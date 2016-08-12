@@ -22,7 +22,6 @@ eclipse
 run
 /gradle/
 /libs/
-/src/
 /build.gradle
 /CREDITS-fml.txt
 /forge-1.10.2-12.18.1.2027-changelog.txt
