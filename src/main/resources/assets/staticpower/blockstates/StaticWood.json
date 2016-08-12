@@ -1,8 +1,0 @@
-{
-    "variants": {
-        "axis=y":  { "model": "staticpower:StaticWood" },
-        "axis=z":   { "model": "staticpower:StaticWoodSide" },
-        "axis=x":   { "model": "staticpower:StaticWoodSide", "y": 90 },
-        "axis=none": { "model": "staticpower:StaticBark" }
-    }
-}

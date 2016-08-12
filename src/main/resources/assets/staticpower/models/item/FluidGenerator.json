@@ -1,8 +1,0 @@
-{
-    "parent": "block/orientable",
-    "textures": {
-	    "top": "staticpower:blocks/MachineSide",
-        "front": "staticpower:blocks/FluidGeneratorFrontOff",
-        "side": "staticpower:blocks/MachineSide"
-    }
-}
