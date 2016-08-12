@@ -1,0 +1,27 @@
+package theking530.staticpower.client;
+
+public class GuiIDRegistry {
+
+	public static final int guiIDBattery = 1;	
+	public static final int guiIDFluidGenerator = 2;
+	public static final int guiIDFluidInfuser = 3;	
+	public static final int guiIDCropSqueezer = 4;	 
+	public static final int guiIDPoweredGrinder = 5;	
+	public static final int guiIDBlockBreaker = 6;	
+	public static final int guiIDPoweredFurnace = 7;
+	public static final int guiIDFarmer = 8;	
+	public static final int guiIDSignalMultiplier = 9;		
+	public static final int guiIDLumumChest = 10;	
+	public static final int guiIDStaticChest = 11;
+	public static final int guiIDSolidGenerator = 12;	
+	public static final int guiIDWaterGenerator = 13;	
+	public static final int guiIDIndustrialFurnace = 14;	
+	public static final int guiIDIndustrialGrinder = 15;
+	public static final int guiIDEnergizedChest = 16;	
+	public static final int guiIDSolderingTable = 17;	
+	public static final int guiIDFusionFurnace = 18;	
+	public static final int guiIDVacuumChest = 19;	
+	public static final int guiIDItemFilter = 20;	
+	public static final int guiIDQuarry = 21;
+	public static final int guiIDStaticBook = 22;
+}

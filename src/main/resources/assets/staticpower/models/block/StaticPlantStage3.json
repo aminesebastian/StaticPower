@@ -1,0 +1,6 @@
+{
+    "parent": "block/crop",
+    "textures": {
+        "crop": "staticpower:blocks/StaticCropPlant4"
+    }
+}
