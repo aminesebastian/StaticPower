@@ -132,7 +132,6 @@ public class StaticPower {
 		SmeltingRecipes.registerFullRecipes();
 		FusionRecipes.registerGrinderRecipe();
 		SolderingRecipes.registerSolderingRecipes();
-	    ItemRenderRegistry.initItemRenderers();
 		GrinderRecipes.registerGrinderRecipe();
 		InfuserRecipes.registerInfusionRecipe();
 		SqueezerRecipes.registerSqueezingRecipes();
