@@ -23,6 +23,7 @@ item.BasicCircuit.name=Basic Circuit
 item.StaticCircuit.name=Static Circuit
 item.EnergizedCircuit.name=Energized Circuit
 item.LumumCircuit.name=Lumum Circuit
+<<<<<<< HEAD
 item.BasicItemFilter.name=Basic Item Filter
 item.UpgradedItemFilter.name=Upgraded Item Filter
 item.AdvancedItemFilter.name=Advanced Item Filter
@@ -195,6 +196,187 @@ container.VacuumChest=VacuumChest
 //Tools
 item.StaticWrench.name=Static Wrench
 item.SolderingIron.name=Soldering Iron
+=======
+item.BasicPortableBattery.name=Basic Portable Battery
+item.StaticPortableBattery.name=Static Portable Battery
+item.EnergizedPortableBattery.name=Energized Portable Battery
+item.LumumPortableBattery.name=Lumum Portable Battery
+item.BasicItemFilter.name=Basic Item Filter
+item.UpgradedItemFilter.name=Upgraded Item Filter
+item.AdvancedItemFilter.name=Advanced Item Filter
+
+//Upgrades
+item.BasicSpeedUpgrade.name=Basic Speed Upgrade
+item.BasicPowerUpgrade.name=Basic Power Upgrade
+item.BasicTankUpgrade.name=Basic Tank Upgrade
+item.StaticSpeedUpgrade.name=Static Speed Upgrade
+item.StaticPowerUpgrade.name=Static Power Upgrade
+item.StaticTankUpgrade.name=Static Tank Upgrade
+item.StaticQuarryingUpgrade.name=Static Quarrying Upgrade
+item.EnergizedSpeedUpgrade.name=Energized Speed Upgrade
+item.EnergizedPowerUpgrade.name=Energized Power Upgrade
+item.EnergizedTankUpgrade.name=Energized Tank Upgrade
+item.EnergizedQuarryingUpgrade.name=Energized Quarrying Upgrade
+item.LumumSpeedUpgrade.name=Lumum Speed Upgrade
+item.LumumPowerUpgrade.name=Lumum Power Upgrade
+item.LumumTankUpgrade.name=Lumum Tank Upgrade
+item.LumumQuarryingUpgrade.name=Lumum Quarrying Upgrade
+
+//Ingots
+item.SilverIngot.name=Silver Ingot
+item.TinIngot.name=Tin Ingot
+item.CopperIngot.name=Copper Ingot
+item.LeadIngot.name=Lead Ingot
+item.PlatinumIngot.name=Platinum Ingot
+item.InertIngot.name=Inert Ingot
+item.StaticIngot.name=§aStatic Metal Ingot
+item.EnergizedIngot.name=§bEnergized Metal Ingot
+item.LumumIngot.name=§eLumum Metal Ingot
+item.RedstoneAlloyIngot.name=Redstone Alloy Ingot
+item.StaticNugget.name=Static Nugget
+item.EnergizedNugget.name=Energized Nugget
+item.LumumNugget.name=Lumum Nugget
+
+//Dusts
+item.SilverDust.name=Silver Dust
+item.TinDust.name=Tin Dust
+item.CopperDust.name=Copper Dust
+item.LeadDust.name=Lead Dust
+item.PlatinumDust.name=Platinum Dust
+item.IronDust.name=Iron Dust
+item.GoldDust.name=Gold Dust
+item.InertInfusionBlend.name=Inert Infusion Blend
+item.StaticDust.name=§aStatic Dust
+item.EnergizedDust.name=§bEnergized Dust
+item.LumumDust.name=§eLumum Dust
+item.RedstoneAlloyDust.name=Redstone Alloy Dust
+
+//Armor/Baubles
+item.StaticHelmet.name=Static Helmet
+item.StaticChestplate.name=Static Chestplate
+item.StatcLeggings.name=Static Leggings
+item.StaticBoots.name=Static Boots
+item.EnergizedHelmet.name=Energized Helmet
+item.EnergizedChestplate.name=Energized Chestplate
+item.EnergizedLeggings.name=Energized Leggings
+item.EnergizedBoots.name=Energized Boots
+item.StaticBelt.name=Static Belt
+item.EnergizedBelt.name=Energized Belt
+
+//Crops
+tile.StaticCropPlant.name=Static Plant
+tile.EnergizedCropPlant.name=Energized Plant
+tile.LumumCropPlant.name=Lumum Plant
+
+//Conduits
+tile.StaticConduit.name=Static Conduit
+tile.FluidConduit.name=Fluid Conduit
+tile.ItemConduit.name=Item Conduit
+
+//Machines
+tile.CropGeneratorIdle.name=Crop Generator
+tile.CropGeneratorActive.name=Crop Generator
+tile.FluidInfuser.name=Fluid Infuser
+tile.FluidGenerator.name=Fluid Generator
+tile.CropSqueezer.name=Crop Squeezer
+tile.PoweredGrinder.name=Powered Grinder
+tile.PoweredFurnace.name=Powered Furnace
+tile.FusionFurnace.name=Fusion Furnace
+tile.BasicTank.name=Basic Tank
+tile.AdvancedTank.name=Advanced Tank
+tile.SignalMultiplier.name=Redstone Transducer
+tile.StaticBattery.name=Static Battery
+tile.EnergizedBattery.name=Energized Battery
+tile.LumumBattery.name=Lumum Battery
+tile.BlockBreaker.name=Block Breaker
+tile.SolidGenerator.name=Solid Generator
+tile.WaterGenerator.name=Water Generator
+tile.IndustrialFurnace.name=Industrial Furnace
+tile.IndustrialGrinder.name=Industrial Grinder
+tile.StaticSolarPanel.name=Static Solar Panel
+tile.EnergizedSolarPanel.name=Energized Solar Panel
+tile.LumumSolarPanel.name=Lumum Solar Panel
+tile.SolderingTable.name=Soldering Table
+tile.Quarry.name=Quarry
+tile.BasicFarmer.name=Basic Farmer
+tile.ChargingStation.name=Charging Station
+
+//Blocks
+tile.StaticLamp.name=Static Lamp
+tile.EnergizedLamp.name=Energized Lamp
+tile.LumumLamp.name=Lumum Lamp
+tile.StaticGrass.name=Static Grass
+tile.EnergizedGrass.name=Energized Grass
+tile.StaticBlock.name=§aStatic Metal Block
+tile.EnergizedBlock.name=§bEnergized Metal Block
+tile.LumumBlock.name=§eLumum Metal Block
+tile.MachineBlock.name=Machine Block
+tile.ObsidianGlass.name=Obsidian Glass
+tile.CopperOre.name=Copper Ore
+tile.TinOre.name=Tin Ore
+tile.SilverOre.name=Silver Ore
+tile.PlatinumOre.name=Platinum Ore
+tile.LeadOre.name=Lead Ore
+tile.StaticChest.name=Static Chest
+tile.EnergizedChest.name=Energized Chest
+tile.LumumChest.name=Lumum Chest
+tile.VacuumChest.name=Vacuum Chest
+tile.AdvancedEarth.name=Advanced Earth
+
+tile.StaticCobblestone.name=Static Cobblestone
+tile.EnergizedCobblestone.name=Energized Cobblestone
+tile.LumumCobblestone.name=Lumum Cobblestone
+
+tile.CrackedStaticBrick.name=Static Brick
+tile.CrackedEnergizedBrick.name=Energized Brick
+tile.CrackedLumumBrick.name=Lumum Brick
+
+tile.StaticWood.name=Static Wood
+tile.EnergizedWood.name=Energized Wood
+tile.LumumWood.name=Lumum Wood
+
+tile.StaticPlanks.name=Static Planks
+tile.EnergizedPlanks.name=Energized Planks
+tile.LumumPlanks.name=Lumum Planks
+
+//Fluids
+fluid.StaticFluid=§aStatic Fluid
+tile.StaticFluid.name=§aStatic Fluid
+fluid.EnergizedFluid=§bEnergized Fluid
+tile.EnergizedFluid.name=§bEnergized Fluid
+fluid.LumumFluid=§eLumum Fluid
+tile.LumumFluid.name=§eLumum Fluid
+
+//GUI
+container.CropGenerator=Crop Generator
+container.CropSqueezer=Crop Squeezer
+container.FluidInfuser=Fluid Infuser
+container.FluidGenerator=Fluid Generator
+container.PowereGrinder=Powered Grinder
+container.PoweredSmelter=Powered Furnace
+container.FusionFurnace=Fusion Furnace
+container.Multi-MachineController=Machine Controller
+container.Farmer=Crop Farmer
+container.SignalMultiplier=Redstone Transducer
+container.StaticBattery=Static Battery
+container.EnergizedBattery=Energized Battery
+container.LumumBattery=Lumum Battery
+container.StaticChest=Static Chest
+container.EnergizedChest=Energized Chest
+container.LumumChest=Lumum Chest
+container.BlockBreaker=Block Breaker
+container.SolidGenerator=Solid Generator
+container.WaterGenerator=Water Generator
+container.IndustrialFurnace=Industrial Furnace
+container.IndustrialGrinder=Industrial Grinder
+container.SolderingTable=Soldering Table
+container.VacuumChest=VacuumChest
+
+//Tools
+item.StaticWrench.name=Static Wrench
+item.SolderingIron.name=Soldering Iron
+item.ElectricSolderingIron.name=Electric Soldering Iron
+>>>>>>> branch '1.10.2' of https://github.com/Theking5301/StaticPower.git
 item.StaticBook.name=Static Book
 item.CoordinateMarker.name=Coordinate Marker
 

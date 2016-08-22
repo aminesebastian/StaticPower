@@ -57,7 +57,11 @@ public class BaseCrop extends BlockCrops implements IGrowable {
     }
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         if(isMaxAge(state)) {
+<<<<<<< HEAD
         	this.dropBlockAsItem(world, pos, state, 0); 
+=======
+        	dropBlockAsItem(world, pos, state, 0); 
+>>>>>>> branch '1.10.2' of https://github.com/Theking5301/StaticPower.git
         	world.setBlockState(pos, withAge(0), 2);
     		return true;
         }

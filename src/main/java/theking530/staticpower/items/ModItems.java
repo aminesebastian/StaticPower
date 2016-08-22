@@ -23,6 +23,7 @@ import theking530.staticpower.items.materials.BaseDust;
 import theking530.staticpower.items.materials.BaseIngot;
 import theking530.staticpower.items.materials.BaseNugget;
 import theking530.staticpower.items.tools.CoordinateMarker;
+<<<<<<< HEAD
 import theking530.staticpower.items.tools.SolderingIron;
 import theking530.staticpower.items.tools.StaticWrench;
 import theking530.staticpower.items.upgrades.BasePowerUpgrade;
@@ -177,6 +178,180 @@ public class ModItems {
 		RegisterHelper.registerItem(EnergizedCircuit);
 		LumumCircuit = new ItemBase("LumumCircuit");
 		RegisterHelper.registerItem(LumumCircuit);
+=======
+import theking530.staticpower.items.tools.ElectricSolderingIron;
+import theking530.staticpower.items.tools.SolderingIron;
+import theking530.staticpower.items.tools.StaticWrench;
+import theking530.staticpower.items.upgrades.BasePowerUpgrade;
+import theking530.staticpower.items.upgrades.BaseQuarryingUpgrade;
+import theking530.staticpower.items.upgrades.BaseSpeedUpgrade;
+import theking530.staticpower.items.upgrades.BaseTankUpgrade;
+
+public class ModItems {
+	
+	public static ArmorMaterial StaticMaterial = EnumHelper.addArmorMaterial("StaticMaterial", null, 28, new int[] {3, 6, 6, 3}, 25, null, 0);
+	public static ArmorMaterial EnergizedMaterial = EnumHelper.addArmorMaterial("EnergizedMaterial", null, 35, new int[] {5, 10, 8, 7}, 35, null, 0);
+	
+	public static Item Rubber;
+	public static Item IOPort;
+	
+	public static Item BasicCircuit;
+	public static Item StaticCircuit;
+	public static Item EnergizedCircuit;
+	public static Item LumumCircuit;
+	
+	public static Item BasicBattery;
+	public static Item StaticBattery;
+	public static Item EnergizedBattery;
+	public static Item LumumBattery;
+	
+	public static Item BasicSpeedUpgrade;
+	public static Item StaticSpeedUpgrade;
+	public static Item EnergizedSpeedUpgrade;
+	public static Item LumumSpeedUpgrade;
+	
+	public static Item BasicTankUpgrade;
+	public static Item StaticTankUpgrade;
+	public static Item EnergizedTankUpgrade;
+	public static Item LumumTankUpgrade;
+	
+	public static Item BasicPowerUpgrade;
+	public static Item StaticPowerUpgrade;
+	public static Item EnergizedPowerUpgrade;
+	public static Item LumumPowerUpgrade;
+	
+	public static Item StaticQuarryingUpgrade;
+	public static Item EnergizedQuarryingUpgrade;
+	public static Item LumumQuarryingUpgrade;
+	
+	public static Item CreativePowerUpgrade;
+	public static Item CreativeTankUpgrade;
+	public static Item CreativeSpeedUpgrade;
+	
+	public static Item StaticWrench;
+	public static Item SolderingIron;
+	public static Item ElectricSolderingIron;
+	public static Item StaticBook;
+	public static Item CoordinateMarker;
+	
+	public static Item BasicItemFilter;
+	public static Item UpgradedItemFilter;
+	public static Item AdvancedItemFilter;
+	public static Item QuarryFilter;
+	
+	public static Item SilverDust;
+	public static Item TinDust;
+	public static Item LeadDust;
+	public static Item CopperDust;
+	public static Item PlatinumDust;
+	public static Item IronDust;
+	public static Item GoldDust;
+	public static Item InertInfusionBlend;
+	public static Item StaticDust;
+	public static Item EnergizedDust;
+	public static Item LumumDust;
+	public static Item RedstoneAlloyDust;
+	
+	public static Item SilverIngot;
+	public static Item TinIngot;
+	public static Item LeadIngot;
+	public static Item CopperIngot;
+	public static Item PlatinumIngot;
+	public static Item InertIngot;
+	public static Item EnergizedIngot;
+	public static Item StaticIngot;
+	public static Item LumumIngot;
+	public static Item RedstoneAlloyIngot;
+	
+	public static Item EnergizedNugget;
+	public static Item StaticNugget;
+	public static Item LumumNugget;
+	
+	public static Item StaticBelt;
+	public static Item EnergizedBelt;
+	public static Item StaticRing;
+	public static Item EnergizedRing;
+	public static Item StaticHelmet;
+	public static Item StaticChestplate;
+	public static Item StaticLeggings;
+	public static Item StaticBoots;
+	public static Item EnergizedHelmet;
+	public static Item EnergizedChestplate;
+	public static Item EnergizedLeggings;
+	public static Item EnergizedBoots;
+	
+	public static Item DepletedCrop;
+	public static Item EnergizedSeeds;
+	public static Item EnergizedCrop;
+	public static Item StaticSeeds;
+	public static Item StaticCrop;
+	public static Item LumumSeeds;
+	public static Item LumumCrop;
+	
+	public static void init() {		
+		
+		StaticWrench = new StaticWrench().setUnlocalizedName("StaticWrench");
+		RegisterHelper.registerItem(StaticWrench);
+		SolderingIron = new SolderingIron("SolderingIron", 10);
+		RegisterHelper.registerItem(SolderingIron);
+		ElectricSolderingIron = new ElectricSolderingIron("ElectricSolderingIron", 100);
+		RegisterHelper.registerItem(ElectricSolderingIron);
+		CoordinateMarker = new CoordinateMarker("CoordinateMarker");
+		RegisterHelper.registerItem(CoordinateMarker);
+		
+		BasicItemFilter = new ItemFilter("BasicItemFilter", FilterTier.BASIC);
+		RegisterHelper.registerItem(BasicItemFilter);
+		UpgradedItemFilter = new ItemFilter("UpgradedItemFilter", FilterTier.UPGRADED);
+		RegisterHelper.registerItem(UpgradedItemFilter);
+		AdvancedItemFilter = new ItemFilter("AdvancedItemFilter", FilterTier.ADVANCED);
+		RegisterHelper.registerItem(AdvancedItemFilter);
+		
+		Rubber = new ItemBase("Rubber");
+		RegisterHelper.registerItem(Rubber);
+		DepletedCrop = new DepletedCrop("DepletedCrop");
+		RegisterHelper.registerItem(DepletedCrop);
+		IOPort = new ItemBase("IOPort");
+		RegisterHelper.registerItem(IOPort);
+		
+		StaticHelmet = new StaticArmor("StaticHelmet", StaticMaterial, "StaticHelmet", EntityEquipmentSlot.HEAD).setUnlocalizedName("StaticHelmet");
+		RegisterHelper.registerItem(StaticHelmet);	
+		StaticChestplate = new StaticArmor("StaticChestplate", StaticMaterial, "StaticChestplate", EntityEquipmentSlot.CHEST).setUnlocalizedName("StaticChestplate");
+		RegisterHelper.registerItem(StaticChestplate);		
+		StaticLeggings = new StaticArmor("StaticLeggings", StaticMaterial, "StaticLeggings", EntityEquipmentSlot.LEGS).setUnlocalizedName("StaticLeggings");
+		RegisterHelper.registerItem(StaticLeggings);		
+		StaticBoots = new StaticArmor("StaticBoots", StaticMaterial, "StaticBoots", EntityEquipmentSlot.FEET).setUnlocalizedName("StaticBoots");
+		RegisterHelper.registerItem(StaticBoots);
+		
+		EnergizedHelmet = new EnergizedArmor("EnergizedHelmet", EnergizedMaterial, "EnergizedHelmet", EntityEquipmentSlot.HEAD).setUnlocalizedName("EnergizedHelmet");
+		RegisterHelper.registerItem(EnergizedHelmet);		
+		EnergizedChestplate = new EnergizedArmor("EnergizedChestplate", EnergizedMaterial, "EnergizedChestplate", EntityEquipmentSlot.CHEST).setUnlocalizedName("EnergizedChestplate");
+		RegisterHelper.registerItem(EnergizedChestplate);		
+		EnergizedLeggings = new EnergizedArmor("EnergizedLeggings", EnergizedMaterial, "EnergizedLeggings", EntityEquipmentSlot.LEGS).setUnlocalizedName("EnergizedLeggings");
+		RegisterHelper.registerItem(EnergizedLeggings);		
+		EnergizedBoots = new EnergizedArmor("EnergizedBoots", EnergizedMaterial, "EnergizedBoots", EntityEquipmentSlot.FEET).setUnlocalizedName("EnergizedBoots");
+		RegisterHelper.registerItem(EnergizedBoots);
+		
+		//EnergizedBelt = new EnergizedBelt(baubles.api.BaubleType.BELT).setUnlocalizedName("EnergizedBelt");
+		//RegisterHelper.registerItem(EnergizedBelt);		
+		
+		BasicCircuit = new ItemBase("BasicCircuit");
+		RegisterHelper.registerItem(BasicCircuit);
+		StaticCircuit = new ItemBase("StaticCircuit");
+		RegisterHelper.registerItem(StaticCircuit);
+		EnergizedCircuit = new ItemBase("EnergizedCircuit");
+		RegisterHelper.registerItem(EnergizedCircuit);
+		LumumCircuit = new ItemBase("LumumCircuit");
+		RegisterHelper.registerItem(LumumCircuit);
+		
+		BasicBattery = new BaseBattery("BasicPortableBattery", 100000, 1000);
+		RegisterHelper.registerItem(BasicBattery);
+		StaticBattery = new BaseBattery("StaticPortableBattery", 250000, 2500);
+		RegisterHelper.registerItem(StaticBattery);
+		EnergizedBattery = new BaseBattery("EnergizedPortableBattery", 500000, 5000);
+		RegisterHelper.registerItem(EnergizedBattery);
+		LumumBattery = new BaseBattery("LumumPortableBattery", 1000000, 10000);
+		RegisterHelper.registerItem(LumumBattery);
+>>>>>>> branch '1.10.2' of https://github.com/Theking5301/StaticPower.git
 		
 		CreativeSpeedUpgrade = new BaseSpeedUpgrade("CreativeSpeedUpgrade", Tier.CREATIVE);
 		RegisterHelper.registerItem(CreativeSpeedUpgrade);	
