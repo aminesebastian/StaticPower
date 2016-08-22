@@ -120,6 +120,7 @@ tile.EnergizedSolarPanel.name=Energized Solar Panel
 tile.LumumSolarPanel.name=Lumum Solar Panel
 tile.SolderingTable.name=Soldering Table
 tile.Quarry.name=Quarry
+tile.BasicFarmer.name=Basic Farmer
 
 //Blocks
 tile.StaticLamp.name=Static Lamp

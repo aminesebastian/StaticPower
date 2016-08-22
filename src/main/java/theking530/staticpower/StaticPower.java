@@ -39,6 +39,7 @@ import theking530.staticpower.handlers.crafting.recipes.SolderingRecipes;
 import theking530.staticpower.handlers.crafting.recipes.SqueezerRecipes;
 import theking530.staticpower.integration.TIC.TinkersIMC;
 import theking530.staticpower.items.ModItems;
+import theking530.staticpower.machines.basicfarmer.TileEntityBasicFarmer;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityEnergizedBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityLumumBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityStaticBattery;
@@ -115,6 +116,7 @@ public class StaticPower {
 		GameRegistry.registerTileEntity(TileEntityStaticBattery.class, "StaticBattery");
 		GameRegistry.registerTileEntity(TileEntityEnergizedBattery.class, "EnergizedBattery");
 		GameRegistry.registerTileEntity(TileEntityLumumBattery.class, "LumumBattery");
+		GameRegistry.registerTileEntity(TileEntityBasicFarmer.class, "BasicFarmer");
 		
 		GameRegistry.registerTileEntity(TileEntityStaticChest.class, "StaticChest");
 		GameRegistry.registerTileEntity(TileEntityEnergizedChest.class, "EnergizedChest");

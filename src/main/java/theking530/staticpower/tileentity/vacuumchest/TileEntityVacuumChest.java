@@ -151,7 +151,7 @@ public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<E
     //IInventory
 	@Override
 	public String getName() {
-		return "container.VacuumChest";
+		return "VacuumChest";
 		
 	}
 	@Override

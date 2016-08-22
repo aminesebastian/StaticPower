@@ -48,7 +48,7 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 	private boolean testing = false;
 	
 	public TileEntityQuarry() {
-		this.initializeBaseMachineWithTank(2, 100000, 1000, 10, 4, new int[0], new int[0], new int[]{1,2,3}, 10000);
+		initializeBaseMachineWithTank(2, 100000, 1000, 10, 4, new int[0], new int[0], new int[]{1,2,3}, 10000);
 	}
 	@Override
 	public void process(){
@@ -202,7 +202,8 @@ public class TileEntityQuarry extends BaseMachineWithTank {
     	NBTTagCompound tag = new NBTTagCompound();
     	writeToNBT(tag);
     	return new SPacketUpdateTileEntity(pos, getBlockMetadata(), tag);
-    }	private BlockPos getLocalStartingPos() {
+    }	
+    private BlockPos getLocalStartingPos() {
 		return new BlockPos(0,0,0);
 	}
 	private BlockPos getAdjustedEndingPos() {

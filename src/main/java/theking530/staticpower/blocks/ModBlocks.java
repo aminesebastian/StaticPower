@@ -13,6 +13,7 @@ import theking530.staticpower.blocks.decorative.StaticLamp;
 import theking530.staticpower.conduits.fluidconduit.BlockFluidConduit;
 import theking530.staticpower.conduits.itemconduit.BlockItemConduit;
 import theking530.staticpower.conduits.staticconduit.BlockStaticConduit;
+import theking530.staticpower.machines.basicfarmer.BlockBasicFarmer;
 import theking530.staticpower.machines.batteries.BlockBattery;
 import theking530.staticpower.machines.cropsqueezer.BlockCropSqueezer;
 import theking530.staticpower.machines.fluidgenerator.BlockFluidGenerator;
@@ -50,6 +51,7 @@ public class ModBlocks {
 	public static Block CropSqueezer;	
 	public static Block PoweredGrinder;
 	public static Block PoweredFurnace;	
+	public static Block BasicFarmer;	
 	public static Block BasicTank;
 	public static Block AdvancedTank;	
 	public static Block Farmer;
@@ -165,6 +167,9 @@ public class ModBlocks {
 		
 		FluidGenerator = new BlockFluidGenerator().setUnlocalizedName("FluidGenerator");
 		RegisterHelper.registerBlock(FluidGenerator);
+		
+		BasicFarmer = new BlockBasicFarmer().setUnlocalizedName("BasicFarmer");
+		RegisterHelper.registerBlock(BasicFarmer);
 		
 		CropSqueezer = new BlockCropSqueezer().setUnlocalizedName("CropSqueezer");
 		RegisterHelper.registerBlock(CropSqueezer);
