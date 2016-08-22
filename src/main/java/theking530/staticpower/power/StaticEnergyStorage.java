@@ -32,10 +32,7 @@ public class StaticEnergyStorage extends EnergyStorage {
 	public float getEnergyRatio(){
 		return (float)energy/(float)capacity;
 	}
-<<<<<<< HEAD
-=======
 	public boolean hasEnoughPowerToExtract() {
 		return capacity >= maxExtract ? true : false;
 	}
->>>>>>> branch '1.10.2' of https://github.com/Theking5301/StaticPower.git
 }

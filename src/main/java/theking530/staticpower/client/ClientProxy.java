@@ -88,11 +88,8 @@ public class ClientProxy extends CommonProxy {
 		//Block Breaker
 		//ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBlockBreaker.class, new TileEntityRenderBlockBreaker());
 		//MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.BlockBreaker), new ItemRenderBlockBreaker());
-<<<<<<< HEAD
 		
 	    ItemRenderRegistry.initItemRenderers();
-=======
->>>>>>> branch '1.10.2' of https://github.com/Theking5301/StaticPower.git
 	}
 	public static void registerModelLoader(Item item, ResourceLocation modelLocation) {
 		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(modelLocation, "inventory"));

@@ -3,25 +3,6 @@ package theking530.staticpower.handlers.crafting.recipes;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-<<<<<<< HEAD
-import theking530.staticpower.assists.RegisterHelper;
-import theking530.staticpower.items.ModItems;
-
-public class SolderingRecipes {
-	
-	@SuppressWarnings("all")
-	public static void registerSolderingRecipes() {
-		
-		//Circuit Recipes
-		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.BasicCircuit, 4), new Object[]{"R R", " I ", "R R", 
-		'I', Items.IRON_INGOT, 'R', Items.REDSTONE});	
-		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.StaticCircuit, 4), new Object[]{"RSR", "GCG", "RSR", 
-		'G', Items.GOLD_INGOT, 'R', Items.REDSTONE, 'S', ModItems.StaticIngot, 'C', ModItems.BasicCircuit});		
-		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.EnergizedCircuit, 4), new Object[]{"RER", "GCG", "RER", 
-		'G', Items.GOLD_INGOT, 'R', Items.REDSTONE, 'E', ModItems.EnergizedIngot, 'C', ModItems.StaticCircuit});		
-		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.LumumCircuit, 4), new Object[]{"RLR", "GCG", "RLR", 
-		'G', Items.GOLD_INGOT, 'R', Items.REDSTONE, 'L', ModItems.LumumIngot, 'C', ModItems.EnergizedCircuit});
-=======
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import theking530.staticpower.assists.RegisterHelper;
@@ -44,9 +25,9 @@ public class SolderingRecipes {
 		
 		//Batteries --------------------------------------------------------------------------------------------------
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.BasicBattery), new Object[]{" G ", "IRI", "IRI", 
-		'I', Items.IRON_INGOT, 'R', Items.REDSTONE, 'G', Items.GOLD_NUGGET});	
+		'I', Items.IRON_INGOT, 'R', Blocks.REDSTONE_BLOCK, 'C', ModItems.CopperIngot});	
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.StaticBattery), new Object[]{" S ", "IRI", "IDI", 
-		'I', ModItems.StaticIngot, 'R', Items.REDSTONE, 'S', ModItems.StaticNugget, 'D', Items.DIAMOND});	
+		'I', ModItems.StaticIngot, 'R', Blocks.REDSTONE_BLOCK, 'S', ModItems.StaticNugget, 'D', Items.DIAMOND});	
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.EnergizedBattery), new Object[]{" E ", "IRI", "IDI", 
 		'I', ModItems.EnergizedIngot, 'R', Blocks.REDSTONE_BLOCK, 'E', ModItems.EnergizedNugget, 'D', Items.DIAMOND});	
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.LumumBattery), new Object[]{" L ", "IRI", "IDI", 
@@ -57,7 +38,6 @@ public class SolderingRecipes {
 		'R', ModItems.BasicBattery, 'I', Items.IRON_INGOT, 'L', new ItemStack(Items.DYE, 4, 4)}));		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.ElectricSolderingIron), new Object[]{"  I","LI ","RL ",
 		'R', ModItems.BasicBattery, 'I', Items.IRON_INGOT, 'L', new ItemStack(Items.DYE, 4, 4)}));	
->>>>>>> branch '1.10.2' of https://github.com/Theking5301/StaticPower.git
 		
 		//Upgrades --------------------------------------------------------------------------------------------------
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.BasicTankUpgrade), new Object[]{" L ","BGB","ICI",

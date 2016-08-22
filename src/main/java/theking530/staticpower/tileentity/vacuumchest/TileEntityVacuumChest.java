@@ -151,12 +151,7 @@ public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<E
     //IInventory
 	@Override
 	public String getName() {
-<<<<<<< HEAD
-		return "container.VacuumChest";
-=======
-		return "VacuumChest";
->>>>>>> branch '1.10.2' of https://github.com/Theking5301/StaticPower.git
-		
+		return "VacuumChest";		
 	}
 	@Override
 	public boolean apply(EntityItem input) {

@@ -2,73 +2,6 @@ package theking530.staticpower.machines.solderingtable;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-<<<<<<< HEAD
-import net.minecraft.init.Blocks;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryCraftResult;
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.inventory.Slot;
-import net.minecraft.inventory.SlotCrafting;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.world.World;
-import theking530.staticpower.handlers.crafting.registries.GrinderRecipeRegistry;
-import theking530.staticpower.handlers.crafting.registries.SolderingRecipeRegistry;
-import theking530.staticpower.items.ModItems;
-import theking530.staticpower.items.tools.SolderingIron;
-
-public class ContainerSolderingTable extends Container {
-	
- /** The crafting matrix inventory (3x3). */
-    private TileEntitySolderingTable SOLDERING_TABLE;
-    private static final String __OBFID = "CL_00001744";
-
-    public ContainerSolderingTable(InventoryPlayer invPlayer, TileEntitySolderingTable teTable) {
-        SOLDERING_TABLE = teTable;
-        int l;
-        int i1;
-               
-        //Crafting Area 0 - 8
-        for (l = 0; l < 3; ++l) {
-            for (i1 = 0; i1 < 3; ++i1){
-                this.addSlotToContainer(new SlotSolderingTableInput(this, SOLDERING_TABLE, i1 + l * 3, 62 + i1 * 18, 17 + l * 18));
-            }
-        }
-        
-        //Extra Slots 9 - 15
-        for (l = 0; l < 7; ++l) {
-        	this.addSlotToContainer(new Slot(SOLDERING_TABLE, l+9, 26 + l * 18, 74));
-        }
-        
-        //Output
-        this.addSlotToContainer(new SlotSolderingTable(this, invPlayer.player, SOLDERING_TABLE, 17, 140, 39));
-        
-        //Soldering Iron
-		this.addSlotToContainer(new SlotSolderingTableInput(this, teTable, 18, 11, 17) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-		          return itemStack.getItem() instanceof SolderingIron;
-		        }
-		});
-        
-		//Inventory
-		for(int i = 0; i < 3; i++) {
-			for(int j = 0; j < 9; j++) {
-				this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 97 + i * 18));
-			}
-		}
-		
-		//ActionBar
-		for(int i = 0; i < 9; i++) {
-			this.addSlotToContainer(new Slot(invPlayer, i, 8 + i * 18, 155));
-		}
-        onCraftMatrixChanged(SOLDERING_TABLE);
-    }
-    public void onSolderingAreaChanged(){
-    	if(SOLDERING_TABLE.getStackInSlot(18) != null && SOLDERING_TABLE.getStackInSlot(18).getItem() instanceof SolderingIron) {
-        	SOLDERING_TABLE.setInventorySlotContents(17, SolderingRecipeRegistry.Soldering().findSolderingOutput(SOLDERING_TABLE, SOLDERING_TABLE.getWorld())); 		
-=======
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -131,7 +64,6 @@ public class ContainerSolderingTable extends Container {
     		}else{
         		SOLDERING_TABLE.setInventorySlotContents(17, null); 	
     		}    	
->>>>>>> branch '1.10.2' of https://github.com/Theking5301/StaticPower.git
     	}else{
     		SOLDERING_TABLE.setInventorySlotContents(17, null); 
     	}

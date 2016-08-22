@@ -51,7 +51,6 @@ public class ItemRenderRegistry {
 		
 		ItemRenderRegistry.registerItem(ModItems.StaticWrench);
 		ItemRenderRegistry.registerItem(ModItems.SolderingIron);
-<<<<<<< HEAD
 		ItemRenderRegistry.registerItem(ModItems.CoordinateMarker);
 		ItemRenderRegistry.registerItem(ModItems.StaticBook);
 		
@@ -59,7 +58,6 @@ public class ItemRenderRegistry {
 		ItemRenderRegistry.registerItem(ModItems.StaticCircuit);
 		ItemRenderRegistry.registerItem(ModItems.EnergizedCircuit);
 		ItemRenderRegistry.registerItem(ModItems.LumumCircuit);
-=======
 		ItemRenderRegistry.registerItem(ModItems.ElectricSolderingIron);
 		ItemRenderRegistry.registerItem(ModItems.CoordinateMarker);
 		ItemRenderRegistry.registerItem(ModItems.StaticBook);
@@ -73,7 +71,6 @@ public class ItemRenderRegistry {
 		ItemRenderRegistry.registerItem(ModItems.StaticBattery);
 		ItemRenderRegistry.registerItem(ModItems.EnergizedBattery);
 		ItemRenderRegistry.registerItem(ModItems.LumumBattery);
->>>>>>> branch '1.10.2' of https://github.com/Theking5301/StaticPower.git
 		
 		ItemRenderRegistry.registerItem(ModItems.Rubber);
 		ItemRenderRegistry.registerItem(ModItems.IOPort);
