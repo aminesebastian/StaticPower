@@ -1,0 +1,8 @@
+{
+    "parent": "block/orientable",
+    "textures": {
+	    "top": "staticpower:blocks/StaticBatteryTop",
+        "front": "staticpower:blocks/StaticBatterySides",
+        "side": "staticpower:blocks/StaticBatterySides"
+    }
+}
