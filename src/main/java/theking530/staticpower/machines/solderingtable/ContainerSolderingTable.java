@@ -2,19 +2,11 @@ package theking530.staticpower.machines.solderingtable;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryCraftResult;
-import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
-import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.world.World;
-import theking530.staticpower.handlers.crafting.registries.GrinderRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.SolderingRecipeRegistry;
-import theking530.staticpower.items.ModItems;
+import theking530.staticpower.items.tools.ISolderingIron;
 import theking530.staticpower.items.tools.SolderingIron;
 
 public class ContainerSolderingTable extends Container {
@@ -47,7 +39,7 @@ public class ContainerSolderingTable extends Container {
 		this.addSlotToContainer(new SlotSolderingTableInput(this, teTable, 18, 11, 17) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
-		          return itemStack.getItem() instanceof SolderingIron;
+		          return itemStack.getItem() instanceof ISolderingIron;
 		        }
 		});
         
@@ -65,8 +57,13 @@ public class ContainerSolderingTable extends Container {
         onCraftMatrixChanged(SOLDERING_TABLE);
     }
     public void onSolderingAreaChanged(){
-    	if(SOLDERING_TABLE.getStackInSlot(18) != null && SOLDERING_TABLE.getStackInSlot(18).getItem() instanceof SolderingIron) {
-        	SOLDERING_TABLE.setInventorySlotContents(17, SolderingRecipeRegistry.Soldering().findSolderingOutput(SOLDERING_TABLE, SOLDERING_TABLE.getWorld())); 		
+    	if(SOLDERING_TABLE.getStackInSlot(18) != null && SOLDERING_TABLE.getStackInSlot(18).getItem() instanceof ISolderingIron) {
+    		ISolderingIron tempIron = (ISolderingIron) SOLDERING_TABLE.getStackInSlot(18).getItem();
+    		if(tempIron.canSolder(SOLDERING_TABLE.getStackInSlot(18))) {
+    			SOLDERING_TABLE.setInventorySlotContents(17, SolderingRecipeRegistry.Soldering().findSolderingOutput(SOLDERING_TABLE, SOLDERING_TABLE.getWorld())); 		
+    		}else{
+        		SOLDERING_TABLE.setInventorySlotContents(17, null); 	
+    		}    	
     	}else{
     		SOLDERING_TABLE.setInventorySlotContents(17, null); 
     	}

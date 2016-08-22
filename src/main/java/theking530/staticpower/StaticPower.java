@@ -43,6 +43,7 @@ import theking530.staticpower.machines.basicfarmer.TileEntityBasicFarmer;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityEnergizedBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityLumumBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityStaticBattery;
+import theking530.staticpower.machines.chargingstation.TileEntityChargingStation;
 import theking530.staticpower.machines.cropsqueezer.TileEntityCropSqueezer;
 import theking530.staticpower.machines.fluidgenerator.TileEntityFluidGenerator;
 import theking530.staticpower.machines.fluidinfuser.TileEntityFluidInfuser;
@@ -117,6 +118,7 @@ public class StaticPower {
 		GameRegistry.registerTileEntity(TileEntityEnergizedBattery.class, "EnergizedBattery");
 		GameRegistry.registerTileEntity(TileEntityLumumBattery.class, "LumumBattery");
 		GameRegistry.registerTileEntity(TileEntityBasicFarmer.class, "BasicFarmer");
+		GameRegistry.registerTileEntity(TileEntityChargingStation.class, "ChargingStation");
 		
 		GameRegistry.registerTileEntity(TileEntityStaticChest.class, "StaticChest");
 		GameRegistry.registerTileEntity(TileEntityEnergizedChest.class, "EnergizedChest");

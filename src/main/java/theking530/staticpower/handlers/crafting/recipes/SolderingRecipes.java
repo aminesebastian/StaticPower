@@ -3,6 +3,8 @@ package theking530.staticpower.handlers.crafting.recipes;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import theking530.staticpower.assists.RegisterHelper;
 import theking530.staticpower.items.ModItems;
 
@@ -20,6 +22,22 @@ public class SolderingRecipes {
 		'G', Items.GOLD_INGOT, 'R', Items.REDSTONE, 'E', ModItems.EnergizedIngot, 'C', ModItems.StaticCircuit});		
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.LumumCircuit, 4), new Object[]{"RLR", "GCG", "RLR", 
 		'G', Items.GOLD_INGOT, 'R', Items.REDSTONE, 'L', ModItems.LumumIngot, 'C', ModItems.EnergizedCircuit});
+		
+		//Batteries --------------------------------------------------------------------------------------------------
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.BasicBattery), new Object[]{" G ", "IRI", "IRI", 
+		'I', Items.IRON_INGOT, 'R', Items.REDSTONE, 'G', Items.GOLD_NUGGET});	
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.StaticBattery), new Object[]{" S ", "IRI", "IDI", 
+		'I', ModItems.StaticIngot, 'R', Items.REDSTONE, 'S', ModItems.StaticNugget, 'D', Items.DIAMOND});	
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.EnergizedBattery), new Object[]{" E ", "IRI", "IDI", 
+		'I', ModItems.EnergizedIngot, 'R', Blocks.REDSTONE_BLOCK, 'E', ModItems.EnergizedNugget, 'D', Items.DIAMOND});	
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.LumumBattery), new Object[]{" L ", "IRI", "IDI", 
+		'I', ModItems.LumumIngot, 'R', Blocks.REDSTONE_BLOCK, 'L', ModItems.LumumNugget, 'D', Items.DIAMOND});	
+		
+		//Tools -------------------------------------------------------------------------------------------------------
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.ElectricSolderingIron), new Object[]{"I  "," IL"," LR",
+		'R', ModItems.BasicBattery, 'I', Items.IRON_INGOT, 'L', new ItemStack(Items.DYE, 4, 4)}));		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.ElectricSolderingIron), new Object[]{"  I","LI ","RL ",
+		'R', ModItems.BasicBattery, 'I', Items.IRON_INGOT, 'L', new ItemStack(Items.DYE, 4, 4)}));	
 		
 		//Upgrades --------------------------------------------------------------------------------------------------
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.BasicTankUpgrade), new Object[]{" L ","BGB","ICI",

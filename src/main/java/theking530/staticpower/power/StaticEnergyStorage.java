@@ -32,4 +32,7 @@ public class StaticEnergyStorage extends EnergyStorage {
 	public float getEnergyRatio(){
 		return (float)energy/(float)capacity;
 	}
+	public boolean hasEnoughPowerToExtract() {
+		return capacity >= maxExtract ? true : false;
+	}
 }

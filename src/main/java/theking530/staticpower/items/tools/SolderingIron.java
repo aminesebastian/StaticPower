@@ -8,9 +8,8 @@ import theking530.staticpower.StaticPower;
 import theking530.staticpower.items.ItemBase;
 import theking530.staticpower.utils.EnumTextFormatting;
 
-public class SolderingIron extends ItemBase {
+public class SolderingIron extends ItemBase implements ISolderingIron{
 	
-		
 	public SolderingIron(String name, int maxUses) {
 		super(name);
 		setMaxStackSize(1);
@@ -26,5 +25,17 @@ public class SolderingIron extends ItemBase {
 	    	}else{
 	    		list.add(EnumTextFormatting.ITALIC + "Hold Shift");
 	    }
+	}
+
+	@Override
+	public void useSolderingItem(ItemStack stack) {
+		stack.setItemDamage(stack.getItemDamage() + 1);
+		if(stack.getItemDamage() >= stack.getMaxDamage()) {
+			stack = null;
+		}
+	}
+	@Override
+	public boolean canSolder(ItemStack stack) {
+		return true;
 	}
 }

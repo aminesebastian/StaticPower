@@ -23,6 +23,7 @@ import theking530.staticpower.items.materials.BaseDust;
 import theking530.staticpower.items.materials.BaseIngot;
 import theking530.staticpower.items.materials.BaseNugget;
 import theking530.staticpower.items.tools.CoordinateMarker;
+import theking530.staticpower.items.tools.ElectricSolderingIron;
 import theking530.staticpower.items.tools.SolderingIron;
 import theking530.staticpower.items.tools.StaticWrench;
 import theking530.staticpower.items.upgrades.BasePowerUpgrade;
@@ -42,6 +43,11 @@ public class ModItems {
 	public static Item StaticCircuit;
 	public static Item EnergizedCircuit;
 	public static Item LumumCircuit;
+	
+	public static Item BasicBattery;
+	public static Item StaticBattery;
+	public static Item EnergizedBattery;
+	public static Item LumumBattery;
 	
 	public static Item BasicSpeedUpgrade;
 	public static Item StaticSpeedUpgrade;
@@ -68,6 +74,7 @@ public class ModItems {
 	
 	public static Item StaticWrench;
 	public static Item SolderingIron;
+	public static Item ElectricSolderingIron;
 	public static Item StaticBook;
 	public static Item CoordinateMarker;
 	
@@ -131,6 +138,8 @@ public class ModItems {
 		RegisterHelper.registerItem(StaticWrench);
 		SolderingIron = new SolderingIron("SolderingIron", 10);
 		RegisterHelper.registerItem(SolderingIron);
+		ElectricSolderingIron = new ElectricSolderingIron("ElectricSolderingIron", 100);
+		RegisterHelper.registerItem(ElectricSolderingIron);
 		CoordinateMarker = new CoordinateMarker("CoordinateMarker");
 		RegisterHelper.registerItem(CoordinateMarker);
 		
@@ -177,6 +186,15 @@ public class ModItems {
 		RegisterHelper.registerItem(EnergizedCircuit);
 		LumumCircuit = new ItemBase("LumumCircuit");
 		RegisterHelper.registerItem(LumumCircuit);
+		
+		BasicBattery = new BaseBattery("BasicPortableBattery", 100000, 1000);
+		RegisterHelper.registerItem(BasicBattery);
+		StaticBattery = new BaseBattery("StaticPortableBattery", 250000, 2500);
+		RegisterHelper.registerItem(StaticBattery);
+		EnergizedBattery = new BaseBattery("EnergizedPortableBattery", 500000, 5000);
+		RegisterHelper.registerItem(EnergizedBattery);
+		LumumBattery = new BaseBattery("LumumPortableBattery", 1000000, 10000);
+		RegisterHelper.registerItem(LumumBattery);
 		
 		CreativeSpeedUpgrade = new BaseSpeedUpgrade("CreativeSpeedUpgrade", Tier.CREATIVE);
 		RegisterHelper.registerItem(CreativeSpeedUpgrade);	

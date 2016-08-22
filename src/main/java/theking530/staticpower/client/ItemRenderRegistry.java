@@ -51,6 +51,7 @@ public class ItemRenderRegistry {
 		
 		ItemRenderRegistry.registerItem(ModItems.StaticWrench);
 		ItemRenderRegistry.registerItem(ModItems.SolderingIron);
+		ItemRenderRegistry.registerItem(ModItems.ElectricSolderingIron);
 		ItemRenderRegistry.registerItem(ModItems.CoordinateMarker);
 		ItemRenderRegistry.registerItem(ModItems.StaticBook);
 		
@@ -58,6 +59,11 @@ public class ItemRenderRegistry {
 		ItemRenderRegistry.registerItem(ModItems.StaticCircuit);
 		ItemRenderRegistry.registerItem(ModItems.EnergizedCircuit);
 		ItemRenderRegistry.registerItem(ModItems.LumumCircuit);
+		
+		ItemRenderRegistry.registerItem(ModItems.BasicBattery);
+		ItemRenderRegistry.registerItem(ModItems.StaticBattery);
+		ItemRenderRegistry.registerItem(ModItems.EnergizedBattery);
+		ItemRenderRegistry.registerItem(ModItems.LumumBattery);
 		
 		ItemRenderRegistry.registerItem(ModItems.Rubber);
 		ItemRenderRegistry.registerItem(ModItems.IOPort);

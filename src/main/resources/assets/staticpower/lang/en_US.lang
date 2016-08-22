@@ -23,6 +23,10 @@ item.BasicCircuit.name=Basic Circuit
 item.StaticCircuit.name=Static Circuit
 item.EnergizedCircuit.name=Energized Circuit
 item.LumumCircuit.name=Lumum Circuit
+item.BasicPortableBattery.name=Basic Portable Battery
+item.StaticPortableBattery.name=Static Portable Battery
+item.EnergizedPortableBattery.name=Energized Portable Battery
+item.LumumPortableBattery.name=Lumum Portable Battery
 item.BasicItemFilter.name=Basic Item Filter
 item.UpgradedItemFilter.name=Upgraded Item Filter
 item.AdvancedItemFilter.name=Advanced Item Filter
@@ -121,6 +125,7 @@ tile.LumumSolarPanel.name=Lumum Solar Panel
 tile.SolderingTable.name=Soldering Table
 tile.Quarry.name=Quarry
 tile.BasicFarmer.name=Basic Farmer
+tile.ChargingStation.name=Charging Station
 
 //Blocks
 tile.StaticLamp.name=Static Lamp
@@ -196,6 +201,7 @@ container.VacuumChest=VacuumChest
 //Tools
 item.StaticWrench.name=Static Wrench
 item.SolderingIron.name=Soldering Iron
+item.ElectricSolderingIron.name=Electric Soldering Iron
 item.StaticBook.name=Static Book
 item.CoordinateMarker.name=Coordinate Marker
 

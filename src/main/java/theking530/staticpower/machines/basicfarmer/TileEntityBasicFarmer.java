@@ -26,7 +26,6 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 			PROCESSING_TIMER++;
 		}else{
 			incrementPosition();
-			//System.out.println(CURRENT_COORD);
 			checkFarmingPlot(CURRENT_COORD);
 			PROCESSING_TIMER = 0;
 		}
