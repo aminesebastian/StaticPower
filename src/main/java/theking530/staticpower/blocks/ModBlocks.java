@@ -15,6 +15,7 @@ import theking530.staticpower.conduits.itemconduit.BlockItemConduit;
 import theking530.staticpower.conduits.staticconduit.BlockStaticConduit;
 import theking530.staticpower.machines.basicfarmer.BlockBasicFarmer;
 import theking530.staticpower.machines.batteries.BlockBattery;
+import theking530.staticpower.machines.chargingstation.BlockChargingStation;
 import theking530.staticpower.machines.cropsqueezer.BlockCropSqueezer;
 import theking530.staticpower.machines.fluidgenerator.BlockFluidGenerator;
 import theking530.staticpower.machines.fluidinfuser.BlockFluidInfuser;
@@ -51,6 +52,7 @@ public class ModBlocks {
 	public static Block CropSqueezer;	
 	public static Block PoweredGrinder;
 	public static Block PoweredFurnace;	
+	public static Block ChargingStation;	
 	public static Block BasicFarmer;	
 	public static Block BasicTank;
 	public static Block AdvancedTank;	
@@ -161,6 +163,9 @@ public class ModBlocks {
 		
 		FusionFurnace = new BlockFusionFurnace().setHardness(3.5f);
 		RegisterHelper.registerBlock(FusionFurnace);
+		
+		ChargingStation = new BlockChargingStation().setHardness(3.5f);
+		RegisterHelper.registerBlock(ChargingStation);
 		
 		Quarry = new BlockQuarry();
 		RegisterHelper.registerBlock(Quarry);

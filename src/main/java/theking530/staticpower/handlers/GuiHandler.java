@@ -14,6 +14,9 @@ import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.machines.batteries.ContainerBattery;
 import theking530.staticpower.machines.batteries.GuiBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityBattery;
+import theking530.staticpower.machines.chargingstation.ContainerChargingStation;
+import theking530.staticpower.machines.chargingstation.GuiChargingStation;
+import theking530.staticpower.machines.chargingstation.TileEntityChargingStation;
 import theking530.staticpower.machines.cropsqueezer.ContainerCropSqueezer;
 import theking530.staticpower.machines.cropsqueezer.GuiCropSqueezer;
 import theking530.staticpower.machines.cropsqueezer.TileEntityCropSqueezer;
@@ -76,6 +79,11 @@ public class GuiHandler implements IGuiHandler {
 			case GuiIDRegistry.guiIDCropSqueezer:
 				if (entity instanceof TileEntityCropSqueezer) {	
 					return new ContainerCropSqueezer(player.inventory, (TileEntityCropSqueezer) entity);
+				}
+				return null;
+			case GuiIDRegistry.guiIDChargingStation:
+				if (entity instanceof TileEntityChargingStation) {	
+					return new ContainerChargingStation(player.inventory, (TileEntityChargingStation) entity);
 				}
 				return null;
 			case GuiIDRegistry.guiIDFusionFurnace:
@@ -176,6 +184,11 @@ public class GuiHandler implements IGuiHandler {
 			case GuiIDRegistry.guiIDPoweredGrinder:
 				if (entity instanceof TileEntityPoweredGrinder) {	
 					return new GuiPoweredGrinder(player.inventory, (TileEntityPoweredGrinder) entity);					
+					}
+				return null;
+			case GuiIDRegistry.guiIDChargingStation:
+				if (entity instanceof TileEntityChargingStation) {	
+					return new GuiChargingStation(player.inventory, (TileEntityChargingStation) entity);					
 					}
 				return null;
 			case GuiIDRegistry.guiIDPoweredFurnace:

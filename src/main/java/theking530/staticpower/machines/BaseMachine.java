@@ -1,6 +1,7 @@
 package theking530.staticpower.machines;
 
 import cofh.api.energy.EnergyStorage;
+import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
@@ -40,7 +41,8 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	
 	public int[] OUTPUT_SLOTS = {1};
 	public int[] UPGRADE_SLOTS;
-
+	public int BATTERY_SLOT = -1;
+	
 	public BaseMachine() {
 	}
 	
@@ -66,6 +68,9 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		STORAGE.setMaxTransfer(INITIAL_ENERGY_PER_TICK);
 		STORAGE.setCapacity(InitialEnergyCapacity);		
 		UPGRADE_SLOTS = upgradeSlots;
+	}
+	public void setBatterySlot(int slot) {
+		BATTERY_SLOT = slot;
 	}
 	public float getEnergyPercent() {
 		float amount = STORAGE.getEnergyStored();
@@ -123,6 +128,18 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 			markForUpdate();
 			markDirty();
 			UPDATE_TIMER = 0;
+		}
+		if(BATTERY_SLOT != -1) {
+			if(slots[BATTERY_SLOT] != null && slots[BATTERY_SLOT].getItem() instanceof IEnergyContainerItem && STORAGE.getEnergyStored() < STORAGE.getMaxEnergyStored()) {
+				IEnergyContainerItem batteryItem = (IEnergyContainerItem) slots[BATTERY_SLOT].getItem();
+				if(batteryItem.getEnergyStored(slots[BATTERY_SLOT]) > 0) {
+					if(STORAGE.getMaxEnergyStored() - STORAGE.getEnergyStored() < STORAGE.getMaxReceive()) {
+						STORAGE.receiveEnergy(batteryItem.extractEnergy(slots[BATTERY_SLOT], STORAGE.getMaxEnergyStored() - STORAGE.getEnergyStored(), false), false);
+					}else{
+						STORAGE.receiveEnergy(batteryItem.extractEnergy(slots[BATTERY_SLOT], STORAGE.getMaxReceive(), false), false);		
+					}
+				}
+			}
 		}
 	}				
 	public void process(){

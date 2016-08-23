@@ -33,6 +33,9 @@ public class StaticEnergyStorage extends EnergyStorage {
 		return (float)energy/(float)capacity;
 	}
 	public boolean hasEnoughPowerToExtract() {
-		return capacity >= maxExtract ? true : false;
+		if(energy <= maxExtract) {
+			return false;
+		}
+		return true;
 	}
 }

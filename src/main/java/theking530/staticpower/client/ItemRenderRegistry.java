@@ -115,6 +115,7 @@ public class ItemRenderRegistry {
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.PoweredGrinder));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.SolderingTable));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.Quarry));
+		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.ChargingStation));
 		
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.SilverOre));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.CopperOre));

@@ -121,6 +121,7 @@ tile.EnergizedSolarPanel.name=Energized Solar Panel
 tile.LumumSolarPanel.name=Lumum Solar Panel
 tile.SolderingTable.name=Soldering Table
 tile.Quarry.name=Quarry
+tile.ChargingStation.name=Charging Station
 
 //Blocks
 tile.StaticLamp.name=Static Lamp

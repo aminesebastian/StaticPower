@@ -8,12 +8,11 @@ import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.assists.Tier;
-import theking530.staticpower.blocks.ModBlocks;
-import theking530.staticpower.client.model.Models;
 import theking530.staticpower.client.render.conduit.TileEntityRenderFluidConduit;
 import theking530.staticpower.client.render.conduit.TileEntityRenderItemConduit;
 import theking530.staticpower.client.render.conduit.TileEntityRenderStaticConduit;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderBattery;
+import theking530.staticpower.client.render.tileentitys.TileEntityRenderChargingStation;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderChest;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderCropSqueezer;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderFluidGenerator;
@@ -30,6 +29,7 @@ import theking530.staticpower.conduits.staticconduit.TileEntityStaticConduit;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityEnergizedBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityLumumBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityStaticBattery;
+import theking530.staticpower.machines.chargingstation.TileEntityChargingStation;
 import theking530.staticpower.machines.cropsqueezer.TileEntityCropSqueezer;
 import theking530.staticpower.machines.fluidgenerator.TileEntityFluidGenerator;
 import theking530.staticpower.machines.fluidinfuser.TileEntityFluidInfuser;
@@ -75,6 +75,8 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityStaticBattery.class, new TileEntityRenderBattery(Tier.STATIC));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEnergizedBattery.class, new TileEntityRenderBattery(Tier.ENERGIZED));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLumumBattery.class, new TileEntityRenderBattery(Tier.LUMUM));
+		//Charging Station
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChargingStation.class, new TileEntityRenderChargingStation());	
 		
 		//Chests		
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityStaticChest.class, new TileEntityRenderChest(Tier.STATIC));	

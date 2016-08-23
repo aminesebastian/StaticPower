@@ -92,6 +92,10 @@ public class ShapedRecipes {
 			GameRegistry.addRecipe(new ItemStack(ModBlocks.FusionFurnace), new Object[]{"FIF", "RBR", "CCC", 
 			'F', ModBlocks.PoweredFurnace, 'R', Items.REDSTONE, 'B', ModBlocks.MachineBlock, 'C', ModItems.BasicCircuit, 'I', ModItems.IOPort});
 			
+			//Charging Station --------------------------------------------------------------------------------------------------
+			GameRegistry.addRecipe(new ItemStack(ModBlocks.ChargingStation), new Object[]{" H ", "RMR", "CBC", 
+			'C', ModItems.BasicCircuit, 'H', Blocks.CHEST, 'R', Items.REDSTONE, 'M', ModBlocks.MachineBlock, 'B', ModItems.BasicBattery});
+			
 			//Fluid Generator  --------------------------------------------------------------------------------------------------
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.FluidGenerator), new Object[]{" U ", "CBC", "VIV", 
 			'V', "ingotCopper", 'C', ModItems.BasicCircuit, 'I', Items.GOLD_INGOT, 'B', ModBlocks.MachineBlock, 'U', Items.BUCKET, 'G', Blocks.GLASS}));
