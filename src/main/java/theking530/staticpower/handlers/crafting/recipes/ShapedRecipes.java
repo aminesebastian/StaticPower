@@ -52,6 +52,12 @@ public class ShapedRecipes {
 			GameRegistry.addRecipe(new ItemStack(ModItems.LumumIngot), new Object[]{"XXX","XXX","XXX",
 			'X', ModItems.LumumNugget});
 			
+			//Energy Crystals ---------------------------------------------------------------------------------------------------
+			GameRegistry.addRecipe(new ItemStack(ModItems.EnergizedEnergyCrystal), new Object[]{" B ","BDB"," B ",
+			'B', ModItems.EnergizedInfusionBlend, 'D', Items.DIAMOND});
+			GameRegistry.addRecipe(new ItemStack(ModItems.LumumEnergyCrystal), new Object[]{" B ","BDB"," B ",
+			'B', ModItems.LumumInfusionBlend, 'D', Items.DIAMOND});
+			
 			//Machine Block --------------------------------------------------------------------------------------------------
 			GameRegistry.addRecipe(new ShapedOreRecipe(ModBlocks.MachineBlock, new Object[]{"TGT", "CIC", "TGT", 
 			'G', Blocks.GLASS, 'I', ModItems.IOPort, 'C', ModItems.BasicCircuit, 'T', "ingotTin"}));
@@ -100,9 +106,13 @@ public class ShapedRecipes {
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.FluidGenerator), new Object[]{" U ", "CBC", "VIV", 
 			'V', "ingotCopper", 'C', ModItems.BasicCircuit, 'I', Items.GOLD_INGOT, 'B', ModBlocks.MachineBlock, 'U', Items.BUCKET, 'G', Blocks.GLASS}));
 			
-			//Static Battery --------------------------------------------------------------------------------------------------
-			GameRegistry.addRecipe(new ItemStack(ModBlocks.StaticBattery), new Object[]{"SSS", "RBR", "SSS", 
-			'S', ModBlocks.StaticBlock, 'R', Blocks.REDSTONE_BLOCK, 'B', ModBlocks.MachineBlock});			
+			//Batteries --------------------------------------------------------------------------------------------------
+			GameRegistry.addRecipe(new ItemStack(ModBlocks.StaticBattery), new Object[]{"SSS", "BMB", "BBB", 
+			'S', ModItems.StaticIngot, 'B', ModItems.StaticBattery, 'M', ModBlocks.MachineBlock});			
+			GameRegistry.addRecipe(new ItemStack(ModBlocks.EnergizedBattery), new Object[]{"SSS", "BMB", "BBB", 
+			'S', ModItems.EnergizedIngot, 'B', ModItems.EnergizedBattery, 'M', ModBlocks.MachineBlock});		
+			GameRegistry.addRecipe(new ItemStack(ModBlocks.LumumBattery), new Object[]{"SSS", "BMB", "BBB",  
+			'S', ModItems.LumumIngot, 'B', ModItems.LumumBattery, 'M', ModBlocks.MachineBlock});		
 			
 			//Static Solar Panel --------------------------------------------------------------------------------------------------
 			GameRegistry.addRecipe(new ItemStack(ModBlocks.StaticSolarPanel), new Object[]{"   ", "EEE", "CIC", 

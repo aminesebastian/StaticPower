@@ -47,7 +47,6 @@ public class InfuserRecipes {
 		RegisterHelper.registerInfuserRecipe(new ItemStack(ModItems.EnergizedCrop), new ItemStack(ModItems.LumumCrop), new FluidStack(ModFluids.EnergizedFluid, 20000));
 		RegisterHelper.registerInfuserRecipe(new ItemStack(Item.getItemFromBlock(Blocks.DIRT)), new ItemStack(ModBlocks.AdvancedEarth), new FluidStack(ModFluids.EnergizedFluid, 250));
 		RegisterHelper.registerInfuserRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.StaticSolarPanel)), new ItemStack(Item.getItemFromBlock(ModBlocks.EnergizedSolarPanel)), new FluidStack(ModFluids.EnergizedFluid, 750));
-		RegisterHelper.registerInfuserRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.StaticBattery)), new ItemStack(ModBlocks.EnergizedBattery), new FluidStack(ModFluids.EnergizedFluid, 10000));
 		RegisterHelper.registerInfuserRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.StaticChest)), new ItemStack(Item.getItemFromBlock(ModBlocks.EnergizedChest)), new FluidStack(ModFluids.EnergizedFluid, 2000));
 		
 		//LumumFluid
@@ -58,7 +57,6 @@ public class InfuserRecipes {
 		RegisterHelper.registerInfuserRecipe(new ItemStack(ModItems.EnergizedDust), new ItemStack(ModItems.LumumDust), new FluidStack(ModFluids.LumumFluid, 100));
 		RegisterHelper.registerInfuserRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.EnergizedSolarPanel)), new ItemStack(Item.getItemFromBlock(ModBlocks.LumumSolarPanel)), new FluidStack(ModFluids.LumumFluid, 750));
 		RegisterHelper.registerInfuserRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.EnergizedBlock)), new ItemStack(Item.getItemFromBlock(ModBlocks.LumumBlock)), new FluidStack(ModFluids.LumumFluid, 2250));
-		RegisterHelper.registerInfuserRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.EnergizedBattery)), new ItemStack(ModBlocks.LumumBattery), new FluidStack(ModFluids.LumumFluid, 10000));
 		RegisterHelper.registerInfuserRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.EnergizedChest)), new ItemStack(Item.getItemFromBlock(ModBlocks.LumumChest)), new FluidStack(ModFluids.LumumFluid, 2000));
 		RegisterHelper.registerInfuserRecipe(new ItemStack(Items.BUCKET), new ItemStack(ModFluids.LumumBucket), new FluidStack(ModFluids.LumumFluid, 1000));
 		

@@ -152,10 +152,10 @@ public class ModBlocks {
 		StaticBattery = new BlockBattery("StaticBattery", Tier.STATIC).setHardness(3.5f);
 		RegisterHelper.registerBlock(StaticBattery);
 		
-		LumumBattery = new BlockBattery("LumumBattery", Tier.ENERGIZED).setHardness(3.5f);
+		LumumBattery = new BlockBattery("LumumBattery", Tier.LUMUM).setHardness(3.5f);
 		RegisterHelper.registerBlock(LumumBattery);
 				
-		EnergizedBattery = new BlockBattery("EnergizedBattery", Tier.LUMUM).setHardness(3.5f);
+		EnergizedBattery = new BlockBattery("EnergizedBattery", Tier.ENERGIZED).setHardness(3.5f);
 		RegisterHelper.registerBlock(EnergizedBattery);
 		
 		FluidInfuser = new BlockFluidInfuser().setUnlocalizedName("FluidInfuser");

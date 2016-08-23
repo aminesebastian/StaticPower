@@ -64,6 +64,14 @@ public class ModItems {
 	public static Item EnergizedPowerUpgrade;
 	public static Item LumumPowerUpgrade;
 	
+	public static Item StaticEnergyCrystal;
+	public static Item EnergizedEnergyCrystal;
+	public static Item LumumEnergyCrystal;
+	
+	public static Item StaticInfusionBlend;
+	public static Item EnergizedInfusionBlend;
+	public static Item LumumInfusionBlend;
+	
 	public static Item StaticQuarryingUpgrade;
 	public static Item EnergizedQuarryingUpgrade;
 	public static Item LumumQuarryingUpgrade;
@@ -175,9 +183,6 @@ public class ModItems {
 		EnergizedBoots = new EnergizedArmor("EnergizedBoots", EnergizedMaterial, "EnergizedBoots", EntityEquipmentSlot.FEET).setUnlocalizedName("EnergizedBoots");
 		RegisterHelper.registerItem(EnergizedBoots);
 		
-		//EnergizedBelt = new EnergizedBelt(baubles.api.BaubleType.BELT).setUnlocalizedName("EnergizedBelt");
-		//RegisterHelper.registerItem(EnergizedBelt);		
-		
 		BasicCircuit = new ItemBase("BasicCircuit");
 		RegisterHelper.registerItem(BasicCircuit);
 		StaticCircuit = new ItemBase("StaticCircuit");
@@ -187,13 +192,23 @@ public class ModItems {
 		LumumCircuit = new ItemBase("LumumCircuit");
 		RegisterHelper.registerItem(LumumCircuit);
 		
-		BasicBattery = new BaseBattery("BasicPortableBattery", 100000, 1000);
+		EnergizedEnergyCrystal = new ItemBase("EnergizedEnergyCrystal");
+		RegisterHelper.registerItem(EnergizedEnergyCrystal);
+		LumumEnergyCrystal = new ItemBase("LumumEnergyCrystal");
+		RegisterHelper.registerItem(LumumEnergyCrystal);
+		
+		EnergizedInfusionBlend = new ItemBase("EnergizedInfusionBlend");
+		RegisterHelper.registerItem(EnergizedInfusionBlend);
+		LumumInfusionBlend = new ItemBase("LumumInfusionBlend");
+		RegisterHelper.registerItem(LumumInfusionBlend);
+		
+		BasicBattery = new BaseBattery("BasicPortableBattery", 50000, 1000);
 		RegisterHelper.registerItem(BasicBattery);
-		StaticBattery = new BaseBattery("StaticPortableBattery", 250000, 2500);
+		StaticBattery = new BaseBattery("StaticPortableBattery", 125000, 2500);
 		RegisterHelper.registerItem(StaticBattery);
-		EnergizedBattery = new BaseBattery("EnergizedPortableBattery", 500000, 5000);
+		EnergizedBattery = new BaseBattery("EnergizedPortableBattery", 625000, 5000);
 		RegisterHelper.registerItem(EnergizedBattery);
-		LumumBattery = new BaseBattery("LumumPortableBattery", 1000000, 10000);
+		LumumBattery = new BaseBattery("LumumPortableBattery", 2500000, 10000);
 		RegisterHelper.registerItem(LumumBattery);
 		
 		CreativeSpeedUpgrade = new BaseSpeedUpgrade("CreativeSpeedUpgrade", Tier.CREATIVE);

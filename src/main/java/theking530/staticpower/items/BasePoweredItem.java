@@ -23,17 +23,28 @@ public class BasePoweredItem extends ItemEnergyContainer{
 	}
 	@Override
     public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn){
-		setDamage(stack, 0);
+		setEnergy(stack, 0);
     }
+	public void setEnergy(ItemStack container, int energy) {
+		if (!container.hasTagCompound()) {
+			container.setTagCompound(new NBTTagCompound());
+		}
+		container.getTagCompound().setInteger("Energy", energy);
+		setDamage(container, (capacity - energy)/DAMAGE_DIVISOR);
+	}
 	@Override
 	public int receiveEnergy(ItemStack container, int maxReceive, boolean simulate) {
-		setDamage(container, (capacity - 1 - getEnergyStored(container))/DAMAGE_DIVISOR);
+		setDamage(container, (capacity - getEnergyStored(container))/DAMAGE_DIVISOR);
 		return super.receiveEnergy(container, maxReceive, simulate);
 	}
 	@Override
 	public int extractEnergy(ItemStack container, int maxExtract, boolean simulate) {
-		setDamage(container, (capacity - 1 - getEnergyStored(container))/DAMAGE_DIVISOR);
+		setDamage(container, (capacity - getEnergyStored(container))/DAMAGE_DIVISOR);
 		return super.extractEnergy(container, maxExtract, simulate);
 	}
+	@Override
+    public boolean showDurabilityBar(ItemStack stack) {
+        return true;
+    }
 
 }

@@ -16,9 +16,15 @@ public class ShaplessRecipes {
 	@SuppressWarnings("all")
 	private static void registerShapelessRecipes() {
 		
-		//Inert Infusion Blend --------------------------------------------------------------------------------------------------
+		//Static Book --------------------------------------------------------------------------------------------------
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.StaticBook), new Object[]{
 				new ItemStack(ModItems.StaticSeeds), new ItemStack(Items.BOOK)});
+		
+		//Infusion Blends
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.EnergizedInfusionBlend), new Object[]{
+				new ItemStack(ModItems.InertInfusionBlend), new ItemStack(ModItems.EnergizedDust)});
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.LumumInfusionBlend), new Object[]{
+				new ItemStack(ModItems.InertInfusionBlend), new ItemStack(ModItems.LumumDust)});
 		
 		//Static Ingot --------------------------------------------------------------------------------------------------
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.StaticIngot, 9), new Object[]{
