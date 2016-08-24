@@ -18,7 +18,7 @@ import theking530.staticpower.assists.Reference;
 import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.machines.BaseMachine;
-import theking530.staticpower.machines.BaseTileEntity;
+import theking530.staticpower.tileentity.BaseTileEntity;
 import theking530.staticpower.utils.EnumTextFormatting;
 import theking530.staticpower.utils.StaticVertexBuffer;
 

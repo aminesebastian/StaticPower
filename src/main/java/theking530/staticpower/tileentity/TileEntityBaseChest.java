@@ -14,7 +14,6 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
-import theking530.staticpower.machines.BaseTileEntity;
 import theking530.staticpower.tileentity.staticchest.ContainerStaticChest;
 
 public class TileEntityBaseChest extends BaseTileEntity{

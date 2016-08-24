@@ -38,6 +38,23 @@ public class ItemRenderRegistry {
 		ItemRenderRegistry.registerItem(ModItems.EnergizedNugget);
 		ItemRenderRegistry.registerItem(ModItems.LumumNugget);
 		
+		ItemRenderRegistry.registerItem(ModItems.EnergizedInfusionBlend);
+		ItemRenderRegistry.registerItem(ModItems.LumumInfusionBlend);	
+		ItemRenderRegistry.registerItem(ModItems.EnergizedEnergyCrystal);
+		ItemRenderRegistry.registerItem(ModItems.LumumEnergyCrystal);
+		ItemRenderRegistry.registerItem(ModItems.CopperCoil);
+		ItemRenderRegistry.registerItem(ModItems.SilverCoil);
+		ItemRenderRegistry.registerItem(ModItems.GoldCoil);
+		ItemRenderRegistry.registerItem(ModItems.CopperWire);
+		ItemRenderRegistry.registerItem(ModItems.SilverWire);
+		ItemRenderRegistry.registerItem(ModItems.GoldWire);
+		ItemRenderRegistry.registerItem(ModItems.IronPlate);
+		ItemRenderRegistry.registerItem(ModItems.CopperPlate);
+		ItemRenderRegistry.registerItem(ModItems.TinPlate);
+		ItemRenderRegistry.registerItem(ModItems.SilverPlate);
+		ItemRenderRegistry.registerItem(ModItems.GoldPlate);
+		ItemRenderRegistry.registerItem(ModItems.LeadPlate);
+		
 		ItemRenderRegistry.registerItem(ModItems.SilverIngot);
 		ItemRenderRegistry.registerItem(ModItems.CopperIngot);
 		ItemRenderRegistry.registerItem(ModItems.TinIngot);
@@ -53,6 +70,8 @@ public class ItemRenderRegistry {
 		ItemRenderRegistry.registerItem(ModItems.SolderingIron);
 		ItemRenderRegistry.registerItem(ModItems.CoordinateMarker);
 		ItemRenderRegistry.registerItem(ModItems.StaticBook);
+		ItemRenderRegistry.registerItem(ModItems.WireCutters);
+		ItemRenderRegistry.registerItem(ModItems.MetalHammer);
 		
 		ItemRenderRegistry.registerItem(ModItems.BasicCircuit);
 		ItemRenderRegistry.registerItem(ModItems.StaticCircuit);
@@ -115,7 +134,9 @@ public class ItemRenderRegistry {
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.PoweredGrinder));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.SolderingTable));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.Quarry));
+		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.BasicFarmer));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.ChargingStation));
+		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.AdvancedEarth));
 		
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.SilverOre));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.CopperOre));

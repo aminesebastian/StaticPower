@@ -21,7 +21,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import theking530.staticpower.assists.Reference;
-import theking530.staticpower.machines.BaseTileEntity;
+import theking530.staticpower.tileentity.BaseTileEntity;
 import theking530.staticpower.utils.SideModeList.Mode;
 import theking530.staticpower.utils.SidePicker;
 import theking530.staticpower.utils.SidePicker.HitCoord;

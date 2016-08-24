@@ -26,6 +26,28 @@ public class ShaplessRecipes {
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.LumumInfusionBlend), new Object[]{
 				new ItemStack(ModItems.InertInfusionBlend), new ItemStack(ModItems.LumumDust)});
 		
+		//Coils ---------------------------------------------------------------------------------------------------------
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.CopperWire, 8), new Object[]{
+				new ItemStack(ModItems.WireCutters, 1, OreDictionary.WILDCARD_VALUE), "ingotCopper"}));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.SilverWire, 8), new Object[]{
+				new ItemStack(ModItems.WireCutters, 1, OreDictionary.WILDCARD_VALUE), "ingotSilver"}));
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.GoldWire, 8), new Object[]{
+				new ItemStack(ModItems.WireCutters, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(Items.GOLD_INGOT)});
+		
+		//Plates ---------------------------------------------------------------------------------------------------------
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.IronPlate, 1), new Object[]{
+				new ItemStack(ModItems.MetalHammer, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(Items.IRON_INGOT)});
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.GoldPlate, 1), new Object[]{
+				new ItemStack(ModItems.MetalHammer, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(Items.GOLD_INGOT)});
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.CopperPlate, 1), new Object[]{
+				new ItemStack(ModItems.MetalHammer, 1, OreDictionary.WILDCARD_VALUE), "ingotCopper"}));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.TinPlate, 1), new Object[]{
+				new ItemStack(ModItems.MetalHammer, 1, OreDictionary.WILDCARD_VALUE), "ingotTin"}));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.SilverPlate, 1), new Object[]{
+				new ItemStack(ModItems.MetalHammer, 1, OreDictionary.WILDCARD_VALUE), "ingotSilver"}));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.LeadPlate, 1), new Object[]{
+				new ItemStack(ModItems.MetalHammer, 1, OreDictionary.WILDCARD_VALUE), "ingotLead"}));
+
 		//Static Ingot --------------------------------------------------------------------------------------------------
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.StaticIngot, 9), new Object[]{
 			new ItemStack(ModBlocks.StaticBlock)});

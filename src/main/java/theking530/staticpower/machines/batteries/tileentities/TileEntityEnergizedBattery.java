@@ -10,7 +10,7 @@ public class TileEntityEnergizedBattery extends TileEntityBattery{
 	
 	public TileEntityEnergizedBattery() {
 		TIER = Tier.ENERGIZED;
-		initializeBasicMachine(2, 2500000, 1000, 0, 0, new int[]{}, new int[]{}, new int[]{});
+		initializeBasicMachine(2, 0, 2500000, 1000, 0, 0, new int[]{}, new int[]{}, new int[]{});
 		MAX_INPUT = 1000;
 		MAX_OUTPUT = 1000;
 		CUSTOM_NAME = "EnergizedBattery";

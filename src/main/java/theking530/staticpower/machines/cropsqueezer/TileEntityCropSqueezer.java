@@ -19,7 +19,7 @@ public class TileEntityCropSqueezer extends BaseMachineWithTank {
 	private String customName;
 	
 	public TileEntityCropSqueezer() {
-		initializeBaseMachineWithTank(2, 100000, 80, 50, 6, new int[]{0}, new int[]{1}, new int[]{2,3,4}, 5000);
+		initializeBaseMachineWithTank(2, 100, 100000, 80, 50, 6, new int[]{0}, new int[]{1}, new int[]{2,3,4}, 5000);
 	}
 	@Override
 	public String getName() {

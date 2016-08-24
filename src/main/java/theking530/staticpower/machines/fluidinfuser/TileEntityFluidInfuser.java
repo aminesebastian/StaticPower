@@ -12,7 +12,7 @@ public class TileEntityFluidInfuser extends BaseMachineWithTank {
 	private static final int[] slots_side = new int[] {1};		
 	
 	public TileEntityFluidInfuser() {
-		initializeBaseMachineWithTank(2, 50000, 80, 100, 6, new int[]{0}, new int[]{1}, new int[]{2,3,4}, 10000);
+		initializeBaseMachineWithTank(2, 100, 50000, 80, 100, 6, new int[]{0}, new int[]{1}, new int[]{2,3,4}, 10000);
 	}
 					
     @Override  

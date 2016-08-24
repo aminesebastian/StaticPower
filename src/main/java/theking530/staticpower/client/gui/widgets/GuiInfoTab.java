@@ -17,7 +17,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import theking530.staticpower.assists.Reference;
-import theking530.staticpower.machines.BaseTileEntity;
+import theking530.staticpower.tileentity.BaseTileEntity;
 import theking530.staticpower.utils.EnumTextFormatting;
 import theking530.staticpower.utils.SidePicker.Side;
 

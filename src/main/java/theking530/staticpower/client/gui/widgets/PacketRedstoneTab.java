@@ -6,7 +6,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import theking530.staticpower.machines.BaseTileEntity;
+import theking530.staticpower.tileentity.BaseTileEntity;
 
   
 public class PacketRedstoneTab implements IMessage{

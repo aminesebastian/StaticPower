@@ -24,8 +24,10 @@ import theking530.staticpower.items.materials.BaseIngot;
 import theking530.staticpower.items.materials.BaseNugget;
 import theking530.staticpower.items.tools.CoordinateMarker;
 import theking530.staticpower.items.tools.ElectricSolderingIron;
+import theking530.staticpower.items.tools.MetalHammer;
 import theking530.staticpower.items.tools.SolderingIron;
 import theking530.staticpower.items.tools.StaticWrench;
+import theking530.staticpower.items.tools.WireCutters;
 import theking530.staticpower.items.upgrades.BasePowerUpgrade;
 import theking530.staticpower.items.upgrades.BaseQuarryingUpgrade;
 import theking530.staticpower.items.upgrades.BaseSpeedUpgrade;
@@ -38,6 +40,18 @@ public class ModItems {
 	
 	public static Item Rubber;
 	public static Item IOPort;
+	public static Item CopperWire;
+	public static Item SilverWire;
+	public static Item GoldWire;
+	public static Item CopperCoil;
+	public static Item SilverCoil;
+	public static Item GoldCoil;
+	public static Item IronPlate;
+	public static Item CopperPlate;
+	public static Item TinPlate;
+	public static Item SilverPlate;
+	public static Item GoldPlate;
+	public static Item LeadPlate;
 	
 	public static Item BasicCircuit;
 	public static Item StaticCircuit;
@@ -85,6 +99,8 @@ public class ModItems {
 	public static Item ElectricSolderingIron;
 	public static Item StaticBook;
 	public static Item CoordinateMarker;
+	public static Item WireCutters;
+	public static Item MetalHammer;
 	
 	public static Item BasicItemFilter;
 	public static Item UpgradedItemFilter;
@@ -150,6 +166,10 @@ public class ModItems {
 		RegisterHelper.registerItem(ElectricSolderingIron);
 		CoordinateMarker = new CoordinateMarker("CoordinateMarker");
 		RegisterHelper.registerItem(CoordinateMarker);
+		WireCutters = new WireCutters();
+		RegisterHelper.registerItem(WireCutters);
+		MetalHammer = new MetalHammer();
+		RegisterHelper.registerItem(MetalHammer);
 		
 		BasicItemFilter = new ItemFilter("BasicItemFilter", FilterTier.BASIC);
 		RegisterHelper.registerItem(BasicItemFilter);
@@ -191,6 +211,31 @@ public class ModItems {
 		RegisterHelper.registerItem(EnergizedCircuit);
 		LumumCircuit = new ItemBase("LumumCircuit");
 		RegisterHelper.registerItem(LumumCircuit);
+		
+		CopperWire = new ItemBase("CopperWire");
+		RegisterHelper.registerItem(CopperWire);
+		SilverWire = new ItemBase("SilverWire");
+		RegisterHelper.registerItem(SilverWire);
+		GoldWire = new ItemBase("GoldWire");
+		RegisterHelper.registerItem(GoldWire);
+		CopperCoil = new ItemBase("CopperCoil");
+		RegisterHelper.registerItem(CopperCoil);
+		SilverCoil = new ItemBase("SilverCoil");
+		RegisterHelper.registerItem(SilverCoil);
+		GoldCoil = new ItemBase("GoldCoil");
+		RegisterHelper.registerItem(GoldCoil);
+		IronPlate = new ItemBase("IronPlate");
+		RegisterHelper.registerItem(IronPlate);
+		CopperPlate = new ItemBase("CopperPlate");
+		RegisterHelper.registerItem(CopperPlate);
+		TinPlate = new ItemBase("TinPlate");
+		RegisterHelper.registerItem(TinPlate);
+		SilverPlate = new ItemBase("SilverPlate");
+		RegisterHelper.registerItem(SilverPlate);
+		GoldPlate = new ItemBase("GoldPlate");
+		RegisterHelper.registerItem(GoldPlate);
+		LeadPlate = new ItemBase("LeadPlate");
+		RegisterHelper.registerItem(LeadPlate);
 		
 		EnergizedEnergyCrystal = new ItemBase("EnergizedEnergyCrystal");
 		RegisterHelper.registerItem(EnergizedEnergyCrystal);

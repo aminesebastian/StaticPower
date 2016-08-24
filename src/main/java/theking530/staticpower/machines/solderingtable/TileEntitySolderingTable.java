@@ -6,7 +6,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import theking530.staticpower.items.tools.ISolderingIron;
-import theking530.staticpower.machines.BaseTileEntity;
+import theking530.staticpower.tileentity.BaseTileEntity;
 
 public class TileEntitySolderingTable extends BaseTileEntity {
 		

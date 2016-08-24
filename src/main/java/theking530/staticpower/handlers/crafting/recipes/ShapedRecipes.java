@@ -18,11 +18,15 @@ public class ShapedRecipes {
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.StaticWrench), new Object[]{" IC"," SI","S  ",
 			'S', "ingotSilver", 'I', Items.IRON_INGOT, 'C', ModItems.StaticCrop}));
 			
-			//Static Wrench --------------------------------------------------------------------------------------------------
+			//Soldering Iron --------------------------------------------------------------------------------------------------
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.SolderingIron), new Object[]{"I  "," IL"," LR",
 			'R', Items.REDSTONE, 'I', Items.IRON_INGOT, 'L', new ItemStack(Items.DYE, 4, 4)}));		
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.SolderingIron), new Object[]{"  I","LI ","RL ",
 			'R', Items.REDSTONE, 'I', Items.IRON_INGOT, 'L', new ItemStack(Items.DYE, 4, 4)}));			
+			
+			//Metal Hammer 
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.MetalHammer), new Object[]{"III","ISI"," S ",
+			'S', Items.STICK, 'I', Items.IRON_INGOT}));		
 			
 			//Fluid Conduit
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.FluidConduit), 8), new Object[]{" S ","SGS"," S ",
@@ -52,6 +56,14 @@ public class ShapedRecipes {
 			GameRegistry.addRecipe(new ItemStack(ModItems.LumumIngot), new Object[]{"XXX","XXX","XXX",
 			'X', ModItems.LumumNugget});
 			
+			//Coils ------------------------------------------------------------------------------------------------------------
+			GameRegistry.addRecipe(new ItemStack(ModItems.CopperCoil), new Object[]{"XXX","XSX","XXX",
+			'X', ModItems.CopperWire, 'S', Items.STICK});
+			GameRegistry.addRecipe(new ItemStack(ModItems.SilverCoil), new Object[]{"XXX","XSX","XXX",
+			'X', ModItems.SilverWire, 'S', Items.STICK});
+			GameRegistry.addRecipe(new ItemStack(ModItems.GoldCoil), new Object[]{"XXX","XSX","XXX",
+			'X', ModItems.GoldWire, 'S', Items.STICK});
+			
 			//Energy Crystals ---------------------------------------------------------------------------------------------------
 			GameRegistry.addRecipe(new ItemStack(ModItems.EnergizedEnergyCrystal), new Object[]{" B ","BDB"," B ",
 			'B', ModItems.EnergizedInfusionBlend, 'D', Items.DIAMOND});
@@ -59,8 +71,8 @@ public class ShapedRecipes {
 			'B', ModItems.LumumInfusionBlend, 'D', Items.DIAMOND});
 			
 			//Machine Block --------------------------------------------------------------------------------------------------
-			GameRegistry.addRecipe(new ShapedOreRecipe(ModBlocks.MachineBlock, new Object[]{"TGT", "CIC", "TGT", 
-			'G', Blocks.GLASS, 'I', ModItems.IOPort, 'C', ModItems.BasicCircuit, 'T', "ingotTin"}));
+			GameRegistry.addRecipe(new ItemStack(ModBlocks.MachineBlock), new Object[]{"TGT", "GCG", "TGT", 
+			'G', Blocks.GLASS, 'C', ModItems.BasicCircuit, 'T', ModItems.TinPlate});
 			
 			//Obsidian Glass --------------------------------------------------------------------------------------------------
 			GameRegistry.addRecipe(new ItemStack(ModBlocks.ObsidianGlass, 4), new Object[]{"O O", " G ", "O O", 
@@ -78,9 +90,13 @@ public class ShapedRecipes {
 			GameRegistry.addRecipe(new ItemStack(ModBlocks.PoweredGrinder), new Object[]{"FFF", "RBR", "III", 
 			'I', Items.IRON_INGOT, 'R', Items.REDSTONE, 'B', ModBlocks.MachineBlock, 'F', Items.FLINT});
 			
+			//Advanced Earth --------------------------------------------------------------------------------------------------
+			GameRegistry.addRecipe(new ItemStack(ModBlocks.AdvancedEarth), new Object[]{"GGG","GDG","GGG",
+			'G', ModItems.GoldPlate, 'D', Blocks.DIRT});
+			
 			//Powered Furnace --------------------------------------------------------------------------------------------------
-			GameRegistry.addRecipe(new ItemStack(ModBlocks.PoweredFurnace), new Object[]{"UUU", "RBR", "III", 
-			'I', Items.IRON_INGOT, 'R', Items.REDSTONE, 'B', ModBlocks.MachineBlock, 'U', Items.BUCKET});
+			GameRegistry.addRecipe(new ItemStack(ModBlocks.PoweredFurnace), new Object[]{"IUI", "RBR", "CCC", 
+			'I', Items.IRON_INGOT, 'R', Items.REDSTONE, 'B', ModBlocks.MachineBlock, 'U', Items.BUCKET, 'C', ModItems.CopperIngot});
 			
 			//Quarry --------------------------------------------------------------------------------------------------
 			GameRegistry.addRecipe(new ItemStack(ModBlocks.Quarry), new Object[]{"PHP", "EBE", "ELE", 
@@ -91,8 +107,8 @@ public class ShapedRecipes {
 			'I', ModItems.IOPort, 'R', Items.REDSTONE, 'B', ModBlocks.MachineBlock, 'U', Items.BUCKET, 'P', Blocks.PISTON});
 			
 			//Crop Squeezer --------------------------------------------------------------------------------------------------
-			GameRegistry.addRecipe(new ItemStack(ModBlocks.CropSqueezer), new Object[]{"FUF", "RBR", "III", 
-			'I', Items.IRON_INGOT, 'R', Items.REDSTONE, 'B', ModBlocks.MachineBlock, 'U', Items.BUCKET, 'F', Items.FLINT});
+			GameRegistry.addRecipe(new ItemStack(ModBlocks.CropSqueezer), new Object[]{"FPF", "RBR", "IUI", 
+			'I', Items.IRON_INGOT, 'R', Items.REDSTONE, 'P', Blocks.PISTON, 'B', ModBlocks.MachineBlock, 'U', Items.BUCKET, 'F', Items.FLINT});
 			
 			//Fusion Furnace --------------------------------------------------------------------------------------------------
 			GameRegistry.addRecipe(new ItemStack(ModBlocks.FusionFurnace), new Object[]{"FIF", "RBR", "CCC", 
@@ -100,7 +116,11 @@ public class ShapedRecipes {
 			
 			//Charging Station --------------------------------------------------------------------------------------------------
 			GameRegistry.addRecipe(new ItemStack(ModBlocks.ChargingStation), new Object[]{" H ", "RMR", "CBC", 
-			'C', ModItems.BasicCircuit, 'H', Blocks.CHEST, 'R', Items.REDSTONE, 'M', ModBlocks.MachineBlock, 'B', ModItems.BasicBattery});
+			'C', ModItems.BasicCircuit, 'H', ModItems.CopperPlate, 'R', ModItems.GoldPlate, 'M', ModBlocks.MachineBlock, 'B', ModItems.BasicBattery});
+			
+			//Basic Farmer --------------------------------------------------------------------------------------------------
+			GameRegistry.addRecipe(new ItemStack(ModBlocks.BasicFarmer), new Object[]{" H ", "RMR", "DCD", 
+			'C', ModItems.BasicCircuit, 'H', Items.IRON_HOE, 'R', ModItems.IronPlate, 'M', ModBlocks.MachineBlock, 'D', Blocks.DIRT});
 			
 			//Fluid Generator  --------------------------------------------------------------------------------------------------
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.FluidGenerator), new Object[]{" U ", "CBC", "VIV", 

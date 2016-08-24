@@ -1,4 +1,4 @@
-package theking530.staticpower.machines;
+package theking530.staticpower.tileentity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +23,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.utils.RedstoneModeList;
 import theking530.staticpower.utils.RedstoneModeList.RedstoneMode;
@@ -36,9 +38,9 @@ import theking530.staticpower.utils.Vector3;
 public class BaseTileEntity extends TileEntity implements ISidedInventory, ITickable {
 
 	public ItemStack[] slots;
-	public ItemStackHandler SLOTS_INPUT = new ItemStackHandler();
-	public ItemStackHandler SLOTS_OUTPUT = new ItemStackHandler();
-	public ItemStackHandler SLOTS_INTERNAL = new ItemStackHandler();
+	public ItemStackHandler  SLOTS_INPUT;
+	public ItemStackHandler  SLOTS_OUTPUT;
+	public ItemStackHandler  SLOTS_INTERNAL;
 	
 	protected static int[] slots_top = new int[] {};
 	protected static int[] slots_bottom = new int[] {};
@@ -68,6 +70,10 @@ public class BaseTileEntity extends TileEntity implements ISidedInventory, ITick
 		SLOTS_INPUT = new ItemStackHandler(slotCount);
 		OUTPUT_SLOTS = outputSlots;
 		INPUT_SLOTS = inputSlots;
+		
+		SLOTS_INPUT = new ItemStackHandler();
+		SLOTS_OUTPUT = new ItemStackHandler();
+		SLOTS_INTERNAL = new ItemStackHandler();
 	}
 	@Override
 	public void update() {
@@ -206,6 +212,9 @@ public class BaseTileEntity extends TileEntity implements ISidedInventory, ITick
     			}
     		}	
         }
+        SLOTS_INPUT.deserializeNBT((NBTTagCompound) nbt.getTag("INPUTS"));
+        SLOTS_OUTPUT.deserializeNBT((NBTTagCompound) nbt.getTag("OUTPUTS"));
+        SLOTS_INTERNAL.deserializeNBT((NBTTagCompound) nbt.getTag("INTERNAL"));
     }		
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
@@ -227,6 +236,9 @@ public class BaseTileEntity extends TileEntity implements ISidedInventory, ITick
     		}
     		nbt.setTag("Items", list);
     	}
+    	nbt.setTag("INPUTS", SLOTS_INPUT.serializeNBT());
+    	nbt.setTag("OUTPUTS", SLOTS_OUTPUT.serializeNBT());
+    	nbt.setTag("INTERNAL", SLOTS_INTERNAL.serializeNBT());
 		return nbt;	
 	}
 	
@@ -791,6 +803,24 @@ public class BaseTileEntity extends TileEntity implements ISidedInventory, ITick
 		return true;
 	}
 	
+    public boolean hasCapability(net.minecraftforge.common.capabilities.Capability<?> capability, net.minecraft.util.EnumFacing facing){
+    	if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+    		return true;
+    	}
+        return super.hasCapability(capability, facing);
+    }
+
+    public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.util.EnumFacing facing){
+    	if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+    		if(facing == EnumFacing.UP) {
+    			return (T) SLOTS_INPUT;
+    		}else{
+    			return (T) SLOTS_OUTPUT;
+    		}
+    	}
+    	return super.getCapability(capability, facing);
+    }
+    
 	public void markForUpdate(){ 
 		worldObj.markAndNotifyBlock(pos, worldObj.getChunkFromBlockCoords(pos), worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2);
 

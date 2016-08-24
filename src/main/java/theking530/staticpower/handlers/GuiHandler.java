@@ -11,6 +11,9 @@ import theking530.staticpower.items.itemfilter.ContainerItemFilter;
 import theking530.staticpower.items.itemfilter.GuiItemFilter;
 import theking530.staticpower.items.itemfilter.InventoryItemFilter;
 import theking530.staticpower.items.itemfilter.ItemFilter;
+import theking530.staticpower.machines.basicfarmer.ContainerBasicFarmer;
+import theking530.staticpower.machines.basicfarmer.GuiBasicFarmer;
+import theking530.staticpower.machines.basicfarmer.TileEntityBasicFarmer;
 import theking530.staticpower.machines.batteries.ContainerBattery;
 import theking530.staticpower.machines.batteries.GuiBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityBattery;
@@ -74,6 +77,11 @@ public class GuiHandler implements IGuiHandler {
 			case GuiIDRegistry.guiIDFluidGenerator:
 				if (entity instanceof TileEntityFluidGenerator) {	
 					return new ContainerFluidGenerator(player.inventory, (TileEntityFluidGenerator) entity);
+				}
+				return null;
+			case GuiIDRegistry.guiBasicFarmer:
+				if (entity instanceof TileEntityBasicFarmer) {	
+					return new ContainerBasicFarmer(player.inventory, (TileEntityBasicFarmer) entity);
 				}
 				return null;
 			case GuiIDRegistry.guiIDCropSqueezer:
@@ -190,6 +198,11 @@ public class GuiHandler implements IGuiHandler {
 				if (entity instanceof TileEntityChargingStation) {	
 					return new GuiChargingStation(player.inventory, (TileEntityChargingStation) entity);					
 					}
+				return null;
+			case GuiIDRegistry.guiBasicFarmer:
+				if (entity instanceof TileEntityBasicFarmer) {	
+					return new GuiBasicFarmer(player.inventory, (TileEntityBasicFarmer) entity);					
+				}
 				return null;
 			case GuiIDRegistry.guiIDPoweredFurnace:
 				if (entity instanceof TileEntityPoweredFurnace) {	

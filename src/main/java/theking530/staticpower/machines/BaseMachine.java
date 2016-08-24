@@ -12,6 +12,7 @@ import net.minecraft.util.EnumFacing;
 import theking530.staticpower.items.upgrades.BasePowerUpgrade;
 import theking530.staticpower.items.upgrades.BaseSpeedUpgrade;
 import theking530.staticpower.power.StaticEnergyStorage;
+import theking530.staticpower.tileentity.BaseTileEntity;
 
 /**
  * @author Amine
@@ -23,6 +24,7 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	public int INITIAL_ENERGY_CAPACITY;
 	public StaticEnergyStorage STORAGE;
 	
+	public int INITIAL_POWER_USE = 100;
 	public int INITIAL_PROCESSING_ENERGY_MULT;
 	public int PROCESSING_ENERGY_MULT = INITIAL_PROCESSING_ENERGY_MULT;
 	public int INITIAL_PROCESSING_TIME;
@@ -48,6 +50,7 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	
 	/**
 	 * @param InitialEnergyMult
+	 * @param InitialPowerUse
 	 * @param InitialEnergyCapacity
 	 * @param InitialEntryPerTick
 	 * @param InitialProcessingTime
@@ -55,12 +58,13 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	 * @param outputSlots
 	 * @param inputSlots
 	 */
-	public void initializeBasicMachine(int InitialEnergyMult, int InitialEnergyCapacity, int InitialEntryPerTick, int InitialProcessingTime, int slotCount, int[] inputSlots, int[] outputSlots, int[] upgradeSlots) {	
+	public void initializeBasicMachine(int InitialEnergyMult, int InitialPowerUse, int InitialEnergyCapacity, int InitialEntryPerTick, int InitialProcessingTime, int slotCount, int[] inputSlots, int[] outputSlots, int[] upgradeSlots) {	
 		initializeBasicTileEntity(slotCount, inputSlots, outputSlots);
 		INITIAL_PROCESSING_ENERGY_MULT = InitialEnergyMult;
 		INITIAL_ENERGY_CAPACITY = InitialEnergyCapacity;
 		INITIAL_ENERGY_PER_TICK = InitialEntryPerTick;
 		INITIAL_PROCESSING_TIME = InitialProcessingTime;
+		INITIAL_POWER_USE = InitialPowerUse;
 		
 		STORAGE = new StaticEnergyStorage(InitialEnergyCapacity);
 		STORAGE.setMaxExtract(INITIAL_ENERGY_PER_TICK);
@@ -279,5 +283,8 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	@Override
 	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
 		return STORAGE.receiveEnergy(maxReceive, simulate);
+	}
+	public int getProcessingCost(){
+		return INITIAL_POWER_USE*PROCESSING_ENERGY_MULT;
 	}
 }

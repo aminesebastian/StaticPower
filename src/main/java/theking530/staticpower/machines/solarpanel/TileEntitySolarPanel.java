@@ -12,8 +12,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import theking530.staticpower.assists.Tier;
-import theking530.staticpower.machines.BaseTileEntity;
 import theking530.staticpower.power.PowerDistributor;
+import theking530.staticpower.tileentity.BaseTileEntity;
 
 public class TileEntitySolarPanel extends BaseTileEntity implements IEnergyHandler, IEnergyProvider {
 	

@@ -16,7 +16,7 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 
 	
 	public TileEntityPoweredGrinder() {
-		initializeBasicMachine(2, 100000, 80, 100, 8, new int[]{0}, new int[]{1, 2, 3}, new int[]{4, 5, 6});
+		initializeBasicMachine(2, 100, 100000, 80, 100, 8, new int[]{0}, new int[]{1, 2, 3}, new int[]{4, 5, 6});
 	}
 
     @Override  

@@ -11,7 +11,7 @@ public class TileEntityFusionFurnace extends BaseMachine {
 	
 
 	public TileEntityFusionFurnace() {
-		initializeBasicMachine(2, 100000, 80, 100, 14, new int[]{0, 1, 2, 3, 4}, new int[]{5}, new int[]{6, 7, 8});
+		initializeBasicMachine(2,100, 100000, 80, 100, 14, new int[]{0, 1, 2, 3, 4}, new int[]{5}, new int[]{6, 7, 8});
 	}
 
     @Override  

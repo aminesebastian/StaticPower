@@ -7,7 +7,7 @@ import theking530.staticpower.machines.BaseMachine;
 public class TileEntityChargingStation extends BaseMachine {
 	
 	public TileEntityChargingStation() {
-		initializeBasicMachine(2, 100000, 500, 2, 13, new int[]{0,1,2,3}, new int[]{4,5,6,7}, new int[]{8,9,10});
+		initializeBasicMachine(2, 0, 100000, 500, 2, 13, new int[]{0,1,2,3}, new int[]{4,5,6,7}, new int[]{8,9,10});
 		setBatterySlot(11);
 	}
 	@Override

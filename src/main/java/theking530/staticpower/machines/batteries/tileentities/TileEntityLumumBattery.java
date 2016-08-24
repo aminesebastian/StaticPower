@@ -10,7 +10,7 @@ public class TileEntityLumumBattery extends TileEntityBattery{
 	
 	public TileEntityLumumBattery() {
 		TIER = Tier.LUMUM;
-		initializeBasicMachine(2, 10000000, 5000, 0, 0, new int[]{}, new int[]{}, new int[]{});
+		initializeBasicMachine(2, 0, 10000000, 5000, 0, 0, new int[]{}, new int[]{}, new int[]{});
 		MAX_INPUT = 5000;
 		MAX_OUTPUT = 5000;
 		CUSTOM_NAME = "LumumBattery";

@@ -44,7 +44,10 @@ public class BasePoweredItem extends ItemEnergyContainer{
 	}
 	@Override
     public boolean showDurabilityBar(ItemStack stack) {
-        return true;
+		if(stack.getItemDamage() == 0) {
+	        return false;	
+		}
+		return true;
     }
 
 }

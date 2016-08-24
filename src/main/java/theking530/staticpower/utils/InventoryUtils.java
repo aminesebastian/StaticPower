@@ -24,6 +24,14 @@ public class InventoryUtils {
 		}
 		return false;
  	}
+	public static boolean canInventoryAcceptItem(IInventory inv, ItemStack stack, int minSlot, int maxSlot) {
+		for(int i=minSlot; i<maxSlot+1; i++) {
+			if(canSlotAcceptItem(inv, stack, i)) {
+				return true;
+			}
+		}
+		return false;
+ 	}
 	public static boolean canSlotAcceptItem(IInventory inv, ItemStack stack, int slot) {
 		if(inv.getStackInSlot(slot) == null) {
 			return true;
@@ -42,6 +50,26 @@ public class InventoryUtils {
 	public static boolean fullyInsertItem(IInventory inv, ItemStack stack) {
 		if(canInventoryAcceptItem(inv, stack)) {
 			for(int i=0; i<inv.getSizeInventory(); i++) {
+				if(inv.getStackInSlot(i) == null) {
+					inv.setInventorySlotContents(i, stack);
+					return true;
+				}else{
+					if(stack.areItemsEqual(stack, inv.getStackInSlot(i)) && stack.areItemStackTagsEqual(stack, inv.getStackInSlot(i))) {
+						int stackSize = stack.stackSize + inv.getStackInSlot(i).stackSize;
+						if(stackSize <= stack.getMaxStackSize()) {
+							stack.stackSize = stackSize;
+							inv.setInventorySlotContents(i, stack);
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+	public static boolean fullyInsertItem(IInventory inv, ItemStack stack, int minSlot, int maxSlot) {
+		if(canInventoryAcceptItem(inv, stack)) {
+			for(int i=minSlot; i<maxSlot+1; i++) {
 				if(inv.getStackInSlot(i) == null) {
 					inv.setInventorySlotContents(i, stack);
 					return true;

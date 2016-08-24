@@ -28,6 +28,11 @@ public class GrinderRecipes {
 		for(int index = 0; index < OreDictionary.getOres("orePlatinum").size(); index++) {
 			RegisterHelper.registerGrinderRecipe(OreDictionary.getOres("orePlatinum").get(index), newOutput(new ItemStack(ModItems.PlatinumDust, 2), 1.0f));
 		}
+		
+		RegisterHelper.registerGrinderRecipe(new ItemStack(ModItems.StaticIngot),  newOutput(new ItemStack(ModItems.StaticDust), 1.0f));
+		RegisterHelper.registerGrinderRecipe(new ItemStack(ModItems.EnergizedIngot),  newOutput(new ItemStack(ModItems.EnergizedDust), 1.0f));
+		RegisterHelper.registerGrinderRecipe(new ItemStack(ModItems.LumumIngot),  newOutput(new ItemStack(ModItems.LumumDust), 1.0f));
+		
 		oreDictionaryRecipe("Aluminium", 2);
 		oreDictionaryRecipe("Nickel", 2);
 		oreDictionaryRecipe("Manganese", 2);

@@ -13,7 +13,7 @@ public class FusionFurnaceRecipeWrapper {
 	protected ItemStack INPUT4;
 	protected ItemStack INPUT5;
 	
-	protected final ItemStack OUTPUT;
+	protected ItemStack OUTPUT;
 	
 	public FusionFurnaceRecipeWrapper(ItemStack output, ItemStack...inputs) {
 		if(inputs.length > 0) {

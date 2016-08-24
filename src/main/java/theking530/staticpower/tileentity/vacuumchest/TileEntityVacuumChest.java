@@ -16,7 +16,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import theking530.staticpower.items.itemfilter.ItemFilter;
-import theking530.staticpower.machines.BaseTileEntity;
+import theking530.staticpower.tileentity.BaseTileEntity;
 
 public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<EntityItem> {
 

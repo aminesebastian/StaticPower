@@ -25,4 +25,5 @@ public class GuiIDRegistry {
 	public static final int guiIDQuarry = 21;
 	public static final int guiIDStaticBook = 22;
 	public static final int guiIDChargingStation = 23;
+	public static final int guiBasicFarmer = 24;
 }

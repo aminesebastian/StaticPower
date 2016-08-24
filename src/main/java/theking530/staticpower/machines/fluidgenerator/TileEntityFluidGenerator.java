@@ -27,7 +27,7 @@ public class TileEntityFluidGenerator extends BaseMachineWithTank{
 	private FluidStack PROCESSING_FLUID;
 			
 	public TileEntityFluidGenerator() {
-		initializeBaseMachineWithTank(1, 50000, 480, 0, 4, new int[]{0}, new int[]{0}, new int[]{1,2,3}, 10000);
+		initializeBaseMachineWithTank(1, 100, 50000, 480, 0, 4, new int[]{0}, new int[]{0}, new int[]{1,2,3}, 10000);
 		POWER_DIST = new PowerDistributor(this, STORAGE);
 		MOVE_SPEED = 10;
 	}

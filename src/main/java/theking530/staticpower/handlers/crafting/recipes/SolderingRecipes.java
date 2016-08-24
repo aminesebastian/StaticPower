@@ -16,16 +16,16 @@ public class SolderingRecipes {
 		//Circuit Recipes
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.BasicCircuit, 4), new Object[]{"R R", " I ", "R R", 
 		'I', Items.IRON_INGOT, 'R', Items.REDSTONE});	
-		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.StaticCircuit, 4), new Object[]{"RSR", "GCG", "RSR", 
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.StaticCircuit, 4), new Object[]{"R R", "GSG", "R R", 
 		'G', Items.GOLD_INGOT, 'R', Items.REDSTONE, 'S', ModItems.StaticIngot, 'C', ModItems.BasicCircuit});		
-		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.EnergizedCircuit, 4), new Object[]{"RER", "GCG", "RER", 
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.EnergizedCircuit, 4), new Object[]{"R R", "GEG", "R R", 
 		'G', Items.GOLD_INGOT, 'R', Items.REDSTONE, 'E', ModItems.EnergizedIngot, 'C', ModItems.StaticCircuit});		
-		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.LumumCircuit, 4), new Object[]{"RLR", "GCG", "RLR", 
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.LumumCircuit, 4), new Object[]{"R R", "GLG", "R R", 
 		'G', Items.GOLD_INGOT, 'R', Items.REDSTONE, 'L', ModItems.LumumIngot, 'C', ModItems.EnergizedCircuit});
 		
 		//Batteries --------------------------------------------------------------------------------------------------
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.BasicBattery), new Object[]{" C ", "IRI", "IRI", 
-		'I', Items.IRON_INGOT, 'R', Blocks.REDSTONE_BLOCK, 'C', ModItems.CopperIngot});	
+		'I', ModItems.IronPlate, 'R', Blocks.REDSTONE_BLOCK, 'C', ModItems.CopperIngot});	
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.StaticBattery), new Object[]{" S ", "IDI", "IRI", 
 		'I', ModItems.StaticIngot, 'R', Blocks.REDSTONE_BLOCK, 'S', ModItems.StaticNugget, 'D', Items.DIAMOND});	
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.EnergizedBattery), new Object[]{" E ", "IDI", "IRI", 

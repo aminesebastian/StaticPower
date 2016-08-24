@@ -2,12 +2,20 @@ package theking530.staticpower.machines.basicfarmer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.block.BlockCactus;
 import net.minecraft.block.BlockCrops;
+import net.minecraft.block.BlockNetherWart;
 import net.minecraft.block.BlockReed;
+import net.minecraft.block.IGrowable;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemHoe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -15,37 +23,49 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.IPlantable;
 import theking530.staticpower.machines.BaseMachineWithTank;
 import theking530.staticpower.utils.InventoryUtils;
 
 public class TileEntityBasicFarmer extends BaseMachineWithTank {
 
 	public int RANGE = 3;
+	public int BLOCKS_PER_TICK = 2;
+	public int FARMING_COST = 100;
 	public BlockPos CURRENT_COORD;
-	
+	private Random RAND;
 	private ArrayList<ItemStack> FARMED_STACKS = new ArrayList();
 	
 	public TileEntityBasicFarmer() {
-		initializeBaseMachineWithTank(2, 100000, 10, 2, 4, new int[0], new int[0], new int[]{1,2,3}, 10000);
+		initializeBaseMachineWithTank(2, 10, 100000, 500, 10, 17, new int[]{9,10}, new int[]{0,1,2,3,4,5,6,7,8}, new int[]{14,15,16}, 10000);
+		setBatterySlot(13);
 		CURRENT_COORD = getStartingCoord();
+		RAND = new Random();
 	}
 	@Override
 	public void process(){
 		if(PROCESSING_TIMER < PROCESSING_TIME) {
 			PROCESSING_TIMER++;
 		}else{
-			if(FARMED_STACKS.size() <= 0) {
-				incrementPosition();
-				checkFarmingPlot(CURRENT_COORD);
+			if(FARMED_STACKS.size() <= 0 && STORAGE.getEnergyStored() >= getProcessingCost()) {
+				for(int i=0; i<BLOCKS_PER_TICK; i++) {
+					if(STORAGE.getEnergyStored() >= getProcessingCost()) {
+						incrementPosition();
+						STORAGE.extractEnergy(getProcessingCost(), false);
+						if(!checkFarmingPlot(CURRENT_COORD)){
+							break;
+						}
+					}else{
+						break;
+					}
+				}
 				PROCESSING_TIMER = 0;
 			}else{
-				if(worldObj.getTileEntity(pos.add(0,1,0)) != null && worldObj.getTileEntity(pos.add(0,1,0)) instanceof IInventory) {
-					for(int k=FARMED_STACKS.size()-1; k>=0; k--) {
-						if(InventoryUtils.fullyInsertItem((IInventory)worldObj.getTileEntity(pos.add(0,1,0)), FARMED_STACKS.get(k))) {
-							FARMED_STACKS.remove(k);
-						}	
+				for(int k=FARMED_STACKS.size()-1; k>=0; k--) {
+					if(InventoryUtils.fullyInsertItem(this, FARMED_STACKS.get(k), 0, 8)) {
+						FARMED_STACKS.remove(k);
 					}	
-				}
+				}	
 			}
 		}
 	}
@@ -95,9 +115,37 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 			return 1;
 		}
 	}
-	public void checkFarmingPlot(BlockPos pos) {
-		//worldObj.spawnParticle(EnumParticleTypes.REDSTONE, pos.getX() + 0.5D, pos.getY() + 1.0D, 
-				//pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
+	public boolean canFarm() {
+		if(STORAGE.getEnergyStored() >= FARMING_COST && slots[9] != null && slots[9].getItem() instanceof ItemHoe) {
+			return true;
+		}
+		return false;
+	}
+	public void useHoe(){
+		if(slots[9] != null && slots[9].getItem() instanceof ItemHoe) {
+			if(slots[9].attemptDamageItem(1, RAND)) {
+				slots[9] = null;
+				worldObj.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_ITEM_BREAK, 
+						SoundCategory.BLOCKS, 1.0F, 1.0F, false);		
+			}	
+		}
+	}
+	public boolean checkFarmingPlot(BlockPos pos) {
+		if(!canFarm()) {
+			return false;
+		}
+		if(RAND.nextInt(19) == 2) {
+	        if(worldObj.getBlockState(pos) != null && worldObj.getBlockState(pos).getBlock() instanceof IGrowable) {
+	        	IGrowable tempCrop = (IGrowable) worldObj.getBlockState(pos).getBlock();
+	        	if(tempCrop.canGrow(worldObj, pos, worldObj.getBlockState(pos), true)) {
+	        		worldObj.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, pos.getX() + 0.5D, pos.getY() + 1.0D, 
+	        				pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
+	        		tempCrop.grow(worldObj, RAND, pos, worldObj.getBlockState(pos));
+	        	}
+	        }	
+		}
+		worldObj.spawnParticle(EnumParticleTypes.REDSTONE, pos.getX() + 0.5D, pos.getY() + 1.0D, 
+				pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
 		if(worldObj.getBlockState(pos).getBlock() != null) {
 			if(worldObj.getBlockState(pos).getBlock() instanceof BlockCrops) {
 				BlockCrops tempCrop = (BlockCrops)worldObj.getBlockState(pos).getBlock();
@@ -107,7 +155,16 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 					worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, pos.getX() + 0.5D, pos.getY() + 1.0D, 
 							pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
 		        	FARMED_STACKS.addAll(getCurrentBlockDrops());
-					worldObj.setBlockState(pos, tempCrop.withAge(0), 2);			
+					worldObj.setBlockState(pos, tempCrop.withAge(0), 2);	
+					useHoe();
+					if(FARMED_STACKS.size() > 0) {
+						for(int i=FARMED_STACKS.size()-1; i>=0; i--) {
+							if(FARMED_STACKS.get(i).getItem() instanceof IPlantable) {
+								FARMED_STACKS.remove(i);
+								break;
+							}
+						}
+					}
 				}
 			}else if(worldObj.getBlockState(pos.add(0, 1, 0)).getBlock() instanceof BlockReed){	      
 				if(worldObj.getBlockState(pos.add(0, 2, 0)).getBlock() instanceof BlockReed) {
@@ -120,8 +177,41 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 						pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
 				FARMED_STACKS.addAll(worldObj.getBlockState(pos.add(0, 1, 0)).getBlock().getDrops(worldObj, pos.add(0, 1, 0), worldObj.getBlockState(pos.add(0, 1, 0)), 0));
 				worldObj.setBlockToAir(pos.add(0, 1, 0));	
+				useHoe();
+			}else if(worldObj.getBlockState(pos.add(0, 1, 0)).getBlock() instanceof BlockCactus){	      
+				if(worldObj.getBlockState(pos.add(0, 2, 0)).getBlock() instanceof BlockCactus) {
+					FARMED_STACKS.addAll(worldObj.getBlockState(pos.add(0, 2, 0)).getBlock().getDrops(worldObj, pos.add(0, 2, 0), worldObj.getBlockState(pos.add(0, 2, 0)), 0));
+					worldObj.setBlockToAir(pos.add(0, 2, 0));	
+				}
+				worldObj.playSound(pos.getX(), pos.getY(), pos.getZ(), worldObj.getBlockState(pos.add(0, 1, 0)).getBlock().getSoundType().getBreakSound(), 
+						SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+				worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, pos.getX() + 0.5D, pos.add(0, 1, 0).getY() + 1.0D, 
+						pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
+				FARMED_STACKS.addAll(worldObj.getBlockState(pos.add(0, 1, 0)).getBlock().getDrops(worldObj, pos.add(0, 1, 0), worldObj.getBlockState(pos.add(0, 1, 0)), 0));
+				worldObj.setBlockToAir(pos.add(0, 1, 0));	
+				useHoe();
+			}else if(worldObj.getBlockState(pos).getBlock() instanceof BlockNetherWart) {
+				BlockNetherWart tempNetherwart = (BlockNetherWart) worldObj.getBlockState(pos).getBlock();
+				if(tempNetherwart.getMetaFromState(worldObj.getBlockState(pos)) >= 3) {
+					worldObj.playSound(pos.getX(), pos.getY(), pos.getZ(), worldObj.getBlockState(pos).getBlock().getSoundType().getBreakSound(), 
+							SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+					worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, pos.getX() + 0.5D, pos.getY() + 1.0D, 
+							pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
+		        	FARMED_STACKS.addAll(getCurrentBlockDrops());
+		        	worldObj.setBlockState(pos, Blocks.NETHER_WART.getDefaultState(), 2);
+					useHoe();
+					if(FARMED_STACKS.size() > 0) {
+						for(int i=FARMED_STACKS.size()-1; i>=0; i--) {
+							if(FARMED_STACKS.get(i).getItem() instanceof IPlantable) {
+								FARMED_STACKS.remove(i);
+								break;
+							}
+						}
+					}
+				}
 			}
 		}
+		return true;
 	}
 	public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);      
@@ -143,5 +233,9 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
     }
 	public List<ItemStack> getCurrentBlockDrops() {
 		return worldObj.getBlockState(CURRENT_COORD).getBlock().getDrops(worldObj, CURRENT_COORD, worldObj.getBlockState(CURRENT_COORD), 0);
+	}
+	@Override
+	public String getName() {
+		return "Basic farmer";
 	}
 }

@@ -35,6 +35,21 @@ item.BasicItemFilter.name=Basic Item Filter
 item.UpgradedItemFilter.name=Upgraded Item Filter
 item.AdvancedItemFilter.name=Advanced Item Filter
 
+item.CopperWire.name=Copper Wire
+item.SilverWire.name=Silver Wire
+item.GoldWire.name=Gold Wire
+
+item.CopperCoil.name=Copper Coil
+item.SilverCoil.name=Silver Coil
+item.GoldCoil.name=Gold Coil
+
+item.IronPlate.name=Iron Plate
+item.CopperPlate.name=Copper Plate
+item.TinPlate.name=Tin Plate
+item.SilverPlate.name=Silver Plate
+item.GoldPlate.name=Gold Plate
+item.LeadPlate.name=Lead Plate
+
 //Upgrades
 item.BasicSpeedUpgrade.name=Basic Speed Upgrade
 item.BasicPowerUpgrade.name=Basic Power Upgrade
@@ -206,9 +221,10 @@ container.VacuumChest=VacuumChest
 item.StaticWrench.name=Static Wrench
 item.SolderingIron.name=Soldering Iron
 item.ElectricSolderingIron.name=Electric Soldering Iron
->>>>>>> branch '1.10.2' of https://github.com/Theking5301/StaticPower.git
 item.StaticBook.name=Static Book
 item.CoordinateMarker.name=Coordinate Marker
+item.WireCutters.name=Wire Cutters
+item.MetalHammer.name=Metal Hammer
 
 //TIC
 material.staticmetal=Static Metal

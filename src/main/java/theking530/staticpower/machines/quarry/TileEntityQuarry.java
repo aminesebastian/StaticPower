@@ -28,8 +28,8 @@ import theking530.staticpower.items.upgrades.BasePowerUpgrade;
 import theking530.staticpower.items.upgrades.BaseQuarryingUpgrade;
 import theking530.staticpower.items.upgrades.BaseSpeedUpgrade;
 import theking530.staticpower.machines.BaseMachineWithTank;
-import theking530.staticpower.machines.BaseTileEntity;
 import theking530.staticpower.power.StaticEnergyStorage;
+import theking530.staticpower.tileentity.BaseTileEntity;
 import theking530.staticpower.utils.InventoryUtils;
 import theking530.staticpower.utils.SideModeList;
 import theking530.staticpower.utils.WorldUtilities;
@@ -48,7 +48,7 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 	private boolean testing = false;
 	
 	public TileEntityQuarry() {
-		initializeBaseMachineWithTank(2, 100000, 1000, 10, 4, new int[0], new int[0], new int[]{1,2,3}, 10000);
+		initializeBaseMachineWithTank(2, 100, 100000, 1000, 10, 4, new int[0], new int[0], new int[]{1,2,3}, 10000);
 	}
 	@Override
 	public void process(){

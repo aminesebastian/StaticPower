@@ -19,9 +19,9 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler{
 	public int INITIAL_TANK_CAPACITY;
 	public FluidTank TANK;
 
-	public void initializeBaseMachineWithTank(int InitialEnergyMult, int InitialEnergyCapacity, int InitialEntryPerTick, int InitialProcessingTime, 
+	public void initializeBaseMachineWithTank(int InitialEnergyMult, int InitialPowerUse, int InitialEnergyCapacity, int InitialEntryPerTick, int InitialProcessingTime, 
 			int slotCount, int[] inputSlots, int[] outputSlots, int[] upgradeSlots, int InitialTankCapacity) {	
-		initializeBasicMachine(InitialEnergyMult, InitialEnergyCapacity, InitialEntryPerTick, InitialProcessingTime, slotCount, inputSlots, outputSlots, upgradeSlots);
+		initializeBasicMachine(InitialEnergyMult, InitialPowerUse, InitialEnergyCapacity, InitialEntryPerTick, InitialProcessingTime, slotCount, inputSlots, outputSlots, upgradeSlots);
 		INITIAL_TANK_CAPACITY = InitialTankCapacity;
 		TANK = new FluidTank(INITIAL_TANK_CAPACITY);
 	}

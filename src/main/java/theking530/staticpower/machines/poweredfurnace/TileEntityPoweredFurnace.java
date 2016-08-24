@@ -12,7 +12,7 @@ public class TileEntityPoweredFurnace extends BaseMachine {
 	private static final int[] slots_side = new int[] {1};		
 		
 	public TileEntityPoweredFurnace() {
-		initializeBasicMachine(2, 100000, 80, 100, 6, new int[]{0}, new int[]{1}, new int[]{2, 3, 4});
+		initializeBasicMachine(2, 100, 100000, 80, 100, 6, new int[]{0}, new int[]{1}, new int[]{2, 3, 4});
 	}
 	
     @Override  

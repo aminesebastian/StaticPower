@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.handlers.PacketHandler;
-import theking530.staticpower.machines.BaseTileEntity;
+import theking530.staticpower.tileentity.BaseTileEntity;
 
 public class GuiRedstoneTab {
 	

@@ -1,9 +1,11 @@
 package theking530.staticpower.items;
 
 import java.util.List;
+import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLog;
+import net.minecraft.block.BlockNetherWart;
 import net.minecraft.block.BlockOldLog;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.IGrowable;
@@ -18,6 +20,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.entity.player.BonemealEvent;
@@ -72,6 +75,14 @@ public class DepletedCrop extends ItemBase {
                     --stack.stackSize;
                 }
                 return true;
+            }
+        }else if(iblockstate.getBlock() instanceof IPlantable) {
+            if (!worldIn.isRemote){
+            	Block tempBlock = (Block)iblockstate.getBlock();
+	        	Random rand = new Random();
+	        	tempBlock.updateTick(worldIn, target, iblockstate, rand);
+	            --stack.stackSize;
+	            return true;
             }
         }
         return false;

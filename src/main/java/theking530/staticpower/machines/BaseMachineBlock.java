@@ -24,6 +24,7 @@ import theking530.staticpower.StaticPower;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.assists.RegisterHelper;
 import theking530.staticpower.blocks.BaseItemBlock;
+import theking530.staticpower.tileentity.BaseTileEntity;
 
 public class BaseMachineBlock extends BlockContainer implements IWrenchable{
 
