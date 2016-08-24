@@ -43,11 +43,11 @@ public class GuiFluidBar {
 		    }
 	
 		    TextureAtlasSprite icon = RenderUtil.getStillTexture(fluid.getFluid());
-		    /**
+
 		    if (icon == null) {
 		      return;
 		    }
-		    */
+
 		    float ratio = ((float)amount/(float)capacity);
 		    float renderAmount = ratio * (float) height;
 	
@@ -57,20 +57,20 @@ public class GuiFluidBar {
 		    
 		    GlStateManager.enableBlend();    
 
-		    /**
+
 	        double minU = icon.getMinU();
 	        double maxU = icon.getMaxU();
 	        double minV = icon.getMinV();
 	        double maxV = icon.getMaxV();
-		    */
+	        double diffV = maxV - minV;
 	        Tessellator tessellator = Tessellator.getInstance();
 	        VertexBuffer tes = tessellator.getBuffer();
 	        tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			Minecraft.getMinecraft().getTextureManager().bindTexture(powerBar);
-			tes.pos(x + width, y, zLevel).tex(1,0).endVertex();
-			tes.pos(x + width, y - renderAmount, zLevel).tex(1,ratio).endVertex();
-			tes.pos(x, y - renderAmount, zLevel).tex(0,ratio).endVertex();
-			tes.pos(x, y, zLevel).tex(0,0).endVertex();	
+			//Minecraft.getMinecraft().getTextureManager().bindTexture(powerBar);
+			tes.pos(x + width, y, zLevel).tex(maxU,minV).endVertex();
+			tes.pos(x + width, y - renderAmount, zLevel).tex(maxU, minV+(diffV*ratio)).endVertex();
+			tes.pos(x, y - renderAmount, zLevel).tex(minU, minV+(diffV*ratio)).endVertex();
+			tes.pos(x, y, zLevel).tex(minU,minV).endVertex();	
 	        tessellator.draw();
 
 		    GlStateManager.disableBlend();

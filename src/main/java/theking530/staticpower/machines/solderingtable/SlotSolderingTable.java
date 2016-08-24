@@ -1,9 +1,8 @@
 package theking530.staticpower.machines.solderingtable;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class SlotSolderingTable extends SlotItemHandler {
@@ -12,8 +11,8 @@ public class SlotSolderingTable extends SlotItemHandler {
 	EntityPlayer PLAYER;
 	ContainerSolderingTable CONTAINER;
 	
-	public SlotSolderingTable(ContainerSolderingTable container, EntityPlayer player, TileEntitySolderingTable teTable, int i, int j, int k) {
-		super(teTable, i, j, k);
+	public SlotSolderingTable(ContainerSolderingTable container, EntityPlayer player, TileEntitySolderingTable teTable, IItemHandler inv, int i, int j, int k) {
+		super(inv, i, j, k);
 		TABLE = teTable;
 		PLAYER = player;
 		CONTAINER = container;
@@ -27,7 +26,7 @@ public class SlotSolderingTable extends SlotItemHandler {
         return false;
     }
 	public void onPickupFromSlot(EntityPlayer player, ItemStack item){
-        FMLCommonHandler.instance().firePlayerCraftingEvent(player, item, TABLE);
+        //FMLCommonHandler.instance().firePlayerCraftingEvent(player, item, TABLE);
         onCrafting(item, item.stackSize);
     }
     public void onSlotChanged() {

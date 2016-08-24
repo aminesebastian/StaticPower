@@ -116,9 +116,24 @@ public class BaseMachineBlock extends BlockContainer implements IWrenchable{
 			tempMachine.writeToNBT(nbt);
 			machineStack.setTagCompound(nbt);
 
-			for(int i=0; i<tempMachine.slots.length; i++) {
-				if(tempMachine.slots[i] != null) {
-					items.add(tempMachine.slots[i].copy());
+			for(int i=0; i<tempMachine.SLOTS_INPUT.getSlots(); i++) {
+				if(tempMachine.SLOTS_INPUT.getStackInSlot(i) != null) {
+					items.add(tempMachine.SLOTS_INPUT.getStackInSlot(i).copy());
+				}
+			}
+			for(int i=0; i<tempMachine.SLOTS_OUTPUT.getSlots(); i++) {
+				if(tempMachine.SLOTS_OUTPUT.getStackInSlot(i) != null) {
+					items.add(tempMachine.SLOTS_OUTPUT.getStackInSlot(i).copy());
+				}
+			}
+			for(int i=0; i<tempMachine.SLOTS_INTERNAL.getSlots(); i++) {
+				if(tempMachine.SLOTS_INTERNAL.getStackInSlot(i) != null) {
+					items.add(tempMachine.SLOTS_INTERNAL.getStackInSlot(i).copy());
+				}
+			}
+			for(int i=0; i<tempMachine.SLOTS_UPGRADES.getSlots(); i++) {
+				if(tempMachine.SLOTS_UPGRADES.getStackInSlot(i) != null) {
+					items.add(tempMachine.SLOTS_UPGRADES.getStackInSlot(i).copy());
 				}
 			}
 

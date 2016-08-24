@@ -15,6 +15,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.items.CapabilityItemHandler;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.tileentity.BaseTileEntity;
 
@@ -23,47 +24,8 @@ public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<E
 	private int RANGE = 3;
 	
 	public TileEntityVacuumChest() {
-		int[] tempSlots = new int[27];
-		for(int i=0; i<27; i++) {
-			tempSlots[i] = i;
-		}
-		initializeBasicTileEntity(31, tempSlots, null);
-	}
-	@Override
-	public void update() {
-		int redstoneSignal = worldObj.getStrongPower(pos);
-		if(REDSTONE_MODE == 0) {
-			process();
-			if(OUTPUT_SLOTS != null) {
-				outputFunction(OUTPUT_SLOTS);	
-			}
-			if(INPUT_SLOTS != null) {
-				inputFunction(INPUT_SLOTS);				
-			}
-		}
-		if(REDSTONE_MODE == 1) {
-			if(redstoneSignal == 0) {
-				process();
-				if(OUTPUT_SLOTS != null) {
-					outputFunction(OUTPUT_SLOTS);	
-				}
-				if(INPUT_SLOTS != null) {
-					inputFunction(INPUT_SLOTS);				
-				}
-			}
-		}
-		if(REDSTONE_MODE == 2) {
-			if(redstoneSignal > 0) {
-				process();
-				if(OUTPUT_SLOTS != null) {
-					outputFunction(OUTPUT_SLOTS);	
-				}
-				if(INPUT_SLOTS != null) {
-					inputFunction(INPUT_SLOTS);				
-				}
-			}
-		}	
-	}			
+		initializeBasicTileEntity(1, 0, 30);
+	}		
 	void process() {
 	    AxisAlignedBB aabb = new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1);
 	    aabb = aabb.expand(RANGE, RANGE, RANGE);
@@ -79,22 +41,22 @@ public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<E
 				double distance = Math.sqrt(x * x + y * y + z * z);
 				if (distance < 1.1) {
 					for(int i=0; i<27; i++){
-						if(slots[i] == null) {
-							slots[i] = stack;
+						if(getOutputStack(i) == null) {
+							SLOTS_OUTPUT.setStackInSlot(i, stack);
 							item.setDead();
 							worldObj.playSound((double)pos.getX(), (double)pos.getY(), (double)pos.getZ(), SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 0.5F, 1.0F, false);
 							break;
 						}else{
-							if(slots[i].isItemEqual(stack)) {
-								int stackSize = slots[i].stackSize + stack.stackSize;
+							if(getOutputStack(i).isItemEqual(stack)) {
+								int stackSize = getOutputStack(i).stackSize + stack.stackSize;
 								if(stackSize <= 64) {
-									slots[i].stackSize = stackSize;
+									getOutputStack(i).stackSize = stackSize;
 									item.setDead();
 									worldObj.playSound((double)pos.getX(), (double)pos.getY(), (double)pos.getZ(), SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 0.5F, 1.0F, false);
 									break;
 								}else{
 									int difference = 64 - stack.stackSize;
-									slots[i].stackSize = 64;
+									getOutputStack(i).stackSize = 64;
 									item.getEntityItem().stackSize = difference;
 									worldObj.playSound((double)pos.getX(), (double)pos.getY(), (double)pos.getZ(), SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 0.5F, 1.0F, false);
 									break;
@@ -116,22 +78,22 @@ public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<E
 	}
 	public boolean canAcceptItem(ItemStack stack) {
 		for(int i=0; i<27; i++) {
-			if(canSlotAcceptItemstack(stack, slots[i])) {
+			if(canSlotAcceptItemstack(stack, getOutputStack(i))) {
 				return true;
 			}
 		}
 		return false;
 	}
 	public boolean hasFilter() {
-		if(slots[27] != null) {
+		if(getInternalStack(0) != null) {
 			return true;
 		}
 		return false;
 	}
 	public boolean doesItemPassFilter(ItemStack stack) {
 		if(hasFilter()) {
-			ItemFilter tempFilter = (ItemFilter)slots[27].getItem();
-			return tempFilter.evaluateFilter(slots[27], stack);
+			ItemFilter tempFilter = (ItemFilter)getInternalStack(0).getItem();
+			return tempFilter.evaluateFilter(getInternalStack(0), stack);
 		}else{
 			return true;
 		}
@@ -147,7 +109,12 @@ public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<E
         super.writeToNBT(nbt);
         return nbt;
 	}	  	    
-	
+    public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.util.EnumFacing facing){
+    	if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+    		return (T) SLOTS_OUTPUT;
+    	}
+    	return super.getCapability(capability, facing);
+    }
     //IInventory
 	@Override
 	public String getName() {

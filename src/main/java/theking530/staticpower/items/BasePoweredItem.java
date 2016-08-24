@@ -49,5 +49,11 @@ public class BasePoweredItem extends ItemEnergyContainer{
 		}
 		return true;
     }
-
+	@Override
+    public int getItemStackLimit(ItemStack stack) {
+		if(stack.getItemDamage() > 0) {
+			return 1;
+		}
+        return this.getItemStackLimit();
+    }
 }

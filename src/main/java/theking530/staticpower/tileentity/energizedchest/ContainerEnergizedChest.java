@@ -6,6 +6,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerEnergizedChest extends Container {
 	
@@ -15,13 +16,12 @@ public class ContainerEnergizedChest extends Container {
 
 	public ContainerEnergizedChest(InventoryPlayer invPlayer, TileEntityEnergizedChest teStaticChest) {
 		E_CHEST = teStaticChest;
-		chestInventory = (IInventory) teStaticChest;
-		this.numRows = teStaticChest.getSizeInventory() / 9;
+		this.numRows = teStaticChest.SLOTS_OUTPUT.getSlots() / 9;
 		int xOff = 0;
 		int yOff = 48;	
 		for (int y = 0; y < 8; y++) {
 			for (int x = 0; x < 9; x++) {
-				this.addSlotToContainer(new Slot(teStaticChest, x + y * 9, 8 +  (x * 18), (19 + (y * 18))));
+				this.addSlotToContainer(new SlotItemHandler(teStaticChest.SLOTS_OUTPUT, x + y * 9, 8 +  (x * 18), (19 + (y * 18))));
 			}
 		}
 		for (int i = 0; i < 3; i++) {

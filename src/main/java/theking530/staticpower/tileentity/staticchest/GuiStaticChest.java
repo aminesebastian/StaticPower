@@ -23,7 +23,7 @@ public class GuiStaticChest extends GuiContainer{
 	        int var2 = (this.height - this.ySize) / 2;       
 	}
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
-		String name = this.staticChest.hasCustomName() ? this.staticChest.getName() : I18n.format(this.staticChest.getName());
+		String name = I18n.format(this.staticChest.getName());
 		this.fontRendererObj.drawString(name, this.xSize - 169, 6, 4210752 );
 	}	
 	@Override

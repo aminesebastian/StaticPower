@@ -3,12 +3,13 @@ package theking530.staticpower.machines.chargingstation;
 import cofh.api.energy.IEnergyContainerItem;
 import net.minecraft.util.EnumFacing;
 import theking530.staticpower.machines.BaseMachine;
+import theking530.staticpower.utils.InventoryUtilities;
 
 public class TileEntityChargingStation extends BaseMachine {
 	
 	public TileEntityChargingStation() {
-		initializeBasicMachine(2, 0, 100000, 500, 2, 0, 4, 4);
-		setBatterySlot(11);
+		initializeBasicMachine(2, 0, 100000, 500, 2, 0, 6, 4);
+		setBatterySlot(4);
 	}
 	@Override
 	public void process(){
@@ -26,10 +27,11 @@ public class TileEntityChargingStation extends BaseMachine {
 	}
 	public void outputItem(int fromSlot){
 		for(int i=0; i<4; i++) {
-			if(SLOTS_OUTPUT.insertItem(i, SLOTS_INPUT.getStackInSlot(fromSlot), true) == null) {
+			if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, i, SLOTS_INPUT.getStackInSlot(fromSlot))) {
+				SLOTS_OUTPUT.insertItem(i, SLOTS_INPUT.getStackInSlot(fromSlot).copy(), false);
 				SLOTS_INPUT.extractItem(fromSlot, 1, false);
 				return;
-			}	
+			}
 		}
 	}
 

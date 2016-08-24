@@ -53,7 +53,7 @@ public class GuiVacuumChest extends GuiContainer{
         int var2 = (this.height - this.ySize) / 2;        		 
 	}
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
-		String name = this.V_CHEST.hasCustomName() ? this.V_CHEST.getName() : I18n.format(this.V_CHEST.getName());
+		String name = I18n.format(this.V_CHEST.getName());
 		this.fontRendererObj.drawString(name, this.xSize - 169, 6, 4210752 );
 	}	
 	@Override

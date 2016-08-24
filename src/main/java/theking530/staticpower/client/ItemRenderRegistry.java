@@ -158,6 +158,9 @@ public class ItemRenderRegistry {
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.StaticLamp));
 		
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.VacuumChest));
+		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.StaticChest));
+		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.EnergizedChest));
+		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.LumumChest));
 		
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.ItemConduit));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.StaticConduit));

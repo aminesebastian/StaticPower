@@ -18,16 +18,20 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.items.CapabilityItemHandler;
+import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.machines.BaseMachineWithTank;
 import theking530.staticpower.utils.InventoryUtilities;
 
 public class TileEntityBasicFarmer extends BaseMachineWithTank {
 
-	public int RANGE = 3;
+	public int INITIAL_RANGE = 3;
+	public int RANGE = INITIAL_RANGE;
 	public int BLOCKS_PER_TICK = 2;
 	public int FARMING_COST = 100;
 	public BlockPos CURRENT_COORD;
@@ -35,8 +39,8 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 	private ArrayList<ItemStack> FARMED_STACKS = new ArrayList();
 	
 	public TileEntityBasicFarmer() {
-		initializeBaseMachineWithTank(2, 10, 100000, 500, 10, 0, 4, 10, 10000);
-		setBatterySlot(13);
+		initializeBaseMachineWithTank(2, 20, 100000, 500, 10, 0, 4, 10, 10000);
+		setBatterySlot(3);
 		CURRENT_COORD = getStartingCoord();
 		RAND = new Random();
 	}
@@ -68,6 +72,28 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 					}
 				}	
 			}
+		}
+	}
+	public void upgradeHandler(){
+		rangeUpgrade();
+		super.upgradeHandler();
+	}
+	public void rangeUpgrade() {
+		boolean flag = false;
+		int slot = 0;
+		for(int i=0; i<3; i++) {
+			if(SLOTS_UPGRADES.getStackInSlot(i) != null) {
+				if(SLOTS_UPGRADES.getStackInSlot(i).getItem() instanceof BaseRangeUpgrade) {
+					flag = true;
+					slot = i;
+				}
+			}
+		}
+		if(flag) {
+			BaseRangeUpgrade tempUpgrade = (BaseRangeUpgrade) SLOTS_UPGRADES.getStackInSlot(slot).getItem();
+			RANGE = (int) (INITIAL_RANGE*tempUpgrade.RANGE_MULT);
+		}else{
+			RANGE = INITIAL_RANGE;
 		}
 	}
 	private void incrementPosition() {
@@ -145,7 +171,7 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 	        	}
 	        }	
 		}
-		worldObj.spawnParticle(EnumParticleTypes.REDSTONE, pos.getX() + 0.5D, pos.getY() + 1.0D, 
+		worldObj.spawnParticle(EnumParticleTypes.REDSTONE, pos.getX() + 0.5D, pos.getY() + 0.25D, 
 				pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
 		if(worldObj.getBlockState(pos).getBlock() != null) {
 			if(worldObj.getBlockState(pos).getBlock() instanceof BlockCrops) {
@@ -239,4 +265,15 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 	public String getName() {
 		return "Basic farmer";
 	}
+    public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.util.EnumFacing facing){
+    	if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+    		if(facing == EnumFacing.DOWN) {
+    			return (T) SLOTS_INPUT;
+    		}else{
+    			return (T) SLOTS_OUTPUT;
+    		}
+    	}
+    	return super.getCapability(capability, facing);
+    }
+    
 }

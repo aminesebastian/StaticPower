@@ -32,6 +32,7 @@ public class GrinderRecipes {
 		RegisterHelper.registerGrinderRecipe(new ItemStack(ModItems.StaticIngot),  newOutput(new ItemStack(ModItems.StaticDust), 1.0f));
 		RegisterHelper.registerGrinderRecipe(new ItemStack(ModItems.EnergizedIngot),  newOutput(new ItemStack(ModItems.EnergizedDust), 1.0f));
 		RegisterHelper.registerGrinderRecipe(new ItemStack(ModItems.LumumIngot),  newOutput(new ItemStack(ModItems.LumumDust), 1.0f));
+		RegisterHelper.registerGrinderRecipe(new ItemStack(ModItems.InertIngot),  newOutput(new ItemStack(ModItems.InertInfusionBlend), 1.0f));
 		
 		oreDictionaryRecipe("Aluminium", 2);
 		oreDictionaryRecipe("Nickel", 2);

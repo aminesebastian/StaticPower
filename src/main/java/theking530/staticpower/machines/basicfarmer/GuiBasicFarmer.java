@@ -58,13 +58,7 @@ public class GuiBasicFarmer extends GuiContainer{
     	int var1 = (this.width - this.xSize) / 2;
         int var2 = (this.height - this.ySize) / 2;  
         if(par1 >= 8 + var1 && par2 >= 8 + var2 && par1 <= 14 + var1 && par2 <= 68 + var2) {
-        	int j1 = FARMER.STORAGE.getEnergyStored();
-        	int k1 = FARMER.STORAGE.getMaxEnergyStored();
-        	int i1 = FARMER.STORAGE.getMaxReceive();
-        	String text = ("Max: " + i1 + " RF/t" + "=" + NumberFormat.getNumberInstance(Locale.US).format(j1)  + "/" + NumberFormat.getNumberInstance(Locale.US).format(k1) + " " + "RF");
-        	String[] splitMsg = text.split("=");
-        	List temp = Arrays.asList(splitMsg);
-        	drawHoveringText(temp, par1, par2, fontRendererObj); 
+        	drawHoveringText(POWER_BAR.drawText(), par1, par2, fontRendererObj); 
         }
 	}	
 
@@ -76,23 +70,10 @@ public class GuiBasicFarmer extends GuiContainer{
 		
 		float scale = 0.7F;
 		GL11.glScalef(scale, scale, scale);
-		/**
-		String area = "Radius: " + FARMER.RANGE;
-		String tutorial5 = "• TEMP Place a chest on";
-		String tutorial6 = "top to collect items!";
-		String tutorial7 = "• Power with RF Power.";
-		String speed = "Ticks per Operation: " + FARMER.PROCESSING_TIME;
-		String blocks = "Blocks per Operation: " + FARMER.BLOCKS_PER_TICK;
-		String energy = "RF per Block: " + FARMER.PROCESSING_ENERGY_MULT * 25;
 		
-		fontRendererObj.drawString(tutorial5, xSize / 2, 30, GUIUtilities.getColor(20, 20, 20));
-		fontRendererObj.drawString(tutorial6, xSize / 2, 40, GUIUtilities.getColor(20, 20, 20));
-		fontRendererObj.drawString(tutorial7, xSize / 2, 50, GUIUtilities.getColor(20, 20, 20));
-		fontRendererObj.drawString(area, xSize / 2, 65, GUIUtilities.getColor(20, 20, 20));
-		fontRendererObj.drawString(speed, xSize / 2, 75, GUIUtilities.getColor(20, 20, 20));
-		fontRendererObj.drawString(blocks, xSize / 2, 85, GUIUtilities.getColor(20, 20, 20));
-		fontRendererObj.drawString(energy, xSize / 2, 95, GUIUtilities.getColor(20, 20, 20));
-		*/
+		String radius = "Radius: " + FARMER.RANGE;	
+		fontRendererObj.drawString(radius, xSize / 2 - 50, 117, GUIUtilities.getColor(20, 20, 20));
+		
 		GL11.glScalef(1/scale, 1/scale, 1/scale);
 	}
 	

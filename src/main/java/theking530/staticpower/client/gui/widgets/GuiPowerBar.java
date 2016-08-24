@@ -31,8 +31,12 @@ public class GuiPowerBar {
 	public GuiPowerBar() {
 
 	}
-	public List drawText(int currentEnergy, int maxEnergy, int energyPerTick) {
-    	String text = ("Max: " + energyPerTick + " RF/t" + "=" + NumberFormat.getNumberInstance(Locale.US).format(currentEnergy)  + "/" + NumberFormat.getNumberInstance(Locale.US).format(maxEnergy) + " " + "RF");
+	public List drawText(int currentEnergy, int maxEnergy, int energyPerTick, int powerUse) {
+    	String text = ("Max: " + energyPerTick + " RF/t");
+    	if(powerUse > 0) {
+    		text += "=" + "Usage: " + powerUse + " RF/t";
+    	}
+    	text += "=" + NumberFormat.getNumberInstance(Locale.US).format(currentEnergy)  + "/" + NumberFormat.getNumberInstance(Locale.US).format(maxEnergy) + " " + "RF";
     	String[] splitMsg = text.split("=");
 		return Arrays.asList(splitMsg);
 	}

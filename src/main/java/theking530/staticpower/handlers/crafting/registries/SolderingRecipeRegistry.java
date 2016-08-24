@@ -2,29 +2,14 @@ package theking530.staticpower.handlers.crafting.registries;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
-import theking530.staticpower.blocks.ModBlocks;
-import theking530.staticpower.handlers.crafting.wrappers.FluidInfuserOutputWrapper;
-import theking530.staticpower.handlers.crafting.wrappers.SolderingRecipeWrapper;
-import theking530.staticpower.items.ModItems;
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.items.IItemHandler;
+import theking530.staticpower.handlers.crafting.wrappers.SolderingRecipeWrapper;
 
 public class SolderingRecipeRegistry {
 
@@ -91,13 +76,13 @@ public class SolderingRecipeRegistry {
         RECIPES.add(solderingRecipe);
         return solderingRecipe;
     }  
-    public ItemStack findSolderingOutput(IInventory invCrafting, World world) {
+    public ItemStack findSolderingOutput(IItemHandler inv, World world) {
         int i = 0;
         ItemStack itemstack = null;
         ItemStack itemstack1 = null;
         int j;
-        for (j = 0; j < invCrafting.getSizeInventory(); ++j){
-            ItemStack itemstack2 = invCrafting.getStackInSlot(j);
+        for (j = 0; j < inv.getSlots(); ++j){
+            ItemStack itemstack2 = inv.getStackInSlot(j);
 
             if (itemstack2 != null){
                 if (i == 0){
@@ -125,8 +110,8 @@ public class SolderingRecipeRegistry {
         }else{
             for (j = 0; j < RECIPES.size(); ++j){
                 SolderingRecipeWrapper recipe = RECIPES.get(j);
-                if (recipe.matches(invCrafting, world)){
-                    return recipe.getCraftingResult(invCrafting);
+                if (recipe.matches(inv, world)){
+                    return recipe.getCraftingResult(inv);
                 }
             }
             return null;

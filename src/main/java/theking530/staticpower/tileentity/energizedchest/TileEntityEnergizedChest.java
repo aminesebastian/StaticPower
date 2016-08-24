@@ -1,12 +1,13 @@
 package theking530.staticpower.tileentity.energizedchest;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.items.CapabilityItemHandler;
 import theking530.staticpower.tileentity.TileEntityBaseChest;
 
 public class TileEntityEnergizedChest extends TileEntityBaseChest{
 	
 	public TileEntityEnergizedChest() {
-		initializeBasicTileEntity(72, null, null);
+		initializeBasicTileEntity(0, 0, 72);
 	}
 	
 	//NBT
@@ -28,7 +29,12 @@ public class TileEntityEnergizedChest extends TileEntityBaseChest{
             return super.receiveClientEvent(i, j);
         }
     }
-    
+    public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.util.EnumFacing facing){
+    	if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+    		return (T) SLOTS_OUTPUT;
+    	}
+    	return super.getCapability(capability, facing);
+    }
     //IInventory
 	@Override
 	public String getName() {

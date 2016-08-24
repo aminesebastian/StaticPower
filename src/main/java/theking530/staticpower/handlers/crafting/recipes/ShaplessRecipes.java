@@ -47,7 +47,13 @@ public class ShaplessRecipes {
 				new ItemStack(ModItems.MetalHammer, 1, OreDictionary.WILDCARD_VALUE), "ingotSilver"}));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.LeadPlate, 1), new Object[]{
 				new ItemStack(ModItems.MetalHammer, 1, OreDictionary.WILDCARD_VALUE), "ingotLead"}));
-
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.StaticPlate, 1), new Object[]{
+				new ItemStack(ModItems.MetalHammer, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(ModItems.StaticIngot)});
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.EnergizedPlate, 1), new Object[]{
+				new ItemStack(ModItems.MetalHammer, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(ModItems.EnergizedIngot)});
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.LumumPlate, 1), new Object[]{
+				new ItemStack(ModItems.MetalHammer, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(ModItems.LumumIngot)});
+		
 		//Static Ingot --------------------------------------------------------------------------------------------------
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.StaticIngot, 9), new Object[]{
 			new ItemStack(ModBlocks.StaticBlock)});
@@ -70,7 +76,7 @@ public class ShaplessRecipes {
 		
 		//Inert Infusion Blend --------------------------------------------------------------------------------------------------
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.InertInfusionBlend, 4), new Object[]{
-			"dustPlatinum", "dustTin", "dustTin", "dustSilver"}));
+			 "dustTin", "dustTin", "dustSilver", "dustSilver"}));
 		
 		//Nuggets --------------------------------------------------------------------------------------------------
 		addOreDictRecipe("nuggetCopper", 9, "ingotCopper");

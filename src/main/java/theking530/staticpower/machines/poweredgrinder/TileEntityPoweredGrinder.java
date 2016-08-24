@@ -12,10 +12,6 @@ import theking530.staticpower.utils.InventoryUtilities;
 
 public class TileEntityPoweredGrinder extends BaseMachine {
 	
-	private static final int[] slots_top = new int[] {0};
-	private static final int[] slots_side = new int[] {1,2,3};		
-
-	
 	public TileEntityPoweredGrinder() {
 		initializeBasicMachine(2, 100, 100000, 80, 100, 1, 1, 3);
 	}
@@ -71,9 +67,8 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 		return false;
 	}
 	public void process() {
-		//worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		if(!isProcessing() && !isMoving() && canProcess(getInputStack(0))) {
-				MOVE_TIMER = 1;
+			MOVE_TIMER = 1;
 		}
 		if(!isProcessing() && isMoving() && canProcess(getInputStack(0))) {
 			if(MOVE_TIMER < MOVE_SPEED) {
@@ -91,10 +86,10 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 			}else{
 				if(getGrindingResult(getInternalStack(0)) != null) {
 					for(int j=0; j<getGrindingResult(getInternalStack(0)).getOutputItemCount(); j++) {
-						for(int i=1; i<4; i++) {
+						for(int i=0; i<3; i++) {
 							if(diceRoll(getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getPercentage())) {
 								if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, i, getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getOutput())) {
-									SLOTS_OUTPUT.insertItem(i, getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getOutput(), false);
+									SLOTS_OUTPUT.insertItem(i, getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getOutput().copy(), false);
 									break;
 								}	
 							}
@@ -102,15 +97,18 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 					}
 				}
 				setInternalStack(0, null);
+				markForUpdate();
 				PROCESSING_TIMER=0;
 				MOVE_TIMER = 0;
 			}
-		}
+		}	
 	}
  
 	public boolean diceRoll(float percentage) {
-		Random rand = new Random();
-		float randFloat = rand.nextFloat();
+		if(percentage >= 1) {
+			return true;
+		}
+		float randFloat = RANDOM.nextFloat();
 		
 		return percentage > randFloat ? true : false;
 	}

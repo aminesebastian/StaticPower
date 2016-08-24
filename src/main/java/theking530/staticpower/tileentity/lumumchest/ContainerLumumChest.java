@@ -8,6 +8,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerLumumChest extends Container {
 	
@@ -17,11 +18,10 @@ public class ContainerLumumChest extends Container {
 
 	public ContainerLumumChest(InventoryPlayer invPlayer, TileEntityLumumChest teStaticChest) {
 		staticChest = teStaticChest;
-		chestInventory = (IInventory) teStaticChest;
-		this.numRows = teStaticChest.getSizeInventory() / 14;
+		this.numRows = teStaticChest.SLOTS_OUTPUT.getSlots() / 14;
 		for (int y = 0; y < 10; y++) {
 			for (int x = 0; x < 14; x++) {
-				this.addSlotToContainer(new Slot(teStaticChest, x + y * 14, 7 + (x * 18), 4+(19 + (y * 18))));
+				this.addSlotToContainer(new SlotItemHandler(teStaticChest.SLOTS_OUTPUT, x + y * 14, 7 + (x * 18), 4+(19 + (y * 18))));
 			}
 		}
 		for (int i = 0; i < 3; i++) {

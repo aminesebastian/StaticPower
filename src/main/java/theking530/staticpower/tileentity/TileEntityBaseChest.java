@@ -39,10 +39,6 @@ public class TileEntityBaseChest extends BaseTileEntity{
 
                 if (entityplayer.openContainer instanceof ContainerStaticChest) {
                     IInventory iinventory = ((ContainerStaticChest)entityplayer.openContainer).getChestInventory();
-
-                    if (iinventory == this || iinventory instanceof InventoryLargeChest && ((InventoryLargeChest)iinventory).isPartOfLargeChest(this)) {
-                        ++this.numPlayersUsing;
-                    }
                 }
             }
         }
@@ -92,9 +88,6 @@ public class TileEntityBaseChest extends BaseTileEntity{
                 if (entityplayer.openContainer instanceof ContainerStaticChest) {
                     IInventory iinventory = ((ContainerStaticChest)entityplayer.openContainer).getChestInventory();
 
-                    if (iinventory == this || iinventory instanceof InventoryLargeChest && ((InventoryLargeChest)iinventory).isPartOfLargeChest(this)) {
-                        ++this.numPlayersUsing;
-                    }
                 }
             }
         }  
@@ -118,50 +111,6 @@ public class TileEntityBaseChest extends BaseTileEntity{
             return super.receiveClientEvent(i, j);
         }
     }
-    //IInventory
-	public void setCustomName(String name) {
-		this.CUSTOM_NAME = name;
-	}
-	public int getSizeInventory() {
-		return slots.length;
-	}
-	@Override
-	public ItemStack getStackInSlot(int i) {
-		return slots[i];
-	}
-	@Override
-	public ItemStack decrStackSize(int i, int j) {
-		if (slots[i] !=null) {
-			if (slots[i].stackSize <= j) {
-				ItemStack itemstack = slots[i];
-				slots[i] = null;
-				return itemstack;
-			}
-			
-			ItemStack itemstack1 = slots[i].splitStack(j);
-			
-			if(slots[i].stackSize == 0) {
-				slots[i] = null;
-			}
-			
-			return itemstack1;
-			
-		}else{
-			
-			return null;
-		}
-	}	
-	@Override
-	public void setInventorySlotContents(int i, ItemStack itemstack) {
-		slots[i] = itemstack;
-		if (itemstack != null && itemstack.stackSize > getInventoryStackLimit()) {
-			itemstack.stackSize = getInventoryStackLimit();
-		}
-	}
-	@Override
-	public boolean hasCustomName() {
-		return this.CUSTOM_NAME != null && this.CUSTOM_NAME.length() > 0;
-	}
 	@Override
 	public String getName() {
 		return "container.StaticChest";

@@ -1,11 +1,10 @@
 package theking530.staticpower.handlers.crafting.wrappers;
 
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.items.IItemHandler;
 
 public class SolderingRecipeWrapper {
 	public final int recipeWidth;
@@ -29,7 +28,7 @@ public class SolderingRecipeWrapper {
     /**
      * Used to check if a recipe matches current crafting inventory
      */
-    public boolean matches(IInventory inventory, World world) {
+    public boolean matches(IItemHandler inventory, World world) {
         for (int i = 0; i <= 3 - this.recipeWidth; ++i){
             for (int j = 0; j <= 3 - this.recipeHeight; ++j){
                 if (this.checkMatch(inventory, i, j, true)){
@@ -46,7 +45,7 @@ public class SolderingRecipeWrapper {
     /**
      * Checks if the region of a crafting inventory is match for the recipe.
      */
-    private boolean checkMatch(IInventory inventory, int p_77573_2_, int p_77573_3_, boolean p_77573_4_) {
+    private boolean checkMatch(IItemHandler inventory, int p_77573_2_, int p_77573_3_, boolean p_77573_4_) {
         for (int k = 0; k < 3; ++k) {
             for (int l = 0; l < 3; ++l) {
                 int i1 = k - p_77573_2_;
@@ -80,7 +79,7 @@ public class SolderingRecipeWrapper {
         }
         return true;
     }
-    public ItemStack getStackInRowAndColumn(IInventory inventory, int p_70463_1_, int p_70463_2_) {
+    public ItemStack getStackInRowAndColumn(IItemHandler inventory, int p_70463_1_, int p_70463_2_) {
         if (p_70463_1_ >= 0 && p_70463_1_ < 3){
             int k = p_70463_1_ + p_70463_2_ * 3;
             return inventory.getStackInSlot(k);
@@ -91,10 +90,10 @@ public class SolderingRecipeWrapper {
     /**
      * Returns an Item that is the result of this recipe
      */
-    public ItemStack getCraftingResult(IInventory inventory){
+    public ItemStack getCraftingResult(IItemHandler inventory){
         ItemStack itemstack = this.getRecipeOutput().copy();
         if (this.field_92101_f) {
-            for (int i = 0; i < inventory.getSizeInventory(); ++i){
+            for (int i = 0; i < inventory.getSlots(); ++i){
                 ItemStack itemstack1 = inventory.getStackInSlot(i);
 
                 if (itemstack1 != null && itemstack1.hasTagCompound()){

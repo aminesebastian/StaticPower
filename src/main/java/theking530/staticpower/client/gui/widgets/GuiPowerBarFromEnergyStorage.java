@@ -21,7 +21,7 @@ public class GuiPowerBarFromEnergyStorage {
 	}
 	
 	public List drawText() {
-		return POWER_BAR.drawText(MACHINE.STORAGE.getEnergyStored(), MACHINE.STORAGE.getMaxEnergyStored(), MACHINE.STORAGE.getMaxReceive());
+		return POWER_BAR.drawText(MACHINE.STORAGE.getEnergyStored(), MACHINE.STORAGE.getMaxEnergyStored(), MACHINE.STORAGE.getMaxReceive(), MACHINE.getProcessingCost());
 	}
 	public void drawPowerBar(int xpos, int ypos, int width, int height, float zLevel) {
 		POWER_BAR.drawPowerBar(xpos, ypos, width, height, zLevel, MACHINE.STORAGE.getEnergyStored(), MACHINE.STORAGE.getMaxEnergyStored());

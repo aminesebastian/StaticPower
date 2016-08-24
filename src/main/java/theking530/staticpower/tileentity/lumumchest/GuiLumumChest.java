@@ -23,7 +23,7 @@ public class GuiLumumChest extends GuiContainer{
 	        int var2 = (this.height - this.ySize) / 2;       
 	}
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
-		String name = this.LUMUM_CHEST.hasCustomName() ? this.LUMUM_CHEST.getName() : I18n.format(this.LUMUM_CHEST.getName());
+		String name =  I18n.format(this.LUMUM_CHEST.getName());
 		this.fontRendererObj.drawString(name, this.xSize - 165, 10, 4210752 );
 	}	
 	@Override

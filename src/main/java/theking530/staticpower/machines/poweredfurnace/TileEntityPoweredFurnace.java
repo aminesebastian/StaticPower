@@ -63,7 +63,7 @@ public class TileEntityPoweredFurnace extends BaseMachine {
 				PROCESSING_TIMER++;
 			}else{
 				if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, 0, getResult(getInternalStack(0)))) {
-					SLOTS_OUTPUT.insertItem(0, getResult(getInternalStack(0)), false);
+					SLOTS_OUTPUT.insertItem(0, getResult(getInternalStack(0)).copy(), false);
 					useEnergy(1000*PROCESSING_ENERGY_MULT);
 					setInternalStack(0, null);
 					PROCESSING_TIMER=0;

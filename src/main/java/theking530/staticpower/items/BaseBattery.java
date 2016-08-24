@@ -15,7 +15,7 @@ public class BaseBattery extends BasePoweredItem {
 
 	public BaseBattery(String name, int capacity, int powerDivisor) {
 		super(name, capacity, powerDivisor);
-		setMaxStackSize(16);
+		setMaxStackSize(1);
 	}
 	@Override  
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean par4) {

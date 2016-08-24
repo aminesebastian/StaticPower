@@ -41,6 +41,7 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 	public ItemStackHandler  SLOTS_OUTPUT;
 	public ItemStackHandler  SLOTS_INTERNAL;
 	public ItemStackHandler  SLOTS_UPGRADES;
+	public Random RANDOM = new Random();
 	
 	public String CUSTOM_NAME;
 	public int REDSTONE_MODE = 0;
@@ -58,10 +59,11 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 	public BaseTileEntity() {
 
 	}
-	public void initializeBasicTileEntity(int inputSlots, int outputSlots, int internalSlots) {
+	public void initializeBasicTileEntity(int internalSlots, int inputSlots, int outputSlots) {
 		SLOTS_INPUT = new ItemStackHandler(inputSlots);
 		SLOTS_OUTPUT = new ItemStackHandler(outputSlots);
 		SLOTS_INTERNAL = new ItemStackHandler(internalSlots);
+		SLOTS_UPGRADES = new ItemStackHandler(3);
 	}
 	@Override
 	public void update() {
@@ -124,6 +126,7 @@ public class BaseTileEntity extends TileEntity implements ITickable {
         SLOTS_INPUT.deserializeNBT((NBTTagCompound) nbt.getTag("INPUTS"));
         SLOTS_OUTPUT.deserializeNBT((NBTTagCompound) nbt.getTag("OUTPUTS"));
         SLOTS_INTERNAL.deserializeNBT((NBTTagCompound) nbt.getTag("INTERNAL"));
+        SLOTS_UPGRADES.deserializeNBT((NBTTagCompound) nbt.getTag("UPGRADES"));
     }		
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
@@ -135,6 +138,7 @@ public class BaseTileEntity extends TileEntity implements ITickable {
     	nbt.setTag("INPUTS", SLOTS_INPUT.serializeNBT());
     	nbt.setTag("OUTPUTS", SLOTS_OUTPUT.serializeNBT());
     	nbt.setTag("INTERNAL", SLOTS_INTERNAL.serializeNBT());
+    	nbt.setTag("UPGRADES", SLOTS_UPGRADES.serializeNBT());
 		return nbt;	
 	}
 	

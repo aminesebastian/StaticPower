@@ -8,18 +8,17 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.StringUtils;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import theking530.staticpower.assists.RegisterHelper;
+import theking530.staticpower.blocks.BaseItemBlock;
 
-public class BaseFluidBlock extends BlockFluidClassic {
+public class BaseFluidBlock extends BlockFluidClassic  {
 
 protected Fluid fluid;
 
@@ -27,6 +26,8 @@ protected Fluid fluid;
 		super(fluid, material);
 		setUnlocalizedName(name);
 		setRegistryName(name);
+		RegisterHelper.registerItem(new BaseItemBlock(this, name));
+		//setDefaultState(blockState.getBaseState().withProperty(LEVEL, 7));
 	}
 	@Override
 	public boolean canDisplace(IBlockAccess world, BlockPos pos) {

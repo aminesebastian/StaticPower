@@ -24,18 +24,38 @@ public class ContainerChargingStation extends Container {
 		C_CHARGING = teCharging;
 		
 		//Input
-		this.addSlotToContainer(new SlotItemHandler(teCharging.SLOTS_INPUT, 0, 63, 29));
-		this.addSlotToContainer(new SlotItemHandler(teCharging.SLOTS_INPUT, 1, 81, 29));
-		this.addSlotToContainer(new SlotItemHandler(teCharging.SLOTS_INPUT, 2, 99, 29));
-		this.addSlotToContainer(new SlotItemHandler(teCharging.SLOTS_INPUT, 3, 117, 29));
+		this.addSlotToContainer(new SlotItemHandler(teCharging.SLOTS_INPUT, 0, 63, 29) {
+			@Override
+	        public boolean isItemValid(ItemStack itemStack) {
+		          return itemStack.getItem() instanceof IEnergyContainerItem ? true : false;
+		    }
+		});	
+		this.addSlotToContainer(new SlotItemHandler(teCharging.SLOTS_INPUT, 1, 81, 29) {
+			@Override
+	        public boolean isItemValid(ItemStack itemStack) {
+		          return itemStack.getItem() instanceof IEnergyContainerItem ? true : false;
+		    }
+		});	
+		this.addSlotToContainer(new SlotItemHandler(teCharging.SLOTS_INPUT, 2, 99, 29) {
+			@Override
+	        public boolean isItemValid(ItemStack itemStack) {
+		          return itemStack.getItem() instanceof IEnergyContainerItem ? true : false;
+		    }
+		});	
+		this.addSlotToContainer(new SlotItemHandler(teCharging.SLOTS_INPUT, 3, 117, 29) {
+			@Override
+	        public boolean isItemValid(ItemStack itemStack) {
+		          return itemStack.getItem() instanceof IEnergyContainerItem ? true : false;
+		    }
+		});	
 		
 		//Output
 		this.addSlotToContainer(new SlotItemHandler(teCharging.SLOTS_OUTPUT, 0, 60, 61) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
-		          return false;
-		    }
-		});	
+		          return itemStack.getItem() instanceof IEnergyContainerItem ? true : false;
+		        }
+		});
 		this.addSlotToContainer(new SlotItemHandler(teCharging.SLOTS_OUTPUT, 1, 80, 61) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
@@ -64,7 +84,7 @@ public class ContainerChargingStation extends Container {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return itemStack.getItem() instanceof IEnergyContainerItem ? true : false;
-		        }
+		    }
 		});
 		this.addSlotToContainer(new SlotItemHandler(teCharging.SLOTS_INPUT, 5, 174, 73) {
 			@Override

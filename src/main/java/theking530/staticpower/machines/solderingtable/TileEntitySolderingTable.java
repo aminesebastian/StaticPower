@@ -13,36 +13,36 @@ public class TileEntitySolderingTable extends BaseTileEntity {
 	private int SOLDERING_IRON_DAMAGE = 1;
 	
 	public TileEntitySolderingTable() {
-		initializeBasicTileEntity(45, null, null);
+		initializeBasicTileEntity(17, 1, 0);
 	}
 	@Override
 	public String getName() {
 		return "SolderingTable";		
 	}
 	public void onCrafted(EntityPlayer player, ItemStack item, int amount) {
-		MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(player, slots[18], EnumHand.MAIN_HAND));
-		if(slots[18].getItem() instanceof ISolderingIron) {
+		MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(player, getInputStack(17), EnumHand.MAIN_HAND));
+		if(getInputStack(17).getItem() instanceof ISolderingIron) {
 			if(!worldObj.isRemote) {
-				ISolderingIron tempIron = (ISolderingIron) slots[18].getItem();
-				tempIron.useSolderingItem(slots[18]);		
+				ISolderingIron tempIron = (ISolderingIron) getInputStack(17).getItem();
+				tempIron.useSolderingItem(getInputStack(17));		
 			}
 		}
     	boolean flag = false;
 		for (int i = 0; i < 9; ++i){
     		flag = false;
-            ItemStack itemstack1 = getStackInSlot(i);
+            ItemStack itemstack1 = getInputStack(i);
             if (itemstack1 != null) {
             	for(int j=9; j<16; j++) {
-            		if(slots[j] != null) {
-            			if(slots[j].isItemEqual(slots[i])) {
-            				decrStackSize(j, 1);
+            		if(getInputStack(j) != null) {
+            			if(getInputStack(j).isItemEqual(getInputStack(i))) {
+            				SLOTS_INPUT.extractItem(j, 1, false);
             				flag = true;
             			}
             		}
             	}
             }
             if(!flag) {
-				decrStackSize(i, 1);
+				SLOTS_INPUT.extractItem(i, 1, false);
             }
 		}
 	}

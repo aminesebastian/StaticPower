@@ -15,6 +15,7 @@ import theking530.staticpower.assists.RegisterHelper;
 import theking530.staticpower.assists.Tier;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.items.armor.EnergizedArmor;
+import theking530.staticpower.items.armor.LumumArmor;
 import theking530.staticpower.items.armor.StaticArmor;
 import theking530.staticpower.items.book.StaticPowerBook;
 import theking530.staticpower.items.itemfilter.FilterTier;
@@ -30,6 +31,7 @@ import theking530.staticpower.items.tools.StaticWrench;
 import theking530.staticpower.items.tools.WireCutters;
 import theking530.staticpower.items.upgrades.BasePowerUpgrade;
 import theking530.staticpower.items.upgrades.BaseQuarryingUpgrade;
+import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.items.upgrades.BaseSpeedUpgrade;
 import theking530.staticpower.items.upgrades.BaseTankUpgrade;
 
@@ -37,6 +39,7 @@ public class ModItems {
 	
 	public static ArmorMaterial StaticMaterial = EnumHelper.addArmorMaterial("StaticMaterial", null, 28, new int[] {3, 6, 6, 3}, 25, null, 0);
 	public static ArmorMaterial EnergizedMaterial = EnumHelper.addArmorMaterial("EnergizedMaterial", null, 35, new int[] {5, 10, 8, 7}, 35, null, 0);
+	public static ArmorMaterial LumumMaterial = EnumHelper.addArmorMaterial("LumumMaterial", null, 35, new int[] {8, 13, 11, 10}, 35, null, 0);
 	
 	public static Item Rubber;
 	public static Item IOPort;
@@ -52,6 +55,9 @@ public class ModItems {
 	public static Item SilverPlate;
 	public static Item GoldPlate;
 	public static Item LeadPlate;
+	public static Item StaticPlate;
+	public static Item EnergizedPlate;
+	public static Item LumumPlate;
 	
 	public static Item BasicCircuit;
 	public static Item StaticCircuit;
@@ -67,6 +73,11 @@ public class ModItems {
 	public static Item StaticSpeedUpgrade;
 	public static Item EnergizedSpeedUpgrade;
 	public static Item LumumSpeedUpgrade;
+	
+	public static Item BasicRangeUpgrade;
+	public static Item StaticRangeUpgrade;
+	public static Item EnergizedRangeUpgrade;
+	public static Item LumumRangeUpgrade;
 	
 	public static Item BasicTankUpgrade;
 	public static Item StaticTankUpgrade;
@@ -147,6 +158,10 @@ public class ModItems {
 	public static Item EnergizedChestplate;
 	public static Item EnergizedLeggings;
 	public static Item EnergizedBoots;
+	public static Item LumumHelmet;
+	public static Item LumumChestplate;
+	public static Item LumumLeggings;
+	public static Item LumumBoots;
 	
 	public static Item DepletedCrop;
 	public static Item EnergizedSeeds;
@@ -203,6 +218,15 @@ public class ModItems {
 		EnergizedBoots = new EnergizedArmor("EnergizedBoots", EnergizedMaterial, "EnergizedBoots", EntityEquipmentSlot.FEET).setUnlocalizedName("EnergizedBoots");
 		RegisterHelper.registerItem(EnergizedBoots);
 		
+		LumumHelmet = new LumumArmor("LumumHelmet", LumumMaterial, "LumumHelmet", EntityEquipmentSlot.HEAD).setUnlocalizedName("LumumHelmet");
+		RegisterHelper.registerItem(LumumHelmet);		
+		LumumChestplate = new LumumArmor("LumumChestplate", LumumMaterial, "LumumChestplate", EntityEquipmentSlot.CHEST).setUnlocalizedName("LumumChestplate");
+		RegisterHelper.registerItem(LumumChestplate);		
+		LumumLeggings = new LumumArmor("LumumLeggings", LumumMaterial, "LumumLeggings", EntityEquipmentSlot.LEGS).setUnlocalizedName("LumumLeggings");
+		RegisterHelper.registerItem(LumumLeggings);		
+		LumumBoots = new LumumArmor("LumumBoots", LumumMaterial, "LumumBoots", EntityEquipmentSlot.FEET).setUnlocalizedName("LumumBoots");
+		RegisterHelper.registerItem(LumumBoots);
+		
 		BasicCircuit = new ItemBase("BasicCircuit");
 		RegisterHelper.registerItem(BasicCircuit);
 		StaticCircuit = new ItemBase("StaticCircuit");
@@ -236,6 +260,12 @@ public class ModItems {
 		RegisterHelper.registerItem(GoldPlate);
 		LeadPlate = new ItemBase("LeadPlate");
 		RegisterHelper.registerItem(LeadPlate);
+		StaticPlate = new ItemBase("StaticPlate");
+		RegisterHelper.registerItem(StaticPlate);
+		EnergizedPlate = new ItemBase("EnergizedPlate");
+		RegisterHelper.registerItem(EnergizedPlate);
+		LumumPlate = new ItemBase("LumumPlate");
+		RegisterHelper.registerItem(LumumPlate);
 		
 		EnergizedEnergyCrystal = new ItemBase("EnergizedEnergyCrystal");
 		RegisterHelper.registerItem(EnergizedEnergyCrystal);
@@ -298,6 +328,15 @@ public class ModItems {
 		RegisterHelper.registerItem(EnergizedQuarryingUpgrade);	
 		LumumQuarryingUpgrade = new BaseQuarryingUpgrade("LumumQuarryingUpgrade", Tier.LUMUM);
 		RegisterHelper.registerItem(LumumQuarryingUpgrade);	
+		
+		BasicRangeUpgrade = new BaseRangeUpgrade("BasicRangeUpgrade", Tier.BASE);
+		RegisterHelper.registerItem(BasicRangeUpgrade);	
+		StaticRangeUpgrade = new BaseRangeUpgrade("StaticRangeUpgrade", Tier.STATIC);
+		RegisterHelper.registerItem(StaticRangeUpgrade);	
+		EnergizedRangeUpgrade = new BaseRangeUpgrade("EnergizedRangeUpgrade", Tier.ENERGIZED);
+		RegisterHelper.registerItem(EnergizedRangeUpgrade);	
+		LumumRangeUpgrade = new BaseRangeUpgrade("LumumRangeUpgrade", Tier.LUMUM);
+		RegisterHelper.registerItem(LumumRangeUpgrade);	
 		
 		StaticSeeds = new StaticSeeds(ModBlocks.StaticCropPlant, Blocks.FARMLAND).setUnlocalizedName("StaticSeeds");
 		RegisterHelper.registerItem(StaticSeeds);	

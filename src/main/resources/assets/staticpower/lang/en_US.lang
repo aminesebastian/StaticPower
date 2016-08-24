@@ -49,23 +49,31 @@ item.TinPlate.name=Tin Plate
 item.SilverPlate.name=Silver Plate
 item.GoldPlate.name=Gold Plate
 item.LeadPlate.name=Lead Plate
+item.StaticPlate.name=Static Plate
+item.EnergizedPlate.name=Energized Plate
+item.LumumPlate.name=Lumum Plate
 
 //Upgrades
 item.BasicSpeedUpgrade.name=Basic Speed Upgrade
 item.BasicPowerUpgrade.name=Basic Power Upgrade
 item.BasicTankUpgrade.name=Basic Tank Upgrade
+item.BasicRangeUpgrade.name=Basic Range Upgrade
 item.StaticSpeedUpgrade.name=Static Speed Upgrade
 item.StaticPowerUpgrade.name=Static Power Upgrade
 item.StaticTankUpgrade.name=Static Tank Upgrade
+item.StaticRangeUpgrade.name=Static Range Upgrade
 item.StaticQuarryingUpgrade.name=Static Quarrying Upgrade
 item.EnergizedSpeedUpgrade.name=Energized Speed Upgrade
 item.EnergizedPowerUpgrade.name=Energized Power Upgrade
 item.EnergizedTankUpgrade.name=Energized Tank Upgrade
 item.EnergizedQuarryingUpgrade.name=Energized Quarrying Upgrade
+item.EnergizedRangeUpgrade.name=Energized Range Upgrade
 item.LumumSpeedUpgrade.name=Lumum Speed Upgrade
 item.LumumPowerUpgrade.name=Lumum Power Upgrade
 item.LumumTankUpgrade.name=Lumum Tank Upgrade
 item.LumumQuarryingUpgrade.name=Lumum Quarrying Upgrade
+item.LumumRangeUpgrade.name=Lumum Range Upgrade
+item.CreativeSpeedUpgrade.name=Creative Speed Upgrade
 
 //Ingots
 item.SilverIngot.name=Silver Ingot
@@ -73,6 +81,7 @@ item.TinIngot.name=Tin Ingot
 item.CopperIngot.name=Copper Ingot
 item.LeadIngot.name=Lead Ingot
 item.PlatinumIngot.name=Platinum Ingot
+item.SteelIngot.name=Steel Ingot
 item.InertIngot.name=Inert Ingot
 item.StaticIngot.name=§aStatic Metal Ingot
 item.EnergizedIngot.name=§bEnergized Metal Ingot
@@ -105,6 +114,10 @@ item.EnergizedHelmet.name=Energized Helmet
 item.EnergizedChestplate.name=Energized Chestplate
 item.EnergizedLeggings.name=Energized Leggings
 item.EnergizedBoots.name=Energized Boots
+item.LumumHelmet.name=Lumum Helmet
+item.LumumChestplate.name=Lumum Chestplate
+item.LumumLeggings.name=Lumum Leggings
+item.LumumBoots.name=Lumum Boots
 item.StaticBelt.name=Static Belt
 item.EnergizedBelt.name=Energized Belt
 
@@ -185,12 +198,12 @@ tile.EnergizedPlanks.name=Energized Planks
 tile.LumumPlanks.name=Lumum Planks
 
 //Fluids
-fluid.StaticFluid=§aStatic Fluid
-tile.StaticFluid.name=§aStatic Fluid
-fluid.EnergizedFluid=§bEnergized Fluid
-tile.EnergizedFluid.name=§bEnergized Fluid
-fluid.LumumFluid=§eLumum Fluid
-tile.LumumFluid.name=§eLumum Fluid
+fluid.staticfluid=§aStatic Fluid
+tile.staticfluid.name=§aStatic Fluid
+fluid.energizedfluid=§bEnergized Fluid
+tile.energizedfluid.name=§bEnergized Fluid
+fluid.lumumfluid=§eLumum Fluid
+tile.lumumfluid.name=§eLumum Fluid
 
 //GUI
 container.CropGenerator=Crop Generator

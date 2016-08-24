@@ -80,7 +80,7 @@ public class TileEntityFusionFurnace extends BaseMachine {
 				PROCESSING_TIMER++;
 			}else{
 				if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, 0, getFusionResult(getInternalStack(0), getInternalStack(1), getInternalStack(2), getInternalStack(3), getInternalStack(4)).getOutputItem())) {
-					SLOTS_OUTPUT.insertItem(0, getFusionResult(getInternalStack(0), getInternalStack(1), getInternalStack(2), getInternalStack(3), getInternalStack(4)).getOutputItem(), false);
+					SLOTS_OUTPUT.insertItem(0, getFusionResult(getInternalStack(0), getInternalStack(1), getInternalStack(2), getInternalStack(3), getInternalStack(4)).getOutputItem().copy(), false);
 					setInternalStack(0, null);
 					setInternalStack(1, null);
 					setInternalStack(2, null);
