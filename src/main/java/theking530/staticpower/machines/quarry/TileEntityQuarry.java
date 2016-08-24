@@ -21,6 +21,9 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.items.CapabilityItemHandler;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.items.itemfilter.ItemFilter;
@@ -30,7 +33,7 @@ import theking530.staticpower.items.upgrades.BaseSpeedUpgrade;
 import theking530.staticpower.machines.BaseMachineWithTank;
 import theking530.staticpower.power.StaticEnergyStorage;
 import theking530.staticpower.tileentity.BaseTileEntity;
-import theking530.staticpower.utils.InventoryUtils;
+import theking530.staticpower.utils.InventoryUtilities;
 import theking530.staticpower.utils.SideModeList;
 import theking530.staticpower.utils.WorldUtilities;
 
@@ -48,7 +51,7 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 	private boolean testing = false;
 	
 	public TileEntityQuarry() {
-		initializeBaseMachineWithTank(2, 100, 100000, 1000, 10, 4, new int[0], new int[0], new int[]{1,2,3}, 10000);
+		initializeBaseMachineWithTank(2, 100, 100000, 1000, 10, 1, 0, 0, 10000);
 	}
 	@Override
 	public void process(){
@@ -80,19 +83,19 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 			}	
 		}
 		if(QUARRIED_STACKS.size() > 0) {
-			if(worldObj.getTileEntity(pos.add(0,1,0)) != null && worldObj.getTileEntity(pos.add(0,1,0)) instanceof IInventory) {
+			if(worldObj.getTileEntity(pos.add(0,1,0)) != null && worldObj.getTileEntity(pos.add(0,1,0)).hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN)) {
 				for(int k=QUARRIED_STACKS.size()-1; k>=0; k--) {
-					if(slots[0] != null && slots[0].getItem() instanceof ItemFilter) {
-						ItemFilter tempFilter = (ItemFilter)slots[0].getItem();
-						if(tempFilter.evaluateFilter(slots[0], QUARRIED_STACKS.get(k))) {
+					if(getInternalStack(0) != null && getInternalStack(0).getItem() instanceof ItemFilter) {
+						ItemFilter tempFilter = (ItemFilter)getInternalStack(0).getItem();
+						if(tempFilter.evaluateFilter(getInternalStack(0), QUARRIED_STACKS.get(k))) {
 							QUARRIED_STACKS.remove(k);
 						}else{
-							if(InventoryUtils.fullyInsertItem((IInventory)worldObj.getTileEntity(pos.add(0,1,0)), QUARRIED_STACKS.get(k))) {
+							if(InventoryUtilities.canFullyInsertItemIntoInventory(worldObj.getTileEntity(pos.add(0,1,0)).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN), QUARRIED_STACKS.get(k))) {
 								QUARRIED_STACKS.remove(k);
 							}	
 						}
 					}else{
-						if(InventoryUtils.fullyInsertItem((IInventory)worldObj.getTileEntity(pos.add(0,1,0)), QUARRIED_STACKS.get(k))) {
+						if(InventoryUtilities.canFullyInsertItemIntoInventory(worldObj.getTileEntity(pos.add(0,1,0)).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN), QUARRIED_STACKS.get(k))) {
 							QUARRIED_STACKS.remove(k);
 						}
 					}
@@ -101,22 +104,22 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 		}
 	}	
 	public void upgradeHandler(){
-		quarryingUpgrade(UPGRADE_SLOTS);
+		quarryingUpgrade();
 		super.upgradeHandler();
 	}
-	public void quarryingUpgrade(int[] upgradeSlots) {
+	public void quarryingUpgrade() {
 		boolean flag = false;
 		int slot = 0;
 		for(int i=0; i<3; i++) {
-			if(slots[upgradeSlots[i]] != null) {
-				if(slots[upgradeSlots[i]].getItem() instanceof BaseQuarryingUpgrade) {
+			if(SLOTS_UPGRADES.getStackInSlot(i) != null) {
+				if(SLOTS_UPGRADES.getStackInSlot(i).getItem() instanceof BaseQuarryingUpgrade) {
 					flag = true;
 					slot = i;
 				}
 			}
 		}
 		if(flag) {
-			BaseQuarryingUpgrade tempUpgrade = (BaseQuarryingUpgrade) slots[upgradeSlots[slot]].getItem();
+			BaseQuarryingUpgrade tempUpgrade = (BaseQuarryingUpgrade) SLOTS_UPGRADES.getStackInSlot(slot).getItem();
 			BLOCKS_PER_TICK = tempUpgrade.BLOCKS_PER_TICK;
 			PROCESSING_ENERGY_MULT = (int) (INITIAL_PROCESSING_ENERGY_MULT*tempUpgrade.POWER_MULT);
 		}else{

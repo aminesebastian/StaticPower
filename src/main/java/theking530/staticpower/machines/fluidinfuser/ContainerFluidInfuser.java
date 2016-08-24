@@ -5,6 +5,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.SlotItemHandler;
 import theking530.staticpower.handlers.crafting.registries.InfuserRecipeRegistry;
 
 public class ContainerFluidInfuser extends Container {
@@ -22,10 +23,10 @@ public class ContainerFluidInfuser extends Container {
 		Infuser = teFluidInfuser;
 		
 		//Input
-		this.addSlotToContainer(new Slot(teFluidInfuser, 0, 55, 32));
+		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.SLOTS_INPUT, 0, 55, 32));
 		
 		//Output
-		this.addSlotToContainer(new SlotFluidInfuser(invPlayer.player, teFluidInfuser, 1, 112, 32) {
+		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.SLOTS_OUTPUT, 0, 112, 32) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return InfuserRecipeRegistry.Infusing().getInfusingItemStackResult(itemStack, Infuser.TANK.getFluid()) != null;
@@ -33,12 +34,12 @@ public class ContainerFluidInfuser extends Container {
 		});
 		
 		//Upgrades
-		this.addSlotToContainer(new Slot(teFluidInfuser, 2, 152, 12));
-		this.addSlotToContainer(new Slot(teFluidInfuser, 3, 152, 32));
-		this.addSlotToContainer(new Slot(teFluidInfuser, 4, 152, 52));
+		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.SLOTS_UPGRADES, 0, 152, 12));
+		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.SLOTS_UPGRADES, 1, 152, 32));
+		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.SLOTS_UPGRADES, 2, 152, 52));
 		
 		//Processing
-		this.addSlotToContainer(new Slot(teFluidInfuser, 5, 10000, 10000) {
+		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.SLOTS_INTERNAL, 0, 10000, 10000) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;

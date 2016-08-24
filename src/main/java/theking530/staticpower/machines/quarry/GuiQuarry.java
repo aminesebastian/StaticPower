@@ -57,7 +57,7 @@ public class GuiQuarry extends CustomGuiContainer{
 	}
 
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
-		String name = this.QUARRY.hasCustomName() ? this.QUARRY.getName() : I18n.format(this.QUARRY.getName());
+		String name = I18n.format(this.QUARRY.getName());
 		fontRendererObj.drawString(name, xSize / 2 - fontRendererObj.getStringWidth(name) / 2 + 3, 7, 255 << 24 | 255 << 16 | 255 << 8 | 255);
 
 		float scale = 0.7F;

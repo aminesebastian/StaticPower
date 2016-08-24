@@ -23,13 +23,13 @@ public class ContainerSolderingTable extends Container {
         //Crafting Area 0 - 8
         for (l = 0; l < 3; ++l) {
             for (i1 = 0; i1 < 3; ++i1){
-                this.addSlotToContainer(new SlotSolderingTableInput(this, SOLDERING_TABLE, i1 + l * 3, 62 + i1 * 18, 17 + l * 18));
+                this.addSlotToContainer(new SlotSolderingTableInput(this, teTable.SLOTS_INPUT, i1 + l * 3, 62 + i1 * 18, 17 + l * 18));
             }
         }
         
         //Extra Slots 9 - 15
         for (l = 0; l < 7; ++l) {
-        	this.addSlotToContainer(new Slot(SOLDERING_TABLE, l+9, 26 + l * 18, 74));
+        	this.addSlotToContainer(new SlotItemHandler(teTable.SLOTS_INPUT, l+9, 26 + l * 18, 74));
         }
         
         //Output

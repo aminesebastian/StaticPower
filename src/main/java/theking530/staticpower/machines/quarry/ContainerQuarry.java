@@ -6,9 +6,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraftforge.items.SlotItemHandler;
 import theking530.staticpower.client.gui.widgets.SlotFilter;
-import theking530.staticpower.handlers.crafting.registries.InfuserRecipeRegistry;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 
 public class ContainerQuarry extends Container {
@@ -24,7 +23,7 @@ public class ContainerQuarry extends Container {
 		Quarry = teQuarry;
 		
 		//Filter
-		this.addSlotToContainer(new SlotFilter(teQuarry, 0, 8, 71) {
+		this.addSlotToContainer(new SlotFilter(teQuarry.SLOTS_INTERNAL, 0, 8, 71) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return itemStack.getItem() instanceof ItemFilter;
@@ -32,9 +31,9 @@ public class ContainerQuarry extends Container {
 		});	
 		
 		//Upgrades
-		this.addSlotToContainer(new Slot(teQuarry, 1, 152, 17));
-		this.addSlotToContainer(new Slot(teQuarry, 2, 152, 37));
-		this.addSlotToContainer(new Slot(teQuarry, 3, 152, 57));
+		this.addSlotToContainer(new SlotItemHandler(teQuarry.SLOTS_UPGRADES, 0, 152, 17));
+		this.addSlotToContainer(new SlotItemHandler(teQuarry.SLOTS_UPGRADES, 1, 152, 37));
+		this.addSlotToContainer(new SlotItemHandler(teQuarry.SLOTS_UPGRADES, 2, 152, 57));
 			
 		//Inventory
 				for(int i = 0; i < 3; i++) {

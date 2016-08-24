@@ -18,16 +18,12 @@ import theking530.staticpower.power.PowerDistributor;
 
 public class TileEntityFluidGenerator extends BaseMachineWithTank{
 
-	private static final int[] slots_top = new int[] {0};
-	private static final int[] slots_bottom = new int[] {0};
-	private static final int[] slots_side = new int[] {0};		
-	
 	private PowerDistributor POWER_DIST;
 	public int SOUND_TIMER = 15;
 	private FluidStack PROCESSING_FLUID;
 			
 	public TileEntityFluidGenerator() {
-		initializeBaseMachineWithTank(1, 100, 50000, 480, 0, 4, new int[]{0}, new int[]{0}, new int[]{1,2,3}, 10000);
+		initializeBaseMachineWithTank(1, 100, 50000, 480, 0, 0, 1, 0, 10000);
 		POWER_DIST = new PowerDistributor(this, STORAGE);
 		MOVE_SPEED = 10;
 	}
@@ -45,57 +41,6 @@ public class TileEntityFluidGenerator extends BaseMachineWithTank{
 		float volume = (amount/capacity)*0.8F;		
 			return volume;	
 	}
-			
-    @Override  
-	public void readFromNBT(NBTTagCompound nbt) {
-        super.readFromNBT(nbt);
-        STORAGE.readFromNBT(nbt);
-        TANK.readFromNBT(nbt);
-        if(slots != null) {
-            NBTTagList list = nbt.getTagList("Items", 10);
-    		slots = new ItemStack[getSizeInventory()];
-            for (int i =0; i < list.tagCount(); i++) {
-    			NBTTagCompound nbt1 = (NBTTagCompound)list.getCompoundTagAt(i);
-    			byte b0 = nbt1.getByte("Slot");
-    			
-    			if (b0 >= 0 && b0 < slots.length) {
-    				slots[b0] = ItemStack.loadItemStackFromNBT(nbt1);
-    			}
-    		}	
-        }
-    }		
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
-        STORAGE.writeToNBT(nbt);
-        TANK.writeToNBT(nbt);
-    	if(slots != null) {
-        	NBTTagList list = new NBTTagList();
-    		for (int i = 0; i < slots.length; i++) {
-    			if (slots[i] != null) {
-    				NBTTagCompound nbt1 = new NBTTagCompound();
-    				nbt1.setByte("Slot", (byte)i);
-    				slots[i].writeToNBT(nbt1);
-    				list.appendTag(nbt1);
-    			}
-    			
-    		}
-    		nbt.setTag("Items", list);
-    	}	
-    	return nbt;
-	}
-	@Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		NBTTagCompound tag = pkt.getNbtCompound();
-		readFromNBT(pkt.getNbtCompound());
-	}
-    @Nullable
-    public SPacketUpdateTileEntity getUpdatePacket(){
-    	NBTTagCompound tag = new NBTTagCompound();
-    	writeToNBT(tag);
-    	return new SPacketUpdateTileEntity(pos, getBlockMetadata(), tag);
-    }
-
 	//Functionality		
 	@Override
 	public String getName() {
@@ -129,16 +74,16 @@ public class TileEntityFluidGenerator extends BaseMachineWithTank{
 			PROCESSING_TIMER = 0;
 		}
 		POWER_DIST.distributePower();
-		if(slots[0] != null) {
+		if(SLOTS_INPUT.getStackInSlot(0) != null) {
 			MOVE_TIMER++;
 			if(MOVE_TIMER == MOVE_SPEED) {
-				if(slots[0].getItem() instanceof IFluidContainerItem) {
-					IFluidContainerItem tempContainer = (IFluidContainerItem)slots[0].getItem();
-					if(tempContainer.getFluid(slots[0]).amount + TANK.getFluidAmount() <= TANK.getCapacity()) {
+				if(SLOTS_INPUT.getStackInSlot(0).getItem() instanceof IFluidContainerItem) {
+					IFluidContainerItem tempContainer = (IFluidContainerItem)SLOTS_INPUT.getStackInSlot(0).getItem();
+					if(tempContainer.getFluid(SLOTS_INPUT.getStackInSlot(0)).amount + TANK.getFluidAmount() <= TANK.getCapacity()) {
 						if(TANK.getFluid() == null) {
-							TANK.fill(tempContainer.drain(slots[0], TANK.getCapacity(), true), true);
-						}else if(tempContainer.getFluid(slots[0]).isFluidEqual(TANK.getFluid())) {
-							TANK.fill(tempContainer.drain(slots[0], TANK.getCapacity(), true), true);
+							TANK.fill(tempContainer.drain(SLOTS_INPUT.getStackInSlot(0), TANK.getCapacity(), true), true);
+						}else if(tempContainer.getFluid(SLOTS_INPUT.getStackInSlot(0)).isFluidEqual(TANK.getFluid())) {
+							TANK.fill(tempContainer.drain(SLOTS_INPUT.getStackInSlot(0), TANK.getCapacity(), true), true);
 						}
 						worldObj.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, (float) 0.5, 1, false);
 					}

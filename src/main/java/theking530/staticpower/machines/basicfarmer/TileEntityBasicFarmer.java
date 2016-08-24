@@ -13,8 +13,6 @@ import net.minecraft.block.BlockReed;
 import net.minecraft.block.IGrowable;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemHoe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,7 +23,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.IPlantable;
 import theking530.staticpower.machines.BaseMachineWithTank;
-import theking530.staticpower.utils.InventoryUtils;
+import theking530.staticpower.utils.InventoryUtilities;
 
 public class TileEntityBasicFarmer extends BaseMachineWithTank {
 
@@ -37,7 +35,7 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 	private ArrayList<ItemStack> FARMED_STACKS = new ArrayList();
 	
 	public TileEntityBasicFarmer() {
-		initializeBaseMachineWithTank(2, 10, 100000, 500, 10, 17, new int[]{9,10}, new int[]{0,1,2,3,4,5,6,7,8}, new int[]{14,15,16}, 10000);
+		initializeBaseMachineWithTank(2, 10, 100000, 500, 10, 0, 4, 10, 10000);
 		setBatterySlot(13);
 		CURRENT_COORD = getStartingCoord();
 		RAND = new Random();
@@ -62,9 +60,12 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 				PROCESSING_TIMER = 0;
 			}else{
 				for(int k=FARMED_STACKS.size()-1; k>=0; k--) {
-					if(InventoryUtils.fullyInsertItem(this, FARMED_STACKS.get(k), 0, 8)) {
+					ItemStack insertedStack = InventoryUtilities.insertItemIntoInventory(SLOTS_OUTPUT, FARMED_STACKS.get(k), 0, 8);
+					if(insertedStack == null) {
 						FARMED_STACKS.remove(k);
-					}	
+					}else{
+						FARMED_STACKS.set(k, insertedStack);
+					}
 				}	
 			}
 		}
@@ -116,15 +117,15 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 		}
 	}
 	public boolean canFarm() {
-		if(STORAGE.getEnergyStored() >= FARMING_COST && slots[9] != null && slots[9].getItem() instanceof ItemHoe) {
+		if(STORAGE.getEnergyStored() >= FARMING_COST && SLOTS_INPUT.getStackInSlot(0) != null && SLOTS_INPUT.getStackInSlot(0).getItem() instanceof ItemHoe) {
 			return true;
 		}
 		return false;
 	}
 	public void useHoe(){
-		if(slots[9] != null && slots[9].getItem() instanceof ItemHoe) {
-			if(slots[9].attemptDamageItem(1, RAND)) {
-				slots[9] = null;
+		if(SLOTS_INPUT.getStackInSlot(0) != null && SLOTS_INPUT.getStackInSlot(0).getItem() instanceof ItemHoe) {
+			if(SLOTS_INPUT.getStackInSlot(0).attemptDamageItem(1, RAND)) {
+				SLOTS_INPUT.setStackInSlot(0, null);
 				worldObj.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_ITEM_BREAK, 
 						SoundCategory.BLOCKS, 1.0F, 1.0F, false);		
 			}	

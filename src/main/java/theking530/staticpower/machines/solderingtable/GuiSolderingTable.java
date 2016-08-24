@@ -40,7 +40,7 @@ public class GuiSolderingTable extends CustomGuiContainer{
 	}
 
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
-		String name = this.TABLE.hasCustomName() ? this.TABLE.getName() : I18n.format(this.TABLE.getName());
+		String name = I18n.format(this.TABLE.getName());
 	
 		this.fontRendererObj.drawString(name, this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2, 6,4210752 );
 	}

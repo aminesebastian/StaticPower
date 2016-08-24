@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagList;
 import theking530.staticpower.handlers.crafting.registries.GrinderRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.GrinderOutputWrapper;
 import theking530.staticpower.machines.BaseMachine;
+import theking530.staticpower.utils.InventoryUtilities;
 
 public class TileEntityPoweredGrinder extends BaseMachine {
 	
@@ -16,46 +17,8 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 
 	
 	public TileEntityPoweredGrinder() {
-		initializeBasicMachine(2, 100, 100000, 80, 100, 8, new int[]{0}, new int[]{1, 2, 3}, new int[]{4, 5, 6});
+		initializeBasicMachine(2, 100, 100000, 80, 100, 1, 1, 3);
 	}
-
-    @Override  
-	public void readFromNBT(NBTTagCompound nbt) {
-        super.readFromNBT(nbt);
-        STORAGE.readFromNBT(nbt);
-        
-        if(slots != null) {
-            NBTTagList list = nbt.getTagList("Items", 10);
-    		slots = new ItemStack[getSizeInventory()];
-            for (int i =0; i < list.tagCount(); i++) {
-    			NBTTagCompound nbt1 = (NBTTagCompound)list.getCompoundTagAt(i);
-    			byte b0 = nbt1.getByte("Slot");
-    			
-    			if (b0 >= 0 && b0 < slots.length) {
-    				slots[b0] = ItemStack.loadItemStackFromNBT(nbt1);
-    			}
-    		}	
-        }
-    }		
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
-        STORAGE.writeToNBT(nbt);	
-    	if(slots != null) {
-        	NBTTagList list = new NBTTagList();
-    		for (int i = 0; i < slots.length; i++) {
-    			if (slots[i] != null) {
-    				NBTTagCompound nbt1 = new NBTTagCompound();
-    				nbt1.setByte("Slot", (byte)i);
-    				slots[i].writeToNBT(nbt1);
-    				list.appendTag(nbt1);
-    			}
-    			
-    		}
-    		nbt.setTag("Items", list);
-    	}	
-    	return nbt;
-	}	    
 		
 	//IInventory				
 	@Override
@@ -89,11 +52,11 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 				GrinderOutputWrapper tempWrapper = getGrindingResult(stack);
 				for(int i=0; i<tempWrapper.getOutputItemCount(); i++) {
 					if(tempWrapper.getOutputItems().get(i).isValid()) {
-						if(canSlotAcceptItemstack(tempWrapper.getOutputItems().get(i).getOutput(), slots[1]) && slot1 == false) {
+						if(canSlotAcceptItemstack(tempWrapper.getOutputItems().get(i).getOutput(), getOutputStack(0)) && slot1 == false) {
 							slot1 = true;
-						}else if(canSlotAcceptItemstack(tempWrapper.getOutputItems().get(i).getOutput(), slots[2]) && slot2 == false) {
+						}else if(canSlotAcceptItemstack(tempWrapper.getOutputItems().get(i).getOutput(), getOutputStack(1)) && slot2 == false) {
 							slot2 = true;
-						}else if(canSlotAcceptItemstack(tempWrapper.getOutputItems().get(i).getOutput(), slots[3]) && slot3 == false) {
+						}else if(canSlotAcceptItemstack(tempWrapper.getOutputItems().get(i).getOutput(), getOutputStack(2)) && slot3 == false) {
 							slot3 = true;
 						}else{
 							flag = false;
@@ -109,14 +72,14 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 	}
 	public void process() {
 		//worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-		if(!isProcessing() && !isMoving() && canProcess(slots[0])) {
+		if(!isProcessing() && !isMoving() && canProcess(getInputStack(0))) {
 				MOVE_TIMER = 1;
 		}
-		if(!isProcessing() && isMoving() && canProcess(slots[0])) {
+		if(!isProcessing() && isMoving() && canProcess(getInputStack(0))) {
 			if(MOVE_TIMER < MOVE_SPEED) {
 				MOVE_TIMER++;
 			}else{
-				moveItem(0,7);
+				moveItem(SLOTS_INPUT, 0, SLOTS_INTERNAL, 0);
 				MOVE_TIMER=0;
 				PROCESSING_TIMER = 1;
 			}
@@ -126,18 +89,19 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 				useEnergy((1000*PROCESSING_ENERGY_MULT) / PROCESSING_TIME);
 				PROCESSING_TIMER++;
 			}else{
-				if(getGrindingResult(slots[7]) != null) {
-					for(int j=0; j<getGrindingResult(slots[7]).getOutputItemCount(); j++) {
+				if(getGrindingResult(getInternalStack(0)) != null) {
+					for(int j=0; j<getGrindingResult(getInternalStack(0)).getOutputItemCount(); j++) {
 						for(int i=1; i<4; i++) {
-							if(diceRoll(getGrindingResult(slots[7]).getOutputItems().get(j).getPercentage())) {
-								if(placeStackInSlot(getGrindingResult(slots[7]).getOutputItems().get(j).getOutput(), i) == true) {
+							if(diceRoll(getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getPercentage())) {
+								if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, i, getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getOutput())) {
+									SLOTS_OUTPUT.insertItem(i, getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getOutput(), false);
 									break;
 								}	
 							}
 						}
 					}
 				}
-				slots[7] = null;
+				setInternalStack(0, null);
 				PROCESSING_TIMER=0;
 				MOVE_TIMER = 0;
 			}

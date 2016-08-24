@@ -7,10 +7,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.fluids.IFluidContainerItem;
-import net.minecraftforge.fluids.ItemFluidContainer;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerFluidGenerator extends Container {
 	
@@ -27,12 +25,12 @@ public class ContainerFluidGenerator extends Container {
 		FluidGenerator = teFluidGenerator;
 		
 		//Input
-		this.addSlotToContainer(new Slot(teFluidGenerator, 0, 80, 31));
+		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_INPUT, 0, 80, 31));
 		
 		//Upgrades
-		this.addSlotToContainer(new Slot(teFluidGenerator, 1, 152, 12));
-		this.addSlotToContainer(new Slot(teFluidGenerator, 2, 152, 32));
-		this.addSlotToContainer(new Slot(teFluidGenerator, 3, 152, 52));
+		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_UPGRADES, 0, 152, 12));
+		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_UPGRADES, 1, 152, 32));
+		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_UPGRADES, 2, 152, 52));
 		
 		//Inventory
 				for(int i = 0; i < 3; i++) {

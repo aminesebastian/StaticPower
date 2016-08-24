@@ -4,8 +4,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
-public class SlotSolderingTable extends Slot {
+public class SlotSolderingTable extends SlotItemHandler {
 
 	TileEntitySolderingTable TABLE;
 	EntityPlayer PLAYER;

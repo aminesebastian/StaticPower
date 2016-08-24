@@ -5,6 +5,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.SlotItemHandler;
 import theking530.staticpower.handlers.crafting.registries.FusionRecipeRegistry;
 
 public class ContainerFusionFurnace extends Container {
@@ -18,38 +19,38 @@ public class ContainerFusionFurnace extends Container {
 		FURNACE = teFusionFurnace;
 		
 		//Input
-		this.addSlotToContainer(new Slot(teFusionFurnace, 0, 44, 44) {
+		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.SLOTS_INPUT, 0, 44, 44) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return true;
 		        }
 		});
-		this.addSlotToContainer(new Slot(teFusionFurnace, 1, 59, 24) {
+		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.SLOTS_INPUT, 1, 59, 24) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return true;
 		        }
 		});
-		this.addSlotToContainer(new Slot(teFusionFurnace, 2, 80, 17) {
+		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.SLOTS_INPUT, 2, 80, 17) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return true;
 		        }
 		});
-		this.addSlotToContainer(new Slot(teFusionFurnace, 3, 101, 24) {
+		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.SLOTS_INPUT, 3, 101, 24) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return true;
 		        }
 		});
-		this.addSlotToContainer(new Slot(teFusionFurnace, 4, 116, 44) {
+		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.SLOTS_INPUT, 4, 116, 44) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return true;
 		        }
 		});
 		//Output
-		this.addSlotToContainer(new SlotFusionFurnace(invPlayer.player, teFusionFurnace, 5, 80, 59) {
+		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.SLOTS_OUTPUT, 0, 80, 59) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;
@@ -57,36 +58,36 @@ public class ContainerFusionFurnace extends Container {
 		});	
 
 		//Upgrades
-		this.addSlotToContainer(new Slot(teFusionFurnace, 6, 152, 12));
-		this.addSlotToContainer(new Slot(teFusionFurnace, 7, 152, 32));
-		this.addSlotToContainer(new Slot(teFusionFurnace, 8, 152, 52));
+		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.SLOTS_UPGRADES, 0, 152, 12));
+		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.SLOTS_UPGRADES, 1, 152, 32));
+		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.SLOTS_UPGRADES, 2, 152, 52));
 		
 		//Processing
-		this.addSlotToContainer(new Slot(teFusionFurnace, 9, 10000, 10000) {
+		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.SLOTS_INTERNAL, 0, 10000, 10000) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;
 		        }
 		});
-		this.addSlotToContainer(new Slot(teFusionFurnace, 10, 10000, 10000) {
+		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.SLOTS_INTERNAL, 1, 10000, 10000) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;
 		        }
 		});
-		this.addSlotToContainer(new Slot(teFusionFurnace, 11, 10000, 10000) {
+		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.SLOTS_INTERNAL, 2, 10000, 10000) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;
 		        }
 		});
-		this.addSlotToContainer(new Slot(teFusionFurnace, 12, 10000, 10000) {
+		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.SLOTS_INTERNAL, 3, 10000, 10000) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;
 		        }
 		});
-		this.addSlotToContainer(new Slot(teFusionFurnace, 13, 10000, 10000) {
+		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.SLOTS_INTERNAL, 4, 10000, 10000) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;

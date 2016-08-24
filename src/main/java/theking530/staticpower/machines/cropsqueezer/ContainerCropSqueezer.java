@@ -5,8 +5,8 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.SlotItemHandler;
 import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistry;
-import theking530.staticpower.machines.fluidinfuser.SlotFluidInfuser;
 
 public class ContainerCropSqueezer extends Container {
 	
@@ -24,10 +24,10 @@ public class ContainerCropSqueezer extends Container {
 		CropSqueezer = teCropSqueezer;
 		
 		//Input
-		this.addSlotToContainer(new Slot(teCropSqueezer, 0, 84, 16));
+		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.SLOTS_INPUT, 0, 84, 16));
 		
 		//Output
-		this.addSlotToContainer(new SlotFluidInfuser(invPlayer.player, teCropSqueezer, 1, 84, 56) {
+		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.SLOTS_OUTPUT, 0, 84, 56) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return SqueezerRecipeRegistry.Squeezing().getSqueezingItemResult(itemStack) != null;
@@ -35,12 +35,12 @@ public class ContainerCropSqueezer extends Container {
 		});
 		
 		//Upgrades
-		this.addSlotToContainer(new Slot(teCropSqueezer, 2, upgradeSlotX+152, upgradeSlotY+12));
-		this.addSlotToContainer(new Slot(teCropSqueezer, 3, upgradeSlotX+152, upgradeSlotY+32));
-		this.addSlotToContainer(new Slot(teCropSqueezer, 4, upgradeSlotX+152, upgradeSlotY+52));
+		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.SLOTS_UPGRADES, 0, upgradeSlotX+152, upgradeSlotY+12));
+		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.SLOTS_UPGRADES, 1, upgradeSlotX+152, upgradeSlotY+32));
+		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.SLOTS_UPGRADES, 2, upgradeSlotX+152, upgradeSlotY+52));
 		
 		//Processing
-		this.addSlotToContainer(new Slot(teCropSqueezer, 5, 10000, 10000));
+		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.SLOTS_INTERNAL, 0, 10000, 10000));
 		
 		//Inventory
 				for(int i = 0; i < 3; i++) {

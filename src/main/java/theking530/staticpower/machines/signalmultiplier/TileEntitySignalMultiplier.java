@@ -59,9 +59,5 @@ public class TileEntitySignalMultiplier extends BaseTileEntity{
 	public String getName() {
 		return "container.SignalMultiplier";		
 	}
-	@Override
-	public boolean hasCustomName() {
-		return this.customName != null && this.customName.length() > 0;
-	}
 	
 }

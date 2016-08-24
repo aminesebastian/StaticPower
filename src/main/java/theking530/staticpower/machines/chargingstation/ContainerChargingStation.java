@@ -7,8 +7,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
-import theking530.staticpower.machines.poweredfurnace.SlotPoweredFurnace;
+import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerChargingStation extends Container {
 	
@@ -25,53 +24,53 @@ public class ContainerChargingStation extends Container {
 		C_CHARGING = teCharging;
 		
 		//Input
-		this.addSlotToContainer(new Slot(teCharging, 0, 63, 29));
-		this.addSlotToContainer(new Slot(teCharging, 1, 81, 29));
-		this.addSlotToContainer(new Slot(teCharging, 2, 99, 29));
-		this.addSlotToContainer(new Slot(teCharging, 3, 117, 29));
+		this.addSlotToContainer(new SlotItemHandler(teCharging.SLOTS_INPUT, 0, 63, 29));
+		this.addSlotToContainer(new SlotItemHandler(teCharging.SLOTS_INPUT, 1, 81, 29));
+		this.addSlotToContainer(new SlotItemHandler(teCharging.SLOTS_INPUT, 2, 99, 29));
+		this.addSlotToContainer(new SlotItemHandler(teCharging.SLOTS_INPUT, 3, 117, 29));
 		
 		//Output
-		this.addSlotToContainer(new Slot(teCharging, 4, 60, 61) {
+		this.addSlotToContainer(new SlotItemHandler(teCharging.SLOTS_OUTPUT, 0, 60, 61) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;
 		    }
 		});	
-		this.addSlotToContainer(new Slot(teCharging, 5, 80, 61) {
+		this.addSlotToContainer(new SlotItemHandler(teCharging.SLOTS_OUTPUT, 1, 80, 61) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;
 		    }
 		});	
-		this.addSlotToContainer(new Slot(teCharging, 6, 100, 61) {
+		this.addSlotToContainer(new SlotItemHandler(teCharging.SLOTS_OUTPUT, 2, 100, 61) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;
 		    }
 		});	
-		this.addSlotToContainer(new Slot(teCharging, 7, 120, 61) {
+		this.addSlotToContainer(new SlotItemHandler(teCharging.SLOTS_OUTPUT, 3, 120, 61) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;
 		    }
 		});	
 		//Upgrades
-		this.addSlotToContainer(new Slot(teCharging, 8, 155, 8));
-		this.addSlotToContainer(new Slot(teCharging, 9, 155, 30));
-		this.addSlotToContainer(new Slot(teCharging, 10, 155, 52));
+		this.addSlotToContainer(new SlotItemHandler(teCharging.SLOTS_UPGRADES, 0, 155, 8));
+		this.addSlotToContainer(new SlotItemHandler(teCharging.SLOTS_UPGRADES, 1, 155, 30));
+		this.addSlotToContainer(new SlotItemHandler(teCharging.SLOTS_UPGRADES, 2, 155, 52));
 		
 		//Battery/Bucket
-		this.addSlotToContainer(new Slot(teCharging, 11, 8, 73) {
+		this.addSlotToContainer(new SlotItemHandler(teCharging.SLOTS_INPUT, 4, 8, 73) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return itemStack.getItem() instanceof IEnergyContainerItem ? true : false;
 		        }
 		});
-		this.addSlotToContainer(new Slot(teCharging, 12, 174, 73) {
+		this.addSlotToContainer(new SlotItemHandler(teCharging.SLOTS_INPUT, 5, 174, 73) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return true;
-		        }
+		    }
 		});		
 		//Inventory
 		for(int i = 0; i < 3; i++) {

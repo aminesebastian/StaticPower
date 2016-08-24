@@ -75,7 +75,7 @@ public class GuiBattery extends CustomGuiContainer {
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String INPUT = (String.valueOf(sBattery.STORAGE.getMaxReceive()) + " RF/t");
 		String OUTPUT = (String.valueOf(sBattery.STORAGE.getMaxExtract()) + " RF/t");
-		String NAME = this.sBattery.hasCustomName() ? this.sBattery.getName() : I18n.format(this.sBattery.getName());
+		String NAME = I18n.format(this.sBattery.getName());
 		this.fontRendererObj.drawString("Input", this.xSize/2-this.fontRendererObj.getStringWidth("Input")/2 - 35, 35, 4210752);
 		this.fontRendererObj.drawString(INPUT, this.xSize/2-this.fontRendererObj.getStringWidth(INPUT)/2 - 35, 45, 4210752);
 		this.fontRendererObj.drawString("Output", this.xSize/2-this.fontRendererObj.getStringWidth("Output")/2 + 35, 35, 4210752);

@@ -68,7 +68,7 @@ public class GuiChargingStation extends GuiContainer{
 	}	
 
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
-		String name = this.C_STATION.hasCustomName() ? this.C_STATION.getName() : I18n.format(this.C_STATION.getName());
+		String name = I18n.format(this.C_STATION.getName());
 	
 		this.fontRendererObj.drawString(name, this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2, 6,4210752 );
 		//this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 3, 4210752);

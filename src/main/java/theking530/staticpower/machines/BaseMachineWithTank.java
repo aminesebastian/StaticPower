@@ -20,31 +20,31 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler{
 	public FluidTank TANK;
 
 	public void initializeBaseMachineWithTank(int InitialEnergyMult, int InitialPowerUse, int InitialEnergyCapacity, int InitialEntryPerTick, int InitialProcessingTime, 
-			int slotCount, int[] inputSlots, int[] outputSlots, int[] upgradeSlots, int InitialTankCapacity) {	
-		initializeBasicMachine(InitialEnergyMult, InitialPowerUse, InitialEnergyCapacity, InitialEntryPerTick, InitialProcessingTime, slotCount, inputSlots, outputSlots, upgradeSlots);
+			int internalSlotCount, int inputSlots, int outputSlots, int InitialTankCapacity) {	
+		initializeBasicMachine(InitialEnergyMult, InitialPowerUse, InitialEnergyCapacity, InitialEntryPerTick, InitialProcessingTime, internalSlotCount, inputSlots, outputSlots);
 		INITIAL_TANK_CAPACITY = InitialTankCapacity;
 		TANK = new FluidTank(INITIAL_TANK_CAPACITY);
 	}
 	
 	@Override
 	public void upgradeHandler(){
-		powerUpgrade(UPGRADE_SLOTS);	
-		tankUpgrade(UPGRADE_SLOTS);
-		processingUpgrade(UPGRADE_SLOTS);
+		powerUpgrade();	
+		tankUpgrade();
+		processingUpgrade();
 	}
-	public void tankUpgrade(int[] upgradeSlots) {
+	public void tankUpgrade() {
 		boolean flag = false;
 		int slot = 0;
 		for(int i=0; i<3; i++) {
-			if(slots[upgradeSlots[i]] != null) {
-				if(slots[upgradeSlots[i]].getItem() instanceof BaseTankUpgrade) {
+			if(SLOTS_UPGRADES.getStackInSlot(i) != null) {
+				if(SLOTS_UPGRADES.getStackInSlot(i).getItem() instanceof BaseTankUpgrade) {
 					flag = true;
 					slot = i;
 				}
 			}
 		}
 		if(flag) {
-			BaseTankUpgrade tempUpgrade = (BaseTankUpgrade) slots[upgradeSlots[slot]].getItem();
+			BaseTankUpgrade tempUpgrade = (BaseTankUpgrade) SLOTS_UPGRADES.getStackInSlot(slot).getItem();
 			TANK.setCapacity((int)(INITIAL_TANK_CAPACITY*tempUpgrade.CAPACITY));
 		}else{
 			TANK.setCapacity(INITIAL_TANK_CAPACITY);

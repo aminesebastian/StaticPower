@@ -6,66 +6,22 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistry;
 import theking530.staticpower.machines.BaseMachineWithTank;
+import theking530.staticpower.utils.InventoryUtilities;
 
 public class TileEntityCropSqueezer extends BaseMachineWithTank {
 
-	private static final int[] slots_top = new int[] {0};
-	private static final int[] slots_bottom = new int[] {0};
-	private static final int[] slots_side = new int[] {0};		
-	
 	public int INITIAL_PROCESSING_ENERGY_MULT = 10;
 	public int ENERGY_CAPACTIY = 100000;
 	
 	private String customName;
 	
 	public TileEntityCropSqueezer() {
-		initializeBaseMachineWithTank(2, 100, 100000, 80, 50, 6, new int[]{0}, new int[]{1}, new int[]{2,3,4}, 5000);
+		initializeBaseMachineWithTank(2, 100, 100000, 80, 50, 1, 1, 1, 5000);
 	}
 	@Override
 	public String getName() {
 		return "Crop Squeezer";		
-	}
-
-    @Override  
-	public void readFromNBT(NBTTagCompound nbt) {
-        super.readFromNBT(nbt);
-        STORAGE.readFromNBT(nbt);
-        TANK.readFromNBT(nbt);
-        if(slots != null) {
-            NBTTagList list = nbt.getTagList("Items", 10);
-    		slots = new ItemStack[getSizeInventory()];
-            for (int i =0; i < list.tagCount(); i++) {
-    			NBTTagCompound nbt1 = (NBTTagCompound)list.getCompoundTagAt(i);
-    			byte b0 = nbt1.getByte("Slot");
-    			
-    			if (b0 >= 0 && b0 < slots.length) {
-    				slots[b0] = ItemStack.loadItemStackFromNBT(nbt1);
-    			}
-    		}	
-        }
-    }		
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
-        STORAGE.writeToNBT(nbt);
-        TANK.writeToNBT(nbt);
-    	if(slots != null) {
-        	NBTTagList list = new NBTTagList();
-    		for (int i = 0; i < slots.length; i++) {
-    			if (slots[i] != null) {
-    				NBTTagCompound nbt1 = new NBTTagCompound();
-    				nbt1.setByte("Slot", (byte)i);
-    				slots[i].writeToNBT(nbt1);
-    				list.appendTag(nbt1);
-    			}
-    			
-    		}
-    		nbt.setTag("Items", list);
-    	}	
-    	return nbt;
-	}
-	
-		
+	}		
 	
     //Process
 	@Override
@@ -88,7 +44,7 @@ public class TileEntityCropSqueezer extends BaseMachineWithTank {
 	@Override
 	public boolean canProcess(ItemStack itemstack) {
 		FluidStack fluidstack = SqueezerRecipeRegistry.Squeezing().getSqueezingFluidResult(itemstack);
-		if(hasResult(itemstack) && fluidstack != null && canSlotAcceptItemstack(getResult(itemstack), slots[1])) {
+		if(hasResult(itemstack) && fluidstack != null && canSlotAcceptItemstack(getResult(itemstack), SLOTS_OUTPUT.getStackInSlot(0))) {
 			if(fluidstack.amount + TANK.getFluidAmount() > TANK.getCapacity()) {
 				return false;
 			}
@@ -122,20 +78,20 @@ public class TileEntityCropSqueezer extends BaseMachineWithTank {
 	}	
 	public void process() {
 		//worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-		if(slots[5] == null){
+		if(SLOTS_INTERNAL.getStackInSlot(0) == null){
 			PROCESSING_TIMER = 0;
 		}
 		//Start Process
-		if(!isProcessing() && !isMoving() && canProcess(slots[0])) {
+		if(!isProcessing() && !isMoving() && canProcess(SLOTS_INPUT.getStackInSlot(0))) {
 			MOVE_TIMER = 1;
 		}
 		//Start Moving
-		if(!isProcessing() && isMoving() && canProcess(slots[0])) {
+		if(!isProcessing() && isMoving() && canProcess(SLOTS_INPUT.getStackInSlot(0))) {
 			MOVE_TIMER++;
 			if(MOVE_TIMER >= MOVE_SPEED) {
 				MOVE_TIMER = 0;
-				useEnergy(getProcessingEnergy(slots[0]));
-				moveItem(0, 5);
+				useEnergy(getProcessingEnergy(SLOTS_INPUT.getStackInSlot(0)));
+				moveItem(SLOTS_INPUT, 0, SLOTS_INTERNAL, 0);
 				PROCESSING_TIMER = 1;	
 			}
 		}else{
@@ -146,10 +102,10 @@ public class TileEntityCropSqueezer extends BaseMachineWithTank {
 			if(PROCESSING_TIMER < PROCESSING_TIME) {
 				PROCESSING_TIMER++;
 			}else{				
-				if(canSlotAcceptItemstack(getResult(slots[5]), slots[1])) {
-					placeItemStackInSlot(getResult(slots[5]), 1);
-					TANK.fill(getFluidResult(slots[5]), true);
-					slots[5] = null;
+				if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, 0, getResult(SLOTS_INTERNAL.getStackInSlot(0)))) {
+					SLOTS_OUTPUT.insertItem(0, getResult(SLOTS_INTERNAL.getStackInSlot(0)), false);
+					TANK.fill(getFluidResult(SLOTS_INTERNAL.getStackInSlot(0)), true);
+					SLOTS_INTERNAL.setStackInSlot(0, null);
 					PROCESSING_TIMER = 0;
 				}
 			}

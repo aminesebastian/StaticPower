@@ -67,7 +67,7 @@ public class GuiPoweredFurnace extends GuiContainer{
 	}	
 
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
-		String name = this.Smelter.hasCustomName() ? this.Smelter.getName() : I18n.format(this.Smelter.getName());
+		String name = I18n.format(this.Smelter.getName());
 	
 		this.fontRendererObj.drawString(name, this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2, 6,4210752 );
 		this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 3, 4210752);

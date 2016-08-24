@@ -6,8 +6,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraft.tileentity.TileEntityFurnace;
-import theking530.staticpower.handlers.crafting.registries.InfuserRecipeRegistry;
+import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerPoweredFurnace extends Container {
 	
@@ -24,10 +23,10 @@ public class ContainerPoweredFurnace extends Container {
 		Smelter = tePoweredSmelter;
 		
 		//Input
-		this.addSlotToContainer(new Slot(tePoweredSmelter, 0, 50, 28));
+		this.addSlotToContainer(new SlotItemHandler(tePoweredSmelter.SLOTS_INPUT, 0, 50, 28));
 		
 		//Output
-		this.addSlotToContainer(new SlotPoweredFurnace(invPlayer.player, tePoweredSmelter, 1, 110, 32) {
+		this.addSlotToContainer(new SlotItemHandler(tePoweredSmelter.SLOTS_OUTPUT, 0, 110, 32) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return FurnaceRecipes.instance().getSmeltingResult(itemStack) != null;
@@ -35,12 +34,12 @@ public class ContainerPoweredFurnace extends Container {
 		});	
 		
 		//Upgrades
-		this.addSlotToContainer(new Slot(tePoweredSmelter, 2, 152, 12));
-		this.addSlotToContainer(new Slot(tePoweredSmelter, 3, 152, 32));
-		this.addSlotToContainer(new Slot(tePoweredSmelter, 4, 152, 52));
+		this.addSlotToContainer(new SlotItemHandler(tePoweredSmelter.SLOTS_UPGRADES, 0, 152, 12));
+		this.addSlotToContainer(new SlotItemHandler(tePoweredSmelter.SLOTS_UPGRADES, 1, 152, 32));
+		this.addSlotToContainer(new SlotItemHandler(tePoweredSmelter.SLOTS_UPGRADES, 2, 152, 52));
 		
 		//Processing
-		this.addSlotToContainer(new Slot(tePoweredSmelter, 5, 10000, 10000) {
+		this.addSlotToContainer(new SlotItemHandler(tePoweredSmelter.SLOTS_INTERNAL, 0, 10000, 10000) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;

@@ -28,7 +28,7 @@ public class GuiSignalMultiplier extends GuiContainer{
 	        int var2 = (this.height - this.ySize) / 2;       
 	}
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
-		String name = this.sMultiplier.hasCustomName() ? this.sMultiplier.getName() : I18n.format(this.sMultiplier.getName());
+		String name = I18n.format(this.sMultiplier.getName());
 		String input = String.valueOf(sMultiplier.INPUT_SIGNAL_LIMIT);
 		String output = String.valueOf(sMultiplier.OUTPUT_SIGNAL_STRENGTH);
 		this.fontRendererObj.drawString(name, this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2, 6,4210752 );

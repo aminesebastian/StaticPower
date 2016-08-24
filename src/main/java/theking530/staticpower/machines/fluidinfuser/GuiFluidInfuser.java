@@ -67,7 +67,7 @@ public class GuiFluidInfuser extends GuiContainer{
 		}	
 	}
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
-		String name = this.Infuser.hasCustomName() ? this.Infuser.getName() : I18n.format(this.Infuser.getName());
+		String name = I18n.format(this.Infuser.getName());
 	
 		this.fontRendererObj.drawString(name, this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2, 6,4210752 );
 		this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 3, 4210752);
@@ -82,12 +82,12 @@ public class GuiFluidInfuser extends GuiContainer{
 		REDSTONE_TAB.drawTab();
 		int powerCost; 
 		int fluidCost; 
-		if(Infuser.getStackInSlot(5) != null) {
-			fluidCost = InfuserRecipeRegistry.Infusing().getInfusingFluidCost(Infuser.getStackInSlot(5), Infuser.TANK.getFluid());
-			powerCost = Infuser.getProcessingEnergy(Infuser.getStackInSlot(5));
+		if(Infuser.SLOTS_INTERNAL.getStackInSlot(0) != null) {
+			fluidCost = InfuserRecipeRegistry.Infusing().getInfusingFluidCost(Infuser.SLOTS_INTERNAL.getStackInSlot(0), Infuser.TANK.getFluid());
+			powerCost = Infuser.getProcessingEnergy(Infuser.SLOTS_INTERNAL.getStackInSlot(0));
 		}else{
-			fluidCost = InfuserRecipeRegistry.Infusing().getInfusingFluidCost(Infuser.getStackInSlot(0), Infuser.TANK.getFluid());
-			powerCost = Infuser.getProcessingEnergy(Infuser.getStackInSlot(0));
+			fluidCost = InfuserRecipeRegistry.Infusing().getInfusingFluidCost(Infuser.SLOTS_INPUT.getStackInSlot(0), Infuser.TANK.getFluid());
+			powerCost = Infuser.getProcessingEnergy(Infuser.SLOTS_INPUT.getStackInSlot(0));
 		}
 		String power = NumberFormat.getNumberInstance(Locale.US).format(powerCost);
 		String fluid = NumberFormat.getNumberInstance(Locale.US).format(fluidCost);

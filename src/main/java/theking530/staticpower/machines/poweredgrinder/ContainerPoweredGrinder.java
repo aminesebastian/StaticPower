@@ -1,15 +1,12 @@
 package theking530.staticpower.machines.poweredgrinder;
 
-import theking530.staticpower.handlers.crafting.registries.GrinderRecipeRegistry;
-import theking530.staticpower.handlers.crafting.registries.InfuserRecipeRegistry;
-import theking530.staticpower.machines.poweredfurnace.SlotPoweredFurnace;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraftforge.items.SlotItemHandler;
+import theking530.staticpower.handlers.crafting.registries.GrinderRecipeRegistry;
 
 public class ContainerPoweredGrinder extends Container {
 	
@@ -22,7 +19,7 @@ public class ContainerPoweredGrinder extends Container {
 		GRINDER = tePoweredGrinder;
 		
 		//Input
-		this.addSlotToContainer(new Slot(tePoweredGrinder, 0, 80, 18) {
+		this.addSlotToContainer(new SlotItemHandler(tePoweredGrinder.SLOTS_INPUT, 0, 80, 18) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return GrinderRecipeRegistry.Grinding().getgrindingResult(itemStack) != null;
@@ -30,19 +27,19 @@ public class ContainerPoweredGrinder extends Container {
 		});
 		
 		//Output
-		this.addSlotToContainer(new SlotPoweredGrinder(invPlayer.player, tePoweredGrinder, 1, 80, 60) {
+		this.addSlotToContainer(new SlotItemHandler(tePoweredGrinder.SLOTS_OUTPUT, 0, 80, 60) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;
 		        }
 		});	
-		this.addSlotToContainer(new SlotPoweredGrinder(invPlayer.player, tePoweredGrinder, 2, 106, 46) {
+		this.addSlotToContainer(new SlotItemHandler(tePoweredGrinder.SLOTS_OUTPUT, 1, 106, 46) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;
 		        }
 		});	
-		this.addSlotToContainer(new SlotPoweredGrinder(invPlayer.player, tePoweredGrinder, 3, 55, 46) {
+		this.addSlotToContainer(new SlotItemHandler(tePoweredGrinder.SLOTS_OUTPUT, 2, 55, 46) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;
@@ -50,12 +47,12 @@ public class ContainerPoweredGrinder extends Container {
 		});
 		
 		//Upgrades
-		this.addSlotToContainer(new Slot(tePoweredGrinder, 4, 152, 12));
-		this.addSlotToContainer(new Slot(tePoweredGrinder, 5, 152, 32));
-		this.addSlotToContainer(new Slot(tePoweredGrinder, 6, 152, 52));
+		this.addSlotToContainer(new SlotItemHandler(tePoweredGrinder.SLOTS_UPGRADES, 0, 152, 12));
+		this.addSlotToContainer(new SlotItemHandler(tePoweredGrinder.SLOTS_UPGRADES, 1, 152, 32));
+		this.addSlotToContainer(new SlotItemHandler(tePoweredGrinder.SLOTS_UPGRADES, 2, 152, 52));
 		
 		//Processing
-		this.addSlotToContainer(new Slot(tePoweredGrinder, 7, 10000, 10000) {
+		this.addSlotToContainer(new SlotItemHandler(tePoweredGrinder.SLOTS_INTERNAL, 0, 10000, 10000) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;
