@@ -138,6 +138,16 @@ public class ShapedRecipes {
 			GameRegistry.addRecipe(new ItemStack(ModBlocks.StaticSolarPanel), new Object[]{"   ", "EEE", "CIC", 
 			'E', ModItems.StaticIngot, 'C', ModItems.BasicCircuit, 'I', ModItems.IOPort});
 			
+			//Gates --------------------------------------------------------------------------------------------------
+			GameRegistry.addRecipe(new ItemStack(ModBlocks.Timer), new Object[]{"   ", "RSV", "PPP", 
+			'P', ModItems.LogicGatePlate, 'S', ModItems.LogicGateServo, 'R', ModItems.LogicGatePowerSync, 'V', ModItems.InvertedLogicGatePowerSync});
+			GameRegistry.addRecipe(new ItemStack(ModBlocks.SignalMultiplier), new Object[]{"   ", "RSV", "PPP", 
+			'P', ModItems.LogicGatePlate, 'S', Items.COMPARATOR, 'R', ModItems.LogicGatePowerSync, 'V', ModItems.InvertedLogicGatePowerSync});
+			GameRegistry.addRecipe(new ItemStack(ModBlocks.NotGate), new Object[]{"   ", "R V", "PPP", 
+			'P', ModItems.LogicGatePlate,'R', ModItems.LogicGatePowerSync, 'V', ModItems.InvertedLogicGatePowerSync});
+			GameRegistry.addRecipe(new ItemStack(ModBlocks.NotGate), new Object[]{"   ", "RQR", "PPP", 
+			'P', ModItems.LogicGatePlate,'R', ModItems.LogicGatePowerSync, 'Q', Blocks.REDSTONE_BLOCK});
+			
 			//Static Chest --------------------------------------------------------------------------------------------------
 			GameRegistry.addRecipe(new ItemStack(ModBlocks.StaticChest), new Object[]{"SSS", "SCS", "SSS", 
 			'S', ModItems.StaticIngot, 'C', Blocks.CHEST});		

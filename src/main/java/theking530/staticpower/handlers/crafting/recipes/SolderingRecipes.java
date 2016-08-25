@@ -91,5 +91,15 @@ public class SolderingRecipes {
 		'P', Items.PAPER, 'C', ModItems.StaticCircuit, 'G', ModItems.StaticNugget});
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.AdvancedItemFilter), new Object[]{" P ","PGP"," C ",
 		'P', Items.PAPER, 'C', ModItems.EnergizedCircuit, 'G', ModItems.EnergizedNugget});
+		
+		//Gate Components
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.LogicGatePlate, 2), new Object[]{"   ", "   ", "SBS", 
+		'S', ModItems.IronPlate, 'B', ModItems.BasicCircuit});
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.LogicGateServo, 4), new Object[]{"S S", " C ", "SBS", 
+		'S', ModItems.IronPlate, 'B', ModItems.BasicBattery, 'C', ModItems.CopperCoil});
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.LogicGatePowerSync, 2), new Object[]{" S ", " R ", " S ", 
+		'S', ModItems.IronPlate, 'R', Blocks.REDSTONE_TORCH});
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.LogicGatePowerSync, 2), new Object[]{" S ", "QRQ", " S ", 
+		'S', ModItems.IronPlate, 'R', Blocks.REDSTONE_TORCH, 'Q', Items.REDSTONE});
 	}
 }

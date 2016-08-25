@@ -94,7 +94,7 @@ item.RedstoneAlloyIngot.name=Redstone Alloy Ingot
 item.StaticNugget.name=Static Nugget
 item.EnergizedNugget.name=Energized Nugget
 item.LumumNugget.name=Lumum Nugget
-
+item.IronNugget.name=Iron Nugget
 //Dusts
 item.SilverDust.name=Silver Dust
 item.TinDust.name=Tin Dust
@@ -216,6 +216,14 @@ tile.PowerCell.name=Power Cell
 container.PowerCell =Power Cell
 tile.Timer.name=Timer
 container.Timer=Timer
+
+//Gate Components
+item.LogicGatePlate.name=Base Gate Plate
+item.LogicGatePowerSync.name=Gate Power Sync
+item.InvertedLogicGatePowerSync.name=Inverted Gate Power Sync
+item.LogicGateServo.name=Gate Servo
+
+
 //GUI
 container.CropGenerator=Crop Generator
 container.CropSqueezer=Crop Squeezer

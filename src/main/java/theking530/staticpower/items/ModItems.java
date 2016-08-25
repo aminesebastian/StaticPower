@@ -110,6 +110,11 @@ public class ModItems {
 	public static Item CreativeTankUpgrade;
 	public static Item CreativeSpeedUpgrade;
 	
+	public static Item LogicGatePlate;
+	public static Item LogicGatePowerSync;
+	public static Item InvertedLogicGatePowerSync;
+	public static Item LogicGateServo;
+	
 	public static Item StaticWrench;
 	public static Item SolderingIron;
 	public static Item ElectricSolderingIron;
@@ -191,6 +196,15 @@ public class ModItems {
 		RegisterHelper.registerItem(WireCutters);
 		MetalHammer = new MetalHammer();
 		RegisterHelper.registerItem(MetalHammer);
+		
+		LogicGatePlate = new ItemBase("LogicGatePlate");
+		RegisterHelper.registerItem(LogicGatePlate);
+		LogicGatePowerSync = new ItemBase("LogicGatePowerSync");
+		RegisterHelper.registerItem(LogicGatePowerSync);
+		InvertedLogicGatePowerSync = new ItemBase("InvertedLogicGatePowerSync");
+		RegisterHelper.registerItem(InvertedLogicGatePowerSync);
+		LogicGateServo = new ItemBase("LogicGateServo");
+		RegisterHelper.registerItem(LogicGateServo);
 		
 		BasicItemFilter = new ItemFilter("BasicItemFilter", FilterTier.BASIC);
 		RegisterHelper.registerItem(BasicItemFilter);

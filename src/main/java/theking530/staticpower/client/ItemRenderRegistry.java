@@ -167,6 +167,11 @@ public class ItemRenderRegistry {
 		
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.StaticLamp));
 		
+		ItemRenderRegistry.registerItem(ModItems.LogicGatePlate);
+		ItemRenderRegistry.registerItem(ModItems.LogicGatePowerSync);
+		ItemRenderRegistry.registerItem(ModItems.InvertedLogicGatePowerSync);
+		ItemRenderRegistry.registerItem(ModItems.LogicGateServo);
+		
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.VacuumChest));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.StaticChest));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.EnergizedChest));
