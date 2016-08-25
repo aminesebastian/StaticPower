@@ -49,9 +49,9 @@ item.TinPlate.name=Tin Plate
 item.SilverPlate.name=Silver Plate
 item.GoldPlate.name=Gold Plate
 item.LeadPlate.name=Lead Plate
-item.StaticPlate.name=Static Plate
-item.EnergizedPlate.name=Energized Plate
-item.LumumPlate.name=Lumum Plate
+item.StaticPlate.name=§aStatic Plate
+item.EnergizedPlate.name=§bEnergized Plate
+item.LumumPlate.name=§eLumum Plate
 
 //Upgrades
 item.BasicSpeedUpgrade.name=Basic Speed Upgrade
