@@ -41,15 +41,21 @@ import theking530.staticpower.machines.poweredgrinder.TileEntityPoweredGrinder;
 import theking530.staticpower.machines.quarry.ContainerQuarry;
 import theking530.staticpower.machines.quarry.GuiQuarry;
 import theking530.staticpower.machines.quarry.TileEntityQuarry;
-import theking530.staticpower.machines.signalmultiplier.ContainerMultiplier;
-import theking530.staticpower.machines.signalmultiplier.GuiSignalMultiplier;
-import theking530.staticpower.machines.signalmultiplier.TileEntitySignalMultiplier;
 import theking530.staticpower.machines.solderingtable.ContainerSolderingTable;
 import theking530.staticpower.machines.solderingtable.GuiSolderingTable;
 import theking530.staticpower.machines.solderingtable.TileEntitySolderingTable;
 import theking530.staticpower.tileentity.energizedchest.ContainerEnergizedChest;
 import theking530.staticpower.tileentity.energizedchest.GuiEnergizedChest;
 import theking530.staticpower.tileentity.energizedchest.TileEntityEnergizedChest;
+import theking530.staticpower.tileentity.gates.powercell.ContainerPowerCell;
+import theking530.staticpower.tileentity.gates.powercell.GuiPowerCell;
+import theking530.staticpower.tileentity.gates.powercell.TileEntityPowerCell;
+import theking530.staticpower.tileentity.gates.timer.ContainerTimer;
+import theking530.staticpower.tileentity.gates.timer.GuiTimer;
+import theking530.staticpower.tileentity.gates.timer.TileEntityTimer;
+import theking530.staticpower.tileentity.gates.transducer.ContainerMultiplier;
+import theking530.staticpower.tileentity.gates.transducer.GuiSignalMultiplier;
+import theking530.staticpower.tileentity.gates.transducer.TileEntitySignalMultiplier;
 import theking530.staticpower.tileentity.lumumchest.ContainerLumumChest;
 import theking530.staticpower.tileentity.lumumchest.GuiLumumChest;
 import theking530.staticpower.tileentity.lumumchest.TileEntityLumumChest;
@@ -99,6 +105,16 @@ public class GuiHandler implements IGuiHandler {
 					return new ContainerFusionFurnace(player.inventory, (TileEntityFusionFurnace) entity);
 				}
 				return null;	
+			case GuiIDRegistry.guiPowerCell:
+				if (entity instanceof TileEntityPowerCell) {	
+					return new ContainerPowerCell(player.inventory, (TileEntityPowerCell) entity);
+				}
+				return null;
+			case GuiIDRegistry.guiTimer:
+				if (entity instanceof TileEntityTimer) {	
+					return new ContainerTimer(player.inventory, (TileEntityTimer) entity);
+				}
+				return null;
 			case GuiIDRegistry.guiIDQuarry:
 				if (entity instanceof TileEntityQuarry) {	
 					return new ContainerQuarry(player.inventory, (TileEntityQuarry) entity);
@@ -192,6 +208,16 @@ public class GuiHandler implements IGuiHandler {
 			case GuiIDRegistry.guiIDPoweredGrinder:
 				if (entity instanceof TileEntityPoweredGrinder) {	
 					return new GuiPoweredGrinder(player.inventory, (TileEntityPoweredGrinder) entity);					
+					}
+				return null;
+			case GuiIDRegistry.guiPowerCell:
+				if (entity instanceof TileEntityPowerCell) {	
+					return new GuiPowerCell(player.inventory, (TileEntityPowerCell) entity);					
+					}
+				return null;
+			case GuiIDRegistry.guiTimer:
+				if (entity instanceof TileEntityTimer) {	
+					return new GuiTimer(player.inventory, (TileEntityTimer) entity);					
 					}
 				return null;
 			case GuiIDRegistry.guiIDChargingStation:

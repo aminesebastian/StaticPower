@@ -39,7 +39,7 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 	private ArrayList<ItemStack> FARMED_STACKS = new ArrayList();
 	
 	public TileEntityBasicFarmer() {
-		initializeBaseMachineWithTank(2, 20, 100000, 500, 10, 0, 4, 10, 10000);
+		initializeBaseMachineWithTank(2, 40, 100000, 500, 10, 0, 4, 10, 10000);
 		setBatterySlot(3);
 		CURRENT_COORD = getStartingCoord();
 		RAND = new Random();
@@ -91,7 +91,7 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 		}
 		if(flag) {
 			BaseRangeUpgrade tempUpgrade = (BaseRangeUpgrade) SLOTS_UPGRADES.getStackInSlot(slot).getItem();
-			RANGE = (int) (INITIAL_RANGE*tempUpgrade.RANGE_MULT);
+			RANGE = (int) (INITIAL_RANGE*tempUpgrade.getMultiplier(SLOTS_UPGRADES.getStackInSlot(slot), 0));
 		}else{
 			RANGE = INITIAL_RANGE;
 		}
@@ -268,9 +268,9 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
     public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.util.EnumFacing facing){
     	if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
     		if(facing == EnumFacing.DOWN) {
-    			return (T) SLOTS_INPUT;
-    		}else{
     			return (T) SLOTS_OUTPUT;
+    		}else{
+    			return (T) SLOTS_INPUT;
     		}
     	}
     	return super.getCapability(capability, facing);

@@ -9,7 +9,9 @@ import theking530.staticpower.client.gui.widgets.PacketRedstoneTab;
 import theking530.staticpower.client.gui.widgets.PacketSideConfigTab;
 import theking530.staticpower.items.itemfilter.PacketItemFilter;
 import theking530.staticpower.machines.batteries.PacketGuiBattery;
-import theking530.staticpower.machines.signalmultiplier.PacketSignalMultiplier;
+import theking530.staticpower.tileentity.gates.powercell.PacketPowerCell;
+import theking530.staticpower.tileentity.gates.timer.PacketTimer;
+import theking530.staticpower.tileentity.gates.transducer.PacketSignalMultiplier;
 
 public class PacketHandler {
 	public static SimpleNetworkWrapper net;
@@ -17,6 +19,8 @@ public class PacketHandler {
 	public static void initPackets() {
 		net = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.MODID);
 		registerMessage(PacketSignalMultiplier.Message.class, PacketSignalMultiplier.class);
+		registerMessage(PacketPowerCell.Message.class, PacketPowerCell.class);
+		registerMessage(PacketTimer.Message.class, PacketTimer.class);
 		registerMessage(PacketGuiBattery.Message.class, PacketGuiBattery.class);
 		registerMessage(PacketRedstoneTab.Message.class, PacketRedstoneTab.class);
 		registerMessage(PacketPowerControlTab.Message.class, PacketPowerControlTab.class);

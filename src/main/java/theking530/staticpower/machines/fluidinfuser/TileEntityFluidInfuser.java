@@ -10,7 +10,7 @@ import theking530.staticpower.utils.InventoryUtilities;
 public class TileEntityFluidInfuser extends BaseMachineWithTank {
 	
 	public TileEntityFluidInfuser() {
-		initializeBaseMachineWithTank(2, 100, 50000, 80, 100, 1, 1, 1, 10000);
+		initializeBaseMachineWithTank(2, 1000, 50000, 80, 100, 1, 1, 1, 10000);
 	}
 	//IInventory				
 	@Override
@@ -36,6 +36,15 @@ public class TileEntityFluidInfuser extends BaseMachineWithTank {
 			}
 		}
 		return false;
+	}
+	@Override
+	public int getProcessingCost() {
+		if(SLOTS_INPUT.getStackInSlot(0) != null) {
+			return getProcessingEnergy(SLOTS_INPUT.getStackInSlot(0));
+		}else if(SLOTS_INTERNAL.getStackInSlot(0) != null){
+			return getProcessingEnergy(SLOTS_INTERNAL.getStackInSlot(0));
+		}
+		return 0;
 	}
 	@Override
 	public int getProcessingEnergy(ItemStack itemStack) {

@@ -62,17 +62,23 @@ public class ShaplessRecipes {
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.EnergizedIngot, 9), new Object[]{
 			new ItemStack(ModBlocks.EnergizedBlock)});
 		
-		//Static Seeds --------------------------------------------------------------------------------------------------
+		//Seeds --------------------------------------------------------------------------------------------------
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.StaticSeeds), new Object[]{
 			new ItemStack(ModItems.StaticCrop)});
-		
-		//Energized Seeds --------------------------------------------------------------------------------------------------
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.EnergizedSeeds), new Object[]{
 			new ItemStack(ModItems.EnergizedCrop)});
-		
-		//Lumum Seeds --------------------------------------------------------------------------------------------------
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.LumumSeeds), new Object[]{
 			new ItemStack(ModItems.LumumCrop)});
+		
+		//Upgrade Plates ---------------------------------------------------------------------------------------------------
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.BasicUpgradePlate), new Object[]{
+				new ItemStack(ModItems.IronPlate), new ItemStack(ModItems.BasicCircuit)});
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.StaticUpgradePlate), new Object[]{
+				new ItemStack(ModItems.StaticPlate), new ItemStack(ModItems.StaticCircuit)});
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.EnergizedUpgradePlate), new Object[]{
+				new ItemStack(ModItems.EnergizedPlate), new ItemStack(ModItems.EnergizedCircuit)});
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.LumumUpgradePlate), new Object[]{
+				new ItemStack(ModItems.LumumPlate), new ItemStack(ModItems.LumumCircuit)});
 		
 		//Inert Infusion Blend --------------------------------------------------------------------------------------------------
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.InertInfusionBlend, 4), new Object[]{
@@ -90,7 +96,8 @@ public class ShaplessRecipes {
 				new ItemStack(ModItems.EnergizedIngot)});
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.LumumNugget, 9), new Object[]{
 				new ItemStack(ModItems.LumumIngot)});
-		
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.IronNugget, 9), new Object[]{
+				new ItemStack(Items.IRON_INGOT)});
 		//Static Planks --------------------------------------------------------------------------------------------------
 		GameRegistry.addShapelessRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.StaticPlanks), 4), new Object[]{
 			new ItemStack(Item.getItemFromBlock(ModBlocks.StaticWood))});

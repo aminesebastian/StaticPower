@@ -13,7 +13,7 @@ public class FusionRecipes {
 	
 	public static void registerGrinderRecipe() {
 		RegisterHelper.registerFusionRecipe(new ItemStack(Items.SADDLE), new ItemStack(Items.LEATHER), new ItemStack(Items.LEATHER), new ItemStack(Items.LEATHER), new ItemStack(Items.IRON_INGOT), new ItemStack(Items.IRON_INGOT));
-		RegisterHelper.registerFusionRecipe(new ItemStack(Items.CAKE), new ItemStack(Items.SUGAR), new ItemStack(Items.WHEAT), new ItemStack(Items.WHEAT), new ItemStack(Items.MILK_BUCKET));
+		RegisterHelper.registerFusionRecipe(new ItemStack(Items.CAKE), new ItemStack(Items.EGG), new ItemStack(Items.SUGAR), new ItemStack(Items.WHEAT), new ItemStack(Items.WHEAT), new ItemStack(Items.MILK_BUCKET));
 		RegisterHelper.registerFusionRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.ObsidianGlass), 8), new ItemStack(Item.getItemFromBlock(Blocks.OBSIDIAN)), new ItemStack(Item.getItemFromBlock(Blocks.OBSIDIAN)), new ItemStack(Item.getItemFromBlock(Blocks.OBSIDIAN)),new ItemStack(Item.getItemFromBlock(Blocks.OBSIDIAN)) , new ItemStack(Item.getItemFromBlock(Blocks.GLASS)));
 		
 		for(int i=0; i<OreDictionary.getOres("ingotSilver").size(); i++) {

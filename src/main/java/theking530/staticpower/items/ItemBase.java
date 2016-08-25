@@ -15,7 +15,7 @@ public class ItemBase extends Item implements EnumTextFormatting {
 		setCreativeTab(StaticPower.StaticPower);
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setMaxStackSize(64);
+		//setMaxStackSize(64);
 	}
 	public boolean showHiddenTooltips() {
 		return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);

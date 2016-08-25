@@ -48,7 +48,7 @@ public class TileEntityCropSqueezer extends BaseMachineWithTank {
 			if(fluidstack.amount + TANK.getFluidAmount() > TANK.getCapacity()) {
 				return false;
 			}
-			if(STORAGE.getEnergyStored() < fluidstack.amount*PROCESSING_ENERGY_MULT) {
+			if(STORAGE.getEnergyStored() < getProcessingEnergy(itemstack)) {
 				return false;
 			}
 			if (TANK.getFluid() != null && !fluidstack.isFluidEqual(TANK.getFluid())) {
@@ -70,9 +70,18 @@ public class TileEntityCropSqueezer extends BaseMachineWithTank {
 		return false;
 	}
 	@Override
+	public int getProcessingCost() {
+		if(SLOTS_INPUT.getStackInSlot(0) != null) {
+			return getProcessingEnergy(SLOTS_INPUT.getStackInSlot(0));
+		}else if(SLOTS_INTERNAL.getStackInSlot(0) != null){
+			return getProcessingEnergy(SLOTS_INTERNAL.getStackInSlot(0));
+		}
+		return 0;
+	}
+	@Override
 	public int getProcessingEnergy(ItemStack itemStack) {
 		if(getResult(itemStack) != null) {
-			return 100*PROCESSING_ENERGY_MULT;
+			return INITIAL_POWER_USE*PROCESSING_ENERGY_MULT;
 		}
 		return 0;
 	}	

@@ -2,6 +2,7 @@ package theking530.staticpower.tileentity.energizedchest;
 
 import javax.annotation.Nullable;
 
+import api.IWrenchTool;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -13,7 +14,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.GuiIDRegistry;
-import theking530.staticpower.machines.poweredfurnace.TileEntityPoweredFurnace;
 import theking530.staticpower.tileentity.BlockBaseChest;
 
 public class BlockEnergizedChest extends BlockBaseChest{

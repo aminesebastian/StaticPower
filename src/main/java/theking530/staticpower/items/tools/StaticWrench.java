@@ -2,6 +2,7 @@ package theking530.staticpower.items.tools;
 
 import api.IWrenchTool;
 import api.IWrenchable;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
@@ -12,6 +13,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.machines.BaseMachineBlock;
 
 public class StaticWrench extends Item implements IWrenchTool{
 	
@@ -21,24 +23,25 @@ public class StaticWrench extends Item implements IWrenchTool{
 		setUnlocalizedName("StaticWrench");
 		setRegistryName("StaticWrench");	
 	}		
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+	@Override
+    public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
 		if(!world.isRemote) {
 			if(stack != null) {
+				if(!player.isSneaking()) {
+					player.swingArm(EnumHand.MAIN_HAND);
+					if(world.getBlockState(pos).getBlock() instanceof IWrenchable) {
+						BaseMachineBlock block = (BaseMachineBlock) world.getBlockState(pos).getBlock();
+						block.wrenchBlock(player, world, pos, side, true);
+						playWrenchSound(world, player, pos);
+						return EnumActionResult.SUCCESS;
+					}	
+				}
 				if(player.isSneaking()) {
 					player.swingArm(EnumHand.MAIN_HAND);
 					if(world.getBlockState(pos).getBlock() instanceof IWrenchable) {
 						IWrenchable block = (IWrenchable)world.getBlockState(pos).getBlock();
-						if(block.canBeWrenched(player, world, pos)){	
-							block.sneakWrenchBlock(player, world, pos, true);
-							playWrenchSound(world, player, pos);
-							return EnumActionResult.SUCCESS;
-						}
-					}	
-				}else{
-					player.swingArm(EnumHand.MAIN_HAND);
-					if(world.getBlockState(pos).getBlock() instanceof IWrenchable) {
-						IWrenchable block = (IWrenchable)world.getBlockState(pos).getBlock();
-						if(block.canBeWrenched(player, world, pos)){	
+						if(block.canBeWrenched(player, world, pos, side)){	
+							block.sneakWrenchBlock(player, world, pos, side, true);
 							playWrenchSound(world, player, pos);
 							return EnumActionResult.SUCCESS;
 						}

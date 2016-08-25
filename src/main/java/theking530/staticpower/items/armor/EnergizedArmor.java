@@ -14,13 +14,16 @@ import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.ISpecialArmor;
 
 public class EnergizedArmor extends ItemArmor {
+
 	public String textureName;
 	
 	public EnergizedArmor(String unlocalizedName, ArmorMaterial material, String textureName, EntityEquipmentSlot type) {
 	    super(material, 0, type);
 	    this.textureName = textureName;
-	    this.setUnlocalizedName(unlocalizedName);
-		setRegistryName(unlocalizedName);	
-	    this.setCreativeTab(StaticPower.StaticPower);
+		setCreativeTab(StaticPower.StaticPower);
+		setUnlocalizedName(unlocalizedName);
+		setRegistryName(unlocalizedName);
+		setMaxStackSize(1);
+		setNoRepair();
 	}	
 }

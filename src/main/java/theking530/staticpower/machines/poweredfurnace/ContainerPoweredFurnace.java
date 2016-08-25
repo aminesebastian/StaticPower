@@ -3,22 +3,21 @@ package theking530.staticpower.machines.poweredfurnace;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerPoweredFurnace extends Container {
 	
 	private TileEntityPoweredFurnace Smelter;
-	private int PROCESSING_TIME;
-	private int FLUID_AMOUNT;
-	private int lastItemInfusionTime;
-	
+	private int PROCESSING_TIMER;
+
 	public ContainerPoweredFurnace(InventoryPlayer invPlayer, TileEntityPoweredFurnace tePoweredSmelter) {
-		PROCESSING_TIME = 0;
-		FLUID_AMOUNT = 0;
-		lastItemInfusionTime = 0;
+		PROCESSING_TIMER = 0;
 		
 		Smelter = tePoweredSmelter;
 		
@@ -106,19 +105,19 @@ public class ContainerPoweredFurnace extends Container {
 		return Smelter.isUseableByPlayer(player);
 	}
 	
-	//Detect Changes
-	public void detectAndSendChanges() {
-		super.detectAndSendChanges();
-		this.PROCESSING_TIME = this.Smelter.PROCESSING_TIME;
-	}
-	
-	//Send Gui Update
-	public void updateProgressBar(int i, int j) {
-		if (i == 0) {
-			Smelter.PROCESSING_TIME = j;
-		}
-		
-	}
-	
+	public void detectAndSendChanges(){
+        super.detectAndSendChanges();
+        for (int i = 0; i < this.listeners.size(); ++i){
+            IContainerListener icontainerlistener = (IContainerListener)this.listeners.get(i);
+            if (PROCESSING_TIMER != Smelter.PROCESSING_TIMER){
+                icontainerlistener.sendProgressBarUpdate(this, 2, Smelter.PROCESSING_TIMER);
+            }
+        }
+        PROCESSING_TIMER = Smelter.PROCESSING_TIMER;
+    }
+    @SideOnly(Side.CLIENT)
+    public void updateProgressBar(int id, int data) {
+    	Smelter.PROCESSING_TIMER = data;
+    }
 }
 

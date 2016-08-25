@@ -4,6 +4,7 @@ import cofh.api.energy.IEnergyContainerItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemBucket;
@@ -12,16 +13,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.items.SlotItemHandler;
 import theking530.staticpower.items.upgrades.BaseUpgrade;
+import theking530.staticpower.items.upgrades.IMachineUpgrade;
 
 public class ContainerBasicFarmer extends Container {
 	
 	private TileEntityBasicFarmer FARMER;
-	private int PROCESSING_TIME;
-	private int FLUID_AMOUNT;
-	private int lastItemInfusionTime;
+	private int ENERGY_STORED;
 	
 	public ContainerBasicFarmer(InventoryPlayer invPlayer, TileEntityBasicFarmer teFarmer) {
-		FLUID_AMOUNT = 0;
+		ENERGY_STORED = 0;
 		
 		FARMER = teFarmer;
 		
@@ -66,8 +66,8 @@ public class ContainerBasicFarmer extends Container {
 			this.addSlotToContainer(new SlotItemHandler(teFarmer.SLOTS_UPGRADES, y, 152, 12+(y*20)) {
 				@Override
 		        public boolean isItemValid(ItemStack itemStack) {
-			          return itemStack.getItem() instanceof BaseUpgrade;
-			        }
+			          return itemStack.getItem() instanceof IMachineUpgrade;
+			    }
 			});
 		}
 		//Inventory
@@ -133,11 +133,20 @@ public class ContainerBasicFarmer extends Container {
 	//Detect Changes
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
+        for (int i = 0; i < this.listeners.size(); ++i){
+            IContainerListener icontainerlistener = (IContainerListener)this.listeners.get(i);
+            if(ENERGY_STORED != FARMER.STORAGE.getEnergyStored()) {
+                icontainerlistener.sendProgressBarUpdate(this, 0, FARMER.STORAGE.getEnergyStored());
+            }
+        }
+        ENERGY_STORED = FARMER.STORAGE.getEnergyStored();
 	}
 	
 	//Send Gui Update
 	public void updateProgressBar(int i, int j) {		
-	}
-	
+    	if(i == 0) {
+    		FARMER.STORAGE.setEnergyStored(j);
+    	}
+	}	
 }
 

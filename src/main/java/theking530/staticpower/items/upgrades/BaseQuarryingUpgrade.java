@@ -6,17 +6,16 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.assists.Tier;
+import theking530.staticpower.items.ItemBase;
 import theking530.staticpower.utils.EnumTextFormatting;
 
-public class BaseQuarryingUpgrade extends BaseUpgrade{
+public class BaseQuarryingUpgrade  extends BaseUpgrade implements IMachineUpgrade{
 
 	public int BLOCKS_PER_TICK = 1;
 	public float POWER_MULT = 1f;
 	
 	public BaseQuarryingUpgrade(String name, Tier tier){
-		setCreativeTab(StaticPower.StaticPower);
-		setUnlocalizedName(name);
-		setRegistryName(name);	
+		super(name, tier);	
 		switch(tier) {
 			case STATIC:
 				BLOCKS_PER_TICK = 2;
@@ -33,12 +32,25 @@ public class BaseQuarryingUpgrade extends BaseUpgrade{
 		default:
 			break;
 		}
+		setMaxStackSize(1);
 	}
-	
+	@Override
+	public float getMultiplier(ItemStack stack, int upgradeNumber) {
+		if(upgradeNumber == 1) {
+			return BLOCKS_PER_TICK;
+		}else{
+			return POWER_MULT;
+		}
+	}
 	@Override  
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
-		list.add(EnumTextFormatting.WHITE +  "Mines " + BLOCKS_PER_TICK + EnumTextFormatting.GREEN + " Blocks Per Tick");
-		list.add(EnumTextFormatting.WHITE + new java.text.DecimalFormat("#").format((POWER_MULT-1)*100) + "%" + EnumTextFormatting.RED + " Power Use");
-    }
+		list.add(EnumTextFormatting.WHITE +  "Mines " + getMultiplier(stack, 0) + EnumTextFormatting.GREEN + " Blocks Per Tick");
+		list.add(EnumTextFormatting.WHITE + new java.text.DecimalFormat("#").format((getMultiplier(stack, 1))*100) + "%" + EnumTextFormatting.RED + " Power Use");
+		if(showHiddenTooltips()) {
+    		list.add(EnumTextFormatting.WHITE + "Stacks Up To: " + stack.getMaxStackSize());
+    	}else{
+        	list.add(EnumTextFormatting.ITALIC + "Hold Shift");
+    	}
+	}
 	
 }

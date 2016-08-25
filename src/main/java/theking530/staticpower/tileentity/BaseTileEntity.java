@@ -123,10 +123,18 @@ public class BaseTileEntity extends TileEntity implements ITickable {
         for(int i=0; i<6; i++) {
         	SIDE_MODES[i] = SideModeList.Mode.values()[nbt.getInteger("SLOSIDEMODETMODE" + i)];
         }      
-        SLOTS_INPUT.deserializeNBT((NBTTagCompound) nbt.getTag("INPUTS"));
-        SLOTS_OUTPUT.deserializeNBT((NBTTagCompound) nbt.getTag("OUTPUTS"));
-        SLOTS_INTERNAL.deserializeNBT((NBTTagCompound) nbt.getTag("INTERNAL"));
-        SLOTS_UPGRADES.deserializeNBT((NBTTagCompound) nbt.getTag("UPGRADES"));
+        if(SLOTS_INPUT != null && SLOTS_INPUT.getSlots() > 0) {
+        	SLOTS_INPUT.deserializeNBT((NBTTagCompound) nbt.getTag("INPUTS"));	
+        }
+        if(SLOTS_OUTPUT != null && SLOTS_OUTPUT.getSlots() > 0) {
+            SLOTS_OUTPUT.deserializeNBT((NBTTagCompound) nbt.getTag("OUTPUTS"));
+        }
+        if(SLOTS_INTERNAL != null && SLOTS_INTERNAL.getSlots() > 0) {
+            SLOTS_INTERNAL.deserializeNBT((NBTTagCompound) nbt.getTag("INTERNAL"));
+        }
+        if(SLOTS_UPGRADES != null && SLOTS_UPGRADES.getSlots() > 0) {
+            SLOTS_UPGRADES.deserializeNBT((NBTTagCompound) nbt.getTag("UPGRADES"));
+        }
     }		
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
@@ -135,10 +143,18 @@ public class BaseTileEntity extends TileEntity implements ITickable {
         for(int i=0; i<6; i++) {
         	nbt.setInteger("SIDEMODE" + i, SIDE_MODES[i].ordinal());
         }
-    	nbt.setTag("INPUTS", SLOTS_INPUT.serializeNBT());
-    	nbt.setTag("OUTPUTS", SLOTS_OUTPUT.serializeNBT());
-    	nbt.setTag("INTERNAL", SLOTS_INTERNAL.serializeNBT());
-    	nbt.setTag("UPGRADES", SLOTS_UPGRADES.serializeNBT());
+        if(SLOTS_INPUT != null && SLOTS_INPUT.getSlots() > 0) {
+        	nbt.setTag("INPUTS", SLOTS_INPUT.serializeNBT());	
+        }
+        if(SLOTS_OUTPUT != null && SLOTS_OUTPUT.getSlots() > 0) {
+        	nbt.setTag("OUTPUTS", SLOTS_OUTPUT.serializeNBT());
+        }
+        if(SLOTS_INTERNAL != null && SLOTS_INTERNAL.getSlots() > 0) {
+        	nbt.setTag("INTERNAL", SLOTS_INTERNAL.serializeNBT());
+        }
+        if(SLOTS_UPGRADES != null && SLOTS_UPGRADES.getSlots() > 0) {
+        	nbt.setTag("UPGRADES", SLOTS_UPGRADES.serializeNBT());
+        }
 		return nbt;	
 	}
 	
@@ -617,7 +633,6 @@ public class BaseTileEntity extends TileEntity implements ITickable {
     
 	public void markForUpdate(){ 
 		worldObj.markAndNotifyBlock(pos, worldObj.getChunkFromBlockCoords(pos), worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2);
-
 	}
 	
 	public void incrementSide(int side){

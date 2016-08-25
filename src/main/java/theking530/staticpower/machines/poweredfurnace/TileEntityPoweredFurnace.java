@@ -10,7 +10,7 @@ import theking530.staticpower.utils.InventoryUtilities;
 public class TileEntityPoweredFurnace extends BaseMachine {
 
 	public TileEntityPoweredFurnace() {
-		initializeBasicMachine(2, 100, 100000, 80, 100, 1, 1, 1);
+		initializeBasicMachine(2, 1000, 100000, 80, 100, 1, 1, 1);
 	}
 	@Override
 	public String getName() {
@@ -38,7 +38,7 @@ public class TileEntityPoweredFurnace extends BaseMachine {
 	@Override
 	public boolean canProcess(ItemStack itemStack) {
 		if(hasResult(itemStack)) {
-			if(canSlotAcceptItemstack(getResult(itemStack), getOutputStack(0)) && STORAGE.getEnergyStored() >= 1000*PROCESSING_ENERGY_MULT) {
+			if(canSlotAcceptItemstack(getResult(itemStack), getOutputStack(0)) && STORAGE.getEnergyStored() >= getProcessingCost()) {
 				return true;
 			}
 		}
@@ -64,14 +64,13 @@ public class TileEntityPoweredFurnace extends BaseMachine {
 			}else{
 				if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, 0, getResult(getInternalStack(0)))) {
 					SLOTS_OUTPUT.insertItem(0, getResult(getInternalStack(0)).copy(), false);
-					useEnergy(1000*PROCESSING_ENERGY_MULT);
+					useEnergy(getProcessingCost());
 					setInternalStack(0, null);
 					PROCESSING_TIMER=0;
 					MOVE_TIMER = 0;
 				}
 			}
 		}
-		
 	}
 }
 

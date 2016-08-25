@@ -56,13 +56,7 @@ public class GuiPoweredFurnace extends GuiContainer{
     	int var1 = (this.width - this.xSize) / 2;
         int var2 = (this.height - this.ySize) / 2;  
         if(par1 >= 8 + var1 && par2 >= 8 + var2 && par1 <= 24 + var1 && par2 <= 68 + var2) {
-        	int j1 = Smelter.STORAGE.getEnergyStored();
-        	int k1 = Smelter.STORAGE.getMaxEnergyStored();
-        	int i1 = Smelter.STORAGE.getMaxReceive();
-        	String text = ("Max: " + i1 + " RF/t" + "=" + NumberFormat.getNumberInstance(Locale.US).format(j1)  + "/" + NumberFormat.getNumberInstance(Locale.US).format(k1) + " " + "RF");
-        	String[] splitMsg = text.split("=");
-        	List temp = Arrays.asList(splitMsg);
-        	drawHoveringText(temp, par1, par2, fontRendererObj); 
+        	drawHoveringText(POWER_BAR.drawText(), par1, par2, fontRendererObj);  
         }
 	}	
 

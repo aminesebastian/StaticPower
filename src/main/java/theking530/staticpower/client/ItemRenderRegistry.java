@@ -19,6 +19,10 @@ public class ItemRenderRegistry {
 		ItemRenderRegistry.registerItem(ModItems.EnergizedChestplate);
 		ItemRenderRegistry.registerItem(ModItems.EnergizedLeggings);
 		ItemRenderRegistry.registerItem(ModItems.EnergizedBoots);
+		ItemRenderRegistry.registerItem(ModItems.LumumHelmet);
+		ItemRenderRegistry.registerItem(ModItems.LumumChestplate);
+		ItemRenderRegistry.registerItem(ModItems.LumumLeggings);
+		ItemRenderRegistry.registerItem(ModItems.LumumBoots);
 		
 		ItemRenderRegistry.registerItem(ModItems.SilverDust);
 		ItemRenderRegistry.registerItem(ModItems.CopperDust);
@@ -37,6 +41,7 @@ public class ItemRenderRegistry {
 		ItemRenderRegistry.registerItem(ModItems.StaticNugget);
 		ItemRenderRegistry.registerItem(ModItems.EnergizedNugget);
 		ItemRenderRegistry.registerItem(ModItems.LumumNugget);
+		ItemRenderRegistry.registerItem(ModItems.IronNugget);
 		
 		ItemRenderRegistry.registerItem(ModItems.EnergizedInfusionBlend);
 		ItemRenderRegistry.registerItem(ModItems.LumumInfusionBlend);	
@@ -54,6 +59,9 @@ public class ItemRenderRegistry {
 		ItemRenderRegistry.registerItem(ModItems.SilverPlate);
 		ItemRenderRegistry.registerItem(ModItems.GoldPlate);
 		ItemRenderRegistry.registerItem(ModItems.LeadPlate);
+		ItemRenderRegistry.registerItem(ModItems.StaticPlate);
+		ItemRenderRegistry.registerItem(ModItems.EnergizedPlate);
+		ItemRenderRegistry.registerItem(ModItems.LumumPlate);
 		
 		ItemRenderRegistry.registerItem(ModItems.SilverIngot);
 		ItemRenderRegistry.registerItem(ModItems.CopperIngot);
@@ -72,14 +80,12 @@ public class ItemRenderRegistry {
 		ItemRenderRegistry.registerItem(ModItems.StaticBook);
 		ItemRenderRegistry.registerItem(ModItems.WireCutters);
 		ItemRenderRegistry.registerItem(ModItems.MetalHammer);
+		ItemRenderRegistry.registerItem(ModItems.ElectricSolderingIron);
 		
 		ItemRenderRegistry.registerItem(ModItems.BasicCircuit);
 		ItemRenderRegistry.registerItem(ModItems.StaticCircuit);
 		ItemRenderRegistry.registerItem(ModItems.EnergizedCircuit);
 		ItemRenderRegistry.registerItem(ModItems.LumumCircuit);
-		ItemRenderRegistry.registerItem(ModItems.ElectricSolderingIron);
-		ItemRenderRegistry.registerItem(ModItems.CoordinateMarker);
-		ItemRenderRegistry.registerItem(ModItems.StaticBook);
 		
 		ItemRenderRegistry.registerItem(ModItems.BasicCircuit);
 		ItemRenderRegistry.registerItem(ModItems.StaticCircuit);
@@ -109,6 +115,10 @@ public class ItemRenderRegistry {
 		ItemRenderRegistry.registerItem(ModItems.LumumSpeedUpgrade);
 		ItemRenderRegistry.registerItem(ModItems.LumumTankUpgrade);
 		ItemRenderRegistry.registerItem(ModItems.LumumQuarryingUpgrade);
+		ItemRenderRegistry.registerItem(ModItems.BasicUpgradePlate);
+		ItemRenderRegistry.registerItem(ModItems.StaticUpgradePlate);
+		ItemRenderRegistry.registerItem(ModItems.EnergizedUpgradePlate);
+		ItemRenderRegistry.registerItem(ModItems.LumumUpgradePlate);
 		
 		ItemRenderRegistry.registerItem(ModItems.StaticCrop);
 		ItemRenderRegistry.registerItem(ModItems.EnergizedCrop);

@@ -30,17 +30,19 @@ public class BasePoweredItem extends ItemEnergyContainer{
 			container.setTagCompound(new NBTTagCompound());
 		}
 		container.getTagCompound().setInteger("Energy", energy);
-		setDamage(container, (capacity - energy)/DAMAGE_DIVISOR);
+		updateDamage(container);
 	}
 	@Override
 	public int receiveEnergy(ItemStack container, int maxReceive, boolean simulate) {
-		setDamage(container, (capacity - getEnergyStored(container))/DAMAGE_DIVISOR);
-		return super.receiveEnergy(container, maxReceive, simulate);
+		int recieved = super.receiveEnergy(container, maxReceive, simulate);
+		updateDamage(container);
+		return recieved;
 	}
 	@Override
 	public int extractEnergy(ItemStack container, int maxExtract, boolean simulate) {
-		setDamage(container, (capacity - getEnergyStored(container))/DAMAGE_DIVISOR);
-		return super.extractEnergy(container, maxExtract, simulate);
+		int extracted = super.extractEnergy(container, maxExtract, simulate);
+		updateDamage(container);
+		return extracted;
 	}
 	@Override
     public boolean showDurabilityBar(ItemStack stack) {
@@ -56,4 +58,7 @@ public class BasePoweredItem extends ItemEnergyContainer{
 		}
         return this.getItemStackLimit();
     }
+	public void updateDamage(ItemStack stack) {
+		setDamage(stack, (capacity - getEnergyStored(stack))/DAMAGE_DIVISOR);
+	}
 }

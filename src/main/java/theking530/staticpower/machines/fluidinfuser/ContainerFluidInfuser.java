@@ -3,22 +3,21 @@ package theking530.staticpower.machines.fluidinfuser;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.SlotItemHandler;
 import theking530.staticpower.handlers.crafting.registries.InfuserRecipeRegistry;
 
 public class ContainerFluidInfuser extends Container {
 	
 	private TileEntityFluidInfuser Infuser;
-	private int PROCESSING_TIME;
-	private int FLUID_AMOUNT;
-	private int lastItemInfusionTime;
+	private int PROCESSING_TIMER;
 	
 	public ContainerFluidInfuser(InventoryPlayer invPlayer, TileEntityFluidInfuser teFluidInfuser) {
-		PROCESSING_TIME = 0;
-		FLUID_AMOUNT = 0;
-		lastItemInfusionTime = 0;
+		PROCESSING_TIMER = 0;
 		
 		Infuser = teFluidInfuser;
 		
@@ -105,14 +104,19 @@ public class ContainerFluidInfuser extends Container {
 		return Infuser.isUseableByPlayer(player);
 	}
 	//Detect Changes
-	public void detectAndSendChanges() {
-		super.detectAndSendChanges();
-		this.PROCESSING_TIME = this.Infuser.PROCESSING_TIMER;
-	}
-	public void updateProgressBar(int i, int j) {
-		if (i == 0) {
-			Infuser.PROCESSING_TIMER = j;
-		}
-	}
+	public void detectAndSendChanges(){
+        super.detectAndSendChanges();
+        for (int i = 0; i < this.listeners.size(); ++i){
+            IContainerListener icontainerlistener = (IContainerListener)this.listeners.get(i);
+            if (PROCESSING_TIMER != Infuser.PROCESSING_TIMER){
+                icontainerlistener.sendProgressBarUpdate(this, 2, Infuser.PROCESSING_TIMER);
+            }
+        }
+        PROCESSING_TIMER = Infuser.PROCESSING_TIMER;
+    }
+    @SideOnly(Side.CLIENT)
+    public void updateProgressBar(int id, int data) {
+    	Infuser.PROCESSING_TIMER = data;
+    }
 }
 

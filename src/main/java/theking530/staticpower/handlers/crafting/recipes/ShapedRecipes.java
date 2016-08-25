@@ -155,15 +155,20 @@ public class ShapedRecipes {
 			'H', Blocks.HOPPER, 'C', Blocks.CHEST, 'B', ModItems.StaticCircuit, 'E', Items.ENDER_PEARL, 'I', Items.IRON_INGOT});	
 			
 			//Static Armor --------------------------------------------------------------------------------------------------
-			GameRegistry.addRecipe(new ItemStack(ModItems.StaticHelmet), new Object[]{"EEE", "E E", "   ",  'E', ModItems.StaticIngot});
-			GameRegistry.addRecipe(new ItemStack(ModItems.StaticChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ModItems.StaticIngot});
-			GameRegistry.addRecipe(new ItemStack(ModItems.StaticLeggings), new Object[]{"EEE", "E E", "E E",  'E', ModItems.StaticIngot});
-			GameRegistry.addRecipe(new ItemStack(ModItems.StaticBoots), new Object[]{"   ", "E E", "E E",  'E', ModItems.StaticIngot});			
+			GameRegistry.addRecipe(new ItemStack(ModItems.StaticHelmet), new Object[]{"EEE", "EBE", "   ",  'E', ModItems.StaticIngot, 'B', ModItems.StaticBattery});
+			GameRegistry.addRecipe(new ItemStack(ModItems.StaticChestplate), new Object[]{"EBE", "EEE", "EEE",  'E', ModItems.StaticIngot, 'B', ModItems.StaticBattery});
+			GameRegistry.addRecipe(new ItemStack(ModItems.StaticLeggings), new Object[]{"EEE", "EBE", "E E",  'E', ModItems.StaticIngot, 'B', ModItems.StaticBattery});
+			GameRegistry.addRecipe(new ItemStack(ModItems.StaticBoots), new Object[]{"   ", "EBE", "E E",  'E', ModItems.StaticIngot, 'B', ModItems.StaticBattery});		
 			//Energized Armor --------------------------------------------------------------------------------------------------
-			GameRegistry.addRecipe(new ItemStack(ModItems.EnergizedHelmet), new Object[]{"EEE", "E E", "   ",  'E', ModItems.EnergizedIngot});
-			GameRegistry.addRecipe(new ItemStack(ModItems.EnergizedChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ModItems.EnergizedIngot});
-			GameRegistry.addRecipe(new ItemStack(ModItems.EnergizedLeggings), new Object[]{"EEE", "E E", "E E",  'E', ModItems.EnergizedIngot});
-			GameRegistry.addRecipe(new ItemStack(ModItems.EnergizedBoots), new Object[]{"   ", "E E", "E E",  'E', ModItems.EnergizedIngot});
+			GameRegistry.addRecipe(new ItemStack(ModItems.EnergizedHelmet), new Object[]{"EEE", "EBE", "   ",  'E', ModItems.EnergizedIngot, 'B', ModItems.EnergizedBattery});
+			GameRegistry.addRecipe(new ItemStack(ModItems.EnergizedChestplate), new Object[]{"EBE", "EEE", "EEE",  'E', ModItems.EnergizedIngot, 'B', ModItems.EnergizedBattery});
+			GameRegistry.addRecipe(new ItemStack(ModItems.EnergizedLeggings), new Object[]{"EEE", "EBE", "E E",  'E', ModItems.EnergizedIngot, 'B', ModItems.EnergizedBattery});
+			GameRegistry.addRecipe(new ItemStack(ModItems.EnergizedBoots), new Object[]{"   ", "EBE", "E E",  'E', ModItems.EnergizedIngot, 'B', ModItems.EnergizedBattery});		
+			//Lumum Armor --------------------------------------------------------------------------------------------------
+			GameRegistry.addRecipe(new ItemStack(ModItems.LumumHelmet), new Object[]{"EEE", "EBE", "   ",  'E', ModItems.LumumIngot, 'B', ModItems.LumumBattery});
+			GameRegistry.addRecipe(new ItemStack(ModItems.LumumChestplate), new Object[]{"EBE", "EEE", "EEE",  'E', ModItems.LumumIngot, 'B', ModItems.LumumBattery});
+			GameRegistry.addRecipe(new ItemStack(ModItems.LumumLeggings), new Object[]{"EEE", "EBE", "E E",  'E', ModItems.LumumIngot, 'B', ModItems.LumumBattery});
+			GameRegistry.addRecipe(new ItemStack(ModItems.LumumBoots), new Object[]{"   ", "EBE", "E E",  'E', ModItems.LumumIngot, 'B', ModItems.LumumBattery});		
 		}
 	
 	public static void registerFullRecipes() {

@@ -21,7 +21,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.client.CommonProxy;
-import theking530.staticpower.client.ItemRenderRegistry;
 import theking530.staticpower.conduits.fluidconduit.TileEntityFluidConduit;
 import theking530.staticpower.conduits.itemconduit.TileEntityItemConduit;
 import theking530.staticpower.conduits.staticconduit.TileEntityStaticConduit;
@@ -51,10 +50,13 @@ import theking530.staticpower.machines.fusionfurnace.TileEntityFusionFurnace;
 import theking530.staticpower.machines.poweredfurnace.TileEntityPoweredFurnace;
 import theking530.staticpower.machines.poweredgrinder.TileEntityPoweredGrinder;
 import theking530.staticpower.machines.quarry.TileEntityQuarry;
-import theking530.staticpower.machines.signalmultiplier.TileEntitySignalMultiplier;
 import theking530.staticpower.machines.solarpanel.TileEntitySolarPanel;
 import theking530.staticpower.machines.solderingtable.TileEntitySolderingTable;
 import theking530.staticpower.tileentity.energizedchest.TileEntityEnergizedChest;
+import theking530.staticpower.tileentity.gates.notgate.TileEntityNotGate;
+import theking530.staticpower.tileentity.gates.powercell.TileEntityPowerCell;
+import theking530.staticpower.tileentity.gates.timer.TileEntityTimer;
+import theking530.staticpower.tileentity.gates.transducer.TileEntitySignalMultiplier;
 import theking530.staticpower.tileentity.lumumchest.TileEntityLumumChest;
 import theking530.staticpower.tileentity.staticchest.TileEntityStaticChest;
 import theking530.staticpower.tileentity.vacuumchest.TileEntityVacuumChest;
@@ -111,7 +113,6 @@ public class StaticPower {
 		GameRegistry.registerTileEntity(TileEntityFluidConduit.class, "FluidConduit");
 		GameRegistry.registerTileEntity(TileEntityItemConduit.class, "ItemConduit");
 		GameRegistry.registerTileEntity(TileEntityFusionFurnace.class, "FusionFurnace");
-		GameRegistry.registerTileEntity(TileEntitySignalMultiplier.class, "SignalMultiplier");
 		GameRegistry.registerTileEntity(TileEntitySolarPanel.class, "SolarPanel");
 		GameRegistry.registerTileEntity(TileEntityQuarry.class, "Quarry");
 		GameRegistry.registerTileEntity(TileEntityStaticBattery.class, "StaticBattery");
@@ -119,6 +120,11 @@ public class StaticPower {
 		GameRegistry.registerTileEntity(TileEntityLumumBattery.class, "LumumBattery");
 		GameRegistry.registerTileEntity(TileEntityBasicFarmer.class, "BasicFarmer");
 		GameRegistry.registerTileEntity(TileEntityChargingStation.class, "ChargingStation");
+		
+		GameRegistry.registerTileEntity(TileEntitySignalMultiplier.class, "SignalMultiplier");
+		GameRegistry.registerTileEntity(TileEntityNotGate.class, "NotGate");
+		GameRegistry.registerTileEntity(TileEntityPowerCell.class, "PowerCell");
+		GameRegistry.registerTileEntity(TileEntityTimer.class, "Timer");
 		
 		GameRegistry.registerTileEntity(TileEntityStaticChest.class, "StaticChest");
 		GameRegistry.registerTileEntity(TileEntityEnergizedChest.class, "EnergizedChest");

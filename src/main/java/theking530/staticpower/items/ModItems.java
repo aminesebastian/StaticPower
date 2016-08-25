@@ -69,6 +69,11 @@ public class ModItems {
 	public static Item EnergizedBattery;
 	public static Item LumumBattery;
 	
+	public static Item BasicUpgradePlate;
+	public static Item StaticUpgradePlate;
+	public static Item EnergizedUpgradePlate;
+	public static Item LumumUpgradePlate;
+	
 	public static Item BasicSpeedUpgrade;
 	public static Item StaticSpeedUpgrade;
 	public static Item EnergizedSpeedUpgrade;
@@ -145,6 +150,7 @@ public class ModItems {
 	public static Item EnergizedNugget;
 	public static Item StaticNugget;
 	public static Item LumumNugget;
+	public static Item IronNugget;
 	
 	public static Item StaticBelt;
 	public static Item EnergizedBelt;
@@ -235,6 +241,15 @@ public class ModItems {
 		RegisterHelper.registerItem(EnergizedCircuit);
 		LumumCircuit = new ItemBase("LumumCircuit");
 		RegisterHelper.registerItem(LumumCircuit);
+		
+		BasicUpgradePlate = new ItemBase("BasicUpgradePlate");
+		RegisterHelper.registerItem(BasicUpgradePlate);
+		StaticUpgradePlate = new ItemBase("StaticUpgradePlate");
+		RegisterHelper.registerItem(StaticUpgradePlate);
+		EnergizedUpgradePlate = new ItemBase("EnergizedUpgradePlate");
+		RegisterHelper.registerItem(EnergizedUpgradePlate);
+		LumumUpgradePlate = new ItemBase("LumumUpgradePlate");
+		RegisterHelper.registerItem(LumumUpgradePlate);
 		
 		CopperWire = new ItemBase("CopperWire");
 		RegisterHelper.registerItem(CopperWire);
@@ -375,6 +390,7 @@ public class ModItems {
 		GameRegistry.register(StaticNugget = new BaseNugget("StaticNugget"));
 		GameRegistry.register(EnergizedNugget = new BaseNugget("EnergizedNugget"));
 		GameRegistry.register(LumumNugget = new BaseNugget("LumumNugget"));
+		GameRegistry.register(IronNugget = new BaseNugget("IronNugget"));
 		
 		GameRegistry.register(SilverDust = new BaseDust("SilverDust"));
 		GameRegistry.register(TinDust = new BaseDust("TinDust"));

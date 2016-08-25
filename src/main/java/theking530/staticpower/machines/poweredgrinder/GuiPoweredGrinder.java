@@ -53,17 +53,9 @@ public class GuiPoweredGrinder extends CustomGuiContainer{
     	int var1 = (this.width - this.xSize) / 2;
         int var2 = (this.height - this.ySize) / 2;  
         if(par1 >= 8 + var1 && par2 >= 8 + var2 && par1 <= 24 + var1 && par2 <= 68 + var2) {
-        	int j1 = Grinder.STORAGE.getEnergyStored();
-        	int k1 = Grinder.STORAGE.getMaxEnergyStored();
-        	int i1 = Grinder.STORAGE.getMaxReceive();
-        	String text = ("Max: " + i1 + " RF/t" + "=" + NumberFormat.getNumberInstance(Locale.US).format(j1)  + "/" + NumberFormat.getNumberInstance(Locale.US).format(k1) + " " + "RF");
-        	String[] splitMsg = text.split("=");
-        	List temp = Arrays.asList(splitMsg);
-        	drawHoveringText(temp, par1, par2, fontRendererObj); 
+        	drawHoveringText(POWERBAR.drawText(), par1, par2, fontRendererObj); 
         }
-
 		drawRect(guiLeft + 82, guiTop + 38, 176, 69, 3394815);
-
 	}
 
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
@@ -78,10 +70,12 @@ public class GuiPoweredGrinder extends CustomGuiContainer{
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.GRINDER_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+		ContainerPoweredGrinder cGrinder = (ContainerPoweredGrinder) inventorySlots;
 		int j1 = Grinder.getProgressScaled(17);
 		drawTexturedModalRect(guiLeft + 76, guiTop + 38, 176, 69, 24, j1);	
 		SIDE_TAB.drawTab();		
 		REDSTONE_TAB.drawTab();
+		POWERBAR.drawPowerBar(guiLeft + 8, guiTop + 68, 16, 60, zLevel);
 	}
 	@Override
 	protected void mouseClicked(int x, int y, int button) throws IOException{

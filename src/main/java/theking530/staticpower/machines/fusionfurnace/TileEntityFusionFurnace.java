@@ -12,7 +12,7 @@ public class TileEntityFusionFurnace extends BaseMachine {
 	
 
 	public TileEntityFusionFurnace() {
-		initializeBasicMachine(2,100, 100000, 80, 100, 4, 4, 1);
+		initializeBasicMachine(2, 1000, 100000, 80, 100, 4, 4, 1);
 	}	
 	//IInventory				
 	@Override
@@ -39,7 +39,7 @@ public class TileEntityFusionFurnace extends BaseMachine {
 			if(getFusionResult(inputs).getOutputItem() != null) {
 				FusionFurnaceRecipeWrapper tempWrapper = getFusionResult(inputs);
 				if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, 0, tempWrapper.getOutputItem())) {
-					if(STORAGE.getEnergyStored() >= PROCESSING_ENERGY_MULT*1000) {
+					if(STORAGE.getEnergyStored() >= getProcessingCost()) {
 						return true;
 					}
 				}
@@ -76,7 +76,7 @@ public class TileEntityFusionFurnace extends BaseMachine {
 		}
 		if(isProcessing() && !isMoving()) {
 			if(PROCESSING_TIMER <= PROCESSING_TIME) {
-				useEnergy((1000*PROCESSING_ENERGY_MULT) / PROCESSING_TIME);
+				useEnergy(getProcessingCost() / PROCESSING_TIME);
 				PROCESSING_TIMER++;
 			}else{
 				if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, 0, getFusionResult(getInternalStack(0), getInternalStack(1), getInternalStack(2), getInternalStack(3), getInternalStack(4)).getOutputItem())) {

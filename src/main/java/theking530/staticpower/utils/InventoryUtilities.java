@@ -50,7 +50,7 @@ public class InventoryUtilities {
 	public static ItemStack insertItemIntoInventory(IItemHandler inv, ItemStack stack, int start, int stop) {
 		for(int i=start; i<stop+1; i++) {
 			if(canInsertItemIntoSlot(inv, i, stack)) {
-				return inv.insertItem(i, stack, false);
+				return inv.insertItem(i, stack.copy(), false);
 			}
 		}
 		return stack;

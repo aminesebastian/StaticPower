@@ -163,10 +163,10 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		}
 		if(flag) {
 			BasePowerUpgrade tempUpgrade = (BasePowerUpgrade) SLOTS_UPGRADES.getStackInSlot(slot).getItem();
-			STORAGE.setCapacity((int)(INITIAL_ENERGY_CAPACITY*tempUpgrade.CAPACITY));
-			STORAGE.setMaxExtract((int)(INITIAL_ENERGY_PER_TICK*tempUpgrade.TICK_UPGRADE));
-			STORAGE.setMaxReceive((int)(INITIAL_ENERGY_PER_TICK*tempUpgrade.TICK_UPGRADE));
-			STORAGE.setMaxTransfer((int)(INITIAL_ENERGY_PER_TICK*tempUpgrade.TICK_UPGRADE));
+			STORAGE.setCapacity((int)(tempUpgrade.getValueMultiplied(INITIAL_ENERGY_CAPACITY, tempUpgrade.getMultiplier(SLOTS_UPGRADES.getStackInSlot(slot), 0))));
+			STORAGE.setMaxExtract((int)(tempUpgrade.getValueMultiplied(INITIAL_ENERGY_PER_TICK, tempUpgrade.getMultiplier(SLOTS_UPGRADES.getStackInSlot(slot), 1))));
+			STORAGE.setMaxReceive((int)(tempUpgrade.getValueMultiplied(INITIAL_ENERGY_PER_TICK, tempUpgrade.getMultiplier(SLOTS_UPGRADES.getStackInSlot(slot), 1))));
+			STORAGE.setMaxTransfer((int)(tempUpgrade.getValueMultiplied(INITIAL_ENERGY_PER_TICK, tempUpgrade.getMultiplier(SLOTS_UPGRADES.getStackInSlot(slot), 1))));
 		}else{
 			STORAGE.setCapacity(INITIAL_ENERGY_CAPACITY);
 			STORAGE.setMaxExtract(INITIAL_ENERGY_PER_TICK);
@@ -187,8 +187,8 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		}
 		if(flag) {
 			BaseSpeedUpgrade tempUpgrade = (BaseSpeedUpgrade) SLOTS_UPGRADES.getStackInSlot(slot).getItem();
-			PROCESSING_TIME = (int) (INITIAL_PROCESSING_TIME/tempUpgrade.SPEED);
-			PROCESSING_ENERGY_MULT = (int) (INITIAL_PROCESSING_ENERGY_MULT*tempUpgrade.POWER_MULT);
+			PROCESSING_TIME = (int) (INITIAL_PROCESSING_TIME/(1+(tempUpgrade.getMultiplier(SLOTS_UPGRADES.getStackInSlot(slot), 0))));
+			PROCESSING_ENERGY_MULT = (int)(tempUpgrade.getValueMultiplied(INITIAL_PROCESSING_ENERGY_MULT, tempUpgrade.getMultiplier(SLOTS_UPGRADES.getStackInSlot(slot), 1)));
 		}else{
 			PROCESSING_ENERGY_MULT = INITIAL_PROCESSING_ENERGY_MULT;
 			PROCESSING_TIME = INITIAL_PROCESSING_TIME;
@@ -211,12 +211,14 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         STORAGE.readFromNBT(nbt);
+        PROCESSING_TIMER = nbt.getInteger("P_TIMER");
     }		
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
-        STORAGE.writeToNBT(nbt);	
-    	return nbt;
+        STORAGE.writeToNBT(nbt);
+        nbt.setInteger("P_TIMER", PROCESSING_TIMER);
+        return nbt;
 	}
 	
 	public ItemStack[] craftingResults(ItemStack[] items) {
@@ -256,6 +258,7 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		return STORAGE.receiveEnergy(maxReceive, simulate);
 	}
 	public int getProcessingCost(){
-		return INITIAL_POWER_USE*PROCESSING_ENERGY_MULT;
+		return (INITIAL_POWER_USE*PROCESSING_ENERGY_MULT);
 	}
+
 }

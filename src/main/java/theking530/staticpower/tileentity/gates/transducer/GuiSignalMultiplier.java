@@ -1,4 +1,4 @@
-package theking530.staticpower.machines.signalmultiplier;
+package theking530.staticpower.tileentity.gates.transducer;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
@@ -64,7 +64,7 @@ public class GuiSignalMultiplier extends GuiContainer{
 				 }else if(isShiftDown() && sMultiplier.INPUT_SIGNAL_LIMIT + 5 > 15){
 					 sMultiplier.INPUT_SIGNAL_LIMIT = 15;
 				 }else{
-				 sMultiplier.INPUT_SIGNAL_LIMIT ++;
+					 sMultiplier.INPUT_SIGNAL_LIMIT ++;
 				 }
 			 }
 	 		}	
@@ -102,13 +102,13 @@ public class GuiSignalMultiplier extends GuiContainer{
 			 }
 		 	}	
 		 if(B.id == 5) {
-			IMessage msg = new PacketSignalMultiplier(INPUT, OUTPUT, sMultiplier.getPos(), true);
+			IMessage msg = new PacketSignalMultiplier(INPUT, OUTPUT, sMultiplier.getPos());
 			PacketHandler.net.sendToServer(msg);
-		 	}
+		 }
 		 if(B.id == 6) {
 			 sMultiplier.OUTPUT_SIGNAL_STRENGTH = 0; 
 			 sMultiplier.INPUT_SIGNAL_LIMIT = 0;
-			 IMessage msg = new PacketSignalMultiplier(INPUT, OUTPUT, sMultiplier.getPos(), false);
+			 IMessage msg = new PacketSignalMultiplier(INPUT, OUTPUT, sMultiplier.getPos());
 			 PacketHandler.net.sendToServer(msg);
 		 }
 	}	

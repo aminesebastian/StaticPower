@@ -3,18 +3,22 @@ package theking530.staticpower.machines.poweredgrinder;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.SlotItemHandler;
 import theking530.staticpower.handlers.crafting.registries.GrinderRecipeRegistry;
 
 public class ContainerPoweredGrinder extends Container {
 	
 	private TileEntityPoweredGrinder GRINDER;
-	private int PROCESSING_TIME;
+	public int PROCESSING_TIMER;
+	public int ENERGY_STORED;
 
 	public ContainerPoweredGrinder(InventoryPlayer invPlayer, TileEntityPoweredGrinder tePoweredGrinder) {
-		PROCESSING_TIME = 0;
+		PROCESSING_TIMER = 0;
 		
 		GRINDER = tePoweredGrinder;
 		
@@ -119,17 +123,27 @@ public class ContainerPoweredGrinder extends Container {
 		return GRINDER.isUseableByPlayer(player);
 	}
 	
-	//Detect Changes
-	public void detectAndSendChanges() {
-		super.detectAndSendChanges();
-		this.PROCESSING_TIME = this.GRINDER.PROCESSING_TIMER;
-	}
-	
-	//Send Gui Update
-	public void updateProgressBar(int i, int j) {
-		if (i == 0) {
-			GRINDER.PROCESSING_TIMER = j;
-		}
-	}
+	public void detectAndSendChanges(){
+        super.detectAndSendChanges();
+        for (int i = 0; i < this.listeners.size(); ++i){
+            IContainerListener icontainerlistener = (IContainerListener)this.listeners.get(i);
+            if(PROCESSING_TIMER != GRINDER.PROCESSING_TIMER){
+                icontainerlistener.sendProgressBarUpdate(this, 0, GRINDER.PROCESSING_TIMER);
+            }
+            if(ENERGY_STORED != GRINDER.STORAGE.getEnergyStored()) {
+                icontainerlistener.sendProgressBarUpdate(this, 1, GRINDER.STORAGE.getEnergyStored());
+            }
+        }
+        PROCESSING_TIMER = GRINDER.PROCESSING_TIMER;
+        ENERGY_STORED = GRINDER.STORAGE.getEnergyStored();
+    }
+    @SideOnly(Side.CLIENT)
+    public void updateProgressBar(int id, int data) {
+    	if(id == 0) {
+        	GRINDER.PROCESSING_TIMER = data;
+    	}else if(id == 1) {
+    		GRINDER.STORAGE.setEnergyStored(data);
+    	}
+    }
 }
 

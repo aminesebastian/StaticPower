@@ -26,13 +26,13 @@ import theking530.staticpower.assists.RegisterHelper;
 import theking530.staticpower.blocks.BaseItemBlock;
 import theking530.staticpower.tileentity.BaseTileEntity;
 
-public class BaseMachineBlock extends BlockContainer implements IWrenchable{
+public class BaseMachineBlock extends BlockContainer implements IWrenchable {
 
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 	
 	protected BaseMachineBlock(String name) {
 		super(Material.IRON);
-		this.setCreativeTab(StaticPower.StaticPower);
+		setCreativeTab(StaticPower.StaticPower);
 		setRegistryName(name);
 		setUnlocalizedName(name);
 		RegisterHelper.registerItem(new BaseItemBlock(this, name));
@@ -99,15 +99,22 @@ public class BaseMachineBlock extends BlockContainer implements IWrenchable{
 		return null;
 	}
 	@Override
-	public void wrenchBlock(EntityPlayer player, World world, BlockPos pos, boolean returnDrops) {
-	}
+	public void wrenchBlock(EntityPlayer player, World world, BlockPos pos, EnumFacing facing, boolean returnDrops) {
+		int currentMeta = getMetaFromState(world.getBlockState(pos));
+		if(facing != EnumFacing.UP && facing != EnumFacing.DOWN) {
+			if(facing != world.getBlockState(pos).getValue(FACING)) {
+				world.setBlockState(pos, world.getBlockState(pos).withProperty(FACING, facing), 2);	
+			}else{
+				world.setBlockState(pos, world.getBlockState(pos).withProperty(FACING, facing.getOpposite()), 2);	
+			}
+		}
+	}	
 	@Override
-	public boolean canBeWrenched(EntityPlayer player, World world, BlockPos pos){
+	public boolean canBeWrenched(EntityPlayer player, World world, BlockPos pos, EnumFacing facing){
 		return true;
 	}
-
 	@Override
-	public void sneakWrenchBlock(EntityPlayer player, World world, BlockPos pos, boolean returnDrops) {
+	public void sneakWrenchBlock(EntityPlayer player, World world, BlockPos pos, EnumFacing facing, boolean returnDrops) {
 		ArrayList<ItemStack> items = new ArrayList();
 		NBTTagCompound nbt = new NBTTagCompound();
 		ItemStack machineStack = new ItemStack(Item.getItemFromBlock(this));

@@ -23,10 +23,13 @@ import theking530.staticpower.machines.fusionfurnace.BlockFusionFurnace;
 import theking530.staticpower.machines.poweredfurnace.BlockPoweredFurnace;
 import theking530.staticpower.machines.poweredgrinder.BlockPoweredGrinder;
 import theking530.staticpower.machines.quarry.BlockQuarry;
-import theking530.staticpower.machines.signalmultiplier.BlockSignalMultiplier;
 import theking530.staticpower.machines.solarpanel.BlockSolarPanel;
 import theking530.staticpower.machines.solderingtable.BlockSolderingTable;
 import theking530.staticpower.tileentity.energizedchest.BlockEnergizedChest;
+import theking530.staticpower.tileentity.gates.notgate.BlockNotGate;
+import theking530.staticpower.tileentity.gates.powercell.BlockPowerCell;
+import theking530.staticpower.tileentity.gates.timer.BlockTimer;
+import theking530.staticpower.tileentity.gates.transducer.BlockSignalMultiplier;
 import theking530.staticpower.tileentity.lumumchest.BlockLumumChest;
 import theking530.staticpower.tileentity.staticchest.BlockStaticChest;
 import theking530.staticpower.tileentity.vacuumchest.BlockVacuumChest;
@@ -57,7 +60,12 @@ public class ModBlocks {
 	public static Block BasicTank;
 	public static Block AdvancedTank;	
 	public static Block Farmer;
+	
 	public static Block SignalMultiplier;
+	public static Block NotGate;
+	public static Block PowerCell;
+	public static Block Timer;
+	
 	public static Block StaticSolarPanel;
 	public static Block EnergizedSolarPanel;
 	public static Block LumumSolarPanel;
@@ -187,7 +195,13 @@ public class ModBlocks {
 		
 		SignalMultiplier = new BlockSignalMultiplier("SignalMultiplier").setHardness(3.5f);
 		RegisterHelper.registerBlock(SignalMultiplier);
-
+		NotGate = new BlockNotGate("NotGate").setHardness(3.5f);
+		RegisterHelper.registerBlock(NotGate);
+		PowerCell = new BlockPowerCell("PowerCell").setHardness(3.5f);
+		RegisterHelper.registerBlock(PowerCell);
+		Timer = new BlockTimer("Timer").setHardness(3.5f);
+		RegisterHelper.registerBlock(Timer);
+		
 		StaticSolarPanel = new BlockSolarPanel("StaticSolarPanel", Tier.STATIC).setHardness(3.5f);
 		RegisterHelper.registerBlock(StaticSolarPanel);
 		

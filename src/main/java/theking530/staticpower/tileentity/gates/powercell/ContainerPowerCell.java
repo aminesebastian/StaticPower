@@ -1,13 +1,13 @@
-package theking530.staticpower.machines.signalmultiplier;
+package theking530.staticpower.tileentity.gates.powercell;
 
 import theking530.staticpower.machines.fluidgenerator.TileEntityFluidGenerator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 
-public class ContainerMultiplier extends Container {
+public class ContainerPowerCell extends Container {
 
-	public ContainerMultiplier(InventoryPlayer invPlayer, TileEntitySignalMultiplier teSignalMultiplier) {
+	public ContainerPowerCell(InventoryPlayer invPlayer, TileEntityPowerCell teSignalMultiplier) {
 		
 	}
 	

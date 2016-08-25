@@ -3,24 +3,27 @@ package theking530.staticpower.machines.cropsqueezer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.SlotItemHandler;
 import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistry;
 
 public class ContainerCropSqueezer extends Container {
 	
 	private TileEntityCropSqueezer CropSqueezer;
-	private int infusingTime;
-	private int fluidAmount;
-	private int lastItemInfusionTime;
+	private int PROCESSING_TIMER;
+	private int FLUID_AMOUNT;
+	private int ENERGY_STORED;
+	private int FLUID_ID;
+	
 	private int upgradeSlotX;
 	private int upgradeSlotY;
 	public ContainerCropSqueezer(InventoryPlayer invPlayer, TileEntityCropSqueezer teCropSqueezer) {
-		infusingTime = 0;
-		fluidAmount = 0;
-		lastItemInfusionTime = 0;
-		
+		PROCESSING_TIMER = 0;
+
 		CropSqueezer = teCropSqueezer;
 		
 		//Input
@@ -106,17 +109,31 @@ public class ContainerCropSqueezer extends Container {
 		return CropSqueezer.isUseableByPlayer(player);
 	}
 	
-	//Detect Changes
-	public void detectAndSendChanges() {
-		super.detectAndSendChanges();
-		this.infusingTime = this.CropSqueezer.PROCESSING_TIMER;
-	}
-	
-	//Send Gui Update
-	public void updateProgressBar(int i, int j) {
-		if (i == 0) {
-			CropSqueezer.PROCESSING_TIMER = j;
-		}
-	}
+	public void detectAndSendChanges(){
+        super.detectAndSendChanges();
+        for (int i = 0; i < this.listeners.size(); ++i){
+            IContainerListener icontainerlistener = (IContainerListener)this.listeners.get(i);
+            if(PROCESSING_TIMER != CropSqueezer.PROCESSING_TIMER){
+                icontainerlistener.sendProgressBarUpdate(this, 0, CropSqueezer.PROCESSING_TIMER);
+            }
+            if(ENERGY_STORED != CropSqueezer.STORAGE.getEnergyStored()) {
+                icontainerlistener.sendProgressBarUpdate(this, 1, CropSqueezer.STORAGE.getEnergyStored());
+            }
+            if(FLUID_AMOUNT != CropSqueezer.TANK.getFluidAmount()) {
+                icontainerlistener.sendProgressBarUpdate(this, 2, CropSqueezer.TANK.getFluidAmount());
+            }
+        }
+        PROCESSING_TIMER = CropSqueezer.PROCESSING_TIMER;
+        ENERGY_STORED = CropSqueezer.STORAGE.getEnergyStored();
+        FLUID_AMOUNT = CropSqueezer.TANK.getFluidAmount();
+    }
+    @SideOnly(Side.CLIENT)
+    public void updateProgressBar(int id, int data) {
+    	if(id == 0) {
+    		CropSqueezer.PROCESSING_TIMER = data;
+    	}else if(id == 1) {
+    		CropSqueezer.STORAGE.setEnergyStored(data);
+    	}
+    }
 }
 

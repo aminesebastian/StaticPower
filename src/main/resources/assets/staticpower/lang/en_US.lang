@@ -74,6 +74,10 @@ item.LumumTankUpgrade.name=Lumum Tank Upgrade
 item.LumumQuarryingUpgrade.name=Lumum Quarrying Upgrade
 item.LumumRangeUpgrade.name=Lumum Range Upgrade
 item.CreativeSpeedUpgrade.name=Creative Speed Upgrade
+item.BasicUpgradePlate.name=Basic Upgrade Plate
+item.StaticUpgradePlate.name=Static Upgrade Plate
+item.EnergizedUpgradePlate.name=Energized Upgrade Plate
+item.LumumUpgradePlate.name=Lumum Upgrade Plate
 
 //Ingots
 item.SilverIngot.name=Silver Ingot
@@ -142,7 +146,6 @@ tile.PoweredFurnace.name=Powered Furnace
 tile.FusionFurnace.name=Fusion Furnace
 tile.BasicTank.name=Basic Tank
 tile.AdvancedTank.name=Advanced Tank
-tile.SignalMultiplier.name=Redstone Transducer
 tile.StaticBattery.name=Static Battery
 tile.EnergizedBattery.name=Energized Battery
 tile.LumumBattery.name=Lumum Battery
@@ -205,6 +208,14 @@ tile.energizedfluid.name=§bEnergized Fluid
 fluid.lumumfluid=§eLumum Fluid
 tile.lumumfluid.name=§eLumum Fluid
 
+//Gates
+tile.SignalMultiplier.name=Redstone Transducer
+container.SignalMultiplier=Redstone Transducer
+tile.NotGate.name=Not Gate
+tile.PowerCell.name=Power Cell
+container.PowerCell =Power Cell
+tile.Timer.name=Timer
+container.Timer=Timer
 //GUI
 container.CropGenerator=Crop Generator
 container.CropSqueezer=Crop Squeezer
@@ -215,7 +226,6 @@ container.PoweredSmelter=Powered Furnace
 container.FusionFurnace=Fusion Furnace
 container.Multi-MachineController=Machine Controller
 container.Farmer=Crop Farmer
-container.SignalMultiplier=Redstone Transducer
 container.StaticBattery=Static Battery
 container.EnergizedBattery=Energized Battery
 container.LumumBattery=Lumum Battery

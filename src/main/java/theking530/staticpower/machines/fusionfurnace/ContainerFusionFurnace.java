@@ -3,8 +3,11 @@ package theking530.staticpower.machines.fusionfurnace;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.SlotItemHandler;
 import theking530.staticpower.handlers.crafting.registries.FusionRecipeRegistry;
 
@@ -154,17 +157,19 @@ public class ContainerFusionFurnace extends Container {
 		return FURNACE.isUseableByPlayer(player);
 	}
 	
-	//Detect Changes
-	public void detectAndSendChanges() {
-		super.detectAndSendChanges();
-		this.PROCESSING_TIMER = FURNACE.PROCESSING_TIMER;
-	}
-	
-	//Send Gui Update
-	public void updateProgressBar(int i, int j) {
-		if (i == 0) {
-			FURNACE.PROCESSING_TIMER = j;
-		}
-	}
+	public void detectAndSendChanges(){
+        super.detectAndSendChanges();
+        for (int i = 0; i < this.listeners.size(); ++i){
+            IContainerListener icontainerlistener = (IContainerListener)this.listeners.get(i);
+            if (PROCESSING_TIMER != FURNACE.PROCESSING_TIMER){
+                icontainerlistener.sendProgressBarUpdate(this, 2, FURNACE.PROCESSING_TIMER);
+            }
+        }
+        PROCESSING_TIMER = FURNACE.PROCESSING_TIMER;
+    }
+    @SideOnly(Side.CLIENT)
+    public void updateProgressBar(int id, int data) {
+    	FURNACE.PROCESSING_TIMER = data;
+    }
 }
 

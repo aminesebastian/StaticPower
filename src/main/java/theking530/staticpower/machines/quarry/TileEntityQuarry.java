@@ -71,7 +71,7 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 						incrementPosition();
 						QUARRIED_STACKS.addAll(getCurrentBlockDrops());
 						mineBlock();
-						STORAGE.extractEnergy(PROCESSING_ENERGY_MULT*100, false);
+						STORAGE.extractEnergy(getProcessingCost(), false);
 						if(getFortuneMultiplier() > 0) {
 							TANK.drain(1, true);
 						}
@@ -120,8 +120,8 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 		}
 		if(flag) {
 			BaseQuarryingUpgrade tempUpgrade = (BaseQuarryingUpgrade) SLOTS_UPGRADES.getStackInSlot(slot).getItem();
-			BLOCKS_PER_TICK = tempUpgrade.BLOCKS_PER_TICK;
-			PROCESSING_ENERGY_MULT = (int) (INITIAL_PROCESSING_ENERGY_MULT*tempUpgrade.POWER_MULT);
+			BLOCKS_PER_TICK = (int) tempUpgrade.getMultiplier(SLOTS_UPGRADES.getStackInSlot(slot), 0);
+			PROCESSING_ENERGY_MULT = (int) (INITIAL_PROCESSING_ENERGY_MULT*tempUpgrade.getMultiplier(SLOTS_UPGRADES.getStackInSlot(slot), 1));
 		}else{
 			BLOCKS_PER_TICK = INITIAL_BLOCKS_PER_TICK;
 			PROCESSING_ENERGY_MULT = INITIAL_PROCESSING_ENERGY_MULT;
