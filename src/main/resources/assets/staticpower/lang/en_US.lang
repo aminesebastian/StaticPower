@@ -213,16 +213,19 @@ tile.SignalMultiplier.name=Redstone Transducer
 container.SignalMultiplier=Redstone Transducer
 tile.NotGate.name=Not Gate
 tile.PowerCell.name=Power Cell
-container.PowerCell =Power Cell
+container.PowerCell=Power Cell
 tile.Timer.name=Timer
 container.Timer=Timer
+tile.Adder.name=Adder
+tile.And.name=And Gate
+tile.Or.name=Or Gate
 
 //Gate Components
 item.LogicGatePlate.name=Base Gate Plate
 item.LogicGatePowerSync.name=Gate Power Sync
 item.InvertedLogicGatePowerSync.name=Inverted Gate Power Sync
 item.LogicGateServo.name=Gate Servo
-
+tile.LogicGateBasePlate.name=Logic Gate Base Plate
 
 //GUI
 container.CropGenerator=Crop Generator

@@ -34,13 +34,14 @@ public class GuiBattery extends CustomGuiContainer {
 	public GuiPowerBarFromEnergyStorage POWER_BAR;
 	public GuiPowerControlTab POWER_TAB = new GuiPowerControlTab(guiLeft, guiTop);
 	public GuiSideConfigTab SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, ModBlocks.StaticBattery);
-	public GuiRedstoneTab REDSTONE_TAB = new GuiRedstoneTab(guiLeft, guiTop);
+	public GuiRedstoneTab REDSTONE_TAB;
 	
 	private TileEntityBattery sBattery;
 	public GuiBattery(InventoryPlayer invPlayer, TileEntityBattery teSBattery) {
 		super(new ContainerBattery(invPlayer, teSBattery));
 		sBattery = teSBattery;
 		POWER_BAR = new GuiPowerBarFromEnergyStorage(teSBattery);
+		REDSTONE_TAB = new GuiRedstoneTab(guiLeft, guiTop, teSBattery);
 		this.xSize = 176;
 		this.ySize = 166;
 	}	

@@ -7,30 +7,28 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import theking530.staticpower.tileentity.BaseTileEntity;
-
-  
+ 
 public class PacketRedstoneTab implements IMessage{
     private static int REDSTONE_MODE;
     private static int x;
     private static int y;
     private static int z;
 
+    public PacketRedstoneTab() {}
+    
     public PacketRedstoneTab(int REDSTONE_MODE, BlockPos pos) {
       this.REDSTONE_MODE = REDSTONE_MODE;
       this.x = pos.getX();
       this.y = pos.getY();
       this.z = pos.getZ();
-    }
-    
+    }   
     @Override
     public void fromBytes(ByteBuf buf) {
-      // the order is important
       this.REDSTONE_MODE = buf.readInt();
       this.x = buf.readInt();
       this.y = buf.readInt();
       this.z = buf.readInt();
-    }
-    
+    }    
     @Override
     public void toBytes(ByteBuf buf) {
       buf.writeInt(REDSTONE_MODE);

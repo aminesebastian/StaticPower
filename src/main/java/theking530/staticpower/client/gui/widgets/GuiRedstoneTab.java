@@ -21,6 +21,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.tileentity.BaseTileEntity;
+import theking530.staticpower.utils.EnumTextFormatting;
 
 public class GuiRedstoneTab {
 	
@@ -35,12 +36,12 @@ public class GuiRedstoneTab {
 	private ResourceLocation redTab = new ResourceLocation(Reference.MODID + ":" + "textures/gui/RedTab.png");
 	private ResourceLocation bg = new ResourceLocation(Reference.MODID + ":" + "textures/gui/ButtonBG.png");
 	
-	public BaseGuiTab RED_TAB = new BaseGuiTab(GUI_LEFT, GUI_TOP, 110, 90, 175, 36, redTab, Items.REDSTONE);
-	public ItemButton IGNORE_REDSTONE = new ItemButton(GUI_LEFT, GUI_TOP, 20, 20, 200, 62, Items.GUNPOWDER);
-	public ItemButton LOW_REDSTONE = new ItemButton(GUI_LEFT, GUI_TOP, 20, 20, 230, 62, Items.REDSTONE);
-	public BlockButton HIGH_REDSTONE = new BlockButton(GUI_LEFT, GUI_TOP, 20, 20, 260, 62, Blocks.REDSTONE_TORCH);
+	public BaseGuiTab RED_TAB = new BaseGuiTab(GUI_LEFT, GUI_TOP, 90, 90, 175, 36, redTab, Items.REDSTONE);
+	public ItemButton IGNORE_REDSTONE = new ItemButton(GUI_LEFT, GUI_TOP, 20, 20, 190, 62, Items.GUNPOWDER);
+	public ItemButton LOW_REDSTONE = new ItemButton(GUI_LEFT, GUI_TOP, 20, 20, 220, 62, Items.REDSTONE);
+	public BlockButton HIGH_REDSTONE = new BlockButton(GUI_LEFT, GUI_TOP, 20, 20, 250, 62, Blocks.REDSTONE_TORCH);
 	
-	public GuiRedstoneTab(int guiLeft, int guiTop){
+	public GuiRedstoneTab(int guiLeft, int guiTop, TileEntity TILE_ENTITY){
 		this.GUI_LEFT = guiLeft;
 		this.GUI_TOP = guiTop;
 	}
@@ -64,35 +65,35 @@ public class GuiRedstoneTab {
 		}
 	}
 	public void drawText() {
-		String tabName = "Redstone Config";
-		String redstoneMode = "Redstone Mode: ";
+		String tabName = EnumTextFormatting.YELLOW + "Redstone Config";
+		String redstoneMode = "Mode: ";
 		BaseTileEntity entity = (BaseTileEntity)TILE_ENTITY;
 		int j = (RED_TAB.WIDTH - RED_TAB.xSIZE) / 2;
 		int k = (RED_TAB.HEIGHT - RED_TAB.ySIZE) / 2;
 		int tabLeft = GUI_LEFT + j + RED_TAB.TAB_XPOS;
 		int tabTop = GUI_TOP + k;
 		modeText(tabLeft, tabTop);	
-		this.FONT_RENDERER.drawStringWithShadow(redstoneMode, tabLeft-this.FONT_RENDERER.getStringWidth(redstoneMode)/2 + 45, tabTop+95, 16777215);
-		this.FONT_RENDERER.drawStringWithShadow(tabName, tabLeft-this.FONT_RENDERER.getStringWidth(tabName)/2 + 68, tabTop+44, 16777215);
+		this.FONT_RENDERER.drawStringWithShadow(redstoneMode, tabLeft-this.FONT_RENDERER.getStringWidth(redstoneMode)/2 + 21, tabTop+95, 16777215);
+		this.FONT_RENDERER.drawStringWithShadow(tabName, tabLeft-this.FONT_RENDERER.getStringWidth(tabName)/2 + 58, tabTop+44, 16777215);
 		
 	}
 	public void modeText(int tabLeft, int tabTop) {
 		String mode;
 		BaseTileEntity entity = (BaseTileEntity)TILE_ENTITY;
 		if(entity.REDSTONE_MODE == 1) {
-		this.FONT_RENDERER.drawStringWithShadow("Low", tabLeft + 85, tabTop+95, 16777215);
+		this.FONT_RENDERER.drawStringWithShadow("Low", tabLeft + 37, tabTop+95, 16777215);
 		this.FONT_RENDERER.drawStringWithShadow("This machine will", tabLeft + 5, tabTop+110, 16777215);		
-		this.FONT_RENDERER.drawStringWithShadow("only operate with no", tabLeft + 6, tabTop+118, 16777215);	
+		this.FONT_RENDERER.drawStringWithShadow("only operate with no", tabLeft + 5, tabTop+118, 16777215);	
 		this.FONT_RENDERER.drawStringWithShadow("signal.", tabLeft + 5, tabTop+127, 16777215);
 		}
 		if(entity.REDSTONE_MODE == 2) {
-		this.FONT_RENDERER.drawStringWithShadow("High", tabLeft + 85, tabTop+95, 16777215);
+		this.FONT_RENDERER.drawStringWithShadow("High", tabLeft + 37, tabTop+95, 16777215);
 		this.FONT_RENDERER.drawStringWithShadow("This machine will", tabLeft + 5, tabTop+110, 16777215);		
-		this.FONT_RENDERER.drawStringWithShadow("only operate with a", tabLeft + 6, tabTop+118, 16777215);	
+		this.FONT_RENDERER.drawStringWithShadow("only operate with a", tabLeft + 5, tabTop+118, 16777215);	
 		this.FONT_RENDERER.drawStringWithShadow("redstone signal.", tabLeft + 5, tabTop+127, 16777215);
 		}
 		if(entity.REDSTONE_MODE == 0) {
-		this.FONT_RENDERER.drawStringWithShadow("Ignore", tabLeft + 85, tabTop+95, 16777215);	
+		this.FONT_RENDERER.drawStringWithShadow("Ignore", tabLeft + 37, tabTop+95, 16777215);	
 		this.FONT_RENDERER.drawStringWithShadow("This machine will", tabLeft + 5, tabTop+110, 16777215);		
 		this.FONT_RENDERER.drawStringWithShadow("ignore any redstone", tabLeft + 6, tabTop+118, 16777215);	
 		this.FONT_RENDERER.drawStringWithShadow("signal.", tabLeft + 5, tabTop+127, 16777215);
@@ -101,7 +102,7 @@ public class GuiRedstoneTab {
 	public void drawButtonBG() {
 		int j = (RED_TAB.WIDTH - RED_TAB.xSIZE) / 2;
 		int k = (RED_TAB.HEIGHT - RED_TAB.ySIZE) / 2;
-		int tabLeft = GUI_LEFT + j + RED_TAB.TAB_XPOS;
+		int tabLeft = GUI_LEFT + j + RED_TAB.TAB_XPOS - 10;
 		int tabTop = GUI_TOP + k;
 
 		GL11.glEnable(GL11.GL_BLEND);
@@ -119,8 +120,8 @@ public class GuiRedstoneTab {
 
 	}
 	public void function() {
-		BaseTileEntity entity = (BaseTileEntity)TILE_ENTITY;
-			
+		if(TILE_ENTITY != null) {
+			BaseTileEntity entity = (BaseTileEntity)TILE_ENTITY;		
 			if(IGNORE_REDSTONE.CLICKED) {
 				entity.REDSTONE_MODE = 0;
 				IMessage msg = new PacketRedstoneTab(0, entity.getPos());
@@ -135,8 +136,9 @@ public class GuiRedstoneTab {
 				entity.REDSTONE_MODE = 2;	
 				IMessage msg = new PacketRedstoneTab(2, entity.getPos());
 				PacketHandler.net.sendToServer(msg);
-			}
+			}	
 		}
+	}
 	public void updateTab(int width, int height, int xSize, int ySize, FontRenderer fontRenderer, TileEntity te) {
 		RED_TAB.updateMethod(width, height, xSize, ySize);
 		IGNORE_REDSTONE.updateMethod(width, height, xSize, ySize, te);
@@ -156,8 +158,14 @@ public class GuiRedstoneTab {
 	public void setTabOpen() {
 		if(RED_TAB.TAB_ANIMATION == RED_TAB.TAB_ANIMATION_SPEED) {
 			IS_TAB_OPEN = true;
+			IGNORE_REDSTONE.IS_VISIBLE = true;
+			LOW_REDSTONE.IS_VISIBLE = true;
+			HIGH_REDSTONE.IS_VISIBLE = true;
 		}else{
 			IS_TAB_OPEN = false;
+			IGNORE_REDSTONE.IS_VISIBLE = false;
+			LOW_REDSTONE.IS_VISIBLE = false;
+			HIGH_REDSTONE.IS_VISIBLE = false;
 		}
 	}
 	public void setGrowthState() {

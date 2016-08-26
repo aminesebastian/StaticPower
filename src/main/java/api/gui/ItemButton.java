@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -76,8 +77,8 @@ public class ItemButton extends Gui{
 	public void drawButtonIcon() {
 		int j = (WIDTH - xSIZE) / 2;
 		int k = (HEIGHT - ySIZE) / 2;
-		int buttonLeft = GUI_LEFT + j + BUTTON_XPOS;
-		int buttonTop = GUI_TOP + k + BUTTON_YPOS;
+		int buttonLeft = GUI_LEFT + j + BUTTON_XPOS+1;
+		int buttonTop = GUI_TOP + k + BUTTON_YPOS+1;
 		
 		GuiDrawItem.drawItem(ITEM, buttonLeft, buttonTop, 1, 0, this.zLevel);
 	}
@@ -135,16 +136,17 @@ public class ItemButton extends Gui{
 		int i = 0;
 		int j = (WIDTH - xSIZE) / 2;
 		int k = (HEIGHT - ySIZE) / 2;
-		if(par1 > j + BUTTON_XPOS && par1 < j + BUTTON_XPOS + BUTTON_WIDTH) {
+		if(par1 > j + BUTTON_XPOS && par1 < j + BUTTON_XPOS + BUTTON_WIDTH && IS_VISIBLE) {
 	    	if(par2 > k + BUTTON_YPOS && par2 < k + BUTTON_YPOS + BUTTON_HEIGHT) {
 	    		CLICKED = true; 
+	    		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 	    	}
 	    }
 	}
 	public void clickTime() {
 		if(CLICKED) {		
 			TIMER++;
-			if(TIMER == 2) {
+			if(TIMER == 3) {
 			CLICKED = false;
 			TIMER = 0;
 			}

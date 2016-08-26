@@ -59,10 +59,10 @@ public class BaseConduit extends Block implements ITileEntityProvider, IWrenchab
 	}
 
 	@Override
-	public void wrenchBlock(EntityPlayer player, World world, BlockPos pos, boolean returnDrops) {		
+	public void wrenchBlock(EntityPlayer player, World world, BlockPos pos, EnumFacing facing, boolean returnDrops) {		
 	}
 	@Override
-	public void sneakWrenchBlock(EntityPlayer player, World world, BlockPos pos, boolean returnDrops) {
+	public void sneakWrenchBlock(EntityPlayer player, World world, BlockPos pos, EnumFacing facing, boolean returnDrops) {
 		ArrayList<ItemStack> items = new ArrayList();
 		ItemStack machineStack = new ItemStack(Item.getItemFromBlock(this));
 		items.add(machineStack);
@@ -75,8 +75,9 @@ public class BaseConduit extends Block implements ITileEntityProvider, IWrenchab
 	}
 
 	@Override
-	public boolean canBeWrenched(EntityPlayer player, World world, BlockPos pos) {
+	public boolean canBeWrenched(EntityPlayer player, World world, BlockPos pos, EnumFacing facing) {
 		return true;
 	}
+
 
 }

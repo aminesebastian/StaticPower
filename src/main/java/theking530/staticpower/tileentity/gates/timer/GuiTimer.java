@@ -58,7 +58,7 @@ public class GuiTimer extends GuiContainer{
 			}
 	 	}	
 		if(B.id == 2) {
-			if(isShiftDown() && P_CELL.SPEED - 5 >= 0){
+			if(isShiftDown() && P_CELL.SPEED - 5 >= 1){
 				P_CELL.SPEED -= 5;
 			}else if(P_CELL.SPEED - 1 > 0){
 				P_CELL.SPEED--;

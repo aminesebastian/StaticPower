@@ -19,7 +19,7 @@ import theking530.staticpower.utils.GuiTextures;
 public class GuiFluidGenerator extends GuiContainer{
 		
 	public GuiSideConfigTab SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, ModBlocks.StaticBattery);
-	public GuiRedstoneTab REDSTONE_TAB = new GuiRedstoneTab(guiLeft, guiTop);
+	public GuiRedstoneTab REDSTONE_TAB;
 	private GuiPowerBarFromEnergyStorage POWERBAR;
 	private GuiFluidBarFromTank FLUIDBAR;
 	
@@ -29,6 +29,7 @@ public class GuiFluidGenerator extends GuiContainer{
 		fGenerator = teFluidGenerator;
 		POWERBAR = new GuiPowerBarFromEnergyStorage(teFluidGenerator);
 		FLUIDBAR = new GuiFluidBarFromTank(teFluidGenerator.TANK);
+		REDSTONE_TAB = new GuiRedstoneTab(guiLeft, guiTop, teFluidGenerator);
 		this.xSize = 176;
 		this.ySize = 166;
 		

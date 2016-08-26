@@ -26,7 +26,7 @@ public class GuiFluidInfuser extends GuiContainer{
 	
 	
 	public GuiSideConfigTab SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, ModBlocks.FluidInfuser);
-	public GuiRedstoneTab REDSTONE_TAB = new GuiRedstoneTab(guiLeft, guiTop);
+	public GuiRedstoneTab REDSTONE_TAB;
 	public GuiInfoTab INFO_TAB = new GuiInfoTab(guiLeft, guiTop);
 	
 	private TileEntityFluidInfuser Infuser;
@@ -38,6 +38,7 @@ public class GuiFluidInfuser extends GuiContainer{
 		Infuser = teInfuser;	
 		POWERBAR = new GuiPowerBarFromEnergyStorage(teInfuser);
 		FLUIDBAR = new GuiFluidBarFromTank(teInfuser.TANK);
+		REDSTONE_TAB = new GuiRedstoneTab(guiLeft, guiTop, teInfuser);
 		this.xSize = 176;
 		this.ySize = 166;		
 	}	

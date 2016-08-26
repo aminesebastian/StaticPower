@@ -27,14 +27,14 @@ public class GuiPoweredFurnace extends GuiContainer{
 	
 	public GuiPowerBarFromEnergyStorage POWER_BAR;
 	public GuiSideConfigTab SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, ModBlocks.PoweredFurnace);
-	public GuiRedstoneTab REDSTONE_TAB = new GuiRedstoneTab(guiLeft, guiTop);
+	public GuiRedstoneTab REDSTONE_TAB;
 	
 	private TileEntityPoweredFurnace Smelter;
 	public GuiPoweredFurnace(InventoryPlayer invPlayer, TileEntityPoweredFurnace teSmelter) {
 		super(new ContainerPoweredFurnace(invPlayer, teSmelter));
 		Smelter = teSmelter;
 		POWER_BAR = new GuiPowerBarFromEnergyStorage(teSmelter);
-		
+		REDSTONE_TAB = new GuiRedstoneTab(guiLeft, guiTop, teSmelter);
 		this.xSize = 176;
 		this.ySize = 166;
 		

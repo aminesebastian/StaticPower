@@ -23,7 +23,7 @@ import theking530.staticpower.utils.GuiTextures;
 public class GuiPoweredGrinder extends CustomGuiContainer{
 	
 	public GuiSideConfigTab SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, ModBlocks.PoweredGrinder);
-	public GuiRedstoneTab REDSTONE_TAB = new GuiRedstoneTab(guiLeft, guiTop);
+	public GuiRedstoneTab REDSTONE_TAB;
 	private GuiPowerBarFromEnergyStorage POWERBAR;
 	
 	private TileEntityPoweredGrinder Grinder;
@@ -31,7 +31,7 @@ public class GuiPoweredGrinder extends CustomGuiContainer{
 		super(new ContainerPoweredGrinder(invPlayer, teGrinder));
 		Grinder = teGrinder;
 		POWERBAR = new GuiPowerBarFromEnergyStorage(teGrinder);
-		
+		REDSTONE_TAB = new GuiRedstoneTab(guiLeft, guiTop, teGrinder);
 		this.xSize = 176;
 		this.ySize = 166;
 		

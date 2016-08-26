@@ -69,29 +69,29 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 	public void update() {
 		int redstoneSignal = worldObj.getRedstonePower(pos, EnumFacing.NORTH);
 		if(REDSTONE_MODE == 0) {
-			if(SLOTS_OUTPUT.getSlots() > 0) {
+			if(SLOTS_OUTPUT != null && SLOTS_OUTPUT.getSlots() > 0) {
 				outputFunction();	
 			}
-			if(SLOTS_INPUT.getSlots() > 0) {
+			if(SLOTS_INPUT != null && SLOTS_INPUT.getSlots() > 0) {
 				inputFunction();				
 			}
 		}
 		if(REDSTONE_MODE == 1) {
 			if(redstoneSignal == 0) {
-				if(SLOTS_OUTPUT.getSlots() > 0) {
+				if(SLOTS_OUTPUT != null && SLOTS_OUTPUT.getSlots() > 0) {
 					outputFunction();	
 				}
-				if(SLOTS_INPUT.getSlots() > 0) {
+				if(SLOTS_INPUT != null && SLOTS_INPUT.getSlots() > 0) {
 					inputFunction();				
 				}
 			}
 		}
 		if(REDSTONE_MODE == 2) {
 			if(redstoneSignal > 0) {
-				if(SLOTS_OUTPUT.getSlots() > 0) {
+				if(SLOTS_OUTPUT != null && SLOTS_OUTPUT.getSlots() > 0) {
 					outputFunction();	
 				}
-				if(SLOTS_INPUT.getSlots() > 0) {
+				if(SLOTS_INPUT != null && SLOTS_INPUT != null && SLOTS_INPUT.getSlots() > 0) {
 					inputFunction();				
 				}
 			}

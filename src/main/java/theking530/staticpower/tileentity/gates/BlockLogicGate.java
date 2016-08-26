@@ -39,7 +39,7 @@ public class BlockLogicGate extends BlockContainer implements IWrenchable{
 		setCreativeTab(StaticPower.StaticPower);
 		setRegistryName(name);
 		setUnlocalizedName(name);
-		RegisterHelper.registerItem(new BaseItemBlock(this, name));
+		RegisterHelper.registerItem(new ItemLogicGate(this, name));
 		GUI_ID = guiID;
 	}
 	public EnumBlockRenderType getRenderType(IBlockState state) {
@@ -154,6 +154,18 @@ public class BlockLogicGate extends BlockContainer implements IWrenchable{
 			//breakBlock(world, x, y, z, this, world.getBlockMetadata(x, y, z));
 			world.setBlockToAir(pos);
 		}		
+	}
+	public String getDescrption(){
+		return null;	
+	}
+	public String getInputDescrption(){
+		return null;
+	}
+	public String getOutputDescrption(){
+		return null;
+	}
+	public String getExtraDescrption(){
+		return null;
 	}
     @Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {

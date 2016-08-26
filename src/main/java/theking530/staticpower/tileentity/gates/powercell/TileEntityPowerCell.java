@@ -12,20 +12,19 @@ public class TileEntityPowerCell extends TileEntityBaseLogicGate {
 	
 	public int POWER = 0;
 	
-	public TileEntityPowerCell() {
-		SIDE_MODES = new Mode[]{Mode.Disabled, Mode.Disabled, Mode.Output, Mode.Output, Mode.Output, Mode.Output};
-	}
 	public boolean isOn(){
 		return POWER > 0;
 	}
 	@Override
-	public void update() {
+	public void gateTick() {
 		if(!worldObj.isRemote) {
-			setAllOutputs(POWER);
+			if(addAllInputSignals() <= 0) {
+				setAllOutputs(POWER);		
+			}
 		}
 	}	
 	public int maxInputs(){
-		return 0;
+		return 3;
 	}
 	@Override
     public void readFromNBT(NBTTagCompound nbt) {
@@ -40,5 +39,8 @@ public class TileEntityPowerCell extends TileEntityBaseLogicGate {
 	}	
 	public String getName() {
 		return "container.PowerCell";		
+	}
+	public Mode[] getInitialModes(){
+		return new Mode[]{Mode.Disabled, Mode.Disabled, Mode.Output, Mode.Output, Mode.Output, Mode.Output};
 	}
 }

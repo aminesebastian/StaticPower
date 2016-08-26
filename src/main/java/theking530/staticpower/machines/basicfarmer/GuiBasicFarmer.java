@@ -29,14 +29,14 @@ public class GuiBasicFarmer extends GuiContainer{
 	
 	public GuiPowerBarFromEnergyStorage POWER_BAR;
 	public GuiSideConfigTab SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, ModBlocks.PoweredFurnace);
-	public GuiRedstoneTab REDSTONE_TAB = new GuiRedstoneTab(guiLeft, guiTop);
+	public GuiRedstoneTab REDSTONE_TAB;
 	
 	private TileEntityBasicFarmer FARMER;
 	public GuiBasicFarmer(InventoryPlayer invPlayer, TileEntityBasicFarmer teFarmer) {
 		super(new ContainerBasicFarmer(invPlayer, teFarmer));
 		FARMER = teFarmer;
 		POWER_BAR = new GuiPowerBarFromEnergyStorage(teFarmer);
-		
+		REDSTONE_TAB = new GuiRedstoneTab(guiLeft, guiTop, teFarmer);
 		this.xSize = 176;
 		this.ySize = 172;
 		

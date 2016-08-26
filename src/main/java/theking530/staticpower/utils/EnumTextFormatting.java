@@ -25,5 +25,5 @@ public interface EnumTextFormatting {
 	TextFormatting STRIKETHROUGH = TextFormatting.STRIKETHROUGH;
 	TextFormatting UNDERLINE = TextFormatting.UNDERLINE;
 	TextFormatting ITALIC = TextFormatting.ITALIC;
-
+	TextFormatting REGULAR = TextFormatting.RESET;
 }

@@ -24,14 +24,14 @@ public class GuiFusionFurnace extends CustomGuiContainer{
 	
 	public GuiPowerBarFromEnergyStorage POWER_BAR;
 	public GuiSideConfigTab SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, ModBlocks.FusionFurnace);
-	public GuiRedstoneTab REDSTONE_TAB = new GuiRedstoneTab(guiLeft, guiTop);
+	public GuiRedstoneTab REDSTONE_TAB;
 	
 	private TileEntityFusionFurnace FUSION_FURNACE;
 	public GuiFusionFurnace(InventoryPlayer invPlayer, TileEntityFusionFurnace teFurnace) {
 		super(new ContainerFusionFurnace(invPlayer, teFurnace));
 		FUSION_FURNACE = teFurnace;
 		POWER_BAR = new GuiPowerBarFromEnergyStorage(teFurnace);
-		
+		REDSTONE_TAB = new GuiRedstoneTab(guiLeft, guiTop, teFurnace);
 		this.xSize = 176;
 		this.ySize = 166;
 		

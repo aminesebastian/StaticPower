@@ -55,6 +55,8 @@ public class ShapedRecipes {
 			'X', ModItems.EnergizedNugget});
 			GameRegistry.addRecipe(new ItemStack(ModItems.LumumIngot), new Object[]{"XXX","XXX","XXX",
 			'X', ModItems.LumumNugget});
+			GameRegistry.addRecipe(new ItemStack(Items.IRON_INGOT), new Object[]{"XXX","XXX","XXX",
+			'X', ModItems.IronNugget});
 			
 			//Coils ------------------------------------------------------------------------------------------------------------
 			GameRegistry.addRecipe(new ItemStack(ModItems.CopperCoil), new Object[]{"XXX","XSX","XXX",
@@ -140,13 +142,13 @@ public class ShapedRecipes {
 			
 			//Gates --------------------------------------------------------------------------------------------------
 			GameRegistry.addRecipe(new ItemStack(ModBlocks.Timer), new Object[]{"   ", "RSV", "PPP", 
-			'P', ModItems.LogicGatePlate, 'S', ModItems.LogicGateServo, 'R', ModItems.LogicGatePowerSync, 'V', ModItems.InvertedLogicGatePowerSync});
+			'P', ModBlocks.LogicGateBasePlate, 'S', ModItems.LogicGateServo, 'R', ModItems.LogicGatePowerSync, 'V', ModItems.InvertedLogicGatePowerSync});
 			GameRegistry.addRecipe(new ItemStack(ModBlocks.SignalMultiplier), new Object[]{"   ", "RSV", "PPP", 
-			'P', ModItems.LogicGatePlate, 'S', Items.COMPARATOR, 'R', ModItems.LogicGatePowerSync, 'V', ModItems.InvertedLogicGatePowerSync});
+			'P', ModBlocks.LogicGateBasePlate, 'S', Items.COMPARATOR, 'R', ModItems.LogicGatePowerSync, 'V', ModItems.InvertedLogicGatePowerSync});
 			GameRegistry.addRecipe(new ItemStack(ModBlocks.NotGate), new Object[]{"   ", "R V", "PPP", 
-			'P', ModItems.LogicGatePlate,'R', ModItems.LogicGatePowerSync, 'V', ModItems.InvertedLogicGatePowerSync});
-			GameRegistry.addRecipe(new ItemStack(ModBlocks.NotGate), new Object[]{"   ", "RQR", "PPP", 
-			'P', ModItems.LogicGatePlate,'R', ModItems.LogicGatePowerSync, 'Q', Blocks.REDSTONE_BLOCK});
+			'P', ModBlocks.LogicGateBasePlate,'R', ModItems.LogicGatePowerSync, 'V', ModItems.InvertedLogicGatePowerSync});
+			GameRegistry.addRecipe(new ItemStack(ModBlocks.PowerCell), new Object[]{"   ", "RQR", "PPP", 
+			'P', ModBlocks.LogicGateBasePlate,'R', ModItems.LogicGatePowerSync, 'Q', Blocks.REDSTONE_BLOCK});
 			
 			//Static Chest --------------------------------------------------------------------------------------------------
 			GameRegistry.addRecipe(new ItemStack(ModBlocks.StaticChest), new Object[]{"SSS", "SCS", "SSS", 

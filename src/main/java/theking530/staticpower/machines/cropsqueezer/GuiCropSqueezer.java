@@ -19,7 +19,7 @@ public class GuiCropSqueezer extends GuiContainer{
 	
 
 	public GuiSideConfigTab SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, ModBlocks.CropSqueezer);
-	public GuiRedstoneTab REDSTONE_TAB = new GuiRedstoneTab(guiLeft, guiTop);
+	public GuiRedstoneTab REDSTONE_TAB;
 	
 	private TileEntityCropSqueezer cSqueezer;
 	private GuiPowerBarFromEnergyStorage POWERBAR;
@@ -31,6 +31,7 @@ public class GuiCropSqueezer extends GuiContainer{
 		cSqueezer = teCropSqueezer;
 		POWERBAR = new GuiPowerBarFromEnergyStorage(teCropSqueezer);
 		FLUIDBAR = new GuiFluidBarFromTank(teCropSqueezer.TANK);
+		REDSTONE_TAB = new GuiRedstoneTab(guiLeft, guiTop, teCropSqueezer);
 		this.xSize = 176;
 		this.ySize = 166;		
 	}

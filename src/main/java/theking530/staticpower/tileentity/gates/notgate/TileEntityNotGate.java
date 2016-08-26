@@ -14,7 +14,7 @@ public class TileEntityNotGate extends TileEntityBaseLogicGate {
 		return getInputSignal(getInputSide()) == 0;
 	}
 	@Override
-	public void update() {
+	public void gateTick() {
 		if(!worldObj.isRemote) {
 			if(getInputSignal(getInputSide()) == 0) {
 				setAllOutputs(15);

@@ -103,18 +103,22 @@ public class ItemRenderRegistry {
 		ItemRenderRegistry.registerItem(ModItems.BasicPowerUpgrade);
 		ItemRenderRegistry.registerItem(ModItems.BasicSpeedUpgrade);
 		ItemRenderRegistry.registerItem(ModItems.BasicTankUpgrade);
+		ItemRenderRegistry.registerItem(ModItems.BasicRangeUpgrade);
 		ItemRenderRegistry.registerItem(ModItems.StaticPowerUpgrade);
 		ItemRenderRegistry.registerItem(ModItems.StaticSpeedUpgrade);
 		ItemRenderRegistry.registerItem(ModItems.StaticTankUpgrade);
 		ItemRenderRegistry.registerItem(ModItems.StaticQuarryingUpgrade);
+		ItemRenderRegistry.registerItem(ModItems.StaticRangeUpgrade);
 		ItemRenderRegistry.registerItem(ModItems.EnergizedPowerUpgrade);
 		ItemRenderRegistry.registerItem(ModItems.EnergizedSpeedUpgrade);
 		ItemRenderRegistry.registerItem(ModItems.EnergizedTankUpgrade);
 		ItemRenderRegistry.registerItem(ModItems.EnergizedQuarryingUpgrade);
+		ItemRenderRegistry.registerItem(ModItems.EnergizedRangeUpgrade);
 		ItemRenderRegistry.registerItem(ModItems.LumumPowerUpgrade);
 		ItemRenderRegistry.registerItem(ModItems.LumumSpeedUpgrade);
 		ItemRenderRegistry.registerItem(ModItems.LumumTankUpgrade);
 		ItemRenderRegistry.registerItem(ModItems.LumumQuarryingUpgrade);
+		ItemRenderRegistry.registerItem(ModItems.LumumRangeUpgrade);
 		ItemRenderRegistry.registerItem(ModItems.BasicUpgradePlate);
 		ItemRenderRegistry.registerItem(ModItems.StaticUpgradePlate);
 		ItemRenderRegistry.registerItem(ModItems.EnergizedUpgradePlate);
@@ -167,7 +171,7 @@ public class ItemRenderRegistry {
 		
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.StaticLamp));
 		
-		ItemRenderRegistry.registerItem(ModItems.LogicGatePlate);
+		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.LogicGateBasePlate));
 		ItemRenderRegistry.registerItem(ModItems.LogicGatePowerSync);
 		ItemRenderRegistry.registerItem(ModItems.InvertedLogicGatePowerSync);
 		ItemRenderRegistry.registerItem(ModItems.LogicGateServo);

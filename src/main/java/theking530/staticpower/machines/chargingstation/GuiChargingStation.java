@@ -27,7 +27,7 @@ public class GuiChargingStation extends GuiContainer{
 	
 	public GuiPowerBarFromEnergyStorage POWER_BAR;
 	public GuiSideConfigTab SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, ModBlocks.PoweredFurnace);
-	public GuiRedstoneTab REDSTONE_TAB = new GuiRedstoneTab(guiLeft, guiTop);
+	public GuiRedstoneTab REDSTONE_TAB;
 	
 	private TileEntityChargingStation C_STATION;
 	
@@ -35,7 +35,7 @@ public class GuiChargingStation extends GuiContainer{
 		super(new ContainerChargingStation(invPlayer, teCharging));
 		C_STATION = teCharging;
 		POWER_BAR = new GuiPowerBarFromEnergyStorage(teCharging);
-		
+		REDSTONE_TAB = new GuiRedstoneTab(guiLeft, guiTop, teCharging);
 		this.xSize = 197;
 		this.ySize = 176;
 		

@@ -53,8 +53,12 @@ import theking530.staticpower.machines.quarry.TileEntityQuarry;
 import theking530.staticpower.machines.solarpanel.TileEntitySolarPanel;
 import theking530.staticpower.machines.solderingtable.TileEntitySolderingTable;
 import theking530.staticpower.tileentity.energizedchest.TileEntityEnergizedChest;
+import theking530.staticpower.tileentity.gates.adder.TileEntityAdder;
+import theking530.staticpower.tileentity.gates.and.TileEntityAndGate;
 import theking530.staticpower.tileentity.gates.notgate.TileEntityNotGate;
+import theking530.staticpower.tileentity.gates.or.TileEntityOrGate;
 import theking530.staticpower.tileentity.gates.powercell.TileEntityPowerCell;
+import theking530.staticpower.tileentity.gates.subtractor.TileEntitySubtractorGate;
 import theking530.staticpower.tileentity.gates.timer.TileEntityTimer;
 import theking530.staticpower.tileentity.gates.transducer.TileEntitySignalMultiplier;
 import theking530.staticpower.tileentity.lumumchest.TileEntityLumumChest;
@@ -125,6 +129,10 @@ public class StaticPower {
 		GameRegistry.registerTileEntity(TileEntityNotGate.class, "NotGate");
 		GameRegistry.registerTileEntity(TileEntityPowerCell.class, "PowerCell");
 		GameRegistry.registerTileEntity(TileEntityTimer.class, "Timer");
+		GameRegistry.registerTileEntity(TileEntityAdder.class, "Adder");
+		GameRegistry.registerTileEntity(TileEntityAndGate.class, "And");
+		GameRegistry.registerTileEntity(TileEntityOrGate.class, "Or");
+		GameRegistry.registerTileEntity(TileEntitySubtractorGate.class, "Subtractor");
 		
 		GameRegistry.registerTileEntity(TileEntityStaticChest.class, "StaticChest");
 		GameRegistry.registerTileEntity(TileEntityEnergizedChest.class, "EnergizedChest");

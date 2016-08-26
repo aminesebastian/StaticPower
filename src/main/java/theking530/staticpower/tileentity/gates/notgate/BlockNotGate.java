@@ -24,5 +24,4 @@ public class BlockNotGate extends BlockLogicGate {
 	public TileEntity createNewTileEntity(World world, int i) {
 		return new TileEntityNotGate();
 	}
-
 }

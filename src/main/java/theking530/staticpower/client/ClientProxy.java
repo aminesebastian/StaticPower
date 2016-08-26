@@ -22,9 +22,13 @@ import theking530.staticpower.client.render.tileentitys.TileEntityRenderPoweredF
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderPoweredGrinder;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderSolarPanel;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderSolderingTable;
+import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRenderAdder;
+import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRenderAndGate;
 import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRenderNotGate;
+import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRenderOrGate;
 import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRenderPowerCell;
 import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRenderSignalMultiplier;
+import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRenderSubtractor;
 import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRenderTimer;
 import theking530.staticpower.conduits.fluidconduit.TileEntityFluidConduit;
 import theking530.staticpower.conduits.itemconduit.TileEntityItemConduit;
@@ -42,8 +46,12 @@ import theking530.staticpower.machines.poweredgrinder.TileEntityPoweredGrinder;
 import theking530.staticpower.machines.solarpanel.TileEntitySolarPanel;
 import theking530.staticpower.machines.solderingtable.TileEntitySolderingTable;
 import theking530.staticpower.tileentity.energizedchest.TileEntityEnergizedChest;
+import theking530.staticpower.tileentity.gates.adder.TileEntityAdder;
+import theking530.staticpower.tileentity.gates.and.TileEntityAndGate;
 import theking530.staticpower.tileentity.gates.notgate.TileEntityNotGate;
+import theking530.staticpower.tileentity.gates.or.TileEntityOrGate;
 import theking530.staticpower.tileentity.gates.powercell.TileEntityPowerCell;
+import theking530.staticpower.tileentity.gates.subtractor.TileEntitySubtractorGate;
 import theking530.staticpower.tileentity.gates.timer.TileEntityTimer;
 import theking530.staticpower.tileentity.gates.transducer.TileEntitySignalMultiplier;
 import theking530.staticpower.tileentity.lumumchest.TileEntityLumumChest;
@@ -70,6 +78,9 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFluidConduit.class, new TileEntityRenderFluidConduit());
 		//IConduit
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityItemConduit.class, new TileEntityRenderItemConduit());
+		
+		
+		
 		//Signal Multiplier
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySignalMultiplier.class, new TileEntityRenderSignalMultiplier());	
 		//Not Gate
@@ -78,6 +89,14 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPowerCell.class, new TileEntityRenderPowerCell());	
 		//Timer
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTimer.class, new TileEntityRenderTimer());	
+		//Adder
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAdder.class, new TileEntityRenderAdder());	
+		//And
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAndGate.class, new TileEntityRenderAndGate());	
+		//Or
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityOrGate.class, new TileEntityRenderOrGate());	
+		//Subtractor
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySubtractorGate.class, new TileEntityRenderSubtractor());	
 		
 		//Solar Panel
 		//registerModelLoader(Item.getItemFromBlock(ModBlocks.StaticSolarPanel), Models.SOLARPANEL);

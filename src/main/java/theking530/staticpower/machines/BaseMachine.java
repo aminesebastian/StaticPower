@@ -126,7 +126,7 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		if(UPDATE_TIMER < UPDATE_TIME) {
 			UPDATE_TIMER++;
 		}else{
-			markForUpdate();
+			//markForUpdate();
 			markDirty();
 			UPDATE_TIMER = 0;
 		}

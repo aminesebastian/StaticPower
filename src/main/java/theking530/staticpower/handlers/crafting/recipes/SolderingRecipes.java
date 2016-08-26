@@ -4,8 +4,10 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import theking530.staticpower.assists.RegisterHelper;
+import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.items.ModItems;
 
 public class SolderingRecipes {
@@ -24,8 +26,10 @@ public class SolderingRecipes {
 		'G', Items.GOLD_INGOT, 'R', Items.REDSTONE, 'L', ModItems.LumumPlate, 'C', ModItems.EnergizedCircuit});
 		
 		//Batteries --------------------------------------------------------------------------------------------------
-		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.BasicBattery), new Object[]{" C ", "IRI", "IRI", 
-		'I', ModItems.IronPlate, 'R', Blocks.REDSTONE_BLOCK, 'C', ModItems.CopperPlate});	
+		for(int i=0; i<OreDictionary.getOres("nuggetIron").size(); i++) {
+			RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.BasicBattery), new Object[]{" C ", "IRI", "IRI", 
+					'I', ModItems.IronPlate, 'R', Blocks.REDSTONE_BLOCK, 'C', OreDictionary.getOres("nuggetIron").get(i)});		
+		}
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.StaticBattery), new Object[]{" S ", "IDI", "IRI", 
 		'I', ModItems.StaticIngot, 'R', Blocks.REDSTONE_BLOCK, 'S', ModItems.StaticNugget, 'D', Items.DIAMOND});	
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.EnergizedBattery), new Object[]{" E ", "IDI", "IRI", 
@@ -85,15 +89,17 @@ public class SolderingRecipes {
 		'P', ModItems.LumumPlate, 'G',  ModItems.LumumUpgradePlate});
 		
 		//Filters --------------------------------------------------------------------------------------------------
-		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.BasicItemFilter), new Object[]{" P ","PGP"," C ",
-		'P', Items.PAPER, 'C', ModItems.BasicCircuit, 'G', ModItems.IronNugget});
+		for(int i=0; i<OreDictionary.getOres("nuggetIron").size(); i++) {
+			RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.BasicItemFilter), new Object[]{" P ","PGP"," C ",
+					'P', Items.PAPER, 'C', ModItems.BasicCircuit, 'G', OreDictionary.getOres("nuggetIron").get(i)});
+		}
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.UpgradedItemFilter), new Object[]{" P ","PGP"," C ",
 		'P', Items.PAPER, 'C', ModItems.StaticCircuit, 'G', ModItems.StaticNugget});
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.AdvancedItemFilter), new Object[]{" P ","PGP"," C ",
 		'P', Items.PAPER, 'C', ModItems.EnergizedCircuit, 'G', ModItems.EnergizedNugget});
 		
 		//Gate Components
-		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.LogicGatePlate, 2), new Object[]{"   ", "   ", "SBS", 
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModBlocks.LogicGateBasePlate, 2), new Object[]{"   ", "   ", "SBS", 
 		'S', ModItems.IronPlate, 'B', ModItems.BasicCircuit});
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.LogicGateServo, 4), new Object[]{"S S", " C ", "SBS", 
 		'S', ModItems.IronPlate, 'B', ModItems.BasicBattery, 'C', ModItems.CopperCoil});

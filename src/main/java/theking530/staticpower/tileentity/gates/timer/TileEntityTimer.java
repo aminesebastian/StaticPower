@@ -13,15 +13,12 @@ public class TileEntityTimer extends TileEntityBaseLogicGate {
 	public int TIMER = 0;
 	public int SPEED = 20;
 	
-	public TileEntityTimer() {
-		SIDE_MODES = new Mode[]{Mode.Disabled, Mode.Disabled, Mode.Output, Mode.Output, Mode.Output, Mode.Output};
-	}
 	@Override
 	public boolean isOn(){
 		return TIMER >= SPEED;		
 	}
 	@Override
-	public void update() {
+	public void gateTick() {
 		if(!worldObj.isRemote) {
 			if(TIMER < SPEED) {
 				TIMER++;
@@ -52,5 +49,8 @@ public class TileEntityTimer extends TileEntityBaseLogicGate {
 	}	
 	public String getName() {
 		return "container.Timer";		
+	}
+	public Mode[] getInitialModes(){
+		return new Mode[]{Mode.Disabled, Mode.Disabled, Mode.Output, Mode.Output, Mode.Output, Mode.Output};
 	}
 }

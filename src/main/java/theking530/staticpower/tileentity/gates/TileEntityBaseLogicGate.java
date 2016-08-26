@@ -16,15 +16,25 @@ import theking530.staticpower.utils.SideModeList.Mode;
 
 public class TileEntityBaseLogicGate extends TileEntity implements ITickable{
 	
-	public int[] OUTPUT_SIGNALS = {0,0,0,0,0,0};
-	public Mode SIDE_MODES[];
+	public int[] OUTPUT_SIGNALS = new int[]{0,0,0,0,0,0};
+	public Mode SIDE_MODES[] = getInitialModes(); 
+	private boolean placed = false;
 	
 	public TileEntityBaseLogicGate() {
-		SIDE_MODES = new Mode[]{Mode.Disabled, Mode.Disabled, Mode.Input, Mode.Output, Mode.Output, Mode.Output};
+
 	}
 	@Override
 	public void update() {
-
+		if(!placed) {
+			reset();
+			updateGate();
+			placed = true;
+		}else{
+			gateTick();
+		}
+	}
+	public void gateTick() {
+		
 	}
     @Override  
 	public void readFromNBT(NBTTagCompound nbt) {
@@ -89,6 +99,47 @@ public class TileEntityBaseLogicGate extends TileEntity implements ITickable{
 		}
 		return 0;
 	}
+	public int addAllInputSignals() {
+		int sum = 0;
+		for(int i=0; i<6; i++) {
+			if(SIDE_MODES[i] == Mode.Input) {
+				sum += getInputSignal(EnumFacing.values()[i]);
+			}
+		}
+		return sum;
+	}
+	public int getExtraSignal(EnumFacing side) {
+		if(side != null) {
+			int strength = 0;
+			if(worldObj.isBlockIndirectlyGettingPowered(pos.offset(side)) > 0) {
+				strength = worldObj.getRedstonePower(pos.offset(side), side);
+			}else{
+				strength = worldObj.getStrongPower(pos.offset(side));
+			}
+			return strength;			
+		}
+		return 0;
+	}
+	public int addAllExtraSignals() {
+		int sum = 0;
+		for(int i=0; i<6; i++) {
+			if(SIDE_MODES[i] == Mode.Regular) {
+				sum += getInputSignal(EnumFacing.values()[i]);
+			}
+		}
+		return sum;
+	}
+	public int getPoweredInputSignalCount() {
+		int count = 0;
+		for(int i=0; i<6; i++) {
+			if(SIDE_MODES[i] == Mode.Input) {
+				if(getInputSignal(EnumFacing.values()[i]) > 0) {
+					count++;
+				}
+			}
+		}
+		return count;
+	}
 	public void setOutputSignal(EnumFacing side, int strength) {
 		if(side == getInputSide()) {
 			return;
@@ -109,6 +160,26 @@ public class TileEntityBaseLogicGate extends TileEntity implements ITickable{
 			}
 		}
 	}	
+	public void setExtraSignal(EnumFacing side, int strength) {
+		if(side == getInputSide()) {
+			return;
+		}else{
+			if(SIDE_MODES[side.ordinal()] == Mode.Regular) {
+				OUTPUT_SIGNALS[side.ordinal()] = strength;
+		        worldObj.notifyBlockOfStateChange(pos.offset(side), this.getBlockType());
+		        worldObj.markAndNotifyBlock(pos.offset(side), worldObj.getChunkFromBlockCoords(pos.offset(side)), worldObj.getBlockState(pos.offset(side)), worldObj.getBlockState(pos.offset(side)), 2);		
+			}       
+		}
+	}	
+	public void setAllExtraOutputs(int strength) {
+		for(int i=2; i<6; i++) {
+			if(getInputSide() != null && i == getInputSide().ordinal()) {
+
+			}else{
+				setExtraSignal(EnumFacing.values()[i], strength);
+			}
+		}
+	}
 	public void reset(){
 		for(int i=2; i<6; i++) {
 			EnumFacing side = EnumFacing.values()[i];
@@ -126,6 +197,12 @@ public class TileEntityBaseLogicGate extends TileEntity implements ITickable{
 	public int maxInputs(){
 		return 1;
 	}
+	public int maxOutputs(){
+		return 4;
+	}
+	public int maxExtra(){
+		return 0;
+	}
 	public int getInputCount() {
 		int inputCount = 0;
 		for(int i=0; i<6; i++) {
@@ -135,7 +212,30 @@ public class TileEntityBaseLogicGate extends TileEntity implements ITickable{
 		}
 		return inputCount;
 	}
+	public int getOutputCount() {
+		int inputCount = 0;
+		for(int i=0; i<6; i++) {
+			if(SIDE_MODES[i] == Mode.Output) {
+				inputCount++;
+			}
+		}
+		return inputCount;
+	}
+	public int getExtraCount() {
+		int inputCount = 0;
+		for(int i=0; i<6; i++) {
+			if(SIDE_MODES[i] == Mode.Regular) {
+				inputCount++;
+			}
+		}
+		return inputCount;
+	}
 	public void sideRightClicked(EnumFacing Side) {
+		if(Side == null) {
+			reset();
+			updateGate();
+			return;
+		}
 		if(SIDE_MODES[Side.ordinal()] == Mode.Disabled) {
 			if(getInputCount() + 1 <= maxInputs()) {
 				SIDE_MODES[Side.ordinal()] = Mode.Input;		
@@ -143,11 +243,20 @@ public class TileEntityBaseLogicGate extends TileEntity implements ITickable{
 				SIDE_MODES[Side.ordinal()] = Mode.Output;		
 			}
 		}else if(SIDE_MODES[Side.ordinal()] == Mode.Input){
-			SIDE_MODES[Side.ordinal()] = Mode.Output;	
+			SIDE_MODES[Side.ordinal()] = Mode.Output;
+		}else if(SIDE_MODES[Side.ordinal()] == Mode.Output){
+			if(getExtraCount() + 1 <= maxExtra()) {
+				SIDE_MODES[Side.ordinal()] = Mode.Regular;	
+			}else{
+				SIDE_MODES[Side.ordinal()] = Mode.Disabled;
+			}
 		}else{
 			SIDE_MODES[Side.ordinal()] = Mode.Disabled;
 		}
 		reset();
 		updateGate();
+	}
+	public Mode[] getInitialModes(){
+		return new Mode[]{Mode.Disabled, Mode.Disabled, Mode.Input, Mode.Output, Mode.Output, Mode.Output};
 	}
 }

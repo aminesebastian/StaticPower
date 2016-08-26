@@ -12,6 +12,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -30,7 +31,7 @@ public class BlockSolarPanel extends BaseMachineBlock {
 		setCreativeTab(StaticPower.StaticPower);
 	}
 	@Override
-	public void wrenchBlock(EntityPlayer player, World world, BlockPos pos, boolean returnDrops) {
+	public void wrenchBlock(EntityPlayer player, World world, BlockPos pos, EnumFacing facing, boolean returnDrops) {
 		ArrayList<ItemStack> items = new ArrayList();
 		ItemStack machineStack = new ItemStack(Item.getItemFromBlock(this));
 		EntityItem droppedItem = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), machineStack);
@@ -39,7 +40,7 @@ public class BlockSolarPanel extends BaseMachineBlock {
 	}
 
 	@Override
-	public boolean canBeWrenched(EntityPlayer player, World world, BlockPos pos) {
+	public boolean canBeWrenched(EntityPlayer player, World world, BlockPos pos, EnumFacing facing) {
 		return true;
 	}
 	@Override

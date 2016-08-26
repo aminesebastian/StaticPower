@@ -22,7 +22,7 @@ public class TileEntitySignalMultiplier extends TileEntityBaseLogicGate {
 		return INPUT_SIGNAL_LIMIT == getInputSignal(getInputSide());
 	}
 	@Override
-	public void update() {
+	public void gateTick() {
 		if(!worldObj.isRemote) {
 			if(conditionsMet()) {
 				setAllOutputs(OUTPUT_SIGNAL_STRENGTH);	

@@ -109,8 +109,7 @@ public class ModItems {
 	public static Item CreativePowerUpgrade;
 	public static Item CreativeTankUpgrade;
 	public static Item CreativeSpeedUpgrade;
-	
-	public static Item LogicGatePlate;
+
 	public static Item LogicGatePowerSync;
 	public static Item InvertedLogicGatePowerSync;
 	public static Item LogicGateServo;
@@ -197,8 +196,6 @@ public class ModItems {
 		MetalHammer = new MetalHammer();
 		RegisterHelper.registerItem(MetalHammer);
 		
-		LogicGatePlate = new ItemBase("LogicGatePlate");
-		RegisterHelper.registerItem(LogicGatePlate);
 		LogicGatePowerSync = new ItemBase("LogicGatePowerSync");
 		RegisterHelper.registerItem(LogicGatePowerSync);
 		InvertedLogicGatePowerSync = new ItemBase("InvertedLogicGatePowerSync");
@@ -425,6 +422,7 @@ public class ModItems {
 		OreDictionary.registerOre("dustPlatinum", new ItemStack(PlatinumDust));
 		OreDictionary.registerOre("dustIron", new ItemStack(IronDust));
 		OreDictionary.registerOre("dustGold", new ItemStack(GoldDust));
+		OreDictionary.registerOre("nuggetIron", new ItemStack(IronNugget));
 	}
 
 }

@@ -7,11 +7,13 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -76,8 +78,8 @@ public class BlockButton extends Gui implements MouseListener{
 	public void drawButtonIcon() {
 		int j = (WIDTH - xSIZE) / 2;
 		int k = (HEIGHT - ySIZE) / 2;
-		int buttonLeft = GUI_LEFT + j + BUTTON_XPOS;
-		int buttonTop = GUI_TOP + k + BUTTON_YPOS;
+		int buttonLeft = GUI_LEFT + j + BUTTON_XPOS+1;
+		int buttonTop = GUI_TOP + k + BUTTON_YPOS+1;
 		
 		Item item = Item.getItemFromBlock(BLOCK);
 		GuiDrawItem.drawItem(item, buttonLeft, buttonTop, 1, -2, this.zLevel);
@@ -132,22 +134,23 @@ public class BlockButton extends Gui implements MouseListener{
 	
 	}	
     public void sound(SoundHandler soundHandler) {
-    	//soundHandler.playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
+    	soundHandler.playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
     }
 	public void buttonMouseClick(int par1, int par2, int button) {
 		int i = 0;
 		int j = (WIDTH - xSIZE) / 2;
 		int k = (HEIGHT - ySIZE) / 2;
-		if(par1 > j + BUTTON_XPOS && par1 < j + BUTTON_XPOS + 24) {
+		if(par1 > j + BUTTON_XPOS && par1 < j + BUTTON_XPOS + 24 && IS_VISIBLE) {
 	    	if(par2 > k + BUTTON_YPOS && par2 < k + BUTTON_YPOS + 24) {
 	    		CLICKED = true; 
+	    		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 	    	}
 	    }
 	}
 	public void clickTime() {
 		if(CLICKED) {		
 			TIMER++;
-			if(TIMER == 2) {
+			if(TIMER == 3) {
 			CLICKED = false;
 			TIMER = 0;
 			}

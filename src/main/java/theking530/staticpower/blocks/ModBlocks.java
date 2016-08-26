@@ -26,8 +26,12 @@ import theking530.staticpower.machines.quarry.BlockQuarry;
 import theking530.staticpower.machines.solarpanel.BlockSolarPanel;
 import theking530.staticpower.machines.solderingtable.BlockSolderingTable;
 import theking530.staticpower.tileentity.energizedchest.BlockEnergizedChest;
+import theking530.staticpower.tileentity.gates.adder.BlockAdder;
+import theking530.staticpower.tileentity.gates.and.BlockAndGate;
 import theking530.staticpower.tileentity.gates.notgate.BlockNotGate;
+import theking530.staticpower.tileentity.gates.or.BlockOrGate;
 import theking530.staticpower.tileentity.gates.powercell.BlockPowerCell;
+import theking530.staticpower.tileentity.gates.subtractor.BlockSubtractorGate;
 import theking530.staticpower.tileentity.gates.timer.BlockTimer;
 import theking530.staticpower.tileentity.gates.transducer.BlockSignalMultiplier;
 import theking530.staticpower.tileentity.lumumchest.BlockLumumChest;
@@ -61,10 +65,15 @@ public class ModBlocks {
 	public static Block AdvancedTank;	
 	public static Block Farmer;
 	
+	public static Block LogicGateBasePlate;
 	public static Block SignalMultiplier;
 	public static Block NotGate;
 	public static Block PowerCell;
 	public static Block Timer;
+	public static Block Adder;
+	public static Block And;
+	public static Block Or;
+	public static Block Subtractor;
 	
 	public static Block StaticSolarPanel;
 	public static Block EnergizedSolarPanel;
@@ -193,6 +202,8 @@ public class ModBlocks {
 		PoweredFurnace = new BlockPoweredFurnace().setUnlocalizedName("PoweredFurnace").setHardness(3.5f);
 		RegisterHelper.registerBlock(PoweredFurnace);
 		
+		LogicGateBasePlate = new BaseBlock(Material.IRON, "LogicGateBasePlate");
+		RegisterHelper.registerBlock(LogicGateBasePlate);
 		SignalMultiplier = new BlockSignalMultiplier("SignalMultiplier").setHardness(3.5f);
 		RegisterHelper.registerBlock(SignalMultiplier);
 		NotGate = new BlockNotGate("NotGate").setHardness(3.5f);
@@ -201,6 +212,14 @@ public class ModBlocks {
 		RegisterHelper.registerBlock(PowerCell);
 		Timer = new BlockTimer("Timer").setHardness(3.5f);
 		RegisterHelper.registerBlock(Timer);
+		Adder = new BlockAdder("Adder").setHardness(3.5f);
+		RegisterHelper.registerBlock(Adder);
+		And = new BlockAndGate("And").setHardness(3.5f);
+		RegisterHelper.registerBlock(And);
+		Or = new BlockOrGate("Or").setHardness(3.5f);
+		RegisterHelper.registerBlock(Or	);
+		Subtractor = new BlockSubtractorGate("Subtractor").setHardness(3.5f);
+		RegisterHelper.registerBlock(Subtractor	);
 		
 		StaticSolarPanel = new BlockSolarPanel("StaticSolarPanel", Tier.STATIC).setHardness(3.5f);
 		RegisterHelper.registerBlock(StaticSolarPanel);

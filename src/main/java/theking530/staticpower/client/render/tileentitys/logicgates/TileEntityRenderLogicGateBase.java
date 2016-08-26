@@ -22,6 +22,7 @@ public class TileEntityRenderLogicGateBase extends TileEntitySpecialRenderer {
     ResourceLocation TEXTURE_OFF;
     ResourceLocation INPUT = new ResourceLocation(Reference.MODID, "textures/blocks/logicgates/LogicGateInput.png");
     ResourceLocation OUTPUT = new ResourceLocation(Reference.MODID, "textures/blocks/logicgates/LogicGateOutput.png");
+    ResourceLocation EXTRA = new ResourceLocation(Reference.MODID, "textures/blocks/logicgates/LogicGateExtraOutput.png");
     
     public TileEntityRenderLogicGateBase(ModelBase Model, ResourceLocation OnTexture, ResourceLocation OffTexture) {
     	MODEL = Model;
@@ -69,6 +70,8 @@ public class TileEntityRenderLogicGateBase extends TileEntitySpecialRenderer {
 			 bindTexture(INPUT);	
         }else if(Gate.SIDE_MODES[side.ordinal()] == Mode.Output){
 			 bindTexture(OUTPUT);	
+        }else if(Gate.SIDE_MODES[side.ordinal()] == Mode.Regular){
+			 bindTexture(EXTRA);	
         }
 		GL11.glDisable(GL11.GL_LIGHTING);		
         if(side == EnumFacing.NORTH) {
