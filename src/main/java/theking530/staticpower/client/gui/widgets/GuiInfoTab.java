@@ -19,7 +19,7 @@ import net.minecraft.world.World;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.tileentity.BaseTileEntity;
 import theking530.staticpower.utils.EnumTextFormatting;
-import theking530.staticpower.utils.SidePicker.Side;
+import theking530.staticpower.utils.OldSidePicker.Side;
 
 public class GuiInfoTab extends GuiScreen {
 	

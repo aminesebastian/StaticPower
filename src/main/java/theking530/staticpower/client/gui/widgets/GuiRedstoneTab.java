@@ -48,13 +48,12 @@ public class GuiRedstoneTab {
 	public void drawTab() {
 		RED_TAB.drawTab();
 		if(IS_TAB_OPEN) {
-		drawButtonBG();	
-		IGNORE_REDSTONE.drawButton();
-		//IGNORE_REDSTONE.drawButton();
-		LOW_REDSTONE.drawButton();
-		HIGH_REDSTONE.drawButton();
-		drawText();
-		function();
+			drawButtonBG();	
+			IGNORE_REDSTONE.drawButton();
+			LOW_REDSTONE.drawButton();
+			HIGH_REDSTONE.drawButton();
+			drawText();
+			function();
 		}else{
 			IGNORE_REDSTONE.TIMER = 0;
 			LOW_REDSTONE.TIMER = 0;
@@ -74,8 +73,7 @@ public class GuiRedstoneTab {
 		int tabTop = GUI_TOP + k;
 		modeText(tabLeft, tabTop);	
 		this.FONT_RENDERER.drawStringWithShadow(redstoneMode, tabLeft-this.FONT_RENDERER.getStringWidth(redstoneMode)/2 + 21, tabTop+95, 16777215);
-		this.FONT_RENDERER.drawStringWithShadow(tabName, tabLeft-this.FONT_RENDERER.getStringWidth(tabName)/2 + 58, tabTop+44, 16777215);
-		
+		this.FONT_RENDERER.drawStringWithShadow(tabName, tabLeft-this.FONT_RENDERER.getStringWidth(tabName)/2 + 58, tabTop+44, 16777215);		
 	}
 	public void modeText(int tabLeft, int tabTop) {
 		String mode;

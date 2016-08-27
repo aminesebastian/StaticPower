@@ -19,7 +19,7 @@ public class ElectricSolderingIron extends BasePoweredItem implements ISoldering
 	}
 	@Override  
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean par4) {
-		list.add("Power Stored: " +  NumberFormat.getNumberInstance(Locale.US).format(getEnergyStored(itemstack)) +"RF/"
+		list.add("Power Stored: " +  NumberFormat.getNumberInstance(Locale.US).format(getEnergyStored(itemstack)) +"/"
 				+  NumberFormat.getNumberInstance(Locale.US).format(capacity) + "RF");
     	if(showHiddenTooltips()) {
     		list.add("Power per Operation: 100RF");

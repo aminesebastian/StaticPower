@@ -6,6 +6,8 @@ import javax.annotation.Nullable;
 
 import api.IWrenchTool;
 import api.IWrenchable;
+import api.RegularWrenchMode;
+import api.SneakWrenchMode;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -59,19 +61,20 @@ public class BaseConduit extends Block implements ITileEntityProvider, IWrenchab
 	}
 
 	@Override
-	public void wrenchBlock(EntityPlayer player, World world, BlockPos pos, EnumFacing facing, boolean returnDrops) {		
+	public void wrenchBlock(EntityPlayer player, RegularWrenchMode mode, ItemStack wrench, World world, BlockPos pos, EnumFacing facing, boolean returnDrops) {		
 	}
 	@Override
-	public void sneakWrenchBlock(EntityPlayer player, World world, BlockPos pos, EnumFacing facing, boolean returnDrops) {
+	public void sneakWrenchBlock(EntityPlayer player, SneakWrenchMode mode, ItemStack wrench, World world, BlockPos pos, EnumFacing facing, boolean returnDrops) {
 		ArrayList<ItemStack> items = new ArrayList();
 		ItemStack machineStack = new ItemStack(Item.getItemFromBlock(this));
 		items.add(machineStack);
 		
 		if(items != null) {
 			//breakBlock(world, x, y, z, this, world.getBlockMetadata(x, y, z));
-			world.setBlockToAir(pos);
 			//world.playSoundEffect((double)x, (double)y, (double)z, "pop", .5f, .5f);
 		}	
+		this.breakBlock(world, pos, world.getBlockState(pos));
+		world.setBlockToAir(pos);
 	}
 
 	@Override

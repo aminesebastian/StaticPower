@@ -40,6 +40,7 @@ public class TileEntityPowerCell extends TileEntityBaseLogicGate {
 	public String getName() {
 		return "container.PowerCell";		
 	}
+	@Override
 	public Mode[] getInitialModes(){
 		return new Mode[]{Mode.Disabled, Mode.Disabled, Mode.Output, Mode.Output, Mode.Output, Mode.Output};
 	}

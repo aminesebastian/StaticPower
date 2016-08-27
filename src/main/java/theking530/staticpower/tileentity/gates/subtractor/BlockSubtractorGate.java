@@ -24,16 +24,16 @@ public class BlockSubtractorGate extends BlockLogicGate {
 	public TileEntity createNewTileEntity(World world, int i) {
 		return new TileEntitySubtractorGate();
 	}
-	public String getDescrption(){
+	public String getDescrption(ItemStack stack){
 		return "Subtract one signal from the other.";	
 	}
-	public String getInputDescrption(){
+	public String getInputDescrption(ItemStack stack){
 		return "First Operand.";
 	}
-	public String getOutputDescrption(){
-		return "Difference of the Purple input minus the Blue input.";
+	public String getOutputDescrption(ItemStack stack){
+		return "Difference of the Blue input minus the Purple input.";
 	}
-	public String getExtraDescrption(){
+	public String getExtraDescrption(ItemStack stack){
 		return "Second Operand.";
 	}
 }

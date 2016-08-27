@@ -23,7 +23,7 @@ import theking530.staticpower.utils.GuiTextures;
 public class GuiFusionFurnace extends CustomGuiContainer{
 	
 	public GuiPowerBarFromEnergyStorage POWER_BAR;
-	public GuiSideConfigTab SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, ModBlocks.FusionFurnace);
+	public GuiSideConfigTab SIDE_TAB;
 	public GuiRedstoneTab REDSTONE_TAB;
 	
 	private TileEntityFusionFurnace FUSION_FURNACE;
@@ -32,6 +32,7 @@ public class GuiFusionFurnace extends CustomGuiContainer{
 		FUSION_FURNACE = teFurnace;
 		POWER_BAR = new GuiPowerBarFromEnergyStorage(teFurnace);
 		REDSTONE_TAB = new GuiRedstoneTab(guiLeft, guiTop, teFurnace);
+		SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, teFurnace);
 		this.xSize = 176;
 		this.ySize = 166;
 		

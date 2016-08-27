@@ -5,19 +5,14 @@ import theking530.staticpower.power.PowerDistributor;
 
 public class TileEntityEnergizedBattery extends TileEntityBattery{
 
-	private int INPUT = 500;
-	private int OUTPUT = 500;
-	
 	public TileEntityEnergizedBattery() {
-		TIER = Tier.ENERGIZED;
-		initializeBasicMachine(2, 0, 500000, 250, 0, 0, 0, 0);
+		initializeBasicMachine(2, 0, 10000000, 500, 0, 0, 0, 0);
 		MAX_INPUT = 1000;
 		MAX_OUTPUT = 1000;
-		CUSTOM_NAME = "EnergizedBattery";
 		POWER_DIS = new PowerDistributor(this, STORAGE);
 	}
 	@Override
 	public String getName() {
-		return "Energized Battery";
+		return "container.EnergizedBattery";
 	}
 }

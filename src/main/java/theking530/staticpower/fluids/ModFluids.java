@@ -48,7 +48,7 @@ public class ModFluids {
 		        .setDensity(1500).setViscosity(3000);
 	    FluidRegistry.registerFluid(f);
 	    StaticFluid = FluidRegistry.getFluid(f.getName());
-	    BlockStaticFluid = new BaseFluidBlock(StaticFluid, new MaterialLiquid(MapColor.GREEN), StaticFluidName);
+	    BlockStaticFluid = new BaseFluidBlock(StaticFluid, new MaterialLiquid(MapColor.EMERALD), StaticFluidName);
 		GameRegistry.register(BlockStaticFluid);
 	    registerBucket(StaticFluid);
 	    registerFluidBlockRendering(StaticFluid, StaticFluidName);
@@ -57,7 +57,7 @@ public class ModFluids {
 		        .setDensity(1500).setViscosity(3000);
 	    FluidRegistry.registerFluid(f);
 	    EnergizedFluid = FluidRegistry.getFluid(f.getName());
-	    BlockEnergizedFluid = new BaseFluidBlock(EnergizedFluid, new MaterialLiquid(MapColor.LIGHT_BLUE), EnergizedFluidName);
+	    BlockEnergizedFluid = new BaseFluidBlock(EnergizedFluid, new MaterialLiquid(MapColor.DIAMOND), EnergizedFluidName);
 		GameRegistry.register(BlockEnergizedFluid);
 	    registerBucket(EnergizedFluid);
 	    registerFluidBlockRendering(EnergizedFluid, EnergizedFluidName);
@@ -66,7 +66,7 @@ public class ModFluids {
 		        .setDensity(1500).setViscosity(3000);
 	    FluidRegistry.registerFluid(f);
 	    LumumFluid = FluidRegistry.getFluid(f.getName());
-	    BlockLumumFluid = new BaseFluidBlock(LumumFluid, new MaterialLiquid(MapColor.YELLOW), LumumFluidName);
+	    BlockLumumFluid = new BaseFluidBlock(LumumFluid, new MaterialLiquid(MapColor.GOLD), LumumFluidName);
 		GameRegistry.register(BlockLumumFluid);
 	    registerBucket(LumumFluid);
 	    registerFluidBlockRendering(LumumFluid, LumumFluidName);

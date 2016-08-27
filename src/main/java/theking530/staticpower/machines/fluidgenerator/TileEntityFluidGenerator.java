@@ -1,17 +1,13 @@
 package theking530.staticpower.machines.fluidgenerator;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.machines.BaseMachineWithTank;
 import theking530.staticpower.power.PowerDistributor;
@@ -24,6 +20,7 @@ public class TileEntityFluidGenerator extends BaseMachineWithTank{
 			
 	public TileEntityFluidGenerator() {
 		initializeBaseMachineWithTank(1, 0, 50000, 480, 0, 0, 1, 0, 10000);
+		setFluidContainerSlot(0);
 		POWER_DIST = new PowerDistributor(this, STORAGE);
 		MOVE_SPEED = 10;
 	}
@@ -46,51 +43,19 @@ public class TileEntityFluidGenerator extends BaseMachineWithTank{
 	public String getName() {
 		return "Fluid Generator";	
 	}	
-		   
-	//Function
-	@Override
-	public boolean hasResult(ItemStack itemstack) {
-		/**
-		if(itemstack.getItem() instanceof StaticBucket) {
-			return true;
-		}
-		if(itemstack.getItem() instanceof EnergizedBucket) {
-			return true;
-		}
-		if(itemstack.getItem() instanceof LumumBucket) {
-			return true;
-		}
-		*/
-		return false;
-	}
 	public void process() {
-		if(!isTankEmpty() && !isProcessing() && getFluidRFOutput(TANK.getFluid()) > 0 && STORAGE.getEnergyStored() < STORAGE.getMaxEnergyStored()) {
-			PROCESSING_TIMER = 1;
-			PROCESSING_FLUID = TANK.getFluid();
-			TANK.drain(1, true);
-		}
-		if(isProcessing() && STORAGE.getEnergyStored() < STORAGE.getMaxEnergyStored() && PROCESSING_FLUID != null) {
-			STORAGE.receiveEnergy(getFluidRFOutput(PROCESSING_FLUID), false);
-			PROCESSING_TIMER = 0;
-		}
-		POWER_DIST.distributePower();
-		if(SLOTS_INPUT.getStackInSlot(0) != null) {
-			MOVE_TIMER++;
-			if(MOVE_TIMER == MOVE_SPEED) {
-				if(SLOTS_INPUT.getStackInSlot(0).getItem() instanceof IFluidContainerItem) {
-					IFluidContainerItem tempContainer = (IFluidContainerItem)SLOTS_INPUT.getStackInSlot(0).getItem();
-					if(tempContainer.getFluid(SLOTS_INPUT.getStackInSlot(0)).amount + TANK.getFluidAmount() <= TANK.getCapacity()) {
-						if(TANK.getFluid() == null) {
-							TANK.fill(tempContainer.drain(SLOTS_INPUT.getStackInSlot(0), TANK.getCapacity(), true), true);
-						}else if(tempContainer.getFluid(SLOTS_INPUT.getStackInSlot(0)).isFluidEqual(TANK.getFluid())) {
-							TANK.fill(tempContainer.drain(SLOTS_INPUT.getStackInSlot(0), TANK.getCapacity(), true), true);
-						}
-						worldObj.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, (float) 0.5, 1, false);
-					}
-				}	
+		if(!worldObj.isRemote) {
+			if(!isTankEmpty() && !isProcessing() && getFluidRFOutput(TANK.getFluid()) > 0 && STORAGE.getEnergyStored() < STORAGE.getMaxEnergyStored()) {
+				PROCESSING_TIMER = 1;
+				PROCESSING_FLUID = TANK.getFluid();
+				TANK.drain(1, true);
 			}
-		}else{
-			MOVE_TIMER = 0;
+			if(isProcessing() && STORAGE.getEnergyStored() < STORAGE.getMaxEnergyStored() && PROCESSING_FLUID != null) {
+				STORAGE.receiveEnergy(getFluidRFOutput(PROCESSING_FLUID), false);
+				PROCESSING_TIMER = 0;
+				sync();
+			}
+			POWER_DIST.distributePower();		
 		}
 	}
 	public int getFluidRFOutput(FluidStack fluid) {

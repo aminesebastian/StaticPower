@@ -15,10 +15,9 @@ import theking530.staticpower.client.gui.widgets.GuiRedstoneTab;
 import theking530.staticpower.client.gui.widgets.GuiSideConfigTab;
 import theking530.staticpower.utils.GuiTextures;
 
-public class GuiCropSqueezer extends GuiContainer{
-	
+public class GuiCropSqueezer extends GuiContainer{	
 
-	public GuiSideConfigTab SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, ModBlocks.CropSqueezer);
+	public GuiSideConfigTab SIDE_TAB;
 	public GuiRedstoneTab REDSTONE_TAB;
 	
 	private TileEntityCropSqueezer cSqueezer;
@@ -32,6 +31,7 @@ public class GuiCropSqueezer extends GuiContainer{
 		POWERBAR = new GuiPowerBarFromEnergyStorage(teCropSqueezer);
 		FLUIDBAR = new GuiFluidBarFromTank(teCropSqueezer.TANK);
 		REDSTONE_TAB = new GuiRedstoneTab(guiLeft, guiTop, teCropSqueezer);
+		SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, teCropSqueezer);
 		this.xSize = 176;
 		this.ySize = 166;		
 	}

@@ -20,6 +20,9 @@ public class BlockLogicGateBasePlate extends BaseBlock {
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
 	}
+    public boolean isFullCube(IBlockState state){
+        return false;
+    }
     @Override
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
         return AA_BB;

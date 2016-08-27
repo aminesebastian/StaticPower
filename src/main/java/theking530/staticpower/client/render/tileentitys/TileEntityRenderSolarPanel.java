@@ -20,7 +20,7 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.model.TRSRTransformation;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.client.model.Models;
-import theking530.staticpower.machines.solarpanel.TileEntitySolarPanel;
+import theking530.staticpower.machines.solarpanel.TileEntityStaticSolarPanel;
 
 public class TileEntityRenderSolarPanel extends TileEntitySpecialRenderer {
 	
@@ -34,22 +34,9 @@ public class TileEntityRenderSolarPanel extends TileEntitySpecialRenderer {
 	static float width = .9F;
 
     public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float f) {
-    	TileEntitySolarPanel sPanel = (TileEntitySolarPanel)tileEntity;	
+    	TileEntityStaticSolarPanel sPanel = (TileEntityStaticSolarPanel)tileEntity;	
     	
-    	switch(sPanel.TIER) {
-    	case STATIC: sTextureOn = new ResourceLocation(Reference.MODID, "textures/models/machines/SSolarPanelOn.png");
-    				 sTextureOff = new ResourceLocation(Reference.MODID, "textures/models/machines/SSolarPanelOff.png");
-    		break;
-    	case ENERGIZED: sTextureOn = new ResourceLocation(Reference.MODID, "textures/models/machines/ESolarPanelOn.png");
-    					sTextureOff = new ResourceLocation(Reference.MODID, "textures/models/machines/ESolarPanelOff.png");
-    		break;
-    	case LUMUM: sTextureOn = new ResourceLocation(Reference.MODID, "textures/models/machines/LSolarPanelOn.png");
-    				sTextureOff = new ResourceLocation(Reference.MODID, "textures/models/machines/LSolarPanelOff.png");
-    		break;
-    	default: sTextureOn = new ResourceLocation(Reference.MODID, "textures/models/machines/SSolarPanelOn.png");
-    			 sTextureOff = new ResourceLocation(Reference.MODID, "textures/models/machines/SSolarPanelOff.png");
-    		break;
-    	}
+
     		
         GlStateManager.pushMatrix();
 

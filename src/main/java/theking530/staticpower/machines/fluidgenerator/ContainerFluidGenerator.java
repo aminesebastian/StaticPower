@@ -3,26 +3,24 @@ package theking530.staticpower.machines.fluidgenerator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerFluidGenerator extends Container {
 	
-	private TileEntityFluidGenerator FluidGenerator;
-	private int PROCESSING_TIME;
-	private int FLUID_AMOUNT;
-	private int lastItemInfusionTime;
+	private TileEntityFluidGenerator F_GENERATOR;
+	private int ENERGY_STORED;
 	
 	public ContainerFluidGenerator(InventoryPlayer invPlayer, TileEntityFluidGenerator teFluidGenerator) {
-		PROCESSING_TIME = 0;
-		FLUID_AMOUNT = 0;
-		lastItemInfusionTime = 0;
-		
-		FluidGenerator = teFluidGenerator;
+		ENERGY_STORED = 0;
+		F_GENERATOR = teFluidGenerator;
 		
 		//Input
 		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_INPUT, 0, 80, 31));
@@ -120,20 +118,11 @@ public class ContainerFluidGenerator extends Container {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
-		return FluidGenerator.isUseableByPlayer(player);
+		return F_GENERATOR.isUseableByPlayer(player);
 	}
-	
-	//Detect Changes
-	public void detectAndSendChanges() {
-		super.detectAndSendChanges();
-		this.PROCESSING_TIME = this.FluidGenerator.PROCESSING_TIME;
-	}
-	
-	//Send Gui Update
-	public void updateProgressBar(int i, int j) {
-		if (i == 0) {
-			FluidGenerator.PROCESSING_TIME = j;
-		}
-	}
+	public void detectAndSendChanges(){
+        super.detectAndSendChanges();
+        F_GENERATOR.sync();
+    }
 }
 

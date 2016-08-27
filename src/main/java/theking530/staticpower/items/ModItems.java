@@ -18,6 +18,8 @@ import theking530.staticpower.items.armor.EnergizedArmor;
 import theking530.staticpower.items.armor.LumumArmor;
 import theking530.staticpower.items.armor.StaticArmor;
 import theking530.staticpower.items.book.StaticPowerBook;
+import theking530.staticpower.items.containers.BaseBattery;
+import theking530.staticpower.items.containers.BaseFluidCapsule;
 import theking530.staticpower.items.itemfilter.FilterTier;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.items.materials.BaseDust;
@@ -26,6 +28,7 @@ import theking530.staticpower.items.materials.BaseNugget;
 import theking530.staticpower.items.tools.CoordinateMarker;
 import theking530.staticpower.items.tools.ElectricSolderingIron;
 import theking530.staticpower.items.tools.MetalHammer;
+import theking530.staticpower.items.tools.BlockReader;
 import theking530.staticpower.items.tools.SolderingIron;
 import theking530.staticpower.items.tools.StaticWrench;
 import theking530.staticpower.items.tools.WireCutters;
@@ -40,6 +43,11 @@ public class ModItems {
 	public static ArmorMaterial StaticMaterial = EnumHelper.addArmorMaterial("StaticMaterial", null, 28, new int[] {3, 6, 6, 3}, 25, null, 0);
 	public static ArmorMaterial EnergizedMaterial = EnumHelper.addArmorMaterial("EnergizedMaterial", null, 35, new int[] {5, 10, 8, 7}, 35, null, 0);
 	public static ArmorMaterial LumumMaterial = EnumHelper.addArmorMaterial("LumumMaterial", null, 35, new int[] {8, 13, 11, 10}, 35, null, 0);
+	
+	public static Item BaseFluidCapsule;
+	public static Item StaticFluidCapsule;
+	public static Item EnergizedFluidCapsule;
+	public static Item LumumFluidCapsule;
 	
 	public static Item Rubber;
 	public static Item IOPort;
@@ -113,6 +121,9 @@ public class ModItems {
 	public static Item LogicGatePowerSync;
 	public static Item InvertedLogicGatePowerSync;
 	public static Item LogicGateServo;
+	public static Item Diode;
+	public static Item Transistor;
+	public static Item InternalClock;
 	
 	public static Item StaticWrench;
 	public static Item SolderingIron;
@@ -121,6 +132,7 @@ public class ModItems {
 	public static Item CoordinateMarker;
 	public static Item WireCutters;
 	public static Item MetalHammer;
+	public static Item NetworkReader;
 	
 	public static Item BasicItemFilter;
 	public static Item UpgradedItemFilter;
@@ -183,6 +195,15 @@ public class ModItems {
 	
 	public static void init() {		
 		
+		BaseFluidCapsule = new BaseFluidCapsule("BaseFluidCapsule", 2000);
+		RegisterHelper.registerItem(BaseFluidCapsule);
+		StaticFluidCapsule = new BaseFluidCapsule("StaticFluidCapsule", 4000);
+		RegisterHelper.registerItem(StaticFluidCapsule);
+		EnergizedFluidCapsule = new BaseFluidCapsule("EnergizedFluidCapsule", 8000);
+		RegisterHelper.registerItem(EnergizedFluidCapsule);
+		LumumFluidCapsule = new BaseFluidCapsule("LumumFluidCapsule", 16000);
+		RegisterHelper.registerItem(LumumFluidCapsule);
+		
 		StaticWrench = new StaticWrench().setUnlocalizedName("StaticWrench");
 		RegisterHelper.registerItem(StaticWrench);
 		SolderingIron = new SolderingIron("SolderingIron", 10);
@@ -195,6 +216,8 @@ public class ModItems {
 		RegisterHelper.registerItem(WireCutters);
 		MetalHammer = new MetalHammer();
 		RegisterHelper.registerItem(MetalHammer);
+		NetworkReader = new BlockReader("NetworkReader");
+		RegisterHelper.registerItem(NetworkReader);
 		
 		LogicGatePowerSync = new ItemBase("LogicGatePowerSync");
 		RegisterHelper.registerItem(LogicGatePowerSync);
@@ -202,6 +225,12 @@ public class ModItems {
 		RegisterHelper.registerItem(InvertedLogicGatePowerSync);
 		LogicGateServo = new ItemBase("LogicGateServo");
 		RegisterHelper.registerItem(LogicGateServo);
+		Diode = new ItemBase("Diode");
+		RegisterHelper.registerItem(Diode);
+		Transistor = new ItemBase("Transistor");
+		RegisterHelper.registerItem(Transistor);
+		InternalClock = new ItemBase("InternalClock");
+		RegisterHelper.registerItem(InternalClock);
 		
 		BasicItemFilter = new ItemFilter("BasicItemFilter", FilterTier.BASIC);
 		RegisterHelper.registerItem(BasicItemFilter);

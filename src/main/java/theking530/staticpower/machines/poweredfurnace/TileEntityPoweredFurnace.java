@@ -45,32 +45,36 @@ public class TileEntityPoweredFurnace extends BaseMachine {
 		return false;
 	}
 	public void process() {
-		//worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-		if(!isProcessing() && !isMoving() && canProcess(getInputStack(0))) {
-			MOVE_TIMER++;
-		}
-		if(!isProcessing() && isMoving() && canProcess(getInputStack(0))) {
-			if(MOVE_TIMER < MOVE_SPEED) {
+		if(!worldObj.isRemote) {
+			if(!isProcessing() && !isMoving() && canProcess(getInputStack(0))) {
 				MOVE_TIMER++;
-			}else{
-				moveItem(SLOTS_INPUT, 0, SLOTS_INTERNAL, 0);
-				PROCESSING_TIMER = 1;
-				MOVE_TIMER = 0;
 			}
-		}
-		if(isProcessing() && !isMoving()) {
-			if(PROCESSING_TIMER < PROCESSING_TIME) {
-				PROCESSING_TIMER++;
-			}else{
-				if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, 0, getResult(getInternalStack(0)))) {
-					SLOTS_OUTPUT.insertItem(0, getResult(getInternalStack(0)).copy(), false);
-					useEnergy(getProcessingCost());
-					setInternalStack(0, null);
-					PROCESSING_TIMER=0;
+			if(!isProcessing() && isMoving() && canProcess(getInputStack(0))) {
+				if(MOVE_TIMER < MOVE_SPEED) {
+					MOVE_TIMER++;
+				}else{
+					moveItem(SLOTS_INPUT, 0, SLOTS_INTERNAL, 0);
+					PROCESSING_TIMER = 1;
 					MOVE_TIMER = 0;
 				}
 			}
+			if(isProcessing() && !isMoving()) {
+				if(PROCESSING_TIMER < PROCESSING_TIME) {
+					PROCESSING_TIMER++;
+				}else{
+					if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, 0, getResult(getInternalStack(0)))) {
+						System.out.println(getResult(getInternalStack(0)));
+						InventoryUtilities.insertItemIntoInventory(SLOTS_OUTPUT, getResult(getInternalStack(0)), 0, 0);
+						//SLOTS_OUTPUT.insertItem(0, getResult(SLOTS_INTERNAL.getStackInSlot(0).copy()), false);
+						useEnergy(getProcessingCost());
+						setInternalStack(0, null);
+						PROCESSING_TIMER=0;
+						MOVE_TIMER = 0;
+					}
+				}
+			}
 		}
+		
 	}
 }
 

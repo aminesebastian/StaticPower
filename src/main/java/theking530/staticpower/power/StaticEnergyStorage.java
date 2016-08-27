@@ -5,11 +5,6 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class StaticEnergyStorage extends EnergyStorage {
 
-	protected int energy;
-	protected int capacity;
-	protected int maxReceive;
-	protected int maxExtract;
-	
 	public StaticEnergyStorage(int capacity) {
 		super(capacity);
 	}

@@ -13,13 +13,15 @@ import theking530.staticpower.handlers.crafting.registries.InfuserRecipeRegistry
 
 public class ContainerFluidInfuser extends Container {
 	
-	private TileEntityFluidInfuser Infuser;
+	private TileEntityFluidInfuser INFUSER;
 	private int PROCESSING_TIMER;
+	private int ENERGY_STORED;
 	
 	public ContainerFluidInfuser(InventoryPlayer invPlayer, TileEntityFluidInfuser teFluidInfuser) {
 		PROCESSING_TIMER = 0;
+		ENERGY_STORED = 0;
 		
-		Infuser = teFluidInfuser;
+		INFUSER = teFluidInfuser;
 		
 		//Input
 		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.SLOTS_INPUT, 0, 55, 32));
@@ -28,7 +30,7 @@ public class ContainerFluidInfuser extends Container {
 		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.SLOTS_OUTPUT, 0, 112, 32) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
-		          return InfuserRecipeRegistry.Infusing().getInfusingItemStackResult(itemStack, Infuser.TANK.getFluid()) != null;
+		          return InfuserRecipeRegistry.Infusing().getInfusingItemStackResult(itemStack, INFUSER.TANK.getFluid()) != null;
 		    }
 		});
 		
@@ -73,7 +75,7 @@ public class ContainerFluidInfuser extends Container {
                 }
                 slot.onSlotChange(itemstack1, itemstack);
             }else if (invSlot != 1 && invSlot != 0){
-            	if (InfuserRecipeRegistry.Infusing().getInfusingItemStackResult(itemstack1, Infuser.TANK.getFluid()) != null){
+            	if (InfuserRecipeRegistry.Infusing().getInfusingItemStackResult(itemstack1, INFUSER.TANK.getFluid()) != null){
                     if (!this.mergeItemStack(itemstack1, 0, 1, false)){
                         return null;
                     }
@@ -101,22 +103,11 @@ public class ContainerFluidInfuser extends Container {
 	   }
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
-		return Infuser.isUseableByPlayer(player);
+		return INFUSER.isUseableByPlayer(player);
 	}
-	//Detect Changes
 	public void detectAndSendChanges(){
         super.detectAndSendChanges();
-        for (int i = 0; i < this.listeners.size(); ++i){
-            IContainerListener icontainerlistener = (IContainerListener)this.listeners.get(i);
-            if (PROCESSING_TIMER != Infuser.PROCESSING_TIMER){
-                icontainerlistener.sendProgressBarUpdate(this, 2, Infuser.PROCESSING_TIMER);
-            }
-        }
-        PROCESSING_TIMER = Infuser.PROCESSING_TIMER;
-    }
-    @SideOnly(Side.CLIENT)
-    public void updateProgressBar(int id, int data) {
-    	Infuser.PROCESSING_TIMER = data;
+        INFUSER.sync();
     }
 }
 

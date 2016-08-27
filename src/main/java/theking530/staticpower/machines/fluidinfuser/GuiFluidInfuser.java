@@ -25,7 +25,7 @@ import theking530.staticpower.utils.GuiTextures;
 public class GuiFluidInfuser extends GuiContainer{
 	
 	
-	public GuiSideConfigTab SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, ModBlocks.FluidInfuser);
+	public GuiSideConfigTab SIDE_TAB;
 	public GuiRedstoneTab REDSTONE_TAB;
 	public GuiInfoTab INFO_TAB = new GuiInfoTab(guiLeft, guiTop);
 	
@@ -39,6 +39,7 @@ public class GuiFluidInfuser extends GuiContainer{
 		POWERBAR = new GuiPowerBarFromEnergyStorage(teInfuser);
 		FLUIDBAR = new GuiFluidBarFromTank(teInfuser.TANK);
 		REDSTONE_TAB = new GuiRedstoneTab(guiLeft, guiTop, teInfuser);
+		SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, teInfuser);
 		this.xSize = 176;
 		this.ySize = 166;		
 	}	

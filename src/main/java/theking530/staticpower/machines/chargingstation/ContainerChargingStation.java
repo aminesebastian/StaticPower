@@ -5,22 +5,20 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerChargingStation extends Container {
 	
 	private TileEntityChargingStation C_CHARGING;
-	private int PROCESSING_TIME;
-	private int FLUID_AMOUNT;
-	private int lastItemInfusionTime;
+	private int ENERGY_STORED;
 	
 	public ContainerChargingStation(InventoryPlayer invPlayer, TileEntityChargingStation teCharging) {
-		PROCESSING_TIME = 0;
-		FLUID_AMOUNT = 0;
-		lastItemInfusionTime = 0;
-		
+		ENERGY_STORED = 0;		
 		C_CHARGING = teCharging;
 		
 		//Input
@@ -85,13 +83,7 @@ public class ContainerChargingStation extends Container {
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return itemStack.getItem() instanceof IEnergyContainerItem ? true : false;
 		    }
-		});
-		this.addSlotToContainer(new SlotItemHandler(teCharging.SLOTS_INPUT, 5, 174, 73) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-		          return true;
-		    }
-		});		
+		});	
 		//Inventory
 		for(int i = 0; i < 3; i++) {
 			for(int j = 0; j < 9; j++) {
@@ -159,18 +151,9 @@ public class ContainerChargingStation extends Container {
 	}
 	
 	//Detect Changes
-	public void detectAndSendChanges() {
-		super.detectAndSendChanges();
-		this.PROCESSING_TIME = this.C_CHARGING.PROCESSING_TIME;
-	}
-	
-	//Send Gui Update
-	public void updateProgressBar(int i, int j) {
-		if (i == 0) {
-			C_CHARGING.PROCESSING_TIME = j;
-		}
-		
-	}
-	
+	public void detectAndSendChanges(){
+        super.detectAndSendChanges();
+        C_CHARGING.sync();
+    }	
 }
 

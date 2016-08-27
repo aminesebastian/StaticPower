@@ -3,7 +3,9 @@ package theking530.staticpower.client;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.item.Item;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.items.ModItems;
@@ -23,6 +25,13 @@ public class ItemRenderRegistry {
 		ItemRenderRegistry.registerItem(ModItems.LumumChestplate);
 		ItemRenderRegistry.registerItem(ModItems.LumumLeggings);
 		ItemRenderRegistry.registerItem(ModItems.LumumBoots);
+		
+		ItemRenderRegistry.registerItem(ModItems.BaseFluidCapsule);
+		ItemRenderRegistry.registerItem(ModItems.StaticFluidCapsule);
+		ItemRenderRegistry.registerItem(ModItems.EnergizedFluidCapsule);
+		ItemRenderRegistry.registerItem(ModItems.LumumFluidCapsule);
+		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((IItemColor)ModItems.EnergizedFluidCapsule, 
+				ModItems.BaseFluidCapsule, ModItems.StaticFluidCapsule, ModItems.EnergizedFluidCapsule, ModItems.LumumFluidCapsule);
 		
 		ItemRenderRegistry.registerItem(ModItems.SilverDust);
 		ItemRenderRegistry.registerItem(ModItems.CopperDust);
@@ -96,6 +105,8 @@ public class ItemRenderRegistry {
 		ItemRenderRegistry.registerItem(ModItems.StaticBattery);
 		ItemRenderRegistry.registerItem(ModItems.EnergizedBattery);
 		ItemRenderRegistry.registerItem(ModItems.LumumBattery);
+		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((IItemColor)ModItems.BasicBattery, 
+				ModItems.BasicBattery, ModItems.StaticBattery, ModItems.EnergizedBattery, ModItems.LumumBattery);
 		
 		ItemRenderRegistry.registerItem(ModItems.Rubber);
 		ItemRenderRegistry.registerItem(ModItems.IOPort);

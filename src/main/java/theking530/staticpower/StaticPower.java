@@ -4,6 +4,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -39,6 +40,7 @@ import theking530.staticpower.handlers.crafting.recipes.SqueezerRecipes;
 import theking530.staticpower.integration.TIC.TinkersIMC;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.machines.basicfarmer.TileEntityBasicFarmer;
+import theking530.staticpower.machines.batteries.tileentities.TileEntityBasicBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityEnergizedBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityLumumBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityStaticBattery;
@@ -47,22 +49,29 @@ import theking530.staticpower.machines.cropsqueezer.TileEntityCropSqueezer;
 import theking530.staticpower.machines.fluidgenerator.TileEntityFluidGenerator;
 import theking530.staticpower.machines.fluidinfuser.TileEntityFluidInfuser;
 import theking530.staticpower.machines.fusionfurnace.TileEntityFusionFurnace;
+import theking530.staticpower.machines.mechanicalsqueezer.TileEntityMechanicalSqueezer;
 import theking530.staticpower.machines.poweredfurnace.TileEntityPoweredFurnace;
 import theking530.staticpower.machines.poweredgrinder.TileEntityPoweredGrinder;
 import theking530.staticpower.machines.quarry.TileEntityQuarry;
-import theking530.staticpower.machines.solarpanel.TileEntitySolarPanel;
+import theking530.staticpower.machines.solarpanel.TileEntityBasicSolarPanel;
+import theking530.staticpower.machines.solarpanel.TileEntityCreativeSolarPanel;
+import theking530.staticpower.machines.solarpanel.TileEntityEnergizedSolarPanel;
+import theking530.staticpower.machines.solarpanel.TileEntityLumumSolarPanel;
+import theking530.staticpower.machines.solarpanel.TileEntityStaticSolarPanel;
 import theking530.staticpower.machines.solderingtable.TileEntitySolderingTable;
-import theking530.staticpower.tileentity.energizedchest.TileEntityEnergizedChest;
+import theking530.staticpower.newconduits.BaseConduitTileEntity;
+import theking530.staticpower.tileentity.chest.energizedchest.TileEntityEnergizedChest;
+import theking530.staticpower.tileentity.chest.lumumchest.TileEntityLumumChest;
+import theking530.staticpower.tileentity.chest.staticchest.TileEntityStaticChest;
 import theking530.staticpower.tileentity.gates.adder.TileEntityAdder;
 import theking530.staticpower.tileentity.gates.and.TileEntityAndGate;
+import theking530.staticpower.tileentity.gates.led.TileEntityLED;
 import theking530.staticpower.tileentity.gates.notgate.TileEntityNotGate;
 import theking530.staticpower.tileentity.gates.or.TileEntityOrGate;
 import theking530.staticpower.tileentity.gates.powercell.TileEntityPowerCell;
 import theking530.staticpower.tileentity.gates.subtractor.TileEntitySubtractorGate;
 import theking530.staticpower.tileentity.gates.timer.TileEntityTimer;
 import theking530.staticpower.tileentity.gates.transducer.TileEntitySignalMultiplier;
-import theking530.staticpower.tileentity.lumumchest.TileEntityLumumChest;
-import theking530.staticpower.tileentity.staticchest.TileEntityStaticChest;
 import theking530.staticpower.tileentity.vacuumchest.TileEntityVacuumChest;
 
 @Mod(modid = Reference.MODID, name = Reference.name, version = Reference.VERSION)
@@ -93,10 +102,10 @@ public class StaticPower {
 	
 		PacketHandler.initPackets();
 		ModBlocks.init();
-		ModItems.init();
 		ModFluids.init();
+		ModItems.init();
 	    OreGenerationHandler.intialize();
-	    
+	    CommonProxy.preInit();
 	    if (Loader.instance().isModLoaded("tconstruct")) {
 	        try {
         		TinkersIMC.initialize();
@@ -107,6 +116,9 @@ public class StaticPower {
             }
         }
 	    
+		GameRegistry.registerTileEntity(BaseConduitTileEntity.class, "BaseConduitTileEntity");
+		GameRegistry.registerTileEntity(BaseConduitTileEntity.class, "BaseChunkLoader");
+		
 		GameRegistry.registerTileEntity(TileEntitySolderingTable.class, "SolderingTable");	
 		GameRegistry.registerTileEntity(TileEntityFluidInfuser.class, "FluidInfuser");
 		GameRegistry.registerTileEntity(TileEntityFluidGenerator.class, "FluidGenerator");
@@ -117,14 +129,22 @@ public class StaticPower {
 		GameRegistry.registerTileEntity(TileEntityFluidConduit.class, "FluidConduit");
 		GameRegistry.registerTileEntity(TileEntityItemConduit.class, "ItemConduit");
 		GameRegistry.registerTileEntity(TileEntityFusionFurnace.class, "FusionFurnace");
-		GameRegistry.registerTileEntity(TileEntitySolarPanel.class, "SolarPanel");
 		GameRegistry.registerTileEntity(TileEntityQuarry.class, "Quarry");
+		GameRegistry.registerTileEntity(TileEntityBasicFarmer.class, "BasicFarmer");
+		GameRegistry.registerTileEntity(TileEntityChargingStation.class, "ChargingStation");
+		GameRegistry.registerTileEntity(TileEntityMechanicalSqueezer.class, "MechanicalSqueezer");
+		
+		GameRegistry.registerTileEntity(TileEntityBasicSolarPanel.class, "BaseSolarPanel");
+		GameRegistry.registerTileEntity(TileEntityStaticSolarPanel.class, "StaticSolarPanel");
+		GameRegistry.registerTileEntity(TileEntityEnergizedSolarPanel.class, "EnergizedSolarPanel");
+		GameRegistry.registerTileEntity(TileEntityLumumSolarPanel.class, "LumumSolarPanel");
+		GameRegistry.registerTileEntity(TileEntityCreativeSolarPanel.class, "CreativeSolarPanel");	
+		
+		GameRegistry.registerTileEntity(TileEntityBasicBattery.class, "BasicBattery");
 		GameRegistry.registerTileEntity(TileEntityStaticBattery.class, "StaticBattery");
 		GameRegistry.registerTileEntity(TileEntityEnergizedBattery.class, "EnergizedBattery");
 		GameRegistry.registerTileEntity(TileEntityLumumBattery.class, "LumumBattery");
-		GameRegistry.registerTileEntity(TileEntityBasicFarmer.class, "BasicFarmer");
-		GameRegistry.registerTileEntity(TileEntityChargingStation.class, "ChargingStation");
-		
+
 		GameRegistry.registerTileEntity(TileEntitySignalMultiplier.class, "SignalMultiplier");
 		GameRegistry.registerTileEntity(TileEntityNotGate.class, "NotGate");
 		GameRegistry.registerTileEntity(TileEntityPowerCell.class, "PowerCell");
@@ -133,6 +153,7 @@ public class StaticPower {
 		GameRegistry.registerTileEntity(TileEntityAndGate.class, "And");
 		GameRegistry.registerTileEntity(TileEntityOrGate.class, "Or");
 		GameRegistry.registerTileEntity(TileEntitySubtractorGate.class, "Subtractor");
+		GameRegistry.registerTileEntity(TileEntityLED.class, "LED");
 		
 		GameRegistry.registerTileEntity(TileEntityStaticChest.class, "StaticChest");
 		GameRegistry.registerTileEntity(TileEntityEnergizedChest.class, "EnergizedChest");

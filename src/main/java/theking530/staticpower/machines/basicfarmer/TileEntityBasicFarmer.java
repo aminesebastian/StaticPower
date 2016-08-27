@@ -24,6 +24,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.items.CapabilityItemHandler;
+import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.machines.BaseMachineWithTank;
 import theking530.staticpower.utils.InventoryUtilities;
@@ -34,18 +35,31 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 	public int RANGE = INITIAL_RANGE;
 	public int BLOCKS_PER_TICK = 2;
 	public int FARMING_COST = 100;
+	public int GROWTH_BONUS_CHANCE = 50;
 	public BlockPos CURRENT_COORD;
 	private Random RAND;
 	private ArrayList<ItemStack> FARMED_STACKS = new ArrayList();
 	
 	public TileEntityBasicFarmer() {
-		initializeBaseMachineWithTank(2, 40, 100000, 500, 10, 0, 4, 10, 10000);
+		initializeBaseMachineWithTank(2, 40, 100000, 500, 10, 0, 4, 10, 10000);		
 		setBatterySlot(3);
+		setFluidContainerSlot(2);
 		CURRENT_COORD = getStartingCoord();
 		RAND = new Random();
 	}
 	@Override
 	public void process(){
+		if(TANK.getFluid() != null) {
+			if(TANK.getFluid().getFluid() == ModFluids.StaticFluid) {
+				GROWTH_BONUS_CHANCE = 50;
+			}else if(TANK.getFluid().getFluid() == ModFluids.EnergizedFluid){
+				GROWTH_BONUS_CHANCE = 25;
+			}else if(TANK.getFluid().getFluid() == ModFluids.LumumFluid){
+				GROWTH_BONUS_CHANCE = 15;
+			}
+		}else{
+			GROWTH_BONUS_CHANCE = 100;
+		}
 		if(PROCESSING_TIMER < PROCESSING_TIME) {
 			PROCESSING_TIMER++;
 		}else{
@@ -54,6 +68,7 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 					if(STORAGE.getEnergyStored() >= getProcessingCost()) {
 						incrementPosition();
 						STORAGE.extractEnergy(getProcessingCost(), false);
+						drain(2, true);
 						if(!checkFarmingPlot(CURRENT_COORD)){
 							break;
 						}
@@ -161,7 +176,7 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 		if(!canFarm()) {
 			return false;
 		}
-		if(RAND.nextInt(19) == 2) {
+		if(RAND.nextInt(GROWTH_BONUS_CHANCE) == 2) {
 	        if(worldObj.getBlockState(pos) != null && worldObj.getBlockState(pos).getBlock() instanceof IGrowable) {
 	        	IGrowable tempCrop = (IGrowable) worldObj.getBlockState(pos).getBlock();
 	        	if(tempCrop.canGrow(worldObj, pos, worldObj.getBlockState(pos), true)) {

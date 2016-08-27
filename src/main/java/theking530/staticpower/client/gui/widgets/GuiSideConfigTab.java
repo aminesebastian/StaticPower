@@ -5,7 +5,6 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 
 import api.gui.TabRightBlock;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
@@ -15,7 +14,6 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
@@ -24,7 +22,6 @@ import theking530.staticpower.assists.Reference;
 import theking530.staticpower.tileentity.BaseTileEntity;
 import theking530.staticpower.utils.SideModeList.Mode;
 import theking530.staticpower.utils.SidePicker;
-import theking530.staticpower.utils.SidePicker.HitCoord;
 import theking530.staticpower.utils.SidePicker.Side;
 
 public class GuiSideConfigTab extends GuiScreen {
@@ -38,7 +35,6 @@ public class GuiSideConfigTab extends GuiScreen {
 	private float MOUSE_DRAGY;
 	private Side SIDE;
 	public int BUTTON;
-	private Block BLOCK;
 	public World WORLD;
 	public BaseTileEntity TE_INV;
 	public EntityPlayer PLAYER;
@@ -50,10 +46,10 @@ public class GuiSideConfigTab extends GuiScreen {
 	
 	public TabRightBlock BLUE_TAB = new TabRightBlock(GUI_LEFT, GUI_TOP, 80, 75, 175, 64, blueTab);
 	
-	public GuiSideConfigTab(int guiLeft, int guiTop, Block block){
+	public GuiSideConfigTab(int guiLeft, int guiTop, TileEntity TE){
 		GUI_LEFT = guiLeft;
 		GUI_TOP = guiTop;
-		BLOCK = block;
+		TILE_ENTITY = TE;
 		FONT_RENDERER = Minecraft.getMinecraft().fontRendererObj;
 	}
 	public void drawTab() {
@@ -105,7 +101,6 @@ public class GuiSideConfigTab extends GuiScreen {
 	public void functionMetaIgnored(Side side) {
 		if(TILE_ENTITY != null) {
 		BaseTileEntity entity = (BaseTileEntity)TILE_ENTITY;
-
 		if(side != null) {
             switch (side) {
 					case XPos:
@@ -392,7 +387,6 @@ public class GuiSideConfigTab extends GuiScreen {
             }               
 		}
 	}
-
 	public void rotationDecider(Side side) {
 		int meta = TILE_ENTITY.getWorld().getBlockMetadata(TILE_ENTITY.getpo);
 		if(meta != 2 && meta != 4 && meta != 5) {
@@ -410,7 +404,7 @@ public class GuiSideConfigTab extends GuiScreen {
 	}
 	*/
 	public void updateTab(int width, int height, int xSize, int ySize, FontRenderer fontRenderer, TileEntity te) {
-		BLUE_TAB.updateMethod(width, height, xSize, ySize, BLOCK);
+		BLUE_TAB.updateMethod(width, height, xSize, ySize, TILE_ENTITY.getBlockType());
 		setTabOpen();
 		setGrowthState();
 		this.FONT_RENDERER = fontRenderer;
@@ -424,10 +418,10 @@ public class GuiSideConfigTab extends GuiScreen {
 		int k = (BLUE_TAB.HEIGHT - BLUE_TAB.ySIZE) / 2;
 		int tabLeft = GUI_LEFT + j + BLUE_TAB.TAB_XPOS;
 		int tabTop = GUI_TOP + k;
-		renderBlock(new ItemStack(BLOCK), 1, tabLeft+74, tabTop+125, false);
+		renderBlock(1, tabLeft+74, tabTop+125, false);
     }
 
-    public void renderBlock(ItemStack item, float zLevel, float x, float y, boolean highlight) {
+    public void renderBlock(float zLevel, float x, float y, boolean highlight) {
     	TileEntity te;
     	float yaw = (Minecraft.getMinecraft().thePlayer.rotationYaw) - 85;
     	float pitch = (Minecraft.getMinecraft().thePlayer.rotationPitch);
@@ -444,18 +438,19 @@ public class GuiSideConfigTab extends GuiScreen {
         GL11.glTranslatef(x-4, y, 10.0F + zLevel);
         GL11.glScalef(38F, 38F, -10F);
         GL11.glRotatef(210F, 1.0F, 0.0F, 0.0F);
-        GL11.glTranslatef(-0.5F, 0.4F, 0.5F);
+        GL11.glTranslatef(-0.5F, 0.5F, 0.5F);
         GL11.glRotatef(rotateX, 0.0F, 1.0F, 0.0F);
-        GL11.glRotatef(rotateY, -multRotateY, 0.0F, 0.0F);
-        GL11.glRotatef(rotateY, 0.0F, 0.0F, -multRotateZ);
-        GL11.glTranslatef(0.5F, -0.4F, -0.5F);              
+        GL11.glRotatef(rotateY, -multRotateY, 0.0F, -multRotateZ);
+       // GL11.glRotatef(rotateY, 0.0F, 0.0F, -multRotateZ);
+        GL11.glTranslatef(0.5F, -0.5F, -0.5F);              
         GL11.glRotatef(-90F, 0.0F, 1.0F, 0.0F);
         TileEntityRendererDispatcher.instance.renderTileEntityAt(TILE_ENTITY, 0.0, -0.1, 0, 0.0F);
  
         SidePicker picker = new SidePicker(1);
-        HitCoord coord = picker.getNearestHit();
+
+		theking530.staticpower.utils.SidePicker.HitCoord coord = picker.getNearestHit();
 	        if(coord != null) {	 
-	            Mode mode = TE_INV.getSideModeFromSide(coord.side);
+	            Mode mode = ((BaseTileEntity)TILE_ENTITY).getSideModeFromSide(coord.side);
 	            if(mode != null) {
 	            	switch(mode) {
 	            	case Regular:
@@ -480,62 +475,63 @@ public class GuiSideConfigTab extends GuiScreen {
     }
 
     public void drawHighlight(int color, Side side) {
-        Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer tes = tessellator.getBuffer();
-        tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-    	GL11.glPushMatrix();
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GL11.glScalef(1.1F, 1.1F, 1.1F);
-		GL11.glTranslatef(0.45F, 0.36F, 0.45F);
-        //tes.setColorRGBA_I(color, 80);
-		switch (side) {
-			case XPos:
-				tes.pos(0.5, -0.5, -0.5).endVertex();
-				tes.pos(0.5, 0.5, -0.5).endVertex();
-				tes.pos(0.5, 0.5, 0.5).endVertex();
-				tes.pos(0.5, -0.5, 0.5).endVertex();
-				break;
-			case YPos:
-				tes.pos(-0.5, 0.5, -0.5).endVertex();
-				tes.pos(-0.5, 0.5, 0.5).endVertex();
-				tes.pos(0.5, 0.5, 0.5).endVertex();
-				tes.pos(0.5, 0.5, -0.5).endVertex();
-				break;
-			case ZPos:
-				tes.pos(-0.5, -0.5, 0.5).endVertex();
-				tes.pos(0.5, -0.5, 0.5).endVertex();
-				tes.pos(0.5, 0.5, 0.5).endVertex();
-				tes.pos(-0.5, 0.5, 0.5).endVertex();
-				break;
-			case XNeg:
-				tes.pos(-0.5, -0.5, -0.5).endVertex();
-				tes.pos(-0.5, -0.5, 0.5).endVertex();
-				tes.pos(-0.5, 0.5, 0.5).endVertex();
-				tes.pos(-0.5, 0.5, -0.5).endVertex();
-				break;
-			case YNeg:
-				tes.pos(-0.5, -0.5, -0.5).endVertex();
-				tes.pos(0.5, -0.5, -0.5).endVertex();
-				tes.pos(0.5, -0.5, 0.5).endVertex();
-				tes.pos(-0.5, -0.5, 0.5).endVertex();
-				break;
-			case ZNeg:
-				tes.pos(-0.5, -0.5, -0.5).endVertex();
-				tes.pos(-0.5, 0.5, -0.5).endVertex();
-				tes.pos(0.5, 0.5, -0.5).endVertex();
-				tes.pos(0.5, -0.5, -0.5).endVertex();
-				break;
-			default:
-				break;
-		}
-		tessellator.draw();
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glPopMatrix();
+    	  Tessellator tessellator = Tessellator.getInstance();
+          VertexBuffer tes = tessellator.getBuffer();
+          tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+      	GL11.glPushMatrix();
+  		GL11.glEnable(GL11.GL_BLEND);
+  		GL11.glDisable(GL11.GL_DEPTH_TEST);
+  		GL11.glDisable(GL11.GL_TEXTURE_2D);
+  		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+  		GL11.glScalef(1.1F, 1.1F, 1.1F);
+  		//GL11.glTranslatef(0.45F, 0.36F, 0.45F);
+  		System.out.println(side);
+          //tes.setColorRGBA_I(color, 80);
+  		switch (side) {
+  			case XPos:
+  				tes.pos(0.5, -0.5, -0.5).endVertex();
+  				tes.pos(0.5, 0.5, -0.5).endVertex();
+  				tes.pos(0.5, 0.5, 0.5).endVertex();
+  				tes.pos(0.5, -0.5, 0.5).endVertex();
+  				break;
+  			case YPos:
+  				tes.pos(-0.5, 0.5, -0.5).endVertex();
+  				tes.pos(-0.5, 0.5, 0.5).endVertex();
+  				tes.pos(0.5, 0.5, 0.5).endVertex();
+  				tes.pos(0.5, 0.5, -0.5).endVertex();
+  				break;
+  			case ZPos:
+  				tes.pos(-0.5, -0.5, 0.5).endVertex();
+  				tes.pos(0.5, -0.5, 0.5).endVertex();
+  				tes.pos(0.5, 0.5, 0.5).endVertex();
+  				tes.pos(-0.5, 0.5, 0.5).endVertex();
+  				break;
+  			case XNeg:
+  				tes.pos(-0.5, -0.5, -0.5).endVertex();
+  				tes.pos(-0.5, -0.5, 0.5).endVertex();
+  				tes.pos(-0.5, 0.5, 0.5).endVertex();
+  				tes.pos(-0.5, 0.5, -0.5).endVertex();
+  				break;
+  			case YNeg:
+  				tes.pos(-0.5, -0.5, -0.5).endVertex();
+  				tes.pos(0.5, -0.5, -0.5).endVertex();
+  				tes.pos(0.5, -0.5, 0.5).endVertex();
+  				tes.pos(-0.5, -0.5, 0.5).endVertex();
+  				break;
+  			case ZNeg:
+  				tes.pos(-0.5, -0.5, -0.5).endVertex();
+  				tes.pos(-0.5, 0.5, -0.5).endVertex();
+  				tes.pos(0.5, 0.5, -0.5).endVertex();
+  				tes.pos(0.5, -0.5, -0.5).endVertex();
+  				break;
+  			default:
+  				break;
+  		}
+  		tessellator.draw();
+  		GL11.glEnable(GL11.GL_DEPTH_TEST);
+  		GL11.glEnable(GL11.GL_TEXTURE_2D);
+  		GL11.glDisable(GL11.GL_BLEND);
+  		GL11.glPopMatrix();
 	}
     protected void drawHoveringText(List p_146283_1_, int p_146283_2_, int p_146283_3_, FontRenderer font) {
     }

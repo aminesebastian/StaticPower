@@ -130,11 +130,11 @@ public class ShapedRecipes {
 			
 			//Batteries --------------------------------------------------------------------------------------------------
 			GameRegistry.addRecipe(new ItemStack(ModBlocks.StaticBattery), new Object[]{"SSS", "BMB", "BBB", 
-			'S', ModItems.StaticIngot, 'B', ModItems.StaticBattery, 'M', ModBlocks.MachineBlock});			
+			'S', ModItems.StaticPlate, 'B', ModItems.StaticBattery, 'M', ModBlocks.MachineBlock});			
 			GameRegistry.addRecipe(new ItemStack(ModBlocks.EnergizedBattery), new Object[]{"SSS", "BMB", "BBB", 
-			'S', ModItems.EnergizedIngot, 'B', ModItems.EnergizedBattery, 'M', ModBlocks.MachineBlock});		
+			'S', ModItems.EnergizedPlate, 'B', ModItems.EnergizedBattery, 'M', ModBlocks.MachineBlock});		
 			GameRegistry.addRecipe(new ItemStack(ModBlocks.LumumBattery), new Object[]{"SSS", "BMB", "BBB",  
-			'S', ModItems.LumumIngot, 'B', ModItems.LumumBattery, 'M', ModBlocks.MachineBlock});		
+			'S', ModItems.LumumPlate, 'B', ModItems.LumumBattery, 'M', ModBlocks.MachineBlock});		
 			
 			//Static Solar Panel --------------------------------------------------------------------------------------------------
 			GameRegistry.addRecipe(new ItemStack(ModBlocks.StaticSolarPanel), new Object[]{"   ", "EEE", "CIC", 
@@ -153,6 +153,16 @@ public class ShapedRecipes {
 			//Static Chest --------------------------------------------------------------------------------------------------
 			GameRegistry.addRecipe(new ItemStack(ModBlocks.StaticChest), new Object[]{"SSS", "SCS", "SSS", 
 			'S', ModItems.StaticIngot, 'C', Blocks.CHEST});		
+			
+			//Fluid Capsules --------------------------------------------------------------------------------------------------
+			GameRegistry.addRecipe(new ItemStack(ModItems.BaseFluidCapsule), new Object[]{"SCS", "SCS", "SCS", 
+			'S', ModItems.IronPlate, 'C', Blocks.GLASS});		
+			GameRegistry.addRecipe(new ItemStack(ModItems.StaticFluidCapsule), new Object[]{"SSS", "SCS", "SSS", 
+			'S', ModItems.StaticPlate, 'C', ModItems.BaseFluidCapsule});		
+			GameRegistry.addRecipe(new ItemStack(ModItems.EnergizedFluidCapsule), new Object[]{"SSS", "SCS", "SSS", 
+			'S', ModItems.EnergizedPlate, 'C', ModItems.StaticFluidCapsule});		
+			GameRegistry.addRecipe(new ItemStack(ModItems.LumumFluidCapsule), new Object[]{"SSS", "SCS", "SSS", 
+			'S', ModItems.LumumPlate, 'C', ModItems.EnergizedFluidCapsule});		
 			
 			//Energized Chest --------------------------------------------------------------------------------------------------
 			GameRegistry.addRecipe(new ItemStack(ModBlocks.EnergizedChest), new Object[]{"EEE", "ECE", "EEE", 

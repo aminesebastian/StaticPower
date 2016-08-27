@@ -30,6 +30,7 @@ public class TileEntityStaticConduit extends TileEntityBaseConduit implements IE
 	}
 	
 	public void updateEntity() {
+		worldObj.markAndNotifyBlock(pos, worldObj.getChunkFromBlockCoords(pos), worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2);
 		updateConduitRenderConnections();
 		updateRecieverRenderConnections();
 		for(int i=0; i<6; i++) {

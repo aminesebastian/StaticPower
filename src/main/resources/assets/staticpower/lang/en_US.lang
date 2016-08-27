@@ -154,9 +154,11 @@ tile.SolidGenerator.name=Solid Generator
 tile.WaterGenerator.name=Water Generator
 tile.IndustrialFurnace.name=Industrial Furnace
 tile.IndustrialGrinder.name=Industrial Grinder
+tile.BasicSolarPanel.name=Basic Solar Panel
 tile.StaticSolarPanel.name=Static Solar Panel
 tile.EnergizedSolarPanel.name=Energized Solar Panel
 tile.LumumSolarPanel.name=Lumum Solar Panel
+tile.CreativeSolarPanel.name=Creative Solar Panel
 tile.SolderingTable.name=Soldering Table
 tile.Quarry.name=Quarry
 tile.BasicFarmer.name=Basic Farmer
@@ -219,12 +221,17 @@ container.Timer=Timer
 tile.Adder.name=Adder
 tile.And.name=And Gate
 tile.Or.name=Or Gate
+tile.Subtractor.name=Subtractor
+tile.LED.name=LED
 
 //Gate Components
 item.LogicGatePlate.name=Base Gate Plate
 item.LogicGatePowerSync.name=Gate Power Sync
 item.InvertedLogicGatePowerSync.name=Inverted Gate Power Sync
 item.LogicGateServo.name=Gate Servo
+item.Diode.name=Diode
+item.Transistor.name=Transistor
+item.InternalClock.name=Internal Clock
 tile.LogicGateBasePlate.name=Logic Gate Base Plate
 
 //GUI
@@ -260,6 +267,10 @@ item.CoordinateMarker.name=Coordinate Marker
 item.WireCutters.name=Wire Cutters
 item.MetalHammer.name=Metal Hammer
 
+item.BaseFluidCapsule.name=Fluid Capsule
+item.StaticFluidCapsule.name=Static Fluid Capsule
+item.EnergizedFluidCapsule.name=Energized Fluid Capsule
+item.LumumFluidCapsule.name=Lumum Fluid Capsule
 //TIC
 material.staticmetal=Static Metal
 material.energizedmetal=Energized Metal

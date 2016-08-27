@@ -19,19 +19,19 @@ public class BasePowerUpgrade  extends BaseUpgrade implements IMachineUpgrade{
 		switch(tier) {
 		case BASE:
 			CAPACITY = (1.25f/maxStackSize);
-			TICK_UPGRADE = (1.5f/maxStackSize);
+			TICK_UPGRADE = (2.0f/maxStackSize);
 			break;
 		case STATIC:
 			CAPACITY = (1.5f/maxStackSize);
-			TICK_UPGRADE = (2f/maxStackSize);
+			TICK_UPGRADE = (3f/maxStackSize);
 			break;
 		case ENERGIZED:
 			CAPACITY = (1.75f/maxStackSize);
-			TICK_UPGRADE = (3f/maxStackSize);
+			TICK_UPGRADE = (4f/maxStackSize);
 			break;
 		case LUMUM:
 			CAPACITY = (2f/maxStackSize);
-			TICK_UPGRADE = (5f/maxStackSize);
+			TICK_UPGRADE = (6f/maxStackSize);
 			break;
 		default:
 			break;
@@ -39,7 +39,7 @@ public class BasePowerUpgrade  extends BaseUpgrade implements IMachineUpgrade{
 	}
 	@Override
 	public float getMultiplier(ItemStack stack, int upgradeNumber) {
-		if(upgradeNumber == 1) {
+		if(upgradeNumber == 0) {
 			return CAPACITY * stack.stackSize;
 		}else{
 			return TICK_UPGRADE * stack.stackSize;

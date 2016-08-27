@@ -20,25 +20,33 @@ import theking530.staticpower.machines.cropsqueezer.BlockCropSqueezer;
 import theking530.staticpower.machines.fluidgenerator.BlockFluidGenerator;
 import theking530.staticpower.machines.fluidinfuser.BlockFluidInfuser;
 import theking530.staticpower.machines.fusionfurnace.BlockFusionFurnace;
+import theking530.staticpower.machines.mechanicalsqueezer.BlockMechanicalSqueezer;
 import theking530.staticpower.machines.poweredfurnace.BlockPoweredFurnace;
 import theking530.staticpower.machines.poweredgrinder.BlockPoweredGrinder;
 import theking530.staticpower.machines.quarry.BlockQuarry;
 import theking530.staticpower.machines.solarpanel.BlockSolarPanel;
 import theking530.staticpower.machines.solderingtable.BlockSolderingTable;
-import theking530.staticpower.tileentity.energizedchest.BlockEnergizedChest;
+import theking530.staticpower.newconduits.BaseConduitBlock;
+import theking530.staticpower.tileentity.chest.energizedchest.BlockEnergizedChest;
+import theking530.staticpower.tileentity.chest.lumumchest.BlockLumumChest;
+import theking530.staticpower.tileentity.chest.staticchest.BlockStaticChest;
+import theking530.staticpower.tileentity.chunkloader.BlockChunkLoader;
+import theking530.staticpower.tileentity.gates.BlockLogicGateBasePlate;
 import theking530.staticpower.tileentity.gates.adder.BlockAdder;
 import theking530.staticpower.tileentity.gates.and.BlockAndGate;
+import theking530.staticpower.tileentity.gates.led.BlockLED;
 import theking530.staticpower.tileentity.gates.notgate.BlockNotGate;
 import theking530.staticpower.tileentity.gates.or.BlockOrGate;
 import theking530.staticpower.tileentity.gates.powercell.BlockPowerCell;
 import theking530.staticpower.tileentity.gates.subtractor.BlockSubtractorGate;
 import theking530.staticpower.tileentity.gates.timer.BlockTimer;
 import theking530.staticpower.tileentity.gates.transducer.BlockSignalMultiplier;
-import theking530.staticpower.tileentity.lumumchest.BlockLumumChest;
-import theking530.staticpower.tileentity.staticchest.BlockStaticChest;
 import theking530.staticpower.tileentity.vacuumchest.BlockVacuumChest;
 
 public class ModBlocks {
+
+	public static Block BaseConduitBlock;
+	public static Block ChunkLoader;
 	
 	public static Block StaticLamp;
 	public static Block EnergizedLamp;
@@ -64,6 +72,7 @@ public class ModBlocks {
 	public static Block BasicTank;
 	public static Block AdvancedTank;	
 	public static Block Farmer;
+	public static Block MechanicalSqueezer;
 	
 	public static Block LogicGateBasePlate;
 	public static Block SignalMultiplier;
@@ -74,10 +83,19 @@ public class ModBlocks {
 	public static Block And;
 	public static Block Or;
 	public static Block Subtractor;
+	public static Block LED;
 	
+	public static Block BasicSolarPanel;
 	public static Block StaticSolarPanel;
 	public static Block EnergizedSolarPanel;
 	public static Block LumumSolarPanel;
+	public static Block CreativeSolarPanel;
+	
+	public static Block BasicBattery;
+	public static Block StaticBattery;
+	public static Block EnergizedBattery;
+	public static Block LumumBattery;
+	
 	public static Block StaticConduit;
 	public static Block FluidConduit;
 	public static Block ItemConduit;
@@ -89,9 +107,6 @@ public class ModBlocks {
 	public static Block StaticCropPlant;
 	public static Block EnergizedCropPlant;
 	public static Block LumumCropPlant;
-	public static Block StaticBattery;
-	public static Block EnergizedBattery;
-	public static Block LumumBattery;
 	public static Block Quarry;
 	public static Block StaticChest;
 	public static Block EnergizedChest;
@@ -121,9 +136,12 @@ public class ModBlocks {
 	
 	public static void init() {
 		
-		//CrackedEnergizedBrick = new BaseBlock(Material.ROCK, "CrackedEnergizedBrick").setHardness(3.5f);
-		//RegisterHelper.registerBlock(CrackedEnergizedBrick);
-
+		ChunkLoader = new BlockChunkLoader("ChunkLoader").setHardness(3.5f);
+		RegisterHelper.registerBlock(ChunkLoader);
+		
+		BaseConduitBlock = new BaseConduitBlock(Material.IRON, "BaseConduitBlock").setHardness(3.5f);
+		RegisterHelper.registerBlock(BaseConduitBlock);
+		
 		StaticWood = new InfusedWood("StaticWood").setHardness(3.5f);
 		RegisterHelper.registerBlock(StaticWood);
 		
@@ -166,12 +184,12 @@ public class ModBlocks {
 		VacuumChest = new BlockVacuumChest("VacuumChest").setUnlocalizedName("VacuumChest").setHardness(3.5f);
 		RegisterHelper.registerBlock(VacuumChest);
 		
+		BasicBattery = new BlockBattery("BasicBattery", Tier.BASE).setHardness(3.5f);
+		RegisterHelper.registerBlock(BasicBattery);
 		StaticBattery = new BlockBattery("StaticBattery", Tier.STATIC).setHardness(3.5f);
-		RegisterHelper.registerBlock(StaticBattery);
-		
+		RegisterHelper.registerBlock(StaticBattery);	
 		LumumBattery = new BlockBattery("LumumBattery", Tier.LUMUM).setHardness(3.5f);
-		RegisterHelper.registerBlock(LumumBattery);
-				
+		RegisterHelper.registerBlock(LumumBattery);			
 		EnergizedBattery = new BlockBattery("EnergizedBattery", Tier.ENERGIZED).setHardness(3.5f);
 		RegisterHelper.registerBlock(EnergizedBattery);
 		
@@ -195,6 +213,8 @@ public class ModBlocks {
 		
 		CropSqueezer = new BlockCropSqueezer().setUnlocalizedName("CropSqueezer");
 		RegisterHelper.registerBlock(CropSqueezer);
+		MechanicalSqueezer = new BlockMechanicalSqueezer().setUnlocalizedName("MechanicalSqueezer");
+		RegisterHelper.registerBlock(MechanicalSqueezer);
 		
 		PoweredGrinder = new BlockPoweredGrinder().setUnlocalizedName("PoweredGrinder").setHardness(3.5f);
 		RegisterHelper.registerBlock(PoweredGrinder);
@@ -202,7 +222,7 @@ public class ModBlocks {
 		PoweredFurnace = new BlockPoweredFurnace().setUnlocalizedName("PoweredFurnace").setHardness(3.5f);
 		RegisterHelper.registerBlock(PoweredFurnace);
 		
-		LogicGateBasePlate = new BaseBlock(Material.IRON, "LogicGateBasePlate");
+		LogicGateBasePlate = new BlockLogicGateBasePlate(Material.IRON, "LogicGateBasePlate");
 		RegisterHelper.registerBlock(LogicGateBasePlate);
 		SignalMultiplier = new BlockSignalMultiplier("SignalMultiplier").setHardness(3.5f);
 		RegisterHelper.registerBlock(SignalMultiplier);
@@ -220,19 +240,24 @@ public class ModBlocks {
 		RegisterHelper.registerBlock(Or	);
 		Subtractor = new BlockSubtractorGate("Subtractor").setHardness(3.5f);
 		RegisterHelper.registerBlock(Subtractor	);
+		LED = new BlockLED("LED").setHardness(3.5f);
+		RegisterHelper.registerBlock(LED);
 		
-		StaticSolarPanel = new BlockSolarPanel("StaticSolarPanel", Tier.STATIC).setHardness(3.5f);
-		RegisterHelper.registerBlock(StaticSolarPanel);
 		
 		SolderingTable = new BlockSolderingTable().setUnlocalizedName("SolderingTable").setHardness(3.5f);
 		RegisterHelper.registerBlock(SolderingTable);
 		
+		BasicSolarPanel = new BlockSolarPanel("BasicSolarPanel", Tier.BASE).setHardness(3.5f);
+		RegisterHelper.registerBlock(BasicSolarPanel);
+		StaticSolarPanel = new BlockSolarPanel("StaticSolarPanel", Tier.STATIC).setHardness(3.5f);
+		RegisterHelper.registerBlock(StaticSolarPanel);
 		EnergizedSolarPanel = new BlockSolarPanel("EnergizedSolarPanel", Tier.ENERGIZED).setHardness(3.5f);
-		RegisterHelper.registerBlock(EnergizedSolarPanel);
-		
+		RegisterHelper.registerBlock(EnergizedSolarPanel);	
 		LumumSolarPanel = new BlockSolarPanel("LumumSolarPanel", Tier.LUMUM).setHardness(3.5f);
 		RegisterHelper.registerBlock(LumumSolarPanel);
-	
+		CreativeSolarPanel = new BlockSolarPanel("CreativeSolarPanel", Tier.CREATIVE).setHardness(3.5f);
+		RegisterHelper.registerBlock(CreativeSolarPanel);
+		
 		StaticLamp = new StaticLamp(Material.GLASS).setUnlocalizedName("StaticLamp");
 		RegisterHelper.registerBlock(StaticLamp);
 		

@@ -8,6 +8,7 @@ import theking530.staticpower.client.gui.widgets.PacketPowerControlTab;
 import theking530.staticpower.client.gui.widgets.PacketRedstoneTab;
 import theking530.staticpower.client.gui.widgets.PacketSideConfigTab;
 import theking530.staticpower.items.itemfilter.PacketItemFilter;
+import theking530.staticpower.machines.PacketMachineSync;
 import theking530.staticpower.machines.batteries.PacketGuiBattery;
 import theking530.staticpower.tileentity.gates.powercell.PacketPowerCell;
 import theking530.staticpower.tileentity.gates.timer.PacketTimer;
@@ -26,6 +27,7 @@ public class PacketHandler {
 		registerMessage(PacketPowerControlTab.Message.class, PacketPowerControlTab.class);
 		registerMessage(PacketSideConfigTab.Message.class, PacketSideConfigTab.class);
 		registerMessage(PacketItemFilter.Message.class, PacketItemFilter.class);
+		registerMessage(PacketMachineSync.Message.class, PacketMachineSync.class);
 	}
 	private static int nextPacketId = 0;
 	  

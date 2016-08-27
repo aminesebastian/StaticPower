@@ -18,7 +18,7 @@ public class TileEntitySubtractorGate extends TileEntityBaseLogicGate {
 		if(!worldObj.isRemote) {
 			if(getInputCount() == 1 && getExtraCount() == 1) {
 				int diff = addAllInputSignals() - addAllExtraSignals();
-				setAllOutputs(Math.min(diff, 0));
+				setAllOutputs(Math.max(diff, 0));
 			}
 			updateGate();
 		}

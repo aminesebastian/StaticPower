@@ -24,7 +24,7 @@ public class GuiQuarry extends CustomGuiContainer{
 	
 	private GuiPowerBarFromEnergyStorage POWERBAR;
 	private GuiFluidBarFromTank FLUIDBAR;
-	public GuiSideConfigTab SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, ModBlocks.Quarry);
+	public GuiSideConfigTab SIDE_TAB;
 	private TileEntityQuarry QUARRY;
 	public GuiDrawItem DRAW_ITEM = new GuiDrawItem();
 	
@@ -33,6 +33,7 @@ public class GuiQuarry extends CustomGuiContainer{
 		QUARRY = teQuarry;	
 		POWERBAR = new GuiPowerBarFromEnergyStorage(teQuarry);
 		FLUIDBAR = new GuiFluidBarFromTank(teQuarry.TANK);
+		SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, teQuarry);
 		xSize = 176;
 		ySize = 173;
 

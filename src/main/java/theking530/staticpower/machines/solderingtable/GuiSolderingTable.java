@@ -16,7 +16,7 @@ import theking530.staticpower.utils.GuiTextures;
 
 public class GuiSolderingTable extends CustomGuiContainer{
 
-	public GuiSideConfigTab SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, ModBlocks.SolderingTable);
+	public GuiSideConfigTab SIDE_TAB;
 	private TileEntitySolderingTable TABLE;
 	public GuiDrawItem DRAW_ITEM = new GuiDrawItem();
 	
@@ -25,7 +25,7 @@ public class GuiSolderingTable extends CustomGuiContainer{
 		TABLE = teTable;	
 		xSize = 176;
 		ySize = 179;
-
+		SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, teTable);
 	}
 	public void updateScreen() {
 		int j = (width - xSize) / 2;

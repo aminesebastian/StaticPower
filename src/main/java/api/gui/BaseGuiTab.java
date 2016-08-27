@@ -26,7 +26,7 @@ public class BaseGuiTab extends Gui {
 	protected int GUI_LEFT;
 	protected int GUI_TOP;
 	public float TAB_ANIMATION = 0;
-	public float TAB_ANIMATION_SPEED = 3.5f;
+	public float TAB_ANIMATION_SPEED = 4f;
 	private Item ITEM;
 	private Block BLOCK;
 	private ResourceLocation texture;

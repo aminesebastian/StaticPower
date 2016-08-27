@@ -24,6 +24,7 @@ import theking530.staticpower.client.render.tileentitys.TileEntityRenderSolarPan
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderSolderingTable;
 import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRenderAdder;
 import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRenderAndGate;
+import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRenderLED;
 import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRenderNotGate;
 import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRenderOrGate;
 import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRenderPowerCell;
@@ -33,6 +34,7 @@ import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRen
 import theking530.staticpower.conduits.fluidconduit.TileEntityFluidConduit;
 import theking530.staticpower.conduits.itemconduit.TileEntityItemConduit;
 import theking530.staticpower.conduits.staticconduit.TileEntityStaticConduit;
+import theking530.staticpower.integration.WAILA.WailaConfig;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityEnergizedBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityLumumBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityStaticBattery;
@@ -43,23 +45,25 @@ import theking530.staticpower.machines.fluidinfuser.TileEntityFluidInfuser;
 import theking530.staticpower.machines.fusionfurnace.TileEntityFusionFurnace;
 import theking530.staticpower.machines.poweredfurnace.TileEntityPoweredFurnace;
 import theking530.staticpower.machines.poweredgrinder.TileEntityPoweredGrinder;
-import theking530.staticpower.machines.solarpanel.TileEntitySolarPanel;
+import theking530.staticpower.machines.solarpanel.TileEntityStaticSolarPanel;
 import theking530.staticpower.machines.solderingtable.TileEntitySolderingTable;
-import theking530.staticpower.tileentity.energizedchest.TileEntityEnergizedChest;
+import theking530.staticpower.tileentity.chest.energizedchest.TileEntityEnergizedChest;
+import theking530.staticpower.tileentity.chest.lumumchest.TileEntityLumumChest;
+import theking530.staticpower.tileentity.chest.staticchest.TileEntityStaticChest;
 import theking530.staticpower.tileentity.gates.adder.TileEntityAdder;
 import theking530.staticpower.tileentity.gates.and.TileEntityAndGate;
+import theking530.staticpower.tileentity.gates.led.TileEntityLED;
 import theking530.staticpower.tileentity.gates.notgate.TileEntityNotGate;
 import theking530.staticpower.tileentity.gates.or.TileEntityOrGate;
 import theking530.staticpower.tileentity.gates.powercell.TileEntityPowerCell;
 import theking530.staticpower.tileentity.gates.subtractor.TileEntitySubtractorGate;
 import theking530.staticpower.tileentity.gates.timer.TileEntityTimer;
 import theking530.staticpower.tileentity.gates.transducer.TileEntitySignalMultiplier;
-import theking530.staticpower.tileentity.lumumchest.TileEntityLumumChest;
-import theking530.staticpower.tileentity.staticchest.TileEntityStaticChest;
 
 public class ClientProxy extends CommonProxy {
 
 	public void registerProxies(){
+	    WailaConfig.callIMC();
 		OBJLoader.INSTANCE.addDomain(Reference.MODID);
 		
 		//Fluid Infuser
@@ -97,12 +101,14 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityOrGate.class, new TileEntityRenderOrGate());	
 		//Subtractor
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySubtractorGate.class, new TileEntityRenderSubtractor());	
+		//LED
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLED.class, new TileEntityRenderLED());	
 		
 		//Solar Panel
 		//registerModelLoader(Item.getItemFromBlock(ModBlocks.StaticSolarPanel), Models.SOLARPANEL);
 		//registerModelLoader(Item.getItemFromBlock(ModBlocks.EnergizedSolarPanel), Models.SOLARPANEL);
 		//registerModelLoader(Item.getItemFromBlock(ModBlocks.LumumSolarPanel), Models.SOLARPANEL);
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySolarPanel.class, new TileEntityRenderSolarPanel());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityStaticSolarPanel.class, new TileEntityRenderSolarPanel());
 		//Batteries
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityStaticBattery.class, new TileEntityRenderBattery(Tier.STATIC));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEnergizedBattery.class, new TileEntityRenderBattery(Tier.ENERGIZED));

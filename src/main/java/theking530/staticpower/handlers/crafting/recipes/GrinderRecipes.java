@@ -17,7 +17,7 @@ public class GrinderRecipes {
 			RegisterHelper.registerGrinderRecipe(OreDictionary.getOres("oreCopper").get(index), newOutput(new ItemStack(ModItems.CopperDust, 2), 1.0f), newOutput(new ItemStack(ModItems.GoldDust, 1), 0.1f));
 		}
 		for(int index = 0; index < OreDictionary.getOres("oreSilver").size(); index++) {
-			RegisterHelper.registerGrinderRecipe(OreDictionary.getOres("oreSilver").get(index), newOutput(new ItemStack(ModItems.SilverDust, 2), 1.0f));
+			RegisterHelper.registerGrinderRecipe(OreDictionary.getOres("oreSilver").get(index), newOutput(new ItemStack(ModItems.SilverDust, 2), 1.0f), newOutput(new ItemStack(ModItems.TinDust, 1), 0.1f));
 		}
 		for(int index = 0; index < OreDictionary.getOres("oreTin").size(); index++) {
 			RegisterHelper.registerGrinderRecipe(OreDictionary.getOres("oreTin").get(index), newOutput(new ItemStack(ModItems.TinDust, 2), 1.0f), newOutput(new ItemStack(ModItems.SilverDust, 1), 0.1f));
@@ -71,7 +71,7 @@ public class GrinderRecipes {
 			RegisterHelper.registerGrinderRecipe(new ItemStack(Item.getItemFromBlock(Blocks.IRON_ORE)),  newOutput(new ItemStack(ModItems.IronDust, 2), 0.1f));	
 		}
 		
-		RegisterHelper.registerGrinderRecipe(new ItemStack(Item.getItemFromBlock(Blocks.GOLD_ORE)),  newOutput(new ItemStack(ModItems.GoldDust, 2), 1.0f), newOutput(new ItemStack(Items.REDSTONE, 2), 0.1f));
+		RegisterHelper.registerGrinderRecipe(new ItemStack(Item.getItemFromBlock(Blocks.GOLD_ORE)),  newOutput(new ItemStack(ModItems.GoldDust, 2), 1.0f), newOutput(new ItemStack(ModItems.CopperDust, 1), 0.1f));
 		RegisterHelper.registerGrinderRecipe(new ItemStack(Item.getItemFromBlock(Blocks.COAL_ORE)),  newOutput(new ItemStack(Items.COAL, 4), 1.0f));
 		RegisterHelper.registerGrinderRecipe(new ItemStack(Item.getItemFromBlock(Blocks.REDSTONE_ORE)),  newOutput(new ItemStack(Items.REDSTONE, 5), 1.0f));
 		RegisterHelper.registerGrinderRecipe(new ItemStack(Item.getItemFromBlock(Blocks.DIAMOND_ORE)),  newOutput(new ItemStack(Items.DIAMOND, 3), 1.0f));

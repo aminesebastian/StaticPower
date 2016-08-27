@@ -96,15 +96,13 @@ public class TileEntityRenderFluidGenerator extends TileEntitySpecialRenderer {
 			}
 			block.drawBlock(3);
 		}
-	}
-		
+	}	
 	public static void drawLiquidBar(TileEntity tileentity, FluidStack fluidStack) {
 		TileEntityFluidGenerator fGen = (TileEntityFluidGenerator)tileentity;
 		float height = fGen.getAdjustedVolume() > 0 ? fGen.getAdjustedVolume() : 0;	
 		final Fluid fluid = fluidStack.getFluid();
-		RenderUtil.drawFluidInWorld(fluidStack, 10.5F*texel, 2.5F*texel, 1.001F, 3F*texel, height+3.25F*texel);
+		RenderUtil.drawFluidInWorld(fluidStack, 10.5F*texel, 2.5F*texel, 1.001F, 3F*texel, height*0.86f);
 	}
-
 	public static void drawEnergyBar(TileEntity tileentity) {
 		TileEntityFluidGenerator fGen = (TileEntityFluidGenerator)tileentity;
 		float height = ((float)(fGen.STORAGE.getEnergyStored()/(float)fGen.STORAGE.getMaxEnergyStored())) > 0 ? ((float)(fGen.STORAGE.getEnergyStored()/(float)fGen.STORAGE.getMaxEnergyStored())) : 0;	

@@ -19,6 +19,7 @@ public class ContainerPoweredGrinder extends Container {
 
 	public ContainerPoweredGrinder(InventoryPlayer invPlayer, TileEntityPoweredGrinder tePoweredGrinder) {
 		PROCESSING_TIMER = 0;
+		ENERGY_STORED = 0;
 		
 		GRINDER = tePoweredGrinder;
 		
@@ -125,25 +126,7 @@ public class ContainerPoweredGrinder extends Container {
 	
 	public void detectAndSendChanges(){
         super.detectAndSendChanges();
-        for (int i = 0; i < this.listeners.size(); ++i){
-            IContainerListener icontainerlistener = (IContainerListener)this.listeners.get(i);
-            if(PROCESSING_TIMER != GRINDER.PROCESSING_TIMER){
-                icontainerlistener.sendProgressBarUpdate(this, 0, GRINDER.PROCESSING_TIMER);
-            }
-            if(ENERGY_STORED != GRINDER.STORAGE.getEnergyStored()) {
-                icontainerlistener.sendProgressBarUpdate(this, 1, GRINDER.STORAGE.getEnergyStored());
-            }
-        }
-        PROCESSING_TIMER = GRINDER.PROCESSING_TIMER;
-        ENERGY_STORED = GRINDER.STORAGE.getEnergyStored();
-    }
-    @SideOnly(Side.CLIENT)
-    public void updateProgressBar(int id, int data) {
-    	if(id == 0) {
-        	GRINDER.PROCESSING_TIMER = data;
-    	}else if(id == 1) {
-    		GRINDER.STORAGE.setEnergyStored(data);
-    	}
+        GRINDER.sync();
     }
 }
 

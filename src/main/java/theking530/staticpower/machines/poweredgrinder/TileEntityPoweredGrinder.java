@@ -80,8 +80,7 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 			}
 		}
 		if(isProcessing() && !isMoving()) {
-			if(!worldObj.isRemote) {
-				if(PROCESSING_TIMER <= PROCESSING_TIME) {
+				if(PROCESSING_TIMER < PROCESSING_TIME) {
 					useEnergy(getProcessingCost() / PROCESSING_TIME);
 					PROCESSING_TIMER++;
 				}else{
@@ -101,7 +100,6 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 					markForUpdate();
 					PROCESSING_TIMER=0;
 					MOVE_TIMER = 0;
-				}
 			}	
 		}
 	}

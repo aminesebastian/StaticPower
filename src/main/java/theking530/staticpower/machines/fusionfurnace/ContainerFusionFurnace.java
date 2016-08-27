@@ -15,9 +15,11 @@ public class ContainerFusionFurnace extends Container {
 	
 	private TileEntityFusionFurnace FURNACE;
 	private int PROCESSING_TIMER;
-
+	private int ENERGY_STORED;
+	
 	public ContainerFusionFurnace(InventoryPlayer invPlayer, TileEntityFusionFurnace teFusionFurnace) {
 		PROCESSING_TIMER = 0;
+		ENERGY_STORED = 0;
 		
 		FURNACE = teFusionFurnace;
 		
@@ -156,20 +158,9 @@ public class ContainerFusionFurnace extends Container {
 	public boolean canInteractWith(EntityPlayer player) {
 		return FURNACE.isUseableByPlayer(player);
 	}
-	
 	public void detectAndSendChanges(){
         super.detectAndSendChanges();
-        for (int i = 0; i < this.listeners.size(); ++i){
-            IContainerListener icontainerlistener = (IContainerListener)this.listeners.get(i);
-            if (PROCESSING_TIMER != FURNACE.PROCESSING_TIMER){
-                icontainerlistener.sendProgressBarUpdate(this, 2, FURNACE.PROCESSING_TIMER);
-            }
-        }
-        PROCESSING_TIMER = FURNACE.PROCESSING_TIMER;
-    }
-    @SideOnly(Side.CLIENT)
-    public void updateProgressBar(int id, int data) {
-    	FURNACE.PROCESSING_TIMER = data;
+        FURNACE.sync();
     }
 }
 

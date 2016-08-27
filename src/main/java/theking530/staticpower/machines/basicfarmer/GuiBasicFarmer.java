@@ -17,6 +17,7 @@ import org.lwjgl.opengl.GL11;
 
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.blocks.ModBlocks;
+import theking530.staticpower.client.gui.widgets.GuiFluidBarFromTank;
 import theking530.staticpower.client.gui.widgets.GuiPowerBar;
 import theking530.staticpower.client.gui.widgets.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.gui.widgets.GuiRedstoneTab;
@@ -28,7 +29,8 @@ import theking530.staticpower.utils.WorldUtilities;
 public class GuiBasicFarmer extends GuiContainer{
 	
 	public GuiPowerBarFromEnergyStorage POWER_BAR;
-	public GuiSideConfigTab SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, ModBlocks.PoweredFurnace);
+	private GuiFluidBarFromTank FLUIDBAR;
+	public GuiSideConfigTab SIDE_TAB;
 	public GuiRedstoneTab REDSTONE_TAB;
 	
 	private TileEntityBasicFarmer FARMER;
@@ -36,7 +38,9 @@ public class GuiBasicFarmer extends GuiContainer{
 		super(new ContainerBasicFarmer(invPlayer, teFarmer));
 		FARMER = teFarmer;
 		POWER_BAR = new GuiPowerBarFromEnergyStorage(teFarmer);
+		FLUIDBAR = new GuiFluidBarFromTank(teFarmer.TANK);
 		REDSTONE_TAB = new GuiRedstoneTab(guiLeft, guiTop, teFarmer);
+		SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, teFarmer);
 		this.xSize = 176;
 		this.ySize = 172;
 		
@@ -60,6 +64,9 @@ public class GuiBasicFarmer extends GuiContainer{
         if(par1 >= 8 + var1 && par2 >= 8 + var2 && par1 <= 14 + var1 && par2 <= 68 + var2) {
         	drawHoveringText(POWER_BAR.drawText(), par1, par2, fontRendererObj); 
         }
+		if(par1 >= 18 + var1 && par2 >= 8 + var2 && par1 <= 34 + var1 && par2 <= 68 + var2) {	
+			drawHoveringText(FLUIDBAR.drawText(), par1, par2, fontRendererObj); 
+		}    
 	}	
 
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
@@ -72,8 +79,10 @@ public class GuiBasicFarmer extends GuiContainer{
 		GL11.glScalef(scale, scale, scale);
 		
 		String radius = "Radius: " + FARMER.RANGE;	
-		fontRendererObj.drawString(radius, xSize / 2 - 50, 117, GUIUtilities.getColor(20, 20, 20));
+		fontRendererObj.drawString(radius, xSize / 2 - 50, 119, GUIUtilities.getColor(20, 20, 20));
 		
+		String growthBounus = "Growth Bonus Chance: " + (int)(((1f/(float)FARMER.GROWTH_BONUS_CHANCE))*100) + "%";	
+		fontRendererObj.drawString(growthBounus, xSize / 2 +20, 119, GUIUtilities.getColor(20, 20, 20));
 		GL11.glScalef(1/scale, 1/scale, 1/scale);
 	}
 	
@@ -87,6 +96,7 @@ public class GuiBasicFarmer extends GuiContainer{
 		REDSTONE_TAB.drawTab();		
 		//Energy Bar
 		POWER_BAR.drawPowerBar(guiLeft + 8, guiTop + 68, 6, 60, 1);
+		FLUIDBAR.drawFluidBar(guiLeft + 18, guiTop + 68, 16, 60, this.zLevel);
 	}
 	
 	@Override

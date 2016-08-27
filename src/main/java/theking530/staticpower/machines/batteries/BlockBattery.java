@@ -17,14 +17,14 @@ import theking530.staticpower.StaticPower;
 import theking530.staticpower.assists.Tier;
 import theking530.staticpower.client.GuiIDRegistry;
 import theking530.staticpower.machines.BaseMachineBlock;
+import theking530.staticpower.machines.batteries.tileentities.TileEntityBasicBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityEnergizedBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityLumumBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityStaticBattery;
 
 public class BlockBattery extends BaseMachineBlock{
-	
-	private static boolean keepInventory = false;	
+
 	public Tier TIER;
 	
 	public BlockBattery(String name, Tier tier) {
@@ -49,6 +49,7 @@ public class BlockBattery extends BaseMachineBlock{
 	@Override
 	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
 		switch(TIER){
+		case BASE: return new TileEntityBasicBattery();
 		case STATIC: return new TileEntityStaticBattery();
 		case ENERGIZED: return new TileEntityEnergizedBattery();
 		case LUMUM: return new TileEntityLumumBattery();

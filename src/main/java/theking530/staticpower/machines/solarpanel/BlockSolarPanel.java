@@ -30,8 +30,11 @@ public class BlockSolarPanel extends BaseMachineBlock {
 		TIER = tier;
 		setCreativeTab(StaticPower.StaticPower);
 	}
+	public EnumBlockRenderType getRenderType(IBlockState state) {
+		return EnumBlockRenderType.MODEL;
+	}
 	@Override
-	public void wrenchBlock(EntityPlayer player, World world, BlockPos pos, EnumFacing facing, boolean returnDrops) {
+	public void sneakWrenchBlock(EntityPlayer player, World world, BlockPos pos, EnumFacing facing, boolean returnDrops) {
 		ArrayList<ItemStack> items = new ArrayList();
 		ItemStack machineStack = new ItemStack(Item.getItemFromBlock(this));
 		EntityItem droppedItem = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), machineStack);
@@ -45,8 +48,18 @@ public class BlockSolarPanel extends BaseMachineBlock {
 	}
 	@Override
 	public TileEntity createNewTileEntity(World world, int i) {
-		TileEntitySolarPanel panel = new TileEntitySolarPanel();
-		panel.initializeSolarPanel(TIER);
-		return panel;
+		switch(TIER) {
+		case BASE:
+			return new TileEntityBasicSolarPanel();
+		case STATIC:
+			return new TileEntityStaticSolarPanel();
+		case ENERGIZED:
+			return new TileEntityEnergizedSolarPanel();	
+		case LUMUM:
+			return new TileEntityLumumSolarPanel();
+		case CREATIVE:
+			return new TileEntityCreativeSolarPanel();
+		}
+		return new TileEntityBasicSolarPanel();
 	}
 }

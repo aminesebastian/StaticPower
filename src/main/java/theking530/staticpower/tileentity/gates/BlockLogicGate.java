@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import javax.annotation.Nullable;
 
 import api.IWrenchable;
+import api.RegularWrenchMode;
+import api.SneakWrenchMode;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -45,7 +47,9 @@ public class BlockLogicGate extends BlockContainer implements IWrenchable{
 	public EnumBlockRenderType getRenderType(IBlockState state) {
 		return EnumBlockRenderType.INVISIBLE;
 	}
-	
+    public boolean isFullCube(IBlockState state){
+        return false;
+    }
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
@@ -102,7 +106,7 @@ public class BlockLogicGate extends BlockContainer implements IWrenchable{
     @Override
 	public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
     	TileEntityBaseLogicGate tempGate = (TileEntityBaseLogicGate) world.getTileEntity(pos);
-    	if(tempGate != null && tempGate.SIDE_MODES[side.getOpposite().ordinal()] != Mode.Disabled) {
+    	if(tempGate != null && tempGate.SIDE_MODES != null && side != null && tempGate.SIDE_MODES[side.getOpposite().ordinal()] != Mode.Disabled) {
     		return true;
     	}
     	return false;
@@ -113,58 +117,27 @@ public class BlockLogicGate extends BlockContainer implements IWrenchable{
 		return true;
 	}
 	@Override
-	public void sneakWrenchBlock(EntityPlayer player, World world, BlockPos pos, EnumFacing facing, boolean returnDrops) {
-		ArrayList<ItemStack> items = new ArrayList();
+	public void sneakWrenchBlock(EntityPlayer player, SneakWrenchMode mode, ItemStack wrench, World world, BlockPos pos, EnumFacing facing, boolean returnDrops) {
 		NBTTagCompound nbt = new NBTTagCompound();
 		ItemStack machineStack = new ItemStack(Item.getItemFromBlock(this));
-		if(world.getTileEntity(pos) instanceof BaseTileEntity) {
-			BaseTileEntity tempMachine = (BaseTileEntity)world.getTileEntity(pos);
-			tempMachine.writeToNBT(nbt);
-			machineStack.setTagCompound(nbt);
-
-			for(int i=0; i<tempMachine.SLOTS_INPUT.getSlots(); i++) {
-				if(tempMachine.SLOTS_INPUT.getStackInSlot(i) != null) {
-					items.add(tempMachine.SLOTS_INPUT.getStackInSlot(i).copy());
-				}
-			}
-			for(int i=0; i<tempMachine.SLOTS_OUTPUT.getSlots(); i++) {
-				if(tempMachine.SLOTS_OUTPUT.getStackInSlot(i) != null) {
-					items.add(tempMachine.SLOTS_OUTPUT.getStackInSlot(i).copy());
-				}
-			}
-			for(int i=0; i<tempMachine.SLOTS_INTERNAL.getSlots(); i++) {
-				if(tempMachine.SLOTS_INTERNAL.getStackInSlot(i) != null) {
-					items.add(tempMachine.SLOTS_INTERNAL.getStackInSlot(i).copy());
-				}
-			}
-			for(int i=0; i<tempMachine.SLOTS_UPGRADES.getSlots(); i++) {
-				if(tempMachine.SLOTS_UPGRADES.getStackInSlot(i) != null) {
-					items.add(tempMachine.SLOTS_UPGRADES.getStackInSlot(i).copy());
-				}
-			}
-
+		if(world.getTileEntity(pos) instanceof TileEntityBaseLogicGate) {
+			TileEntityBaseLogicGate tempMachine = (TileEntityBaseLogicGate)world.getTileEntity(pos);
+			machineStack.setTagCompound(tempMachine.writeToNBT(nbt));
 		}
-		items.add(machineStack);
-		
-		if(items != null) {
-			for(int i=0; i<items.size(); i++) {
-				EntityItem droppedItem = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(),items.get(i));
-				world.spawnEntityInWorld(droppedItem);
-			}
-			//breakBlock(world, x, y, z, this, world.getBlockMetadata(x, y, z));
-			world.setBlockToAir(pos);
-		}		
+		EntityItem droppedItem = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), machineStack);
+		world.spawnEntityInWorld(droppedItem);
+		world.setBlockToAir(pos);
 	}
-	public String getDescrption(){
+	public String getDescrption(ItemStack stack){
 		return null;	
 	}
-	public String getInputDescrption(){
+	public String getInputDescrption(ItemStack stack){
 		return null;
 	}
-	public String getOutputDescrption(){
+	public String getOutputDescrption(ItemStack stack){
 		return null;
 	}
-	public String getExtraDescrption(){
+	public String getExtraDescrption(ItemStack stack){
 		return null;
 	}
     @Override
@@ -172,6 +145,6 @@ public class BlockLogicGate extends BlockContainer implements IWrenchable{
 		return null;
 	}
 	@Override
-	public void wrenchBlock(EntityPlayer player, World world, BlockPos pos, EnumFacing facing, boolean returnDrops) {
+	public void wrenchBlock(EntityPlayer player, RegularWrenchMode mode, ItemStack wrench, World world, BlockPos pos, EnumFacing facing, boolean returnDrops) {
 	}
 }

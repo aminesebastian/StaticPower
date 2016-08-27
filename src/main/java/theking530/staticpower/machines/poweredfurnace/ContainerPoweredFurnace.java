@@ -13,19 +13,21 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerPoweredFurnace extends Container {
 	
-	private TileEntityPoweredFurnace Smelter;
+	private TileEntityPoweredFurnace SMELTER;
 	private int PROCESSING_TIMER;
+	private int ENERGY_STORED;
 
 	public ContainerPoweredFurnace(InventoryPlayer invPlayer, TileEntityPoweredFurnace tePoweredSmelter) {
 		PROCESSING_TIMER = 0;
+		ENERGY_STORED = 0;
 		
-		Smelter = tePoweredSmelter;
+		SMELTER = tePoweredSmelter;
 		
 		//Input
 		this.addSlotToContainer(new SlotItemHandler(tePoweredSmelter.SLOTS_INPUT, 0, 50, 28));
 		
 		//Output
-		this.addSlotToContainer(new SlotItemHandler(tePoweredSmelter.SLOTS_OUTPUT, 0, 110, 32) {
+		this.addSlotToContainer(new SlotItemHandler(tePoweredSmelter.SLOTS_OUTPUT, 0, 109, 32) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return FurnaceRecipes.instance().getSmeltingResult(itemStack) != null;
@@ -102,22 +104,11 @@ public class ContainerPoweredFurnace extends Container {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
-		return Smelter.isUseableByPlayer(player);
+		return SMELTER.isUseableByPlayer(player);
 	}
-	
 	public void detectAndSendChanges(){
         super.detectAndSendChanges();
-        for (int i = 0; i < this.listeners.size(); ++i){
-            IContainerListener icontainerlistener = (IContainerListener)this.listeners.get(i);
-            if (PROCESSING_TIMER != Smelter.PROCESSING_TIMER){
-                icontainerlistener.sendProgressBarUpdate(this, 2, Smelter.PROCESSING_TIMER);
-            }
-        }
-        PROCESSING_TIMER = Smelter.PROCESSING_TIMER;
-    }
-    @SideOnly(Side.CLIENT)
-    public void updateProgressBar(int id, int data) {
-    	Smelter.PROCESSING_TIMER = data;
+        SMELTER.sync();
     }
 }
 

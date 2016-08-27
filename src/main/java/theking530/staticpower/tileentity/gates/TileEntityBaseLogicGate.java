@@ -11,6 +11,7 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import theking530.staticpower.utils.Color;
 import theking530.staticpower.utils.SideModeList;
 import theking530.staticpower.utils.SideModeList.Mode;
 
@@ -57,6 +58,11 @@ public class TileEntityBaseLogicGate extends TileEntity implements ITickable{
         }
 		return nbt;	
 	}
+    public void onMachinePlaced(NBTTagCompound nbt) {
+    }		
+    public NBTTagCompound onMachineBroken(NBTTagCompound nbt) {
+		return nbt;
+	}	
 	@Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 		readFromNBT(pkt.getNbtCompound());

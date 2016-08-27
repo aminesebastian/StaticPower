@@ -1,39 +1,34 @@
 package theking530.staticpower.tileentity;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.SoundCategory;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import theking530.staticpower.handlers.PacketHandler;
+import theking530.staticpower.machines.PacketMachineSync;
+import theking530.staticpower.utils.OldSidePicker;
+import theking530.staticpower.utils.OldSidePicker.BlockSide;
 import theking530.staticpower.utils.RedstoneModeList;
 import theking530.staticpower.utils.RedstoneModeList.RedstoneMode;
 import theking530.staticpower.utils.SideModeList;
 import theking530.staticpower.utils.SideModeList.Mode;
-import theking530.staticpower.utils.SidePicker;
-import theking530.staticpower.utils.SidePicker.BlockSide;
 import theking530.staticpower.utils.SidePicker.Side;
-import theking530.staticpower.utils.Vector3;
 
 public class BaseTileEntity extends TileEntity implements ITickable {
 
@@ -55,6 +50,7 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 	public int OUT_TIME = 2;
 	public int UPDATE_TIMER = 0;
 	public int UPDATE_TIME = 10;
+	public boolean PLACED = false;
 	
 	public BaseTileEntity() {
 
@@ -67,6 +63,10 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 	}
 	@Override
 	public void update() {
+		if(!PLACED) {
+			onPlaced();
+			PLACED = true;
+		}
 		int redstoneSignal = worldObj.getRedstonePower(pos, EnumFacing.NORTH);
 		if(REDSTONE_MODE == 0) {
 			if(SLOTS_OUTPUT != null && SLOTS_OUTPUT.getSlots() > 0) {
@@ -75,6 +75,7 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 			if(SLOTS_INPUT != null && SLOTS_INPUT.getSlots() > 0) {
 				inputFunction();				
 			}
+			process();
 		}
 		if(REDSTONE_MODE == 1) {
 			if(redstoneSignal == 0) {
@@ -84,6 +85,7 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 				if(SLOTS_INPUT != null && SLOTS_INPUT.getSlots() > 0) {
 					inputFunction();				
 				}
+				process();
 			}
 		}
 		if(REDSTONE_MODE == 2) {
@@ -94,6 +96,7 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 				if(SLOTS_INPUT != null && SLOTS_INPUT != null && SLOTS_INPUT.getSlots() > 0) {
 					inputFunction();				
 				}
+				process();
 			}
 		}	
 		if(UPDATE_TIMER < UPDATE_TIME) {
@@ -101,11 +104,22 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 		}else{
 			markForUpdate();
 			markDirty();
+			sync();
 			UPDATE_TIMER = 0;
 		}
-	}			
+	}		
+	public void onPlaced(){
+		
+	}
+	public void process() {
+		
+	}
 	public ItemStack getInputStack(int slot) {
-		return SLOTS_INPUT.getStackInSlot(slot);
+		if(slot < SLOTS_INPUT.getSlots()) {
+			return SLOTS_INPUT.getStackInSlot(slot);	
+		}else{
+			return null;
+		}
 	}
 	public ItemStack getOutputStack(int slot) {
 		return SLOTS_OUTPUT.getStackInSlot(slot);
@@ -116,23 +130,31 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 	public void setInternalStack(int slot, ItemStack stack) {
 		SLOTS_INTERNAL.setStackInSlot(slot, stack);
 	}
-    @Override  
+    
+	public void readFromSyncNBT(NBTTagCompound nbt) {
+		
+	}
+	public NBTTagCompound writeToSyncNBT(NBTTagCompound nbt) {
+		return nbt;
+	}
+	
+	@Override  
 	public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         REDSTONE_MODE = nbt.getShort("REDSTONE_MODE");
         for(int i=0; i<6; i++) {
-        	SIDE_MODES[i] = SideModeList.Mode.values()[nbt.getInteger("SLOSIDEMODETMODE" + i)];
+        	SIDE_MODES[i] = SideModeList.Mode.values()[nbt.getInteger("SIDEMODE" + i)];
         }      
-        if(SLOTS_INPUT != null && SLOTS_INPUT.getSlots() > 0) {
+        if(SLOTS_INPUT != null && SLOTS_INPUT.getSlots() > 0 && nbt.hasKey("INPUTS")) {
         	SLOTS_INPUT.deserializeNBT((NBTTagCompound) nbt.getTag("INPUTS"));	
         }
-        if(SLOTS_OUTPUT != null && SLOTS_OUTPUT.getSlots() > 0) {
+        if(SLOTS_OUTPUT != null && SLOTS_OUTPUT.getSlots() > 0 && nbt.hasKey("OUTPUTS")) {
             SLOTS_OUTPUT.deserializeNBT((NBTTagCompound) nbt.getTag("OUTPUTS"));
         }
-        if(SLOTS_INTERNAL != null && SLOTS_INTERNAL.getSlots() > 0) {
+        if(SLOTS_INTERNAL != null && SLOTS_INTERNAL.getSlots() > 0 && nbt.hasKey("INTERNAL")) {
             SLOTS_INTERNAL.deserializeNBT((NBTTagCompound) nbt.getTag("INTERNAL"));
         }
-        if(SLOTS_UPGRADES != null && SLOTS_UPGRADES.getSlots() > 0) {
+        if(SLOTS_UPGRADES != null && SLOTS_UPGRADES.getSlots() > 0 && nbt.hasKey("UPGRADES")) {
             SLOTS_UPGRADES.deserializeNBT((NBTTagCompound) nbt.getTag("UPGRADES"));
         }
     }		
@@ -155,15 +177,31 @@ public class BaseTileEntity extends TileEntity implements ITickable {
         if(SLOTS_UPGRADES != null && SLOTS_UPGRADES.getSlots() > 0) {
         	nbt.setTag("UPGRADES", SLOTS_UPGRADES.serializeNBT());
         }
+        nbt.setBoolean("PLACED", true);
 		return nbt;	
 	}
 	
-	public NBTTagCompound onMachineBroken() {
-		NBTTagCompound nbt = new NBTTagCompound();	
-    	return writeToNBT(nbt);
+	public NBTTagCompound onMachineBroken(NBTTagCompound nbt) {
+		writeToNBT(nbt);
+    	return nbt;
 	}
 	public void onMachinePlaced(NBTTagCompound nbt) {
-		readFromNBT(nbt);
+        REDSTONE_MODE = nbt.getShort("REDSTONE_MODE");
+        for(int i=0; i<6; i++) {
+        	SIDE_MODES[i] = SideModeList.Mode.values()[nbt.getInteger("SIDEMODE" + i)];
+        }      
+        if(SLOTS_INPUT != null && SLOTS_INPUT.getSlots() > 0) {
+        	SLOTS_INPUT.deserializeNBT((NBTTagCompound) nbt.getTag("INPUTS"));	
+        }
+        if(SLOTS_OUTPUT != null && SLOTS_OUTPUT.getSlots() > 0) {
+            SLOTS_OUTPUT.deserializeNBT((NBTTagCompound) nbt.getTag("OUTPUTS"));
+        }
+        if(SLOTS_INTERNAL != null && SLOTS_INTERNAL.getSlots() > 0) {
+            SLOTS_INTERNAL.deserializeNBT((NBTTagCompound) nbt.getTag("INTERNAL"));
+        }
+        if(SLOTS_UPGRADES != null && SLOTS_UPGRADES.getSlots() > 0) {
+            SLOTS_UPGRADES.deserializeNBT((NBTTagCompound) nbt.getTag("UPGRADES"));
+        }
 	}	
 	
 	@Override
@@ -242,6 +280,57 @@ public class BaseTileEntity extends TileEntity implements ITickable {
     	}
 		return null;
     }
+    public EnumFacing getFacingFromBlockSide(BlockSide side) {
+    	EnumFacing facing = EnumFacing.getHorizontal(this.getBlockMetadata());
+    	switch(facing) {
+    	case NORTH:
+        	switch(side) {
+	    	case Front : return EnumFacing.NORTH;
+	    	case Back : return EnumFacing.SOUTH;
+	    	case Top : return EnumFacing.UP;
+	    	case Bottom : return EnumFacing.DOWN;
+	    	case Right : return EnumFacing.EAST;
+	    	case Left : return EnumFacing.WEST;
+        	}
+    	case SOUTH:
+        	switch(side) {
+	    	case Front : return EnumFacing.NORTH;
+	    	case Back : return EnumFacing.SOUTH;
+	    	case Top : return EnumFacing.UP;
+	    	case Bottom : return EnumFacing.DOWN;
+	    	case Right : return EnumFacing.WEST;
+	    	case Left : return EnumFacing.EAST;
+        	}
+    	case EAST:
+        	switch(side) {
+	    	case Front : return EnumFacing.EAST;
+	    	case Back : return EnumFacing.WEST;
+	    	case Top : return EnumFacing.UP;
+	    	case Bottom : return EnumFacing.DOWN;
+	    	case Right : return EnumFacing.SOUTH;
+	    	case Left : return EnumFacing.NORTH;
+        	}
+    	case WEST:
+        	switch(side) {
+	    	case Front : return EnumFacing.WEST;
+	    	case Back : return EnumFacing.EAST;
+	    	case Top : return EnumFacing.UP;
+	    	case Bottom : return EnumFacing.DOWN;
+	    	case Right : return EnumFacing.NORTH;
+	    	case Left : return EnumFacing.SOUTH;
+        	}
+    	default:
+        	switch(side) {
+	    	case Front : return EnumFacing.NORTH;
+	    	case Back : return EnumFacing.SOUTH;
+	    	case Top : return EnumFacing.UP;
+	    	case Bottom : return EnumFacing.DOWN;
+	    	case Right : return EnumFacing.EAST;
+	    	case Left : return EnumFacing.WEST;
+        	}
+    	}
+		return null;
+    }
     public Mode getSideModeFromSide(Side side) {
     	switch(side) {
 	    	case XPos : return SIDE_MODES[5];
@@ -290,8 +379,8 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 		}
 	}
 
-    public TileEntity getTEFromBlockSide(SidePicker.BlockSide blockSide, EnumFacing facing) {
-    	SidePicker.Side side = SidePicker.Side.getSideFromBlockSide(blockSide, facing);
+    public TileEntity getTEFromBlockSide(OldSidePicker.BlockSide blockSide, EnumFacing facing) {
+    	OldSidePicker.Side side = OldSidePicker.getSideFromBlockSide(blockSide, facing);
     	switch(side) {
     	case YNeg : 
     		return worldObj.getTileEntity(pos.offset(EnumFacing.DOWN));
@@ -310,8 +399,8 @@ public class BaseTileEntity extends TileEntity implements ITickable {
     	}
 		return null;
     }
-    public int getBlockXCoord(SidePicker.BlockSide blockSide, EnumFacing facing) {
-    	SidePicker.Side side = SidePicker.Side.getSideFromBlockSide(blockSide, facing);
+    public int getBlockXCoord(OldSidePicker.BlockSide blockSide, EnumFacing facing) {
+    	OldSidePicker.Side side = OldSidePicker.getSideFromBlockSide(blockSide, facing);
     	switch(side) {
     	case YNeg : 
     		return 0;
@@ -330,8 +419,8 @@ public class BaseTileEntity extends TileEntity implements ITickable {
     	}
 		return 0;
     } 
-    public int getBlockZCoord(SidePicker.BlockSide blockSide, EnumFacing facing) {
-    	SidePicker.Side side = SidePicker.Side.getSideFromBlockSide(blockSide, facing);
+    public int getBlockZCoord(OldSidePicker.BlockSide blockSide, EnumFacing facing) {
+    	OldSidePicker.Side side = OldSidePicker.getSideFromBlockSide(blockSide, facing);
     	switch(side) {
     	case YNeg : 
     		return 0;
@@ -350,8 +439,8 @@ public class BaseTileEntity extends TileEntity implements ITickable {
     	}
 		return 0;
     } 
-    public int getBlockYCoord(SidePicker.BlockSide blockSide, EnumFacing facing) {
-    	SidePicker.Side side = SidePicker.Side.getSideFromBlockSide(blockSide, facing);
+    public int getBlockYCoord(OldSidePicker.BlockSide blockSide, EnumFacing facing) {
+    	OldSidePicker.Side side = OldSidePicker.getSideFromBlockSide(blockSide, facing);
     	switch(side) {
     	case YNeg : 
     		return -1;
@@ -411,7 +500,7 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 		}
 		return false;
     }
-    public void outputItem(int fromSlot, SidePicker.BlockSide blockSide, int startSlot, boolean backwards) {
+    public void outputItem(int fromSlot, OldSidePicker.BlockSide blockSide, int startSlot, boolean backwards) {
 		if (getSideModeFromBlockSide(blockSide) == SideModeList.Mode.Output || getSideModeFromBlockSide(blockSide) == SideModeList.Mode.Disabled) {
 			ItemStack stack = SLOTS_OUTPUT.getStackInSlot(fromSlot);
 			if (stack == null) {
@@ -496,7 +585,7 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 			return;
 		}
     }
-	public void inputItem(int inputSlot, SidePicker.BlockSide blockSide, int startSlot) {
+	public void inputItem(int inputSlot, OldSidePicker.BlockSide blockSide, int startSlot) {
 		if (getSideModeFromBlockSide(blockSide) == SideModeList.Mode.Input || getSideModeFromBlockSide(blockSide) == SideModeList.Mode.Disabled) {
 			EnumFacing facing = worldObj.getBlockState(pos).getValue(BlockHorizontal.FACING);
 			TileEntity te = getTEFromBlockSide(blockSide, facing);
@@ -541,15 +630,15 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 			if(IN_TIMER>0) {
 				if(IN_TIMER >= IN_TIME) {
 					switch(rand) {
-					case 0: inputItem(slot, SidePicker.BlockSide.Top, 0);
+					case 0: inputItem(slot, OldSidePicker.BlockSide.Top, 0);
 							break;
-					case 1: inputItem(slot, SidePicker.BlockSide.Bottom, 0);
+					case 1: inputItem(slot, OldSidePicker.BlockSide.Bottom, 0);
 							break;
-					case 2: inputItem(slot, SidePicker.BlockSide.Right, 0);
+					case 2: inputItem(slot, OldSidePicker.BlockSide.Right, 0);
 							break;
-					case 3: inputItem(slot, SidePicker.BlockSide.Left, 0);
+					case 3: inputItem(slot, OldSidePicker.BlockSide.Left, 0);
 							break;
-					case 4: inputItem(slot, SidePicker.BlockSide.Back, 0);
+					case 4: inputItem(slot, OldSidePicker.BlockSide.Back, 0);
 							break;
 					default:
 						break;
@@ -569,15 +658,15 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 					int rand = randomGenerator.nextInt(5);
 				if(OUT_TIMER >= OUT_TIME) {
 					switch(rand) {
-					case 0: outputItem(slot, SidePicker.BlockSide.Top, 0, false);
+					case 0: outputItem(slot, OldSidePicker.BlockSide.Top, 0, false);
 							break;
-					case 1: outputItem(slot, SidePicker.BlockSide.Bottom, 0, false);
+					case 1: outputItem(slot, OldSidePicker.BlockSide.Bottom, 0, false);
 							break;
-					case 2: outputItem(slot, SidePicker.BlockSide.Right, 0, false);
+					case 2: outputItem(slot, OldSidePicker.BlockSide.Right, 0, false);
 							break;
-					case 3: outputItem(slot, SidePicker.BlockSide.Left, 0, false);
+					case 3: outputItem(slot, OldSidePicker.BlockSide.Left, 0, false);
 							break;
-					case 4: outputItem(slot, SidePicker.BlockSide.Back, 0, false);
+					case 4: outputItem(slot, OldSidePicker.BlockSide.Back, 0, false);
 							break;
 					default:
 						break;
@@ -615,12 +704,19 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 	}
 	
     public boolean hasCapability(net.minecraftforge.common.capabilities.Capability<?> capability, net.minecraft.util.EnumFacing facing){
+    	if(SIDE_MODES[facing.ordinal()] == Mode.Disabled) {
+       		System.out.println(facing);
+    		return false;
+    	}
     	if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
     		return true;
     	}
         return super.hasCapability(capability, facing);
     }
     public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.util.EnumFacing facing){
+       	if(SIDE_MODES[facing.ordinal()] == Mode.Disabled) {
+    		return null;
+    	}
     	if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
     		if(facing == EnumFacing.UP) {
     			return (T) SLOTS_INPUT;
@@ -636,6 +732,10 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 	}
 	
 	public void incrementSide(int side){
+		if(side == 3) {
+			SIDE_MODES[3] = SideModeList.Mode.Disabled;
+			System.out.println(SIDE_MODES[3]);
+		}
 		if(SIDE_MODES[side].ordinal() >= 3) {
 			SIDE_MODES[side] = SideModeList.Mode.values()[0];
 		}else{
@@ -646,5 +746,9 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 		for(int i=0; i<6; i++) {
 			SIDE_MODES[i] = SideModeList.Mode.values()[0];
 		}
+	}
+	public void sync() {
+		IMessage msg = new PacketMachineSync( this);
+		PacketHandler.net.sendToServer(msg);
 	}
 }

@@ -10,11 +10,8 @@ import theking530.staticpower.utils.SideModeList.Mode;
 
 public class TileEntityBattery extends BaseMachine{
 	
-	public Tier TIER;
 	public int MAX_INPUT;
 	public int MAX_OUTPUT;
-	private int INPUT;
-	private int OUTPUT;
 	protected PowerDistributor POWER_DIS;
 	
 	public TileEntityBattery() {
@@ -39,42 +36,12 @@ public class TileEntityBattery extends BaseMachine{
 					POWER_DIS.distributePower();
 				}
 			}
+			sync();
 		}
-	}
-	public void initializeValues() {
-		STORAGE.setMaxExtract(OUTPUT);
-		STORAGE.setMaxReceive(INPUT);
 	}
 	@Override
 	public void upgradeHandler() {
 		
-	}
-	
-	//NBT and Networking
-	@Override  
-	public void readFromNBT(NBTTagCompound nbt) {
-        super.readFromNBT(nbt);
-        TIER = Tier.values()[nbt.getInteger("TIER")];
-        STORAGE.readFromNBT(nbt);
-        MAX_INPUT = nbt.getInteger("MAX_INPUT");
-        MAX_OUTPUT = nbt.getInteger("MAX_OUTPUT");
-        INPUT = nbt.getInteger("INPUT");
-        OUTPUT = nbt.getInteger("OUTPUT");
-    }		
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
-        nbt.setInteger("TIER", TIER.ordinal());
-        STORAGE.writeToNBT(nbt);
-		nbt.setInteger("MAX_INPUT", MAX_INPUT);
-		nbt.setInteger("MAX_OUTPUT", MAX_OUTPUT);
-		nbt.setInteger("INPUT", STORAGE.getMaxReceive());
-		nbt.setInteger("OUTPUT", STORAGE.getMaxExtract());
-		return nbt;
-	}	    
-	@Override
-    public void onDataPacket(net.minecraft.network.NetworkManager net, net.minecraft.network.play.server.SPacketUpdateTileEntity pkt) {
-		readFromNBT(pkt.getNbtCompound());
 	}
 	  
 	//Tab Integration
@@ -87,12 +54,7 @@ public class TileEntityBattery extends BaseMachine{
 	}
 	@Override
 	public String getName() {
-		switch(TIER) {
-			case STATIC: return "Static Battery";
-			case ENERGIZED: return "Energized Battery";
-			case LUMUM: return "Lumum Battery";
-			default: return "Battery";	
-		}		
+		return "Battery";	
 	}
 	
 	//Energy

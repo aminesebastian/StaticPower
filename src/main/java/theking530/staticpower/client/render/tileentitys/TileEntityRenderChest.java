@@ -12,7 +12,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.assists.Tier;
-import theking530.staticpower.tileentity.TileEntityBaseChest;
+import theking530.staticpower.tileentity.chest.TileEntityBaseChest;
 
 @SideOnly(Side.CLIENT)
 public class TileEntityRenderChest extends TileEntitySpecialRenderer<TileEntity> {

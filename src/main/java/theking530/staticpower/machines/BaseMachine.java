@@ -5,10 +5,16 @@ import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundCategory;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.items.upgrades.BasePowerUpgrade;
 import theking530.staticpower.items.upgrades.BaseSpeedUpgrade;
 import theking530.staticpower.power.StaticEnergyStorage;
@@ -42,6 +48,8 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	public int UPDATE_TIME = 0;
 	
 	public int BATTERY_SLOT = -1;
+	public int PREV_STORAGE = 0;
+	public int CURRENT_RF_TICK = 0;
 	
 	public BaseMachine() {
 	}
@@ -83,27 +91,14 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		return STORAGE.getEnergyStored() > 0 ? true : false;
 	}
 	public int useEnergy(int energyCost) {
-		int tempCost = 0;
-		if(STORAGE.getEnergyStored() - energyCost >= 0) {
-			tempCost = energyCost;
-			STORAGE.setEnergyStored(STORAGE.getEnergyStored() - energyCost);	
-		}else{
-			tempCost = STORAGE.getEnergyStored();
-			STORAGE.setEnergyStored(0);
-		}
-		return tempCost;
+		return extractEnergy(null, energyCost, false);
 	}
 	
 	@Override
 	public void update(){
 		upgradeHandler();
+		CURRENT_RF_TICK = STORAGE.getEnergyStored() - PREV_STORAGE;
 		int redstoneSignal = worldObj.getStrongPower(pos);
-		if(UPDATE_TIMER < UPDATE_TIME) {
-			UPDATE_TIMER++;
-		}else{
-			//worldObj.mark
-			UPDATE_TIMER = 0;
-		}
 		if(REDSTONE_MODE == 0) {
 			process();
 			outputFunction();
@@ -131,20 +126,26 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 			UPDATE_TIMER = 0;
 		}
 		if(BATTERY_SLOT != -1) {
-			if(SLOTS_INPUT.getStackInSlot(BATTERY_SLOT) != null && SLOTS_INPUT.getStackInSlot(BATTERY_SLOT).getItem() instanceof IEnergyContainerItem && STORAGE.getEnergyStored() < STORAGE.getMaxEnergyStored()) {
-				IEnergyContainerItem batteryItem = (IEnergyContainerItem) SLOTS_INPUT.getStackInSlot(BATTERY_SLOT).getItem();
-				if(batteryItem.getEnergyStored(SLOTS_INPUT.getStackInSlot(BATTERY_SLOT)) > 0) {
-					if(STORAGE.getMaxEnergyStored() - STORAGE.getEnergyStored() < STORAGE.getMaxReceive()) {
-						STORAGE.receiveEnergy(batteryItem.extractEnergy(SLOTS_INPUT.getStackInSlot(BATTERY_SLOT), STORAGE.getMaxEnergyStored() - STORAGE.getEnergyStored(), false), false);
-					}else{
-						STORAGE.receiveEnergy(batteryItem.extractEnergy(SLOTS_INPUT.getStackInSlot(BATTERY_SLOT), STORAGE.getMaxReceive(), false), false);		
-					}
+			useBattery();
+		}
+		PREV_STORAGE = STORAGE.getEnergyStored();
+	}	
+	public void useBattery() {
+		if(SLOTS_INPUT.getStackInSlot(BATTERY_SLOT) != null && SLOTS_INPUT.getStackInSlot(BATTERY_SLOT).getItem() instanceof IEnergyContainerItem && STORAGE.getEnergyStored() < STORAGE.getMaxEnergyStored()) {
+			IEnergyContainerItem batteryItem = (IEnergyContainerItem) SLOTS_INPUT.getStackInSlot(BATTERY_SLOT).getItem();
+			if(batteryItem.getEnergyStored(SLOTS_INPUT.getStackInSlot(BATTERY_SLOT)) > 0) {
+				if(STORAGE.getMaxEnergyStored() - STORAGE.getEnergyStored() < STORAGE.getMaxReceive()) {
+					STORAGE.receiveEnergy(batteryItem.extractEnergy(SLOTS_INPUT.getStackInSlot(BATTERY_SLOT), STORAGE.getMaxEnergyStored() - STORAGE.getEnergyStored(), false), false);
+				}else{
+					STORAGE.receiveEnergy(batteryItem.extractEnergy(SLOTS_INPUT.getStackInSlot(BATTERY_SLOT), STORAGE.getMaxReceive(), false), false);		
 				}
 			}
 		}
-	}				
-	public void process(){
-		
+	}
+	@Override
+	public void onPlaced(){
+		PREV_STORAGE = STORAGE.getEnergyStored();
+		sync();
 	}
 	public void upgradeHandler(){
 		powerUpgrade();		
@@ -207,6 +208,22 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		return 0;
 	}
 	
+	@Override
+	public void readFromSyncNBT(NBTTagCompound nbt) {
+		super.readFromSyncNBT(nbt);
+		STORAGE.readFromNBT(nbt);
+		PROCESSING_TIMER = nbt.getInteger("PTIMER");
+		MOVE_TIMER = nbt.getInteger("MTIMER");
+	}
+	@Override
+	public NBTTagCompound writeToSyncNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+		STORAGE.writeToNBT(nbt);
+		nbt.setInteger("PTIMER", PROCESSING_TIMER);
+		nbt.setInteger("MTIMER", MOVE_TIMER);
+		return nbt;
+	}
+	
     @Override  
 	public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
@@ -219,6 +236,11 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
         STORAGE.writeToNBT(nbt);
         nbt.setInteger("P_TIMER", PROCESSING_TIMER);
         return nbt;
+	}
+	
+	public void onMachinePlaced(NBTTagCompound nbt) {
+		super.onMachinePlaced(nbt);
+        STORAGE.readFromNBT(nbt);
 	}
 	
 	public ItemStack[] craftingResults(ItemStack[] items) {
@@ -251,14 +273,19 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	}
 	@Override
 	public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
+		if(!worldObj.isRemote) {
+			sync();
+		}
 		return STORAGE.extractEnergy(maxExtract, simulate);
 	}
 	@Override
 	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
+		if(!worldObj.isRemote) {
+			sync();
+		}
 		return STORAGE.receiveEnergy(maxReceive, simulate);
 	}
 	public int getProcessingCost(){
 		return (INITIAL_POWER_USE*PROCESSING_ENERGY_MULT);
 	}
-
 }

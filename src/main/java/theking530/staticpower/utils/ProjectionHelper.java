@@ -5,11 +5,12 @@ package theking530.staticpower.utils;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.util.math.BlockPos;
-
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
+
+import net.minecraft.client.renderer.GLAllocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 
 public class ProjectionHelper {
 
@@ -29,23 +30,23 @@ public class ProjectionHelper {
 		GL11.glGetInteger(GL11.GL_VIEWPORT, viewport);
 	}
 
-	public BlockPos unproject(float winX, float winY, float winZ) {
+	public Vec3d unproject(float winX, float winY, float winZ) {
 		GLU.gluUnProject(winX, winY, winZ, modelview, projection, viewport, objectCoords);
 
 		float objectX = objectCoords.get(0);
 		float objectY = objectCoords.get(1);
 		float objectZ = objectCoords.get(2);
 
-		return new BlockPos(objectX, objectY, objectZ);
+		return new Vec3d(objectX, objectY, objectZ);
 	}
 
-	public BlockPos project(float objX, float objY, float objZ) {
+	public Vec3d project(float objX, float objY, float objZ) {
 		GLU.gluProject(objX, objY, objZ, modelview, projection, viewport, winCoords);
 
 		float winX = winCoords.get(0);
 		float winY = winCoords.get(1);
 		float winZ = winCoords.get(2);
 		
-		return new BlockPos(winX, winY, winZ);
+		return new Vec3d(winX, winY, winZ);
 	}
 }

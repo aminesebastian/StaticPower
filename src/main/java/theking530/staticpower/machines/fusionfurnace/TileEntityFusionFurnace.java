@@ -10,9 +10,8 @@ import theking530.staticpower.utils.InventoryUtilities;
 
 public class TileEntityFusionFurnace extends BaseMachine {
 	
-
 	public TileEntityFusionFurnace() {
-		initializeBasicMachine(2, 1000, 100000, 80, 100, 4, 4, 1);
+		initializeBasicMachine(2, 1000, 100000, 80, 100, 5, 5, 1);
 	}	
 	//IInventory				
 	@Override

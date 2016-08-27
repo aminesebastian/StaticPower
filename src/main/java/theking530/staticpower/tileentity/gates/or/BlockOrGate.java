@@ -24,16 +24,16 @@ public class BlockOrGate extends BlockLogicGate {
 	public TileEntity createNewTileEntity(World world, int i) {
 		return new TileEntityOrGate();
 	}
-	public String getDescrption(){
+	public String getDescrption(ItemStack stack){
 		return "Emits a redstone signal if any input is true.";	
 	}
-	public String getInputDescrption(){
+	public String getInputDescrption(ItemStack stack){
 		return "Input to evaluate.";
 	}
-	public String getOutputDescrption(){
+	public String getOutputDescrption(ItemStack stack){
 		return "Regular OR output.";
 	}
-	public String getExtraDescrption(){
+	public String getExtraDescrption(ItemStack stack){
 		return "Exclusive OR (XOR) output.";
 	}
 }

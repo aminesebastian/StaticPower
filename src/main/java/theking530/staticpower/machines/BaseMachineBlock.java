@@ -1,8 +1,8 @@
 package theking530.staticpower.machines;
 
-import java.util.ArrayList;
-
 import api.IWrenchable;
+import api.RegularWrenchMode;
+import api.SneakWrenchMode;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -21,15 +21,15 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.assists.Reference;
 import theking530.staticpower.assists.RegisterHelper;
 import theking530.staticpower.blocks.BaseItemBlock;
 import theking530.staticpower.tileentity.BaseTileEntity;
+import theking530.staticpower.utils.OldSidePicker;
 
 public class BaseMachineBlock extends BlockContainer implements IWrenchable {
 
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
-	
+
 	protected BaseMachineBlock(String name) {
 		super(Material.IRON);
 		setCreativeTab(StaticPower.StaticPower);
@@ -94,19 +94,38 @@ public class BaseMachineBlock extends BlockContainer implements IWrenchable {
 		EnumFacing enumfacing = (placer == null) ? EnumFacing.NORTH : EnumFacing.fromAngle(placer.rotationYaw);
         return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
     }
+    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
+		if(world.getTileEntity(pos) instanceof BaseMachine) {
+			BaseMachine tempMachine = (BaseMachine)world.getTileEntity(pos);
+			if(placer.getHeldItemMainhand().hasTagCompound()) {
+				tempMachine.onMachinePlaced(placer.getHeldItemMainhand().getTagCompound());
+			}
+		}
+		super.onBlockPlacedBy(world, pos, state, placer, stack);
+    }
 	@Override
 	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
 		return null;
 	}
 	@Override
-	public void wrenchBlock(EntityPlayer player, World world, BlockPos pos, EnumFacing facing, boolean returnDrops) {
-		int currentMeta = getMetaFromState(world.getBlockState(pos));
-		if(facing != EnumFacing.UP && facing != EnumFacing.DOWN) {
-			if(facing != world.getBlockState(pos).getValue(FACING)) {
-				world.setBlockState(pos, world.getBlockState(pos).withProperty(FACING, facing), 2);	
+	public void wrenchBlock(EntityPlayer player, RegularWrenchMode mode, ItemStack wrench, World world, BlockPos pos, EnumFacing facing, boolean returnDrops) {
+		if(!world.isRemote) {
+			if(mode == RegularWrenchMode.ROTATE) {
+				if(facing != EnumFacing.UP && facing != EnumFacing.DOWN) {
+					if(facing != world.getBlockState(pos).getValue(FACING)) {
+						world.setBlockState(pos, world.getBlockState(pos).withProperty(FACING, facing), 2);	
+					}else{
+						world.setBlockState(pos, world.getBlockState(pos).withProperty(FACING, facing.getOpposite()), 2);	
+					}
+				}	
 			}else{
-				world.setBlockState(pos, world.getBlockState(pos).withProperty(FACING, facing.getOpposite()), 2);	
-			}
+				int currentMeta = getMetaFromState(world.getBlockState(pos));
+				BaseTileEntity TE = (BaseTileEntity) world.getTileEntity(pos);
+
+				TE.incrementSide(OldSidePicker.getAdjustedEnumFacing(facing, currentMeta).ordinal());
+				TE.sync();
+				TE.markForUpdate();
+			}	
 		}
 	}	
 	@Override
@@ -114,46 +133,16 @@ public class BaseMachineBlock extends BlockContainer implements IWrenchable {
 		return true;
 	}
 	@Override
-	public void sneakWrenchBlock(EntityPlayer player, World world, BlockPos pos, EnumFacing facing, boolean returnDrops) {
-		ArrayList<ItemStack> items = new ArrayList();
+	public void sneakWrenchBlock(EntityPlayer player, SneakWrenchMode mode, ItemStack wrench, World world, BlockPos pos, EnumFacing facing, boolean returnDrops){
 		NBTTagCompound nbt = new NBTTagCompound();
 		ItemStack machineStack = new ItemStack(Item.getItemFromBlock(this));
 		if(world.getTileEntity(pos) instanceof BaseTileEntity) {
 			BaseTileEntity tempMachine = (BaseTileEntity)world.getTileEntity(pos);
-			tempMachine.writeToNBT(nbt);
+			tempMachine.onMachineBroken(nbt);
 			machineStack.setTagCompound(nbt);
-
-			for(int i=0; i<tempMachine.SLOTS_INPUT.getSlots(); i++) {
-				if(tempMachine.SLOTS_INPUT.getStackInSlot(i) != null) {
-					items.add(tempMachine.SLOTS_INPUT.getStackInSlot(i).copy());
-				}
-			}
-			for(int i=0; i<tempMachine.SLOTS_OUTPUT.getSlots(); i++) {
-				if(tempMachine.SLOTS_OUTPUT.getStackInSlot(i) != null) {
-					items.add(tempMachine.SLOTS_OUTPUT.getStackInSlot(i).copy());
-				}
-			}
-			for(int i=0; i<tempMachine.SLOTS_INTERNAL.getSlots(); i++) {
-				if(tempMachine.SLOTS_INTERNAL.getStackInSlot(i) != null) {
-					items.add(tempMachine.SLOTS_INTERNAL.getStackInSlot(i).copy());
-				}
-			}
-			for(int i=0; i<tempMachine.SLOTS_UPGRADES.getSlots(); i++) {
-				if(tempMachine.SLOTS_UPGRADES.getStackInSlot(i) != null) {
-					items.add(tempMachine.SLOTS_UPGRADES.getStackInSlot(i).copy());
-				}
-			}
-
-		}
-		items.add(machineStack);
-		
-		if(items != null) {
-			for(int i=0; i<items.size(); i++) {
-				EntityItem droppedItem = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(),items.get(i));
-				world.spawnEntityInWorld(droppedItem);
-			}
-			//breakBlock(world, x, y, z, this, world.getBlockMetadata(x, y, z));
-			world.setBlockToAir(pos);
 		}		
+		EntityItem droppedItem = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), machineStack);
+		world.spawnEntityInWorld(droppedItem);
+		world.setBlockToAir(pos);	
 	}
 }

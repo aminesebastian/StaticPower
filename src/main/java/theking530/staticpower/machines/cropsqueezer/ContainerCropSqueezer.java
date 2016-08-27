@@ -6,9 +6,11 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.SlotItemHandler;
+import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistry;
 
 public class ContainerCropSqueezer extends Container {
@@ -23,7 +25,9 @@ public class ContainerCropSqueezer extends Container {
 	private int upgradeSlotY;
 	public ContainerCropSqueezer(InventoryPlayer invPlayer, TileEntityCropSqueezer teCropSqueezer) {
 		PROCESSING_TIMER = 0;
-
+		ENERGY_STORED = 0;
+		FLUID_AMOUNT = 0;
+		
 		CropSqueezer = teCropSqueezer;
 		
 		//Input
@@ -111,29 +115,7 @@ public class ContainerCropSqueezer extends Container {
 	
 	public void detectAndSendChanges(){
         super.detectAndSendChanges();
-        for (int i = 0; i < this.listeners.size(); ++i){
-            IContainerListener icontainerlistener = (IContainerListener)this.listeners.get(i);
-            if(PROCESSING_TIMER != CropSqueezer.PROCESSING_TIMER){
-                icontainerlistener.sendProgressBarUpdate(this, 0, CropSqueezer.PROCESSING_TIMER);
-            }
-            if(ENERGY_STORED != CropSqueezer.STORAGE.getEnergyStored()) {
-                icontainerlistener.sendProgressBarUpdate(this, 1, CropSqueezer.STORAGE.getEnergyStored());
-            }
-            if(FLUID_AMOUNT != CropSqueezer.TANK.getFluidAmount()) {
-                icontainerlistener.sendProgressBarUpdate(this, 2, CropSqueezer.TANK.getFluidAmount());
-            }
-        }
-        PROCESSING_TIMER = CropSqueezer.PROCESSING_TIMER;
-        ENERGY_STORED = CropSqueezer.STORAGE.getEnergyStored();
-        FLUID_AMOUNT = CropSqueezer.TANK.getFluidAmount();
-    }
-    @SideOnly(Side.CLIENT)
-    public void updateProgressBar(int id, int data) {
-    	if(id == 0) {
-    		CropSqueezer.PROCESSING_TIMER = data;
-    	}else if(id == 1) {
-    		CropSqueezer.STORAGE.setEnergyStored(data);
-    	}
+        CropSqueezer.sync();
     }
 }
 

@@ -51,7 +51,9 @@ public class RenderUtil {
 			Tessellator tessellator = Tessellator.getInstance();
 	        VertexBuffer vertexbuffer = tessellator.getBuffer();
 	        vertexbuffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-	
+			GL11.glRotated(180, 0, 1, 0);
+			GL11.glScaled(1, 1, -1);
+			GL11.glTranslated(-1, 0, 0);
 			vertexbuffer.pos(x+width, y+height, z).tex(uMax, vMax).endVertex();
 			vertexbuffer.pos(x+width, y, z).tex(uMax, vMin).endVertex();
 			vertexbuffer.pos(x, y, z).tex(uMin, vMin).endVertex();
@@ -75,8 +77,7 @@ public class RenderUtil {
 		vertexbuffer.pos(x+width, y+(height*ratio), z).tex(1, ratio).endVertex();
 		vertexbuffer.pos(x+width, y, z).tex(1, 0).endVertex();
 		vertexbuffer.pos(x, y, z).tex(0, 0).endVertex();
-		vertexbuffer.pos(x, y+(height*ratio), z).tex(0, ratio).endVertex();	
-			
+		vertexbuffer.pos(x, y+(height*ratio), z).tex(0, ratio).endVertex();		
 		tessellator.draw();		
 		GL11.glPopMatrix();
 	}

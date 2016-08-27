@@ -20,25 +20,27 @@ public class PowerDistributor {
 	
 	public void distributePower() {
 		if(E_STORAGE != null && TE != null) { 
-			if(E_STORAGE.getEnergyStored() > 0) {
-				for(int i=0; i<6; i++) {
-					EnumFacing facing = EnumFacing.values()[i];
-					if(TE instanceof BaseTileEntity) {
-						BaseTileEntity tempTe = (BaseTileEntity)TE;
-						if(tempTe.getModeFromInt(i) == Mode.Output || tempTe.getModeFromInt(i) == Mode.Regular) {
+			if(!TE.getWorld().isRemote) {
+				if(E_STORAGE.getEnergyStored() > 0) {
+					for(int i=0; i<6; i++) {
+						EnumFacing facing = EnumFacing.values()[i];
+						if(TE instanceof BaseTileEntity) {
+							BaseTileEntity tempTe = (BaseTileEntity)TE;
+							if(tempTe.getModeFromInt(i) == Mode.Output || tempTe.getModeFromInt(i) == Mode.Regular) {
+								if(E_STORAGE.getEnergyStored() > E_STORAGE.getMaxExtract()) {
+									provideRF(facing, E_STORAGE.getMaxExtract());
+								}else{
+									provideRF(facing, E_STORAGE.getEnergyStored());
+								}
+							}
+						}else{
 							if(E_STORAGE.getEnergyStored() > E_STORAGE.getMaxExtract()) {
 								provideRF(facing, E_STORAGE.getMaxExtract());
 							}else{
 								provideRF(facing, E_STORAGE.getEnergyStored());
 							}
 						}
-					}else{
-						if(E_STORAGE.getEnergyStored() > E_STORAGE.getMaxExtract()) {
-							provideRF(facing, E_STORAGE.getMaxExtract());
-						}else{
-							provideRF(facing, E_STORAGE.getEnergyStored());
-						}
-					}
+					}	
 				}	
 			}
 		}

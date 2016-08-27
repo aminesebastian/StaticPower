@@ -3,20 +3,24 @@ package theking530.staticpower.machines.batteries;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityBattery;
 
 
 public class ContainerBattery extends Container {
 	
-	private TileEntityBattery Battery;
-	private int PROCESSING_TIME;
+	private TileEntityBattery BATTERY;
+	private int ENERGY_STORED;
 	
 	public ContainerBattery(InventoryPlayer invPlayer, TileEntityBattery teBattery) {
-		Battery = teBattery;
+		ENERGY_STORED = 0;
+		BATTERY = teBattery;
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
 				this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
@@ -100,18 +104,11 @@ public class ContainerBattery extends Container {
 	    }
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
-		return Battery.isUseableByPlayer(player);
+		return BATTERY.isUseableByPlayer(player);
 	}
-	//Detect Changes
-	public void detectAndSendChanges() {
-		super.detectAndSendChanges();
-		this.PROCESSING_TIME = this.Battery.PROCESSING_TIME;
-	}
-	//Send Gui Update
-	public void updateProgressBar(int i, int j) {
-		if (i == 0) {
-			Battery.PROCESSING_TIME = j;
-			}		
-		}
-	}
+	public void detectAndSendChanges(){
+        super.detectAndSendChanges();
+        BATTERY.sync();
+    }
+}
 

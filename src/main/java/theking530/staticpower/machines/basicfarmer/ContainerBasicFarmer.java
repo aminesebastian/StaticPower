@@ -11,6 +11,7 @@ import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemHoe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import theking530.staticpower.items.upgrades.BaseUpgrade;
 import theking530.staticpower.items.upgrades.IMachineUpgrade;
@@ -53,7 +54,7 @@ public class ContainerBasicFarmer extends Container {
 		this.addSlotToContainer(new SlotItemHandler(teFarmer.SLOTS_INPUT, 2, 37, 8) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
-		          return itemStack.getItem() instanceof ItemBucket;
+		          return itemStack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
 		        }
 		});
 		this.addSlotToContainer(new SlotItemHandler(teFarmer.SLOTS_INPUT, 3, 8, 71) {
@@ -133,20 +134,7 @@ public class ContainerBasicFarmer extends Container {
 	//Detect Changes
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
-        for (int i = 0; i < this.listeners.size(); ++i){
-            IContainerListener icontainerlistener = (IContainerListener)this.listeners.get(i);
-            if(ENERGY_STORED != FARMER.STORAGE.getEnergyStored()) {
-                icontainerlistener.sendProgressBarUpdate(this, 0, FARMER.STORAGE.getEnergyStored());
-            }
-        }
-        ENERGY_STORED = FARMER.STORAGE.getEnergyStored();
+		FARMER.sync();
 	}
-	
-	//Send Gui Update
-	public void updateProgressBar(int i, int j) {		
-    	if(i == 0) {
-    		FARMER.STORAGE.setEnergyStored(j);
-    	}
-	}	
 }
 

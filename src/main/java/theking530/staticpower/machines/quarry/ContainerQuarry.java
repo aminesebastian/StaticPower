@@ -3,24 +3,25 @@ package theking530.staticpower.machines.quarry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.SlotItemHandler;
 import theking530.staticpower.client.gui.widgets.SlotFilter;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 
 public class ContainerQuarry extends Container {
 	
-	private TileEntityQuarry Quarry;
-	private int PROCESSING_TIME;
-	private int FLUID_AMOUNT;
-	private int lastItemInfusionTime;
+	private TileEntityQuarry QUARRY;
+	private int ENERGY_STORED;
 	
 	public ContainerQuarry(InventoryPlayer invPlayer, TileEntityQuarry teQuarry) {
-		FLUID_AMOUNT = 0;
+		ENERGY_STORED = 0;
 		
-		Quarry = teQuarry;
+		QUARRY = teQuarry;
 		
 		//Filter
 		this.addSlotToContainer(new SlotFilter(teQuarry.SLOTS_INTERNAL, 0, 8, 71) {
@@ -92,17 +93,12 @@ public class ContainerQuarry extends Container {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
-		return Quarry.isUseableByPlayer(player);
+		return QUARRY.isUseableByPlayer(player);
 	}
 	
-	//Detect Changes
-	public void detectAndSendChanges() {
-		super.detectAndSendChanges();
-	}
-	
-	//Send Gui Update
-	public void updateProgressBar(int i, int j) {		
-	}
-	
+	public void detectAndSendChanges(){
+        super.detectAndSendChanges();
+        QUARRY.sync();
+    }	
 }
 

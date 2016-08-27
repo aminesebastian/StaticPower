@@ -111,8 +111,8 @@ public class TileEntityCropSqueezer extends BaseMachineWithTank {
 				PROCESSING_TIMER++;
 			}else{				
 				if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, 0, getResult(SLOTS_INTERNAL.getStackInSlot(0)))) {
-					SLOTS_OUTPUT.insertItem(0, getResult(SLOTS_INTERNAL.getStackInSlot(0)).copy(), false);
 					TANK.fill(getFluidResult(SLOTS_INTERNAL.getStackInSlot(0)), true);
+					SLOTS_OUTPUT.insertItem(0, getResult(SLOTS_INTERNAL.getStackInSlot(0)).copy(), false);
 					SLOTS_INTERNAL.setStackInSlot(0, null);
 					PROCESSING_TIMER = 0;
 					markForUpdate();

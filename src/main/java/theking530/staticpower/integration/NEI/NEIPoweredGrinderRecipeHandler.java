@@ -80,7 +80,7 @@ public class NEIPoweredGrinderRecipeHandler extends TemplateRecipeHandler {
 	}
     @Override
     public void loadTransferRects() {
-        transferRects.add(new RecipeTransferRect(new Rectangle(74, 23, 24, 18), "grinding"));
+        transferRects.add(new RecipeTransferRect(new Rectangle(78, 28, 22, 16), "grinding"));
     }
     @Override
     public Class<? extends GuiContainer> getGuiClass() {

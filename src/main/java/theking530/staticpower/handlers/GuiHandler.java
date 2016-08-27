@@ -32,6 +32,9 @@ import theking530.staticpower.machines.fluidinfuser.TileEntityFluidInfuser;
 import theking530.staticpower.machines.fusionfurnace.ContainerFusionFurnace;
 import theking530.staticpower.machines.fusionfurnace.GuiFusionFurnace;
 import theking530.staticpower.machines.fusionfurnace.TileEntityFusionFurnace;
+import theking530.staticpower.machines.mechanicalsqueezer.ContainerMechanicalSqueezer;
+import theking530.staticpower.machines.mechanicalsqueezer.GuiMechanicalSqueezer;
+import theking530.staticpower.machines.mechanicalsqueezer.TileEntityMechanicalSqueezer;
 import theking530.staticpower.machines.poweredfurnace.ContainerPoweredFurnace;
 import theking530.staticpower.machines.poweredfurnace.GuiPoweredFurnace;
 import theking530.staticpower.machines.poweredfurnace.TileEntityPoweredFurnace;
@@ -44,9 +47,15 @@ import theking530.staticpower.machines.quarry.TileEntityQuarry;
 import theking530.staticpower.machines.solderingtable.ContainerSolderingTable;
 import theking530.staticpower.machines.solderingtable.GuiSolderingTable;
 import theking530.staticpower.machines.solderingtable.TileEntitySolderingTable;
-import theking530.staticpower.tileentity.energizedchest.ContainerEnergizedChest;
-import theking530.staticpower.tileentity.energizedchest.GuiEnergizedChest;
-import theking530.staticpower.tileentity.energizedchest.TileEntityEnergizedChest;
+import theking530.staticpower.tileentity.chest.energizedchest.ContainerEnergizedChest;
+import theking530.staticpower.tileentity.chest.energizedchest.GuiEnergizedChest;
+import theking530.staticpower.tileentity.chest.energizedchest.TileEntityEnergizedChest;
+import theking530.staticpower.tileentity.chest.lumumchest.ContainerLumumChest;
+import theking530.staticpower.tileentity.chest.lumumchest.GuiLumumChest;
+import theking530.staticpower.tileentity.chest.lumumchest.TileEntityLumumChest;
+import theking530.staticpower.tileentity.chest.staticchest.ContainerStaticChest;
+import theking530.staticpower.tileentity.chest.staticchest.GuiStaticChest;
+import theking530.staticpower.tileentity.chest.staticchest.TileEntityStaticChest;
 import theking530.staticpower.tileentity.gates.powercell.ContainerPowerCell;
 import theking530.staticpower.tileentity.gates.powercell.GuiPowerCell;
 import theking530.staticpower.tileentity.gates.powercell.TileEntityPowerCell;
@@ -56,12 +65,6 @@ import theking530.staticpower.tileentity.gates.timer.TileEntityTimer;
 import theking530.staticpower.tileentity.gates.transducer.ContainerMultiplier;
 import theking530.staticpower.tileentity.gates.transducer.GuiSignalMultiplier;
 import theking530.staticpower.tileentity.gates.transducer.TileEntitySignalMultiplier;
-import theking530.staticpower.tileentity.lumumchest.ContainerLumumChest;
-import theking530.staticpower.tileentity.lumumchest.GuiLumumChest;
-import theking530.staticpower.tileentity.lumumchest.TileEntityLumumChest;
-import theking530.staticpower.tileentity.staticchest.ContainerStaticChest;
-import theking530.staticpower.tileentity.staticchest.GuiStaticChest;
-import theking530.staticpower.tileentity.staticchest.TileEntityStaticChest;
 import theking530.staticpower.tileentity.vacuumchest.ContainerVacuumChest;
 import theking530.staticpower.tileentity.vacuumchest.GuiVacuumChest;
 import theking530.staticpower.tileentity.vacuumchest.TileEntityVacuumChest;
@@ -93,6 +96,11 @@ public class GuiHandler implements IGuiHandler {
 			case GuiIDRegistry.guiIDCropSqueezer:
 				if (entity instanceof TileEntityCropSqueezer) {	
 					return new ContainerCropSqueezer(player.inventory, (TileEntityCropSqueezer) entity);
+				}
+				return null;
+			case GuiIDRegistry.guiMechanicalSqueezer:
+				if (entity instanceof TileEntityMechanicalSqueezer) {	
+					return new ContainerMechanicalSqueezer(player.inventory, (TileEntityMechanicalSqueezer) entity);
 				}
 				return null;
 			case GuiIDRegistry.guiIDChargingStation:
@@ -197,6 +205,11 @@ public class GuiHandler implements IGuiHandler {
 			case GuiIDRegistry.guiIDCropSqueezer:
 				if (entity instanceof TileEntityCropSqueezer) {	
 					return new GuiCropSqueezer(player.inventory, (TileEntityCropSqueezer) entity);			
+				}
+				return null;
+			case GuiIDRegistry.guiMechanicalSqueezer:
+				if (entity instanceof TileEntityMechanicalSqueezer) {	
+					return new GuiMechanicalSqueezer(player.inventory, (TileEntityMechanicalSqueezer) entity);			
 				}
 				return null;
 			case GuiIDRegistry.guiIDVacuumChest:
