@@ -18,11 +18,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import theking530.staticpower.assists.Reference;
+import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.tileentity.BaseTileEntity;
 import theking530.staticpower.utils.SideModeList.Mode;
 import theking530.staticpower.utils.SidePicker;
 import theking530.staticpower.utils.SidePicker.Side;
+import theking530.staticpower.utils.SideUtils;
 
 public class GuiSideConfigTab extends GuiScreen {
 	
@@ -419,6 +422,7 @@ public class GuiSideConfigTab extends GuiScreen {
 		int tabLeft = GUI_LEFT + j + BLUE_TAB.TAB_XPOS;
 		int tabTop = GUI_TOP + k;
 		renderBlock(1, tabLeft+74, tabTop+125, false);
+		BUTTON = -1;
     }
 
     public void renderBlock(float zLevel, float x, float y, boolean highlight) {
@@ -433,20 +437,21 @@ public class GuiSideConfigTab extends GuiScreen {
     	float multRotateY = (float) Math.pow(MathHelper.sin((float) (rotateX*0.1025)), 2); 
     	float multRotateZ = (float) Math.pow(MathHelper.cos((float) (rotateX*0.1025)), 2); 
 
-        GL11.glPushMatrix();
+      	GL11.glPushMatrix();
 		
         GL11.glTranslatef(x-4, y, 10.0F + zLevel);
         GL11.glScalef(38F, 38F, -10F);
         GL11.glRotatef(210F, 1.0F, 0.0F, 0.0F);
         GL11.glTranslatef(-0.5F, 0.5F, 0.5F);
         GL11.glRotatef(rotateX, 0.0F, 1.0F, 0.0F);
-        GL11.glRotatef(rotateY, -multRotateY, 0.0F, -multRotateZ);
-       // GL11.glRotatef(rotateY, 0.0F, 0.0F, -multRotateZ);
+        GL11.glRotatef(rotateY, -multRotateY, 0.0F, 0.0F);
+        GL11.glRotatef(rotateY, 0.0F, 0.0F, -multRotateZ);
         GL11.glTranslatef(0.5F, -0.5F, -0.5F);              
         GL11.glRotatef(-90F, 0.0F, 1.0F, 0.0F);
+        
         TileEntityRendererDispatcher.instance.renderTileEntityAt(TILE_ENTITY, 0.0, -0.1, 0, 0.0F);
- 
-        SidePicker picker = new SidePicker(1);
+        
+        SidePicker picker = new SidePicker(0.8f);
 
 		theking530.staticpower.utils.SidePicker.HitCoord coord = picker.getNearestHit();
 	        if(coord != null) {	 
@@ -454,22 +459,30 @@ public class GuiSideConfigTab extends GuiScreen {
 	            if(mode != null) {
 	            	switch(mode) {
 	            	case Regular:
-	            		drawHighlight(16777215, coord.side);
+	            		//drawHighlight(16777215, coord.side);
 	            		break;
 	            	case Input:
-	            		drawHighlight(3394815, coord.side);
+	            		//drawHighlight(3394815, coord.side);
 	            		break;
 	            	case Output:
-	            		drawHighlight(16750899, coord.side);
+	            		//drawHighlight(16750899, coord.side);
 	            		break;
 	            	case Disabled:
-	            		drawHighlight(10098969, coord.side);
+	            		//drawHighlight(10098969, coord.side);
 	            		break;
 	            		default:
 	            			break;
 	            	}
 	            }
             this.SIDE = coord.side;
+
+            if(BUTTON == 0) {
+            	//System.out.println("Success!");
+            	BaseTileEntity te2 = ((BaseTileEntity)TILE_ENTITY);
+            	te2.incrementSide(SideUtils.getAdjustedEnumFacing(SideUtils.toEnumFacing(SIDE), SideUtils.getBlockHorizontal(te2.getWorld().getBlockState(te2.getPos()))).ordinal());
+				IMessage msg = new PacketSideConfigTab(te2.SIDE_MODES, te2.getPos());
+				PacketHandler.net.sendToServer(msg);
+            }
 	    }	        
         GL11.glPopMatrix(); 
     }

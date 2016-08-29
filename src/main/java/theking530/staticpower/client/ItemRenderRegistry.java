@@ -179,7 +179,12 @@ public class ItemRenderRegistry {
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.StaticBlock));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.EnergizedBlock));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.LumumBlock));
-		
+		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.BlockCopper));
+		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.BlockTin));
+		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.BlockSilver));
+		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.BlockLead));
+		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.BlockPlatinum));
+
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.StaticLamp));
 		
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.LogicGateBasePlate));

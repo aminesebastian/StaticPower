@@ -32,7 +32,7 @@ public class GuiPowerBar {
 
 	}
 	public List drawText(int currentEnergy, int maxEnergy, int energyPerTick, int powerUse) {
-    	String text = ("Max: " + energyPerTick + " RF/t");
+    	String text = ("Input: " + energyPerTick + " RF/t");
     	if(powerUse > 0) {
     		text += "=" + "Usage: " + powerUse + " RF/t";
     	}

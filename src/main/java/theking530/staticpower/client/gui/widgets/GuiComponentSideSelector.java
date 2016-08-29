@@ -19,8 +19,6 @@ import net.minecraft.util.math.MathHelper;
 import theking530.staticpower.client.BaseComponent;
 import theking530.staticpower.client.gui.widgets.Trackball.TrackballWrapper;
 import theking530.staticpower.utils.OldSidePicker;
-import theking530.staticpower.utils.OldSidePicker.HitCoord;
-import theking530.staticpower.utils.OldSidePicker.Side;
 
 public class GuiComponentSideSelector extends BaseComponent {
 
@@ -64,10 +62,10 @@ public class GuiComponentSideSelector extends BaseComponent {
 		GL11.glScaled(scale, -scale, scale);
 		trackball.update(mouseX - width, -(mouseY - height));
 		if (te != null) TileEntityRendererDispatcher.instance.renderTileEntityAt(te, -0.5, -0.5, -0.5, 0.0F);
+		/**
+		OldSidePicker picker = new OldSidePicker();
 
-		OldSidePicker picker = new OldSidePicker(0.5);
-
-		HitCoord coord = picker.getNearestHit();
+		theking530.staticpower.utils.SidePicker.HitCoord coord = picker.getNearestHit();
 
 		if (coord != null) drawHighlight(tessellator, coord.side, 0x444444);
 
@@ -80,6 +78,7 @@ public class GuiComponentSideSelector extends BaseComponent {
 		lastSideHovered = coord == null? null : coord.side.toEnumFacing(coord.side);
 
 		GL11.glPopMatrix();
+		*/
 	}
 
 	@Override

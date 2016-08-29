@@ -17,6 +17,7 @@ import theking530.staticpower.machines.basicfarmer.BlockBasicFarmer;
 import theking530.staticpower.machines.batteries.BlockBattery;
 import theking530.staticpower.machines.chargingstation.BlockChargingStation;
 import theking530.staticpower.machines.cropsqueezer.BlockCropSqueezer;
+import theking530.staticpower.machines.fermenter.BlockFermenter;
 import theking530.staticpower.machines.fluidgenerator.BlockFluidGenerator;
 import theking530.staticpower.machines.fluidinfuser.BlockFluidInfuser;
 import theking530.staticpower.machines.fusionfurnace.BlockFusionFurnace;
@@ -48,14 +49,20 @@ public class ModBlocks {
 	public static Block BaseConduitBlock;
 	public static Block ChunkLoader;
 	
+	public static Block EnergizedBlock;
+	public static Block StaticBlock;
+	public static Block LumumBlock;
+	public static Block BlockCopper;
+	public static Block BlockTin;
+	public static Block BlockSilver;
+	public static Block BlockLead;
+	public static Block BlockPlatinum;
+	
 	public static Block StaticLamp;
 	public static Block EnergizedLamp;
 	public static Block LumumLamp;
 	public static Block StaticGrass;
 	public static Block EnergizedGrass;
-	public static Block EnergizedBlock;
-	public static Block StaticBlock;
-	public static Block LumumBlock;
 	public static Block MachineBlock;
 	public static Block ObsidianGlass;
 	public static Block LaserFence;
@@ -73,6 +80,7 @@ public class ModBlocks {
 	public static Block AdvancedTank;	
 	public static Block Farmer;
 	public static Block MechanicalSqueezer;
+	public static Block Fermenter;
 	
 	public static Block LogicGateBasePlate;
 	public static Block SignalMultiplier;
@@ -216,6 +224,9 @@ public class ModBlocks {
 		MechanicalSqueezer = new BlockMechanicalSqueezer().setUnlocalizedName("MechanicalSqueezer");
 		RegisterHelper.registerBlock(MechanicalSqueezer);
 		
+		Fermenter = new BlockFermenter().setUnlocalizedName("Fermenter");
+		RegisterHelper.registerBlock(Fermenter);
+		
 		PoweredGrinder = new BlockPoweredGrinder().setUnlocalizedName("PoweredGrinder").setHardness(3.5f);
 		RegisterHelper.registerBlock(PoweredGrinder);
 		
@@ -268,13 +279,26 @@ public class ModBlocks {
 		RegisterHelper.registerBlock(LumumLamp);	
 		
 		StaticBlock = new BaseBlock(Material.IRON, "StaticBlock");
-		RegisterHelper.registerBlock(StaticBlock);
-		
+		RegisterHelper.registerBlock(StaticBlock);	
 		EnergizedBlock = new BaseBlock(Material.IRON, "EnergizedBlock");
-		RegisterHelper.registerBlock(EnergizedBlock);
-		
+		RegisterHelper.registerBlock(EnergizedBlock);	
 		LumumBlock = new BaseBlock(Material.IRON, "LumumBlock");
 		RegisterHelper.registerBlock(LumumBlock);
+		BlockCopper = new BaseBlock(Material.IRON, "BlockCopper");
+		RegisterHelper.registerBlock(BlockCopper);	
+		OreDictionary.registerOre("blockCopper", new ItemStack(BlockCopper));
+		BlockTin = new BaseBlock(Material.IRON, "BlockTin");
+		RegisterHelper.registerBlock(BlockTin);	
+		OreDictionary.registerOre("blockTin", new ItemStack(BlockTin));
+		BlockSilver = new BaseBlock(Material.IRON, "BlockSilver");
+		RegisterHelper.registerBlock(BlockSilver);
+		OreDictionary.registerOre("blockSilver", new ItemStack(BlockSilver));
+		BlockLead = new BaseBlock(Material.IRON, "BlockLead");
+		RegisterHelper.registerBlock(BlockLead);	
+		OreDictionary.registerOre("blockLead", new ItemStack(BlockLead));
+		BlockPlatinum = new BaseBlock(Material.IRON, "BlockPlatinum");
+		RegisterHelper.registerBlock(BlockPlatinum);
+		OreDictionary.registerOre("blockPlatinum", new ItemStack(BlockPlatinum));
 		
 		StaticGrass = new StaticGrass(Material.GRASS).setUnlocalizedName("StaticGrass");
 		RegisterHelper.registerBlock(StaticGrass);

@@ -53,7 +53,7 @@ public class WailaBasicMachineProvider implements IWailaDataProvider{
 		storedString +="Stored: " + GUIUtilities.getStoredPowerFormatted(tempMachine.STORAGE);
 		currenttip.add(storedString);	
 		if(accessor.getPlayer().isSneaking()){
-			currenttip.add("Output: " + EnumTextFormatting.WHITE +GUIUtilities.getMaxExtractFormatted(tempMachine.STORAGE));
+			//currenttip.add("Output: " + EnumTextFormatting.WHITE +GUIUtilities.getMaxExtractFormatted(tempMachine.STORAGE));
 			currenttip.add("Input: " + EnumTextFormatting.WHITE +GUIUtilities.getMaxRecieveFormatted(tempMachine.STORAGE));
 		}else{
 			currenttip.add(EnumTextFormatting.ITALIC + "(Hold Shift)");

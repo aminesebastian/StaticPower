@@ -170,9 +170,16 @@ tile.EnergizedLamp.name=Energized Lamp
 tile.LumumLamp.name=Lumum Lamp
 tile.StaticGrass.name=Static Grass
 tile.EnergizedGrass.name=Energized Grass
+
 tile.StaticBlock.name=§aStatic Metal Block
 tile.EnergizedBlock.name=§bEnergized Metal Block
 tile.LumumBlock.name=§eLumum Metal Block
+tile.BlockCopper.name=Copper Block
+tile.BlockTin.name=Tin Block
+tile.BlockSilver.name=Silver Block
+tile.BlockLead.name=Lead Block
+tile.BlockPlatinum.name=Platinum Block
+
 tile.MachineBlock.name=Machine Block
 tile.ObsidianGlass.name=Obsidian Glass
 tile.CopperOre.name=Copper Ore
@@ -209,7 +216,10 @@ fluid.energizedfluid=§bEnergized Fluid
 tile.energizedfluid.name=§bEnergized Fluid
 fluid.lumumfluid=§eLumum Fluid
 tile.lumumfluid.name=§eLumum Fluid
-
+tile.Ethanol.name = Ethanol
+fluid.Ethanol = Ethanol
+tile.Steam.name = Steam
+fluid.Steam = Steam
 //Gates
 tile.SignalMultiplier.name=Redstone Transducer
 container.SignalMultiplier=Redstone Transducer
@@ -257,6 +267,7 @@ container.IndustrialFurnace=Industrial Furnace
 container.IndustrialGrinder=Industrial Grinder
 container.SolderingTable=Soldering Table
 container.VacuumChest=VacuumChest
+container.Fermenter=Fermenter
 
 //Tools
 item.StaticWrench.name=Static Wrench

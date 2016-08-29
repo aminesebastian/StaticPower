@@ -11,7 +11,7 @@ import theking530.staticpower.items.ModItems;
 
 public class FusionRecipes {
 	
-	public static void registerGrinderRecipe() {
+	public static void registerFusionRecipes() {
 		RegisterHelper.registerFusionRecipe(new ItemStack(Items.SADDLE), new ItemStack(Items.LEATHER), new ItemStack(Items.LEATHER), new ItemStack(Items.LEATHER), new ItemStack(Items.IRON_INGOT), new ItemStack(Items.IRON_INGOT));
 		RegisterHelper.registerFusionRecipe(new ItemStack(Items.CAKE), new ItemStack(Items.EGG), new ItemStack(Items.SUGAR), new ItemStack(Items.WHEAT), new ItemStack(Items.WHEAT), new ItemStack(Items.MILK_BUCKET));
 		RegisterHelper.registerFusionRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.ObsidianGlass), 8), new ItemStack(Item.getItemFromBlock(Blocks.OBSIDIAN)), new ItemStack(Item.getItemFromBlock(Blocks.OBSIDIAN)), new ItemStack(Item.getItemFromBlock(Blocks.OBSIDIAN)),new ItemStack(Item.getItemFromBlock(Blocks.OBSIDIAN)) , new ItemStack(Item.getItemFromBlock(Blocks.GLASS)));

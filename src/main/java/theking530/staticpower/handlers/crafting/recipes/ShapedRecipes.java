@@ -36,17 +36,24 @@ public class ShapedRecipes {
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.ItemConduit), 8), new Object[]{" T ","TGT"," T ",
 			'T', "ingotTin", 'G', Blocks.GLASS}));
 			
-			//Static Block --------------------------------------------------------------------------------------------------
+			//Metal Blocks --------------------------------------------------------------------------------------------------
 			GameRegistry.addRecipe(new ItemStack(ModBlocks.StaticBlock), new Object[]{"XXX","XXX","XXX",
 			'X', ModItems.StaticIngot});
-			
-			//Energized Block --------------------------------------------------------------------------------------------------
 			GameRegistry.addRecipe(new ItemStack(ModBlocks.EnergizedBlock), new Object[]{"XXX","XXX","XXX",
 			'X', ModItems.EnergizedIngot});
-			
-			//Static Block --------------------------------------------------------------------------------------------------
 			GameRegistry.addRecipe(new ItemStack(ModBlocks.LumumBlock), new Object[]{"XXX","XXX","XXX",
 			'X', ModItems.LumumIngot});
+			
+			GameRegistry.addRecipe(new ItemStack(ModBlocks.BlockCopper), new Object[]{"XXX","XXX","XXX",
+			'X', ModItems.CopperIngot});
+			GameRegistry.addRecipe(new ItemStack(ModBlocks.BlockTin), new Object[]{"XXX","XXX","XXX",
+			'X', ModItems.TinIngot});
+			GameRegistry.addRecipe(new ItemStack(ModBlocks.BlockSilver), new Object[]{"XXX","XXX","XXX",
+			'X', ModItems.SilverIngot});
+			GameRegistry.addRecipe(new ItemStack(ModBlocks.BlockLead), new Object[]{"XXX","XXX","XXX",
+			'X', ModItems.LeadIngot});
+			GameRegistry.addRecipe(new ItemStack(ModBlocks.BlockPlatinum), new Object[]{"XXX","XXX","XXX",
+			'X', ModItems.PlatinumIngot});
 			
 			//Ingots ------------------------------------------------------------------------------------------------------------
 			GameRegistry.addRecipe(new ItemStack(ModItems.StaticIngot), new Object[]{"XXX","XXX","XXX",

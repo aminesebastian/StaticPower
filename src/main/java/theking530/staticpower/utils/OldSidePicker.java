@@ -34,43 +34,8 @@ public class OldSidePicker {
 		ZNeg,
 		ZPos;
 	}
-	public static Side fromEnumFacing(EnumFacing dir) {
-		switch (dir) {
-			case WEST:
-				return Side.XNeg;
-			case EAST:
-				return Side.XPos;
-			case DOWN:
-				return Side.YNeg;
-			case UP:
-				return Side.YPos;
-			case NORTH:
-				return Side.ZNeg;
-			case SOUTH:
-				return Side.ZPos;
-			default:
-				break;
-		}
-		return null;
-	}
-	public static EnumFacing toEnumFacing(Side side) {
-		switch (side) {
-			case XNeg:
-				return EnumFacing.WEST;
-			case XPos:
-				return EnumFacing.EAST;
-			case YNeg:
-				return EnumFacing.DOWN;
-			case YPos:
-				return EnumFacing.UP;
-			case ZNeg:
-				return EnumFacing.NORTH;
-			case ZPos:
-				return EnumFacing.SOUTH;
-			default:
-				return null;
-		}
-	}
+
+
 	public static EnumFacing getMachineFront(int metadata) {
 		switch(metadata) {
 			case 0: return EnumFacing.NORTH;
@@ -80,86 +45,7 @@ public class OldSidePicker {
 		}
 		return EnumFacing.NORTH;
 	}
-	public static Side getSideFromBlockSide(BlockSide side, EnumFacing facing) {
-		if(facing.ordinal() != 2 && facing.ordinal() != 4 && facing.ordinal() != 5) {
-	    	switch(side) {
-	    	case Bottom : 
-	    		return Side.YNeg;
-	    	case Top : 
-	    		return Side.YPos;
-	    	case Back : 
-	    		return Side.ZNeg;
-	    	case Front : 
-	    		return Side.ZPos;
-	    	case Left : 
-	    		return Side.XNeg;
-	    	case Right : 
-	    		return Side.XPos;
-	    		default :
-	    			break;
-	    	}
-		}
-		if(facing.ordinal() == 2) {
-	    	switch(side) {
-	    	case Bottom : 
-	    		return Side.YNeg;
-	    	case Top : 
-	    		return Side.YPos;
-	    	case Front : 
-	    		return Side.ZNeg;
-	    	case Back : 
-	    		return Side.ZPos;
-	    	case Right : 
-	    		return Side.XNeg;
-	    	case Left : 
-	    		return Side.XPos;
-	    		default :
-	    			break;
-	    	}
-		}
-		if(facing.ordinal() == 4) {
-	    	switch(side) {
-	    	case Bottom : 
-	    		return Side.YNeg;
-	    	case Top : 
-	    		return Side.YPos;
-	    	case Left : 
-	    		return Side.ZNeg;
-	    	case Right : 
-	    		return Side.ZPos;
-	    	case Front : 
-	    		return Side.XNeg;
-	    	case Back : 
-	    		return Side.XPos;
-	    		default :
-	    			break;
-	    	}
-		}
-		if(facing.ordinal() == 5) {
-	    	switch(side) {
-	    	case Bottom : 
-	    		return Side.YNeg;
-	    	case Top : 
-	    		return Side.YPos;
-	    	case Right : 
-	    		return Side.ZNeg;
-	    	case Left : 
-	    		return Side.ZPos;
-	    	case Back : 
-	    		return Side.XNeg;
-	    	case Front : 
-	    		return Side.XPos;
-	    		default :
-	    			break;
-	    	}
-		}
-		return null;
-	}
-	public static int getIntFromBlockSide(BlockSide side, EnumFacing facing) {
-		Side coordSide = getSideFromBlockSide(side, facing);
-		int sideInt = toSideNumber(coordSide);
-		return sideInt;
-	}
+
 		/**
 		 * 
 		 * @return Returns default of 6.

@@ -40,42 +40,7 @@ public class BlockCropSqueezer extends BaseMachineBlock{
     		return true;
     	}else if (!player.isSneaking()) {
     		TileEntityCropSqueezer entity = (TileEntityCropSqueezer) world.getTileEntity(pos);
-    		if(player.getHeldItemMainhand() != null) {
-        		if(player.getHeldItemMainhand().getItem() == Items.BUCKET) {
-        			if(entity.TANK.getFluid() != null) {
-        				if(entity.TANK.getFluidAmount() >= 1000) {
-        					if(entity.TANK.getFluid().isFluidEqual(new FluidStack(ModFluids.StaticFluid, 100))) {
-            					player.getHeldItemMainhand().stackSize--;
-        						player.inventory.addItemStackToInventory(new ItemStack(ModFluids.StaticBucket, 1));
-        						player.inventoryContainer.detectAndSendChanges();
-        					}   					
-        					if(entity.TANK.getFluid().isFluidEqual(new FluidStack(ModFluids.EnergizedFluid, 100))) {
-            					player.getHeldItemMainhand().stackSize--;
-        						player.inventory.addItemStackToInventory(new ItemStack(ModFluids.EnergizedBucket, 1));
-        						player.inventoryContainer.detectAndSendChanges();
-        					}   
-        					if(entity.TANK.getFluid().isFluidEqual(new FluidStack(ModFluids.LumumFluid, 100))) {
-            					player.getHeldItemMainhand().stackSize--;
-        						player.inventory.addItemStackToInventory(new ItemStack(ModFluids.LumumBucket, 1));
-        						player.inventoryContainer.detectAndSendChanges();
-        					}   
-    						entity.TANK.drain(1000, true);
-        				}else if(entity.TANK.getFluid().amount < 1000) {
-        					player.addChatComponentMessage(new TextComponentString("Requires " + (1000 - entity.TANK.getFluid().amount) + "mb " + entity.TANK.getFluid().getLocalizedName() + EnumTextFormatting.WHITE + " to fill a bucket."));
-        				}
-        			}		
-	    		}else{
-	        		if (entity != null) {
-	        			FMLNetworkHandler.openGui(player, StaticPower.staticpower, GuiIDRegistry.guiIDCropSqueezer, world, pos.getX(), pos.getY(), pos.getZ());
-	
-	        		}	
-	    		}
-    		}else{
-        		if (entity != null) {
-        			FMLNetworkHandler.openGui(player, StaticPower.staticpower, GuiIDRegistry.guiIDCropSqueezer, world, pos.getX(), pos.getY(), pos.getZ());
-
-        		}	
-    		}
+        	FMLNetworkHandler.openGui(player, StaticPower.staticpower, GuiIDRegistry.guiIDCropSqueezer, world, pos.getX(), pos.getY(), pos.getZ());
     		return true;
     	}else{
     		return false;

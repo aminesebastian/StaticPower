@@ -19,6 +19,7 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.items.CapabilityItemHandler;
+import theking530.staticpower.fluids.FluidDistributor;
 import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.items.upgrades.BaseTankUpgrade;
 
@@ -31,11 +32,14 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler{
 	public int CONTAINER_MOVE_TIMER = 0;
 	public int CONTAINER_MOVE_SPEED = 4;
 	
+	public FluidDistributor FLUID_DIST;
+	
 	public void initializeBaseMachineWithTank(int InitialEnergyMult, int InitialPowerUse, int InitialEnergyCapacity, int InitialEntryPerTick, int InitialProcessingTime, 
 			int internalSlotCount, int inputSlots, int outputSlots, int InitialTankCapacity) {	
 		initializeBasicMachine(InitialEnergyMult, InitialPowerUse, InitialEnergyCapacity, InitialEntryPerTick, InitialProcessingTime, internalSlotCount, inputSlots, outputSlots);
 		INITIAL_TANK_CAPACITY = InitialTankCapacity;
 		TANK = new FluidTank(INITIAL_TANK_CAPACITY);
+		FLUID_DIST = new FluidDistributor(this, TANK);
 	}
 	public void setFluidContainerSlot(int slot) {
 		FLUID_CONTAINER_SLOT = slot;
@@ -45,6 +49,9 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler{
 		super.update();
 		if(FLUID_CONTAINER_SLOT != -1) {
 			useFluidContainer();
+		}
+		if(evauluateRedstoneSettings()) {
+			FLUID_DIST.distributeFluid();
 		}
 	}
 	public void useFluidContainer() {

@@ -2,6 +2,7 @@ package theking530.staticpower.machines.solarpanel;
 
 import java.util.ArrayList;
 
+import api.SneakWrenchMode;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -34,7 +35,7 @@ public class BlockSolarPanel extends BaseMachineBlock {
 		return EnumBlockRenderType.MODEL;
 	}
 	@Override
-	public void sneakWrenchBlock(EntityPlayer player, World world, BlockPos pos, EnumFacing facing, boolean returnDrops) {
+	public void sneakWrenchBlock(EntityPlayer player, SneakWrenchMode mode, ItemStack wrench, World world, BlockPos pos, EnumFacing facing, boolean returnDrops) {
 		ArrayList<ItemStack> items = new ArrayList();
 		ItemStack machineStack = new ItemStack(Item.getItemFromBlock(this));
 		EntityItem droppedItem = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), machineStack);

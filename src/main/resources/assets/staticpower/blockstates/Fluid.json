@@ -12,6 +12,14 @@
 		"lumumfluid": {
             "model": "forge:fluid",
             "custom": { "fluid": "lumumfluid" }
+        },
+				"ethanol": {
+            "model": "forge:fluid",
+            "custom": { "fluid": "ethanol" }
+        },
+		"steam": {
+            "model": "forge:fluid",
+            "custom": { "fluid": "steam" }
         }
     }
 }

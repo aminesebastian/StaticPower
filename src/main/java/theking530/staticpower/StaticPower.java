@@ -4,7 +4,6 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -29,6 +28,7 @@ import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.handlers.GuiHandler;
 import theking530.staticpower.handlers.OreGenerationHandler;
 import theking530.staticpower.handlers.PacketHandler;
+import theking530.staticpower.handlers.crafting.recipes.FermenterRecipes;
 import theking530.staticpower.handlers.crafting.recipes.FusionRecipes;
 import theking530.staticpower.handlers.crafting.recipes.GrinderRecipes;
 import theking530.staticpower.handlers.crafting.recipes.InfuserRecipes;
@@ -46,6 +46,7 @@ import theking530.staticpower.machines.batteries.tileentities.TileEntityLumumBat
 import theking530.staticpower.machines.batteries.tileentities.TileEntityStaticBattery;
 import theking530.staticpower.machines.chargingstation.TileEntityChargingStation;
 import theking530.staticpower.machines.cropsqueezer.TileEntityCropSqueezer;
+import theking530.staticpower.machines.fermenter.TileEntityFermenter;
 import theking530.staticpower.machines.fluidgenerator.TileEntityFluidGenerator;
 import theking530.staticpower.machines.fluidinfuser.TileEntityFluidInfuser;
 import theking530.staticpower.machines.fusionfurnace.TileEntityFusionFurnace;
@@ -133,6 +134,7 @@ public class StaticPower {
 		GameRegistry.registerTileEntity(TileEntityBasicFarmer.class, "BasicFarmer");
 		GameRegistry.registerTileEntity(TileEntityChargingStation.class, "ChargingStation");
 		GameRegistry.registerTileEntity(TileEntityMechanicalSqueezer.class, "MechanicalSqueezer");
+		GameRegistry.registerTileEntity(TileEntityFermenter.class, "Fermenter");
 		
 		GameRegistry.registerTileEntity(TileEntityBasicSolarPanel.class, "BaseSolarPanel");
 		GameRegistry.registerTileEntity(TileEntityStaticSolarPanel.class, "StaticSolarPanel");
@@ -169,11 +171,12 @@ public class StaticPower {
 		ShapedRecipes.registerFullRecipes();   
 		ShaplessRecipes.registerFullRecipes(); 
 		SmeltingRecipes.registerFullRecipes();
-		FusionRecipes.registerGrinderRecipe();
+		FusionRecipes.registerFusionRecipes();
 		SolderingRecipes.registerSolderingRecipes();
-		GrinderRecipes.registerGrinderRecipe();
-		InfuserRecipes.registerInfusionRecipe();
+		GrinderRecipes.registerGrinderRecipes();
+		InfuserRecipes.registerInfusionRecipes();
 		SqueezerRecipes.registerSqueezingRecipes();
+		FermenterRecipes.registerFermenterRecipes();
 	}
 	@SubscribeEvent
 	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {

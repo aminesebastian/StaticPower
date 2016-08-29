@@ -12,7 +12,7 @@ import theking530.staticpower.items.ModItems;
 
 public class GrinderRecipes {
 
-	public static void registerGrinderRecipe() {
+	public static void registerGrinderRecipes() {
 		for(int index = 0; index < OreDictionary.getOres("oreCopper").size(); index++) {
 			RegisterHelper.registerGrinderRecipe(OreDictionary.getOres("oreCopper").get(index), newOutput(new ItemStack(ModItems.CopperDust, 2), 1.0f), newOutput(new ItemStack(ModItems.GoldDust, 1), 0.1f));
 		}

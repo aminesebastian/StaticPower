@@ -5,6 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import theking530.staticpower.handlers.crafting.registries.FermenterRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.FusionRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.GrinderRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.InfuserRecipeRegistry;
@@ -19,6 +20,9 @@ public class RegisterHelper
 		}
 		public static void registerItem(Item item) {
 			GameRegistry.register(item);
+		}
+		public static void registerFermenterRecipe(ItemStack input, FluidStack output) {
+			FermenterRecipeRegistry.Fermenting().addRecipe(input, output);
 		}
 		public static void registerGrinderRecipe(ItemStack itemstack, GrinderOutput... outputs) {
 			GrinderRecipeRegistry.Grinding().addRecipe(itemstack, outputs);

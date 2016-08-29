@@ -23,6 +23,7 @@ public class GuiTextures {
 	public static final ResourceLocation QUARRY_GUI = new ResourceLocation(Reference.MODID + ":" + "textures/gui/QuarryGui.png");
 	public static final ResourceLocation CHARGING_STATION_GUI = new ResourceLocation(Reference.MODID + ":" + "textures/gui/ChargingStationGui.png");
 	public static final ResourceLocation BASIC_FARMER_GUI = new ResourceLocation(Reference.MODID + ":" + "textures/gui/BasicFarmerGui.png");
+	public static final ResourceLocation FERMENTER_GUI = new ResourceLocation(Reference.MODID + ":" + "textures/gui/FermenterGui.png");
 	
 	public static final ResourceLocation SCHEST_GUI = new ResourceLocation(Reference.MODID + ":" + "textures/gui/StaticChestGui.png");
 	public static final ResourceLocation ECHEST_GUI = new ResourceLocation(Reference.MODID + ":" + "textures/gui/EnergizedChestGui.png");

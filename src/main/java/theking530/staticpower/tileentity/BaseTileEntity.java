@@ -23,12 +23,13 @@ import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.machines.PacketMachineSync;
 import theking530.staticpower.utils.OldSidePicker;
-import theking530.staticpower.utils.OldSidePicker.BlockSide;
 import theking530.staticpower.utils.RedstoneModeList;
 import theking530.staticpower.utils.RedstoneModeList.RedstoneMode;
 import theking530.staticpower.utils.SideModeList;
 import theking530.staticpower.utils.SideModeList.Mode;
 import theking530.staticpower.utils.SidePicker.Side;
+import theking530.staticpower.utils.SideUtils;
+import theking530.staticpower.utils.SideUtils.BlockSide;
 
 public class BaseTileEntity extends TileEntity implements ITickable {
 
@@ -40,9 +41,8 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 	
 	public String CUSTOM_NAME;
 	public int REDSTONE_MODE = 0;
-	/**
-	 * 0 = In/Out : 1 = In : 2 = Out : 3 = Disabled
-	 */
+
+	/** EnumFacing */
 	public SideModeList.Mode[] SIDE_MODES = {Mode.Regular, Mode.Regular, Mode.Regular, Mode.Regular, Mode.Regular, Mode.Regular};
 	public int IN_TIMER = 0;
 	public int IN_TIME = 2;
@@ -234,99 +234,48 @@ public class BaseTileEntity extends TileEntity implements ITickable {
     	switch(facing) {
     	case NORTH:
         	switch(side) {
-	    	case Front : return SIDE_MODES[2];
-	    	case Back : return SIDE_MODES[3];
-	    	case Top : return SIDE_MODES[1];
-	    	case Bottom : return SIDE_MODES[0];
-	    	case Right : return SIDE_MODES[5];
-	    	case Left : return SIDE_MODES[4];
+	    	case FRONT : return SIDE_MODES[2];
+	    	case BACK : return SIDE_MODES[3];
+	    	case TOP : return SIDE_MODES[1];
+	    	case BOTTOM : return SIDE_MODES[0];
+	    	case RIGHT : return SIDE_MODES[5];
+	    	case LEFT : return SIDE_MODES[4];
         	}
     	case SOUTH:
         	switch(side) {
-	    	case Front : return SIDE_MODES[2];
-	    	case Back : return SIDE_MODES[3];
-	    	case Top : return SIDE_MODES[1];
-	    	case Bottom : return SIDE_MODES[0];
-	    	case Right : return SIDE_MODES[4];
-	    	case Left : return SIDE_MODES[5];
+	    	case FRONT : return SIDE_MODES[2];
+	    	case BACK : return SIDE_MODES[3];
+	    	case TOP : return SIDE_MODES[1];
+	    	case BOTTOM : return SIDE_MODES[0];
+	    	case RIGHT : return SIDE_MODES[4];
+	    	case LEFT : return SIDE_MODES[5];
         	}
     	case EAST:
         	switch(side) {
-	    	case Front : return SIDE_MODES[5];
-	    	case Back : return SIDE_MODES[4];
-	    	case Top : return SIDE_MODES[1];
-	    	case Bottom : return SIDE_MODES[0];
-	    	case Right : return SIDE_MODES[3];
-	    	case Left : return SIDE_MODES[2];
+	    	case FRONT : return SIDE_MODES[5];
+	    	case BACK : return SIDE_MODES[4];
+	    	case TOP : return SIDE_MODES[1];
+	    	case BOTTOM : return SIDE_MODES[0];
+	    	case RIGHT : return SIDE_MODES[3];
+	    	case LEFT : return SIDE_MODES[2];
         	}
     	case WEST:
         	switch(side) {
-	    	case Front : return SIDE_MODES[4];
-	    	case Back : return SIDE_MODES[5];
-	    	case Top : return SIDE_MODES[1];
-	    	case Bottom : return SIDE_MODES[0];
-	    	case Right : return SIDE_MODES[2];
-	    	case Left : return SIDE_MODES[3];
+	    	case FRONT : return SIDE_MODES[4];
+	    	case BACK : return SIDE_MODES[5];
+	    	case TOP : return SIDE_MODES[1];
+	    	case BOTTOM : return SIDE_MODES[0];
+	    	case RIGHT : return SIDE_MODES[2];
+	    	case LEFT : return SIDE_MODES[3];
         	}
     	default:
         	switch(side) {
-	    	case Front : return SIDE_MODES[2];
-	    	case Back : return SIDE_MODES[3];
-	    	case Top : return SIDE_MODES[1];
-	    	case Bottom : return SIDE_MODES[0];
-	    	case Right : return SIDE_MODES[5];
-	    	case Left : return SIDE_MODES[4];
-        	}
-    	}
-		return null;
-    }
-    public EnumFacing getFacingFromBlockSide(BlockSide side) {
-    	EnumFacing facing = EnumFacing.getHorizontal(this.getBlockMetadata());
-    	switch(facing) {
-    	case NORTH:
-        	switch(side) {
-	    	case Front : return EnumFacing.NORTH;
-	    	case Back : return EnumFacing.SOUTH;
-	    	case Top : return EnumFacing.UP;
-	    	case Bottom : return EnumFacing.DOWN;
-	    	case Right : return EnumFacing.EAST;
-	    	case Left : return EnumFacing.WEST;
-        	}
-    	case SOUTH:
-        	switch(side) {
-	    	case Front : return EnumFacing.NORTH;
-	    	case Back : return EnumFacing.SOUTH;
-	    	case Top : return EnumFacing.UP;
-	    	case Bottom : return EnumFacing.DOWN;
-	    	case Right : return EnumFacing.WEST;
-	    	case Left : return EnumFacing.EAST;
-        	}
-    	case EAST:
-        	switch(side) {
-	    	case Front : return EnumFacing.EAST;
-	    	case Back : return EnumFacing.WEST;
-	    	case Top : return EnumFacing.UP;
-	    	case Bottom : return EnumFacing.DOWN;
-	    	case Right : return EnumFacing.SOUTH;
-	    	case Left : return EnumFacing.NORTH;
-        	}
-    	case WEST:
-        	switch(side) {
-	    	case Front : return EnumFacing.WEST;
-	    	case Back : return EnumFacing.EAST;
-	    	case Top : return EnumFacing.UP;
-	    	case Bottom : return EnumFacing.DOWN;
-	    	case Right : return EnumFacing.NORTH;
-	    	case Left : return EnumFacing.SOUTH;
-        	}
-    	default:
-        	switch(side) {
-	    	case Front : return EnumFacing.NORTH;
-	    	case Back : return EnumFacing.SOUTH;
-	    	case Top : return EnumFacing.UP;
-	    	case Bottom : return EnumFacing.DOWN;
-	    	case Right : return EnumFacing.EAST;
-	    	case Left : return EnumFacing.WEST;
+	    	case FRONT : return SIDE_MODES[2];
+	    	case BACK : return SIDE_MODES[3];
+	    	case TOP : return SIDE_MODES[1];
+	    	case BOTTOM : return SIDE_MODES[0];
+	    	case RIGHT : return SIDE_MODES[5];
+	    	case LEFT : return SIDE_MODES[4];
         	}
     	}
 		return null;
@@ -379,86 +328,7 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 		}
 	}
 
-    public TileEntity getTEFromBlockSide(OldSidePicker.BlockSide blockSide, EnumFacing facing) {
-    	OldSidePicker.Side side = OldSidePicker.getSideFromBlockSide(blockSide, facing);
-    	switch(side) {
-    	case YNeg : 
-    		return worldObj.getTileEntity(pos.offset(EnumFacing.DOWN));
-    	case YPos : 
-    		return worldObj.getTileEntity(pos.offset(EnumFacing.UP));
-    	case ZNeg : 
-    		return worldObj.getTileEntity(pos.offset(EnumFacing.NORTH));
-    	case ZPos : 
-    		return worldObj.getTileEntity(pos.offset(EnumFacing.SOUTH));
-    	case XNeg : 
-    		return worldObj.getTileEntity(pos.offset(EnumFacing.WEST));
-    	case XPos : 
-    		return worldObj.getTileEntity(pos.offset(EnumFacing.EAST));
-    		default :
-    			break;
-    	}
-		return null;
-    }
-    public int getBlockXCoord(OldSidePicker.BlockSide blockSide, EnumFacing facing) {
-    	OldSidePicker.Side side = OldSidePicker.getSideFromBlockSide(blockSide, facing);
-    	switch(side) {
-    	case YNeg : 
-    		return 0;
-    	case YPos : 
-    		return 0;
-    	case ZNeg : 
-    		return 0;
-    	case ZPos : 
-    		return 0;
-    	case XNeg : 
-    		return -1;
-    	case XPos : 
-    		return +1;
-    		default :
-    			break;
-    	}
-		return 0;
-    } 
-    public int getBlockZCoord(OldSidePicker.BlockSide blockSide, EnumFacing facing) {
-    	OldSidePicker.Side side = OldSidePicker.getSideFromBlockSide(blockSide, facing);
-    	switch(side) {
-    	case YNeg : 
-    		return 0;
-    	case YPos : 
-    		return 0;
-    	case ZNeg : 
-    		return -1;
-    	case ZPos : 
-    		return +1;
-    	case XNeg : 
-    		return 0;
-    	case XPos : 
-    		return 0;
-    		default :
-    			break;
-    	}
-		return 0;
-    } 
-    public int getBlockYCoord(OldSidePicker.BlockSide blockSide, EnumFacing facing) {
-    	OldSidePicker.Side side = OldSidePicker.getSideFromBlockSide(blockSide, facing);
-    	switch(side) {
-    	case YNeg : 
-    		return -1;
-    	case YPos : 
-    		return +1;
-    	case ZNeg : 
-    		return 0;
-    	case ZPos : 
-    		return 0;
-    	case XNeg : 
-    		return 0;
-    	case XPos : 
-    		return 0;
-    		default :
-    			break;
-    	}
-		return 0;
-    } 
+
     public RedstoneMode getRedstoneMode() {
     	return RedstoneModeList.RedstoneMode.getModeFromInt(REDSTONE_MODE);
     } 
@@ -473,7 +343,7 @@ public class BaseTileEntity extends TileEntity implements ITickable {
     }
 
     public Mode getModeFromFacing(EnumFacing facing) {
-    	return SIDE_MODES[facing.ordinal()];
+    	return SIDE_MODES[SideUtils.getBlockSide(facing.getOpposite(), SideUtils.getBlockHorizontal(worldObj.getBlockState(pos))).ordinal()];
     }
     
     public boolean insertItem(ItemStack stack, ISidedInventory inv, EnumFacing side) {
@@ -500,14 +370,14 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 		}
 		return false;
     }
-    public void outputItem(int fromSlot, OldSidePicker.BlockSide blockSide, int startSlot, boolean backwards) {
+    public void outputItem(int fromSlot, theking530.staticpower.utils.SideUtils.BlockSide blockSide, int startSlot, boolean backwards) {
 		if (getSideModeFromBlockSide(blockSide) == SideModeList.Mode.Output || getSideModeFromBlockSide(blockSide) == SideModeList.Mode.Disabled) {
 			ItemStack stack = SLOTS_OUTPUT.getStackInSlot(fromSlot);
 			if (stack == null) {
 				return;
 			} else {
 				EnumFacing facing = worldObj.getBlockState(pos).getValue(BlockHorizontal.FACING);
-				TileEntity te = getTEFromBlockSide(blockSide, facing);
+				TileEntity te = worldObj.getTileEntity(pos.offset(SideUtils.getEnumFacingFromSide(blockSide, facing)));
 				if (te == null) {
 					return;
 				} else if (te instanceof IInventory) {
@@ -585,10 +455,10 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 			return;
 		}
     }
-	public void inputItem(int inputSlot, OldSidePicker.BlockSide blockSide, int startSlot) {
+	public void inputItem(int inputSlot, BlockSide blockSide, int startSlot) {
 		if (getSideModeFromBlockSide(blockSide) == SideModeList.Mode.Input || getSideModeFromBlockSide(blockSide) == SideModeList.Mode.Disabled) {
 			EnumFacing facing = worldObj.getBlockState(pos).getValue(BlockHorizontal.FACING);
-			TileEntity te = getTEFromBlockSide(blockSide, facing);
+			TileEntity te = worldObj.getTileEntity(pos.offset(SideUtils.getEnumFacingFromSide(blockSide, facing)));
 			if (te == null) {
 				return;
 			} else if (te instanceof IInventory) {
@@ -630,15 +500,15 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 			if(IN_TIMER>0) {
 				if(IN_TIMER >= IN_TIME) {
 					switch(rand) {
-					case 0: inputItem(slot, OldSidePicker.BlockSide.Top, 0);
+					case 0: inputItem(slot, BlockSide.TOP, 0);
 							break;
-					case 1: inputItem(slot, OldSidePicker.BlockSide.Bottom, 0);
+					case 1: inputItem(slot, BlockSide.BOTTOM, 0);
 							break;
-					case 2: inputItem(slot, OldSidePicker.BlockSide.Right, 0);
+					case 2: inputItem(slot, BlockSide.RIGHT, 0);
 							break;
-					case 3: inputItem(slot, OldSidePicker.BlockSide.Left, 0);
+					case 3: inputItem(slot, BlockSide.LEFT, 0);
 							break;
-					case 4: inputItem(slot, OldSidePicker.BlockSide.Back, 0);
+					case 4: inputItem(slot, BlockSide.BACK, 0);
 							break;
 					default:
 						break;
@@ -658,15 +528,15 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 					int rand = randomGenerator.nextInt(5);
 				if(OUT_TIMER >= OUT_TIME) {
 					switch(rand) {
-					case 0: outputItem(slot, OldSidePicker.BlockSide.Top, 0, false);
+					case 0: outputItem(slot, BlockSide.TOP, 0, false);
 							break;
-					case 1: outputItem(slot, OldSidePicker.BlockSide.Bottom, 0, false);
+					case 1: outputItem(slot, BlockSide.BOTTOM, 0, false);
 							break;
-					case 2: outputItem(slot, OldSidePicker.BlockSide.Right, 0, false);
+					case 2: outputItem(slot, BlockSide.RIGHT, 0, false);
 							break;
-					case 3: outputItem(slot, OldSidePicker.BlockSide.Left, 0, false);
+					case 3: outputItem(slot, BlockSide.LEFT, 0, false);
 							break;
-					case 4: outputItem(slot, OldSidePicker.BlockSide.Back, 0, false);
+					case 4: outputItem(slot, BlockSide.BACK, 0, false);
 							break;
 					default:
 						break;

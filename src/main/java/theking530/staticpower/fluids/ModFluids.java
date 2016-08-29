@@ -25,22 +25,23 @@ import theking530.staticpower.assists.Reference;
 
 public class ModFluids {
 	
-	public static Item StaticBucket;
-	public static Item EnergizedBucket;
-	public static Item LumumBucket;
-	
 	public static Fluid StaticFluid;
 	public static Fluid EnergizedFluid;
 	public static Fluid LumumFluid;
+	public static Fluid Steam;
+	public static Fluid Ethanol;
 	
 	public static String StaticFluidName = "staticfluid";
 	public static String EnergizedFluidName = "energizedfluid";
 	public static String LumumFluidName = "lumumfluid";
+	public static String EthanolName = "Ethanol";
+	public static String SteamFluidName = "Steam";
 	
 	public static Block BlockStaticFluid;
 	public static Block BlockEnergizedFluid;
 	public static Block BlockLumumFluid;
-
+	public static Block BlockSteamFluid;
+	public static Block BlockEthanol;
 	
 	public static void init() {
 		
@@ -70,6 +71,24 @@ public class ModFluids {
 		GameRegistry.register(BlockLumumFluid);
 	    registerBucket(LumumFluid);
 	    registerFluidBlockRendering(LumumFluid, LumumFluidName);
+	    
+	    f  = new Fluid(SteamFluidName, getStill(SteamFluidName), getFlowing(SteamFluidName))
+		        .setDensity(1500).setViscosity(3000).setGaseous(true);
+	    FluidRegistry.registerFluid(f);
+	    Steam = FluidRegistry.getFluid(f.getName());
+	    BlockSteamFluid = new BaseFluidBlock(Steam, new MaterialLiquid(MapColor.QUARTZ), SteamFluidName);
+		GameRegistry.register(BlockSteamFluid);
+	    registerBucket(Steam);
+	    registerFluidBlockRendering(Steam, SteamFluidName);
+	    
+	    f  = new Fluid(EthanolName, getStill(EthanolName), getFlowing(EthanolName))
+		        .setDensity(150).setViscosity(1000);
+	    FluidRegistry.registerFluid(f);
+	    Ethanol = FluidRegistry.getFluid(f.getName());
+	    BlockEthanol = new BaseFluidBlock(Ethanol, new MaterialLiquid(MapColor.ICE), EthanolName);
+		GameRegistry.register(BlockEthanol);
+	    registerBucket(Ethanol);
+	    registerFluidBlockRendering(Ethanol, EthanolName);
 		
 	}
 	

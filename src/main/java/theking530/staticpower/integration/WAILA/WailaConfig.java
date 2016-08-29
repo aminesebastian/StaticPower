@@ -9,6 +9,7 @@ import theking530.staticpower.machines.batteries.tileentities.TileEntityEnergize
 import theking530.staticpower.machines.batteries.tileentities.TileEntityLumumBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityStaticBattery;
 import theking530.staticpower.machines.cropsqueezer.TileEntityCropSqueezer;
+import theking530.staticpower.machines.fermenter.TileEntityFermenter;
 import theking530.staticpower.machines.fluidgenerator.TileEntityFluidGenerator;
 import theking530.staticpower.machines.fluidinfuser.TileEntityFluidInfuser;
 import theking530.staticpower.machines.fusionfurnace.TileEntityFusionFurnace;
@@ -36,6 +37,7 @@ public class WailaConfig {
 		registrar.registerBodyProvider(new WailaBasicMachineProvider(), TileEntityBasicFarmer.class);
 		registrar.registerBodyProvider(new WailaBasicTankMachineProvider(), TileEntityCropSqueezer.class);
 		registrar.registerBodyProvider(new WailaBasicTankMachineProvider(), TileEntityFluidInfuser.class);
+		registrar.registerBodyProvider(new WailaBasicTankMachineProvider(), TileEntityFermenter.class);
 		registrar.registerBodyProvider(new WailaFluidGeneratorProvider(), TileEntityFluidGenerator.class);
 		
 		registrar.registerBodyProvider(new WailaSolarPanelProvider(), TileEntityBasicSolarPanel.class);

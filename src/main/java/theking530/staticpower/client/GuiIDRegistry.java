@@ -29,4 +29,5 @@ public class GuiIDRegistry {
 	public static final int guiPowerCell = 25;
 	public static final int guiTimer = 26;
 	public static final int guiMechanicalSqueezer = 27;
+	public static final int guiFermenter = 28;
 }

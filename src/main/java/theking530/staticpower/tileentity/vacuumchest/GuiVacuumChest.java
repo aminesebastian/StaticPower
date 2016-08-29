@@ -22,7 +22,7 @@ import theking530.staticpower.utils.GuiTextures;
 public class GuiVacuumChest extends GuiContainer{
 	
 	private TileEntityVacuumChest V_CHEST;
-	public GuiSideConfigTab SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, ModBlocks.VacuumChest);
+	public GuiSideConfigTab SIDE_TAB;
 	public GuiRedstoneTab REDSTONE_TAB;
 	public GuiInfoTab INFO_TAB = new GuiInfoTab(guiLeft, guiTop);
 	public GuiDrawItem DRAW_ITEM = new GuiDrawItem();
@@ -31,6 +31,7 @@ public class GuiVacuumChest extends GuiContainer{
 		super(new ContainerVacuumChest(invPlayer, teVChest));
 		V_CHEST = teVChest;		
 		REDSTONE_TAB = new GuiRedstoneTab(guiLeft, guiTop, teVChest);
+		SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, teVChest);
 		xSize = 176;
 		ySize = 205;	
 	}

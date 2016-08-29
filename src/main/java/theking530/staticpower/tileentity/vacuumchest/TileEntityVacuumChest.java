@@ -26,7 +26,8 @@ public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<E
 	public TileEntityVacuumChest() {
 		initializeBasicTileEntity(1, 0, 30);
 	}		
-	void process() {
+	@Override
+	public void process() {
 	    AxisAlignedBB aabb = new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1);
 	    aabb = aabb.expand(RANGE, RANGE, RANGE);
 	    List<EntityItem> droppedItems = worldObj.getEntitiesWithinAABB(EntityItem.class, aabb, this);

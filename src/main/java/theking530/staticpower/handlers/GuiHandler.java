@@ -23,6 +23,9 @@ import theking530.staticpower.machines.chargingstation.TileEntityChargingStation
 import theking530.staticpower.machines.cropsqueezer.ContainerCropSqueezer;
 import theking530.staticpower.machines.cropsqueezer.GuiCropSqueezer;
 import theking530.staticpower.machines.cropsqueezer.TileEntityCropSqueezer;
+import theking530.staticpower.machines.fermenter.ContainerFermenter;
+import theking530.staticpower.machines.fermenter.GuiFermenter;
+import theking530.staticpower.machines.fermenter.TileEntityFermenter;
 import theking530.staticpower.machines.fluidgenerator.ContainerFluidGenerator;
 import theking530.staticpower.machines.fluidgenerator.GuiFluidGenerator;
 import theking530.staticpower.machines.fluidgenerator.TileEntityFluidGenerator;
@@ -106,6 +109,11 @@ public class GuiHandler implements IGuiHandler {
 			case GuiIDRegistry.guiIDChargingStation:
 				if (entity instanceof TileEntityChargingStation) {	
 					return new ContainerChargingStation(player.inventory, (TileEntityChargingStation) entity);
+				}
+				return null;
+			case GuiIDRegistry.guiFermenter:
+				if (entity instanceof TileEntityFermenter) {	
+					return new ContainerFermenter(player.inventory, (TileEntityFermenter) entity);
 				}
 				return null;
 			case GuiIDRegistry.guiIDFusionFurnace:
@@ -215,6 +223,12 @@ public class GuiHandler implements IGuiHandler {
 			case GuiIDRegistry.guiIDVacuumChest:
 				if (entity instanceof TileEntityVacuumChest) {	
 					return new GuiVacuumChest(player.inventory, (TileEntityVacuumChest) entity);
+				
+				}
+				return null;
+			case GuiIDRegistry.guiFermenter:
+				if (entity instanceof TileEntityFermenter) {	
+					return new GuiFermenter(player.inventory, (TileEntityFermenter) entity);
 				
 				}
 				return null;

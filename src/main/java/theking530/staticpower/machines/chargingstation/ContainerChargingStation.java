@@ -119,7 +119,7 @@ public class ContainerChargingStation extends Container {
 	            slot.onSlotChange(itemstack1, itemstack);
 	        }else if (invSlot != 1 && invSlot != 0){
 	        	if (itemstack1.getItem() instanceof IEnergyContainerItem){
-	                if (!this.mergeItemStack(itemstack1, 0, 1, false)){
+	                if (!this.mergeItemStack(itemstack1, 0, 4, false)){
 	                    return null;
 	                }
 	            }else if (invSlot >= 6 && invSlot < 33) {

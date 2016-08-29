@@ -55,7 +55,7 @@ public class WailaBasicTankMachineProvider implements IWailaDataProvider{
 			}else{
 				currenttip.add(EnumTextFormatting.WHITE + "" +  NumberFormat.getNumberInstance(Locale.US).format(tempMachine.CURRENT_RF_TICK) + " RF/t");
 			}
-			currenttip.add("Output: " + EnumTextFormatting.WHITE +GUIUtilities.getMaxExtractFormatted(tempMachine.STORAGE));
+			//currenttip.add("Output: " + EnumTextFormatting.WHITE +GUIUtilities.getMaxExtractFormatted(tempMachine.STORAGE));
 			currenttip.add("Input: " + EnumTextFormatting.WHITE +GUIUtilities.getMaxRecieveFormatted(tempMachine.STORAGE));
 		}else{
 			currenttip.add(EnumTextFormatting.ITALIC + "(Hold Shift)");

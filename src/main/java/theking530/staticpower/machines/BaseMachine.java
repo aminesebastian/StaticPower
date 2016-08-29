@@ -73,9 +73,9 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		INITIAL_POWER_USE = InitialPowerUse;
 		
 		STORAGE = new StaticEnergyStorage(InitialEnergyCapacity);
-		STORAGE.setMaxExtract(INITIAL_ENERGY_PER_TICK);
-		STORAGE.setMaxReceive(INITIAL_ENERGY_PER_TICK);
-		STORAGE.setMaxTransfer(INITIAL_ENERGY_PER_TICK);
+		STORAGE.setMaxExtract(100000000);
+		STORAGE.setMaxReceive(InitialEntryPerTick);
+		//STORAGE.setMaxTransfer(100000000);
 		STORAGE.setCapacity(InitialEnergyCapacity);		
 	}
 	public void setBatterySlot(int slot) {
@@ -98,25 +98,10 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	public void update(){
 		upgradeHandler();
 		CURRENT_RF_TICK = STORAGE.getEnergyStored() - PREV_STORAGE;
-		int redstoneSignal = worldObj.getStrongPower(pos);
-		if(REDSTONE_MODE == 0) {
+		if(evauluateRedstoneSettings()) {
 			process();
 			outputFunction();
-			inputFunction();
-		}
-		if(REDSTONE_MODE == 1) {
-			if(redstoneSignal == 0) {
-				process();	
-				outputFunction();
-				inputFunction();
-			}
-		}
-		if(REDSTONE_MODE == 2) {
-			if(redstoneSignal > 0) {
-				process();	
-				outputFunction();
-				inputFunction();
-			}
+			inputFunction();	
 		}
 		if(UPDATE_TIMER < UPDATE_TIME) {
 			UPDATE_TIMER++;
@@ -130,6 +115,23 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		}
 		PREV_STORAGE = STORAGE.getEnergyStored();
 	}	
+	public boolean evauluateRedstoneSettings() {
+		int redstoneSignal = worldObj.getStrongPower(pos);
+		if(REDSTONE_MODE == 0) {
+			return true;
+		}
+		if(REDSTONE_MODE == 1) {
+			if(redstoneSignal <= 0) {
+				return true;	
+			}
+		}
+		if(REDSTONE_MODE == 2) {
+			if(redstoneSignal > 0) {
+				return true;	
+			}
+		}
+		return false;
+	}
 	public void useBattery() {
 		if(SLOTS_INPUT.getStackInSlot(BATTERY_SLOT) != null && SLOTS_INPUT.getStackInSlot(BATTERY_SLOT).getItem() instanceof IEnergyContainerItem && STORAGE.getEnergyStored() < STORAGE.getMaxEnergyStored()) {
 			IEnergyContainerItem batteryItem = (IEnergyContainerItem) SLOTS_INPUT.getStackInSlot(BATTERY_SLOT).getItem();
@@ -165,14 +167,14 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		if(flag) {
 			BasePowerUpgrade tempUpgrade = (BasePowerUpgrade) SLOTS_UPGRADES.getStackInSlot(slot).getItem();
 			STORAGE.setCapacity((int)(tempUpgrade.getValueMultiplied(INITIAL_ENERGY_CAPACITY, tempUpgrade.getMultiplier(SLOTS_UPGRADES.getStackInSlot(slot), 0))));
-			STORAGE.setMaxExtract((int)(tempUpgrade.getValueMultiplied(INITIAL_ENERGY_PER_TICK, tempUpgrade.getMultiplier(SLOTS_UPGRADES.getStackInSlot(slot), 1))));
+			//STORAGE.setMaxExtract((int)(tempUpgrade.getValueMultiplied(INITIAL_ENERGY_PER_TICK, tempUpgrade.getMultiplier(SLOTS_UPGRADES.getStackInSlot(slot), 1))));
 			STORAGE.setMaxReceive((int)(tempUpgrade.getValueMultiplied(INITIAL_ENERGY_PER_TICK, tempUpgrade.getMultiplier(SLOTS_UPGRADES.getStackInSlot(slot), 1))));
-			STORAGE.setMaxTransfer((int)(tempUpgrade.getValueMultiplied(INITIAL_ENERGY_PER_TICK, tempUpgrade.getMultiplier(SLOTS_UPGRADES.getStackInSlot(slot), 1))));
+			//STORAGE.setMaxTransfer((int)(tempUpgrade.getValueMultiplied(INITIAL_ENERGY_PER_TICK, tempUpgrade.getMultiplier(SLOTS_UPGRADES.getStackInSlot(slot), 1))));
 		}else{
 			STORAGE.setCapacity(INITIAL_ENERGY_CAPACITY);
-			STORAGE.setMaxExtract(INITIAL_ENERGY_PER_TICK);
+			//STORAGE.setMaxExtract(INITIAL_ENERGY_PER_TICK);
 			STORAGE.setMaxReceive(INITIAL_ENERGY_PER_TICK);
-			STORAGE.setMaxTransfer(INITIAL_ENERGY_PER_TICK);
+			//STORAGE.setMaxTransfer(INITIAL_ENERGY_PER_TICK);
 		}
 	}
 	public void processingUpgrade() {
@@ -212,15 +214,15 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	public void readFromSyncNBT(NBTTagCompound nbt) {
 		super.readFromSyncNBT(nbt);
 		STORAGE.readFromNBT(nbt);
-		PROCESSING_TIMER = nbt.getInteger("PTIMER");
-		MOVE_TIMER = nbt.getInteger("MTIMER");
+		PROCESSING_TIMER = nbt.getInteger("P_TIMER");
+		MOVE_TIMER = nbt.getInteger("M_TIMER");
 	}
 	@Override
 	public NBTTagCompound writeToSyncNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		STORAGE.writeToNBT(nbt);
-		nbt.setInteger("PTIMER", PROCESSING_TIMER);
-		nbt.setInteger("MTIMER", MOVE_TIMER);
+		nbt.setInteger("P_TIMER", PROCESSING_TIMER);
+		nbt.setInteger("M_TIMER", MOVE_TIMER);
 		return nbt;
 	}
 	
@@ -253,10 +255,7 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		return MOVE_TIMER > 0;
 	}
 	public int getProgressScaled(int i) {
-		if(this.PROCESSING_TIMER != 0) {
-			return (PROCESSING_TIMER * i) / PROCESSING_TIME;
-		}
-		return 0;
+		return (PROCESSING_TIMER * i) / PROCESSING_TIME;
 	}
 
 	@Override

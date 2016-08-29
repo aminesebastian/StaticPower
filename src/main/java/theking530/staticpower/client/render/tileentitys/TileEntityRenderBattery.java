@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.assists.Tier;
@@ -75,22 +76,23 @@ public class TileEntityRenderBattery extends TileEntitySpecialRenderer {
 	@Override
 	public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float f, int dest) {
 		TileEntityBattery battery = (TileEntityBattery)tileentity;			
-
+		EnumFacing facing = EnumFacing.getHorizontal(battery.getBlockMetadata());
+		
 		int i = tileentity.getBlockMetadata();	
 		GL11.glPushMatrix();
 		GL11.glTranslated(x, y, z);
-		if(i == 2) {
-			GL11.glRotated(180, 0, 1, 0);
-			GL11.glTranslated(-1, 0, -1);
-			}
-		if(i == 4) {
+		if(facing == EnumFacing.WEST) {
 			GL11.glRotated(-90, 0, 1, 0);
 			GL11.glTranslated(0, 0, -1);
 			}
-		if(i == 5) {
+		if(facing == EnumFacing.NORTH) {
+			GL11.glRotated(180, 0, 1, 0);
+			GL11.glTranslated(-1, 0, -1);
+			}
+		if(facing == EnumFacing.EAST) {
 			GL11.glRotated(90, 0, 1, 0);
 			GL11.glTranslated(-1, 0, 0);
-			}
+		}
 		GL11.glDisable(GL11.GL_LIGHTING);			
 		checkAndRenderSides(tileentity, 0);
 		checkAndRenderSides(tileentity, 1);

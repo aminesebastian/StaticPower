@@ -8,6 +8,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import theking530.staticpower.blocks.ModBlocks;
+import theking530.staticpower.client.ItemRenderRegistry;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 
@@ -54,13 +55,24 @@ public class ShaplessRecipes {
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.LumumPlate, 1), new Object[]{
 				new ItemStack(ModItems.MetalHammer, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(ModItems.LumumIngot)});
 		
-		//Static Ingot --------------------------------------------------------------------------------------------------
+		//Metal BLocks --------------------------------------------------------------------------------------------------
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.StaticIngot, 9), new Object[]{
-			new ItemStack(ModBlocks.StaticBlock)});
-		
-		//Energized Ingot --------------------------------------------------------------------------------------------------
+				new ItemStack(ModBlocks.StaticBlock)});
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.EnergizedIngot, 9), new Object[]{
 			new ItemStack(ModBlocks.EnergizedBlock)});
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.LumumIngot, 9), new Object[]{
+				new ItemStack(ModBlocks.LumumBlock)});
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.CopperIngot, 9), new Object[]{
+				new ItemStack(ModBlocks.BlockCopper)});
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.TinIngot, 9), new Object[]{
+			new ItemStack(ModBlocks.BlockTin)});
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.SilverIngot, 9), new Object[]{
+				new ItemStack(ModBlocks.BlockSilver)});
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.LeadIngot, 9), new Object[]{
+				new ItemStack(ModBlocks.BlockLead)});
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.PlatinumIngot, 9), new Object[]{
+			new ItemStack(ModBlocks.BlockPlatinum)});
+
 		
 		//Seeds --------------------------------------------------------------------------------------------------
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.StaticSeeds), new Object[]{

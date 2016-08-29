@@ -3,6 +3,7 @@ package theking530.staticpower.tileentity.gates.led;
 import javax.annotation.Nullable;
 
 import api.IWrenchTool;
+import api.RegularWrenchMode;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -60,7 +61,7 @@ public class BlockLED extends BlockLogicGate {
 		return super.getLightValue(state, world, pos);
     }
 	@Override
-	public void wrenchBlock(EntityPlayer player, World world, BlockPos pos, EnumFacing facing, boolean returnDrops) {
+	public void wrenchBlock(EntityPlayer player, RegularWrenchMode mode, ItemStack wrench, World world, BlockPos pos, EnumFacing facing, boolean returnDrops) {
 		if (!world.isRemote) {
 			TileEntityLED tempLED = (TileEntityLED) world.getTileEntity(pos);
 			tempLED.INVERTED = !tempLED.INVERTED;
