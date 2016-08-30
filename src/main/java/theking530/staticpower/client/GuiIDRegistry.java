@@ -31,4 +31,5 @@ public class GuiIDRegistry {
 	public static final int guiMechanicalSqueezer = 27;
 	public static final int guiFermenter = 28;
 	public static final int guiDistilery = 29;
+	public static final int guiCondenser = 30;
 }

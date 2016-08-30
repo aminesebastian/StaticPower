@@ -83,6 +83,10 @@ public class ShapedRecipes {
 			GameRegistry.addRecipe(new ItemStack(ModBlocks.MachineBlock), new Object[]{"TGT", "GCG", "TGT", 
 			'G', Blocks.GLASS, 'C', ModItems.BasicCircuit, 'T', ModItems.TinPlate});
 			
+			//Heating Element --------------------------------------------------------------------------------------------------
+			GameRegistry.addRecipe(new ItemStack(ModBlocks.HeatingElement), new Object[]{"CCC", "WRW", "CC", 
+			'R', ModItems.SilverPlate , 'C', ModItems.CopperPlate, 'W', ModItems.CopperCoil});
+			
 			//Obsidian Glass --------------------------------------------------------------------------------------------------
 			GameRegistry.addRecipe(new ItemStack(ModBlocks.ObsidianGlass, 4), new Object[]{"O O", " G ", "O O", 
 			'G', Blocks.GLASS, 'O', Blocks.OBSIDIAN});

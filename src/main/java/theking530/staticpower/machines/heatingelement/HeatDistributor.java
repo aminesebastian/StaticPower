@@ -18,7 +18,7 @@ public class HeatDistributor {
 				if(TE.getWorld().getTileEntity(TE.getPos().offset(EnumFacing.values()[i])) instanceof IHeatable) {
 					IHeatable heatable = (IHeatable) TE.getWorld().getTileEntity(TE.getPos().offset(EnumFacing.values()[i]));
 					if(heatable.canHeat() && heatable.getHeat() < heatable.getMaxHeat()) {
-						return STORAGE.extractHeat(heatable.recieveHeat(STORAGE.getHeat()));
+						return STORAGE.extractHeat(heatable.recieveHeat(Math.min(10, STORAGE.getHeat())));
 					}
 				}	
 			}

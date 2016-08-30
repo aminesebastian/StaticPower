@@ -1,4 +1,4 @@
-package theking530.staticpower.machines.boiler;
+package theking530.staticpower.machines.condenser;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -13,33 +13,29 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ContainerDistillery extends Container {
+public class ContainerCondenser extends Container {
 	
-	private TileEntityDistillery F_GENERATOR;
+	private TileEntityCondenser F_GENERATOR;
 	private int ENERGY_STORED;
 	
-	public ContainerDistillery(InventoryPlayer invPlayer, TileEntityDistillery teFluidGenerator) {
+	public ContainerCondenser(InventoryPlayer invPlayer, TileEntityCondenser teFluidGenerator) {
 		ENERGY_STORED = 0;
 		F_GENERATOR = teFluidGenerator;
 		
 		//Input
-		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_INPUT, 0, 80, 31));
-		
-		//Upgrades
-		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_UPGRADES, 0, 152, 12));
-		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_UPGRADES, 1, 152, 32));
-		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_UPGRADES, 2, 152, 52));
-		
+		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_INPUT, 0, 25, 39));
+		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_INPUT, 1, 134, 39));
+
 		//Inventory
 				for(int i = 0; i < 3; i++) {
 					for(int j = 0; j < 9; j++) {
-						this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+						this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 91 + i * 18));
 					}
 				}
 				
 				//ActionBar
 				for(int i = 0; i < 9; i++) {
-					this.addSlotToContainer(new Slot(invPlayer, i, 8 + i * 18, 142));
+					this.addSlotToContainer(new Slot(invPlayer, i, 8 + i * 18, 149));
 			}
 	}
 	

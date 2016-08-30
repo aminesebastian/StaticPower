@@ -53,7 +53,7 @@ public class GuiFluidBar {
 	
 		    RenderUtil.bindBlockTexture();
 		    int color = fluid.getFluid().getColor(fluid);
-		    GL11.glColor3ub((byte) (color >> 16 & 0xFF), (byte) (color >> 8 & 0xFF), (byte) (color & 0xFF));
+		    //GL11.glColor3ub((byte) (color >> 16 & 0xFF), (byte) (color >> 8 & 0xFF), (byte) (color & 0xFF));
 		    
 		    GlStateManager.enableBlend();    
 

@@ -26,10 +26,10 @@ public class GuiHeatBarFromStorage {
 		STORAGE = storage;
 		BAR = new GuiHeatBar();
 	}
-	public void drawHeatBar(double x, double y, double zLevel, double width, double height) {
-		BAR.drawHeatBar(STORAGE.getMaxHeat(), STORAGE.getHeat(), x, y, zLevel, width, height);
-	}
 	public List drawText() {
 		return BAR.drawText(STORAGE.getHeat(), STORAGE.getMaxHeat());
+	}
+	public void drawHeatBar(double x, double y, double zLevel, double width, double height) {
+		BAR.drawHeatBar(STORAGE.getMaxHeat(), STORAGE.getHeat(), x, y, zLevel, width, height);
 	}
 }

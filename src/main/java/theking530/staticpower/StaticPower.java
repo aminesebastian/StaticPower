@@ -44,9 +44,10 @@ import theking530.staticpower.machines.batteries.tileentities.TileEntityBasicBat
 import theking530.staticpower.machines.batteries.tileentities.TileEntityEnergizedBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityLumumBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityStaticBattery;
-import theking530.staticpower.machines.boiler.TileEntityDistillery;
 import theking530.staticpower.machines.chargingstation.TileEntityChargingStation;
+import theking530.staticpower.machines.condenser.TileEntityCondenser;
 import theking530.staticpower.machines.cropsqueezer.TileEntityCropSqueezer;
+import theking530.staticpower.machines.distillery.TileEntityDistillery;
 import theking530.staticpower.machines.fermenter.TileEntityFermenter;
 import theking530.staticpower.machines.fluidgenerator.TileEntityFluidGenerator;
 import theking530.staticpower.machines.fluidinfuser.TileEntityFluidInfuser;
@@ -138,6 +139,8 @@ public class StaticPower {
 		GameRegistry.registerTileEntity(TileEntityMechanicalSqueezer.class, "MechanicalSqueezer");
 		GameRegistry.registerTileEntity(TileEntityFermenter.class, "Fermenter");
 		GameRegistry.registerTileEntity(TileEntityHeatingElement.class, "HeatingElement");
+		GameRegistry.registerTileEntity(TileEntityDistillery.class, "Distillery");
+		GameRegistry.registerTileEntity(TileEntityCondenser.class, "Condenser");
 		
 		GameRegistry.registerTileEntity(TileEntityBasicSolarPanel.class, "BaseSolarPanel");
 		GameRegistry.registerTileEntity(TileEntityStaticSolarPanel.class, "StaticSolarPanel");
@@ -149,7 +152,7 @@ public class StaticPower {
 		GameRegistry.registerTileEntity(TileEntityStaticBattery.class, "StaticBattery");
 		GameRegistry.registerTileEntity(TileEntityEnergizedBattery.class, "EnergizedBattery");
 		GameRegistry.registerTileEntity(TileEntityLumumBattery.class, "LumumBattery");
-		GameRegistry.registerTileEntity(TileEntityDistillery.class, "Distillery");
+
 
 		GameRegistry.registerTileEntity(TileEntitySignalMultiplier.class, "SignalMultiplier");
 		GameRegistry.registerTileEntity(TileEntityNotGate.class, "NotGate");

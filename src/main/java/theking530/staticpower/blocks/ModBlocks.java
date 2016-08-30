@@ -15,9 +15,10 @@ import theking530.staticpower.conduits.itemconduit.BlockItemConduit;
 import theking530.staticpower.conduits.staticconduit.BlockStaticConduit;
 import theking530.staticpower.machines.basicfarmer.BlockBasicFarmer;
 import theking530.staticpower.machines.batteries.BlockBattery;
-import theking530.staticpower.machines.boiler.BlockDistillery;
 import theking530.staticpower.machines.chargingstation.BlockChargingStation;
+import theking530.staticpower.machines.condenser.BlockCondenser;
 import theking530.staticpower.machines.cropsqueezer.BlockCropSqueezer;
+import theking530.staticpower.machines.distillery.BlockDistillery;
 import theking530.staticpower.machines.fermenter.BlockFermenter;
 import theking530.staticpower.machines.fluidgenerator.BlockFluidGenerator;
 import theking530.staticpower.machines.fluidinfuser.BlockFluidInfuser;
@@ -85,6 +86,7 @@ public class ModBlocks {
 	public static Block Fermenter;
 	public static Block HeatingElement;
 	public static Block Distillery;
+	public static Block Condenser;
 	
 	public static Block LogicGateBasePlate;
 	public static Block SignalMultiplier;
@@ -222,6 +224,9 @@ public class ModBlocks {
 		
 		Distillery = new BlockDistillery().setUnlocalizedName("Distillery");
 		RegisterHelper.registerBlock(Distillery);
+		
+		Condenser = new BlockCondenser().setUnlocalizedName("Condenser");
+		RegisterHelper.registerBlock(Condenser);
 		
 		FluidGenerator = new BlockFluidGenerator().setUnlocalizedName("FluidGenerator");
 		RegisterHelper.registerBlock(FluidGenerator);

@@ -17,15 +17,18 @@ import theking530.staticpower.machines.basicfarmer.TileEntityBasicFarmer;
 import theking530.staticpower.machines.batteries.ContainerBattery;
 import theking530.staticpower.machines.batteries.GuiBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityBattery;
-import theking530.staticpower.machines.boiler.ContainerDistillery;
-import theking530.staticpower.machines.boiler.GuiDistillery;
-import theking530.staticpower.machines.boiler.TileEntityDistillery;
 import theking530.staticpower.machines.chargingstation.ContainerChargingStation;
 import theking530.staticpower.machines.chargingstation.GuiChargingStation;
 import theking530.staticpower.machines.chargingstation.TileEntityChargingStation;
+import theking530.staticpower.machines.condenser.ContainerCondenser;
+import theking530.staticpower.machines.condenser.GuiCondenser;
+import theking530.staticpower.machines.condenser.TileEntityCondenser;
 import theking530.staticpower.machines.cropsqueezer.ContainerCropSqueezer;
 import theking530.staticpower.machines.cropsqueezer.GuiCropSqueezer;
 import theking530.staticpower.machines.cropsqueezer.TileEntityCropSqueezer;
+import theking530.staticpower.machines.distillery.ContainerDistillery;
+import theking530.staticpower.machines.distillery.GuiDistillery;
+import theking530.staticpower.machines.distillery.TileEntityDistillery;
 import theking530.staticpower.machines.fermenter.ContainerFermenter;
 import theking530.staticpower.machines.fermenter.GuiFermenter;
 import theking530.staticpower.machines.fermenter.TileEntityFermenter;
@@ -97,6 +100,11 @@ public class GuiHandler implements IGuiHandler {
 			case GuiIDRegistry.guiDistilery:
 				if (entity instanceof TileEntityDistillery) {	
 					return new ContainerDistillery(player.inventory, (TileEntityDistillery) entity);
+				}
+				return null;
+			case GuiIDRegistry.guiCondenser:
+				if (entity instanceof TileEntityCondenser) {	
+					return new ContainerCondenser(player.inventory, (TileEntityCondenser) entity);
 				}
 				return null;
 			case GuiIDRegistry.guiBasicFarmer:
@@ -216,6 +224,11 @@ public class GuiHandler implements IGuiHandler {
 			case GuiIDRegistry.guiDistilery:
 				if (entity instanceof TileEntityDistillery) {	
 					return new GuiDistillery(player.inventory, (TileEntityDistillery) entity);				
+				}
+				return null;
+			case GuiIDRegistry.guiCondenser:
+				if (entity instanceof TileEntityCondenser) {	
+					return new GuiCondenser(player.inventory, (TileEntityCondenser) entity);				
 				}
 				return null;
 			case GuiIDRegistry.guiIDFluidGenerator:

@@ -1,4 +1,4 @@
-package theking530.staticpower.machines.boiler;
+package theking530.staticpower.machines.condenser;
 
 import javax.annotation.Nullable;
 
@@ -16,10 +16,10 @@ import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.GuiIDRegistry;
 import theking530.staticpower.machines.BaseMachineBlock;
 
-public class BlockDistillery extends BaseMachineBlock{
+public class BlockCondenser extends BaseMachineBlock{
 	
-	public BlockDistillery() {
-		super("Distillery");
+	public BlockCondenser() {
+		super("Condenser");
 		setHardness(3.5f);
 	    setResistance(5.0f);
 	}
@@ -31,9 +31,9 @@ public class BlockDistillery extends BaseMachineBlock{
     	if (world.isRemote) {
     		return true;
     	}else if (!player.isSneaking()) {
-    		TileEntityDistillery entity = (TileEntityDistillery) world.getTileEntity(pos);
+    		TileEntityCondenser entity = (TileEntityCondenser) world.getTileEntity(pos);
     		if (entity != null) {
-    			FMLNetworkHandler.openGui(player, StaticPower.staticpower, GuiIDRegistry.guiDistilery, world, pos.getX(), pos.getY(), pos.getZ());
+    			FMLNetworkHandler.openGui(player, StaticPower.staticpower, GuiIDRegistry.guiCondenser, world, pos.getX(), pos.getY(), pos.getZ());
 
     		}
     		return true;
@@ -44,6 +44,6 @@ public class BlockDistillery extends BaseMachineBlock{
 	
 	@Override
 	public TileEntity createNewTileEntity(World var1, int var2) {
-		return new TileEntityDistillery();
+		return new TileEntityCondenser();
 	}
 }

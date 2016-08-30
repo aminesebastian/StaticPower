@@ -12,10 +12,15 @@ public class FermenterRecipes {
 	
 	public static void registerFermenterRecipes() {
 		RegisterHelper.registerFermenterRecipe(new ItemStack(Items.BEETROOT), mash(35));
+		RegisterHelper.registerFermenterRecipe(new ItemStack(Items.BEETROOT_SEEDS), mash(15));
 		RegisterHelper.registerFermenterRecipe(new ItemStack(Items.POTATO), mash(25));
 		RegisterHelper.registerFermenterRecipe(new ItemStack(Items.CARROT), mash(20));
 		RegisterHelper.registerFermenterRecipe(new ItemStack(Items.WHEAT), mash(15));
+		RegisterHelper.registerFermenterRecipe(new ItemStack(Items.WHEAT_SEEDS), mash(10));
+		RegisterHelper.registerFermenterRecipe(new ItemStack(Items.POISONOUS_POTATO), mash(100));
+		RegisterHelper.registerFermenterRecipe(new ItemStack(Items.MELON_SEEDS), mash(10));
 		RegisterHelper.registerFermenterRecipe(new ItemStack(Items.MELON), mash(50));
+		RegisterHelper.registerFermenterRecipe(new ItemStack(Items.PUMPKIN_SEEDS), mash(10));
 		RegisterHelper.registerFermenterRecipe(new ItemStack(Blocks.PUMPKIN), mash(50));
 		RegisterHelper.registerFermenterRecipe(new ItemStack(Items.SPIDER_EYE), mash(100));
 		RegisterHelper.registerFermenterRecipe(new ItemStack(Items.SUGAR), mash(50));

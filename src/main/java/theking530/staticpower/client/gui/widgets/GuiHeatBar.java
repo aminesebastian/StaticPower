@@ -37,7 +37,6 @@ public class GuiHeatBar {
 
 		    float ratio = ((float)heat/(float)maxHeat);
 		    float renderAmount = ratio * (float) height;
-	
 		    RenderUtil.bindBlockTexture();	    
 		    GlStateManager.enableBlend();    
 
@@ -55,6 +54,7 @@ public class GuiHeatBar {
 			tes.pos(x, y - renderAmount, zLevel).tex(minU, minV+(diffV*ratio)).endVertex();
 			tes.pos(x, y, zLevel).tex(minU,minV).endVertex();	
 	        tessellator.draw();
+
 
 		    GlStateManager.disableBlend();
 	}

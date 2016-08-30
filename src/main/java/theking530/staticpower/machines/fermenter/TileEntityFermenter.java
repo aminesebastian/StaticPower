@@ -12,7 +12,7 @@ public class TileEntityFermenter extends BaseMachineWithTank {
 
 	
 	public TileEntityFermenter() {
-		initializeBaseMachineWithTank(4, 500, 100000, 160, 50, 1, 11, 0, 5000);
+		initializeBaseMachineWithTank(4, 500, 100000, 160, 45, 1, 11, 0, 5000);
 		setBatterySlot(10);
 		setFluidContainerSlot(9, FluidContainerMode.FILL);
 	}

@@ -166,6 +166,8 @@ tile.BasicFarmer.name=Basic Farmer
 tile.ChargingStation.name=Charging Station
 tile.Fermenter.name=Fermenter
 tile.HeatingElement.name=Heating Element 
+tile.Condenser.name=Condenser
+tile.Distillery.name=Distillery
 
 //Blocks
 tile.StaticLamp.name=Static Lamp
@@ -225,8 +227,8 @@ tile.Steam.name=Steam
 fluid.Steam=Steam
 tile.Mash.name=Mash
 fluid.Mash=Mash
-tile.EvaporatedMash.name=Mash
-fluid.EvaporatedMash=Mash
+tile.EvaporatedMash.name=Evaporated Mash
+fluid.EvaporatedMash=Evaporated Mash
 
 //Gates
 tile.SignalMultiplier.name=Redstone Transducer
