@@ -17,6 +17,9 @@ import theking530.staticpower.machines.basicfarmer.TileEntityBasicFarmer;
 import theking530.staticpower.machines.batteries.ContainerBattery;
 import theking530.staticpower.machines.batteries.GuiBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityBattery;
+import theking530.staticpower.machines.boiler.ContainerDistillery;
+import theking530.staticpower.machines.boiler.GuiDistillery;
+import theking530.staticpower.machines.boiler.TileEntityDistillery;
 import theking530.staticpower.machines.chargingstation.ContainerChargingStation;
 import theking530.staticpower.machines.chargingstation.GuiChargingStation;
 import theking530.staticpower.machines.chargingstation.TileEntityChargingStation;
@@ -89,6 +92,11 @@ public class GuiHandler implements IGuiHandler {
 			case GuiIDRegistry.guiIDFluidGenerator:
 				if (entity instanceof TileEntityFluidGenerator) {	
 					return new ContainerFluidGenerator(player.inventory, (TileEntityFluidGenerator) entity);
+				}
+				return null;
+			case GuiIDRegistry.guiDistilery:
+				if (entity instanceof TileEntityDistillery) {	
+					return new ContainerDistillery(player.inventory, (TileEntityDistillery) entity);
 				}
 				return null;
 			case GuiIDRegistry.guiBasicFarmer:
@@ -203,6 +211,11 @@ public class GuiHandler implements IGuiHandler {
 			case GuiIDRegistry.guiIDFluidInfuser:
 				if (entity instanceof TileEntityFluidInfuser) {	
 					return new GuiFluidInfuser(player.inventory, (TileEntityFluidInfuser) entity);				
+				}
+				return null;
+			case GuiIDRegistry.guiDistilery:
+				if (entity instanceof TileEntityDistillery) {	
+					return new GuiDistillery(player.inventory, (TileEntityDistillery) entity);				
 				}
 				return null;
 			case GuiIDRegistry.guiIDFluidGenerator:

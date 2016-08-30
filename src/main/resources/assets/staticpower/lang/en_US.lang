@@ -95,6 +95,7 @@ item.StaticNugget.name=Static Nugget
 item.EnergizedNugget.name=Energized Nugget
 item.LumumNugget.name=Lumum Nugget
 item.IronNugget.name=Iron Nugget
+
 //Dusts
 item.SilverDust.name=Silver Dust
 item.TinDust.name=Tin Dust
@@ -163,6 +164,8 @@ tile.SolderingTable.name=Soldering Table
 tile.Quarry.name=Quarry
 tile.BasicFarmer.name=Basic Farmer
 tile.ChargingStation.name=Charging Station
+tile.Fermenter.name=Fermenter
+tile.HeatingElement.name=Heating Element 
 
 //Blocks
 tile.StaticLamp.name=Static Lamp
@@ -216,10 +219,15 @@ fluid.energizedfluid=§bEnergized Fluid
 tile.energizedfluid.name=§bEnergized Fluid
 fluid.lumumfluid=§eLumum Fluid
 tile.lumumfluid.name=§eLumum Fluid
-tile.Ethanol.name = Ethanol
-fluid.Ethanol = Ethanol
-tile.Steam.name = Steam
-fluid.Steam = Steam
+tile.Ethanol.name=Ethanol
+fluid.Ethanol=Ethanol
+tile.Steam.name=Steam
+fluid.Steam=Steam
+tile.Mash.name=Mash
+fluid.Mash=Mash
+tile.EvaporatedMash.name=Mash
+fluid.EvaporatedMash=Mash
+
 //Gates
 tile.SignalMultiplier.name=Redstone Transducer
 container.SignalMultiplier=Redstone Transducer

@@ -30,18 +30,24 @@ public class ModFluids {
 	public static Fluid LumumFluid;
 	public static Fluid Steam;
 	public static Fluid Ethanol;
+	public static Fluid Mash;
+	public static Fluid EvaporatedMash;
 	
 	public static String StaticFluidName = "staticfluid";
 	public static String EnergizedFluidName = "energizedfluid";
 	public static String LumumFluidName = "lumumfluid";
 	public static String EthanolName = "Ethanol";
 	public static String SteamFluidName = "Steam";
+	public static String MashName = "Mash";
+	public static String EvaporatedMashName = "EvaporatedMash";
 	
 	public static Block BlockStaticFluid;
 	public static Block BlockEnergizedFluid;
 	public static Block BlockLumumFluid;
 	public static Block BlockSteamFluid;
 	public static Block BlockEthanol;
+	public static Block BlockMash;
+	public static Block BlockEvaporatedMash;
 	
 	public static void init() {
 		
@@ -89,6 +95,24 @@ public class ModFluids {
 		GameRegistry.register(BlockEthanol);
 	    registerBucket(Ethanol);
 	    registerFluidBlockRendering(Ethanol, EthanolName);
+	    
+	    f  = new Fluid(MashName, getStill(MashName), getFlowing(MashName))
+		        .setDensity(150).setViscosity(1000);
+	    FluidRegistry.registerFluid(f);
+	    Mash = FluidRegistry.getFluid(f.getName());
+	    BlockMash = new BaseFluidBlock(Mash, new MaterialLiquid(MapColor.WOOD), MashName);
+		GameRegistry.register(BlockMash);
+	    registerBucket(Mash);
+	    registerFluidBlockRendering(Mash, MashName);
+	    
+	    f  = new Fluid(EvaporatedMashName, getStill(EvaporatedMashName), getFlowing(EvaporatedMashName))
+		        .setDensity(150).setViscosity(1000);
+	    FluidRegistry.registerFluid(f);
+	    EvaporatedMash = FluidRegistry.getFluid(f.getName());
+	    BlockEvaporatedMash = new BaseFluidBlock(EvaporatedMash, new MaterialLiquid(MapColor.WOOD), EvaporatedMashName);
+		GameRegistry.register(BlockEvaporatedMash);
+	    registerBucket(EvaporatedMash);
+	    registerFluidBlockRendering(EvaporatedMash, EvaporatedMashName);
 		
 	}
 	

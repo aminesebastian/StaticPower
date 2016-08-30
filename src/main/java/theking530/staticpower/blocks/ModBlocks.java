@@ -15,12 +15,14 @@ import theking530.staticpower.conduits.itemconduit.BlockItemConduit;
 import theking530.staticpower.conduits.staticconduit.BlockStaticConduit;
 import theking530.staticpower.machines.basicfarmer.BlockBasicFarmer;
 import theking530.staticpower.machines.batteries.BlockBattery;
+import theking530.staticpower.machines.boiler.BlockDistillery;
 import theking530.staticpower.machines.chargingstation.BlockChargingStation;
 import theking530.staticpower.machines.cropsqueezer.BlockCropSqueezer;
 import theking530.staticpower.machines.fermenter.BlockFermenter;
 import theking530.staticpower.machines.fluidgenerator.BlockFluidGenerator;
 import theking530.staticpower.machines.fluidinfuser.BlockFluidInfuser;
 import theking530.staticpower.machines.fusionfurnace.BlockFusionFurnace;
+import theking530.staticpower.machines.heatingelement.BlockHeatingElement;
 import theking530.staticpower.machines.mechanicalsqueezer.BlockMechanicalSqueezer;
 import theking530.staticpower.machines.poweredfurnace.BlockPoweredFurnace;
 import theking530.staticpower.machines.poweredgrinder.BlockPoweredGrinder;
@@ -81,6 +83,8 @@ public class ModBlocks {
 	public static Block Farmer;
 	public static Block MechanicalSqueezer;
 	public static Block Fermenter;
+	public static Block HeatingElement;
+	public static Block Distillery;
 	
 	public static Block LogicGateBasePlate;
 	public static Block SignalMultiplier;
@@ -147,6 +151,9 @@ public class ModBlocks {
 		ChunkLoader = new BlockChunkLoader("ChunkLoader").setHardness(3.5f);
 		RegisterHelper.registerBlock(ChunkLoader);
 		
+		HeatingElement = new BlockHeatingElement().setHardness(3.5f);
+		RegisterHelper.registerBlock(HeatingElement);
+		
 		BaseConduitBlock = new BaseConduitBlock(Material.IRON, "BaseConduitBlock").setHardness(3.5f);
 		RegisterHelper.registerBlock(BaseConduitBlock);
 		
@@ -212,6 +219,9 @@ public class ModBlocks {
 		
 		Quarry = new BlockQuarry();
 		RegisterHelper.registerBlock(Quarry);
+		
+		Distillery = new BlockDistillery().setUnlocalizedName("Distillery");
+		RegisterHelper.registerBlock(Distillery);
 		
 		FluidGenerator = new BlockFluidGenerator().setUnlocalizedName("FluidGenerator");
 		RegisterHelper.registerBlock(FluidGenerator);

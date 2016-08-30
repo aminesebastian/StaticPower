@@ -28,6 +28,7 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler{
 	public int INITIAL_TANK_CAPACITY;
 	public FluidTank TANK;
 	public int FLUID_CONTAINER_SLOT = -1;
+	public FluidContainerMode FLUID_CONTAINER_MODE = FluidContainerMode.FILL;
 	
 	public int CONTAINER_MOVE_TIMER = 0;
 	public int CONTAINER_MOVE_SPEED = 4;
@@ -41,8 +42,9 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler{
 		TANK = new FluidTank(INITIAL_TANK_CAPACITY);
 		FLUID_DIST = new FluidDistributor(this, TANK);
 	}
-	public void setFluidContainerSlot(int slot) {
+	public void setFluidContainerSlot(int slot, FluidContainerMode mode) {
 		FLUID_CONTAINER_SLOT = slot;
+		FLUID_CONTAINER_MODE = mode;
 	}
 	@Override
 	public void update(){
@@ -60,9 +62,15 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler{
 		}else{
 			if(SLOTS_INPUT.getStackInSlot(FLUID_CONTAINER_SLOT) != null && SLOTS_INPUT.getStackInSlot(FLUID_CONTAINER_SLOT).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null) && SLOTS_INPUT.getStackInSlot(FLUID_CONTAINER_SLOT).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null) instanceof FluidHandlerItemStack) {
 				FluidHandlerItemStack tempContainer = (FluidHandlerItemStack)SLOTS_INPUT.getStackInSlot(FLUID_CONTAINER_SLOT).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
-				if(tempContainer.getFluid() != null && tempContainer.getFluid().amount > 0) {
+				if(FLUID_CONTAINER_MODE ==  FluidContainerMode.DRAIN && tempContainer.getFluid() != null && tempContainer.getFluid().amount > 0) {
 					if(tempContainer.getFluid().isFluidEqual(TANK.getFluid()) || TANK.getFluid() == null) {
 						TANK.fill(tempContainer.drain(Math.min(TANK.getCapacity()-TANK.getFluidAmount(), 100), true), true);
+						worldObj.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, .1f, 1, false);
+						CONTAINER_MOVE_TIMER = 0;	
+					}
+				}else if(FLUID_CONTAINER_MODE == FluidContainerMode.FILL && TANK.getFluid() != null){
+					if(tempContainer.getFluid() == null || tempContainer.getFluid().isFluidEqual(TANK.getFluid())) {
+						TANK.drain(tempContainer.fill(new FluidStack(TANK.getFluid().getFluid(), Math.min(TANK.getCapacity()-TANK.getFluidAmount(), 100)), true), true);	
 						worldObj.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.BLOCKS, .1f, 1, false);
 						CONTAINER_MOVE_TIMER = 0;	
 					}

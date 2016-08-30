@@ -35,7 +35,7 @@ public class GUIUtilities {
 		return new Vector3(255,255,255);
 	}
 	public static String getStoredPowerFormatted(StaticEnergyStorage Storage) {
-		return EnumTextFormatting.WHITE+ ""+ NumberFormat.getNumberInstance(Locale.US).format(Storage.getEnergyStored()) + "/" + NumberFormat.getNumberInstance(Locale.US).format(Storage.getMaxEnergyStored()) + " RF";
+		return NumberFormat.getNumberInstance(Locale.US).format(Storage.getEnergyStored()) + "/" + NumberFormat.getNumberInstance(Locale.US).format(Storage.getMaxEnergyStored()) + " RF";
 	}
 	public static String getMaxExtractFormatted(StaticEnergyStorage Storage) {
 		return NumberFormat.getNumberInstance(Locale.US).format(Storage.getMaxExtract()) + " RF/t";

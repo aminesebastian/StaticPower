@@ -10,6 +10,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.machines.BaseMachineWithTank;
+import theking530.staticpower.machines.FluidContainerMode;
 import theking530.staticpower.power.PowerDistributor;
 
 public class TileEntityFluidGenerator extends BaseMachineWithTank{
@@ -20,7 +21,7 @@ public class TileEntityFluidGenerator extends BaseMachineWithTank{
 			
 	public TileEntityFluidGenerator() {
 		initializeBaseMachineWithTank(1, 0, 50000, 480, 0, 0, 1, 0, 10000);
-		setFluidContainerSlot(0);
+		setFluidContainerSlot(0, FluidContainerMode.DRAIN);
 		POWER_DIST = new PowerDistributor(this, STORAGE);
 		MOVE_SPEED = 10;
 	}

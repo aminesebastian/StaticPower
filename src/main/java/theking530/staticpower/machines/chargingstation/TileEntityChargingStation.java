@@ -10,6 +10,7 @@ public class TileEntityChargingStation extends BaseMachine {
 	public TileEntityChargingStation() {
 		initializeBasicMachine(2, 0, 100000, 500, 2, 0, 6, 4);
 		setBatterySlot(4);
+		STORAGE.setMaxExtract(512);
 	}
 	@Override
 	public void process(){

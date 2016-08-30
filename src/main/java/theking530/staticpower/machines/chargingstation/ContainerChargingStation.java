@@ -125,7 +125,7 @@ public class ContainerChargingStation extends Container {
 	            }else if (invSlot >= 6 && invSlot < 33) {
 	                if (!this.mergeItemStack(itemstack1, 33, 42, false)) {
 	                    return null;
-	                }
+	            }
 	            }else if (invSlot >= 33 && invSlot < 42 && !this.mergeItemStack(itemstack1, 6, 33, false))  {
 	                return null;
 	            }

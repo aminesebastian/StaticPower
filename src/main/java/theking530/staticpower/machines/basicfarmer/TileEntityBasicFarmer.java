@@ -27,6 +27,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.machines.BaseMachineWithTank;
+import theking530.staticpower.machines.FluidContainerMode;
 import theking530.staticpower.utils.InventoryUtilities;
 
 public class TileEntityBasicFarmer extends BaseMachineWithTank {
@@ -43,7 +44,7 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 	public TileEntityBasicFarmer() {
 		initializeBaseMachineWithTank(2, 40, 100000, 500, 10, 0, 4, 10, 10000);		
 		setBatterySlot(3);
-		setFluidContainerSlot(2);
+		setFluidContainerSlot(2, FluidContainerMode.DRAIN);
 		CURRENT_COORD = getStartingCoord();
 		RAND = new Random();
 	}

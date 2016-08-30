@@ -13,9 +13,17 @@
             "model": "forge:fluid",
             "custom": { "fluid": "lumumfluid" }
         },
-				"ethanol": {
+		"ethanol": {
             "model": "forge:fluid",
             "custom": { "fluid": "ethanol" }
+        },
+		"mash": {
+            "model": "forge:fluid",
+            "custom": { "fluid": "mash" }
+        },
+		"evaporatedmash": {
+            "model": "forge:fluid",
+            "custom": { "fluid": "evaporatedmash" }
         },
 		"steam": {
             "model": "forge:fluid",

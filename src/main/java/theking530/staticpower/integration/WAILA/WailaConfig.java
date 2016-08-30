@@ -13,14 +13,11 @@ import theking530.staticpower.machines.fermenter.TileEntityFermenter;
 import theking530.staticpower.machines.fluidgenerator.TileEntityFluidGenerator;
 import theking530.staticpower.machines.fluidinfuser.TileEntityFluidInfuser;
 import theking530.staticpower.machines.fusionfurnace.TileEntityFusionFurnace;
+import theking530.staticpower.machines.heatingelement.TileEntityHeatingElement;
 import theking530.staticpower.machines.poweredfurnace.TileEntityPoweredFurnace;
 import theking530.staticpower.machines.poweredgrinder.TileEntityPoweredGrinder;
 import theking530.staticpower.machines.quarry.TileEntityQuarry;
 import theking530.staticpower.machines.solarpanel.TileEntityBasicSolarPanel;
-import theking530.staticpower.machines.solarpanel.TileEntityCreativeSolarPanel;
-import theking530.staticpower.machines.solarpanel.TileEntityEnergizedSolarPanel;
-import theking530.staticpower.machines.solarpanel.TileEntityLumumSolarPanel;
-import theking530.staticpower.machines.solarpanel.TileEntityStaticSolarPanel;
 
 public class WailaConfig {
 
@@ -40,11 +37,13 @@ public class WailaConfig {
 		registrar.registerBodyProvider(new WailaBasicTankMachineProvider(), TileEntityFermenter.class);
 		registrar.registerBodyProvider(new WailaFluidGeneratorProvider(), TileEntityFluidGenerator.class);
 		
+		registrar.registerBodyProvider(new WailaHeatingElementProvider(), TileEntityHeatingElement.class);
+		
 		registrar.registerBodyProvider(new WailaSolarPanelProvider(), TileEntityBasicSolarPanel.class);
-		registrar.registerBodyProvider(new WailaSolarPanelProvider(), TileEntityStaticSolarPanel.class);
-		registrar.registerBodyProvider(new WailaSolarPanelProvider(), TileEntityEnergizedSolarPanel.class);
-		registrar.registerBodyProvider(new WailaSolarPanelProvider(), TileEntityLumumSolarPanel.class);
-		registrar.registerBodyProvider(new WailaSolarPanelProvider(), TileEntityCreativeSolarPanel.class);
+		//registrar.registerBodyProvider(new WailaSolarPanelProvider(), TileEntityStaticSolarPanel.class);
+		//registrar.registerBodyProvider(new WailaSolarPanelProvider(), TileEntityEnergizedSolarPanel.class);
+		//registrar.registerBodyProvider(new WailaSolarPanelProvider(), TileEntityLumumSolarPanel.class);
+		//registrar.registerBodyProvider(new WailaSolarPanelProvider(), TileEntityCreativeSolarPanel.class);
 	}
 	public static void callIMC() {
 		FMLInterModComms.sendMessage("Waila", "register", WailaConfig.class.getName() + ".callbackRegister");

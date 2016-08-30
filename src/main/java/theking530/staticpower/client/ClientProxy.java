@@ -15,6 +15,7 @@ import theking530.staticpower.client.render.tileentitys.TileEntityRenderBattery;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderChargingStation;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderChest;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderCropSqueezer;
+import theking530.staticpower.client.render.tileentitys.TileEntityRenderFermenter;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderFluidGenerator;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderFluidInfuser;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderFusionFurnace;
@@ -40,6 +41,7 @@ import theking530.staticpower.machines.batteries.tileentities.TileEntityLumumBat
 import theking530.staticpower.machines.batteries.tileentities.TileEntityStaticBattery;
 import theking530.staticpower.machines.chargingstation.TileEntityChargingStation;
 import theking530.staticpower.machines.cropsqueezer.TileEntityCropSqueezer;
+import theking530.staticpower.machines.fermenter.TileEntityFermenter;
 import theking530.staticpower.machines.fluidgenerator.TileEntityFluidGenerator;
 import theking530.staticpower.machines.fluidinfuser.TileEntityFluidInfuser;
 import theking530.staticpower.machines.fusionfurnace.TileEntityFusionFurnace;
@@ -72,6 +74,8 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCropSqueezer.class, new TileEntityRenderCropSqueezer());
 		//Fluid Generator
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFluidGenerator.class, new TileEntityRenderFluidGenerator());
+		//Fermenter
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFermenter.class, new TileEntityRenderFermenter());
 		//Smelter
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPoweredFurnace.class, new TileEntityRenderPoweredFurnace());
 		//Grinder

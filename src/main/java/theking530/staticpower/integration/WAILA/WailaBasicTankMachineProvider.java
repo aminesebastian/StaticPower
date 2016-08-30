@@ -35,7 +35,7 @@ public class WailaBasicTankMachineProvider implements IWailaDataProvider{
 		BaseMachineWithTank tempMachine = (BaseMachineWithTank) accessor.getTileEntity();
 		String percentage = "Progress: " + (int)(((float)tempMachine.PROCESSING_TIMER/(float)tempMachine.PROCESSING_TIME)*100) + "%";
 		String storedString;
-		String fluid = tempMachine.TANK.getFluid() == null ? "Fluid: Empty" : "Fluid: " + tempMachine.TANK.getFluid().getLocalizedName() + " (" + tempMachine.TANK.getFluidAmount() + "mB)";
+		String fluid = tempMachine.TANK.getFluid() == null ? "Fluid: " +  EnumTextFormatting.WHITE + "Empty" : "Fluid: " + EnumTextFormatting.WHITE + "" + tempMachine.TANK.getFluid().getLocalizedName() + " (" + tempMachine.TANK.getFluidAmount() + "mB)";
 		currenttip.add(percentage);
 		if(tempMachine.STORAGE.getEnergyRatio() >= .75) {
 			storedString = EnumTextFormatting.GREEN.toString();

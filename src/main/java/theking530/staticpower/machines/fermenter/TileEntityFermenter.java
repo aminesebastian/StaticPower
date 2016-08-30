@@ -5,14 +5,16 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.handlers.crafting.registries.FermenterRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistry;
 import theking530.staticpower.machines.BaseMachineWithTank;
+import theking530.staticpower.machines.FluidContainerMode;
 import theking530.staticpower.utils.InventoryUtilities;
 
 public class TileEntityFermenter extends BaseMachineWithTank {
 
+	
 	public TileEntityFermenter() {
 		initializeBaseMachineWithTank(4, 500, 100000, 160, 50, 1, 11, 0, 5000);
-		setBatterySlot(9);
-		setFluidContainerSlot(10);
+		setBatterySlot(10);
+		setFluidContainerSlot(9, FluidContainerMode.FILL);
 	}
 	@Override
 	public String getName() {
@@ -32,6 +34,9 @@ public class TileEntityFermenter extends BaseMachineWithTank {
 	}
 	@Override
 	public boolean canProcess(ItemStack itemstack) {
+		if(itemstack == null) {
+			return false;
+		}
 		FluidStack fluidstack = FermenterRecipeRegistry.Fermenting().getFluidResult(itemstack);
 		if(hasResult(itemstack) && fluidstack != null) {
 			if(fluidstack.amount + TANK.getFluidAmount() > TANK.getCapacity()) {
@@ -48,9 +53,6 @@ public class TileEntityFermenter extends BaseMachineWithTank {
 			}
 			if(TANK.getFluidAmount() + fluidstack.amount <= TANK.getCapacity()) {
 				return true;
-			}
-			if(TANK.getFluidAmount() + fluidstack.amount > TANK.getCapacity()) {
-				return false;
 			}
 			if (TANK.getFluid() != null && fluidstack.isFluidEqual(TANK.getFluid())) {
 				return true;
@@ -69,7 +71,7 @@ public class TileEntityFermenter extends BaseMachineWithTank {
 		if(!worldObj.isRemote) {
 			if(!isProcessing() && !isMoving()) {
 				for(int i=0; i<9; i++) {
-					if(canProcess(SLOTS_INPUT.getStackInSlot(i))) {
+					if(SLOTS_INPUT.getStackInSlot(i) != null && canProcess(SLOTS_INPUT.getStackInSlot(i))) {
 						moveItem(SLOTS_INPUT, i, SLOTS_INTERNAL, 0);
 						MOVE_TIMER = 1;
 						//System.out.println("HI");
@@ -80,7 +82,7 @@ public class TileEntityFermenter extends BaseMachineWithTank {
 				if(!isProcessing() && SLOTS_INTERNAL.getStackInSlot(0) != null) {
 					PROCESSING_TIMER++;
 				}
-				if(isProcessing() && canProcess(SLOTS_INTERNAL.getStackInSlot(0))) {
+				if(isProcessing()) {
 					if(PROCESSING_TIMER < PROCESSING_TIME) {
 						PROCESSING_TIMER++;
 						//System.out.println(STORAGE.extractEnergy(getProcessingCost()/PROCESSING_TIME, false));
