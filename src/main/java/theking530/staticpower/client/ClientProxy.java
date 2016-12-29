@@ -35,6 +35,7 @@ import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRen
 import theking530.staticpower.conduits.fluidconduit.TileEntityFluidConduit;
 import theking530.staticpower.conduits.itemconduit.TileEntityItemConduit;
 import theking530.staticpower.conduits.staticconduit.TileEntityStaticConduit;
+import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.integration.WAILA.WailaConfig;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityEnergizedBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityLumumBattery;
@@ -132,8 +133,11 @@ public class ClientProxy extends CommonProxy {
 		//Block Breaker
 		//ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBlockBreaker.class, new TileEntityRenderBlockBreaker());
 		//MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.BlockBreaker), new ItemRenderBlockBreaker());
+
 		
 	    ItemRenderRegistry.initItemRenderers();
+	    ModFluids.initBlockRendering();
+	    ModFluids.initItemRendering();
 	}
 	public static void registerModelLoader(Item item, ResourceLocation modelLocation) {
 		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(modelLocation, "inventory"));

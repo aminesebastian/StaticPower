@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Locale;
 
 import net.minecraft.block.BlockLiquid;
-import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -28,7 +27,7 @@ import theking530.staticpower.items.ItemBase;
 import theking530.staticpower.utils.EnumTextFormatting;
 import theking530.staticpower.utils.GUIUtilities;
 
-public class BaseFluidCapsule extends ItemBase implements IItemColor  {
+public class BaseFluidCapsule extends ItemBase { // implements IItemColor  {
 
 	public int CAPACITY;
 	
@@ -147,6 +146,7 @@ public class BaseFluidCapsule extends ItemBase implements IItemColor  {
     public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt){
     	return new FluidHandlerItemStack(stack, CAPACITY);
     }
+    /*
 	@Override
 	public int getColorFromItemstack(ItemStack stack, int tintIndex) {
 		if(tintIndex == 0) {
@@ -167,4 +167,5 @@ public class BaseFluidCapsule extends ItemBase implements IItemColor  {
 			return 1;
 		}
 	}
+	*/
 }

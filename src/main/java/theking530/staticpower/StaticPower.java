@@ -21,6 +21,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.client.CommonProxy;
+import theking530.staticpower.client.ItemRenderRegistry;
 import theking530.staticpower.conduits.fluidconduit.TileEntityFluidConduit;
 import theking530.staticpower.conduits.itemconduit.TileEntityItemConduit;
 import theking530.staticpower.conduits.staticconduit.TileEntityStaticConduit;
@@ -120,6 +121,9 @@ public class StaticPower {
             }
         }
 	    
+
+
+	    
 		GameRegistry.registerTileEntity(BaseConduitTileEntity.class, "BaseConduitTileEntity");
 		GameRegistry.registerTileEntity(BaseConduitTileEntity.class, "BaseChunkLoader");
 		
@@ -175,6 +179,7 @@ public class StaticPower {
 		proxy.registerProxies();
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());	
 		
+	
 		ShapedRecipes.registerFullRecipes();   
 		ShaplessRecipes.registerFullRecipes(); 
 		SmeltingRecipes.registerFullRecipes();

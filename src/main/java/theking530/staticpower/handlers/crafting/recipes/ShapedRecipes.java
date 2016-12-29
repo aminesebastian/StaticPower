@@ -84,7 +84,7 @@ public class ShapedRecipes {
 			'G', Blocks.GLASS, 'C', ModItems.BasicCircuit, 'T', ModItems.TinPlate});
 			
 			//Heating Element --------------------------------------------------------------------------------------------------
-			GameRegistry.addRecipe(new ItemStack(ModBlocks.HeatingElement), new Object[]{"CCC", "WRW", "CC", 
+			GameRegistry.addRecipe(new ItemStack(ModBlocks.HeatingElement), new Object[]{"WCW", "W W", "WCW", 
 			'R', ModItems.SilverPlate , 'C', ModItems.CopperPlate, 'W', ModItems.CopperCoil});
 			
 			//Obsidian Glass --------------------------------------------------------------------------------------------------

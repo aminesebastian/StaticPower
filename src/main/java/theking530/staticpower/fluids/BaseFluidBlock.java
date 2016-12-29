@@ -26,7 +26,7 @@ protected Fluid fluid;
 		super(fluid, material);
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		RegisterHelper.registerItem(new BaseItemBlock(this, name));
+		//RegisterHelper.registerItem(new BaseItemBlock(this, name));
 		//setDefaultState(blockState.getBaseState().withProperty(LEVEL, 7));
 	}
 	@Override

@@ -50,7 +50,6 @@ public class ModFluids {
 	public static Block BlockEvaporatedMash;
 	
 	public static void init() {
-		
 		Fluid f  = new Fluid(StaticFluidName, getStill(StaticFluidName), getFlowing(StaticFluidName))
 		        .setDensity(1500).setViscosity(3000);
 	    FluidRegistry.registerFluid(f);
@@ -58,7 +57,6 @@ public class ModFluids {
 	    BlockStaticFluid = new BaseFluidBlock(StaticFluid, new MaterialLiquid(MapColor.EMERALD), StaticFluidName);
 		GameRegistry.register(BlockStaticFluid);
 	    registerBucket(StaticFluid);
-	    registerFluidBlockRendering(StaticFluid, StaticFluidName);
 	    
 	    f  = new Fluid(EnergizedFluidName, getStill(EnergizedFluidName), getFlowing(EnergizedFluidName))
 		        .setDensity(1500).setViscosity(3000);
@@ -67,7 +65,6 @@ public class ModFluids {
 	    BlockEnergizedFluid = new BaseFluidBlock(EnergizedFluid, new MaterialLiquid(MapColor.DIAMOND), EnergizedFluidName);
 		GameRegistry.register(BlockEnergizedFluid);
 	    registerBucket(EnergizedFluid);
-	    registerFluidBlockRendering(EnergizedFluid, EnergizedFluidName);
 	    
 	    f  = new Fluid(LumumFluidName, getStill(LumumFluidName), getFlowing(LumumFluidName))
 		        .setDensity(1500).setViscosity(3000);
@@ -76,7 +73,6 @@ public class ModFluids {
 	    BlockLumumFluid = new BaseFluidBlock(LumumFluid, new MaterialLiquid(MapColor.GOLD), LumumFluidName);
 		GameRegistry.register(BlockLumumFluid);
 	    registerBucket(LumumFluid);
-	    registerFluidBlockRendering(LumumFluid, LumumFluidName);
 	    
 	    f  = new Fluid(SteamFluidName, getStill(SteamFluidName), getFlowing(SteamFluidName))
 		        .setDensity(1500).setViscosity(3000).setGaseous(true);
@@ -85,7 +81,6 @@ public class ModFluids {
 	    BlockSteamFluid = new BaseFluidBlock(Steam, new MaterialLiquid(MapColor.QUARTZ), SteamFluidName);
 		GameRegistry.register(BlockSteamFluid);
 	    registerBucket(Steam);
-	    registerFluidBlockRendering(Steam, SteamFluidName);
 	    
 	    f  = new Fluid(EthanolName, getStill(EthanolName), getFlowing(EthanolName))
 		        .setDensity(150).setViscosity(1000);
@@ -94,7 +89,6 @@ public class ModFluids {
 	    BlockEthanol = new BaseFluidBlock(Ethanol, new MaterialLiquid(MapColor.ICE), EthanolName);
 		GameRegistry.register(BlockEthanol);
 	    registerBucket(Ethanol);
-	    registerFluidBlockRendering(Ethanol, EthanolName);
 	    
 	    f  = new Fluid(MashName, getStill(MashName), getFlowing(MashName))
 		        .setDensity(150).setViscosity(1000);
@@ -103,7 +97,6 @@ public class ModFluids {
 	    BlockMash = new BaseFluidBlock(Mash, new MaterialLiquid(MapColor.WOOD), MashName);
 		GameRegistry.register(BlockMash);
 	    registerBucket(Mash);
-	    registerFluidBlockRendering(Mash, MashName);
 	    
 	    f  = new Fluid(EvaporatedMashName, getStill(EvaporatedMashName), getFlowing(EvaporatedMashName))
 		        .setDensity(150).setViscosity(1000);
@@ -111,11 +104,40 @@ public class ModFluids {
 	    EvaporatedMash = FluidRegistry.getFluid(f.getName());
 	    BlockEvaporatedMash = new BaseFluidBlock(EvaporatedMash, new MaterialLiquid(MapColor.WOOD), EvaporatedMashName);
 		GameRegistry.register(BlockEvaporatedMash);
-	    registerBucket(EvaporatedMash);
-	    registerFluidBlockRendering(EvaporatedMash, EvaporatedMashName);
+	    registerBucket(EvaporatedMash);   
 		
 	}
-	
+	@SideOnly(Side.CLIENT)
+	public static void initBlockRendering() {
+	    registerFluidBlockRendering(StaticFluid, StaticFluidName);
+	    registerFluidBlockRendering(EnergizedFluid, EnergizedFluidName);
+	    registerFluidBlockRendering(LumumFluid, LumumFluidName);
+	    registerFluidBlockRendering(Steam, SteamFluidName);
+	    registerFluidBlockRendering(Ethanol, EthanolName);
+	    registerFluidBlockRendering(Mash, MashName);
+	    registerFluidBlockRendering(EvaporatedMash, EvaporatedMashName);		
+	}
+	@SideOnly(Side.CLIENT)
+	public static void initItemRendering() {
+		registerFluidItemRendering(StaticFluid, StaticFluidName);
+	    registerFluidItemRendering(EnergizedFluid, EnergizedFluidName);
+	    registerFluidItemRendering(LumumFluid, LumumFluidName);
+	    registerFluidItemRendering(Steam, SteamFluidName);
+	    registerFluidItemRendering(Ethanol, EthanolName);
+	    registerFluidItemRendering(Mash, MashName);
+	    registerFluidItemRendering(EvaporatedMash, EvaporatedMashName);		
+	}
+	public static Fluid createFluid(String name, Fluid fluid, Block fluidBlock, MapColor color) {
+		Fluid f  = new Fluid(name, getStill(name), getFlowing(name))
+		        .setDensity(1500).setViscosity(3000);
+	    FluidRegistry.registerFluid(f);
+	    fluid = FluidRegistry.getFluid(f.getName());
+	    fluidBlock = new BaseFluidBlock(fluid, new MaterialLiquid(color), name);
+		GameRegistry.register(fluidBlock);
+	    registerBucket(fluid);
+	    registerFluidBlockRendering(fluid, name);
+		return f;
+	}
 	public static ResourceLocation getStill(String fluidName) {
 			return new ResourceLocation(Reference.MODID + ":blocks/" + fluidName + "Still");
 	}
@@ -130,16 +152,22 @@ public class ModFluids {
 
 	    FluidStateMapper mapper = new FluidStateMapper(fluid);
 	    Block block = fluid.getBlock();
+	    // block-model
+	    if (block != null) {
+	      ModelLoader.setCustomStateMapper(block, mapper);
+	    }
+	}
+	@SideOnly(Side.CLIENT)
+	public static void registerFluidItemRendering(Fluid fluid, String name) {
+
+	    FluidStateMapper mapper = new FluidStateMapper(fluid);
+	    Block block = fluid.getBlock();
 	    Item item = Item.getItemFromBlock(block);
 
 	    // item-model
 	    if (item != null) {
 	      ModelLoader.registerItemVariants(item);
 	      ModelLoader.setCustomMeshDefinition(item, mapper);
-	    }
-	    // block-model
-	    if (block != null) {
-	      ModelLoader.setCustomStateMapper(block, mapper);
 	    }
 	}
 	 public static class FluidStateMapper extends StateMapperBase implements ItemMeshDefinition {
@@ -161,6 +189,6 @@ public class ModFluids {
 		    public ModelResourceLocation getModelLocation(ItemStack stack) {
 		      return location;
 		    }
-		  }
+	}
 }
 
