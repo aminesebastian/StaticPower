@@ -166,6 +166,8 @@ public class ItemRenderRegistry {
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.AdvancedEarth));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.Fermenter));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.HeatingElement));
+		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.Distillery));
+		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.Condenser));
 		
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.SilverOre));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.CopperOre));

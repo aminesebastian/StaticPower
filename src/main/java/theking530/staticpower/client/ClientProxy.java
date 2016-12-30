@@ -14,7 +14,9 @@ import theking530.staticpower.client.render.conduit.TileEntityRenderStaticCondui
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderBattery;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderChargingStation;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderChest;
+import theking530.staticpower.client.render.tileentitys.TileEntityRenderCondenser;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderCropSqueezer;
+import theking530.staticpower.client.render.tileentitys.TileEntityRenderDistillery;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderFermenter;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderFluidGenerator;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderFluidInfuser;
@@ -41,7 +43,9 @@ import theking530.staticpower.machines.batteries.tileentities.TileEntityEnergize
 import theking530.staticpower.machines.batteries.tileentities.TileEntityLumumBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityStaticBattery;
 import theking530.staticpower.machines.chargingstation.TileEntityChargingStation;
+import theking530.staticpower.machines.condenser.TileEntityCondenser;
 import theking530.staticpower.machines.cropsqueezer.TileEntityCropSqueezer;
+import theking530.staticpower.machines.distillery.TileEntityDistillery;
 import theking530.staticpower.machines.fermenter.TileEntityFermenter;
 import theking530.staticpower.machines.fluidgenerator.TileEntityFluidGenerator;
 import theking530.staticpower.machines.fluidinfuser.TileEntityFluidInfuser;
@@ -129,6 +133,13 @@ public class ClientProxy extends CommonProxy {
 		
 		//SolderingTable
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySolderingTable.class, new TileEntityRenderSolderingTable());
+		
+		//Distillery
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDistillery.class, new TileEntityRenderDistillery());
+		
+		//Condenser
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCondenser.class, new TileEntityRenderCondenser());
+		
 		
 		//Block Breaker
 		//ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBlockBreaker.class, new TileEntityRenderBlockBreaker());

@@ -256,24 +256,6 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 		}
 		return true;
 	}
-	public void readFromNBT(NBTTagCompound nbt) {
-        super.readFromNBT(nbt);      
-    }		
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
-		return nbt;	
-	}
-	@Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		readFromNBT(pkt.getNbtCompound());
-	}
-    @Nullable
-    public SPacketUpdateTileEntity getUpdatePacket(){
-    	NBTTagCompound tag = new NBTTagCompound();
-    	writeToNBT(tag);
-    	return new SPacketUpdateTileEntity(pos, getBlockMetadata(), tag);
-    }
 	public List<ItemStack> getCurrentBlockDrops() {
 		return worldObj.getBlockState(CURRENT_COORD).getBlock().getDrops(worldObj, CURRENT_COORD, worldObj.getBlockState(CURRENT_COORD), 0);
 	}

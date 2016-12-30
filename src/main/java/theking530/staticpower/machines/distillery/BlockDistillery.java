@@ -23,9 +23,6 @@ public class BlockDistillery extends BaseMachineBlock{
 		setHardness(3.5f);
 	    setResistance(5.0f);
 	}
-	public EnumBlockRenderType getRenderType(IBlockState state) {
-		return EnumBlockRenderType.MODEL;
-	}
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
     	if (world.isRemote) {

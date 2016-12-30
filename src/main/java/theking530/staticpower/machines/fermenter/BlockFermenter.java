@@ -31,7 +31,6 @@ public class BlockFermenter extends BaseMachineBlock{
 	    setResistance(5.0f);
 		setCreativeTab(StaticPower.StaticPower);
 	}
-
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
     	if (world.isRemote) {

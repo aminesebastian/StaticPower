@@ -87,6 +87,18 @@ public class ShapedRecipes {
 			GameRegistry.addRecipe(new ItemStack(ModBlocks.HeatingElement), new Object[]{"WCW", "W W", "WCW", 
 			'R', ModItems.SilverPlate , 'C', ModItems.CopperPlate, 'W', ModItems.CopperCoil});
 			
+			//Fermenter --------------------------------------------------------------------------------------------------
+			GameRegistry.addRecipe(new ItemStack(ModBlocks.HeatingElement), new Object[]{"IPI", "GMG", "IPI", 
+			'G', Blocks.GLASS , 'I', ModItems.IronPlate, 'P', Blocks.PISTON, 'M', ModBlocks.MachineBlock});
+			
+			//Distillery --------------------------------------------------------------------------------------------------
+			GameRegistry.addRecipe(new ItemStack(ModBlocks.Distillery), new Object[]{"GGG", "BMB", "CCC", 
+			'G', Blocks.GLASS , 'C', ModItems.CopperPlate, 'B', Items.BUCKET, 'M', ModBlocks.MachineBlock});
+			
+			//Condenser --------------------------------------------------------------------------------------------------
+			GameRegistry.addRecipe(new ItemStack(ModBlocks.Condenser), new Object[]{"CCC", "BMB", "GGG", 
+			'G', Blocks.GLASS , 'C', ModItems.CopperPlate, 'B', Items.BUCKET, 'M', ModBlocks.MachineBlock});
+			
 			//Obsidian Glass --------------------------------------------------------------------------------------------------
 			GameRegistry.addRecipe(new ItemStack(ModBlocks.ObsidianGlass, 4), new Object[]{"O O", " G ", "O O", 
 			'G', Blocks.GLASS, 'O', Blocks.OBSIDIAN});

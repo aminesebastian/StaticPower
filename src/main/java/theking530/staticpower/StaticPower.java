@@ -121,8 +121,6 @@ public class StaticPower {
             }
         }
 	    
-
-
 	    
 		GameRegistry.registerTileEntity(BaseConduitTileEntity.class, "BaseConduitTileEntity");
 		GameRegistry.registerTileEntity(BaseConduitTileEntity.class, "BaseChunkLoader");

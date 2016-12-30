@@ -62,13 +62,22 @@ public class TileEntityFluidGenerator extends BaseMachineWithTank{
 	public int getFluidRFOutput(FluidStack fluid) {
 		if(fluid != null) {
 			if(fluid.getFluid() == ModFluids.StaticFluid) {
-				return 120;
+				return 128;
 			}
 			if(fluid.getFluid() == ModFluids.EnergizedFluid) {
-				return 240;
+				return 256;
 			}
 			if(fluid.getFluid() == ModFluids.LumumFluid) {
-				return 480;
+				return 512;
+			}
+			if(fluid.getFluid() == ModFluids.Ethanol) {
+				return 240;
+			}
+			if(fluid.getFluid() == ModFluids.EvaporatedMash) {
+				return 40;
+			}
+			if(fluid.getFluid() == ModFluids.Mash) {
+				return 20;
 			}
 		}
 		return 0;
