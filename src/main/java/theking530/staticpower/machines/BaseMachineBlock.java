@@ -124,7 +124,6 @@ public class BaseMachineBlock extends BlockContainer implements IWrenchable {
 
 				TE.incrementSide(OldSidePicker.getAdjustedEnumFacing(facing, currentMeta).ordinal());
 				TE.sync();
-				TE.markForUpdate();
 			}	
 		}
 	}	

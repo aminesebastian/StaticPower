@@ -18,10 +18,10 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.client.CommonProxy;
-import theking530.staticpower.client.ItemRenderRegistry;
 import theking530.staticpower.conduits.fluidconduit.TileEntityFluidConduit;
 import theking530.staticpower.conduits.itemconduit.TileEntityItemConduit;
 import theking530.staticpower.conduits.staticconduit.TileEntityStaticConduit;
@@ -38,8 +38,10 @@ import theking530.staticpower.handlers.crafting.recipes.ShaplessRecipes;
 import theking530.staticpower.handlers.crafting.recipes.SmeltingRecipes;
 import theking530.staticpower.handlers.crafting.recipes.SolderingRecipes;
 import theking530.staticpower.handlers.crafting.recipes.SqueezerRecipes;
+import theking530.staticpower.handlers.crafting.recipes.ToolRecipes;
 import theking530.staticpower.integration.TIC.TinkersIMC;
 import theking530.staticpower.items.ModItems;
+import theking530.staticpower.items.tools.basictools.ModTools;
 import theking530.staticpower.machines.basicfarmer.TileEntityBasicFarmer;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityBasicBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityEnergizedBattery;
@@ -109,6 +111,13 @@ public class StaticPower {
 		ModBlocks.init();
 		ModFluids.init();
 		ModItems.init();
+		ModTools.init();
+		
+		if(preEvent.getSide() == Side.CLIENT) {
+		    ModFluids.initBlockRendering();
+		    ModFluids.initItemRendering();
+		}
+		
 	    OreGenerationHandler.intialize();
 	    CommonProxy.preInit();
 	    if (Loader.instance().isModLoaded("tconstruct")) {
@@ -187,6 +196,7 @@ public class StaticPower {
 		InfuserRecipes.registerInfusionRecipes();
 		SqueezerRecipes.registerSqueezingRecipes();
 		FermenterRecipes.registerFermenterRecipes();
+		ToolRecipes.registerToolRecipes();
 	}
 	@SubscribeEvent
 	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {

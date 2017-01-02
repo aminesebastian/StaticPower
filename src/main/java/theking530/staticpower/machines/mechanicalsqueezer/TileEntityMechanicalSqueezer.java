@@ -9,34 +9,43 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
 import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistry;
+import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent;
 import theking530.staticpower.tileentity.BaseTileEntity;
 import theking530.staticpower.utils.InventoryUtilities;
 
 public class TileEntityMechanicalSqueezer extends BaseTileEntity {
 
 	private String customName;
-	public FluidTank TANK = new FluidTank(5000);
+	public FluidTank TANK;
 	public int PROCESSING_TIMER = 0;
 	public int PROCESSING_TIME = 20;
 	public int MOVE_TIMER = 0;
 	public int MOVE_SPEED = 4;
+	public int FLUID_TO_CONTAINER_RATE = 100; //1 Bucket
 	
+	public DrainToBucketComponent DRAIN_COMPONENT;
+
 	public TileEntityMechanicalSqueezer() {
-		initializeBasicTileEntity(1, 2, 1);
+		initializeBasicTileEntity(1, 2, 2);
+		TANK = new FluidTank(1000);
+		DRAIN_COMPONENT = new DrainToBucketComponent(SLOTS_INPUT, 1, SLOTS_OUTPUT, 1, this, TANK, FLUID_TO_CONTAINER_RATE);
 	}
 	@Override
 	public String getName() {
 		return "Mechanical Squeezer";		
 	}		
-	
-	public void readFromSyncNBT(NBTTagCompound nbt) {
-		TANK.readFromNBT(nbt);
+	@Override  
+    public void readFromNBT(NBTTagCompound nbt) {
+        super.readFromNBT(nbt);
+        TANK.readFromNBT(nbt);
 		PROCESSING_TIMER = nbt.getInteger("P_TIMER");
-	}
-	public NBTTagCompound writeToSyncNBT(NBTTagCompound nbt) {
+    }		
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+        super.writeToNBT(nbt);
 		TANK.writeToNBT(nbt);
 		nbt.setInteger("P_TIMER", PROCESSING_TIMER);
-		return nbt;
+    	return nbt;
 	}
 	
 	
@@ -93,26 +102,10 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity {
 	}
 	@Override
 	public void process(){
-		useFluidContainer();
-	}
-	public void useFluidContainer() {
-		if(SLOTS_INPUT.getStackInSlot(1) != null && SLOTS_INPUT.getStackInSlot(1).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null) && SLOTS_INPUT.getStackInSlot(1).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null) instanceof FluidHandlerItemStack) {
-			FluidHandlerItemStack tempContainer = (FluidHandlerItemStack)SLOTS_INPUT.getStackInSlot(1).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
-			if(TANK.getFluid() != null) {
-				if(tempContainer.getFluid() == null || tempContainer.getFluid().isFluidEqual(TANK.getFluid())) {
-					int drained = 0;				
-					if(!worldObj.isRemote) {
-						drained = tempContainer.fill(new FluidStack(TANK.getFluid(), 100), true);
-						TANK.drain(drained, true);						
-					}
-					if(drained > 0) {
-						worldObj.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.BLOCKS, (float) 0.25, 1, false);						
-					}
-				}
-			}
-		}	
+		DRAIN_COMPONENT.drainToContainer();
 	}
 	public void rightClick() {
+		this.sync();
 		if(SLOTS_INTERNAL.getStackInSlot(0) == null){
 			PROCESSING_TIMER = 0;
 		}
@@ -135,16 +128,27 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity {
 		if(isProcessing() && !isMoving() && canProcess(SLOTS_INTERNAL.getStackInSlot(0))) {
 			if(PROCESSING_TIMER < PROCESSING_TIME) {
 				PROCESSING_TIMER++;
+				worldObj.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_SAND_STEP, SoundCategory.BLOCKS, 0.15f, 1, false);						
 			}else{				
 				if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, 0, getResult(SLOTS_INTERNAL.getStackInSlot(0)))) {
 					TANK.fill(getFluidResult(SLOTS_INTERNAL.getStackInSlot(0)), true);
 					SLOTS_OUTPUT.insertItem(0, getResult(SLOTS_INTERNAL.getStackInSlot(0)).copy(), false);
 					SLOTS_INTERNAL.setStackInSlot(0, null);
 					PROCESSING_TIMER = 0;
-					markForUpdate();
+					sync();
 				}
 			}
 		}	
+	}
+	public float getFluidLevelScaled(int height) {
+		int capacity = TANK.getCapacity();
+		int volume = TANK.getFluidAmount();
+		if(capacity != 0) {
+			float percentage = (float)volume/(float)capacity;
+			return percentage * height;
+		}else{
+			return 0;
+		}
 	}
 }
 

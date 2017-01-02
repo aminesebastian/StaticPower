@@ -52,6 +52,8 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 	public int UPDATE_TIME = 10;
 	public boolean PLACED = false;
 	
+	public boolean REQUIRES_UPDATE = true;
+	
 	public BaseTileEntity() {
 
 	}
@@ -102,9 +104,10 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 		if(UPDATE_TIMER < UPDATE_TIME) {
 			UPDATE_TIMER++;
 		}else{
-			markForUpdate();
+			if(REQUIRES_UPDATE) {
+				sync();
+			}
 			markDirty();
-			sync();
 			UPDATE_TIMER = 0;
 		}
 	}		
@@ -132,10 +135,10 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 	}
     
 	public void readFromSyncNBT(NBTTagCompound nbt) {
-		
+		readFromNBT(nbt);
 	}
 	public NBTTagCompound writeToSyncNBT(NBTTagCompound nbt) {
-		return nbt;
+		return writeToNBT(nbt);
 	}
 	
 	@Override  
@@ -597,10 +600,6 @@ public class BaseTileEntity extends TileEntity implements ITickable {
     	return super.getCapability(capability, facing);
     }
     
-	public void markForUpdate(){ 
-		worldObj.markAndNotifyBlock(pos, worldObj.getChunkFromBlockCoords(pos), worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2);
-	}
-	
 	public void incrementSide(int side){
 		if(side == 3) {
 			SIDE_MODES[3] = SideModeList.Mode.Disabled;
@@ -620,5 +619,6 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 	public void sync() {
 		IMessage msg = new PacketMachineSync( this);
 		PacketHandler.net.sendToServer(msg);
+		worldObj.markAndNotifyBlock(pos, worldObj.getChunkFromBlockCoords(pos), worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2);
 	}
 }

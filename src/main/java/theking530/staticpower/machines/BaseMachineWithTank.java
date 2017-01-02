@@ -29,7 +29,8 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler{
 	public FluidTank TANK;
 	public int FLUID_CONTAINER_SLOT = -1;
 	public FluidContainerMode FLUID_CONTAINER_MODE = FluidContainerMode.FILL;
-	
+	public int FLUID_TO_CONTAINER_RATE = 100; //1 Bucket
+
 	public int CONTAINER_MOVE_TIMER = 0;
 	public int CONTAINER_MOVE_SPEED = 4;
 	

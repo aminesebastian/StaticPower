@@ -4,10 +4,13 @@ import javax.annotation.Nullable;
 
 import api.IWrenchTool;
 import api.RegularWrenchMode;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -17,6 +20,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.machines.BaseMachine;
 import theking530.staticpower.tileentity.gates.BlockLogicGate;
 import theking530.staticpower.utils.Color;
@@ -28,6 +32,7 @@ public class BlockLED extends BlockLogicGate {
 	public BlockLED(String name) {
 		super(name, 0);
 	}
+
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (!world.isRemote) {

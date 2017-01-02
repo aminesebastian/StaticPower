@@ -31,8 +31,11 @@ public class ElectricSolderingIron extends BasePoweredItem implements ISoldering
 		return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
 	}
 	@Override
-	public void useSolderingItem(ItemStack itemstack) {
-		extractEnergy(itemstack, 100, false);
+	public boolean useSolderingItem(ItemStack itemstack) {
+		if(this.getEnergyStored(itemstack) >= 100) {
+			extractEnergy(itemstack, 100, false);			
+		}
+		return false;
 	}
 	@Override
 	public boolean canSolder(ItemStack itemstack) {

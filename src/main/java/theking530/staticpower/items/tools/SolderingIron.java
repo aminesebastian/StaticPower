@@ -28,14 +28,18 @@ public class SolderingIron extends ItemBase implements ISolderingIron{
 	}
 
 	@Override
-	public void useSolderingItem(ItemStack stack) {
+	public boolean useSolderingItem(ItemStack stack) {
 		stack.setItemDamage(stack.getItemDamage() + 1);
 		if(stack.getItemDamage() >= stack.getMaxDamage()) {
-			stack = null;
+			return true;
 		}
+		return false;
 	}
 	@Override
-	public boolean canSolder(ItemStack stack) {
-		return true;
+	public boolean canSolder(ItemStack solderingIron) {
+		if(solderingIron.getItemDamage() < solderingIron.getMaxDamage()) {
+			return true;
+		}
+		return false;
 	}
 }

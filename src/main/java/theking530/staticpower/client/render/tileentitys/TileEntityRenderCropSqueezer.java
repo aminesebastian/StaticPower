@@ -14,6 +14,7 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.client.model.ModelBlock;
 import theking530.staticpower.machines.cropsqueezer.TileEntityCropSqueezer;
+import theking530.staticpower.machines.mechanicalsqueezer.TileEntityMechanicalSqueezer;
 import theking530.staticpower.utils.RenderUtil;
 import theking530.staticpower.utils.SideModeList.Mode;
 
@@ -52,11 +53,17 @@ public class TileEntityRenderCropSqueezer extends TileEntitySpecialRenderer<Tile
 		checkAndRenderSides(te, 3);
 		checkAndRenderSides(te, 4);
 		checkAndRenderSides(te, 5);
-		if(squeezer.TANK.getFluid() != null) {
+		if(squeezer.TANK.getFluid() != null || (squeezer.getInputStack(0) != null && squeezer.getFluidResult(squeezer.getInputStack(0)) != null)) {
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-			drawLiquidPour(te, squeezer.TANK.getFluid());
+			if(squeezer.TANK.getFluid() != null) {
+				drawLiquidPour(te, squeezer.TANK.getFluid());
+			}else if(squeezer.getInputStack(0) != null && squeezer.getFluidResult(squeezer.getInputStack(0)) != null){
+				drawLiquidPour(te, squeezer.getFluidResult(squeezer.getInputStack(0)));
+			}else{
+				
+			}
 			GL11.glDisable(GL11.GL_BLEND);
 		}
 		GL11.glEnable(GL11.GL_LIGHTING);
@@ -98,7 +105,8 @@ public class TileEntityRenderCropSqueezer extends TileEntitySpecialRenderer<Tile
 		TileEntityCropSqueezer squeezer = (TileEntityCropSqueezer)tileentity;
 		float height = squeezer.getFluidLevelScaled(1);	
 		final Fluid fluid = fluidStack.getFluid();
-		RenderUtil.drawFluidInWorld(fluidStack, 7*texel, 1-4*texel, 1.0001F, 2*texel, (float)((6.5*texel)*squeezer.PROCESSING_TIMER/ squeezer.PROCESSING_TIME));
+		float progress = ((float)squeezer.PROCESSING_TIMER/(float)squeezer.PROCESSING_TIME)*0.5f;
+		RenderUtil.drawFluidInWorld(fluidStack, 7*texel, 1-4*texel-progress, 1.0001F, 2*texel, progress);
 		RenderUtil.drawFluidInWorld(fluidStack, 4*texel, 3.5F*texel, 1.0001F, 8*texel, (height)*.38F);
 	}
 }

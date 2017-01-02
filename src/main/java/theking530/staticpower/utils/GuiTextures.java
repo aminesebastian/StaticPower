@@ -26,6 +26,7 @@ public class GuiTextures {
 	public static final ResourceLocation FERMENTER_GUI = new ResourceLocation(Reference.MODID + ":" + "textures/gui/FermenterGui.png");
 	public static final ResourceLocation DISTILLERY_GUI = new ResourceLocation(Reference.MODID + ":" + "textures/gui/DistilleryGui.png");
 	public static final ResourceLocation CONDENSER_GUI = new ResourceLocation(Reference.MODID + ":" + "textures/gui/CondenserGui.png");
+	public static final ResourceLocation MSQUEEZER_GUI = new ResourceLocation(Reference.MODID + ":" + "textures/gui/MechanicalSqueezerGui.png");
 	
 	public static final ResourceLocation SCHEST_GUI = new ResourceLocation(Reference.MODID + ":" + "textures/gui/StaticChestGui.png");
 	public static final ResourceLocation ECHEST_GUI = new ResourceLocation(Reference.MODID + ":" + "textures/gui/EnergizedChestGui.png");

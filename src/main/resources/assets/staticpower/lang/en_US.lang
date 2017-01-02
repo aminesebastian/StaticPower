@@ -168,6 +168,7 @@ tile.Fermenter.name=Fermenter
 tile.HeatingElement.name=Heating Element 
 tile.Condenser.name=Condenser
 tile.Distillery.name=Distillery
+tile.MechanicalSqueezer.name=Mechanical Squeezer
 
 //Blocks
 tile.StaticLamp.name=Static Lamp
@@ -287,6 +288,54 @@ item.StaticBook.name=Static Book
 item.CoordinateMarker.name=Coordinate Marker
 item.WireCutters.name=Wire Cutters
 item.MetalHammer.name=Metal Hammer
+
+item.sCopperAxe.name=Copper Axe
+item.sCopperPickaxe.name=Copper Pickaxe
+item.sCopperHoe.name=Copper Hoe
+item.sCopperShovel.name=Copper Shovel
+item.sCopperSword.name=Copper Sword
+
+item.sTinAxe.name=Tin Axe
+item.sTinPickaxe.name=Tin Pickaxe
+item.sTinHoe.name=Tin Hoe
+item.sTinShovel.name=Tin Shovel
+item.sTinSword.name=Tin Sword
+
+item.sSilverAxe.name=Silver Axe
+item.sSilverPickaxe.name=Silver Pickaxe
+item.sSilverHoe.name=Silver Hoe
+item.sSilverShovel.name=Silver Shovel
+item.sSilverSword.name=Silver Sword
+
+item.sLeadAxe.name=Lead Axe
+item.sLeadPickaxe.name=Lead Pickaxe
+item.sLeadHoe.name=Lead Hoe
+item.sLeadShovel.name=Lead Shovel
+item.sLeadSword.name=Lead Sword
+
+item.sPlatinumAxe.name=Platinum Axe
+item.sPlatinumPickaxe.name=Platinum Pickaxe
+item.sPlatinumHoe.name=Platinum Hoe
+item.sPlatinumShovel.name=Platinum Shovel
+item.sPlatinumSword.name=Platinum Sword
+
+item.sStaticAxe.name=Static Axe
+item.sStaticPickaxe.name=Static Pickaxe
+item.sStaticHoe.name=Static Hoe
+item.sStaticShovel.name=Static Shovel
+item.sStaticSword.name=Static Sword
+
+item.sEnergizedAxe.name=Energized Axe
+item.sEnergizedPickaxe.name=Energized Pickaxe
+item.sEnergizedHoe.name=Energized Hoe
+item.sEnergizedShovel.name=Energized Shovel
+item.sEnergizedSword.name=Energized Sword
+
+item.sLumumAxe.name=Lumum Axe
+item.sLumumPickaxe.name=Lumum Pickaxe
+item.sLumumHoe.name=Lumum Hoe
+item.sLumumShovel.name=Lumum Shovel
+item.sLumumSword.name=Lumum Sword
 
 item.BaseFluidCapsule.name=Fluid Capsule
 item.StaticFluidCapsule.name=Static Fluid Capsule

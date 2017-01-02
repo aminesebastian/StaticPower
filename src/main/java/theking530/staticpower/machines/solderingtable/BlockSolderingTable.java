@@ -33,7 +33,6 @@ public class BlockSolderingTable extends BaseMachineBlock{
     		TileEntitySolderingTable entity = (TileEntitySolderingTable) world.getTileEntity(pos);
     		if (entity != null) {
     			FMLNetworkHandler.openGui(player, StaticPower.staticpower, GuiIDRegistry.guiIDSolderingTable, world, pos.getX(), pos.getY(), pos.getZ());
-
     		}
     		return true;
     	}else{

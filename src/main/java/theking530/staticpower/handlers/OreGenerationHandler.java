@@ -40,7 +40,7 @@ public class OreGenerationHandler implements IWorldGenerator {
                 generateOre(ModBlocks.SilverOre, world, rand, chunkX, chunkZ,2,6,4,0,40);
             }
             if (StaticPowerConfig.PLATINUM_ORE_GEN) {
-                generateOre(ModBlocks.PlatinumOre, world, rand, chunkX, chunkZ,1,3,3,0,30);
+                generateOre(ModBlocks.PlatinumOre, world, rand, chunkX, chunkZ,2,4,3,0,30);
             }
         }
     }

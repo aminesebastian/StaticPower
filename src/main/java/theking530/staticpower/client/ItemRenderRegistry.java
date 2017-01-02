@@ -3,14 +3,13 @@ package theking530.staticpower.client;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.item.Item;
-import net.minecraftforge.fml.client.FMLClientHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.obj.OBJLoader;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.items.ModItems;
+import theking530.staticpower.items.tools.basictools.ModTools;
 
 public class ItemRenderRegistry {
 
@@ -154,12 +153,20 @@ public class ItemRenderRegistry {
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.EnergizedBattery));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.LumumBattery));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.CropSqueezer));
+		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.MechanicalSqueezer));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.FluidGenerator));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.FluidInfuser));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.FusionFurnace));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.PoweredFurnace));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.PoweredGrinder));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.SolderingTable));
+		
+		//ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.SolderingTable));
+
+        OBJLoader.INSTANCE.addDomain(Reference.MODID.toLowerCase());
+        Item item2 = Item.getItemFromBlock(ModBlocks.SolderingTable);
+        ModelLoader.setCustomModelResourceLocation(item2, 0, new ModelResourceLocation(Reference.MODID.toLowerCase() + ":" + ModBlocks.SolderingTable.getUnlocalizedName().substring(5), "inventory"));
+        
+		
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.Quarry));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.BasicFarmer));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.ChargingStation));
@@ -212,6 +219,54 @@ public class ItemRenderRegistry {
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.StaticWood));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.EnergizedWood));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.LumumWood));
+		
+		ItemRenderRegistry.registerItem(ModTools.CopperAxe);
+		ItemRenderRegistry.registerItem(ModTools.CopperPickaxe);
+		ItemRenderRegistry.registerItem(ModTools.CopperShovel);
+		ItemRenderRegistry.registerItem(ModTools.CopperHoe);
+		ItemRenderRegistry.registerItem(ModTools.CopperSword);
+		
+		ItemRenderRegistry.registerItem(ModTools.TinAxe);
+		ItemRenderRegistry.registerItem(ModTools.TinPickaxe);
+		ItemRenderRegistry.registerItem(ModTools.TinShovel);
+		ItemRenderRegistry.registerItem(ModTools.TinHoe);
+		ItemRenderRegistry.registerItem(ModTools.TinSword);
+		
+		ItemRenderRegistry.registerItem(ModTools.SilverAxe);
+		ItemRenderRegistry.registerItem(ModTools.SilverPickaxe);
+		ItemRenderRegistry.registerItem(ModTools.SilverShovel);
+		ItemRenderRegistry.registerItem(ModTools.SilverHoe);
+		ItemRenderRegistry.registerItem(ModTools.SilverSword);
+		
+		ItemRenderRegistry.registerItem(ModTools.LeadAxe);
+		ItemRenderRegistry.registerItem(ModTools.LeadPickaxe);
+		ItemRenderRegistry.registerItem(ModTools.LeadShovel);
+		ItemRenderRegistry.registerItem(ModTools.LeadHoe);
+		ItemRenderRegistry.registerItem(ModTools.LeadSword);
+		
+		ItemRenderRegistry.registerItem(ModTools.PlatinumAxe);
+		ItemRenderRegistry.registerItem(ModTools.PlatinumPickaxe);
+		ItemRenderRegistry.registerItem(ModTools.PlatinumShovel);
+		ItemRenderRegistry.registerItem(ModTools.PlatinumHoe);
+		ItemRenderRegistry.registerItem(ModTools.PlatinumSword);
+		
+		ItemRenderRegistry.registerItem(ModTools.StaticAxe);
+		ItemRenderRegistry.registerItem(ModTools.StaticPickaxe);
+		ItemRenderRegistry.registerItem(ModTools.StaticShovel);
+		ItemRenderRegistry.registerItem(ModTools.StaticHoe);
+		ItemRenderRegistry.registerItem(ModTools.StaticSword);
+		
+		ItemRenderRegistry.registerItem(ModTools.EnergizedAxe);
+		ItemRenderRegistry.registerItem(ModTools.EnergizedPickaxe);
+		ItemRenderRegistry.registerItem(ModTools.EnergizedShovel);
+		ItemRenderRegistry.registerItem(ModTools.EnergizedHoe);
+		ItemRenderRegistry.registerItem(ModTools.EnergizedSword);
+		
+		ItemRenderRegistry.registerItem(ModTools.LumumAxe);
+		ItemRenderRegistry.registerItem(ModTools.LumumPickaxe);
+		ItemRenderRegistry.registerItem(ModTools.LumumShovel);
+		ItemRenderRegistry.registerItem(ModTools.LumumHoe);
+		ItemRenderRegistry.registerItem(ModTools.LumumSword);
 	}
     public static void registerItem(Item item, int metadata) {
     	Minecraft.getMinecraft().getRenderItem().getItemModelMesher()

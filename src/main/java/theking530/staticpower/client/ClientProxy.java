@@ -3,11 +3,13 @@ package theking530.staticpower.client;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.assists.Tier;
+import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.client.render.conduit.TileEntityRenderFluidConduit;
 import theking530.staticpower.client.render.conduit.TileEntityRenderItemConduit;
 import theking530.staticpower.client.render.conduit.TileEntityRenderStaticConduit;
@@ -21,6 +23,7 @@ import theking530.staticpower.client.render.tileentitys.TileEntityRenderFermente
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderFluidGenerator;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderFluidInfuser;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderFusionFurnace;
+import theking530.staticpower.client.render.tileentitys.TileEntityRenderMechanicalSqueezer;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderPoweredFurnace;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderPoweredGrinder;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderSolarPanel;
@@ -37,7 +40,6 @@ import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRen
 import theking530.staticpower.conduits.fluidconduit.TileEntityFluidConduit;
 import theking530.staticpower.conduits.itemconduit.TileEntityItemConduit;
 import theking530.staticpower.conduits.staticconduit.TileEntityStaticConduit;
-import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.integration.WAILA.WailaConfig;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityEnergizedBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityLumumBattery;
@@ -50,6 +52,7 @@ import theking530.staticpower.machines.fermenter.TileEntityFermenter;
 import theking530.staticpower.machines.fluidgenerator.TileEntityFluidGenerator;
 import theking530.staticpower.machines.fluidinfuser.TileEntityFluidInfuser;
 import theking530.staticpower.machines.fusionfurnace.TileEntityFusionFurnace;
+import theking530.staticpower.machines.mechanicalsqueezer.TileEntityMechanicalSqueezer;
 import theking530.staticpower.machines.poweredfurnace.TileEntityPoweredFurnace;
 import theking530.staticpower.machines.poweredgrinder.TileEntityPoweredGrinder;
 import theking530.staticpower.machines.solarpanel.TileEntityStaticSolarPanel;
@@ -91,8 +94,9 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFluidConduit.class, new TileEntityRenderFluidConduit());
 		//IConduit
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityItemConduit.class, new TileEntityRenderItemConduit());
-		
-		
+		//Mechanical Squeezer
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMechanicalSqueezer.class, new TileEntityRenderMechanicalSqueezer());
+
 		
 		//Signal Multiplier
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySignalMultiplier.class, new TileEntityRenderSignalMultiplier());	
@@ -147,8 +151,7 @@ public class ClientProxy extends CommonProxy {
 
 		
 	    ItemRenderRegistry.initItemRenderers();
-	    ModFluids.initBlockRendering();
-	    ModFluids.initItemRendering();
+
 	}
 	public static void registerModelLoader(Item item, ResourceLocation modelLocation) {
 		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(modelLocation, "inventory"));

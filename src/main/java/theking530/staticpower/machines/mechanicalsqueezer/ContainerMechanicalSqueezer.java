@@ -7,6 +7,7 @@ import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.SlotItemHandler;
@@ -31,18 +32,29 @@ public class ContainerMechanicalSqueezer extends Container {
 		CropSqueezer = teCropSqueezer;
 		
 		//Input
-		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.SLOTS_INPUT, 0, 84, 16));
+		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.SLOTS_INPUT, 0, 103, 18));
+		
+		//Fluid Slots
+		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.SLOTS_INPUT, 1, 7, 17) {
+			@Override
+	        public boolean isItemValid(ItemStack itemStack) {
+		          return itemStack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+		    }
+		});
+		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.SLOTS_OUTPUT, 1, 7, 47) {
+			@Override
+	        public boolean isItemValid(ItemStack itemStack) {
+		          return false;
+		    }
+		});
 		
 		//Output
-		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.SLOTS_OUTPUT, 0, 84, 56) {
+		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.SLOTS_OUTPUT, 0, 103, 58) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return SqueezerRecipeRegistry.Squeezing().getSqueezingItemResult(itemStack) != null;
 		        }
 		});
-		
-		//Fluid Slot
-		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.SLOTS_INPUT, 1, upgradeSlotX+152, upgradeSlotY+12));
 		
 		//Processing
 		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.SLOTS_INTERNAL, 0, 10000, 10000));
@@ -50,13 +62,13 @@ public class ContainerMechanicalSqueezer extends Container {
 		//Inventory
 				for(int i = 0; i < 3; i++) {
 					for(int j = 0; j < 9; j++) {
-						this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+						this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 27 + j * 18, 84 + i * 18));
 					}
 				}
 				
 				//ActionBar
 				for(int i = 0; i < 9; i++) {
-					this.addSlotToContainer(new Slot(invPlayer, i, 8 + i * 18, 142));
+					this.addSlotToContainer(new Slot(invPlayer, i, 27 + i * 18, 142));
 			}
 	}
 	public void moveUpgradeSlots(int x, int y) {

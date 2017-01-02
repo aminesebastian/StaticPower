@@ -22,14 +22,15 @@ public class ContainerSolderingTable extends Container {
         int i1;
                
         //Crafting Area 0 - 8
-        for (l = 0; l < 3; ++l) {
-            for (i1 = 0; i1 < 3; ++i1){
+        for (l = 0; l < 3; l++) {
+            for (i1 = 0; i1 < 3; i1++){
                 this.addSlotToContainer(new SlotSolderingTableInput(this, teTable.SLOTS_INPUT, i1 + l * 3, 62 + i1 * 18, 17 + l * 18));
             }
         }
         
+        
         //Extra Slots 9 - 15
-        for (l = 0; l < 7; ++l) {
+        for (l = 0; l < 7; l++) {
         	this.addSlotToContainer(new SlotItemHandler(teTable.SLOTS_INPUT, l+9, 26 + l * 18, 74));
         }
         
@@ -61,12 +62,12 @@ public class ContainerSolderingTable extends Container {
     	if(SOLDERING_TABLE.getInputStack(16) != null && SOLDERING_TABLE.getInputStack(16).getItem() instanceof ISolderingIron) {
     		ISolderingIron tempIron = (ISolderingIron) SOLDERING_TABLE.getInputStack(16).getItem();
     		if(tempIron.canSolder(SOLDERING_TABLE.getInputStack(16))) {
-    			SOLDERING_TABLE.SLOTS_OUTPUT.setStackInSlot(17, SolderingRecipeRegistry.Soldering().findSolderingOutput(SOLDERING_TABLE.SLOTS_INPUT, SOLDERING_TABLE.getWorld())); 		
+    			SOLDERING_TABLE.SLOTS_OUTPUT.setStackInSlot(0, SolderingRecipeRegistry.Soldering().findSolderingOutput(SOLDERING_TABLE.SLOTS_INPUT, SOLDERING_TABLE.getWorld())); 		
     		}else{
-        		SOLDERING_TABLE.SLOTS_INPUT.setStackInSlot(17, null); 	
+        		SOLDERING_TABLE.SLOTS_OUTPUT.setStackInSlot(0, null); 	
     		}    	
     	}else{
-    		SOLDERING_TABLE.SLOTS_INPUT.setStackInSlot(17, null); 
+    		SOLDERING_TABLE.SLOTS_OUTPUT.setStackInSlot(0, null); 
     	}
     }
     public ItemStack transferStackInSlot(EntityPlayer p_82846_1_, int p_82846_2_){

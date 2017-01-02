@@ -26,7 +26,7 @@ public class GuiQuarry extends CustomGuiContainer{
 	private GuiFluidBarFromTank FLUIDBAR;
 	public GuiSideConfigTab SIDE_TAB;
 	private TileEntityQuarry QUARRY;
-	public GuiDrawItem DRAW_ITEM = new GuiDrawItem();
+	public GuiDrawItem DRAW_ITEM = new GuiDrawItem(true);
 	
 	public GuiQuarry(InventoryPlayer invPlayer, TileEntityQuarry teQuarry) {
 		super(new ContainerQuarry(invPlayer, teQuarry));

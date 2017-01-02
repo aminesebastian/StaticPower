@@ -1,22 +1,29 @@
 package theking530.staticpower.machines.cropsqueezer;
 
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.SoundCategory;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
 import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistry;
 import theking530.staticpower.machines.BaseMachineWithTank;
+import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent;
 import theking530.staticpower.utils.InventoryUtilities;
 
 public class TileEntityCropSqueezer extends BaseMachineWithTank {
 
 	public int INITIAL_PROCESSING_ENERGY_MULT = 10;
 	public int ENERGY_CAPACTIY = 100000;
+	public DrainToBucketComponent DRAIN_COMPONENT;
 	
 	private String customName;
 	
 	public TileEntityCropSqueezer() {
-		initializeBaseMachineWithTank(2, 100, 100000, 80, 50, 1, 1, 1, 5000);
+		initializeBaseMachineWithTank(2, 100, 100000, 80, 50, 1, 2, 2, 5000);
+		DRAIN_COMPONENT = new DrainToBucketComponent(SLOTS_INPUT, 1, SLOTS_OUTPUT, 1, this, TANK, FLUID_TO_CONTAINER_RATE);
 	}
 	@Override
 	public String getName() {
@@ -86,6 +93,7 @@ public class TileEntityCropSqueezer extends BaseMachineWithTank {
 		return 0;
 	}	
 	public void process() {
+		DRAIN_COMPONENT.drainToContainer();
 		if(SLOTS_INTERNAL.getStackInSlot(0) == null){
 			PROCESSING_TIMER = 0;
 		}
@@ -115,7 +123,7 @@ public class TileEntityCropSqueezer extends BaseMachineWithTank {
 					SLOTS_OUTPUT.insertItem(0, getResult(SLOTS_INTERNAL.getStackInSlot(0)).copy(), false);
 					SLOTS_INTERNAL.setStackInSlot(0, null);
 					PROCESSING_TIMER = 0;
-					markForUpdate();
+					sync();
 				}
 			}
 		}	

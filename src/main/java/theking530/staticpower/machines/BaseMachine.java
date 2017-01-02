@@ -51,6 +51,8 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	public int PREV_STORAGE = 0;
 	public int CURRENT_RF_TICK = 0;
 	
+	public boolean REQUIRES_UPDATE = true;
+	
 	public BaseMachine() {
 	}
 	
@@ -106,7 +108,9 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		if(UPDATE_TIMER < UPDATE_TIME) {
 			UPDATE_TIMER++;
 		}else{
-			//markForUpdate();
+			if(REQUIRES_UPDATE) {
+				sync();
+			}
 			markDirty();
 			UPDATE_TIMER = 0;
 		}

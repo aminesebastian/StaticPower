@@ -92,8 +92,8 @@ public class TileEntityFermenter extends BaseMachineWithTank {
 						SLOTS_INTERNAL.setStackInSlot(0, null);
 						PROCESSING_TIMER = 0;
 						MOVE_TIMER = 0;
-						this.markDirty();
-						this.markForUpdate();
+						markDirty();
+						sync();
 					}
 				}
 			}			

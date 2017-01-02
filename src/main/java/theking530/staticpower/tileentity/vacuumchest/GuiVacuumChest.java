@@ -25,7 +25,7 @@ public class GuiVacuumChest extends GuiContainer{
 	public GuiSideConfigTab SIDE_TAB;
 	public GuiRedstoneTab REDSTONE_TAB;
 	public GuiInfoTab INFO_TAB = new GuiInfoTab(guiLeft, guiTop);
-	public GuiDrawItem DRAW_ITEM = new GuiDrawItem();
+	public GuiDrawItem DRAW_ITEM = new GuiDrawItem(true);
 	
 	public GuiVacuumChest(InventoryPlayer invPlayer, TileEntityVacuumChest teVChest) {
 		super(new ContainerVacuumChest(invPlayer, teVChest));

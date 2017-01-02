@@ -107,7 +107,7 @@ public class ModFluids {
 	    registerBucket(EvaporatedMash);   
 		
 	}
-	@SideOnly(Side.CLIENT)
+
 	public static void initBlockRendering() {
 	    registerFluidBlockRendering(StaticFluid, StaticFluidName);
 	    registerFluidBlockRendering(EnergizedFluid, EnergizedFluidName);
@@ -117,7 +117,7 @@ public class ModFluids {
 	    registerFluidBlockRendering(Mash, MashName);
 	    registerFluidBlockRendering(EvaporatedMash, EvaporatedMashName);		
 	}
-	@SideOnly(Side.CLIENT)
+
 	public static void initItemRendering() {
 		registerFluidItemRendering(StaticFluid, StaticFluidName);
 	    registerFluidItemRendering(EnergizedFluid, EnergizedFluidName);

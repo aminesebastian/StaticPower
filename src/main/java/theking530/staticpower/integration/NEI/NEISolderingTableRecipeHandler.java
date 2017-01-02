@@ -27,7 +27,7 @@ import theking530.staticpower.utils.GuiTextures;
 
 public class NEISolderingTableRecipeHandler extends TemplateRecipeHandler {
 	
-	public GuiDrawItem DRAW_ITEM = new GuiDrawItem();
+	public GuiDrawItem DRAW_ITEM = new GuiDrawItem(true);
 	
     public class CachedShapedRecipe extends CachedRecipe {
         public ArrayList<PositionedStack> ingredients;

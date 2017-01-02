@@ -18,7 +18,7 @@ public class GuiSolderingTable extends CustomGuiContainer{
 
 	public GuiSideConfigTab SIDE_TAB;
 	private TileEntitySolderingTable TABLE;
-	public GuiDrawItem DRAW_ITEM = new GuiDrawItem();
+	public GuiDrawItem DRAW_ITEM = new GuiDrawItem(true);
 	
 	public GuiSolderingTable(InventoryPlayer invPlayer, TileEntitySolderingTable teTable) {
 		super(new ContainerSolderingTable(invPlayer, teTable));

@@ -5,6 +5,7 @@ import static theking530.staticpower.assists.RegisterHelper.registerItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
+import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -25,13 +26,18 @@ import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.items.materials.BaseDust;
 import theking530.staticpower.items.materials.BaseIngot;
 import theking530.staticpower.items.materials.BaseNugget;
+import theking530.staticpower.items.tools.BlockReader;
 import theking530.staticpower.items.tools.CoordinateMarker;
 import theking530.staticpower.items.tools.ElectricSolderingIron;
 import theking530.staticpower.items.tools.MetalHammer;
-import theking530.staticpower.items.tools.BlockReader;
 import theking530.staticpower.items.tools.SolderingIron;
 import theking530.staticpower.items.tools.StaticWrench;
 import theking530.staticpower.items.tools.WireCutters;
+import theking530.staticpower.items.tools.basictools.BaseAxe;
+import theking530.staticpower.items.tools.basictools.BaseHoe;
+import theking530.staticpower.items.tools.basictools.BasePickaxe;
+import theking530.staticpower.items.tools.basictools.BaseShovel;
+import theking530.staticpower.items.tools.basictools.BaseSword;
 import theking530.staticpower.items.upgrades.BasePowerUpgrade;
 import theking530.staticpower.items.upgrades.BaseQuarryingUpgrade;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
@@ -193,8 +199,7 @@ public class ModItems {
 	public static Item LumumSeeds;
 	public static Item LumumCrop;
 	
-	public static void init() {		
-		
+	public static void init() {			
 		BaseFluidCapsule = new BaseFluidCapsule("BaseFluidCapsule", 2000);
 		RegisterHelper.registerItem(BaseFluidCapsule);
 		StaticFluidCapsule = new BaseFluidCapsule("StaticFluidCapsule", 4000);
@@ -411,6 +416,7 @@ public class ModItems {
 		StaticBook = new StaticPowerBook("StaticBook");
 		registerItem(StaticBook);	
 		
+
 		GameRegistry.register(StaticIngot = new BaseIngot("StaticIngot"));
 		GameRegistry.register(EnergizedIngot = new BaseIngot("EnergizedIngot"));
 		GameRegistry.register(LumumIngot = new BaseIngot("LumumIngot"));

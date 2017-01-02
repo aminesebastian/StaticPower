@@ -25,7 +25,7 @@ public class TileEntityHeatingElement extends BaseMachine implements ITickable, 
 				}
 				HEAT_DIST.provideHeat();		
 				PROCESSING_TIMER = 0;
-				markForUpdate();
+				
 				markDirty();
 			}else{
 				PROCESSING_TIMER++;
