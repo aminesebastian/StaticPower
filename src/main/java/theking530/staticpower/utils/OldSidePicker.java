@@ -1,19 +1,10 @@
 package theking530.staticpower.utils;
 
+import net.minecraft.util.EnumFacing;
+
 /**
  * Thanks to mikeemoo and the openmods team for an amazing open source mod.
  */
-
-import java.util.Map;
-
-import org.lwjgl.input.Mouse;
-
-import com.google.common.collect.Maps;
-
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-
 public class OldSidePicker {
 
 	private static final ProjectionHelper projectionHelper = new ProjectionHelper();

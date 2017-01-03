@@ -108,7 +108,6 @@ public class ContainerPoweredFurnace extends Container {
 	}
 	public void detectAndSendChanges(){
         super.detectAndSendChanges();
-        SMELTER.sync();
     }
 }
 

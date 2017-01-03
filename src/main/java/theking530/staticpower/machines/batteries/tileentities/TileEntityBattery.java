@@ -36,7 +36,7 @@ public class TileEntityBattery extends BaseMachine{
 					POWER_DIS.distributePower();
 				}
 			}
-			sync();
+			updateBlock();
 		}
 	}
 	@Override

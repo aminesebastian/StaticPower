@@ -117,7 +117,6 @@ public class ContainerFermenter extends Container {
 	
 	public void detectAndSendChanges(){
         super.detectAndSendChanges();
-        FERMENTER.sync();
     }
 }
 

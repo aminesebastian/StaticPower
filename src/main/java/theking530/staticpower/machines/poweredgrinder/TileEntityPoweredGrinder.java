@@ -97,7 +97,7 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 						}
 					}
 					setInternalStack(0, null);
-					sync();
+					updateBlock();
 					PROCESSING_TIMER=0;
 					MOVE_TIMER = 0;
 			}	

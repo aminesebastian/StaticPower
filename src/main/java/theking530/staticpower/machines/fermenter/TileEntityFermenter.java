@@ -3,10 +3,7 @@ package theking530.staticpower.machines.fermenter;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.handlers.crafting.registries.FermenterRecipeRegistry;
-import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistry;
 import theking530.staticpower.machines.BaseMachineWithTank;
-import theking530.staticpower.machines.FluidContainerMode;
-import theking530.staticpower.utils.InventoryUtilities;
 
 public class TileEntityFermenter extends BaseMachineWithTank {
 
@@ -14,7 +11,7 @@ public class TileEntityFermenter extends BaseMachineWithTank {
 	public TileEntityFermenter() {
 		initializeBaseMachineWithTank(4, 500, 100000, 160, 45, 1, 11, 0, 5000);
 		setBatterySlot(10);
-		setFluidContainerSlot(9, FluidContainerMode.FILL);
+		//setFluidContainerSlot(9, FluidContainerMode.FILL);
 	}
 	@Override
 	public String getName() {
@@ -85,15 +82,15 @@ public class TileEntityFermenter extends BaseMachineWithTank {
 				if(isProcessing()) {
 					if(PROCESSING_TIMER < PROCESSING_TIME) {
 						PROCESSING_TIMER++;
-						//System.out.println(STORAGE.extractEnergy(getProcessingCost()/PROCESSING_TIME, false));
 						STORAGE.extractEnergy(getProcessingCost()/PROCESSING_TIME, false);
+						updateBlock();
 					}else{
 						TANK.fill(getFermentingResult(SLOTS_INTERNAL.getStackInSlot(0)), true);
 						SLOTS_INTERNAL.setStackInSlot(0, null);
 						PROCESSING_TIMER = 0;
 						MOVE_TIMER = 0;
 						markDirty();
-						sync();
+						updateBlock();
 					}
 				}
 			}			

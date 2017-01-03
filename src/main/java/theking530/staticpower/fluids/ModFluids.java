@@ -33,9 +33,9 @@ public class ModFluids {
 	public static Fluid Mash;
 	public static Fluid EvaporatedMash;
 	
-	public static String StaticFluidName = "staticfluid";
-	public static String EnergizedFluidName = "energizedfluid";
-	public static String LumumFluidName = "lumumfluid";
+	public static String StaticFluidName = "StaticFluid";
+	public static String EnergizedFluidName = "EnergizedFluid";
+	public static String LumumFluidName = "LumumFluid";
 	public static String EthanolName = "Ethanol";
 	public static String SteamFluidName = "Steam";
 	public static String MashName = "Mash";

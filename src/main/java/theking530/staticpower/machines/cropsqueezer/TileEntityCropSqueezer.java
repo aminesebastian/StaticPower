@@ -93,7 +93,7 @@ public class TileEntityCropSqueezer extends BaseMachineWithTank {
 		return 0;
 	}	
 	public void process() {
-		DRAIN_COMPONENT.drainToContainer();
+		DRAIN_COMPONENT.update();
 		if(SLOTS_INTERNAL.getStackInSlot(0) == null){
 			PROCESSING_TIMER = 0;
 		}
@@ -117,13 +117,14 @@ public class TileEntityCropSqueezer extends BaseMachineWithTank {
 		if(isProcessing() && !isMoving() && canProcess(SLOTS_INTERNAL.getStackInSlot(0))) {
 			if(PROCESSING_TIMER < PROCESSING_TIME) {
 				PROCESSING_TIMER++;
+				updateBlock();
 			}else{				
 				if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, 0, getResult(SLOTS_INTERNAL.getStackInSlot(0)))) {
 					TANK.fill(getFluidResult(SLOTS_INTERNAL.getStackInSlot(0)), true);
 					SLOTS_OUTPUT.insertItem(0, getResult(SLOTS_INTERNAL.getStackInSlot(0)).copy(), false);
 					SLOTS_INTERNAL.setStackInSlot(0, null);
 					PROCESSING_TIMER = 0;
-					sync();
+					updateBlock();
 				}
 			}
 		}	

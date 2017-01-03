@@ -1,27 +1,31 @@
 package theking530.staticpower.machines.mechanicalsqueezer;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistry;
 import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent;
 import theking530.staticpower.tileentity.BaseTileEntity;
 import theking530.staticpower.utils.InventoryUtilities;
 
-public class TileEntityMechanicalSqueezer extends BaseTileEntity {
+public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFluidHandler{
 
-	private String customName;
 	public FluidTank TANK;
 	public int PROCESSING_TIMER = 0;
 	public int PROCESSING_TIME = 20;
 	public int MOVE_TIMER = 0;
 	public int MOVE_SPEED = 4;
-	public int FLUID_TO_CONTAINER_RATE = 100; //1 Bucket
+	public int FLUID_TO_CONTAINER_RATE = 10; //1 Bucket
 	
 	public DrainToBucketComponent DRAIN_COMPONENT;
 
@@ -34,6 +38,17 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity {
 	public String getName() {
 		return "Mechanical Squeezer";		
 	}		
+	
+	public void readFromSyncNBT(NBTTagCompound nbt) {
+        TANK.readFromNBT(nbt);
+		PROCESSING_TIMER = nbt.getInteger("P_TIMER");
+	}
+	public NBTTagCompound writeToSyncNBT(NBTTagCompound nbt) {
+		TANK.writeToNBT(nbt);
+		nbt.setInteger("P_TIMER", PROCESSING_TIMER);
+		return nbt;
+	}
+	
 	@Override  
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
@@ -47,7 +62,28 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity {
 		nbt.setInteger("P_TIMER", PROCESSING_TIMER);
     	return nbt;
 	}
+   
+	public NBTTagCompound onMachineBroken(NBTTagCompound nbt) {
+		writeToNBT(nbt);
+    	return nbt;
+	}
+	public void onMachinePlaced(NBTTagCompound nbt) {
+		readFromNBT(nbt);
+	}	
 	
+	@Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+		readFromNBT(pkt.getNbtCompound());
+	}
+	
+	@Override
+	public final NBTTagCompound getUpdateTag() {
+		return this.writeToNBT(new NBTTagCompound());
+	}
+	@Override
+	public SPacketUpdateTileEntity getUpdatePacket() {
+		return new SPacketUpdateTileEntity(this.getPos(), 1, this.getUpdateTag());
+	}
 	
     //Process
 	public ItemStack getResult(ItemStack itemStack) {
@@ -102,44 +138,48 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity {
 	}
 	@Override
 	public void process(){
-		DRAIN_COMPONENT.drainToContainer();
+		DRAIN_COMPONENT.update();
 	}
 	public void rightClick() {
-		this.sync();
-		if(SLOTS_INTERNAL.getStackInSlot(0) == null){
-			PROCESSING_TIMER = 0;
-		}
-		//Start Process
-		if(!isProcessing() && !isMoving() && canProcess(SLOTS_INPUT.getStackInSlot(0))) {
-			MOVE_TIMER = 1;
-		}
-		//Start Moving
-		if(!isProcessing() && isMoving() && canProcess(SLOTS_INPUT.getStackInSlot(0))) {
-			MOVE_TIMER++;
-			if(MOVE_TIMER >= MOVE_SPEED) {
-				MOVE_TIMER = 0;
-				moveItem(SLOTS_INPUT, 0, SLOTS_INTERNAL, 0);
-				PROCESSING_TIMER = 1;	
+		if(!worldObj.isRemote) {
+			DRAIN_COMPONENT.update();
+			if(SLOTS_INTERNAL.getStackInSlot(0) == null){
+				PROCESSING_TIMER = 0;
 			}
-		}else{
-			MOVE_TIMER = 0;
-		}
-		//Start Processing
-		if(isProcessing() && !isMoving() && canProcess(SLOTS_INTERNAL.getStackInSlot(0))) {
-			if(PROCESSING_TIMER < PROCESSING_TIME) {
-				PROCESSING_TIMER++;
-				worldObj.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_SAND_STEP, SoundCategory.BLOCKS, 0.15f, 1, false);						
-			}else{				
-				if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, 0, getResult(SLOTS_INTERNAL.getStackInSlot(0)))) {
-					TANK.fill(getFluidResult(SLOTS_INTERNAL.getStackInSlot(0)), true);
-					SLOTS_OUTPUT.insertItem(0, getResult(SLOTS_INTERNAL.getStackInSlot(0)).copy(), false);
-					SLOTS_INTERNAL.setStackInSlot(0, null);
-					PROCESSING_TIMER = 0;
-					sync();
+			//Start Process
+			if(!isProcessing() && !isMoving() && canProcess(SLOTS_INPUT.getStackInSlot(0))) {
+				MOVE_TIMER = 1;
+			}
+			//Start Moving
+			if(!isProcessing() && isMoving() && canProcess(SLOTS_INPUT.getStackInSlot(0))) {
+				MOVE_TIMER++;
+				if(MOVE_TIMER >= MOVE_SPEED) {
+					MOVE_TIMER = 0;
+					moveItem(SLOTS_INPUT, 0, SLOTS_INTERNAL, 0);
+					PROCESSING_TIMER = 1;	
 				}
+			}else{
+				MOVE_TIMER = 0;
 			}
-		}	
+			//Start Processing
+			if(isProcessing() && !isMoving() && canProcess(SLOTS_INTERNAL.getStackInSlot(0))) {
+				if(PROCESSING_TIMER < PROCESSING_TIME) {
+					PROCESSING_TIMER++;
+					updateBlock();
+					worldObj.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_SAND_STEP, SoundCategory.BLOCKS, 0.15f, 1, false);		
+				}else{				
+					if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, 0, getResult(SLOTS_INTERNAL.getStackInSlot(0)))) {
+						TANK.fill(getFluidResult(SLOTS_INTERNAL.getStackInSlot(0)), true);
+						SLOTS_OUTPUT.insertItem(0, getResult(SLOTS_INTERNAL.getStackInSlot(0)).copy(), false);
+						SLOTS_INTERNAL.setStackInSlot(0, null);
+						PROCESSING_TIMER = 0;					
+					}
+				}
+			}	
+		}
 	}
+	
+	//FLUID
 	public float getFluidLevelScaled(int height) {
 		int capacity = TANK.getCapacity();
 		int volume = TANK.getFluidAmount();
@@ -150,7 +190,34 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity {
 			return 0;
 		}
 	}
+    @SuppressWarnings("unchecked")
+	public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.util.EnumFacing facing){
+    	if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+    		return (T) this;
+    	}
+    	return super.getCapability(capability, facing);
+    }
+    public boolean hasCapability(net.minecraftforge.common.capabilities.Capability<?> capability, net.minecraft.util.EnumFacing facing){
+    	if(capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+    		return true;
+    	}
+        return super.hasCapability(capability, facing);
+    }
+	@Override
+	public IFluidTankProperties[] getTankProperties() {
+		return TANK.getTankProperties();
+	}
+	@Override
+	public int fill(FluidStack resource, boolean doFill) {
+		return TANK.fill(resource, doFill);
+	}
+	@Override
+	public FluidStack drain(FluidStack resource, boolean doDrain) {
+		return TANK.drain(resource, doDrain);
+	}
+	@Override
+	public FluidStack drain(int maxDrain, boolean doDrain) {
+		return TANK.drain(maxDrain, doDrain);
+	}
 }
-
-
 	

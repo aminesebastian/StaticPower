@@ -22,24 +22,25 @@ public class ContainerFluidGenerator extends Container {
 		ENERGY_STORED = 0;
 		F_GENERATOR = teFluidGenerator;
 		
-		//Input
-		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_INPUT, 0, 80, 31));
+		//Fluid Slots
+		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_INPUT, 0, 7, 17));
+		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_OUTPUT, 0, 7, 47));
 		
 		//Upgrades
-		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_UPGRADES, 0, 152, 12));
-		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_UPGRADES, 1, 152, 32));
-		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_UPGRADES, 2, 152, 52));
+		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_UPGRADES, 0, 171, 12));
+		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_UPGRADES, 1, 171, 32));
+		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_UPGRADES, 2, 171, 52));
 		
 		//Inventory
 				for(int i = 0; i < 3; i++) {
 					for(int j = 0; j < 9; j++) {
-						this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+						this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 27 + j * 18, 84 + i * 18));
 					}
 				}
 				
 				//ActionBar
 				for(int i = 0; i < 9; i++) {
-					this.addSlotToContainer(new Slot(invPlayer, i, 8 + i * 18, 142));
+					this.addSlotToContainer(new Slot(invPlayer, i, 27 + i * 18, 142));
 			}
 	}
 	
@@ -122,7 +123,7 @@ public class ContainerFluidGenerator extends Container {
 	}
 	public void detectAndSendChanges(){
         super.detectAndSendChanges();
-        F_GENERATOR.sync();
+       // F_GENERATOR.sync();
     }
 }
 

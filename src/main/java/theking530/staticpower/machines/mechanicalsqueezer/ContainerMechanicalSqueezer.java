@@ -71,10 +71,13 @@ public class ContainerMechanicalSqueezer extends Container {
 					this.addSlotToContainer(new Slot(invPlayer, i, 27 + i * 18, 142));
 			}
 	}
+	
 	public void moveUpgradeSlots(int x, int y) {
 		this.upgradeSlotY = y;
 		this.upgradeSlotX = x;
 	}
+	
+
 	//Shift Click Functionality
 	public ItemStack transferStackInSlot(EntityPlayer player, int invSlot) {
         ItemStack itemstack = null;
@@ -125,7 +128,6 @@ public class ContainerMechanicalSqueezer extends Container {
 	
 	public void detectAndSendChanges(){
         super.detectAndSendChanges();
-        CropSqueezer.sync();
     }
 }
 

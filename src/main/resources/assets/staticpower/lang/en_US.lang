@@ -216,12 +216,12 @@ tile.EnergizedPlanks.name=Energized Planks
 tile.LumumPlanks.name=Lumum Planks
 
 //Fluids
-fluid.staticfluid=§aStatic Fluid
-tile.staticfluid.name=§aStatic Fluid
-fluid.energizedfluid=§bEnergized Fluid
-tile.energizedfluid.name=§bEnergized Fluid
-fluid.lumumfluid=§eLumum Fluid
-tile.lumumfluid.name=§eLumum Fluid
+fluid.StaticFluid=§aStatic Fluid
+tile.StaticFluid.name=§aStatic Fluid
+fluid.EnergizedFluid=§bEnergized Fluid
+tile.EnergizedFluid.name=§bEnergized Fluid
+fluid.LumumFluid=§eLumum Fluid
+tile.LumumFluid.name=§eLumum Fluid
 tile.Ethanol.name=Ethanol
 fluid.Ethanol=Ethanol
 tile.Steam.name=Steam

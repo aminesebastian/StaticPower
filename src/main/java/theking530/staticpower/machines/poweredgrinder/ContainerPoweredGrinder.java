@@ -126,7 +126,6 @@ public class ContainerPoweredGrinder extends Container {
 	
 	public void detectAndSendChanges(){
         super.detectAndSendChanges();
-        GRINDER.sync();
     }
 }
 

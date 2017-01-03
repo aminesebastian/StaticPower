@@ -35,19 +35,16 @@ public class BlockMechanicalSqueezer extends BaseMachineBlock{
 	}
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-    	if (world.isRemote) {
-    		return true;
-    	}else if (player.isSneaking()) {
+		if (!player.isSneaking()) {
     		TileEntityMechanicalSqueezer entity = (TileEntityMechanicalSqueezer) world.getTileEntity(pos);
     		if (entity != null) {
     			FMLNetworkHandler.openGui(player, StaticPower.staticpower, GuiIDRegistry.guiMechanicalSqueezer, world, pos.getX(), pos.getY(), pos.getZ());
-
     		}
     		return true;
     	}else{
     		TileEntityMechanicalSqueezer entity = (TileEntityMechanicalSqueezer) world.getTileEntity(pos);
-			entity.rightClick();
-    		return false;
+    		entity.rightClick();
+    		return true;
     	}
 	}
 

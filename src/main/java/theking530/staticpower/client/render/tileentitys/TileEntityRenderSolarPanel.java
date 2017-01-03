@@ -2,10 +2,8 @@ package theking530.staticpower.client.render.tileentitys;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -18,11 +16,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.model.TRSRTransformation;
-import theking530.staticpower.assists.Reference;
 import theking530.staticpower.client.model.Models;
 import theking530.staticpower.machines.solarpanel.TileEntityStaticSolarPanel;
 
-public class TileEntityRenderSolarPanel extends TileEntitySpecialRenderer {
+public class TileEntityRenderSolarPanel extends TileEntitySpecialRenderer<TileEntity> {
 	
 	//ResourceLocation model = new ResourceLocation(Reference.MODID, "models/machines/SolarPanel.obj");
 	ResourceLocation sTextureOn;

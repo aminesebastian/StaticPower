@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.block.BlockCactus;
 import net.minecraft.block.BlockCrops;
 import net.minecraft.block.BlockNetherWart;
@@ -15,9 +13,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemHoe;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
@@ -27,7 +22,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.machines.BaseMachineWithTank;
-import theking530.staticpower.machines.FluidContainerMode;
 import theking530.staticpower.utils.InventoryUtilities;
 
 public class TileEntityBasicFarmer extends BaseMachineWithTank {
@@ -44,7 +38,6 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 	public TileEntityBasicFarmer() {
 		initializeBaseMachineWithTank(2, 40, 100000, 500, 10, 0, 4, 10, 10000);		
 		setBatterySlot(3);
-		setFluidContainerSlot(2, FluidContainerMode.DRAIN);
 		CURRENT_COORD = getStartingCoord();
 		RAND = new Random();
 	}

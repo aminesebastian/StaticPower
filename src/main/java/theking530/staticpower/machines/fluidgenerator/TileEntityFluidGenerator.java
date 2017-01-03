@@ -2,6 +2,7 @@ package theking530.staticpower.machines.fluidgenerator;
 
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraftforge.fluids.FluidStack;
@@ -10,7 +11,8 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.machines.BaseMachineWithTank;
-import theking530.staticpower.machines.FluidContainerMode;
+import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent;
+import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent.FluidContainerInteractionMode;
 import theking530.staticpower.power.PowerDistributor;
 
 public class TileEntityFluidGenerator extends BaseMachineWithTank{
@@ -18,10 +20,12 @@ public class TileEntityFluidGenerator extends BaseMachineWithTank{
 	private PowerDistributor POWER_DIST;
 	public int SOUND_TIMER = 15;
 	private FluidStack PROCESSING_FLUID;
-			
+	public DrainToBucketComponent DRAIN_COMPONENT;
+	
 	public TileEntityFluidGenerator() {
-		initializeBaseMachineWithTank(1, 0, 50000, 480, 0, 0, 1, 0, 10000);
-		setFluidContainerSlot(0, FluidContainerMode.DRAIN);
+		initializeBaseMachineWithTank(1, 0, 50000, 480, 0, 0, 1, 1, 10000);
+		DRAIN_COMPONENT = new DrainToBucketComponent(SLOTS_INPUT, 0, SLOTS_OUTPUT, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
+		DRAIN_COMPONENT.setMode(FluidContainerInteractionMode.FILL);
 		POWER_DIST = new PowerDistributor(this, STORAGE);
 		MOVE_SPEED = 10;
 	}
@@ -39,6 +43,7 @@ public class TileEntityFluidGenerator extends BaseMachineWithTank{
 		float volume = (amount/capacity)*0.8F;		
 			return volume;	
 	}
+
 	//Functionality		
 	@Override
 	public String getName() {
@@ -54,10 +59,11 @@ public class TileEntityFluidGenerator extends BaseMachineWithTank{
 			if(isProcessing() && STORAGE.getEnergyStored() < STORAGE.getMaxEnergyStored() && PROCESSING_FLUID != null) {
 				STORAGE.receiveEnergy(getFluidRFOutput(PROCESSING_FLUID), false);
 				PROCESSING_TIMER = 0;
-				sync();
+				updateBlock();
 			}
 			POWER_DIST.distributePower();		
 		}
+		DRAIN_COMPONENT.update();
 	}
 	public int getFluidRFOutput(FluidStack fluid) {
 		if(fluid != null) {

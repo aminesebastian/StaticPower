@@ -153,7 +153,6 @@ public class ContainerChargingStation extends Container {
 	//Detect Changes
 	public void detectAndSendChanges(){
         super.detectAndSendChanges();
-        C_CHARGING.sync();
     }	
 }
 

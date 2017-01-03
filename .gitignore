@@ -20,15 +20,3 @@ build
 # other
 eclipse
 run
-/gradle/
-/libs/
-/build.gradle
-/CREDITS-fml.txt
-/forge-1.10.2-12.18.1.2027-changelog.txt
-/gradlew
-/gradlew.bat
-/LICENSE-new.txt
-/MinecraftForge-Credits.txt
-/Paulscode IBXM Library License.txt
-/Paulscode SoundSystem CodecIBXM License.txt
-/README.txt

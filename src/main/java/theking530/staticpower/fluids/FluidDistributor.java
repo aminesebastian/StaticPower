@@ -29,17 +29,19 @@ public class FluidDistributor {
 					EnumFacing facing = EnumFacing.values()[i];
 					if(TE instanceof BaseTileEntity) {
 						BaseTileEntity tempTe = (BaseTileEntity)TE;
-						if(tempTe.getModeFromInt(i) == Mode.Output && TANK.getFluidAmount() > 0) {
-							if(TANK.getFluidAmount() > FLUID_OUTPUT_RATE) {
-								pushFluid(facing, FLUID_OUTPUT_RATE);
-							}else{
-								pushFluid(facing, TANK.getFluidAmount());
-							}
-						}else if(tempTe.getModeFromFacing(facing) == Mode.Input) {	
-							if(TANK.getFluidAmount() < TANK.getCapacity()) {
-								pullFluid(facing, TANK.getFluidAmount());
-							}else{
-								return;
+						if(tempTe != null) {
+							if(tempTe.getModeFromInt(i) == Mode.Output && TANK.getFluidAmount() > 0) {
+								if(TANK.getFluidAmount() > FLUID_OUTPUT_RATE) {
+									pushFluid(facing, FLUID_OUTPUT_RATE);
+								}else{
+									pushFluid(facing, TANK.getFluidAmount());
+								}
+							}else if(tempTe.getModeFromFacing(facing) == Mode.Input) {	
+								if(TANK.getFluidAmount() < TANK.getCapacity()) {
+									pullFluid(facing, TANK.getFluidAmount());
+								}else{
+									return;
+								}
 							}
 						}
 					}	

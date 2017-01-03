@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Locale;
 
 import net.minecraft.block.BlockLiquid;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
@@ -17,15 +19,17 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import theking530.staticpower.items.ItemBase;
 import theking530.staticpower.utils.EnumTextFormatting;
-import theking530.staticpower.utils.GUIUtilities;
 
 public class BaseFluidCapsule extends ItemBase { // implements IItemColor  {
 
@@ -35,6 +39,20 @@ public class BaseFluidCapsule extends ItemBase { // implements IItemColor  {
 		super(name);
 		CAPACITY = capacity;
 	}
+	
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
+        for (Fluid fluid : FluidRegistry.getRegisteredFluids().values()) {
+                // add all fluids that the bucket can be filled  with
+                ItemStack stack = new ItemStack(this);
+                FluidHandlerItemStack tempHandler = (FluidHandlerItemStack) stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+                FluidStack fs = new FluidStack(fluid, tempHandler.getTankProperties()[0].getCapacity());
+                if (tempHandler.fill(fs, true) == fs.amount) {
+                    subItems.add(stack);
+                }
+        }
+    }
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
     	FluidHandlerItemStack tempHandler = (FluidHandlerItemStack) stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
@@ -139,7 +157,12 @@ public class BaseFluidCapsule extends ItemBase { // implements IItemColor  {
     	    }else{
         		list.add(0 + "/" + NumberFormat.getNumberInstance(Locale.US).format(CAPACITY) + " mB");
     	    }
-    	    list.add(EnumTextFormatting.ITALIC + "Shift Right-Click to Place.");
+    	    if(showHiddenTooltips()) {
+    	    	list.add("Right-Click to Pick Up.");
+    	    	list.add("Shift Right-Click to Place.");
+    	    }else{
+    	    	list.add(EnumTextFormatting.ITALIC + "Hold Shift");
+    	    }
     	}
     }
     @Override

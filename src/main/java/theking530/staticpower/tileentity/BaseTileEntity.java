@@ -3,8 +3,6 @@ package theking530.staticpower.tileentity;
 import java.util.List;
 import java.util.Random;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -17,12 +15,8 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-import theking530.staticpower.handlers.PacketHandler;
-import theking530.staticpower.machines.PacketMachineSync;
-import theking530.staticpower.utils.OldSidePicker;
 import theking530.staticpower.utils.RedstoneModeList;
 import theking530.staticpower.utils.RedstoneModeList.RedstoneMode;
 import theking530.staticpower.utils.SideModeList;
@@ -49,7 +43,7 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 	public int OUT_TIMER = 0;
 	public int OUT_TIME = 2;
 	public int UPDATE_TIMER = 0;
-	public int UPDATE_TIME = 10;
+	public int UPDATE_TIME = 100;
 	public boolean PLACED = false;
 	
 	public boolean REQUIRES_UPDATE = true;
@@ -105,7 +99,7 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 			UPDATE_TIMER++;
 		}else{
 			if(REQUIRES_UPDATE) {
-				sync();
+				updateBlock();
 			}
 			markDirty();
 			UPDATE_TIMER = 0;
@@ -135,10 +129,9 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 	}
     
 	public void readFromSyncNBT(NBTTagCompound nbt) {
-		readFromNBT(nbt);
 	}
 	public NBTTagCompound writeToSyncNBT(NBTTagCompound nbt) {
-		return writeToNBT(nbt);
+		return nbt;
 	}
 	
 	@Override  
@@ -211,13 +204,15 @@ public class BaseTileEntity extends TileEntity implements ITickable {
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 		readFromNBT(pkt.getNbtCompound());
 	}
-    @Nullable
-    public SPacketUpdateTileEntity getUpdatePacket(){
-    	NBTTagCompound tag = new NBTTagCompound();
-    	writeToNBT(tag);
-    	return new SPacketUpdateTileEntity(pos, getBlockMetadata(), tag);
-    }
-
+	@Override
+	public NBTTagCompound getUpdateTag() {
+		return this.writeToNBT(new NBTTagCompound());
+	}
+	@Override
+	public SPacketUpdateTileEntity getUpdatePacket() {
+		return new SPacketUpdateTileEntity(this.getPos(), 1, this.getUpdateTag());
+	}
+    
 	public boolean isUseableByPlayer(EntityPlayer player) {
 		if (worldObj.getTileEntity(pos) != this) {
 			return false;
@@ -346,7 +341,10 @@ public class BaseTileEntity extends TileEntity implements ITickable {
     }
 
     public Mode getModeFromFacing(EnumFacing facing) {
-    	return SIDE_MODES[SideUtils.getBlockSide(facing.getOpposite(), SideUtils.getBlockHorizontal(worldObj.getBlockState(pos))).ordinal()];
+    	if(SideUtils.getBlockHorizontal(worldObj.getBlockState(pos)) != null) {
+    		return SIDE_MODES[SideUtils.getBlockSide(facing.getOpposite(), SideUtils.getBlockHorizontal(worldObj.getBlockState(pos))).ordinal()];	
+    	}
+    	return Mode.Disabled;
     }
     
     public boolean insertItem(ItemStack stack, ISidedInventory inv, EnumFacing side) {
@@ -616,9 +614,7 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 			SIDE_MODES[i] = SideModeList.Mode.values()[0];
 		}
 	}
-	public void sync() {
-		IMessage msg = new PacketMachineSync( this);
-		PacketHandler.net.sendToServer(msg);
-		worldObj.markAndNotifyBlock(pos, worldObj.getChunkFromBlockCoords(pos), worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2);
+	public void updateBlock() {
+			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2);
 	}
 }

@@ -108,7 +108,6 @@ public class ContainerBattery extends Container {
 	}
 	public void detectAndSendChanges(){
         super.detectAndSendChanges();
-        BATTERY.sync();
     }
 }
 

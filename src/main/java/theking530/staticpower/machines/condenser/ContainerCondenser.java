@@ -118,7 +118,6 @@ public class ContainerCondenser extends Container {
 	}
 	public void detectAndSendChanges(){
         super.detectAndSendChanges();
-        F_GENERATOR.sync();
     }
 }
 

@@ -134,7 +134,6 @@ public class ContainerBasicFarmer extends Container {
 	//Detect Changes
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
-		FARMER.sync();
 	}
 }
 

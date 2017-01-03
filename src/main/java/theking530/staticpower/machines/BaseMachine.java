@@ -1,20 +1,16 @@
 package theking530.staticpower.machines;
 
-import cofh.api.energy.EnergyStorage;
+import javax.annotation.Nullable;
+
 import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundCategory;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.items.upgrades.BasePowerUpgrade;
 import theking530.staticpower.items.upgrades.BaseSpeedUpgrade;
 import theking530.staticpower.power.StaticEnergyStorage;
@@ -109,7 +105,7 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 			UPDATE_TIMER++;
 		}else{
 			if(REQUIRES_UPDATE) {
-				sync();
+				updateBlock();
 			}
 			markDirty();
 			UPDATE_TIMER = 0;
@@ -151,7 +147,7 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	@Override
 	public void onPlaced(){
 		PREV_STORAGE = STORAGE.getEnergyStored();
-		sync();
+		updateBlock();
 	}
 	public void upgradeHandler(){
 		powerUpgrade();		
@@ -223,7 +219,7 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	}
 	@Override
 	public NBTTagCompound writeToSyncNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
+		super.writeToSyncNBT(nbt);
 		STORAGE.writeToNBT(nbt);
 		nbt.setInteger("P_TIMER", PROCESSING_TIMER);
 		nbt.setInteger("M_TIMER", MOVE_TIMER);
@@ -244,6 +240,18 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
         return nbt;
 	}
 	
+	@Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+		readFromNBT(pkt.getNbtCompound());
+	}
+    @Nullable
+    public SPacketUpdateTileEntity getUpdatePacket(){
+    	NBTTagCompound tag = new NBTTagCompound();
+    	writeToNBT(tag);
+    	return new SPacketUpdateTileEntity(pos, getBlockMetadata(), tag);
+    }
+
+    
 	public void onMachinePlaced(NBTTagCompound nbt) {
 		super.onMachinePlaced(nbt);
         STORAGE.readFromNBT(nbt);
@@ -277,14 +285,14 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	@Override
 	public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
 		if(!worldObj.isRemote) {
-			sync();
+			updateBlock();
 		}
 		return STORAGE.extractEnergy(maxExtract, simulate);
 	}
 	@Override
 	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
 		if(!worldObj.isRemote) {
-			sync();
+			updateBlock();
 		}
 		return STORAGE.receiveEnergy(maxReceive, simulate);
 	}

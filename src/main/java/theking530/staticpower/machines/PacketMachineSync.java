@@ -21,8 +21,7 @@ public class PacketMachineSync implements IMessage{
     public PacketMachineSync() {}
     
     public PacketMachineSync(BaseTileEntity TE) {
-    	TAG = new NBTTagCompound();
-    	TE.writeToSyncNBT(TAG);
+    	TAG = TE.writeToSyncNBT(new NBTTagCompound());
     	X = TE.getPos().getX();
     	Y = TE.getPos().getY();
     	Z = TE.getPos().getZ();
@@ -46,11 +45,11 @@ public class PacketMachineSync implements IMessage{
     public static class Message implements IMessageHandler<PacketMachineSync, IMessage> {
     @Override
     public IMessage onMessage(PacketMachineSync message, MessageContext ctx) {
-    	 	TileEntity tile = Minecraft.getMinecraft().theWorld.getTileEntity(new BlockPos(message.X, message.Y, message.Z));
-    		if(tile != null && tile instanceof BaseTileEntity) {
-    			BaseTileEntity te = (BaseTileEntity)tile;					
-    			te.readFromSyncNBT(message.TAG);
-    		}
+	 	TileEntity tile = ctx.getServerHandler().playerEntity.getEntityWorld().getTileEntity(new BlockPos(message.X, message.Y, message.Z));
+		if(tile != null && tile instanceof BaseTileEntity) {
+			BaseTileEntity te = (BaseTileEntity)tile;					
+			te.readFromSyncNBT(message.TAG);
+		}
 		return null;
     	}
     }

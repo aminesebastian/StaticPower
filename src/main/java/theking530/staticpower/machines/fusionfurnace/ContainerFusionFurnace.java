@@ -160,7 +160,6 @@ public class ContainerFusionFurnace extends Container {
 	}
 	public void detectAndSendChanges(){
         super.detectAndSendChanges();
-        FURNACE.sync();
     }
 }
 

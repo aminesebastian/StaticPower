@@ -192,7 +192,7 @@ public class GuiBattery extends CustomGuiContainer {
 			break;
 		}
 		if(!sBattery.getWorld().isRemote) {
-			sBattery.sync();		
+			sBattery.updateBlock();		
 		}
 
 	}

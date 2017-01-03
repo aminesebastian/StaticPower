@@ -3,18 +3,15 @@ package theking530.staticpower.client.render.tileentitys;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.client.model.ModelBlock;
 import theking530.staticpower.machines.cropsqueezer.TileEntityCropSqueezer;
-import theking530.staticpower.machines.mechanicalsqueezer.TileEntityMechanicalSqueezer;
 import theking530.staticpower.utils.RenderUtil;
 import theking530.staticpower.utils.SideModeList.Mode;
 
@@ -104,9 +101,8 @@ public class TileEntityRenderCropSqueezer extends TileEntitySpecialRenderer<Tile
 	public static void drawLiquidPour(TileEntity tileentity, FluidStack fluidStack) {
 		TileEntityCropSqueezer squeezer = (TileEntityCropSqueezer)tileentity;
 		float height = squeezer.getFluidLevelScaled(1);	
-		final Fluid fluid = fluidStack.getFluid();
 		float progress = ((float)squeezer.PROCESSING_TIMER/(float)squeezer.PROCESSING_TIME)*0.5f;
 		RenderUtil.drawFluidInWorld(fluidStack, 7*texel, 1-4*texel-progress, 1.0001F, 2*texel, progress);
-		RenderUtil.drawFluidInWorld(fluidStack, 4*texel, 3.5F*texel, 1.0001F, 8*texel, (height)*.38F);
+		RenderUtil.drawFluidInWorld(fluidStack, 4*texel, 3.5F*texel, 1.0001F, 8*texel, (height)*.18F);
 	}
 }

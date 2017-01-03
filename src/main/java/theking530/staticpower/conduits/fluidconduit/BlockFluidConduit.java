@@ -1,15 +1,9 @@
 package theking530.staticpower.conduits.fluidconduit;
 
-import java.util.ArrayList;
-
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
-import theking530.staticpower.StaticPower;
 import theking530.staticpower.conduits.BaseConduit;
 
 public class BlockFluidConduit extends BaseConduit {
@@ -18,7 +12,7 @@ public class BlockFluidConduit extends BaseConduit {
 	
 	public BlockFluidConduit() {
 		super("FluidConduit");
-		float pixel = 1F/16F;
+	
 		//his.setBlockBounds(11*pixel/2, 11*pixel/2, 11*pixel/2, 1-11*pixel/2, 1-11*pixel/2, 1-11*pixel/2);
 		this.useNeighborBrightness = true;
 	}	

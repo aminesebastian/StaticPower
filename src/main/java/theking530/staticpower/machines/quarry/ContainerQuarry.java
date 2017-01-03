@@ -98,7 +98,6 @@ public class ContainerQuarry extends Container {
 	
 	public void detectAndSendChanges(){
         super.detectAndSendChanges();
-        QUARRY.sync();
     }	
 }
 

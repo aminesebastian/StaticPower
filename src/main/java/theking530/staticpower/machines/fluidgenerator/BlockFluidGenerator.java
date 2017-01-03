@@ -20,14 +20,10 @@ import theking530.staticpower.machines.BaseMachineBlock;
 
 public class BlockFluidGenerator extends BaseMachineBlock{
 	
-	private Random rand;
-	private static boolean keepInventory = false;
-
 	public BlockFluidGenerator() {
 		super("FluidGenerator");
 		setHardness(3.5f);
-	    setResistance(5.0f);
-		rand = new Random();	
+	    setResistance(5.0f);	
 	}
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {

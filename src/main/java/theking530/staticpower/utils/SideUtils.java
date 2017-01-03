@@ -190,6 +190,9 @@ public class SideUtils {
 		return null;
 	}
 	public static EnumFacing getBlockHorizontal(IBlockState block){
-		return block.getValue(BlockHorizontal.FACING);
+		if(block.getProperties().get(BlockHorizontal.FACING) != null) {
+			return block.getValue(BlockHorizontal.FACING);		
+		}
+		return null;
 	}
 }

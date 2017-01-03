@@ -107,7 +107,6 @@ public class ContainerFluidInfuser extends Container {
 	}
 	public void detectAndSendChanges(){
         super.detectAndSendChanges();
-        INFUSER.sync();
     }
 }
 

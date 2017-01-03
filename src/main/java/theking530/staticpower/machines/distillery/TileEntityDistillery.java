@@ -156,7 +156,7 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
 	@Override
 	public int fill(FluidStack resource, boolean doFill) {
 		if(!worldObj.isRemote) {
-			sync();
+			updateBlock();
 		}
 		if(resource.getFluid() == ModFluids.Mash) {
 			return TANK.fill(resource, doFill);	
@@ -167,14 +167,14 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
 	@Override	
 	public FluidStack drain(FluidStack resource, boolean doDrain) {
 		if(!worldObj.isRemote) {
-			sync();
+			updateBlock();
 		}
 		return TANK2.drain(resource, doDrain);
 	}
 	@Override
 	public FluidStack drain(int maxDrain, boolean doDrain) {
 		if(!worldObj.isRemote) {
-			sync();
+			updateBlock();
 		}
 		return TANK2.drain(maxDrain, doDrain);
 	}

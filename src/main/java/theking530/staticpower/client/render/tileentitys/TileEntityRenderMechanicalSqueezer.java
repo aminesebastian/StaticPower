@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.client.model.ModelBlock;
@@ -22,7 +21,7 @@ public class TileEntityRenderMechanicalSqueezer extends TileEntitySpecialRendere
 	ResourceLocation sideIn = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSideIn.png");
 	ResourceLocation sideOut = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSideOut.png");
 	ResourceLocation front = new ResourceLocation(Reference.MODID, "textures/blocks/MechanicalSqueezerFrontOFF.png");
-	ResourceLocation frontOn = new ResourceLocation(Reference.MODID, "textures/blocks/MechanicalSqueezerFrontOn.png");
+	ResourceLocation frontOn = new ResourceLocation(Reference.MODID, "textures/blocks/MechanicalSqueezerFrontON.png");
 
 	static float texel = 1/16F;
 	
@@ -102,9 +101,8 @@ public class TileEntityRenderMechanicalSqueezer extends TileEntitySpecialRendere
 	public static void drawLiquidPour(TileEntity tileentity, FluidStack fluidStack) {
 		TileEntityMechanicalSqueezer squeezer = (TileEntityMechanicalSqueezer)tileentity;
 		float height = squeezer.getFluidLevelScaled(1);	
-		final Fluid fluid = fluidStack.getFluid();
 		float progress = ((float)squeezer.PROCESSING_TIMER/(float)squeezer.PROCESSING_TIME)*0.5f;
 		RenderUtil.drawFluidInWorld(fluidStack, 7*texel, 1-4*texel-progress, 1.0001F, 2*texel, progress);
-		RenderUtil.drawFluidInWorld(fluidStack, 4*texel, 3.5F*texel, 1.0001F, 8*texel, (height)*.38F);
+		RenderUtil.drawFluidInWorld(fluidStack, 4*texel, 3.5F*texel, 1.0001F, 8*texel, (height)*.18F);
 	}
 }

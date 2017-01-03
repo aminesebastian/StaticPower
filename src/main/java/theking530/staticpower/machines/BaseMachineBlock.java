@@ -12,19 +12,26 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.assists.RegisterHelper;
 import theking530.staticpower.blocks.BaseItemBlock;
 import theking530.staticpower.tileentity.BaseTileEntity;
 import theking530.staticpower.utils.OldSidePicker;
+import theking530.staticpower.utils.WorldUtilities;
 
 public class BaseMachineBlock extends BlockContainer implements IWrenchable {
 
@@ -103,10 +110,31 @@ public class BaseMachineBlock extends BlockContainer implements IWrenchable {
 		}
 		super.onBlockPlacedBy(world, pos, state, placer, stack);
     }
-	@Override
+    /**
+     * Called serverside after this block is replaced with another in Chunk, but before the Tile Entity is updated
+     */
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        TileEntity tileentity = worldIn.getTileEntity(pos);
+        
+        for(EnumFacing facing : EnumFacing.values()) {
+        	if(tileentity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing)) {
+        		ItemStackHandler tempHandler = (ItemStackHandler) tileentity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing);
+        		if(tempHandler != null) {
+        			for(int i=0; i<tempHandler.getSlots(); i++) {
+        				if(tempHandler.getStackInSlot(i) != null) {
+        					WorldUtilities.dropItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), tempHandler.getStackInSlot(i));
+        				}
+        			}
+        		}
+        	}   
+        }
+        super.breakBlock(worldIn, pos, state);
+    }
+    @Override
 	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
 		return null;
 	}
+	
 	@Override
 	public void wrenchBlock(EntityPlayer player, RegularWrenchMode mode, ItemStack wrench, World world, BlockPos pos, EnumFacing facing, boolean returnDrops) {
 		if(!world.isRemote) {
@@ -123,9 +151,10 @@ public class BaseMachineBlock extends BlockContainer implements IWrenchable {
 				BaseTileEntity TE = (BaseTileEntity) world.getTileEntity(pos);
 
 				TE.incrementSide(OldSidePicker.getAdjustedEnumFacing(facing, currentMeta).ordinal());
-				TE.sync();
+				TE.updateBlock();
 			}	
 		}
+		world.markAndNotifyBlock(pos, world.getChunkFromBlockCoords(pos), world.getBlockState(pos), world.getBlockState(pos), 2);
 	}	
 	@Override
 	public boolean canBeWrenched(EntityPlayer player, World world, BlockPos pos, EnumFacing facing){
@@ -133,15 +162,19 @@ public class BaseMachineBlock extends BlockContainer implements IWrenchable {
 	}
 	@Override
 	public void sneakWrenchBlock(EntityPlayer player, SneakWrenchMode mode, ItemStack wrench, World world, BlockPos pos, EnumFacing facing, boolean returnDrops){
-		NBTTagCompound nbt = new NBTTagCompound();
-		ItemStack machineStack = new ItemStack(Item.getItemFromBlock(this));
-		if(world.getTileEntity(pos) instanceof BaseTileEntity) {
-			BaseTileEntity tempMachine = (BaseTileEntity)world.getTileEntity(pos);
-			tempMachine.onMachineBroken(nbt);
-			machineStack.setTagCompound(nbt);
-		}		
-		EntityItem droppedItem = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), machineStack);
-		world.spawnEntityInWorld(droppedItem);
-		world.setBlockToAir(pos);	
+		if(!world.isRemote) {
+			NBTTagCompound nbt = new NBTTagCompound();
+			ItemStack machineStack = new ItemStack(Item.getItemFromBlock(this));
+			if(world.getTileEntity(pos) instanceof BaseTileEntity) {
+				BaseTileEntity tempMachine = (BaseTileEntity)world.getTileEntity(pos);
+				tempMachine.onMachineBroken(nbt);
+				machineStack.setTagCompound(nbt);
+			}		
+			EntityItem droppedItem = new EntityItem(world, pos.getX()+0.5, pos.getY(), pos.getZ()+0.5, machineStack);
+			world.spawnEntityInWorld(droppedItem);
+			droppedItem.setVelocity(0.0, 0.2f, 0.0);	
+		}
+		world.playSound(player, pos, SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 1.0f, 1.1f);
+		world.setBlockToAir(pos);
 	}
 }

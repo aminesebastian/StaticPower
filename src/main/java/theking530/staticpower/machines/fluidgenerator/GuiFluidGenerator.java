@@ -31,15 +31,15 @@ public class GuiFluidGenerator extends GuiContainer{
 		FLUIDBAR = new GuiFluidBarFromTank(teFluidGenerator.TANK);
 		REDSTONE_TAB = new GuiRedstoneTab(guiLeft, guiTop, teFluidGenerator);
 		SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, teFluidGenerator);
-		this.xSize = 176;
+		this.xSize = 195;
 		this.ySize = 166;
 		
 	}
 	public void updateScreen() {
 		int j = (width - xSize) / 2;
 		int k = (height - ySize) / 2;
-		SIDE_TAB.updateTab(width, height, xSize, ySize, fontRendererObj, fGenerator);
-		REDSTONE_TAB.updateTab(width, height, xSize, ySize, fontRendererObj, fGenerator);
+		SIDE_TAB.updateTab(width+38, height, xSize, ySize, fontRendererObj, fGenerator);
+		REDSTONE_TAB.updateTab(width+38, height, xSize, ySize, fontRendererObj, fGenerator);
 		if(SIDE_TAB.GROWTH_STATE == 1){
 			REDSTONE_TAB.RED_TAB.GROWTH_STATE = 2;
 		}
@@ -51,10 +51,10 @@ public class GuiFluidGenerator extends GuiContainer{
     	super.drawScreen(par1, par2, par3);
 		int var1 = (this.width - this.xSize) / 2;
 		int var2 = (this.height - this.ySize) / 2;
-		if(par1 >= 11 + var1 && par2 >= 8 + var2 && par1 <= 27 + var1 && par2 <= 68 + var2) {	
+		if(par1 >= 30 + var1 && par2 >= 8 + var2 && par1 <= 46 + var1 && par2 <= 68 + var2) {	
 			drawHoveringText(FLUIDBAR.drawText(), par1, par2, fontRendererObj); 
-		}     
-		if(par1 >= 31 + var1 && par2 >= 8 + var2 && par1 <= 37 + var1 && par2 <= 68 + var2) {
+		}       
+		if(par1 >= 50 + var1 && par2 >= 8 + var2 && par1 <= 56 + var1 && par2 <= 68 + var2) {
 			drawHoveringText(POWERBAR.drawText(), par1, par2, fontRendererObj); 
 		}	        
 	}
@@ -62,8 +62,8 @@ public class GuiFluidGenerator extends GuiContainer{
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = I18n.format(this.fGenerator.getName());
 	
-		this.fontRendererObj.drawString(name, this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2, 6,4210752 );
-		this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 3, 4210752);
+		this.fontRendererObj.drawString(name, this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2 +18, 6,4210752 );
+		this.fontRendererObj.drawString(I18n.format("container.inventory"), 27, this.ySize - 96 + 3, 4210752);
 	}
 	
 	@Override
@@ -74,8 +74,8 @@ public class GuiFluidGenerator extends GuiContainer{
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		REDSTONE_TAB.drawTab();
 		SIDE_TAB.drawTab();	
-		POWERBAR.drawPowerBar(guiLeft + 31, guiTop + 68, 6, 60, this.zLevel);
-		FLUIDBAR.drawFluidBar(guiLeft + 11, guiTop + 68, 16, 60, this.zLevel);
+		POWERBAR.drawPowerBar(guiLeft + 50, guiTop + 68, 6, 60, this.zLevel);
+		FLUIDBAR.drawFluidBar(guiLeft + 30, guiTop + 68, 16, 60, this.zLevel);
 	}
 	@Override
 	protected void mouseClicked(int x, int y, int button) throws IOException{

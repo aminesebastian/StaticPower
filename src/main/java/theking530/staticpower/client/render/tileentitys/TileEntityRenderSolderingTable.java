@@ -9,10 +9,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.client.model.ModelSolderingTable;
-import theking530.staticpower.machines.solderingtable.TileEntitySolderingTable;
 
 public class TileEntityRenderSolderingTable extends TileEntitySpecialRenderer<TileEntity> {
-
+	
 	private final ModelSolderingTable Table;
 	ResourceLocation SolderingTableTexture = new ResourceLocation(Reference.MODID, "textures/models/tileentity/SolderingTable.png");
 	
@@ -23,8 +22,7 @@ public class TileEntityRenderSolderingTable extends TileEntitySpecialRenderer<Ti
     }
 	
 	@Override
-	 public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float f, int destroyStage) {	
-		TileEntitySolderingTable infuser = (TileEntitySolderingTable)tileentity;			
+	 public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float f, int destroyStage) {				
 		EnumFacing facing = EnumFacing.getHorizontal(tileentity.getBlockMetadata())	;
 		GL11.glPushMatrix();
 		GL11.glTranslated(x, y, z);

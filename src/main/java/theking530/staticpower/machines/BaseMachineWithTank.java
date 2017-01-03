@@ -1,35 +1,26 @@
 package theking530.staticpower.machines;
 
-import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemBucket;
-import net.minecraft.item.ItemStack;
+import javax.annotation.Nullable;
+
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundCategory;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.items.CapabilityItemHandler;
 import theking530.staticpower.fluids.FluidDistributor;
-import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.items.upgrades.BaseTankUpgrade;
 
-public class BaseMachineWithTank extends BaseMachine implements IFluidHandler{
+public class BaseMachineWithTank extends BaseMachine implements IFluidHandler {
 
 	public int INITIAL_TANK_CAPACITY;
 	public FluidTank TANK;
 	public int FLUID_CONTAINER_SLOT = -1;
-	public FluidContainerMode FLUID_CONTAINER_MODE = FluidContainerMode.FILL;
-	public int FLUID_TO_CONTAINER_RATE = 100; //1 Bucket
+	//public FluidContainerMode FLUID_CONTAINER_MODE = FluidContainerMode.FILL;
+	public int FLUID_TO_CONTAINER_RATE = 10; //1 Bucket
 
 	public int CONTAINER_MOVE_TIMER = 0;
 	public int CONTAINER_MOVE_SPEED = 4;
@@ -43,41 +34,19 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler{
 		TANK = new FluidTank(INITIAL_TANK_CAPACITY);
 		FLUID_DIST = new FluidDistributor(this, TANK);
 	}
-	public void setFluidContainerSlot(int slot, FluidContainerMode mode) {
-		FLUID_CONTAINER_SLOT = slot;
-		FLUID_CONTAINER_MODE = mode;
-	}
+
 	@Override
 	public void update(){
 		super.update();
 		if(FLUID_CONTAINER_SLOT != -1) {
 			useFluidContainer();
 		}
-		if(evauluateRedstoneSettings()) {
+		if(evauluateRedstoneSettings() && FLUID_DIST != null) {
 			FLUID_DIST.distributeFluid();
 		}
 	}
 	public void useFluidContainer() {
-		if(CONTAINER_MOVE_TIMER < CONTAINER_MOVE_SPEED) {
-			CONTAINER_MOVE_TIMER++;	
-		}else{
-			if(SLOTS_INPUT.getStackInSlot(FLUID_CONTAINER_SLOT) != null && SLOTS_INPUT.getStackInSlot(FLUID_CONTAINER_SLOT).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null) && SLOTS_INPUT.getStackInSlot(FLUID_CONTAINER_SLOT).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null) instanceof FluidHandlerItemStack) {
-				FluidHandlerItemStack tempContainer = (FluidHandlerItemStack)SLOTS_INPUT.getStackInSlot(FLUID_CONTAINER_SLOT).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
-				if(FLUID_CONTAINER_MODE ==  FluidContainerMode.DRAIN && tempContainer.getFluid() != null && tempContainer.getFluid().amount > 0) {
-					if(tempContainer.getFluid().isFluidEqual(TANK.getFluid()) || TANK.getFluid() == null) {
-						TANK.fill(tempContainer.drain(Math.min(TANK.getCapacity()-TANK.getFluidAmount(), 100), true), true);
-						worldObj.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, .1f, 1, false);
-						CONTAINER_MOVE_TIMER = 0;	
-					}
-				}else if(FLUID_CONTAINER_MODE == FluidContainerMode.FILL && TANK.getFluid() != null){
-					if(tempContainer.getFluid() == null || tempContainer.getFluid().isFluidEqual(TANK.getFluid())) {
-						TANK.drain(tempContainer.fill(new FluidStack(TANK.getFluid().getFluid(), Math.min(TANK.getCapacity()-TANK.getFluidAmount(), 100)), true), true);	
-						worldObj.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.BLOCKS, .1f, 1, false);
-						CONTAINER_MOVE_TIMER = 0;	
-					}
-				}
-			}	
-		}
+
 	}
 	@Override
 	public void upgradeHandler(){
@@ -133,6 +102,18 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler{
 		return nbt;
 	}
     
+	@Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+		readFromNBT(pkt.getNbtCompound());
+	}
+    @Nullable
+    public SPacketUpdateTileEntity getUpdatePacket(){
+    	NBTTagCompound tag = new NBTTagCompound();
+    	writeToNBT(tag);
+    	return new SPacketUpdateTileEntity(pos, getBlockMetadata(), tag);
+    }
+
+	
 	public boolean isTankEmpty() {
 		return TANK.getFluidAmount() <= 0 ? true : false;
 	}
@@ -147,21 +128,21 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler{
 	@Override
 	public int fill(FluidStack resource, boolean doFill) {
 		if(!worldObj.isRemote) {
-			sync();
+			updateBlock();
 		}
 		return TANK.fill(resource, doFill);
 	}
 	@Override
 	public FluidStack drain(FluidStack resource, boolean doDrain) {
 		if(!worldObj.isRemote) {
-			sync();
+			updateBlock();
 		}
 		return TANK.drain(resource, doDrain);
 	}
 	@Override
 	public FluidStack drain(int maxDrain, boolean doDrain) {
 		if(!worldObj.isRemote) {
-			sync();
+			updateBlock();
 		}
 		return TANK.drain(maxDrain, doDrain);
 	}
@@ -178,7 +159,8 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler{
 			return 0;
 		}			
 	}
-    public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.util.EnumFacing facing){
+    @SuppressWarnings("unchecked")
+	public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.util.EnumFacing facing){
     	if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
     		return (T) this;
     	}
