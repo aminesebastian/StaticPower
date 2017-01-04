@@ -1,10 +1,14 @@
 package theking530.staticpower.items.tools.basictools;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
@@ -29,13 +33,14 @@ public class BaseSword extends ItemSword {
 	@Override  
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean par4) {
     	if(showHiddenTooltips()) {
-    		String tempLevel = "Mining Level: " +  MATERIAL.getHarvestLevel();
-    		String tempSpeed = "Speed: " +  MATERIAL.getEfficiencyOnProperMaterial();
+    		Collection<AttributeModifier> temp = getAttributeModifiers(EntityEquipmentSlot.MAINHAND, itemstack).get(SharedMonsterAttributes.ATTACK_SPEED.getAttributeUnlocalizedName());
+    		
+    		//String tempSpeed = "Attack Speed: " +  temp.toArray()[0];
     		String tempDamage = "Damage: " + (Math.round(getDamageVsEntity()) + 4); 
     		String tempDurability = "Durability: " + (MATERIAL.getMaxUses()-itemstack.getMetadata()) + "/" + MATERIAL.getMaxUses();
     		
-    		list.add(tempLevel);
-    		list.add(tempSpeed);
+    		
+    		//list.add(tempSpeed);
     		list.add(tempDurability);
     		list.add(tempDamage);
     	}else{

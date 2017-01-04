@@ -57,6 +57,16 @@ public class SmeltingRecipes {
 		ItemStack dustInert = new ItemStack(ModItems.InertInfusionBlend);
 		ItemStack ingotInert = new ItemStack(ModItems.InertIngot, 1);
 		GameRegistry.addSmelting(dustInert, ingotInert, 0.1f);
+		//Nickel
+		ItemStack dustNickel = new ItemStack(ModItems.NickelDust);
+		ItemStack ingotNickel = new ItemStack(ModItems.NickelIngot, 1);
+		GameRegistry.addSmelting(dustNickel, ingotNickel, 0.1f);
+		GameRegistry.addSmelting(new ItemStack(Item.getItemFromBlock(ModBlocks.NickelOre)), new ItemStack(ModItems.NickelIngot, 1), 0.1f);
+		//Aluminium
+		ItemStack dustAluminium = new ItemStack(ModItems.AluminiumDust);
+		ItemStack ingotAluminium = new ItemStack(ModItems.AluminiumIngot, 1);
+		GameRegistry.addSmelting(dustAluminium, ingotAluminium, 0.1f);
+		GameRegistry.addSmelting(new ItemStack(Item.getItemFromBlock(ModBlocks.AluminiumOre)), new ItemStack(ModItems.AluminiumIngot, 1), 0.1f);
 		
 		GameRegistry.addSmelting(new ItemStack(ModItems.RedstoneAlloyDust), new ItemStack(ModItems.RedstoneAlloyIngot), 0.1F);
 	}

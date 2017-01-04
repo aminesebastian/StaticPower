@@ -5,7 +5,6 @@ import static theking530.staticpower.assists.RegisterHelper.registerItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
-import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -24,6 +23,7 @@ import theking530.staticpower.items.containers.BaseFluidCapsule;
 import theking530.staticpower.items.itemfilter.FilterTier;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.items.materials.BaseDust;
+import theking530.staticpower.items.materials.BaseGem;
 import theking530.staticpower.items.materials.BaseIngot;
 import theking530.staticpower.items.materials.BaseNugget;
 import theking530.staticpower.items.tools.BlockReader;
@@ -33,11 +33,6 @@ import theking530.staticpower.items.tools.MetalHammer;
 import theking530.staticpower.items.tools.SolderingIron;
 import theking530.staticpower.items.tools.StaticWrench;
 import theking530.staticpower.items.tools.WireCutters;
-import theking530.staticpower.items.tools.basictools.BaseAxe;
-import theking530.staticpower.items.tools.basictools.BaseHoe;
-import theking530.staticpower.items.tools.basictools.BasePickaxe;
-import theking530.staticpower.items.tools.basictools.BaseShovel;
-import theking530.staticpower.items.tools.basictools.BaseSword;
 import theking530.staticpower.items.upgrades.BasePowerUpgrade;
 import theking530.staticpower.items.upgrades.BaseQuarryingUpgrade;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
@@ -156,6 +151,8 @@ public class ModItems {
 	public static Item StaticDust;
 	public static Item EnergizedDust;
 	public static Item LumumDust;
+	public static Item NickelDust;
+	public static Item AluminiumDust;
 	public static Item RedstoneAlloyDust;
 	
 	public static Item SilverIngot;
@@ -167,7 +164,12 @@ public class ModItems {
 	public static Item EnergizedIngot;
 	public static Item StaticIngot;
 	public static Item LumumIngot;
+	public static Item NickelIngot;
+	public static Item AluminiumIngot;
 	public static Item RedstoneAlloyIngot;
+	
+	public static Item SapphireGem;
+	public static Item RubyGem;
 	
 	public static Item EnergizedNugget;
 	public static Item StaticNugget;
@@ -420,18 +422,27 @@ public class ModItems {
 		GameRegistry.register(StaticIngot = new BaseIngot("StaticIngot"));
 		GameRegistry.register(EnergizedIngot = new BaseIngot("EnergizedIngot"));
 		GameRegistry.register(LumumIngot = new BaseIngot("LumumIngot"));
+		
 		GameRegistry.register(SilverIngot = new BaseIngot("SilverIngot"));
 		GameRegistry.register(TinIngot = new BaseIngot("TinIngot"));
 		GameRegistry.register(LeadIngot = new BaseIngot("LeadIngot"));
 		GameRegistry.register(CopperIngot = new BaseIngot("CopperIngot"));
 		GameRegistry.register(PlatinumIngot = new BaseIngot("PlatinumIngot"));
-		GameRegistry.register(InertIngot = new BaseIngot("InertIngot"));
-		GameRegistry.register(RedstoneAlloyIngot = new BaseIngot("RedstoneAlloyIngot"));
+		GameRegistry.register(NickelIngot = new BaseIngot("NickelIngot"));
+		GameRegistry.register(AluminiumIngot = new BaseIngot("AluminiumIngot"));
 		OreDictionary.registerOre("ingotSilver", new ItemStack(SilverIngot));
 		OreDictionary.registerOre("ingotTin", new ItemStack(TinIngot));
 		OreDictionary.registerOre("ingotLead", new ItemStack(LeadIngot));
 		OreDictionary.registerOre("ingotCopper", new ItemStack(CopperIngot));
 		OreDictionary.registerOre("ingotPlatinum", new ItemStack(PlatinumIngot));
+		
+		GameRegistry.register(SapphireGem = new BaseGem("SapphireGem"));
+		GameRegistry.register(RubyGem = new BaseGem("RubyGem"));
+		OreDictionary.registerOre("gemSapphire", new ItemStack(SapphireGem));
+		OreDictionary.registerOre("gemRuby", new ItemStack(RubyGem));
+		
+		GameRegistry.register(InertIngot = new BaseIngot("InertIngot"));
+		GameRegistry.register(RedstoneAlloyIngot = new BaseIngot("RedstoneAlloyIngot"));
 		
 		GameRegistry.register(StaticNugget = new BaseNugget("StaticNugget"));
 		GameRegistry.register(EnergizedNugget = new BaseNugget("EnergizedNugget"));
@@ -444,12 +455,9 @@ public class ModItems {
 		GameRegistry.register(CopperDust = new BaseDust("CopperDust"));
 		GameRegistry.register(PlatinumDust = new BaseDust("PlatinumDust"));
 		GameRegistry.register(IronDust = new BaseDust("IronDust"));
-		GameRegistry.register(GoldDust = new BaseDust("GoldDust"));
-		GameRegistry.register(InertInfusionBlend = new BaseDust("InertInfusionBlend"));
-		GameRegistry.register(StaticDust = new BaseDust("StaticDust"));
-		GameRegistry.register(EnergizedDust = new BaseDust("EnergizedDust"));
-		GameRegistry.register(LumumDust = new BaseDust("LumumDust"));
-		GameRegistry.register(RedstoneAlloyDust = new BaseDust("RedstoneAlloyDust"));
+		GameRegistry.register(GoldDust = new BaseDust("GoldDust"));	
+		GameRegistry.register(NickelDust = new BaseDust("NickelDust"));
+		GameRegistry.register(AluminiumDust = new BaseDust("AluminiumDust"));	
 		OreDictionary.registerOre("dustSilver", new ItemStack(SilverDust));
 		OreDictionary.registerOre("dustTin", new ItemStack(TinDust));
 		OreDictionary.registerOre("dustLead", new ItemStack(LeadDust));
@@ -457,7 +465,16 @@ public class ModItems {
 		OreDictionary.registerOre("dustPlatinum", new ItemStack(PlatinumDust));
 		OreDictionary.registerOre("dustIron", new ItemStack(IronDust));
 		OreDictionary.registerOre("dustGold", new ItemStack(GoldDust));
+		OreDictionary.registerOre("dustNickel", new ItemStack(NickelDust));
+		OreDictionary.registerOre("dustAluminium", new ItemStack(AluminiumDust));
 		OreDictionary.registerOre("nuggetIron", new ItemStack(IronNugget));
+		
+		GameRegistry.register(InertInfusionBlend = new BaseDust("InertInfusionBlend"));
+		GameRegistry.register(StaticDust = new BaseDust("StaticDust"));
+		GameRegistry.register(EnergizedDust = new BaseDust("EnergizedDust"));
+		GameRegistry.register(LumumDust = new BaseDust("LumumDust"));
+		GameRegistry.register(RedstoneAlloyDust = new BaseDust("RedstoneAlloyDust"));
+
 	}
 
 }

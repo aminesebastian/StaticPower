@@ -72,7 +72,14 @@ public class ShaplessRecipes {
 				new ItemStack(ModBlocks.BlockLead)});
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.PlatinumIngot, 9), new Object[]{
 			new ItemStack(ModBlocks.BlockPlatinum)});
-
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.NickelIngot, 9), new Object[]{
+				new ItemStack(ModBlocks.BlockNickel)});
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.AluminiumIngot, 9), new Object[]{
+				new ItemStack(ModBlocks.BlockAluminium)});
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.SapphireGem, 9), new Object[]{
+				new ItemStack(ModBlocks.BlockSapphire)});
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.RubyGem, 9), new Object[]{
+			new ItemStack(ModBlocks.BlockRuby)});
 		
 		//Seeds --------------------------------------------------------------------------------------------------
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.StaticSeeds), new Object[]{

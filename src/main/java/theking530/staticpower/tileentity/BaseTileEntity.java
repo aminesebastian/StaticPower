@@ -43,10 +43,10 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 	public int OUT_TIMER = 0;
 	public int OUT_TIME = 2;
 	public int UPDATE_TIMER = 0;
-	public int UPDATE_TIME = 100;
+	public int UPDATE_TIME = 200;
 	public boolean PLACED = false;
 	
-	public boolean REQUIRES_UPDATE = true;
+	public boolean REQUIRES_UPDATE = false;
 	
 	public BaseTileEntity() {
 

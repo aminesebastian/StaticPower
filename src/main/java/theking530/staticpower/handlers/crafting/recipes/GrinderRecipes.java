@@ -23,10 +23,16 @@ public class GrinderRecipes {
 			RegisterHelper.registerGrinderRecipe(OreDictionary.getOres("oreTin").get(index), newOutput(new ItemStack(ModItems.TinDust, 2), 1.0f), newOutput(new ItemStack(ModItems.SilverDust, 1), 0.1f));
 		}
 		for(int index = 0; index < OreDictionary.getOres("oreLead").size(); index++) {
-			RegisterHelper.registerGrinderRecipe(OreDictionary.getOres("oreLead").get(index), newOutput(new ItemStack(ModItems.LeadDust, 2), 1.0f));
+			RegisterHelper.registerGrinderRecipe(OreDictionary.getOres("oreLead").get(index), newOutput(new ItemStack(ModItems.LeadDust, 2), 1.0f), newOutput(new ItemStack(ModItems.RubyGem, 1), 0.02f));
 		}
 		for(int index = 0; index < OreDictionary.getOres("orePlatinum").size(); index++) {
-			RegisterHelper.registerGrinderRecipe(OreDictionary.getOres("orePlatinum").get(index), newOutput(new ItemStack(ModItems.PlatinumDust, 2), 1.0f));
+			RegisterHelper.registerGrinderRecipe(OreDictionary.getOres("orePlatinum").get(index), newOutput(new ItemStack(ModItems.PlatinumDust, 2), 1.0f), newOutput(new ItemStack(Items.DIAMOND, 1), 0.02f));
+		}
+		for(int index = 0; index < OreDictionary.getOres("oreNickel").size(); index++) {
+			RegisterHelper.registerGrinderRecipe(OreDictionary.getOres("oreNickel").get(index), newOutput(new ItemStack(ModItems.NickelDust, 2), 1.0f), newOutput(new ItemStack(ModItems.PlatinumDust, 1), 0.1f));
+		}
+		for(int index = 0; index < OreDictionary.getOres("oreAluminium").size(); index++) {
+			RegisterHelper.registerGrinderRecipe(OreDictionary.getOres("oreAluminium").get(index), newOutput(new ItemStack(ModItems.AluminiumDust, 2), 1.0f), newOutput(new ItemStack(ModItems.SapphireGem, 1), 0.02f));
 		}
 		
 		RegisterHelper.registerGrinderRecipe(new ItemStack(ModItems.StaticIngot),  newOutput(new ItemStack(ModItems.StaticDust), 1.0f));
@@ -34,8 +40,9 @@ public class GrinderRecipes {
 		RegisterHelper.registerGrinderRecipe(new ItemStack(ModItems.LumumIngot),  newOutput(new ItemStack(ModItems.LumumDust), 1.0f));
 		RegisterHelper.registerGrinderRecipe(new ItemStack(ModItems.InertIngot),  newOutput(new ItemStack(ModItems.InertInfusionBlend), 1.0f));
 		
-		oreDictionaryRecipe("Aluminium", 2);
-		oreDictionaryRecipe("Nickel", 2);
+		oreDictionaryRecipe("QuartzBlack", 2);
+		ingotDictionaryRecipe("QuartzBlack", 1);
+		
 		oreDictionaryRecipe("Manganese", 2);
 		oreDictionaryRecipe("Mithril", 2);
 		oreDictionaryRecipe("Zinc", 2);
@@ -65,12 +72,8 @@ public class GrinderRecipes {
 		
 		ingotDictionaryRecipe("Bronze", 1);
 		oreDictionaryOutput(new ItemStack(Item.getItemFromBlock(Blocks.OBSIDIAN)), "dustObsidian", 8);
-		if(OreDictionary.getOres("dustNickel").size() > 0) {
-			RegisterHelper.registerGrinderRecipe(new ItemStack(Item.getItemFromBlock(Blocks.IRON_ORE)),  newOutput(new ItemStack(ModItems.IronDust, 2), 1.0f), newOutput(new ItemStack(OreDictionary.getOres("dustNickel").get(0).getItem(), 1), 0.1f));	
-		}else{
-			RegisterHelper.registerGrinderRecipe(new ItemStack(Item.getItemFromBlock(Blocks.IRON_ORE)),  newOutput(new ItemStack(ModItems.IronDust, 2), 0.1f));	
-		}
-		
+
+		RegisterHelper.registerGrinderRecipe(new ItemStack(Item.getItemFromBlock(Blocks.IRON_ORE)),  newOutput(new ItemStack(ModItems.IronDust, 2), 1.0f), newOutput(new ItemStack(ModItems.NickelDust), 0.1f));		
 		RegisterHelper.registerGrinderRecipe(new ItemStack(Item.getItemFromBlock(Blocks.GOLD_ORE)),  newOutput(new ItemStack(ModItems.GoldDust, 2), 1.0f), newOutput(new ItemStack(ModItems.CopperDust, 1), 0.1f));
 		RegisterHelper.registerGrinderRecipe(new ItemStack(Item.getItemFromBlock(Blocks.COAL_ORE)),  newOutput(new ItemStack(Items.COAL, 4), 1.0f));
 		RegisterHelper.registerGrinderRecipe(new ItemStack(Item.getItemFromBlock(Blocks.REDSTONE_ORE)),  newOutput(new ItemStack(Items.REDSTONE, 5), 1.0f));
@@ -107,6 +110,12 @@ public class GrinderRecipes {
 		for(int index = 0; index < OreDictionary.getOres("ingotPlatinum").size(); index++) {
 			RegisterHelper.registerGrinderRecipe(OreDictionary.getOres("ingotPlatinum").get(index), newOutput(new ItemStack(ModItems.PlatinumDust, 1), 1.0f));
 		}
+		for(int index = 0; index < OreDictionary.getOres("ingotNickel").size(); index++) {
+			RegisterHelper.registerGrinderRecipe(OreDictionary.getOres("ingotNickel").get(index), newOutput(new ItemStack(ModItems.NickelDust, 1), 1.0f));
+		}
+		for(int index = 0; index < OreDictionary.getOres("ingotAluminium").size(); index++) {
+			RegisterHelper.registerGrinderRecipe(OreDictionary.getOres("ingotAluminium").get(index), newOutput(new ItemStack(ModItems.AluminiumDust, 1), 1.0f));
+		}
 		
 		oreDictionaryRecipe("ingotSteel", "dustSteel", 1);
 		oreDictionaryRecipe("ingotBronze", "dustBronze", 1);
@@ -115,9 +124,9 @@ public class GrinderRecipes {
 		oreDictionaryRecipe("ingotUranium", "dustUranium", 1);
 		oreDictionaryRecipe("ingotAluminium", "dustAluminium", 1);
 		
-		oreDictionaryRecipe("oreRuby", "gemRuby", 4);
-		oreDictionaryRecipe("oreSapphire", "gemSapphire", 4);
-		oreDictionaryRecipe("orePeridot", "gemPeridot", 4);
+		oreDictionaryRecipe("oreRuby", "gemRuby", 5);
+		oreDictionaryRecipe("oreSapphire", "gemSapphire", 5);
+		oreDictionaryRecipe("orePeridot", "gemPeridot", 5);
 		oreDictionaryRecipe("gemRuby", "dustRuby", 1);
 		oreDictionaryRecipe("gemSapphire", "dustSapphire", 1);
 		oreDictionaryRecipe("gemPeridot", "dustPeridot", 1);

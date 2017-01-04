@@ -13,6 +13,7 @@ import theking530.staticpower.blocks.decorative.StaticLamp;
 import theking530.staticpower.conduits.fluidconduit.BlockFluidConduit;
 import theking530.staticpower.conduits.itemconduit.BlockItemConduit;
 import theking530.staticpower.conduits.staticconduit.BlockStaticConduit;
+import theking530.staticpower.items.ModItems;
 import theking530.staticpower.machines.basicfarmer.BlockBasicFarmer;
 import theking530.staticpower.machines.batteries.BlockBattery;
 import theking530.staticpower.machines.chargingstation.BlockChargingStation;
@@ -52,6 +53,7 @@ public class ModBlocks {
 	public static Block BaseConduitBlock;
 	public static Block ChunkLoader;
 	
+	//Blocks
 	public static Block EnergizedBlock;
 	public static Block StaticBlock;
 	public static Block LumumBlock;
@@ -60,6 +62,10 @@ public class ModBlocks {
 	public static Block BlockSilver;
 	public static Block BlockLead;
 	public static Block BlockPlatinum;
+	public static Block BlockNickel;
+	public static Block BlockAluminium;
+	public static Block BlockSapphire;
+	public static Block BlockRuby;
 	
 	public static Block StaticLamp;
 	public static Block EnergizedLamp;
@@ -72,6 +78,8 @@ public class ModBlocks {
 	public static Block LaserLines;
 	public static Block AdvancedEarth;
 	public static Block ControlPanel;
+	
+	//Machines
 	public static Block FluidGenerator;	
 	public static Block FluidInfuser;	
 	public static Block CropSqueezer;	
@@ -88,6 +96,7 @@ public class ModBlocks {
 	public static Block Distillery;
 	public static Block Condenser;
 	
+	//Gates
 	public static Block LogicGateBasePlate;
 	public static Block SignalMultiplier;
 	public static Block NotGate;
@@ -99,25 +108,36 @@ public class ModBlocks {
 	public static Block Subtractor;
 	public static Block LED;
 	
+	//Solar Panels
 	public static Block BasicSolarPanel;
 	public static Block StaticSolarPanel;
 	public static Block EnergizedSolarPanel;
 	public static Block LumumSolarPanel;
 	public static Block CreativeSolarPanel;
 	
+	//Batteries
 	public static Block BasicBattery;
 	public static Block StaticBattery;
 	public static Block EnergizedBattery;
 	public static Block LumumBattery;
 	
+	//Conduits
 	public static Block StaticConduit;
 	public static Block FluidConduit;
 	public static Block ItemConduit;
+	
+	//Ores
 	public static Block SilverOre;
 	public static Block TinOre;
 	public static Block LeadOre;
 	public static Block CopperOre;
 	public static Block PlatinumOre;
+	public static Block NickelOre;
+	public static Block AluminiumOre;
+	public static Block RubyOre;
+	public static Block SapphireOre;
+	
+	//Misc
 	public static Block StaticCropPlant;
 	public static Block EnergizedCropPlant;
 	public static Block LumumCropPlant;
@@ -126,24 +146,17 @@ public class ModBlocks {
 	public static Block EnergizedChest;
 	public static Block LumumChest;
 	public static Block VacuumChest;
-	//public static Block SolidGenerator;
-	//public static Block WaterGenerator;
-	//public static Block IndustrialGrinder;
-	//public static Block IndustrialFurnace;	
-	//public static Block BlockBreaker;
 	public static Block SolderingTable;
 	public static Block FusionFurnace;
 	
-	public static Block CrackedEnergizedBrick;
-	
+	//Decorative
+	public static Block CrackedEnergizedBrick;	
 	public static Block StaticWood;
 	public static Block EnergizedWood;
-	public static Block LumumWood;
-	
+	public static Block LumumWood;	
 	public static Block StaticPlanks;
 	public static Block EnergizedPlanks;
-	public static Block LumumPlanks;
-	
+	public static Block LumumPlanks;	
 	public static Block StaticCobblestone;
 	public static Block EnergizedCobblestone;
 	public static Block LumumCobblestone;
@@ -313,7 +326,20 @@ public class ModBlocks {
 		OreDictionary.registerOre("blockLead", new ItemStack(BlockLead));
 		BlockPlatinum = new BaseBlock(Material.IRON, "BlockPlatinum");
 		RegisterHelper.registerBlock(BlockPlatinum);
-		OreDictionary.registerOre("blockPlatinum", new ItemStack(BlockPlatinum));
+		OreDictionary.registerOre("blockPlatinum", new ItemStack(BlockPlatinum));	
+		BlockNickel = new BaseBlock(Material.IRON, "BlockNickel");
+		RegisterHelper.registerBlock(BlockNickel);	
+		OreDictionary.registerOre("blockNickel", new ItemStack(BlockNickel));
+		BlockAluminium = new BaseBlock(Material.IRON, "BlockAluminium");
+		RegisterHelper.registerBlock(BlockAluminium);
+		OreDictionary.registerOre("blockAluminium", new ItemStack(BlockAluminium));
+		BlockSapphire = new BaseBlock(Material.IRON, "BlockSapphire");
+		RegisterHelper.registerBlock(BlockSapphire);	
+		OreDictionary.registerOre("blockSapphire", new ItemStack(BlockSapphire));
+		BlockRuby = new BaseBlock(Material.IRON, "BlockRuby");
+		RegisterHelper.registerBlock(BlockRuby);
+		OreDictionary.registerOre("blockRuby", new ItemStack(BlockRuby));
+		
 		
 		StaticGrass = new StaticGrass(Material.GRASS).setUnlocalizedName("StaticGrass");
 		RegisterHelper.registerBlock(StaticGrass);
@@ -358,6 +384,22 @@ public class ModBlocks {
 		PlatinumOre = new Ore("PlatinumOre", "pickaxe", 2).setHardness(3.5f);
 		RegisterHelper.registerBlock(PlatinumOre);
 		OreDictionary.registerOre("orePlatinum", new ItemStack(PlatinumOre));
+		
+		NickelOre = new Ore("NickelOre", "pickaxe", 1).setHardness(3.5f);
+		RegisterHelper.registerBlock(NickelOre);
+		OreDictionary.registerOre("oreNickel", new ItemStack(NickelOre));
+		
+		AluminiumOre = new Ore("AluminiumOre", "pickaxe", 2).setHardness(3.5f);
+		RegisterHelper.registerBlock(AluminiumOre);
+		OreDictionary.registerOre("oreAluminium", new ItemStack(AluminiumOre));
+
+		SapphireOre = new GemOre("SapphireOre", "pickaxe", 2, ModItems.SapphireGem, 1, 3).setHardness(3.5f);
+		RegisterHelper.registerBlock(SapphireOre);
+		OreDictionary.registerOre("oreSapphire", new ItemStack(SapphireOre));
+				
+		RubyOre = new GemOre("RubyOre", "pickaxe", 2, ModItems.RubyGem, 1, 3).setHardness(3.5f);
+		RegisterHelper.registerBlock(RubyOre);
+		OreDictionary.registerOre("oreRuby", new ItemStack(RubyOre));
 		
 		EnergizedCropPlant = new BaseCrop(Tier.ENERGIZED, "EnergizedCropPlant");
 		RegisterHelper.registerBlock(EnergizedCropPlant);

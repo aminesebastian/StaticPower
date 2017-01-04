@@ -4,3 +4,5 @@ Industrial Soldering Table
 Mining Cart
 Solar Panel Models
 Nuts & Bolts
+Welder
+One or Two more ores (Aluminium, Zinc, Titanium, Three/Four Gems like Redstone)

@@ -34,13 +34,25 @@ public class OreGenerationHandler implements IWorldGenerator {
                 generateOre(ModBlocks.TinOre, world, rand, chunkX, chunkZ,2,6,4,30,90);
             }
             if (StaticPowerConfig.LEAD_ORE_GEN) {
-                generateOre(ModBlocks.LeadOre, world, rand, chunkX, chunkZ,2,6,4,0,40);
+                generateOre(ModBlocks.LeadOre, world, rand, chunkX, chunkZ,1,5,3,0,32);
             }
             if (StaticPowerConfig.SILVER_ORE_GEN) {
-                generateOre(ModBlocks.SilverOre, world, rand, chunkX, chunkZ,2,6,4,0,40);
+                generateOre(ModBlocks.SilverOre, world, rand, chunkX, chunkZ,1,5,4,0,32);
             }
             if (StaticPowerConfig.PLATINUM_ORE_GEN) {
-                generateOre(ModBlocks.PlatinumOre, world, rand, chunkX, chunkZ,2,4,3,0,30);
+                generateOre(ModBlocks.PlatinumOre, world, rand, chunkX, chunkZ,2,4,2,0,30);
+            }
+            if (StaticPowerConfig.NICKEL_ORE_GEN) {
+                generateOre(ModBlocks.NickelOre, world, rand, chunkX, chunkZ,1,3,3,0,40);
+            }
+            if (StaticPowerConfig.ALUMINIUM_ORE_GEN) {
+                generateOre(ModBlocks.AluminiumOre, world, rand, chunkX, chunkZ,1,5,4,30,90);
+            }
+            if (StaticPowerConfig.SAPPHIRE_ORE_GEN) {
+                generateOre(ModBlocks.SapphireOre, world, rand, chunkX, chunkZ,1,3,2,0,40);
+            }
+            if (StaticPowerConfig.RUBY_ORE_GEN) {
+                generateOre(ModBlocks.RubyOre, world, rand, chunkX, chunkZ,1,4,2,0,40);
             }
         }
     }

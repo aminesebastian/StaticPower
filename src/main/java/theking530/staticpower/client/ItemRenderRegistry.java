@@ -42,6 +42,8 @@ public class ItemRenderRegistry {
 		ItemRenderRegistry.registerItem(ModItems.TinDust);
 		ItemRenderRegistry.registerItem(ModItems.LeadDust);
 		ItemRenderRegistry.registerItem(ModItems.PlatinumDust);
+		ItemRenderRegistry.registerItem(ModItems.NickelDust);
+		ItemRenderRegistry.registerItem(ModItems.AluminiumDust);
 		ItemRenderRegistry.registerItem(ModItems.StaticDust);
 		ItemRenderRegistry.registerItem(ModItems.EnergizedDust);
 		ItemRenderRegistry.registerItem(ModItems.LumumDust);
@@ -83,6 +85,10 @@ public class ItemRenderRegistry {
 		ItemRenderRegistry.registerItem(ModItems.LumumIngot);
 		ItemRenderRegistry.registerItem(ModItems.InertIngot);
 		ItemRenderRegistry.registerItem(ModItems.RedstoneAlloyIngot);
+		ItemRenderRegistry.registerItem(ModItems.NickelIngot);
+		ItemRenderRegistry.registerItem(ModItems.AluminiumIngot);
+		ItemRenderRegistry.registerItem(ModItems.SapphireGem);
+		ItemRenderRegistry.registerItem(ModItems.RubyGem);
 		
 		ItemRenderRegistry.registerItem(ModItems.StaticWrench);
 		ItemRenderRegistry.registerItem(ModItems.SolderingIron);
@@ -181,6 +187,10 @@ public class ItemRenderRegistry {
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.TinOre));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.LeadOre));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.PlatinumOre));
+		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.NickelOre));
+		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.AluminiumOre));
+		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.SapphireOre));
+		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.RubyOre));
 		
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.StaticPlanks));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.EnergizedPlanks));
@@ -197,7 +207,11 @@ public class ItemRenderRegistry {
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.BlockSilver));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.BlockLead));
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.BlockPlatinum));
-
+		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.BlockNickel));
+		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.BlockAluminium));
+		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.BlockSapphire));
+		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.BlockRuby));
+		
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.StaticLamp));
 		
 		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.LogicGateBasePlate));
@@ -267,6 +281,19 @@ public class ItemRenderRegistry {
 		ItemRenderRegistry.registerItem(ModTools.LumumShovel);
 		ItemRenderRegistry.registerItem(ModTools.LumumHoe);
 		ItemRenderRegistry.registerItem(ModTools.LumumSword);
+		
+		ItemRenderRegistry.registerItem(ModTools.SapphireAxe);
+		ItemRenderRegistry.registerItem(ModTools.SapphirePickaxe);
+		ItemRenderRegistry.registerItem(ModTools.SapphireShovel);
+		ItemRenderRegistry.registerItem(ModTools.SapphireHoe);
+		ItemRenderRegistry.registerItem(ModTools.SapphireSword);
+		
+		ItemRenderRegistry.registerItem(ModTools.RubyAxe);
+		ItemRenderRegistry.registerItem(ModTools.RubyPickaxe);
+		ItemRenderRegistry.registerItem(ModTools.RubyShovel);
+		ItemRenderRegistry.registerItem(ModTools.RubyHoe);
+		ItemRenderRegistry.registerItem(ModTools.RubySword);
+		
 	}
     public static void registerItem(Item item, int metadata) {
     	Minecraft.getMinecraft().getRenderItem().getItemModelMesher()

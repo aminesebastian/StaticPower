@@ -54,6 +54,15 @@ public class ShapedRecipes {
 		GameRegistry.addRecipe(new ItemStack(ModBlocks.BlockPlatinum), new Object[]{"XXX","XXX","XXX",
 		'X', ModItems.PlatinumIngot});
 		
+		GameRegistry.addRecipe(new ItemStack(ModBlocks.BlockNickel), new Object[]{"XXX","XXX","XXX",
+		'X', ModItems.NickelIngot});
+		GameRegistry.addRecipe(new ItemStack(ModBlocks.BlockAluminium), new Object[]{"XXX","XXX","XXX",
+		'X', ModItems.AluminiumIngot});
+		GameRegistry.addRecipe(new ItemStack(ModBlocks.BlockSapphire), new Object[]{"XXX","XXX","XXX",
+		'X', ModItems.SapphireGem});
+		GameRegistry.addRecipe(new ItemStack(ModBlocks.BlockRuby), new Object[]{"XXX","XXX","XXX",
+		'X', ModItems.RubyGem});
+		
 		//Ingots ------------------------------------------------------------------------------------------------------------
 		GameRegistry.addRecipe(new ItemStack(ModItems.StaticIngot), new Object[]{"XXX","XXX","XXX",
 		'X', ModItems.StaticNugget});
@@ -87,7 +96,7 @@ public class ShapedRecipes {
 		'R', ModItems.SilverPlate , 'C', ModItems.CopperPlate, 'W', ModItems.CopperCoil});
 		
 		//Fermenter --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.HeatingElement), new Object[]{"IPI", "GMG", "IPI", 
+		GameRegistry.addRecipe(new ItemStack(ModBlocks.Fermenter), new Object[]{"IPI", "GMG", "IPI", 
 		'G', Blocks.GLASS , 'I', ModItems.IronPlate, 'P', Blocks.PISTON, 'M', ModBlocks.MachineBlock});
 		
 		//Distillery --------------------------------------------------------------------------------------------------

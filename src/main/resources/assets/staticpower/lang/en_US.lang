@@ -87,6 +87,8 @@ item.LeadIngot.name=Lead Ingot
 item.PlatinumIngot.name=Platinum Ingot
 item.SteelIngot.name=Steel Ingot
 item.InertIngot.name=Inert Ingot
+item.NickelIngot.name=Nickel Ingot
+item.AluminiumIngot.name=Aluminium Ingot
 item.StaticIngot.name=§aStatic Metal Ingot
 item.EnergizedIngot.name=§bEnergized Metal Ingot
 item.LumumIngot.name=§eLumum Metal Ingot
@@ -96,6 +98,10 @@ item.EnergizedNugget.name=Energized Nugget
 item.LumumNugget.name=Lumum Nugget
 item.IronNugget.name=Iron Nugget
 
+//Gems
+item.SapphireGem.name=Sapphire
+item.RubyGem.name=Ruby
+
 //Dusts
 item.SilverDust.name=Silver Dust
 item.TinDust.name=Tin Dust
@@ -104,6 +110,8 @@ item.LeadDust.name=Lead Dust
 item.PlatinumDust.name=Platinum Dust
 item.IronDust.name=Iron Dust
 item.GoldDust.name=Gold Dust
+item.NickelDust.name=Nickel Dust
+item.AluminiumDust.name=Aluminium Dust
 item.InertInfusionBlend.name=Inert Infusion Blend
 item.StaticDust.name=§aStatic Dust
 item.EnergizedDust.name=§bEnergized Dust
@@ -176,7 +184,15 @@ tile.EnergizedLamp.name=Energized Lamp
 tile.LumumLamp.name=Lumum Lamp
 tile.StaticGrass.name=Static Grass
 tile.EnergizedGrass.name=Energized Grass
+tile.StaticChest.name=Static Chest
+tile.EnergizedChest.name=Energized Chest
+tile.LumumChest.name=Lumum Chest
+tile.VacuumChest.name=Vacuum Chest
+tile.AdvancedEarth.name=Advanced Earth
+tile.MachineBlock.name=Machine Block
+tile.ObsidianGlass.name=Obsidian Glass
 
+//Material Blocks
 tile.StaticBlock.name=§aStatic Metal Block
 tile.EnergizedBlock.name=§bEnergized Metal Block
 tile.LumumBlock.name=§eLumum Metal Block
@@ -185,19 +201,21 @@ tile.BlockTin.name=Tin Block
 tile.BlockSilver.name=Silver Block
 tile.BlockLead.name=Lead Block
 tile.BlockPlatinum.name=Platinum Block
+tile.BlockNickel.name=Nickel Block
+tile.BlockAluminium.name=Aluminium Block
+tile.BlockSapphire.name=Sapphire Block
+tile.BlockRuby.name=Ruby Block
 
-tile.MachineBlock.name=Machine Block
-tile.ObsidianGlass.name=Obsidian Glass
+//Ore
 tile.CopperOre.name=Copper Ore
 tile.TinOre.name=Tin Ore
 tile.SilverOre.name=Silver Ore
 tile.PlatinumOre.name=Platinum Ore
 tile.LeadOre.name=Lead Ore
-tile.StaticChest.name=Static Chest
-tile.EnergizedChest.name=Energized Chest
-tile.LumumChest.name=Lumum Chest
-tile.VacuumChest.name=Vacuum Chest
-tile.AdvancedEarth.name=Advanced Earth
+tile.NickelOre.name=Nickel Ore
+tile.AluminiumOre.name=Aluminium Ore
+tile.SapphireOre.name=Sapphire Ore
+tile.RubyOre.name=Ruby Ore
 
 tile.StaticCobblestone.name=Static Cobblestone
 tile.EnergizedCobblestone.name=Energized Cobblestone
@@ -337,10 +355,23 @@ item.sLumumHoe.name=Lumum Hoe
 item.sLumumShovel.name=Lumum Shovel
 item.sLumumSword.name=Lumum Sword
 
+item.sSapphireAxe.name=Sapphire Axe
+item.sSapphirePickaxe.name=Sapphire Pickaxe
+item.sSapphireHoe.name=Sapphire Hoe
+item.sSapphireShovel.name=Sapphire Shovel
+item.sSapphireSword.name=Sapphire Sword
+
+item.sRubyAxe.name=Ruby Axe
+item.sRubyPickaxe.name=Ruby Pickaxe
+item.sRubyHoe.name=Ruby Hoe
+item.sRubyShovel.name=Ruby Shovel
+item.sRubySword.name=Ruby Sword
+
 item.BaseFluidCapsule.name=Fluid Capsule
 item.StaticFluidCapsule.name=Static Fluid Capsule
 item.EnergizedFluidCapsule.name=Energized Fluid Capsule
 item.LumumFluidCapsule.name=Lumum Fluid Capsule
+
 //TIC
 material.staticmetal=Static Metal
 material.energizedmetal=Energized Metal

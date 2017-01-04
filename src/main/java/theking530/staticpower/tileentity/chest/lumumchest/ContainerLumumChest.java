@@ -18,19 +18,19 @@ public class ContainerLumumChest extends Container {
 
 	public ContainerLumumChest(InventoryPlayer invPlayer, TileEntityLumumChest teStaticChest) {
 		staticChest = teStaticChest;
-		this.numRows = teStaticChest.SLOTS_OUTPUT.getSlots() / 14;
-		for (int y = 0; y < 10; y++) {
-			for (int x = 0; x < 14; x++) {
-				this.addSlotToContainer(new SlotItemHandler(teStaticChest.SLOTS_OUTPUT, x + y * 14, 7 + (x * 18), 4+(19 + (y * 18))));
+		this.numRows = teStaticChest.SLOTS_OUTPUT.getSlots() / 12;
+		for (int y = 0; y < 8; y++) {
+			for (int x = 0; x < 12; x++) {
+				this.addSlotToContainer(new SlotItemHandler(teStaticChest.SLOTS_OUTPUT, x + y * 12, 8 + (x * 18), (19 + (y * 18))));
 			}
 		}
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
-				this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 52 + j * 18, 212 + i * 18));
+				this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 35 + j * 18, 172 + i * 18));
 			}
 		}
 		for (int i = 0; i < 9; i++) {
-			this.addSlotToContainer(new Slot(invPlayer, i, 52 + i * 18, 270));
+			this.addSlotToContainer(new Slot(invPlayer, i, 35 + i * 18, 230));
 		}
 	}
 

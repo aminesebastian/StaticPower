@@ -108,9 +108,9 @@ public class StaticPower {
 		StaticPowerConfig.updateConfig();
 	
 		PacketHandler.initPackets();
-		ModBlocks.init();
 		ModFluids.init();
 		ModItems.init();
+		ModBlocks.init();
 		ModTools.init();
 		
 		if(preEvent.getSide() == Side.CLIENT) {

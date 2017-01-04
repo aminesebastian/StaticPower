@@ -9,15 +9,18 @@ import theking530.staticpower.items.ModItems;
 
 public class ModTools {
 
-	public static ToolMaterial COPPER = EnumHelper.addToolMaterial("COPPER", 1, 225, 5.0F, 3.0F, 15);
-	public static ToolMaterial TIN = EnumHelper.addToolMaterial("TIN", 1, 225, 5.0F, 3.0F, 15);
-	public static ToolMaterial SILVER = EnumHelper.addToolMaterial("SILVER", 2, 500, 8.0F, 4.0F, 20);
-	public static ToolMaterial LEAD = EnumHelper.addToolMaterial("LEAD", 2, 2000, 3.0F, 4.0F, 20);
-	public static ToolMaterial PLATINUM = EnumHelper.addToolMaterial("PLATINUM", 2, 2500, 5.0F, 5.0F, 30);
-	public static ToolMaterial STATIC = EnumHelper.addToolMaterial("STATIC", 2, 500, 7.0F, 3.0F, 20);
-	public static ToolMaterial ENERGIZED = EnumHelper.addToolMaterial("ENERGIZED", 2, 2000, 5.0F, 4.0F, 30);
+	public static ToolMaterial COPPER = EnumHelper.addToolMaterial("COPPER", 1, 500, 5.0F, 3.0F, 15);
+	public static ToolMaterial TIN = EnumHelper.addToolMaterial("TIN", 1, 500, 5.0F, 3.0F, 15);
+	public static ToolMaterial SILVER = EnumHelper.addToolMaterial("SILVER", 2, 1000, 6.0F, 3.0F, 20);
+	public static ToolMaterial LEAD = EnumHelper.addToolMaterial("LEAD", 2, 1500, 3.0F, 3.0F, 20);
+	public static ToolMaterial PLATINUM = EnumHelper.addToolMaterial("PLATINUM", 3, 2000, 4.0F, 5.0F, 30);
+	public static ToolMaterial NICKEL = EnumHelper.addToolMaterial("NICKEL", 2, 500, 8.0F, 3.0F, 20);
+	public static ToolMaterial ALUMINIUM = EnumHelper.addToolMaterial("ALUMINIUM", 1, 500, 3.0F, 3.0F, 15);
+	public static ToolMaterial STATIC = EnumHelper.addToolMaterial("STATIC", 2, 1500, 7.0F, 3.0F, 20);
+	public static ToolMaterial ENERGIZED = EnumHelper.addToolMaterial("ENERGIZED", 2, 2500, 4.0F, 4.0F, 30);
 	public static ToolMaterial LUMUM = EnumHelper.addToolMaterial("LUMUM", 3, 4000, 12.0F, 5.0F, 40);
-	
+	public static ToolMaterial RUBY = EnumHelper.addToolMaterial("RUBY", 2, 1500, 5.0F, 5.0F, 30);
+	public static ToolMaterial SAPPHIRE = EnumHelper.addToolMaterial("SAPPHIRE", 2, 1500, 5.0F, 5.0F, 30);
 	
 	public static Item CopperPickaxe;
 	public static Item CopperAxe;
@@ -49,7 +52,6 @@ public class ModTools {
 	public static Item PlatinumHoe;
 	public static Item PlatinumSword;
 	
-	
 	public static Item StaticPickaxe;
 	public static Item StaticAxe;
 	public static Item StaticShovel;
@@ -67,6 +69,18 @@ public class ModTools {
 	public static Item LumumShovel;
 	public static Item LumumHoe;
 	public static Item LumumSword;
+	
+	public static Item SapphirePickaxe;
+	public static Item SapphireAxe;
+	public static Item SapphireShovel;
+	public static Item SapphireHoe;
+	public static Item SapphireSword;
+	
+	public static Item RubyPickaxe;
+	public static Item RubyAxe;
+	public static Item RubyShovel;
+	public static Item RubyHoe;
+	public static Item RubySword;
 	
 	public static void init() {
 		CopperPickaxe = new BasePickaxe(COPPER, "sCopperPickaxe");
@@ -155,7 +169,28 @@ public class ModTools {
 		LumumShovel = new BaseShovel(LUMUM, "sLumumShovel");
 		RegisterHelper.registerItem(LumumShovel);	
 		LumumSword = new BaseSword(LUMUM, "sLumumSword");
-		RegisterHelper.registerItem(LumumSword);	
+		RegisterHelper.registerItem(LumumSword);
 		
+		SapphirePickaxe = new BasePickaxe(SAPPHIRE, "sSapphirePickaxe");
+		RegisterHelper.registerItem(SapphirePickaxe);	
+		SapphireAxe = new BaseAxe(SAPPHIRE, "sSapphireAxe");
+		RegisterHelper.registerItem(SapphireAxe);	
+		SapphireHoe = new BaseHoe(SAPPHIRE, "sSapphireHoe");
+		RegisterHelper.registerItem(SapphireHoe);	
+		SapphireShovel = new BaseShovel(SAPPHIRE, "sSapphireShovel");
+		RegisterHelper.registerItem(SapphireShovel);	
+		SapphireSword = new BaseSword(SAPPHIRE, "sSapphireSword");
+		RegisterHelper.registerItem(SapphireSword);	
+		
+		RubyPickaxe = new BasePickaxe(RUBY, "sRubyPickaxe");
+		RegisterHelper.registerItem(RubyPickaxe);	
+		RubyAxe = new BaseAxe(RUBY, "sRubyAxe");
+		RegisterHelper.registerItem(RubyAxe);	
+		RubyHoe = new BaseHoe(RUBY, "sRubyHoe");
+		RegisterHelper.registerItem(RubyHoe);	
+		RubyShovel = new BaseShovel(RUBY, "sRubyShovel");
+		RegisterHelper.registerItem(RubyShovel);	
+		RubySword = new BaseSword(RUBY, "sRubySword");
+		RegisterHelper.registerItem(RubySword);			
 	}
 }

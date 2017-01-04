@@ -35,16 +35,6 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler {
 		FLUID_DIST = new FluidDistributor(this, TANK);
 	}
 
-	@Override
-	public void update(){
-		super.update();
-		if(FLUID_CONTAINER_SLOT != -1) {
-			useFluidContainer();
-		}
-		if(evauluateRedstoneSettings() && FLUID_DIST != null) {
-			FLUID_DIST.distributeFluid();
-		}
-	}
 	public void useFluidContainer() {
 
 	}

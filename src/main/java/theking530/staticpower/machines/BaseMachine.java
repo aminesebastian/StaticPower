@@ -40,9 +40,6 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	public int PROCESSING_TIMER = 0;
 	public int MOVE_TIMER = 0;
 	
-	public int UPDATE_TIMER = 10;
-	public int UPDATE_TIME = 0;
-	
 	public int BATTERY_SLOT = -1;
 	public int PREV_STORAGE = 0;
 	public int CURRENT_RF_TICK = 0;
@@ -109,9 +106,6 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 			}
 			markDirty();
 			UPDATE_TIMER = 0;
-		}
-		if(BATTERY_SLOT != -1) {
-			useBattery();
 		}
 		PREV_STORAGE = STORAGE.getEnergyStored();
 	}	

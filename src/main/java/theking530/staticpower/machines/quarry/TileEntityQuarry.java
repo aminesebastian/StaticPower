@@ -91,11 +91,13 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 							QUARRIED_STACKS.remove(k);
 						}else{
 							if(InventoryUtilities.canFullyInsertItemIntoInventory(worldObj.getTileEntity(pos.add(0,1,0)).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN), QUARRIED_STACKS.get(k))) {
+								InventoryUtilities.fullyInsertItemIntoInventory(worldObj.getTileEntity(pos.add(0,1,0)).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN), QUARRIED_STACKS.get(k));
 								QUARRIED_STACKS.remove(k);
 							}	
 						}
 					}else{
 						if(InventoryUtilities.canFullyInsertItemIntoInventory(worldObj.getTileEntity(pos.add(0,1,0)).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN), QUARRIED_STACKS.get(k))) {
+							InventoryUtilities.fullyInsertItemIntoInventory(worldObj.getTileEntity(pos.add(0,1,0)).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN), QUARRIED_STACKS.get(k));
 							QUARRIED_STACKS.remove(k);
 						}
 					}

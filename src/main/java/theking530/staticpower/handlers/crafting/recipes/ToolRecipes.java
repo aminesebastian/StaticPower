@@ -196,6 +196,52 @@ public class ToolRecipes {
 				'M', ModItems.LumumIngot, 'S', Items.STICK});	
 		GameRegistry.addRecipe(new ItemStack(ModTools.LumumSword), new Object[]{"  M","  M","  S",
 				'M', ModItems.LumumIngot, 'S', Items.STICK});	
+	
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SapphireAxe), new Object[]{"MM ","MS "," S ",
+				'M', "gemSapphire", 'S', Items.STICK}));	
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SapphireAxe), new Object[]{" MM"," SM"," S ",
+				'M', "gemSapphire", 'S', Items.STICK}));	
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SapphireHoe), new Object[]{"MM "," S "," S ",
+				'M', "gemSapphire", 'S', Items.STICK}));	
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SapphireHoe), new Object[]{" MM"," S "," S ",
+				'M', "gemSapphire", 'S', Items.STICK}));	
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SapphirePickaxe), new Object[]{"MMM"," S "," S ",
+				'M', "gemSapphire", 'S', Items.STICK}));	
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SapphireShovel), new Object[]{"M  ","S  ","S  ",
+				'M', "gemSapphire", 'S', Items.STICK}));	
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SapphireShovel), new Object[]{" M "," S "," S ",
+				'M', "gemSapphire", 'S', Items.STICK}));	
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SapphireShovel), new Object[]{"  M","  S","  S",
+				'M', "gemSapphire", 'S', Items.STICK}));	
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SapphireSword), new Object[]{"M  ","M  ","S  ",
+				'M', "gemSapphire", 'S', Items.STICK}));	
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SapphireSword), new Object[]{" M "," M "," S ",
+				'M', "gemSapphire", 'S', Items.STICK}));	
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SapphireSword), new Object[]{"  M","  M","  S",
+				'M', "gemSapphire", 'S', Items.STICK}));	
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.RubyAxe), new Object[]{"MM ","MS "," S ",
+				'M', "gemRuby", 'S', Items.STICK}));	
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.RubyAxe), new Object[]{" MM"," SM"," S ",
+				'M', "gemRuby", 'S', Items.STICK}));	
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.RubyHoe), new Object[]{"MM "," S "," S ",
+				'M', "gemRuby", 'S', Items.STICK}));	
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.RubyHoe), new Object[]{" MM"," S "," S ",
+				'M', "gemRuby", 'S', Items.STICK}));	
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.RubyPickaxe), new Object[]{"MMM"," S "," S ",
+				'M', "gemRuby", 'S', Items.STICK}));	
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.RubyShovel), new Object[]{"M  ","S  ","S  ",
+				'M', "gemRuby", 'S', Items.STICK}));	
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.RubyShovel), new Object[]{" M "," S "," S ",
+				'M', "gemRuby", 'S', Items.STICK}));	
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.RubyShovel), new Object[]{"  M","  S","  S",
+				'M', "gemRuby", 'S', Items.STICK}));	
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.RubySword), new Object[]{"M  ","M  ","S  ",
+				'M', "gemRuby", 'S', Items.STICK}));	
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.RubySword), new Object[]{" M "," M "," S ",
+				'M', "gemRuby", 'S', Items.STICK}));	
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.RubySword), new Object[]{"  M","  M","  S",
+				'M', "gemRuby", 'S', Items.STICK}));	
 	}
 }
 
