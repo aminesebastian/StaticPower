@@ -8,17 +8,23 @@ import java.util.Locale;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import theking530.staticpower.blocks.ModBlocks;
-import theking530.staticpower.client.gui.widgets.GuiFluidBarFromTank;
-import theking530.staticpower.client.gui.widgets.GuiInfoTab;
-import theking530.staticpower.client.gui.widgets.GuiPowerBar;
-import theking530.staticpower.client.gui.widgets.GuiPowerBarFromEnergyStorage;
-import theking530.staticpower.client.gui.widgets.GuiRedstoneTab;
-import theking530.staticpower.client.gui.widgets.GuiSideConfigTab;
+import theking530.staticpower.client.gui.widgets.buttons.ArrowButton;
+import theking530.staticpower.client.gui.widgets.tabs.GuiInfoTab;
+import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
+import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
+import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarFromTank;
+import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBar;
+import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
+import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.handlers.crafting.registries.InfuserRecipeRegistry;
+import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent.FluidContainerInteractionMode;
+import theking530.staticpower.machines.quarry.PacketQuarryContainerMode;
 import theking530.staticpower.utils.EnumTextFormatting;
 import theking530.staticpower.utils.GuiTextures;
 
@@ -40,15 +46,44 @@ public class GuiFluidInfuser extends GuiContainer{
 		FLUIDBAR = new GuiFluidBarFromTank(teInfuser.TANK);
 		REDSTONE_TAB = new GuiRedstoneTab(guiLeft, guiTop, teInfuser);
 		SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, teInfuser);
-		this.xSize = 176;
+		this.xSize = 214;
 		this.ySize = 166;		
 	}	
+	@Override
+	public void initGui() {
+		super.initGui();
+	 	int j = (width - xSize) / 2;
+	    int k = (height - ySize) / 2;
+
+	    this.buttonList.add(new ArrowButton(1, j+7, k+35, 16, 10, "<"));
+	    
+	    if(Infuser.DRAIN_COMPONENT.getMode() == FluidContainerInteractionMode.FillFromContainer) {
+	    	buttonList.get(0).displayString = ">";
+	    }else{
+	    	buttonList.get(0).displayString = "<";
+	    }
+	}
+	@Override
+	protected void actionPerformed(GuiButton B) {
+		if(B.id == 1) {
+			IMessage msg = new PacketFluidInfuserContainerMode(Infuser.DRAIN_COMPONENT.getInverseMode(), Infuser.getPos());
+			PacketHandler.net.sendToServer(msg);
+			Infuser.DRAIN_COMPONENT.setMode(Infuser.DRAIN_COMPONENT.getInverseMode());
+			
+		    if(Infuser.DRAIN_COMPONENT.getMode() == FluidContainerInteractionMode.FillFromContainer) {
+		    	buttonList.get(0).displayString = ">";
+		    }else{
+		    	buttonList.get(0).displayString = "<";
+		    }
+		}
+	}	
+	
 	public void updateScreen() {
 		int j = (width - xSize) / 2;
 		int k = (height - ySize) / 2;
-		SIDE_TAB.updateTab(width, height, xSize, ySize, fontRendererObj, Infuser);
-		REDSTONE_TAB.updateTab(width, height, xSize, ySize, fontRendererObj, Infuser);
-		INFO_TAB.updateTab(width, height, xSize, ySize, fontRendererObj, Infuser);
+		SIDE_TAB.updateTab(width+38, height, xSize, ySize, fontRendererObj, Infuser);
+		REDSTONE_TAB.updateTab(width+38, height, xSize, ySize, fontRendererObj, Infuser);
+		INFO_TAB.updateTab(width+38, height, xSize, ySize, fontRendererObj, Infuser);
 		if(INFO_TAB.GROWTH_STATE == 1){
 			REDSTONE_TAB.RED_TAB.GROWTH_STATE = 2;
 			SIDE_TAB.BLUE_TAB.GROWTH_STATE = 2;
@@ -61,18 +96,18 @@ public class GuiFluidInfuser extends GuiContainer{
     	super.drawScreen(par1, par2, par3);
     	int var1 = (this.width - this.xSize) / 2;
         int var2 = (this.height - this.ySize) / 2;
-		if(par1 >= 11 + var1 && par2 >= 8 + var2 && par1 <= 27 + var1 && par2 <= 68 + var2) {	
+		if(par1 >= 30 + var1 && par2 >= 8 + var2 && par1 <= 46 + var1 && par2 <= 68 + var2) {	
 			drawHoveringText(FLUIDBAR.drawText(), par1, par2, fontRendererObj); 
 		}    
-		if(par1 >= 31 + var1 && par2 >= 8 + var2 && par1 <= 37 + var1 && par2 <= 68 + var2) {
+		if(par1 >= 49 + var1 && par2 >= 8 + var2 && par1 <= 56 + var1 && par2 <= 68 + var2) {
 			drawHoveringText(POWERBAR.drawText(), par1, par2, fontRendererObj); 
 		}	
 	}
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = I18n.format(this.Infuser.getName());
 	
-		this.fontRendererObj.drawString(name, this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2, 6,4210752 );
-		this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 3, 4210752);
+		this.fontRendererObj.drawString(name, this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2 +6, 6,4210752 );
+		this.fontRendererObj.drawString(I18n.format("container.inventory"), 27, this.ySize - 96 + 3, 4210752);
 	}	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {		
@@ -97,12 +132,12 @@ public class GuiFluidInfuser extends GuiContainer{
     	String[] splitMsg = text.split("=");
 		
 		INFO_TAB.drawTab(Arrays.asList(splitMsg));
-		POWERBAR.drawPowerBar(guiLeft + 31, guiTop + 68, 6, 60, this.zLevel);
-		FLUIDBAR.drawFluidBar(guiLeft + 11, guiTop + 68, 16, 60, this.zLevel);
+		POWERBAR.drawPowerBar(guiLeft + 50, guiTop + 68, 6, 60, this.zLevel);
+		FLUIDBAR.drawFluidBar(guiLeft + 30, guiTop + 68, 16, 60, this.zLevel);
 	}	
 	public void progressBar() {
 		int j1 = Infuser.getProgressScaled(24);
-		drawTexturedModalRect(guiLeft + 78, guiTop + 32, 176, 69, j1 + 1, 16);	
+		drawTexturedModalRect(guiLeft + 97, guiTop + 32, 195, 69, j1+1, 16);	
 	}	
 	@Override
 	protected void mouseClicked(int x, int y, int button) throws IOException{

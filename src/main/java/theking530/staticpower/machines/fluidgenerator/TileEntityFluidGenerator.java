@@ -10,6 +10,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
 import theking530.staticpower.fluids.ModFluids;
+import theking530.staticpower.handlers.crafting.registries.FluidGeneratorRecipeRegistry;
 import theking530.staticpower.machines.BaseMachineWithTank;
 import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent;
 import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent.FluidContainerInteractionMode;
@@ -24,8 +25,8 @@ public class TileEntityFluidGenerator extends BaseMachineWithTank{
 	
 	public TileEntityFluidGenerator() {
 		initializeBaseMachineWithTank(1, 0, 50000, 480, 0, 0, 1, 1, 10000);
-		DRAIN_COMPONENT = new DrainToBucketComponent(SLOTS_INPUT, 0, SLOTS_OUTPUT, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
-		DRAIN_COMPONENT.setMode(FluidContainerInteractionMode.FILL);
+		DRAIN_COMPONENT = new DrainToBucketComponent("BucketDrain", SLOTS_INPUT, 0, SLOTS_OUTPUT, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
+		DRAIN_COMPONENT.setMode(FluidContainerInteractionMode.FillFromContainer);
 		POWER_DIST = new PowerDistributor(this, STORAGE);
 		MOVE_SPEED = 10;
 	}
@@ -41,7 +42,7 @@ public class TileEntityFluidGenerator extends BaseMachineWithTank{
 		float amount = TANK.getFluidAmount();
 		float capacity = TANK.getCapacity();
 		float volume = (amount/capacity)*0.8F;		
-			return volume;	
+		return volume;	
 	}
 
 	//Functionality		
@@ -61,30 +62,13 @@ public class TileEntityFluidGenerator extends BaseMachineWithTank{
 				PROCESSING_TIMER = 0;
 				updateBlock();
 			}
-			POWER_DIST.distributePower();		
+			POWER_DIST.distributePower();	
+			DRAIN_COMPONENT.update();
 		}
-		DRAIN_COMPONENT.update();
 	}
 	public int getFluidRFOutput(FluidStack fluid) {
 		if(fluid != null) {
-			if(fluid.getFluid() == ModFluids.StaticFluid) {
-				return 128;
-			}
-			if(fluid.getFluid() == ModFluids.EnergizedFluid) {
-				return 256;
-			}
-			if(fluid.getFluid() == ModFluids.LumumFluid) {
-				return 512;
-			}
-			if(fluid.getFluid() == ModFluids.Ethanol) {
-				return 240;
-			}
-			if(fluid.getFluid() == ModFluids.EvaporatedMash) {
-				return 40;
-			}
-			if(fluid.getFluid() == ModFluids.Mash) {
-				return 20;
-			}
+			return FluidGeneratorRecipeRegistry.Generating().getPowerOutput(fluid);
 		}
 		return 0;
 	}

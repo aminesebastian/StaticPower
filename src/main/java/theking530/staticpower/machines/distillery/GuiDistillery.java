@@ -5,17 +5,24 @@ import java.io.IOException;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.staticpower.client.gui.widgets.GuiFluidBar;
-import theking530.staticpower.client.gui.widgets.GuiFluidBarFromTank;
-import theking530.staticpower.client.gui.widgets.GuiHeatBarFromStorage;
-import theking530.staticpower.client.gui.widgets.GuiPowerBarFromEnergyStorage;
-import theking530.staticpower.client.gui.widgets.GuiRedstoneTab;
-import theking530.staticpower.client.gui.widgets.GuiSideConfigTab;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import theking530.staticpower.client.gui.widgets.buttons.ArrowButton;
+import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
+import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
+import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBar;
+import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarFromTank;
+import theking530.staticpower.client.gui.widgets.valuebars.GuiHeatBarFromStorage;
+import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
+import theking530.staticpower.fluids.ModFluids;
+import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.handlers.crafting.registries.FermenterRecipeRegistry;
+import theking530.staticpower.machines.fluidinfuser.PacketFluidInfuserContainerMode;
+import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent.FluidContainerInteractionMode;
 import theking530.staticpower.utils.GuiTextures;
 
 public class GuiDistillery extends GuiContainer{
@@ -35,15 +42,43 @@ public class GuiDistillery extends GuiContainer{
 		FLUIDBAR2 = new GuiFluidBarFromTank(teFluidGenerator.TANK2);
 		REDSTONE_TAB = new GuiRedstoneTab(guiLeft, guiTop, teFluidGenerator);
 		SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, teFluidGenerator);
-		this.xSize = 176;
-		this.ySize = 173;
-		
+		this.xSize = 214;
+		this.ySize = 173;		
 	}
+	@Override
+	public void initGui() {
+		super.initGui();
+	 	int j = (width - xSize) / 2;
+	    int k = (height - ySize) / 2;
+
+	    this.buttonList.add(new ArrowButton(1, j+7, k+35, 16, 10, "<"));
+	    
+	    if(DISTILLERY.DRAIN_COMPONENT_MASH.getMode() == FluidContainerInteractionMode.FillFromContainer) {
+	    	buttonList.get(0).displayString = ">";
+	    }else{
+	    	buttonList.get(0).displayString = "<";
+	    }
+	}
+	@Override
+	protected void actionPerformed(GuiButton B) {
+		if(B.id == 1) {
+			IMessage msg = new PacketDistilleryContainerMode(DISTILLERY.DRAIN_COMPONENT_MASH.getInverseMode(), DISTILLERY.getPos());
+			PacketHandler.net.sendToServer(msg);
+			DISTILLERY.DRAIN_COMPONENT_MASH.setMode(DISTILLERY.DRAIN_COMPONENT_MASH.getInverseMode());
+			
+		    if(DISTILLERY.DRAIN_COMPONENT_MASH.getMode() == FluidContainerInteractionMode.FillFromContainer) {
+		    	buttonList.get(0).displayString = ">";
+		    }else{
+		    	buttonList.get(0).displayString = "<";
+		    }
+		}
+	}
+	
 	public void updateScreen() {
 		int j = (width - xSize) / 2;
 		int k = (height - ySize) / 2;
-		SIDE_TAB.updateTab(width, height, xSize, ySize, fontRendererObj, DISTILLERY);
-		REDSTONE_TAB.updateTab(width, height, xSize, ySize, fontRendererObj, DISTILLERY);
+		SIDE_TAB.updateTab(width+33, height+80, xSize, ySize, fontRendererObj, DISTILLERY);
+		REDSTONE_TAB.updateTab(width+33, height+80, xSize, ySize, fontRendererObj, DISTILLERY);
 		if(SIDE_TAB.GROWTH_STATE == 1){
 			REDSTONE_TAB.RED_TAB.GROWTH_STATE = 2;
 		}
@@ -54,15 +89,15 @@ public class GuiDistillery extends GuiContainer{
 	public void drawScreen(int par1, int par2, float par3) {
     	super.drawScreen(par1, par2, par3);
 		int var1 = (this.width - this.xSize) / 2;
-		int var2 = (this.height - this.ySize) / 2;
-		if(par1 >= 52 + var1 && par2 >= 16 + var2 && par1 <= 68 + var1 && par2 <= 79 + var2) {	
+		int var2 = (this.height - this.ySize) / 2;    
+		if(par1 >= 71 + var1 && par2 >= 16 + var2 && par1 <= 87 + var1 && par2 <= 79 + var2) {	
 			drawHoveringText(FLUIDBAR.drawText(), par1, par2, fontRendererObj); 
 		}     
-		if(par1 >= 52 + var1 && par2 >= 80 + var2 && par1 <= 80 + var1 && par2 <= 88 + var2) {
-			drawHoveringText(HEATBAR.drawText(), par1, par2, fontRendererObj); 
-		}	 
-		if(par1 >= 108 + var1 && par2 >= 16 + var2 && par1 <= 123 + var1 && par2 <= 79 + var2) {	
+		if(par1 >= 127 + var1 && par2 >= 16 + var2 && par1 <= 142 + var1 && par2 <= 79 + var2) {	
 			drawHoveringText(FLUIDBAR2.drawText(), par1, par2, fontRendererObj); 
+		}	
+		if(par1 >= 71 + var1 && par2 >= 80 + var2 && par1 <= 87 + var1 && par2 <= 88 + var2) {	
+			drawHoveringText(HEATBAR.drawText(), par1, par2, fontRendererObj); 
 		}	    
 	}
 
@@ -81,14 +116,14 @@ public class GuiDistillery extends GuiContainer{
 		
 		if(DISTILLERY.PROCESSING_STACK != null) {
 			int j1 = DISTILLERY.getProgressScaled(34);
-			GuiFluidBar.drawFluidBar(DISTILLERY.PROCESSING_STACK, 1000, 1000, guiLeft + 71, guiTop + 49, 1, j1, 5);
+			GuiFluidBar.drawFluidBar(new FluidStack(ModFluids.Mash, 100), 100, 100, guiLeft + 90, guiTop + 49, 1, 20, 5);
 		}
-		
-		REDSTONE_TAB.drawTab();
 		SIDE_TAB.drawTab();	
-		HEATBAR.drawHeatBar(guiLeft + 52, guiTop + 88, this.zLevel, 16, 8);
-		FLUIDBAR.drawFluidBar(guiLeft + 52, guiTop + 77, 16, 60, this.zLevel);
-		FLUIDBAR2.drawFluidBar(guiLeft + 108, guiTop + 77, 16, 60, this.zLevel);
+		REDSTONE_TAB.drawTab();
+
+		HEATBAR.drawHeatBar(guiLeft + 71, guiTop + 88, this.zLevel, 16, 8);
+		FLUIDBAR.drawFluidBar(guiLeft + 71, guiTop + 77, 16, 60, this.zLevel);
+		FLUIDBAR2.drawFluidBar(guiLeft + 127, guiTop + 77, 16, 60, this.zLevel);
 	}
 	@Override
 	protected void mouseClicked(int x, int y, int button) throws IOException{

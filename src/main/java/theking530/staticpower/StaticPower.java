@@ -29,7 +29,10 @@ import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.handlers.GuiHandler;
 import theking530.staticpower.handlers.OreGenerationHandler;
 import theking530.staticpower.handlers.PacketHandler;
+import theking530.staticpower.handlers.crafting.recipes.CondenserRecipes;
+import theking530.staticpower.handlers.crafting.recipes.DistilleryRecipes;
 import theking530.staticpower.handlers.crafting.recipes.FermenterRecipes;
+import theking530.staticpower.handlers.crafting.recipes.FluidGeneratorRecipes;
 import theking530.staticpower.handlers.crafting.recipes.FusionRecipes;
 import theking530.staticpower.handlers.crafting.recipes.GrinderRecipes;
 import theking530.staticpower.handlers.crafting.recipes.InfuserRecipes;
@@ -60,12 +63,6 @@ import theking530.staticpower.machines.mechanicalsqueezer.TileEntityMechanicalSq
 import theking530.staticpower.machines.poweredfurnace.TileEntityPoweredFurnace;
 import theking530.staticpower.machines.poweredgrinder.TileEntityPoweredGrinder;
 import theking530.staticpower.machines.quarry.TileEntityQuarry;
-import theking530.staticpower.machines.solarpanel.TileEntityBasicSolarPanel;
-import theking530.staticpower.machines.solarpanel.TileEntityCreativeSolarPanel;
-import theking530.staticpower.machines.solarpanel.TileEntityEnergizedSolarPanel;
-import theking530.staticpower.machines.solarpanel.TileEntityLumumSolarPanel;
-import theking530.staticpower.machines.solarpanel.TileEntityStaticSolarPanel;
-import theking530.staticpower.machines.solderingtable.TileEntitySolderingTable;
 import theking530.staticpower.newconduits.BaseConduitTileEntity;
 import theking530.staticpower.tileentity.chest.energizedchest.TileEntityEnergizedChest;
 import theking530.staticpower.tileentity.chest.lumumchest.TileEntityLumumChest;
@@ -79,7 +76,14 @@ import theking530.staticpower.tileentity.gates.powercell.TileEntityPowerCell;
 import theking530.staticpower.tileentity.gates.subtractor.TileEntitySubtractorGate;
 import theking530.staticpower.tileentity.gates.timer.TileEntityTimer;
 import theking530.staticpower.tileentity.gates.transducer.TileEntitySignalMultiplier;
+import theking530.staticpower.tileentity.solarpanels.TileEntityBasicSolarPanel;
+import theking530.staticpower.tileentity.solarpanels.TileEntityCreativeSolarPanel;
+import theking530.staticpower.tileentity.solarpanels.TileEntityEnergizedSolarPanel;
+import theking530.staticpower.tileentity.solarpanels.TileEntityLumumSolarPanel;
+import theking530.staticpower.tileentity.solarpanels.TileEntityStaticSolarPanel;
+import theking530.staticpower.tileentity.solderingtable.TileEntitySolderingTable;
 import theking530.staticpower.tileentity.vacuumchest.TileEntityVacuumChest;
+import theking530.staticpower.world.plants.ModPlants;
 
 @Mod(modid = Reference.MODID, name = Reference.name, version = Reference.VERSION)
 
@@ -112,6 +116,7 @@ public class StaticPower {
 		ModItems.init();
 		ModBlocks.init();
 		ModTools.init();
+		ModPlants.init();
 		
 		if(preEvent.getSide() == Side.CLIENT) {
 		    ModFluids.initBlockRendering();
@@ -196,6 +201,9 @@ public class StaticPower {
 		InfuserRecipes.registerInfusionRecipes();
 		SqueezerRecipes.registerSqueezingRecipes();
 		FermenterRecipes.registerFermenterRecipes();
+		FluidGeneratorRecipes.registerFluidGeneratorRecipes();
+		CondenserRecipes.registerCondenserRecipes();
+		DistilleryRecipes.registerDistilleryRecipes();
 		ToolRecipes.registerToolRecipes();
 	}
 	@SubscribeEvent

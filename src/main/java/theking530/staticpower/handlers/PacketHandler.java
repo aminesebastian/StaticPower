@@ -4,18 +4,25 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import theking530.staticpower.assists.Reference;
-import theking530.staticpower.client.gui.widgets.PacketPowerControlTab;
-import theking530.staticpower.client.gui.widgets.PacketRedstoneTab;
-import theking530.staticpower.client.gui.widgets.PacketSideConfigTab;
+import theking530.staticpower.client.gui.widgets.tabs.PacketPowerControlTab;
+import theking530.staticpower.client.gui.widgets.tabs.PacketRedstoneTab;
+import theking530.staticpower.client.gui.widgets.tabs.PacketSideConfigTab;
 import theking530.staticpower.items.itemfilter.PacketItemFilter;
 import theking530.staticpower.machines.PacketMachineSync;
+import theking530.staticpower.machines.basicfarmer.PacketBasicFarmerContainerMode;
 import theking530.staticpower.machines.batteries.PacketGuiBattery;
+import theking530.staticpower.machines.condenser.PacketCondenserContainerMode;
+import theking530.staticpower.machines.distillery.PacketDistilleryContainerMode;
+import theking530.staticpower.machines.fluidgenerator.PacketFluidGeneratorContainerMode;
+import theking530.staticpower.machines.fluidinfuser.PacketFluidInfuserContainerMode;
+import theking530.staticpower.machines.quarry.PacketQuarryContainerMode;
 import theking530.staticpower.tileentity.gates.powercell.PacketPowerCell;
 import theking530.staticpower.tileentity.gates.timer.PacketTimer;
 import theking530.staticpower.tileentity.gates.transducer.PacketSignalMultiplier;
 
 public class PacketHandler {
 	public static SimpleNetworkWrapper net;
+	private static int nextPacketId = 0; 
 	
 	public static void initPackets() {
 		net = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.MODID);
@@ -28,13 +35,19 @@ public class PacketHandler {
 		registerMessage(PacketSideConfigTab.Message.class, PacketSideConfigTab.class);
 		registerMessage(PacketItemFilter.Message.class, PacketItemFilter.class);
 		registerMessage(PacketMachineSync.Message.class, PacketMachineSync.class);
+		registerMessage(PacketFluidGeneratorContainerMode.Message.class, PacketFluidGeneratorContainerMode.class);
+		
+		registerMessage(PacketQuarryContainerMode.Message.class, PacketQuarryContainerMode.class);
+		registerMessage(PacketFluidInfuserContainerMode.Message.class, PacketFluidInfuserContainerMode.class);
+		registerMessage(PacketCondenserContainerMode.Message.class, PacketCondenserContainerMode.class);
+		registerMessage(PacketDistilleryContainerMode.Message.class, PacketDistilleryContainerMode.class);
+		registerMessage(PacketBasicFarmerContainerMode.Message.class, PacketBasicFarmerContainerMode.class);
 	}
-	private static int nextPacketId = 0;
-	  
+	
 	private static void registerMessage(Class packet, Class message) {
 	    net.registerMessage(packet, message, nextPacketId, Side.CLIENT);
 	    net.registerMessage(packet, message, nextPacketId, Side.SERVER);
 	    nextPacketId++;
-	  }
+	}
 }
 

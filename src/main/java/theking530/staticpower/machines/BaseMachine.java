@@ -46,6 +46,7 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	
 	public boolean REQUIRES_UPDATE = true;
 	
+
 	public BaseMachine() {
 	}
 	
@@ -191,6 +192,7 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 			PROCESSING_TIME = INITIAL_PROCESSING_TIME;
 		}
 	}
+	
 	public ItemStack getResult(ItemStack itemstack) {
 		return null;	
 	}
@@ -244,8 +246,7 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
     	writeToNBT(tag);
     	return new SPacketUpdateTileEntity(pos, getBlockMetadata(), tag);
     }
-
-    
+ 
 	public void onMachinePlaced(NBTTagCompound nbt) {
 		super.onMachinePlaced(nbt);
         STORAGE.readFromNBT(nbt);
@@ -263,7 +264,7 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	public int getProgressScaled(int i) {
 		return (PROCESSING_TIMER * i) / PROCESSING_TIME;
 	}
-
+	
 	@Override
 	public boolean canConnectEnergy(EnumFacing from) {
 		return true;

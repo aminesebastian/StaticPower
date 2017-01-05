@@ -29,24 +29,28 @@ public class ContainerFermenter extends Container {
 		//Input
         for (int i= 0; i < 3; ++i) {
             for (int j = 0; j < 3; ++j){
-                this.addSlotToContainer(new SlotItemHandler(teFERMENTER.SLOTS_INPUT, j + i * 3, 68 + j * 18, 16 + i * 18){
+                this.addSlotToContainer(new SlotItemHandler(teFERMENTER.SLOTS_INPUT, j + i * 3, 87 + j * 18, 16 + i * 18){
         			@Override
         	        public boolean isItemValid(ItemStack itemStack) {
-        		          return FermenterRecipeRegistry.Fermenting().getFluidResult(itemStack)!= null;
+        		          return FermenterRecipeRegistry.Fermenting().getFluidResult(itemStack) != null;
         		        }
         		});
             }
         }
-        //Battery
-        this.addSlotToContainer(new SlotItemHandler(teFERMENTER.SLOTS_INPUT, 9, 43, 52));
+        //Output
+        this.addSlotToContainer(new SlotItemHandler(teFERMENTER.SLOTS_OUTPUT, 1, 62, 52));
         
-        //Bucket
-        this.addSlotToContainer(new SlotItemHandler(teFERMENTER.SLOTS_INPUT, 10, 8, 71));
-		
+        //Battery
+        this.addSlotToContainer(new SlotItemHandler(teFERMENTER.SLOTS_INPUT, 9, 27, 71));
+        
+        //Container Input and Output
+        this.addSlotToContainer(new SlotItemHandler(teFERMENTER.SLOTS_INPUT, 10, 7, 17));
+        this.addSlotToContainer(new SlotItemHandler(teFERMENTER.SLOTS_OUTPUT, 0, 7, 47));
+        
         //Upgrades
-		this.addSlotToContainer(new SlotItemHandler(teFERMENTER.SLOTS_UPGRADES, 0, upgradeSlotX+152, upgradeSlotY+12));
-		this.addSlotToContainer(new SlotItemHandler(teFERMENTER.SLOTS_UPGRADES, 1, upgradeSlotX+152, upgradeSlotY+32));
-		this.addSlotToContainer(new SlotItemHandler(teFERMENTER.SLOTS_UPGRADES, 2, upgradeSlotX+152, upgradeSlotY+52));
+		this.addSlotToContainer(new SlotItemHandler(teFERMENTER.SLOTS_UPGRADES, 0, upgradeSlotX+171, upgradeSlotY+12));
+		this.addSlotToContainer(new SlotItemHandler(teFERMENTER.SLOTS_UPGRADES, 1, upgradeSlotX+171, upgradeSlotY+32));
+		this.addSlotToContainer(new SlotItemHandler(teFERMENTER.SLOTS_UPGRADES, 2, upgradeSlotX+171, upgradeSlotY+52));
 		
 		//Processing
 		this.addSlotToContainer(new SlotItemHandler(teFERMENTER.SLOTS_INTERNAL, 0, 10000, 10000));
@@ -54,13 +58,13 @@ public class ContainerFermenter extends Container {
 		//Inventory
 		for(int i = 0; i < 3; i++) {
 			for(int j = 0; j < 9; j++) {
-				this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 90 + i * 18));
+				this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 27 + j * 18, 90 + i * 18));
 			}
 		}
 		
 		//ActionBar
 		for(int i = 0; i < 9; i++) {
-			this.addSlotToContainer(new Slot(invPlayer, i, 8 + i * 18, 148));
+			this.addSlotToContainer(new Slot(invPlayer, i, 27 + i * 18, 148));
 		}
 	}
 	public void moveUpgradeSlots(int x, int y) {

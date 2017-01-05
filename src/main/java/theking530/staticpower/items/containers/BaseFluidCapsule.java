@@ -43,6 +43,7 @@ public class BaseFluidCapsule extends ItemBase { // implements IItemColor  {
     @SideOnly(Side.CLIENT)
     @Override
     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
+        subItems.add(new ItemStack(this));
         for (Fluid fluid : FluidRegistry.getRegisteredFluids().values()) {
                 // add all fluids that the bucket can be filled  with
                 ItemStack stack = new ItemStack(this);
@@ -57,7 +58,7 @@ public class BaseFluidCapsule extends ItemBase { // implements IItemColor  {
     public String getItemStackDisplayName(ItemStack stack) {
     	FluidHandlerItemStack tempHandler = (FluidHandlerItemStack) stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
     	if(tempHandler.getFluid() != null) {
-    		return super.getItemStackDisplayName(stack) + " (" + tempHandler.getFluid().getLocalizedName() + ")";
+    		return tempHandler.getFluid().getLocalizedName() + super.getItemStackDisplayName(stack);
     	}else{
     		return super.getItemStackDisplayName(stack);
     	}

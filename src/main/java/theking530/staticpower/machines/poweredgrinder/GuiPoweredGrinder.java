@@ -15,9 +15,9 @@ import net.minecraft.util.ResourceLocation;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.client.gui.widgets.CustomGuiContainer;
-import theking530.staticpower.client.gui.widgets.GuiPowerBarFromEnergyStorage;
-import theking530.staticpower.client.gui.widgets.GuiRedstoneTab;
-import theking530.staticpower.client.gui.widgets.GuiSideConfigTab;
+import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
+import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
+import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.utils.GuiTextures;
 
 public class GuiPoweredGrinder extends CustomGuiContainer{
@@ -53,7 +53,7 @@ public class GuiPoweredGrinder extends CustomGuiContainer{
     	super.drawScreen(par1, par2, par3);
     	int var1 = (this.width - this.xSize) / 2;
         int var2 = (this.height - this.ySize) / 2;  
-        if(par1 >= 8 + var1 && par2 >= 8 + var2 && par1 <= 24 + var1 && par2 <= 68 + var2) {
+        if(par1 >= 8 + var1 && par2 >= 8 + var2 && par1 <= 24 + var1 && par2 <= 62 + var2) {
         	drawHoveringText(POWERBAR.drawText(), par1, par2, fontRendererObj); 
         }
 		drawRect(guiLeft + 82, guiTop + 38, 176, 69, 3394815);
@@ -63,7 +63,7 @@ public class GuiPoweredGrinder extends CustomGuiContainer{
 		String name = I18n.format(this.Grinder.getName());
 	
 		this.fontRendererObj.drawString(name, this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2, 6,4210752 );
-		this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 3, 4210752);
+		this.fontRendererObj.drawString(I18n.format("container.inventory"), 26, this.ySize - 96 + 3, 4210752);
 	}
 	
 	@Override
@@ -76,7 +76,7 @@ public class GuiPoweredGrinder extends CustomGuiContainer{
 		drawTexturedModalRect(guiLeft + 76, guiTop + 38, 176, 69, 24, j1);	
 		SIDE_TAB.drawTab();		
 		REDSTONE_TAB.drawTab();
-		POWERBAR.drawPowerBar(guiLeft + 8, guiTop + 68, 16, 60, zLevel);
+		POWERBAR.drawPowerBar(guiLeft + 8, guiTop + 62, 16, 54, zLevel);
 	}
 	@Override
 	protected void mouseClicked(int x, int y, int button) throws IOException{

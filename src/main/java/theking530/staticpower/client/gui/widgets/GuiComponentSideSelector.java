@@ -16,11 +16,11 @@ import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
-import theking530.staticpower.client.BaseComponent;
+import theking530.staticpower.client.BaseSideSelectorComponent;
 import theking530.staticpower.client.gui.widgets.Trackball.TrackballWrapper;
 import theking530.staticpower.utils.OldSidePicker;
 
-public class GuiComponentSideSelector extends BaseComponent {
+public class GuiComponentSideSelector extends BaseSideSelectorComponent {
 
 	private static final double SQRT_3 = Math.sqrt(3);
 

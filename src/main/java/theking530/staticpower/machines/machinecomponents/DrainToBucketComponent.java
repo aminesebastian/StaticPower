@@ -3,6 +3,7 @@ package theking530.staticpower.machines.machinecomponents;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.tileentity.TileEntity;
 import theking530.staticpower.tileentity.BaseTileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -10,7 +11,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class DrainToBucketComponent {
+public class DrainToBucketComponent extends BaseComponent{
 
 	private ItemStackHandler INITIAL_EMPTY_BUCKET_HANDLER;
 	private int INITIAL_EMPTY_BUCKET_SLOT;
@@ -22,21 +23,22 @@ public class DrainToBucketComponent {
 	private ItemStackHandler FILLED_BUCKET_HANDLER;
 	private int FILLED_BUCKET_SLOT;
 	
-
 	private IFluidHandler FLUID_HANDLER;
 	private BaseTileEntity TE;
 	private int FLUID_TO_CONTAINER_RATE;
-	private FluidContainerInteractionMode MODE = FluidContainerInteractionMode.DRAIN;
+	private FluidContainerInteractionMode MODE = FluidContainerInteractionMode.DrainToContainer;
+
 	private int MOVE_TIME = 0;
 	private int MOVE_TIMER = 0;
 	
 	public enum FluidContainerInteractionMode {
-		FILL, DRAIN;
+		FillFromContainer, DrainToContainer;
 	}
 
-	
-	public DrainToBucketComponent(ItemStackHandler EmptyBucketHandler, int EmptyBucketSlot, ItemStackHandler FilledBucketHandler, int FilledBucketSlot,
+	public DrainToBucketComponent(String componentName, ItemStackHandler EmptyBucketHandler, int EmptyBucketSlot, ItemStackHandler FilledBucketHandler, int FilledBucketSlot,
 			BaseTileEntity tileEntity, IFluidHandler fluidHandler, int drainRate) {
+		super(componentName);
+		
 		INITIAL_EMPTY_BUCKET_HANDLER = EmptyBucketHandler;
 		INITIAL_EMPTY_BUCKET_SLOT = EmptyBucketSlot;
 		INITIAL_FILLED_BUCKET_HANDLER = FilledBucketHandler;
@@ -53,7 +55,7 @@ public class DrainToBucketComponent {
 	}
 	public void update() {
 		if(MOVE_TIMER >= MOVE_TIME) {
-			if(MODE == FluidContainerInteractionMode.FILL) {
+			if(MODE == FluidContainerInteractionMode.FillFromContainer) {
 				fillFromContainer();
 			}else{
 				drainToContainer();
@@ -65,7 +67,7 @@ public class DrainToBucketComponent {
 	}
 	public void setMode(FluidContainerInteractionMode NewMode) {
 		MODE = NewMode;
-		if(MODE == FluidContainerInteractionMode.FILL) {
+		if(MODE == FluidContainerInteractionMode.FillFromContainer) {
 			FILLED_BUCKET_HANDLER = INITIAL_EMPTY_BUCKET_HANDLER;
 			FILLED_BUCKET_SLOT = INITIAL_EMPTY_BUCKET_SLOT;
 			EMPTY_BUCKET_HANDLER = INITIAL_FILLED_BUCKET_HANDLER;
@@ -147,6 +149,16 @@ public class DrainToBucketComponent {
 					EMPTY_BUCKET_HANDLER.insertItem(EMPTY_BUCKET_SLOT, FILLED_BUCKET_HANDLER.extractItem(FILLED_BUCKET_SLOT, 1, false), false);
 				}
 			}
+		}
+	}
+	public FluidContainerInteractionMode getMode() {
+		return MODE;
+	}
+	public FluidContainerInteractionMode getInverseMode() {
+		if(MODE == FluidContainerInteractionMode.DrainToContainer) {
+			return FluidContainerInteractionMode.FillFromContainer;
+		}else{
+			return FluidContainerInteractionMode.DrainToContainer;
 		}
 	}
 }

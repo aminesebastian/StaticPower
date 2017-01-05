@@ -10,6 +10,7 @@ import theking530.staticpower.assists.Reference;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.items.tools.basictools.ModTools;
+import theking530.staticpower.world.plants.ModPlants;
 
 public class ItemRenderRegistry {
 
@@ -142,13 +143,13 @@ public class ItemRenderRegistry {
 		ItemRenderRegistry.registerItem(ModItems.EnergizedUpgradePlate);
 		ItemRenderRegistry.registerItem(ModItems.LumumUpgradePlate);
 		
-		ItemRenderRegistry.registerItem(ModItems.StaticCrop);
-		ItemRenderRegistry.registerItem(ModItems.EnergizedCrop);
-		ItemRenderRegistry.registerItem(ModItems.LumumCrop);
-		ItemRenderRegistry.registerItem(ModItems.DepletedCrop);
-		ItemRenderRegistry.registerItem(ModItems.StaticSeeds);
-		ItemRenderRegistry.registerItem(ModItems.EnergizedSeeds);
-		ItemRenderRegistry.registerItem(ModItems.LumumSeeds);
+		ItemRenderRegistry.registerItem(ModPlants.StaticCrop);
+		ItemRenderRegistry.registerItem(ModPlants.EnergizedCrop);
+		ItemRenderRegistry.registerItem(ModPlants.LumumCrop);
+		ItemRenderRegistry.registerItem(ModPlants.DepletedCrop);
+		ItemRenderRegistry.registerItem(ModPlants.StaticSeeds);
+		ItemRenderRegistry.registerItem(ModPlants.EnergizedSeeds);
+		ItemRenderRegistry.registerItem(ModPlants.LumumSeeds);
 		
 		ItemRenderRegistry.registerItem(ModItems.BasicItemFilter);
 		ItemRenderRegistry.registerItem(ModItems.UpgradedItemFilter);

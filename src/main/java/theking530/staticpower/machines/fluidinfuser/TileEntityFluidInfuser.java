@@ -5,12 +5,18 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import theking530.staticpower.handlers.crafting.registries.InfuserRecipeRegistry;
 import theking530.staticpower.machines.BaseMachineWithTank;
+import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent;
+import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent.FluidContainerInteractionMode;
 import theking530.staticpower.utils.InventoryUtilities;
 
 public class TileEntityFluidInfuser extends BaseMachineWithTank {
 	
+	public DrainToBucketComponent DRAIN_COMPONENT;
+	
 	public TileEntityFluidInfuser() {
-		initializeBaseMachineWithTank(2, 1000, 50000, 80, 100, 1, 1, 1, 10000);
+		initializeBaseMachineWithTank(2, 1000, 50000, 80, 100, 1, 2, 2, 10000);
+		DRAIN_COMPONENT = new DrainToBucketComponent("BucketDrain", SLOTS_INPUT, 1, SLOTS_OUTPUT, 1, this, TANK, FLUID_TO_CONTAINER_RATE);
+		DRAIN_COMPONENT.setMode(FluidContainerInteractionMode.FillFromContainer);
 	}
 	//IInventory				
 	@Override
@@ -55,37 +61,40 @@ public class TileEntityFluidInfuser extends BaseMachineWithTank {
 	}
 	@Override
 	public void process() {
-		//worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-		if(SLOTS_INTERNAL.getStackInSlot(0) == null){
-			PROCESSING_TIMER = 0;
-		}
-		if(!isProcessing() && !isMoving() && !isTankEmpty() && hasPower() && hasResult(SLOTS_INPUT.getStackInSlot(0))) {
-			MOVE_TIMER = 1;
-		}
-		if(!isProcessing() && isMoving() && !isTankEmpty() && hasPower() && hasResult(SLOTS_INPUT.getStackInSlot(0))) {
-			MOVE_TIMER++;
-			if(MOVE_TIMER >= MOVE_SPEED) {
-				MOVE_TIMER = 0;
-				TANK.drain(InfuserRecipeRegistry.Infusing().getInfusingFluidCost(SLOTS_INPUT.getStackInSlot(0), TANK.getFluid()), true);
-				useEnergy(getProcessingEnergy(SLOTS_INPUT.getStackInSlot(0)));
-				moveItem(SLOTS_INPUT, 0, SLOTS_INTERNAL, 0);
-				PROCESSING_TIMER = 1;
-				
+		if(!worldObj.isRemote) {
+			DRAIN_COMPONENT.update();
+			if(SLOTS_INTERNAL.getStackInSlot(0) == null){
+				PROCESSING_TIMER = 0;
 			}
-		}else{
-			MOVE_TIMER = 0;
-		}
-		if(isProcessing() && !isMoving()) {
-			if(PROCESSING_TIMER < PROCESSING_TIME) {
-				PROCESSING_TIMER++;
-			}else{
-				if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, 0, getResult(SLOTS_INTERNAL.getStackInSlot(0)))) {
-					SLOTS_OUTPUT.insertItem(0, getResult(SLOTS_INTERNAL.getStackInSlot(0)).copy(), false);
-					SLOTS_INTERNAL.setStackInSlot(0, null);
-					PROCESSING_TIMER = 0;
+			if(!isProcessing() && !isMoving() && !isTankEmpty() && hasPower() && hasResult(SLOTS_INPUT.getStackInSlot(0))) {
+				MOVE_TIMER = 1;
+			}
+			if(!isProcessing() && isMoving() && !isTankEmpty() && hasPower() && hasResult(SLOTS_INPUT.getStackInSlot(0))) {
+				MOVE_TIMER++;
+				if(MOVE_TIMER >= MOVE_SPEED) {
+					MOVE_TIMER = 0;
+					TANK.drain(InfuserRecipeRegistry.Infusing().getInfusingFluidCost(SLOTS_INPUT.getStackInSlot(0), TANK.getFluid()), true);
+					useEnergy(getProcessingEnergy(SLOTS_INPUT.getStackInSlot(0)));
+					moveItem(SLOTS_INPUT, 0, SLOTS_INTERNAL, 0);
+					PROCESSING_TIMER = 1;
+					
 				}
+			}else{
+				MOVE_TIMER = 0;
 			}
-		}	
+			if(isProcessing() && !isMoving()) {
+				if(PROCESSING_TIMER < PROCESSING_TIME) {
+					PROCESSING_TIMER++;
+				}else{
+					if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, 0, getResult(SLOTS_INTERNAL.getStackInSlot(0)))) {
+						SLOTS_OUTPUT.insertItem(0, getResult(SLOTS_INTERNAL.getStackInSlot(0)).copy(), false);
+						SLOTS_INTERNAL.setStackInSlot(0, null);
+						PROCESSING_TIMER = 0;
+						updateBlock();
+					}
+				}
+			}	
+		}
 	}
 }
 

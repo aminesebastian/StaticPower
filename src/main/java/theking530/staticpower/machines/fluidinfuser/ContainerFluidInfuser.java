@@ -24,10 +24,14 @@ public class ContainerFluidInfuser extends Container {
 		INFUSER = teFluidInfuser;
 		
 		//Input
-		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.SLOTS_INPUT, 0, 55, 32));
+		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.SLOTS_INPUT, 0, 74, 32));
+		
+		//Fluid Slots
+		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.SLOTS_INPUT, 1, 7, 17));
+		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.SLOTS_OUTPUT, 1, 7, 47));
 		
 		//Output
-		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.SLOTS_OUTPUT, 0, 112, 32) {
+		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.SLOTS_OUTPUT, 0, 131, 32) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return InfuserRecipeRegistry.Infusing().getInfusingItemStackResult(itemStack, INFUSER.TANK.getFluid()) != null;
@@ -35,9 +39,9 @@ public class ContainerFluidInfuser extends Container {
 		});
 		
 		//Upgrades
-		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.SLOTS_UPGRADES, 0, 152, 12));
-		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.SLOTS_UPGRADES, 1, 152, 32));
-		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.SLOTS_UPGRADES, 2, 152, 52));
+		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.SLOTS_UPGRADES, 0, 171, 12));
+		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.SLOTS_UPGRADES, 1, 171, 32));
+		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.SLOTS_UPGRADES, 2, 171, 52));
 		
 		//Processing
 		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.SLOTS_INTERNAL, 0, 10000, 10000) {
@@ -50,13 +54,13 @@ public class ContainerFluidInfuser extends Container {
 		//Inventory
 				for(int i = 0; i < 3; i++) {
 					for(int j = 0; j < 9; j++) {
-						this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+						this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 27 + j * 18, 84 + i * 18));
 					}
 				}
 				
 				//ActionBar
 				for(int i = 0; i < 9; i++) {
-					this.addSlotToContainer(new Slot(invPlayer, i, 8 + i * 18, 142));
+					this.addSlotToContainer(new Slot(invPlayer, i, 27 + i * 18, 142));
 			}
 	}
 

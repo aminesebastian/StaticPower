@@ -51,7 +51,7 @@ public class ModFluids {
 	
 	public static void init() {
 		Fluid f  = new Fluid(StaticFluidName, getStill(StaticFluidName), getFlowing(StaticFluidName))
-		        .setDensity(1500).setViscosity(3000);
+		        .setDensity(1500).setViscosity(3000).setTemperature(300);;
 	    FluidRegistry.registerFluid(f);
 	    StaticFluid = FluidRegistry.getFluid(f.getName());
 	    BlockStaticFluid = new BaseFluidBlock(StaticFluid, new MaterialLiquid(MapColor.EMERALD), StaticFluidName);
@@ -59,7 +59,7 @@ public class ModFluids {
 	    registerBucket(StaticFluid);
 	    
 	    f  = new Fluid(EnergizedFluidName, getStill(EnergizedFluidName), getFlowing(EnergizedFluidName))
-		        .setDensity(1500).setViscosity(3000);
+		        .setDensity(1500).setViscosity(3000).setTemperature(600);;
 	    FluidRegistry.registerFluid(f);
 	    EnergizedFluid = FluidRegistry.getFluid(f.getName());
 	    BlockEnergizedFluid = new BaseFluidBlock(EnergizedFluid, new MaterialLiquid(MapColor.DIAMOND), EnergizedFluidName);
@@ -67,7 +67,7 @@ public class ModFluids {
 	    registerBucket(EnergizedFluid);
 	    
 	    f  = new Fluid(LumumFluidName, getStill(LumumFluidName), getFlowing(LumumFluidName))
-		        .setDensity(1500).setViscosity(3000);
+		        .setDensity(1500).setViscosity(3000).setTemperature(1000);
 	    FluidRegistry.registerFluid(f);
 	    LumumFluid = FluidRegistry.getFluid(f.getName());
 	    BlockLumumFluid = new BaseFluidBlock(LumumFluid, new MaterialLiquid(MapColor.GOLD), LumumFluidName);
@@ -75,7 +75,7 @@ public class ModFluids {
 	    registerBucket(LumumFluid);
 	    
 	    f  = new Fluid(SteamFluidName, getStill(SteamFluidName), getFlowing(SteamFluidName))
-		        .setDensity(1500).setViscosity(3000).setGaseous(true);
+		        .setDensity(1500).setViscosity(3000).setGaseous(true).setTemperature(100);;
 	    FluidRegistry.registerFluid(f);
 	    Steam = FluidRegistry.getFluid(f.getName());
 	    BlockSteamFluid = new BaseFluidBlock(Steam, new MaterialLiquid(MapColor.QUARTZ), SteamFluidName);
@@ -83,7 +83,7 @@ public class ModFluids {
 	    registerBucket(Steam);
 	    
 	    f  = new Fluid(EthanolName, getStill(EthanolName), getFlowing(EthanolName))
-		        .setDensity(150).setViscosity(1000);
+		        .setDensity(150).setViscosity(1000).setTemperature(75);;
 	    FluidRegistry.registerFluid(f);
 	    Ethanol = FluidRegistry.getFluid(f.getName());
 	    BlockEthanol = new BaseFluidBlock(Ethanol, new MaterialLiquid(MapColor.ICE), EthanolName);
@@ -91,7 +91,7 @@ public class ModFluids {
 	    registerBucket(Ethanol);
 	    
 	    f  = new Fluid(MashName, getStill(MashName), getFlowing(MashName))
-		        .setDensity(150).setViscosity(1000);
+		        .setDensity(150).setViscosity(1000).setTemperature(50);;
 	    FluidRegistry.registerFluid(f);
 	    Mash = FluidRegistry.getFluid(f.getName());
 	    BlockMash = new BaseFluidBlock(Mash, new MaterialLiquid(MapColor.WOOD), MashName);
@@ -99,7 +99,7 @@ public class ModFluids {
 	    registerBucket(Mash);
 	    
 	    f  = new Fluid(EvaporatedMashName, getStill(EvaporatedMashName), getFlowing(EvaporatedMashName))
-		        .setDensity(150).setViscosity(1000);
+		        .setDensity(150).setViscosity(1000).setTemperature(110);
 	    FluidRegistry.registerFluid(f);
 	    EvaporatedMash = FluidRegistry.getFluid(f.getName());
 	    BlockEvaporatedMash = new BaseFluidBlock(EvaporatedMash, new MaterialLiquid(MapColor.WOOD), EvaporatedMashName);

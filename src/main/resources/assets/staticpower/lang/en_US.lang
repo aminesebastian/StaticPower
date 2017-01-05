@@ -367,10 +367,10 @@ item.sRubyHoe.name=Ruby Hoe
 item.sRubyShovel.name=Ruby Shovel
 item.sRubySword.name=Ruby Sword
 
-item.BaseFluidCapsule.name=Fluid Capsule
-item.StaticFluidCapsule.name=Static Fluid Capsule
-item.EnergizedFluidCapsule.name=Energized Fluid Capsule
-item.LumumFluidCapsule.name=Lumum Fluid Capsule
+item.BaseFluidCapsule.name=Canister
+item.StaticFluidCapsule.name=Canister
+item.EnergizedFluidCapsule.name=Canister
+item.LumumFluidCapsule.name=Canister
 
 //TIC
 material.staticmetal=Static Metal

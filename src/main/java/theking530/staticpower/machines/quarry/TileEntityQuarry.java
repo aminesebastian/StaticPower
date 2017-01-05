@@ -31,6 +31,8 @@ import theking530.staticpower.items.upgrades.BasePowerUpgrade;
 import theking530.staticpower.items.upgrades.BaseQuarryingUpgrade;
 import theking530.staticpower.items.upgrades.BaseSpeedUpgrade;
 import theking530.staticpower.machines.BaseMachineWithTank;
+import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent;
+import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent.FluidContainerInteractionMode;
 import theking530.staticpower.power.StaticEnergyStorage;
 import theking530.staticpower.tileentity.BaseTileEntity;
 import theking530.staticpower.utils.InventoryUtilities;
@@ -47,61 +49,68 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 	public int BLOCKS_PER_TICK = INITIAL_BLOCKS_PER_TICK;
 	
 	private ArrayList<ItemStack> QUARRIED_STACKS = new ArrayList();
-			
+	public DrainToBucketComponent DRAIN_COMPONENT;
+	
 	private boolean testing = false;
 	
 	public TileEntityQuarry() {
-		initializeBaseMachineWithTank(2, 100, 100000, 1000, 10, 1, 0, 0, 10000);
+		initializeBaseMachineWithTank(2, 100, 100000, 1000, 10, 1, 1, 1, 10000);
+		DRAIN_COMPONENT = new DrainToBucketComponent("BucketDrain", SLOTS_INPUT, 0, SLOTS_OUTPUT, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
+		DRAIN_COMPONENT.setMode(FluidContainerInteractionMode.FillFromContainer);
 	}
 	@Override
 	public void process(){
-		if(testing) {
-			STARTING_COORD = pos.offset(EnumFacing.SOUTH, 5);	
-			STARTING_COORD = STARTING_COORD.offset(EnumFacing.WEST, 1);	
-			ENDING_COORD = pos.offset(EnumFacing.NORTH, 5);
-			ENDING_COORD = ENDING_COORD.offset(EnumFacing.WEST, 10);
-			CURRENT_COORD = new BlockPos(STARTING_COORD.getX(), getInitialYCoordinate(), STARTING_COORD.getZ());
-			testing = false;
-		}
-		if(isAbleToMine()) {
-			drawStartingAndEndingCoords();
-			if(!isDoneMining()) {
-				if(PROCESSING_TIMER >= PROCESSING_TIME && QUARRIED_STACKS.size() <= 0 && STORAGE.getEnergyStored() >= PROCESSING_ENERGY_MULT*100) {
-					for(int i=0; i<BLOCKS_PER_TICK; i++) {
-						incrementPosition();
-						QUARRIED_STACKS.addAll(getCurrentBlockDrops());
-						mineBlock();
-						STORAGE.extractEnergy(getProcessingCost(), false);
-						if(getFortuneMultiplier() > 0) {
-							TANK.drain(1, true);
+		if(!worldObj.isRemote) {
+			DRAIN_COMPONENT.update();
+			if(testing) {
+				STARTING_COORD = pos.offset(EnumFacing.SOUTH, 5);	
+				STARTING_COORD = STARTING_COORD.offset(EnumFacing.WEST, 1);	
+				ENDING_COORD = pos.offset(EnumFacing.NORTH, 5);
+				ENDING_COORD = ENDING_COORD.offset(EnumFacing.WEST, 10);
+				CURRENT_COORD = new BlockPos(STARTING_COORD.getX(), getInitialYCoordinate(), STARTING_COORD.getZ());
+				testing = false;
+			}
+			if(isAbleToMine()) {
+				drawStartingAndEndingCoords();
+				if(!isDoneMining()) {
+					if(PROCESSING_TIMER >= PROCESSING_TIME && QUARRIED_STACKS.size() <= 0 && STORAGE.getEnergyStored() >= PROCESSING_ENERGY_MULT*100) {
+						for(int i=0; i<BLOCKS_PER_TICK; i++) {
+							incrementPosition();
+							QUARRIED_STACKS.addAll(getCurrentBlockDrops());
+							mineBlock();
+							STORAGE.extractEnergy(getProcessingCost(), false);
+							if(getFortuneMultiplier() > 0) {
+								TANK.drain(1, true);
+							}
 						}
-					}
-					PROCESSING_TIMER = 0;		
-				}else{
-					PROCESSING_TIMER++;
-				}		
-			}	
-		}
-		if(QUARRIED_STACKS.size() > 0) {
-			if(worldObj.getTileEntity(pos.add(0,1,0)) != null && worldObj.getTileEntity(pos.add(0,1,0)).hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN)) {
-				for(int k=QUARRIED_STACKS.size()-1; k>=0; k--) {
-					if(getInternalStack(0) != null && getInternalStack(0).getItem() instanceof ItemFilter) {
-						ItemFilter tempFilter = (ItemFilter)getInternalStack(0).getItem();
-						if(tempFilter.evaluateFilter(getInternalStack(0), QUARRIED_STACKS.get(k))) {
-							QUARRIED_STACKS.remove(k);
+						updateBlock();
+						PROCESSING_TIMER = 0;		
+					}else{
+						PROCESSING_TIMER++;
+					}		
+				}	
+			}
+			if(QUARRIED_STACKS.size() > 0) {
+				if(worldObj.getTileEntity(pos.add(0,1,0)) != null && worldObj.getTileEntity(pos.add(0,1,0)).hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN)) {
+					for(int k=QUARRIED_STACKS.size()-1; k>=0; k--) {
+						if(getInternalStack(0) != null && getInternalStack(0).getItem() instanceof ItemFilter) {
+							ItemFilter tempFilter = (ItemFilter)getInternalStack(0).getItem();
+							if(tempFilter.evaluateFilter(getInternalStack(0), QUARRIED_STACKS.get(k))) {
+								QUARRIED_STACKS.remove(k);
+							}else{
+								if(InventoryUtilities.canFullyInsertItemIntoInventory(worldObj.getTileEntity(pos.add(0,1,0)).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN), QUARRIED_STACKS.get(k))) {
+									InventoryUtilities.fullyInsertItemIntoInventory(worldObj.getTileEntity(pos.add(0,1,0)).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN), QUARRIED_STACKS.get(k));
+									QUARRIED_STACKS.remove(k);
+								}	
+							}
 						}else{
 							if(InventoryUtilities.canFullyInsertItemIntoInventory(worldObj.getTileEntity(pos.add(0,1,0)).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN), QUARRIED_STACKS.get(k))) {
 								InventoryUtilities.fullyInsertItemIntoInventory(worldObj.getTileEntity(pos.add(0,1,0)).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN), QUARRIED_STACKS.get(k));
 								QUARRIED_STACKS.remove(k);
-							}	
+							}
 						}
-					}else{
-						if(InventoryUtilities.canFullyInsertItemIntoInventory(worldObj.getTileEntity(pos.add(0,1,0)).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN), QUARRIED_STACKS.get(k))) {
-							InventoryUtilities.fullyInsertItemIntoInventory(worldObj.getTileEntity(pos.add(0,1,0)).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN), QUARRIED_STACKS.get(k));
-							QUARRIED_STACKS.remove(k);
-						}
-					}
-				}	
+					}	
+				}
 			}
 		}
 	}	

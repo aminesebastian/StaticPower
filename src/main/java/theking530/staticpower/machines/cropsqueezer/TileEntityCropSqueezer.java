@@ -23,7 +23,7 @@ public class TileEntityCropSqueezer extends BaseMachineWithTank {
 	
 	public TileEntityCropSqueezer() {
 		initializeBaseMachineWithTank(2, 100, 100000, 80, 50, 1, 2, 2, 5000);
-		DRAIN_COMPONENT = new DrainToBucketComponent(SLOTS_INPUT, 1, SLOTS_OUTPUT, 1, this, TANK, FLUID_TO_CONTAINER_RATE);
+		DRAIN_COMPONENT = new DrainToBucketComponent("BucketDrain", SLOTS_INPUT, 1, SLOTS_OUTPUT, 1, this, TANK, FLUID_TO_CONTAINER_RATE);
 	}
 	@Override
 	public String getName() {
@@ -93,41 +93,50 @@ public class TileEntityCropSqueezer extends BaseMachineWithTank {
 		return 0;
 	}	
 	public void process() {
-		DRAIN_COMPONENT.update();
-		if(SLOTS_INTERNAL.getStackInSlot(0) == null){
-			PROCESSING_TIMER = 0;
-		}
-		//Start Process
-		if(!isProcessing() && !isMoving() && canProcess(SLOTS_INPUT.getStackInSlot(0))) {
-			MOVE_TIMER = 1;
-		}
-		//Start Moving
-		if(!isProcessing() && isMoving() && canProcess(SLOTS_INPUT.getStackInSlot(0))) {
-			MOVE_TIMER++;
-			if(MOVE_TIMER >= MOVE_SPEED) {
-				MOVE_TIMER = 0;
-				useEnergy(getProcessingEnergy(SLOTS_INPUT.getStackInSlot(0)));
-				moveItem(SLOTS_INPUT, 0, SLOTS_INTERNAL, 0);
-				PROCESSING_TIMER = 1;	
+		if(!worldObj.isRemote) {
+			DRAIN_COMPONENT.update();
+			if(SLOTS_INTERNAL.getStackInSlot(0) == null){
+				PROCESSING_TIMER = 0;
 			}
-		}else{
-			MOVE_TIMER = 0;
-		}
-		//Start Processing
-		if(isProcessing() && !isMoving() && canProcess(SLOTS_INTERNAL.getStackInSlot(0))) {
-			if(PROCESSING_TIMER < PROCESSING_TIME) {
-				PROCESSING_TIMER++;
-				updateBlock();
-			}else{				
-				if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, 0, getResult(SLOTS_INTERNAL.getStackInSlot(0)))) {
-					TANK.fill(getFluidResult(SLOTS_INTERNAL.getStackInSlot(0)), true);
-					SLOTS_OUTPUT.insertItem(0, getResult(SLOTS_INTERNAL.getStackInSlot(0)).copy(), false);
-					SLOTS_INTERNAL.setStackInSlot(0, null);
-					PROCESSING_TIMER = 0;
-					updateBlock();
+			//Start Process
+			if(!isProcessing() && !isMoving() && canProcess(SLOTS_INPUT.getStackInSlot(0))) {
+				MOVE_TIMER = 1;
+			}
+			//Start Moving
+			if(!isProcessing() && isMoving() && canProcess(SLOTS_INPUT.getStackInSlot(0))) {
+				MOVE_TIMER++;
+				if(MOVE_TIMER >= MOVE_SPEED) {
+					MOVE_TIMER = 0;
+					useEnergy(getProcessingEnergy(SLOTS_INPUT.getStackInSlot(0)));
+					moveItem(SLOTS_INPUT, 0, SLOTS_INTERNAL, 0);
+					PROCESSING_TIMER = 1;	
 				}
+			}else{
+				MOVE_TIMER = 0;
 			}
-		}	
+			//Start Processing
+			if(isProcessing() && !isMoving() && canProcess(SLOTS_INTERNAL.getStackInSlot(0))) {
+				if(PROCESSING_TIMER < PROCESSING_TIME) {
+					PROCESSING_TIMER++;
+					updateBlock();
+				}else{				
+					if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, 0, getResult(SLOTS_INTERNAL.getStackInSlot(0)))) {
+						TANK.fill(getFluidResult(SLOTS_INTERNAL.getStackInSlot(0)), true);
+						SLOTS_OUTPUT.insertItem(0, getResult(SLOTS_INTERNAL.getStackInSlot(0)).copy(), false);
+						SLOTS_INTERNAL.setStackInSlot(0, null);
+						PROCESSING_TIMER = 0;
+						updateBlock();
+					}
+				}
+			}	
+		}
+	}
+	@Override
+	public int fill(FluidStack resource, boolean doFill) {
+		if(!worldObj.isRemote) {
+			updateBlock();
+		}
+		return TANK.fill(resource, doFill);
 	}
 }
 

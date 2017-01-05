@@ -55,8 +55,6 @@ import theking530.staticpower.machines.fusionfurnace.TileEntityFusionFurnace;
 import theking530.staticpower.machines.mechanicalsqueezer.TileEntityMechanicalSqueezer;
 import theking530.staticpower.machines.poweredfurnace.TileEntityPoweredFurnace;
 import theking530.staticpower.machines.poweredgrinder.TileEntityPoweredGrinder;
-import theking530.staticpower.machines.solarpanel.TileEntityStaticSolarPanel;
-import theking530.staticpower.machines.solderingtable.TileEntitySolderingTable;
 import theking530.staticpower.tileentity.chest.energizedchest.TileEntityEnergizedChest;
 import theking530.staticpower.tileentity.chest.lumumchest.TileEntityLumumChest;
 import theking530.staticpower.tileentity.chest.staticchest.TileEntityStaticChest;
@@ -69,6 +67,8 @@ import theking530.staticpower.tileentity.gates.powercell.TileEntityPowerCell;
 import theking530.staticpower.tileentity.gates.subtractor.TileEntitySubtractorGate;
 import theking530.staticpower.tileentity.gates.timer.TileEntityTimer;
 import theking530.staticpower.tileentity.gates.transducer.TileEntitySignalMultiplier;
+import theking530.staticpower.tileentity.solarpanels.TileEntityStaticSolarPanel;
+import theking530.staticpower.tileentity.solderingtable.TileEntitySolderingTable;
 
 public class ClientProxy extends CommonProxy {
 

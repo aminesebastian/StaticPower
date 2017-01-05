@@ -19,7 +19,7 @@ import theking530.staticpower.client.GuiIDRegistry;
 import theking530.staticpower.items.tools.CoordinateMarker;
 import theking530.staticpower.machines.BaseMachineBlock;
 import theking530.staticpower.machines.poweredgrinder.TileEntityPoweredGrinder;
-import theking530.staticpower.machines.solderingtable.TileEntitySolderingTable;
+import theking530.staticpower.tileentity.solderingtable.TileEntitySolderingTable;
 import theking530.staticpower.utils.EnumTextFormatting;
 import theking530.staticpower.utils.WorldUtilities;
 

@@ -114,19 +114,20 @@ public class BaseMachineBlock extends BlockContainer implements IWrenchable {
      * Called serverside after this block is replaced with another in Chunk, but before the Tile Entity is updated
      */
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-        
-        for(EnumFacing facing : EnumFacing.values()) {
-        	if(tileentity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing)) {
-        		ItemStackHandler tempHandler = (ItemStackHandler) tileentity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing);
-        		if(tempHandler != null) {
-        			for(int i=0; i<tempHandler.getSlots(); i++) {
-        				if(tempHandler.getStackInSlot(i) != null) {
-        					WorldUtilities.dropItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), tempHandler.getStackInSlot(i));
-        				}
-        			}
-        		}
-        	}   
+        BaseTileEntity tileentity = (BaseTileEntity) worldIn.getTileEntity(pos);
+        if(!tileentity.WRENCHED) {
+	        for(EnumFacing facing : EnumFacing.values()) {
+	        	if(tileentity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing)) {
+	        		ItemStackHandler tempHandler = (ItemStackHandler) tileentity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing);
+	        		if(tempHandler != null) {
+	        			for(int i=0; i<tempHandler.getSlots(); i++) {
+	        				if(tempHandler.getStackInSlot(i) != null) {
+	        					WorldUtilities.dropItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), tempHandler.getStackInSlot(i));
+	        				}
+	        			}
+	        		}
+	        	}   
+	        }
         }
         super.breakBlock(worldIn, pos, state);
     }
@@ -162,19 +163,18 @@ public class BaseMachineBlock extends BlockContainer implements IWrenchable {
 	}
 	@Override
 	public void sneakWrenchBlock(EntityPlayer player, SneakWrenchMode mode, ItemStack wrench, World world, BlockPos pos, EnumFacing facing, boolean returnDrops){
-		if(!world.isRemote) {
-			NBTTagCompound nbt = new NBTTagCompound();
-			ItemStack machineStack = new ItemStack(Item.getItemFromBlock(this));
-			if(world.getTileEntity(pos) instanceof BaseTileEntity) {
-				BaseTileEntity tempMachine = (BaseTileEntity)world.getTileEntity(pos);
-				tempMachine.onMachineBroken(nbt);
-				machineStack.setTagCompound(nbt);
-			}		
-			EntityItem droppedItem = new EntityItem(world, pos.getX()+0.5, pos.getY(), pos.getZ()+0.5, machineStack);
-			world.spawnEntityInWorld(droppedItem);
-			droppedItem.setVelocity(0.0, 0.2f, 0.0);	
+		NBTTagCompound nbt = new NBTTagCompound();
+		ItemStack machineStack = new ItemStack(Item.getItemFromBlock(this));
+		if(world.getTileEntity(pos) instanceof BaseTileEntity) {
+			BaseTileEntity tempMachine = (BaseTileEntity)world.getTileEntity(pos);
+			tempMachine.WRENCHED = true;
+			tempMachine.onMachineBroken(nbt);
+			machineStack.setTagCompound(nbt);	
 		}
+		EntityItem droppedItem = new EntityItem(world, pos.getX()+0.5, pos.getY(), pos.getZ()+0.5, machineStack);
+		world.spawnEntityInWorld(droppedItem);
 		world.playSound(player, pos, SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 1.0f, 1.1f);
 		world.setBlockToAir(pos);
+		world.markAndNotifyBlock(pos, world.getChunkFromBlockCoords(pos), world.getBlockState(pos), world.getBlockState(pos), 2);
 	}
 }

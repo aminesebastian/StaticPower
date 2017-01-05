@@ -1,8 +1,11 @@
 Plate Maker
 Wire Maker
 Industrial Soldering Table
+Soldering Table Blueprints
+Block Breaker
+PowerConduits
 Mining Cart
 Solar Panel Models
 Nuts & Bolts
 Welder
-One or Two more ores (Aluminium, Zinc, Titanium, Three/Four Gems like Redstone)
+DONE	One or Two more ores (Aluminium, Zinc, Titanium, Three/Four Gems like Redstone) 

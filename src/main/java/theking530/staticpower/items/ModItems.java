@@ -2,6 +2,7 @@ package theking530.staticpower.items;
 
 import static theking530.staticpower.assists.RegisterHelper.registerItem;
 
+import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
@@ -38,6 +39,7 @@ import theking530.staticpower.items.upgrades.BaseQuarryingUpgrade;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.items.upgrades.BaseSpeedUpgrade;
 import theking530.staticpower.items.upgrades.BaseTankUpgrade;
+import theking530.staticpower.world.plants.BaseCrop;
 
 public class ModItems {
 	
@@ -193,15 +195,12 @@ public class ModItems {
 	public static Item LumumLeggings;
 	public static Item LumumBoots;
 	
-	public static Item DepletedCrop;
-	public static Item EnergizedSeeds;
-	public static Item EnergizedCrop;
-	public static Item StaticSeeds;
-	public static Item StaticCrop;
-	public static Item LumumSeeds;
-	public static Item LumumCrop;
+	public static Block StaticCropPlant;
+	public static Block EnergizedCropPlant;
+	public static Block LumumCropPlant;
 	
-	public static void init() {			
+	public static void init() {		
+		
 		BaseFluidCapsule = new BaseFluidCapsule("BaseFluidCapsule", 2000);
 		RegisterHelper.registerItem(BaseFluidCapsule);
 		StaticFluidCapsule = new BaseFluidCapsule("StaticFluidCapsule", 4000);
@@ -248,8 +247,6 @@ public class ModItems {
 		
 		Rubber = new ItemBase("Rubber");
 		RegisterHelper.registerItem(Rubber);
-		DepletedCrop = new DepletedCrop("DepletedCrop");
-		RegisterHelper.registerItem(DepletedCrop);
 		IOPort = new ItemBase("IOPort");
 		RegisterHelper.registerItem(IOPort);
 		
@@ -400,20 +397,7 @@ public class ModItems {
 		LumumRangeUpgrade = new BaseRangeUpgrade("LumumRangeUpgrade", Tier.LUMUM);
 		RegisterHelper.registerItem(LumumRangeUpgrade);	
 		
-		StaticSeeds = new StaticSeeds(ModBlocks.StaticCropPlant, Blocks.FARMLAND).setUnlocalizedName("StaticSeeds");
-		RegisterHelper.registerItem(StaticSeeds);	
-		MinecraftForge.addGrassSeed(new ItemStack(StaticSeeds), 20);		
-		EnergizedSeeds = new EnergizedSeeds(ModBlocks.EnergizedCropPlant, Blocks.FARMLAND).setUnlocalizedName("EnergizedSeeds");
-		RegisterHelper.registerItem(EnergizedSeeds);			
-		LumumSeeds = new LumumSeeds(ModBlocks.LumumCropPlant, Blocks.FARMLAND).setUnlocalizedName("LumumSeeds");
-		RegisterHelper.registerItem(LumumSeeds);	
-		
-		StaticCrop = new StaticCrop().setUnlocalizedName("StaticCrop");
-		RegisterHelper.registerItem(StaticCrop);			
-		EnergizedCrop = new EnergizedCrop().setUnlocalizedName("EnergizedCrop");
-		RegisterHelper.registerItem(EnergizedCrop);			
-		LumumCrop = new LumumCrop().setUnlocalizedName("LumumCrop");
-		registerItem(LumumCrop);	
+	
 
 		StaticBook = new StaticPowerBook("StaticBook");
 		registerItem(StaticBook);	
@@ -474,7 +458,7 @@ public class ModItems {
 		GameRegistry.register(EnergizedDust = new BaseDust("EnergizedDust"));
 		GameRegistry.register(LumumDust = new BaseDust("LumumDust"));
 		GameRegistry.register(RedstoneAlloyDust = new BaseDust("RedstoneAlloyDust"));
-
+		
 	}
 
 }

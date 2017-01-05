@@ -8,6 +8,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.items.ModItems;
+import theking530.staticpower.world.plants.ModPlants;
 
 public class ShapedRecipes {
 
@@ -15,7 +16,7 @@ public class ShapedRecipes {
 	private static void registerShapedRecipes() {		
 		//Static Wrench --------------------------------------------------------------------------------------------------
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.StaticWrench), new Object[]{" IC"," SI","S  ",
-		'S', "ingotSilver", 'I', Items.IRON_INGOT, 'C', ModItems.StaticCrop}));
+		'S', "ingotSilver", 'I', Items.IRON_INGOT, 'C', ModPlants.StaticCrop}));
 		
 		//Soldering Iron --------------------------------------------------------------------------------------------------
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.SolderingIron), new Object[]{"I  "," IL"," LR",
@@ -128,8 +129,8 @@ public class ShapedRecipes {
 		'G', ModItems.GoldPlate, 'D', Blocks.DIRT});
 		
 		//Powered Furnace --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.PoweredFurnace), new Object[]{"IUI", "RBR", "CCC", 
-		'I', Items.IRON_INGOT, 'R', Items.REDSTONE, 'B', ModBlocks.MachineBlock, 'U', Items.BUCKET, 'C', ModItems.CopperIngot});
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.PoweredFurnace), new Object[]{"IUI", "RBR", "CCC", 
+		'I', Items.IRON_INGOT, 'R', Items.REDSTONE, 'B', ModBlocks.MachineBlock, 'U', Items.BUCKET, 'C', "ingotCopper"}));
 		
 		//Quarry --------------------------------------------------------------------------------------------------
 		GameRegistry.addRecipe(new ItemStack(ModBlocks.Quarry), new Object[]{"PHP", "EBE", "ELE", 

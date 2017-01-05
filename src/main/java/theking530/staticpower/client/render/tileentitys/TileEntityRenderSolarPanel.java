@@ -17,7 +17,7 @@ import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.model.TRSRTransformation;
 import theking530.staticpower.client.model.Models;
-import theking530.staticpower.machines.solarpanel.TileEntityStaticSolarPanel;
+import theking530.staticpower.tileentity.solarpanels.TileEntityStaticSolarPanel;
 
 public class TileEntityRenderSolarPanel extends TileEntitySpecialRenderer<TileEntity> {
 	

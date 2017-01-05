@@ -17,10 +17,10 @@ import org.lwjgl.opengl.GL11;
 
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.blocks.ModBlocks;
-import theking530.staticpower.client.gui.widgets.GuiPowerBar;
-import theking530.staticpower.client.gui.widgets.GuiPowerBarFromEnergyStorage;
-import theking530.staticpower.client.gui.widgets.GuiRedstoneTab;
-import theking530.staticpower.client.gui.widgets.GuiSideConfigTab;
+import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
+import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
+import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBar;
+import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.utils.GuiTextures;
 
 public class GuiChargingStation extends GuiContainer{

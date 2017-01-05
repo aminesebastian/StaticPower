@@ -22,21 +22,25 @@ public class ContainerDistillery extends Container {
 		ENERGY_STORED = 0;
 		F_GENERATOR = teFluidGenerator;
 		
-		//Input
-		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_INPUT, 0, 25, 39));
-		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_INPUT, 1, 134, 39));
+		//Input Left
+		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_INPUT, 0, 7, 17));
+		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_OUTPUT, 0, 7, 47));
+		
+		//Input Right
+		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_INPUT, 1, 191, 17));
+		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_OUTPUT, 1, 191, 47));
 
 		//Inventory
-				for(int i = 0; i < 3; i++) {
-					for(int j = 0; j < 9; j++) {
-						this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 91 + i * 18));
-					}
-				}
-				
-				//ActionBar
-				for(int i = 0; i < 9; i++) {
-					this.addSlotToContainer(new Slot(invPlayer, i, 8 + i * 18, 149));
+		for(int i = 0; i < 3; i++) {
+			for(int j = 0; j < 9; j++) {
+				this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 27 + j * 18, 91 + i * 18));
 			}
+		}
+				
+		//ActionBar
+		for(int i = 0; i < 9; i++) {
+			this.addSlotToContainer(new Slot(invPlayer, i, 27 + i * 18, 149));
+		}
 	}
 	
 	//Shift Click Functionality

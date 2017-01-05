@@ -13,7 +13,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import theking530.staticpower.machines.solarpanel.TileEntityBasicSolarPanel;
+import theking530.staticpower.tileentity.solarpanels.TileEntityBasicSolarPanel;
 import theking530.staticpower.utils.EnumTextFormatting;
 import theking530.staticpower.utils.GUIUtilities;
 

@@ -32,7 +32,7 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFlu
 	public TileEntityMechanicalSqueezer() {
 		initializeBasicTileEntity(1, 2, 2);
 		TANK = new FluidTank(1000);
-		DRAIN_COMPONENT = new DrainToBucketComponent(SLOTS_INPUT, 1, SLOTS_OUTPUT, 1, this, TANK, FLUID_TO_CONTAINER_RATE);
+		DRAIN_COMPONENT = new DrainToBucketComponent("BucketDrain", SLOTS_INPUT, 1, SLOTS_OUTPUT, 1, this, TANK, FLUID_TO_CONTAINER_RATE);
 	}
 	@Override
 	public String getName() {
@@ -138,7 +138,9 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFlu
 	}
 	@Override
 	public void process(){
-		DRAIN_COMPONENT.update();
+		if(!worldObj.isRemote) {
+			DRAIN_COMPONENT.update();
+		}
 	}
 	public void rightClick() {
 		if(!worldObj.isRemote) {

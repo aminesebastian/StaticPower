@@ -5,14 +5,19 @@ import java.io.IOException;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import theking530.staticpower.blocks.ModBlocks;
-import theking530.staticpower.client.gui.widgets.GuiFluidBarFromTank;
-import theking530.staticpower.client.gui.widgets.GuiPowerBarFromEnergyStorage;
-import theking530.staticpower.client.gui.widgets.GuiRedstoneTab;
-import theking530.staticpower.client.gui.widgets.GuiSideConfigTab;
+import theking530.staticpower.client.gui.widgets.buttons.ArrowButton;
+import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
+import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
+import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarFromTank;
+import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
+import theking530.staticpower.handlers.PacketHandler;
+import theking530.staticpower.machines.fluidgenerator.PacketFluidGeneratorContainerMode;
 import theking530.staticpower.utils.GuiTextures;
 
 public class GuiCropSqueezer extends GuiContainer{	
@@ -35,6 +40,7 @@ public class GuiCropSqueezer extends GuiContainer{
 		this.xSize = 195;
 		this.ySize = 166;		
 	}
+	
 	public void updateScreen() {
 		int j = (width - xSize) / 2;
 		int k = (height - ySize) / 2;

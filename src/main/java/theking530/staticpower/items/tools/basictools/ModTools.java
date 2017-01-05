@@ -19,8 +19,8 @@ public class ModTools {
 	public static ToolMaterial STATIC = EnumHelper.addToolMaterial("STATIC", 2, 1500, 7.0F, 3.0F, 20);
 	public static ToolMaterial ENERGIZED = EnumHelper.addToolMaterial("ENERGIZED", 2, 2500, 4.0F, 4.0F, 30);
 	public static ToolMaterial LUMUM = EnumHelper.addToolMaterial("LUMUM", 3, 4000, 12.0F, 5.0F, 40);
-	public static ToolMaterial RUBY = EnumHelper.addToolMaterial("RUBY", 2, 1500, 5.0F, 5.0F, 30);
-	public static ToolMaterial SAPPHIRE = EnumHelper.addToolMaterial("SAPPHIRE", 2, 1500, 5.0F, 5.0F, 30);
+	public static ToolMaterial RUBY = EnumHelper.addToolMaterial("RUBY", 2, 1500, 5.0F, 7.0F, 30);
+	public static ToolMaterial SAPPHIRE = EnumHelper.addToolMaterial("SAPPHIRE", 2, 1500, 7.0F, 5.0F, 30);
 	
 	public static Item CopperPickaxe;
 	public static Item CopperAxe;

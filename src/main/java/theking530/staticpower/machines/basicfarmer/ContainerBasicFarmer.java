@@ -28,43 +28,47 @@ public class ContainerBasicFarmer extends Container {
 		
         for (int l = 0; l < 3; ++l) {
             for (int i1 = 0; i1 < 3; ++i1){
-                this.addSlotToContainer(new SlotItemHandler(teFarmer.SLOTS_OUTPUT, i1 + l * 3, 68 + i1 * 18, 30 + l * 18));
+                this.addSlotToContainer(new SlotItemHandler(teFarmer.SLOTS_OUTPUT, i1 + l * 3, 87 + i1 * 18, 30 + l * 18));
             }
         }
-		//Empty Bucket
-		this.addSlotToContainer(new SlotItemHandler(teFarmer.SLOTS_OUTPUT, 9, 37, 30) {
+        
+		//Buckets
+		this.addSlotToContainer(new SlotItemHandler(teFarmer.SLOTS_INPUT, 2, 7, 17) {
+			@Override
+	        public boolean isItemValid(ItemStack itemStack) {
+		          return itemStack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+		        }
+		});
+		this.addSlotToContainer(new SlotItemHandler(teFarmer.SLOTS_OUTPUT, 9, 7, 47) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;
 		        }
 		});
 		
-		this.addSlotToContainer(new SlotItemHandler(teFarmer.SLOTS_INPUT, 0, 71, 8) {
+		//Hoe
+		this.addSlotToContainer(new SlotItemHandler(teFarmer.SLOTS_INPUT, 0, 90, 8) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return itemStack.getItem() instanceof ItemHoe;
 		        }
 		});
-		this.addSlotToContainer(new SlotItemHandler(teFarmer.SLOTS_INPUT, 1, 101, 8) {
+		//Axe
+		this.addSlotToContainer(new SlotItemHandler(teFarmer.SLOTS_INPUT, 1, 120, 8) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return itemStack.getItem() instanceof ItemAxe;
 		        }
 		});
-		this.addSlotToContainer(new SlotItemHandler(teFarmer.SLOTS_INPUT, 2, 37, 8) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-		          return itemStack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
-		        }
-		});
-		this.addSlotToContainer(new SlotItemHandler(teFarmer.SLOTS_INPUT, 3, 8, 71) {
+
+		this.addSlotToContainer(new SlotItemHandler(teFarmer.SLOTS_INPUT, 3, 27, 71) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return itemStack.getItem() instanceof IEnergyContainerItem;
 		        }
 		});
 		for(int y=0; y<3; y++) {
-			this.addSlotToContainer(new SlotItemHandler(teFarmer.SLOTS_UPGRADES, y, 152, 12+(y*20)) {
+			this.addSlotToContainer(new SlotItemHandler(teFarmer.SLOTS_UPGRADES, y, 171, 12+(y*20)) {
 				@Override
 		        public boolean isItemValid(ItemStack itemStack) {
 			          return itemStack.getItem() instanceof IMachineUpgrade;
@@ -72,16 +76,16 @@ public class ContainerBasicFarmer extends Container {
 			});
 		}
 		//Inventory
-				for(int i = 0; i < 3; i++) {
-					for(int j = 0; j < 9; j++) {
-						this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 90 + i * 18));
-					}
-				}
-				
-				//ActionBar
-				for(int i = 0; i < 9; i++) {
-					this.addSlotToContainer(new Slot(invPlayer, i, 8+ i * 18, 148));
+		for(int i = 0; i < 3; i++) {
+			for(int j = 0; j < 9; j++) {
+				this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 27 + j * 18, 90 + i * 18));
 			}
+		}
+		
+		//ActionBar
+		for(int i = 0; i < 9; i++) {
+			this.addSlotToContainer(new Slot(invPlayer, i, 27+ i * 18, 148));
+		}
 	}
 	
 	//Shift Click Functionality

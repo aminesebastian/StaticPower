@@ -4,12 +4,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.handlers.crafting.registries.FermenterRecipeRegistry;
 import theking530.staticpower.machines.BaseMachineWithTank;
+import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent;
+import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent.FluidContainerInteractionMode;
 
 public class TileEntityFermenter extends BaseMachineWithTank {
 
+	public DrainToBucketComponent DRAIN_COMPONENT;
 	
 	public TileEntityFermenter() {
-		initializeBaseMachineWithTank(4, 500, 100000, 160, 45, 1, 11, 0, 5000);
+		initializeBaseMachineWithTank(4, 500, 100000, 160, 45, 1, 11, 2, 5000);
+		DRAIN_COMPONENT = new DrainToBucketComponent("BucketDrain", SLOTS_INPUT, 10, SLOTS_OUTPUT, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
 		setBatterySlot(10);
 		//setFluidContainerSlot(9, FluidContainerMode.FILL);
 	}
@@ -66,12 +70,12 @@ public class TileEntityFermenter extends BaseMachineWithTank {
 	}	
 	public void process() {
 		if(!worldObj.isRemote) {
+			DRAIN_COMPONENT.update();
 			if(!isProcessing() && !isMoving()) {
 				for(int i=0; i<9; i++) {
 					if(SLOTS_INPUT.getStackInSlot(i) != null && canProcess(SLOTS_INPUT.getStackInSlot(i))) {
 						moveItem(SLOTS_INPUT, i, SLOTS_INTERNAL, 0);
 						MOVE_TIMER = 1;
-						//System.out.println("HI");
 						break;
 					}
 				}	

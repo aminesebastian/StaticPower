@@ -17,7 +17,7 @@ import theking530.staticpower.machines.heatingelement.TileEntityHeatingElement;
 import theking530.staticpower.machines.poweredfurnace.TileEntityPoweredFurnace;
 import theking530.staticpower.machines.poweredgrinder.TileEntityPoweredGrinder;
 import theking530.staticpower.machines.quarry.TileEntityQuarry;
-import theking530.staticpower.machines.solarpanel.TileEntityBasicSolarPanel;
+import theking530.staticpower.tileentity.solarpanels.TileEntityBasicSolarPanel;
 
 public class WailaConfig {
 

@@ -67,40 +67,42 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 		return false;
 	}
 	public void process() {
-		if(!isProcessing() && !isMoving() && canProcess(getInputStack(0))) {
-			MOVE_TIMER = 1;
-		}
-		if(!isProcessing() && isMoving() && canProcess(getInputStack(0))) {
-			if(MOVE_TIMER < MOVE_SPEED) {
-				MOVE_TIMER++;
-			}else{
-				moveItem(SLOTS_INPUT, 0, SLOTS_INTERNAL, 0);
-				MOVE_TIMER=0;
-				PROCESSING_TIMER = 1;
+		if(!worldObj.isRemote) {
+			if(!isProcessing() && !isMoving() && canProcess(getInputStack(0))) {
+				MOVE_TIMER = 1;
 			}
-		}
-		if(isProcessing() && !isMoving()) {
-				if(PROCESSING_TIMER < PROCESSING_TIME) {
-					useEnergy(getProcessingCost() / PROCESSING_TIME);
-					PROCESSING_TIMER++;
+			if(!isProcessing() && isMoving() && canProcess(getInputStack(0))) {
+				if(MOVE_TIMER < MOVE_SPEED) {
+					MOVE_TIMER++;
 				}else{
-					if(getGrindingResult(getInternalStack(0)) != null) {
-						for(int j=0; j<getGrindingResult(getInternalStack(0)).getOutputItemCount(); j++) {
-							for(int i=0; i<3; i++) {
-								if(diceRoll(getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getPercentage())) {
-									if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, i, getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getOutput())) {
-										SLOTS_OUTPUT.insertItem(i, getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getOutput().copy(), false);
-										break;
-									}	
+					moveItem(SLOTS_INPUT, 0, SLOTS_INTERNAL, 0);
+					MOVE_TIMER=0;
+					PROCESSING_TIMER = 1;
+				}
+			}
+			if(isProcessing() && !isMoving()) {
+					if(PROCESSING_TIMER < PROCESSING_TIME) {
+						useEnergy(getProcessingCost() / PROCESSING_TIME);
+						PROCESSING_TIMER++;
+					}else{
+						if(getGrindingResult(getInternalStack(0)) != null) {
+							for(int j=0; j<getGrindingResult(getInternalStack(0)).getOutputItemCount(); j++) {
+								for(int i=0; i<3; i++) {
+									if(diceRoll(getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getPercentage())) {
+										if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, i, getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getOutput())) {
+											SLOTS_OUTPUT.insertItem(i, getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getOutput().copy(), false);
+											break;
+										}	
+									}
 								}
 							}
 						}
-					}
-					setInternalStack(0, null);
-					updateBlock();
-					PROCESSING_TIMER=0;
-					MOVE_TIMER = 0;
-			}	
+						setInternalStack(0, null);
+						updateBlock();
+						PROCESSING_TIMER=0;
+						MOVE_TIMER = 0;
+				}	
+			}
 		}
 	}
  

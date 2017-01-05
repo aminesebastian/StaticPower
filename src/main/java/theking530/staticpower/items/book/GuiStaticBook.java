@@ -9,7 +9,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import theking530.staticpower.client.gui.widgets.GuiInfoTab;
+import theking530.staticpower.client.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.items.itemfilter.ContainerItemFilter;
 import theking530.staticpower.items.itemfilter.FilterTier;

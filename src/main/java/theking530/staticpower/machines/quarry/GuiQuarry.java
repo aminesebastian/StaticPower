@@ -7,15 +7,21 @@ import java.io.IOException;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.client.gui.widgets.CustomGuiContainer;
 import theking530.staticpower.client.gui.widgets.GuiDrawItem;
-import theking530.staticpower.client.gui.widgets.GuiFluidBarFromTank;
-import theking530.staticpower.client.gui.widgets.GuiPowerBarFromEnergyStorage;
-import theking530.staticpower.client.gui.widgets.GuiSideConfigTab;
+import theking530.staticpower.client.gui.widgets.buttons.ArrowButton;
+import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
+import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarFromTank;
+import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
+import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.items.ModItems;
+import theking530.staticpower.machines.fluidgenerator.PacketFluidGeneratorContainerMode;
+import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent.FluidContainerInteractionMode;
 import theking530.staticpower.utils.GUIUtilities;
 import theking530.staticpower.utils.GuiTextures;
 import theking530.staticpower.utils.WorldUtilities;
@@ -34,14 +40,43 @@ public class GuiQuarry extends CustomGuiContainer{
 		POWERBAR = new GuiPowerBarFromEnergyStorage(teQuarry);
 		FLUIDBAR = new GuiFluidBarFromTank(teQuarry.TANK);
 		SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, teQuarry);
-		xSize = 176;
+		xSize = 214;
 		ySize = 173;
 
 	}
+	@Override
+	public void initGui() {
+		super.initGui();
+	 	int j = (width - xSize) / 2;
+	    int k = (height - ySize) / 2;
+
+	    this.buttonList.add(new ArrowButton(1, j+7, k+35, 16, 10, "<"));
+	    
+	    if(QUARRY.DRAIN_COMPONENT.getMode() == FluidContainerInteractionMode.FillFromContainer) {
+	    	buttonList.get(0).displayString = ">";
+	    }else{
+	    	buttonList.get(0).displayString = "<";
+	    }
+	}
+	@Override
+	protected void actionPerformed(GuiButton B) {
+		if(B.id == 1) {
+			IMessage msg = new PacketQuarryContainerMode(QUARRY.DRAIN_COMPONENT.getInverseMode(), QUARRY.getPos());
+			PacketHandler.net.sendToServer(msg);
+			QUARRY.DRAIN_COMPONENT.setMode(QUARRY.DRAIN_COMPONENT.getInverseMode());
+			
+		    if(QUARRY.DRAIN_COMPONENT.getMode() == FluidContainerInteractionMode.FillFromContainer) {
+		    	buttonList.get(0).displayString = ">";
+		    }else{
+		    	buttonList.get(0).displayString = "<";
+		    }
+		}
+	}	
+	
 	public void updateScreen() {
 		int j = (width - xSize) / 2;
 		int k = (height - ySize) / 2;
-		SIDE_TAB.updateTab(width, height, xSize, ySize, fontRendererObj, QUARRY);
+		SIDE_TAB.updateTab(width+38, height, xSize, ySize, fontRendererObj, QUARRY);
 	}	
 	public void drawScreen(int par1, int par2, float par3) {
     	super.drawScreen(par1, par2, par3);
@@ -49,10 +84,10 @@ public class GuiQuarry extends CustomGuiContainer{
         int var2 = (this.height - this.ySize) / 2;  
 		drawRect(guiLeft + 82, guiTop + 38, 176, 69, 3394815);
 		
-		if(par1 >= 8 + var1 && par2 >= 5 + var2 && par1 <= 24 + var1 && par2 <= 66 + var2) {	
+		if(par1 >= 27 + var1 && par2 >= 8 + var2 && par1 <= 42 + var1 && par2 <= 68 + var2) {	
 			drawHoveringText(FLUIDBAR.drawText(), par1, par2, fontRendererObj); 
-		}     
-		if(par1 >= 27 + var1 && par2 >= 5 + var2 && par1 <= 35 + var1 && par2 <= 66 + var2) {
+		}    
+		if(par1 >= 46 + var1 && par2 >= 8 + var2 && par1 <= 52 + var1 && par2 <= 68 + var2) {
 			drawHoveringText(POWERBAR.drawText(), par1, par2, fontRendererObj); 
 		}	
 	}
@@ -78,13 +113,13 @@ public class GuiQuarry extends CustomGuiContainer{
 		
 		GL11.glScalef(scale, scale, scale);
 		if(!QUARRY.isAbleToMine()) {
-			fontRendererObj.drawString(tutorial, xSize / 2 - 26, 30, GUIUtilities.getColor(200, 200, 200));
-			fontRendererObj.drawString(tutorial2, xSize / 2 - 26, 40, GUIUtilities.getColor(200, 200, 200));
-			fontRendererObj.drawString(tutorial3, xSize / 2 - 26, 50, GUIUtilities.getColor(200, 200, 200));
-			fontRendererObj.drawString(tutorial4, xSize / 2 - 26, 60, GUIUtilities.getColor(200, 200, 200));
-			fontRendererObj.drawString(tutorial5, xSize / 2 - 26, 75, GUIUtilities.getColor(200, 200, 200));
-			fontRendererObj.drawString(tutorial6, xSize / 2 - 26, 85, GUIUtilities.getColor(200, 200, 200));
-			fontRendererObj.drawString(tutorial7, xSize / 2 - 26, 100, GUIUtilities.getColor(200, 200, 200));
+			fontRendererObj.drawString(tutorial, xSize / 2 - 20, 30, GUIUtilities.getColor(200, 200, 200));
+			fontRendererObj.drawString(tutorial2, xSize / 2 - 20, 40, GUIUtilities.getColor(200, 200, 200));
+			fontRendererObj.drawString(tutorial3, xSize / 2 - 20, 50, GUIUtilities.getColor(200, 200, 200));
+			fontRendererObj.drawString(tutorial4, xSize / 2 - 20, 60, GUIUtilities.getColor(200, 200, 200));
+			fontRendererObj.drawString(tutorial5, xSize / 2 - 20, 75, GUIUtilities.getColor(200, 200, 200));
+			fontRendererObj.drawString(tutorial6, xSize / 2 - 20, 85, GUIUtilities.getColor(200, 200, 200));
+			fontRendererObj.drawString(tutorial7, xSize / 2 - 20, 100, GUIUtilities.getColor(200, 200, 200));
 		}else if(QUARRY.isDoneMining()) {
 			fontRendererObj.drawString("Quarrying Completed!", xSize / 2 - 26, 30, GUIUtilities.getColor(200, 200, 200));
 		}else{
@@ -106,7 +141,7 @@ public class GuiQuarry extends CustomGuiContainer{
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.QUARRY_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-    	DRAW_ITEM.drawItem(ModItems.BasicItemFilter, guiLeft, guiTop, 8, 71, zLevel);
+    	DRAW_ITEM.drawItem(ModItems.BasicItemFilter, guiLeft, guiTop, 27, 71, zLevel);
 		SIDE_TAB.drawTab();	
 		POWERBAR.drawPowerBar(guiLeft + 28, guiTop + 66, 6, 60, this.zLevel);
 		FLUIDBAR.drawFluidBar(guiLeft + 8, guiTop + 66, 16, 60, this.zLevel);

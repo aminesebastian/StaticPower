@@ -29,8 +29,6 @@ import theking530.staticpower.machines.mechanicalsqueezer.BlockMechanicalSqueeze
 import theking530.staticpower.machines.poweredfurnace.BlockPoweredFurnace;
 import theking530.staticpower.machines.poweredgrinder.BlockPoweredGrinder;
 import theking530.staticpower.machines.quarry.BlockQuarry;
-import theking530.staticpower.machines.solarpanel.BlockSolarPanel;
-import theking530.staticpower.machines.solderingtable.BlockSolderingTable;
 import theking530.staticpower.newconduits.BaseConduitBlock;
 import theking530.staticpower.tileentity.chest.energizedchest.BlockEnergizedChest;
 import theking530.staticpower.tileentity.chest.lumumchest.BlockLumumChest;
@@ -46,6 +44,8 @@ import theking530.staticpower.tileentity.gates.powercell.BlockPowerCell;
 import theking530.staticpower.tileentity.gates.subtractor.BlockSubtractorGate;
 import theking530.staticpower.tileentity.gates.timer.BlockTimer;
 import theking530.staticpower.tileentity.gates.transducer.BlockSignalMultiplier;
+import theking530.staticpower.tileentity.solarpanels.BlockSolarPanel;
+import theking530.staticpower.tileentity.solderingtable.BlockSolderingTable;
 import theking530.staticpower.tileentity.vacuumchest.BlockVacuumChest;
 
 public class ModBlocks {
@@ -138,9 +138,6 @@ public class ModBlocks {
 	public static Block SapphireOre;
 	
 	//Misc
-	public static Block StaticCropPlant;
-	public static Block EnergizedCropPlant;
-	public static Block LumumCropPlant;
 	public static Block Quarry;
 	public static Block StaticChest;
 	public static Block EnergizedChest;
@@ -401,13 +398,6 @@ public class ModBlocks {
 		RegisterHelper.registerBlock(RubyOre);
 		OreDictionary.registerOre("oreRuby", new ItemStack(RubyOre));
 		
-		EnergizedCropPlant = new BaseCrop(Tier.ENERGIZED, "EnergizedCropPlant");
-		RegisterHelper.registerBlock(EnergizedCropPlant);
-		
-		StaticCropPlant = new BaseCrop(Tier.STATIC, "StaticCropPlant");
-		RegisterHelper.registerBlock(StaticCropPlant);
-		
-		LumumCropPlant = new BaseCrop(Tier.LUMUM, "LumumCropPlant");
-		RegisterHelper.registerBlock(LumumCropPlant);
+
 	}
 }

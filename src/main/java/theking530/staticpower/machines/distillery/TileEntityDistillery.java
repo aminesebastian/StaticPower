@@ -6,10 +6,14 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import theking530.staticpower.fluids.ModFluids;
+import theking530.staticpower.handlers.crafting.registries.CondenserRecipeRegistry;
+import theking530.staticpower.handlers.crafting.registries.DistilleryRecipeRegistry;
 import theking530.staticpower.machines.BaseMachineWithTank;
 import theking530.staticpower.machines.condenser.TileEntityCondenser;
 import theking530.staticpower.machines.heatingelement.HeatStorage;
 import theking530.staticpower.machines.heatingelement.IHeatable;
+import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent;
+import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent.FluidContainerInteractionMode;
 import theking530.staticpower.power.PowerDistributor;
 
 public class TileEntityDistillery extends BaseMachineWithTank implements IHeatable{
@@ -19,11 +23,17 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
 	public FluidTank TANK2;
 	
 	public FluidStack PROCESSING_STACK;
+	public DrainToBucketComponent DRAIN_COMPONENT_EVAPORATED_MASH;
+	public DrainToBucketComponent DRAIN_COMPONENT_MASH;
 	
 	public TileEntityDistillery() {
-		initializeBaseMachineWithTank(0, 0, 0, 0, 50, 0, 2, 0, 5000);
+		initializeBaseMachineWithTank(0, 0, 0, 0, 2, 0, 2, 2, 5000);
 		HEAT_STORAGE = new HeatStorage(150);
 		TANK2 = new FluidTank(5000);
+		
+		DRAIN_COMPONENT_MASH = new DrainToBucketComponent("LeftBucketDrain", SLOTS_INPUT, 0, SLOTS_OUTPUT, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
+		DRAIN_COMPONENT_MASH.setMode(FluidContainerInteractionMode.FillFromContainer);
+		DRAIN_COMPONENT_EVAPORATED_MASH = new DrainToBucketComponent("RightBucketDrain", SLOTS_INPUT, 1, SLOTS_OUTPUT, 1, this, TANK2, FLUID_TO_CONTAINER_RATE);
 	}
 	@Override
 	public String getName() {
@@ -31,33 +41,82 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
 	}	
 	public void process() {
 		if(!worldObj.isRemote) {
-			if(!isProcessing() && TANK2.getFluidAmount() + 50 <= TANK2.getCapacity() && HEAT_STORAGE.getHeat() >= 100 
-					&& TANK.getFluid() != null && TANK.getFluid().isFluidEqual(new FluidStack(ModFluids.Mash, 1)) && PROCESSING_STACK == null) {
-				PROCESSING_STACK = TANK.drain(Math.min(TANK.getFluidAmount(), 50), true);
+			DRAIN_COMPONENT_EVAPORATED_MASH.update();
+			DRAIN_COMPONENT_MASH.update();
+			if(!isProcessing() && canProcess() && PROCESSING_STACK == null) {
+				PROCESSING_STACK = TANK.drain(getInputFluidAmount(), true);
 				PROCESSING_TIMER++;
 			}
 			if(isProcessing()) {
 				if(PROCESSING_TIMER < PROCESSING_TIME) {
 					PROCESSING_TIMER++;
+					updateBlock();
 				}else{
 					if(PROCESSING_STACK != null) {
 						PROCESSING_TIMER = 0;
 						HEAT_STORAGE.extractHeat(1);
-						TANK2.fill(new FluidStack(ModFluids.EvaporatedMash, PROCESSING_STACK.amount), true);
-						PROCESSING_STACK = null;		
-					}else{
-						//PROCESSING_TIMER = 0;
+						TANK2.fill(getOutputFluid(), true);
+						PROCESSING_STACK = null;	
+						updateBlock();
 					}
 				}
 			}
 			if(TANK2.getFluid() != null) {
-				if(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) instanceof TileEntityCondenser) {
-					TileEntityCondenser te = (TileEntityCondenser) worldObj.getTileEntity(pos.offset(EnumFacing.UP));
-					TANK2.drain(te.fill(TANK2.getFluid(), true), true);
-				}	
+				if(CondenserRecipeRegistry.Condensing().getFluidOutput(TANK2.getFluid()) != null) {
+					if(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) instanceof TileEntityCondenser) {
+						TileEntityCondenser te = (TileEntityCondenser) worldObj.getTileEntity(pos.offset(EnumFacing.UP));
+						TANK2.drain(te.fill(TANK2.getFluid(), true), true);
+					}	
+				}
 			}
 		}
 	}
+	public boolean canProcess() {
+		if(hasOutput()) {
+			if(TANK.getFluid().amount >= getInputFluidAmount()) {
+				if(getHeat() >= getOutputMinHeat()) {
+					if(TANK2.getFluid() == null) {
+						return true;
+					}
+					FluidStack tempOutput = getOutputFluid();
+					if(TANK2.getFluid().isFluidEqual(tempOutput)) {
+						if(TANK2.getFluid().amount + tempOutput.amount <= TANK2.getCapacity()) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+	public boolean hasOutput() {
+		return getOutputFluid() != null;
+	}
+	public int getInputFluidAmount() {
+		if(TANK.getFluid() != null) {
+			return DistilleryRecipeRegistry.Distillery().getFluidInputAmount(TANK.getFluid(), getHeat());
+		}
+		return 0;
+	}
+	public FluidStack getOutputFluid() {
+		if(TANK.getFluid() != null) {
+			return DistilleryRecipeRegistry.Distillery().getFluidOutput(TANK.getFluid(), getHeat());
+		}
+		return null;
+	}
+	public int getOutputHeatCost() {
+		if(TANK.getFluid() != null) {
+			return DistilleryRecipeRegistry.Distillery().getHeatCost(TANK.getFluid(), getHeat());
+		}
+		return 0;
+	}
+	public int getOutputMinHeat() {
+		if(TANK.getFluid() != null) {
+			return DistilleryRecipeRegistry.Distillery().getHeatMin(TANK.getFluid(), getHeat());
+		}
+		return 0;
+	}
+	
 	@Override
 	public void readFromSyncNBT(NBTTagCompound nbt) {
 		super.readFromSyncNBT(nbt);
@@ -158,10 +217,9 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
 		if(!worldObj.isRemote) {
 			updateBlock();
 		}
-		if(resource.getFluid() == ModFluids.Mash) {
+		if(DistilleryRecipeRegistry.Distillery().getFluidOutput(resource, 10000000) != null){
 			return TANK.fill(resource, doFill);	
 		}
-		System.out.println("HI");
 		return 0;
 	}
 	@Override	

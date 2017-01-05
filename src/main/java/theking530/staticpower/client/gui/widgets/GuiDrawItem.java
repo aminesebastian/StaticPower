@@ -51,7 +51,7 @@ public class GuiDrawItem {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 
-        System.out.println(Minecraft.getMinecraft().currentScreen.height);
+       // System.out.println(Minecraft.getMinecraft().currentScreen.height);
         setupGuiTransform(x, y, zLevel, bakedmodel.isGui3d());
         bakedmodel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(bakedmodel, ItemCameraTransforms.TransformType.GUI, false);        
         GL11.glColor4d(1.0, 1.0, 1.0, 0.5);

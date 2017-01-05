@@ -13,9 +13,9 @@ import net.minecraft.util.ResourceLocation;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.client.gui.widgets.GuiDrawItem;
-import theking530.staticpower.client.gui.widgets.GuiInfoTab;
-import theking530.staticpower.client.gui.widgets.GuiRedstoneTab;
-import theking530.staticpower.client.gui.widgets.GuiSideConfigTab;
+import theking530.staticpower.client.gui.widgets.tabs.GuiInfoTab;
+import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
+import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.utils.GuiTextures;
 

@@ -1,5 +1,6 @@
 package theking530.staticpower.tileentity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -17,6 +18,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import theking530.staticpower.machines.machinecomponents.BaseComponent;
 import theking530.staticpower.utils.RedstoneModeList;
 import theking530.staticpower.utils.RedstoneModeList.RedstoneMode;
 import theking530.staticpower.utils.SideModeList;
@@ -47,6 +49,8 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 	public boolean PLACED = false;
 	
 	public boolean REQUIRES_UPDATE = false;
+	public ArrayList<BaseComponent> COMPONENTS;
+	public boolean WRENCHED = false;
 	
 	public BaseTileEntity() {
 
@@ -56,7 +60,9 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 		SLOTS_OUTPUT = new ItemStackHandler(outputSlots);
 		SLOTS_INTERNAL = new ItemStackHandler(internalSlots);
 		SLOTS_UPGRADES = new ItemStackHandler(3);
+		COMPONENTS = new ArrayList<BaseComponent>();
 	}
+
 	@Override
 	public void update() {
 		if(!PLACED) {
@@ -325,7 +331,6 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 			}
 		}
 	}
-
 
     public RedstoneMode getRedstoneMode() {
     	return RedstoneModeList.RedstoneMode.getModeFromInt(REDSTONE_MODE);
@@ -615,6 +620,7 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 		}
 	}
 	public void updateBlock() {
-			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2);
+		worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2);
 	}
+
 }

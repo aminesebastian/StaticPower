@@ -4,7 +4,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
@@ -12,6 +11,7 @@ import theking530.staticpower.assists.RegisterHelper;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.items.ModItems;
+import theking530.staticpower.world.plants.ModPlants;
 
 public class InfuserRecipes {
 
@@ -28,7 +28,7 @@ public class InfuserRecipes {
 		RegisterHelper.registerInfuserRecipe(new ItemStack(Items.IRON_CHESTPLATE), new ItemStack(ModItems.StaticChestplate), new FluidStack(ModFluids.StaticFluid, 2000));
 		RegisterHelper.registerInfuserRecipe(new ItemStack(Items.IRON_LEGGINGS), new ItemStack(ModItems.StaticLeggings), new FluidStack(ModFluids.StaticFluid, 1750));
 		RegisterHelper.registerInfuserRecipe(new ItemStack(Items.IRON_BOOTS), new ItemStack(ModItems.StaticBoots), new FluidStack(ModFluids.StaticFluid, 1000));
-		RegisterHelper.registerInfuserRecipe(new ItemStack(ModItems.StaticCrop), new ItemStack(ModItems.EnergizedCrop), new FluidStack(ModFluids.StaticFluid, 10000));
+		RegisterHelper.registerInfuserRecipe(new ItemStack(ModPlants.StaticCrop), new ItemStack(ModPlants.EnergizedCrop), new FluidStack(ModFluids.StaticFluid, 10000));
 		RegisterHelper.registerInfuserRecipe(new ItemStack(Item.getItemFromBlock(Blocks.DIRT)), new ItemStack(Item.getItemFromBlock(ModBlocks.StaticGrass)), new FluidStack(ModFluids.StaticFluid, 500));
 		RegisterHelper.registerInfuserRecipe(new ItemStack(Item.getItemFromBlock(Blocks.CHEST)), new ItemStack(Item.getItemFromBlock(ModBlocks.StaticChest)), new FluidStack(ModFluids.StaticFluid, 2000));
 		
@@ -44,7 +44,7 @@ public class InfuserRecipes {
 		RegisterHelper.registerInfuserRecipe(new ItemStack(ModItems.StaticChestplate), new ItemStack(ModItems.EnergizedChestplate), new FluidStack(ModFluids.EnergizedFluid, 2000));
 		RegisterHelper.registerInfuserRecipe(new ItemStack(ModItems.StaticLeggings), new ItemStack(ModItems.EnergizedLeggings), new FluidStack(ModFluids.EnergizedFluid, 1750));
 		RegisterHelper.registerInfuserRecipe(new ItemStack(ModItems.StaticBoots), new ItemStack(ModItems.EnergizedBoots), new FluidStack(ModFluids.EnergizedFluid, 1000));
-		RegisterHelper.registerInfuserRecipe(new ItemStack(ModItems.EnergizedCrop), new ItemStack(ModItems.LumumCrop), new FluidStack(ModFluids.EnergizedFluid, 20000));	
+		RegisterHelper.registerInfuserRecipe(new ItemStack(ModPlants.EnergizedCrop), new ItemStack(ModPlants.LumumCrop), new FluidStack(ModFluids.EnergizedFluid, 20000));	
 		RegisterHelper.registerInfuserRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.StaticSolarPanel)), new ItemStack(Item.getItemFromBlock(ModBlocks.EnergizedSolarPanel)), new FluidStack(ModFluids.EnergizedFluid, 750));
 		RegisterHelper.registerInfuserRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.StaticChest)), new ItemStack(Item.getItemFromBlock(ModBlocks.EnergizedChest)), new FluidStack(ModFluids.EnergizedFluid, 2000));
 		

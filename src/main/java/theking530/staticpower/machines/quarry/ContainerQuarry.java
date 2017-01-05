@@ -24,29 +24,33 @@ public class ContainerQuarry extends Container {
 		QUARRY = teQuarry;
 		
 		//Filter
-		this.addSlotToContainer(new SlotFilter(teQuarry.SLOTS_INTERNAL, 0, 8, 71) {
+		this.addSlotToContainer(new SlotFilter(teQuarry.SLOTS_INTERNAL, 0, 27, 71) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return itemStack.getItem() instanceof ItemFilter;
-		        }
+		    }
 		});	
 		
+		//Fluid Slots
+		this.addSlotToContainer(new SlotItemHandler(teQuarry.SLOTS_INPUT, 0, 7, 17));
+		this.addSlotToContainer(new SlotItemHandler(teQuarry.SLOTS_OUTPUT, 0, 7, 47));
+		
 		//Upgrades
-		this.addSlotToContainer(new SlotItemHandler(teQuarry.SLOTS_UPGRADES, 0, 152, 17));
-		this.addSlotToContainer(new SlotItemHandler(teQuarry.SLOTS_UPGRADES, 1, 152, 37));
-		this.addSlotToContainer(new SlotItemHandler(teQuarry.SLOTS_UPGRADES, 2, 152, 57));
+		this.addSlotToContainer(new SlotItemHandler(teQuarry.SLOTS_UPGRADES, 0, 171, 17));
+		this.addSlotToContainer(new SlotItemHandler(teQuarry.SLOTS_UPGRADES, 1, 171, 37));
+		this.addSlotToContainer(new SlotItemHandler(teQuarry.SLOTS_UPGRADES, 2, 171, 57));
 			
 		//Inventory
-				for(int i = 0; i < 3; i++) {
-					for(int j = 0; j < 9; j++) {
-						this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 92 + i * 18));
-					}
-				}
-				
-				//ActionBar
-				for(int i = 0; i < 9; i++) {
-					this.addSlotToContainer(new Slot(invPlayer, i, 8+ i * 18, 150));
+		for(int i = 0; i < 3; i++) {
+			for(int j = 0; j < 9; j++) {
+				this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 27 + j * 18, 92 + i * 18));
 			}
+		}
+		
+		//ActionBar
+		for(int i = 0; i < 9; i++) {
+			this.addSlotToContainer(new Slot(invPlayer, i, 27 + i * 18, 150));
+		}
 	}
 	
 	//Shift Click Functionality

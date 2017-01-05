@@ -5,7 +5,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import theking530.staticpower.handlers.crafting.registries.CondenserRecipeRegistry;
+import theking530.staticpower.handlers.crafting.registries.DistilleryRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.FermenterRecipeRegistry;
+import theking530.staticpower.handlers.crafting.registries.FluidGeneratorRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.FusionRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.GrinderRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.InfuserRecipeRegistry;
@@ -42,5 +45,15 @@ public class RegisterHelper
 		}
 		public static void registerSolderingRecipe(ItemStack outputStack, Object ... inputParams) {
 			SolderingRecipeRegistry.Soldering().addRecipe(outputStack, inputParams);
+		}
+		
+		public static void registerFluidGeneratorRecipe(FluidStack inputFluid, int powerPerTick) {
+			FluidGeneratorRecipeRegistry.Generating().addRecipe(inputFluid, powerPerTick);
+		}
+		public static void registerCondenserRecipe(FluidStack fluidInput, FluidStack fluidOutput, int condensingTime) {
+			CondenserRecipeRegistry.Condensing().addRecipe(fluidInput, fluidOutput, condensingTime);
+		}
+		public static void registerDistilleryRecipe(FluidStack fluidInput, FluidStack fluidOutput, int heatMin, int heatCost) {
+			DistilleryRecipeRegistry.Distillery().addRecipe(fluidInput, fluidOutput, heatMin, heatCost);
 		}
 }

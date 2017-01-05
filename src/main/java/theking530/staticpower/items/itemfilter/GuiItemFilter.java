@@ -10,7 +10,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import theking530.staticpower.client.gui.widgets.GuiInfoTab;
+import theking530.staticpower.client.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.utils.GuiTextures;
 

@@ -8,9 +8,9 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import theking530.staticpower.blocks.ModBlocks;
-import theking530.staticpower.client.ItemRenderRegistry;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.items.itemfilter.ItemFilter;
+import theking530.staticpower.world.plants.ModPlants;
 
 public class ShaplessRecipes {
 
@@ -19,7 +19,7 @@ public class ShaplessRecipes {
 		
 		//Static Book --------------------------------------------------------------------------------------------------
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.StaticBook), new Object[]{
-				new ItemStack(ModItems.StaticSeeds), new ItemStack(Items.BOOK)});
+				new ItemStack(ModPlants.StaticSeeds), new ItemStack(Items.BOOK)});
 		
 		//Infusion Blends
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.EnergizedInfusionBlend), new Object[]{
@@ -82,12 +82,12 @@ public class ShaplessRecipes {
 			new ItemStack(ModBlocks.BlockRuby)});
 		
 		//Seeds --------------------------------------------------------------------------------------------------
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.StaticSeeds), new Object[]{
-			new ItemStack(ModItems.StaticCrop)});
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.EnergizedSeeds), new Object[]{
-			new ItemStack(ModItems.EnergizedCrop)});
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.LumumSeeds), new Object[]{
-			new ItemStack(ModItems.LumumCrop)});
+		GameRegistry.addShapelessRecipe(new ItemStack(ModPlants.StaticSeeds), new Object[]{
+			new ItemStack(ModPlants.StaticCrop)});
+		GameRegistry.addShapelessRecipe(new ItemStack(ModPlants.EnergizedSeeds), new Object[]{
+			new ItemStack(ModPlants.EnergizedCrop)});
+		GameRegistry.addShapelessRecipe(new ItemStack(ModPlants.LumumSeeds), new Object[]{
+			new ItemStack(ModPlants.LumumCrop)});
 		
 		//Upgrade Plates ---------------------------------------------------------------------------------------------------
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.BasicUpgradePlate), new Object[]{

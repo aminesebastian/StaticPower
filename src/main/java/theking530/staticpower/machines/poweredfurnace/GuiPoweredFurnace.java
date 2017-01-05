@@ -17,10 +17,10 @@ import org.lwjgl.opengl.GL11;
 
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.blocks.ModBlocks;
-import theking530.staticpower.client.gui.widgets.GuiPowerBar;
-import theking530.staticpower.client.gui.widgets.GuiPowerBarFromEnergyStorage;
-import theking530.staticpower.client.gui.widgets.GuiRedstoneTab;
-import theking530.staticpower.client.gui.widgets.GuiSideConfigTab;
+import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
+import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
+import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBar;
+import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.utils.GuiTextures;
 
 public class GuiPoweredFurnace extends GuiContainer{
@@ -56,7 +56,7 @@ public class GuiPoweredFurnace extends GuiContainer{
     	super.drawScreen(par1, par2, par3);
     	int var1 = (this.width - this.xSize) / 2;
         int var2 = (this.height - this.ySize) / 2;  
-        if(par1 >= 8 + var1 && par2 >= 8 + var2 && par1 <= 24 + var1 && par2 <= 68 + var2) {
+        if(par1 >= 8 + var1 && par2 >= 8 + var2 && par1 <= 24 + var1 && par2 <= 62 + var2) {
         	drawHoveringText(POWER_BAR.drawText(), par1, par2, fontRendererObj);  
         }
 	}	
@@ -65,7 +65,7 @@ public class GuiPoweredFurnace extends GuiContainer{
 		String name = I18n.format(this.Smelter.getName());
 	
 		this.fontRendererObj.drawString(name, this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2, 6,4210752 );
-		this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 3, 4210752);
+		this.fontRendererObj.drawString(I18n.format("container.inventory"), 26, this.ySize - 96 + 3, 4210752);
 	}
 	
 	@Override
@@ -85,7 +85,7 @@ public class GuiPoweredFurnace extends GuiContainer{
 			drawTexturedModalRect(guiLeft + 51, guiTop + 50, 176, 55, 14, 14);	
 		}	
 		//Energy Bar
-		POWER_BAR.drawPowerBar(guiLeft + 8, guiTop + 68, 16, 60, 1);
+		POWER_BAR.drawPowerBar(guiLeft + 8, guiTop + 62, 16, 54, 1);
 	}
 	
 	@Override

@@ -5,15 +5,19 @@ import java.io.IOException;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.staticpower.blocks.ModBlocks;
-import theking530.staticpower.client.gui.widgets.GuiFluidBarFromTank;
-import theking530.staticpower.client.gui.widgets.GuiPowerBarFromEnergyStorage;
-import theking530.staticpower.client.gui.widgets.GuiRedstoneTab;
-import theking530.staticpower.client.gui.widgets.GuiSideConfigTab;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import theking530.staticpower.client.gui.widgets.buttons.ArrowButton;
+import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
+import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
+import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarFromTank;
+import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
+import theking530.staticpower.handlers.PacketHandler;
+import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent.FluidContainerInteractionMode;
 import theking530.staticpower.utils.GuiTextures;
 
 public class GuiFluidGenerator extends GuiContainer{
@@ -22,8 +26,8 @@ public class GuiFluidGenerator extends GuiContainer{
 	public GuiRedstoneTab REDSTONE_TAB;
 	private GuiPowerBarFromEnergyStorage POWERBAR;
 	private GuiFluidBarFromTank FLUIDBAR;
-	
 	private TileEntityFluidGenerator fGenerator;
+	
 	public GuiFluidGenerator(InventoryPlayer invPlayer, TileEntityFluidGenerator teFluidGenerator) {
 		super(new ContainerFluidGenerator(invPlayer, teFluidGenerator));
 		fGenerator = teFluidGenerator;
@@ -35,6 +39,35 @@ public class GuiFluidGenerator extends GuiContainer{
 		this.ySize = 166;
 		
 	}
+	@Override
+	public void initGui() {
+		super.initGui();
+	 	int j = (width - xSize) / 2;
+	    int k = (height - ySize) / 2;
+
+	    this.buttonList.add(new ArrowButton(1, j+7, k+35, 16, 10, "<"));
+	    
+	    if(fGenerator.DRAIN_COMPONENT.getMode() == FluidContainerInteractionMode.FillFromContainer) {
+	    	buttonList.get(0).displayString = ">";
+	    }else{
+	    	buttonList.get(0).displayString = "<";
+	    }
+	}
+	@Override
+	protected void actionPerformed(GuiButton B) {
+		if(B.id == 1) {
+			IMessage msg = new PacketFluidGeneratorContainerMode(fGenerator.DRAIN_COMPONENT.getInverseMode(), fGenerator.getPos());
+			PacketHandler.net.sendToServer(msg);
+			fGenerator.DRAIN_COMPONENT.setMode(fGenerator.DRAIN_COMPONENT.getInverseMode());
+			
+		    if(fGenerator.DRAIN_COMPONENT.getMode() == FluidContainerInteractionMode.FillFromContainer) {
+		    	buttonList.get(0).displayString = ">";
+		    }else{
+		    	buttonList.get(0).displayString = "<";
+		    }
+		}
+	}	
+	
 	public void updateScreen() {
 		int j = (width - xSize) / 2;
 		int k = (height - ySize) / 2;
