@@ -139,10 +139,10 @@ public class ModFluids {
 		return f;
 	}
 	public static ResourceLocation getStill(String fluidName) {
-			return new ResourceLocation(Reference.MODID + ":blocks/" + fluidName + "Still");
+			return new ResourceLocation(Reference.MODID + ":blocks/fluids/" + fluidName + "Still");
 	}
 	public static ResourceLocation getFlowing(String fluidName) {
-			return new ResourceLocation(Reference.MODID  + ":blocks/" + fluidName + "Flow");
+			return new ResourceLocation(Reference.MODID  + ":blocks/fluids/" + fluidName + "Flow");
 	}
 	private static void registerBucket(Fluid fluid) {
 		FluidRegistry.addBucketForFluid(fluid);

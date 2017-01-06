@@ -46,10 +46,10 @@ public class TileEntityPoweredFurnace extends BaseMachine {
 	}
 	public void process() {
 		if(!worldObj.isRemote) {
-			if(!isProcessing() && !isMoving() && canProcess(getInputStack(0)) && SLOTS_INTERNAL.getStackInSlot(0) == null) {
+			if(!isProcessing() && !isMoving() && canProcess(getInputStack(0))) {
 				MOVE_TIMER++;
 			}
-			if(!isProcessing() && isMoving() && canProcess(getInputStack(0)) && SLOTS_INTERNAL.getStackInSlot(0) == null) {
+			if(!isProcessing() && isMoving() && canProcess(getInputStack(0))) {
 				if(MOVE_TIMER < MOVE_SPEED) {
 					MOVE_TIMER++;
 				}else{
@@ -64,8 +64,11 @@ public class TileEntityPoweredFurnace extends BaseMachine {
 					PROCESSING_TIMER++;
 				}else{
 					PROCESSING_TIMER=0;
+					updateBlock();
 					if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, 0, getResult(getInternalStack(0)))) {
 						//System.out.println(getResult(getInternalStack(0)));
+						InventoryUtilities.insertItemIntoInventory(SLOTS_OUTPUT, getResult(getInternalStack(0)), 0, 0);
+						//SLOTS_OUTPUT.insertItem(0, getResult(SLOTS_INTERNAL.getStackInSlot(0).copy()), false);
 						setInternalStack(0, null);
 						MOVE_TIMER = 0;
 					}

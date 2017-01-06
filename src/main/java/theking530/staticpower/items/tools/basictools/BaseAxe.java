@@ -17,6 +17,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.items.EquipmentMaterial;
 import theking530.staticpower.utils.EnumTextFormatting;
 
 
@@ -25,27 +26,27 @@ public class BaseAxe extends ItemTool {
     private static final Set<Block> EFFECTIVE_ON = Sets.newHashSet(new Block[] {Blocks.PLANKS, Blocks.BOOKSHELF, Blocks.LOG, Blocks.LOG2, Blocks.CHEST, Blocks.PUMPKIN, Blocks.LIT_PUMPKIN, Blocks.MELON_BLOCK, Blocks.LADDER, Blocks.WOODEN_BUTTON, Blocks.WOODEN_PRESSURE_PLATE});
 
 	public String NAME = "";
-	public ToolMaterial MATERIAL;
+	public EquipmentMaterial MATERIAL;
 	
-	public BaseAxe(ToolMaterial material, String unlocalizedName) {
-        super(material, EFFECTIVE_ON);
+	public BaseAxe(EquipmentMaterial material, String unlocalizedName) {
+        super(material.getToolMaterial(), EFFECTIVE_ON);
 		NAME= unlocalizedName;
 		setUnlocalizedName(unlocalizedName);
 		setRegistryName(unlocalizedName);
 		setCreativeTab(StaticPower.StaticPower);
 		
 		MATERIAL = material;
-        this.damageVsEntity = material.getDamageVsEntity();
+        this.damageVsEntity = material.getToolMaterial().getDamageVsEntity();
         this.attackSpeed = -3.0F;
 	}
 	
 	@Override  
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean par4) {
     	if(showHiddenTooltips()) {
-    		String tempLevel = "Mining Level: " +  MATERIAL.getHarvestLevel();
-    		String tempSpeed = "Speed: " +  MATERIAL.getEfficiencyOnProperMaterial();
-    		String tempDamage = "Damage: " + (Math.round(MATERIAL.getDamageVsEntity()) + 1); 
-    		String tempDurability = "Durability: " + (MATERIAL.getMaxUses()-itemstack.getMetadata()) + "/" + MATERIAL.getMaxUses();
+    		String tempLevel = "Mining Level: " +  MATERIAL.getToolMaterial().getHarvestLevel();
+    		String tempSpeed = "Speed: " +  MATERIAL.getToolMaterial().getEfficiencyOnProperMaterial();
+    		String tempDamage = "Damage: " + (Math.round(MATERIAL.getToolMaterial().getDamageVsEntity()) + 1); 
+    		String tempDurability = "Durability: " + (MATERIAL.getToolMaterial().getMaxUses()-itemstack.getMetadata()) + "/" + MATERIAL.getToolMaterial().getMaxUses();
     		
     		list.add(tempLevel);
     		list.add(tempSpeed);

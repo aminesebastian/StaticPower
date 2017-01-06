@@ -57,21 +57,32 @@ public class GuiFluidBar {
 		    
 		    GlStateManager.enableBlend();    
 
-
+		    int count = (int) Math.ceil(height/16);
+		    float segmentCapacity = capacity / ((float)height/16);
+		    int finalSegmentHeight = (int) (height - ((count-1)*16));
+		    int segmentsUsed = (int) ((renderAmount+16)/16);
+		    		
 	        double minU = icon.getMinU();
 	        double maxU = icon.getMaxU();
 	        double minV = icon.getMinV();
 	        double maxV = icon.getMaxV();
 	        double diffV = maxV - minV;
-	        Tessellator tessellator = Tessellator.getInstance();
-	        VertexBuffer tes = tessellator.getBuffer();
-	        tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			//Minecraft.getMinecraft().getTextureManager().bindTexture(powerBar);
-			tes.pos(x + width, y, zLevel).tex(maxU,minV).endVertex();
-			tes.pos(x + width, y - renderAmount, zLevel).tex(maxU, minV+(diffV*ratio)).endVertex();
-			tes.pos(x, y - renderAmount, zLevel).tex(minU, minV+(diffV*ratio)).endVertex();
-			tes.pos(x, y, zLevel).tex(minU,minV).endVertex();	
-	        tessellator.draw();
+	        
+
+	        for(int i=0; i<segmentsUsed; i++) {
+	        	float segmentRatio = (amount - (segmentCapacity*i))/segmentCapacity;
+			    double yMin = (i*16);
+			    double yMax = (i+(segmentRatio))*16;
+
+		        Tessellator tessellator = Tessellator.getInstance();
+		        VertexBuffer tes = tessellator.getBuffer();
+		        tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+				tes.pos(x + width, y-yMin , zLevel).tex(maxU,minV).endVertex();
+				tes.pos(x + width, y-yMax, zLevel).tex(maxU, minV+(diffV*segmentRatio)).endVertex();
+				tes.pos(x, y-yMax, zLevel).tex(minU, minV+(diffV*segmentRatio)).endVertex();
+				tes.pos(x, y-yMin , zLevel).tex(minU,minV).endVertex();	
+		        tessellator.draw();
+	        }
 
 		    GlStateManager.disableBlend();
 	}

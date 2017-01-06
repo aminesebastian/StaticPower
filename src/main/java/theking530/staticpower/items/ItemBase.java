@@ -20,5 +20,4 @@ public class ItemBase extends Item implements EnumTextFormatting {
 	public boolean showHiddenTooltips() {
 		return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
 	}
-
 }

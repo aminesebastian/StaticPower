@@ -3,21 +3,12 @@ package theking530.staticpower.items;
 import static theking530.staticpower.assists.RegisterHelper.registerItem;
 
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import theking530.staticpower.assists.RegisterHelper;
 import theking530.staticpower.assists.Tier;
-import theking530.staticpower.blocks.ModBlocks;
-import theking530.staticpower.items.armor.EnergizedArmor;
-import theking530.staticpower.items.armor.LumumArmor;
-import theking530.staticpower.items.armor.StaticArmor;
 import theking530.staticpower.items.book.StaticPowerBook;
 import theking530.staticpower.items.containers.BaseBattery;
 import theking530.staticpower.items.containers.BaseFluidCapsule;
@@ -39,13 +30,8 @@ import theking530.staticpower.items.upgrades.BaseQuarryingUpgrade;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.items.upgrades.BaseSpeedUpgrade;
 import theking530.staticpower.items.upgrades.BaseTankUpgrade;
-import theking530.staticpower.world.plants.BaseCrop;
 
 public class ModItems {
-	
-	public static ArmorMaterial StaticMaterial = EnumHelper.addArmorMaterial("StaticMaterial", null, 28, new int[] {3, 6, 6, 3}, 25, null, 0);
-	public static ArmorMaterial EnergizedMaterial = EnumHelper.addArmorMaterial("EnergizedMaterial", null, 35, new int[] {5, 10, 8, 7}, 35, null, 0);
-	public static ArmorMaterial LumumMaterial = EnumHelper.addArmorMaterial("LumumMaterial", null, 35, new int[] {8, 13, 11, 10}, 35, null, 0);
 	
 	public static Item BaseFluidCapsule;
 	public static Item StaticFluidCapsule;
@@ -178,22 +164,7 @@ public class ModItems {
 	public static Item LumumNugget;
 	public static Item IronNugget;
 	
-	public static Item StaticBelt;
-	public static Item EnergizedBelt;
-	public static Item StaticRing;
-	public static Item EnergizedRing;
-	public static Item StaticHelmet;
-	public static Item StaticChestplate;
-	public static Item StaticLeggings;
-	public static Item StaticBoots;
-	public static Item EnergizedHelmet;
-	public static Item EnergizedChestplate;
-	public static Item EnergizedLeggings;
-	public static Item EnergizedBoots;
-	public static Item LumumHelmet;
-	public static Item LumumChestplate;
-	public static Item LumumLeggings;
-	public static Item LumumBoots;
+
 	
 	public static Block StaticCropPlant;
 	public static Block EnergizedCropPlant;
@@ -250,32 +221,6 @@ public class ModItems {
 		IOPort = new ItemBase("IOPort");
 		RegisterHelper.registerItem(IOPort);
 		
-		StaticHelmet = new StaticArmor("StaticHelmet", StaticMaterial, "StaticHelmet", EntityEquipmentSlot.HEAD).setUnlocalizedName("StaticHelmet");
-		RegisterHelper.registerItem(StaticHelmet);	
-		StaticChestplate = new StaticArmor("StaticChestplate", StaticMaterial, "StaticChestplate", EntityEquipmentSlot.CHEST).setUnlocalizedName("StaticChestplate");
-		RegisterHelper.registerItem(StaticChestplate);		
-		StaticLeggings = new StaticArmor("StaticLeggings", StaticMaterial, "StaticLeggings", EntityEquipmentSlot.LEGS).setUnlocalizedName("StaticLeggings");
-		RegisterHelper.registerItem(StaticLeggings);		
-		StaticBoots = new StaticArmor("StaticBoots", StaticMaterial, "StaticBoots", EntityEquipmentSlot.FEET).setUnlocalizedName("StaticBoots");
-		RegisterHelper.registerItem(StaticBoots);
-		
-		EnergizedHelmet = new EnergizedArmor("EnergizedHelmet", EnergizedMaterial, "EnergizedHelmet", EntityEquipmentSlot.HEAD).setUnlocalizedName("EnergizedHelmet");
-		RegisterHelper.registerItem(EnergizedHelmet);		
-		EnergizedChestplate = new EnergizedArmor("EnergizedChestplate", EnergizedMaterial, "EnergizedChestplate", EntityEquipmentSlot.CHEST).setUnlocalizedName("EnergizedChestplate");
-		RegisterHelper.registerItem(EnergizedChestplate);		
-		EnergizedLeggings = new EnergizedArmor("EnergizedLeggings", EnergizedMaterial, "EnergizedLeggings", EntityEquipmentSlot.LEGS).setUnlocalizedName("EnergizedLeggings");
-		RegisterHelper.registerItem(EnergizedLeggings);		
-		EnergizedBoots = new EnergizedArmor("EnergizedBoots", EnergizedMaterial, "EnergizedBoots", EntityEquipmentSlot.FEET).setUnlocalizedName("EnergizedBoots");
-		RegisterHelper.registerItem(EnergizedBoots);
-		
-		LumumHelmet = new LumumArmor("LumumHelmet", LumumMaterial, "LumumHelmet", EntityEquipmentSlot.HEAD).setUnlocalizedName("LumumHelmet");
-		RegisterHelper.registerItem(LumumHelmet);		
-		LumumChestplate = new LumumArmor("LumumChestplate", LumumMaterial, "LumumChestplate", EntityEquipmentSlot.CHEST).setUnlocalizedName("LumumChestplate");
-		RegisterHelper.registerItem(LumumChestplate);		
-		LumumLeggings = new LumumArmor("LumumLeggings", LumumMaterial, "LumumLeggings", EntityEquipmentSlot.LEGS).setUnlocalizedName("LumumLeggings");
-		RegisterHelper.registerItem(LumumLeggings);		
-		LumumBoots = new LumumArmor("LumumBoots", LumumMaterial, "LumumBoots", EntityEquipmentSlot.FEET).setUnlocalizedName("LumumBoots");
-		RegisterHelper.registerItem(LumumBoots);
 		
 		BasicCircuit = new ItemBase("BasicCircuit");
 		RegisterHelper.registerItem(BasicCircuit);

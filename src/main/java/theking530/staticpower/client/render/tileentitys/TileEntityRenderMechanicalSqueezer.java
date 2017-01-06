@@ -102,7 +102,7 @@ public class TileEntityRenderMechanicalSqueezer extends TileEntitySpecialRendere
 		TileEntityMechanicalSqueezer squeezer = (TileEntityMechanicalSqueezer)tileentity;
 		float height = squeezer.getFluidLevelScaled(1);	
 		float progress = ((float)squeezer.PROCESSING_TIMER/(float)squeezer.PROCESSING_TIME)*0.5f;
-		RenderUtil.drawFluidInWorld(fluidStack, 7*texel, 1-4*texel-progress, 1.0001F, 2*texel, progress);
-		RenderUtil.drawFluidInWorld(fluidStack, 4*texel, 3.5F*texel, 1.0001F, 8*texel, (height)*.18F);
+		RenderUtil.drawFluidInWorld(fluidStack, fluidStack.amount, 7*texel, 1-4*texel-progress, 1.0001F, 2*texel, progress);
+		RenderUtil.drawFluidInWorld(fluidStack, squeezer.TANK.getCapacity(), 4*texel, 3.5F*texel, 1.0001F, 8*texel, texel*2.5f);
 	}
 }

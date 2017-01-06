@@ -1,7 +1,7 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "staticpower:items/LumumLeggings"
+		"layer0": "staticpower:items/armour/LumumLeggings"
 	},
 	"display": {
 		"thirdperson": {

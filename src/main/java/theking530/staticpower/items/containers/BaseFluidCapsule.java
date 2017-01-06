@@ -58,9 +58,19 @@ public class BaseFluidCapsule extends ItemBase { // implements IItemColor  {
     public String getItemStackDisplayName(ItemStack stack) {
     	FluidHandlerItemStack tempHandler = (FluidHandlerItemStack) stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
     	if(tempHandler.getFluid() != null) {
-    		return tempHandler.getFluid().getLocalizedName() + super.getItemStackDisplayName(stack);
+    		return tempHandler.getFluid().getLocalizedName() + " " + super.getItemStackDisplayName(stack);
     	}else{
-    		return super.getItemStackDisplayName(stack);
+    		String tempString;
+    		if(CAPACITY == 2000) {
+    			tempString = "";
+    		}else if(CAPACITY == 4000) {
+    			tempString = "Static ";
+    		}else if(CAPACITY == 8000) {
+    			tempString = "Energized ";
+    		}else{
+    			tempString = "Lumum ";
+    		}
+    		return tempString + super.getItemStackDisplayName(stack);
     	}
     }
     @Override

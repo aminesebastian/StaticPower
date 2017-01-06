@@ -43,7 +43,9 @@ import theking530.staticpower.handlers.crafting.recipes.SolderingRecipes;
 import theking530.staticpower.handlers.crafting.recipes.SqueezerRecipes;
 import theking530.staticpower.handlers.crafting.recipes.ToolRecipes;
 import theking530.staticpower.integration.TIC.TinkersIMC;
+import theking530.staticpower.items.ModMaterials;
 import theking530.staticpower.items.ModItems;
+import theking530.staticpower.items.armor.ModArmor;
 import theking530.staticpower.items.tools.basictools.ModTools;
 import theking530.staticpower.machines.basicfarmer.TileEntityBasicFarmer;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityBasicBattery;
@@ -114,9 +116,11 @@ public class StaticPower {
 		PacketHandler.initPackets();
 		ModFluids.init();
 		ModItems.init();
+		ModMaterials.init();
 		ModBlocks.init();
 		ModTools.init();
 		ModPlants.init();
+		ModArmor.init();
 		
 		if(preEvent.getSide() == Side.CLIENT) {
 		    ModFluids.initBlockRendering();

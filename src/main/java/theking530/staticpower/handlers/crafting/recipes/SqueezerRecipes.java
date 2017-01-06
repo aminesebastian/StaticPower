@@ -13,9 +13,9 @@ import theking530.staticpower.world.plants.ModPlants;
 public class SqueezerRecipes {
 	
 	public static void registerSqueezingRecipes() {
-		RegisterHelper.registerSqueezerRecipe(new ItemStack(ModPlants.StaticCrop), new ItemStack(ModPlants.DepletedCrop), new FluidStack(ModFluids.StaticFluid, 100));
-		RegisterHelper.registerSqueezerRecipe(new ItemStack(ModPlants.EnergizedCrop), new ItemStack(ModPlants.DepletedCrop), new FluidStack(ModFluids.EnergizedFluid, 100));
-		RegisterHelper.registerSqueezerRecipe(new ItemStack(ModPlants.LumumCrop), new ItemStack(ModPlants.DepletedCrop), new FluidStack(ModFluids.LumumFluid, 100));
+		RegisterHelper.registerSqueezerRecipe(new ItemStack(ModPlants.StaticCrop), new ItemStack(ModPlants.DepletedCrop), new FluidStack(ModFluids.StaticFluid, 200));
+		RegisterHelper.registerSqueezerRecipe(new ItemStack(ModPlants.EnergizedCrop), new ItemStack(ModPlants.DepletedCrop), new FluidStack(ModFluids.EnergizedFluid, 200));
+		RegisterHelper.registerSqueezerRecipe(new ItemStack(ModPlants.LumumCrop), new ItemStack(ModPlants.DepletedCrop), new FluidStack(ModFluids.LumumFluid, 200));
 		
 		RegisterHelper.registerSqueezerRecipe(new ItemStack(ModPlants.StaticSeeds), new ItemStack(Items.WHEAT_SEEDS), new FluidStack(ModFluids.StaticFluid, 25));
 		RegisterHelper.registerSqueezerRecipe(new ItemStack(ModPlants.EnergizedSeeds), new ItemStack(Items.WHEAT_SEEDS), new FluidStack(ModFluids.EnergizedFluid, 25));

@@ -9,32 +9,75 @@ import net.minecraftforge.client.model.obj.OBJLoader;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.items.ModItems;
+import theking530.staticpower.items.armor.ModArmor;
 import theking530.staticpower.items.tools.basictools.ModTools;
 import theking530.staticpower.world.plants.ModPlants;
 
 public class ItemRenderRegistry {
 
 	public static void initItemRenderers() {
-		ItemRenderRegistry.registerItem(ModItems.StaticHelmet);
-		ItemRenderRegistry.registerItem(ModItems.StaticChestplate);
-		ItemRenderRegistry.registerItem(ModItems.StaticLeggings);
-		ItemRenderRegistry.registerItem(ModItems.StaticBoots);
-		ItemRenderRegistry.registerItem(ModItems.EnergizedHelmet);
-		ItemRenderRegistry.registerItem(ModItems.EnergizedChestplate);
-		ItemRenderRegistry.registerItem(ModItems.EnergizedLeggings);
-		ItemRenderRegistry.registerItem(ModItems.EnergizedBoots);
-		ItemRenderRegistry.registerItem(ModItems.LumumHelmet);
-		ItemRenderRegistry.registerItem(ModItems.LumumChestplate);
-		ItemRenderRegistry.registerItem(ModItems.LumumLeggings);
-		ItemRenderRegistry.registerItem(ModItems.LumumBoots);
+		ItemRenderRegistry.registerItem(ModArmor.BaseShield);
+		
+		ItemRenderRegistry.registerItem(ModArmor.StaticHelmet);
+		ItemRenderRegistry.registerItem(ModArmor.StaticChestplate);
+		ItemRenderRegistry.registerItem(ModArmor.StaticLeggings);
+		ItemRenderRegistry.registerItem(ModArmor.StaticBoots);
+		
+		ItemRenderRegistry.registerItem(ModArmor.EnergizedHelmet);
+		ItemRenderRegistry.registerItem(ModArmor.EnergizedChestplate);
+		ItemRenderRegistry.registerItem(ModArmor.EnergizedLeggings);
+		ItemRenderRegistry.registerItem(ModArmor.EnergizedBoots);
+		
+		ItemRenderRegistry.registerItem(ModArmor.LumumHelmet);
+		ItemRenderRegistry.registerItem(ModArmor.LumumChestplate);
+		ItemRenderRegistry.registerItem(ModArmor.LumumLeggings);
+		ItemRenderRegistry.registerItem(ModArmor.LumumBoots);
+		
+		ItemRenderRegistry.registerItem(ModArmor.CopperHelmet);
+		ItemRenderRegistry.registerItem(ModArmor.CopperChestplate);
+		ItemRenderRegistry.registerItem(ModArmor.CopperLeggings);
+		ItemRenderRegistry.registerItem(ModArmor.CopperBoots);
+		
+		ItemRenderRegistry.registerItem(ModArmor.TinHelmet);
+		ItemRenderRegistry.registerItem(ModArmor.TinChestplate);
+		ItemRenderRegistry.registerItem(ModArmor.TinLeggings);
+		ItemRenderRegistry.registerItem(ModArmor.TinBoots);
+		
+		ItemRenderRegistry.registerItem(ModArmor.LeadHelmet);
+		ItemRenderRegistry.registerItem(ModArmor.LeadChestplate);
+		ItemRenderRegistry.registerItem(ModArmor.LeadLeggings);
+		ItemRenderRegistry.registerItem(ModArmor.LeadBoots);
+		
+		ItemRenderRegistry.registerItem(ModArmor.SilverHelmet);
+		ItemRenderRegistry.registerItem(ModArmor.SilverChestplate);
+		ItemRenderRegistry.registerItem(ModArmor.SilverLeggings);
+		ItemRenderRegistry.registerItem(ModArmor.SilverBoots);
+		
+		ItemRenderRegistry.registerItem(ModArmor.PlatinumHelmet);
+		ItemRenderRegistry.registerItem(ModArmor.PlatinumChestplate);
+		ItemRenderRegistry.registerItem(ModArmor.PlatinumLeggings);
+		ItemRenderRegistry.registerItem(ModArmor.PlatinumBoots);
+		
+		ItemRenderRegistry.registerItem(ModArmor.AluminiumHelmet);
+		ItemRenderRegistry.registerItem(ModArmor.AluminiumChestplate);
+		ItemRenderRegistry.registerItem(ModArmor.AluminiumLeggings);
+		ItemRenderRegistry.registerItem(ModArmor.AluminiumBoots);
+		
+		ItemRenderRegistry.registerItem(ModArmor.SapphireHelmet);
+		ItemRenderRegistry.registerItem(ModArmor.SapphireChestplate);
+		ItemRenderRegistry.registerItem(ModArmor.SapphireLeggings);
+		ItemRenderRegistry.registerItem(ModArmor.SapphireBoots);
+		
+		ItemRenderRegistry.registerItem(ModArmor.RubyHelmet);
+		ItemRenderRegistry.registerItem(ModArmor.RubyChestplate);
+		ItemRenderRegistry.registerItem(ModArmor.RubyLeggings);
+		ItemRenderRegistry.registerItem(ModArmor.RubyBoots);
 		
 		ItemRenderRegistry.registerItem(ModItems.BaseFluidCapsule);
 		ItemRenderRegistry.registerItem(ModItems.StaticFluidCapsule);
 		ItemRenderRegistry.registerItem(ModItems.EnergizedFluidCapsule);
 		ItemRenderRegistry.registerItem(ModItems.LumumFluidCapsule);
-		//FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((IItemColor)ModItems.EnergizedFluidCapsule, 
-				//ModItems.BaseFluidCapsule, ModItems.StaticFluidCapsule, ModItems.EnergizedFluidCapsule, ModItems.LumumFluidCapsule);
-		
+
 		ItemRenderRegistry.registerItem(ModItems.SilverDust);
 		ItemRenderRegistry.registerItem(ModItems.CopperDust);
 		ItemRenderRegistry.registerItem(ModItems.IronDust);

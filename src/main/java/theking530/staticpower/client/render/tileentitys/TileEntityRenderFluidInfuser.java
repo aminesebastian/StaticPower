@@ -54,7 +54,7 @@ public class TileEntityRenderFluidInfuser extends TileEntitySpecialRenderer {
 		checkAndRenderSides(tileentity, 3);
 		checkAndRenderSides(tileentity, 4);
 		checkAndRenderSides(tileentity, 5);
-		//renderInfusingItem(tileentity, translationX, translationY, translationZ);
+		//renderInfusingItem(tileentity, x, y, z);
 		if(infuser.TANK.getFluid() != null) {
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -93,6 +93,6 @@ public class TileEntityRenderFluidInfuser extends TileEntitySpecialRenderer {
 		TileEntityFluidInfuser infuser = (TileEntityFluidInfuser)tileentity;
 		float height = infuser.getFluidLevelScaled(1);	
 		
-		RenderUtil.drawFluidInWorld(fluidStack, 4F*texel, 3.5F*texel, 1.0001F, 8F*texel, height*.57f);
+		RenderUtil.drawFluidInWorld(fluidStack, infuser.TANK.getCapacity(), 4F*texel, 3.5F*texel, 1.0001F, 8F*texel, texel*9);
 	}
 }

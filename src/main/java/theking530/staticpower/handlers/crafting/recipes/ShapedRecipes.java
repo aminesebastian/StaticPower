@@ -8,6 +8,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.items.ModItems;
+import theking530.staticpower.items.armor.ModArmor;
 import theking530.staticpower.world.plants.ModPlants;
 
 public class ShapedRecipes {
@@ -213,20 +214,63 @@ public class ShapedRecipes {
 		'H', Blocks.HOPPER, 'C', Blocks.CHEST, 'B', ModItems.StaticCircuit, 'E', Items.ENDER_PEARL, 'I', Items.IRON_INGOT});	
 		
 		//Static Armor --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModItems.StaticHelmet), new Object[]{"EEE", "EBE", "   ",  'E', ModItems.StaticIngot, 'B', ModItems.StaticBattery});
-		GameRegistry.addRecipe(new ItemStack(ModItems.StaticChestplate), new Object[]{"EBE", "EEE", "EEE",  'E', ModItems.StaticIngot, 'B', ModItems.StaticBattery});
-		GameRegistry.addRecipe(new ItemStack(ModItems.StaticLeggings), new Object[]{"EEE", "EBE", "E E",  'E', ModItems.StaticIngot, 'B', ModItems.StaticBattery});
-		GameRegistry.addRecipe(new ItemStack(ModItems.StaticBoots), new Object[]{"   ", "EBE", "E E",  'E', ModItems.StaticIngot, 'B', ModItems.StaticBattery});		
+		GameRegistry.addRecipe(new ItemStack(ModArmor.StaticHelmet), new Object[]{"EEE", "EBE", "   ",  'E', ModItems.StaticIngot, 'B', ModItems.StaticBattery});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.StaticChestplate), new Object[]{"EBE", "EEE", "EEE",  'E', ModItems.StaticIngot, 'B', ModItems.StaticBattery});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.StaticLeggings), new Object[]{"EEE", "EBE", "E E",  'E', ModItems.StaticIngot, 'B', ModItems.StaticBattery});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.StaticBoots), new Object[]{"   ", "EBE", "E E",  'E', ModItems.StaticIngot, 'B', ModItems.StaticBattery});		
 		//Energized Armor --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModItems.EnergizedHelmet), new Object[]{"EEE", "EBE", "   ",  'E', ModItems.EnergizedIngot, 'B', ModItems.EnergizedBattery});
-		GameRegistry.addRecipe(new ItemStack(ModItems.EnergizedChestplate), new Object[]{"EBE", "EEE", "EEE",  'E', ModItems.EnergizedIngot, 'B', ModItems.EnergizedBattery});
-		GameRegistry.addRecipe(new ItemStack(ModItems.EnergizedLeggings), new Object[]{"EEE", "EBE", "E E",  'E', ModItems.EnergizedIngot, 'B', ModItems.EnergizedBattery});
-		GameRegistry.addRecipe(new ItemStack(ModItems.EnergizedBoots), new Object[]{"   ", "EBE", "E E",  'E', ModItems.EnergizedIngot, 'B', ModItems.EnergizedBattery});		
+		GameRegistry.addRecipe(new ItemStack(ModArmor.EnergizedHelmet), new Object[]{"EEE", "EBE", "   ",  'E', ModItems.EnergizedIngot, 'B', ModItems.EnergizedBattery});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.EnergizedChestplate), new Object[]{"EBE", "EEE", "EEE",  'E', ModItems.EnergizedIngot, 'B', ModItems.EnergizedBattery});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.EnergizedLeggings), new Object[]{"EEE", "EBE", "E E",  'E', ModItems.EnergizedIngot, 'B', ModItems.EnergizedBattery});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.EnergizedBoots), new Object[]{"   ", "EBE", "E E",  'E', ModItems.EnergizedIngot, 'B', ModItems.EnergizedBattery});		
 		//Lumum Armor --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModItems.LumumHelmet), new Object[]{"EEE", "EBE", "   ",  'E', ModItems.LumumIngot, 'B', ModItems.LumumBattery});
-		GameRegistry.addRecipe(new ItemStack(ModItems.LumumChestplate), new Object[]{"EBE", "EEE", "EEE",  'E', ModItems.LumumIngot, 'B', ModItems.LumumBattery});
-		GameRegistry.addRecipe(new ItemStack(ModItems.LumumLeggings), new Object[]{"EEE", "EBE", "E E",  'E', ModItems.LumumIngot, 'B', ModItems.LumumBattery});
-		GameRegistry.addRecipe(new ItemStack(ModItems.LumumBoots), new Object[]{"   ", "EBE", "E E",  'E', ModItems.LumumIngot, 'B', ModItems.LumumBattery});		
+		GameRegistry.addRecipe(new ItemStack(ModArmor.LumumHelmet), new Object[]{"EEE", "EBE", "   ",  'E', ModItems.LumumIngot, 'B', ModItems.LumumBattery});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.LumumChestplate), new Object[]{"EBE", "EEE", "EEE",  'E', ModItems.LumumIngot, 'B', ModItems.LumumBattery});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.LumumLeggings), new Object[]{"EEE", "EBE", "E E",  'E', ModItems.LumumIngot, 'B', ModItems.LumumBattery});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.LumumBoots), new Object[]{"   ", "EBE", "E E",  'E', ModItems.LumumIngot, 'B', ModItems.LumumBattery});		
+		
+		//Copper Armor --------------------------------------------------------------------------------------------------
+		GameRegistry.addRecipe(new ItemStack(ModArmor.CopperHelmet), new Object[]{"EEE", "E E", "   ",  'E', ModItems.CopperIngot});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.CopperChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ModItems.CopperIngot});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.CopperLeggings), new Object[]{"EEE", "E E", "E E",  'E', ModItems.CopperIngot});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.CopperBoots), new Object[]{"   ", "E E", "E E",  'E', ModItems.CopperIngot});		
+		//Tin Armor --------------------------------------------------------------------------------------------------
+		GameRegistry.addRecipe(new ItemStack(ModArmor.TinHelmet), new Object[]{"EEE", "E E", "   ",  'E', ModItems.TinIngot});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.TinChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ModItems.TinIngot});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.TinLeggings), new Object[]{"EEE", "E E", "E E",  'E', ModItems.TinIngot});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.TinBoots), new Object[]{"   ", "E E", "E E",  'E', ModItems.TinIngot});		
+		//Lead Armor --------------------------------------------------------------------------------------------------
+		GameRegistry.addRecipe(new ItemStack(ModArmor.LeadHelmet), new Object[]{"EEE", "E E", "   ",  'E', ModItems.LeadIngot});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.LeadChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ModItems.LeadIngot});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.LeadLeggings), new Object[]{"EEE", "E E", "E E",  'E', ModItems.LeadIngot});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.LeadBoots), new Object[]{"   ", "E E", "E E",  'E', ModItems.LeadIngot});		
+		//Silver Armor --------------------------------------------------------------------------------------------------
+		GameRegistry.addRecipe(new ItemStack(ModArmor.SilverHelmet), new Object[]{"EEE", "E E", "   ",  'E', ModItems.SilverIngot});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.SilverChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ModItems.SilverIngot});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.SilverLeggings), new Object[]{"EEE", "E E", "E E",  'E', ModItems.SilverIngot});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.SilverBoots), new Object[]{"   ", "E E", "E E",  'E', ModItems.SilverIngot});		
+		//Platinum Armor --------------------------------------------------------------------------------------------------
+		GameRegistry.addRecipe(new ItemStack(ModArmor.PlatinumHelmet), new Object[]{"EEE", "E E", "   ",  'E', ModItems.PlatinumIngot});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.PlatinumChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ModItems.PlatinumIngot});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.PlatinumLeggings), new Object[]{"EEE", "E E", "E E",  'E', ModItems.PlatinumIngot});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.PlatinumBoots), new Object[]{"   ", "E E", "E E",  'E', ModItems.PlatinumIngot});		
+		//Aluminium Armor --------------------------------------------------------------------------------------------------
+		GameRegistry.addRecipe(new ItemStack(ModArmor.AluminiumHelmet), new Object[]{"EEE", "E E", "   ",  'E', ModItems.AluminiumIngot});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.AluminiumChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ModItems.AluminiumIngot});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.AluminiumLeggings), new Object[]{"EEE", "E E", "E E",  'E', ModItems.AluminiumIngot});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.AluminiumBoots), new Object[]{"   ", "E E", "E E",  'E', ModItems.AluminiumIngot});		
+		//Sapphire Armor --------------------------------------------------------------------------------------------------
+		GameRegistry.addRecipe(new ItemStack(ModArmor.SapphireHelmet), new Object[]{"EEE", "E E", "   ",  'E', ModItems.SapphireGem});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.SapphireChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ModItems.SapphireGem});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.SapphireLeggings), new Object[]{"EEE", "E E", "E E",  'E', ModItems.SapphireGem});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.SapphireBoots), new Object[]{"   ", "E E", "E E",  'E', ModItems.SapphireGem});		
+		//Ruby Armor --------------------------------------------------------------------------------------------------
+		GameRegistry.addRecipe(new ItemStack(ModArmor.RubyHelmet), new Object[]{"EEE", "E E", "   ",  'E', ModItems.RubyGem});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.RubyChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ModItems.RubyGem});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.RubyLeggings), new Object[]{"EEE", "E E", "E E",  'E', ModItems.RubyGem});
+		GameRegistry.addRecipe(new ItemStack(ModArmor.RubyBoots), new Object[]{"   ", "E E", "E E",  'E', ModItems.RubyGem});		
+	
+	
 	}
 	
 	public static void registerFullRecipes() {

@@ -35,18 +35,21 @@ public class RenderUtil {
 	public static void bindBlockTexture() {
 	    engine().bindTexture(BLOCK_TEX);
 	}
-	public static void drawFluidInWorld(FluidStack fluidStack, float x, float y, float z, float width, float height) {
+	public static void drawFluidInWorld(FluidStack fluidStack, int capacity, float x, float y, float z, float width, float height) {
 	    TextureAtlasSprite icon = RenderUtil.getStillTexture(fluidStack.getFluid());
 		if(icon != null) {
-			final double uMin = icon.getMinU();
-			final double uMax = icon.getMaxU();
-			final double vMin = icon.getMinV();
-			final double vMax = icon.getMaxV();
 			
-			double heightDifferent = (vMax - vMin);
-			RenderUtil.bindBlockTexture();
-		    int color = fluidStack.getFluid().getColor(fluidStack);
+	        double minU = icon.getMinU();
+	        double maxU = icon.getMaxU();
+	        double minV = icon.getMinV();
+	        double maxV = icon.getMaxV();
+	        double diffV = maxV - minV;
+	        
+		    float ratio = ((float)fluidStack.amount/(float)capacity);
+		    float adjustedHeight = ratio*height;
 		    
+			RenderUtil.bindBlockTexture();		  
+			
 			GL11.glPushMatrix();
 			Tessellator tessellator = Tessellator.getInstance();
 	        VertexBuffer vertexbuffer = tessellator.getBuffer();
@@ -54,10 +57,10 @@ public class RenderUtil {
 			GL11.glRotated(180, 0, 1, 0);
 			GL11.glScaled(1, 1, -1);
 			GL11.glTranslated(-1, 0, 0);
-			vertexbuffer.pos(x+width, y+height, z).tex(uMax, vMax).endVertex();
-			vertexbuffer.pos(x+width, y, z).tex(uMax, vMin).endVertex();
-			vertexbuffer.pos(x, y, z).tex(uMin, vMin).endVertex();
-			vertexbuffer.pos(x, y+height, z).tex(uMin, vMax).endVertex();	
+			vertexbuffer.pos(x+width, y+adjustedHeight, z).tex(maxU,minV+diffV*ratio).endVertex();
+			vertexbuffer.pos(x+width, y, z).tex(maxU, minV).endVertex();
+			vertexbuffer.pos(x, y, z).tex(minU, minV).endVertex();
+			vertexbuffer.pos(x, y+adjustedHeight, z).tex(minU, minV+diffV*ratio).endVertex();	
 				
 			tessellator.draw();		
 			GL11.glPopMatrix();

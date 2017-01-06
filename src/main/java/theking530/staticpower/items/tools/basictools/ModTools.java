@@ -1,26 +1,10 @@
 package theking530.staticpower.items.tools.basictools;
 
 import net.minecraft.item.Item;
-import net.minecraft.item.Item.ToolMaterial;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.EnumHelper;
 import theking530.staticpower.assists.RegisterHelper;
-import theking530.staticpower.items.ModItems;
+import theking530.staticpower.items.ModMaterials;
 
 public class ModTools {
-
-	public static ToolMaterial COPPER = EnumHelper.addToolMaterial("COPPER", 1, 500, 5.0F, 3.0F, 15);
-	public static ToolMaterial TIN = EnumHelper.addToolMaterial("TIN", 1, 500, 5.0F, 3.0F, 15);
-	public static ToolMaterial SILVER = EnumHelper.addToolMaterial("SILVER", 2, 1000, 6.0F, 3.0F, 20);
-	public static ToolMaterial LEAD = EnumHelper.addToolMaterial("LEAD", 2, 1500, 3.0F, 3.0F, 20);
-	public static ToolMaterial PLATINUM = EnumHelper.addToolMaterial("PLATINUM", 3, 2000, 4.0F, 5.0F, 30);
-	public static ToolMaterial NICKEL = EnumHelper.addToolMaterial("NICKEL", 2, 500, 8.0F, 3.0F, 20);
-	public static ToolMaterial ALUMINIUM = EnumHelper.addToolMaterial("ALUMINIUM", 1, 500, 3.0F, 3.0F, 15);
-	public static ToolMaterial STATIC = EnumHelper.addToolMaterial("STATIC", 2, 1500, 7.0F, 3.0F, 20);
-	public static ToolMaterial ENERGIZED = EnumHelper.addToolMaterial("ENERGIZED", 2, 2500, 4.0F, 4.0F, 30);
-	public static ToolMaterial LUMUM = EnumHelper.addToolMaterial("LUMUM", 3, 4000, 12.0F, 5.0F, 40);
-	public static ToolMaterial RUBY = EnumHelper.addToolMaterial("RUBY", 2, 1500, 5.0F, 7.0F, 30);
-	public static ToolMaterial SAPPHIRE = EnumHelper.addToolMaterial("SAPPHIRE", 2, 1500, 7.0F, 5.0F, 30);
 	
 	public static Item CopperPickaxe;
 	public static Item CopperAxe;
@@ -83,114 +67,114 @@ public class ModTools {
 	public static Item RubySword;
 	
 	public static void init() {
-		CopperPickaxe = new BasePickaxe(COPPER, "sCopperPickaxe");
+		CopperPickaxe = new BasePickaxe(ModMaterials.COPPER, "sCopperPickaxe");
 		RegisterHelper.registerItem(CopperPickaxe);	
-		CopperAxe = new BaseAxe(COPPER, "sCopperAxe");
+		CopperAxe = new BaseAxe(ModMaterials.COPPER, "sCopperAxe");
 		RegisterHelper.registerItem(CopperAxe);	
-		CopperHoe = new BaseHoe(COPPER, "sCopperHoe");
+		CopperHoe = new BaseHoe(ModMaterials.COPPER, "sCopperHoe");
 		RegisterHelper.registerItem(CopperHoe);	
-		CopperShovel = new BaseShovel(COPPER, "sCopperShovel");
+		CopperShovel = new BaseShovel(ModMaterials.COPPER, "sCopperShovel");
 		RegisterHelper.registerItem(CopperShovel);	
-		CopperSword = new BaseSword(COPPER, "sCopperSword");
+		CopperSword = new BaseSword(ModMaterials.COPPER, "sCopperSword");
 		RegisterHelper.registerItem(CopperSword);	
 		
-		TinPickaxe = new BasePickaxe(TIN, "sTinPickaxe");
+		TinPickaxe = new BasePickaxe(ModMaterials.TIN, "sTinPickaxe");
 		RegisterHelper.registerItem(TinPickaxe);	
-		TinAxe = new BaseAxe(TIN, "sTinAxe");
+		TinAxe = new BaseAxe(ModMaterials.TIN, "sTinAxe");
 		RegisterHelper.registerItem(TinAxe);	
-		TinHoe = new BaseHoe(TIN, "sTinHoe");
+		TinHoe = new BaseHoe(ModMaterials.TIN, "sTinHoe");
 		RegisterHelper.registerItem(TinHoe);	
-		TinShovel = new BaseShovel(TIN, "sTinShovel");
+		TinShovel = new BaseShovel(ModMaterials.TIN, "sTinShovel");
 		RegisterHelper.registerItem(TinShovel);	
-		TinSword = new BaseSword(TIN, "sTinSword");
+		TinSword = new BaseSword(ModMaterials.TIN, "sTinSword");
 		RegisterHelper.registerItem(TinSword);	
 		
-		SilverPickaxe = new BasePickaxe(SILVER, "sSilverPickaxe");
+		SilverPickaxe = new BasePickaxe(ModMaterials.SILVER, "sSilverPickaxe");
 		RegisterHelper.registerItem(SilverPickaxe);	
-		SilverAxe = new BaseAxe(SILVER, "sSilverAxe");
+		SilverAxe = new BaseAxe(ModMaterials.SILVER, "sSilverAxe");
 		RegisterHelper.registerItem(SilverAxe);	
-		SilverHoe = new BaseHoe(SILVER, "sSilverHoe");
+		SilverHoe = new BaseHoe(ModMaterials.SILVER, "sSilverHoe");
 		RegisterHelper.registerItem(SilverHoe);	
-		SilverShovel = new BaseShovel(SILVER, "sSilverShovel");
+		SilverShovel = new BaseShovel(ModMaterials.SILVER, "sSilverShovel");
 		RegisterHelper.registerItem(SilverShovel);	
-		SilverSword = new BaseSword(SILVER, "sSilverSword");
+		SilverSword = new BaseSword(ModMaterials.SILVER, "sSilverSword");
 		RegisterHelper.registerItem(SilverSword);	
 		
-		LeadPickaxe = new BasePickaxe(LEAD, "sLeadPickaxe");
+		LeadPickaxe = new BasePickaxe(ModMaterials.LEAD, "sLeadPickaxe");
 		RegisterHelper.registerItem(LeadPickaxe);	
-		LeadAxe = new BaseAxe(LEAD, "sLeadAxe");
+		LeadAxe = new BaseAxe(ModMaterials.LEAD, "sLeadAxe");
 		RegisterHelper.registerItem(LeadAxe);	
-		LeadHoe = new BaseHoe(LEAD, "sLeadHoe");
+		LeadHoe = new BaseHoe(ModMaterials.LEAD, "sLeadHoe");
 		RegisterHelper.registerItem(LeadHoe);	
-		LeadShovel = new BaseShovel(LEAD, "sLeadShovel");
+		LeadShovel = new BaseShovel(ModMaterials.LEAD, "sLeadShovel");
 		RegisterHelper.registerItem(LeadShovel);	
-		LeadSword = new BaseSword(LEAD, "sLeadSword");
+		LeadSword = new BaseSword(ModMaterials.LEAD, "sLeadSword");
 		RegisterHelper.registerItem(LeadSword);	
 		
-		PlatinumPickaxe = new BasePickaxe(PLATINUM, "sPlatinumPickaxe");
+		PlatinumPickaxe = new BasePickaxe(ModMaterials.PLATINUM, "sPlatinumPickaxe");
 		RegisterHelper.registerItem(PlatinumPickaxe);	
-		PlatinumAxe = new BaseAxe(PLATINUM, "sPlatinumAxe");
+		PlatinumAxe = new BaseAxe(ModMaterials.PLATINUM, "sPlatinumAxe");
 		RegisterHelper.registerItem(PlatinumAxe);	
-		PlatinumHoe = new BaseHoe(PLATINUM, "sPlatinumHoe");
+		PlatinumHoe = new BaseHoe(ModMaterials.PLATINUM, "sPlatinumHoe");
 		RegisterHelper.registerItem(PlatinumHoe);	
-		PlatinumShovel = new BaseShovel(PLATINUM, "sPlatinumShovel");
+		PlatinumShovel = new BaseShovel(ModMaterials.PLATINUM, "sPlatinumShovel");
 		RegisterHelper.registerItem(PlatinumShovel);	
-		PlatinumSword = new BaseSword(PLATINUM, "sPlatinumSword");
+		PlatinumSword = new BaseSword(ModMaterials.PLATINUM, "sPlatinumSword");
 		RegisterHelper.registerItem(PlatinumSword);	
 		
-		StaticPickaxe = new BasePickaxe(STATIC, "sStaticPickaxe");
+		StaticPickaxe = new BasePickaxe(ModMaterials.STATIC, "sStaticPickaxe");
 		RegisterHelper.registerItem(StaticPickaxe);	
-		StaticAxe = new BaseAxe(STATIC, "sStaticAxe");
+		StaticAxe = new BaseAxe(ModMaterials.STATIC, "sStaticAxe");
 		RegisterHelper.registerItem(StaticAxe);	
-		StaticHoe = new BaseHoe(STATIC, "sStaticHoe");
+		StaticHoe = new BaseHoe(ModMaterials.STATIC, "sStaticHoe");
 		RegisterHelper.registerItem(StaticHoe);	
-		StaticShovel = new BaseShovel(STATIC, "sStaticShovel");
+		StaticShovel = new BaseShovel(ModMaterials.STATIC, "sStaticShovel");
 		RegisterHelper.registerItem(StaticShovel);	
-		StaticSword = new BaseSword(STATIC, "sStaticSword");
+		StaticSword = new BaseSword(ModMaterials.STATIC, "sStaticSword");
 		RegisterHelper.registerItem(StaticSword);	
 		
-		EnergizedPickaxe = new BasePickaxe(ENERGIZED, "sEnergizedPickaxe");
+		EnergizedPickaxe = new BasePickaxe(ModMaterials.ENERGIZED, "sEnergizedPickaxe");
 		RegisterHelper.registerItem(EnergizedPickaxe);	
-		EnergizedAxe = new BaseAxe(ENERGIZED, "sEnergizedAxe");
+		EnergizedAxe = new BaseAxe(ModMaterials.ENERGIZED, "sEnergizedAxe");
 		RegisterHelper.registerItem(EnergizedAxe);	
-		EnergizedHoe = new BaseHoe(ENERGIZED, "sEnergizedHoe");
+		EnergizedHoe = new BaseHoe(ModMaterials.ENERGIZED, "sEnergizedHoe");
 		RegisterHelper.registerItem(EnergizedHoe);	
-		EnergizedShovel = new BaseShovel(ENERGIZED, "sEnergizedShovel");
+		EnergizedShovel = new BaseShovel(ModMaterials.ENERGIZED, "sEnergizedShovel");
 		RegisterHelper.registerItem(EnergizedShovel);	
-		EnergizedSword = new BaseSword(ENERGIZED, "sEnergizedSword");
+		EnergizedSword = new BaseSword(ModMaterials.ENERGIZED, "sEnergizedSword");
 		RegisterHelper.registerItem(EnergizedSword);	
 		
-		LumumPickaxe = new BasePickaxe(LUMUM, "sLumumPickaxe");
+		LumumPickaxe = new BasePickaxe(ModMaterials.LUMUM, "sLumumPickaxe");
 		RegisterHelper.registerItem(LumumPickaxe);	
-		LumumAxe = new BaseAxe(LUMUM, "sLumumAxe");
+		LumumAxe = new BaseAxe(ModMaterials.LUMUM, "sLumumAxe");
 		RegisterHelper.registerItem(LumumAxe);	
-		LumumHoe = new BaseHoe(LUMUM, "sLumumHoe");
+		LumumHoe = new BaseHoe(ModMaterials.LUMUM, "sLumumHoe");
 		RegisterHelper.registerItem(LumumHoe);	
-		LumumShovel = new BaseShovel(LUMUM, "sLumumShovel");
+		LumumShovel = new BaseShovel(ModMaterials.LUMUM, "sLumumShovel");
 		RegisterHelper.registerItem(LumumShovel);	
-		LumumSword = new BaseSword(LUMUM, "sLumumSword");
+		LumumSword = new BaseSword(ModMaterials.LUMUM, "sLumumSword");
 		RegisterHelper.registerItem(LumumSword);
 		
-		SapphirePickaxe = new BasePickaxe(SAPPHIRE, "sSapphirePickaxe");
+		SapphirePickaxe = new BasePickaxe(ModMaterials.SAPPHIRE, "sSapphirePickaxe");
 		RegisterHelper.registerItem(SapphirePickaxe);	
-		SapphireAxe = new BaseAxe(SAPPHIRE, "sSapphireAxe");
+		SapphireAxe = new BaseAxe(ModMaterials.SAPPHIRE, "sSapphireAxe");
 		RegisterHelper.registerItem(SapphireAxe);	
-		SapphireHoe = new BaseHoe(SAPPHIRE, "sSapphireHoe");
+		SapphireHoe = new BaseHoe(ModMaterials.SAPPHIRE, "sSapphireHoe");
 		RegisterHelper.registerItem(SapphireHoe);	
-		SapphireShovel = new BaseShovel(SAPPHIRE, "sSapphireShovel");
+		SapphireShovel = new BaseShovel(ModMaterials.SAPPHIRE, "sSapphireShovel");
 		RegisterHelper.registerItem(SapphireShovel);	
-		SapphireSword = new BaseSword(SAPPHIRE, "sSapphireSword");
+		SapphireSword = new BaseSword(ModMaterials.SAPPHIRE, "sSapphireSword");
 		RegisterHelper.registerItem(SapphireSword);	
 		
-		RubyPickaxe = new BasePickaxe(RUBY, "sRubyPickaxe");
+		RubyPickaxe = new BasePickaxe(ModMaterials.RUBY, "sRubyPickaxe");
 		RegisterHelper.registerItem(RubyPickaxe);	
-		RubyAxe = new BaseAxe(RUBY, "sRubyAxe");
+		RubyAxe = new BaseAxe(ModMaterials.RUBY, "sRubyAxe");
 		RegisterHelper.registerItem(RubyAxe);	
-		RubyHoe = new BaseHoe(RUBY, "sRubyHoe");
+		RubyHoe = new BaseHoe(ModMaterials.RUBY, "sRubyHoe");
 		RegisterHelper.registerItem(RubyHoe);	
-		RubyShovel = new BaseShovel(RUBY, "sRubyShovel");
+		RubyShovel = new BaseShovel(ModMaterials.RUBY, "sRubyShovel");
 		RegisterHelper.registerItem(RubyShovel);	
-		RubySword = new BaseSword(RUBY, "sRubySword");
+		RubySword = new BaseSword(ModMaterials.RUBY, "sRubySword");
 		RegisterHelper.registerItem(RubySword);			
 	}
 }

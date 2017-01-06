@@ -143,8 +143,8 @@ public class GuiQuarry extends CustomGuiContainer{
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
     	DRAW_ITEM.drawItem(ModItems.BasicItemFilter, guiLeft, guiTop, 27, 71, zLevel);
 		SIDE_TAB.drawTab();	
-		POWERBAR.drawPowerBar(guiLeft + 28, guiTop + 66, 6, 60, this.zLevel);
-		FLUIDBAR.drawFluidBar(guiLeft + 8, guiTop + 66, 16, 60, this.zLevel);
+		POWERBAR.drawPowerBar(guiLeft + 47, guiTop + 66, 6, 60, this.zLevel);
+		FLUIDBAR.drawFluidBar(guiLeft + 27, guiTop + 66, 16, 60, this.zLevel);
 	}
 	@Override
 	protected void mouseClicked(int x, int y, int button) throws IOException{

@@ -118,22 +118,6 @@ item.EnergizedDust.name=§bEnergized Dust
 item.LumumDust.name=§eLumum Dust
 item.RedstoneAlloyDust.name=Redstone Alloy Dust
 
-//Armor/Baubles
-item.StaticHelmet.name=Static Helmet
-item.StaticChestplate.name=Static Chestplate
-item.StatcLeggings.name=Static Leggings
-item.StaticBoots.name=Static Boots
-item.EnergizedHelmet.name=Energized Helmet
-item.EnergizedChestplate.name=Energized Chestplate
-item.EnergizedLeggings.name=Energized Leggings
-item.EnergizedBoots.name=Energized Boots
-item.LumumHelmet.name=Lumum Helmet
-item.LumumChestplate.name=Lumum Chestplate
-item.LumumLeggings.name=Lumum Leggings
-item.LumumBoots.name=Lumum Boots
-item.StaticBelt.name=Static Belt
-item.EnergizedBelt.name=Energized Belt
-
 //Crops
 tile.StaticCropPlant.name=Static Plant
 tile.EnergizedCropPlant.name=Energized Plant
@@ -366,6 +350,62 @@ item.sRubyPickaxe.name=Ruby Pickaxe
 item.sRubyHoe.name=Ruby Hoe
 item.sRubyShovel.name=Ruby Shovel
 item.sRubySword.name=Ruby Sword
+
+//Armor/Baubles
+item.StaticHelmet.name=Static Helmet
+item.StaticChestplate.name=Static Chestplate
+item.StaticLeggings.name=Static Leggings
+item.StaticBoots.name=Static Boots
+item.EnergizedHelmet.name=Energized Helmet
+item.EnergizedChestplate.name=Energized Chestplate
+item.EnergizedLeggings.name=Energized Leggings
+item.EnergizedBoots.name=Energized Boots
+item.LumumHelmet.name=Lumum Helmet
+item.LumumChestplate.name=Lumum Chestplate
+item.LumumLeggings.name=Lumum Leggings
+item.LumumBoots.name=Lumum Boots
+item.StaticBelt.name=Static Belt
+item.EnergizedBelt.name=Energized Belt
+
+item.sCopperHelmet.name=Copper Helmet
+item.sCopperChestplate.name=Copper Chestplate
+item.sCopperLeggings.name=Copper Leggings
+item.sCopperBoots.name=Copper Boots
+
+item.sTinHelmet.name=Tin Helmet
+item.sTinChestplate.name=Tin Chestplate
+item.sTinLeggings.name=Tin Leggings
+item.sTinBoots.name=Tin Boots
+
+item.sLeadHelmet.name=Lead Helmet
+item.sLeadChestplate.name=Lead Chestplate
+item.sLeadLeggings.name=Lead Leggings
+item.sLeadBoots.name=Lead Boots
+
+item.sSilverHelmet.name=Silver Helmet
+item.sSilverChestplate.name=Silver Chestplate
+item.sSilverLeggings.name=Silver Leggings
+item.sSilverBoots.name=Silver Boots
+
+item.sPlatinumHelmet.name=Platinum Helmet
+item.sPlatinumChestplate.name=Platinum Chestplate
+item.sPlatinumLeggings.name=Platinum Leggings
+item.sPlatinumBoots.name=Platinum Boots
+
+item.sAluminiumHelmet.name=Aluminium Helmet
+item.sAluminiumChestplate.name=Aluminium Chestplate
+item.sAluminiumLeggings.name=Aluminium Leggings
+item.sAluminiumBoots.name=Aluminium Boots
+
+item.sSapphireHelmet.name=Sapphire Helmet
+item.sSapphireChestplate.name=Sapphire Chestplate
+item.sSapphireLeggings.name=Sapphire Leggings
+item.sSapphireBoots.name=Sapphire Boots
+
+item.sRubyHelmet.name=Ruby Helmet
+item.sRubyChestplate.name=Ruby Chestplate
+item.sRubyLeggings.name=Ruby Leggings
+item.sRubyBoots.name=Ruby Boots
 
 item.BaseFluidCapsule.name=Canister
 item.StaticFluidCapsule.name=Canister

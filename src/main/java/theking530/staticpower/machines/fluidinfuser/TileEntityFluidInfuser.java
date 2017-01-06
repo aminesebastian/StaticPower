@@ -87,7 +87,9 @@ public class TileEntityFluidInfuser extends BaseMachineWithTank {
 					PROCESSING_TIMER++;
 				}else{
 					if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, 0, getResult(SLOTS_INTERNAL.getStackInSlot(0)))) {
-						SLOTS_OUTPUT.insertItem(0, getResult(SLOTS_INTERNAL.getStackInSlot(0)).copy(), false);
+						if(SLOTS_INTERNAL.getStackInSlot(0) != null && getResult(SLOTS_INTERNAL.getStackInSlot(0)) != null) { //Weird Bug when Serializing
+							SLOTS_OUTPUT.insertItem(0, getResult(SLOTS_INTERNAL.getStackInSlot(0)).copy(), false);
+						}
 						SLOTS_INTERNAL.setStackInSlot(0, null);
 						PROCESSING_TIMER = 0;
 						updateBlock();

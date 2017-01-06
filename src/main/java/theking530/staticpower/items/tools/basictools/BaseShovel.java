@@ -5,20 +5,20 @@ import java.util.List;
 import org.lwjgl.input.Keyboard;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.items.EquipmentMaterial;
 import theking530.staticpower.utils.EnumTextFormatting;
 
 
 public class BaseShovel extends ItemSpade {
 
 	public String NAME = "";
-	public ToolMaterial MATERIAL;
+	public EquipmentMaterial MATERIAL;
 	
-	public BaseShovel(ToolMaterial material, String unlocalizedName) {
-		super(material);
+	public BaseShovel(EquipmentMaterial material, String unlocalizedName) {
+		super(material.getToolMaterial());
 		NAME= unlocalizedName;
 		setUnlocalizedName(unlocalizedName);
 		setRegistryName(unlocalizedName);
@@ -29,10 +29,10 @@ public class BaseShovel extends ItemSpade {
 	@Override  
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean par4) {
     	if(showHiddenTooltips()) {
-    		String tempLevel = "Mining Level: " +  MATERIAL.getHarvestLevel();
-    		String tempSpeed = "Speed: " +  MATERIAL.getEfficiencyOnProperMaterial();
-    		String tempDamage = "Damage: " + (Math.round(MATERIAL.getDamageVsEntity()) + 2.5F); 
-    		String tempDurability = "Durability: " + (MATERIAL.getMaxUses()-itemstack.getMetadata()) + "/" + MATERIAL.getMaxUses();
+    		String tempLevel = "Mining Level: " +  MATERIAL.getToolMaterial().getHarvestLevel();
+    		String tempSpeed = "Speed: " +  MATERIAL.getToolMaterial().getEfficiencyOnProperMaterial();
+    		String tempDamage = "Damage: " + (Math.round(MATERIAL.getToolMaterial().getDamageVsEntity()) + 2.5F); 
+    		String tempDurability = "Durability: " + (MATERIAL.getToolMaterial().getMaxUses()-itemstack.getMetadata()) + "/" + MATERIAL.getToolMaterial().getMaxUses();
     		
     		list.add(tempLevel);
     		list.add(tempSpeed);

@@ -63,7 +63,7 @@ public class GuiPoweredGrinder extends CustomGuiContainer{
 		String name = I18n.format(this.Grinder.getName());
 	
 		this.fontRendererObj.drawString(name, this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2, 6,4210752 );
-		this.fontRendererObj.drawString(I18n.format("container.inventory"), 26, this.ySize - 96 + 3, 4210752);
+		//this.fontRendererObj.drawString(I18n.format("container.inventory"), 26, this.ySize - 96 + 3, 4210752);
 	}
 	
 	@Override

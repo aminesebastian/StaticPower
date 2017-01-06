@@ -9,20 +9,20 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.items.EquipmentMaterial;
 import theking530.staticpower.utils.EnumTextFormatting;
 
 
 public class BaseSword extends ItemSword {
 
 	public String NAME = "";
-	public ToolMaterial MATERIAL;
+	public EquipmentMaterial MATERIAL;
 	
-	public BaseSword(ToolMaterial material, String unlocalizedName) {
-		super(material);
+	public BaseSword(EquipmentMaterial material, String unlocalizedName) {
+		super(material.getToolMaterial());
 		NAME= unlocalizedName;
 		setUnlocalizedName(unlocalizedName);
 		setRegistryName(unlocalizedName);
@@ -37,7 +37,7 @@ public class BaseSword extends ItemSword {
     		
     		//String tempSpeed = "Attack Speed: " +  temp.toArray()[0];
     		String tempDamage = "Damage: " + (Math.round(getDamageVsEntity()) + 4); 
-    		String tempDurability = "Durability: " + (MATERIAL.getMaxUses()-itemstack.getMetadata()) + "/" + MATERIAL.getMaxUses();
+    		String tempDurability = "Durability: " + (MATERIAL.getToolMaterial().getMaxUses()-itemstack.getMetadata()) + "/" + MATERIAL.getToolMaterial().getMaxUses();
     		
     		
     		//list.add(tempSpeed);
