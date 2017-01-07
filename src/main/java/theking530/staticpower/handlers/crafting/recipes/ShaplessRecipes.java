@@ -129,6 +129,16 @@ public class ShaplessRecipes {
 		GameRegistry.addShapelessRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.LumumPlanks), 4), new Object[]{
 			new ItemStack(Item.getItemFromBlock(ModBlocks.LumumWood))});
 		
+		//Cannisters
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.BaseFluidCapsule, 1), new Object[]{
+				new ItemStack(ModItems.BaseFluidCapsule)});
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.StaticFluidCapsule, 1), new Object[]{
+				new ItemStack(ModItems.StaticFluidCapsule)});
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.EnergizedFluidCapsule, 1), new Object[]{
+				new ItemStack(ModItems.EnergizedFluidCapsule)});
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.LumumFluidCapsule, 1), new Object[]{
+				new ItemStack(ModItems.LumumFluidCapsule)});
+		
 		//Filters
 		ItemStack quarryFilter = new ItemStack(ModItems.UpgradedItemFilter);
 		ItemFilter.writeQuarryFilter(quarryFilter);

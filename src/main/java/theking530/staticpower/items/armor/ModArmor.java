@@ -63,12 +63,41 @@ public class ModArmor {
 	public static Item RubyLeggings;
 	public static Item RubyBoots;
 	
+	public static Item UndeadHelmet;
+	public static Item UndeadChestplate;
+	public static Item UndeadLeggings;
+	public static Item UndeadBoots;
+	
+	public static Item SkeletonHelmet;
+	public static Item SkeletonChestplate;
+	public static Item SkeletonLeggings;
+	public static Item SkeletonBoots;
+	
 	public static Item BaseShield;
 	
 	public static void init() {		
 		
 		BaseShield = new BaseShield("BaseShield", BaseArmor.ArmorType.MEDIUM, ModMaterials.COPPER);
 		RegisterHelper.registerItem(BaseShield);	
+			
+		SkeletonHelmet = new SkeletonArmor("SkeletonHelmet", BaseArmor.ArmorType.LIGHT, ModMaterials.SKELETON, EntityEquipmentSlot.HEAD);
+		RegisterHelper.registerItem(SkeletonHelmet);	
+		SkeletonChestplate = new SkeletonArmor("SkeletonChestplate", BaseArmor.ArmorType.LIGHT, ModMaterials.SKELETON, EntityEquipmentSlot.CHEST);
+		RegisterHelper.registerItem(SkeletonChestplate);		
+		SkeletonLeggings = new SkeletonArmor("SkeletonLeggings", BaseArmor.ArmorType.LIGHT, ModMaterials.SKELETON, EntityEquipmentSlot.LEGS);
+		RegisterHelper.registerItem(SkeletonLeggings);		
+		SkeletonBoots = new SkeletonArmor("SkeletonBoots", BaseArmor.ArmorType.LIGHT, ModMaterials.SKELETON, EntityEquipmentSlot.FEET);
+		RegisterHelper.registerItem(SkeletonBoots);
+		
+		
+		UndeadHelmet = new UndeadArmor("UndeadHelmet", BaseArmor.ArmorType.LIGHT, ModMaterials.UNDEAD, EntityEquipmentSlot.HEAD);
+		RegisterHelper.registerItem(UndeadHelmet);	
+		UndeadChestplate = new UndeadArmor("UndeadChestplate", BaseArmor.ArmorType.LIGHT, ModMaterials.UNDEAD, EntityEquipmentSlot.CHEST);
+		RegisterHelper.registerItem(UndeadChestplate);		
+		UndeadLeggings = new UndeadArmor("UndeadLeggings", BaseArmor.ArmorType.LIGHT, ModMaterials.UNDEAD, EntityEquipmentSlot.LEGS);
+		RegisterHelper.registerItem(UndeadLeggings);		
+		UndeadBoots = new UndeadArmor("UndeadBoots", BaseArmor.ArmorType.LIGHT, ModMaterials.UNDEAD, EntityEquipmentSlot.FEET);
+		RegisterHelper.registerItem(UndeadBoots);
 		
 		StaticHelmet = new BaseArmor("StaticHelmet", BaseArmor.ArmorType.MEDIUM, ModMaterials.STATIC, EntityEquipmentSlot.HEAD);
 		RegisterHelper.registerItem(StaticHelmet);	
@@ -88,13 +117,13 @@ public class ModArmor {
 		EnergizedBoots = new BaseArmor("EnergizedBoots", BaseArmor.ArmorType.MEDIUM, ModMaterials.ENERGIZED,EntityEquipmentSlot.FEET);
 		RegisterHelper.registerItem(EnergizedBoots);
 		
-		LumumHelmet = new BaseArmor("LumumHelmet", BaseArmor.ArmorType.MEDIUM, ModMaterials.LUMUM, EntityEquipmentSlot.HEAD);
+		LumumHelmet = new BaseArmor("LumumHelmet", BaseArmor.ArmorType.HEAVY, ModMaterials.LUMUM, EntityEquipmentSlot.HEAD);
 		RegisterHelper.registerItem(LumumHelmet);		
-		LumumChestplate = new BaseArmor("LumumChestplate", BaseArmor.ArmorType.MEDIUM, ModMaterials.LUMUM, EntityEquipmentSlot.CHEST);
+		LumumChestplate = new BaseArmor("LumumChestplate", BaseArmor.ArmorType.HEAVY, ModMaterials.LUMUM, EntityEquipmentSlot.CHEST);
 		RegisterHelper.registerItem(LumumChestplate);		
-		LumumLeggings = new BaseArmor("LumumLeggings", BaseArmor.ArmorType.MEDIUM, ModMaterials.LUMUM,EntityEquipmentSlot.LEGS);
+		LumumLeggings = new BaseArmor("LumumLeggings", BaseArmor.ArmorType.HEAVY, ModMaterials.LUMUM,EntityEquipmentSlot.LEGS);
 		RegisterHelper.registerItem(LumumLeggings);		
-		LumumBoots = new BaseArmor("LumumBoots", BaseArmor.ArmorType.MEDIUM, ModMaterials.LUMUM, EntityEquipmentSlot.FEET);
+		LumumBoots = new BaseArmor("LumumBoots", BaseArmor.ArmorType.HEAVY, ModMaterials.LUMUM, EntityEquipmentSlot.FEET);
 		RegisterHelper.registerItem(LumumBoots);
 		
 		CopperHelmet = new CopperArmor("sCopperHelmet", BaseArmor.ArmorType.MEDIUM, ModMaterials.COPPER, EntityEquipmentSlot.HEAD);
@@ -106,22 +135,22 @@ public class ModArmor {
 		CopperBoots = new CopperArmor("sCopperBoots", BaseArmor.ArmorType.MEDIUM, ModMaterials.COPPER, EntityEquipmentSlot.FEET);
 		RegisterHelper.registerItem(CopperBoots);
 		
-		TinHelmet = new TinArmor("sTinHelmet", BaseArmor.ArmorType.MEDIUM, ModMaterials.TIN,  EntityEquipmentSlot.HEAD);
+		TinHelmet = new TinArmor("sTinHelmet", BaseArmor.ArmorType.LIGHT, ModMaterials.TIN,  EntityEquipmentSlot.HEAD);
 		RegisterHelper.registerItem(TinHelmet);		
-		TinChestplate = new TinArmor("sTinChestplate", BaseArmor.ArmorType.MEDIUM, ModMaterials.TIN, EntityEquipmentSlot.CHEST);
+		TinChestplate = new TinArmor("sTinChestplate", BaseArmor.ArmorType.LIGHT, ModMaterials.TIN, EntityEquipmentSlot.CHEST);
 		RegisterHelper.registerItem(TinChestplate);		
-		TinLeggings = new TinArmor("sTinLeggings", BaseArmor.ArmorType.MEDIUM, ModMaterials.TIN, EntityEquipmentSlot.LEGS);
+		TinLeggings = new TinArmor("sTinLeggings", BaseArmor.ArmorType.LIGHT, ModMaterials.TIN, EntityEquipmentSlot.LEGS);
 		RegisterHelper.registerItem(TinLeggings);		
-		TinBoots = new TinArmor("sTinBoots", BaseArmor.ArmorType.MEDIUM, ModMaterials.TIN, EntityEquipmentSlot.FEET);
+		TinBoots = new TinArmor("sTinBoots", BaseArmor.ArmorType.LIGHT, ModMaterials.TIN, EntityEquipmentSlot.FEET);
 		RegisterHelper.registerItem(TinBoots);
 		
-		LeadHelmet = new LeadArmor("sLeadHelmet", BaseArmor.ArmorType.MEDIUM, ModMaterials.LEAD, EntityEquipmentSlot.HEAD);
+		LeadHelmet = new LeadArmor("sLeadHelmet", BaseArmor.ArmorType.HEAVY, ModMaterials.LEAD, EntityEquipmentSlot.HEAD);
 		RegisterHelper.registerItem(LeadHelmet);		
-		LeadChestplate = new LeadArmor("sLeadChestplate", BaseArmor.ArmorType.MEDIUM, ModMaterials.LEAD, EntityEquipmentSlot.CHEST);
+		LeadChestplate = new LeadArmor("sLeadChestplate", BaseArmor.ArmorType.HEAVY, ModMaterials.LEAD, EntityEquipmentSlot.CHEST);
 		RegisterHelper.registerItem(LeadChestplate);		
-		LeadLeggings = new LeadArmor("sLeadLeggings", BaseArmor.ArmorType.MEDIUM, ModMaterials.LEAD, EntityEquipmentSlot.LEGS);
+		LeadLeggings = new LeadArmor("sLeadLeggings", BaseArmor.ArmorType.HEAVY, ModMaterials.LEAD, EntityEquipmentSlot.LEGS);
 		RegisterHelper.registerItem(LeadLeggings);		
-		LeadBoots = new LeadArmor("sLeadBoots", BaseArmor.ArmorType.MEDIUM, ModMaterials.LEAD, EntityEquipmentSlot.FEET);
+		LeadBoots = new LeadArmor("sLeadBoots", BaseArmor.ArmorType.HEAVY, ModMaterials.LEAD, EntityEquipmentSlot.FEET);
 		RegisterHelper.registerItem(LeadBoots);
 		
 		SilverHelmet = new SilverArmor("sSilverHelmet", BaseArmor.ArmorType.MEDIUM, ModMaterials.SILVER, EntityEquipmentSlot.HEAD);
@@ -133,22 +162,22 @@ public class ModArmor {
 		SilverBoots = new SilverArmor("sSilverBoots", BaseArmor.ArmorType.MEDIUM, ModMaterials.SILVER,  EntityEquipmentSlot.FEET);
 		RegisterHelper.registerItem(SilverBoots);
 		
-		PlatinumHelmet = new PlatinumArmor("sPlatinumHelmet", BaseArmor.ArmorType.MEDIUM, ModMaterials.PLATINUM, EntityEquipmentSlot.HEAD);
+		PlatinumHelmet = new PlatinumArmor("sPlatinumHelmet", BaseArmor.ArmorType.HEAVY, ModMaterials.PLATINUM, EntityEquipmentSlot.HEAD);
 		RegisterHelper.registerItem(PlatinumHelmet);		
-		PlatinumChestplate = new PlatinumArmor("sPlatinumChestplate", BaseArmor.ArmorType.MEDIUM, ModMaterials.PLATINUM, EntityEquipmentSlot.CHEST);
+		PlatinumChestplate = new PlatinumArmor("sPlatinumChestplate", BaseArmor.ArmorType.HEAVY, ModMaterials.PLATINUM, EntityEquipmentSlot.CHEST);
 		RegisterHelper.registerItem(PlatinumChestplate);		
-		PlatinumLeggings = new PlatinumArmor("sPlatinumLeggings", BaseArmor.ArmorType.MEDIUM, ModMaterials.PLATINUM,  EntityEquipmentSlot.LEGS);
+		PlatinumLeggings = new PlatinumArmor("sPlatinumLeggings", BaseArmor.ArmorType.HEAVY, ModMaterials.PLATINUM,  EntityEquipmentSlot.LEGS);
 		RegisterHelper.registerItem(PlatinumLeggings);		
-		PlatinumBoots = new PlatinumArmor("sPlatinumBoots", BaseArmor.ArmorType.MEDIUM, ModMaterials.PLATINUM, EntityEquipmentSlot.FEET);
+		PlatinumBoots = new PlatinumArmor("sPlatinumBoots", BaseArmor.ArmorType.HEAVY, ModMaterials.PLATINUM, EntityEquipmentSlot.FEET);
 		RegisterHelper.registerItem(PlatinumBoots);
 		
-		AluminiumHelmet = new AluminiumArmor("sAluminiumHelmet", BaseArmor.ArmorType.MEDIUM, ModMaterials.ALUMINIUM, EntityEquipmentSlot.HEAD);
+		AluminiumHelmet = new AluminiumArmor("sAluminiumHelmet", BaseArmor.ArmorType.LIGHT, ModMaterials.ALUMINIUM, EntityEquipmentSlot.HEAD);
 		RegisterHelper.registerItem(AluminiumHelmet);		
-		AluminiumChestplate = new AluminiumArmor("sAluminiumChestplate", BaseArmor.ArmorType.MEDIUM, ModMaterials.ALUMINIUM, EntityEquipmentSlot.CHEST);
+		AluminiumChestplate = new AluminiumArmor("sAluminiumChestplate", BaseArmor.ArmorType.LIGHT, ModMaterials.ALUMINIUM, EntityEquipmentSlot.CHEST);
 		RegisterHelper.registerItem(AluminiumChestplate);		
-		AluminiumLeggings = new AluminiumArmor("sAluminiumLeggings", BaseArmor.ArmorType.MEDIUM, ModMaterials.ALUMINIUM, EntityEquipmentSlot.LEGS);
+		AluminiumLeggings = new AluminiumArmor("sAluminiumLeggings", BaseArmor.ArmorType.LIGHT, ModMaterials.ALUMINIUM, EntityEquipmentSlot.LEGS);
 		RegisterHelper.registerItem(AluminiumLeggings);		
-		AluminiumBoots = new AluminiumArmor("sAluminiumBoots", BaseArmor.ArmorType.MEDIUM, ModMaterials.ALUMINIUM, EntityEquipmentSlot.FEET);
+		AluminiumBoots = new AluminiumArmor("sAluminiumBoots", BaseArmor.ArmorType.LIGHT, ModMaterials.ALUMINIUM, EntityEquipmentSlot.FEET);
 		RegisterHelper.registerItem(AluminiumBoots);
 		
 		SapphireHelmet = new SapphireArmor("sSapphireHelmet", BaseArmor.ArmorType.MEDIUM, ModMaterials.SAPPHIRE, EntityEquipmentSlot.HEAD);

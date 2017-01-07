@@ -27,6 +27,7 @@ import theking530.staticpower.conduits.itemconduit.TileEntityItemConduit;
 import theking530.staticpower.conduits.staticconduit.TileEntityStaticConduit;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.handlers.GuiHandler;
+import theking530.staticpower.handlers.ModEvents;
 import theking530.staticpower.handlers.OreGenerationHandler;
 import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.handlers.crafting.recipes.CondenserRecipes;
@@ -66,6 +67,7 @@ import theking530.staticpower.machines.poweredfurnace.TileEntityPoweredFurnace;
 import theking530.staticpower.machines.poweredgrinder.TileEntityPoweredGrinder;
 import theking530.staticpower.machines.quarry.TileEntityQuarry;
 import theking530.staticpower.newconduits.BaseConduitTileEntity;
+import theking530.staticpower.potioneffects.ModPotions;
 import theking530.staticpower.tileentity.chest.energizedchest.TileEntityEnergizedChest;
 import theking530.staticpower.tileentity.chest.lumumchest.TileEntityLumumChest;
 import theking530.staticpower.tileentity.chest.staticchest.TileEntityStaticChest;
@@ -121,6 +123,7 @@ public class StaticPower {
 		ModTools.init();
 		ModPlants.init();
 		ModArmor.init();
+		ModPotions.init();
 		
 		if(preEvent.getSide() == Side.CLIENT) {
 		    ModFluids.initBlockRendering();

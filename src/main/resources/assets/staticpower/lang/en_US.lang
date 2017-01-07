@@ -407,6 +407,16 @@ item.sRubyChestplate.name=Ruby Chestplate
 item.sRubyLeggings.name=Ruby Leggings
 item.sRubyBoots.name=Ruby Boots
 
+item.UndeadHelmet.name=Undead Helmet
+item.UndeadChestplate.name=Undead Chestplate
+item.UndeadLeggings.name=Undead Leggings
+item.UndeadBoots.name=Undead Boots
+
+item.SkeletonHelmet.name=Skeleton Helmet
+item.SkeletonChestplate.name=Skeleton Chestplate
+item.SkeletonLeggings.name=Skeleton Leggings
+item.SkeletonBoots.name=Skeleton Boots
+
 item.BaseFluidCapsule.name=Canister
 item.StaticFluidCapsule.name=Canister
 item.EnergizedFluidCapsule.name=Canister

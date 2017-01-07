@@ -11,3 +11,4 @@ Welder
 DONE	One or Two more ores (Aluminium, Zinc, Titanium, Three/Four Gems like Redstone) 
 Food like cheaper bread from wheat and barley
 Empowered Mode for Armor
+Armor sets by mob

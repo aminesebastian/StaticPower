@@ -2,40 +2,43 @@ package theking530.staticpower.items.armor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.lwjgl.input.Keyboard;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.items.EquipmentMaterial;
-import theking530.staticpower.items.ModItems;
-import theking530.staticpower.items.ModMaterials;
 import theking530.staticpower.utils.EnumTextFormatting;
 
 public class BaseArmor extends ItemArmor {
 
 	public EquipmentMaterial MATERIAL;
 	public ArmorType ARMOR_TYPE;
-
+	public Random RANDOM;
+	public int LEVEL;
+	
 	public BaseArmor(String name, ArmorType type, EquipmentMaterial materialIn, EntityEquipmentSlot equipmentSlotIn) {
 		super(materialIn.getArmorMaterial(), equipmentSlotIn == EntityEquipmentSlot.LEGS ? 2 : 1, equipmentSlotIn);
 	    MATERIAL = materialIn;
 	    ARMOR_TYPE = type;
+	    LEVEL = 10;
+	    RANDOM = new Random();
 		setCreativeTab(StaticPower.StaticPower);
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setMaxStackSize(1);
 	}
+	
     public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
     	if(!stack.hasTagCompound()) {
     		NBTTagCompound tempTag = new NBTTagCompound();
@@ -56,27 +59,36 @@ public class BaseArmor extends ItemArmor {
 	@Override
 	public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack) {
 		BaseArmor tempArmor = (BaseArmor) itemStack.getItem();
-		if(!isFullSet(player) || !itemStack.getTagCompound().getBoolean("EQUIPPED")) {
-			for(int i=0; i<getEffects().length; i++) {
-				player.removePotionEffect(getEffects()[i].getPotion());
-			}
-		}else{
-			for(int i=0; i<getEffects().length; i++) {
-				effectPlayer(player, getEffects()[i].getPotion(), getEffects()[i].getAmplifier());
+		if(getEffects() != null) {
+			if(!isFullSet(player) || !itemStack.getTagCompound().getBoolean("EQUIPPED")) {
+				for(int i=0; i<getEffects().length; i++) {
+					player.removePotionEffect(getEffects()[i].getPotion());
+				}
+			}else{
+				for(int i=0; i<getEffects().length; i++) {
+					effectPlayer(player, getEffects()[i].getPotion(), getEffects()[i].getAmplifier());
+				}
 			}
 		}
 	} 
 	public void onEquipped(EntityPlayer player, ItemStack itemstack, BaseArmor tempArmor) {
-		for(int i=0; i<getEffects().length; i++) {
-			effectPlayer(player, getEffects()[i].getPotion(), getEffects()[i].getAmplifier());
+		if(getEffects() != null) {
+			for(int i=0; i<getEffects().length; i++) {
+				effectPlayer(player, getEffects()[i].getPotion(), getEffects()[i].getAmplifier());
+			}
 		}
 	}
 	public void onUnequipped(EntityPlayer player, ItemStack itemstack, BaseArmor tempArmor) {
-		for(int i=0; i<getEffects().length; i++) {
-			player.removePotionEffect(getEffects()[i].getPotion());
+		if(getEffects() != null) {
+			for(int i=0; i<getEffects().length; i++) {
+				player.removePotionEffect(getEffects()[i].getPotion());
+			}
 		}
 	}
 	
+	public void onWearerDamaged(LivingAttackEvent event, float AdjustedDamage, EntityPlayer player, EntityEquipmentSlot equipmentSlot, ItemStack stack) {
+		
+	}
 	public List getSetInfo() {
 		List tempList = new ArrayList();
 		tempList.add("MISSING");
@@ -143,9 +155,15 @@ public class BaseArmor extends ItemArmor {
 		}
 		return false;
 	}
-	private void effectPlayer(EntityPlayer player, Potion potion, int amplifier) {
-	    if (player.getActivePotionEffect(potion) == null || player.getActivePotionEffect(potion).getDuration() <= 1)
+	protected void effectPlayer(EntityPlayer player, Potion potion, int amplifier) {
+	    if (player.getActivePotionEffect(potion) == null || player.getActivePotionEffect(potion).getDuration() <= 1) {
 	        player.addPotionEffect(new PotionEffect(potion, 20000000, amplifier, true, true));
+	    }
+	}
+	protected void effectPlayer(EntityPlayer player, Potion potion, int amplifier, int duration) {
+	    if (player.getActivePotionEffect(potion) == null || player.getActivePotionEffect(potion).getDuration() <= 1) {
+	        player.addPotionEffect(new PotionEffect(potion, duration, amplifier, true, true));
+	    }
 	}
 	
 	public boolean showHiddenTooltips() {
@@ -157,8 +175,9 @@ public class BaseArmor extends ItemArmor {
 		if(tempArmor != null) {	
 			ArmorType tempArmorType= tempArmor.ARMOR_TYPE;		
 			if(showHiddenTooltips()) {
+				list.add(EnumTextFormatting.BOLD + "Level " + LEVEL);
 				list.add("Type: " + tempArmorType.toLocalizedString());
-				list.add("Material: " + tempArmor.MATERIAL.toColorString());
+				list.add("Material: " + tempArmor.MATERIAL.getParentMaterial().toColorString());
 				list.add("");
 				list.add(EnumTextFormatting.UNDERLINE + "Set Bonus");
 				list.addAll(getSetInfo());
@@ -167,6 +186,10 @@ public class BaseArmor extends ItemArmor {
 				list.add(EnumTextFormatting.ITALIC + "Hold Shift");
 			}
 		}
+	}
+	
+	public ItemStack getRandomDrop(double dropRate) {
+		return new ItemStack(this, 1);
 	}
 	public static enum ArmorType {
 		LIGHT(2, 2, 0.5), MEDIUM(1, 1, 1), HEAVY(0.5, 0.5, 2);
@@ -195,5 +218,14 @@ public class BaseArmor extends ItemArmor {
 		public double getDamageBoost() {
 			return DAMAGE_BOOST;
 		}
+	}
+	
+	public boolean diceRoll(double percentage) {
+		if(percentage >= 1) {
+			return true;
+		}
+		double randDouble = RANDOM.nextDouble();
+		System.out.println(randDouble);
+		return percentage > randDouble ? true : false;
 	}
 }

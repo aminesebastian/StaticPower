@@ -18,6 +18,16 @@ public class ItemRenderRegistry {
 	public static void initItemRenderers() {
 		ItemRenderRegistry.registerItem(ModArmor.BaseShield);
 		
+		ItemRenderRegistry.registerItem(ModArmor.SkeletonHelmet);
+		ItemRenderRegistry.registerItem(ModArmor.SkeletonChestplate);
+		ItemRenderRegistry.registerItem(ModArmor.SkeletonLeggings);
+		ItemRenderRegistry.registerItem(ModArmor.SkeletonBoots);
+		
+		ItemRenderRegistry.registerItem(ModArmor.UndeadHelmet);
+		ItemRenderRegistry.registerItem(ModArmor.UndeadChestplate);
+		ItemRenderRegistry.registerItem(ModArmor.UndeadLeggings);
+		ItemRenderRegistry.registerItem(ModArmor.UndeadBoots);
+		
 		ItemRenderRegistry.registerItem(ModArmor.StaticHelmet);
 		ItemRenderRegistry.registerItem(ModArmor.StaticChestplate);
 		ItemRenderRegistry.registerItem(ModArmor.StaticLeggings);
