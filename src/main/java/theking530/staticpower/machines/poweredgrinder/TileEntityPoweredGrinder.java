@@ -8,12 +8,16 @@ import net.minecraft.nbt.NBTTagList;
 import theking530.staticpower.handlers.crafting.registries.GrinderRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.GrinderOutputWrapper;
 import theking530.staticpower.machines.BaseMachine;
+import theking530.staticpower.machines.machinecomponents.FillFromBatteryComponent;
 import theking530.staticpower.utils.InventoryUtilities;
 
 public class TileEntityPoweredGrinder extends BaseMachine {
 	
+	private FillFromBatteryComponent BATTERY_COMPONENT;
+	
 	public TileEntityPoweredGrinder() {
-		initializeBasicMachine(2, 1000, 100000, 80, 100, 1, 1, 3);
+		initializeBasicMachine(2, 1000, 100000, 80, 100, 1, 2, 3);
+		BATTERY_COMPONENT = new FillFromBatteryComponent("BatteryComponent", SLOTS_INPUT, 1, this, STORAGE);
 	}
 		
 	//IInventory				
@@ -68,6 +72,7 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 	}
 	public void process() {
 		if(!worldObj.isRemote) {
+			BATTERY_COMPONENT.update();
 			if(!isProcessing() && !isMoving() && canProcess(getInputStack(0))) {
 				MOVE_TIMER = 1;
 			}

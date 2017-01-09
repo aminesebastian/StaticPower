@@ -13,6 +13,11 @@ import theking530.staticpower.items.ModItems;
 public class GrinderRecipes {
 
 	public static void registerGrinderRecipes() {
+		
+		//Food
+		RegisterHelper.registerGrinderRecipe(new ItemStack(Items.WHEAT),  newOutput(new ItemStack(ModItems.WheatFlour, 2), 1.0f),  newOutput(new ItemStack(ModItems.WheatFlour, 2), 0.25f));
+		RegisterHelper.registerGrinderRecipe(new ItemStack(Items.POTATO),  newOutput(new ItemStack(ModItems.PotatoFlour, 2), 1.0f),  newOutput(new ItemStack(ModItems.PotatoFlour, 2), 0.25f));
+		
 		for(int index = 0; index < OreDictionary.getOres("oreCopper").size(); index++) {
 			RegisterHelper.registerGrinderRecipe(OreDictionary.getOres("oreCopper").get(index), newOutput(new ItemStack(ModItems.CopperDust, 2), 1.0f), newOutput(new ItemStack(ModItems.GoldDust, 1), 0.1f));
 		}

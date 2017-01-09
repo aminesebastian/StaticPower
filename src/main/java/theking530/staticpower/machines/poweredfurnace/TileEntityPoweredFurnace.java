@@ -5,17 +5,20 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import theking530.staticpower.machines.BaseMachine;
+import theking530.staticpower.machines.machinecomponents.FillFromBatteryComponent;
 import theking530.staticpower.utils.InventoryUtilities;
 
 public class TileEntityPoweredFurnace extends BaseMachine {
 
+	private FillFromBatteryComponent BATTERY_COMPONENT;
+	
 	public TileEntityPoweredFurnace() {
-		initializeBasicMachine(2, 1000, 100000, 80, 100, 1, 1, 1);
+		initializeBasicMachine(2, 1000, 100000, 80, 150, 1, 2, 1);
+		BATTERY_COMPONENT = new FillFromBatteryComponent("BatteryComponent", SLOTS_INPUT, 1, this, STORAGE);
 	}
 	@Override
 	public String getName() {
-		return "Powered Furnace";
-		
+		return "Powered Furnace";		
 	}			
 	
 	//Functionality
@@ -46,6 +49,7 @@ public class TileEntityPoweredFurnace extends BaseMachine {
 	}
 	public void process() {
 		if(!worldObj.isRemote) {
+			BATTERY_COMPONENT.update();
 			if(!isProcessing() && !isMoving() && canProcess(getInputStack(0))) {
 				MOVE_TIMER++;
 			}
@@ -66,9 +70,7 @@ public class TileEntityPoweredFurnace extends BaseMachine {
 					PROCESSING_TIMER=0;
 					updateBlock();
 					if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, 0, getResult(getInternalStack(0)))) {
-						//System.out.println(getResult(getInternalStack(0)));
 						InventoryUtilities.insertItemIntoInventory(SLOTS_OUTPUT, getResult(getInternalStack(0)), 0, 0);
-						//SLOTS_OUTPUT.insertItem(0, getResult(SLOTS_INTERNAL.getStackInSlot(0).copy()), false);
 						setInternalStack(0, null);
 						MOVE_TIMER = 0;
 					}

@@ -31,6 +31,9 @@ public class ContainerPoweredGrinder extends Container {
 		        }
 		});
 		
+		//Battery
+		this.addSlotToContainer(new SlotItemHandler(tePoweredGrinder.SLOTS_INPUT, 1, 8, 65));
+		
 		//Output
 		this.addSlotToContainer(new SlotItemHandler(tePoweredGrinder.SLOTS_OUTPUT, 0, 80, 60) {
 			@Override

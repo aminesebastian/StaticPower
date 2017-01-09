@@ -42,13 +42,13 @@ public class BasePoweredItem extends ItemEnergyContainer{
 	public int extractEnergy(ItemStack container, int maxExtract, boolean simulate) {
 		int extracted = super.extractEnergy(container, maxExtract, simulate);
 		updateDamage(container);
+		if(container.getItemDamage() == 0) {
+			container.setItemDamage(1);
+		}
 		return extracted;
 	}
 	@Override
     public boolean showDurabilityBar(ItemStack stack) {
-		if(stack.getItemDamage() == 0) {
-	        return false;	
-		}
 		return true;
     }
 	@Override

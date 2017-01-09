@@ -2,7 +2,7 @@ package theking530.staticpower.world.plants;
 
 import net.minecraft.item.Item;
 
-public class EnergizedPlant extends BaseCrop {
+public class EnergizedPlant extends BaseSimplePlant {
 
 	public EnergizedPlant(String name) {
 		super(name);

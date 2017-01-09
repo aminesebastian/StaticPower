@@ -3,13 +3,11 @@ package theking530.staticpower.machines.poweredfurnace;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.SlotItemHandler;
+import theking530.staticpower.machines.machinecomponents.SlotWithExperienceOutput;
 
 public class ContainerPoweredFurnace extends Container {
 	
@@ -26,12 +24,15 @@ public class ContainerPoweredFurnace extends Container {
 		//Input
 		this.addSlotToContainer(new SlotItemHandler(tePoweredSmelter.SLOTS_INPUT, 0, 50, 28));
 		
+		//Battery
+		this.addSlotToContainer(new SlotItemHandler(tePoweredSmelter.SLOTS_INPUT, 1, 8, 65));
+		
 		//Output
-		this.addSlotToContainer(new SlotItemHandler(tePoweredSmelter.SLOTS_OUTPUT, 0, 109, 32) {
+		this.addSlotToContainer(new SlotWithExperienceOutput(invPlayer.player, tePoweredSmelter.SLOTS_OUTPUT, 0, 109, 32) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return FurnaceRecipes.instance().getSmeltingResult(itemStack) != null;
-		        }
+		    }
 		});	
 		
 		//Upgrades

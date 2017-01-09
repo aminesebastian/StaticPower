@@ -4,7 +4,11 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
+import net.minecraft.block.BlockDispenser;
 import net.minecraft.block.BlockLiquid;
+import net.minecraft.client.renderer.ItemMeshDefinition;
+import net.minecraft.client.renderer.block.model.ModelBakery;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -18,7 +22,10 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelDynBucket;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.fluids.DispenseFluidContainer;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -38,6 +45,7 @@ public class BaseFluidCapsule extends ItemBase { // implements IItemColor  {
 	public BaseFluidCapsule(String name, int capacity) {
 		super(name);
 		CAPACITY = capacity;
+	    BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, DispenseFluidContainer.getInstance());
 	}
 	
     @SideOnly(Side.CLIENT)
@@ -180,26 +188,4 @@ public class BaseFluidCapsule extends ItemBase { // implements IItemColor  {
     public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt){
     	return new FluidHandlerItemStack(stack, CAPACITY);
     }
-    /*
-	@Override
-	public int getColorFromItemstack(ItemStack stack, int tintIndex) {
-		if(tintIndex == 0) {
-			return -1;
-		}else{
-			if(stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)){
-	    		FluidHandlerItemStack tempHandler = (FluidHandlerItemStack) stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
-	    		if(tempHandler.getFluid() != null) {
-	    			if(tempHandler.getFluid().getFluid().getBlock() != null) {
-	    				return tempHandler.getFluid().getFluid().getBlock().getMaterial(tempHandler.getFluid().getFluid().getBlock().getDefaultState()).getMaterialMapColor().colorValue;	
-	    			}else{
-	    				return -1;
-	    			}
-	    		}else{
-	    			return GUIUtilities.getColor(50, 50, 50);
-	    		}
-	    	}
-			return 1;
-		}
-	}
-	*/
 }

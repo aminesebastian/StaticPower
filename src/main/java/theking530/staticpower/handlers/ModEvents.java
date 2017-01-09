@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
 
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -24,6 +25,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
@@ -37,6 +39,7 @@ import theking530.staticpower.items.armor.BaseShield;
 import theking530.staticpower.items.armor.ModArmor;
 import theking530.staticpower.items.armor.SkeletonArmor;
 import theking530.staticpower.items.armor.UndeadArmor;
+import theking530.staticpower.mbe15_item_dynamic_item_model.ChessboardModel;
 import theking530.staticpower.potioneffects.BasePotion;
 
 public class ModEvents {
@@ -52,7 +55,21 @@ public class ModEvents {
 	public static void init() {
 		MinecraftForge.EVENT_BUS.register(new ModEvents());
 	}
-    @SubscribeEvent
+  @SubscribeEvent
+  public void onModelBakeEvent(ModelBakeEvent event)
+  {
+	  System.out.println("ADG");
+    // Find the existing mapping for ChessboardModel - we added it in StartupClientOnly.initClientOnly(), which
+    //   caused it to be loaded from resources (model/items/mbe15_item_chessboard.json) just like an ordinary item
+    // Replace the mapping with our ISmartBlockModel, using the existing mapped model as the base for the smart model.
+    Object object =  event.getModelRegistry().getObject(ChessboardModel.modelResourceLocation);
+    if (object instanceof IBakedModel) {
+      IBakedModel existingModel = (IBakedModel)object;
+      ChessboardModel customModel = new ChessboardModel(existingModel);
+      event.getModelRegistry().putObject(ChessboardModel.modelResourceLocation, customModel);
+    }
+  }
+    @SubscribeEvent(priority=EventPriority.HIGH, receiveCanceled=true)
 	public void attackEvent(LivingAttackEvent e) {
     	handleShieldDamage(e);
     	handleArmorDamage(e);
@@ -61,7 +78,7 @@ public class ModEvents {
     public void dropEvent(LivingDropsEvent event) {
     	handleArmorSetDrops(event);
     } 
-    @SubscribeEvent
+    @SubscribeEvent(priority=EventPriority.HIGHEST, receiveCanceled=true)
     public void onEntityUpdate(LivingUpdateEvent event) {
     	Collection<PotionEffect> tempEffects = event.getEntityLiving().getActivePotionEffects();
     	if(tempEffects == null) {
@@ -146,23 +163,24 @@ public class ModEvents {
                 }
             }
         }
-
-		if(player.inventory.armorItemInSlot(3) != null && player.inventory.armorItemInSlot(3).getItem() instanceof BaseArmor) {
-			BaseArmor tempArmor = (BaseArmor) player.inventory.armorItemInSlot(3).getItem();
-			tempArmor.onWearerDamaged(e, damageAmount, player, EntityEquipmentSlot.HEAD, player.inventory.armorItemInSlot(3));
-		}
-		if(player.inventory.armorItemInSlot(2) != null && player.inventory.armorItemInSlot(2).getItem() instanceof BaseArmor) {
-			BaseArmor tempArmor = (BaseArmor) player.inventory.armorItemInSlot(2).getItem();
-			tempArmor.onWearerDamaged(e, damageAmount, player, EntityEquipmentSlot.CHEST, player.inventory.armorItemInSlot(2));
-		}
-		if(player.inventory.armorItemInSlot(1) != null && player.inventory.armorItemInSlot(1).getItem() instanceof BaseArmor) {
-			BaseArmor tempArmor = (BaseArmor) player.inventory.armorItemInSlot(1).getItem();
-			tempArmor.onWearerDamaged(e, damageAmount, player, EntityEquipmentSlot.LEGS, player.inventory.armorItemInSlot(1));
-		}
-		if(player.inventory.armorItemInSlot(0) != null && player.inventory.armorItemInSlot(0).getItem() instanceof BaseArmor) {
-			BaseArmor tempArmor = (BaseArmor) player.inventory.armorItemInSlot(0).getItem();
-			tempArmor.onWearerDamaged(e, damageAmount, player, EntityEquipmentSlot.FEET, player.inventory.armorItemInSlot(0));
-		}	
+        if(player != null && player.inventory != null) {
+			if(player.inventory.armorInventory[3] != null && player.inventory.armorInventory[3].getItem() instanceof BaseArmor) {
+				BaseArmor tempArmor = (BaseArmor) player.inventory.armorInventory[3].getItem();
+				tempArmor.onWearerDamaged(e, damageAmount, player, EntityEquipmentSlot.HEAD, player.inventory.armorInventory[3]);
+			}
+			if(player.inventory.armorInventory[2] != null && player.inventory.armorInventory[2].getItem() instanceof BaseArmor) {
+				BaseArmor tempArmor = (BaseArmor) player.inventory.armorInventory[2].getItem();
+				tempArmor.onWearerDamaged(e, damageAmount, player, EntityEquipmentSlot.CHEST, player.inventory.armorInventory[2]);
+			}
+			if(player.inventory.armorInventory[1] != null && player.inventory.armorInventory[1].getItem() instanceof BaseArmor) {
+				BaseArmor tempArmor = (BaseArmor) player.inventory.armorInventory[1].getItem();
+				tempArmor.onWearerDamaged(e, damageAmount, player, EntityEquipmentSlot.LEGS, player.inventory.armorInventory[1]);
+			}
+			if(player.inventory.armorInventory[0] != null && player.inventory.armorInventory[0].getItem() instanceof BaseArmor) {
+				BaseArmor tempArmor = (BaseArmor) player.inventory.armorInventory[0].getItem();
+				tempArmor.onWearerDamaged(e, damageAmount, player, EntityEquipmentSlot.FEET, player.inventory.armorInventory[0]);
+			}	
+        }
     }
 
     public void handleArmorSetDrops(LivingDropsEvent event) {

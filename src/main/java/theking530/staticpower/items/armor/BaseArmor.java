@@ -105,16 +105,16 @@ public class BaseArmor extends ItemArmor {
 	 */
 	
 	public boolean isEquipped(EntityPlayer player, ItemStack itemstack) {
-		if(player.inventory.armorItemInSlot(3) != null && itemstack.isItemEqualIgnoreDurability(player.inventory.armorItemInSlot(3))) {
+		if(player.inventory.armorInventory[3] != null && itemstack.isItemEqualIgnoreDurability(player.inventory.armorInventory[3])) {
 			return true;
 		}
-		if(player.inventory.armorItemInSlot(2) != null && itemstack.isItemEqualIgnoreDurability(player.inventory.armorItemInSlot(2))) {
+		if(player.inventory.armorInventory[2] != null && itemstack.isItemEqualIgnoreDurability(player.inventory.armorInventory[2])) {
 			return true;
 		}
-		if(player.inventory.armorItemInSlot(1) != null && itemstack.isItemEqualIgnoreDurability(player.inventory.armorItemInSlot(1))) {
+		if(player.inventory.armorInventory[1] != null && itemstack.isItemEqualIgnoreDurability(player.inventory.armorInventory[1])) {
 			return true;
 		}
-		if(player.inventory.armorItemInSlot(0) != null && itemstack.isItemEqualIgnoreDurability(player.inventory.armorItemInSlot(0))) {
+		if(player.inventory.armorInventory[0] != null && itemstack.isItemEqualIgnoreDurability(player.inventory.armorInventory[0])) {
 			return true;
 		}		
 		return false;
@@ -134,17 +134,17 @@ public class BaseArmor extends ItemArmor {
 		BaseArmor leggings = null;
 		BaseArmor boots = null;
 		
-		if(player.inventory.armorItemInSlot(3) != null) {
-			helmet = (BaseArmor)player.inventory.armorItemInSlot(3).getItem();
+		if(player.inventory.armorInventory[3] != null) {
+			helmet = (BaseArmor)player.inventory.armorInventory[3].getItem();
 		}
-		if(player.inventory.armorItemInSlot(2) != null) {
-			chest = (BaseArmor)player.inventory.armorItemInSlot(2).getItem();
+		if(player.inventory.armorInventory[2] != null) {
+			chest = (BaseArmor)player.inventory.armorInventory[2].getItem();
 		}
-		if(player.inventory.armorItemInSlot(1) != null) {
-			leggings = (BaseArmor)player.inventory.armorItemInSlot(1).getItem();
+		if(player.inventory.armorInventory[1] != null) {
+			leggings = (BaseArmor)player.inventory.armorInventory[1].getItem();
 		}
-		if(player.inventory.armorItemInSlot(0) != null) {
-			boots = (BaseArmor)player.inventory.armorItemInSlot(0).getItem();
+		if(player.inventory.armorInventory[0] != null) {
+			boots = (BaseArmor)player.inventory.armorInventory[0].getItem();
 		}
 		
 		if (helmet != null && helmet.MATERIAL == MATERIAL

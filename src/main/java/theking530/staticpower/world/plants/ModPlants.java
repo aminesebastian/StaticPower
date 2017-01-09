@@ -12,6 +12,7 @@ public class ModPlants {
 	public static Block StaticCropPlant;
 	public static Block EnergizedCropPlant;
 	public static Block LumumCropPlant;
+	public static Block TestDoublePlant;
 	
 	public static Item DepletedCrop;
 	public static Item EnergizedSeeds;
@@ -46,6 +47,9 @@ public class ModPlants {
 		RegisterHelper.registerItem(LumumSeeds);	
 		LumumCrop = new LumumCrop().setUnlocalizedName("LumumCrop");
 		RegisterHelper.registerItem(LumumCrop);		
+		
+		TestDoublePlant = new BaseDoublePlant("TestDoublePlant", DepletedCrop, DepletedCrop);
+		RegisterHelper.registerBlock(TestDoublePlant);	
 
 	}
 }

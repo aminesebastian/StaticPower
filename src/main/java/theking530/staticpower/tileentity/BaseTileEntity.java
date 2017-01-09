@@ -18,7 +18,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-import theking530.staticpower.machines.machinecomponents.BaseComponent;
+import theking530.staticpower.machines.machinecomponents.IMachineComponentInterface;
 import theking530.staticpower.utils.RedstoneModeList;
 import theking530.staticpower.utils.RedstoneModeList.RedstoneMode;
 import theking530.staticpower.utils.SideModeList;
@@ -49,7 +49,7 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 	public boolean PLACED = false;
 	
 	public boolean REQUIRES_UPDATE = false;
-	public ArrayList<BaseComponent> COMPONENTS;
+	public ArrayList<IMachineComponentInterface> COMPONENTS;
 	public boolean WRENCHED = false;
 	
 	public BaseTileEntity() {
@@ -60,7 +60,7 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 		SLOTS_OUTPUT = new ItemStackHandler(outputSlots);
 		SLOTS_INTERNAL = new ItemStackHandler(internalSlots);
 		SLOTS_UPGRADES = new ItemStackHandler(3);
-		COMPONENTS = new ArrayList<BaseComponent>();
+		COMPONENTS = new ArrayList<IMachineComponentInterface>();
 	}
 
 	@Override
@@ -581,7 +581,6 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 	
     public boolean hasCapability(net.minecraftforge.common.capabilities.Capability<?> capability, net.minecraft.util.EnumFacing facing){
     	if(SIDE_MODES[facing.ordinal()] == Mode.Disabled) {
-       		System.out.println(facing);
     		return false;
     	}
     	if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
@@ -606,7 +605,6 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 	public void incrementSide(int side){
 		if(side == 3) {
 			SIDE_MODES[3] = SideModeList.Mode.Disabled;
-			System.out.println(SIDE_MODES[3]);
 		}
 		if(SIDE_MODES[side].ordinal() >= 3) {
 			SIDE_MODES[side] = SideModeList.Mode.values()[0];

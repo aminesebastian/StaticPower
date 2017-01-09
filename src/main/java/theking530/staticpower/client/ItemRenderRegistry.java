@@ -11,11 +11,21 @@ import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.items.armor.ModArmor;
 import theking530.staticpower.items.tools.basictools.ModTools;
+import theking530.staticpower.mbe15_item_dynamic_item_model.StartupCommon;
 import theking530.staticpower.world.plants.ModPlants;
 
 public class ItemRenderRegistry {
 
 	public static void initItemRenderers() {
+		ItemRenderRegistry.registerItem(ModItems.PotatoFlour);
+		ItemRenderRegistry.registerItem(ModItems.WheatFlour);
+		ItemRenderRegistry.registerItem(ModItems.PotatoBread);
+		
+		ItemRenderRegistry.registerItem(ModItems.ApplePie);
+		ItemRenderRegistry.registerItem(ModItems.StaticPie);
+		ItemRenderRegistry.registerItem(ModItems.EnergizedPie);
+		ItemRenderRegistry.registerItem(ModItems.LumumPie);
+		
 		ItemRenderRegistry.registerItem(ModArmor.BaseShield);
 		
 		ItemRenderRegistry.registerItem(ModArmor.SkeletonHelmet);
@@ -82,11 +92,6 @@ public class ItemRenderRegistry {
 		ItemRenderRegistry.registerItem(ModArmor.RubyChestplate);
 		ItemRenderRegistry.registerItem(ModArmor.RubyLeggings);
 		ItemRenderRegistry.registerItem(ModArmor.RubyBoots);
-		
-		ItemRenderRegistry.registerItem(ModItems.BaseFluidCapsule);
-		ItemRenderRegistry.registerItem(ModItems.StaticFluidCapsule);
-		ItemRenderRegistry.registerItem(ModItems.EnergizedFluidCapsule);
-		ItemRenderRegistry.registerItem(ModItems.LumumFluidCapsule);
 
 		ItemRenderRegistry.registerItem(ModItems.SilverDust);
 		ItemRenderRegistry.registerItem(ModItems.CopperDust);
@@ -348,6 +353,13 @@ public class ItemRenderRegistry {
 		ItemRenderRegistry.registerItem(ModTools.RubyHoe);
 		ItemRenderRegistry.registerItem(ModTools.RubySword);
 		
+		ItemRenderRegistry.registerItem(ModItems.BaseFluidCapsule);
+		ItemRenderRegistry.registerItem(ModItems.StaticFluidCapsule);
+		ItemRenderRegistry.registerItem(ModItems.EnergizedFluidCapsule);
+		ItemRenderRegistry.registerItem(ModItems.LumumFluidCapsule);
+		
+	    ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation("staticpower:mbe15_item_chessboard", "inventory");
+	    ModelLoader.setCustomModelResourceLocation(StartupCommon.itemChessBoard, 0, itemModelResourceLocation);
 	}
     public static void registerItem(Item item, int metadata) {
     	Minecraft.getMinecraft().getRenderItem().getItemModelMesher()

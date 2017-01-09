@@ -2,7 +2,6 @@ package theking530.staticpower.items;
 
 import static theking530.staticpower.assists.RegisterHelper.registerItem;
 
-import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -30,6 +29,7 @@ import theking530.staticpower.items.upgrades.BaseQuarryingUpgrade;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.items.upgrades.BaseSpeedUpgrade;
 import theking530.staticpower.items.upgrades.BaseTankUpgrade;
+import theking530.staticpower.mbe15_item_dynamic_item_model.StartupCommon;
 
 public class ModItems {
 	
@@ -164,13 +164,34 @@ public class ModItems {
 	public static Item LumumNugget;
 	public static Item IronNugget;
 	
+	public static Item WheatFlour;
+	public static Item PotatoFlour;
+	public static Item PotatoBread;
+	
+	public static Item ApplePie;
+	public static Item StaticPie;
+	public static Item EnergizedPie;
+	public static Item LumumPie;
 
-	
-	public static Block StaticCropPlant;
-	public static Block EnergizedCropPlant;
-	public static Block LumumCropPlant;
-	
 	public static void init() {		
+		
+		StartupCommon.preInitCommon();
+		
+		WheatFlour = new BaseFood("WheatFlour", 2);
+		RegisterHelper.registerItem(WheatFlour);	
+		PotatoFlour = new BaseFood("PotatoFlour", 2);
+		RegisterHelper.registerItem(PotatoFlour);
+		PotatoBread = new BaseFood("PotatoBread", 8);
+		RegisterHelper.registerItem(PotatoBread);
+		
+		ApplePie = new BaseFood("ApplePie", 6);
+		RegisterHelper.registerItem(ApplePie);
+		StaticPie = new BaseFood("StaticPie", 7);
+		RegisterHelper.registerItem(StaticPie);
+		EnergizedPie = new BaseFood("EnergizedPie", 8);
+		RegisterHelper.registerItem(EnergizedPie);
+		LumumPie = new BaseFood("LumumPie", 9);
+		RegisterHelper.registerItem(LumumPie);
 		
 		BaseFluidCapsule = new BaseFluidCapsule("BaseFluidCapsule", 2000);
 		RegisterHelper.registerItem(BaseFluidCapsule);

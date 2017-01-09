@@ -422,6 +422,16 @@ item.StaticFluidCapsule.name=Canister
 item.EnergizedFluidCapsule.name=Canister
 item.LumumFluidCapsule.name=Canister
 
+//Food
+item.WheatFlour.name=Wheat Flour
+item.PotatoFlour.name=Potato Flour
+item.PotatoBread.name=Potato Bread
+
+item.ApplePie.name=Apple Pie
+item.StaticPie.name=§aStatic Pie
+item.EnergizedPie.name=§bEnergized Pie
+item.LumumPie.name=§eLumum Pie
+
 //TIC
 material.staticmetal=Static Metal
 material.energizedmetal=Energized Metal

@@ -17,6 +17,13 @@ public class ShaplessRecipes {
 	@SuppressWarnings("all")
 	private static void registerShapelessRecipes() {
 		
+		//Food --------------------------------------------------------------------------------------------------
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.PotatoFlour), new Object[]{
+			new ItemStack(Items.POTATO)});
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.WheatFlour), new Object[]{
+				new ItemStack(Items.WHEAT)});
+		
+		
 		//Static Book --------------------------------------------------------------------------------------------------
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.StaticBook), new Object[]{
 				new ItemStack(ModPlants.StaticSeeds), new ItemStack(Items.BOOK)});
@@ -129,7 +136,7 @@ public class ShaplessRecipes {
 		GameRegistry.addShapelessRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.LumumPlanks), 4), new Object[]{
 			new ItemStack(Item.getItemFromBlock(ModBlocks.LumumWood))});
 		
-		//Cannisters
+		//Cannisters --------------------------------------------------------------------------------------------------
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.BaseFluidCapsule, 1), new Object[]{
 				new ItemStack(ModItems.BaseFluidCapsule)});
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.StaticFluidCapsule, 1), new Object[]{
@@ -139,7 +146,7 @@ public class ShaplessRecipes {
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.LumumFluidCapsule, 1), new Object[]{
 				new ItemStack(ModItems.LumumFluidCapsule)});
 		
-		//Filters
+		//Filters --------------------------------------------------------------------------------------------------
 		ItemStack quarryFilter = new ItemStack(ModItems.UpgradedItemFilter);
 		ItemFilter.writeQuarryFilter(quarryFilter);
 		GameRegistry.addShapelessRecipe(quarryFilter, new Object[]{

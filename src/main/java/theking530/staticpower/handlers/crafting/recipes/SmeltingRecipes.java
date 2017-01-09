@@ -12,6 +12,10 @@ public class SmeltingRecipes {
 	@SuppressWarnings("all")
 	private static void registerSmeltingRecipes() {
 		
+		//Food
+		GameRegistry.addSmelting(new ItemStack(ModItems.WheatFlour), new ItemStack(Items.BREAD), 0.1f);
+		GameRegistry.addSmelting(new ItemStack(ModItems.PotatoFlour), new ItemStack(ModItems.PotatoBread), 0.1f);
+		
 		//Silver
 		ItemStack dustSilver = new ItemStack(ModItems.SilverDust);
 		ItemStack ingotSilver = new ItemStack(ModItems.SilverIngot, 1);

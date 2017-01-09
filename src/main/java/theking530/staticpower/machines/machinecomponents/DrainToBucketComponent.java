@@ -11,8 +11,10 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class DrainToBucketComponent extends BaseComponent{
+public class DrainToBucketComponent implements IMachineComponentInterface{
 
+	private String NAME;
+	
 	private ItemStackHandler INITIAL_EMPTY_BUCKET_HANDLER;
 	private int INITIAL_EMPTY_BUCKET_SLOT;
 	private ItemStackHandler INITIAL_FILLED_BUCKET_HANDLER;
@@ -37,8 +39,8 @@ public class DrainToBucketComponent extends BaseComponent{
 
 	public DrainToBucketComponent(String componentName, ItemStackHandler EmptyBucketHandler, int EmptyBucketSlot, ItemStackHandler FilledBucketHandler, int FilledBucketSlot,
 			BaseTileEntity tileEntity, IFluidHandler fluidHandler, int drainRate) {
-		super(componentName);
-		
+
+		NAME = componentName;
 		INITIAL_EMPTY_BUCKET_HANDLER = EmptyBucketHandler;
 		INITIAL_EMPTY_BUCKET_SLOT = EmptyBucketSlot;
 		INITIAL_FILLED_BUCKET_HANDLER = FilledBucketHandler;
@@ -160,5 +162,9 @@ public class DrainToBucketComponent extends BaseComponent{
 		}else{
 			return FluidContainerInteractionMode.DrainToContainer;
 		}
+	}
+	@Override
+	public String getComponentName() {
+		return NAME;
 	}
 }
