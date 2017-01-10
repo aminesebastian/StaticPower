@@ -7,7 +7,7 @@ to some of the data and functions you need to build a successful mod.
 
 Note also that the patches are built against "unrenamed" MCP source code (aka
 srgnames) - this means that you will not be able to read them directly against
-normal code.
+normal code.g
 
 Source pack installation information:
 
