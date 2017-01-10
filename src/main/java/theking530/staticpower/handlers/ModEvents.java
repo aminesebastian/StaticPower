@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
 
-import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -25,7 +24,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
@@ -39,7 +37,6 @@ import theking530.staticpower.items.armor.BaseShield;
 import theking530.staticpower.items.armor.ModArmor;
 import theking530.staticpower.items.armor.SkeletonArmor;
 import theking530.staticpower.items.armor.UndeadArmor;
-import theking530.staticpower.mbe15_item_dynamic_item_model.ChessboardModel;
 import theking530.staticpower.potioneffects.BasePotion;
 
 public class ModEvents {
@@ -50,25 +47,11 @@ public class ModEvents {
 	public ModEvents() {
 		RANDOM = new Random();
 		POTION_EFFECTS = new ArrayList<PotionEffect>();
-	}
-	
+	}	
 	public static void init() {
 		MinecraftForge.EVENT_BUS.register(new ModEvents());
 	}
-  @SubscribeEvent
-  public void onModelBakeEvent(ModelBakeEvent event)
-  {
-	  System.out.println("ADG");
-    // Find the existing mapping for ChessboardModel - we added it in StartupClientOnly.initClientOnly(), which
-    //   caused it to be loaded from resources (model/items/mbe15_item_chessboard.json) just like an ordinary item
-    // Replace the mapping with our ISmartBlockModel, using the existing mapped model as the base for the smart model.
-    Object object =  event.getModelRegistry().getObject(ChessboardModel.modelResourceLocation);
-    if (object instanceof IBakedModel) {
-      IBakedModel existingModel = (IBakedModel)object;
-      ChessboardModel customModel = new ChessboardModel(existingModel);
-      event.getModelRegistry().putObject(ChessboardModel.modelResourceLocation, customModel);
-    }
-  }
+	
     @SubscribeEvent(priority=EventPriority.HIGH, receiveCanceled=true)
 	public void attackEvent(LivingAttackEvent e) {
     	handleShieldDamage(e);

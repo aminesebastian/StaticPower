@@ -1,13 +1,11 @@
 package theking530.staticpower;
 
 import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.Logger;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -27,7 +25,6 @@ import theking530.staticpower.conduits.itemconduit.TileEntityItemConduit;
 import theking530.staticpower.conduits.staticconduit.TileEntityStaticConduit;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.handlers.GuiHandler;
-import theking530.staticpower.handlers.ModEvents;
 import theking530.staticpower.handlers.OreGenerationHandler;
 import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.handlers.crafting.recipes.CondenserRecipes;
@@ -44,8 +41,8 @@ import theking530.staticpower.handlers.crafting.recipes.SolderingRecipes;
 import theking530.staticpower.handlers.crafting.recipes.SqueezerRecipes;
 import theking530.staticpower.handlers.crafting.recipes.ToolRecipes;
 import theking530.staticpower.integration.TIC.TinkersIMC;
-import theking530.staticpower.items.ModMaterials;
 import theking530.staticpower.items.ModItems;
+import theking530.staticpower.items.ModMaterials;
 import theking530.staticpower.items.armor.ModArmor;
 import theking530.staticpower.items.tools.basictools.ModTools;
 import theking530.staticpower.machines.basicfarmer.TileEntityBasicFarmer;
@@ -101,7 +98,7 @@ public class StaticPower {
     
     public static CreativeTabs StaticPower = new CreativeTabStandard(CreativeTabs.getNextID(), "StaticPower");  
     public static Configuration config;
-    public static Logger logger = FMLLog.getLogger();
+    public static org.apache.logging.log4j.Logger logger;
     
     @Mod.Instance(Reference.MODID)
     public static StaticPower instance;
@@ -112,6 +109,7 @@ public class StaticPower {
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent preEvent){
+		logger = preEvent.getModLog();
 		config = new Configuration(preEvent.getSuggestedConfigurationFile());
 		StaticPowerConfig.updateConfig();
 	
@@ -132,6 +130,7 @@ public class StaticPower {
 		
 	    OreGenerationHandler.intialize();
 	    CommonProxy.preInit();
+	    
 	    if (Loader.instance().isModLoaded("tconstruct")) {
 	        try {
         		TinkersIMC.initialize();

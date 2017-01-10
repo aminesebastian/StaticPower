@@ -45,7 +45,7 @@ public class TinkersIMC {
 		tag.setFloat("Projectile_Mass", projectileMass);
 		tag.setFloat("Projectile_Fragility", projectileFragility); // This is a multiplier to the shafts break-chance
 
-		FMLInterModComms.sendMessage("TConstruct", "addMaterial", tag);	
+		FMLInterModComms.sendMessage("tconstruct", "addMaterial", tag);	
 		
 		NBTTagCompound repairTag = new NBTTagCompound();
 		repairTag.setInteger("MaterialId", ID);
@@ -54,7 +54,7 @@ public class TinkersIMC {
 		item.writeToNBT(repairItem); // seared brick item
 		repairTag.setTag("Item", repairItem);
 
-		FMLInterModComms.sendMessage("TConstruct", "addMaterialItem", repairTag);
+		FMLInterModComms.sendMessage("tconstruct", "addMaterialItem", repairTag);
 		
 		NBTTagCompound partTag = new NBTTagCompound();
 		partTag.setInteger("MaterialId", ID); // output material id
@@ -65,7 +65,7 @@ public class TinkersIMC {
 		// 1 value = 1 shard. So 1 blocks like stone usually have value 2.
 		// Seared Brick is the shard, the block consists of 4 bricks, therefore value 4
 		partTag.setInteger("Value", 2);
-		FMLInterModComms.sendMessage("TConstruct", "addPartBuilderMaterial", partTag);
+		FMLInterModComms.sendMessage("tconstruct", "addPartBuilderMaterial", partTag);
 		
 	}
 	
@@ -90,12 +90,12 @@ public class TinkersIMC {
 		tag.setTag("Block", item);
 		fluid.writeToNBT(tag);
 		tag.setInteger("Temperature", temperature);
-		FMLInterModComms.sendMessage("TConstruct", "addSmelteryMelting", tag);
+		FMLInterModComms.sendMessage("tconstruct", "addSmelteryMelting", tag);
 		
 		NBTTagCompound fluidTag = new NBTTagCompound();
 		fluid.writeToNBT(fluidTag); // this also works, amount doesn't matter
 		fluidTag.setInteger("MaterialId", ID); // output material id
-		FMLInterModComms.sendMessage("TConstruct", "addPartCastingMaterial", fluidTag);
+		FMLInterModComms.sendMessage("tconstruct", "addPartCastingMaterial", fluidTag);
 
 	}
 

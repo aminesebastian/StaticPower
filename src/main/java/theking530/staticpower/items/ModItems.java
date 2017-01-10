@@ -29,7 +29,6 @@ import theking530.staticpower.items.upgrades.BaseQuarryingUpgrade;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.items.upgrades.BaseSpeedUpgrade;
 import theking530.staticpower.items.upgrades.BaseTankUpgrade;
-import theking530.staticpower.mbe15_item_dynamic_item_model.StartupCommon;
 
 public class ModItems {
 	
@@ -173,10 +172,7 @@ public class ModItems {
 	public static Item EnergizedPie;
 	public static Item LumumPie;
 
-	public static void init() {		
-		
-		StartupCommon.preInitCommon();
-		
+	public static void init() {				
 		WheatFlour = new BaseFood("WheatFlour", 2);
 		RegisterHelper.registerItem(WheatFlour);	
 		PotatoFlour = new BaseFood("PotatoFlour", 2);
