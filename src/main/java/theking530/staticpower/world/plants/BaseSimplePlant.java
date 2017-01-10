@@ -27,7 +27,7 @@ public class BaseSimplePlant extends BlockCrops implements IGrowable {
         setTickRandomly(true);
         setHardness(0.0F);
         disableStats();
-        setLightLevel(1.0F);
+        //setLightLevel(1.0F);
 		setUnlocalizedName(name);
 		setRegistryName(name);
     }

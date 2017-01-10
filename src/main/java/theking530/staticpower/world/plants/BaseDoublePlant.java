@@ -4,18 +4,10 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.BlockCrops;
-import net.minecraft.block.BlockDoublePlant;
-import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.IGrowable;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -25,20 +17,17 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import theking530.staticpower.assists.Tier;
-import theking530.staticpower.items.ModItems;
 
-public class BaseDoublePlant extends BlockCrops implements IGrowable {
+public class BaseDoublePlant extends BaseSimplePlant  {
 
     private static final AxisAlignedBB[] CROPS_AABB = new AxisAlignedBB[] {new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.125D, 1.0D), new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.25D, 1.0D), new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.375D, 1.0D), new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.5D, 1.0D), new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.625D, 1.0D), new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.75D, 1.0D), new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.875D, 1.0D), new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.9D, 1.0D)};
     public static final PropertyEnum<EnumCropHalf> HALF = PropertyEnum.<EnumCropHalf>create("half", EnumCropHalf.class);
     
     public BaseDoublePlant(String name, Item seeds, Item crop) {
+    	super(name);
         setTickRandomly(true);
         setHardness(0.0F);
         disableStats();
-		setUnlocalizedName(name);
-		setRegistryName(name);
         setDefaultState(blockState.getBaseState().withProperty(this.getAgeProperty(), Integer.valueOf(0)).withProperty(HALF, EnumCropHalf.LOWER));
         setSoundType(SoundType.PLANT);
     }

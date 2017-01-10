@@ -48,8 +48,8 @@ public class ModPlants {
 		LumumCrop = new LumumCrop().setUnlocalizedName("LumumCrop");
 		RegisterHelper.registerItem(LumumCrop);		
 		
-		TestDoublePlant = new BaseDoublePlant("TestDoublePlant", DepletedCrop, DepletedCrop);
-		RegisterHelper.registerBlock(TestDoublePlant);	
+		//TestDoublePlant = new BaseDoublePlant("TestDoublePlant", DepletedCrop, DepletedCrop).setLightLevel(1.0F);
+		//-RegisterHelper.registerBlock(TestDoublePlant);	
 
 	}
 }
