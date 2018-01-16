@@ -4,9 +4,9 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraftforge.oredict.OreIngredient;
+import theking530.staticpower.assists.RegisterHelper;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.items.itemfilter.ItemFilter;
@@ -18,144 +18,135 @@ public class ShaplessRecipes {
 	private static void registerShapelessRecipes() {
 		
 		//Food --------------------------------------------------------------------------------------------------
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.PotatoFlour), new Object[]{
-			new ItemStack(Items.POTATO)});
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.WheatFlour), new Object[]{
-				new ItemStack(Items.WHEAT)});
+		RegisterHelper.addShapelessRecipe("StaticPower_potatoFlour", "StaticPower", new ItemStack(ModItems.PotatoFlour), new Ingredient[]{
+			Ingredient.fromItem(Items.POTATO)});
+		RegisterHelper.addShapelessRecipe("StaticPower_wheatFlour", "StaticPower", new ItemStack(ModItems.WheatFlour), new Ingredient[]{
+				Ingredient.fromItem(Items.WHEAT)});
 		
-		
+
 		//Static Book --------------------------------------------------------------------------------------------------
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.StaticBook), new Object[]{
-				new ItemStack(ModPlants.StaticSeeds), new ItemStack(Items.BOOK)});
+		RegisterHelper.addShapelessRecipe("StaticPower_staticBook", "StaticPower", new ItemStack(ModItems.StaticBook), new Ingredient[]{
+				Ingredient.fromItem(ModPlants.StaticSeeds), Ingredient.fromItem(Items.BOOK)});
 		
 		//Infusion Blends
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.EnergizedInfusionBlend), new Object[]{
-				new ItemStack(ModItems.InertInfusionBlend), new ItemStack(ModItems.EnergizedDust)});
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.LumumInfusionBlend), new Object[]{
-				new ItemStack(ModItems.InertInfusionBlend), new ItemStack(ModItems.LumumDust)});
+		RegisterHelper.addShapelessRecipe("StaticPower_energizedInfusionBlend", "StaticPower", new ItemStack(ModItems.EnergizedInfusionBlend, 2), new Ingredient[]{
+				Ingredient.fromItem(ModItems.InertInfusionBlend), Ingredient.fromItem(ModItems.EnergizedDust)});
+		RegisterHelper.addShapelessRecipe("StaticPower_lumumInfusionBlend", "StaticPower", new ItemStack(ModItems.LumumInfusionBlend, 2), new Ingredient[]{
+				Ingredient.fromItem(ModItems.InertInfusionBlend), Ingredient.fromItem(ModItems.LumumDust)});
 		
 		//Coils ---------------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.CopperWire, 8), new Object[]{
-				new ItemStack(ModItems.WireCutters, 1, OreDictionary.WILDCARD_VALUE), "ingotCopper"}));
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.SilverWire, 8), new Object[]{
-				new ItemStack(ModItems.WireCutters, 1, OreDictionary.WILDCARD_VALUE), "ingotSilver"}));
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.GoldWire, 8), new Object[]{
-				new ItemStack(ModItems.WireCutters, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(Items.GOLD_INGOT)});
+		RegisterHelper.addShapelessRecipe("StaticPower_copperWire", "StaticPower", new ItemStack(ModItems.CopperWire, 8), new Ingredient[]{
+				Ingredient.fromItem(ModItems.WireCutters), new OreIngredient("ingotCopper")});
+		RegisterHelper.addShapelessRecipe("StaticPower_silverWire", "StaticPower", new ItemStack(ModItems.SilverWire, 8), new Ingredient[]{
+				Ingredient.fromItem(ModItems.WireCutters), new OreIngredient("ingotSilver")});
+		RegisterHelper.addShapelessRecipe("StaticPower_goldWire", "StaticPower", new ItemStack(ModItems.GoldWire, 8), new Ingredient[]{
+				Ingredient.fromItem(ModItems.WireCutters), Ingredient.fromItem(Items.GOLD_INGOT)});
 		
 		//Plates ---------------------------------------------------------------------------------------------------------
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.IronPlate, 1), new Object[]{
-				new ItemStack(ModItems.MetalHammer, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(Items.IRON_INGOT)});
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.GoldPlate, 1), new Object[]{
-				new ItemStack(ModItems.MetalHammer, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(Items.GOLD_INGOT)});
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.CopperPlate, 1), new Object[]{
-				new ItemStack(ModItems.MetalHammer, 1, OreDictionary.WILDCARD_VALUE), "ingotCopper"}));
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.TinPlate, 1), new Object[]{
-				new ItemStack(ModItems.MetalHammer, 1, OreDictionary.WILDCARD_VALUE), "ingotTin"}));
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.SilverPlate, 1), new Object[]{
-				new ItemStack(ModItems.MetalHammer, 1, OreDictionary.WILDCARD_VALUE), "ingotSilver"}));
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.LeadPlate, 1), new Object[]{
-				new ItemStack(ModItems.MetalHammer, 1, OreDictionary.WILDCARD_VALUE), "ingotLead"}));
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.StaticPlate, 1), new Object[]{
-				new ItemStack(ModItems.MetalHammer, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(ModItems.StaticIngot)});
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.EnergizedPlate, 1), new Object[]{
-				new ItemStack(ModItems.MetalHammer, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(ModItems.EnergizedIngot)});
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.LumumPlate, 1), new Object[]{
-				new ItemStack(ModItems.MetalHammer, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(ModItems.LumumIngot)});
+		RegisterHelper.addShapelessRecipe("StaticPower_ironPlate", "StaticPower", new ItemStack(ModItems.IronPlate, 1), new Ingredient[]{
+				Ingredient.fromItem(ModItems.MetalHammer), Ingredient.fromItem(Items.IRON_INGOT)});
+		RegisterHelper.addShapelessRecipe("StaticPower_goldPlate", "StaticPower", new ItemStack(ModItems.GoldPlate, 1), new Ingredient[]{
+				Ingredient.fromItem(ModItems.MetalHammer), Ingredient.fromItem(Items.GOLD_INGOT)});
+		RegisterHelper.addShapelessRecipe("StaticPower_copperPlate", "StaticPower", new ItemStack(ModItems.CopperPlate, 1), new Ingredient[]{
+				Ingredient.fromItem(ModItems.MetalHammer), new OreIngredient("ingotCopper")});
+		RegisterHelper.addShapelessRecipe("StaticPower_tinPlate", "StaticPower", new ItemStack(ModItems.TinPlate, 1), new Ingredient[]{
+				Ingredient.fromItem(ModItems.MetalHammer), new OreIngredient("ingotTin")});
+		RegisterHelper.addShapelessRecipe("StaticPower_silverPlate", "StaticPower", new ItemStack(ModItems.SilverPlate, 1), new Ingredient[]{
+				Ingredient.fromItem(ModItems.MetalHammer), new OreIngredient("ingotSilver")});
+		RegisterHelper.addShapelessRecipe("StaticPower_leadPlate", "StaticPower", new ItemStack(ModItems.LeadPlate, 1), new Ingredient[]{
+				Ingredient.fromItem(ModItems.MetalHammer), new OreIngredient("ingotLead")});
+		RegisterHelper.addShapelessRecipe("StaticPower_staticPlate", "StaticPower", new ItemStack(ModItems.StaticPlate, 1), new Ingredient[]{
+				Ingredient.fromItem(ModItems.MetalHammer), Ingredient.fromItem(ModItems.StaticIngot)});
+		RegisterHelper.addShapelessRecipe("StaticPower_energizedPlate", "StaticPower", new ItemStack(ModItems.EnergizedPlate, 1), new Ingredient[]{
+				Ingredient.fromItem(ModItems.MetalHammer), Ingredient.fromItem(ModItems.EnergizedIngot)});
+		RegisterHelper.addShapelessRecipe("StaticPower_lumumPlate", "StaticPower", new ItemStack(ModItems.LumumPlate, 1), new Ingredient[]{
+				Ingredient.fromItem(ModItems.MetalHammer), Ingredient.fromItem(ModItems.LumumIngot)});
 		
 		//Metal BLocks --------------------------------------------------------------------------------------------------
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.StaticIngot, 9), new Object[]{
-				new ItemStack(ModBlocks.StaticBlock)});
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.EnergizedIngot, 9), new Object[]{
-			new ItemStack(ModBlocks.EnergizedBlock)});
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.LumumIngot, 9), new Object[]{
-				new ItemStack(ModBlocks.LumumBlock)});
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.CopperIngot, 9), new Object[]{
-				new ItemStack(ModBlocks.BlockCopper)});
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.TinIngot, 9), new Object[]{
-			new ItemStack(ModBlocks.BlockTin)});
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.SilverIngot, 9), new Object[]{
-				new ItemStack(ModBlocks.BlockSilver)});
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.LeadIngot, 9), new Object[]{
-				new ItemStack(ModBlocks.BlockLead)});
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.PlatinumIngot, 9), new Object[]{
-			new ItemStack(ModBlocks.BlockPlatinum)});
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.NickelIngot, 9), new Object[]{
-				new ItemStack(ModBlocks.BlockNickel)});
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.AluminiumIngot, 9), new Object[]{
-				new ItemStack(ModBlocks.BlockAluminium)});
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.SapphireGem, 9), new Object[]{
-				new ItemStack(ModBlocks.BlockSapphire)});
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.RubyGem, 9), new Object[]{
-			new ItemStack(ModBlocks.BlockRuby)});
+		RegisterHelper.addShapelessRecipe("StaticPower_staticIngot", "StaticPower", new ItemStack(ModItems.StaticIngot, 9), new Ingredient[]{
+				Ingredient.fromItem(Item.getItemFromBlock(ModBlocks.StaticBlock))});
+		RegisterHelper.addShapelessRecipe("StaticPower_energizedIngot", "StaticPower", new ItemStack(ModItems.EnergizedIngot, 9), new Ingredient[]{
+			Ingredient.fromItem(Item.getItemFromBlock(ModBlocks.EnergizedBlock))});
+		RegisterHelper.addShapelessRecipe("StaticPower_lumumIngot", "StaticPower", new ItemStack(ModItems.LumumIngot, 9), new Ingredient[]{
+				Ingredient.fromItem(Item.getItemFromBlock(ModBlocks.LumumBlock))});
+		RegisterHelper.addShapelessRecipe("StaticPower_copperIngot", "StaticPower", new ItemStack(ModItems.CopperIngot, 9), new Ingredient[]{
+				Ingredient.fromItem(Item.getItemFromBlock(ModBlocks.BlockCopper))});
+		RegisterHelper.addShapelessRecipe("StaticPower_tinIngot", "StaticPower", new ItemStack(ModItems.TinIngot, 9), new Ingredient[]{
+			Ingredient.fromItem(Item.getItemFromBlock(ModBlocks.BlockTin))});
+		RegisterHelper.addShapelessRecipe("StaticPower_silverIngot", "StaticPower", new ItemStack(ModItems.SilverIngot, 9), new Ingredient[]{
+				Ingredient.fromItem(Item.getItemFromBlock(ModBlocks.BlockSilver))});
+		RegisterHelper.addShapelessRecipe("StaticPower_leadIngot", "StaticPower", new ItemStack(ModItems.LeadIngot, 9), new Ingredient[]{
+				Ingredient.fromItem(Item.getItemFromBlock(ModBlocks.BlockLead))});
+		RegisterHelper.addShapelessRecipe("StaticPower_platinumIngot", "StaticPower", new ItemStack(ModItems.PlatinumIngot, 9), new Ingredient[]{
+			Ingredient.fromItem(Item.getItemFromBlock(ModBlocks.BlockPlatinum))});
+		RegisterHelper.addShapelessRecipe("StaticPower_nickelIngot", "StaticPower", new ItemStack(ModItems.NickelIngot, 9), new Ingredient[]{
+				Ingredient.fromItem(Item.getItemFromBlock(ModBlocks.BlockNickel))});
+		RegisterHelper.addShapelessRecipe("StaticPower_aluminiumIngot", "StaticPower", new ItemStack(ModItems.AluminiumIngot, 9), new Ingredient[]{
+				Ingredient.fromItem(Item.getItemFromBlock(ModBlocks.BlockAluminium))});
+		RegisterHelper.addShapelessRecipe("StaticPower_sapphireGem", "StaticPower", new ItemStack(ModItems.SapphireGem, 9), new Ingredient[]{
+				Ingredient.fromItem(Item.getItemFromBlock(ModBlocks.BlockSapphire))});
+		RegisterHelper.addShapelessRecipe("StaticPower_rubyGem", "StaticPower", new ItemStack(ModItems.RubyGem, 9), new Ingredient[]{
+			Ingredient.fromItem(Item.getItemFromBlock(ModBlocks.BlockRuby))});
 		
 		//Seeds --------------------------------------------------------------------------------------------------
-		GameRegistry.addShapelessRecipe(new ItemStack(ModPlants.StaticSeeds), new Object[]{
-			new ItemStack(ModPlants.StaticCrop)});
-		GameRegistry.addShapelessRecipe(new ItemStack(ModPlants.EnergizedSeeds), new Object[]{
-			new ItemStack(ModPlants.EnergizedCrop)});
-		GameRegistry.addShapelessRecipe(new ItemStack(ModPlants.LumumSeeds), new Object[]{
-			new ItemStack(ModPlants.LumumCrop)});
+		RegisterHelper.addShapelessRecipe("StaticPower_staticSeeds", "StaticPower", new ItemStack(ModPlants.StaticSeeds), new Ingredient[]{
+			Ingredient.fromItem(ModPlants.StaticCrop)});
+		RegisterHelper.addShapelessRecipe("StaticPower_energizedSeeds", "StaticPower", new ItemStack(ModPlants.EnergizedSeeds), new Ingredient[]{
+			Ingredient.fromItem(ModPlants.EnergizedCrop)});
+		RegisterHelper.addShapelessRecipe("StaticPower_lumumSeeds", "StaticPower", new ItemStack(ModPlants.LumumSeeds), new Ingredient[]{
+			Ingredient.fromItem(ModPlants.LumumCrop)});
 		
 		//Upgrade Plates ---------------------------------------------------------------------------------------------------
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.BasicUpgradePlate), new Object[]{
-				new ItemStack(ModItems.IronPlate), new ItemStack(ModItems.BasicCircuit)});
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.StaticUpgradePlate), new Object[]{
-				new ItemStack(ModItems.StaticPlate), new ItemStack(ModItems.StaticCircuit)});
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.EnergizedUpgradePlate), new Object[]{
-				new ItemStack(ModItems.EnergizedPlate), new ItemStack(ModItems.EnergizedCircuit)});
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.LumumUpgradePlate), new Object[]{
-				new ItemStack(ModItems.LumumPlate), new ItemStack(ModItems.LumumCircuit)});
+		RegisterHelper.addShapelessRecipe("StaticPower_basicUpgradePlate", "StaticPower", new ItemStack(ModItems.BasicUpgradePlate), new Ingredient[]{
+				Ingredient.fromItem(ModItems.IronPlate), Ingredient.fromItem(ModItems.BasicCircuit)});
+		RegisterHelper.addShapelessRecipe("StaticPower_staticUpgradePlate", "StaticPower", new ItemStack(ModItems.StaticUpgradePlate), new Ingredient[]{
+				Ingredient.fromItem(ModItems.StaticPlate), Ingredient.fromItem(ModItems.StaticCircuit)});
+		RegisterHelper.addShapelessRecipe("StaticPower_energizedUpgradePlate", "StaticPower", new ItemStack(ModItems.EnergizedUpgradePlate), new Ingredient[]{
+				Ingredient.fromItem(ModItems.EnergizedPlate), Ingredient.fromItem(ModItems.EnergizedCircuit)});
+		RegisterHelper.addShapelessRecipe("StaticPower_lumumUpgradePlate", "StaticPower", new ItemStack(ModItems.LumumUpgradePlate), new Ingredient[]{
+				Ingredient.fromItem(ModItems.LumumPlate), Ingredient.fromItem(ModItems.LumumCircuit)});
 		
 		//Inert Infusion Blend --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.InertInfusionBlend, 4), new Object[]{
-			 "dustTin", "dustTin", "dustSilver", "dustSilver"}));
+		RegisterHelper.addShapelessRecipe("StaticPower_inertInfusionBlend", "StaticPower", new ItemStack(ModItems.InertInfusionBlend, 4), new Ingredient[]{
+				new OreIngredient("dustTin"), new OreIngredient("dustTin"), new OreIngredient("dustSilver"), new OreIngredient("dustSilver")});
 		
 		//Nuggets --------------------------------------------------------------------------------------------------
-		addOreDictRecipe("nuggetCopper", 9, "ingotCopper");
-		addOreDictRecipe("nuggetTin", 9, "ingotTin");
-		addOreDictRecipe("nuggetSilver", 9, "ingotSilver");
-		addOreDictRecipe("nuggetLead", 9, "ingotLead");
-		addOreDictRecipe("nuggetPlatinum", 9, "ingotPlatinum");
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.StaticNugget, 9), new Object[]{
-				new ItemStack(ModItems.StaticIngot)});
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.EnergizedNugget, 9), new Object[]{
-				new ItemStack(ModItems.EnergizedIngot)});
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.LumumNugget, 9), new Object[]{
-				new ItemStack(ModItems.LumumIngot)});
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.IronNugget, 9), new Object[]{
-				new ItemStack(Items.IRON_INGOT)});
+
+		RegisterHelper.addShapelessRecipe("StaticPower_staticNugget", "StaticPower", new ItemStack(ModItems.StaticNugget, 9), new Ingredient[]{
+				Ingredient.fromItem(ModItems.StaticIngot)});
+		RegisterHelper.addShapelessRecipe("StaticPower_energizedNugget", "StaticPower", new ItemStack(ModItems.EnergizedNugget, 9), new Ingredient[]{
+				Ingredient.fromItem(ModItems.EnergizedIngot)});
+		RegisterHelper.addShapelessRecipe("StaticPower_lumumNugget", "StaticPower", new ItemStack(ModItems.LumumNugget, 9), new Ingredient[]{
+				Ingredient.fromItem(ModItems.LumumIngot)});
+		RegisterHelper.addShapelessRecipe("StaticPower_ironNugget", "StaticPower", new ItemStack(ModItems.IronNugget, 9), new Ingredient[]{
+				Ingredient.fromItem(Items.IRON_INGOT)});
 		//Static Planks --------------------------------------------------------------------------------------------------
-		GameRegistry.addShapelessRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.StaticPlanks), 4), new Object[]{
-			new ItemStack(Item.getItemFromBlock(ModBlocks.StaticWood))});
+		RegisterHelper.addShapelessRecipe("StaticPower_staticPlanks", "StaticPower", new ItemStack(Item.getItemFromBlock(ModBlocks.StaticPlanks), 4), new Ingredient[]{
+			Ingredient.fromItem(Item.getItemFromBlock(ModBlocks.StaticWood))});
 		
 		//Energized Planks --------------------------------------------------------------------------------------------------
-		GameRegistry.addShapelessRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.EnergizedPlanks), 4), new Object[]{
-			new ItemStack(Item.getItemFromBlock(ModBlocks.EnergizedWood))});
+		RegisterHelper.addShapelessRecipe("StaticPower_energizedPlanks", "StaticPower", new ItemStack(Item.getItemFromBlock(ModBlocks.EnergizedPlanks), 4), new Ingredient[]{
+			Ingredient.fromItem(Item.getItemFromBlock(ModBlocks.EnergizedWood))});
 		
 		//Lumum Planks --------------------------------------------------------------------------------------------------
-		GameRegistry.addShapelessRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.LumumPlanks), 4), new Object[]{
-			new ItemStack(Item.getItemFromBlock(ModBlocks.LumumWood))});
+		RegisterHelper.addShapelessRecipe("StaticPower_lumumPlanks", "StaticPower", new ItemStack(Item.getItemFromBlock(ModBlocks.LumumPlanks), 4), new Ingredient[]{
+			Ingredient.fromItem(Item.getItemFromBlock(ModBlocks.LumumWood))});
 		
 		//Cannisters --------------------------------------------------------------------------------------------------
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.BaseFluidCapsule, 1), new Object[]{
-				new ItemStack(ModItems.BaseFluidCapsule)});
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.StaticFluidCapsule, 1), new Object[]{
-				new ItemStack(ModItems.StaticFluidCapsule)});
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.EnergizedFluidCapsule, 1), new Object[]{
-				new ItemStack(ModItems.EnergizedFluidCapsule)});
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.LumumFluidCapsule, 1), new Object[]{
-				new ItemStack(ModItems.LumumFluidCapsule)});
+		RegisterHelper.addShapelessRecipe("StaticPower_baseFluidCapsule", "StaticPower", new ItemStack(ModItems.BaseFluidCapsule, 1), new Ingredient[]{
+				Ingredient.fromItem(ModItems.BaseFluidCapsule)});
+		RegisterHelper.addShapelessRecipe("StaticPower_staticFluidCapsule", "StaticPower", new ItemStack(ModItems.StaticFluidCapsule, 1), new Ingredient[]{
+				Ingredient.fromItem(ModItems.StaticFluidCapsule)});
+		RegisterHelper.addShapelessRecipe("StaticPower_energizedFluidCapsule", "StaticPower", new ItemStack(ModItems.EnergizedFluidCapsule, 1), new Ingredient[]{
+				Ingredient.fromItem(ModItems.EnergizedFluidCapsule)});
+		RegisterHelper.addShapelessRecipe("StaticPower_lumumFluidCapsule", "StaticPower", new ItemStack(ModItems.LumumFluidCapsule, 1), new Ingredient[]{
+				Ingredient.fromItem(ModItems.LumumFluidCapsule)});
 		
 		//Filters --------------------------------------------------------------------------------------------------
 		ItemStack quarryFilter = new ItemStack(ModItems.UpgradedItemFilter);
 		ItemFilter.writeQuarryFilter(quarryFilter);
-		GameRegistry.addShapelessRecipe(quarryFilter, new Object[]{
-				new ItemStack(ModItems.UpgradedItemFilter), new ItemStack(Item.getItemFromBlock(Blocks.COBBLESTONE))});
-	}
-	public static void addOreDictRecipe(String input, int count, String output) {
-		if(OreDictionary.getOres("input").size() > 0) {
-			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(OreDictionary.getOres("output").get(0).getItem(), count), new Object[]{"input"}));
-		}		
+		RegisterHelper.addShapelessRecipe("StaticPower_quarryFilter", "StaticPower", quarryFilter, new Ingredient[]{
+				Ingredient.fromItem(ModItems.UpgradedItemFilter), Ingredient.fromItem(Item.getItemFromBlock(Blocks.COBBLESTONE))});
 	}
 	public static void registerFullRecipes() {
 		registerShapelessRecipes();

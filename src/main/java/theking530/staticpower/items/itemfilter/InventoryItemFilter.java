@@ -35,18 +35,17 @@ public class InventoryItemFilter implements IInventory {
 				slots = new ItemStack[10];
 				break;
 		}
+		for(int i=0; i<slots.length; i++) {
+			slots[i] = ItemStack.EMPTY;
+		}
 		readFromNBT(stack.getTagCompound());
+	
 	}
 	public void setWhiteListMode(boolean mode) {
 		WHITE_LIST_MODE = mode;
 	}
 	public boolean getWhiteListMode() {
 		return WHITE_LIST_MODE;
-	}
-	
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer entityplayer){
-		return true;
 	}
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack itemstack){
@@ -60,7 +59,7 @@ public class InventoryItemFilter implements IInventory {
 			NBTTagCompound item = (NBTTagCompound) items.getCompoundTagAt(i);
 			int slot = item.getInteger("Slot");
 			if (slot >= 0 && slot < getSizeInventory()) {
-				slots[slot] = ItemStack.loadItemStackFromNBT(item);
+				slots[slot] = new ItemStack(item);
 			}
 		}
 	}
@@ -93,12 +92,12 @@ public class InventoryItemFilter implements IInventory {
 	@Override
 	public ItemStack decrStackSize(int slot, int amount){
 		ItemStack stack = getStackInSlot(slot);
-		if(stack != null){
-			if(stack.stackSize > amount){
+		if(stack != ItemStack.EMPTY){
+			if(stack.getCount() > amount){
 				stack = stack.splitStack(amount);
 				markDirty();
 			}else{
-				setInventorySlotContents(slot, null);
+				setInventorySlotContents(slot, ItemStack.EMPTY);
 			}
 		}
 		return stack;
@@ -115,8 +114,8 @@ public class InventoryItemFilter implements IInventory {
 	@Override
 	public void markDirty(){
 		for (int i = 0; i < getSizeInventory(); ++i){
-			if (getStackInSlot(i) != null && getStackInSlot(i).stackSize == 0) {
-				slots[i] = null;
+			if (getStackInSlot(i) != ItemStack.EMPTY && getStackInSlot(i).getCount() == 0) {
+				slots[i] = ItemStack.EMPTY;
 			}
 		}		
 		writeToNBT(ITEMSTACK.getTagCompound());
@@ -135,7 +134,7 @@ public class InventoryItemFilter implements IInventory {
 	}
 	@Override
 	public ItemStack removeStackFromSlot(int index) {
-		return null;
+		return ItemStack.EMPTY;
 	}
 	@Override
 	public void openInventory(EntityPlayer player) {
@@ -156,5 +155,13 @@ public class InventoryItemFilter implements IInventory {
 	}
 	@Override
 	public void clear() {
+	}
+	@Override
+	public boolean isEmpty() {
+		return false;
+	}
+	@Override
+	public boolean isUsableByPlayer(EntityPlayer player) {
+		return true;
 	}
 }

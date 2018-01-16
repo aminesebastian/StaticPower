@@ -39,9 +39,8 @@ public class TileEntityRenderChest extends TileEntitySpecialRenderer<TileEntity>
     	}
     }
     @Override
-    public void renderTileEntityAt(TileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
-    	TileEntityBaseChest staticChest = (TileEntityBaseChest)te;
-        int i = staticChest.getBlockMetadata();	
+    public void render(TileEntity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+    	TileEntityBaseChest staticChest = (TileEntityBaseChest)te;	
         
     	switch(TIER) {
     	case STATIC:
@@ -83,8 +82,6 @@ public class TileEntityRenderChest extends TileEntitySpecialRenderer<TileEntity>
 		}
         GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
         float f1 = staticChest.prevLidAngle + (staticChest.lidAngle - staticChest.prevLidAngle) * partialTicks;
-        float f2;
-        
         f1 = 1.0F - f1;
         f1 = 1.0F - f1 * f1 * f1;
         modelchest.chestLid.rotateAngleX = -(f1 * (float)Math.PI / 2.0F);

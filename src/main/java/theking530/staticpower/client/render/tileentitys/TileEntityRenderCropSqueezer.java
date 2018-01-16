@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -15,7 +16,7 @@ import theking530.staticpower.machines.cropsqueezer.TileEntityCropSqueezer;
 import theking530.staticpower.utils.RenderUtil;
 import theking530.staticpower.utils.SideModeList.Mode;
 
-public class TileEntityRenderCropSqueezer extends TileEntitySpecialRenderer<TileEntity> {
+public class TileEntityRenderCropSqueezer extends TileEntitySpecialRenderer<TileEntityCropSqueezer> {
 
 	ResourceLocation side = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSide.png");
 	ResourceLocation sideIn = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSideIn.png");
@@ -26,9 +27,9 @@ public class TileEntityRenderCropSqueezer extends TileEntitySpecialRenderer<Tile
 	static float texel = 1/16F;
 	
 	@Override
-    public void renderTileEntityAt(TileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
-		TileEntityCropSqueezer squeezer = (TileEntityCropSqueezer)te;
-		EnumFacing facing = EnumFacing.getHorizontal(te.getBlockMetadata())	;
+    public void render(TileEntityCropSqueezer te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+		EnumFacing facing = te.getFacingDirection();
+		
 		GL11.glPushMatrix();
 		GL11.glTranslated(x, y, z);
 		if(facing == EnumFacing.WEST) {
@@ -50,14 +51,14 @@ public class TileEntityRenderCropSqueezer extends TileEntitySpecialRenderer<Tile
 		checkAndRenderSides(te, 3);
 		checkAndRenderSides(te, 4);
 		checkAndRenderSides(te, 5);
-		if(squeezer.TANK.getFluid() != null || (squeezer.getInputStack(0) != null && squeezer.getFluidResult(squeezer.getInputStack(0)) != null)) {
+		if(te.TANK.getFluid() != null || (te.getInputStack(0) != ItemStack.EMPTY && te.getFluidResult(te.getInputStack(0)) != null)) {
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-			if(squeezer.TANK.getFluid() != null) {
-				drawLiquidPour(te, squeezer.TANK.getFluid());
-			}else if(squeezer.getInputStack(0) != null && squeezer.getFluidResult(squeezer.getInputStack(0)) != null){
-				drawLiquidPour(te, squeezer.getFluidResult(squeezer.getInputStack(0)));
+			if(te.TANK.getFluid() != null) {
+				drawLiquidPour(te, te.TANK.getFluid());
+			}else if(te.getInputStack(0) != null && te.getFluidResult(te.getInputStack(0)) != null){
+				drawLiquidPour(te, te.getFluidResult(te.getInputStack(0)));
 			}else{
 				
 			}
@@ -100,7 +101,6 @@ public class TileEntityRenderCropSqueezer extends TileEntitySpecialRenderer<Tile
 
 	public static void drawLiquidPour(TileEntity tileentity, FluidStack fluidStack) {
 		TileEntityCropSqueezer squeezer = (TileEntityCropSqueezer)tileentity;
-		float height = squeezer.getFluidLevelScaled(1);	
 		float progress = ((float)squeezer.PROCESSING_TIMER/(float)squeezer.PROCESSING_TIME)*0.5f;
 		RenderUtil.drawFluidInWorld(fluidStack, fluidStack.amount, 7*texel, 1-4*texel-progress, 1.0001F, 2*texel, progress);
 		RenderUtil.drawFluidInWorld(fluidStack, squeezer.TANK.getCapacity(), 4*texel, 3.5F*texel, 1.0001F, 8*texel, texel*2.5f);

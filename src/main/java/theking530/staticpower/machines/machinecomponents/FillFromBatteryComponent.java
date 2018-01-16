@@ -1,7 +1,6 @@
 package theking530.staticpower.machines.machinecomponents;
 
-import cofh.api.energy.IEnergyContainerItem;
-import net.minecraft.util.EnumFacing;
+import cofh.redstoneflux.api.IEnergyContainerItem;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.power.StaticEnergyStorage;
 import theking530.staticpower.tileentity.BaseTileEntity;
@@ -14,8 +13,6 @@ public class FillFromBatteryComponent implements IMachineComponentInterface{
 	private int BATTERY_SLOT;
 	private BaseTileEntity TE;
 	private StaticEnergyStorage ENERGY_STORAGE;
-	private EnumFacing DIRECTION;
-	
 	public FillFromBatteryComponent(String componentName, ItemStackHandler batterySlotHandler, int batterySlot,
 			BaseTileEntity tileEntity, StaticEnergyStorage energyHandler) {	
 		NAME = componentName;

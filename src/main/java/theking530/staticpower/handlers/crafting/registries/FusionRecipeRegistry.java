@@ -6,16 +6,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import theking530.staticpower.blocks.ModBlocks;
-import theking530.staticpower.handlers.crafting.wrappers.FusionFurnaceRecipeWrapper;
-import theking530.staticpower.handlers.crafting.wrappers.GrinderOutputWrapper;
-import theking530.staticpower.handlers.crafting.wrappers.GrinderOutputWrapper.GrinderOutput;
-import theking530.staticpower.items.ModItems;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
+import theking530.staticpower.handlers.crafting.wrappers.FusionFurnaceRecipeWrapper;
 
 public class FusionRecipeRegistry {
 

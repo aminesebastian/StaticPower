@@ -61,7 +61,7 @@ public class ContainerItemFilter extends Container {
 	//Shift Click Functionality
 	public ItemStack transferStackInSlot(EntityPlayer p_82846_1_, int p_82846_2_)
 	{
-        ItemStack itemstack = null;
+        ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = (Slot)this.inventorySlots.get(p_82846_2_);
 
         if (slot != null && slot.getHasStack())
@@ -73,17 +73,17 @@ public class ContainerItemFilter extends Container {
             {
                 if (!this.mergeItemStack(itemstack1, this.numRows * 9, this.inventorySlots.size(), true))
                 {
-                    return null;
+                    return ItemStack.EMPTY;
                 }
             }
             else if (!this.mergeItemStack(itemstack1, 0, this.numRows * 9, false))
             {
-                return null;
+                return ItemStack.EMPTY;
             }
 
-            if (itemstack1.stackSize == 0)
+            if (itemstack1.getCount() == 0)
             {
-                slot.putStack((ItemStack)null);
+                slot.putStack(ItemStack.EMPTY);
             }
             else
             {

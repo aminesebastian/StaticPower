@@ -1,15 +1,14 @@
 package theking530.staticpower.machines.machinecomponents;
 
 import net.minecraft.init.SoundEvents;
-import net.minecraft.tileentity.TileEntity;
-import theking530.staticpower.tileentity.BaseTileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundCategory;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
 import net.minecraftforge.items.ItemStackHandler;
+import theking530.staticpower.tileentity.BaseTileEntity;
 
 public class DrainToBucketComponent implements IMachineComponentInterface{
 
@@ -82,8 +81,8 @@ public class DrainToBucketComponent implements IMachineComponentInterface{
 		}
 	}
 	private void drainToContainer() {
-		if(EMPTY_BUCKET_HANDLER.getStackInSlot(EMPTY_BUCKET_SLOT) != null && EMPTY_BUCKET_HANDLER.getStackInSlot(EMPTY_BUCKET_SLOT).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null) && EMPTY_BUCKET_HANDLER.getStackInSlot(EMPTY_BUCKET_SLOT).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null) instanceof FluidHandlerItemStack) {
-			FluidHandlerItemStack tempContainer = (FluidHandlerItemStack)EMPTY_BUCKET_HANDLER.getStackInSlot(EMPTY_BUCKET_SLOT).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+		if(EMPTY_BUCKET_HANDLER.getStackInSlot(EMPTY_BUCKET_SLOT) !=  ItemStack.EMPTY && EMPTY_BUCKET_HANDLER.getStackInSlot(EMPTY_BUCKET_SLOT).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null) && EMPTY_BUCKET_HANDLER.getStackInSlot(EMPTY_BUCKET_SLOT).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null) instanceof FluidHandlerItemStack) {
+			FluidHandlerItemStack tempContainer = (FluidHandlerItemStack)EMPTY_BUCKET_HANDLER.getStackInSlot(EMPTY_BUCKET_SLOT).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
 			FluidStack testStack = FLUID_HANDLER.getTankProperties()[0].getContents();
 			if(testStack != null) {
 				if(tempContainer.getFluid() == null || tempContainer.getFluid().isFluidEqual(testStack)) {
@@ -100,8 +99,8 @@ public class DrainToBucketComponent implements IMachineComponentInterface{
 				}
 			}
 		}	
-		if(EMPTY_BUCKET_HANDLER.getStackInSlot(EMPTY_BUCKET_SLOT) != null && EMPTY_BUCKET_HANDLER.getStackInSlot(EMPTY_BUCKET_SLOT).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null) && EMPTY_BUCKET_HANDLER.getStackInSlot(EMPTY_BUCKET_SLOT).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null) instanceof FluidHandlerItemStack) {
-			FluidHandlerItemStack tempContainer = (FluidHandlerItemStack)EMPTY_BUCKET_HANDLER.getStackInSlot(EMPTY_BUCKET_SLOT).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+		if(EMPTY_BUCKET_HANDLER.getStackInSlot(EMPTY_BUCKET_SLOT) !=  ItemStack.EMPTY && EMPTY_BUCKET_HANDLER.getStackInSlot(EMPTY_BUCKET_SLOT).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null) && EMPTY_BUCKET_HANDLER.getStackInSlot(EMPTY_BUCKET_SLOT).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null) instanceof FluidHandlerItemStack) {
+			FluidHandlerItemStack tempContainer = (FluidHandlerItemStack)EMPTY_BUCKET_HANDLER.getStackInSlot(EMPTY_BUCKET_SLOT).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
 			if(tempContainer.getFluid() == null) {
 				return;
 			}
@@ -109,7 +108,7 @@ public class DrainToBucketComponent implements IMachineComponentInterface{
 			if(testStack == null || tempContainer.getFluid().amount >= tempContainer.getTankProperties()[0].getCapacity()) {
 				if(FILLED_BUCKET_HANDLER.getStackInSlot(FILLED_BUCKET_SLOT) != null) {
 					if(FILLED_BUCKET_HANDLER.getStackInSlot(FILLED_BUCKET_SLOT).isItemEqual(EMPTY_BUCKET_HANDLER.getStackInSlot(EMPTY_BUCKET_SLOT))) {
-						if(FILLED_BUCKET_HANDLER.getStackInSlot(FILLED_BUCKET_SLOT).stackSize < FILLED_BUCKET_HANDLER.getStackInSlot(FILLED_BUCKET_SLOT).getMaxStackSize()) {
+						if(FILLED_BUCKET_HANDLER.getStackInSlot(FILLED_BUCKET_SLOT).getCount() < FILLED_BUCKET_HANDLER.getStackInSlot(FILLED_BUCKET_SLOT).getMaxStackSize()) {
 							FILLED_BUCKET_HANDLER.insertItem(FILLED_BUCKET_SLOT, EMPTY_BUCKET_HANDLER.extractItem(EMPTY_BUCKET_SLOT, 1, false), false);
 						}
 					}
@@ -120,8 +119,8 @@ public class DrainToBucketComponent implements IMachineComponentInterface{
 		}
 	}
 	private void fillFromContainer() {
-		if(FILLED_BUCKET_HANDLER.getStackInSlot(FILLED_BUCKET_SLOT) != null && FILLED_BUCKET_HANDLER.getStackInSlot(FILLED_BUCKET_SLOT).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null) && FILLED_BUCKET_HANDLER.getStackInSlot(FILLED_BUCKET_SLOT).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null) instanceof FluidHandlerItemStack) {
-			FluidHandlerItemStack tempContainer = (FluidHandlerItemStack)FILLED_BUCKET_HANDLER.getStackInSlot(FILLED_BUCKET_SLOT).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+		if(FILLED_BUCKET_HANDLER.getStackInSlot(FILLED_BUCKET_SLOT) !=  ItemStack.EMPTY && FILLED_BUCKET_HANDLER.getStackInSlot(FILLED_BUCKET_SLOT).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null) && FILLED_BUCKET_HANDLER.getStackInSlot(FILLED_BUCKET_SLOT).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null) instanceof FluidHandlerItemStack) {
+			FluidHandlerItemStack tempContainer = (FluidHandlerItemStack)FILLED_BUCKET_HANDLER.getStackInSlot(FILLED_BUCKET_SLOT).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
 			if(tempContainer.getFluid() != null) {
 				FluidStack testStack = FLUID_HANDLER.getTankProperties()[0].getContents();
 				if(testStack == null || (testStack.amount < FLUID_HANDLER.getTankProperties()[0].getCapacity() && testStack.isFluidEqual(tempContainer.getFluid()))) {
@@ -138,12 +137,12 @@ public class DrainToBucketComponent implements IMachineComponentInterface{
 				}
 			}	
 		}
-		if(FILLED_BUCKET_HANDLER.getStackInSlot(FILLED_BUCKET_SLOT) != null && FILLED_BUCKET_HANDLER.getStackInSlot(FILLED_BUCKET_SLOT).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null) && FILLED_BUCKET_HANDLER.getStackInSlot(FILLED_BUCKET_SLOT).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null) instanceof FluidHandlerItemStack) {
-			FluidHandlerItemStack tempContainer = (FluidHandlerItemStack)FILLED_BUCKET_HANDLER.getStackInSlot(FILLED_BUCKET_SLOT).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+		if(FILLED_BUCKET_HANDLER.getStackInSlot(FILLED_BUCKET_SLOT) !=  ItemStack.EMPTY && FILLED_BUCKET_HANDLER.getStackInSlot(FILLED_BUCKET_SLOT).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null) && FILLED_BUCKET_HANDLER.getStackInSlot(FILLED_BUCKET_SLOT).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null) instanceof FluidHandlerItemStack) {
+			FluidHandlerItemStack tempContainer = (FluidHandlerItemStack)FILLED_BUCKET_HANDLER.getStackInSlot(FILLED_BUCKET_SLOT).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
 			if(tempContainer.getFluid() == null) {
-				if(EMPTY_BUCKET_HANDLER.getStackInSlot(EMPTY_BUCKET_SLOT) != null) {
+				if(EMPTY_BUCKET_HANDLER.getStackInSlot(EMPTY_BUCKET_SLOT) !=  ItemStack.EMPTY) {
 					if(EMPTY_BUCKET_HANDLER.getStackInSlot(EMPTY_BUCKET_SLOT).isItemEqual(FILLED_BUCKET_HANDLER.getStackInSlot(FILLED_BUCKET_SLOT))) {
-						if(EMPTY_BUCKET_HANDLER.getStackInSlot(EMPTY_BUCKET_SLOT).stackSize < EMPTY_BUCKET_HANDLER.getStackInSlot(EMPTY_BUCKET_SLOT).getMaxStackSize()) {
+						if(EMPTY_BUCKET_HANDLER.getStackInSlot(EMPTY_BUCKET_SLOT).getCount() < EMPTY_BUCKET_HANDLER.getStackInSlot(EMPTY_BUCKET_SLOT).getMaxStackSize()) {
 							EMPTY_BUCKET_HANDLER.insertItem(EMPTY_BUCKET_SLOT, FILLED_BUCKET_HANDLER.extractItem(FILLED_BUCKET_SLOT, 1, false), false);
 						}
 					}

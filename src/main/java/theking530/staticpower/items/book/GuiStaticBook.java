@@ -2,19 +2,9 @@ package theking530.staticpower.items.book;
 
 import java.io.IOException;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import theking530.staticpower.client.gui.widgets.tabs.GuiInfoTab;
-import theking530.staticpower.handlers.PacketHandler;
-import theking530.staticpower.items.itemfilter.ContainerItemFilter;
-import theking530.staticpower.items.itemfilter.FilterTier;
-import theking530.staticpower.items.itemfilter.InventoryItemFilter;
-import theking530.staticpower.items.itemfilter.PacketItemFilter;
 import theking530.staticpower.utils.GuiTextures;
 
 public class GuiStaticBook extends GuiScreen {
@@ -47,7 +37,7 @@ public class GuiStaticBook extends GuiScreen {
 	}
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = "Item Filter";
-		//this.fontRendererObj.drawString(name, this.xSize - 169, 6, 4210752 );
+		//this.fontRenderer.drawString(name, this.xSize - 169, 6, 4210752 );
 		
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.AFILTER_GUI);
 		//drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);

@@ -9,7 +9,6 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBar;
@@ -36,13 +35,11 @@ public class GuiFermenter extends GuiContainer{
 		REDSTONE_TAB = new GuiRedstoneTab(guiLeft, guiTop, teCropSqueezer);
 		SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, teCropSqueezer);
 		this.xSize = 214;
-		this.ySize = 166;		
+		this.ySize = 172;		
 	}
 	public void updateScreen() {
-		int j = (width - xSize) / 2;
-		int k = (height - ySize) / 2;
-		SIDE_TAB.updateTab(width+33, height, xSize, ySize, fontRendererObj, FERMENTER);
-		REDSTONE_TAB.updateTab(width+33, height, xSize, ySize, fontRendererObj, FERMENTER);
+		SIDE_TAB.updateTab(width+33, height, xSize, ySize, fontRenderer, FERMENTER);
+		REDSTONE_TAB.updateTab(width+33, height, xSize, ySize, fontRenderer, FERMENTER);
 		CONTAINER.moveUpgradeSlots(100, 100);
 		if(SIDE_TAB.GROWTH_STATE == 1){
 			REDSTONE_TAB.RED_TAB.GROWTH_STATE = 2;
@@ -53,20 +50,26 @@ public class GuiFermenter extends GuiContainer{
 	}
 	public void drawScreen(int par1, int par2, float par3) {
 		super.drawScreen(par1, par2, par3);
+		
+		this.zLevel = -1.0f;
+		this.drawDefaultBackground();	
+		this.zLevel = 0.0f;
+		
 		int var1 = (this.width - this.xSize) / 2;
 		int var2 = (this.height - this.ySize) / 2;
 		if(par1 >= 26 + var1 && par2 >= 8 + var2 && par1 <= 33 + var1 && par2 <= 68 + var2) {
-			drawHoveringText(POWERBAR.drawText(), par1, par2, fontRendererObj); 
+			drawHoveringText(POWERBAR.drawText(), par1, par2, fontRenderer); 
 		}		
 		if(par1 >= 36 + var1 && par2 >= 8 + var2 && par1 <= 53 + var1 && par2 <= 68 + var2) {	
-			drawHoveringText(FLUIDBAR.drawText(), par1, par2, fontRendererObj); 
+			drawHoveringText(FLUIDBAR.drawText(), par1, par2, fontRenderer); 
 		}    
+		this.renderHoveredToolTip(par1, par2);
 	}
 
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = I18n.format(this.FERMENTER.getName());	
-		this.fontRendererObj.drawString(name, this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2 + 7, 6,4210752 );
-		//this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 3, 4210752);
+		this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2 + 7, 6,4210752 );
+		//this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 3, 4210752);
 	}
 	
 	@Override
@@ -83,7 +86,7 @@ public class GuiFermenter extends GuiContainer{
 			
 		SIDE_TAB.drawTab();		
 		REDSTONE_TAB.drawTab();
-		POWERBAR.drawPowerBar(guiLeft + 27, guiTop + 68, 6, 60, this.zLevel);
+		POWERBAR.drawPowerBar(guiLeft + 27, guiTop + 68, 6, 60, this.zLevel, f);
 		FLUIDBAR.drawFluidBar(guiLeft + 37, guiTop + 68, 16, 60, this.zLevel);
 	}
 	@Override

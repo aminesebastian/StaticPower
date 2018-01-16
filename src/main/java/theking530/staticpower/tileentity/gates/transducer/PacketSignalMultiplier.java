@@ -8,11 +8,11 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
   
 public class PacketSignalMultiplier implements IMessage{
-    private static int INT_INPUT;
-    private static int INT_OUTPUT;
-    private static int x;
-    private static int y;
-    private static int z;
+    private int INT_INPUT;
+    private int INT_OUTPUT;
+    private int x;
+    private int y;
+    private int z;
     
     public PacketSignalMultiplier() {}
     
@@ -42,7 +42,7 @@ public class PacketSignalMultiplier implements IMessage{
     public static class Message implements IMessageHandler<PacketSignalMultiplier, IMessage> {
     @Override
     public IMessage onMessage(PacketSignalMultiplier message, MessageContext ctx) {
-    		TileEntity te = ctx.getServerHandler().playerEntity.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
+    		TileEntity te = ctx.getServerHandler().player.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
     		if(te != null) {
 	    		TileEntitySignalMultiplier sMultiplier = (TileEntitySignalMultiplier)te;
 	    		sMultiplier.INPUT_SIGNAL_LIMIT = message.INT_INPUT;

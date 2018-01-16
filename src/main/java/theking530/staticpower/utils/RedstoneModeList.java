@@ -1,7 +1,5 @@
 package theking530.staticpower.utils;
 
-import theking530.staticpower.utils.SideModeList.Mode;
-
 public class RedstoneModeList {
 
 	public enum RedstoneMode {

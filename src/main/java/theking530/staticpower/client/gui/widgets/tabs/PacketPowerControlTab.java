@@ -9,11 +9,11 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import theking530.staticpower.machines.BaseMachine;
   
 public class PacketPowerControlTab implements IMessage{
-    private static int MAX_POWER_THRESHOLD;
-    private static int MIN_POWER_THRESHOLD;
-    private static int x;
-    private static int y;
-    private static int z;
+    private int MAX_POWER_THRESHOLD;
+    private int MIN_POWER_THRESHOLD;
+    private int x;
+    private int y;
+    private int z;
 
     public PacketPowerControlTab() {}
     
@@ -46,7 +46,7 @@ public class PacketPowerControlTab implements IMessage{
     public static class Message implements IMessageHandler<PacketPowerControlTab, IMessage> {
     @Override
     public IMessage onMessage(PacketPowerControlTab message, MessageContext ctx) {
-    		TileEntity te = ctx.getServerHandler().playerEntity.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
+    		TileEntity te = ctx.getServerHandler().player.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
     		if(te != null && te instanceof BaseMachine) {
     			BaseMachine entity = (BaseMachine)te;
     			entity.MIN_POWER_THRESHOLD = message.MIN_POWER_THRESHOLD;

@@ -1,19 +1,19 @@
 package theking530.staticpower.items.itemfilter;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class PacketItemFilter implements IMessage{
-    private static boolean WHITE_LIST_MODE;
-	private static InventoryItemFilter INV_FILTER;
-	
+    private boolean WHITE_LIST_MODE;
+
     public PacketItemFilter() {}
     
-    public PacketItemFilter(InventoryItemFilter invFilter, boolean listMode) {
+    public PacketItemFilter(boolean listMode) {
     	WHITE_LIST_MODE = listMode;
-    	INV_FILTER = invFilter;
     }
     
     @Override
@@ -28,7 +28,13 @@ public class PacketItemFilter implements IMessage{
     public static class Message implements IMessageHandler<PacketItemFilter, IMessage> {
 	    @Override
 	    public IMessage onMessage(PacketItemFilter message, MessageContext ctx) {
-	    	INV_FILTER.setWhiteListMode(message.WHITE_LIST_MODE);
+	    	if(ctx.getServerHandler().player.getHeldItem(EnumHand.MAIN_HAND) != ItemStack.EMPTY && ctx.getServerHandler().player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof ItemFilter) {
+	    		ItemStack itemstack = ctx.getServerHandler().player.getHeldItem(EnumHand.MAIN_HAND);
+	    		if(itemstack.hasTagCompound()) {
+		    		System.out.println(itemstack.getTagCompound());
+	    			itemstack.getTagCompound().setBoolean("WHITE_LIST_MODE", message.WHITE_LIST_MODE);
+	    		}
+	    	}
 			return null;
     	}
     }

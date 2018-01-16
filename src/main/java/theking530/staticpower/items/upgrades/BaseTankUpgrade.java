@@ -2,10 +2,12 @@ package theking530.staticpower.items.upgrades;
 
 import java.util.List;
 
-import net.minecraft.entity.player.EntityPlayer;
+import javax.annotation.Nullable;
+
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import theking530.staticpower.assists.Tier;
-import theking530.staticpower.items.upgrades.BaseUpgrade;
 import theking530.staticpower.utils.EnumTextFormatting;
 
 public class BaseTankUpgrade extends BaseUpgrade implements IMachineUpgrade {
@@ -34,10 +36,10 @@ public class BaseTankUpgrade extends BaseUpgrade implements IMachineUpgrade {
 	@Override
 	public float getMultiplier(ItemStack stack, int upgradeNumber) {
 		BaseTankUpgrade tempUpgrade = (BaseTankUpgrade) stack.getItem();
-		return (tempUpgrade.CAPACITY * stack.stackSize);
+		return (tempUpgrade.CAPACITY * stack.getCount());
 	}
 	@Override  
-	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn) {
 		list.add(EnumTextFormatting.WHITE +  "+" + new java.text.DecimalFormat("#").format((getMultiplier(stack, 0))*100) + "%" + EnumTextFormatting.GREEN + " Tank Capacity");
 		if(showHiddenTooltips()) {
     		list.add(EnumTextFormatting.WHITE + "Stacks Up To: " + stack.getMaxStackSize());

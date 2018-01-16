@@ -3,24 +3,16 @@ package theking530.staticpower.machines.fusionfurnace;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.SlotItemHandler;
 import theking530.staticpower.handlers.crafting.registries.FusionRecipeRegistry;
 
 public class ContainerFusionFurnace extends Container {
 	
 	private TileEntityFusionFurnace FURNACE;
-	private int PROCESSING_TIMER;
-	private int ENERGY_STORED;
 	
 	public ContainerFusionFurnace(InventoryPlayer invPlayer, TileEntityFusionFurnace teFusionFurnace) {
-		PROCESSING_TIMER = 0;
-		ENERGY_STORED = 0;
-		
 		FURNACE = teFusionFurnace;
 		
 		//Input
@@ -141,15 +133,15 @@ public class ContainerFusionFurnace extends Container {
 	            }else if (!this.mergeItemStack(itemstack1, 8, 44, false)) {
 	                return null;
 	            }
-	            if (itemstack1.stackSize == 0){
-	                slot.putStack((ItemStack)null);
+	            if (itemstack1.getCount() == 0){
+	                slot.putStack(ItemStack.EMPTY);
 	            }else {
 	                slot.onSlotChanged();
 	            }
-	            if (itemstack1.stackSize == itemstack.stackSize){
+	            if (itemstack1.getCount() == itemstack.getCount()){
 	                return null;
 	            }
-	            slot.onPickupFromSlot(player, itemstack1);
+	            slot.onTake(player, itemstack1);
 	        }
 	        return itemstack;
 	    }

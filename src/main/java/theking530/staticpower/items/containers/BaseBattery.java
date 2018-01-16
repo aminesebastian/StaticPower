@@ -4,24 +4,16 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
-import cofh.api.energy.IEnergyContainerItem;
-import cofh.api.energy.ItemEnergyContainer;
+import javax.annotation.Nullable;
+
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
+import net.minecraft.util.NonNullList;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import theking530.staticpower.StaticPower;
-import theking530.staticpower.assists.Tier;
 import theking530.staticpower.items.BasePoweredItem;
-import theking530.staticpower.utils.EnumTextFormatting;
-import theking530.staticpower.utils.GUIUtilities;
 
 public class BaseBattery extends BasePoweredItem { 
 
@@ -31,19 +23,19 @@ public class BaseBattery extends BasePoweredItem {
 	}
     @SideOnly(Side.CLIENT)
     @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
 
     	ItemStack emptyBattery = new ItemStack(this); 
     	emptyBattery.setItemDamage(getMaxEnergyStored(emptyBattery)/DAMAGE_DIVISOR);
-        subItems.add(emptyBattery);
+    	items.add(emptyBattery);
         
         ItemStack filledBattery = new ItemStack(this);     
         this.receiveEnergy(filledBattery, this.getMaxEnergyStored(filledBattery), false);
-        subItems.add(filledBattery);
+        items.add(filledBattery);
     }
 	
 	@Override  
-	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean par4) {
+		public void addInformation(ItemStack itemstack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn) {
 		list.add("Power Stored: " +  NumberFormat.getNumberInstance(Locale.US).format(getEnergyStored(itemstack)) +"/"
 				+  NumberFormat.getNumberInstance(Locale.US).format(capacity) + "RF");
 	}

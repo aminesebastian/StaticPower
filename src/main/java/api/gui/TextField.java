@@ -5,8 +5,8 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraftforge.fml.relauncher.Side;
@@ -583,7 +583,7 @@ public class TextField extends Gui
         }
 
         Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer tes = tessellator.getBuffer();
+        BufferBuilder tes = tessellator.getBuffer();
 
         
         GL11.glColor4f(0.0F, 0.0F, 255.0F, 255.0F);

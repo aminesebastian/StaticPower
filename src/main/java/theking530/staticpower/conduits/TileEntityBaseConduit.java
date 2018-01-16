@@ -1,61 +1,155 @@
 package theking530.staticpower.conduits;
 
-import net.minecraft.inventory.IInventory;
+import javax.annotation.Nullable;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
-import theking530.staticpower.conduits.itemconduit.TileEntityItemConduit;
+import net.minecraft.world.World;
+import net.minecraftforge.energy.CapabilityEnergy;
+import theking530.staticpower.conduits.staticconduit.TileEntityStaticConduit;
 
-public class TileEntityBaseConduit extends TileEntity implements IConduit {
+public class TileEntityBaseConduit extends TileEntity implements IConduit, ITickable {
 	
 	public EnumFacing[] connections = new EnumFacing[6];
 	public EnumFacing[] receivers = new EnumFacing[6];
 	
 	public int[] SIDE_MODES = {0,0,0,0,0,0};
+	public ConduitGrid GRID;
 	
-	
+	public TileEntityBaseConduit() {
+
+	}
+	@Override
+	public void update() {
+		if(GRID == null) {
+			createGrid();
+		}
+		updateConduitRenderConnections();
+		updateRecieverRenderConnections();
+
+	}
+	public void createGrid() {
+		GRID = new ConduitGrid(world);
+		GRID.AddEntry(this);
+		generateGridNeighbors(GRID);  
+	}
+	public void generateGridNeighbors(ConduitGrid masterGrid) {
+		masterGrid.AddEntry(this);
+		for(int i=0; i<6; i++) {
+			TileEntity te = getWorld().getTileEntity(pos.offset(EnumFacing.values()[i]));
+			if(te != null && te instanceof TileEntityBaseConduit) {
+				TileEntityBaseConduit tempCond = (TileEntityBaseConduit)te;
+				if(SIDE_MODES[EnumFacing.values()[i].ordinal()] == 1) {
+					continue;
+				}
+				if(tempCond.SIDE_MODES[EnumFacing.values()[i].getOpposite().ordinal()] == 1) {
+					continue;
+				}
+				if(tempCond.GRID != masterGrid) {
+					masterGrid.AddEntry(this);
+					tempCond.GRID = masterGrid;
+					tempCond.generateGridNeighbors(masterGrid);
+				}
+			}
+		}
+	}
+    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+    	createGrid();
+    }
+	public void onNeighborUpdated(IBlockState observerState, World world, Block oldBlock, BlockPos changedBlockPos, Block newBlock) {
+		//If a block is broken, attempt to regenerate the network.
+		if(newBlock == Blocks.AIR) {
+			for(int i=0; i<6; i++) {
+				TileEntity te = getWorld().getTileEntity(changedBlockPos.offset(EnumFacing.values()[i]));
+				if(te != null && te instanceof TileEntityBaseConduit) {
+					TileEntityBaseConduit tempCond = (TileEntityBaseConduit)te;
+					if(SIDE_MODES[EnumFacing.values()[i].ordinal()] == 1) {
+						continue;
+					}
+					if(te instanceof TileEntityStaticConduit) {
+						if(((TileEntityStaticConduit)te).SIDE_MODES[EnumFacing.values()[i].getOpposite().ordinal()] == 1) {
+							continue;
+						}
+					}
+					tempCond.createGrid();
+				}
+			}
+		}
+	}
 	public void updateConduitRenderConnections() {
-		if(isConduit(pos.offset(EnumFacing.UP))) connections[0] = EnumFacing.UP;
+		if(isConduit(EnumFacing.UP)) connections[0] = EnumFacing.UP;
 		else connections[0] = null;
-		if(isConduit(pos.offset(EnumFacing.DOWN))) connections[1] = EnumFacing.DOWN;
+		if(isConduit(EnumFacing.DOWN)) connections[1] = EnumFacing.DOWN;
 		else connections[1] = null;
-		if(isConduit(pos.offset(EnumFacing.NORTH))) connections[2] = EnumFacing.NORTH;
+		if(isConduit(EnumFacing.NORTH)) connections[2] = EnumFacing.NORTH;
 		else connections[2] = null;
-		if(isConduit(pos.offset(EnumFacing.SOUTH))) connections[3] = EnumFacing.SOUTH;
+		if(isConduit(EnumFacing.SOUTH)) connections[3] = EnumFacing.SOUTH;
 		else connections[3] = null;
-		if(isConduit(pos.offset(EnumFacing.EAST))) connections[4] = EnumFacing.EAST;
+		if(isConduit(EnumFacing.EAST)) connections[4] = EnumFacing.EAST;
 		else connections[4] = null;
-		if(isConduit(pos.offset(EnumFacing.WEST))) connections[5] = EnumFacing.WEST;
-		else connections[5] = null;		
+		if(isConduit(EnumFacing.WEST)) connections[5] = EnumFacing.WEST;
+		else connections[5] = null;	
+		
 	}	
 	public void updateRecieverRenderConnections() {
-		if(isReciever(pos.offset(EnumFacing.UP))) receivers[0] = EnumFacing.UP;
+		if(isReciever(EnumFacing.UP)) receivers[0] = EnumFacing.UP;
 		else receivers[0] = null;
-		if(isReciever(pos.offset(EnumFacing.DOWN))) receivers[1] = EnumFacing.DOWN;
+		if(isReciever(EnumFacing.DOWN)) receivers[1] = EnumFacing.DOWN;
 		else receivers[1] = null;
-		if(isReciever(pos.offset(EnumFacing.NORTH))) receivers[3] = EnumFacing.NORTH;
+		if(isReciever(EnumFacing.NORTH)) receivers[3] = EnumFacing.NORTH;
 		else receivers[3] = null;
-		if(isReciever(pos.offset(EnumFacing.SOUTH))) receivers[2] = EnumFacing.SOUTH;
+		if(isReciever(EnumFacing.SOUTH)) receivers[2] = EnumFacing.SOUTH;
 		else receivers[2] = null;
-		if(isReciever(pos.offset(EnumFacing.EAST))) receivers[4] = EnumFacing.EAST;
+		if(isReciever(EnumFacing.EAST)) receivers[4] = EnumFacing.EAST;
 		else receivers[4] = null;
-		if(isReciever(pos.offset(EnumFacing.WEST))) receivers[5] = EnumFacing.WEST;
+		if(isReciever(EnumFacing.WEST)) receivers[5] = EnumFacing.WEST;
 		else receivers[5] = null;		
 	}	
+	
+	public void readFromSyncNBT(NBTTagCompound nbt) {
+	}
+	public NBTTagCompound writeToSyncNBT(NBTTagCompound nbt) {
+		return nbt;
+	}
+	
+    @Override  
+	public void readFromNBT(NBTTagCompound nbt) {
+        super.readFromNBT(nbt);
+    }		
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+        super.writeToNBT(nbt);
+		return nbt;
+	}
+	
 	@Override
-	public boolean isConduit(BlockPos pos) {
-		return this.worldObj.getTileEntity(pos) instanceof TileEntityItemConduit;
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+		readFromNBT(pkt.getNbtCompound());
+	}
+    @Nullable
+    public SPacketUpdateTileEntity getUpdatePacket(){
+    	NBTTagCompound tag = new NBTTagCompound();
+    	writeToNBT(tag);
+    	return new SPacketUpdateTileEntity(pos, getBlockMetadata(), tag);
+    }
+    
+	@Override
+	public boolean isConduit(EnumFacing side) {
+		return false;
 	}		
 	@Override
-	public boolean isReciever(BlockPos pos) {
-		TileEntity te = worldObj.getTileEntity(pos);
-		if(te instanceof IInventory) {
-			if(te instanceof TileEntityItemConduit) {
-				return false;
-			}
-			return true;
-		}
-		return false;
+	public boolean isReciever(EnumFacing side) {
+		return false;	
 	}	
 	public boolean straightConnection(EnumFacing[] directions) {
 		EnumFacing mainDirection = null;
@@ -75,16 +169,7 @@ public class TileEntityBaseConduit extends TileEntity implements IConduit {
 		return isOpposite;
 	}	
 	public boolean isOpposite(EnumFacing firstDirection, EnumFacing secondDirection) {
-		if(firstDirection.equals(EnumFacing.NORTH) && (secondDirection.equals(EnumFacing.SOUTH)) || (firstDirection.equals(EnumFacing.SOUTH) && (secondDirection.equals(EnumFacing.NORTH)))) {
-			return true;
-		}
-		if(firstDirection.equals(EnumFacing.UP) && (secondDirection.equals(EnumFacing.DOWN)) || (firstDirection.equals(EnumFacing.DOWN) && (secondDirection.equals(EnumFacing.UP)))) {
-			return true;
-		}
-		if(firstDirection.equals(EnumFacing.EAST) && (secondDirection.equals(EnumFacing.WEST)) || (firstDirection.equals(EnumFacing.WEST) && (secondDirection.equals(EnumFacing.EAST)))) {
-			return true;
-		}
-		return false;
+		return firstDirection.getOpposite() == secondDirection;
 	}
 	public boolean disconected(EnumFacing from) {
 		if(SIDE_MODES[from.ordinal()] == 2){
@@ -113,14 +198,15 @@ public class TileEntityBaseConduit extends TileEntity implements IConduit {
 		return true;
 	}
 	public void incrementSideMode(EnumFacing side) {
-		TileEntity temp = worldObj.getTileEntity(pos.offset(side));
-		if(temp != null && isReciever(temp.getPos())) {
-			if(SIDE_MODES[side.ordinal()] < 2) {
-				SIDE_MODES[side.ordinal()]++;
-			}else{
-				SIDE_MODES[side.ordinal()] = 0;
-			}
+		if(SIDE_MODES[side.ordinal()] < 1) {
+			SIDE_MODES[side.ordinal()]++;
+		}else{
+			SIDE_MODES[side.ordinal()] = 0;
 		}
-		System.out.println(SIDE_MODES[side.ordinal()]);
+		if(getWorld().getTileEntity(pos.offset(side)) instanceof TileEntityBaseConduit) {
+			TileEntityBaseConduit cond = (TileEntityBaseConduit)getWorld().getTileEntity(pos.offset(side));
+			cond.SIDE_MODES[side.getOpposite().ordinal()] = SIDE_MODES[side.ordinal()];
+		}
+		onNeighborUpdated(getWorld().getBlockState(pos), getWorld(), blockType, pos, Blocks.AIR);
 	}
 }

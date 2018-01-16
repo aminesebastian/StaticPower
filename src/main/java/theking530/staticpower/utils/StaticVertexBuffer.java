@@ -1,12 +1,12 @@
 package theking530.staticpower.utils;
 
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 
 public class StaticVertexBuffer {
 
 	public static final Tessellator tessellator = Tessellator.getInstance();
-	public static final VertexBuffer vertexbuffer = tessellator.getBuffer();
+	public static final BufferBuilder vertexbuffer = tessellator.getBuffer();
     
 	public static void pos(float x, float y, float z, float u, float v) {
 		vertexbuffer.pos(x, y, z).tex(u, v).endVertex();

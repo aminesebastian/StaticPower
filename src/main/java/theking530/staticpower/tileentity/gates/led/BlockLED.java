@@ -1,16 +1,10 @@
 package theking530.staticpower.tileentity.gates.led;
 
-import javax.annotation.Nullable;
-
-import api.IWrenchTool;
 import api.RegularWrenchMode;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -20,8 +14,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import theking530.staticpower.blocks.ModBlocks;
-import theking530.staticpower.machines.BaseMachine;
 import theking530.staticpower.tileentity.gates.BlockLogicGate;
 import theking530.staticpower.utils.Color;
 
@@ -34,12 +26,12 @@ public class BlockLED extends BlockLogicGate {
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+		public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		if (!world.isRemote) {
 			TileEntityLED tempLED = (TileEntityLED) world.getTileEntity(pos);
-			if(heldItem != null) {
-				if(heldItem.getItem() instanceof ItemDye) {
-					tempLED.setColor(Color.values()[heldItem.getMetadata()]);
+			if(player.getHeldItem(hand) != null) {
+				if(player.getHeldItem(hand).getItem() instanceof ItemDye) {
+					tempLED.setColor(Color.values()[player.getHeldItem(hand).getMetadata()]);
 					return true;	
 				}
 			}
@@ -48,7 +40,7 @@ public class BlockLED extends BlockLogicGate {
 			}else{
 				tempLED.cycleColor(false);	
 			}
-			player.addChatComponentMessage(new TextComponentString("Color Set: " + tempLED.COLOR));
+			player.sendMessage(new TextComponentString("Color Set: " + tempLED.COLOR));
     		return true;
     	}
 		return true;
@@ -71,20 +63,23 @@ public class BlockLED extends BlockLogicGate {
 			TileEntityLED tempLED = (TileEntityLED) world.getTileEntity(pos);
 			tempLED.INVERTED = !tempLED.INVERTED;
 			if(tempLED.INVERTED) {
-				player.addChatComponentMessage(new TextComponentString("Behaviour: Inverted"));
+				player.sendMessage(new TextComponentString("Behaviour: Inverted"));
 			}else{
-				player.addChatComponentMessage(new TextComponentString("Behaviour: Regular"));
+				player.sendMessage(new TextComponentString("Behaviour: Regular"));
 			}
 		}
 	}
 	public String getDescrption(ItemStack stack){
 		if(stack.hasTagCompound()) {
-			return "Color: " + Color.values()[stack.getTagCompound().getInteger("COLOR")].toString();
+			return "A dimmable redstone powered light.\nColor: " + Color.values()[stack.getTagCompound().getInteger("COLOR")].toString();
 		}
 		return null;	
 	}
+	public String getInputDescrption(ItemStack stack){
+		return "A redstone singlal of variable strength.";
+	}
 	@Override
-	public TileEntity createNewTileEntity(World world, int i) {
+	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileEntityLED();
 	}
 }

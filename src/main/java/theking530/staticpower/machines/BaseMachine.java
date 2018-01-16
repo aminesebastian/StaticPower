@@ -2,15 +2,17 @@ package theking530.staticpower.machines;
 
 import javax.annotation.Nullable;
 
-import cofh.api.energy.IEnergyContainerItem;
-import cofh.api.energy.IEnergyHandler;
-import cofh.api.energy.IEnergyProvider;
-import cofh.api.energy.IEnergyReceiver;
+import cofh.redstoneflux.api.IEnergyContainerItem;
+import cofh.redstoneflux.api.IEnergyHandler;
+import cofh.redstoneflux.api.IEnergyProvider;
+import cofh.redstoneflux.api.IEnergyReceiver;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
 import theking530.staticpower.items.upgrades.BasePowerUpgrade;
 import theking530.staticpower.items.upgrades.BaseSpeedUpgrade;
 import theking530.staticpower.power.StaticEnergyStorage;
@@ -59,9 +61,10 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	 * @param slotCount
 	 * @param outputSlots
 	 * @param inputSlots
+	 * @param disableFaceInteraction
 	 */
-	public void initializeBasicMachine(int InitialEnergyMult, int InitialPowerUse, int InitialEnergyCapacity, int InitialEntryPerTick, int InitialProcessingTime, int internalSlotCount, int inputSlots, int outputSlots) {	
-		initializeBasicTileEntity(internalSlotCount, inputSlots, outputSlots);
+	public void initializeBasicMachine(int InitialEnergyMult, int InitialPowerUse, int InitialEnergyCapacity, int InitialEntryPerTick, int InitialProcessingTime, int internalSlotCount, int inputSlots, int outputSlots, boolean disableFaceInteraction) {	
+		initializeBasicTileEntity(internalSlotCount, inputSlots, outputSlots, disableFaceInteraction);
 		INITIAL_PROCESSING_ENERGY_MULT = InitialEnergyMult;
 		INITIAL_ENERGY_CAPACITY = InitialEnergyCapacity;
 		INITIAL_ENERGY_PER_TICK = InitialEntryPerTick;
@@ -69,27 +72,23 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		INITIAL_POWER_USE = InitialPowerUse;
 		
 		STORAGE = new StaticEnergyStorage(InitialEnergyCapacity);
-		STORAGE.setMaxExtract(100000000);
 		STORAGE.setMaxReceive(InitialEntryPerTick);
-		//STORAGE.setMaxTransfer(100000000);
+		STORAGE.setMaxExtract(InitialEntryPerTick);
 		STORAGE.setCapacity(InitialEnergyCapacity);		
 	}
-	public void setBatterySlot(int slot) {
-		BATTERY_SLOT = slot;
+	/**
+	 * @param InitialEnergyMult
+	 * @param InitialPowerUse
+	 * @param InitialEnergyCapacity
+	 * @param InitialEntryPerTick
+	 * @param InitialProcessingTime
+	 * @param slotCount
+	 * @param outputSlots
+	 * @param inputSlots
+	 */
+	public void initializeBasicMachine(int InitialEnergyMult, int InitialPowerUse, int InitialEnergyCapacity, int InitialEntryPerTick, int InitialProcessingTime, int internalSlotCount, int inputSlots, int outputSlots) {	
+		initializeBasicMachine(InitialEnergyMult, InitialPowerUse, InitialEnergyCapacity, InitialEntryPerTick, InitialProcessingTime, internalSlotCount, inputSlots, outputSlots, true);	
 	}
-	public float getEnergyPercent() {
-		float amount = STORAGE.getEnergyStored();
-		float capacity = STORAGE.getMaxEnergyStored();
-		float volume = (amount/capacity);		
-			return volume;	
-	}	
-	public boolean hasPower(){
-		return STORAGE.getEnergyStored() > 0 ? true : false;
-	}
-	public int useEnergy(int energyCost) {
-		return extractEnergy(null, energyCost, false);
-	}
-	
 	@Override
 	public void update(){
 		upgradeHandler();
@@ -111,7 +110,7 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		PREV_STORAGE = STORAGE.getEnergyStored();
 	}	
 	public boolean evauluateRedstoneSettings() {
-		int redstoneSignal = worldObj.getStrongPower(pos);
+		int redstoneSignal = getWorld().getStrongPower(pos);
 		if(REDSTONE_MODE == 0) {
 			return true;
 		}
@@ -126,18 +125,6 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 			}
 		}
 		return false;
-	}
-	public void useBattery() {
-		if(SLOTS_INPUT.getStackInSlot(BATTERY_SLOT) != null && SLOTS_INPUT.getStackInSlot(BATTERY_SLOT).getItem() instanceof IEnergyContainerItem && STORAGE.getEnergyStored() < STORAGE.getMaxEnergyStored()) {
-			IEnergyContainerItem batteryItem = (IEnergyContainerItem) SLOTS_INPUT.getStackInSlot(BATTERY_SLOT).getItem();
-			if(batteryItem.getEnergyStored(SLOTS_INPUT.getStackInSlot(BATTERY_SLOT)) > 0) {
-				if(STORAGE.getMaxEnergyStored() - STORAGE.getEnergyStored() < STORAGE.getMaxReceive()) {
-					STORAGE.receiveEnergy(batteryItem.extractEnergy(SLOTS_INPUT.getStackInSlot(BATTERY_SLOT), STORAGE.getMaxEnergyStored() - STORAGE.getEnergyStored(), false), false);
-				}else{
-					STORAGE.receiveEnergy(batteryItem.extractEnergy(SLOTS_INPUT.getStackInSlot(BATTERY_SLOT), STORAGE.getMaxReceive(), false), false);		
-				}
-			}
-		}
 	}
 	@Override
 	public void onPlaced(){
@@ -162,14 +149,10 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		if(flag) {
 			BasePowerUpgrade tempUpgrade = (BasePowerUpgrade) SLOTS_UPGRADES.getStackInSlot(slot).getItem();
 			STORAGE.setCapacity((int)(tempUpgrade.getValueMultiplied(INITIAL_ENERGY_CAPACITY, tempUpgrade.getMultiplier(SLOTS_UPGRADES.getStackInSlot(slot), 0))));
-			//STORAGE.setMaxExtract((int)(tempUpgrade.getValueMultiplied(INITIAL_ENERGY_PER_TICK, tempUpgrade.getMultiplier(SLOTS_UPGRADES.getStackInSlot(slot), 1))));
 			STORAGE.setMaxReceive((int)(tempUpgrade.getValueMultiplied(INITIAL_ENERGY_PER_TICK, tempUpgrade.getMultiplier(SLOTS_UPGRADES.getStackInSlot(slot), 1))));
-			//STORAGE.setMaxTransfer((int)(tempUpgrade.getValueMultiplied(INITIAL_ENERGY_PER_TICK, tempUpgrade.getMultiplier(SLOTS_UPGRADES.getStackInSlot(slot), 1))));
 		}else{
 			STORAGE.setCapacity(INITIAL_ENERGY_CAPACITY);
-			//STORAGE.setMaxExtract(INITIAL_ENERGY_PER_TICK);
 			STORAGE.setMaxReceive(INITIAL_ENERGY_PER_TICK);
-			//STORAGE.setMaxTransfer(INITIAL_ENERGY_PER_TICK);
 		}
 	}
 	public void processingUpgrade() {
@@ -192,18 +175,21 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 			PROCESSING_TIME = INITIAL_PROCESSING_TIME;
 		}
 	}
-	
-	public ItemStack getResult(ItemStack itemstack) {
-		return null;	
+
+	public void setBatterySlot(int slot) {
+		BATTERY_SLOT = slot;
 	}
-	public boolean hasResult(ItemStack itemstack) {
-		return false;	
-	}	
-	public boolean canProcess(ItemStack itemstack) {
-		return false;
-	}
-	public int getProcessingEnergy(ItemStack itemstack) {
-		return 0;
+	public void useBattery() {
+		if(SLOTS_INPUT.getStackInSlot(BATTERY_SLOT) != null && SLOTS_INPUT.getStackInSlot(BATTERY_SLOT).getItem() instanceof IEnergyContainerItem && STORAGE.getEnergyStored() < STORAGE.getMaxEnergyStored()) {
+			IEnergyContainerItem batteryItem = (IEnergyContainerItem) SLOTS_INPUT.getStackInSlot(BATTERY_SLOT).getItem();
+			if(batteryItem.getEnergyStored(SLOTS_INPUT.getStackInSlot(BATTERY_SLOT)) > 0) {
+				if(STORAGE.getMaxEnergyStored() - STORAGE.getEnergyStored() < STORAGE.getMaxReceive()) {
+					STORAGE.receiveEnergy(batteryItem.extractEnergy(SLOTS_INPUT.getStackInSlot(BATTERY_SLOT), STORAGE.getMaxEnergyStored() - STORAGE.getEnergyStored(), false), false);
+				}else{
+					STORAGE.receiveEnergy(batteryItem.extractEnergy(SLOTS_INPUT.getStackInSlot(BATTERY_SLOT), STORAGE.getMaxReceive(), false), false);		
+				}
+			}
+		}
 	}
 	
 	@Override
@@ -255,6 +241,20 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	public ItemStack[] craftingResults(ItemStack[] items) {
 		return null;
 	}
+	
+	//PROCESSING
+	public ItemStack getResult(ItemStack itemstack) {
+		return null;	
+	}
+	public boolean hasResult(ItemStack itemstack) {
+		return false;	
+	}	
+	public boolean canProcess(ItemStack itemstack) {
+		return false;
+	}
+	public int getProcessingEnergy(ItemStack itemstack) {
+		return 0;
+	}
 	public boolean isProcessing() {
 		return PROCESSING_TIMER > 0;
 	}
@@ -264,7 +264,23 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	public int getProgressScaled(int i) {
 		return (PROCESSING_TIMER * i) / PROCESSING_TIME;
 	}
+	public int getProcessingCost(){
+		return (INITIAL_POWER_USE*PROCESSING_ENERGY_MULT);
+	}
 	
+	//ENERGY
+	public float getEnergyPercent() {
+		float amount = STORAGE.getEnergyStored();
+		float capacity = STORAGE.getMaxEnergyStored();
+		float volume = (amount/capacity);		
+			return volume;	
+	}	
+	public boolean hasPower(){
+		return STORAGE.getEnergyStored() > 0 ? true : false;
+	}
+	public int useEnergy(int energyCost) {
+		return extractEnergy(null, energyCost, false);
+	}
 	@Override
 	public boolean canConnectEnergy(EnumFacing from) {
 		return true;
@@ -279,19 +295,65 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	}
 	@Override
 	public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
-		if(!worldObj.isRemote) {
+		if(!getWorld().isRemote) {
 			updateBlock();
 		}
 		return STORAGE.extractEnergy(maxExtract, simulate);
 	}
 	@Override
 	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
-		if(!worldObj.isRemote) {
+		if(!getWorld().isRemote) {
 			updateBlock();
 		}
 		return STORAGE.receiveEnergy(maxReceive, simulate);
 	}
-	public int getProcessingCost(){
-		return (INITIAL_POWER_USE*PROCESSING_ENERGY_MULT);
+	/* CAPABILITIES */
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing from) {
+		return capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, from);
 	}
+	@Override
+	public <T> T getCapability(Capability<T> capability, final EnumFacing from) {
+		if (capability == CapabilityEnergy.ENERGY) {
+			return CapabilityEnergy.ENERGY.cast(new net.minecraftforge.energy.IEnergyStorage() {
+
+				@Override
+				public int receiveEnergy(int maxReceive, boolean simulate) {
+
+					return BaseMachine.this.receiveEnergy(from, maxReceive, simulate);
+				}
+
+				@Override
+				public int extractEnergy(int maxExtract, boolean simulate) {
+
+					return BaseMachine.this.extractEnergy(from, maxExtract, simulate);
+				}
+
+				@Override
+				public int getEnergyStored() {
+
+					return BaseMachine.this.getEnergyStored(from);
+				}
+
+				@Override
+				public int getMaxEnergyStored() {
+
+					return BaseMachine.this.getMaxEnergyStored(from);
+				}
+
+				@Override
+				public boolean canExtract() {
+
+					return false;
+				}
+
+				@Override
+				public boolean canReceive() {
+
+					return true;
+				}
+			});
+		}
+		return super.getCapability(capability, from);
+	}	
 }

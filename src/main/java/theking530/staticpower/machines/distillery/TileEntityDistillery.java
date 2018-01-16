@@ -4,8 +4,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.handlers.crafting.registries.CondenserRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.DistilleryRecipeRegistry;
 import theking530.staticpower.machines.BaseMachineWithTank;
@@ -14,11 +12,9 @@ import theking530.staticpower.machines.heatingelement.HeatStorage;
 import theking530.staticpower.machines.heatingelement.IHeatable;
 import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent;
 import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent.FluidContainerInteractionMode;
-import theking530.staticpower.power.PowerDistributor;
 
 public class TileEntityDistillery extends BaseMachineWithTank implements IHeatable{
 
-	private PowerDistributor POWER_DIST;
 	public HeatStorage HEAT_STORAGE;
 	public FluidTank TANK2;
 	
@@ -40,7 +36,7 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
 		return "Distillery";	
 	}	
 	public void process() {
-		if(!worldObj.isRemote) {
+		if(!getWorld().isRemote) {
 			DRAIN_COMPONENT_EVAPORATED_MASH.update();
 			DRAIN_COMPONENT_MASH.update();
 			if(!isProcessing() && canProcess() && PROCESSING_STACK == null) {
@@ -63,8 +59,8 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
 			}
 			if(TANK2.getFluid() != null) {
 				if(CondenserRecipeRegistry.Condensing().getFluidOutput(TANK2.getFluid()) != null) {
-					if(worldObj.getTileEntity(pos.offset(EnumFacing.UP)) instanceof TileEntityCondenser) {
-						TileEntityCondenser te = (TileEntityCondenser) worldObj.getTileEntity(pos.offset(EnumFacing.UP));
+					if(getWorld().getTileEntity(pos.offset(EnumFacing.UP)) instanceof TileEntityCondenser) {
+						TileEntityCondenser te = (TileEntityCondenser) getWorld().getTileEntity(pos.offset(EnumFacing.UP));
 						TANK2.drain(te.fill(TANK2.getFluid(), true), true);
 					}	
 				}
@@ -123,9 +119,9 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
         HEAT_STORAGE.readFromNBT(nbt);
         
         FluidStack tempStack = null;
-        tempStack = tempStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("TANK2"));
+        tempStack = FluidStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("TANK2"));
         TANK2.setFluid(tempStack);
-        tempStack = tempStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("PFLUID"));
+        tempStack = FluidStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("PFLUID"));
         PROCESSING_STACK = tempStack;
 	}
 	@Override
@@ -151,9 +147,9 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
         HEAT_STORAGE.readFromNBT(nbt);
 
         FluidStack tempStack = null;
-        tempStack = tempStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("TANK2"));
+        tempStack = FluidStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("TANK2"));
         TANK2.setFluid(tempStack);
-        tempStack = tempStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("PFluid"));
+        tempStack = FluidStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("PFluid"));
         PROCESSING_STACK = tempStack;
     }		
     @Override
@@ -177,9 +173,9 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
 		HEAT_STORAGE.readFromNBT(nbt);
 
         FluidStack tempStack = null;
-        tempStack = tempStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("TANK2"));
+        tempStack = FluidStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("TANK2"));
         TANK2.setFluid(tempStack);
-        tempStack = tempStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("PFluid"));
+        tempStack = FluidStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("PFluid"));
         PROCESSING_STACK = tempStack;
 	}
     
@@ -214,7 +210,7 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
 	
 	@Override
 	public int fill(FluidStack resource, boolean doFill) {
-		if(!worldObj.isRemote) {
+		if(!getWorld().isRemote) {
 			updateBlock();
 		}
 		if(DistilleryRecipeRegistry.Distillery().getFluidOutput(resource, 10000000) != null){
@@ -224,14 +220,14 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
 	}
 	@Override	
 	public FluidStack drain(FluidStack resource, boolean doDrain) {
-		if(!worldObj.isRemote) {
+		if(!getWorld().isRemote) {
 			updateBlock();
 		}
 		return TANK2.drain(resource, doDrain);
 	}
 	@Override
 	public FluidStack drain(int maxDrain, boolean doDrain) {
-		if(!worldObj.isRemote) {
+		if(!getWorld().isRemote) {
 			updateBlock();
 		}
 		return TANK2.drain(maxDrain, doDrain);

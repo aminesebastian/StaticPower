@@ -1,8 +1,7 @@
 package theking530.staticpower.client.model;
 
-import theking530.staticpower.assists.Reference;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
+import theking530.staticpower.assists.Reference;
 
 public class Models {
 

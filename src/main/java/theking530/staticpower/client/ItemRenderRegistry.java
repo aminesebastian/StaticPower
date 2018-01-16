@@ -1,12 +1,9 @@
 package theking530.staticpower.client;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.client.model.obj.OBJLoader;
-import theking530.staticpower.assists.Reference;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.items.armor.ModArmor;
@@ -211,86 +208,87 @@ public class ItemRenderRegistry {
 		ItemRenderRegistry.registerItem(ModItems.BasicItemFilter);
 		ItemRenderRegistry.registerItem(ModItems.UpgradedItemFilter);
 		ItemRenderRegistry.registerItem(ModItems.AdvancedItemFilter);
-		
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.MachineBlock));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.StaticBattery));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.EnergizedBattery));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.LumumBattery));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.CropSqueezer));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.MechanicalSqueezer));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.FluidGenerator));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.FluidInfuser));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.FusionFurnace));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.PoweredFurnace));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.PoweredGrinder));
-		
-		//ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.SolderingTable));
 
-        OBJLoader.INSTANCE.addDomain(Reference.MODID.toLowerCase());
-        Item item2 = Item.getItemFromBlock(ModBlocks.SolderingTable);
-        ModelLoader.setCustomModelResourceLocation(item2, 0, new ModelResourceLocation(Reference.MODID.toLowerCase() + ":" + ModBlocks.SolderingTable.getUnlocalizedName().substring(5), "inventory"));
-        
+		registerBlock(ModBlocks.MachineBlock);
+		registerBlock(ModBlocks.StaticBattery);
+		registerBlock(ModBlocks.EnergizedBattery);
+		registerBlock(ModBlocks.LumumBattery);
+		registerBlock(ModBlocks.CropSqueezer);
+		registerBlock(ModBlocks.MechanicalSqueezer);
+		registerBlock(ModBlocks.FluidGenerator);
+		registerBlock(ModBlocks.FluidInfuser);
+		registerBlock(ModBlocks.FusionFurnace);
+		registerBlock(ModBlocks.PoweredFurnace);
+		registerBlock(ModBlocks.PoweredGrinder);
 		
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.Quarry));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.BasicFarmer));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.ChargingStation));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.AdvancedEarth));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.Fermenter));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.HeatingElement));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.Distillery));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.Condenser));
+		registerBlock(ModBlocks.SolderingTable);
 		
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.SilverOre));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.CopperOre));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.TinOre));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.LeadOre));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.PlatinumOre));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.NickelOre));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.AluminiumOre));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.SapphireOre));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.RubyOre));
-		
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.StaticPlanks));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.EnergizedPlanks));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.LumumPlanks));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.StaticCobblestone));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.EnergizedCobblestone));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.LumumCobblestone));
+		registerBlock(ModBlocks.BasicSolarPanel);
+		registerBlock(ModBlocks.StaticSolarPanel);
+		registerBlock(ModBlocks.EnergizedSolarPanel);
+		registerBlock(ModBlocks.LumumSolarPanel);
+		registerBlock(ModBlocks.CreativeSolarPanel);
 
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.StaticBlock));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.EnergizedBlock));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.LumumBlock));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.BlockCopper));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.BlockTin));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.BlockSilver));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.BlockLead));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.BlockPlatinum));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.BlockNickel));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.BlockAluminium));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.BlockSapphire));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.BlockRuby));
+        registerBlock(ModBlocks.Quarry);
+		registerBlock(ModBlocks.BasicFarmer);
+		registerBlock(ModBlocks.ChargingStation);
+		registerBlock(ModBlocks.AdvancedEarth);
+		registerBlock(ModBlocks.Fermenter);
+		registerBlock(ModBlocks.HeatingElement);
+		registerBlock(ModBlocks.Distillery);
+		registerBlock(ModBlocks.Condenser);
 		
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.StaticLamp));
+		registerBlock(ModBlocks.SilverOre);
+		registerBlock(ModBlocks.CopperOre);
+		registerBlock(ModBlocks.TinOre);
+		registerBlock(ModBlocks.LeadOre);
+		registerBlock(ModBlocks.PlatinumOre);
+		registerBlock(ModBlocks.NickelOre);
+		registerBlock(ModBlocks.AluminiumOre);
+		registerBlock(ModBlocks.SapphireOre);
+		registerBlock(ModBlocks.RubyOre);
 		
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.LogicGateBasePlate));
+		registerBlock(ModBlocks.StaticPlanks);
+		registerBlock(ModBlocks.EnergizedPlanks);
+		registerBlock(ModBlocks.LumumPlanks);
+		registerBlock(ModBlocks.StaticCobblestone);
+		registerBlock(ModBlocks.EnergizedCobblestone);
+		registerBlock(ModBlocks.LumumCobblestone);
+
+		registerBlock(ModBlocks.StaticBlock);
+		registerBlock(ModBlocks.EnergizedBlock);
+		registerBlock(ModBlocks.LumumBlock);
+		registerBlock(ModBlocks.BlockCopper);
+		registerBlock(ModBlocks.BlockTin);
+		registerBlock(ModBlocks.BlockSilver);
+		registerBlock(ModBlocks.BlockLead);
+		registerBlock(ModBlocks.BlockPlatinum);
+		registerBlock(ModBlocks.BlockNickel);
+		registerBlock(ModBlocks.BlockAluminium);
+		registerBlock(ModBlocks.BlockSapphire);
+		registerBlock(ModBlocks.BlockRuby);
+		
+		registerBlock(ModBlocks.StaticLamp);
+		
+		registerBlock(ModBlocks.LogicGateBasePlate);
 		ItemRenderRegistry.registerItem(ModItems.LogicGatePowerSync);
 		ItemRenderRegistry.registerItem(ModItems.InvertedLogicGatePowerSync);
 		ItemRenderRegistry.registerItem(ModItems.LogicGateServo);
 		
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.VacuumChest));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.StaticChest));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.EnergizedChest));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.LumumChest));
+		registerBlock(ModBlocks.VacuumChest);
+		registerBlock(ModBlocks.StaticChest);
+		registerBlock(ModBlocks.EnergizedChest);
+		registerBlock(ModBlocks.LumumChest);
 		
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.ItemConduit));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.StaticConduit));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.FluidConduit));
+		registerBlock(ModBlocks.ItemConduit);
+		registerBlock(ModBlocks.StaticConduit);
+		registerBlock(ModBlocks.FluidConduit);
 		
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.ObsidianGlass));
+		registerBlock(ModBlocks.ObsidianGlass);
 		
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.StaticWood));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.EnergizedWood));
-		ItemRenderRegistry.registerItem(Item.getItemFromBlock(ModBlocks.LumumWood));
+		registerBlock(ModBlocks.StaticWood);
+		registerBlock(ModBlocks.EnergizedWood);
+		registerBlock(ModBlocks.LumumWood);
 		
 		ItemRenderRegistry.registerItem(ModTools.CopperAxe);
 		ItemRenderRegistry.registerItem(ModTools.CopperPickaxe);
@@ -356,22 +354,17 @@ public class ItemRenderRegistry {
 		ItemRenderRegistry.registerItem(ModItems.StaticFluidCapsule);
 		ItemRenderRegistry.registerItem(ModItems.EnergizedFluidCapsule);
 		ItemRenderRegistry.registerItem(ModItems.LumumFluidCapsule);
-
 	}
     public static void registerItem(Item item, int metadata) {
-    	Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-        .register(item, metadata, new ModelResourceLocation(Reference.MODID + ":" + item.getUnlocalizedName().substring(5), "inventory"));
+    	ModelLoader.setCustomModelResourceLocation(item, metadata, new ModelResourceLocation(item.getRegistryName(), "inventory"));
     }
     public static void registerItem(Item item) {
-    	Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-        .register(item, 0, new ModelResourceLocation(Reference.MODID + ":" + item.getUnlocalizedName().substring(5), "inventory"));
+    	ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
     }
     public static void registerBlock(Block block, int metadata) {
-    	Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-        .register(Item.getItemFromBlock(block), metadata, new ModelResourceLocation(Reference.MODID + ":" + block.getUnlocalizedName().substring(5), "inventory"));
+    	ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), metadata, new ModelResourceLocation(block.getRegistryName(), "inventory"));
     }
     public static void registerBlock(Block block) {
-    	Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-        .register(Item.getItemFromBlock(block), 0, new ModelResourceLocation(Reference.MODID + ":" + block.getUnlocalizedName().substring(5), "inventory"));
+    	ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), 0, new ModelResourceLocation(block.getRegistryName(), "inventory"));
     }
 }

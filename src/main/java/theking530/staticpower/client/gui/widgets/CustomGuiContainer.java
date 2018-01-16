@@ -18,7 +18,7 @@ public class CustomGuiContainer extends GuiContainer{
         itemRender.zLevel = 200.0F;
         FontRenderer font = null;
         if (p_146982_1_ != null) font = p_146982_1_.getItem().getFontRenderer(p_146982_1_);
-        if (font == null) font = fontRendererObj;
+        if (font == null) font = fontRenderer;
         itemRender.renderItemAndEffectIntoGUI(p_146982_1_, p_146982_2_, p_146982_3_);
         itemRender.renderItemOverlayIntoGUI(font, p_146982_1_, p_146982_2_, p_146982_3_ - 0, p_146982_4_);
         this.zLevel = 0.0F;

@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
@@ -26,7 +27,7 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler {
 	public int CONTAINER_MOVE_SPEED = 4;
 	
 	public FluidDistributor FLUID_DIST;
-	
+
 	public void initializeBaseMachineWithTank(int InitialEnergyMult, int InitialPowerUse, int InitialEnergyCapacity, int InitialEntryPerTick, int InitialProcessingTime, 
 			int internalSlotCount, int inputSlots, int outputSlots, int InitialTankCapacity) {	
 		initializeBasicMachine(InitialEnergyMult, InitialPowerUse, InitialEnergyCapacity, InitialEntryPerTick, InitialProcessingTime, internalSlotCount, inputSlots, outputSlots);
@@ -40,9 +41,8 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler {
 	}
 	@Override
 	public void upgradeHandler(){
-		powerUpgrade();	
+		super.upgradeHandler();
 		tankUpgrade();
-		processingUpgrade();
 	}
 	public void tankUpgrade() {
 		boolean flag = false;
@@ -71,24 +71,26 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler {
 	@Override  
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
-        TANK.readFromNBT(nbt);
+        TANK.readFromNBT(nbt.getCompoundTag("TANK"));
     }		
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
-		TANK.writeToNBT(nbt);
+        NBTTagCompound tank =  new NBTTagCompound();
+        TANK.writeToNBT(tank);
+        nbt.setTag("TANK", tank);
     	return nbt;
 	}
 
 	@Override
 	public void readFromSyncNBT(NBTTagCompound nbt) {
 		super.readFromSyncNBT(nbt);
-		TANK.readFromNBT(nbt);
+		readFromNBT(nbt);
 	}
 	@Override
 	public NBTTagCompound writeToSyncNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		TANK.writeToNBT(nbt);
+		writeToNBT(nbt);
 		return nbt;
 	}
     
@@ -102,8 +104,6 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler {
     	writeToNBT(tag);
     	return new SPacketUpdateTileEntity(pos, getBlockMetadata(), tag);
     }
-
-	
 	public boolean isTankEmpty() {
 		return TANK.getFluidAmount() <= 0 ? true : false;
 	}
@@ -117,21 +117,22 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler {
 
 	@Override
 	public int fill(FluidStack resource, boolean doFill) {
-		if(!worldObj.isRemote) {
+		if(!getWorld().isRemote) {
 			updateBlock();
 		}
-		return TANK.fill(resource, doFill);
+		int temp = TANK.fill(resource, doFill);
+		return temp;
 	}
 	@Override
 	public FluidStack drain(FluidStack resource, boolean doDrain) {
-		if(!worldObj.isRemote) {
+		if(!getWorld().isRemote) {
 			updateBlock();
 		}
 		return TANK.drain(resource, doDrain);
 	}
 	@Override
 	public FluidStack drain(int maxDrain, boolean doDrain) {
-		if(!worldObj.isRemote) {
+		if(!getWorld().isRemote) {
 			updateBlock();
 		}
 		return TANK.drain(maxDrain, doDrain);

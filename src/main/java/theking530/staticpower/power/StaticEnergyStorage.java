@@ -1,6 +1,6 @@
 package theking530.staticpower.power;
 
-import cofh.api.energy.EnergyStorage;
+import cofh.redstoneflux.impl.EnergyStorage;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class StaticEnergyStorage extends EnergyStorage {

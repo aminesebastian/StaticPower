@@ -9,10 +9,10 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import theking530.staticpower.tileentity.BaseTileEntity;
  
 public class PacketRedstoneTab implements IMessage{
-    private static int REDSTONE_MODE;
-    private static int x;
-    private static int y;
-    private static int z;
+    private int REDSTONE_MODE;
+    private int x;
+    private int y;
+    private int z;
 
     public PacketRedstoneTab() {}
     
@@ -39,7 +39,7 @@ public class PacketRedstoneTab implements IMessage{
     public static class Message implements IMessageHandler<PacketRedstoneTab, IMessage> {
     @Override
     public IMessage onMessage(PacketRedstoneTab message, MessageContext ctx) {
-    		TileEntity te = ctx.getServerHandler().playerEntity.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
+    		TileEntity te = ctx.getServerHandler().player.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
     		if(te != null && te instanceof BaseTileEntity) {
     			BaseTileEntity entity = (BaseTileEntity)te;
     			entity.REDSTONE_MODE = message.REDSTONE_MODE;

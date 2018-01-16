@@ -1,9 +1,7 @@
 package theking530.staticpower.tileentity.solarpanels;
 
-import cofh.api.energy.EnergyStorage;
-import cofh.api.energy.IEnergyHandler;
-import cofh.api.energy.IEnergyProvider;
-import cofh.api.energy.IEnergyReceiver;
+import cofh.redstoneflux.api.IEnergyHandler;
+import cofh.redstoneflux.api.IEnergyProvider;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -12,10 +10,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
-import theking530.staticpower.assists.Tier;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
 import theking530.staticpower.power.PowerDistributor;
 import theking530.staticpower.power.StaticEnergyStorage;
-import theking530.staticpower.tileentity.BaseTileEntity;
 
 public class TileEntityBasicSolarPanel extends TileEntity implements ITickable, IEnergyHandler, IEnergyProvider {
 	
@@ -34,7 +32,7 @@ public class TileEntityBasicSolarPanel extends TileEntity implements ITickable, 
 	}	
 	@Override
 	public void update() {
-		if(!worldObj.isRemote) {
+		if(!getWorld().isRemote) {
 			generateRF();
 			if(STORAGE.getEnergyStored() > 0) {
 				POWER_DIST.provideRF(EnumFacing.DOWN, STORAGE.getMaxReceive());		
@@ -43,13 +41,13 @@ public class TileEntityBasicSolarPanel extends TileEntity implements ITickable, 
 	}	
 	//Functionality
 	public void generateRF() {
-		if(!worldObj.canBlockSeeSky(pos)) {
+		if(!getWorld().canBlockSeeSky(pos)) {
 		}else if(lightRatio() > 0 && STORAGE.getEnergyStored() < STORAGE.getMaxEnergyStored()) {
 			STORAGE.receiveEnergy(STORAGE.getMaxReceive(), false);
 		}
 	}
 	public boolean isGenerating() {
-		if(!worldObj.canBlockSeeSky(pos)) {
+		if(!getWorld().canBlockSeeSky(pos)) {
 			return false;
 		}else if(lightRatio() > 0 && STORAGE.getEnergyStored() < STORAGE.getMaxEnergyStored()) {
 			return true;
@@ -59,7 +57,7 @@ public class TileEntityBasicSolarPanel extends TileEntity implements ITickable, 
 	
 	//Light
 	public float lightRatio() {
-		return calculateLightRatio(worldObj, pos);
+		return calculateLightRatio(getWorld(), pos);
 	}
 	public float calculateLightRatio(World world, BlockPos pos) {
 		int lightValue = world.getLightFor(EnumSkyBlock.SKY, pos) - world.getSkylightSubtracted();
@@ -73,7 +71,7 @@ public class TileEntityBasicSolarPanel extends TileEntity implements ITickable, 
 
 		lightValue = Math.round(lightValue * MathHelper.cos(sunAngle));
 
-		lightValue = MathHelper.clamp_int(lightValue, 0, 15);
+		lightValue = MathHelper.clamp(lightValue, 0, 15);
 		return lightValue / 15f;
 	}
 	
@@ -110,4 +108,53 @@ public class TileEntityBasicSolarPanel extends TileEntity implements ITickable, 
 		}
 		return 0;
 	}
+	/* CAPABILITIES */
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing from) {
+		return capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, from);
+	}
+	@Override
+	public <T> T getCapability(Capability<T> capability, final EnumFacing from) {
+		if (capability == CapabilityEnergy.ENERGY) {
+			return CapabilityEnergy.ENERGY.cast(new net.minecraftforge.energy.IEnergyStorage() {
+
+				@Override
+				public int receiveEnergy(int maxReceive, boolean simulate) {
+
+					return 0;
+				}
+
+				@Override
+				public int extractEnergy(int maxExtract, boolean simulate) {
+
+					return TileEntityBasicSolarPanel.this.extractEnergy(from, maxExtract, simulate);
+				}
+
+				@Override
+				public int getEnergyStored() {
+
+					return TileEntityBasicSolarPanel.this.getEnergyStored(from);
+				}
+
+				@Override
+				public int getMaxEnergyStored() {
+
+					return TileEntityBasicSolarPanel.this.getMaxEnergyStored(from);
+				}
+
+				@Override
+				public boolean canExtract() {
+
+					return false;
+				}
+
+				@Override
+				public boolean canReceive() {
+
+					return true;
+				}
+			});
+		}
+		return super.getCapability(capability, from);
+	}	
 }

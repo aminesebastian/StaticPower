@@ -3,7 +3,6 @@ package theking530.staticpower.handlers.crafting.wrappers;
 import java.util.ArrayList;
 
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
 
 public class GrinderOutputWrapper {
 

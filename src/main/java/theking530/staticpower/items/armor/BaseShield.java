@@ -26,7 +26,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.items.EquipmentMaterial;
-import theking530.staticpower.items.ModItems;
 import theking530.staticpower.items.armor.BaseArmor.ArmorType;
 
 public class BaseShield extends ItemShield{
@@ -54,7 +53,7 @@ public class BaseShield extends ItemShield{
 	}
 	
     public String getItemStackDisplayName(ItemStack stack){
-        if (stack.getSubCompound("BlockEntityTag", false) != null)  {
+        if (stack.getSubCompound("BlockEntityTag") != null)  {
             String s = getUnlocalizedName();
             EnumDyeColor enumdyecolor = ItemBanner.getBaseColor(stack);
             s = s + enumdyecolor.getUnlocalizedName() + ".name";
@@ -78,10 +77,10 @@ public class BaseShield extends ItemShield{
 		activeItemStack = player.getActiveItemStack();
 
 		if (damage > 0.0F && activeItemStack != null && activeItemStack.getItem() instanceof BaseShield) {
-			int i = 1 + MathHelper.floor_float(damage);
+			int i = 1 + MathHelper.floor(damage);
 			activeItemStack.damageItem(i, player);
 
-			if (activeItemStack.stackSize <= 0) {
+			if (activeItemStack.getCount() <= 0) {
 				EnumHand enumhand = player.getActiveHand();
 				net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(player, activeItemStack, enumhand);
 
@@ -94,7 +93,7 @@ public class BaseShield extends ItemShield{
 
 				activeItemStack = null;
 				if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
-					player.playSound(SoundEvents.ITEM_SHIELD_BREAK, 0.8F, 0.8F + player.worldObj.rand.nextFloat() * 0.4F);
+					player.playSound(SoundEvents.ITEM_SHIELD_BREAK, 0.8F, 0.8F + player.world.rand.nextFloat() * 0.4F);
 				}
 			}
 		}

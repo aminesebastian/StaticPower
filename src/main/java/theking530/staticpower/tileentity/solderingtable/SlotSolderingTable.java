@@ -10,7 +10,8 @@ public class SlotSolderingTable extends SlotItemHandler {
 	TileEntitySolderingTable TABLE;
 	EntityPlayer PLAYER;
 	ContainerSolderingTable CONTAINER;
-	
+    private int amountCrafted;
+    
 	public SlotSolderingTable(ContainerSolderingTable container, EntityPlayer player, TileEntitySolderingTable teTable, IItemHandler inv, int i, int j, int k) {
 		super(inv, i, j, k);
 		TABLE = teTable;
@@ -19,18 +20,20 @@ public class SlotSolderingTable extends SlotItemHandler {
 	}
 	@Override
     protected void onCrafting(ItemStack item, int amount){
-        onCrafting(item);
-        TABLE.onCrafted(PLAYER, item, amount);
+        this.amountCrafted += amount;
+        this.onCrafting(item);
+    }
+    protected void onSwapCraft(int p_190900_1_)
+    {
+        this.amountCrafted += p_190900_1_;
     }
     public boolean isItemValid(ItemStack item){
         return false;
     }
-	public void onPickupFromSlot(EntityPlayer player, ItemStack item){
-        //FMLCommonHandler.instance().firePlayerCraftingEvent(player, item, TABLE);
-        onCrafting(item, item.stackSize);
-    }
-    public void onSlotChanged() {
-        super.onSlotChanged();
+    public ItemStack onTake(EntityPlayer thePlayer, ItemStack stack)
+    {
+        TABLE.onCrafted(PLAYER, stack, amountCrafted);
         CONTAINER.onSolderingAreaChanged();
+        return stack;
     }
 }

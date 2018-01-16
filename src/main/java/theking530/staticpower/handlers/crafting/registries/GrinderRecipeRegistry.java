@@ -5,22 +5,15 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import theking530.staticpower.blocks.ModBlocks;
+import net.minecraft.item.ItemStack;
 import theking530.staticpower.handlers.crafting.wrappers.GrinderOutputWrapper;
 import theking530.staticpower.handlers.crafting.wrappers.GrinderOutputWrapper.GrinderOutput;
-import theking530.staticpower.items.ModItems;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
 
 public class GrinderRecipeRegistry {
 
 	private static final GrinderRecipeRegistry GRINDER_BASE = new GrinderRecipeRegistry();
 	
-	@SuppressWarnings("rawtypes")
-	private Map grindingList = new HashMap();
+	private Map<ItemStack, GrinderOutputWrapper> grindingList = new HashMap<ItemStack, GrinderOutputWrapper>();
 
 	public static GrinderRecipeRegistry Grinding() {
 		return GRINDER_BASE;
@@ -40,23 +33,20 @@ public class GrinderRecipeRegistry {
 		}
 		putLists(input, tempWrapper);
 	}
-	@SuppressWarnings("unchecked")
 	public void putLists(ItemStack input, GrinderOutputWrapper outputs){
 		grindingList.put(input, outputs);
 	}
-    public Map getGrindingList() {
+    public Map<ItemStack, GrinderOutputWrapper> getGrindingList() {
         return this.grindingList;
     }
-	@SuppressWarnings("rawtypes")
 	public GrinderOutputWrapper getgrindingResult(ItemStack itemstack) {
-		Iterator iterator = this.grindingList.entrySet().iterator();
-		Entry entry;
-
+		Iterator<Entry<ItemStack, GrinderOutputWrapper>> iterator = grindingList.entrySet().iterator();
+		Entry<ItemStack, GrinderOutputWrapper> entry;
 		do {
 			if (!iterator.hasNext()) {
 				return null;
 			}
-			entry = (Entry) iterator.next();
+			entry = iterator.next();
 		} while (!canBeGrinded(itemstack, (ItemStack) entry.getKey()));
 		return (GrinderOutputWrapper) entry.getValue();
 	}

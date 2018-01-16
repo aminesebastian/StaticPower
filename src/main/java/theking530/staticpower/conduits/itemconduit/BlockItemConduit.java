@@ -1,8 +1,8 @@
 package theking530.staticpower.conduits.itemconduit;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import theking530.staticpower.StaticPower;
 import theking530.staticpower.conduits.BaseConduit;
 
 public class BlockItemConduit extends BaseConduit {
@@ -57,7 +57,7 @@ public class BlockItemConduit extends BaseConduit {
 	}
 	*/
 	@Override
-	public TileEntity createNewTileEntity(World world, int i) {
+	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileEntityItemConduit();
 	}
 }

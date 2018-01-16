@@ -7,21 +7,10 @@ import javax.annotation.Nullable;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.assists.Reference;
 import theking530.staticpower.assists.RegisterHelper;
 
 public class GemOre extends Block{
@@ -36,7 +25,7 @@ public class GemOre extends Block{
 		setUnlocalizedName(name);	
 		setRegistryName(name);
 		setHarvestLevel(tool, level);
-		RegisterHelper.registerItem(new BaseItemBlock(this, name));
+		//RegisterHelper.registerItem(new BaseItemBlock(this, name));
 		GEM_DROP = gemDrop;
 		DROP_MIN = dropMin;
 		DROP_MAX = dropMax;

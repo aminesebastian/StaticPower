@@ -1,6 +1,5 @@
 package theking530.staticpower.client.gui.widgets;
 
-import net.minecraft.inventory.IInventory;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 

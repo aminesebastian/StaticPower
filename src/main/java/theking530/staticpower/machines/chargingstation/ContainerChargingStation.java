@@ -1,24 +1,18 @@
 package theking530.staticpower.machines.chargingstation;
 
-import cofh.api.energy.IEnergyContainerItem;
+import cofh.redstoneflux.api.IEnergyContainerItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerChargingStation extends Container {
 	
 	private TileEntityChargingStation C_CHARGING;
-	private int ENERGY_STORED;
-	
-	public ContainerChargingStation(InventoryPlayer invPlayer, TileEntityChargingStation teCharging) {
-		ENERGY_STORED = 0;		
+
+	public ContainerChargingStation(InventoryPlayer invPlayer, TileEntityChargingStation teCharging) {	
 		C_CHARGING = teCharging;
 		
 		//Input
@@ -97,9 +91,7 @@ public class ContainerChargingStation extends Container {
 		}
 		//Armor
 		for (int k = 0; k < 4; ++k){
-			EntityEquipmentSlot[] VALID_EQUIPMENT_SLOTS = new EntityEquipmentSlot[] {EntityEquipmentSlot.HEAD, EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET};
-	        EntityEquipmentSlot entityequipmentslot = VALID_EQUIPMENT_SLOTS[k];
-	        addSlotToContainer(new Slot(invPlayer, 36 + (3 - k), 7, 95 + k * 18));
+			addSlotToContainer(new Slot(invPlayer, 36 + (3 - k), 7, 95 + k * 18));
 		}
 	}
 	
@@ -132,15 +124,15 @@ public class ContainerChargingStation extends Container {
 	        }else if (!this.mergeItemStack(itemstack1, 6, 42, false)) {
 	            return null;
 	        }
-	        if (itemstack1.stackSize == 0){
-	            slot.putStack((ItemStack)null);
+	        if (itemstack1.getCount() == 0){
+	            slot.putStack(ItemStack.EMPTY);
 	        }else {
 	            slot.onSlotChanged();
 	        }
-	        if (itemstack1.stackSize == itemstack.stackSize){
+	        if (itemstack1.getCount() == itemstack.getCount()){
 	            return null;
 	        }
-	        slot.onPickupFromSlot(player, itemstack1);
+	        slot.onTake(player, itemstack1);
 	    }
 	    return itemstack;
 	}

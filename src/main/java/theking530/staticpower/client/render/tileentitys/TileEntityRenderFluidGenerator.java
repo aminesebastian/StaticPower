@@ -2,17 +2,10 @@ package theking530.staticpower.client.render.tileentitys;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.client.model.ModelBlock;
@@ -20,7 +13,7 @@ import theking530.staticpower.machines.fluidgenerator.TileEntityFluidGenerator;
 import theking530.staticpower.utils.RenderUtil;
 import theking530.staticpower.utils.SideModeList.Mode;
 
-public class TileEntityRenderFluidGenerator extends TileEntitySpecialRenderer {
+public class TileEntityRenderFluidGenerator extends TileEntitySpecialRenderer<TileEntityFluidGenerator> {
 
 	ResourceLocation side = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSide.png");
 	ResourceLocation sideIn = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSideIn.png");
@@ -32,9 +25,9 @@ public class TileEntityRenderFluidGenerator extends TileEntitySpecialRenderer {
 	static float width = 1F;
 	float height = 1F;
 	
-	public void renderTileEntityAt(TileEntity tileentity, double translationX, double translationY, double translationZ, float f, int dest) {
-		TileEntityFluidGenerator fGen = (TileEntityFluidGenerator)tileentity;			
-		EnumFacing facing = EnumFacing.getHorizontal(tileentity.getBlockMetadata());
+	public void render(TileEntityFluidGenerator tileentity, double translationX, double translationY, double translationZ, float f, int dest, float alpha) {		
+		EnumFacing facing = tileentity.getFacingDirection();
+		
 		GL11.glPushMatrix();
 		GL11.glTranslated(translationX, translationY, translationZ);
 		if(facing == EnumFacing.WEST) {
@@ -56,10 +49,10 @@ public class TileEntityRenderFluidGenerator extends TileEntitySpecialRenderer {
 		checkAndRenderSides(tileentity, 3);
 		checkAndRenderSides(tileentity, 4);
 		checkAndRenderSides(tileentity, 5);
-		if(fGen.TANK.getFluid() != null) {	
+		if(tileentity.TANK.getFluid() != null) {	
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			drawLiquidBar(tileentity, fGen.TANK.getFluid());
+			drawLiquidBar(tileentity, tileentity.TANK.getFluid());
 			GL11.glDisable(GL11.GL_BLEND);
 		}
 		drawEnergyBar(tileentity);
@@ -99,8 +92,6 @@ public class TileEntityRenderFluidGenerator extends TileEntitySpecialRenderer {
 	}	
 	public static void drawLiquidBar(TileEntity tileentity, FluidStack fluidStack) {
 		TileEntityFluidGenerator fGen = (TileEntityFluidGenerator)tileentity;
-		float height = fGen.getAdjustedVolume() > 0 ? fGen.getAdjustedVolume() : 0;	
-		final Fluid fluid = fluidStack.getFluid();
 		RenderUtil.drawFluidInWorld(fluidStack, fGen.TANK.getCapacity(), 10.5F*texel, 2.5F*texel, 1.0005F, 3F*texel, 0.69f);
 	}
 	public static void drawEnergyBar(TileEntity tileentity) {

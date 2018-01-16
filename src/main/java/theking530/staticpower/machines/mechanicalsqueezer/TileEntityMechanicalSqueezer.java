@@ -1,7 +1,5 @@
 package theking530.staticpower.machines.mechanicalsqueezer;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -91,7 +89,7 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFlu
 	}
 	@Override 
 	public boolean hasResult(ItemStack itemstack) {
-		if(itemstack != null && getResult(itemstack) != null) {
+		if(itemstack != null && getResult(itemstack) != ItemStack.EMPTY) {
 			return true;
 		}
 		return false;
@@ -138,14 +136,14 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFlu
 	}
 	@Override
 	public void process(){
-		if(!worldObj.isRemote) {
+		if(!getWorld().isRemote) {
 			DRAIN_COMPONENT.update();
 		}
 	}
 	public void rightClick() {
-		if(!worldObj.isRemote) {
+		if(!getWorld().isRemote) {
 			DRAIN_COMPONENT.update();
-			if(SLOTS_INTERNAL.getStackInSlot(0) == null){
+			if(SLOTS_INTERNAL.getStackInSlot(0) == ItemStack.EMPTY){
 				PROCESSING_TIMER = 0;
 			}
 			//Start Process
@@ -168,12 +166,12 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFlu
 				if(PROCESSING_TIMER < PROCESSING_TIME) {
 					PROCESSING_TIMER++;
 					updateBlock();
-					worldObj.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_SAND_STEP, SoundCategory.BLOCKS, 0.15f, 1, false);		
+					getWorld().playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_SAND_STEP, SoundCategory.BLOCKS, 0.15f, 1, false);		
 				}else{				
 					if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, 0, getResult(SLOTS_INTERNAL.getStackInSlot(0)))) {
 						TANK.fill(getFluidResult(SLOTS_INTERNAL.getStackInSlot(0)), true);
 						SLOTS_OUTPUT.insertItem(0, getResult(SLOTS_INTERNAL.getStackInSlot(0)).copy(), false);
-						SLOTS_INTERNAL.setStackInSlot(0, null);
+						SLOTS_INTERNAL.setStackInSlot(0, ItemStack.EMPTY);
 						PROCESSING_TIMER = 0;					
 					}
 				}

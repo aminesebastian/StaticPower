@@ -68,7 +68,7 @@ public class BlockFluidConduit extends BaseConduit {
 		return false;
 	}
 	@Override
-	public TileEntity createNewTileEntity(World world, int i) {
+	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileEntityFluidConduit();
 	}
 }

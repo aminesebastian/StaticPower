@@ -1,7 +1,6 @@
 package theking530.staticpower.items.itemfilter;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 import org.lwjgl.opengl.GL11;
 
@@ -40,7 +39,7 @@ public class GuiItemFilter extends GuiContainer{
 		if(B.id == 1) {
 			boolean tempMode = INV_FILTER.getWhiteListMode();
 			INV_FILTER.setWhiteListMode(!tempMode);
-			IMessage msg = new PacketItemFilter(INV_FILTER, !tempMode);
+			IMessage msg = new PacketItemFilter(!tempMode);
 			PacketHandler.net.sendToServer(msg);
 			String mode = !tempMode == true ? "Whitelist" : "Blacklist";
 			B.displayString = mode;
@@ -48,14 +47,11 @@ public class GuiItemFilter extends GuiContainer{
 		}
 	}
 	public void updateScreen() {
-		int j = (width - xSize) / 2;
-		int k = (height - ySize) / 2;
-		//INFO_TAB.updateTab(width, height, xSize, ySize, fontRendererObj);
+;
 	}	
 	public void drawScreen(int par1, int par2, float par3) {
-	    	super.drawScreen(par1, par2, par3);
-	    	int var1 = (this.width - this.xSize) / 2;
-	        int var2 = (this.height - this.ySize) / 2;       
+	    super.drawScreen(par1, par2, par3);
+     
 	}
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = "Item Filter";
@@ -70,7 +66,7 @@ public class GuiItemFilter extends GuiContainer{
 			name = "Advanced Item Filter";
 			break;
 		}
-		this.fontRendererObj.drawString(name, this.xSize - 169, 6, 4210752 );
+		this.fontRenderer.drawString(name, this.xSize - 169, 6, 4210752 );
 	}	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
@@ -89,8 +85,8 @@ public class GuiItemFilter extends GuiContainer{
 
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		
-    	String text = ("Filter ites going into an inventory.");
-    	String[] splitMsg = text.split("=");
+    	//String text = ("Filter ites going into an inventory.");
+    	//	String[] splitMsg = text.split("=");
 		
 		//INFO_TAB.drawTab(Arrays.asList(splitMsg));
 	}

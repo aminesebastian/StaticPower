@@ -7,26 +7,17 @@ import java.util.Locale;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import theking530.staticpower.assists.Reference;
 import theking530.staticpower.utils.RenderUtil;
 
 public class GuiHeatBar {
 	
-	private static ResourceLocation powerBar = new ResourceLocation(Reference.MODID + ":" + "textures/gui/PowerBar.png");
-	
-	public List drawText(int temperature, int maxTemperature) {
+	public List<String> drawText(int temperature, int maxTemperature) {
 		String text = ("Heat" + "=" + NumberFormat.getNumberInstance(Locale.US).format(temperature) + "/" + NumberFormat.getNumberInstance(Locale.US).format(maxTemperature));
 		String[] splitMsg = text.split("=");
 		return Arrays.asList(splitMsg);
@@ -46,7 +37,7 @@ public class GuiHeatBar {
 	        double maxV = icon.getMaxV();
 	        double diffV = maxV - minV;
 	        Tessellator tessellator = Tessellator.getInstance();
-	        VertexBuffer tes = tessellator.getBuffer();
+	        BufferBuilder tes = tessellator.getBuffer();
 	        tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			//Minecraft.getMinecraft().getTextureManager().bindTexture(powerBar);
 			tes.pos(x + width, y, zLevel).tex(maxU,minV).endVertex();

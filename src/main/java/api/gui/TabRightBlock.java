@@ -5,8 +5,8 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -71,7 +71,7 @@ public class TabRightBlock extends Gui {
 		int tabTop = GUI_TOP + k + TAB_YPOS;
 
         Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer tes = tessellator.getBuffer();
+        BufferBuilder tes = tessellator.getBuffer();
         tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		GL11.glPushMatrix();

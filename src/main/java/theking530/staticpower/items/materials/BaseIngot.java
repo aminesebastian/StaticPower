@@ -1,10 +1,5 @@
 package theking530.staticpower.items.materials;
 
-import java.util.List;
-
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import theking530.staticpower.items.ItemBase;
 
 public class BaseIngot extends ItemBase{

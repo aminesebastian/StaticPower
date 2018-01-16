@@ -1,15 +1,15 @@
 package theking530.staticpower.tileentity.gates;
 
-import java.util.ArrayList;
-
-import javax.annotation.Nullable;
-
 import api.IWrenchable;
 import api.RegularWrenchMode;
 import api.SneakWrenchMode;
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -25,15 +25,24 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.assists.RegisterHelper;
-import theking530.staticpower.blocks.BaseItemBlock;
-import theking530.staticpower.tileentity.BaseTileEntity;
 import theking530.staticpower.utils.SideModeList.Mode;
 
-public class BlockLogicGate extends BlockContainer implements IWrenchable{
+public class BlockLogicGate extends Block implements IWrenchable{
 
 	static float PIXEL = 1F/16F;
-    private static final AxisAlignedBB AA_BB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 2*PIXEL, 1.0D);
+    private static final AxisAlignedBB[] AABB = new AxisAlignedBB[] {
+    		new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 2*PIXEL, 1.0D), 
+    		new AxisAlignedBB(0.0D, 0.0D, 1-2*PIXEL, 1.0D, 1.0D, 1.0D), 
+    		new AxisAlignedBB(0.0D, 0.0D, 0.0D, 2*PIXEL, 1.0D, 1.0D), 
+    		new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 2*PIXEL), 
+    		new AxisAlignedBB(1-2*PIXEL, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D),  
+    		new AxisAlignedBB(0.0D, 1-2*PIXEL, 0.0D, 1.0D, 1.0D, 1.0D)
+    };
+    
+    /**
+     * 0 = On the Ground } 1-4 = On the side ordererd North, East, West, South | 5 = On the ceiling
+     */
+    public static final PropertyInteger ORIENTATION = PropertyInteger.create("orientation", 0, 6);
     private int GUI_ID;
     
     protected BlockLogicGate(String name, int guiID) {
@@ -41,7 +50,7 @@ public class BlockLogicGate extends BlockContainer implements IWrenchable{
 		setCreativeTab(StaticPower.StaticPower);
 		setRegistryName(name);
 		setUnlocalizedName(name);
-		RegisterHelper.registerItem(new ItemLogicGate(this, name));
+		StaticPower.REGISTRY.PreRegisterItem(new ItemLogicGate(this, name));
 		GUI_ID = guiID;
 	}
 	public EnumBlockRenderType getRenderType(IBlockState state) {
@@ -55,7 +64,7 @@ public class BlockLogicGate extends BlockContainer implements IWrenchable{
 		return false;
 	}
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		if (world.isRemote) {
     		return true;
     	}else if (!player.isSneaking()) {
@@ -67,7 +76,6 @@ public class BlockLogicGate extends BlockContainer implements IWrenchable{
                 		return true;					
     				}
         		}else{
-        			int metadata = getMetaFromState(world.getBlockState(pos));
         			if(hitX > .75) {
         				entity.sideRightClicked(EnumFacing.EAST);	     
         			}else if(hitX < .25) {
@@ -101,7 +109,7 @@ public class BlockLogicGate extends BlockContainer implements IWrenchable{
     }
     @Override
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
-        return AA_BB;
+        return AABB[state.getValue(ORIENTATION)];
     }
     @Override
 	public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
@@ -125,7 +133,7 @@ public class BlockLogicGate extends BlockContainer implements IWrenchable{
 			machineStack.setTagCompound(tempMachine.writeToNBT(nbt));
 		}
 		EntityItem droppedItem = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), machineStack);
-		world.spawnEntityInWorld(droppedItem);
+		world.spawnEntity(droppedItem);
 		world.setBlockToAir(pos);
 	}
 	public String getDescrption(ItemStack stack){
@@ -141,10 +149,98 @@ public class BlockLogicGate extends BlockContainer implements IWrenchable{
 		return null;
 	}
     @Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) {
+    public boolean hasTileEntity(IBlockState state) {
+		return true;    	
+    }
+    @Override
+	public TileEntity createTileEntity(World world, IBlockState state) {
 		return null;
 	}
 	@Override
 	public void wrenchBlock(EntityPlayer player, RegularWrenchMode mode, ItemStack wrench, World world, BlockPos pos, EnumFacing facing, boolean returnDrops) {
 	}
+	
+	
+    public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
+        this.setDefaultOrientation(worldIn, pos, state);
+    }
+    private void setDefaultOrientation(World worldIn, BlockPos pos, IBlockState state)
+    {
+    	 if (!worldIn.isRemote)
+         {
+             int enumfacing = state.getValue(ORIENTATION);
+             worldIn.setBlockState(pos, state.withProperty(ORIENTATION, enumfacing), 2);
+         }
+    }
+    public IBlockState getStateFromMeta(int meta)
+    {
+        EnumFacing enumfacing = EnumFacing.getFront(meta);
+
+        if (enumfacing.getAxis() == EnumFacing.Axis.Y)
+        {
+            enumfacing = EnumFacing.NORTH;
+        }
+
+        return this.getDefaultState().withProperty(ORIENTATION, meta);
+    }
+
+    /**
+     * Convert the BlockState into the correct metadata value
+     */
+    public int getMetaFromState(IBlockState state)
+    {
+        return state.getValue(ORIENTATION);
+    }
+
+    /**
+     * Called by ItemBlocks just before a block is actually set in the world, to allow for adjustments to the
+     * IBlockstate
+     */
+    public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+    {
+    	if(facing == EnumFacing.UP) {
+            return this.getDefaultState().withProperty(ORIENTATION, 0);
+    	}
+    	if(facing == EnumFacing.DOWN) {
+            return this.getDefaultState().withProperty(ORIENTATION, 5);
+    	}
+    	if(facing == EnumFacing.NORTH) {
+            return this.getDefaultState().withProperty(ORIENTATION, 1);
+    	}
+    	if(facing == EnumFacing.EAST) {
+            return this.getDefaultState().withProperty(ORIENTATION, 2);
+    	}
+    	if(facing == EnumFacing.SOUTH) {
+            return this.getDefaultState().withProperty(ORIENTATION, 3);
+    	}
+    	if(facing == EnumFacing.WEST) {
+            return this.getDefaultState().withProperty(ORIENTATION, 4);
+    	}
+        return this.getDefaultState().withProperty(ORIENTATION, 0);
+    }
+    public IBlockState onBlockPlaced(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+    	if(facing == EnumFacing.UP) {
+            return this.getDefaultState().withProperty(ORIENTATION, 0);
+    	}
+    	if(facing == EnumFacing.DOWN) {
+            return this.getDefaultState().withProperty(ORIENTATION, 5);
+    	}
+    	if(facing == EnumFacing.NORTH) {
+            return this.getDefaultState().withProperty(ORIENTATION, 1);
+    	}
+    	if(facing == EnumFacing.EAST) {
+            return this.getDefaultState().withProperty(ORIENTATION, 2);
+    	}
+    	if(facing == EnumFacing.SOUTH) {
+            return this.getDefaultState().withProperty(ORIENTATION, 3);
+    	}
+    	if(facing == EnumFacing.WEST) {
+            return this.getDefaultState().withProperty(ORIENTATION, 4);
+    	}
+        return this.getDefaultState().withProperty(ORIENTATION, 0);
+    }
+
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, new IProperty[] {ORIENTATION});
+    }
 }

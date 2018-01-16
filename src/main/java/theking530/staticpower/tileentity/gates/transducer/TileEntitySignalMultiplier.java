@@ -1,16 +1,10 @@
 package theking530.staticpower.tileentity.gates.transducer;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRedstoneWire;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import theking530.staticpower.tileentity.gates.TileEntityBaseLogicGate;
 
 public class TileEntitySignalMultiplier extends TileEntityBaseLogicGate {
 
-	private String customName;
-	
 	public int INPUT_SIGNAL_LIMIT;
 	public int OUTPUT_SIGNAL_STRENGTH;
 	public boolean IS_RESET = true;
@@ -23,7 +17,7 @@ public class TileEntitySignalMultiplier extends TileEntityBaseLogicGate {
 	}
 	@Override
 	public void gateTick() {
-		if(!worldObj.isRemote) {
+		if(!getWorld().isRemote) {
 			if(conditionsMet()) {
 				setAllOutputs(OUTPUT_SIGNAL_STRENGTH);	
 				IS_RESET = false;

@@ -8,20 +8,19 @@ import api.gui.TabRightBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import theking530.staticpower.assists.Reference;
 import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.tileentity.BaseTileEntity;
+import theking530.staticpower.utils.GuiTextures;
 import theking530.staticpower.utils.SideModeList.Mode;
 import theking530.staticpower.utils.SidePicker;
 import theking530.staticpower.utils.SidePicker.Side;
@@ -44,16 +43,14 @@ public class GuiSideConfigTab extends GuiScreen {
 	public static boolean IS_TAB_OPEN;
 	public TileEntity TILE_ENTITY;
 	private FontRenderer FONT_RENDERER;
-	private ResourceLocation blueTab = new ResourceLocation(Reference.MODID + ":" + "textures/gui/BlueTab.png");
-	private ResourceLocation bg = new ResourceLocation(Reference.MODID + ":" + "textures/gui/ButtonBG.png");
 	
-	public TabRightBlock BLUE_TAB = new TabRightBlock(GUI_LEFT, GUI_TOP, 80, 75, 175, 64, blueTab);
+	public TabRightBlock BLUE_TAB = new TabRightBlock(GUI_LEFT, GUI_TOP, 80, 75, 175, 64, GuiTextures.BLUE_TAB);
 	
 	public GuiSideConfigTab(int guiLeft, int guiTop, TileEntity TE){
 		GUI_LEFT = guiLeft;
 		GUI_TOP = guiTop;
 		TILE_ENTITY = TE;
-		FONT_RENDERER = Minecraft.getMinecraft().fontRendererObj;
+		FONT_RENDERER = Minecraft.getMinecraft().fontRenderer;
 	}
 	public void drawTab() {
 		BLUE_TAB.drawTab();
@@ -89,8 +86,8 @@ public class GuiSideConfigTab extends GuiScreen {
 
 		GL11.glEnable(GL11.GL_BLEND);
 		Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer vertexbuffer = tessellator.getBuffer();
-		Minecraft.getMinecraft().getTextureManager().bindTexture(bg);
+        BufferBuilder vertexbuffer = tessellator.getBuffer();
+		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.BUTTON_BG);
 		GlStateManager.color(1, 1, 1);
 		vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
 		vertexbuffer.pos(tabLeft+93, tabTop+155, 0).tex(0,1).endVertex();
@@ -427,8 +424,8 @@ public class GuiSideConfigTab extends GuiScreen {
 
     public void renderBlock(float zLevel, float x, float y, boolean highlight) {
     	TileEntity te;
-    	float yaw = (Minecraft.getMinecraft().thePlayer.rotationYaw) - 85;
-    	float pitch = (Minecraft.getMinecraft().thePlayer.rotationPitch);
+    	float yaw = (Minecraft.getMinecraft().player.rotationYaw) - 85;
+    	float pitch = (Minecraft.getMinecraft().player.rotationPitch);
     	float rotateX = yaw + (MOUSE_DRAGX*4.5f);
     	float rotateY = (MOUSE_DRAGY*-4.5f);
     	float identifierY = MathHelper.sin((float) (rotateX*0.5));
@@ -449,7 +446,7 @@ public class GuiSideConfigTab extends GuiScreen {
         GL11.glTranslatef(0.5F, -0.5F, -0.5F);              
         GL11.glRotatef(-90F, 0.0F, 1.0F, 0.0F);
         
-        TileEntityRendererDispatcher.instance.renderTileEntityAt(TILE_ENTITY, 0.0, -0.1, 0, 0.0F);
+        TileEntityRendererDispatcher.instance.render(TILE_ENTITY, 0.0, -0.1, 0, 0.0F);
         
         SidePicker picker = new SidePicker(0.8f);
 
@@ -489,7 +486,7 @@ public class GuiSideConfigTab extends GuiScreen {
 
     public void drawHighlight(int color, Side side) {
     	  Tessellator tessellator = Tessellator.getInstance();
-          VertexBuffer tes = tessellator.getBuffer();
+          BufferBuilder tes = tessellator.getBuffer();
           tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
       	GL11.glPushMatrix();
   		GL11.glEnable(GL11.GL_BLEND);
@@ -564,7 +561,7 @@ public class GuiSideConfigTab extends GuiScreen {
     public void mouseDrag(int xMouse, int yMouse, int button, long time) {
 		int j = (BLUE_TAB.WIDTH - BLUE_TAB.xSIZE) / 2;
 		int k = (BLUE_TAB.HEIGHT - BLUE_TAB.ySIZE) / 2;
-		float yaw = (Minecraft.getMinecraft().thePlayer.rotationYaw);
+		float yaw = (Minecraft.getMinecraft().player.rotationYaw);
     	if(xMouse > j + 188 && xMouse < j + 265) {
     		if(yMouse > k + 82 && yMouse < k + 155){
     			float x = -(MOUSE_X - xMouse);

@@ -2,11 +2,12 @@ package theking530.staticpower.items.upgrades;
 
 import java.util.List;
 
-import net.minecraft.entity.player.EntityPlayer;
+import javax.annotation.Nullable;
+
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
-import theking530.staticpower.StaticPower;
+import net.minecraft.world.World;
 import theking530.staticpower.assists.Tier;
-import theking530.staticpower.items.ItemBase;
 import theking530.staticpower.utils.EnumTextFormatting;
 
 public class BasePowerUpgrade  extends BaseUpgrade implements IMachineUpgrade{
@@ -40,13 +41,13 @@ public class BasePowerUpgrade  extends BaseUpgrade implements IMachineUpgrade{
 	@Override
 	public float getMultiplier(ItemStack stack, int upgradeNumber) {
 		if(upgradeNumber == 0) {
-			return CAPACITY * stack.stackSize;
+			return CAPACITY * stack.getCount();
 		}else{
-			return TICK_UPGRADE * stack.stackSize;
+			return TICK_UPGRADE * stack.getCount();
 		}
 	}
 	@Override  
-	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
+		public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn) {
 		list.add(EnumTextFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format((getMultiplier(stack, 0))*100) + "%" + EnumTextFormatting.GREEN + " RF Capacity");
 		list.add(EnumTextFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format((getMultiplier(stack, 1))*100) + "%" + EnumTextFormatting.GREEN + " RF Per Tick");
 

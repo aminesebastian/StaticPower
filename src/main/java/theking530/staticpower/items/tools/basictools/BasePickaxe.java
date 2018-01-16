@@ -2,11 +2,14 @@ package theking530.staticpower.items.tools.basictools;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import org.lwjgl.input.Keyboard;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.items.EquipmentMaterial;
 import theking530.staticpower.utils.EnumTextFormatting;
@@ -27,11 +30,11 @@ public class BasePickaxe extends ItemPickaxe {
 	}
 	
 	@Override  
-	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean par4) {
+		public void addInformation(ItemStack itemstack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn) {
     	if(showHiddenTooltips()) {
     		String tempLevel = "Mining Level: " +  MATERIAL.getToolMaterial().getHarvestLevel();
-    		String tempSpeed = "Speed: " +  MATERIAL.getToolMaterial().getEfficiencyOnProperMaterial();
-    		String tempDamage = "Damage: " + (Math.round(MATERIAL.getToolMaterial().getDamageVsEntity()) + 2); 
+    		String tempSpeed = "Speed: " +  MATERIAL.getToolMaterial().getEfficiency();
+    		String tempDamage = "Damage: " + (Math.round(MATERIAL.getToolMaterial().getAttackDamage()) + 2); 
     		String tempDurability = "Durability: " + (MATERIAL.getToolMaterial().getMaxUses()-itemstack.getMetadata()) + "/" + MATERIAL.getToolMaterial().getMaxUses();
     		
     		list.add(tempLevel);

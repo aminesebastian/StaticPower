@@ -31,11 +31,11 @@ public class GuiSignalMultiplier extends GuiContainer{
 		String name = I18n.format(this.sMultiplier.getName());
 		String input = String.valueOf(sMultiplier.INPUT_SIGNAL_LIMIT);
 		String output = String.valueOf(sMultiplier.OUTPUT_SIGNAL_STRENGTH);
-		this.fontRendererObj.drawString(name, this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2, 6,4210752 );
-		this.fontRendererObj.drawString(input, this.xSize / 2 - 40, 41, 4210752 );
-		this.fontRendererObj.drawString(output, this.xSize / 2 + 37, 41, 4210752 );
-		this.fontRendererObj.drawString("Input", this.xSize / 2 - 49, 71, 4210752 );
-		this.fontRendererObj.drawString("Output", this.xSize / 2 + 25, 71, 4210752 );
+		this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2, 6,4210752 );
+		this.fontRenderer.drawString(input, this.xSize / 2 - 40, 41, 4210752 );
+		this.fontRenderer.drawString(output, this.xSize / 2 + 37, 41, 4210752 );
+		this.fontRenderer.drawString("Input", this.xSize / 2 - 49, 71, 4210752 );
+		this.fontRenderer.drawString("Output", this.xSize / 2 + 25, 71, 4210752 );
 	}
 	@Override
 	public void initGui() {

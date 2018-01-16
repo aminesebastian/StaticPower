@@ -1,10 +1,7 @@
 package theking530.staticpower.machines.chargingstation;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
@@ -15,7 +12,6 @@ import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.GuiIDRegistry;
 import theking530.staticpower.machines.BaseMachineBlock;
-import theking530.staticpower.tileentity.vacuumchest.TileEntityVacuumChest;
 
 public class BlockChargingStation extends BaseMachineBlock{
 
@@ -26,7 +22,7 @@ public class BlockChargingStation extends BaseMachineBlock{
 		return EnumBlockRenderType.INVISIBLE;
 	}
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+		public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
     	if (world.isRemote) {
     		return true;
     	}else if (!player.isSneaking()) {
@@ -41,7 +37,7 @@ public class BlockChargingStation extends BaseMachineBlock{
     	}
 	}
 	@Override
-	public TileEntity createNewTileEntity(World var1, int var2) {
+	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileEntityChargingStation();
 	}
 }

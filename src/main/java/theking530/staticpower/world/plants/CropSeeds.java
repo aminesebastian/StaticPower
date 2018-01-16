@@ -19,7 +19,6 @@ public class CropSeeds extends ItemSeeds implements IPlantable {
 
     private final Block CROP_BLOCK;
     
-    @SuppressWarnings("static-access")
     public CropSeeds(String name, Block blockCrop, Block blockSoil) {
         super(blockCrop, blockSoil);
         CROP_BLOCK = blockCrop;
@@ -28,13 +27,12 @@ public class CropSeeds extends ItemSeeds implements IPlantable {
         setUnlocalizedName(name);
     }
 
-    @SuppressWarnings("static-access")
     public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         net.minecraft.block.state.IBlockState state = worldIn.getBlockState(pos);
         if (facing == EnumFacing.UP && playerIn.canPlayerEdit(pos.offset(facing), facing, stack) 
         		&& state.getBlock().canSustainPlant(state, worldIn, pos, EnumFacing.UP, this) && worldIn.isAirBlock(pos.up())) {
             worldIn.setBlockState(pos.up(), this.CROP_BLOCK.getDefaultState());
-            --stack.stackSize;
+            stack.setCount(stack.getCount()-1);
             return EnumActionResult.SUCCESS;
         }else{
             return EnumActionResult.FAIL;

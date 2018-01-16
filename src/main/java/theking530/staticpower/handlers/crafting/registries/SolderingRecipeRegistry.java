@@ -47,7 +47,7 @@ public class SolderingRecipeRegistry {
 
         for (hashmap = new HashMap(); i < inputParams.length; i += 2){
             Character character = (Character)inputParams[i];
-            ItemStack itemstack1 = null;
+            ItemStack itemstack1 = ItemStack.EMPTY;
 
             if (inputParams[i + 1] instanceof Item){
                 itemstack1 = new ItemStack((Item)inputParams[i + 1]);
@@ -68,7 +68,7 @@ public class SolderingRecipeRegistry {
             if (hashmap.containsKey(Character.valueOf(c0))){
                 aitemstack[i1] = ((ItemStack)hashmap.get(Character.valueOf(c0))).copy();
             }else{
-                aitemstack[i1] = null;
+                aitemstack[i1] = ItemStack.EMPTY;
             }
         }
 
@@ -78,13 +78,13 @@ public class SolderingRecipeRegistry {
     }  
     public ItemStack findSolderingOutput(IItemHandler inv, World world) {
         int i = 0;
-        ItemStack itemstack = null;
-        ItemStack itemstack1 = null;
+        ItemStack itemstack = ItemStack.EMPTY;
+        ItemStack itemstack1 = ItemStack.EMPTY;
         int j;
         for (j = 0; j < inv.getSlots(); ++j){
             ItemStack itemstack2 = inv.getStackInSlot(j);
 
-            if (itemstack2 != null){
+            if (itemstack2 != ItemStack.EMPTY){
                 if (i == 0){
                     itemstack = itemstack2;
                 }
@@ -95,7 +95,7 @@ public class SolderingRecipeRegistry {
             }
         }
 
-        if (i == 2 && itemstack.getItem() == itemstack1.getItem() && itemstack.stackSize == 1 && itemstack1.stackSize == 1 && itemstack.getItem().isRepairable()) {
+        if (i == 2 && itemstack.getItem() == itemstack1.getItem() && itemstack.getCount() == 1 && itemstack1.getCount() == 1 && itemstack.getItem().isRepairable()) {
             Item item = itemstack.getItem();
             int j1 = item.getMaxDamage() - itemstack.getItemDamage();
             int k = item.getMaxDamage() - itemstack1.getItemDamage();
@@ -114,7 +114,7 @@ public class SolderingRecipeRegistry {
                     return recipe.getCraftingResult(inv);
                 }
             }
-            return null;
+            return ItemStack.EMPTY;
         }
     }
     public List getRecipeList(){

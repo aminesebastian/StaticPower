@@ -1,8 +1,8 @@
 package theking530.staticpower.assists;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import theking530.staticpower.handlers.crafting.registries.CondenserRecipeRegistry;
@@ -16,14 +16,8 @@ import theking530.staticpower.handlers.crafting.registries.SolderingRecipeRegist
 import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.GrinderOutputWrapper.GrinderOutput;
 
-public class RegisterHelper 
-{
-		public static void registerBlock(Block block) {
-			GameRegistry.register(block);
-		}
-		public static void registerItem(Item item) {
-			GameRegistry.register(item);
-		}
+public class RegisterHelper  {
+
 		public static void registerFermenterRecipe(ItemStack input, FluidStack output) {
 			FermenterRecipeRegistry.Fermenting().addRecipe(input, output);
 		}
@@ -55,5 +49,11 @@ public class RegisterHelper
 		}
 		public static void registerDistilleryRecipe(FluidStack fluidInput, FluidStack fluidOutput, int heatMin, int heatCost) {
 			DistilleryRecipeRegistry.Distillery().addRecipe(fluidInput, fluidOutput, heatMin, heatCost);
+		}
+		public static void addShapedRecipe(String name, String group, ItemStack stack, Object... recipeComponents) {	
+			GameRegistry.addShapedRecipe(new ResourceLocation(Reference.MODID, name), new ResourceLocation(group), stack, recipeComponents);
+		}
+		public static void addShapelessRecipe(String name, String group, ItemStack stack, Ingredient... recipeComponents) {	
+			GameRegistry.addShapelessRecipe(new ResourceLocation(Reference.MODID, name), new ResourceLocation(group), stack, recipeComponents);
 		}
 }

@@ -17,7 +17,7 @@ public class BaseConduitBlock extends BlockContainer {
 		setCreativeTab(StaticPower.StaticPower);
 		setRegistryName(name);
 		setUnlocalizedName(name);
-		RegisterHelper.registerItem(new BaseItemBlock(this, name));
+		//RegisterHelper.registerItem(new BaseItemBlock(this, name));
 	}
     public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor){ 
     	if(world.getTileEntity(pos) != null) {

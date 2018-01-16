@@ -1,11 +1,13 @@
 package theking530.staticpower.handlers.crafting.recipes;
 
+import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraftforge.oredict.OreIngredient;
+import theking530.staticpower.assists.RegisterHelper;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.items.armor.ModArmor;
@@ -15,264 +17,277 @@ public class ShapedRecipes {
 
 	@SuppressWarnings("all")
 	private static void registerShapedRecipes() {		
+		
 		//Static Wrench --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.StaticWrench), new Object[]{" IC"," SI","S  ",
-		'S', "ingotSilver", 'I', Items.IRON_INGOT, 'C', ModPlants.StaticCrop}));
+		RegisterHelper.addShapedRecipe("StaticPower_staticWrench", "StaticPower", new ItemStack(ModItems.StaticWrench), new Object[]{" IC"," SI","S  ",
+		'S', ingredientOre("ingotSilver"), 'I', ingredientFromItem(Items.IRON_INGOT), 'C', ingredientFromItem(ModPlants.StaticCrop)});
 		
 		//Soldering Iron --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.SolderingIron), new Object[]{"I  "," IL"," LR",
-		'R', Items.REDSTONE, 'I', Items.IRON_INGOT, 'L', new ItemStack(Items.DYE, 4, 4)}));		
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.SolderingIron), new Object[]{"  I","LI ","RL ",
-		'R', Items.REDSTONE, 'I', Items.IRON_INGOT, 'L', new ItemStack(Items.DYE, 4, 4)}));			
+		RegisterHelper.addShapedRecipe("StaticPower_solderingIron1", "StaticPower", new ItemStack(ModItems.SolderingIron), new Object[]{"I  "," IL"," LR",
+		'R', ingredientFromItem(Items.REDSTONE), 'I', ingredientFromItem(Items.IRON_INGOT), 'L', Ingredient.fromStacks(new ItemStack(Items.DYE, 1, 4))});		
+		RegisterHelper.addShapedRecipe("StaticPower_solderingIron2", "StaticPower", new ItemStack(ModItems.SolderingIron), new Object[]{"  I","LI ","RL ",
+		'R', ingredientFromItem(Items.REDSTONE), 'I', ingredientFromItem(Items.IRON_INGOT), 'L', Ingredient.fromStacks(new ItemStack(Items.DYE, 1, 4))});			
+		
+		//Coordinate Marker --------------------------------------------------------------------------------------------------
+		RegisterHelper.addShapedRecipe("StaticPower_coordinateMarker", "StaticPower", new ItemStack(ModItems.CoordinateMarker), new Object[]{"IGI","ICI","IOI",
+		'C', ingredientFromItem(ModItems.BasicCircuit), 'I', ingredientFromItem(Items.IRON_INGOT), 'G', ingredientFromBlock(Blocks.GLASS), 'O', ingredientOre("ingotCopper")});	
 		
 		//Metal Hammer 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.MetalHammer), new Object[]{"III","ISI"," S ",
-		'S', Items.STICK, 'I', Items.IRON_INGOT}));		
+		RegisterHelper.addShapedRecipe("StaticPower_metalHammer", "StaticPower", new ItemStack(ModItems.MetalHammer), new Object[]{"III","ISI"," S ",
+		'S', ingredientFromItem(Items.STICK), 'I', ingredientFromItem(Items.IRON_INGOT)});		
 		
 		//Fluid Conduit
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.FluidConduit), 8), new Object[]{" S ","SGS"," S ",
-		'S', "ingotSilver", 'G', Blocks.GLASS}));
-		
+		RegisterHelper.addShapedRecipe("StaticPower_fluidConduit", "StaticPower", new ItemStack(Item.getItemFromBlock(ModBlocks.FluidConduit), 8), new Object[]{" S ","SGS"," S ",
+		'S', ingredientOre("ingotSilver"), 'G', ingredientFromBlock(Blocks.GLASS)});
+				
 		//Item Conduit
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.ItemConduit), 8), new Object[]{" T ","TGT"," T ",
-		'T', "ingotTin", 'G', Blocks.GLASS}));
+		RegisterHelper.addShapedRecipe("StaticPower_itemConduit", "StaticPower", new ItemStack(Item.getItemFromBlock(ModBlocks.ItemConduit), 8), new Object[]{" T ","TGT"," T ",
+		'T', ingredientOre("ingotTin"), 'G', ingredientFromBlock(Blocks.GLASS)});
 		
 		//Metal Blocks --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.StaticBlock), new Object[]{"XXX","XXX","XXX",
-		'X', ModItems.StaticIngot});
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.EnergizedBlock), new Object[]{"XXX","XXX","XXX",
-		'X', ModItems.EnergizedIngot});
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.LumumBlock), new Object[]{"XXX","XXX","XXX",
-		'X', ModItems.LumumIngot});
+		RegisterHelper.addShapedRecipe("StaticPower_staticBlock", "StaticPower", new ItemStack(ModBlocks.StaticBlock), new Object[]{"XXX","XXX","XXX",
+		'X', ingredientFromItem(ModItems.StaticIngot)});
+		RegisterHelper.addShapedRecipe("StaticPower_energizedBlock", "StaticPower", new ItemStack(ModBlocks.EnergizedBlock), new Object[]{"XXX","XXX","XXX",
+		'X', ingredientFromItem(ModItems.EnergizedIngot)});
+		RegisterHelper.addShapedRecipe("StaticPower_lumumBlock", "StaticPower", new ItemStack(ModBlocks.LumumBlock), new Object[]{"XXX","XXX","XXX",
+		'X', ingredientFromItem(ModItems.LumumIngot)});
 		
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.BlockCopper), new Object[]{"XXX","XXX","XXX",
-		'X', ModItems.CopperIngot});
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.BlockTin), new Object[]{"XXX","XXX","XXX",
-		'X', ModItems.TinIngot});
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.BlockSilver), new Object[]{"XXX","XXX","XXX",
-		'X', ModItems.SilverIngot});
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.BlockLead), new Object[]{"XXX","XXX","XXX",
-		'X', ModItems.LeadIngot});
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.BlockPlatinum), new Object[]{"XXX","XXX","XXX",
-		'X', ModItems.PlatinumIngot});
+		RegisterHelper.addShapedRecipe("StaticPower_cooperBlock", "StaticPower", new ItemStack(ModBlocks.BlockCopper), new Object[]{"XXX","XXX","XXX",
+		'X', ingredientFromItem(ModItems.CopperIngot)});
+		RegisterHelper.addShapedRecipe("StaticPower_tinBlock", "StaticPower", new ItemStack(ModBlocks.BlockTin), new Object[]{"XXX","XXX","XXX",
+		'X', ingredientFromItem(ModItems.TinIngot)});
+		RegisterHelper.addShapedRecipe("StaticPower_silverBlock", "StaticPower", new ItemStack(ModBlocks.BlockSilver), new Object[]{"XXX","XXX","XXX",
+		'X', ingredientFromItem(ModItems.SilverIngot)});
+		RegisterHelper.addShapedRecipe("StaticPower_leadBlock", "StaticPower", new ItemStack(ModBlocks.BlockLead), new Object[]{"XXX","XXX","XXX",
+		'X', ingredientFromItem(ModItems.LeadIngot)});
+		RegisterHelper.addShapedRecipe("StaticPower_platinumBlock", "StaticPower", new ItemStack(ModBlocks.BlockPlatinum), new Object[]{"XXX","XXX","XXX",
+		'X', ingredientFromItem(ModItems.PlatinumIngot)});
 		
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.BlockNickel), new Object[]{"XXX","XXX","XXX",
-		'X', ModItems.NickelIngot});
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.BlockAluminium), new Object[]{"XXX","XXX","XXX",
-		'X', ModItems.AluminiumIngot});
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.BlockSapphire), new Object[]{"XXX","XXX","XXX",
-		'X', ModItems.SapphireGem});
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.BlockRuby), new Object[]{"XXX","XXX","XXX",
-		'X', ModItems.RubyGem});
+		RegisterHelper.addShapedRecipe("StaticPower_nickelBlock", "StaticPower", new ItemStack(ModBlocks.BlockNickel), new Object[]{"XXX","XXX","XXX",
+		'X', ingredientFromItem(ModItems.NickelIngot)});
+		RegisterHelper.addShapedRecipe("StaticPower_aluminiumBlock", "StaticPower", new ItemStack(ModBlocks.BlockAluminium), new Object[]{"XXX","XXX","XXX",
+		'X', ingredientFromItem(ModItems.AluminiumIngot)});
+		RegisterHelper.addShapedRecipe("StaticPower_sapphireBlock", "StaticPower", new ItemStack(ModBlocks.BlockSapphire), new Object[]{"XXX","XXX","XXX",
+		'X', ingredientFromItem(ModItems.SapphireGem)});
+		RegisterHelper.addShapedRecipe("StaticPower_rubyBlock", "StaticPower", new ItemStack(ModBlocks.BlockRuby), new Object[]{"XXX","XXX","XXX",
+		'X', ingredientFromItem(ModItems.RubyGem)});
 		
 		//Ingots ------------------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModItems.StaticIngot), new Object[]{"XXX","XXX","XXX",
-		'X', ModItems.StaticNugget});
-		GameRegistry.addRecipe(new ItemStack(ModItems.EnergizedIngot), new Object[]{"XXX","XXX","XXX",
-		'X', ModItems.EnergizedNugget});
-		GameRegistry.addRecipe(new ItemStack(ModItems.LumumIngot), new Object[]{"XXX","XXX","XXX",
-		'X', ModItems.LumumNugget});
-		GameRegistry.addRecipe(new ItemStack(Items.IRON_INGOT), new Object[]{"XXX","XXX","XXX",
-		'X', ModItems.IronNugget});
+		RegisterHelper.addShapedRecipe("StaticPower_staticIngot", "StaticPower", new ItemStack(ModItems.StaticIngot), new Object[]{"XXX","XXX","XXX",
+		'X', ingredientFromItem(ModItems.StaticNugget)});
+		RegisterHelper.addShapedRecipe("StaticPower_energizedIngot", "StaticPower", new ItemStack(ModItems.EnergizedIngot), new Object[]{"XXX","XXX","XXX",
+		'X', ingredientFromItem(ModItems.EnergizedNugget)});
+		RegisterHelper.addShapedRecipe("StaticPower_lumumIngot", "StaticPower", new ItemStack(ModItems.LumumIngot), new Object[]{"XXX","XXX","XXX",
+		'X', ingredientFromItem(ModItems.LumumNugget)});
+		RegisterHelper.addShapedRecipe("StaticPower_ironIngot", "StaticPower", new ItemStack(Items.IRON_INGOT), new Object[]{"XXX","XXX","XXX",
+		'X', ingredientFromItem(ModItems.IronNugget)});
 		
 		//Coils ------------------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModItems.CopperCoil), new Object[]{"XXX","XSX","XXX",
-		'X', ModItems.CopperWire, 'S', Items.STICK});
-		GameRegistry.addRecipe(new ItemStack(ModItems.SilverCoil), new Object[]{"XXX","XSX","XXX",
-		'X', ModItems.SilverWire, 'S', Items.STICK});
-		GameRegistry.addRecipe(new ItemStack(ModItems.GoldCoil), new Object[]{"XXX","XSX","XXX",
-		'X', ModItems.GoldWire, 'S', Items.STICK});
+		RegisterHelper.addShapedRecipe("StaticPower_copperCoil", "StaticPower", new ItemStack(ModItems.CopperCoil), new Object[]{"XXX","XSX","XXX",
+		'X', ingredientFromItem(ModItems.CopperWire), 'S', ingredientFromItem(Items.STICK)});
+		RegisterHelper.addShapedRecipe("StaticPower_silverCoil", "StaticPower", new ItemStack(ModItems.SilverCoil), new Object[]{"XXX","XSX","XXX",
+		'X', ingredientFromItem(ModItems.SilverWire), 'S', ingredientFromItem(Items.STICK)});
+		RegisterHelper.addShapedRecipe("StaticPower_goldCoil", "StaticPower", new ItemStack(ModItems.GoldCoil), new Object[]{"XXX","XSX","XXX",
+		'X', ingredientFromItem(ModItems.GoldWire), 'S', ingredientFromItem(Items.STICK)});
 		
 		//Energy Crystals ---------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModItems.EnergizedEnergyCrystal), new Object[]{" B ","BDB"," B ",
-		'B', ModItems.EnergizedInfusionBlend, 'D', Items.DIAMOND});
-		GameRegistry.addRecipe(new ItemStack(ModItems.LumumEnergyCrystal), new Object[]{" B ","BDB"," B ",
-		'B', ModItems.LumumInfusionBlend, 'D', Items.DIAMOND});
+		RegisterHelper.addShapedRecipe("StaticPower_energizedEnergyCrystal", "StaticPower", new ItemStack(ModItems.EnergizedEnergyCrystal), new Object[]{" B ","BDB"," B ",
+		'B', ingredientFromItem(ModItems.EnergizedInfusionBlend), 'D', ingredientFromItem(Items.DIAMOND)});
+		RegisterHelper.addShapedRecipe("StaticPower_lumumEnergyCrystal", "StaticPower", new ItemStack(ModItems.LumumEnergyCrystal), new Object[]{" B ","BDB"," B ",
+		'B', ingredientFromItem(ModItems.LumumInfusionBlend), 'D', ingredientFromItem(Items.DIAMOND)});
 		
 		//Machine Block --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.MachineBlock), new Object[]{"TGT", "GCG", "TGT", 
-		'G', Blocks.GLASS, 'C', ModItems.BasicCircuit, 'T', ModItems.TinPlate});
+		RegisterHelper.addShapedRecipe("StaticPower_machineBlock", "StaticPower", new ItemStack(ModBlocks.MachineBlock), new Object[]{"TGT", "GCG", "TGT", 
+		'G', ingredientFromBlock((Blocks.GLASS)), 'C', ingredientFromItem(ModItems.BasicCircuit), 'T', ingredientFromItem(ModItems.TinPlate)});
 		
 		//Heating Element --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.HeatingElement), new Object[]{"WCW", "W W", "WCW", 
-		'R', ModItems.SilverPlate , 'C', ModItems.CopperPlate, 'W', ModItems.CopperCoil});
+		RegisterHelper.addShapedRecipe("StaticPower_heatingElement", "StaticPower", new ItemStack(ModBlocks.HeatingElement), new Object[]{"WCW", "W W", "WCW", 
+		'C', ingredientFromItem(ModItems.CopperPlate), 'W', ingredientFromItem(ModItems.CopperCoil)});
 		
 		//Fermenter --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.Fermenter), new Object[]{"IPI", "GMG", "IPI", 
-		'G', Blocks.GLASS , 'I', ModItems.IronPlate, 'P', Blocks.PISTON, 'M', ModBlocks.MachineBlock});
+		RegisterHelper.addShapedRecipe("StaticPower_fermenter", "StaticPower", new ItemStack(ModBlocks.Fermenter), new Object[]{"IPI", "GMG", "IPI", 
+		'G', ingredientFromBlock((Blocks.GLASS)) , 'I', ingredientFromItem(ModItems.IronPlate), 'P', ingredientFromBlock(Blocks.PISTON), 'M', ingredientFromBlock(ModBlocks.MachineBlock)});
 		
 		//Distillery --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.Distillery), new Object[]{"GGG", "BMB", "CCC", 
-		'G', Blocks.GLASS , 'C', ModItems.CopperPlate, 'B', Items.BUCKET, 'M', ModBlocks.MachineBlock});
+		RegisterHelper.addShapedRecipe("StaticPower_distillery", "StaticPower", new ItemStack(ModBlocks.Distillery), new Object[]{"GGG", "BMB", "CCC", 
+		'G', ingredientFromBlock((Blocks.GLASS)) , 'C', ingredientFromItem(ModItems.CopperPlate), 'B', ingredientFromItem(Items.BUCKET), 'M', ingredientFromBlock(ModBlocks.MachineBlock)});
 		
 		//Condenser --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.Condenser), new Object[]{"CCC", "BMB", "GGG", 
-		'G', Blocks.GLASS , 'C', ModItems.CopperPlate, 'B', Items.BUCKET, 'M', ModBlocks.MachineBlock});
+		RegisterHelper.addShapedRecipe("StaticPower_condenser", "StaticPower", new ItemStack(ModBlocks.Condenser), new Object[]{"CCC", "BMB", "GGG", 
+		'G', ingredientFromBlock((Blocks.GLASS)) , 'C', ingredientFromItem(ModItems.CopperPlate), 'B', ingredientFromItem(Items.BUCKET), 'M', ingredientFromBlock(ModBlocks.MachineBlock)});
 		
 		//Obsidian Glass --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.ObsidianGlass, 4), new Object[]{"O O", " G ", "O O", 
-		'G', Blocks.GLASS, 'O', Blocks.OBSIDIAN});
+		RegisterHelper.addShapedRecipe("StaticPower_obsidianGlass", "StaticPower", new ItemStack(ModBlocks.ObsidianGlass, 4), new Object[]{"O O", " G ", "O O", 
+		'G', ingredientFromBlock((Blocks.GLASS)), 'O', ingredientFromBlock(Blocks.OBSIDIAN)});
 		
 		//Soldering Table --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.SolderingTable), new Object[]{"III","S S","S S",
-		'I', Items.IRON_INGOT, 'S', Blocks.STONE});
+		RegisterHelper.addShapedRecipe("StaticPower_solderingTable", "StaticPower", new ItemStack(ModBlocks.SolderingTable), new Object[]{"III","S S","S S",
+		'I', ingredientFromItem(Items.IRON_INGOT), 'S', ingredientFromBlock(Blocks.STONE)});
 		
 		//I/O Port --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ShapedOreRecipe(ModItems.IOPort, new Object[]{" G ", "RLR", " G ", 
-		'G', Blocks.GLASS, 'L', Blocks.LEVER, 'R', Items.REDSTONE}));	
+		RegisterHelper.addShapedRecipe("StaticPower_iOPort", "StaticPower", new ItemStack(ModItems.IOPort), new Object[]{" G ", "RLR", " G ", 
+		'G', ingredientFromBlock((Blocks.GLASS)), 'L', ingredientFromBlock((Blocks.LEVER)), 'R', ingredientFromItem(Items.REDSTONE)});	
 		
 		//Powered Grinder --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.PoweredGrinder), new Object[]{"FFF", "RBR", "III", 
-		'I', Items.IRON_INGOT, 'R', Items.REDSTONE, 'B', ModBlocks.MachineBlock, 'F', Items.FLINT});
+		RegisterHelper.addShapedRecipe("StaticPower_poweredGrinder", "StaticPower", new ItemStack(ModBlocks.PoweredGrinder), new Object[]{"FFF", "RBR", "III", 
+		'I', ingredientFromItem(Items.IRON_INGOT), 'R', ingredientFromItem(Items.REDSTONE), 'B', ingredientFromBlock(ModBlocks.MachineBlock), 'F', ingredientFromItem(Items.FLINT)});
 		
 		//Advanced Earth --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.AdvancedEarth), new Object[]{"GGG","GDG","GGG",
-		'G', ModItems.GoldPlate, 'D', Blocks.DIRT});
+		RegisterHelper.addShapedRecipe("StaticPower_advancedEarth", "StaticPower", new ItemStack(ModBlocks.AdvancedEarth), new Object[]{"GGG","GDG","GGG",
+		'G', ingredientFromItem(ModItems.GoldPlate), 'D', ingredientFromBlock(Blocks.DIRT)});
 		
 		//Powered Furnace --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.PoweredFurnace), new Object[]{"IUI", "RBR", "CCC", 
-		'I', Items.IRON_INGOT, 'R', Items.REDSTONE, 'B', ModBlocks.MachineBlock, 'U', Items.BUCKET, 'C', "ingotCopper"}));
+		RegisterHelper.addShapedRecipe("StaticPower_poweredFurnace", "StaticPower", new ItemStack(ModBlocks.PoweredFurnace), new Object[]{"IUI", "RBR", "CCC", 
+		'I', ingredientFromItem(Items.IRON_INGOT), 'R', ingredientFromItem(Items.REDSTONE), 'B', ingredientFromBlock(ModBlocks.MachineBlock), 'U', ingredientFromItem(Items.BUCKET), 'C', ingredientOre("ingotCopper")});
 		
 		//Quarry --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.Quarry), new Object[]{"PHP", "EBE", "ELE", 
-		'P', Items.DIAMOND_PICKAXE, 'H', Blocks.HOPPER, 'B', ModBlocks.MachineBlock, 'E', ModItems.EnergizedCircuit, 'L', ModItems.LumumCircuit});
+		RegisterHelper.addShapedRecipe("StaticPower_quarry", "StaticPower", new ItemStack(ModBlocks.Quarry), new Object[]{"PHP", "EBE", "ELE", 
+		'P', ingredientFromItem(Items.DIAMOND_PICKAXE), 'H', ingredientFromBlock(Blocks.HOPPER), 'B', ingredientFromBlock(ModBlocks.MachineBlock), 'E', ingredientFromItem(ModItems.EnergizedCircuit), 'L', ingredientFromItem(ModItems.LumumCircuit)});
 		
 		//Fluid Infuser --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.FluidInfuser), new Object[]{" U ", "PBP", "RIR", 
-		'I', ModItems.IOPort, 'R', Items.REDSTONE, 'B', ModBlocks.MachineBlock, 'U', Items.BUCKET, 'P', Blocks.PISTON});
+		RegisterHelper.addShapedRecipe("StaticPower_fluidInfuser", "StaticPower", new ItemStack(ModBlocks.FluidInfuser), new Object[]{" U ", "PBP", "RIR", 
+		'I', ingredientFromItem(ModItems.IOPort), 'R', ingredientFromItem(Items.REDSTONE), 'B', ingredientFromBlock(ModBlocks.MachineBlock), 'U', ingredientFromItem(Items.BUCKET), 'P', ingredientFromBlock(Blocks.PISTON)});
 		
 		//Crop Squeezer --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.CropSqueezer), new Object[]{"FPF", "RBR", "IUI", 
-		'I', Items.IRON_INGOT, 'R', Items.REDSTONE, 'P', Blocks.PISTON, 'B', ModBlocks.MachineBlock, 'U', Items.BUCKET, 'F', Items.FLINT});
+		RegisterHelper.addShapedRecipe("StaticPower_cropSqueezer", "StaticPower", new ItemStack(ModBlocks.CropSqueezer), new Object[]{"FPF", "RBR", "IUI", 
+		'I', ingredientFromItem(Items.IRON_INGOT), 'R', ingredientFromItem(Items.REDSTONE), 'P', ingredientFromBlock(Blocks.PISTON), 'B', ingredientFromBlock(ModBlocks.MachineBlock), 'U', ingredientFromItem(Items.BUCKET), 'F', ingredientFromItem(Items.FLINT)});
 		
 		//Mechanical Squeezer --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.MechanicalSqueezer), new Object[]{"FFF", "PBP", "SSS", 
-		'P', Blocks.PISTON, 'B', Items.BUCKET, 'F', Items.FLINT, 'S', Blocks.STONE});
+		RegisterHelper.addShapedRecipe("StaticPower_mechanicalSqueezer", "StaticPower", new ItemStack(ModBlocks.MechanicalSqueezer), new Object[]{"FFF", "PBP", "SSS", 
+		'P', ingredientFromBlock(Blocks.PISTON), 'B', ingredientFromItem(Items.BUCKET), 'F', ingredientFromItem(Items.FLINT), 'S', ingredientFromBlock(Blocks.STONE)});
 	
 		//Fusion Furnace --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.FusionFurnace), new Object[]{"FIF", "RBR", "CCC", 
-		'F', ModBlocks.PoweredFurnace, 'R', Items.REDSTONE, 'B', ModBlocks.MachineBlock, 'C', ModItems.BasicCircuit, 'I', ModItems.IOPort});
+		RegisterHelper.addShapedRecipe("StaticPower_fusionFurnace", "StaticPower", new ItemStack(ModBlocks.FusionFurnace), new Object[]{"FIF", "RBR", "CCC", 
+		'F', ingredientFromBlock(ModBlocks.PoweredFurnace), 'R', ingredientFromItem(Items.REDSTONE), 'B', ingredientFromBlock(ModBlocks.MachineBlock), 'C', ingredientFromItem(ModItems.BasicCircuit), 'I', ingredientFromItem(ModItems.IOPort)});
 		
 		//Charging Station --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.ChargingStation), new Object[]{" H ", "RMR", "CBC", 
-		'C', ModItems.BasicCircuit, 'H', ModItems.CopperPlate, 'R', ModItems.GoldPlate, 'M', ModBlocks.MachineBlock, 'B', ModItems.BasicBattery});
+		RegisterHelper.addShapedRecipe("StaticPower_chargingStation", "StaticPower", new ItemStack(ModBlocks.ChargingStation), new Object[]{" H ", "RMR", "CBC", 
+		'C', ingredientFromItem(ModItems.BasicCircuit), 'H', ingredientFromItem(ModItems.CopperPlate), 'R', ingredientFromItem(ModItems.GoldPlate), 'M', ingredientFromBlock(ModBlocks.MachineBlock), 'B', ingredientFromItem(ModItems.BasicBattery)});
 		
 		//Basic Farmer --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.BasicFarmer), new Object[]{" H ", "RMR", "DCD", 
-		'C', ModItems.BasicCircuit, 'H', Items.IRON_HOE, 'R', ModItems.IronPlate, 'M', ModBlocks.MachineBlock, 'D', Blocks.DIRT});
+		RegisterHelper.addShapedRecipe("StaticPower_basicFarmer", "StaticPower", new ItemStack(ModBlocks.BasicFarmer), new Object[]{" H ", "RMR", "DCD", 
+		'C', ingredientFromItem(ModItems.BasicCircuit), 'H', ingredientFromItem(Items.IRON_HOE), 'R', ingredientFromItem(ModItems.IronPlate), 'M', ingredientFromBlock(ModBlocks.MachineBlock), 'D', ingredientFromBlock(Blocks.DIRT)});
 		
 		//Fluid Generator  --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModBlocks.FluidGenerator), new Object[]{" U ", "CBC", "VIV", 
-		'V', "ingotCopper", 'C', ModItems.BasicCircuit, 'I', Items.GOLD_INGOT, 'B', ModBlocks.MachineBlock, 'U', Items.BUCKET, 'G', Blocks.GLASS}));
-		
+		RegisterHelper.addShapedRecipe("StaticPower_fluidGenerator", "StaticPower", new ItemStack(ModBlocks.FluidGenerator), new Object[]{" U ", "CBC", "VIV", 
+		'V', ingredientFromItem(ModItems.CopperPlate), 'C', ingredientFromItem(ModItems.BasicCircuit), 'I', ingredientFromItem(Items.GOLD_INGOT), 'B', ingredientFromBlock(ModBlocks.MachineBlock), 'U', ingredientFromItem(Items.BUCKET)});
+
 		//Batteries --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.StaticBattery), new Object[]{"SSS", "BMB", "BBB", 
-		'S', ModItems.StaticPlate, 'B', ModItems.StaticBattery, 'M', ModBlocks.MachineBlock});			
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.EnergizedBattery), new Object[]{"SSS", "BMB", "BBB", 
-		'S', ModItems.EnergizedPlate, 'B', ModItems.EnergizedBattery, 'M', ModBlocks.MachineBlock});		
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.LumumBattery), new Object[]{"SSS", "BMB", "BBB",  
-		'S', ModItems.LumumPlate, 'B', ModItems.LumumBattery, 'M', ModBlocks.MachineBlock});		
+		RegisterHelper.addShapedRecipe("StaticPower_staticBattery", "StaticPower", new ItemStack(ModBlocks.StaticBattery), new Object[]{"SSS", "BMB", "BBB", 
+		'S', ingredientFromItem(ModItems.StaticPlate), 'B', ingredientFromItem(ModItems.StaticBattery), 'M', ingredientFromBlock(ModBlocks.MachineBlock)});			
+		RegisterHelper.addShapedRecipe("StaticPower_energizedBattery", "StaticPower", new ItemStack(ModBlocks.EnergizedBattery), new Object[]{"SSS", "BMB", "BBB", 
+		'S', ingredientFromItem(ModItems.EnergizedPlate), 'B', ModItems.EnergizedBattery, 'M', ingredientFromBlock(ModBlocks.MachineBlock)});		
+		RegisterHelper.addShapedRecipe("StaticPower_lumumBattery", "StaticPower", new ItemStack(ModBlocks.LumumBattery), new Object[]{"SSS", "BMB", "BBB",  
+		'S', ingredientFromItem(ModItems.LumumPlate), 'B', ingredientFromItem(ModItems.LumumBattery), 'M', ingredientFromBlock(ModBlocks.MachineBlock)});		
 		
 		//Static Solar Panel --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.StaticSolarPanel), new Object[]{"   ", "EEE", "CIC", 
-		'E', ModItems.StaticIngot, 'C', ModItems.BasicCircuit, 'I', ModItems.IOPort});
+		RegisterHelper.addShapedRecipe("StaticPower_staticSolarPanel", "StaticPower", new ItemStack(ModBlocks.StaticSolarPanel), new Object[]{"   ", "EEE", "CIC", 
+		'E', ingredientFromItem(ModItems.StaticIngot), 'C', ingredientFromItem(ModItems.BasicCircuit), 'I', ingredientFromItem(ModItems.IOPort)});
 		
 		//Gates --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.Timer), new Object[]{"   ", "RSV", "PPP", 
-		'P', ModBlocks.LogicGateBasePlate, 'S', ModItems.LogicGateServo, 'R', ModItems.LogicGatePowerSync, 'V', ModItems.InvertedLogicGatePowerSync});
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.SignalMultiplier), new Object[]{"   ", "RSV", "PPP", 
-		'P', ModBlocks.LogicGateBasePlate, 'S', Items.COMPARATOR, 'R', ModItems.LogicGatePowerSync, 'V', ModItems.InvertedLogicGatePowerSync});
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.NotGate), new Object[]{"   ", "R V", "PPP", 
-		'P', ModBlocks.LogicGateBasePlate,'R', ModItems.LogicGatePowerSync, 'V', ModItems.InvertedLogicGatePowerSync});
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.PowerCell), new Object[]{"   ", "RQR", "PPP", 
-		'P', ModBlocks.LogicGateBasePlate,'R', ModItems.LogicGatePowerSync, 'Q', Blocks.REDSTONE_BLOCK});
+		RegisterHelper.addShapedRecipe("StaticPower_timer", "StaticPower", new ItemStack(ModBlocks.Timer), new Object[]{"   ", "RSV", "PPP", 
+		'P', ingredientFromBlock(ModBlocks.LogicGateBasePlate), 'S', ingredientFromItem(ModItems.LogicGateServo), 'R', ingredientFromItem(ModItems.LogicGatePowerSync), 'V', ingredientFromItem(ModItems.InvertedLogicGatePowerSync)});
+		RegisterHelper.addShapedRecipe("StaticPower_signalMultiplier", "StaticPower", new ItemStack(ModBlocks.SignalMultiplier), new Object[]{"   ", "RSV", "PPP", 
+		'P', ingredientFromBlock(ModBlocks.LogicGateBasePlate), 'S', ingredientFromItem(Items.COMPARATOR), 'R', ingredientFromItem(ModItems.LogicGatePowerSync), 'V', ingredientFromItem(ModItems.InvertedLogicGatePowerSync)});
+		RegisterHelper.addShapedRecipe("StaticPower_notGate", "StaticPower", new ItemStack(ModBlocks.NotGate), new Object[]{"   ", "R V", "PPP", 
+		'P', ingredientFromBlock(ModBlocks.LogicGateBasePlate),'R', ingredientFromItem(ModItems.LogicGatePowerSync), 'V', ingredientFromItem(ModItems.InvertedLogicGatePowerSync)});
+		RegisterHelper.addShapedRecipe("StaticPower_powerCell", "StaticPower", new ItemStack(ModBlocks.PowerCell), new Object[]{"   ", "RQR", "PPP", 
+		'P', ingredientFromBlock(ModBlocks.LogicGateBasePlate),'R', ingredientFromItem(ModItems.LogicGatePowerSync), 'Q', ingredientFromBlock(Blocks.REDSTONE_BLOCK)});
 		
 		//Static Chest --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.StaticChest), new Object[]{"SSS", "SCS", "SSS", 
-		'S', ModItems.StaticIngot, 'C', Blocks.CHEST});		
+		RegisterHelper.addShapedRecipe("StaticPower_staticChest", "StaticPower", new ItemStack(ModBlocks.StaticChest), new Object[]{"SSS", "SCS", "SSS", 
+		'S', ingredientFromItem(ModItems.StaticIngot), 'C', ingredientFromBlock(Blocks.CHEST)});		
 		
 		//Fluid Capsules --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModItems.BaseFluidCapsule), new Object[]{"SCS", "SCS", "SCS", 
-		'S', ModItems.IronPlate, 'C', Blocks.GLASS});		
-		GameRegistry.addRecipe(new ItemStack(ModItems.StaticFluidCapsule), new Object[]{"SSS", "SCS", "SSS", 
-		'S', ModItems.StaticPlate, 'C', ModItems.BaseFluidCapsule});		
-		GameRegistry.addRecipe(new ItemStack(ModItems.EnergizedFluidCapsule), new Object[]{"SSS", "SCS", "SSS", 
-		'S', ModItems.EnergizedPlate, 'C', ModItems.StaticFluidCapsule});		
-		GameRegistry.addRecipe(new ItemStack(ModItems.LumumFluidCapsule), new Object[]{"SSS", "SCS", "SSS", 
-		'S', ModItems.LumumPlate, 'C', ModItems.EnergizedFluidCapsule});		
-		
+		RegisterHelper.addShapedRecipe("StaticPower_baseFluidCapsule", "StaticPower", new ItemStack(ModItems.BaseFluidCapsule), new Object[]{"SCS", "SCS", "SCS", 
+		'S', ingredientFromItem(ModItems.IronPlate), 'C', ingredientFromBlock(Blocks.GLASS)});		
+		RegisterHelper.addShapedRecipe("StaticPower_staticFluidCapsule", "StaticPower", new ItemStack(ModItems.StaticFluidCapsule), new Object[]{"SSS", "SCS", "SSS", 
+		'S', ingredientFromItem(ModItems.StaticPlate), 'C', ingredientFromItem(ModItems.BaseFluidCapsule)});		
+		RegisterHelper.addShapedRecipe("StaticPower_energizedFluidCapsule", "StaticPower", new ItemStack(ModItems.EnergizedFluidCapsule), new Object[]{"SSS", "SCS", "SSS", 
+		'S', ingredientFromItem(ModItems.EnergizedPlate), 'C', ingredientFromItem(ModItems.StaticFluidCapsule)});		
+		RegisterHelper.addShapedRecipe("StaticPower_lumumFluidCapsule", "StaticPower", new ItemStack(ModItems.LumumFluidCapsule), new Object[]{"SSS", "SCS", "SSS", 
+		'S', ingredientFromItem(ModItems.LumumPlate), 'C', ingredientFromItem(ModItems.EnergizedFluidCapsule)});		
+
 		//Energized Chest --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.EnergizedChest), new Object[]{"EEE", "ECE", "EEE", 
-		'E', ModItems.EnergizedIngot, 'C', ModBlocks.StaticChest});		
+		RegisterHelper.addShapedRecipe("StaticPower_energizedChest", "StaticPower", new ItemStack(ModBlocks.EnergizedChest), new Object[]{"EEE", "ECE", "EEE", 
+		'E', ingredientFromItem(ModItems.EnergizedIngot), 'C',  ingredientFromBlock(ModBlocks.StaticChest)});		
 		
 		//Lumum Chest --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.LumumChest), new Object[]{"LLL", "LCL", "LLL", 
-		'L', ModItems.LumumIngot, 'C', ModBlocks.EnergizedChest});		
+		RegisterHelper.addShapedRecipe("StaticPower_lumumChest", "StaticPower", new ItemStack(ModBlocks.LumumChest), new Object[]{"LLL", "LCL", "LLL", 
+		'L', ingredientFromItem(ModItems.LumumIngot), 'C',  ingredientFromBlock(ModBlocks.EnergizedChest)});		
 		
 		//Vacuum Chest
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.VacuumChest), new Object[]{"EHE", " C ", "IBI", 
-		'H', Blocks.HOPPER, 'C', Blocks.CHEST, 'B', ModItems.StaticCircuit, 'E', Items.ENDER_PEARL, 'I', Items.IRON_INGOT});	
+		RegisterHelper.addShapedRecipe("StaticPower_vacuumChest", "StaticPower", new ItemStack(ModBlocks.VacuumChest), new Object[]{"EHE", " C ", "IBI", 
+		'H',  ingredientFromBlock(Blocks.HOPPER), 'C',  ingredientFromBlock(Blocks.CHEST), 'B', ingredientFromItem(ModItems.StaticCircuit), 'E', ingredientFromItem(Items.ENDER_PEARL), 'I', ingredientFromItem(Items.IRON_INGOT)});	
 		
 		//Static Armor --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModArmor.StaticHelmet), new Object[]{"EEE", "EBE", "   ",  'E', ModItems.StaticIngot, 'B', ModItems.StaticBattery});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.StaticChestplate), new Object[]{"EBE", "EEE", "EEE",  'E', ModItems.StaticIngot, 'B', ModItems.StaticBattery});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.StaticLeggings), new Object[]{"EEE", "EBE", "E E",  'E', ModItems.StaticIngot, 'B', ModItems.StaticBattery});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.StaticBoots), new Object[]{"   ", "EBE", "E E",  'E', ModItems.StaticIngot, 'B', ModItems.StaticBattery});		
+		RegisterHelper.addShapedRecipe("StaticPower_staticHelmet", "StaticPower", new ItemStack(ModArmor.StaticHelmet), new Object[]{"EEE", "EBE", "   ",  'E', ingredientFromItem(ModItems.StaticIngot), 'B', ingredientFromItem(ModItems.StaticBattery)});
+		RegisterHelper.addShapedRecipe("StaticPower_staticChestplate", "StaticPower", new ItemStack(ModArmor.StaticChestplate), new Object[]{"EBE", "EEE", "EEE",  'E', ingredientFromItem(ModItems.StaticIngot), 'B', ingredientFromItem(ModItems.StaticBattery)});
+		RegisterHelper.addShapedRecipe("StaticPower_staticLeggings", "StaticPower", new ItemStack(ModArmor.StaticLeggings), new Object[]{"EEE", "EBE", "E E",  'E', ingredientFromItem(ModItems.StaticIngot), 'B', ingredientFromItem(ModItems.StaticBattery)});
+		RegisterHelper.addShapedRecipe("StaticPower_staticBoots", "StaticPower", new ItemStack(ModArmor.StaticBoots), new Object[]{"   ", "EBE", "E E",  'E', ingredientFromItem(ModItems.StaticIngot), 'B', ingredientFromItem(ModItems.StaticBattery)});		
 		//Energized Armor --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModArmor.EnergizedHelmet), new Object[]{"EEE", "EBE", "   ",  'E', ModItems.EnergizedIngot, 'B', ModItems.EnergizedBattery});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.EnergizedChestplate), new Object[]{"EBE", "EEE", "EEE",  'E', ModItems.EnergizedIngot, 'B', ModItems.EnergizedBattery});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.EnergizedLeggings), new Object[]{"EEE", "EBE", "E E",  'E', ModItems.EnergizedIngot, 'B', ModItems.EnergizedBattery});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.EnergizedBoots), new Object[]{"   ", "EBE", "E E",  'E', ModItems.EnergizedIngot, 'B', ModItems.EnergizedBattery});		
+		RegisterHelper.addShapedRecipe("StaticPower_energizedHelmet", "StaticPower", new ItemStack(ModArmor.EnergizedHelmet), new Object[]{"EEE", "EBE", "   ",  'E', ingredientFromItem(ModItems.EnergizedIngot), 'B', ingredientFromItem(ModItems.EnergizedBattery)});
+		RegisterHelper.addShapedRecipe("StaticPower_energizedChestplate", "StaticPower", new ItemStack(ModArmor.EnergizedChestplate), new Object[]{"EBE", "EEE", "EEE",  'E', ingredientFromItem(ModItems.EnergizedIngot), 'B', ingredientFromItem(ModItems.EnergizedBattery)});
+		RegisterHelper.addShapedRecipe("StaticPower_energizedLeggings", "StaticPower", new ItemStack(ModArmor.EnergizedLeggings), new Object[]{"EEE", "EBE", "E E",  'E', ingredientFromItem(ModItems.EnergizedIngot), 'B', ingredientFromItem(ModItems.EnergizedBattery)});
+		RegisterHelper.addShapedRecipe("StaticPower_energizedBoots", "StaticPower", new ItemStack(ModArmor.EnergizedBoots), new Object[]{"   ", "EBE", "E E",  'E', ingredientFromItem(ModItems.EnergizedIngot), 'B', ingredientFromItem(ModItems.EnergizedBattery)});		
 		//Lumum Armor --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModArmor.LumumHelmet), new Object[]{"EEE", "EBE", "   ",  'E', ModItems.LumumIngot, 'B', ModItems.LumumBattery});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.LumumChestplate), new Object[]{"EBE", "EEE", "EEE",  'E', ModItems.LumumIngot, 'B', ModItems.LumumBattery});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.LumumLeggings), new Object[]{"EEE", "EBE", "E E",  'E', ModItems.LumumIngot, 'B', ModItems.LumumBattery});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.LumumBoots), new Object[]{"   ", "EBE", "E E",  'E', ModItems.LumumIngot, 'B', ModItems.LumumBattery});		
+		RegisterHelper.addShapedRecipe("StaticPower_lumumHelmet", "StaticPower", new ItemStack(ModArmor.LumumHelmet), new Object[]{"EEE", "EBE", "   ",  'E', ingredientFromItem(ModItems.LumumIngot), 'B', ingredientFromItem(ModItems.LumumBattery)});
+		RegisterHelper.addShapedRecipe("StaticPower_lumumChestplate", "StaticPower", new ItemStack(ModArmor.LumumChestplate), new Object[]{"EBE", "EEE", "EEE",  'E', ingredientFromItem(ModItems.LumumIngot), 'B', ingredientFromItem(ModItems.LumumBattery)});
+		RegisterHelper.addShapedRecipe("StaticPower_lumumLeggings", "StaticPower", new ItemStack(ModArmor.LumumLeggings), new Object[]{"EEE", "EBE", "E E",  'E', ingredientFromItem(ModItems.LumumIngot), 'B', ingredientFromItem(ModItems.LumumBattery)});
+		RegisterHelper.addShapedRecipe("StaticPower_lumumBoots", "StaticPower", new ItemStack(ModArmor.LumumBoots), new Object[]{"   ", "EBE", "E E",  'E', ingredientFromItem(ModItems.LumumIngot), 'B', ingredientFromItem(ModItems.LumumBattery)});		
 		
 		//Copper Armor --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModArmor.CopperHelmet), new Object[]{"EEE", "E E", "   ",  'E', ModItems.CopperIngot});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.CopperChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ModItems.CopperIngot});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.CopperLeggings), new Object[]{"EEE", "E E", "E E",  'E', ModItems.CopperIngot});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.CopperBoots), new Object[]{"   ", "E E", "E E",  'E', ModItems.CopperIngot});		
+		RegisterHelper.addShapedRecipe("StaticPower_copperHelmet", "StaticPower", new ItemStack(ModArmor.CopperHelmet), new Object[]{"EEE", "E E", "   ",  'E', ingredientFromItem(ModItems.CopperIngot)});
+		RegisterHelper.addShapedRecipe("StaticPower_copperChestplate", "StaticPower", new ItemStack(ModArmor.CopperChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ingredientFromItem(ModItems.CopperIngot)});
+		RegisterHelper.addShapedRecipe("StaticPower_copperLeggings", "StaticPower", new ItemStack(ModArmor.CopperLeggings), new Object[]{"EEE", "E E", "E E",  'E', ingredientFromItem(ModItems.CopperIngot)});
+		RegisterHelper.addShapedRecipe("StaticPower_copperBoots", "StaticPower", new ItemStack(ModArmor.CopperBoots), new Object[]{"   ", "E E", "E E",  'E', ingredientFromItem(ModItems.CopperIngot)});		
 		//Tin Armor --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModArmor.TinHelmet), new Object[]{"EEE", "E E", "   ",  'E', ModItems.TinIngot});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.TinChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ModItems.TinIngot});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.TinLeggings), new Object[]{"EEE", "E E", "E E",  'E', ModItems.TinIngot});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.TinBoots), new Object[]{"   ", "E E", "E E",  'E', ModItems.TinIngot});		
+		RegisterHelper.addShapedRecipe("StaticPower_tinHelmet", "StaticPower", new ItemStack(ModArmor.TinHelmet), new Object[]{"EEE", "E E", "   ",  'E', ingredientFromItem(ModItems.TinIngot)});
+		RegisterHelper.addShapedRecipe("StaticPower_tinChestplate", "StaticPower", new ItemStack(ModArmor.TinChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ingredientFromItem(ModItems.TinIngot)});
+		RegisterHelper.addShapedRecipe("StaticPower_tinLeggings", "StaticPower", new ItemStack(ModArmor.TinLeggings), new Object[]{"EEE", "E E", "E E",  'E', ingredientFromItem(ModItems.TinIngot)});
+		RegisterHelper.addShapedRecipe("StaticPower_tinBoots", "StaticPower", new ItemStack(ModArmor.TinBoots), new Object[]{"   ", "E E", "E E",  'E', ingredientFromItem(ModItems.TinIngot)});		
 		//Lead Armor --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModArmor.LeadHelmet), new Object[]{"EEE", "E E", "   ",  'E', ModItems.LeadIngot});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.LeadChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ModItems.LeadIngot});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.LeadLeggings), new Object[]{"EEE", "E E", "E E",  'E', ModItems.LeadIngot});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.LeadBoots), new Object[]{"   ", "E E", "E E",  'E', ModItems.LeadIngot});		
+		RegisterHelper.addShapedRecipe("StaticPower_leadHelmet", "StaticPower", new ItemStack(ModArmor.LeadHelmet), new Object[]{"EEE", "E E", "   ",  'E', ingredientFromItem(ModItems.LeadIngot)});
+		RegisterHelper.addShapedRecipe("StaticPower_leadChestplate", "StaticPower", new ItemStack(ModArmor.LeadChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ingredientFromItem(ModItems.LeadIngot)});
+		RegisterHelper.addShapedRecipe("StaticPower_leadLeggings", "StaticPower", new ItemStack(ModArmor.LeadLeggings), new Object[]{"EEE", "E E", "E E",  'E', ingredientFromItem(ModItems.LeadIngot)});
+		RegisterHelper.addShapedRecipe("StaticPower_leadBoots", "StaticPower", new ItemStack(ModArmor.LeadBoots), new Object[]{"   ", "E E", "E E",  'E', ingredientFromItem(ModItems.LeadIngot)});		
 		//Silver Armor --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModArmor.SilverHelmet), new Object[]{"EEE", "E E", "   ",  'E', ModItems.SilverIngot});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.SilverChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ModItems.SilverIngot});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.SilverLeggings), new Object[]{"EEE", "E E", "E E",  'E', ModItems.SilverIngot});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.SilverBoots), new Object[]{"   ", "E E", "E E",  'E', ModItems.SilverIngot});		
+		RegisterHelper.addShapedRecipe("StaticPower_silverHelmet", "StaticPower", new ItemStack(ModArmor.SilverHelmet), new Object[]{"EEE", "E E", "   ",  'E', ingredientFromItem(ModItems.SilverIngot)});
+		RegisterHelper.addShapedRecipe("StaticPower_silverChestplate", "StaticPower", new ItemStack(ModArmor.SilverChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ingredientFromItem(ModItems.SilverIngot)});
+		RegisterHelper.addShapedRecipe("StaticPower_silverLeggings", "StaticPower", new ItemStack(ModArmor.SilverLeggings), new Object[]{"EEE", "E E", "E E",  'E', ingredientFromItem(ModItems.SilverIngot)});
+		RegisterHelper.addShapedRecipe("StaticPower_silverBoots", "StaticPower", new ItemStack(ModArmor.SilverBoots), new Object[]{"   ", "E E", "E E",  'E', ingredientFromItem(ModItems.SilverIngot)});		
 		//Platinum Armor --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModArmor.PlatinumHelmet), new Object[]{"EEE", "E E", "   ",  'E', ModItems.PlatinumIngot});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.PlatinumChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ModItems.PlatinumIngot});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.PlatinumLeggings), new Object[]{"EEE", "E E", "E E",  'E', ModItems.PlatinumIngot});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.PlatinumBoots), new Object[]{"   ", "E E", "E E",  'E', ModItems.PlatinumIngot});		
+		RegisterHelper.addShapedRecipe("StaticPower_platinumHelmet", "StaticPower", new ItemStack(ModArmor.PlatinumHelmet), new Object[]{"EEE", "E E", "   ",  'E', ingredientFromItem(ModItems.PlatinumIngot)});
+		RegisterHelper.addShapedRecipe("StaticPower_platinumChestplate", "StaticPower", new ItemStack(ModArmor.PlatinumChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ingredientFromItem(ModItems.PlatinumIngot)});
+		RegisterHelper.addShapedRecipe("StaticPower_platinumLeggings", "StaticPower", new ItemStack(ModArmor.PlatinumLeggings), new Object[]{"EEE", "E E", "E E",  'E', ingredientFromItem(ModItems.PlatinumIngot)});
+		RegisterHelper.addShapedRecipe("StaticPower_platinumBoots", "StaticPower", new ItemStack(ModArmor.PlatinumBoots), new Object[]{"   ", "E E", "E E",  'E', ingredientFromItem(ModItems.PlatinumIngot)});		
 		//Aluminium Armor --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModArmor.AluminiumHelmet), new Object[]{"EEE", "E E", "   ",  'E', ModItems.AluminiumIngot});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.AluminiumChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ModItems.AluminiumIngot});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.AluminiumLeggings), new Object[]{"EEE", "E E", "E E",  'E', ModItems.AluminiumIngot});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.AluminiumBoots), new Object[]{"   ", "E E", "E E",  'E', ModItems.AluminiumIngot});		
+		RegisterHelper.addShapedRecipe("StaticPower_aluminiumHelmet", "StaticPower", new ItemStack(ModArmor.AluminiumHelmet), new Object[]{"EEE", "E E", "   ",  'E', ingredientFromItem(ModItems.AluminiumIngot)});
+		RegisterHelper.addShapedRecipe("StaticPower_aluminiumChestplate", "StaticPower", new ItemStack(ModArmor.AluminiumChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ingredientFromItem(ModItems.AluminiumIngot)});
+		RegisterHelper.addShapedRecipe("StaticPower_aluminiumLeggings", "StaticPower", new ItemStack(ModArmor.AluminiumLeggings), new Object[]{"EEE", "E E", "E E",  'E', ingredientFromItem(ModItems.AluminiumIngot)});
+		RegisterHelper.addShapedRecipe("StaticPower_aluminiumBoots", "StaticPower", new ItemStack(ModArmor.AluminiumBoots), new Object[]{"   ", "E E", "E E",  'E', ingredientFromItem(ModItems.AluminiumIngot)});		
 		//Sapphire Armor --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModArmor.SapphireHelmet), new Object[]{"EEE", "E E", "   ",  'E', ModItems.SapphireGem});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.SapphireChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ModItems.SapphireGem});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.SapphireLeggings), new Object[]{"EEE", "E E", "E E",  'E', ModItems.SapphireGem});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.SapphireBoots), new Object[]{"   ", "E E", "E E",  'E', ModItems.SapphireGem});		
+		RegisterHelper.addShapedRecipe("StaticPower_sapphireHelmet", "StaticPower", new ItemStack(ModArmor.SapphireHelmet), new Object[]{"EEE", "E E", "   ",  'E', ingredientFromItem(ModItems.SapphireGem)});
+		RegisterHelper.addShapedRecipe("StaticPower_sapphireChestplate", "StaticPower", new ItemStack(ModArmor.SapphireChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ingredientFromItem(ModItems.SapphireGem)});
+		RegisterHelper.addShapedRecipe("StaticPower_sapphireLeggings", "StaticPower", new ItemStack(ModArmor.SapphireLeggings), new Object[]{"EEE", "E E", "E E",  'E', ingredientFromItem(ModItems.SapphireGem)});
+		RegisterHelper.addShapedRecipe("StaticPower_sapphireBoots", "StaticPower", new ItemStack(ModArmor.SapphireBoots), new Object[]{"   ", "E E", "E E",  'E', ingredientFromItem(ModItems.SapphireGem)});		
 		//Ruby Armor --------------------------------------------------------------------------------------------------
-		GameRegistry.addRecipe(new ItemStack(ModArmor.RubyHelmet), new Object[]{"EEE", "E E", "   ",  'E', ModItems.RubyGem});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.RubyChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ModItems.RubyGem});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.RubyLeggings), new Object[]{"EEE", "E E", "E E",  'E', ModItems.RubyGem});
-		GameRegistry.addRecipe(new ItemStack(ModArmor.RubyBoots), new Object[]{"   ", "E E", "E E",  'E', ModItems.RubyGem});		
+		RegisterHelper.addShapedRecipe("StaticPower_rubyHelmet", "StaticPower", new ItemStack(ModArmor.RubyHelmet), new Object[]{"EEE", "E E", "   ",  'E', ingredientFromItem(ModItems.RubyGem)});
+		RegisterHelper.addShapedRecipe("StaticPower_rubyChestplate", "StaticPower", new ItemStack(ModArmor.RubyChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ingredientFromItem(ModItems.RubyGem)});
+		RegisterHelper.addShapedRecipe("StaticPower_rubyLeggings", "StaticPower", new ItemStack(ModArmor.RubyLeggings), new Object[]{"EEE", "E E", "E E",  'E', ingredientFromItem(ModItems.RubyGem)});
+		RegisterHelper.addShapedRecipe("StaticPower_rubyBoots", "StaticPower", new ItemStack(ModArmor.RubyBoots), new Object[]{"   ", "E E", "E E",  'E', ingredientFromItem(ModItems.RubyGem)});		
 	
-	
+
 	}
-	
+	public static Ingredient ingredientFromBlock(Block block) {
+		return ingredientFromItem(Item.getItemFromBlock(block));
+	}
+	public static Ingredient ingredientOre(String ore) {
+		return new OreIngredient(ore);
+	}
+	public static Ingredient ingredientFromItem(Item item) {
+		return Ingredient.fromItem(item);
+	}
 	public static void registerFullRecipes() {
 		registerShapedRecipes();
 	}

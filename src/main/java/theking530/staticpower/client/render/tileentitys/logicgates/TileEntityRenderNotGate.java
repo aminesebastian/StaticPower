@@ -8,8 +8,8 @@ public class TileEntityRenderNotGate extends TileEntityRenderLogicGateBase {
 	
     public TileEntityRenderNotGate() {
         super(new ModelSignalMultiplier(), 
-        		new ResourceLocation(Reference.MODID, "textures/models/misc/MultiplierON.png"), 
-        		new ResourceLocation(Reference.MODID, "textures/models/misc/MultiplierOFF.png"));
+        		new ResourceLocation(Reference.MODID, "textures/blocks/logic_gate_base_on.png"), 
+        		new ResourceLocation(Reference.MODID, "textures/blocks/logic_gate_base_off.png"));
     }
 }
 

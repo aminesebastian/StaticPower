@@ -10,10 +10,10 @@ import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent.
 
 public class PacketDistilleryContainerMode implements IMessage{
 	
-    private static FluidContainerInteractionMode MODE;
-    private static int x;
-    private static int y;
-    private static int z;
+    private FluidContainerInteractionMode MODE;
+    private int x;
+    private int y;
+    private int z;
 
     public PacketDistilleryContainerMode() {}
     
@@ -40,7 +40,7 @@ public class PacketDistilleryContainerMode implements IMessage{
     public static class Message implements IMessageHandler<PacketDistilleryContainerMode, IMessage> {
     @Override
     public IMessage onMessage(PacketDistilleryContainerMode message, MessageContext ctx) {
-    		TileEntity te = ctx.getServerHandler().playerEntity.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
+    		TileEntity te = ctx.getServerHandler().player.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
     		if(te != null && te instanceof TileEntityDistillery) {
     			TileEntityDistillery entity = (TileEntityDistillery)te;
     			entity.DRAIN_COMPONENT_MASH.setMode(message.MODE);

@@ -8,9 +8,10 @@ import api.gui.TabRightItem;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.vertex.VertexBuffer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.tileentity.TileEntity;
@@ -19,6 +20,7 @@ import net.minecraft.world.World;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.tileentity.BaseTileEntity;
 import theking530.staticpower.utils.EnumTextFormatting;
+import theking530.staticpower.utils.GuiTextures;
 import theking530.staticpower.utils.OldSidePicker.Side;
 
 public class GuiInfoTab extends GuiScreen {
@@ -38,10 +40,9 @@ public class GuiInfoTab extends GuiScreen {
 	public static boolean IS_TAB_OPEN;
 	public TileEntity TILE_ENTITY;
 	private FontRenderer FONT_RENDERER;
-	private ResourceLocation orangeTab = new ResourceLocation(Reference.MODID + ":" + "textures/gui/GreenTab.png");
-	private ResourceLocation bg = new ResourceLocation(Reference.MODID + ":" + "textures/gui/ButtonBG.png");
+
 	
-	public TabRightItem ORANGE_TAB = new TabRightItem(GUI_LEFT, GUI_TOP, 115, 80, 175, 8, orangeTab, Items.PAPER);
+	public TabRightItem GREEN_TAB = new TabRightItem(GUI_LEFT, GUI_TOP, 115, 80, 175, 8, GuiTextures.GREEN_TAB, Items.PAPER);
 	
 	public GuiInfoTab(int guiLeft, int guiTop){
 		this.GUI_LEFT = guiLeft;
@@ -49,7 +50,7 @@ public class GuiInfoTab extends GuiScreen {
 	}
 	public void drawTab(List list) {
 		int k = 0;
-		ORANGE_TAB.drawTab();
+		GREEN_TAB.drawTab();
 		if(IS_TAB_OPEN) {	
 			drawButtonBG();	
     	    drawText(list);
@@ -60,9 +61,9 @@ public class GuiInfoTab extends GuiScreen {
 		String tabName = EnumTextFormatting.UNDERLINE + block.getLocalizedName();
 		String tabNameColored =  EnumTextFormatting.WHITE + tabName;
 		BaseTileEntity entity = (BaseTileEntity)TILE_ENTITY;
-		int j = (ORANGE_TAB.WIDTH - ORANGE_TAB.xSIZE) / 2;
-		int k = (ORANGE_TAB.HEIGHT - ORANGE_TAB.ySIZE) / 2;
-		int tabLeft = GUI_LEFT + j + ORANGE_TAB.TAB_XPOS;
+		int j = (GREEN_TAB.WIDTH - GREEN_TAB.xSIZE) / 2;
+		int k = (GREEN_TAB.HEIGHT - GREEN_TAB.ySIZE) / 2;
+		int tabLeft = GUI_LEFT + j + GREEN_TAB.TAB_XPOS;
 		int tabTop = GUI_TOP + k;
 		GL11.glDisable(GL11.GL_LIGHTING);
 		modeText(tabLeft, tabTop);	
@@ -78,9 +79,9 @@ public class GuiInfoTab extends GuiScreen {
 		BaseTileEntity entity = (BaseTileEntity)TILE_ENTITY;
 	}
 	public void drawButtonBG() {
-		int j = (ORANGE_TAB.WIDTH - ORANGE_TAB.xSIZE) / 2;
-		int k = (ORANGE_TAB.HEIGHT - ORANGE_TAB.ySIZE) / 2;
-		int tabLeft = GUI_LEFT + j + ORANGE_TAB.TAB_XPOS;
+		int j = (GREEN_TAB.WIDTH - GREEN_TAB.xSIZE) / 2;
+		int k = (GREEN_TAB.HEIGHT - GREEN_TAB.ySIZE) / 2;
+		int tabLeft = GUI_LEFT + j + GREEN_TAB.TAB_XPOS;
 		int tabTop = GUI_TOP + k;
     	GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_LIGHTING);
@@ -89,7 +90,7 @@ public class GuiInfoTab extends GuiScreen {
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer tes = tessellator.getBuffer();
+        BufferBuilder tes = tessellator.getBuffer();
         tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         tes.color(.5F, .5F, .5F, 1F);
         tes.pos(tabLeft+126, tabTop+100, 0).endVertex();
@@ -103,7 +104,7 @@ public class GuiInfoTab extends GuiScreen {
 		GL11.glPopMatrix();
 	}
 	public void updateTab(int width, int height, int xSize, int ySize, FontRenderer fontRenderer, TileEntity te) {
-		ORANGE_TAB.updateMethod(width, height, xSize, ySize);
+		GREEN_TAB.updateMethod(width, height, xSize, ySize);
 		setTabOpen();
 		setGrowthState();
 		this.FONT_RENDERER = fontRenderer;
@@ -113,20 +114,20 @@ public class GuiInfoTab extends GuiScreen {
 	}
     
     public void mouseInteraction(int par1, int par2, int button) {
-		ORANGE_TAB.tabMouseExtension(par1, par2, button);	
+		GREEN_TAB.tabMouseExtension(par1, par2, button);	
 		MOUSE_X = par1;
 		MOUSE_Y = par2;
 		BUTTON = button;
 	}	
 	public void setTabOpen() {
-		if(ORANGE_TAB.TAB_ANIMATION == ORANGE_TAB.TAB_ANIMATION_SPEED) {
+		if(GREEN_TAB.TAB_ANIMATION == GREEN_TAB.TAB_ANIMATION_SPEED) {
 			IS_TAB_OPEN = true;
 		}else{
 			IS_TAB_OPEN = false;
 		}
 	}
 	public void setGrowthState() {
-		int state = ORANGE_TAB.GROWTH_STATE ;
+		int state = GREEN_TAB.GROWTH_STATE ;
 			GROWTH_STATE = state;
 	}
 }

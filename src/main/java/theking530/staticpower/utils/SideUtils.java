@@ -3,7 +3,6 @@ package theking530.staticpower.utils;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
-import theking530.staticpower.utils.OldSidePicker.BlockSide;
 import theking530.staticpower.utils.SidePicker.Side;
 
 
@@ -17,12 +16,17 @@ public class SideUtils {
 		RIGHT,
 		LEFT;
 	}
-	public static BlockSide getBlockSide(EnumFacing hitSide, EnumFacing metadata) {
+	/***
+	 * @param hitSide = The Side that we want to translate to a BlockSide.
+	 * @param machineFacing - The Facing Direction of the block. 
+	 * @return We take the Facing Direction of the block and then return the relative blockside versus the requested hitside.
+	 */
+	public static BlockSide getBlockSide(EnumFacing hitSide, EnumFacing machineFacing) {
 		switch(hitSide) {
 		case UP: return BlockSide.TOP;
 		case DOWN: return BlockSide.BOTTOM;
 		case WEST: 
-			switch(metadata) {
+			switch(machineFacing) {
 				case NORTH: return BlockSide.RIGHT;
 				case SOUTH: return BlockSide.LEFT;
 				case EAST:  return BlockSide.BACK;
@@ -31,7 +35,7 @@ public class SideUtils {
 					break;
 			}
 		case EAST:
-			switch(metadata) {
+			switch(machineFacing) {
 				case NORTH:return BlockSide.LEFT;
 				case SOUTH:return BlockSide.RIGHT;
 				case EAST: return BlockSide.FRONT;
@@ -40,7 +44,7 @@ public class SideUtils {
 					break;
 			}
 		case NORTH: 
-			switch(metadata) {
+			switch(machineFacing) {
 				case NORTH: return BlockSide.FRONT;
 				case SOUTH: return BlockSide.BACK;
 				case EAST: return BlockSide.RIGHT;
@@ -49,7 +53,7 @@ public class SideUtils {
 					break;
 			}
 		case SOUTH:
-			switch(metadata) {
+			switch(machineFacing) {
 				case NORTH:  return BlockSide.BACK;
 				case SOUTH: return BlockSide.FRONT;
 				case EAST: return BlockSide.LEFT;

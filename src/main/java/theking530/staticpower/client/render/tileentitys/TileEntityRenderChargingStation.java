@@ -9,10 +9,9 @@ import net.minecraft.util.ResourceLocation;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.client.model.ModelBlock;
 import theking530.staticpower.machines.chargingstation.TileEntityChargingStation;
-import theking530.staticpower.machines.poweredfurnace.TileEntityPoweredFurnace;
 import theking530.staticpower.utils.SideModeList.Mode;
 
-public class TileEntityRenderChargingStation extends TileEntitySpecialRenderer {
+public class TileEntityRenderChargingStation extends TileEntitySpecialRenderer<TileEntityChargingStation> {
 
 	ResourceLocation side = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSide.png");
 	ResourceLocation sideIn = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSideIn.png");
@@ -22,9 +21,8 @@ public class TileEntityRenderChargingStation extends TileEntitySpecialRenderer {
 	ResourceLocation frontOn = new ResourceLocation(Reference.MODID, "textures/blocks/ChargingStationOn.png");
 	
 	@Override
-	public void renderTileEntityAt(TileEntity tileentity, double translationX, double translationY, double translationZ, float f, int dest) {
-		TileEntityChargingStation charger = (TileEntityChargingStation)tileentity;			
-		EnumFacing facing = EnumFacing.getHorizontal(tileentity.getBlockMetadata())	;
+    public void render(TileEntityChargingStation tileentity, double translationX, double translationY, double translationZ, float f, int dest, float alpha) {
+		EnumFacing facing = tileentity.getFacingDirection();
 		GL11.glPushMatrix();
 		GL11.glTranslated(translationX, translationY, translationZ);
 		if(facing == EnumFacing.WEST) {
@@ -46,12 +44,11 @@ public class TileEntityRenderChargingStation extends TileEntitySpecialRenderer {
 		checkAndRenderSides(tileentity, 3);
 		checkAndRenderSides(tileentity, 4);
 		checkAndRenderSides(tileentity, 5);
-
+	
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glTranslated(-translationX, -translationY, -translationZ);	
 		GL11.glColor3f(1.0F, 1.0F, 1.0F);	
 		GL11.glPopMatrix();
-
 	}
 	
 	public void checkAndRenderSides(TileEntity tileentity, int side) {

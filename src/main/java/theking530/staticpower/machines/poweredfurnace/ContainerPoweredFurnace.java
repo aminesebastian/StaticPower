@@ -12,13 +12,8 @@ import theking530.staticpower.machines.machinecomponents.SlotWithExperienceOutpu
 public class ContainerPoweredFurnace extends Container {
 	
 	private TileEntityPoweredFurnace SMELTER;
-	private int PROCESSING_TIMER;
-	private int ENERGY_STORED;
 
 	public ContainerPoweredFurnace(InventoryPlayer invPlayer, TileEntityPoweredFurnace tePoweredSmelter) {
-		PROCESSING_TIMER = 0;
-		ENERGY_STORED = 0;
-		
 		SMELTER = tePoweredSmelter;
 		
 		//Input
@@ -90,15 +85,15 @@ public class ContainerPoweredFurnace extends Container {
 	        }else if (!this.mergeItemStack(itemstack1, 6, 42, false)) {
 	            return null;
 	        }
-	        if (itemstack1.stackSize == 0){
-	            slot.putStack((ItemStack)null);
+	        if (itemstack1.getCount() == 0){
+	            slot.putStack(ItemStack.EMPTY);
 	        }else {
 	            slot.onSlotChanged();
 	        }
-	        if (itemstack1.stackSize == itemstack.stackSize){
+	        if (itemstack1.getCount() == itemstack.getCount()){
 	            return null;
 	        }
-	        slot.onPickupFromSlot(player, itemstack1);
+	        slot.onTake(player, itemstack1);
 	    }
 	    return itemstack;
 	}

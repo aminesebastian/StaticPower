@@ -1,7 +1,5 @@
 package theking530.staticpower.machines.quarry;
 
-import static theking530.staticpower.items.ModItems.BasicItemFilter;
-
 import java.io.IOException;
 
 import org.lwjgl.opengl.GL11;
@@ -11,7 +9,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.client.gui.widgets.CustomGuiContainer;
 import theking530.staticpower.client.gui.widgets.GuiDrawItem;
 import theking530.staticpower.client.gui.widgets.buttons.ArrowButton;
@@ -20,7 +17,6 @@ import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.items.ModItems;
-import theking530.staticpower.machines.fluidgenerator.PacketFluidGeneratorContainerMode;
 import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent.FluidContainerInteractionMode;
 import theking530.staticpower.utils.GUIUtilities;
 import theking530.staticpower.utils.GuiTextures;
@@ -32,8 +28,7 @@ public class GuiQuarry extends CustomGuiContainer{
 	private GuiFluidBarFromTank FLUIDBAR;
 	public GuiSideConfigTab SIDE_TAB;
 	private TileEntityQuarry QUARRY;
-	public GuiDrawItem DRAW_ITEM = new GuiDrawItem(true);
-	
+
 	public GuiQuarry(InventoryPlayer invPlayer, TileEntityQuarry teQuarry) {
 		super(new ContainerQuarry(invPlayer, teQuarry));
 		QUARRY = teQuarry;	
@@ -72,29 +67,32 @@ public class GuiQuarry extends CustomGuiContainer{
 		    }
 		}
 	}	
-	
+	@Override
 	public void updateScreen() {
-		int j = (width - xSize) / 2;
-		int k = (height - ySize) / 2;
-		SIDE_TAB.updateTab(width+38, height, xSize, ySize, fontRendererObj, QUARRY);
-	}	
+		SIDE_TAB.updateTab(width+38, height, xSize, ySize, fontRenderer, QUARRY);
+	}
+	@Override
 	public void drawScreen(int par1, int par2, float par3) {
     	super.drawScreen(par1, par2, par3);
     	int var1 = (this.width - this.xSize) / 2;
         int var2 = (this.height - this.ySize) / 2;  
+		this.zLevel = -1.0f;
+		this.drawDefaultBackground();	
+		this.zLevel = 0.0f;
 		drawRect(guiLeft + 82, guiTop + 38, 176, 69, 3394815);
 		
 		if(par1 >= 27 + var1 && par2 >= 8 + var2 && par1 <= 42 + var1 && par2 <= 68 + var2) {	
-			drawHoveringText(FLUIDBAR.drawText(), par1, par2, fontRendererObj); 
+			drawHoveringText(FLUIDBAR.drawText(), par1, par2, fontRenderer); 
 		}    
 		if(par1 >= 46 + var1 && par2 >= 8 + var2 && par1 <= 52 + var1 && par2 <= 68 + var2) {
-			drawHoveringText(POWERBAR.drawText(), par1, par2, fontRendererObj); 
+			drawHoveringText(POWERBAR.drawText(), par1, par2, fontRenderer); 
 		}	
+		this.renderHoveredToolTip(par1, par2);
 	}
-
+	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = I18n.format(this.QUARRY.getName());
-		fontRendererObj.drawString(name, xSize / 2 - fontRendererObj.getStringWidth(name) / 2 + 3, 7, 255 << 24 | 255 << 16 | 255 << 8 | 255);
+		fontRenderer.drawString(name, xSize / 2 - fontRenderer.getStringWidth(name) / 2 + 3, 7, 255 << 24 | 255 << 16 | 255 << 8 | 255);
 
 		float scale = 0.7F;
 		String currentPosition = QUARRY.CURRENT_COORD.toString().substring(9, QUARRY.CURRENT_COORD.toString().length()-1);
@@ -113,23 +111,23 @@ public class GuiQuarry extends CustomGuiContainer{
 		
 		GL11.glScalef(scale, scale, scale);
 		if(!QUARRY.isAbleToMine()) {
-			fontRendererObj.drawString(tutorial, xSize / 2 - 20, 30, GUIUtilities.getColor(200, 200, 200));
-			fontRendererObj.drawString(tutorial2, xSize / 2 - 20, 40, GUIUtilities.getColor(200, 200, 200));
-			fontRendererObj.drawString(tutorial3, xSize / 2 - 20, 50, GUIUtilities.getColor(200, 200, 200));
-			fontRendererObj.drawString(tutorial4, xSize / 2 - 20, 60, GUIUtilities.getColor(200, 200, 200));
-			fontRendererObj.drawString(tutorial5, xSize / 2 - 20, 75, GUIUtilities.getColor(200, 200, 200));
-			fontRendererObj.drawString(tutorial6, xSize / 2 - 20, 85, GUIUtilities.getColor(200, 200, 200));
-			fontRendererObj.drawString(tutorial7, xSize / 2 - 20, 100, GUIUtilities.getColor(200, 200, 200));
+			fontRenderer.drawString(tutorial, xSize / 2 - 20, 30, GUIUtilities.getColor(200, 200, 200));
+			fontRenderer.drawString(tutorial2, xSize / 2 - 20, 40, GUIUtilities.getColor(200, 200, 200));
+			fontRenderer.drawString(tutorial3, xSize / 2 - 20, 50, GUIUtilities.getColor(200, 200, 200));
+			fontRenderer.drawString(tutorial4, xSize / 2 - 20, 60, GUIUtilities.getColor(200, 200, 200));
+			fontRenderer.drawString(tutorial5, xSize / 2 - 20, 75, GUIUtilities.getColor(200, 200, 200));
+			fontRenderer.drawString(tutorial6, xSize / 2 - 20, 85, GUIUtilities.getColor(200, 200, 200));
+			fontRenderer.drawString(tutorial7, xSize / 2 - 20, 100, GUIUtilities.getColor(200, 200, 200));
 		}else if(QUARRY.isDoneMining()) {
-			fontRendererObj.drawString("Quarrying Completed!", xSize / 2 - 26, 30, GUIUtilities.getColor(200, 200, 200));
+			fontRenderer.drawString("Quarrying Completed!", xSize / 2 - 26, 30, GUIUtilities.getColor(200, 200, 200));
 		}else{
-			fontRendererObj.drawString("Current Position: ", xSize / 2 - fontRendererObj.getStringWidth("Current Position: ") / 2 + 18, 30, GUIUtilities.getColor(200, 200, 200));
-			fontRendererObj.drawString(currentPosition, xSize / 2 - 26, 40, GUIUtilities.getColor(200, 200, 200));
-			fontRendererObj.drawString(area, xSize / 2 - 26, 55, GUIUtilities.getColor(200, 200, 200));
-			fontRendererObj.drawString(speed, xSize / 2 - 26, 65, GUIUtilities.getColor(200, 200, 200));
-			fontRendererObj.drawString(blocks, xSize / 2 - 26, 75, GUIUtilities.getColor(200, 200, 200));
-			fontRendererObj.drawString(energy, xSize / 2 - 26, 85, GUIUtilities.getColor(200, 200, 200));
-			fontRendererObj.drawString(fortune, xSize / 2 - 26, 95, GUIUtilities.getColor(200, 200, 200));
+			fontRenderer.drawString("Current Position: ", xSize / 2 - fontRenderer.getStringWidth("Current Position: ") / 2 + 23, 30, GUIUtilities.getColor(200, 200, 200));
+			fontRenderer.drawString("• " + currentPosition, xSize / 2 - 20, 40, GUIUtilities.getColor(200, 200, 200));
+			fontRenderer.drawString("• " + area, xSize / 2 - 20, 55, GUIUtilities.getColor(200, 200, 200));
+			fontRenderer.drawString("• " + speed, xSize / 2 - 20, 65, GUIUtilities.getColor(200, 200, 200));
+			fontRenderer.drawString("• " + blocks, xSize / 2 - 20, 75, GUIUtilities.getColor(200, 200, 200));
+			fontRenderer.drawString("• " + energy, xSize / 2 - 20, 85, GUIUtilities.getColor(200, 200, 200));
+			fontRenderer.drawString("• " + fortune, xSize / 2 - 20, 95, GUIUtilities.getColor(200, 200, 200));
 		}
 
 		GL11.glScalef(1/scale, 1/scale, 1/scale);
@@ -141,9 +139,9 @@ public class GuiQuarry extends CustomGuiContainer{
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.QUARRY_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-    	DRAW_ITEM.drawItem(ModItems.BasicItemFilter, guiLeft, guiTop, 27, 71, zLevel);
+    	GuiDrawItem.drawItem(ModItems.BasicItemFilter, guiLeft, guiTop, 27, 71, zLevel, 0.5f);
 		SIDE_TAB.drawTab();	
-		POWERBAR.drawPowerBar(guiLeft + 47, guiTop + 66, 6, 60, this.zLevel);
+		POWERBAR.drawPowerBar(guiLeft + 47, guiTop + 66, 6, 60, this.zLevel, f);
 		FLUIDBAR.drawFluidBar(guiLeft + 27, guiTop + 66, 16, 60, this.zLevel);
 	}
 	@Override
@@ -151,6 +149,7 @@ public class GuiQuarry extends CustomGuiContainer{
 	    super.mouseClicked(x, y, button);
 	    SIDE_TAB.mouseInteraction(x, y, button);
 	}	
+	@Override
 	protected void mouseClickMove(int x, int y, int button, long time) {
 		super.mouseClickMove(x, y, button, time);
 		SIDE_TAB.mouseDrag(x, y, button, time);

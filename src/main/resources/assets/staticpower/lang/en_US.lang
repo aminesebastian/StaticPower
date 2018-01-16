@@ -139,6 +139,7 @@ tile.PoweredFurnace.name=Powered Furnace
 tile.FusionFurnace.name=Fusion Furnace
 tile.BasicTank.name=Basic Tank
 tile.AdvancedTank.name=Advanced Tank
+tile.BasicBattery.name=Basic Battery
 tile.StaticBattery.name=Static Battery
 tile.EnergizedBattery.name=Energized Battery
 tile.LumumBattery.name=Lumum Battery

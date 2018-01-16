@@ -4,7 +4,6 @@ import org.lwjgl.input.Keyboard;
 
 import net.minecraft.item.Item;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.assists.Reference;
 import theking530.staticpower.utils.EnumTextFormatting;
 
 public class ItemBase extends Item implements EnumTextFormatting {

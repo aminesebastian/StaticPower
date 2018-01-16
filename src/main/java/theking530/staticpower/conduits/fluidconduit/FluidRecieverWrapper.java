@@ -1,7 +1,7 @@
 package theking530.staticpower.conduits.fluidconduit;
 
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class FluidRecieverWrapper {
 	

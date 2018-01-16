@@ -13,12 +13,12 @@ public class SlotPhantom extends Slot{
     @Override
     public boolean canTakeStack(EntityPlayer player) {
     	super.canTakeStack(player);
-    	inventory.setInventorySlotContents(slotNumber, null);
+    	inventory.setInventorySlotContents(slotNumber, ItemStack.EMPTY);
         return false;
     }
     public boolean isItemValid(ItemStack itemStack){
     	ItemStack tempItemStack = itemStack.copy();
-    	tempItemStack.stackSize = 1;
+    	tempItemStack.setCount(1);
     	inventory.setInventorySlotContents(slotNumber, tempItemStack);
         return false;
     }

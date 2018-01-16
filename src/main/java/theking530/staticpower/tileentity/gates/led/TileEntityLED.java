@@ -18,7 +18,7 @@ public class TileEntityLED extends TileEntityBaseLogicGate {
 	}
 	@Override
 	public void gateTick() {
-		if(!worldObj.isRemote) {
+		if(!getWorld().isRemote) {
 			if(INVERTED) {
 				LIGHT_LEVEL = Math.max(0, 15-addAllInputSignals());
 			}else{
@@ -28,12 +28,12 @@ public class TileEntityLED extends TileEntityBaseLogicGate {
 		}
 	}	
 	public void setColor(Color color) {
-		if(!worldObj.isRemote) {
+		if(!getWorld().isRemote) {
 			COLOR = Color.values()[StaticMath.clamp(color.ordinal(), 15, 0)];
 		}
 	}
 	public void cycleColor(boolean reverse) {
-		if(!worldObj.isRemote) {
+		if(!getWorld().isRemote) {
 			if(!reverse) {
 				if(COLOR.ordinal() + 1 < 15) {
 					COLOR = Color.values()[COLOR.ordinal() + 1];

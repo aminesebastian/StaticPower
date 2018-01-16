@@ -1,7 +1,7 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "staticpower:items/WheatFlour"
+		"layer0": "staticpower:items/wheatflour"
 	},
 	"display": {
 		"thirdperson": {

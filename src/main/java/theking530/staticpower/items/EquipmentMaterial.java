@@ -1,14 +1,8 @@
 package theking530.staticpower.items;
 
-import java.util.List;
-
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.text.TextFormatting;
-import theking530.staticpower.items.armor.BaseArmor;
-import theking530.staticpower.items.armor.BaseArmor.ArmorType;
-import theking530.staticpower.utils.EnumTextFormatting;
 
 public class EquipmentMaterial {
 

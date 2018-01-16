@@ -5,38 +5,25 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import cofh.api.energy.IEnergyReceiver;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.items.CapabilityItemHandler;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.items.itemfilter.ItemFilter;
-import theking530.staticpower.items.upgrades.BasePowerUpgrade;
 import theking530.staticpower.items.upgrades.BaseQuarryingUpgrade;
-import theking530.staticpower.items.upgrades.BaseSpeedUpgrade;
 import theking530.staticpower.machines.BaseMachineWithTank;
 import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent;
 import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent.FluidContainerInteractionMode;
-import theking530.staticpower.power.StaticEnergyStorage;
-import theking530.staticpower.tileentity.BaseTileEntity;
 import theking530.staticpower.utils.InventoryUtilities;
-import theking530.staticpower.utils.SideModeList;
 import theking530.staticpower.utils.WorldUtilities;
 
 public class TileEntityQuarry extends BaseMachineWithTank {
@@ -48,7 +35,7 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 	public int INITIAL_BLOCKS_PER_TICK = 1;
 	public int BLOCKS_PER_TICK = INITIAL_BLOCKS_PER_TICK;
 	
-	private ArrayList<ItemStack> QUARRIED_STACKS = new ArrayList();
+	private ArrayList<ItemStack> QUARRIED_STACKS = new ArrayList<ItemStack>();
 	public DrainToBucketComponent DRAIN_COMPONENT;
 	
 	private boolean testing = false;
@@ -60,7 +47,7 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 	}
 	@Override
 	public void process(){
-		if(!worldObj.isRemote) {
+		if(!getWorld().isRemote) {
 			DRAIN_COMPONENT.update();
 			if(testing) {
 				STARTING_COORD = pos.offset(EnumFacing.SOUTH, 5);	
@@ -91,21 +78,21 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 				}	
 			}
 			if(QUARRIED_STACKS.size() > 0) {
-				if(worldObj.getTileEntity(pos.add(0,1,0)) != null && worldObj.getTileEntity(pos.add(0,1,0)).hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN)) {
+				if(getWorld().getTileEntity(pos.add(0,1,0)) != null && getWorld().getTileEntity(pos.add(0,1,0)).hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN)) {
 					for(int k=QUARRIED_STACKS.size()-1; k>=0; k--) {
-						if(getInternalStack(0) != null && getInternalStack(0).getItem() instanceof ItemFilter) {
+						if(getInternalStack(0) != ItemStack.EMPTY && getInternalStack(0).getItem() instanceof ItemFilter) {
 							ItemFilter tempFilter = (ItemFilter)getInternalStack(0).getItem();
 							if(tempFilter.evaluateFilter(getInternalStack(0), QUARRIED_STACKS.get(k))) {
 								QUARRIED_STACKS.remove(k);
 							}else{
-								if(InventoryUtilities.canFullyInsertItemIntoInventory(worldObj.getTileEntity(pos.add(0,1,0)).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN), QUARRIED_STACKS.get(k))) {
-									InventoryUtilities.fullyInsertItemIntoInventory(worldObj.getTileEntity(pos.add(0,1,0)).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN), QUARRIED_STACKS.get(k));
+								if(InventoryUtilities.canFullyInsertItemIntoInventory(getWorld().getTileEntity(pos.add(0,1,0)).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN), QUARRIED_STACKS.get(k))) {
+									InventoryUtilities.fullyInsertItemIntoInventory(getWorld().getTileEntity(pos.add(0,1,0)).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN), QUARRIED_STACKS.get(k));
 									QUARRIED_STACKS.remove(k);
 								}	
 							}
 						}else{
-							if(InventoryUtilities.canFullyInsertItemIntoInventory(worldObj.getTileEntity(pos.add(0,1,0)).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN), QUARRIED_STACKS.get(k))) {
-								InventoryUtilities.fullyInsertItemIntoInventory(worldObj.getTileEntity(pos.add(0,1,0)).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN), QUARRIED_STACKS.get(k));
+							if(InventoryUtilities.canFullyInsertItemIntoInventory(getWorld().getTileEntity(pos.add(0,1,0)).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN), QUARRIED_STACKS.get(k))) {
+								InventoryUtilities.fullyInsertItemIntoInventory(getWorld().getTileEntity(pos.add(0,1,0)).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN), QUARRIED_STACKS.get(k));
 								QUARRIED_STACKS.remove(k);
 							}
 						}
@@ -159,13 +146,14 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 			return;
 		}
 	}
+	@SuppressWarnings("deprecation")
 	private void mineBlock() {
-		if(worldObj.getBlockState(CURRENT_COORD).getBlock() != Blocks.BEDROCK 
-				&& worldObj.getBlockState(CURRENT_COORD).getBlock() != Blocks.AIR
-				&& worldObj.getBlockState(CURRENT_COORD).getBlock() != ModBlocks.Quarry) {
-			worldObj.playSound(CURRENT_COORD.getX(), CURRENT_COORD.getY(), CURRENT_COORD.getZ(), worldObj.getBlockState(CURRENT_COORD).getBlock().getSoundType().getBreakSound(), 
+		if(getWorld().getBlockState(CURRENT_COORD).getBlock() != Blocks.BEDROCK 
+				&& getWorld().getBlockState(CURRENT_COORD).getBlock() != Blocks.AIR
+				&& getWorld().getBlockState(CURRENT_COORD).getBlock() != ModBlocks.Quarry) {
+			getWorld().playSound(CURRENT_COORD.getX(), CURRENT_COORD.getY(), CURRENT_COORD.getZ(), getWorld().getBlockState(CURRENT_COORD).getBlock().getSoundType().getBreakSound(), 
 					SoundCategory.BLOCKS, 0.5F, 1.0F, false);
-			worldObj.setBlockToAir(CURRENT_COORD);		
+			getWorld().setBlockToAir(CURRENT_COORD);		
 		}
 	}
 	public void setCoordinates(BlockPos starting, BlockPos ending) {
@@ -217,10 +205,7 @@ public class TileEntityQuarry extends BaseMachineWithTank {
     	writeToNBT(tag);
     	return new SPacketUpdateTileEntity(pos, getBlockMetadata(), tag);
     }	
-    private BlockPos getLocalStartingPos() {
-		return new BlockPos(0,0,0);
-	}
-	private BlockPos getAdjustedEndingPos() {
+    private BlockPos getAdjustedEndingPos() {
 		BlockPos temp1 = ENDING_COORD.subtract(STARTING_COORD);
 		BlockPos absPos = new BlockPos(Math.abs(temp1.getX()), Math.abs(temp1.getY()), Math.abs(temp1.getZ()));
 		return absPos;
@@ -248,25 +233,28 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 		}
 	}
 	private void drawStartingAndEndingCoords() {
-		if (worldObj.isRemote && isAbleToMine()) { 
-			worldObj.spawnParticle(EnumParticleTypes.REDSTONE, STARTING_COORD.getX() + 0.5D, STARTING_COORD.getY() + 1.0D, 
+		if (getWorld().isRemote && isAbleToMine()) { 
+			getWorld().spawnParticle(EnumParticleTypes.REDSTONE, STARTING_COORD.getX() + 0.5D, STARTING_COORD.getY() + 1.0D, 
 					STARTING_COORD.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
-			worldObj.spawnParticle(EnumParticleTypes.REDSTONE, ENDING_COORD.getX() + 0.5D, ENDING_COORD.getY() + 1.0D, 
+			getWorld().spawnParticle(EnumParticleTypes.REDSTONE, ENDING_COORD.getX() + 0.5D, ENDING_COORD.getY() + 1.0D, 
 					ENDING_COORD.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
 			
-			worldObj.spawnParticle(EnumParticleTypes.REDSTONE, STARTING_COORD.getX() + 0.5D, STARTING_COORD.getY() + 1.0D, 
+			getWorld().spawnParticle(EnumParticleTypes.REDSTONE, STARTING_COORD.getX() + 0.5D, STARTING_COORD.getY() + 1.0D, 
 					ENDING_COORD.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
-			worldObj.spawnParticle(EnumParticleTypes.REDSTONE, ENDING_COORD.getX() + 0.5D, ENDING_COORD.getY() + 1.0D, 
+			getWorld().spawnParticle(EnumParticleTypes.REDSTONE, ENDING_COORD.getX() + 0.5D, ENDING_COORD.getY() + 1.0D, 
 					STARTING_COORD.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
 		}
 	}
 	public List<ItemStack> getCurrentBlockDrops() {
-		if(worldObj.isRemote) {
-			worldObj.spawnParticle(EnumParticleTypes.REDSTONE, CURRENT_COORD.getX() + 0.5D, CURRENT_COORD.getY() + 1.0D, 
+		if(getWorld().isRemote) {
+			getWorld().spawnParticle(EnumParticleTypes.REDSTONE, CURRENT_COORD.getX() + 0.5D, CURRENT_COORD.getY() + 1.0D, 
 				CURRENT_COORD.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
 		}
-		return worldObj.getBlockState(CURRENT_COORD).getBlock().getDrops(worldObj, CURRENT_COORD, worldObj.getBlockState(CURRENT_COORD), getFortuneMultiplier());
+        NonNullList<ItemStack> ret = NonNullList.create();
+		getWorld().getBlockState(CURRENT_COORD).getBlock().getDrops(ret, getWorld(), CURRENT_COORD, getWorld().getBlockState(CURRENT_COORD), 0);
+		return ret;
 	}
+
 	@Override
 	public String getName() {
 		return "Quarry";

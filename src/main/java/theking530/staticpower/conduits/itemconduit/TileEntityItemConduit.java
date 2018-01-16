@@ -7,10 +7,12 @@ import java.util.Random;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.items.CapabilityItemHandler;
 import theking530.staticpower.conduits.TileEntityBaseConduit;
 import theking530.staticpower.utils.WorldUtilities;
 
@@ -30,8 +32,8 @@ public class TileEntityItemConduit extends TileEntityBaseConduit {
 	
 	public void updateEntity() {
 		//MOVE_RATE = 20;
-		worldObj.markAndNotifyBlock(pos, worldObj.getChunkFromBlockCoords(pos), worldObj.getBlockState(pos), worldObj.getBlockState(pos), 0);
-		//worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		getWorld().markAndNotifyBlock(pos, getWorld().getChunkFromBlockCoords(pos), getWorld().getBlockState(pos), getWorld().getBlockState(pos), 0);
+		//getWorld().markBlockForUpdate(xCoord, yCoord, zCoord);
 		if(NETWORK == null) {
 			onPlaced();
 		}else{
@@ -43,13 +45,13 @@ public class TileEntityItemConduit extends TileEntityBaseConduit {
 	public void onPlaced(){
 	}	
 	@Override
-	public boolean isConduit(BlockPos pos) {
-		return this.worldObj.getTileEntity(pos) instanceof TileEntityItemConduit;
+	public boolean isConduit(EnumFacing facing) {
+		return this.getWorld().getTileEntity(pos.offset(facing)) instanceof TileEntityItemConduit;
 	}		
 	@Override
-	public boolean isReciever(BlockPos pos) {
-		TileEntity te = worldObj.getTileEntity(pos);
-		if(te instanceof IInventory) {
+	public boolean isReciever(EnumFacing facing) {
+		TileEntity te = getWorld().getTileEntity(pos.offset(facing));
+		if(te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing)) {
 			if(te instanceof TileEntityItemConduit) {
 				return false;
 			}
@@ -97,7 +99,7 @@ public class TileEntityItemConduit extends TileEntityBaseConduit {
 	}
 	public boolean pullItem(EnumFacing facing) {
 		Random rand = new Random();
-		TileEntity te = worldObj.getTileEntity(pos.offset(facing));
+		TileEntity te = getWorld().getTileEntity(pos.offset(facing));
 		if(te != null && te instanceof ISidedInventory) {
 			ISidedInventory tempInv = (ISidedInventory)te;
 			for(int i=0; i<tempInv.getSizeInventory(); i++) {
@@ -114,7 +116,7 @@ public class TileEntityItemConduit extends TileEntityBaseConduit {
 	//Conduit Connection
 	public TileEntityItemConduit selectRandomJoinedConduit(TileEntityItemConduit... excludedConduits) {
 		Random rand = new Random();
-		TileEntity[] teArray = WorldUtilities.getAdjacentEntities(worldObj, pos);
+		TileEntity[] teArray = WorldUtilities.getAdjacentEntities(getWorld(), pos);
 		ArrayList<TileEntityItemConduit> conduitList = new ArrayList();
 		for(int k=0; k<6; k++) {
 			if(teArray[k] != null && teArray[k] instanceof TileEntityItemConduit) {
@@ -138,7 +140,7 @@ public class TileEntityItemConduit extends TileEntityBaseConduit {
 		return null;
 	}
 	public boolean isConnectedToConduit(EnumFacing facing) {
-		TileEntity teCond = worldObj.getTileEntity(pos.offset(facing));
+		TileEntity teCond = getWorld().getTileEntity(pos.offset(facing));
 		if(teCond != null && teCond instanceof TileEntityItemConduit) {
 			return true;
 		}
@@ -153,7 +155,7 @@ public class TileEntityItemConduit extends TileEntityBaseConduit {
 		return false;
 	}
 	public int getConnectedConduitCount() {
-		TileEntity[] teArray = WorldUtilities.getAdjacentEntities(worldObj, pos);
+		TileEntity[] teArray = WorldUtilities.getAdjacentEntities(getWorld(), pos);
 		int count = 0;
 		for(int k=0; k<6; k++) {
 			if(teArray[k] != null && teArray[k] instanceof TileEntityItemConduit) {
@@ -172,7 +174,7 @@ public class TileEntityItemConduit extends TileEntityBaseConduit {
 	//Inventory Connection
 	public boolean isConnectedToInventory(ItemConduitWrapper slot, EnumFacing facing) {
 		if(!disconected(facing)) {
-			TileEntity tempInv = worldObj.getTileEntity(pos.offset(facing));
+			TileEntity tempInv = getWorld().getTileEntity(pos.offset(facing));
 			if(tempInv != null && tempInv instanceof ISidedInventory && tempInv != slot.INVENTORY_SOURCE) {
 				return true;
 			}
@@ -188,7 +190,7 @@ public class TileEntityItemConduit extends TileEntityBaseConduit {
 		return false;
 	}
 	public TileEntity getConectedInventory(EnumFacing facing) {
-		TileEntity tempInv = worldObj.getTileEntity(pos.offset(facing));
+		TileEntity tempInv = getWorld().getTileEntity(pos.offset(facing));
 		if(tempInv instanceof ISidedInventory) {
 			return tempInv;	
 		}
@@ -201,7 +203,7 @@ public class TileEntityItemConduit extends TileEntityBaseConduit {
 				if(tempInv.getStackInSlot(i) == null) {
 					return true;
 				}else{
-					int stackSize = tempInv.getStackInSlot(i).stackSize + slot.ITEM.stackSize;
+					int stackSize = tempInv.getStackInSlot(i).getCount() + slot.ITEM.getCount();
 					if(stackSize <= slot.ITEM.getMaxStackSize()) {
 						return true;
 					}else{
@@ -219,7 +221,7 @@ public class TileEntityItemConduit extends TileEntityBaseConduit {
 				if(tempInv.getStackInSlot(i) == null) {
 					tempInv.setInventorySlotContents(i, slot.ITEM);
 				}else{
-					slot.ITEM.stackSize += tempInv.getStackInSlot(i).stackSize;
+					slot.ITEM.setCount(slot.ITEM.getCount() + tempInv.getStackInSlot(i).getCount());
 					tempInv.setInventorySlotContents(i, slot.ITEM);
 				}
 			slot = null;

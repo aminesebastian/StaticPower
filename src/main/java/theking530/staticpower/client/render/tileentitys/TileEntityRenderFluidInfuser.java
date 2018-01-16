@@ -2,17 +2,10 @@ package theking530.staticpower.client.render.tileentitys;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.client.model.ModelBlock;
@@ -20,7 +13,7 @@ import theking530.staticpower.machines.fluidinfuser.TileEntityFluidInfuser;
 import theking530.staticpower.utils.RenderUtil;
 import theking530.staticpower.utils.SideModeList.Mode;
 
-public class TileEntityRenderFluidInfuser extends TileEntitySpecialRenderer {
+public class TileEntityRenderFluidInfuser extends TileEntitySpecialRenderer<TileEntityFluidInfuser> {
 
 	ResourceLocation side = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSide.png");
 	ResourceLocation sideIn = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSideIn.png");
@@ -30,9 +23,9 @@ public class TileEntityRenderFluidInfuser extends TileEntitySpecialRenderer {
 	static float texel = 1F/16F;
 	
 	@Override
-	public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float f, int destroyStage) {
-		TileEntityFluidInfuser infuser = (TileEntityFluidInfuser)tileentity;			
-		EnumFacing facing = EnumFacing.getHorizontal(tileentity.getBlockMetadata())	;
+	public void render(TileEntityFluidInfuser tileentity, double x, double y, double z, float f, int destroyStage, float alpha) {		
+		EnumFacing facing = tileentity.getFacingDirection();
+		
 		GL11.glPushMatrix();
 		GL11.glTranslated(x, y, z);
 		if(facing == EnumFacing.WEST) {
@@ -55,10 +48,10 @@ public class TileEntityRenderFluidInfuser extends TileEntitySpecialRenderer {
 		checkAndRenderSides(tileentity, 4);
 		checkAndRenderSides(tileentity, 5);
 		//renderInfusingItem(tileentity, x, y, z);
-		if(infuser.TANK.getFluid() != null) {
+		if(tileentity.TANK.getFluid() != null) {
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			drawLiquidBar(tileentity, infuser.TANK.getFluid());
+			drawLiquidBar(tileentity, tileentity.TANK.getFluid());
 			GL11.glDisable(GL11.GL_BLEND);
 		}
 		GL11.glEnable(GL11.GL_LIGHTING);
@@ -91,8 +84,6 @@ public class TileEntityRenderFluidInfuser extends TileEntitySpecialRenderer {
 	
 	public static void drawLiquidBar(TileEntity tileentity, FluidStack fluidStack) {
 		TileEntityFluidInfuser infuser = (TileEntityFluidInfuser)tileentity;
-		float height = infuser.getFluidLevelScaled(1);	
-		
 		RenderUtil.drawFluidInWorld(fluidStack, infuser.TANK.getCapacity(), 4F*texel, 3.5F*texel, 1.0001F, 8F*texel, texel*9);
 	}
 }

@@ -8,10 +8,11 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.vertex.VertexBuffer;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -40,7 +41,7 @@ public class GuiComponentSideSelector extends BaseSideSelectorComponent {
 	public GuiComponentSideSelector(int x, int y, double scale, int meta, TileEntity te, boolean highlightSelectedSides) {
 		super(x, y);
 		this.scale = scale;
-		this.diameter = MathHelper.ceiling_double_int(scale * SQRT_3);
+		this.diameter = MathHelper.ceil(scale * SQRT_3);
 		this.meta = meta;
 		this.te = te;
 		this.highlightSelectedSides = highlightSelectedSides;
@@ -57,11 +58,10 @@ public class GuiComponentSideSelector extends BaseSideSelectorComponent {
 		final int height = getWidth();
 		// assumption: block is rendered in (0,0,0) - (1,1,1) coordinates
 		GL11.glPushMatrix();
-		Tessellator tessellator = Tessellator.getInstance();
 		GL11.glTranslatef(offsetX + x + width / 2, offsetY + y + height / 2, diameter);
 		GL11.glScaled(scale, -scale, scale);
 		trackball.update(mouseX - width, -(mouseY - height));
-		if (te != null) TileEntityRendererDispatcher.instance.renderTileEntityAt(te, -0.5, -0.5, -0.5, 0.0F);
+		if (te != null) TileEntityRendererDispatcher.instance.render(te, -0.5, -0.5, -0.5, 0.0F);
 		/**
 		OldSidePicker picker = new OldSidePicker();
 
@@ -92,7 +92,7 @@ public class GuiComponentSideSelector extends BaseSideSelectorComponent {
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		
         Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer tes = tessellator.getBuffer();
+        BufferBuilder tes = tessellator.getBuffer();
         tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         //tes.setColorRGBA_I(color, 64);
 		switch (side) {

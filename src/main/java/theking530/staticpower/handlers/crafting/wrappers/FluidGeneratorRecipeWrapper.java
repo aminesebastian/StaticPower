@@ -1,6 +1,5 @@
 package theking530.staticpower.handlers.crafting.wrappers;
 
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 public class FluidGeneratorRecipeWrapper {

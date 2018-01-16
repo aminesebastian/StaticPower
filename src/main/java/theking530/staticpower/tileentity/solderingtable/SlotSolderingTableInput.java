@@ -1,6 +1,5 @@
 package theking530.staticpower.tileentity.solderingtable;
 
-import net.minecraft.inventory.Slot;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 

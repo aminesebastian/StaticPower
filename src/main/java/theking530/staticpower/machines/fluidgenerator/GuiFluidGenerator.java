@@ -9,7 +9,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import theking530.staticpower.client.gui.widgets.buttons.ArrowButton;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
@@ -69,10 +68,8 @@ public class GuiFluidGenerator extends GuiContainer{
 	}	
 	
 	public void updateScreen() {
-		int j = (width - xSize) / 2;
-		int k = (height - ySize) / 2;
-		SIDE_TAB.updateTab(width+38, height, xSize, ySize, fontRendererObj, fGenerator);
-		REDSTONE_TAB.updateTab(width+38, height, xSize, ySize, fontRendererObj, fGenerator);
+		SIDE_TAB.updateTab(width+38, height, xSize, ySize, fontRenderer, fGenerator);
+		REDSTONE_TAB.updateTab(width+38, height, xSize, ySize, fontRenderer, fGenerator);
 		if(SIDE_TAB.GROWTH_STATE == 1){
 			REDSTONE_TAB.RED_TAB.GROWTH_STATE = 2;
 		}
@@ -82,33 +79,38 @@ public class GuiFluidGenerator extends GuiContainer{
 	}
 	public void drawScreen(int par1, int par2, float par3) {
     	super.drawScreen(par1, par2, par3);
+		this.zLevel = -1.0f;
+		this.drawDefaultBackground();	
+		this.zLevel = 0.0f;
+    	
 		int var1 = (this.width - this.xSize) / 2;
 		int var2 = (this.height - this.ySize) / 2;
 		if(par1 >= 30 + var1 && par2 >= 8 + var2 && par1 <= 46 + var1 && par2 <= 68 + var2) {	
-			drawHoveringText(FLUIDBAR.drawText(), par1, par2, fontRendererObj); 
+			drawHoveringText(FLUIDBAR.drawText(), par1, par2, fontRenderer); 
 		}       
 		if(par1 >= 50 + var1 && par2 >= 8 + var2 && par1 <= 56 + var1 && par2 <= 68 + var2) {
-			drawHoveringText(POWERBAR.drawText(), par1, par2, fontRendererObj); 
-		}	        
+			drawHoveringText(POWERBAR.drawText(), par1, par2, fontRenderer); 
+		}	 
+		this.renderHoveredToolTip(par1, par2);
 	}
 
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = I18n.format(this.fGenerator.getName());
 	
-		this.fontRendererObj.drawString(name, this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2 +18, 6,4210752 );
-		this.fontRendererObj.drawString(I18n.format("container.inventory"), 27, this.ySize - 96 + 3, 4210752);
+		this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2 +18, 6,4210752 );
+		this.fontRenderer.drawString(I18n.format("container.inventory"), 27, this.ySize - 96 + 3, 4210752);
 	}
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
-		FluidStack fluidStack = fGenerator.TANK.getFluid();
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.FGENERATOR_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		REDSTONE_TAB.drawTab();
 		SIDE_TAB.drawTab();	
-		POWERBAR.drawPowerBar(guiLeft + 50, guiTop + 68, 6, 60, this.zLevel);
+		POWERBAR.drawPowerBar(guiLeft + 50, guiTop + 68, 6, 60, this.zLevel, f);
 		FLUIDBAR.drawFluidBar(guiLeft + 30, guiTop + 68, 16, 60, this.zLevel);
+
 	}
 	@Override
 	protected void mouseClicked(int x, int y, int button) throws IOException{

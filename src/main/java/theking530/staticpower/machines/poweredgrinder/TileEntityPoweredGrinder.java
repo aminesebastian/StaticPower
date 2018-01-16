@@ -1,10 +1,6 @@
 package theking530.staticpower.machines.poweredgrinder;
 
-import java.util.Random;
-
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import theking530.staticpower.handlers.crafting.registries.GrinderRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.GrinderOutputWrapper;
 import theking530.staticpower.machines.BaseMachine;
@@ -28,7 +24,7 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 	
 	//Process 
 	public GrinderOutputWrapper getGrindingResult(ItemStack stack) {
-		if(stack != null) {
+		if(stack != ItemStack.EMPTY) {
 			return GrinderRecipeRegistry.Grinding().getgrindingResult(stack);
 		}else{
 			return null;
@@ -36,7 +32,7 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 		
 	}
 	public boolean hasResult(ItemStack stack) {
-		if(stack != null && getGrindingResult(stack) != null) {
+		if(stack != ItemStack.EMPTY && getGrindingResult(stack) != null) {
 			return true;
 		}
 		return false;
@@ -71,7 +67,7 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 		return false;
 	}
 	public void process() {
-		if(!worldObj.isRemote) {
+		if(!getWorld().isRemote) {
 			BATTERY_COMPONENT.update();
 			if(!isProcessing() && !isMoving() && canProcess(getInputStack(0))) {
 				MOVE_TIMER = 1;
@@ -86,26 +82,41 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 				}
 			}
 			if(isProcessing() && !isMoving()) {
-					if(PROCESSING_TIMER < PROCESSING_TIME) {
-						useEnergy(getProcessingCost() / PROCESSING_TIME);
-						PROCESSING_TIMER++;
-					}else{
-						if(getGrindingResult(getInternalStack(0)) != null) {
-							for(int j=0; j<getGrindingResult(getInternalStack(0)).getOutputItemCount(); j++) {
+				if(PROCESSING_TIMER < PROCESSING_TIME) {
+					useEnergy(getProcessingCost() / PROCESSING_TIME);
+					PROCESSING_TIMER++;
+				}else{
+					if(getGrindingResult(getInternalStack(0)) != null) {
+						for(int j=0; j<getGrindingResult(getInternalStack(0)).getOutputItemCount(); j++) {
+							ItemStack result = getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getOutput();
+							if(diceRoll(getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getPercentage())) {
+								boolean flag = false;
+								int slot = -1;
 								for(int i=0; i<3; i++) {
-									if(diceRoll(getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getPercentage())) {
-										if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, i, getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getOutput())) {
-											SLOTS_OUTPUT.insertItem(i, getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getOutput().copy(), false);
+									if(ItemStack.areItemStacksEqual(SLOTS_OUTPUT.getStackInSlot(0), result) && InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, i, getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getOutput())) {
+										slot = i;
+										flag = true;
+										break;
+									}	
+								}
+								if(!flag) {
+									for(int i=0; i<3; i++) {
+										if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, i, result)) {
+											slot = i;
 											break;
 										}	
 									}
 								}
-							}
+								if(slot != -1) {
+									SLOTS_OUTPUT.insertItem(slot, result.copy(), false);
+								}
+							}						
 						}
-						setInternalStack(0, null);
-						updateBlock();
-						PROCESSING_TIMER=0;
-						MOVE_TIMER = 0;
+					}
+					setInternalStack(0, ItemStack.EMPTY);
+					updateBlock();
+					PROCESSING_TIMER=0;
+					MOVE_TIMER = 0;
 				}	
 			}
 		}
@@ -115,8 +126,7 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 		if(percentage >= 1) {
 			return true;
 		}
-		float randFloat = RANDOM.nextFloat();
-		
+		float randFloat = RANDOM.nextFloat();	
 		return percentage > randFloat ? true : false;
 	}
 }

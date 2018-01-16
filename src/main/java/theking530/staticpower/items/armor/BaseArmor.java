@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javax.annotation.Nullable;
+
 import org.lwjgl.input.Keyboard;
 
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -58,7 +62,6 @@ public class BaseArmor extends ItemArmor {
     }
 	@Override
 	public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack) {
-		BaseArmor tempArmor = (BaseArmor) itemStack.getItem();
 		if(getEffects() != null) {
 			if(!isFullSet(player) || !itemStack.getTagCompound().getBoolean("EQUIPPED")) {
 				for(int i=0; i<getEffects().length; i++) {
@@ -89,8 +92,8 @@ public class BaseArmor extends ItemArmor {
 	public void onWearerDamaged(LivingAttackEvent event, float AdjustedDamage, EntityPlayer player, EntityEquipmentSlot equipmentSlot, ItemStack stack) {
 		
 	}
-	public List getSetInfo() {
-		List tempList = new ArrayList();
+	public List<String> getSetInfo() {
+		List<String> tempList = new ArrayList<String>();
 		tempList.add("MISSING");
 		return tempList;
 	}
@@ -105,16 +108,16 @@ public class BaseArmor extends ItemArmor {
 	 */
 	
 	public boolean isEquipped(EntityPlayer player, ItemStack itemstack) {
-		if(player.inventory.armorInventory[3] != null && itemstack.isItemEqualIgnoreDurability(player.inventory.armorInventory[3])) {
+		if(player.inventory.armorInventory.get(3) != null && itemstack.isItemEqualIgnoreDurability(player.inventory.armorInventory.get(3))) {
 			return true;
 		}
-		if(player.inventory.armorInventory[2] != null && itemstack.isItemEqualIgnoreDurability(player.inventory.armorInventory[2])) {
+		if(player.inventory.armorInventory.get(2) != null && itemstack.isItemEqualIgnoreDurability(player.inventory.armorInventory.get(2))) {
 			return true;
 		}
-		if(player.inventory.armorInventory[1] != null && itemstack.isItemEqualIgnoreDurability(player.inventory.armorInventory[1])) {
+		if(player.inventory.armorInventory.get(1) != null && itemstack.isItemEqualIgnoreDurability(player.inventory.armorInventory.get(1))) {
 			return true;
 		}
-		if(player.inventory.armorInventory[0] != null && itemstack.isItemEqualIgnoreDurability(player.inventory.armorInventory[0])) {
+		if(player.inventory.armorInventory.get(0) != null && itemstack.isItemEqualIgnoreDurability(player.inventory.armorInventory.get(0))) {
 			return true;
 		}		
 		return false;
@@ -134,17 +137,25 @@ public class BaseArmor extends ItemArmor {
 		BaseArmor leggings = null;
 		BaseArmor boots = null;
 		
-		if(player.inventory.armorInventory[3] != null) {
-			helmet = (BaseArmor)player.inventory.armorInventory[3].getItem();
+		if(player.inventory.armorInventory.get(3) != null) {
+			if(player.inventory.armorInventory.get(3).getItem() instanceof BaseArmor) {
+				helmet = (BaseArmor)player.inventory.armorInventory.get(3).getItem();
+			}
 		}
-		if(player.inventory.armorInventory[2] != null) {
-			chest = (BaseArmor)player.inventory.armorInventory[2].getItem();
+		if(player.inventory.armorInventory.get(2) != null) {
+			if(player.inventory.armorInventory.get(2).getItem() instanceof BaseArmor) {
+				chest = (BaseArmor)player.inventory.armorInventory.get(2).getItem();
+			}
 		}
-		if(player.inventory.armorInventory[1] != null) {
-			leggings = (BaseArmor)player.inventory.armorInventory[1].getItem();
+		if(player.inventory.armorInventory.get(1) != null) {
+			if(player.inventory.armorInventory.get(1).getItem() instanceof BaseArmor) {
+				leggings = (BaseArmor)player.inventory.armorInventory.get(1).getItem();
+			}
 		}
-		if(player.inventory.armorInventory[0] != null) {
-			boots = (BaseArmor)player.inventory.armorInventory[0].getItem();
+		if(player.inventory.armorInventory.get(0) != null) {
+			if(player.inventory.armorInventory.get(0).getItem() instanceof BaseArmor) {
+				boots = (BaseArmor)player.inventory.armorInventory.get(0).getItem();
+			}
 		}
 		
 		if (helmet != null && helmet.MATERIAL == MATERIAL
@@ -170,7 +181,7 @@ public class BaseArmor extends ItemArmor {
 		return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
 	}
 	@Override  
-	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean par4) {
+		public void addInformation(ItemStack itemstack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn) {
 		BaseArmor tempArmor = (BaseArmor) itemstack.getItem();
 		if(tempArmor != null) {	
 			ArmorType tempArmorType= tempArmor.ARMOR_TYPE;		

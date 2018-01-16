@@ -4,20 +4,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.handlers.crafting.registries.CondenserRecipeRegistry;
-import theking530.staticpower.handlers.crafting.registries.DistilleryRecipeRegistry;
 import theking530.staticpower.machines.BaseMachineWithTank;
-import theking530.staticpower.machines.heatingelement.HeatStorage;
-import theking530.staticpower.machines.heatingelement.IHeatable;
 import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent;
 import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent.FluidContainerInteractionMode;
-import theking530.staticpower.power.PowerDistributor;
 
 public class TileEntityCondenser extends BaseMachineWithTank  {
 
-	private PowerDistributor POWER_DIST;
 	public FluidTank TANK2;
 	
 	public FluidStack PROCESSING_STACK;
@@ -38,7 +31,7 @@ public class TileEntityCondenser extends BaseMachineWithTank  {
 		return "Condenser";	
 	}	
 	public void process() {
-		if(!worldObj.isRemote) {
+		if(!getWorld().isRemote) {
 			DRAIN_COMPONENT_EVAPORATED_MASH.update();
 			DRAIN_COMPONENT_ETHANOL.update();
 			if(!isProcessing() && PROCESSING_STACK == null && canProcess()) {
@@ -101,10 +94,8 @@ public class TileEntityCondenser extends BaseMachineWithTank  {
 	@Override
 	public void readFromSyncNBT(NBTTagCompound nbt) {
 		super.readFromSyncNBT(nbt);
-        FluidStack tempStack = null;
-
-        TANK2.setFluid(tempStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("TANK2")));
-        PROCESSING_STACK = tempStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("PFLUID"));
+        TANK2.setFluid(FluidStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("TANK2")));
+        PROCESSING_STACK = FluidStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("PFLUID"));
 	}
 	@Override
 	public NBTTagCompound writeToSyncNBT(NBTTagCompound nbt) {
@@ -124,10 +115,8 @@ public class TileEntityCondenser extends BaseMachineWithTank  {
     @Override  
 	public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
-        FluidStack tempStack = null;
-        
-        TANK2.setFluid(tempStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("TANK2")));
-        PROCESSING_STACK = tempStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("PFLUID"));
+        TANK2.setFluid(FluidStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("TANK2")));
+        PROCESSING_STACK = FluidStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("PFLUID"));
     }		
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
@@ -147,9 +136,9 @@ public class TileEntityCondenser extends BaseMachineWithTank  {
 	public void onMachinePlaced(NBTTagCompound nbt) {
 		super.onMachinePlaced(nbt);
         FluidStack tempStack = null;
-        tempStack = tempStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("TANK2"));
+        tempStack = FluidStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("TANK2"));
         TANK2.setFluid(tempStack);
-        tempStack = tempStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("PFluid"));
+        tempStack = FluidStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("PFluid"));
         PROCESSING_STACK = tempStack;
 	}
     
@@ -163,7 +152,7 @@ public class TileEntityCondenser extends BaseMachineWithTank  {
 	}
 	@Override
 	public int fill(FluidStack resource, boolean doFill) {
-		if(!worldObj.isRemote) {
+		if(!getWorld().isRemote) {
 			updateBlock();
 		}
 		if(CondenserRecipeRegistry.Condensing().getFluidOutput(resource) != null){
@@ -173,14 +162,14 @@ public class TileEntityCondenser extends BaseMachineWithTank  {
 	}
 	@Override	
 	public FluidStack drain(FluidStack resource, boolean doDrain) {
-		if(!worldObj.isRemote) {
+		if(!getWorld().isRemote) {
 			updateBlock();
 		}
 		return TANK2.drain(resource, doDrain);
 	}
 	@Override
 	public FluidStack drain(int maxDrain, boolean doDrain) {
-		if(!worldObj.isRemote) {
+		if(!getWorld().isRemote) {
 			updateBlock();
 		}
 		return TANK2.drain(maxDrain, doDrain);

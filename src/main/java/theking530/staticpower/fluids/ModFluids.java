@@ -1,11 +1,7 @@
 package theking530.staticpower.fluids;
 
-import java.util.function.Consumer;
-import java.util.function.Function;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialLiquid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.ItemMeshDefinition;
@@ -17,10 +13,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.IFluidBlock;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import theking530.staticpower.Registry;
 import theking530.staticpower.assists.Reference;
 
 public class ModFluids {
@@ -49,13 +44,13 @@ public class ModFluids {
 	public static Block BlockMash;
 	public static Block BlockEvaporatedMash;
 	
-	public static void init() {
+	public static void init(Registry registry) {
 		Fluid f  = new Fluid(StaticFluidName, getStill(StaticFluidName), getFlowing(StaticFluidName))
 		        .setDensity(1500).setViscosity(3000).setTemperature(300);;
 	    FluidRegistry.registerFluid(f);
 	    StaticFluid = FluidRegistry.getFluid(f.getName());
 	    BlockStaticFluid = new BaseFluidBlock(StaticFluid, new MaterialLiquid(MapColor.EMERALD), StaticFluidName);
-		GameRegistry.register(BlockStaticFluid);
+		registry.PreRegisterBlock(BlockStaticFluid);
 	    registerBucket(StaticFluid);
 	    
 	    f  = new Fluid(EnergizedFluidName, getStill(EnergizedFluidName), getFlowing(EnergizedFluidName))
@@ -63,7 +58,7 @@ public class ModFluids {
 	    FluidRegistry.registerFluid(f);
 	    EnergizedFluid = FluidRegistry.getFluid(f.getName());
 	    BlockEnergizedFluid = new BaseFluidBlock(EnergizedFluid, new MaterialLiquid(MapColor.DIAMOND), EnergizedFluidName);
-		GameRegistry.register(BlockEnergizedFluid);
+		registry.PreRegisterBlock(BlockEnergizedFluid);
 	    registerBucket(EnergizedFluid);
 	    
 	    f  = new Fluid(LumumFluidName, getStill(LumumFluidName), getFlowing(LumumFluidName))
@@ -71,7 +66,7 @@ public class ModFluids {
 	    FluidRegistry.registerFluid(f);
 	    LumumFluid = FluidRegistry.getFluid(f.getName());
 	    BlockLumumFluid = new BaseFluidBlock(LumumFluid, new MaterialLiquid(MapColor.GOLD), LumumFluidName);
-		GameRegistry.register(BlockLumumFluid);
+		registry.PreRegisterBlock(BlockLumumFluid);
 	    registerBucket(LumumFluid);
 	    
 	    f  = new Fluid(SteamFluidName, getStill(SteamFluidName), getFlowing(SteamFluidName))
@@ -79,7 +74,7 @@ public class ModFluids {
 	    FluidRegistry.registerFluid(f);
 	    Steam = FluidRegistry.getFluid(f.getName());
 	    BlockSteamFluid = new BaseFluidBlock(Steam, new MaterialLiquid(MapColor.QUARTZ), SteamFluidName);
-		GameRegistry.register(BlockSteamFluid);
+		registry.PreRegisterBlock(BlockSteamFluid);
 	    registerBucket(Steam);
 	    
 	    f  = new Fluid(EthanolName, getStill(EthanolName), getFlowing(EthanolName))
@@ -87,7 +82,7 @@ public class ModFluids {
 	    FluidRegistry.registerFluid(f);
 	    Ethanol = FluidRegistry.getFluid(f.getName());
 	    BlockEthanol = new BaseFluidBlock(Ethanol, new MaterialLiquid(MapColor.ICE), EthanolName);
-		GameRegistry.register(BlockEthanol);
+		registry.PreRegisterBlock(BlockEthanol);
 	    registerBucket(Ethanol);
 	    
 	    f  = new Fluid(MashName, getStill(MashName), getFlowing(MashName))
@@ -95,7 +90,7 @@ public class ModFluids {
 	    FluidRegistry.registerFluid(f);
 	    Mash = FluidRegistry.getFluid(f.getName());
 	    BlockMash = new BaseFluidBlock(Mash, new MaterialLiquid(MapColor.WOOD), MashName);
-		GameRegistry.register(BlockMash);
+		registry.PreRegisterBlock(BlockMash);
 	    registerBucket(Mash);
 	    
 	    f  = new Fluid(EvaporatedMashName, getStill(EvaporatedMashName), getFlowing(EvaporatedMashName))
@@ -103,7 +98,7 @@ public class ModFluids {
 	    FluidRegistry.registerFluid(f);
 	    EvaporatedMash = FluidRegistry.getFluid(f.getName());
 	    BlockEvaporatedMash = new BaseFluidBlock(EvaporatedMash, new MaterialLiquid(MapColor.WOOD), EvaporatedMashName);
-		GameRegistry.register(BlockEvaporatedMash);
+		registry.PreRegisterBlock(BlockEvaporatedMash);
 	    registerBucket(EvaporatedMash);   
 		
 	}
@@ -127,13 +122,13 @@ public class ModFluids {
 	    registerFluidItemRendering(Mash, MashName);
 	    registerFluidItemRendering(EvaporatedMash, EvaporatedMashName);		
 	}
-	public static Fluid createFluid(String name, Fluid fluid, Block fluidBlock, MapColor color) {
+	public static Fluid createFluid(Registry registry, String name, Fluid fluid, Block fluidBlock, MapColor color) {
 		Fluid f  = new Fluid(name, getStill(name), getFlowing(name))
 		        .setDensity(1500).setViscosity(3000);
 	    FluidRegistry.registerFluid(f);
 	    fluid = FluidRegistry.getFluid(f.getName());
 	    fluidBlock = new BaseFluidBlock(fluid, new MaterialLiquid(color), name);
-		GameRegistry.register(fluidBlock);
+		registry.PreRegisterBlock(fluidBlock);
 	    registerBucket(fluid);
 	    registerFluidBlockRendering(fluid, name);
 		return f;

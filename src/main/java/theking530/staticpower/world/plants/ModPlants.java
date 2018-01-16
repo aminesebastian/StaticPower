@@ -5,7 +5,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
-import theking530.staticpower.assists.RegisterHelper;
+import theking530.staticpower.Registry;
 
 public class ModPlants {
 
@@ -22,31 +22,31 @@ public class ModPlants {
 	public static Item LumumSeeds;
 	public static Item LumumCrop;
 	
-	public static void init() {		
+	public static void init(Registry registry) {		
 		DepletedCrop = new DepletedCrop("DepletedCrop");
-		RegisterHelper.registerItem(DepletedCrop);
+		registry.PreRegisterItem(DepletedCrop);
 		
 		StaticCropPlant = new StaticPlant("StaticCropPlant");
-		RegisterHelper.registerBlock(StaticCropPlant);	
+		registry.PreRegisterBlock(StaticCropPlant);	
 		StaticSeeds = new StaticSeeds(StaticCropPlant, Blocks.FARMLAND).setUnlocalizedName("StaticSeeds");
-		RegisterHelper.registerItem(StaticSeeds);	
+		registry.PreRegisterItem(StaticSeeds);	
 		MinecraftForge.addGrassSeed(new ItemStack(StaticSeeds), 20);
 		StaticCrop = new StaticCrop().setUnlocalizedName("StaticCrop");
-		RegisterHelper.registerItem(StaticCrop);	
+		registry.PreRegisterItem(StaticCrop);	
 			
 		EnergizedCropPlant = new EnergizedPlant("EnergizedCropPlant");
-		RegisterHelper.registerBlock(EnergizedCropPlant);	
+		registry.PreRegisterBlock(EnergizedCropPlant);	
 		EnergizedSeeds = new EnergizedSeeds(EnergizedCropPlant, Blocks.FARMLAND).setUnlocalizedName("EnergizedSeeds");
-		RegisterHelper.registerItem(EnergizedSeeds);			
+		registry.PreRegisterItem(EnergizedSeeds);			
 		EnergizedCrop = new EnergizedCrop().setUnlocalizedName("EnergizedCrop");
-		RegisterHelper.registerItem(EnergizedCrop);	
+		registry.PreRegisterItem(EnergizedCrop);	
 	
 		LumumCropPlant = new LumumPlant("LumumCropPlant");
-		RegisterHelper.registerBlock(LumumCropPlant);
+		registry.PreRegisterBlock(LumumCropPlant);
 		LumumSeeds = new LumumSeeds(LumumCropPlant, Blocks.FARMLAND).setUnlocalizedName("LumumSeeds");
-		RegisterHelper.registerItem(LumumSeeds);	
+		registry.PreRegisterItem(LumumSeeds);	
 		LumumCrop = new LumumCrop().setUnlocalizedName("LumumCrop");
-		RegisterHelper.registerItem(LumumCrop);		
+		registry.PreRegisterItem(LumumCrop);		
 		
 		//TestDoublePlant = new BaseDoublePlant("TestDoublePlant", DepletedCrop, DepletedCrop).setLightLevel(1.0F);
 		//-RegisterHelper.registerBlock(TestDoublePlant);	

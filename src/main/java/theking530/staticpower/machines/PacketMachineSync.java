@@ -1,7 +1,6 @@
 package theking530.staticpower.machines;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -45,7 +44,7 @@ public class PacketMachineSync implements IMessage{
     public static class Message implements IMessageHandler<PacketMachineSync, IMessage> {
     @Override
     public IMessage onMessage(PacketMachineSync message, MessageContext ctx) {
-	 	TileEntity tile = ctx.getServerHandler().playerEntity.getEntityWorld().getTileEntity(new BlockPos(message.X, message.Y, message.Z));
+	 	TileEntity tile = ctx.getServerHandler().player.getEntityWorld().getTileEntity(new BlockPos(message.X, message.Y, message.Z));
 		if(tile != null && tile instanceof BaseTileEntity) {
 			BaseTileEntity te = (BaseTileEntity)tile;					
 			te.readFromSyncNBT(message.TAG);

@@ -2,8 +2,8 @@ package theking530.staticpower.client.render.tileentitys;
 
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
@@ -15,7 +15,7 @@ import theking530.staticpower.client.model.ModelBlock;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityBattery;
 import theking530.staticpower.utils.SideModeList.Mode;
 
-public class TileEntityRenderBattery extends TileEntitySpecialRenderer {
+public class TileEntityRenderBattery extends TileEntitySpecialRenderer<TileEntityBattery> {
 
 	ResourceLocation top;
 	ResourceLocation topIn;
@@ -27,58 +27,53 @@ public class TileEntityRenderBattery extends TileEntitySpecialRenderer {
 	ResourceLocation sideIn;
 	ResourceLocation sideOut;
 	
-	ResourceLocation eBar = new ResourceLocation(Reference.MODID, "textures/blocks/BatteryEnergyBar.png");
+	ResourceLocation eBar = new ResourceLocation(Reference.MODID, "textures/blocks/battery_energy_bar.png");
 	
-	private Tier TIER;
-	
-	public TileEntityRenderBattery(Tier tier) {
-		TIER = tier;	
+	public TileEntityRenderBattery(Tier tier) {	
 		switch(tier) {
-    	case STATIC:top = new ResourceLocation(Reference.MODID, "textures/blocks/StaticBatteryTop.png");
-    				topIn = new ResourceLocation(Reference.MODID, "textures/blocks/StaticBatteryTopIn.png");
-    				topOut = new ResourceLocation(Reference.MODID, "textures/blocks/StaticBatteryTopOut.png");
-    				topDis = new ResourceLocation(Reference.MODID, "textures/blocks/StaticBatteryTopDis.png");
-    				side = new ResourceLocation(Reference.MODID, "textures/blocks/StaticBatterySides.png");
-    				sideDis = new ResourceLocation(Reference.MODID, "textures/blocks/StaticBatterySidesDis.png");
-    				sideIn = new ResourceLocation(Reference.MODID, "textures/blocks/StaticBatterySidesIn.png");
-    				sideOut = new ResourceLocation(Reference.MODID, "textures/blocks/StaticBatterySidesOut.png");	
+    	case STATIC:top = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_top.png");
+    				topIn = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_top_in.png");
+    				topOut = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_top_out.png");
+    				topDis = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_top_dis.png");
+    				side = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_sides.png");
+    				sideDis = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_sides_dis.png");
+    				sideIn = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_sides_in.png");
+    				sideOut = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_sides_out.png");	
     		break;
-    	case ENERGIZED:top = new ResourceLocation(Reference.MODID, "textures/blocks/EnergizedBatteryTop.png");
-					topIn = new ResourceLocation(Reference.MODID, "textures/blocks/EnergizedBatteryTopIn.png");
-					topOut = new ResourceLocation(Reference.MODID, "textures/blocks/EnergizedBatteryTopOut.png");
-					topDis = new ResourceLocation(Reference.MODID, "textures/blocks/EnergizedBatteryTopDis.png");
-					side = new ResourceLocation(Reference.MODID, "textures/blocks/EnergizedBatterySides.png");
-					sideDis = new ResourceLocation(Reference.MODID, "textures/blocks/EnergizedBatterySidesDis.png");
-					sideIn = new ResourceLocation(Reference.MODID, "textures/blocks/EnergizedBatterySidesIn.png");
-					sideOut = new ResourceLocation(Reference.MODID, "textures/blocks/EnergizedBatterySidesOut.png");	
+    	case ENERGIZED:top = new ResourceLocation(Reference.MODID, "textures/blocks/energized_battery_top.png");
+					topIn = new ResourceLocation(Reference.MODID, "textures/blocks/energized_battery_top_in.png");
+					topOut = new ResourceLocation(Reference.MODID, "textures/blocks/energized_battery_top_out.png");
+					topDis = new ResourceLocation(Reference.MODID, "textures/blocks/energized_battery_top_dis.png");
+					side = new ResourceLocation(Reference.MODID, "textures/blocks/energized_battery_sides.png");
+					sideDis = new ResourceLocation(Reference.MODID, "textures/blocks/energized_battery_sides_dis.png");
+					sideIn = new ResourceLocation(Reference.MODID, "textures/blocks/energized_battery_sides_in.png");
+					sideOut = new ResourceLocation(Reference.MODID, "textures/blocks/energized_battery_sides_out.png");	
 			break;
-    	case LUMUM:top = new ResourceLocation(Reference.MODID, "textures/blocks/LumumBatteryTop.png");
-					topIn = new ResourceLocation(Reference.MODID, "textures/blocks/LumumBatteryTopIn.png");
-					topOut = new ResourceLocation(Reference.MODID, "textures/blocks/LumumBatteryTopOut.png");
-					topDis = new ResourceLocation(Reference.MODID, "textures/blocks/LumumBatteryTopDis.png");
-					side = new ResourceLocation(Reference.MODID, "textures/blocks/LumumBatterySides.png");
-					sideDis = new ResourceLocation(Reference.MODID, "textures/blocks/LumumBatterySidesDis.png");
-					sideIn = new ResourceLocation(Reference.MODID, "textures/blocks/LumumBatterySidesIn.png");
-					sideOut = new ResourceLocation(Reference.MODID, "textures/blocks/LumumBatterySidesOut.png");	
+    	case LUMUM:top = new ResourceLocation(Reference.MODID, "textures/blocks/lumum_battery_top.png");
+					topIn = new ResourceLocation(Reference.MODID, "textures/blocks/lumum_battery_top_in.png");
+					topOut = new ResourceLocation(Reference.MODID, "textures/blocks/lumum_battery_top_out.png");
+					topDis = new ResourceLocation(Reference.MODID, "textures/blocks/lumum_battery_top_dis.png");
+					side = new ResourceLocation(Reference.MODID, "textures/blocks/lumum_battery_sides.png");
+					sideDis = new ResourceLocation(Reference.MODID, "textures/blocks/lumum_battery_sides_dis.png");
+					sideIn = new ResourceLocation(Reference.MODID, "textures/blocks/lumum_battery_sides_in.png");
+					sideOut = new ResourceLocation(Reference.MODID, "textures/blocks/lumum_battery_sides_out.png");	
 			break;
-    	default:top = new ResourceLocation(Reference.MODID, "textures/blocks/StaticBatteryTop.png");
-				topIn = new ResourceLocation(Reference.MODID, "textures/blocks/StaticBatteryTopIn.png");
-				topOut = new ResourceLocation(Reference.MODID, "textures/blocks/StaticBatteryTopOut.png");
-				topDis = new ResourceLocation(Reference.MODID, "textures/blocks/StaticBatteryTopDis.png");
-				side = new ResourceLocation(Reference.MODID, "textures/blocks/StaticBatterySides.png");
-				sideDis = new ResourceLocation(Reference.MODID, "textures/blocks/StaticBatterySidesDis.png");
-				sideIn = new ResourceLocation(Reference.MODID, "textures/blocks/StaticBatterySidesIn.png");
-				sideOut = new ResourceLocation(Reference.MODID, "textures/blocks/StaticBatterySidesOut.png");	
+    	default:top = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_top.png");
+				topIn = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_top_in.png");
+				topOut = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_top_out.png");
+				topDis = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_top_dis.png");
+				side = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_sides.png");
+				sideDis = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_sides_dis.png");
+				sideIn = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_sides_in.png");
+				sideOut = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_sides_out.png");	
 				break;
     	}
 	}
 	
 	@Override
-	public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float f, int dest) {
-		TileEntityBattery battery = (TileEntityBattery)tileentity;			
-		EnumFacing facing = EnumFacing.getHorizontal(battery.getBlockMetadata());
-		
-		int i = tileentity.getBlockMetadata();	
+	public void render(TileEntityBattery tileentity, double x, double y, double z, float f, int dest, float alpha) {	
+		EnumFacing facing = tileentity.getFacingDirection();
+			
 		GL11.glPushMatrix();
 		GL11.glTranslated(x, y, z);
 		if(facing == EnumFacing.WEST) {
@@ -147,7 +142,7 @@ public class TileEntityRenderBattery extends TileEntitySpecialRenderer {
 		GL11.glPushMatrix();
 			
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer vertex = tessellator.getBuffer();
+		BufferBuilder vertex = tessellator.getBuffer();
 		vertex.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
 		//Back

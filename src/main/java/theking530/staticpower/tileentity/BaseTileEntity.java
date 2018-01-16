@@ -6,6 +6,7 @@ import java.util.Random;
 
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
@@ -45,31 +46,36 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 	public int OUT_TIMER = 0;
 	public int OUT_TIME = 2;
 	public int UPDATE_TIMER = 0;
-	public int UPDATE_TIME = 200;
+	public int UPDATE_TIME = 10;
 	public boolean PLACED = false;
 	
 	public boolean REQUIRES_UPDATE = false;
 	public ArrayList<IMachineComponentInterface> COMPONENTS;
 	public boolean WRENCHED = false;
 	
+	public boolean DISABLE_FACE_INTERACTION;
+	
 	public BaseTileEntity() {
 
 	}
-	public void initializeBasicTileEntity(int internalSlots, int inputSlots, int outputSlots) {
+	public void initializeBasicTileEntity(int internalSlots, int inputSlots, int outputSlots, boolean disableFaceInteraction) {
 		SLOTS_INPUT = new ItemStackHandler(inputSlots);
 		SLOTS_OUTPUT = new ItemStackHandler(outputSlots);
 		SLOTS_INTERNAL = new ItemStackHandler(internalSlots);
 		SLOTS_UPGRADES = new ItemStackHandler(3);
 		COMPONENTS = new ArrayList<IMachineComponentInterface>();
+		DISABLE_FACE_INTERACTION = disableFaceInteraction;
 	}
-
+	public void initializeBasicTileEntity(int internalSlots, int inputSlots, int outputSlots) {
+		initializeBasicTileEntity(internalSlots, inputSlots, outputSlots, true);
+	}
 	@Override
 	public void update() {
 		if(!PLACED) {
 			onPlaced();
 			PLACED = true;
 		}
-		int redstoneSignal = worldObj.getRedstonePower(pos, EnumFacing.NORTH);
+		int redstoneSignal = getWorld().getRedstonePower(pos, EnumFacing.NORTH);
 		if(REDSTONE_MODE == 0) {
 			if(SLOTS_OUTPUT != null && SLOTS_OUTPUT.getSlots() > 0) {
 				outputFunction();	
@@ -121,7 +127,7 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 		if(slot < SLOTS_INPUT.getSlots()) {
 			return SLOTS_INPUT.getStackInSlot(slot);	
 		}else{
-			return null;
+			return ItemStack.EMPTY;
 		}
 	}
 	public ItemStack getOutputStack(int slot) {
@@ -220,7 +226,7 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 	}
     
 	public boolean isUseableByPlayer(EntityPlayer player) {
-		if (worldObj.getTileEntity(pos) != this) {
+		if (getWorld().getTileEntity(pos) != this) {
 			return false;
 		}else{
 			return player.getDistanceSq((double)pos.getX() + 0.25D, (double)pos.getY() + 0.25D, (double)pos.getZ() + 0.25D) <= 22;
@@ -296,12 +302,13 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 		return null;	
     }
 	public boolean canSlotAcceptItemstack(ItemStack item, ItemStack slot) {
-		if(slot == null) {
+		if(slot == ItemStack.EMPTY) {
 			return true;
 		}
-		if(item != null) {
+
+		if(item != ItemStack.EMPTY) {
 			if(slot.getItem() == item.getItem() && (!item.getHasSubtypes() || item.getItemDamage() == slot.getItemDamage()) && ItemStack.areItemStackTagsEqual(item, slot)) {
-				int i = slot.stackSize + item.stackSize;			
+				int i = slot.getCount() + item.getCount();			
 				if(i <= item.getMaxStackSize()) {
 					return true;
 				}else{
@@ -312,7 +319,7 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 		return false;
 	}
 	public boolean canSlotAcceptItemstackIgnoringCount(ItemStack item, ItemStack slot) {
-		if(slot == null) {
+		if(slot == ItemStack.EMPTY) {
 			return true;
 		}
 		if(item != null) {
@@ -324,9 +331,9 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 	}
 	/** From Slot to Slot */
 	public void moveItem(ItemStackHandler fromInv, int fromSlot, ItemStackHandler toInv, int toSlot) {
-		if(fromInv.getStackInSlot(fromSlot) != null) {
+		if(fromInv.getStackInSlot(fromSlot) != ItemStack.EMPTY) {
 			ItemStack extractedItem = fromInv.extractItem(fromSlot, 1, false);
-			if(extractedItem != null) {
+			if(extractedItem != ItemStack.EMPTY) {
 				toInv.insertItem(toSlot, extractedItem, false);
 			}
 		}
@@ -336,7 +343,7 @@ public class BaseTileEntity extends TileEntity implements ITickable {
     	return RedstoneModeList.RedstoneMode.getModeFromInt(REDSTONE_MODE);
     } 
     public Item getItem(ItemStack itemStack) {
-    	if(itemStack != null) {
+    	if(itemStack != ItemStack.EMPTY) {
     		return itemStack.getItem();
     	}
 		return null;
@@ -346,10 +353,18 @@ public class BaseTileEntity extends TileEntity implements ITickable {
     }
 
     public Mode getModeFromFacing(EnumFacing facing) {
-    	if(SideUtils.getBlockHorizontal(worldObj.getBlockState(pos)) != null) {
-    		return SIDE_MODES[SideUtils.getBlockSide(facing.getOpposite(), SideUtils.getBlockHorizontal(worldObj.getBlockState(pos))).ordinal()];	
+    	if(SideUtils.getBlockHorizontal(getWorld().getBlockState(pos)) != null) {
+    		return SIDE_MODES[SideUtils.getBlockSide(facing.getOpposite(), SideUtils.getBlockHorizontal(getWorld().getBlockState(pos))).ordinal()];	
     	}
     	return Mode.Disabled;
+    }
+    
+    public EnumFacing getFacingDirection() {
+    	if(getWorld().getBlockState(pos).getProperties().containsKey(BlockHorizontal.FACING)) {
+        	return getWorld().getBlockState(getPos()).getValue(BlockHorizontal.FACING);
+    	}else{
+        	return EnumFacing.UP;
+    	}
     }
     
     public boolean insertItem(ItemStack stack, ISidedInventory inv, EnumFacing side) {
@@ -362,14 +377,14 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 		return false;
     }
     public boolean insertItem(ItemStack stack, IInventory inv, int slot) {
-		if(inv.getStackInSlot(slot) == null) {
+		if(inv.getStackInSlot(slot) == ItemStack.EMPTY) {
 			inv.setInventorySlotContents(slot, stack);
 			return true;
 		}else{
-			if(inv.getStackInSlot(slot).isItemEqual(stack) && inv.getStackInSlot(slot).areItemStackTagsEqual(inv.getStackInSlot(slot), stack)) {
-				int stackSize = inv.getStackInSlot(slot).stackSize + stack.stackSize;
+			if(inv.getStackInSlot(slot).isItemEqual(stack) && ItemStack.areItemStacksEqual(inv.getStackInSlot(slot), stack)) {
+				int stackSize = inv.getStackInSlot(slot).getCount() + stack.getCount();
 				if(stackSize <= 64) {
-					inv.getStackInSlot(slot).stackSize = stackSize;
+					inv.getStackInSlot(slot).setCount(stackSize);
 					return true;
 				}		
 			}
@@ -379,18 +394,17 @@ public class BaseTileEntity extends TileEntity implements ITickable {
     public void outputItem(int fromSlot, theking530.staticpower.utils.SideUtils.BlockSide blockSide, int startSlot, boolean backwards) {
 		if (getSideModeFromBlockSide(blockSide) == SideModeList.Mode.Output || getSideModeFromBlockSide(blockSide) == SideModeList.Mode.Disabled) {
 			ItemStack stack = SLOTS_OUTPUT.getStackInSlot(fromSlot);
-			if (stack == null) {
+			if (stack == ItemStack.EMPTY) {
 				return;
 			} else {
-				EnumFacing facing = worldObj.getBlockState(pos).getValue(BlockHorizontal.FACING);
-				TileEntity te = worldObj.getTileEntity(pos.offset(SideUtils.getEnumFacingFromSide(blockSide, facing)));
+				EnumFacing facing = getWorld().getBlockState(pos).getValue(BlockHorizontal.FACING);
+				TileEntity te = getWorld().getTileEntity(pos.offset(SideUtils.getEnumFacingFromSide(blockSide, facing)));
 				if (te == null) {
 					return;
 				} else if (te instanceof IInventory) {
 					IInventory inv = (IInventory) te;
 					int numSlots = inv.getSizeInventory();
-					if (!worldObj.isRemote) {
-						boolean flag1 = false;
+					if (!getWorld().isRemote) {
 						int k = startSlot;
 						if (backwards) {
 							k = numSlots - 1;
@@ -399,26 +413,24 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 						ItemStack itemstack1;
 
 						if (stack.isStackable() && inv.isItemValidForSlot(k, stack)) {
-							while (stack.stackSize > 0 && (!backwards && k < numSlots || backwards && k >= startSlot)) {
+							while (stack.getCount() > 0 && (!backwards && k < numSlots || backwards && k >= startSlot)) {
 								itemstack1 = inv.getStackInSlot(k);
 
-								if (itemstack1 != null && itemstack1.getItem() == stack.getItem() && (!stack.getHasSubtypes() || stack.getItemDamage() == itemstack1.getItemDamage()) && ItemStack.areItemStackTagsEqual(stack, itemstack1)) {
-									int l = itemstack1.stackSize + stack.stackSize;
+								if (itemstack1 != ItemStack.EMPTY && itemstack1.getItem() == stack.getItem() && (!stack.getHasSubtypes() || stack.getItemDamage() == itemstack1.getItemDamage()) && ItemStack.areItemStackTagsEqual(stack, itemstack1)) {
+									int l = itemstack1.getCount() + stack.getCount();
 
 									if (l <= stack.getMaxStackSize()) {
-										stack.stackSize = 0;
-										if (SLOTS_OUTPUT.getStackInSlot(fromSlot).stackSize <= 0) {
-											SLOTS_OUTPUT.setStackInSlot(fromSlot, null);
+										stack.setCount(0);
+										if (SLOTS_OUTPUT.getStackInSlot(fromSlot).getCount() <= 0) {
+											SLOTS_OUTPUT.setStackInSlot(fromSlot, ItemStack.EMPTY);
 										}
-										itemstack1.stackSize = l;
-										flag1 = true;
-									} else if (itemstack1.stackSize < stack.getMaxStackSize()) {
-										stack.stackSize -= stack.getMaxStackSize() - itemstack1.stackSize;
-										if (SLOTS_OUTPUT.getStackInSlot(fromSlot).stackSize <= 0) {
-											SLOTS_OUTPUT.setStackInSlot(fromSlot, null);
+										itemstack1.setCount(l);
+									} else if (itemstack1.getCount() < stack.getMaxStackSize()) {
+										stack.setCount(stack.getCount() - stack.getMaxStackSize() - itemstack1.getCount());
+										if (SLOTS_OUTPUT.getStackInSlot(fromSlot).getCount() <= 0) {
+											SLOTS_OUTPUT.setStackInSlot(fromSlot, ItemStack.EMPTY);
 										}
-										itemstack1.stackSize = stack.getMaxStackSize();
-										flag1 = true;
+										itemstack1.setCount(stack.getMaxStackSize());
 									}
 								}
 
@@ -430,7 +442,7 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 							}
 						}
 
-						if (stack.stackSize > 0) {
+						if (stack.getCount() > 0) {
 							if (backwards) {
 								k = numSlots - 1;
 							} else {
@@ -440,10 +452,9 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 							while (!backwards && k < numSlots || backwards && k >= startSlot) {
 								itemstack1 = inv.getStackInSlot(k);
 
-								if (itemstack1 == null && inv.isItemValidForSlot(k, stack)) {
+								if (itemstack1 == ItemStack.EMPTY && inv.isItemValidForSlot(k, stack)) {
 									inv.setInventorySlotContents(k, stack.copy());
-									SLOTS_OUTPUT.setStackInSlot(fromSlot, null);
-									flag1 = true;
+									SLOTS_OUTPUT.setStackInSlot(fromSlot, ItemStack.EMPTY);
 									break;
 								}
 
@@ -463,13 +474,13 @@ public class BaseTileEntity extends TileEntity implements ITickable {
     }
 	public void inputItem(int inputSlot, BlockSide blockSide, int startSlot) {
 		if (getSideModeFromBlockSide(blockSide) == SideModeList.Mode.Input || getSideModeFromBlockSide(blockSide) == SideModeList.Mode.Disabled) {
-			EnumFacing facing = worldObj.getBlockState(pos).getValue(BlockHorizontal.FACING);
-			TileEntity te = worldObj.getTileEntity(pos.offset(SideUtils.getEnumFacingFromSide(blockSide, facing)));
+			EnumFacing facing = getWorld().getBlockState(pos).getValue(BlockHorizontal.FACING);
+			TileEntity te = getWorld().getTileEntity(pos.offset(SideUtils.getEnumFacingFromSide(blockSide, facing)));
 			if (te == null) {
 				return;
 			} else if (te instanceof IInventory) {
 				IInventory inv = (IInventory) te;
-				if (!worldObj.isRemote) {
+				if (!getWorld().isRemote) {
 					for(int currentTESlot = startSlot; currentTESlot < inv.getSizeInventory(); currentTESlot++) {
 						ItemStack stack = inv.getStackInSlot(currentTESlot);
 						if(stack != null) {
@@ -479,13 +490,13 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 										SLOTS_INPUT.setStackInSlot(inputSlot, stack.copy());
 										inv.setInventorySlotContents(currentTESlot, null);
 									}else{
-										int i = SLOTS_INPUT.getStackInSlot(inputSlot).stackSize + stack.stackSize;
+										int i = SLOTS_INPUT.getStackInSlot(inputSlot).getCount() + stack.getCount();
 										
 										if(i > SLOTS_INPUT.getStackInSlot(inputSlot).getMaxStackSize()) {
-											stack.stackSize -= stack.getMaxStackSize() - SLOTS_INPUT.getStackInSlot(inputSlot).stackSize;
-											SLOTS_INPUT.getStackInSlot(inputSlot).stackSize = stack.getMaxStackSize();
+											stack.setCount(stack.getCount() - stack.getMaxStackSize() - SLOTS_INPUT.getStackInSlot(inputSlot).getCount());
+											SLOTS_INPUT.getStackInSlot(inputSlot).setCount(stack.getMaxStackSize());
 										}else if(i <= SLOTS_INPUT.getStackInSlot(inputSlot).getMaxStackSize()){
-											SLOTS_INPUT.getStackInSlot(inputSlot).stackSize = i;
+											SLOTS_INPUT.getStackInSlot(inputSlot).setCount(i);
 											inv.setInventorySlotContents(currentTESlot, null);				
 										}	
 									}									
@@ -498,7 +509,7 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 		}					
 	}	
 	public void inputFunction() {
-		if(SLOTS_INPUT != null && SLOTS_INPUT.getSlots() > 0) {
+		if(SLOTS_INPUT != null && SLOTS_INPUT.getSlots() > 0 && getWorld().getBlockState(pos) != null && getWorld().getBlockState(pos) != Blocks.AIR) {
 			Random randomGenerator = new Random();
 			int slot = randomGenerator.nextInt(SLOTS_INPUT.getSlots());
 			int rand = randomGenerator.nextInt(5);
@@ -528,7 +539,7 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 		if(SLOTS_OUTPUT != null && SLOTS_OUTPUT.getSlots() > 0) {
 			Random randomGenerator = new Random();
 			int slot = randomGenerator.nextInt(SLOTS_OUTPUT.getSlots());
-			if(SLOTS_OUTPUT.getStackInSlot(slot) != null) {
+			if(SLOTS_OUTPUT.getStackInSlot(slot) != ItemStack.EMPTY) {
 				OUT_TIMER++;
 				if(OUT_TIMER>0) {
 					int rand = randomGenerator.nextInt(5);
@@ -567,7 +578,7 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 		}	
 	}
 	public boolean canInventoryAcceptStack(ItemStack stack, IInventory inv) {
-		if (stack == null) {
+		if (stack == ItemStack.EMPTY) {
 			return false;
 		}else{
 			for(int i=0; i<inv.getSizeInventory(); i++) {
@@ -583,27 +594,28 @@ public class BaseTileEntity extends TileEntity implements ITickable {
     	if(SIDE_MODES[facing.ordinal()] == Mode.Disabled) {
     		return false;
     	}
-    	if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+    	if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && SideUtils.getBlockSide(facing, getFacingDirection()) != BlockSide.FRONT) {
     		return true;
     	}
         return super.hasCapability(capability, facing);
     }
-    public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.util.EnumFacing facing){
-       	if(SIDE_MODES[facing.ordinal()] == Mode.Disabled) {
+    @SuppressWarnings("unchecked")
+	public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.util.EnumFacing facing){
+       	if(SIDE_MODES[facing.ordinal()] == Mode.Disabled || SideUtils.getBlockSide(facing, getFacingDirection()) == BlockSide.FRONT) {
     		return null;
     	}
     	if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-    		if(facing == EnumFacing.UP) {
-    			return (T) SLOTS_INPUT;
-    		}else{
+    		if(SIDE_MODES[facing.ordinal()] == Mode.Output) {
     			return (T) SLOTS_OUTPUT;
+    		}else{
+    			return (T) SLOTS_INPUT;
     		}
     	}
     	return super.getCapability(capability, facing);
     }
     
 	public void incrementSide(int side){
-		if(side == 3) {
+		if(side == 3 && DISABLE_FACE_INTERACTION) {
 			SIDE_MODES[3] = SideModeList.Mode.Disabled;
 		}
 		if(SIDE_MODES[side].ordinal() >= 3) {
@@ -611,14 +623,18 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 		}else{
 			SIDE_MODES[side] = SideModeList.Mode.values()[SIDE_MODES[side].ordinal()+1];
 		}
+		onSidesConfigUpdate();
 	}
 	public void resetSides(){
 		for(int i=0; i<6; i++) {
 			SIDE_MODES[i] = SideModeList.Mode.values()[0];
 		}
+		onSidesConfigUpdate();
 	}
 	public void updateBlock() {
-		worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2);
+		getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 2);
 	}
-
+	public void onSidesConfigUpdate() {
+		
+	}
 }

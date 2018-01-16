@@ -1,7 +1,5 @@
 package theking530.staticpower.potioneffects;
 
-import javax.annotation.Nullable;
-
 public class ModPotions {
 	
 	public static BasePotion GHOST;

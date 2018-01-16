@@ -10,15 +10,15 @@ import theking530.staticpower.tileentity.BaseTileEntity;
 import theking530.staticpower.utils.SideModeList;
   
 public class PacketSideConfigTab implements IMessage{
-    private static int SIDE0;
-    private static int SIDE1;
-    private static int SIDE2;
-    private static int SIDE3;
-    private static int SIDE4;
-    private static int SIDE5;
-    private static int x;
-    private static int y;
-    private static int z;
+    private int SIDE0;
+    private int SIDE1;
+    private int SIDE2;
+    private int SIDE3;
+    private int SIDE4;
+    private int SIDE5;
+    private int x;
+    private int y;
+    private int z;
 
     public PacketSideConfigTab() {}
     
@@ -63,7 +63,7 @@ public class PacketSideConfigTab implements IMessage{
     public static class Message implements IMessageHandler<PacketSideConfigTab, IMessage> {
     @Override
     public IMessage onMessage(PacketSideConfigTab message, MessageContext ctx) {
-    		TileEntity te = ctx.getServerHandler().playerEntity.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
+    		TileEntity te = ctx.getServerHandler().player.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
     		if(te != null && te instanceof BaseTileEntity) {
     			BaseTileEntity entity = (BaseTileEntity)te;
     			entity.SIDE_MODES[0] = SideModeList.Mode.values()[message.SIDE0];

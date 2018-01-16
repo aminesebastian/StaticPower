@@ -16,7 +16,6 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.client.CommonProxy;
@@ -68,6 +67,7 @@ import theking530.staticpower.potioneffects.ModPotions;
 import theking530.staticpower.tileentity.chest.energizedchest.TileEntityEnergizedChest;
 import theking530.staticpower.tileentity.chest.lumumchest.TileEntityLumumChest;
 import theking530.staticpower.tileentity.chest.staticchest.TileEntityStaticChest;
+import theking530.staticpower.tileentity.chunkloader.TileEntityChunkLoader;
 import theking530.staticpower.tileentity.gates.adder.TileEntityAdder;
 import theking530.staticpower.tileentity.gates.and.TileEntityAndGate;
 import theking530.staticpower.tileentity.gates.led.TileEntityLED;
@@ -97,8 +97,9 @@ public class StaticPower {
     public static CommonProxy proxy;
     
     public static CreativeTabs StaticPower = new CreativeTabStandard(CreativeTabs.getNextID(), "StaticPower");  
-    public static Configuration config;
-    public static org.apache.logging.log4j.Logger logger;
+    public static Configuration CONFIG;
+    public static org.apache.logging.log4j.Logger LOGGER;
+    public static Registry REGISTRY;
     
     @Mod.Instance(Reference.MODID)
     public static StaticPower instance;
@@ -109,41 +110,39 @@ public class StaticPower {
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent preEvent){
-		logger = preEvent.getModLog();
-		config = new Configuration(preEvent.getSuggestedConfigurationFile());
+		LOGGER = preEvent.getModLog();
+		REGISTRY = new Registry();
+		REGISTRY.preInit(preEvent);
+		CONFIG = new Configuration(preEvent.getSuggestedConfigurationFile());
 		StaticPowerConfig.updateConfig();
 	
 		PacketHandler.initPackets();
-		ModFluids.init();
-		ModItems.init();
+		ModFluids.init(REGISTRY);
+		ModItems.init(REGISTRY);
 		ModMaterials.init();
-		ModBlocks.init();
-		ModTools.init();
-		ModPlants.init();
-		ModArmor.init();
+		ModBlocks.init(REGISTRY);
+		ModTools.init(REGISTRY);
+		ModPlants.init(REGISTRY);
+		ModArmor.init(REGISTRY);
 		ModPotions.init();
-		
-		if(preEvent.getSide() == Side.CLIENT) {
-		    ModFluids.initBlockRendering();
-		    ModFluids.initItemRendering();
-		}
 		
 	    OreGenerationHandler.intialize();
 	    CommonProxy.preInit();
-	    
-	    if (Loader.instance().isModLoaded("tconstruct")) {
+	        
+	    Loader.instance();
+		if (Loader.isModLoaded("tconstruct")) {
 	        try {
         		TinkersIMC.initialize();
-        		logger.log(Level.INFO, "Loaded Tinkers' Construct addon");
+        		LOGGER.log(Level.INFO, "Loaded Tinkers' Construct addon");
 	        }catch (Exception e) {
-	        	logger.log(Level.WARN, "Could not load Tinkers' Construct addon");
+	        	LOGGER.log(Level.WARN, "Could not load Tinkers' Construct addon");
                 e.printStackTrace(System.err);
             }
         }
 	    
 	    
 		GameRegistry.registerTileEntity(BaseConduitTileEntity.class, "BaseConduitTileEntity");
-		GameRegistry.registerTileEntity(BaseConduitTileEntity.class, "BaseChunkLoader");
+		GameRegistry.registerTileEntity(TileEntityChunkLoader.class, "BaseChunkLoader");
 		
 		GameRegistry.registerTileEntity(TileEntitySolderingTable.class, "SolderingTable");	
 		GameRegistry.registerTileEntity(TileEntityFluidInfuser.class, "FluidInfuser");

@@ -2,16 +2,9 @@ package theking530.staticpower.client.render.conduit;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import theking530.staticpower.assists.Reference;
+import theking530.staticpower.conduits.TileEntityBaseConduit;
 import theking530.staticpower.conduits.itemconduit.TileEntityItemConduit;
 
 public class TileEntityRenderItemConduit extends TileEntityRenderBaseConduit {
@@ -26,7 +19,7 @@ public class TileEntityRenderItemConduit extends TileEntityRenderBaseConduit {
 	private float itemPosition = 0.0f;
 
 	@Override
-	public void renderTileEntityAt(TileEntity tileentity, double translationX, double translationY, double translationZ, float f, int dest) {
+	    public void render(TileEntityBaseConduit tileentity, double translationX, double translationY, double translationZ, float f, int dest, float alpha) {
 		TileEntityItemConduit conduit = (TileEntityItemConduit)tileentity;	
 		
 		GL11.glTranslated(translationX, translationY, translationZ);
@@ -52,14 +45,14 @@ public class TileEntityRenderItemConduit extends TileEntityRenderBaseConduit {
 			for(int i = 0; i < conduit.connections.length; i++) {
 				if(conduit.connections[i] != null) {
 					this.bindTexture(texture);
-					drawCore(conduit.connections[i]);
+					drawCore(conduit.connections[i], tileentity);
 				}
 			}
 		} else {
 			for(int i = 0; i < conduit.connections.length; i++) 
 				if(conduit.connections[i] != null) {	
 					this.bindTexture(texture);
-					drawStraight(conduit.connections[i]);
+					drawStraight(conduit.connections[i], tileentity);
 					break;
 				}
 			}
@@ -72,7 +65,7 @@ public class TileEntityRenderItemConduit extends TileEntityRenderBaseConduit {
 		EntityItem entItem = null;
 		if(conduit.slot != null && conduit.slot.ITEM != null) {
 			ItemStack tempStack = conduit.slot.ITEM.copy();
-			tempStack.stackSize = 1;
+			tempStack.getCount() = 1;
 			entItem = new EntityItem(conduit.getWorld(), x, y, z,  tempStack);
 		}
 		if(entItem != null && conduit.slot.hasValidInventory()) {

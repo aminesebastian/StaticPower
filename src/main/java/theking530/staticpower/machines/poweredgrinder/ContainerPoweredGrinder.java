@@ -3,11 +3,8 @@ package theking530.staticpower.machines.poweredgrinder;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.SlotItemHandler;
 import theking530.staticpower.handlers.crafting.registries.GrinderRecipeRegistry;
 
@@ -28,6 +25,7 @@ public class ContainerPoweredGrinder extends Container {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return GrinderRecipeRegistry.Grinding().getgrindingResult(itemStack) != null;
+		          
 		        }
 		});
 		
@@ -82,7 +80,7 @@ public class ContainerPoweredGrinder extends Container {
 	
 	//Shift Click Functionality
 	public ItemStack transferStackInSlot(EntityPlayer player, int invSlot) {
-		  ItemStack itemstack = null;
+		  ItemStack itemstack = ItemStack.EMPTY;
 	        Slot slot = (Slot)this.inventorySlots.get(invSlot);
 
 	        if (slot != null && slot.getHasStack()) {
@@ -91,33 +89,33 @@ public class ContainerPoweredGrinder extends Container {
 
 	            if (invSlot == 0 || invSlot == 1 ||  invSlot == 2 || invSlot == 3) {
 	                if (!this.mergeItemStack(itemstack1, 8, 44, true)) {
-	                    return null;
+	                    return ItemStack.EMPTY;
 	                }
 	                slot.onSlotChange(itemstack1, itemstack);
 	            }else if (invSlot != 0 && invSlot != 1 && invSlot != 2 && invSlot != 3){
 	            	if (GrinderRecipeRegistry.Grinding().getgrindingResult(itemstack1) != null){
 	                    if (!this.mergeItemStack(itemstack1, 0, 1, false)){
-	                        return null;
+	                        return ItemStack.EMPTY;
 	                    }
 	                }else if (invSlot >= 8 && invSlot < 35) {
 	                    if (!this.mergeItemStack(itemstack1, 35, 44, false)) {
-	                        return null;
+	                        return ItemStack.EMPTY;
 	                    }
 	                }else if (invSlot >= 35 && invSlot < 44 && !this.mergeItemStack(itemstack1, 8, 35, false))  {
 	                    return null;
 	                }
 	            }else if (!this.mergeItemStack(itemstack1, 8, 44, false)) {
-	                return null;
+	                return ItemStack.EMPTY;
 	            }
-	            if (itemstack1.stackSize == 0){
-	                slot.putStack((ItemStack)null);
+	            if (itemstack1.getCount() == 0){
+	                slot.putStack(ItemStack.EMPTY);
 	            }else {
 	                slot.onSlotChanged();
 	            }
-	            if (itemstack1.stackSize == itemstack.stackSize){
-	                return null;
+	            if (itemstack1.getCount() == itemstack.getCount()){
+	                return ItemStack.EMPTY;
 	            }
-	            slot.onPickupFromSlot(player, itemstack1);
+	            slot.onTake(player, itemstack1);
 	        }
 	        return itemstack;
 	    }

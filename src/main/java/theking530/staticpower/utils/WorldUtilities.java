@@ -72,7 +72,7 @@ public class WorldUtilities {
         float f1 = RANDOM.nextFloat() * 0.8F + 0.1F;
         float f2 = RANDOM.nextFloat() * 0.8F + 0.1F;
 
-        while (stack.stackSize > 0) {
+        while (stack.getCount() > 0) {
             int i = RANDOM.nextInt(21) + 10;
 
             EntityItem entityitem = new EntityItem(worldIn, x + (double)f, y + (double)f1, z + (double)f2, stack.splitStack(i));
@@ -80,7 +80,7 @@ public class WorldUtilities {
             entityitem.motionX = RANDOM.nextGaussian() * 0.05000000074505806D;
             entityitem.motionY = RANDOM.nextGaussian() * 0.05000000074505806D + 0.20000000298023224D;
             entityitem.motionZ = RANDOM.nextGaussian() * 0.05000000074505806D;
-            worldIn.spawnEntityInWorld(entityitem);
+            worldIn.spawnEntity(entityitem);
         }
     }
 }

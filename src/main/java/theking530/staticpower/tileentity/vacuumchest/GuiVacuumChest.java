@@ -9,9 +9,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.util.ResourceLocation;
-import theking530.staticpower.assists.Reference;
-import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.client.gui.widgets.GuiDrawItem;
 import theking530.staticpower.client.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
@@ -38,9 +35,9 @@ public class GuiVacuumChest extends GuiContainer{
 	public void updateScreen() {
 		int j = (width - xSize) / 2;
 		int k = (height - ySize) / 2;
-		SIDE_TAB.updateTab(width, height, xSize, ySize, fontRendererObj, V_CHEST);
-		REDSTONE_TAB.updateTab(width, height, xSize, ySize, fontRendererObj, V_CHEST);
-		INFO_TAB.updateTab(width, height, xSize, ySize, fontRendererObj, V_CHEST);
+		SIDE_TAB.updateTab(width, height, xSize, ySize, fontRenderer, V_CHEST);
+		REDSTONE_TAB.updateTab(width, height, xSize, ySize, fontRenderer, V_CHEST);
+		INFO_TAB.updateTab(width, height, xSize, ySize, fontRenderer, V_CHEST);
 		if(INFO_TAB.GROWTH_STATE == 1){
 			REDSTONE_TAB.RED_TAB.GROWTH_STATE = 2;
 			SIDE_TAB.BLUE_TAB.GROWTH_STATE = 2;
@@ -56,7 +53,7 @@ public class GuiVacuumChest extends GuiContainer{
 	}
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = I18n.format(this.V_CHEST.getName());
-		this.fontRendererObj.drawString(name, this.xSize - 169, 6, 4210752 );
+		this.fontRenderer.drawString(name, this.xSize - 169, 6, 4210752 );
 	}	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {	
@@ -67,7 +64,7 @@ public class GuiVacuumChest extends GuiContainer{
     	String text = ("Vacuums items in a  =nearby radius.");
     	String[] splitMsg = text.split("=");
 		
-    	DRAW_ITEM.drawItem(ModItems.BasicItemFilter, guiLeft, guiTop, 8, 78, this.zLevel);
+    	GuiDrawItem.drawItem(ModItems.BasicItemFilter, guiLeft, guiTop, 8, 78, this.zLevel, 0.5f);
 		INFO_TAB.drawTab(Arrays.asList(splitMsg));
 	}
 	@Override

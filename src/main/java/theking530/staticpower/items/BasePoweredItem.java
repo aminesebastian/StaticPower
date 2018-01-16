@@ -1,6 +1,6 @@
 package theking530.staticpower.items;
 
-import cofh.api.energy.ItemEnergyContainer;
+import cofh.redstoneflux.impl.ItemEnergyContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -56,7 +56,7 @@ public class BasePoweredItem extends ItemEnergyContainer{
 		if(stack.getItemDamage() > 0) {
 			return 1;
 		}
-        return this.getItemStackLimit();
+        return maxStackSize;
     }
 	public void updateDamage(ItemStack stack) {
 		setDamage(stack, (capacity - getEnergyStored(stack))/DAMAGE_DIVISOR);

@@ -9,9 +9,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityPigZombie;
-import net.minecraft.entity.monster.EntitySkeleton;
+import net.minecraft.entity.monster.EntityWitherSkeleton;
 import net.minecraft.entity.monster.EntityZombie;
-import net.minecraft.entity.monster.SkeletonType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
@@ -29,9 +28,11 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import theking530.staticpower.assists.Reference;
 import theking530.staticpower.items.armor.BaseArmor;
 import theking530.staticpower.items.armor.BaseShield;
 import theking530.staticpower.items.armor.ModArmor;
@@ -39,6 +40,7 @@ import theking530.staticpower.items.armor.SkeletonArmor;
 import theking530.staticpower.items.armor.UndeadArmor;
 import theking530.staticpower.potioneffects.BasePotion;
 
+@Mod.EventBusSubscriber(modid = Reference.MODID)
 public class ModEvents {
 	
 	public final Random RANDOM;
@@ -51,6 +53,7 @@ public class ModEvents {
 	public static void init() {
 		MinecraftForge.EVENT_BUS.register(new ModEvents());
 	}
+	
 	
     @SubscribeEvent(priority=EventPriority.HIGH, receiveCanceled=true)
 	public void attackEvent(LivingAttackEvent e) {
@@ -99,10 +102,10 @@ public class ModEvents {
 		activeItemStack = player.getActiveItemStack();
 
 		if (damage > 0.0F && activeItemStack != null && activeItemStack.getItem() instanceof BaseShield) {
-			int i = 1 + MathHelper.floor_float(damage);
+			int i = 1 + MathHelper.floor(damage);
 			activeItemStack.damageItem(i, player);
 
-			if (activeItemStack.stackSize <= 0) {
+			if (activeItemStack.getCount() <= 0) {
 				EnumHand enumhand = player.getActiveHand();
 				net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(player, activeItemStack, enumhand);
 
@@ -115,7 +118,7 @@ public class ModEvents {
 
 				activeItemStack = null;
 				if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
-					player.playSound(SoundEvents.ITEM_SHIELD_BREAK, 0.8F, 0.8F + player.worldObj.rand.nextFloat() * 0.4F);
+					player.playSound(SoundEvents.ITEM_SHIELD_BREAK, 0.8F, 0.8F + player.getEntityWorld().rand.nextFloat() * 0.4F);
 				}
 			}
 		}
@@ -130,7 +133,7 @@ public class ModEvents {
         damageAmount = CombatRules.getDamageAfterAbsorb(damageAmount, (float)player.getTotalArmorValue(), (float)player.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue());
 
         if (!e.getSource().isDamageAbsolute()){
-            if (player.isPotionActive(MobEffects.RESISTANCE) && e.getSource() != DamageSource.outOfWorld) {
+            if (player.isPotionActive(MobEffects.RESISTANCE) && e.getSource() != DamageSource.OUT_OF_WORLD) {
                 int i = (player.getActivePotionEffect(MobEffects.RESISTANCE).getAmplifier() + 1) * 5;
                 int j = 25 - i;
                 float f = damageAmount * (float)j;
@@ -147,22 +150,22 @@ public class ModEvents {
             }
         }
         if(player != null && player.inventory != null) {
-			if(player.inventory.armorInventory[3] != null && player.inventory.armorInventory[3].getItem() instanceof BaseArmor) {
-				BaseArmor tempArmor = (BaseArmor) player.inventory.armorInventory[3].getItem();
-				tempArmor.onWearerDamaged(e, damageAmount, player, EntityEquipmentSlot.HEAD, player.inventory.armorInventory[3]);
-			}
-			if(player.inventory.armorInventory[2] != null && player.inventory.armorInventory[2].getItem() instanceof BaseArmor) {
-				BaseArmor tempArmor = (BaseArmor) player.inventory.armorInventory[2].getItem();
-				tempArmor.onWearerDamaged(e, damageAmount, player, EntityEquipmentSlot.CHEST, player.inventory.armorInventory[2]);
-			}
-			if(player.inventory.armorInventory[1] != null && player.inventory.armorInventory[1].getItem() instanceof BaseArmor) {
-				BaseArmor tempArmor = (BaseArmor) player.inventory.armorInventory[1].getItem();
-				tempArmor.onWearerDamaged(e, damageAmount, player, EntityEquipmentSlot.LEGS, player.inventory.armorInventory[1]);
-			}
-			if(player.inventory.armorInventory[0] != null && player.inventory.armorInventory[0].getItem() instanceof BaseArmor) {
-				BaseArmor tempArmor = (BaseArmor) player.inventory.armorInventory[0].getItem();
-				tempArmor.onWearerDamaged(e, damageAmount, player, EntityEquipmentSlot.FEET, player.inventory.armorInventory[0]);
-			}	
+        	for(int i=0; i<4; i++) {
+    			if(player.inventory.armorInventory.get(i) != null && player.inventory.armorInventory.get(i).getItem() instanceof BaseArmor) {
+    				BaseArmor tempArmor = (BaseArmor) player.inventory.armorInventory.get(i).getItem();
+    				EntityEquipmentSlot slot;
+    				if(i == 0) {
+    					slot = EntityEquipmentSlot.FEET;
+    				}else if(i == 1) {
+    					slot = EntityEquipmentSlot.LEGS;
+    				}else if(i == 2) {
+    					slot = EntityEquipmentSlot.CHEST;
+    				}else{
+    					slot = EntityEquipmentSlot.HEAD;
+    				}
+    				tempArmor.onWearerDamaged(e, damageAmount, player, slot, player.inventory.armorInventory.get(i));
+    			}	
+        	}	
         }
     }
 
@@ -180,9 +183,9 @@ public class ModEvents {
 					event.getDrops().add(itemDropX);			
 				}
 			}
-		}else if(entity instanceof EntitySkeleton){	
-			EntitySkeleton tempSkele = (EntitySkeleton) entity;
-			if(tempSkele.getSkeletonType() != SkeletonType.WITHER) {
+		}else if(entity instanceof EntityWitherSkeleton){	
+			EntityWitherSkeleton tempSkele = (EntityWitherSkeleton) entity;
+			if(tempSkele != null) {
 				SkeletonArmor tempArmor = (SkeletonArmor) ModArmor.SkeletonHelmet;
 				ItemStack tempStack = tempArmor.getRandomDrop(0.06);
 				if(tempStack != null) {

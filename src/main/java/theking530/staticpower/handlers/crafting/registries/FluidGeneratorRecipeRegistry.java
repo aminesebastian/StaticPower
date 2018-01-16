@@ -5,9 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.staticpower.handlers.crafting.wrappers.FermenterOutputWrapper;
 import theking530.staticpower.handlers.crafting.wrappers.FluidGeneratorRecipeWrapper;
 
 public class FluidGeneratorRecipeRegistry {

@@ -1,48 +1,52 @@
 package theking530.staticpower.conduits.staticconduit;
 
-import cofh.api.energy.EnergyStorage;
-import cofh.api.energy.IEnergyHandler;
-import cofh.api.energy.IEnergyProvider;
-import cofh.api.energy.IEnergyReceiver;
+import cofh.redstoneflux.api.IEnergyHandler;
+import cofh.redstoneflux.api.IEnergyProvider;
+import cofh.redstoneflux.api.IEnergyReceiver;
+import cofh.redstoneflux.impl.EnergyStorage;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
 import theking530.staticpower.conduits.TileEntityBaseConduit;
 import theking530.staticpower.power.PowerDistributor;
 
-public class TileEntityStaticConduit extends TileEntityBaseConduit implements IEnergyHandler, IEnergyProvider, IEnergyReceiver{
+public class TileEntityStaticConduit extends TileEntityBaseConduit implements IEnergyHandler, IEnergyProvider, IEnergyReceiver {
 	
-	public int ENERGY_CAPACTIY = 1280;
+	public int ENERGY_CAPACTIY = 3000;
 	public EnergyStorage STORAGE = new EnergyStorage(ENERGY_CAPACTIY);
-	public int RF_PER_TICK = 100;
+	public int RF_PER_TICK = 1000;
 	public PowerDistributor POWER_DIST;
 	public EnumFacing LAST_RECIEVED;
-	private boolean needsUpdate = false;
-	
+
 	public TileEntityStaticConduit() {
 		STORAGE.setMaxExtract(RF_PER_TICK);
 		STORAGE.setMaxReceive(RF_PER_TICK);
 		STORAGE.setMaxTransfer(RF_PER_TICK);
 		POWER_DIST = new PowerDistributor(this, STORAGE);
 	}
-	
-	public void updateEntity() {
-		worldObj.markAndNotifyBlock(pos, worldObj.getChunkFromBlockCoords(pos), worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2);
-		updateConduitRenderConnections();
-		updateRecieverRenderConnections();
-		for(int i=0; i<6; i++) {
-			if(STORAGE.getEnergyStored() >= STORAGE.getMaxExtract()) {
-				if(LAST_RECIEVED == null || LAST_RECIEVED.ordinal() != i) {
-					POWER_DIST.provideRF(EnumFacing.values()[i], STORAGE.getMaxExtract());
-				}			
-			}
+
+	@Override
+	public void update() {
+		super.update();
+		if(!getWorld().isRemote) {
+			for(int i=0; i<6; i++) {
+				if(STORAGE.getEnergyStored() >= RF_PER_TICK) {
+					TileEntity adjacentTileEntity = getWorld().getTileEntity(pos.offset(EnumFacing.values()[i]));
+					if(adjacentTileEntity instanceof TileEntityStaticConduit) {
+						net.minecraftforge.energy.IEnergyStorage adjacentStorage = POWER_DIST.getEnergyHandlerPosition(EnumFacing.values()[i]);
+						if(adjacentStorage != null && adjacentStorage.getEnergyStored() < STORAGE.getEnergyStored()) {
+							POWER_DIST.provideRF(EnumFacing.values()[i], STORAGE.getMaxExtract());				
+						}	
+					}else{
+						POWER_DIST.provideRF(EnumFacing.values()[i], STORAGE.getMaxExtract());					
+					}
+				
+				}
+			}		
 		}
-		//worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}	
-		
     @Override  
 	public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
@@ -62,15 +66,24 @@ public class TileEntityStaticConduit extends TileEntityBaseConduit implements IE
 	}
 
 	@Override
-	public boolean isReciever(BlockPos pos) {
-		TileEntity te = worldObj.getTileEntity(pos);
-		if(te instanceof IEnergyReceiver) {
-			if(te instanceof TileEntityStaticConduit) {
-				return false;
-			}
-			return true;
+	public boolean isConduit(EnumFacing side) {
+		if(SIDE_MODES[side.ordinal()] == 1) {
+			return false;
+		}
+		if(getWorld().getTileEntity(pos.offset(side)) instanceof TileEntityStaticConduit) {
+			return ((TileEntityStaticConduit)getWorld().getTileEntity(pos.offset(side))).SIDE_MODES[side.getOpposite().ordinal()] == 0;
 		}
 		return false;
+	}		
+	@Override
+	public boolean isReciever(EnumFacing side) {
+		if(SIDE_MODES[side.ordinal()] == 1) {
+			return false;
+		}
+		if(getWorld().getTileEntity(pos.offset(side)) != null && !(getWorld().getTileEntity(pos.offset(side)) instanceof TileEntityStaticConduit) && getWorld().getTileEntity(pos.offset(side)).hasCapability(CapabilityEnergy.ENERGY, side.getOpposite())) {
+			return true;
+		}
+		return false;		
 	}	
 	public float getEnergyAdjusted() {
 		int amount = STORAGE.getEnergyStored();
@@ -100,9 +113,59 @@ public class TileEntityStaticConduit extends TileEntityBaseConduit implements IE
 	@Override
 	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
 		if(!disconected(from) && !canPull(from)) {
+			LAST_RECIEVED = from;
 			return STORAGE.receiveEnergy(maxReceive, simulate);
 		}
 		return 0;
+	}
+	/* CAPABILITIES */
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing from) {
+		return capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, from);
+	}
+	@Override
+	public <T> T getCapability(Capability<T> capability, final EnumFacing from) {
+		if (capability == CapabilityEnergy.ENERGY) {
+			return CapabilityEnergy.ENERGY.cast(new net.minecraftforge.energy.IEnergyStorage() {
+
+				@Override
+				public int receiveEnergy(int maxReceive, boolean simulate) {
+
+					return TileEntityStaticConduit.this.receiveEnergy(from, maxReceive, simulate);
+				}
+
+				@Override
+				public int extractEnergy(int maxExtract, boolean simulate) {
+
+					return TileEntityStaticConduit.this.extractEnergy(from, maxExtract, simulate);
+				}
+
+				@Override
+				public int getEnergyStored() {
+
+					return TileEntityStaticConduit.this.getEnergyStored(from);
+				}
+
+				@Override
+				public int getMaxEnergyStored() {
+
+					return TileEntityStaticConduit.this.getMaxEnergyStored(from);
+				}
+
+				@Override
+				public boolean canExtract() {
+
+					return true;
+				}
+
+				@Override
+				public boolean canReceive() {
+
+					return true;
+				}
+			});
+		}
+		return super.getCapability(capability, from);
 	}
 }
 	

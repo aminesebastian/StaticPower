@@ -6,16 +6,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import theking530.staticpower.assists.Reference;
 import theking530.staticpower.client.gui.widgets.GuiDrawItem;
+import theking530.staticpower.utils.GuiTextures;
 import theking530.staticpower.utils.StaticVertexBuffer;
 
 public class ItemButton extends Gui{
@@ -38,8 +36,6 @@ public class ItemButton extends Gui{
 	public boolean IS_VISIBLE = true;
 	public boolean CLICKED = false;
 	
-	private ResourceLocation base = new ResourceLocation(Reference.MODID + ":" + "/textures/gui/Button.png");
-	private ResourceLocation hover = new ResourceLocation(Reference.MODID + ":" + "/textures/gui/ButtonHover.png");
 	
 	public ItemButton(int guiLeft, int guiTop, int width, int height, int xPos, int yPos, Item item) {
 		this.GUI_LEFT = guiLeft;
@@ -80,7 +76,7 @@ public class ItemButton extends Gui{
 		int buttonLeft = GUI_LEFT + j + BUTTON_XPOS+1;
 		int buttonTop = GUI_TOP + k + BUTTON_YPOS+1;
 		
-		GuiDrawItem.drawItem(ITEM, buttonLeft, buttonTop, 1, 0, this.zLevel);
+		GuiDrawItem.drawItem(ITEM, buttonLeft, buttonTop, 1, 0, this.zLevel, 1.0f);
 	}
 	public void drawButtonBase() {
 		int j = (WIDTH - xSIZE) / 2;
@@ -89,13 +85,13 @@ public class ItemButton extends Gui{
 		int buttonTop = GUI_TOP + k + BUTTON_YPOS;
 		
         Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer tes = tessellator.getBuffer();
+        BufferBuilder tes = tessellator.getBuffer();
         tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
 		if(CLICKED == true || HIGHLIGHT == true) {
-			Minecraft.getMinecraft().getTextureManager().bindTexture(hover);
+			Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.BUTTON_HOVER);
 		}else{
-			Minecraft.getMinecraft().getTextureManager().bindTexture(base);
+			Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.BUTTON);
 		}	
 		//Top
 		StaticVertexBuffer.pos(buttonLeft+BUTTON_WIDTH, buttonTop+3, 0, 0, .15);
@@ -133,7 +129,6 @@ public class ItemButton extends Gui{
     	//soundHandler.playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
     }
 	public void buttonMouseClick(int par1, int par2, int button) {
-		int i = 0;
 		int j = (WIDTH - xSIZE) / 2;
 		int k = (HEIGHT - ySIZE) / 2;
 		if(par1 > j + BUTTON_XPOS && par1 < j + BUTTON_XPOS + BUTTON_WIDTH && IS_VISIBLE) {

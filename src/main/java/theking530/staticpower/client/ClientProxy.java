@@ -3,13 +3,11 @@ package theking530.staticpower.client;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.assists.Tier;
-import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.client.render.conduit.TileEntityRenderFluidConduit;
 import theking530.staticpower.client.render.conduit.TileEntityRenderItemConduit;
 import theking530.staticpower.client.render.conduit.TileEntityRenderStaticConduit;
@@ -40,7 +38,6 @@ import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRen
 import theking530.staticpower.conduits.fluidconduit.TileEntityFluidConduit;
 import theking530.staticpower.conduits.itemconduit.TileEntityItemConduit;
 import theking530.staticpower.conduits.staticconduit.TileEntityStaticConduit;
-import theking530.staticpower.integration.WAILA.WailaConfig;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityEnergizedBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityLumumBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityStaticBattery;
@@ -73,7 +70,7 @@ import theking530.staticpower.tileentity.solderingtable.TileEntitySolderingTable
 public class ClientProxy extends CommonProxy {
 
 	public void registerProxies(){
-	    WailaConfig.callIMC();
+	    //WailaConfig.callIMC();
 		OBJLoader.INSTANCE.addDomain(Reference.MODID);
 		
 		//Fluid Infuser
@@ -121,7 +118,8 @@ public class ClientProxy extends CommonProxy {
 		//registerModelLoader(Item.getItemFromBlock(ModBlocks.StaticSolarPanel), Models.SOLARPANEL);
 		//registerModelLoader(Item.getItemFromBlock(ModBlocks.EnergizedSolarPanel), Models.SOLARPANEL);
 		//registerModelLoader(Item.getItemFromBlock(ModBlocks.LumumSolarPanel), Models.SOLARPANEL);
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityStaticSolarPanel.class, new TileEntityRenderSolarPanel());
+		//ClientRegistry.bindTileEntitySpecialRenderer(TileEntityStaticSolarPanel.class, new TileEntityRenderSolarPanel());
+		
 		//Batteries
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityStaticBattery.class, new TileEntityRenderBattery(Tier.STATIC));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEnergizedBattery.class, new TileEntityRenderBattery(Tier.ENERGIZED));
@@ -136,7 +134,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFusionFurnace.class, new TileEntityRenderFusionFurnace());
 		
 		//SolderingTable
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySolderingTable.class, new TileEntityRenderSolderingTable());
+		//ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySolderingTable.class, new TileEntityRenderSolderingTable());
 		
 		//Distillery
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDistillery.class, new TileEntityRenderDistillery());
@@ -148,9 +146,6 @@ public class ClientProxy extends CommonProxy {
 		//Block Breaker
 		//ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBlockBreaker.class, new TileEntityRenderBlockBreaker());
 		//MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.BlockBreaker), new ItemRenderBlockBreaker());
-
-		
-	    ItemRenderRegistry.initItemRenderers();
 
 	}
 	public static void registerModelLoader(Item item, ResourceLocation modelLocation) {

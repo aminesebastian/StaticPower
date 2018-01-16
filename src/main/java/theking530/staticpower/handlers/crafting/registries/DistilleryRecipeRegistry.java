@@ -7,7 +7,6 @@ import java.util.Map.Entry;
 
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.handlers.crafting.wrappers.DistilleryRecipeWrapper;
-import theking530.staticpower.handlers.crafting.wrappers.FluidGeneratorRecipeWrapper;
 
 public class DistilleryRecipeRegistry {
 

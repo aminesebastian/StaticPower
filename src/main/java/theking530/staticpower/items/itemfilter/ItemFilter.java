@@ -2,6 +2,9 @@ package theking530.staticpower.items.itemfilter;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -29,16 +32,16 @@ public class ItemFilter extends ItemBase {
 		TIER = tier;
 	}
 	@Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer player, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+	ItemStack itemStack = player.getHeldItem(hand);
 		if (world.isRemote) {
-			return new ActionResult(EnumActionResult.PASS, itemStack);
+			return new ActionResult<ItemStack>(EnumActionResult.PASS, itemStack);
 		}else if (!player.isSneaking()) {
 			FMLNetworkHandler.openGui(player, StaticPower.staticpower, GuiIDRegistry.guiIDItemFilter, world, 0, 0, 0);
-			return new ActionResult(EnumActionResult.SUCCESS, itemStack);
+			return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStack);
 		}else{
-			return new ActionResult(EnumActionResult.FAIL, itemStack);
-		}
-        
+			return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemStack);
+		}    
     }
 	public void onCreated(ItemStack item, World world, EntityPlayer player) {
 		super.onCreated(item, world, player);
@@ -46,20 +49,34 @@ public class ItemFilter extends ItemBase {
 	public boolean evaluateFilter(ItemStack filter, ItemStack itemstack) {
 		int slotCount = TIER == FilterTier.BASIC ? 4 : TIER == FilterTier.UPGRADED ? 8 : 10;
 		ItemStack[] slots = new ItemStack[slotCount];
+		boolean whitelist = true;
 		if(filter.hasTagCompound()) {
 			NBTTagList items = filter.getTagCompound().getTagList("ItemInventory", Constants.NBT.TAG_COMPOUND);
 			for (int i = 0; i < items.tagCount(); ++i){
 				NBTTagCompound item = (NBTTagCompound) items.getCompoundTagAt(i);
 				int slot = item.getInteger("Slot");
 				if (slot >= 0 && slot < slotCount) {
-					slots[slot] = ItemStack.loadItemStackFromNBT(item);
+					slots[slot] = new ItemStack(item);
 				}
 			}
-		}
-		for(int i=0; i<slotCount; i++) {
-			if(slots[i] != null) {
-				if(slots[i].isItemEqual(itemstack)) {
-					return true;
+			if(filter.getTagCompound().hasKey("WHITE_LIST_MODE")) {
+				whitelist = filter.getTagCompound().getBoolean("WHITE_LIST_MODE");
+			}
+			if(whitelist) {
+				for(int i=0; i<slotCount; i++) {
+					if(slots[i] != ItemStack.EMPTY) {
+						if(slots[i].isItemEqual(itemstack)) {
+							return true;
+						}
+					}
+				}
+			}else{
+				for(int i=0; i<slotCount; i++) {
+					if(slots[i] != ItemStack.EMPTY) {
+						if(slots[i].isItemEqual(itemstack)) {
+							return false;
+						}
+					}
 				}
 			}
 		}
@@ -71,7 +88,7 @@ public class ItemFilter extends ItemBase {
 		return 1; 
 	}
 	@Override  
-	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean par4) {
+	public void addInformation(ItemStack itemstack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn) {
 		int slotCount = TIER == FilterTier.BASIC ? 4 : TIER == FilterTier.UPGRADED ? 8 : 10;
 		ItemStack[] slots = new ItemStack[slotCount];
 		
@@ -81,14 +98,14 @@ public class ItemFilter extends ItemBase {
 				NBTTagCompound item = (NBTTagCompound) items.getCompoundTagAt(i);
 				int slot = item.getInteger("Slot");
 				if (slot >= 0 && slot < slotCount) {
-					slots[slot] = ItemStack.loadItemStackFromNBT(item);
+					slots[slot] = new ItemStack(item);
 				}
 			}
 		}
     	if(showHiddenTooltips()) {
     		boolean empty = true;
     		for(int i=0; i<slotCount; i++) {
-    			if(slots[i] != null) {
+    			if(slots[i] != ItemStack.EMPTY) {
     				list.add("Slot " + (i+1) + ": " + slots[i].getDisplayName());
     				empty=false;
     			}

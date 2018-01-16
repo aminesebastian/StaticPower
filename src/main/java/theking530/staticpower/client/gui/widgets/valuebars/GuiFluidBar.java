@@ -7,25 +7,17 @@ import java.util.Locale;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.staticpower.assists.Reference;
 import theking530.staticpower.utils.RenderUtil;
 
 public class GuiFluidBar {
 	
-	private static ResourceLocation powerBar = new ResourceLocation(Reference.MODID + ":" + "textures/gui/PowerBar.png");
-	
-	public List drawText(int fluidAmount, int maxCapacity, FluidStack fluid) {
+	public static List<String> drawText(int fluidAmount, int maxCapacity, FluidStack fluid) {
 		if(fluid != null) {	
 			String name = fluid.getLocalizedName();
 			String text = (name + "=" + NumberFormat.getNumberInstance(Locale.US).format(fluidAmount) + "/" + NumberFormat.getNumberInstance(Locale.US).format(maxCapacity)+ "mB");
@@ -52,14 +44,10 @@ public class GuiFluidBar {
 		    float renderAmount = ratio * (float) height;
 	
 		    RenderUtil.bindBlockTexture();
-		    int color = fluid.getFluid().getColor(fluid);
-		    //GL11.glColor3ub((byte) (color >> 16 & 0xFF), (byte) (color >> 8 & 0xFF), (byte) (color & 0xFF));
-		    
+
 		    GlStateManager.enableBlend();    
 
-		    int count = (int) Math.ceil(height/16);
 		    float segmentCapacity = capacity / ((float)height/16);
-		    int finalSegmentHeight = (int) (height - ((count-1)*16));
 		    int segmentsUsed = (int) ((renderAmount+16)/16);
 		    		
 	        double minU = icon.getMinU();
@@ -75,7 +63,7 @@ public class GuiFluidBar {
 			    double yMax = (i+(segmentRatio))*16;
 
 		        Tessellator tessellator = Tessellator.getInstance();
-		        VertexBuffer tes = tessellator.getBuffer();
+		        BufferBuilder tes = tessellator.getBuffer();
 		        tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 				tes.pos(x + width, y-yMin , zLevel).tex(maxU,minV).endVertex();
 				tes.pos(x + width, y-yMax, zLevel).tex(maxU, minV+(diffV*segmentRatio)).endVertex();

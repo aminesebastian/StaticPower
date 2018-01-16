@@ -6,20 +6,19 @@ import api.gui.ItemButton;
 import api.gui.TabRightItem;
 import api.gui.TextField;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import theking530.staticpower.assists.Reference;
 import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.machines.BaseMachine;
 import theking530.staticpower.tileentity.BaseTileEntity;
 import theking530.staticpower.utils.EnumTextFormatting;
+import theking530.staticpower.utils.GuiTextures;
 import theking530.staticpower.utils.StaticVertexBuffer;
 
 public class GuiPowerControlTab {
@@ -32,11 +31,8 @@ public class GuiPowerControlTab {
 	public boolean IS_TAB_OPEN;
 	public TileEntity TILE_ENTITY;
 	private FontRenderer FONT_RENDERER;
-	private ResourceLocation redTab = new ResourceLocation(Reference.MODID + ":" + "textures/gui/PurpleTab.png");
-	private ResourceLocation bg = new ResourceLocation(Reference.MODID + ":" + "textures/gui/ButtonBG.png");
-	private String ON_PERC = "";
-	private String OFF_PERC = "100%";
-	public TabRightItem YELLOW_TAB = new TabRightItem(GUI_LEFT, GUI_TOP, 100, 70, 175, 8, redTab, ModItems.StaticWrench);
+
+	public TabRightItem YELLOW_TAB = new TabRightItem(GUI_LEFT, GUI_TOP, 100, 70, 175, 8, GuiTextures.PURPLE_TAB, ModItems.StaticWrench);
 	private int MIN_VALUE;
 	private TextField MIN_PERCENTAGE = new TextField(GUI_LEFT + 230, GUI_TOP + 35, 30, 15);
 	private int MAX_VALUE;
@@ -124,7 +120,7 @@ public class GuiPowerControlTab {
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer tes = tessellator.getBuffer();
+        BufferBuilder tes = tessellator.getBuffer();
         tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         tes.color(.5F, .5F, .5F, 1F);    
 		StaticVertexBuffer.pos(tabLeft+104, tabTop+90, 0, 0, 1);

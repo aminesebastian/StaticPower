@@ -8,10 +8,10 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
   
 public class PacketPowerCell implements IMessage{
-    private static int POWER;
-    private static int x;
-    private static int y;
-    private static int z;
+    private int POWER;
+    private int x;
+    private int y;
+    private int z;
     
     public PacketPowerCell() {}
     
@@ -38,7 +38,7 @@ public class PacketPowerCell implements IMessage{
     public static class Message implements IMessageHandler<PacketPowerCell, IMessage> {
     @Override
     public IMessage onMessage(PacketPowerCell message, MessageContext ctx) {
-    		TileEntity te = ctx.getServerHandler().playerEntity.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
+    		TileEntity te = ctx.getServerHandler().player.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
     		if(te != null) {
 	    		TileEntityPowerCell sMultiplier = (TileEntityPowerCell)te;
 	    		sMultiplier.POWER = message.POWER;

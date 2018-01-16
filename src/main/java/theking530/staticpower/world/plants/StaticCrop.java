@@ -2,10 +2,13 @@ package theking530.staticpower.world.plants;
 
 import java.util.List;
 
-import net.minecraft.entity.player.EntityPlayer;
+import javax.annotation.Nullable;
+
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import theking530.staticpower.StaticPower;
 
 public class StaticCrop extends ItemFood {
@@ -21,9 +24,9 @@ public class StaticCrop extends ItemFood {
 		setAlwaysEdible();
 	}
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
-		list.add("These Seem to Radiate");
-		list.add("Energy...Yummy");
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+		tooltip.add("These Seem to Radiate");
+		tooltip	.add("Energy...Yummy");
 	}
 }
 		

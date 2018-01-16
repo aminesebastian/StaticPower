@@ -2,18 +2,16 @@ package theking530.staticpower.client.render.conduit;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import theking530.staticpower.assists.Reference;
+import theking530.staticpower.conduits.TileEntityBaseConduit;
 import theking530.staticpower.conduits.staticconduit.TileEntityStaticConduit;
 
 public class TileEntityRenderStaticConduit extends TileEntityRenderBaseConduit {
 	
-	ResourceLocation texture = new ResourceLocation(Reference.MODID, "textures/models/conduits/StaticConduit.png");
 	ResourceLocation energy = new ResourceLocation(Reference.MODID, "textures/models/conduits/ConduitEnergy.png");
-	ResourceLocation pullTexture = new ResourceLocation(Reference.MODID, "textures/models/conduits/StaticConduitPull.png");
+	ResourceLocation texture = new ResourceLocation(Reference.MODID, "textures/models/conduits/FluidConduit.png");
+	ResourceLocation pullTexture = new ResourceLocation(Reference.MODID, "textures/models/conduits/FluidConduitPull.png");
 	
 	boolean drawInside = true;
 	
@@ -21,7 +19,7 @@ public class TileEntityRenderStaticConduit extends TileEntityRenderBaseConduit {
 	float texel = 1F/64F;
 
 	@Override
-	public void renderTileEntityAt(TileEntity tileentity, double translationX, double translationY, double translationZ, float f, int dest) {
+	public void render(TileEntityBaseConduit tileentity, double translationX, double translationY, double translationZ, float f, int dest, float alpha) {
 		TileEntityStaticConduit conduit = (TileEntityStaticConduit) tileentity;
 		float energyAmount = conduit.STORAGE.getEnergyStored();
 		
@@ -54,14 +52,14 @@ public class TileEntityRenderStaticConduit extends TileEntityRenderBaseConduit {
 					this.bindTexture(energy);
 					//drawCoreEnergy(conduit.connections[i], conduit);
 					this.bindTexture(texture);
-					drawCore(conduit.connections[i]);
+					drawCore(conduit.connections[i], tileentity);
 				}
 			}
 		} else {
 			for(int i = 0; i < conduit.connections.length; i++) 
 				if(conduit.connections[i] != null) {	
 					this.bindTexture(texture);
-					drawStraight(conduit.connections[i]);
+					drawStraight(conduit.connections[i], tileentity);
 					this.bindTexture(energy);
 					//drawStraightEnergy(conduit.connections[i], conduit);
 					break;

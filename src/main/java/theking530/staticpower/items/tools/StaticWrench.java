@@ -4,7 +4,6 @@ import api.IWrenchTool;
 import api.IWrenchable;
 import api.RegularWrenchMode;
 import api.SneakWrenchMode;
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
@@ -14,12 +13,11 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.machines.BaseMachineBlock;
-import theking530.staticpower.utils.EnumTextFormatting;
 
 public class StaticWrench extends Item implements IWrenchTool{
 	
@@ -30,50 +28,51 @@ public class StaticWrench extends Item implements IWrenchTool{
 		setRegistryName("StaticWrench");	
 	}		
 	@Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand){
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand) {
+		ItemStack itemStack = playerIn.getHeldItem(hand);
 		if(!worldIn.isRemote) {
 			if(!playerIn.isSneaking()) {
-				if(getWrenchMode(itemStackIn).ordinal() + 1 <= RegularWrenchMode.values().length-1) {
-					setWrenchMode(itemStackIn, RegularWrenchMode.values()[getWrenchMode(itemStackIn).ordinal() + 1]);
-					playerIn.addChatComponentMessage(new TextComponentString("Wrench Mode: " + getWrenchMode(itemStackIn).toString()));	
+				if(getWrenchMode(itemStack).ordinal() + 1 <= RegularWrenchMode.values().length-1) {
+					setWrenchMode(itemStack, RegularWrenchMode.values()[getWrenchMode(itemStack).ordinal() + 1]);
+					playerIn.sendMessage(new TextComponentString("Wrench Mode: " + getWrenchMode(itemStack).toString()));	
 				}else{
-					setWrenchMode(itemStackIn, RegularWrenchMode.values()[0]);	
-					playerIn.addChatComponentMessage(new TextComponentString("Wrench Mode: " + getWrenchMode(itemStackIn).toString()));	
+					setWrenchMode(itemStack, RegularWrenchMode.values()[0]);	
+					playerIn.sendMessage(new TextComponentString("Wrench Mode: " + getWrenchMode(itemStack).toString()));	
 				}	
 			}
 		}
-        return new ActionResult(EnumActionResult.PASS, itemStackIn);
+        return new ActionResult<ItemStack>(EnumActionResult.PASS, itemStack);
     }
 	@Override
-    public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
-		if(!world.isRemote) {
-			if(stack != null) {
-				if(!player.isSneaking()) {
-					player.swingArm(EnumHand.MAIN_HAND);
-					if(world.getBlockState(pos).getBlock() instanceof IWrenchable) {
-						IWrenchable block = (IWrenchable) world.getBlockState(pos).getBlock();
-						block.wrenchBlock(player, getWrenchMode(stack), stack, world, pos, side, true);
-						playWrenchSound(world, player, pos);
+    public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
+
+		if(player.getHeldItem(hand) != null) {
+			if(!player.isSneaking()) {
+				player.swingArm(EnumHand.MAIN_HAND);
+				if(world.getBlockState(pos).getBlock() instanceof IWrenchable) {
+					IWrenchable block = (IWrenchable) world.getBlockState(pos).getBlock();
+					block.wrenchBlock(player, getWrenchMode(player.getHeldItem(hand)), player.getHeldItem(hand), world, pos, side, true);
+					playWrenchSound(world, pos);
+					return EnumActionResult.SUCCESS;
+				}	
+			}
+			if(player.isSneaking()) {
+				player.swingArm(EnumHand.MAIN_HAND);
+				if(world.getBlockState(pos).getBlock() instanceof IWrenchable) {
+					IWrenchable block = (IWrenchable)world.getBlockState(pos).getBlock();
+					if(block.canBeWrenched(player, world, pos, side)){	
+						block.sneakWrenchBlock(player, getSneakWrenchMode(player.getHeldItem(hand)), player.getHeldItem(hand), world, pos, side, true);
+						playWrenchSound(world, pos);
 						return EnumActionResult.SUCCESS;
-					}	
-				}
-				if(player.isSneaking()) {
-					player.swingArm(EnumHand.MAIN_HAND);
-					if(world.getBlockState(pos).getBlock() instanceof IWrenchable) {
-						IWrenchable block = (IWrenchable)world.getBlockState(pos).getBlock();
-						if(block.canBeWrenched(player, world, pos, side)){	
-							block.sneakWrenchBlock(player, getSneakWrenchMode(stack), stack, world, pos, side, true);
-							playWrenchSound(world, player, pos);
-							return EnumActionResult.SUCCESS;
-						}
-					}	
-				}
+					}
+				}	
 			}
 		}
+		
         return EnumActionResult.PASS;
     }
-	public void playWrenchSound(World world, EntityPlayer player, BlockPos pos) {
-		player.playSound(SoundEvents.ENTITY_CHICKEN_EGG, 0.3F, (float) (0.5F + Math.random()*2.0));
+	public void playWrenchSound(World world, BlockPos pos) {
+		world.playSound(null, pos, SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 0.15F, (float) (0.5F + Math.random()*2.0));
 	}
 	@Override
 	public RegularWrenchMode getWrenchMode(ItemStack stack) {

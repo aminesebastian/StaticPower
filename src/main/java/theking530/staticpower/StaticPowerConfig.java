@@ -2,7 +2,6 @@ package theking530.staticpower;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class StaticPowerConfig {
 	
@@ -18,9 +17,9 @@ public class StaticPowerConfig {
 	
 	public static void updateConfig() {
 		MinecraftForge.EVENT_BUS.register(StaticPower.instance);
-		Configuration config = StaticPower.config;
+		Configuration config = StaticPower.CONFIG;
 		
-		final String oreGen = config.CATEGORY_GENERAL + config.CATEGORY_SPLITTER + "Ore Generation";
+		final String oreGen = Configuration.CATEGORY_GENERAL + Configuration.CATEGORY_SPLITTER + "Ore Generation";
 		config.addCustomCategoryComment(oreGen, "Disable ore generation by ore.");
 		
 		COPPER_ORE_GEN = config.getBoolean("Copper Ore", oreGen, true, "Disable or Enable Copper Ore Generation");
@@ -33,8 +32,9 @@ public class StaticPowerConfig {
 		SAPPHIRE_ORE_GEN = config.getBoolean("Sapphire Ore", oreGen, true, "Disable or Enable Sapphire Ore Generation");
 		RUBY_ORE_GEN = config.getBoolean("Ruby Ore", oreGen, true, "Disable or Enable Ruby Ore Generation");
 		
-		if(StaticPower.config.hasChanged()) {
-			StaticPower.config.save();
+		if(StaticPower.CONFIG.hasChanged()) {
+			StaticPower.CONFIG
+			.save();
 		}
 	}	
 }

@@ -2,11 +2,12 @@ package theking530.staticpower.items.upgrades;
 
 import java.util.List;
 
-import net.minecraft.entity.player.EntityPlayer;
+import javax.annotation.Nullable;
+
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
-import theking530.staticpower.StaticPower;
+import net.minecraft.world.World;
 import theking530.staticpower.assists.Tier;
-import theking530.staticpower.items.ItemBase;
 import theking530.staticpower.utils.EnumTextFormatting;
 
 public class BaseQuarryingUpgrade  extends BaseUpgrade implements IMachineUpgrade{
@@ -43,7 +44,7 @@ public class BaseQuarryingUpgrade  extends BaseUpgrade implements IMachineUpgrad
 		}
 	}
 	@Override  
-	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
+		public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn) {
 		list.add(EnumTextFormatting.WHITE +  "Mines " + getMultiplier(stack, 0) + EnumTextFormatting.GREEN + " Blocks Per Tick");
 		list.add(EnumTextFormatting.WHITE + new java.text.DecimalFormat("#").format((getMultiplier(stack, 1))*100) + "%" + EnumTextFormatting.RED + " Power Use");
 		if(showHiddenTooltips()) {

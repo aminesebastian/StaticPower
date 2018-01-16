@@ -16,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
@@ -36,7 +37,7 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 	public int GROWTH_BONUS_CHANCE = 50;
 	public BlockPos CURRENT_COORD;
 	private Random RAND;
-	private ArrayList<ItemStack> FARMED_STACKS = new ArrayList();
+	private ArrayList<ItemStack> FARMED_STACKS = new ArrayList<ItemStack>();
 	public DrainToBucketComponent DRAIN_COMPONENT;
 	
 	public TileEntityBasicFarmer() {
@@ -83,7 +84,7 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 				}else{
 					for(int k=FARMED_STACKS.size()-1; k>=0; k--) {
 						ItemStack insertedStack = InventoryUtilities.insertItemIntoInventory(SLOTS_OUTPUT, FARMED_STACKS.get(k), 0, 8);
-						if(insertedStack == null) {
+						if(insertedStack == ItemStack.EMPTY) {
 							FARMED_STACKS.remove(k);
 						}else{
 							FARMED_STACKS.set(k, insertedStack);
@@ -101,7 +102,7 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
         CURRENT_COORD = new BlockPos(new Vec3i(nbt.getInteger("CURR_X"), nbt.getInteger("CURR_Y"), nbt.getInteger("CURR_Z")));
         
         for(int i=0; i<nbt.getInteger("FARMED_COUNT"); i++) {
-        	FARMED_STACKS.add(ItemStack.loadItemStackFromNBT((NBTTagCompound) nbt.getTag("FARMED"+i)));
+        	FARMED_STACKS.add(new ItemStack((NBTTagCompound) nbt.getTag("FARMED"+i)));
         }
     }		
     @Override
@@ -196,9 +197,9 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 	}
 	public void useHoe(){
 		if(SLOTS_INPUT.getStackInSlot(0) != null && SLOTS_INPUT.getStackInSlot(0).getItem() instanceof ItemHoe) {
-			if(SLOTS_INPUT.getStackInSlot(0).attemptDamageItem(1, RAND)) {
+			if(SLOTS_INPUT.getStackInSlot(0).attemptDamageItem(1, RAND, null)) {
 				SLOTS_INPUT.setStackInSlot(0, null);
-				worldObj.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_ITEM_BREAK, 
+				getWorld().playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_ITEM_BREAK, 
 						SoundCategory.BLOCKS, 1.0F, 1.0F, false);		
 			}	
 		}
@@ -208,31 +209,31 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 			return false;
 		}
 		if(RAND.nextInt(GROWTH_BONUS_CHANCE) == 2) {
-	        if(worldObj.getBlockState(pos) != null && worldObj.getBlockState(pos).getBlock() instanceof IGrowable) {
-	        	IGrowable tempCrop = (IGrowable) worldObj.getBlockState(pos).getBlock();
-	        	if(tempCrop.canGrow(worldObj, pos, worldObj.getBlockState(pos), true)) {
-	        		worldObj.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, pos.getX() + 0.5D, pos.getY() + 1.0D, 
+	        if(getWorld().getBlockState(pos) != null && getWorld().getBlockState(pos).getBlock() instanceof IGrowable) {
+	        	IGrowable tempCrop = (IGrowable) getWorld().getBlockState(pos).getBlock();
+	        	if(tempCrop.canGrow(getWorld(), pos, getWorld().getBlockState(pos), true)) {
+	        		getWorld().spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, pos.getX() + 0.5D, pos.getY() + 1.0D, 
 	        				pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
-	        		tempCrop.grow(worldObj, RAND, pos, worldObj.getBlockState(pos));
-	        		worldObj.markAndNotifyBlock(pos, worldObj.getChunkFromBlockCoords(pos), worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2);
+	        		tempCrop.grow(getWorld(), RAND, pos, getWorld().getBlockState(pos));
+	        		getWorld().markAndNotifyBlock(pos, getWorld().getChunkFromBlockCoords(pos), getWorld().getBlockState(pos), getWorld().getBlockState(pos), 2);
 	        	}
 	        }	
 		}
-		worldObj.spawnParticle(EnumParticleTypes.REDSTONE, pos.getX() + 0.5D, pos.getY() + 0.25D, 
+		getWorld().spawnParticle(EnumParticleTypes.REDSTONE, pos.getX() + 0.5D, pos.getY() + 0.25D, 
 				pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
-		if(worldObj.getBlockState(pos).getBlock() != null) {
-			if(worldObj.getBlockState(pos).getBlock() instanceof BlockCrops) {
-				BlockCrops tempCrop = (BlockCrops)worldObj.getBlockState(pos).getBlock();
-				if(!tempCrop.canGrow(worldObj, pos, worldObj.getBlockState(pos), true)) {
-					worldObj.playSound(pos.getX(), pos.getY(), pos.getZ(), worldObj.getBlockState(pos).getBlock().getSoundType().getBreakSound(), 
+		if(getWorld().getBlockState(pos).getBlock() != null) {
+			if(getWorld().getBlockState(pos).getBlock() instanceof BlockCrops) {
+				BlockCrops tempCrop = (BlockCrops)getWorld().getBlockState(pos).getBlock();
+				if(!tempCrop.canGrow(getWorld(), pos, getWorld().getBlockState(pos), true)) {
+					getWorld().playSound(pos.getX(), pos.getY(), pos.getZ(), getWorld().getBlockState(pos).getBlock().getSoundType(getWorld().getBlockState(pos.add(0, 1, 0)), world, pos.add(0, 1, 0), null).getBreakSound(), 
 							SoundCategory.BLOCKS, 1.0F, 1.0F, false);
-					worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, pos.getX() + 0.5D, pos.getY() + 1.0D, 
+					getWorld().spawnParticle(EnumParticleTypes.SMOKE_LARGE, pos.getX() + 0.5D, pos.getY() + 1.0D, 
 							pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
-		        	if(!worldObj.isRemote) {
+		        	if(!getWorld().isRemote) {
 						FARMED_STACKS.addAll(getCurrentBlockDrops());
-						worldObj.setBlockState(pos, tempCrop.withAge(0), 2);	
+						getWorld().setBlockState(pos, tempCrop.withAge(0), 2);	
 						useHoe();
-		        		worldObj.markAndNotifyBlock(pos, worldObj.getChunkFromBlockCoords(pos), worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2);
+		        		getWorld().markAndNotifyBlock(pos, getWorld().getChunkFromBlockCoords(pos), getWorld().getBlockState(pos), getWorld().getBlockState(pos), 2);
 						if(FARMED_STACKS.size() > 0) {
 							for(int i=FARMED_STACKS.size()-1; i>=0; i--) {
 								if(FARMED_STACKS.get(i).getItem() instanceof IPlantable) {
@@ -243,54 +244,62 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 						}
 		        	}
 				}
-			}else if(worldObj.getBlockState(pos.add(0, 1, 0)).getBlock() instanceof BlockReed){	   
-	        	if(!worldObj.isRemote) {
-					if(worldObj.getBlockState(pos.add(0, 2, 0)).getBlock() instanceof BlockReed) {
-						FARMED_STACKS.addAll(worldObj.getBlockState(pos.add(0, 2, 0)).getBlock().getDrops(worldObj, pos.add(0, 2, 0), worldObj.getBlockState(pos.add(0, 2, 0)), 0));
-						worldObj.setBlockToAir(pos.add(0, 2, 0));	
-		        		worldObj.markAndNotifyBlock(pos, worldObj.getChunkFromBlockCoords(pos), worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2);
+			}else if(getWorld().getBlockState(pos.add(0, 1, 0)).getBlock() instanceof BlockReed){	   
+	        	if(!getWorld().isRemote) {
+					if(getWorld().getBlockState(pos.add(0, 2, 0)).getBlock() instanceof BlockReed) {
+				        NonNullList<ItemStack> ret = NonNullList.create();
+						getWorld().getBlockState(pos.add(0, 2, 0)).getBlock().getDrops(ret, getWorld(), pos.add(0, 2, 0), getWorld().getBlockState(pos.add(0, 2, 0)), 0);
+						FARMED_STACKS.addAll(ret);
+						getWorld().setBlockToAir(pos.add(0, 2, 0));	
+		        		getWorld().markAndNotifyBlock(pos, getWorld().getChunkFromBlockCoords(pos), getWorld().getBlockState(pos), getWorld().getBlockState(pos), 2);
 					}
 	        	}
-				worldObj.playSound(pos.getX(), pos.getY(), pos.getZ(), worldObj.getBlockState(pos.add(0, 1, 0)).getBlock().getSoundType().getBreakSound(), 
+				getWorld().playSound(pos.getX(), pos.getY(), pos.getZ(), getWorld().getBlockState(pos.add(0, 1, 0)).getBlock().getSoundType(getWorld().getBlockState(pos.add(0, 1, 0)), world, pos.add(0, 1, 0), null).getBreakSound(), 
 						SoundCategory.BLOCKS, 1.0F, 1.0F, false);
-				worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, pos.getX() + 0.5D, pos.add(0, 1, 0).getY() + 1.0D, 
+				getWorld().spawnParticle(EnumParticleTypes.SMOKE_LARGE, pos.getX() + 0.5D, pos.add(0, 1, 0).getY() + 1.0D, 
 						pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
-	        	if(!worldObj.isRemote) {
-					FARMED_STACKS.addAll(worldObj.getBlockState(pos.add(0, 1, 0)).getBlock().getDrops(worldObj, pos.add(0, 1, 0), worldObj.getBlockState(pos.add(0, 1, 0)), 0));
-					worldObj.setBlockToAir(pos.add(0, 1, 0));
-					worldObj.markAndNotifyBlock(pos, worldObj.getChunkFromBlockCoords(pos), worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2);
+	        	if(!getWorld().isRemote) {
+			        NonNullList<ItemStack> ret = NonNullList.create();
+					getWorld().getBlockState(pos.add(0, 2, 0)).getBlock().getDrops(ret, getWorld(), pos.add(0, 2, 0), getWorld().getBlockState(pos.add(0, 2, 0)), 0);
+					FARMED_STACKS.addAll(ret);
+					getWorld().setBlockToAir(pos.add(0, 1, 0));
+					getWorld().markAndNotifyBlock(pos, getWorld().getChunkFromBlockCoords(pos), getWorld().getBlockState(pos), getWorld().getBlockState(pos), 2);
 					useHoe();
 	        	}
-			}else if(worldObj.getBlockState(pos.add(0, 1, 0)).getBlock() instanceof BlockCactus){	      
-	        	if(!worldObj.isRemote) {
-					if(worldObj.getBlockState(pos.add(0, 2, 0)).getBlock() instanceof BlockCactus) {
-						FARMED_STACKS.addAll(worldObj.getBlockState(pos.add(0, 2, 0)).getBlock().getDrops(worldObj, pos.add(0, 2, 0), worldObj.getBlockState(pos.add(0, 2, 0)), 0));
-						worldObj.setBlockToAir(pos.add(0, 2, 0));	
-		        		worldObj.markAndNotifyBlock(pos, worldObj.getChunkFromBlockCoords(pos), worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2);
+			}else if(getWorld().getBlockState(pos.add(0, 1, 0)).getBlock() instanceof BlockCactus){	      
+	        	if(!getWorld().isRemote) {
+					if(getWorld().getBlockState(pos.add(0, 2, 0)).getBlock() instanceof BlockCactus) {
+				        NonNullList<ItemStack> ret = NonNullList.create();
+						getWorld().getBlockState(pos.add(0, 2, 0)).getBlock().getDrops(ret, getWorld(), pos.add(0, 2, 0), getWorld().getBlockState(pos.add(0, 2, 0)), 0);
+						FARMED_STACKS.addAll(ret);
+						getWorld().setBlockToAir(pos.add(0, 2, 0));	
+		        		getWorld().markAndNotifyBlock(pos, getWorld().getChunkFromBlockCoords(pos), getWorld().getBlockState(pos), getWorld().getBlockState(pos), 2);
 					}
 	        	}
-				worldObj.playSound(pos.getX(), pos.getY(), pos.getZ(), worldObj.getBlockState(pos.add(0, 1, 0)).getBlock().getSoundType().getBreakSound(), 
+				getWorld().playSound(pos.getX(), pos.getY(), pos.getZ(), getWorld().getBlockState(pos.add(0, 1, 0)).getBlock().getSoundType(getWorld().getBlockState(pos.add(0, 1, 0)), world, pos.add(0, 1, 0), null).getBreakSound(),  
 						SoundCategory.BLOCKS, 1.0F, 1.0F, false);
-				worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, pos.getX() + 0.5D, pos.add(0, 1, 0).getY() + 1.0D, 
+				getWorld().spawnParticle(EnumParticleTypes.SMOKE_LARGE, pos.getX() + 0.5D, pos.add(0, 1, 0).getY() + 1.0D, 
 						pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
-	        	if(!worldObj.isRemote) {
-					FARMED_STACKS.addAll(worldObj.getBlockState(pos.add(0, 1, 0)).getBlock().getDrops(worldObj, pos.add(0, 1, 0), worldObj.getBlockState(pos.add(0, 1, 0)), 0));
-					worldObj.setBlockToAir(pos.add(0, 1, 0));	
+	        	if(!getWorld().isRemote) {
+			        NonNullList<ItemStack> ret = NonNullList.create();
+					getWorld().getBlockState(pos.add(0, 2, 0)).getBlock().getDrops(ret, getWorld(), pos.add(0, 2, 0), getWorld().getBlockState(pos.add(0, 2, 0)), 0);
+					FARMED_STACKS.addAll(ret);
+					getWorld().setBlockToAir(pos.add(0, 1, 0));	
 					useHoe();
-	        		worldObj.markAndNotifyBlock(pos, worldObj.getChunkFromBlockCoords(pos), worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2);
+	        		getWorld().markAndNotifyBlock(pos, getWorld().getChunkFromBlockCoords(pos), getWorld().getBlockState(pos), getWorld().getBlockState(pos), 2);
 	        	}
-			}else if(worldObj.getBlockState(pos).getBlock() instanceof BlockNetherWart) {
-				BlockNetherWart tempNetherwart = (BlockNetherWart) worldObj.getBlockState(pos).getBlock();
-				if(tempNetherwart.getMetaFromState(worldObj.getBlockState(pos)) >= 3) {
-					worldObj.playSound(pos.getX(), pos.getY(), pos.getZ(), worldObj.getBlockState(pos).getBlock().getSoundType().getBreakSound(), 
+			}else if(getWorld().getBlockState(pos).getBlock() instanceof BlockNetherWart) {
+				BlockNetherWart tempNetherwart = (BlockNetherWart) getWorld().getBlockState(pos).getBlock();
+				if(tempNetherwart.getMetaFromState(getWorld().getBlockState(pos)) >= 3) {
+					getWorld().playSound(pos.getX(), pos.getY(), pos.getZ(), getWorld().getBlockState(pos).getBlock().getSoundType(getWorld().getBlockState(pos.add(0, 1, 0)), world, pos.add(0, 1, 0), null).getBreakSound(), 
 							SoundCategory.BLOCKS, 1.0F, 1.0F, false);
-					worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, pos.getX() + 0.5D, pos.getY() + 1.0D, 
+					getWorld().spawnParticle(EnumParticleTypes.SMOKE_LARGE, pos.getX() + 0.5D, pos.getY() + 1.0D, 
 							pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
-		        	if(!worldObj.isRemote) {
+		        	if(!getWorld().isRemote) {
 						FARMED_STACKS.addAll(getCurrentBlockDrops());
-			        	worldObj.setBlockState(pos, Blocks.NETHER_WART.getDefaultState(), 2);
+			        	getWorld().setBlockState(pos, Blocks.NETHER_WART.getDefaultState(), 2);
 						useHoe();
-		        		worldObj.markAndNotifyBlock(pos, worldObj.getChunkFromBlockCoords(pos), worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2);
+		        		getWorld().markAndNotifyBlock(pos, getWorld().getChunkFromBlockCoords(pos), getWorld().getBlockState(pos), getWorld().getBlockState(pos), 2);
 						if(FARMED_STACKS.size() > 0) {
 							for(int i=FARMED_STACKS.size()-1; i>=0; i--) {
 								if(FARMED_STACKS.get(i).getItem() instanceof IPlantable) {
@@ -306,13 +315,16 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 		return true;
 	}
 	public List<ItemStack> getCurrentBlockDrops() {
-		return worldObj.getBlockState(CURRENT_COORD).getBlock().getDrops(worldObj, CURRENT_COORD, worldObj.getBlockState(CURRENT_COORD), 0);
+        NonNullList<ItemStack> ret = NonNullList.create();
+		getWorld().getBlockState(CURRENT_COORD).getBlock().getDrops(ret, getWorld(), CURRENT_COORD, getWorld().getBlockState(CURRENT_COORD), 0);
+		return ret;
 	}
 	@Override
 	public String getName() {
 		return "Basic farmer";
 	}
-    public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.util.EnumFacing facing){
+    @SuppressWarnings("unchecked")
+	public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.util.EnumFacing facing){
     	if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
     		if(facing == EnumFacing.DOWN) {
     			return (T) SLOTS_OUTPUT;

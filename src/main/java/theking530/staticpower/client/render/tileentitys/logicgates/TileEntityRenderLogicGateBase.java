@@ -3,10 +3,11 @@ package theking530.staticpower.client.render.tileentitys.logicgates;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.vertex.VertexBuffer;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -30,18 +31,41 @@ public class TileEntityRenderLogicGateBase extends TileEntitySpecialRenderer {
     	TEXTURE_OFF = OffTexture;
     }
 	@Override
-	public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float f, int dest) {
+	    public void render(TileEntity tileentity, double x, double y, double z, float f, int dest, float alpha) {
 		TileEntityBaseLogicGate Gate = (TileEntityBaseLogicGate)tileentity;
-		EnumFacing facing = EnumFacing.getHorizontal(tileentity.getBlockMetadata())	;
+		int orientation = tileentity.getBlockMetadata();
+		
 		GL11.glPushMatrix();
 		GL11.glTranslated(x, y, z);
 
 		 GL11.glTranslatef(0.5F, 1.5F, 0.5F);		
 		 GL11.glPushMatrix();
-		 GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 		 
-		 GL11.glRotatef(-90F, 0.0F, 1.0F, 0.0F);
-		 //GL11.glTranslatef(0.5F, 1.5F, 0.5F);		
+		 switch(orientation) {
+		 case 0:
+			 GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);			 
+			 GL11.glRotatef(-90F, 0.0F, 1.0F, 0.0F);
+			 break;
+		 case 1:
+			 GL11.glRotatef(90, 1.0F, 0.0F, 0.0F);
+			 GL11.glTranslatef(0.0F, -1.0F, 1.0F);
+			 break;
+		 case 2:
+			 GL11.glRotatef(90, 0.0F, 0.0F, 1.0F);
+			 GL11.glTranslatef(-1.0F, -1.0F, 0.0F);
+			 break;
+		 case 3:
+			 GL11.glRotatef(-90, 1.0F, 0.0F, 0.0F);
+			 GL11.glTranslatef(0.0F, -1.0F, -1.0F);
+			 break;
+		 case 4:
+			 GL11.glRotatef(-90, 0.0F, 0.0F, 1.0F);
+			 GL11.glTranslatef(1.0F, -1.0F, 0.0F);
+			 break;
+		 case 5: 
+			 GL11.glTranslatef(0.0F, -2.0F, 0.0F);	
+			 break;
+		 }
 		 
 		 renderInputOutput(Gate, EnumFacing.NORTH);
 		 renderInputOutput(Gate, EnumFacing.SOUTH);
@@ -63,7 +87,7 @@ public class TileEntityRenderLogicGateBase extends TileEntitySpecialRenderer {
 			return;
         }
 		Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer vertexbuffer = tessellator.getBuffer();
+        BufferBuilder vertexbuffer = tessellator.getBuffer();
         vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
 
         if(Gate.SIDE_MODES[side.ordinal()] == Mode.Input) {

@@ -1,12 +1,6 @@
 package theking530.staticpower.potioneffects;
 
-import java.util.ArrayList;
-import java.util.UUID;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.potion.PotionEffect;
@@ -58,7 +52,7 @@ public class EffectGhost extends BasePotion {
 
         for (player.experienceTotal -= amount; player.experience <= 0.0F; player.experience /= (float)player.xpBarCap()) {
         	player.experience = (player.experience + 1.0F) * (float)player.xpBarCap();
-        	player.removeExperienceLevel(1);
+        	player.addExperience(-1);
         }
 	}
 }

@@ -1,13 +1,11 @@
 package theking530.staticpower.fluids;
 
-import java.util.List;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -15,8 +13,6 @@ import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import theking530.staticpower.assists.RegisterHelper;
-import theking530.staticpower.blocks.BaseItemBlock;
 
 public class BaseFluidBlock extends BlockFluidClassic  {
 
@@ -52,9 +48,9 @@ protected Fluid fluid;
 	}
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
-		if (tab != null) {
-			super.getSubBlocks(itemIn, tab, list);
+    public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items) {
+		if (itemIn != null) {
+			super.getSubBlocks(itemIn, items);
 		}
 	}
 }

@@ -5,7 +5,6 @@ import java.util.List;
 
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.potion.PotionEffect;
 import theking530.staticpower.items.EquipmentMaterial;
 import theking530.staticpower.utils.EnumTextFormatting;

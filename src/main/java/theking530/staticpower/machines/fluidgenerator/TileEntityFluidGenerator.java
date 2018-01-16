@@ -1,15 +1,7 @@
 package theking530.staticpower.machines.fluidgenerator;
 
-import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundCategory;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
-import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.handlers.crafting.registries.FluidGeneratorRecipeRegistry;
 import theking530.staticpower.machines.BaseMachineWithTank;
 import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent;
@@ -51,7 +43,7 @@ public class TileEntityFluidGenerator extends BaseMachineWithTank{
 		return "Fluid Generator";	
 	}	
 	public void process() {
-		if(!worldObj.isRemote) {
+		if(!getWorld().isRemote) {
 			if(!isTankEmpty() && !isProcessing() && getFluidRFOutput(TANK.getFluid()) > 0 && STORAGE.getEnergyStored() < STORAGE.getMaxEnergyStored()) {
 				PROCESSING_TIMER = 1;
 				PROCESSING_FLUID = TANK.getFluid();

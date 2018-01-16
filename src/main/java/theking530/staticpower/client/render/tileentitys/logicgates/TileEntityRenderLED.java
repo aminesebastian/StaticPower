@@ -2,10 +2,11 @@ package theking530.staticpower.client.render.tileentitys.logicgates;
 
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.vertex.VertexBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import theking530.staticpower.assists.Reference;
@@ -13,21 +14,43 @@ import theking530.staticpower.tileentity.gates.led.TileEntityLED;
 import theking530.staticpower.utils.GUIUtilities;
 import theking530.staticpower.utils.Vector3;
 
-public class TileEntityRenderLED extends TileEntitySpecialRenderer {
+public class TileEntityRenderLED extends TileEntitySpecialRenderer<TileEntityLED> {
 
     private final float PIXEL = 1f/16f;
-    ResourceLocation TEXTURE = new ResourceLocation(Reference.MODID, "textures/BlankTexture.png");
+    ResourceLocation TEXTURE = new ResourceLocation(Reference.MODID, "textures/blank_texture.png");
     
 	@Override
-	public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float f, int dest) {
-		TileEntityLED LED = (TileEntityLED)tileentity;
+	public void render(TileEntityLED LED, double x, double y, double z, float f, int dest, float alpha) {
+		GL11.glPushMatrix();
+		GL11.glTranslated(x, y, z);		
+		GL11.glPushMatrix();
 
-		GL11.glPushMatrix();
-		GL11.glTranslated(x, y, z);
-		GL11.glTranslatef(0.0F, PIXEL*2, 0.0F);		
-		GL11.glPushMatrix();
-		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);		 
-		GL11.glRotatef(-90F, 0.0F, 1.0F, 0.0F);
+		int orientation = LED.getBlockMetadata();
+		
+		switch(orientation) {
+		 case 0:			 
+			 break;
+		 case 1:
+			 GL11.glRotatef(-90, 1.0F, 0.0F, 0.0F);
+			 GL11.glTranslatef(0.0F, -1.0F, 0.0F);
+			 break;
+		 case 2:
+			 GL11.glRotatef(-90, 0.0F, 0.0F, 1.0F);
+			 GL11.glTranslatef(-1.0F, 0.0F, 0.0F);
+			 break;
+		 case 3:
+			 GL11.glRotatef(-90, 1.0F, 0.0F, 0.0F);
+			 GL11.glTranslatef(0.0F, 0.0F-2*PIXEL, 0.0F);
+			 break;
+		 case 4:
+			 GL11.glRotatef(-90, 0.0F, 0.0F, 1.0F);
+			 GL11.glTranslatef(-1.0F, 1.0F-2*PIXEL, 0.0F);
+			 break;
+		 case 5: 
+			 GL11.glTranslatef(0.0F, 1.0F-2*PIXEL, 0.0F);	
+			 break;
+		 }
+		
 		GL11.glDisable(GL11.GL_LIGHTING);
 		bindTexture(TEXTURE);
 		renderBlock(LED);
@@ -39,7 +62,7 @@ public class TileEntityRenderLED extends TileEntitySpecialRenderer {
 		Vector3 vec3 = GUIUtilities.getColor(LED.COLOR);
 		float POWER = ((float)LED.LIGHT_LEVEL+1f)/16f;
 		Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer vertexbuffer = tessellator.getBuffer();
+        BufferBuilder vertexbuffer = tessellator.getBuffer();
         vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
 		//Bottom
 		GL11.glPushMatrix();

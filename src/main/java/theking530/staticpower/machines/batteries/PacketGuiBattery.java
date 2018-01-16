@@ -11,11 +11,11 @@ import theking530.staticpower.machines.batteries.tileentities.TileEntityBattery;
 
   
 public class PacketGuiBattery implements IMessage{
-    private static int INPUT_PER_TICK;
-    private static int OUTPUT_PER_TICK;
-    private static int x;
-    private static int y;
-    private static int z;
+    private int INPUT_PER_TICK;
+    private int OUTPUT_PER_TICK;
+    private int x;
+    private int y;
+    private int z;
 
     
     public PacketGuiBattery() {}
@@ -49,7 +49,7 @@ public class PacketGuiBattery implements IMessage{
     public static class Message implements IMessageHandler<PacketGuiBattery, IMessage> {
     @Override
     public IMessage onMessage(PacketGuiBattery message, MessageContext ctx) {
-	 	TileEntity tile = Minecraft.getMinecraft().theWorld.getTileEntity(new BlockPos(message.x, message.y, message.z));
+	 	TileEntity tile = Minecraft.getMinecraft().world.getTileEntity(new BlockPos(message.x, message.y, message.z));
     		if(tile != null) {
     			TileEntityBattery battery = (TileEntityBattery)tile;
     			battery.STORAGE.setMaxReceive(message.INPUT_PER_TICK);

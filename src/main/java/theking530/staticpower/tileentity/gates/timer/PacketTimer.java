@@ -8,10 +8,10 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
   
 public class PacketTimer implements IMessage{
-    private static int SPEED;
-    private static int x;
-    private static int y;
-    private static int z;
+    private int SPEED;
+    private int x;
+    private int y;
+    private int z;
     
     public PacketTimer() {}
     
@@ -38,7 +38,7 @@ public class PacketTimer implements IMessage{
     public static class Message implements IMessageHandler<PacketTimer, IMessage> {
     @Override
     public IMessage onMessage(PacketTimer message, MessageContext ctx) {
-    		TileEntity te = ctx.getServerHandler().playerEntity.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
+    		TileEntity te = ctx.getServerHandler().player.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
     		if(te != null) {
 	    		TileEntityTimer sMultiplier = (TileEntityTimer)te;
 	    		sMultiplier.SPEED = message.SPEED;

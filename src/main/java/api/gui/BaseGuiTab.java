@@ -5,16 +5,13 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.MinecraftForgeClient;
 import theking530.staticpower.utils.StaticVertexBuffer;
 
 public class BaseGuiTab extends Gui {
@@ -26,7 +23,7 @@ public class BaseGuiTab extends Gui {
 	protected int GUI_LEFT;
 	protected int GUI_TOP;
 	public float TAB_ANIMATION = 0;
-	public float TAB_ANIMATION_SPEED = 4f;
+	public float TAB_ANIMATION_SPEED = 5.0f;
 	private Item ITEM;
 	private Block BLOCK;
 	private ResourceLocation texture;
@@ -80,7 +77,7 @@ public class BaseGuiTab extends Gui {
 		int tabLeft = GUI_LEFT + j + TAB_XPOS;
 		int tabTop = GUI_TOP + k + TAB_YPOS;
         Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer tes = tessellator.getBuffer();
+        BufferBuilder tes = tessellator.getBuffer();
         tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		//Top

@@ -3,31 +3,18 @@ package theking530.staticpower.machines.cropsqueezer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.SlotItemHandler;
-import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistry;
 
 public class ContainerCropSqueezer extends Container {
 	
 	private TileEntityCropSqueezer CropSqueezer;
-	private int PROCESSING_TIMER;
-	private int FLUID_AMOUNT;
-	private int ENERGY_STORED;
-	private int FLUID_ID;
 	
 	private int upgradeSlotX;
 	private int upgradeSlotY;
 	public ContainerCropSqueezer(InventoryPlayer invPlayer, TileEntityCropSqueezer teCropSqueezer) {
-		PROCESSING_TIMER = 0;
-		ENERGY_STORED = 0;
-		FLUID_AMOUNT = 0;
-		
 		CropSqueezer = teCropSqueezer;
 		
 		//Input
@@ -98,15 +85,15 @@ public class ContainerCropSqueezer extends Container {
             }else if (!this.mergeItemStack(itemstack1, 6, 42, false)) {
                 return null;
             }
-            if (itemstack1.stackSize == 0){
-                slot.putStack((ItemStack)null);
+            if (itemstack1.getCount() == 0){
+                slot.putStack(ItemStack.EMPTY);
             }else {
                 slot.onSlotChanged();
             }
-            if (itemstack1.stackSize == itemstack.stackSize){
+            if (itemstack1.getCount() == itemstack.getCount()){
                 return null;
             }
-            slot.onPickupFromSlot(player, itemstack1);
+            slot.onTake(player, itemstack1);
         }
         return itemstack;
     }

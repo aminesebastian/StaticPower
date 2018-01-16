@@ -1,12 +1,7 @@
 package theking530.staticpower.tileentity.gates.notgate;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRedstoneWire;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import theking530.staticpower.tileentity.gates.TileEntityBaseLogicGate;
-import theking530.staticpower.utils.SideModeList.Mode;
 
 public class TileEntityNotGate extends TileEntityBaseLogicGate {
 	
@@ -15,7 +10,7 @@ public class TileEntityNotGate extends TileEntityBaseLogicGate {
 	}
 	@Override
 	public void gateTick() {
-		if(!worldObj.isRemote) {
+		if(!getWorld().isRemote) {
 			if(getInputSignal(getInputSide()) == 0) {
 				setAllOutputs(15);
 			}else{

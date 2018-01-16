@@ -1,15 +1,12 @@
 package theking530.staticpower.utils;
 
-import java.util.List;
-
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
 public class InventoryUtilities {
 
 	public static boolean canFullyInsertItemIntoSlot(IItemHandler inv, int slot, ItemStack stack) {
-		if(inv.insertItem(slot, stack, true) == null) {
+		if(inv.insertItem(slot, stack, true) == ItemStack.EMPTY) {
 			return true;
 		}else{
 			return false;
@@ -18,7 +15,7 @@ public class InventoryUtilities {
 	public static boolean canInsertItemIntoSlot(IItemHandler inv, int slot, ItemStack stack) {
 		if(canFullyInsertItemIntoSlot(inv, slot, stack)) {
 			return true;
-		}else if(inv.insertItem(slot, stack, true).stackSize < stack.stackSize) {
+		}else if(inv.insertItem(slot, stack, true).getCount() < stack.getCount()) {
 			return true;
 		}
 		return false;

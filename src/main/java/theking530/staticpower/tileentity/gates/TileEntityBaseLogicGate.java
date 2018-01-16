@@ -4,15 +4,12 @@ import java.util.ArrayList;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.BlockRedstoneWire;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import theking530.staticpower.utils.Color;
-import theking530.staticpower.utils.SideModeList;
 import theking530.staticpower.utils.SideModeList.Mode;
 
 public class TileEntityBaseLogicGate extends TileEntity implements ITickable{
@@ -77,7 +74,7 @@ public class TileEntityBaseLogicGate extends TileEntity implements ITickable{
 		return false;
 	}
 	public ArrayList<EnumFacing> getInputSides(){
-		ArrayList<EnumFacing> facingList = new ArrayList();
+		ArrayList<EnumFacing> facingList = new ArrayList<EnumFacing>();
 		for(int i=0; i<6; i++) {
 			if(SIDE_MODES[i] == Mode.Input) {
 				facingList.add(EnumFacing.values()[i]);
@@ -94,13 +91,18 @@ public class TileEntityBaseLogicGate extends TileEntity implements ITickable{
 		return null;
 	}
 	public int getInputSignal(EnumFacing side) {
+		if(getWorld().isRemote) {
+			return 0;
+		}
 		if(side != null) {
 			int strength = 0;
-			if(worldObj.isBlockIndirectlyGettingPowered(pos.offset(side)) > 0) {
-				strength = worldObj.getRedstonePower(pos.offset(side), side);
-			}else{
-				strength = worldObj.getStrongPower(pos.offset(side));
+			for(int i=0; i<6; i++) {
+				//int temp = getWorld().getStrongPower(pos.offset(side), EnumFacing.values()[i]);
+//				if(temp > strength) {
+					//strength = temp;
+				//}
 			}
+
 			return strength;			
 		}
 		return 0;
@@ -117,11 +119,14 @@ public class TileEntityBaseLogicGate extends TileEntity implements ITickable{
 	public int getExtraSignal(EnumFacing side) {
 		if(side != null) {
 			int strength = 0;
-			if(worldObj.isBlockIndirectlyGettingPowered(pos.offset(side)) > 0) {
-				strength = worldObj.getRedstonePower(pos.offset(side), side);
-			}else{
-				strength = worldObj.getStrongPower(pos.offset(side));
+
+			for(int i=0; i<6; i++) {
+				int temp = getWorld().getStrongPower(pos.offset(side), EnumFacing.values()[i]);
+				if(temp > strength) {
+					strength = temp;
+				}
 			}
+
 			return strength;			
 		}
 		return 0;
@@ -151,9 +156,7 @@ public class TileEntityBaseLogicGate extends TileEntity implements ITickable{
 			return;
 		}else{
 			if(SIDE_MODES[side.ordinal()] == Mode.Output) {
-				OUTPUT_SIGNALS[side.ordinal()] = strength;
-		        worldObj.notifyBlockOfStateChange(pos.offset(side), this.getBlockType());
-		        worldObj.markAndNotifyBlock(pos.offset(side), worldObj.getChunkFromBlockCoords(pos.offset(side)), worldObj.getBlockState(pos.offset(side)), worldObj.getBlockState(pos.offset(side)), 2);		
+				OUTPUT_SIGNALS[side.ordinal()] = strength;		
 			}       
 		}
 	}	
@@ -171,9 +174,7 @@ public class TileEntityBaseLogicGate extends TileEntity implements ITickable{
 			return;
 		}else{
 			if(SIDE_MODES[side.ordinal()] == Mode.Regular) {
-				OUTPUT_SIGNALS[side.ordinal()] = strength;
-		        worldObj.notifyBlockOfStateChange(pos.offset(side), this.getBlockType());
-		        worldObj.markAndNotifyBlock(pos.offset(side), worldObj.getChunkFromBlockCoords(pos.offset(side)), worldObj.getBlockState(pos.offset(side)), worldObj.getBlockState(pos.offset(side)), 2);		
+				OUTPUT_SIGNALS[side.ordinal()] = strength;	
 			}       
 		}
 	}	
@@ -189,16 +190,13 @@ public class TileEntityBaseLogicGate extends TileEntity implements ITickable{
 	public void reset(){
 		for(int i=2; i<6; i++) {
 			EnumFacing side = EnumFacing.values()[i];
-			OUTPUT_SIGNALS[side.ordinal()] = 0;
-	        worldObj.notifyBlockOfStateChange(pos.offset(side), this.getBlockType());
-	        worldObj.markAndNotifyBlock(pos.offset(side), worldObj.getChunkFromBlockCoords(pos.offset(side)), worldObj.getBlockState(pos.offset(side)), worldObj.getBlockState(pos.offset(side)), 2);		
+			OUTPUT_SIGNALS[side.ordinal()] = 0;		
 		}
 	}
 	public void updateGate() {
-        worldObj.notifyBlockOfStateChange(pos, this.getBlockType());
-        worldObj.markAndNotifyBlock(pos, worldObj.getChunkFromBlockCoords(pos), worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2);
-		blockType.neighborChanged(worldObj.getBlockState(pos), worldObj, pos, blockType);
-        markDirty();
+		getWorld().notifyNeighborsOfStateChange(pos, blockType, false);
+        getWorld().markAndNotifyBlock(pos, getWorld().getChunkFromBlockCoords(pos), getWorld().getBlockState(pos), getWorld().getBlockState(pos), 2);
+        //markDirty();
 	}
 	public int maxInputs(){
 		return 1;

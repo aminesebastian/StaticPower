@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.IModel;
@@ -19,7 +18,7 @@ import net.minecraftforge.common.model.TRSRTransformation;
 import theking530.staticpower.client.model.Models;
 import theking530.staticpower.tileentity.solarpanels.TileEntityStaticSolarPanel;
 
-public class TileEntityRenderSolarPanel extends TileEntitySpecialRenderer<TileEntity> {
+public class TileEntityRenderSolarPanel extends TileEntitySpecialRenderer<TileEntityStaticSolarPanel> {
 	
 	//ResourceLocation model = new ResourceLocation(Reference.MODID, "models/machines/SolarPanel.obj");
 	ResourceLocation sTextureOn;
@@ -30,11 +29,7 @@ public class TileEntityRenderSolarPanel extends TileEntitySpecialRenderer<TileEn
 	
 	static float width = .9F;
 
-    public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float f) {
-    	TileEntityStaticSolarPanel sPanel = (TileEntityStaticSolarPanel)tileEntity;	
-    	
-
-    		
+    public void renderTileEntityAt(TileEntityStaticSolarPanel tileEntity, double x, double y, double z, float f) { 
         GlStateManager.pushMatrix();
 
         GlStateManager.translate(.5, 0, .5);

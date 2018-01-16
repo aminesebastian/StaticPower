@@ -24,7 +24,7 @@ public class GuiEnergizedChest extends GuiContainer{
 	}
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = I18n.format(this.ENERGIZED_CHEST.getName());
-		this.fontRendererObj.drawString(name, this.xSize - 169, 7, 4210752 );
+		this.fontRenderer.drawString(name, this.xSize - 169, 7, 4210752 );
 	}	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {

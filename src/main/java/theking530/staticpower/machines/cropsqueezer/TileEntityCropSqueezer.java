@@ -1,13 +1,7 @@
 package theking530.staticpower.machines.cropsqueezer;
 
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.SoundCategory;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
 import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistry;
 import theking530.staticpower.machines.BaseMachineWithTank;
 import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent;
@@ -18,8 +12,6 @@ public class TileEntityCropSqueezer extends BaseMachineWithTank {
 	public int INITIAL_PROCESSING_ENERGY_MULT = 10;
 	public int ENERGY_CAPACTIY = 100000;
 	public DrainToBucketComponent DRAIN_COMPONENT;
-	
-	private String customName;
 	
 	public TileEntityCropSqueezer() {
 		initializeBaseMachineWithTank(2, 100, 100000, 80, 50, 1, 2, 2, 5000);
@@ -78,24 +70,24 @@ public class TileEntityCropSqueezer extends BaseMachineWithTank {
 	}
 	@Override
 	public int getProcessingCost() {
-		if(SLOTS_INPUT.getStackInSlot(0) != null) {
+		if(SLOTS_INPUT.getStackInSlot(0) != ItemStack.EMPTY) {
 			return getProcessingEnergy(SLOTS_INPUT.getStackInSlot(0));
-		}else if(SLOTS_INTERNAL.getStackInSlot(0) != null){
+		}else if(SLOTS_INTERNAL.getStackInSlot(0) != ItemStack.EMPTY){
 			return getProcessingEnergy(SLOTS_INTERNAL.getStackInSlot(0));
 		}
 		return 0;
 	}
 	@Override
 	public int getProcessingEnergy(ItemStack itemStack) {
-		if(getResult(itemStack) != null) {
+		if(getResult(itemStack) != ItemStack.EMPTY) {
 			return INITIAL_POWER_USE*PROCESSING_ENERGY_MULT;
 		}
 		return 0;
 	}	
 	public void process() {
-		if(!worldObj.isRemote) {
+		if(!getWorld().isRemote) {
 			DRAIN_COMPONENT.update();
-			if(SLOTS_INTERNAL.getStackInSlot(0) == null){
+			if(SLOTS_INTERNAL.getStackInSlot(0) == ItemStack.EMPTY){
 				PROCESSING_TIMER = 0;
 			}
 			//Start Process
@@ -123,7 +115,7 @@ public class TileEntityCropSqueezer extends BaseMachineWithTank {
 					if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, 0, getResult(SLOTS_INTERNAL.getStackInSlot(0)))) {
 						TANK.fill(getFluidResult(SLOTS_INTERNAL.getStackInSlot(0)), true);
 						SLOTS_OUTPUT.insertItem(0, getResult(SLOTS_INTERNAL.getStackInSlot(0)).copy(), false);
-						SLOTS_INTERNAL.setStackInSlot(0, null);
+						SLOTS_INTERNAL.setStackInSlot(0, ItemStack.EMPTY);
 						PROCESSING_TIMER = 0;
 						updateBlock();
 					}
@@ -133,7 +125,7 @@ public class TileEntityCropSqueezer extends BaseMachineWithTank {
 	}
 	@Override
 	public int fill(FluidStack resource, boolean doFill) {
-		if(!worldObj.isRemote) {
+		if(!getWorld().isRemote) {
 			updateBlock();
 		}
 		return TANK.fill(resource, doFill);

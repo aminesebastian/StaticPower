@@ -2,6 +2,9 @@ package theking530.staticpower.world.plants;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemFood;
@@ -20,9 +23,9 @@ public class LumumCrop extends ItemFood {
 		setAlwaysEdible();
 	}
 	@Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
-		list.add("These Seem to Radiate");
-		list.add("Energy...Yummy");
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+		tooltip.add("These Seem to Radiate");
+		tooltip.add("Energy...Yummy");
     }	
 	@Override
 	protected void onFoodEaten(ItemStack stack, World world, EntityPlayer player) {
@@ -36,7 +39,7 @@ public class LumumCrop extends ItemFood {
                 int j = EntityXPOrb.getXPSplit(i);
         	   // world.playSoundAtEntity(player, "random.orb", 0.5F, 0.4F / (itemRand.nextFloat()));
                 i -= j;
-                world.spawnEntityInWorld(new EntityXPOrb(world, player.posX, player.posY, player.posZ, j));
+                world.spawnEntity(new EntityXPOrb(world, player.posX, player.posY, player.posZ, j));
             }
         }
 	}

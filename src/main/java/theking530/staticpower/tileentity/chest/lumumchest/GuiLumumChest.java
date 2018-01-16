@@ -4,7 +4,6 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import theking530.staticpower.utils.GuiTextures;
@@ -25,7 +24,7 @@ public class GuiLumumChest extends GuiContainer{
 	}
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name =  I18n.format(this.LUMUM_CHEST.getName());
-		this.fontRendererObj.drawString(name, this.xSize - 222, 7, 4210752 );
+		this.fontRenderer.drawString(name, this.xSize - 222, 7, 4210752 );
 	}	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {

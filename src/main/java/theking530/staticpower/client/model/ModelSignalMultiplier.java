@@ -3,6 +3,7 @@ package theking530.staticpower.client.model;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraftforge.client.ForgeHooksClient;
 
 public class ModelSignalMultiplier extends ModelBase {
 	
@@ -45,6 +46,7 @@ public class ModelSignalMultiplier extends ModelBase {
       BorderBottom.setRotationPoint(-3F, 21.5F, -4F);
       BorderBottom.setTextureSize(64, 32);
       BorderBottom.mirror = true;
+
       setRotation(BorderBottom, 0F, 0F, 0F);
   }
   

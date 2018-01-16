@@ -6,17 +6,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import theking530.staticpower.client.gui.widgets.tabs.PacketRedstoneTab;
-import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent;
 import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent.FluidContainerInteractionMode;
-import theking530.staticpower.tileentity.BaseTileEntity;
 
 public class PacketFluidGeneratorContainerMode implements IMessage{
 	
-    private static FluidContainerInteractionMode MODE;
-    private static int x;
-    private static int y;
-    private static int z;
+    private FluidContainerInteractionMode MODE;
+    private int x;
+    private int y;
+    private int z;
 
     public PacketFluidGeneratorContainerMode() {}
     
@@ -43,7 +40,7 @@ public class PacketFluidGeneratorContainerMode implements IMessage{
     public static class Message implements IMessageHandler<PacketFluidGeneratorContainerMode, IMessage> {
     @Override
     public IMessage onMessage(PacketFluidGeneratorContainerMode message, MessageContext ctx) {
-    		TileEntity te = ctx.getServerHandler().playerEntity.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
+    		TileEntity te = ctx.getServerHandler().player.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
     		if(te != null && te instanceof TileEntityFluidGenerator) {
     			TileEntityFluidGenerator entity = (TileEntityFluidGenerator)te;
     			entity.DRAIN_COMPONENT.setMode(message.MODE);

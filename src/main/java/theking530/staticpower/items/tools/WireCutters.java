@@ -2,9 +2,12 @@ package theking530.staticpower.items.tools;
 
 import java.util.List;
 
-import net.minecraft.entity.player.EntityPlayer;
+import javax.annotation.Nullable;
+
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import theking530.staticpower.items.ItemBase;
 import theking530.staticpower.utils.EnumTextFormatting;
 
@@ -32,10 +35,10 @@ public class WireCutters extends ItemBase {
 		return true;
 	}
 	@Override  
-	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean par4) {
+		public void addInformation(ItemStack itemstack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn) {
 	    	if(showHiddenTooltips()) {
-	    		list.add("Max Uses: " + getMaxDamage());
-	    		list.add("Uses Remaining: " + (getMaxDamage() - getDamage(itemstack)));
+	    		list.add("Max Uses: " + getMaxDamage(itemstack));
+	    		list.add("Uses Remaining: " + (getMaxDamage(itemstack) - getDamage(itemstack)));
 	    	}else{
 	    		list.add(EnumTextFormatting.ITALIC + "Hold Shift");
 	    }

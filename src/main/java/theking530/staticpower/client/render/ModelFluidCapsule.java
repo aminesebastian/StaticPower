@@ -22,6 +22,7 @@ package theking530.staticpower.client.render;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Quat4f;
@@ -29,7 +30,7 @@ import javax.vecmath.Quat4f;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.base.Function;
-import com.google.common.base.Optional;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -54,12 +55,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
-import net.minecraftforge.client.model.IModelCustomData;
-import net.minecraftforge.client.model.IPerspectiveAwareModel;
-import net.minecraftforge.client.model.IRetexturableModel;
 import net.minecraftforge.client.model.ItemLayerModel;
 import net.minecraftforge.client.model.ItemTextureQuadConverter;
 import net.minecraftforge.client.model.ModelStateComposition;
+import net.minecraftforge.client.model.PerspectiveMapWrapper;
 import net.minecraftforge.client.model.SimpleModelState;
 import net.minecraftforge.common.model.IModelPart;
 import net.minecraftforge.common.model.IModelState;
@@ -70,7 +69,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import theking530.staticpower.assists.Reference;
 
-public final class ModelFluidCapsule implements IModel, IModelCustomData, IRetexturableModel {
+public final class ModelFluidCapsule implements IModel {
     public static final ModelResourceLocation LOCATION = new ModelResourceLocation(new ResourceLocation(Reference.MODID + ":" + "FluidCapsule"), "inventory");
 
     // minimal Z offset to prevent depth-fighting
@@ -119,10 +118,9 @@ public final class ModelFluidCapsule implements IModel, IModelCustomData, IRetex
     }
 
     @Override
-    public IBakedModel bake(IModelState state, VertexFormat format,
-                                    Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
+	public IBakedModel bake(IModelState state, VertexFormat format, java.util.function.Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
 
-        ImmutableMap<TransformType, TRSRTransformation> transformMap = IPerspectiveAwareModel.MapWrapper.getTransforms(state);
+        ImmutableMap<TransformType, TRSRTransformation> transformMap = PerspectiveMapWrapper.getTransforms(state);
 
         // if the fluid is a gas wi manipulate the initial state to be rotated 180? to turn it upside down
         if (flipGas && fluid != null && fluid.isGaseous())
@@ -130,7 +128,7 @@ public final class ModelFluidCapsule implements IModel, IModelCustomData, IRetex
             state = new ModelStateComposition(state, TRSRTransformation.blockCenterToCorner(new TRSRTransformation(null, new Quat4f(0, 0, 1, 0), null, null)));
         }
 
-        TRSRTransformation transform = state.apply(Optional.<IModelPart>absent()).or(TRSRTransformation.identity());
+        TRSRTransformation transform = state.apply(Optional.empty()).orElse(TRSRTransformation.identity());
         TextureAtlasSprite fluidSprite = null;
         ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
 
@@ -293,9 +291,9 @@ public final class ModelFluidCapsule implements IModel, IModelCustomData, IRetex
             return model.cache.get(name);
         }
     }
-
+    
     // the dynamic capsule is based on the empty capsule
-    private static final class BakedFluidCapsule implements IPerspectiveAwareModel
+    private static final class BakedFluidCapsule implements IBakedModel
     {
 
         private final ModelFluidCapsule parent;
@@ -324,11 +322,11 @@ public final class ModelFluidCapsule implements IModel, IModelCustomData, IRetex
             return BakedFluidCapsuleOverrideHandler.INSTANCE;
         }
 
-        @Override
-        public Pair<? extends IBakedModel, Matrix4f> handlePerspective(TransformType cameraTransformType)
-        {
-            return IPerspectiveAwareModel.MapWrapper.handlePerspective(this, transforms, cameraTransformType);
-        }
+       // @Override
+       // public Pair<? extends IBakedModel, Matrix4f> handlePerspective(TransformType cameraTransformType)
+       // {
+       //     return IBakedModel.MapWrapper.handlePerspective(this, transforms, cameraTransformType);
+      //  }
 
         @Override
         public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand)

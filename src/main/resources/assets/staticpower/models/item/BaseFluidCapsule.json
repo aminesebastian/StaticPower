@@ -1,7 +1,14 @@
 {
-    "parent": "item/generated",
-    "textures": {
-	    "layer0": "staticpower:items/BaseFluidCapsule",
-        "layer1": "staticpower:items/FluidCapsuleFluid"
+    "forge_marker": 1,
+    "variants": {
+        "inventory": {
+            "model": "forge:forgebucket",
+            "textures": {
+                "base": "staticpower:items/BaseFluidCapsule",
+                "fluid": "staticpower:items/FluidCapsuleFluid",
+				"cover": "staticpower:items/BaseFluidCapsule",
+            },
+            "transform": "forge:default-item"
+        }
     }
 }

@@ -20,8 +20,8 @@ public class BaseConduitTileEntity extends TileEntity implements ITickable{
 	public void onPlaced(){ 
 		PLACED = false;
 		for(int i=0; i<6; i++) {
-			if(worldObj.getTileEntity(pos.offset(EnumFacing.values()[i])) != null && worldObj.getTileEntity(pos.offset(EnumFacing.values()[i])) instanceof BaseConduitTileEntity) {
-				BaseConduitTileEntity te = (BaseConduitTileEntity)worldObj.getTileEntity(pos.offset(EnumFacing.values()[i]));
+			if(getWorld().getTileEntity(pos.offset(EnumFacing.values()[i])) != null && getWorld().getTileEntity(pos.offset(EnumFacing.values()[i])) instanceof BaseConduitTileEntity) {
+				BaseConduitTileEntity te = (BaseConduitTileEntity)getWorld().getTileEntity(pos.offset(EnumFacing.values()[i]));
 				if(te.NETWORK != null) {
 					te.NETWORK.addConduit(this);
 					PLACED = true;
@@ -35,8 +35,8 @@ public class BaseConduitTileEntity extends TileEntity implements ITickable{
 		}
 	}
 	public void onNeighborUpdate(IBlockAccess world, BlockPos pos, BlockPos neighbor){
-		if(NETWORK.CONDUIT_MAP.containsKey(worldObj.getTileEntity(neighbor))) {
-			NETWORK.CONDUIT_MAP.remove(worldObj.getTileEntity(neighbor));		
+		if(NETWORK.CONDUIT_MAP.containsKey(getWorld().getTileEntity(neighbor))) {
+			NETWORK.CONDUIT_MAP.remove(getWorld().getTileEntity(neighbor));		
 		}
 	}
 }

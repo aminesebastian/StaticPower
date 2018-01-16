@@ -10,28 +10,29 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import theking530.staticpower.handlers.PacketHandler;
+import theking530.staticpower.tileentity.gates.timer.PacketTimer;
 import theking530.staticpower.utils.GuiTextures;
 
 public class GuiPowerCell extends GuiContainer{
 	
 	private TileEntityPowerCell P_CELL;
+	private int CURRENT_SIGNAL;
 	
 	public GuiPowerCell(InventoryPlayer invPlayer, TileEntityPowerCell tePowerCell) {
 		super(new ContainerPowerCell(invPlayer, tePowerCell));
 		P_CELL = tePowerCell;		
+		CURRENT_SIGNAL = P_CELL.POWER;
 		this.xSize = 138;
 		this.ySize = 86;		
 	}
 	public void drawScreen(int par1, int par2, float par3) {
-    	super.drawScreen(par1, par2, par3);
-    	int var1 = (this.width - this.xSize) / 2;
-        int var2 = (this.height - this.ySize) / 2;       
+    	super.drawScreen(par1, par2, par3);   
 	}
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = I18n.format(this.P_CELL.getName());
 		String info = "Power: " + P_CELL.POWER;
-		this.fontRendererObj.drawString(name, this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2, 6,4210752 );
-		this.fontRendererObj.drawString(info, this.xSize / 2 - this.fontRendererObj.getStringWidth(info)/2 - 1, 57, 4210752 );
+		this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2, 6,4210752 );
+		this.fontRenderer.drawString(info, this.xSize / 2 - this.fontRenderer.getStringWidth(info)/2 - 1, 57, 4210752 );
 	}
 	@Override
 	public void initGui() {
@@ -49,36 +50,30 @@ public class GuiPowerCell extends GuiContainer{
 	}
 	@Override
 	protected void actionPerformed(GuiButton B) {
-		int POWER = P_CELL.POWER;
-		 if(B.id == 1) {
-			 if(P_CELL.POWER < 15) {
-				 if(isShiftDown() && P_CELL.POWER + 5 <= 15){
-					 P_CELL.POWER += 5;
-				 }else if(isShiftDown() && P_CELL.POWER + 5 > 15){
-					 P_CELL.POWER = 15;
-				 }else{
-					 P_CELL.POWER++;
-				 }
-			 }
-	 		}	
-		 if(B.id == 2) {
-			 if(P_CELL.POWER > 0) {
-				 if(isShiftDown() && P_CELL.POWER - 5 >= 0){
-					 P_CELL.POWER -= 5;
-				 }else if(isShiftDown() && P_CELL.POWER - 5 < 0){
-					 P_CELL.POWER = 0;
-				 }else{
-					 P_CELL.POWER--;
-				 }
-		 	}	
-		 }
-		 if(B.id == 5) {
-			IMessage msg = new PacketPowerCell(POWER, P_CELL.getPos());
+		if(B.id == 1) {
+			if(isShiftDown()){
+				CURRENT_SIGNAL += 5;
+			}else{
+				CURRENT_SIGNAL++;
+			}
+	 	}	
+		if(B.id == 2) {
+			if(isShiftDown() && CURRENT_SIGNAL - 5 >= 1){
+				CURRENT_SIGNAL -= 5;
+			}else if(CURRENT_SIGNAL - 1 > 0){
+				CURRENT_SIGNAL--;
+			}
+		}
+		if(B.id == 5) {
+			IMessage msg = new PacketTimer(CURRENT_SIGNAL, P_CELL.getPos());
+			P_CELL.POWER = CURRENT_SIGNAL;
 			PacketHandler.net.sendToServer(msg);
-		 }
+		}
 	}	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
+    	this.drawDefaultBackground();
+    	
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.MULTIPLIER_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);

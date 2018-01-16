@@ -4,24 +4,20 @@ import java.util.List;
 
 import com.google.common.base.Predicate;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.tileentity.BaseTileEntity;
 
 public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<EntityItem> {
 
-	private int RANGE = 3;
+	private int RANGE = 5;
 	
 	public TileEntityVacuumChest() {
 		initializeBasicTileEntity(1, 0, 30);
@@ -30,36 +26,37 @@ public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<E
 	public void process() {
 	    AxisAlignedBB aabb = new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1);
 	    aabb = aabb.expand(RANGE, RANGE, RANGE);
-	    List<EntityItem> droppedItems = worldObj.getEntitiesWithinAABB(EntityItem.class, aabb, this);
+	    aabb = aabb.offset(-RANGE/2, -RANGE/2, -RANGE/2);
+	    List<EntityItem> droppedItems = getWorld().getEntitiesWithinAABB(EntityItem.class, aabb, this);
 		for (EntityItem entity : droppedItems) {
 
 			double x = (pos.getX() + 0.5D - entity.posX);
 			double y = (pos.getY() + 0.5D - entity.posY);
 			double z = (pos.getZ() + 0.5D - entity.posZ);
 			EntityItem item = entity;
-			ItemStack stack = item.getEntityItem().copy();
+			ItemStack stack = item.getItem().copy();
 			if(canAcceptItem(stack) && doesItemPassFilter(stack)) {
 				double distance = Math.sqrt(x * x + y * y + z * z);
 				if (distance < 1.1) {
 					for(int i=0; i<27; i++){
-						if(getOutputStack(i) == null) {
+						if(getOutputStack(i) == ItemStack.EMPTY) {
 							SLOTS_OUTPUT.setStackInSlot(i, stack);
 							item.setDead();
-							worldObj.playSound((double)pos.getX(), (double)pos.getY(), (double)pos.getZ(), SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 0.5F, 1.0F, false);
+							getWorld().playSound((double)pos.getX(), (double)pos.getY(), (double)pos.getZ(), SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 0.5F, 1.0F, false);
 							break;
 						}else{
 							if(getOutputStack(i).isItemEqual(stack)) {
-								int stackSize = getOutputStack(i).stackSize + stack.stackSize;
+								int stackSize = getOutputStack(i).getCount() + stack.getCount();
 								if(stackSize <= 64) {
-									getOutputStack(i).stackSize = stackSize;
+									getOutputStack(i).setCount(stackSize);
 									item.setDead();
-									worldObj.playSound((double)pos.getX(), (double)pos.getY(), (double)pos.getZ(), SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 0.5F, 1.0F, false);
+									getWorld().playSound((double)pos.getX(), (double)pos.getY(), (double)pos.getZ(), SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 0.5F, 1.0F, false);
 									break;
 								}else{
-									int difference = 64 - stack.stackSize;
-									getOutputStack(i).stackSize = 64;
-									item.getEntityItem().stackSize = difference;
-									worldObj.playSound((double)pos.getX(), (double)pos.getY(), (double)pos.getZ(), SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 0.5F, 1.0F, false);
+									int difference = 64 - stack.getCount();
+									getOutputStack(i).setCount(64);
+									item.getItem().setCount(difference);
+									getWorld().playSound((double)pos.getX(), (double)pos.getY(), (double)pos.getZ(), SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 0.5F, 1.0F, false);
 									break;
 								}
 							}
@@ -86,7 +83,7 @@ public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<E
 		return false;
 	}
 	public boolean hasFilter() {
-		if(getInternalStack(0) != null) {
+		if(getInternalStack(0) != ItemStack.EMPTY) {
 			return true;
 		}
 		return false;
@@ -110,7 +107,8 @@ public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<E
         super.writeToNBT(nbt);
         return nbt;
 	}	  	    
-    public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.util.EnumFacing facing){
+	@SuppressWarnings("unchecked")
+	public <T> T getCapability(Capability<T> capability, net.minecraft.util.EnumFacing facing){
     	if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
     		return (T) SLOTS_OUTPUT;
     	}

@@ -8,14 +8,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 import theking530.staticpower.handlers.crafting.registries.SolderingRecipeRegistry;
 import theking530.staticpower.items.tools.ISolderingIron;
-import theking530.staticpower.items.tools.SolderingIron;
 
 public class ContainerSolderingTable extends Container {
 	
  /** The crafting matrix inventory (3x3). */
     private TileEntitySolderingTable SOLDERING_TABLE;
-    private static final String __OBFID = "CL_00001744";
-
     public ContainerSolderingTable(InventoryPlayer invPlayer, TileEntitySolderingTable teTable) {
         SOLDERING_TABLE = teTable;
         int l;
@@ -64,14 +61,17 @@ public class ContainerSolderingTable extends Container {
     		if(tempIron.canSolder(SOLDERING_TABLE.getInputStack(16))) {
     			SOLDERING_TABLE.SLOTS_OUTPUT.setStackInSlot(0, SolderingRecipeRegistry.Soldering().findSolderingOutput(SOLDERING_TABLE.SLOTS_INPUT, SOLDERING_TABLE.getWorld())); 		
     		}else{
-        		SOLDERING_TABLE.SLOTS_OUTPUT.setStackInSlot(0, null); 	
+        		SOLDERING_TABLE.SLOTS_OUTPUT.setStackInSlot(0, ItemStack.EMPTY); 	
     		}    	
     	}else{
-    		SOLDERING_TABLE.SLOTS_OUTPUT.setStackInSlot(0, null); 
+    		SOLDERING_TABLE.SLOTS_OUTPUT.setStackInSlot(0, ItemStack.EMPTY); 
     	}
+    	SOLDERING_TABLE.getWorld().notifyNeighborsOfStateChange(SOLDERING_TABLE.getPos(), SOLDERING_TABLE.getBlockType(), true);
+    	SOLDERING_TABLE.getWorld().markAndNotifyBlock(SOLDERING_TABLE.getPos(), SOLDERING_TABLE.getWorld().getChunkFromBlockCoords(SOLDERING_TABLE.getPos()), SOLDERING_TABLE.getWorld().getBlockState(SOLDERING_TABLE.getPos()), SOLDERING_TABLE.getWorld().getBlockState(SOLDERING_TABLE.getPos()), 2);
+    	SOLDERING_TABLE.markDirty();
     }
     public ItemStack transferStackInSlot(EntityPlayer p_82846_1_, int p_82846_2_){
-        ItemStack itemstack = null;
+        ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = (Slot)this.inventorySlots.get(p_82846_2_);
 
         if (slot != null && slot.getHasStack()){
@@ -79,31 +79,31 @@ public class ContainerSolderingTable extends Container {
             itemstack = itemstack1.copy();
             if (p_82846_2_ == 0){
                 if (!this.mergeItemStack(itemstack1, 10, 46, true)){
-                    return null;
+                    return ItemStack.EMPTY;
                 }
 
                 slot.onSlotChange(itemstack1, itemstack);
             }else if (p_82846_2_ >= 10 && p_82846_2_ < 37){
                 if (!this.mergeItemStack(itemstack1, 37, 46, false)){
-                    return null;
+                    return ItemStack.EMPTY;
                 }
             }else if (p_82846_2_ >= 37 && p_82846_2_ < 46){
                 if (!this.mergeItemStack(itemstack1, 10, 37, false)){
-                    return null;
+                    return ItemStack.EMPTY;
                 }
             }else if (!this.mergeItemStack(itemstack1, 10, 46, false)){
-                return null;
+                return ItemStack.EMPTY;
             }
-            if (itemstack1.stackSize == 0){
-                slot.putStack((ItemStack)null);
+            if (itemstack1.getCount() == 0){
+                slot.putStack(ItemStack.EMPTY);
             }else{
                 slot.onSlotChanged();
             }
 
-            if (itemstack1.stackSize == itemstack.stackSize){
-                return null;
+            if (itemstack1.getCount() == itemstack.getCount()){
+                return ItemStack.EMPTY;
             }
-            slot.onPickupFromSlot(p_82846_1_, itemstack1);
+            slot.onTake(p_82846_1_, itemstack1);
         }
         return itemstack;
     }

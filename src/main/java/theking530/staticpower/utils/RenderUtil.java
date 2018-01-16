@@ -3,19 +3,16 @@ package theking530.staticpower.utils;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.item.Item;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.assists.Reference;
-import theking530.staticpower.machines.cropsqueezer.TileEntityCropSqueezer;
 
 public class RenderUtil {
 	
@@ -52,7 +49,7 @@ public class RenderUtil {
 			
 			GL11.glPushMatrix();
 			Tessellator tessellator = Tessellator.getInstance();
-	        VertexBuffer vertexbuffer = tessellator.getBuffer();
+	        BufferBuilder vertexbuffer = tessellator.getBuffer();
 	        vertexbuffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			GL11.glRotated(180, 0, 1, 0);
 			GL11.glScaled(1, 1, -1);
@@ -72,7 +69,7 @@ public class RenderUtil {
 	    
 		GL11.glPushMatrix();
 		Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer vertexbuffer = tessellator.getBuffer();
+        BufferBuilder vertexbuffer = tessellator.getBuffer();
         vertexbuffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		GL11.glRotated(180, 0, 1, 0);
 		GL11.glScaled(1, 1, -1);

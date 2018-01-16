@@ -11,7 +11,7 @@ import theking530.staticpower.client.model.ModelBlock;
 import theking530.staticpower.machines.fermenter.TileEntityFermenter;
 import theking530.staticpower.utils.SideModeList.Mode;
 
-public class TileEntityRenderFermenter extends TileEntitySpecialRenderer {
+public class TileEntityRenderFermenter extends TileEntitySpecialRenderer<TileEntityFermenter> {
 
 	ResourceLocation side = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSide.png");
 	ResourceLocation sideIn = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSideIn.png");
@@ -21,9 +21,9 @@ public class TileEntityRenderFermenter extends TileEntitySpecialRenderer {
 	ResourceLocation frontOn = new ResourceLocation(Reference.MODID, "textures/blocks/FermenterOn.png");
 	
 	@Override
-	public void renderTileEntityAt(TileEntity tileentity, double translationX, double translationY, double translationZ, float f, int dest) {
-		TileEntityFermenter charger = (TileEntityFermenter)tileentity;			
-		EnumFacing facing = EnumFacing.getHorizontal(tileentity.getBlockMetadata())	;
+	    public void render(TileEntityFermenter tileentity, double translationX, double translationY, double translationZ, float f, int dest, float alpha) {			
+		EnumFacing facing = tileentity.getFacingDirection();
+		
 		GL11.glPushMatrix();
 		GL11.glTranslated(translationX, translationY, translationZ);
 		if(facing == EnumFacing.WEST) {

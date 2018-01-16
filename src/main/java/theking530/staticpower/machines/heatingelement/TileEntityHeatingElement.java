@@ -1,7 +1,6 @@
 package theking530.staticpower.machines.heatingelement;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import theking530.staticpower.machines.BaseMachine;
 
@@ -17,7 +16,7 @@ public class TileEntityHeatingElement extends BaseMachine implements ITickable, 
 	}
 	@Override
 	public void process(){
-		if(!worldObj.isRemote) {
+		if(!getWorld().isRemote) {
 			if(PROCESSING_TIMER >= PROCESSING_TIME) {
 				if(HEAT_STORAGE.getHeat() < HEAT_STORAGE.getMaxHeat() && STORAGE.getEnergyStored() > getProcessingCost()) {
 					HEAT_STORAGE.recieveHeat(1);

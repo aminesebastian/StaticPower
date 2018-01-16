@@ -7,21 +7,20 @@ import api.gui.BlockButton;
 import api.gui.ItemButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import theking530.staticpower.assists.Reference;
 import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.tileentity.BaseTileEntity;
 import theking530.staticpower.utils.EnumTextFormatting;
+import theking530.staticpower.utils.GuiTextures;
 
 public class GuiRedstoneTab {
 	
@@ -33,10 +32,9 @@ public class GuiRedstoneTab {
 	public boolean IS_TAB_OPEN;
 	public TileEntity TILE_ENTITY;
 	private FontRenderer FONT_RENDERER;
-	private ResourceLocation redTab = new ResourceLocation(Reference.MODID + ":" + "textures/gui/RedTab.png");
-	private ResourceLocation bg = new ResourceLocation(Reference.MODID + ":" + "textures/gui/ButtonBG.png");
+
 	
-	public BaseGuiTab RED_TAB = new BaseGuiTab(GUI_LEFT, GUI_TOP, 90, 90, 175, 36, redTab, Items.REDSTONE);
+	public BaseGuiTab RED_TAB = new BaseGuiTab(GUI_LEFT, GUI_TOP, 90, 90, 175, 36, GuiTextures.RED_TAB, Items.REDSTONE);
 	public ItemButton IGNORE_REDSTONE = new ItemButton(GUI_LEFT, GUI_TOP, 20, 20, 190, 62, Items.GUNPOWDER);
 	public ItemButton LOW_REDSTONE = new ItemButton(GUI_LEFT, GUI_TOP, 20, 20, 220, 62, Items.REDSTONE);
 	public BlockButton HIGH_REDSTONE = new BlockButton(GUI_LEFT, GUI_TOP, 20, 20, 250, 62, Blocks.REDSTONE_TORCH);
@@ -105,8 +103,8 @@ public class GuiRedstoneTab {
 
 		GL11.glEnable(GL11.GL_BLEND);
 		Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer vertexbuffer = tessellator.getBuffer();
-		Minecraft.getMinecraft().getTextureManager().bindTexture(bg);
+        BufferBuilder vertexbuffer = tessellator.getBuffer();
+		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.BUTTON_BG);
 		GlStateManager.color(1, 1, 1);
 		vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
 		vertexbuffer.pos(tabLeft+114, tabTop+88, 0).tex(0,1).endVertex();

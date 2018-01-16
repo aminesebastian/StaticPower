@@ -1,247 +1,59 @@
 package theking530.staticpower.handlers.crafting.recipes;
 
+import net.minecraft.block.Block;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item.ToolMaterial;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.EnumHelper;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraftforge.oredict.OreIngredient;
+import theking530.staticpower.assists.RegisterHelper;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.items.tools.basictools.ModTools;
 
 public class ToolRecipes {
 	
-	@SuppressWarnings("all")
-	public static void registerToolRecipes() {
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.CopperAxe), new Object[]{"MM ","MS "," S ",
-				'M', "ingotCopper", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.CopperAxe), new Object[]{" MM"," SM"," S ",
-				'M', "ingotCopper", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.CopperHoe), new Object[]{"MM "," S "," S ",
-				'M', "ingotCopper", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.CopperHoe), new Object[]{" MM"," S "," S ",
-				'M', "ingotCopper", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.CopperPickaxe), new Object[]{"MMM"," S "," S ",
-				'M', "ingotCopper", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.CopperShovel), new Object[]{"M  ","S  ","S  ",
-				'M', "ingotCopper", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.CopperShovel), new Object[]{" M "," S "," S ",
-				'M', "ingotCopper", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.CopperShovel), new Object[]{"  M","  S","  S",
-				'M', "ingotCopper", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.CopperSword), new Object[]{"M  ","M  ","S  ",
-				'M', "ingotCopper", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.CopperSword), new Object[]{" M "," M "," S ",
-				'M', "ingotCopper", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.CopperSword), new Object[]{"  M","  M","  S",
-				'M', "ingotCopper", 'S', Items.STICK}));	
-		
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.TinAxe), new Object[]{"MM ","MS "," S ",
-				'M', "ingotTin", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.TinAxe), new Object[]{" MM"," SM"," S ",
-				'M', "ingotTin", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.TinHoe), new Object[]{"MM "," S "," S ",
-				'M', "ingotTin", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.TinHoe), new Object[]{" MM"," S "," S ",
-				'M', "ingotTin", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.TinPickaxe), new Object[]{"MMM"," S "," S ",
-				'M', "ingotTin", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.TinShovel), new Object[]{"M  ","S  ","S  ",
-				'M', "ingotTin", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.TinShovel), new Object[]{" M "," S "," S ",
-				'M', "ingotTin", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.TinShovel), new Object[]{"  M","  S","  S",
-				'M', "ingotTin", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.TinSword), new Object[]{"M  ","M  ","S  ",
-				'M', "ingotTin", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.TinSword), new Object[]{" M "," M "," S ",
-				'M', "ingotTin", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.TinSword), new Object[]{"  M","  M","  S",
-				'M', "ingotTin", 'S', Items.STICK}));	
-		
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SilverAxe), new Object[]{"MM ","MS "," S ",
-				'M', "ingotSilver", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SilverAxe), new Object[]{" MM"," SM"," S ",
-				'M', "ingotSilver", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SilverHoe), new Object[]{"MM "," S "," S ",
-				'M', "ingotSilver", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SilverHoe), new Object[]{" MM"," S "," S ",
-				'M', "ingotSilver", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SilverPickaxe), new Object[]{"MMM"," S "," S ",
-				'M', "ingotSilver", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SilverShovel), new Object[]{"M  ","S  ","S  ",
-				'M', "ingotSilver", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SilverShovel), new Object[]{" M "," S "," S ",
-				'M', "ingotSilver", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SilverShovel), new Object[]{"  M","  S","  S",
-				'M', "ingotSilver", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SilverSword), new Object[]{"M  ","M  ","S  ",
-				'M', "ingotSilver", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SilverSword), new Object[]{" M "," M "," S ",
-				'M', "ingotSilver", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SilverSword), new Object[]{"  M","  M","  S",
-				'M', "ingotSilver", 'S', Items.STICK}));	
-		
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.LeadAxe), new Object[]{"MM ","MS "," S ",
-				'M', "ingotLead", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.LeadAxe), new Object[]{" MM"," SM"," S ",
-				'M', "ingotLead", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.LeadHoe), new Object[]{"MM "," S "," S ",
-				'M', "ingotLead", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.LeadHoe), new Object[]{" MM"," S "," S ",
-				'M', "ingotLead", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.LeadPickaxe), new Object[]{"MMM"," S "," S ",
-				'M', "ingotLead", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.LeadShovel), new Object[]{"M  ","S  ","S  ",
-				'M', "ingotLead", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.LeadShovel), new Object[]{" M "," S "," S ",
-				'M', "ingotLead", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.LeadShovel), new Object[]{"  M","  S","  S",
-				'M', "ingotLead", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.LeadSword), new Object[]{"M  ","M  ","S  ",
-				'M', "ingotLead", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.LeadSword), new Object[]{" M "," M "," S ",
-				'M', "ingotLead", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.LeadSword), new Object[]{"  M","  M","  S",
-				'M', "ingotLead", 'S', Items.STICK}));	
-		
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.PlatinumAxe), new Object[]{"MM ","MS "," S ",
-				'M', "ingotPlatinum", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.PlatinumAxe), new Object[]{" MM"," SM"," S ",
-				'M', "ingotPlatinum", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.PlatinumHoe), new Object[]{"MM "," S "," S ",
-				'M', "ingotPlatinum", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.PlatinumHoe), new Object[]{" MM"," S "," S ",
-				'M', "ingotPlatinum", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.PlatinumPickaxe), new Object[]{"MMM"," S "," S ",
-				'M', "ingotPlatinum", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.PlatinumShovel), new Object[]{"M  ","S  ","S  ",
-				'M', "ingotPlatinum", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.PlatinumShovel), new Object[]{" M "," S "," S ",
-				'M', "ingotPlatinum", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.PlatinumShovel), new Object[]{"  M","  S","  S",
-				'M', "ingotPlatinum", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.PlatinumSword), new Object[]{"M  ","M  ","S  ",
-				'M', "ingotPlatinum", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.PlatinumSword), new Object[]{" M "," M "," S ",
-				'M', "ingotPlatinum", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.PlatinumSword), new Object[]{"  M","  M","  S",
-				'M', "ingotPlatinum", 'S', Items.STICK}));	
-		
-		GameRegistry.addRecipe(new ItemStack(ModTools.StaticAxe), new Object[]{"MM ","MS "," S ",
-				'M', ModItems.StaticIngot, 'S', Items.STICK});	
-		GameRegistry.addRecipe(new ItemStack(ModTools.StaticAxe), new Object[]{" MM"," SM"," S ",
-				'M', ModItems.StaticIngot, 'S', Items.STICK});	
-		GameRegistry.addRecipe(new ItemStack(ModTools.StaticHoe), new Object[]{"MM "," S "," S ",
-				'M', ModItems.StaticIngot, 'S', Items.STICK});	
-		GameRegistry.addRecipe(new ItemStack(ModTools.StaticHoe), new Object[]{" MM"," S "," S ",
-				'M', ModItems.StaticIngot, 'S', Items.STICK});	
-		GameRegistry.addRecipe(new ItemStack(ModTools.StaticPickaxe), new Object[]{"MMM"," S "," S ",
-				'M', ModItems.StaticIngot, 'S', Items.STICK});	
-		GameRegistry.addRecipe(new ItemStack(ModTools.StaticShovel), new Object[]{"M  ","S  ","S  ",
-				'M', ModItems.StaticIngot, 'S', Items.STICK});	
-		GameRegistry.addRecipe(new ItemStack(ModTools.StaticShovel), new Object[]{" M "," S "," S ",
-				'M', ModItems.StaticIngot, 'S', Items.STICK});	
-		GameRegistry.addRecipe(new ItemStack(ModTools.StaticShovel), new Object[]{"  M","  S","  S",
-				'M', ModItems.StaticIngot, 'S', Items.STICK});	
-		GameRegistry.addRecipe(new ItemStack(ModTools.StaticSword), new Object[]{"M  ","M  ","S  ",
-				'M', ModItems.StaticIngot, 'S', Items.STICK});	
-		GameRegistry.addRecipe(new ItemStack(ModTools.StaticSword), new Object[]{" M "," M "," S ",
-				'M', ModItems.StaticIngot, 'S', Items.STICK});	
-		GameRegistry.addRecipe(new ItemStack(ModTools.StaticSword), new Object[]{"  M","  M","  S",
-				'M', ModItems.StaticIngot, 'S', Items.STICK});	
-		
-		GameRegistry.addRecipe(new ItemStack(ModTools.EnergizedAxe), new Object[]{"MM ","MS "," S ",
-				'M', ModItems.EnergizedIngot, 'S', Items.STICK});	
-		GameRegistry.addRecipe(new ItemStack(ModTools.EnergizedAxe), new Object[]{" MM"," SM"," S ",
-				'M', ModItems.EnergizedIngot, 'S', Items.STICK});	
-		GameRegistry.addRecipe(new ItemStack(ModTools.EnergizedHoe), new Object[]{"MM "," S "," S ",
-				'M', ModItems.EnergizedIngot, 'S', Items.STICK});	
-		GameRegistry.addRecipe(new ItemStack(ModTools.EnergizedHoe), new Object[]{" MM"," S "," S ",
-				'M', ModItems.EnergizedIngot, 'S', Items.STICK});	
-		GameRegistry.addRecipe(new ItemStack(ModTools.EnergizedPickaxe), new Object[]{"MMM"," S "," S ",
-				'M', ModItems.EnergizedIngot, 'S', Items.STICK});	
-		GameRegistry.addRecipe(new ItemStack(ModTools.EnergizedShovel), new Object[]{"M  ","S  ","S  ",
-				'M', ModItems.EnergizedIngot, 'S', Items.STICK});	
-		GameRegistry.addRecipe(new ItemStack(ModTools.EnergizedShovel), new Object[]{" M "," S "," S ",
-				'M', ModItems.EnergizedIngot, 'S', Items.STICK});	
-		GameRegistry.addRecipe(new ItemStack(ModTools.EnergizedShovel), new Object[]{"  M","  S","  S",
-				'M', ModItems.EnergizedIngot, 'S', Items.STICK});	
-		GameRegistry.addRecipe(new ItemStack(ModTools.EnergizedSword), new Object[]{"M  ","M  ","S  ",
-				'M', ModItems.EnergizedIngot, 'S', Items.STICK});	
-		GameRegistry.addRecipe(new ItemStack(ModTools.EnergizedSword), new Object[]{" M "," M "," S ",
-				'M', ModItems.EnergizedIngot, 'S', Items.STICK});	
-		GameRegistry.addRecipe(new ItemStack(ModTools.EnergizedSword), new Object[]{"  M","  M","  S",
-				'M', ModItems.EnergizedIngot, 'S', Items.STICK});
-		
-		GameRegistry.addRecipe(new ItemStack(ModTools.LumumAxe), new Object[]{"MM ","MS "," S ",
-				'M', ModItems.LumumIngot, 'S', Items.STICK});	
-		GameRegistry.addRecipe(new ItemStack(ModTools.LumumAxe), new Object[]{" MM"," SM"," S ",
-				'M', ModItems.LumumIngot, 'S', Items.STICK});	
-		GameRegistry.addRecipe(new ItemStack(ModTools.LumumHoe), new Object[]{"MM "," S "," S ",
-				'M', ModItems.LumumIngot, 'S', Items.STICK});	
-		GameRegistry.addRecipe(new ItemStack(ModTools.LumumHoe), new Object[]{" MM"," S "," S ",
-				'M', ModItems.LumumIngot, 'S', Items.STICK});	
-		GameRegistry.addRecipe(new ItemStack(ModTools.LumumPickaxe), new Object[]{"MMM"," S "," S ",
-				'M', ModItems.LumumIngot, 'S', Items.STICK});	
-		GameRegistry.addRecipe(new ItemStack(ModTools.LumumShovel), new Object[]{"M  ","S  ","S  ",
-				'M', ModItems.LumumIngot, 'S', Items.STICK});	
-		GameRegistry.addRecipe(new ItemStack(ModTools.LumumShovel), new Object[]{" M "," S "," S ",
-				'M', ModItems.LumumIngot, 'S', Items.STICK});	
-		GameRegistry.addRecipe(new ItemStack(ModTools.LumumShovel), new Object[]{"  M","  S","  S",
-				'M', ModItems.LumumIngot, 'S', Items.STICK});	
-		GameRegistry.addRecipe(new ItemStack(ModTools.LumumSword), new Object[]{"M  ","M  ","S  ",
-				'M', ModItems.LumumIngot, 'S', Items.STICK});	
-		GameRegistry.addRecipe(new ItemStack(ModTools.LumumSword), new Object[]{" M "," M "," S ",
-				'M', ModItems.LumumIngot, 'S', Items.STICK});	
-		GameRegistry.addRecipe(new ItemStack(ModTools.LumumSword), new Object[]{"  M","  M","  S",
-				'M', ModItems.LumumIngot, 'S', Items.STICK});	
-	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SapphireAxe), new Object[]{"MM ","MS "," S ",
-				'M', "gemSapphire", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SapphireAxe), new Object[]{" MM"," SM"," S ",
-				'M', "gemSapphire", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SapphireHoe), new Object[]{"MM "," S "," S ",
-				'M', "gemSapphire", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SapphireHoe), new Object[]{" MM"," S "," S ",
-				'M', "gemSapphire", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SapphirePickaxe), new Object[]{"MMM"," S "," S ",
-				'M', "gemSapphire", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SapphireShovel), new Object[]{"M  ","S  ","S  ",
-				'M', "gemSapphire", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SapphireShovel), new Object[]{" M "," S "," S ",
-				'M', "gemSapphire", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SapphireShovel), new Object[]{"  M","  S","  S",
-				'M', "gemSapphire", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SapphireSword), new Object[]{"M  ","M  ","S  ",
-				'M', "gemSapphire", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SapphireSword), new Object[]{" M "," M "," S ",
-				'M', "gemSapphire", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.SapphireSword), new Object[]{"  M","  M","  S",
-				'M', "gemSapphire", 'S', Items.STICK}));	
-		
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.RubyAxe), new Object[]{"MM ","MS "," S ",
-				'M', "gemRuby", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.RubyAxe), new Object[]{" MM"," SM"," S ",
-				'M', "gemRuby", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.RubyHoe), new Object[]{"MM "," S "," S ",
-				'M', "gemRuby", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.RubyHoe), new Object[]{" MM"," S "," S ",
-				'M', "gemRuby", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.RubyPickaxe), new Object[]{"MMM"," S "," S ",
-				'M', "gemRuby", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.RubyShovel), new Object[]{"M  ","S  ","S  ",
-				'M', "gemRuby", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.RubyShovel), new Object[]{" M "," S "," S ",
-				'M', "gemRuby", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.RubyShovel), new Object[]{"  M","  S","  S",
-				'M', "gemRuby", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.RubySword), new Object[]{"M  ","M  ","S  ",
-				'M', "gemRuby", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.RubySword), new Object[]{" M "," M "," S ",
-				'M', "gemRuby", 'S', Items.STICK}));	
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModTools.RubySword), new Object[]{"  M","  M","  S",
-				'M', "gemRuby", 'S', Items.STICK}));	
+	public static void registerToolRecipes() {	
+		registerToolSet(ingredientOre("ingotCopper"), "copper", new ItemStack(ModTools.CopperAxe), new ItemStack(ModTools.CopperHoe), new ItemStack(ModTools.CopperPickaxe), new ItemStack(ModTools.CopperShovel), new ItemStack(ModTools.CopperSword));
+		registerToolSet(ingredientOre("ingotTin"), "tin", new ItemStack(ModTools.TinAxe), new ItemStack(ModTools.TinHoe), new ItemStack(ModTools.TinPickaxe), new ItemStack(ModTools.TinShovel), new ItemStack(ModTools.TinSword));
+		registerToolSet(ingredientOre("ingotSilver"), "silver", new ItemStack(ModTools.SilverAxe), new ItemStack(ModTools.SilverHoe), new ItemStack(ModTools.SilverPickaxe), new ItemStack(ModTools.SilverShovel), new ItemStack(ModTools.SilverSword));
+		registerToolSet(ingredientOre("ingotLead"), "lead", new ItemStack(ModTools.LeadAxe), new ItemStack(ModTools.LeadHoe), new ItemStack(ModTools.LeadPickaxe), new ItemStack(ModTools.LeadShovel), new ItemStack(ModTools.LeadSword));
+		registerToolSet(ingredientOre("ingotPlatinum"), "platinum", new ItemStack(ModTools.PlatinumAxe), new ItemStack(ModTools.PlatinumHoe), new ItemStack(ModTools.PlatinumPickaxe), new ItemStack(ModTools.PlatinumShovel), new ItemStack(ModTools.PlatinumSword));
+		registerToolSet(ingredientFromItem(ModItems.StaticIngot), "static", new ItemStack(ModTools.StaticAxe), new ItemStack(ModTools.StaticHoe), new ItemStack(ModTools.StaticPickaxe), new ItemStack(ModTools.StaticShovel), new ItemStack(ModTools.StaticSword));
+		registerToolSet(ingredientFromItem(ModItems.EnergizedIngot), "energized", new ItemStack(ModTools.EnergizedAxe), new ItemStack(ModTools.EnergizedHoe), new ItemStack(ModTools.EnergizedPickaxe), new ItemStack(ModTools.EnergizedShovel), new ItemStack(ModTools.EnergizedSword));
+		registerToolSet(ingredientFromItem(ModItems.LumumIngot), "lumum", new ItemStack(ModTools.LumumAxe), new ItemStack(ModTools.LumumHoe), new ItemStack(ModTools.LumumPickaxe), new ItemStack(ModTools.LumumShovel), new ItemStack(ModTools.LumumSword));
+	}
+	public static void registerToolSet(Ingredient material, String prefix, ItemStack axe, ItemStack hoe, ItemStack pickaxe, ItemStack shovel, ItemStack sword) {
+		RegisterHelper.addShapedRecipe("StaticPower_" + prefix + "Axe1", "StaticPower", axe, new Object[]{"MM ","MS "," S ",
+				'M', material, 'S', ingredientFromItem(Items.STICK)});
+		RegisterHelper.addShapedRecipe("StaticPower_" + prefix + "Axe2", "StaticPower", axe, new Object[]{" MM"," SM"," S ",
+				'M', material, 'S', ingredientFromItem(Items.STICK)});
+		RegisterHelper.addShapedRecipe("StaticPower_" + prefix + "Hoe1", "StaticPower", hoe, new Object[]{"MM "," S "," S ",
+				'M', material, 'S', ingredientFromItem(Items.STICK)});
+		RegisterHelper.addShapedRecipe("StaticPower_" + prefix + "Hoe2", "StaticPower", hoe, new Object[]{" MM"," S "," S ",
+				'M', material, 'S', ingredientFromItem(Items.STICK)});
+		RegisterHelper.addShapedRecipe("StaticPower_" + prefix + "Pickaxe", "StaticPower", pickaxe, new Object[]{"MMM"," S "," S ",
+				'M', material, 'S', ingredientFromItem(Items.STICK)});
+		RegisterHelper.addShapedRecipe("StaticPower_" + prefix + "Shovel1", "StaticPower", shovel, new Object[]{"M  ","S  ","S  ",
+				'M', material, 'S', ingredientFromItem(Items.STICK)});
+		RegisterHelper.addShapedRecipe("StaticPower_" + prefix + "Shovel2", "StaticPower", shovel, new Object[]{" M "," S "," S ",
+				'M', material, 'S', ingredientFromItem(Items.STICK)});
+		RegisterHelper.addShapedRecipe("StaticPower_" + prefix + "Shovel3", "StaticPower", shovel, new Object[]{"  M","  S","  S",
+				'M', material, 'S', ingredientFromItem(Items.STICK)});
+		RegisterHelper.addShapedRecipe("StaticPower_" + prefix + "Sword1", "StaticPower", sword, new Object[]{"M  ","M  ","S  ",
+				'M', material, 'S', ingredientFromItem(Items.STICK)});
+		RegisterHelper.addShapedRecipe("StaticPower_" + prefix + "Sword2", "StaticPower", sword, new Object[]{" M "," M "," S ",
+				'M', material, 'S', ingredientFromItem(Items.STICK)});
+		RegisterHelper.addShapedRecipe("StaticPower_" + prefix + "Sword3", "StaticPower", sword, new Object[]{"  M","  M","  S",
+				'M', material, 'S', ingredientFromItem(Items.STICK)});
+	}
+	public static Ingredient ingredientFromBlock(Block block) {
+		return ingredientFromItem(Item.getItemFromBlock(block));
+	}
+	public static Ingredient ingredientOre(String ore) {
+		return new OreIngredient(ore);
+	}
+	public static Ingredient ingredientFromItem(Item item) {
+		return Ingredient.fromItem(item);
 	}
 }
 

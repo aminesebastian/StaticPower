@@ -5,7 +5,6 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.handlers.crafting.registries.FermenterRecipeRegistry;
 import theking530.staticpower.machines.BaseMachineWithTank;
 import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent;
-import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent.FluidContainerInteractionMode;
 
 public class TileEntityFermenter extends BaseMachineWithTank {
 
@@ -28,7 +27,7 @@ public class TileEntityFermenter extends BaseMachineWithTank {
 	}
 	@Override 
 	public boolean hasResult(ItemStack itemstack) {
-		if(itemstack != null && getFermentingResult(itemstack) != null) {
+		if(itemstack != ItemStack.EMPTY && getFermentingResult(itemstack) != null) {
 			return true;
 		}
 		return false;
@@ -63,24 +62,24 @@ public class TileEntityFermenter extends BaseMachineWithTank {
 	}
 	@Override
 	public int getProcessingEnergy(ItemStack itemStack) {
-		if(getResult(itemStack) != null) {
+		if(getResult(itemStack) != ItemStack.EMPTY) {
 			return INITIAL_POWER_USE*PROCESSING_ENERGY_MULT;
 		}
 		return 0;
 	}	
 	public void process() {
-		if(!worldObj.isRemote) {
+		if(!getWorld().isRemote) {
 			DRAIN_COMPONENT.update();
 			if(!isProcessing() && !isMoving()) {
 				for(int i=0; i<9; i++) {
-					if(SLOTS_INPUT.getStackInSlot(i) != null && canProcess(SLOTS_INPUT.getStackInSlot(i))) {
+					if(SLOTS_INPUT.getStackInSlot(i) != ItemStack.EMPTY && canProcess(SLOTS_INPUT.getStackInSlot(i))) {
 						moveItem(SLOTS_INPUT, i, SLOTS_INTERNAL, 0);
 						MOVE_TIMER = 1;
 						break;
 					}
 				}	
 			}else{
-				if(!isProcessing() && SLOTS_INTERNAL.getStackInSlot(0) != null) {
+				if(!isProcessing() && SLOTS_INTERNAL.getStackInSlot(0) != ItemStack.EMPTY) {
 					PROCESSING_TIMER++;
 				}
 				if(isProcessing()) {
@@ -90,7 +89,7 @@ public class TileEntityFermenter extends BaseMachineWithTank {
 						updateBlock();
 					}else{
 						TANK.fill(getFermentingResult(SLOTS_INTERNAL.getStackInSlot(0)), true);
-						SLOTS_INTERNAL.setStackInSlot(0, null);
+						SLOTS_INTERNAL.extractItem(0, SLOTS_INTERNAL.getStackInSlot(0).getCount(), false);
 						PROCESSING_TIMER = 0;
 						MOVE_TIMER = 0;
 						markDirty();

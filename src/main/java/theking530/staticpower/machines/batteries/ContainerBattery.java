@@ -3,23 +3,18 @@ package theking530.staticpower.machines.batteries;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityBattery;
 
 
 public class ContainerBattery extends Container {
 	
 	private TileEntityBattery BATTERY;
-	private int ENERGY_STORED;
 	
 	public ContainerBattery(InventoryPlayer invPlayer, TileEntityBattery teBattery) {
-		ENERGY_STORED = 0;
 		BATTERY = teBattery;
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
@@ -83,21 +78,21 @@ public class ContainerBattery extends Container {
 	                return null;
 	            }
 
-	            if (itemstack1.stackSize == 0)
+	            if (itemstack1.getCount() == 0)
 	            {
-	                slot.putStack((ItemStack)null);
+	                slot.putStack(ItemStack.EMPTY);
 	            }
 	            else
 	            {
 	                slot.onSlotChanged();
 	            }
 
-	            if (itemstack1.stackSize == itemstack.stackSize)
+	            if (itemstack1.getCount() == itemstack.getCount())
 	            {
 	                return null;
 	            }
 
-	            slot.onPickupFromSlot(p_82846_1_, itemstack1);
+	            slot.onTake(p_82846_1_, itemstack1);
 	        }
 
 	        return itemstack;

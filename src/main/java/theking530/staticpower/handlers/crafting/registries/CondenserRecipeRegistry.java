@@ -7,7 +7,6 @@ import java.util.Map.Entry;
 
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.handlers.crafting.wrappers.CondenserRecipeWrapper;
-import theking530.staticpower.handlers.crafting.wrappers.DistilleryRecipeWrapper;
 
 public class CondenserRecipeRegistry {
 

@@ -1,22 +1,13 @@
 package theking530.staticpower.handlers.crafting.registries;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import theking530.staticpower.blocks.ModBlocks;
-import theking530.staticpower.handlers.crafting.wrappers.FluidInfuserOutputWrapper;
-import theking530.staticpower.items.ModItems;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.oredict.OreDictionary;
+import theking530.staticpower.handlers.crafting.wrappers.FluidInfuserOutputWrapper;
 
 public class InfuserRecipeRegistry {
 

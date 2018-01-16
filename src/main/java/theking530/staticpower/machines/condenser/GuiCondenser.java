@@ -9,18 +9,13 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import theking530.staticpower.client.gui.widgets.buttons.ArrowButton;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBar;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarFromTank;
-import theking530.staticpower.client.gui.widgets.valuebars.GuiHeatBarFromStorage;
-import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.handlers.PacketHandler;
-import theking530.staticpower.handlers.crafting.registries.FermenterRecipeRegistry;
-import theking530.staticpower.machines.fluidgenerator.PacketFluidGeneratorContainerMode;
 import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent.FluidContainerInteractionMode;
 import theking530.staticpower.utils.GuiTextures;
 
@@ -73,10 +68,8 @@ public class GuiCondenser extends GuiContainer{
 	}	
 	
 	public void updateScreen() {
-		int j = (width - xSize) / 2;
-		int k = (height - ySize) / 2;
-		SIDE_TAB.updateTab(width+33, height+80, xSize, ySize, fontRendererObj, DISTILLERY);
-		REDSTONE_TAB.updateTab(width+33, height+80, xSize, ySize, fontRendererObj, DISTILLERY);
+		SIDE_TAB.updateTab(width+33, height+80, xSize, ySize, fontRenderer, DISTILLERY);
+		REDSTONE_TAB.updateTab(width+33, height+80, xSize, ySize, fontRenderer, DISTILLERY);
 		if(SIDE_TAB.GROWTH_STATE == 1){
 			REDSTONE_TAB.RED_TAB.GROWTH_STATE = 2;
 		}
@@ -88,23 +81,27 @@ public class GuiCondenser extends GuiContainer{
     	super.drawScreen(par1, par2, par3);
 		int var1 = (this.width - this.xSize) / 2;
 		int var2 = (this.height - this.ySize) / 2;
+				
+		this.zLevel = -1.0f;
+		this.drawDefaultBackground();	
+		this.zLevel = 0.0f;
+		
 		if(par1 >= 71 + var1 && par2 >= 16 + var2 && par1 <= 87 + var1 && par2 <= 79 + var2) {	
-			drawHoveringText(FLUIDBAR.drawText(), par1, par2, fontRendererObj); 
+			drawHoveringText(FLUIDBAR.drawText(), par1, par2, fontRenderer); 
 		}     
 		if(par1 >= 127 + var1 && par2 >= 16 + var2 && par1 <= 142 + var1 && par2 <= 79 + var2) {	
-			drawHoveringText(FLUIDBAR2.drawText(), par1, par2, fontRendererObj); 
+			drawHoveringText(FLUIDBAR2.drawText(), par1, par2, fontRenderer); 
 		}	    
+		this.renderHoveredToolTip(par1, par2);
 	}
-
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = I18n.format(this.DISTILLERY.getName());
 	
-		this.fontRendererObj.drawString(name, this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2, 6,4210752 );
+		this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2, 6,4210752 );
 	}
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
-		FluidStack fluidStack = DISTILLERY.TANK.getFluid();
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.CONDENSER_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);

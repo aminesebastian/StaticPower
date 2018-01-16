@@ -1,12 +1,13 @@
 package theking530.staticpower.machines.batteries.tileentities;
 
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import theking530.staticpower.assists.Tier;
+import net.minecraftforge.items.CapabilityItemHandler;
 import theking530.staticpower.machines.BaseMachine;
 import theking530.staticpower.power.PowerDistributor;
+import theking530.staticpower.utils.SideUtils;
 import theking530.staticpower.utils.RedstoneModeList.RedstoneMode;
 import theking530.staticpower.utils.SideModeList.Mode;
+import theking530.staticpower.utils.SideUtils.BlockSide;
 
 public class TileEntityBattery extends BaseMachine{
 	
@@ -15,14 +16,14 @@ public class TileEntityBattery extends BaseMachine{
 	protected PowerDistributor POWER_DIS;
 	
 	public TileEntityBattery() {
-
+		POWER_DIS = new PowerDistributor(this, STORAGE, SIDE_MODES);		
 	}
 	
 	public void process() {
-		//worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-		int redstoneSignal = worldObj.getStrongPower(pos);
+		//getWorld().markBlockForUpdate(xCoord, yCoord, zCoord);
+		int redstoneSignal = getWorld().getStrongPower(pos);
 		powerTab();
-		if(!worldObj.isRemote) {
+		if(!getWorld().isRemote) {
 			if(getRedstoneMode() == RedstoneMode.Ignore) {
 				POWER_DIS.distributePower();
 			}
@@ -47,14 +48,18 @@ public class TileEntityBattery extends BaseMachine{
 	//Tab Integration
 	public void powerTab() {	
 		if(getEnergyLevelScaled(1)*100 > this.MIN_POWER_THRESHOLD && getEnergyLevelScaled(1)*100 < this.MAX_POWER_THRESHOLD) {
-			//worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 15, 3);
+			//getWorld().setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 15, 3);
 		}else{
-			//worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 0, 3);
+			//getWorld().setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 0, 3);
 		}
 	}
 	@Override
 	public String getName() {
 		return "Battery";	
+	}
+	@Override
+	public void onSidesConfigUpdate() {
+		POWER_DIS.updateSideSettings(SIDE_MODES);
 	}
 	
 	//Energy

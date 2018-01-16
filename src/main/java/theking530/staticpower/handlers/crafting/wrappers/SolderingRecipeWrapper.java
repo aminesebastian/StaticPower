@@ -1,6 +1,5 @@
 package theking530.staticpower.handlers.crafting.wrappers;
 
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -12,7 +11,6 @@ public class SolderingRecipeWrapper {
     public final ItemStack[] recipeItems;
     private final ItemStack recipeOutput;
     private boolean field_92101_f;
-    private static final String __OBFID = "CL_00000093";
 
     public SolderingRecipeWrapper(int x, int y, ItemStack[] inputs, ItemStack output) {
         this.recipeWidth = x;
@@ -50,7 +48,7 @@ public class SolderingRecipeWrapper {
             for (int l = 0; l < 3; ++l) {
                 int i1 = k - p_77573_2_;
                 int j1 = l - p_77573_3_;
-                ItemStack itemstack = null;
+                ItemStack itemstack = ItemStack.EMPTY;
 
                 if (i1 >= 0 && j1 >= 0 && i1 < this.recipeWidth && j1 < this.recipeHeight){
                     if (p_77573_4_){
@@ -62,10 +60,10 @@ public class SolderingRecipeWrapper {
 
                 ItemStack itemstack1 = getStackInRowAndColumn(inventory, k, l);
 
-                if (itemstack1 != null || itemstack != null){
-                    if (itemstack1 == null && itemstack != null || itemstack1 != null && itemstack == null){
-                        return false;
-                    }
+                if (itemstack1 != ItemStack.EMPTY || itemstack != ItemStack.EMPTY){
+                   // if (itemstack1 == ItemStack.EMPTY && itemstack != ItemStack.EMPTY || itemstack1 != ItemStack.EMPTY && itemstack == ItemStack.EMPTY){
+                       // return false;
+                    //}
 
                     if (itemstack.getItem() != itemstack1.getItem()){
                         return false;
@@ -84,7 +82,7 @@ public class SolderingRecipeWrapper {
             int k = p_70463_1_ + p_70463_2_ * 3;
             return inventory.getStackInSlot(k);
         }else{
-            return null;
+            return ItemStack.EMPTY;
         }
     }
     /**
@@ -96,7 +94,7 @@ public class SolderingRecipeWrapper {
             for (int i = 0; i < inventory.getSlots(); ++i){
                 ItemStack itemstack1 = inventory.getStackInSlot(i);
 
-                if (itemstack1 != null && itemstack1.hasTagCompound()){
+                if (itemstack1 != ItemStack.EMPTY && itemstack1.hasTagCompound()){
                     itemstack.setTagCompound((NBTTagCompound)itemstack1.getTagCompound().copy());
                 }
             }

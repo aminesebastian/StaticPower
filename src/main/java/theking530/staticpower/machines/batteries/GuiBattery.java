@@ -8,24 +8,16 @@ import java.util.Locale;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import theking530.staticpower.assists.Reference;
-import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.client.gui.widgets.CustomGuiContainer;
 import theking530.staticpower.client.gui.widgets.tabs.GuiPowerControlTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
-import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityBattery;
 import theking530.staticpower.utils.GuiTextures;
 
@@ -49,19 +41,17 @@ public class GuiBattery extends CustomGuiContainer {
 	}	
 	
 	public void updateScreen() {
-		int j = (width - xSize) / 2;
-		int k = (height - ySize) / 2;
-		POWER_TAB.updateTab(width, height, xSize, ySize, fontRendererObj, sBattery);
-		SIDE_TAB.updateTab(width, height, xSize, ySize, fontRendererObj, sBattery);
-		REDSTONE_TAB.updateTab(width, height, xSize, ySize, fontRendererObj, sBattery);
+		POWER_TAB.updateTab(width, height, xSize, ySize, fontRenderer, sBattery);
+		SIDE_TAB.updateTab(width, height, xSize, ySize, fontRenderer, sBattery);
+		REDSTONE_TAB.updateTab(width, height, xSize, ySize, fontRenderer, sBattery);
 		if(POWER_TAB.GROWTH_STATE == 1){
 			REDSTONE_TAB.RED_TAB.GROWTH_STATE = 2;
 			SIDE_TAB.BLUE_TAB.GROWTH_STATE = 2;
 		}
 		if(REDSTONE_TAB.GROWTH_STATE == 1) {
 			SIDE_TAB.BLUE_TAB.GROWTH_STATE = 2;
-		}
-	}	
+		}	
+	}
 	//Draw Main
 	@Override
 	public void initGui() {
@@ -79,27 +69,33 @@ public class GuiBattery extends CustomGuiContainer {
 		String INPUT = (String.valueOf(sBattery.STORAGE.getMaxReceive()) + " RF/t");
 		String OUTPUT = (String.valueOf(sBattery.STORAGE.getMaxExtract()) + " RF/t");
 		String NAME = I18n.format(this.sBattery.getName());
-		this.fontRendererObj.drawString("Input", this.xSize/2-this.fontRendererObj.getStringWidth("Input")/2 - 35, 35, 4210752);
-		this.fontRendererObj.drawString(INPUT, this.xSize/2-this.fontRendererObj.getStringWidth(INPUT)/2 - 35, 45, 4210752);
-		this.fontRendererObj.drawString("Output", this.xSize/2-this.fontRendererObj.getStringWidth("Output")/2 + 35, 35, 4210752);
-		this.fontRendererObj.drawString(OUTPUT, this.xSize/2-this.fontRendererObj.getStringWidth(OUTPUT)/2 + 35, 45, 4210752);
-		this.fontRendererObj.drawString(NAME, this.xSize / 2 - this.fontRendererObj.getStringWidth(NAME) / 2, 6, 4210752);
-		this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 3, 4210752);
+		this.fontRenderer.drawString("Input", this.xSize/2-this.fontRenderer.getStringWidth("Input")/2 - 35, 35, 4210752);
+		this.fontRenderer.drawString(INPUT, this.xSize/2-this.fontRenderer.getStringWidth(INPUT)/2 - 35, 45, 4210752);
+		this.fontRenderer.drawString("Output", this.xSize/2-this.fontRenderer.getStringWidth("Output")/2 + 35, 35, 4210752);
+		this.fontRenderer.drawString(OUTPUT, this.xSize/2-this.fontRenderer.getStringWidth(OUTPUT)/2 + 35, 45, 4210752);
+		this.fontRenderer.drawString(NAME, this.xSize / 2 - this.fontRenderer.getStringWidth(NAME) / 2, 6, 4210752);
+		this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 3, 4210752);
 	}
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
-		int w = (width - xSize) / 2;
-		int k = (height - ySize) / 2;
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.mc.getTextureManager().bindTexture(GuiTextures.BATTERY_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		POWER_BAR.drawPowerBar(guiLeft + 80, guiTop + 71, 16, 51, 1);
+		POWER_BAR.drawPowerBar(guiLeft + 80, guiTop + 71, 16, 51, 1, f);
 		SIDE_TAB.drawTab();		
 		REDSTONE_TAB.drawTab();
 		POWER_TAB.drawTab();	
 	}
 	public void drawScreen(int par1, int par2, float par3) {
 		super.drawScreen(par1, par2, par3);
+		
+		this.zLevel = -1.0f;
+		this.drawDefaultBackground();	
+		this.zLevel = 0.0f;
+		
+		this.zLevel = -1.0f;
+		this.drawDefaultBackground();
+		this.zLevel = 0.0f;
 		int var1 = (this.width - this.xSize) / 2;
 		int var2 = (this.height - this.ySize) / 2;
 		if (par1 >= 80 + var1 && par2 >= 20 + var2 && par1 <= 96 + var1
@@ -112,11 +108,11 @@ public class GuiBattery extends CustomGuiContainer {
 					+ "RF/"
 					+ NumberFormat.getNumberInstance(Locale.US).format(k1)
 					+ " " + "RF" };
-			List temp = Arrays.asList(text);
-			drawHoveringText(temp, par1, par2, fontRendererObj);
+			List<String> temp = Arrays.asList(text);
+			drawHoveringText(temp, par1, par2, fontRenderer);
 		}
-	}		
-	
+		this.renderHoveredToolTip(par1, par2);
+	}
     //Draw Misc	
 	public void guiButtons(int j, int k) {
 		this.buttonList.add(new GuiButton(1, j + 8, k + 25, 18, 18, "+"));

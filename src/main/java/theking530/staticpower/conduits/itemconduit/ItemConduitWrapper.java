@@ -13,7 +13,7 @@ import net.minecraft.util.math.BlockPos;
 public class ItemConduitWrapper {
 	public ItemStack ITEM;
 	public TileEntity INVENTORY_SOURCE;
-	public ArrayList<TileEntity> PATH = new ArrayList();
+	public ArrayList<TileEntity> PATH = new ArrayList<TileEntity>();
 	public int CURRENT_PATH_INDEX = 0;
 	
 	public ItemConduitWrapper(ItemStack item, TileEntity inv, TileEntityItemConduit startingConduit) {
@@ -62,10 +62,10 @@ public class ItemConduitWrapper {
 		}
 	}
 	public void readFromNBT(NBTTagCompound tag) {
-		ITEM = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("Item"));
-		if(Minecraft.getMinecraft().theWorld.getTileEntity(new BlockPos(tag.getInteger("IXCOORD"), tag.getInteger("IYCOORD"), tag.getInteger("IZCOORD"))) != null) {
-			if(Minecraft.getMinecraft().theWorld.getTileEntity(new BlockPos(tag.getInteger("IXCOORD"), tag.getInteger("IYCOORD"), tag.getInteger("IZCOORD"))) instanceof ISidedInventory) {
-				INVENTORY_SOURCE = Minecraft.getMinecraft().theWorld.getTileEntity(new BlockPos(tag.getInteger("IXCOORD"), tag.getInteger("IYCOORD"), tag.getInteger("IZCOORD")));
+		ITEM = new ItemStack(tag.getCompoundTag("Item"));
+		if(Minecraft.getMinecraft().world.getTileEntity(new BlockPos(tag.getInteger("IXCOORD"), tag.getInteger("IYCOORD"), tag.getInteger("IZCOORD"))) != null) {
+			if(Minecraft.getMinecraft().world.getTileEntity(new BlockPos(tag.getInteger("IXCOORD"), tag.getInteger("IYCOORD"), tag.getInteger("IZCOORD"))) instanceof ISidedInventory) {
+				INVENTORY_SOURCE = Minecraft.getMinecraft().world.getTileEntity(new BlockPos(tag.getInteger("IXCOORD"), tag.getInteger("IYCOORD"), tag.getInteger("IZCOORD")));
 			}
 		}
 	}

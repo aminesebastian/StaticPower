@@ -1,19 +1,12 @@
 package theking530.staticpower.machines.poweredgrinder;
 
 import java.io.IOException;
-import java.text.NumberFormat;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
 
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.util.ResourceLocation;
-import theking530.staticpower.assists.Reference;
-import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.client.gui.widgets.CustomGuiContainer;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
@@ -38,10 +31,8 @@ public class GuiPoweredGrinder extends CustomGuiContainer{
 		
 	}
 	public void updateScreen() {
-		int j = (width - xSize) / 2;
-		int k = (height - ySize) / 2;
-		SIDE_TAB.updateTab(width, height, xSize, ySize, fontRendererObj, Grinder);
-		REDSTONE_TAB.updateTab(width, height, xSize, ySize, fontRendererObj, Grinder);
+		SIDE_TAB.updateTab(width, height, xSize, ySize, fontRenderer, Grinder);
+		REDSTONE_TAB.updateTab(width, height, xSize, ySize, fontRenderer, Grinder);
 		if(SIDE_TAB.GROWTH_STATE == 1){
 			REDSTONE_TAB.RED_TAB.GROWTH_STATE = 2;
 		}
@@ -49,21 +40,23 @@ public class GuiPoweredGrinder extends CustomGuiContainer{
 			SIDE_TAB.BLUE_TAB.GROWTH_STATE = 2;
 		}
 	}	
-	public void drawScreen(int par1, int par2, float par3) {
-    	super.drawScreen(par1, par2, par3);
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+    	super.drawScreen(mouseX, mouseY, partialTicks);
+		this.zLevel = -1.0f;
+		this.drawDefaultBackground();	
+		this.zLevel = 0.0f;
     	int var1 = (this.width - this.xSize) / 2;
         int var2 = (this.height - this.ySize) / 2;  
-        if(par1 >= 8 + var1 && par2 >= 8 + var2 && par1 <= 24 + var1 && par2 <= 62 + var2) {
-        	drawHoveringText(POWERBAR.drawText(), par1, par2, fontRendererObj); 
+        if(mouseX >= 8 + var1 && mouseY >= 8 + var2 && mouseX <= 24 + var1 && mouseY <= 62 + var2) {
+        	drawHoveringText(POWERBAR.drawText(), mouseX, mouseY, fontRenderer); 
         }
-		drawRect(guiLeft + 82, guiTop + 38, 176, 69, 3394815);
+		drawRect(guiLeft + 82, guiTop + 38, 176, 69, 3394815);	
+		this.renderHoveredToolTip(mouseX, mouseY);
 	}
 
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
-		String name = I18n.format(this.Grinder.getName());
-	
-		this.fontRendererObj.drawString(name, this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2, 6,4210752 );
-		//this.fontRendererObj.drawString(I18n.format("container.inventory"), 26, this.ySize - 96 + 3, 4210752);
+		String NAME = I18n.format(this.Grinder.getName());
+		this.fontRenderer.drawString(NAME, this.xSize / 2 - this.fontRenderer.getStringWidth(NAME) / 2, 6, 4210752);
 	}
 	
 	@Override
@@ -71,12 +64,11 @@ public class GuiPoweredGrinder extends CustomGuiContainer{
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.GRINDER_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		ContainerPoweredGrinder cGrinder = (ContainerPoweredGrinder) inventorySlots;
 		int j1 = Grinder.getProgressScaled(17);
 		drawTexturedModalRect(guiLeft + 76, guiTop + 38, 176, 69, 24, j1);	
 		SIDE_TAB.drawTab();		
 		REDSTONE_TAB.drawTab();
-		POWERBAR.drawPowerBar(guiLeft + 8, guiTop + 62, 16, 54, zLevel);
+		POWERBAR.drawPowerBar(guiLeft + 8, guiTop + 62, 16, 54, zLevel, f);
 	}
 	@Override
 	protected void mouseClicked(int x, int y, int button) throws IOException{

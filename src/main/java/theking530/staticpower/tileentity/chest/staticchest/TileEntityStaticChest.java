@@ -1,7 +1,6 @@
 package theking530.staticpower.tileentity.chest.staticchest;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.items.CapabilityItemHandler;
 import theking530.staticpower.tileentity.chest.TileEntityBaseChest;
 
