@@ -16,6 +16,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import theking530.staticpower.conduits.staticconduit.TileEntityStaticConduit;
 
 public class TileEntityBaseConduit extends TileEntity implements IConduit, ITickable {
@@ -47,20 +48,25 @@ public class TileEntityBaseConduit extends TileEntity implements IConduit, ITick
 		masterGrid.AddEntry(this);
 		for(int i=0; i<6; i++) {
 			TileEntity te = getWorld().getTileEntity(pos.offset(EnumFacing.values()[i]));
-			if(te != null && te instanceof TileEntityBaseConduit) {
-				TileEntityBaseConduit tempCond = (TileEntityBaseConduit)te;
-				if(SIDE_MODES[EnumFacing.values()[i].ordinal()] == 1) {
-					continue;
-				}
-				if(tempCond.SIDE_MODES[EnumFacing.values()[i].getOpposite().ordinal()] == 1) {
-					continue;
-				}
-				if(tempCond.GRID != masterGrid) {
-					masterGrid.AddEntry(this);
-					tempCond.GRID = masterGrid;
-					tempCond.generateGridNeighbors(masterGrid);
+			if(te != null) {
+				if(te instanceof TileEntityBaseConduit) {
+					TileEntityBaseConduit tempCond = (TileEntityBaseConduit)te;
+					if(SIDE_MODES[EnumFacing.values()[i].ordinal()] == 1) {
+						continue;
+					}
+					if(tempCond.SIDE_MODES[EnumFacing.values()[i].getOpposite().ordinal()] == 1) {
+						continue;
+					}
+					if(tempCond.GRID != masterGrid) {
+						masterGrid.AddEntry(this);
+						tempCond.GRID = masterGrid;
+						tempCond.generateGridNeighbors(masterGrid);
+					}
+				}else if(te.hasCapability(CapabilityEnergy.ENERGY, EnumFacing.values()[i].getOpposite())) {
+					masterGrid.AddEntry(te);
 				}
 			}
+
 		}
 	}
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
@@ -68,7 +74,7 @@ public class TileEntityBaseConduit extends TileEntity implements IConduit, ITick
     }
 	public void onNeighborUpdated(IBlockState observerState, World world, Block oldBlock, BlockPos changedBlockPos, Block newBlock) {
 		//If a block is broken, attempt to regenerate the network.
-		if(newBlock == Blocks.AIR) {
+		if(newBlock == Blocks.AIR || world.getTileEntity(changedBlockPos) != null) {
 			for(int i=0; i<6; i++) {
 				TileEntity te = getWorld().getTileEntity(changedBlockPos.offset(EnumFacing.values()[i]));
 				if(te != null && te instanceof TileEntityBaseConduit) {

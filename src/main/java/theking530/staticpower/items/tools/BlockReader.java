@@ -23,10 +23,15 @@ public class BlockReader extends ItemBase{
     		TileEntityBaseConduit te = (TileEntityBaseConduit) tile;
     		if(te.GRID != null) {
     			if(!world.isRemote) {
-        			player.sendMessage(new TextComponentString(te.GRID.toString()));			
+        			player.sendMessage(new TextComponentString(te.GRID.toString()));	
+    				player.sendMessage(new TextComponentString(pos.toString()));
     			}    		
     	    	return EnumActionResult.SUCCESS;
     		}
+    	}else{
+			if(!world.isRemote) {
+				player.sendMessage(new TextComponentString(pos.toString()));
+			}
     	}
     	return EnumActionResult.PASS;
     }

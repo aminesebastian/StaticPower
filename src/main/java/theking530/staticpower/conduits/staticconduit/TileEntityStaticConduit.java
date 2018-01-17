@@ -1,5 +1,11 @@
 package theking530.staticpower.conduits.staticconduit;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import cofh.redstoneflux.api.IEnergyHandler;
 import cofh.redstoneflux.api.IEnergyProvider;
 import cofh.redstoneflux.api.IEnergyReceiver;
@@ -7,19 +13,23 @@ import cofh.redstoneflux.impl.EnergyStorage;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import theking530.staticpower.conduits.TileEntityBaseConduit;
 import theking530.staticpower.power.PowerDistributor;
 
 public class TileEntityStaticConduit extends TileEntityBaseConduit implements IEnergyHandler, IEnergyProvider, IEnergyReceiver {
 	
-	public int ENERGY_CAPACTIY = 3000;
+	public int ENERGY_CAPACTIY = 6000;
 	public EnergyStorage STORAGE = new EnergyStorage(ENERGY_CAPACTIY);
 	public int RF_PER_TICK = 1000;
 	public PowerDistributor POWER_DIST;
 	public EnumFacing LAST_RECIEVED;
 
+	public int TICK_FOR_DEBUG;
+	
 	public TileEntityStaticConduit() {
 		STORAGE.setMaxExtract(RF_PER_TICK);
 		STORAGE.setMaxReceive(RF_PER_TICK);
@@ -31,22 +41,86 @@ public class TileEntityStaticConduit extends TileEntityBaseConduit implements IE
 	public void update() {
 		super.update();
 		if(!getWorld().isRemote) {
-			for(int i=0; i<6; i++) {
-				if(STORAGE.getEnergyStored() >= RF_PER_TICK) {
-					TileEntity adjacentTileEntity = getWorld().getTileEntity(pos.offset(EnumFacing.values()[i]));
-					if(adjacentTileEntity instanceof TileEntityStaticConduit) {
-						net.minecraftforge.energy.IEnergyStorage adjacentStorage = POWER_DIST.getEnergyHandlerPosition(EnumFacing.values()[i]);
-						if(adjacentStorage != null && adjacentStorage.getEnergyStored() < STORAGE.getEnergyStored()) {
-							POWER_DIST.provideRF(EnumFacing.values()[i], STORAGE.getMaxExtract());				
-						}	
-					}else{
-						POWER_DIST.provideRF(EnumFacing.values()[i], STORAGE.getMaxExtract());					
-					}
-				
-				}
-			}		
+			testDebugPower();
+			//System.out.println(GRID.GatherPath(new BlockPos(-750,  237, 703), new BlockPos(-756,  237, 708)));
 		}
 	}	
+	public void testDebugPower() {
+		int recieverCount = 0;
+		List<BlockPos> recievers = new ArrayList<BlockPos>();
+		
+	    Iterator<Entry<BlockPos, TileEntity>> it = GRID.ENERGY_STORAGE_MAP.entrySet().iterator();
+	    while (it.hasNext()) {
+	        Map.Entry<BlockPos, TileEntity> pair = (Map.Entry<BlockPos, TileEntity>)it.next();
+	        if(getWorld().getTileEntity(pair.getKey()) != null) {
+		        IEnergyStorage storage = getWorld().getTileEntity(pair.getKey()).getCapability(CapabilityEnergy.ENERGY, null);
+		        if(storage.canReceive() && storage.getEnergyStored() < storage.getMaxEnergyStored()) {
+		        	recieverCount++;
+		        	recievers.add(pair.getKey());
+		        }   	
+	        }   
+	    }   
+
+	    if(recieverCount > 0) {
+	    	for(int i=0; i<recievers.size(); i++) {
+		        List<BlockPos> path = GRID.GatherPath(getPos(), recievers.get(i));	
+		        if(path != null) {
+		        	if(path.size() > 1) { //GET PROPER SIDE
+		        		//System.out.println(path.get(1));
+				        int provided = POWER_DIST.provideRF(path.get(1), EnumFacing.UP, Math.min(STORAGE.getEnergyStored(), RF_PER_TICK/recieverCount));	
+		        	}
+		        }
+	    	}
+	    }
+	}
+	public void distributePower() {
+		if(TICK_FOR_DEBUG < 1) {
+			TICK_FOR_DEBUG++;
+			return;
+		}
+		TICK_FOR_DEBUG = 0;
+		int provided = 0;
+		int count = 0;
+		for(int i=0; i<6; i++) {
+			if(LAST_RECIEVED != null && LAST_RECIEVED.ordinal() == i) {
+				continue;
+			}
+			if(getWorld().getTileEntity(getPos().offset(EnumFacing.values()[i])) != null) {
+				net.minecraftforge.energy.IEnergyStorage adjacentStorage = POWER_DIST.getEnergyHandlerPosition(EnumFacing.values()[i]);
+				if(adjacentStorage != null) {
+					if(adjacentStorage.getEnergyStored() < adjacentStorage.getMaxEnergyStored()) {
+						count++;
+					}
+				}
+			}
+		}
+		if(count <= 0) {
+			return;
+		}
+		
+		for(int i=0; i<6; i++) {
+			if(LAST_RECIEVED != null && LAST_RECIEVED.ordinal() == i) {
+				continue;
+			}
+			if(STORAGE.getEnergyStored() > 0) {
+				TileEntity adjacentTileEntity = getWorld().getTileEntity(pos.offset(EnumFacing.values()[i]));
+				if(adjacentTileEntity instanceof TileEntityStaticConduit) {
+					net.minecraftforge.energy.IEnergyStorage adjacentStorage = POWER_DIST.getEnergyHandlerPosition(EnumFacing.values()[i]);
+					if(adjacentStorage != null) {
+						provided = POWER_DIST.provideRF(EnumFacing.values()[i], Math.min(STORAGE.getEnergyStored(), RF_PER_TICK));				
+					}	
+				}else{
+					provided = POWER_DIST.provideRF(EnumFacing.values()[i], Math.min(STORAGE.getEnergyStored(), RF_PER_TICK));					
+				}
+			
+			}
+		}	
+		if(LAST_RECIEVED != null) {
+			if(provided < RF_PER_TICK) {
+				POWER_DIST.provideRF(LAST_RECIEVED, Math.min(STORAGE.getEnergyStored(), RF_PER_TICK-provided));	
+			}
+		}
+	}
     @Override  
 	public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
@@ -130,7 +204,7 @@ public class TileEntityStaticConduit extends TileEntityBaseConduit implements IE
 
 				@Override
 				public int receiveEnergy(int maxReceive, boolean simulate) {
-
+					LAST_RECIEVED = from;
 					return TileEntityStaticConduit.this.receiveEnergy(from, maxReceive, simulate);
 				}
 
@@ -154,14 +228,12 @@ public class TileEntityStaticConduit extends TileEntityBaseConduit implements IE
 
 				@Override
 				public boolean canExtract() {
-
-					return true;
+					return SIDE_MODES[from.ordinal()] == 0;
 				}
 
 				@Override
 				public boolean canReceive() {
-
-					return true;
+					return SIDE_MODES[from.ordinal()] == 0;
 				}
 			});
 		}
