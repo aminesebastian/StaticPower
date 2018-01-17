@@ -68,6 +68,7 @@ public class TileEntityStaticConduit extends TileEntityBaseConduit implements IE
 		        	if(path.size() > 1) { //GET PROPER SIDE
 		        		//System.out.println(path.get(1));
 				        int provided = POWER_DIST.provideRF(path.get(1), EnumFacing.UP, Math.min(STORAGE.getEnergyStored(), RF_PER_TICK/recieverCount));	
+				        //System.out.println("Sent Power to: " + path.get(i).toString() + " which is a: " + world.getTileEntity(path.get(i)));
 		        	}
 		        }
 	    	}
