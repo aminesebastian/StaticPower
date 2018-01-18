@@ -1,11 +1,14 @@
 package theking530.staticpower.conduits;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Queue;
 import java.util.Random;
 
 import net.minecraft.nbt.NBTTagCompound;
@@ -24,7 +27,7 @@ public class ConduitGrid {
 	private int GRID_ID;
 	private float[] GRID_COLOR;
 	
-	
+
 	public ConduitGrid(World world) {
 		WORLD = world;
 		GRID_MAP = new HashMap<BlockPos, TileEntity>();
@@ -68,26 +71,81 @@ public class ConduitGrid {
 		}
 		GRID_ID = tag.getInteger("GRID_ID");
 	}
+    public List<BlockPos> GatherShortestPath(BlockPos fromPos, BlockPos toPos) {
+        LinkedList<BlockPos> bfsList = new LinkedList<>();
+        Queue<BlockPos> queue = new LinkedList<>();
+
+        List<BlockPos> visited = new ArrayList<BlockPos>();
+        BlockPos current = fromPos;
+
+        List<BlockPos> prev = new ArrayList<BlockPos>();
+        
+        queue.add(current);
+        visited.add(current);
+
+        while (!queue.isEmpty()) {
+
+            current = queue.remove();
+
+            if (current.equals(toPos)) {
+                break;
+            } else {
+                LinkedList<BlockPos> currentFriends = GetValidAdjacentTiles(current);
+                for (BlockPos currentFriend : currentFriends) {
+                    if (!visited.contains(currentFriend)) {
+                        queue.add(currentFriend);
+                        visited.add(currentFriend);
+                        prev.add(current);
+                    }
+                }
+            }
+        }
+
+        if (!current.equals(toPos)) {
+            System.out.println("\nThere is no path between " + current + " and " + toPos);
+            return Collections.emptyList();
+        }
+
+        Collections.reverse(bfsList);
+
+        return prev;
+
+    }
+    public LinkedList<BlockPos> GetValidAdjacentTiles(BlockPos currentPosition) {
+    	LinkedList<BlockPos> adjacentList = new LinkedList<BlockPos>();
+    	for(int i=0; i<6; i++) {
+    		BlockPos test = currentPosition.offset(EnumFacing.values()[i]);
+    		if(GRID_MAP.containsKey(test) || ENERGY_STORAGE_MAP.containsKey(test)) {
+    			adjacentList.add(test);
+    		}
+    	}
+    	return adjacentList;
+    }
 
 	public List<BlockPos> GatherPath(BlockPos fromPos, BlockPos toPos) {	
+		List<BlockPos> path = new ArrayList<BlockPos>();
+		path.add(fromPos);
+		
 		if(fromPos.equals(toPos)) {
-			List<BlockPos> path = new ArrayList<BlockPos>();
-			path.add(toPos);
 			return path;
 		}
 
-		List<BlockPos> temp = new ArrayList<BlockPos>();
-		temp.add(fromPos);
+		List<BlockPos> checked = new ArrayList<BlockPos>();
+		checked.add(fromPos);
 		
-		List<BlockPos> path = new ArrayList<BlockPos>();
-		path.add(fromPos);
-		if(worker_GatherPath(fromPos, toPos, path, temp)) {
-			return path;	
+		List<BlockPos> gatherResult = worker_GatherPath(fromPos, toPos, checked);
+		
+		if(gatherResult != null){
+			for(int j=0; j<gatherResult.size(); j++) {
+				path.add(gatherResult.get(j));
+			}
+			return path;
 		}
+
 		
-		return null;
+		return  worker_GatherPath(fromPos, toPos, checked);	
 	}
-	private boolean worker_GatherPath(BlockPos currentBlock, BlockPos toPos, List<BlockPos> path, List<BlockPos> checkedBlocks) {
+	private List<BlockPos> worker_GatherPath(BlockPos currentBlock, BlockPos toPos, List<BlockPos> checkedBlocks) {
 		for(int i=0; i<6; i++) {
 			BlockPos child = currentBlock.offset(EnumFacing.values()[i]);
 
@@ -101,21 +159,27 @@ public class ConduitGrid {
 				continue;	
 			}
 			
+			List<BlockPos> tempPath = new LinkedList<BlockPos>();
+			
 			if(child.equals(toPos)) {
-				path.add(child);
-				return true;
+				tempPath.add(child);
+				return tempPath;
 			}
 			if(WORLD.getTileEntity(child) != null) {
 				TileEntity te = WORLD.getTileEntity(child);
 				if(te instanceof TileEntityBaseConduit) {
-					path.add(child);
-					if(worker_GatherPath(child, toPos, path, checkedBlocks)){
-						return true;
+					tempPath.add(child);
+					List<BlockPos> recursiveResult = worker_GatherPath(child, toPos, checkedBlocks);
+					if(recursiveResult != null){
+						for(int j=0; j<recursiveResult.size(); j++) {
+							tempPath.add(recursiveResult.get(j));
+						}
+						return tempPath;
 					}
 				}
 			}
 		}
-		return false;
+		return null;
 	}
 	public boolean AddEntry(TileEntity entity) {
 		if(entity == null) {

@@ -91,7 +91,7 @@ dependencies {
   
   compile "codechicken:CodeChickenLib:${mc_version}-${ccl_version}:deobf"
   
-  deobfCompile "mcjty.theoneprobe:TheOneProbe-{mc_major_version}:${mc_major_version}-${one_probe_version}"
+  deobfCompile "mcjty.theoneprobe:TheOneProbe-${mc_major_version}:${mc_major_version}-${one_probe_version}"
 }
 
 processResources {

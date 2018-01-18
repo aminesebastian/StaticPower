@@ -66,22 +66,22 @@ public class TileEntityStaticConduit extends TileEntityBaseConduit implements IE
 		        List<BlockPos> path = GRID.GatherPath(getPos(), recievers.get(i));	
 		        if(path != null) {
 		        	if(path.size() > 1) { //GET PROPER SIDE
-		        		//System.out.println(path.get(1));
-				        int provided = POWER_DIST.provideRF(path.get(1), EnumFacing.UP, Math.min(STORAGE.getEnergyStored(), RF_PER_TICK/recieverCount));	
-				        //System.out.println("Sent Power to: " + path.get(i).toString() + " which is a: " + world.getTileEntity(path.get(i)));
+		        		//System.out.println(path);
+		        		int powerMult = 1;
+		        		if(getWorld().getTileEntity(path.get(1)) instanceof TileEntityStaticConduit) {
+		        			powerMult = 6;
+		        		}
+				        int provided = POWER_DIST.provideRF(path.get(1), EnumFacing.UP, Math.min(STORAGE.getEnergyStored(), powerMult * RF_PER_TICK/recieverCount));	
+				        //System.out.println("Sent " + provided + " Power to: " + path.get(1).toString() + " which is a: " + world.getTileEntity(path.get(1)));
 		        	}
 		        }
 	    	}
 	    }
 	}
 	public void distributePower() {
-		if(TICK_FOR_DEBUG < 1) {
-			TICK_FOR_DEBUG++;
-			return;
-		}
-		TICK_FOR_DEBUG = 0;
 		int provided = 0;
 		int count = 0;
+		
 		for(int i=0; i<6; i++) {
 			if(LAST_RECIEVED != null && LAST_RECIEVED.ordinal() == i) {
 				continue;
@@ -95,6 +95,7 @@ public class TileEntityStaticConduit extends TileEntityBaseConduit implements IE
 				}
 			}
 		}
+
 		if(count <= 0) {
 			return;
 		}
@@ -113,7 +114,6 @@ public class TileEntityStaticConduit extends TileEntityBaseConduit implements IE
 				}else{
 					provided = POWER_DIST.provideRF(EnumFacing.values()[i], Math.min(STORAGE.getEnergyStored(), RF_PER_TICK));					
 				}
-			
 			}
 		}	
 		if(LAST_RECIEVED != null) {
