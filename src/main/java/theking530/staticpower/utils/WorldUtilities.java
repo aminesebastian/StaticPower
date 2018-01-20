@@ -44,6 +44,29 @@ public class WorldUtilities {
 			return EnumFacing.SOUTH;
 		}
 	}
+	public static EnumFacing getFacingFromPos(BlockPos source, BlockPos query) {
+		if(source != null && query != null) {
+			if(source.getY() > query.getY()) {
+				return EnumFacing.DOWN;
+			}
+			if(source.getY() < query.getY()) {
+				return EnumFacing.UP;
+			}
+			if(source.getZ() > query.getZ()) {
+				return EnumFacing.NORTH;
+			}
+			if(source.getZ() < query.getZ()) {
+				return EnumFacing.SOUTH;
+			}
+			if(source.getX() > query.getX()) {
+				return EnumFacing.WEST;
+			}
+			if(source.getX() < query.getX()) {
+				return EnumFacing.EAST;
+			}
+		}
+		return EnumFacing.UP;
+	}
 	public static void writeBlockPosToNBT(NBTTagCompound nbt, BlockPos pos, String name) {
 		nbt.setInteger(name+"X", pos.getX());
 		nbt.setInteger(name+"Y", pos.getY());

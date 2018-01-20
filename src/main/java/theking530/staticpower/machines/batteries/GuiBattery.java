@@ -68,12 +68,18 @@ public class GuiBattery extends CustomGuiContainer {
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String INPUT = (String.valueOf(sBattery.STORAGE.getMaxReceive()) + " RF/t");
 		String OUTPUT = (String.valueOf(sBattery.STORAGE.getMaxExtract()) + " RF/t");
+		
+		String current_input = (String.valueOf(sBattery.CURRENT_RF_TICK) + " RF/t");
+
 		String NAME = I18n.format(this.sBattery.getName());
 		this.fontRenderer.drawString("Input", this.xSize/2-this.fontRenderer.getStringWidth("Input")/2 - 35, 35, 4210752);
 		this.fontRenderer.drawString(INPUT, this.xSize/2-this.fontRenderer.getStringWidth(INPUT)/2 - 35, 45, 4210752);
 		this.fontRenderer.drawString("Output", this.xSize/2-this.fontRenderer.getStringWidth("Output")/2 + 35, 35, 4210752);
 		this.fontRenderer.drawString(OUTPUT, this.xSize/2-this.fontRenderer.getStringWidth(OUTPUT)/2 + 35, 45, 4210752);
 		this.fontRenderer.drawString(NAME, this.xSize / 2 - this.fontRenderer.getStringWidth(NAME) / 2, 6, 4210752);
+		
+		this.fontRenderer.drawString(current_input, this.xSize/2-this.fontRenderer.getStringWidth(INPUT)/2 - 40, 25, 4210752);
+		
 		this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 3, 4210752);
 	}
 	@Override

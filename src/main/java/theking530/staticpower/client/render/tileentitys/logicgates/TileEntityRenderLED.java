@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.vertex.VertexBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import theking530.staticpower.assists.Reference;
-import theking530.staticpower.tileentity.gates.led.TileEntityLED;
+import theking530.staticpower.logic.gates.led.TileEntityLED;
 import theking530.staticpower.utils.GUIUtilities;
 import theking530.staticpower.utils.Vector3;
 

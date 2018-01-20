@@ -8,6 +8,9 @@ import theking530.staticpower.client.gui.widgets.tabs.PacketPowerControlTab;
 import theking530.staticpower.client.gui.widgets.tabs.PacketRedstoneTab;
 import theking530.staticpower.client.gui.widgets.tabs.PacketSideConfigTab;
 import theking530.staticpower.items.itemfilter.PacketItemFilter;
+import theking530.staticpower.logic.gates.powercell.PacketPowerCell;
+import theking530.staticpower.logic.gates.timer.PacketTimer;
+import theking530.staticpower.logic.gates.transducer.PacketSignalMultiplier;
 import theking530.staticpower.machines.PacketMachineSync;
 import theking530.staticpower.machines.basicfarmer.PacketBasicFarmerContainerMode;
 import theking530.staticpower.machines.batteries.PacketGuiBattery;
@@ -16,9 +19,6 @@ import theking530.staticpower.machines.distillery.PacketDistilleryContainerMode;
 import theking530.staticpower.machines.fluidgenerator.PacketFluidGeneratorContainerMode;
 import theking530.staticpower.machines.fluidinfuser.PacketFluidInfuserContainerMode;
 import theking530.staticpower.machines.quarry.PacketQuarryContainerMode;
-import theking530.staticpower.tileentity.gates.powercell.PacketPowerCell;
-import theking530.staticpower.tileentity.gates.timer.PacketTimer;
-import theking530.staticpower.tileentity.gates.transducer.PacketSignalMultiplier;
 
 public class PacketHandler {
 	public static SimpleNetworkWrapper net;

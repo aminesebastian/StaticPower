@@ -10,112 +10,101 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.Random;
+import java.util.Stack;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import theking530.staticpower.conduits.staticconduit.TileEntityStaticConduit;
+import theking530.staticpower.StaticPower;
 
-public class ConduitGrid {
+public class ConduitGrid<T extends TileEntityBaseConduit> {
 
-	public HashMap<BlockPos, TileEntity> GRID_MAP;
-	public HashMap<BlockPos, TileEntity> ENERGY_STORAGE_MAP;
+	public HashMap<BlockPos, T> GRID_MAP;
+	public HashMap<BlockPos, TileEntity> RECIEVER_STORAGE_MAP;
 	
 	private World WORLD;
 	private int GRID_ID;
 	private float[] GRID_COLOR;
-	
+	public boolean INVALID;
 
 	public ConduitGrid(World world) {
 		WORLD = world;
-		GRID_MAP = new HashMap<BlockPos, TileEntity>();
-		ENERGY_STORAGE_MAP = new HashMap<BlockPos, TileEntity>();
+		GRID_MAP = new HashMap<BlockPos, T>();
+		RECIEVER_STORAGE_MAP = new HashMap<BlockPos, TileEntity>();
 		Random rand = new Random();
 		GRID_ID = rand.nextInt();
 		GRID_COLOR = new float[]{rand.nextFloat(), rand.nextFloat(), rand.nextFloat()};
+		INVALID = false;
+		
+		StaticPower.GRIDS.add(this);
 	}
 	public float[] getColor() {
 		return GRID_COLOR;		
 	}	
-	public NBTTagCompound Serialize(){
-		NBTTagCompound parent = new NBTTagCompound();
-		int count = 0;
-	    Iterator<Entry<BlockPos, TileEntity>> it = GRID_MAP.entrySet().iterator();
-	    while (it.hasNext()) {
-	        Map.Entry<BlockPos, TileEntity> pair = (Map.Entry<BlockPos, TileEntity>)it.next();
-	        
-	        NBTTagCompound temp = new NBTTagCompound();
-	        temp.setIntArray("POS", new int[]{pair.getKey().getX(), pair.getKey().getY(), pair.getKey().getZ()});
-	        
-	        System.out.println(pair.getKey() + " = " + pair.getValue());
-	        parent.setTag("BLOCK_" + count, temp);
-	        count++;
-	    }    
-	    parent.setInteger("COUNT", count);
-	    parent.setInteger("GRID_ID", GRID_ID);	   
-	    
-	    return parent;
+	public void Tick() {
+		
 	}
-	public void Deserialize(NBTTagCompound tag) {
-		int originalCount = tag.getInteger("COUNT");
+	public ConduitPath doBFSShortestPath(BlockPos source, BlockPos dest) {
+		ArrayList<BlockPos> shortestPathList = new ArrayList<BlockPos>();
+		HashMap<BlockPos, Boolean> visited = new HashMap<BlockPos, Boolean>();
 
-		for(int i=0; i<originalCount; i++) {
-			NBTTagCompound blockTag = tag.getCompoundTag("BLOCK_" + i);
-			int[] posArray = blockTag.getIntArray("POS");
-			BlockPos tempPos = new BlockPos(posArray[0], posArray[1], posArray[2]);
-			if(WORLD.getTileEntity(tempPos) != null) {
-				GRID_MAP.put(tempPos, WORLD.getTileEntity(tempPos));
+		if (source == dest)
+			return null;
+		Queue<BlockPos> queue = new LinkedList<BlockPos>();
+		Stack<BlockPos> pathStack = new Stack<BlockPos>();
+
+		queue.add(source);
+		pathStack.add(source);
+		visited.put(source, true);
+
+		while(!queue.isEmpty())
+		{
+			BlockPos u = queue.poll();
+			ArrayList<BlockPos> adjList = GetValidAdjacentTiles(u);
+
+			if(adjList.contains(dest)) {
+				break;
+			}
+			
+			for(BlockPos v : adjList)
+			{
+				if(!visited.containsKey(v))
+				{
+					queue.add(v);
+					visited.put(v, true);
+					pathStack.add(v);
+					if(u == dest)
+						break;
+				}
 			}
 		}
-		GRID_ID = tag.getInteger("GRID_ID");
+
+
+		//To find the path
+		BlockPos node, currentSrc=dest;
+		shortestPathList.add(dest);
+		while(!pathStack.isEmpty())
+		{
+			node = pathStack.pop();
+			if(GetValidAdjacentTiles(currentSrc).contains(node))
+			{
+				shortestPathList.add(node);
+				currentSrc = node;
+				if(node == source)
+					break;
+			}
+		}
+		Collections.reverse(shortestPathList);
+		//System.out.println(shortestPathList);
+		return new ConduitPath(shortestPathList);
 	}
-    public List<BlockPos> GatherShortestPath(BlockPos fromPos, BlockPos toPos) {
-        LinkedList<BlockPos> bfsList = new LinkedList<>();
-        Queue<BlockPos> queue = new LinkedList<>();
-
-        List<BlockPos> visited = new ArrayList<BlockPos>();
-        BlockPos current = fromPos;
-
-        List<BlockPos> prev = new ArrayList<BlockPos>();
-        
-        queue.add(current);
-        visited.add(current);
-
-        while (!queue.isEmpty()) {
-
-            current = queue.remove();
-
-            if (current.equals(toPos)) {
-                break;
-            } else {
-                LinkedList<BlockPos> currentFriends = GetValidAdjacentTiles(current);
-                for (BlockPos currentFriend : currentFriends) {
-                    if (!visited.contains(currentFriend)) {
-                        queue.add(currentFriend);
-                        visited.add(currentFriend);
-                        prev.add(current);
-                    }
-                }
-            }
-        }
-
-        if (!current.equals(toPos)) {
-            System.out.println("\nThere is no path between " + current + " and " + toPos);
-            return Collections.emptyList();
-        }
-
-        Collections.reverse(bfsList);
-
-        return prev;
-
-    }
-    public LinkedList<BlockPos> GetValidAdjacentTiles(BlockPos currentPosition) {
-    	LinkedList<BlockPos> adjacentList = new LinkedList<BlockPos>();
+    public ArrayList<BlockPos> GetValidAdjacentTiles(BlockPos currentPosition) {
+    	ArrayList<BlockPos> adjacentList = new ArrayList<BlockPos>();
     	for(int i=0; i<6; i++) {
     		BlockPos test = currentPosition.offset(EnumFacing.values()[i]);
-    		if(GRID_MAP.containsKey(test) || ENERGY_STORAGE_MAP.containsKey(test)) {
+    		if(GRID_MAP.containsKey(test) || RECIEVER_STORAGE_MAP.containsKey(test)) {
     			adjacentList.add(test);
     		}
     	}
@@ -130,10 +119,10 @@ public class ConduitGrid {
 			return path;
 		}
 
-		List<BlockPos> checked = new ArrayList<BlockPos>();
-		checked.add(fromPos);
+		List<BlockPos> visited = new ArrayList<BlockPos>();
+		visited.add(fromPos);
 		
-		List<BlockPos> gatherResult = worker_GatherPath(fromPos, toPos, checked);
+		List<BlockPos> gatherResult = worker_GatherPath(fromPos, toPos, visited);
 		
 		if(gatherResult != null){
 			for(int j=0; j<gatherResult.size(); j++) {
@@ -143,19 +132,19 @@ public class ConduitGrid {
 		}
 
 		
-		return  worker_GatherPath(fromPos, toPos, checked);	
+		return gatherResult;	
 	}
-	private List<BlockPos> worker_GatherPath(BlockPos currentBlock, BlockPos toPos, List<BlockPos> checkedBlocks) {
+	private List<BlockPos> worker_GatherPath(BlockPos currentBlock, BlockPos toPos, List<BlockPos> visitedBlocks) {
 		for(int i=0; i<6; i++) {
 			BlockPos child = currentBlock.offset(EnumFacing.values()[i]);
 
-			if(checkedBlocks.contains(child)) {
+			if(visitedBlocks.contains(child)) {
 				continue;
 			}		
 			
-			checkedBlocks.add(child);
+			visitedBlocks.add(child);
 			
-			if(!(ENERGY_STORAGE_MAP.containsKey(child)) && !(GRID_MAP.containsKey(child))) {
+			if(!(RECIEVER_STORAGE_MAP.containsKey(child)) && !(GRID_MAP.containsKey(child))) {
 				continue;	
 			}
 			
@@ -169,7 +158,7 @@ public class ConduitGrid {
 				TileEntity te = WORLD.getTileEntity(child);
 				if(te instanceof TileEntityBaseConduit) {
 					tempPath.add(child);
-					List<BlockPos> recursiveResult = worker_GatherPath(child, toPos, checkedBlocks);
+					List<BlockPos> recursiveResult = worker_GatherPath(child, toPos, visitedBlocks);
 					if(recursiveResult != null){
 						for(int j=0; j<recursiveResult.size(); j++) {
 							tempPath.add(recursiveResult.get(j));
@@ -181,6 +170,7 @@ public class ConduitGrid {
 		}
 		return null;
 	}
+	@SuppressWarnings("unchecked")
 	public boolean AddEntry(TileEntity entity) {
 		if(entity == null) {
 			return false;
@@ -189,12 +179,12 @@ public class ConduitGrid {
 			if(GRID_MAP.containsKey(entity.getPos())) {
 				return false;
 			}
-			GRID_MAP.put(entity.getPos(), entity);
+			GRID_MAP.put(entity.getPos(), (T)entity);
 		}else{
-			if(ENERGY_STORAGE_MAP.containsKey(entity.getPos())) {
+			if(RECIEVER_STORAGE_MAP.containsKey(entity.getPos())) {
 				return false;
 			}
-			ENERGY_STORAGE_MAP.put(entity.getPos(), entity);
+			RECIEVER_STORAGE_MAP.put(entity.getPos(), entity);
 		}
 		return false;
 	}
@@ -202,11 +192,11 @@ public class ConduitGrid {
 		return GRID_MAP.size();
 	}
 	public int GetEnergyStorageMapSize() {
-		return ENERGY_STORAGE_MAP.size();
+		return RECIEVER_STORAGE_MAP.size();
 	}
 	@Override
 	public String toString() {
-		return "Grid Size: " + GetGridSize() + "  Energy Storage Size: " + GetEnergyStorageMapSize() + " Grid ID: " + GRID_ID;	
+		return "Grid Size: " + GetGridSize() + " Reciever Count: " + GetEnergyStorageMapSize() + " Grid ID: " + GRID_ID;	
 	}
 	
 	public class GridReciever {

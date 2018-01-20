@@ -15,8 +15,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.IEnergyStorage;
 import theking530.staticpower.conduits.staticconduit.TileEntityStaticConduit;
 
 public class TileEntityBaseConduit extends TileEntity implements IConduit, ITickable {
@@ -25,10 +23,13 @@ public class TileEntityBaseConduit extends TileEntity implements IConduit, ITick
 	public EnumFacing[] receivers = new EnumFacing[6];
 	
 	public int[] SIDE_MODES = {0,0,0,0,0,0};
-	public ConduitGrid GRID;
+	public ConduitGrid<TileEntityBaseConduit> GRID;
+	
+	public int SELECTED;
+	
 	
 	public TileEntityBaseConduit() {
-
+		SELECTED = 1;
 	}
 	@Override
 	public void update() {
@@ -40,11 +41,15 @@ public class TileEntityBaseConduit extends TileEntity implements IConduit, ITick
 
 	}
 	public void createGrid() {
-		GRID = new ConduitGrid(world);
+		if(GRID != null) {
+			GRID.INVALID = true;	
+		}
+
+		GRID = new ConduitGrid<TileEntityBaseConduit>(world);
 		GRID.AddEntry(this);
 		generateGridNeighbors(GRID);  
 	}
-	public void generateGridNeighbors(ConduitGrid masterGrid) {
+	public void generateGridNeighbors(ConduitGrid<TileEntityBaseConduit> masterGrid) {
 		masterGrid.AddEntry(this);
 		for(int i=0; i<6; i++) {
 			TileEntity te = getWorld().getTileEntity(pos.offset(EnumFacing.values()[i]));
@@ -62,7 +67,7 @@ public class TileEntityBaseConduit extends TileEntity implements IConduit, ITick
 						tempCond.GRID = masterGrid;
 						tempCond.generateGridNeighbors(masterGrid);
 					}
-				}else if(te.hasCapability(CapabilityEnergy.ENERGY, EnumFacing.values()[i].getOpposite())) {
+				}else if(isReciever(EnumFacing.values()[i])) {
 					masterGrid.AddEntry(te);
 				}
 			}
@@ -131,10 +136,16 @@ public class TileEntityBaseConduit extends TileEntity implements IConduit, ITick
     @Override  
 	public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
+		for(int i=0; i<6; i++) {
+			SIDE_MODES[i] = nbt.getInteger("SIDE"+i);
+		}
     }		
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
+		for(int i=0; i<6; i++) {
+			nbt.setInteger("SIDE"+i, SIDE_MODES[i]);
+		}
 		return nbt;
 	}
 	

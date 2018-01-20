@@ -1,7 +1,9 @@
 package theking530.staticpower.conduits.staticconduit;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -17,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import theking530.staticpower.conduits.ConduitPath;
 import theking530.staticpower.conduits.TileEntityBaseConduit;
 import theking530.staticpower.power.PowerDistributor;
 
@@ -27,33 +30,119 @@ public class TileEntityStaticConduit extends TileEntityBaseConduit implements IE
 	public int RF_PER_TICK = 1000;
 	public PowerDistributor POWER_DIST;
 	public EnumFacing LAST_RECIEVED;
+	public int TEST_DEBUG_COUNT;
 
-	public int TICK_FOR_DEBUG;
-	
 	public TileEntityStaticConduit() {
+		super();
 		STORAGE.setMaxExtract(RF_PER_TICK);
 		STORAGE.setMaxReceive(RF_PER_TICK);
 		STORAGE.setMaxTransfer(RF_PER_TICK);
 		POWER_DIST = new PowerDistributor(this, STORAGE);
+
 	}
 
 	@Override
 	public void update() {
 		super.update();
 		if(!getWorld().isRemote) {
-			testDebugPower();
-			//System.out.println(GRID.GatherPath(new BlockPos(-750,  237, 703), new BlockPos(-756,  237, 708)));
+			boringProvidePower();
 		}
 	}	
-	public void testDebugPower() {
-		int recieverCount = 0;
-		List<BlockPos> recievers = new ArrayList<BlockPos>();
+	public void boringProvidePower() {	
+		if(STORAGE.getEnergyStored() <= 0) {
+			return;
+		}
 		
-	    Iterator<Entry<BlockPos, TileEntity>> it = GRID.ENERGY_STORAGE_MAP.entrySet().iterator();
+		List<BlockPos> recieversToSatisfy = new LinkedList<BlockPos>();	
+		
+	    //Generate a list of potential receivers
+	    Iterator<Entry<BlockPos, TileEntity>> it = GRID.RECIEVER_STORAGE_MAP.entrySet().iterator();
+	    while (it.hasNext()) {
+	        Map.Entry<BlockPos, TileEntity> pair = (Map.Entry<BlockPos, TileEntity>)it.next();
+	        if(getWorld().getTileEntity(pair.getKey()) != null) {
+		        IEnergyStorage storage = getWorld().getTileEntity(pair.getKey()).getCapability(CapabilityEnergy.ENERGY, EnumFacing.UP);
+		        if(storage != null && storage.canReceive() && storage.getEnergyStored() < storage.getMaxEnergyStored()) {
+		        	recieversToSatisfy.add(pair.getKey());
+		        }   	
+	        }   
+	    }   
+	    for(int i=0; i<recieversToSatisfy.size(); i++) {
+    		int powerToProvide = Math.min(STORAGE.getEnergyStored(), RF_PER_TICK/recieversToSatisfy.size());
+	        POWER_DIST.provideRF(recieversToSatisfy.get(i), EnumFacing.WEST, powerToProvide);
+	    }
+	    
+		if(STORAGE.getEnergyStored() >= 0) {
+			return;
+		}
+		
+	}
+	public void testDebugPower() {
+		if(STORAGE.getEnergyStored() <= 0) {
+			return;
+		}
+		int recieverCount = 0;		
+		Map<BlockPos, ConduitPath> potentialRecievers = new HashMap<BlockPos, ConduitPath>();	
+	    List<BlockPos> satisfiedRecievers = new ArrayList<BlockPos>();  
+		
+	    //Generate a list of potential receivers
+	    Iterator<Entry<BlockPos, TileEntity>> it = GRID.RECIEVER_STORAGE_MAP.entrySet().iterator();
 	    while (it.hasNext()) {
 	        Map.Entry<BlockPos, TileEntity> pair = (Map.Entry<BlockPos, TileEntity>)it.next();
 	        if(getWorld().getTileEntity(pair.getKey()) != null) {
 		        IEnergyStorage storage = getWorld().getTileEntity(pair.getKey()).getCapability(CapabilityEnergy.ENERGY, null);
+		        if(storage != null && storage.canReceive() && storage.getEnergyStored() < storage.getMaxEnergyStored()) {
+		        	potentialRecievers.put(pair.getKey(), GRID.doBFSShortestPath(getPos(), pair.getKey()));
+		        }   	
+	        }   
+	    }   
+	    
+	    //Assign count of receivers to be satisfied. More efficient than incrementing a value during the above loop.
+	    recieverCount = potentialRecievers.size();
+	    
+	    //Attempt to satisfy all receivers.
+	    for(int i=0; i<recieverCount; i++) {
+	    	Map.Entry<BlockPos, ConduitPath>  shortestPath = null;
+	    	int shortestPathLength = 100000000;
+	    	
+	    	//Determine closets receiver and store it in 'shortestPath'.
+		    Iterator<Entry<BlockPos, ConduitPath>> testIt = potentialRecievers.entrySet().iterator();
+		    while (testIt.hasNext()) {
+		        Map.Entry<BlockPos, ConduitPath> pair = (Map.Entry<BlockPos, ConduitPath>)testIt.next();
+		        if(pair.getValue().size() < shortestPathLength && !satisfiedRecievers.contains(pair.getKey())) {
+		        	shortestPathLength = pair.getValue().size();
+		        	shortestPath = pair;
+		        }
+		    }   
+		    
+		    //Safety Check.
+		    if(shortestPath == null) {
+		    	return;
+		    }
+
+		    //Satisfy towards reciever.
+		    ConduitPath path = shortestPath.getValue();	
+	        if(path != null && path.size() > 1) {
+        		if(getWorld().getTileEntity(path.get(1)) instanceof TileEntityStaticConduit) {
+	        		int conduitPowerPerTick = STORAGE.getEnergyStored()/recieverCount;
+	        		POWER_DIST.provideRF(path.get(1), EnumFacing.WEST, conduitPowerPerTick);	
+	        		//System.out.println(provided + " provided to: " + path.get(1));
+        		}else{
+	        		int powerToProvide = Math.min(STORAGE.getEnergyStored(), RF_PER_TICK/recieverCount);
+			        POWER_DIST.provideRF(path.get(1), EnumFacing.WEST, powerToProvide);
+        		}	 
+        	}	  
+		    satisfiedRecievers.add(shortestPath.getKey());
+	    }
+	}
+	public void testBFS() {
+		int recieverCount = 0;
+		List<BlockPos> recievers = new ArrayList<BlockPos>();
+		
+	    Iterator<Entry<BlockPos, TileEntity>> it = GRID.RECIEVER_STORAGE_MAP.entrySet().iterator();
+	    while (it.hasNext()) {
+	        Map.Entry<BlockPos, TileEntity> pair = (Map.Entry<BlockPos, TileEntity>)it.next();
+	        if(pair.getValue() != null) {
+		        IEnergyStorage storage = pair.getValue().getCapability(CapabilityEnergy.ENERGY, null);
 		        if(storage.canReceive() && storage.getEnergyStored() < storage.getMaxEnergyStored()) {
 		        	recieverCount++;
 		        	recievers.add(pair.getKey());
@@ -63,18 +152,17 @@ public class TileEntityStaticConduit extends TileEntityBaseConduit implements IE
 
 	    if(recieverCount > 0) {
 	    	for(int i=0; i<recievers.size(); i++) {
-		        List<BlockPos> path = GRID.GatherPath(getPos(), recievers.get(i));	
-		        if(path != null) {
-		        	if(path.size() > 1) { //GET PROPER SIDE
-		        		//System.out.println(path);
-		        		int powerMult = 1;
-		        		if(getWorld().getTileEntity(path.get(1)) instanceof TileEntityStaticConduit) {
-		        			powerMult = 6;
-		        		}
-				        int provided = POWER_DIST.provideRF(path.get(1), EnumFacing.UP, Math.min(STORAGE.getEnergyStored(), powerMult * RF_PER_TICK/recieverCount));	
-				        //System.out.println("Sent " + provided + " Power to: " + path.get(1).toString() + " which is a: " + world.getTileEntity(path.get(1)));
-		        	}
-		        }
+	    		ConduitPath path = GRID.doBFSShortestPath(getPos(), recievers.get(i));	
+		        if(path != null && path.size() > 1) {
+		        	//System.out.println(path);
+	        		if(getWorld().getTileEntity(path.get(1)) instanceof TileEntityStaticConduit) {
+		        		int conduitPowerPerTick = STORAGE.getEnergyStored()/recieverCount;
+		        		POWER_DIST.provideRF(path.get(1), EnumFacing.UP, conduitPowerPerTick);
+	        		}else{
+		        		int powerToProvide = Math.min(STORAGE.getEnergyStored(), RF_PER_TICK/recieverCount);
+				        POWER_DIST.provideRF(path.get(1), EnumFacing.UP, powerToProvide);
+	        		}	 
+	        	}	  
 	    	}
 	    }
 	}
@@ -121,22 +209,17 @@ public class TileEntityStaticConduit extends TileEntityBaseConduit implements IE
 				POWER_DIST.provideRF(LAST_RECIEVED, Math.min(STORAGE.getEnergyStored(), RF_PER_TICK-provided));	
 			}
 		}
+		LAST_RECIEVED = null;
 	}
     @Override  
 	public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         STORAGE.readFromNBT(nbt);
-		for(int i=0; i<6; i++) {
-			SIDE_MODES[i] = nbt.getInteger("SIDE"+i);
-		}
     }		
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
         STORAGE.writeToNBT(nbt);
-		for(int i=0; i<6; i++) {
-			nbt.setInteger("SIDE"+i, SIDE_MODES[i]);
-		}
 		return nbt;
 	}
 
@@ -205,7 +288,6 @@ public class TileEntityStaticConduit extends TileEntityBaseConduit implements IE
 
 				@Override
 				public int receiveEnergy(int maxReceive, boolean simulate) {
-					LAST_RECIEVED = from;
 					return TileEntityStaticConduit.this.receiveEnergy(from, maxReceive, simulate);
 				}
 

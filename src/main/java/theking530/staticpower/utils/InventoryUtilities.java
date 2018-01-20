@@ -21,12 +21,16 @@ public class InventoryUtilities {
 		return false;
 	}
 	public static boolean canFullyInsertItemIntoInventory(IItemHandler inv, ItemStack stack) {
+		int leftOver = 1000;
+		ItemStack output = stack;
 		for(int i=0; i<inv.getSlots(); i++) {
-			if(canFullyInsertItemIntoSlot(inv, i, stack)) {
-				return true;
+			output = inv.insertItem(i, output, true);
+			leftOver = output.getCount();
+			if(leftOver <= 0) {
+				break;
 			}
 		}
-		return false;
+		return leftOver <= 0;
 	}
 	public static boolean canInsertItemIntoInventory(IItemHandler inv, ItemStack stack) {
 		for(int i=0; i<inv.getSlots(); i++) {
@@ -37,12 +41,16 @@ public class InventoryUtilities {
 		return false;
 	}
 	public static ItemStack insertItemIntoInventory(IItemHandler inv, ItemStack stack) {
+		int leftOver = 1000;
+		ItemStack output = stack;
 		for(int i=0; i<inv.getSlots(); i++) {
-			if(canInsertItemIntoSlot(inv, i, stack)) {
-				return inv.insertItem(i, stack, false);
+			output = inv.insertItem(i, output, false);
+			leftOver = output.getCount();
+			if(leftOver <= 0) {
+				break;
 			}
 		}
-		return stack;
+		return output;
 	}
 	public static ItemStack insertItemIntoInventory(IItemHandler inv, ItemStack stack, int start, int stop) {
 		for(int i=start; i<stop+1; i++) {

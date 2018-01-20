@@ -22,7 +22,9 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
@@ -31,7 +33,9 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.items.armor.BaseArmor;
 import theking530.staticpower.items.armor.BaseShield;
@@ -54,7 +58,14 @@ public class ModEvents {
 		MinecraftForge.EVENT_BUS.register(new ModEvents());
 	}
 	
-	
+	@SubscribeEvent
+	public void scheduler(ServerTickEvent e){
+		for(int i=0; i<StaticPower.GRIDS.size(); i++) {
+			if(StaticPower.GRIDS.get(i) != null && !StaticPower.GRIDS.get(i).INVALID) {
+				StaticPower.GRIDS.get(i).Tick();
+			}
+		}
+	}
     @SubscribeEvent(priority=EventPriority.HIGH, receiveCanceled=true)
 	public void attackEvent(LivingAttackEvent e) {
     	handleShieldDamage(e);
@@ -87,7 +98,18 @@ public class ModEvents {
 			}
 		}
     }
-    
+	@SubscribeEvent (priority = EventPriority.HIGHEST)
+	public void onBlockHighlight(DrawBlockHighlightEvent event) {
+
+		RayTraceResult target = event.getTarget();
+		EntityPlayer player = event.getPlayer();
+		float partialTicks = event.getPartialTicks();
+
+		//if (doDuctHighlight(target, player, partialTicks)) {
+		//	event.setCanceled(true);
+		//}
+	}
+	
     public void handleShieldDamage(LivingAttackEvent e) {
 		float damage = e.getAmount();
 		ItemStack activeItemStack;

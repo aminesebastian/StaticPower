@@ -1,6 +1,5 @@
 package theking530.staticpower.conduits;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -16,22 +15,17 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.conduits.staticconduit.TileEntityStaticConduit;
-import theking530.staticpower.tileentity.BaseTileEntity;
 
 public class BaseConduit extends Block implements IWrenchable {
 
@@ -53,7 +47,7 @@ public class BaseConduit extends Block implements IWrenchable {
 
     	AxisAlignedBB base = new AxisAlignedBB(min, min, min, max, max, max);
     	
-		TileEntityStaticConduit conduit = (TileEntityStaticConduit) source.getTileEntity(pos);
+		TileEntityBaseConduit conduit = (TileEntityBaseConduit) source.getTileEntity(pos);
 		if (conduit != null) {
 			if (conduit.connections[0] != null) {
 				base = base.union(new AxisAlignedBB(min, 1.0F, min, max, max, max));
@@ -84,7 +78,7 @@ public class BaseConduit extends Block implements IWrenchable {
 
 		AxisAlignedBB bb = new AxisAlignedBB(min, min, min, max, max, max);
 		addCollisionBoxToList(pos, entityBox, collidingBoxes, bb);
-		TileEntityStaticConduit conduit = (TileEntityStaticConduit) world.getTileEntity(pos);
+		TileEntityBaseConduit conduit = (TileEntityBaseConduit) world.getTileEntity(pos);
 
 		if (conduit != null) {
 			if (conduit.connections[0] != null) {

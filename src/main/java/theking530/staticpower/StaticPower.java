@@ -1,5 +1,7 @@
 package theking530.staticpower;
 
+import java.util.LinkedList;
+
 import org.apache.logging.log4j.Level;
 
 import net.minecraft.creativetab.CreativeTabs;
@@ -19,6 +21,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.client.CommonProxy;
+import theking530.staticpower.conduits.ConduitGrid;
 import theking530.staticpower.conduits.fluidconduit.TileEntityFluidConduit;
 import theking530.staticpower.conduits.itemconduit.TileEntityItemConduit;
 import theking530.staticpower.conduits.staticconduit.TileEntityStaticConduit;
@@ -44,6 +47,15 @@ import theking530.staticpower.items.ModItems;
 import theking530.staticpower.items.ModMaterials;
 import theking530.staticpower.items.armor.ModArmor;
 import theking530.staticpower.items.tools.basictools.ModTools;
+import theking530.staticpower.logic.gates.adder.TileEntityAdder;
+import theking530.staticpower.logic.gates.and.TileEntityAndGate;
+import theking530.staticpower.logic.gates.led.TileEntityLED;
+import theking530.staticpower.logic.gates.notgate.TileEntityNotGate;
+import theking530.staticpower.logic.gates.or.TileEntityOrGate;
+import theking530.staticpower.logic.gates.powercell.TileEntityPowerCell;
+import theking530.staticpower.logic.gates.subtractor.TileEntitySubtractorGate;
+import theking530.staticpower.logic.gates.timer.TileEntityTimer;
+import theking530.staticpower.logic.gates.transducer.TileEntitySignalMultiplier;
 import theking530.staticpower.machines.basicfarmer.TileEntityBasicFarmer;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityBasicBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityEnergizedBattery;
@@ -62,21 +74,11 @@ import theking530.staticpower.machines.mechanicalsqueezer.TileEntityMechanicalSq
 import theking530.staticpower.machines.poweredfurnace.TileEntityPoweredFurnace;
 import theking530.staticpower.machines.poweredgrinder.TileEntityPoweredGrinder;
 import theking530.staticpower.machines.quarry.TileEntityQuarry;
-import theking530.staticpower.newconduits.BaseConduitTileEntity;
 import theking530.staticpower.potioneffects.ModPotions;
 import theking530.staticpower.tileentity.chest.energizedchest.TileEntityEnergizedChest;
 import theking530.staticpower.tileentity.chest.lumumchest.TileEntityLumumChest;
 import theking530.staticpower.tileentity.chest.staticchest.TileEntityStaticChest;
 import theking530.staticpower.tileentity.chunkloader.TileEntityChunkLoader;
-import theking530.staticpower.tileentity.gates.adder.TileEntityAdder;
-import theking530.staticpower.tileentity.gates.and.TileEntityAndGate;
-import theking530.staticpower.tileentity.gates.led.TileEntityLED;
-import theking530.staticpower.tileentity.gates.notgate.TileEntityNotGate;
-import theking530.staticpower.tileentity.gates.or.TileEntityOrGate;
-import theking530.staticpower.tileentity.gates.powercell.TileEntityPowerCell;
-import theking530.staticpower.tileentity.gates.subtractor.TileEntitySubtractorGate;
-import theking530.staticpower.tileentity.gates.timer.TileEntityTimer;
-import theking530.staticpower.tileentity.gates.transducer.TileEntitySignalMultiplier;
 import theking530.staticpower.tileentity.solarpanels.TileEntityBasicSolarPanel;
 import theking530.staticpower.tileentity.solarpanels.TileEntityCreativeSolarPanel;
 import theking530.staticpower.tileentity.solarpanels.TileEntityEnergizedSolarPanel;
@@ -100,6 +102,7 @@ public class StaticPower {
     public static Configuration CONFIG;
     public static org.apache.logging.log4j.Logger LOGGER;
     public static Registry REGISTRY;
+    public static LinkedList<ConduitGrid> GRIDS;
     
     @Mod.Instance(Reference.MODID)
     public static StaticPower instance;
@@ -114,6 +117,7 @@ public class StaticPower {
 		REGISTRY = new Registry();
 		REGISTRY.preInit(preEvent);
 		CONFIG = new Configuration(preEvent.getSuggestedConfigurationFile());
+		GRIDS = new LinkedList<ConduitGrid>();
 		StaticPowerConfig.updateConfig();
 	
 		PacketHandler.initPackets();
@@ -141,7 +145,7 @@ public class StaticPower {
         }
 	    
 	    
-		GameRegistry.registerTileEntity(BaseConduitTileEntity.class, "BaseConduitTileEntity");
+
 		GameRegistry.registerTileEntity(TileEntityChunkLoader.class, "BaseChunkLoader");
 		
 		GameRegistry.registerTileEntity(TileEntitySolderingTable.class, "SolderingTable");	
