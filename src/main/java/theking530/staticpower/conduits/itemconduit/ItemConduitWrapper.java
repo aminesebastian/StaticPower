@@ -8,16 +8,20 @@ import theking530.staticpower.conduits.ConduitPath;
 import theking530.staticpower.utils.WorldUtilities;
 
 public class ItemConduitWrapper {
-	public ItemStack ITEM;
-	public BlockPos SOURCE;
-	public ConduitPath PATH;
-	
+	private ItemStack ITEM;
+	private BlockPos SOURCE;
+	private ConduitPath PATH;
+	private float RANDOM_ROTATION;
 	private int CURRENT_INDEX;
 	
-	public ItemConduitWrapper(ItemStack item, BlockPos source) {
+	private int MOVE_TIMER;
+	
+	public ItemConduitWrapper(ItemStack item, BlockPos source, float randomRotation) {
 		ITEM = item;
 		SOURCE = source;
 		CURRENT_INDEX = 0;
+		RANDOM_ROTATION = randomRotation;
+		MOVE_TIMER = 0;
 	}
 	public void setPath(ConduitPath path) {
 		PATH = path;
@@ -38,10 +42,13 @@ public class ItemConduitWrapper {
 		}
 		return CURRENT_INDEX == 0 ? PATH.get(CURRENT_INDEX) : PATH.get(CURRENT_INDEX-1);
 	}
+	public boolean hasPath() {
+		return PATH != null;
+	}
 	public ConduitPath getPath() {
 		return PATH;
 	}
-	public BlockPos getSource() {
+	public BlockPos getSourceLocation() {
 		return SOURCE;
 	}
 	public ItemStack getItemStack() {
@@ -49,6 +56,15 @@ public class ItemConduitWrapper {
 	}
 	public EnumFacing getCurrentDirection() {
 		return WorldUtilities.getFacingFromPos(getCurrentBlockPos(), getNextBlockPos());
+	}	
+	public float getRotationOffset() {
+		return RANDOM_ROTATION;
+	}
+	public int getMoveTimer() {
+		return MOVE_TIMER;
+	}
+	public void incrementMoveTimer() {
+		MOVE_TIMER++;
 	}
 	
 	public void readFromNBT(NBTTagCompound nbt) {

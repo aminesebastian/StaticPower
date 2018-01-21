@@ -18,6 +18,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.machines.machinecomponents.IMachineComponentInterface;
 import theking530.staticpower.utils.RedstoneModeList;
@@ -401,9 +402,9 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 				TileEntity te = getWorld().getTileEntity(pos.offset(SideUtils.getEnumFacingFromSide(blockSide, facing)));
 				if (te == null) {
 					return;
-				} else if (te instanceof IInventory) {
-					IInventory inv = (IInventory) te;
-					int numSlots = inv.getSizeInventory();
+				} else if (te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, SideUtils.getEnumFacingFromSide(blockSide, facing))) {
+					IItemHandler inv = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, SideUtils.getEnumFacingFromSide(blockSide, facing));
+					int numSlots = inv.getSlots();
 					if (!getWorld().isRemote) {
 						int k = startSlot;
 						if (backwards) {
@@ -412,7 +413,7 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 
 						ItemStack itemstack1;
 
-						if (stack.isStackable() && inv.isItemValidForSlot(k, stack)) {
+						if (stack.isStackable() && inv.insertItem(k, stack, false) == ItemStack.EMPTY) {
 							while (stack.getCount() > 0 && (!backwards && k < numSlots || backwards && k >= startSlot)) {
 								itemstack1 = inv.getStackInSlot(k);
 
@@ -452,8 +453,8 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 							while (!backwards && k < numSlots || backwards && k >= startSlot) {
 								itemstack1 = inv.getStackInSlot(k);
 
-								if (itemstack1 == ItemStack.EMPTY && inv.isItemValidForSlot(k, stack)) {
-									inv.setInventorySlotContents(k, stack.copy());
+								if (itemstack1 == ItemStack.EMPTY && inv.insertItem(k, stack, false) == ItemStack.EMPTY) {
+									inv.insertItem(k, stack.copy(), true);
 									SLOTS_OUTPUT.setStackInSlot(fromSlot, ItemStack.EMPTY);
 									break;
 								}
@@ -478,17 +479,17 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 			TileEntity te = getWorld().getTileEntity(pos.offset(SideUtils.getEnumFacingFromSide(blockSide, facing)));
 			if (te == null) {
 				return;
-			} else if (te instanceof IInventory) {
-				IInventory inv = (IInventory) te;
+			} else if (te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, SideUtils.getEnumFacingFromSide(blockSide, facing))) {
+				IItemHandler inv = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, SideUtils.getEnumFacingFromSide(blockSide, facing));
 				if (!getWorld().isRemote) {
-					for(int currentTESlot = startSlot; currentTESlot < inv.getSizeInventory(); currentTESlot++) {
+					for(int currentTESlot = startSlot; currentTESlot < inv.getSlots(); currentTESlot++) {
 						ItemStack stack = inv.getStackInSlot(currentTESlot);
 						if(stack != null) {
 							if(hasResult(stack)) {
 								if (canSlotAcceptItemstackIgnoringCount(stack, SLOTS_INPUT.getStackInSlot(inputSlot))) {				
 									if(SLOTS_INPUT.getStackInSlot(inputSlot) == null && stack != null) {
 										SLOTS_INPUT.setStackInSlot(inputSlot, stack.copy());
-										inv.setInventorySlotContents(currentTESlot, null);
+										inv.extractItem(currentTESlot, inv.getStackInSlot(currentTESlot).getCount(), false);
 									}else{
 										int i = SLOTS_INPUT.getStackInSlot(inputSlot).getCount() + stack.getCount();
 										
@@ -497,7 +498,7 @@ public class BaseTileEntity extends TileEntity implements ITickable {
 											SLOTS_INPUT.getStackInSlot(inputSlot).setCount(stack.getMaxStackSize());
 										}else if(i <= SLOTS_INPUT.getStackInSlot(inputSlot).getMaxStackSize()){
 											SLOTS_INPUT.getStackInSlot(inputSlot).setCount(i);
-											inv.setInventorySlotContents(currentTESlot, null);				
+											inv.extractItem(currentTESlot, inv.getStackInSlot(currentTESlot).getCount(), false);			
 										}	
 									}									
 								}

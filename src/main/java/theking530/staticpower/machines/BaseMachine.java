@@ -13,9 +13,9 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
+import theking530.staticpower.energy.StaticEnergyStorage;
 import theking530.staticpower.items.upgrades.BasePowerUpgrade;
 import theking530.staticpower.items.upgrades.BaseSpeedUpgrade;
-import theking530.staticpower.power.StaticEnergyStorage;
 import theking530.staticpower.tileentity.BaseTileEntity;
 
 /**

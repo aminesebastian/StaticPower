@@ -39,7 +39,6 @@ import theking530.staticpower.machines.mechanicalsqueezer.BlockMechanicalSqueeze
 import theking530.staticpower.machines.poweredfurnace.BlockPoweredFurnace;
 import theking530.staticpower.machines.poweredgrinder.BlockPoweredGrinder;
 import theking530.staticpower.machines.quarry.BlockQuarry;
-import theking530.staticpower.newconduits.BaseConduitBlock;
 import theking530.staticpower.tileentity.chest.energizedchest.BlockEnergizedChest;
 import theking530.staticpower.tileentity.chest.lumumchest.BlockLumumChest;
 import theking530.staticpower.tileentity.chest.staticchest.BlockStaticChest;
@@ -165,10 +164,7 @@ public class ModBlocks {
 		
 		HeatingElement = new BlockHeatingElement().setHardness(3.5f);
 		registry.PreRegisterBlock(HeatingElement);
-		
-		BaseConduitBlock = new BaseConduitBlock(Material.IRON, "BaseConduitBlock").setHardness(3.5f);
-		registry.PreRegisterBlock(BaseConduitBlock);
-		
+			
 		StaticWood = new InfusedWood("StaticWood").setHardness(3.5f);
 		registry.PreRegisterBlock(StaticWood);
 		

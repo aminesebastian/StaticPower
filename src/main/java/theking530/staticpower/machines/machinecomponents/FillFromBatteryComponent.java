@@ -2,7 +2,7 @@ package theking530.staticpower.machines.machinecomponents;
 
 import cofh.redstoneflux.api.IEnergyContainerItem;
 import net.minecraftforge.items.ItemStackHandler;
-import theking530.staticpower.power.StaticEnergyStorage;
+import theking530.staticpower.energy.StaticEnergyStorage;
 import theking530.staticpower.tileentity.BaseTileEntity;
 
 public class FillFromBatteryComponent implements IMachineComponentInterface{

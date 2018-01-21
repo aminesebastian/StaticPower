@@ -12,8 +12,8 @@ import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
-import theking530.staticpower.power.PowerDistributor;
-import theking530.staticpower.power.StaticEnergyStorage;
+import theking530.staticpower.energy.PowerDistributor;
+import theking530.staticpower.energy.StaticEnergyStorage;
 
 public class TileEntityBasicSolarPanel extends TileEntity implements ITickable, IEnergyHandler, IEnergyProvider {
 	

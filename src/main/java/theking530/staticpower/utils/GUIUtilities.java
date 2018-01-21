@@ -3,7 +3,7 @@ package theking530.staticpower.utils;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import theking530.staticpower.power.StaticEnergyStorage;
+import theking530.staticpower.energy.StaticEnergyStorage;
 
 public class GUIUtilities {
 

@@ -2,7 +2,7 @@
 
 import cofh.redstoneflux.api.IEnergyHandler;
 import cofh.redstoneflux.api.IEnergyProvider;
-import theking530.staticpower.power.StaticEnergyStorage;
+import theking530.staticpower.energy.StaticEnergyStorage;
 
 public class TileEntityLumumSolarPanel extends TileEntityBasicSolarPanel implements IEnergyHandler, IEnergyProvider {
 	

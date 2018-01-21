@@ -1,4 +1,4 @@
-package theking530.staticpower.world.plants;
+package theking530.staticpower.crops;
 
 import java.util.List;
 
@@ -9,10 +9,10 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class StaticSeeds extends CropSeeds {
-
-    public StaticSeeds(Block blockCrop, Block blockSoil) {
-        super("StaticSeeds", blockCrop, blockSoil);
+public class EnergizedSeeds extends CropSeeds {
+    
+    public EnergizedSeeds(Block blockCrop, Block blockSoil) {
+        super("EnergizedSeeds", blockCrop, blockSoil);
     }
     
     @Override

@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -48,18 +49,18 @@ public class TileEntityRenderItemConduit extends TileEntityRenderBaseConduit {
 		}
 		if (!conduit.straightConnection(conduit.connections)) {
 			this.bindTexture(texture);
-			drawNode(tileentity, 11.0f); 			
+			drawNode(tileentity, 11.5f); 			
 			for(int i = 0; i < conduit.connections.length; i++) {
 				if(conduit.connections[i] != null) {
 					this.bindTexture(texture);
-					drawCore(conduit.connections[i], tileentity, 11.0f);
+					drawCore(conduit.connections[i], tileentity, 11.5f);
 				}
 			}
 		} else {
 			for(int i = 0; i < conduit.connections.length; i++) {
 				if(conduit.connections[i] != null) {	
 					this.bindTexture(texture);
-					drawStraight(conduit.connections[i], tileentity, 11.0f);
+					drawStraight(conduit.connections[i], tileentity, 11.5f);
 					break;
 				}
 			}
@@ -75,21 +76,21 @@ public class TileEntityRenderItemConduit extends TileEntityRenderBaseConduit {
 	public void renderItemInConduit(TileEntityItemConduit conduit, double x, double y, double z, float deltaTime) {
 		EntityItem entItem = null;
 
-		if(conduit.SLOT != null && conduit.SLOT.ITEM != ItemStack.EMPTY) {
-			ItemStack tempStack = conduit.SLOT.ITEM.copy();
+		if(conduit.PREVIEW_STACK != null && conduit.PREVIEW_STACK != ItemStack.EMPTY) {
+			ItemStack tempStack = conduit.PREVIEW_STACK.copy();
 			tempStack.setCount(1);
 			entItem = new EntityItem(conduit.getWorld(), x, y, z,  tempStack);
 		}
-		if(entItem != null) {
+		if(entItem != null && conduit.IS_MOVING) {
 			float partialTick = Minecraft.getMinecraft().getRenderPartialTicks();		
 			float previousPosition =  (float)Math.max(0, conduit.MOVE_TIMER-1)/(float)conduit.MOVE_RATE;
 			float currentPosition =  (float)conduit.MOVE_TIMER/(float)conduit.MOVE_RATE;			
 			float alpha = (previousPosition + (currentPosition - previousPosition) * partialTick);
 			
-			float yOffset = conduit.SLOT.ITEM.getItem() instanceof Item ? -0.05f : 0.0f;
-			float scale = conduit.SLOT.ITEM.getItem() instanceof Item ? 0.55f : 0.75f;
-			
-			EnumFacing direction = conduit.SLOT.getCurrentDirection();
+			float yOffset = conduit.PREVIEW_STACK.getItem() instanceof ItemBlock ? 0.05f : 0.02f;
+			float scale = conduit.PREVIEW_STACK.getItem() instanceof ItemBlock ? 0.75f : 0.70f;
+			scale /= 1.5;
+			EnumFacing direction = conduit.PREVIEW_DIRECTION;
 			if(direction != null) {
 				GL11.glPushMatrix();
 				
@@ -113,7 +114,7 @@ public class TileEntityRenderItemConduit extends TileEntityRenderBaseConduit {
 				GL11.glScalef(scale, scale, scale);
 				GL11.glTranslated(-x, -y, -z);	
 				
-				entItem.hoverStart = conduit.getWorld().getWorldTime()/50.0f;	
+				entItem.hoverStart = 0.0f; //conduit.RANDOM_ROTATION + conduit.getWorld().getWorldTime()/50.0f;	
 				Minecraft.getMinecraft().getRenderManager().renderEntity(entItem, x, y, z, conduit.getWorld().getWorldTime(), 0.0f, false);
 				GL11.glPopMatrix();
 			}

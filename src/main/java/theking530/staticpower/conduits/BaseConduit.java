@@ -1,10 +1,10 @@
 package theking530.staticpower.conduits;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
 
-import api.IWrenchTool;
 import api.IWrenchable;
 import api.RegularWrenchMode;
 import api.SneakWrenchMode;
@@ -23,14 +23,17 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.handlers.ModEvents;
 
 public class BaseConduit extends Block implements IWrenchable {
 
-	private float pixel = 1F/16F;
-	
+	private float PIXEL = 1F/16F;
+
 	protected BaseConduit(String name) {
 		super(Material.GLASS);
 		setUnlocalizedName(name);
@@ -39,11 +42,22 @@ public class BaseConduit extends Block implements IWrenchable {
 		this.lightOpacity = 0;
 		//RegisterHelper.registerItem(new BaseItemBlock(this, name));
 	}
+	
+	public EnumBlockRenderType getRenderType(IBlockState state) {
+		return EnumBlockRenderType.INVISIBLE;
+	}
+	public boolean isOpaqueCube(IBlockState state) {
+		return false;
+	}
+	public boolean isFullCube(IBlockState state) {
+		return false;
+	}
+	
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
 
-    	float max = 1-12*pixel/2;
-    	float min = 12*pixel/2;
+    	float max = 1-12*PIXEL/2;
+    	float min = 12*PIXEL/2;
 
     	AxisAlignedBB base = new AxisAlignedBB(min, min, min, max, max, max);
     	
@@ -73,8 +87,8 @@ public class BaseConduit extends Block implements IWrenchable {
 	}
 	@Override
     public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entity, boolean b) {
-    	float max = 1-11*pixel/2;
-    	float min = 11*pixel/2;
+    	float max = 1-11*PIXEL/2;
+    	float min = 11*PIXEL/2;
 
 		AxisAlignedBB bb = new AxisAlignedBB(min, min, min, max, max, max);
 		addCollisionBoxToList(pos, entityBox, collidingBoxes, bb);
@@ -108,54 +122,154 @@ public class BaseConduit extends Block implements IWrenchable {
 			
 		}
 	}
-
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-		if (world.isRemote) {
-    		return true;
-    	}else if (!player.isSneaking()) {
-    		if(player.getHeldItemMainhand().getItem() instanceof IWrenchTool) {
-    			TileEntityBaseConduit tempConduit = (TileEntityBaseConduit) world.getTileEntity(pos);
-    			tempConduit.incrementSideMode(facing);
-    		}
-    	}
-		return false;
-	}
-	public EnumBlockRenderType getRenderType(IBlockState state) {
-		return EnumBlockRenderType.INVISIBLE;
-	}
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
-	public boolean isFullCube(IBlockState state) {
-		return false;
+	public RayTraceResult collisionRayTrace(IBlockState blockState, World world, BlockPos pos, Vec3d start, Vec3d end) {
+		List<AxisAlignedBB> aabbList = new ArrayList<AxisAlignedBB>();
+    	float max = 1-11*PIXEL/2;
+    	float min = 11*PIXEL/2;
+    	
+    	aabbList.add(new AxisAlignedBB(min, min, min, max, max, max));
+		TileEntityBaseConduit conduit = (TileEntityBaseConduit) world.getTileEntity(pos);
+
+		if (conduit != null) {
+			if (conduit.connections[1] != null) {
+				aabbList.add(new AxisAlignedBB(min, min, min, max, 0.0F, max));
+			}else{
+				aabbList.add(null);
+			}
+			if (conduit.connections[0] != null) {
+				aabbList.add(new AxisAlignedBB(min, 1.0F, min, max, max, max));
+			}else{
+				aabbList.add(null);
+			}
+			if (conduit.connections[2] != null) {
+				aabbList.add(new AxisAlignedBB(min, min, 0.0F, max, max, max));
+			}else{
+				aabbList.add(null);
+			}
+			if (conduit.connections[3] != null) {
+				aabbList.add(new AxisAlignedBB(min, min, min, max, max, 1.0F));
+			}else{
+				aabbList.add(null);
+			}
+			if (conduit.connections[5] != null) {
+				aabbList.add(new AxisAlignedBB(0.0F, min, min, max, max, max));
+			}else{
+				aabbList.add(null);
+			}
+			if (conduit.connections[4] != null) {
+				aabbList.add(new AxisAlignedBB(1.0F, min, min, max, max, max));
+			}else{
+				aabbList.add(null);
+			}
+			
+			for(int i=0; i<aabbList.size(); i++) {
+				if(aabbList.get(i) == null) {
+					continue;
+				}
+				// r.dir is unit direction vector of ray
+
+				Vec3d r = end.subtract(start).normalize();
+				double xDir = 1.0f / r.x;
+				double yDir = 1.0f / r.y;
+				double zDir = 1.0f / r.z;
+				
+				Vec3d dirfrac = new Vec3d(xDir, yDir, zDir);
+				
+				// lb is the corner of AABB with minimal coordinates - left bottom, rt is maximal corner
+				// r.org is origin of ray
+				float t1 = (float) ((aabbList.get(i).minX+pos.getX() - start.x)*dirfrac.x);
+				float t2 = (float) ((aabbList.get(i).maxX+pos.getX() - start.x)*dirfrac.x);
+				float t3 = (float) ((aabbList.get(i).minY+pos.getY() - start.y)*dirfrac.y);
+				float t4 = (float) ((aabbList.get(i).maxY+pos.getY() - start.y)*dirfrac.y);
+				float t5 = (float) ((aabbList.get(i).minZ+pos.getZ() - start.z)*dirfrac.z);
+				float t6 = (float) ((aabbList.get(i).maxZ+pos.getZ() - start.z)*dirfrac.z);
+
+				float tmin = Math.max(Math.max(Math.min(t1, t2), Math.min(t3, t4)), Math.min(t5, t6));
+				float tmax = Math.min(Math.min(Math.max(t1, t2), Math.max(t3, t4)), Math.max(t5, t6));
+
+				// if tmax < 0, ray (line) is intersecting AABB, but the whole AABB is behind us
+				if (tmax < 0) {
+				   	continue;
+				}
+
+				// if tmin > tmax, ray doesn't intersect AABB
+				if (tmin > tmax) {
+				   	continue;
+				}
+
+		        Vec3d vec3d = start.subtract((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
+		        Vec3d vec3d1 = end.subtract((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
+		        RayTraceResult raytraceresult = aabbList.get(i).calculateIntercept(vec3d, vec3d1);
+		        raytraceresult = raytraceresult == null ? null : new RayTraceResult(raytraceresult.hitVec.addVector((double)pos.getX(), (double)pos.getY(), (double)pos.getZ()), raytraceresult.sideHit, pos);
+		        if(raytraceresult != null) {
+					raytraceresult.subHit = i;
+					return raytraceresult;
+		        }
+			}		
+			
+		}
+
+		return null;
 	}
 	
 	@Override
+	public boolean canBeWrenched(EntityPlayer player, World world, BlockPos pos, EnumFacing facing) {
+		return true;
+	}	
+	@Override
 	public void wrenchBlock(EntityPlayer player, RegularWrenchMode mode, ItemStack wrench, World world, BlockPos pos, EnumFacing facing, boolean returnDrops) {		
-		TileEntity te = world.getTileEntity(pos);
-		if(te != null) {
-			if(te instanceof TileEntityBaseConduit) {
-				((TileEntityBaseConduit)te).incrementSideMode(facing);
+		if(!world.isRemote) {
+			TileEntity te = world.getTileEntity(pos);
+			if(te != null) {
+				if(te instanceof TileEntityBaseConduit) {
+	    			RayTraceResult target = ModEvents.retraceBlock(world, player, pos);
+	    			if(target != null) {
+	        			TileEntityBaseConduit cond = (TileEntityBaseConduit)te;
+	        			cond.conduitWrenched(facing,  target.subHit);
+	        			world.markAndNotifyBlock(pos, world.getChunkFromBlockCoords(pos), world.getBlockState(pos), world.getBlockState(pos), 3);
+	    			}
+				}
 			}
 		}
-	}
+	}	
 	@Override
 	public void sneakWrenchBlock(EntityPlayer player, SneakWrenchMode mode, ItemStack wrench, World world, BlockPos pos, EnumFacing facing, boolean returnDrops) {
 		if(!world.isRemote) {
+			TileEntity te = world.getTileEntity(pos);
+			if(te != null) {
+				if(te instanceof TileEntityBaseConduit) {
+	    			RayTraceResult target = ModEvents.retraceBlock(world, player, pos);
+	    			if(target != null) {
+	        			TileEntityBaseConduit cond = (TileEntityBaseConduit)te;
+	        			cond.conduitSneakWrenched(facing,  target.subHit);
+	    			}
+				}
+			}
+			
 			ItemStack conduitStack = new ItemStack(Item.getItemFromBlock(this));
-
 			EntityItem droppedItem = new EntityItem(world, pos.getX()+0.5, pos.getY(), pos.getZ()+0.5, conduitStack);
 			world.spawnEntity(droppedItem);
-
 			world.setBlockToAir(pos);
 			world.markAndNotifyBlock(pos, world.getChunkFromBlockCoords(pos), world.getBlockState(pos), world.getBlockState(pos), 2);
 		}
 	}
-
-	@Override
-	public boolean canBeWrenched(EntityPlayer player, World world, BlockPos pos, EnumFacing facing) {
-		return true;
+	
+    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+    	if(!world.isRemote) {
+			TileEntity te = world.getTileEntity(pos);
+			if(te != null) {
+				if(te instanceof TileEntityBaseConduit) {
+        			TileEntityBaseConduit cond = (TileEntityBaseConduit)te;
+        			cond.conduitBroken();
+				}
+			}
+    	}     
+        super.breakBlock(world, pos, state);
+    }
+	@Override	
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    	return false;
 	}
 	@Override
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
@@ -170,7 +284,8 @@ public class BaseConduit extends Block implements IWrenchable {
     		((TileEntityBaseConduit)world.getTileEntity(observerPos)).onNeighborUpdated(observerState, world, changedBlock, changedBlockPos, world.getBlockState(changedBlockPos).getBlock());
     	}
     }
-	@Override
+	
+	@Override	
 	public boolean hasTileEntity(IBlockState state) {
 		return true;
 	}
@@ -178,6 +293,4 @@ public class BaseConduit extends Block implements IWrenchable {
 	public TileEntity createTileEntity(World world, IBlockState state) {
 		return null;
 	}
-
-
 }

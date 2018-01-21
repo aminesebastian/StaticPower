@@ -14,10 +14,11 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.tileentity.BaseTileEntity;
+import theking530.staticpower.utils.InventoryUtilities;
 
 public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<EntityItem> {
 
-	private int RANGE = 5;
+	private int RANGE = 10;
 	
 	public TileEntityVacuumChest() {
 		initializeBasicTileEntity(1, 0, 30);
@@ -38,37 +39,18 @@ public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<E
 			if(canAcceptItem(stack) && doesItemPassFilter(stack)) {
 				double distance = Math.sqrt(x * x + y * y + z * z);
 				if (distance < 1.1) {
-					for(int i=0; i<27; i++){
-						if(getOutputStack(i) == ItemStack.EMPTY) {
-							SLOTS_OUTPUT.setStackInSlot(i, stack);
-							item.setDead();
-							getWorld().playSound((double)pos.getX(), (double)pos.getY(), (double)pos.getZ(), SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 0.5F, 1.0F, false);
-							break;
-						}else{
-							if(getOutputStack(i).isItemEqual(stack)) {
-								int stackSize = getOutputStack(i).getCount() + stack.getCount();
-								if(stackSize <= 64) {
-									getOutputStack(i).setCount(stackSize);
-									item.setDead();
-									getWorld().playSound((double)pos.getX(), (double)pos.getY(), (double)pos.getZ(), SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 0.5F, 1.0F, false);
-									break;
-								}else{
-									int difference = 64 - stack.getCount();
-									getOutputStack(i).setCount(64);
-									item.getItem().setCount(difference);
-									getWorld().playSound((double)pos.getX(), (double)pos.getY(), (double)pos.getZ(), SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 0.5F, 1.0F, false);
-									break;
-								}
-							}
-						}
+					if(InventoryUtilities.canFullyInsertItemIntoInventory(SLOTS_OUTPUT, stack)) {
+						InventoryUtilities.insertItemIntoInventory(SLOTS_OUTPUT, stack);
+						item.setDead();
+						getWorld().playSound((double)pos.getX(), (double)pos.getY(), (double)pos.getZ(), SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 0.5F, 1.0F, false);
 					}
 				} else {
 					double var11 = 1.0 - distance / 15.0;
 					if (var11 > 0.0D) {
 						var11 *= var11;
-						entity.motionX += x / distance * var11 * 0.03;
-						entity.motionY += y / distance * var11 * 0.15;
-						entity.motionZ += z / distance * var11 * 0.03;
+						entity.motionX += x / distance * var11 * 0.06;
+						entity.motionY += y / distance * var11 * 0.30;
+						entity.motionZ += z / distance * var11 * 0.06;
 					}
 				}
 			}

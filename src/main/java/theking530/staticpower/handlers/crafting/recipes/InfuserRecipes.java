@@ -9,10 +9,10 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import theking530.staticpower.assists.RegisterHelper;
 import theking530.staticpower.blocks.ModBlocks;
+import theking530.staticpower.crops.ModPlants;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.items.armor.ModArmor;
-import theking530.staticpower.world.plants.ModPlants;
 
 public class InfuserRecipes {
 

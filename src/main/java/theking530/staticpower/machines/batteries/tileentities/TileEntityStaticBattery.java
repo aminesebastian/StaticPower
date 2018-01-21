@@ -1,6 +1,6 @@
 package theking530.staticpower.machines.batteries.tileentities;
 
-import theking530.staticpower.power.PowerDistributor;
+import theking530.staticpower.energy.PowerDistributor;
 
 public class TileEntityStaticBattery extends TileEntityBattery{
 

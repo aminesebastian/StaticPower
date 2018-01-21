@@ -1,4 +1,4 @@
-package theking530.staticpower.world.plants;
+package theking530.staticpower.crops;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;

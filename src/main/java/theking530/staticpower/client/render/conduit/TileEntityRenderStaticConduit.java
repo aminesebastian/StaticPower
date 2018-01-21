@@ -83,7 +83,7 @@ public class TileEntityRenderStaticConduit extends TileEntityRenderBaseConduit {
 			GL11.glPushMatrix();
 			GL11.glTranslatef(0.5F, 0.5F, 0.5F);
 			if (direction.equals(EnumFacing.DOWN)) {
-				GL11.glRotatef(180, 0, 0, 0);
+				GL11.glRotatef(180, 1, 0, 0);
 			}else if (direction.equals(EnumFacing.UP)) {
 				GL11.glRotatef(0, 1, 0, 0);
 			}	
@@ -103,40 +103,40 @@ public class TileEntityRenderStaticConduit extends TileEntityRenderBaseConduit {
 			
 			
 			//Front
-			StaticVertexBuffer.pos(9*pixel/2, 1, 1-9*pixel/2, 0*texel, 10*texel);
-			StaticVertexBuffer.pos(9*pixel/2, 28*pixel/2, 1-9*pixel/2, 0*texel, 0*texel);	
-			StaticVertexBuffer.pos(1-9*pixel/2, 28*pixel/2, 1-9*pixel/2, 10*texel, 0*texel);	
-			StaticVertexBuffer.pos(1-9*pixel/2, 1, 1-9*pixel/2, 10*texel, 10*texel);		
+			StaticVertexBuffer.pos(9.5*pixel/2, 1, 1-9.5*pixel/2, 0*texel, 10*texel);
+			StaticVertexBuffer.pos(9.5*pixel/2, 25.5*pixel/2, 1-9.5*pixel/2, 0*texel, 0*texel);	
+			StaticVertexBuffer.pos(1-9.5*pixel/2, 25.5*pixel/2, 1-9.5*pixel/2, 10*texel, 0*texel);	
+			StaticVertexBuffer.pos(1-9.5*pixel/2, 1, 1-9.5*pixel/2, 10*texel, 10*texel);		
 			
 			//Right
-			StaticVertexBuffer.pos(1-9*pixel/2, 1, 1-9*pixel/2, 0*texel, 10*texel);	
-			StaticVertexBuffer.pos(1-9*pixel/2, 28*pixel/2, 1-9*pixel/2, 0*texel, 0*texel);	
-			StaticVertexBuffer.pos(1-9*pixel/2, 28*pixel/2, 9*pixel/2, 10*texel, 0*texel);
-			StaticVertexBuffer.pos(1-9*pixel/2, 1, 9*pixel/2, 10*texel, 10*texel);		
+			StaticVertexBuffer.pos(1-9.5*pixel/2, 1, 1-9.5*pixel/2, 0*texel, 10*texel);	
+			StaticVertexBuffer.pos(1-9.5*pixel/2, 25.5*pixel/2, 1-9.5*pixel/2, 0*texel, 0*texel);	
+			StaticVertexBuffer.pos(1-9.5*pixel/2, 25.5*pixel/2, 9.5*pixel/2, 10*texel, 0*texel);
+			StaticVertexBuffer.pos(1-9.5*pixel/2, 1, 9.5*pixel/2, 10*texel, 10*texel);		
 	
 			//Back
-			StaticVertexBuffer.pos(1-9*pixel/2, 1, 9*pixel/2, 0*texel, 10*texel);	
-			StaticVertexBuffer.pos(1-9*pixel/2, 28*pixel/2, 9*pixel/2, 0*texel, 0*texel);
-			StaticVertexBuffer.pos(9*pixel/2, 28*pixel/2, 9*pixel/2, 10*texel, 0*texel);
-			StaticVertexBuffer.pos(9*pixel/2, 1, 9*pixel/2, 10*texel, 10*texel);
+			StaticVertexBuffer.pos(1-9.5*pixel/2, 1, 9.5*pixel/2, 0*texel, 10*texel);	
+			StaticVertexBuffer.pos(1-9.5*pixel/2, 25.5*pixel/2, 9.5*pixel/2, 0*texel, 0*texel);
+			StaticVertexBuffer.pos(9.5*pixel/2, 25.5*pixel/2, 9.5*pixel/2, 10*texel, 0*texel);
+			StaticVertexBuffer.pos(9.5*pixel/2, 1, 9.5*pixel/2, 10*texel, 10*texel);
 	
 			//Left
-			StaticVertexBuffer.pos(9*pixel/2, 1, 9*pixel/2, 0*texel, 10*texel);	
-			StaticVertexBuffer.pos(9*pixel/2, 28*pixel/2, 9*pixel/2, 0*texel, 0*texel);	
-			StaticVertexBuffer.pos(9*pixel/2, 28*pixel/2, 1-9*pixel/2, 10*texel, 0*texel);	
-			StaticVertexBuffer.pos(9*pixel/2, 1, 1-9*pixel/2, 10*texel, 10*texel);	
+			StaticVertexBuffer.pos(9.5*pixel/2, 1, 9.5*pixel/2, 0*texel, 10*texel);	
+			StaticVertexBuffer.pos(9.5*pixel/2, 25.5*pixel/2, 9.5*pixel/2, 0*texel, 0*texel);	
+			StaticVertexBuffer.pos(9.5*pixel/2, 25.5*pixel/2, 1-9.5*pixel/2, 10*texel, 0*texel);	
+			StaticVertexBuffer.pos(9.5*pixel/2, 1, 1-9.5*pixel/2, 10*texel, 10*texel);	
 	
 			//Top
-			StaticVertexBuffer.pos(9*pixel/2, 28*pixel/2, 1-9*pixel/2, 0*texel, 10*texel);
-			StaticVertexBuffer.pos(9*pixel/2, 28*pixel/2, 9*pixel/2, 0*texel, 0*texel);	
-			StaticVertexBuffer.pos(1-9*pixel/2, 28*pixel/2, 9*pixel/2, 10*texel, 0*texel);
-			StaticVertexBuffer.pos(1-9*pixel/2, 28*pixel/2, 1-9*pixel/2, 10*texel, 10*texel);
+			StaticVertexBuffer.pos(9.5*pixel/2, 25.5*pixel/2, 1-9.5*pixel/2, 0*texel, 10*texel);
+			StaticVertexBuffer.pos(9.5*pixel/2, 25.5*pixel/2, 9.5*pixel/2, 0*texel, 0*texel);	
+			StaticVertexBuffer.pos(1-9.5*pixel/2, 25.5*pixel/2, 9.5*pixel/2, 10*texel, 0*texel);
+			StaticVertexBuffer.pos(1-9.5*pixel/2, 25.5*pixel/2, 1-9.5*pixel/2, 10*texel, 10*texel);
 			
 			//Bottom
-			StaticVertexBuffer.pos(1-9*pixel/2, 1, 1-9*pixel/2, 0*texel, 10*texel);	
-			StaticVertexBuffer.pos(1-9*pixel/2, 1, 9*pixel/2, 0*texel, 0*texel);	
-			StaticVertexBuffer.pos(9*pixel/2, 1, 9*pixel/2, 10*texel, 0*texel);	
-			StaticVertexBuffer.pos(9*pixel/2, 1, 1-9*pixel/2, 10*texel, 10*texel);	
+			StaticVertexBuffer.pos(1-9.5*pixel/2, 1, 1-9.5*pixel/2, 0*texel, 10*texel);	
+			StaticVertexBuffer.pos(1-9.5*pixel/2, 1, 9.5*pixel/2, 0*texel, 0*texel);	
+			StaticVertexBuffer.pos(9.5*pixel/2, 1, 9.5*pixel/2, 10*texel, 0*texel);	
+			StaticVertexBuffer.pos(9.5*pixel/2, 1, 1-9.5*pixel/2, 10*texel, 10*texel);	
 
 		//Front
 		StaticVertexBuffer.pos(1-12*pixel/2, 1-12*pixel/2, 1-12*pixel/2, 10*texel, 10*texel);		
@@ -186,28 +186,28 @@ public class TileEntityRenderStaticConduit extends TileEntityRenderBaseConduit {
 			GL11.glTranslatef(-0.5F, -0.5F, -0.5F);		
 			
 			//Front
-			StaticVertexBuffer.pos(1-12*pixel/2, 0, 1-12*pixel/2, 20*texel, 10*texel);		
-			StaticVertexBuffer.pos(1-12*pixel/2, 1, 1-12*pixel/2, 52*texel, 10*texel);	
-			StaticVertexBuffer.pos(12*pixel/2, 1, 1-12*pixel/2, 52*texel, 0*texel);	
-			StaticVertexBuffer.pos(12*pixel/2, 0, 1-12*pixel/2, 20*texel, 0*texel);			
+			StaticVertexBuffer.pos(1-12.1*pixel/2, 0, 1-12.1*pixel/2, 20*texel, 10*texel);		
+			StaticVertexBuffer.pos(1-12.1*pixel/2, 1, 1-12.1*pixel/2, 52*texel, 10*texel);	
+			StaticVertexBuffer.pos(12.1*pixel/2, 1, 1-12.1*pixel/2, 52*texel, 0*texel);	
+			StaticVertexBuffer.pos(12.1*pixel/2, 0, 1-12.1*pixel/2, 20*texel, 0*texel);			
 			
 			//Back
-			StaticVertexBuffer.pos(12*pixel/2, 0, 12*pixel/2, 20*texel, 10*texel);	
-			StaticVertexBuffer.pos(12*pixel/2, 1, 12*pixel/2, 52*texel, 10*texel);	
-			StaticVertexBuffer.pos(1-12*pixel/2, 1, 12*pixel/2, 52*texel, 0*texel);	
-			StaticVertexBuffer.pos(1-12*pixel/2, 0, 12*pixel/2, 20*texel, 0*texel);	
+			StaticVertexBuffer.pos(12.1*pixel/2, 0, 12.1*pixel/2, 20*texel, 10*texel);	
+			StaticVertexBuffer.pos(12.1*pixel/2, 1, 12.1*pixel/2, 52*texel, 10*texel);	
+			StaticVertexBuffer.pos(1-12.1*pixel/2, 1, 12.1*pixel/2, 52*texel, 0*texel);	
+			StaticVertexBuffer.pos(1-12.1*pixel/2, 0, 12.1*pixel/2, 20*texel, 0*texel);	
 			
 			//Left
-			StaticVertexBuffer.pos(1-12*pixel/2, 0, 12*pixel/2, 20*texel, 10*texel);	
-			StaticVertexBuffer.pos(1-12*pixel/2, 1, 12*pixel/2, 52*texel, 10*texel);	
-			StaticVertexBuffer.pos(1-12*pixel/2, 1, 1-12*pixel/2, 52*texel, 0*texel);	
-			StaticVertexBuffer.pos(1-12*pixel/2, 0, 1-12*pixel/2, 20*texel, 0*texel);	
+			StaticVertexBuffer.pos(1-12.1*pixel/2, 0, 12.1*pixel/2, 20*texel, 10*texel);	
+			StaticVertexBuffer.pos(1-12.1*pixel/2, 1, 12.1*pixel/2, 52*texel, 10*texel);	
+			StaticVertexBuffer.pos(1-12.1*pixel/2, 1, 1-12.1*pixel/2, 52*texel, 0*texel);	
+			StaticVertexBuffer.pos(1-12.1*pixel/2, 0, 1-12.1*pixel/2, 20*texel, 0*texel);	
 			
 			//Right
-			StaticVertexBuffer.pos(12*pixel/2, 0, 1-12*pixel/2, 20*texel, 0*texel);	
-			StaticVertexBuffer.pos(12*pixel/2, 1, 1-12*pixel/2, 52*texel, 0*texel);	
-			StaticVertexBuffer.pos(12*pixel/2, 1, 12*pixel/2, 52*texel, 10*texel);	
-			StaticVertexBuffer.pos(12*pixel/2, 0, 12*pixel/2, 20*texel, 10*texel);	
+			StaticVertexBuffer.pos(12.1*pixel/2, 0, 1-12.1*pixel/2, 20*texel, 0*texel);	
+			StaticVertexBuffer.pos(12.1*pixel/2, 1, 1-12.1*pixel/2, 52*texel, 0*texel);	
+			StaticVertexBuffer.pos(12.1*pixel/2, 1, 12.1*pixel/2, 52*texel, 10*texel);	
+			StaticVertexBuffer.pos(12.1*pixel/2, 0, 12.1*pixel/2, 20*texel, 10*texel);	
 		}
 		tessellator.draw();	
 		GL11.glPopMatrix();
@@ -240,28 +240,28 @@ public class TileEntityRenderStaticConduit extends TileEntityRenderBaseConduit {
 			
 			
 			//Front
-			StaticVertexBuffer.pos(1-12*pixel/2, 1-12*pixel/2, 1-12*pixel/2, 10*texel, 10*texel);		
-			StaticVertexBuffer.pos(1-12*pixel/2, 1, 1-12*pixel/2, 20*texel, 10*texel);	
-			StaticVertexBuffer.pos(12*pixel/2, 1, 1-12*pixel/2, 20*texel, 0*texel);	
-			StaticVertexBuffer.pos(12*pixel/2, 1-12*pixel/2, 1-12*pixel/2, 10*texel, 0*texel);			
+			StaticVertexBuffer.pos(1-12.1*pixel/2, 1-12.1*pixel/2, 1-12.1*pixel/2, 10*texel, 10*texel);		
+			StaticVertexBuffer.pos(1-12.1*pixel/2, 1, 1-12.1*pixel/2, 20*texel, 10*texel);	
+			StaticVertexBuffer.pos(12.1*pixel/2, 1, 1-12.1*pixel/2, 20*texel, 0*texel);	
+			StaticVertexBuffer.pos(12.1*pixel/2, 1-12.1*pixel/2, 1-12.1*pixel/2, 10*texel, 0*texel);			
 			
 			//Back
-			StaticVertexBuffer.pos(12*pixel/2, 1-12*pixel/2, 12*pixel/2, 10*texel, 10*texel);	
-			StaticVertexBuffer.pos(12*pixel/2, 1, 12*pixel/2, 20*texel, 10*texel);	
-			StaticVertexBuffer.pos(1-12*pixel/2, 1, 12*pixel/2, 20*texel, 0*texel);	
-			StaticVertexBuffer.pos(1-12*pixel/2, 1-12*pixel/2, 12*pixel/2, 10*texel, 0*texel);	
+			StaticVertexBuffer.pos(12.1*pixel/2, 1-12.1*pixel/2, 12.1*pixel/2, 10*texel, 10*texel);	
+			StaticVertexBuffer.pos(12.1*pixel/2, 1, 12.1*pixel/2, 20*texel, 10*texel);	
+			StaticVertexBuffer.pos(1-12.1*pixel/2, 1, 12.1*pixel/2, 20*texel, 0*texel);	
+			StaticVertexBuffer.pos(1-12.1*pixel/2, 1-12.1*pixel/2, 12.1*pixel/2, 10*texel, 0*texel);	
 			
 			//Left
-			StaticVertexBuffer.pos(1-12*pixel/2, 1-12*pixel/2, 12*pixel/2, 10*texel, 10*texel);	
-			StaticVertexBuffer.pos(1-12*pixel/2, 1, 12*pixel/2, 20*texel, 10*texel);	
-			StaticVertexBuffer.pos(1-12*pixel/2, 1, 1-12*pixel/2, 20*texel, 0*texel);	
-			StaticVertexBuffer.pos(1-12*pixel/2, 1-12*pixel/2, 1-12*pixel/2, 10*texel, 0*texel);	
+			StaticVertexBuffer.pos(1-12.1*pixel/2, 1-12.1*pixel/2, 12.1*pixel/2, 10*texel, 10*texel);	
+			StaticVertexBuffer.pos(1-12.1*pixel/2, 1, 12.1*pixel/2, 20*texel, 10*texel);	
+			StaticVertexBuffer.pos(1-12.1*pixel/2, 1, 1-12.1*pixel/2, 20*texel, 0*texel);	
+			StaticVertexBuffer.pos(1-12.1*pixel/2, 1-12.1*pixel/2, 1-12.1*pixel/2, 10*texel, 0*texel);	
 			
 			//Right
-			StaticVertexBuffer.pos(12*pixel/2, 1-12*pixel/2, 1-12*pixel/2, 10*texel, 0*texel);	
-			StaticVertexBuffer.pos(12*pixel/2, 1, 1-12*pixel/2, 20*texel, 0*texel);	
-			StaticVertexBuffer.pos(12*pixel/2, 1, 12*pixel/2, 20*texel, 10*texel);	
-			StaticVertexBuffer.pos(12*pixel/2, 1-12*pixel/2, 12*pixel/2, 10*texel, 10*texel);	
+			StaticVertexBuffer.pos(12.1*pixel/2, 1-12.1*pixel/2, 1-12.1*pixel/2, 10*texel, 0*texel);	
+			StaticVertexBuffer.pos(12.1*pixel/2, 1, 1-12.1*pixel/2, 20*texel, 0*texel);	
+			StaticVertexBuffer.pos(12.1*pixel/2, 1, 12.1*pixel/2, 20*texel, 10*texel);	
+			StaticVertexBuffer.pos(12.1*pixel/2, 1-12.1*pixel/2, 12.1*pixel/2, 10*texel, 10*texel);	
 		}
 		tessellator.draw();		
 		GL11.glPopMatrix();

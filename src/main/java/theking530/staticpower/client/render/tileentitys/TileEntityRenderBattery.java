@@ -138,6 +138,7 @@ public class TileEntityRenderBattery extends TileEntitySpecialRenderer<TileEntit
 	public void drawEnergy(TileEntity tileentity) {		
 		TileEntityBattery battery = (TileEntityBattery)tileentity;			
 		float height = (battery.getEnergyLevelScaled(1) +.39F)*.72F;
+		float texHeight = battery.getEnergyLevelScaled(1);
 		this.bindTexture(eBar);
 		GL11.glPushMatrix();
 			
@@ -147,26 +148,26 @@ public class TileEntityRenderBattery extends TileEntitySpecialRenderer<TileEntit
 
 		//Back
 		vertex.pos(.25, .218, -0.001).tex(0, 0).endVertex();
-		vertex.pos(.25, height*.78125, -0.001).tex(0, height).endVertex();
-		vertex.pos(.75, height*.78125, -0.001).tex(1, height).endVertex();	
+		vertex.pos(.25, height*.78125, -0.001).tex(0, texHeight).endVertex();
+		vertex.pos(.75, height*.78125, -0.001).tex(1, texHeight).endVertex();	
 		vertex.pos(.75, .218, -0.001).tex(1, 0).endVertex();		
 
 		//Left
 		vertex.pos(1.001, .218, .25).tex(0, 0).endVertex();
-		vertex.pos(1.001, height*.78125, .25).tex(0, height).endVertex();
-		vertex.pos(1.001, height*.78125, .75).tex(1, height).endVertex();	
+		vertex.pos(1.001, height*.78125, .25).tex(0, texHeight).endVertex();
+		vertex.pos(1.001, height*.78125, .75).tex(1, texHeight).endVertex();	
 		vertex.pos(1.001, .218, .75).tex(1, 0).endVertex();
 
 		//Right
 		vertex.pos(-0.001, .218, .75).tex(0, 0).endVertex();
-		vertex.pos(-0.001, height*.78125, .75).tex(0, height).endVertex();	
-		vertex.pos(-0.001, height*.78125, .25).tex(1, height).endVertex();	
+		vertex.pos(-0.001, height*.78125, .75).tex(0, texHeight).endVertex();	
+		vertex.pos(-0.001, height*.78125, .25).tex(1, texHeight).endVertex();	
 		vertex.pos(-0.001, .218, .25).tex(1, 0).endVertex();	
 
 		//Front
 		vertex.pos(.25, height*.78125, 1.001).tex(0, 0).endVertex();
-		vertex.pos(.25, .218, 1.001).tex(0, height).endVertex();	
-		vertex.pos(.75, .218, 1.001).tex(1, height).endVertex();	
+		vertex.pos(.25, .218, 1.001).tex(0, texHeight).endVertex();	
+		vertex.pos(.75, .218, 1.001).tex(1, texHeight).endVertex();	
 		vertex.pos(.75, height*.78125, 1.001).tex(1, 0).endVertex();			
 
 		tessellator.draw();		

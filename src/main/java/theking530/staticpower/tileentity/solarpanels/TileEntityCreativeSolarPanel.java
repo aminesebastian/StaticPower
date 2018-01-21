@@ -3,7 +3,7 @@ package theking530.staticpower.tileentity.solarpanels;
 import cofh.redstoneflux.api.IEnergyHandler;
 import cofh.redstoneflux.api.IEnergyProvider;
 import net.minecraft.util.EnumFacing;
-import theking530.staticpower.power.StaticEnergyStorage;
+import theking530.staticpower.energy.StaticEnergyStorage;
 
 public class TileEntityCreativeSolarPanel extends TileEntityBasicSolarPanel implements IEnergyHandler, IEnergyProvider {
 	

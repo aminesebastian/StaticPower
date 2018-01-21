@@ -7,8 +7,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.items.CapabilityItemHandler;
 import theking530.staticpower.tileentity.BaseTileEntity;
 import theking530.staticpower.tileentity.chest.staticchest.ContainerStaticChest;
+import theking530.staticpower.utils.SideUtils;
+import theking530.staticpower.utils.SideUtils.BlockSide;
 
 public class TileEntityBaseChest extends BaseTileEntity{
 
@@ -110,4 +113,18 @@ public class TileEntityBaseChest extends BaseTileEntity{
 		return "container.StaticChest";
 		
 	}					
+
+	/* CAPABILITIES */
+    public boolean hasCapability(net.minecraftforge.common.capabilities.Capability<?> capability, net.minecraft.util.EnumFacing facing){
+    	if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+    		return true;
+    	}
+        return super.hasCapability(capability, facing);
+    }
+    public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.util.EnumFacing facing){
+    	if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+    		return (T) SLOTS_OUTPUT;
+    	}
+    	return super.getCapability(capability, facing);
+    }  
 }

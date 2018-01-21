@@ -8,9 +8,9 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.oredict.OreIngredient;
 import theking530.staticpower.assists.RegisterHelper;
 import theking530.staticpower.blocks.ModBlocks;
+import theking530.staticpower.crops.ModPlants;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.items.itemfilter.ItemFilter;
-import theking530.staticpower.world.plants.ModPlants;
 
 public class ShaplessRecipes {
 

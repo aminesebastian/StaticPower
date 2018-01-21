@@ -1,7 +1,5 @@
 package theking530.staticpower;
 
-import java.util.LinkedList;
-
 import org.apache.logging.log4j.Level;
 
 import net.minecraft.creativetab.CreativeTabs;
@@ -21,10 +19,10 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.client.CommonProxy;
-import theking530.staticpower.conduits.ConduitGrid;
 import theking530.staticpower.conduits.fluidconduit.TileEntityFluidConduit;
 import theking530.staticpower.conduits.itemconduit.TileEntityItemConduit;
 import theking530.staticpower.conduits.staticconduit.TileEntityStaticConduit;
+import theking530.staticpower.crops.ModPlants;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.handlers.GuiHandler;
 import theking530.staticpower.handlers.OreGenerationHandler;
@@ -86,7 +84,6 @@ import theking530.staticpower.tileentity.solarpanels.TileEntityLumumSolarPanel;
 import theking530.staticpower.tileentity.solarpanels.TileEntityStaticSolarPanel;
 import theking530.staticpower.tileentity.solderingtable.TileEntitySolderingTable;
 import theking530.staticpower.tileentity.vacuumchest.TileEntityVacuumChest;
-import theking530.staticpower.world.plants.ModPlants;
 
 @Mod(modid = Reference.MODID, name = Reference.name, version = Reference.VERSION)
 
@@ -102,7 +99,6 @@ public class StaticPower {
     public static Configuration CONFIG;
     public static org.apache.logging.log4j.Logger LOGGER;
     public static Registry REGISTRY;
-    public static LinkedList<ConduitGrid> GRIDS;
     
     @Mod.Instance(Reference.MODID)
     public static StaticPower instance;
@@ -117,7 +113,6 @@ public class StaticPower {
 		REGISTRY = new Registry();
 		REGISTRY.preInit(preEvent);
 		CONFIG = new Configuration(preEvent.getSuggestedConfigurationFile());
-		GRIDS = new LinkedList<ConduitGrid>();
 		StaticPowerConfig.updateConfig();
 	
 		PacketHandler.initPackets();
