@@ -7,6 +7,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import theking530.staticpower.tileentity.BaseTileEntity;
+import theking530.staticpower.utils.RedstoneModeList.RedstoneMode;
  
 public class PacketRedstoneTab implements IMessage{
     private int REDSTONE_MODE;
@@ -42,7 +43,7 @@ public class PacketRedstoneTab implements IMessage{
     		TileEntity te = ctx.getServerHandler().player.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
     		if(te != null && te instanceof BaseTileEntity) {
     			BaseTileEntity entity = (BaseTileEntity)te;
-    			entity.REDSTONE_MODE = message.REDSTONE_MODE;
+    			entity.REDSTONE_MODE = RedstoneMode.getModeFromInt(message.REDSTONE_MODE);
     		}
 		return null;
     	}

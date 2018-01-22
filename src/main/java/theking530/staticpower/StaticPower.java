@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import theking530.staticpower.assists.OreDictionaryRegistration;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.client.CommonProxy;
@@ -209,6 +210,7 @@ public class StaticPower {
 		CondenserRecipes.registerCondenserRecipes();
 		DistilleryRecipes.registerDistilleryRecipes();
 		ToolRecipes.registerToolRecipes();
+		OreDictionaryRegistration.registerOres();
 	}
 	@SubscribeEvent
 	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {

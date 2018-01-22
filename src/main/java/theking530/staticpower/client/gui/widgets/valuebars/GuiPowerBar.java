@@ -18,7 +18,7 @@ public class GuiPowerBar {
 	private float WORLD_TIME;
 	
 	public GuiPowerBar() {
-		GLOW_SCALE_RATE = 0.15f;
+		GLOW_SCALE_RATE = 0.10f;
 		WORLD_TIME = 0.0f;
 	}
 	

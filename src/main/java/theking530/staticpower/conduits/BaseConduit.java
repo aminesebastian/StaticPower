@@ -214,7 +214,7 @@ public class BaseConduit extends Block implements IWrenchable {
 	}
 	
 	@Override
-	public boolean canBeWrenched(EntityPlayer player, World world, BlockPos pos, EnumFacing facing) {
+	public boolean canBeWrenched(EntityPlayer player, World world, BlockPos pos, EnumFacing facing, boolean sneaking) {
 		return true;
 	}	
 	@Override

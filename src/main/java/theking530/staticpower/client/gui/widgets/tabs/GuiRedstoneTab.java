@@ -21,6 +21,7 @@ import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.tileentity.BaseTileEntity;
 import theking530.staticpower.utils.EnumTextFormatting;
 import theking530.staticpower.utils.GuiTextures;
+import theking530.staticpower.utils.RedstoneModeList.RedstoneMode;
 
 public class GuiRedstoneTab {
 	
@@ -76,19 +77,19 @@ public class GuiRedstoneTab {
 	public void modeText(int tabLeft, int tabTop) {
 		String mode;
 		BaseTileEntity entity = (BaseTileEntity)TILE_ENTITY;
-		if(entity.REDSTONE_MODE == 1) {
+		if(entity.REDSTONE_MODE == RedstoneMode.Low) {
 		this.FONT_RENDERER.drawStringWithShadow("Low", tabLeft + 37, tabTop+95, 16777215);
 		this.FONT_RENDERER.drawStringWithShadow("This machine will", tabLeft + 5, tabTop+110, 16777215);		
 		this.FONT_RENDERER.drawStringWithShadow("only operate with no", tabLeft + 5, tabTop+118, 16777215);	
 		this.FONT_RENDERER.drawStringWithShadow("signal.", tabLeft + 5, tabTop+127, 16777215);
 		}
-		if(entity.REDSTONE_MODE == 2) {
+		if(entity.REDSTONE_MODE == RedstoneMode.High) {
 		this.FONT_RENDERER.drawStringWithShadow("High", tabLeft + 37, tabTop+95, 16777215);
 		this.FONT_RENDERER.drawStringWithShadow("This machine will", tabLeft + 5, tabTop+110, 16777215);		
 		this.FONT_RENDERER.drawStringWithShadow("only operate with a", tabLeft + 5, tabTop+118, 16777215);	
 		this.FONT_RENDERER.drawStringWithShadow("redstone signal.", tabLeft + 5, tabTop+127, 16777215);
 		}
-		if(entity.REDSTONE_MODE == 0) {
+		if(entity.REDSTONE_MODE == RedstoneMode.Ignore) {
 		this.FONT_RENDERER.drawStringWithShadow("Ignore", tabLeft + 37, tabTop+95, 16777215);	
 		this.FONT_RENDERER.drawStringWithShadow("This machine will", tabLeft + 5, tabTop+110, 16777215);		
 		this.FONT_RENDERER.drawStringWithShadow("ignore any redstone", tabLeft + 6, tabTop+118, 16777215);	
@@ -119,17 +120,17 @@ public class GuiRedstoneTab {
 		if(TILE_ENTITY != null) {
 			BaseTileEntity entity = (BaseTileEntity)TILE_ENTITY;		
 			if(IGNORE_REDSTONE.CLICKED) {
-				entity.REDSTONE_MODE = 0;
+				entity.REDSTONE_MODE = RedstoneMode.Ignore;
 				IMessage msg = new PacketRedstoneTab(0, entity.getPos());
 				PacketHandler.net.sendToServer(msg);
 			}
 			if(LOW_REDSTONE.CLICKED) {
-				entity.REDSTONE_MODE = 1;
+				entity.REDSTONE_MODE = RedstoneMode.Low;
 				IMessage msg = new PacketRedstoneTab(1, entity.getPos());
 				PacketHandler.net.sendToServer(msg);
 			}
 			if(HIGH_REDSTONE.CLICKED) {
-				entity.REDSTONE_MODE = 2;	
+				entity.REDSTONE_MODE = RedstoneMode.High;	
 				IMessage msg = new PacketRedstoneTab(2, entity.getPos());
 				PacketHandler.net.sendToServer(msg);
 			}	

@@ -45,30 +45,27 @@ public class StaticWrench extends Item implements IWrenchTool{
     }
 	@Override
     public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
-
 		if(player.getHeldItem(hand) != null) {
-			if(!player.isSneaking()) {
+			if(world.getBlockState(pos).getBlock() instanceof IWrenchable) {
+				IWrenchable block = (IWrenchable) world.getBlockState(pos).getBlock();
 				player.swingArm(EnumHand.MAIN_HAND);
-				if(world.getBlockState(pos).getBlock() instanceof IWrenchable) {
-					IWrenchable block = (IWrenchable) world.getBlockState(pos).getBlock();
-					block.wrenchBlock(player, getWrenchMode(player.getHeldItem(hand)), player.getHeldItem(hand), world, pos, side, true);
-					playWrenchSound(world, pos);
-					return EnumActionResult.SUCCESS;
-				}	
-			}
-			if(player.isSneaking()) {
-				player.swingArm(EnumHand.MAIN_HAND);
-				if(world.getBlockState(pos).getBlock() instanceof IWrenchable) {
-					IWrenchable block = (IWrenchable)world.getBlockState(pos).getBlock();
-					if(block.canBeWrenched(player, world, pos, side)){	
-						block.sneakWrenchBlock(player, getSneakWrenchMode(player.getHeldItem(hand)), player.getHeldItem(hand), world, pos, side, true);
+				if(!player.isSneaking()) {
+					if(block.canBeWrenched(player, world, pos, side, false)){	
+						block.wrenchBlock(player, getWrenchMode(player.getHeldItem(hand)), player.getHeldItem(hand), world, pos, side, true);
 						playWrenchSound(world, pos);
 						return EnumActionResult.SUCCESS;
-					}
-				}	
+					}	
+				}else{
+					if(world.getBlockState(pos).getBlock() instanceof IWrenchable) {
+						if(block.canBeWrenched(player, world, pos, side, true)){	
+							block.sneakWrenchBlock(player, getSneakWrenchMode(player.getHeldItem(hand)), player.getHeldItem(hand), world, pos, side, true);
+							playWrenchSound(world, pos);
+							return EnumActionResult.SUCCESS;
+						}
+					}				
+				}				
 			}
-		}
-		
+		}		
         return EnumActionResult.PASS;
     }
 	public void playWrenchSound(World world, BlockPos pos) {

@@ -176,15 +176,15 @@ public class ModBlocks {
 		
 		StaticPlanks = new BaseBlock(Material.WOOD, "StaticPlanks").setHardness(3.5f);
 		registry.PreRegisterBlock(StaticPlanks);
-		OreDictionary.registerOre("plankWood", new ItemStack(StaticPlanks));
+		OreDictionary.registerOre("plankWood", StaticPlanks);
 		
 		EnergizedPlanks = new BaseBlock(Material.WOOD, "EnergizedPlanks").setHardness(3.5f);
 		registry.PreRegisterBlock(EnergizedPlanks);
-		OreDictionary.registerOre("plankWood", new ItemStack(EnergizedPlanks));
+		OreDictionary.registerOre("plankWood", EnergizedPlanks);
 		
 		LumumPlanks = new BaseBlock(Material.WOOD, "LumumPlanks").setHardness(3.5f);
 		registry.PreRegisterBlock(LumumPlanks);
-		OreDictionary.registerOre("plankWood", new ItemStack(LumumPlanks));
+		OreDictionary.registerOre("plankWood", LumumPlanks);
 		
 		StaticCobblestone = new BaseBlock(Material.ROCK, "StaticCobblestone").setHardness(3.5f);
 		registry.PreRegisterBlock(StaticCobblestone);
@@ -307,31 +307,31 @@ public class ModBlocks {
 		registry.PreRegisterBlock(LumumBlock);
 		BlockCopper = new BaseBlock(Material.IRON, "BlockCopper");
 		registry.PreRegisterBlock(BlockCopper);	
-		OreDictionary.registerOre("blockCopper", new ItemStack(BlockCopper));
+		OreDictionary.registerOre("blockCopper", BlockCopper);
 		BlockTin = new BaseBlock(Material.IRON, "BlockTin");
 		registry.PreRegisterBlock(BlockTin);	
-		OreDictionary.registerOre("blockTin", new ItemStack(BlockTin));
+		OreDictionary.registerOre("blockTin", BlockTin);
 		BlockSilver = new BaseBlock(Material.IRON, "BlockSilver");
 		registry.PreRegisterBlock(BlockSilver);
-		OreDictionary.registerOre("blockSilver", new ItemStack(BlockSilver));
+		OreDictionary.registerOre("blockSilver", BlockSilver);
 		BlockLead = new BaseBlock(Material.IRON, "BlockLead");
 		registry.PreRegisterBlock(BlockLead);	
-		OreDictionary.registerOre("blockLead", new ItemStack(BlockLead));
+		OreDictionary.registerOre("blockLead", BlockLead);
 		BlockPlatinum = new BaseBlock(Material.IRON, "BlockPlatinum");
 		registry.PreRegisterBlock(BlockPlatinum);
-		OreDictionary.registerOre("blockPlatinum", new ItemStack(BlockPlatinum));	
+		OreDictionary.registerOre("blockPlatinum", BlockPlatinum);	
 		BlockNickel = new BaseBlock(Material.IRON, "BlockNickel");
 		registry.PreRegisterBlock(BlockNickel);	
-		OreDictionary.registerOre("blockNickel", new ItemStack(BlockNickel));
+		OreDictionary.registerOre("blockNickel", BlockNickel);
 		BlockAluminium = new BaseBlock(Material.IRON, "BlockAluminium");
 		registry.PreRegisterBlock(BlockAluminium);
-		OreDictionary.registerOre("blockAluminium", new ItemStack(BlockAluminium));
+		OreDictionary.registerOre("blockAluminium", BlockAluminium);
 		BlockSapphire = new BaseBlock(Material.IRON, "BlockSapphire");
 		registry.PreRegisterBlock(BlockSapphire);	
-		OreDictionary.registerOre("blockSapphire", new ItemStack(BlockSapphire));
+		OreDictionary.registerOre("blockSapphire", BlockSapphire);
 		BlockRuby = new BaseBlock(Material.IRON, "BlockRuby");
 		registry.PreRegisterBlock(BlockRuby);
-		OreDictionary.registerOre("blockRuby", new ItemStack(BlockRuby));
+		OreDictionary.registerOre("blockRuby", BlockRuby);
 		
 		
 		StaticGrass = new StaticGrass(Material.GRASS).setUnlocalizedName("StaticGrass");
@@ -360,40 +360,29 @@ public class ModBlocks {
 				
 		CopperOre = new Ore("CopperOre", "pickaxe", 1).setHardness(3.5f);
 		registry.PreRegisterBlock(CopperOre);
-		OreDictionary.registerOre("oreCopper", new ItemStack(CopperOre));
-		
+
 		TinOre = new Ore("TinOre", "pickaxe", 1).setHardness(3.5f);
 		registry.PreRegisterBlock(TinOre);
-		OreDictionary.registerOre("oreTin", new ItemStack(TinOre));
-		
+
 		SilverOre = new Ore("SilverOre", "pickaxe", 2).setHardness(3.5f);
 		registry.PreRegisterBlock(SilverOre);
-		OreDictionary.registerOre("oreSilver", new ItemStack(SilverOre));
 
 		LeadOre = new Ore("LeadOre", "pickaxe", 2).setHardness(3.5f);
 		registry.PreRegisterBlock(LeadOre);
-		OreDictionary.registerOre("oreLead", new ItemStack(LeadOre));
-				
+			
 		PlatinumOre = new Ore("PlatinumOre", "pickaxe", 2).setHardness(3.5f);
 		registry.PreRegisterBlock(PlatinumOre);
-		OreDictionary.registerOre("orePlatinum", new ItemStack(PlatinumOre));
-		
+	
 		NickelOre = new Ore("NickelOre", "pickaxe", 1).setHardness(3.5f);
 		registry.PreRegisterBlock(NickelOre);
-		OreDictionary.registerOre("oreNickel", new ItemStack(NickelOre));
-		
+
 		AluminiumOre = new Ore("AluminiumOre", "pickaxe", 2).setHardness(3.5f);
 		registry.PreRegisterBlock(AluminiumOre);
-		OreDictionary.registerOre("oreAluminium", new ItemStack(AluminiumOre));
 
 		SapphireOre = new GemOre("SapphireOre", "pickaxe", 2, ModItems.SapphireGem, 1, 3).setHardness(3.5f);
 		registry.PreRegisterBlock(SapphireOre);
-		OreDictionary.registerOre("oreSapphire", new ItemStack(SapphireOre));
-				
+
 		RubyOre = new GemOre("RubyOre", "pickaxe", 2, ModItems.RubyGem, 1, 3).setHardness(3.5f);
 		registry.PreRegisterBlock(RubyOre);
-		OreDictionary.registerOre("oreRuby", new ItemStack(RubyOre));
-		
-
 	}
 }

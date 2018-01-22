@@ -61,10 +61,10 @@ public class TileEntityBaseConduit extends TileEntity implements IConduit, ITick
 			if(te != null) {
 				if(te instanceof TileEntityBaseConduit) {
 					TileEntityBaseConduit tempCond = (TileEntityBaseConduit)te;
-					if(SIDE_MODES[EnumFacing.values()[i].ordinal()] == 1) {
+					if(SIDE_MODES[EnumFacing.values()[i].ordinal()] == 2) {
 						continue;
 					}
-					if(tempCond.SIDE_MODES[EnumFacing.values()[i].getOpposite().ordinal()] == 1) {
+					if(tempCond.SIDE_MODES[EnumFacing.values()[i].getOpposite().ordinal()] == 2) {
 						continue;
 					}
 					if(tempCond.GRID != masterGrid) {
@@ -90,11 +90,11 @@ public class TileEntityBaseConduit extends TileEntity implements IConduit, ITick
 				TileEntity te = getWorld().getTileEntity(changedBlockPos.offset(EnumFacing.values()[i]));
 				if(te != null && te instanceof TileEntityBaseConduit) {
 					TileEntityBaseConduit tempCond = (TileEntityBaseConduit)te;
-					if(SIDE_MODES[EnumFacing.values()[i].ordinal()] == 1) {
+					if(SIDE_MODES[EnumFacing.values()[i].ordinal()] == 2) {
 						continue;
 					}
 					if(te instanceof TileEntityStaticConduit) {
-						if(((TileEntityStaticConduit)te).SIDE_MODES[EnumFacing.values()[i].getOpposite().ordinal()] == 1) {
+						if(((TileEntityStaticConduit)te).SIDE_MODES[EnumFacing.values()[i].getOpposite().ordinal()] == 2) {
 							continue;
 						}
 					}
@@ -157,8 +157,7 @@ public class TileEntityBaseConduit extends TileEntity implements IConduit, ITick
     	NBTTagCompound tag = new NBTTagCompound();
     	writeToNBT(tag);
     	return new SPacketUpdateTileEntity(pos, getBlockMetadata(), tag);
-    }
-    
+    }   
 	@Override
 	public boolean isConduit(EnumFacing side) {
 		return false;
@@ -188,7 +187,7 @@ public class TileEntityBaseConduit extends TileEntity implements IConduit, ITick
 		return firstDirection.getOpposite() == secondDirection;
 	}
 	public boolean disconected(EnumFacing from) {
-		if(SIDE_MODES[from.ordinal()] == 1){
+		if(SIDE_MODES[from.ordinal()] == 2){
 			return true;
 		}
 		return false;
@@ -202,9 +201,7 @@ public class TileEntityBaseConduit extends TileEntity implements IConduit, ITick
 	}
 	public void conduitWrenched(EnumFacing side, int subHit) {
 		EnumFacing adjustedSide = subHit == 0 ? side : EnumFacing.values()[subHit-1];	
-		SIDE_MODES[adjustedSide.ordinal()] = SIDE_MODES[adjustedSide.ordinal()] == 1 ? 0 : 1;
-		
-
+		SIDE_MODES[adjustedSide.ordinal()] = SIDE_MODES[adjustedSide.ordinal()] == 2 ? 0 : 2;
 		getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 3);
 	}	
 	@Override
@@ -225,7 +222,7 @@ public class TileEntityBaseConduit extends TileEntity implements IConduit, ITick
     	float y = getPos().getY();
     	float z = getPos().getZ();
 
-    	System.out.println(subHit);
+    	//System.out.println(subHit);
     	
 		switch(subHit) {
 			case 0: return new CustomBoundingBox(min, min, min, x+min2, max+y-pixel*5.5, max+z-min2);

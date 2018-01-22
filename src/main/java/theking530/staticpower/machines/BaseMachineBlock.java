@@ -181,7 +181,7 @@ public class BaseMachineBlock extends Block implements IWrenchable {
 		world.markAndNotifyBlock(pos, world.getChunkFromBlockCoords(pos), world.getBlockState(pos), world.getBlockState(pos), 2);
 	}	
 	@Override
-	public boolean canBeWrenched(EntityPlayer player, World world, BlockPos pos, EnumFacing facing){
+	public boolean canBeWrenched(EntityPlayer player, World world, BlockPos pos, EnumFacing facing, boolean sneaking){
 		return true;
 	}
 	@Override

@@ -44,12 +44,11 @@ public class GuiFluidBar {
 		    float renderAmount = ratio * (float) height;
 	
 		    RenderUtil.bindBlockTexture();
-
 		    GlStateManager.enableBlend();    
 
 		    float segmentCapacity = capacity / ((float)height/16);
 		    int segmentsUsed = (int) ((renderAmount+16)/16);
-		    		
+		    
 	        double minU = icon.getMinU();
 	        double maxU = icon.getMaxU();
 	        double minV = icon.getMinV();
@@ -58,16 +57,17 @@ public class GuiFluidBar {
 	        
 
 	        for(int i=0; i<segmentsUsed; i++) {
-	        	float segmentRatio = (amount - (segmentCapacity*i))/segmentCapacity;
-			    double yMin = (i*16);
-			    double yMax = (i+(segmentRatio))*16;
+			    double currentSegmentCapacity = segmentCapacity*(i+1);
+			    double fillRatio = Math.min(1.0, amount/currentSegmentCapacity);
 
+			    double yMin = (i*16);
+			    double yMax = ((i+1)*16)*fillRatio;				    	    
 		        Tessellator tessellator = Tessellator.getInstance();
 		        BufferBuilder tes = tessellator.getBuffer();
 		        tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-				tes.pos(x + width, y-yMin , zLevel).tex(maxU,minV).endVertex();
-				tes.pos(x + width, y-yMax, zLevel).tex(maxU, minV+(diffV*segmentRatio)).endVertex();
-				tes.pos(x, y-yMax, zLevel).tex(minU, minV+(diffV*segmentRatio)).endVertex();
+				tes.pos(x + width, y-yMin , zLevel).tex(maxU, minV).endVertex();
+				tes.pos(x + width, y-yMax, zLevel).tex(maxU, minV + (fillRatio * diffV)).endVertex();
+				tes.pos(x, y-yMax, zLevel).tex(minU, minV + (fillRatio * diffV)).endVertex();
 				tes.pos(x, y-yMin , zLevel).tex(minU,minV).endVertex();	
 		        tessellator.draw();
 	        }

@@ -55,15 +55,17 @@ public class DrainToBucketComponent implements IMachineComponentInterface{
 		FLUID_TO_CONTAINER_RATE = drainRate;
 	}
 	public void update() {
-		if(MOVE_TIMER >= MOVE_TIME) {
-			if(MODE == FluidContainerInteractionMode.FillFromContainer) {
-				fillFromContainer();
+		if(!TE.getWorld().isRemote) {
+			if(MOVE_TIMER >= MOVE_TIME) {
+				if(MODE == FluidContainerInteractionMode.FillFromContainer) {
+					fillFromContainer();
+				}else{
+					drainToContainer();
+				}
+				MOVE_TIMER = 0;
 			}else{
-				drainToContainer();
+				MOVE_TIMER++;
 			}
-			MOVE_TIMER = 0;
-		}else{
-			MOVE_TIMER++;
 		}
 	}
 	public void setMode(FluidContainerInteractionMode NewMode) {

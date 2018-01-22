@@ -33,7 +33,7 @@ public class TileEntityRenderStaticConduit extends TileEntityRenderBaseConduit {
 		
 		for(int i = 0; i < conduit.receivers.length; i++){
 			if(conduit.receivers[i] != null) {
-				if(conduit.SIDE_MODES[i] == 2) {
+				if(conduit.SIDE_MODES[i] == 1) {
 					
 				}else{
 				this.bindTexture(energy);

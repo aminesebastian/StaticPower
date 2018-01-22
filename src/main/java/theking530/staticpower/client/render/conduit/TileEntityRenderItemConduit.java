@@ -4,7 +4,6 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -35,16 +34,12 @@ public class TileEntityRenderItemConduit extends TileEntityRenderBaseConduit {
 
 		for(int i = 0; i < conduit.receivers.length; i++){
 			if(conduit.receivers[i] != null) {
-				if(conduit.SIDE_MODES[i] == 2) {
-					
+				if(conduit.SIDE_MODES[i] == 1) {
+					this.bindTexture(pullTexture);
 				}else{
-					if(conduit.SIDE_MODES[i] == 1) {
-						this.bindTexture(pullTexture);
-					}else{
-						this.bindTexture(texture);
-					}
-					drawConnection(conduit.receivers[i], tileentity, 9.0f, 12.0f);
-				}		
+					this.bindTexture(texture);
+				}
+				drawConnection(conduit.receivers[i], tileentity, 9.0f, 12.0f);				
 			}
 		}
 		if (!conduit.straightConnection(conduit.connections)) {

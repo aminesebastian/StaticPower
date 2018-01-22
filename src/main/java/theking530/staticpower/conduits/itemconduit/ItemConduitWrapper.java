@@ -43,7 +43,11 @@ public class ItemConduitWrapper {
 		return CURRENT_INDEX == 0 ? PATH.get(CURRENT_INDEX) : PATH.get(CURRENT_INDEX-1);
 	}
 	public boolean hasPath() {
-		return PATH != null;
+		if(PATH == null) {
+			return false;
+		}else{
+			return PATH.size() > 2;
+		}
 	}
 	public ConduitPath getPath() {
 		return PATH;

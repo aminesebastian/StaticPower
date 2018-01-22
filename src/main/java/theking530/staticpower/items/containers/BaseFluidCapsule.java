@@ -40,13 +40,35 @@ import theking530.staticpower.utils.EnumTextFormatting;
 public class BaseFluidCapsule extends ItemBase { // implements IItemColor  {
 
 	public int CAPACITY;
+	public int DAMAGE_DIVISOR;
 	
-	public BaseFluidCapsule(String name, int capacity) {
+	public BaseFluidCapsule(String name, int capacity, int damageDivisor) {
 		super(name);
 		CAPACITY = capacity;
 	    BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, DispenseFluidContainer.getInstance());
+		setMaxDamage(capacity/damageDivisor);
+		setMaxStackSize(1);
+		setNoRepair();
+		DAMAGE_DIVISOR = damageDivisor;
 	}
-	
+	@Override
+    public boolean showDurabilityBar(ItemStack stack) {
+    	FluidHandlerItemStack tempHandler = (FluidHandlerItemStack) stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
+        FluidStack fluidStack = tempHandler.getFluid();
+    	if(fluidStack != null) {
+            return true;
+    	}
+		return false;
+    }
+    public double getDurabilityForDisplay(ItemStack stack) {
+    	FluidHandlerItemStack tempHandler = (FluidHandlerItemStack) stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
+        FluidStack fluidStack = tempHandler.getFluid();
+    	if(fluidStack != null) {
+            return 1-((double)fluidStack.amount / (double)CAPACITY);
+    	}
+		return getMaxDamage(stack);
+    }
+
     @SideOnly(Side.CLIENT)
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
@@ -85,83 +107,49 @@ public class BaseFluidCapsule extends ItemBase { // implements IItemColor  {
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
 		ItemStack itemStack = player.getHeldItem(hand);
     	FluidHandlerItemStack tempHandler = (FluidHandlerItemStack) itemStack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
-        FluidStack fluidStack = tempHandler.getFluid();
 
-        // clicked on a block?
-        RayTraceResult mop = this.rayTrace(world, player, true);
+        RayTraceResult rayTrace = this.rayTrace(world, player, true);
 
-        if(mop == null || mop.typeOfHit != RayTraceResult.Type.BLOCK){
+        if(rayTrace == null || rayTrace.typeOfHit != RayTraceResult.Type.BLOCK){
             return ActionResult.newResult(EnumActionResult.PASS, itemStack);
         }
 
-        BlockPos clickPos = mop.getBlockPos();
+        BlockPos clickPos = rayTrace.getBlockPos();
         if(!player.isSneaking()) {
+        	Fluid fluid = null;
+        	
 	        if(world.getBlockState(clickPos).getBlock() instanceof IFluidBlock) {
 	        	IFluidBlock baseBlock = (IFluidBlock) world.getBlockState(clickPos).getBlock();
-	        	if(((Integer)world.getBlockState(clickPos).getValue(BlockLiquid.LEVEL)).intValue() == 0) {
-	        		if(tempHandler.getFluid() == null) {
-	        			tempHandler.fill(new FluidStack(baseBlock.getFluid(), 1000), true);
-	        			player.playSound(baseBlock.getFluid().getFillSound(), 0.5F, (float) (0.5F + Math.random()*2.0));
-	        			world.setBlockToAir(clickPos);
-	                    return ActionResult.newResult(EnumActionResult.SUCCESS, itemStack);
-	        		}else if(tempHandler.getFluid().amount + 1000 <= CAPACITY  || player.isCreative()) {
-	        			if(tempHandler.getFluid().getFluid().equals(baseBlock.getFluid())) {
-		        			tempHandler.fill(new FluidStack(tempHandler.getFluid().getFluid(), tempHandler.getFluid().amount), true);
-		        			player.playSound(baseBlock.getFluid().getFillSound(), 0.5F, (float) (1.0F));
-		        			world.setBlockToAir(clickPos);
-		                    return ActionResult.newResult(EnumActionResult.SUCCESS, itemStack);	
-	        			}
-	        		}
-	        	}
+	        	fluid = baseBlock.getFluid();	     
+	        }else if(world.getBlockState(clickPos).getBlock() == Blocks.WATER) {
+	        	fluid = FluidRegistry.WATER;
+	        }else if(world.getBlockState(clickPos).getBlock() == Blocks.LAVA) {
+        		fluid = FluidRegistry.LAVA;
 	        }
-	        if(world.getBlockState(clickPos).getBlock() == Blocks.WATER) {
-        		if(tempHandler.getFluid() == null) {
-        			tempHandler.fill(new FluidStack(FluidRegistry.WATER, 1000), true);
-        			player.playSound(FluidRegistry.WATER.getFillSound(), 0.5F, (float) (0.5F + Math.random()*2.0));
-        			world.setBlockToAir(clickPos);
-                    return ActionResult.newResult(EnumActionResult.SUCCESS, itemStack);
-        		}else if(tempHandler.getFluid().amount + 1000 <= CAPACITY  || player.isCreative()) {
-        			if(tempHandler.getFluid().getFluid().equals(FluidRegistry.WATER)) {
-	        			tempHandler.fill(new FluidStack(tempHandler.getFluid().getFluid(), tempHandler.getFluid().amount), true);
-	        			player.playSound(FluidRegistry.WATER.getFillSound(), 0.5F, (float) (1.0F));
-	        			world.setBlockToAir(clickPos);
-	                    return ActionResult.newResult(EnumActionResult.SUCCESS, itemStack);	
-        			}
-        		}	
-	        }
-	        if(world.getBlockState(clickPos).getBlock() == Blocks.LAVA) {
-        		if(tempHandler.getFluid() == null) {
-        			tempHandler.fill(new FluidStack(FluidRegistry.LAVA, 1000), true);
-        			player.playSound(FluidRegistry.LAVA.getFillSound(), 0.5F, (float) (0.5F + Math.random()*2.0));
-        			world.setBlockToAir(clickPos);
-                    return ActionResult.newResult(EnumActionResult.SUCCESS, itemStack);
-        		}else if(tempHandler.getFluid().amount + 1000 <= CAPACITY  || player.isCreative()) {
-        			if(tempHandler.getFluid().getFluid().equals(FluidRegistry.LAVA)) {
-	        			tempHandler.fill(new FluidStack(tempHandler.getFluid().getFluid(), tempHandler.getFluid().amount), true);
-	        			player.playSound(FluidRegistry.LAVA.getFillSound(), 0.5F, (float) (1.0F));
-	        			world.setBlockToAir(clickPos);
-	                    return ActionResult.newResult(EnumActionResult.SUCCESS, itemStack);	
-        			}
-        		}	
+	        if(fluid != null) {
+				int filled = tempHandler.fill(new FluidStack(fluid, 1000), false);
+				if(filled == 1000) {
+					tempHandler.fill(new FluidStack(fluid, 1000), true);
+	      			world.setBlockToAir(clickPos);
+	        		player.playSound(fluid.getFillSound(tempHandler.getFluid()), 0.5F, (float) (1.0F));
+	                return ActionResult.newResult(EnumActionResult.SUCCESS, itemStack);	
+				}
 	        }
         }else{
-        	 // empty bucket shouldn't exist, do nothing since it should be handled by the bucket event
+            FluidStack fluidStack = tempHandler.getFluid();
             if (fluidStack == null || fluidStack.amount < 1000){
                 return ActionResult.newResult(EnumActionResult.PASS, itemStack);
             }
-            // can we place liquid there?
             if (world.isBlockModifiable(player, clickPos)){
-                // the block adjacent to the side we clicked on
-                BlockPos targetPos = clickPos.offset(mop.sideHit);
-
-                // can the player place there?
-                if (player.canPlayerEdit(targetPos, mop.sideHit, itemStack)){
-                    // try placing liquid
-                    if (FluidUtil.tryPlaceFluid(player, world, targetPos, itemStack, fluidStack) != FluidActionResult.FAILURE && !player.capabilities.isCreativeMode){
-                        // success!
+                BlockPos targetPos = clickPos.offset(rayTrace.sideHit);
+                if (player.canPlayerEdit(targetPos, rayTrace.sideHit, itemStack)){
+                    if (FluidUtil.tryPlaceFluid(player, world, targetPos, itemStack, fluidStack) != FluidActionResult.FAILURE){
                         player.addStat(StatList.getObjectUseStats(this));
-                        tempHandler.drain(1000, true);
-                            return ActionResult.newResult(EnumActionResult.SUCCESS, itemStack);
+                		player.playSound(fluidStack.getFluid().getEmptySound(fluidStack), 0.5F, (float) (1.0F));
+                        if(!player.capabilities.isCreativeMode) {
+                            tempHandler.drain(1000, true);
+                        }
+                        return ActionResult.newResult(EnumActionResult.SUCCESS, itemStack);
                     }
                 }
             }
@@ -169,7 +157,7 @@ public class BaseFluidCapsule extends ItemBase { // implements IItemColor  {
         return ActionResult.newResult(EnumActionResult.FAIL, itemStack);
     }
     @Override
-    	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn) {
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn) {
     	if(stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)){
     		FluidHandlerItemStack tempHandler = (FluidHandlerItemStack) stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
     	    if(tempHandler.getFluid() != null) {
@@ -187,6 +175,6 @@ public class BaseFluidCapsule extends ItemBase { // implements IItemColor  {
     }
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt){
-    	return new FluidHandlerItemStack(stack, CAPACITY);
+    	return new SPItemStackFluidHandler(stack, CAPACITY);
     }
 }

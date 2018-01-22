@@ -106,7 +106,7 @@ public class GuiBasicFarmer extends GuiContainer{
 		String radius = "Radius: " + FARMER.RANGE;	
 		fontRenderer.drawString(radius, xSize / 2 - 31, 119, GUIUtilities.getColor(20, 20, 20));
 		
-		String growthBounus = "Growth Bonus Chance: " + (int)(((1f/(float)FARMER.GROWTH_BONUS_CHANCE))*100) + "%";	
+		String growthBounus = "Growth Bonus Chance: " + FARMER.GROWTH_BONUS_CHANCE + "%";	
 		fontRenderer.drawString(growthBounus, xSize / 2 +39, 119, GUIUtilities.getColor(20, 20, 20));
 		GL11.glScalef(1/scale, 1/scale, 1/scale);
 	}

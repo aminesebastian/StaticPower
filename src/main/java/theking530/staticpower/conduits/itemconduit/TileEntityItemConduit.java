@@ -18,19 +18,20 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.conduits.ConduitPath;
 import theking530.staticpower.conduits.TileEntityBaseConduit;
-import theking530.staticpower.tileentity.chest.staticchest.TileEntityStaticChest;
 import theking530.staticpower.utils.InventoryUtilities;
 
 public class TileEntityItemConduit extends TileEntityBaseConduit {
 	
 	public ItemConduitWrapper SLOT;
-	public int PULL_RATE = 30;
+	public int PULL_RATE = 20;
 	public int PULL_TIMER = 0;
 	
 	public int PULL_ITEMS = 4;
 	
-	public int MOVE_RATE = 20;
+	public int MOVE_RATE = 10;
 	public int MOVE_TIMER = 0;
+	
+	
 	public Random RANDOM;
 	
 	
@@ -41,6 +42,7 @@ public class TileEntityItemConduit extends TileEntityBaseConduit {
 	
 	public TileEntityItemConduit() {	
 		RANDOM = new Random();
+		SLOT = null;
 	}
 	@Override
 	public void update() {
@@ -50,10 +52,15 @@ public class TileEntityItemConduit extends TileEntityBaseConduit {
 		}
 		if(!getWorld().isRemote) {
 			if(SLOT == null) {
+				if(PULL_TIMER < PULL_RATE) {
+					PULL_TIMER++;
+					return;
+				}
+				PULL_TIMER = 0;
 				setSlot(attemptPullItem());
 				if(SLOT != null) {
 					ConduitPath path = getClosestPath(SLOT);
-					if(path != null) {
+					if(path != null && path.size() > 2) {
 						SLOT.setPath(path);
 						SLOT.incrementPath();
 						MOVE_TIMER = 0;
@@ -143,7 +150,6 @@ public class TileEntityItemConduit extends TileEntityBaseConduit {
 		return false;
 	}
 	public ConduitPath getClosestPath(ItemConduitWrapper slot) {	
-
 	    //Generate a list of items already in transport
 		Map<BlockPos, List<ItemConduitRecieverWrapper>> mappedPaths = new HashMap<BlockPos, List<ItemConduitRecieverWrapper>>();	
 	    Iterator<Entry<BlockPos, TileEntityBaseConduit>> pathsIt = GRID.GRID_MAP.entrySet().iterator();
@@ -171,7 +177,7 @@ public class TileEntityItemConduit extends TileEntityBaseConduit {
 		    	EnumFacing facing = path.getPenultimateFacing();
 	        	BlockPos finalPos = path.getDestination();
 	        	
-	        	if(te != null && !(te instanceof TileEntityStaticChest) && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing) && !pair.getKey().equals(slot.getSourceLocation())) {
+	        	if(te != null && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing) && !pair.getKey().equals(slot.getSourceLocation())) {
 					IItemHandler itemHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing);			
 		        	List<ItemStack> items = new ArrayList<ItemStack>();
 
@@ -216,13 +222,15 @@ public class TileEntityItemConduit extends TileEntityBaseConduit {
 	}
 	public ItemConduitWrapper attemptPullItem() {
 		for(int i=0; i<6; i++) {
-			EnumFacing facing = EnumFacing.values()[i];
-			TileEntity te = getWorld().getTileEntity(pos.offset(facing));
-			if(te != null && te instanceof TileEntityStaticChest && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing)) {
-				IItemHandler itemHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing);
-				for(int j=0; j<itemHandler.getSlots(); j++) {
-					if(itemHandler.getStackInSlot(j) != ItemStack.EMPTY) {
-						return new ItemConduitWrapper(itemHandler.extractItem(j, PULL_ITEMS, false), getPos().offset(facing), RANDOM.nextFloat()*20);
+			if(SIDE_MODES[i] == 1) {
+				EnumFacing facing = EnumFacing.values()[i];
+				TileEntity te = getWorld().getTileEntity(pos.offset(facing));
+				if(te != null && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite())) {
+					IItemHandler itemHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
+					for(int j=0; j<itemHandler.getSlots(); j++) {
+						if(itemHandler.getStackInSlot(j) != ItemStack.EMPTY) {
+							return new ItemConduitWrapper(itemHandler.extractItem(j, PULL_ITEMS, false), getPos().offset(facing), RANDOM.nextFloat()*20);
+						}
 					}
 				}
 			}
@@ -234,7 +242,7 @@ public class TileEntityItemConduit extends TileEntityBaseConduit {
 		if(te == null) {
 			return false;
 		}
-		if(!(te instanceof TileEntityStaticChest) && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing)) {
+		if(te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing)) {
 			IItemHandler itemHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing);
 			if(InventoryUtilities.canFullyInsertItemIntoInventory(itemHandler, SLOT.getItemStack())) {
 				return true;
@@ -244,7 +252,7 @@ public class TileEntityItemConduit extends TileEntityBaseConduit {
 	}
 	public boolean placeInInventory(BlockPos inventory, EnumFacing facing) {
 		TileEntity te = getWorld().getTileEntity(inventory);
-		if(!(te instanceof TileEntityStaticChest) && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing)) {
+		if(te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing)) {
 			IItemHandler itemHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing);
 			if(InventoryUtilities.canFullyInsertItemIntoInventory(itemHandler, SLOT.getItemStack())) {
 				InventoryUtilities.insertItemIntoInventory(itemHandler, SLOT.getItemStack());
@@ -257,17 +265,17 @@ public class TileEntityItemConduit extends TileEntityBaseConduit {
 	
 	@Override
 	public boolean isConduit(EnumFacing side) {
-		if(SIDE_MODES[side.ordinal()] == 1) {
+		if(SIDE_MODES[side.ordinal()] == 2) {
 			return false;
 		}
 		if(getWorld().getTileEntity(pos.offset(side)) instanceof TileEntityItemConduit) {
-			return ((TileEntityItemConduit)getWorld().getTileEntity(pos.offset(side))).SIDE_MODES[side.getOpposite().ordinal()] == 0;
+			return ((TileEntityItemConduit)getWorld().getTileEntity(pos.offset(side))).SIDE_MODES[side.getOpposite().ordinal()] != 1;
 		}
 		return false;
 	}		
 	@Override
 	public boolean isReciever(EnumFacing side) {
-		if(SIDE_MODES[side.ordinal()] == 1) {
+		if(SIDE_MODES[side.ordinal()] == 2) {
 			return false;
 		}
 		if(getWorld().getTileEntity(pos.offset(side)) != null && !(getWorld().getTileEntity(pos.offset(side)) instanceof TileEntityItemConduit) && getWorld().getTileEntity(pos.offset(side)).hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite())) {
@@ -275,8 +283,19 @@ public class TileEntityItemConduit extends TileEntityBaseConduit {
 		}
 		return false;		
 	}
-	public void conduitWrenched(EnumFacing side, int subHit) {
-		super.conduitWrenched(side, subHit);
+	public void conduitWrenched(EnumFacing side, int subHit) {	
+		EnumFacing adjustedSide = subHit == 0 ? side : EnumFacing.values()[subHit-1];	
+
+		if(receivers[adjustedSide.getOpposite().ordinal()] == adjustedSide) {
+			SIDE_MODES[adjustedSide.ordinal()] = SIDE_MODES[adjustedSide.ordinal()] + 1;
+			if(SIDE_MODES[adjustedSide.ordinal()] > 2) {
+				SIDE_MODES[adjustedSide.ordinal()] = 0;
+			}
+		}else{
+			SIDE_MODES[adjustedSide.ordinal()] = SIDE_MODES[adjustedSide.ordinal()] == 2 ? 0 : 2;
+		}
+		getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 3);
+		
 		if(SLOT != null && SLOT.hasPath() && SLOT.getCurrentDirection() == side) {
 			EntityItem droppedItem = new EntityItem(world, pos.getX()+0.5, pos.getY(), pos.getZ()+0.5, SLOT.getItemStack());
 			world.spawnEntity(droppedItem);

@@ -95,7 +95,7 @@ public class ConduitGrid<T extends TileEntityBaseConduit, S extends Capability<E
     		if(GRID_MAP.containsKey(test) || RECIEVER_STORAGE_MAP.containsKey(test)) {
     			if(WORLD.getTileEntity(test) != null && WORLD.getTileEntity(test) instanceof TileEntityBaseConduit) {
     				TileEntityBaseConduit cond = (TileEntityBaseConduit)WORLD.getTileEntity(test);
-    				if(cond.SIDE_MODES[i] == 0) {
+    				if(cond.SIDE_MODES[EnumFacing.values()[i].getOpposite().ordinal()] == 0) {
     	    			adjacentList.add(test);
     				}
     			}else{

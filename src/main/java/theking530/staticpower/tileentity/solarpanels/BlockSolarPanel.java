@@ -50,8 +50,8 @@ public class BlockSolarPanel extends BaseMachineBlock {
         return AA_BB;
     }
 	@Override
-	public boolean canBeWrenched(EntityPlayer player, World world, BlockPos pos, EnumFacing facing) {
-		return true;
+	public boolean canBeWrenched(EntityPlayer player, World world, BlockPos pos, EnumFacing facing, boolean sneaking) {
+		return sneaking;
 	}
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {

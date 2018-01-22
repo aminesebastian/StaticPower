@@ -17,6 +17,7 @@ import theking530.staticpower.energy.StaticEnergyStorage;
 import theking530.staticpower.items.upgrades.BasePowerUpgrade;
 import theking530.staticpower.items.upgrades.BaseSpeedUpgrade;
 import theking530.staticpower.tileentity.BaseTileEntity;
+import theking530.staticpower.utils.RedstoneModeList.RedstoneMode;
 
 /**
  * @author Amine
@@ -111,15 +112,15 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	}	
 	public boolean evauluateRedstoneSettings() {
 		int redstoneSignal = getWorld().getStrongPower(pos);
-		if(REDSTONE_MODE == 0) {
+		if(REDSTONE_MODE == RedstoneMode.Ignore) {
 			return true;
 		}
-		if(REDSTONE_MODE == 1) {
+		if(REDSTONE_MODE == RedstoneMode.Low) {
 			if(redstoneSignal <= 0) {
 				return true;	
 			}
 		}
-		if(REDSTONE_MODE == 2) {
+		if(REDSTONE_MODE == RedstoneMode.High) {
 			if(redstoneSignal > 0) {
 				return true;	
 			}

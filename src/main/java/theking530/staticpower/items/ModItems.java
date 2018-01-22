@@ -1,8 +1,6 @@
 package theking530.staticpower.items;
 
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
 import theking530.staticpower.Registry;
 import theking530.staticpower.assists.Tier;
 import theking530.staticpower.items.book.StaticPowerBook;
@@ -186,13 +184,13 @@ public class ModItems {
 		LumumPie = new BaseFood("LumumPie", 9);
 		registry.PreRegisterItem(LumumPie);
 		
-		BaseFluidCapsule = new BaseFluidCapsule("BaseFluidCapsule", 2000);
+		BaseFluidCapsule = new BaseFluidCapsule("BaseFluidCapsule", 2000, 40);
 		registry.PreRegisterItem(BaseFluidCapsule);
-		StaticFluidCapsule = new BaseFluidCapsule("StaticFluidCapsule", 4000);
+		StaticFluidCapsule = new BaseFluidCapsule("StaticFluidCapsule", 4000, 80);
 		registry.PreRegisterItem(StaticFluidCapsule);
-		EnergizedFluidCapsule = new BaseFluidCapsule("EnergizedFluidCapsule", 8000);
+		EnergizedFluidCapsule = new BaseFluidCapsule("EnergizedFluidCapsule", 8000, 160);
 		registry.PreRegisterItem(EnergizedFluidCapsule);
-		LumumFluidCapsule = new BaseFluidCapsule("LumumFluidCapsule", 16000);
+		LumumFluidCapsule = new BaseFluidCapsule("LumumFluidCapsule", 16000, 320);
 		registry.PreRegisterItem(LumumFluidCapsule);
 		
 		StaticWrench = new StaticWrench().setUnlocalizedName("StaticWrench");
@@ -372,16 +370,10 @@ public class ModItems {
 		registry.PreRegisterItem(PlatinumIngot = new BaseIngot("PlatinumIngot"));
 		registry.PreRegisterItem(NickelIngot = new BaseIngot("NickelIngot"));
 		registry.PreRegisterItem(AluminiumIngot = new BaseIngot("AluminiumIngot"));
-		OreDictionary.registerOre("ingotSilver", new ItemStack(SilverIngot));
-		OreDictionary.registerOre("ingotTin", new ItemStack(TinIngot));
-		OreDictionary.registerOre("ingotLead", new ItemStack(LeadIngot));
-		OreDictionary.registerOre("ingotCopper", new ItemStack(CopperIngot));
-		OreDictionary.registerOre("ingotPlatinum", new ItemStack(PlatinumIngot));
-		
+
 		registry.PreRegisterItem(SapphireGem = new BaseGem("SapphireGem"));
 		registry.PreRegisterItem(RubyGem = new BaseGem("RubyGem"));
-		OreDictionary.registerOre("gemSapphire", new ItemStack(SapphireGem));
-		OreDictionary.registerOre("gemRuby", new ItemStack(RubyGem));
+
 		
 		registry.PreRegisterItem(InertIngot = new BaseIngot("InertIngot"));
 		registry.PreRegisterItem(RedstoneAlloyIngot = new BaseIngot("RedstoneAlloyIngot"));
@@ -400,17 +392,7 @@ public class ModItems {
 		registry.PreRegisterItem(GoldDust = new BaseDust("GoldDust"));	
 		registry.PreRegisterItem(NickelDust = new BaseDust("NickelDust"));
 		registry.PreRegisterItem(AluminiumDust = new BaseDust("AluminiumDust"));	
-		OreDictionary.registerOre("dustSilver", new ItemStack(SilverDust));
-		OreDictionary.registerOre("dustTin", new ItemStack(TinDust));
-		OreDictionary.registerOre("dustLead", new ItemStack(LeadDust));
-		OreDictionary.registerOre("dustCopper", new ItemStack(CopperDust));
-		OreDictionary.registerOre("dustPlatinum", new ItemStack(PlatinumDust));
-		OreDictionary.registerOre("dustIron", new ItemStack(IronDust));
-		OreDictionary.registerOre("dustGold", new ItemStack(GoldDust));
-		OreDictionary.registerOre("dustNickel", new ItemStack(NickelDust));
-		OreDictionary.registerOre("dustAluminium", new ItemStack(AluminiumDust));
-		OreDictionary.registerOre("nuggetIron", new ItemStack(IronNugget));
-		
+
 		registry.PreRegisterItem(InertInfusionBlend = new BaseDust("InertInfusionBlend"));
 		registry.PreRegisterItem(StaticDust = new BaseDust("StaticDust"));
 		registry.PreRegisterItem(EnergizedDust = new BaseDust("EnergizedDust"));

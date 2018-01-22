@@ -276,13 +276,15 @@ public class TileEntityRenderBaseConduit extends TileEntitySpecialRenderer<TileE
 			GL11.glPushMatrix();
 			GL11.glTranslatef(0.5F, 0.5F, 0.5F);
 			if (direction.equals(EnumFacing.UP)) {
+				GL11.glRotatef(180, 0, 1, 0);
 			//ROTATE
 			}else if (direction.equals(EnumFacing.DOWN)) {
 				GL11.glRotatef(180, 1, 0, 0);
-				GL11.glRotatef(180, 0, 1, 0);
+
 			}	
 			else if (direction.equals(EnumFacing.SOUTH)) {
 				GL11.glRotatef(90, 1, 0, 0);
+
 			}	
 			else if (direction.equals(EnumFacing.NORTH)) {
 				GL11.glRotatef(270, 1, 0, 0);
@@ -301,7 +303,7 @@ public class TileEntityRenderBaseConduit extends TileEntitySpecialRenderer<TileE
 			
 			//Front
 	        vertextBuffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			GL11.glColor3f(bottomBrightness, bottomBrightness, bottomBrightness);
+			GL11.glColor3f(sideBrightness, sideBrightness, sideBrightness);
 			StaticVertexBuffer.pos(1-radius*pixel/2, 1-radius*pixel/2, 1-radius*pixel/2, 10*texel, 10*texel);		
 			StaticVertexBuffer.pos(1-radius*pixel/2, 1, 1-radius*pixel/2, 20*texel, 10*texel);	
 			StaticVertexBuffer.pos(radius*pixel/2, 1, 1-radius*pixel/2, 20*texel, 0*texel);	
@@ -424,7 +426,7 @@ public class TileEntityRenderBaseConduit extends TileEntitySpecialRenderer<TileE
 			
 			//Bottom
 	        vertextBuffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			GL11.glColor3f(bottomBrightness, bottomBrightness, bottomBrightness);
+			GL11.glColor3f(sideBrightness, sideBrightness, sideBrightness);
 			StaticVertexBuffer.pos(radius*pixel/2, radius*pixel/2, 1-radius*pixel/2, 10*texel, 10*texel);	
 			StaticVertexBuffer.pos(radius*pixel/2, radius*pixel/2, radius*pixel/2, 10*texel, 0*texel);	
 			StaticVertexBuffer.pos(1-radius*pixel/2, radius*pixel/2, radius*pixel/2, 0*texel, 0*texel);				
