@@ -10,7 +10,7 @@ import net.minecraftforge.common.util.Constants;
 
 public class InventoryItemFilter implements IInventory {
 	
-	private final ItemStack ITEMSTACK;
+	public final ItemStack ITEMSTACK;
 	private ItemStack[] slots;
 	private boolean WHITE_LIST_MODE = true;
 	private FilterTier TIER;

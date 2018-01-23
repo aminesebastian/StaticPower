@@ -7,12 +7,12 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
-import net.minecraft.tileentity.TileEntity;
-import theking530.staticpower.client.gui.widgets.GuiDrawItem;
+import net.minecraft.item.ItemStack;
 import theking530.staticpower.utils.GuiTextures;
 import theking530.staticpower.utils.StaticVertexBuffer;
 
@@ -22,67 +22,52 @@ public class ItemButton extends Gui{
 	public int BUTTON_HEIGHT;
 	public int BUTTON_XPOS;
 	public int BUTTON_YPOS;
-	private int GUI_LEFT;
-	private int GUI_TOP;
+	
 	private Item ITEM;
 	public int GROWTH_STATE;
-	public TileEntity TILE_ENTITY;
-	private int WIDTH;
-	private int HEIGHT;
-	private int xSIZE;
-	private int ySIZE;
+
 	public int TIMER = 0;
 	public boolean HIGHLIGHT;
 	public boolean IS_VISIBLE = true;
 	public boolean CLICKED = false;
 	
 	
-	public ItemButton(int guiLeft, int guiTop, int width, int height, int xPos, int yPos, Item item) {
-		this.GUI_LEFT = guiLeft;
-		this.GUI_TOP = guiTop;
+	public ItemButton(int width, int height, Item item) {
 		this.BUTTON_WIDTH = width;
 		this.BUTTON_HEIGHT = height;
-		this.BUTTON_XPOS = xPos;
-		this.BUTTON_YPOS = yPos;
+
 		this.ITEM = item;		
 	}
 	public void playSound() {
 		if(TIMER == 1) {
-			if(TILE_ENTITY != null) {
-				//TILE_ENTITY.getWorldObj().playSound(TILE_ENTITY.xCoord, TILE_ENTITY.yCoord, TILE_ENTITY.zCoord, "gui.button.press", 0.4F, 1.0F, CLICKED); 
-			}
+			Minecraft.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, 0.4F, 1.0F);
 		}
 	}
-	public void updateMethod(int width, int height, int xSize, int ySize, TileEntity te) {
+	public void updateMethod() {
 		playSound();
 		clickTime();
-		this.WIDTH = width;
-		this.HEIGHT = height;
-		this.xSIZE = xSize;
-		this.ySIZE = ySize;
-		this.TILE_ENTITY = te;
 	}
-	public void drawButton() {
+	public void drawButton(int xPos, int yPos) {
 		if(IS_VISIBLE) {
-		drawButtonBase();
+		drawButtonBase(xPos, yPos);
 			if(ITEM != null) {
-				drawButtonIcon();
+				drawButtonIcon(xPos, yPos);
 			}
 		}
+		BUTTON_XPOS = xPos;
+		BUTTON_YPOS = yPos;
 	}
-	public void drawButtonIcon() {
-		int j = (WIDTH - xSIZE) / 2;
-		int k = (HEIGHT - ySIZE) / 2;
-		int buttonLeft = GUI_LEFT + j + BUTTON_XPOS+1;
-		int buttonTop = GUI_TOP + k + BUTTON_YPOS+1;
+	public void drawButtonIcon(int xPos, int yPos) {
+		int buttonLeft = xPos+1;
+		int buttonTop =  yPos+1;
 		
-		GuiDrawItem.drawItem(ITEM, buttonLeft, buttonTop, 1, 0, this.zLevel, 1.0f);
+		ItemStack item = new ItemStack(ITEM);		
+		RenderItem customRenderer = Minecraft.getMinecraft().getRenderItem();
+		customRenderer.renderItemIntoGUI(item, buttonLeft+1, buttonTop);
 	}
-	public void drawButtonBase() {
-		int j = (WIDTH - xSIZE) / 2;
-		int k = (HEIGHT - ySIZE) / 2;
-		int buttonLeft = GUI_LEFT + j + BUTTON_XPOS;
-		int buttonTop = GUI_TOP + k + BUTTON_YPOS;
+	public void drawButtonBase(int xPos, int yPos) {
+		int buttonLeft = xPos;
+		int buttonTop = yPos;
 		
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder tes = tessellator.getBuffer();
@@ -129,10 +114,8 @@ public class ItemButton extends Gui{
     	//soundHandler.playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
     }
 	public void buttonMouseClick(int par1, int par2, int button) {
-		int j = (WIDTH - xSIZE) / 2;
-		int k = (HEIGHT - ySIZE) / 2;
-		if(par1 > j + BUTTON_XPOS && par1 < j + BUTTON_XPOS + BUTTON_WIDTH && IS_VISIBLE) {
-	    	if(par2 > k + BUTTON_YPOS && par2 < k + BUTTON_YPOS + BUTTON_HEIGHT) {
+		if(par1 > BUTTON_XPOS && par1 < BUTTON_XPOS + BUTTON_WIDTH && IS_VISIBLE) {
+	    	if(par2 > BUTTON_YPOS && par2 < BUTTON_YPOS + BUTTON_HEIGHT) {
 	    		CLICKED = true; 
 	    		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 	    	}
@@ -142,8 +125,8 @@ public class ItemButton extends Gui{
 		if(CLICKED) {		
 			TIMER++;
 			if(TIMER == 3) {
-			CLICKED = false;
-			TIMER = 0;
+				CLICKED = false;
+				TIMER = 0;
 			}
 		}
 	}

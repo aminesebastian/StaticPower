@@ -2,84 +2,166 @@ package api.gui;
 
 import org.lwjgl.opengl.GL11;
 
+import api.RectangleBounds;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import theking530.staticpower.client.gui.widgets.GuiTabManager;
 import theking530.staticpower.utils.StaticVertexBuffer;
 
-public class BaseGuiTab extends Gui {
+public abstract class BaseGuiTab extends Gui {
 	
-	public int TAB_WIDTH;
-	public int TAB_HEIGHT;
-	public int TAB_XPOS;
-	public int TAB_YPOS;
-	protected int GUI_LEFT;
-	protected int GUI_TOP;
-	public float TAB_ANIMATION = 0;
-	public float TAB_ANIMATION_SPEED = 5.0f;
-	private Item ITEM;
-	private Block BLOCK;
-	private ResourceLocation texture;
-	public int GROWTH_STATE;
-	public int WIDTH;
-	public int HEIGHT;
-	public int xSIZE;
-	public int ySIZE;
-	public boolean IS_OPEN = false;
-	
-	public BaseGuiTab(int guiLeft, int guiTop, int width, int height, int xPos, int yPos, ResourceLocation texture, Item item) {
-		this.GUI_LEFT = guiLeft;
-		this.GUI_TOP = guiTop;
-		this.TAB_WIDTH = width;
-		this.TAB_HEIGHT = height;
-		this.TAB_XPOS = xPos;
-		this.TAB_YPOS = yPos;
-		this.ITEM = item;		
-		this.texture = texture;
-	}
-	public void updateMethod(int width, int height, int xSize, int ySize) {
-		extendTab();
-		setState();
-		this.WIDTH = width;
-		this.HEIGHT = height;
-		this.xSIZE = xSize;
-		this.ySIZE = ySize;
-	}
-	public void drawTab() {
-		drawBaseTab();
-		if(ITEM != null) {
-			drawButtonIcon();
-		}
-	}
-	public void drawButtonIcon() {
-		int j = (WIDTH - xSIZE) / 2;
-		int k = (HEIGHT - ySIZE) / 2;
-		int tabLeft = GUI_LEFT + j + TAB_XPOS;
-		int tabTop = GUI_TOP + k + TAB_YPOS;
+	public enum TabState {
+		CLOSED, OPENING, OPEN, CLOSING;
 		
-		if(BLOCK != null) {
-			ItemStack item = new ItemStack(Item.getItemFromBlock(BLOCK));		
-			RenderItem customRenderer = Minecraft.getMinecraft().getRenderItem();
-			customRenderer.renderItemIntoGUI(item, tabLeft+1, tabTop+2);
+		static TabState incrementState(TabState curr) {
+			int newIndex = curr.ordinal() + 1;
+			newIndex = newIndex % 3;
+			return TabState.values()[newIndex];
 		}
-
 	}
-	public void drawBaseTab() {
-		int j = (WIDTH - xSIZE) / 2;
-		int k = (HEIGHT - ySIZE) / 2;
-		int tabLeft = GUI_LEFT + j + TAB_XPOS;
-		int tabTop = GUI_TOP + k + TAB_YPOS;
+	
+	protected int TAB_WIDTH;
+	protected int TAB_HEIGHT;
+	protected int TAB_XPOS;
+	protected int TAB_YPOS;
+
+	protected float TAB_ANIMATION = 0;
+	protected float TAB_ANIMATION_SPEED = 5.0f;
+	protected Item ITEM;
+	protected ResourceLocation TAB_TEXTURE;
+	protected TabState TAB_STATE;
+	
+	private GuiTabManager TAB_MANAGER;
+	
+	public BaseGuiTab(int tabWidth, int tabHeight, ResourceLocation texture, Item item) {
+		TAB_WIDTH = tabWidth;
+		TAB_HEIGHT = tabHeight;
+		ITEM = item;		
+		TAB_TEXTURE = texture;
+		TAB_STATE = TabState.CLOSED;
+	}
+	public BaseGuiTab(int tabWidth, int tabHeight, ResourceLocation texture, Block block) {
+		this(tabWidth, tabHeight, texture, Item.getItemFromBlock(block));
+	}
+	
+	public void update(int xPos, int yPos, float partialTicks) {
+		updateAnimation(partialTicks);
+		
+		TAB_XPOS = xPos;
+		TAB_YPOS = yPos;
+		
+
+		drawTab(xPos, yPos, partialTicks);
+		drawExtra(xPos, yPos, partialTicks);	
+	}
+	public void mouseInteraction(int mouseX, int mouseY, int button) {
+		if(mouseX >  TAB_XPOS && mouseX <  TAB_XPOS + 24) {
+	    	if(mouseY >  TAB_YPOS && mouseY <  TAB_YPOS + 24) {
+	    		if(TAB_STATE == TabState.CLOSED) {
+	    			TAB_STATE = TabState.OPENING;
+		    		TAB_MANAGER.tabOpening(this);
+	    		}
+	    		if(TAB_STATE == TabState.OPEN) {
+	    			TAB_STATE = TabState.CLOSING;
+	    			TAB_MANAGER.tabClosing(this);
+	    		}
+	    	}
+	    }
+		if(isOpen()) {
+			handleExtraMouseInteraction(mouseX, mouseY, button);
+		}
+	}
+	public void keyboardInteraction(char par1, int par2) {
+		if(isOpen()) {
+			handleExtraKeyboardInteraction(par1, par2);
+		}
+	}
+	public void mouseClickMoveIntraction(int x, int y, int button, long time) {
+		if(isOpen()) {
+			handleExtraClickMouseMove(x, y, button, time);
+		}
+	}
+	public boolean isOpen() {
+		return TAB_STATE == TabState.OPEN;
+	}
+	public boolean isClosed() {
+		return TAB_STATE == TabState.CLOSED;
+	}
+	public TabState getTabState() {
+		return TAB_STATE;
+	}
+	public boolean setTabState(TabState newState) {
+		if(newState == TabState.CLOSED || newState == TabState.CLOSING) {
+			if(getTabState() == TabState.OPEN) {
+				TAB_STATE = TabState.CLOSING;
+				return true;
+			}
+		}else if(newState == TabState.OPEN || newState == TabState.OPENING) {
+			if(getTabState() == TabState.CLOSED) {
+				TAB_STATE = TabState.OPENING;
+				return true;
+			}
+		}
+		return false;
+	}
+	public void setManager(GuiTabManager manager) {
+		TAB_MANAGER = manager;
+	}
+	
+	protected abstract void drawExtra(int xPos, int yPos, float partialTicks);
+	protected abstract void handleExtraMouseInteraction(int mouseX, int mouseY, int button);
+	protected abstract void handleExtraKeyboardInteraction(char par1, int par2);
+	protected abstract void handleExtraClickMouseMove(int mouseX, int mouseY, int button, long time);
+	
+	private void updateAnimation(float partialTicks) {
+		if(TAB_STATE == TabState.OPENING && TAB_ANIMATION < TAB_ANIMATION_SPEED) {
+			TAB_ANIMATION = Math.min(TAB_ANIMATION_SPEED, TAB_ANIMATION + partialTicks*2);
+			if(TAB_ANIMATION == TAB_ANIMATION_SPEED) {
+				TAB_STATE = TabState.OPEN;
+			}
+		}
+		if(TAB_STATE == TabState.CLOSING && TAB_ANIMATION > 0) {
+			TAB_ANIMATION = Math.max(0, TAB_ANIMATION - partialTicks*2);
+			if(TAB_ANIMATION == 0) {
+				TAB_STATE = TabState.CLOSED;
+			}
+		}
+		if(TAB_STATE == TabState.CLOSING && TAB_ANIMATION <=  0) {
+			TAB_STATE = TabState.CLOSED;
+    		TAB_MANAGER.tabClosed(this);
+		}
+		if(TAB_STATE == TabState.OPENING && TAB_ANIMATION >= TAB_ANIMATION_SPEED) {
+			TAB_STATE = TabState.OPEN;
+    		TAB_MANAGER.tabOpened(this);
+		}
+	}
+	private void drawTab(int xPos, int yPos, float partialTicks) {
+		drawBaseTab(xPos, yPos, partialTicks);
+		drawButtonIcon(xPos, yPos, partialTicks);
+	}
+	private void drawButtonIcon(int xPos, int yPos, float partialTicks) {
+		if(ITEM != null) {
+	        GlStateManager.disableDepth();
+	        Minecraft.getMinecraft().getRenderItem().renderItemAndEffectIntoGUI(new ItemStack(ITEM), xPos+3, yPos+4);
+		}
+	}
+	private void drawBaseTab(int xPos, int yPos, float partialTicks) {
+		int tabLeft = xPos;
+		int tabTop = yPos;
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder tes = tessellator.getBuffer();
         tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(TAB_TEXTURE);
+		
+
 		//Top
 		StaticVertexBuffer.pos(tabLeft+20+(TAB_WIDTH*TAB_ANIMATION/TAB_ANIMATION_SPEED), tabTop+3, 0, .976, .03);
 		StaticVertexBuffer.pos(tabLeft+20+(TAB_WIDTH*TAB_ANIMATION/TAB_ANIMATION_SPEED), tabTop, 0, .976, 0);
@@ -117,46 +199,11 @@ public class BaseGuiTab extends Gui {
 		StaticVertexBuffer.pos(tabLeft+20+(TAB_WIDTH*TAB_ANIMATION/TAB_ANIMATION_SPEED), tabTop+4, 0, .9767, .03);
 
 		tessellator.draw();
+		
 	}
-
-	public void extendTab() {
-		if(GROWTH_STATE == 1 && TAB_ANIMATION < TAB_ANIMATION_SPEED) {
-			TAB_ANIMATION++;
-			if(TAB_ANIMATION == TAB_ANIMATION_SPEED) {
-				GROWTH_STATE = 1;
-			}
-		}
-		if(GROWTH_STATE == 2 && TAB_ANIMATION > 0) {
-			TAB_ANIMATION--;
-			if(TAB_ANIMATION == 0) {
-				GROWTH_STATE = 0;
-			}
-		}
-		if(GROWTH_STATE == 2 && TAB_ANIMATION == 0) {
-			GROWTH_STATE = 0;
-		}
-		if(GROWTH_STATE > 2) {
-			GROWTH_STATE = 2;
-		}
-	}
-	public void tabMouseExtension(int par1, int par2, int button) {
-		int j = (WIDTH - xSIZE) / 2;
-		int k = (HEIGHT - ySIZE) / 2;
-		if(par1 > j + TAB_XPOS && par1 < j + TAB_XPOS + 24) {
-	    	if(par2 > k + TAB_YPOS && par2 < k + TAB_YPOS + 24) {
-	    		GROWTH_STATE += 1; 
-	    	}
-	    		if(GROWTH_STATE > 2){
-	    			GROWTH_STATE = 0;
-	    	}
-	    }
-	}
-	public void setState() {
-		if(TAB_ANIMATION == TAB_ANIMATION_SPEED) {
-			IS_OPEN = true;
-		}else{
-			IS_OPEN = false;
-		}
+	
+	public RectangleBounds getBounds() {
+		return new RectangleBounds(TAB_XPOS, TAB_YPOS, TAB_WIDTH, TAB_HEIGHT);
 	}
 }
 

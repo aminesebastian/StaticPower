@@ -1,56 +1,42 @@
 	package theking530.staticpower.machines.cropsqueezer;
 
-import java.io.IOException;
-
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
+import theking530.staticpower.client.gui.widgets.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.utils.GuiTextures;
 
-public class GuiCropSqueezer extends GuiContainer{	
+public class GuiCropSqueezer extends BaseGuiContainer {	
 
-	public GuiSideConfigTab SIDE_TAB;
-	public GuiRedstoneTab REDSTONE_TAB;
-	
 	private TileEntityCropSqueezer cSqueezer;
 	private GuiPowerBarFromEnergyStorage POWERBAR;
 	private GuiFluidBarFromTank FLUIDBAR;
-	private static ContainerCropSqueezer CONTAINER;
 	
 	public GuiCropSqueezer(InventoryPlayer invPlayer, TileEntityCropSqueezer teCropSqueezer) {
-		super(CONTAINER = new ContainerCropSqueezer(invPlayer, teCropSqueezer));
+		super(new ContainerCropSqueezer(invPlayer, teCropSqueezer), 195, 166);
 		cSqueezer = teCropSqueezer;
 		POWERBAR = new GuiPowerBarFromEnergyStorage(teCropSqueezer);
 		FLUIDBAR = new GuiFluidBarFromTank(teCropSqueezer.TANK);
-		REDSTONE_TAB = new GuiRedstoneTab(guiLeft, guiTop, teCropSqueezer);
-		SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, teCropSqueezer);
+		
+		getTabManager().registerTab(new GuiRedstoneTab(100, 100, teCropSqueezer));
+		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teCropSqueezer));
+
 		this.xSize = 195;
 		this.ySize = 166;		
 	}
-	
-	public void updateScreen() {
-		SIDE_TAB.updateTab(width+38, height, xSize, ySize, fontRenderer, cSqueezer);
-		REDSTONE_TAB.updateTab(width+38, height, xSize, ySize, fontRenderer, cSqueezer);
-		CONTAINER.moveUpgradeSlots(100, 100);
-		if(SIDE_TAB.GROWTH_STATE == 1){
-			REDSTONE_TAB.RED_TAB.GROWTH_STATE = 2;
-		}
-		if(REDSTONE_TAB.GROWTH_STATE == 1) {
-			SIDE_TAB.BLUE_TAB.GROWTH_STATE = 2;
-		}
-	}
+
 	public void drawScreen(int par1, int par2, float par3) {
 		super.drawScreen(par1, par2, par3);
 		this.zLevel = -1.0f;
 		this.drawDefaultBackground();	
 		this.zLevel = 0.0f;
+		
 		int var1 = (this.width - this.xSize) / 2;
 		int var2 = (this.height - this.ySize) / 2;
 		if(par1 >= 30 + var1 && par2 >= 8 + var2 && par1 <= 46 + var1 && par2 <= 68 + var2) {	
@@ -77,21 +63,12 @@ public class GuiCropSqueezer extends GuiContainer{
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.MSQUEEZER_GUI);
 		drawTexturedModalRect(guiLeft + 107, guiTop + 33, 198, 71, 14, 1+j1);
 			
-		SIDE_TAB.drawTab();		
-		REDSTONE_TAB.drawTab();
+		
+        getTabManager().drawTabs(guiLeft+175, guiTop+10, width, height, f);
+		
 		POWERBAR.drawPowerBar(guiLeft + 50, guiTop + 68, 6, 60, this.zLevel, f);
 		FLUIDBAR.drawFluidBar(guiLeft + 30, guiTop + 68, 16, 60, this.zLevel);
 	}
-	@Override
-	protected void mouseClicked(int x, int y, int button) throws IOException{
-	    super.mouseClicked(x, y, button);
-	    REDSTONE_TAB.mouseInteraction(x, y, button);
-	    SIDE_TAB.mouseInteraction(x, y, button);
-	}	
-	protected void mouseClickMove(int x, int y, int button, long time) {
-		super.mouseClickMove(x, y, button, time);
-		SIDE_TAB.mouseDrag(x, y, button, time);
-	}	
 }
 
 

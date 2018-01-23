@@ -89,7 +89,7 @@ public class SidePicker {
 	}
 
 	private static Vec3d getMouseVector(float z) {
-		return projectionHelper.unproject(Mouse.getX(), Mouse.getY()-25, z);
+		return projectionHelper.unproject(Mouse.getX(), Mouse.getY(), z);
 	}
 
 	private Vec3d calculateXPoint(Vec3d near, Vec3d diff, double x) {
@@ -104,7 +104,7 @@ public class SidePicker {
 	}
 
 	private Vec3d calculateYPoint(Vec3d near, Vec3d diff, double y) {
-		double p = (y - near.x) / diff.x;
+		double p = (y - near.y) / diff.y;
 
 		double x = near.x + diff.x * p;
 		double z = near.z + diff.z * p;
@@ -177,5 +177,4 @@ public class SidePicker {
 
 		return new HitCoord(minSide, hits.get(minSide));
 	}
-
 }

@@ -181,34 +181,15 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		BATTERY_SLOT = slot;
 	}
 	public void useBattery() {
-		if(SLOTS_INPUT.getStackInSlot(BATTERY_SLOT) != null && SLOTS_INPUT.getStackInSlot(BATTERY_SLOT).getItem() instanceof IEnergyContainerItem && STORAGE.getEnergyStored() < STORAGE.getMaxEnergyStored()) {
+		if(SLOTS_INPUT.getStackInSlot(BATTERY_SLOT) != ItemStack.EMPTY && SLOTS_INPUT.getStackInSlot(BATTERY_SLOT).getItem() instanceof IEnergyContainerItem && STORAGE.getEnergyStored() < STORAGE.getMaxEnergyStored()) {
 			IEnergyContainerItem batteryItem = (IEnergyContainerItem) SLOTS_INPUT.getStackInSlot(BATTERY_SLOT).getItem();
 			if(batteryItem.getEnergyStored(SLOTS_INPUT.getStackInSlot(BATTERY_SLOT)) > 0) {
-				if(STORAGE.getMaxEnergyStored() - STORAGE.getEnergyStored() < STORAGE.getMaxReceive()) {
-					STORAGE.receiveEnergy(batteryItem.extractEnergy(SLOTS_INPUT.getStackInSlot(BATTERY_SLOT), STORAGE.getMaxEnergyStored() - STORAGE.getEnergyStored(), false), false);
-				}else{
-					STORAGE.receiveEnergy(batteryItem.extractEnergy(SLOTS_INPUT.getStackInSlot(BATTERY_SLOT), STORAGE.getMaxReceive(), false), false);		
-				}
+				int maxExtract = batteryItem.extractEnergy(SLOTS_INPUT.getStackInSlot(BATTERY_SLOT), STORAGE.getMaxReceive(), false);
+				int recieved = STORAGE.receiveEnergy(maxExtract, false);
+				batteryItem.extractEnergy(SLOTS_INPUT.getStackInSlot(BATTERY_SLOT), recieved, true);
 			}
 		}
 	}
-	
-	@Override
-	public void readFromSyncNBT(NBTTagCompound nbt) {
-		super.readFromSyncNBT(nbt);
-		STORAGE.readFromNBT(nbt);
-		PROCESSING_TIMER = nbt.getInteger("P_TIMER");
-		MOVE_TIMER = nbt.getInteger("M_TIMER");
-	}
-	@Override
-	public NBTTagCompound writeToSyncNBT(NBTTagCompound nbt) {
-		super.writeToSyncNBT(nbt);
-		STORAGE.writeToNBT(nbt);
-		nbt.setInteger("P_TIMER", PROCESSING_TIMER);
-		nbt.setInteger("M_TIMER", MOVE_TIMER);
-		return nbt;
-	}
-	
     @Override  
 	public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
@@ -239,16 +220,9 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
         STORAGE.readFromNBT(nbt);
 	}
 	
-	public ItemStack[] craftingResults(ItemStack[] items) {
-		return null;
-	}
-	
 	//PROCESSING
 	public ItemStack getResult(ItemStack itemstack) {
 		return null;	
-	}
-	public boolean hasResult(ItemStack itemstack) {
-		return false;	
 	}	
 	public boolean canProcess(ItemStack itemstack) {
 		return false;
@@ -308,6 +282,7 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		}
 		return STORAGE.receiveEnergy(maxReceive, simulate);
 	}
+	
 	/* CAPABILITIES */
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing from) {

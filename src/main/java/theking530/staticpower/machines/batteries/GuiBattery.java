@@ -1,6 +1,5 @@
 package theking530.staticpower.machines.batteries;
 
-import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -11,9 +10,7 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import theking530.staticpower.client.gui.widgets.CustomGuiContainer;
+import theking530.staticpower.client.gui.widgets.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.tabs.GuiPowerControlTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
@@ -21,37 +18,21 @@ import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarFromEnergy
 import theking530.staticpower.machines.batteries.tileentities.TileEntityBattery;
 import theking530.staticpower.utils.GuiTextures;
 
-public class GuiBattery extends CustomGuiContainer {
+public class GuiBattery extends BaseGuiContainer {
 	
 	public GuiPowerBarFromEnergyStorage POWER_BAR;
-	public GuiPowerControlTab POWER_TAB;
-	public GuiSideConfigTab SIDE_TAB;
-	public GuiRedstoneTab REDSTONE_TAB;
+
 	
 	private TileEntityBattery sBattery;
 	public GuiBattery(InventoryPlayer invPlayer, TileEntityBattery teSBattery) {
-		super(new ContainerBattery(invPlayer, teSBattery));
+		super(new ContainerBattery(invPlayer, teSBattery), 176, 166);
 		sBattery = teSBattery;
 		POWER_BAR = new GuiPowerBarFromEnergyStorage(teSBattery);
-		REDSTONE_TAB = new GuiRedstoneTab(guiLeft, guiTop, teSBattery);
-		POWER_TAB = new GuiPowerControlTab(guiLeft, guiTop);
-		SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, teSBattery);
-		this.xSize = 176;
-		this.ySize = 166;
+		getTabManager().registerTab(new GuiRedstoneTab(100, 100, teSBattery));
+		getTabManager().registerTab(new GuiPowerControlTab(100, 100, teSBattery));
+		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teSBattery));
 	}	
-	
-	public void updateScreen() {
-		POWER_TAB.updateTab(width, height, xSize, ySize, fontRenderer, sBattery);
-		SIDE_TAB.updateTab(width, height, xSize, ySize, fontRenderer, sBattery);
-		REDSTONE_TAB.updateTab(width, height, xSize, ySize, fontRenderer, sBattery);
-		if(POWER_TAB.GROWTH_STATE == 1){
-			REDSTONE_TAB.RED_TAB.GROWTH_STATE = 2;
-			SIDE_TAB.BLUE_TAB.GROWTH_STATE = 2;
-		}
-		if(REDSTONE_TAB.GROWTH_STATE == 1) {
-			SIDE_TAB.BLUE_TAB.GROWTH_STATE = 2;
-		}	
-	}
+
 	//Draw Main
 	@Override
 	public void initGui() {
@@ -59,11 +40,6 @@ public class GuiBattery extends CustomGuiContainer {
 		int j = (width - xSize) / 2;
 		int k = (height - ySize) / 2;
 		guiButtons(j, k);
-		POWER_TAB.fieldInit();
-	}
-	@SubscribeEvent
-	public void onRenderTick(TickEvent.RenderTickEvent event) {
-		//System.out.println("HI");
 	}
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String INPUT = (String.valueOf(sBattery.STORAGE.getMaxReceive()) + " RF/t");
@@ -88,9 +64,8 @@ public class GuiBattery extends CustomGuiContainer {
 		this.mc.getTextureManager().bindTexture(GuiTextures.BATTERY_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		POWER_BAR.drawPowerBar(guiLeft + 80, guiTop + 71, 16, 51, 1, f);
-		SIDE_TAB.drawTab();		
-		REDSTONE_TAB.drawTab();
-		POWER_TAB.drawTab();	
+	
+        getTabManager().drawTabs(guiLeft+175, guiTop+10, width, height, f);
 	}
 	public void drawScreen(int par1, int par2, float par3) {
 		super.drawScreen(par1, par2, par3);
@@ -98,10 +73,7 @@ public class GuiBattery extends CustomGuiContainer {
 		this.zLevel = -1.0f;
 		this.drawDefaultBackground();	
 		this.zLevel = 0.0f;
-		
-		this.zLevel = -1.0f;
-		this.drawDefaultBackground();
-		this.zLevel = 0.0f;
+
 		int var1 = (this.width - this.xSize) / 2;
 		int var2 = (this.height - this.ySize) / 2;
 		if (par1 >= 80 + var1 && par2 >= 20 + var2 && par1 <= 96 + var1
@@ -198,19 +170,4 @@ public class GuiBattery extends CustomGuiContainer {
 		}
 
 	}
-	@Override
-	protected void mouseClicked(int x, int y, int button) throws IOException{
-	    super.mouseClicked(x, y, button);
-	    POWER_TAB.mouseInteraction(x, y, button);
-	    REDSTONE_TAB.mouseInteraction(x, y, button);
-	    SIDE_TAB.mouseInteraction(x, y, button);
-	}	
-	protected void mouseClickMove(int x, int y, int button, long time) {
-		super.mouseClickMove(x, y, button, time);
-		SIDE_TAB.mouseDrag(x, y, button, time);
-	}
-	protected void keyTyped(char par1, int par2) throws IOException {
-        super.keyTyped(par1, par2);
-        POWER_TAB.keyboardInteraction(par1, par2);
-    }
 }

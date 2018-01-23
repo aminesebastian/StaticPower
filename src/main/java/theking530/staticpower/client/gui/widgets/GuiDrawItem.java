@@ -32,9 +32,10 @@ public class GuiDrawItem {
         	renderItemModelIntoGUI(new ItemStack(item), guiLeft+x, guiTop+y, zLevel, alpha, render.getItemModelWithOverrides(new ItemStack(item), (World)null, Minecraft.getMinecraft().player));
         }
     }
-    protected static void renderItemModelIntoGUI(ItemStack stack, int x, int y, float zLevel, float alpha, IBakedModel bakedmodel) {       
+    protected static void renderItemModelIntoGUI(ItemStack stack, int x, int y, float zLevel, float alpha, IBakedModel bakedmodel) { 
+        GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f-alpha);
         Minecraft.getMinecraft().getRenderItem().renderItemAndEffectIntoGUI(stack, x, y);
-        
+		GL11.glEnable(GL11.GL_BLEND);
         //Render overlay to fake transparency
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f-alpha);
         GlStateManager.disableTexture2D();    
@@ -50,6 +51,6 @@ public class GuiDrawItem {
         tessellator.draw();
         GlStateManager.enableTexture2D(); 
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-
+		GL11.glDisable(GL11.GL_BLEND);
     }
 }

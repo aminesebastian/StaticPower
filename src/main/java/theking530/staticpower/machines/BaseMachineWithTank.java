@@ -5,10 +5,8 @@ import javax.annotation.Nullable;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
@@ -20,8 +18,7 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler {
 	public int INITIAL_TANK_CAPACITY;
 	public FluidTank TANK;
 	public int FLUID_CONTAINER_SLOT = -1;
-	//public FluidContainerMode FLUID_CONTAINER_MODE = FluidContainerMode.FILL;
-	public int FLUID_TO_CONTAINER_RATE = 10; //1 Bucket
+	public int FLUID_TO_CONTAINER_RATE = 10;
 
 	public int CONTAINER_MOVE_TIMER = 0;
 	public int CONTAINER_MOVE_SPEED = 4;
@@ -63,11 +60,6 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler {
 		}
 	}
 	
-	public void onMachinePlaced(NBTTagCompound nbt) {
-		super.onMachinePlaced(nbt);
-        TANK.readFromNBT(nbt);
-	}	
-   
 	@Override  
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
@@ -80,20 +72,7 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler {
         TANK.writeToNBT(tank);
         nbt.setTag("TANK", tank);
     	return nbt;
-	}
-
-	@Override
-	public void readFromSyncNBT(NBTTagCompound nbt) {
-		super.readFromSyncNBT(nbt);
-		readFromNBT(nbt);
-	}
-	@Override
-	public NBTTagCompound writeToSyncNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		writeToNBT(nbt);
-		return nbt;
-	}
-    
+	}    
 	@Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 		readFromNBT(pkt.getNbtCompound());
@@ -104,17 +83,19 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler {
     	writeToNBT(tag);
     	return new SPacketUpdateTileEntity(pos, getBlockMetadata(), tag);
     }
+	
+    public void onMachinePlaced(NBTTagCompound nbt) {
+		super.onMachinePlaced(nbt);
+        TANK.readFromNBT(nbt);
+	}	
+   
 	public boolean isTankEmpty() {
 		return TANK.getFluidAmount() <= 0 ? true : false;
-	}
-	public boolean tankHasSpace() {
-		return TANK.getFluidAmount() < TANK.getCapacity();
 	}
 	@Override
 	public IFluidTankProperties[] getTankProperties() {
 		return TANK.getTankProperties();
 	}
-
 	@Override
 	public int fill(FluidStack resource, boolean doFill) {
 		if(!getWorld().isRemote) {
@@ -137,9 +118,7 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler {
 		}
 		return TANK.drain(maxDrain, doDrain);
 	}
-	public IFluidTank getFluidTank() {
-		return TANK;
-	}
+
 	public float getFluidLevelScaled(int height) {
 		int capacity = TANK.getCapacity();
 		int volume = TANK.getFluidAmount();

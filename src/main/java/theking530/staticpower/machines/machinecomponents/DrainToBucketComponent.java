@@ -138,9 +138,6 @@ public class DrainToBucketComponent implements IMachineComponentInterface{
 					}
 				}
 			}	
-		}
-		if(FILLED_BUCKET_HANDLER.getStackInSlot(FILLED_BUCKET_SLOT) !=  ItemStack.EMPTY && FILLED_BUCKET_HANDLER.getStackInSlot(FILLED_BUCKET_SLOT).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null) && FILLED_BUCKET_HANDLER.getStackInSlot(FILLED_BUCKET_SLOT).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null) instanceof FluidHandlerItemStack) {
-			FluidHandlerItemStack tempContainer = (FluidHandlerItemStack)FILLED_BUCKET_HANDLER.getStackInSlot(FILLED_BUCKET_SLOT).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
 			if(tempContainer.getFluid() == null) {
 				if(EMPTY_BUCKET_HANDLER.getStackInSlot(EMPTY_BUCKET_SLOT) !=  ItemStack.EMPTY) {
 					if(EMPTY_BUCKET_HANDLER.getStackInSlot(EMPTY_BUCKET_SLOT).isItemEqual(FILLED_BUCKET_HANDLER.getStackInSlot(FILLED_BUCKET_SLOT))) {

@@ -11,13 +11,12 @@ import org.lwjgl.util.vector.Vector3f;
 import com.google.common.base.Preconditions;
 
 public class Trackball {
-	private static FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 	public static class TrackballWrapper {
 		private final Trackball target = new Trackball();
 		private final float radius;
 		private final int mouseButton;
 		private boolean isDragging;
-		
+
 		public TrackballWrapper(int mouseButton, int radiusPx) {
 			this.mouseButton = mouseButton;
 			this.radius = radiusPx;
@@ -46,7 +45,7 @@ public class Trackball {
 
 	private Vector3f dragStart;
 	private Matrix4f lastTransform;
-
+	private static FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 	public Trackball() {
 		lastTransform = new Matrix4f();
 	}
@@ -86,7 +85,11 @@ public class Trackball {
 	}
 
 	public void applyTransform(float mouseX, float mouseY, boolean isDragging) {
-		loadMatrix(isDragging? getTransform(mouseX, mouseY) : lastTransform);
+		Matrix4f transform = isDragging? getTransform(mouseX, mouseY) : lastTransform;
+		
+		transform.store(matrixBuffer);
+		matrixBuffer.flip();
+		GL11.glMultMatrix(matrixBuffer);
 	}
 
 	public void startDrag(float mouseX, float mouseY) {
@@ -96,10 +99,4 @@ public class Trackball {
 	public void endDrag(float mouseX, float mouseY) {
 		lastTransform = getTransform(mouseX, mouseY);
 	}
-	public static synchronized void loadMatrix(Matrix4f transform) {
-		transform.store(matrixBuffer);
-		matrixBuffer.flip();
-		GL11.glMultMatrix(matrixBuffer);
-	}
-
 }

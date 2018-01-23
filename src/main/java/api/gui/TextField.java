@@ -2,6 +2,7 @@ package api.gui;
 
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
@@ -18,8 +19,7 @@ public class TextField extends Gui
     private FontRenderer FONT_RENDERER;
     public int xPosition;
     public int yPosition;
-    public int xPos;
-    public int yPos;
+
     /** The width of this text field. */
     public int width;
     public int height;
@@ -43,21 +43,16 @@ public class TextField extends Gui
     private int disabledColor = 7368816;
     /** True if this textbox is visible */
     private boolean visible = true;
-    private static final String __OBFID = "CL_00000670";
 
     public TextField(int p_i1032_2_, int p_i1032_3_, int p_i1032_4_, int p_i1032_5_) {
-        this.xPos = p_i1032_2_;
-        this.yPos = p_i1032_3_;
+        this.xPosition = p_i1032_2_;
+        this.yPosition = p_i1032_3_;
         this.width = p_i1032_4_;
         this.height = p_i1032_5_;
+    	this.FONT_RENDERER = Minecraft.getMinecraft().fontRenderer;
     }
-    public void updateMethod(FontRenderer fontrenderer, int width, int height, int xSize, int ySize) {
-    	this.FONT_RENDERER = fontrenderer;
+    public void updateMethod() {
     	updateCursorCounter();
-		int j = (width - xSize) / 2;
-		int k = (height - ySize) / 2;
-    	this.xPosition = j + xPos;
-    	this.yPosition = k + yPos;
     }
     /**
      * Increments the cursor counter
@@ -112,7 +107,6 @@ public class TextField extends Gui
         int i = this.cursorPosition < this.selectionEnd ? this.cursorPosition : this.selectionEnd;
         int j = this.cursorPosition < this.selectionEnd ? this.selectionEnd : this.cursorPosition;
         int k = this.maxStringLength - this.text.length() - (i - this.selectionEnd);
-        boolean flag = false;
 
         if (this.text.length() > 0)
         {

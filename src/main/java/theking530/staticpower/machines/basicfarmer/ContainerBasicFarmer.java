@@ -30,7 +30,7 @@ public class ContainerBasicFarmer extends Container {
 		this.addSlotToContainer(new SlotItemHandler(teFarmer.SLOTS_INPUT, 2, 7, 17) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
-		          return itemStack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+		          return itemStack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
 		        }
 		});
 		this.addSlotToContainer(new SlotItemHandler(teFarmer.SLOTS_OUTPUT, 9, 7, 47) {

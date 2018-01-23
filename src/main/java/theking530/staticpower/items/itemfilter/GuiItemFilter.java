@@ -1,30 +1,31 @@
 package theking530.staticpower.items.itemfilter;
 
-import java.io.IOException;
+import java.util.Arrays;
 
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import theking530.staticpower.client.gui.widgets.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.utils.GuiTextures;
 
-public class GuiItemFilter extends GuiContainer{
+public class GuiItemFilter extends BaseGuiContainer {
 	
-	public GuiInfoTab INFO_TAB = new GuiInfoTab(guiLeft, guiTop);
+	public GuiInfoTab INFO_TAB;
 	private InventoryItemFilter INV_FILTER;
 	private FilterTier TIER;
 	
 	public GuiItemFilter(InventoryPlayer invPlayer, FilterTier tier, InventoryItemFilter invFilter) {
-		super(new ContainerItemFilter(invPlayer, invFilter, tier));
-		this.xSize = 176;
-		this.ySize = 205;	
+		super(new ContainerItemFilter(invPlayer, invFilter, tier), 176, 205);
 		INV_FILTER = invFilter;
 		TIER = tier;
+		
+		INFO_TAB = new GuiInfoTab(100, 100);
+		getTabManager().registerTab(INFO_TAB);
 	}
 	@Override
 	public void initGui() {
@@ -85,20 +86,11 @@ public class GuiItemFilter extends GuiContainer{
 
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		
-    	//String text = ("Filter ites going into an inventory.");
-    	//	String[] splitMsg = text.split("=");
+    	String text = ("Filter items going into an inventory.");
+    		String[] splitMsg = text.split("=");
 		
-		//INFO_TAB.drawTab(Arrays.asList(splitMsg));
+		INFO_TAB.setText(INV_FILTER.ITEMSTACK.getDisplayName(), Arrays.asList(splitMsg));
 	}
-	@Override
-	protected void mouseClicked(int x, int y, int button) throws IOException{
-	    super.mouseClicked(x, y, button);
-	    INFO_TAB.mouseInteraction(x, y, button);
-	}	
-	protected void mouseClickMove(int x, int y, int button, long time) {
-		super.mouseClickMove(x, y, button, time);
-	}	
-	
 }
 
 

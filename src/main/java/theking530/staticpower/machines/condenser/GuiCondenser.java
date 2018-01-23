@@ -1,15 +1,13 @@
 package theking530.staticpower.machines.condenser;
 
-import java.io.IOException;
-
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import theking530.staticpower.client.gui.widgets.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.buttons.ArrowButton;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
@@ -19,7 +17,7 @@ import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent.FluidContainerInteractionMode;
 import theking530.staticpower.utils.GuiTextures;
 
-public class GuiCondenser extends GuiContainer{
+public class GuiCondenser extends BaseGuiContainer{
 		
 	public GuiSideConfigTab SIDE_TAB;
 	public GuiRedstoneTab REDSTONE_TAB;
@@ -28,15 +26,13 @@ public class GuiCondenser extends GuiContainer{
 	private TileEntityCondenser DISTILLERY;
 	
 	public GuiCondenser(InventoryPlayer invPlayer, TileEntityCondenser teFluidGenerator) {
-		super(new ContainerCondenser(invPlayer, teFluidGenerator));
+		super(new ContainerCondenser(invPlayer, teFluidGenerator), 214, 173);
 		DISTILLERY = teFluidGenerator;
 		FLUIDBAR = new GuiFluidBarFromTank(teFluidGenerator.TANK);
 		FLUIDBAR2 = new GuiFluidBarFromTank(teFluidGenerator.TANK2);
-		REDSTONE_TAB = new GuiRedstoneTab(guiLeft, guiTop, teFluidGenerator);
-		SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, teFluidGenerator);
-		this.xSize = 214;
-		this.ySize = 173;
 		
+		getTabManager().registerTab(new GuiRedstoneTab(100, 100, teFluidGenerator));
+		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teFluidGenerator));	
 	}
 	@Override
 	public void initGui() {
@@ -66,17 +62,6 @@ public class GuiCondenser extends GuiContainer{
 		    }
 		}
 	}	
-	
-	public void updateScreen() {
-		SIDE_TAB.updateTab(width+33, height+80, xSize, ySize, fontRenderer, DISTILLERY);
-		REDSTONE_TAB.updateTab(width+33, height+80, xSize, ySize, fontRenderer, DISTILLERY);
-		if(SIDE_TAB.GROWTH_STATE == 1){
-			REDSTONE_TAB.RED_TAB.GROWTH_STATE = 2;
-		}
-		if(REDSTONE_TAB.GROWTH_STATE == 1) {
-			SIDE_TAB.BLUE_TAB.GROWTH_STATE = 2;
-		}
-	}
 	public void drawScreen(int par1, int par2, float par3) {
     	super.drawScreen(par1, par2, par3);
 		int var1 = (this.width - this.xSize) / 2;
@@ -110,21 +95,11 @@ public class GuiCondenser extends GuiContainer{
 			int j1 = DISTILLERY.getProgressScaled(34);
 			GuiFluidBar.drawFluidBar(DISTILLERY.PROCESSING_STACK, 1000, 1000, guiLeft + 90, guiTop + 49, 1, j1, 5);
 		}
-		SIDE_TAB.drawTab();	
-		REDSTONE_TAB.drawTab();
-
+		
+        getTabManager().drawTabs(guiLeft+175, guiTop+10, width, height, f);
+        
 		FLUIDBAR.drawFluidBar(guiLeft + 71, guiTop + 77, 16, 60, this.zLevel);
 		FLUIDBAR2.drawFluidBar(guiLeft + 127, guiTop + 77, 16, 60, this.zLevel);
-	}
-	@Override
-	protected void mouseClicked(int x, int y, int button) throws IOException{
-	    super.mouseClicked(x, y, button);
-	    REDSTONE_TAB.mouseInteraction(x, y, button);
-	    SIDE_TAB.mouseInteraction(x, y, button);
-	}	
-	protected void mouseClickMove(int x, int y, int button, long time) {
-		super.mouseClickMove(x, y, button, time);
-		SIDE_TAB.mouseDrag(x, y, button, time);
 	}
 }
 

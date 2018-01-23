@@ -21,7 +21,6 @@ import theking530.staticpower.utils.InventoryUtilities;
 import theking530.staticpower.utils.RedstoneModeList.RedstoneMode;
 import theking530.staticpower.utils.SideModeList;
 import theking530.staticpower.utils.SideModeList.Mode;
-import theking530.staticpower.utils.SidePicker.Side;
 import theking530.staticpower.utils.SideUtils;
 import theking530.staticpower.utils.SideUtils.BlockSide;
 
@@ -287,17 +286,7 @@ public class BaseTileEntity extends TileEntity implements ITickable {
     	}
 		return null;
     }
-    public Mode getSideModeFromSide(Side side) {
-    	switch(side) {
-	    	case XPos : return SIDE_MODES[5];
-	    	case XNeg : return SIDE_MODES[4];
-	    	case YPos : return SIDE_MODES[1];
-	    	case YNeg : return SIDE_MODES[0];
-	    	case ZPos : return SIDE_MODES[3];
-	    	case ZNeg : return SIDE_MODES[2];
-    	}
-		return null;	
-    }
+
 	public boolean canSlotAcceptItemstack(ItemStack item, ItemStack slot) {
 		if(slot == ItemStack.EMPTY) {
 			return true;

@@ -3,7 +3,6 @@ package theking530.staticpower.utils;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
-import theking530.staticpower.utils.SidePicker.Side;
 
 
 public class SideUtils {
@@ -63,24 +62,6 @@ public class SideUtils {
 			}
 		}
 		return null;
-	}
-	public static EnumFacing toEnumFacing(Side sIDE) {
-		switch (sIDE) {
-			case XNeg:
-				return EnumFacing.WEST;
-			case XPos:
-				return EnumFacing.EAST;
-			case YNeg:
-				return EnumFacing.DOWN;
-			case YPos:
-				return EnumFacing.UP;
-			case ZNeg:
-				return EnumFacing.NORTH;
-			case ZPos:
-				return EnumFacing.SOUTH;
-			default:
-				return null;
-		}
 	}
 	public static EnumFacing getAdjustedEnumFacing(EnumFacing facing, EnumFacing horizontal) {
 		int metadata = horizontal.ordinal() - 2;

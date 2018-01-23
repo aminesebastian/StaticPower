@@ -1,37 +1,31 @@
 package theking530.staticpower.tileentity.solderingtable;
 
-import java.io.IOException;
-
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import theking530.staticpower.client.gui.widgets.CustomGuiContainer;
+import theking530.staticpower.client.gui.widgets.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.GuiDrawItem;
 import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.utils.GuiTextures;
 
-public class GuiSolderingTable extends CustomGuiContainer{
+public class GuiSolderingTable extends BaseGuiContainer {
 
-	public GuiSideConfigTab SIDE_TAB;
 	private TileEntitySolderingTable TABLE;
 	public GuiDrawItem DRAW_ITEM = new GuiDrawItem(true);
 	
 	public GuiSolderingTable(InventoryPlayer invPlayer, TileEntitySolderingTable teTable) {
-		super(new ContainerSolderingTable(invPlayer, teTable));
+		super(new ContainerSolderingTable(invPlayer, teTable), 176, 179);
 		TABLE = teTable;	
-		xSize = 176;
-		ySize = 179;
-		SIDE_TAB = new GuiSideConfigTab(guiLeft, guiTop, teTable);
+
+		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teTable));
 	}
-	public void updateScreen() {
-		SIDE_TAB.updateTab(width, height, xSize, ySize, fontRenderer, TABLE);
-	}	
 	public void drawScreen(int par1, int par2, float par3) {
     	super.drawScreen(par1, par2, par3);
     	drawRect(guiLeft + 82, guiTop + 38, 176, 69, 3394815);
+
 	}
 
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
@@ -45,18 +39,11 @@ public class GuiSolderingTable extends CustomGuiContainer{
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.SOLDERING_TABLE_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-    	GuiDrawItem.drawItem(ModItems.SolderingIron, guiLeft, guiTop, 11, 17, this.zLevel, 0.5f);
-		SIDE_TAB.drawTab();		
+    	GuiDrawItem.drawItem(ModItems.SolderingIron, guiLeft, guiTop, 11, 17, this.zLevel, 0.5f);	
+    	
+		
+        getTabManager().drawTabs(guiLeft+175, guiTop+10, width, height, f);
 	}
-	@Override
-	protected void mouseClicked(int x, int y, int button) throws IOException{
-	    super.mouseClicked(x, y, button);
-	    SIDE_TAB.mouseInteraction(x, y, button);
-	}	
-	protected void mouseClickMove(int x, int y, int button, long time) {
-		super.mouseClickMove(x, y, button, time);
-		SIDE_TAB.mouseDrag(x, y, button, time);
-	}	
 }
 
 

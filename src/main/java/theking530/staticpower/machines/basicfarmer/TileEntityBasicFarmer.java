@@ -110,15 +110,12 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
-		if(CURRENT_COORD != null) {
-			nbt.setInteger("CURR_X", CURRENT_COORD.getX());
-			nbt.setInteger("CURR_Y", CURRENT_COORD.getY());
-			nbt.setInteger("CURR_Z", CURRENT_COORD.getZ());
-		}
-	
+		nbt.setInteger("CURR_X", CURRENT_COORD.getX());
+		nbt.setInteger("CURR_Y", CURRENT_COORD.getY());
+		nbt.setInteger("CURR_Z", CURRENT_COORD.getZ());
 		nbt.setInteger("FARMED_COUNT", FARMED_STACKS.size());
 		for(int i=0; i<FARMED_STACKS.size(); i++) {
-			nbt.setTag("FARMED" + i, FARMED_STACKS.get(i).writeToNBT(nbt));
+			nbt.setTag("FARMED" + i, FARMED_STACKS.get(i).writeToNBT(new NBTTagCompound()));
 		}
     	return nbt;
 	}

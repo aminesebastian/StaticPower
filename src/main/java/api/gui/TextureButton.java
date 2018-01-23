@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
-import theking530.staticpower.assists.Reference;
+import theking530.staticpower.utils.GuiTextures;
 import theking530.staticpower.utils.StaticVertexBuffer;
 
 public class TextureButton extends Gui{
@@ -20,7 +20,7 @@ public class TextureButton extends Gui{
 	public int BUTTON_YPOS;
 	private int GUI_LEFT;
 	private int GUI_TOP;
-	private ResourceLocation texture;
+
 	public int GROWTH_STATE;
 	private int WIDTH;
 	private int HEIGHT;
@@ -30,8 +30,6 @@ public class TextureButton extends Gui{
 	public boolean IS_VISIBLE = true;
 	public boolean CLICKED = false;
 	
-	private ResourceLocation base = new ResourceLocation(Reference.MODID + ":" + "/textures/gui/Button.png");
-	private ResourceLocation hover = new ResourceLocation(Reference.MODID + ":" + "/textures/gui/ButtonHover.png");
 	
 	public TextureButton(int guiLeft, int guiTop, int width, int height, int xPos, int yPos, ResourceLocation texture) {
 		this.GUI_LEFT = guiLeft;
@@ -39,8 +37,7 @@ public class TextureButton extends Gui{
 		this.BUTTON_WIDTH = width;
 		this.BUTTON_HEIGHT = height;
 		this.BUTTON_XPOS = xPos;
-		this.BUTTON_YPOS = yPos;
-		this.texture = texture;		
+		this.BUTTON_YPOS = yPos;	
 	}
 	public void setInfo(int width, int height, int xSize, int ySize) {
 		this.WIDTH = width;
@@ -60,11 +57,11 @@ public class TextureButton extends Gui{
         tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         
 		if(IS_VISIBLE) {
-		if(CLICKED == true) {
-			Minecraft.getMinecraft().getTextureManager().bindTexture(hover);
-		}else{
-			Minecraft.getMinecraft().getTextureManager().bindTexture(base);
-		}	
+			if(CLICKED == true) {
+				Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.BUTTON_HOVER);
+			}else{
+				Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.BUTTON);
+			}	
 
 		//Top
 		StaticVertexBuffer.pos(buttonLeft+BUTTON_WIDTH, buttonTop+2, 0, 0, .1);
@@ -104,7 +101,6 @@ public class TextureButton extends Gui{
     	//soundHandler.playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
     }
 	public void buttonMouseClick(int par1, int par2) {
-		int i = 0;
 		int j = (WIDTH - xSIZE) / 2;
 		int k = (HEIGHT - ySIZE) / 2;
 		if(par1 > j + BUTTON_XPOS && par1 < j + BUTTON_XPOS + 24) {
