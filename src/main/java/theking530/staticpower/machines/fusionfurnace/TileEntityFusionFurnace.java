@@ -35,7 +35,7 @@ public class TileEntityFusionFurnace extends BaseMachine {
 		if(hasResult(inputs) == true) {
 			if(getFusionResult(inputs).getOutputItem() != null) {
 				FusionFurnaceRecipeWrapper tempWrapper = getFusionResult(inputs);
-				if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, 0, tempWrapper.getOutputItem())) {
+				if(InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 0, tempWrapper.getOutputItem())) {
 					if(STORAGE.getEnergyStored() >= getProcessingCost()) {
 						return true;
 					}
@@ -53,19 +53,19 @@ public class TileEntityFusionFurnace extends BaseMachine {
 				MOVE_TIMER++;
 			}else{
 				if(getInputStack(0) != ItemStack.EMPTY) {
-					moveItem(SLOTS_INPUT, 0, SLOTS_INTERNAL, 0);
+					moveItem(slotsInput, 0, slotsInternal, 0);
 				}
 				if(getInputStack(1)!= ItemStack.EMPTY) {
-					moveItem(SLOTS_INPUT, 1, SLOTS_INTERNAL, 1);
+					moveItem(slotsInput, 1, slotsInternal, 1);
 				}
 				if(getInputStack(2) != ItemStack.EMPTY) {
-					moveItem(SLOTS_INPUT, 2, SLOTS_INTERNAL, 2);
+					moveItem(slotsInput, 2, slotsInternal, 2);
 				}
 				if(getInputStack(3) != ItemStack.EMPTY) {
-					moveItem(SLOTS_INPUT, 3, SLOTS_INTERNAL, 3);
+					moveItem(slotsInput, 3, slotsInternal, 3);
 				}
 				if(getInputStack(4) != ItemStack.EMPTY) {
-					moveItem(SLOTS_INPUT, 4, SLOTS_INTERNAL, 4);
+					moveItem(slotsInput, 4, slotsInternal, 4);
 				}
 				MOVE_TIMER=0;
 				PROCESSING_TIMER = 1;
@@ -76,8 +76,8 @@ public class TileEntityFusionFurnace extends BaseMachine {
 				useEnergy(getProcessingCost() / PROCESSING_TIME);
 				PROCESSING_TIMER++;
 			}else{
-				if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, 0, getFusionResult(getInternalStack(0), getInternalStack(1), getInternalStack(2), getInternalStack(3), getInternalStack(4)).getOutputItem())) {
-					SLOTS_OUTPUT.insertItem(0, getFusionResult(getInternalStack(0), getInternalStack(1), getInternalStack(2), getInternalStack(3), getInternalStack(4)).getOutputItem().copy(), false);
+				if(InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 0, getFusionResult(getInternalStack(0), getInternalStack(1), getInternalStack(2), getInternalStack(3), getInternalStack(4)).getOutputItem())) {
+					slotsOutput.insertItem(0, getFusionResult(getInternalStack(0), getInternalStack(1), getInternalStack(2), getInternalStack(3), getInternalStack(4)).getOutputItem().copy(), false);
 					setInternalStack(0, ItemStack.EMPTY);
 					setInternalStack(1, ItemStack.EMPTY);
 					setInternalStack(2, ItemStack.EMPTY);

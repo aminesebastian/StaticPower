@@ -18,7 +18,7 @@ import theking530.staticpower.utils.InventoryUtilities;
 
 public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<EntityItem> {
 
-	private int RANGE = 10;
+	private float RANGE = 10;
 	
 	public TileEntityVacuumChest() {
 		initializeBasicTileEntity(1, 0, 30);
@@ -36,11 +36,11 @@ public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<E
 			double z = (pos.getZ() + 0.5D - entity.posZ);
 			EntityItem item = entity;
 			ItemStack stack = item.getItem().copy();
-			if(canAcceptItem(stack) && doesItemPassFilter(stack)) {
+			if(InventoryUtilities.canFullyInsertItemIntoInventory(slotsOutput, stack) && doesItemPassFilter(stack)) {
 				double distance = Math.sqrt(x * x + y * y + z * z);
 				if (distance < 1.1) {
-					if(InventoryUtilities.canFullyInsertItemIntoInventory(SLOTS_OUTPUT, stack)) {
-						InventoryUtilities.insertItemIntoInventory(SLOTS_OUTPUT, stack);
+					if(InventoryUtilities.canFullyInsertItemIntoInventory(slotsOutput, stack)) {
+						InventoryUtilities.insertItemIntoInventory(slotsOutput, stack);
 						item.setDead();
 						getWorld().playSound((double)pos.getX(), (double)pos.getY(), (double)pos.getZ(), SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 0.5F, 1.0F, false);
 					}
@@ -55,14 +55,6 @@ public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<E
 				}
 			}
 		}
-	}
-	public boolean canAcceptItem(ItemStack stack) {
-		for(int i=0; i<27; i++) {
-			if(canSlotAcceptItemstack(stack, getOutputStack(i))) {
-				return true;
-			}
-		}
-		return false;
 	}
 	public boolean hasFilter() {
 		if(getInternalStack(0) != ItemStack.EMPTY) {
@@ -92,7 +84,7 @@ public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<E
 	@SuppressWarnings("unchecked")
 	public <T> T getCapability(Capability<T> capability, net.minecraft.util.EnumFacing facing){
     	if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-    		return (T) SLOTS_OUTPUT;
+    		return (T) slotsOutput;
     	}
     	return super.getCapability(capability, facing);
     }
@@ -104,5 +96,8 @@ public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<E
 	@Override
 	public boolean apply(EntityItem input) {
 		return true;
+	}
+	public float getRadius() {
+		return RANGE/2.0f;
 	}
 }

@@ -28,25 +28,28 @@ public abstract class BaseGuiTab extends Gui {
 		}
 	}
 	
-	protected int TAB_WIDTH;
-	protected int TAB_HEIGHT;
-	protected int TAB_XPOS;
-	protected int TAB_YPOS;
+	protected int tabWidth;
+	protected int tabHeight;
+	protected int xPosition;
+	protected int yPosition;
 
-	protected float TAB_ANIMATION = 0;
-	protected float TAB_ANIMATION_SPEED = 5.0f;
-	protected Item ITEM;
-	protected ResourceLocation TAB_TEXTURE;
-	protected TabState TAB_STATE;
+	private float currentWidth;
+	private float currentHeight;
 	
-	private GuiTabManager TAB_MANAGER;
+	protected float animationTimer = 0;
+	protected float animationTime = 5.0f;
+	protected Item itemIcon;
+	protected ResourceLocation tabTexture;
+	protected TabState tabState;
+	
+	private GuiTabManager owningManager;
 	
 	public BaseGuiTab(int tabWidth, int tabHeight, ResourceLocation texture, Item item) {
-		TAB_WIDTH = tabWidth;
-		TAB_HEIGHT = tabHeight;
-		ITEM = item;		
-		TAB_TEXTURE = texture;
-		TAB_STATE = TabState.CLOSED;
+		this.tabWidth = tabWidth;
+		this.tabHeight = tabHeight;
+		itemIcon = item;		
+		tabTexture = texture;
+		tabState = TabState.CLOSED;
 	}
 	public BaseGuiTab(int tabWidth, int tabHeight, ResourceLocation texture, Block block) {
 		this(tabWidth, tabHeight, texture, Item.getItemFromBlock(block));
@@ -55,23 +58,23 @@ public abstract class BaseGuiTab extends Gui {
 	public void update(int xPos, int yPos, float partialTicks) {
 		updateAnimation(partialTicks);
 		
-		TAB_XPOS = xPos;
-		TAB_YPOS = yPos;
+		xPosition = xPos;
+		yPosition = yPos;
 		
 
 		drawTab(xPos, yPos, partialTicks);
 		drawExtra(xPos, yPos, partialTicks);	
 	}
 	public void mouseInteraction(int mouseX, int mouseY, int button) {
-		if(mouseX >  TAB_XPOS && mouseX <  TAB_XPOS + 24) {
-	    	if(mouseY >  TAB_YPOS && mouseY <  TAB_YPOS + 24) {
-	    		if(TAB_STATE == TabState.CLOSED) {
-	    			TAB_STATE = TabState.OPENING;
-		    		TAB_MANAGER.tabOpening(this);
+		if(mouseX >  xPosition && mouseX <  xPosition + 24) {
+	    	if(mouseY >  yPosition && mouseY <  yPosition + 24) {
+	    		if(tabState == TabState.CLOSED) {
+	    			tabState = TabState.OPENING;
+		    		owningManager.tabOpening(this);
 	    		}
-	    		if(TAB_STATE == TabState.OPEN) {
-	    			TAB_STATE = TabState.CLOSING;
-	    			TAB_MANAGER.tabClosing(this);
+	    		if(tabState == TabState.OPEN) {
+	    			tabState = TabState.CLOSING;
+	    			owningManager.tabClosing(this);
 	    		}
 	    	}
 	    }
@@ -90,30 +93,30 @@ public abstract class BaseGuiTab extends Gui {
 		}
 	}
 	public boolean isOpen() {
-		return TAB_STATE == TabState.OPEN;
+		return tabState == TabState.OPEN;
 	}
 	public boolean isClosed() {
-		return TAB_STATE == TabState.CLOSED;
+		return tabState == TabState.CLOSED;
 	}
 	public TabState getTabState() {
-		return TAB_STATE;
+		return tabState;
 	}
 	public boolean setTabState(TabState newState) {
 		if(newState == TabState.CLOSED || newState == TabState.CLOSING) {
 			if(getTabState() == TabState.OPEN) {
-				TAB_STATE = TabState.CLOSING;
+				tabState = TabState.CLOSING;
 				return true;
 			}
 		}else if(newState == TabState.OPEN || newState == TabState.OPENING) {
 			if(getTabState() == TabState.CLOSED) {
-				TAB_STATE = TabState.OPENING;
+				tabState = TabState.OPENING;
 				return true;
 			}
 		}
 		return false;
 	}
 	public void setManager(GuiTabManager manager) {
-		TAB_MANAGER = manager;
+		owningManager = manager;
 	}
 	
 	protected abstract void drawExtra(int xPos, int yPos, float partialTicks);
@@ -122,25 +125,25 @@ public abstract class BaseGuiTab extends Gui {
 	protected abstract void handleExtraClickMouseMove(int mouseX, int mouseY, int button, long time);
 	
 	private void updateAnimation(float partialTicks) {
-		if(TAB_STATE == TabState.OPENING && TAB_ANIMATION < TAB_ANIMATION_SPEED) {
-			TAB_ANIMATION = Math.min(TAB_ANIMATION_SPEED, TAB_ANIMATION + partialTicks*2);
-			if(TAB_ANIMATION == TAB_ANIMATION_SPEED) {
-				TAB_STATE = TabState.OPEN;
+		if(tabState == TabState.OPENING && animationTimer < animationTime) {
+			animationTimer = Math.min(animationTime, animationTimer + partialTicks*2);
+			if(animationTimer == animationTime) {
+				tabState = TabState.OPEN;
 			}
 		}
-		if(TAB_STATE == TabState.CLOSING && TAB_ANIMATION > 0) {
-			TAB_ANIMATION = Math.max(0, TAB_ANIMATION - partialTicks*2);
-			if(TAB_ANIMATION == 0) {
-				TAB_STATE = TabState.CLOSED;
+		if(tabState == TabState.CLOSING && animationTimer > 0) {
+			animationTimer = Math.max(0, animationTimer - partialTicks*2);
+			if(animationTimer == 0) {
+				tabState = TabState.CLOSED;
 			}
 		}
-		if(TAB_STATE == TabState.CLOSING && TAB_ANIMATION <=  0) {
-			TAB_STATE = TabState.CLOSED;
-    		TAB_MANAGER.tabClosed(this);
+		if(tabState == TabState.CLOSING && animationTimer <=  0) {
+			tabState = TabState.CLOSED;
+    		owningManager.tabClosed(this);
 		}
-		if(TAB_STATE == TabState.OPENING && TAB_ANIMATION >= TAB_ANIMATION_SPEED) {
-			TAB_STATE = TabState.OPEN;
-    		TAB_MANAGER.tabOpened(this);
+		if(tabState == TabState.OPENING && animationTimer >= animationTime) {
+			tabState = TabState.OPEN;
+    		owningManager.tabOpened(this);
 		}
 	}
 	private void drawTab(int xPos, int yPos, float partialTicks) {
@@ -148,9 +151,9 @@ public abstract class BaseGuiTab extends Gui {
 		drawButtonIcon(xPos, yPos, partialTicks);
 	}
 	private void drawButtonIcon(int xPos, int yPos, float partialTicks) {
-		if(ITEM != null) {
+		if(itemIcon != null) {
 	        GlStateManager.disableDepth();
-	        Minecraft.getMinecraft().getRenderItem().renderItemAndEffectIntoGUI(new ItemStack(ITEM), xPos+3, yPos+4);
+	        Minecraft.getMinecraft().getRenderItem().renderItemAndEffectIntoGUI(new ItemStack(itemIcon), xPos+3, yPos+4);
 		}
 	}
 	private void drawBaseTab(int xPos, int yPos, float partialTicks) {
@@ -159,51 +162,53 @@ public abstract class BaseGuiTab extends Gui {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder tes = tessellator.getBuffer();
         tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		Minecraft.getMinecraft().getTextureManager().bindTexture(TAB_TEXTURE);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(tabTexture);
 		
-
+		currentWidth = ((tabWidth*animationTimer/animationTime));
+		currentHeight = ((tabHeight*animationTimer/animationTime));
+		
 		//Top
-		StaticVertexBuffer.pos(tabLeft+20+(TAB_WIDTH*TAB_ANIMATION/TAB_ANIMATION_SPEED), tabTop+3, 0, .976, .03);
-		StaticVertexBuffer.pos(tabLeft+20+(TAB_WIDTH*TAB_ANIMATION/TAB_ANIMATION_SPEED), tabTop, 0, .976, 0);
+		StaticVertexBuffer.pos(tabLeft+20+(tabWidth*animationTimer/animationTime), tabTop+3, 0, .976, .03);
+		StaticVertexBuffer.pos(tabLeft+20+(tabWidth*animationTimer/animationTime), tabTop, 0, .976, 0);
 		StaticVertexBuffer.pos(tabLeft+1, tabTop, 0, 0, 0);
 		StaticVertexBuffer.pos(tabLeft+1, tabTop+3, 0, 0, .03);
 		
 		//Bottom
-		StaticVertexBuffer.pos(tabLeft+21+(TAB_WIDTH*TAB_ANIMATION/TAB_ANIMATION_SPEED), tabTop+24+(TAB_HEIGHT*TAB_ANIMATION/TAB_ANIMATION_SPEED), 0, .976, 1);
-		StaticVertexBuffer.pos(tabLeft+21+(TAB_WIDTH*TAB_ANIMATION/TAB_ANIMATION_SPEED), tabTop+21+(TAB_HEIGHT*TAB_ANIMATION/TAB_ANIMATION_SPEED), 0, .976, .965);
-		StaticVertexBuffer.pos(tabLeft+1, tabTop+21+(TAB_HEIGHT*TAB_ANIMATION/TAB_ANIMATION_SPEED), 0, 0, .965);
-		StaticVertexBuffer.pos(tabLeft+1, tabTop+24+(TAB_HEIGHT*TAB_ANIMATION/TAB_ANIMATION_SPEED), 0, 0, 1);
+		StaticVertexBuffer.pos(tabLeft+21+(tabWidth*animationTimer/animationTime), tabTop+24+(tabHeight*animationTimer/animationTime), 0, .976, 1);
+		StaticVertexBuffer.pos(tabLeft+21+(tabWidth*animationTimer/animationTime), tabTop+21+(tabHeight*animationTimer/animationTime), 0, .976, .965);
+		StaticVertexBuffer.pos(tabLeft+1, tabTop+21+(tabHeight*animationTimer/animationTime), 0, 0, .965);
+		StaticVertexBuffer.pos(tabLeft+1, tabTop+24+(tabHeight*animationTimer/animationTime), 0, 0, 1);
 		
 		//Right Side
-		StaticVertexBuffer.pos(tabLeft+23.8+(TAB_WIDTH*TAB_ANIMATION/TAB_ANIMATION_SPEED), tabTop+22+(TAB_HEIGHT*TAB_ANIMATION/TAB_ANIMATION_SPEED), 0, 1, 0.035);
-		StaticVertexBuffer.pos(tabLeft+23.8+(TAB_WIDTH*TAB_ANIMATION/TAB_ANIMATION_SPEED), tabTop+4, 0, 1, .95);
-		StaticVertexBuffer.pos(tabLeft+21+(TAB_WIDTH*TAB_ANIMATION/TAB_ANIMATION_SPEED), tabTop+4, 0, .976, .95);
-		StaticVertexBuffer.pos(tabLeft+21+(TAB_WIDTH*TAB_ANIMATION/TAB_ANIMATION_SPEED), tabTop+22+(TAB_HEIGHT*TAB_ANIMATION/TAB_ANIMATION_SPEED), 0, .976, 0.035);
+		StaticVertexBuffer.pos(tabLeft+23.8+(tabWidth*animationTimer/animationTime), tabTop+22+(tabHeight*animationTimer/animationTime), 0, 1, 0.035);
+		StaticVertexBuffer.pos(tabLeft+23.8+(tabWidth*animationTimer/animationTime), tabTop+4, 0, 1, .95);
+		StaticVertexBuffer.pos(tabLeft+21+(tabWidth*animationTimer/animationTime), tabTop+4, 0, .976, .95);
+		StaticVertexBuffer.pos(tabLeft+21+(tabWidth*animationTimer/animationTime), tabTop+22+(tabHeight*animationTimer/animationTime), 0, .976, 0.035);
 		
 		//Body
-		StaticVertexBuffer.pos(tabLeft+21+(TAB_WIDTH*TAB_ANIMATION/TAB_ANIMATION_SPEED), tabTop+21+(TAB_HEIGHT*TAB_ANIMATION/TAB_ANIMATION_SPEED), 0, .976, 0.035);
-		StaticVertexBuffer.pos(tabLeft+21+(TAB_WIDTH*TAB_ANIMATION/TAB_ANIMATION_SPEED), tabTop+3, 0, .976, .965);
+		StaticVertexBuffer.pos(tabLeft+21+(tabWidth*animationTimer/animationTime), tabTop+21+(tabHeight*animationTimer/animationTime), 0, .976, 0.035);
+		StaticVertexBuffer.pos(tabLeft+21+(tabWidth*animationTimer/animationTime), tabTop+3, 0, .976, .965);
 		StaticVertexBuffer.pos(tabLeft+1, tabTop+3, 0, 0, .965);
-		StaticVertexBuffer.pos(tabLeft+1, tabTop+21+(TAB_HEIGHT*TAB_ANIMATION/TAB_ANIMATION_SPEED), 0, 0, 0.035);
+		StaticVertexBuffer.pos(tabLeft+1, tabTop+21+(tabHeight*animationTimer/animationTime), 0, 0, 0.035);
 		
 		//Bottom Corner
-		StaticVertexBuffer.pos(tabLeft+24.1+(TAB_WIDTH*TAB_ANIMATION/TAB_ANIMATION_SPEED), tabTop+23+(TAB_HEIGHT*TAB_ANIMATION/TAB_ANIMATION_SPEED), 0, 1, 1);
-		StaticVertexBuffer.pos(tabLeft+24.1+(TAB_WIDTH*TAB_ANIMATION/TAB_ANIMATION_SPEED), tabTop+20+(TAB_HEIGHT*TAB_ANIMATION/TAB_ANIMATION_SPEED), 0, 1, .965);
-		StaticVertexBuffer.pos(tabLeft+20+(TAB_WIDTH*TAB_ANIMATION/TAB_ANIMATION_SPEED), tabTop+20+(TAB_HEIGHT*TAB_ANIMATION/TAB_ANIMATION_SPEED), 0, .976, .965);
-		StaticVertexBuffer.pos(tabLeft+20+(TAB_WIDTH*TAB_ANIMATION/TAB_ANIMATION_SPEED), tabTop+23+(TAB_HEIGHT*TAB_ANIMATION/TAB_ANIMATION_SPEED), 0, .976, 1);
+		StaticVertexBuffer.pos(tabLeft+24.1+(tabWidth*animationTimer/animationTime), tabTop+23+(tabHeight*animationTimer/animationTime), 0, 1, 1);
+		StaticVertexBuffer.pos(tabLeft+24.1+(tabWidth*animationTimer/animationTime), tabTop+20+(tabHeight*animationTimer/animationTime), 0, 1, .965);
+		StaticVertexBuffer.pos(tabLeft+20+(tabWidth*animationTimer/animationTime), tabTop+20+(tabHeight*animationTimer/animationTime), 0, .976, .965);
+		StaticVertexBuffer.pos(tabLeft+20+(tabWidth*animationTimer/animationTime), tabTop+23+(tabHeight*animationTimer/animationTime), 0, .976, 1);
 		
 		//Top Corner
-		StaticVertexBuffer.pos(tabLeft+24+(TAB_WIDTH*TAB_ANIMATION/TAB_ANIMATION_SPEED), tabTop+4, 0, 1, .03);
-		StaticVertexBuffer.pos(tabLeft+24+(TAB_WIDTH*TAB_ANIMATION/TAB_ANIMATION_SPEED), tabTop, 0, 1, 0);
-		StaticVertexBuffer.pos(tabLeft+20+(TAB_WIDTH*TAB_ANIMATION/TAB_ANIMATION_SPEED), tabTop, 0, .976, 0);
-		StaticVertexBuffer.pos(tabLeft+20+(TAB_WIDTH*TAB_ANIMATION/TAB_ANIMATION_SPEED), tabTop+4, 0, .9767, .03);
+		StaticVertexBuffer.pos(tabLeft+24+(tabWidth*animationTimer/animationTime), tabTop+4, 0, 1, .03);
+		StaticVertexBuffer.pos(tabLeft+24+(tabWidth*animationTimer/animationTime), tabTop, 0, 1, 0);
+		StaticVertexBuffer.pos(tabLeft+20+(tabWidth*animationTimer/animationTime), tabTop, 0, .976, 0);
+		StaticVertexBuffer.pos(tabLeft+20+(tabWidth*animationTimer/animationTime), tabTop+4, 0, .9767, .03);
 
 		tessellator.draw();
 		
 	}
 	
 	public RectangleBounds getBounds() {
-		return new RectangleBounds(TAB_XPOS, TAB_YPOS, TAB_WIDTH, TAB_HEIGHT);
+		return new RectangleBounds(xPosition, yPosition, currentWidth+24, currentHeight+24);
 	}
 }
 

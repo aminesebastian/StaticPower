@@ -22,16 +22,16 @@ public class ContainerMechanicalSqueezer extends Container {
 		CropSqueezer = teCropSqueezer;
 		
 		//Input
-		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.SLOTS_INPUT, 0, 103, 18));
+		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.slotsInput, 0, 103, 18));
 		
 		//Fluid Slots
-		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.SLOTS_INPUT, 1, 7, 17) {
+		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.slotsInput, 1, 7, 17) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return itemStack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
 		    }
 		});
-		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.SLOTS_OUTPUT, 1, 7, 47) {
+		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.slotsOutput, 1, 7, 47) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;
@@ -39,7 +39,7 @@ public class ContainerMechanicalSqueezer extends Container {
 		});
 		
 		//Output
-		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.SLOTS_OUTPUT, 0, 103, 58) {
+		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.slotsOutput, 0, 103, 58) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return SqueezerRecipeRegistry.Squeezing().getSqueezingItemResult(itemStack) != null;
@@ -47,7 +47,7 @@ public class ContainerMechanicalSqueezer extends Container {
 		});
 		
 		//Processing
-		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.SLOTS_INTERNAL, 0, 10000, 10000));
+		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.slotsInternal, 0, 10000, 10000));
 		
 		//Inventory
 				for(int i = 0; i < 3; i++) {

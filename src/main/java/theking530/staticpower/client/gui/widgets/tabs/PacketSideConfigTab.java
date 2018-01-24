@@ -66,12 +66,12 @@ public class PacketSideConfigTab implements IMessage{
     		TileEntity te = ctx.getServerHandler().player.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
     		if(te != null && te instanceof BaseTileEntity) {
     			BaseTileEntity entity = (BaseTileEntity)te;
-    			entity.SIDE_MODES[0] = SideModeList.Mode.values()[message.SIDE0];
-    			entity.SIDE_MODES[1] = SideModeList.Mode.values()[message.SIDE1];
-    			entity.SIDE_MODES[2] = SideModeList.Mode.values()[message.SIDE2];
-    			entity.SIDE_MODES[3] = SideModeList.Mode.values()[message.SIDE3];
-    			entity.SIDE_MODES[4] = SideModeList.Mode.values()[message.SIDE4];
-    			entity.SIDE_MODES[5] = SideModeList.Mode.values()[message.SIDE5];
+    			entity.getSideConfigurations()[0] = SideModeList.Mode.values()[message.SIDE0];
+    			entity.getSideConfigurations()[1] = SideModeList.Mode.values()[message.SIDE1];
+    			entity.getSideConfigurations()[2] = SideModeList.Mode.values()[message.SIDE2];
+    			entity.getSideConfigurations()[3] = SideModeList.Mode.values()[message.SIDE3];
+    			entity.getSideConfigurations()[4] = SideModeList.Mode.values()[message.SIDE4];
+    			entity.getSideConfigurations()[5] = SideModeList.Mode.values()[message.SIDE5];
     		}
 		return null;
     	}

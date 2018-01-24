@@ -21,7 +21,7 @@ public class ContainerPoweredGrinder extends Container {
 		GRINDER = tePoweredGrinder;
 		
 		//Input
-		this.addSlotToContainer(new SlotItemHandler(tePoweredGrinder.SLOTS_INPUT, 0, 80, 18) {
+		this.addSlotToContainer(new SlotItemHandler(tePoweredGrinder.slotsInput, 0, 80, 18) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return GrinderRecipeRegistry.Grinding().getgrindingResult(itemStack) != null;
@@ -30,22 +30,22 @@ public class ContainerPoweredGrinder extends Container {
 		});
 		
 		//Battery
-		this.addSlotToContainer(new SlotItemHandler(tePoweredGrinder.SLOTS_INPUT, 1, 8, 65));
+		this.addSlotToContainer(new SlotItemHandler(tePoweredGrinder.slotsInput, 1, 8, 65));
 		
 		//Output
-		this.addSlotToContainer(new SlotItemHandler(tePoweredGrinder.SLOTS_OUTPUT, 0, 80, 60) {
+		this.addSlotToContainer(new SlotItemHandler(tePoweredGrinder.slotsOutput, 0, 80, 60) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;
 		        }
 		});	
-		this.addSlotToContainer(new SlotItemHandler(tePoweredGrinder.SLOTS_OUTPUT, 1, 106, 46) {
+		this.addSlotToContainer(new SlotItemHandler(tePoweredGrinder.slotsOutput, 1, 106, 46) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;
 		        }
 		});	
-		this.addSlotToContainer(new SlotItemHandler(tePoweredGrinder.SLOTS_OUTPUT, 2, 55, 46) {
+		this.addSlotToContainer(new SlotItemHandler(tePoweredGrinder.slotsOutput, 2, 55, 46) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;
@@ -53,12 +53,12 @@ public class ContainerPoweredGrinder extends Container {
 		});
 		
 		//Upgrades
-		this.addSlotToContainer(new SlotItemHandler(tePoweredGrinder.SLOTS_UPGRADES, 0, 152, 12));
-		this.addSlotToContainer(new SlotItemHandler(tePoweredGrinder.SLOTS_UPGRADES, 1, 152, 32));
-		this.addSlotToContainer(new SlotItemHandler(tePoweredGrinder.SLOTS_UPGRADES, 2, 152, 52));
+		this.addSlotToContainer(new SlotItemHandler(tePoweredGrinder.slotsUpgrades, 0, 152, 12));
+		this.addSlotToContainer(new SlotItemHandler(tePoweredGrinder.slotsUpgrades, 1, 152, 32));
+		this.addSlotToContainer(new SlotItemHandler(tePoweredGrinder.slotsUpgrades, 2, 152, 52));
 		
 		//Processing
-		this.addSlotToContainer(new SlotItemHandler(tePoweredGrinder.SLOTS_INTERNAL, 0, 10000, 10000) {
+		this.addSlotToContainer(new SlotItemHandler(tePoweredGrinder.slotsInternal, 0, 10000, 10000) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;

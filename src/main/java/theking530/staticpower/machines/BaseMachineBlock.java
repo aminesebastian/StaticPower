@@ -30,7 +30,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blocks.BaseItemBlock;
 import theking530.staticpower.tileentity.BaseTileEntity;
-import theking530.staticpower.utils.SideUtils;
+import theking530.staticpower.utils.SideUtilities;
 import theking530.staticpower.utils.WorldUtilities;
 
 public class BaseMachineBlock extends Block implements IWrenchable {
@@ -54,30 +54,21 @@ public class BaseMachineBlock extends Block implements IWrenchable {
 		return false;
 	}
 
-    private void setDefaultFacing(World worldIn, BlockPos pos, IBlockState state)
-    {
-        if (!worldIn.isRemote)
-        {
+    private void setDefaultFacing(World worldIn, BlockPos pos, IBlockState state) {
+        if (!worldIn.isRemote) {
             IBlockState iblockstate = worldIn.getBlockState(pos.north());
             IBlockState iblockstate1 = worldIn.getBlockState(pos.south());
             IBlockState iblockstate2 = worldIn.getBlockState(pos.west());
             IBlockState iblockstate3 = worldIn.getBlockState(pos.east());
             EnumFacing enumfacing = (EnumFacing)state.getValue(FACING);
 
-            if (enumfacing == EnumFacing.NORTH && iblockstate.isFullBlock() && !iblockstate1.isFullBlock())
-            {
+            if (enumfacing == EnumFacing.NORTH && iblockstate.isFullBlock() && !iblockstate1.isFullBlock()) {
                 enumfacing = EnumFacing.SOUTH;
-            }
-            else if (enumfacing == EnumFacing.SOUTH && iblockstate1.isFullBlock() && !iblockstate.isFullBlock())
-            {
+            } else if (enumfacing == EnumFacing.SOUTH && iblockstate1.isFullBlock() && !iblockstate.isFullBlock()) {
                 enumfacing = EnumFacing.NORTH;
-            }
-            else if (enumfacing == EnumFacing.WEST && iblockstate2.isFullBlock() && !iblockstate3.isFullBlock())
-            {
+            } else if (enumfacing == EnumFacing.WEST && iblockstate2.isFullBlock() && !iblockstate3.isFullBlock()) {
                 enumfacing = EnumFacing.EAST;
-            }
-            else if (enumfacing == EnumFacing.EAST && iblockstate3.isFullBlock() && !iblockstate2.isFullBlock())
-            {
+            } else if (enumfacing == EnumFacing.EAST && iblockstate3.isFullBlock() && !iblockstate2.isFullBlock()) {
                 enumfacing = EnumFacing.WEST;
             }
 
@@ -87,51 +78,27 @@ public class BaseMachineBlock extends Block implements IWrenchable {
     public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
         this.setDefaultFacing(worldIn, pos, state);
     }
-    /**
-     * Called by ItemBlocks just before a block is actually set in the world, to allow for adjustments to the
-     * IBlockstate
-     */
-    public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
-    {
+    public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
         return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
     }
 
-    /**
-     * Called by ItemBlocks after a block is set in the world, to allow post-place logic
-     */
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
-    {
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
         worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
 
-        if (stack.hasDisplayName())
-        {
+        if (stack.hasDisplayName()) {
             if(worldIn.getTileEntity(pos) instanceof BaseMachine) {
     			BaseMachine tempMachine = (BaseMachine)worldIn.getTileEntity(pos);
     			if(placer.getHeldItemMainhand().hasTagCompound()) {
-    				tempMachine.onMachinePlaced(placer.getHeldItemMainhand().getTagCompound());
+    				tempMachine.onMachinePlaced(placer.getHeldItemMainhand().getTagCompound(), worldIn, pos, state, placer, stack);
     			}
     		}
     		super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
         }
     }
-
-    public IBlockState onBlockPlaced(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-		if(world.getTileEntity(pos) instanceof BaseMachine) {
-			BaseMachine tempMachine = (BaseMachine)world.getTileEntity(pos);
-			if(placer.getHeldItemMainhand().hasTagCompound()) {
-				tempMachine.onMachinePlaced(placer.getHeldItemMainhand().getTagCompound());
-			}
-		}
-		return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
-    }
-
-    /**
-     * Called serverside after this block is replaced with another in Chunk, but before the Tile Entity is updated
-     */
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
     	if(worldIn.getTileEntity(pos) instanceof BaseTileEntity) {
     		 BaseTileEntity tileentity = (BaseTileEntity) worldIn.getTileEntity(pos);
-    	        if(!tileentity.WRENCHED) {
+    	        if(!tileentity.wasWrenchedDoNotBreak) {
     		        for(EnumFacing facing : EnumFacing.values()) {
     		        	if(tileentity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing)) {
     		        		ItemStackHandler tempHandler = (ItemStackHandler) tileentity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing);
@@ -171,10 +138,8 @@ public class BaseMachineBlock extends Block implements IWrenchable {
 					};
 				}	
 			}else{
-				int currentMeta = getMetaFromState(world.getBlockState(pos));
 				BaseTileEntity TE = (BaseTileEntity) world.getTileEntity(pos);
-
-				TE.incrementSide(SideUtils.getBlockSide(facing.getOpposite(), world.getBlockState(pos).getValue(BlockHorizontal.FACING)).ordinal());
+				TE.incrementSide(SideUtilities.getBlockSide(facing.getOpposite(), world.getBlockState(pos).getValue(BlockHorizontal.FACING)).ordinal());
 				TE.updateBlock();
 			}	
 		}
@@ -190,7 +155,7 @@ public class BaseMachineBlock extends Block implements IWrenchable {
 		ItemStack machineStack = new ItemStack(Item.getItemFromBlock(this));
 		if(world.getTileEntity(pos) instanceof BaseTileEntity) {
 			BaseTileEntity tempMachine = (BaseTileEntity)world.getTileEntity(pos);
-			tempMachine.WRENCHED = true;
+			tempMachine.wasWrenchedDoNotBreak = true;
 			tempMachine.onMachineBroken(nbt);
 			machineStack.setTagCompound(nbt);	
 		}

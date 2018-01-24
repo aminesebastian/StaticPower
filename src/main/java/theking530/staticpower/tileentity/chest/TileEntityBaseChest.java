@@ -10,8 +10,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.items.CapabilityItemHandler;
 import theking530.staticpower.tileentity.BaseTileEntity;
 import theking530.staticpower.tileentity.chest.staticchest.ContainerStaticChest;
-import theking530.staticpower.utils.SideUtils;
-import theking530.staticpower.utils.SideUtils.BlockSide;
+import theking530.staticpower.utils.SideUtilities;
+import theking530.staticpower.utils.SideUtilities.BlockSide;
 
 public class TileEntityBaseChest extends BaseTileEntity{
 
@@ -123,7 +123,7 @@ public class TileEntityBaseChest extends BaseTileEntity{
     }
     public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.util.EnumFacing facing){
     	if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-    		return (T) SLOTS_OUTPUT;
+    		return (T) slotsOutput;
     	}
     	return super.getCapability(capability, facing);
     }  

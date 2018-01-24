@@ -103,12 +103,12 @@ public class GuiFluidInfuser extends BaseGuiContainer{
 		progressBar();
 		int powerCost; 
 		int fluidCost; 
-		if(Infuser.SLOTS_INTERNAL.getStackInSlot(0) != null) {
-			fluidCost = InfuserRecipeRegistry.Infusing().getInfusingFluidCost(Infuser.SLOTS_INTERNAL.getStackInSlot(0), Infuser.TANK.getFluid());
-			powerCost = Infuser.getProcessingEnergy(Infuser.SLOTS_INTERNAL.getStackInSlot(0));
+		if(Infuser.slotsInternal.getStackInSlot(0) != null) {
+			fluidCost = InfuserRecipeRegistry.Infusing().getInfusingFluidCost(Infuser.slotsInternal.getStackInSlot(0), Infuser.TANK.getFluid());
+			powerCost = Infuser.getProcessingEnergy(Infuser.slotsInternal.getStackInSlot(0));
 		}else{
-			fluidCost = InfuserRecipeRegistry.Infusing().getInfusingFluidCost(Infuser.SLOTS_INPUT.getStackInSlot(0), Infuser.TANK.getFluid());
-			powerCost = Infuser.getProcessingEnergy(Infuser.SLOTS_INPUT.getStackInSlot(0));
+			fluidCost = InfuserRecipeRegistry.Infusing().getInfusingFluidCost(Infuser.slotsInput.getStackInSlot(0), Infuser.TANK.getFluid());
+			powerCost = Infuser.getProcessingEnergy(Infuser.slotsInput.getStackInSlot(0));
 		}
 		String power = NumberFormat.getNumberInstance(Locale.US).format(powerCost);
 		String fluid = NumberFormat.getNumberInstance(Locale.US).format(fluidCost);

@@ -16,10 +16,10 @@ public class ContainerStaticChest extends Container {
 
 	public ContainerStaticChest(InventoryPlayer invPlayer, TileEntityStaticChest teStaticChest) {
 		staticChest = teStaticChest;
-		this.numRows = teStaticChest.SLOTS_OUTPUT.getSlots() / 9;
+		this.numRows = teStaticChest.slotsOutput.getSlots() / 9;
 		for (int y = 0; y < 5; y++) {
 			for (int x = 0; x < 9; x++) {
-				this.addSlotToContainer(new SlotItemHandler(teStaticChest.SLOTS_OUTPUT, x + y * 9, 8 + x * 18, 19 + y * 18));
+				this.addSlotToContainer(new SlotItemHandler(teStaticChest.slotsOutput, x + y * 9, 8 + x * 18, 19 + y * 18));
 			}
 		}
 		for (int i = 0; i < 3; i++) {

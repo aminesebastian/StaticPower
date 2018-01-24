@@ -13,7 +13,7 @@ public class TileEntityBattery extends BaseMachine{
 	protected PowerDistributor POWER_DIS;
 	
 	public TileEntityBattery() {
-		POWER_DIS = new PowerDistributor(this, STORAGE, SIDE_MODES);		
+		POWER_DIS = new PowerDistributor(this, STORAGE, getSideConfigurations());		
 	}
 	
 	public void process() {
@@ -56,13 +56,13 @@ public class TileEntityBattery extends BaseMachine{
 	}
 	@Override
 	public void onSidesConfigUpdate() {
-		POWER_DIS.updateSideSettings(SIDE_MODES);
+		POWER_DIS.updateSideSettings(getSideConfigurations());
 	}
 	
 	//Energy
 	@Override
 	public boolean canConnectEnergy(EnumFacing from) {
-		if(getModeFromFacing(from) == Mode.Disabled) {
+		if(getSideConfiguration(from) == Mode.Disabled) {
 			return false;
 		}else{
 			return true;

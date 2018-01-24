@@ -18,7 +18,7 @@ public class ContainerQuarry extends Container {
 		QUARRY = teQuarry;
 		
 		//Filter
-		this.addSlotToContainer(new SlotFilter(teQuarry.SLOTS_INTERNAL, 0, 27, 71) {
+		this.addSlotToContainer(new SlotFilter(teQuarry.slotsInternal, 0, 27, 71) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return itemStack.getItem() instanceof ItemFilter;
@@ -26,13 +26,13 @@ public class ContainerQuarry extends Container {
 		});	
 		
 		//Fluid Slots
-		this.addSlotToContainer(new SlotItemHandler(teQuarry.SLOTS_INPUT, 0, 7, 17));
-		this.addSlotToContainer(new SlotItemHandler(teQuarry.SLOTS_OUTPUT, 0, 7, 47));
+		this.addSlotToContainer(new SlotItemHandler(teQuarry.slotsInput, 0, 7, 17));
+		this.addSlotToContainer(new SlotItemHandler(teQuarry.slotsOutput, 0, 7, 47));
 		
 		//Upgrades
-		this.addSlotToContainer(new SlotItemHandler(teQuarry.SLOTS_UPGRADES, 0, 171, 17));
-		this.addSlotToContainer(new SlotItemHandler(teQuarry.SLOTS_UPGRADES, 1, 171, 37));
-		this.addSlotToContainer(new SlotItemHandler(teQuarry.SLOTS_UPGRADES, 2, 171, 57));
+		this.addSlotToContainer(new SlotItemHandler(teQuarry.slotsUpgrades, 0, 171, 17));
+		this.addSlotToContainer(new SlotItemHandler(teQuarry.slotsUpgrades, 1, 171, 37));
+		this.addSlotToContainer(new SlotItemHandler(teQuarry.slotsUpgrades, 2, 171, 57));
 			
 		//Inventory
 		for(int i = 0; i < 3; i++) {

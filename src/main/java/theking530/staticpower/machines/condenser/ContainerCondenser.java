@@ -18,12 +18,12 @@ public class ContainerCondenser extends Container {
 		F_GENERATOR = teFluidGenerator;
 		
 		//Input Left
-		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_INPUT, 0, 7, 17));
-		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_OUTPUT, 0, 7, 47));
+		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.slotsInput, 0, 7, 17));
+		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.slotsOutput, 0, 7, 47));
 		
 		//Input Right
-		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_INPUT, 1, 191, 17));
-		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_OUTPUT, 1, 191, 47));
+		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.slotsInput, 1, 191, 17));
+		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.slotsOutput, 1, 191, 47));
 		
 		//Inventory
 		for(int i = 0; i < 3; i++) {

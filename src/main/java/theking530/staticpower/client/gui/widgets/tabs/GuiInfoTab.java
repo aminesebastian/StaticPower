@@ -24,8 +24,7 @@ public class GuiInfoTab extends BaseGuiTab {
 	
 	private List<String> INFO;
 	private String TITLE;
-	//public BaseGuiTab GREEN_TAB = new BaseGuiTab(GUI_LEFT, GUI_TOP, 115, 80, 175, 8, GuiTextures.GREEN_TAB, Items.PAPER);
-	
+
 	public GuiInfoTab(int width, int height){
 		super(width, height, GuiTextures.GREEN_TAB, Items.PAPER);
 		FONT_RENDERER = Minecraft.getMinecraft().fontRenderer;
@@ -48,21 +47,25 @@ public class GuiInfoTab extends BaseGuiTab {
 
 		FONT_RENDERER.drawStringWithShadow(tabNameColored, xPos-FONT_RENDERER.getStringWidth(tabNameColored)/2 + 63, yPos+8, GUIUtilities.getColor(242, 0, 255));	
 		for(int i = 0; i < INFO.size(); i++) {
-			String string = EnumTextFormatting.ITALIC + (String) INFO.get(i);
-    		FONT_RENDERER.drawStringWithShadow(string, xPos + 18, (yPos+25)+11*i, 16777215);
+			String string = (String) INFO.get(i);
+    		FONT_RENDERER.drawString(string, xPos + 18, (yPos+28)+11*i, 16777215);
 		}	
 	}
 	public void drawTextBG(int xPos, int yPos) {
+		int height = 20;
+		if(INFO != null) {
+			height = INFO.size()*19;
+		}
 		GL11.glEnable(GL11.GL_BLEND);
 		Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder vertexbuffer = tessellator.getBuffer();
-		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.BUTTON_BG);
-		GlStateManager.color(1, 1, 1);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.BUTTON_BG);	
+		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-		vertexbuffer.pos(xPos+114, yPos+55, 0).tex(0,1).endVertex();
+		vertexbuffer.pos(xPos+114, yPos+height, 0).tex(0,1).endVertex();
 		vertexbuffer.pos(xPos+114, yPos+22, 0).tex(0,0).endVertex();
 		vertexbuffer.pos(xPos+12, yPos+22, 0).tex(1,0).endVertex();
-		vertexbuffer.pos(xPos+12, yPos+55, 0).tex(1,1).endVertex();	
+		vertexbuffer.pos(xPos+12, yPos+height, 0).tex(1,1).endVertex();	
 		tessellator.draw();
 		GL11.glDisable(GL11.GL_BLEND);
 	}

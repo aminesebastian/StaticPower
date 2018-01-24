@@ -16,14 +16,14 @@ public class ContainerFluidInfuser extends Container {
 		INFUSER = teFluidInfuser;
 		
 		//Input
-		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.SLOTS_INPUT, 0, 74, 32));
+		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.slotsInput, 0, 74, 32));
 		
 		//Fluid Slots
-		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.SLOTS_INPUT, 1, 7, 17));
-		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.SLOTS_OUTPUT, 1, 7, 47));
+		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.slotsInput, 1, 7, 17));
+		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.slotsOutput, 1, 7, 47));
 		
 		//Output
-		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.SLOTS_OUTPUT, 0, 131, 32) {
+		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.slotsOutput, 0, 131, 32) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return InfuserRecipeRegistry.Infusing().getInfusingItemStackResult(itemStack, INFUSER.TANK.getFluid()) != null;
@@ -31,12 +31,12 @@ public class ContainerFluidInfuser extends Container {
 		});
 		
 		//Upgrades
-		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.SLOTS_UPGRADES, 0, 171, 12));
-		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.SLOTS_UPGRADES, 1, 171, 32));
-		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.SLOTS_UPGRADES, 2, 171, 52));
+		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.slotsUpgrades, 0, 171, 12));
+		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.slotsUpgrades, 1, 171, 32));
+		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.slotsUpgrades, 2, 171, 52));
 		
 		//Processing
-		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.SLOTS_INTERNAL, 0, 10000, 10000) {
+		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.slotsInternal, 0, 10000, 10000) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;

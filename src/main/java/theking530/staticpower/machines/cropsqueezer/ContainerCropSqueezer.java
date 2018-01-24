@@ -18,14 +18,14 @@ public class ContainerCropSqueezer extends Container {
 		CropSqueezer = teCropSqueezer;
 		
 		//Input
-		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.SLOTS_INPUT, 0, 103, 16));
+		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.slotsInput, 0, 103, 16));
 		
 		//Fluid Slots
-		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.SLOTS_INPUT, 1, 7, 17));
-		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.SLOTS_OUTPUT, 1, 7, 47));
+		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.slotsInput, 1, 7, 17));
+		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.slotsOutput, 1, 7, 47));
 		
 		//Output
-		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.SLOTS_OUTPUT, 0, 103, 56) {
+		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.slotsOutput, 0, 103, 56) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return SqueezerRecipeRegistry.Squeezing().getSqueezingItemResult(itemStack) != null;
@@ -33,12 +33,12 @@ public class ContainerCropSqueezer extends Container {
 		});
 		
 		//Upgrades
-		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.SLOTS_UPGRADES, 0, upgradeSlotX+171, upgradeSlotY+12));
-		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.SLOTS_UPGRADES, 1, upgradeSlotX+171, upgradeSlotY+32));
-		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.SLOTS_UPGRADES, 2, upgradeSlotX+171, upgradeSlotY+52));
+		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.slotsUpgrades, 0, upgradeSlotX+171, upgradeSlotY+12));
+		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.slotsUpgrades, 1, upgradeSlotX+171, upgradeSlotY+32));
+		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.slotsUpgrades, 2, upgradeSlotX+171, upgradeSlotY+52));
 		
 		//Processing
-		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.SLOTS_INTERNAL, 0, 10000, 10000));
+		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.slotsInternal, 0, 10000, 10000));
 		
 		//Inventory
 				for(int i = 0; i < 3; i++) {

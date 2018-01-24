@@ -21,7 +21,7 @@ import theking530.staticpower.utils.GuiTextures;
 import theking530.staticpower.utils.SideModeList.Mode;
 import theking530.staticpower.utils.SidePicker;
 import theking530.staticpower.utils.SidePicker.Side;
-import theking530.staticpower.utils.SideUtils;
+import theking530.staticpower.utils.SideUtilities;
 
 public class GuiSideConfigTab extends BaseGuiTab {
 

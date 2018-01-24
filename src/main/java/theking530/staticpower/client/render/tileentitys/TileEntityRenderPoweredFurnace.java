@@ -57,16 +57,16 @@ public class TileEntityRenderPoweredFurnace extends TileEntitySpecialRenderer<Ti
 		TileEntityPoweredFurnace smelter = (TileEntityPoweredFurnace)tileentity;		
 		ModelBlock block = new ModelBlock();
 		if(side != 3) {
-			if(smelter.getModeFromInt(side) == Mode.Regular) {
+			if(smelter.getSideConfiguration(EnumFacing.values()[side]) == Mode.Regular) {
 				this.bindTexture(this.side);
 			}
-			if(smelter.getModeFromInt(side) == Mode.Input) {
+			if(smelter.getSideConfiguration(EnumFacing.values()[side]) == Mode.Input) {
 				this.bindTexture(sideIn);
 			}
-			if(smelter.getModeFromInt(side) == Mode.Output) {
+			if(smelter.getSideConfiguration(EnumFacing.values()[side]) == Mode.Output) {
 				this.bindTexture(sideOut);
 			}
-			if(smelter.getModeFromInt(side) == Mode.Disabled) {
+			if(smelter.getSideConfiguration(EnumFacing.values()[side]) == Mode.Disabled) {
 				this.bindTexture(sideDis);
 			}
 			block.drawBlock(side);

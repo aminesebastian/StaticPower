@@ -63,16 +63,16 @@ public class MachineTileEntityRenderer extends TileEntitySpecialRenderer<BaseTil
 		BaseMachine machine = (BaseMachine)tileentity;	
 		
 		if(side != 3) {
-			if(machine.getModeFromInt(side) == Mode.Regular) {
+			if(machine.getSideConfiguration(EnumFacing.values()[side]) == Mode.Regular) {
 				this.bindTexture(this.side);
 			}
-			if(machine.getModeFromInt(side) == Mode.Input) {
+			if(machine.getSideConfiguration(EnumFacing.values()[side]) == Mode.Input) {
 				this.bindTexture(sideIn);
 			}
-			if(machine.getModeFromInt(side) == Mode.Output) {
+			if(machine.getSideConfiguration(EnumFacing.values()[side]) == Mode.Output) {
 				this.bindTexture(sideOut);
 			}
-			if(machine.getModeFromInt(side) == Mode.Disabled) {
+			if(machine.getSideConfiguration(EnumFacing.values()[side]) == Mode.Disabled) {
 				this.bindTexture(this.side);
 			}
 			BLOCK.drawBlock(side);

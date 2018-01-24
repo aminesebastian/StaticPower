@@ -15,18 +15,18 @@ public class ContainerVacuumChest extends Container {
 
 	public ContainerVacuumChest(InventoryPlayer invPlayer, TileEntityVacuumChest teVChest) {
 		V_CHEST = teVChest;
-		numRows = V_CHEST.SLOTS_OUTPUT.getSlots() / 9;
+		numRows = V_CHEST.slotsOutput.getSlots() / 9;
 		
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 9; x++) {
-				this.addSlotToContainer(new SlotItemHandler(V_CHEST.SLOTS_OUTPUT, x + y * 9, 8 + x * 18, 20 + y * 18));
+				this.addSlotToContainer(new SlotItemHandler(V_CHEST.slotsOutput, x + y * 9, 8 + x * 18, 20 + y * 18));
 			}
 		}
-		this.addSlotToContainer(new SlotFilter(V_CHEST.SLOTS_INTERNAL, 0, 8, 78));
+		this.addSlotToContainer(new SlotFilter(V_CHEST.slotsInternal, 0, 8, 78));
 		
-		this.addSlotToContainer(new SlotItemHandler(V_CHEST.SLOTS_UPGRADES, 0, 116, 78));
-		this.addSlotToContainer(new SlotItemHandler(V_CHEST.SLOTS_UPGRADES, 1, 134, 78));
-		this.addSlotToContainer(new SlotItemHandler(V_CHEST.SLOTS_UPGRADES, 2, 152, 78));
+		this.addSlotToContainer(new SlotItemHandler(V_CHEST.slotsUpgrades, 0, 116, 78));
+		this.addSlotToContainer(new SlotItemHandler(V_CHEST.slotsUpgrades, 1, 134, 78));
+		this.addSlotToContainer(new SlotItemHandler(V_CHEST.slotsUpgrades, 2, 152, 78));
 		
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {

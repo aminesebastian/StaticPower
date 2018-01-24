@@ -1,7 +1,12 @@
 package theking530.staticpower.machines.distillery;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import theking530.staticpower.handlers.crafting.registries.CondenserRecipeRegistry;
@@ -27,9 +32,9 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
 		HEAT_STORAGE = new HeatStorage(150);
 		TANK2 = new FluidTank(5000);
 		
-		DRAIN_COMPONENT_MASH = new DrainToBucketComponent("LeftBucketDrain", SLOTS_INPUT, 0, SLOTS_OUTPUT, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
+		DRAIN_COMPONENT_MASH = new DrainToBucketComponent("LeftBucketDrain", slotsInput, 0, slotsOutput, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
 		DRAIN_COMPONENT_MASH.setMode(FluidContainerInteractionMode.FillFromContainer);
-		DRAIN_COMPONENT_EVAPORATED_MASH = new DrainToBucketComponent("RightBucketDrain", SLOTS_INPUT, 1, SLOTS_OUTPUT, 1, this, TANK2, FLUID_TO_CONTAINER_RATE);
+		DRAIN_COMPONENT_EVAPORATED_MASH = new DrainToBucketComponent("RightBucketDrain", slotsInput, 1, slotsOutput, 1, this, TANK2, FLUID_TO_CONTAINER_RATE);
 	}
 	@Override
 	public String getName() {
@@ -112,35 +117,6 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
 		}
 		return 0;
 	}
-	
-	@Override
-	public void readFromSyncNBT(NBTTagCompound nbt) {
-		super.readFromSyncNBT(nbt);
-        HEAT_STORAGE.readFromNBT(nbt);
-        
-        FluidStack tempStack = null;
-        tempStack = FluidStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("TANK2"));
-        TANK2.setFluid(tempStack);
-        tempStack = FluidStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("PFLUID"));
-        PROCESSING_STACK = tempStack;
-	}
-	@Override
-	public NBTTagCompound writeToSyncNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-        HEAT_STORAGE.writeToNBT(nbt);
-        if(TANK2.getFluid() != null) {
-            NBTTagCompound fTag = new NBTTagCompound();
-            TANK2.getFluid().writeToNBT(fTag);
-            nbt.setTag("TANK2", fTag);    	
-        }
-        if(PROCESSING_STACK != null) {
-        	NBTTagCompound pTag = new NBTTagCompound();
-        	PROCESSING_STACK.writeToNBT(pTag);
-        	nbt.setTag("PFLUID", pTag);
-        }
-		return nbt;
-	}
-	
     @Override  
 	public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
@@ -168,8 +144,8 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
         }
         return nbt;
 	}	
-	public void onMachinePlaced(NBTTagCompound nbt) {
-		super.onMachinePlaced(nbt);
+	public void onMachinePlaced(NBTTagCompound nbt, World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)  {
+		super.onMachinePlaced(nbt, world, pos, state, placer, stack);
 		HEAT_STORAGE.readFromNBT(nbt);
 
         FluidStack tempStack = null;

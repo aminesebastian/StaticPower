@@ -60,10 +60,10 @@ public class GuiFermenter extends BaseGuiContainer {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.FERMENTER_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		if(FERMENTER.SLOTS_INTERNAL.getStackInSlot(0) != null) {
+		if(FERMENTER.slotsInternal.getStackInSlot(0) != null) {
 			int j1 = FERMENTER.getProgressScaled(32);
 			//System.out.println(j1);
-			FluidStack fluid = FermenterRecipeRegistry.Fermenting().getFluidResult(FERMENTER.SLOTS_INTERNAL.getStackInSlot(0));
+			FluidStack fluid = FermenterRecipeRegistry.Fermenting().getFluidResult(FERMENTER.slotsInternal.getStackInSlot(0));
 			GuiFluidBar.drawFluidBar(fluid, 1000, 1000, guiLeft + 86 - j1, guiTop + 44, 1, j1, 5);
 		}
 

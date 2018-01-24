@@ -2,9 +2,14 @@ package theking530.staticpower.machines;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -45,16 +50,16 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler {
 		boolean flag = false;
 		int slot = 0;
 		for(int i=0; i<3; i++) {
-			if(SLOTS_UPGRADES.getStackInSlot(i) != null) {
-				if(SLOTS_UPGRADES.getStackInSlot(i).getItem() instanceof BaseTankUpgrade) {
+			if(slotsUpgrades.getStackInSlot(i) != null) {
+				if(slotsUpgrades.getStackInSlot(i).getItem() instanceof BaseTankUpgrade) {
 					flag = true;
 					slot = i;
 				}
 			}
 		}
 		if(flag) {
-			BaseTankUpgrade tempUpgrade = (BaseTankUpgrade) SLOTS_UPGRADES.getStackInSlot(slot).getItem();
-			TANK.setCapacity((int)(tempUpgrade.getValueMultiplied(INITIAL_TANK_CAPACITY, tempUpgrade.getMultiplier(SLOTS_UPGRADES.getStackInSlot(slot), 0))));
+			BaseTankUpgrade tempUpgrade = (BaseTankUpgrade) slotsUpgrades.getStackInSlot(slot).getItem();
+			TANK.setCapacity((int)(tempUpgrade.getValueMultiplied(INITIAL_TANK_CAPACITY, tempUpgrade.getMultiplier(slotsUpgrades.getStackInSlot(slot), 0))));
 		}else{
 			TANK.setCapacity(INITIAL_TANK_CAPACITY);
 		}
@@ -84,8 +89,8 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler {
     	return new SPacketUpdateTileEntity(pos, getBlockMetadata(), tag);
     }
 	
-    public void onMachinePlaced(NBTTagCompound nbt) {
-		super.onMachinePlaced(nbt);
+    public void onMachinePlaced(NBTTagCompound nbt, World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)  {
+		super.onMachinePlaced(nbt, world, pos, state, placer, stack);
         TANK.readFromNBT(nbt);
 	}	
    

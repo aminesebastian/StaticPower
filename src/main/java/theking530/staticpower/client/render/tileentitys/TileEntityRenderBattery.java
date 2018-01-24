@@ -105,31 +105,31 @@ public class TileEntityRenderBattery extends TileEntitySpecialRenderer<TileEntit
 		TileEntityBattery battery = (TileEntityBattery)tileentity;		
 		ModelBlock block = new ModelBlock();
 		if(side <= 1) {
-			if(battery.getModeFromInt(side) == Mode.Regular) {
+			if(battery.getSideConfiguration(EnumFacing.values()[side]) == Mode.Regular) {
 				this.bindTexture(top);
 			}
-			if(battery.getModeFromInt(side) == Mode.Input) {
+			if(battery.getSideConfiguration(EnumFacing.values()[side]) == Mode.Input) {
 				this.bindTexture(topIn);
 			}
-			if(battery.getModeFromInt(side) == Mode.Output) {
+			if(battery.getSideConfiguration(EnumFacing.values()[side]) == Mode.Output) {
 				this.bindTexture(topOut);
 			}
-			if(battery.getModeFromInt(side) == Mode.Disabled) {
+			if(battery.getSideConfiguration(EnumFacing.values()[side]) == Mode.Disabled) {
 				this.bindTexture(topDis);
 			}
 			block.drawBlock(side);
 		}
 		if(side >= 2) {
-			if(battery.getModeFromInt(side) == Mode.Regular) {
+			if(battery.getSideConfiguration(EnumFacing.values()[side]) == Mode.Regular) {
 				this.bindTexture(this.side);
 			}
-			if(battery.getModeFromInt(side) == Mode.Input) {
+			if(battery.getSideConfiguration(EnumFacing.values()[side]) == Mode.Input) {
 				this.bindTexture(sideIn);
 			}
-			if(battery.getModeFromInt(side) == Mode.Output) {
+			if(battery.getSideConfiguration(EnumFacing.values()[side]) == Mode.Output) {
 				this.bindTexture(sideOut);
 			}
-			if(battery.getModeFromInt(side) == Mode.Disabled) {
+			if(battery.getSideConfiguration(EnumFacing.values()[side]) == Mode.Disabled) {
 				this.bindTexture(sideDis);
 			}
 			block.drawBlock(side);

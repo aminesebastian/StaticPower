@@ -16,7 +16,7 @@ public class TileEntityFluidInfuser extends BaseMachineWithTank {
 	
 	public TileEntityFluidInfuser() {
 		initializeBaseMachineWithTank(2, 1000, 50000, 80, 100, 1, 2, 2, 10000);
-		DRAIN_COMPONENT = new DrainToBucketComponent("BucketDrain", SLOTS_INPUT, 1, SLOTS_OUTPUT, 1, this, TANK, FLUID_TO_CONTAINER_RATE);
+		DRAIN_COMPONENT = new DrainToBucketComponent("BucketDrain", slotsInput, 1, slotsOutput, 1, this, TANK, FLUID_TO_CONTAINER_RATE);
 		DRAIN_COMPONENT.setMode(FluidContainerInteractionMode.FillFromContainer);
 	}
 	//IInventory				
@@ -42,8 +42,8 @@ public class TileEntityFluidInfuser extends BaseMachineWithTank {
 	@Override
 	public boolean hasResult(ItemStack itemStack) {
 		if(itemStack != ItemStack.EMPTY) {
-			if(getResult(itemStack) != ItemStack.EMPTY && TANK.getFluidAmount() >= InfuserRecipeRegistry.Infusing().getInfusingFluidCost(SLOTS_INPUT.getStackInSlot(0), TANK.getFluid()) &&
-					STORAGE.getEnergyStored() >= getProcessingEnergy(itemStack) && canSlotAcceptItemstack(getResult(itemStack), SLOTS_OUTPUT.getStackInSlot(0))) {
+			if(getResult(itemStack) != ItemStack.EMPTY && TANK.getFluidAmount() >= InfuserRecipeRegistry.Infusing().getInfusingFluidCost(slotsInput.getStackInSlot(0), TANK.getFluid()) &&
+					STORAGE.getEnergyStored() >= getProcessingEnergy(itemStack) && InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 0, getResult(itemStack))) {
 				return true;
 			}
 		}
@@ -51,10 +51,10 @@ public class TileEntityFluidInfuser extends BaseMachineWithTank {
 	}
 	@Override
 	public int getProcessingCost() {
-		if(SLOTS_INPUT.getStackInSlot(0) != ItemStack.EMPTY) {
-			return getProcessingEnergy(SLOTS_INPUT.getStackInSlot(0));
-		}else if(SLOTS_INTERNAL.getStackInSlot(0) != ItemStack.EMPTY){
-			return getProcessingEnergy(SLOTS_INTERNAL.getStackInSlot(0));
+		if(slotsInput.getStackInSlot(0) != ItemStack.EMPTY) {
+			return getProcessingEnergy(slotsInput.getStackInSlot(0));
+		}else if(slotsInternal.getStackInSlot(0) != ItemStack.EMPTY){
+			return getProcessingEnergy(slotsInternal.getStackInSlot(0));
 		}
 		return 0;
 	}
@@ -86,21 +86,21 @@ public class TileEntityFluidInfuser extends BaseMachineWithTank {
 		if(!getWorld().isRemote) {
 			DRAIN_COMPONENT.update();
 		}
-		if(SLOTS_INTERNAL.getStackInSlot(0) == ItemStack.EMPTY){
+		if(slotsInternal.getStackInSlot(0) == ItemStack.EMPTY){
 			PROCESSING_TIMER = 0;
 		}
-		if(!isProcessing() && !isMoving() && !isTankEmpty() && hasPower() && hasResult(SLOTS_INPUT.getStackInSlot(0))) {
+		if(!isProcessing() && !isMoving() && !isTankEmpty() && hasPower() && hasResult(slotsInput.getStackInSlot(0))) {
 			MOVE_TIMER = 1;
 		}
-		if(!isProcessing() && isMoving() && !isTankEmpty() && hasPower() && hasResult(SLOTS_INPUT.getStackInSlot(0))) {
+		if(!isProcessing() && isMoving() && !isTankEmpty() && hasPower() && hasResult(slotsInput.getStackInSlot(0))) {
 			MOVE_TIMER++;
 			if(MOVE_TIMER >= MOVE_SPEED) {
 				MOVE_TIMER = 0;
 				if(!getWorld().isRemote) {
-					TANK.drain(InfuserRecipeRegistry.Infusing().getInfusingFluidCost(SLOTS_INPUT.getStackInSlot(0), TANK.getFluid()), true);
-					useEnergy(getProcessingEnergy(SLOTS_INPUT.getStackInSlot(0)));
+					TANK.drain(InfuserRecipeRegistry.Infusing().getInfusingFluidCost(slotsInput.getStackInSlot(0), TANK.getFluid()), true);
+					useEnergy(getProcessingEnergy(slotsInput.getStackInSlot(0)));
 				}
-				moveItem(SLOTS_INPUT, 0, SLOTS_INTERNAL, 0);
+				moveItem(slotsInput, 0, slotsInternal, 0);
 				PROCESSING_TIMER = 1;
 				
 			}
@@ -111,11 +111,11 @@ public class TileEntityFluidInfuser extends BaseMachineWithTank {
 			if(PROCESSING_TIMER < PROCESSING_TIME) {
 				PROCESSING_TIMER++;
 			}else{
-				if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, 0, getResult(SLOTS_INTERNAL.getStackInSlot(0)))) {
-					if(SLOTS_INTERNAL.getStackInSlot(0) != ItemStack.EMPTY && getResult(SLOTS_INTERNAL.getStackInSlot(0)) != ItemStack.EMPTY) { //Weird Bug when Serializing
-						SLOTS_OUTPUT.insertItem(0, getResult(SLOTS_INTERNAL.getStackInSlot(0)).copy(), false);
+				if(InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 0, getResult(slotsInternal.getStackInSlot(0)))) {
+					if(slotsInternal.getStackInSlot(0) != ItemStack.EMPTY && getResult(slotsInternal.getStackInSlot(0)) != ItemStack.EMPTY) { //Weird Bug when Serializing
+						slotsOutput.insertItem(0, getResult(slotsInternal.getStackInSlot(0)).copy(), false);
 					}
-					SLOTS_INTERNAL.setStackInSlot(0, ItemStack.EMPTY);
+					slotsInternal.setStackInSlot(0, ItemStack.EMPTY);
 					PROCESSING_TIMER = 0;
 					updateBlock();
 				}

@@ -32,6 +32,8 @@ public class StaticPowerJEIPlugin implements IModPlugin{
         registry.handleRecipes(SolderingRecipeWrapper.class, SolderingTableRecipeWrapper.FACTORY, SOLDERING_TABLE_UID);
         registry.addRecipes(SolderingRecipeRegistry.Soldering().getRecipeList(), SOLDERING_TABLE_UID);
         registry.addRecipeClickArea(GuiSolderingTable.class, 111, 69, 26, 19, SOLDERING_TABLE_UID);
+        
+        registry.addAdvancedGuiHandlers(new JEITabSlotAdjuster());
         //registry.addRecipeCatalyst(new ItemStack(SHBlocks.blockHammerCraft), Reference.JEI.HAMMER_CRAFTING_UID);
     }
 }

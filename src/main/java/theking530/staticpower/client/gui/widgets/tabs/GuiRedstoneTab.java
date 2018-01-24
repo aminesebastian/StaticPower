@@ -14,55 +14,50 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import theking530.staticpower.handlers.PacketHandler;
-import theking530.staticpower.tileentity.BaseTileEntity;
+import theking530.staticpower.tileentity.IRedstoneConfigurable;
 import theking530.staticpower.utils.EnumTextFormatting;
 import theking530.staticpower.utils.GuiTextures;
 import theking530.staticpower.utils.RedstoneModeList.RedstoneMode;
 
 public class GuiRedstoneTab extends BaseGuiTab {
-	
-	public int GUI_LEFT;
-	public int GUI_TOP;
-	public int GROWTH_STATE;
-	public World WORLD;
-	public TileEntity TILE_ENTITY;
-	private FontRenderer FONT_RENDERER;
 
-	public ItemButton IGNORE_REDSTONE;
-	public ItemButton LOW_REDSTONE;
-	public ItemButton HIGH_REDSTONE;
+	public TileEntity tileEntity;
+	private FontRenderer fontRenderer;
+
+	public ItemButton ignoreRedstoneButton;
+	public ItemButton lowRedstoneButton;
+	public ItemButton highRedstoneButton;
 	
 	public GuiRedstoneTab(int width, int height, TileEntity te) {
 		super(width, height, GuiTextures.RED_TAB, Items.REDSTONE);
-		FONT_RENDERER = Minecraft.getMinecraft().fontRenderer;
-		TILE_ENTITY = te;
+		fontRenderer = Minecraft.getMinecraft().fontRenderer;
+		tileEntity = te;
 		
-		IGNORE_REDSTONE = new ItemButton(20, 20, Items.GUNPOWDER);
-		LOW_REDSTONE = new ItemButton(20, 20, Items.REDSTONE);
-		HIGH_REDSTONE = new ItemButton(20, 20, Item.getItemFromBlock(Blocks.REDSTONE_TORCH));
+		ignoreRedstoneButton = new ItemButton(20, 20, Items.GUNPOWDER);
+		lowRedstoneButton = new ItemButton(20, 20, Items.REDSTONE);
+		highRedstoneButton = new ItemButton(20, 20, Item.getItemFromBlock(Blocks.REDSTONE_TORCH));
 	}
 	@Override
 	public void drawExtra(int xPos, int yPos, float partialTicks) {
 		if(isOpen()) {
 			drawButtonBG(xPos, yPos-32);	
-			IGNORE_REDSTONE.drawButton(xPos+25, yPos+30);
-			LOW_REDSTONE.drawButton(xPos+55, yPos+30);
-			HIGH_REDSTONE.drawButton(xPos+85, yPos+30);
+			ignoreRedstoneButton.drawButton(xPos+25, yPos+30);
+			lowRedstoneButton.drawButton(xPos+55, yPos+30);
+			highRedstoneButton.drawButton(xPos+85, yPos+30);
 			drawText(xPos+5, yPos-35);
 			function();
-			IGNORE_REDSTONE.updateMethod();
-			LOW_REDSTONE.updateMethod();
-			HIGH_REDSTONE.updateMethod();
+			ignoreRedstoneButton.updateMethod();
+			lowRedstoneButton.updateMethod();
+			highRedstoneButton.updateMethod();
 		}else{
-			IGNORE_REDSTONE.TIMER = 0;
-			LOW_REDSTONE.TIMER = 0;
-			HIGH_REDSTONE.TIMER = 0;
-			IGNORE_REDSTONE.CLICKED = false;
-			LOW_REDSTONE.CLICKED = false;
-			HIGH_REDSTONE.CLICKED = false;
+			ignoreRedstoneButton.TIMER = 0;
+			lowRedstoneButton.TIMER = 0;
+			highRedstoneButton.TIMER = 0;
+			ignoreRedstoneButton.CLICKED = false;
+			lowRedstoneButton.CLICKED = false;
+			highRedstoneButton.CLICKED = false;
 		}
 	}
 	public void drawText(int xPos, int yPos) {
@@ -70,26 +65,28 @@ public class GuiRedstoneTab extends BaseGuiTab {
 		String redstoneMode = "Mode: ";
 
 		modeText(xPos, yPos);	
-		FONT_RENDERER.drawStringWithShadow(redstoneMode, xPos-this.FONT_RENDERER.getStringWidth(redstoneMode)/2 + 24, yPos+95, 16777215);
-		FONT_RENDERER.drawStringWithShadow(tabName, xPos-this.FONT_RENDERER.getStringWidth(tabName)/2 + 58, yPos+43, 16777215);		
+		fontRenderer.drawStringWithShadow(redstoneMode, xPos-this.fontRenderer.getStringWidth(redstoneMode)/2 + 24, yPos+95, 16777215);
+		fontRenderer.drawStringWithShadow(tabName, xPos-this.fontRenderer.getStringWidth(tabName)/2 + 58, yPos+43, 16777215);		
 	}
 	public void modeText(int tabLeft, int tabTop) {
-		BaseTileEntity entity = (BaseTileEntity)TILE_ENTITY;
-		if(entity.REDSTONE_MODE == RedstoneMode.Low) {
-			FONT_RENDERER.drawStringWithShadow("Low", tabLeft + 37, tabTop+95, 16777215);
-			FONT_RENDERER.drawStringWithShadow("This machine will", tabLeft + 8, tabTop+110, 16777215);		
-			FONT_RENDERER.drawStringWithShadow("only operate with no", tabLeft + 8, tabTop+118, 16777215);	
-			FONT_RENDERER.drawStringWithShadow("signal.", tabLeft + 8, tabTop+127, 16777215);
-		} else if(entity.REDSTONE_MODE == RedstoneMode.High) {
-			FONT_RENDERER.drawStringWithShadow("High", tabLeft + 37, tabTop+95, 16777215);
-			FONT_RENDERER.drawStringWithShadow("This machine will", tabLeft + 8, tabTop+110, 16777215);		
-			FONT_RENDERER.drawStringWithShadow("only operate with a", tabLeft + 8, tabTop+118, 16777215);	
-			FONT_RENDERER.drawStringWithShadow("redstone signal.", tabLeft + 8, tabTop+127, 16777215);
-		} else if(entity.REDSTONE_MODE == RedstoneMode.Ignore) {
-			FONT_RENDERER.drawStringWithShadow("Ignore", tabLeft + 37, tabTop+95, 16777215);	
-			FONT_RENDERER.drawStringWithShadow("This machine will", tabLeft + 8, tabTop+110, 16777215);		
-			FONT_RENDERER.drawStringWithShadow("ignore any redstone", tabLeft + 8, tabTop+118, 16777215);	
-			FONT_RENDERER.drawStringWithShadow("signal.", tabLeft + 8, tabTop+127, 16777215);
+		if(tileEntity instanceof IRedstoneConfigurable) {
+			IRedstoneConfigurable entity = (IRedstoneConfigurable)tileEntity;
+			if(entity.getRedstoneMode() == RedstoneMode.Low) {
+				fontRenderer.drawStringWithShadow("Low", tabLeft + 37, tabTop+95, 16777215);
+				fontRenderer.drawStringWithShadow("This machine will", tabLeft + 8, tabTop+110, 16777215);		
+				fontRenderer.drawStringWithShadow("only operate with no", tabLeft + 8, tabTop+118, 16777215);	
+				fontRenderer.drawStringWithShadow("signal.", tabLeft + 8, tabTop+127, 16777215);
+			} else if(entity.getRedstoneMode() == RedstoneMode.High) {
+				fontRenderer.drawStringWithShadow("High", tabLeft + 37, tabTop+95, 16777215);
+				fontRenderer.drawStringWithShadow("This machine will", tabLeft + 8, tabTop+110, 16777215);		
+				fontRenderer.drawStringWithShadow("only operate with a", tabLeft + 8, tabTop+118, 16777215);	
+				fontRenderer.drawStringWithShadow("redstone signal.", tabLeft + 8, tabTop+127, 16777215);
+			} else if(entity.getRedstoneMode() == RedstoneMode.Ignore) {
+				fontRenderer.drawStringWithShadow("Ignore", tabLeft + 37, tabTop+95, 16777215);	
+				fontRenderer.drawStringWithShadow("This machine will", tabLeft + 8, tabTop+110, 16777215);		
+				fontRenderer.drawStringWithShadow("ignore any redstone", tabLeft + 8, tabTop+118, 16777215);	
+				fontRenderer.drawStringWithShadow("signal.", tabLeft + 8, tabTop+127, 16777215);
+			}
 		}
 	}
 	public void drawButtonBG(int xPos, int yPos) {
@@ -108,31 +105,33 @@ public class GuiRedstoneTab extends BaseGuiTab {
 
 	}
 	public void function() {
-		if(TILE_ENTITY != null) {
-			BaseTileEntity entity = (BaseTileEntity)TILE_ENTITY;		
-			if(IGNORE_REDSTONE.CLICKED) {
-				entity.REDSTONE_MODE = RedstoneMode.Ignore;
-				IMessage msg = new PacketRedstoneTab(0, entity.getPos());
-				PacketHandler.net.sendToServer(msg);
+		if(tileEntity != null) {
+			if(tileEntity instanceof IRedstoneConfigurable) {
+				IRedstoneConfigurable entity = (IRedstoneConfigurable)tileEntity;		
+				if(ignoreRedstoneButton.CLICKED) {
+					entity.setRedstoneMode(RedstoneMode.Ignore);
+					IMessage msg = new PacketRedstoneTab(0, tileEntity.getPos());
+					PacketHandler.net.sendToServer(msg);
+				}
+				if(lowRedstoneButton.CLICKED) {
+					entity.setRedstoneMode(RedstoneMode.Low);	
+					IMessage msg = new PacketRedstoneTab(1, tileEntity.getPos());
+					PacketHandler.net.sendToServer(msg);
+				}
+				if(highRedstoneButton.CLICKED) {
+					entity.setRedstoneMode(RedstoneMode.High);	
+					IMessage msg = new PacketRedstoneTab(2, tileEntity.getPos());
+					PacketHandler.net.sendToServer(msg);
+				}	
 			}
-			if(LOW_REDSTONE.CLICKED) {
-				entity.REDSTONE_MODE = RedstoneMode.Low;
-				IMessage msg = new PacketRedstoneTab(1, entity.getPos());
-				PacketHandler.net.sendToServer(msg);
-			}
-			if(HIGH_REDSTONE.CLICKED) {
-				entity.REDSTONE_MODE = RedstoneMode.High;	
-				IMessage msg = new PacketRedstoneTab(2, entity.getPos());
-				PacketHandler.net.sendToServer(msg);
-			}	
 		}
 	}
 
 	@Override
 	protected void handleExtraMouseInteraction(int mouseX, int mouseY, int button) {
-		IGNORE_REDSTONE.buttonMouseClick(mouseX, mouseY, button);
-		LOW_REDSTONE.buttonMouseClick(mouseX, mouseY, button);
-		HIGH_REDSTONE.buttonMouseClick(mouseX, mouseY, button);	
+		ignoreRedstoneButton.buttonMouseClick(mouseX, mouseY, button);
+		lowRedstoneButton.buttonMouseClick(mouseX, mouseY, button);
+		highRedstoneButton.buttonMouseClick(mouseX, mouseY, button);	
 	}
 	@Override
 	protected void handleExtraKeyboardInteraction(char par1, int par2) {

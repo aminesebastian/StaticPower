@@ -17,7 +17,7 @@ public class TileEntityFluidGenerator extends BaseMachineWithTank{
 	
 	public TileEntityFluidGenerator() {
 		initializeBaseMachineWithTank(1, 0, 50000, 480, 0, 0, 1, 1, 10000);
-		DRAIN_COMPONENT = new DrainToBucketComponent("BucketDrain", SLOTS_INPUT, 0, SLOTS_OUTPUT, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
+		DRAIN_COMPONENT = new DrainToBucketComponent("BucketDrain", slotsInput, 0, slotsOutput, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
 		DRAIN_COMPONENT.setMode(FluidContainerInteractionMode.FillFromContainer);
 		POWER_DIST = new PowerDistributor(this, STORAGE);
 		MOVE_SPEED = 10;

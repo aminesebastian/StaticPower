@@ -17,13 +17,13 @@ public class ContainerPoweredFurnace extends Container {
 		SMELTER = tePoweredSmelter;
 		
 		//Input
-		this.addSlotToContainer(new SlotItemHandler(tePoweredSmelter.SLOTS_INPUT, 0, 50, 28));
+		this.addSlotToContainer(new SlotItemHandler(tePoweredSmelter.slotsInput, 0, 50, 28));
 		
 		//Battery
-		this.addSlotToContainer(new SlotItemHandler(tePoweredSmelter.SLOTS_INPUT, 1, 8, 65));
+		this.addSlotToContainer(new SlotItemHandler(tePoweredSmelter.slotsInput, 1, 8, 65));
 		
 		//Output
-		this.addSlotToContainer(new SlotWithExperienceOutput(invPlayer.player, tePoweredSmelter.SLOTS_OUTPUT, 0, 109, 32) {
+		this.addSlotToContainer(new SlotWithExperienceOutput(invPlayer.player, tePoweredSmelter.slotsOutput, 0, 109, 32) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return FurnaceRecipes.instance().getSmeltingResult(itemStack) != null;
@@ -31,12 +31,12 @@ public class ContainerPoweredFurnace extends Container {
 		});	
 		
 		//Upgrades
-		this.addSlotToContainer(new SlotItemHandler(tePoweredSmelter.SLOTS_UPGRADES, 0, 152, 12));
-		this.addSlotToContainer(new SlotItemHandler(tePoweredSmelter.SLOTS_UPGRADES, 1, 152, 32));
-		this.addSlotToContainer(new SlotItemHandler(tePoweredSmelter.SLOTS_UPGRADES, 2, 152, 52));
+		this.addSlotToContainer(new SlotItemHandler(tePoweredSmelter.slotsUpgrades, 0, 152, 12));
+		this.addSlotToContainer(new SlotItemHandler(tePoweredSmelter.slotsUpgrades, 1, 152, 32));
+		this.addSlotToContainer(new SlotItemHandler(tePoweredSmelter.slotsUpgrades, 2, 152, 52));
 		
 		//Processing
-		this.addSlotToContainer(new SlotItemHandler(tePoweredSmelter.SLOTS_INTERNAL, 0, 10000, 10000) {
+		this.addSlotToContainer(new SlotItemHandler(tePoweredSmelter.slotsInternal, 0, 10000, 10000) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;

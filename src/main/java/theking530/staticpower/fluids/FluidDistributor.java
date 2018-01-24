@@ -30,13 +30,13 @@ public class FluidDistributor {
 					if(TE instanceof BaseTileEntity) {
 						BaseTileEntity tempTe = (BaseTileEntity)TE;
 						if(tempTe != null) {
-							if(tempTe.getModeFromInt(i) == Mode.Output && TANK.getFluidAmount() > 0) {
+							if(tempTe.getSideConfiguration(EnumFacing.values()[i]) == Mode.Output && TANK.getFluidAmount() > 0) {
 								if(TANK.getFluidAmount() > FLUID_OUTPUT_RATE) {
 									pushFluid(facing, FLUID_OUTPUT_RATE);
 								}else{
 									pushFluid(facing, TANK.getFluidAmount());
 								}
-							}else if(tempTe.getModeFromFacing(facing) == Mode.Input) {	
+							}else if(tempTe.getSideConfiguration(facing) == Mode.Input) {	
 								if(TANK.getFluidAmount() < TANK.getCapacity()) {
 									pullFluid(facing, TANK.getFluidAmount());
 								}else{

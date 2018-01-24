@@ -57,16 +57,16 @@ public class TileEntityRenderFermenter extends TileEntitySpecialRenderer<TileEnt
 		TileEntityFermenter charger = (TileEntityFermenter)tileentity;		
 		ModelBlock block = new ModelBlock();
 		if(side != 3) {
-			if(charger.getModeFromInt(side) == Mode.Regular) {
+			if(charger.getSideConfiguration(EnumFacing.values()[side]) == Mode.Regular) {
 				this.bindTexture(this.side);
 			}
-			if(charger.getModeFromInt(side) == Mode.Input) {
+			if(charger.getSideConfiguration(EnumFacing.values()[side]) == Mode.Input) {
 				this.bindTexture(sideIn);
 			}
-			if(charger.getModeFromInt(side) == Mode.Output) {
+			if(charger.getSideConfiguration(EnumFacing.values()[side]) == Mode.Output) {
 				this.bindTexture(sideOut);
 			}
-			if(charger.getModeFromInt(side) == Mode.Disabled) {
+			if(charger.getSideConfiguration(EnumFacing.values()[side]) == Mode.Disabled) {
 				this.bindTexture(sideDis);
 			}
 			block.drawBlock(side);

@@ -11,7 +11,6 @@ import theking530.staticpower.items.itemfilter.PacketItemFilter;
 import theking530.staticpower.logic.gates.powercell.PacketPowerCell;
 import theking530.staticpower.logic.gates.timer.PacketTimer;
 import theking530.staticpower.logic.gates.transducer.PacketSignalMultiplier;
-import theking530.staticpower.machines.PacketMachineSync;
 import theking530.staticpower.machines.basicfarmer.PacketBasicFarmerContainerMode;
 import theking530.staticpower.machines.batteries.PacketGuiBattery;
 import theking530.staticpower.machines.condenser.PacketCondenserContainerMode;
@@ -34,7 +33,6 @@ public class PacketHandler {
 		registerMessage(PacketPowerControlTab.Message.class, PacketPowerControlTab.class);
 		registerMessage(PacketSideConfigTab.Message.class, PacketSideConfigTab.class);
 		registerMessage(PacketItemFilter.Message.class, PacketItemFilter.class);
-		registerMessage(PacketMachineSync.Message.class, PacketMachineSync.class);
 		registerMessage(PacketFluidGeneratorContainerMode.Message.class, PacketFluidGeneratorContainerMode.class);
 		
 		registerMessage(PacketQuarryContainerMode.Message.class, PacketQuarryContainerMode.class);

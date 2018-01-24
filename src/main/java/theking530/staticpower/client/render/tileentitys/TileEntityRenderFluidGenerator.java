@@ -67,16 +67,16 @@ public class TileEntityRenderFluidGenerator extends TileEntitySpecialRenderer<Ti
 		TileEntityFluidGenerator fGen = (TileEntityFluidGenerator)tileentity;	
 		ModelBlock block = new ModelBlock();
 		if(side != 3) {
-			if(fGen.getModeFromInt(side) == Mode.Regular) {
+			if(fGen.getSideConfiguration(EnumFacing.values()[side]) == Mode.Regular) {
 				this.bindTexture(this.side);
 			}
-			if(fGen.getModeFromInt(side) == Mode.Input) {
+			if(fGen.getSideConfiguration(EnumFacing.values()[side]) == Mode.Input) {
 				this.bindTexture(sideIn);
 			}
-			if(fGen.getModeFromInt(side) == Mode.Output) {
+			if(fGen.getSideConfiguration(EnumFacing.values()[side]) == Mode.Output) {
 				this.bindTexture(sideOut);
 			}
-			if(fGen.getModeFromInt(side) == Mode.Disabled) {
+			if(fGen.getSideConfiguration(EnumFacing.values()[side]) == Mode.Disabled) {
 				this.bindTexture(this.side);
 			}
 			block.drawBlock(side);

@@ -18,13 +18,13 @@ public class ContainerFluidGenerator extends Container {
 		F_GENERATOR = teFluidGenerator;
 		
 		//Fluid Slots
-		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_INPUT, 0, 7, 17));
-		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_OUTPUT, 0, 7, 47));
+		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.slotsInput, 0, 7, 17));
+		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.slotsOutput, 0, 7, 47));
 		
 		//Upgrades
-		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_UPGRADES, 0, 171, 12));
-		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_UPGRADES, 1, 171, 32));
-		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.SLOTS_UPGRADES, 2, 171, 52));
+		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.slotsUpgrades, 0, 171, 12));
+		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.slotsUpgrades, 1, 171, 32));
+		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.slotsUpgrades, 2, 171, 52));
 		
 		//Inventory
 				for(int i = 0; i < 3; i++) {

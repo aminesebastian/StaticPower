@@ -64,16 +64,16 @@ public class TileEntityRenderFluidInfuser extends TileEntitySpecialRenderer<Tile
 		TileEntityFluidInfuser infuser = (TileEntityFluidInfuser)tileentity;	
 		ModelBlock block = new ModelBlock();
 		if(side != 3) {
-			if(infuser.getModeFromInt(side) == Mode.Regular) {
+			if(infuser.getSideConfiguration(EnumFacing.values()[side]) == Mode.Regular) {
 				this.bindTexture(this.side);
 			}
-			if(infuser.getModeFromInt(side) == Mode.Input) {
+			if(infuser.getSideConfiguration(EnumFacing.values()[side]) == Mode.Input) {
 				this.bindTexture(sideIn);
 			}
-			if(infuser.getModeFromInt(side) == Mode.Output) {
+			if(infuser.getSideConfiguration(EnumFacing.values()[side]) == Mode.Output) {
 				this.bindTexture(sideOut);
 			}
-			if(infuser.getModeFromInt(side) == Mode.Disabled) {
+			if(infuser.getSideConfiguration(EnumFacing.values()[side]) == Mode.Disabled) {
 				this.bindTexture(this.side);
 			}
 			block.drawBlock(side);

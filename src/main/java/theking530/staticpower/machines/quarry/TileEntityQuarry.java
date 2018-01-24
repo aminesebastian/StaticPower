@@ -42,7 +42,7 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 	
 	public TileEntityQuarry() {
 		initializeBaseMachineWithTank(2, 100, 100000, 1000, 10, 1, 1, 1, 10000);
-		DRAIN_COMPONENT = new DrainToBucketComponent("BucketDrain", SLOTS_INPUT, 0, SLOTS_OUTPUT, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
+		DRAIN_COMPONENT = new DrainToBucketComponent("BucketDrain", slotsInput, 0, slotsOutput, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
 		DRAIN_COMPONENT.setMode(FluidContainerInteractionMode.FillFromContainer);
 	}
 	@Override
@@ -109,17 +109,17 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 		boolean flag = false;
 		int slot = 0;
 		for(int i=0; i<3; i++) {
-			if(SLOTS_UPGRADES.getStackInSlot(i) != null) {
-				if(SLOTS_UPGRADES.getStackInSlot(i).getItem() instanceof BaseQuarryingUpgrade) {
+			if(slotsUpgrades.getStackInSlot(i) != null) {
+				if(slotsUpgrades.getStackInSlot(i).getItem() instanceof BaseQuarryingUpgrade) {
 					flag = true;
 					slot = i;
 				}
 			}
 		}
 		if(flag) {
-			BaseQuarryingUpgrade tempUpgrade = (BaseQuarryingUpgrade) SLOTS_UPGRADES.getStackInSlot(slot).getItem();
-			BLOCKS_PER_TICK = (int) tempUpgrade.getMultiplier(SLOTS_UPGRADES.getStackInSlot(slot), 0);
-			PROCESSING_ENERGY_MULT = (int) (INITIAL_PROCESSING_ENERGY_MULT*tempUpgrade.getMultiplier(SLOTS_UPGRADES.getStackInSlot(slot), 1));
+			BaseQuarryingUpgrade tempUpgrade = (BaseQuarryingUpgrade) slotsUpgrades.getStackInSlot(slot).getItem();
+			BLOCKS_PER_TICK = (int) tempUpgrade.getMultiplier(slotsUpgrades.getStackInSlot(slot), 0);
+			PROCESSING_ENERGY_MULT = (int) (INITIAL_PROCESSING_ENERGY_MULT*tempUpgrade.getMultiplier(slotsUpgrades.getStackInSlot(slot), 1));
 		}else{
 			BLOCKS_PER_TICK = INITIAL_BLOCKS_PER_TICK;
 			PROCESSING_ENERGY_MULT = INITIAL_PROCESSING_ENERGY_MULT;

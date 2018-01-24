@@ -17,10 +17,10 @@ public class TileEntityChargingStation extends BaseMachine {
 	public void process(){
 		if(STORAGE.getEnergyStored() > 0) {
 			for(int i=0; i<4; i++) {
-				if(SLOTS_INPUT.getStackInSlot(i) != ItemStack.EMPTY && SLOTS_INPUT.getStackInSlot(i).getItem() instanceof IEnergyContainerItem) {
-					IEnergyContainerItem tempChargingItem = (IEnergyContainerItem)SLOTS_INPUT.getStackInSlot(i).getItem();
-					extractEnergy(EnumFacing.UP, tempChargingItem.receiveEnergy(SLOTS_INPUT.getStackInSlot(i), STORAGE.getMaxExtract(), false), false);
-					if(tempChargingItem.getEnergyStored(SLOTS_INPUT.getStackInSlot(i)) >= tempChargingItem.getMaxEnergyStored(SLOTS_INPUT.getStackInSlot(i))) {
+				if(slotsInput.getStackInSlot(i) != ItemStack.EMPTY && slotsInput.getStackInSlot(i).getItem() instanceof IEnergyContainerItem) {
+					IEnergyContainerItem tempChargingItem = (IEnergyContainerItem)slotsInput.getStackInSlot(i).getItem();
+					extractEnergy(EnumFacing.UP, tempChargingItem.receiveEnergy(slotsInput.getStackInSlot(i), STORAGE.getMaxExtract(), false), false);
+					if(tempChargingItem.getEnergyStored(slotsInput.getStackInSlot(i)) >= tempChargingItem.getMaxEnergyStored(slotsInput.getStackInSlot(i))) {
 						outputItem(i);
 					}
 				}
@@ -29,9 +29,9 @@ public class TileEntityChargingStation extends BaseMachine {
 	}
 	public void outputItem(int fromSlot){
 		for(int i=0; i<4; i++) {
-			if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, i, SLOTS_INPUT.getStackInSlot(fromSlot))) {
-				SLOTS_OUTPUT.insertItem(i, SLOTS_INPUT.getStackInSlot(fromSlot).copy(), false);
-				SLOTS_INPUT.extractItem(fromSlot, 1, false);
+			if(InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, i, slotsInput.getStackInSlot(fromSlot))) {
+				slotsOutput.insertItem(i, slotsInput.getStackInSlot(fromSlot).copy(), false);
+				slotsInput.extractItem(fromSlot, 1, false);
 				return;
 			}
 		}

@@ -34,9 +34,7 @@ public class InventoryUtilities {
 			}
 		}
 		return true;
-	}
-	
-	
+	}	
 	public static boolean canFullyInsertItemIntoSlot(IItemHandler inv, int slot, ItemStack stack) {
 		if(inv.insertItem(slot, stack, true) == ItemStack.EMPTY) {
 			return true;

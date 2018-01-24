@@ -16,11 +16,11 @@ public class TileEntitySolderingTable extends BaseTileEntity {
 	public TileEntitySolderingTable() {
 		//initializeBasicTileEntity(0, 17, 1);
 		
-		SLOTS_INPUT = new ItemStackHandler(17);
-		SLOTS_OUTPUT = new ItemStackHandler(1);
-		SLOTS_INTERNAL = new ItemStackHandler(1);
-		SLOTS_UPGRADES = new ItemStackHandler(3);
-		REQUIRES_UPDATE = false;
+		slotsInput = new ItemStackHandler(17);
+		slotsOutput = new ItemStackHandler(1);
+		slotsInternal = new ItemStackHandler(1);
+		slotsUpgrades = new ItemStackHandler(3);
+		updateQueued = false;
 	}
 	@Override
 	public String getName() {
@@ -35,7 +35,7 @@ public class TileEntitySolderingTable extends BaseTileEntity {
 					return;
 				}
 				if(tempIron.useSolderingItem(getInputStack(16))) {
-					SLOTS_INPUT.setStackInSlot(16, ItemStack.EMPTY);
+					slotsInput.setStackInSlot(16, ItemStack.EMPTY);
 					getWorld().playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0f, 1, false);		
 				}
 			}
@@ -47,13 +47,13 @@ public class TileEntitySolderingTable extends BaseTileEntity {
             if (itemstack1 != ItemStack.EMPTY) {
             	for(int j=9; j<16; j++) {
             		if(getInputStack(j) != ItemStack.EMPTY && getInputStack(j).isItemEqual(getInputStack(i))) {
-        				SLOTS_INPUT.extractItem(j, 1, false);
+        				slotsInput.extractItem(j, 1, false);
         				flag = true;
         				break;
             		}
             	}
                 if(!flag) {
-    				SLOTS_INPUT.extractItem(i, 1, false);
+    				slotsInput.extractItem(i, 1, false);
                 }
             }
 		}

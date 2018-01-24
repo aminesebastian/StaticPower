@@ -12,7 +12,7 @@ public class TileEntityPoweredFurnace extends BaseMachine {
 	
 	public TileEntityPoweredFurnace() {
 		initializeBasicMachine(2, 1000, 100000, 80, 150, 1, 2, 1);
-		BATTERY_COMPONENT = new FillFromBatteryComponent("BatteryComponent", SLOTS_INPUT, 1, this, STORAGE);
+		BATTERY_COMPONENT = new FillFromBatteryComponent("BatteryComponent", slotsInput, 1, this, STORAGE);
 	}
 	@Override
 	public String getName() {
@@ -39,7 +39,7 @@ public class TileEntityPoweredFurnace extends BaseMachine {
 	@Override
 	public boolean canProcess(ItemStack itemStack) {
 		if(hasResult(itemStack)) {
-			if(canSlotAcceptItemstack(getResult(itemStack), getOutputStack(0)) && STORAGE.getEnergyStored() >= getProcessingCost()) {
+			if(InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 0, getResult(itemStack)) && STORAGE.getEnergyStored() >= getProcessingCost()) {
 				return true;
 			}
 		}
@@ -55,7 +55,7 @@ public class TileEntityPoweredFurnace extends BaseMachine {
 				if(MOVE_TIMER < MOVE_SPEED) {
 					MOVE_TIMER++;
 				}else{
-					moveItem(SLOTS_INPUT, 0, SLOTS_INTERNAL, 0);
+					moveItem(slotsInput, 0, slotsInternal, 0);
 					PROCESSING_TIMER = 1;
 					MOVE_TIMER = 0;
 				}
@@ -67,8 +67,8 @@ public class TileEntityPoweredFurnace extends BaseMachine {
 				}else{
 					PROCESSING_TIMER=0;
 					updateBlock();
-					if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, 0, getResult(getInternalStack(0)))) {
-						InventoryUtilities.insertItemIntoInventory(SLOTS_OUTPUT, getResult(getInternalStack(0)), 0, 0);
+					if(InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 0, getResult(getInternalStack(0)))) {
+						InventoryUtilities.insertItemIntoInventory(slotsOutput, getResult(getInternalStack(0)), 0, 0);
 						setInternalStack(0, ItemStack.EMPTY);
 						MOVE_TIMER = 0;
 					}

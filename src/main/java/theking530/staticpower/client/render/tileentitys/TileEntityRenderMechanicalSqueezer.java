@@ -75,16 +75,16 @@ public class TileEntityRenderMechanicalSqueezer extends TileEntitySpecialRendere
 		TileEntityMechanicalSqueezer squeezer = (TileEntityMechanicalSqueezer)tileentity;		
 		ModelBlock block = new ModelBlock();
 		if(side != 3) {
-			if(squeezer.getModeFromInt(side) == Mode.Regular) {
+			if(squeezer.getSideConfiguration(EnumFacing.values()[side]) == Mode.Regular) {
 				this.bindTexture(this.side);
 			}
-			if(squeezer.getModeFromInt(side) == Mode.Input) {
+			if(squeezer.getSideConfiguration(EnumFacing.values()[side]) == Mode.Input) {
 				this.bindTexture(sideIn);
 			}
-			if(squeezer.getModeFromInt(side) == Mode.Output) {
+			if(squeezer.getSideConfiguration(EnumFacing.values()[side]) == Mode.Output) {
 				this.bindTexture(sideOut);
 			}
-			if(squeezer.getModeFromInt(side) == Mode.Disabled) {
+			if(squeezer.getSideConfiguration(EnumFacing.values()[side]) == Mode.Disabled) {
 				this.bindTexture(this.side);
 			}
 			block.drawBlock(side);

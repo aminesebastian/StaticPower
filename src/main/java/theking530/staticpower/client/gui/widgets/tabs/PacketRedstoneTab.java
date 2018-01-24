@@ -6,7 +6,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import theking530.staticpower.tileentity.BaseTileEntity;
+import theking530.staticpower.tileentity.IRedstoneConfigurable;
 import theking530.staticpower.utils.RedstoneModeList.RedstoneMode;
  
 public class PacketRedstoneTab implements IMessage{
@@ -38,14 +38,14 @@ public class PacketRedstoneTab implements IMessage{
       buf.writeInt(z);
     }
     public static class Message implements IMessageHandler<PacketRedstoneTab, IMessage> {
-    @Override
-    public IMessage onMessage(PacketRedstoneTab message, MessageContext ctx) {
-    		TileEntity te = ctx.getServerHandler().player.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
-    		if(te != null && te instanceof BaseTileEntity) {
-    			BaseTileEntity entity = (BaseTileEntity)te;
-    			entity.REDSTONE_MODE = RedstoneMode.getModeFromInt(message.REDSTONE_MODE);
-    		}
-		return null;
+	    @Override
+	    public IMessage onMessage(PacketRedstoneTab message, MessageContext ctx) {
+			TileEntity te = ctx.getServerHandler().player.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
+			if(te != null && te instanceof IRedstoneConfigurable) {
+				IRedstoneConfigurable entity = (IRedstoneConfigurable)te;
+				entity.setRedstoneMode(RedstoneMode.getModeFromInt(message.REDSTONE_MODE));
+			}
+			return null;
     	}
     }
 }

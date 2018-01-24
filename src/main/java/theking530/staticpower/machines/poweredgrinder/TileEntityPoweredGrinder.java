@@ -13,7 +13,7 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 	
 	public TileEntityPoweredGrinder() {
 		initializeBasicMachine(2, 1000, 100000, 80, 100, 1, 2, 3);
-		BATTERY_COMPONENT = new FillFromBatteryComponent("BatteryComponent", SLOTS_INPUT, 1, this, STORAGE);
+		BATTERY_COMPONENT = new FillFromBatteryComponent("BatteryComponent", slotsInput, 1, this, STORAGE);
 	}
 		
 	//IInventory				
@@ -48,16 +48,17 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 				GrinderOutputWrapper tempWrapper = getGrindingResult(stack);
 				for(int i=0; i<tempWrapper.getOutputItemCount(); i++) {
 					if(tempWrapper.getOutputItems().get(i).isValid()) {
-						if(canSlotAcceptItemstack(tempWrapper.getOutputItems().get(i).getOutput(), getOutputStack(0)) && slot1 == false) {
+						if(InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 0, tempWrapper.getOutputItems().get(i).getOutput()) && slot1 == false) {
 							slot1 = true;
-						}else if(canSlotAcceptItemstack(tempWrapper.getOutputItems().get(i).getOutput(), getOutputStack(1)) && slot2 == false) {
+						}else if(InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 1, tempWrapper.getOutputItems().get(i).getOutput()) && slot2 == false) {
 							slot2 = true;
-						}else if(canSlotAcceptItemstack(tempWrapper.getOutputItems().get(i).getOutput(), getOutputStack(2)) && slot3 == false) {
+						}else if(InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 2, tempWrapper.getOutputItems().get(i).getOutput()) && slot3 == false) {
 							slot3 = true;
 						}else{
 							flag = false;
 						}
 					}
+
 				}
 				if(STORAGE.getEnergyStored() >= getProcessingCost() && flag == true) {
 					return true;
@@ -76,7 +77,7 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 				if(MOVE_TIMER < MOVE_SPEED) {
 					MOVE_TIMER++;
 				}else{
-					moveItem(SLOTS_INPUT, 0, SLOTS_INTERNAL, 0);
+					moveItem(slotsInput, 0, slotsInternal, 0);
 					MOVE_TIMER=0;
 					PROCESSING_TIMER = 1;
 				}
@@ -93,7 +94,7 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 								boolean flag = false;
 								int slot = -1;
 								for(int i=0; i<3; i++) {
-									if(ItemStack.areItemStacksEqual(SLOTS_OUTPUT.getStackInSlot(0), result) && InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, i, getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getOutput())) {
+									if(ItemStack.areItemStacksEqual(slotsOutput.getStackInSlot(0), result) && InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, i, getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getOutput())) {
 										slot = i;
 										flag = true;
 										break;
@@ -101,14 +102,14 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 								}
 								if(!flag) {
 									for(int i=0; i<3; i++) {
-										if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, i, result)) {
+										if(InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, i, result)) {
 											slot = i;
 											break;
 										}	
 									}
 								}
 								if(slot != -1) {
-									SLOTS_OUTPUT.insertItem(slot, result.copy(), false);
+									slotsOutput.insertItem(slot, result.copy(), false);
 								}
 							}						
 						}
@@ -126,7 +127,7 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 		if(percentage >= 1) {
 			return true;
 		}
-		float randFloat = RANDOM.nextFloat();	
+		float randFloat = randomGenerator.nextFloat();	
 		return percentage > randFloat ? true : false;
 	}
 }

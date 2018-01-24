@@ -39,12 +39,9 @@ public class ItemButton extends Gui{
 		this.ITEM = item;		
 	}
 	public void playSound() {
-		if(TIMER == 1) {
-			Minecraft.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, 0.4F, 1.0F);
-		}
+		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 	}
 	public void updateMethod() {
-		playSound();
 		clickTime();
 	}
 	public void drawButton(int xPos, int yPos) {
@@ -116,8 +113,8 @@ public class ItemButton extends Gui{
 	public void buttonMouseClick(int par1, int par2, int button) {
 		if(par1 > BUTTON_XPOS && par1 < BUTTON_XPOS + BUTTON_WIDTH && IS_VISIBLE) {
 	    	if(par2 > BUTTON_YPOS && par2 < BUTTON_YPOS + BUTTON_HEIGHT) {
-	    		CLICKED = true; 
-	    		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+	    		CLICKED = true;
+	    		playSound();
 	    	}
 	    }
 	}

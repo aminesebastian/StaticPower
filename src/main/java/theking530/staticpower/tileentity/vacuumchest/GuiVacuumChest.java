@@ -1,5 +1,6 @@
 package theking530.staticpower.tileentity.vacuumchest;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
 
 import org.lwjgl.opengl.GL11;
@@ -13,6 +14,7 @@ import theking530.staticpower.client.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticpower.items.ModItems;
+import theking530.staticpower.utils.EnumTextFormatting;
 import theking530.staticpower.utils.GuiTextures;
 
 public class GuiVacuumChest extends BaseGuiContainer{
@@ -26,10 +28,11 @@ public class GuiVacuumChest extends BaseGuiContainer{
 		super(new ContainerVacuumChest(invPlayer, teVChest), 176, 205);
 		V_CHEST = teVChest;		
 
-		INFO_TAB = new GuiInfoTab(100, 50);
+		INFO_TAB = new GuiInfoTab(100, 85);
 		getTabManager().registerTab(INFO_TAB);
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teVChest));
 		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teVChest));
+		getTabManager().setInitiallyOpenTab(INFO_TAB);
 	}
 	public void drawScreen(int par1, int par2, float par3) {
     	super.drawScreen(par1, par2, par3);
@@ -47,8 +50,8 @@ public class GuiVacuumChest extends BaseGuiContainer{
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.VCHEST_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		
-    	String text = ("Vacuums items in a  =nearby radius.");
+		DecimalFormat format = new DecimalFormat("##.###");
+    	String text = ("Vacuums items in a  =nearby radius. ==" + EnumTextFormatting.RED + "Radius: " + EnumTextFormatting.AQUA + format.format(V_CHEST.getRadius()) + " Blocks");
     	String[] splitMsg = text.split("=");
 		
         getTabManager().drawTabs(guiLeft+175, guiTop+10, width, height, f);

@@ -16,38 +16,38 @@ public class ContainerFusionFurnace extends Container {
 		FURNACE = teFusionFurnace;
 		
 		//Input
-		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.SLOTS_INPUT, 0, 44, 44) {
+		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.slotsInput, 0, 44, 44) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return true;
 		        }
 		});
-		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.SLOTS_INPUT, 1, 59, 24) {
+		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.slotsInput, 1, 59, 24) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return true;
 		        }
 		});
-		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.SLOTS_INPUT, 2, 80, 17) {
+		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.slotsInput, 2, 80, 17) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return true;
 		        }
 		});
-		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.SLOTS_INPUT, 3, 101, 24) {
+		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.slotsInput, 3, 101, 24) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return true;
 		        }
 		});
-		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.SLOTS_INPUT, 4, 116, 44) {
+		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.slotsInput, 4, 116, 44) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return true;
 		        }
 		});
 		//Output
-		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.SLOTS_OUTPUT, 0, 80, 59) {
+		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.slotsOutput, 0, 80, 59) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;
@@ -55,36 +55,36 @@ public class ContainerFusionFurnace extends Container {
 		});	
 
 		//Upgrades
-		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.SLOTS_UPGRADES, 0, 152, 12));
-		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.SLOTS_UPGRADES, 1, 152, 32));
-		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.SLOTS_UPGRADES, 2, 152, 52));
+		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.slotsUpgrades, 0, 152, 12));
+		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.slotsUpgrades, 1, 152, 32));
+		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.slotsUpgrades, 2, 152, 52));
 		
 		//Processing
-		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.SLOTS_INTERNAL, 0, 10000, 10000) {
+		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.slotsInternal, 0, 10000, 10000) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;
 		        }
 		});
-		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.SLOTS_INTERNAL, 1, 10000, 10000) {
+		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.slotsInternal, 1, 10000, 10000) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;
 		        }
 		});
-		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.SLOTS_INTERNAL, 2, 10000, 10000) {
+		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.slotsInternal, 2, 10000, 10000) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;
 		        }
 		});
-		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.SLOTS_INTERNAL, 3, 10000, 10000) {
+		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.slotsInternal, 3, 10000, 10000) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;
 		        }
 		});
-		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.SLOTS_INTERNAL, 4, 10000, 10000) {
+		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.slotsInternal, 4, 10000, 10000) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;

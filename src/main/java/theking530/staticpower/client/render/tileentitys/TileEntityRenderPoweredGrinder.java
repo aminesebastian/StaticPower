@@ -65,16 +65,16 @@ public class TileEntityRenderPoweredGrinder extends TileEntitySpecialRenderer<Ti
 		TileEntityPoweredGrinder grinder = (TileEntityPoweredGrinder)tileentity;		
 		ModelBlock block = new ModelBlock();
 		if(side != 3) {
-			if(grinder.getModeFromInt(side) == Mode.Regular) {
+			if(grinder.getSideConfiguration(EnumFacing.values()[side]) == Mode.Regular) {
 				this.bindTexture(this.side);
 			}
-			if(grinder.getModeFromInt(side) == Mode.Input) {
+			if(grinder.getSideConfiguration(EnumFacing.values()[side]) == Mode.Input) {
 				this.bindTexture(sideIn);
 			}
-			if(grinder.getModeFromInt(side) == Mode.Output) {
+			if(grinder.getSideConfiguration(EnumFacing.values()[side]) == Mode.Output) {
 				this.bindTexture(sideOut);
 			}
-			if(grinder.getModeFromInt(side) == Mode.Disabled) {
+			if(grinder.getSideConfiguration(EnumFacing.values()[side]) == Mode.Disabled) {
 				this.bindTexture(sideDis);
 			}
 			block.drawBlock(side);

@@ -30,7 +30,7 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFlu
 	public TileEntityMechanicalSqueezer() {
 		initializeBasicTileEntity(1, 2, 2);
 		TANK = new FluidTank(1000);
-		DRAIN_COMPONENT = new DrainToBucketComponent("BucketDrain", SLOTS_INPUT, 1, SLOTS_OUTPUT, 1, this, TANK, FLUID_TO_CONTAINER_RATE);
+		DRAIN_COMPONENT = new DrainToBucketComponent("BucketDrain", slotsInput, 1, slotsOutput, 1, this, TANK, FLUID_TO_CONTAINER_RATE);
 	}
 	@Override
 	public String getName() {
@@ -87,7 +87,6 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFlu
 	public ItemStack getResult(ItemStack itemStack) {
 		return SqueezerRecipeRegistry.Squeezing().getSqueezingItemResult(itemStack);
 	}
-	@Override 
 	public boolean hasResult(ItemStack itemstack) {
 		if(itemstack != null && getResult(itemstack) != ItemStack.EMPTY) {
 			return true;
@@ -102,7 +101,7 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFlu
     }
 	public boolean canProcess(ItemStack itemstack) {
 		FluidStack fluidstack = SqueezerRecipeRegistry.Squeezing().getSqueezingFluidResult(itemstack);
-		if(hasResult(itemstack) && fluidstack != null && canSlotAcceptItemstack(getResult(itemstack), SLOTS_OUTPUT.getStackInSlot(0))) {
+		if(hasResult(itemstack) && fluidstack != null && InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 0, getResult(itemstack))) {
 			if(fluidstack.amount + TANK.getFluidAmount() > TANK.getCapacity()) {
 				return false;
 			}
@@ -143,35 +142,35 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFlu
 	public void rightClick() {
 		if(!getWorld().isRemote) {
 			DRAIN_COMPONENT.update();
-			if(SLOTS_INTERNAL.getStackInSlot(0) == ItemStack.EMPTY){
+			if(slotsInternal.getStackInSlot(0) == ItemStack.EMPTY){
 				PROCESSING_TIMER = 0;
 			}
 			//Start Process
-			if(!isProcessing() && !isMoving() && canProcess(SLOTS_INPUT.getStackInSlot(0))) {
+			if(!isProcessing() && !isMoving() && canProcess(slotsInput.getStackInSlot(0))) {
 				MOVE_TIMER = 1;
 			}
 			//Start Moving
-			if(!isProcessing() && isMoving() && canProcess(SLOTS_INPUT.getStackInSlot(0))) {
+			if(!isProcessing() && isMoving() && canProcess(slotsInput.getStackInSlot(0))) {
 				MOVE_TIMER++;
 				if(MOVE_TIMER >= MOVE_SPEED) {
 					MOVE_TIMER = 0;
-					moveItem(SLOTS_INPUT, 0, SLOTS_INTERNAL, 0);
+					moveItem(slotsInput, 0, slotsInternal, 0);
 					PROCESSING_TIMER = 1;	
 				}
 			}else{
 				MOVE_TIMER = 0;
 			}
 			//Start Processing
-			if(isProcessing() && !isMoving() && canProcess(SLOTS_INTERNAL.getStackInSlot(0))) {
+			if(isProcessing() && !isMoving() && canProcess(slotsInternal.getStackInSlot(0))) {
 				if(PROCESSING_TIMER < PROCESSING_TIME) {
 					PROCESSING_TIMER++;
 					updateBlock();
 					getWorld().playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_SAND_STEP, SoundCategory.BLOCKS, 0.15f, 1, false);		
 				}else{				
-					if(InventoryUtilities.canFullyInsertItemIntoSlot(SLOTS_OUTPUT, 0, getResult(SLOTS_INTERNAL.getStackInSlot(0)))) {
-						TANK.fill(getFluidResult(SLOTS_INTERNAL.getStackInSlot(0)), true);
-						SLOTS_OUTPUT.insertItem(0, getResult(SLOTS_INTERNAL.getStackInSlot(0)).copy(), false);
-						SLOTS_INTERNAL.setStackInSlot(0, ItemStack.EMPTY);
+					if(InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 0, getResult(slotsInternal.getStackInSlot(0)))) {
+						TANK.fill(getFluidResult(slotsInternal.getStackInSlot(0)), true);
+						slotsOutput.insertItem(0, getResult(slotsInternal.getStackInSlot(0)).copy(), false);
+						slotsInternal.setStackInSlot(0, ItemStack.EMPTY);
 						PROCESSING_TIMER = 0;					
 					}
 				}

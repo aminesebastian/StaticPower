@@ -43,7 +43,7 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 	
 	public TileEntityBasicFarmer() {
 		initializeBaseMachineWithTank(2, 20, 100000, 100, 10, 0, 4, 10, 10000);		
-		DRAIN_COMPONENT = new DrainToBucketComponent("BucketDrain", SLOTS_INPUT, 2, SLOTS_OUTPUT, 9, this, TANK, FLUID_TO_CONTAINER_RATE);
+		DRAIN_COMPONENT = new DrainToBucketComponent("BucketDrain", slotsInput, 2, slotsOutput, 9, this, TANK, FLUID_TO_CONTAINER_RATE);
 		DRAIN_COMPONENT.setMode(FluidContainerInteractionMode.FillFromContainer);
 		setBatterySlot(3);
 		CURRENT_COORD = getStartingCoord();
@@ -69,7 +69,7 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 			}else{
 				if(!getWorld().isRemote) {
 					for(int i=FARMED_STACKS.size()-1; i>=0; i--) {
-						ItemStack insertedStack = InventoryUtilities.insertItemIntoInventory(SLOTS_OUTPUT, FARMED_STACKS.get(i), 0, 8);
+						ItemStack insertedStack = InventoryUtilities.insertItemIntoInventory(slotsOutput, FARMED_STACKS.get(i), 0, 8);
 						if(insertedStack == ItemStack.EMPTY) {
 							FARMED_STACKS.remove(i);
 						}else{
@@ -128,16 +128,16 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 		boolean flag = false;
 		int slot = 0;
 		for(int i=0; i<3; i++) {
-			if(SLOTS_UPGRADES.getStackInSlot(i) != null) {
-				if(SLOTS_UPGRADES.getStackInSlot(i).getItem() instanceof BaseRangeUpgrade) {
+			if(slotsUpgrades.getStackInSlot(i) != null) {
+				if(slotsUpgrades.getStackInSlot(i).getItem() instanceof BaseRangeUpgrade) {
 					flag = true;
 					slot = i;
 				}
 			}
 		}
 		if(flag) {
-			BaseRangeUpgrade tempUpgrade = (BaseRangeUpgrade) SLOTS_UPGRADES.getStackInSlot(slot).getItem();
-			RANGE = (int) (INITIAL_RANGE*tempUpgrade.getMultiplier(SLOTS_UPGRADES.getStackInSlot(slot), 0));
+			BaseRangeUpgrade tempUpgrade = (BaseRangeUpgrade) slotsUpgrades.getStackInSlot(slot).getItem();
+			RANGE = (int) (INITIAL_RANGE*tempUpgrade.getMultiplier(slotsUpgrades.getStackInSlot(slot), 0));
 		}else{
 			RANGE = INITIAL_RANGE;
 		}
@@ -190,23 +190,23 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 		}
 	}
 	public boolean canFarm() {
-		if(STORAGE.getEnergyStored() >= getProcessingCost() && SLOTS_INPUT.getStackInSlot(0) != null && SLOTS_INPUT.getStackInSlot(0).getItem() instanceof ItemHoe) {
+		if(STORAGE.getEnergyStored() >= getProcessingCost() && slotsInput.getStackInSlot(0) != null && slotsInput.getStackInSlot(0).getItem() instanceof ItemHoe) {
 			return true;
 		}
 		return false;
 	}
 	public void useHoe(){
-		if(SLOTS_INPUT.getStackInSlot(0) != ItemStack.EMPTY && SLOTS_INPUT.getStackInSlot(0).getItem() instanceof ItemHoe) {
-			if(SLOTS_INPUT.getStackInSlot(0).attemptDamageItem(1, RAND, null)) {
-				SLOTS_INPUT.setStackInSlot(0, ItemStack.EMPTY);
+		if(slotsInput.getStackInSlot(0) != ItemStack.EMPTY && slotsInput.getStackInSlot(0).getItem() instanceof ItemHoe) {
+			if(slotsInput.getStackInSlot(0).attemptDamageItem(1, RAND, null)) {
+				slotsInput.setStackInSlot(0, ItemStack.EMPTY);
 				getWorld().playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F, false);		
 			}	
 		}
 	}
 	public void useAxe(){
-		if(SLOTS_INPUT.getStackInSlot(1) != ItemStack.EMPTY && SLOTS_INPUT.getStackInSlot(1).getItem() instanceof ItemAxe) {
-			if(SLOTS_INPUT.getStackInSlot(0).attemptDamageItem(1, RAND, null)) {
-				SLOTS_INPUT.setStackInSlot(0, ItemStack.EMPTY);
+		if(slotsInput.getStackInSlot(1) != ItemStack.EMPTY && slotsInput.getStackInSlot(1).getItem() instanceof ItemAxe) {
+			if(slotsInput.getStackInSlot(0).attemptDamageItem(1, RAND, null)) {
+				slotsInput.setStackInSlot(0, ItemStack.EMPTY);
 				getWorld().playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F, false);		
 			}	
 		}
@@ -363,9 +363,9 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 	public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.util.EnumFacing facing){
     	if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
     		if(facing == EnumFacing.UP) {
-    			return (T) SLOTS_INPUT;
+    			return (T) slotsInput;
     		}else{
-    			return (T) SLOTS_OUTPUT;
+    			return (T) slotsOutput;
     		}
     	}
     	return super.getCapability(capability, facing);

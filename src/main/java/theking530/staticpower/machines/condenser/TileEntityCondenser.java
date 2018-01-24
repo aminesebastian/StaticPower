@@ -1,7 +1,12 @@
 package theking530.staticpower.machines.condenser;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import theking530.staticpower.handlers.crafting.registries.CondenserRecipeRegistry;
@@ -21,9 +26,9 @@ public class TileEntityCondenser extends BaseMachineWithTank  {
 		initializeBaseMachineWithTank(0, 0, 0, 0, 100, 0, 2, 2, 5000);
 		TANK2 = new FluidTank(5000);
 		
-		DRAIN_COMPONENT_EVAPORATED_MASH = new DrainToBucketComponent("LeftBucketDrain", SLOTS_INPUT, 0, SLOTS_OUTPUT, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
+		DRAIN_COMPONENT_EVAPORATED_MASH = new DrainToBucketComponent("LeftBucketDrain", slotsInput, 0, slotsOutput, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
 		DRAIN_COMPONENT_EVAPORATED_MASH.setMode(FluidContainerInteractionMode.FillFromContainer);
-		DRAIN_COMPONENT_ETHANOL = new DrainToBucketComponent("RightBucketDrain", SLOTS_INPUT, 1, SLOTS_OUTPUT, 1, this, TANK2, FLUID_TO_CONTAINER_RATE);	
+		DRAIN_COMPONENT_ETHANOL = new DrainToBucketComponent("RightBucketDrain", slotsInput, 1, slotsOutput, 1, this, TANK2, FLUID_TO_CONTAINER_RATE);	
 	}
 	
 	@Override
@@ -90,27 +95,6 @@ public class TileEntityCondenser extends BaseMachineWithTank  {
 			return CondenserRecipeRegistry.Condensing().getCondensingTime(TANK.getFluid());
 		}
 		return 0;
-	}
-	@Override
-	public void readFromSyncNBT(NBTTagCompound nbt) {
-		super.readFromSyncNBT(nbt);
-        TANK2.setFluid(FluidStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("TANK2")));
-        PROCESSING_STACK = FluidStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("PFLUID"));
-	}
-	@Override
-	public NBTTagCompound writeToSyncNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-        if(TANK2.getFluid() != null) {
-            NBTTagCompound fTag = new NBTTagCompound();
-            TANK2.getFluid().writeToNBT(fTag);
-            nbt.setTag("TANK2", fTag);    	
-        }
-        if(PROCESSING_STACK != null) {
-        	NBTTagCompound pTag = new NBTTagCompound();
-        	PROCESSING_STACK.writeToNBT(pTag);
-        	nbt.setTag("PFLUID", pTag);
-        }
-		return nbt;
 	}	
     @Override  
 	public void readFromNBT(NBTTagCompound nbt) {
@@ -133,8 +117,8 @@ public class TileEntityCondenser extends BaseMachineWithTank  {
         }
         return nbt;
 	}	
-	public void onMachinePlaced(NBTTagCompound nbt) {
-		super.onMachinePlaced(nbt);
+	public void onMachinePlaced(NBTTagCompound nbt, World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)  {
+		super.onMachinePlaced(nbt, world, pos, state, placer, stack);
         FluidStack tempStack = null;
         tempStack = FluidStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("TANK2"));
         TANK2.setFluid(tempStack);

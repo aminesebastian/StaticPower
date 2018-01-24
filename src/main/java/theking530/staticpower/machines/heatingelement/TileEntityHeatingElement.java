@@ -1,7 +1,12 @@
 package theking530.staticpower.machines.heatingelement;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import theking530.staticpower.machines.BaseMachine;
 
 public class TileEntityHeatingElement extends BaseMachine implements ITickable, IHeatProvider {
@@ -32,18 +37,6 @@ public class TileEntityHeatingElement extends BaseMachine implements ITickable, 
 			}	
 		}
 	}
-	@Override
-	public void readFromSyncNBT(NBTTagCompound nbt) {
-		super.readFromSyncNBT(nbt);
-        HEAT_STORAGE.readFromNBT(nbt);
-	}
-	@Override
-	public NBTTagCompound writeToSyncNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-        HEAT_STORAGE.writeToNBT(nbt);
-		return nbt;
-	}
-	
     @Override  
 	public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
@@ -55,8 +48,8 @@ public class TileEntityHeatingElement extends BaseMachine implements ITickable, 
         HEAT_STORAGE.writeToNBT(nbt);
         return nbt;
 	}	
-	public void onMachinePlaced(NBTTagCompound nbt) {
-		super.onMachinePlaced(nbt);
+	public void onMachinePlaced(NBTTagCompound nbt, World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)  {
+		super.onMachinePlaced(nbt, world, pos, state, placer, stack);
 		HEAT_STORAGE.readFromNBT(nbt);
 	}
 }

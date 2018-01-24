@@ -12,7 +12,7 @@ public class TileEntityFermenter extends BaseMachineWithTank {
 	
 	public TileEntityFermenter() {
 		initializeBaseMachineWithTank(4, 500, 100000, 160, 45, 1, 11, 2, 5000);
-		DRAIN_COMPONENT = new DrainToBucketComponent("BucketDrain", SLOTS_INPUT, 10, SLOTS_OUTPUT, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
+		DRAIN_COMPONENT = new DrainToBucketComponent("BucketDrain", slotsInput, 10, slotsOutput, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
 		setBatterySlot(10);
 		//setFluidContainerSlot(9, FluidContainerMode.FILL);
 	}
@@ -72,14 +72,14 @@ public class TileEntityFermenter extends BaseMachineWithTank {
 			DRAIN_COMPONENT.update();
 			if(!isProcessing() && !isMoving()) {
 				for(int i=0; i<9; i++) {
-					if(SLOTS_INPUT.getStackInSlot(i) != ItemStack.EMPTY && canProcess(SLOTS_INPUT.getStackInSlot(i))) {
-						moveItem(SLOTS_INPUT, i, SLOTS_INTERNAL, 0);
+					if(slotsInput.getStackInSlot(i) != ItemStack.EMPTY && canProcess(slotsInput.getStackInSlot(i))) {
+						moveItem(slotsInput, i, slotsInternal, 0);
 						MOVE_TIMER = 1;
 						break;
 					}
 				}	
 			}else{
-				if(!isProcessing() && SLOTS_INTERNAL.getStackInSlot(0) != ItemStack.EMPTY) {
+				if(!isProcessing() && slotsInternal.getStackInSlot(0) != ItemStack.EMPTY) {
 					PROCESSING_TIMER++;
 				}
 				if(isProcessing()) {
@@ -88,8 +88,8 @@ public class TileEntityFermenter extends BaseMachineWithTank {
 						STORAGE.extractEnergy(getProcessingCost()/PROCESSING_TIME, false);
 						updateBlock();
 					}else{
-						TANK.fill(getFermentingResult(SLOTS_INTERNAL.getStackInSlot(0)), true);
-						SLOTS_INTERNAL.extractItem(0, SLOTS_INTERNAL.getStackInSlot(0).getCount(), false);
+						TANK.fill(getFermentingResult(slotsInternal.getStackInSlot(0)), true);
+						slotsInternal.extractItem(0, slotsInternal.getStackInSlot(0).getCount(), false);
 						PROCESSING_TIMER = 0;
 						MOVE_TIMER = 0;
 						markDirty();

@@ -20,7 +20,7 @@ public class ContainerFermenter extends Container {
 		//Input
         for (int i= 0; i < 3; ++i) {
             for (int j = 0; j < 3; ++j){
-                this.addSlotToContainer(new SlotItemHandler(teFERMENTER.SLOTS_INPUT, j + i * 3, 87 + j * 18, 16 + i * 18){
+                this.addSlotToContainer(new SlotItemHandler(teFERMENTER.slotsInput, j + i * 3, 87 + j * 18, 16 + i * 18){
         			@Override
         	        public boolean isItemValid(ItemStack itemStack) {
         		          return FermenterRecipeRegistry.Fermenting().getFluidResult(itemStack) != null;
@@ -29,22 +29,22 @@ public class ContainerFermenter extends Container {
             }
         }
         //Output
-        this.addSlotToContainer(new SlotItemHandler(teFERMENTER.SLOTS_OUTPUT, 1, 62, 52));
+        this.addSlotToContainer(new SlotItemHandler(teFERMENTER.slotsOutput, 1, 62, 52));
         
         //Battery
-        this.addSlotToContainer(new SlotItemHandler(teFERMENTER.SLOTS_INPUT, 9, 27, 71));
+        this.addSlotToContainer(new SlotItemHandler(teFERMENTER.slotsInput, 9, 27, 71));
         
         //Container Input and Output
-        this.addSlotToContainer(new SlotItemHandler(teFERMENTER.SLOTS_INPUT, 10, 7, 17));
-        this.addSlotToContainer(new SlotItemHandler(teFERMENTER.SLOTS_OUTPUT, 0, 7, 47));
+        this.addSlotToContainer(new SlotItemHandler(teFERMENTER.slotsInput, 10, 7, 17));
+        this.addSlotToContainer(new SlotItemHandler(teFERMENTER.slotsOutput, 0, 7, 47));
         
         //Upgrades
-		this.addSlotToContainer(new SlotItemHandler(teFERMENTER.SLOTS_UPGRADES, 0, upgradeSlotX+171, upgradeSlotY+12));
-		this.addSlotToContainer(new SlotItemHandler(teFERMENTER.SLOTS_UPGRADES, 1, upgradeSlotX+171, upgradeSlotY+32));
-		this.addSlotToContainer(new SlotItemHandler(teFERMENTER.SLOTS_UPGRADES, 2, upgradeSlotX+171, upgradeSlotY+52));
+		this.addSlotToContainer(new SlotItemHandler(teFERMENTER.slotsUpgrades, 0, upgradeSlotX+171, upgradeSlotY+12));
+		this.addSlotToContainer(new SlotItemHandler(teFERMENTER.slotsUpgrades, 1, upgradeSlotX+171, upgradeSlotY+32));
+		this.addSlotToContainer(new SlotItemHandler(teFERMENTER.slotsUpgrades, 2, upgradeSlotX+171, upgradeSlotY+52));
 		
 		//Processing
-		this.addSlotToContainer(new SlotItemHandler(teFERMENTER.SLOTS_INTERNAL, 0, 10000, 10000));
+		this.addSlotToContainer(new SlotItemHandler(teFERMENTER.slotsInternal, 0, 10000, 10000));
 		
 		//Inventory
 		for(int i = 0; i < 3; i++) {

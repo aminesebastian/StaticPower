@@ -21,21 +21,21 @@ public class ContainerSolderingTable extends Container {
         //Crafting Area 0 - 8
         for (l = 0; l < 3; l++) {
             for (i1 = 0; i1 < 3; i1++){
-                this.addSlotToContainer(new SlotSolderingTableInput(this, teTable.SLOTS_INPUT, i1 + l * 3, 62 + i1 * 18, 17 + l * 18));
+                this.addSlotToContainer(new SlotSolderingTableInput(this, teTable.slotsInput, i1 + l * 3, 62 + i1 * 18, 17 + l * 18));
             }
         }
         
         
         //Extra Slots 9 - 15
         for (l = 0; l < 7; l++) {
-        	this.addSlotToContainer(new SlotItemHandler(teTable.SLOTS_INPUT, l+9, 26 + l * 18, 74));
+        	this.addSlotToContainer(new SlotItemHandler(teTable.slotsInput, l+9, 26 + l * 18, 74));
         }
         
         //Output
-        this.addSlotToContainer(new SlotSolderingTable(this, invPlayer.player, teTable, teTable.SLOTS_OUTPUT, 0, 140, 39));
+        this.addSlotToContainer(new SlotSolderingTable(this, invPlayer.player, teTable, teTable.slotsOutput, 0, 140, 39));
         
         //Soldering Iron
-		this.addSlotToContainer(new SlotSolderingTableInput(this, teTable.SLOTS_INPUT, 16, 11, 17) {
+		this.addSlotToContainer(new SlotSolderingTableInput(this, teTable.slotsInput, 16, 11, 17) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return itemStack.getItem() instanceof ISolderingIron;
@@ -59,12 +59,12 @@ public class ContainerSolderingTable extends Container {
     	if(SOLDERING_TABLE.getInputStack(16) != null && SOLDERING_TABLE.getInputStack(16).getItem() instanceof ISolderingIron) {
     		ISolderingIron tempIron = (ISolderingIron) SOLDERING_TABLE.getInputStack(16).getItem();
     		if(tempIron.canSolder(SOLDERING_TABLE.getInputStack(16))) {
-    			SOLDERING_TABLE.SLOTS_OUTPUT.setStackInSlot(0, SolderingRecipeRegistry.Soldering().findSolderingOutput(SOLDERING_TABLE.SLOTS_INPUT, SOLDERING_TABLE.getWorld())); 		
+    			SOLDERING_TABLE.slotsOutput.setStackInSlot(0, SolderingRecipeRegistry.Soldering().findSolderingOutput(SOLDERING_TABLE.slotsInput, SOLDERING_TABLE.getWorld())); 		
     		}else{
-        		SOLDERING_TABLE.SLOTS_OUTPUT.setStackInSlot(0, ItemStack.EMPTY); 	
+        		SOLDERING_TABLE.slotsOutput.setStackInSlot(0, ItemStack.EMPTY); 	
     		}    	
     	}else{
-    		SOLDERING_TABLE.SLOTS_OUTPUT.setStackInSlot(0, ItemStack.EMPTY); 
+    		SOLDERING_TABLE.slotsOutput.setStackInSlot(0, ItemStack.EMPTY); 
     	}
     	SOLDERING_TABLE.getWorld().notifyNeighborsOfStateChange(SOLDERING_TABLE.getPos(), SOLDERING_TABLE.getBlockType(), true);
     	SOLDERING_TABLE.getWorld().markAndNotifyBlock(SOLDERING_TABLE.getPos(), SOLDERING_TABLE.getWorld().getChunkFromBlockCoords(SOLDERING_TABLE.getPos()), SOLDERING_TABLE.getWorld().getBlockState(SOLDERING_TABLE.getPos()), SOLDERING_TABLE.getWorld().getBlockState(SOLDERING_TABLE.getPos()), 2);

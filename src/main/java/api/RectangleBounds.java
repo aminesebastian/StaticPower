@@ -2,28 +2,28 @@ package api;
 
 public class RectangleBounds {
 
-	private int x;
-	private int y;
-	private int w;
-	private int h;
+	private float x;
+	private float y;
+	private float w;
+	private float h;
 	
-	public RectangleBounds(int xPos, int yPos, int width, int height) {
+	public RectangleBounds(float xPos, float yPos, float width, float height) {
 		x = xPos;
 		y = yPos;
 		w = width;
 		h = height;
 	}
 	
-	public int getX() {
+	public float getX() {
 		return x;
 	}
-	public int getY() {
+	public float getY() {
 		return y;
 	}
-	public int getW() {
+	public float getW() {
 		return w;
 	}
-	public int getH() {
+	public float getH() {
 		return h;
 	}
 }

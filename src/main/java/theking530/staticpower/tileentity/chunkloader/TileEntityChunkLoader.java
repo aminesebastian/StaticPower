@@ -8,13 +8,13 @@ import theking530.staticpower.tileentity.StaticTileEntity;
 
 public class TileEntityChunkLoader extends TileEntity implements StaticTileEntity{
 
-	private UUID PLACER_UUID;
+	private UUID placerUUID;
 	
 	public void placedByPlayer(EntityLivingBase player) {
-		PLACER_UUID = player.getUniqueID();
+		placerUUID = player.getUniqueID();
 	}
 	@Override
 	public UUID getPlacer() {
-		return PLACER_UUID;
+		return placerUUID;
 	}
 }
