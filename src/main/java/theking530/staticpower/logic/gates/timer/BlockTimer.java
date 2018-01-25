@@ -16,10 +16,12 @@ public class BlockTimer extends BlockLogicGate {
 	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileEntityTimer();
 	}
+	@Override
 	public String getDescrption(ItemStack stack){
 		return "Output a redstone pulse on every configurable amount of ticks.";	
 	}
+	@Override
 	public String getOutputDescrption(ItemStack stack){
-		return "Pulse of strength 15.";
+		return "Single tick pulse of strength 15.";
 	}
 }

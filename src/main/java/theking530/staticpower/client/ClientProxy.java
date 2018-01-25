@@ -24,8 +24,6 @@ import theking530.staticpower.client.render.tileentitys.TileEntityRenderFusionFu
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderMechanicalSqueezer;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderPoweredFurnace;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderPoweredGrinder;
-import theking530.staticpower.client.render.tileentitys.TileEntityRenderSolarPanel;
-import theking530.staticpower.client.render.tileentitys.TileEntityRenderSolderingTable;
 import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRenderAdder;
 import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRenderAndGate;
 import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRenderLED;
@@ -64,8 +62,6 @@ import theking530.staticpower.machines.poweredgrinder.TileEntityPoweredGrinder;
 import theking530.staticpower.tileentity.chest.energizedchest.TileEntityEnergizedChest;
 import theking530.staticpower.tileentity.chest.lumumchest.TileEntityLumumChest;
 import theking530.staticpower.tileentity.chest.staticchest.TileEntityStaticChest;
-import theking530.staticpower.tileentity.solarpanels.TileEntityStaticSolarPanel;
-import theking530.staticpower.tileentity.solderingtable.TileEntitySolderingTable;
 
 public class ClientProxy extends CommonProxy {
 

@@ -15,9 +15,9 @@ import theking530.staticpower.assists.RegisterHelper;
 
 public class GemOre extends Block{
 	
-	private Item GEM_DROP;
-	private int DROP_MIN;
-	private int DROP_MAX;
+	private Item droppedGem;
+	private int dropMin;
+	private int dropMax;
 	
 	public GemOre(String name, String tool, int level, Item gemDrop, int dropMin, int dropMax) {
 		super(Material.ROCK);
@@ -26,16 +26,16 @@ public class GemOre extends Block{
 		setRegistryName(name);
 		setHarvestLevel(tool, level);
 		//RegisterHelper.registerItem(new BaseItemBlock(this, name));
-		GEM_DROP = gemDrop;
-		DROP_MIN = dropMin;
-		DROP_MAX = dropMax;
+		droppedGem = gemDrop;
+		this.dropMin = dropMin;
+		this.dropMax = dropMax;
 	}
     /**
      * Get the Item that this Block should drop when harvested.
      */
     @Nullable
     public Item getItemDropped(IBlockState state, Random rand, int fortune) {
-        return GEM_DROP;
+        return droppedGem;
     }
 
     /**
@@ -49,7 +49,7 @@ public class GemOre extends Block{
      * Returns the quantity of items to drop on block destruction.
      */
     public int quantityDropped(Random random) {
-        return (DROP_MIN) + random.nextInt(Math.max(1, DROP_MAX-DROP_MIN));
+        return (dropMin) + random.nextInt(Math.max(1, dropMax-dropMin));
     }
 
     /**

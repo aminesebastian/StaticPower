@@ -39,7 +39,7 @@ public class BaseMachineBlock extends Block implements IWrenchable {
 
 	protected BaseMachineBlock(String name) {
 		super(Material.IRON);
-		setCreativeTab(StaticPower.StaticPower);
+		//setCreativeTab(StaticPower.StaticPower);
 		setRegistryName(name);
 		setUnlocalizedName(name);	
 		StaticPower.REGISTRY.PreRegisterItem(new BaseItemBlock(this, name));

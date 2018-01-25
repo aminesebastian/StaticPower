@@ -20,7 +20,7 @@ public class InfuserRecipes {
 		//StaticFluid
 		oreDictionaryStack("logWood", Item.getItemFromBlock(ModBlocks.StaticWood), new FluidStack(ModFluids.StaticFluid, 150));
 		RegisterHelper.registerInfuserRecipe(new ItemStack(Item.getItemFromBlock(Blocks.COBBLESTONE)), new ItemStack(Item.getItemFromBlock(ModBlocks.StaticCobblestone)), new FluidStack(ModFluids.StaticFluid, 50));	
-		RegisterHelper.registerInfuserRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.ObsidianGlass)), new ItemStack(Item.getItemFromBlock(ModBlocks.StaticLamp)), new FluidStack(ModFluids.StaticFluid, 100));
+		RegisterHelper.registerInfuserRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.ObsidianGlass)), new ItemStack(Item.getItemFromBlock(ModBlocks.StaticLamp)), new FluidStack(ModFluids.StaticFluid, 1000));
 		RegisterHelper.registerInfuserRecipe(new ItemStack(Items.IRON_INGOT), new ItemStack(ModItems.StaticIngot), new FluidStack(ModFluids.StaticFluid, 250));
 		oreDictionaryStack("dustIron", ModItems.StaticDust, new FluidStack(ModFluids.StaticFluid, 250));
 		RegisterHelper.registerInfuserRecipe(new ItemStack(ModItems.IronPlate), new ItemStack(ModItems.StaticPlate), new FluidStack(ModFluids.StaticFluid, 250));
@@ -52,7 +52,7 @@ public class InfuserRecipes {
 		//LumumFluid
 		oreDictionaryStack("logWood", Item.getItemFromBlock(ModBlocks.LumumWood), new FluidStack(ModFluids.LumumFluid, 150));
 		RegisterHelper.registerInfuserRecipe(new ItemStack(Item.getItemFromBlock(Blocks.COBBLESTONE)), new ItemStack(Item.getItemFromBlock(ModBlocks.LumumCobblestone)), new FluidStack(ModFluids.LumumFluid, 50));	
-		RegisterHelper.registerInfuserRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.ObsidianGlass)), new ItemStack(Item.getItemFromBlock(ModBlocks.LumumLamp)), new FluidStack(ModFluids.LumumFluid, 100));
+		RegisterHelper.registerInfuserRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.ObsidianGlass)), new ItemStack(Item.getItemFromBlock(ModBlocks.LumumLamp)), new FluidStack(ModFluids.LumumFluid, 1000));
 		RegisterHelper.registerInfuserRecipe(new ItemStack(Items.IRON_INGOT), new ItemStack(ModItems.LumumIngot), new FluidStack(ModFluids.LumumFluid, 250));		
 		oreDictionaryStack("dustIron", ModItems.LumumDust, new FluidStack(ModFluids.LumumFluid, 250));
 		RegisterHelper.registerInfuserRecipe(new ItemStack(ModItems.IronPlate), new ItemStack(ModItems.LumumPlate), new FluidStack(ModFluids.LumumFluid, 250));
