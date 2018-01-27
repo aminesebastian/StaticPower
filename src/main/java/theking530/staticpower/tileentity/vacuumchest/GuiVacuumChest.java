@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import theking530.staticpower.client.gui.widgets.BaseGuiContainer;
+import theking530.staticpower.client.gui.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.GuiDrawItem;
 import theking530.staticpower.client.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
@@ -28,18 +28,15 @@ public class GuiVacuumChest extends BaseGuiContainer{
 		super(new ContainerVacuumChest(invPlayer, teVChest), 176, 205);
 		V_CHEST = teVChest;		
 
-		INFO_TAB = new GuiInfoTab(100, 85);
+		INFO_TAB = new GuiInfoTab(100, 65);
 		getTabManager().registerTab(INFO_TAB);
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teVChest));
 		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teVChest));
 		getTabManager().setInitiallyOpenTab(INFO_TAB);
 	}
-	public void drawScreen(int par1, int par2, float par3) {
-    	super.drawScreen(par1, par2, par3);
-	}
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = I18n.format(this.V_CHEST.getName());
-		this.fontRenderer.drawString(name, this.xSize - 169, 6, 4210752 );
+		this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2, 6,4210752 );
 	}	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {	

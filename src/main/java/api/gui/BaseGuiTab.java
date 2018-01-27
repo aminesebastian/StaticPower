@@ -167,6 +167,7 @@ public abstract class BaseGuiTab extends Gui {
 		currentWidth = ((tabWidth*animationTimer/animationTime));
 		currentHeight = ((tabHeight*animationTimer/animationTime));
 		
+		GL11.glPushMatrix();
 		//Top
 		StaticVertexBuffer.pos(tabLeft+20+(tabWidth*animationTimer/animationTime), tabTop+3, 0, .976, .03);
 		StaticVertexBuffer.pos(tabLeft+20+(tabWidth*animationTimer/animationTime), tabTop, 0, .976, 0);
@@ -204,7 +205,7 @@ public abstract class BaseGuiTab extends Gui {
 		StaticVertexBuffer.pos(tabLeft+20+(tabWidth*animationTimer/animationTime), tabTop+4, 0, .9767, .03);
 
 		tessellator.draw();
-		
+		GL11.glPopMatrix();
 	}
 	
 	public RectangleBounds getBounds() {

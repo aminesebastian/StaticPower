@@ -39,7 +39,7 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 	
 	private RedstoneMode redstoneMode = RedstoneMode.Ignore;
 
-	private SideModeList.Mode[] sideModes = {Mode.Regular, Mode.Regular, Mode.Regular, Mode.Regular, Mode.Regular, Mode.Regular};
+	private SideConfiguration ioSideConfiguration;
 	public int inputTimer = 0;
 	public int inputTime = 2;
 	public int outputTimer = 0;
@@ -54,7 +54,7 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 	public boolean disableFaceInteraction;
 	
 	public BaseTileEntity() {
-
+		ioSideConfiguration = new SideConfiguration();
 	}
 	public void initializeBasicTileEntity(int internalSlots, int inputSlots, int outputSlots, boolean disableFaceInteraction) {
 		slotsInput = new ItemStackHandler(inputSlots);
@@ -146,7 +146,7 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
         super.readFromNBT(nbt);
         redstoneMode = RedstoneMode.getModeFromInt(nbt.getShort("REDSTONE_MODE"));
         for(int i=0; i<6; i++) {
-        	sideModes[i] = SideModeList.Mode.values()[nbt.getInteger("SIDEMODE" + i)];
+        	setSideConfiguration(SideModeList.Mode.values()[nbt.getInteger("SIDEMODE" + i)], EnumFacing.values()[i]);
         }      
         if(slotsInput != null && slotsInput.getSlots() > 0 && nbt.hasKey("INPUTS")) {
         	slotsInput.deserializeNBT((NBTTagCompound) nbt.getTag("INPUTS"));	
@@ -166,7 +166,7 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
         super.writeToNBT(nbt);
 		nbt.setShort("REDSTONE_MODE", (short)redstoneMode.ordinal());
         for(int i=0; i<6; i++) {
-        	nbt.setInteger("SIDEMODE" + i, sideModes[i].ordinal());
+        	nbt.setInteger("SIDEMODE" + i, getSideConfiguration(EnumFacing.values()[i]).ordinal());
         }
         if(slotsInput != null && slotsInput.getSlots() > 0) {
         	nbt.setTag("INPUTS", slotsInput.serializeNBT());	
@@ -190,7 +190,7 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 	public void onMachinePlaced(NBTTagCompound nbt, World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
         redstoneMode = RedstoneMode.getModeFromInt(nbt.getShort("REDSTONE_MODE"));
         for(int i=0; i<6; i++) {
-        	sideModes[i] = SideModeList.Mode.values()[nbt.getInteger("SIDEMODE" + i)];
+        	setSideConfiguration(SideModeList.Mode.values()[nbt.getInteger("SIDEMODE" + i)], EnumFacing.values()[i]);
         }      
         if(slotsInput != null && slotsInput.getSlots() > 0) {
         	slotsInput.deserializeNBT((NBTTagCompound) nbt.getTag("INPUTS"));	
@@ -350,7 +350,7 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
     		return null;
     	}
     	if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-    		if(sideModes[facing.ordinal()] == Mode.Output) {
+    		if(getSideConfiguration(facing) == Mode.Output) {
     			return (T) slotsOutput;
     		}else{
     			return (T) slotsInput;
@@ -361,18 +361,19 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
     
 	public void incrementSide(int side){
 		if(side == 3 && disableFaceInteraction) {
-			sideModes[3] = SideModeList.Mode.Disabled;
+			setSideConfiguration(SideModeList.Mode.Disabled, EnumFacing.values()[side]);
 		}
-		if(sideModes[side].ordinal() >= 3) {
-			sideModes[side] = SideModeList.Mode.values()[0];
+		SideModeList.Mode currentSideMode = getSideConfiguration(EnumFacing.values()[side]);
+		if(currentSideMode.ordinal() >= 3) {
+			setSideConfiguration(SideModeList.Mode.Disabled, EnumFacing.values()[side]);
 		}else{
-			sideModes[side] = SideModeList.Mode.values()[sideModes[side].ordinal()+1];
+			setSideConfiguration(SideModeList.Mode.values()[currentSideMode.ordinal()+1], EnumFacing.values()[side]);
 		}
 		onSidesConfigUpdate();
 	}
 	public void resetSides(){
 		for(int i=0; i<6; i++) {
-			sideModes[i] = SideModeList.Mode.values()[0];
+			setSideConfiguration(SideModeList.Mode.Disabled, EnumFacing.values()[i]);
 		}
 		onSidesConfigUpdate();
 	}
@@ -409,11 +410,11 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 	}
 	@Override
 	public Mode getSideConfiguration(EnumFacing facing) {
-		return sideModes[facing.ordinal()];
+		return ioSideConfiguration.getSideConfiguration(facing);
 	}
 	@Override
 	public Mode[] getSideConfigurations() {
-		return sideModes;
+		return ioSideConfiguration.getConfiguration();
 	}
 	@Override
 	public void setSideConfiguration(Mode newMode, BlockSide side) {
@@ -422,6 +423,6 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 	}
 	@Override
 	public void setSideConfiguration(Mode newMode, EnumFacing facing) {
-		sideModes[facing.ordinal()] = newMode;
+		ioSideConfiguration.setSideConfiguration(newMode, facing);
 	}
 }

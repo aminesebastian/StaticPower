@@ -51,9 +51,9 @@ public class RegisterHelper  {
 			DistilleryRecipeRegistry.Distillery().addRecipe(fluidInput, fluidOutput, heatMin, heatCost);
 		}
 		public static void addShapedRecipe(String name, String group, ItemStack stack, Object... recipeComponents) {	
-			GameRegistry.addShapedRecipe(new ResourceLocation(Reference.MODID, name), new ResourceLocation(group), stack, recipeComponents);
+			GameRegistry.addShapedRecipe(new ResourceLocation(Reference.MOD_ID, name), new ResourceLocation(group), stack, recipeComponents);
 		}
 		public static void addShapelessRecipe(String name, String group, ItemStack stack, Ingredient... recipeComponents) {	
-			GameRegistry.addShapelessRecipe(new ResourceLocation(Reference.MODID, name), new ResourceLocation(group), stack, recipeComponents);
+			GameRegistry.addShapelessRecipe(new ResourceLocation(Reference.MOD_ID, name), new ResourceLocation(group), stack, recipeComponents);
 		}
 }

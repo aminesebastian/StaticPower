@@ -6,4 +6,5 @@ public interface IMachineUpgrade {
 
 	public float getMultiplier(ItemStack stack, int upgradeNumber);
 	public int getValueMultiplied(int value, float multiplier);
+	public float getValueMultiplied(float value, float multiplier);
 }

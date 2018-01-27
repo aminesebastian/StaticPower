@@ -11,7 +11,7 @@ import theking530.staticpower.assists.Reference;
 
 public class EffectGhost extends BasePotion {
 
-	public static final ResourceLocation GHOST_OVERLAY = new ResourceLocation(Reference.MODID + ":" + "textures/gui/GhostOverlay.png");
+	public static final ResourceLocation GHOST_OVERLAY = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/GhostOverlay.png");
 	
 	protected EffectGhost(String name, boolean isBadEffectIn, int liquidColorIn) {
 		super(name, isBadEffectIn, liquidColorIn);

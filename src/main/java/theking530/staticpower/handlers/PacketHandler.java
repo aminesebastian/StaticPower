@@ -24,7 +24,7 @@ public class PacketHandler {
 	private static int nextPacketId = 0; 
 	
 	public static void initPackets() {
-		net = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.MODID);
+		net = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.MOD_ID);
 		registerMessage(PacketSignalMultiplier.Message.class, PacketSignalMultiplier.class);
 		registerMessage(PacketPowerCell.Message.class, PacketPowerCell.class);
 		registerMessage(PacketTimer.Message.class, PacketTimer.class);

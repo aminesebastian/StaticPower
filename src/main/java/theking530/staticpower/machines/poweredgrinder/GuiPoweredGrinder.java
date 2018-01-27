@@ -5,7 +5,7 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import theking530.staticpower.client.gui.widgets.BaseGuiContainer;
+import theking530.staticpower.client.gui.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;

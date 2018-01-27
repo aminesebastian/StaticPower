@@ -134,10 +134,10 @@ public class ModFluids {
 		return f;
 	}
 	public static ResourceLocation getStill(String fluidName) {
-			return new ResourceLocation(Reference.MODID + ":blocks/fluids/" + fluidName + "Still");
+			return new ResourceLocation(Reference.MOD_ID + ":blocks/fluids/" + fluidName + "Still");
 	}
 	public static ResourceLocation getFlowing(String fluidName) {
-			return new ResourceLocation(Reference.MODID  + ":blocks/fluids/" + fluidName + "Flow");
+			return new ResourceLocation(Reference.MOD_ID  + ":blocks/fluids/" + fluidName + "Flow");
 	}
 	private static void registerBucket(Fluid fluid) {
 		FluidRegistry.addBucketForFluid(fluid);
@@ -172,7 +172,7 @@ public class ModFluids {
 
 		    public FluidStateMapper(Fluid fluid) {
 		      this.fluid = fluid;
-		      location = new ModelResourceLocation(Reference.MODID + ":Fluid", fluid.getName());
+		      location = new ModelResourceLocation(Reference.MOD_ID + ":Fluid", fluid.getName());
 		    }
 
 		    @Override

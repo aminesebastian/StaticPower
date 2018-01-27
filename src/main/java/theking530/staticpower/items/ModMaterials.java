@@ -52,25 +52,25 @@ public class ModMaterials {
 		initToolValues();
 	}
 	private static void initArmorValues() {
-		STATIC.initArmorMaterial(EnumHelper.addArmorMaterial("StaticMaterial", Reference.MODID + ":StaticArmor", 30, new int[] {3, 6, 6, 3}, 25, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 1.0F));
-		ENERGIZED.initArmorMaterial(EnumHelper.addArmorMaterial("EnergizedMaterial", Reference.MODID + ":EnergizedArmor", 50, new int[] {5, 10, 8, 7}, 35, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 2.0F));
-		LUMUM.initArmorMaterial(EnumHelper.addArmorMaterial("LumumMaterial", Reference.MODID + ":LumumArmor", 70, new int[] {8, 13, 11, 10}, 35, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 4.0F));
+		STATIC.initArmorMaterial(EnumHelper.addArmorMaterial("StaticMaterial", Reference.MOD_ID + ":StaticArmor", 30, new int[] {3, 6, 6, 3}, 25, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 1.0F));
+		ENERGIZED.initArmorMaterial(EnumHelper.addArmorMaterial("EnergizedMaterial", Reference.MOD_ID + ":EnergizedArmor", 50, new int[] {5, 10, 8, 7}, 35, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 2.0F));
+		LUMUM.initArmorMaterial(EnumHelper.addArmorMaterial("LumumMaterial", Reference.MOD_ID + ":LumumArmor", 70, new int[] {8, 13, 11, 10}, 35, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 4.0F));
 		
-		LEATHER.initArmorMaterial(EnumHelper.addArmorMaterial("LeatherMaterial", Reference.MODID + ":LeatherArmor", 30, new int[] {1, 2, 2, 1}, 25, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 0.5F));
-		IRON.initArmorMaterial(EnumHelper.addArmorMaterial("IronMaterial", Reference.MODID + ":IronArmor", 40, new int[] {2, 2, 2, 1}, 25, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 0.0F));
-		GOLD.initArmorMaterial(EnumHelper.addArmorMaterial("GoldMaterial", Reference.MODID + ":GoldArmor", 30, new int[] {1, 3, 2, 1}, 25, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 0.5F));
+		LEATHER.initArmorMaterial(EnumHelper.addArmorMaterial("LeatherMaterial", Reference.MOD_ID + ":LeatherArmor", 30, new int[] {1, 2, 2, 1}, 25, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 0.5F));
+		IRON.initArmorMaterial(EnumHelper.addArmorMaterial("IronMaterial", Reference.MOD_ID + ":IronArmor", 40, new int[] {2, 2, 2, 1}, 25, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 0.0F));
+		GOLD.initArmorMaterial(EnumHelper.addArmorMaterial("GoldMaterial", Reference.MOD_ID + ":GoldArmor", 30, new int[] {1, 3, 2, 1}, 25, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 0.5F));
 		
-		COPPER.initArmorMaterial(EnumHelper.addArmorMaterial("CopperMaterial", Reference.MODID + ":CopperArmor", 30, new int[] {1, 2, 2, 1}, 25, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 0.5F));
-		TIN.initArmorMaterial(EnumHelper.addArmorMaterial("TinMaterial", Reference.MODID + ":TinArmor", 28, new int[] {2, 2, 2, 1}, 25, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 0.0F));
-		SILVER.initArmorMaterial(EnumHelper.addArmorMaterial("SilverMaterial", Reference.MODID + ":SilverArmor", 28, new int[] {1, 3, 2, 1}, 25, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 0.5F));
-		LEAD.initArmorMaterial(EnumHelper.addArmorMaterial("LeadMaterial", Reference.MODID + ":LeadArmor", 68, new int[] {3, 4, 3, 3}, 25, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 1.0F));
-		PLATINUM.initArmorMaterial(EnumHelper.addArmorMaterial("PlatinumMaterial", Reference.MODID + ":PlatinumArmor", 48, new int[] {3, 5, 4, 3}, 25, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 1.0F));
-		ALUMINIUM.initArmorMaterial(EnumHelper.addArmorMaterial("AluminiumMaterial", Reference.MODID + ":AluminiumArmor", 18, new int[] {1, 2, 1, 1}, 35, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 0.0F));
-		RUBY.initArmorMaterial(EnumHelper.addArmorMaterial("RubyMaterial", Reference.MODID + ":RubyArmor", 48, new int[] {5, 7, 6, 4}, 25, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 2.0F));
-		SAPPHIRE.initArmorMaterial(EnumHelper.addArmorMaterial("SapphireMaterial", Reference.MODID + ":SapphireArmor", 48, new int[] {5, 7, 6, 4}, 35, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 2.0F));
+		COPPER.initArmorMaterial(EnumHelper.addArmorMaterial("CopperMaterial", Reference.MOD_ID + ":CopperArmor", 30, new int[] {1, 2, 2, 1}, 25, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 0.5F));
+		TIN.initArmorMaterial(EnumHelper.addArmorMaterial("TinMaterial", Reference.MOD_ID + ":TinArmor", 28, new int[] {2, 2, 2, 1}, 25, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 0.0F));
+		SILVER.initArmorMaterial(EnumHelper.addArmorMaterial("SilverMaterial", Reference.MOD_ID + ":SilverArmor", 28, new int[] {1, 3, 2, 1}, 25, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 0.5F));
+		LEAD.initArmorMaterial(EnumHelper.addArmorMaterial("LeadMaterial", Reference.MOD_ID + ":LeadArmor", 68, new int[] {3, 4, 3, 3}, 25, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 1.0F));
+		PLATINUM.initArmorMaterial(EnumHelper.addArmorMaterial("PlatinumMaterial", Reference.MOD_ID + ":PlatinumArmor", 48, new int[] {3, 5, 4, 3}, 25, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 1.0F));
+		ALUMINIUM.initArmorMaterial(EnumHelper.addArmorMaterial("AluminiumMaterial", Reference.MOD_ID + ":AluminiumArmor", 18, new int[] {1, 2, 1, 1}, 35, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 0.0F));
+		RUBY.initArmorMaterial(EnumHelper.addArmorMaterial("RubyMaterial", Reference.MOD_ID + ":RubyArmor", 48, new int[] {5, 7, 6, 4}, 25, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 2.0F));
+		SAPPHIRE.initArmorMaterial(EnumHelper.addArmorMaterial("SapphireMaterial", Reference.MOD_ID + ":SapphireArmor", 48, new int[] {5, 7, 6, 4}, 35, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 2.0F));
 	
-		UNDEAD.initArmorMaterial(EnumHelper.addArmorMaterial("UndeadMaterial", Reference.MODID + ":UndeadArmor", 28, new int[] {3, 4, 3, 2}, 35, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 1.0F));
-		SKELETON.initArmorMaterial(EnumHelper.addArmorMaterial("SkeletonMaterial", Reference.MODID + ":SkeletonArmor", 28, new int[] {3, 4, 3, 2}, 35, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 1.0F));
+		UNDEAD.initArmorMaterial(EnumHelper.addArmorMaterial("UndeadMaterial", Reference.MOD_ID + ":UndeadArmor", 28, new int[] {3, 4, 3, 2}, 35, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 1.0F));
+		SKELETON.initArmorMaterial(EnumHelper.addArmorMaterial("SkeletonMaterial", Reference.MOD_ID + ":SkeletonArmor", 28, new int[] {3, 4, 3, 2}, 35, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 1.0F));
 	}
 	private static void initToolValues() {
 		STATIC.initToolMaterial(EnumHelper.addToolMaterial("STATIC", 2, 1500, 7.0F, 3.0F, 20));

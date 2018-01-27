@@ -67,7 +67,7 @@ public class ClientProxy extends CommonProxy {
 
 	public void registerProxies(){
 	    //WailaConfig.callIMC();
-		OBJLoader.INSTANCE.addDomain(Reference.MODID);
+		OBJLoader.INSTANCE.addDomain(Reference.MOD_ID);
 		
 		//Fluid Infuser
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFluidInfuser.class, new TileEntityRenderFluidInfuser());		

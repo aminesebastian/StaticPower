@@ -17,7 +17,6 @@ import theking530.staticpower.items.ModItems;
 import theking530.staticpower.machines.BaseMachine;
 import theking530.staticpower.utils.EnumTextFormatting;
 import theking530.staticpower.utils.GuiTextures;
-import theking530.staticpower.utils.StaticVertexBuffer;
 
 public class GuiPowerControlTab extends BaseGuiTab{
 	
@@ -31,28 +30,30 @@ public class GuiPowerControlTab extends BaseGuiTab{
 	private ItemButton SET_PERCENTAGE;
 	
 	public GuiPowerControlTab(int guiLeft, int guiTop, TileEntity te){
-		super(guiTop, guiTop, GuiTextures.PURPLE_TAB, ModItems.StaticWrench);
+		super(guiLeft, guiTop, GuiTextures.PURPLE_TAB, ModItems.StaticWrench);
 		FONT_RENDERER = Minecraft.getMinecraft().fontRenderer;
 		TILE_ENTITY = te;
 		
-		MIN_PERCENTAGE = new TextField(guiLeft + 230, guiTop + 35, 30, 15);
-		MAX_PERCENTAGE = new TextField(guiLeft + 230, guiTop + 54, 30, 15);
-		SET_PERCENTAGE = new ItemButton(16, 16, ModItems.BasicBattery);
+		MIN_PERCENTAGE = new TextField(30, 15);
+		MAX_PERCENTAGE = new TextField(30, 15);
+		SET_PERCENTAGE = new ItemButton(48, 20, null);
 	}
 	@Override
 	public void drawExtra(int xPos, int yPos, float partialTicks) {
 		if(isOpen()) {
+			drawButtonBG(xPos, yPos);
 			MAX_PERCENTAGE.updateMethod();
 			MAX_PERCENTAGE.setMaxStringLength(3);		
 			MIN_PERCENTAGE.updateMethod();
 			SET_PERCENTAGE.updateMethod();
 			MIN_PERCENTAGE.setMaxStringLength(3);
 			
-			SET_PERCENTAGE.drawButton(xPos, yPos);
-			MAX_PERCENTAGE.drawTextBox();
-			MIN_PERCENTAGE.drawTextBox();
+			SET_PERCENTAGE.drawButton(xPos+40, yPos+67);
+			MAX_PERCENTAGE.drawTextBox(xPos+60, yPos+25);
+			MIN_PERCENTAGE.drawTextBox(xPos+60, yPos+45);
 			function();
 			drawText(xPos, yPos);
+
 		}else{
 			SET_PERCENTAGE.TIMER = 0;
 			SET_PERCENTAGE.CLICKED = false;
@@ -60,43 +61,33 @@ public class GuiPowerControlTab extends BaseGuiTab{
 	}
 	public void drawText(int xPos, int yPos) {
 		String tabName = "Power Control";
-		modeText(xPos, yPos);	
-		this.FONT_RENDERER.drawStringWithShadow(tabName, xPos-this.FONT_RENDERER.getStringWidth(tabName)/2 + 60, yPos+15, 16777215);	
-	}
-	public void modeText(int tabLeft, int tabTop) {
-		String max = "Minimum:";
-		String min = "Maximum:";
+		this.FONT_RENDERER.drawStringWithShadow(EnumTextFormatting.GREEN + tabName, xPos-this.FONT_RENDERER.getStringWidth(tabName)/2 + 64, yPos+8, 16777215);	
+		
+		String min = "Minimum:";
+		String max = "Maximum:";
 		String percent = "%";
 		String buttonText = "Confirm";
 
-		this.FONT_RENDERER.drawString(max, tabLeft+10, tabTop+39, 16777215);				
-		this.FONT_RENDERER.drawString(min, tabLeft+10, tabTop+58, 16777215);	
-		this.FONT_RENDERER.drawString(EnumTextFormatting.BOLD + percent, tabLeft+90, tabTop+39, 16777215);	
-		this.FONT_RENDERER.drawString(EnumTextFormatting.BOLD + percent, tabLeft+90, tabTop+58, 16777215);
-		this.FONT_RENDERER.drawString(buttonText, tabLeft+40, tabTop+80, 16777215);
-	}
-	public void buttonText(int tabLeft, int tabTop){
+		this.FONT_RENDERER.drawStringWithShadow(EnumTextFormatting.RED + min, xPos+15, yPos+29, 16777215);				
+		this.FONT_RENDERER.drawStringWithShadow(EnumTextFormatting.WHITE + max, xPos+15, yPos+48, 16777215);	
+		this.FONT_RENDERER.drawStringWithShadow(EnumTextFormatting.BOLD + percent, xPos+95, yPos+29, 16777215);	
+		this.FONT_RENDERER.drawStringWithShadow(EnumTextFormatting.BOLD + percent, xPos+95, yPos+48, 16777215);
+		this.FONT_RENDERER.drawStringWithShadow(buttonText, xPos+46, yPos+73, 16777215);
 	}
 	public void drawButtonBG(int xPos, int yPos) {
-    	GL11.glPushMatrix();
-		GL11.glDisable(GL11.GL_LIGHTING);
+		int height = -40;
 		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder tes = tessellator.getBuffer();
-        tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        tes.color(.5F, .5F, .5F, 1F);    
-		StaticVertexBuffer.pos(xPos+104, yPos+90, 0, 0, 1);
-		StaticVertexBuffer.pos(xPos+104, yPos+30, 0, 0, 0);
-		StaticVertexBuffer.pos(xPos+17, yPos+30, 0, 1, 0);
-		StaticVertexBuffer.pos(xPos+17, yPos+90, 0, 1, 1);	
+		Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder vertexbuffer = tessellator.getBuffer();
+		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.BUTTON_BG);	
+		GL11.glColor3f(1.0f, 1.0f, 1.0f);
+		vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
+		vertexbuffer.pos(xPos+10, yPos+20, 0).tex(0,1).endVertex();
+		vertexbuffer.pos(xPos+10, yPos+64, 0).tex(0,0).endVertex();
+		vertexbuffer.pos(xPos+110, yPos+64, 0).tex(1,0).endVertex();
+		vertexbuffer.pos(xPos+110, yPos+20, 0).tex(1,1).endVertex();	
 		tessellator.draw();
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glPopMatrix();
 	}
 	public void function() {
 		BaseMachine entity = (BaseMachine)TILE_ENTITY;
@@ -120,7 +111,6 @@ public class GuiPowerControlTab extends BaseGuiTab{
 	}
 	@Override
 	public void handleExtraMouseInteraction(int x, int y, int button) {	
-		mouseInteraction(x, y, button);
 		MAX_PERCENTAGE.mouseClicked(x, y, button);
 		MIN_PERCENTAGE.mouseClicked(x, y, button);
 		SET_PERCENTAGE.buttonMouseClick(x, y, button);

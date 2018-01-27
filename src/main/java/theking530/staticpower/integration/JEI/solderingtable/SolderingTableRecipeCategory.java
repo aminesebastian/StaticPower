@@ -38,7 +38,7 @@ public class SolderingTableRecipeCategory implements IRecipeCategory<SolderingTa
 
 	    @Override
 	    public String getModName() {
-	        return Reference.name;
+	        return Reference.MOD_NAME;
 	    }
 
 	    @Override

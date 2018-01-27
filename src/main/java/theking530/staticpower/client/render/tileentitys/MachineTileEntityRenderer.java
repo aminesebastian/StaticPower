@@ -18,9 +18,9 @@ import theking530.staticpower.utils.SideModeList.Mode;
 public class MachineTileEntityRenderer extends TileEntitySpecialRenderer<BaseTileEntity> {
 
 
-	ResourceLocation side = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSide.png");
-	ResourceLocation sideIn = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSideIn.png");
-	ResourceLocation sideOut = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSideOut.png");
+	ResourceLocation side = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MachineSide.png");
+	ResourceLocation sideIn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MachineSideIn.png");
+	ResourceLocation sideOut = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MachineSideOut.png");
 	
 	ModelBlock BLOCK = new ModelBlock();
 	

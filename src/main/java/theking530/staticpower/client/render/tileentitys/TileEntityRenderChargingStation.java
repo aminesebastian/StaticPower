@@ -13,12 +13,12 @@ import theking530.staticpower.utils.SideModeList.Mode;
 
 public class TileEntityRenderChargingStation extends TileEntitySpecialRenderer<TileEntityChargingStation> {
 
-	ResourceLocation side = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSide.png");
-	ResourceLocation sideIn = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSideIn.png");
-	ResourceLocation sideOut = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSideOut.png");
-	ResourceLocation sideDis = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSideDIS.png");
-	ResourceLocation front = new ResourceLocation(Reference.MODID, "textures/blocks/ChargingStationOff.png");
-	ResourceLocation frontOn = new ResourceLocation(Reference.MODID, "textures/blocks/ChargingStationOn.png");
+	ResourceLocation side = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MachineSide.png");
+	ResourceLocation sideIn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MachineSideIn.png");
+	ResourceLocation sideOut = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MachineSideOut.png");
+	ResourceLocation sideDis = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MachineSideDIS.png");
+	ResourceLocation front = new ResourceLocation(Reference.MOD_ID, "textures/blocks/ChargingStationOff.png");
+	ResourceLocation frontOn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/ChargingStationOn.png");
 	
 	@Override
     public void render(TileEntityChargingStation tileentity, double translationX, double translationY, double translationZ, float f, int dest, float alpha) {

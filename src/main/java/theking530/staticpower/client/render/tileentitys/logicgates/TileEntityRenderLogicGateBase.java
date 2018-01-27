@@ -21,9 +21,9 @@ public class TileEntityRenderLogicGateBase extends TileEntitySpecialRenderer {
     private final ModelBase MODEL;
     ResourceLocation TEXTURE_ON;
     ResourceLocation TEXTURE_OFF;
-    ResourceLocation INPUT = new ResourceLocation(Reference.MODID, "textures/blocks/logicgates/LogicGateInput.png");
-    ResourceLocation OUTPUT = new ResourceLocation(Reference.MODID, "textures/blocks/logicgates/LogicGateOutput.png");
-    ResourceLocation EXTRA = new ResourceLocation(Reference.MODID, "textures/blocks/logicgates/LogicGateExtraOutput.png");
+    ResourceLocation INPUT = new ResourceLocation(Reference.MOD_ID, "textures/blocks/logicgates/LogicGateInput.png");
+    ResourceLocation OUTPUT = new ResourceLocation(Reference.MOD_ID, "textures/blocks/logicgates/LogicGateOutput.png");
+    ResourceLocation EXTRA = new ResourceLocation(Reference.MOD_ID, "textures/blocks/logicgates/LogicGateExtraOutput.png");
     
     public TileEntityRenderLogicGateBase(ModelBase Model, ResourceLocation OnTexture, ResourceLocation OffTexture) {
     	MODEL = Model;

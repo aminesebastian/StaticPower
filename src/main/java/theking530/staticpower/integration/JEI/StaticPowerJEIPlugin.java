@@ -18,7 +18,7 @@ import theking530.staticpower.tileentity.solderingtable.GuiSolderingTable;
 public class StaticPowerJEIPlugin implements IModPlugin{
 	
 	public static IJeiHelpers jeiHelpers;
-	public static final String SOLDERING_TABLE_UID = Reference.MODID + ":solderingTable";
+	public static final String SOLDERING_TABLE_UID = Reference.MOD_ID + ":solderingTable";
 	
     @Override
     public void registerCategories(@Nonnull IRecipeCategoryRegistration registry) {

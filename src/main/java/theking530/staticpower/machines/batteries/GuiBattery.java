@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import theking530.staticpower.client.gui.widgets.BaseGuiContainer;
+import theking530.staticpower.client.gui.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.tabs.GuiPowerControlTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
@@ -28,8 +28,8 @@ public class GuiBattery extends BaseGuiContainer {
 		super(new ContainerBattery(invPlayer, teSBattery), 176, 166);
 		sBattery = teSBattery;
 		POWER_BAR = new GuiPowerBarFromEnergyStorage(teSBattery);
-		getTabManager().registerTab(new GuiRedstoneTab(100, 100, teSBattery));
-		getTabManager().registerTab(new GuiPowerControlTab(100, 100, teSBattery));
+		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teSBattery));
+		getTabManager().registerTab(new GuiPowerControlTab(100, 70, teSBattery));
 		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teSBattery));
 	}	
 
@@ -54,12 +54,17 @@ public class GuiBattery extends BaseGuiContainer {
 		this.fontRenderer.drawString(OUTPUT, this.xSize/2-this.fontRenderer.getStringWidth(OUTPUT)/2 + 35, 45, 4210752);
 		this.fontRenderer.drawString(NAME, this.xSize / 2 - this.fontRenderer.getStringWidth(NAME) / 2, 6, 4210752);
 		
-		this.fontRenderer.drawString(current_input, this.xSize/2-this.fontRenderer.getStringWidth(INPUT)/2 - 40, 25, 4210752);
+		this.fontRenderer.drawString(current_input, this.xSize/2-this.fontRenderer.getStringWidth(INPUT)/2 - 30, 25, 4210752);
 		
 		this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 3, 4210752);
 	}
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
+		this.zLevel = -1.0f;
+		this.drawDefaultBackground();	
+		this.zLevel = 0.0f;
+		
+		
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.mc.getTextureManager().bindTexture(GuiTextures.BATTERY_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
@@ -69,10 +74,6 @@ public class GuiBattery extends BaseGuiContainer {
 	}
 	public void drawScreen(int par1, int par2, float par3) {
 		super.drawScreen(par1, par2, par3);
-		
-		this.zLevel = -1.0f;
-		this.drawDefaultBackground();	
-		this.zLevel = 0.0f;
 
 		int var1 = (this.width - this.xSize) / 2;
 		int var2 = (this.height - this.ySize) / 2;

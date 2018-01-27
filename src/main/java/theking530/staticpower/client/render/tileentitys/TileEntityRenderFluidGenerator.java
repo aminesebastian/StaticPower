@@ -15,11 +15,11 @@ import theking530.staticpower.utils.SideModeList.Mode;
 
 public class TileEntityRenderFluidGenerator extends TileEntitySpecialRenderer<TileEntityFluidGenerator> {
 
-	ResourceLocation side = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSide.png");
-	ResourceLocation sideIn = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSideIn.png");
-	ResourceLocation sideOut = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSideOut.png");
-	ResourceLocation frontOn = new ResourceLocation(Reference.MODID, "textures/blocks/FluidGeneratorFrontOn.png");
-	ResourceLocation front = new ResourceLocation(Reference.MODID, "textures/blocks/FluidGeneratorFrontOff.png");
+	ResourceLocation side = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MachineSide.png");
+	ResourceLocation sideIn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MachineSideIn.png");
+	ResourceLocation sideOut = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MachineSideOut.png");
+	ResourceLocation frontOn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/FluidGeneratorFrontOn.png");
+	ResourceLocation front = new ResourceLocation(Reference.MOD_ID, "textures/blocks/FluidGeneratorFrontOff.png");
 	
 	static float texel = 1F/16F;
 	static float width = 1F;

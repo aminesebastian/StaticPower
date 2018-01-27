@@ -7,7 +7,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import theking530.staticpower.client.gui.widgets.BaseGuiContainer;
+import theking530.staticpower.client.gui.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.buttons.ArrowButton;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
@@ -63,10 +63,6 @@ public class GuiFluidGenerator extends BaseGuiContainer {
 	}	
 	public void drawScreen(int par1, int par2, float par3) {
     	super.drawScreen(par1, par2, par3);
-		this.zLevel = -1.0f;
-		this.drawDefaultBackground();	
-		this.zLevel = 0.0f;
-
 
 		int var1 = (this.width - this.xSize) / 2;
 		int var2 = (this.height - this.ySize) / 2;
@@ -87,6 +83,10 @@ public class GuiFluidGenerator extends BaseGuiContainer {
 	}	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
+		this.zLevel = -1.0f;
+		this.drawDefaultBackground();	
+		this.zLevel = 0.0f;
+		
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.FGENERATOR_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
@@ -94,7 +94,7 @@ public class GuiFluidGenerator extends BaseGuiContainer {
 		FLUIDBAR.drawFluidBar(guiLeft + 30, guiTop + 68, 16, 60, this.zLevel);
 		
 		
-        getTabManager().drawTabs(guiLeft+175, guiTop+10, width, height, f);
+        getTabManager().drawTabs(guiLeft+194, guiTop+10, width, height, f);
 
 	}
 }

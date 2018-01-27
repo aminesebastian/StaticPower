@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-	    "layer0": "staticpower:items/EnergizedFluidCapsule",
-        "layer1": "staticpower:items/FluidCapsuleFluid"
+	    "layer0": "staticpower:items/energizedfluidcapsule",
+        "layer1": "staticpower:items/fluidcapsulefluid"
     }
 }

@@ -18,4 +18,8 @@ public class BaseUpgrade extends ItemBase implements IMachineUpgrade{
 	public int getValueMultiplied(int value, float multiplier) {
 		return (int) (value + (multiplier*(float)value));
 	}
+	@Override
+	public float getValueMultiplied(float value, float multiplier) {
+		return value + (multiplier*value);
+	}
 }

@@ -5,14 +5,18 @@ import java.util.List;
 
 import api.gui.BaseGuiTab;
 import api.gui.BaseGuiTab.TabState;
+import net.minecraft.client.gui.Gui;
+import theking530.staticpower.client.gui.BaseGuiContainer;
 
 public class GuiTabManager {
 	
 	private List<BaseGuiTab> registeredTabs;
 	private BaseGuiTab initiallyOpenTab;
+	private BaseGuiContainer owningGui;
 	
-	public GuiTabManager() {
+	public GuiTabManager(BaseGuiContainer owner) {
 		registeredTabs = new ArrayList<BaseGuiTab>();
+		owningGui = owner;
 	}	
 	public void registerTab(BaseGuiTab tab) {
 		registeredTabs.add(tab);
@@ -36,6 +40,7 @@ public class GuiTabManager {
 					offset += (int) registeredTabs.get(j).getBounds().getH()-24;
 				}
 			}
+			offset = Math.min(offset, owningGui.getXSize()-(registeredTabs.size()*25)-1);
 			registeredTabs.get(i).update(tabPositionX, tabPositionY + (i*25) + offset, partialTicks);
 		}
 	}

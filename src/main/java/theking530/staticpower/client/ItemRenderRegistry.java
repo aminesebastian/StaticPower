@@ -1,9 +1,12 @@
 package theking530.staticpower.client;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
+import theking530.staticpower.assists.Reference;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.crops.ModPlants;
 import theking530.staticpower.items.ModItems;
@@ -11,203 +14,203 @@ import theking530.staticpower.items.armor.ModArmor;
 import theking530.staticpower.items.tools.basictools.ModTools;
 
 public class ItemRenderRegistry {
-
+	
 	public static void initItemRenderers() {
-		ItemRenderRegistry.registerItem(ModItems.PotatoFlour);
-		ItemRenderRegistry.registerItem(ModItems.WheatFlour);
-		ItemRenderRegistry.registerItem(ModItems.PotatoBread);
+		registerItem(ModItems.PotatoFlour);
+		registerItem(ModItems.WheatFlour);
+		registerItem(ModItems.PotatoBread);
 		
-		ItemRenderRegistry.registerItem(ModItems.ApplePie);
-		ItemRenderRegistry.registerItem(ModItems.StaticPie);
-		ItemRenderRegistry.registerItem(ModItems.EnergizedPie);
-		ItemRenderRegistry.registerItem(ModItems.LumumPie);
+		registerItem(ModItems.ApplePie);
+		registerItem(ModItems.StaticPie);
+		registerItem(ModItems.EnergizedPie);
+		registerItem(ModItems.LumumPie);
 		
-		ItemRenderRegistry.registerItem(ModArmor.BaseShield);
+		registerItem(ModArmor.BaseShield);
 		
-		ItemRenderRegistry.registerItem(ModArmor.SkeletonHelmet);
-		ItemRenderRegistry.registerItem(ModArmor.SkeletonChestplate);
-		ItemRenderRegistry.registerItem(ModArmor.SkeletonLeggings);
-		ItemRenderRegistry.registerItem(ModArmor.SkeletonBoots);
+		registerItem(ModArmor.SkeletonHelmet);
+		registerItem(ModArmor.SkeletonChestplate);
+		registerItem(ModArmor.SkeletonLeggings);
+		registerItem(ModArmor.SkeletonBoots);
 		
-		ItemRenderRegistry.registerItem(ModArmor.UndeadHelmet);
-		ItemRenderRegistry.registerItem(ModArmor.UndeadChestplate);
-		ItemRenderRegistry.registerItem(ModArmor.UndeadLeggings);
-		ItemRenderRegistry.registerItem(ModArmor.UndeadBoots);
+		registerItem(ModArmor.UndeadHelmet);
+		registerItem(ModArmor.UndeadChestplate);
+		registerItem(ModArmor.UndeadLeggings);
+		registerItem(ModArmor.UndeadBoots);
 		
-		ItemRenderRegistry.registerItem(ModArmor.StaticHelmet);
-		ItemRenderRegistry.registerItem(ModArmor.StaticChestplate);
-		ItemRenderRegistry.registerItem(ModArmor.StaticLeggings);
-		ItemRenderRegistry.registerItem(ModArmor.StaticBoots);
+		registerItem(ModArmor.StaticHelmet);
+		registerItem(ModArmor.StaticChestplate);
+		registerItem(ModArmor.StaticLeggings);
+		registerItem(ModArmor.StaticBoots);
 		
-		ItemRenderRegistry.registerItem(ModArmor.EnergizedHelmet);
-		ItemRenderRegistry.registerItem(ModArmor.EnergizedChestplate);
-		ItemRenderRegistry.registerItem(ModArmor.EnergizedLeggings);
-		ItemRenderRegistry.registerItem(ModArmor.EnergizedBoots);
+		registerItem(ModArmor.EnergizedHelmet);
+		registerItem(ModArmor.EnergizedChestplate);
+		registerItem(ModArmor.EnergizedLeggings);
+		registerItem(ModArmor.EnergizedBoots);
 		
-		ItemRenderRegistry.registerItem(ModArmor.LumumHelmet);
-		ItemRenderRegistry.registerItem(ModArmor.LumumChestplate);
-		ItemRenderRegistry.registerItem(ModArmor.LumumLeggings);
-		ItemRenderRegistry.registerItem(ModArmor.LumumBoots);
+		registerItem(ModArmor.LumumHelmet);
+		registerItem(ModArmor.LumumChestplate);
+		registerItem(ModArmor.LumumLeggings);
+		registerItem(ModArmor.LumumBoots);
 		
-		ItemRenderRegistry.registerItem(ModArmor.CopperHelmet);
-		ItemRenderRegistry.registerItem(ModArmor.CopperChestplate);
-		ItemRenderRegistry.registerItem(ModArmor.CopperLeggings);
-		ItemRenderRegistry.registerItem(ModArmor.CopperBoots);
+		registerItem(ModArmor.CopperHelmet);
+		registerItem(ModArmor.CopperChestplate);
+		registerItem(ModArmor.CopperLeggings);
+		registerItem(ModArmor.CopperBoots);
 		
-		ItemRenderRegistry.registerItem(ModArmor.TinHelmet);
-		ItemRenderRegistry.registerItem(ModArmor.TinChestplate);
-		ItemRenderRegistry.registerItem(ModArmor.TinLeggings);
-		ItemRenderRegistry.registerItem(ModArmor.TinBoots);
+		registerItem(ModArmor.TinHelmet);
+		registerItem(ModArmor.TinChestplate);
+		registerItem(ModArmor.TinLeggings);
+		registerItem(ModArmor.TinBoots);
 		
-		ItemRenderRegistry.registerItem(ModArmor.LeadHelmet);
-		ItemRenderRegistry.registerItem(ModArmor.LeadChestplate);
-		ItemRenderRegistry.registerItem(ModArmor.LeadLeggings);
-		ItemRenderRegistry.registerItem(ModArmor.LeadBoots);
+		registerItem(ModArmor.LeadHelmet);
+		registerItem(ModArmor.LeadChestplate);
+		registerItem(ModArmor.LeadLeggings);
+		registerItem(ModArmor.LeadBoots);
 		
-		ItemRenderRegistry.registerItem(ModArmor.SilverHelmet);
-		ItemRenderRegistry.registerItem(ModArmor.SilverChestplate);
-		ItemRenderRegistry.registerItem(ModArmor.SilverLeggings);
-		ItemRenderRegistry.registerItem(ModArmor.SilverBoots);
+		registerItem(ModArmor.SilverHelmet);
+		registerItem(ModArmor.SilverChestplate);
+		registerItem(ModArmor.SilverLeggings);
+		registerItem(ModArmor.SilverBoots);
 		
-		ItemRenderRegistry.registerItem(ModArmor.PlatinumHelmet);
-		ItemRenderRegistry.registerItem(ModArmor.PlatinumChestplate);
-		ItemRenderRegistry.registerItem(ModArmor.PlatinumLeggings);
-		ItemRenderRegistry.registerItem(ModArmor.PlatinumBoots);
+		registerItem(ModArmor.PlatinumHelmet);
+		registerItem(ModArmor.PlatinumChestplate);
+		registerItem(ModArmor.PlatinumLeggings);
+		registerItem(ModArmor.PlatinumBoots);
 		
-		ItemRenderRegistry.registerItem(ModArmor.AluminiumHelmet);
-		ItemRenderRegistry.registerItem(ModArmor.AluminiumChestplate);
-		ItemRenderRegistry.registerItem(ModArmor.AluminiumLeggings);
-		ItemRenderRegistry.registerItem(ModArmor.AluminiumBoots);
+		registerItem(ModArmor.AluminiumHelmet);
+		registerItem(ModArmor.AluminiumChestplate);
+		registerItem(ModArmor.AluminiumLeggings);
+		registerItem(ModArmor.AluminiumBoots);
 		
-		ItemRenderRegistry.registerItem(ModArmor.SapphireHelmet);
-		ItemRenderRegistry.registerItem(ModArmor.SapphireChestplate);
-		ItemRenderRegistry.registerItem(ModArmor.SapphireLeggings);
-		ItemRenderRegistry.registerItem(ModArmor.SapphireBoots);
+		registerItem(ModArmor.SapphireHelmet);
+		registerItem(ModArmor.SapphireChestplate);
+		registerItem(ModArmor.SapphireLeggings);
+		registerItem(ModArmor.SapphireBoots);
 		
-		ItemRenderRegistry.registerItem(ModArmor.RubyHelmet);
-		ItemRenderRegistry.registerItem(ModArmor.RubyChestplate);
-		ItemRenderRegistry.registerItem(ModArmor.RubyLeggings);
-		ItemRenderRegistry.registerItem(ModArmor.RubyBoots);
+		registerItem(ModArmor.RubyHelmet);
+		registerItem(ModArmor.RubyChestplate);
+		registerItem(ModArmor.RubyLeggings);
+		registerItem(ModArmor.RubyBoots);
 
-		ItemRenderRegistry.registerItem(ModItems.SilverDust);
-		ItemRenderRegistry.registerItem(ModItems.CopperDust);
-		ItemRenderRegistry.registerItem(ModItems.IronDust);
-		ItemRenderRegistry.registerItem(ModItems.GoldDust);
-		ItemRenderRegistry.registerItem(ModItems.SilverDust);
-		ItemRenderRegistry.registerItem(ModItems.TinDust);
-		ItemRenderRegistry.registerItem(ModItems.LeadDust);
-		ItemRenderRegistry.registerItem(ModItems.PlatinumDust);
-		ItemRenderRegistry.registerItem(ModItems.NickelDust);
-		ItemRenderRegistry.registerItem(ModItems.AluminiumDust);
-		ItemRenderRegistry.registerItem(ModItems.StaticDust);
-		ItemRenderRegistry.registerItem(ModItems.EnergizedDust);
-		ItemRenderRegistry.registerItem(ModItems.LumumDust);
-		ItemRenderRegistry.registerItem(ModItems.InertInfusionBlend);
-		ItemRenderRegistry.registerItem(ModItems.RedstoneAlloyDust);
+		registerItem(ModItems.SilverDust);
+		registerItem(ModItems.CopperDust);
+		registerItem(ModItems.IronDust);
+		registerItem(ModItems.GoldDust);
+		registerItem(ModItems.SilverDust);
+		registerItem(ModItems.TinDust);
+		registerItem(ModItems.LeadDust);
+		registerItem(ModItems.PlatinumDust);
+		registerItem(ModItems.NickelDust);
+		registerItem(ModItems.AluminiumDust);
+		registerItem(ModItems.StaticDust);
+		registerItem(ModItems.EnergizedDust);
+		registerItem(ModItems.LumumDust);
+		registerItem(ModItems.InertInfusionBlend);
+		registerItem(ModItems.RedstoneAlloyDust);
 		
-		ItemRenderRegistry.registerItem(ModItems.StaticNugget);
-		ItemRenderRegistry.registerItem(ModItems.EnergizedNugget);
-		ItemRenderRegistry.registerItem(ModItems.LumumNugget);
-		ItemRenderRegistry.registerItem(ModItems.IronNugget);
+		registerItem(ModItems.StaticNugget);
+		registerItem(ModItems.EnergizedNugget);
+		registerItem(ModItems.LumumNugget);
+		registerItem(ModItems.IronNugget);
 		
-		ItemRenderRegistry.registerItem(ModItems.EnergizedInfusionBlend);
-		ItemRenderRegistry.registerItem(ModItems.LumumInfusionBlend);	
-		ItemRenderRegistry.registerItem(ModItems.EnergizedEnergyCrystal);
-		ItemRenderRegistry.registerItem(ModItems.LumumEnergyCrystal);
-		ItemRenderRegistry.registerItem(ModItems.CopperCoil);
-		ItemRenderRegistry.registerItem(ModItems.SilverCoil);
-		ItemRenderRegistry.registerItem(ModItems.GoldCoil);
-		ItemRenderRegistry.registerItem(ModItems.CopperWire);
-		ItemRenderRegistry.registerItem(ModItems.SilverWire);
-		ItemRenderRegistry.registerItem(ModItems.GoldWire);
-		ItemRenderRegistry.registerItem(ModItems.IronPlate);
-		ItemRenderRegistry.registerItem(ModItems.CopperPlate);
-		ItemRenderRegistry.registerItem(ModItems.TinPlate);
-		ItemRenderRegistry.registerItem(ModItems.SilverPlate);
-		ItemRenderRegistry.registerItem(ModItems.GoldPlate);
-		ItemRenderRegistry.registerItem(ModItems.LeadPlate);
-		ItemRenderRegistry.registerItem(ModItems.StaticPlate);
-		ItemRenderRegistry.registerItem(ModItems.EnergizedPlate);
-		ItemRenderRegistry.registerItem(ModItems.LumumPlate);
+		registerItem(ModItems.EnergizedInfusionBlend);
+		registerItem(ModItems.LumumInfusionBlend);	
+		registerItem(ModItems.EnergizedEnergyCrystal);
+		registerItem(ModItems.LumumEnergyCrystal);
+		registerItem(ModItems.CopperCoil);
+		registerItem(ModItems.SilverCoil);
+		registerItem(ModItems.GoldCoil);
+		registerItem(ModItems.CopperWire);
+		registerItem(ModItems.SilverWire);
+		registerItem(ModItems.GoldWire);
+		registerItem(ModItems.IronPlate);
+		registerItem(ModItems.CopperPlate);
+		registerItem(ModItems.TinPlate);
+		registerItem(ModItems.SilverPlate);
+		registerItem(ModItems.GoldPlate);
+		registerItem(ModItems.LeadPlate);
+		registerItem(ModItems.StaticPlate);
+		registerItem(ModItems.EnergizedPlate);
+		registerItem(ModItems.LumumPlate);
 		
-		ItemRenderRegistry.registerItem(ModItems.SilverIngot);
-		ItemRenderRegistry.registerItem(ModItems.CopperIngot);
-		ItemRenderRegistry.registerItem(ModItems.TinIngot);
-		ItemRenderRegistry.registerItem(ModItems.LeadIngot);
-		ItemRenderRegistry.registerItem(ModItems.PlatinumIngot);
-		ItemRenderRegistry.registerItem(ModItems.StaticIngot);
-		ItemRenderRegistry.registerItem(ModItems.EnergizedIngot);
-		ItemRenderRegistry.registerItem(ModItems.LumumIngot);
-		ItemRenderRegistry.registerItem(ModItems.InertIngot);
-		ItemRenderRegistry.registerItem(ModItems.RedstoneAlloyIngot);
-		ItemRenderRegistry.registerItem(ModItems.NickelIngot);
-		ItemRenderRegistry.registerItem(ModItems.AluminiumIngot);
-		ItemRenderRegistry.registerItem(ModItems.SapphireGem);
-		ItemRenderRegistry.registerItem(ModItems.RubyGem);
+		registerItem(ModItems.SilverIngot);
+		registerItem(ModItems.CopperIngot);
+		registerItem(ModItems.TinIngot);
+		registerItem(ModItems.LeadIngot);
+		registerItem(ModItems.PlatinumIngot);
+		registerItem(ModItems.StaticIngot);
+		registerItem(ModItems.EnergizedIngot);
+		registerItem(ModItems.LumumIngot);
+		registerItem(ModItems.InertIngot);
+		registerItem(ModItems.RedstoneAlloyIngot);
+		registerItem(ModItems.NickelIngot);
+		registerItem(ModItems.AluminiumIngot);
+		registerItem(ModItems.SapphireGem);
+		registerItem(ModItems.RubyGem);
 		
-		ItemRenderRegistry.registerItem(ModItems.StaticWrench);
-		ItemRenderRegistry.registerItem(ModItems.SolderingIron);
-		ItemRenderRegistry.registerItem(ModItems.CoordinateMarker);
-		ItemRenderRegistry.registerItem(ModItems.StaticBook);
-		ItemRenderRegistry.registerItem(ModItems.WireCutters);
-		ItemRenderRegistry.registerItem(ModItems.MetalHammer);
-		ItemRenderRegistry.registerItem(ModItems.ElectricSolderingIron);
+		registerItem(ModItems.StaticWrench);
+		registerItem(ModItems.SolderingIron);
+		registerItem(ModItems.CoordinateMarker);
+		registerItem(ModItems.StaticBook);
+		registerItem(ModItems.WireCutters);
+		registerItem(ModItems.MetalHammer);
+		registerItem(ModItems.ElectricSolderingIron);
 		
-		ItemRenderRegistry.registerItem(ModItems.BasicCircuit);
-		ItemRenderRegistry.registerItem(ModItems.StaticCircuit);
-		ItemRenderRegistry.registerItem(ModItems.EnergizedCircuit);
-		ItemRenderRegistry.registerItem(ModItems.LumumCircuit);
+		registerItem(ModItems.BasicCircuit);
+		registerItem(ModItems.StaticCircuit);
+		registerItem(ModItems.EnergizedCircuit);
+		registerItem(ModItems.LumumCircuit);
 		
-		ItemRenderRegistry.registerItem(ModItems.BasicCircuit);
-		ItemRenderRegistry.registerItem(ModItems.StaticCircuit);
-		ItemRenderRegistry.registerItem(ModItems.EnergizedCircuit);
-		ItemRenderRegistry.registerItem(ModItems.LumumCircuit);
+		registerItem(ModItems.BasicCircuit);
+		registerItem(ModItems.StaticCircuit);
+		registerItem(ModItems.EnergizedCircuit);
+		registerItem(ModItems.LumumCircuit);
 		
-		ItemRenderRegistry.registerItem(ModItems.BasicBattery);
-		ItemRenderRegistry.registerItem(ModItems.StaticBattery);
-		ItemRenderRegistry.registerItem(ModItems.EnergizedBattery);
-		ItemRenderRegistry.registerItem(ModItems.LumumBattery);
+		registerItem(ModItems.BasicBattery);
+		registerItem(ModItems.StaticBattery);
+		registerItem(ModItems.EnergizedBattery);
+		registerItem(ModItems.LumumBattery);
 		//FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((IItemColor)ModItems.BasicBattery, 
 				//ModItems.BasicBattery, ModItems.StaticBattery, ModItems.EnergizedBattery, ModItems.LumumBattery);
 		
-		ItemRenderRegistry.registerItem(ModItems.Rubber);
-		ItemRenderRegistry.registerItem(ModItems.IOPort);
+		registerItem(ModItems.Rubber);
+		registerItem(ModItems.IOPort);
 		
-		ItemRenderRegistry.registerItem(ModItems.BasicPowerUpgrade);
-		ItemRenderRegistry.registerItem(ModItems.BasicSpeedUpgrade);
-		ItemRenderRegistry.registerItem(ModItems.BasicTankUpgrade);
-		ItemRenderRegistry.registerItem(ModItems.BasicRangeUpgrade);
-		ItemRenderRegistry.registerItem(ModItems.StaticPowerUpgrade);
-		ItemRenderRegistry.registerItem(ModItems.StaticSpeedUpgrade);
-		ItemRenderRegistry.registerItem(ModItems.StaticTankUpgrade);
-		ItemRenderRegistry.registerItem(ModItems.StaticQuarryingUpgrade);
-		ItemRenderRegistry.registerItem(ModItems.StaticRangeUpgrade);
-		ItemRenderRegistry.registerItem(ModItems.EnergizedPowerUpgrade);
-		ItemRenderRegistry.registerItem(ModItems.EnergizedSpeedUpgrade);
-		ItemRenderRegistry.registerItem(ModItems.EnergizedTankUpgrade);
-		ItemRenderRegistry.registerItem(ModItems.EnergizedQuarryingUpgrade);
-		ItemRenderRegistry.registerItem(ModItems.EnergizedRangeUpgrade);
-		ItemRenderRegistry.registerItem(ModItems.LumumPowerUpgrade);
-		ItemRenderRegistry.registerItem(ModItems.LumumSpeedUpgrade);
-		ItemRenderRegistry.registerItem(ModItems.LumumTankUpgrade);
-		ItemRenderRegistry.registerItem(ModItems.LumumQuarryingUpgrade);
-		ItemRenderRegistry.registerItem(ModItems.LumumRangeUpgrade);
-		ItemRenderRegistry.registerItem(ModItems.BasicUpgradePlate);
-		ItemRenderRegistry.registerItem(ModItems.StaticUpgradePlate);
-		ItemRenderRegistry.registerItem(ModItems.EnergizedUpgradePlate);
-		ItemRenderRegistry.registerItem(ModItems.LumumUpgradePlate);
+		registerItem(ModItems.BasicPowerUpgrade);
+		registerItem(ModItems.BasicSpeedUpgrade);
+		registerItem(ModItems.BasicTankUpgrade);
+		registerItem(ModItems.BasicRangeUpgrade);
+		registerItem(ModItems.StaticPowerUpgrade);
+		registerItem(ModItems.StaticSpeedUpgrade);
+		registerItem(ModItems.StaticTankUpgrade);
+		registerItem(ModItems.StaticQuarryingUpgrade);
+		registerItem(ModItems.StaticRangeUpgrade);
+		registerItem(ModItems.EnergizedPowerUpgrade);
+		registerItem(ModItems.EnergizedSpeedUpgrade);
+		registerItem(ModItems.EnergizedTankUpgrade);
+		registerItem(ModItems.EnergizedQuarryingUpgrade);
+		registerItem(ModItems.EnergizedRangeUpgrade);
+		registerItem(ModItems.LumumPowerUpgrade);
+		registerItem(ModItems.LumumSpeedUpgrade);
+		registerItem(ModItems.LumumTankUpgrade);
+		registerItem(ModItems.LumumQuarryingUpgrade);
+		registerItem(ModItems.LumumRangeUpgrade);
+		registerItem(ModItems.BasicUpgradePlate);
+		registerItem(ModItems.StaticUpgradePlate);
+		registerItem(ModItems.EnergizedUpgradePlate);
+		registerItem(ModItems.LumumUpgradePlate);
 		
-		ItemRenderRegistry.registerItem(ModPlants.StaticCrop);
-		ItemRenderRegistry.registerItem(ModPlants.EnergizedCrop);
-		ItemRenderRegistry.registerItem(ModPlants.LumumCrop);
-		ItemRenderRegistry.registerItem(ModPlants.DepletedCrop);
-		ItemRenderRegistry.registerItem(ModPlants.StaticSeeds);
-		ItemRenderRegistry.registerItem(ModPlants.EnergizedSeeds);
-		ItemRenderRegistry.registerItem(ModPlants.LumumSeeds);
+		registerItem(ModPlants.StaticCrop);
+		registerItem(ModPlants.EnergizedCrop);
+		registerItem(ModPlants.LumumCrop);
+		registerItem(ModPlants.DepletedCrop);
+		registerItem(ModPlants.StaticSeeds);
+		registerItem(ModPlants.EnergizedSeeds);
+		registerItem(ModPlants.LumumSeeds);
 		
-		ItemRenderRegistry.registerItem(ModItems.BasicItemFilter);
-		ItemRenderRegistry.registerItem(ModItems.UpgradedItemFilter);
-		ItemRenderRegistry.registerItem(ModItems.AdvancedItemFilter);
+		registerItem(ModItems.BasicItemFilter);
+		registerItem(ModItems.UpgradedItemFilter);
+		registerItem(ModItems.AdvancedItemFilter);
 
 		registerBlock(ModBlocks.MachineBlock);
 		registerBlock(ModBlocks.StaticBattery);
@@ -271,9 +274,9 @@ public class ItemRenderRegistry {
 		registerBlock(ModBlocks.StaticLamp);
 		
 		registerBlock(ModBlocks.LogicGateBasePlate);
-		ItemRenderRegistry.registerItem(ModItems.LogicGatePowerSync);
-		ItemRenderRegistry.registerItem(ModItems.InvertedLogicGatePowerSync);
-		ItemRenderRegistry.registerItem(ModItems.LogicGateServo);
+		registerItem(ModItems.LogicGatePowerSync);
+		registerItem(ModItems.InvertedLogicGatePowerSync);
+		registerItem(ModItems.LogicGateServo);
 		
 		registerBlock(ModBlocks.VacuumChest);
 		registerBlock(ModBlocks.StaticChest);
@@ -290,71 +293,76 @@ public class ItemRenderRegistry {
 		registerBlock(ModBlocks.EnergizedWood);
 		registerBlock(ModBlocks.LumumWood);
 		
-		ItemRenderRegistry.registerItem(ModTools.CopperAxe);
-		ItemRenderRegistry.registerItem(ModTools.CopperPickaxe);
-		ItemRenderRegistry.registerItem(ModTools.CopperShovel);
-		ItemRenderRegistry.registerItem(ModTools.CopperHoe);
-		ItemRenderRegistry.registerItem(ModTools.CopperSword);
+		registerItem(ModTools.CopperAxe);
+		registerItem(ModTools.CopperPickaxe);
+		registerItem(ModTools.CopperShovel);
+		registerItem(ModTools.CopperHoe);
+		registerItem(ModTools.CopperSword);
 		
-		ItemRenderRegistry.registerItem(ModTools.TinAxe);
-		ItemRenderRegistry.registerItem(ModTools.TinPickaxe);
-		ItemRenderRegistry.registerItem(ModTools.TinShovel);
-		ItemRenderRegistry.registerItem(ModTools.TinHoe);
-		ItemRenderRegistry.registerItem(ModTools.TinSword);
+		registerItem(ModTools.TinAxe);
+		registerItem(ModTools.TinPickaxe);
+		registerItem(ModTools.TinShovel);
+		registerItem(ModTools.TinHoe);
+		registerItem(ModTools.TinSword);
 		
-		ItemRenderRegistry.registerItem(ModTools.SilverAxe);
-		ItemRenderRegistry.registerItem(ModTools.SilverPickaxe);
-		ItemRenderRegistry.registerItem(ModTools.SilverShovel);
-		ItemRenderRegistry.registerItem(ModTools.SilverHoe);
-		ItemRenderRegistry.registerItem(ModTools.SilverSword);
+		registerItem(ModTools.SilverAxe);
+		registerItem(ModTools.SilverPickaxe);
+		registerItem(ModTools.SilverShovel);
+		registerItem(ModTools.SilverHoe);
+		registerItem(ModTools.SilverSword);
 		
-		ItemRenderRegistry.registerItem(ModTools.LeadAxe);
-		ItemRenderRegistry.registerItem(ModTools.LeadPickaxe);
-		ItemRenderRegistry.registerItem(ModTools.LeadShovel);
-		ItemRenderRegistry.registerItem(ModTools.LeadHoe);
-		ItemRenderRegistry.registerItem(ModTools.LeadSword);
+		registerItem(ModTools.LeadAxe);
+		registerItem(ModTools.LeadPickaxe);
+		registerItem(ModTools.LeadShovel);
+		registerItem(ModTools.LeadHoe);
+		registerItem(ModTools.LeadSword);
 		
-		ItemRenderRegistry.registerItem(ModTools.PlatinumAxe);
-		ItemRenderRegistry.registerItem(ModTools.PlatinumPickaxe);
-		ItemRenderRegistry.registerItem(ModTools.PlatinumShovel);
-		ItemRenderRegistry.registerItem(ModTools.PlatinumHoe);
-		ItemRenderRegistry.registerItem(ModTools.PlatinumSword);
+		registerItem(ModTools.PlatinumAxe);
+		registerItem(ModTools.PlatinumPickaxe);
+		registerItem(ModTools.PlatinumShovel);
+		registerItem(ModTools.PlatinumHoe);
+		registerItem(ModTools.PlatinumSword);
 		
-		ItemRenderRegistry.registerItem(ModTools.StaticAxe);
-		ItemRenderRegistry.registerItem(ModTools.StaticPickaxe);
-		ItemRenderRegistry.registerItem(ModTools.StaticShovel);
-		ItemRenderRegistry.registerItem(ModTools.StaticHoe);
-		ItemRenderRegistry.registerItem(ModTools.StaticSword);
+		registerItem(ModTools.StaticAxe);
+		registerItem(ModTools.StaticPickaxe);
+		registerItem(ModTools.StaticShovel);
+		registerItem(ModTools.StaticHoe);
+		registerItem(ModTools.StaticSword);
 		
-		ItemRenderRegistry.registerItem(ModTools.EnergizedAxe);
-		ItemRenderRegistry.registerItem(ModTools.EnergizedPickaxe);
-		ItemRenderRegistry.registerItem(ModTools.EnergizedShovel);
-		ItemRenderRegistry.registerItem(ModTools.EnergizedHoe);
-		ItemRenderRegistry.registerItem(ModTools.EnergizedSword);
+		registerItem(ModTools.EnergizedAxe);
+		registerItem(ModTools.EnergizedPickaxe);
+		registerItem(ModTools.EnergizedShovel);
+		registerItem(ModTools.EnergizedHoe);
+		registerItem(ModTools.EnergizedSword);
 		
-		ItemRenderRegistry.registerItem(ModTools.LumumAxe);
-		ItemRenderRegistry.registerItem(ModTools.LumumPickaxe);
-		ItemRenderRegistry.registerItem(ModTools.LumumShovel);
-		ItemRenderRegistry.registerItem(ModTools.LumumHoe);
-		ItemRenderRegistry.registerItem(ModTools.LumumSword);
+		registerItem(ModTools.LumumAxe);
+		registerItem(ModTools.LumumPickaxe);
+		registerItem(ModTools.LumumShovel);
+		registerItem(ModTools.LumumHoe);
+		registerItem(ModTools.LumumSword);
 		
-		ItemRenderRegistry.registerItem(ModTools.SapphireAxe);
-		ItemRenderRegistry.registerItem(ModTools.SapphirePickaxe);
-		ItemRenderRegistry.registerItem(ModTools.SapphireShovel);
-		ItemRenderRegistry.registerItem(ModTools.SapphireHoe);
-		ItemRenderRegistry.registerItem(ModTools.SapphireSword);
+		registerItem(ModTools.SapphireAxe);
+		registerItem(ModTools.SapphirePickaxe);
+		registerItem(ModTools.SapphireShovel);
+		registerItem(ModTools.SapphireHoe);
+		registerItem(ModTools.SapphireSword);
 		
-		ItemRenderRegistry.registerItem(ModTools.RubyAxe);
-		ItemRenderRegistry.registerItem(ModTools.RubyPickaxe);
-		ItemRenderRegistry.registerItem(ModTools.RubyShovel);
-		ItemRenderRegistry.registerItem(ModTools.RubyHoe);
-		ItemRenderRegistry.registerItem(ModTools.RubySword);
-		
-		ItemRenderRegistry.registerItem(ModItems.BaseFluidCapsule);
-		ItemRenderRegistry.registerItem(ModItems.StaticFluidCapsule);
-		ItemRenderRegistry.registerItem(ModItems.EnergizedFluidCapsule);
-		ItemRenderRegistry.registerItem(ModItems.LumumFluidCapsule);
+		registerItem(ModTools.RubyAxe);
+		registerItem(ModTools.RubyPickaxe);
+		registerItem(ModTools.RubyShovel);
+		registerItem(ModTools.RubyHoe);
+		registerItem(ModTools.RubySword);		
+
+	    registerCannister(ModItems.BaseFluidCapsule, "basefluidcapsule");
+	    registerCannister(ModItems.StaticFluidCapsule, "staticfluidcapsule");
+	    registerCannister(ModItems.EnergizedFluidCapsule, "energizedfluidcapsule");
+	    registerCannister(ModItems.LumumFluidCapsule, "lumumfluidcapsule");
 	}
+    public static void registerCannister(Item item, String blockstate) {
+    	ModelResourceLocation location =  new ModelResourceLocation(new ResourceLocation(Reference.MOD_ID, blockstate), "inventory");
+		ModelLoader.setCustomMeshDefinition(item, stack -> location);
+	    ModelBakery.registerItemVariants(item, location);
+    }
     public static void registerItem(Item item, int metadata) {
     	ModelLoader.setCustomModelResourceLocation(item, metadata, new ModelResourceLocation(item.getRegistryName(), "inventory"));
     }

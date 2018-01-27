@@ -13,12 +13,12 @@ import theking530.staticpower.utils.SideModeList.Mode;
 
 public class TileEntityRenderCondenser extends TileEntitySpecialRenderer<TileEntityCondenser> {
 
-	ResourceLocation side = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSide.png");
-	ResourceLocation sideIn = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSideIn.png");
-	ResourceLocation sideOut = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSideOut.png");
-	ResourceLocation sideDis = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSideDIS.png");
-	ResourceLocation front = new ResourceLocation(Reference.MODID, "textures/blocks/CondenserOff.png");
-	ResourceLocation frontOn = new ResourceLocation(Reference.MODID, "textures/blocks/CondenserOn.png");
+	ResourceLocation side = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MachineSide.png");
+	ResourceLocation sideIn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MachineSideIn.png");
+	ResourceLocation sideOut = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MachineSideOut.png");
+	ResourceLocation sideDis = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MachineSideDIS.png");
+	ResourceLocation front = new ResourceLocation(Reference.MOD_ID, "textures/blocks/CondenserOff.png");
+	ResourceLocation frontOn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/CondenserOn.png");
 	
 	@Override
 	public void render(TileEntityCondenser tileentity, double translationX, double translationY, double translationZ, float f, int dest, float alpha) {		

@@ -8,11 +8,9 @@ import api.gui.BaseGuiTab;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.Items;
-import theking530.staticpower.utils.EnumTextFormatting;
 import theking530.staticpower.utils.GUIUtilities;
 import theking530.staticpower.utils.GuiTextures;
 

@@ -27,45 +27,45 @@ public class TileEntityRenderBattery extends TileEntitySpecialRenderer<TileEntit
 	ResourceLocation sideIn;
 	ResourceLocation sideOut;
 	
-	ResourceLocation eBar = new ResourceLocation(Reference.MODID, "textures/blocks/battery_energy_bar.png");
+	ResourceLocation eBar = new ResourceLocation(Reference.MOD_ID, "textures/blocks/battery_energy_bar.png");
 	
 	public TileEntityRenderBattery(Tier tier) {	
 		switch(tier) {
-    	case STATIC:top = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_top.png");
-    				topIn = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_top_in.png");
-    				topOut = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_top_out.png");
-    				topDis = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_top_dis.png");
-    				side = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_sides.png");
-    				sideDis = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_sides_dis.png");
-    				sideIn = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_sides_in.png");
-    				sideOut = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_sides_out.png");	
+    	case STATIC:top = new ResourceLocation(Reference.MOD_ID, "textures/blocks/static_battery_top.png");
+    				topIn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/static_battery_top_in.png");
+    				topOut = new ResourceLocation(Reference.MOD_ID, "textures/blocks/static_battery_top_out.png");
+    				topDis = new ResourceLocation(Reference.MOD_ID, "textures/blocks/static_battery_top_dis.png");
+    				side = new ResourceLocation(Reference.MOD_ID, "textures/blocks/static_battery_sides.png");
+    				sideDis = new ResourceLocation(Reference.MOD_ID, "textures/blocks/static_battery_sides_dis.png");
+    				sideIn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/static_battery_sides_in.png");
+    				sideOut = new ResourceLocation(Reference.MOD_ID, "textures/blocks/static_battery_sides_out.png");	
     		break;
-    	case ENERGIZED:top = new ResourceLocation(Reference.MODID, "textures/blocks/energized_battery_top.png");
-					topIn = new ResourceLocation(Reference.MODID, "textures/blocks/energized_battery_top_in.png");
-					topOut = new ResourceLocation(Reference.MODID, "textures/blocks/energized_battery_top_out.png");
-					topDis = new ResourceLocation(Reference.MODID, "textures/blocks/energized_battery_top_dis.png");
-					side = new ResourceLocation(Reference.MODID, "textures/blocks/energized_battery_sides.png");
-					sideDis = new ResourceLocation(Reference.MODID, "textures/blocks/energized_battery_sides_dis.png");
-					sideIn = new ResourceLocation(Reference.MODID, "textures/blocks/energized_battery_sides_in.png");
-					sideOut = new ResourceLocation(Reference.MODID, "textures/blocks/energized_battery_sides_out.png");	
+    	case ENERGIZED:top = new ResourceLocation(Reference.MOD_ID, "textures/blocks/energized_battery_top.png");
+					topIn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/energized_battery_top_in.png");
+					topOut = new ResourceLocation(Reference.MOD_ID, "textures/blocks/energized_battery_top_out.png");
+					topDis = new ResourceLocation(Reference.MOD_ID, "textures/blocks/energized_battery_top_dis.png");
+					side = new ResourceLocation(Reference.MOD_ID, "textures/blocks/energized_battery_sides.png");
+					sideDis = new ResourceLocation(Reference.MOD_ID, "textures/blocks/energized_battery_sides_dis.png");
+					sideIn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/energized_battery_sides_in.png");
+					sideOut = new ResourceLocation(Reference.MOD_ID, "textures/blocks/energized_battery_sides_out.png");	
 			break;
-    	case LUMUM:top = new ResourceLocation(Reference.MODID, "textures/blocks/lumum_battery_top.png");
-					topIn = new ResourceLocation(Reference.MODID, "textures/blocks/lumum_battery_top_in.png");
-					topOut = new ResourceLocation(Reference.MODID, "textures/blocks/lumum_battery_top_out.png");
-					topDis = new ResourceLocation(Reference.MODID, "textures/blocks/lumum_battery_top_dis.png");
-					side = new ResourceLocation(Reference.MODID, "textures/blocks/lumum_battery_sides.png");
-					sideDis = new ResourceLocation(Reference.MODID, "textures/blocks/lumum_battery_sides_dis.png");
-					sideIn = new ResourceLocation(Reference.MODID, "textures/blocks/lumum_battery_sides_in.png");
-					sideOut = new ResourceLocation(Reference.MODID, "textures/blocks/lumum_battery_sides_out.png");	
+    	case LUMUM:top = new ResourceLocation(Reference.MOD_ID, "textures/blocks/lumum_battery_top.png");
+					topIn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/lumum_battery_top_in.png");
+					topOut = new ResourceLocation(Reference.MOD_ID, "textures/blocks/lumum_battery_top_out.png");
+					topDis = new ResourceLocation(Reference.MOD_ID, "textures/blocks/lumum_battery_top_dis.png");
+					side = new ResourceLocation(Reference.MOD_ID, "textures/blocks/lumum_battery_sides.png");
+					sideDis = new ResourceLocation(Reference.MOD_ID, "textures/blocks/lumum_battery_sides_dis.png");
+					sideIn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/lumum_battery_sides_in.png");
+					sideOut = new ResourceLocation(Reference.MOD_ID, "textures/blocks/lumum_battery_sides_out.png");	
 			break;
-    	default:top = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_top.png");
-				topIn = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_top_in.png");
-				topOut = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_top_out.png");
-				topDis = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_top_dis.png");
-				side = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_sides.png");
-				sideDis = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_sides_dis.png");
-				sideIn = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_sides_in.png");
-				sideOut = new ResourceLocation(Reference.MODID, "textures/blocks/static_battery_sides_out.png");	
+    	default:top = new ResourceLocation(Reference.MOD_ID, "textures/blocks/static_battery_top.png");
+				topIn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/static_battery_top_in.png");
+				topOut = new ResourceLocation(Reference.MOD_ID, "textures/blocks/static_battery_top_out.png");
+				topDis = new ResourceLocation(Reference.MOD_ID, "textures/blocks/static_battery_top_dis.png");
+				side = new ResourceLocation(Reference.MOD_ID, "textures/blocks/static_battery_sides.png");
+				sideDis = new ResourceLocation(Reference.MOD_ID, "textures/blocks/static_battery_sides_dis.png");
+				sideIn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/static_battery_sides_in.png");
+				sideOut = new ResourceLocation(Reference.MOD_ID, "textures/blocks/static_battery_sides_out.png");	
 				break;
     	}
 	}

@@ -14,8 +14,8 @@ import theking530.staticpower.conduits.itemconduit.TileEntityItemConduit;
 
 public class TileEntityRenderItemConduit extends TileEntityRenderBaseConduit {
 	
-	ResourceLocation texture = new ResourceLocation(Reference.MODID, "textures/models/conduits/ItemConduit.png");
-	ResourceLocation pullTexture = new ResourceLocation(Reference.MODID, "textures/models/conduits/ItemConduitPull.png");
+	ResourceLocation texture = new ResourceLocation(Reference.MOD_ID, "textures/models/conduits/ItemConduit.png");
+	ResourceLocation pullTexture = new ResourceLocation(Reference.MOD_ID, "textures/models/conduits/ItemConduitPull.png");
 	boolean drawInside = false;
 	
 	float pixel = 1F/16F;

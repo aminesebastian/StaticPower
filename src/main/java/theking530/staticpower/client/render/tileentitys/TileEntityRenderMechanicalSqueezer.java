@@ -18,11 +18,11 @@ import theking530.staticpower.utils.SideModeList.Mode;
 
 public class TileEntityRenderMechanicalSqueezer extends TileEntitySpecialRenderer<TileEntityMechanicalSqueezer> {
 
-	ResourceLocation side = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSide.png");
-	ResourceLocation sideIn = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSideIn.png");
-	ResourceLocation sideOut = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSideOut.png");
-	ResourceLocation front = new ResourceLocation(Reference.MODID, "textures/blocks/MechanicalSqueezerFrontOFF.png");
-	ResourceLocation frontOn = new ResourceLocation(Reference.MODID, "textures/blocks/MechanicalSqueezerFrontON.png");
+	ResourceLocation side = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MachineSide.png");
+	ResourceLocation sideIn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MachineSideIn.png");
+	ResourceLocation sideOut = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MachineSideOut.png");
+	ResourceLocation front = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MechanicalSqueezerFrontOFF.png");
+	ResourceLocation frontOn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MechanicalSqueezerFrontON.png");
 
 	static float texel = 1/16F;
 	

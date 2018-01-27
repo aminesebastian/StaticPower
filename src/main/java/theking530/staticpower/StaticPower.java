@@ -86,7 +86,7 @@ import theking530.staticpower.tileentity.solarpanels.TileEntityStaticSolarPanel;
 import theking530.staticpower.tileentity.solderingtable.TileEntitySolderingTable;
 import theking530.staticpower.tileentity.vacuumchest.TileEntityVacuumChest;
 
-@Mod(modid = Reference.MODID, name = Reference.name, version = Reference.VERSION)
+@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION)
 
 public class StaticPower {
 	
@@ -101,7 +101,7 @@ public class StaticPower {
     public static org.apache.logging.log4j.Logger LOGGER;
     public static Registry REGISTRY;
     
-    @Mod.Instance(Reference.MODID)
+    @Mod.Instance(Reference.MOD_ID)
     public static StaticPower instance;
     
 	static {
@@ -214,7 +214,7 @@ public class StaticPower {
 	}
 	@SubscribeEvent
 	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-		if(event.getModID().equals(Reference.MODID)) {
+		if(event.getModID().equals(Reference.MOD_ID)) {
 			StaticPowerConfig.updateConfig();
 		}
 	}

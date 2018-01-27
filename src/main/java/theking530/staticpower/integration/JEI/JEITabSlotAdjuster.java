@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 import api.RectangleBounds;
 import api.gui.BaseGuiTab;
 import mezz.jei.api.gui.IAdvancedGuiHandler;
-import theking530.staticpower.client.gui.widgets.BaseGuiContainer;
+import theking530.staticpower.client.gui.BaseGuiContainer;
 
 public class JEITabSlotAdjuster implements IAdvancedGuiHandler<BaseGuiContainer>{
 	@Override

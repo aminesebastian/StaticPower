@@ -15,9 +15,9 @@ import theking530.staticpower.utils.StaticVertexBuffer;
 
 public class TileEntityRenderStaticConduit extends TileEntityRenderBaseConduit {
 	
-	ResourceLocation energy = new ResourceLocation(Reference.MODID, "textures/models/conduits/ConduitEnergy.png");
-	ResourceLocation texture = new ResourceLocation(Reference.MODID, "textures/models/conduits/FluidConduit.png");
-	ResourceLocation pullTexture = new ResourceLocation(Reference.MODID, "textures/models/conduits/FluidConduitPull.png");
+	ResourceLocation energy = new ResourceLocation(Reference.MOD_ID, "textures/models/conduits/ConduitEnergy.png");
+	ResourceLocation texture = new ResourceLocation(Reference.MOD_ID, "textures/models/conduits/FluidConduit.png");
+	ResourceLocation pullTexture = new ResourceLocation(Reference.MOD_ID, "textures/models/conduits/FluidConduitPull.png");
 	
 	boolean drawInside = true;
 	

@@ -17,7 +17,7 @@ import theking530.staticpower.utils.Vector3;
 public class TileEntityRenderLED extends TileEntitySpecialRenderer<TileEntityLED> {
 
     private final float PIXEL = 1f/16f;
-    ResourceLocation TEXTURE = new ResourceLocation(Reference.MODID, "textures/blank_texture.png");
+    ResourceLocation TEXTURE = new ResourceLocation(Reference.MOD_ID, "textures/blank_texture.png");
     
 	@Override
 	public void render(TileEntityLED LED, double x, double y, double z, float f, int dest, float alpha) {

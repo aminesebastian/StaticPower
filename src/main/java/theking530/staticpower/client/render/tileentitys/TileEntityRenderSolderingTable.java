@@ -14,7 +14,7 @@ import theking530.staticpower.tileentity.solderingtable.TileEntitySolderingTable
 public class TileEntityRenderSolderingTable extends TileEntitySpecialRenderer<TileEntitySolderingTable> {
 	
 	private final ModelSolderingTable Table;
-	ResourceLocation SolderingTableTexture = new ResourceLocation(Reference.MODID, "textures/models/tileentity/SolderingTable.png");
+	ResourceLocation SolderingTableTexture = new ResourceLocation(Reference.MOD_ID, "textures/models/tileentity/SolderingTable.png");
 	
 	static float texel = 1F/16F;
 	

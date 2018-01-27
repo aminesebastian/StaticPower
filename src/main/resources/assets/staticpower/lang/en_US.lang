@@ -280,7 +280,7 @@ container.WaterGenerator=Water Generator
 container.IndustrialFurnace=Industrial Furnace
 container.IndustrialGrinder=Industrial Grinder
 container.SolderingTable=Soldering Table
-container.VacuumChest=VacuumChest
+container.VacuumChest=Vacuum Chest
 container.Fermenter=Fermenter
 
 //Tools

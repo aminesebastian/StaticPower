@@ -180,12 +180,10 @@ public class ModBlocks {
 		
 		EnergizedPlanks = new BaseBlock(Material.WOOD, "EnergizedPlanks").setHardness(3.5f);
 		registry.PreRegisterBlock(EnergizedPlanks);
-		OreDictionary.registerOre("plankWood", EnergizedPlanks);
 		
 		LumumPlanks = new BaseBlock(Material.WOOD, "LumumPlanks").setHardness(3.5f);
 		registry.PreRegisterBlock(LumumPlanks);
-		OreDictionary.registerOre("plankWood", LumumPlanks);
-		
+
 		StaticCobblestone = new BaseBlock(Material.ROCK, "StaticCobblestone").setHardness(3.5f);
 		registry.PreRegisterBlock(StaticCobblestone);
 		
@@ -307,31 +305,22 @@ public class ModBlocks {
 		registry.PreRegisterBlock(LumumBlock);
 		BlockCopper = new BaseBlock(Material.IRON, "BlockCopper");
 		registry.PreRegisterBlock(BlockCopper);	
-		OreDictionary.registerOre("blockCopper", BlockCopper);
 		BlockTin = new BaseBlock(Material.IRON, "BlockTin");
 		registry.PreRegisterBlock(BlockTin);	
-		OreDictionary.registerOre("blockTin", BlockTin);
 		BlockSilver = new BaseBlock(Material.IRON, "BlockSilver");
 		registry.PreRegisterBlock(BlockSilver);
-		OreDictionary.registerOre("blockSilver", BlockSilver);
 		BlockLead = new BaseBlock(Material.IRON, "BlockLead");
-		registry.PreRegisterBlock(BlockLead);	
-		OreDictionary.registerOre("blockLead", BlockLead);
+		registry.PreRegisterBlock(BlockLead);	;
 		BlockPlatinum = new BaseBlock(Material.IRON, "BlockPlatinum");
 		registry.PreRegisterBlock(BlockPlatinum);
-		OreDictionary.registerOre("blockPlatinum", BlockPlatinum);	
 		BlockNickel = new BaseBlock(Material.IRON, "BlockNickel");
 		registry.PreRegisterBlock(BlockNickel);	
-		OreDictionary.registerOre("blockNickel", BlockNickel);
 		BlockAluminium = new BaseBlock(Material.IRON, "BlockAluminium");
 		registry.PreRegisterBlock(BlockAluminium);
-		OreDictionary.registerOre("blockAluminium", BlockAluminium);
 		BlockSapphire = new BaseBlock(Material.IRON, "BlockSapphire");
 		registry.PreRegisterBlock(BlockSapphire);	
-		OreDictionary.registerOre("blockSapphire", BlockSapphire);
 		BlockRuby = new BaseBlock(Material.IRON, "BlockRuby");
 		registry.PreRegisterBlock(BlockRuby);
-		OreDictionary.registerOre("blockRuby", BlockRuby);
 		
 		
 		StaticGrass = new StaticGrass(Material.GRASS).setUnlocalizedName("StaticGrass");

@@ -25,16 +25,16 @@ public class TileEntityRenderChest extends TileEntitySpecialRenderer<TileEntity>
     	TIER = tier;	
     	switch(TIER) {
     	case STATIC:
-    		texture = new ResourceLocation(Reference.MODID, "textures/models/tileentity/StaticChest.png");
+    		texture = new ResourceLocation(Reference.MOD_ID, "textures/models/tileentity/StaticChest.png");
     		break;
     	case ENERGIZED:
-    		texture = new ResourceLocation(Reference.MODID, "textures/models/tileentity/EnergizedChest.png");
+    		texture = new ResourceLocation(Reference.MOD_ID, "textures/models/tileentity/EnergizedChest.png");
     		break;
     	case LUMUM:
-    		texture = new ResourceLocation(Reference.MODID, "textures/models/tileentity/LumumChest.png");
+    		texture = new ResourceLocation(Reference.MOD_ID, "textures/models/tileentity/LumumChest.png");
     		break;
     	default:
-    		texture = new ResourceLocation(Reference.MODID, "textures/models/tileentity/StaticChest.png");
+    		texture = new ResourceLocation(Reference.MOD_ID, "textures/models/tileentity/StaticChest.png");
     		break;
     	}
     }
@@ -44,16 +44,16 @@ public class TileEntityRenderChest extends TileEntitySpecialRenderer<TileEntity>
         
     	switch(TIER) {
     	case STATIC:
-    		texture = new ResourceLocation(Reference.MODID, "textures/models/tileentity/StaticChest.png");
+    		texture = new ResourceLocation(Reference.MOD_ID, "textures/models/tileentity/StaticChest.png");
     		break;
     	case ENERGIZED:
-    		texture = new ResourceLocation(Reference.MODID, "textures/models/tileentity/EnergizedChest.png");
+    		texture = new ResourceLocation(Reference.MOD_ID, "textures/models/tileentity/EnergizedChest.png");
     		break;
     	case LUMUM:
-    		texture = new ResourceLocation(Reference.MODID, "textures/models/tileentity/LumumChest.png");
+    		texture = new ResourceLocation(Reference.MOD_ID, "textures/models/tileentity/LumumChest.png");
     		break;
     	default:
-    		texture = new ResourceLocation(Reference.MODID, "textures/models/tileentity/StaticChest.png");
+    		texture = new ResourceLocation(Reference.MOD_ID, "textures/models/tileentity/StaticChest.png");
     		break;
     	}
         

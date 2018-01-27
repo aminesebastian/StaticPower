@@ -39,8 +39,8 @@ public class StringButton extends Gui implements MouseListener{
 	public boolean IS_VISIBLE = true;
 	public boolean CLICKED = false;
 	
-	private ResourceLocation base = new ResourceLocation(Reference.MODID + ":" + "/textures/gui/Button.png");
-	private ResourceLocation hover = new ResourceLocation(Reference.MODID + ":" + "/textures/gui/ButtonHover.png");
+	private ResourceLocation base = new ResourceLocation(Reference.MOD_ID + ":" + "/textures/gui/Button.png");
+	private ResourceLocation hover = new ResourceLocation(Reference.MOD_ID + ":" + "/textures/gui/ButtonHover.png");
 	
 	public StringButton(int guiLeft, int guiTop, int width, int height, int xPos, int yPos, Block block) {
 		this.GUI_LEFT = guiLeft;

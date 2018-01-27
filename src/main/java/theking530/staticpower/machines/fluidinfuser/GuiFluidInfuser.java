@@ -11,7 +11,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import theking530.staticpower.client.gui.widgets.BaseGuiContainer;
+import theking530.staticpower.client.gui.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.buttons.ArrowButton;
 import theking530.staticpower.client.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;

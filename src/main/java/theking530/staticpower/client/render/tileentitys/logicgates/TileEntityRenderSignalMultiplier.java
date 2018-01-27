@@ -8,8 +8,8 @@ public class TileEntityRenderSignalMultiplier extends TileEntityRenderLogicGateB
 	
     public TileEntityRenderSignalMultiplier() {
         super(new ModelSignalMultiplier(), 
-        		new ResourceLocation(Reference.MODID, "textures/blocks/logic_gate_base_on.png"), 
-        		new ResourceLocation(Reference.MODID, "textures/blocks/logic_gate_base_off.png"));
+        		new ResourceLocation(Reference.MOD_ID, "textures/blocks/logic_gate_base_on.png"), 
+        		new ResourceLocation(Reference.MOD_ID, "textures/blocks/logic_gate_base_off.png"));
     }
 }
 

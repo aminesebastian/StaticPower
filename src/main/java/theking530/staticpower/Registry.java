@@ -4,13 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.item.Item;
-import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.model.ModelDynBucket;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.client.model.obj.OBJLoader;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -18,20 +14,19 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.blocks.BaseItemBlock;
-import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.client.ItemRenderRegistry;
+import theking530.staticpower.client.model.fluidcapsule.ModelFluidCapsule.LoaderFluidCapsule;
 import theking530.staticpower.fluids.ModFluids;
-import theking530.staticpower.items.ModItems;
-import theking530.staticpower.tileentity.solderingtable.TileEntitySolderingTable;
 
-@Mod.EventBusSubscriber(modid = Reference.MODID)
+@Mod.EventBusSubscriber(modid = Reference.MOD_ID)
 public class Registry {
 
 	public List<Item> ITEMS = new LinkedList<>();
 	public List<Block> BLOCKS = new LinkedList<>();
-    
+
     public void preInit(FMLPreInitializationEvent e) {
     	 MinecraftForge.EVENT_BUS.register(this);
+    	 //ModelLoaderRegistry.registerLoader(theking530.staticpower.client.model.fluidcapsule.ModelFluidCapsule.LoaderFluidCapsule.INSTANCE);
     }
     
     public void PreRegisterItem(Item item) {
@@ -40,6 +35,11 @@ public class Registry {
     public void PreRegisterBlock(Block block) {
     	BLOCKS.add(block);
     	ITEMS.add(new BaseItemBlock(block, block.getUnlocalizedName()));
+    }
+    
+    @SubscribeEvent
+    public static void onTextureStitchedPre(TextureStitchEvent.Pre e) {
+    	LoaderFluidCapsule.INSTANCE.register(e.getMap());
     }
     @SubscribeEvent
     public void registerBlocks(RegistryEvent.Register<Block> e) {
@@ -55,14 +55,8 @@ public class Registry {
 
 	@SubscribeEvent
     public void registerModels(ModelRegistryEvent event) {	
-        OBJLoader.INSTANCE.addDomain(Reference.MODID.toLowerCase());
-    	
 	    ItemRenderRegistry.initItemRenderers();
 	    ModFluids.initBlockRendering();
-	    ModFluids.initItemRendering();
-	    
-        ModelLoader.setCustomMeshDefinition(ModItems.BaseFluidCapsule, stack -> ModelDynBucket.LOCATION);
-        ModelBakery.registerItemVariants(ModItems.BaseFluidCapsule, ModelDynBucket.LOCATION);
-	    
+	    ModFluids.initItemRendering();	    
     }
 }

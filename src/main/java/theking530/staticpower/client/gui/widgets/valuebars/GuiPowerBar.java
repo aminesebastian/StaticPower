@@ -18,7 +18,7 @@ public class GuiPowerBar {
 	private float WORLD_TIME;
 	
 	public GuiPowerBar() {
-		GLOW_SCALE_RATE = 0.10f;
+		GLOW_SCALE_RATE = 0.20f;
 		WORLD_TIME = 0.0f;
 	}
 	
@@ -45,13 +45,14 @@ public class GuiPowerBar {
 		vertexbuffer.pos(xpos + width, ypos - k1, zLevel).tex(1,u1).endVertex();
 		vertexbuffer.pos(xpos, ypos - k1, zLevel).tex(0,u1).endVertex();
 		vertexbuffer.pos(xpos, ypos, zLevel).tex(0,0).endVertex();	
+		GlStateManager.color(1.0f, 1.0f, 1.0f);
 		tessellator.draw();
 	}
 	private float getGlow(float deltaTime) {
 		WORLD_TIME += deltaTime;
 		float sin = (float)(Math.sin(WORLD_TIME*GLOW_SCALE_RATE));
 		sin = (sin + 10)/20;
-		sin *= 2;
+
 		return Math.min(sin, 1);
 	}
 }	

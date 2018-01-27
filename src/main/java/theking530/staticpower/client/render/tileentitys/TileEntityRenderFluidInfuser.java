@@ -15,10 +15,10 @@ import theking530.staticpower.utils.SideModeList.Mode;
 
 public class TileEntityRenderFluidInfuser extends TileEntitySpecialRenderer<TileEntityFluidInfuser> {
 
-	ResourceLocation side = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSide.png");
-	ResourceLocation sideIn = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSideIn.png");
-	ResourceLocation sideOut = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSideOut.png");
-	ResourceLocation front = new ResourceLocation(Reference.MODID, "textures/blocks/FluidInfuserFront.png");
+	ResourceLocation side = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MachineSide.png");
+	ResourceLocation sideIn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MachineSideIn.png");
+	ResourceLocation sideOut = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MachineSideOut.png");
+	ResourceLocation front = new ResourceLocation(Reference.MOD_ID, "textures/blocks/FluidInfuserFront.png");
 	
 	static float texel = 1F/16F;
 	

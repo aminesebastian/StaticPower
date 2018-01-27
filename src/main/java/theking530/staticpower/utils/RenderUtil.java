@@ -17,7 +17,7 @@ import theking530.staticpower.assists.Reference;
 public class RenderUtil {
 	
 	public static final ResourceLocation BLOCK_TEX = TextureMap.LOCATION_BLOCKS_TEXTURE;
-	public static final ResourceLocation POWER_BAR_TEXTURE = new ResourceLocation(Reference.MODID, "textures/blocks/BlockEnergyBar.png");
+	public static final ResourceLocation POWER_BAR_TEXTURE = new ResourceLocation(Reference.MOD_ID, "textures/blocks/BlockEnergyBar.png");
 	
 	public static TextureAtlasSprite getStillTexture(Fluid fluid) {
 		ResourceLocation iconKey = fluid.getStill();

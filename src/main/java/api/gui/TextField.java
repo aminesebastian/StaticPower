@@ -44,9 +44,7 @@ public class TextField extends Gui
     /** True if this textbox is visible */
     private boolean visible = true;
 
-    public TextField(int p_i1032_2_, int p_i1032_3_, int p_i1032_4_, int p_i1032_5_) {
-        this.xPosition = p_i1032_2_;
-        this.yPosition = p_i1032_3_;
+    public TextField(int p_i1032_4_, int p_i1032_5_) {
         this.width = p_i1032_4_;
         this.height = p_i1032_5_;
     	this.FONT_RENDERER = Minecraft.getMinecraft().fontRenderer;
@@ -476,8 +474,10 @@ public class TextField extends Gui
     /**
      * Draws the textbox
      */
-    public void drawTextBox()
+    public void drawTextBox(int xPos, int yPos)
     {
+    	this.xPosition = xPos;
+    	this.yPosition = yPos;
         if (this.getVisible())
         {
             if (this.getEnableBackgroundDrawing())

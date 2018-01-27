@@ -52,7 +52,7 @@ import theking530.staticpower.utils.customboundingbox.CustomBoundingBox;
 import theking530.staticpower.utils.customboundingbox.ICustomBoundingBox;
 import theking530.staticpower.utils.customboundingbox.RenderCustomBoundingBox;
 
-@Mod.EventBusSubscriber(modid = Reference.MODID)
+@Mod.EventBusSubscriber(modid = Reference.MOD_ID)
 public class ModEvents {
 	
 	public final Random RANDOM;

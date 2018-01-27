@@ -13,12 +13,12 @@ import theking530.staticpower.utils.SideModeList.Mode;
 
 public class TileEntityRenderPoweredFurnace extends TileEntitySpecialRenderer<TileEntityPoweredFurnace> {
 
-	ResourceLocation side = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSide.png");
-	ResourceLocation sideIn = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSideIn.png");
-	ResourceLocation sideOut = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSideOut.png");
-	ResourceLocation sideDis = new ResourceLocation(Reference.MODID, "textures/blocks/MachineSideDIS.png");
-	ResourceLocation front = new ResourceLocation(Reference.MODID, "textures/blocks/PoweredSmelterFront.png");
-	ResourceLocation frontOn = new ResourceLocation(Reference.MODID, "textures/blocks/PoweredSmelterFrontOn.png");
+	ResourceLocation side = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MachineSide.png");
+	ResourceLocation sideIn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MachineSideIn.png");
+	ResourceLocation sideOut = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MachineSideOut.png");
+	ResourceLocation sideDis = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MachineSideDIS.png");
+	ResourceLocation front = new ResourceLocation(Reference.MOD_ID, "textures/blocks/PoweredSmelterFront.png");
+	ResourceLocation frontOn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/PoweredSmelterFrontOn.png");
 	
 	@Override
 	public void render(TileEntityPoweredFurnace tileentity, double translationX, double translationY, double translationZ, float f, int dest, float alpha) {			

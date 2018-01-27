@@ -1,4 +1,4 @@
-package theking530.staticpower.client.gui.widgets;
+package theking530.staticpower.client.gui;
 
 import java.io.IOException;
 
@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.math.Vec3i;
+import theking530.staticpower.client.gui.widgets.GuiTabManager;
 import theking530.staticpower.utils.GUIUtilities;
 
 public abstract class BaseGuiContainer extends GuiContainer {
@@ -19,14 +20,19 @@ public abstract class BaseGuiContainer extends GuiContainer {
 		super(inventorySlotsIn);
 		xSize = guiXSize;
 		ySize = guiYSize;
-		tabManager = new GuiTabManager();
+		tabManager = new GuiTabManager(this);
 	}
 	@Override
 	protected abstract void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY);
-
 	
 	public GuiTabManager getTabManager() {
 		return tabManager;
+	}
+	
+	@Override
+	public void drawScreen(int par1, int par2, float par3) {
+    	super.drawScreen(par1, par2, par3);
+		this.renderHoveredToolTip(par1, par2);
 	}
 	@Override
 	protected void mouseClicked(int x, int y, int button) throws IOException{
