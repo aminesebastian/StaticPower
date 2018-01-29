@@ -22,18 +22,18 @@ public class TileEntityHeatingElement extends BaseMachine implements ITickable, 
 	@Override
 	public void process(){
 		if(!getWorld().isRemote) {
-			if(PROCESSING_TIMER >= PROCESSING_TIME) {
-				if(HEAT_STORAGE.getHeat() < HEAT_STORAGE.getMaxHeat() && STORAGE.getEnergyStored() > getProcessingCost()) {
+			if(processingTimer >= processingTime) {
+				if(HEAT_STORAGE.getHeat() < HEAT_STORAGE.getMaxHeat() && energyStorage.getEnergyStored() > getProcessingCost()) {
 					HEAT_STORAGE.recieveHeat(1);
-					STORAGE.extractEnergy(getProcessingCost(), false);
+					energyStorage.extractEnergy(getProcessingCost(), false);
 				}
 				HEAT_DIST.provideHeat();		
-				PROCESSING_TIMER = 0;
+				processingTimer = 0;
 				
 				markDirty();
 			}else{
-				PROCESSING_TIMER++;
-				STORAGE.extractEnergy(getProcessingCost(), false);
+				processingTimer++;
+				energyStorage.extractEnergy(getProcessingCost(), false);
 			}	
 		}
 	}

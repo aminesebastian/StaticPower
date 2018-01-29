@@ -12,14 +12,13 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexBuffer;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
 import theking530.staticpower.client.BaseSideSelectorComponent;
 import theking530.staticpower.client.gui.widgets.Trackball.TrackballWrapper;
-import theking530.staticpower.utils.OldSidePicker;
+import theking530.staticpower.utils.SidePicker;
 
 public class GuiComponentSideSelector extends BaseSideSelectorComponent {
 
@@ -84,7 +83,7 @@ public class GuiComponentSideSelector extends BaseSideSelectorComponent {
 	@Override
 	public void renderOverlay(Minecraft minecraft, int offsetX, int offsetY, int mouseX, int mouseY) {}
 
-	private static void drawHighlight(Tessellator t, OldSidePicker.Side side, int color) {
+	private static void drawHighlight(Tessellator t, SidePicker.Side side, int color) {
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);

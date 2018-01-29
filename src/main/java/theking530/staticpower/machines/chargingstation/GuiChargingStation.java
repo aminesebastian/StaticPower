@@ -27,7 +27,7 @@ public class GuiChargingStation extends BaseGuiContainer {
 		C_STATION = teCharging;
 		POWER_BAR = new GuiPowerBarFromEnergyStorage(teCharging);
 		
-		getTabManager().registerTab(new GuiRedstoneTab(100, 100, teCharging));
+		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teCharging));
 		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teCharging));	
 	}
 
@@ -41,9 +41,9 @@ public class GuiChargingStation extends BaseGuiContainer {
     	int var1 = (this.width - this.xSize) / 2;
         int var2 = (this.height - this.ySize) / 2;  
         if(par1 >= 8 + var1 && par2 >= 8 + var2 && par1 <= 24 + var1 && par2 <= 68 + var2) {
-        	int j1 = C_STATION.STORAGE.getEnergyStored();
-        	int k1 = C_STATION.STORAGE.getMaxEnergyStored();
-        	int i1 = C_STATION.STORAGE.getMaxReceive();
+        	int j1 = C_STATION.energyStorage.getEnergyStored();
+        	int k1 = C_STATION.energyStorage.getMaxEnergyStored();
+        	int i1 = C_STATION.energyStorage.getMaxReceive();
         	String text = ("Max: " + i1 + " RF/t" + "=" + NumberFormat.getNumberInstance(Locale.US).format(j1)  + "/" + NumberFormat.getNumberInstance(Locale.US).format(k1) + " " + "RF");
         	String[] splitMsg = text.split("=");
         	List<String> temp = Arrays.asList(splitMsg);

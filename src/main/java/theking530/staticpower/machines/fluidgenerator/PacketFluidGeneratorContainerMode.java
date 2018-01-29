@@ -6,7 +6,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent.FluidContainerInteractionMode;
+import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent.FluidContainerInteractionMode;
 
 public class PacketFluidGeneratorContainerMode implements IMessage{
 	
@@ -43,7 +43,7 @@ public class PacketFluidGeneratorContainerMode implements IMessage{
     		TileEntity te = ctx.getServerHandler().player.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
     		if(te != null && te instanceof TileEntityFluidGenerator) {
     			TileEntityFluidGenerator entity = (TileEntityFluidGenerator)te;
-    			entity.DRAIN_COMPONENT.setMode(message.MODE);
+    			entity.fluidContainerComponent.setMode(message.MODE);
     			entity.updateBlock();
     		}
 		return null;

@@ -15,8 +15,8 @@ import theking530.staticpower.machines.BaseMachineWithTank;
 import theking530.staticpower.machines.condenser.TileEntityCondenser;
 import theking530.staticpower.machines.heatingelement.HeatStorage;
 import theking530.staticpower.machines.heatingelement.IHeatable;
-import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent;
-import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent.FluidContainerInteractionMode;
+import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent;
+import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent.FluidContainerInteractionMode;
 
 public class TileEntityDistillery extends BaseMachineWithTank implements IHeatable{
 
@@ -46,16 +46,14 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
 			DRAIN_COMPONENT_MASH.update();
 			if(!isProcessing() && canProcess() && PROCESSING_STACK == null) {
 				PROCESSING_STACK = TANK.drain(getInputFluidAmount(), true);
-				PROCESSING_TIMER++;
+				processingTimer++;
 			}
 			if(isProcessing()) {
-				if(PROCESSING_TIMER < PROCESSING_TIME) {
-					PROCESSING_TIMER++;
-					updateBlock();
+				if(processingTimer < processingTime) {
+					processingTimer++;
 				}else{
 					if(PROCESSING_STACK != null) {
-						PROCESSING_TIMER = 0;
-						HEAT_STORAGE.extractHeat(1);
+						processingTimer = 0;
 						TANK2.fill(getOutputFluid(), true);
 						PROCESSING_STACK = null;	
 						updateBlock();

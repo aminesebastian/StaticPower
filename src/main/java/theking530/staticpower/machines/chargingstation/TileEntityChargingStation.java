@@ -11,15 +11,15 @@ public class TileEntityChargingStation extends BaseMachine {
 	public TileEntityChargingStation() {
 		initializeBasicMachine(2, 0, 100000, 500, 2, 0, 6, 4);
 		setBatterySlot(4);
-		STORAGE.setMaxExtract(512);
+		energyStorage.setMaxExtract(512);
 	}
 	@Override
 	public void process(){
-		if(STORAGE.getEnergyStored() > 0) {
+		if(energyStorage.getEnergyStored() > 0) {
 			for(int i=0; i<4; i++) {
 				if(slotsInput.getStackInSlot(i) != ItemStack.EMPTY && slotsInput.getStackInSlot(i).getItem() instanceof IEnergyContainerItem) {
 					IEnergyContainerItem tempChargingItem = (IEnergyContainerItem)slotsInput.getStackInSlot(i).getItem();
-					extractEnergy(EnumFacing.UP, tempChargingItem.receiveEnergy(slotsInput.getStackInSlot(i), STORAGE.getMaxExtract(), false), false);
+					extractEnergy(EnumFacing.UP, tempChargingItem.receiveEnergy(slotsInput.getStackInSlot(i), energyStorage.getMaxExtract(), false), false);
 					if(tempChargingItem.getEnergyStored(slotsInput.getStackInSlot(i)) >= tempChargingItem.getMaxEnergyStored(slotsInput.getStackInSlot(i))) {
 						outputItem(i);
 					}

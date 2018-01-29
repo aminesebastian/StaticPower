@@ -13,7 +13,7 @@ public class TileEntityBattery extends BaseMachine{
 	protected PowerDistributor POWER_DIS;
 	
 	public TileEntityBattery() {
-		POWER_DIS = new PowerDistributor(this, STORAGE, getSideConfigurations());		
+		POWER_DIS = new PowerDistributor(this, energyStorage);		
 	}
 	
 	public void process() {
@@ -44,7 +44,7 @@ public class TileEntityBattery extends BaseMachine{
 	  
 	//Tab Integration
 	public void powerTab() {	
-		if(getEnergyLevelScaled(1)*100 > this.MIN_POWER_THRESHOLD && getEnergyLevelScaled(1)*100 < this.MAX_POWER_THRESHOLD) {
+		if(getEnergyLevelScaled(1)*100 > this.minPowerThreshold && getEnergyLevelScaled(1)*100 < this.maxPowerThreshold) {
 			//getWorld().setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 15, 3);
 		}else{
 			//getWorld().setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 0, 3);
@@ -56,7 +56,7 @@ public class TileEntityBattery extends BaseMachine{
 	}
 	@Override
 	public void onSidesConfigUpdate() {
-		POWER_DIS.updateSideSettings(getSideConfigurations());
+
 	}
 	
 	//Energy
@@ -69,8 +69,8 @@ public class TileEntityBattery extends BaseMachine{
 		}
 	}
 	public float getEnergyLevelScaled(int i) {
-		float amount = STORAGE.getEnergyStored();
-		float percentFilled = (amount/STORAGE.getMaxEnergyStored());	
+		float amount = energyStorage.getEnergyStored();
+		float percentFilled = (amount/energyStorage.getMaxEnergyStored());	
 		return percentFilled * (float)i;
 	}	
 }

@@ -7,16 +7,14 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexBuffer;
 import net.minecraft.entity.Entity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.logic.gates.TileEntityBaseLogicGate;
 import theking530.staticpower.utils.SideModeList.Mode;
 
-public class TileEntityRenderLogicGateBase extends TileEntitySpecialRenderer {
+public class TileEntityRenderLogicGateBase extends TileEntitySpecialRenderer<TileEntityBaseLogicGate> {
 
     private final ModelBase MODEL;
     ResourceLocation TEXTURE_ON;
@@ -31,7 +29,7 @@ public class TileEntityRenderLogicGateBase extends TileEntitySpecialRenderer {
     	TEXTURE_OFF = OffTexture;
     }
 	@Override
-	    public void render(TileEntity tileentity, double x, double y, double z, float f, int dest, float alpha) {
+	    public void render(TileEntityBaseLogicGate tileentity, double x, double y, double z, float f, int dest, float alpha) {
 		TileEntityBaseLogicGate Gate = (TileEntityBaseLogicGate)tileentity;
 		int orientation = tileentity.getBlockMetadata();
 		

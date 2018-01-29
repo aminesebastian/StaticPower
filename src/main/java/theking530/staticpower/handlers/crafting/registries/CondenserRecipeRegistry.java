@@ -71,7 +71,7 @@ private static final CondenserRecipeRegistry CONDENSER_BASE = new CondenserRecip
 		CondenserRecipeWrapper tempWrapper = (CondenserRecipeWrapper)entry.getValue();
 		
 		if(tempWrapper.getInputFluid() != null && fluidInput != null && tempWrapper.getInputFluid().isFluidEqual(fluidInput)) {
-				return true;
+			return true;
 		}
 		return false;
 	}

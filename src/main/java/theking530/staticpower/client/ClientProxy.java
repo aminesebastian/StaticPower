@@ -110,12 +110,6 @@ public class ClientProxy extends CommonProxy {
 		//LED
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLED.class, new TileEntityRenderLED());	
 		
-		//Solar Panel
-		//registerModelLoader(Item.getItemFromBlock(ModBlocks.StaticSolarPanel), Models.SOLARPANEL);
-		//registerModelLoader(Item.getItemFromBlock(ModBlocks.EnergizedSolarPanel), Models.SOLARPANEL);
-		//registerModelLoader(Item.getItemFromBlock(ModBlocks.LumumSolarPanel), Models.SOLARPANEL);
-		//ClientRegistry.bindTileEntitySpecialRenderer(TileEntityStaticSolarPanel.class, new TileEntityRenderSolarPanel());
-		
 		//Batteries
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityStaticBattery.class, new TileEntityRenderBattery(Tier.STATIC));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEnergizedBattery.class, new TileEntityRenderBattery(Tier.ENERGIZED));
@@ -129,20 +123,11 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLumumChest.class, new TileEntityRenderChest(Tier.LUMUM));		
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFusionFurnace.class, new TileEntityRenderFusionFurnace());
 		
-		//SolderingTable
-		//ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySolderingTable.class, new TileEntityRenderSolderingTable());
-		
 		//Distillery
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDistillery.class, new TileEntityRenderDistillery());
 		
 		//Condenser
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCondenser.class, new TileEntityRenderCondenser());
-		
-		
-		//Block Breaker
-		//ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBlockBreaker.class, new TileEntityRenderBlockBreaker());
-		//MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.BlockBreaker), new ItemRenderBlockBreaker());
-
 	}
 	public static void registerModelLoader(Item item, ResourceLocation modelLocation) {
 		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(modelLocation, "inventory"));

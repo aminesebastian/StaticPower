@@ -14,10 +14,10 @@ import net.minecraft.world.World;
 import theking530.staticpower.items.BasePoweredItem;
 import theking530.staticpower.utils.EnumTextFormatting;
 
-public class ElectricSolderingIron extends BasePoweredItem implements ISolderingIron{
+public class ElectricSolderingIron extends BasePoweredItem implements ISolderingIron {
 	
-	public ElectricSolderingIron(String name, int maxUses) {
-		super(name, maxUses*100, maxUses);
+	public ElectricSolderingIron(String name, int capacity) {
+		super(name, capacity, capacity/100);
 	}
 	@Override  
 		public void addInformation(ItemStack itemstack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn) {

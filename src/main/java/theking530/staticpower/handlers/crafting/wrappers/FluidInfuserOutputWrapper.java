@@ -4,19 +4,22 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 public class FluidInfuserOutputWrapper {
-	protected final ItemStack outputItem;
-	protected final FluidStack requiredFluid;
+	private final ItemStack inputItem;
+	private final ItemStack outputItem;
+	private final FluidStack requiredFluid;
 	
-	public FluidInfuserOutputWrapper(ItemStack output, FluidStack fluid) {
+	public FluidInfuserOutputWrapper(ItemStack input, ItemStack output, FluidStack fluid) {
+		inputItem = input;
 		outputItem = output;
 		requiredFluid = fluid;
 	}
-	
-	public ItemStack getOutputItem() {
+	public ItemStack getInputItemStack() {
+		return inputItem;
+	}
+	public ItemStack getOutputItemStack() {
 		return outputItem;
 	}
-
-	public FluidStack getRequiredFluid() {
+	public FluidStack getRequiredFluidStack() {
 		return requiredFluid;
 	}
 }

@@ -24,6 +24,7 @@ import theking530.staticpower.utils.EnumTextFormatting;
 import theking530.staticpower.utils.ItemUtilities;
 
 public class AdvancedEarth extends BlockFarmland {
+	
     protected AdvancedEarth() {
         setDefaultState(this.blockState.getBaseState().withProperty(MOISTURE, Integer.valueOf(7)));
         setTickRandomly(true);

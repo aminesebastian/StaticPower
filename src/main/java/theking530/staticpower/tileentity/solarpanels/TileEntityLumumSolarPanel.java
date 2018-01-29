@@ -7,9 +7,8 @@ import theking530.staticpower.energy.StaticEnergyStorage;
 public class TileEntityLumumSolarPanel extends TileEntityBasicSolarPanel implements IEnergyHandler, IEnergyProvider {
 	
 	public void initializeSolarPanel() {
-		STORAGE = new StaticEnergyStorage(1024);
-		STORAGE.setMaxTransfer(160);
-		STORAGE.setMaxReceive(160);
-		STORAGE.setMaxExtract(160*2);
+		energyStorage = new StaticEnergyStorage(1024);
+		energyStorage.setMaxReceive(160);
+		energyStorage.setMaxExtract(160*2);
 	}	
 }

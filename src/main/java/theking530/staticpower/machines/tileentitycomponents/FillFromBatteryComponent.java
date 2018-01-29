@@ -1,13 +1,14 @@
-package theking530.staticpower.machines.machinecomponents;
+package theking530.staticpower.machines.tileentitycomponents;
 
 import cofh.redstoneflux.api.IEnergyContainerItem;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.energy.StaticEnergyStorage;
 import theking530.staticpower.tileentity.BaseTileEntity;
 
-public class FillFromBatteryComponent implements IMachineComponentInterface{
+public class FillFromBatteryComponent implements ITileEntityComponent{
 
 	private String NAME;
+	private boolean isEnabled;
 	
 	private ItemStackHandler BATTERY_SLOT_HANDLER;
 	private int BATTERY_SLOT;
@@ -42,5 +43,12 @@ public class FillFromBatteryComponent implements IMachineComponentInterface{
 	public String getComponentName() {
 		return NAME;
 	}
-
+	@Override
+	public boolean isEnabled() {
+		return isEnabled;
+	}
+	@Override
+	public void setEnabled(boolean isEnabled) {
+		this.isEnabled = isEnabled;
+	}
 }

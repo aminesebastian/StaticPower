@@ -23,7 +23,7 @@ public class GuiPoweredFurnace extends BaseGuiContainer {
 		Smelter = teSmelter;
 		POWER_BAR = new GuiPowerBarFromEnergyStorage(teSmelter);
 		
-		getTabManager().registerTab(new GuiRedstoneTab(100, 100, teSmelter));
+		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teSmelter));
 		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teSmelter));	
 	}
 	public void drawScreen(int par1, int par2, float par3) {

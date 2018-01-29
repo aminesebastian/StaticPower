@@ -38,6 +38,9 @@ public class GrinderRecipes {
 		for(int index = 0; index < OreDictionary.getOres("oreAluminium").size(); index++) {
 			RegisterHelper.registerGrinderRecipe(OreDictionary.getOres("oreAluminium").get(index), newOutput(new ItemStack(ModItems.AluminiumDust, 2), 1.0f), newOutput(new ItemStack(ModItems.SapphireGem, 1), 0.02f));
 		}
+		for(int index = 0; index < OreDictionary.getOres("oreBauxite").size(); index++) {
+			RegisterHelper.registerGrinderRecipe(OreDictionary.getOres("oreBauxite").get(index), newOutput(new ItemStack(ModItems.AluminiumDust, 2), 1.0f), newOutput(new ItemStack(ModItems.SapphireGem, 1), 0.02f));
+		}
 		
 		RegisterHelper.registerGrinderRecipe(new ItemStack(ModItems.StaticIngot),  newOutput(new ItemStack(ModItems.StaticDust), 1.0f));
 		RegisterHelper.registerGrinderRecipe(new ItemStack(ModItems.EnergizedIngot),  newOutput(new ItemStack(ModItems.EnergizedDust), 1.0f));
@@ -120,6 +123,9 @@ public class GrinderRecipes {
 		for(int index = 0; index < OreDictionary.getOres("ingotAluminium").size(); index++) {
 			RegisterHelper.registerGrinderRecipe(OreDictionary.getOres("ingotAluminium").get(index), newOutput(new ItemStack(ModItems.AluminiumDust, 1), 1.0f));
 		}
+		for(int index = 0; index < OreDictionary.getOres("ingotBauxite").size(); index++) {
+			RegisterHelper.registerGrinderRecipe(OreDictionary.getOres("ingotBauxite").get(index), newOutput(new ItemStack(ModItems.AluminiumDust, 1), 1.0f));
+		}
 		
 		oreDictionaryRecipe("ingotSteel", "dustSteel", 1);
 		oreDictionaryRecipe("ingotBronze", "dustBronze", 1);
@@ -128,9 +134,9 @@ public class GrinderRecipes {
 		oreDictionaryRecipe("ingotUranium", "dustUranium", 1);
 		oreDictionaryRecipe("ingotAluminium", "dustAluminium", 1);
 		
-		oreDictionaryRecipe("oreRuby", "gemRuby", 5);
-		oreDictionaryRecipe("oreSapphire", "gemSapphire", 5);
-		oreDictionaryRecipe("orePeridot", "gemPeridot", 5);
+		oreDictionaryRecipe("oreRuby", "gemRuby", 3);
+		oreDictionaryRecipe("oreSapphire", "gemSapphire", 3);
+		oreDictionaryRecipe("orePeridot", "gemPeridot", 3);
 		oreDictionaryRecipe("gemRuby", "dustRuby", 1);
 		oreDictionaryRecipe("gemSapphire", "dustSapphire", 1);
 		oreDictionaryRecipe("gemPeridot", "dustPeridot", 1);

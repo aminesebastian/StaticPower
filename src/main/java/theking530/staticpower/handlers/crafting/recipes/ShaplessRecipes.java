@@ -133,13 +133,13 @@ public class ShaplessRecipes {
 			Ingredient.fromItem(Item.getItemFromBlock(ModBlocks.LumumWood))});
 		
 		//Cannisters --------------------------------------------------------------------------------------------------
-		RegisterHelper.addShapelessRecipe("StaticPower_baseFluidCapsule", "StaticPower", new ItemStack(ModItems.BaseFluidCapsule, 1), new Ingredient[]{
+		RegisterHelper.addShapelessRecipe("StaticPower_empty_baseFluidCapsule", "StaticPower", new ItemStack(ModItems.BaseFluidCapsule, 1), new Ingredient[]{
 				Ingredient.fromItem(ModItems.BaseFluidCapsule)});
-		RegisterHelper.addShapelessRecipe("StaticPower_staticFluidCapsule", "StaticPower", new ItemStack(ModItems.StaticFluidCapsule, 1), new Ingredient[]{
+		RegisterHelper.addShapelessRecipe("StaticPower_empty_staticFluidCapsule", "StaticPower", new ItemStack(ModItems.StaticFluidCapsule, 1), new Ingredient[]{
 				Ingredient.fromItem(ModItems.StaticFluidCapsule)});
-		RegisterHelper.addShapelessRecipe("StaticPower_energizedFluidCapsule", "StaticPower", new ItemStack(ModItems.EnergizedFluidCapsule, 1), new Ingredient[]{
+		RegisterHelper.addShapelessRecipe("StaticPower_empty_energizedFluidCapsule", "StaticPower", new ItemStack(ModItems.EnergizedFluidCapsule, 1), new Ingredient[]{
 				Ingredient.fromItem(ModItems.EnergizedFluidCapsule)});
-		RegisterHelper.addShapelessRecipe("StaticPower_lumumFluidCapsule", "StaticPower", new ItemStack(ModItems.LumumFluidCapsule, 1), new Ingredient[]{
+		RegisterHelper.addShapelessRecipe("StaticPower_empty_lumumFluidCapsule", "StaticPower", new ItemStack(ModItems.LumumFluidCapsule, 1), new Ingredient[]{
 				Ingredient.fromItem(ModItems.LumumFluidCapsule)});
 		
 		//Filters --------------------------------------------------------------------------------------------------

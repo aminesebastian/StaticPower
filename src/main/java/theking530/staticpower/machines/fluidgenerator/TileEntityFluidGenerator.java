@@ -5,22 +5,22 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.energy.PowerDistributor;
 import theking530.staticpower.handlers.crafting.registries.FluidGeneratorRecipeRegistry;
 import theking530.staticpower.machines.BaseMachineWithTank;
-import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent;
-import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent.FluidContainerInteractionMode;
+import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent;
+import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent.FluidContainerInteractionMode;
 
 public class TileEntityFluidGenerator extends BaseMachineWithTank{
 
-	private PowerDistributor POWER_DIST;
-	public int SOUND_TIMER = 15;
-	private FluidStack PROCESSING_FLUID;
-	public DrainToBucketComponent DRAIN_COMPONENT;
+	private PowerDistributor energyDistributor;
+	public int soundTimer = 15;
+	private FluidStack processingFluid;
+	public DrainToBucketComponent fluidContainerComponent;
 	
 	public TileEntityFluidGenerator() {
 		initializeBaseMachineWithTank(1, 0, 50000, 480, 0, 0, 1, 1, 10000);
-		DRAIN_COMPONENT = new DrainToBucketComponent("BucketDrain", slotsInput, 0, slotsOutput, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
-		DRAIN_COMPONENT.setMode(FluidContainerInteractionMode.FillFromContainer);
-		POWER_DIST = new PowerDistributor(this, STORAGE);
-		MOVE_SPEED = 10;
+		fluidContainerComponent = new DrainToBucketComponent("BucketDrain", slotsInput, 0, slotsOutput, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
+		fluidContainerComponent.setMode(FluidContainerInteractionMode.FillFromContainer);
+		energyDistributor = new PowerDistributor(this, energyStorage);
+		moveSpeed = 10;
 	}
 	
 	//Internal TANK			
@@ -44,18 +44,18 @@ public class TileEntityFluidGenerator extends BaseMachineWithTank{
 	}	
 	public void process() {
 		if(!getWorld().isRemote) {
-			if(!isTankEmpty() && !isProcessing() && getFluidRFOutput(TANK.getFluid()) > 0 && STORAGE.getEnergyStored() < STORAGE.getMaxEnergyStored()) {
-				PROCESSING_TIMER = 1;
-				PROCESSING_FLUID = TANK.getFluid();
+			if(!isTankEmpty() && !isProcessing() && getFluidRFOutput(TANK.getFluid()) > 0 && energyStorage.getEnergyStored() < energyStorage.getMaxEnergyStored()) {
+				processingTimer = 1;
+				processingFluid = TANK.getFluid();
 				TANK.drain(1, true);
 			}
-			if(isProcessing() && STORAGE.getEnergyStored() < STORAGE.getMaxEnergyStored() && PROCESSING_FLUID != null) {
-				STORAGE.receiveEnergy(getFluidRFOutput(PROCESSING_FLUID), false);
-				PROCESSING_TIMER = 0;
+			if(isProcessing() && energyStorage.getEnergyStored() < energyStorage.getMaxEnergyStored() && processingFluid != null) {
+				energyStorage.receiveEnergy(getFluidRFOutput(processingFluid), false);
+				processingTimer = 0;
 				updateBlock();
 			}
-			POWER_DIST.distributePower();	
-			DRAIN_COMPONENT.update();
+			energyDistributor.distributePower();	
+			fluidContainerComponent.update();
 		}
 	}
 	public int getFluidRFOutput(FluidStack fluid) {

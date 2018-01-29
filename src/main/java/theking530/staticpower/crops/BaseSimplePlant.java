@@ -42,7 +42,7 @@ public class BaseSimplePlant extends BlockCrops implements IGrowable {
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
         return CROPS_AABB[((Integer)state.getValue(this.getAgeProperty())).intValue()];
     }
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
         if(isMaxAge(state)) {
         	dropBlockAsItem(world, pos, state, 0); 
         	world.setBlockState(pos, withAge(0), 2);

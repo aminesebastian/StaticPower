@@ -26,8 +26,8 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.machines.BaseMachineWithTank;
-import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent;
-import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent.FluidContainerInteractionMode;
+import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent;
+import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent.FluidContainerInteractionMode;
 import theking530.staticpower.utils.InventoryUtilities;
 
 public class TileEntityBasicFarmer extends BaseMachineWithTank {
@@ -54,10 +54,10 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 	public void process(){
 		DRAIN_COMPONENT.update();
 		updateGrowthChange();
-		if(PROCESSING_TIMER < PROCESSING_TIME && canFarm()) {
-			PROCESSING_TIMER++;
+		if(processingTimer < processingTime && canFarm()) {
+			processingTimer++;
 		}else{
-			if(FARMED_STACKS.size() <= 1 && STORAGE.getEnergyStored() >= getProcessingCost() * BLOCKS_PER_TICK) {
+			if(FARMED_STACKS.size() <= 1 && energyStorage.getEnergyStored() >= getProcessingCost() * BLOCKS_PER_TICK) {
 				for(int i=0; i<BLOCKS_PER_TICK; i++) {
 					incrementPosition();
 					checkFarmingPlot(CURRENT_COORD);
@@ -65,7 +65,7 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 				useEnergy(getProcessingCost() * BLOCKS_PER_TICK);
 				TANK.drain(1 * BLOCKS_PER_TICK, true);
 				updateBlock();
-				PROCESSING_TIMER = 0;
+				processingTimer = 0;
 			}else{
 				if(!getWorld().isRemote) {
 					for(int i=FARMED_STACKS.size()-1; i>=0; i--) {
@@ -190,7 +190,7 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 		}
 	}
 	public boolean canFarm() {
-		if(STORAGE.getEnergyStored() >= getProcessingCost() && slotsInput.getStackInSlot(0) != null && slotsInput.getStackInSlot(0).getItem() instanceof ItemHoe) {
+		if(energyStorage.getEnergyStored() >= getProcessingCost() && slotsInput.getStackInSlot(0) != null && slotsInput.getStackInSlot(0).getItem() instanceof ItemHoe) {
 			return true;
 		}
 		return false;

@@ -61,6 +61,9 @@ public class BaseConduit extends Block implements IWrenchable {
 
     	AxisAlignedBB base = new AxisAlignedBB(min, min, min, max, max, max);
     	
+    	if(!(source.getTileEntity(pos) instanceof TileEntityBaseConduit)) {
+    		return base;
+    	}
 		TileEntityBaseConduit conduit = (TileEntityBaseConduit) source.getTileEntity(pos);
 		if (conduit != null) {
 			if (conduit.connections[0] != null) {

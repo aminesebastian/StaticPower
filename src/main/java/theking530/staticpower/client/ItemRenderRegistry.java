@@ -278,6 +278,16 @@ public class ItemRenderRegistry {
 		registerItem(ModItems.InvertedLogicGatePowerSync);
 		registerItem(ModItems.LogicGateServo);
 		
+		registerTemporaryLogicGate(ModBlocks.Adder);
+		registerTemporaryLogicGate(ModBlocks.Subtractor);
+		registerTemporaryLogicGate(ModBlocks.Timer);
+		registerTemporaryLogicGate(ModBlocks.And);
+		registerTemporaryLogicGate(ModBlocks.Or);
+		registerTemporaryLogicGate(ModBlocks.SignalMultiplier);
+		registerTemporaryLogicGate(ModBlocks.PowerCell);
+		registerTemporaryLogicGate(ModBlocks.LED);
+		registerTemporaryLogicGate(ModBlocks.NotGate);
+		
 		registerBlock(ModBlocks.VacuumChest);
 		registerBlock(ModBlocks.StaticChest);
 		registerBlock(ModBlocks.EnergizedChest);
@@ -374,5 +384,8 @@ public class ItemRenderRegistry {
     }
     public static void registerBlock(Block block) {
     	ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), 0, new ModelResourceLocation(block.getRegistryName(), "inventory"));
+    }
+    public static void registerTemporaryLogicGate(Block block) {
+    	ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), 0, new ModelResourceLocation(ModBlocks.LogicGateBasePlate.getRegistryName(), "inventory"));
     }
 }

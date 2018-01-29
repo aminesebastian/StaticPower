@@ -13,8 +13,7 @@ public class InfuserRecipeRegistry {
 
 	private static final InfuserRecipeRegistry INFUSER_BASE = new InfuserRecipeRegistry();
 	
-	@SuppressWarnings("rawtypes")
-	private Map infusionList = new HashMap();
+	private Map<ItemStack, FluidInfuserOutputWrapper> infusionList = new HashMap<ItemStack, FluidInfuserOutputWrapper>();
 	
 	public static InfuserRecipeRegistry Infusing() {
 		return INFUSER_BASE;
@@ -23,44 +22,42 @@ public class InfuserRecipeRegistry {
 		
 	}
 	public void addRecipe(ItemStack input, ItemStack output, FluidStack requiredFluidStack){
-		FluidInfuserOutputWrapper tempWrapper = new FluidInfuserOutputWrapper(output, requiredFluidStack);
+		FluidInfuserOutputWrapper tempWrapper = new FluidInfuserOutputWrapper(input, output, requiredFluidStack);
 		infusionList.put(input, tempWrapper);
 	}
-    public Map getInfusingRecipes() {
+    public Map<ItemStack, FluidInfuserOutputWrapper> getInfusingRecipes() {
         return this.infusionList;
     }
     /** Given input item stack and the fluidstack in the infuser */
-	@SuppressWarnings("rawtypes")
 	public ItemStack getInfusingItemStackResult(ItemStack inputItemstack, FluidStack infuserfluidstack) {
-		Iterator iterator = this.infusionList.entrySet().iterator();
-		Entry entry;
+		Iterator<?> iterator = this.infusionList.entrySet().iterator();
+		Entry<?, ?> entry;
 		do {
 			if (!iterator.hasNext()) {
 				return null;
 			}
-			entry = (Entry) iterator.next();
+			entry = (Entry<?, ?>) iterator.next();
 		} while (!isValidCombination(entry, inputItemstack, infuserfluidstack));
 		FluidInfuserOutputWrapper tempWrapper = (FluidInfuserOutputWrapper)entry.getValue();
-		return tempWrapper.getOutputItem();
+		return tempWrapper.getOutputItemStack();
 	}
-	@SuppressWarnings("rawtypes")
 	public int getInfusingFluidCost(ItemStack inputItemstack, FluidStack infuserfluidstack) {
-		Iterator iterator = this.infusionList.entrySet().iterator();
-		Entry entry;
+		Iterator<?> iterator = this.infusionList.entrySet().iterator();
+		Entry<?, ?> entry;
 		do {
 			if (!iterator.hasNext()) {
 				return 0;
 			}
-			entry = (Entry) iterator.next();
+			entry = (Entry<?, ?>) iterator.next();
 		} while (!isValidCombination(entry, inputItemstack, infuserfluidstack));
 		FluidInfuserOutputWrapper tempWrapper = (FluidInfuserOutputWrapper)entry.getValue();
-		FluidStack recipeFluidStack = tempWrapper.getRequiredFluid();
+		FluidStack recipeFluidStack = tempWrapper.getRequiredFluidStack();
 		return recipeFluidStack.amount;
 	}
-	private boolean isValidCombination(Entry entry, ItemStack inputItemstack, FluidStack infuserfluidstack) {
+	private boolean isValidCombination(Entry<?, ?> entry, ItemStack inputItemstack, FluidStack infuserfluidstack) {
 		ItemStack recipeInputStack = (ItemStack)entry.getKey();
 		FluidInfuserOutputWrapper tempWrapper = (FluidInfuserOutputWrapper)entry.getValue();
-		FluidStack recipeFluidStack = tempWrapper.getRequiredFluid();
+		FluidStack recipeFluidStack = tempWrapper.getRequiredFluidStack();
 		
 		if(recipeInputStack != null && inputItemstack != null && infuserfluidstack != null) {
 			return inputItemstack.isItemEqual(recipeInputStack) && infuserfluidstack.isFluidEqual(recipeFluidStack);

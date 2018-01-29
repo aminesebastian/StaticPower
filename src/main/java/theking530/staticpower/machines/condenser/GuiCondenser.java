@@ -14,7 +14,7 @@ import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBar;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticpower.handlers.PacketHandler;
-import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent.FluidContainerInteractionMode;
+import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent.FluidContainerInteractionMode;
 import theking530.staticpower.utils.GuiTextures;
 
 public class GuiCondenser extends BaseGuiContainer{
@@ -31,7 +31,7 @@ public class GuiCondenser extends BaseGuiContainer{
 		FLUIDBAR = new GuiFluidBarFromTank(teFluidGenerator.TANK);
 		FLUIDBAR2 = new GuiFluidBarFromTank(teFluidGenerator.TANK2);
 		
-		getTabManager().registerTab(new GuiRedstoneTab(100, 100, teFluidGenerator));
+		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teFluidGenerator));
 		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teFluidGenerator));	
 	}
 	@Override
@@ -66,11 +66,7 @@ public class GuiCondenser extends BaseGuiContainer{
     	super.drawScreen(par1, par2, par3);
 		int var1 = (this.width - this.xSize) / 2;
 		int var2 = (this.height - this.ySize) / 2;
-				
-		this.zLevel = -1.0f;
-		this.drawDefaultBackground();	
-		this.zLevel = 0.0f;
-		
+
 		if(par1 >= 71 + var1 && par2 >= 16 + var2 && par1 <= 87 + var1 && par2 <= 79 + var2) {	
 			drawHoveringText(FLUIDBAR.drawText(), par1, par2, fontRenderer); 
 		}     
@@ -87,6 +83,12 @@ public class GuiCondenser extends BaseGuiContainer{
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
+		
+		this.zLevel = -1.0f;
+		this.drawDefaultBackground();	
+		this.zLevel = 0.0f;
+
+
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.CONDENSER_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
@@ -95,11 +97,12 @@ public class GuiCondenser extends BaseGuiContainer{
 			int j1 = DISTILLERY.getProgressScaled(34);
 			GuiFluidBar.drawFluidBar(DISTILLERY.PROCESSING_STACK, 1000, 1000, guiLeft + 90, guiTop + 49, 1, j1, 5);
 		}
-		
-        getTabManager().drawTabs(guiLeft+175, guiTop+10, width, height, f);
         
 		FLUIDBAR.drawFluidBar(guiLeft + 71, guiTop + 77, 16, 60, this.zLevel);
 		FLUIDBAR2.drawFluidBar(guiLeft + 127, guiTop + 77, 16, 60, this.zLevel);
+		
+		
+        getTabManager().drawTabs(guiLeft+213, guiTop+10, width, height, f);
 	}
 }
 

@@ -7,7 +7,6 @@ import java.util.Locale;
 import javax.annotation.Nullable;
 
 import net.minecraft.block.BlockDispenser;
-import net.minecraft.block.BlockLiquid;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -37,7 +36,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import theking530.staticpower.items.ItemBase;
 import theking530.staticpower.utils.EnumTextFormatting;
 
-public class BaseFluidCapsule extends ItemBase { // implements IItemColor  {
+public class BaseFluidCapsule extends ItemBase { 
 
 	public int CAPACITY;
 	public int DAMAGE_DIVISOR;
@@ -69,7 +68,6 @@ public class BaseFluidCapsule extends ItemBase { // implements IItemColor  {
 		return getMaxDamage(stack);
     }
 
-    @SideOnly(Side.CLIENT)
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
     	items.add(new ItemStack(this));
@@ -87,19 +85,21 @@ public class BaseFluidCapsule extends ItemBase { // implements IItemColor  {
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
     	FluidHandlerItemStack tempHandler = (FluidHandlerItemStack) stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
+    	
+		String tempString;
+		if(CAPACITY == 2000) {
+			tempString = "";
+		}else if(CAPACITY == 4000) {
+			tempString = "Static ";
+		}else if(CAPACITY == 8000) {
+			tempString = "Energized ";
+		}else{
+			tempString = "Lumum ";
+		}
+    	
     	if(tempHandler != null && tempHandler.getFluid() != null) {
-    		return tempHandler.getFluid().getLocalizedName() + " " + super.getItemStackDisplayName(stack);
+    		return tempString + tempHandler.getFluid().getLocalizedName() + " " + super.getItemStackDisplayName(stack);
     	}else{
-    		String tempString;
-    		if(CAPACITY == 2000) {
-    			tempString = "";
-    		}else if(CAPACITY == 4000) {
-    			tempString = "Static ";
-    		}else if(CAPACITY == 8000) {
-    			tempString = "Energized ";
-    		}else{
-    			tempString = "Lumum ";
-    		}
     		return tempString + super.getItemStackDisplayName(stack);
     	}
     }

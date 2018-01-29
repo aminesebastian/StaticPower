@@ -64,7 +64,8 @@ public class SideUtilities {
 		return null;
 	}
 	public static EnumFacing getAdjustedEnumFacing(EnumFacing facing, EnumFacing horizontal) {
-		int metadata = horizontal.ordinal() - 2;
+		int metadata = horizontal.ordinal();
+
 		switch(facing) {
 		case DOWN: return EnumFacing.DOWN;
 		case UP: return EnumFacing.UP;
@@ -100,24 +101,6 @@ public class SideUtilities {
 		return EnumFacing.UP;
 	}
 	public static EnumFacing getEnumFacingFromSide(BlockSide side, EnumFacing facing) {
-		if(facing.ordinal() != 2 && facing.ordinal() != 4 && facing.ordinal() != 5) {
-	    	switch(side) {
-	    	case BOTTOM : 
-	    		return EnumFacing.DOWN;
-	    	case TOP : 
-	    		return EnumFacing.UP;
-	    	case BACK : 
-	    		return EnumFacing.NORTH;
-	    	case FRONT : 
-	    		return EnumFacing.SOUTH;
-	    	case LEFT : 
-	    		return EnumFacing.WEST;
-	    	case RIGHT : 
-	    		return EnumFacing.EAST;
-	    		default :
-	    			break;
-	    	}
-		}
 		if(facing.ordinal() == 2) {
 	    	switch(side) {
 	    	case BOTTOM : 
@@ -131,6 +114,24 @@ public class SideUtilities {
 	    	case RIGHT : 
 	    		return EnumFacing.WEST;
 	    	case LEFT : 
+	    		return EnumFacing.EAST;
+	    		default :
+	    			break;
+	    	}
+		}
+		if(facing.ordinal() == 3) {
+	    	switch(side) {
+	    	case BOTTOM : 
+	    		return EnumFacing.DOWN;
+	    	case TOP : 
+	    		return EnumFacing.UP;
+	    	case BACK : 
+	    		return EnumFacing.NORTH;
+	    	case FRONT : 
+	    		return EnumFacing.SOUTH;
+	    	case LEFT : 
+	    		return EnumFacing.WEST;
+	    	case RIGHT : 
 	    		return EnumFacing.EAST;
 	    		default :
 	    			break;
@@ -179,5 +180,41 @@ public class SideUtilities {
 			return block.getValue(BlockHorizontal.FACING);		
 		}
 		return null;
+	}
+	public static EnumFacing getEnumFacingFromRenderingInt(int renderingInt, EnumFacing machineFacing) {
+		if(machineFacing == EnumFacing.SOUTH) {
+			return EnumFacing.values()[renderingInt];
+		}else if(machineFacing == EnumFacing.NORTH) {
+			if(renderingInt == 4) {
+				return EnumFacing.EAST;
+			}
+			if(renderingInt == 5) {
+				return EnumFacing.WEST;
+			}
+			if(renderingInt == 2) {
+				return EnumFacing.SOUTH;
+			}
+		}else if(machineFacing == EnumFacing.EAST) {
+			if(renderingInt == 4) {
+				return EnumFacing.SOUTH;
+			}
+			if(renderingInt == 5) {
+				return EnumFacing.NORTH;
+			}
+			if(renderingInt == 2) {
+				return EnumFacing.WEST;
+			}
+		}else if(machineFacing == EnumFacing.WEST) {
+			if(renderingInt == 4) {
+				return EnumFacing.NORTH;
+			}
+			if(renderingInt == 5) {
+				return EnumFacing.SOUTH;
+			}
+			if(renderingInt == 2) {
+				return EnumFacing.EAST;
+			}
+		}
+		return EnumFacing.values()[renderingInt];
 	}
 }

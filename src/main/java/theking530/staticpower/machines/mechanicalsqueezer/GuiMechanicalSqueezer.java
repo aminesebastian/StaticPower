@@ -24,7 +24,7 @@ public class GuiMechanicalSqueezer extends BaseGuiContainer{
 		cSqueezer = teCropSqueezer;
 		FLUIDBAR = new GuiFluidBarFromTank(teCropSqueezer.TANK);
 
-		getTabManager().registerTab(new GuiRedstoneTab(100, 100, teCropSqueezer));
+		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teCropSqueezer));
 		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teCropSqueezer));
 	}
 	public void drawScreen(int par1, int par2, float par3) {

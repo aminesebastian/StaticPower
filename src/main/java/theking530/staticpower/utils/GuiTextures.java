@@ -10,7 +10,7 @@ public class GuiTextures {
 	public static final ResourceLocation FURNACE_GUI = new ResourceLocation(Reference.MOD_ID, "textures/gui/powered_furnace_gui.png");
 	public static final ResourceLocation IFURNACE_GUI = new ResourceLocation(Reference.MOD_ID, "textures/gui/industrial_furnace_gui.png");
 	public static final ResourceLocation GRINDER_GUI = new ResourceLocation(Reference.MOD_ID, "textures/gui/powered_grinder_gui.png");
-	public static final ResourceLocation INFUSER_GUI = new ResourceLocation(Reference.MOD_ID, "textures/gui/fluid_infuser_gui.png");
+	public static final ResourceLocation FLUID_INFUSER_GUI = new ResourceLocation(Reference.MOD_ID, "textures/gui/fluid_infuser_gui.png");
 	public static final ResourceLocation FGENERATOR_GUI = new ResourceLocation(Reference.MOD_ID, "textures/gui/fluid_generator_gui.png");
 	public static final ResourceLocation FARMER_GUI = new ResourceLocation(Reference.MOD_ID, "textures/gui/farmer_gui.png");
 	public static final ResourceLocation SQUEEZER_GUI = new ResourceLocation(Reference.MOD_ID, "textures/gui/crop_squeezer_gui.png");

@@ -36,7 +36,7 @@ public class TileEntityFusionFurnace extends BaseMachine {
 			if(getFusionResult(inputs).getOutputItem() != null) {
 				FusionFurnaceRecipeWrapper tempWrapper = getFusionResult(inputs);
 				if(InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 0, tempWrapper.getOutputItem())) {
-					if(STORAGE.getEnergyStored() >= getProcessingCost()) {
+					if(energyStorage.getEnergyStored() >= getProcessingCost()) {
 						return true;
 					}
 				}
@@ -46,11 +46,11 @@ public class TileEntityFusionFurnace extends BaseMachine {
 	}
 	public void process() {
 		if(!isProcessing() && !isMoving() && canProcess(getInputStack(0), getInputStack(1), getInputStack(2), getInputStack(3), getInputStack(4))) {
-				MOVE_TIMER = 1;
+				moveTimer = 1;
 		}
 		if(!isProcessing() && isMoving() && canProcess(getInputStack(0), getInputStack(1), getInputStack(2), getInputStack(3), getInputStack(4))) {
-			if(MOVE_TIMER < MOVE_SPEED) {
-				MOVE_TIMER++;
+			if(moveTimer < moveSpeed) {
+				moveTimer++;
 			}else{
 				if(getInputStack(0) != ItemStack.EMPTY) {
 					moveItem(slotsInput, 0, slotsInternal, 0);
@@ -67,14 +67,14 @@ public class TileEntityFusionFurnace extends BaseMachine {
 				if(getInputStack(4) != ItemStack.EMPTY) {
 					moveItem(slotsInput, 4, slotsInternal, 4);
 				}
-				MOVE_TIMER=0;
-				PROCESSING_TIMER = 1;
+				moveTimer=0;
+				processingTimer = 1;
 			}
 		}
 		if(isProcessing() && !isMoving()) {
-			if(PROCESSING_TIMER <= PROCESSING_TIME) {
-				useEnergy(getProcessingCost() / PROCESSING_TIME);
-				PROCESSING_TIMER++;
+			if(processingTimer <= processingTime) {
+				useEnergy(getProcessingCost() / processingTime);
+				processingTimer++;
 			}else{
 				if(InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 0, getFusionResult(getInternalStack(0), getInternalStack(1), getInternalStack(2), getInternalStack(3), getInternalStack(4)).getOutputItem())) {
 					slotsOutput.insertItem(0, getFusionResult(getInternalStack(0), getInternalStack(1), getInternalStack(2), getInternalStack(3), getInternalStack(4)).getOutputItem().copy(), false);
@@ -83,7 +83,7 @@ public class TileEntityFusionFurnace extends BaseMachine {
 					setInternalStack(2, ItemStack.EMPTY);
 					setInternalStack(3, ItemStack.EMPTY);
 					setInternalStack(4, ItemStack.EMPTY);
-					PROCESSING_TIMER=0;
+					processingTimer=0;
 				}
 			}
 		}

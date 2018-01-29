@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.handlers.crafting.registries.FermenterRecipeRegistry;
 import theking530.staticpower.machines.BaseMachineWithTank;
-import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent;
+import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent;
 
 public class TileEntityFermenter extends BaseMachineWithTank {
 
@@ -42,7 +42,7 @@ public class TileEntityFermenter extends BaseMachineWithTank {
 			if(fluidstack.amount + TANK.getFluidAmount() > TANK.getCapacity()) {
 				return false;
 			}
-			if(STORAGE.getEnergyStored() < getProcessingCost()) {
+			if(energyStorage.getEnergyStored() < getProcessingCost()) {
 				return false;
 			}
 			if (TANK.getFluid() != null && !fluidstack.isFluidEqual(TANK.getFluid())) {
@@ -63,7 +63,7 @@ public class TileEntityFermenter extends BaseMachineWithTank {
 	@Override
 	public int getProcessingEnergy(ItemStack itemStack) {
 		if(getResult(itemStack) != ItemStack.EMPTY) {
-			return INITIAL_POWER_USE*PROCESSING_ENERGY_MULT;
+			return initialPowerUse*processingEnergyMult;
 		}
 		return 0;
 	}	
@@ -74,24 +74,24 @@ public class TileEntityFermenter extends BaseMachineWithTank {
 				for(int i=0; i<9; i++) {
 					if(slotsInput.getStackInSlot(i) != ItemStack.EMPTY && canProcess(slotsInput.getStackInSlot(i))) {
 						moveItem(slotsInput, i, slotsInternal, 0);
-						MOVE_TIMER = 1;
+						moveTimer = 1;
 						break;
 					}
 				}	
 			}else{
 				if(!isProcessing() && slotsInternal.getStackInSlot(0) != ItemStack.EMPTY) {
-					PROCESSING_TIMER++;
+					processingTimer++;
 				}
 				if(isProcessing()) {
-					if(PROCESSING_TIMER < PROCESSING_TIME) {
-						PROCESSING_TIMER++;
-						STORAGE.extractEnergy(getProcessingCost()/PROCESSING_TIME, false);
+					if(processingTimer < processingTime) {
+						processingTimer++;
+						energyStorage.extractEnergy(getProcessingCost()/processingTime, false);
 						updateBlock();
 					}else{
 						TANK.fill(getFermentingResult(slotsInternal.getStackInSlot(0)), true);
 						slotsInternal.extractItem(0, slotsInternal.getStackInSlot(0).getCount(), false);
-						PROCESSING_TIMER = 0;
-						MOVE_TIMER = 0;
+						processingTimer = 0;
+						moveTimer = 0;
 						markDirty();
 						updateBlock();
 					}

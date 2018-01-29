@@ -4,16 +4,19 @@ import net.minecraft.item.ItemStack;
 import theking530.staticpower.handlers.crafting.registries.GrinderRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.GrinderOutputWrapper;
 import theking530.staticpower.machines.BaseMachine;
-import theking530.staticpower.machines.machinecomponents.FillFromBatteryComponent;
+import theking530.staticpower.machines.tileentitycomponents.FillFromBatteryComponent;
+import theking530.staticpower.machines.tileentitycomponents.TileEntityInputServo;
+import theking530.staticpower.machines.tileentitycomponents.TileEntityOutputServo;
 import theking530.staticpower.utils.InventoryUtilities;
+import theking530.staticpower.utils.TileEntityUtils;
 
 public class TileEntityPoweredGrinder extends BaseMachine {
 	
-	private FillFromBatteryComponent BATTERY_COMPONENT;
-	
 	public TileEntityPoweredGrinder() {
 		initializeBasicMachine(2, 1000, 100000, 80, 100, 1, 2, 3);
-		BATTERY_COMPONENT = new FillFromBatteryComponent("BatteryComponent", slotsInput, 1, this, STORAGE);
+		registerComponent(new FillFromBatteryComponent("BatteryComponent", slotsInput, 1, this, energyStorage));
+		registerComponent(new TileEntityOutputServo(this, 2, slotsOutput, 0, 1, 2));
+		registerComponent(new TileEntityInputServo(this, 2, slotsInput, 0));
 	}
 		
 	//IInventory				
@@ -23,6 +26,60 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 	}
 	
 	//Process 
+	public void process() {
+		if(!getWorld().isRemote) {
+			if(!isProcessing() && !isMoving() && canProcess(getInputStack(0))) {
+				moveTimer = 1;
+			}
+			if(!isProcessing() && isMoving() && canProcess(getInputStack(0))) {
+				if(moveTimer < moveSpeed) {
+					moveTimer++;
+				}else{
+					moveItem(slotsInput, 0, slotsInternal, 0);
+					moveTimer=0;
+					processingTimer = 1;
+				}
+			}
+			if(isProcessing() && !isMoving()) {
+				if(processingTimer < processingTime) {
+					useEnergy(getProcessingCost() / processingTime);
+					processingTimer++;
+				}else{
+					if(getGrindingResult(getInternalStack(0)) != null) {
+						for(int j=0; j<getGrindingResult(getInternalStack(0)).getOutputItemCount(); j++) {
+							ItemStack result = getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getOutput();
+							if(TileEntityUtils.diceRoll(getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getPercentage())) {
+								boolean flag = false;
+								int slot = -1;
+								for(int i=0; i<3; i++) {
+									if(ItemStack.areItemStacksEqual(slotsOutput.getStackInSlot(0), result) && InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, i, getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getOutput())) {
+										slot = i;
+										flag = true;
+										break;
+									}	
+								}
+								if(!flag) {
+									for(int i=0; i<3; i++) {
+										if(InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, i, result)) {
+											slot = i;
+											break;
+										}	
+									}
+								}
+								if(slot != -1) {
+									slotsOutput.insertItem(slot, result.copy(), false);
+								}
+							}						
+						}
+					}
+					setInternalStack(0, ItemStack.EMPTY);
+					updateBlock();
+					processingTimer=0;
+					moveTimer = 0;
+				}	
+			}
+		}
+	}
 	public GrinderOutputWrapper getGrindingResult(ItemStack stack) {
 		if(stack != ItemStack.EMPTY) {
 			return GrinderRecipeRegistry.Grinding().getgrindingResult(stack);
@@ -60,77 +117,11 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 					}
 
 				}
-				if(STORAGE.getEnergyStored() >= getProcessingCost() && flag == true) {
+				if(energyStorage.getEnergyStored() >= getProcessingCost() && flag == true) {
 					return true;
 				}
 			}
 		}
 		return false;
 	}
-	public void process() {
-		if(!getWorld().isRemote) {
-			BATTERY_COMPONENT.update();
-			if(!isProcessing() && !isMoving() && canProcess(getInputStack(0))) {
-				MOVE_TIMER = 1;
-			}
-			if(!isProcessing() && isMoving() && canProcess(getInputStack(0))) {
-				if(MOVE_TIMER < MOVE_SPEED) {
-					MOVE_TIMER++;
-				}else{
-					moveItem(slotsInput, 0, slotsInternal, 0);
-					MOVE_TIMER=0;
-					PROCESSING_TIMER = 1;
-				}
-			}
-			if(isProcessing() && !isMoving()) {
-				if(PROCESSING_TIMER < PROCESSING_TIME) {
-					useEnergy(getProcessingCost() / PROCESSING_TIME);
-					PROCESSING_TIMER++;
-				}else{
-					if(getGrindingResult(getInternalStack(0)) != null) {
-						for(int j=0; j<getGrindingResult(getInternalStack(0)).getOutputItemCount(); j++) {
-							ItemStack result = getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getOutput();
-							if(diceRoll(getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getPercentage())) {
-								boolean flag = false;
-								int slot = -1;
-								for(int i=0; i<3; i++) {
-									if(ItemStack.areItemStacksEqual(slotsOutput.getStackInSlot(0), result) && InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, i, getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getOutput())) {
-										slot = i;
-										flag = true;
-										break;
-									}	
-								}
-								if(!flag) {
-									for(int i=0; i<3; i++) {
-										if(InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, i, result)) {
-											slot = i;
-											break;
-										}	
-									}
-								}
-								if(slot != -1) {
-									slotsOutput.insertItem(slot, result.copy(), false);
-								}
-							}						
-						}
-					}
-					setInternalStack(0, ItemStack.EMPTY);
-					updateBlock();
-					PROCESSING_TIMER=0;
-					MOVE_TIMER = 0;
-				}	
-			}
-		}
-	}
- 
-	public boolean diceRoll(float percentage) {
-		if(percentage >= 1) {
-			return true;
-		}
-		float randFloat = randomGenerator.nextFloat();	
-		return percentage > randFloat ? true : false;
-	}
 }
-
-
-	

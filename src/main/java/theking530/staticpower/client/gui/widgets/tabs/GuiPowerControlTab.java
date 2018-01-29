@@ -103,8 +103,8 @@ public class GuiPowerControlTab extends BaseGuiTab{
 			} catch(NumberFormatException e) {}				
 		}
 		if(SET_PERCENTAGE.CLICKED) {
-			entity.MIN_POWER_THRESHOLD = MIN_VALUE;
-			entity.MAX_POWER_THRESHOLD = MAX_VALUE;
+			entity.minPowerThreshold = MIN_VALUE;
+			entity.maxPowerThreshold = MAX_VALUE;
 			IMessage msg = new PacketPowerControlTab(MAX_VALUE, MIN_VALUE, TILE_ENTITY.getPos());
 			PacketHandler.net.sendToServer(msg);	
 		}

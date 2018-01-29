@@ -21,14 +21,11 @@ public class GuiPoweredGrinder extends BaseGuiContainer{
 		Grinder = teGrinder;
 		POWERBAR = new GuiPowerBarFromEnergyStorage(teGrinder);
 
-		getTabManager().registerTab(new GuiRedstoneTab(100, 100, teGrinder));
+		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teGrinder));
 		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teGrinder));
 	}	
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
     	super.drawScreen(mouseX, mouseY, partialTicks);
-		this.zLevel = -1.0f;
-		this.drawDefaultBackground();	
-		this.zLevel = 0.0f;
 		
     	int var1 = (this.width - this.xSize) / 2;
         int var2 = (this.height - this.ySize) / 2;  
@@ -46,6 +43,10 @@ public class GuiPoweredGrinder extends BaseGuiContainer{
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
+		this.zLevel = -1.0f;
+		this.drawDefaultBackground();	
+		this.zLevel = 0.0f;
+		
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.GRINDER_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);

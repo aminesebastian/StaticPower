@@ -16,7 +16,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import theking530.staticpower.items.BasePoweredItem;
 
 public class BaseBattery extends BasePoweredItem { 
-
+	
 	public BaseBattery(String name, int capacity, int powerDivisor) {
 		super(name, capacity, powerDivisor);
 		setMaxStackSize(1);
@@ -30,7 +30,7 @@ public class BaseBattery extends BasePoweredItem {
     	items.add(emptyBattery);
         
         ItemStack filledBattery = new ItemStack(this);     
-        this.receiveEnergy(filledBattery, this.getMaxEnergyStored(filledBattery), false);
+        this.setEnergy(filledBattery, capacity);
         items.add(filledBattery);
     }
 	

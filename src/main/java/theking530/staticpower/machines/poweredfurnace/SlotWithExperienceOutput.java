@@ -1,4 +1,4 @@
-package theking530.staticpower.machines.machinecomponents;
+package theking530.staticpower.machines.poweredfurnace;
 
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;

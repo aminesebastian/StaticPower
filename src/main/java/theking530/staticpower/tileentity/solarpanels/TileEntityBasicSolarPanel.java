@@ -17,39 +17,38 @@ import theking530.staticpower.energy.StaticEnergyStorage;
 
 public class TileEntityBasicSolarPanel extends TileEntity implements ITickable, IEnergyHandler, IEnergyProvider {
 	
-	public StaticEnergyStorage STORAGE; 
-	public PowerDistributor POWER_DIST;
+	public StaticEnergyStorage energyStorage; 
+	public PowerDistributor energyDistributor;
 	
 	public TileEntityBasicSolarPanel() {
 		initializeSolarPanel();
-		POWER_DIST = new PowerDistributor(this, STORAGE);
+		energyDistributor = new PowerDistributor(this, energyStorage);
 	}
 	public void initializeSolarPanel() {
-		STORAGE = new StaticEnergyStorage(64);
-		STORAGE.setMaxTransfer(10);
-		STORAGE.setMaxReceive(10);
-		STORAGE.setMaxExtract(10*2);
+		energyStorage = new StaticEnergyStorage(64);
+		energyStorage.setMaxReceive(10);
+		energyStorage.setMaxExtract(10*2);
 	}	
 	@Override
 	public void update() {
 		if(!getWorld().isRemote) {
 			generateRF();
-			if(STORAGE.getEnergyStored() > 0) {
-				POWER_DIST.provideRF(EnumFacing.DOWN, STORAGE.getMaxReceive());		
+			if(energyStorage.getEnergyStored() > 0) {
+				energyDistributor.provideRF(EnumFacing.DOWN, energyStorage.getMaxReceive());		
 			}
 		}
 	}	
 	//Functionality
 	public void generateRF() {
 		if(!getWorld().canBlockSeeSky(pos)) {
-		}else if(lightRatio() > 0 && STORAGE.getEnergyStored() < STORAGE.getMaxEnergyStored()) {
-			STORAGE.receiveEnergy(STORAGE.getMaxReceive(), false);
+		}else if(lightRatio() > 0 && energyStorage.getEnergyStored() < energyStorage.getMaxEnergyStored()) {
+			energyStorage.receiveEnergy(energyStorage.getMaxReceive(), false);
 		}
 	}
 	public boolean isGenerating() {
 		if(!getWorld().canBlockSeeSky(pos)) {
 			return false;
-		}else if(lightRatio() > 0 && STORAGE.getEnergyStored() < STORAGE.getMaxEnergyStored()) {
+		}else if(lightRatio() > 0 && energyStorage.getEnergyStored() < energyStorage.getMaxEnergyStored()) {
 			return true;
 		}
 		return false;
@@ -95,16 +94,16 @@ public class TileEntityBasicSolarPanel extends TileEntity implements ITickable, 
 	}
 	@Override
 	public int getEnergyStored(EnumFacing from) {
-		return STORAGE.getEnergyStored();
+		return energyStorage.getEnergyStored();
 	}
 	@Override
 	public int getMaxEnergyStored(EnumFacing from) {
-		return STORAGE.getMaxEnergyStored();
+		return energyStorage.getMaxEnergyStored();
 	}
 	@Override
 	public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
 		if(from == EnumFacing.DOWN) {
-			return STORAGE.extractEnergy(maxExtract, simulate);
+			return energyStorage.extractEnergy(maxExtract, simulate);
 		}
 		return 0;
 	}

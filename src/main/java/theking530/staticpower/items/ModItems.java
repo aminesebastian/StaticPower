@@ -195,9 +195,9 @@ public class ModItems {
 		
 		StaticWrench = new StaticWrench().setUnlocalizedName("StaticWrench");
 		registry.PreRegisterItem(StaticWrench);
-		SolderingIron = new SolderingIron("SolderingIron", 10);
+		SolderingIron = new SolderingIron("SolderingIron", 20);
 		registry.PreRegisterItem(SolderingIron);
-		ElectricSolderingIron = new ElectricSolderingIron("ElectricSolderingIron", 100);
+		ElectricSolderingIron = new ElectricSolderingIron("ElectricSolderingIron", 50000);
 		registry.PreRegisterItem(ElectricSolderingIron);
 		CoordinateMarker = new CoordinateMarker("CoordinateMarker");
 		registry.PreRegisterItem(CoordinateMarker);

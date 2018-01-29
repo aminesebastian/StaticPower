@@ -129,17 +129,15 @@ public class BaseMachineBlock extends Block implements IWrenchable {
 		if(!world.isRemote) {
 			if(mode == RegularWrenchMode.ROTATE) {
 				if(facing != EnumFacing.UP && facing != EnumFacing.DOWN) {
-					System.out.println("Facing: " + facing);
-					System.out.println("Facing Opposite: " + facing.getOpposite());
 					if(facing != world.getBlockState(pos).getValue(FACING)) {
-						world.setBlockState(pos, world.getBlockState(pos).withProperty(FACING, facing), 2);	
+						//world.setBlockState(pos, world.getBlockState(pos).withProperty(FACING, facing), 2);	
 					}else{
-						world.setBlockState(pos, world.getBlockState(pos).withProperty(FACING, facing.getOpposite()), 2);	
+						//world.setBlockState(pos, world.getBlockState(pos).withProperty(FACING, facing.getOpposite()), 2);	
 					};
 				}	
 			}else{
 				BaseTileEntity TE = (BaseTileEntity) world.getTileEntity(pos);
-				TE.incrementSide(SideUtilities.getBlockSide(facing.getOpposite(), world.getBlockState(pos).getValue(BlockHorizontal.FACING)).ordinal());
+				TE.incrementSide(facing);
 				TE.updateBlock();
 			}	
 		}

@@ -14,7 +14,7 @@ import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.handlers.PacketHandler;
-import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent.FluidContainerInteractionMode;
+import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent.FluidContainerInteractionMode;
 import theking530.staticpower.utils.GuiTextures;
 
 public class GuiFluidGenerator extends BaseGuiContainer {
@@ -29,7 +29,7 @@ public class GuiFluidGenerator extends BaseGuiContainer {
 		POWERBAR = new GuiPowerBarFromEnergyStorage(teFluidGenerator);
 		FLUIDBAR = new GuiFluidBarFromTank(teFluidGenerator.TANK);
 		
-		getTabManager().registerTab(new GuiRedstoneTab(100, 100, teFluidGenerator));
+		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teFluidGenerator));
 		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teFluidGenerator));
 		
 	}
@@ -41,7 +41,7 @@ public class GuiFluidGenerator extends BaseGuiContainer {
 
 	    this.buttonList.add(new ArrowButton(1, j+7, k+35, 16, 10, "<"));
 	    
-	    if(fGenerator.DRAIN_COMPONENT.getMode() == FluidContainerInteractionMode.FillFromContainer) {
+	    if(fGenerator.fluidContainerComponent.getMode() == FluidContainerInteractionMode.FillFromContainer) {
 	    	buttonList.get(0).displayString = ">";
 	    }else{
 	    	buttonList.get(0).displayString = "<";
@@ -50,11 +50,11 @@ public class GuiFluidGenerator extends BaseGuiContainer {
 	@Override
 	protected void actionPerformed(GuiButton B) {
 		if(B.id == 1) {
-			IMessage msg = new PacketFluidGeneratorContainerMode(fGenerator.DRAIN_COMPONENT.getInverseMode(), fGenerator.getPos());
+			IMessage msg = new PacketFluidGeneratorContainerMode(fGenerator.fluidContainerComponent.getInverseMode(), fGenerator.getPos());
 			PacketHandler.net.sendToServer(msg);
-			fGenerator.DRAIN_COMPONENT.setMode(fGenerator.DRAIN_COMPONENT.getInverseMode());
+			fGenerator.fluidContainerComponent.setMode(fGenerator.fluidContainerComponent.getInverseMode());
 			
-		    if(fGenerator.DRAIN_COMPONENT.getMode() == FluidContainerInteractionMode.FillFromContainer) {
+		    if(fGenerator.fluidContainerComponent.getMode() == FluidContainerInteractionMode.FillFromContainer) {
 		    	buttonList.get(0).displayString = ">";
 		    }else{
 		    	buttonList.get(0).displayString = "<";

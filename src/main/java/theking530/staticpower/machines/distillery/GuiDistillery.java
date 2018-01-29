@@ -17,7 +17,7 @@ import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiHeatBarFromStorage;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.handlers.PacketHandler;
-import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent.FluidContainerInteractionMode;
+import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent.FluidContainerInteractionMode;
 import theking530.staticpower.utils.GuiTextures;
 
 public class GuiDistillery extends BaseGuiContainer {
@@ -34,7 +34,7 @@ public class GuiDistillery extends BaseGuiContainer {
 		FLUIDBAR = new GuiFluidBarFromTank(teFluidGenerator.TANK);
 		FLUIDBAR2 = new GuiFluidBarFromTank(teFluidGenerator.TANK2);
 		
-		getTabManager().registerTab(new GuiRedstoneTab(100, 100, teFluidGenerator));
+		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teFluidGenerator));
 		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teFluidGenerator));
 	}
 	@Override
@@ -67,13 +67,6 @@ public class GuiDistillery extends BaseGuiContainer {
 	}
 	public void drawScreen(int par1, int par2, float par3) {
     	super.drawScreen(par1, par2, par3);
-    	
-		this.zLevel = -1.0f;
-		this.drawDefaultBackground();	
-		this.zLevel = 0.0f;
-    	
-		
-		getTabManager().drawTabs(width+38, height, width, height, par3);
 		
 		int var1 = (this.width - this.xSize) / 2;
 		int var2 = (this.height - this.ySize) / 2;    
@@ -96,7 +89,11 @@ public class GuiDistillery extends BaseGuiContainer {
 	}
 	
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
+	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {   	
+		this.zLevel = -1.0f;
+		this.drawDefaultBackground();	
+		this.zLevel = 0.0f;
+    			
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.DISTILLERY_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
@@ -109,7 +106,7 @@ public class GuiDistillery extends BaseGuiContainer {
 		FLUIDBAR2.drawFluidBar(guiLeft + 127, guiTop + 77, 16, 60, this.zLevel);
 		
 		
-        getTabManager().drawTabs(guiLeft+175, guiTop+10, width, height, f);
+        getTabManager().drawTabs(guiLeft+213, guiTop+10, width, height, f);
 	}
 }
 

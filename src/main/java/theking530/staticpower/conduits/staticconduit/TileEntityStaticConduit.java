@@ -9,7 +9,6 @@ import java.util.Map.Entry;
 import cofh.redstoneflux.api.IEnergyHandler;
 import cofh.redstoneflux.api.IEnergyProvider;
 import cofh.redstoneflux.api.IEnergyReceiver;
-import cofh.redstoneflux.impl.EnergyStorage;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -19,22 +18,20 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import theking530.staticpower.conduits.TileEntityBaseConduit;
 import theking530.staticpower.energy.PowerDistributor;
+import theking530.staticpower.energy.StaticEnergyStorage;
 
 public class TileEntityStaticConduit extends TileEntityBaseConduit implements IEnergyHandler, IEnergyProvider, IEnergyReceiver {
 	
-	public int ENERGY_CAPACTIY = 6000;
-	public EnergyStorage STORAGE = new EnergyStorage(ENERGY_CAPACTIY);
-	public int RF_PER_TICK = 1000;
-	public PowerDistributor POWER_DIST;
-	public EnumFacing LAST_RECIEVED;
-	public int TEST_DEBUG_COUNT;
+	public int energyCapactiy = 6000;
+	public StaticEnergyStorage energyStorage;
+	public int powerPerTick = 1000;
+	public PowerDistributor energyDistributor;
+
 
 	public TileEntityStaticConduit() {
 		super();
-		STORAGE.setMaxExtract(RF_PER_TICK);
-		STORAGE.setMaxReceive(RF_PER_TICK);
-		STORAGE.setMaxTransfer(RF_PER_TICK);
-		POWER_DIST = new PowerDistributor(this, STORAGE);
+		energyStorage = new StaticEnergyStorage(energyCapactiy, powerPerTick, powerPerTick);
+		energyDistributor = new PowerDistributor(this, energyStorage);
 
 	}
 
@@ -46,7 +43,7 @@ public class TileEntityStaticConduit extends TileEntityBaseConduit implements IE
 		}
 	}	
 	public void providePower() {	
-		if(STORAGE.getEnergyStored() <= 0) {
+		if(energyStorage.getEnergyStored() <= 0) {
 			return;
 		}
 		
@@ -64,11 +61,12 @@ public class TileEntityStaticConduit extends TileEntityBaseConduit implements IE
 	        }   
 	    }   
 	    for(int i=0; i<recieversToSatisfy.size(); i++) {
-    		int powerToProvide = Math.min(STORAGE.getEnergyStored(), RF_PER_TICK/recieversToSatisfy.size());
-	        POWER_DIST.provideRF(recieversToSatisfy.get(i), EnumFacing.WEST, powerToProvide);
+    		int powerToProvide = energyStorage.extractEnergy(powerPerTick/recieversToSatisfy.size(), true);
+
+	        energyDistributor.provideRF(recieversToSatisfy.get(i), EnumFacing.WEST, powerToProvide);
 	    }
 	    
-		if(STORAGE.getEnergyStored() >= 0) {
+		if(energyStorage.getEnergyStored() >= 0) {
 			return;
 		}
 		
@@ -76,12 +74,12 @@ public class TileEntityStaticConduit extends TileEntityBaseConduit implements IE
     @Override  
 	public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
-        STORAGE.readFromNBT(nbt);
+        energyStorage.readFromNBT(nbt);
     }		
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
-        STORAGE.writeToNBT(nbt);
+        energyStorage.writeToNBT(nbt);
 		return nbt;
 	}
 
@@ -106,8 +104,8 @@ public class TileEntityStaticConduit extends TileEntityBaseConduit implements IE
 		return false;		
 	}	
 	public float getEnergyAdjusted() {
-		int amount = STORAGE.getEnergyStored();
-		int max = ENERGY_CAPACTIY;
+		int amount = energyStorage.getEnergyStored();
+		int max = energyCapactiy;
 	
 		return (float)amount/(float)max;
 	}
@@ -120,21 +118,20 @@ public class TileEntityStaticConduit extends TileEntityBaseConduit implements IE
 	}
 	@Override
 	public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
-		return STORAGE.extractEnergy(maxExtract, simulate);
+		return energyStorage.extractEnergy(maxExtract, simulate);
 	}
 	@Override
 	public int getEnergyStored(EnumFacing from) {
-		return STORAGE.getEnergyStored();
+		return energyStorage.getEnergyStored();
 	}
 	@Override
 	public int getMaxEnergyStored(EnumFacing from) {
-		return STORAGE.getMaxEnergyStored();
+		return energyStorage.getMaxEnergyStored();
 	}
 	@Override
 	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
 		if(!disconected(from)) {
-			LAST_RECIEVED = from;
-			return STORAGE.receiveEnergy(maxReceive, simulate);
+			return energyStorage.receiveEnergy(maxReceive, simulate);
 		}
 		return 0;
 	}

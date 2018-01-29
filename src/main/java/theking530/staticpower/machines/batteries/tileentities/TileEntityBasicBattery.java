@@ -8,7 +8,7 @@ public class TileEntityBasicBattery extends TileEntityBattery{
 		initializeBasicMachine(2, 0, 100000, 50, 0, 0, 0, 0, false);
 		MAX_INPUT = 100;
 		MAX_OUTPUT = 100;
-		POWER_DIS = new PowerDistributor(this, STORAGE);
+		POWER_DIS = new PowerDistributor(this, energyStorage);
 	}
 	@Override
 	public String getName() {

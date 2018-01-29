@@ -27,16 +27,12 @@ public class GuiFermenter extends BaseGuiContainer {
 		POWERBAR = new GuiPowerBarFromEnergyStorage(teCropSqueezer);
 		FLUIDBAR = new GuiFluidBarFromTank(teCropSqueezer.TANK);
 		
-		getTabManager().registerTab(new GuiRedstoneTab(100, 100, teCropSqueezer));
+		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teCropSqueezer));
 		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teCropSqueezer));
 		
 	}
 	public void drawScreen(int par1, int par2, float par3) {
 		super.drawScreen(par1, par2, par3);
-		
-		this.zLevel = -1.0f;
-		this.drawDefaultBackground();	
-		this.zLevel = 0.0f;
 		
 		int var1 = (this.width - this.xSize) / 2;
 		int var2 = (this.height - this.ySize) / 2;
@@ -57,6 +53,10 @@ public class GuiFermenter extends BaseGuiContainer {
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
+		this.zLevel = -1.0f;
+		this.drawDefaultBackground();	
+		this.zLevel = 0.0f;
+		
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.FERMENTER_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
@@ -71,7 +71,7 @@ public class GuiFermenter extends BaseGuiContainer {
 		FLUIDBAR.drawFluidBar(guiLeft + 37, guiTop + 68, 16, 60, this.zLevel);
 		
 		
-        getTabManager().drawTabs(guiLeft+175, guiTop+10, width, height, f);
+        getTabManager().drawTabs(guiLeft+194, guiTop+10, width, height, f);
 	}
 }
 

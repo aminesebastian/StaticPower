@@ -7,7 +7,6 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.items.SlotItemHandler;
-import theking530.staticpower.machines.machinecomponents.SlotWithExperienceOutput;
 
 public class ContainerPoweredFurnace extends Container {
 	

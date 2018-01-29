@@ -42,10 +42,10 @@ public class GuiBattery extends BaseGuiContainer {
 		guiButtons(j, k);
 	}
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
-		String INPUT = (String.valueOf(sBattery.STORAGE.getMaxReceive()) + " RF/t");
-		String OUTPUT = (String.valueOf(sBattery.STORAGE.getMaxExtract()) + " RF/t");
+		String INPUT = (String.valueOf(sBattery.energyStorage.getMaxReceive()) + " RF/t");
+		String OUTPUT = (String.valueOf(sBattery.energyStorage.getMaxExtract()) + " RF/t");
 		
-		String current_input = (String.valueOf(sBattery.CURRENT_RF_TICK) + " RF/t");
+		String current_input = (String.valueOf(sBattery.currentEnergyPerTick) + " RF/t");
 
 		String NAME = I18n.format(this.sBattery.getName());
 		this.fontRenderer.drawString("Input", this.xSize/2-this.fontRenderer.getStringWidth("Input")/2 - 35, 35, 4210752);
@@ -79,8 +79,8 @@ public class GuiBattery extends BaseGuiContainer {
 		int var2 = (this.height - this.ySize) / 2;
 		if (par1 >= 80 + var1 && par2 >= 20 + var2 && par1 <= 96 + var1
 				&& par2 <= 71 + var2) {
-			int j1 = sBattery.STORAGE.getEnergyStored();
-			int k1 = sBattery.STORAGE.getMaxEnergyStored();
+			int j1 = sBattery.energyStorage.getEnergyStored();
+			int k1 = sBattery.energyStorage.getMaxEnergyStored();
 			String[] text = { NumberFormat.getNumberInstance(Locale.US).format(
 					j1)
 					+ " "
@@ -106,63 +106,63 @@ public class GuiBattery extends BaseGuiContainer {
 		
 		switch(B.id) {
 		case 1:
-			if (isShiftKeyDown() && sBattery.STORAGE.getMaxReceive() + 100 <= sBattery.MAX_INPUT) {
-				sBattery.STORAGE.setMaxReceive(sBattery.STORAGE.getMaxReceive()+100);
-			} else if (isShiftKeyDown() && sBattery.STORAGE.getMaxReceive() + 100 > sBattery.MAX_INPUT) {
-				sBattery.STORAGE.setMaxReceive(sBattery.MAX_INPUT);
-			} else if (isCtrlKeyDown() && sBattery.STORAGE.getMaxReceive() + 1 <= sBattery.MAX_INPUT) {
-				sBattery.STORAGE.setMaxReceive(sBattery.STORAGE.getMaxReceive()+1);
-			} else if (isCtrlKeyDown() && sBattery.STORAGE.getMaxReceive() + 1 > sBattery.MAX_INPUT) {
+			if (isShiftKeyDown() && sBattery.energyStorage.getMaxReceive() + 100 <= sBattery.MAX_INPUT) {
+				sBattery.energyStorage.setMaxReceive(sBattery.energyStorage.getMaxReceive()+100);
+			} else if (isShiftKeyDown() && sBattery.energyStorage.getMaxReceive() + 100 > sBattery.MAX_INPUT) {
+				sBattery.energyStorage.setMaxReceive(sBattery.MAX_INPUT);
+			} else if (isCtrlKeyDown() && sBattery.energyStorage.getMaxReceive() + 1 <= sBattery.MAX_INPUT) {
+				sBattery.energyStorage.setMaxReceive(sBattery.energyStorage.getMaxReceive()+1);
+			} else if (isCtrlKeyDown() && sBattery.energyStorage.getMaxReceive() + 1 > sBattery.MAX_INPUT) {
 				//INPUT_PER_TICK = sBattery.MAX_INPUT;
-			} else if (sBattery.STORAGE.getMaxReceive() + 50 <= sBattery.MAX_INPUT) {
-				sBattery.STORAGE.setMaxReceive(sBattery.STORAGE.getMaxReceive()+50);
-			} else if (sBattery.STORAGE.getMaxReceive() + 50 > sBattery.MAX_INPUT) {
-				sBattery.STORAGE.setMaxReceive(sBattery.MAX_INPUT);
+			} else if (sBattery.energyStorage.getMaxReceive() + 50 <= sBattery.MAX_INPUT) {
+				sBattery.energyStorage.setMaxReceive(sBattery.energyStorage.getMaxReceive()+50);
+			} else if (sBattery.energyStorage.getMaxReceive() + 50 > sBattery.MAX_INPUT) {
+				sBattery.energyStorage.setMaxReceive(sBattery.MAX_INPUT);
 			}
 			break;
 		case 2 :
-			if (isShiftKeyDown() && sBattery.STORAGE.getMaxReceive() - 100 >= 0) {
-				sBattery.STORAGE.setMaxReceive(sBattery.STORAGE.getMaxReceive()-100);
-			} else if (isShiftKeyDown() && sBattery.STORAGE.getMaxReceive() - 100 < 0) {
-				sBattery.STORAGE.setMaxReceive(0);
-			} else if (isCtrlKeyDown() && sBattery.STORAGE.getMaxReceive() - 1 >= 0) {
-				sBattery.STORAGE.setMaxReceive(sBattery.STORAGE.getMaxReceive()-1);
-			} else if (isCtrlKeyDown() && sBattery.STORAGE.getMaxReceive() - 1 < 0) {
-				sBattery.STORAGE.setMaxReceive(0);
-			} else if (sBattery.STORAGE.getMaxReceive() - 50 >= 0) {
-				sBattery.STORAGE.setMaxReceive(sBattery.STORAGE.getMaxReceive()-50);
-			} else if (sBattery.STORAGE.getMaxReceive() - 50 < 0) {
-				sBattery.STORAGE.setMaxReceive(0);
+			if (isShiftKeyDown() && sBattery.energyStorage.getMaxReceive() - 100 >= 0) {
+				sBattery.energyStorage.setMaxReceive(sBattery.energyStorage.getMaxReceive()-100);
+			} else if (isShiftKeyDown() && sBattery.energyStorage.getMaxReceive() - 100 < 0) {
+				sBattery.energyStorage.setMaxReceive(0);
+			} else if (isCtrlKeyDown() && sBattery.energyStorage.getMaxReceive() - 1 >= 0) {
+				sBattery.energyStorage.setMaxReceive(sBattery.energyStorage.getMaxReceive()-1);
+			} else if (isCtrlKeyDown() && sBattery.energyStorage.getMaxReceive() - 1 < 0) {
+				sBattery.energyStorage.setMaxReceive(0);
+			} else if (sBattery.energyStorage.getMaxReceive() - 50 >= 0) {
+				sBattery.energyStorage.setMaxReceive(sBattery.energyStorage.getMaxReceive()-50);
+			} else if (sBattery.energyStorage.getMaxReceive() - 50 < 0) {
+				sBattery.energyStorage.setMaxReceive(0);
 			}
 			break;
 		case 3 :
-			if (isShiftKeyDown() && sBattery.STORAGE.getMaxExtract() + 50 <= sBattery.MAX_OUTPUT) {
-				sBattery.STORAGE.setMaxExtract(sBattery.STORAGE.getMaxExtract()+50);
-			} else if (isShiftKeyDown() && sBattery.STORAGE.getMaxExtract() + 50 > sBattery.MAX_OUTPUT) {
-				sBattery.STORAGE.setMaxExtract(sBattery.MAX_OUTPUT);
-			} else if (isCtrlKeyDown() && sBattery.STORAGE.getMaxExtract() + 1 <= sBattery.MAX_OUTPUT) {
-				sBattery.STORAGE.setMaxExtract(sBattery.STORAGE.getMaxExtract()+1);
-			} else if (isCtrlKeyDown() && sBattery.STORAGE.getMaxExtract() + 1 > sBattery.MAX_OUTPUT) {
-				sBattery.STORAGE.setMaxExtract(sBattery.MAX_OUTPUT);
-			} else if (sBattery.STORAGE.getMaxExtract() + 5 <= sBattery.MAX_OUTPUT) {
-				sBattery.STORAGE.setMaxExtract(sBattery.STORAGE.getMaxExtract()+5);
-			} else if (sBattery.STORAGE.getMaxExtract() + 5 > sBattery.MAX_OUTPUT) {
-				sBattery.STORAGE.setMaxExtract(sBattery.MAX_OUTPUT);
+			if (isShiftKeyDown() && sBattery.energyStorage.getMaxExtract() + 50 <= sBattery.MAX_OUTPUT) {
+				sBattery.energyStorage.setMaxExtract(sBattery.energyStorage.getMaxExtract()+50);
+			} else if (isShiftKeyDown() && sBattery.energyStorage.getMaxExtract() + 50 > sBattery.MAX_OUTPUT) {
+				sBattery.energyStorage.setMaxExtract(sBattery.MAX_OUTPUT);
+			} else if (isCtrlKeyDown() && sBattery.energyStorage.getMaxExtract() + 1 <= sBattery.MAX_OUTPUT) {
+				sBattery.energyStorage.setMaxExtract(sBattery.energyStorage.getMaxExtract()+1);
+			} else if (isCtrlKeyDown() && sBattery.energyStorage.getMaxExtract() + 1 > sBattery.MAX_OUTPUT) {
+				sBattery.energyStorage.setMaxExtract(sBattery.MAX_OUTPUT);
+			} else if (sBattery.energyStorage.getMaxExtract() + 5 <= sBattery.MAX_OUTPUT) {
+				sBattery.energyStorage.setMaxExtract(sBattery.energyStorage.getMaxExtract()+5);
+			} else if (sBattery.energyStorage.getMaxExtract() + 5 > sBattery.MAX_OUTPUT) {
+				sBattery.energyStorage.setMaxExtract(sBattery.MAX_OUTPUT);
 			}
 			break;
 		case 4 :
-			if (isShiftKeyDown() && sBattery.STORAGE.getMaxExtract() - 50 >= 0) {
-				sBattery.STORAGE.setMaxExtract(sBattery.STORAGE.getMaxExtract()-50);
-			} else if (isShiftKeyDown() && sBattery.STORAGE.getMaxExtract() - 50 < 0) {
-				sBattery.STORAGE.setMaxExtract(0);
-			} else if (isCtrlKeyDown() && sBattery.STORAGE.getMaxExtract() - 1 >= 0) {
-				sBattery.STORAGE.setMaxExtract(sBattery.STORAGE.getMaxExtract()-1);
-			} else if (isCtrlKeyDown() && sBattery.STORAGE.getMaxExtract() - 1 < 0) {
-				sBattery.STORAGE.setMaxExtract(0);
-			} else if (sBattery.STORAGE.getMaxExtract() - 5 >= 0) {
-				sBattery.STORAGE.setMaxExtract(sBattery.STORAGE.getMaxExtract()-5);
-			} else if (sBattery.STORAGE.getMaxExtract() - 5 < 0) {
-				sBattery.STORAGE.setMaxExtract(0);
+			if (isShiftKeyDown() && sBattery.energyStorage.getMaxExtract() - 50 >= 0) {
+				sBattery.energyStorage.setMaxExtract(sBattery.energyStorage.getMaxExtract()-50);
+			} else if (isShiftKeyDown() && sBattery.energyStorage.getMaxExtract() - 50 < 0) {
+				sBattery.energyStorage.setMaxExtract(0);
+			} else if (isCtrlKeyDown() && sBattery.energyStorage.getMaxExtract() - 1 >= 0) {
+				sBattery.energyStorage.setMaxExtract(sBattery.energyStorage.getMaxExtract()-1);
+			} else if (isCtrlKeyDown() && sBattery.energyStorage.getMaxExtract() - 1 < 0) {
+				sBattery.energyStorage.setMaxExtract(0);
+			} else if (sBattery.energyStorage.getMaxExtract() - 5 >= 0) {
+				sBattery.energyStorage.setMaxExtract(sBattery.energyStorage.getMaxExtract()-5);
+			} else if (sBattery.energyStorage.getMaxExtract() - 5 < 0) {
+				sBattery.energyStorage.setMaxExtract(0);
 			}
 			break;
 		}

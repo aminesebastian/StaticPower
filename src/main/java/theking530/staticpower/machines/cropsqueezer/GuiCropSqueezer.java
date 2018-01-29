@@ -24,19 +24,13 @@ public class GuiCropSqueezer extends BaseGuiContainer {
 		POWERBAR = new GuiPowerBarFromEnergyStorage(teCropSqueezer);
 		FLUIDBAR = new GuiFluidBarFromTank(teCropSqueezer.TANK);
 		
-		getTabManager().registerTab(new GuiRedstoneTab(100, 100, teCropSqueezer));
-		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teCropSqueezer));
-
-		this.xSize = 195;
-		this.ySize = 166;		
+		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teCropSqueezer));
+		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teCropSqueezer));	
 	}
 
 	public void drawScreen(int par1, int par2, float par3) {
 		super.drawScreen(par1, par2, par3);
-		this.zLevel = -1.0f;
-		this.drawDefaultBackground();	
-		this.zLevel = 0.0f;
-		
+
 		int var1 = (this.width - this.xSize) / 2;
 		int var2 = (this.height - this.ySize) / 2;
 		if(par1 >= 30 + var1 && par2 >= 8 + var2 && par1 <= 46 + var1 && par2 <= 68 + var2) {	
@@ -45,7 +39,6 @@ public class GuiCropSqueezer extends BaseGuiContainer {
 		if(par1 >= 50 + var1 && par2 >= 8 + var2 && par1 <= 56 + var1 && par2 <= 68 + var2) {
 			drawHoveringText(POWERBAR.drawText(), par1, par2, fontRenderer); 
 		}		
-		this.renderHoveredToolTip(par1, par2);
 	}
 
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
@@ -56,6 +49,11 @@ public class GuiCropSqueezer extends BaseGuiContainer {
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
+		this.zLevel = -1.0f;
+		this.drawDefaultBackground();	
+		this.zLevel = 0.0f;
+		
+		
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.SQUEEZER_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
@@ -64,7 +62,7 @@ public class GuiCropSqueezer extends BaseGuiContainer {
 		drawTexturedModalRect(guiLeft + 107, guiTop + 33, 198, 71, 14, 1+j1);
 			
 		
-        getTabManager().drawTabs(guiLeft+175, guiTop+10, width, height, f);
+        getTabManager().drawTabs(guiLeft+194, guiTop+10, width, height, f);
 		
 		POWERBAR.drawPowerBar(guiLeft + 50, guiTop + 68, 6, 60, this.zLevel, f);
 		FLUIDBAR.drawFluidBar(guiLeft + 30, guiTop + 68, 16, 60, this.zLevel);

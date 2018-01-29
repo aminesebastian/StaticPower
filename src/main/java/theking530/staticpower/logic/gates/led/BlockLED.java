@@ -23,6 +23,7 @@ public class BlockLED extends BlockLogicGate {
 	
 	public BlockLED(String name) {
 		super(name, 0);
+		setLightLevel(15.0f);
 	}
 
 	@Override

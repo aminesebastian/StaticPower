@@ -5,8 +5,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.handlers.crafting.registries.InfuserRecipeRegistry;
 import theking530.staticpower.machines.BaseMachineWithTank;
-import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent;
-import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent.FluidContainerInteractionMode;
+import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent;
+import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent.FluidContainerInteractionMode;
 import theking530.staticpower.utils.InventoryUtilities;
 
 public class TileEntityFluidInfuser extends BaseMachineWithTank {
@@ -43,7 +43,7 @@ public class TileEntityFluidInfuser extends BaseMachineWithTank {
 	public boolean hasResult(ItemStack itemStack) {
 		if(itemStack != ItemStack.EMPTY) {
 			if(getResult(itemStack) != ItemStack.EMPTY && TANK.getFluidAmount() >= InfuserRecipeRegistry.Infusing().getInfusingFluidCost(slotsInput.getStackInSlot(0), TANK.getFluid()) &&
-					STORAGE.getEnergyStored() >= getProcessingEnergy(itemStack) && InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 0, getResult(itemStack))) {
+					energyStorage.getEnergyStored() >= getProcessingEnergy(itemStack) && InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 0, getResult(itemStack))) {
 				return true;
 			}
 		}
@@ -61,7 +61,7 @@ public class TileEntityFluidInfuser extends BaseMachineWithTank {
 	@Override
 	public int getProcessingEnergy(ItemStack itemStack) {
 		if(getResult(itemStack) != ItemStack.EMPTY) {
-			return InfuserRecipeRegistry.Infusing().getInfusingFluidCost(itemStack, TANK.getFluid())*5*PROCESSING_ENERGY_MULT;
+			return InfuserRecipeRegistry.Infusing().getInfusingFluidCost(itemStack, TANK.getFluid())*5*processingEnergyMult;
 		}
 		return 0;
 	}
@@ -87,36 +87,36 @@ public class TileEntityFluidInfuser extends BaseMachineWithTank {
 			DRAIN_COMPONENT.update();
 		}
 		if(slotsInternal.getStackInSlot(0) == ItemStack.EMPTY){
-			PROCESSING_TIMER = 0;
+			processingTimer = 0;
 		}
 		if(!isProcessing() && !isMoving() && !isTankEmpty() && hasPower() && hasResult(slotsInput.getStackInSlot(0))) {
-			MOVE_TIMER = 1;
+			moveTimer = 1;
 		}
 		if(!isProcessing() && isMoving() && !isTankEmpty() && hasPower() && hasResult(slotsInput.getStackInSlot(0))) {
-			MOVE_TIMER++;
-			if(MOVE_TIMER >= MOVE_SPEED) {
-				MOVE_TIMER = 0;
+			moveTimer++;
+			if(moveTimer >= moveSpeed) {
+				moveTimer = 0;
 				if(!getWorld().isRemote) {
 					TANK.drain(InfuserRecipeRegistry.Infusing().getInfusingFluidCost(slotsInput.getStackInSlot(0), TANK.getFluid()), true);
 					useEnergy(getProcessingEnergy(slotsInput.getStackInSlot(0)));
 				}
 				moveItem(slotsInput, 0, slotsInternal, 0);
-				PROCESSING_TIMER = 1;
+				processingTimer = 1;
 				
 			}
 		}else{
-			MOVE_TIMER = 0;
+			moveTimer = 0;
 		}
 		if(isProcessing() && !isMoving()) {
-			if(PROCESSING_TIMER < PROCESSING_TIME) {
-				PROCESSING_TIMER++;
+			if(processingTimer < processingTime) {
+				processingTimer++;
 			}else{
 				if(InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 0, getResult(slotsInternal.getStackInSlot(0)))) {
 					if(slotsInternal.getStackInSlot(0) != ItemStack.EMPTY && getResult(slotsInternal.getStackInSlot(0)) != ItemStack.EMPTY) { //Weird Bug when Serializing
 						slotsOutput.insertItem(0, getResult(slotsInternal.getStackInSlot(0)).copy(), false);
 					}
 					slotsInternal.setStackInSlot(0, ItemStack.EMPTY);
-					PROCESSING_TIMER = 0;
+					processingTimer = 0;
 					updateBlock();
 				}
 			}

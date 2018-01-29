@@ -3,7 +3,7 @@ package theking530.staticpower.machines.poweredfurnace;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import theking530.staticpower.machines.BaseMachine;
-import theking530.staticpower.machines.machinecomponents.FillFromBatteryComponent;
+import theking530.staticpower.machines.tileentitycomponents.FillFromBatteryComponent;
 import theking530.staticpower.utils.InventoryUtilities;
 
 public class TileEntityPoweredFurnace extends BaseMachine {
@@ -12,7 +12,7 @@ public class TileEntityPoweredFurnace extends BaseMachine {
 	
 	public TileEntityPoweredFurnace() {
 		initializeBasicMachine(2, 1000, 100000, 80, 150, 1, 2, 1);
-		BATTERY_COMPONENT = new FillFromBatteryComponent("BatteryComponent", slotsInput, 1, this, STORAGE);
+		BATTERY_COMPONENT = new FillFromBatteryComponent("BatteryComponent", slotsInput, 1, this, energyStorage);
 	}
 	@Override
 	public String getName() {
@@ -39,7 +39,7 @@ public class TileEntityPoweredFurnace extends BaseMachine {
 	@Override
 	public boolean canProcess(ItemStack itemStack) {
 		if(hasResult(itemStack)) {
-			if(InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 0, getResult(itemStack)) && STORAGE.getEnergyStored() >= getProcessingCost()) {
+			if(InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 0, getResult(itemStack)) && energyStorage.getEnergyStored() >= getProcessingCost()) {
 				return true;
 			}
 		}
@@ -49,28 +49,28 @@ public class TileEntityPoweredFurnace extends BaseMachine {
 		if(!getWorld().isRemote) {
 			BATTERY_COMPONENT.update();
 			if(!isProcessing() && !isMoving() && canProcess(getInputStack(0))) {
-				MOVE_TIMER++;
+				moveTimer++;
 			}
 			if(!isProcessing() && isMoving() && canProcess(getInputStack(0))) {
-				if(MOVE_TIMER < MOVE_SPEED) {
-					MOVE_TIMER++;
+				if(moveTimer < moveSpeed) {
+					moveTimer++;
 				}else{
 					moveItem(slotsInput, 0, slotsInternal, 0);
-					PROCESSING_TIMER = 1;
-					MOVE_TIMER = 0;
+					processingTimer = 1;
+					moveTimer = 0;
 				}
 			}
 			if(isProcessing() && !isMoving()) {
-				if(PROCESSING_TIMER < PROCESSING_TIME) {
-					useEnergy(getProcessingCost() / PROCESSING_TIME);
-					PROCESSING_TIMER++;
+				if(processingTimer < processingTime) {
+					useEnergy(getProcessingCost() / processingTime);
+					processingTimer++;
 				}else{
-					PROCESSING_TIMER=0;
+					processingTimer=0;
 					updateBlock();
 					if(InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 0, getResult(getInternalStack(0)))) {
 						InventoryUtilities.insertItemIntoInventory(slotsOutput, getResult(getInternalStack(0)), 0, 0);
 						setInternalStack(0, ItemStack.EMPTY);
-						MOVE_TIMER = 0;
+						moveTimer = 0;
 					}
 				}
 			}

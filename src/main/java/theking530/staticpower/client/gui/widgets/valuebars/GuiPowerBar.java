@@ -14,15 +14,15 @@ import theking530.staticpower.utils.GuiTextures;
 
 public class GuiPowerBar {
 	
-	private float  GLOW_SCALE_RATE;
-	private float WORLD_TIME;
+	private static float GLOW_SCALE_RATE;
+	private static float WORLD_TIME;
 	
 	public GuiPowerBar() {
 		GLOW_SCALE_RATE = 0.20f;
 		WORLD_TIME = 0.0f;
 	}
 	
-	public List<String> drawText(int currentEnergy, int maxEnergy, int energyPerTick, int powerUse) {
+	public static List<String> drawText(int currentEnergy, int maxEnergy, int energyPerTick, int powerUse) {
     	String text = ("Input: " + energyPerTick + " RF/t");
     	if(powerUse > 0) {
     		text += "=" + "Usage: " + powerUse + " RF/t";
@@ -31,7 +31,7 @@ public class GuiPowerBar {
     	String[] splitMsg = text.split("=");
 		return Arrays.asList(splitMsg);
 	}
-	public void drawPowerBar(int xpos, int ypos, int width, int height, float zLevel, int currentEnergy, int maxEnergy, float deltaTime) {
+	public static void drawPowerBar(int xpos, int ypos, int width, int height, float zLevel, int currentEnergy, int maxEnergy, float deltaTime) {
 		float u1 = (float)currentEnergy/(float)maxEnergy;
 		float k1 = u1 * height;
 		float glowState = getGlow(deltaTime);
@@ -48,7 +48,7 @@ public class GuiPowerBar {
 		GlStateManager.color(1.0f, 1.0f, 1.0f);
 		tessellator.draw();
 	}
-	private float getGlow(float deltaTime) {
+	private static float getGlow(float deltaTime) {
 		WORLD_TIME += deltaTime;
 		float sin = (float)(Math.sin(WORLD_TIME*GLOW_SCALE_RATE));
 		sin = (sin + 10)/20;

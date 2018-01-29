@@ -11,8 +11,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import theking530.staticpower.handlers.crafting.registries.CondenserRecipeRegistry;
 import theking530.staticpower.machines.BaseMachineWithTank;
-import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent;
-import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent.FluidContainerInteractionMode;
+import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent;
+import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent.FluidContainerInteractionMode;
 
 public class TileEntityCondenser extends BaseMachineWithTank  {
 
@@ -23,7 +23,7 @@ public class TileEntityCondenser extends BaseMachineWithTank  {
 	public DrainToBucketComponent DRAIN_COMPONENT_ETHANOL;
 
 	public TileEntityCondenser() {
-		initializeBaseMachineWithTank(0, 0, 0, 0, 100, 0, 2, 2, 5000);
+		initializeBaseMachineWithTank(0, 0, 0, 0, 20, 0, 2, 2, 5000);
 		TANK2 = new FluidTank(5000);
 		
 		DRAIN_COMPONENT_EVAPORATED_MASH = new DrainToBucketComponent("LeftBucketDrain", slotsInput, 0, slotsOutput, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
@@ -41,18 +41,17 @@ public class TileEntityCondenser extends BaseMachineWithTank  {
 			DRAIN_COMPONENT_ETHANOL.update();
 			if(!isProcessing() && PROCESSING_STACK == null && canProcess()) {
 				PROCESSING_STACK = TANK.drain(getInputFluidAmount(), true);
-				PROCESSING_TIME = Math.max(getOutputCondensingTime(), 0);
-				PROCESSING_TIMER++;
+				processingTime = Math.max(getOutputCondensingTime(), 0);
+				processingTimer++;
 			}
 			if(isProcessing()) {
-				if(PROCESSING_TIMER < PROCESSING_TIME) {
-					PROCESSING_TIMER++;
-					updateBlock();
+				if(processingTimer < processingTime) {
+					processingTimer++;
 				}else{
 					if(PROCESSING_STACK != null) {
 						TANK2.fill(getOutputFluid(), true);
 						PROCESSING_STACK = null;
-						PROCESSING_TIMER = 0;		
+						processingTimer = 0;		
 						updateBlock();
 					}
 				}
@@ -85,7 +84,9 @@ public class TileEntityCondenser extends BaseMachineWithTank  {
 		return 0;
 	}
 	public FluidStack getOutputFluid() {
-		if(TANK.getFluid() != null) {
+		if(PROCESSING_STACK != null) {
+			return CondenserRecipeRegistry.Condensing().getFluidOutput(PROCESSING_STACK);
+		}else if(TANK.getFluid() != null) {
 			return CondenserRecipeRegistry.Condensing().getFluidOutput(TANK.getFluid());
 		}
 		return null;

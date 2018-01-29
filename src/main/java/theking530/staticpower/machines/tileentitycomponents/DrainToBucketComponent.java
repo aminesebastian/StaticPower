@@ -1,4 +1,4 @@
-package theking530.staticpower.machines.machinecomponents;
+package theking530.staticpower.machines.tileentitycomponents;
 
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -10,7 +10,7 @@ import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.tileentity.BaseTileEntity;
 
-public class DrainToBucketComponent implements IMachineComponentInterface{
+public class DrainToBucketComponent implements ITileEntityComponent{
 
 	private String NAME;
 	
@@ -31,6 +31,8 @@ public class DrainToBucketComponent implements IMachineComponentInterface{
 
 	private int MOVE_TIME = 0;
 	private int MOVE_TIMER = 0;
+	
+	private boolean isEnabled;
 	
 	public enum FluidContainerInteractionMode {
 		FillFromContainer, DrainToContainer;
@@ -164,5 +166,13 @@ public class DrainToBucketComponent implements IMachineComponentInterface{
 	@Override
 	public String getComponentName() {
 		return NAME;
+	}
+	@Override
+	public boolean isEnabled() {
+		return isEnabled;
+	}
+	@Override
+	public void setEnabled(boolean isEnabled) {
+		this.isEnabled = isEnabled;
 	}
 }

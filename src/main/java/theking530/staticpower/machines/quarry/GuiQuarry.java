@@ -15,7 +15,7 @@ import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.items.ModItems;
-import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent.FluidContainerInteractionMode;
+import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent.FluidContainerInteractionMode;
 import theking530.staticpower.utils.GUIUtilities;
 import theking530.staticpower.utils.GuiTextures;
 import theking530.staticpower.utils.WorldUtilities;
@@ -101,9 +101,9 @@ public class GuiQuarry extends BaseGuiContainer {
 		String tutorial5 = "• Place a chest on";
 		String tutorial6 = "top to collect items!";
 		String tutorial7 = "• Power with RF Power.";
-		String speed = "Ticks per Operation: " + QUARRY.PROCESSING_TIME;
+		String speed = "Ticks per Operation: " + QUARRY.processingTime;
 		String blocks = "Blocks per Operation: " + QUARRY.BLOCKS_PER_TICK;
-		String energy = "RF per Block: " + QUARRY.PROCESSING_ENERGY_MULT * 100;
+		String energy = "RF per Block: " + QUARRY.processingEnergyMult * 100;
 		String fortune = "Fortune Level: " + QUARRY.getFortuneMultiplier();
 		
 		GL11.glScalef(scale, scale, scale);

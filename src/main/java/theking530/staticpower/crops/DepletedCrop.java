@@ -30,11 +30,11 @@ public class DepletedCrop extends ItemBase {
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
 		tooltip.add("Strangly Fertilizing...");
     }
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (!playerIn.canPlayerEdit(pos.offset(facing), facing, stack)) {
+	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
+        if (!playerIn.canPlayerEdit(pos.offset(facing), facing, playerIn.getHeldItem(hand))) {
             return EnumActionResult.FAIL;
         }else{
-            if (applyBonemeal(stack, worldIn, pos, playerIn)){
+            if (applyBonemeal(playerIn.getHeldItem(hand), worldIn, pos, playerIn, hand)){
                 if (!worldIn.isRemote){
                     worldIn.playEvent(2005, pos, 0);
                 }
@@ -43,43 +43,32 @@ public class DepletedCrop extends ItemBase {
             return EnumActionResult.PASS;
         }
     }
-	public static boolean func_150919_a(ItemStack itemstack, World world, BlockPos pos) {
-        if (world instanceof WorldServer)
-            return applyBonemeal(itemstack, world, pos, FakePlayerFactory.getMinecraft((WorldServer)world));
-        return false;
-    }	
-    public static boolean applyBonemeal(ItemStack stack, World worldIn, BlockPos target){
-        if (worldIn instanceof net.minecraft.world.WorldServer)
-            return applyBonemeal(stack, worldIn, target, net.minecraftforge.common.util.FakePlayerFactory.getMinecraft((net.minecraft.world.WorldServer)worldIn));
-        return false;
-    }
-    public static boolean applyBonemeal(ItemStack stack, World worldIn, BlockPos target, EntityPlayer player) {
+    public static boolean applyBonemeal(ItemStack stack, World worldIn, BlockPos target, EntityPlayer player, EnumHand hand) {
         IBlockState iblockstate = worldIn.getBlockState(target);
 
-        int hook = net.minecraftforge.event.ForgeEventFactory.onApplyBonemeal(player, worldIn, target, iblockstate, stack, null);
+        int hook = net.minecraftforge.event.ForgeEventFactory.onApplyBonemeal(player, worldIn, target, iblockstate, stack, hand);
         if (hook != 0) return hook > 0;
 
-        if (iblockstate.getBlock() instanceof IGrowable){
+        if (iblockstate.getBlock() instanceof IGrowable)
+        {
             IGrowable igrowable = (IGrowable)iblockstate.getBlock();
 
-            if (igrowable.canGrow(worldIn, target, iblockstate, worldIn.isRemote)) {
-                if (!worldIn.isRemote){
-                    if (igrowable.canUseBonemeal(worldIn, worldIn.rand, target, iblockstate)){
+            if (igrowable.canGrow(worldIn, target, iblockstate, worldIn.isRemote))
+            {
+                if (!worldIn.isRemote)
+                {
+                    if (igrowable.canUseBonemeal(worldIn, worldIn.rand, target, iblockstate))
+                    {
                         igrowable.grow(worldIn, worldIn.rand, target, iblockstate);
                     }
-                    stack.setCount(stack.getCount()-1);
+
+                    stack.shrink(1);
                 }
+
                 return true;
             }
-        }else if(iblockstate.getBlock() instanceof IPlantable) {
-            if (!worldIn.isRemote){
-            	Block tempBlock = (Block)iblockstate.getBlock();
-	        	Random rand = new Random();
-	        	tempBlock.updateTick(worldIn, target, iblockstate, rand);
-	            stack.setCount(stack.getCount()-1);
-	            return true;
-            }
         }
+
         return false;
     }
 }

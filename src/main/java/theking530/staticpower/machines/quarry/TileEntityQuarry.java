@@ -21,8 +21,8 @@ import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.items.upgrades.BaseQuarryingUpgrade;
 import theking530.staticpower.machines.BaseMachineWithTank;
-import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent;
-import theking530.staticpower.machines.machinecomponents.DrainToBucketComponent.FluidContainerInteractionMode;
+import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent;
+import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent.FluidContainerInteractionMode;
 import theking530.staticpower.utils.InventoryUtilities;
 import theking530.staticpower.utils.WorldUtilities;
 
@@ -60,20 +60,20 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 			if(isAbleToMine()) {
 				drawStartingAndEndingCoords();
 				if(!isDoneMining()) {
-					if(PROCESSING_TIMER >= PROCESSING_TIME && QUARRIED_STACKS.size() <= 0 && STORAGE.getEnergyStored() >= PROCESSING_ENERGY_MULT*100) {
+					if(processingTimer >= processingTime && QUARRIED_STACKS.size() <= 0 && energyStorage.getEnergyStored() >= processingEnergyMult*100) {
 						for(int i=0; i<BLOCKS_PER_TICK; i++) {
 							incrementPosition();
 							QUARRIED_STACKS.addAll(getCurrentBlockDrops());
 							mineBlock();
-							STORAGE.extractEnergy(getProcessingCost(), false);
+							energyStorage.extractEnergy(getProcessingCost(), false);
 							if(getFortuneMultiplier() > 0) {
 								TANK.drain(1, true);
 							}
 						}
 						updateBlock();
-						PROCESSING_TIMER = 0;		
+						processingTimer = 0;		
 					}else{
-						PROCESSING_TIMER++;
+						processingTimer++;
 					}		
 				}	
 			}
@@ -119,10 +119,10 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 		if(flag) {
 			BaseQuarryingUpgrade tempUpgrade = (BaseQuarryingUpgrade) slotsUpgrades.getStackInSlot(slot).getItem();
 			BLOCKS_PER_TICK = (int) tempUpgrade.getMultiplier(slotsUpgrades.getStackInSlot(slot), 0);
-			PROCESSING_ENERGY_MULT = (int) (INITIAL_PROCESSING_ENERGY_MULT*tempUpgrade.getMultiplier(slotsUpgrades.getStackInSlot(slot), 1));
+			processingEnergyMult = (int) (initialProcessingEnergyMult*tempUpgrade.getMultiplier(slotsUpgrades.getStackInSlot(slot), 1));
 		}else{
 			BLOCKS_PER_TICK = INITIAL_BLOCKS_PER_TICK;
-			PROCESSING_ENERGY_MULT = INITIAL_PROCESSING_ENERGY_MULT;
+			processingEnergyMult = initialProcessingEnergyMult;
 		}
 	}
 	private void incrementPosition() {

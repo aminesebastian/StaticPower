@@ -36,19 +36,10 @@ public class InventoryUtilities {
 		return true;
 	}	
 	public static boolean canFullyInsertItemIntoSlot(IItemHandler inv, int slot, ItemStack stack) {
-		if(inv.insertItem(slot, stack, true) == ItemStack.EMPTY) {
-			return true;
-		}else{
-			return false;
-		}
+		return inv.insertItem(slot, stack, true) == ItemStack.EMPTY;
 	}
 	public static boolean canInsertItemIntoSlot(IItemHandler inv, int slot, ItemStack stack) {
-		if(canFullyInsertItemIntoSlot(inv, slot, stack)) {
-			return true;
-		}else if(inv.insertItem(slot, stack, true).getCount() < stack.getCount()) {
-			return true;
-		}
-		return false;
+		return inv.insertItem(slot, stack, true).getCount() != stack.getCount();
 	}
 	public static boolean canFullyInsertItemIntoInventory(IItemHandler inv, ItemStack stack) {
 		ItemStack output = stack;

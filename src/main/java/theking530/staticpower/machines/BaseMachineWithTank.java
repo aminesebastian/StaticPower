@@ -23,7 +23,7 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler {
 	public int INITIAL_TANK_CAPACITY;
 	public FluidTank TANK;
 	public int FLUID_CONTAINER_SLOT = -1;
-	public int FLUID_TO_CONTAINER_RATE = 10;
+	public int FLUID_TO_CONTAINER_RATE = 20;
 
 	public int CONTAINER_MOVE_TIMER = 0;
 	public int CONTAINER_MOVE_SPEED = 4;

@@ -52,8 +52,8 @@ public class PacketGuiBattery implements IMessage{
 	 	TileEntity tile = Minecraft.getMinecraft().world.getTileEntity(new BlockPos(message.x, message.y, message.z));
     		if(tile != null) {
     			TileEntityBattery battery = (TileEntityBattery)tile;
-    			battery.STORAGE.setMaxReceive(message.INPUT_PER_TICK);
-    			battery.STORAGE.setMaxExtract(message.OUTPUT_PER_TICK);
+    			battery.energyStorage.setMaxReceive(message.INPUT_PER_TICK);
+    			battery.energyStorage.setMaxExtract(message.OUTPUT_PER_TICK);
     		}
 		return null;
     	}

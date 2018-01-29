@@ -40,8 +40,8 @@ public class GuiTabManager {
 					offset += (int) registeredTabs.get(j).getBounds().getH()-24;
 				}
 			}
-			offset = Math.min(offset, owningGui.getXSize()-(registeredTabs.size()*25)-1);
-			registeredTabs.get(i).update(tabPositionX, tabPositionY + (i*25) + offset, partialTicks);
+			offset = Math.min((i*25) + offset, owningGui.getXSize()-(registeredTabs.size()*22));
+			registeredTabs.get(i).update(tabPositionX, tabPositionY + offset, partialTicks);
 		}
 	}
 	public void tabClosed(BaseGuiTab tab) {}

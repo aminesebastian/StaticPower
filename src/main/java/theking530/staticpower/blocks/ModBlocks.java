@@ -2,7 +2,6 @@ package theking530.staticpower.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import theking530.staticpower.Registry;
 import theking530.staticpower.assists.Tier;
@@ -368,10 +367,10 @@ public class ModBlocks {
 		AluminiumOre = new Ore("AluminiumOre", "pickaxe", 2).setHardness(3.5f);
 		registry.PreRegisterBlock(AluminiumOre);
 
-		SapphireOre = new GemOre("SapphireOre", "pickaxe", 2, ModItems.SapphireGem, 1, 3).setHardness(3.5f);
+		SapphireOre = new GemOre("SapphireOre", "pickaxe", 2, ModItems.SapphireGem, 1, 2).setHardness(3.5f);
 		registry.PreRegisterBlock(SapphireOre);
 
-		RubyOre = new GemOre("RubyOre", "pickaxe", 2, ModItems.RubyGem, 1, 3).setHardness(3.5f);
+		RubyOre = new GemOre("RubyOre", "pickaxe", 2, ModItems.RubyGem, 1, 2).setHardness(3.5f);
 		registry.PreRegisterBlock(RubyOre);
 	}
 }

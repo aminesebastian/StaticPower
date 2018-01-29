@@ -3,6 +3,7 @@ package theking530.staticpower;
 import org.apache.logging.log4j.Level;
 
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -129,6 +130,7 @@ public class StaticPower {
 	    OreGenerationHandler.intialize();
 	    CommonProxy.preInit();
 	        
+	    OBJLoader.INSTANCE.addDomain(Reference.MOD_ID);
 	    Loader.instance();
 		if (Loader.isModLoaded("tconstruct")) {
 	        try {
@@ -196,7 +198,7 @@ public class StaticPower {
 		proxy.registerProxies();
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());	
 		
-	
+		OreDictionaryRegistration.registerOres();
 		ShapedRecipes.registerFullRecipes();   
 		ShaplessRecipes.registerFullRecipes(); 
 		SmeltingRecipes.registerFullRecipes();
@@ -210,7 +212,7 @@ public class StaticPower {
 		CondenserRecipes.registerCondenserRecipes();
 		DistilleryRecipes.registerDistilleryRecipes();
 		ToolRecipes.registerToolRecipes();
-		OreDictionaryRegistration.registerOres();
+
 	}
 	@SubscribeEvent
 	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {

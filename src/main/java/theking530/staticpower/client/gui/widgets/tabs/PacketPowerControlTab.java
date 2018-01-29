@@ -49,8 +49,8 @@ public class PacketPowerControlTab implements IMessage{
     		TileEntity te = ctx.getServerHandler().player.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
     		if(te != null && te instanceof BaseMachine) {
     			BaseMachine entity = (BaseMachine)te;
-    			entity.MIN_POWER_THRESHOLD = message.MIN_POWER_THRESHOLD;
-    			entity.MAX_POWER_THRESHOLD = message.MAX_POWER_THRESHOLD;
+    			entity.minPowerThreshold = message.MIN_POWER_THRESHOLD;
+    			entity.maxPowerThreshold = message.MAX_POWER_THRESHOLD;
     		}
 		return null;
     	}

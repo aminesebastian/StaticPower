@@ -5,12 +5,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import theking530.staticpower.StaticPower;
 
 public class BasePoweredItem extends ItemEnergyContainer{
 
 	public int DAMAGE_DIVISOR;
-	
+
 	public BasePoweredItem(String name, int capacity, int damageDivisor) {
 		super(capacity);
 		setCreativeTab(StaticPower.StaticPower);
