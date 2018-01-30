@@ -22,6 +22,7 @@ public class OreDictionaryRegistration {
 		OreDictionary.registerOre("blockPlatinum", ModBlocks.BlockPlatinum);	
 		OreDictionary.registerOre("blockNickel", ModBlocks.BlockNickel);
 		OreDictionary.registerOre("blockAluminium", ModBlocks.BlockAluminium);
+		OreDictionary.registerOre("blockAluminum", ModBlocks.BlockAluminium);
 		OreDictionary.registerOre("blockSapphire", ModBlocks.BlockSapphire);
 		OreDictionary.registerOre("blockRuby", ModBlocks.BlockRuby);
 		
@@ -32,6 +33,7 @@ public class OreDictionaryRegistration {
 		OreDictionary.registerOre("orePlatinum", ModBlocks.PlatinumOre);
 		OreDictionary.registerOre("oreNickel", ModBlocks.NickelOre);
 		OreDictionary.registerOre("oreAluminium", ModBlocks.AluminiumOre);
+		OreDictionary.registerOre("oreAluminum", ModBlocks.AluminiumOre);
 		OreDictionary.registerOre("oreSapphire", ModBlocks.SapphireOre);
 		OreDictionary.registerOre("oreRuby", ModBlocks.RubyOre);
 		
@@ -41,7 +43,10 @@ public class OreDictionaryRegistration {
 		OreDictionary.registerOre("ingotLead", ModItems.LeadIngot);
 		OreDictionary.registerOre("ingotCopper", ModItems.CopperIngot);
 		OreDictionary.registerOre("ingotPlatinum", ModItems.PlatinumIngot);
-
+		OreDictionary.registerOre("ingotAluminium", ModItems.AluminiumIngot);
+		OreDictionary.registerOre("ingotAluminum", ModItems.AluminiumIngot);
+		OreDictionary.registerOre("ingotNickel", ModItems.NickelIngot);
+		
 		OreDictionary.registerOre("gemSapphire", ModItems.SapphireGem);
 		OreDictionary.registerOre("gemRuby", ModItems.RubyGem);
 		
@@ -53,6 +58,9 @@ public class OreDictionaryRegistration {
 		OreDictionary.registerOre("dustGold", ModItems.GoldDust);
 		OreDictionary.registerOre("dustNickel", ModItems.NickelDust);
 		OreDictionary.registerOre("dustAluminium", ModItems.AluminiumDust);
+		OreDictionary.registerOre("dustAluminum", ModItems.AluminiumDust);
 		OreDictionary.registerOre("nuggetIron", ModItems.IronNugget);
+		
+		OreDictionary.registerOre("silicon", ModItems.Silicon);
 	}
 }

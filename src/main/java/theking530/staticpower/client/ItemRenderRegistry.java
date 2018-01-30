@@ -133,6 +133,9 @@ public class ItemRenderRegistry {
 		registerItem(ModItems.EnergizedPlate);
 		registerItem(ModItems.LumumPlate);
 		
+		registerItem(ModItems.PlateMould);
+		registerItem(ModItems.WireMould);
+		
 		registerItem(ModItems.SilverIngot);
 		registerItem(ModItems.CopperIngot);
 		registerItem(ModItems.TinIngot);
@@ -272,6 +275,8 @@ public class ItemRenderRegistry {
 		registerBlock(ModBlocks.BlockRuby);
 		
 		registerBlock(ModBlocks.StaticLamp);
+		registerBlock(ModBlocks.EnergizedLamp);
+		registerBlock(ModBlocks.LumumLamp);
 		
 		registerBlock(ModBlocks.LogicGateBasePlate);
 		registerItem(ModItems.LogicGatePowerSync);

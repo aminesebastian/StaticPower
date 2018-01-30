@@ -16,9 +16,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.conduits.ConduitPath;
 import theking530.staticpower.conduits.TileEntityBaseConduit;
-import theking530.staticpower.utils.InventoryUtilities;
 
 public class TileEntityItemConduit extends TileEntityBaseConduit {
 	

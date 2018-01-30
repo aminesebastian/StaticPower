@@ -5,6 +5,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.OreIngredient;
 import theking530.staticpower.assists.RegisterHelper;
 import theking530.staticpower.blocks.ModBlocks;
@@ -34,33 +35,33 @@ public class ShaplessRecipes {
 		RegisterHelper.addShapelessRecipe("StaticPower_lumumInfusionBlend", "StaticPower", new ItemStack(ModItems.LumumInfusionBlend, 2), new Ingredient[]{
 				Ingredient.fromItem(ModItems.InertInfusionBlend), Ingredient.fromItem(ModItems.LumumDust)});
 		
-		//Coils ---------------------------------------------------------------------------------------------------------
+		//Wires ---------------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapelessRecipe("StaticPower_copperWire", "StaticPower", new ItemStack(ModItems.CopperWire, 8), new Ingredient[]{
-				Ingredient.fromItem(ModItems.WireCutters), new OreIngredient("ingotCopper")});
+				Ingredient.fromStacks(new ItemStack(ModItems.WireCutters, 1, OreDictionary.WILDCARD_VALUE)), new OreIngredient("ingotCopper")});
 		RegisterHelper.addShapelessRecipe("StaticPower_silverWire", "StaticPower", new ItemStack(ModItems.SilverWire, 8), new Ingredient[]{
-				Ingredient.fromItem(ModItems.WireCutters), new OreIngredient("ingotSilver")});
+				Ingredient.fromStacks(new ItemStack(ModItems.WireCutters, 1, OreDictionary.WILDCARD_VALUE)), new OreIngredient("ingotSilver")});
 		RegisterHelper.addShapelessRecipe("StaticPower_goldWire", "StaticPower", new ItemStack(ModItems.GoldWire, 8), new Ingredient[]{
-				Ingredient.fromItem(ModItems.WireCutters), Ingredient.fromItem(Items.GOLD_INGOT)});
+				Ingredient.fromStacks(new ItemStack(ModItems.WireCutters, 1, OreDictionary.WILDCARD_VALUE)), Ingredient.fromItem(Items.GOLD_INGOT)});
 		
 		//Plates ---------------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapelessRecipe("StaticPower_ironPlate", "StaticPower", new ItemStack(ModItems.IronPlate, 1), new Ingredient[]{
-				Ingredient.fromItem(ModItems.MetalHammer), Ingredient.fromItem(Items.IRON_INGOT)});
+				Ingredient.fromStacks(new ItemStack(ModItems.MetalHammer, 1, OreDictionary.WILDCARD_VALUE)), Ingredient.fromItem(Items.IRON_INGOT)});
 		RegisterHelper.addShapelessRecipe("StaticPower_goldPlate", "StaticPower", new ItemStack(ModItems.GoldPlate, 1), new Ingredient[]{
-				Ingredient.fromItem(ModItems.MetalHammer), Ingredient.fromItem(Items.GOLD_INGOT)});
+				Ingredient.fromStacks(new ItemStack(ModItems.MetalHammer, 1, OreDictionary.WILDCARD_VALUE)), Ingredient.fromItem(Items.GOLD_INGOT)});
 		RegisterHelper.addShapelessRecipe("StaticPower_copperPlate", "StaticPower", new ItemStack(ModItems.CopperPlate, 1), new Ingredient[]{
-				Ingredient.fromItem(ModItems.MetalHammer), new OreIngredient("ingotCopper")});
+				Ingredient.fromStacks(new ItemStack(ModItems.MetalHammer, 1, OreDictionary.WILDCARD_VALUE)), new OreIngredient("ingotCopper")});
 		RegisterHelper.addShapelessRecipe("StaticPower_tinPlate", "StaticPower", new ItemStack(ModItems.TinPlate, 1), new Ingredient[]{
-				Ingredient.fromItem(ModItems.MetalHammer), new OreIngredient("ingotTin")});
+				Ingredient.fromStacks(new ItemStack(ModItems.MetalHammer, 1, OreDictionary.WILDCARD_VALUE)), new OreIngredient("ingotTin")});
 		RegisterHelper.addShapelessRecipe("StaticPower_silverPlate", "StaticPower", new ItemStack(ModItems.SilverPlate, 1), new Ingredient[]{
-				Ingredient.fromItem(ModItems.MetalHammer), new OreIngredient("ingotSilver")});
+				Ingredient.fromStacks(new ItemStack(ModItems.MetalHammer, 1, OreDictionary.WILDCARD_VALUE)), new OreIngredient("ingotSilver")});
 		RegisterHelper.addShapelessRecipe("StaticPower_leadPlate", "StaticPower", new ItemStack(ModItems.LeadPlate, 1), new Ingredient[]{
-				Ingredient.fromItem(ModItems.MetalHammer), new OreIngredient("ingotLead")});
+				Ingredient.fromStacks(new ItemStack(ModItems.MetalHammer, 1, OreDictionary.WILDCARD_VALUE)), new OreIngredient("ingotLead")});
 		RegisterHelper.addShapelessRecipe("StaticPower_staticPlate", "StaticPower", new ItemStack(ModItems.StaticPlate, 1), new Ingredient[]{
-				Ingredient.fromItem(ModItems.MetalHammer), Ingredient.fromItem(ModItems.StaticIngot)});
+				Ingredient.fromStacks(new ItemStack(ModItems.MetalHammer, 1, OreDictionary.WILDCARD_VALUE)), Ingredient.fromItem(ModItems.StaticIngot)});
 		RegisterHelper.addShapelessRecipe("StaticPower_energizedPlate", "StaticPower", new ItemStack(ModItems.EnergizedPlate, 1), new Ingredient[]{
-				Ingredient.fromItem(ModItems.MetalHammer), Ingredient.fromItem(ModItems.EnergizedIngot)});
+				Ingredient.fromStacks(new ItemStack(ModItems.MetalHammer, 1, OreDictionary.WILDCARD_VALUE)), Ingredient.fromItem(ModItems.EnergizedIngot)});
 		RegisterHelper.addShapelessRecipe("StaticPower_lumumPlate", "StaticPower", new ItemStack(ModItems.LumumPlate, 1), new Ingredient[]{
-				Ingredient.fromItem(ModItems.MetalHammer), Ingredient.fromItem(ModItems.LumumIngot)});
+				Ingredient.fromStacks(new ItemStack(ModItems.MetalHammer, 1, OreDictionary.WILDCARD_VALUE)), Ingredient.fromItem(ModItems.LumumIngot)});
 		
 		//Metal BLocks --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapelessRecipe("StaticPower_staticIngot", "StaticPower", new ItemStack(ModItems.StaticIngot, 9), new Ingredient[]{
@@ -143,7 +144,7 @@ public class ShaplessRecipes {
 				Ingredient.fromItem(ModItems.LumumFluidCapsule)});
 		
 		//Filters --------------------------------------------------------------------------------------------------
-		ItemStack quarryFilter = new ItemStack(ModItems.UpgradedItemFilter);
+		ItemStack quarryFilter = new ItemStack(ModItems.UpgradedItemFilter, 1);
 		ItemFilter.writeQuarryFilter(quarryFilter);
 		RegisterHelper.addShapelessRecipe("StaticPower_quarryFilter", "StaticPower", quarryFilter, new Ingredient[]{
 				Ingredient.fromItem(ModItems.UpgradedItemFilter), Ingredient.fromItem(Item.getItemFromBlock(Blocks.COBBLESTONE))});

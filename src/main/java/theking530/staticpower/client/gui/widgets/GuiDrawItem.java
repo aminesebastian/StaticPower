@@ -51,6 +51,6 @@ public class GuiDrawItem {
         tessellator.draw();
         GlStateManager.enableTexture2D(); 
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-		GL11.glDisable(GL11.GL_BLEND);
+		//GL11.glDisable(GL11.GL_BLEND);
     }
 }

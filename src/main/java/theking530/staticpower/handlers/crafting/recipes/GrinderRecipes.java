@@ -47,6 +47,8 @@ public class GrinderRecipes {
 		RegisterHelper.registerGrinderRecipe(new ItemStack(ModItems.LumumIngot),  newOutput(new ItemStack(ModItems.LumumDust), 1.0f));
 		RegisterHelper.registerGrinderRecipe(new ItemStack(ModItems.InertIngot),  newOutput(new ItemStack(ModItems.InertInfusionBlend), 1.0f));
 		
+		RegisterHelper.registerGrinderRecipe(new ItemStack(Item.getItemFromBlock(Blocks.SAND)),  newOutput(new ItemStack(ModItems.Silicon), 1.0f),  newOutput(new ItemStack(ModItems.Silicon), 0.1f));
+		
 		oreDictionaryRecipe("QuartzBlack", 2);
 		ingotDictionaryRecipe("QuartzBlack", 1);
 		

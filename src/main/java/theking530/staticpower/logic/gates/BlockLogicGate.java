@@ -25,7 +25,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.utils.SideModeList.Mode;
+import theking530.staticpower.assists.utilities.SideModeList.Mode;
 
 public class BlockLogicGate extends Block implements IWrenchable{
 

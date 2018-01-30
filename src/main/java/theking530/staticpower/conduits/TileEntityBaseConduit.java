@@ -19,9 +19,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.IItemHandler;
+import theking530.staticpower.assists.customboundingbox.CustomBoundingBox;
+import theking530.staticpower.assists.customboundingbox.ICustomBoundingBox;
 import theking530.staticpower.conduits.staticconduit.TileEntityStaticConduit;
-import theking530.staticpower.utils.customboundingbox.CustomBoundingBox;
-import theking530.staticpower.utils.customboundingbox.ICustomBoundingBox;
 
 public class TileEntityBaseConduit extends TileEntity implements IConduit, ITickable, ICustomBoundingBox {
 	

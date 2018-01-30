@@ -14,6 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.assists.Reference;
+import theking530.staticpower.assists.utilities.GuiTextures;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBar;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBar;
@@ -23,7 +24,6 @@ import theking530.staticpower.handlers.crafting.wrappers.FluidInfuserOutputWrapp
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.integration.JEI.StaticPowerJEIPlugin;
 import theking530.staticpower.tileentity.solderingtable.GuiSolderingTable;
-import theking530.staticpower.utils.GuiTextures;
 
 public class FluidInfuserRecipeCategory extends BaseJEIRecipeCategory<FluidInfuserRecipeWrapper>{
 	 private final String locTitle;

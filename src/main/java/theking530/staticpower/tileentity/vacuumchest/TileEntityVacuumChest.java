@@ -12,17 +12,18 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.items.itemfilter.ItemFilter;
-import theking530.staticpower.items.upgrades.BasePowerUpgrade;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.tileentity.BaseTileEntity;
 import theking530.staticpower.tileentity.IUpgradeableTileEntity;
-import theking530.staticpower.utils.InventoryUtilities;
 
 public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<EntityItem>, IUpgradeableTileEntity {
 
@@ -64,6 +65,8 @@ public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<E
 						entity.motionX += x / distance * var11 * 0.06;
 						entity.motionY += y / distance * var11 * 0.15;
 						entity.motionZ += z / distance * var11 * 0.06;
+						Vec3d entityPos = entity.getPositionVector();
+						getWorld().spawnParticle(EnumParticleTypes.PORTAL, entityPos.x, entityPos.y, entityPos.z, 0.0D, 0.0D, 0.0D, new int[0]);
 					}
 				}
 			}

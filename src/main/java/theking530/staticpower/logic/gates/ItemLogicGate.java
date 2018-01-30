@@ -9,8 +9,8 @@ import org.lwjgl.input.Keyboard;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import theking530.staticpower.assists.utilities.EnumTextFormatting;
 import theking530.staticpower.blocks.BaseItemBlock;
-import theking530.staticpower.utils.EnumTextFormatting;
 
 public class ItemLogicGate extends BaseItemBlock{
 

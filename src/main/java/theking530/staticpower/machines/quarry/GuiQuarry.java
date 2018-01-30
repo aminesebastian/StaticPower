@@ -7,6 +7,9 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import theking530.staticpower.assists.utilities.GuiTextures;
+import theking530.staticpower.assists.utilities.GuiUtilities;
+import theking530.staticpower.assists.utilities.WorldUtilities;
 import theking530.staticpower.client.gui.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.GuiDrawItem;
 import theking530.staticpower.client.gui.widgets.buttons.ArrowButton;
@@ -16,9 +19,6 @@ import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarFromEnergy
 import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent.FluidContainerInteractionMode;
-import theking530.staticpower.utils.GUIUtilities;
-import theking530.staticpower.utils.GuiTextures;
-import theking530.staticpower.utils.WorldUtilities;
 
 public class GuiQuarry extends BaseGuiContainer {
 	
@@ -108,23 +108,23 @@ public class GuiQuarry extends BaseGuiContainer {
 		
 		GL11.glScalef(scale, scale, scale);
 		if(!QUARRY.isAbleToMine()) {
-			fontRenderer.drawString(tutorial, xSize / 2 - 20, 30, GUIUtilities.getColor(200, 200, 200));
-			fontRenderer.drawString(tutorial2, xSize / 2 - 20, 40, GUIUtilities.getColor(200, 200, 200));
-			fontRenderer.drawString(tutorial3, xSize / 2 - 20, 50, GUIUtilities.getColor(200, 200, 200));
-			fontRenderer.drawString(tutorial4, xSize / 2 - 20, 60, GUIUtilities.getColor(200, 200, 200));
-			fontRenderer.drawString(tutorial5, xSize / 2 - 20, 75, GUIUtilities.getColor(200, 200, 200));
-			fontRenderer.drawString(tutorial6, xSize / 2 - 20, 85, GUIUtilities.getColor(200, 200, 200));
-			fontRenderer.drawString(tutorial7, xSize / 2 - 20, 100, GUIUtilities.getColor(200, 200, 200));
+			fontRenderer.drawString(tutorial, xSize / 2 - 20, 30, GuiUtilities.getColor(200, 200, 200));
+			fontRenderer.drawString(tutorial2, xSize / 2 - 20, 40, GuiUtilities.getColor(200, 200, 200));
+			fontRenderer.drawString(tutorial3, xSize / 2 - 20, 50, GuiUtilities.getColor(200, 200, 200));
+			fontRenderer.drawString(tutorial4, xSize / 2 - 20, 60, GuiUtilities.getColor(200, 200, 200));
+			fontRenderer.drawString(tutorial5, xSize / 2 - 20, 75, GuiUtilities.getColor(200, 200, 200));
+			fontRenderer.drawString(tutorial6, xSize / 2 - 20, 85, GuiUtilities.getColor(200, 200, 200));
+			fontRenderer.drawString(tutorial7, xSize / 2 - 20, 100, GuiUtilities.getColor(200, 200, 200));
 		}else if(QUARRY.isDoneMining()) {
-			fontRenderer.drawString("Quarrying Completed!", xSize / 2 - 26, 30, GUIUtilities.getColor(200, 200, 200));
+			fontRenderer.drawString("Quarrying Completed!", xSize / 2 - 26, 30, GuiUtilities.getColor(200, 200, 200));
 		}else{
-			fontRenderer.drawString("Current Position: ", xSize / 2 - fontRenderer.getStringWidth("Current Position: ") / 2 + 23, 30, GUIUtilities.getColor(200, 200, 200));
-			fontRenderer.drawString("• " + currentPosition, xSize / 2 - 20, 40, GUIUtilities.getColor(200, 200, 200));
-			fontRenderer.drawString("• " + area, xSize / 2 - 20, 55, GUIUtilities.getColor(200, 200, 200));
-			fontRenderer.drawString("• " + speed, xSize / 2 - 20, 65, GUIUtilities.getColor(200, 200, 200));
-			fontRenderer.drawString("• " + blocks, xSize / 2 - 20, 75, GUIUtilities.getColor(200, 200, 200));
-			fontRenderer.drawString("• " + energy, xSize / 2 - 20, 85, GUIUtilities.getColor(200, 200, 200));
-			fontRenderer.drawString("• " + fortune, xSize / 2 - 20, 95, GUIUtilities.getColor(200, 200, 200));
+			fontRenderer.drawString("Current Position: ", xSize / 2 - fontRenderer.getStringWidth("Current Position: ") / 2 + 23, 30, GuiUtilities.getColor(200, 200, 200));
+			fontRenderer.drawString("• " + currentPosition, xSize / 2 - 20, 40, GuiUtilities.getColor(200, 200, 200));
+			fontRenderer.drawString("• " + area, xSize / 2 - 20, 55, GuiUtilities.getColor(200, 200, 200));
+			fontRenderer.drawString("• " + speed, xSize / 2 - 20, 65, GuiUtilities.getColor(200, 200, 200));
+			fontRenderer.drawString("• " + blocks, xSize / 2 - 20, 75, GuiUtilities.getColor(200, 200, 200));
+			fontRenderer.drawString("• " + energy, xSize / 2 - 20, 85, GuiUtilities.getColor(200, 200, 200));
+			fontRenderer.drawString("• " + fortune, xSize / 2 - 20, 95, GuiUtilities.getColor(200, 200, 200));
 		}
 
 		GL11.glScalef(1/scale, 1/scale, 1/scale);

@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fluids.FluidStack;
+import theking530.staticpower.assists.utilities.GuiTextures;
 import theking530.staticpower.client.gui.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
@@ -13,7 +14,6 @@ import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBar;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.handlers.crafting.registries.FermenterRecipeRegistry;
-import theking530.staticpower.utils.GuiTextures;
 
 public class GuiFermenter extends BaseGuiContainer {	
 

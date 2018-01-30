@@ -9,11 +9,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import theking530.staticpower.assists.utilities.InventoryUtilities;
+import theking530.staticpower.assists.utilities.SideModeList;
+import theking530.staticpower.assists.utilities.SideUtilities;
+import theking530.staticpower.assists.utilities.SideUtilities.BlockSide;
 import theking530.staticpower.tileentity.ISideConfigurable;
-import theking530.staticpower.utils.InventoryUtilities;
-import theking530.staticpower.utils.SideModeList;
-import theking530.staticpower.utils.SideUtilities;
-import theking530.staticpower.utils.SideUtilities.BlockSide;
 
 public class TileEntityInputServo implements ITileEntityComponent{
 

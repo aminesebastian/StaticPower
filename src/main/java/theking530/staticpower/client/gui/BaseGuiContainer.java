@@ -9,8 +9,8 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.math.Vec3i;
+import theking530.staticpower.assists.utilities.GuiUtilities;
 import theking530.staticpower.client.gui.widgets.GuiTabManager;
-import theking530.staticpower.utils.GUIUtilities;
 
 public abstract class BaseGuiContainer extends GuiContainer {
 
@@ -50,7 +50,7 @@ public abstract class BaseGuiContainer extends GuiContainer {
 	    tabManager.handleKeyboardInteraction(par1, par2);
     }
     public void drawCustomBackground(Vec3i startColor, Vec3i endColor) {
-        this.drawGradientRect(0, 0, this.width, this.height, GUIUtilities.getColor(startColor.getX(), startColor.getY(), startColor.getZ()), GUIUtilities.getColor(endColor.getX(), endColor.getY(), endColor.getZ()));
+        this.drawGradientRect(0, 0, this.width, this.height, GuiUtilities.getColor(startColor.getX(), startColor.getY(), startColor.getZ()), GuiUtilities.getColor(endColor.getX(), endColor.getY(), endColor.getZ()));
         net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.GuiScreenEvent.BackgroundDrawnEvent(this));
     }
 	@Override

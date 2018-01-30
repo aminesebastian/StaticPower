@@ -1,8 +1,8 @@
 package theking530.staticpower.tileentity;
 
 import net.minecraft.util.EnumFacing;
-import theking530.staticpower.utils.SideModeList.Mode;
-import theking530.staticpower.utils.SideUtilities.BlockSide;
+import theking530.staticpower.assists.utilities.SideModeList.Mode;
+import theking530.staticpower.assists.utilities.SideUtilities.BlockSide;
 
 public interface ISideConfigurable {
 

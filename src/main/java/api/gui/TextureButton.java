@@ -9,8 +9,8 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
-import theking530.staticpower.utils.GuiTextures;
-import theking530.staticpower.utils.StaticVertexBuffer;
+import theking530.staticpower.assists.utilities.GuiTextures;
+import theking530.staticpower.assists.utilities.StaticVertexBuffer;
 
 public class TextureButton extends Gui{
 	

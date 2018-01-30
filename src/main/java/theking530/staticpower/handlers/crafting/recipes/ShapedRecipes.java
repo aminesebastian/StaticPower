@@ -22,6 +22,10 @@ public class ShapedRecipes {
 		RegisterHelper.addShapedRecipe("StaticPower_staticWrench", "StaticPower", new ItemStack(ModItems.StaticWrench), new Object[]{" IC"," SI","S  ",
 		'S', ingredientOre("ingotSilver"), 'I', ingredientFromItem(Items.IRON_INGOT), 'C', ingredientFromItem(ModPlants.StaticCrop)});
 		
+		//Static Wrench --------------------------------------------------------------------------------------------------
+		RegisterHelper.addShapedRecipe("StaticPower_wireCutter", "StaticPower", new ItemStack(ModItems.WireCutters), new Object[]{" I ","LLI"," L ",
+		'L', Ingredient.fromStacks(new ItemStack(Items.DYE, 1, 4)), 'I', ingredientFromItem(Items.IRON_INGOT)});
+		
 		//Soldering Iron --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_solderingIron1", "StaticPower", new ItemStack(ModItems.SolderingIron), new Object[]{"I  "," IL"," LR",
 		'R', ingredientFromItem(Items.REDSTONE), 'I', ingredientFromItem(Items.IRON_INGOT), 'L', Ingredient.fromStacks(new ItemStack(Items.DYE, 1, 4))});		
@@ -43,6 +47,10 @@ public class ShapedRecipes {
 		//Item Conduit
 		RegisterHelper.addShapedRecipe("StaticPower_itemConduit", "StaticPower", new ItemStack(Item.getItemFromBlock(ModBlocks.ItemConduit), 8), new Object[]{" T ","TGT"," T ",
 		'T', ingredientOre("ingotTin"), 'G', ingredientFromBlock(Blocks.GLASS)});
+		
+		//Item Conduit
+		RegisterHelper.addShapedRecipe("StaticPower_staticConduit", "StaticPower", new ItemStack(Item.getItemFromBlock(ModBlocks.StaticConduit), 8), new Object[]{" S ","SGS"," S ",
+		'S', ingredientFromItem(ModItems.SilverIngot), 'G', ingredientFromBlock(Blocks.GLASS)});
 		
 		//Metal Blocks --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_staticBlock", "StaticPower", new ItemStack(ModBlocks.StaticBlock), new Object[]{"XXX","XXX","XXX",
@@ -133,8 +141,8 @@ public class ShapedRecipes {
 		'I', ingredientFromItem(Items.IRON_INGOT), 'R', ingredientFromItem(Items.REDSTONE), 'B', ingredientFromBlock(ModBlocks.MachineBlock), 'F', ingredientFromItem(Items.FLINT)});
 		
 		//Advanced Earth --------------------------------------------------------------------------------------------------
-		RegisterHelper.addShapedRecipe("StaticPower_advancedEarth", "StaticPower", new ItemStack(ModBlocks.AdvancedEarth), new Object[]{"GGG","GDG","GGG",
-		'G', ingredientFromItem(ModItems.GoldPlate), 'D', ingredientFromBlock(Blocks.DIRT)});
+		RegisterHelper.addShapedRecipe("StaticPower_advancedEarth", "StaticPower", new ItemStack(ModBlocks.AdvancedEarth), new Object[]{" E ","EDE"," E ",
+		'E', ingredientFromItem(ModItems.EnergizedPlate), 'D', ingredientFromBlock(Blocks.DIRT)});
 		
 		//Powered Furnace --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_poweredFurnace", "StaticPower", new ItemStack(ModBlocks.PoweredFurnace), new Object[]{"IUI", "RBR", "CCC", 
@@ -181,8 +189,8 @@ public class ShapedRecipes {
 		'S', ingredientFromItem(ModItems.LumumPlate), 'B', ingredientFromItem(ModItems.LumumBattery), 'M', ingredientFromBlock(ModBlocks.MachineBlock)});		
 		
 		//Static Solar Panel --------------------------------------------------------------------------------------------------
-		RegisterHelper.addShapedRecipe("StaticPower_staticSolarPanel", "StaticPower", new ItemStack(ModBlocks.StaticSolarPanel), new Object[]{"   ", "EEE", "CIC", 
-		'E', ingredientFromItem(ModItems.StaticIngot), 'C', ingredientFromItem(ModItems.BasicCircuit), 'I', ingredientFromItem(ModItems.IOPort)});
+		RegisterHelper.addShapedRecipe("StaticPower_basicSolarPanel", "StaticPower", new ItemStack(ModBlocks.BasicSolarPanel), new Object[]{"   ", "LLL", "CIC", 
+		'L', ingredientFromBlock(Blocks.LAPIS_BLOCK), 'C', ingredientFromItem(ModItems.BasicCircuit), 'I', ingredientFromItem(ModItems.IOPort)});
 		
 		//Gates --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_timer", "StaticPower", new ItemStack(ModBlocks.Timer), new Object[]{"   ", "RSV", "PPP", 
@@ -193,6 +201,16 @@ public class ShapedRecipes {
 		'P', ingredientFromBlock(ModBlocks.LogicGateBasePlate),'R', ingredientFromItem(ModItems.LogicGatePowerSync), 'V', ingredientFromItem(ModItems.InvertedLogicGatePowerSync)});
 		RegisterHelper.addShapedRecipe("StaticPower_powerCell", "StaticPower", new ItemStack(ModBlocks.PowerCell), new Object[]{"   ", "RQR", "PPP", 
 		'P', ingredientFromBlock(ModBlocks.LogicGateBasePlate),'R', ingredientFromItem(ModItems.LogicGatePowerSync), 'Q', ingredientFromBlock(Blocks.REDSTONE_BLOCK)});
+		RegisterHelper.addShapedRecipe("StaticPower_adder", "StaticPower", new ItemStack(ModBlocks.Adder), new Object[]{" T ", "RQR", "PPP", 
+		'P', ingredientFromBlock(ModBlocks.LogicGateBasePlate),'R', ingredientFromItem(ModItems.LogicGatePowerSync), 'T', ingredientFromItem(ModItems.Transistor),'Q', ingredientFromItem(ModItems.MemoryChip)});
+		RegisterHelper.addShapedRecipe("StaticPower_andGate", "StaticPower", new ItemStack(ModBlocks.And), new Object[]{"   ", "RQR", "PPP", 
+		'P', ingredientFromBlock(ModBlocks.LogicGateBasePlate),'R', ingredientFromItem(ModItems.LogicGatePowerSync), 'Q', ingredientFromItem(ModItems.MemoryChip)});
+		RegisterHelper.addShapedRecipe("StaticPower_orGate", "StaticPower", new ItemStack(ModBlocks.Or), new Object[]{"   ", "RQV", "PPP", 
+		'P', ingredientFromBlock(ModBlocks.LogicGateBasePlate),'R', ingredientFromItem(ModItems.LogicGatePowerSync), 'V', ingredientFromItem(ModItems.InvertedLogicGatePowerSync), 'Q', ingredientFromItem(ModItems.MemoryChip)});
+		RegisterHelper.addShapedRecipe("StaticPower_subtractor", "StaticPower", new ItemStack(ModBlocks.Subtractor), new Object[]{" T ", "VQV", "PPP", 
+		'P', ingredientFromBlock(ModBlocks.LogicGateBasePlate), 'V', ingredientFromItem(ModItems.InvertedLogicGatePowerSync), 'T', ingredientFromItem(ModItems.Transistor), 'Q', ingredientFromItem(ModItems.MemoryChip)});
+		RegisterHelper.addShapedRecipe("StaticPower_LED", "StaticPower", new ItemStack(ModBlocks.LED, 4), new Object[]{"GGG", "GDG", "SCS", 
+		'G', ingredientFromBlock(Blocks.GLASS), 'D', ingredientFromItem(ModItems.Diode), 'S', ingredientFromItem(ModItems.SilverWire), 'C', ingredientFromItem(ModItems.BasicCircuit)});
 		
 		//Static Chest --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_staticChest", "StaticPower", new ItemStack(ModBlocks.StaticChest), new Object[]{"SSS", "SCS", "SSS", 
@@ -277,7 +295,9 @@ public class ShapedRecipes {
 		RegisterHelper.addShapedRecipe("StaticPower_rubyLeggings", "StaticPower", new ItemStack(ModArmor.RubyLeggings), new Object[]{"EEE", "E E", "E E",  'E', ingredientFromItem(ModItems.RubyGem)});
 		RegisterHelper.addShapedRecipe("StaticPower_rubyBoots", "StaticPower", new ItemStack(ModArmor.RubyBoots), new Object[]{"   ", "E E", "E E",  'E', ingredientFromItem(ModItems.RubyGem)});		
 	
-
+		//Apple Pie
+		RegisterHelper.addShapedRecipe("StaticPower_applePie", "StaticPower", new ItemStack(ModItems.ApplePie), new Object[]{"AS ","E  ","   ",
+		'S', ingredientFromItem(Items.SUGAR), 'A', ingredientFromItem(Items.EGG), 'E', ingredientFromItem(Items.APPLE)});
 	}
 	public static Ingredient ingredientFromBlock(Block block) {
 		return ingredientFromItem(Item.getItemFromBlock(block));

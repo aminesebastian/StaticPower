@@ -39,7 +39,7 @@ public class GrinderRecipeRegistry {
     public Map<ItemStack, GrinderOutputWrapper> getGrindingList() {
         return this.grindingList;
     }
-	public GrinderOutputWrapper getgrindingResult(ItemStack itemstack) {
+	public GrinderOutputWrapper getGrindingResult(ItemStack itemstack) {
 		Iterator<Entry<ItemStack, GrinderOutputWrapper>> iterator = grindingList.entrySet().iterator();
 		Entry<ItemStack, GrinderOutputWrapper> entry;
 		do {

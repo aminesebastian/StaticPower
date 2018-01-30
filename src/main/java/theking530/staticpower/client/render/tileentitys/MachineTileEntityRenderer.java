@@ -10,10 +10,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.assists.Reference;
+import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.client.model.ModelBlock;
 import theking530.staticpower.machines.BaseMachine;
 import theking530.staticpower.tileentity.BaseTileEntity;
-import theking530.staticpower.utils.SideModeList.Mode;
 
 public class MachineTileEntityRenderer extends TileEntitySpecialRenderer<BaseTileEntity> {
 

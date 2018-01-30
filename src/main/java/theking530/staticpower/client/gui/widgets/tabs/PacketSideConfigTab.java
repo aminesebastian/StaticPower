@@ -6,8 +6,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import theking530.staticpower.assists.utilities.SideModeList;
 import theking530.staticpower.tileentity.BaseTileEntity;
-import theking530.staticpower.utils.SideModeList;
   
 public class PacketSideConfigTab implements IMessage{
     private int SIDE0;

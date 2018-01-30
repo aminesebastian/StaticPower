@@ -6,8 +6,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import theking530.staticpower.assists.utilities.RedstoneModeList.RedstoneMode;
 import theking530.staticpower.tileentity.IRedstoneConfigurable;
-import theking530.staticpower.utils.RedstoneModeList.RedstoneMode;
  
 public class PacketRedstoneTab implements IMessage{
     private int REDSTONE_MODE;

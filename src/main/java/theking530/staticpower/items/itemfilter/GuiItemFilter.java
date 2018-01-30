@@ -8,10 +8,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import theking530.staticpower.assists.utilities.GuiTextures;
 import theking530.staticpower.client.gui.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticpower.handlers.PacketHandler;
-import theking530.staticpower.utils.GuiTextures;
 
 public class GuiItemFilter extends BaseGuiContainer {
 	

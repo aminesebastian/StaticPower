@@ -16,6 +16,8 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.CapabilityItemHandler;
+import theking530.staticpower.assists.utilities.InventoryUtilities;
+import theking530.staticpower.assists.utilities.WorldUtilities;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.items.itemfilter.ItemFilter;
@@ -23,8 +25,6 @@ import theking530.staticpower.items.upgrades.BaseQuarryingUpgrade;
 import theking530.staticpower.machines.BaseMachineWithTank;
 import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent;
 import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent.FluidContainerInteractionMode;
-import theking530.staticpower.utils.InventoryUtilities;
-import theking530.staticpower.utils.WorldUtilities;
 
 public class TileEntityQuarry extends BaseMachineWithTank {
 	

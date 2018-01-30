@@ -1,8 +1,8 @@
 package theking530.staticpower.logic.gates.or;
 
 import net.minecraft.nbt.NBTTagCompound;
+import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.logic.gates.TileEntityBaseLogicGate;
-import theking530.staticpower.utils.SideModeList.Mode;
 
 public class TileEntityOrGate extends TileEntityBaseLogicGate {
 	

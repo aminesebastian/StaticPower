@@ -1,10 +1,10 @@
 package theking530.staticpower.machines.fusionfurnace;
 
 import net.minecraft.item.ItemStack;
+import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.handlers.crafting.registries.FusionRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.FusionFurnaceRecipeWrapper;
 import theking530.staticpower.machines.BaseMachine;
-import theking530.staticpower.utils.InventoryUtilities;
 
 public class TileEntityFusionFurnace extends BaseMachine {
 	

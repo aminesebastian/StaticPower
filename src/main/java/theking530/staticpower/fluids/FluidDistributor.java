@@ -7,8 +7,8 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.tileentity.BaseTileEntity;
-import theking530.staticpower.utils.SideModeList.Mode;
 
 public class FluidDistributor {
 

@@ -23,12 +23,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.items.CapabilityItemHandler;
+import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.machines.BaseMachineWithTank;
 import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent;
 import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent.FluidContainerInteractionMode;
-import theking530.staticpower.utils.InventoryUtilities;
 
 public class TileEntityBasicFarmer extends BaseMachineWithTank {
 

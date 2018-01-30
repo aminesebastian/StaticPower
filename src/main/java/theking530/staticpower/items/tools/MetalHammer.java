@@ -8,14 +8,14 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import theking530.staticpower.assists.utilities.EnumTextFormatting;
 import theking530.staticpower.items.ItemBase;
-import theking530.staticpower.utils.EnumTextFormatting;
 
 public class MetalHammer extends ItemBase {
 
-	public MetalHammer() {
+	public MetalHammer(int uses) {
 		super("MetalHammer");
-		setMaxDamage(35);
+		setMaxDamage(uses);
 		setMaxStackSize(1);
 	}
 	@Override
@@ -26,9 +26,8 @@ public class MetalHammer extends ItemBase {
 		return false;
 	}
 	@Override
-	public ItemStack getContainerItem(ItemStack itemStack) {
-	    itemStack.setItemDamage(itemStack.getItemDamage() + 1);
-	    return itemStack;     	
+	public ItemStack getContainerItem(ItemStack stack) {
+		return stack.getItemDamage() < stack.getMaxDamage() ? new ItemStack(stack.getItem(), 1,stack.getItemDamage() + 1) : ItemStack.EMPTY;  	
 	}
 	@Override
 	public boolean hasContainerItem(){

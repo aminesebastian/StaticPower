@@ -14,8 +14,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import theking530.staticpower.assists.utilities.Color;
 import theking530.staticpower.logic.gates.BlockLogicGate;
-import theking530.staticpower.utils.Color;
 
 public class BlockLED extends BlockLogicGate {
 

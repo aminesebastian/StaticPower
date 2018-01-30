@@ -3,11 +3,11 @@ package theking530.staticpower.machines.fluidinfuser;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
+import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.handlers.crafting.registries.InfuserRecipeRegistry;
 import theking530.staticpower.machines.BaseMachineWithTank;
 import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent;
 import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent.FluidContainerInteractionMode;
-import theking530.staticpower.utils.InventoryUtilities;
 
 public class TileEntityFluidInfuser extends BaseMachineWithTank {
 	

@@ -3,8 +3,8 @@ package theking530.staticpower.machines.chargingstation;
 import cofh.redstoneflux.api.IEnergyContainerItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.machines.BaseMachine;
-import theking530.staticpower.utils.InventoryUtilities;
 
 public class TileEntityChargingStation extends BaseMachine {
 	

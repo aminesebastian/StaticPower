@@ -6,9 +6,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import theking530.staticpower.assists.utilities.SideUtilities;
+import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.tileentity.ISideConfigurable;
-import theking530.staticpower.utils.SideModeList.Mode;
-import theking530.staticpower.utils.SideUtilities;
 
 public class PowerDistributor {
 
@@ -30,7 +30,6 @@ public class PowerDistributor {
 					EnumFacing facing = EnumFacing.values()[i];
 					facing = SideUtilities.getAdjustedEnumFacing(facing, poweredTileEntity.getWorld().getBlockState(poweredTileEntity.getPos()).getValue(BlockHorizontal.FACING));
 					if(sideConfigurable == null || (sideConfigurable != null && sideConfigurable.getSideConfiguration(facing) == Mode.Output)) {
-						System.out.println(facing);
 						int maxExtract = energyStorage.extractEnergy(Integer.MAX_VALUE, true);
 						provideRF(facing, Math.min(maxExtract, energyStorage.getEnergyStored()));
 					}

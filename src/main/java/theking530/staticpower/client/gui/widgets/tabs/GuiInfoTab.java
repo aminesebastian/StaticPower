@@ -12,8 +12,8 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.Items;
-import theking530.staticpower.utils.GUIUtilities;
-import theking530.staticpower.utils.GuiTextures;
+import theking530.staticpower.assists.utilities.GuiTextures;
+import theking530.staticpower.assists.utilities.GuiUtilities;
 
 public class GuiInfoTab extends BaseGuiTab {
 	
@@ -46,12 +46,14 @@ public class GuiInfoTab extends BaseGuiTab {
 	@Override
 	protected void drawExtra(int xPos, int yPos, float partialTicks) {
 		if(isOpen()) {	
-			drawTextBG(xPos, yPos);	
-			drawText(xPos, yPos);
+			if(INFO.size() > 0) {
+				drawTextBG(xPos, yPos);	
+				drawText(xPos, yPos);	
+			}
     	}	
 	}
 	private void drawText(int xPos, int yPos) {
-		FONT_RENDERER.drawStringWithShadow(TITLE, xPos+FONT_RENDERER.getStringWidth(TITLE)/2+3, yPos+8, GUIUtilities.getColor(242, 0, 255));	
+		FONT_RENDERER.drawStringWithShadow(TITLE, xPos+FONT_RENDERER.getStringWidth(TITLE)/2+3, yPos+8, GuiUtilities.getColor(242, 0, 255));	
 		for(int i = 0; i < INFO.size(); i++) {
 			String string = (String) INFO.get(i);
     		FONT_RENDERER.drawString(string, xPos + 18, (yPos+28)+11*i, 16777215);

@@ -9,8 +9,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.assists.Reference;
+import theking530.staticpower.assists.utilities.RenderUtil;
 import theking530.staticpower.machines.mechanicalsqueezer.TileEntityMechanicalSqueezer;
-import theking530.staticpower.utils.RenderUtil;
 
 public class TileEntityRenderMechanicalSqueezer extends BaseMachineTESR<TileEntityMechanicalSqueezer> {
 

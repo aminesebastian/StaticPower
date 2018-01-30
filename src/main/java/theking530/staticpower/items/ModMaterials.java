@@ -4,7 +4,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.EnumHelper;
 import theking530.staticpower.assists.Reference;
-import theking530.staticpower.utils.EnumTextFormatting;
+import theking530.staticpower.assists.utilities.EnumTextFormatting;
 
 public class ModMaterials {
 

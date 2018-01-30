@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.fluids.FluidRegistry;
-import theking530.staticpower.utils.RenderUtil;
+import theking530.staticpower.assists.utilities.RenderUtil;
 
 public class GuiHeatBar {
 	

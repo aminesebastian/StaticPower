@@ -4,8 +4,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import theking530.staticpower.assists.utilities.WorldUtilities;
 import theking530.staticpower.conduits.ConduitPath;
-import theking530.staticpower.utils.WorldUtilities;
 
 public class ItemConduitWrapper {
 	private ItemStack ITEM;

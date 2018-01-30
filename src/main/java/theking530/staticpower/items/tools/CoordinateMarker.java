@@ -16,9 +16,9 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+import theking530.staticpower.assists.utilities.EnumTextFormatting;
+import theking530.staticpower.assists.utilities.WorldUtilities;
 import theking530.staticpower.items.ItemBase;
-import theking530.staticpower.utils.EnumTextFormatting;
-import theking530.staticpower.utils.WorldUtilities;
 
 public class CoordinateMarker extends ItemBase {
 

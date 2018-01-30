@@ -1,10 +1,10 @@
 package theking530.staticpower.machines.batteries.tileentities;
 
 import net.minecraft.util.EnumFacing;
+import theking530.staticpower.assists.utilities.RedstoneModeList.RedstoneMode;
+import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.energy.PowerDistributor;
 import theking530.staticpower.machines.BaseMachine;
-import theking530.staticpower.utils.RedstoneModeList.RedstoneMode;
-import theking530.staticpower.utils.SideModeList.Mode;
 
 public class TileEntityBattery extends BaseMachine{
 	

@@ -8,14 +8,14 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
+import theking530.staticpower.assists.utilities.EnumTextFormatting;
+import theking530.staticpower.assists.utilities.GuiTextures;
 import theking530.staticpower.client.gui.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.GuiDrawItem;
 import theking530.staticpower.client.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticpower.items.ModItems;
-import theking530.staticpower.utils.EnumTextFormatting;
-import theking530.staticpower.utils.GuiTextures;
 
 public class GuiVacuumChest extends BaseGuiContainer{
 	

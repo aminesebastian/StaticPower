@@ -8,9 +8,9 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import theking530.staticpower.assists.Reference;
+import theking530.staticpower.assists.utilities.GuiUtilities;
+import theking530.staticpower.assists.utilities.Vector3;
 import theking530.staticpower.logic.gates.led.TileEntityLED;
-import theking530.staticpower.utils.GUIUtilities;
-import theking530.staticpower.utils.Vector3;
 
 public class TileEntityRenderLED extends TileEntitySpecialRenderer<TileEntityLED> {
 
@@ -57,7 +57,7 @@ public class TileEntityRenderLED extends TileEntitySpecialRenderer<TileEntityLED
 		GL11.glPopMatrix();
 	}
 	public void renderBlock(TileEntityLED LED) {
-		Vector3 vec3 = GUIUtilities.getColor(LED.COLOR);
+		Vector3 vec3 = GuiUtilities.getColor(LED.COLOR);
 		float POWER = ((float)LED.LIGHT_LEVEL+1f)/16f;
 		Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder vertexbuffer = tessellator.getBuffer();

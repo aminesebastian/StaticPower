@@ -1,14 +1,14 @@
 package theking530.staticpower.machines.poweredgrinder;
 
 import net.minecraft.item.ItemStack;
+import theking530.staticpower.assists.utilities.InventoryUtilities;
+import theking530.staticpower.assists.utilities.TileEntityUtilities;
 import theking530.staticpower.handlers.crafting.registries.GrinderRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.GrinderOutputWrapper;
 import theking530.staticpower.machines.BaseMachine;
 import theking530.staticpower.machines.tileentitycomponents.FillFromBatteryComponent;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityInputServo;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityOutputServo;
-import theking530.staticpower.utils.InventoryUtilities;
-import theking530.staticpower.utils.TileEntityUtils;
 
 public class TileEntityPoweredGrinder extends BaseMachine {
 	
@@ -48,7 +48,7 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 					if(getGrindingResult(getInternalStack(0)) != null) {
 						for(int j=0; j<getGrindingResult(getInternalStack(0)).getOutputItemCount(); j++) {
 							ItemStack result = getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getOutput();
-							if(TileEntityUtils.diceRoll(getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getPercentage())) {
+							if(TileEntityUtilities.diceRoll(getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getPercentage())) {
 								boolean flag = false;
 								int slot = -1;
 								for(int i=0; i<3; i++) {
@@ -82,7 +82,7 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 	}
 	public GrinderOutputWrapper getGrindingResult(ItemStack stack) {
 		if(stack != ItemStack.EMPTY) {
-			return GrinderRecipeRegistry.Grinding().getgrindingResult(stack);
+			return GrinderRecipeRegistry.Grinding().getGrindingResult(stack);
 		}else{
 			return null;
 		}

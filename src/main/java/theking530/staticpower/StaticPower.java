@@ -33,6 +33,7 @@ import theking530.staticpower.handlers.crafting.recipes.CondenserRecipes;
 import theking530.staticpower.handlers.crafting.recipes.DistilleryRecipes;
 import theking530.staticpower.handlers.crafting.recipes.FermenterRecipes;
 import theking530.staticpower.handlers.crafting.recipes.FluidGeneratorRecipes;
+import theking530.staticpower.handlers.crafting.recipes.FormerRecipes;
 import theking530.staticpower.handlers.crafting.recipes.FusionRecipes;
 import theking530.staticpower.handlers.crafting.recipes.GrinderRecipes;
 import theking530.staticpower.handlers.crafting.recipes.InfuserRecipes;
@@ -68,6 +69,7 @@ import theking530.staticpower.machines.distillery.TileEntityDistillery;
 import theking530.staticpower.machines.fermenter.TileEntityFermenter;
 import theking530.staticpower.machines.fluidgenerator.TileEntityFluidGenerator;
 import theking530.staticpower.machines.fluidinfuser.TileEntityFluidInfuser;
+import theking530.staticpower.machines.former.TileEntityFormer;
 import theking530.staticpower.machines.fusionfurnace.TileEntityFusionFurnace;
 import theking530.staticpower.machines.heatingelement.TileEntityHeatingElement;
 import theking530.staticpower.machines.mechanicalsqueezer.TileEntityMechanicalSqueezer;
@@ -164,6 +166,7 @@ public class StaticPower {
 		GameRegistry.registerTileEntity(TileEntityHeatingElement.class, "HeatingElement");
 		GameRegistry.registerTileEntity(TileEntityDistillery.class, "Distillery");
 		GameRegistry.registerTileEntity(TileEntityCondenser.class, "Condenser");
+		GameRegistry.registerTileEntity(TileEntityFormer.class, "Former");
 		
 		GameRegistry.registerTileEntity(TileEntityBasicSolarPanel.class, "BaseSolarPanel");
 		GameRegistry.registerTileEntity(TileEntityStaticSolarPanel.class, "StaticSolarPanel");
@@ -211,6 +214,7 @@ public class StaticPower {
 		FluidGeneratorRecipes.registerFluidGeneratorRecipes();
 		CondenserRecipes.registerCondenserRecipes();
 		DistilleryRecipes.registerDistilleryRecipes();
+		FormerRecipes.registerFusionRecipes();
 		ToolRecipes.registerToolRecipes();
 
 	}

@@ -18,12 +18,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import theking530.staticpower.assists.utilities.SideModeList;
+import theking530.staticpower.assists.utilities.SideUtilities;
+import theking530.staticpower.assists.utilities.RedstoneModeList.RedstoneMode;
+import theking530.staticpower.assists.utilities.SideModeList.Mode;
+import theking530.staticpower.assists.utilities.SideUtilities.BlockSide;
 import theking530.staticpower.machines.tileentitycomponents.ITileEntityComponent;
-import theking530.staticpower.utils.RedstoneModeList.RedstoneMode;
-import theking530.staticpower.utils.SideModeList;
-import theking530.staticpower.utils.SideModeList.Mode;
-import theking530.staticpower.utils.SideUtilities;
-import theking530.staticpower.utils.SideUtilities.BlockSide;
 
 public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneConfigurable, ISideConfigurable {
 

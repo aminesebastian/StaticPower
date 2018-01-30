@@ -13,8 +13,8 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import theking530.staticpower.utils.GuiTextures;
-import theking530.staticpower.utils.StaticVertexBuffer;
+import theking530.staticpower.assists.utilities.GuiTextures;
+import theking530.staticpower.assists.utilities.StaticVertexBuffer;
 
 public class ItemButton extends Gui{
 	

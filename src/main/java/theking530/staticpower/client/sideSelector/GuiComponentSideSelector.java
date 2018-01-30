@@ -26,10 +26,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
+import theking530.staticpower.assists.utilities.SidePicker;
+import theking530.staticpower.assists.utilities.SidePicker.HitCoord;
+import theking530.staticpower.assists.utilities.SidePicker.Side;
 import theking530.staticpower.client.gui.widgets.Trackball.TrackballWrapper;
-import theking530.staticpower.utils.SidePicker;
-import theking530.staticpower.utils.SidePicker.HitCoord;
-import theking530.staticpower.utils.SidePicker.Side;
 
 public class GuiComponentSideSelector  {
 

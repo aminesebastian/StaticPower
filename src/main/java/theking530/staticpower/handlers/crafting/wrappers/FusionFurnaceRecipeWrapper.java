@@ -65,7 +65,7 @@ public class FusionFurnaceRecipeWrapper {
 		return tempCount;
 	}
 	public ArrayList<ItemStack> getInputs(){
-		ArrayList<ItemStack> tempList = new ArrayList();
+		ArrayList<ItemStack> tempList = new ArrayList<ItemStack>();
 		if(INPUT1 != null) {
 			tempList.add(INPUT1);
 		}

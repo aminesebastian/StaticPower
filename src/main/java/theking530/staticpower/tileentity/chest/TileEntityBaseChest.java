@@ -8,10 +8,10 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.items.CapabilityItemHandler;
+import theking530.staticpower.assists.utilities.SideUtilities;
+import theking530.staticpower.assists.utilities.SideUtilities.BlockSide;
 import theking530.staticpower.tileentity.BaseTileEntity;
 import theking530.staticpower.tileentity.chest.staticchest.ContainerStaticChest;
-import theking530.staticpower.utils.SideUtilities;
-import theking530.staticpower.utils.SideUtilities.BlockSide;
 
 public class TileEntityBaseChest extends BaseTileEntity{
 

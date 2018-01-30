@@ -50,6 +50,9 @@ public class ModItems {
 	public static Item EnergizedPlate;
 	public static Item LumumPlate;
 	
+	public static Item PlateMould;
+	public static Item WireMould;
+	
 	public static Item BasicCircuit;
 	public static Item StaticCircuit;
 	public static Item EnergizedCircuit;
@@ -101,6 +104,9 @@ public class ModItems {
 	public static Item CreativeTankUpgrade;
 	public static Item CreativeSpeedUpgrade;
 
+	public static Item Silicon;
+	public static Item MemoryChip;
+	
 	public static Item LogicGatePowerSync;
 	public static Item InvertedLogicGatePowerSync;
 	public static Item LogicGateServo;
@@ -201,25 +207,21 @@ public class ModItems {
 		registry.PreRegisterItem(ElectricSolderingIron);
 		CoordinateMarker = new CoordinateMarker("CoordinateMarker");
 		registry.PreRegisterItem(CoordinateMarker);
-		WireCutters = new WireCutters();
+		WireCutters = new WireCutters(64);
 		registry.PreRegisterItem(WireCutters);
-		MetalHammer = new MetalHammer();
+		MetalHammer = new MetalHammer(64);
 		registry.PreRegisterItem(MetalHammer);
 		NetworkReader = new BlockReader("NetworkReader");
 		registry.PreRegisterItem(NetworkReader);
 		
-		LogicGatePowerSync = new ItemBase("LogicGatePowerSync");
-		registry.PreRegisterItem(LogicGatePowerSync);
-		InvertedLogicGatePowerSync = new ItemBase("InvertedLogicGatePowerSync");
-		registry.PreRegisterItem(InvertedLogicGatePowerSync);
-		LogicGateServo = new ItemBase("LogicGateServo");
-		registry.PreRegisterItem(LogicGateServo);
-		Diode = new ItemBase("Diode");
-		registry.PreRegisterItem(Diode);
-		Transistor = new ItemBase("Transistor");
-		registry.PreRegisterItem(Transistor);
-		InternalClock = new ItemBase("InternalClock");
-		registry.PreRegisterItem(InternalClock);
+		registry.PreRegisterItem(Silicon = new ItemBase("Silicon"));
+		registry.PreRegisterItem(MemoryChip = new ItemBase("MemoryChip"));
+		registry.PreRegisterItem(LogicGatePowerSync = new ItemBase("LogicGatePowerSync"));
+		registry.PreRegisterItem(InvertedLogicGatePowerSync = new ItemBase("InvertedLogicGatePowerSync"));
+		registry.PreRegisterItem(LogicGateServo = new ItemBase("LogicGateServo"));
+		registry.PreRegisterItem(Diode = new ItemBase("Diode"));
+		registry.PreRegisterItem(Transistor = new ItemBase("Transistor"));
+		registry.PreRegisterItem(InternalClock = new ItemBase("InternalClock"));
 		
 		BasicItemFilter = new ItemFilter("BasicItemFilter", FilterTier.BASIC);
 		registry.PreRegisterItem(BasicItemFilter);
@@ -227,11 +229,9 @@ public class ModItems {
 		registry.PreRegisterItem(UpgradedItemFilter);
 		AdvancedItemFilter = new ItemFilter("AdvancedItemFilter", FilterTier.ADVANCED);
 		registry.PreRegisterItem(AdvancedItemFilter);
-		
-		Rubber = new ItemBase("Rubber");
-		registry.PreRegisterItem(Rubber);
-		IOPort = new ItemBase("IOPort");
-		registry.PreRegisterItem(IOPort);
+
+		registry.PreRegisterItem(Rubber = new ItemBase("Rubber"));
+		registry.PreRegisterItem(IOPort = new ItemBase("IOPort"));
 		
 		
 		BasicCircuit = new ItemBase("BasicCircuit");
@@ -252,36 +252,24 @@ public class ModItems {
 		LumumUpgradePlate = new ItemBase("LumumUpgradePlate");
 		registry.PreRegisterItem(LumumUpgradePlate);
 		
-		CopperWire = new ItemBase("CopperWire");
-		registry.PreRegisterItem(CopperWire);
-		SilverWire = new ItemBase("SilverWire");
-		registry.PreRegisterItem(SilverWire);
-		GoldWire = new ItemBase("GoldWire");
-		registry.PreRegisterItem(GoldWire);
-		CopperCoil = new ItemBase("CopperCoil");
-		registry.PreRegisterItem(CopperCoil);
-		SilverCoil = new ItemBase("SilverCoil");
-		registry.PreRegisterItem(SilverCoil);
-		GoldCoil = new ItemBase("GoldCoil");
-		registry.PreRegisterItem(GoldCoil);
-		IronPlate = new ItemBase("IronPlate");
-		registry.PreRegisterItem(IronPlate);
-		CopperPlate = new ItemBase("CopperPlate");
-		registry.PreRegisterItem(CopperPlate);
-		TinPlate = new ItemBase("TinPlate");
-		registry.PreRegisterItem(TinPlate);
-		SilverPlate = new ItemBase("SilverPlate");
-		registry.PreRegisterItem(SilverPlate);
-		GoldPlate = new ItemBase("GoldPlate");
-		registry.PreRegisterItem(GoldPlate);
-		LeadPlate = new ItemBase("LeadPlate");
-		registry.PreRegisterItem(LeadPlate);
-		StaticPlate = new ItemBase("StaticPlate");
-		registry.PreRegisterItem(StaticPlate);
-		EnergizedPlate = new ItemBase("EnergizedPlate");
-		registry.PreRegisterItem(EnergizedPlate);
-		LumumPlate = new ItemBase("LumumPlate");
-		registry.PreRegisterItem(LumumPlate);
+		registry.PreRegisterItem(CopperWire = new ItemBase("CopperWire"));
+		registry.PreRegisterItem(SilverWire = new ItemBase("SilverWire"));
+		registry.PreRegisterItem(GoldWire = new ItemBase("GoldWire"));
+		registry.PreRegisterItem(CopperCoil = new ItemBase("CopperCoil"));
+		registry.PreRegisterItem(SilverCoil = new ItemBase("SilverCoil"));
+		registry.PreRegisterItem(GoldCoil = new ItemBase("GoldCoil"));
+		registry.PreRegisterItem(IronPlate = new ItemBase("IronPlate"));
+		registry.PreRegisterItem(CopperPlate = new ItemBase("CopperPlate"));
+		registry.PreRegisterItem(TinPlate = new ItemBase("TinPlate"));
+		registry.PreRegisterItem(SilverPlate = new ItemBase("SilverPlate"));
+		registry.PreRegisterItem(GoldPlate = new ItemBase("GoldPlate"));
+		registry.PreRegisterItem(LeadPlate = new ItemBase("LeadPlate"));
+		registry.PreRegisterItem(StaticPlate = new ItemBase("StaticPlate"));
+		registry.PreRegisterItem(EnergizedPlate = new ItemBase("EnergizedPlate"));
+		registry.PreRegisterItem(LumumPlate = new ItemBase("LumumPlate"));
+		
+		registry.PreRegisterItem(PlateMould = new FormerMold("PlateMould"));
+		registry.PreRegisterItem(WireMould = new FormerMold("WireMould"));
 		
 		EnergizedEnergyCrystal = new ItemBase("EnergizedEnergyCrystal");
 		registry.PreRegisterItem(EnergizedEnergyCrystal);
@@ -329,35 +317,22 @@ public class ModItems {
 		LumumTankUpgrade = new BaseTankUpgrade("LumumTankUpgrade", Tier.LUMUM);
 		registry.PreRegisterItem(LumumTankUpgrade);	
 		
-		BasicPowerUpgrade = new BasePowerUpgrade("BasicPowerUpgrade", Tier.BASE);
-		registry.PreRegisterItem(BasicPowerUpgrade);
-		StaticPowerUpgrade = new BasePowerUpgrade("StaticPowerUpgrade", Tier.STATIC);
-		registry.PreRegisterItem(StaticPowerUpgrade);
-		EnergizedPowerUpgrade = new BasePowerUpgrade("EnergizedPowerUpgrade", Tier.ENERGIZED);
-		registry.PreRegisterItem(EnergizedPowerUpgrade);
-		LumumPowerUpgrade = new BasePowerUpgrade("LumumPowerUpgrade", Tier.LUMUM);
-		registry.PreRegisterItem(LumumPowerUpgrade);
+		registry.PreRegisterItem(BasicPowerUpgrade = new BasePowerUpgrade("BasicPowerUpgrade", Tier.BASE));
+		registry.PreRegisterItem(StaticPowerUpgrade = new BasePowerUpgrade("StaticPowerUpgrade", Tier.STATIC));
+		registry.PreRegisterItem(EnergizedPowerUpgrade = new BasePowerUpgrade("EnergizedPowerUpgrade", Tier.ENERGIZED));
+		registry.PreRegisterItem(LumumPowerUpgrade = new BasePowerUpgrade("LumumPowerUpgrade", Tier.LUMUM));
 		
-		StaticQuarryingUpgrade = new BaseQuarryingUpgrade("StaticQuarryingUpgrade", Tier.STATIC);
-		registry.PreRegisterItem(StaticQuarryingUpgrade);	
-		EnergizedQuarryingUpgrade = new BaseQuarryingUpgrade("EnergizedQuarryingUpgrade", Tier.ENERGIZED);
-		registry.PreRegisterItem(EnergizedQuarryingUpgrade);	
-		LumumQuarryingUpgrade = new BaseQuarryingUpgrade("LumumQuarryingUpgrade", Tier.LUMUM);
-		registry.PreRegisterItem(LumumQuarryingUpgrade);	
-		
-		BasicRangeUpgrade = new BaseRangeUpgrade("BasicRangeUpgrade", Tier.BASE);
-		registry.PreRegisterItem(BasicRangeUpgrade);	
-		StaticRangeUpgrade = new BaseRangeUpgrade("StaticRangeUpgrade", Tier.STATIC);
-		registry.PreRegisterItem(StaticRangeUpgrade);	
-		EnergizedRangeUpgrade = new BaseRangeUpgrade("EnergizedRangeUpgrade", Tier.ENERGIZED);
-		registry.PreRegisterItem(EnergizedRangeUpgrade);	
-		LumumRangeUpgrade = new BaseRangeUpgrade("LumumRangeUpgrade", Tier.LUMUM);
-		registry.PreRegisterItem(LumumRangeUpgrade);	
+		registry.PreRegisterItem(StaticQuarryingUpgrade = new BaseQuarryingUpgrade("StaticQuarryingUpgrade", Tier.STATIC));	
+		registry.PreRegisterItem(EnergizedQuarryingUpgrade = new BaseQuarryingUpgrade("EnergizedQuarryingUpgrade", Tier.ENERGIZED));	
+		registry.PreRegisterItem(LumumQuarryingUpgrade = new BaseQuarryingUpgrade("LumumQuarryingUpgrade", Tier.LUMUM));	
+
+		registry.PreRegisterItem(BasicRangeUpgrade = new BaseRangeUpgrade("BasicRangeUpgrade", Tier.BASE));	
+		registry.PreRegisterItem(StaticRangeUpgrade = new BaseRangeUpgrade("StaticRangeUpgrade", Tier.STATIC));	
+		registry.PreRegisterItem(EnergizedRangeUpgrade = new BaseRangeUpgrade("EnergizedRangeUpgrade", Tier.ENERGIZED));	
+		registry.PreRegisterItem(LumumRangeUpgrade = new BaseRangeUpgrade("LumumRangeUpgrade", Tier.LUMUM));	
 		
 	
-
-		StaticBook = new StaticPowerBook("StaticBook");
-		registry.PreRegisterItem(StaticBook);	
+		registry.PreRegisterItem(StaticBook = new StaticPowerBook("StaticBook"));	
 
 		registry.PreRegisterItem(StaticIngot = new BaseIngot("StaticIngot"));
 		registry.PreRegisterItem(EnergizedIngot = new BaseIngot("EnergizedIngot"));
@@ -397,8 +372,6 @@ public class ModItems {
 		registry.PreRegisterItem(StaticDust = new BaseDust("StaticDust"));
 		registry.PreRegisterItem(EnergizedDust = new BaseDust("EnergizedDust"));
 		registry.PreRegisterItem(LumumDust = new BaseDust("LumumDust"));
-		registry.PreRegisterItem(RedstoneAlloyDust = new BaseDust("RedstoneAlloyDust"));
-		
+		registry.PreRegisterItem(RedstoneAlloyDust = new BaseDust("RedstoneAlloyDust"));	
 	}
-
 }

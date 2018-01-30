@@ -11,10 +11,10 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistry;
 import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent;
 import theking530.staticpower.tileentity.BaseTileEntity;
-import theking530.staticpower.utils.InventoryUtilities;
 
 public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFluidHandler{
 

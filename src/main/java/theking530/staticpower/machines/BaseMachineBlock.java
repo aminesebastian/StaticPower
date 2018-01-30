@@ -4,7 +4,6 @@ import api.IWrenchable;
 import api.RegularWrenchMode;
 import api.SneakWrenchMode;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
@@ -28,10 +27,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.assists.utilities.WorldUtilities;
 import theking530.staticpower.blocks.BaseItemBlock;
 import theking530.staticpower.tileentity.BaseTileEntity;
-import theking530.staticpower.utils.SideUtilities;
-import theking530.staticpower.utils.WorldUtilities;
 
 public class BaseMachineBlock extends Block implements IWrenchable {
 

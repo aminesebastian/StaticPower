@@ -16,9 +16,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
+import theking530.staticpower.assists.utilities.SidePicker;
 import theking530.staticpower.client.BaseSideSelectorComponent;
 import theking530.staticpower.client.gui.widgets.Trackball.TrackballWrapper;
-import theking530.staticpower.utils.SidePicker;
 
 public class GuiComponentSideSelector extends BaseSideSelectorComponent {
 

@@ -19,17 +19,17 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.assists.utilities.EnumTextFormatting;
 import theking530.staticpower.client.GuiIDRegistry;
 import theking530.staticpower.items.ItemBase;
-import theking530.staticpower.utils.EnumTextFormatting;
 
 public class ItemFilter extends ItemBase {
 	
-	public FilterTier TIER;
+	public FilterTier filterTier;
 	
 	public ItemFilter(String name, FilterTier tier) {
 		super(name);
-		TIER = tier;
+		filterTier = tier;
 	}
 	@Override
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
@@ -47,7 +47,7 @@ public class ItemFilter extends ItemBase {
 		super.onCreated(item, world, player);
 	}
 	public boolean evaluateFilter(ItemStack filter, ItemStack itemstack) {
-		int slotCount = TIER == FilterTier.BASIC ? 4 : TIER == FilterTier.UPGRADED ? 8 : 10;
+		int slotCount = getSlotCount();
 		ItemStack[] slots = new ItemStack[slotCount];
 		boolean whitelist = true;
 		if(filter.hasTagCompound()) {
@@ -82,14 +82,16 @@ public class ItemFilter extends ItemBase {
 		}
 		return false;
 	}
-	
+	public int getSlotCount() {
+		return filterTier == FilterTier.BASIC ? 4 : filterTier == FilterTier.UPGRADED ? 8 : 10;
+	}
 	@Override
 	public int getMaxItemUseDuration(ItemStack stack) {
 		return 1; 
 	}
 	@Override  
 	public void addInformation(ItemStack itemstack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn) {
-		int slotCount = TIER == FilterTier.BASIC ? 4 : TIER == FilterTier.UPGRADED ? 8 : 10;
+		int slotCount = getSlotCount();
 		ItemStack[] slots = new ItemStack[slotCount];
 		
 		if(itemstack.hasTagCompound()) {
@@ -105,7 +107,7 @@ public class ItemFilter extends ItemBase {
     	if(showHiddenTooltips()) {
     		boolean empty = true;
     		for(int i=0; i<slotCount; i++) {
-    			if(slots[i] != ItemStack.EMPTY) {
+    			if(slots[i] != null && slots[i] != ItemStack.EMPTY) {
     				list.add("Slot " + (i+1) + ": " + slots[i].getDisplayName());
     				empty=false;
     			}

@@ -42,15 +42,15 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import theking530.staticpower.assists.Reference;
+import theking530.staticpower.assists.customboundingbox.CustomBoundingBox;
+import theking530.staticpower.assists.customboundingbox.ICustomBoundingBox;
+import theking530.staticpower.assists.customboundingbox.RenderCustomBoundingBox;
 import theking530.staticpower.items.armor.BaseArmor;
 import theking530.staticpower.items.armor.BaseShield;
 import theking530.staticpower.items.armor.ModArmor;
 import theking530.staticpower.items.armor.SkeletonArmor;
 import theking530.staticpower.items.armor.UndeadArmor;
 import theking530.staticpower.potioneffects.BasePotion;
-import theking530.staticpower.utils.customboundingbox.CustomBoundingBox;
-import theking530.staticpower.utils.customboundingbox.ICustomBoundingBox;
-import theking530.staticpower.utils.customboundingbox.RenderCustomBoundingBox;
 
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
 public class ModEvents {

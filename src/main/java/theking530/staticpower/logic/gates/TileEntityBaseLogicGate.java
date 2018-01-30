@@ -10,7 +10,7 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import theking530.staticpower.utils.SideModeList.Mode;
+import theking530.staticpower.assists.utilities.SideModeList.Mode;
 
 public class TileEntityBaseLogicGate extends TileEntity implements ITickable{
 	

@@ -85,6 +85,25 @@ public class SolderingRecipes {
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.LumumRangeUpgrade), new Object[]{"PPP"," G ","PPP",
 		'P', ModItems.LumumPlate, 'G',  ModItems.LumumUpgradePlate});
 		
+		//Molds --------------------------------------------------------------------------------------------------
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.PlateMould), new Object[]{"   "," C "," P ",
+		'P', ModItems.IronPlate, 'C',  ModItems.CopperPlate});
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.PlateMould), new Object[]{"   "," C "," P ",
+		'P', ModItems.IronPlate, 'C',  ModItems.TinPlate});
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.PlateMould), new Object[]{"   "," C "," P ",
+		'P', ModItems.IronPlate, 'C',  ModItems.SilverPlate});
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.PlateMould), new Object[]{"   "," C "," P ",
+		'P', ModItems.IronPlate, 'C',  ModItems.GoldPlate});
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.PlateMould), new Object[]{"   "," C "," P ",
+		'P', ModItems.IronPlate, 'C',  ModItems.LeadPlate});
+		
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.WireMould), new Object[]{"   "," C "," P ",
+		'P', ModItems.IronPlate, 'C',  ModItems.CopperWire});
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.WireMould), new Object[]{"   "," C "," P ",
+		'P', ModItems.IronPlate, 'C',  ModItems.SilverWire});
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.WireMould), new Object[]{"   "," C "," P ",
+		'P', ModItems.IronPlate, 'C',  ModItems.GoldWire});
+		
 		//Filters --------------------------------------------------------------------------------------------------
 		for(int i=0; i<OreDictionary.getOres("nuggetIron").size(); i++) {
 			RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.BasicItemFilter), new Object[]{" P ","PGP"," C ",
@@ -98,11 +117,19 @@ public class SolderingRecipes {
 		//Gate Components
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModBlocks.LogicGateBasePlate, 2), new Object[]{"   ", "   ", "SBS", 
 		'S', ModItems.IronPlate, 'B', ModItems.BasicCircuit});
-		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.LogicGateServo, 4), new Object[]{"S S", " C ", "SBS", 
-		'S', ModItems.IronPlate, 'B', ModItems.BasicBattery, 'C', ModItems.CopperCoil});
-		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.LogicGatePowerSync, 2), new Object[]{" S ", " R ", " S ", 
-		'S', ModItems.IronPlate, 'R', Blocks.REDSTONE_TORCH});
-		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.LogicGatePowerSync, 2), new Object[]{" S ", "QRQ", " S ", 
-		'S', ModItems.IronPlate, 'R', Blocks.REDSTONE_TORCH, 'Q', Items.REDSTONE});
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.LogicGateServo, 4), new Object[]{"S S", " C ", "QBQ", 
+		'S', ModItems.IronPlate, 'B', ModItems.BasicBattery, 'C', ModItems.CopperCoil, 'Q', ModItems.SilverWire});
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.LogicGatePowerSync, 2), new Object[]{"   ", " R ", " S ", 
+		'S', ModItems.BasicCircuit, 'R', Blocks.REDSTONE_TORCH});
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.InvertedLogicGatePowerSync, 2), new Object[]{" Q ", " R ", " S ", 
+		'S', ModItems.BasicCircuit, 'R', Blocks.REDSTONE_TORCH, 'Q', Items.REDSTONE});
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.Diode, 8), new Object[]{"   ", "SRS", "QCQ", 
+		'S', ModItems.IronPlate, 'Q', ModItems.SilverWire, 'R', Items.REDSTONE, 'C', ModItems.BasicCircuit});
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.Transistor, 8), new Object[]{" S ", "SRS", "QCQ", 
+		'S', ModItems.IronPlate, 'Q', ModItems.SilverWire, 'R', Items.REDSTONE, 'C', ModItems.BasicCircuit});
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.InternalClock, 2), new Object[]{" S ", "SRS", "QCQ", 
+		'S', ModItems.IronPlate, 'Q', ModItems.SilverWire, 'R', Items.QUARTZ, 'C', ModItems.BasicCircuit});
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.MemoryChip, 4), new Object[]{"PPP", "SSS", "QCQ", 
+		'P', ModItems.IronPlate, 'Q', ModItems.SilverWire, 'S', ModItems.Silicon, 'C', ModItems.BasicCircuit});
 	}
 }

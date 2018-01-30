@@ -14,14 +14,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import theking530.staticpower.assists.utilities.GuiTextures;
+import theking530.staticpower.assists.utilities.SidePicker;
+import theking530.staticpower.assists.utilities.SideUtilities;
+import theking530.staticpower.assists.utilities.SideModeList.Mode;
+import theking530.staticpower.assists.utilities.SidePicker.Side;
 import theking530.staticpower.client.sideSelector.GuiComponentSideSelector;
 import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.tileentity.BaseTileEntity;
-import theking530.staticpower.utils.GuiTextures;
-import theking530.staticpower.utils.SideModeList.Mode;
-import theking530.staticpower.utils.SidePicker;
-import theking530.staticpower.utils.SidePicker.Side;
-import theking530.staticpower.utils.SideUtilities;
 
 public class GuiSideConfigTab extends BaseGuiTab {
 

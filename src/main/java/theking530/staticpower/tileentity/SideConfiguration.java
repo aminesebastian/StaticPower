@@ -1,8 +1,8 @@
 package theking530.staticpower.tileentity;
 
 import net.minecraft.util.EnumFacing;
-import theking530.staticpower.utils.SideModeList;
-import theking530.staticpower.utils.SideModeList.Mode;
+import theking530.staticpower.assists.utilities.SideModeList;
+import theking530.staticpower.assists.utilities.SideModeList.Mode;
 
 public class SideConfiguration {
 

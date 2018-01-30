@@ -8,7 +8,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import theking530.staticpower.assists.Tier;
-import theking530.staticpower.utils.EnumTextFormatting;
+import theking530.staticpower.assists.utilities.EnumTextFormatting;
 
 public class BaseSpeedUpgrade extends BaseUpgrade implements IMachineUpgrade{
 	public float SPEED = 1f;

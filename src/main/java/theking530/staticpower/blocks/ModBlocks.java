@@ -32,6 +32,7 @@ import theking530.staticpower.machines.distillery.BlockDistillery;
 import theking530.staticpower.machines.fermenter.BlockFermenter;
 import theking530.staticpower.machines.fluidgenerator.BlockFluidGenerator;
 import theking530.staticpower.machines.fluidinfuser.BlockFluidInfuser;
+import theking530.staticpower.machines.former.BlockFormer;
 import theking530.staticpower.machines.fusionfurnace.BlockFusionFurnace;
 import theking530.staticpower.machines.heatingelement.BlockHeatingElement;
 import theking530.staticpower.machines.mechanicalsqueezer.BlockMechanicalSqueezer;
@@ -93,6 +94,7 @@ public class ModBlocks {
 	public static Block HeatingElement;
 	public static Block Distillery;
 	public static Block Condenser;
+	public static Block Former;
 	
 	//Gates
 	public static Block LogicGateBasePlate;
@@ -159,48 +161,38 @@ public class ModBlocks {
 	public static void init(Registry registry) {
 		
 		ChunkLoader = new BlockChunkLoader("ChunkLoader").setHardness(3.5f);
-		registry.PreRegisterBlock(ChunkLoader);
-		
+		registry.PreRegisterBlock(ChunkLoader);		
 		HeatingElement = new BlockHeatingElement().setHardness(3.5f);
 		registry.PreRegisterBlock(HeatingElement);
 			
 		StaticWood = new InfusedWood("StaticWood").setHardness(3.5f);
-		registry.PreRegisterBlock(StaticWood);
-		
+		registry.PreRegisterBlock(StaticWood);		
 		EnergizedWood = new InfusedWood("EnergizedWood").setHardness(3.5f);
 		registry.PreRegisterBlock(EnergizedWood);
-		
 		LumumWood = new InfusedWood("LumumWood").setHardness(3.5f);
 		registry.PreRegisterBlock(LumumWood);
 		
 		StaticPlanks = new BaseBlock(Material.WOOD, "StaticPlanks").setHardness(3.5f);
 		registry.PreRegisterBlock(StaticPlanks);
-		OreDictionary.registerOre("plankWood", StaticPlanks);
-		
+		OreDictionary.registerOre("plankWood", StaticPlanks);		
 		EnergizedPlanks = new BaseBlock(Material.WOOD, "EnergizedPlanks").setHardness(3.5f);
-		registry.PreRegisterBlock(EnergizedPlanks);
-		
+		registry.PreRegisterBlock(EnergizedPlanks);		
 		LumumPlanks = new BaseBlock(Material.WOOD, "LumumPlanks").setHardness(3.5f);
 		registry.PreRegisterBlock(LumumPlanks);
 
 		StaticCobblestone = new BaseBlock(Material.ROCK, "StaticCobblestone").setHardness(3.5f);
-		registry.PreRegisterBlock(StaticCobblestone);
-		
+		registry.PreRegisterBlock(StaticCobblestone);		
 		EnergizedCobblestone = new BaseBlock(Material.ROCK, "EnergizedCobblestone").setHardness(3.5f);
-		registry.PreRegisterBlock(EnergizedCobblestone);
-		
+		registry.PreRegisterBlock(EnergizedCobblestone);		
 		LumumCobblestone = new BaseBlock(Material.ROCK, "LumumCobblestone").setHardness(3.5f);
 		registry.PreRegisterBlock(LumumCobblestone);
 
 		StaticChest = new BlockStaticChest("StaticChest").setUnlocalizedName("StaticChest").setHardness(3.5f);
-		registry.PreRegisterBlock(StaticChest);
-		
+		registry.PreRegisterBlock(StaticChest);		
 		EnergizedChest = new BlockEnergizedChest("EnergizedChest").setUnlocalizedName("EnergizedChest").setHardness(3.5f);
-		registry.PreRegisterBlock(EnergizedChest);
-		
+		registry.PreRegisterBlock(EnergizedChest);		
 		LumumChest = new BlockLumumChest("LumumChest").setUnlocalizedName("LumumChest").setHardness(3.5f);
-		registry.PreRegisterBlock(LumumChest);
-		
+		registry.PreRegisterBlock(LumumChest);		
 		VacuumChest = new BlockVacuumChest("VacuumChest").setUnlocalizedName("VacuumChest").setHardness(3.5f);
 		registry.PreRegisterBlock(VacuumChest);
 		
@@ -214,42 +206,33 @@ public class ModBlocks {
 		registry.PreRegisterBlock(EnergizedBattery);
 		
 		FluidInfuser = new BlockFluidInfuser().setUnlocalizedName("FluidInfuser");
-		registry.PreRegisterBlock(FluidInfuser);
-		
+		registry.PreRegisterBlock(FluidInfuser);		
 		FusionFurnace = new BlockFusionFurnace().setHardness(3.5f);
-		registry.PreRegisterBlock(FusionFurnace);
-		
+		registry.PreRegisterBlock(FusionFurnace);		
 		ChargingStation = new BlockChargingStation().setHardness(3.5f);
-		registry.PreRegisterBlock(ChargingStation);
-		
+		registry.PreRegisterBlock(ChargingStation);		
 		Quarry = new BlockQuarry();
-		registry.PreRegisterBlock(Quarry);
-		
+		registry.PreRegisterBlock(Quarry);		
 		Distillery = new BlockDistillery().setUnlocalizedName("Distillery");
-		registry.PreRegisterBlock(Distillery);
-		
+		registry.PreRegisterBlock(Distillery);		
 		Condenser = new BlockCondenser().setUnlocalizedName("Condenser");
-		registry.PreRegisterBlock(Condenser);
-		
+		registry.PreRegisterBlock(Condenser);		
 		FluidGenerator = new BlockFluidGenerator().setUnlocalizedName("FluidGenerator");
-		registry.PreRegisterBlock(FluidGenerator);
-		
+		registry.PreRegisterBlock(FluidGenerator);		
 		BasicFarmer = new BlockBasicFarmer().setUnlocalizedName("BasicFarmer");
-		registry.PreRegisterBlock(BasicFarmer);
-		
+		registry.PreRegisterBlock(BasicFarmer);		
 		CropSqueezer = new BlockCropSqueezer().setUnlocalizedName("CropSqueezer");
 		registry.PreRegisterBlock(CropSqueezer);
 		MechanicalSqueezer = new BlockMechanicalSqueezer().setUnlocalizedName("MechanicalSqueezer");
-		registry.PreRegisterBlock(MechanicalSqueezer);
-		
+		registry.PreRegisterBlock(MechanicalSqueezer);		
 		Fermenter = new BlockFermenter().setUnlocalizedName("Fermenter");
 		registry.PreRegisterBlock(Fermenter);
-		
 		PoweredGrinder = new BlockPoweredGrinder().setUnlocalizedName("PoweredGrinder").setHardness(3.5f);
-		registry.PreRegisterBlock(PoweredGrinder);
-		
+		registry.PreRegisterBlock(PoweredGrinder);	
 		PoweredFurnace = new BlockPoweredFurnace().setUnlocalizedName("PoweredFurnace").setHardness(3.5f);
 		registry.PreRegisterBlock(PoweredFurnace);
+		Former = new BlockFormer().setHardness(3.5f);
+		registry.PreRegisterBlock(Former);
 		
 		LogicGateBasePlate = new BlockLogicGateBasePlate(Material.IRON, "LogicGateBasePlate");
 		registry.PreRegisterBlock(LogicGateBasePlate);
@@ -288,11 +271,9 @@ public class ModBlocks {
 		registry.PreRegisterBlock(CreativeSolarPanel);
 		
 		StaticLamp = new StaticLamp(Material.GLASS).setUnlocalizedName("StaticLamp");
-		registry.PreRegisterBlock(StaticLamp);
-		
+		registry.PreRegisterBlock(StaticLamp);		
 		EnergizedLamp = new EnergizedLamp(Material.GLASS).setUnlocalizedName("EnergizedLamp");
-		registry.PreRegisterBlock(EnergizedLamp);
-		
+		registry.PreRegisterBlock(EnergizedLamp);		
 		LumumLamp = new LumumLamp(Material.GLASS).setUnlocalizedName("LumumLamp");
 		registry.PreRegisterBlock(LumumLamp);	
 		
@@ -323,53 +304,42 @@ public class ModBlocks {
 		
 		
 		StaticGrass = new StaticGrass(Material.GRASS).setUnlocalizedName("StaticGrass");
-		registry.PreRegisterBlock(StaticGrass);
-		
+		registry.PreRegisterBlock(StaticGrass);	
 		EnergizedGrass = new EnergizedGrass(Material.GRASS).setUnlocalizedName("EnergizedGrass");
 		registry.PreRegisterBlock(EnergizedGrass);
 		
 		MachineBlock = new BaseBlock(Material.IRON, "MachineBlock");
 		registry.PreRegisterBlock(MachineBlock);
-		
+	
 		ObsidianGlass = new ObsidianGlass(Material.GLASS);
 		registry.PreRegisterBlock(ObsidianGlass);
-		
+	
 		AdvancedEarth = new AdvancedEarth().setUnlocalizedName("AdvancedEarth").setHardness(3.5f);
 		registry.PreRegisterBlock(AdvancedEarth);
 	
 		StaticConduit = new BlockStaticConduit();
-		registry.PreRegisterBlock(StaticConduit);
-		
+		registry.PreRegisterBlock(StaticConduit);		
 		FluidConduit = new BlockFluidConduit();
-		registry.PreRegisterBlock(FluidConduit);	
-		
+		registry.PreRegisterBlock(FluidConduit);			
 		ItemConduit = new BlockItemConduit();
 		registry.PreRegisterBlock(ItemConduit);	
 				
 		CopperOre = new Ore("CopperOre", "pickaxe", 1).setHardness(3.5f);
 		registry.PreRegisterBlock(CopperOre);
-
 		TinOre = new Ore("TinOre", "pickaxe", 1).setHardness(3.5f);
 		registry.PreRegisterBlock(TinOre);
-
 		SilverOre = new Ore("SilverOre", "pickaxe", 2).setHardness(3.5f);
 		registry.PreRegisterBlock(SilverOre);
-
 		LeadOre = new Ore("LeadOre", "pickaxe", 2).setHardness(3.5f);
-		registry.PreRegisterBlock(LeadOre);
-			
+		registry.PreRegisterBlock(LeadOre);			
 		PlatinumOre = new Ore("PlatinumOre", "pickaxe", 2).setHardness(3.5f);
-		registry.PreRegisterBlock(PlatinumOre);
-	
+		registry.PreRegisterBlock(PlatinumOre);	
 		NickelOre = new Ore("NickelOre", "pickaxe", 1).setHardness(3.5f);
 		registry.PreRegisterBlock(NickelOre);
-
 		AluminiumOre = new Ore("AluminiumOre", "pickaxe", 2).setHardness(3.5f);
 		registry.PreRegisterBlock(AluminiumOre);
-
 		SapphireOre = new GemOre("SapphireOre", "pickaxe", 2, ModItems.SapphireGem, 1, 2).setHardness(3.5f);
 		registry.PreRegisterBlock(SapphireOre);
-
 		RubyOre = new GemOre("RubyOre", "pickaxe", 2, ModItems.RubyGem, 1, 2).setHardness(3.5f);
 		registry.PreRegisterBlock(RubyOre);
 	}

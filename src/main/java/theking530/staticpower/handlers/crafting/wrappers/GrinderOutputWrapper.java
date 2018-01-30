@@ -17,7 +17,7 @@ public class GrinderOutputWrapper {
 	}
 	
 	public ArrayList<GrinderOutput> getOutputItems() {
-		ArrayList<GrinderOutput> tempOutput = new ArrayList();
+		ArrayList<GrinderOutput> tempOutput = new ArrayList<GrinderOutput>();
 		if(outputItem1.isValid()) {
 			tempOutput.add(outputItem1);
 		}

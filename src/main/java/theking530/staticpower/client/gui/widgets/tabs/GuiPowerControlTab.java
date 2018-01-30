@@ -12,11 +12,11 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import theking530.staticpower.assists.utilities.EnumTextFormatting;
+import theking530.staticpower.assists.utilities.GuiTextures;
 import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.machines.BaseMachine;
-import theking530.staticpower.utils.EnumTextFormatting;
-import theking530.staticpower.utils.GuiTextures;
 
 public class GuiPowerControlTab extends BaseGuiTab{
 	

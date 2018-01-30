@@ -11,8 +11,8 @@ import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.assists.utilities.EnumTextFormatting;
 import theking530.staticpower.items.EquipmentMaterial;
-import theking530.staticpower.utils.EnumTextFormatting;
 
 
 public class BaseShovel extends ItemSpade {

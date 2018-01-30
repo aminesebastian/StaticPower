@@ -6,6 +6,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import theking530.staticpower.assists.utilities.GuiTextures;
+import theking530.staticpower.assists.utilities.GuiUtilities;
 import theking530.staticpower.client.gui.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.buttons.ArrowButton;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
@@ -14,8 +16,6 @@ import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent.FluidContainerInteractionMode;
-import theking530.staticpower.utils.GUIUtilities;
-import theking530.staticpower.utils.GuiTextures;
 
 public class GuiBasicFarmer extends BaseGuiContainer{
 	
@@ -90,10 +90,10 @@ public class GuiBasicFarmer extends BaseGuiContainer{
 		GL11.glScalef(scale, scale, scale);
 		
 		String radius = "Radius: " + FARMER.RANGE;	
-		fontRenderer.drawString(radius, xSize / 2 - 31, 119, GUIUtilities.getColor(20, 20, 20));
+		fontRenderer.drawString(radius, xSize / 2 - 31, 119, GuiUtilities.getColor(20, 20, 20));
 		
 		String growthBounus = "Growth Bonus Chance: " + FARMER.GROWTH_BONUS_CHANCE + "%";	
-		fontRenderer.drawString(growthBounus, xSize / 2 +39, 119, GUIUtilities.getColor(20, 20, 20));
+		fontRenderer.drawString(growthBounus, xSize / 2 +39, 119, GuiUtilities.getColor(20, 20, 20));
 		GL11.glScalef(1/scale, 1/scale, 1/scale);
 	}
 	

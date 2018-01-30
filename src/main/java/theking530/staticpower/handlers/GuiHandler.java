@@ -47,6 +47,9 @@ import theking530.staticpower.machines.fluidgenerator.TileEntityFluidGenerator;
 import theking530.staticpower.machines.fluidinfuser.ContainerFluidInfuser;
 import theking530.staticpower.machines.fluidinfuser.GuiFluidInfuser;
 import theking530.staticpower.machines.fluidinfuser.TileEntityFluidInfuser;
+import theking530.staticpower.machines.former.ContainerFormer;
+import theking530.staticpower.machines.former.GuiFormer;
+import theking530.staticpower.machines.former.TileEntityFormer;
 import theking530.staticpower.machines.fusionfurnace.ContainerFusionFurnace;
 import theking530.staticpower.machines.fusionfurnace.GuiFusionFurnace;
 import theking530.staticpower.machines.fusionfurnace.TileEntityFusionFurnace;
@@ -196,13 +199,18 @@ public class GuiHandler implements IGuiHandler {
 				if (entity instanceof TileEntitySignalMultiplier) {	
 					return new ContainerMultiplier(player.inventory, (TileEntitySignalMultiplier) entity);
 				}
-				return null;							
+				return null;	
+			case GuiIDRegistry.guiIDFormer:
+				if (entity instanceof TileEntityFormer) {	
+					return new ContainerFormer(player.inventory, (TileEntityFormer) entity);
+				}
+				return null;
 			}
 		}else{
 			switch(ID) {
 			case GuiIDRegistry.guiIDItemFilter:
 				ItemFilter filter = (ItemFilter)player.getHeldItemMainhand().getItem();
-				return new ContainerItemFilter(player.inventory, new InventoryItemFilter(player.getHeldItemMainhand(), filter.TIER), filter.TIER);
+				return new ContainerItemFilter(player.inventory, new InventoryItemFilter(player.getHeldItemMainhand(), filter.filterTier), filter.filterTier);
 			}
 		}
 		return null;
@@ -328,15 +336,20 @@ public class GuiHandler implements IGuiHandler {
 					return new GuiSignalMultiplier(player.inventory, (TileEntitySignalMultiplier) entity);				
 				}
 				return null;
+			case GuiIDRegistry.guiIDFormer:
+				if (entity instanceof TileEntityFormer) {	
+					return new GuiFormer(player.inventory, (TileEntityFormer) entity);				
+				}
+				return null;
 			}
 		}else{
 			switch(ID) {
 			case GuiIDRegistry.guiIDItemFilter:
 				ItemFilter filter = (ItemFilter)player.getHeldItemMainhand().getItem();
-				return new GuiItemFilter(player.inventory, filter.TIER, new InventoryItemFilter(player.getHeldItemMainhand(), filter.TIER));
+				return new GuiItemFilter(player.inventory, filter.filterTier, new InventoryItemFilter(player.getHeldItemMainhand(), filter.filterTier));
 			
 			case GuiIDRegistry.guiIDStaticBook:
-				ItemFilter book = (ItemFilter)player.getHeldItemMainhand().getItem();
+				//ItemFilter book = (ItemFilter)player.getHeldItemMainhand().getItem();
 				return new GuiStaticBook();
 			}
 		}

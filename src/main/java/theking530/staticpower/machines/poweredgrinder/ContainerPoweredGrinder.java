@@ -24,7 +24,7 @@ public class ContainerPoweredGrinder extends Container {
 		this.addSlotToContainer(new SlotItemHandler(tePoweredGrinder.slotsInput, 0, 80, 18) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
-		          return GrinderRecipeRegistry.Grinding().getgrindingResult(itemStack) != null;
+		          return GrinderRecipeRegistry.Grinding().getGrindingResult(itemStack) != null;
 		          
 		        }
 		});
@@ -93,7 +93,7 @@ public class ContainerPoweredGrinder extends Container {
 	                }
 	                slot.onSlotChange(itemstack1, itemstack);
 	            }else if (invSlot != 0 && invSlot != 1 && invSlot != 2 && invSlot != 3){
-	            	if (GrinderRecipeRegistry.Grinding().getgrindingResult(itemstack1) != null){
+	            	if (GrinderRecipeRegistry.Grinding().getGrindingResult(itemstack1) != null){
 	                    if (!this.mergeItemStack(itemstack1, 0, 1, false)){
 	                        return ItemStack.EMPTY;
 	                    }

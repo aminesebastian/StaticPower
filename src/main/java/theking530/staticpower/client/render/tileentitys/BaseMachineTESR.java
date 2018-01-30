@@ -6,11 +6,11 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import theking530.staticpower.assists.Reference;
+import theking530.staticpower.assists.utilities.SideModeList;
+import theking530.staticpower.assists.utilities.SideUtilities;
 import theking530.staticpower.client.model.ModelBlock;
 import theking530.staticpower.machines.IProcessing;
 import theking530.staticpower.tileentity.BaseTileEntity;
-import theking530.staticpower.utils.SideModeList;
-import theking530.staticpower.utils.SideUtilities;
 
 public class BaseMachineTESR <T extends BaseTileEntity> extends TileEntitySpecialRenderer<T> {
 

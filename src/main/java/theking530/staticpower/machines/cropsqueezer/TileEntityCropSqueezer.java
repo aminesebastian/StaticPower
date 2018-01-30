@@ -2,20 +2,17 @@ package theking530.staticpower.machines.cropsqueezer;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistry;
 import theking530.staticpower.machines.BaseMachineWithTank;
 import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityInputServo;
-import theking530.staticpower.utils.InventoryUtilities;
 
 public class TileEntityCropSqueezer extends BaseMachineWithTank {
 
-	public DrainToBucketComponent bucketDrainComponent;
-	
 	public TileEntityCropSqueezer() {
 		initializeBaseMachineWithTank(2, 100, 100000, 80, 50, 1, 2, 2, 5000);
-		bucketDrainComponent = new DrainToBucketComponent("BucketDrain", slotsInput, 1, slotsOutput, 1, this, TANK, FLUID_TO_CONTAINER_RATE);
-		registerComponent(bucketDrainComponent);
+		registerComponent(new DrainToBucketComponent("BucketDrain", slotsInput, 1, slotsOutput, 1, this, TANK, FLUID_TO_CONTAINER_RATE));
 		registerComponent(new TileEntityInputServo(this, 2, slotsInput, 0));
 	}
 	@Override

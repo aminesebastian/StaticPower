@@ -7,10 +7,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
+import theking530.staticpower.assists.utilities.EnumTextFormatting;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.items.ModItems;
-import theking530.staticpower.utils.EnumTextFormatting;
 
 public class TinkersIMC {
 
