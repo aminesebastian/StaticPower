@@ -1,5 +1,6 @@
 package theking530.staticpower.items.itemfilter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -20,6 +21,7 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.assists.utilities.EnumTextFormatting;
+import theking530.staticpower.assists.utilities.ItemUtilities;
 import theking530.staticpower.client.GuiIDRegistry;
 import theking530.staticpower.items.ItemBase;
 
@@ -48,37 +50,36 @@ public class ItemFilter extends ItemBase {
 	}
 	public boolean evaluateFilter(ItemStack filter, ItemStack itemstack) {
 		int slotCount = getSlotCount();
-		ItemStack[] slots = new ItemStack[slotCount];
-		boolean whitelist = true;
+		List<ItemStack> slots = new ArrayList<ItemStack>();
+		
 		if(filter.hasTagCompound()) {
 			NBTTagList items = filter.getTagCompound().getTagList("ItemInventory", Constants.NBT.TAG_COMPOUND);
 			for (int i = 0; i < items.tagCount(); ++i){
 				NBTTagCompound item = (NBTTagCompound) items.getCompoundTagAt(i);
 				int slot = item.getInteger("Slot");
 				if (slot >= 0 && slot < slotCount) {
-					slots[slot] = new ItemStack(item);
+					slots.add(new ItemStack(item));
 				}
 			}
+			
+			boolean whitelist = true;
+			boolean matchNBT = false;
+			boolean matchMetadata = true;
+			boolean matchOreDict = false;
+			
 			if(filter.getTagCompound().hasKey("WHITE_LIST_MODE")) {
 				whitelist = filter.getTagCompound().getBoolean("WHITE_LIST_MODE");
 			}
-			if(whitelist) {
-				for(int i=0; i<slotCount; i++) {
-					if(slots[i] != ItemStack.EMPTY) {
-						if(slots[i].isItemEqual(itemstack)) {
-							return true;
-						}
-					}
-				}
-			}else{
-				for(int i=0; i<slotCount; i++) {
-					if(slots[i] != ItemStack.EMPTY) {
-						if(slots[i].isItemEqual(itemstack)) {
-							return false;
-						}
-					}
-				}
+			if(filter.getTagCompound().hasKey("MATCH_NBT")) {
+				matchNBT = filter.getTagCompound().getBoolean("MATCH_NBT");
 			}
+			if(filter.getTagCompound().hasKey("MATCH_METADATA")) {
+				matchMetadata = filter.getTagCompound().getBoolean("MATCH_METADATA");
+			}
+			if(filter.getTagCompound().hasKey("MATCH_ORE_DICT")) {
+				matchOreDict = filter.getTagCompound().getBoolean("MATCH_ORE_DICT");
+			}
+			return ItemUtilities.filterItems(slots, itemstack, whitelist, matchMetadata, matchNBT, matchOreDict);
 		}
 		return false;
 	}
@@ -107,7 +108,7 @@ public class ItemFilter extends ItemBase {
     	if(showHiddenTooltips()) {
     		boolean empty = true;
     		for(int i=0; i<slotCount; i++) {
-    			if(slots[i] != null && slots[i] != ItemStack.EMPTY) {
+    			if(slots[i] != null && !slots[i].isEmpty()) {
     				list.add("Slot " + (i+1) + ": " + slots[i].getDisplayName());
     				empty=false;
     			}

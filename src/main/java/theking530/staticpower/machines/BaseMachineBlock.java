@@ -81,17 +81,17 @@ public class BaseMachineBlock extends Block implements IWrenchable {
     }
 
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+		super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
         worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
 
-        if (stack.hasDisplayName()) {
-            if(worldIn.getTileEntity(pos) instanceof BaseMachine) {
-    			BaseMachine tempMachine = (BaseMachine)worldIn.getTileEntity(pos);
-    			if(placer.getHeldItemMainhand().hasTagCompound()) {
-    				tempMachine.onMachinePlaced(placer.getHeldItemMainhand().getTagCompound(), worldIn, pos, state, placer, stack);
-    			}
-    		}
-    		super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
-        }
+        if(worldIn.getTileEntity(pos) instanceof BaseTileEntity) {
+        	System.out.println("HI");
+        	BaseTileEntity tempMachine = (BaseTileEntity)worldIn.getTileEntity(pos);
+			if(stack.hasTagCompound()) {
+				tempMachine.onMachinePlaced(stack.getTagCompound(), worldIn, pos, state, placer, stack);
+			}
+		}
+
     }
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
     	if(worldIn.getTileEntity(pos) instanceof BaseTileEntity) {
@@ -147,19 +147,20 @@ public class BaseMachineBlock extends Block implements IWrenchable {
 	}
 	@Override
 	public void sneakWrenchBlock(EntityPlayer player, SneakWrenchMode mode, ItemStack wrench, World world, BlockPos pos, EnumFacing facing, boolean returnDrops){
-		NBTTagCompound nbt = new NBTTagCompound();
-		ItemStack machineStack = new ItemStack(Item.getItemFromBlock(this));
-		if(world.getTileEntity(pos) instanceof BaseTileEntity) {
-			BaseTileEntity tempMachine = (BaseTileEntity)world.getTileEntity(pos);
-			tempMachine.wasWrenchedDoNotBreak = true;
-			tempMachine.onMachineBroken(nbt);
-			machineStack.setTagCompound(nbt);	
+		if(!world.isRemote) {
+			NBTTagCompound nbt = new NBTTagCompound();
+			ItemStack machineStack = new ItemStack(Item.getItemFromBlock(this));
+			if(world.getTileEntity(pos) instanceof BaseTileEntity) {
+				BaseTileEntity tempMachine = (BaseTileEntity)world.getTileEntity(pos);
+				tempMachine.wasWrenchedDoNotBreak = true;
+				tempMachine.onMachineBroken(nbt);
+				machineStack.setTagCompound(nbt);	
+			}
+			EntityItem droppedItem = new EntityItem(world, pos.getX()+0.5, pos.getY(), pos.getZ()+0.5, machineStack);
+			world.spawnEntity(droppedItem);
+			world.playSound(player, pos, SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 1.0f, 1.1f);
+			world.setBlockToAir(pos);
 		}
-		EntityItem droppedItem = new EntityItem(world, pos.getX()+0.5, pos.getY(), pos.getZ()+0.5, machineStack);
-		world.spawnEntity(droppedItem);
-		world.playSound(player, pos, SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 1.0f, 1.1f);
-		world.setBlockToAir(pos);
-		world.markAndNotifyBlock(pos, world.getChunkFromBlockCoords(pos), world.getBlockState(pos), world.getBlockState(pos), 2);
 	}
 
     public IBlockState getStateFromMeta(int meta)

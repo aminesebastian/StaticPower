@@ -6,6 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import theking530.staticpower.assists.RegisterHelper;
+import theking530.staticpower.assists.utilities.OreDictionaryUtilities;
 import theking530.staticpower.handlers.crafting.wrappers.GrinderOutputWrapper.GrinderOutput;
 import theking530.staticpower.items.ModItems;
 
@@ -173,7 +174,7 @@ public class GrinderRecipes {
 		String dust = "dust";
 		if(OreDictionary.getOres(dust+metal).size() > 0) {
 			for(int index = 0; index < OreDictionary.getOres(ore+metal).size(); index++) {
-				ItemStack oreDustStack = OreDictionary.getOres(dust+metal).get(0);
+				ItemStack oreDustStack = OreDictionaryUtilities.getOreDicitionaryItemStackToModify(dust+metal, 0);
 				oreDustStack.setCount(number);
 				RegisterHelper.registerGrinderRecipe(OreDictionary.getOres(ore+metal).get(index), newOutput(oreDustStack, 1.0f));
 			}	
@@ -181,7 +182,7 @@ public class GrinderRecipes {
 	}
 	public static void oreDictionaryOutput(ItemStack input, String output, int number) {
 		if(OreDictionary.getOres(output).size() > 0) {
-			ItemStack outputStack = OreDictionary.getOres(output).get(0);
+			ItemStack outputStack = OreDictionaryUtilities.getOreDicitionaryItemStackToModify(output, 0);
 			outputStack.setCount(number);
 			RegisterHelper.registerGrinderRecipe(input, newOutput(outputStack, 1.0f));	
 		}
@@ -192,7 +193,7 @@ public class GrinderRecipes {
 		String dust = "dust";
 		if(OreDictionary.getOres(dust+metal).size() > 0) {
 			for(int index = 0; index < OreDictionary.getOres(ingot+metal).size(); index++) {
-				ItemStack ingotDustStack = OreDictionary.getOres(dust+metal).get(0);
+				ItemStack ingotDustStack = OreDictionaryUtilities.getOreDicitionaryItemStackToModify(dust+metal, 0);
 				ingotDustStack.setCount(number);
 				RegisterHelper.registerGrinderRecipe(OreDictionary.getOres(ingot+metal).get(index), newOutput(ingotDustStack, 1.0f));
 			}
@@ -201,7 +202,7 @@ public class GrinderRecipes {
 	public static void baseDictionaryRecipe(String input, String output, int number) {
 		if(OreDictionary.getOres(output).size() > 0) {
 			for(int index = 0; index < OreDictionary.getOres(input).size(); index++) {
-				ItemStack result = OreDictionary.getOres(output).get(0);
+				ItemStack result = OreDictionaryUtilities.getOreDicitionaryItemStackToModify(output, 0);
 				result.setCount(number);
 				RegisterHelper.registerGrinderRecipe(OreDictionary.getOres(input).get(index), newOutput(result, 1.0f));
 			}

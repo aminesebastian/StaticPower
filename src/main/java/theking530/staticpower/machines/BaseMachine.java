@@ -188,7 +188,7 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
  
 	public void onMachinePlaced(NBTTagCompound nbt, World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
 		super.onMachinePlaced(nbt, world, pos, state, placer, stack);
-        energyStorage.readFromNBT(nbt);
+		this.readFromNBT(nbt);
 		previouslyStoredEnergyAmount = energyStorage.getEnergyStored();
 		updateBlock();
 	}

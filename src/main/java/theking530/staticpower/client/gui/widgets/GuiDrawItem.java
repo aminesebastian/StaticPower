@@ -37,7 +37,7 @@ public class GuiDrawItem {
         Minecraft.getMinecraft().getRenderItem().renderItemAndEffectIntoGUI(stack, x, y);
 		GL11.glEnable(GL11.GL_BLEND);
         //Render overlay to fake transparency
-        GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f-alpha);
+        GlStateManager.color(0.5429f, 0.5429f, 0.5429f, 1.0f-alpha);
         GlStateManager.disableTexture2D();    
         GlStateManager.disableDepth();
         GlStateManager.enableBlend(); 

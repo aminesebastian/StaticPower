@@ -40,7 +40,7 @@ public class GuiItemFilter extends BaseGuiContainer {
 		if(B.id == 1) {
 			boolean tempMode = INV_FILTER.getWhiteListMode();
 			INV_FILTER.setWhiteListMode(!tempMode);
-			IMessage msg = new PacketItemFilter(!tempMode);
+			IMessage msg = new PacketItemFilter(!tempMode, true, true, true);
 			PacketHandler.net.sendToServer(msg);
 			String mode = !tempMode == true ? "Whitelist" : "Blacklist";
 			B.displayString = mode;

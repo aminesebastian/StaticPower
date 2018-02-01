@@ -18,19 +18,19 @@ public class BaseSpeedUpgrade extends BaseUpgrade implements IMachineUpgrade{
 		super(name, tier);
 		switch(tier) {
 		case BASE:
-			SPEED = (1.1f/maxStackSize);
-			POWER_MULT = (1.15f/maxStackSize);
+			SPEED = (1.05f/maxStackSize);
+			POWER_MULT = (1.25f/maxStackSize);
 			break;
 		case STATIC:
-			SPEED = (1.75f/maxStackSize);
-			POWER_MULT = (1.75f/maxStackSize);
+			SPEED = (1.3f/maxStackSize);
+			POWER_MULT = (1.5f/maxStackSize);
 			break;
 		case ENERGIZED:
-			SPEED = (2.25f/maxStackSize);
+			SPEED = (1.75f/maxStackSize);
 			POWER_MULT = (2.0f/maxStackSize);
 			break;
 		case LUMUM:
-			SPEED = (3.5f/maxStackSize);
+			SPEED = (3.0f/maxStackSize);
 			POWER_MULT = (2.5f/maxStackSize);
 			break;
 		case CREATIVE:

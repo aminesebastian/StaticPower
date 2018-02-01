@@ -63,12 +63,7 @@ public class GuiBasicFarmer extends BaseGuiContainer{
 	}	
 	public void drawScreen(int par1, int par2, float par3) {
     	super.drawScreen(par1, par2, par3);
-    	
-		this.zLevel = -1.0f;
-		this.drawDefaultBackground();	
-		this.zLevel = 0.0f;
-
-		
+    			
     	int var1 = (this.width - this.xSize) / 2;
         int var2 = (this.height - this.ySize) / 2;  
         if(par1 >= 26 + var1 && par2 >= 8 + var2 && par1 <= 32 + var1 && par2 <= 68 + var2) {
@@ -77,7 +72,6 @@ public class GuiBasicFarmer extends BaseGuiContainer{
 		if(par1 >= 37 + var1 && par2 >= 8 + var2 && par1 <= 53 + var1 && par2 <= 68 + var2) {	
 			drawHoveringText(FLUIDBAR.drawText(), par1, par2, fontRenderer); 
 		}    
-		this.renderHoveredToolTip(par1, par2);
 	}	
 
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
@@ -99,15 +93,18 @@ public class GuiBasicFarmer extends BaseGuiContainer{
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
+		this.zLevel = -1.0f;
+		this.drawDefaultBackground();	
+		this.zLevel = 0.0f;
+
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.BASIC_FARMER_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-	
-        getTabManager().drawTabs(guiLeft+175, guiTop+10, width, height, f);
-		
 		//Energy Bar
 		POWER_BAR.drawPowerBar(guiLeft + 27, guiTop + 68, 6, 60, 1, f);
 		FLUIDBAR.drawFluidBar(guiLeft + 37, guiTop + 68, 16, 60, this.zLevel);
+		
+        getTabManager().drawTabs(guiLeft+194, guiTop+10, width, height, f);	
 	}
 }
 

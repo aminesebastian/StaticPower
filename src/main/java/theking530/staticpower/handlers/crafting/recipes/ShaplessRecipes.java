@@ -36,11 +36,11 @@ public class ShaplessRecipes {
 				Ingredient.fromItem(ModItems.InertInfusionBlend), Ingredient.fromItem(ModItems.LumumDust)});
 		
 		//Wires ---------------------------------------------------------------------------------------------------------
-		RegisterHelper.addShapelessRecipe("StaticPower_copperWire", "StaticPower", new ItemStack(ModItems.CopperWire, 8), new Ingredient[]{
+		RegisterHelper.addShapelessRecipe("StaticPower_copperWire", "StaticPower", new ItemStack(ModItems.CopperWire, 4), new Ingredient[]{
 				Ingredient.fromStacks(new ItemStack(ModItems.WireCutters, 1, OreDictionary.WILDCARD_VALUE)), new OreIngredient("ingotCopper")});
-		RegisterHelper.addShapelessRecipe("StaticPower_silverWire", "StaticPower", new ItemStack(ModItems.SilverWire, 8), new Ingredient[]{
+		RegisterHelper.addShapelessRecipe("StaticPower_silverWire", "StaticPower", new ItemStack(ModItems.SilverWire, 4), new Ingredient[]{
 				Ingredient.fromStacks(new ItemStack(ModItems.WireCutters, 1, OreDictionary.WILDCARD_VALUE)), new OreIngredient("ingotSilver")});
-		RegisterHelper.addShapelessRecipe("StaticPower_goldWire", "StaticPower", new ItemStack(ModItems.GoldWire, 8), new Ingredient[]{
+		RegisterHelper.addShapelessRecipe("StaticPower_goldWire", "StaticPower", new ItemStack(ModItems.GoldWire, 4), new Ingredient[]{
 				Ingredient.fromStacks(new ItemStack(ModItems.WireCutters, 1, OreDictionary.WILDCARD_VALUE)), Ingredient.fromItem(Items.GOLD_INGOT)});
 		
 		//Plates ---------------------------------------------------------------------------------------------------------
