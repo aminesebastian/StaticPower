@@ -2,8 +2,11 @@ package theking530.staticpower.client.gui.widgets.tabs;
 
 import org.lwjgl.opengl.GL11;
 
-import api.gui.BaseGuiTab;
-import api.gui.ItemButton;
+import api.gui.IInteractableGui;
+import api.gui.button.BaseButton;
+import api.gui.button.ButtonManager;
+import api.gui.button.ItemButton;
+import api.gui.tab.BaseGuiTab;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -21,11 +24,13 @@ import theking530.staticpower.assists.utilities.RedstoneModeList.RedstoneMode;
 import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.tileentity.IRedstoneConfigurable;
 
-public class GuiRedstoneTab extends BaseGuiTab {
+public class GuiRedstoneTab extends BaseGuiTab implements IInteractableGui {
 
 	public TileEntity tileEntity;
 	private FontRenderer fontRenderer;
 
+	private ButtonManager buttonManager;
+	
 	public ItemButton ignoreRedstoneButton;
 	public ItemButton lowRedstoneButton;
 	public ItemButton highRedstoneButton;
@@ -35,29 +40,36 @@ public class GuiRedstoneTab extends BaseGuiTab {
 		fontRenderer = Minecraft.getMinecraft().fontRenderer;
 		tileEntity = te;
 		
-		ignoreRedstoneButton = new ItemButton(20, 20, Items.GUNPOWDER);
-		lowRedstoneButton = new ItemButton(20, 20, Items.REDSTONE);
-		highRedstoneButton = new ItemButton(20, 20, Item.getItemFromBlock(Blocks.REDSTONE_TORCH));
+		buttonManager = new ButtonManager(this);
+		
+		ignoreRedstoneButton = new ItemButton(Items.GUNPOWDER, 20, 20, 0, 0);
+		lowRedstoneButton = new ItemButton(Items.REDSTONE, 20, 20, 0, 0);
+		highRedstoneButton = new ItemButton(Item.getItemFromBlock(Blocks.REDSTONE_TORCH), 20, 20, 0, 0);
+		
+		buttonManager.registerButton(ignoreRedstoneButton);
+		buttonManager.registerButton(lowRedstoneButton);
+		buttonManager.registerButton(highRedstoneButton);
+		
+		if(tileEntity instanceof IRedstoneConfigurable) {
+			RedstoneMode currentMode = ((IRedstoneConfigurable)tileEntity).getRedstoneMode();
+			if(currentMode == RedstoneMode.Ignore) {
+				ignoreRedstoneButton.setToggled(true);
+			}else if(currentMode == RedstoneMode.Low) {
+				lowRedstoneButton.setToggled(true);
+			}else{
+				highRedstoneButton.setToggled(true);
+			}
+		}
 	}
 	@Override
 	public void drawExtra(int xPos, int yPos, float partialTicks) {
 		if(isOpen()) {
 			drawButtonBG(xPos, yPos-32);	
-			ignoreRedstoneButton.drawButton(xPos+25, yPos+30);
-			lowRedstoneButton.drawButton(xPos+55, yPos+30);
-			highRedstoneButton.drawButton(xPos+85, yPos+30);
+			ignoreRedstoneButton.setPosition(xPos+25, yPos+30);
+			lowRedstoneButton.setPosition(xPos+55, yPos+30);
+			highRedstoneButton.setPosition(xPos+85, yPos+30);
+			buttonManager.drawButtons();
 			drawText(xPos+5, yPos-35);
-			function();
-			ignoreRedstoneButton.updateMethod();
-			lowRedstoneButton.updateMethod();
-			highRedstoneButton.updateMethod();
-		}else{
-			ignoreRedstoneButton.TIMER = 0;
-			lowRedstoneButton.TIMER = 0;
-			highRedstoneButton.TIMER = 0;
-			ignoreRedstoneButton.CLICKED = false;
-			lowRedstoneButton.CLICKED = false;
-			highRedstoneButton.CLICKED = false;
 		}
 	}
 	public void drawText(int xPos, int yPos) {
@@ -104,34 +116,11 @@ public class GuiRedstoneTab extends BaseGuiTab {
 		GL11.glDisable(GL11.GL_BLEND);
 
 	}
-	public void function() {
-		if(tileEntity != null) {
-			if(tileEntity instanceof IRedstoneConfigurable) {
-				IRedstoneConfigurable entity = (IRedstoneConfigurable)tileEntity;		
-				if(ignoreRedstoneButton.CLICKED) {
-					entity.setRedstoneMode(RedstoneMode.Ignore);
-					IMessage msg = new PacketRedstoneTab(0, tileEntity.getPos());
-					PacketHandler.net.sendToServer(msg);
-				}
-				if(lowRedstoneButton.CLICKED) {
-					entity.setRedstoneMode(RedstoneMode.Low);	
-					IMessage msg = new PacketRedstoneTab(1, tileEntity.getPos());
-					PacketHandler.net.sendToServer(msg);
-				}
-				if(highRedstoneButton.CLICKED) {
-					entity.setRedstoneMode(RedstoneMode.High);	
-					IMessage msg = new PacketRedstoneTab(2, tileEntity.getPos());
-					PacketHandler.net.sendToServer(msg);
-				}	
-			}
-		}
-	}
-
 	@Override
 	protected void handleExtraMouseInteraction(int mouseX, int mouseY, int button) {
-		ignoreRedstoneButton.buttonMouseClick(mouseX, mouseY, button);
-		lowRedstoneButton.buttonMouseClick(mouseX, mouseY, button);
-		highRedstoneButton.buttonMouseClick(mouseX, mouseY, button);	
+		ignoreRedstoneButton.handleMouseInteraction(mouseX, mouseY, button);
+		lowRedstoneButton.handleMouseInteraction(mouseX, mouseY, button);
+		highRedstoneButton.handleMouseInteraction(mouseX, mouseY, button);	
 	}
 	@Override
 	protected void handleExtraKeyboardInteraction(char par1, int par2) {
@@ -140,5 +129,34 @@ public class GuiRedstoneTab extends BaseGuiTab {
 	@Override
 	protected void handleExtraClickMouseMove(int x, int y, int button, long time) {
 		
+	}
+	@Override
+	public void buttonPressed(BaseButton button) {
+		if(tileEntity != null) {
+			if(tileEntity instanceof IRedstoneConfigurable) {
+				
+				ignoreRedstoneButton.setToggled(false);
+				lowRedstoneButton.setToggled(false);
+				highRedstoneButton.setToggled(false);
+				button.setToggled(true);
+				
+				IRedstoneConfigurable entity = (IRedstoneConfigurable)tileEntity;		
+				if(ignoreRedstoneButton == button) {
+					entity.setRedstoneMode(RedstoneMode.Ignore);
+					IMessage msg = new PacketRedstoneTab(0, tileEntity.getPos());
+					PacketHandler.net.sendToServer(msg);
+				}
+				if(lowRedstoneButton == button) {
+					entity.setRedstoneMode(RedstoneMode.Low);	
+					IMessage msg = new PacketRedstoneTab(1, tileEntity.getPos());
+					PacketHandler.net.sendToServer(msg);
+				}
+				if(highRedstoneButton == button) {
+					entity.setRedstoneMode(RedstoneMode.High);	
+					IMessage msg = new PacketRedstoneTab(2, tileEntity.getPos());
+					PacketHandler.net.sendToServer(msg);
+				}	
+			}
+		}		
 	}	
 }

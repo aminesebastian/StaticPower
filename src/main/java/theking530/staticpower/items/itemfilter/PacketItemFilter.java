@@ -43,7 +43,6 @@ public class PacketItemFilter implements IMessage{
 	    	if(ctx.getServerHandler().player.getHeldItem(EnumHand.MAIN_HAND) != ItemStack.EMPTY && ctx.getServerHandler().player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof ItemFilter) {
 	    		ItemStack itemstack = ctx.getServerHandler().player.getHeldItem(EnumHand.MAIN_HAND);
 	    		if(itemstack.hasTagCompound()) {
-		    		System.out.println(itemstack.getTagCompound());
 	    			itemstack.getTagCompound().setBoolean("WHITE_LIST_MODE", message.WHITE_LIST_MODE);
 	    			itemstack.getTagCompound().setBoolean("MATCH_METADATA", message.MATCH_METADATA);
 	    			itemstack.getTagCompound().setBoolean("MATCH_NBT", message.MATCH_NBT);

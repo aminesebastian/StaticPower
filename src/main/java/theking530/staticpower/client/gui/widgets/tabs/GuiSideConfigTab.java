@@ -2,7 +2,7 @@ package theking530.staticpower.client.gui.widgets.tabs;
 
 import org.lwjgl.opengl.GL11;
 
-import api.gui.BaseGuiTab;
+import api.gui.tab.BaseGuiTab;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;

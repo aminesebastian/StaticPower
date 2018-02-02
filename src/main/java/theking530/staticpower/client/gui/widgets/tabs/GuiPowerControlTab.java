@@ -2,15 +2,17 @@ package theking530.staticpower.client.gui.widgets.tabs;
 
 import org.lwjgl.opengl.GL11;
 
-import api.gui.BaseGuiTab;
-import api.gui.ItemButton;
+import api.gui.IInteractableGui;
 import api.gui.TextField;
+import api.gui.button.BaseButton;
+import api.gui.button.ButtonManager;
+import api.gui.button.StandardButton;
+import api.gui.tab.BaseGuiTab;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import theking530.staticpower.assists.utilities.EnumTextFormatting;
 import theking530.staticpower.assists.utilities.GuiTextures;
@@ -18,25 +20,31 @@ import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.machines.BaseMachine;
 
-public class GuiPowerControlTab extends BaseGuiTab{
+public class GuiPowerControlTab extends BaseGuiTab implements IInteractableGui{
 	
-	public TileEntity TILE_ENTITY;
+	public BaseMachine TILE_ENTITY;
 	private FontRenderer FONT_RENDERER;
 
 	private int MIN_VALUE;
 	private TextField MIN_PERCENTAGE;
 	private int MAX_VALUE;
 	private TextField MAX_PERCENTAGE;
-	private ItemButton SET_PERCENTAGE;
+	private StandardButton SET_PERCENTAGE;
 	
-	public GuiPowerControlTab(int guiLeft, int guiTop, TileEntity te){
+	private ButtonManager buttonManager;
+	
+	public GuiPowerControlTab(int guiLeft, int guiTop, BaseMachine te){
 		super(guiLeft, guiTop, GuiTextures.PURPLE_TAB, ModItems.StaticWrench);
 		FONT_RENDERER = Minecraft.getMinecraft().fontRenderer;
 		TILE_ENTITY = te;
+	
+		buttonManager = new ButtonManager(this);
 		
 		MIN_PERCENTAGE = new TextField(30, 15);
 		MAX_PERCENTAGE = new TextField(30, 15);
-		SET_PERCENTAGE = new ItemButton(48, 20, null);
+		SET_PERCENTAGE = new StandardButton(48, 20, 0, 0);
+		
+		buttonManager.registerButton(SET_PERCENTAGE);
 	}
 	@Override
 	public void drawExtra(int xPos, int yPos, float partialTicks) {
@@ -45,19 +53,17 @@ public class GuiPowerControlTab extends BaseGuiTab{
 			MAX_PERCENTAGE.updateMethod();
 			MAX_PERCENTAGE.setMaxStringLength(3);		
 			MIN_PERCENTAGE.updateMethod();
-			SET_PERCENTAGE.updateMethod();
+			SET_PERCENTAGE.setPosition(xPos+40, yPos+67);
+			buttonManager.drawButtons();
 			MIN_PERCENTAGE.setMaxStringLength(3);
 			
-			SET_PERCENTAGE.drawButton(xPos+40, yPos+67);
+
 			MAX_PERCENTAGE.drawTextBox(xPos+60, yPos+25);
 			MIN_PERCENTAGE.drawTextBox(xPos+60, yPos+45);
 			function();
 			drawText(xPos, yPos);
 
-		}else{
-			SET_PERCENTAGE.TIMER = 0;
-			SET_PERCENTAGE.CLICKED = false;
-		}		
+		}	
 	}
 	public void drawText(int xPos, int yPos) {
 		String tabName = "Power Control";
@@ -90,8 +96,25 @@ public class GuiPowerControlTab extends BaseGuiTab{
 		GL11.glDisable(GL11.GL_BLEND);
 	}
 	public void function() {
-		BaseMachine entity = (BaseMachine)TILE_ENTITY;
+
+	}
+	@Override
+	public void handleExtraMouseInteraction(int x, int y, int button) {	
+		MAX_PERCENTAGE.mouseClicked(x, y, button);
+		MIN_PERCENTAGE.mouseClicked(x, y, button);
+		buttonManager.handleMouseInteraction(x, y, button);
+	}	
+	@Override
+	public void handleExtraKeyboardInteraction(char par1, int par2) {
+		MAX_PERCENTAGE.textboxKeyTyped(par1, par2);	
+		MIN_PERCENTAGE.textboxKeyTyped(par1, par2);	
+	}
+	@Override
+	protected void handleExtraClickMouseMove(int mouseX, int mouseY, int button, long time) {
 		
+	}
+	@Override
+	public void buttonPressed(BaseButton button) {
 		if(MAX_PERCENTAGE.getText() != null) {			
 			try { 
 				MAX_VALUE = Integer.valueOf(MAX_PERCENTAGE.getText().replaceFirst(".*?(\\d+).*", "$1"));				
@@ -102,26 +125,11 @@ public class GuiPowerControlTab extends BaseGuiTab{
 				MIN_VALUE = Integer.valueOf(MIN_PERCENTAGE.getText().replaceFirst(".*?(\\d+).*", "$1"));			
 			} catch(NumberFormatException e) {}				
 		}
-		if(SET_PERCENTAGE.CLICKED) {
-			entity.minPowerThreshold = MIN_VALUE;
-			entity.maxPowerThreshold = MAX_VALUE;
+		if(SET_PERCENTAGE == button) {
+			TILE_ENTITY.minPowerThreshold = MIN_VALUE;
+			TILE_ENTITY.maxPowerThreshold = MAX_VALUE;
 			IMessage msg = new PacketPowerControlTab(MAX_VALUE, MIN_VALUE, TILE_ENTITY.getPos());
 			PacketHandler.net.sendToServer(msg);	
 		}
-	}
-	@Override
-	public void handleExtraMouseInteraction(int x, int y, int button) {	
-		MAX_PERCENTAGE.mouseClicked(x, y, button);
-		MIN_PERCENTAGE.mouseClicked(x, y, button);
-		SET_PERCENTAGE.buttonMouseClick(x, y, button);
-	}	
-	@Override
-	public void handleExtraKeyboardInteraction(char par1, int par2) {
-		MAX_PERCENTAGE.textboxKeyTyped(par1, par2);	
-		MIN_PERCENTAGE.textboxKeyTyped(par1, par2);	
-	}
-	@Override
-	protected void handleExtraClickMouseMove(int mouseX, int mouseY, int button, long time) {
-		
 	}
 }

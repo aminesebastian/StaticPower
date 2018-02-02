@@ -2,6 +2,7 @@ package theking530.staticpower.client.gui;
 
 import java.io.IOException;
 
+import api.gui.tab.GuiTabManager;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -10,7 +11,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.math.Vec3i;
 import theking530.staticpower.assists.utilities.GuiUtilities;
-import theking530.staticpower.client.gui.widgets.GuiTabManager;
 
 public abstract class BaseGuiContainer extends GuiContainer {
 

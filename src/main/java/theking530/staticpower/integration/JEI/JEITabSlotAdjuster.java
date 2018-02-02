@@ -7,7 +7,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import api.RectangleBounds;
-import api.gui.BaseGuiTab;
+import api.gui.tab.BaseGuiTab;
 import mezz.jei.api.gui.IAdvancedGuiHandler;
 import theking530.staticpower.client.gui.BaseGuiContainer;
 

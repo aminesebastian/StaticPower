@@ -79,7 +79,7 @@ public class ItemFilter extends ItemBase {
 			if(filter.getTagCompound().hasKey("MATCH_ORE_DICT")) {
 				matchOreDict = filter.getTagCompound().getBoolean("MATCH_ORE_DICT");
 			}
-			return ItemUtilities.filterItems(slots, itemstack, whitelist, matchMetadata, matchNBT, matchOreDict);
+			return ItemUtilities.filterItems(slots, itemstack, whitelist, matchMetadata, matchNBT, matchOreDict, false);
 		}
 		return false;
 	}

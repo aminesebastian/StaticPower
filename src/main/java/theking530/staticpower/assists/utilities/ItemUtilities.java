@@ -17,11 +17,13 @@ public class ItemUtilities {
 	public static boolean showHiddenTooltips() {
 		return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
 	}
-	public static boolean filterItems(List<ItemStack> filterItems, ItemStack itemToCheck, boolean whitelist, boolean matchMetadata, boolean matchNBT, boolean matchOreDict) {
+	public static boolean filterItems(List<ItemStack> filterItems, ItemStack itemToCheck, boolean whitelist, boolean matchMetadata, boolean matchNBT, boolean matchOreDict, boolean matchMod) {
 		boolean match = false;
-
+		if(itemToCheck.isEmpty()) {
+			return false;
+		}
 		for(int i=0; i<filterItems.size(); i++) {
-			if(filterItems.get(i) != ItemStack.EMPTY) {
+			if(!filterItems.get(i).isEmpty()) {
 				if(ItemStack.areItemsEqual(filterItems.get(i), itemToCheck)) {					
 					match =  true;
 				}
@@ -29,7 +31,7 @@ public class ItemUtilities {
 		}
 		if(!match && matchMetadata) {
 			for(int i=0; i<filterItems.size(); i++) {
-				if(filterItems.get(i) != ItemStack.EMPTY) {
+				if(!filterItems.get(i).isEmpty()) {
 					if(ItemStack.areItemsEqualIgnoreDurability(filterItems.get(i), itemToCheck)) {
 						match = true;
 						break;
@@ -39,8 +41,18 @@ public class ItemUtilities {
 		}
 		if(!match && matchNBT) {
 			for(int i=0; i<filterItems.size(); i++) {
-				if(filterItems.get(i) != ItemStack.EMPTY) {
+				if(!filterItems.get(i).isEmpty()) {
 					if(filterItems.get(i).hasTagCompound() && itemToCheck.hasTagCompound() && ItemStack.areItemStackTagsEqual(filterItems.get(i), itemToCheck)) {	
+						match = true;
+						break;
+					}
+				}
+			}
+		}
+		if(!match && matchMod) {
+			for(int i=0; i<filterItems.size(); i++) {
+				if(!filterItems.get(i).isEmpty()) {
+					if(filterItems.get(i).getItem().getRegistryName().getResourceDomain() == itemToCheck.getItem().getRegistryName().getResourceDomain()) {	
 						match = true;
 						break;
 					}
