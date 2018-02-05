@@ -49,7 +49,7 @@ public class ItemFilter extends ItemBase {
 		super.onCreated(item, world, player);
 	}
 	public boolean evaluateFilter(ItemStack filter, ItemStack itemstack) {
-		int slotCount = getSlotCount();
+		int slotCount = filterTier.getSlotCount();
 		List<ItemStack> slots = new ArrayList<ItemStack>();
 		
 		if(filter.hasTagCompound()) {
@@ -83,16 +83,13 @@ public class ItemFilter extends ItemBase {
 		}
 		return false;
 	}
-	public int getSlotCount() {
-		return filterTier == FilterTier.BASIC ? 4 : filterTier == FilterTier.UPGRADED ? 8 : 10;
-	}
 	@Override
 	public int getMaxItemUseDuration(ItemStack stack) {
 		return 1; 
 	}
 	@Override  
 	public void addInformation(ItemStack itemstack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn) {
-		int slotCount = getSlotCount();
+		int slotCount = filterTier.getSlotCount();
 		ItemStack[] slots = new ItemStack[slotCount];
 		
 		if(itemstack.hasTagCompound()) {

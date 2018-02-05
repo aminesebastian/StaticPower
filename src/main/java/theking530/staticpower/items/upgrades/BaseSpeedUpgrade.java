@@ -17,7 +17,7 @@ public class BaseSpeedUpgrade extends BaseUpgrade implements IMachineUpgrade{
 	public  BaseSpeedUpgrade(String name, Tier tier){
 		super(name, tier);
 		switch(tier) {
-		case BASE:
+		case BASIC:
 			SPEED = (1.05f/maxStackSize);
 			POWER_MULT = (1.25f/maxStackSize);
 			break;

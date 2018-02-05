@@ -6,11 +6,13 @@ import java.util.List;
 import java.util.Locale;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import theking530.staticpower.assists.utilities.GuiTextures;
+import theking530.staticpower.assists.GuiTextures;
+import theking530.staticpower.assists.utilities.GuiUtilities;
 
 public class GuiPowerBar {
 	
@@ -36,6 +38,8 @@ public class GuiPowerBar {
 		float k1 = u1 * height;
 		float glowState = getGlow(deltaTime);
 		
+		Gui.drawRect(xpos, ypos, xpos + width, ypos-height, GuiUtilities.getColor(15, 15, 15));
+		
 		Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder vertexbuffer = tessellator.getBuffer();
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.POWER_BAR);
@@ -47,11 +51,13 @@ public class GuiPowerBar {
 		vertexbuffer.pos(xpos, ypos, zLevel).tex(0,0).endVertex();	
 		GlStateManager.color(1.0f, 1.0f, 1.0f);
 		tessellator.draw();
+
+
 	}
 	private static float getGlow(float deltaTime) {
 		WORLD_TIME += deltaTime;
 		float sin = (float)(Math.sin(WORLD_TIME*GLOW_SCALE_RATE));
-		sin = (sin + 10)/20;
+		sin = (sin + 5)/5;
 
 		return Math.min(sin, 1);
 	}

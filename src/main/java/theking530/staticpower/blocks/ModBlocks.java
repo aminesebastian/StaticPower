@@ -5,10 +5,8 @@ import net.minecraft.block.material.Material;
 import net.minecraftforge.oredict.OreDictionary;
 import theking530.staticpower.Registry;
 import theking530.staticpower.assists.Tier;
-import theking530.staticpower.blocks.decorative.EnergizedLamp;
-import theking530.staticpower.blocks.decorative.LumumLamp;
+import theking530.staticpower.blocks.decorative.Lamp;
 import theking530.staticpower.blocks.decorative.ObsidianGlass;
-import theking530.staticpower.blocks.decorative.StaticLamp;
 import theking530.staticpower.conduits.fluidconduit.BlockFluidConduit;
 import theking530.staticpower.conduits.itemconduit.BlockItemConduit;
 import theking530.staticpower.conduits.staticconduit.BlockStaticConduit;
@@ -196,7 +194,7 @@ public class ModBlocks {
 		VacuumChest = new BlockVacuumChest("VacuumChest").setUnlocalizedName("VacuumChest").setHardness(3.5f);
 		registry.PreRegisterBlock(VacuumChest);
 		
-		BasicBattery = new BlockBattery("BasicBattery", Tier.BASE).setHardness(3.5f);
+		BasicBattery = new BlockBattery("BasicBattery", Tier.BASIC).setHardness(3.5f);
 		registry.PreRegisterBlock(BasicBattery);
 		StaticBattery = new BlockBattery("StaticBattery", Tier.STATIC).setHardness(3.5f);
 		registry.PreRegisterBlock(StaticBattery);	
@@ -259,7 +257,7 @@ public class ModBlocks {
 		SolderingTable = new BlockSolderingTable().setUnlocalizedName("SolderingTable").setHardness(3.5f);
 		registry.PreRegisterBlock(SolderingTable);
 		
-		BasicSolarPanel = new BlockSolarPanel("BasicSolarPanel", Tier.BASE).setHardness(3.5f);
+		BasicSolarPanel = new BlockSolarPanel("BasicSolarPanel", Tier.BASIC).setHardness(3.5f);
 		registry.PreRegisterBlock(BasicSolarPanel);
 		StaticSolarPanel = new BlockSolarPanel("StaticSolarPanel", Tier.STATIC).setHardness(3.5f);
 		registry.PreRegisterBlock(StaticSolarPanel);
@@ -270,11 +268,11 @@ public class ModBlocks {
 		CreativeSolarPanel = new BlockSolarPanel("CreativeSolarPanel", Tier.CREATIVE).setHardness(3.5f);
 		registry.PreRegisterBlock(CreativeSolarPanel);
 		
-		StaticLamp = new StaticLamp(Material.GLASS).setUnlocalizedName("StaticLamp");
+		StaticLamp = new Lamp("StaticLamp").setUnlocalizedName("StaticLamp");
 		registry.PreRegisterBlock(StaticLamp);		
-		EnergizedLamp = new EnergizedLamp(Material.GLASS).setUnlocalizedName("EnergizedLamp");
+		EnergizedLamp = new Lamp("EnergizedLamp").setUnlocalizedName("EnergizedLamp");
 		registry.PreRegisterBlock(EnergizedLamp);		
-		LumumLamp = new LumumLamp(Material.GLASS).setUnlocalizedName("LumumLamp");
+		LumumLamp = new Lamp("LumumLamp").setUnlocalizedName("LumumLamp");
 		registry.PreRegisterBlock(LumumLamp);	
 		
 		StaticBlock = new BaseBlock(Material.IRON, "StaticBlock");
@@ -302,16 +300,15 @@ public class ModBlocks {
 		BlockRuby = new BaseBlock(Material.IRON, "BlockRuby");
 		registry.PreRegisterBlock(BlockRuby);
 		
-		
-		StaticGrass = new StaticGrass(Material.GRASS).setUnlocalizedName("StaticGrass");
+		StaticGrass = new StaticGrass();
 		registry.PreRegisterBlock(StaticGrass);	
-		EnergizedGrass = new EnergizedGrass(Material.GRASS).setUnlocalizedName("EnergizedGrass");
+		EnergizedGrass = new EnergizedGrass();
 		registry.PreRegisterBlock(EnergizedGrass);
 		
 		MachineBlock = new BaseBlock(Material.IRON, "MachineBlock");
 		registry.PreRegisterBlock(MachineBlock);
 	
-		ObsidianGlass = new ObsidianGlass(Material.GLASS);
+		ObsidianGlass = new ObsidianGlass();
 		registry.PreRegisterBlock(ObsidianGlass);
 	
 		AdvancedEarth = new AdvancedEarth().setUnlocalizedName("AdvancedEarth").setHardness(3.5f);

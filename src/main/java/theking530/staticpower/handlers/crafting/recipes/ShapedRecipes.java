@@ -87,8 +87,6 @@ public class ShapedRecipes {
 		'X', ingredientFromItem(ModItems.EnergizedNugget)});
 		RegisterHelper.addShapedRecipe("StaticPower_lumumIngot", "StaticPower", new ItemStack(ModItems.LumumIngot), new Object[]{"XXX","XXX","XXX",
 		'X', ingredientFromItem(ModItems.LumumNugget)});
-		RegisterHelper.addShapedRecipe("StaticPower_ironIngot", "StaticPower", new ItemStack(Items.IRON_INGOT), new Object[]{"XXX","XXX","XXX",
-		'X', ingredientFromItem(ModItems.IronNugget)});
 		
 		//Coils ------------------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_copperCoil", "StaticPower", new ItemStack(ModItems.CopperCoil), new Object[]{"XXX","XSX","XXX",

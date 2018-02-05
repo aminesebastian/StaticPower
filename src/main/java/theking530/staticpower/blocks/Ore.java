@@ -3,7 +3,6 @@ package theking530.staticpower.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.assists.RegisterHelper;
 
 public class Ore extends Block{
 	
@@ -13,6 +12,5 @@ public class Ore extends Block{
 		setUnlocalizedName(name);	
 		setRegistryName(name);
 		setHarvestLevel(tool, level);
-		//RegisterHelper.registerItem(new BaseItemBlock(this, name));
 	}
 }

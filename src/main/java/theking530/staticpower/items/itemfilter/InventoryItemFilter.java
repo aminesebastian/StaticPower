@@ -10,66 +10,61 @@ import net.minecraftforge.common.util.Constants;
 
 public class InventoryItemFilter implements IInventory {
 	
-	public final ItemStack ITEMSTACK;
+	public final ItemStack owningItemStack;
 	private ItemStack[] slots;
-	private boolean WHITE_LIST_MODE = true;
-    private boolean MATCH_METADATA = false;
-    private boolean MATCH_NBT = false;
-    private boolean MATCH_ORE_DICT = false;
-	private FilterTier TIER;
+	private boolean whiteListMode = true;
+    private boolean checkMetadata = false;
+    private boolean checkNBT = false;
+    private boolean checkOreDictionary = false;
+    private boolean checkModDomain = false;
+	private FilterTier filterTier;
 		
 	public InventoryItemFilter(ItemStack stack, FilterTier tier) {
-		ITEMSTACK = stack;
+		owningItemStack = stack;
 		if (!stack.hasTagCompound()) {
 			stack.setTagCompound(new NBTTagCompound());
 		}
-		TIER = tier;
-		switch(TIER) {
-			case BASIC:
-				slots = new ItemStack[4];
-				break;
-			case UPGRADED:
-				slots = new ItemStack[8];
-				break;
-			case ADVANCED:
-				slots = new ItemStack[10];
-				break;
-			default:
-				slots = new ItemStack[10];
-				break;
-		}
+		filterTier = tier;
+
+		slots = new ItemStack[filterTier.getSlotCount()+1];
 		for(int i=0; i<slots.length; i++) {
 			slots[i] = ItemStack.EMPTY;
 		}
 		readFromNBT(stack.getTagCompound());
-	
 	}
-	public void getMatchMetadata(boolean mode) {
-		MATCH_METADATA = mode;
+	public FilterTier getFilterTier() {
+		return filterTier;
+	}
+	public void setMatchMetadata(boolean mode) {
+		checkMetadata = mode;
 	}
 	public boolean getMatchMetadata() {
-		return MATCH_METADATA;
+		return checkMetadata;
 	}
-	
 	public void setMatchNBT(boolean mode) {
-		MATCH_NBT = mode;
+		checkNBT = mode;
 	}
 	public boolean getMatchNBT() {
-		return MATCH_NBT;
+		return checkNBT;
 	}
 	
 	public void setMatchOreDictionary(boolean mode) {
-		MATCH_ORE_DICT = mode;
+		checkOreDictionary = mode;
 	}
 	public boolean getMatchOreDictionary() {
-		return MATCH_ORE_DICT;
+		return checkOreDictionary;
 	}
-	
+	public void setMatchModeID(boolean mode) {
+		checkModDomain = mode;
+	}
+	public boolean getMatchModID() {
+		return checkModDomain;
+	}
 	public void setWhiteListMode(boolean mode) {
-		WHITE_LIST_MODE = mode;
+		whiteListMode = mode;
 	}
 	public boolean getWhiteListMode() {
-		return WHITE_LIST_MODE;
+		return whiteListMode;
 	}
 	
 	@Override
@@ -78,12 +73,12 @@ public class InventoryItemFilter implements IInventory {
 	}
 	public void readFromNBT(NBTTagCompound compound){
 		NBTTagList items = compound.getTagList("ItemInventory", Constants.NBT.TAG_COMPOUND);
-		WHITE_LIST_MODE = compound.getBoolean("WHITE_LIST_MODE");
-		MATCH_METADATA = compound.getBoolean("MATCH_METADATA");
-		MATCH_NBT = compound.getBoolean("MATCH_NBT");
-		MATCH_ORE_DICT = compound.getBoolean("MATCH_ORE_DICT");
+		whiteListMode = compound.getBoolean("WHITE_LIST_MODE");
+		checkMetadata = compound.getBoolean("MATCH_METADATA");
+		checkNBT = compound.getBoolean("MATCH_NBT");
+		checkOreDictionary = compound.getBoolean("MATCH_ORE_DICT");
 		
-		TIER = FilterTier.values()[compound.getInteger("TIER")];
+		//filterTier = FilterTier.values()[compound.getInteger("TIER")];
 		for (int i = 0; i < items.tagCount(); ++i){
 			NBTTagCompound item = (NBTTagCompound) items.getCompoundTagAt(i);
 			int slot = item.getInteger("Slot");
@@ -102,12 +97,12 @@ public class InventoryItemFilter implements IInventory {
 				items.appendTag(item);
 			}
 		}
-		tagcompound.setInteger("TIER", TIER.ordinal());
+		//tagcompound.setInteger("TIER", filterTier.ordinal());
 		tagcompound.setTag("ItemInventory", items);
-		tagcompound.setBoolean("WHITE_LIST_MODE", WHITE_LIST_MODE);
-		tagcompound.setBoolean("MATCH_METADATA", MATCH_METADATA);
-		tagcompound.setBoolean("MATCH_NBT", MATCH_NBT);
-		tagcompound.setBoolean("MATCH_ORE_DICT", MATCH_ORE_DICT);
+		tagcompound.setBoolean("WHITE_LIST_MODE", whiteListMode);
+		tagcompound.setBoolean("MATCH_METADATA", checkMetadata);
+		tagcompound.setBoolean("MATCH_NBT", checkNBT);
+		tagcompound.setBoolean("MATCH_ORE_DICT", checkOreDictionary);
 	}
 	@Override
 	public int getSizeInventory() {
@@ -149,11 +144,23 @@ public class InventoryItemFilter implements IInventory {
 				slots[i] = ItemStack.EMPTY;
 			}
 		}		
-		writeToNBT(ITEMSTACK.getTagCompound());
+		writeToNBT(owningItemStack.getTagCompound());
 	}
 	@Override
 	public String getName() {
-		return "container.ItemFilter";
+		String name = "ItemFilter";
+		switch(filterTier) {
+		case BASIC:
+			name = "BasicItemFilter";
+			break;
+		case UPGRADED:
+			name = "UpgradedItemFilter";
+			break;
+		case ADVANCED:
+			name = "AdvancedItemFilter";
+			break;
+		}
+		return "container." + name;
 	}
 	@Override
 	public boolean hasCustomName() {

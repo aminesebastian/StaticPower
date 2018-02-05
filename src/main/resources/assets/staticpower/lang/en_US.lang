@@ -77,6 +77,9 @@ item.LumumTankUpgrade.name=Lumum Tank Upgrade
 item.LumumQuarryingUpgrade.name=Lumum Quarrying Upgrade
 item.LumumRangeUpgrade.name=Lumum Range Upgrade
 item.CreativeSpeedUpgrade.name=Creative Speed Upgrade
+item.TeleportUpgrade.name=Teleport Upgrade
+item.ExperienceVacuumUpgrade.name=Experience Vacuum Upgrade
+
 item.BasicUpgradePlate.name=Basic Upgrade Plate
 item.StaticUpgradePlate.name=Static Upgrade Plate
 item.EnergizedUpgradePlate.name=Energized Upgrade Plate
@@ -236,6 +239,7 @@ tile.Mash.name=Mash
 fluid.Mash=Mash
 tile.EvaporatedMash.name=Evaporated Mash
 fluid.EvaporatedMash=Evaporated Mash
+fluid.LiquidExperience=Liquid Experience
 
 //Gates
 tile.SignalMultiplier.name=Redstone Transducer
@@ -258,6 +262,8 @@ item.InvertedLogicGatePowerSync.name=Inverted Gate Power Sync
 item.LogicGateServo.name=Gate Servo
 item.Diode.name=Diode
 item.Transistor.name=Transistor
+item.MemoryChip.name=Memory Chip
+item.Silicon.name=Silicon
 item.InternalClock.name=Internal Clock
 tile.LogicGateBasePlate.name=Logic Gate Base Plate
 
@@ -285,6 +291,10 @@ container.IndustrialGrinder=Industrial Grinder
 container.SolderingTable=Soldering Table
 container.VacuumChest=Vacuum Chest
 container.Fermenter=Fermenter
+
+container.BasicItemFilter=Basic Item Filter
+container.UpgradedItemFilter=Upgraded Item Filter
+container.AdvancedItemFilter=Advanced Item Filter
 
 //Tools
 item.StaticWrench.name=Static Wrench

@@ -119,8 +119,6 @@ public class ShaplessRecipes {
 				Ingredient.fromItem(ModItems.EnergizedIngot)});
 		RegisterHelper.addShapelessRecipe("StaticPower_lumumNugget", "StaticPower", new ItemStack(ModItems.LumumNugget, 9), new Ingredient[]{
 				Ingredient.fromItem(ModItems.LumumIngot)});
-		RegisterHelper.addShapelessRecipe("StaticPower_ironNugget", "StaticPower", new ItemStack(ModItems.IronNugget, 9), new Ingredient[]{
-				Ingredient.fromItem(Items.IRON_INGOT)});
 		//Static Planks --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapelessRecipe("StaticPower_staticPlanks", "StaticPower", new ItemStack(Item.getItemFromBlock(ModBlocks.StaticPlanks), 4), new Ingredient[]{
 			Ingredient.fromItem(Item.getItemFromBlock(ModBlocks.StaticWood))});

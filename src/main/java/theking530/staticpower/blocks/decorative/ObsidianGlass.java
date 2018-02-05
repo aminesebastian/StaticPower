@@ -8,13 +8,11 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.assists.RegisterHelper;
-import theking530.staticpower.blocks.BaseItemBlock;
 
 public class ObsidianGlass extends Block{
 
-	public ObsidianGlass(Material material) {
-		super(material.GLASS);
+	public ObsidianGlass() {
+		super(Material.GLASS);
 		setCreativeTab(StaticPower.StaticPower);
 		setUnlocalizedName("ObsidianGlass");	
 		setRegistryName("ObsidianGlass");

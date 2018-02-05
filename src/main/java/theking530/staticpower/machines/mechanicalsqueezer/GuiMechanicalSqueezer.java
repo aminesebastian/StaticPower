@@ -1,11 +1,9 @@
 	package theking530.staticpower.machines.mechanicalsqueezer;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import theking530.staticpower.assists.utilities.GuiTextures;
+import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.client.gui.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
@@ -28,19 +26,12 @@ public class GuiMechanicalSqueezer extends BaseGuiContainer{
 		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teCropSqueezer));
 	}
 	public void drawScreen(int par1, int par2, float par3) {
-		super.drawScreen(par1, par2, par3);
-		
-		this.zLevel = -1.0f;
-		this.drawDefaultBackground();	
-		this.zLevel = 0.0f;
-
-		
+		super.drawScreen(par1, par2, par3);		
 		int var1 = (this.width - this.xSize) / 2;
 		int var2 = (this.height - this.ySize) / 2;
 		if(par1 >= 30 + var1 && par2 >= 8 + var2 && par1 <= 46 + var1 && par2 <= 68 + var2) {	
 			drawHoveringText(FLUIDBAR.drawText(), par1, par2, fontRenderer); 
 		} 
-		this.renderHoveredToolTip(par1, par2);
 	}
 
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
@@ -50,8 +41,7 @@ public class GuiMechanicalSqueezer extends BaseGuiContainer{
 	}
 	
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+	protected void drawExtra(float f, int i, int j) {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.MSQUEEZER_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		int j1 = cSqueezer.getProgressScaled(15);
@@ -59,9 +49,6 @@ public class GuiMechanicalSqueezer extends BaseGuiContainer{
 		drawTexturedModalRect(guiLeft + 107, guiTop + 34, 198, 71, 14, 1+j1);
 
 		FLUIDBAR.drawFluidBar(guiLeft + 30, guiTop + 68, 16, 60, this.zLevel);
-		
-		
-        getTabManager().drawTabs(guiLeft+175, guiTop+10, width, height, f);
 	}
 }
 

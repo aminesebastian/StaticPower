@@ -11,7 +11,6 @@ import net.minecraft.item.Item;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.assists.RegisterHelper;
 
 public class GemOre extends Block{
 	

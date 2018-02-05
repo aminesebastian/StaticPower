@@ -14,8 +14,8 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.assists.utilities.EnumTextFormatting;
-import theking530.staticpower.assists.utilities.GuiTextures;
 import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.machines.BaseMachine;
@@ -54,7 +54,7 @@ public class GuiPowerControlTab extends BaseGuiTab implements IInteractableGui{
 			MAX_PERCENTAGE.setMaxStringLength(3);		
 			MIN_PERCENTAGE.updateMethod();
 			SET_PERCENTAGE.setPosition(xPos+40, yPos+67);
-			buttonManager.drawButtons();
+			buttonManager.drawButtons(xPos, yPos);
 			MIN_PERCENTAGE.setMaxStringLength(3);
 			
 
@@ -81,7 +81,6 @@ public class GuiPowerControlTab extends BaseGuiTab implements IInteractableGui{
 		this.FONT_RENDERER.drawStringWithShadow(buttonText, xPos+46, yPos+73, 16777215);
 	}
 	public void drawButtonBG(int xPos, int yPos) {
-		int height = -40;
 		GL11.glEnable(GL11.GL_BLEND);
 		Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder vertexbuffer = tessellator.getBuffer();

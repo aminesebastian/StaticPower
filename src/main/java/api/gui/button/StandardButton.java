@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import theking530.staticpower.assists.utilities.GuiTextures;
+import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.assists.utilities.StaticVertexBuffer;
 
 public class StandardButton extends BaseButton{
@@ -23,12 +23,14 @@ public class StandardButton extends BaseButton{
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder tes = tessellator.getBuffer();
         tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-
+        
 		if(isClicked() || isHovered() || isToggled()) {
 			Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.BUTTON_HOVER);
 		}else{
 			Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.BUTTON);
 		}	
+		
+		GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		//Top
 		StaticVertexBuffer.pos(buttonLeft+width, buttonTop+3, 0, 0, .15);
 		StaticVertexBuffer.pos(buttonLeft+width, buttonTop, 0, 0, 0);

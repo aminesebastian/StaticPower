@@ -23,29 +23,9 @@ public class ItemUtilities {
 			return false;
 		}
 		for(int i=0; i<filterItems.size(); i++) {
-			if(!filterItems.get(i).isEmpty()) {
-				if(ItemStack.areItemsEqual(filterItems.get(i), itemToCheck)) {					
+			if(!filterItems.get(i).isEmpty() && !itemToCheck.isEmpty()) {
+				if(filterItems.get(i).getItem() ==  itemToCheck.getItem()) {					
 					match =  true;
-				}
-			}
-		}
-		if(!match && matchMetadata) {
-			for(int i=0; i<filterItems.size(); i++) {
-				if(!filterItems.get(i).isEmpty()) {
-					if(ItemStack.areItemsEqualIgnoreDurability(filterItems.get(i), itemToCheck)) {
-						match = true;
-						break;
-					}
-				}
-			}
-		}
-		if(!match && matchNBT) {
-			for(int i=0; i<filterItems.size(); i++) {
-				if(!filterItems.get(i).isEmpty()) {
-					if(filterItems.get(i).hasTagCompound() && itemToCheck.hasTagCompound() && ItemStack.areItemStackTagsEqual(filterItems.get(i), itemToCheck)) {	
-						match = true;
-						break;
-					}
 				}
 			}
 		}
@@ -74,6 +54,29 @@ public class ItemUtilities {
 					}
 				}
 			}			
+		}
+		
+		if(match && matchMetadata) {
+			match = false;
+			for(int i=0; i<filterItems.size(); i++) {
+				if(!filterItems.get(i).isEmpty()) {
+					if(ItemStack.areItemsEqual(filterItems.get(i), itemToCheck)) {
+						match = true;
+						break;
+					}
+				}
+			}
+		}
+		if(match && matchNBT) {
+			match = false;
+			for(int i=0; i<filterItems.size(); i++) {
+				if(!filterItems.get(i).isEmpty()) {
+					if(filterItems.get(i).hasTagCompound() && itemToCheck.hasTagCompound() && ItemStack.areItemStackTagsEqual(filterItems.get(i), itemToCheck)) {	
+						match = true;
+						break;
+					}
+				}
+			}
 		}
 		if(match) {
 			return whitelist ? true : false;

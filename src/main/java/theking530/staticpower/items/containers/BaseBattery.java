@@ -13,25 +13,27 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.items.BasePoweredItem;
 
 public class BaseBattery extends BasePoweredItem { 
 	
-	public BaseBattery(String name, int capacity, int powerDivisor) {
-		super(name, capacity, powerDivisor);
+	public BaseBattery(String name, int capacity) {
+		super(name, capacity, capacity/50);
 		setMaxStackSize(1);
 	}
     @SideOnly(Side.CLIENT)
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-
-    	ItemStack emptyBattery = new ItemStack(this); 
-    	emptyBattery.setItemDamage(getMaxEnergyStored(emptyBattery)/DAMAGE_DIVISOR);
-    	items.add(emptyBattery);
-        
-        ItemStack filledBattery = new ItemStack(this);     
-        this.setEnergy(filledBattery, capacity);
-        items.add(filledBattery);
+    	if(tab == StaticPower.StaticPower) {
+	    	ItemStack emptyBattery = new ItemStack(this); 
+	    	emptyBattery.setItemDamage(getMaxEnergyStored(emptyBattery)/damageDivisor);
+	    	items.add(emptyBattery);
+	        
+	        ItemStack filledBattery = new ItemStack(this);     
+	        this.setEnergy(filledBattery, capacity);
+	        items.add(filledBattery);
+    	}
     }
 	
 	@Override  

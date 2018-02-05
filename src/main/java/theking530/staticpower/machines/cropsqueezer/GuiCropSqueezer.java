@@ -1,11 +1,9 @@
 	package theking530.staticpower.machines.cropsqueezer;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import theking530.staticpower.assists.utilities.GuiTextures;
+import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.client.gui.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
@@ -48,22 +46,13 @@ public class GuiCropSqueezer extends BaseGuiContainer {
 	}
 	
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
-		this.zLevel = -1.0f;
-		this.drawDefaultBackground();	
-		this.zLevel = 0.0f;
-		
-		
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+	protected void drawExtra(float f, int i, int j) {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.SQUEEZER_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		int j1 = cSqueezer.getProgressScaled(15);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.MSQUEEZER_GUI);
 		drawTexturedModalRect(guiLeft + 107, guiTop + 33, 198, 71, 14, 1+j1);
-			
-		
-        getTabManager().drawTabs(guiLeft+194, guiTop+10, width, height, f);
-		
+
 		POWERBAR.drawPowerBar(guiLeft + 50, guiTop + 68, 6, 60, this.zLevel, f);
 		FLUIDBAR.drawFluidBar(guiLeft + 30, guiTop + 68, 16, 60, this.zLevel);
 	}

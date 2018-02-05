@@ -18,7 +18,7 @@ public class BasePowerUpgrade  extends BaseUpgrade implements IMachineUpgrade{
 	public  BasePowerUpgrade(String name, Tier tier){
 		super(name, tier);
 		switch(tier) {
-		case BASE:
+		case BASIC:
 			CAPACITY = (1.25f/maxStackSize);
 			TICK_UPGRADE = (2.0f/maxStackSize);
 			break;

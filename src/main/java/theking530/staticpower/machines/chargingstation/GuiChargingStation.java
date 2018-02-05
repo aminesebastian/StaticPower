@@ -5,12 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import theking530.staticpower.assists.utilities.GuiTextures;
+import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.client.gui.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
@@ -34,10 +32,6 @@ public class GuiChargingStation extends BaseGuiContainer {
 	public void drawScreen(int par1, int par2, float par3) {
     	super.drawScreen(par1, par2, par3);
     	
-		this.zLevel = -1.0f;
-		this.drawDefaultBackground();	
-		this.zLevel = 0.0f;
-
     	int var1 = (this.width - this.xSize) / 2;
         int var2 = (this.height - this.ySize) / 2;  
         if(par1 >= 8 + var1 && par2 >= 8 + var2 && par1 <= 24 + var1 && par2 <= 68 + var2) {
@@ -49,7 +43,6 @@ public class GuiChargingStation extends BaseGuiContainer {
         	List<String> temp = Arrays.asList(splitMsg);
         	drawHoveringText(temp, par1, par2, fontRenderer); 
         }
-		this.renderHoveredToolTip(par1, par2);
 	}	
 
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
@@ -61,15 +54,12 @@ public class GuiChargingStation extends BaseGuiContainer {
 	}
 	
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+	protected void drawExtra(float f, int i, int j) {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.CHARGING_STATION_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		//Progress Bar
 		int j1 = C_STATION.getProgressScaled(24);
 		drawTexturedModalRect(guiLeft + 73, guiTop + 32, 176, 69, j1, 14);	
-		//Tabs		
-        getTabManager().drawTabs(guiLeft+175, guiTop+10, width, height, f);
 		//Energy Bar
 		POWER_BAR.drawPowerBar(guiLeft + 8, guiTop + 68, 16, 60, 1, f);
 	}

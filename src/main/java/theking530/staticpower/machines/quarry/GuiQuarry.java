@@ -7,7 +7,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import theking530.staticpower.assists.utilities.GuiTextures;
+import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.assists.utilities.GuiUtilities;
 import theking530.staticpower.assists.utilities.WorldUtilities;
 import theking530.staticpower.client.gui.BaseGuiContainer;
@@ -84,7 +84,6 @@ public class GuiQuarry extends BaseGuiContainer {
 		if(par1 >= 46 + var1 && par2 >= 8 + var2 && par1 <= 52 + var1 && par2 <= 68 + var2) {
 			drawHoveringText(POWERBAR.drawText(), par1, par2, fontRenderer); 
 		}	
-		this.renderHoveredToolTip(par1, par2);
 	}
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
@@ -132,17 +131,13 @@ public class GuiQuarry extends BaseGuiContainer {
 	}
 	
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+	protected void drawExtra(float f, int i, int j) {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.QUARRY_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
     	GuiDrawItem.drawItem(ModItems.BasicItemFilter, guiLeft, guiTop, 27, 71, zLevel, 0.5f);
 
 		POWERBAR.drawPowerBar(guiLeft + 47, guiTop + 66, 6, 60, this.zLevel, f);
 		FLUIDBAR.drawFluidBar(guiLeft + 27, guiTop + 66, 16, 60, this.zLevel);
-		
-		
-        getTabManager().drawTabs(guiLeft+175, guiTop+10, width, height, f);
 	}	
 }
 

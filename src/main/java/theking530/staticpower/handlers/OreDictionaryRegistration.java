@@ -1,4 +1,4 @@
-package theking530.staticpower.assists;
+package theking530.staticpower.handlers;
 
 import net.minecraftforge.oredict.OreDictionary;
 import theking530.staticpower.blocks.ModBlocks;
@@ -37,6 +37,7 @@ public class OreDictionaryRegistration {
 		OreDictionary.registerOre("oreSapphire", ModBlocks.SapphireOre);
 		OreDictionary.registerOre("oreRuby", ModBlocks.RubyOre);
 		
+		OreDictionary.registerOre("itemSilicon", ModItems.Silicon);
 		
 		OreDictionary.registerOre("ingotSilver", ModItems.SilverIngot);
 		OreDictionary.registerOre("ingotTin", ModItems.TinIngot);
@@ -59,7 +60,6 @@ public class OreDictionaryRegistration {
 		OreDictionary.registerOre("dustNickel", ModItems.NickelDust);
 		OreDictionary.registerOre("dustAluminium", ModItems.AluminiumDust);
 		OreDictionary.registerOre("dustAluminum", ModItems.AluminiumDust);
-		OreDictionary.registerOre("nuggetIron", ModItems.IronNugget);
 		
 		OreDictionary.registerOre("silicon", ModItems.Silicon);
 	}

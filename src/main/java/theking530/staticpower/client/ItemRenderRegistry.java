@@ -111,8 +111,7 @@ public class ItemRenderRegistry {
 		registerItem(ModItems.StaticNugget);
 		registerItem(ModItems.EnergizedNugget);
 		registerItem(ModItems.LumumNugget);
-		registerItem(ModItems.IronNugget);
-		
+
 		registerItem(ModItems.EnergizedInfusionBlend);
 		registerItem(ModItems.LumumInfusionBlend);	
 		registerItem(ModItems.EnergizedEnergyCrystal);
@@ -179,6 +178,8 @@ public class ItemRenderRegistry {
 		registerItem(ModItems.Rubber);
 		registerItem(ModItems.IOPort);
 		
+		registerItem(ModItems.ExperienceVacuumUpgrade);
+		registerItem(ModItems.TeleportUpgrade);
 		registerItem(ModItems.BasicPowerUpgrade);
 		registerItem(ModItems.BasicSpeedUpgrade);
 		registerItem(ModItems.BasicTankUpgrade);
@@ -244,6 +245,9 @@ public class ItemRenderRegistry {
 		registerBlock(ModBlocks.Distillery);
 		registerBlock(ModBlocks.Condenser);
 		
+		registerBlock(ModBlocks.StaticGrass);
+		registerBlock(ModBlocks.EnergizedGrass);
+		
 		registerBlock(ModBlocks.SilverOre);
 		registerBlock(ModBlocks.CopperOre);
 		registerBlock(ModBlocks.TinOre);
@@ -279,9 +283,14 @@ public class ItemRenderRegistry {
 		registerBlock(ModBlocks.LumumLamp);
 		
 		registerBlock(ModBlocks.LogicGateBasePlate);
+		
 		registerItem(ModItems.LogicGatePowerSync);
 		registerItem(ModItems.InvertedLogicGatePowerSync);
 		registerItem(ModItems.LogicGateServo);
+		registerItem(ModItems.Transistor);
+		registerItem(ModItems.Silicon);
+		registerItem(ModItems.Diode);
+		registerItem(ModItems.MemoryChip);
 		
 		registerTemporaryLogicGate(ModBlocks.Adder);
 		registerTemporaryLogicGate(ModBlocks.Subtractor);

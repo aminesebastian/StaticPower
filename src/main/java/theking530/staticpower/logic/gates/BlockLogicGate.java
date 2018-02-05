@@ -13,6 +13,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -26,8 +27,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.assists.utilities.SideModeList.Mode;
+import theking530.staticpower.blocks.IItemBlockProvider;
 
-public class BlockLogicGate extends Block implements IWrenchable{
+public class BlockLogicGate extends Block implements IWrenchable, IItemBlockProvider{
 
 	static float PIXEL = 1F/16F;
     private static final AxisAlignedBB[] AABB = new AxisAlignedBB[] {
@@ -50,7 +52,6 @@ public class BlockLogicGate extends Block implements IWrenchable{
 		setCreativeTab(StaticPower.StaticPower);
 		setRegistryName(name);
 		setUnlocalizedName(name);
-		StaticPower.REGISTRY.PreRegisterItem(new ItemLogicGate(this, name));
 		GUI_ID = guiID;
 	}
 	public EnumBlockRenderType getRenderType(IBlockState state) {
@@ -243,4 +244,8 @@ public class BlockLogicGate extends Block implements IWrenchable{
     protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, new IProperty[] {ORIENTATION});
     }
+	@Override
+	public ItemBlock getItemBlock() {
+		return new ItemLogicGate(this, this.getUnlocalizedName());
+	}
 }

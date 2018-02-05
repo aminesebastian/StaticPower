@@ -44,7 +44,7 @@ public class BlockBattery extends BaseMachineBlock{
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
 		switch(TIER){
-		case BASE: return new TileEntityBasicBattery();
+		case BASIC: return new TileEntityBasicBattery();
 		case STATIC: return new TileEntityStaticBattery();
 		case ENERGIZED: return new TileEntityEnergizedBattery();
 		case LUMUM: return new TileEntityLumumBattery();

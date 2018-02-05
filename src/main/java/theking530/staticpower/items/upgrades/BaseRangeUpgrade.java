@@ -17,7 +17,7 @@ public class BaseRangeUpgrade  extends BaseUpgrade implements IMachineUpgrade{
 	public  BaseRangeUpgrade(String name, Tier tier){
 		super(name, tier);
 		switch(tier) {
-		case BASE:
+		case BASIC:
 			RANGE_MULT = (0.75f);
 			break;
 		case STATIC:

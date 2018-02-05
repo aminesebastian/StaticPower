@@ -9,62 +9,65 @@ import api.gui.tab.BaseGuiTab;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.Items;
-import theking530.staticpower.assists.utilities.GuiTextures;
+import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.assists.utilities.GuiUtilities;
 
 public class GuiInfoTab extends BaseGuiTab {
-	
 
-	public int BUTTON;
-	private FontRenderer FONT_RENDERER;
+	private FontRenderer fontRenderer;
 	
-	private List<String> INFO;
-	private String TITLE;
+	private List<String> info;
+	private String tabTitle;
 
 	public GuiInfoTab(int width, int height){
 		super(width, height, GuiTextures.GREEN_TAB, Items.PAPER);
-		FONT_RENDERER = Minecraft.getMinecraft().fontRenderer;
+		fontRenderer = Minecraft.getMinecraft().fontRenderer;
 	}
 	public void setText(String title, List<String> text) {
-		INFO = text;
-		TITLE = title;
+		info = text;
+		tabTitle = title;
 	}
 	public void setText(String title, String text) {
-		INFO = Arrays.asList(text.split("="));
+		info = Arrays.asList(text.split("="));
 		int stringLengthMax = 0;
-		for(int i=0; i<INFO.size(); i++) {
-			if(FONT_RENDERER.getStringWidth(INFO.get(i)) > stringLengthMax) {
-				stringLengthMax = FONT_RENDERER.getStringWidth(INFO.get(i));
+		for(int i=0; i<info.size(); i++) {
+			if(fontRenderer.getStringWidth(info.get(i)) > stringLengthMax) {
+				stringLengthMax = fontRenderer.getStringWidth(info.get(i));
 			}
 		}
 		this.tabWidth = stringLengthMax+8;
-		TITLE = title;
+		tabTitle = title;
 	}	
 	@Override
 	protected void drawExtra(int xPos, int yPos, float partialTicks) {
 		if(isOpen()) {	
-			if(INFO.size() > 0) {
+			if(info != null && info.size() > 0) {
 				drawTextBG(xPos, yPos);	
 				drawText(xPos, yPos);	
 			}
     	}	
 	}
 	private void drawText(int xPos, int yPos) {
-		FONT_RENDERER.drawStringWithShadow(TITLE, xPos+FONT_RENDERER.getStringWidth(TITLE)/2+3, yPos+8, GuiUtilities.getColor(242, 0, 255));	
-		for(int i = 0; i < INFO.size(); i++) {
-			String string = (String) INFO.get(i);
-    		FONT_RENDERER.drawString(string, xPos + 18, (yPos+28)+11*i, 16777215);
+		fontRenderer.drawStringWithShadow(tabTitle, xPos+23, yPos+8, GuiUtilities.getColor(242, 0, 255));	
+		float fontScale = 1.0f;
+		int scaleBasedXOffset = 0;
+		int scaleBasedYOffset = 0;
+		GlStateManager.scale(fontScale, fontScale, fontScale);
+		for(int i = 0; i < info.size(); i++) {
+			String string = (String) info.get(i);
+    		fontRenderer.drawStringWithShadow(string, xPos + 17 + scaleBasedXOffset, (yPos+27)+scaleBasedYOffset+11*i, 16777215);
 		}	
+		GlStateManager.scale(1.0f/fontScale, 1.0f/fontScale, 1.0f/fontScale);
 	}
 	public void drawTextBG(int xPos, int yPos) {
 		int height = 0;
-		if(INFO != null) {
-			height = INFO.size()*12;
+		if(info != null) {
+			height = info.size()*11;
 		}
-		GL11.glEnable(GL11.GL_BLEND);
 		Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder vertexbuffer = tessellator.getBuffer();
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.BUTTON_BG);	
@@ -75,7 +78,6 @@ public class GuiInfoTab extends BaseGuiTab {
 		vertexbuffer.pos(xPos+10, yPos+22, 0).tex(1,0).endVertex();
 		vertexbuffer.pos(xPos+10, yPos+height+28, 0).tex(1,1).endVertex();	
 		tessellator.draw();
-		GL11.glDisable(GL11.GL_BLEND);
 	}
 	@Override
 	protected void handleExtraMouseInteraction(int mouseX, int mouseY, int button) {

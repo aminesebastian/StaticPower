@@ -18,8 +18,8 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.assists.utilities.EnumTextFormatting;
-import theking530.staticpower.assists.utilities.GuiTextures;
 import theking530.staticpower.assists.utilities.RedstoneModeList.RedstoneMode;
 import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.tileentity.IRedstoneConfigurable;
@@ -68,7 +68,7 @@ public class GuiRedstoneTab extends BaseGuiTab implements IInteractableGui {
 			ignoreRedstoneButton.setPosition(xPos+25, yPos+30);
 			lowRedstoneButton.setPosition(xPos+55, yPos+30);
 			highRedstoneButton.setPosition(xPos+85, yPos+30);
-			buttonManager.drawButtons();
+			buttonManager.drawButtons(xPos, yPos);
 			drawText(xPos+5, yPos-35);
 		}
 	}

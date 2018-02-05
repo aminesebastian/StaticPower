@@ -1,14 +1,12 @@
 package theking530.staticpower.machines.distillery;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import theking530.staticpower.assists.utilities.GuiTextures;
+import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.client.gui.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.buttons.ArrowButton;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
@@ -79,7 +77,6 @@ public class GuiDistillery extends BaseGuiContainer {
 		if(par1 >= 71 + var1 && par2 >= 80 + var2 && par1 <= 87 + var1 && par2 <= 88 + var2) {	
 			drawHoveringText(HEATBAR.drawText(), par1, par2, fontRenderer); 
 		}	  
-		this.renderHoveredToolTip(par1, par2);
 	}
 
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
@@ -89,12 +86,7 @@ public class GuiDistillery extends BaseGuiContainer {
 	}
 	
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {   	
-		this.zLevel = -1.0f;
-		this.drawDefaultBackground();	
-		this.zLevel = 0.0f;
-    			
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+	protected void drawExtra(float f, int i, int j) {   	
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.DISTILLERY_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		
@@ -104,9 +96,6 @@ public class GuiDistillery extends BaseGuiContainer {
 		HEATBAR.drawHeatBar(guiLeft + 71, guiTop + 88, this.zLevel, 16, 8);
 		FLUIDBAR.drawFluidBar(guiLeft + 71, guiTop + 77, 16, 60, this.zLevel);
 		FLUIDBAR2.drawFluidBar(guiLeft + 127, guiTop + 77, 16, 60, this.zLevel);
-		
-		
-        getTabManager().drawTabs(guiLeft+213, guiTop+10, width, height, f);
 	}
 }
 

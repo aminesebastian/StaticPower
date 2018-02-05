@@ -5,7 +5,7 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import theking530.staticpower.assists.utilities.GuiTextures;
+import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.client.gui.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.GuiDrawItem;
 import theking530.staticpower.client.gui.widgets.tabs.GuiInfoTab;
@@ -21,7 +21,7 @@ public class GuiSolderingTable extends BaseGuiContainer {
 		super(new ContainerSolderingTable(invPlayer, teTable), 176, 179);
 		solderingTable = teTable;	
 
-		infoTab = new GuiInfoTab(110, 90);
+		infoTab = new GuiInfoTab(110, 80);
 		getTabManager().registerTab(infoTab);
 		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teTable));
 	}
@@ -38,17 +38,11 @@ public class GuiSolderingTable extends BaseGuiContainer {
 	}
 	
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
-		this.zLevel = -1.0f;
-		this.drawDefaultBackground();	
-		this.zLevel = 0.0f;
-		
+	protected void drawExtra(float f, int i, int j) {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.SOLDERING_TABLE_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
-        getTabManager().drawTabs(guiLeft+175, guiTop+10, width, height, f);
-        		
     	GuiDrawItem.drawItem(ModItems.SolderingIron, guiLeft, guiTop, 11, 17, this.zLevel, 0.5f);	  		
 	}
 }

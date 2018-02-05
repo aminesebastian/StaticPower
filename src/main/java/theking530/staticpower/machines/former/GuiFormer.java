@@ -1,11 +1,9 @@
 package theking530.staticpower.machines.former;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import theking530.staticpower.assists.utilities.GuiTextures;
+import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.client.gui.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.GuiDrawItem;
 import theking530.staticpower.client.gui.widgets.tabs.GuiInfoTab;
@@ -38,8 +36,7 @@ public class GuiFormer extends BaseGuiContainer{
         	drawHoveringText(powerbar.drawText(), mouseX, mouseY, fontRenderer); 
         }
 		drawRect(guiLeft + 82, guiTop + 38, 176, 69, 3394815);	
-		this.renderHoveredToolTip(mouseX, mouseY);
-		
+
 		String formerInfo = "The former transforms=items into other items=by shaping them against=moulds.";
 		
 		infoTab.setText("Former", formerInfo);
@@ -51,12 +48,7 @@ public class GuiFormer extends BaseGuiContainer{
 	}
 	
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
-		this.zLevel = -1.0f;
-		this.drawDefaultBackground();	
-		this.zLevel = 0.0f;
-		
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+	protected void drawExtra(float f, int i, int j) {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.FORMER_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		
@@ -66,7 +58,6 @@ public class GuiFormer extends BaseGuiContainer{
 		GuiDrawItem.drawItem(ModItems.PlateMould, guiLeft, guiTop, 37, 34, zLevel, 0.3f);
 		
 		powerbar.drawPowerBar(guiLeft + 8, guiTop + 62, 16, 54, zLevel, f);	
-        getTabManager().drawTabs(guiLeft+175, guiTop+10, width, height, f);
 	}	
 }
 

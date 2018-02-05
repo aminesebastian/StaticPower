@@ -24,6 +24,8 @@ import theking530.staticpower.items.upgrades.BaseQuarryingUpgrade;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.items.upgrades.BaseSpeedUpgrade;
 import theking530.staticpower.items.upgrades.BaseTankUpgrade;
+import theking530.staticpower.items.upgrades.ExperienceVacuumUpgrade;
+import theking530.staticpower.items.upgrades.TeleportUpgrade;
 
 public class ModItems {
 	
@@ -67,6 +69,9 @@ public class ModItems {
 	public static Item StaticUpgradePlate;
 	public static Item EnergizedUpgradePlate;
 	public static Item LumumUpgradePlate;
+	
+	public static Item TeleportUpgrade;
+	public static Item ExperienceVacuumUpgrade;
 	
 	public static Item BasicSpeedUpgrade;
 	public static Item StaticSpeedUpgrade;
@@ -162,8 +167,7 @@ public class ModItems {
 	public static Item EnergizedNugget;
 	public static Item StaticNugget;
 	public static Item LumumNugget;
-	public static Item IronNugget;
-	
+
 	public static Item WheatFlour;
 	public static Item PotatoFlour;
 	public static Item PotatoBread;
@@ -190,13 +194,13 @@ public class ModItems {
 		LumumPie = new BaseFood("LumumPie", 9);
 		registry.PreRegisterItem(LumumPie);
 		
-		BaseFluidCapsule = new BaseFluidCapsule("BaseFluidCapsule", 2000, 40);
+		BaseFluidCapsule = new BaseFluidCapsule("BaseFluidCapsule", Tier.BASIC.getFluidCanisterCapacity());
 		registry.PreRegisterItem(BaseFluidCapsule);
-		StaticFluidCapsule = new BaseFluidCapsule("StaticFluidCapsule", 4000, 80);
+		StaticFluidCapsule = new BaseFluidCapsule("StaticFluidCapsule", Tier.STATIC.getFluidCanisterCapacity());
 		registry.PreRegisterItem(StaticFluidCapsule);
-		EnergizedFluidCapsule = new BaseFluidCapsule("EnergizedFluidCapsule", 8000, 160);
+		EnergizedFluidCapsule = new BaseFluidCapsule("EnergizedFluidCapsule", Tier.ENERGIZED.getFluidCanisterCapacity());
 		registry.PreRegisterItem(EnergizedFluidCapsule);
-		LumumFluidCapsule = new BaseFluidCapsule("LumumFluidCapsule", 16000, 320);
+		LumumFluidCapsule = new BaseFluidCapsule("LumumFluidCapsule", Tier.LUMUM.getFluidCanisterCapacity());
 		registry.PreRegisterItem(LumumFluidCapsule);
 		
 		StaticWrench = new StaticWrench().setUnlocalizedName("StaticWrench");
@@ -281,13 +285,13 @@ public class ModItems {
 		LumumInfusionBlend = new ItemBase("LumumInfusionBlend");
 		registry.PreRegisterItem(LumumInfusionBlend);
 		
-		BasicBattery = new BaseBattery("BasicPortableBattery", 50000, 1000);
+		BasicBattery = new BaseBattery("BasicPortableBattery", Tier.BASIC.getPortableBatteryCapacity());
 		registry.PreRegisterItem(BasicBattery);
-		StaticBattery = new BaseBattery("StaticPortableBattery", 125000, 2500);
+		StaticBattery = new BaseBattery("StaticPortableBattery", Tier.STATIC.getPortableBatteryCapacity());
 		registry.PreRegisterItem(StaticBattery);
-		EnergizedBattery = new BaseBattery("EnergizedPortableBattery", 625000, 5000);
+		EnergizedBattery = new BaseBattery("EnergizedPortableBattery", Tier.ENERGIZED.getPortableBatteryCapacity());
 		registry.PreRegisterItem(EnergizedBattery);
-		LumumBattery = new BaseBattery("LumumPortableBattery", 2500000, 10000);
+		LumumBattery = new BaseBattery("LumumPortableBattery", Tier.LUMUM.getPortableBatteryCapacity());
 		registry.PreRegisterItem(LumumBattery);
 		
 		CreativeSpeedUpgrade = new BaseSpeedUpgrade("CreativeSpeedUpgrade", Tier.CREATIVE);
@@ -299,7 +303,10 @@ public class ModItems {
 		registry.PreRegisterItem(CreativeSpeedUpgrade);
 		*/
 		
-		BasicSpeedUpgrade = new BaseSpeedUpgrade("BasicSpeedUpgrade", Tier.BASE);
+		registry.PreRegisterItem(TeleportUpgrade = new TeleportUpgrade("TeleportUpgrade"));
+		registry.PreRegisterItem(ExperienceVacuumUpgrade = new ExperienceVacuumUpgrade("ExperienceVacuumUpgrade"));
+		
+		BasicSpeedUpgrade = new BaseSpeedUpgrade("BasicSpeedUpgrade", Tier.BASIC);
 		registry.PreRegisterItem(BasicSpeedUpgrade);	
 		StaticSpeedUpgrade = new BaseSpeedUpgrade("StaticSpeedUpgrade", Tier.STATIC);
 		registry.PreRegisterItem(StaticSpeedUpgrade);	
@@ -308,7 +315,7 @@ public class ModItems {
 		LumumSpeedUpgrade = new BaseSpeedUpgrade("LumumSpeedUpgrade", Tier.LUMUM);
 		registry.PreRegisterItem(LumumSpeedUpgrade);	
 		
-		BasicTankUpgrade = new BaseTankUpgrade("BasicTankUpgrade", Tier.BASE);
+		BasicTankUpgrade = new BaseTankUpgrade("BasicTankUpgrade", Tier.BASIC);
 		registry.PreRegisterItem(BasicTankUpgrade);	
 		StaticTankUpgrade = new BaseTankUpgrade("StaticTankUpgrade", Tier.STATIC);
 		registry.PreRegisterItem(StaticTankUpgrade);	
@@ -317,7 +324,7 @@ public class ModItems {
 		LumumTankUpgrade = new BaseTankUpgrade("LumumTankUpgrade", Tier.LUMUM);
 		registry.PreRegisterItem(LumumTankUpgrade);	
 		
-		registry.PreRegisterItem(BasicPowerUpgrade = new BasePowerUpgrade("BasicPowerUpgrade", Tier.BASE));
+		registry.PreRegisterItem(BasicPowerUpgrade = new BasePowerUpgrade("BasicPowerUpgrade", Tier.BASIC));
 		registry.PreRegisterItem(StaticPowerUpgrade = new BasePowerUpgrade("StaticPowerUpgrade", Tier.STATIC));
 		registry.PreRegisterItem(EnergizedPowerUpgrade = new BasePowerUpgrade("EnergizedPowerUpgrade", Tier.ENERGIZED));
 		registry.PreRegisterItem(LumumPowerUpgrade = new BasePowerUpgrade("LumumPowerUpgrade", Tier.LUMUM));
@@ -326,7 +333,7 @@ public class ModItems {
 		registry.PreRegisterItem(EnergizedQuarryingUpgrade = new BaseQuarryingUpgrade("EnergizedQuarryingUpgrade", Tier.ENERGIZED));	
 		registry.PreRegisterItem(LumumQuarryingUpgrade = new BaseQuarryingUpgrade("LumumQuarryingUpgrade", Tier.LUMUM));	
 
-		registry.PreRegisterItem(BasicRangeUpgrade = new BaseRangeUpgrade("BasicRangeUpgrade", Tier.BASE));	
+		registry.PreRegisterItem(BasicRangeUpgrade = new BaseRangeUpgrade("BasicRangeUpgrade", Tier.BASIC));	
 		registry.PreRegisterItem(StaticRangeUpgrade = new BaseRangeUpgrade("StaticRangeUpgrade", Tier.STATIC));	
 		registry.PreRegisterItem(EnergizedRangeUpgrade = new BaseRangeUpgrade("EnergizedRangeUpgrade", Tier.ENERGIZED));	
 		registry.PreRegisterItem(LumumRangeUpgrade = new BaseRangeUpgrade("LumumRangeUpgrade", Tier.LUMUM));	
@@ -356,8 +363,7 @@ public class ModItems {
 		registry.PreRegisterItem(StaticNugget = new BaseNugget("StaticNugget"));
 		registry.PreRegisterItem(EnergizedNugget = new BaseNugget("EnergizedNugget"));
 		registry.PreRegisterItem(LumumNugget = new BaseNugget("LumumNugget"));
-		registry.PreRegisterItem(IronNugget = new BaseNugget("IronNugget"));
-		
+
 		registry.PreRegisterItem(SilverDust = new BaseDust("SilverDust"));
 		registry.PreRegisterItem(TinDust = new BaseDust("TinDust"));
 		registry.PreRegisterItem(LeadDust = new BaseDust("LeadDust"));

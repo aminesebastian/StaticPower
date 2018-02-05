@@ -30,6 +30,7 @@ public class GuiFluidBar {
 	}
 
 	public static void drawFluidBar(FluidStack fluid, int capacity, int amount, double x, double y, double zLevel, double width, double height) {
+			GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		    if (fluid == null || fluid.getFluid() == null) {
 		      return;
 		    }

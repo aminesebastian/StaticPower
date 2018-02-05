@@ -14,7 +14,7 @@ public class GuiFluidBarFromTank {
 	public List<String> drawText() {
 		return GuiFluidBar.drawText(TANK.getFluidAmount(), TANK.getCapacity(), TANK.getFluid());
 	}
-	public void drawFluidBar(int xpos, int ypos, int width, int height, float zLevel) {  ;
+	public void drawFluidBar(int xpos, int ypos, int width, int height, float zLevel) {  
 		GuiFluidBar.drawFluidBar(TANK.getFluid(),TANK.getCapacity(), TANK.getFluidAmount(),xpos, ypos, zLevel, width, height);
 	}
 }

@@ -14,6 +14,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.blocks.BaseItemBlock;
+import theking530.staticpower.blocks.IItemBlockProvider;
 import theking530.staticpower.client.ItemRenderRegistry;
 import theking530.staticpower.client.model.fluidcapsule.ModelFluidCapsule.LoaderFluidCapsule;
 import theking530.staticpower.fluids.ModFluids;
@@ -34,7 +35,14 @@ public class Registry {
     }
     public void PreRegisterBlock(Block block) {
     	BLOCKS.add(block);
-    	ITEMS.add(new BaseItemBlock(block, block.getUnlocalizedName()));
+    	if(block instanceof IItemBlockProvider) {
+    		IItemBlockProvider provider = (IItemBlockProvider)block;
+    		if(provider.getItemBlock() != null) {
+            	ITEMS.add(provider.getItemBlock());	
+    		}
+    	}else{
+        	ITEMS.add(new BaseItemBlock(block, block.getUnlocalizedName()));	
+    	}
     }
     
     @SubscribeEvent

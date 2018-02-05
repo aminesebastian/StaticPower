@@ -56,7 +56,7 @@ public class BlockSolarPanel extends BaseMachineBlock {
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
 		switch(TIER) {
-		case BASE:
+		case BASIC:
 			return new TileEntityBasicSolarPanel();
 		case STATIC:
 			return new TileEntityStaticSolarPanel();

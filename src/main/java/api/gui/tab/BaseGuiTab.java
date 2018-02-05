@@ -5,16 +5,15 @@ import org.lwjgl.opengl.GL11;
 import api.RectangleBounds;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.assists.utilities.StaticVertexBuffer;
 
 public abstract class BaseGuiTab extends Gui {
@@ -82,6 +81,20 @@ public abstract class BaseGuiTab extends Gui {
 		if(isOpen()) {
 			handleExtraMouseInteraction(mouseX, mouseY, button);
 		}
+	}
+	public void drawDarkBackground(int xPos, int yPos, int width, int height) {
+		GL11.glEnable(GL11.GL_BLEND);
+		Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder vertexbuffer = tessellator.getBuffer();
+		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.BUTTON_BG);	
+		GL11.glColor3f(1.0f, 1.0f, 1.0f);
+		vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
+		vertexbuffer.pos(xPos, yPos, 0).tex(0,1).endVertex();
+		vertexbuffer.pos(xPos, yPos+height, 0).tex(0,0).endVertex();
+		vertexbuffer.pos(xPos+width, yPos+height, 0).tex(1,0).endVertex();
+		vertexbuffer.pos(xPos+width, yPos, 0).tex(1,1).endVertex();	
+		tessellator.draw();
+		GL11.glDisable(GL11.GL_BLEND);
 	}
 	public void keyboardInteraction(char par1, int par2) {
 		if(isOpen()) {
@@ -164,10 +177,11 @@ public abstract class BaseGuiTab extends Gui {
         BufferBuilder tes = tessellator.getBuffer();
         tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(tabTexture);
-		
+
+	    GlStateManager.enableBlend();
 		currentWidth = ((tabWidth*animationTimer/animationTime));
 		currentHeight = ((tabHeight*animationTimer/animationTime));
-		
+
 		GL11.glPushMatrix();
 		//Top
 		StaticVertexBuffer.pos(tabLeft+20+(tabWidth*animationTimer/animationTime), tabTop+3, 0, .976, .03);

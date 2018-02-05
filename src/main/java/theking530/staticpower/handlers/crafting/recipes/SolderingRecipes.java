@@ -2,6 +2,7 @@ package theking530.staticpower.handlers.crafting.recipes;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import theking530.staticpower.assists.RegisterHelper;
@@ -85,6 +86,9 @@ public class SolderingRecipes {
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.LumumRangeUpgrade), new Object[]{"PPP"," G ","PPP",
 		'P', ModItems.LumumPlate, 'G',  ModItems.LumumUpgradePlate});
 		
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.TeleportUpgrade), new Object[]{"EHE"," P ","EHE",
+		'H', Item.getItemFromBlock(Blocks.HOPPER), 'E', Items.ENDER_PEARL, 'P',  ModItems.EnergizedUpgradePlate});
+		
 		//Molds --------------------------------------------------------------------------------------------------
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.PlateMould), new Object[]{"   "," C "," P ",
 		'P', ModItems.IronPlate, 'C',  ModItems.CopperPlate});
@@ -124,12 +128,18 @@ public class SolderingRecipes {
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.InvertedLogicGatePowerSync, 2), new Object[]{" Q ", " R ", " S ", 
 		'S', ModItems.BasicCircuit, 'R', Blocks.REDSTONE_TORCH, 'Q', Items.REDSTONE});
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.Diode, 8), new Object[]{"   ", "SRS", "QCQ", 
-		'S', ModItems.IronPlate, 'Q', ModItems.SilverWire, 'R', Items.REDSTONE, 'C', ModItems.BasicCircuit});
+		'S', ModItems.IronPlate, 'Q', ModItems.SilverWire, 'R', Item.getItemFromBlock(Blocks.UNPOWERED_REPEATER), 'C', ModItems.BasicCircuit});
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.Transistor, 8), new Object[]{" S ", "SRS", "QCQ", 
-		'S', ModItems.IronPlate, 'Q', ModItems.SilverWire, 'R', Items.REDSTONE, 'C', ModItems.BasicCircuit});
+		'S', ModItems.IronPlate, 'Q', ModItems.SilverWire, 'R', Item.getItemFromBlock(Blocks.LEVER), 'C', ModItems.BasicCircuit});
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.InternalClock, 2), new Object[]{" S ", "SRS", "QCQ", 
 		'S', ModItems.IronPlate, 'Q', ModItems.SilverWire, 'R', Items.QUARTZ, 'C', ModItems.BasicCircuit});
-		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.MemoryChip, 4), new Object[]{"PPP", "SSS", "QCQ", 
-		'P', ModItems.IronPlate, 'Q', ModItems.SilverWire, 'S', ModItems.Silicon, 'C', ModItems.BasicCircuit});
+		
+		registerSiliconOreDictRecipes();
+	}
+	private static void registerSiliconOreDictRecipes() {
+		for(int i=0; i<OreDictionary.getOres("itemSilicon").size(); i++) {
+			RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.MemoryChip, 4), new Object[]{"PPP", "SSS", "QCQ", 
+					'P', ModItems.IronPlate, 'Q', ModItems.SilverWire, 'S', OreDictionary.getOres("itemSilicon").get(i).getItem(), 'C', ModItems.BasicCircuit});
+		}
 	}
 }

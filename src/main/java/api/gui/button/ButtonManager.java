@@ -17,10 +17,20 @@ public class ButtonManager {
 	public void registerButton(BaseButton button) {
 		buttonList.add(button);
 	}
-	public void drawButtons() {
+	public void drawButtons(int mouseX, int mouseY) {
+		for(int i=0; i<buttonList.size(); i++) {
+			if(buttonList.get(i).isVisible()) {
+				buttonList.get(i).handleMouseMoveInteraction(mouseX, mouseY);
+			}
+		}
 		for(int i=0; i<buttonList.size(); i++) {
 			if(buttonList.get(i).isVisible()) {
 				buttonList.get(i).draw();
+			}
+		}
+		for(int i=0; i<buttonList.size(); i++) {
+			if(buttonList.get(i).isHovered()) {
+				buttonList.get(i).drawTooltip();
 			}
 		}
 		serviceButtons();
@@ -37,13 +47,6 @@ public class ButtonManager {
 		for(int i=0; i<buttonList.size(); i++) {
 			if(buttonList.get(i).isVisible()) {
 				buttonList.get(i).handleMouseInteraction(mouseX, mouseY, button);
-			}
-		}
-	}
-	public void handleMouseMoveInteraction(int mouseX, int mouseY) {
-		for(int i=0; i<buttonList.size(); i++) {
-			if(buttonList.get(i).isVisible()) {
-				buttonList.get(i).handleMouseMoveInteraction(mouseX, mouseY);
 			}
 		}
 	}

@@ -5,12 +5,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import theking530.staticpower.StaticPower;
 
 public class BasePoweredItem extends ItemEnergyContainer{
 
-	public int DAMAGE_DIVISOR;
+	public int damageDivisor;
 
 	public BasePoweredItem(String name, int capacity, int damageDivisor) {
 		super(capacity);
@@ -18,9 +17,10 @@ public class BasePoweredItem extends ItemEnergyContainer{
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setMaxStackSize(1);
-		setMaxDamage(capacity/damageDivisor);
+		this.damageDivisor = Math.max(1, damageDivisor);
+		setMaxDamage(capacity/this.damageDivisor);
 		setNoRepair();
-		DAMAGE_DIVISOR = damageDivisor;
+
 	}
 	@Override
     public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn){
@@ -60,6 +60,6 @@ public class BasePoweredItem extends ItemEnergyContainer{
         return maxStackSize;
     }
 	public void updateDamage(ItemStack stack) {
-		setDamage(stack, (capacity - getEnergyStored(stack))/DAMAGE_DIVISOR);
+		setDamage(stack, (capacity - getEnergyStored(stack))/damageDivisor);
 	}
 }

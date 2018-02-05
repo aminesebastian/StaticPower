@@ -1,12 +1,10 @@
 	package theking530.staticpower.machines.fermenter;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.staticpower.assists.utilities.GuiTextures;
+import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.client.gui.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
@@ -52,26 +50,18 @@ public class GuiFermenter extends BaseGuiContainer {
 	}
 	
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
-		this.zLevel = -1.0f;
-		this.drawDefaultBackground();	
-		this.zLevel = 0.0f;
-		
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+	protected void drawExtra(float f, int i, int j) {
+
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.FERMENTER_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		if(FERMENTER.slotsInternal.getStackInSlot(0) != null) {
 			int j1 = FERMENTER.getProgressScaled(32);
-			//System.out.println(j1);
 			FluidStack fluid = FermenterRecipeRegistry.Fermenting().getFluidResult(FERMENTER.slotsInternal.getStackInSlot(0));
 			GuiFluidBar.drawFluidBar(fluid, 1000, 1000, guiLeft + 86 - j1, guiTop + 44, 1, j1, 5);
 		}
 
 		POWERBAR.drawPowerBar(guiLeft + 27, guiTop + 68, 6, 60, this.zLevel, f);
 		FLUIDBAR.drawFluidBar(guiLeft + 37, guiTop + 68, 16, 60, this.zLevel);
-		
-		
-        getTabManager().drawTabs(guiLeft+194, guiTop+10, width, height, f);
 	}
 }
 

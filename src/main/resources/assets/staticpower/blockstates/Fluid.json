@@ -28,6 +28,10 @@
 		"steam": {
             "model": "forge:fluid",
             "custom": { "fluid": "steam" }
+        },
+		"liquidexperience": {
+            "model": "forge:fluid",
+            "custom": { "fluid": "liquidexperience" }
         }
     }
 }

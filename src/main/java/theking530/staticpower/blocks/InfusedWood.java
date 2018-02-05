@@ -8,7 +8,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.assists.RegisterHelper;
 
 public class InfusedWood extends BlockLog {
 	
@@ -21,7 +20,6 @@ public class InfusedWood extends BlockLog {
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setCreativeTab(StaticPower.StaticPower);
-		//RegisterHelper.registerItem(new BaseItemBlock(this, name));
     }  
     public IBlockState getStateFromMeta(int meta) {
     	int vanillaMeta = meta;

@@ -3,7 +3,6 @@ package theking530.staticpower.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.assists.RegisterHelper;
 
 public class BaseBlock extends Block{
 
@@ -11,8 +10,8 @@ public class BaseBlock extends Block{
 		super(materialIn);
 		setUnlocalizedName(name);
 		setRegistryName(name);
+		setHarvestLevel("pickaxe", 0);
 		setCreativeTab(StaticPower.StaticPower);
-		//RegisterHelper.registerItem(new BaseItemBlock(this, name));
 	}
 	public BaseBlock(Material materialIn, String name, String tool, int level) {
 		super(materialIn);
@@ -20,6 +19,5 @@ public class BaseBlock extends Block{
 		setRegistryName(name);
 		setHarvestLevel(tool, level);
 		setCreativeTab(StaticPower.StaticPower);
-		//RegisterHelper.registerItem(new BaseItemBlock(this, name));
 	}
 }

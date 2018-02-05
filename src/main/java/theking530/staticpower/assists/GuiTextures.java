@@ -1,9 +1,9 @@
-package theking530.staticpower.assists.utilities;
+package theking530.staticpower.assists;
 
 import net.minecraft.util.ResourceLocation;
-import theking530.staticpower.assists.Reference;
 
 public class GuiTextures {
+	public static final ResourceLocation GENERIC_GUI = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/generic_gui_sampler.png");
 	
 	public static final ResourceLocation BATTERY_GUI = new ResourceLocation(Reference.MOD_ID, "textures/gui/battery_gui.png");
 	public static final ResourceLocation MULTIPLIER_GUI = new ResourceLocation(Reference.MOD_ID, "textures/gui/multiplier_gui.png");

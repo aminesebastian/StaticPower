@@ -14,6 +14,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -29,9 +30,10 @@ import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.assists.utilities.WorldUtilities;
 import theking530.staticpower.blocks.BaseItemBlock;
+import theking530.staticpower.blocks.IItemBlockProvider;
 import theking530.staticpower.tileentity.BaseTileEntity;
 
-public class BaseMachineBlock extends Block implements IWrenchable {
+public class BaseMachineBlock extends Block implements IWrenchable, IItemBlockProvider {
 
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 
@@ -40,7 +42,6 @@ public class BaseMachineBlock extends Block implements IWrenchable {
 		setCreativeTab(StaticPower.StaticPower);
 		setRegistryName(name);
 		setUnlocalizedName(name);	
-		StaticPower.REGISTRY.PreRegisterItem(new BaseItemBlock(this, name));
 		this.hasTileEntity = true;
 		this.lightOpacity = 0;
 	}
@@ -85,7 +86,6 @@ public class BaseMachineBlock extends Block implements IWrenchable {
         worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
 
         if(worldIn.getTileEntity(pos) instanceof BaseTileEntity) {
-        	System.out.println("HI");
         	BaseTileEntity tempMachine = (BaseTileEntity)worldIn.getTileEntity(pos);
 			if(stack.hasTagCompound()) {
 				tempMachine.onMachinePlaced(stack.getTagCompound(), worldIn, pos, state, placer, stack);
@@ -205,4 +205,9 @@ public class BaseMachineBlock extends Block implements IWrenchable {
     {
         return new BlockStateContainer(this, new IProperty[] {FACING});
     }
+
+	@Override
+	public ItemBlock getItemBlock() {
+		return new BaseItemBlock(this, getUnlocalizedName());
+	}
 }

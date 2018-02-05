@@ -6,7 +6,9 @@ import java.util.Random;
 
 import net.minecraft.block.BlockCactus;
 import net.minecraft.block.BlockCrops;
+import net.minecraft.block.BlockMelon;
 import net.minecraft.block.BlockNetherWart;
+import net.minecraft.block.BlockPumpkin;
 import net.minecraft.block.BlockReed;
 import net.minecraft.block.IGrowable;
 import net.minecraft.init.Blocks;
@@ -57,7 +59,7 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 		if(processingTimer < processingTime && canFarm()) {
 			processingTimer++;
 		}else{
-			if(FARMED_STACKS.size() <= 1 && energyStorage.getEnergyStored() >= getProcessingCost() * BLOCKS_PER_TICK) {
+			if(FARMED_STACKS.size() <= 1 && canFarm()) {
 				for(int i=0; i<BLOCKS_PER_TICK; i++) {
 					incrementPosition();
 					checkFarmingPlot(CURRENT_COORD);
@@ -190,7 +192,8 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 		}
 	}
 	public boolean canFarm() {
-		if(energyStorage.getEnergyStored() >= getProcessingCost() && slotsInput.getStackInSlot(0) != null && slotsInput.getStackInSlot(0).getItem() instanceof ItemHoe) {
+		if(energyStorage.getEnergyStored() >= getProcessingCost() * BLOCKS_PER_TICK && !slotsInput.getStackInSlot(0).isEmpty() && slotsInput.getStackInSlot(0).getItem() instanceof ItemHoe
+				&& !slotsInput.getStackInSlot(1).isEmpty() && slotsInput.getStackInSlot(1).getItem() instanceof ItemAxe) {
 			return true;
 		}
 		return false;
@@ -205,8 +208,8 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 	}
 	public void useAxe(){
 		if(slotsInput.getStackInSlot(1) != ItemStack.EMPTY && slotsInput.getStackInSlot(1).getItem() instanceof ItemAxe) {
-			if(slotsInput.getStackInSlot(0).attemptDamageItem(1, RAND, null)) {
-				slotsInput.setStackInSlot(0, ItemStack.EMPTY);
+			if(slotsInput.getStackInSlot(1).attemptDamageItem(1, RAND, null)) {
+				slotsInput.setStackInSlot(1, ItemStack.EMPTY);
 				getWorld().playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F, false);		
 			}	
 		}
@@ -225,6 +228,7 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 			harvestSugarCane(pos);
 			harvestCactus(pos);
 			harvestNetherWart(pos);
+			harvestMelonOrPumpkin(pos);
 		}
 		return true;
 	}
@@ -242,6 +246,12 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 			return true;
 		}
 		if(getWorld().getBlockState(pos).getBlock() instanceof BlockNetherWart) {
+			return true;
+		}
+		if(getWorld().getBlockState(pos).getBlock() instanceof BlockMelon) {
+			return true;
+		}
+		if(getWorld().getBlockState(pos).getBlock() instanceof BlockPumpkin) {
 			return true;
 		}
 		return false;		
@@ -297,17 +307,32 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
         	if(!getWorld().isRemote) {
 				FARMED_STACKS.addAll(getBlockDrops(pos.add(0, 1, 0)));
 				getWorld().setBlockToAir(pos.add(0, 1, 0));	
-				useHoe();
+				useAxe();
         		getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 3);
         		       		
 				if(getWorld().getBlockState(pos.add(0, 2, 0)).getBlock() instanceof BlockCactus) {
 					FARMED_STACKS.addAll(getBlockDrops(pos.add(0, 2, 0)));
 					getWorld().setBlockToAir(pos.add(0, 2, 0));	
 					getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 3);
+					useAxe();
 				}
         	}
 			getWorld().playSound(null, pos, getWorld().getBlockState(pos.add(0, 1, 0)).getBlock().getSoundType(getWorld().getBlockState(pos.add(0, 1, 0)), world, pos.add(0, 1, 0), null).getBreakSound(), SoundCategory.BLOCKS, 1.0F, 1.0F);
 			getWorld().spawnParticle(EnumParticleTypes.SMOKE_LARGE, pos.getX() + 0.5D, pos.add(0, 1, 0).getY() + 1.0D, pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
+        	return true;
+		}
+		return false;
+	}
+	public boolean harvestMelonOrPumpkin(BlockPos pos) {
+		if(getWorld().getBlockState(pos).getBlock() instanceof BlockMelon || getWorld().getBlockState(pos).getBlock() instanceof BlockPumpkin){	   
+        	if(!getWorld().isRemote) {
+				FARMED_STACKS.addAll(getBlockDrops(pos));
+				getWorld().setBlockToAir(pos);	
+				useAxe();
+        		getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 3);       		       		
+        	}
+			getWorld().playSound(null, pos, getWorld().getBlockState(pos).getBlock().getSoundType(getWorld().getBlockState(pos), world, pos, null).getBreakSound(), SoundCategory.BLOCKS, 1.0F, 1.0F);
+			getWorld().spawnParticle(EnumParticleTypes.SMOKE_LARGE, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
         	return true;
 		}
 		return false;

@@ -31,24 +31,23 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.assists.utilities.EnumTextFormatting;
 import theking530.staticpower.items.ItemBase;
 
 public class BaseFluidCapsule extends ItemBase { 
 
-	public int CAPACITY;
-	public int DAMAGE_DIVISOR;
-	
-	public BaseFluidCapsule(String name, int capacity, int damageDivisor) {
+	public int capacity;
+	public int damageDivisor;
+
+	public BaseFluidCapsule(String name, int fluidCapacity) {
 		super(name);
-		CAPACITY = capacity;
+		capacity = fluidCapacity;
+		damageDivisor = Math.max(1, capacity/50);
 	    BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, DispenseFluidContainer.getInstance());
 		setMaxDamage(capacity/damageDivisor);
 		setMaxStackSize(1);
 		setNoRepair();
-		DAMAGE_DIVISOR = damageDivisor;
 	}
 	@Override
     public boolean showDurabilityBar(ItemStack stack) {
@@ -63,23 +62,27 @@ public class BaseFluidCapsule extends ItemBase {
     	FluidHandlerItemStack tempHandler = (FluidHandlerItemStack) stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
         FluidStack fluidStack = tempHandler.getFluid();
     	if(fluidStack != null) {
-            return 1-((double)fluidStack.amount / (double)CAPACITY);
+            return 1-((double)fluidStack.amount / (double)capacity);
     	}
 		return getMaxDamage(stack);
     }
 
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-    	items.add(new ItemStack(this));
-        for (Fluid fluid : FluidRegistry.getRegisteredFluids().values()) {
+    	if(tab == StaticPower.StaticPower) {
+        	items.add(new ItemStack(this));
+        	int meta = 0;
+            for (Fluid fluid : FluidRegistry.getRegisteredFluids().values()) {
                 // add all fluids that the bucket can be filled  with
-                ItemStack stack = new ItemStack(this);
+                ItemStack stack = new ItemStack(this, 1, meta);
                 FluidHandlerItemStack tempHandler = (FluidHandlerItemStack) stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY , null);
-                FluidStack fs = new FluidStack(fluid, CAPACITY);
+                FluidStack fs = new FluidStack(fluid, capacity);
                 if (tempHandler.fill(fs, true) == fs.amount) {
                 	items.add(stack);
                 }
-        }
+                meta++;
+            }
+    	}
     }
     
     @Override
@@ -87,11 +90,11 @@ public class BaseFluidCapsule extends ItemBase {
     	FluidHandlerItemStack tempHandler = (FluidHandlerItemStack) stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
     	
 		String tempString;
-		if(CAPACITY == 2000) {
+		if(capacity == 2000) {
 			tempString = "";
-		}else if(CAPACITY == 4000) {
+		}else if(capacity == 4000) {
 			tempString = "Static ";
-		}else if(CAPACITY == 8000) {
+		}else if(capacity == 8000) {
 			tempString = "Energized ";
 		}else{
 			tempString = "Lumum ";
@@ -161,9 +164,9 @@ public class BaseFluidCapsule extends ItemBase {
     	if(stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)){
     		FluidHandlerItemStack tempHandler = (FluidHandlerItemStack) stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
     	    if(tempHandler.getFluid() != null) {
-        		list.add(NumberFormat.getNumberInstance(Locale.US).format(tempHandler.getFluid().amount) + "/" + NumberFormat.getNumberInstance(Locale.US).format(CAPACITY) + " mB");
+        		list.add(NumberFormat.getNumberInstance(Locale.US).format(tempHandler.getFluid().amount) + "/" + NumberFormat.getNumberInstance(Locale.US).format(capacity) + " mB");
     	    }else{
-        		list.add(0 + "/" + NumberFormat.getNumberInstance(Locale.US).format(CAPACITY) + " mB");
+        		list.add(0 + "/" + NumberFormat.getNumberInstance(Locale.US).format(capacity) + " mB");
     	    }
     	    if(showHiddenTooltips()) {
     	    	list.add("Right-Click to Pick Up.");
@@ -175,6 +178,6 @@ public class BaseFluidCapsule extends ItemBase {
     }
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt){
-    	return new SPItemStackFluidHandler(stack, CAPACITY);
+    	return new SPItemStackFluidHandler(stack, capacity);
     }
 }

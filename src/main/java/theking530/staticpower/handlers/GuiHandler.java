@@ -210,7 +210,7 @@ public class GuiHandler implements IGuiHandler {
 			switch(ID) {
 			case GuiIDRegistry.guiIDItemFilter:
 				ItemFilter filter = (ItemFilter)player.getHeldItemMainhand().getItem();
-				return new ContainerItemFilter(player.inventory, new InventoryItemFilter(player.getHeldItemMainhand(), filter.filterTier), filter.filterTier);
+				return new ContainerItemFilter(player.inventory, new InventoryItemFilter(player.getHeldItemMainhand(), filter.filterTier));
 			}
 		}
 		return null;
@@ -346,7 +346,7 @@ public class GuiHandler implements IGuiHandler {
 			switch(ID) {
 			case GuiIDRegistry.guiIDItemFilter:
 				ItemFilter filter = (ItemFilter)player.getHeldItemMainhand().getItem();
-				return new GuiItemFilter(player.inventory, filter.filterTier, new InventoryItemFilter(player.getHeldItemMainhand(), filter.filterTier));
+				return new GuiItemFilter(player.inventory, new InventoryItemFilter(player.getHeldItemMainhand(), filter.filterTier));
 			
 			case GuiIDRegistry.guiIDStaticBook:
 				//ItemFilter book = (ItemFilter)player.getHeldItemMainhand().getItem();
