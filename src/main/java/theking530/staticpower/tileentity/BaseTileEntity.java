@@ -7,6 +7,7 @@ import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -18,10 +19,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-import theking530.staticpower.assists.utilities.SideModeList;
-import theking530.staticpower.assists.utilities.SideUtilities;
 import theking530.staticpower.assists.utilities.RedstoneModeList.RedstoneMode;
+import theking530.staticpower.assists.utilities.SideModeList;
 import theking530.staticpower.assists.utilities.SideModeList.Mode;
+import theking530.staticpower.assists.utilities.SideUtilities;
 import theking530.staticpower.assists.utilities.SideUtilities.BlockSide;
 import theking530.staticpower.machines.tileentitycomponents.ITileEntityComponent;
 
@@ -247,16 +248,29 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 		}
 		onSidesConfigUpdate();
 	}
-	public void resetSides(){
-		for(int i=0; i<6; i++) {
-			setSideConfiguration(SideModeList.Mode.Disabled, EnumFacing.values()[i]);
-		}
-		onSidesConfigUpdate();
-	}
 	public void updateBlock() {
 		getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 2);
 	}
 
+	/*Upgrade Handling*/
+	public ItemStack getUpgrade(Item upgradeBase) {
+		ItemStack upgrade = ItemStack.EMPTY;
+		int slot = -1;
+		for(int i=0; i<slotsUpgrades.getSlots(); i++) {
+			slot = i;
+			upgrade = slotsUpgrades.getStackInSlot(slot);
+			if(!upgrade.isEmpty()) {
+				if(upgrade.getItem().getClass().isInstance(upgradeBase)) {
+					return upgrade;
+				}
+			}
+		}
+		return ItemStack.EMPTY;
+	}
+	public boolean hasUpgrade(Item upgradeBase) {
+		return !getUpgrade(upgradeBase).isEmpty();
+	}
+	
 	/*Components*/
 	public void registerComponent(ITileEntityComponent component) {
 		components.add(component);
@@ -275,16 +289,16 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 	
 	/*Redstone Control*/
 	@Override
+	public boolean isRedstoneControllable() {
+		return true;
+	}
+	@Override
     public RedstoneMode getRedstoneMode() {
     	return redstoneMode;
     } 
 	@Override
 	public void setRedstoneMode(RedstoneMode newMode) {
 		redstoneMode = newMode;
-	}
-	@Override
-	public boolean isRedstoneControllable() {
-		return true;
 	}
 	public boolean evauluateRedstoneSettings() {
 		int redstoneSignal = getWorld().getStrongPower(pos);
@@ -334,5 +348,10 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 	public void onSidesConfigUpdate() {
 		
 	}
-	
+	public void resetSideConfiguration(){
+		for(int i=0; i<6; i++) {
+			setSideConfiguration(SideModeList.Mode.Disabled, EnumFacing.values()[i]);
+		}
+		onSidesConfigUpdate();
+	}
 }

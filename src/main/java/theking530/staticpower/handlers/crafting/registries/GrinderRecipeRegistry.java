@@ -25,11 +25,11 @@ public class GrinderRecipeRegistry {
 		GrinderOutputWrapper tempWrapper = null;
 		GrinderOutput nullOutput = new GrinderOutput(null, 0);
 		if(outputs.length == 1) {
-			tempWrapper = new GrinderOutputWrapper(outputs[0], nullOutput, nullOutput);
+			tempWrapper = new GrinderOutputWrapper(input, outputs[0], nullOutput, nullOutput);
 		}else if(outputs.length == 2) {
-			tempWrapper = new GrinderOutputWrapper(outputs[0], outputs[1], nullOutput);
+			tempWrapper = new GrinderOutputWrapper(input, outputs[0], outputs[1], nullOutput);
 		}else if(outputs.length == 3) {
-			tempWrapper = new GrinderOutputWrapper(outputs[0], outputs[1], outputs[2]);
+			tempWrapper = new GrinderOutputWrapper(input, outputs[0], outputs[1], outputs[2]);
 		}
 		putLists(input, tempWrapper);
 	}

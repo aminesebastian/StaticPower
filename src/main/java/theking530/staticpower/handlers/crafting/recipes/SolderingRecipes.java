@@ -89,6 +89,9 @@ public class SolderingRecipes {
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.TeleportUpgrade), new Object[]{"EHE"," P ","EHE",
 		'H', Item.getItemFromBlock(Blocks.HOPPER), 'E', Items.ENDER_PEARL, 'P',  ModItems.EnergizedUpgradePlate});
 		
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.ExperienceVacuumUpgrade), new Object[]{"CGC"," P ","CGC",
+		'G', Item.getItemFromBlock(Blocks.GLASS), 'C', ModItems.BaseFluidCapsule, 'P',  ModItems.StaticUpgradePlate});
+		
 		//Molds --------------------------------------------------------------------------------------------------
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.PlateMould), new Object[]{"   "," C "," P ",
 		'P', ModItems.IronPlate, 'C',  ModItems.CopperPlate});

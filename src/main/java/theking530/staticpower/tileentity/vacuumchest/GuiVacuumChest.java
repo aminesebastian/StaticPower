@@ -14,25 +14,30 @@ import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticpower.items.ModItems;
 
-public class GuiVacuumChest extends BaseGuiContainer{
+public class GuiVacuumChest extends BaseGuiContainer {
 	
 	private TileEntityVacuumChest vacuumChest;
-
-	public GuiInfoTab inforTab;
+	private GuiInfoTab infoTab;
 	private GuiFluidBarFromTank fluidBar;
 	
 	public GuiVacuumChest(InventoryPlayer invPlayer, TileEntityVacuumChest teVChest) {
 		super(new ContainerVacuumChest(invPlayer, teVChest), 176, 185);
-		vacuumChest = teVChest;		
-		if(vacuumChest.showTank()) {
-			this.xSize = 200;
-		}
+		vacuumChest = teVChest;	
+		
 		fluidBar = new GuiFluidBarFromTank(vacuumChest.getTank());
-		inforTab = new GuiInfoTab(100, 65);
-		getTabManager().registerTab(inforTab);
+		fluidBar.setPosition(176, 72);
+		fluidBar.setSize(16,  60);
+		registerWidget(fluidBar);
+		
+		if(vacuumChest.showTank()) {
+			xSize = 200;
+		}
+		
+		infoTab = new GuiInfoTab(100, 65);
+		getTabManager().registerTab(infoTab);
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teVChest));
 		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teVChest));
-		getTabManager().setInitiallyOpenTab(inforTab);
+		getTabManager().setInitiallyOpenTab(infoTab);
 	}
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = I18n.format(this.vacuumChest.getName());
@@ -40,9 +45,6 @@ public class GuiVacuumChest extends BaseGuiContainer{
 	}	
 	@Override
 	protected void drawExtra(float f, int i, int j) {			
-		//Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.VCHEST_GUI);
-		//drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		
 		drawGenericBackground();
 		drawPlayerInventorySlots(guiLeft+8, guiTop+ySize-83);
 
@@ -61,14 +63,15 @@ public class GuiVacuumChest extends BaseGuiContainer{
     	String[] splitMsg = text.split("=");
     		
     	GuiDrawItem.drawItem(ModItems.BasicItemFilter, guiLeft, guiTop, 8, 78, this.zLevel, 0.5f);
-		inforTab.setText(vacuumChest.getBlockType().getLocalizedName(), Arrays.asList(splitMsg));
-		
+		infoTab.setText(vacuumChest.getBlockType().getLocalizedName(), Arrays.asList(splitMsg));
+
 		if(!vacuumChest.showTank()) {
-			xSize = 176;
+			setScreenSizeTarget(176, 185);
+			fluidBar.setVisible(false);
 		}else{
-			xSize = 200;
+			setScreenSizeTarget(200, 185);
 	    	drawSlot(guiLeft+176, guiTop+12, 16, 60);
-	    	fluidBar.drawFluidBar(guiLeft+176, guiTop+72, 16, 60, zLevel);
+			fluidBar.setVisible(true);
 		}
 	}	
 }

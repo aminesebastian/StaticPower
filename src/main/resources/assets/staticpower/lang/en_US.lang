@@ -240,7 +240,7 @@ fluid.Mash=Mash
 tile.EvaporatedMash.name=Evaporated Mash
 fluid.EvaporatedMash=Evaporated Mash
 fluid.LiquidExperience=Liquid Experience
-
+tile.LiquidExperience.name=Liquid Experience
 //Gates
 tile.SignalMultiplier.name=Redstone Transducer
 container.SignalMultiplier=Redstone Transducer

@@ -12,7 +12,7 @@ public class SlotWithExperienceOutput extends SlotItemHandler {
 
     private final EntityPlayer thePlayer;
     private int removeCount;
-	
+
 	public SlotWithExperienceOutput(EntityPlayer player, IItemHandler handler, int i, int j, int k) {
 		super(handler, i, j, k);
 		thePlayer = player;
@@ -30,10 +30,10 @@ public class SlotWithExperienceOutput extends SlotItemHandler {
 
         return super.decrStackSize(amount);
     }
-
-    public void onSlotChange(EntityPlayer playerIn, ItemStack stack) {
+    public ItemStack onTake(EntityPlayer thePlayer, ItemStack stack) {
         this.onCrafting(stack);
-        super.onTake(playerIn, stack);
+        super.onTake(thePlayer, stack);
+        return stack;
     }
 
     /**
@@ -50,11 +50,10 @@ public class SlotWithExperienceOutput extends SlotItemHandler {
      */
     protected void onCrafting(ItemStack stack) {
         stack.onCrafting(this.thePlayer.getEntityWorld(), this.thePlayer, this.removeCount);
-
         if (!this.thePlayer.getEntityWorld().isRemote) {
             int i = this.removeCount;
             float f = getExperience(stack);
-
+ 
             if (f == 0.0F) {
                 i = 0;
             } else if (f < 1.0F) {

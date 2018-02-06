@@ -43,4 +43,7 @@ public class GuiUtilities {
 	public static String getMaxRecieveFormatted(StaticEnergyStorage Storage) {
 		return NumberFormat.getNumberInstance(Locale.US).format(Storage.getMaxReceive()) + " RF/t";
 	}
+	public static String formatIntegerWithCommas(int value) {
+		return NumberFormat.getNumberInstance(Locale.US).format(value);
+	}
 }

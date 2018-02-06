@@ -25,7 +25,7 @@ public class ContainerPoweredFurnace extends Container {
 		this.addSlotToContainer(new SlotWithExperienceOutput(invPlayer.player, tePoweredSmelter.slotsOutput, 0, 109, 32) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
-		          return FurnaceRecipes.instance().getSmeltingResult(itemStack) != null;
+		          return !FurnaceRecipes.instance().getSmeltingResult(itemStack).isEmpty();
 		    }
 		});	
 		

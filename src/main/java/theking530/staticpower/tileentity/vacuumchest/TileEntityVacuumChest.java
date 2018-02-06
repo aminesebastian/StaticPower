@@ -25,8 +25,10 @@ import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.assists.utilities.TileEntityUtilities;
 import theking530.staticpower.fluids.ModFluids;
+import theking530.staticpower.items.ModItems;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
+import theking530.staticpower.items.upgrades.BaseTankUpgrade;
 import theking530.staticpower.items.upgrades.ExperienceVacuumUpgrade;
 import theking530.staticpower.items.upgrades.TeleportUpgrade;
 import theking530.staticpower.tileentity.BaseTileEntity;
@@ -167,69 +169,27 @@ public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<E
 	/*Update Handling*/
 	@Override
 	public void handleUpgrades() {
-		handleRangeUpgrade();
-		handleTeleportUpgrade();
-		handleExperienceUpgrade();
-	}
-	public void handleRangeUpgrade() {
-		ItemStack upgrade = ItemStack.EMPTY;
-		int slot = -1;
-		for(int i=0; i<getUpgradeSlots().size(); i++) {
-			slot = getUpgradeSlots().get(i);
-			upgrade = slotsUpgrades.getStackInSlot(slot);
-			if(!upgrade.isEmpty()) {
-				if(isValidUpgrade(upgrade)) {
-					if(upgrade.getItem() instanceof BaseRangeUpgrade) {
-						break;
-					}
-				}
-			}
-		}
-		if(!upgrade.isEmpty()) {
-			BaseRangeUpgrade tempUpgrade = (BaseRangeUpgrade) upgrade.getItem();
-			vacuumDiamater = tempUpgrade.getValueMultiplied(initialVacuumDiamater, tempUpgrade.getMultiplier(upgrade, 0));
+		if(hasUpgrade(ModItems.BasicRangeUpgrade)) {
+			BaseRangeUpgrade tempUpgrade = (BaseRangeUpgrade) getUpgrade(ModItems.BasicRangeUpgrade).getItem();
+			vacuumDiamater = tempUpgrade.getValueMultiplied(initialVacuumDiamater, tempUpgrade.getMultiplier(getUpgrade(ModItems.BasicRangeUpgrade), 0));
 		}else{
 			vacuumDiamater = initialVacuumDiamater;
 		}
-	}
-	public void handleTeleportUpgrade() {
-		ItemStack upgrade = ItemStack.EMPTY;
-		int slot = -1;
-		for(int i=0; i<getUpgradeSlots().size(); i++) {
-			slot = getUpgradeSlots().get(i);
-			upgrade = slotsUpgrades.getStackInSlot(slot);
-			if(!upgrade.isEmpty()) {
-				if(isValidUpgrade(upgrade)) {
-					if(upgrade.getItem() instanceof TeleportUpgrade) {
-						break;
-					}
-				}
-			}
-		}
-		if(!upgrade.isEmpty()) {
+		if(hasUpgrade(ModItems.TeleportUpgrade)) {
 			shouldTeleport = true;
 		}else{
 			shouldTeleport = false;
 		}
-	}
-	public void handleExperienceUpgrade() {
-		ItemStack upgrade = ItemStack.EMPTY;
-		int slot = -1;
-		for(int i=0; i<getUpgradeSlots().size(); i++) {
-			slot = getUpgradeSlots().get(i);
-			upgrade = slotsUpgrades.getStackInSlot(slot);
-			if(!upgrade.isEmpty()) {
-				if(isValidUpgrade(upgrade)) {
-					if(upgrade.getItem() instanceof ExperienceVacuumUpgrade) {
-						break;
-					}
-				}
-			}
-		}
-		if(!upgrade.isEmpty() && upgrade.getItem() instanceof ExperienceVacuumUpgrade) {
+		if(hasUpgrade(ModItems.ExperienceVacuumUpgrade)) {
 			shouldVacuumExperience = true;
 		}else{
 			shouldVacuumExperience = false;
+		}
+		if(hasUpgrade(ModItems.BasicTankUpgrade)) {
+			BaseTankUpgrade tempUpgrade = (BaseTankUpgrade) getUpgrade(ModItems.BasicTankUpgrade).getItem();
+			experienceTank.setCapacity((int)(tempUpgrade.getValueMultiplied(10000, tempUpgrade.getMultiplier(getUpgrade(ModItems.BasicTankUpgrade), 0))));
+		}else{
+			experienceTank.setCapacity(10000);
 		}
 	}
 	@Override

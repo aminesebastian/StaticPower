@@ -64,10 +64,10 @@ public class GuiRedstoneTab extends BaseGuiTab implements IInteractableGui {
 	@Override
 	public void drawExtra(int xPos, int yPos, float partialTicks) {
 		if(isOpen()) {
-			drawButtonBG(xPos, yPos-32);	
-			ignoreRedstoneButton.setPosition(xPos+25, yPos+30);
-			lowRedstoneButton.setPosition(xPos+55, yPos+30);
-			highRedstoneButton.setPosition(xPos+85, yPos+30);
+			drawButtonBG(xPos-3, yPos-32);	
+			ignoreRedstoneButton.setPosition(xPos+23, yPos+30);
+			lowRedstoneButton.setPosition(xPos+53, yPos+30);
+			highRedstoneButton.setPosition(xPos+83, yPos+30);
 			buttonManager.drawButtons(xPos, yPos);
 			drawText(xPos+5, yPos-35);
 		}

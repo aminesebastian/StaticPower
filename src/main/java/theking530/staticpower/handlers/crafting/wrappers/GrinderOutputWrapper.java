@@ -6,14 +6,16 @@ import net.minecraft.item.ItemStack;
 
 public class GrinderOutputWrapper {
 
-	protected final GrinderOutput outputItem1;
-	protected final GrinderOutput outputItem2;
-	protected final GrinderOutput outputItem3;
+	private final GrinderOutput outputItem1;
+	private final GrinderOutput outputItem2;
+	private final GrinderOutput outputItem3;
+	private final ItemStack inputItem;
 	
-	public GrinderOutputWrapper(GrinderOutput output1, GrinderOutput output2, GrinderOutput output3) {
+	public GrinderOutputWrapper(ItemStack input, GrinderOutput output1, GrinderOutput output2, GrinderOutput output3) {
 		outputItem1 = output1;
 		outputItem2 = output2;
 		outputItem3 = output3;
+		inputItem = input;
 	}
 	
 	public ArrayList<GrinderOutput> getOutputItems() {
@@ -28,6 +30,9 @@ public class GrinderOutputWrapper {
 			tempOutput.add(outputItem3);
 		}
 		return tempOutput;
+	}
+	public ItemStack getInputItem() {
+		return inputItem;
 	}
 	public int getOutputItemCount() {
 		int tempCount = 0;

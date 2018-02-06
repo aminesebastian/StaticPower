@@ -30,6 +30,7 @@ import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.machines.BaseMachineWithTank;
 import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent;
+import theking530.staticpower.machines.tileentitycomponents.FillFromBatteryComponent;
 import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent.FluidContainerInteractionMode;
 
 public class TileEntityBasicFarmer extends BaseMachineWithTank {
@@ -47,7 +48,7 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 		initializeBaseMachineWithTank(2, 20, 100000, 100, 10, 0, 4, 10, 10000);		
 		DRAIN_COMPONENT = new DrainToBucketComponent("BucketDrain", slotsInput, 2, slotsOutput, 9, this, TANK, FLUID_TO_CONTAINER_RATE);
 		DRAIN_COMPONENT.setMode(FluidContainerInteractionMode.FillFromContainer);
-		setBatterySlot(3);
+		registerComponent(new FillFromBatteryComponent("BatteryComponent", slotsInput, 3, this, energyStorage));
 		CURRENT_COORD = getStartingCoord();
 		RAND = new Random();
 		FARMED_STACKS = new ArrayList<ItemStack>();
@@ -286,13 +287,13 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 				getWorld().getBlockState(pos.add(0, 1, 0)).getBlock().getDrops(drops1, getWorld(), pos.add(0, 1, 0), getWorld().getBlockState(pos.add(0, 1, 0)), 0);
 				FARMED_STACKS.addAll(getBlockDrops(pos.add(0, 1, 0)));
 				getWorld().setBlockToAir(pos.add(0, 1, 0));
-        		getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 3);
+        		getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 2);
         		useAxe();
             	       		
 				if(getWorld().getBlockState(pos.add(0, 2, 0)).getBlock() instanceof BlockReed) {
 					FARMED_STACKS.addAll(getBlockDrops(pos.add(0, 2, 0)));
 					getWorld().setBlockToAir(pos.add(0, 2, 0));	
-					getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 3);
+					getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 2);
 					useAxe();
 				}
         	}
