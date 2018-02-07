@@ -19,6 +19,7 @@ import theking530.staticpower.items.tools.MetalHammer;
 import theking530.staticpower.items.tools.SolderingIron;
 import theking530.staticpower.items.tools.StaticWrench;
 import theking530.staticpower.items.tools.WireCutters;
+import theking530.staticpower.items.upgrades.BaseOutputMultiplierUpgrade;
 import theking530.staticpower.items.upgrades.BasePowerUpgrade;
 import theking530.staticpower.items.upgrades.BaseQuarryingUpgrade;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
@@ -109,6 +110,11 @@ public class ModItems {
 	public static Item CreativeTankUpgrade;
 	public static Item CreativeSpeedUpgrade;
 
+	public static Item BasicOutputMultiplierUpgrade;
+	public static Item StaticOutputMultiplierUpgrade;
+	public static Item EnergizedOutputMultiplierUpgrade;
+	public static Item LumumOutputMultiplierUpgrade;
+	
 	public static Item Silicon;
 	public static Item MemoryChip;
 	
@@ -338,6 +344,10 @@ public class ModItems {
 		registry.PreRegisterItem(EnergizedRangeUpgrade = new BaseRangeUpgrade("EnergizedRangeUpgrade", Tier.ENERGIZED));	
 		registry.PreRegisterItem(LumumRangeUpgrade = new BaseRangeUpgrade("LumumRangeUpgrade", Tier.LUMUM));	
 		
+		registry.PreRegisterItem(BasicOutputMultiplierUpgrade = new BaseOutputMultiplierUpgrade("BasicOutputMultiplierUpgrade", Tier.BASIC));	
+		registry.PreRegisterItem(StaticOutputMultiplierUpgrade = new BaseOutputMultiplierUpgrade("StaticOutputMultiplierUpgrade", Tier.STATIC));	
+		registry.PreRegisterItem(EnergizedOutputMultiplierUpgrade = new BaseOutputMultiplierUpgrade("EnergizedOutputMultiplierUpgrade", Tier.ENERGIZED));	
+		registry.PreRegisterItem(LumumOutputMultiplierUpgrade = new BaseOutputMultiplierUpgrade("LumumOutputMultiplierUpgrade", Tier.LUMUM));	
 	
 		registry.PreRegisterItem(StaticBook = new StaticPowerBook("StaticBook"));	
 

@@ -89,7 +89,7 @@ public class SolderingRecipes {
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.TeleportUpgrade), new Object[]{"EHE"," P ","EHE",
 		'H', Item.getItemFromBlock(Blocks.HOPPER), 'E', Items.ENDER_PEARL, 'P',  ModItems.EnergizedUpgradePlate});
 		
-		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.ExperienceVacuumUpgrade), new Object[]{"CGC"," P ","CGC",
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.ExperienceVacuumUpgrade), new Object[]{"CGC","GPG","CGC",
 		'G', Item.getItemFromBlock(Blocks.GLASS), 'C', ModItems.BaseFluidCapsule, 'P',  ModItems.StaticUpgradePlate});
 		
 		//Molds --------------------------------------------------------------------------------------------------
@@ -136,6 +136,14 @@ public class SolderingRecipes {
 		'S', ModItems.IronPlate, 'Q', ModItems.SilverWire, 'R', Item.getItemFromBlock(Blocks.LEVER), 'C', ModItems.BasicCircuit});
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.InternalClock, 2), new Object[]{" S ", "SRS", "QCQ", 
 		'S', ModItems.IronPlate, 'Q', ModItems.SilverWire, 'R', Items.QUARTZ, 'C', ModItems.BasicCircuit});
+		
+		//Fluid Canisters
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.StaticFluidCapsule), new Object[]{"PPP", "CPC", "PPP", 
+		'P', ModItems.StaticPlate, 'C', ModItems.BaseFluidCapsule});		
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.EnergizedFluidCapsule), new Object[]{"PPP", "CPC", "PPP", 
+		'P', ModItems.EnergizedPlate, 'C', ModItems.StaticFluidCapsule});		
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.LumumFluidCapsule), new Object[]{"PPP", "CPC", "PPP", 
+		'P', ModItems.LumumPlate, 'C', ModItems.EnergizedFluidCapsule});	
 		
 		registerSiliconOreDictRecipes();
 	}

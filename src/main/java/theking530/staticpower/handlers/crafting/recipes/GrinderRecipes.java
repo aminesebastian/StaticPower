@@ -102,7 +102,6 @@ public class GrinderRecipes {
 			RegisterHelper.registerGrinderRecipe(new ItemStack(Items.COAL), newOutput(OreDictionary.getOres("dustCoal").get(0), 1.0f));	
 		}
 
-		oreDictionaryOutput(new ItemStack(Item.getItemFromBlock(Blocks.SAND)), "itemSilicon", 1);
 		
 		//Ingots
 		for(int index = 0; index < OreDictionary.getOres("ingotCopper").size(); index++) {

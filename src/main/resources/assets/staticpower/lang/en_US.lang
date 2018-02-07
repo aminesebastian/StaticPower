@@ -80,6 +80,11 @@ item.CreativeSpeedUpgrade.name=Creative Speed Upgrade
 item.TeleportUpgrade.name=Teleport Upgrade
 item.ExperienceVacuumUpgrade.name=Experience Vacuum Upgrade
 
+item.BasicOutputMultiplierUpgrade.name=Basic Output Multiplier Upgrade
+item.StaticOutputMultiplierUpgrade.name=Static Output Multiplier Upgrade
+item.EnergizedOutputMultiplierUpgrade.name=Energized Output Multiplier Upgrade
+item.LumumOutputMultiplierUpgrade.name=Lumum Output Multiplier Upgrade
+
 item.BasicUpgradePlate.name=Basic Upgrade Plate
 item.StaticUpgradePlate.name=Static Upgrade Plate
 item.EnergizedUpgradePlate.name=Energized Upgrade Plate

@@ -204,6 +204,11 @@ public class ItemRenderRegistry {
 		registerItem(ModItems.EnergizedUpgradePlate);
 		registerItem(ModItems.LumumUpgradePlate);
 		
+		registerItem(ModItems.BasicOutputMultiplierUpgrade);
+		registerItem(ModItems.StaticOutputMultiplierUpgrade);
+		registerItem(ModItems.EnergizedOutputMultiplierUpgrade);
+		registerItem(ModItems.LumumOutputMultiplierUpgrade);
+		
 		registerItem(ModPlants.StaticCrop);
 		registerItem(ModPlants.EnergizedCrop);
 		registerItem(ModPlants.LumumCrop);
@@ -291,6 +296,7 @@ public class ItemRenderRegistry {
 		registerItem(ModItems.Silicon);
 		registerItem(ModItems.Diode);
 		registerItem(ModItems.MemoryChip);
+		registerItem(ModItems.InternalClock);
 		
 		registerTemporaryLogicGate(ModBlocks.Adder);
 		registerTemporaryLogicGate(ModBlocks.Subtractor);

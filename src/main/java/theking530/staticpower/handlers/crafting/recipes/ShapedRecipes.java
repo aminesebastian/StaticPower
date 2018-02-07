@@ -216,13 +216,7 @@ public class ShapedRecipes {
 		
 		//Fluid Capsules --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_baseFluidCapsule", "StaticPower", new ItemStack(ModItems.BaseFluidCapsule), new Object[]{"PGP", "PGP", "PGP", 
-		'P', ingredientFromItem(ModItems.IronPlate), 'G', ingredientFromBlock(Blocks.GLASS_PANE)});		
-		RegisterHelper.addShapedRecipe("StaticPower_staticFluidCapsule", "StaticPower", new ItemStack(ModItems.StaticFluidCapsule), new Object[]{"PPP", "CPC", "PPP", 
-		'P', ingredientFromItem(ModItems.StaticPlate), 'C', ingredientFromItem(ModItems.BaseFluidCapsule)});		
-		RegisterHelper.addShapedRecipe("StaticPower_energizedFluidCapsule", "StaticPower", new ItemStack(ModItems.EnergizedFluidCapsule), new Object[]{"PPP", "CPC", "PPP", 
-		'P', ingredientFromItem(ModItems.EnergizedPlate), 'C', ingredientFromItem(ModItems.StaticFluidCapsule)});		
-		RegisterHelper.addShapedRecipe("StaticPower_lumumFluidCapsule", "StaticPower", new ItemStack(ModItems.LumumFluidCapsule), new Object[]{"PPP", "CPC", "PPP", 
-		'P', ingredientFromItem(ModItems.LumumPlate), 'C', ingredientFromItem(ModItems.EnergizedFluidCapsule)});		
+		'P', ingredientFromItem(ModItems.IronPlate), 'G', ingredientFromBlock(Blocks.GLASS_PANE)});			
 
 		//Energized Chest --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_energizedChest", "StaticPower", new ItemStack(ModBlocks.EnergizedChest), new Object[]{"EEE", "ECE", "EEE", 

@@ -22,6 +22,7 @@ import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.assists.utilities.EnumTextFormatting;
 import theking530.staticpower.assists.utilities.ItemUtilities;
+import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.client.GuiIDRegistry;
 import theking530.staticpower.items.ItemBase;
 
@@ -142,6 +143,41 @@ public class ItemFilter extends ItemBase {
 		tempItems[5] = new ItemStack(Item.getItemFromBlock(Blocks.GRAVEL));
 		tempItems[6] = new ItemStack(Items.FLINT);
 		writePremadeFilter(stack, tempItems);
+		stack.getTagCompound().setBoolean("WHITE_LIST_MODE", false);
 		stack.setStackDisplayName("Quarry Filter");
+	}
+	public static void writeOreFilter(ItemStack stack) {
+		ItemStack[] tempItems = new ItemStack[7];
+		
+		tempItems[0] = new ItemStack(Item.getItemFromBlock(Blocks.IRON_ORE));
+		tempItems[1] = new ItemStack(Item.getItemFromBlock(Blocks.GOLD_ORE));
+		tempItems[2] = new ItemStack(Item.getItemFromBlock(ModBlocks.CopperOre));
+		tempItems[3] = new ItemStack(Item.getItemFromBlock(ModBlocks.TinOre));
+		tempItems[4] = new ItemStack(Item.getItemFromBlock(ModBlocks.SilverOre));
+		tempItems[5] = new ItemStack(Item.getItemFromBlock(ModBlocks.LeadOre));
+		tempItems[6] = new ItemStack(Item.getItemFromBlock(ModBlocks.NickelOre));
+
+		writePremadeFilter(stack, tempItems);
+		stack.getTagCompound().setBoolean("WHITE_LIST_MODE", true);
+		stack.getTagCompound().setBoolean("MATCH_ORE_DICT", true);
+		stack.setStackDisplayName("Ore Filter");
+	}
+	public static void writeAdvancedOreFilter(ItemStack stack) {
+		ItemStack[] tempItems = new ItemStack[9];
+		
+		tempItems[0] = new ItemStack(Item.getItemFromBlock(Blocks.IRON_ORE));
+		tempItems[1] = new ItemStack(Item.getItemFromBlock(Blocks.GOLD_ORE));
+		tempItems[2] = new ItemStack(Item.getItemFromBlock(ModBlocks.CopperOre));
+		tempItems[3] = new ItemStack(Item.getItemFromBlock(ModBlocks.TinOre));
+		tempItems[4] = new ItemStack(Item.getItemFromBlock(ModBlocks.SilverOre));
+		tempItems[5] = new ItemStack(Item.getItemFromBlock(ModBlocks.LeadOre));
+		tempItems[6] = new ItemStack(Item.getItemFromBlock(ModBlocks.NickelOre));
+		tempItems[7] = new ItemStack(Item.getItemFromBlock(ModBlocks.RubyOre));
+		tempItems[8] = new ItemStack(Item.getItemFromBlock(ModBlocks.SapphireOre));		
+		
+		writePremadeFilter(stack, tempItems);
+		stack.getTagCompound().setBoolean("WHITE_LIST_MODE", true);
+		stack.getTagCompound().setBoolean("MATCH_ORE_DICT", true);
+		stack.setStackDisplayName("Advanced Ore Filter");
 	}
 }

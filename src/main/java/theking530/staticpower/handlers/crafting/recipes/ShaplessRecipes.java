@@ -131,21 +131,22 @@ public class ShaplessRecipes {
 		RegisterHelper.addShapelessRecipe("StaticPower_lumumPlanks", "StaticPower", new ItemStack(Item.getItemFromBlock(ModBlocks.LumumPlanks), 4), new Ingredient[]{
 			Ingredient.fromItem(Item.getItemFromBlock(ModBlocks.LumumWood))});
 		
-		//Cannisters --------------------------------------------------------------------------------------------------
-		RegisterHelper.addShapelessRecipe("StaticPower_empty_baseFluidCapsule", "StaticPower", new ItemStack(ModItems.BaseFluidCapsule, 1), new Ingredient[]{
-				Ingredient.fromItem(ModItems.BaseFluidCapsule)});
-		RegisterHelper.addShapelessRecipe("StaticPower_empty_staticFluidCapsule", "StaticPower", new ItemStack(ModItems.StaticFluidCapsule, 1), new Ingredient[]{
-				Ingredient.fromItem(ModItems.StaticFluidCapsule)});
-		RegisterHelper.addShapelessRecipe("StaticPower_empty_energizedFluidCapsule", "StaticPower", new ItemStack(ModItems.EnergizedFluidCapsule, 1), new Ingredient[]{
-				Ingredient.fromItem(ModItems.EnergizedFluidCapsule)});
-		RegisterHelper.addShapelessRecipe("StaticPower_empty_lumumFluidCapsule", "StaticPower", new ItemStack(ModItems.LumumFluidCapsule, 1), new Ingredient[]{
-				Ingredient.fromItem(ModItems.LumumFluidCapsule)});
-		
+
 		//Filters --------------------------------------------------------------------------------------------------
 		ItemStack quarryFilter = new ItemStack(ModItems.UpgradedItemFilter, 1);
 		ItemFilter.writeQuarryFilter(quarryFilter);
 		RegisterHelper.addShapelessRecipe("StaticPower_quarryFilter", "StaticPower", quarryFilter, new Ingredient[]{
 				Ingredient.fromItem(ModItems.UpgradedItemFilter), Ingredient.fromItem(Item.getItemFromBlock(Blocks.COBBLESTONE))});
+		
+		ItemStack quarryFilter2 = new ItemStack(ModItems.UpgradedItemFilter, 1);
+		ItemFilter.writeOreFilter(quarryFilter2);
+		RegisterHelper.addShapelessRecipe("StaticPower_oreFilter", "StaticPower", quarryFilter2, new Ingredient[]{
+				Ingredient.fromItem(ModItems.UpgradedItemFilter), Ingredient.fromItem(Item.getItemFromBlock(Blocks.IRON_ORE))});
+		
+		ItemStack quarryFilter3 = new ItemStack(ModItems.AdvancedItemFilter, 1);
+		ItemFilter.writeAdvancedOreFilter(quarryFilter3);
+		RegisterHelper.addShapelessRecipe("StaticPower_advancedOreFilter", "StaticPower", quarryFilter3, new Ingredient[]{
+				Ingredient.fromItem(ModItems.AdvancedItemFilter), Ingredient.fromItem(Item.getItemFromBlock(Blocks.GOLD_ORE))});
 	}
 	public static void registerFullRecipes() {
 		registerShapelessRecipes();
