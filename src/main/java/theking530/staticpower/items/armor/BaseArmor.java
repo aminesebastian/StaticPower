@@ -235,7 +235,6 @@ public class BaseArmor extends ItemArmor {
 			return true;
 		}
 		double randDouble = RANDOM.nextDouble();
-		System.out.println(randDouble);
 		return percentage > randDouble ? true : false;
 	}
 }

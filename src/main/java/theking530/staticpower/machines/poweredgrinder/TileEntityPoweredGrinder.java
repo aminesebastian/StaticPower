@@ -5,6 +5,8 @@ import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.assists.utilities.TileEntityUtilities;
 import theking530.staticpower.handlers.crafting.registries.GrinderRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.GrinderOutputWrapper;
+import theking530.staticpower.items.ModItems;
+import theking530.staticpower.items.upgrades.BaseOutputMultiplierUpgrade;
 import theking530.staticpower.machines.BaseMachine;
 import theking530.staticpower.machines.tileentitycomponents.FillFromBatteryComponent;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityInputServo;
@@ -12,11 +14,14 @@ import theking530.staticpower.machines.tileentitycomponents.TileEntityOutputServ
 
 public class TileEntityPoweredGrinder extends BaseMachine {
 	
+	private float bonusOutputChance;
+	
 	public TileEntityPoweredGrinder() {
 		initializeBasicMachine(2, 1000, 100000, 80, 100, 1, 2, 3);
 		registerComponent(new FillFromBatteryComponent("BatteryComponent", slotsInput, 1, this, energyStorage));
 		registerComponent(new TileEntityOutputServo(this, 2, slotsOutput, 0, 1, 2));
 		registerComponent(new TileEntityInputServo(this, 2, slotsInput, 0));
+		bonusOutputChance = 0.0f;
 	}
 		
 	//IInventory				
@@ -48,7 +53,7 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 					if(getGrindingResult(getInternalStack(0)) != null) {
 						for(int j=0; j<getGrindingResult(getInternalStack(0)).getOutputItemCount(); j++) {
 							ItemStack result = getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getOutput();
-							if(TileEntityUtilities.diceRoll(getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getPercentage())) {
+							if(TileEntityUtilities.diceRoll(getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getPercentage()+bonusOutputChance)) {
 								boolean flag = false;
 								int slot = -1;
 								for(int i=0; i<3; i++) {
@@ -80,6 +85,24 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 			}
 		}
 	}
+	@Override
+	public void upgradeHandler(){
+		super.upgradeHandler();
+		outputUpgradeHandler();
+	}
+	private void outputUpgradeHandler() {
+		if(hasUpgrade(ModItems.BasicOutputMultiplierUpgrade)) {
+			BaseOutputMultiplierUpgrade tempUpgrade = (BaseOutputMultiplierUpgrade) getUpgrade(ModItems.BasicOutputMultiplierUpgrade).getItem();
+			bonusOutputChance = tempUpgrade.getMultiplier(getUpgrade(ModItems.BasicOutputMultiplierUpgrade), 0);
+		}else{
+			bonusOutputChance = 0.0f;
+		}
+	}
+	
+	public float getBonusOutputChance() {
+		return Math.min(1.0f, bonusOutputChance);
+	}
+	
 	public GrinderOutputWrapper getGrindingResult(ItemStack stack) {
 		if(stack != ItemStack.EMPTY) {
 			return GrinderRecipeRegistry.Grinding().getGrindingResult(stack);
