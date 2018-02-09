@@ -8,9 +8,9 @@ import theking530.staticpower.handlers.crafting.wrappers.GrinderOutputWrapper;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.items.upgrades.BaseOutputMultiplierUpgrade;
 import theking530.staticpower.machines.BaseMachine;
-import theking530.staticpower.machines.tileentitycomponents.FillFromBatteryComponent;
-import theking530.staticpower.machines.tileentitycomponents.TileEntityInputServo;
-import theking530.staticpower.machines.tileentitycomponents.TileEntityOutputServo;
+import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
+import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
+import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
 
 public class TileEntityPoweredGrinder extends BaseMachine {
 	
@@ -18,9 +18,9 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 	
 	public TileEntityPoweredGrinder() {
 		initializeBasicMachine(2, 1000, 100000, 80, 100, 1, 2, 3);
-		registerComponent(new FillFromBatteryComponent("BatteryComponent", slotsInput, 1, this, energyStorage));
-		registerComponent(new TileEntityOutputServo(this, 2, slotsOutput, 0, 1, 2));
-		registerComponent(new TileEntityInputServo(this, 2, slotsInput, 0));
+		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInput, 1, this, energyStorage));
+		registerComponent(new TileEntityItemOutputServo(this, 2, slotsOutput, 0, 1, 2));
+		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0));
 		bonusOutputChance = 0.0f;
 	}
 		
@@ -47,6 +47,7 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 			}
 			if(isProcessing() && !isMoving()) {
 				if(processingTimer < processingTime) {
+					energyStorage.setMaxExtract(getProcessingCost() / processingTime);
 					useEnergy(getProcessingCost() / processingTime);
 					processingTimer++;
 				}else{
@@ -97,6 +98,7 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 		}else{
 			bonusOutputChance = 0.0f;
 		}
+		processingEnergyMult = (processingEnergyMult * (1+bonusOutputChance/2.0f));
 	}
 	
 	public float getBonusOutputChance() {

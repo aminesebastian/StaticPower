@@ -27,6 +27,9 @@ public abstract class BaseGuiTab extends Gui {
 			return TabState.values()[newIndex];
 		}
 	}
+	public enum TabSide {
+		LEFT, RIGHT;
+	}
 	
 	protected int tabWidth;
 	protected int tabHeight;
@@ -40,7 +43,9 @@ public abstract class BaseGuiTab extends Gui {
 	protected float animationTime = 5.0f;
 	protected Item itemIcon;
 	protected ResourceLocation tabTexture;
+	
 	protected TabState tabState;
+	protected TabSide tabSide;
 	
 	private GuiTabManager owningManager;
 	
@@ -50,6 +55,7 @@ public abstract class BaseGuiTab extends Gui {
 		itemIcon = item;		
 		tabTexture = texture;
 		tabState = TabState.CLOSED;
+		tabSide = TabSide.RIGHT;
 	}
 	public BaseGuiTab(int tabWidth, int tabHeight, ResourceLocation texture, Block block) {
 		this(tabWidth, tabHeight, texture, Item.getItemFromBlock(block));
@@ -61,9 +67,10 @@ public abstract class BaseGuiTab extends Gui {
 		xPosition = xPos;
 		yPosition = yPos;
 		
-
+		GL11.glColor3f(1.0f, 1.0f, 1.0f);	
 		drawTab(xPos, yPos, partialTicks);
-		drawExtra(xPos, yPos, partialTicks);	
+		drawExtra(getTabSide() == TabSide.RIGHT ? xPos : xPos - tabWidth, yPos, partialTicks);	
+
 	}
 	public void mouseInteraction(int mouseX, int mouseY, int button) {
 		if(mouseX >  xPosition && mouseX <  xPosition + 24) {
@@ -115,6 +122,14 @@ public abstract class BaseGuiTab extends Gui {
 	public TabState getTabState() {
 		return tabState;
 	}
+	public TabSide getTabSide(){
+		return tabSide;
+	}
+	public BaseGuiTab setTabSide(TabSide newSide) {
+		this.tabSide = newSide;
+		return this;
+	}
+	
 	public boolean setTabState(TabState newState) {
 		if(newState == TabState.CLOSED || newState == TabState.CLOSING) {
 			if(getTabState() == TabState.OPEN) {
@@ -161,17 +176,19 @@ public abstract class BaseGuiTab extends Gui {
 		}
 	}
 	private void drawTab(int xPos, int yPos, float partialTicks) {
+		GL11.glEnable(GL11.GL_BLEND);
 		drawBaseTab(xPos, yPos, partialTicks);
 		drawButtonIcon(xPos, yPos, partialTicks);
+		GL11.glDisable(GL11.GL_BLEND);
 	}
 	private void drawButtonIcon(int xPos, int yPos, float partialTicks) {
 		if(itemIcon != null) {
 	        GlStateManager.disableDepth();
-	        Minecraft.getMinecraft().getRenderItem().renderItemAndEffectIntoGUI(new ItemStack(itemIcon), xPos+3, yPos+4);
+	        Minecraft.getMinecraft().getRenderItem().renderItemAndEffectIntoGUI(new ItemStack(itemIcon), getTabSide() == TabSide.RIGHT ? xPos+3 : xPos+5, yPos+4);
 		}
 	}
 	private void drawBaseTab(int xPos, int yPos, float partialTicks) {
-		int tabLeft = xPos;
+		int tabLeft = xPos-(getTabSide() == TabSide.RIGHT ? 0 : 24);
 		int tabTop = yPos;
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder tes = tessellator.getBuffer();
@@ -183,6 +200,12 @@ public abstract class BaseGuiTab extends Gui {
 		currentHeight = ((tabHeight*animationTimer/animationTime));
 
 		GL11.glPushMatrix();
+		GL11.glDisable(GL11.GL_CULL_FACE);
+		if(getTabSide() == TabSide.LEFT) {
+			GL11.glTranslatef(xPos, yPos, 0.0f);
+			GL11.glScalef(-1.0f, 1.0f, 1.0f);;
+			GL11.glTranslatef(-xPos, -yPos, 0.0f);
+		}
 		//Top
 		StaticVertexBuffer.pos(tabLeft+20+(tabWidth*animationTimer/animationTime), tabTop+3, 0, .976, .03);
 		StaticVertexBuffer.pos(tabLeft+20+(tabWidth*animationTimer/animationTime), tabTop, 0, .976, 0);
@@ -220,6 +243,7 @@ public abstract class BaseGuiTab extends Gui {
 		StaticVertexBuffer.pos(tabLeft+20+(tabWidth*animationTimer/animationTime), tabTop+4, 0, .9767, .03);
 
 		tessellator.draw();
+		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glPopMatrix();
 	}
 	

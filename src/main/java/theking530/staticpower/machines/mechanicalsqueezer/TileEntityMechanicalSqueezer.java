@@ -13,7 +13,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistry;
-import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent;
+import theking530.staticpower.machines.tileentitycomponents.BucketInteractionComponent;
 import theking530.staticpower.tileentity.BaseTileEntity;
 
 public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFluidHandler{
@@ -25,12 +25,12 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFlu
 	public int MOVE_SPEED = 4;
 	public int FLUID_TO_CONTAINER_RATE = 10; //1 Bucket
 	
-	public DrainToBucketComponent DRAIN_COMPONENT;
+	public BucketInteractionComponent DRAIN_COMPONENT;
 
 	public TileEntityMechanicalSqueezer() {
 		initializeBasicTileEntity(1, 2, 2);
 		TANK = new FluidTank(1000);
-		DRAIN_COMPONENT = new DrainToBucketComponent("BucketDrain", slotsInput, 1, slotsOutput, 1, this, TANK, FLUID_TO_CONTAINER_RATE);
+		DRAIN_COMPONENT = new BucketInteractionComponent("BucketDrain", slotsInput, 1, slotsOutput, 1, this, TANK, FLUID_TO_CONTAINER_RATE);
 	}
 	@Override
 	public String getName() {
@@ -136,12 +136,12 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFlu
 	@Override
 	public void process(){
 		if(!getWorld().isRemote) {
-			DRAIN_COMPONENT.update();
+			DRAIN_COMPONENT.preProcessUpdate();
 		}
 	}
 	public void rightClick() {
 		if(!getWorld().isRemote) {
-			DRAIN_COMPONENT.update();
+			DRAIN_COMPONENT.preProcessUpdate();
 			if(slotsInternal.getStackInSlot(0) == ItemStack.EMPTY){
 				PROCESSING_TIMER = 0;
 			}

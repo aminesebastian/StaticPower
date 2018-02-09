@@ -11,24 +11,24 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import theking530.staticpower.handlers.crafting.registries.CondenserRecipeRegistry;
 import theking530.staticpower.machines.BaseMachineWithTank;
-import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent;
-import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent.FluidContainerInteractionMode;
+import theking530.staticpower.machines.tileentitycomponents.BucketInteractionComponent;
+import theking530.staticpower.machines.tileentitycomponents.BucketInteractionComponent.FluidContainerInteractionMode;
 
 public class TileEntityCondenser extends BaseMachineWithTank  {
 
 	public FluidTank TANK2;
 	
 	public FluidStack PROCESSING_STACK;
-	public DrainToBucketComponent DRAIN_COMPONENT_EVAPORATED_MASH;
-	public DrainToBucketComponent DRAIN_COMPONENT_ETHANOL;
+	public BucketInteractionComponent DRAIN_COMPONENT_EVAPORATED_MASH;
+	public BucketInteractionComponent DRAIN_COMPONENT_ETHANOL;
 
 	public TileEntityCondenser() {
 		initializeBaseMachineWithTank(0, 0, 0, 0, 20, 0, 2, 2, 5000);
 		TANK2 = new FluidTank(5000);
 		
-		DRAIN_COMPONENT_EVAPORATED_MASH = new DrainToBucketComponent("LeftBucketDrain", slotsInput, 0, slotsOutput, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
+		DRAIN_COMPONENT_EVAPORATED_MASH = new BucketInteractionComponent("LeftBucketDrain", slotsInput, 0, slotsOutput, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
 		DRAIN_COMPONENT_EVAPORATED_MASH.setMode(FluidContainerInteractionMode.FillFromContainer);
-		DRAIN_COMPONENT_ETHANOL = new DrainToBucketComponent("RightBucketDrain", slotsInput, 1, slotsOutput, 1, this, TANK2, FLUID_TO_CONTAINER_RATE);	
+		DRAIN_COMPONENT_ETHANOL = new BucketInteractionComponent("RightBucketDrain", slotsInput, 1, slotsOutput, 1, this, TANK2, FLUID_TO_CONTAINER_RATE);	
 	}
 	
 	@Override
@@ -37,8 +37,8 @@ public class TileEntityCondenser extends BaseMachineWithTank  {
 	}	
 	public void process() {
 		if(!getWorld().isRemote) {
-			DRAIN_COMPONENT_EVAPORATED_MASH.update();
-			DRAIN_COMPONENT_ETHANOL.update();
+			DRAIN_COMPONENT_EVAPORATED_MASH.preProcessUpdate();
+			DRAIN_COMPONENT_ETHANOL.preProcessUpdate();
 			if(!isProcessing() && PROCESSING_STACK == null && canProcess()) {
 				PROCESSING_STACK = TANK.drain(getInputFluidAmount(), true);
 				processingTime = Math.max(getOutputCondensingTime(), 0);

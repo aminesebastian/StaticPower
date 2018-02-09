@@ -5,6 +5,7 @@ import net.minecraft.util.ResourceLocation;
 public class GuiTextures {
 	public static final ResourceLocation GENERIC_GUI = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/generic_gui_sampler.png");
 	
+	public static final ResourceLocation TANK_OVERLAY = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/tank_overlay.png");
 	public static final ResourceLocation BATTERY_GUI = new ResourceLocation(Reference.MOD_ID, "textures/gui/battery_gui.png");
 	public static final ResourceLocation MULTIPLIER_GUI = new ResourceLocation(Reference.MOD_ID, "textures/gui/multiplier_gui.png");
 	public static final ResourceLocation FURNACE_GUI = new ResourceLocation(Reference.MOD_ID, "textures/gui/powered_furnace_gui.png");
@@ -41,6 +42,7 @@ public class GuiTextures {
 	public static final ResourceLocation PURPLE_TAB = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/purple_tab.png");
 	public static final ResourceLocation RED_TAB = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/red_tab.png");
 	public static final ResourceLocation BLUE_TAB = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/blue_tab.png");
+	public static final ResourceLocation YELLOW_TAB = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/yellow_tab.png");
 	
 	public static final ResourceLocation POWER_BAR_FG = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/power_bar_power.png");
 	public static final ResourceLocation POWER_BAR_BG = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/power_bar_bg.png");

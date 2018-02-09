@@ -5,19 +5,19 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.energy.PowerDistributor;
 import theking530.staticpower.handlers.crafting.registries.FluidGeneratorRecipeRegistry;
 import theking530.staticpower.machines.BaseMachineWithTank;
-import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent;
-import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent.FluidContainerInteractionMode;
+import theking530.staticpower.machines.tileentitycomponents.BucketInteractionComponent;
+import theking530.staticpower.machines.tileentitycomponents.BucketInteractionComponent.FluidContainerInteractionMode;
 
 public class TileEntityFluidGenerator extends BaseMachineWithTank{
 
 	private PowerDistributor energyDistributor;
 	public int soundTimer = 15;
 	private FluidStack processingFluid;
-	public DrainToBucketComponent fluidContainerComponent;
+	public BucketInteractionComponent fluidContainerComponent;
 	
 	public TileEntityFluidGenerator() {
-		initializeBaseMachineWithTank(1, 0, 50000, 480, 0, 0, 1, 1, 10000);
-		fluidContainerComponent = new DrainToBucketComponent("BucketDrain", slotsInput, 0, slotsOutput, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
+		initializeBaseMachineWithTank(1, 0, 50000, 480, 0, 0, 1, 1, 5000);
+		fluidContainerComponent = new BucketInteractionComponent("BucketDrain", slotsInput, 0, slotsOutput, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
 		fluidContainerComponent.setMode(FluidContainerInteractionMode.FillFromContainer);
 		energyDistributor = new PowerDistributor(this, energyStorage);
 		moveSpeed = 10;
@@ -52,10 +52,10 @@ public class TileEntityFluidGenerator extends BaseMachineWithTank{
 			if(isProcessing() && energyStorage.getEnergyStored() < energyStorage.getMaxEnergyStored() && processingFluid != null) {
 				energyStorage.receiveEnergy(getFluidRFOutput(processingFluid), false);
 				processingTimer = 0;
-				updateBlock();
 			}
 			energyDistributor.distributePower();	
-			fluidContainerComponent.update();
+			fluidContainerComponent.preProcessUpdate();
+			updateBlock();
 		}
 	}
 	public int getFluidRFOutput(FluidStack fluid) {

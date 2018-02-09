@@ -24,10 +24,7 @@ public class GuiVacuumChest extends BaseGuiContainer {
 		super(new ContainerVacuumChest(invPlayer, teVChest), 176, 185);
 		vacuumChest = teVChest;	
 		
-		fluidBar = new GuiFluidBarFromTank(vacuumChest.getTank());
-		fluidBar.setPosition(176, 72);
-		fluidBar.setSize(16,  60);
-		registerWidget(fluidBar);
+		registerWidget(fluidBar = new GuiFluidBarFromTank(vacuumChest.getTank(), 176, 72, 16, 60));
 		
 		if(vacuumChest.showTank()) {
 			xSize = 200;

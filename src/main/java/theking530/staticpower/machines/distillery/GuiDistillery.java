@@ -16,22 +16,21 @@ import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiHeatBarFromStorage;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.handlers.PacketHandler;
-import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent.FluidContainerInteractionMode;
+import theking530.staticpower.machines.tileentitycomponents.BucketInteractionComponent.FluidContainerInteractionMode;
 
 public class GuiDistillery extends BaseGuiContainer {
 
-	private GuiHeatBarFromStorage HEATBAR;
-	private GuiFluidBarFromTank FLUIDBAR;
-	private GuiFluidBarFromTank FLUIDBAR2;
-	private TileEntityDistillery DISTILLERY;
+	private GuiHeatBarFromStorage heatbar;
+	private TileEntityDistillery distillery;
 	
 	public GuiDistillery(InventoryPlayer invPlayer, TileEntityDistillery teFluidGenerator) {
 		super(new ContainerDistillery(invPlayer, teFluidGenerator), 214, 173);
-		DISTILLERY = teFluidGenerator;
-		HEATBAR = new GuiHeatBarFromStorage(teFluidGenerator.HEAT_STORAGE);
-		FLUIDBAR = new GuiFluidBarFromTank(teFluidGenerator.TANK);
-		FLUIDBAR2 = new GuiFluidBarFromTank(teFluidGenerator.TANK2);
+		distillery = teFluidGenerator;
 		
+		heatbar = new GuiHeatBarFromStorage(teFluidGenerator.HEAT_STORAGE);
+		registerWidget(new GuiFluidBarFromTank(teFluidGenerator.TANK, 71, 77, 16, 60));
+		registerWidget(new GuiFluidBarFromTank(teFluidGenerator.TANK2, 127, 77, 16, 60));
+
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teFluidGenerator));
 		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teFluidGenerator));
 	}
@@ -43,7 +42,7 @@ public class GuiDistillery extends BaseGuiContainer {
 
 	    this.buttonList.add(new ArrowButton(1, j+7, k+35, 16, 10, "<"));
 	    
-	    if(DISTILLERY.DRAIN_COMPONENT_MASH.getMode() == FluidContainerInteractionMode.FillFromContainer) {
+	    if(distillery.DRAIN_COMPONENT_MASH.getMode() == FluidContainerInteractionMode.FillFromContainer) {
 	    	buttonList.get(0).displayString = ">";
 	    }else{
 	    	buttonList.get(0).displayString = "<";
@@ -52,11 +51,11 @@ public class GuiDistillery extends BaseGuiContainer {
 	@Override
 	protected void actionPerformed(GuiButton B) {
 		if(B.id == 1) {
-			IMessage msg = new PacketDistilleryContainerMode(DISTILLERY.DRAIN_COMPONENT_MASH.getInverseMode(), DISTILLERY.getPos());
+			IMessage msg = new PacketDistilleryContainerMode(distillery.DRAIN_COMPONENT_MASH.getInverseMode(), distillery.getPos());
 			PacketHandler.net.sendToServer(msg);
-			DISTILLERY.DRAIN_COMPONENT_MASH.setMode(DISTILLERY.DRAIN_COMPONENT_MASH.getInverseMode());
+			distillery.DRAIN_COMPONENT_MASH.setMode(distillery.DRAIN_COMPONENT_MASH.getInverseMode());
 			
-		    if(DISTILLERY.DRAIN_COMPONENT_MASH.getMode() == FluidContainerInteractionMode.FillFromContainer) {
+		    if(distillery.DRAIN_COMPONENT_MASH.getMode() == FluidContainerInteractionMode.FillFromContainer) {
 		    	buttonList.get(0).displayString = ">";
 		    }else{
 		    	buttonList.get(0).displayString = "<";
@@ -68,19 +67,13 @@ public class GuiDistillery extends BaseGuiContainer {
 		
 		int var1 = (this.width - this.xSize) / 2;
 		int var2 = (this.height - this.ySize) / 2;    
-		if(par1 >= 71 + var1 && par2 >= 16 + var2 && par1 <= 87 + var1 && par2 <= 79 + var2) {	
-			drawHoveringText(FLUIDBAR.drawText(), par1, par2, fontRenderer); 
-		}     
-		if(par1 >= 127 + var1 && par2 >= 16 + var2 && par1 <= 142 + var1 && par2 <= 79 + var2) {	
-			drawHoveringText(FLUIDBAR2.drawText(), par1, par2, fontRenderer); 
-		}	
 		if(par1 >= 71 + var1 && par2 >= 80 + var2 && par1 <= 87 + var1 && par2 <= 88 + var2) {	
-			drawHoveringText(HEATBAR.drawText(), par1, par2, fontRenderer); 
+			drawHoveringText(heatbar.drawText(), par1, par2, fontRenderer); 
 		}	  
 	}
 
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
-		String name = I18n.format(this.DISTILLERY.getName());
+		String name = I18n.format(this.distillery.getName());
 	
 		this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2, 6,4210752 );
 	}
@@ -90,12 +83,10 @@ public class GuiDistillery extends BaseGuiContainer {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.DISTILLERY_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		
-		if(DISTILLERY.PROCESSING_STACK != null) {
+		if(distillery.PROCESSING_STACK != null) {
 			GuiFluidBar.drawFluidBar(new FluidStack(ModFluids.Mash, 100), 100, 100, guiLeft + 90, guiTop + 49, 1, 20, 5);
 		}
-		HEATBAR.drawHeatBar(guiLeft + 71, guiTop + 88, this.zLevel, 16, 8);
-		FLUIDBAR.drawFluidBar(guiLeft + 71, guiTop + 77, 16, 60, this.zLevel);
-		FLUIDBAR2.drawFluidBar(guiLeft + 127, guiTop + 77, 16, 60, this.zLevel);
+		heatbar.drawHeatBar(guiLeft + 71, guiTop + 88, this.zLevel, 16, 8);
 	}
 }
 

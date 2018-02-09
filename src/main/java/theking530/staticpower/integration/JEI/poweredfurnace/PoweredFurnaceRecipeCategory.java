@@ -67,7 +67,7 @@ public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<Smelting
     @Override
     public void drawExtras(@Nonnull Minecraft minecraft) {
     	GuiDrawUtilities.drawSlot(0, 8, 16, 54);
-    	GuiPowerBar.drawPowerBar(0, 62, 16, 54, 1.0f, currentPower, 10000, minecraft.getRenderPartialTicks());
+    	GuiPowerBar.drawPowerBar(0, 62, 16, 54, 1.0f, currentPower, 10000);
     	currentPower -= 2;
     	if(currentPower <= 0) {
     		currentPower = 10000;

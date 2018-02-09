@@ -10,7 +10,7 @@ import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.tileentity.BaseTileEntity;
 
-public class DrainToBucketComponent implements ITileEntityComponent{
+public class BucketInteractionComponent implements ITileEntityComponent{
 
 	private String NAME;
 	
@@ -38,7 +38,7 @@ public class DrainToBucketComponent implements ITileEntityComponent{
 		FillFromContainer, DrainToContainer;
 	}
 
-	public DrainToBucketComponent(String componentName, ItemStackHandler EmptyBucketHandler, int EmptyBucketSlot, ItemStackHandler FilledBucketHandler, int FilledBucketSlot,
+	public BucketInteractionComponent(String componentName, ItemStackHandler EmptyBucketHandler, int EmptyBucketSlot, ItemStackHandler FilledBucketHandler, int FilledBucketSlot,
 			BaseTileEntity tileEntity, IFluidHandler fluidHandler, int drainRate) {
 
 		NAME = componentName;
@@ -56,7 +56,7 @@ public class DrainToBucketComponent implements ITileEntityComponent{
 		TE = tileEntity;
 		FLUID_TO_CONTAINER_RATE = drainRate;
 	}
-	public void update() {
+	public void preProcessUpdate() {
 		if(!TE.getWorld().isRemote) {
 			if(MOVE_TIMER >= MOVE_TIME) {
 				if(MODE == FluidContainerInteractionMode.FillFromContainer) {
@@ -174,5 +174,10 @@ public class DrainToBucketComponent implements ITileEntityComponent{
 	@Override
 	public void setEnabled(boolean isEnabled) {
 		this.isEnabled = isEnabled;
+	}
+	@Override
+	public void postProcessUpdate() {
+		// TODO Auto-generated method stub
+		
 	}
 }

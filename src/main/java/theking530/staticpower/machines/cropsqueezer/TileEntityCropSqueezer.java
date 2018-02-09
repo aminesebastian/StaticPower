@@ -5,15 +5,15 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistry;
 import theking530.staticpower.machines.BaseMachineWithTank;
-import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent;
-import theking530.staticpower.machines.tileentitycomponents.TileEntityInputServo;
+import theking530.staticpower.machines.tileentitycomponents.BucketInteractionComponent;
+import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
 
 public class TileEntityCropSqueezer extends BaseMachineWithTank {
 
 	public TileEntityCropSqueezer() {
 		initializeBaseMachineWithTank(2, 100, 100000, 80, 50, 1, 2, 2, 5000);
-		registerComponent(new DrainToBucketComponent("BucketDrain", slotsInput, 1, slotsOutput, 1, this, TANK, FLUID_TO_CONTAINER_RATE));
-		registerComponent(new TileEntityInputServo(this, 2, slotsInput, 0));
+		registerComponent(new BucketInteractionComponent("BucketDrain", slotsInput, 1, slotsOutput, 1, this, TANK, FLUID_TO_CONTAINER_RATE));
+		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0));
 	}
 	@Override
 	public String getName() {
@@ -78,7 +78,7 @@ public class TileEntityCropSqueezer extends BaseMachineWithTank {
 	@Override
 	public int getProcessingEnergy(ItemStack itemStack) {
 		if(getResult(itemStack) != ItemStack.EMPTY) {
-			return initialPowerUse*processingEnergyMult;
+			return (int) (initialPowerUse*processingEnergyMult);
 		}
 		return 0;
 	}	

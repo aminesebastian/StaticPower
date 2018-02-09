@@ -1,16 +1,13 @@
 package theking530.staticpower.machines.batteries;
 
-import java.text.NumberFormat;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-
+import api.gui.tab.BaseGuiTab.TabSide;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.client.gui.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.tabs.GuiPowerControlTab;
+import theking530.staticpower.client.gui.widgets.tabs.GuiPowerInfoTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
@@ -18,17 +15,20 @@ import theking530.staticpower.machines.batteries.tileentities.TileEntityBattery;
 
 public class GuiBattery extends BaseGuiContainer {
 	
-	public GuiPowerBarFromEnergyStorage POWER_BAR;
-
+	private TileEntityBattery battery;
 	
-	private TileEntityBattery sBattery;
 	public GuiBattery(InventoryPlayer invPlayer, TileEntityBattery teSBattery) {
 		super(new ContainerBattery(invPlayer, teSBattery), 176, 166);
-		sBattery = teSBattery;
-		POWER_BAR = new GuiPowerBarFromEnergyStorage(teSBattery);
+		battery = teSBattery;
+		
+		registerWidget(new GuiPowerBarFromEnergyStorage(teSBattery, 80, 71, 16, 51));
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teSBattery));
 		getTabManager().registerTab(new GuiPowerControlTab(100, 70, teSBattery));
 		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teSBattery));
+		
+		GuiPowerInfoTab powerInfoTab;
+		getTabManager().registerTab(powerInfoTab = new GuiPowerInfoTab(80, 60, teSBattery.getEnergyStorage()));
+		powerInfoTab.setTabSide(TabSide.LEFT);	
 	}	
 
 	//Draw Main
@@ -40,12 +40,12 @@ public class GuiBattery extends BaseGuiContainer {
 		guiButtons(j, k);
 	}
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
-		String INPUT = (String.valueOf(sBattery.energyStorage.getMaxReceive()) + " RF/t");
-		String OUTPUT = (String.valueOf(sBattery.energyStorage.getMaxExtract()) + " RF/t");
+		String INPUT = (String.valueOf(battery.energyStorage.getMaxReceive()) + " RF/t");
+		String OUTPUT = (String.valueOf(battery.energyStorage.getMaxExtract()) + " RF/t");
 		
-		String current_input = (String.valueOf(sBattery.currentEnergyPerTick) + " RF/t");
+		String current_input = (String.valueOf(battery.currentEnergyPerTick) + " RF/t");
 
-		String NAME = I18n.format(this.sBattery.getName());
+		String NAME = I18n.format(this.battery.getName());
 		this.fontRenderer.drawString("Input", this.xSize/2-this.fontRenderer.getStringWidth("Input")/2 - 35, 35, 4210752);
 		this.fontRenderer.drawString(INPUT, this.xSize/2-this.fontRenderer.getStringWidth(INPUT)/2 - 35, 45, 4210752);
 		this.fontRenderer.drawString("Output", this.xSize/2-this.fontRenderer.getStringWidth("Output")/2 + 35, 35, 4210752);
@@ -60,26 +60,6 @@ public class GuiBattery extends BaseGuiContainer {
 	protected void drawExtra(float f, int i, int j) {
 		this.mc.getTextureManager().bindTexture(GuiTextures.BATTERY_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		POWER_BAR.drawPowerBar(guiLeft + 80, guiTop + 71, 16, 51, 1, f);
-	}
-	public void drawScreen(int par1, int par2, float par3) {
-		super.drawScreen(par1, par2, par3);
-
-		int var1 = (this.width - this.xSize) / 2;
-		int var2 = (this.height - this.ySize) / 2;
-		if (par1 >= 80 + var1 && par2 >= 20 + var2 && par1 <= 96 + var1
-				&& par2 <= 71 + var2) {
-			int j1 = sBattery.energyStorage.getEnergyStored();
-			int k1 = sBattery.energyStorage.getMaxEnergyStored();
-			String[] text = { NumberFormat.getNumberInstance(Locale.US).format(
-					j1)
-					+ " "
-					+ "RF/"
-					+ NumberFormat.getNumberInstance(Locale.US).format(k1)
-					+ " " + "RF" };
-			List<String> temp = Arrays.asList(text);
-			drawHoveringText(temp, par1, par2, fontRenderer);
-		}
 	}
     //Draw Misc	
 	public void guiButtons(int j, int k) {
@@ -95,68 +75,68 @@ public class GuiBattery extends BaseGuiContainer {
 		
 		switch(B.id) {
 		case 1:
-			if (isShiftKeyDown() && sBattery.energyStorage.getMaxReceive() + 100 <= sBattery.MAX_INPUT) {
-				sBattery.energyStorage.setMaxReceive(sBattery.energyStorage.getMaxReceive()+100);
-			} else if (isShiftKeyDown() && sBattery.energyStorage.getMaxReceive() + 100 > sBattery.MAX_INPUT) {
-				sBattery.energyStorage.setMaxReceive(sBattery.MAX_INPUT);
-			} else if (isCtrlKeyDown() && sBattery.energyStorage.getMaxReceive() + 1 <= sBattery.MAX_INPUT) {
-				sBattery.energyStorage.setMaxReceive(sBattery.energyStorage.getMaxReceive()+1);
-			} else if (isCtrlKeyDown() && sBattery.energyStorage.getMaxReceive() + 1 > sBattery.MAX_INPUT) {
+			if (isShiftKeyDown() && battery.energyStorage.getMaxReceive() + 100 <= battery.MAX_INPUT) {
+				battery.energyStorage.setMaxReceive(battery.energyStorage.getMaxReceive()+100);
+			} else if (isShiftKeyDown() && battery.energyStorage.getMaxReceive() + 100 > battery.MAX_INPUT) {
+				battery.energyStorage.setMaxReceive(battery.MAX_INPUT);
+			} else if (isCtrlKeyDown() && battery.energyStorage.getMaxReceive() + 1 <= battery.MAX_INPUT) {
+				battery.energyStorage.setMaxReceive(battery.energyStorage.getMaxReceive()+1);
+			} else if (isCtrlKeyDown() && battery.energyStorage.getMaxReceive() + 1 > battery.MAX_INPUT) {
 				//INPUT_PER_TICK = sBattery.MAX_INPUT;
-			} else if (sBattery.energyStorage.getMaxReceive() + 50 <= sBattery.MAX_INPUT) {
-				sBattery.energyStorage.setMaxReceive(sBattery.energyStorage.getMaxReceive()+50);
-			} else if (sBattery.energyStorage.getMaxReceive() + 50 > sBattery.MAX_INPUT) {
-				sBattery.energyStorage.setMaxReceive(sBattery.MAX_INPUT);
+			} else if (battery.energyStorage.getMaxReceive() + 50 <= battery.MAX_INPUT) {
+				battery.energyStorage.setMaxReceive(battery.energyStorage.getMaxReceive()+50);
+			} else if (battery.energyStorage.getMaxReceive() + 50 > battery.MAX_INPUT) {
+				battery.energyStorage.setMaxReceive(battery.MAX_INPUT);
 			}
 			break;
 		case 2 :
-			if (isShiftKeyDown() && sBattery.energyStorage.getMaxReceive() - 100 >= 0) {
-				sBattery.energyStorage.setMaxReceive(sBattery.energyStorage.getMaxReceive()-100);
-			} else if (isShiftKeyDown() && sBattery.energyStorage.getMaxReceive() - 100 < 0) {
-				sBattery.energyStorage.setMaxReceive(0);
-			} else if (isCtrlKeyDown() && sBattery.energyStorage.getMaxReceive() - 1 >= 0) {
-				sBattery.energyStorage.setMaxReceive(sBattery.energyStorage.getMaxReceive()-1);
-			} else if (isCtrlKeyDown() && sBattery.energyStorage.getMaxReceive() - 1 < 0) {
-				sBattery.energyStorage.setMaxReceive(0);
-			} else if (sBattery.energyStorage.getMaxReceive() - 50 >= 0) {
-				sBattery.energyStorage.setMaxReceive(sBattery.energyStorage.getMaxReceive()-50);
-			} else if (sBattery.energyStorage.getMaxReceive() - 50 < 0) {
-				sBattery.energyStorage.setMaxReceive(0);
+			if (isShiftKeyDown() && battery.energyStorage.getMaxReceive() - 100 >= 0) {
+				battery.energyStorage.setMaxReceive(battery.energyStorage.getMaxReceive()-100);
+			} else if (isShiftKeyDown() && battery.energyStorage.getMaxReceive() - 100 < 0) {
+				battery.energyStorage.setMaxReceive(0);
+			} else if (isCtrlKeyDown() && battery.energyStorage.getMaxReceive() - 1 >= 0) {
+				battery.energyStorage.setMaxReceive(battery.energyStorage.getMaxReceive()-1);
+			} else if (isCtrlKeyDown() && battery.energyStorage.getMaxReceive() - 1 < 0) {
+				battery.energyStorage.setMaxReceive(0);
+			} else if (battery.energyStorage.getMaxReceive() - 50 >= 0) {
+				battery.energyStorage.setMaxReceive(battery.energyStorage.getMaxReceive()-50);
+			} else if (battery.energyStorage.getMaxReceive() - 50 < 0) {
+				battery.energyStorage.setMaxReceive(0);
 			}
 			break;
 		case 3 :
-			if (isShiftKeyDown() && sBattery.energyStorage.getMaxExtract() + 50 <= sBattery.MAX_OUTPUT) {
-				sBattery.energyStorage.setMaxExtract(sBattery.energyStorage.getMaxExtract()+50);
-			} else if (isShiftKeyDown() && sBattery.energyStorage.getMaxExtract() + 50 > sBattery.MAX_OUTPUT) {
-				sBattery.energyStorage.setMaxExtract(sBattery.MAX_OUTPUT);
-			} else if (isCtrlKeyDown() && sBattery.energyStorage.getMaxExtract() + 1 <= sBattery.MAX_OUTPUT) {
-				sBattery.energyStorage.setMaxExtract(sBattery.energyStorage.getMaxExtract()+1);
-			} else if (isCtrlKeyDown() && sBattery.energyStorage.getMaxExtract() + 1 > sBattery.MAX_OUTPUT) {
-				sBattery.energyStorage.setMaxExtract(sBattery.MAX_OUTPUT);
-			} else if (sBattery.energyStorage.getMaxExtract() + 5 <= sBattery.MAX_OUTPUT) {
-				sBattery.energyStorage.setMaxExtract(sBattery.energyStorage.getMaxExtract()+5);
-			} else if (sBattery.energyStorage.getMaxExtract() + 5 > sBattery.MAX_OUTPUT) {
-				sBattery.energyStorage.setMaxExtract(sBattery.MAX_OUTPUT);
+			if (isShiftKeyDown() && battery.energyStorage.getMaxExtract() + 50 <= battery.MAX_OUTPUT) {
+				battery.energyStorage.setMaxExtract(battery.energyStorage.getMaxExtract()+50);
+			} else if (isShiftKeyDown() && battery.energyStorage.getMaxExtract() + 50 > battery.MAX_OUTPUT) {
+				battery.energyStorage.setMaxExtract(battery.MAX_OUTPUT);
+			} else if (isCtrlKeyDown() && battery.energyStorage.getMaxExtract() + 1 <= battery.MAX_OUTPUT) {
+				battery.energyStorage.setMaxExtract(battery.energyStorage.getMaxExtract()+1);
+			} else if (isCtrlKeyDown() && battery.energyStorage.getMaxExtract() + 1 > battery.MAX_OUTPUT) {
+				battery.energyStorage.setMaxExtract(battery.MAX_OUTPUT);
+			} else if (battery.energyStorage.getMaxExtract() + 5 <= battery.MAX_OUTPUT) {
+				battery.energyStorage.setMaxExtract(battery.energyStorage.getMaxExtract()+5);
+			} else if (battery.energyStorage.getMaxExtract() + 5 > battery.MAX_OUTPUT) {
+				battery.energyStorage.setMaxExtract(battery.MAX_OUTPUT);
 			}
 			break;
 		case 4 :
-			if (isShiftKeyDown() && sBattery.energyStorage.getMaxExtract() - 50 >= 0) {
-				sBattery.energyStorage.setMaxExtract(sBattery.energyStorage.getMaxExtract()-50);
-			} else if (isShiftKeyDown() && sBattery.energyStorage.getMaxExtract() - 50 < 0) {
-				sBattery.energyStorage.setMaxExtract(0);
-			} else if (isCtrlKeyDown() && sBattery.energyStorage.getMaxExtract() - 1 >= 0) {
-				sBattery.energyStorage.setMaxExtract(sBattery.energyStorage.getMaxExtract()-1);
-			} else if (isCtrlKeyDown() && sBattery.energyStorage.getMaxExtract() - 1 < 0) {
-				sBattery.energyStorage.setMaxExtract(0);
-			} else if (sBattery.energyStorage.getMaxExtract() - 5 >= 0) {
-				sBattery.energyStorage.setMaxExtract(sBattery.energyStorage.getMaxExtract()-5);
-			} else if (sBattery.energyStorage.getMaxExtract() - 5 < 0) {
-				sBattery.energyStorage.setMaxExtract(0);
+			if (isShiftKeyDown() && battery.energyStorage.getMaxExtract() - 50 >= 0) {
+				battery.energyStorage.setMaxExtract(battery.energyStorage.getMaxExtract()-50);
+			} else if (isShiftKeyDown() && battery.energyStorage.getMaxExtract() - 50 < 0) {
+				battery.energyStorage.setMaxExtract(0);
+			} else if (isCtrlKeyDown() && battery.energyStorage.getMaxExtract() - 1 >= 0) {
+				battery.energyStorage.setMaxExtract(battery.energyStorage.getMaxExtract()-1);
+			} else if (isCtrlKeyDown() && battery.energyStorage.getMaxExtract() - 1 < 0) {
+				battery.energyStorage.setMaxExtract(0);
+			} else if (battery.energyStorage.getMaxExtract() - 5 >= 0) {
+				battery.energyStorage.setMaxExtract(battery.energyStorage.getMaxExtract()-5);
+			} else if (battery.energyStorage.getMaxExtract() - 5 < 0) {
+				battery.energyStorage.setMaxExtract(0);
 			}
 			break;
 		}
-		if(!sBattery.getWorld().isRemote) {
-			sBattery.updateBlock();		
+		if(!battery.getWorld().isRemote) {
+			battery.updateBlock();		
 		}
 
 	}

@@ -8,20 +8,12 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import theking530.staticpower.assists.GuiTextures;
-import theking530.staticpower.assists.utilities.SidePicker;
-import theking530.staticpower.assists.utilities.SideUtilities;
-import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.assists.utilities.SidePicker.Side;
 import theking530.staticpower.client.sideSelector.GuiComponentSideSelector;
-import theking530.staticpower.handlers.PacketHandler;
-import theking530.staticpower.tileentity.BaseTileEntity;
 
 public class GuiSideConfigTab extends BaseGuiTab {
 
@@ -56,7 +48,7 @@ public class GuiSideConfigTab extends BaseGuiTab {
     		}	
     	drawText(xPos+10, yPos+8);
 		drawButtonBG(xPos, yPos);	
-		selector.render(xPos, yPos, MOUSE_DRAGX, MOUSE_DRAGY);
+		//selector.render(xPos, yPos, MOUSE_DRAGX, MOUSE_DRAGY);
 		X_POS = xPos;
 		Y_POS = yPos;
 		}

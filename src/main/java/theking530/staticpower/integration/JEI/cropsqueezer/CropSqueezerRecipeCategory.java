@@ -71,7 +71,7 @@ public class CropSqueezerRecipeCategory extends BaseJEIRecipeCategory<CropSqueez
 	    public void drawExtras(@Nonnull Minecraft minecraft) {
 	    	GuiDrawUtilities.drawSlot(13, 2, 16, 60);
 	    	
-	    	GuiPowerBar.drawPowerBar(0, 62, 6, 60, 1.0f, currentPower, 10000, minecraft.getRenderPartialTicks());
+	    	GuiPowerBar.drawPowerBar(0, 62, 6, 60, 1.0f, currentPower, 10000);
 	    	GuiDrawUtilities.drawSlot(0, 2, 6, 60);
 	    	
 	    	currentPower -= 2;

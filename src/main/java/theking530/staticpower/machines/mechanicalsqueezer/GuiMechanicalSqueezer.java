@@ -10,28 +10,16 @@ import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarFromTank;
 
 public class GuiMechanicalSqueezer extends BaseGuiContainer{
-	
-	public GuiSideConfigTab SIDE_TAB;
-	public GuiRedstoneTab REDSTONE_TAB;
-	
+
 	private TileEntityMechanicalSqueezer cSqueezer;
-	private GuiFluidBarFromTank FLUIDBAR;
 
 	public GuiMechanicalSqueezer(InventoryPlayer invPlayer, TileEntityMechanicalSqueezer teCropSqueezer) {
 		super(new ContainerMechanicalSqueezer(invPlayer, teCropSqueezer), 195, 166);
 		cSqueezer = teCropSqueezer;
-		FLUIDBAR = new GuiFluidBarFromTank(teCropSqueezer.TANK);
+		registerWidget(new GuiFluidBarFromTank(teCropSqueezer.TANK, 30, 68, 16, 60));
 
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teCropSqueezer));
 		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teCropSqueezer));
-	}
-	public void drawScreen(int par1, int par2, float par3) {
-		super.drawScreen(par1, par2, par3);		
-		int var1 = (this.width - this.xSize) / 2;
-		int var2 = (this.height - this.ySize) / 2;
-		if(par1 >= 30 + var1 && par2 >= 8 + var2 && par1 <= 46 + var1 && par2 <= 68 + var2) {	
-			drawHoveringText(FLUIDBAR.drawText(), par1, par2, fontRenderer); 
-		} 
 	}
 
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
@@ -47,8 +35,6 @@ public class GuiMechanicalSqueezer extends BaseGuiContainer{
 		int j1 = cSqueezer.getProgressScaled(15);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.MSQUEEZER_GUI);
 		drawTexturedModalRect(guiLeft + 107, guiTop + 34, 198, 71, 14, 1+j1);
-
-		FLUIDBAR.drawFluidBar(guiLeft + 30, guiTop + 68, 16, 60, this.zLevel);
 	}
 }
 

@@ -14,12 +14,8 @@ import theking530.staticpower.assists.GuiTextures;
 
 public class GuiPowerBar {
 	
-	private static float glowScaleRate;
-	private static float worldTime;
-	
 	public GuiPowerBar() {
-		glowScaleRate = 0.20f;
-		worldTime = 0.0f;
+		
 	}
 	
 	public static List<String> drawText(int currentEnergy, int maxEnergy, int energyPerTick, int powerUse) {
@@ -31,11 +27,11 @@ public class GuiPowerBar {
     	String[] splitMsg = text.split("=");
 		return Arrays.asList(splitMsg);
 	}
-	public static void drawPowerBar(int xpos, int ypos, int width, int height, float zLevel, int currentEnergy, int maxEnergy, float deltaTime) {
+	public static void drawPowerBar(int xpos, int ypos, int width, int height, float zLevel, int currentEnergy, int maxEnergy) {
 		float u1 = (float)currentEnergy/(float)maxEnergy;
 		float k1 = u1 * height;
 
-		float glowState = getGlow((float)Minecraft.getSystemTime() / 1000.0f);
+		float glowState = getGlow();
 
 		Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder vertexbuffer = tessellator.getBuffer();
@@ -59,13 +55,12 @@ public class GuiPowerBar {
 
 		GlStateManager.color(1.0f, 1.0f, 1.0f);
 	}
-	private static float getGlow(float deltaTime) {
-		worldTime = deltaTime;
-		float sin = (float)(Math.sin(deltaTime));
+	private static float getGlow() {
+		float sin = (float)(Math.sin((float)Minecraft.getSystemTime() / 1000.0f));
 
 		sin = Math.abs(sin);
 		sin += 3;
-		sin /= 5.0f;
+		sin /= 6.0f;
 		return sin*1.5f;
 	}
 }	

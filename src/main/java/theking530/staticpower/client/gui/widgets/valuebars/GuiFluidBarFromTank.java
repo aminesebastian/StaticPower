@@ -16,9 +16,19 @@ public class GuiFluidBarFromTank implements IGuiWidget{
 	private int ySize;
 	private BaseGuiContainer owningGui;
 	
+	public GuiFluidBarFromTank(IFluidTank tank, int xPosition, int yPosition, int xSize, int ySize) {
+		this.tank = tank;
+		this.isVisible = true;
+		this.xPosition = xPosition;
+		this.yPosition = yPosition;
+		this.xSize = xSize;
+		this.ySize = ySize;
+	}
 	public GuiFluidBarFromTank(IFluidTank tank) {
 		this.tank = tank;
+		this.isVisible = true;
 	}
+	
 	@Override
 	public void setOwningGui(BaseGuiContainer owningGui) {
 		this.owningGui = owningGui;		

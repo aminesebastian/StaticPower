@@ -62,8 +62,9 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 	@Override
 	public void update() {
 		if(evauluateRedstoneSettings()) {
-			updateComponents();
+			preProcessUpdateComponents();
 			process();
+			postProcessUpdateComponents();
 		}
 		if(updateTimer < updateTime) {
 			updateTimer++;
@@ -281,9 +282,14 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 	public List<ITileEntityComponent> getComponents() {
 		return components;
 	}
-	private void updateComponents() {
+	private void preProcessUpdateComponents() {
 		for(int i=0; i<components.size(); i++) {
-			components.get(i).update();
+			components.get(i).preProcessUpdate();
+		}
+	}
+	private void postProcessUpdateComponents() {
+		for(int i=0; i<components.size(); i++) {
+			components.get(i).postProcessUpdate();
 		}
 	}
 	

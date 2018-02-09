@@ -6,17 +6,17 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.handlers.crafting.registries.InfuserRecipeRegistry;
 import theking530.staticpower.machines.BaseMachineWithTank;
-import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent;
-import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent.FluidContainerInteractionMode;
+import theking530.staticpower.machines.tileentitycomponents.BucketInteractionComponent;
+import theking530.staticpower.machines.tileentitycomponents.BucketInteractionComponent.FluidContainerInteractionMode;
 
 public class TileEntityFluidInfuser extends BaseMachineWithTank {
 	
-	public DrainToBucketComponent DRAIN_COMPONENT;
+	public BucketInteractionComponent DRAIN_COMPONENT;
 	public FluidStack LAST_CONTAINED_FLUID;
 	
 	public TileEntityFluidInfuser() {
 		initializeBaseMachineWithTank(2, 1000, 50000, 80, 100, 1, 2, 2, 10000);
-		DRAIN_COMPONENT = new DrainToBucketComponent("BucketDrain", slotsInput, 1, slotsOutput, 1, this, TANK, FLUID_TO_CONTAINER_RATE);
+		DRAIN_COMPONENT = new BucketInteractionComponent("BucketDrain", slotsInput, 1, slotsOutput, 1, this, TANK, FLUID_TO_CONTAINER_RATE);
 		DRAIN_COMPONENT.setMode(FluidContainerInteractionMode.FillFromContainer);
 	}
 	//IInventory				
@@ -61,7 +61,7 @@ public class TileEntityFluidInfuser extends BaseMachineWithTank {
 	@Override
 	public int getProcessingEnergy(ItemStack itemStack) {
 		if(getResult(itemStack) != ItemStack.EMPTY) {
-			return InfuserRecipeRegistry.Infusing().getInfusingFluidCost(itemStack, TANK.getFluid())*5*processingEnergyMult;
+			return (int) (InfuserRecipeRegistry.Infusing().getInfusingFluidCost(itemStack, TANK.getFluid())*5*processingEnergyMult);
 		}
 		return 0;
 	}
@@ -84,7 +84,7 @@ public class TileEntityFluidInfuser extends BaseMachineWithTank {
 	@Override
 	public void process() {
 		if(!getWorld().isRemote) {
-			DRAIN_COMPONENT.update();
+			DRAIN_COMPONENT.preProcessUpdate();
 		}
 		if(slotsInternal.getStackInSlot(0) == ItemStack.EMPTY){
 			processingTimer = 0;

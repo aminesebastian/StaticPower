@@ -1,5 +1,6 @@
 package theking530.staticpower.machines.fluidgenerator;
 
+import api.gui.tab.BaseGuiTab.TabSide;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
@@ -8,28 +9,31 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.client.gui.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.buttons.ArrowButton;
+import theking530.staticpower.client.gui.widgets.tabs.GuiPowerInfoTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.handlers.PacketHandler;
-import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent.FluidContainerInteractionMode;
+import theking530.staticpower.machines.tileentitycomponents.BucketInteractionComponent.FluidContainerInteractionMode;
 
 public class GuiFluidGenerator extends BaseGuiContainer {
 	
-	private GuiPowerBarFromEnergyStorage POWERBAR;
-	private GuiFluidBarFromTank FLUIDBAR;
 	private TileEntityFluidGenerator fGenerator;
 		
 	public GuiFluidGenerator(InventoryPlayer invPlayer, TileEntityFluidGenerator teFluidGenerator) {
 		super(new ContainerFluidGenerator(invPlayer, teFluidGenerator), 195, 166);
 		fGenerator = teFluidGenerator;
-		POWERBAR = new GuiPowerBarFromEnergyStorage(teFluidGenerator);
-		FLUIDBAR = new GuiFluidBarFromTank(teFluidGenerator.TANK);
+		
+		registerWidget(new GuiPowerBarFromEnergyStorage(teFluidGenerator, 50, 68, 6, 60));
+		registerWidget(new GuiFluidBarFromTank(teFluidGenerator.TANK, 30, 68, 16, 60));
 		
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teFluidGenerator));
 		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teFluidGenerator));
 		
+		GuiPowerInfoTab powerInfoTab;
+		getTabManager().registerTab(powerInfoTab = new GuiPowerInfoTab(80, 60, teFluidGenerator.getEnergyStorage()));
+		powerInfoTab.setTabSide(TabSide.LEFT);	
 	}
 	@Override
 	public void initGui() {
@@ -59,19 +63,6 @@ public class GuiFluidGenerator extends BaseGuiContainer {
 		    }
 		}
 	}	
-	public void drawScreen(int par1, int par2, float par3) {
-    	super.drawScreen(par1, par2, par3);
-
-		int var1 = (this.width - this.xSize) / 2;
-		int var2 = (this.height - this.ySize) / 2;
-		if(par1 >= 30 + var1 && par2 >= 8 + var2 && par1 <= 46 + var1 && par2 <= 68 + var2) {	
-			drawHoveringText(FLUIDBAR.drawText(), par1, par2, fontRenderer); 
-		}       
-		if(par1 >= 50 + var1 && par2 >= 8 + var2 && par1 <= 56 + var1 && par2 <= 68 + var2) {
-			drawHoveringText(POWERBAR.drawText(), par1, par2, fontRenderer); 
-		}	 
-	}
-
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = I18n.format(this.fGenerator.getName());
 	
@@ -82,8 +73,6 @@ public class GuiFluidGenerator extends BaseGuiContainer {
 	protected void drawExtra(float f, int i, int j) {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.FGENERATOR_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-		POWERBAR.drawPowerBar(guiLeft + 50, guiTop + 68, 6, 60, this.zLevel, f);
-		FLUIDBAR.drawFluidBar(guiLeft + 30, guiTop + 68, 16, 60, this.zLevel);
 	}
 }
 

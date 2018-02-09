@@ -61,7 +61,7 @@ public class FluidInfuserRecipeCategory extends BaseJEIRecipeCategory<FluidInfus
 	    }
 	    @Override
 	    public void drawExtras(@Nonnull Minecraft minecraft) {
-	    	GuiPowerBar.drawPowerBar(26, 62, 6, 60, 1.0f, 5000, 10000, minecraft.getRenderPartialTicks());
+	    	GuiPowerBar.drawPowerBar(26, 62, 6, 60, 1.0f, 5000, 10000);
 	    }
 
 	    @Override

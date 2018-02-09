@@ -15,7 +15,7 @@ import theking530.staticpower.assists.utilities.SideUtilities;
 import theking530.staticpower.assists.utilities.SideUtilities.BlockSide;
 import theking530.staticpower.tileentity.ISideConfigurable;
 
-public class TileEntityOutputServo implements ITileEntityComponent{
+public class TileEntityItemOutputServo implements ITileEntityComponent{
 
 	private Random randomGenerator = new Random();
 	
@@ -27,7 +27,7 @@ public class TileEntityOutputServo implements ITileEntityComponent{
 	private int[] slots;
 	private boolean isEnabled;
 	
-	public TileEntityOutputServo(TileEntity tileEntity, int outputTime, ItemStackHandler inventory, int... slots) {
+	public TileEntityItemOutputServo(TileEntity tileEntity, int outputTime, ItemStackHandler inventory, int... slots) {
 		this.tileEntity = tileEntity;
 		this.outputTime = outputTime;
 		this.inventory = inventory;
@@ -42,7 +42,7 @@ public class TileEntityOutputServo implements ITileEntityComponent{
 		return "Output Servo";
 	}
 	@Override
-	public void update() {
+	public void preProcessUpdate() {
 		if(!tileEntity.getWorld().isRemote) {
 			if(inventory != null && inventory.getSlots() > 0 && tileEntity != null) {
 				int randomIndex = randomGenerator.nextInt(slots.length);		
@@ -93,5 +93,10 @@ public class TileEntityOutputServo implements ITileEntityComponent{
 	@Override
 	public void setEnabled(boolean isEnabled) {
 		this.isEnabled = isEnabled;
+	}
+	@Override
+	public void postProcessUpdate() {
+		// TODO Auto-generated method stub
+		
 	}
 }

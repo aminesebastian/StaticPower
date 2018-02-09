@@ -4,15 +4,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.machines.BaseMachine;
-import theking530.staticpower.machines.tileentitycomponents.FillFromBatteryComponent;
+import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
 
 public class TileEntityPoweredFurnace extends BaseMachine {
 
-	private FillFromBatteryComponent BATTERY_COMPONENT;
+	private BatteryInteractionComponent BATTERY_COMPONENT;
 	
 	public TileEntityPoweredFurnace() {
 		initializeBasicMachine(2, 1000, 100000, 80, 150, 1, 2, 1);
-		BATTERY_COMPONENT = new FillFromBatteryComponent("BatteryComponent", slotsInput, 1, this, energyStorage);
+		BATTERY_COMPONENT = new BatteryInteractionComponent("BatteryComponent", slotsInput, 1, this, energyStorage);
 	}
 	@Override
 	public String getName() {
@@ -47,7 +47,7 @@ public class TileEntityPoweredFurnace extends BaseMachine {
 	}
 	public void process() {
 		if(!getWorld().isRemote) {
-			BATTERY_COMPONENT.update();
+			BATTERY_COMPONENT.preProcessUpdate();
 			if(!isProcessing() && !isMoving() && canProcess(getInputStack(0))) {
 				moveTimer++;
 			}

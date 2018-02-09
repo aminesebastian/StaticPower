@@ -4,15 +4,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.handlers.crafting.registries.FermenterRecipeRegistry;
 import theking530.staticpower.machines.BaseMachineWithTank;
-import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent;
+import theking530.staticpower.machines.tileentitycomponents.BucketInteractionComponent;
 
 public class TileEntityFermenter extends BaseMachineWithTank {
 
-	public DrainToBucketComponent DRAIN_COMPONENT;
+	public BucketInteractionComponent DRAIN_COMPONENT;
 	
 	public TileEntityFermenter() {
 		initializeBaseMachineWithTank(4, 500, 100000, 160, 45, 1, 11, 2, 5000);
-		DRAIN_COMPONENT = new DrainToBucketComponent("BucketDrain", slotsInput, 10, slotsOutput, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
+		DRAIN_COMPONENT = new BucketInteractionComponent("BucketDrain", slotsInput, 10, slotsOutput, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
 		setBatterySlot(10);
 		//setFluidContainerSlot(9, FluidContainerMode.FILL);
 	}
@@ -63,13 +63,13 @@ public class TileEntityFermenter extends BaseMachineWithTank {
 	@Override
 	public int getProcessingEnergy(ItemStack itemStack) {
 		if(getResult(itemStack) != ItemStack.EMPTY) {
-			return initialPowerUse*processingEnergyMult;
+			return (int) (initialPowerUse*processingEnergyMult);
 		}
 		return 0;
 	}	
 	public void process() {
 		if(!getWorld().isRemote) {
-			DRAIN_COMPONENT.update();
+			DRAIN_COMPONENT.preProcessUpdate();
 			if(!isProcessing() && !isMoving()) {
 				for(int i=0; i<9; i++) {
 					if(slotsInput.getStackInSlot(i) != ItemStack.EMPTY && canProcess(slotsInput.getStackInSlot(i))) {

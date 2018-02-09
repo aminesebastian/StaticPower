@@ -47,7 +47,7 @@ public class PowerDistributor {
 	 * @return - The actual amount of energy that was sent.
 	 */
 	public int provideRF(BlockPos pos, EnumFacing facing, int amount) {
-		IEnergyStorage handler = getEnergyHandlerPosition(pos, facing);
+		IEnergyStorage handler = getEnergyHandlerPosition(pos, facing.getOpposite());
 
 		if(handler != null) {
 			if(handler.getEnergyStored() < handler.getMaxEnergyStored() && handler.canReceive()) {

@@ -2,25 +2,80 @@ package theking530.staticpower.client.gui.widgets.valuebars;
 
 import java.util.List;
 
+import api.gui.IGuiWidget;
+import theking530.staticpower.client.gui.BaseGuiContainer;
 import theking530.staticpower.machines.BaseMachine;
 
-public class GuiPowerBarFromEnergyStorage {
+public class GuiPowerBarFromEnergyStorage implements IGuiWidget {
 
-	GuiPowerBar POWER_BAR = new GuiPowerBar();
-	private BaseMachine MACHINE;
-
+	private BaseMachine machine;
 	
-	public GuiPowerBarFromEnergyStorage(BaseMachine teInfuser) {
-		MACHINE = teInfuser;
+	private BaseGuiContainer owningGui;
+	private boolean isVisible;
+	
+	private int xPosition;
+	private int yPosition;
+	private int xSize;
+	private int ySize;
+	
+	public GuiPowerBarFromEnergyStorage(BaseMachine machine, int xPosition, int yPosition, int xSize, int ySize) {
+		this.machine = machine;
+		isVisible = true;
+		this.xPosition = xPosition;
+		this.yPosition = yPosition;
+		this.xSize = xSize;
+		this.ySize = ySize;
 	}
+	public GuiPowerBarFromEnergyStorage(BaseMachine machine) {
+		this.machine = machine;
+		isVisible = true;
+	}
+	@Override
+	public void setOwningGui(BaseGuiContainer owningGui) {
+		this.owningGui = owningGui;
+	}
+	@Override
+	public boolean isVisible() {
+		return isVisible;
+	}
+	@Override
+	public void setVisible(boolean isVisible) {
+		this.isVisible = isVisible;
+	}
+	@Override
+	public void setPosition(int xPos, int yPos) {
+		xPosition = xPos;
+		yPosition = yPos;
+	}
+	@Override
+	public void setSize(int xSize, int ySize) {
+		this.xSize = xSize;
+		this.ySize = ySize;
+	}
+	@Override
+	public void renderBackground(int mouseX, int mouseY, float partialTicks) {
+		GuiPowerBar.drawPowerBar(owningGui.getGuiLeft()+xPosition, owningGui.getGuiTop()+yPosition, xSize, ySize, 0.0f, machine.energyStorage.getEnergyStored(), machine.energyStorage.getMaxEnergyStored());
+	}
+	@Override
+	public void renderForeground(int mouseX, int mouseY, float partialTicks) {}
 	
-	public List<String> drawText() {
-		if(MACHINE.processingTime == 0) {
-			return GuiPowerBar.drawText(MACHINE.energyStorage.getEnergyStored(), MACHINE.energyStorage.getMaxEnergyStored(), MACHINE.energyStorage.getMaxReceive(), 0);
+	@Override
+	public boolean shouldDrawTooltip(int mouseX, int mouseY) {
+		if(mouseX >= owningGui.getGuiLeft()+xPosition && mouseY <= owningGui.getGuiTop()+yPosition  && mouseX <= owningGui.getGuiLeft()+xPosition+xSize && mouseY >= owningGui.getGuiTop()+yPosition-ySize ) {	
+			return true; 
 		}
-		return GuiPowerBar.drawText(MACHINE.energyStorage.getEnergyStored(), MACHINE.energyStorage.getMaxEnergyStored(), MACHINE.energyStorage.getMaxReceive(), MACHINE.getProcessingCost()/MACHINE.processingTime);
+		return false;  
 	}
-	public void drawPowerBar(int xpos, int ypos, int width, int height, float zLevel, float deltaTime) {
-		GuiPowerBar.drawPowerBar(xpos, ypos, width, height, zLevel, MACHINE.energyStorage.getEnergyStored(), MACHINE.energyStorage.getMaxEnergyStored(), deltaTime);
+	@Override
+	public List<String> getTooltip() {
+		if(machine.processingTime == 0) {
+			return GuiPowerBar.drawText(machine.energyStorage.getEnergyStored(), machine.energyStorage.getMaxEnergyStored(), machine.energyStorage.getMaxReceive(), 0);
+		}
+		return GuiPowerBar.drawText(machine.energyStorage.getEnergyStored(), machine.energyStorage.getMaxEnergyStored(), machine.energyStorage.getMaxReceive(), machine.getProcessingCost()/machine.processingTime);
+	}
+
+	@Override
+	public void mouseHover(int mouseX, int mouseY) {
+
 	}
 }

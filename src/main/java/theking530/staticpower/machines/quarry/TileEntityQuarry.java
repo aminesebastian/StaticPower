@@ -23,8 +23,8 @@ import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.items.upgrades.BaseQuarryingUpgrade;
 import theking530.staticpower.machines.BaseMachineWithTank;
-import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent;
-import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent.FluidContainerInteractionMode;
+import theking530.staticpower.machines.tileentitycomponents.BucketInteractionComponent;
+import theking530.staticpower.machines.tileentitycomponents.BucketInteractionComponent.FluidContainerInteractionMode;
 
 public class TileEntityQuarry extends BaseMachineWithTank {
 	
@@ -36,19 +36,19 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 	public int BLOCKS_PER_TICK = INITIAL_BLOCKS_PER_TICK;
 	
 	private ArrayList<ItemStack> QUARRIED_STACKS = new ArrayList<ItemStack>();
-	public DrainToBucketComponent DRAIN_COMPONENT;
+	public BucketInteractionComponent DRAIN_COMPONENT;
 	
 	private boolean testing = false;
 	
 	public TileEntityQuarry() {
 		initializeBaseMachineWithTank(2, 100, 100000, 1000, 10, 1, 1, 1, 10000);
-		DRAIN_COMPONENT = new DrainToBucketComponent("BucketDrain", slotsInput, 0, slotsOutput, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
+		DRAIN_COMPONENT = new BucketInteractionComponent("BucketDrain", slotsInput, 0, slotsOutput, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
 		DRAIN_COMPONENT.setMode(FluidContainerInteractionMode.FillFromContainer);
 	}
 	@Override
 	public void process(){
 		if(!getWorld().isRemote) {
-			DRAIN_COMPONENT.update();
+			DRAIN_COMPONENT.preProcessUpdate();
 			if(testing) {
 				STARTING_COORD = pos.offset(EnumFacing.SOUTH, 5);	
 				STARTING_COORD = STARTING_COORD.offset(EnumFacing.WEST, 1);	

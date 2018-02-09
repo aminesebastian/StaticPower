@@ -26,15 +26,15 @@ import theking530.staticpower.tileentity.BaseTileEntity;
  * @author Amine
  *
  */
-public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEnergyReceiver, IEnergyProvider, IProcessing{
+public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEnergyReceiver, IEnergyProvider, IProcessing, IEnergyUser {
 	
 	public int initialEnergyPerTick;
 	public int initialEnergyCapacity;
 	public StaticEnergyStorage energyStorage;
 	
 	public int initialPowerUse = 100;
-	public int initialProcessingEnergyMult;
-	public int processingEnergyMult = initialProcessingEnergyMult;
+	public float initialProcessingEnergyMult;
+	public float processingEnergyMult = initialProcessingEnergyMult;
 	public int initialProcessingTime;
 	public int processingTime = initialProcessingTime;
 	
@@ -67,7 +67,7 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	 * @param inputSlots
 	 * @param disableFaceInteraction
 	 */
-	public void initializeBasicMachine(int InitialEnergyMult, int InitialPowerUse, int InitialEnergyCapacity, int InitialEntryPerTick, int InitialProcessingTime, int internalSlotCount, int inputSlots, int outputSlots, boolean disableFaceInteraction) {	
+	public void initializeBasicMachine(float InitialEnergyMult, int InitialPowerUse, int InitialEnergyCapacity, int InitialEntryPerTick, int InitialProcessingTime, int internalSlotCount, int inputSlots, int outputSlots, boolean disableFaceInteraction) {	
 		initializeBasicTileEntity(internalSlotCount, inputSlots, outputSlots, disableFaceInteraction);
 		initialProcessingEnergyMult = InitialEnergyMult;
 		initialEnergyCapacity = InitialEnergyCapacity;
@@ -78,7 +78,9 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		energyStorage = new StaticEnergyStorage(InitialEnergyCapacity);
 		energyStorage.setMaxReceive(InitialEntryPerTick);
 		energyStorage.setMaxExtract(InitialEntryPerTick);
-		energyStorage.setCapacity(InitialEnergyCapacity);		
+		energyStorage.setCapacity(InitialEnergyCapacity);	
+		
+		registerComponent(energyStorage);
 	}
 	/**
 	 * @param InitialEnergyMult
@@ -98,9 +100,9 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		currentEnergyPerTick = energyStorage.getEnergyStored() - previouslyStoredEnergyAmount;
 
 		super.update();
-		upgradeHandler();
 
 		previouslyStoredEnergyAmount = energyStorage.getEnergyStored();
+		upgradeHandler();
 	}	
 
 	public void upgradeHandler(){
@@ -193,7 +195,7 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		updateBlock();
 	}
 	
-	//PROCESSING
+	/* PROCESSING */ 
 	public ItemStack getResult(ItemStack itemstack) {
 		return null;	
 	}	
@@ -211,7 +213,7 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		return (processingTimer * i) / processingTime;
 	}
 	public int getProcessingCost(){
-		return (initialPowerUse*processingEnergyMult);
+		return (int) (initialPowerUse*processingEnergyMult);
 	}
 	@Override
 	public boolean isProcessing() {
@@ -230,7 +232,7 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		return (float)processingTimer / (float)processingTime;
 	}	
 	
-	//ENERGY
+	/* ENERGY */
 	public float getEnergyPercent() {
 		float amount = energyStorage.getEnergyStored();
 		float capacity = energyStorage.getMaxEnergyStored();
@@ -268,6 +270,24 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 			updateBlock();
 		}
 		return energyStorage.receiveEnergy(maxReceive, simulate);
+	}
+	
+	/* ENERGY AND PROCESSING */
+	@Override
+	public boolean isUsingEnergy() {
+		return isProcessing();
+	}
+	@Override
+	public int maxEnergyUsagePerTick() {
+		return getProcessingCost()/Math.max(1, getProcessingTime());
+	}
+	@Override
+	public StaticEnergyStorage getEnergyStorage() {
+		return energyStorage;
+	}
+	@Override
+	public int getCurrentEnergyIO() {
+		return currentEnergyPerTick;
 	}
 	
 	/* CAPABILITIES */

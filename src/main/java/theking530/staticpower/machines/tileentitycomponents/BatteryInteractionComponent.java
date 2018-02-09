@@ -5,7 +5,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.energy.StaticEnergyStorage;
 import theking530.staticpower.tileentity.BaseTileEntity;
 
-public class FillFromBatteryComponent implements ITileEntityComponent{
+public class BatteryInteractionComponent implements ITileEntityComponent{
 
 	private String NAME;
 	private boolean isEnabled;
@@ -14,7 +14,7 @@ public class FillFromBatteryComponent implements ITileEntityComponent{
 	private int BATTERY_SLOT;
 	private BaseTileEntity TE;
 	private StaticEnergyStorage ENERGY_STORAGE;
-	public FillFromBatteryComponent(String componentName, ItemStackHandler batterySlotHandler, int batterySlot,
+	public BatteryInteractionComponent(String componentName, ItemStackHandler batterySlotHandler, int batterySlot,
 			BaseTileEntity tileEntity, StaticEnergyStorage energyHandler) {	
 		NAME = componentName;
 		BATTERY_SLOT_HANDLER = batterySlotHandler;
@@ -24,7 +24,7 @@ public class FillFromBatteryComponent implements ITileEntityComponent{
 	}
 
 	@Override
-	public void update() {
+	public void preProcessUpdate() {
 		if(BATTERY_SLOT < BATTERY_SLOT_HANDLER.getSlots()) {
 			if(ENERGY_STORAGE.getEnergyStored() < ENERGY_STORAGE.getMaxEnergyStored()) {
 				if(BATTERY_SLOT_HANDLER.getStackInSlot(BATTERY_SLOT) != null && BATTERY_SLOT_HANDLER.getStackInSlot(BATTERY_SLOT).getItem() instanceof IEnergyContainerItem) {
@@ -50,5 +50,11 @@ public class FillFromBatteryComponent implements ITileEntityComponent{
 	@Override
 	public void setEnabled(boolean isEnabled) {
 		this.isEnabled = isEnabled;
+	}
+
+	@Override
+	public void postProcessUpdate() {
+		// TODO Auto-generated method stub
+		
 	}
 }

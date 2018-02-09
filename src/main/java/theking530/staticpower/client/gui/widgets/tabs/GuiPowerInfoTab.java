@@ -12,26 +12,27 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.init.Items;
 import theking530.staticpower.assists.GuiTextures;
+import theking530.staticpower.assists.utilities.EnumTextFormatting;
 import theking530.staticpower.assists.utilities.GuiUtilities;
+import theking530.staticpower.energy.StaticEnergyStorage;
+import theking530.staticpower.items.ModItems;
 
-public class GuiInfoTab extends BaseGuiTab {
+public class GuiPowerInfoTab extends BaseGuiTab {
 
 	private FontRenderer fontRenderer;
 	
 	private List<String> info;
 	private String tabTitle;
-
-	public GuiInfoTab(int width, int height){
-		super(width, height, GuiTextures.GREEN_TAB, Items.PAPER);
+	private StaticEnergyStorage energyStorage;
+	private int previousRF;
+	
+	public GuiPowerInfoTab(int width, int height, StaticEnergyStorage storage){
+		super(width, height, GuiTextures.PURPLE_TAB, ModItems.BasicPowerUpgrade);
 		fontRenderer = Minecraft.getMinecraft().fontRenderer;
+		energyStorage = storage;
 	}
-	public void setText(String title, List<String> text) {
-		info = text;
-		tabTitle = title;
-	}
-	public void setText(String title, String text) {
+	protected void setText(String title, String text) {
 		info = Arrays.asList(text.split("="));
 		int stringLengthMax = 0;
 		for(int i=0; i<info.size(); i++) {
@@ -42,9 +43,17 @@ public class GuiInfoTab extends BaseGuiTab {
 		this.tabWidth = stringLengthMax+8;
 		tabTitle = title;
 	}	
+	
+	protected void setPowerInfoText() {
+		int energyPerTick = energyStorage.getEnergyIO();
+		String text = (EnumTextFormatting.GREEN + "Current I/O: =" + energyPerTick + " RF/t=" + EnumTextFormatting.AQUA + "Max Recieve:=" + energyStorage.getMaxReceive() + " RF/t");
+		setText("Power I/O", text);
+	}
+	
 	@Override
 	protected void drawExtra(int xPos, int yPos, float partialTicks) {
 		if(isOpen()) {	
+			setPowerInfoText();
 			if(info != null && info.size() > 0) {
 				drawTextBG(xPos, yPos);	
 				drawText(xPos, yPos);	
@@ -52,7 +61,7 @@ public class GuiInfoTab extends BaseGuiTab {
     	}	
 	}
 	private void drawText(int xPos, int yPos) {
-		fontRenderer.drawStringWithShadow(tabTitle, xPos+23, yPos+8, GuiUtilities.getColor(0, 242, 255));	
+		fontRenderer.drawStringWithShadow(tabTitle, xPos+11, yPos+8, GuiUtilities.getColor(242, 0, 255));	
 		float fontScale = 1.0f;
 		int scaleBasedXOffset = 0;
 		int scaleBasedYOffset = 0;

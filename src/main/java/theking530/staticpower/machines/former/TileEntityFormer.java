@@ -5,17 +5,17 @@ import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.handlers.crafting.registries.FormerRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.FormerRecipeWrapper;
 import theking530.staticpower.machines.BaseMachine;
-import theking530.staticpower.machines.tileentitycomponents.FillFromBatteryComponent;
-import theking530.staticpower.machines.tileentitycomponents.TileEntityInputServo;
-import theking530.staticpower.machines.tileentitycomponents.TileEntityOutputServo;
+import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
+import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
+import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
 
 public class TileEntityFormer extends BaseMachine {
 	
 	public TileEntityFormer() {
 		initializeBasicMachine(2, 1000, 100000, 80, 100, 1, 3, 1);
-		registerComponent(new FillFromBatteryComponent("BatteryComponent", slotsInput, 2, this, energyStorage));
-		registerComponent(new TileEntityOutputServo(this, 2, slotsOutput, 0));
-		registerComponent(new TileEntityInputServo(this, 2, slotsInput, 0, 1));
+		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInput, 2, this, energyStorage));
+		registerComponent(new TileEntityItemOutputServo(this, 2, slotsOutput, 0));
+		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0, 1));
 	}
 		
 	//IInventory				

@@ -1,9 +1,13 @@
 package theking530.staticpower.energy;
 
-import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraft.nbt.NBTTagCompound;
+import java.util.ArrayList;
+import java.util.List;
 
-public class StaticEnergyStorage implements IEnergyStorage {
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.energy.IEnergyStorage;
+import theking530.staticpower.machines.tileentitycomponents.ITileEntityComponent;
+
+public class StaticEnergyStorage implements IEnergyStorage, ITileEntityComponent {
 
 	private int capacity;
 	private int currentEnergy;
@@ -11,8 +15,15 @@ public class StaticEnergyStorage implements IEnergyStorage {
 	private int maxReceive;
 	private int maxExtract;
 	
+	private int lastEnergyStored;
+	private int energyPerTick;
+	private List<Integer> powerPerTickList;
+	private int powerPerTickSmoothingFactor = 1;
+	
 	private boolean canExtract;
 	private boolean canRecieve;
+
+	private boolean isEnabled;
 
 	public StaticEnergyStorage(int capacity) {
 		this(capacity, Integer.MAX_VALUE);
@@ -26,6 +37,7 @@ public class StaticEnergyStorage implements IEnergyStorage {
 		this.maxExtract = maxExtract;
 		canRecieve = true;
 		canExtract = false;
+		powerPerTickList = new ArrayList<Integer>();
 	}
 	
 
@@ -35,6 +47,7 @@ public class StaticEnergyStorage implements IEnergyStorage {
 		if (currentEnergy > capacity) {
 			currentEnergy = capacity;
 		}
+		energyPerTick = nbt.getInteger("PerTick");
 		return this;
 	}
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
@@ -43,22 +56,19 @@ public class StaticEnergyStorage implements IEnergyStorage {
 		}
 		nbt.setInteger("Energy", currentEnergy);
 		nbt.setInteger("Capacity", capacity);
+		nbt.setInteger("PerTick", energyPerTick);
+
 		return nbt;
 	}
 	public float getEnergyRatio(){
 		return (float)currentEnergy/(float)capacity;
 	}
-	public boolean hasEnoughPowerToExtract() {
-		if(currentEnergy <= maxExtract) {
-			return false;
-		}
-		return true;
-	}
+
 	@Override
 	public int receiveEnergy(int maxReceive, boolean simulate) {
 		int maxPossibleRecieve = Math.min(maxReceive, this.maxReceive);
 		int maxActualRecieve = Math.min(maxPossibleRecieve, capacity-currentEnergy);
-		
+
 		if(!simulate) {
 			currentEnergy += maxActualRecieve;
 		}
@@ -73,7 +83,7 @@ public class StaticEnergyStorage implements IEnergyStorage {
 		if(!simulate) {
 			currentEnergy -= maxActualExtract;
 		}
-		
+
 		return maxActualExtract;
 	}
 	@Override
@@ -92,25 +102,62 @@ public class StaticEnergyStorage implements IEnergyStorage {
 	public boolean canReceive() {
 		return canRecieve;
 	}
+	
 	public void setCanRecieve(boolean newCanRecieve) {
 		canRecieve = newCanRecieve;
 	}
 	public void setCanExtract(boolean newCanExtract) {
 		canExtract = newCanExtract;
 	}
+	
 	public void setMaxReceive(int newMaxRecieve) {
 		maxReceive = newMaxRecieve;		
 	}
 	public void setMaxExtract(int newMaxExtract) {
 		maxExtract = newMaxExtract;			
 	}
+	
 	public int getMaxExtract() {
 		return maxExtract;
 	}
 	public int getMaxReceive() {
 		return maxReceive;
 	}
+	
 	public void setCapacity(int newCapacity) {
 		capacity = newCapacity;		
+		currentEnergy = Math.min(currentEnergy, capacity);
+	}
+	
+	public int getEnergyIO() {
+		return energyPerTick;
+	}
+	@Override
+	public void preProcessUpdate() {
+		powerPerTickList.add(currentEnergy - lastEnergyStored);
+		if(powerPerTickList.size() > powerPerTickSmoothingFactor) {
+			powerPerTickList.remove(0);
+		}
+		int sum = 0;
+		for(int i=0; i<powerPerTickList.size(); i++) {
+			sum += powerPerTickList.get(i);
+		}
+		energyPerTick = currentEnergy - lastEnergyStored; //sum/powerPerTickList.size();
+	}
+	@Override
+	public String getComponentName() {
+		return "Energy Storage";
+	}
+	@Override
+	public boolean isEnabled() {
+		return isEnabled;
+	}
+	@Override
+	public void setEnabled(boolean isEnabled) {	
+		this.isEnabled = isEnabled;	
+	}
+	@Override
+	public void postProcessUpdate() {
+		lastEnergyStored = currentEnergy;
 	}
 }

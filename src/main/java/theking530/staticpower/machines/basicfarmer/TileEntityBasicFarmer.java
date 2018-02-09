@@ -29,9 +29,9 @@ import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.machines.BaseMachineWithTank;
-import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent;
-import theking530.staticpower.machines.tileentitycomponents.FillFromBatteryComponent;
-import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent.FluidContainerInteractionMode;
+import theking530.staticpower.machines.tileentitycomponents.BucketInteractionComponent;
+import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
+import theking530.staticpower.machines.tileentitycomponents.BucketInteractionComponent.FluidContainerInteractionMode;
 
 public class TileEntityBasicFarmer extends BaseMachineWithTank {
 
@@ -42,30 +42,30 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 	public BlockPos CURRENT_COORD;
 	private Random RAND;
 	private ArrayList<ItemStack> FARMED_STACKS;
-	public DrainToBucketComponent DRAIN_COMPONENT;
+	public BucketInteractionComponent DRAIN_COMPONENT;
 	
 	public TileEntityBasicFarmer() {
 		initializeBaseMachineWithTank(2, 20, 100000, 100, 10, 0, 4, 10, 10000);		
-		DRAIN_COMPONENT = new DrainToBucketComponent("BucketDrain", slotsInput, 2, slotsOutput, 9, this, TANK, FLUID_TO_CONTAINER_RATE);
+		DRAIN_COMPONENT = new BucketInteractionComponent("BucketDrain", slotsInput, 2, slotsOutput, 9, this, TANK, FLUID_TO_CONTAINER_RATE);
 		DRAIN_COMPONENT.setMode(FluidContainerInteractionMode.FillFromContainer);
-		registerComponent(new FillFromBatteryComponent("BatteryComponent", slotsInput, 3, this, energyStorage));
+		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInput, 3, this, energyStorage));
 		CURRENT_COORD = getStartingCoord();
 		RAND = new Random();
 		FARMED_STACKS = new ArrayList<ItemStack>();
 	}
 	@Override
 	public void process(){
-		DRAIN_COMPONENT.update();
+		DRAIN_COMPONENT.preProcessUpdate();
 		updateGrowthChange();
 		if(processingTimer < processingTime && canFarm()) {
 			processingTimer++;
+			useEnergy(maxEnergyUsagePerTick() * BLOCKS_PER_TICK);
 		}else{
 			if(FARMED_STACKS.size() <= 1 && canFarm()) {
 				for(int i=0; i<BLOCKS_PER_TICK; i++) {
 					incrementPosition();
 					checkFarmingPlot(CURRENT_COORD);
 				}
-				useEnergy(getProcessingCost() * BLOCKS_PER_TICK);
 				TANK.drain(1 * BLOCKS_PER_TICK, true);
 				updateBlock();
 				processingTimer = 0;

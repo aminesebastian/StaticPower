@@ -15,8 +15,8 @@ import theking530.staticpower.machines.BaseMachineWithTank;
 import theking530.staticpower.machines.condenser.TileEntityCondenser;
 import theking530.staticpower.machines.heatingelement.HeatStorage;
 import theking530.staticpower.machines.heatingelement.IHeatable;
-import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent;
-import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent.FluidContainerInteractionMode;
+import theking530.staticpower.machines.tileentitycomponents.BucketInteractionComponent;
+import theking530.staticpower.machines.tileentitycomponents.BucketInteractionComponent.FluidContainerInteractionMode;
 
 public class TileEntityDistillery extends BaseMachineWithTank implements IHeatable{
 
@@ -24,17 +24,17 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
 	public FluidTank TANK2;
 	
 	public FluidStack PROCESSING_STACK;
-	public DrainToBucketComponent DRAIN_COMPONENT_EVAPORATED_MASH;
-	public DrainToBucketComponent DRAIN_COMPONENT_MASH;
+	public BucketInteractionComponent DRAIN_COMPONENT_EVAPORATED_MASH;
+	public BucketInteractionComponent DRAIN_COMPONENT_MASH;
 	
 	public TileEntityDistillery() {
 		initializeBaseMachineWithTank(0, 0, 0, 0, 2, 0, 2, 2, 5000);
 		HEAT_STORAGE = new HeatStorage(150);
 		TANK2 = new FluidTank(5000);
 		
-		DRAIN_COMPONENT_MASH = new DrainToBucketComponent("LeftBucketDrain", slotsInput, 0, slotsOutput, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
+		DRAIN_COMPONENT_MASH = new BucketInteractionComponent("LeftBucketDrain", slotsInput, 0, slotsOutput, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
 		DRAIN_COMPONENT_MASH.setMode(FluidContainerInteractionMode.FillFromContainer);
-		DRAIN_COMPONENT_EVAPORATED_MASH = new DrainToBucketComponent("RightBucketDrain", slotsInput, 1, slotsOutput, 1, this, TANK2, FLUID_TO_CONTAINER_RATE);
+		DRAIN_COMPONENT_EVAPORATED_MASH = new BucketInteractionComponent("RightBucketDrain", slotsInput, 1, slotsOutput, 1, this, TANK2, FLUID_TO_CONTAINER_RATE);
 	}
 	@Override
 	public String getName() {
@@ -42,8 +42,8 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
 	}	
 	public void process() {
 		if(!getWorld().isRemote) {
-			DRAIN_COMPONENT_EVAPORATED_MASH.update();
-			DRAIN_COMPONENT_MASH.update();
+			DRAIN_COMPONENT_EVAPORATED_MASH.preProcessUpdate();
+			DRAIN_COMPONENT_MASH.preProcessUpdate();
 			if(!isProcessing() && canProcess() && PROCESSING_STACK == null) {
 				PROCESSING_STACK = TANK.drain(getInputFluidAmount(), true);
 				processingTimer++;

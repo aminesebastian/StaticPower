@@ -228,7 +228,7 @@ public class TileEntityItemConduit extends TileEntityBaseConduit {
 				if(te != null && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite())) {
 					IItemHandler itemHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
 					for(int j=0; j<itemHandler.getSlots(); j++) {
-						if(itemHandler.getStackInSlot(j) != ItemStack.EMPTY) {
+						if(!itemHandler.getStackInSlot(j).isEmpty()) {
 							return new ItemConduitWrapper(itemHandler.extractItem(j, PULL_ITEMS, false), getPos().offset(facing), RANDOM.nextFloat()*20);
 						}
 					}

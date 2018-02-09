@@ -2,6 +2,7 @@ package theking530.staticpower.machines.quarry;
 
 import org.lwjgl.opengl.GL11;
 
+import api.gui.tab.BaseGuiTab.TabSide;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
@@ -13,27 +14,29 @@ import theking530.staticpower.assists.utilities.WorldUtilities;
 import theking530.staticpower.client.gui.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.GuiDrawItem;
 import theking530.staticpower.client.gui.widgets.buttons.ArrowButton;
+import theking530.staticpower.client.gui.widgets.tabs.GuiMachinePowerInfoTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.items.ModItems;
-import theking530.staticpower.machines.tileentitycomponents.DrainToBucketComponent.FluidContainerInteractionMode;
+import theking530.staticpower.machines.tileentitycomponents.BucketInteractionComponent.FluidContainerInteractionMode;
 
 public class GuiQuarry extends BaseGuiContainer {
 	
-	private GuiPowerBarFromEnergyStorage POWERBAR;
-	private GuiFluidBarFromTank FLUIDBAR;
-
 	private TileEntityQuarry QUARRY;
 
 	public GuiQuarry(InventoryPlayer invPlayer, TileEntityQuarry teQuarry) {
 		super(new ContainerQuarry(invPlayer, teQuarry), 214, 173);
 		QUARRY = teQuarry;	
-		POWERBAR = new GuiPowerBarFromEnergyStorage(teQuarry);
-		FLUIDBAR = new GuiFluidBarFromTank(teQuarry.TANK);
+		registerWidget(new GuiPowerBarFromEnergyStorage(teQuarry, 47, 66, 6, 60));
+		registerWidget(new GuiFluidBarFromTank(teQuarry.TANK, 27, 66, 16, 60));
 
 		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teQuarry));
+		
+		GuiMachinePowerInfoTab powerInfoTab;
+		getTabManager().registerTab(powerInfoTab = new GuiMachinePowerInfoTab(80, 80, teQuarry));
+		powerInfoTab.setTabSide(TabSide.LEFT);	
 	}
 	@Override
 	public void initGui() {
@@ -63,28 +66,6 @@ public class GuiQuarry extends BaseGuiContainer {
 		    }
 		}
 	}	
-	@Override
-	public void updateScreen() {
-
-	}
-	@Override
-	public void drawScreen(int par1, int par2, float par3) {
-    	super.drawScreen(par1, par2, par3);
-    	int var1 = (this.width - this.xSize) / 2;
-        int var2 = (this.height - this.ySize) / 2;  
-		this.zLevel = -1.0f;
-		this.drawDefaultBackground();	
-		this.zLevel = 0.0f;
-
-		drawRect(guiLeft + 82, guiTop + 38, 176, 69, 3394815);
-		
-		if(par1 >= 27 + var1 && par2 >= 8 + var2 && par1 <= 42 + var1 && par2 <= 68 + var2) {	
-			drawHoveringText(FLUIDBAR.drawText(), par1, par2, fontRenderer); 
-		}    
-		if(par1 >= 46 + var1 && par2 >= 8 + var2 && par1 <= 52 + var1 && par2 <= 68 + var2) {
-			drawHoveringText(POWERBAR.drawText(), par1, par2, fontRenderer); 
-		}	
-	}
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = I18n.format(this.QUARRY.getName());
@@ -135,9 +116,6 @@ public class GuiQuarry extends BaseGuiContainer {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.QUARRY_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
     	GuiDrawItem.drawItem(ModItems.BasicItemFilter, guiLeft, guiTop, 27, 71, zLevel, 0.5f);
-
-		POWERBAR.drawPowerBar(guiLeft + 47, guiTop + 66, 6, 60, this.zLevel, f);
-		FLUIDBAR.drawFluidBar(guiLeft + 27, guiTop + 66, 16, 60, this.zLevel);
 	}	
 }
 
