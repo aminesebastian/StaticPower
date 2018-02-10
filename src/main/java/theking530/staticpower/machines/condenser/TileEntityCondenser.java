@@ -23,12 +23,15 @@ public class TileEntityCondenser extends BaseMachineWithTank  {
 	public BucketInteractionComponent DRAIN_COMPONENT_ETHANOL;
 
 	public TileEntityCondenser() {
-		initializeBaseMachineWithTank(0, 0, 0, 0, 20, 0, 2, 2, 5000);
+		initializeBasicMachine(0, 0, 0, 0, 20);
+		initializeTank(5000);
+		initializeSlots(0, 2, 2);
+		
 		TANK2 = new FluidTank(5000);
 		
-		DRAIN_COMPONENT_EVAPORATED_MASH = new BucketInteractionComponent("LeftBucketDrain", slotsInput, 0, slotsOutput, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
+		DRAIN_COMPONENT_EVAPORATED_MASH = new BucketInteractionComponent("LeftBucketDrain", slotsInput, 0, slotsOutput, 0, this, fluidTank, fluidToContainerRate);
 		DRAIN_COMPONENT_EVAPORATED_MASH.setMode(FluidContainerInteractionMode.FillFromContainer);
-		DRAIN_COMPONENT_ETHANOL = new BucketInteractionComponent("RightBucketDrain", slotsInput, 1, slotsOutput, 1, this, TANK2, FLUID_TO_CONTAINER_RATE);	
+		DRAIN_COMPONENT_ETHANOL = new BucketInteractionComponent("RightBucketDrain", slotsInput, 1, slotsOutput, 1, this, TANK2, fluidToContainerRate);	
 	}
 	
 	@Override
@@ -40,7 +43,7 @@ public class TileEntityCondenser extends BaseMachineWithTank  {
 			DRAIN_COMPONENT_EVAPORATED_MASH.preProcessUpdate();
 			DRAIN_COMPONENT_ETHANOL.preProcessUpdate();
 			if(!isProcessing() && PROCESSING_STACK == null && canProcess()) {
-				PROCESSING_STACK = TANK.drain(getInputFluidAmount(), true);
+				PROCESSING_STACK = fluidTank.drain(getInputFluidAmount(), true);
 				processingTime = Math.max(getOutputCondensingTime(), 0);
 				processingTimer++;
 			}
@@ -60,7 +63,7 @@ public class TileEntityCondenser extends BaseMachineWithTank  {
 	}
 	public boolean canProcess() {
 		if(hasOutput()) {
-			if(TANK.getFluid().amount >= getInputFluidAmount()) {
+			if(fluidTank.getFluid().amount >= getInputFluidAmount()) {
 				if(TANK2.getFluid() == null) {
 					return true;
 				}
@@ -78,22 +81,22 @@ public class TileEntityCondenser extends BaseMachineWithTank  {
 		return getOutputFluid() != null;
 	}
 	public int getInputFluidAmount() {
-		if(TANK.getFluid() != null) {
-			return CondenserRecipeRegistry.Condensing().getFluidInputAmount(TANK.getFluid());
+		if(fluidTank.getFluid() != null) {
+			return CondenserRecipeRegistry.Condensing().getFluidInputAmount(fluidTank.getFluid());
 		}
 		return 0;
 	}
 	public FluidStack getOutputFluid() {
 		if(PROCESSING_STACK != null) {
 			return CondenserRecipeRegistry.Condensing().getFluidOutput(PROCESSING_STACK);
-		}else if(TANK.getFluid() != null) {
-			return CondenserRecipeRegistry.Condensing().getFluidOutput(TANK.getFluid());
+		}else if(fluidTank.getFluid() != null) {
+			return CondenserRecipeRegistry.Condensing().getFluidOutput(fluidTank.getFluid());
 		}
 		return null;
 	}
 	public int getOutputCondensingTime() {
-		if(TANK.getFluid() != null) {
-			return CondenserRecipeRegistry.Condensing().getCondensingTime(TANK.getFluid());
+		if(fluidTank.getFluid() != null) {
+			return CondenserRecipeRegistry.Condensing().getCondensingTime(fluidTank.getFluid());
 		}
 		return 0;
 	}	
@@ -118,8 +121,8 @@ public class TileEntityCondenser extends BaseMachineWithTank  {
         }
         return nbt;
 	}	
-	public void onMachinePlaced(NBTTagCompound nbt, World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)  {
-		super.onMachinePlaced(nbt, world, pos, state, placer, stack);
+	public void deserializeOnPlaced(NBTTagCompound nbt, World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)  {
+		super.deserializeOnPlaced(nbt, world, pos, state, placer, stack);
         FluidStack tempStack = null;
         tempStack = FluidStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("TANK2"));
         TANK2.setFluid(tempStack);
@@ -141,7 +144,7 @@ public class TileEntityCondenser extends BaseMachineWithTank  {
 			updateBlock();
 		}
 		if(CondenserRecipeRegistry.Condensing().getFluidOutput(resource) != null){
-			return TANK.fill(resource, doFill);	
+			return fluidTank.fill(resource, doFill);	
 		}
 		return 0;
 	}

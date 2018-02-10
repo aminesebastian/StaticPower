@@ -21,7 +21,7 @@ public class GuiCropSqueezer extends BaseGuiContainer {
 		cSqueezer = teCropSqueezer;
 		
 		registerWidget(new GuiPowerBarFromEnergyStorage(teCropSqueezer, 50, 68, 6, 60));
-		registerWidget(new GuiFluidBarFromTank(teCropSqueezer.TANK, 30, 68, 16, 60));
+		registerWidget(new GuiFluidBarFromTank(teCropSqueezer.fluidTank, 30, 68, 16, 60));
 		
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teCropSqueezer));
 		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teCropSqueezer));

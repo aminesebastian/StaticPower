@@ -67,8 +67,7 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	 * @param inputSlots
 	 * @param disableFaceInteraction
 	 */
-	public void initializeBasicMachine(float InitialEnergyMult, int InitialPowerUse, int InitialEnergyCapacity, int InitialEntryPerTick, int InitialProcessingTime, int internalSlotCount, int inputSlots, int outputSlots, boolean disableFaceInteraction) {	
-		initializeBasicTileEntity(internalSlotCount, inputSlots, outputSlots, disableFaceInteraction);
+	public void initializeBasicMachine(float InitialEnergyMult, int InitialPowerUse, int InitialEnergyCapacity, int InitialEntryPerTick, int InitialProcessingTime) {	
 		initialProcessingEnergyMult = InitialEnergyMult;
 		initialEnergyCapacity = InitialEnergyCapacity;
 		initialEnergyPerTick = InitialEntryPerTick;
@@ -81,19 +80,6 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		energyStorage.setCapacity(InitialEnergyCapacity);	
 		
 		registerComponent(energyStorage);
-	}
-	/**
-	 * @param InitialEnergyMult
-	 * @param InitialPowerUse
-	 * @param InitialEnergyCapacity
-	 * @param InitialEntryPerTick
-	 * @param InitialProcessingTime
-	 * @param slotCount
-	 * @param outputSlots
-	 * @param inputSlots
-	 */
-	public void initializeBasicMachine(int InitialEnergyMult, int InitialPowerUse, int InitialEnergyCapacity, int InitialEntryPerTick, int InitialProcessingTime, int internalSlotCount, int inputSlots, int outputSlots) {	
-		initializeBasicMachine(InitialEnergyMult, InitialPowerUse, InitialEnergyCapacity, InitialEntryPerTick, InitialProcessingTime, internalSlotCount, inputSlots, outputSlots, true);	
 	}
 	@Override
 	public void update(){
@@ -188,8 +174,8 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
     	return new SPacketUpdateTileEntity(pos, getBlockMetadata(), tag);
     }
  
-	public void onMachinePlaced(NBTTagCompound nbt, World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-		super.onMachinePlaced(nbt, world, pos, state, placer, stack);
+	public void deserializeOnPlaced(NBTTagCompound nbt, World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+		super.deserializeOnPlaced(nbt, world, pos, state, placer, stack);
 		this.readFromNBT(nbt);
 		previouslyStoredEnergyAmount = energyStorage.getEnergyStored();
 		updateBlock();
@@ -293,49 +279,54 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	/* CAPABILITIES */
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing from) {
-		return capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, from);
+		if(capability == CapabilityEnergy.ENERGY && energyStorage != null) {
+			return true;
+		}
+		return super.hasCapability(capability, from);
 	}
 	@Override
 	public <T> T getCapability(Capability<T> capability, final EnumFacing from) {
 		if (capability == CapabilityEnergy.ENERGY) {
-			return CapabilityEnergy.ENERGY.cast(new net.minecraftforge.energy.IEnergyStorage() {
+			if(energyStorage != null) {
+				return CapabilityEnergy.ENERGY.cast(new net.minecraftforge.energy.IEnergyStorage() {
 
-				@Override
-				public int receiveEnergy(int maxReceive, boolean simulate) {
+					@Override
+					public int receiveEnergy(int maxReceive, boolean simulate) {
 
-					return BaseMachine.this.receiveEnergy(from, maxReceive, simulate);
-				}
+						return BaseMachine.this.receiveEnergy(from, maxReceive, simulate);
+					}
 
-				@Override
-				public int extractEnergy(int maxExtract, boolean simulate) {
+					@Override
+					public int extractEnergy(int maxExtract, boolean simulate) {
 
-					return BaseMachine.this.extractEnergy(from, maxExtract, simulate);
-				}
+						return BaseMachine.this.extractEnergy(from, maxExtract, simulate);
+					}
 
-				@Override
-				public int getEnergyStored() {
+					@Override
+					public int getEnergyStored() {
 
-					return BaseMachine.this.getEnergyStored(from);
-				}
+						return BaseMachine.this.getEnergyStored(from);
+					}
 
-				@Override
-				public int getMaxEnergyStored() {
+					@Override
+					public int getMaxEnergyStored() {
 
-					return BaseMachine.this.getMaxEnergyStored(from);
-				}
+						return BaseMachine.this.getMaxEnergyStored(from);
+					}
 
-				@Override
-				public boolean canExtract() {
+					@Override
+					public boolean canExtract() {
 
-					return false;
-				}
+						return false;
+					}
 
-				@Override
-				public boolean canReceive() {
+					@Override
+					public boolean canReceive() {
 
-					return true;
-				}
-			});
+						return true;
+					}
+				});
+			}
 		}
 		return super.getCapability(capability, from);
 	}

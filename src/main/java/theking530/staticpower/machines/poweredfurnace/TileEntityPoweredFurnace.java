@@ -11,7 +11,8 @@ public class TileEntityPoweredFurnace extends BaseMachine {
 	private BatteryInteractionComponent BATTERY_COMPONENT;
 	
 	public TileEntityPoweredFurnace() {
-		initializeBasicMachine(2, 1000, 100000, 80, 150, 1, 2, 1);
+		initializeSlots(1, 2, 1);
+		initializeBasicMachine(2, 1000, 100000, 80, 150);
 		BATTERY_COMPONENT = new BatteryInteractionComponent("BatteryComponent", slotsInput, 1, this, energyStorage);
 	}
 	@Override
@@ -55,7 +56,7 @@ public class TileEntityPoweredFurnace extends BaseMachine {
 				if(moveTimer < moveSpeed) {
 					moveTimer++;
 				}else{
-					moveItem(slotsInput, 0, slotsInternal, 0);
+					transferItemInternally(slotsInput, 0, slotsInternal, 0);
 					processingTimer = 1;
 					moveTimer = 0;
 				}

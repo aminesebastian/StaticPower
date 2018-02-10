@@ -7,20 +7,13 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
-import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.items.tools.ISolderingIron;
 import theking530.staticpower.tileentity.BaseTileEntity;
 
 public class TileEntitySolderingTable extends BaseTileEntity {
 		
 	public TileEntitySolderingTable() {
-		//initializeBasicTileEntity(0, 17, 1);
-		
-		slotsInput = new ItemStackHandler(17);
-		slotsOutput = new ItemStackHandler(1);
-		slotsInternal = new ItemStackHandler(1);
-		slotsUpgrades = new ItemStackHandler(3);
-		updateQueued = false;
+		initializeSlots(1, 17, 1);
 	}
 	@Override
 	public String getName() {

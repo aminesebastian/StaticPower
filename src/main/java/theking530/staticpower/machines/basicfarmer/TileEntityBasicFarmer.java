@@ -45,8 +45,11 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 	public BucketInteractionComponent DRAIN_COMPONENT;
 	
 	public TileEntityBasicFarmer() {
-		initializeBaseMachineWithTank(2, 20, 100000, 100, 10, 0, 4, 10, 10000);		
-		DRAIN_COMPONENT = new BucketInteractionComponent("BucketDrain", slotsInput, 2, slotsOutput, 9, this, TANK, FLUID_TO_CONTAINER_RATE);
+		initializeBasicMachine(2, 20, 100000, 100, 10);
+		initializeTank(10000);	
+		initializeSlots(0, 4, 10);
+
+		DRAIN_COMPONENT = new BucketInteractionComponent("BucketDrain", slotsInput, 2, slotsOutput, 9, this, fluidTank, fluidToContainerRate);
 		DRAIN_COMPONENT.setMode(FluidContainerInteractionMode.FillFromContainer);
 		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInput, 3, this, energyStorage));
 		CURRENT_COORD = getStartingCoord();
@@ -66,7 +69,7 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 					incrementPosition();
 					checkFarmingPlot(CURRENT_COORD);
 				}
-				TANK.drain(1 * BLOCKS_PER_TICK, true);
+				fluidTank.drain(1 * BLOCKS_PER_TICK, true);
 				updateBlock();
 				processingTimer = 0;
 			}else{
@@ -84,12 +87,12 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 		}	
 	}
 	public void updateGrowthChange() {
-		if(TANK.getFluid() != null) {
-			if(TANK.getFluid().getFluid() == ModFluids.StaticFluid) {
+		if(fluidTank.getFluid() != null) {
+			if(fluidTank.getFluid().getFluid() == ModFluids.StaticFluid) {
 				GROWTH_BONUS_CHANCE = 15;
-			}else if(TANK.getFluid().getFluid() == ModFluids.EnergizedFluid){
+			}else if(fluidTank.getFluid().getFluid() == ModFluids.EnergizedFluid){
 				GROWTH_BONUS_CHANCE = 25;
-			}else if(TANK.getFluid().getFluid() == ModFluids.LumumFluid){
+			}else if(fluidTank.getFluid().getFluid() == ModFluids.LumumFluid){
 				GROWTH_BONUS_CHANCE = 50;
 			}else{
 				GROWTH_BONUS_CHANCE = 0;

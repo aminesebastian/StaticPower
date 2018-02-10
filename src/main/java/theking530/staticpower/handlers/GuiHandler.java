@@ -65,6 +65,9 @@ import theking530.staticpower.machines.poweredgrinder.TileEntityPoweredGrinder;
 import theking530.staticpower.machines.quarry.ContainerQuarry;
 import theking530.staticpower.machines.quarry.GuiQuarry;
 import theking530.staticpower.machines.quarry.TileEntityQuarry;
+import theking530.staticpower.tileentity.barrel.ContainerBarrel;
+import theking530.staticpower.tileentity.barrel.GuiBarrel;
+import theking530.staticpower.tileentity.barrel.TileEntityBarrel;
 import theking530.staticpower.tileentity.chest.energizedchest.ContainerEnergizedChest;
 import theking530.staticpower.tileentity.chest.energizedchest.GuiEnergizedChest;
 import theking530.staticpower.tileentity.chest.energizedchest.TileEntityEnergizedChest;
@@ -200,6 +203,11 @@ public class GuiHandler implements IGuiHandler {
 					return new ContainerMultiplier(player.inventory, (TileEntitySignalMultiplier) entity);
 				}
 				return null;	
+			case GuiIDRegistry.guiIDBarrel:
+				if (entity instanceof TileEntityBarrel) {	
+					return new ContainerBarrel(player.inventory, (TileEntityBarrel) entity);
+				}
+				return null;
 			case GuiIDRegistry.guiIDFormer:
 				if (entity instanceof TileEntityFormer) {	
 					return new ContainerFormer(player.inventory, (TileEntityFormer) entity);
@@ -334,6 +342,11 @@ public class GuiHandler implements IGuiHandler {
 			case GuiIDRegistry.guiIDSignalMultiplier:
 				if (entity instanceof TileEntitySignalMultiplier) {	
 					return new GuiSignalMultiplier(player.inventory, (TileEntitySignalMultiplier) entity);				
+				}
+				return null;
+			case GuiIDRegistry.guiIDBarrel:
+				if (entity instanceof TileEntityBarrel) {	
+					return new GuiBarrel(player.inventory, (TileEntityBarrel) entity);				
 				}
 				return null;
 			case GuiIDRegistry.guiIDFormer:

@@ -15,4 +15,6 @@ public interface ISideConfigurable {
     
 	public void setSideConfiguration(Mode newMode, BlockSide side);
     public void setSideConfiguration(Mode newMode, EnumFacing facing);
+    
+	public void incrementSideConfiguration(EnumFacing side);
 }

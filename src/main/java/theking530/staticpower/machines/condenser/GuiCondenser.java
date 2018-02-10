@@ -1,6 +1,5 @@
 package theking530.staticpower.machines.condenser;
 
-import api.gui.tab.BaseGuiTab.TabSide;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
@@ -9,7 +8,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.client.gui.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.buttons.ArrowButton;
-import theking530.staticpower.client.gui.widgets.tabs.GuiMachinePowerInfoTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBar;
@@ -25,7 +23,7 @@ public class GuiCondenser extends BaseGuiContainer{
 		super(new ContainerCondenser(invPlayer, teFluidGenerator), 214, 173);
 		condenser = teFluidGenerator;
 		
-		registerWidget(new GuiFluidBarFromTank(teFluidGenerator.TANK, 71, 77, 16, 60));
+		registerWidget(new GuiFluidBarFromTank(teFluidGenerator.fluidTank, 71, 77, 16, 60));
 		registerWidget(new GuiFluidBarFromTank(teFluidGenerator.TANK2, 127, 77, 16, 60));
 		
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teFluidGenerator));

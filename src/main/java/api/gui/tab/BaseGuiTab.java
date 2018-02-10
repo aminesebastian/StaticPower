@@ -201,6 +201,7 @@ public abstract class BaseGuiTab extends Gui {
 
 		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_CULL_FACE);
+		GlStateManager.disableLighting();
 		if(getTabSide() == TabSide.LEFT) {
 			GL11.glTranslatef(xPos, yPos, 0.0f);
 			GL11.glScalef(-1.0f, 1.0f, 1.0f);;
@@ -244,6 +245,7 @@ public abstract class BaseGuiTab extends Gui {
 
 		tessellator.draw();
 		GL11.glEnable(GL11.GL_CULL_FACE);
+		GlStateManager.enableLighting();
 		GL11.glPopMatrix();
 	}
 	

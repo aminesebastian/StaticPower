@@ -16,8 +16,11 @@ public class TileEntityFluidGenerator extends BaseMachineWithTank{
 	public BucketInteractionComponent fluidContainerComponent;
 	
 	public TileEntityFluidGenerator() {
-		initializeBaseMachineWithTank(1, 0, 50000, 480, 0, 0, 1, 1, 5000);
-		fluidContainerComponent = new BucketInteractionComponent("BucketDrain", slotsInput, 0, slotsOutput, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
+		initializeBasicMachine(1, 0, 50000, 480, 0);
+		initializeTank(5000);
+		initializeSlots(0, 1, 1);
+		
+		fluidContainerComponent = new BucketInteractionComponent("BucketDrain", slotsInput, 0, slotsOutput, 0, this, fluidTank, fluidToContainerRate);
 		fluidContainerComponent.setMode(FluidContainerInteractionMode.FillFromContainer);
 		energyDistributor = new PowerDistributor(this, energyStorage);
 		moveSpeed = 10;
@@ -25,14 +28,14 @@ public class TileEntityFluidGenerator extends BaseMachineWithTank{
 	
 	//Internal TANK			
 	public boolean hasFuel() {
-		if (TANK.getFluidAmount() > 0) {
+		if (fluidTank.getFluidAmount() > 0) {
 			return true;
 		}
 		return false;
 	}		
 	public float getAdjustedVolume() {
-		float amount = TANK.getFluidAmount();
-		float capacity = TANK.getCapacity();
+		float amount = fluidTank.getFluidAmount();
+		float capacity = fluidTank.getCapacity();
 		float volume = (amount/capacity)*0.8F;		
 		return volume;	
 	}
@@ -44,10 +47,10 @@ public class TileEntityFluidGenerator extends BaseMachineWithTank{
 	}	
 	public void process() {
 		if(!getWorld().isRemote) {
-			if(!isTankEmpty() && !isProcessing() && getFluidRFOutput(TANK.getFluid()) > 0 && energyStorage.getEnergyStored() < energyStorage.getMaxEnergyStored()) {
+			if(!isTankEmpty() && !isProcessing() && getFluidRFOutput(fluidTank.getFluid()) > 0 && energyStorage.getEnergyStored() < energyStorage.getMaxEnergyStored()) {
 				processingTimer = 1;
-				processingFluid = TANK.getFluid();
-				TANK.drain(1, true);
+				processingFluid = fluidTank.getFluid();
+				fluidTank.drain(1, true);
 			}
 			if(isProcessing() && energyStorage.getEnergyStored() < energyStorage.getMaxEnergyStored() && processingFluid != null) {
 				energyStorage.receiveEnergy(getFluidRFOutput(processingFluid), false);

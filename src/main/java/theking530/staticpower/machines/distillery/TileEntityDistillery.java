@@ -28,13 +28,16 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
 	public BucketInteractionComponent DRAIN_COMPONENT_MASH;
 	
 	public TileEntityDistillery() {
-		initializeBaseMachineWithTank(0, 0, 0, 0, 2, 0, 2, 2, 5000);
+		initializeBasicMachine(0, 0, 0, 0, 2);
+		initializeTank(5000);
+		initializeSlots(0, 2, 2);
+		
 		HEAT_STORAGE = new HeatStorage(150);
 		TANK2 = new FluidTank(5000);
 		
-		DRAIN_COMPONENT_MASH = new BucketInteractionComponent("LeftBucketDrain", slotsInput, 0, slotsOutput, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
+		DRAIN_COMPONENT_MASH = new BucketInteractionComponent("LeftBucketDrain", slotsInput, 0, slotsOutput, 0, this, fluidTank, fluidToContainerRate);
 		DRAIN_COMPONENT_MASH.setMode(FluidContainerInteractionMode.FillFromContainer);
-		DRAIN_COMPONENT_EVAPORATED_MASH = new BucketInteractionComponent("RightBucketDrain", slotsInput, 1, slotsOutput, 1, this, TANK2, FLUID_TO_CONTAINER_RATE);
+		DRAIN_COMPONENT_EVAPORATED_MASH = new BucketInteractionComponent("RightBucketDrain", slotsInput, 1, slotsOutput, 1, this, TANK2, fluidToContainerRate);
 	}
 	@Override
 	public String getName() {
@@ -45,7 +48,7 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
 			DRAIN_COMPONENT_EVAPORATED_MASH.preProcessUpdate();
 			DRAIN_COMPONENT_MASH.preProcessUpdate();
 			if(!isProcessing() && canProcess() && PROCESSING_STACK == null) {
-				PROCESSING_STACK = TANK.drain(getInputFluidAmount(), true);
+				PROCESSING_STACK = fluidTank.drain(getInputFluidAmount(), true);
 				processingTimer++;
 			}
 			if(isProcessing()) {
@@ -72,7 +75,7 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
 	}
 	public boolean canProcess() {
 		if(hasOutput()) {
-			if(TANK.getFluid().amount >= getInputFluidAmount()) {
+			if(fluidTank.getFluid().amount >= getInputFluidAmount()) {
 				if(getHeat() >= getOutputMinHeat()) {
 					if(TANK2.getFluid() == null) {
 						return true;
@@ -92,26 +95,26 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
 		return getOutputFluid() != null;
 	}
 	public int getInputFluidAmount() {
-		if(TANK.getFluid() != null) {
-			return DistilleryRecipeRegistry.Distillery().getFluidInputAmount(TANK.getFluid(), getHeat());
+		if(fluidTank.getFluid() != null) {
+			return DistilleryRecipeRegistry.Distillery().getFluidInputAmount(fluidTank.getFluid(), getHeat());
 		}
 		return 0;
 	}
 	public FluidStack getOutputFluid() {
-		if(TANK.getFluid() != null) {
-			return DistilleryRecipeRegistry.Distillery().getFluidOutput(TANK.getFluid(), getHeat());
+		if(fluidTank.getFluid() != null) {
+			return DistilleryRecipeRegistry.Distillery().getFluidOutput(fluidTank.getFluid(), getHeat());
 		}
 		return null;
 	}
 	public int getOutputHeatCost() {
-		if(TANK.getFluid() != null) {
-			return DistilleryRecipeRegistry.Distillery().getHeatCost(TANK.getFluid(), getHeat());
+		if(fluidTank.getFluid() != null) {
+			return DistilleryRecipeRegistry.Distillery().getHeatCost(fluidTank.getFluid(), getHeat());
 		}
 		return 0;
 	}
 	public int getOutputMinHeat() {
-		if(TANK.getFluid() != null) {
-			return DistilleryRecipeRegistry.Distillery().getHeatMin(TANK.getFluid(), getHeat());
+		if(fluidTank.getFluid() != null) {
+			return DistilleryRecipeRegistry.Distillery().getHeatMin(fluidTank.getFluid(), getHeat());
 		}
 		return 0;
 	}
@@ -142,8 +145,8 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
         }
         return nbt;
 	}	
-	public void onMachinePlaced(NBTTagCompound nbt, World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)  {
-		super.onMachinePlaced(nbt, world, pos, state, placer, stack);
+	public void deserializeOnPlaced(NBTTagCompound nbt, World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)  {
+		super.deserializeOnPlaced(nbt, world, pos, state, placer, stack);
 		HEAT_STORAGE.readFromNBT(nbt);
 
         FluidStack tempStack = null;
@@ -188,7 +191,7 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
 			updateBlock();
 		}
 		if(DistilleryRecipeRegistry.Distillery().getFluidOutput(resource, 10000000) != null){
-			return TANK.fill(resource, doFill);	
+			return fluidTank.fill(resource, doFill);	
 		}
 		return 0;
 	}

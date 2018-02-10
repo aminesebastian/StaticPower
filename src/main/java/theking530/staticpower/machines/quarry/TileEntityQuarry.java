@@ -41,8 +41,11 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 	private boolean testing = false;
 	
 	public TileEntityQuarry() {
-		initializeBaseMachineWithTank(2, 100, 100000, 1000, 10, 1, 1, 1, 10000);
-		DRAIN_COMPONENT = new BucketInteractionComponent("BucketDrain", slotsInput, 0, slotsOutput, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
+		initializeBasicMachine(2, 100, 100000, 1000, 10);
+		initializeTank(10000);
+		initializeSlots(1, 1, 1);
+		
+		DRAIN_COMPONENT = new BucketInteractionComponent("BucketDrain", slotsInput, 0, slotsOutput, 0, this, fluidTank, fluidToContainerRate);
 		DRAIN_COMPONENT.setMode(FluidContainerInteractionMode.FillFromContainer);
 	}
 	@Override
@@ -67,7 +70,7 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 							mineBlock();
 							energyStorage.extractEnergy(getProcessingCost(), false);
 							if(getFortuneMultiplier() > 0) {
-								TANK.drain(1, true);
+								fluidTank.drain(1, true);
 							}
 						}
 						updateBlock();
@@ -260,14 +263,14 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 		return "Quarry";
 	}
 	public int getFortuneMultiplier() {
-		if(TANK.getFluid() != null) {
-			if(TANK.getFluid().getFluid() == ModFluids.StaticFluid) {
+		if(fluidTank.getFluid() != null) {
+			if(fluidTank.getFluid().getFluid() == ModFluids.StaticFluid) {
 				return 1;
 			}
-			if(TANK.getFluid().getFluid() == ModFluids.EnergizedFluid) {
+			if(fluidTank.getFluid().getFluid() == ModFluids.EnergizedFluid) {
 				return 2;
 			}
-			if(TANK.getFluid().getFluid() == ModFluids.LumumFluid) {
+			if(fluidTank.getFluid().getFluid() == ModFluids.LumumFluid) {
 				return 3;
 			}
 		}

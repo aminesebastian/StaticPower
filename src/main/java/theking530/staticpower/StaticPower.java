@@ -77,6 +77,7 @@ import theking530.staticpower.machines.poweredfurnace.TileEntityPoweredFurnace;
 import theking530.staticpower.machines.poweredgrinder.TileEntityPoweredGrinder;
 import theking530.staticpower.machines.quarry.TileEntityQuarry;
 import theking530.staticpower.potioneffects.ModPotions;
+import theking530.staticpower.tileentity.barrel.TileEntityBarrel;
 import theking530.staticpower.tileentity.chest.energizedchest.TileEntityEnergizedChest;
 import theking530.staticpower.tileentity.chest.lumumchest.TileEntityLumumChest;
 import theking530.staticpower.tileentity.chest.staticchest.TileEntityStaticChest;
@@ -195,6 +196,7 @@ public class StaticPower {
 		GameRegistry.registerTileEntity(TileEntityLumumChest.class, "LumumChest");
 		GameRegistry.registerTileEntity(TileEntityVacuumChest.class, "VacuumChest");
 		
+		GameRegistry.registerTileEntity(TileEntityBarrel.class, "Barrel");
 	}	
 	@EventHandler
 	public void Init(FMLInitializationEvent Event){

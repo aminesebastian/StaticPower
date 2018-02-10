@@ -15,8 +15,11 @@ public class TileEntityFluidInfuser extends BaseMachineWithTank {
 	public FluidStack LAST_CONTAINED_FLUID;
 	
 	public TileEntityFluidInfuser() {
-		initializeBaseMachineWithTank(2, 1000, 50000, 80, 100, 1, 2, 2, 10000);
-		DRAIN_COMPONENT = new BucketInteractionComponent("BucketDrain", slotsInput, 1, slotsOutput, 1, this, TANK, FLUID_TO_CONTAINER_RATE);
+		initializeBasicMachine(2, 1000, 50000, 80, 100);
+		initializeTank(10000);
+		initializeSlots(1, 2, 2);
+		
+		DRAIN_COMPONENT = new BucketInteractionComponent("BucketDrain", slotsInput, 1, slotsOutput, 1, this, fluidTank, fluidToContainerRate);
 		DRAIN_COMPONENT.setMode(FluidContainerInteractionMode.FillFromContainer);
 	}
 	//IInventory				
@@ -29,8 +32,8 @@ public class TileEntityFluidInfuser extends BaseMachineWithTank {
 	@Override
  	public ItemStack getResult(ItemStack itemStack) {
 		if(itemStack != ItemStack.EMPTY) {
-			if(TANK.getFluid() != null) {
-				return InfuserRecipeRegistry.Infusing().getInfusingItemStackResult(itemStack, TANK.getFluid());
+			if(fluidTank.getFluid() != null) {
+				return InfuserRecipeRegistry.Infusing().getInfusingItemStackResult(itemStack, fluidTank.getFluid());
 			}else{			
 				return InfuserRecipeRegistry.Infusing().getInfusingItemStackResult(itemStack, LAST_CONTAINED_FLUID);
 			}
@@ -39,10 +42,9 @@ public class TileEntityFluidInfuser extends BaseMachineWithTank {
 			return ItemStack.EMPTY;
 		}
 	}
-	@Override
 	public boolean hasResult(ItemStack itemStack) {
 		if(itemStack != ItemStack.EMPTY) {
-			if(getResult(itemStack) != ItemStack.EMPTY && TANK.getFluidAmount() >= InfuserRecipeRegistry.Infusing().getInfusingFluidCost(slotsInput.getStackInSlot(0), TANK.getFluid()) &&
+			if(getResult(itemStack) != ItemStack.EMPTY && fluidTank.getFluidAmount() >= InfuserRecipeRegistry.Infusing().getInfusingFluidCost(slotsInput.getStackInSlot(0), fluidTank.getFluid()) &&
 					energyStorage.getEnergyStored() >= getProcessingEnergy(itemStack) && InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 0, getResult(itemStack))) {
 				return true;
 			}
@@ -61,7 +63,7 @@ public class TileEntityFluidInfuser extends BaseMachineWithTank {
 	@Override
 	public int getProcessingEnergy(ItemStack itemStack) {
 		if(getResult(itemStack) != ItemStack.EMPTY) {
-			return (int) (InfuserRecipeRegistry.Infusing().getInfusingFluidCost(itemStack, TANK.getFluid())*5*processingEnergyMult);
+			return (int) (InfuserRecipeRegistry.Infusing().getInfusingFluidCost(itemStack, fluidTank.getFluid())*5*processingEnergyMult);
 		}
 		return 0;
 	}
@@ -97,10 +99,10 @@ public class TileEntityFluidInfuser extends BaseMachineWithTank {
 			if(moveTimer >= moveSpeed) {
 				moveTimer = 0;
 				if(!getWorld().isRemote) {
-					TANK.drain(InfuserRecipeRegistry.Infusing().getInfusingFluidCost(slotsInput.getStackInSlot(0), TANK.getFluid()), true);
+					fluidTank.drain(InfuserRecipeRegistry.Infusing().getInfusingFluidCost(slotsInput.getStackInSlot(0), fluidTank.getFluid()), true);
 					useEnergy(getProcessingEnergy(slotsInput.getStackInSlot(0)));
 				}
-				moveItem(slotsInput, 0, slotsInternal, 0);
+				transferItemInternally(slotsInput, 0, slotsInternal, 0);
 				processingTimer = 1;
 				
 			}

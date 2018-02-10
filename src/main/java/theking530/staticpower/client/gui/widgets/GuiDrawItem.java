@@ -29,7 +29,12 @@ public class GuiDrawItem {
 	}
 	public static void drawItem(Item item, int guiLeft, int guiTop, int x, int y, float zLevel, float alpha) {
         if(SHOULD_DRAW) {
-        	renderItemModelIntoGUI(new ItemStack(item), guiLeft+x, guiTop+y, zLevel, alpha, render.getItemModelWithOverrides(new ItemStack(item), (World)null, Minecraft.getMinecraft().player));
+        	renderItemModelIntoGUI(new ItemStack(item), guiLeft+x, guiTop+y, zLevel, alpha, render.getItemModelWithOverrides(new ItemStack(item), Minecraft.getMinecraft().world, Minecraft.getMinecraft().player));
+        }
+    }
+	public static void drawItem(ItemStack item, int guiLeft, int guiTop, int x, int y, float zLevel, float alpha) {
+        if(SHOULD_DRAW) {
+        	renderItemModelIntoGUI(item, guiLeft+x, guiTop+y, zLevel, alpha, render.getItemModelWithOverrides(item, Minecraft.getMinecraft().world, Minecraft.getMinecraft().player));
         }
     }
     protected static void renderItemModelIntoGUI(ItemStack stack, int x, int y, float zLevel, float alpha, IBakedModel bakedmodel) { 

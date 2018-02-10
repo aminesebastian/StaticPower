@@ -30,7 +30,7 @@ public class GuiQuarry extends BaseGuiContainer {
 		super(new ContainerQuarry(invPlayer, teQuarry), 214, 173);
 		QUARRY = teQuarry;	
 		registerWidget(new GuiPowerBarFromEnergyStorage(teQuarry, 47, 66, 6, 60));
-		registerWidget(new GuiFluidBarFromTank(teQuarry.TANK, 27, 66, 16, 60));
+		registerWidget(new GuiFluidBarFromTank(teQuarry.fluidTank, 27, 66, 16, 60));
 
 		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teQuarry));
 		

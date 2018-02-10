@@ -6,7 +6,7 @@ import theking530.staticpower.tileentity.chest.TileEntityBaseChest;
 public class TileEntityLumumChest extends TileEntityBaseChest{
 
 	public TileEntityLumumChest() {
-		initializeBasicTileEntity(0, 0, 96);
+		initializeSlots(0, 0, 96);
 	}
 	//NBT
 	@Override

@@ -24,12 +24,12 @@ public class TileEntityRenderCropSqueezer extends BaseMachineTESR<TileEntityCrop
 		return machineOn ? frontOn : front;
 	}
 	public void drawExtra(TileEntityCropSqueezer te, double translationX, double translationY, double translationZ, float f, int dest, float alpha) {
-		if(te.TANK.getFluid() != null || (te.getInputStack(0) != ItemStack.EMPTY && te.getFluidResult(te.getInputStack(0)) != null)) {
+		if(te.fluidTank.getFluid() != null || (te.getInputStack(0) != ItemStack.EMPTY && te.getFluidResult(te.getInputStack(0)) != null)) {
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-			if(te.TANK.getFluid() != null) {
-				drawLiquidPour(te, te.TANK.getFluid());
+			if(te.fluidTank.getFluid() != null) {
+				drawLiquidPour(te, te.fluidTank.getFluid());
 			}else if(te.getInputStack(0) != null && te.getFluidResult(te.getInputStack(0)) != null){
 				drawLiquidPour(te, te.getFluidResult(te.getInputStack(0)));
 			}else{
@@ -42,6 +42,6 @@ public class TileEntityRenderCropSqueezer extends BaseMachineTESR<TileEntityCrop
 		TileEntityCropSqueezer squeezer = (TileEntityCropSqueezer)tileentity;
 		float progress = ((float)squeezer.processingTimer/(float)squeezer.processingTime)*0.5f;
 		RenderUtil.drawFluidInWorld(fluidStack, fluidStack.amount, 7*texel, 1-4*texel-progress, 1.0001F, 2*texel, progress);
-		RenderUtil.drawFluidInWorld(fluidStack, squeezer.TANK.getCapacity(), 4*texel, 3.5F*texel, 1.0001F, 8*texel, texel*2.5f);
+		RenderUtil.drawFluidInWorld(fluidStack, squeezer.fluidTank.getCapacity(), 4*texel, 3.5F*texel, 1.0001F, 8*texel, texel*2.5f);
 	}
 }

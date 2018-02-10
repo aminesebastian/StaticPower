@@ -54,14 +54,25 @@ public class GuiInfoTab extends BaseGuiTab {
 	private void drawText(int xPos, int yPos) {
 		fontRenderer.drawStringWithShadow(tabTitle, xPos+23, yPos+8, GuiUtilities.getColor(0, 242, 255));	
 		float fontScale = 1.0f;
-		int scaleBasedXOffset = 0;
-		int scaleBasedYOffset = 0;
-		GlStateManager.scale(fontScale, fontScale, fontScale);
+		
 		for(int i = 0; i < info.size(); i++) {
 			String string = (String) info.get(i);
-    		fontRenderer.drawStringWithShadow(string, xPos + 17 + scaleBasedXOffset, (yPos+27)+scaleBasedYOffset+11*i, 16777215);
+			
+			int textX = (int)((xPos + 17 - fontScale) / fontScale) - 1;
+			int textY = (int)((yPos+34+(11*i) - 7 * fontScale) / fontScale) - 1;
+			
+			GlStateManager.disableLighting();
+			GlStateManager.disableDepth();
+			GlStateManager.disableBlend();
+			GlStateManager.pushMatrix();
+			GlStateManager.scale(fontScale, fontScale, fontScale);
+			
+			fontRenderer.drawStringWithShadow(string, textX, textY, 16777215);
+			
+			GlStateManager.popMatrix();
+			GlStateManager.enableLighting();
+			GlStateManager.enableDepth();
 		}	
-		GlStateManager.scale(1.0f/fontScale, 1.0f/fontScale, 1.0f/fontScale);
 	}
 	public void drawTextBG(int xPos, int yPos) {
 		int height = 0;

@@ -25,17 +25,17 @@ public class TileEntityRenderFluidGenerator extends BaseMachineTESR<TileEntityFl
 
 	@Override
 	public void drawExtra(TileEntityFluidGenerator tileentity, double translationX, double translationY, double translationZ, float f, int dest, float alpha) {
-		if(tileentity.TANK.getFluid() != null) {	
+		if(tileentity.fluidTank.getFluid() != null) {	
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			drawLiquidBar(tileentity, tileentity.TANK.getFluid());
+			drawLiquidBar(tileentity, tileentity.fluidTank.getFluid());
 			GL11.glDisable(GL11.GL_BLEND);
 		}
 		drawEnergyBar(tileentity);
 	}
 	public static void drawLiquidBar(TileEntity tileentity, FluidStack fluidStack) {
 		TileEntityFluidGenerator fGen = (TileEntityFluidGenerator)tileentity;
-		RenderUtil.drawFluidInWorld(fluidStack, fGen.TANK.getCapacity(), 10.5F*texel, 2.5F*texel, 1.0005F, 3F*texel, 0.69f);
+		RenderUtil.drawFluidInWorld(fluidStack, fGen.fluidTank.getCapacity(), 10.5F*texel, 2.5F*texel, 1.0005F, 3F*texel, 0.69f);
 	}
 	public static void drawEnergyBar(TileEntity tileentity) {
 		TileEntityFluidGenerator fGen = (TileEntityFluidGenerator)tileentity;

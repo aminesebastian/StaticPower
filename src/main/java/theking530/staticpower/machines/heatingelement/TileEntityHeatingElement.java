@@ -15,7 +15,8 @@ public class TileEntityHeatingElement extends BaseMachine implements ITickable, 
 	public HeatDistributor HEAT_DIST;
 	
 	public TileEntityHeatingElement() {
-		initializeBasicMachine(1, 5, 100, 100, 20, 0, 0, 0);
+		initializeSlots(0, 0, 0);
+		initializeBasicMachine(1, 5, 100, 100, 20);
 		HEAT_STORAGE = new HeatStorage(200);
 		HEAT_DIST = new HeatDistributor(this, HEAT_STORAGE);
 	}
@@ -48,8 +49,8 @@ public class TileEntityHeatingElement extends BaseMachine implements ITickable, 
         HEAT_STORAGE.writeToNBT(nbt);
         return nbt;
 	}	
-	public void onMachinePlaced(NBTTagCompound nbt, World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)  {
-		super.onMachinePlaced(nbt, world, pos, state, placer, stack);
+	public void deserializeOnPlaced(NBTTagCompound nbt, World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)  {
+		super.deserializeOnPlaced(nbt, world, pos, state, placer, stack);
 		HEAT_STORAGE.readFromNBT(nbt);
 	}
 }

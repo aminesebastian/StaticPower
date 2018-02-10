@@ -28,7 +28,7 @@ public class GuiDistillery extends BaseGuiContainer {
 		distillery = teFluidGenerator;
 		
 		heatbar = new GuiHeatBarFromStorage(teFluidGenerator.HEAT_STORAGE);
-		registerWidget(new GuiFluidBarFromTank(teFluidGenerator.TANK, 71, 77, 16, 60));
+		registerWidget(new GuiFluidBarFromTank(teFluidGenerator.fluidTank, 71, 77, 16, 60));
 		registerWidget(new GuiFluidBarFromTank(teFluidGenerator.TANK2, 127, 77, 16, 60));
 
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teFluidGenerator));

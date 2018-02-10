@@ -20,22 +20,16 @@ import theking530.staticpower.items.upgrades.BaseTankUpgrade;
 
 public class BaseMachineWithTank extends BaseMachine implements IFluidHandler {
 
-	public int INITIAL_TANK_CAPACITY;
-	public FluidTank TANK;
-	public int FLUID_CONTAINER_SLOT = -1;
-	public int FLUID_TO_CONTAINER_RATE = 20;
-
-	public int CONTAINER_MOVE_TIMER = 0;
-	public int CONTAINER_MOVE_SPEED = 4;
+	public int initialTankCapacity;
+	public int fluidToContainerRate = 10;
 	
-	public FluidDistributor FLUID_DIST;
+	public FluidTank fluidTank;	
+	public FluidDistributor fluidDistributor;
 
-	public void initializeBaseMachineWithTank(int InitialEnergyMult, int InitialPowerUse, int InitialEnergyCapacity, int InitialEntryPerTick, int InitialProcessingTime, 
-			int internalSlotCount, int inputSlots, int outputSlots, int InitialTankCapacity) {	
-		initializeBasicMachine(InitialEnergyMult, InitialPowerUse, InitialEnergyCapacity, InitialEntryPerTick, InitialProcessingTime, internalSlotCount, inputSlots, outputSlots);
-		INITIAL_TANK_CAPACITY = InitialTankCapacity;
-		TANK = new FluidTank(INITIAL_TANK_CAPACITY);
-		FLUID_DIST = new FluidDistributor(this, TANK);
+	public void initializeTank(int InitialTankCapacity) {	
+		initialTankCapacity = InitialTankCapacity;
+		fluidTank = new FluidTank(initialTankCapacity);
+		fluidDistributor = new FluidDistributor(this, fluidTank);
 	}
 
 	public void useFluidContainer() {
@@ -59,22 +53,22 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler {
 		}
 		if(flag) {
 			BaseTankUpgrade tempUpgrade = (BaseTankUpgrade) slotsUpgrades.getStackInSlot(slot).getItem();
-			TANK.setCapacity((int)(tempUpgrade.getValueMultiplied(INITIAL_TANK_CAPACITY, tempUpgrade.getMultiplier(slotsUpgrades.getStackInSlot(slot), 0))));
+			fluidTank.setCapacity((int)(tempUpgrade.getValueMultiplied(initialTankCapacity, tempUpgrade.getMultiplier(slotsUpgrades.getStackInSlot(slot), 0))));
 		}else{
-			TANK.setCapacity(INITIAL_TANK_CAPACITY);
+			fluidTank.setCapacity(initialTankCapacity);
 		}
 	}
 	
 	@Override  
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
-        TANK.readFromNBT(nbt.getCompoundTag("TANK"));
+        fluidTank.readFromNBT(nbt.getCompoundTag("TANK"));
     }		
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
         NBTTagCompound tank =  new NBTTagCompound();
-        TANK.writeToNBT(tank);
+        fluidTank.writeToNBT(tank);
         nbt.setTag("TANK", tank);
     	return nbt;
 	}    
@@ -89,24 +83,24 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler {
     	return new SPacketUpdateTileEntity(pos, getBlockMetadata(), tag);
     }
 	
-    public void onMachinePlaced(NBTTagCompound nbt, World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)  {
-		super.onMachinePlaced(nbt, world, pos, state, placer, stack);
-        TANK.readFromNBT(nbt);
+    public void deserializeOnPlaced(NBTTagCompound nbt, World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)  {
+		super.deserializeOnPlaced(nbt, world, pos, state, placer, stack);
+        fluidTank.readFromNBT(nbt);
 	}	
    
 	public boolean isTankEmpty() {
-		return TANK.getFluidAmount() <= 0 ? true : false;
+		return fluidTank.getFluidAmount() <= 0 ? true : false;
 	}
 	@Override
 	public IFluidTankProperties[] getTankProperties() {
-		return TANK.getTankProperties();
+		return fluidTank.getTankProperties();
 	}
 	@Override
 	public int fill(FluidStack resource, boolean doFill) {
 		if(!getWorld().isRemote) {
 			updateBlock();
 		}
-		int temp = TANK.fill(resource, doFill);
+		int temp = fluidTank.fill(resource, doFill);
 		return temp;
 	}
 	@Override
@@ -114,19 +108,19 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler {
 		if(!getWorld().isRemote) {
 			updateBlock();
 		}
-		return TANK.drain(resource, doDrain);
+		return fluidTank.drain(resource, doDrain);
 	}
 	@Override
 	public FluidStack drain(int maxDrain, boolean doDrain) {
 		if(!getWorld().isRemote) {
 			updateBlock();
 		}
-		return TANK.drain(maxDrain, doDrain);
+		return fluidTank.drain(maxDrain, doDrain);
 	}
 
 	public float getFluidLevelScaled(int height) {
-		int capacity = TANK.getCapacity();
-		int volume = TANK.getFluidAmount();
+		int capacity = fluidTank.getCapacity();
+		int volume = fluidTank.getFluidAmount();
 		if(capacity != 0) {
 			float percentage = (float)volume/(float)capacity;
 			return percentage * height;

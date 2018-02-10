@@ -6,7 +6,7 @@ import theking530.staticpower.tileentity.chest.TileEntityBaseChest;
 public class TileEntityEnergizedChest extends TileEntityBaseChest{
 	
 	public TileEntityEnergizedChest() {
-		initializeBasicTileEntity(0, 0, 72);
+		initializeSlots(0, 0, 72);
 	}
 	
 	//NBT

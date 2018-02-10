@@ -37,6 +37,7 @@ import theking530.staticpower.machines.mechanicalsqueezer.BlockMechanicalSqueeze
 import theking530.staticpower.machines.poweredfurnace.BlockPoweredFurnace;
 import theking530.staticpower.machines.poweredgrinder.BlockPoweredGrinder;
 import theking530.staticpower.machines.quarry.BlockQuarry;
+import theking530.staticpower.tileentity.barrel.BlockBarrel;
 import theking530.staticpower.tileentity.chest.energizedchest.BlockEnergizedChest;
 import theking530.staticpower.tileentity.chest.lumumchest.BlockLumumChest;
 import theking530.staticpower.tileentity.chest.staticchest.BlockStaticChest;
@@ -75,6 +76,7 @@ public class ModBlocks {
 	public static Block LaserLines;
 	public static Block AdvancedEarth;
 	public static Block ControlPanel;
+	public static Block FusionFurnace;
 	
 	//Machines
 	public static Block FluidGenerator;	
@@ -142,7 +144,8 @@ public class ModBlocks {
 	public static Block LumumChest;
 	public static Block VacuumChest;
 	public static Block SolderingTable;
-	public static Block FusionFurnace;
+
+	public static Block Barrel;
 	
 	//Decorative
 	public static Block CrackedEnergizedBrick;	
@@ -193,6 +196,9 @@ public class ModBlocks {
 		registry.PreRegisterBlock(LumumChest);		
 		VacuumChest = new BlockVacuumChest("VacuumChest").setUnlocalizedName("VacuumChest").setHardness(3.5f);
 		registry.PreRegisterBlock(VacuumChest);
+		
+		Barrel = new BlockBarrel("Barrel").setUnlocalizedName("Barrel").setHardness(3.5f);
+		registry.PreRegisterBlock(Barrel);
 		
 		BasicBattery = new BlockBattery("BasicBattery", Tier.BASIC).setHardness(3.5f);
 		registry.PreRegisterBlock(BasicBattery);

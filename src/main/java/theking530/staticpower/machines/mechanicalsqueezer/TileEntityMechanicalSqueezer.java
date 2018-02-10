@@ -28,7 +28,7 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFlu
 	public BucketInteractionComponent DRAIN_COMPONENT;
 
 	public TileEntityMechanicalSqueezer() {
-		initializeBasicTileEntity(1, 2, 2);
+		initializeSlots(1, 2, 2);
 		TANK = new FluidTank(1000);
 		DRAIN_COMPONENT = new BucketInteractionComponent("BucketDrain", slotsInput, 1, slotsOutput, 1, this, TANK, FLUID_TO_CONTAINER_RATE);
 	}
@@ -61,7 +61,7 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFlu
     	return nbt;
 	}
    
-	public NBTTagCompound onMachineBroken(NBTTagCompound nbt) {
+	public NBTTagCompound serializeOnBroken(NBTTagCompound nbt) {
 		writeToNBT(nbt);
     	return nbt;
 	}
@@ -154,7 +154,7 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFlu
 				MOVE_TIMER++;
 				if(MOVE_TIMER >= MOVE_SPEED) {
 					MOVE_TIMER = 0;
-					moveItem(slotsInput, 0, slotsInternal, 0);
+					transferItemInternally(slotsInput, 0, slotsInternal, 0);
 					PROCESSING_TIMER = 1;	
 				}
 			}else{

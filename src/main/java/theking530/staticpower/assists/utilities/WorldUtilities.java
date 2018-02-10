@@ -106,4 +106,7 @@ public class WorldUtilities {
             worldIn.spawnEntity(entityitem);
         }
     }
+	public static void dropItem(World worldIn, BlockPos pos, ItemStack stack) {
+		dropItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), stack);
+    }
 }

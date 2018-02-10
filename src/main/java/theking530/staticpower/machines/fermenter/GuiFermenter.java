@@ -24,7 +24,7 @@ public class GuiFermenter extends BaseGuiContainer {
 		fermenter = teCropSqueezer;
 
 		registerWidget(new GuiPowerBarFromEnergyStorage(teCropSqueezer, 27, 68, 6, 60));
-		registerWidget(new GuiFluidBarFromTank(teCropSqueezer.TANK, 37, 68, 16, 60));
+		registerWidget(new GuiFluidBarFromTank(teCropSqueezer.fluidTank, 37, 68, 16, 60));
 		
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teCropSqueezer));
 		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teCropSqueezer));

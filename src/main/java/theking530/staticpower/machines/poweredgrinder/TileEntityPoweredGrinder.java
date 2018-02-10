@@ -17,7 +17,8 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 	private float bonusOutputChance;
 	
 	public TileEntityPoweredGrinder() {
-		initializeBasicMachine(2, 1000, 100000, 80, 100, 1, 2, 3);
+		initializeSlots(1, 2, 3);
+		initializeBasicMachine(2, 1000, 100000, 80, 100);
 		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInput, 1, this, energyStorage));
 		registerComponent(new TileEntityItemOutputServo(this, 2, slotsOutput, 0, 1, 2));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0));
@@ -40,7 +41,7 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 				if(moveTimer < moveSpeed) {
 					moveTimer++;
 				}else{
-					moveItem(slotsInput, 0, slotsInternal, 0);
+					transferItemInternally(slotsInput, 0, slotsInternal, 0);
 					moveTimer=0;
 					processingTimer = 1;
 				}

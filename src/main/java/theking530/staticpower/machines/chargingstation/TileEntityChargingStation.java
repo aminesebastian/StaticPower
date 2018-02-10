@@ -9,7 +9,8 @@ import theking530.staticpower.machines.BaseMachine;
 public class TileEntityChargingStation extends BaseMachine {
 	
 	public TileEntityChargingStation() {
-		initializeBasicMachine(2, 0, 100000, 500, 2, 0, 6, 4);
+		initializeSlots(0, 6, 4);
+		initializeBasicMachine(2, 0, 100000, 500, 2);
 		setBatterySlot(4);
 		energyStorage.setMaxExtract(512);
 	}

@@ -19,14 +19,17 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import theking530.staticpower.assists.INameable;
 import theking530.staticpower.assists.utilities.RedstoneModeList.RedstoneMode;
 import theking530.staticpower.assists.utilities.SideModeList;
 import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.assists.utilities.SideUtilities;
 import theking530.staticpower.assists.utilities.SideUtilities.BlockSide;
+import theking530.staticpower.machines.IBreakSerializeable;
+import theking530.staticpower.machines.IUpgradeable;
 import theking530.staticpower.machines.tileentitycomponents.ITileEntityComponent;
 
-public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneConfigurable, ISideConfigurable {
+public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneConfigurable, ISideConfigurable, IUpgradeable, INameable, IBreakSerializeable {
 
 	public ItemStackHandler  slotsInput;
 	public ItemStackHandler  slotsOutput;
@@ -37,28 +40,29 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 	private RedstoneMode redstoneMode = RedstoneMode.Ignore;
 	private SideConfiguration ioSideConfiguration;
 
-	public int updateTimer = 0;
-	public int updateTime = 10;
+	private int updateTimer = 0;
+	private int updateTime = 10;
 	
-	public boolean updateQueued = false;
-
+	private boolean updateQueued = false;
+	private boolean disableFaceInteraction;
+	
 	public boolean wasWrenchedDoNotBreak = false;
-	public boolean disableFaceInteraction;
 	
 	public BaseTileEntity() {
 		ioSideConfiguration = new SideConfiguration();
 		components = new ArrayList<ITileEntityComponent>();
 	}
-	public void initializeBasicTileEntity(int internalSlots, int inputSlots, int outputSlots, boolean disableFaceInteraction) {
+	public void initializeSlots(int internalSlots, int inputSlots, int outputSlots, boolean disableFaceInteraction) {
 		slotsInput = new ItemStackHandler(inputSlots);
 		slotsOutput = new ItemStackHandler(outputSlots);
 		slotsInternal = new ItemStackHandler(internalSlots);
 		slotsUpgrades = new ItemStackHandler(3);
 		this.disableFaceInteraction = disableFaceInteraction;
 	}
-	public void initializeBasicTileEntity(int internalSlots, int inputSlots, int outputSlots) {
-		initializeBasicTileEntity(internalSlots, inputSlots, outputSlots, true);
+	public void initializeSlots(int internalSlots, int inputSlots, int outputSlots) {
+		initializeSlots(internalSlots, inputSlots, outputSlots, true);
 	}
+	
 	@Override
 	public void update() {
 		if(evauluateRedstoneSettings()) {
@@ -76,8 +80,9 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 			updateTimer = 0;
 		}
 	}		
-	public void process() {
-		
+	public void process() {}
+	public void updateBlock() {
+		getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 2);
 	}
 	
 	public ItemStack getInputStack(int slot) {
@@ -148,28 +153,6 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
         nbt.setBoolean("PLACED", true);
 		return nbt;	
 	}
-	public NBTTagCompound onMachineBroken(NBTTagCompound nbt) {
-		writeToNBT(nbt);
-    	return nbt;
-	}
-	public void onMachinePlaced(NBTTagCompound nbt, World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        redstoneMode = RedstoneMode.getModeFromInt(nbt.getShort("REDSTONE_MODE"));
-        for(int i=0; i<6; i++) {
-        	setSideConfiguration(SideModeList.Mode.values()[nbt.getInteger("SIDEMODE" + i)], EnumFacing.values()[i]);
-        }      
-        if(slotsInput != null && slotsInput.getSlots() > 0) {
-        	slotsInput.deserializeNBT((NBTTagCompound) nbt.getTag("INPUTS"));	
-        }
-        if(slotsOutput != null && slotsOutput.getSlots() > 0) {
-            slotsOutput.deserializeNBT((NBTTagCompound) nbt.getTag("OUTPUTS"));
-        }
-        if(slotsInternal != null && slotsInternal.getSlots() > 0) {
-            slotsInternal.deserializeNBT((NBTTagCompound) nbt.getTag("INTERNAL"));
-        }
-        if(slotsUpgrades != null && slotsUpgrades.getSlots() > 0) {
-            slotsUpgrades.deserializeNBT((NBTTagCompound) nbt.getTag("UPGRADES"));
-        }
-	}	
 	
 	@Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
@@ -190,20 +173,10 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 		}else{
 			return player.getDistanceSq((double)pos.getX() + 0.25D, (double)pos.getY() + 0.25D, (double)pos.getZ() + 0.25D) <= 22;
 		}
-
 	}
-    public String getName(){
-    	return null;
-    }
-	
-    /** From Slot to Slot */
-	public void moveItem(ItemStackHandler fromInv, int fromSlot, ItemStackHandler toInv, int toSlot) {
+	public void transferItemInternally(ItemStackHandler fromInv, int fromSlot, ItemStackHandler toInv, int toSlot) {
 		toInv.insertItem(toSlot, fromInv.extractItem(fromSlot, 1, false), false);
 	}
-    public boolean hasResult(ItemStack stack) {
-    	return true;
-    }
-
     public EnumFacing getFacingDirection() {
     	if(getWorld().getBlockState(pos).getProperties().containsKey(BlockHorizontal.FACING)) {
         	return getWorld().getBlockState(getPos()).getValue(BlockHorizontal.FACING);
@@ -212,12 +185,59 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
     	}
     }
 
+    /*Nameable*/
+	@Override
+    public String getName(){
+    	return "*ERROR*";
+    }
+    
+    /*Serializeable*/
+    public NBTTagCompound serializeOnBroken(NBTTagCompound nbt) {
+		writeToNBT(nbt);
+    	return nbt;
+	}
+	public void deserializeOnPlaced(NBTTagCompound nbt, World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+        redstoneMode = RedstoneMode.getModeFromInt(nbt.getShort("REDSTONE_MODE"));
+        for(int i=0; i<6; i++) {
+        	setSideConfiguration(SideModeList.Mode.values()[nbt.getInteger("SIDEMODE" + i)], EnumFacing.values()[i]);
+        }      
+        if(slotsInput != null && slotsInput.getSlots() > 0) {
+        	slotsInput.deserializeNBT((NBTTagCompound) nbt.getTag("INPUTS"));	
+        }
+        if(slotsOutput != null && slotsOutput.getSlots() > 0) {
+            slotsOutput.deserializeNBT((NBTTagCompound) nbt.getTag("OUTPUTS"));
+        }
+        if(slotsInternal != null && slotsInternal.getSlots() > 0) {
+            slotsInternal.deserializeNBT((NBTTagCompound) nbt.getTag("INTERNAL"));
+        }
+        if(slotsUpgrades != null && slotsUpgrades.getSlots() > 0) {
+            slotsUpgrades.deserializeNBT((NBTTagCompound) nbt.getTag("UPGRADES"));
+        }
+	}	
+	@Override
+	public boolean shouldSerializeWhenBroken() {
+		return true;
+	}
+	@Override
+	public boolean shouldDeserializeWhenPlace(NBTTagCompound nbt, World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+		return true;
+	}
+    
+	/*Capability Handling*/
     public boolean hasCapability(net.minecraftforge.common.capabilities.Capability<?> capability, net.minecraft.util.EnumFacing facing){
     	if(getSideConfiguration(facing) == Mode.Disabled) {
     		return false;
     	}
     	if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && SideUtilities.getBlockSide(facing, getFacingDirection()) != BlockSide.FRONT) {
-    		return true;
+    		if(getSideConfiguration(facing) == Mode.Output) {
+    			if(slotsOutput != null) {
+        			return true;
+    			}
+    		}else{
+    			if(slotsInput != null) {
+        			return true;
+    			}
+    		}
     	}
         return super.hasCapability(capability, facing);
     }
@@ -228,31 +248,18 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
     	}
     	if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
     		if(getSideConfiguration(facing) == Mode.Output) {
-    			return (T) slotsOutput;
+    			if(slotsOutput != null) {
+        			return (T) slotsOutput;
+    			}
     		}else{
-    			return (T) slotsInput;
+    			if(slotsInput != null) {
+        			return (T) slotsInput;
+    			}
     		}
     	}
     	return super.getCapability(capability, facing);
     }
     
-	public void incrementSide(EnumFacing side){
-		BlockSide blockSideEquiv = SideUtilities.getBlockSide(side, getFacingDirection());
-		if(blockSideEquiv == BlockSide.FRONT && disableFaceInteraction) {
-			setSideConfiguration(SideModeList.Mode.Disabled, side);
-		}
-		SideModeList.Mode currentSideMode = getSideConfiguration(side);
-		if(currentSideMode == Mode.Disabled) {
-			setSideConfiguration(SideModeList.Mode.Regular, side);
-		}else{
-			setSideConfiguration(SideModeList.Mode.values()[currentSideMode.ordinal()+1], side);
-		}
-		onSidesConfigUpdate();
-	}
-	public void updateBlock() {
-		getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 2);
-	}
-
 	/*Upgrade Handling*/
 	public ItemStack getUpgrade(Item upgradeBase) {
 		ItemStack upgrade = ItemStack.EMPTY;
@@ -270,6 +277,20 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 	}
 	public boolean hasUpgrade(Item upgradeBase) {
 		return !getUpgrade(upgradeBase).isEmpty();
+	}
+	@Override
+	public List<ItemStack> getAllUpgrades() {
+		List<ItemStack> list = new ArrayList<ItemStack>();
+		ItemStack upgrade = ItemStack.EMPTY;
+		int slot = -1;
+		for(int i=0; i<slotsUpgrades.getSlots(); i++) {
+			slot = i;
+			upgrade = slotsUpgrades.getStackInSlot(slot);
+			if(!upgrade.isEmpty()) {
+				list.add(upgrade);
+			}
+		}
+		return list;
 	}
 	
 	/*Components*/
@@ -357,6 +378,20 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 	public void resetSideConfiguration(){
 		for(int i=0; i<6; i++) {
 			setSideConfiguration(SideModeList.Mode.Disabled, EnumFacing.values()[i]);
+		}
+		onSidesConfigUpdate();
+	}
+	@Override
+	public void incrementSideConfiguration(EnumFacing side){
+		BlockSide blockSideEquiv = SideUtilities.getBlockSide(side, getFacingDirection());
+		if(blockSideEquiv == BlockSide.FRONT && disableFaceInteraction) {
+			setSideConfiguration(SideModeList.Mode.Disabled, side);
+		}
+		SideModeList.Mode currentSideMode = getSideConfiguration(side);
+		if(currentSideMode == Mode.Disabled) {
+			setSideConfiguration(SideModeList.Mode.Regular, side);
+		}else{
+			setSideConfiguration(SideModeList.Mode.values()[currentSideMode.ordinal()+1], side);
 		}
 		onSidesConfigUpdate();
 	}

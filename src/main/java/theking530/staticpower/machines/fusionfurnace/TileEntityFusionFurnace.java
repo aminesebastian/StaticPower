@@ -9,7 +9,8 @@ import theking530.staticpower.machines.BaseMachine;
 public class TileEntityFusionFurnace extends BaseMachine {
 	
 	public TileEntityFusionFurnace() {
-		initializeBasicMachine(2, 1000, 100000, 80, 100, 5, 5, 1);
+		initializeSlots(5, 5, 1);
+		initializeBasicMachine(2, 1000, 100000, 80, 100);
 	}	
 	//IInventory				
 	@Override
@@ -53,19 +54,19 @@ public class TileEntityFusionFurnace extends BaseMachine {
 				moveTimer++;
 			}else{
 				if(getInputStack(0) != ItemStack.EMPTY) {
-					moveItem(slotsInput, 0, slotsInternal, 0);
+					transferItemInternally(slotsInput, 0, slotsInternal, 0);
 				}
 				if(getInputStack(1)!= ItemStack.EMPTY) {
-					moveItem(slotsInput, 1, slotsInternal, 1);
+					transferItemInternally(slotsInput, 1, slotsInternal, 1);
 				}
 				if(getInputStack(2) != ItemStack.EMPTY) {
-					moveItem(slotsInput, 2, slotsInternal, 2);
+					transferItemInternally(slotsInput, 2, slotsInternal, 2);
 				}
 				if(getInputStack(3) != ItemStack.EMPTY) {
-					moveItem(slotsInput, 3, slotsInternal, 3);
+					transferItemInternally(slotsInput, 3, slotsInternal, 3);
 				}
 				if(getInputStack(4) != ItemStack.EMPTY) {
-					moveItem(slotsInput, 4, slotsInternal, 4);
+					transferItemInternally(slotsInput, 4, slotsInternal, 4);
 				}
 				moveTimer=0;
 				processingTimer = 1;

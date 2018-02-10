@@ -35,7 +35,7 @@ public class GuiFluidInfuser extends BaseGuiContainer{
 		infuser = teInfuser;	
 		
 		registerWidget(new GuiPowerBarFromEnergyStorage(teInfuser, 50, 68, 6, 60));
-		registerWidget(new GuiFluidBarFromTank(teInfuser.TANK, 30, 68, 16, 60));
+		registerWidget(new GuiFluidBarFromTank(teInfuser.fluidTank, 30, 68, 16, 60));
 
 		getTabManager().registerTab(infoTab = new GuiInfoTab(100, 85));
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teInfuser));
@@ -90,10 +90,10 @@ public class GuiFluidInfuser extends BaseGuiContainer{
 		int powerCost; 
 		int fluidCost; 
 		if(infuser.slotsInternal.getStackInSlot(0) != ItemStack.EMPTY) {
-			fluidCost = InfuserRecipeRegistry.Infusing().getInfusingFluidCost(infuser.slotsInternal.getStackInSlot(0), infuser.TANK.getFluid());
+			fluidCost = InfuserRecipeRegistry.Infusing().getInfusingFluidCost(infuser.slotsInternal.getStackInSlot(0), infuser.fluidTank.getFluid());
 			powerCost = infuser.getProcessingEnergy(infuser.slotsInternal.getStackInSlot(0));
 		}else{
-			fluidCost = InfuserRecipeRegistry.Infusing().getInfusingFluidCost(infuser.slotsInput.getStackInSlot(0), infuser.TANK.getFluid());
+			fluidCost = InfuserRecipeRegistry.Infusing().getInfusingFluidCost(infuser.slotsInput.getStackInSlot(0), infuser.fluidTank.getFluid());
 			powerCost = infuser.getProcessingEnergy(infuser.slotsInput.getStackInSlot(0));
 		}
 		String power = NumberFormat.getNumberInstance(Locale.US).format(powerCost);

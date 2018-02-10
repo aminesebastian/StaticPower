@@ -11,8 +11,11 @@ public class TileEntityFermenter extends BaseMachineWithTank {
 	public BucketInteractionComponent DRAIN_COMPONENT;
 	
 	public TileEntityFermenter() {
-		initializeBaseMachineWithTank(4, 500, 100000, 160, 45, 1, 11, 2, 5000);
-		DRAIN_COMPONENT = new BucketInteractionComponent("BucketDrain", slotsInput, 10, slotsOutput, 0, this, TANK, FLUID_TO_CONTAINER_RATE);
+		initializeBasicMachine(4, 500, 100000, 160, 45);
+		initializeTank(5000);
+		initializeSlots(1, 11, 2);
+		
+		DRAIN_COMPONENT = new BucketInteractionComponent("BucketDrain", slotsInput, 10, slotsOutput, 0, this, fluidTank, fluidToContainerRate);
 		setBatterySlot(10);
 		//setFluidContainerSlot(9, FluidContainerMode.FILL);
 	}
@@ -25,7 +28,6 @@ public class TileEntityFermenter extends BaseMachineWithTank {
 	public FluidStack getFermentingResult(ItemStack itemStack) {
 		return FermenterRecipeRegistry.Fermenting().getFluidResult(itemStack);
 	}
-	@Override 
 	public boolean hasResult(ItemStack itemstack) {
 		if(itemstack != ItemStack.EMPTY && getFermentingResult(itemstack) != null) {
 			return true;
@@ -39,22 +41,22 @@ public class TileEntityFermenter extends BaseMachineWithTank {
 		}
 		FluidStack fluidstack = FermenterRecipeRegistry.Fermenting().getFluidResult(itemstack);
 		if(hasResult(itemstack) && fluidstack != null) {
-			if(fluidstack.amount + TANK.getFluidAmount() > TANK.getCapacity()) {
+			if(fluidstack.amount + fluidTank.getFluidAmount() > fluidTank.getCapacity()) {
 				return false;
 			}
 			if(energyStorage.getEnergyStored() < getProcessingCost()) {
 				return false;
 			}
-			if (TANK.getFluid() != null && !fluidstack.isFluidEqual(TANK.getFluid())) {
+			if (fluidTank.getFluid() != null && !fluidstack.isFluidEqual(fluidTank.getFluid())) {
 				return false;
 			}
-			if(TANK.getFluid() == null) {
+			if(fluidTank.getFluid() == null) {
 				return true;
 			}
-			if(TANK.getFluidAmount() + fluidstack.amount <= TANK.getCapacity()) {
+			if(fluidTank.getFluidAmount() + fluidstack.amount <= fluidTank.getCapacity()) {
 				return true;
 			}
-			if (TANK.getFluid() != null && fluidstack.isFluidEqual(TANK.getFluid())) {
+			if (fluidTank.getFluid() != null && fluidstack.isFluidEqual(fluidTank.getFluid())) {
 				return true;
 			}				
 		}
@@ -73,7 +75,7 @@ public class TileEntityFermenter extends BaseMachineWithTank {
 			if(!isProcessing() && !isMoving()) {
 				for(int i=0; i<9; i++) {
 					if(slotsInput.getStackInSlot(i) != ItemStack.EMPTY && canProcess(slotsInput.getStackInSlot(i))) {
-						moveItem(slotsInput, i, slotsInternal, 0);
+						transferItemInternally(slotsInput, i, slotsInternal, 0);
 						moveTimer = 1;
 						break;
 					}
@@ -88,7 +90,7 @@ public class TileEntityFermenter extends BaseMachineWithTank {
 						energyStorage.extractEnergy(getProcessingCost()/processingTime, false);
 						updateBlock();
 					}else{
-						TANK.fill(getFermentingResult(slotsInternal.getStackInSlot(0)), true);
+						fluidTank.fill(getFermentingResult(slotsInternal.getStackInSlot(0)), true);
 						slotsInternal.extractItem(0, slotsInternal.getStackInSlot(0).getCount(), false);
 						processingTimer = 0;
 						moveTimer = 0;

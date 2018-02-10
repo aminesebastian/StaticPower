@@ -250,6 +250,8 @@ public class ItemRenderRegistry {
 		registerBlock(ModBlocks.Distillery);
 		registerBlock(ModBlocks.Condenser);
 		
+		registerBlock(ModBlocks.Barrel);
+		
 		registerBlock(ModBlocks.StaticGrass);
 		registerBlock(ModBlocks.EnergizedGrass);
 		

@@ -33,8 +33,7 @@ public class StaticPowerConfig {
 		RUBY_ORE_GEN = config.getBoolean("Ruby Ore", oreGen, true, "Disable or Enable Ruby Ore Generation");
 		
 		if(StaticPower.CONFIG.hasChanged()) {
-			StaticPower.CONFIG
-			.save();
+			StaticPower.CONFIG.save();
 		}
 	}	
 }

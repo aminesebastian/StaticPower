@@ -26,7 +26,7 @@ public class ContainerFluidInfuser extends Container {
 		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.slotsOutput, 0, 131, 32) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
-		          return InfuserRecipeRegistry.Infusing().getInfusingItemStackResult(itemStack, INFUSER.TANK.getFluid()) != null;
+		          return InfuserRecipeRegistry.Infusing().getInfusingItemStackResult(itemStack, INFUSER.fluidTank.getFluid()) != null;
 		    }
 		});
 		
@@ -71,7 +71,7 @@ public class ContainerFluidInfuser extends Container {
                 }
                 slot.onSlotChange(itemstack1, itemstack);
             }else if (invSlot != 1 && invSlot != 0){
-            	if (InfuserRecipeRegistry.Infusing().getInfusingItemStackResult(itemstack1, INFUSER.TANK.getFluid()) != null){
+            	if (InfuserRecipeRegistry.Infusing().getInfusingItemStackResult(itemstack1, INFUSER.fluidTank.getFluid()) != null){
                     if (!this.mergeItemStack(itemstack1, 0, 1, false)){
                         return null;
                     }

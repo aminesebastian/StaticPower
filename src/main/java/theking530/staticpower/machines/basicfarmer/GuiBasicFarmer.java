@@ -31,7 +31,7 @@ public class GuiBasicFarmer extends BaseGuiContainer{
 		tileEntityFarmer = teFarmer;
 		
 		registerWidget(new GuiPowerBarFromEnergyStorage(teFarmer, 27, 68, 6, 60));
-		registerWidget(new GuiFluidBarFromTank(teFarmer.TANK, 37, 68, 16, 60));
+		registerWidget(new GuiFluidBarFromTank(teFarmer.fluidTank, 37, 68, 16, 60));
 
 		getTabManager().registerTab(infoTab = new GuiInfoTab(100, 100));
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teFarmer));

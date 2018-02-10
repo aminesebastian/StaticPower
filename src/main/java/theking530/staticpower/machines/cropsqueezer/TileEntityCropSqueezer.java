@@ -11,8 +11,11 @@ import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputS
 public class TileEntityCropSqueezer extends BaseMachineWithTank {
 
 	public TileEntityCropSqueezer() {
-		initializeBaseMachineWithTank(2, 100, 100000, 80, 50, 1, 2, 2, 5000);
-		registerComponent(new BucketInteractionComponent("BucketDrain", slotsInput, 1, slotsOutput, 1, this, TANK, FLUID_TO_CONTAINER_RATE));
+		initializeBasicMachine(2, 100, 100000, 80, 50);
+		initializeTank(5000);
+		initializeSlots(1, 2, 2);
+		
+		registerComponent(new BucketInteractionComponent("BucketDrain", slotsInput, 1, slotsOutput, 1, this, fluidTank, fluidToContainerRate));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0));
 	}
 	@Override
@@ -25,7 +28,6 @@ public class TileEntityCropSqueezer extends BaseMachineWithTank {
 	public ItemStack getResult(ItemStack itemStack) {
 		return SqueezerRecipeRegistry.Squeezing().getSqueezingItemResult(itemStack);
 	}
-	@Override 
 	public boolean hasResult(ItemStack itemstack) {
 		if(itemstack != null && getResult(itemstack) != null) {
 			return true;
@@ -42,25 +44,25 @@ public class TileEntityCropSqueezer extends BaseMachineWithTank {
 	public boolean canProcess(ItemStack itemstack) {
 		FluidStack fluidstack = SqueezerRecipeRegistry.Squeezing().getSqueezingFluidResult(itemstack);
 		if(hasResult(itemstack) && fluidstack != null && InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 0, getResult(itemstack))) {
-			if(fluidstack.amount + TANK.getFluidAmount() > TANK.getCapacity()) {
+			if(fluidstack.amount + fluidTank.getFluidAmount() > fluidTank.getCapacity()) {
 				return false;
 			}
 			if(energyStorage.getEnergyStored() < getProcessingEnergy(itemstack)) {
 				return false;
 			}
-			if (TANK.getFluid() != null && !fluidstack.isFluidEqual(TANK.getFluid())) {
+			if (fluidTank.getFluid() != null && !fluidstack.isFluidEqual(fluidTank.getFluid())) {
 				return false;
 			}
-			if(TANK.getFluid() == null) {
+			if(fluidTank.getFluid() == null) {
 				return true;
 			}
-			if(TANK.getFluidAmount() + fluidstack.amount <= TANK.getCapacity()) {
+			if(fluidTank.getFluidAmount() + fluidstack.amount <= fluidTank.getCapacity()) {
 				return true;
 			}
-			if(TANK.getFluidAmount() + fluidstack.amount > TANK.getCapacity()) {
+			if(fluidTank.getFluidAmount() + fluidstack.amount > fluidTank.getCapacity()) {
 				return false;
 			}
-			if (TANK.getFluid() != null && fluidstack.isFluidEqual(TANK.getFluid())) {
+			if (fluidTank.getFluid() != null && fluidstack.isFluidEqual(fluidTank.getFluid())) {
 				return true;
 			}				
 		}
@@ -97,7 +99,7 @@ public class TileEntityCropSqueezer extends BaseMachineWithTank {
 				if(moveTimer >= moveSpeed) {
 					moveTimer = 0;
 					useEnergy(getProcessingEnergy(slotsInput.getStackInSlot(0)));
-					moveItem(slotsInput, 0, slotsInternal, 0);
+					transferItemInternally(slotsInput, 0, slotsInternal, 0);
 					processingTimer = 1;	
 				}
 			}else{
@@ -110,7 +112,7 @@ public class TileEntityCropSqueezer extends BaseMachineWithTank {
 					updateBlock();
 				}else{				
 					if(InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 0, getResult(slotsInternal.getStackInSlot(0)))) {
-						TANK.fill(getFluidResult(slotsInternal.getStackInSlot(0)), true);
+						fluidTank.fill(getFluidResult(slotsInternal.getStackInSlot(0)), true);
 						slotsOutput.insertItem(0, getResult(slotsInternal.getStackInSlot(0)).copy(), false);
 						slotsInternal.setStackInSlot(0, ItemStack.EMPTY);
 						processingTimer = 0;
@@ -125,7 +127,7 @@ public class TileEntityCropSqueezer extends BaseMachineWithTank {
 		if(!getWorld().isRemote) {
 			updateBlock();
 		}
-		return TANK.fill(resource, doFill);
+		return fluidTank.fill(resource, doFill);
 	}
 }
 

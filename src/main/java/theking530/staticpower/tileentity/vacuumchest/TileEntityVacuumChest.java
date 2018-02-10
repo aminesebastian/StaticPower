@@ -43,7 +43,7 @@ public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<E
 	private FluidTank experienceTank;
 	
 	public TileEntityVacuumChest() {
-		initializeBasicTileEntity(1, 0, 30);
+		initializeSlots(1, 0, 30);
 		initialVacuumDiamater = 6;
 		vacuumDiamater = initialVacuumDiamater;
 		shouldTeleport = false;

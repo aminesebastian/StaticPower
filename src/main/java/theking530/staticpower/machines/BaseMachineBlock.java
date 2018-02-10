@@ -88,7 +88,7 @@ public class BaseMachineBlock extends Block implements IWrenchable, IItemBlockPr
         if(worldIn.getTileEntity(pos) instanceof BaseTileEntity) {
         	BaseTileEntity tempMachine = (BaseTileEntity)worldIn.getTileEntity(pos);
 			if(stack.hasTagCompound()) {
-				tempMachine.onMachinePlaced(stack.getTagCompound(), worldIn, pos, state, placer, stack);
+				tempMachine.deserializeOnPlaced(stack.getTagCompound(), worldIn, pos, state, placer, stack);
 			}
 		}
 
@@ -135,7 +135,7 @@ public class BaseMachineBlock extends Block implements IWrenchable, IItemBlockPr
 				}	
 			}else{
 				BaseTileEntity TE = (BaseTileEntity) world.getTileEntity(pos);
-				TE.incrementSide(facing);
+				TE.incrementSideConfiguration(facing);
 				TE.updateBlock();
 			}	
 		}
@@ -153,7 +153,7 @@ public class BaseMachineBlock extends Block implements IWrenchable, IItemBlockPr
 			if(world.getTileEntity(pos) instanceof BaseTileEntity) {
 				BaseTileEntity tempMachine = (BaseTileEntity)world.getTileEntity(pos);
 				tempMachine.wasWrenchedDoNotBreak = true;
-				tempMachine.onMachineBroken(nbt);
+				tempMachine.serializeOnBroken(nbt);
 				machineStack.setTagCompound(nbt);	
 			}
 			EntityItem droppedItem = new EntityItem(world, pos.getX()+0.5, pos.getY(), pos.getZ()+0.5, machineStack);
