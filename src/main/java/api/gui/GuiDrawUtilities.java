@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import theking530.staticpower.assists.GuiTextures;
@@ -64,4 +65,24 @@ public class GuiDrawUtilities {
         bufferbuilder.pos(xCoord, yCoord, zLevel).tex(minU, minV).endVertex();
         tessellator.draw();
     }
+	public static void drawStringWithSize(String text, int xPos, int yPos, float scale, int color, boolean withShadow) {
+		int textX = (int)((xPos - Minecraft.getMinecraft().fontRenderer.getStringWidth(text) * scale) / scale) - 1;
+		int textY = (int)((yPos - 7 * scale) / scale) - 1;
+		
+		GlStateManager.disableLighting();
+		GlStateManager.disableDepth();
+		GlStateManager.disableBlend();
+		GlStateManager.pushMatrix();
+		GlStateManager.scale(scale, scale, scale);
+		
+		if(withShadow) {
+			Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(text, textX, textY, color);
+		}else{
+			Minecraft.getMinecraft().fontRenderer.drawString(text, textX, textY, color);
+		}	
+		
+		GlStateManager.popMatrix();
+		GlStateManager.enableLighting();
+		GlStateManager.enableDepth();
+	}
 }

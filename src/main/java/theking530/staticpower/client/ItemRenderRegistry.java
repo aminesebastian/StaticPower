@@ -1,14 +1,19 @@
 package theking530.staticpower.client;
 
+import java.util.Map;
+import java.util.Map.Entry;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.blocks.ModBlocks;
-import theking530.staticpower.crops.ModPlants;
+import theking530.staticpower.blocks.crops.ModPlants;
+import theking530.staticpower.items.IVariantItem;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.items.armor.ModArmor;
 import theking530.staticpower.items.tools.basictools.ModTools;
@@ -250,7 +255,7 @@ public class ItemRenderRegistry {
 		registerBlock(ModBlocks.Distillery);
 		registerBlock(ModBlocks.Condenser);
 		
-		registerBlock(ModBlocks.Barrel);
+		registerBlock(ModBlocks.Digistore);
 		
 		registerBlock(ModBlocks.StaticGrass);
 		registerBlock(ModBlocks.EnergizedGrass);
@@ -389,6 +394,9 @@ public class ItemRenderRegistry {
 	    registerCannister(ModItems.StaticFluidCapsule, "staticfluidcapsule");
 	    registerCannister(ModItems.EnergizedFluidCapsule, "energizedfluidcapsule");
 	    registerCannister(ModItems.LumumFluidCapsule, "lumumfluidcapsule");
+	    
+	    registerItemWithVariants(ModItems.DigistoreCapacityUpgrade);
+	    registerItemWithVariants(ModItems.DigistoreMiscUpgrade);
 	}
     public static void registerCannister(Item item, String blockstate) {
     	ModelResourceLocation location =  new ModelResourceLocation(new ResourceLocation(Reference.MOD_ID, blockstate), "inventory");
@@ -410,4 +418,21 @@ public class ItemRenderRegistry {
     public static void registerTemporaryLogicGate(Block block) {
     	ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), 0, new ModelResourceLocation(ModBlocks.LogicGateBasePlate.getRegistryName(), "inventory"));
     }
+    
+    public static void registerItemWithVariants(Item baseItem) {
+    	if(baseItem instanceof IVariantItem) {
+    		IVariantItem variantItem = (IVariantItem)baseItem;
+        	Map<ItemStack, String> subItems = variantItem.getSubItemMap();
+        	for(Entry<ItemStack, String> entry : subItems.entrySet()) {
+        		registerItemModelForMeta(baseItem, entry.getKey().getMetadata(), "model" + "=" + entry.getValue());
+        	}
+    	}
+	}
+	private static void registerItemModelForMeta(Item item, int metadata, String variant) {
+		ModelResourceLocation res = new ModelResourceLocation(item.getRegistryName(), variant);
+		registerItemModelForMeta(item, metadata, res);
+	}
+	private static void registerItemModelForMeta(Item item, int metadata, ModelResourceLocation modelResourceLocation) {
+		ModelLoader.setCustomModelResourceLocation(item, metadata, modelResourceLocation);
+	}
 }

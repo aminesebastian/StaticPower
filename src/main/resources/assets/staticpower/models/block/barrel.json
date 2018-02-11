@@ -1,8 +1,0 @@
-{
-    "parent": "block/orientable",
-    "textures": {
-        "top": "staticpower:blocks/barrel_side",
-        "front": "staticpower:blocks/barrel_front",
-        "side": "staticpower:blocks/barrel_side"
-    }
-}

@@ -9,7 +9,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.oredict.OreIngredient;
 import theking530.staticpower.assists.RegisterHelper;
 import theking530.staticpower.blocks.ModBlocks;
-import theking530.staticpower.crops.ModPlants;
+import theking530.staticpower.blocks.crops.ModPlants;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.items.armor.ModArmor;
 
@@ -185,6 +185,10 @@ public class ShapedRecipes {
 		'S', ingredientFromItem(ModItems.EnergizedPlate), 'B', ModItems.EnergizedBattery, 'M', ingredientFromBlock(ModBlocks.MachineBlock)});		
 		RegisterHelper.addShapedRecipe("StaticPower_lumumBattery", "StaticPower", new ItemStack(ModBlocks.LumumBattery), new Object[]{"SSS", "BMB", "BBB",  
 		'S', ingredientFromItem(ModItems.LumumPlate), 'B', ingredientFromItem(ModItems.LumumBattery), 'M', ingredientFromBlock(ModBlocks.MachineBlock)});		
+		
+		//Digistore
+		RegisterHelper.addShapedRecipe("StaticPower_digistore", "StaticPower", new ItemStack(ModBlocks.Digistore), new Object[]{"TTT","TCT","TMT",
+		'M', ingredientFromItem(ModItems.MemoryChip), 'T', ingredientOre("plateTin"), 'C', ingredientOre("chestWood")});
 		
 		//Static Solar Panel --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_basicSolarPanel", "StaticPower", new ItemStack(ModBlocks.BasicSolarPanel), new Object[]{"   ", "LLL", "CIC", 

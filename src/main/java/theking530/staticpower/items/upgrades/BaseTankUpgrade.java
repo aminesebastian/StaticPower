@@ -34,13 +34,13 @@ public class BaseTankUpgrade extends BaseUpgrade implements IMachineUpgrade {
 		}
 	}
 	@Override
-	public float getMultiplier(ItemStack stack, int upgradeNumber) {
+	public float getUpgradeValueAtIndex(ItemStack stack, int upgradeNumber) {
 		BaseTankUpgrade tempUpgrade = (BaseTankUpgrade) stack.getItem();
 		return (tempUpgrade.CAPACITY * stack.getCount());
 	}
 	@Override  
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn) {
-		list.add(EnumTextFormatting.WHITE +  "+" + new java.text.DecimalFormat("#").format((getMultiplier(stack, 0))*100) + "%" + EnumTextFormatting.GREEN + " Tank Capacity");
+		list.add(EnumTextFormatting.WHITE +  "+" + new java.text.DecimalFormat("#").format((getUpgradeValueAtIndex(stack, 0))*100) + "%" + EnumTextFormatting.GREEN + " Tank Capacity");
 		if(showHiddenTooltips()) {
     		list.add(EnumTextFormatting.WHITE + "Stacks Up To: " + stack.getMaxStackSize());
     	}else{

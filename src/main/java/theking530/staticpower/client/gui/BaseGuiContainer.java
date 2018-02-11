@@ -114,6 +114,9 @@ public abstract class BaseGuiContainer extends GuiContainer implements IInteract
 	public void drawSlot(int xPos, int yPos, int width, int height) {
 		GuiDrawUtilities.drawSlot(xPos, yPos, width, height);
 	}
+	public void drawStringWithSize(String text, int xPos, int yPos, float scale, int color, boolean withShadow) {
+		GuiDrawUtilities.drawStringWithSize(text, xPos, yPos, scale, color, withShadow);
+	}
 	
 	@Override	
 	protected void mouseClicked(int x, int y, int button) throws IOException{

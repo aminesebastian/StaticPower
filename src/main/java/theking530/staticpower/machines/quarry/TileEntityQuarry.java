@@ -121,8 +121,8 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 		}
 		if(flag) {
 			BaseQuarryingUpgrade tempUpgrade = (BaseQuarryingUpgrade) slotsUpgrades.getStackInSlot(slot).getItem();
-			BLOCKS_PER_TICK = (int) tempUpgrade.getMultiplier(slotsUpgrades.getStackInSlot(slot), 0);
-			processingEnergyMult = (int) (initialProcessingEnergyMult*tempUpgrade.getMultiplier(slotsUpgrades.getStackInSlot(slot), 1));
+			BLOCKS_PER_TICK = (int) tempUpgrade.getUpgradeValueAtIndex(slotsUpgrades.getStackInSlot(slot), 0);
+			processingEnergyMult = (int) (initialProcessingEnergyMult*tempUpgrade.getUpgradeValueAtIndex(slotsUpgrades.getStackInSlot(slot), 1));
 		}else{
 			BLOCKS_PER_TICK = INITIAL_BLOCKS_PER_TICK;
 			processingEnergyMult = initialProcessingEnergyMult;

@@ -53,7 +53,7 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler {
 		}
 		if(flag) {
 			BaseTankUpgrade tempUpgrade = (BaseTankUpgrade) slotsUpgrades.getStackInSlot(slot).getItem();
-			fluidTank.setCapacity((int)(tempUpgrade.getValueMultiplied(initialTankCapacity, tempUpgrade.getMultiplier(slotsUpgrades.getStackInSlot(slot), 0))));
+			fluidTank.setCapacity((int)(tempUpgrade.getValueMultiplied(initialTankCapacity, tempUpgrade.getUpgradeValueAtIndex(slotsUpgrades.getStackInSlot(slot), 0))));
 		}else{
 			fluidTank.setCapacity(initialTankCapacity);
 		}

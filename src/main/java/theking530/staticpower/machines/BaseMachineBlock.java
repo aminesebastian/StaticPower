@@ -26,7 +26,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.assists.utilities.WorldUtilities;
 import theking530.staticpower.blocks.BaseItemBlock;
@@ -99,7 +99,7 @@ public class BaseMachineBlock extends Block implements IWrenchable, IItemBlockPr
     	        if(!tileentity.wasWrenchedDoNotBreak) {
     		        for(EnumFacing facing : EnumFacing.values()) {
     		        	if(tileentity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing)) {
-    		        		ItemStackHandler tempHandler = (ItemStackHandler) tileentity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing);
+    		        		IItemHandler tempHandler = tileentity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing);
     		        		if(tempHandler != null) {
     		        			for(int i=0; i<tempHandler.getSlots(); i++) {
     		        				if(tempHandler.getStackInSlot(i) != null) {

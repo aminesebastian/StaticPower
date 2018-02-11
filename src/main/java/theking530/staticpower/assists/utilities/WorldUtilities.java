@@ -90,21 +90,9 @@ public class WorldUtilities {
 		return null;
 	}
 	public static void dropItem(World worldIn, double x, double y, double z, ItemStack stack) {
-    	Random RANDOM = new Random();
-    	float f = RANDOM.nextFloat() * 0.8F + 0.1F;
-        float f1 = RANDOM.nextFloat() * 0.8F + 0.1F;
-        float f2 = RANDOM.nextFloat() * 0.8F + 0.1F;
+        EntityItem entityitem = new EntityItem(worldIn, x, y, z, stack);
 
-        while (stack.getCount() > 0) {
-            int i = RANDOM.nextInt(21) + 10;
-
-            EntityItem entityitem = new EntityItem(worldIn, x + (double)f, y + (double)f1, z + (double)f2, stack.splitStack(i));
-
-            entityitem.motionX = RANDOM.nextGaussian() * 0.05000000074505806D;
-            entityitem.motionY = RANDOM.nextGaussian() * 0.05000000074505806D + 0.20000000298023224D;
-            entityitem.motionZ = RANDOM.nextGaussian() * 0.05000000074505806D;
-            worldIn.spawnEntity(entityitem);
-        }
+        worldIn.spawnEntity(entityitem);
     }
 	public static void dropItem(World worldIn, BlockPos pos, ItemStack stack) {
 		dropItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), stack);

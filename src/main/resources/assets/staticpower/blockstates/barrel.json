@@ -1,8 +1,0 @@
-{
-    "variants": {
-	    "facing=north": { "model": "staticpower:Barrel" },
-        "facing=south": { "model": "staticpower:Barrel", "y": 180 },
-        "facing=west":  { "model": "staticpower:Barrel", "y": 270 },
-        "facing=east":  { "model": "staticpower:Barrel", "y": 90 }
-    }
-}

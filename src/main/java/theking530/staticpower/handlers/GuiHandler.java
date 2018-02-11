@@ -65,9 +65,6 @@ import theking530.staticpower.machines.poweredgrinder.TileEntityPoweredGrinder;
 import theking530.staticpower.machines.quarry.ContainerQuarry;
 import theking530.staticpower.machines.quarry.GuiQuarry;
 import theking530.staticpower.machines.quarry.TileEntityQuarry;
-import theking530.staticpower.tileentity.barrel.ContainerBarrel;
-import theking530.staticpower.tileentity.barrel.GuiBarrel;
-import theking530.staticpower.tileentity.barrel.TileEntityBarrel;
 import theking530.staticpower.tileentity.chest.energizedchest.ContainerEnergizedChest;
 import theking530.staticpower.tileentity.chest.energizedchest.GuiEnergizedChest;
 import theking530.staticpower.tileentity.chest.energizedchest.TileEntityEnergizedChest;
@@ -77,6 +74,9 @@ import theking530.staticpower.tileentity.chest.lumumchest.TileEntityLumumChest;
 import theking530.staticpower.tileentity.chest.staticchest.ContainerStaticChest;
 import theking530.staticpower.tileentity.chest.staticchest.GuiStaticChest;
 import theking530.staticpower.tileentity.chest.staticchest.TileEntityStaticChest;
+import theking530.staticpower.tileentity.digistore.ContainerDigistore;
+import theking530.staticpower.tileentity.digistore.GuiDigistore;
+import theking530.staticpower.tileentity.digistore.TileEntityDigistore;
 import theking530.staticpower.tileentity.solderingtable.ContainerSolderingTable;
 import theking530.staticpower.tileentity.solderingtable.GuiSolderingTable;
 import theking530.staticpower.tileentity.solderingtable.TileEntitySolderingTable;
@@ -204,8 +204,8 @@ public class GuiHandler implements IGuiHandler {
 				}
 				return null;	
 			case GuiIDRegistry.guiIDBarrel:
-				if (entity instanceof TileEntityBarrel) {	
-					return new ContainerBarrel(player.inventory, (TileEntityBarrel) entity);
+				if (entity instanceof TileEntityDigistore) {	
+					return new ContainerDigistore(player.inventory, (TileEntityDigistore) entity);
 				}
 				return null;
 			case GuiIDRegistry.guiIDFormer:
@@ -345,8 +345,8 @@ public class GuiHandler implements IGuiHandler {
 				}
 				return null;
 			case GuiIDRegistry.guiIDBarrel:
-				if (entity instanceof TileEntityBarrel) {	
-					return new GuiBarrel(player.inventory, (TileEntityBarrel) entity);				
+				if (entity instanceof TileEntityDigistore) {	
+					return new GuiDigistore(player.inventory, (TileEntityDigistore) entity);				
 				}
 				return null;
 			case GuiIDRegistry.guiIDFormer:

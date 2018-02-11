@@ -18,6 +18,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.assists.INameable;
 import theking530.staticpower.assists.utilities.RedstoneModeList.RedstoneMode;
@@ -25,8 +26,6 @@ import theking530.staticpower.assists.utilities.SideModeList;
 import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.assists.utilities.SideUtilities;
 import theking530.staticpower.assists.utilities.SideUtilities.BlockSide;
-import theking530.staticpower.machines.IBreakSerializeable;
-import theking530.staticpower.machines.IUpgradeable;
 import theking530.staticpower.machines.tileentitycomponents.ITileEntityComponent;
 
 public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneConfigurable, ISideConfigurable, IUpgradeable, INameable, IBreakSerializeable {
@@ -263,10 +262,8 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 	/*Upgrade Handling*/
 	public ItemStack getUpgrade(Item upgradeBase) {
 		ItemStack upgrade = ItemStack.EMPTY;
-		int slot = -1;
 		for(int i=0; i<slotsUpgrades.getSlots(); i++) {
-			slot = i;
-			upgrade = slotsUpgrades.getStackInSlot(slot);
+			upgrade = slotsUpgrades.getStackInSlot(i);
 			if(!upgrade.isEmpty()) {
 				if(upgrade.getItem().getClass().isInstance(upgradeBase)) {
 					return upgrade;
@@ -277,6 +274,19 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 	}
 	public boolean hasUpgrade(Item upgradeBase) {
 		return !getUpgrade(upgradeBase).isEmpty();
+	}
+	@Override
+	public ItemStack getUpgrade(ItemStack upgrade) {
+		for(int i=0; i<slotsUpgrades.getSlots(); i++) {
+			if(ItemStack.areItemStacksEqual(ItemHandlerHelper.copyStackWithSize(upgrade, 1), ItemHandlerHelper.copyStackWithSize(slotsUpgrades.getStackInSlot(i), 1))) {
+				return slotsUpgrades.getStackInSlot(i);
+			}
+		}
+		return ItemStack.EMPTY;
+	}
+	@Override
+	public boolean hasUpgrade(ItemStack upgrade) {
+		return !getUpgrade(upgrade).isEmpty();
 	}
 	@Override
 	public List<ItemStack> getAllUpgrades() {
@@ -291,6 +301,10 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 			}
 		}
 		return list;
+	}
+	@Override
+	public boolean canAcceptUpgrade(ItemStack upgrade) {
+		return true;
 	}
 	
 	/*Components*/

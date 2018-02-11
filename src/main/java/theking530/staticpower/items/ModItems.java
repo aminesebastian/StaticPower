@@ -19,12 +19,14 @@ import theking530.staticpower.items.tools.MetalHammer;
 import theking530.staticpower.items.tools.SolderingIron;
 import theking530.staticpower.items.tools.StaticWrench;
 import theking530.staticpower.items.tools.WireCutters;
+import theking530.staticpower.items.upgrades.BaseDigistoreCapacityUpgrade;
 import theking530.staticpower.items.upgrades.BaseOutputMultiplierUpgrade;
 import theking530.staticpower.items.upgrades.BasePowerUpgrade;
 import theking530.staticpower.items.upgrades.BaseQuarryingUpgrade;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.items.upgrades.BaseSpeedUpgrade;
 import theking530.staticpower.items.upgrades.BaseTankUpgrade;
+import theking530.staticpower.items.upgrades.DigistoreMiscUpgrades;
 import theking530.staticpower.items.upgrades.ExperienceVacuumUpgrade;
 import theking530.staticpower.items.upgrades.TeleportUpgrade;
 
@@ -110,6 +112,9 @@ public class ModItems {
 	public static Item CreativeTankUpgrade;
 	public static Item CreativeSpeedUpgrade;
 
+	public static Item DigistoreCapacityUpgrade;
+	public static Item DigistoreMiscUpgrade;
+	
 	public static Item BasicOutputMultiplierUpgrade;
 	public static Item StaticOutputMultiplierUpgrade;
 	public static Item EnergizedOutputMultiplierUpgrade;
@@ -348,7 +353,10 @@ public class ModItems {
 		registry.PreRegisterItem(StaticOutputMultiplierUpgrade = new BaseOutputMultiplierUpgrade("StaticOutputMultiplierUpgrade", Tier.STATIC));	
 		registry.PreRegisterItem(EnergizedOutputMultiplierUpgrade = new BaseOutputMultiplierUpgrade("EnergizedOutputMultiplierUpgrade", Tier.ENERGIZED));	
 		registry.PreRegisterItem(LumumOutputMultiplierUpgrade = new BaseOutputMultiplierUpgrade("LumumOutputMultiplierUpgrade", Tier.LUMUM));	
-	
+		
+		registry.PreRegisterItem(DigistoreCapacityUpgrade = new BaseDigistoreCapacityUpgrade("DigistoreCapacityUpgrade"));
+		registry.PreRegisterItem(DigistoreMiscUpgrade = new DigistoreMiscUpgrades("DigistoreMiscUpgrade"));
+		
 		registry.PreRegisterItem(StaticBook = new StaticPowerBook("StaticBook"));	
 
 		registry.PreRegisterItem(StaticIngot = new BaseIngot("StaticIngot"));

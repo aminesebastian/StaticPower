@@ -19,11 +19,11 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.blocks.ModBlocks;
+import theking530.staticpower.blocks.crops.ModPlants;
 import theking530.staticpower.client.CommonProxy;
 import theking530.staticpower.conduits.fluidconduit.TileEntityFluidConduit;
 import theking530.staticpower.conduits.itemconduit.TileEntityItemConduit;
 import theking530.staticpower.conduits.staticconduit.TileEntityStaticConduit;
-import theking530.staticpower.crops.ModPlants;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.handlers.GuiHandler;
 import theking530.staticpower.handlers.OreDictionaryRegistration;
@@ -77,11 +77,11 @@ import theking530.staticpower.machines.poweredfurnace.TileEntityPoweredFurnace;
 import theking530.staticpower.machines.poweredgrinder.TileEntityPoweredGrinder;
 import theking530.staticpower.machines.quarry.TileEntityQuarry;
 import theking530.staticpower.potioneffects.ModPotions;
-import theking530.staticpower.tileentity.barrel.TileEntityBarrel;
 import theking530.staticpower.tileentity.chest.energizedchest.TileEntityEnergizedChest;
 import theking530.staticpower.tileentity.chest.lumumchest.TileEntityLumumChest;
 import theking530.staticpower.tileentity.chest.staticchest.TileEntityStaticChest;
 import theking530.staticpower.tileentity.chunkloader.TileEntityChunkLoader;
+import theking530.staticpower.tileentity.digistore.TileEntityDigistore;
 import theking530.staticpower.tileentity.solarpanels.TileEntityBasicSolarPanel;
 import theking530.staticpower.tileentity.solarpanels.TileEntityCreativeSolarPanel;
 import theking530.staticpower.tileentity.solarpanels.TileEntityEnergizedSolarPanel;
@@ -196,7 +196,7 @@ public class StaticPower {
 		GameRegistry.registerTileEntity(TileEntityLumumChest.class, "LumumChest");
 		GameRegistry.registerTileEntity(TileEntityVacuumChest.class, "VacuumChest");
 		
-		GameRegistry.registerTileEntity(TileEntityBarrel.class, "Barrel");
+		GameRegistry.registerTileEntity(TileEntityDigistore.class, "Barrel");
 	}	
 	@EventHandler
 	public void Init(FMLInitializationEvent Event){

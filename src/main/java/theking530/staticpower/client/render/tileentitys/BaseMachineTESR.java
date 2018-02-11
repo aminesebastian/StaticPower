@@ -9,8 +9,8 @@ import theking530.staticpower.assists.Reference;
 import theking530.staticpower.assists.utilities.SideModeList;
 import theking530.staticpower.assists.utilities.SideUtilities;
 import theking530.staticpower.client.model.ModelBlock;
-import theking530.staticpower.machines.IProcessing;
 import theking530.staticpower.tileentity.BaseTileEntity;
+import theking530.staticpower.tileentity.IProcessing;
 
 public class BaseMachineTESR <T extends BaseTileEntity> extends TileEntitySpecialRenderer<T> {
 

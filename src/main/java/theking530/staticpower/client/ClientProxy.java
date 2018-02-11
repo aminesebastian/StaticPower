@@ -11,7 +11,7 @@ import theking530.staticpower.assists.Tier;
 import theking530.staticpower.client.render.conduit.TileEntityRenderFluidConduit;
 import theking530.staticpower.client.render.conduit.TileEntityRenderItemConduit;
 import theking530.staticpower.client.render.conduit.TileEntityRenderStaticConduit;
-import theking530.staticpower.client.render.tileentitys.TileEntityRenderBarrel;
+import theking530.staticpower.client.render.tileentitys.TileEntityRenderDigistore;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderBattery;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderChargingStation;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderChest;
@@ -60,10 +60,10 @@ import theking530.staticpower.machines.fusionfurnace.TileEntityFusionFurnace;
 import theking530.staticpower.machines.mechanicalsqueezer.TileEntityMechanicalSqueezer;
 import theking530.staticpower.machines.poweredfurnace.TileEntityPoweredFurnace;
 import theking530.staticpower.machines.poweredgrinder.TileEntityPoweredGrinder;
-import theking530.staticpower.tileentity.barrel.TileEntityBarrel;
 import theking530.staticpower.tileentity.chest.energizedchest.TileEntityEnergizedChest;
 import theking530.staticpower.tileentity.chest.lumumchest.TileEntityLumumChest;
 import theking530.staticpower.tileentity.chest.staticchest.TileEntityStaticChest;
+import theking530.staticpower.tileentity.digistore.TileEntityDigistore;
 
 public class ClientProxy extends CommonProxy {
 
@@ -92,7 +92,7 @@ public class ClientProxy extends CommonProxy {
 		//Mechanical Squeezer
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMechanicalSqueezer.class, new TileEntityRenderMechanicalSqueezer());
 		//Barrel
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBarrel.class, new TileEntityRenderBarrel());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDigistore.class, new TileEntityRenderDigistore());
 		
 		//Signal Multiplier
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySignalMultiplier.class, new TileEntityRenderSignalMultiplier());	

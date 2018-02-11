@@ -37,11 +37,11 @@ import theking530.staticpower.machines.mechanicalsqueezer.BlockMechanicalSqueeze
 import theking530.staticpower.machines.poweredfurnace.BlockPoweredFurnace;
 import theking530.staticpower.machines.poweredgrinder.BlockPoweredGrinder;
 import theking530.staticpower.machines.quarry.BlockQuarry;
-import theking530.staticpower.tileentity.barrel.BlockBarrel;
 import theking530.staticpower.tileentity.chest.energizedchest.BlockEnergizedChest;
 import theking530.staticpower.tileentity.chest.lumumchest.BlockLumumChest;
 import theking530.staticpower.tileentity.chest.staticchest.BlockStaticChest;
 import theking530.staticpower.tileentity.chunkloader.BlockChunkLoader;
+import theking530.staticpower.tileentity.digistore.BlockDigistore;
 import theking530.staticpower.tileentity.solarpanels.BlockSolarPanel;
 import theking530.staticpower.tileentity.solderingtable.BlockSolderingTable;
 import theking530.staticpower.tileentity.vacuumchest.BlockVacuumChest;
@@ -145,7 +145,7 @@ public class ModBlocks {
 	public static Block VacuumChest;
 	public static Block SolderingTable;
 
-	public static Block Barrel;
+	public static Block Digistore;
 	
 	//Decorative
 	public static Block CrackedEnergizedBrick;	
@@ -197,8 +197,8 @@ public class ModBlocks {
 		VacuumChest = new BlockVacuumChest("VacuumChest").setUnlocalizedName("VacuumChest").setHardness(3.5f);
 		registry.PreRegisterBlock(VacuumChest);
 		
-		Barrel = new BlockBarrel("Barrel").setUnlocalizedName("Barrel").setHardness(3.5f);
-		registry.PreRegisterBlock(Barrel);
+		Digistore = new BlockDigistore("Digistore").setUnlocalizedName("Digistore").setHardness(3.5f);
+		registry.PreRegisterBlock(Digistore);
 		
 		BasicBattery = new BlockBattery("BasicBattery", Tier.BASIC).setHardness(3.5f);
 		registry.PreRegisterBlock(BasicBattery);

@@ -17,7 +17,7 @@ public class ExperienceVacuumUpgrade extends BaseUpgrade implements IMachineUpgr
 		setMaxStackSize(1);
 	}
 	@Override
-	public float getMultiplier(ItemStack stack, int upgradeNumber) {
+	public float getUpgradeValueAtIndex(ItemStack stack, int upgradeNumber) {
 		return 0.0f;
 	}
 	@Override  

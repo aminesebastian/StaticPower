@@ -21,6 +21,8 @@ import theking530.staticpower.energy.StaticEnergyStorage;
 import theking530.staticpower.items.upgrades.BasePowerUpgrade;
 import theking530.staticpower.items.upgrades.BaseSpeedUpgrade;
 import theking530.staticpower.tileentity.BaseTileEntity;
+import theking530.staticpower.tileentity.IEnergyUser;
+import theking530.staticpower.tileentity.IProcessing;
 
 /**
  * @author Amine
@@ -108,8 +110,8 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		}
 		if(flag) {
 			BasePowerUpgrade tempUpgrade = (BasePowerUpgrade) slotsUpgrades.getStackInSlot(slot).getItem();
-			energyStorage.setCapacity((int)(tempUpgrade.getValueMultiplied(initialEnergyCapacity, tempUpgrade.getMultiplier(slotsUpgrades.getStackInSlot(slot), 0))));
-			energyStorage.setMaxReceive((int)(tempUpgrade.getValueMultiplied(initialEnergyPerTick, tempUpgrade.getMultiplier(slotsUpgrades.getStackInSlot(slot), 1))));
+			energyStorage.setCapacity((int)(tempUpgrade.getValueMultiplied(initialEnergyCapacity, tempUpgrade.getUpgradeValueAtIndex(slotsUpgrades.getStackInSlot(slot), 0))));
+			energyStorage.setMaxReceive((int)(tempUpgrade.getValueMultiplied(initialEnergyPerTick, tempUpgrade.getUpgradeValueAtIndex(slotsUpgrades.getStackInSlot(slot), 1))));
 		}else{
 			energyStorage.setCapacity(initialEnergyCapacity);
 			energyStorage.setMaxReceive(initialEnergyPerTick);
@@ -128,8 +130,8 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		}
 		if(flag) {
 			BaseSpeedUpgrade tempUpgrade = (BaseSpeedUpgrade) slotsUpgrades.getStackInSlot(slot).getItem();
-			processingTime = (int) (initialProcessingTime/(1+(tempUpgrade.getMultiplier(slotsUpgrades.getStackInSlot(slot), 0))));
-			processingEnergyMult = (int)(tempUpgrade.getValueMultiplied(initialProcessingEnergyMult, tempUpgrade.getMultiplier(slotsUpgrades.getStackInSlot(slot), 1)));
+			processingTime = (int) (initialProcessingTime/(1+(tempUpgrade.getUpgradeValueAtIndex(slotsUpgrades.getStackInSlot(slot), 0))));
+			processingEnergyMult = (int)(tempUpgrade.getValueMultiplied(initialProcessingEnergyMult, tempUpgrade.getUpgradeValueAtIndex(slotsUpgrades.getStackInSlot(slot), 1)));
 		}else{
 			processingEnergyMult = initialProcessingEnergyMult;
 			processingTime = initialProcessingTime;

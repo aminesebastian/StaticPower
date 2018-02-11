@@ -35,13 +35,13 @@ public class BaseOutputMultiplierUpgrade  extends BaseUpgrade implements IMachin
 		this.setMaxStackSize(8);
 	}
 	@Override
-	public float getMultiplier(ItemStack stack, int upgradeNumber) {
+	public float getUpgradeValueAtIndex(ItemStack stack, int upgradeNumber) {
 		return multiplier * stack.getCount();
 	}
 	@Override  
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn) {
-		list.add(EnumTextFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format((getMultiplier(stack, 0))*100) + "%" + EnumTextFormatting.GREEN + " Output Chance");
-		list.add(EnumTextFormatting.WHITE + "+" + new java.text.DecimalFormat("#.#").format((getMultiplier(stack, 0)/2)*100) + "%" + EnumTextFormatting.RED + " Power Usage");
+		list.add(EnumTextFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format((getUpgradeValueAtIndex(stack, 0))*100) + "%" + EnumTextFormatting.GREEN + " Output Chance");
+		list.add(EnumTextFormatting.WHITE + "+" + new java.text.DecimalFormat("#.#").format((getUpgradeValueAtIndex(stack, 0)/2)*100) + "%" + EnumTextFormatting.RED + " Power Usage");
 
 		if(showHiddenTooltips()) {
     		list.add(EnumTextFormatting.WHITE + "Stacks Up To: " + stack.getMaxStackSize());

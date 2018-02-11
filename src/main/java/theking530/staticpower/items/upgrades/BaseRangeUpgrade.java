@@ -35,15 +35,15 @@ public class BaseRangeUpgrade  extends BaseUpgrade implements IMachineUpgrade{
 		setMaxStackSize(1);
 	}
 	@Override
-	public float getMultiplier(ItemStack stack, int upgradeNumber) {
+	public float getUpgradeValueAtIndex(ItemStack stack, int upgradeNumber) {
 		return RANGE_MULT;
 	}
 	@Override  
 		public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn) {
 		if(RANGE_MULT < 1) {
-			list.add(EnumTextFormatting.RED +  "-" + new java.text.DecimalFormat("#").format((getMultiplier(stack, 0))*100) + "% " + EnumTextFormatting.WHITE + "Range");
+			list.add(EnumTextFormatting.RED +  "-" + new java.text.DecimalFormat("#").format((getUpgradeValueAtIndex(stack, 0))*100) + "% " + EnumTextFormatting.WHITE + "Range");
 		}else{
-			list.add(EnumTextFormatting.GREEN +  "+" + new java.text.DecimalFormat("#").format((getMultiplier(stack, 0))*100) + "% " + EnumTextFormatting.WHITE + "Range");
+			list.add(EnumTextFormatting.GREEN +  "+" + new java.text.DecimalFormat("#").format((getUpgradeValueAtIndex(stack, 0))*100) + "% " + EnumTextFormatting.WHITE + "Range");
 		}
 		
 		if(showHiddenTooltips()) {

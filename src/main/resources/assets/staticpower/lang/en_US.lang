@@ -1,5 +1,25 @@
 itemGroup.StaticPower=Static Power
 
+//Tier
+tier.Basic=Basic
+tier.Creative=Creative
+tier.Iron=Iron
+tier.Gold=Gold
+tier.Tin=Tin
+tier.Copper=Copper
+tier.Silver=Silver
+tier.Lead=Lead
+tier.Nickel=Nickel
+tier.Aluminium=Aluminium
+tier.Diamond=Diamond
+tier.Emerald=Emerald
+tier.Obsidian=Obsidian
+tier.Sapphire=Sapphire
+tier.Ruby=Ruby
+tier.Static=Static
+tier.Energized=Energized
+tier.Lumum=Lumum
+
 //Items
 item.WoodenWheel.name=WoodenWheel
 item.BootMold.name=Boot Mold
@@ -90,6 +110,9 @@ item.StaticUpgradePlate.name=Static Upgrade Plate
 item.EnergizedUpgradePlate.name=Energized Upgrade Plate
 item.LumumUpgradePlate.name=Lumum Upgrade Plate
 
+item.DigistoreCapacityUpgrade=Digistore Capacity Upgrade
+item.DigistoreVoidUpgrade=§5Digistore Void Upgrade
+
 //Ingots
 item.SilverIngot.name=Silver Ingot
 item.TinIngot.name=Tin Ingot
@@ -174,7 +197,7 @@ tile.Condenser.name=Condenser
 tile.Distillery.name=Distillery
 tile.MechanicalSqueezer.name=Mechanical Squeezer
 
-tile.Barrel.name=Barrel
+tile.Digistore.name=Digistore
 
 //Blocks
 tile.StaticLamp.name=Static Lamp
@@ -303,8 +326,7 @@ container.Fermenter=Fermenter
 container.BasicItemFilter=Basic Item Filter
 container.UpgradedItemFilter=Upgraded Item Filter
 container.AdvancedItemFilter=Advanced Item Filter
-
-container.Barrel = Digistore;
+container.Digistore=Digistore
 
 //Tools
 item.StaticWrench.name=Static Wrench

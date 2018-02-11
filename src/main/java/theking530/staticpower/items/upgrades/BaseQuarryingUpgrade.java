@@ -36,7 +36,7 @@ public class BaseQuarryingUpgrade  extends BaseUpgrade implements IMachineUpgrad
 		setMaxStackSize(1);
 	}
 	@Override
-	public float getMultiplier(ItemStack stack, int upgradeNumber) {
+	public float getUpgradeValueAtIndex(ItemStack stack, int upgradeNumber) {
 		if(upgradeNumber == 1) {
 			return BLOCKS_PER_TICK;
 		}else{
@@ -45,8 +45,8 @@ public class BaseQuarryingUpgrade  extends BaseUpgrade implements IMachineUpgrad
 	}
 	@Override  
 		public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn) {
-		list.add(EnumTextFormatting.WHITE +  "Mines " + getMultiplier(stack, 0) + EnumTextFormatting.GREEN + " Blocks Per Tick");
-		list.add(EnumTextFormatting.WHITE + new java.text.DecimalFormat("#").format((getMultiplier(stack, 1))*100) + "%" + EnumTextFormatting.RED + " Power Use");
+		list.add(EnumTextFormatting.WHITE +  "Mines " + getUpgradeValueAtIndex(stack, 0) + EnumTextFormatting.GREEN + " Blocks Per Tick");
+		list.add(EnumTextFormatting.WHITE + new java.text.DecimalFormat("#").format((getUpgradeValueAtIndex(stack, 1))*100) + "%" + EnumTextFormatting.RED + " Power Use");
 		if(showHiddenTooltips()) {
     		list.add(EnumTextFormatting.WHITE + "Stacks Up To: " + stack.getMaxStackSize());
     	}else{

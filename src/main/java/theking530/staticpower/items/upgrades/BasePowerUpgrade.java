@@ -39,7 +39,7 @@ public class BasePowerUpgrade  extends BaseUpgrade implements IMachineUpgrade{
 		}
 	}
 	@Override
-	public float getMultiplier(ItemStack stack, int upgradeNumber) {
+	public float getUpgradeValueAtIndex(ItemStack stack, int upgradeNumber) {
 		if(upgradeNumber == 0) {
 			return CAPACITY * stack.getCount();
 		}else{
@@ -48,8 +48,8 @@ public class BasePowerUpgrade  extends BaseUpgrade implements IMachineUpgrade{
 	}
 	@Override  
 		public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn) {
-		list.add(EnumTextFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format((getMultiplier(stack, 0))*100) + "%" + EnumTextFormatting.GREEN + " RF Capacity");
-		list.add(EnumTextFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format((getMultiplier(stack, 1))*100) + "%" + EnumTextFormatting.GREEN + " RF Per Tick");
+		list.add(EnumTextFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format((getUpgradeValueAtIndex(stack, 0))*100) + "%" + EnumTextFormatting.GREEN + " RF Capacity");
+		list.add(EnumTextFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format((getUpgradeValueAtIndex(stack, 1))*100) + "%" + EnumTextFormatting.GREEN + " RF Per Tick");
 
 		if(showHiddenTooltips()) {
     		list.add(EnumTextFormatting.WHITE + "Stacks Up To: " + stack.getMaxStackSize());

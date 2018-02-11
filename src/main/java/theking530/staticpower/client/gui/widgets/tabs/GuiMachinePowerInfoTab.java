@@ -1,7 +1,7 @@
 package theking530.staticpower.client.gui.widgets.tabs;
 
 import theking530.staticpower.assists.utilities.EnumTextFormatting;
-import theking530.staticpower.machines.IEnergyUser;
+import theking530.staticpower.tileentity.IEnergyUser;
 
 public class GuiMachinePowerInfoTab extends GuiPowerInfoTab {
 

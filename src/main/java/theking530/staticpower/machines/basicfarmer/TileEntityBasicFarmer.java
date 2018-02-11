@@ -143,7 +143,7 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 		}
 		if(flag) {
 			BaseRangeUpgrade tempUpgrade = (BaseRangeUpgrade) slotsUpgrades.getStackInSlot(slot).getItem();
-			RANGE = (int) (INITIAL_RANGE*tempUpgrade.getMultiplier(slotsUpgrades.getStackInSlot(slot), 0));
+			RANGE = (int) (INITIAL_RANGE*tempUpgrade.getUpgradeValueAtIndex(slotsUpgrades.getStackInSlot(slot), 0));
 		}else{
 			RANGE = INITIAL_RANGE;
 		}

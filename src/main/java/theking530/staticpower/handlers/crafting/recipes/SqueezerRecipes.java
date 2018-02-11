@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.assists.RegisterHelper;
 import theking530.staticpower.blocks.ModBlocks;
-import theking530.staticpower.crops.ModPlants;
+import theking530.staticpower.blocks.crops.ModPlants;
 import theking530.staticpower.fluids.ModFluids;
 
 public class SqueezerRecipes {

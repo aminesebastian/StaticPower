@@ -40,7 +40,7 @@ public class BaseSpeedUpgrade extends BaseUpgrade implements IMachineUpgrade{
 		}
 	}
 	@Override
-	public float getMultiplier(ItemStack stack, int upgradeNumber) {
+	public float getUpgradeValueAtIndex(ItemStack stack, int upgradeNumber) {
 		if(upgradeNumber == 0) {
 			return (SPEED * stack.getCount());
 		}else{
@@ -49,8 +49,8 @@ public class BaseSpeedUpgrade extends BaseUpgrade implements IMachineUpgrade{
 	}
 	@Override  
 		public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn) {
-		list.add(EnumTextFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format((getMultiplier(stack, 0))*100) + "%" + EnumTextFormatting.GREEN + " Processing Speed");
-		list.add(EnumTextFormatting.WHITE + "+" +  new java.text.DecimalFormat("#").format((getMultiplier(stack, 1))*100) + "%" + EnumTextFormatting.RED + " Power Use");
+		list.add(EnumTextFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format((getUpgradeValueAtIndex(stack, 0))*100) + "%" + EnumTextFormatting.GREEN + " Processing Speed");
+		list.add(EnumTextFormatting.WHITE + "+" +  new java.text.DecimalFormat("#").format((getUpgradeValueAtIndex(stack, 1))*100) + "%" + EnumTextFormatting.RED + " Power Use");
 		if(showHiddenTooltips()) {
     		list.add(EnumTextFormatting.WHITE + "Stacks Up To: " + stack.getMaxStackSize());
     	}else{

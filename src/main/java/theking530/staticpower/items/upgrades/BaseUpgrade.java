@@ -11,7 +11,7 @@ public class BaseUpgrade extends ItemBase implements IMachineUpgrade{
 		setMaxStackSize(16);
 	}
 	@Override
-	public float getMultiplier(ItemStack stack, int upgradeNumber) {
+	public float getUpgradeValueAtIndex(ItemStack stack, int upgradeNumber) {
 		return 0;
 	}
 	@Override

@@ -26,7 +26,7 @@ public class ContainerPoweredGrinder extends Container {
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return GrinderRecipeRegistry.Grinding().getGrindingResult(itemStack) != null;
 		          
-		        }
+		    }
 		});
 		
 		//Battery

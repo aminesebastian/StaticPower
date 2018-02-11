@@ -95,7 +95,7 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 	private void outputUpgradeHandler() {
 		if(hasUpgrade(ModItems.BasicOutputMultiplierUpgrade)) {
 			BaseOutputMultiplierUpgrade tempUpgrade = (BaseOutputMultiplierUpgrade) getUpgrade(ModItems.BasicOutputMultiplierUpgrade).getItem();
-			bonusOutputChance = tempUpgrade.getMultiplier(getUpgrade(ModItems.BasicOutputMultiplierUpgrade), 0);
+			bonusOutputChance = tempUpgrade.getUpgradeValueAtIndex(getUpgrade(ModItems.BasicOutputMultiplierUpgrade), 0);
 		}else{
 			bonusOutputChance = 0.0f;
 		}

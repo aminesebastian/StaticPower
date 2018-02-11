@@ -171,7 +171,7 @@ public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<E
 	public void handleUpgrades() {
 		if(hasUpgrade(ModItems.BasicRangeUpgrade)) {
 			BaseRangeUpgrade tempUpgrade = (BaseRangeUpgrade) getUpgrade(ModItems.BasicRangeUpgrade).getItem();
-			vacuumDiamater = tempUpgrade.getValueMultiplied(initialVacuumDiamater, tempUpgrade.getMultiplier(getUpgrade(ModItems.BasicRangeUpgrade), 0));
+			vacuumDiamater = tempUpgrade.getValueMultiplied(initialVacuumDiamater, tempUpgrade.getUpgradeValueAtIndex(getUpgrade(ModItems.BasicRangeUpgrade), 0));
 		}else{
 			vacuumDiamater = initialVacuumDiamater;
 		}
@@ -187,7 +187,7 @@ public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<E
 		}
 		if(hasUpgrade(ModItems.BasicTankUpgrade)) {
 			BaseTankUpgrade tempUpgrade = (BaseTankUpgrade) getUpgrade(ModItems.BasicTankUpgrade).getItem();
-			experienceTank.setCapacity((int)(tempUpgrade.getValueMultiplied(10000, tempUpgrade.getMultiplier(getUpgrade(ModItems.BasicTankUpgrade), 0))));
+			experienceTank.setCapacity((int)(tempUpgrade.getValueMultiplied(10000, tempUpgrade.getUpgradeValueAtIndex(getUpgrade(ModItems.BasicTankUpgrade), 0))));
 		}else{
 			experienceTank.setCapacity(10000);
 		}

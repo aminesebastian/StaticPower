@@ -149,7 +149,7 @@ public class SolderingRecipes {
 	}
 	private static void registerSiliconOreDictRecipes() {
 		for(int i=0; i<OreDictionary.getOres("itemSilicon").size(); i++) {
-			RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.MemoryChip, 4), new Object[]{"PPP", "SSS", "QCQ", 
+			RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.MemoryChip, 8), new Object[]{"PPP", "SSS", "QCQ", 
 					'P', ModItems.IronPlate, 'Q', ModItems.SilverWire, 'S', OreDictionary.getOres("itemSilicon").get(i).getItem(), 'C', ModItems.BasicCircuit});
 		}
 	}

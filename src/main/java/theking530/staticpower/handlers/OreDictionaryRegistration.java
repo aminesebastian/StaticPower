@@ -61,6 +61,12 @@ public class OreDictionaryRegistration {
 		OreDictionary.registerOre("dustAluminium", ModItems.AluminiumDust);
 		OreDictionary.registerOre("dustAluminum", ModItems.AluminiumDust);
 		
+		OreDictionary.registerOre("plateTin", ModItems.TinPlate);
+		OreDictionary.registerOre("plateLead", ModItems.LeadPlate);
+		OreDictionary.registerOre("plateCopper", ModItems.CopperPlate);
+		OreDictionary.registerOre("plateIron", ModItems.IronPlate);
+		OreDictionary.registerOre("plateGold", ModItems.GoldPlate);
+		
 		OreDictionary.registerOre("silicon", ModItems.Silicon);
 	}
 }
