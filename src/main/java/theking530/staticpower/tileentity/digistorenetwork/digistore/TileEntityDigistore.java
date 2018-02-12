@@ -141,6 +141,9 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
     public int getMaxStoredAmount() {
     	return maxStoredItems;
     }
+    public boolean isFull() {
+		return getStoredAmount() < getMaxStoredAmount();
+    }
     public float getFilledRatio() {
     	return (float)getStoredAmount()/(float)getMaxStoredAmount();
     }

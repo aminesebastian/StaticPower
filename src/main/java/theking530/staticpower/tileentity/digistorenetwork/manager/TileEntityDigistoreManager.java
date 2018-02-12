@@ -39,18 +39,18 @@ public class TileEntityDigistoreManager extends BaseDigistoreTileEntity {
 	public Map<BlockPos, BaseDigistoreTileEntity> getGrid() {
 		return masterDigistoreList;
 	}	
+	
+	
 	private Map<BlockPos, BaseDigistoreTileEntity> createNewGrid() {
 		return new HashMap<BlockPos, BaseDigistoreTileEntity>();
 	}
-	public void updateGrid() {
-		if(!getWorld().isRemote) {
-			masterDigistoreList = createNewGrid();
-			digistoreList = new ArrayList<TileEntityDigistore>();
-			extenderPositions = new ArrayList<BlockPos>();
-			masterDigistoreList.put(getPos(), this);
-			setManager(this);
-			generateGridNeighbors(masterDigistoreList, getPos()); 
-		}
+	private void updateGrid() {
+		masterDigistoreList = createNewGrid();
+		digistoreList = new ArrayList<TileEntityDigistore>();
+		extenderPositions = new ArrayList<BlockPos>();
+		masterDigistoreList.put(getPos(), this);
+		setManager(this);
+		generateGridNeighbors(masterDigistoreList, getPos()); 
 	}
 	private void generateGridNeighbors(Map<BlockPos, BaseDigistoreTileEntity> grid, BlockPos currentPos) {
 		for(EnumFacing facing : EnumFacing.values()) {
@@ -83,10 +83,11 @@ public class TileEntityDigistoreManager extends BaseDigistoreTileEntity {
 		updateGrid();
     }
 	@Override 
-	public void onBroken() {
-		
+	public void onBroken(){
+		for(Entry<BlockPos, BaseTileEntityDigistore> entry : masterDigistoreList) {
+			entry.getValue().setManager(null);
+		}
 	}
-
 	/*Capability Handling*/
     public boolean hasCapability(net.minecraftforge.common.capabilities.Capability<?> capability, net.minecraft.util.EnumFacing facing){
     	if(getSideConfiguration(facing) == Mode.Disabled) {
@@ -104,7 +105,7 @@ public class TileEntityDigistoreManager extends BaseDigistoreTileEntity {
     	if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
 			return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(new IItemHandler() {
 				public int getSlots() {
-			    	return evauluateRedstoneSettings() ? masterDigistoreList.size() - 1 : 0;
+			    	return evauluateRedstoneSettings() ? digistoreList.size() : 0;
 			    }
 			    @Nonnull
 			    public ItemStack getStackInSlot(int slot) {
@@ -116,11 +117,11 @@ public class TileEntityDigistoreManager extends BaseDigistoreTileEntity {
 			    @Nonnull
 			    public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
 			    	for(TileEntityDigistore digistore : digistoreList) {
-			    		if(digistore.getStoredItem().isEmpty() || ItemHandlerHelper.canItemStacksStack(digistore.getStoredItem(), stack)) {
-				    		return digistoreList.get(slot).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).insertItem(slot, stack, simulate);
+			    		if(ItemHandlerHelper.canItemStacksStack(digistore.getStoredItem(), stack) && !digistore.isFull()) {
+				    		return digistore.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).insertItem(slot, stack, simulate);
 			    		}
 			    	}
-			    	return stack;
+			    	return digistoreList.get(slot).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).insertItem(slot, stack, simulate);
 			    }
 			    @Nonnull
 			    public ItemStack extractItem(int slot, int amount, boolean simulate) {
