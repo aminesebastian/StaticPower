@@ -23,27 +23,42 @@ public class BaseDigistoreCapacityUpgrade extends BaseUpgrade implements IVarian
 
 	private final Map<ItemStack, String> upgrades;
 	
+	public final ItemStack basicCapacityUpgrade;
+	public final ItemStack ironCapacityUpgrade;
+	public final ItemStack goldCapacityUpgrade;
+	public final ItemStack leadCapacityUpgrade;
+	public final ItemStack obsidianCapacityUpgrade;
+	
+	public final ItemStack staticCapacityUpgrade;
+	public final ItemStack energizedCapacityUpgrade;
+	public final ItemStack lumumCapacityUpgrade;
+	
 	public BaseDigistoreCapacityUpgrade(String name) {
 		super(name, Tier.BASIC);
 		setMaxStackSize(8);
 		
 		upgrades = new HashMap<ItemStack, String>();
-    	int meta = 0;
-        for (Tier tier : Tier.values()) {
-        	int itemAmount = tier.getDigistoreItemCapacityAmount();
-        	String itemName = tier.getName() + "=item.DigistoreCapacityUpgrade";
         
-        	if(itemAmount != -1) {
-            	ItemStack upgrade = new ItemStack(this, 1, meta);         
-            	NBTTagCompound nbt = new NBTTagCompound();
-            	nbt.setInteger("ITEM_COUNT", itemAmount);
-            	nbt.setString("ITEM_NAME", itemName);
-            	upgrade.setTagCompound(nbt);
-            	upgrades.put(upgrade, tier.toString());
-                meta++;
-        	}
-        }
+    	basicCapacityUpgrade = createUpgrade(Tier.BASIC, 0);
+    	ironCapacityUpgrade = createUpgrade(Tier.IRON, 1);
+    	goldCapacityUpgrade = createUpgrade(Tier.GOLD, 2);
+    	leadCapacityUpgrade = createUpgrade(Tier.LEAD, 3);
+    	obsidianCapacityUpgrade = createUpgrade(Tier.OBSIDIAN, 4);
+    	staticCapacityUpgrade = createUpgrade(Tier.STATIC, 5);
+    	energizedCapacityUpgrade = createUpgrade(Tier.ENERGIZED, 6);
+    	lumumCapacityUpgrade = createUpgrade(Tier.LUMUM, 7); 
 	}
+	
+	private ItemStack createUpgrade(Tier tier, int meta) {
+    	ItemStack upgrade = new ItemStack(this, 1, meta);         
+    	NBTTagCompound nbt = new NBTTagCompound();
+    	nbt.setInteger("ITEM_COUNT", tier.getDigistoreItemCapacityAmount());
+    	nbt.setString("ITEM_NAME", tier.getName() + "=item.DigistoreCapacityUpgrade");
+    	upgrade.setTagCompound(nbt);
+    	upgrades.put(upgrade, tier.toString());
+		return upgrade;
+	}
+
 	@Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
     	if(tab == StaticPower.StaticPower) {

@@ -36,8 +36,10 @@ public abstract class BaseButton extends Gui{
 		this.yPosition = yPos;
 	}
 	public void draw() {
+		GlStateManager.disableLighting();
 		drawButton();
 		drawExtra();
+		GlStateManager.enableLighting();
 	}
 	public void handleMouseInteraction(int mouseX, int mouseY, int button) {
 		if(mouseX > xPosition && mouseX < xPosition + width && isVisible) {
@@ -68,12 +70,14 @@ public abstract class BaseButton extends Gui{
 		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 	}
 	public void drawTooltip() {
-        GlStateManager.disableDepth();
-        net.minecraftforge.fml.client.config.GuiUtils.drawHoveringText(tooltip, mouseX-4, mouseY+8, Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight, -1, Minecraft.getMinecraft().fontRenderer);
-        GlStateManager.disableLighting();
-        GlStateManager.disableDepth();
-        RenderHelper.disableStandardItemLighting();
-        GlStateManager.enableRescaleNormal();
+		if(tooltip != null && tooltip.size() > 0) {
+	        GlStateManager.disableDepth();
+	        net.minecraftforge.fml.client.config.GuiUtils.drawHoveringText(tooltip, mouseX-4, mouseY+8, Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight, -1, Minecraft.getMinecraft().fontRenderer);
+	        GlStateManager.disableLighting();
+	        GlStateManager.disableDepth();
+	        RenderHelper.disableStandardItemLighting();
+	        GlStateManager.enableRescaleNormal();	
+		}
     }
 	public void setPosition(int xPosition, int yPosition) {
 		this.xPosition = xPosition;

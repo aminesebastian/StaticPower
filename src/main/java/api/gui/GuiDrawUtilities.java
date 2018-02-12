@@ -45,6 +45,7 @@ public class GuiDrawUtilities {
 		}
 	}
 	public static void drawSlot(int xPos, int yPos, int width, int height) {
+		GlStateManager.disableLighting();
 		Gui.drawRect(xPos-1, yPos-1, xPos, yPos+height, GuiUtilities.getColor(55, 55, 55));
 		Gui.drawRect(xPos, yPos-1, xPos+width, yPos, GuiUtilities.getColor(55, 55, 55));
 		Gui.drawRect(xPos+width, yPos-1, xPos+width+1, yPos, GuiUtilities.getColor(139, 139, 139));
@@ -54,8 +55,10 @@ public class GuiDrawUtilities {
 		Gui.drawRect(xPos+width, yPos, xPos+width+1, yPos+height+1, GuiUtilities.getColor(255, 255, 255));
 		
 		Gui.drawRect(xPos, yPos, xPos+width, yPos+height, GuiUtilities.getColor(139, 139, 139));
+		GlStateManager.enableLighting();
 	}
     public static void drawTexturedGenericRect(int xCoord, int yCoord, int width, int height, float zLevel, double minU, double minV, double maxU, double maxV) {
+		GlStateManager.disableLighting();
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();
         bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
@@ -64,6 +67,7 @@ public class GuiDrawUtilities {
         bufferbuilder.pos(xCoord+width, yCoord, zLevel).tex(maxU, minV).endVertex();
         bufferbuilder.pos(xCoord, yCoord, zLevel).tex(minU, minV).endVertex();
         tessellator.draw();
+		GlStateManager.enableLighting();
     }
 	public static void drawStringWithSize(String text, int xPos, int yPos, float scale, int color, boolean withShadow) {
 		int textX = (int)((xPos - Minecraft.getMinecraft().fontRenderer.getStringWidth(text) * scale) / scale) - 1;

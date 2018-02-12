@@ -112,8 +112,8 @@ public class ModItems {
 	public static Item CreativeTankUpgrade;
 	public static Item CreativeSpeedUpgrade;
 
-	public static Item DigistoreCapacityUpgrade;
-	public static Item DigistoreMiscUpgrade;
+	public static BaseDigistoreCapacityUpgrade DigistoreCapacityUpgrade;
+	public static DigistoreMiscUpgrades DigistoreMiscUpgrade;
 	
 	public static Item BasicOutputMultiplierUpgrade;
 	public static Item StaticOutputMultiplierUpgrade;
@@ -204,15 +204,6 @@ public class ModItems {
 		registry.PreRegisterItem(EnergizedPie);
 		LumumPie = new BaseFood("LumumPie", 9);
 		registry.PreRegisterItem(LumumPie);
-		
-		BaseFluidCapsule = new BaseFluidCapsule("BaseFluidCapsule", Tier.BASIC.getFluidCanisterCapacity());
-		registry.PreRegisterItem(BaseFluidCapsule);
-		StaticFluidCapsule = new BaseFluidCapsule("StaticFluidCapsule", Tier.STATIC.getFluidCanisterCapacity());
-		registry.PreRegisterItem(StaticFluidCapsule);
-		EnergizedFluidCapsule = new BaseFluidCapsule("EnergizedFluidCapsule", Tier.ENERGIZED.getFluidCanisterCapacity());
-		registry.PreRegisterItem(EnergizedFluidCapsule);
-		LumumFluidCapsule = new BaseFluidCapsule("LumumFluidCapsule", Tier.LUMUM.getFluidCanisterCapacity());
-		registry.PreRegisterItem(LumumFluidCapsule);
 		
 		StaticWrench = new StaticWrench().setUnlocalizedName("StaticWrench");
 		registry.PreRegisterItem(StaticWrench);
@@ -305,6 +296,48 @@ public class ModItems {
 		LumumBattery = new BaseBattery("LumumPortableBattery", Tier.LUMUM.getPortableBatteryCapacity());
 		registry.PreRegisterItem(LumumBattery);
 		
+		registry.PreRegisterItem(StaticBook = new StaticPowerBook("StaticBook"));	
+
+		registry.PreRegisterItem(StaticIngot = new BaseIngot("StaticIngot"));
+		registry.PreRegisterItem(EnergizedIngot = new BaseIngot("EnergizedIngot"));
+		registry.PreRegisterItem(LumumIngot = new BaseIngot("LumumIngot"));
+		
+		registry.PreRegisterItem(SilverIngot = new BaseIngot("SilverIngot"));
+		registry.PreRegisterItem(TinIngot = new BaseIngot("TinIngot"));
+		registry.PreRegisterItem(LeadIngot = new BaseIngot("LeadIngot"));
+		registry.PreRegisterItem(CopperIngot = new BaseIngot("CopperIngot"));
+		registry.PreRegisterItem(PlatinumIngot = new BaseIngot("PlatinumIngot"));
+		registry.PreRegisterItem(NickelIngot = new BaseIngot("NickelIngot"));
+		registry.PreRegisterItem(AluminiumIngot = new BaseIngot("AluminiumIngot"));
+
+		registry.PreRegisterItem(SapphireGem = new BaseGem("SapphireGem"));
+		registry.PreRegisterItem(RubyGem = new BaseGem("RubyGem"));
+
+		
+		registry.PreRegisterItem(InertIngot = new BaseIngot("InertIngot"));
+		registry.PreRegisterItem(RedstoneAlloyIngot = new BaseIngot("RedstoneAlloyIngot"));
+		
+		registry.PreRegisterItem(StaticNugget = new BaseNugget("StaticNugget"));
+		registry.PreRegisterItem(EnergizedNugget = new BaseNugget("EnergizedNugget"));
+		registry.PreRegisterItem(LumumNugget = new BaseNugget("LumumNugget"));
+
+		registry.PreRegisterItem(SilverDust = new BaseDust("SilverDust"));
+		registry.PreRegisterItem(TinDust = new BaseDust("TinDust"));
+		registry.PreRegisterItem(LeadDust = new BaseDust("LeadDust"));
+		registry.PreRegisterItem(CopperDust = new BaseDust("CopperDust"));
+		registry.PreRegisterItem(PlatinumDust = new BaseDust("PlatinumDust"));
+		registry.PreRegisterItem(IronDust = new BaseDust("IronDust"));
+		registry.PreRegisterItem(GoldDust = new BaseDust("GoldDust"));	
+		registry.PreRegisterItem(NickelDust = new BaseDust("NickelDust"));
+		registry.PreRegisterItem(AluminiumDust = new BaseDust("AluminiumDust"));	
+
+		registry.PreRegisterItem(InertInfusionBlend = new BaseDust("InertInfusionBlend"));
+		registry.PreRegisterItem(StaticDust = new BaseDust("StaticDust"));
+		registry.PreRegisterItem(EnergizedDust = new BaseDust("EnergizedDust"));
+		registry.PreRegisterItem(LumumDust = new BaseDust("LumumDust"));
+		registry.PreRegisterItem(RedstoneAlloyDust = new BaseDust("RedstoneAlloyDust"));	
+		
+		
 		CreativeSpeedUpgrade = new BaseSpeedUpgrade("CreativeSpeedUpgrade", Tier.CREATIVE);
 		registry.PreRegisterItem(CreativeSpeedUpgrade);	
 		/**
@@ -357,45 +390,13 @@ public class ModItems {
 		registry.PreRegisterItem(DigistoreCapacityUpgrade = new BaseDigistoreCapacityUpgrade("DigistoreCapacityUpgrade"));
 		registry.PreRegisterItem(DigistoreMiscUpgrade = new DigistoreMiscUpgrades("DigistoreMiscUpgrade"));
 		
-		registry.PreRegisterItem(StaticBook = new StaticPowerBook("StaticBook"));	
-
-		registry.PreRegisterItem(StaticIngot = new BaseIngot("StaticIngot"));
-		registry.PreRegisterItem(EnergizedIngot = new BaseIngot("EnergizedIngot"));
-		registry.PreRegisterItem(LumumIngot = new BaseIngot("LumumIngot"));
-		
-		registry.PreRegisterItem(SilverIngot = new BaseIngot("SilverIngot"));
-		registry.PreRegisterItem(TinIngot = new BaseIngot("TinIngot"));
-		registry.PreRegisterItem(LeadIngot = new BaseIngot("LeadIngot"));
-		registry.PreRegisterItem(CopperIngot = new BaseIngot("CopperIngot"));
-		registry.PreRegisterItem(PlatinumIngot = new BaseIngot("PlatinumIngot"));
-		registry.PreRegisterItem(NickelIngot = new BaseIngot("NickelIngot"));
-		registry.PreRegisterItem(AluminiumIngot = new BaseIngot("AluminiumIngot"));
-
-		registry.PreRegisterItem(SapphireGem = new BaseGem("SapphireGem"));
-		registry.PreRegisterItem(RubyGem = new BaseGem("RubyGem"));
-
-		
-		registry.PreRegisterItem(InertIngot = new BaseIngot("InertIngot"));
-		registry.PreRegisterItem(RedstoneAlloyIngot = new BaseIngot("RedstoneAlloyIngot"));
-		
-		registry.PreRegisterItem(StaticNugget = new BaseNugget("StaticNugget"));
-		registry.PreRegisterItem(EnergizedNugget = new BaseNugget("EnergizedNugget"));
-		registry.PreRegisterItem(LumumNugget = new BaseNugget("LumumNugget"));
-
-		registry.PreRegisterItem(SilverDust = new BaseDust("SilverDust"));
-		registry.PreRegisterItem(TinDust = new BaseDust("TinDust"));
-		registry.PreRegisterItem(LeadDust = new BaseDust("LeadDust"));
-		registry.PreRegisterItem(CopperDust = new BaseDust("CopperDust"));
-		registry.PreRegisterItem(PlatinumDust = new BaseDust("PlatinumDust"));
-		registry.PreRegisterItem(IronDust = new BaseDust("IronDust"));
-		registry.PreRegisterItem(GoldDust = new BaseDust("GoldDust"));	
-		registry.PreRegisterItem(NickelDust = new BaseDust("NickelDust"));
-		registry.PreRegisterItem(AluminiumDust = new BaseDust("AluminiumDust"));	
-
-		registry.PreRegisterItem(InertInfusionBlend = new BaseDust("InertInfusionBlend"));
-		registry.PreRegisterItem(StaticDust = new BaseDust("StaticDust"));
-		registry.PreRegisterItem(EnergizedDust = new BaseDust("EnergizedDust"));
-		registry.PreRegisterItem(LumumDust = new BaseDust("LumumDust"));
-		registry.PreRegisterItem(RedstoneAlloyDust = new BaseDust("RedstoneAlloyDust"));	
+		BaseFluidCapsule = new BaseFluidCapsule("BaseFluidCapsule", Tier.BASIC.getFluidCanisterCapacity());
+		registry.PreRegisterItem(BaseFluidCapsule);
+		StaticFluidCapsule = new BaseFluidCapsule("StaticFluidCapsule", Tier.STATIC.getFluidCanisterCapacity());
+		registry.PreRegisterItem(StaticFluidCapsule);
+		EnergizedFluidCapsule = new BaseFluidCapsule("EnergizedFluidCapsule", Tier.ENERGIZED.getFluidCanisterCapacity());
+		registry.PreRegisterItem(EnergizedFluidCapsule);
+		LumumFluidCapsule = new BaseFluidCapsule("LumumFluidCapsule", Tier.LUMUM.getFluidCanisterCapacity());
+		registry.PreRegisterItem(LumumFluidCapsule);
 	}
 }

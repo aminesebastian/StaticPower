@@ -256,6 +256,8 @@ public class ItemRenderRegistry {
 		registerBlock(ModBlocks.Condenser);
 		
 		registerBlock(ModBlocks.Digistore);
+		registerBlock(ModBlocks.DigistoreManager);
+		registerBlock(ModBlocks.DigistoreNetworkExtender);
 		
 		registerBlock(ModBlocks.StaticGrass);
 		registerBlock(ModBlocks.EnergizedGrass);

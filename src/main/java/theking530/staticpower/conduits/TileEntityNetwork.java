@@ -14,7 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 
-public class ConduitGrid<T extends TileEntityBaseConduit, S extends Capability<E>, E> {
+public class TileEntityNetwork<T extends TileEntity, S extends Capability<E>, E> {
 
 	public HashMap<BlockPos, T> GRID_MAP;
 	public HashMap<BlockPos, TileEntity> RECIEVER_STORAGE_MAP;
@@ -24,7 +24,7 @@ public class ConduitGrid<T extends TileEntityBaseConduit, S extends Capability<E
 	public boolean INVALID;
 	public World WORLD;
 	
-	public ConduitGrid(World world) {
+	public TileEntityNetwork(World world) {
 		GRID_MAP = new HashMap<BlockPos, T>();
 		RECIEVER_STORAGE_MAP = new HashMap<BlockPos, TileEntity>();
 		Random rand = new Random();

@@ -63,7 +63,7 @@ import theking530.staticpower.machines.poweredgrinder.TileEntityPoweredGrinder;
 import theking530.staticpower.tileentity.chest.energizedchest.TileEntityEnergizedChest;
 import theking530.staticpower.tileentity.chest.lumumchest.TileEntityLumumChest;
 import theking530.staticpower.tileentity.chest.staticchest.TileEntityStaticChest;
-import theking530.staticpower.tileentity.digistore.TileEntityDigistore;
+import theking530.staticpower.tileentity.digistorenetwork.digistore.TileEntityDigistore;
 
 public class ClientProxy extends CommonProxy {
 

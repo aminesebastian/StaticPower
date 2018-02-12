@@ -4,9 +4,9 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.world.World;
-import theking530.staticpower.conduits.BaseConduit;
+import theking530.staticpower.conduits.BaseConduitBlock;
 
-public class BlockFluidConduit extends BaseConduit {
+public class BlockFluidConduit extends BaseConduitBlock {
 
 	float pixel = 1F/16F;
 	

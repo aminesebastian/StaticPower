@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentity.digistore;
+package theking530.staticpower.tileentity.digistorenetwork.digistore;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;

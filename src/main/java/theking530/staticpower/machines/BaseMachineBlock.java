@@ -36,7 +36,8 @@ import theking530.staticpower.tileentity.BaseTileEntity;
 public class BaseMachineBlock extends Block implements IWrenchable, IItemBlockProvider {
 
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
-
+	protected boolean shouldDropContents;
+	
 	protected BaseMachineBlock(String name) {
 		super(Material.IRON);
 		setCreativeTab(StaticPower.StaticPower);
@@ -44,6 +45,7 @@ public class BaseMachineBlock extends Block implements IWrenchable, IItemBlockPr
 		setUnlocalizedName(name);	
 		this.hasTileEntity = true;
 		this.lightOpacity = 0;
+		this.shouldDropContents = true;
 	}
 
 	public EnumBlockRenderType getRenderType(IBlockState state) {
@@ -94,7 +96,7 @@ public class BaseMachineBlock extends Block implements IWrenchable, IItemBlockPr
 
     }
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-    	if(worldIn.getTileEntity(pos) instanceof BaseTileEntity) {
+    	if(shouldDropContents && worldIn.getTileEntity(pos) instanceof BaseTileEntity) {
     		 BaseTileEntity tileentity = (BaseTileEntity) worldIn.getTileEntity(pos);
     	        if(!tileentity.wasWrenchedDoNotBreak) {
     		        for(EnumFacing facing : EnumFacing.values()) {
@@ -103,7 +105,7 @@ public class BaseMachineBlock extends Block implements IWrenchable, IItemBlockPr
     		        		if(tempHandler != null) {
     		        			for(int i=0; i<tempHandler.getSlots(); i++) {
     		        				if(tempHandler.getStackInSlot(i) != null) {
-    		        					WorldUtilities.dropItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), tempHandler.getStackInSlot(i));
+    		        					WorldUtilities.dropItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), tempHandler.extractItem(i, tempHandler.getStackInSlot(i).getCount(), false));
     		        				}
     		        			}
     		        		}

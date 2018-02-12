@@ -1,7 +1,5 @@
 package theking530.staticpower.assists.utilities;
 
-import java.util.Random;
-
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -89,12 +87,32 @@ public class WorldUtilities {
 		}
 		return null;
 	}
-	public static void dropItem(World worldIn, double x, double y, double z, ItemStack stack) {
+	public static EntityItem dropItem(World worldIn, double x, double y, double z, ItemStack stack) {
         EntityItem entityitem = new EntityItem(worldIn, x, y, z, stack);
-
         worldIn.spawnEntity(entityitem);
+        return entityitem;
     }
-	public static void dropItem(World worldIn, BlockPos pos, ItemStack stack) {
-		dropItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), stack);
+	public static EntityItem dropItem(World worldIn, EnumFacing direction, double x, double y, double z, ItemStack stack) {
+		EntityItem item = null;
+		if(direction == EnumFacing.EAST) {
+			item = dropItem(worldIn, x, y, z-0.5, stack);
+		}else if(direction == EnumFacing.NORTH) {
+			item = dropItem(worldIn, x+0.5, y, z, stack);
+		}else if(direction == EnumFacing.SOUTH) {
+			item = dropItem(worldIn, x+0.5, y, z+0.5, stack);
+		}else if(direction == EnumFacing.UP) {
+			item = dropItem(worldIn, x, y+0.5, z, stack);
+		}else if(direction == EnumFacing.DOWN) {
+			item = dropItem(worldIn, x, y-0.5, z, stack);
+		}else{
+			item = dropItem(worldIn, x, y,z+0.5, stack);
+		}
+        return item;
+    }
+	public static EntityItem dropItem(World worldIn, BlockPos pos, ItemStack stack) {
+		return dropItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), stack);
+    }
+	public static EntityItem dropItem(World worldIn, EnumFacing facing, BlockPos pos, ItemStack stack) {
+		return dropItem(worldIn, facing, pos.getX(), pos.getY(), pos.getZ(), stack);
     }
 }

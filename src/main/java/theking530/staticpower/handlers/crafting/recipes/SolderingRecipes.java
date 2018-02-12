@@ -86,6 +86,36 @@ public class SolderingRecipes {
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.LumumRangeUpgrade), new Object[]{"PPP"," G ","PPP",
 		'P', ModItems.LumumPlate, 'G',  ModItems.LumumUpgradePlate});
 		
+		RegisterHelper.registerSolderingRecipe(ModItems.DigistoreCapacityUpgrade.basicCapacityUpgrade, new Object[]{"SCS"," G ","SCS",
+		'S', Items.STICK, 'C', Item.getItemFromBlock(Blocks.CHEST), 'G',  ModItems.BasicUpgradePlate});	
+		RegisterHelper.registerSolderingRecipe(ModItems.DigistoreCapacityUpgrade.ironCapacityUpgrade, new Object[]{" P ","UPU"," P ",
+		'P', ModItems.IronPlate, 'U', ModItems.DigistoreCapacityUpgrade.basicCapacityUpgrade});		
+		RegisterHelper.registerSolderingRecipe(ModItems.DigistoreCapacityUpgrade.goldCapacityUpgrade, new Object[]{" P ","UPU"," P ",
+		'P', ModItems.GoldPlate, 'U', ModItems.DigistoreCapacityUpgrade.ironCapacityUpgrade});	
+		RegisterHelper.registerSolderingRecipe(ModItems.DigistoreCapacityUpgrade.leadCapacityUpgrade, new Object[]{" P ","UPU"," P ",
+		'P', ModItems.LeadPlate, 'U', ModItems.DigistoreCapacityUpgrade.basicCapacityUpgrade});	
+		RegisterHelper.registerSolderingRecipe(ModItems.DigistoreCapacityUpgrade.obsidianCapacityUpgrade, new Object[]{"C C"," G ","C C",
+		'C', Blocks.OBSIDIAN, 'G',  ModItems.BasicUpgradePlate});
+		
+		RegisterHelper.registerSolderingRecipe(ModItems.DigistoreCapacityUpgrade.staticCapacityUpgrade, new Object[]{" P ","UPU"," P ",
+		'P', ModItems.StaticPlate, 'U', ModItems.DigistoreCapacityUpgrade.goldCapacityUpgrade});		
+		RegisterHelper.registerSolderingRecipe(ModItems.DigistoreCapacityUpgrade.energizedCapacityUpgrade, new Object[]{" P ","UPU"," P ",
+		'P', ModItems.EnergizedPlate, 'U', ModItems.DigistoreCapacityUpgrade.staticCapacityUpgrade});		
+		RegisterHelper.registerSolderingRecipe(ModItems.DigistoreCapacityUpgrade.lumumCapacityUpgrade, new Object[]{" P ","UPU"," P ",
+		'P', ModItems.LumumPlate, 'U', ModItems.DigistoreCapacityUpgrade.energizedCapacityUpgrade});
+		
+		RegisterHelper.registerSolderingRecipe(ModItems.DigistoreMiscUpgrade.VoidUprgade, new Object[]{"OOO","OBO","OOO",
+		'O', Blocks.OBSIDIAN, 'B', ModItems.BasicUpgradePlate});
+		
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.BasicOutputMultiplierUpgrade), new Object[]{" F ","FGF","F F",
+		'F', Item.getItemFromBlock(Blocks.GRAVEL), 'G', ModItems.BasicUpgradePlate});
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.StaticOutputMultiplierUpgrade), new Object[]{" F ","FGF","F F",
+		'F', Items.FLINT,  'G', ModItems.StaticUpgradePlate});
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.EnergizedOutputMultiplierUpgrade), new Object[]{" F ","FGF","F F",
+		'F', ModItems.Silicon, 'G', ModItems.EnergizedUpgradePlate});
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.LumumOutputMultiplierUpgrade), new Object[]{" F ","FGF","F F",
+		'F', Item.getItemFromBlock(Blocks.PISTON), 'G', ModItems.LumumUpgradePlate});
+		
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.TeleportUpgrade), new Object[]{"EHE"," P ","EHE",
 		'H', Item.getItemFromBlock(Blocks.HOPPER), 'E', Items.ENDER_PEARL, 'P',  ModItems.EnergizedUpgradePlate});
 		

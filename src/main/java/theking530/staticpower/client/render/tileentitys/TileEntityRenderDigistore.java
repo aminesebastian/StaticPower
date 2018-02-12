@@ -12,11 +12,12 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import theking530.staticpower.assists.Reference;
-import theking530.staticpower.tileentity.digistore.TileEntityDigistore;
+import theking530.staticpower.tileentity.digistorenetwork.digistore.TileEntityDigistore;
 
 public class TileEntityRenderDigistore extends TileEntitySpecialRenderer<TileEntityDigistore> {
 
 	private static final ResourceLocation voidIndicator = new ResourceLocation(Reference.MOD_ID, "textures/blocks/digistore/void_indicator.png");
+	private static final ResourceLocation lockedIndicator = new ResourceLocation(Reference.MOD_ID, "textures/blocks/digistore/locked_indicator.png");
 	private static final ResourceLocation fillBar = new ResourceLocation(Reference.MOD_ID, "textures/blocks/digistore/digistore_fill_bar.png");
 	
 	@Override
@@ -71,7 +72,30 @@ public class TileEntityRenderDigistore extends TileEntitySpecialRenderer<TileEnt
 		}
 	}
 	public void drawIndicators(TileEntityDigistore barrel, double translationX, double translationY, double translationZ, float f, int dest, float alpha) {
-		if(barrel.voidUpgradeInstalled()) {
+		float offset = 0.0f;
+		if(barrel.isLocked()) {
+			GL11.glDisable(GL11.GL_LIGHTING);
+			GL11.glPushMatrix();
+			Tessellator tessellator = Tessellator.getInstance();
+	        BufferBuilder vertexbuffer = tessellator.getBuffer();
+	        
+			Minecraft.getMinecraft().getTextureManager().bindTexture(lockedIndicator);
+	        
+	        vertexbuffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			GL11.glRotated(180, 0, 1, 0);
+			GL11.glScaled(1, 1, -1);
+			GL11.glTranslated(-1, 0, 0);
+			GL11.glColor3f(1.0f, 1.0f, 1.0f);
+			vertexbuffer.pos(0.11+offset, 0.99, 1.005).tex(1.0, 0.0).endVertex();
+			vertexbuffer.pos(0.11+offset, 0.89, 1.005).tex(1.0, 1.0).endVertex();
+			vertexbuffer.pos(0.01+offset, 0.89, 1.005).tex(0.0, 1.0).endVertex();
+			vertexbuffer.pos(0.01+offset, 0.99, 1.005).tex(0.0, 0.0).endVertex();		
+			tessellator.draw();		
+			GL11.glPopMatrix();
+			GL11.glEnable(GL11.GL_LIGHTING);
+			offset += 0.11f;
+		}
+		if(barrel.isVoidUpgradeInstalled()) {
 			GL11.glDisable(GL11.GL_LIGHTING);
 			GL11.glPushMatrix();
 			Tessellator tessellator = Tessellator.getInstance();
@@ -84,13 +108,14 @@ public class TileEntityRenderDigistore extends TileEntitySpecialRenderer<TileEnt
 			GL11.glScaled(1, 1, -1);
 			GL11.glTranslated(-1, 0, 0);
 			GL11.glColor3f(1.0f, 1.0f, 1.0f);
-			vertexbuffer.pos(0.11, 0.99, 1.005).tex(1.0, 1.0).endVertex();
-			vertexbuffer.pos(0.11, 0.89, 1.005).tex(1.0, 0.0).endVertex();
-			vertexbuffer.pos(0.01, 0.89, 1.005).tex(0.0, 0.0).endVertex();
-			vertexbuffer.pos(0.01, 0.99, 1.005).tex(0.0, 1.0).endVertex();		
+			vertexbuffer.pos(0.11+offset, 0.99, 1.005).tex(1.0, 1.0).endVertex();
+			vertexbuffer.pos(0.11+offset, 0.89, 1.005).tex(1.0, 0.0).endVertex();
+			vertexbuffer.pos(0.01+offset, 0.89, 1.005).tex(0.0, 0.0).endVertex();
+			vertexbuffer.pos(0.01+offset, 0.99, 1.005).tex(0.0, 1.0).endVertex();		
 			tessellator.draw();		
 			GL11.glPopMatrix();
 			GL11.glEnable(GL11.GL_LIGHTING);
+			offset += 0.11f;
 		}
 	}
 	public void drawItemBackground(TileEntityDigistore barrel, double translationX, double translationY, double translationZ, float f, int dest, float alpha) {

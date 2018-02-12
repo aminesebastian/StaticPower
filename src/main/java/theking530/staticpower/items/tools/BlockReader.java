@@ -16,6 +16,7 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import theking530.staticpower.conduits.TileEntityBaseConduit;
 import theking530.staticpower.items.ItemBase;
+import theking530.staticpower.tileentity.digistorenetwork.BaseDigistoreTileEntity;
 
 public class BlockReader extends ItemBase{
 
@@ -42,6 +43,15 @@ public class BlockReader extends ItemBase{
     			        }  
 
     			    } 
+    			}    		
+    	    	return EnumActionResult.SUCCESS;
+    		}
+    	}else if(tile instanceof BaseDigistoreTileEntity) {
+    		BaseDigistoreTileEntity te = (BaseDigistoreTileEntity) tile;
+    		if(te.hasManager() && te.getManager().getGrid() != null) {
+    			if(!world.isRemote) {
+        			player.sendMessage(new TextComponentString(te.getManager().getGrid().toString()));	
+    				player.sendMessage(new TextComponentString(te.getManager().getGrid().size() + ""));
     			}    		
     	    	return EnumActionResult.SUCCESS;
     		}

@@ -29,7 +29,7 @@ public class TileEntityBaseConduit extends TileEntity implements IConduit, ITick
 	public EnumFacing[] receivers = new EnumFacing[6];
 	
 	public int[] SIDE_MODES = {0,0,0,0,0,0};
-	public ConduitGrid<TileEntityBaseConduit, Capability<IItemHandler>, IItemHandler> GRID;
+	public TileEntityNetwork<TileEntityBaseConduit, Capability<IItemHandler>, IItemHandler> GRID;
 	
 	public TileEntityBaseConduit() {}
 	
@@ -51,10 +51,10 @@ public class TileEntityBaseConduit extends TileEntity implements IConduit, ITick
 		GRID.AddEntry(this);
 		generateGridNeighbors(GRID);  
 	}
-	public ConduitGrid<TileEntityBaseConduit, Capability<IItemHandler>, IItemHandler> createNewGrid() {
-		return new ConduitGrid<TileEntityBaseConduit, Capability<IItemHandler>, IItemHandler>(getWorld());
+	public TileEntityNetwork<TileEntityBaseConduit, Capability<IItemHandler>, IItemHandler> createNewGrid() {
+		return new TileEntityNetwork<TileEntityBaseConduit, Capability<IItemHandler>, IItemHandler>(getWorld());
 	}
-	public void generateGridNeighbors(ConduitGrid<TileEntityBaseConduit, Capability<IItemHandler>, IItemHandler> masterGrid) {
+	public void generateGridNeighbors(TileEntityNetwork<TileEntityBaseConduit, Capability<IItemHandler>, IItemHandler> masterGrid) {
 		masterGrid.AddEntry(this);
 		for(int i=0; i<6; i++) {
 			TileEntity te = getWorld().getTileEntity(pos.offset(EnumFacing.values()[i]));

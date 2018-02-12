@@ -32,7 +32,7 @@ public class GuiPowerBar {
 		float k1 = u1 * height;
 
 		float glowState = getGlow();
-
+		GlStateManager.disableLighting();
 		Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder vertexbuffer = tessellator.getBuffer();
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.POWER_BAR_BG);
@@ -54,6 +54,7 @@ public class GuiPowerBar {
 		tessellator.draw();
 
 		GlStateManager.color(1.0f, 1.0f, 1.0f);
+		GlStateManager.enableLighting();
 	}
 	private static float getGlow() {
 		float sin = (float)(Math.sin((float)Minecraft.getSystemTime() / 1000.0f));

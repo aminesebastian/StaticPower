@@ -41,7 +41,9 @@ import theking530.staticpower.tileentity.chest.energizedchest.BlockEnergizedChes
 import theking530.staticpower.tileentity.chest.lumumchest.BlockLumumChest;
 import theking530.staticpower.tileentity.chest.staticchest.BlockStaticChest;
 import theking530.staticpower.tileentity.chunkloader.BlockChunkLoader;
-import theking530.staticpower.tileentity.digistore.BlockDigistore;
+import theking530.staticpower.tileentity.digistorenetwork.digistore.BlockDigistore;
+import theking530.staticpower.tileentity.digistorenetwork.manager.BlockDigistoreManager;
+import theking530.staticpower.tileentity.digistorenetwork.networkextender.BlockDigistoreNetworkExtender;
 import theking530.staticpower.tileentity.solarpanels.BlockSolarPanel;
 import theking530.staticpower.tileentity.solderingtable.BlockSolderingTable;
 import theking530.staticpower.tileentity.vacuumchest.BlockVacuumChest;
@@ -146,6 +148,8 @@ public class ModBlocks {
 	public static Block SolderingTable;
 
 	public static Block Digistore;
+	public static Block DigistoreManager;
+	public static Block DigistoreNetworkExtender;
 	
 	//Decorative
 	public static Block CrackedEnergizedBrick;	
@@ -199,6 +203,12 @@ public class ModBlocks {
 		
 		Digistore = new BlockDigistore("Digistore").setUnlocalizedName("Digistore").setHardness(3.5f);
 		registry.PreRegisterBlock(Digistore);
+		
+		DigistoreManager = new BlockDigistoreManager("DigistoreManager").setUnlocalizedName("DigistoreManager").setHardness(3.5f);
+		registry.PreRegisterBlock(DigistoreManager);
+			
+		DigistoreNetworkExtender = new BlockDigistoreNetworkExtender("DigistoreNetworkExtender").setUnlocalizedName("DigistoreNetworkExtender").setHardness(3.5f);
+		registry.PreRegisterBlock(DigistoreNetworkExtender);
 		
 		BasicBattery = new BlockBattery("BasicBattery", Tier.BASIC).setHardness(3.5f);
 		registry.PreRegisterBlock(BasicBattery);

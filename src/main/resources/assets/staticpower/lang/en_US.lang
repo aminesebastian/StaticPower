@@ -198,6 +198,8 @@ tile.Distillery.name=Distillery
 tile.MechanicalSqueezer.name=Mechanical Squeezer
 
 tile.Digistore.name=Digistore
+tile.DigistoreManager.name=Digistore Manager
+tile.DigistoreNetworkExtender.name=Digistore Network Extender
 
 //Blocks
 tile.StaticLamp.name=Static Lamp
@@ -327,6 +329,7 @@ container.BasicItemFilter=Basic Item Filter
 container.UpgradedItemFilter=Upgraded Item Filter
 container.AdvancedItemFilter=Advanced Item Filter
 container.Digistore=Digistore
+container.DigistoreManager=Digistore Manager
 
 //Tools
 item.StaticWrench.name=Static Wrench

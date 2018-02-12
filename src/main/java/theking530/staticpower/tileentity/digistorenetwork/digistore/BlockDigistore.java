@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentity.digistore;
+package theking530.staticpower.tileentity.digistorenetwork.digistore;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,10 +13,10 @@ import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.assists.utilities.WorldUtilities;
 import theking530.staticpower.client.GuiIDRegistry;
-import theking530.staticpower.machines.BaseMachineBlock;
 import theking530.staticpower.tileentity.BaseTileEntity;
+import theking530.staticpower.tileentity.digistorenetwork.BaseDigistoreBlock;
 
-public class BlockDigistore extends BaseMachineBlock {
+public class BlockDigistore extends BaseDigistoreBlock {
 
 	public BlockDigistore(String name) {
 		super(name);
@@ -25,12 +25,6 @@ public class BlockDigistore extends BaseMachineBlock {
 	}	
 	public EnumBlockRenderType getRenderType(IBlockState state) {
 		return EnumBlockRenderType.MODEL;
-	}
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
-	public boolean isFullCube(IBlockState state) {
-		return false;		
 	}
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
@@ -53,6 +47,7 @@ public class BlockDigistore extends BaseMachineBlock {
     	}
 	}
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        super.breakBlock(worldIn, pos, state);
     	if(!worldIn.isRemote && worldIn.getTileEntity(pos) instanceof BaseTileEntity) {
     		TileEntityDigistore barrel = (TileEntityDigistore) worldIn.getTileEntity(pos);
 	        if(!barrel.wasWrenchedDoNotBreak) {

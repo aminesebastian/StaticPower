@@ -18,6 +18,7 @@ import theking530.staticpower.machines.distillery.PacketDistilleryContainerMode;
 import theking530.staticpower.machines.fluidgenerator.PacketFluidGeneratorContainerMode;
 import theking530.staticpower.machines.fluidinfuser.PacketFluidInfuserContainerMode;
 import theking530.staticpower.machines.quarry.PacketQuarryContainerMode;
+import theking530.staticpower.tileentity.digistorenetwork.digistore.PacketLockDigistore;
 
 public class PacketHandler {
 	public static SimpleNetworkWrapper net;
@@ -40,6 +41,7 @@ public class PacketHandler {
 		registerMessage(PacketCondenserContainerMode.Message.class, PacketCondenserContainerMode.class);
 		registerMessage(PacketDistilleryContainerMode.Message.class, PacketDistilleryContainerMode.class);
 		registerMessage(PacketBasicFarmerContainerMode.Message.class, PacketBasicFarmerContainerMode.class);
+		registerMessage(PacketLockDigistore.Message.class, PacketLockDigistore.class);
 	}
 	
 	private static void registerMessage(Class packet, Class message) {

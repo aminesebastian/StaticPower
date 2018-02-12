@@ -2,7 +2,7 @@
     "parent": "block/orientable",
     "textures": {
         "top": "staticpower:blocks/digistore/digistore_side",
-        "front": "staticpower:blocks/digistore/digistore_front",
+        "front": "staticpower:blocks/digistore/digistore_side",
         "side": "staticpower:blocks/digistore/digistore_side"
     }
 }

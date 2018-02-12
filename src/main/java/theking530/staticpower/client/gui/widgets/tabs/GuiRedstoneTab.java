@@ -83,6 +83,7 @@ public class GuiRedstoneTab extends BaseGuiTab implements IInteractableGui {
 	public void modeText(int tabLeft, int tabTop) {
 		if(tileEntity instanceof IRedstoneConfigurable) {
 			IRedstoneConfigurable entity = (IRedstoneConfigurable)tileEntity;
+			GlStateManager.disableLighting();
 			if(entity.getRedstoneMode() == RedstoneMode.Low) {
 				fontRenderer.drawStringWithShadow("Low", tabLeft + 37, tabTop+95, 16777215);
 				fontRenderer.drawStringWithShadow("This machine will", tabLeft + 8, tabTop+110, 16777215);		

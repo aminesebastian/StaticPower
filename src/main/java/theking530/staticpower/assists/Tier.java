@@ -1,6 +1,6 @@
 package theking530.staticpower.assists;
 
-import theking530.staticpower.tileentity.digistore.TileEntityDigistore;
+import theking530.staticpower.tileentity.digistorenetwork.digistore.TileEntityDigistore;
 
 public enum Tier {
 	BASIC("Basic", 50000, 100000, 2000, 512), 

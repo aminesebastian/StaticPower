@@ -19,7 +19,6 @@ public class StandardButton extends BaseButton{
 	protected void drawButton() {
 		int buttonLeft = xPosition;
 		int buttonTop = yPosition;
-		
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder tes = tessellator.getBuffer();
         tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);

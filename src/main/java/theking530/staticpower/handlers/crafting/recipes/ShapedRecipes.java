@@ -131,8 +131,8 @@ public class ShapedRecipes {
 		'I', ingredientFromItem(Items.IRON_INGOT), 'S', ingredientFromBlock(Blocks.STONE)});
 		
 		//I/O Port --------------------------------------------------------------------------------------------------
-		RegisterHelper.addShapedRecipe("StaticPower_iOPort", "StaticPower", new ItemStack(ModItems.IOPort), new Object[]{" G ", "RLR", " G ", 
-		'G', ingredientFromBlock((Blocks.GLASS)), 'L', ingredientFromBlock((Blocks.LEVER)), 'R', ingredientFromItem(Items.REDSTONE)});	
+		RegisterHelper.addShapedRecipe("StaticPower_iOPort", "StaticPower", new ItemStack(ModItems.IOPort, 2), new Object[]{" L ", "LGL", " L ", 
+		'G', ingredientFromBlock((Blocks.GLASS)), 'L', ingredientFromBlock((Blocks.LEVER))});	
 		
 		//Powered Grinder --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_poweredGrinder", "StaticPower", new ItemStack(ModBlocks.PoweredGrinder), new Object[]{"FFF", "RBR", "III", 
@@ -189,6 +189,14 @@ public class ShapedRecipes {
 		//Digistore
 		RegisterHelper.addShapedRecipe("StaticPower_digistore", "StaticPower", new ItemStack(ModBlocks.Digistore), new Object[]{"TTT","TCT","TMT",
 		'M', ingredientFromItem(ModItems.MemoryChip), 'T', ingredientOre("plateTin"), 'C', ingredientOre("chestWood")});
+		
+		//Digistore Manager
+		RegisterHelper.addShapedRecipe("StaticPower_digistoreManager", "StaticPower", new ItemStack(ModBlocks.DigistoreManager), new Object[]{"TTT","IDI","TMT",
+		'M', ingredientFromItem(ModItems.StaticCircuit), 'T', ingredientOre("plateTin"), 'D', ingredientFromBlock(ModBlocks.Digistore), 'I', ingredientFromItem(ModItems.IOPort)});
+		
+		//Digistore Extender
+		RegisterHelper.addShapedRecipe("StaticPower_digistoreNetworkExtender", "StaticPower", new ItemStack(ModBlocks.DigistoreNetworkExtender, 8), new Object[]{"TTT", "I I","TTT",
+		'T', ingredientOre("plateTin"), 'I', ingredientFromItem(ModItems.IOPort)});
 		
 		//Static Solar Panel --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_basicSolarPanel", "StaticPower", new ItemStack(ModBlocks.BasicSolarPanel), new Object[]{"   ", "LLL", "CIC", 

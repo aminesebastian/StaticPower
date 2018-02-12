@@ -81,7 +81,8 @@ import theking530.staticpower.tileentity.chest.energizedchest.TileEntityEnergize
 import theking530.staticpower.tileentity.chest.lumumchest.TileEntityLumumChest;
 import theking530.staticpower.tileentity.chest.staticchest.TileEntityStaticChest;
 import theking530.staticpower.tileentity.chunkloader.TileEntityChunkLoader;
-import theking530.staticpower.tileentity.digistore.TileEntityDigistore;
+import theking530.staticpower.tileentity.digistorenetwork.digistore.TileEntityDigistore;
+import theking530.staticpower.tileentity.digistorenetwork.manager.TileEntityDigistoreManager;
 import theking530.staticpower.tileentity.solarpanels.TileEntityBasicSolarPanel;
 import theking530.staticpower.tileentity.solarpanels.TileEntityCreativeSolarPanel;
 import theking530.staticpower.tileentity.solarpanels.TileEntityEnergizedSolarPanel;
@@ -196,7 +197,8 @@ public class StaticPower {
 		GameRegistry.registerTileEntity(TileEntityLumumChest.class, "LumumChest");
 		GameRegistry.registerTileEntity(TileEntityVacuumChest.class, "VacuumChest");
 		
-		GameRegistry.registerTileEntity(TileEntityDigistore.class, "Barrel");
+		GameRegistry.registerTileEntity(TileEntityDigistore.class, "Digistore");
+		GameRegistry.registerTileEntity(TileEntityDigistoreManager.class, "DigistoreManager");
 	}	
 	@EventHandler
 	public void Init(FMLInitializationEvent Event){
