@@ -10,12 +10,12 @@ public class TileEntityLumumChest extends TileEntityBaseChest{
 	}
 	//NBT
 	@Override
-    public void readFromNBT(NBTTagCompound nbt) {
-        super.readFromNBT(nbt);
+    public void deserializeData(NBTTagCompound nbt) {
+        super.deserializeData(nbt);
     }		
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
+    public NBTTagCompound serializeData(NBTTagCompound nbt) {
+        super.serializeData(nbt);
         return nbt;
 	}	  	    
     public boolean receiveClientEvent(int i, int j) {

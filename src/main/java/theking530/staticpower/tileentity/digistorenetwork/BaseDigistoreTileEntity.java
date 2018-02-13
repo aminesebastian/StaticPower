@@ -20,7 +20,7 @@ public abstract class BaseDigistoreTileEntity extends BaseTileEntity {
 		manager = newManager;
 	}
 	public TileEntityDigistoreManager getManager() {
-		if(manager != null && !manager.getGrid().containsKey(getPos())) {
+		if(manager != null && !manager.getNetwork().getMasterList().containsKey(getPos())) {
 			manager = null;
 		}
 		return manager;

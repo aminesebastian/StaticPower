@@ -113,10 +113,23 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 	@Override  
 	public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
-        redstoneMode = RedstoneMode.getModeFromInt(nbt.getShort("REDSTONE_MODE"));
-        for(int i=0; i<6; i++) {
-        	setSideConfiguration(SideModeList.Mode.values()[nbt.getInteger("SIDEMODE" + i)], EnumFacing.values()[i]);
-        }      
+        deserializeData(nbt);
+    }		
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+        super.writeToNBT(nbt);
+        return serializeData(nbt);
+	}
+	
+    public void deserializeData(NBTTagCompound nbt) {
+        if(this.isRedstoneControllable()) {
+        	redstoneMode = RedstoneMode.getModeFromInt(nbt.getShort("REDSTONE_MODE"));
+        }
+		if(isSideConfigurable()) {
+	        for(int i=0; i<6; i++) {
+	        	setSideConfiguration(SideModeList.Mode.values()[nbt.getInteger("SIDEMODE" + i)], EnumFacing.values()[i]);
+	        }    
+		}
         if(slotsInput != null && slotsInput.getSlots() > 0 && nbt.hasKey("INPUTS")) {
         	slotsInput.deserializeNBT((NBTTagCompound) nbt.getTag("INPUTS"));	
         }
@@ -129,14 +142,17 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
         if(slotsUpgrades != null && slotsUpgrades.getSlots() > 0 && nbt.hasKey("UPGRADES")) {
             slotsUpgrades.deserializeNBT((NBTTagCompound) nbt.getTag("UPGRADES"));
         }
-    }		
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
-		nbt.setShort("REDSTONE_MODE", (short)redstoneMode.ordinal());
-        for(int i=0; i<6; i++) {
-        	nbt.setInteger("SIDEMODE" + i, getSideConfiguration(EnumFacing.values()[i]).ordinal());
+    }
+    public NBTTagCompound serializeData(NBTTagCompound nbt) {
+        if(this.isRedstoneControllable()) {
+    		nbt.setShort("REDSTONE_MODE", (short)redstoneMode.ordinal());	
         }
+		if(isSideConfigurable()) {
+	        for(int i=0; i<6; i++) {
+	        	nbt.setInteger("SIDEMODE" + i, getSideConfiguration(EnumFacing.values()[i]).ordinal());
+	        }
+		}
+
         if(slotsInput != null && slotsInput.getSlots() > 0) {
         	nbt.setTag("INPUTS", slotsInput.serializeNBT());	
         }
@@ -151,21 +167,21 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
         }
         nbt.setBoolean("PLACED", true);
 		return nbt;	
-	}
-	
+    }
+    
 	@Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 		readFromNBT(pkt.getNbtCompound());
 	}
 	@Override
 	public NBTTagCompound getUpdateTag() {
-		return this.writeToNBT(new NBTTagCompound());
+		return writeToNBT(new NBTTagCompound());
 	}
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket() {
-		return new SPacketUpdateTileEntity(this.getPos(), 1, this.getUpdateTag());
+		return new SPacketUpdateTileEntity(this.getPos(), getBlockMetadata(), this.getUpdateTag());
 	}
-    
+	
 	public boolean isUseableByPlayer(EntityPlayer player) {
 		if (getWorld().getTileEntity(pos) != this) {
 			return false;
@@ -192,26 +208,11 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
     
     /*Serializeable*/
     public NBTTagCompound serializeOnBroken(NBTTagCompound nbt) {
-		writeToNBT(nbt);
+    	serializeData(nbt);
     	return nbt;
 	}
 	public void deserializeOnPlaced(NBTTagCompound nbt, World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        redstoneMode = RedstoneMode.getModeFromInt(nbt.getShort("REDSTONE_MODE"));
-        for(int i=0; i<6; i++) {
-        	setSideConfiguration(SideModeList.Mode.values()[nbt.getInteger("SIDEMODE" + i)], EnumFacing.values()[i]);
-        }      
-        if(slotsInput != null && slotsInput.getSlots() > 0) {
-        	slotsInput.deserializeNBT((NBTTagCompound) nbt.getTag("INPUTS"));	
-        }
-        if(slotsOutput != null && slotsOutput.getSlots() > 0) {
-            slotsOutput.deserializeNBT((NBTTagCompound) nbt.getTag("OUTPUTS"));
-        }
-        if(slotsInternal != null && slotsInternal.getSlots() > 0) {
-            slotsInternal.deserializeNBT((NBTTagCompound) nbt.getTag("INTERNAL"));
-        }
-        if(slotsUpgrades != null && slotsUpgrades.getSlots() > 0) {
-            slotsUpgrades.deserializeNBT((NBTTagCompound) nbt.getTag("UPGRADES"));
-        }
+		deserializeData(nbt);
 	}	
 	@Override
 	public boolean shouldSerializeWhenBroken() {
@@ -223,7 +224,10 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 	}
     
 	/*Capability Handling*/
-    public boolean hasCapability(net.minecraftforge.common.capabilities.Capability<?> capability, net.minecraft.util.EnumFacing facing){
+    public boolean hasCapability(net.minecraftforge.common.capabilities.Capability<?> capability, net.minecraft.util.EnumFacing facing) {
+    	if(facing == null) {
+    		return false;
+    	}
     	if(getSideConfiguration(facing) == Mode.Disabled) {
     		return false;
     	}
@@ -242,6 +246,9 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
     }
     @SuppressWarnings("unchecked")
 	public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.util.EnumFacing facing){
+    	if(facing == null) {
+    		return null;
+    	}
        	if(getSideConfiguration(facing) == Mode.Disabled || SideUtilities.getBlockSide(facing, getFacingDirection()) == BlockSide.FRONT) {
     		return null;
     	}

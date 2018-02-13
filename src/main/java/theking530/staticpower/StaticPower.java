@@ -1,9 +1,11 @@
 package theking530.staticpower;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.logging.log4j.Level;
 
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -13,6 +15,7 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -43,7 +46,9 @@ import theking530.staticpower.handlers.crafting.recipes.SmeltingRecipes;
 import theking530.staticpower.handlers.crafting.recipes.SolderingRecipes;
 import theking530.staticpower.handlers.crafting.recipes.SqueezerRecipes;
 import theking530.staticpower.handlers.crafting.recipes.ToolRecipes;
-import theking530.staticpower.integration.TIC.TinkersIMC;
+import theking530.staticpower.integration.ICompatibilityPlugin;
+import theking530.staticpower.integration.TIC.PluginTinkersConstruct;
+import theking530.staticpower.integration.TOP.PluginTOP;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.items.ModMaterials;
 import theking530.staticpower.items.armor.ModArmor;
@@ -82,6 +87,7 @@ import theking530.staticpower.tileentity.chest.lumumchest.TileEntityLumumChest;
 import theking530.staticpower.tileentity.chest.staticchest.TileEntityStaticChest;
 import theking530.staticpower.tileentity.chunkloader.TileEntityChunkLoader;
 import theking530.staticpower.tileentity.digistorenetwork.digistore.TileEntityDigistore;
+import theking530.staticpower.tileentity.digistorenetwork.ioport.TileEntityDigistoreIOPort;
 import theking530.staticpower.tileentity.digistorenetwork.manager.TileEntityDigistoreManager;
 import theking530.staticpower.tileentity.solarpanels.TileEntityBasicSolarPanel;
 import theking530.staticpower.tileentity.solarpanels.TileEntityCreativeSolarPanel;
@@ -105,6 +111,8 @@ public class StaticPower {
     public static Configuration CONFIG;
     public static org.apache.logging.log4j.Logger LOGGER;
     public static Registry REGISTRY;
+    
+    public static List<ICompatibilityPlugin> plugins = new ArrayList<ICompatibilityPlugin>();
     
     @Mod.Instance(Reference.MOD_ID)
     public static StaticPower instance;
@@ -133,18 +141,8 @@ public class StaticPower {
 		
 	    OreGenerationHandler.intialize();
 	    CommonProxy.preInit();
-	        
-	    OBJLoader.INSTANCE.addDomain(Reference.MOD_ID);
-	    Loader.instance();
-		if (Loader.isModLoaded("tconstruct")) {
-	        try {
-        		TinkersIMC.initialize();
-        		LOGGER.log(Level.INFO, "Loaded Tinkers' Construct addon");
-	        }catch (Exception e) {
-	        	LOGGER.log(Level.WARN, "Could not load Tinkers' Construct addon");
-                e.printStackTrace(System.err);
-            }
-        }
+
+	    loadCompatibilityPlugins();
 	    
 	    
 
@@ -199,6 +197,7 @@ public class StaticPower {
 		
 		GameRegistry.registerTileEntity(TileEntityDigistore.class, "Digistore");
 		GameRegistry.registerTileEntity(TileEntityDigistoreManager.class, "DigistoreManager");
+		GameRegistry.registerTileEntity(TileEntityDigistoreIOPort.class, "DigistoreIOPort");
 	}	
 	@EventHandler
 	public void Init(FMLInitializationEvent Event){
@@ -227,6 +226,31 @@ public class StaticPower {
 		if(event.getModID().equals(Reference.MOD_ID)) {
 			StaticPowerConfig.updateConfig();
 		}
+	}
+	
+	
+    @Mod.EventHandler
+    public void imcCallback(FMLInterModComms.IMCEvent event) {
+
+    }
+	public void loadCompatibilityPlugins() {
+	    Loader.instance();
+
+		plugins.add(new PluginTOP());
+		plugins.add(new PluginTinkersConstruct());
+		
+		for(ICompatibilityPlugin plugin : plugins) {
+			if(plugin.shouldRegister()) {
+		        try {
+		        	plugin.register();
+					LOGGER.log(Level.INFO, "Static Power: Loading " + plugin.getPluginName() + " compatibility plugin.");
+		        } catch (Exception e) {
+					LOGGER.log(Level.INFO, "Static Power: Error while loading " + plugin.getPluginName() + " compatibility plugin.");
+	                e.printStackTrace(System.err);
+	            }
+			}
+		}
+		
 	}
 }
 	

@@ -255,9 +255,12 @@ public class ItemRenderRegistry {
 		registerBlock(ModBlocks.Distillery);
 		registerBlock(ModBlocks.Condenser);
 		
+		registerBlock(ModBlocks.Former);
+		
 		registerBlock(ModBlocks.Digistore);
 		registerBlock(ModBlocks.DigistoreManager);
 		registerBlock(ModBlocks.DigistoreNetworkExtender);
+		registerBlock(ModBlocks.DigistoreIOPort);
 		
 		registerBlock(ModBlocks.StaticGrass);
 		registerBlock(ModBlocks.EnergizedGrass);

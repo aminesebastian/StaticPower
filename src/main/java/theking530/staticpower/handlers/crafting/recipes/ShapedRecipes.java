@@ -104,7 +104,7 @@ public class ShapedRecipes {
 		
 		//Machine Block --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_machineBlock", "StaticPower", new ItemStack(ModBlocks.MachineBlock), new Object[]{"TGT", "GCG", "TGT", 
-		'G', ingredientFromBlock((Blocks.GLASS)), 'C', ingredientFromItem(ModItems.BasicCircuit), 'T', ingredientFromItem(ModItems.TinPlate)});
+		'G', ingredientFromBlock((Blocks.GLASS)), 'C', ingredientFromItem(ModItems.BasicCircuit), 'T', ingredientOre("plateTin")});
 		
 		//Heating Element --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_heatingElement", "StaticPower", new ItemStack(ModBlocks.HeatingElement), new Object[]{"WCW", "W W", "WCW", 
@@ -178,6 +178,10 @@ public class ShapedRecipes {
 		RegisterHelper.addShapedRecipe("StaticPower_fluidGenerator", "StaticPower", new ItemStack(ModBlocks.FluidGenerator), new Object[]{" U ", "CBC", "VIV", 
 		'V', ingredientFromItem(ModItems.CopperPlate), 'C', ingredientFromItem(ModItems.BasicCircuit), 'I', ingredientFromItem(Items.GOLD_INGOT), 'B', ingredientFromBlock(ModBlocks.MachineBlock), 'U', ingredientFromItem(Items.BUCKET)});
 
+		//Former  --------------------------------------------------------------------------------------------------
+		RegisterHelper.addShapedRecipe("StaticPower_former", "StaticPower", new ItemStack(ModBlocks.Former), new Object[]{" L ", "PBP", "IAI", 
+		'P', ingredientFromBlock(Blocks.PISTON), 'L', ingredientOre("plateIron"), 'I', ingredientFromItem(Items.GOLD_INGOT), 'B', ingredientFromBlock(ModBlocks.MachineBlock), 'A', ingredientFromBlock(Blocks.IRON_BLOCK), 'I', ingredientFromItem(ModItems.IOPort)});
+		
 		//Batteries --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_staticBattery", "StaticPower", new ItemStack(ModBlocks.StaticBattery), new Object[]{"SSS", "BMB", "BBB", 
 		'S', ingredientFromItem(ModItems.StaticPlate), 'B', ingredientFromItem(ModItems.StaticBattery), 'M', ingredientFromBlock(ModBlocks.MachineBlock)});			
@@ -197,6 +201,10 @@ public class ShapedRecipes {
 		//Digistore Extender
 		RegisterHelper.addShapedRecipe("StaticPower_digistoreNetworkExtender", "StaticPower", new ItemStack(ModBlocks.DigistoreNetworkExtender, 8), new Object[]{"TTT", "I I","TTT",
 		'T', ingredientOre("plateTin"), 'I', ingredientFromItem(ModItems.IOPort)});
+		
+		//Digistore IOPort
+		RegisterHelper.addShapedRecipe("StaticPower_digistoreIOPort", "StaticPower", new ItemStack(ModBlocks.DigistoreIOPort), new Object[]{"TIT", "IDI","TIT",
+		'T', ingredientOre("plateTin"), 'I', ingredientFromItem(ModItems.IOPort), 'D', ingredientFromBlock(ModBlocks.Digistore)});
 		
 		//Static Solar Panel --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_basicSolarPanel", "StaticPower", new ItemStack(ModBlocks.BasicSolarPanel), new Object[]{"   ", "LLL", "CIC", 

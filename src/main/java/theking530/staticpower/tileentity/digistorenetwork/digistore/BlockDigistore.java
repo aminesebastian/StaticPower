@@ -2,6 +2,7 @@ package theking530.staticpower.tileentity.digistorenetwork.digistore;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -58,11 +59,11 @@ public class BlockDigistore extends BaseDigistoreBlock {
 	        		storedAmount -= droppedItem.getCount();
 					WorldUtilities.dropItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), droppedItem);
 	        	}
-	        }
-	        for(int i=0; i<barrel.slotsUpgrades.getSlots(); i++) {
-	        	if(!barrel.slotsUpgrades.getStackInSlot(i).isEmpty()) {
-					WorldUtilities.dropItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), barrel.slotsUpgrades.getStackInSlot(i));
-	        	}
+		        for(int i=0; i<barrel.slotsUpgrades.getSlots(); i++) {
+		        	if(!barrel.slotsUpgrades.getStackInSlot(i).isEmpty()) {
+						WorldUtilities.dropItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), barrel.slotsUpgrades.getStackInSlot(i));
+		        	}
+		        }
 	        }
     	}     
     }
@@ -76,5 +77,10 @@ public class BlockDigistore extends BaseDigistoreBlock {
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state){
 		return new TileEntityDigistore();
+	}
+	
+	@Override
+	public ItemBlock getItemBlock() {
+		return new DigistoreItemBlock(this, getUnlocalizedName());
 	}
 }

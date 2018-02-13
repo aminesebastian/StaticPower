@@ -196,10 +196,12 @@ tile.HeatingElement.name=Heating Element
 tile.Condenser.name=Condenser
 tile.Distillery.name=Distillery
 tile.MechanicalSqueezer.name=Mechanical Squeezer
+tile.Former.name=Former
 
 tile.Digistore.name=Digistore
 tile.DigistoreManager.name=Digistore Manager
 tile.DigistoreNetworkExtender.name=Digistore Network Extender
+tile.DigistoreIOPort.name=Digistore I/O Port
 
 //Blocks
 tile.StaticLamp.name=Static Lamp

@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.assists.Reference;
 
 public class RenderUtil {
@@ -65,7 +66,7 @@ public class RenderUtil {
 
 	}
 	public static void drawPowerBarInWorld(float ratio, float x, float y, float z, float width, float height) {	
-		engine().bindTexture(POWER_BAR_TEXTURE);
+		engine().bindTexture(GuiTextures.POWER_BAR_FG);
 	    
 		GL11.glPushMatrix();
 		Tessellator tessellator = Tessellator.getInstance();

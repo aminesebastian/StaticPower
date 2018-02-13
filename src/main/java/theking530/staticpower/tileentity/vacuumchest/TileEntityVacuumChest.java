@@ -132,15 +132,15 @@ public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<E
 	
 	//NBT
 	@Override
-    public void readFromNBT(NBTTagCompound nbt) {
-        super.readFromNBT(nbt);
+    public void deserializeData(NBTTagCompound nbt) {
+        super.deserializeData(nbt);
         if(nbt.hasKey("TANK")) {
         	experienceTank.readFromNBT(nbt.getCompoundTag("TANK"));
         }
     }		
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
+    public NBTTagCompound serializeData(NBTTagCompound nbt) {
+        super.serializeData(nbt);
         NBTTagCompound tankTag = new NBTTagCompound();
         experienceTank.writeToNBT(tankTag);
         nbt.setTag("TANK", tankTag);

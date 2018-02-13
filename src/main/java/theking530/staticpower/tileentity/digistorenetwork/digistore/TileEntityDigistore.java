@@ -142,7 +142,7 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
     	return maxStoredItems;
     }
     public boolean isFull() {
-		return getStoredAmount() < getMaxStoredAmount();
+		return getStoredAmount() >= getMaxStoredAmount();
     }
     public float getFilledRatio() {
     	return (float)getStoredAmount()/(float)getMaxStoredAmount();
@@ -170,16 +170,16 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
     }
     
 	@Override  
-	public void readFromNBT(NBTTagCompound nbt) {
-        super.readFromNBT(nbt);
+	public void deserializeData(NBTTagCompound nbt) {
+        super.deserializeData(nbt);
         storedAmount = nbt.getInteger("STORED_AMOUNT");
         storedItem = new ItemStack(nbt.getCompoundTag("STORED_ITEM"));
         shouldVoid = nbt.getBoolean("VOID");
         locked = nbt.getBoolean("LOCKED");
     }		
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
+    public NBTTagCompound serializeData(NBTTagCompound nbt) {
+        super.serializeData(nbt);
         nbt.setInteger("STORED_AMOUNT", storedAmount);
         nbt.setTag("STORED_ITEM", storedItem.serializeNBT());
         nbt.setBoolean("VOID", shouldVoid);

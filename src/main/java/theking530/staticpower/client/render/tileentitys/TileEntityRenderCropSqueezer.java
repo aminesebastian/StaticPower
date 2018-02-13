@@ -14,14 +14,14 @@ import theking530.staticpower.machines.cropsqueezer.TileEntityCropSqueezer;
 
 public class TileEntityRenderCropSqueezer extends BaseMachineTESR<TileEntityCropSqueezer> {
 
-	static float texel = 1/16F;
+	static float texel = 1/64F;
 
-	private static final ResourceLocation front = new ResourceLocation(Reference.MOD_ID, "textures/blocks/CropSqueezerFrontOFF.png");
-	private static final ResourceLocation frontOn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/CropSqueezerFrontOn.png");
+	private static final ResourceLocation frontOn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/machines/crop_squeezer_front_on.png");
+	private static final ResourceLocation frontOff = new ResourceLocation(Reference.MOD_ID, "textures/blocks/machines/crop_squeezer_front_off.png");
 	
 	@Override
 	protected ResourceLocation getFrontTexture(boolean machineOn) {
-		return machineOn ? frontOn : front;
+		return machineOn ? frontOn : frontOff;
 	}
 	public void drawExtra(TileEntityCropSqueezer te, double translationX, double translationY, double translationZ, float f, int dest, float alpha) {
 		if(te.fluidTank.getFluid() != null || (te.getInputStack(0) != ItemStack.EMPTY && te.getFluidResult(te.getInputStack(0)) != null)) {
@@ -41,7 +41,7 @@ public class TileEntityRenderCropSqueezer extends BaseMachineTESR<TileEntityCrop
 	public static void drawLiquidPour(TileEntity tileentity, FluidStack fluidStack) {
 		TileEntityCropSqueezer squeezer = (TileEntityCropSqueezer)tileentity;
 		float progress = ((float)squeezer.processingTimer/(float)squeezer.processingTime)*0.5f;
-		RenderUtil.drawFluidInWorld(fluidStack, fluidStack.amount, 7*texel, 1-4*texel-progress, 1.0001F, 2*texel, progress);
-		RenderUtil.drawFluidInWorld(fluidStack, squeezer.fluidTank.getCapacity(), 4*texel, 3.5F*texel, 1.0001F, 8*texel, texel*2.5f);
+		RenderUtil.drawFluidInWorld(fluidStack, fluidStack.amount, 28*texel, 1-16*texel-progress, 1.0001F, 8*texel, progress);
+		RenderUtil.drawFluidInWorld(fluidStack, squeezer.fluidTank.getCapacity(), 16*texel, 14.0F*texel, 1.0001F, 32*texel, texel*13.0f);
 	}
 }

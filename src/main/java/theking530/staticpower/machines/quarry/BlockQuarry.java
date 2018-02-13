@@ -25,7 +25,7 @@ public class BlockQuarry extends BaseMachineBlock{
 	    setResistance(5.0f);
 	}
 	public EnumBlockRenderType getRenderType(IBlockState state) {
-		return EnumBlockRenderType.MODEL;
+		return EnumBlockRenderType.INVISIBLE;
 	}
 	@Override
 		public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {

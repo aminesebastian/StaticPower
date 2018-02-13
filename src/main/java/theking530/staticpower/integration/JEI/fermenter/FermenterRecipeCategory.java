@@ -25,7 +25,7 @@ import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBar;
 import theking530.staticpower.handlers.crafting.registries.FermenterRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.FermenterOutputWrapper;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
-import theking530.staticpower.integration.JEI.StaticPowerJEIPlugin;
+import theking530.staticpower.integration.JEI.PluginJEI;
 import theking530.staticpower.machines.fermenter.GuiFermenter;
 
 public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterRecipeWrapper>{
@@ -38,17 +38,17 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 	        background = guiHelper.createDrawable(GuiTextures.FERMENTER_GUI, 54, 3, 116, 67, 0, 0, 30, 0);
 	    }
 	    public void initialize(@Nonnull IModRegistry registry) {
-	        registry.handleRecipes(FermenterOutputWrapper.class, FermenterRecipeWrapper.FACTORY, StaticPowerJEIPlugin.FERMENTER_UID);
-	        registry.addRecipes(FermenterRecipeRegistry.Fermenting().getFermentingRecipes().values(), StaticPowerJEIPlugin.FERMENTER_UID);
-	        registry.addRecipeClickArea(GuiFermenter.class, 111, 69, 26, 19, StaticPowerJEIPlugin.FERMENTER_UID);
-	    	registry.addRecipeCatalyst(new ItemStack(Item.getItemFromBlock(ModBlocks.Fermenter)), StaticPowerJEIPlugin.FERMENTER_UID);  
+	        registry.handleRecipes(FermenterOutputWrapper.class, FermenterRecipeWrapper.FACTORY, PluginJEI.FERMENTER_UID);
+	        registry.addRecipes(FermenterRecipeRegistry.Fermenting().getFermentingRecipes().values(), PluginJEI.FERMENTER_UID);
+	        registry.addRecipeClickArea(GuiFermenter.class, 111, 69, 26, 19, PluginJEI.FERMENTER_UID);
+	    	registry.addRecipeCatalyst(new ItemStack(Item.getItemFromBlock(ModBlocks.Fermenter)), PluginJEI.FERMENTER_UID);  
 	    	currentPower = 10000;
 	    }
 	    
 	    @Override
 	    @Nonnull
 	    public String getUid() {
-	        return StaticPowerJEIPlugin.FERMENTER_UID;
+	        return PluginJEI.FERMENTER_UID;
 	    }
 
 	    @Override

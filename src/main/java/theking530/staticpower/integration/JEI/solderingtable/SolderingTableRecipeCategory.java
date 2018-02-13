@@ -20,7 +20,7 @@ import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.handlers.crafting.registries.SolderingRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.SolderingRecipeWrapper;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
-import theking530.staticpower.integration.JEI.StaticPowerJEIPlugin;
+import theking530.staticpower.integration.JEI.PluginJEI;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.tileentity.solderingtable.GuiSolderingTable;
 
@@ -33,16 +33,16 @@ public class SolderingTableRecipeCategory extends BaseJEIRecipeCategory<Solderin
 	        background = guiHelper.createDrawable(GuiTextures.SOLDERING_TABLE_GUI, 8, 8, 161, 86, 0, 0, 0, 0);
 	    }
 	    public void initialize(@Nonnull IModRegistry registry) {
-	        registry.handleRecipes(SolderingRecipeWrapper.class, SolderingTableRecipeWrapper.FACTORY, StaticPowerJEIPlugin.SOLDERING_TABLE_UID);
-	        registry.addRecipes(SolderingRecipeRegistry.Soldering().getRecipeList(), StaticPowerJEIPlugin.SOLDERING_TABLE_UID);
-	        registry.addRecipeClickArea(GuiSolderingTable.class, 111, 69, 26, 19, StaticPowerJEIPlugin.SOLDERING_TABLE_UID);
-	    	registry.addRecipeCatalyst(new ItemStack(Item.getItemFromBlock(ModBlocks.SolderingTable)), StaticPowerJEIPlugin.SOLDERING_TABLE_UID);
+	        registry.handleRecipes(SolderingRecipeWrapper.class, SolderingTableRecipeWrapper.FACTORY, PluginJEI.SOLDERING_TABLE_UID);
+	        registry.addRecipes(SolderingRecipeRegistry.Soldering().getRecipeList(), PluginJEI.SOLDERING_TABLE_UID);
+	        registry.addRecipeClickArea(GuiSolderingTable.class, 111, 69, 26, 19, PluginJEI.SOLDERING_TABLE_UID);
+	    	registry.addRecipeCatalyst(new ItemStack(Item.getItemFromBlock(ModBlocks.SolderingTable)), PluginJEI.SOLDERING_TABLE_UID);
 	        
 	    }
 	    @Override
 	    @Nonnull
 	    public String getUid() {
-	        return StaticPowerJEIPlugin.SOLDERING_TABLE_UID;
+	        return PluginJEI.SOLDERING_TABLE_UID;
 	    }
 
 	    @Override

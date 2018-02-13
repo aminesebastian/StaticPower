@@ -21,6 +21,7 @@ public abstract class BaseDigistoreBlock extends BaseMachineBlock {
 	}
 	@Override
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+		super.onBlockPlacedBy(world, pos, state, placer, stack);
     	if(world.getTileEntity(pos) != null && world.getTileEntity(pos) instanceof BaseDigistoreTileEntity) {
     		((BaseDigistoreTileEntity)world.getTileEntity(pos)).onPlaced(world, pos, state, placer, stack);
     	}

@@ -89,16 +89,6 @@ public class TileEntityBaseChest extends BaseTileEntity{
             }
         }  
 	}
-	//NBT
-	@Override
-    public void readFromNBT(NBTTagCompound nbt) {
-        super.readFromNBT(nbt);
-    }		
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
-        return nbt;
-	}	  	    
 
     public boolean receiveClientEvent(int i, int j) {
         if (i == 1) {

@@ -11,13 +11,14 @@ import theking530.staticpower.machines.fluidinfuser.TileEntityFluidInfuser;
 
 public class TileEntityRenderFluidInfuser extends BaseMachineTESR<TileEntityFluidInfuser> {
 
-	static float texel = 1F/16F;
+	static float texel = 1F/64F;
 
-	private static final ResourceLocation front = new ResourceLocation(Reference.MOD_ID, "textures/blocks/FluidInfuserFront.png");
+	private static final ResourceLocation frontOn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/machines/infuser_front_on.png");
+	private static final ResourceLocation frontOff = new ResourceLocation(Reference.MOD_ID, "textures/blocks/machines/infuser_front_off.png");
 	
 	@Override
 	protected ResourceLocation getFrontTexture(boolean machineOn) {
-		return front;
+		return machineOn ? frontOn : frontOff;
 	}
 	public void drawExtra(TileEntityFluidInfuser tileentity, double translationX, double translationY, double translationZ, float f, int dest, float alpha) {
 		if(tileentity.fluidTank.getFluid() != null) {
@@ -30,6 +31,6 @@ public class TileEntityRenderFluidInfuser extends BaseMachineTESR<TileEntityFlui
 
 	public static void drawLiquidBar(TileEntity tileentity, FluidStack fluidStack) {
 		TileEntityFluidInfuser infuser = (TileEntityFluidInfuser)tileentity;
-		RenderUtil.drawFluidInWorld(fluidStack, infuser.fluidTank.getCapacity(), 4F*texel, 3.5F*texel, 1.0001F, 8F*texel, texel*9);
+		RenderUtil.drawFluidInWorld(fluidStack, infuser.fluidTank.getCapacity(), 14F*texel, 14.0F*texel, 1.0001F, 36F*texel, 30F*texel);
 	}
 }

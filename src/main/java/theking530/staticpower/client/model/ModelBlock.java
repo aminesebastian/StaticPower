@@ -37,7 +37,7 @@ public class ModelBlock {
 			if(side == 2) {
 			//Back
 			GL11.glPushMatrix();
-			GL11.glColor3f(0.8F, 0.8F, 0.8F);
+			GL11.glColor3f(0.55F, 0.55F, 0.55F);
 			vertexbuffer.pos(0, 0, 0).tex(1, 1).endVertex();	
 			vertexbuffer.pos(0, 1, 0).tex(1, 0).endVertex();	
 			vertexbuffer.pos(1, 1, 0).tex(0, 0).endVertex();	
@@ -47,7 +47,7 @@ public class ModelBlock {
 			if(side == 3) {
 			//Front
 			GL11.glPushMatrix();
-			GL11.glColor3f(0.8F, 0.8F, 0.8F);
+			GL11.glColor3f(0.6F, 0.6F, 0.6F);
 			vertexbuffer.pos(0, 1, 1).tex(0, 0).endVertex();
 			vertexbuffer.pos(0, 0, 1).tex(0, 1).endVertex();	
 			vertexbuffer.pos(1, 0, 1).tex(1, 1).endVertex();	
@@ -57,7 +57,7 @@ public class ModelBlock {
 			if(side == 4) {
 			//Right
 			GL11.glPushMatrix();
-			GL11.glColor3f(0.6F, 0.6F, 0.6F);
+			GL11.glColor3f(0.5F, 0.5F, 0.5F);
 			vertexbuffer.pos(0, 0, 1).tex(1, 1).endVertex();	
 			vertexbuffer.pos(0, 1, 1).tex(1, 0).endVertex();	
 			vertexbuffer.pos(0, 1, 0).tex(0, 0).endVertex();	
@@ -67,7 +67,7 @@ public class ModelBlock {
 			if(side == 5) {
 			//Left
 			GL11.glPushMatrix();
-			GL11.glColor3f(0.6F, 0.6F, 0.6F);
+			GL11.glColor3f(0.5F, 0.5F, 0.5F);
 			vertexbuffer.pos(1, 0, 0).tex(1, 1).endVertex();	
 			vertexbuffer.pos(1, 1, 0).tex(1, 0).endVertex();	
 			vertexbuffer.pos(1, 1, 1).tex(0, 0).endVertex();	

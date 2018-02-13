@@ -40,7 +40,7 @@ public abstract class BaseGuiTab extends Gui {
 	private float currentHeight;
 	
 	protected float animationTimer = 0;
-	protected float animationTime = 5.0f;
+	protected float animationTime = 4.0f;
 	protected Item itemIcon;
 	protected ResourceLocation tabTexture;
 	

@@ -24,7 +24,7 @@ import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBar;
 import theking530.staticpower.handlers.crafting.registries.GrinderRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.GrinderOutputWrapper;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
-import theking530.staticpower.integration.JEI.StaticPowerJEIPlugin;
+import theking530.staticpower.integration.JEI.PluginJEI;
 
 public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<PoweredGrinderRecipeWrapper>{
  	private final String locTitle;
@@ -36,17 +36,17 @@ public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<PoweredG
         background = guiHelper.createDrawable(GuiTextures.GRINDER_GUI, 30, 3, 118, 78, -5, 0, 0, 0);
     }
     public void initialize(@Nonnull IModRegistry registry) {
-        registry.handleRecipes(GrinderOutputWrapper.class, PoweredGrinderRecipeWrapper.FACTORY, StaticPowerJEIPlugin.POWERED_GRINDER_UID);
-        registry.addRecipes(GrinderRecipeRegistry.Grinding().getGrindingList().values(), StaticPowerJEIPlugin.POWERED_GRINDER_UID);
+        registry.handleRecipes(GrinderOutputWrapper.class, PoweredGrinderRecipeWrapper.FACTORY, PluginJEI.POWERED_GRINDER_UID);
+        registry.addRecipes(GrinderRecipeRegistry.Grinding().getGrindingList().values(), PluginJEI.POWERED_GRINDER_UID);
         //registry.addRecipeClickArea(GuiPoweredGrinder.class, 111, 69, 26, 19, StaticPowerJEIPlugin.POWERED_GRINDER_UID);
-    	registry.addRecipeCatalyst(new ItemStack(Item.getItemFromBlock(ModBlocks.PoweredGrinder)), StaticPowerJEIPlugin.POWERED_GRINDER_UID);
+    	registry.addRecipeCatalyst(new ItemStack(Item.getItemFromBlock(ModBlocks.PoweredGrinder)), PluginJEI.POWERED_GRINDER_UID);
     	currentPower = 10000;
     }
     
     @Override
     @Nonnull
     public String getUid() {
-        return StaticPowerJEIPlugin.POWERED_GRINDER_UID;
+        return PluginJEI.POWERED_GRINDER_UID;
     }
 
     @Override

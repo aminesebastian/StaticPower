@@ -6,6 +6,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import theking530.staticpower.client.GuiIDRegistry;
+import theking530.staticpower.items.book.ContainerStaticBook;
 import theking530.staticpower.items.book.GuiStaticBook;
 import theking530.staticpower.items.itemfilter.ContainerItemFilter;
 import theking530.staticpower.items.itemfilter.GuiItemFilter;
@@ -219,6 +220,8 @@ public class GuiHandler implements IGuiHandler {
 			case GuiIDRegistry.guiIDItemFilter:
 				ItemFilter filter = (ItemFilter)player.getHeldItemMainhand().getItem();
 				return new ContainerItemFilter(player.inventory, new InventoryItemFilter(player.getHeldItemMainhand(), filter.filterTier));
+			case GuiIDRegistry.guiIDStaticBook:
+				return new ContainerStaticBook();
 			}
 		}
 		return null;
@@ -362,8 +365,7 @@ public class GuiHandler implements IGuiHandler {
 				return new GuiItemFilter(player.inventory, new InventoryItemFilter(player.getHeldItemMainhand(), filter.filterTier));
 			
 			case GuiIDRegistry.guiIDStaticBook:
-				//ItemFilter book = (ItemFilter)player.getHeldItemMainhand().getItem();
-				return new GuiStaticBook();
+				return new GuiStaticBook(player.inventory);
 			}
 		}
 		return null;

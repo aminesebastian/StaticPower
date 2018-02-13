@@ -12,7 +12,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -22,7 +21,6 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -90,7 +88,9 @@ public class BaseMachineBlock extends Block implements IWrenchable, IItemBlockPr
         if(worldIn.getTileEntity(pos) instanceof BaseTileEntity) {
         	BaseTileEntity tempMachine = (BaseTileEntity)worldIn.getTileEntity(pos);
 			if(stack.hasTagCompound()) {
-				tempMachine.deserializeOnPlaced(stack.getTagCompound(), worldIn, pos, state, placer, stack);
+				if(tempMachine.shouldDeserializeWhenPlace(stack.getTagCompound(), worldIn, pos, state, placer, stack)) {
+					tempMachine.deserializeOnPlaced(stack.getTagCompound(), worldIn, pos, state, placer, stack);
+				}
 			}
 		}
 
@@ -155,12 +155,13 @@ public class BaseMachineBlock extends Block implements IWrenchable, IItemBlockPr
 			if(world.getTileEntity(pos) instanceof BaseTileEntity) {
 				BaseTileEntity tempMachine = (BaseTileEntity)world.getTileEntity(pos);
 				tempMachine.wasWrenchedDoNotBreak = true;
-				tempMachine.serializeOnBroken(nbt);
-				machineStack.setTagCompound(nbt);	
+				if(tempMachine.shouldSerializeWhenBroken()) {
+					tempMachine.serializeOnBroken(nbt);
+					machineStack.setTagCompound(nbt);	
+				}
 			}
 			EntityItem droppedItem = new EntityItem(world, pos.getX()+0.5, pos.getY(), pos.getZ()+0.5, machineStack);
 			world.spawnEntity(droppedItem);
-			world.playSound(player, pos, SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 1.0f, 1.1f);
 			world.setBlockToAir(pos);
 		}
 	}

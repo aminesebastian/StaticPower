@@ -1,7 +1,5 @@
 package theking530.staticpower.machines;
 
-import javax.annotation.Nullable;
-
 import cofh.redstoneflux.api.IEnergyContainerItem;
 import cofh.redstoneflux.api.IEnergyHandler;
 import cofh.redstoneflux.api.IEnergyProvider;
@@ -10,8 +8,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -152,33 +148,24 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		}
 	}
     @Override  
-	public void readFromNBT(NBTTagCompound nbt) {
-        super.readFromNBT(nbt);
+	public void deserializeData(NBTTagCompound nbt) {
+        super.deserializeData(nbt);
         energyStorage.readFromNBT(nbt);
         processingTimer = nbt.getInteger("P_TIMER");
     }		
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
+    public NBTTagCompound serializeData(NBTTagCompound nbt) {
+        super.serializeData(nbt);
         energyStorage.writeToNBT(nbt);
         nbt.setInteger("P_TIMER", processingTimer);
         return nbt;
 	}
 	
-	@Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		readFromNBT(pkt.getNbtCompound());
-	}
-    @Nullable
-    public SPacketUpdateTileEntity getUpdatePacket(){
-    	NBTTagCompound tag = new NBTTagCompound();
-    	writeToNBT(tag);
-    	return new SPacketUpdateTileEntity(pos, getBlockMetadata(), tag);
-    }
+
  
 	public void deserializeOnPlaced(NBTTagCompound nbt, World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
 		super.deserializeOnPlaced(nbt, world, pos, state, placer, stack);
-		this.readFromNBT(nbt);
+		this.deserializeData(nbt);
 		previouslyStoredEnergyAmount = energyStorage.getEnergyStored();
 		updateBlock();
 	}

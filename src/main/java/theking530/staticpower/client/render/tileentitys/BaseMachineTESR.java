@@ -15,10 +15,10 @@ import theking530.staticpower.tileentity.IProcessing;
 public class BaseMachineTESR <T extends BaseTileEntity> extends TileEntitySpecialRenderer<T> {
 
 	private static final ModelBlock BLOCK = new ModelBlock();
-	private static final ResourceLocation side = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MachineSide.png");
-	private static final ResourceLocation sideIn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MachineSideIn.png");
-	private static final ResourceLocation sideOut = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MachineSideOut.png");
-	private static final ResourceLocation sideDis = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MachineSideDIS.png");
+	private static final ResourceLocation side = new ResourceLocation(Reference.MOD_ID, "textures/blocks/machines/machine_side.png");
+	private static final ResourceLocation sideIn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/machines/machine_side_input.png");
+	private static final ResourceLocation sideOut = new ResourceLocation(Reference.MOD_ID, "textures/blocks/machines/machine_side_output.png");
+	private static final ResourceLocation sideDis = new ResourceLocation(Reference.MOD_ID, "textures/blocks/machines/machine_side_disabled.png");
 	
 	@Override
 	public void render(T tileentity, double translationX, double translationY, double translationZ, float f, int dest, float alpha) {		
@@ -38,7 +38,7 @@ public class BaseMachineTESR <T extends BaseTileEntity> extends TileEntitySpecia
 			GL11.glRotated(90, 0, 1, 0);
 			GL11.glTranslated(-1, 0, 0);
 		}
-		GL11.glDisable(GL11.GL_LIGHTING);			
+		GL11.glDisable(GL11.GL_LIGHTING);		
 		checkAndRenderSides(tileentity, 0);
 		checkAndRenderSides(tileentity, 1);
 		checkAndRenderSides(tileentity, 2);

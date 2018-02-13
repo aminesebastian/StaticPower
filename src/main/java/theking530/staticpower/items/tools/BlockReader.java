@@ -48,10 +48,10 @@ public class BlockReader extends ItemBase{
     		}
     	}else if(tile instanceof BaseDigistoreTileEntity) {
     		BaseDigistoreTileEntity te = (BaseDigistoreTileEntity) tile;
-    		if(te.hasManager() && te.getManager().getGrid() != null) {
+    		if(te.hasManager() && te.getManager().getNetwork() != null) {
     			if(!world.isRemote) {
-        			player.sendMessage(new TextComponentString(te.getManager().getGrid().toString()));	
-    				player.sendMessage(new TextComponentString(te.getManager().getGrid().size() + ""));
+        			player.sendMessage(new TextComponentString(te.getManager().getNetwork().getMasterList().toString()));	
+    				player.sendMessage(new TextComponentString(te.getManager().getNetwork().getMasterList().size() + ""));
     			}    		
     	    	return EnumActionResult.SUCCESS;
     		}

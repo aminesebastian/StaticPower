@@ -19,7 +19,7 @@ import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBar;
 import theking530.staticpower.handlers.crafting.registries.InfuserRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.FluidInfuserOutputWrapper;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
-import theking530.staticpower.integration.JEI.StaticPowerJEIPlugin;
+import theking530.staticpower.integration.JEI.PluginJEI;
 import theking530.staticpower.tileentity.solderingtable.GuiSolderingTable;
 
 public class FluidInfuserRecipeCategory extends BaseJEIRecipeCategory<FluidInfuserRecipeWrapper>{
@@ -31,16 +31,16 @@ public class FluidInfuserRecipeCategory extends BaseJEIRecipeCategory<FluidInfus
 	        background = guiHelper.createDrawable(GuiTextures.FLUID_INFUSER_GUI, 24, 6, 144, 65);
 	    }
 	    public void initialize(@Nonnull IModRegistry registry) {
-	        registry.handleRecipes(FluidInfuserOutputWrapper.class, FluidInfuserRecipeWrapper.FACTORY, StaticPowerJEIPlugin.FLUID_INFUSER_UID);
-	        registry.addRecipes(InfuserRecipeRegistry.Infusing().getInfusingRecipes().values(), StaticPowerJEIPlugin.FLUID_INFUSER_UID);
-	        registry.addRecipeClickArea(GuiSolderingTable.class, 111, 69, 26, 19, StaticPowerJEIPlugin.FLUID_INFUSER_UID);
-	    	registry.addRecipeCatalyst(new ItemStack(Item.getItemFromBlock(ModBlocks.FluidInfuser)), StaticPowerJEIPlugin.FLUID_INFUSER_UID);
+	        registry.handleRecipes(FluidInfuserOutputWrapper.class, FluidInfuserRecipeWrapper.FACTORY, PluginJEI.FLUID_INFUSER_UID);
+	        registry.addRecipes(InfuserRecipeRegistry.Infusing().getInfusingRecipes().values(), PluginJEI.FLUID_INFUSER_UID);
+	        registry.addRecipeClickArea(GuiSolderingTable.class, 111, 69, 26, 19, PluginJEI.FLUID_INFUSER_UID);
+	    	registry.addRecipeCatalyst(new ItemStack(Item.getItemFromBlock(ModBlocks.FluidInfuser)), PluginJEI.FLUID_INFUSER_UID);
 	        
 	    }
 	    @Override
 	    @Nonnull
 	    public String getUid() {
-	        return StaticPowerJEIPlugin.FLUID_INFUSER_UID;
+	        return PluginJEI.FLUID_INFUSER_UID;
 	    }
 
 	    @Override

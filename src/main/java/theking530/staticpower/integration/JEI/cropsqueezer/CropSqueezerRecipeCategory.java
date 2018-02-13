@@ -25,7 +25,7 @@ import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBar;
 import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.SqueezerOutputWrapper;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
-import theking530.staticpower.integration.JEI.StaticPowerJEIPlugin;
+import theking530.staticpower.integration.JEI.PluginJEI;
 import theking530.staticpower.machines.cropsqueezer.GuiCropSqueezer;
 
 public class CropSqueezerRecipeCategory extends BaseJEIRecipeCategory<CropSqueezerRecipeWrapper>{
@@ -38,17 +38,17 @@ public class CropSqueezerRecipeCategory extends BaseJEIRecipeCategory<CropSqueez
 	        background = guiHelper.createDrawable(GuiTextures.SQUEEZER_GUI, 57, 3, 113, 75, 0, 0, 30, 0);
 	    }
 	    public void initialize(@Nonnull IModRegistry registry) {
-	        registry.handleRecipes(SqueezerOutputWrapper.class, CropSqueezerRecipeWrapper.FACTORY, StaticPowerJEIPlugin.SQUEEZER_UID);
-	        registry.addRecipes(SqueezerRecipeRegistry.Squeezing().getSqueezingRecipes().values(), StaticPowerJEIPlugin.SQUEEZER_UID);
-	        registry.addRecipeClickArea(GuiCropSqueezer.class, 111, 69, 26, 19, StaticPowerJEIPlugin.SQUEEZER_UID);
-	    	registry.addRecipeCatalyst(new ItemStack(Item.getItemFromBlock(ModBlocks.CropSqueezer)), StaticPowerJEIPlugin.SQUEEZER_UID);  
+	        registry.handleRecipes(SqueezerOutputWrapper.class, CropSqueezerRecipeWrapper.FACTORY, PluginJEI.SQUEEZER_UID);
+	        registry.addRecipes(SqueezerRecipeRegistry.Squeezing().getSqueezingRecipes().values(), PluginJEI.SQUEEZER_UID);
+	        registry.addRecipeClickArea(GuiCropSqueezer.class, 111, 69, 26, 19, PluginJEI.SQUEEZER_UID);
+	    	registry.addRecipeCatalyst(new ItemStack(Item.getItemFromBlock(ModBlocks.CropSqueezer)), PluginJEI.SQUEEZER_UID);  
 	    	currentPower = 10000;
 	    }
 	    
 	    @Override
 	    @Nonnull
 	    public String getUid() {
-	        return StaticPowerJEIPlugin.SQUEEZER_UID;
+	        return PluginJEI.SQUEEZER_UID;
 	    }
 
 	    @Override

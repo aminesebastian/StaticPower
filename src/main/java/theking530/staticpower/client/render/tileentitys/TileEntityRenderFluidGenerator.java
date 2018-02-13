@@ -11,16 +11,16 @@ import theking530.staticpower.machines.fluidgenerator.TileEntityFluidGenerator;
 
 public class TileEntityRenderFluidGenerator extends BaseMachineTESR<TileEntityFluidGenerator> {
 
-	static float texel = 1F/16F;
+	static float texel = 1F/64F;
 	static float width = 1F;
 	float height = 1F;
 	
-	private static final ResourceLocation frontOn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/FluidGeneratorFrontOn.png");
-	private static final ResourceLocation front = new ResourceLocation(Reference.MOD_ID, "textures/blocks/FluidGeneratorFrontOff.png");
+	private static final ResourceLocation frontOn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/machines/fluid_generator_front_on.png");
+	private static final ResourceLocation frontOff = new ResourceLocation(Reference.MOD_ID, "textures/blocks/machines/fluid_generator_front_off.png");
 	
 	@Override
 	protected ResourceLocation getFrontTexture(boolean machineOn) {
-		return machineOn ? frontOn : front;
+		return machineOn ? frontOn : frontOff;
 	}
 
 	@Override
@@ -35,11 +35,11 @@ public class TileEntityRenderFluidGenerator extends BaseMachineTESR<TileEntityFl
 	}
 	public static void drawLiquidBar(TileEntity tileentity, FluidStack fluidStack) {
 		TileEntityFluidGenerator fGen = (TileEntityFluidGenerator)tileentity;
-		RenderUtil.drawFluidInWorld(fluidStack, fGen.fluidTank.getCapacity(), 10.5F*texel, 2.5F*texel, 1.0005F, 3F*texel, 0.69f);
+		RenderUtil.drawFluidInWorld(fluidStack, fGen.fluidTank.getCapacity(), 41.0F*texel, 12.0F*texel, 1.0005F, 8.0F*texel, 40.0f*texel);
 	}
 	public static void drawEnergyBar(TileEntity tileentity) {
 		TileEntityFluidGenerator fGen = (TileEntityFluidGenerator)tileentity;
 		float height = ((float)(fGen.energyStorage.getEnergyStored()/(float)fGen.energyStorage.getMaxEnergyStored())) > 0 ? ((float)(fGen.energyStorage.getEnergyStored()/(float)fGen.energyStorage.getMaxEnergyStored())) : 0;	
-		RenderUtil.drawPowerBarInWorld(height, 2.5F*texel, 2.5F*texel, 1.0005F, 3F*texel, .69F);
+		RenderUtil.drawPowerBarInWorld(height, 15.0F*texel, 12.0F*texel, 1.0005F, 8.0F*texel, 40.0f*texel);
 	}
 }

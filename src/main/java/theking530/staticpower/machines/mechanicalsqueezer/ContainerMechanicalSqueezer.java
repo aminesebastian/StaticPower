@@ -28,7 +28,7 @@ public class ContainerMechanicalSqueezer extends Container {
 		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.slotsInput, 1, 7, 17) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
-		          return itemStack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+		          return itemStack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
 		    }
 		});
 		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.slotsOutput, 1, 7, 47) {

@@ -13,8 +13,6 @@ import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.plugins.vanilla.furnace.SmeltingRecipe;
-import mezz.jei.plugins.vanilla.furnace.SmeltingRecipeMaker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -24,9 +22,9 @@ import theking530.staticpower.assists.utilities.GuiUtilities;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBar;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
-import theking530.staticpower.integration.JEI.StaticPowerJEIPlugin;
+import theking530.staticpower.integration.JEI.PluginJEI;
 
-public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<SmeltingRecipe>{
+public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<StaticSmeltingRecipe>{
  	private final String locTitle;
     private IDrawable background;
     private int currentPower;
@@ -36,16 +34,16 @@ public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<Smelting
         background = guiHelper.createDrawable(GuiTextures.FURNACE_GUI, 30, 3, 118, 78, -5, 0, 0, 0);
     }
     public void initialize(@Nonnull IModRegistry registry) {
-        registry.addRecipes(SmeltingRecipeMaker.getFurnaceRecipes(registry.getJeiHelpers()), StaticPowerJEIPlugin.POWERED_FURNACE_UID);
+        registry.addRecipes(StaticSmeltingRecipeMaker.getFurnaceRecipes(registry.getJeiHelpers()), PluginJEI.POWERED_FURNACE_UID);
         //registry.addRecipeClickArea(GuiPoweredFurnace.class, 111, 69, 26, 19, StaticPowerJEIPlugin.POWERED_FURNACE_UID);
-    	registry.addRecipeCatalyst(new ItemStack(Item.getItemFromBlock(ModBlocks.PoweredFurnace)), StaticPowerJEIPlugin.POWERED_FURNACE_UID);
+    	registry.addRecipeCatalyst(new ItemStack(Item.getItemFromBlock(ModBlocks.PoweredFurnace)), PluginJEI.POWERED_FURNACE_UID);
     	currentPower = 10000;
     }
     
     @Override
     @Nonnull
     public String getUid() {
-        return StaticPowerJEIPlugin.POWERED_FURNACE_UID;
+        return PluginJEI.POWERED_FURNACE_UID;
     }
 
     @Override
@@ -84,7 +82,7 @@ public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<Smelting
 		return Collections.emptyList();
 	}
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, SmeltingRecipe recipeWrapper, IIngredients ingredients) {
+    public void setRecipe(IRecipeLayout recipeLayout, StaticSmeltingRecipe recipeWrapper, IIngredients ingredients) {
         IGuiItemStackGroup guiStacks = recipeLayout.getItemStacks();
         int slotId = 0;
 

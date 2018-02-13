@@ -60,13 +60,13 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler {
 	}
 	
 	@Override  
-    public void readFromNBT(NBTTagCompound nbt) {
-        super.readFromNBT(nbt);
+    public void deserializeData(NBTTagCompound nbt) {
+        super.deserializeData(nbt);
         fluidTank.readFromNBT(nbt.getCompoundTag("TANK"));
     }		
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
+    public NBTTagCompound serializeData(NBTTagCompound nbt) {
+        super.serializeData(nbt);
         NBTTagCompound tank =  new NBTTagCompound();
         fluidTank.writeToNBT(tank);
         nbt.setTag("TANK", tank);

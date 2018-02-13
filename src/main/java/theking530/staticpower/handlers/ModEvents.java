@@ -102,6 +102,7 @@ public class ModEvents {
 			}
 		}
     }
+    @SideOnly(Side.CLIENT)
 	@SubscribeEvent (priority = EventPriority.HIGHEST)
 	public void onBlockHighlight(DrawBlockHighlightEvent event) {
 		RayTraceResult target = event.getTarget();

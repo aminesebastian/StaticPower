@@ -6,11 +6,11 @@ import theking530.staticpower.machines.poweredgrinder.TileEntityPoweredGrinder;
 
 public class TileEntityRenderPoweredGrinder extends BaseMachineTESR<TileEntityPoweredGrinder> {
 
-	private static final ResourceLocation front = new ResourceLocation(Reference.MOD_ID, "textures/blocks/PoweredGrinderFront.png");
-	private static final ResourceLocation frontOn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/PoweredGrinderFrontOn.png");
+	private static final ResourceLocation frontOn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/machines/powered_grinder_front_on.png");
+	private static final ResourceLocation frontOff = new ResourceLocation(Reference.MOD_ID, "textures/blocks/machines/powered_grinder_front_off.png");
 	
 	@Override
 	protected ResourceLocation getFrontTexture(boolean machineOn) {
-		return machineOn ? frontOn : front;
+		return machineOn ? frontOn : frontOff;
 	}
 }
