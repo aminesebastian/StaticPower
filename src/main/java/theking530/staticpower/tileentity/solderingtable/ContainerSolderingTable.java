@@ -59,15 +59,14 @@ public class ContainerSolderingTable extends Container {
     	if(SOLDERING_TABLE.getInputStack(16) != null && SOLDERING_TABLE.getInputStack(16).getItem() instanceof ISolderingIron) {
     		ISolderingIron tempIron = (ISolderingIron) SOLDERING_TABLE.getInputStack(16).getItem();
     		if(tempIron.canSolder(SOLDERING_TABLE.getInputStack(16))) {
-    			SOLDERING_TABLE.slotsOutput.setStackInSlot(0, SolderingRecipeRegistry.Soldering().findSolderingOutput(SOLDERING_TABLE.slotsInput, SOLDERING_TABLE.getWorld())); 		
+    			SOLDERING_TABLE.slotsOutput.setStackInSlot(0, SolderingRecipeRegistry.Soldering().getOutput(SOLDERING_TABLE.slotsInput, SOLDERING_TABLE.getWorld(), 3, 3).copy()); 		
     		}else{
         		SOLDERING_TABLE.slotsOutput.setStackInSlot(0, ItemStack.EMPTY); 	
     		}    	
     	}else{
     		SOLDERING_TABLE.slotsOutput.setStackInSlot(0, ItemStack.EMPTY); 
     	}
-    	SOLDERING_TABLE.getWorld().notifyNeighborsOfStateChange(SOLDERING_TABLE.getPos(), SOLDERING_TABLE.getBlockType(), true);
-    	SOLDERING_TABLE.getWorld().markAndNotifyBlock(SOLDERING_TABLE.getPos(), SOLDERING_TABLE.getWorld().getChunkFromBlockCoords(SOLDERING_TABLE.getPos()), SOLDERING_TABLE.getWorld().getBlockState(SOLDERING_TABLE.getPos()), SOLDERING_TABLE.getWorld().getBlockState(SOLDERING_TABLE.getPos()), 2);
+    	SOLDERING_TABLE.updateBlock();
     	SOLDERING_TABLE.markDirty();
     }
     public ItemStack transferStackInSlot(EntityPlayer p_82846_1_, int p_82846_2_){

@@ -1,35 +1,38 @@
 package theking530.staticpower.handlers.crafting.wrappers;
 
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 
 public class FormerRecipeWrapper {
 
-	private ItemStack inputItemStack;
-	private Item requiredMold;
+	private Ingredient inputIngredient;
+	private Ingredient requiredMold;
 	private ItemStack outputItemStack;
 	
-	public FormerRecipeWrapper(ItemStack output, ItemStack input, Item mold) {
-		inputItemStack = input;
+	public FormerRecipeWrapper(ItemStack output, Ingredient input, Ingredient mold) {
+		inputIngredient = input;
 		requiredMold = mold;
 		outputItemStack = output;
 	}
 	
-	public ItemStack getInputItemStack() {
-		return inputItemStack;
+	public Ingredient getInputIngredient() {
+		return inputIngredient;
 	}
 	public ItemStack getOutputItemStack() {
 		return outputItemStack;
 	}
-	public Item getRequiredMold() {
+	public Ingredient getRequiredMold() {
 		return requiredMold;
 	}
-	public boolean satisfiesRecipe(ItemStack input, Item mold) {
-		if(ItemStack.areItemsEqual(input, getInputItemStack()) && input.getCount() >= getInputItemStack().getCount()) {
-			if(mold == requiredMold) {
+	public boolean satisfiesRecipe(ItemStack input, ItemStack mold) {
+		if(inputIngredient.apply(input)) {
+			if(requiredMold.apply(mold)) {
 				return true;
 			}
 		}
 		return false;
+	}
+	public boolean isValidMold(ItemStack mold) {
+		return requiredMold.apply(mold);
 	}
 }

@@ -3,15 +3,16 @@ package theking530.staticpower.handlers.crafting.wrappers;
 import java.util.ArrayList;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 
 public class GrinderOutputWrapper {
 
 	private final GrinderOutput outputItem1;
 	private final GrinderOutput outputItem2;
 	private final GrinderOutput outputItem3;
-	private final ItemStack inputItem;
+	private final Ingredient inputItem;
 	
-	public GrinderOutputWrapper(ItemStack input, GrinderOutput output1, GrinderOutput output2, GrinderOutput output3) {
+	public GrinderOutputWrapper(Ingredient input, GrinderOutput output1, GrinderOutput output2, GrinderOutput output3) {
 		outputItem1 = output1;
 		outputItem2 = output2;
 		outputItem3 = output3;
@@ -31,7 +32,7 @@ public class GrinderOutputWrapper {
 		}
 		return tempOutput;
 	}
-	public ItemStack getInputItem() {
+	public Ingredient getInputItem() {
 		return inputItem;
 	}
 	public int getOutputItemCount() {

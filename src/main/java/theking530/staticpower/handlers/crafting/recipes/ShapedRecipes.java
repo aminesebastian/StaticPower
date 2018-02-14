@@ -37,8 +37,8 @@ public class ShapedRecipes {
 		'C', ingredientFromItem(ModItems.BasicCircuit), 'I', ingredientFromItem(Items.IRON_INGOT), 'G', ingredientFromBlock(Blocks.GLASS), 'O', ingredientOre("ingotCopper")});	
 		
 		//Metal Hammer 
-		RegisterHelper.addShapedRecipe("StaticPower_metalHammer", "StaticPower", new ItemStack(ModItems.MetalHammer), new Object[]{"III","ISI"," S ",
-		'S', ingredientFromItem(Items.STICK), 'I', ingredientFromItem(Items.IRON_INGOT)});		
+		RegisterHelper.addShapedRecipe("StaticPower_metalHammer", "StaticPower", new ItemStack(ModItems.MetalHammer), new Object[]{"ITI","ISI"," S ",
+		'S', ingredientFromItem(Items.STICK), 'I', ingredientFromItem(Items.IRON_INGOT), 'T', ingredientOre("ingotTin")});		
 		
 		//Fluid Conduit
 		RegisterHelper.addShapedRecipe("StaticPower_fluidConduit", "StaticPower", new ItemStack(Item.getItemFromBlock(ModBlocks.FluidConduit), 8), new Object[]{" S ","SGS"," S ",

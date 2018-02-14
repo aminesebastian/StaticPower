@@ -5,6 +5,8 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.machines.BaseMachine;
 import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
+import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
+import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
 
 public class TileEntityPoweredFurnace extends BaseMachine {
 
@@ -13,6 +15,8 @@ public class TileEntityPoweredFurnace extends BaseMachine {
 	public TileEntityPoweredFurnace() {
 		initializeSlots(1, 2, 1);
 		initializeBasicMachine(2, 1000, 100000, 80, 150);
+		registerComponent(new TileEntityItemOutputServo(this, 2, slotsOutput, 0));
+		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0));
 		BATTERY_COMPONENT = new BatteryInteractionComponent("BatteryComponent", slotsInput, 1, this, energyStorage);
 	}
 	@Override

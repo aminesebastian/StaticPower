@@ -1,9 +1,10 @@
 package theking530.staticpower.assists;
 
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.crafting.CraftingHelper.ShapedPrimer;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import theking530.staticpower.handlers.crafting.registries.CondenserRecipeRegistry;
@@ -17,13 +18,14 @@ import theking530.staticpower.handlers.crafting.registries.InfuserRecipeRegistry
 import theking530.staticpower.handlers.crafting.registries.SolderingRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.GrinderOutputWrapper.GrinderOutput;
+import theking530.staticpower.handlers.crafting.wrappers.SolderingRecipeWrapper;
 
 public class RegisterHelper  {
 	
 	public static void registerFermenterRecipe(ItemStack input, FluidStack output) {
 		FermenterRecipeRegistry.Fermenting().addRecipe(input, output);
 	}
-	public static void registerGrinderRecipe(ItemStack itemstack, GrinderOutput... outputs) {
+	public static void registerGrinderRecipe(Ingredient itemstack, GrinderOutput... outputs) {
 		GrinderRecipeRegistry.Grinding().addRecipe(itemstack, outputs);
 	}
 	public static void registerInfuserRecipe(ItemStack itemstack1, ItemStack itemstack2, FluidStack fluidStack) {
@@ -36,14 +38,15 @@ public class RegisterHelper  {
 			FusionRecipeRegistry.Fusing().addRecipe(output, inputs);			
 		}
 	}
-	public static void registerFormerRecipes(ItemStack output, ItemStack input, Item mold) {
+	public static void registerFormerRecipes(ItemStack output, Ingredient input, Ingredient mold) {
 		FormerRecipeRegistry.Forming().addRecipe(output, input, mold);
 	}
 	public static void registerSqueezerRecipe(ItemStack input, ItemStack result, FluidStack outputFluid) {
 		SqueezerRecipeRegistry.Squeezing().addRecipe(input, result, outputFluid);
 	}
 	public static void registerSolderingRecipe(ItemStack outputStack, Object ... inputParams) {
-		SolderingRecipeRegistry.Soldering().addRecipe(outputStack, inputParams);
+        ShapedPrimer primer = CraftingHelper.parseShaped(inputParams);
+		SolderingRecipeRegistry.Soldering().addRecipe(new SolderingRecipeWrapper("", primer.width, primer.height, primer.input, outputStack));
 	}
 	
 	public static void registerFluidGeneratorRecipe(FluidStack inputFluid, int powerPerTick) {

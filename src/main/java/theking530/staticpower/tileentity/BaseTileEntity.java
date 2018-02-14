@@ -415,5 +415,6 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 			setSideConfiguration(SideModeList.Mode.values()[currentSideMode.ordinal()+1], side);
 		}
 		onSidesConfigUpdate();
+		updateBlock();
 	}
 }

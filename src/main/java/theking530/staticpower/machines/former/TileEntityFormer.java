@@ -28,7 +28,7 @@ public class TileEntityFormer extends BaseMachine {
 	@Override
    	public ItemStack getResult(ItemStack itemStack) {
 		if(itemStack != ItemStack.EMPTY && slotsInput.getStackInSlot(1) != ItemStack.EMPTY) { //Null check needed
-			FormerRecipeWrapper recipe = FormerRecipeRegistry.Forming().getFormingResult(itemStack, slotsInput.getStackInSlot(1).getItem());
+			FormerRecipeWrapper recipe = FormerRecipeRegistry.Forming().getFormingResult(itemStack, slotsInput.getStackInSlot(1));
 			if(recipe != null) {
 				return recipe.getOutputItemStack();	
 			}

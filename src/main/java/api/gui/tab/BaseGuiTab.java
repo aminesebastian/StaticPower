@@ -179,7 +179,6 @@ public abstract class BaseGuiTab extends Gui {
 		GL11.glEnable(GL11.GL_BLEND);
 		drawBaseTab(xPos, yPos, partialTicks);
 		drawButtonIcon(xPos, yPos, partialTicks);
-		GL11.glDisable(GL11.GL_BLEND);
 	}
 	private void drawButtonIcon(int xPos, int yPos, float partialTicks) {
 		if(itemIcon != null) {

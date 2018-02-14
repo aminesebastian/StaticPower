@@ -36,7 +36,7 @@ public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<PoweredG
         background = guiHelper.createDrawable(GuiTextures.GRINDER_GUI, 30, 3, 118, 78, -5, 0, 0, 0);
     }
     public void initialize(@Nonnull IModRegistry registry) {
-        registry.handleRecipes(GrinderOutputWrapper.class, PoweredGrinderRecipeWrapper.FACTORY, PluginJEI.POWERED_GRINDER_UID);
+    	registry.handleRecipes(GrinderOutputWrapper.class, recipe -> new PoweredGrinderRecipeWrapper(recipe), PluginJEI.POWERED_GRINDER_UID);  
         registry.addRecipes(GrinderRecipeRegistry.Grinding().getGrindingList().values(), PluginJEI.POWERED_GRINDER_UID);
         //registry.addRecipeClickArea(GuiPoweredGrinder.class, 111, 69, 26, 19, StaticPowerJEIPlugin.POWERED_GRINDER_UID);
     	registry.addRecipeCatalyst(new ItemStack(Item.getItemFromBlock(ModBlocks.PoweredGrinder)), PluginJEI.POWERED_GRINDER_UID);

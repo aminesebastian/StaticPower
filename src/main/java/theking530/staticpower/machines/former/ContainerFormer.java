@@ -6,8 +6,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
+import theking530.staticpower.handlers.crafting.registries.FormerRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.GrinderRecipeRegistry;
-import theking530.staticpower.items.FormerMold;
 
 public class ContainerFormer extends Container {
 	
@@ -27,7 +27,7 @@ public class ContainerFormer extends Container {
 		addSlotToContainer(new SlotItemHandler(tePoweredGrinder.slotsInput, 1, 37, 34) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
-				return itemStack.getItem() instanceof FormerMold;	          
+				return FormerRecipeRegistry.Forming().isValidMold(itemStack);	          
 		    }
 		});
 

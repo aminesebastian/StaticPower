@@ -57,7 +57,7 @@ public class ContainerPoweredFurnace extends Container {
 	
 	//Shift Click Functionality
 	public ItemStack transferStackInSlot(EntityPlayer player, int invSlot) {
-	    ItemStack itemstack = null;
+	    ItemStack itemstack = ItemStack.EMPTY;
 	    Slot slot = (Slot)this.inventorySlots.get(invSlot);
 	
 	    if (slot != null && slot.getHasStack()) {
@@ -66,23 +66,23 @@ public class ContainerPoweredFurnace extends Container {
 	
 	        if (invSlot == 1 || invSlot == 0) {
 	            if (!this.mergeItemStack(itemstack1, 6, 42, true)) {
-	                return null;
+	                return ItemStack.EMPTY;
 	            }
 	            slot.onSlotChange(itemstack1, itemstack);
 	        }else if (invSlot != 1 && invSlot != 0){
 	        	if (FurnaceRecipes.instance().getSmeltingResult(itemstack1) != null){
 	                if (!this.mergeItemStack(itemstack1, 0, 1, false)){
-	                    return null;
+	                    return ItemStack.EMPTY;
 	                }
 	            }else if (invSlot >= 6 && invSlot < 33) {
 	                if (!this.mergeItemStack(itemstack1, 33, 42, false)) {
-	                    return null;
+	                    return ItemStack.EMPTY;
 	                }
 	            }else if (invSlot >= 33 && invSlot < 42 && !this.mergeItemStack(itemstack1, 6, 33, false))  {
-	                return null;
+	                return ItemStack.EMPTY;
 	            }
 	        }else if (!this.mergeItemStack(itemstack1, 6, 42, false)) {
-	            return null;
+	            return ItemStack.EMPTY;
 	        }
 	        if (itemstack1.getCount() == 0){
 	            slot.putStack(ItemStack.EMPTY);
@@ -90,7 +90,7 @@ public class ContainerPoweredFurnace extends Container {
 	            slot.onSlotChanged();
 	        }
 	        if (itemstack1.getCount() == itemstack.getCount()){
-	            return null;
+	            return ItemStack.EMPTY;
 	        }
 	        slot.onTake(player, itemstack1);
 	    }

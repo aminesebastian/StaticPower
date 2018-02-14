@@ -102,7 +102,7 @@ public class ContainerPoweredGrinder extends Container {
 	                        return ItemStack.EMPTY;
 	                    }
 	                }else if (invSlot >= 35 && invSlot < 44 && !this.mergeItemStack(itemstack1, 8, 35, false))  {
-	                    return null;
+	                    return ItemStack.EMPTY;
 	                }
 	            }else if (!this.mergeItemStack(itemstack1, 8, 44, false)) {
 	                return ItemStack.EMPTY;

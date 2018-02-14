@@ -36,7 +36,7 @@ public class FormerRecipeCategory extends BaseJEIRecipeCategory<JEIFormerRecipeW
         background = guiHelper.createDrawable(GuiTextures.FORMER_GUI, 30, 3, 118, 78, -5, 0, 25, 0);
     }
     public void initialize(@Nonnull IModRegistry registry) {
-        registry.handleRecipes(FormerRecipeWrapper.class, JEIFormerRecipeWrapper.FACTORY, PluginJEI.FORMER_UID);
+    	registry.handleRecipes(FormerRecipeWrapper.class, recipe -> new JEIFormerRecipeWrapper(recipe), PluginJEI.FORMER_UID);     
         registry.addRecipes(FormerRecipeRegistry.Forming().getFormingList().values(), PluginJEI.FORMER_UID);
         //registry.addRecipeClickArea(GuiPoweredGrinder.class, 111, 69, 26, 19, StaticPowerJEIPlugin.POWERED_GRINDER_UID);
     	registry.addRecipeCatalyst(new ItemStack(Item.getItemFromBlock(ModBlocks.Former)), PluginJEI.FORMER_UID);
@@ -96,6 +96,8 @@ public class FormerRecipeCategory extends BaseJEIRecipeCategory<JEIFormerRecipeW
         //Output
         guiStacks.init(slotId++, false, 112, 25);
         	              
+        System.out.print( ingredients.getInputs(ItemStack.class) + "\n");
+        
         guiStacks.set(ingredients);
     }
 }
