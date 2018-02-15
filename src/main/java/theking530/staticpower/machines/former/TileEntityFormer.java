@@ -12,9 +12,9 @@ import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutput
 public class TileEntityFormer extends BaseMachine {
 	
 	public TileEntityFormer() {
-		initializeSlots(1, 3, 1);
+		initializeSlots(2, 2, 1);
 		initializeBasicMachine(2, 1000, 100000, 80, 100);
-		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInput, 2, this, energyStorage));
+		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInternal, 1, this, energyStorage));
 		registerComponent(new TileEntityItemOutputServo(this, 2, slotsOutput, 0));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0, 1));
 	}

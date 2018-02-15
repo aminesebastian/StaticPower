@@ -32,7 +32,7 @@ public class ContainerFormer extends Container {
 		});
 
 		//Battery
-		addSlotToContainer(new SlotItemHandler(tePoweredGrinder.slotsInput, 2, 8, 65));
+		addSlotToContainer(new SlotItemHandler(tePoweredGrinder.slotsInternal, 1, 8, 65));
 		
 		//Output
 		addSlotToContainer(new SlotItemHandler(tePoweredGrinder.slotsOutput, 0, 118, 35) {
@@ -92,7 +92,7 @@ public class ContainerFormer extends Container {
 	                        return ItemStack.EMPTY;
 	                    }
 	                }else if (invSlot >= 35 && invSlot < 44 && !this.mergeItemStack(itemstack1, 8, 35, false))  {
-	                    return null;
+	                    return ItemStack.EMPTY;
 	                }
 	            }else if (!this.mergeItemStack(itemstack1, 8, 44, false)) {
 	                return ItemStack.EMPTY;

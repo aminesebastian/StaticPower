@@ -22,7 +22,7 @@ public class ShapedRecipes {
 		RegisterHelper.addShapedRecipe("StaticPower_staticWrench", "StaticPower", new ItemStack(ModItems.StaticWrench), new Object[]{" IC"," SI","S  ",
 		'S', ingredientOre("ingotSilver"), 'I', ingredientFromItem(Items.IRON_INGOT), 'C', ingredientFromItem(ModPlants.StaticCrop)});
 		
-		//Static Wrench --------------------------------------------------------------------------------------------------
+		//Wire Cutter --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_wireCutter", "StaticPower", new ItemStack(ModItems.WireCutters), new Object[]{" I ","LLI"," L ",
 		'L', Ingredient.fromStacks(new ItemStack(Items.DYE, 1, 4)), 'I', ingredientFromItem(Items.IRON_INGOT)});
 		
@@ -50,7 +50,7 @@ public class ShapedRecipes {
 		
 		//Item Conduit
 		RegisterHelper.addShapedRecipe("StaticPower_staticConduit", "StaticPower", new ItemStack(Item.getItemFromBlock(ModBlocks.StaticConduit), 8), new Object[]{" S ","SGS"," S ",
-		'S', ingredientFromItem(ModItems.SilverIngot), 'G', ingredientFromBlock(Blocks.GLASS)});
+		'S', ingredientOre("ingotGold"), 'G', ingredientFromBlock(Blocks.GLASS)});
 		
 		//Metal Blocks --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_staticBlock", "StaticPower", new ItemStack(ModBlocks.StaticBlock), new Object[]{"XXX","XXX","XXX",

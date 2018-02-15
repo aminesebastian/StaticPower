@@ -30,6 +30,8 @@ import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.machines.BaseMachineWithTank;
 import theking530.staticpower.machines.tileentitycomponents.BucketInteractionComponent;
+import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
+import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
 import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
 import theking530.staticpower.machines.tileentitycomponents.BucketInteractionComponent.FluidContainerInteractionMode;
 
@@ -47,11 +49,15 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 	public TileEntityBasicFarmer() {
 		initializeBasicMachine(2, 20, 100000, 100, 10);
 		initializeTank(10000);	
-		initializeSlots(0, 4, 10);
+		initializeSlots(3, 2, 9);
 
-		DRAIN_COMPONENT = new BucketInteractionComponent("BucketDrain", slotsInput, 2, slotsOutput, 9, this, fluidTank, fluidToContainerRate);
+		DRAIN_COMPONENT = new BucketInteractionComponent("BucketDrain", slotsInternal, 1, slotsInternal, 2, this, fluidTank, fluidToContainerRate);
 		DRAIN_COMPONENT.setMode(FluidContainerInteractionMode.FillFromContainer);
-		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInput, 3, this, energyStorage));
+
+		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInternal, 0, this, energyStorage));
+		registerComponent(new TileEntityItemOutputServo(this, 2, slotsOutput, 0, 1, 2, 3, 4, 5, 6, 7, 8));
+		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0, 1));
+		
 		CURRENT_COORD = getStartingCoord();
 		RAND = new Random();
 		FARMED_STACKS = new ArrayList<ItemStack>();

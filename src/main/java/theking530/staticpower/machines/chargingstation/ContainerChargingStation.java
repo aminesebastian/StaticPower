@@ -72,7 +72,7 @@ public class ContainerChargingStation extends Container {
 		this.addSlotToContainer(new SlotItemHandler(teCharging.slotsUpgrades, 2, 155, 52));
 		
 		//Battery/Bucket
-		this.addSlotToContainer(new SlotItemHandler(teCharging.slotsInput, 4, 8, 73) {
+		this.addSlotToContainer(new SlotItemHandler(teCharging.slotsInternal, 0, 8, 73) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return itemStack.getItem() instanceof IEnergyContainerItem ? true : false;
@@ -97,7 +97,7 @@ public class ContainerChargingStation extends Container {
 	
 	//Shift Click Functionality
 	public ItemStack transferStackInSlot(EntityPlayer player, int invSlot) {
-	    ItemStack itemstack = null;
+	    ItemStack itemstack = ItemStack.EMPTY;
 	    Slot slot = (Slot)this.inventorySlots.get(invSlot);
 	
 	    if (slot != null && slot.getHasStack()) {
@@ -106,23 +106,23 @@ public class ContainerChargingStation extends Container {
 	
 	        if (invSlot == 1 || invSlot == 0) {
 	            if (!this.mergeItemStack(itemstack1, 6, 42, true)) {
-	                return null;
+	                return ItemStack.EMPTY;
 	            }
 	            slot.onSlotChange(itemstack1, itemstack);
 	        }else if (invSlot != 1 && invSlot != 0){
 	        	if (itemstack1.getItem() instanceof IEnergyContainerItem){
 	                if (!this.mergeItemStack(itemstack1, 0, 4, false)){
-	                    return null;
+	                    return ItemStack.EMPTY;
 	                }
 	            }else if (invSlot >= 6 && invSlot < 33) {
 	                if (!this.mergeItemStack(itemstack1, 33, 42, false)) {
-	                    return null;
+	                    return ItemStack.EMPTY;
 	            }
 	            }else if (invSlot >= 33 && invSlot < 42 && !this.mergeItemStack(itemstack1, 6, 33, false))  {
-	                return null;
+	                return ItemStack.EMPTY;
 	            }
 	        }else if (!this.mergeItemStack(itemstack1, 6, 42, false)) {
-	            return null;
+	            return ItemStack.EMPTY;
 	        }
 	        if (itemstack1.getCount() == 0){
 	            slot.putStack(ItemStack.EMPTY);
@@ -130,7 +130,7 @@ public class ContainerChargingStation extends Container {
 	            slot.onSlotChanged();
 	        }
 	        if (itemstack1.getCount() == itemstack.getCount()){
-	            return null;
+	            return ItemStack.EMPTY;
 	        }
 	        slot.onTake(player, itemstack1);
 	    }

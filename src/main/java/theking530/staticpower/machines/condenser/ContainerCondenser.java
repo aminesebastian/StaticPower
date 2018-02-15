@@ -40,7 +40,7 @@ public class ContainerCondenser extends Container {
 	
 	//Shift Click Functionality
 	public ItemStack transferStackInSlot(EntityPlayer player, int p_82846_2_) {
-        ItemStack itemstack = null;
+        ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = (Slot)this.inventorySlots.get(p_82846_2_);
 
         if (slot != null && slot.getHasStack())
@@ -52,7 +52,7 @@ public class ContainerCondenser extends Container {
             {
                 if (!this.mergeItemStack(itemstack1, 3, 39, true))
                 {
-                    return null;
+                    return ItemStack.EMPTY;
                 }
 
                 slot.onSlotChange(itemstack1, itemstack);
@@ -63,31 +63,31 @@ public class ContainerCondenser extends Container {
                 {
                     if (!this.mergeItemStack(itemstack1, 0, 1, false))
                     {
-                        return null;
+                        return ItemStack.EMPTY;
                     }
                 }
                 else if (TileEntityFurnace.isItemFuel(itemstack1))
                 {
                     if (!this.mergeItemStack(itemstack1, 1, 2, false))
                     {
-                        return null;
+                        return ItemStack.EMPTY;
                     }
                 }
                 else if (p_82846_2_ >= 3 && p_82846_2_ < 30)
                 {
                     if (!this.mergeItemStack(itemstack1, 30, 39, false))
                     {
-                        return null;
+                        return ItemStack.EMPTY;
                     }
                 }
                 else if (p_82846_2_ >= 30 && p_82846_2_ < 39 && !this.mergeItemStack(itemstack1, 3, 30, false))
                 {
-                    return null;
+                    return ItemStack.EMPTY;
                 }
             }
             else if (!this.mergeItemStack(itemstack1, 3, 39, false))
             {
-                return null;
+                return ItemStack.EMPTY;
             }
 
             if (itemstack1.getCount() == 0)
@@ -101,7 +101,7 @@ public class ContainerCondenser extends Container {
 
             if (itemstack1.getCount() == itemstack.getCount())
             {
-                return null;
+                return ItemStack.EMPTY;
             }
 
             slot.onTake(player, itemstack1);

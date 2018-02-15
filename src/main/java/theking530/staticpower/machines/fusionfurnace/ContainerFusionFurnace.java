@@ -59,37 +59,6 @@ public class ContainerFusionFurnace extends Container {
 		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.slotsUpgrades, 1, 152, 32));
 		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.slotsUpgrades, 2, 152, 52));
 		
-		//Processing
-		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.slotsInternal, 0, 10000, 10000) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-		          return false;
-		        }
-		});
-		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.slotsInternal, 1, 10000, 10000) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-		          return false;
-		        }
-		});
-		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.slotsInternal, 2, 10000, 10000) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-		          return false;
-		        }
-		});
-		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.slotsInternal, 3, 10000, 10000) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-		          return false;
-		        }
-		});
-		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.slotsInternal, 4, 10000, 10000) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-		          return false;
-		        }
-		});
 				
 		//Inventory
 		for(int i = 0; i < 3; i++) {
@@ -106,7 +75,7 @@ public class ContainerFusionFurnace extends Container {
 
 	//Shift Click Functionality
 	public ItemStack transferStackInSlot(EntityPlayer player, int invSlot) {
-		  ItemStack itemstack = null;
+		  ItemStack itemstack = ItemStack.EMPTY;
 	        Slot slot = (Slot)this.inventorySlots.get(invSlot);
 
 	        if (slot != null && slot.getHasStack()) {
@@ -115,23 +84,23 @@ public class ContainerFusionFurnace extends Container {
 
 	            if (invSlot == 0 || invSlot == 1 ||  invSlot == 2 || invSlot == 3) {
 	                if (!this.mergeItemStack(itemstack1, 8, 44, true)) {
-	                    return null;
+	                    return ItemStack.EMPTY;
 	                }
 	                slot.onSlotChange(itemstack1, itemstack);
 	            }else if (invSlot != 0 && invSlot != 1 && invSlot != 2 && invSlot != 3){
 	            	if (FusionRecipeRegistry.Fusing().getFusionResult(itemstack1) != null){
 	                    if (!this.mergeItemStack(itemstack1, 0, 1, false)){
-	                        return null;
+	                        return ItemStack.EMPTY;
 	                    }
 	                }else if (invSlot >= 8 && invSlot < 35) {
 	                    if (!this.mergeItemStack(itemstack1, 35, 44, false)) {
-	                        return null;
+	                        return ItemStack.EMPTY;
 	                    }
 	                }else if (invSlot >= 35 && invSlot < 44 && !this.mergeItemStack(itemstack1, 8, 35, false))  {
-	                    return null;
+	                    return ItemStack.EMPTY;
 	                }
 	            }else if (!this.mergeItemStack(itemstack1, 8, 44, false)) {
-	                return null;
+	                return ItemStack.EMPTY;
 	            }
 	            if (itemstack1.getCount() == 0){
 	                slot.putStack(ItemStack.EMPTY);
@@ -139,7 +108,7 @@ public class ContainerFusionFurnace extends Container {
 	                slot.onSlotChanged();
 	            }
 	            if (itemstack1.getCount() == itemstack.getCount()){
-	                return null;
+	                return ItemStack.EMPTY;
 	            }
 	            slot.onTake(player, itemstack1);
 	        }

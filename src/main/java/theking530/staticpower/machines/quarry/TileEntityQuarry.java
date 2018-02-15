@@ -45,7 +45,7 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 		initializeTank(10000);
 		initializeSlots(1, 1, 1);
 		
-		DRAIN_COMPONENT = new BucketInteractionComponent("BucketDrain", slotsInput, 0, slotsOutput, 0, this, fluidTank, fluidToContainerRate);
+		DRAIN_COMPONENT = new BucketInteractionComponent("BucketDrain", slotsInternal, 0, slotsInternal, 1, this, fluidTank, fluidToContainerRate);
 		DRAIN_COMPONENT.setMode(FluidContainerInteractionMode.FillFromContainer);
 	}
 	@Override

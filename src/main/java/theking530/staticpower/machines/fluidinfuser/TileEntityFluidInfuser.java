@@ -17,9 +17,9 @@ public class TileEntityFluidInfuser extends BaseMachineWithTank {
 	public TileEntityFluidInfuser() {
 		initializeBasicMachine(2, 1000, 50000, 80, 100);
 		initializeTank(10000);
-		initializeSlots(1, 2, 2);
+		initializeSlots(3, 1, 1);
 		
-		DRAIN_COMPONENT = new BucketInteractionComponent("BucketDrain", slotsInput, 1, slotsOutput, 1, this, fluidTank, fluidToContainerRate);
+		DRAIN_COMPONENT = new BucketInteractionComponent("BucketDrain", slotsInternal, 1, slotsInternal, 2, this, fluidTank, fluidToContainerRate);
 		DRAIN_COMPONENT.setMode(FluidContainerInteractionMode.FillFromContainer);
 	}
 	//IInventory				

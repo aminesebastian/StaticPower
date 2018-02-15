@@ -54,7 +54,6 @@ public class BatteryInteractionComponent implements ITileEntityComponent{
 
 	@Override
 	public void postProcessUpdate() {
-		// TODO Auto-generated method stub
-		
+
 	}
 }

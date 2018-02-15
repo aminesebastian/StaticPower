@@ -19,7 +19,7 @@ public class ContainerPoweredFurnace extends Container {
 		this.addSlotToContainer(new SlotItemHandler(tePoweredSmelter.slotsInput, 0, 50, 28));
 		
 		//Battery
-		this.addSlotToContainer(new SlotItemHandler(tePoweredSmelter.slotsInput, 1, 8, 65));
+		this.addSlotToContainer(new SlotItemHandler(tePoweredSmelter.slotsInternal, 1, 8, 65));
 		
 		//Output
 		this.addSlotToContainer(new SlotWithExperienceOutput(invPlayer.player, tePoweredSmelter.slotsOutput, 0, 109, 32) {

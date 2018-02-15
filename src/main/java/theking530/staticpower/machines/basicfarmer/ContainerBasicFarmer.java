@@ -27,13 +27,13 @@ public class ContainerBasicFarmer extends Container {
         }
         
 		//Buckets
-		this.addSlotToContainer(new SlotItemHandler(teFarmer.slotsInput, 2, 7, 17) {
+		this.addSlotToContainer(new SlotItemHandler(teFarmer.slotsInternal, 1, 7, 17) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return itemStack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
 		        }
 		});
-		this.addSlotToContainer(new SlotItemHandler(teFarmer.slotsOutput, 9, 7, 47) {
+		this.addSlotToContainer(new SlotItemHandler(teFarmer.slotsInternal, 2, 7, 47) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return false;
@@ -54,8 +54,8 @@ public class ContainerBasicFarmer extends Container {
 		          return itemStack.getItem() instanceof ItemAxe;
 		        }
 		});
-
-		this.addSlotToContainer(new SlotItemHandler(teFarmer.slotsInput, 3, 27, 71) {
+		//Battery
+		this.addSlotToContainer(new SlotItemHandler(teFarmer.slotsInternal, 0, 27, 71) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return itemStack.getItem() instanceof IEnergyContainerItem;

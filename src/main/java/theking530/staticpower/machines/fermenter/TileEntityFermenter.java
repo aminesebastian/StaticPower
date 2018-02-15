@@ -4,6 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.handlers.crafting.registries.FermenterRecipeRegistry;
 import theking530.staticpower.machines.BaseMachineWithTank;
+import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
 import theking530.staticpower.machines.tileentitycomponents.BucketInteractionComponent;
 
 public class TileEntityFermenter extends BaseMachineWithTank {
@@ -13,10 +14,11 @@ public class TileEntityFermenter extends BaseMachineWithTank {
 	public TileEntityFermenter() {
 		initializeBasicMachine(4, 500, 100000, 160, 45);
 		initializeTank(5000);
-		initializeSlots(1, 11, 2);
+		initializeSlots(4, 9, 1);
 		
-		DRAIN_COMPONENT = new BucketInteractionComponent("BucketDrain", slotsInput, 10, slotsOutput, 0, this, fluidTank, fluidToContainerRate);
-		setBatterySlot(10);
+		DRAIN_COMPONENT = new BucketInteractionComponent("BucketDrain", slotsInternal, 2, slotsInternal, 3, this, fluidTank, fluidToContainerRate);
+		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInternal, 1, this, energyStorage));
+
 		//setFluidContainerSlot(9, FluidContainerMode.FILL);
 	}
 	@Override

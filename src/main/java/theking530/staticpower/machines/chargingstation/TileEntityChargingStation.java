@@ -5,14 +5,21 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.machines.BaseMachine;
+import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
+import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
+import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
 
 public class TileEntityChargingStation extends BaseMachine {
 	
 	public TileEntityChargingStation() {
-		initializeSlots(0, 6, 4);
+		initializeSlots(1, 4, 4);
 		initializeBasicMachine(2, 0, 100000, 500, 2);
-		setBatterySlot(4);
 		energyStorage.setMaxExtract(512);
+		
+		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInternal, 0, this, energyStorage));
+		registerComponent(new TileEntityItemOutputServo(this, 2, slotsOutput, 0, 1, 2, 3));
+		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0, 1, 2, 3));
+		
 	}
 	@Override
 	public void process(){
