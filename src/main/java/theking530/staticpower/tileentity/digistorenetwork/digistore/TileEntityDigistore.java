@@ -18,7 +18,7 @@ import theking530.staticpower.items.upgrades.DigistoreMiscUpgrades;
 import theking530.staticpower.tileentity.digistorenetwork.BaseDigistoreTileEntity;
 
 public class TileEntityDigistore extends BaseDigistoreTileEntity {
-	public static final int DEFAULT_CAPACITY = 512;
+	public static final int DEFAULT_CAPACITY = 1024;
 	
 	private int storedAmount;
 	private int maxStoredItems;

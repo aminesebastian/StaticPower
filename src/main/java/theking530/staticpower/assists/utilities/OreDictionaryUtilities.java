@@ -5,7 +5,7 @@ import net.minecraftforge.oredict.OreDictionary;
 
 public class OreDictionaryUtilities {
 
-	public static ItemStack getOreDicitionaryItemStackToModify(String ore, int index) {
+	public static ItemStack getOreStack(String ore, int index) {
 		return OreDictionary.getOres(ore).get(index).copy();
 	}
 }

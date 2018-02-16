@@ -73,8 +73,9 @@ item.StaticPlate.name=§aStatic Plate
 item.EnergizedPlate.name=§bEnergized Plate
 item.LumumPlate.name=§eLumum Plate
 
-item.PlateMould.name=Plate Mould
-item.WireMould.name=Wire Mould
+item.PlateMould.name=Plate Mold
+item.WireMould.name=Wire Mold
+item.BlankMould.name=Blank Mold
 
 //Upgrades
 item.BasicSpeedUpgrade.name=Basic Speed Upgrade

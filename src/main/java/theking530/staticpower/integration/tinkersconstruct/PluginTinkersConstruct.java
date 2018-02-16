@@ -1,4 +1,4 @@
-package theking530.staticpower.integration.TIC;
+package theking530.staticpower.integration.tinkersconstruct;
 
 
 import net.minecraft.block.Block;

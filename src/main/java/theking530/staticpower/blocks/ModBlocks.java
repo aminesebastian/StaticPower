@@ -2,7 +2,6 @@ package theking530.staticpower.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraftforge.oredict.OreDictionary;
 import theking530.staticpower.Registry;
 import theking530.staticpower.assists.Tier;
 import theking530.staticpower.blocks.decorative.Lamp;
@@ -27,6 +26,7 @@ import theking530.staticpower.machines.chargingstation.BlockChargingStation;
 import theking530.staticpower.machines.condenser.BlockCondenser;
 import theking530.staticpower.machines.cropsqueezer.BlockCropSqueezer;
 import theking530.staticpower.machines.distillery.BlockDistillery;
+import theking530.staticpower.machines.esotericenchanter.BlockEsotericEnchanter;
 import theking530.staticpower.machines.fermenter.BlockFermenter;
 import theking530.staticpower.machines.fluidgenerator.BlockFluidGenerator;
 import theking530.staticpower.machines.fluidinfuser.BlockFluidInfuser;
@@ -98,6 +98,7 @@ public class ModBlocks {
 	public static Block Distillery;
 	public static Block Condenser;
 	public static Block Former;
+	public static Block EsotericEnchanter;
 	
 	//Gates
 	public static Block LogicGateBasePlate;
@@ -181,7 +182,6 @@ public class ModBlocks {
 		
 		StaticPlanks = new BaseBlock(Material.WOOD, "StaticPlanks").setHardness(3.5f);
 		registry.PreRegisterBlock(StaticPlanks);
-		OreDictionary.registerOre("plankWood", StaticPlanks);		
 		EnergizedPlanks = new BaseBlock(Material.WOOD, "EnergizedPlanks").setHardness(3.5f);
 		registry.PreRegisterBlock(EnergizedPlanks);		
 		LumumPlanks = new BaseBlock(Material.WOOD, "LumumPlanks").setHardness(3.5f);
@@ -252,6 +252,9 @@ public class ModBlocks {
 		registry.PreRegisterBlock(PoweredFurnace);
 		Former = new BlockFormer().setHardness(3.5f);
 		registry.PreRegisterBlock(Former);
+		
+		EsotericEnchanter = new BlockEsotericEnchanter("EsotericEnchanter").setHardness(3.5f);
+		registry.PreRegisterBlock(EsotericEnchanter);
 		
 		LogicGateBasePlate = new BlockLogicGateBasePlate(Material.IRON, "LogicGateBasePlate");
 		registry.PreRegisterBlock(LogicGateBasePlate);

@@ -55,6 +55,7 @@ public class ModItems {
 	public static Item EnergizedPlate;
 	public static Item LumumPlate;
 	
+	public static Item BlankMould;
 	public static Item PlateMould;
 	public static Item WireMould;
 	
@@ -276,6 +277,7 @@ public class ModItems {
 		
 		registry.PreRegisterItem(PlateMould = new FormerMold("PlateMould"));
 		registry.PreRegisterItem(WireMould = new FormerMold("WireMould"));
+		registry.PreRegisterItem(BlankMould = new ItemBase("BlankMould"));
 		
 		EnergizedEnergyCrystal = new ItemBase("EnergizedEnergyCrystal");
 		registry.PreRegisterItem(EnergizedEnergyCrystal);

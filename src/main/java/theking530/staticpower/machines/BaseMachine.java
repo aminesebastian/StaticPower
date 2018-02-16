@@ -161,7 +161,6 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
         return nbt;
 	}
 	
-
  
 	public void deserializeOnPlaced(NBTTagCompound nbt, World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
 		super.deserializeOnPlaced(nbt, world, pos, state, placer, stack);
@@ -175,7 +174,7 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		return null;	
 	}	
 	public boolean canProcess(ItemStack itemstack) {
-		return false;
+		return !getResult(itemstack).isEmpty() && getEnergyStorage().getEnergyStored() >= getProcessingEnergy(itemstack);
 	}
 	public int getProcessingEnergy(ItemStack itemstack) {
 		return 0;

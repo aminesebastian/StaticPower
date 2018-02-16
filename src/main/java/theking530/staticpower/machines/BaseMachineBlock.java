@@ -23,7 +23,6 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.assists.utilities.WorldUtilities;
@@ -98,20 +97,40 @@ public class BaseMachineBlock extends Block implements IWrenchable, IItemBlockPr
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
     	if(shouldDropContents && worldIn.getTileEntity(pos) instanceof BaseTileEntity) {
     		 BaseTileEntity tileentity = (BaseTileEntity) worldIn.getTileEntity(pos);
-    	        if(!tileentity.wasWrenchedDoNotBreak) {
-    		        for(EnumFacing facing : EnumFacing.values()) {
-    		        	if(tileentity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing)) {
-    		        		IItemHandler tempHandler = tileentity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing);
-    		        		if(tempHandler != null) {
-    		        			for(int i=0; i<tempHandler.getSlots(); i++) {
-    		        				if(tempHandler.getStackInSlot(i) != null) {
-    		        					WorldUtilities.dropItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), tempHandler.extractItem(i, tempHandler.getStackInSlot(i).getCount(), false));
-    		        				}
-    		        			}
-    		        		}
-    		        	}   
-    		        }
-    	        }
+	        if(!tileentity.wasWrenchedDoNotBreak) {      		
+	        	IItemHandler tempHandler = tileentity.slotsInput;
+        		if(tempHandler != null) {
+        			for(int i=0; i<tempHandler.getSlots(); i++) {
+        				if(tempHandler.getStackInSlot(i) != null) {
+        					WorldUtilities.dropItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), tempHandler.extractItem(i, tempHandler.getStackInSlot(i).getCount(), false));
+        				}
+        			}
+        		}  
+        		tempHandler = tileentity.slotsOutput;
+        		if(tempHandler != null) {
+        			for(int i=0; i<tempHandler.getSlots(); i++) {
+        				if(tempHandler.getStackInSlot(i) != null) {
+        					WorldUtilities.dropItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), tempHandler.extractItem(i, tempHandler.getStackInSlot(i).getCount(), false));
+        				}
+        			}
+        		}  
+        		tempHandler = tileentity.slotsUpgrades;
+        		if(tempHandler != null) {
+        			for(int i=0; i<tempHandler.getSlots(); i++) {
+        				if(tempHandler.getStackInSlot(i) != null) {
+        					WorldUtilities.dropItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), tempHandler.extractItem(i, tempHandler.getStackInSlot(i).getCount(), false));
+        				}
+        			}
+        		}  
+        		tempHandler = tileentity.slotsInternal;
+        		if(tempHandler != null) {
+        			for(int i=0; i<tempHandler.getSlots(); i++) {
+        				if(tempHandler.getStackInSlot(i) != null) {
+        					WorldUtilities.dropItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), tempHandler.extractItem(i, tempHandler.getStackInSlot(i).getCount(), false));
+        				}
+        			}
+        		}  
+	        }
     	}     
         super.breakBlock(worldIn, pos, state);
     }

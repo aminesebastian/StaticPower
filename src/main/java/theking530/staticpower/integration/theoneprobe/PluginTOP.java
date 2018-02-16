@@ -1,4 +1,4 @@
-package theking530.staticpower.integration.TOP;
+package theking530.staticpower.integration.theoneprobe;
 
 import javax.annotation.Nullable;
 

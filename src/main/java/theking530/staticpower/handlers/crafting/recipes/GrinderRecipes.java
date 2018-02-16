@@ -200,7 +200,7 @@ public class GrinderRecipes {
 		String dust = "dust";
 		if(OreDictionary.getOres(dust+metal).size() > 0) {
 			for(int index = 0; index < OreDictionary.getOres(ore+metal).size(); index++) {
-				ItemStack oreDustStack = OreDictionaryUtilities.getOreDicitionaryItemStackToModify(dust+metal, 0);
+				ItemStack oreDustStack = OreDictionaryUtilities.getOreStack(dust+metal, 0);
 				oreDustStack.setCount(number);
 				RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre(ore+metal), newOutput(oreDustStack));
 			}	
@@ -212,7 +212,7 @@ public class GrinderRecipes {
 		String dust = "dust";
 		if(OreDictionary.getOres(dust+metal).size() > 0) {
 			for(int index = 0; index < OreDictionary.getOres(ingot+metal).size(); index++) {
-				ItemStack ingotDustStack = OreDictionaryUtilities.getOreDicitionaryItemStackToModify(dust+metal, 0);
+				ItemStack ingotDustStack = OreDictionaryUtilities.getOreStack(dust+metal, 0);
 				ingotDustStack.setCount(number);
 				RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre(ingot+metal), newOutput(ingotDustStack));
 			}
@@ -221,7 +221,7 @@ public class GrinderRecipes {
 	public static void baseDictionaryRecipe(String input, String output, int number) {
 		if(OreDictionary.getOres(output).size() > 0) {
 			for(int index = 0; index < OreDictionary.getOres(input).size(); index++) {
-				ItemStack result = OreDictionaryUtilities.getOreDicitionaryItemStackToModify(output, 0);
+				ItemStack result = OreDictionaryUtilities.getOreStack(output, 0);
 				result.setCount(number);
 				RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre(input), newOutput(result));
 			}

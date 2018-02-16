@@ -1,7 +1,11 @@
 package theking530.staticpower.client.render.tileentitys;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.assists.Reference;
+import theking530.staticpower.assists.utilities.RenderUtil;
 import theking530.staticpower.assists.utilities.SideModeList;
 import theking530.staticpower.machines.basicfarmer.TileEntityBasicFarmer;
 
@@ -14,6 +18,8 @@ public class TileEntityRenderFarmer extends BaseMachineTESR<TileEntityBasicFarme
 	private static final ResourceLocation farmerSideOut = new ResourceLocation(Reference.MOD_ID, "textures/blocks/machines/farmer_side_output.png");
 	private static final ResourceLocation farmerSideDis = new ResourceLocation(Reference.MOD_ID, "textures/blocks/machines/farmer_side_disabled.png");
 
+	private static float texel = 1F/64F;
+	
 	@Override
 	protected ResourceLocation getFrontTexture(boolean machineOn) {
 		return front;
@@ -27,5 +33,20 @@ public class TileEntityRenderFarmer extends BaseMachineTESR<TileEntityBasicFarme
 			case Disabled: return farmerSideDis;
 			default: return farmerSide;
 		}
+	}
+	
+	@Override
+	public void drawExtra(TileEntityBasicFarmer tileentity, double translationX, double translationY, double translationZ, float f, int dest, float alpha) {
+		if(tileentity.fluidTank.getFluid() != null) {	
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			drawLiquidBar(tileentity, tileentity.fluidTank.getFluid());
+			GL11.glDisable(GL11.GL_BLEND);
+		}
+	}
+	public static void drawLiquidBar(TileEntityBasicFarmer tileentity, FluidStack fluidStack) {
+		RenderUtil.drawFluidInWorld(fluidStack, tileentity.fluidTank.getCapacity(), 44.0F*texel, 16.0F*texel, 1.0005F, 8.0F*texel, 33.0f*texel);
+		
+		RenderUtil.drawFluidInWorld(fluidStack, tileentity.fluidTank.getCapacity(), 12.0F*texel, 16.0F*texel, 1.0005F, 8.0F*texel, 33.0f*texel);
 	}
 }

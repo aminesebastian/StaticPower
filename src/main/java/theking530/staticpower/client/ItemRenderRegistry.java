@@ -139,6 +139,7 @@ public class ItemRenderRegistry {
 		
 		registerItem(ModItems.PlateMould);
 		registerItem(ModItems.WireMould);
+		registerItem(ModItems.BlankMould);
 		
 		registerItem(ModItems.SilverIngot);
 		registerItem(ModItems.CopperIngot);

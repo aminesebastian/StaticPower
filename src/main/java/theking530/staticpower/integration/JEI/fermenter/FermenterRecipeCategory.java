@@ -28,7 +28,7 @@ import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.integration.JEI.PluginJEI;
 import theking530.staticpower.machines.fermenter.GuiFermenter;
 
-public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterRecipeWrapper>{
+public class FermenterRecipeCategory extends BaseJEIRecipeCategory<JEIFermenterRecipeWrapper>{
 	 	private final String locTitle;
 	    private IDrawable background;
 	    private int currentPower;
@@ -38,7 +38,7 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 	        background = guiHelper.createDrawable(GuiTextures.FERMENTER_GUI, 54, 3, 116, 67, 0, 0, 30, 0);
 	    }
 	    public void initialize(@Nonnull IModRegistry registry) {
-	        registry.handleRecipes(FermenterOutputWrapper.class, FermenterRecipeWrapper.FACTORY, PluginJEI.FERMENTER_UID);
+	    	registry.handleRecipes(FermenterOutputWrapper.class, recipe -> new JEIFermenterRecipeWrapper(recipe), PluginJEI.FERMENTER_UID); 
 	        registry.addRecipes(FermenterRecipeRegistry.Fermenting().getFermentingRecipes().values(), PluginJEI.FERMENTER_UID);
 	        registry.addRecipeClickArea(GuiFermenter.class, 111, 69, 26, 19, PluginJEI.FERMENTER_UID);
 	    	registry.addRecipeCatalyst(new ItemStack(Item.getItemFromBlock(ModBlocks.Fermenter)), PluginJEI.FERMENTER_UID);  
@@ -90,7 +90,7 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 			return Collections.emptyList();
 		}
 	    @Override
-	    public void setRecipe(IRecipeLayout recipeLayout, FermenterRecipeWrapper recipeWrapper, IIngredients ingredients) {
+	    public void setRecipe(IRecipeLayout recipeLayout, JEIFermenterRecipeWrapper recipeWrapper, IIngredients ingredients) {
 	        IGuiItemStackGroup guiStacks = recipeLayout.getItemStacks();
 	        IGuiFluidStackGroup guiFluidStacks = recipeLayout.getFluidStacks();
 
@@ -100,7 +100,7 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 	        guiStacks.init(slotId++, true, 62, 12);  
 	        
 	        //Output
-	        guiFluidStacks.init(0, false, 13, 2, 16, 60, 800, false, null);
+	        guiFluidStacks.init(0, false, 13, 2, 16, 60, 300, false, null);
 	        
 	        guiStacks.set(ingredients);
 	        guiFluidStacks.set(ingredients);

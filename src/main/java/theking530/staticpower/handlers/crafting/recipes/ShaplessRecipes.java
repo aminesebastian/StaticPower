@@ -109,7 +109,7 @@ public class ShaplessRecipes {
 		
 		//Inert Infusion Blend --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapelessRecipe("StaticPower_inertInfusionBlend", "StaticPower", new ItemStack(ModItems.InertInfusionBlend, 4), new Ingredient[]{
-				new OreIngredient("dustTin"), new OreIngredient("dustTin"), new OreIngredient("dustSilver"), new OreIngredient("dustSilver")});
+				new OreIngredient("dustTin"), new OreIngredient("dustPlatinum"), new OreIngredient("dustSilver"), new OreIngredient("dustSilver")});
 		
 		//Nuggets --------------------------------------------------------------------------------------------------
 

@@ -34,6 +34,7 @@ import theking530.staticpower.handlers.OreGenerationHandler;
 import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.handlers.crafting.recipes.CondenserRecipes;
 import theking530.staticpower.handlers.crafting.recipes.DistilleryRecipes;
+import theking530.staticpower.handlers.crafting.recipes.EsotericEnchanterRecipes;
 import theking530.staticpower.handlers.crafting.recipes.FermenterRecipes;
 import theking530.staticpower.handlers.crafting.recipes.FluidGeneratorRecipes;
 import theking530.staticpower.handlers.crafting.recipes.FormerRecipes;
@@ -47,8 +48,9 @@ import theking530.staticpower.handlers.crafting.recipes.SolderingRecipes;
 import theking530.staticpower.handlers.crafting.recipes.SqueezerRecipes;
 import theking530.staticpower.handlers.crafting.recipes.ToolRecipes;
 import theking530.staticpower.integration.ICompatibilityPlugin;
-import theking530.staticpower.integration.TIC.PluginTinkersConstruct;
-import theking530.staticpower.integration.TOP.PluginTOP;
+import theking530.staticpower.integration.theoneprobe.PluginTOP;
+import theking530.staticpower.integration.thermalfoundation.PluginThermalFoundation;
+import theking530.staticpower.integration.tinkersconstruct.PluginTinkersConstruct;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.items.ModMaterials;
 import theking530.staticpower.items.armor.ModArmor;
@@ -71,6 +73,7 @@ import theking530.staticpower.machines.chargingstation.TileEntityChargingStation
 import theking530.staticpower.machines.condenser.TileEntityCondenser;
 import theking530.staticpower.machines.cropsqueezer.TileEntityCropSqueezer;
 import theking530.staticpower.machines.distillery.TileEntityDistillery;
+import theking530.staticpower.machines.esotericenchanter.TileEsotericEnchanter;
 import theking530.staticpower.machines.fermenter.TileEntityFermenter;
 import theking530.staticpower.machines.fluidgenerator.TileEntityFluidGenerator;
 import theking530.staticpower.machines.fluidinfuser.TileEntityFluidInfuser;
@@ -97,7 +100,7 @@ import theking530.staticpower.tileentity.solarpanels.TileEntityStaticSolarPanel;
 import theking530.staticpower.tileentity.solderingtable.TileEntitySolderingTable;
 import theking530.staticpower.tileentity.vacuumchest.TileEntityVacuumChest;
 
-@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION)
+@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, dependencies = "after:thermalfoundation;")
 
 public class StaticPower {
 	
@@ -195,6 +198,8 @@ public class StaticPower {
 		GameRegistry.registerTileEntity(TileEntityLumumChest.class, "LumumChest");
 		GameRegistry.registerTileEntity(TileEntityVacuumChest.class, "VacuumChest");
 		
+		GameRegistry.registerTileEntity(TileEsotericEnchanter.class, "Esoteric Enchanter");
+		
 		GameRegistry.registerTileEntity(TileEntityDigistore.class, "Digistore");
 		GameRegistry.registerTileEntity(TileEntityDigistoreManager.class, "DigistoreManager");
 		GameRegistry.registerTileEntity(TileEntityDigistoreIOPort.class, "DigistoreIOPort");
@@ -218,8 +223,9 @@ public class StaticPower {
 		CondenserRecipes.registerCondenserRecipes();
 		DistilleryRecipes.registerDistilleryRecipes();
 		FormerRecipes.registerFusionRecipes();
+		EsotericEnchanterRecipes.registerEsotericEnchanterRecipes();
 		ToolRecipes.registerToolRecipes();
-
+		
 	}
 	@SubscribeEvent
 	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
@@ -238,6 +244,7 @@ public class StaticPower {
 
 		plugins.add(new PluginTOP());
 		plugins.add(new PluginTinkersConstruct());
+		plugins.add(new PluginThermalFoundation());
 		
 		for(ICompatibilityPlugin plugin : plugins) {
 			if(plugin.shouldRegister()) {

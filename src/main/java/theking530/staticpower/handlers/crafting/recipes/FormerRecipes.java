@@ -32,7 +32,8 @@ public class FormerRecipes {
 		
 		
 		
-		RegisterHelper.registerFormerRecipes(new ItemStack(ModItems.PlateMould), new MultiOreIngredient("plateTin", "plateCopper", "plateSilver", "plateLead", "plateGold"), CraftHelpers.ingredientOre("plateIron"));	
+		RegisterHelper.registerFormerRecipes(new ItemStack(ModItems.PlateMould), new MultiOreIngredient("plateTin", "plateCopper", "plateSilver", "plateLead", "plateGold"), CraftHelpers.ingredientFromItem(ModItems.BlankMould));	
+		RegisterHelper.registerFormerRecipes(new ItemStack(ModItems.WireMould), new MultiOreIngredient("wireCopper", "wireSilver", "wireGold"), CraftHelpers.ingredientFromItem(ModItems.BlankMould));	
 		
 		
 	}

@@ -9,6 +9,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import theking530.staticpower.handlers.crafting.registries.CondenserRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.DistilleryRecipeRegistry;
+import theking530.staticpower.handlers.crafting.registries.EsotericEnchanterRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.FermenterRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.FluidGeneratorRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.FormerRecipeRegistry;
@@ -22,16 +23,14 @@ import theking530.staticpower.handlers.crafting.wrappers.SolderingRecipeWrapper;
 
 public class RegisterHelper  {
 	
-	public static void registerFermenterRecipe(ItemStack input, FluidStack output) {
+	public static void registerFermenterRecipe(Ingredient input, FluidStack output) {
 		FermenterRecipeRegistry.Fermenting().addRecipe(input, output);
 	}
 	public static void registerGrinderRecipe(Ingredient itemstack, GrinderOutput... outputs) {
 		GrinderRecipeRegistry.Grinding().addRecipe(itemstack, outputs);
 	}
-	public static void registerInfuserRecipe(ItemStack itemstack1, ItemStack itemstack2, FluidStack fluidStack) {
-		if(fluidStack != null && itemstack1 != null && itemstack2 != null) {
-			InfuserRecipeRegistry.Infusing().addRecipe(itemstack1, itemstack2, fluidStack);			
-		}
+	public static void registerInfuserRecipe(Ingredient input, ItemStack output, FluidStack fluidStack) {
+		InfuserRecipeRegistry.Infusing().addRecipe(input, output, fluidStack);			
 	}
 	public static void registerFusionRecipe(ItemStack output, ItemStack...inputs) {
 		if(output != null && inputs[0] != null) {
@@ -51,6 +50,12 @@ public class RegisterHelper  {
 	
 	public static void registerFluidGeneratorRecipe(FluidStack inputFluid, int powerPerTick) {
 		FluidGeneratorRecipeRegistry.Generating().addRecipe(inputFluid, powerPerTick);
+	}
+	public static void registerEsotericEnchanterRecipe(ItemStack output, Ingredient input1, Ingredient input2, FluidStack inputFluidStack) {
+		EsotericEnchanterRecipeRegistry.Enchanting().addRecipe(output, input1, input2, inputFluidStack);
+	}
+	public static void registerEsotericEnchanterRecipe(ItemStack output, Ingredient input1, FluidStack inputFluidStack) {
+		EsotericEnchanterRecipeRegistry.Enchanting().addRecipe(output, input1, inputFluidStack);
 	}
 	public static void registerCondenserRecipe(FluidStack fluidInput, FluidStack fluidOutput, int condensingTime) {
 		CondenserRecipeRegistry.Condensing().addRecipe(fluidInput, fluidOutput, condensingTime);

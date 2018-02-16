@@ -11,9 +11,7 @@ import theking530.staticpower.machines.fluidgenerator.TileEntityFluidGenerator;
 
 public class TileEntityRenderFluidGenerator extends BaseMachineTESR<TileEntityFluidGenerator> {
 
-	static float texel = 1F/64F;
-	static float width = 1F;
-	float height = 1F;
+	private static float texel = 1F/64F;
 	
 	private static final ResourceLocation frontOn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/machines/fluid_generator_front_on.png");
 	private static final ResourceLocation frontOff = new ResourceLocation(Reference.MOD_ID, "textures/blocks/machines/fluid_generator_front_off.png");
