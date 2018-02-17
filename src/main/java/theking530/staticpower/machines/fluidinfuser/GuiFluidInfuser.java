@@ -22,7 +22,8 @@ import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.handlers.crafting.registries.InfuserRecipeRegistry;
-import theking530.staticpower.machines.tileentitycomponents.BucketInteractionComponent.FluidContainerInteractionMode;
+import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
+import theking530.staticpower.machines.tileentitycomponents.PacketFluidContainerComponent;
 
 public class GuiFluidInfuser extends BaseGuiContainer{
 	
@@ -62,7 +63,7 @@ public class GuiFluidInfuser extends BaseGuiContainer{
 	@Override
 	protected void actionPerformed(GuiButton B) {
 		if(B.id == 1) {
-			IMessage msg = new PacketFluidInfuserContainerMode(infuser.DRAIN_COMPONENT.getInverseMode(), infuser.getPos());
+			IMessage msg = new PacketFluidContainerComponent(infuser.DRAIN_COMPONENT.getInverseMode(), infuser.getComponents().indexOf(infuser.DRAIN_COMPONENT), infuser.getPos());
 			PacketHandler.net.sendToServer(msg);
 			infuser.DRAIN_COMPONENT.setMode(infuser.DRAIN_COMPONENT.getInverseMode());
 			

@@ -23,8 +23,8 @@ import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.items.upgrades.BaseQuarryingUpgrade;
 import theking530.staticpower.machines.BaseMachineWithTank;
-import theking530.staticpower.machines.tileentitycomponents.BucketInteractionComponent;
-import theking530.staticpower.machines.tileentitycomponents.BucketInteractionComponent.FluidContainerInteractionMode;
+import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent;
+import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
 
 public class TileEntityQuarry extends BaseMachineWithTank {
 	
@@ -36,7 +36,7 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 	public int BLOCKS_PER_TICK = INITIAL_BLOCKS_PER_TICK;
 	
 	private ArrayList<ItemStack> QUARRIED_STACKS = new ArrayList<ItemStack>();
-	public BucketInteractionComponent DRAIN_COMPONENT;
+	public FluidContainerComponent DRAIN_COMPONENT;
 	
 	private boolean testing = false;
 	
@@ -45,7 +45,7 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 		initializeTank(10000);
 		initializeSlots(1, 1, 1);
 		
-		DRAIN_COMPONENT = new BucketInteractionComponent("BucketDrain", slotsInternal, 0, slotsInternal, 1, this, fluidTank, fluidToContainerRate);
+		DRAIN_COMPONENT = new FluidContainerComponent("BucketDrain", slotsInternal, 0, slotsInternal, 1, this, fluidTank, fluidToContainerRate);
 		DRAIN_COMPONENT.setMode(FluidContainerInteractionMode.FillFromContainer);
 	}
 	@Override

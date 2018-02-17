@@ -16,7 +16,8 @@ import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiHeatBarFromStorage;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.handlers.PacketHandler;
-import theking530.staticpower.machines.tileentitycomponents.BucketInteractionComponent.FluidContainerInteractionMode;
+import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
+import theking530.staticpower.machines.tileentitycomponents.PacketFluidContainerComponent;
 
 public class GuiDistillery extends BaseGuiContainer {
 
@@ -51,7 +52,7 @@ public class GuiDistillery extends BaseGuiContainer {
 	@Override
 	protected void actionPerformed(GuiButton B) {
 		if(B.id == 1) {
-			IMessage msg = new PacketDistilleryContainerMode(distillery.DRAIN_COMPONENT_MASH.getInverseMode(), distillery.getPos());
+			IMessage msg = new PacketFluidContainerComponent(distillery.DRAIN_COMPONENT_MASH.getInverseMode(), distillery.getComponents().indexOf(distillery.DRAIN_COMPONENT_MASH), distillery.getPos());
 			PacketHandler.net.sendToServer(msg);
 			distillery.DRAIN_COMPONENT_MASH.setMode(distillery.DRAIN_COMPONENT_MASH.getInverseMode());
 			

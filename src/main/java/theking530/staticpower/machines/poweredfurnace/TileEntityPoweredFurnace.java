@@ -10,14 +10,12 @@ import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutput
 
 public class TileEntityPoweredFurnace extends BaseMachine {
 
-	private BatteryInteractionComponent BATTERY_COMPONENT;
-	
 	public TileEntityPoweredFurnace() {
 		initializeSlots(2, 1, 1);
 		initializeBasicMachine(2, 1000, 100000, 80, 150);
 		registerComponent(new TileEntityItemOutputServo(this, 2, slotsOutput, 0));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0));
-		BATTERY_COMPONENT = new BatteryInteractionComponent("BatteryComponent", slotsInternal, 1, this, energyStorage);
+		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInternal, 1, this, energyStorage));
 	}
 	@Override
 	public String getName() {
@@ -52,7 +50,6 @@ public class TileEntityPoweredFurnace extends BaseMachine {
 	}
 	public void process() {
 		if(!getWorld().isRemote) {
-			BATTERY_COMPONENT.preProcessUpdate();
 			if(!isProcessing() && !isMoving() && canProcess(getInputStack(0))) {
 				moveTimer++;
 			}

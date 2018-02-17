@@ -9,7 +9,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistry;
-import theking530.staticpower.machines.tileentitycomponents.BucketInteractionComponent;
+import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent;
 import theking530.staticpower.tileentity.BaseTileEntity;
 import theking530.staticpower.tileentity.IProcessing;
 
@@ -25,7 +25,7 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFlu
 	public TileEntityMechanicalSqueezer() {
 		initializeSlots(1, 2, 2);
 		fluidTank = new FluidTank(1000);
-		this.registerComponent(new BucketInteractionComponent("BucketDrain", slotsInput, 1, slotsOutput, 1, this, fluidTank, fluidToContainerRate));
+		this.registerComponent(new FluidContainerComponent("BucketDrain", slotsInput, 1, slotsOutput, 1, this, fluidTank, fluidToContainerRate));
 	}
 	@Override
 	public String getName() {

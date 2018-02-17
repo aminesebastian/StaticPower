@@ -41,7 +41,7 @@ public class BlockDigistore extends BaseDigistoreBlock {
     		if(player.getHeldItem(hand).isEmpty()) {
         		TileEntityDigistore entity = (TileEntityDigistore) world.getTileEntity(pos);
         		if (entity != null) {
-        			FMLNetworkHandler.openGui(player, StaticPower.staticpower, GuiIDRegistry.guiIDBarrel, world, pos.getX(), pos.getY(), pos.getZ());
+        			FMLNetworkHandler.openGui(player, StaticPower.staticpower, GuiIDRegistry.guiIDDigistore, world, pos.getX(), pos.getY(), pos.getZ());
         		}
     		}
     		return false;

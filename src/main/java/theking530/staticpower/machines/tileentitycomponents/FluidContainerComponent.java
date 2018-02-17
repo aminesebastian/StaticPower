@@ -10,7 +10,7 @@ import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.tileentity.BaseTileEntity;
 
-public class BucketInteractionComponent implements ITileEntityComponent{
+public class FluidContainerComponent implements ITileEntityComponent{
 
 	private String NAME;
 	
@@ -38,7 +38,7 @@ public class BucketInteractionComponent implements ITileEntityComponent{
 		FillFromContainer, DrainToContainer;
 	}
 
-	public BucketInteractionComponent(String componentName, ItemStackHandler EmptyBucketHandler, int EmptyBucketSlot, ItemStackHandler FilledBucketHandler, int FilledBucketSlot,
+	public FluidContainerComponent(String componentName, ItemStackHandler EmptyBucketHandler, int EmptyBucketSlot, ItemStackHandler FilledBucketHandler, int FilledBucketSlot,
 			BaseTileEntity tileEntity, IFluidHandler fluidHandler, int drainRate) {
 
 		NAME = componentName;

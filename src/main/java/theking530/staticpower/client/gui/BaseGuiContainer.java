@@ -1,5 +1,6 @@
 package theking530.staticpower.client.gui;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -104,6 +105,12 @@ public abstract class BaseGuiContainer extends GuiContainer implements IInteract
 	}
 	public void drawGenericBackground(int width, int height) {		
 		GuiDrawUtilities.drawGenericBackground(width, height, guiLeft, guiTop, zLevel);
+	}
+	public void drawGenericBackground(int xPos, int yPos, int width, int height) {		
+		GuiDrawUtilities.drawGenericBackground(width, height, xPos+guiLeft, yPos+guiTop, zLevel);
+	}
+	public void drawGenericBackground(int xPos, int yPos, int width, int height, Color mainTint, Color rimTint) {		
+		GuiDrawUtilities.drawGenericBackground(width, height, xPos+guiLeft, yPos+guiTop, zLevel, mainTint, rimTint);
 	}
 	public void drawPlayerInventorySlots() {
 		drawPlayerInventorySlots(guiLeft+(xSize-162)/2+1, guiTop+ySize-83);

@@ -257,6 +257,7 @@ public class ItemRenderRegistry {
 		registerBlock(ModBlocks.Condenser);
 		
 		registerBlock(ModBlocks.Former);
+		registerBlock(ModBlocks.EsotericEnchanter);
 		
 		registerBlock(ModBlocks.Digistore);
 		registerBlock(ModBlocks.DigistoreManager);

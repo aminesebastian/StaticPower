@@ -80,7 +80,7 @@ public class FluidInfuserRecipeCategory extends BaseJEIRecipeCategory<JEIFluidIn
 
 	        //Input
 	        guiStacks.init(slotId++, true, 49, 25);        
-	        guiFluidStacks.init(0, true, 6, 2, 16, 60, ingredients.getInputs(FluidStack.class).get(0).get(0).amount*2, false, null);
+	        guiFluidStacks.init(0, true, 6, 2, 16, 60, 5000, false, null);
 	        
 	        //Output
 	        guiStacks.init(slotId, false, 106, 25);

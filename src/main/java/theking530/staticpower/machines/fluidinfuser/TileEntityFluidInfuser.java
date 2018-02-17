@@ -6,12 +6,12 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.handlers.crafting.registries.InfuserRecipeRegistry;
 import theking530.staticpower.machines.BaseMachineWithTank;
-import theking530.staticpower.machines.tileentitycomponents.BucketInteractionComponent;
-import theking530.staticpower.machines.tileentitycomponents.BucketInteractionComponent.FluidContainerInteractionMode;
+import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent;
+import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
 
 public class TileEntityFluidInfuser extends BaseMachineWithTank {
 	
-	public BucketInteractionComponent DRAIN_COMPONENT;
+	public FluidContainerComponent DRAIN_COMPONENT;
 	public FluidStack LAST_CONTAINED_FLUID;
 	
 	public TileEntityFluidInfuser() {
@@ -19,7 +19,7 @@ public class TileEntityFluidInfuser extends BaseMachineWithTank {
 		initializeTank(10000);
 		initializeSlots(3, 1, 1);
 		
-		DRAIN_COMPONENT = new BucketInteractionComponent("BucketDrain", slotsInternal, 1, slotsInternal, 2, this, fluidTank, fluidToContainerRate);
+		DRAIN_COMPONENT = new FluidContainerComponent("BucketDrain", slotsInternal, 1, slotsInternal, 2, this, fluidTank, fluidToContainerRate);
 		DRAIN_COMPONENT.setMode(FluidContainerInteractionMode.FillFromContainer);
 	}
 	//IInventory				

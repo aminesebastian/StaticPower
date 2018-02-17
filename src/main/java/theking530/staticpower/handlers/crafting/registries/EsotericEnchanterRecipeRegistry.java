@@ -20,23 +20,23 @@ public class EsotericEnchanterRecipeRegistry {
 	private EsotericEnchanterRecipeRegistry() {
 		
 	}
-	public void addRecipe(ItemStack output, Ingredient input1, Ingredient input2, FluidStack requiredFluidStack){
-		EsotericEnchanterRecipeWrapper tempWrapper = new EsotericEnchanterRecipeWrapper(output, input1, input2, requiredFluidStack);
+	public void addRecipe(ItemStack output, Ingredient input1, Ingredient input2, Ingredient input3, FluidStack requiredFluidStack){
+		EsotericEnchanterRecipeWrapper tempWrapper = new EsotericEnchanterRecipeWrapper(output, input1, input2, input3, requiredFluidStack);
 		enchantingList.add(tempWrapper);
 	}
-	public void addRecipe(ItemStack output, Ingredient input1, FluidStack requiredFluidStack){
-		EsotericEnchanterRecipeWrapper tempWrapper = new EsotericEnchanterRecipeWrapper(output, input1, requiredFluidStack);
+	public void addRecipe(ItemStack output, Ingredient input1, Ingredient input2, FluidStack requiredFluidStack){
+		EsotericEnchanterRecipeWrapper tempWrapper = new EsotericEnchanterRecipeWrapper(output, input1, input2, requiredFluidStack);
 		enchantingList.add(tempWrapper);
 	}
     public List<EsotericEnchanterRecipeWrapper> getEnchantingRecipes() {
         return enchantingList;
     }
-	public ItemStack getEnchantingResult(ItemStack input1, ItemStack input2, FluidStack inputFluidStack) {
+	public EsotericEnchanterRecipeWrapper getEnchantingResult(ItemStack input1, ItemStack input2, ItemStack input3, FluidStack inputFluidStack) {
 		for(EsotericEnchanterRecipeWrapper recipe : enchantingList) {
-			if(recipe.isSatisfied(input1, input2, inputFluidStack)) {
-				return recipe.getOutputItemStack();
+			if(recipe.isSatisfied(input1, input2, input3, inputFluidStack)) {
+				return recipe;
 			}
 		}
-		return ItemStack.EMPTY;
+		return null;
 	}
 }

@@ -16,6 +16,7 @@ import theking530.staticpower.client.render.tileentitys.TileEntityRenderCondense
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderCropSqueezer;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderDigistore;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderDistillery;
+import theking530.staticpower.client.render.tileentitys.TileEntityRenderEsotericEnchanter;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderFarmer;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderFermenter;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderFluidGenerator;
@@ -55,6 +56,7 @@ import theking530.staticpower.machines.chargingstation.TileEntityChargingStation
 import theking530.staticpower.machines.condenser.TileEntityCondenser;
 import theking530.staticpower.machines.cropsqueezer.TileEntityCropSqueezer;
 import theking530.staticpower.machines.distillery.TileEntityDistillery;
+import theking530.staticpower.machines.esotericenchanter.TileEsotericEnchanter;
 import theking530.staticpower.machines.fermenter.TileEntityFermenter;
 import theking530.staticpower.machines.fluidgenerator.TileEntityFluidGenerator;
 import theking530.staticpower.machines.fluidinfuser.TileEntityFluidInfuser;
@@ -100,6 +102,8 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBasicFarmer.class, new TileEntityRenderFarmer());		
 		//Quarry
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityQuarry.class, new TileEntityRenderQuarry());		
+		//Quarry
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEsotericEnchanter.class, new TileEntityRenderEsotericEnchanter());	
 		
 		//Signal Multiplier
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySignalMultiplier.class, new TileEntityRenderSignalMultiplier());	

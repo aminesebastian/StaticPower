@@ -37,6 +37,16 @@ public class JEIEsotericEnchanterRecipeWrapper implements IRecipeWrapper{
 		}
 		inputLists.add(inputs2);
 	
+		ArrayList<ItemStack> inputs3 = new ArrayList<ItemStack>();
+		if(recipe.getIngredient3() != null) {
+			for(ItemStack inputItem : recipe.getIngredient3().getMatchingStacks()) {
+				inputs3.add(inputItem);
+			}
+		}else{
+			inputs3.add(ItemStack.EMPTY);
+		}
+		inputLists.add(inputs3);
+		
 	    ingredients.setInputLists(ItemStack.class, inputLists);
 	    ingredients.setInput(FluidStack.class, recipe.getInputFluidStack());
 	    ingredients.setOutput(ItemStack.class, recipe.getOutputItemStack());

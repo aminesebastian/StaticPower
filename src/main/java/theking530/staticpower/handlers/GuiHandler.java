@@ -39,6 +39,9 @@ import theking530.staticpower.machines.cropsqueezer.TileEntityCropSqueezer;
 import theking530.staticpower.machines.distillery.ContainerDistillery;
 import theking530.staticpower.machines.distillery.GuiDistillery;
 import theking530.staticpower.machines.distillery.TileEntityDistillery;
+import theking530.staticpower.machines.esotericenchanter.ContainerEsotericEnchanter;
+import theking530.staticpower.machines.esotericenchanter.GuiEsotericEnchanter;
+import theking530.staticpower.machines.esotericenchanter.TileEsotericEnchanter;
 import theking530.staticpower.machines.fermenter.ContainerFermenter;
 import theking530.staticpower.machines.fermenter.GuiFermenter;
 import theking530.staticpower.machines.fermenter.TileEntityFermenter;
@@ -204,9 +207,14 @@ public class GuiHandler implements IGuiHandler {
 					return new ContainerMultiplier(player.inventory, (TileEntitySignalMultiplier) entity);
 				}
 				return null;	
-			case GuiIDRegistry.guiIDBarrel:
+			case GuiIDRegistry.guiIDDigistore:
 				if (entity instanceof TileEntityDigistore) {	
 					return new ContainerDigistore(player.inventory, (TileEntityDigistore) entity);
+				}
+				return null;
+			case GuiIDRegistry.guiIDEsotericEnchanter:
+				if (entity instanceof TileEsotericEnchanter) {	
+					return new ContainerEsotericEnchanter(player.inventory, (TileEsotericEnchanter) entity);
 				}
 				return null;
 			case GuiIDRegistry.guiIDFormer:
@@ -347,9 +355,14 @@ public class GuiHandler implements IGuiHandler {
 					return new GuiSignalMultiplier(player.inventory, (TileEntitySignalMultiplier) entity);				
 				}
 				return null;
-			case GuiIDRegistry.guiIDBarrel:
+			case GuiIDRegistry.guiIDDigistore:
 				if (entity instanceof TileEntityDigistore) {	
 					return new GuiDigistore(player.inventory, (TileEntityDigistore) entity);				
+				}
+				return null;
+			case GuiIDRegistry.guiIDEsotericEnchanter:
+				if (entity instanceof TileEsotericEnchanter) {	
+					return new GuiEsotericEnchanter(player.inventory, (TileEsotericEnchanter) entity);				
 				}
 				return null;
 			case GuiIDRegistry.guiIDFormer:

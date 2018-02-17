@@ -154,6 +154,7 @@ public class GrinderRecipes {
 		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientFromBlock(Blocks.SAND),  newOutput(new ItemStack(ModItems.Silicon)),  newOutput(new ItemStack(ModItems.Silicon), 0.1f));
 		
 		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientFromItem(Items.BONE), newOutput(new ItemStack(Items.DYE, 6, 15)));
+		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientFromItem(Items.PRISMARINE_SHARD), newOutput(new ItemStack(Items.PRISMARINE_CRYSTALS)));
 		
 		/*Thanks to CoFH team for pointers on good items to add here! :) */
 		

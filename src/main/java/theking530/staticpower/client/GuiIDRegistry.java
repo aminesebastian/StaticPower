@@ -13,8 +13,8 @@ public class GuiIDRegistry {
 	public static final int guiIDSignalMultiplier = 9;		
 	public static final int guiIDLumumChest = 10;	
 	public static final int guiIDStaticChest = 11;
-	public static final int guiIDBarrel = 12;	
-	public static final int guiIDWaterGenerator = 13;	
+	public static final int guiIDDigistore = 12;	
+	public static final int guiIDEsotericEnchanter = 13;	
 	public static final int guiIDIndustrialFurnace = 14;	
 	public static final int guiIDIndustrialGrinder = 15;
 	public static final int guiIDEnergizedChest = 16;	

@@ -19,7 +19,8 @@ import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.handlers.PacketHandler;
-import theking530.staticpower.machines.tileentitycomponents.BucketInteractionComponent.FluidContainerInteractionMode;
+import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
+import theking530.staticpower.machines.tileentitycomponents.PacketFluidContainerComponent;
 
 public class GuiBasicFarmer extends BaseGuiContainer{
 	
@@ -59,7 +60,7 @@ public class GuiBasicFarmer extends BaseGuiContainer{
 	@Override
 	protected void actionPerformed(GuiButton B) {
 		if(B.id == 1) {
-			IMessage msg = new PacketBasicFarmerContainerMode(tileEntityFarmer.DRAIN_COMPONENT.getInverseMode(), tileEntityFarmer.getPos());
+			IMessage msg = new PacketFluidContainerComponent(tileEntityFarmer.DRAIN_COMPONENT.getInverseMode(), tileEntityFarmer.getComponents().indexOf(tileEntityFarmer.DRAIN_COMPONENT), tileEntityFarmer.getPos());
 			PacketHandler.net.sendToServer(msg);
 			tileEntityFarmer.DRAIN_COMPONENT.setMode(tileEntityFarmer.DRAIN_COMPONENT.getInverseMode());
 		}

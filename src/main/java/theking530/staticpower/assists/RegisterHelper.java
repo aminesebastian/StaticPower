@@ -51,11 +51,11 @@ public class RegisterHelper  {
 	public static void registerFluidGeneratorRecipe(FluidStack inputFluid, int powerPerTick) {
 		FluidGeneratorRecipeRegistry.Generating().addRecipe(inputFluid, powerPerTick);
 	}
-	public static void registerEsotericEnchanterRecipe(ItemStack output, Ingredient input1, Ingredient input2, FluidStack inputFluidStack) {
-		EsotericEnchanterRecipeRegistry.Enchanting().addRecipe(output, input1, input2, inputFluidStack);
+	public static void registerEsotericEnchanterRecipe(ItemStack output, Ingredient input1, Ingredient input2, Ingredient input3, FluidStack inputFluidStack) {
+		EsotericEnchanterRecipeRegistry.Enchanting().addRecipe(output, input1, input2, input3, inputFluidStack);
 	}
-	public static void registerEsotericEnchanterRecipe(ItemStack output, Ingredient input1, FluidStack inputFluidStack) {
-		EsotericEnchanterRecipeRegistry.Enchanting().addRecipe(output, input1, inputFluidStack);
+	public static void registerEsotericEnchanterRecipe(ItemStack output, Ingredient input1, Ingredient input2,FluidStack inputFluidStack) {
+		EsotericEnchanterRecipeRegistry.Enchanting().addRecipe(output, input1, input2, inputFluidStack);
 	}
 	public static void registerCondenserRecipe(FluidStack fluidInput, FluidStack fluidOutput, int condensingTime) {
 		CondenserRecipeRegistry.Condensing().addRecipe(fluidInput, fluidOutput, condensingTime);

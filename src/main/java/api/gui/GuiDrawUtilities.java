@@ -1,5 +1,7 @@
 package api.gui;
 
+import java.awt.Color;
+
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
@@ -14,10 +16,12 @@ import theking530.staticpower.assists.utilities.GuiUtilities;
 public class GuiDrawUtilities {
 	private static final float genericBackgroundPixel = 1.0f/9.0f;
 	
-	public static void drawGenericBackground(int width, int height, int guiLeft, int guiTop, float zLevel) {		
-		//MainBG
-		Gui.drawRect(guiLeft+3, guiTop+3, guiLeft+width-3, guiTop+height-3, GuiUtilities.getColor(198, 198, 198));
-		GL11.glColor3f(1.0f, 1.0f, 1.0f);
+	public static void drawGenericBackground(int width, int height, int guiLeft, int guiTop, float zLevel, Color mainTint, Color rimTint) {		
+		//MainBG	
+		GL11.glColor3f((float)mainTint.getRed()/255.0f, (float)mainTint.getGreen()/255.0f, (float)mainTint.getBlue()/255.0f);
+		Gui.drawRect(guiLeft+3, guiTop+3, guiLeft+width-3, guiTop+height-3, GuiUtilities.getColor(mainTint.getRed(), mainTint.getGreen(), mainTint.getBlue()));
+		
+		GL11.glColor3f((float)rimTint.getRed()/255.0f, (float)rimTint.getGreen()/255.0f, (float)rimTint.getBlue()/255.0f);
 		
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.GENERIC_GUI);
 		GL11.glEnable(GL11.GL_BLEND);
@@ -33,6 +37,9 @@ public class GuiDrawUtilities {
 		drawTexturedGenericRect(guiLeft+4, guiTop+height-3, width-8, 3, zLevel, 4*genericBackgroundPixel, 6*genericBackgroundPixel, 5*genericBackgroundPixel, 9*genericBackgroundPixel);
 		drawTexturedGenericRect(guiLeft+width-3, guiTop+4, 3, height-8, zLevel, 6*genericBackgroundPixel, 3*genericBackgroundPixel, 9*genericBackgroundPixel, 4*genericBackgroundPixel);
 		GL11.glDisable(GL11.GL_BLEND);
+	}
+	public static void drawGenericBackground(int width, int height, int guiLeft, int guiTop, float zLevel) {		
+		drawGenericBackground(width, height, guiLeft, guiTop, zLevel, new Color(198, 198, 198), new Color(255, 255, 255));
 	}
 	public static void drawPlayerInventorySlots(int xPos, int yPos) {
 		for (int i = 0; i < 3; i++) {
@@ -55,7 +62,6 @@ public class GuiDrawUtilities {
 		Gui.drawRect(xPos+width, yPos, xPos+width+1, yPos+height+1, GuiUtilities.getColor(255, 255, 255));
 		
 		Gui.drawRect(xPos, yPos, xPos+width, yPos+height, GuiUtilities.getColor(139, 139, 139));
-		GlStateManager.enableLighting();
 	}
     public static void drawTexturedGenericRect(int xCoord, int yCoord, int width, int height, float zLevel, double minU, double minV, double maxU, double maxV) {
 		GlStateManager.disableLighting();
@@ -67,7 +73,7 @@ public class GuiDrawUtilities {
         bufferbuilder.pos(xCoord+width, yCoord, zLevel).tex(maxU, minV).endVertex();
         bufferbuilder.pos(xCoord, yCoord, zLevel).tex(minU, minV).endVertex();
         tessellator.draw();
-		GlStateManager.enableLighting();
+		//GlStateManager.enableLighting();
     }
 	public static void drawStringWithSize(String text, int xPos, int yPos, float scale, int color, boolean withShadow) {
 		int textX = (int)((xPos - Minecraft.getMinecraft().fontRenderer.getStringWidth(text) * scale) / scale) - 1;

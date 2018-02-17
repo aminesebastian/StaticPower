@@ -3,6 +3,8 @@ package theking530.staticpower.tileentity;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -18,8 +20,10 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.assists.INameable;
 import theking530.staticpower.assists.utilities.RedstoneModeList.RedstoneMode;
 import theking530.staticpower.assists.utilities.SideModeList;
@@ -244,7 +248,6 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
     	}
         return super.hasCapability(capability, facing);
     }
-    @SuppressWarnings("unchecked")
 	public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.util.EnumFacing facing){
     	if(facing == null) {
     		return null;
@@ -252,18 +255,66 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
        	if(getSideConfiguration(facing) == Mode.Disabled || SideUtilities.getBlockSide(facing, getFacingDirection()) == BlockSide.FRONT) {
     		return null;
     	}
-    	if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-    		if(getSideConfiguration(facing) == Mode.Output) {
-    			if(slotsOutput != null) {
-        			return (T) slotsOutput;
-    			}
-    		}else{
-    			if(slotsInput != null) {
-        			return (T) slotsInput;
-    			}
-    		}
+    	if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {		
+    		Mode sideConfig = getSideConfiguration(facing);		
+			return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(new IItemHandler() {
+				public int getSlots() {
+			    	return BaseTileEntity.this.getSlots(sideConfig);
+			    }
+			    @Nonnull
+			    public ItemStack getStackInSlot(int slot) {
+			    	return BaseTileEntity.this.getStackInSlot(sideConfig, slot);
+			    }
+			    @Nonnull
+			    public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {			    
+		    		return BaseTileEntity.this.insertItem(sideConfig, slot, stack, simulate);
+			    }
+			    @Nonnull
+			    public ItemStack extractItem(int slot, int amount, boolean simulate) {
+			    	return BaseTileEntity.this.extractItem(sideConfig, slot, amount, simulate);	
+			    }
+			    public int getSlotLimit(int slot) {
+			    	return BaseTileEntity.this.getSlotLimit(sideConfig, slot);
+			    }
+			});
     	}
     	return super.getCapability(capability, facing);
+    }
+    
+    /*Item Handling*/
+    public int getSlots(Mode sideMode) {
+    	return sideMode == Mode.Input ? slotsInput.getSlots() : sideMode == Mode.Output ? slotsOutput.getSlots() : 0;
+    }
+    @Nonnull
+    public ItemStack getStackInSlot(Mode sideMode, int slot) {
+    	IItemHandler handler = sideMode == Mode.Input ? slotsInput : sideMode == Mode.Output ? slotsOutput : null;
+    	if(handler != null) {
+        	return handler.getStackInSlot(slot);
+    	}
+    	return ItemStack.EMPTY;
+    }
+    @Nonnull
+    public ItemStack insertItem(Mode sideMode, int slot, @Nonnull ItemStack stack, boolean simulate) {
+    	IItemHandler handler = sideMode == Mode.Input ? slotsInput : sideMode == Mode.Output ? slotsOutput : null;
+    	if(handler != null) {
+        	return handler.insertItem(slot, stack, simulate);
+    	}
+    	return stack;
+    }
+    @Nonnull
+    public ItemStack extractItem(Mode sideMode, int slot, int amount, boolean simulate) {
+    	IItemHandler handler = sideMode == Mode.Input ? slotsInput : sideMode == Mode.Output ? slotsOutput : null;
+    	if(handler != null) {
+        	return handler.extractItem(slot, amount, simulate);
+    	}
+    	return ItemStack.EMPTY;
+    }
+    public int getSlotLimit(Mode sideMode, int slot) {
+    	IItemHandler handler = sideMode == Mode.Input ? slotsInput : sideMode == Mode.Output ? slotsOutput : null;
+    	if(handler != null) {
+        	return handler.getSlotLimit(slot);
+    	}
+    	return 0;
     }
     
 	/*Upgrade Handling*/
@@ -325,13 +376,21 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 		return components;
 	}
 	private void preProcessUpdateComponents() {
-		for(int i=0; i<components.size(); i++) {
-			components.get(i).preProcessUpdate();
+		try{
+			for(int i=0; i<components.size(); i++) {
+				components.get(i).preProcessUpdate();
+			}
+		}catch(Exception e) {
+			StaticPower.LOGGER.warn(this.getName() + " at position " + getPos() + ": " + e.getMessage());
 		}
 	}
 	private void postProcessUpdateComponents() {
-		for(int i=0; i<components.size(); i++) {
-			components.get(i).postProcessUpdate();
+		try{
+			for(int i=0; i<components.size(); i++) {
+				components.get(i).postProcessUpdate();
+			}	
+		}catch(Exception e) {
+			StaticPower.LOGGER.warn(this.getName() + " at position " + getPos() + ": " + e.getMessage());
 		}
 	}
 	

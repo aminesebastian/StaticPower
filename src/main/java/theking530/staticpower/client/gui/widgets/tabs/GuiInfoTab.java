@@ -39,7 +39,7 @@ public class GuiInfoTab extends BaseGuiTab {
 				stringLengthMax = fontRenderer.getStringWidth(info.get(i));
 			}
 		}
-		this.tabWidth = stringLengthMax+8;
+		this.tabWidth = Math.max(fontRenderer.getStringWidth(title), stringLengthMax)+8;
 		tabTitle = title;
 	}	
 	@Override
