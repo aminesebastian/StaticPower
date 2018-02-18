@@ -2,18 +2,31 @@ package theking530.staticpower.assists.utilities;
 
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumFacing;
 
 
 public class SideUtilities {
 	
 	public enum BlockSide {
-		TOP,
-		BOTTOM,
-		FRONT,
-		BACK,
-		RIGHT,
-		LEFT;
+		TOP("Top"),
+		BOTTOM("Bottom"),
+		FRONT("Front"),
+		BACK("Back"),
+		RIGHT("Right"),
+		LEFT("Left");
+		
+		private String name;
+		
+		private BlockSide(String name) {
+			this.name = name;
+		}
+		public String getName() {
+			return "side." + name;
+		}
+		public String getLocalizedName() {
+			return I18n.format(getName());
+		}
 	}
 	/***
 	 * @param hitSide = The Side that we want to translate to a BlockSide.

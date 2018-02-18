@@ -7,10 +7,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.assists.utilities.EnumTextFormatting;
 import theking530.staticpower.assists.utilities.GuiUtilities;
 import theking530.staticpower.client.gui.BaseGuiContainer;
+import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.client.gui.widgets.buttons.ArrowButton;
 import theking530.staticpower.client.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiMachinePowerInfoTab;
@@ -36,7 +36,7 @@ public class GuiBasicFarmer extends BaseGuiContainer{
 
 		getTabManager().registerTab(infoTab = new GuiInfoTab(100, 100));
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teFarmer));
-		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teFarmer));	
+		getTabManager().registerTab(new GuiSideConfigTab(80, 80, teFarmer));	
 		getTabManager().setInitiallyOpenTab(infoTab);
 		
 		GuiMachinePowerInfoTab powerInfoTab;

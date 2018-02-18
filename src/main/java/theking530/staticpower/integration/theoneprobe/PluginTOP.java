@@ -29,8 +29,9 @@ import theking530.staticpower.assists.utilities.GuiUtilities;
 import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.integration.ICompatibilityPlugin;
 import theking530.staticpower.machines.BaseMachineWithTank;
+import theking530.staticpower.tileentity.BaseTileEntity;
+import theking530.staticpower.tileentity.IProcessing;
 import theking530.staticpower.tileentity.ISideConfigurable;
-import theking530.staticpower.tileentity.digistorenetwork.BaseDigistoreTileEntity;
 import theking530.staticpower.tileentity.digistorenetwork.digistore.TileEntityDigistore;
 
 public class PluginTOP implements ICompatibilityPlugin {
@@ -73,7 +74,7 @@ public class PluginTOP implements ICompatibilityPlugin {
 						TileEntity tile = world.getTileEntity(data.getPos());
 						
 						if(tile != null) {
-							if(tile instanceof BaseDigistoreTileEntity) {
+							if(tile instanceof BaseTileEntity) {
 								config.showCanBeHarvested(ConfigMode.NOT);
 							}
 							if(tile instanceof BaseMachineWithTank) {
@@ -95,13 +96,22 @@ public class PluginTOP implements ICompatibilityPlugin {
 	
 						TileEntity tile = world.getTileEntity(data.getPos());
 						if (tile instanceof TileEntityDigistore) {
-							if (mode == ProbeMode.NORMAL) {
+							if (!((TileEntityDigistore)tile).getStoredItem().isEmpty() && mode == ProbeMode.NORMAL) {
 								IProbeInfo infoSub = probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER).borderColor(GuiUtilities.getColor(50, 120, 180)).spacing(2));
 								
 								ItemStack stored = ((TileEntityDigistore)tile).getStoredItem();
 								infoSub.item(stored, probeInfo.defaultItemStyle().width(16).height(16)).text(TextStyleClass.INFO + stored.getDisplayName() + TextStyleClass.INFO + " (" + ((TileEntityDigistore)tile).getStoredAmount() + ")");
 							}
 						}
+						if(tile instanceof IProcessing) {
+							IProcessing processing = (IProcessing)tile;
+							IProbeInfo infoSub = probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER));
+							if(processing.getCurrentProgress() > 0) {
+								infoSub.progress(processing.getCurrentProgress(), processing.getProcessingTime());
+							}
+						}
+						
+						
 						if(tile instanceof ISideConfigurable) {
 							ISideConfigurable configurable = (ISideConfigurable)tile;
 							if(configurable.isSideConfigurable() && configurable.getSideConfiguration(data.getSideHit()) != Mode.Regular) {

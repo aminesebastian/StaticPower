@@ -11,6 +11,7 @@ import api.gui.GuiDrawUtilities;
 import api.gui.IGuiWidget;
 import api.gui.IInteractableGui;
 import api.gui.button.BaseButton;
+import api.gui.button.BaseButton.ClickedState;
 import api.gui.button.ButtonManager;
 import api.gui.tab.GuiTabManager;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -19,8 +20,13 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
 import net.minecraft.util.math.Vec3i;
 import theking530.staticpower.assists.utilities.GuiUtilities;
+import theking530.staticpower.assists.utilities.SideModeList.Mode;
+import theking530.staticpower.client.gui.widgets.GuiDrawItem;
+import theking530.staticpower.machines.tileentitycomponents.slots.StaticPowerContainerSlot;
+import theking530.staticpower.tileentity.BaseTileEntity;
 
 public abstract class BaseGuiContainer extends GuiContainer implements IInteractableGui {
 
@@ -31,6 +37,9 @@ public abstract class BaseGuiContainer extends GuiContainer implements IInteract
 	private int xSizeTarget;
 	private int ySizeTarget;
 	
+	private int outputSlotSize;
+	private int inputSlotSize;
+	
 	public BaseGuiContainer(Container inventorySlotsIn, int guiXSize, int guiYSize) {
 		super(inventorySlotsIn);
 		xSize = guiXSize;
@@ -40,6 +49,9 @@ public abstract class BaseGuiContainer extends GuiContainer implements IInteract
 		tabManager = new GuiTabManager(this);
 		buttonManager = new ButtonManager(this);
 		widgets = new ArrayList<IGuiWidget>();
+		
+		outputSlotSize = 24;
+		inputSlotSize = 16;
 	}
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
@@ -84,6 +96,7 @@ public abstract class BaseGuiContainer extends GuiContainer implements IInteract
 				drawHoveringText(widgets.get(i).getTooltip(), mouseX, mouseY, fontRenderer); 
 	        }
 		}
+		getTabManager().handleMouseMoveInteraction(mouseX, mouseY);
 	}
 	protected void drawButtons(int mouseX, int mouseY) {
 		buttonManager.drawButtons(mouseX, mouseY);
@@ -118,35 +131,37 @@ public abstract class BaseGuiContainer extends GuiContainer implements IInteract
 	public void drawPlayerInventorySlots(int xPos, int yPos) {
 		GuiDrawUtilities.drawPlayerInventorySlots(xPos, yPos);
 	}
+	public void drawSlot(int xPos, int yPos, int width, int height, Mode slotMode) {
+		if(slotMode == Mode.Regular) {
+			GuiDrawUtilities.drawSlot(xPos, yPos, width, height);
+		}else{
+			Color color = slotMode == Mode.Input ? new Color(80, 130, 179) : new Color(200, 140, 50);
+			GuiDrawUtilities.drawSlot(xPos, yPos, width, height, color);
+		}
+	}
 	public void drawSlot(int xPos, int yPos, int width, int height) {
 		GuiDrawUtilities.drawSlot(xPos, yPos, width, height);
 	}
 	public void drawStringWithSize(String text, int xPos, int yPos, float scale, int color, boolean withShadow) {
 		GuiDrawUtilities.drawStringWithSize(text, xPos, yPos, scale, color, withShadow);
 	}
-	
-	@Override	
-	protected void mouseClicked(int x, int y, int button) throws IOException{
-	    super.mouseClicked(x, y, button);
-	    tabManager.handleMouseInteraction(x, y, button);
-	    buttonManager.handleMouseInteraction(x, y, button);
-		for(int i=0; i<widgets.size(); i++) {
-			widgets.get(i).mouseClick(x, y, button);
+	public void drawContainerSlots(BaseTileEntity te, List<Slot> slots) {
+		for(Slot slot : slots) {
+			if(slot instanceof StaticPowerContainerSlot) {
+				StaticPowerContainerSlot handlerSlot = (StaticPowerContainerSlot)slot;
+				Mode intendedMode = handlerSlot.getItemHandler() == te.slotsInput ? Mode.Input : handlerSlot.getItemHandler() == te.slotsOutput ? Mode.Output : Mode.Regular;
+				int slotSize = intendedMode == Mode.Input ? inputSlotSize : outputSlotSize;
+				int adjustment = (slotSize - 16)/2;
+				if(intendedMode != Mode.Regular) {
+					drawSlot(slot.xPos + guiLeft - adjustment, slot.yPos + guiTop - adjustment, slotSize, slotSize, te.getSideWithModeCount(intendedMode) > 0 ? intendedMode : Mode.Regular);
+				}else{
+					drawSlot(slot.xPos + guiLeft, slot.yPos + guiTop, 16, 16);
+				}
+				if(!handlerSlot.getPreviewItem().isEmpty()) {
+					GuiDrawItem.drawItem(handlerSlot.getPreviewItem(), guiLeft, guiTop, slot.xPos, slot.yPos, zLevel, handlerSlot.getPreviewAlpha());	
+				}
+			}
 		}
-	}	
-	@Override
-	protected void mouseClickMove(int x, int y, int button, long time) {
-		super.mouseClickMove(x, y, button, time);
-		tabManager.handleMouseClickMove(x, y, button, time);
-	}
-	@Override
-	protected void keyTyped(char par1, int par2) throws IOException {
-        super.keyTyped(par1, par2);
-	    tabManager.handleKeyboardInteraction(par1, par2);
-    }
-	public void registerWidget(IGuiWidget widget){
-		widgets.add(widget);
-		widget.setOwningGui(this);
 	}
     public void drawCustomBackground(Vec3i startColor, Vec3i endColor) {
         this.drawGradientRect(0, 0, this.width, this.height, GuiUtilities.getColor(startColor.getX(), startColor.getY(), startColor.getZ()), GuiUtilities.getColor(endColor.getX(), endColor.getY(), endColor.getZ()));
@@ -195,14 +210,42 @@ public abstract class BaseGuiContainer extends GuiContainer implements IInteract
         bufferbuilder.pos(xCoord, yCoord, this.zLevel).tex(minU, minV).endVertex();
         tessellator.draw();
     }
-	@Override
-	public void buttonPressed(BaseButton button) {
-		
+    
+	public void setInputSlotSize(int size) {
+		inputSlotSize = size;
+	}
+	public void setOutputSlotSize(int size) {
+		outputSlotSize = size;
 	}
 	public void setScreenSizeTarget(int xSizeTarget, int ySizeTarget) {
 		this.xSizeTarget = xSizeTarget;
 		this.ySizeTarget = ySizeTarget;
 	}
+	
+	@Override	
+	protected void mouseClicked(int x, int y, int button) throws IOException{
+	    super.mouseClicked(x, y, button);
+	    tabManager.handleMouseInteraction(x, y, button);
+	    buttonManager.handleMouseInteraction(x, y, button);
+		for(int i=0; i<widgets.size(); i++) {
+			widgets.get(i).mouseClick(x, y, button);
+		}
+	}	
+	@Override
+	protected void keyTyped(char par1, int par2) throws IOException {
+        super.keyTyped(par1, par2);
+	    tabManager.handleKeyboardInteraction(par1, par2);
+    }
+	public void registerWidget(IGuiWidget widget){
+		widgets.add(widget);
+		widget.setOwningGui(this);
+	}
+
+	@Override
+	public void buttonPressed(BaseButton button, ClickedState mouseButton) {
+		
+	}
+
 	private void animateScreenSize() {
 		if(Math.abs(xSize - xSizeTarget) > 0) {
 			int minimumAnimationVal = xSizeTarget-xSize > 0 ? 1 : -1;

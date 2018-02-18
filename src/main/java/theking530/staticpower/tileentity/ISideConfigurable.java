@@ -6,6 +6,10 @@ import theking530.staticpower.assists.utilities.SideUtilities.BlockSide;
 
 public interface ISideConfigurable {
 
+	public enum SideIncrementDirection {
+		FORWARD, BACKWARDS;
+	}
+	
 	public boolean isSideConfigurable();
 	
 	public Mode getSideConfiguration(BlockSide side);
@@ -16,5 +20,7 @@ public interface ISideConfigurable {
 	public void setSideConfiguration(Mode newMode, BlockSide side);
     public void setSideConfiguration(Mode newMode, EnumFacing facing);
     
-	public void incrementSideConfiguration(EnumFacing side);
+	public void incrementSideConfiguration(EnumFacing side, SideIncrementDirection direction);
+	
+	public int getSideWithModeCount(Mode mode);
 }

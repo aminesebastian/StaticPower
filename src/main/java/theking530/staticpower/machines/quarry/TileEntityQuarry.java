@@ -43,15 +43,14 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 	public TileEntityQuarry() {
 		initializeBasicMachine(2, 100, 100000, 1000, 10);
 		initializeTank(10000);
-		initializeSlots(1, 1, 1);
+		initializeSlots(3, 0, 0);
 		
-		DRAIN_COMPONENT = new FluidContainerComponent("BucketDrain", slotsInternal, 0, slotsInternal, 1, this, fluidTank, fluidToContainerRate);
+		registerComponent(DRAIN_COMPONENT = new FluidContainerComponent("BucketDrain", slotsInternal, 1, slotsInternal, 2, this, fluidTank, fluidToContainerRate));
 		DRAIN_COMPONENT.setMode(FluidContainerInteractionMode.FillFromContainer);
 	}
 	@Override
 	public void process(){
 		if(!getWorld().isRemote) {
-			DRAIN_COMPONENT.preProcessUpdate();
 			if(testing) {
 				STARTING_COORD = pos.offset(EnumFacing.SOUTH, 5);	
 				STARTING_COORD = STARTING_COORD.offset(EnumFacing.WEST, 1);	

@@ -7,8 +7,10 @@ import javax.annotation.Nonnull;
 
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,6 +21,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -46,6 +50,10 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 	private int updateTimer = 0;
 	private int updateTime = 10;
 	
+	private int internalSlotsCount;
+	private int inputSlotsCount;
+	private int outputSlotsCount;
+	
 	private boolean updateQueued = false;
 	private boolean disableFaceInteraction;
 	
@@ -60,6 +68,11 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 		slotsOutput = new ItemStackHandler(outputSlots);
 		slotsInternal = new ItemStackHandler(internalSlots);
 		slotsUpgrades = new ItemStackHandler(3);
+		
+		internalSlotsCount = internalSlots;
+		inputSlotsCount = inputSlots;
+		outputSlotsCount = outputSlots;
+		
 		this.disableFaceInteraction = disableFaceInteraction;
 	}
 	public void initializeSlots(int internalSlots, int inputSlots, int outputSlots) {
@@ -136,12 +149,21 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 		}
         if(slotsInput != null && slotsInput.getSlots() > 0 && nbt.hasKey("INPUTS")) {
         	slotsInput.deserializeNBT((NBTTagCompound) nbt.getTag("INPUTS"));	
+        	if(slotsInput.getSlots() != inputSlotsCount) {
+        		slotsInput.setSize(inputSlotsCount);
+        	}
         }
         if(slotsOutput != null && slotsOutput.getSlots() > 0 && nbt.hasKey("OUTPUTS")) {
             slotsOutput.deserializeNBT((NBTTagCompound) nbt.getTag("OUTPUTS"));
+        	if(slotsOutput.getSlots() != outputSlotsCount) {
+        		slotsOutput.setSize(outputSlotsCount);
+        	}
         }
         if(slotsInternal != null && slotsInternal.getSlots() > 0 && nbt.hasKey("INTERNAL")) {
             slotsInternal.deserializeNBT((NBTTagCompound) nbt.getTag("INTERNAL"));
+        	if(slotsInternal.getSlots() != internalSlotsCount) {
+        		slotsInternal.setSize(internalSlotsCount);
+        	}
         }
         if(slotsUpgrades != null && slotsUpgrades.getSlots() > 0 && nbt.hasKey("UPGRADES")) {
             slotsUpgrades.deserializeNBT((NBTTagCompound) nbt.getTag("UPGRADES"));
@@ -190,9 +212,23 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 		if (getWorld().getTileEntity(pos) != this) {
 			return false;
 		}else{
-			return player.getDistanceSq((double)pos.getX() + 0.25D, (double)pos.getY() + 0.25D, (double)pos.getZ() + 0.25D) <= 22;
+			return player.getDistanceSq((double)pos.getX() + 0.25D, (double)pos.getY() + 0.25D, (double)pos.getZ() + 0.25D) <= Math.pow(getBlockReachDistance(player), 2);
 		}
 	}
+	public static double getBlockReachDistance(EntityPlayer player) {
+
+		return player.world.isRemote ? getBlockReachDistanceClient() : player instanceof EntityPlayerMP ? getBlockReachDistanceServer((EntityPlayerMP) player) : 5D;
+	}
+	private static double getBlockReachDistanceServer(EntityPlayerMP player) {
+
+		return player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue();
+	}
+	@SideOnly (Side.CLIENT)
+	private static double getBlockReachDistanceClient() {
+
+		return Minecraft.getMinecraft().playerController.getBlockReachDistance();
+	}
+	
 	public void transferItemInternally(ItemStackHandler fromInv, int fromSlot, ItemStackHandler toInv, int toSlot) {
 		toInv.insertItem(toSlot, fromInv.extractItem(fromSlot, 1, false), false);
 	}
@@ -462,18 +498,32 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 		onSidesConfigUpdate();
 	}
 	@Override
-	public void incrementSideConfiguration(EnumFacing side){
+	public void incrementSideConfiguration(EnumFacing side, SideIncrementDirection direction){
 		BlockSide blockSideEquiv = SideUtilities.getBlockSide(side, getFacingDirection());
 		if(blockSideEquiv == BlockSide.FRONT && disableFaceInteraction) {
 			setSideConfiguration(SideModeList.Mode.Disabled, side);
 		}
+		
 		SideModeList.Mode currentSideMode = getSideConfiguration(side);
-		if(currentSideMode == Mode.Disabled) {
-			setSideConfiguration(SideModeList.Mode.Regular, side);
-		}else{
-			setSideConfiguration(SideModeList.Mode.values()[currentSideMode.ordinal()+1], side);
+		int newIndex = direction == SideIncrementDirection.FORWARD ? currentSideMode.ordinal() + 1 : currentSideMode.ordinal() - 1;
+		if(newIndex < 0) {
+			newIndex += 4;
 		}
+		newIndex %= 4;
+		
+		setSideConfiguration(SideModeList.Mode.values()[newIndex], side);
+
 		onSidesConfigUpdate();
 		updateBlock();
+	}
+	@Override
+	public int getSideWithModeCount(Mode mode) {
+		int count = 0;
+		for(Mode sideMode : getSideConfigurations()) {
+			if(sideMode == mode) {
+				count++;
+			}
+		}
+		return count;
 	}
 }

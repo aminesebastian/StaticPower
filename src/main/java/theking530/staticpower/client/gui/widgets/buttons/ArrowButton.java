@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import theking530.staticpower.assists.GuiTextures;
+import theking530.staticpower.client.gui.GuiTextures;
 
 public class ArrowButton extends GuiButton{
 	

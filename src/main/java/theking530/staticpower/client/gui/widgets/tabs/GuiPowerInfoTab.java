@@ -12,9 +12,9 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.assists.utilities.EnumTextFormatting;
 import theking530.staticpower.assists.utilities.GuiUtilities;
+import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.energy.StaticEnergyStorage;
 import theking530.staticpower.items.ModItems;
 
@@ -25,8 +25,7 @@ public class GuiPowerInfoTab extends BaseGuiTab {
 	private List<String> info;
 	private String tabTitle;
 	private StaticEnergyStorage energyStorage;
-	private int previousRF;
-	
+
 	public GuiPowerInfoTab(int width, int height, StaticEnergyStorage storage){
 		super(width, height, GuiTextures.PURPLE_TAB, ModItems.BasicPowerUpgrade);
 		fontRenderer = Minecraft.getMinecraft().fontRenderer;
@@ -100,7 +99,7 @@ public class GuiPowerInfoTab extends BaseGuiTab {
 	}
 
 	@Override
-	protected void handleExtraClickMouseMove(int x, int y, int button, long time) {
-
+	protected void handleExtraMouseMove(int mouseX, int mouseY) {
+		
 	}
 }

@@ -5,17 +5,21 @@ import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.handlers.crafting.registries.FusionRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.FusionFurnaceRecipeWrapper;
 import theking530.staticpower.machines.BaseMachine;
+import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
+import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
 
 public class TileEntityFusionFurnace extends BaseMachine {
 	
 	public TileEntityFusionFurnace() {
 		initializeSlots(5, 5, 1);
 		initializeBasicMachine(2, 1000, 100000, 80, 100);
+		registerComponent(new TileEntityItemOutputServo(this, 2, slotsOutput, 0));
+		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0, 1, 2, 3, 4));
 	}	
 	//IInventory				
 	@Override
 	public String getName() {
-		return "Fusion Furnace";		
+		return "container.FusionFurnace";		
 	}
 	
 	//Process 

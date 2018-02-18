@@ -67,7 +67,7 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
 				if(CondenserRecipeRegistry.Condensing().getFluidOutput(TANK2.getFluid()) != null) {
 					if(getWorld().getTileEntity(pos.offset(EnumFacing.UP)) instanceof TileEntityCondenser) {
 						TileEntityCondenser te = (TileEntityCondenser) getWorld().getTileEntity(pos.offset(EnumFacing.UP));
-						TANK2.drain(te.fill(TANK2.getFluid(), true), true);
+						TANK2.drain(te.fill(TANK2.getFluid(), true, EnumFacing.DOWN), true);
 					}	
 				}
 			}
@@ -186,7 +186,7 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
 	}
 	
 	@Override
-	public int fill(FluidStack resource, boolean doFill) {
+	public int fill(FluidStack resource, boolean doFill, EnumFacing facing) {
 		if(!getWorld().isRemote) {
 			updateBlock();
 		}
@@ -196,14 +196,14 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
 		return 0;
 	}
 	@Override	
-	public FluidStack drain(FluidStack resource, boolean doDrain) {
+	public FluidStack drain(FluidStack resource, boolean doDrain, EnumFacing facing) {
 		if(!getWorld().isRemote) {
 			updateBlock();
 		}
 		return TANK2.drain(resource, doDrain);
 	}
 	@Override
-	public FluidStack drain(int maxDrain, boolean doDrain) {
+	public FluidStack drain(int maxDrain, boolean doDrain, EnumFacing facing) {
 		if(!getWorld().isRemote) {
 			updateBlock();
 		}

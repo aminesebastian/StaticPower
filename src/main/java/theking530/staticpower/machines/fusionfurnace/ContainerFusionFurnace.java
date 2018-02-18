@@ -2,75 +2,37 @@ package theking530.staticpower.machines.fusionfurnace;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.SlotItemHandler;
+import theking530.staticpower.container.BaseContainer;
 import theking530.staticpower.handlers.crafting.registries.FusionRecipeRegistry;
+import theking530.staticpower.machines.tileentitycomponents.slots.OutputSlot;
+import theking530.staticpower.machines.tileentitycomponents.slots.StaticPowerContainerSlot;
 
-public class ContainerFusionFurnace extends Container {
+public class ContainerFusionFurnace extends BaseContainer {
 	
-	private TileEntityFusionFurnace FURNACE;
+	private TileEntityFusionFurnace tileEntityFusionFurnace;
 	
 	public ContainerFusionFurnace(InventoryPlayer invPlayer, TileEntityFusionFurnace teFusionFurnace) {
-		FURNACE = teFusionFurnace;
+		tileEntityFusionFurnace = teFusionFurnace;
 		
 		//Input
-		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.slotsInput, 0, 44, 44) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-		          return true;
-		        }
-		});
-		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.slotsInput, 1, 59, 24) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-		          return true;
-		        }
-		});
-		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.slotsInput, 2, 80, 17) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-		          return true;
-		        }
-		});
-		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.slotsInput, 3, 101, 24) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-		          return true;
-		        }
-		});
-		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.slotsInput, 4, 116, 44) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-		          return true;
-		        }
-		});
+		this.addSlotToContainer(new StaticPowerContainerSlot(teFusionFurnace.slotsInput, 0, 36, 40));
+		this.addSlotToContainer(new StaticPowerContainerSlot(teFusionFurnace.slotsInput, 1, 58, 28));
+		this.addSlotToContainer(new StaticPowerContainerSlot(teFusionFurnace.slotsInput, 2, 80, 17));
+		this.addSlotToContainer(new StaticPowerContainerSlot(teFusionFurnace.slotsInput, 3, 102, 28));
+		this.addSlotToContainer(new StaticPowerContainerSlot(teFusionFurnace.slotsInput, 4, 124, 40));
+		
 		//Output
-		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.slotsOutput, 0, 80, 59) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-		          return false;
-		        }
-		});	
+		this.addSlotToContainer(new OutputSlot(teFusionFurnace.slotsOutput, 0, 80, 59));
 
 		//Upgrades
-		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.slotsUpgrades, 0, 152, 12));
-		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.slotsUpgrades, 1, 152, 32));
-		this.addSlotToContainer(new SlotItemHandler(teFusionFurnace.slotsUpgrades, 2, 152, 52));
+		this.addSlotToContainer(new StaticPowerContainerSlot(teFusionFurnace.slotsUpgrades, 0, 152, 12));
+		this.addSlotToContainer(new StaticPowerContainerSlot(teFusionFurnace.slotsUpgrades, 1, 152, 32));
+		this.addSlotToContainer(new StaticPowerContainerSlot(teFusionFurnace.slotsUpgrades, 2, 152, 52));
 		
-				
-		//Inventory
-		for(int i = 0; i < 3; i++) {
-			for(int j = 0; j < 9; j++) {
-				this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
-			}
-		}
-			
-		//ActionBar
-		for(int i = 0; i < 9; i++) {
-			this.addSlotToContainer(new Slot(invPlayer, i, 8 + i * 18, 142));
-		}
+		this.addPlayerInventory(invPlayer, 8, 84);
+		this.addPlayerHotbar(invPlayer, 8, 142);		
 	}
 
 	//Shift Click Functionality
@@ -117,7 +79,7 @@ public class ContainerFusionFurnace extends Container {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
-		return FURNACE.isUseableByPlayer(player);
+		return tileEntityFusionFurnace.isUseableByPlayer(player);
 	}
 	public void detectAndSendChanges(){
         super.detectAndSendChanges();

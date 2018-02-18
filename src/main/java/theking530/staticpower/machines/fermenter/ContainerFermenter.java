@@ -29,7 +29,7 @@ public class ContainerFermenter extends Container {
             }
         }
         //Output
-        this.addSlotToContainer(new SlotItemHandler(teFERMENTER.slotsOutput, 1, 62, 52));
+        this.addSlotToContainer(new SlotItemHandler(teFERMENTER.slotsOutput, 0, 62, 52));
         
         //Battery
         this.addSlotToContainer(new SlotItemHandler(teFERMENTER.slotsInternal, 1, 27, 71));
@@ -42,9 +42,6 @@ public class ContainerFermenter extends Container {
 		this.addSlotToContainer(new SlotItemHandler(teFERMENTER.slotsUpgrades, 0, upgradeSlotX+171, upgradeSlotY+12));
 		this.addSlotToContainer(new SlotItemHandler(teFERMENTER.slotsUpgrades, 1, upgradeSlotX+171, upgradeSlotY+32));
 		this.addSlotToContainer(new SlotItemHandler(teFERMENTER.slotsUpgrades, 2, upgradeSlotX+171, upgradeSlotY+52));
-		
-		//Processing
-		this.addSlotToContainer(new SlotItemHandler(teFERMENTER.slotsInternal, 0, 10000, 10000));
 		
 		//Inventory
 		for(int i = 0; i < 3; i++) {

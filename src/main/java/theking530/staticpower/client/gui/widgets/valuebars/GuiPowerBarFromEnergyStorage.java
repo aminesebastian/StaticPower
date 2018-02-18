@@ -54,7 +54,7 @@ public class GuiPowerBarFromEnergyStorage implements IGuiWidget {
 	}
 	@Override
 	public void renderBackground(int mouseX, int mouseY, float partialTicks) {
-		GuiPowerBar.drawPowerBar(owningGui.getGuiLeft()+xPosition, owningGui.getGuiTop()+yPosition, xSize, ySize, 0.0f, machine.energyStorage.getEnergyStored(), machine.energyStorage.getMaxEnergyStored());
+		GuiPowerBarUtilities.drawPowerBar(owningGui.getGuiLeft()+xPosition, owningGui.getGuiTop()+yPosition, xSize, ySize, 0.0f, machine.energyStorage.getEnergyStored(), machine.energyStorage.getMaxEnergyStored());
 	}
 	@Override
 	public void renderForeground(int mouseX, int mouseY, float partialTicks) {}
@@ -69,9 +69,9 @@ public class GuiPowerBarFromEnergyStorage implements IGuiWidget {
 	@Override
 	public List<String> getTooltip() {
 		if(machine.processingTime == 0) {
-			return GuiPowerBar.drawText(machine.energyStorage.getEnergyStored(), machine.energyStorage.getMaxEnergyStored(), machine.energyStorage.getMaxReceive(), 0);
+			return GuiPowerBarUtilities.getTooltip(machine.energyStorage.getEnergyStored(), machine.energyStorage.getMaxEnergyStored(), machine.energyStorage.getMaxReceive(), 0);
 		}
-		return GuiPowerBar.drawText(machine.energyStorage.getEnergyStored(), machine.energyStorage.getMaxEnergyStored(), machine.energyStorage.getMaxReceive(), machine.getProcessingCost()/machine.processingTime);
+		return GuiPowerBarUtilities.getTooltip(machine.energyStorage.getEnergyStored(), machine.energyStorage.getMaxEnergyStored(), machine.energyStorage.getMaxReceive(), machine.getProcessingCost()/machine.processingTime);
 	}
 
 	@Override

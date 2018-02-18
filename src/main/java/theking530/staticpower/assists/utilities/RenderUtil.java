@@ -12,8 +12,8 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.assists.Reference;
+import theking530.staticpower.client.gui.GuiTextures;
 
 public class RenderUtil {
 	

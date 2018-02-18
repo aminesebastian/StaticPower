@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
@@ -15,10 +16,11 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.fluids.FluidDistributor;
 import theking530.staticpower.items.upgrades.BaseTankUpgrade;
 
-public class BaseMachineWithTank extends BaseMachine implements IFluidHandler {
+public class BaseMachineWithTank extends BaseMachine {
 
 	public int initialTankCapacity;
 	public int fluidToContainerRate = 10;
@@ -91,27 +93,23 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler {
 	public boolean isTankEmpty() {
 		return fluidTank.getFluidAmount() <= 0 ? true : false;
 	}
-	@Override
-	public IFluidTankProperties[] getTankProperties() {
+	public IFluidTankProperties[] getTankProperties(EnumFacing facing) {
 		return fluidTank.getTankProperties();
 	}
-	@Override
-	public int fill(FluidStack resource, boolean doFill) {
+	public int fill(FluidStack resource, boolean doFill, EnumFacing facing) {
 		if(!getWorld().isRemote) {
 			updateBlock();
 		}
 		int temp = fluidTank.fill(resource, doFill);
 		return temp;
 	}
-	@Override
-	public FluidStack drain(FluidStack resource, boolean doDrain) {
+	public FluidStack drain(FluidStack resource, boolean doDrain, EnumFacing facing) {
 		if(!getWorld().isRemote) {
 			updateBlock();
 		}
 		return fluidTank.drain(resource, doDrain);
 	}
-	@Override
-	public FluidStack drain(int maxDrain, boolean doDrain) {
+	public FluidStack drain(int maxDrain, boolean doDrain, EnumFacing facing) {
 		if(!getWorld().isRemote) {
 			updateBlock();
 		}
@@ -128,15 +126,43 @@ public class BaseMachineWithTank extends BaseMachine implements IFluidHandler {
 			return 0;
 		}			
 	}
-    @SuppressWarnings("unchecked")
 	public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.util.EnumFacing facing){
-    	if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-    		return (T) this;
+		Mode sideConfig = facing == null ? Mode.Regular : getSideConfiguration(facing);
+    	if(facing == null || sideConfig != Mode.Disabled && capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+    		return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new IFluidHandler() {
+				@Override
+				public IFluidTankProperties[] getTankProperties() {
+					return BaseMachineWithTank.this.getTankProperties(facing);
+				}
+				@Override
+				public int fill(FluidStack resource, boolean doFill) {
+					if(facing == null || sideConfig == Mode.Input) {
+						return BaseMachineWithTank.this.fill(resource, doFill, facing);
+					}
+					return 0;
+				}
+
+				@Override
+				public FluidStack drain(FluidStack resource, boolean doDrain) {
+					if(facing == null || sideConfig == Mode.Output) {
+						return BaseMachineWithTank.this.drain(resource, doDrain, facing);				
+					}
+					return null;
+				}
+				@Override
+				public FluidStack drain(int maxDrain, boolean doDrain) {
+					if(facing == null || sideConfig == Mode.Output) {
+						return BaseMachineWithTank.this.drain(maxDrain, doDrain, facing);
+					}
+					return null;
+				}			
+    		});
     	}
     	return super.getCapability(capability, facing);
     }
     public boolean hasCapability(net.minecraftforge.common.capabilities.Capability<?> capability, net.minecraft.util.EnumFacing facing){
-    	if(capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+		Mode sideConfig = facing == null ? Mode.Regular : getSideConfiguration(facing);
+    	if(sideConfig != Mode.Disabled && capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
     		return true;
     	}
         return super.hasCapability(capability, facing);

@@ -26,8 +26,8 @@ public class ContainerQuarry extends Container {
 		});	
 		
 		//Fluid Slots
-		this.addSlotToContainer(new SlotItemHandler(teQuarry.slotsInternal, 0, 7, 17));
-		this.addSlotToContainer(new SlotItemHandler(teQuarry.slotsInternal, 1, 7, 47));
+		this.addSlotToContainer(new SlotItemHandler(teQuarry.slotsInternal, 1, 7, 17));
+		this.addSlotToContainer(new SlotItemHandler(teQuarry.slotsInternal, 2, 7, 47));
 		
 		//Upgrades
 		this.addSlotToContainer(new SlotItemHandler(teQuarry.slotsUpgrades, 0, 171, 17));

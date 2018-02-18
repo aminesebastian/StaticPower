@@ -5,6 +5,7 @@ import javax.annotation.Nonnull;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.assists.utilities.SideModeList.Mode;
@@ -127,7 +128,8 @@ public class TileEsotericEnchanter extends BaseMachineWithTank {
     	return stack;
     }
     @Override
-	public int fill(FluidStack resource, boolean doFill) {
+	public int fill(FluidStack resource, boolean doFill, EnumFacing facing) {
+    	updateBlock();
 		if(resource != null && resource.getFluid() == ModFluids.LiquidExperience) {
 			return fluidTank.fill(resource, doFill);
 		}

@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import api.gui.IInteractableGui;
 import api.gui.button.BaseButton;
+import api.gui.button.BaseButton.ClickedState;
 import api.gui.button.ButtonManager;
 import api.gui.button.ItemButton;
 import api.gui.tab.BaseGuiTab;
@@ -18,9 +19,9 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.assists.utilities.EnumTextFormatting;
 import theking530.staticpower.assists.utilities.RedstoneModeList.RedstoneMode;
+import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.tileentity.IRedstoneConfigurable;
 
@@ -45,6 +46,9 @@ public class GuiRedstoneTab extends BaseGuiTab implements IInteractableGui {
 		ignoreRedstoneButton = new ItemButton(Items.GUNPOWDER, 20, 20, 0, 0);
 		lowRedstoneButton = new ItemButton(Items.REDSTONE, 20, 20, 0, 0);
 		highRedstoneButton = new ItemButton(Item.getItemFromBlock(Blocks.REDSTONE_TORCH), 20, 20, 0, 0);
+		
+		ignoreRedstoneButton.setClickSoundPitch(0.75f);
+		lowRedstoneButton.setClickSoundPitch(0.85f);
 		
 		buttonManager.registerButton(ignoreRedstoneButton);
 		buttonManager.registerButton(lowRedstoneButton);
@@ -128,11 +132,11 @@ public class GuiRedstoneTab extends BaseGuiTab implements IInteractableGui {
 
 	}
 	@Override
-	protected void handleExtraClickMouseMove(int x, int y, int button, long time) {
-		
+	protected void handleExtraMouseMove(int x, int y) {
+		buttonManager.handleMouseMoveInteraction(x, y);
 	}
 	@Override
-	public void buttonPressed(BaseButton button) {
+	public void buttonPressed(BaseButton button, ClickedState mouseButton) {
 		if(tileEntity != null) {
 			if(tileEntity instanceof IRedstoneConfigurable) {
 				
@@ -159,5 +163,10 @@ public class GuiRedstoneTab extends BaseGuiTab implements IInteractableGui {
 				}	
 			}
 		}		
+	}
+	@Override
+	public void buttonHovered(BaseButton button) {
+		// TODO Auto-generated method stub
+		
 	}	
 }

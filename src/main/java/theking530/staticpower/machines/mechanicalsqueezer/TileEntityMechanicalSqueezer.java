@@ -185,7 +185,7 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFlu
 		return processingTime;
 	}
 	@Override
-	public int getProcessingProgress() {
+	public int getCurrentProgress() {
 		return processingTimer;
 	}
 	@Override

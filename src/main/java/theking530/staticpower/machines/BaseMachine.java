@@ -191,14 +191,14 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	}
 	@Override
 	public boolean isProcessing() {
-		return processingTimer > 0;
+		return processingTimer > 0 && evauluateRedstoneSettings();
 	}
 	@Override
 	public int getProcessingTime() {
 		return processingTime;
 	}
 	@Override
-	public int getProcessingProgress() {
+	public int getCurrentProgress() {
 		return processingTimer;
 	}
 	@Override

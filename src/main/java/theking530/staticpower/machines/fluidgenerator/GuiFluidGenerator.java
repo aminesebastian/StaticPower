@@ -6,8 +6,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.client.gui.BaseGuiContainer;
+import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.client.gui.widgets.buttons.ArrowButton;
 import theking530.staticpower.client.gui.widgets.tabs.GuiPowerInfoTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
@@ -30,7 +30,7 @@ public class GuiFluidGenerator extends BaseGuiContainer {
 		registerWidget(new GuiFluidBarFromTank(teFluidGenerator.fluidTank, 30, 68, 16, 60));
 		
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teFluidGenerator));
-		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teFluidGenerator));
+		getTabManager().registerTab(new GuiSideConfigTab(80, 80, teFluidGenerator));
 		
 		GuiPowerInfoTab powerInfoTab;
 		getTabManager().registerTab(powerInfoTab = new GuiPowerInfoTab(80, 60, teFluidGenerator.getEnergyStorage()));

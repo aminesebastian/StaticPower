@@ -87,9 +87,9 @@ public class GuiTabManager {
 			registeredTabs.get(i).keyboardInteraction(par1, par2);
 		}
 	}
-	public void handleMouseClickMove(int x, int y, int button, long time) {
+	public void handleMouseMoveInteraction(int x, int y) {
 		for(int i=0; i<registeredTabs.size(); i++) {
-			registeredTabs.get(i).mouseClickMoveIntraction(i, i, i, time);
+			registeredTabs.get(i).mouseMoveIntraction(x, y);
 		}
 	}
 }

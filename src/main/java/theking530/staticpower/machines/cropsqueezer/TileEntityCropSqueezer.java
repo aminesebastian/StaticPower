@@ -1,6 +1,7 @@
 package theking530.staticpower.machines.cropsqueezer;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistry;
@@ -123,11 +124,11 @@ public class TileEntityCropSqueezer extends BaseMachineWithTank {
 		}
 	}
 	@Override
-	public int fill(FluidStack resource, boolean doFill) {
+	public int fill(FluidStack resource, boolean doFill, EnumFacing facing) {
 		if(!getWorld().isRemote) {
 			updateBlock();
 		}
-		return fluidTank.fill(resource, doFill);
+		return 0;
 	}
 }
 

@@ -75,15 +75,14 @@ public class TileEntityItemInputServo implements ITileEntityComponent{
 		if (sideConfigurable == null || sideConfigurable.getSideConfiguration(blockSide) == SideModeList.Mode.Input) {
 			EnumFacing facing = tileEntity.getWorld().getBlockState(tileEntity.getPos()).getValue(BlockHorizontal.FACING);
 			TileEntity te = tileEntity.getWorld().getTileEntity(tileEntity.getPos().offset(SideUtilities.getEnumFacingFromSide(blockSide, facing)));
-			if (te != null && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, SideUtilities.getEnumFacingFromSide(blockSide, facing))) {
-				IItemHandler inv = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, SideUtilities.getEnumFacingFromSide(blockSide, facing));
+			if (te != null && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, SideUtilities.getEnumFacingFromSide(blockSide, facing).getOpposite())) {
+				IItemHandler inv = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, SideUtilities.getEnumFacingFromSide(blockSide, facing).getOpposite());
 				for(int currentTESlot = startSlot; currentTESlot < inv.getSlots(); currentTESlot++) {
-					ItemStack stack = inv.getStackInSlot(currentTESlot).copy();
+					ItemStack stack = inv.extractItem(currentTESlot, 64, true);
 					if(stack != null) { //Find a way to check if input item is valid.
-						if (InventoryUtilities.canInsertItemIntoSlot(inventory, inputSlot, stack)) {	
-							System.out.println("can Insert");
-							ItemStack returnedStack = inventory.insertItem(inputSlot, stack, false);
-							inv.extractItem(currentTESlot, stack.getCount() - returnedStack.getCount(), false);																	
+						if (InventoryUtilities.canInsertItemIntoSlot(inventory, inputSlot, stack)) {
+							ItemStack actualPull = inv.extractItem(currentTESlot, 64, false);
+							inventory.insertItem(inputSlot, actualPull, false);																
 						}
 					}
 				}		

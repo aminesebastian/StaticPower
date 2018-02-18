@@ -3,6 +3,7 @@ package theking530.staticpower.items.itemfilter;
 import java.util.Arrays;
 
 import api.gui.button.BaseButton;
+import api.gui.button.BaseButton.ClickedState;
 import api.gui.button.TextButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -71,7 +72,7 @@ public class GuiItemFilter extends BaseGuiContainer {
 		modButton.setPosition(guiLeft+118, guiTop+40); 
 	}
 	@Override
-	public void buttonPressed(BaseButton button) {
+	public void buttonPressed(BaseButton button, ClickedState mouseButton) {
 		if(button == whitelistButton) {
 			inventoryItemFilter.setWhiteListMode(!inventoryItemFilter.getWhiteListMode());
 			String mode = inventoryItemFilter.getWhiteListMode() == true ? "W" : "B";

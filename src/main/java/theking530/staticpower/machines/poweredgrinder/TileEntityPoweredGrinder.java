@@ -28,7 +28,7 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 	//IInventory				
 	@Override
 	public String getName() {
-		return "Powered Grinder";		
+		return "container.PoweredGrinder";		
 	}
 	
 	//Process 

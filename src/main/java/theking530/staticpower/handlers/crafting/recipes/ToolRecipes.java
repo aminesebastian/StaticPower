@@ -23,27 +23,27 @@ public class ToolRecipes {
 		registerToolSet(ingredientFromItem(ModItems.LumumIngot), "lumum", new ItemStack(ModTools.LumumAxe), new ItemStack(ModTools.LumumHoe), new ItemStack(ModTools.LumumPickaxe), new ItemStack(ModTools.LumumShovel), new ItemStack(ModTools.LumumSword));
 	}
 	public static void registerToolSet(Ingredient material, String prefix, ItemStack axe, ItemStack hoe, ItemStack pickaxe, ItemStack shovel, ItemStack sword) {
-		RegisterHelper.addShapedRecipe("StaticPower_" + prefix + "Axe1", "StaticPower", axe, new Object[]{"MM ","MS "," S ",
+		RegisterHelper.registerSolderingRecipe(axe, new Object[]{"MM ","MS "," S ",
 				'M', material, 'S', ingredientFromItem(Items.STICK)});
-		RegisterHelper.addShapedRecipe("StaticPower_" + prefix + "Axe2", "StaticPower", axe, new Object[]{" MM"," SM"," S ",
+		RegisterHelper.registerSolderingRecipe(axe, new Object[]{" MM"," SM"," S ",
 				'M', material, 'S', ingredientFromItem(Items.STICK)});
-		RegisterHelper.addShapedRecipe("StaticPower_" + prefix + "Hoe1", "StaticPower", hoe, new Object[]{"MM "," S "," S ",
+		RegisterHelper.registerSolderingRecipe(hoe, new Object[]{"MM "," S "," S ",
 				'M', material, 'S', ingredientFromItem(Items.STICK)});
-		RegisterHelper.addShapedRecipe("StaticPower_" + prefix + "Hoe2", "StaticPower", hoe, new Object[]{" MM"," S "," S ",
+		RegisterHelper.registerSolderingRecipe(hoe, new Object[]{" MM"," S "," S ",
 				'M', material, 'S', ingredientFromItem(Items.STICK)});
-		RegisterHelper.addShapedRecipe("StaticPower_" + prefix + "Pickaxe", "StaticPower", pickaxe, new Object[]{"MMM"," S "," S ",
+		RegisterHelper.registerSolderingRecipe(pickaxe, new Object[]{"MMM"," S "," S ",
 				'M', material, 'S', ingredientFromItem(Items.STICK)});
-		RegisterHelper.addShapedRecipe("StaticPower_" + prefix + "Shovel1", "StaticPower", shovel, new Object[]{"M  ","S  ","S  ",
+		RegisterHelper.registerSolderingRecipe(shovel, new Object[]{"M  ","S  ","S  ",
 				'M', material, 'S', ingredientFromItem(Items.STICK)});
-		RegisterHelper.addShapedRecipe("StaticPower_" + prefix + "Shovel2", "StaticPower", shovel, new Object[]{" M "," S "," S ",
+		RegisterHelper.registerSolderingRecipe(shovel, new Object[]{" M "," S "," S ",
 				'M', material, 'S', ingredientFromItem(Items.STICK)});
-		RegisterHelper.addShapedRecipe("StaticPower_" + prefix + "Shovel3", "StaticPower", shovel, new Object[]{"  M","  S","  S",
+		RegisterHelper.registerSolderingRecipe(shovel, new Object[]{"  M","  S","  S",
 				'M', material, 'S', ingredientFromItem(Items.STICK)});
-		RegisterHelper.addShapedRecipe("StaticPower_" + prefix + "Sword1", "StaticPower", sword, new Object[]{"M  ","M  ","S  ",
+		RegisterHelper.registerSolderingRecipe(sword, new Object[]{"M  ","M  ","S  ",
 				'M', material, 'S', ingredientFromItem(Items.STICK)});
-		RegisterHelper.addShapedRecipe("StaticPower_" + prefix + "Sword2", "StaticPower", sword, new Object[]{" M "," M "," S ",
+		RegisterHelper.registerSolderingRecipe(sword, new Object[]{" M "," M "," S ",
 				'M', material, 'S', ingredientFromItem(Items.STICK)});
-		RegisterHelper.addShapedRecipe("StaticPower_" + prefix + "Sword3", "StaticPower", sword, new Object[]{"  M","  M","  S",
+		RegisterHelper.registerSolderingRecipe(sword, new Object[]{"  M","  M","  S",
 				'M', material, 'S', ingredientFromItem(Items.STICK)});
 	}
 	public static Ingredient ingredientFromBlock(Block block) {

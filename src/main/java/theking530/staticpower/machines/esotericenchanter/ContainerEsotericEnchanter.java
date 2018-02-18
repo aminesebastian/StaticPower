@@ -6,9 +6,12 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.items.SlotItemHandler;
 import theking530.staticpower.container.BaseContainer;
+import theking530.staticpower.items.ModItems;
 import theking530.staticpower.items.upgrades.BaseUpgrade;
+import theking530.staticpower.machines.tileentitycomponents.slots.FluidContainerSlot;
+import theking530.staticpower.machines.tileentitycomponents.slots.OutputSlot;
+import theking530.staticpower.machines.tileentitycomponents.slots.StaticPowerContainerSlot;
 
 public class ContainerEsotericEnchanter extends BaseContainer {
 	
@@ -18,24 +21,24 @@ public class ContainerEsotericEnchanter extends BaseContainer {
 		esotericEnchanter = teEsotericEnchanter;
 		
 		//InputSlots
-		this.addSlotToContainer(new SlotItemHandler(esotericEnchanter.slotsInput, 0, 32, 35));
-		this.addSlotToContainer(new SlotItemHandler(esotericEnchanter.slotsInput, 1, 52, 35));
-		this.addSlotToContainer(new SlotItemHandler(esotericEnchanter.slotsInput, 2, 72, 35));
+		this.addSlotToContainer(new StaticPowerContainerSlot(new ItemStack(Items.BOOK), esotericEnchanter.slotsInput, 0, 30, 35));
+		this.addSlotToContainer(new StaticPowerContainerSlot(esotericEnchanter.slotsInput, 1, 52, 35));
+		this.addSlotToContainer(new StaticPowerContainerSlot(esotericEnchanter.slotsInput, 2, 74, 35));
 		
 		//OutputSlots
-		this.addSlotToContainer(new SlotItemHandler(esotericEnchanter.slotsOutput, 0, 122, 35));
+		this.addSlotToContainer(new OutputSlot(esotericEnchanter.slotsOutput, 0, 126, 35));
 			
 		//BatterySlot
-		this.addSlotToContainer(new SlotItemHandler(esotericEnchanter.slotsInternal, 3, 8, 54));
+		this.addSlotToContainer(new StaticPowerContainerSlot(new ItemStack(ModItems.BasicBattery), esotericEnchanter.slotsInternal, 3, 8, 54));
 		
 		//FluidContainerSlots
-		this.addSlotToContainer(new SlotItemHandler(esotericEnchanter.slotsInternal, 4, -24, 11));
-		this.addSlotToContainer(new SlotItemHandler(esotericEnchanter.slotsInternal, 5, -24, 43));
+		this.addSlotToContainer(new FluidContainerSlot(esotericEnchanter.slotsInternal, 4, -24, 11));
+		this.addSlotToContainer(new StaticPowerContainerSlot(esotericEnchanter.slotsInternal, 5, -24, 43));
 		
 		//Upgrades
-		this.addSlotToContainer(new SlotItemHandler(esotericEnchanter.slotsUpgrades, 0, -24, 76));
-		this.addSlotToContainer(new SlotItemHandler(esotericEnchanter.slotsUpgrades, 1, -24, 94));
-		this.addSlotToContainer(new SlotItemHandler(esotericEnchanter.slotsUpgrades, 2, -24, 112));
+		this.addSlotToContainer(new StaticPowerContainerSlot(esotericEnchanter.slotsUpgrades, 0, -24, 76));
+		this.addSlotToContainer(new StaticPowerContainerSlot(esotericEnchanter.slotsUpgrades, 1, -24, 94));
+		this.addSlotToContainer(new StaticPowerContainerSlot(esotericEnchanter.slotsUpgrades, 2, -24, 112));
 		
 		this.addPlayerInventory(invPlayer, 8, 84);
 		this.addPlayerHotbar(invPlayer, 8, 142);

@@ -5,20 +5,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import api.gui.GuiDrawUtilities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import theking530.staticpower.assists.GuiTextures;
+import theking530.staticpower.client.gui.GuiTextures;
 
-public class GuiPowerBar {
-	
-	public GuiPowerBar() {
-		
-	}
-	
-	public static List<String> drawText(int currentEnergy, int maxEnergy, int energyPerTick, int powerUse) {
+public class GuiPowerBarUtilities {
+
+	public static List<String> getTooltip(int currentEnergy, int maxEnergy, int energyPerTick, int powerUse) {
     	String text = ("Input: " + energyPerTick + " RF/t");
     	if(powerUse > 0) {
     		text += "=" + "Usage: " + powerUse + " RF/t";
@@ -31,7 +28,10 @@ public class GuiPowerBar {
 		float u1 = (float)currentEnergy/(float)maxEnergy;
 		float k1 = u1 * height;
 
-		float glowState = getGlow();
+		
+		GuiDrawUtilities.drawSlot(xpos, ypos-height, width, height);
+		
+		float glowState = getPowerBarGlow();
 		GlStateManager.disableLighting();
 		Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder vertexbuffer = tessellator.getBuffer();
@@ -54,9 +54,10 @@ public class GuiPowerBar {
 		tessellator.draw();
 
 		GlStateManager.color(1.0f, 1.0f, 1.0f);
+
 		GlStateManager.enableLighting();
 	}
-	private static float getGlow() {
+	private static float getPowerBarGlow() {
 		float sin = (float)(Math.sin((float)Minecraft.getSystemTime() / 1000.0f));
 
 		sin = Math.abs(sin);

@@ -17,11 +17,11 @@ import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.assists.utilities.GuiUtilities;
 import theking530.staticpower.blocks.ModBlocks;
-import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBar;
+import theking530.staticpower.client.gui.GuiTextures;
+import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticpower.handlers.crafting.registries.FermenterRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.FermenterOutputWrapper;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
@@ -71,7 +71,7 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<JEIFermenterR
 	    public void drawExtras(@Nonnull Minecraft minecraft) {
 	    	GuiDrawUtilities.drawSlot(13, 2, 16, 60);
 	    	
-	    	GuiPowerBar.drawPowerBar(0, 62, 6, 60, 1.0f, currentPower, 10000);
+	    	GuiPowerBarUtilities.drawPowerBar(0, 62, 6, 60, 1.0f, currentPower, 10000);
 	    	GuiDrawUtilities.drawSlot(0, 2, 6, 60);
 	    	
 	    	currentPower -= 2;

@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.util.Arrays;
 
 import api.gui.button.BaseButton;
+import api.gui.button.BaseButton.ClickedState;
 import api.gui.button.TextButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -35,11 +36,11 @@ public class GuiDigistore extends BaseGuiContainer {
 		infoTab = new GuiInfoTab(100, 65);
 		getTabManager().registerTab(infoTab);
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, barrel));
-		//getTabManager().registerTab(new GuiSideConfigTab(100, 100, barrel));
+		//getTabManager().registerTab(new GuiSideConfigTab(80, 80, barrel));
 		getTabManager().setInitiallyOpenTab(infoTab);
 	}
 	@Override
-	public void buttonPressed(BaseButton button) {
+	public void buttonPressed(BaseButton button, ClickedState mouseButton) {
 		if(barrel != null) {
 			barrel.setLocked(!barrel.isLocked());
 			button.setToggled(barrel.isLocked());

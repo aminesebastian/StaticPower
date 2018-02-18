@@ -22,7 +22,7 @@ import net.minecraft.item.ItemStack;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.assists.utilities.GuiUtilities;
 import theking530.staticpower.blocks.ModBlocks;
-import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBar;
+import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticpower.handlers.crafting.registries.EsotericEnchanterRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.EsotericEnchanterRecipeWrapper;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
@@ -72,7 +72,7 @@ public class EsotericEnchanterRecipeCategory extends BaseJEIRecipeCategory<JEIEs
 	    public void drawExtras(@Nonnull Minecraft minecraft) {
 	    	GuiDrawUtilities.drawSlot(8, 0, 16, 60);
 	       	GuiDrawUtilities.drawSlot(152, 0, 16, 60);
-	    	GuiPowerBar.drawPowerBar(8, 60, 16, 60, 1.0f, currentPower, 10000);
+	    	GuiPowerBarUtilities.drawPowerBar(8, 60, 16, 60, 1.0f, currentPower, 10000);
 
 			GuiDrawUtilities.drawSlot(32, 22, 16, 16);
 			GuiDrawUtilities.drawSlot(52, 22, 16, 16);

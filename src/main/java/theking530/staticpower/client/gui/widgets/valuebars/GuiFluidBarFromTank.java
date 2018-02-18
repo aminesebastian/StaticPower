@@ -4,7 +4,9 @@ import java.util.List;
 
 import api.gui.IGuiWidget;
 import net.minecraftforge.fluids.IFluidTank;
+import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.client.gui.BaseGuiContainer;
+import theking530.staticpower.tileentity.ISideConfigurable;
 
 public class GuiFluidBarFromTank implements IGuiWidget{
 	
@@ -16,17 +18,24 @@ public class GuiFluidBarFromTank implements IGuiWidget{
 	private int ySize;
 	private BaseGuiContainer owningGui;
 	
-	public GuiFluidBarFromTank(IFluidTank tank, int xPosition, int yPosition, int xSize, int ySize) {
+	private Mode mode;
+	private ISideConfigurable sideConfigurable;
+	
+	public GuiFluidBarFromTank(IFluidTank tank, int xPosition, int yPosition, int xSize, int ySize, Mode mode, ISideConfigurable sideConfigurable) {
 		this.tank = tank;
 		this.isVisible = true;
 		this.xPosition = xPosition;
 		this.yPosition = yPosition;
 		this.xSize = xSize;
 		this.ySize = ySize;
+		this.mode = mode;
+		this.sideConfigurable = sideConfigurable;
+	}
+	public GuiFluidBarFromTank(IFluidTank tank, int xPosition, int yPosition, int xSize, int ySize) {
+		this(tank, xPosition, yPosition, xSize, ySize, null, null);
 	}
 	public GuiFluidBarFromTank(IFluidTank tank) {
-		this.tank = tank;
-		this.isVisible = true;
+		this(tank, 0, 0, 0, 0);
 	}
 	
 	@Override
@@ -34,10 +43,10 @@ public class GuiFluidBarFromTank implements IGuiWidget{
 		this.owningGui = owningGui;		
 	}
 	public List<String> drawText() {
-		return GuiFluidBar.drawText(tank.getFluidAmount(), tank.getCapacity(), tank.getFluid());
+		return GuiFluidBarUtilities.getTooltip(tank.getFluidAmount(), tank.getCapacity(), tank.getFluid());
 	}
 	public void drawFluidBar(int xpos, int ypos, int width, int height, float zLevel) {  
-		GuiFluidBar.drawFluidBar(tank.getFluid(),tank.getCapacity(), tank.getFluidAmount(),xpos, ypos, zLevel, width, height);
+
 	}
 	@Override
 	public boolean isVisible() {
@@ -59,7 +68,13 @@ public class GuiFluidBarFromTank implements IGuiWidget{
 	}
 	@Override
 	public void renderBackground(int mouseX, int mouseY, float partialTicks) {
-		GuiFluidBar.drawFluidBar(tank.getFluid(),tank.getCapacity(), tank.getFluidAmount(), owningGui.getGuiLeft()+xPosition, owningGui.getGuiTop()+yPosition, 0.0f, xSize, ySize);
+		if(sideConfigurable != null && mode != null) {
+			if(sideConfigurable.getSideWithModeCount(mode) > 0) {
+				GuiFluidBarUtilities.drawFluidBar(tank.getFluid(),tank.getCapacity(), tank.getFluidAmount(),owningGui.getGuiLeft()+xPosition, owningGui.getGuiTop()+yPosition, 0.0f, xSize, ySize, mode);	
+				return;
+			}
+		}
+		GuiFluidBarUtilities.drawFluidBar(tank.getFluid(),tank.getCapacity(), tank.getFluidAmount(),owningGui.getGuiLeft()+xPosition, owningGui.getGuiTop()+yPosition, 0.0f, xSize, ySize);	
 	}
 	@Override
 	public void renderForeground(int mouseX, int mouseY, float partialTicks) {}
@@ -73,7 +88,7 @@ public class GuiFluidBarFromTank implements IGuiWidget{
 	}
 	@Override
 	public List<String> getTooltip() {
-		return GuiFluidBar.drawText(tank.getFluidAmount(), tank.getCapacity(), tank.getFluid());
+		return GuiFluidBarUtilities.getTooltip(tank.getFluidAmount(), tank.getCapacity(), tank.getFluid());
 	}
 	@Override
 	public void mouseHover(int mouseX, int mouseY) {		

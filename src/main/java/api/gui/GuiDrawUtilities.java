@@ -10,8 +10,8 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.assists.utilities.GuiUtilities;
+import theking530.staticpower.client.gui.GuiTextures;
 
 public class GuiDrawUtilities {
 	private static final float genericBackgroundPixel = 1.0f/9.0f;
@@ -51,8 +51,13 @@ public class GuiDrawUtilities {
 			drawSlot(xPos + i * 18, yPos+59, 16, 16);
 		}
 	}
-	public static void drawSlot(int xPos, int yPos, int width, int height) {
+	public static void drawSlot(int xPos, int yPos, int width, int height, Color color) {
 		GlStateManager.disableLighting();
+		
+		if(color != null) {
+			Gui.drawRect(xPos-2, yPos-2, xPos+width+2, yPos+height+2, GuiUtilities.getColor(color.getRed(), color.getGreen(), color.getBlue()));			
+		}	
+		
 		Gui.drawRect(xPos-1, yPos-1, xPos, yPos+height, GuiUtilities.getColor(55, 55, 55));
 		Gui.drawRect(xPos, yPos-1, xPos+width, yPos, GuiUtilities.getColor(55, 55, 55));
 		Gui.drawRect(xPos+width, yPos-1, xPos+width+1, yPos, GuiUtilities.getColor(139, 139, 139));
@@ -62,6 +67,10 @@ public class GuiDrawUtilities {
 		Gui.drawRect(xPos+width, yPos, xPos+width+1, yPos+height+1, GuiUtilities.getColor(255, 255, 255));
 		
 		Gui.drawRect(xPos, yPos, xPos+width, yPos+height, GuiUtilities.getColor(139, 139, 139));
+		GL11.glColor3f(1.0f, 1.0f, 1.0f);
+	}
+	public static void drawSlot(int xPos, int yPos, int width, int height) {
+		drawSlot(xPos, yPos, width, height, null);
 	}
     public static void drawTexturedGenericRect(int xCoord, int yCoord, int width, int height, float zLevel, double minU, double minV, double maxU, double maxV) {
 		GlStateManager.disableLighting();
@@ -73,7 +82,6 @@ public class GuiDrawUtilities {
         bufferbuilder.pos(xCoord+width, yCoord, zLevel).tex(maxU, minV).endVertex();
         bufferbuilder.pos(xCoord, yCoord, zLevel).tex(minU, minV).endVertex();
         tessellator.draw();
-		//GlStateManager.enableLighting();
     }
 	public static void drawStringWithSize(String text, int xPos, int yPos, float scale, int color, boolean withShadow) {
 		int textX = (int)((xPos - Minecraft.getMinecraft().fontRenderer.getStringWidth(text) * scale) / scale) - 1;
@@ -95,4 +103,17 @@ public class GuiDrawUtilities {
 		GlStateManager.enableLighting();
 		GlStateManager.enableDepth();
 	}
+    public static void drawTexturedModalRect(float x, float y, float width, float height, float minU, float minV, float maxU, float maxV) {
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferbuilder = tessellator.getBuffer();
+        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+        bufferbuilder.pos((double)(x + 0), (double)(y + height), 0.0).tex((double)((float)(minU)), (double)((float)(maxV))).endVertex();
+        bufferbuilder.pos((double)(x + width), (double)(y + height), 0.0).tex((double)((float)(maxU)), (double)((float)(maxV))).endVertex();
+        bufferbuilder.pos((double)(x + width), (double)(y + 0), 0.0).tex((double)((float)(maxU)), (double)((float)(minV))).endVertex();
+        bufferbuilder.pos((double)(x + 0), (double)(y + 0), 0.0).tex((double)((float)(minU)), (double)((float)(minV))).endVertex();
+        tessellator.draw();
+    }
+    public static void drawTexturedModalRect(float x, float y, float width, float height, float minU, float minV,  float maxU, float maxV, float texetSize) {
+    	drawTexturedModalRect(x, y, width, height, minU*texetSize, minV*texetSize, maxU*texetSize, maxV*texetSize);
+    }
 }

@@ -9,7 +9,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import theking530.staticpower.assists.GuiTextures;
+import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.handlers.PacketHandler;
 
 public class GuiTimer extends GuiContainer{

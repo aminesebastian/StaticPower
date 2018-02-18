@@ -139,7 +139,7 @@ public class TileEntityCondenser extends BaseMachineWithTank  {
 		return false;
 	}
 	@Override
-	public int fill(FluidStack resource, boolean doFill) {
+	public int fill(FluidStack resource, boolean doFill, EnumFacing facing) {
 		if(!getWorld().isRemote) {
 			updateBlock();
 		}
@@ -149,14 +149,14 @@ public class TileEntityCondenser extends BaseMachineWithTank  {
 		return 0;
 	}
 	@Override	
-	public FluidStack drain(FluidStack resource, boolean doDrain) {
+	public FluidStack drain(FluidStack resource, boolean doDrain, EnumFacing facing) {
 		if(!getWorld().isRemote) {
 			updateBlock();
 		}
 		return TANK2.drain(resource, doDrain);
 	}
 	@Override
-	public FluidStack drain(int maxDrain, boolean doDrain) {
+	public FluidStack drain(int maxDrain, boolean doDrain, EnumFacing facing) {
 		if(!getWorld().isRemote) {
 			updateBlock();
 		}

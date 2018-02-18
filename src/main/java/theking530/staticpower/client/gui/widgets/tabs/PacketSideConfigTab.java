@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import theking530.staticpower.assists.utilities.SideModeList;
-import theking530.staticpower.tileentity.BaseTileEntity;
+import theking530.staticpower.tileentity.ISideConfigurable;
   
 public class PacketSideConfigTab implements IMessage{
     private int SIDE0;
@@ -21,6 +21,7 @@ public class PacketSideConfigTab implements IMessage{
     private int z;
 
     public PacketSideConfigTab() {}
+    
     
     public PacketSideConfigTab(SideModeList.Mode[] sideModes, BlockPos pos) {
       this.SIDE0 = sideModes[0].ordinal();
@@ -61,11 +62,11 @@ public class PacketSideConfigTab implements IMessage{
       buf.writeInt(z);
     }
     public static class Message implements IMessageHandler<PacketSideConfigTab, IMessage> {
-    @Override
-    public IMessage onMessage(PacketSideConfigTab message, MessageContext ctx) {
+    	@Override
+    	public IMessage onMessage(PacketSideConfigTab message, MessageContext ctx) {
     		TileEntity te = ctx.getServerHandler().player.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
-    		if(te != null && te instanceof BaseTileEntity) {
-    			BaseTileEntity entity = (BaseTileEntity)te;
+    		if(te != null && te instanceof ISideConfigurable) {
+    			ISideConfigurable entity = (ISideConfigurable)te;
     			entity.getSideConfigurations()[0] = SideModeList.Mode.values()[message.SIDE0];
     			entity.getSideConfigurations()[1] = SideModeList.Mode.values()[message.SIDE1];
     			entity.getSideConfigurations()[2] = SideModeList.Mode.values()[message.SIDE2];
@@ -73,7 +74,7 @@ public class PacketSideConfigTab implements IMessage{
     			entity.getSideConfigurations()[4] = SideModeList.Mode.values()[message.SIDE4];
     			entity.getSideConfigurations()[5] = SideModeList.Mode.values()[message.SIDE5];
     		}
-		return null;
+    		return null;
     	}
     }
 }

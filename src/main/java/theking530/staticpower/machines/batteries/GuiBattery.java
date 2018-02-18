@@ -4,8 +4,8 @@ import api.gui.tab.BaseGuiTab.TabSide;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.client.gui.BaseGuiContainer;
+import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.client.gui.widgets.tabs.GuiPowerControlTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiPowerInfoTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
@@ -24,7 +24,7 @@ public class GuiBattery extends BaseGuiContainer {
 		registerWidget(new GuiPowerBarFromEnergyStorage(teSBattery, 80, 71, 16, 51));
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teSBattery));
 		getTabManager().registerTab(new GuiPowerControlTab(100, 70, teSBattery));
-		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teSBattery));
+		getTabManager().registerTab(new GuiSideConfigTab(80, 80, teSBattery));
 		
 		GuiPowerInfoTab powerInfoTab;
 		getTabManager().registerTab(powerInfoTab = new GuiPowerInfoTab(80, 60, teSBattery.getEnergyStorage()));

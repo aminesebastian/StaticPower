@@ -2,14 +2,17 @@ package theking530.staticpower.machines.former;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.SlotItemHandler;
+import theking530.staticpower.container.BaseContainer;
 import theking530.staticpower.handlers.crafting.registries.FormerRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.GrinderRecipeRegistry;
+import theking530.staticpower.items.ModItems;
+import theking530.staticpower.machines.tileentitycomponents.slots.BatterySlot;
+import theking530.staticpower.machines.tileentitycomponents.slots.OutputSlot;
+import theking530.staticpower.machines.tileentitycomponents.slots.StaticPowerContainerSlot;
 
-public class ContainerFormer extends Container {
+public class ContainerFormer extends BaseContainer {
 	
 	private TileEntityFormer former;
 
@@ -17,14 +20,14 @@ public class ContainerFormer extends Container {
 	public ContainerFormer(InventoryPlayer invPlayer, TileEntityFormer tePoweredGrinder) {
 		former = tePoweredGrinder;
 		//Input Former
-		addSlotToContainer(new SlotItemHandler(tePoweredGrinder.slotsInput, 0, 59, 34) {
+		addSlotToContainer(new StaticPowerContainerSlot(tePoweredGrinder.slotsInput, 0, 59, 34) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		        return tePoweredGrinder.hasResult(itemStack);		          
 		    }
 		});
 		//Input Mold
-		addSlotToContainer(new SlotItemHandler(tePoweredGrinder.slotsInput, 1, 37, 34) {
+		addSlotToContainer(new StaticPowerContainerSlot(new ItemStack(ModItems.PlateMould), 0.3f, tePoweredGrinder.slotsInput, 1, 37, 34) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 				return FormerRecipeRegistry.Forming().isValidMold(itemStack);	          
@@ -32,40 +35,18 @@ public class ContainerFormer extends Container {
 		});
 
 		//Battery
-		addSlotToContainer(new SlotItemHandler(tePoweredGrinder.slotsInternal, 1, 8, 65));
+		addSlotToContainer(new BatterySlot(tePoweredGrinder.slotsInternal, 1, 8, 65));
 		
 		//Output
-		addSlotToContainer(new SlotItemHandler(tePoweredGrinder.slotsOutput, 0, 118, 35) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-		          return false;
-		    }
-		});	
+		addSlotToContainer(new OutputSlot(tePoweredGrinder.slotsOutput, 0, 118, 35));
 		
 		//Upgrades
-		addSlotToContainer(new SlotItemHandler(tePoweredGrinder.slotsUpgrades, 0, 152, 12));
-		addSlotToContainer(new SlotItemHandler(tePoweredGrinder.slotsUpgrades, 1, 152, 32));
-		addSlotToContainer(new SlotItemHandler(tePoweredGrinder.slotsUpgrades, 2, 152, 52));
+		addSlotToContainer(new StaticPowerContainerSlot(tePoweredGrinder.slotsUpgrades, 0, 152, 12));
+		addSlotToContainer(new StaticPowerContainerSlot(tePoweredGrinder.slotsUpgrades, 1, 152, 32));
+		addSlotToContainer(new StaticPowerContainerSlot(tePoweredGrinder.slotsUpgrades, 2, 152, 52));
 		
-		//Processing
-		addSlotToContainer(new SlotItemHandler(tePoweredGrinder.slotsInternal, 0, 10000, 10000) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-		          return false;
-		    }
-		});
-				
-		//Inventory
-		for(int i = 0; i < 3; i++) {
-			for(int j = 0; j < 9; j++) {
-				addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
-			}
-		}
-			
-		//ActionBar
-		for(int i = 0; i < 9; i++) {
-			addSlotToContainer(new Slot(invPlayer, i, 8 + i * 18, 142));
-		}
+		this.addPlayerInventory(invPlayer, 8, 84);
+		this.addPlayerHotbar(invPlayer, 8, 142);
 	}
 	
 	//Shift Click Functionality

@@ -1,4 +1,6 @@
-package theking530.staticpower.machines.poweredfurnace;
+package theking530.staticpower.machines.tileentitycomponents.slots;
+
+import javax.annotation.Nonnull;
 
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
@@ -6,9 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
 
-public class SlotWithExperienceOutput extends SlotItemHandler {
+public class SlotWithExperienceOutput extends StaticPowerContainerSlot {
 
     private final EntityPlayer thePlayer;
     private int removeCount;
@@ -18,7 +19,10 @@ public class SlotWithExperienceOutput extends SlotItemHandler {
 		thePlayer = player;
 
 	}
-
+    @Override
+    public boolean isItemValid(@Nonnull ItemStack stack) {
+		return false;	          
+    }
     /**
      * Decrease the size of the stack in slot (first int arg) by the amount of the second int arg. Returns the new
      * stack.

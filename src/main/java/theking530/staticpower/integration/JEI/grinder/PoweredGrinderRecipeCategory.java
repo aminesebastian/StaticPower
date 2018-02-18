@@ -16,11 +16,11 @@ import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.assists.utilities.GuiUtilities;
 import theking530.staticpower.blocks.ModBlocks;
-import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBar;
+import theking530.staticpower.client.gui.GuiTextures;
+import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticpower.handlers.crafting.registries.GrinderRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.GrinderOutputWrapper;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
@@ -68,7 +68,7 @@ public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<PoweredG
     @Override
     public void drawExtras(@Nonnull Minecraft minecraft) {
     	GuiDrawUtilities.drawSlot(0, 8, 16, 54);
-    	GuiPowerBar.drawPowerBar(0, 62, 16, 54, 1.0f, currentPower, 10000);
+    	GuiPowerBarUtilities.drawPowerBar(0, 62, 16, 54, 1.0f, currentPower, 10000);
     	currentPower -= 2;
     	if(currentPower <= 0) {
     		currentPower = 10000;

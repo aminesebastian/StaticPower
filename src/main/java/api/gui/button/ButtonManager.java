@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import api.gui.IInteractableGui;
+import api.gui.button.BaseButton.ClickedState;
 
 public class ButtonManager {
 
@@ -20,11 +21,6 @@ public class ButtonManager {
 	public void drawButtons(int mouseX, int mouseY) {
 		for(int i=0; i<buttonList.size(); i++) {
 			if(buttonList.get(i).isVisible()) {
-				buttonList.get(i).handleMouseMoveInteraction(mouseX, mouseY);
-			}
-		}
-		for(int i=0; i<buttonList.size(); i++) {
-			if(buttonList.get(i).isVisible()) {
 				buttonList.get(i).draw();
 			}
 		}
@@ -38,8 +34,13 @@ public class ButtonManager {
 	public void serviceButtons() {
 		for(int i=0; i<buttonList.size(); i++) {
 			if(buttonList.get(i).isClicked()) {
-				owningGui.buttonPressed(buttonList.get(i));
-				buttonList.get(i).setClicked(false);
+				owningGui.buttonPressed(buttonList.get(i), buttonList.get(i).getClickedState());
+				buttonList.get(i).setClicked(ClickedState.NONE);
+			}
+		}
+		for(int i=0; i<buttonList.size(); i++) {
+			if(buttonList.get(i).isHovered()) {
+				owningGui.buttonHovered(buttonList.get(i));
 			}
 		}
 	}
@@ -47,6 +48,13 @@ public class ButtonManager {
 		for(int i=0; i<buttonList.size(); i++) {
 			if(buttonList.get(i).isVisible()) {
 				buttonList.get(i).handleMouseInteraction(mouseX, mouseY, button);
+			}
+		}
+	}
+	public void handleMouseMoveInteraction(int mouseX, int mouseY) {
+		for(int i=0; i<buttonList.size(); i++) {
+			if(buttonList.get(i).isVisible()) {
+				buttonList.get(i).handleMouseMoveInteraction(mouseX, mouseY);
 			}
 		}
 	}

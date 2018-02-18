@@ -13,8 +13,8 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.assists.utilities.StaticVertexBuffer;
+import theking530.staticpower.client.gui.GuiTextures;
 
 public abstract class BaseGuiTab extends Gui {
 	
@@ -36,6 +36,9 @@ public abstract class BaseGuiTab extends Gui {
 	protected int xPosition;
 	protected int yPosition;
 
+	protected int xPositionOffset;
+	protected int yPositionOffset;
+	
 	private float currentWidth;
 	private float currentHeight;
 	
@@ -56,6 +59,9 @@ public abstract class BaseGuiTab extends Gui {
 		tabTexture = texture;
 		tabState = TabState.CLOSED;
 		tabSide = TabSide.RIGHT;
+
+		xPositionOffset = 0;
+		yPositionOffset = 0;
 	}
 	public BaseGuiTab(int tabWidth, int tabHeight, ResourceLocation texture, Block block) {
 		this(tabWidth, tabHeight, texture, Item.getItemFromBlock(block));
@@ -64,12 +70,12 @@ public abstract class BaseGuiTab extends Gui {
 	public void update(int xPos, int yPos, float partialTicks) {
 		updateAnimation(partialTicks);
 		
-		xPosition = xPos;
-		yPosition = yPos;
+		xPosition = xPos + xPositionOffset;
+		yPosition = yPos + yPositionOffset;
 		
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);	
-		drawTab(xPos, yPos, partialTicks);
-		drawExtra(getTabSide() == TabSide.RIGHT ? xPos : xPos - tabWidth, yPos, partialTicks);	
+		drawTab(xPosition, yPosition, partialTicks);
+		drawExtra(getTabSide() == TabSide.RIGHT ? xPosition : xPosition - tabWidth, yPosition, partialTicks);	
 
 	}
 	public void mouseInteraction(int mouseX, int mouseY, int button) {
@@ -108,9 +114,9 @@ public abstract class BaseGuiTab extends Gui {
 			handleExtraKeyboardInteraction(par1, par2);
 		}
 	}
-	public void mouseClickMoveIntraction(int x, int y, int button, long time) {
+	public void mouseMoveIntraction(int x, int y) {
 		if(isOpen()) {
-			handleExtraClickMouseMove(x, y, button, time);
+			handleExtraMouseMove(x, y);
 		}
 	}
 	public boolean isOpen() {
@@ -147,11 +153,20 @@ public abstract class BaseGuiTab extends Gui {
 	public void setManager(GuiTabManager manager) {
 		owningManager = manager;
 	}
-	
+	public void setOffsets(int xOffset, int yOffset) {
+		xPositionOffset = xOffset;
+		yPositionOffset = yOffset;
+	}
+	public int getXOffset() {
+		return xPositionOffset;
+	}
+	public int getYOffset() {
+		return yPositionOffset;
+	}
 	protected abstract void drawExtra(int xPos, int yPos, float partialTicks);
 	protected abstract void handleExtraMouseInteraction(int mouseX, int mouseY, int button);
 	protected abstract void handleExtraKeyboardInteraction(char par1, int par2);
-	protected abstract void handleExtraClickMouseMove(int mouseX, int mouseY, int button, long time);
+	protected abstract void handleExtraMouseMove(int mouseX, int mouseY);
 	
 	private void updateAnimation(float partialTicks) {
 		if(tabState == TabState.OPENING && animationTimer < animationTime) {

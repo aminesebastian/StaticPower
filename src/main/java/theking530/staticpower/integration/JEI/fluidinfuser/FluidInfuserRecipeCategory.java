@@ -13,10 +13,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.blocks.ModBlocks;
-import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBar;
+import theking530.staticpower.client.gui.GuiTextures;
+import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticpower.handlers.crafting.registries.InfuserRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.FluidInfuserOutputWrapper;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
@@ -63,7 +63,7 @@ public class FluidInfuserRecipeCategory extends BaseJEIRecipeCategory<JEIFluidIn
 	    }
 	    @Override
 	    public void drawExtras(@Nonnull Minecraft minecraft) {
-	    	GuiPowerBar.drawPowerBar(26, 62, 6, 60, 1.0f, currentPower, 10000);
+	    	GuiPowerBarUtilities.drawPowerBar(26, 62, 6, 60, 1.0f, currentPower, 10000);
 	    	
 	    	currentPower -= 2;
 	    	if(currentPower <= 0) {

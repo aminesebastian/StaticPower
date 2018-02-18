@@ -29,6 +29,7 @@ import theking530.staticpower.assists.utilities.WorldUtilities;
 import theking530.staticpower.blocks.BaseItemBlock;
 import theking530.staticpower.blocks.IItemBlockProvider;
 import theking530.staticpower.tileentity.BaseTileEntity;
+import theking530.staticpower.tileentity.ISideConfigurable.SideIncrementDirection;
 
 public class BaseMachineBlock extends Block implements IWrenchable, IItemBlockProvider {
 
@@ -156,7 +157,7 @@ public class BaseMachineBlock extends Block implements IWrenchable, IItemBlockPr
 				}	
 			}else{
 				BaseTileEntity TE = (BaseTileEntity) world.getTileEntity(pos);
-				TE.incrementSideConfiguration(facing);
+				TE.incrementSideConfiguration(facing, SideIncrementDirection.FORWARD);
 				TE.updateBlock();
 			}	
 		}

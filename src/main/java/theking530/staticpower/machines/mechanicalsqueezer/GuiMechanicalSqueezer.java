@@ -3,8 +3,8 @@
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.client.gui.BaseGuiContainer;
+import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarFromTank;
@@ -19,7 +19,7 @@ public class GuiMechanicalSqueezer extends BaseGuiContainer{
 		registerWidget(new GuiFluidBarFromTank(teCropSqueezer.fluidTank, 30, 68, 16, 60));
 
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teCropSqueezer));
-		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teCropSqueezer));
+		getTabManager().registerTab(new GuiSideConfigTab(80, 80, teCropSqueezer));
 	}
 
 	protected void drawGuiContainerForegroundLayer(int i, int j) {

@@ -13,8 +13,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.Items;
-import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.assists.utilities.GuiUtilities;
+import theking530.staticpower.client.gui.GuiTextures;
 
 public class GuiInfoTab extends BaseGuiTab {
 
@@ -100,9 +100,8 @@ public class GuiInfoTab extends BaseGuiTab {
 	protected void handleExtraKeyboardInteraction(char par1, int par2) {
 		
 	}
-
 	@Override
-	protected void handleExtraClickMouseMove(int x, int y, int button, long time) {
-
+	protected void handleExtraMouseMove(int mouseX, int mouseY) {
+		
 	}
 }

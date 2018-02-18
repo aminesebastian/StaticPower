@@ -6,12 +6,12 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.client.gui.BaseGuiContainer;
+import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.client.gui.widgets.buttons.ArrowButton;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
-import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBar;
+import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarUtilities;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiHeatBarFromStorage;
 import theking530.staticpower.fluids.ModFluids;
@@ -33,7 +33,7 @@ public class GuiDistillery extends BaseGuiContainer {
 		registerWidget(new GuiFluidBarFromTank(teFluidGenerator.TANK2, 127, 77, 16, 60));
 
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teFluidGenerator));
-		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teFluidGenerator));
+		getTabManager().registerTab(new GuiSideConfigTab(80, 80, teFluidGenerator));
 	}
 	@Override
 	public void initGui() {
@@ -85,7 +85,7 @@ public class GuiDistillery extends BaseGuiContainer {
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		
 		if(distillery.PROCESSING_STACK != null) {
-			GuiFluidBar.drawFluidBar(new FluidStack(ModFluids.Mash, 100), 100, 100, guiLeft + 90, guiTop + 49, 1, 20, 5);
+			GuiFluidBarUtilities.drawFluidBar(new FluidStack(ModFluids.Mash, 100), 100, 100, guiLeft + 90, guiTop + 49, 1, 20, 5);
 		}
 		heatbar.drawHeatBar(guiLeft + 71, guiTop + 88, this.zLevel, 16, 8);
 	}

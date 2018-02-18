@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL11;
 import api.gui.IInteractableGui;
 import api.gui.TextField;
 import api.gui.button.BaseButton;
+import api.gui.button.BaseButton.ClickedState;
 import api.gui.button.ButtonManager;
 import api.gui.button.StandardButton;
 import api.gui.tab.BaseGuiTab;
@@ -14,8 +15,8 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.assists.utilities.EnumTextFormatting;
+import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.machines.BaseMachine;
@@ -109,11 +110,11 @@ public class GuiPowerControlTab extends BaseGuiTab implements IInteractableGui{
 		MIN_PERCENTAGE.textboxKeyTyped(par1, par2);	
 	}
 	@Override
-	protected void handleExtraClickMouseMove(int mouseX, int mouseY, int button, long time) {
+	protected void handleExtraMouseMove(int mouseX, int mouseY) {
 		
 	}
 	@Override
-	public void buttonPressed(BaseButton button) {
+	public void buttonPressed(BaseButton button, ClickedState mouseButton) {
 		if(MAX_PERCENTAGE.getText() != null) {			
 			try { 
 				MAX_VALUE = Integer.valueOf(MAX_PERCENTAGE.getText().replaceFirst(".*?(\\d+).*", "$1"));				
@@ -130,5 +131,9 @@ public class GuiPowerControlTab extends BaseGuiTab implements IInteractableGui{
 			IMessage msg = new PacketPowerControlTab(MAX_VALUE, MIN_VALUE, TILE_ENTITY.getPos());
 			PacketHandler.net.sendToServer(msg);	
 		}
+	}
+	@Override
+	public void buttonHovered(BaseButton button) {
+
 	}
 }

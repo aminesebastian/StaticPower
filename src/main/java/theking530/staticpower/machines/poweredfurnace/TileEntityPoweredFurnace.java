@@ -19,7 +19,7 @@ public class TileEntityPoweredFurnace extends BaseMachine {
 	}
 	@Override
 	public String getName() {
-		return "Powered Furnace";		
+		return "container.PoweredFurnace";		
 	}			
 	
 	//Functionality

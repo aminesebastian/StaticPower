@@ -5,8 +5,8 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import theking530.staticpower.assists.GuiTextures;
 import theking530.staticpower.client.gui.BaseGuiContainer;
+import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.client.gui.widgets.GuiDrawItem;
 import theking530.staticpower.client.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
@@ -23,7 +23,7 @@ public class GuiSolderingTable extends BaseGuiContainer {
 
 		infoTab = new GuiInfoTab(110, 80);
 		getTabManager().registerTab(infoTab);
-		getTabManager().registerTab(new GuiSideConfigTab(100, 100, teTable));
+		getTabManager().registerTab(new GuiSideConfigTab(80, 80, teTable));
 	}
 	public void drawScreen(int par1, int par2, float par3) {
     	super.drawScreen(par1, par2, par3);

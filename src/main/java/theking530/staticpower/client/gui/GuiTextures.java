@@ -1,6 +1,7 @@
-package theking530.staticpower.assists;
+package theking530.staticpower.client.gui;
 
 import net.minecraft.util.ResourceLocation;
+import theking530.staticpower.assists.Reference;
 
 public class GuiTextures {
 	public static final ResourceLocation GENERIC_GUI = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/generic_gui_sampler.png");
@@ -53,4 +54,6 @@ public class GuiTextures {
 	public static final ResourceLocation BUTTON_HOVER = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/button_hover.png");
 	
 	public static final ResourceLocation GUI_ICONS = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/gui_icons.png");
+	public static final ResourceLocation ARROW_PROGRESS_BAR = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/arrow_progress_bar.png");
+	public static final ResourceLocation GRINDER_PROGRESS_BAR = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/grinder_progress_bar.png");
 }
