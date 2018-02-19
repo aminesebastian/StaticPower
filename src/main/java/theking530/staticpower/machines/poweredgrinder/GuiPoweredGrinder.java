@@ -26,7 +26,7 @@ public class GuiPoweredGrinder extends BaseGuiContainer{
 		
 		getTabManager().registerTab(infoTab = new GuiInfoTab(100, 60));
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teGrinder));
-		getTabManager().registerTab(new GuiSideConfigTab(80, 80, teGrinder));
+		getTabManager().registerTab(new GuiSideConfigTab(80, 80, false, teGrinder));
 		
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(80, 80, tileEntityGrinder).setTabSide(TabSide.LEFT));
 

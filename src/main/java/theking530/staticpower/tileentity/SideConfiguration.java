@@ -17,4 +17,18 @@ public class SideConfiguration {
     public void setSideConfiguration(Mode newMode, EnumFacing facing) {
     	configuration[facing.ordinal()] = newMode;
     }
+    public void setToDefault() {
+		setSideConfiguration(Mode.Input, EnumFacing.UP);
+		setSideConfiguration(Mode.Input, EnumFacing.DOWN);
+		
+		setSideConfiguration(Mode.Output, EnumFacing.EAST);
+		setSideConfiguration(Mode.Output, EnumFacing.WEST);
+		setSideConfiguration(Mode.Output, EnumFacing.NORTH);
+		setSideConfiguration(Mode.Output, EnumFacing.SOUTH);
+    }
+    public void reset() {
+    	for(int i=0; i<6; i++) {
+    		configuration[i] = Mode.Regular;
+    	}
+    }
 }

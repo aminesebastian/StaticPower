@@ -29,7 +29,7 @@ public class SqueezerRecipeRegistry {
 	    Entry<?, ?> pair;
 	    do {
 	    	if(!iterator.hasNext()) {
-	    		return null;
+	    		return ItemStack.EMPTY;
 	    	}
 	    	pair = (Entry<?, ?>) iterator.next();
 	    }while(!isValidRecipe(pair, input));

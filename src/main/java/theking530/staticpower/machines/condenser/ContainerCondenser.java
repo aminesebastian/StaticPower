@@ -2,15 +2,16 @@ package theking530.staticpower.machines.condenser;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.items.SlotItemHandler;
+import theking530.staticpower.container.BaseContainer;
+import theking530.staticpower.machines.tileentitycomponents.slots.FluidContainerSlot;
+import theking530.staticpower.machines.tileentitycomponents.slots.OutputSlot;
 
-public class ContainerCondenser extends Container {
+public class ContainerCondenser extends BaseContainer {
 	
 	private TileEntityCondenser F_GENERATOR;
 
@@ -18,24 +19,15 @@ public class ContainerCondenser extends Container {
 		F_GENERATOR = teFluidGenerator;
 		
 		//Input Left
-		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.slotsInput, 0, 7, 17));
-		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.slotsOutput, 0, 7, 47));
+		this.addSlotToContainer(new FluidContainerSlot(teFluidGenerator.slotsInput, 0, 10, 17));
+		this.addSlotToContainer(new OutputSlot(teFluidGenerator.slotsOutput, 0, 10, 53));
 		
 		//Input Right
-		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.slotsInput, 1, 191, 17));
-		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.slotsOutput, 1, 191, 47));
+		this.addSlotToContainer(new FluidContainerSlot(teFluidGenerator.slotsInput, 1, 150, 17));
+		this.addSlotToContainer(new OutputSlot(teFluidGenerator.slotsOutput, 1, 150, 53));
 		
-		//Inventory
-		for(int i = 0; i < 3; i++) {
-			for(int j = 0; j < 9; j++) {
-				this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 27 + j * 18, 91 + i * 18));
-			}
-		}
-		
-		//ActionBar
-		for(int i = 0; i < 9; i++) {
-			this.addSlotToContainer(new Slot(invPlayer, i, 27 + i * 18, 149));
-		}
+		this.addPlayerInventory(invPlayer, 8, 91);
+		this.addPlayerHotbar(invPlayer, 8, 149);
 	}
 	
 	//Shift Click Functionality

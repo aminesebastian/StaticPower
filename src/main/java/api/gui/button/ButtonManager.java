@@ -17,6 +17,7 @@ public class ButtonManager {
 	}
 	public void registerButton(BaseButton button) {
 		buttonList.add(button);
+		button.setOwningGui(owningGui);
 	}
 	public void drawButtons(int mouseX, int mouseY) {
 		for(int i=0; i<buttonList.size(); i++) {

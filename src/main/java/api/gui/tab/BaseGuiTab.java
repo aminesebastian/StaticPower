@@ -153,9 +153,10 @@ public abstract class BaseGuiTab extends Gui {
 	public void setManager(GuiTabManager manager) {
 		owningManager = manager;
 	}
-	public void setOffsets(int xOffset, int yOffset) {
+	public BaseGuiTab setOffsets(int xOffset, int yOffset) {
 		xPositionOffset = xOffset;
 		yPositionOffset = yOffset;
+		return this;
 	}
 	public int getXOffset() {
 		return xPositionOffset;

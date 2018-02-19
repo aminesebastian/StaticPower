@@ -23,9 +23,9 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFlu
 	public int fluidToContainerRate = 10; 
 	
 	public TileEntityMechanicalSqueezer() {
-		initializeSlots(1, 2, 2);
+		initializeSlots(3, 1, 1);
 		fluidTank = new FluidTank(1000);
-		this.registerComponent(new FluidContainerComponent("BucketDrain", slotsInput, 1, slotsOutput, 1, this, fluidTank, fluidToContainerRate));
+		this.registerComponent(new FluidContainerComponent("BucketDrain", slotsInternal, 1, slotsInternal, 2, this, fluidTank, fluidToContainerRate));
 	}
 	@Override
 	public String getName() {

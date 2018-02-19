@@ -10,6 +10,7 @@ import theking530.staticpower.items.upgrades.BaseUpgrade;
 import theking530.staticpower.machines.tileentitycomponents.slots.BatterySlot;
 import theking530.staticpower.machines.tileentitycomponents.slots.SlotWithExperienceOutput;
 import theking530.staticpower.machines.tileentitycomponents.slots.StaticPowerContainerSlot;
+import theking530.staticpower.machines.tileentitycomponents.slots.UpgradeSlot;
 
 public class ContainerPoweredFurnace extends BaseContainer {
 	
@@ -33,9 +34,9 @@ public class ContainerPoweredFurnace extends BaseContainer {
 		this.addSlotToContainer(new SlotWithExperienceOutput(invPlayer.player, tePoweredSmelter.slotsOutput, 0, 109, 32));
 		
 		//Upgrades
-		this.addSlotToContainer(new StaticPowerContainerSlot(tePoweredSmelter.slotsUpgrades, 0, 152, 12));
-		this.addSlotToContainer(new StaticPowerContainerSlot(tePoweredSmelter.slotsUpgrades, 1, 152, 32));
-		this.addSlotToContainer(new StaticPowerContainerSlot(tePoweredSmelter.slotsUpgrades, 2, 152, 52));
+		this.addSlotToContainer(new UpgradeSlot(tePoweredSmelter.slotsUpgrades, 0, 152, 12));
+		this.addSlotToContainer(new UpgradeSlot(tePoweredSmelter.slotsUpgrades, 1, 152, 32));
+		this.addSlotToContainer(new UpgradeSlot(tePoweredSmelter.slotsUpgrades, 2, 152, 52));
 		
 		this.addPlayerInventory(invPlayer, 8, 84);
 		this.addPlayerHotbar(invPlayer, 8, 142);	

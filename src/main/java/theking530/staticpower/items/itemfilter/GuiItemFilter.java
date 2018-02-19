@@ -33,11 +33,11 @@ public class GuiItemFilter extends BaseGuiContainer {
 		getTabManager().registerTab(infoTab);
 		getTabManager().setInitiallyOpenTab(infoTab);
 
-		whitelistButton = new TextButton(20, 20, guiLeft+30, guiTop+40, "W");
-		nbtButton = new TextButton(20, 20, guiLeft+52, guiTop+40, "N");
-		metaButton = new TextButton(20, 20, guiLeft+74, guiTop+40, "M");
-		oreButton = new TextButton(20, 20, guiLeft+96, guiTop+40, "O");
-		modButton = new TextButton(20, 20, guiLeft+118, guiTop+40, "D"); 
+		whitelistButton = new TextButton(20, 20, 30, 40, "W");
+		nbtButton = new TextButton(20, 20, 52, 40, "N");
+		metaButton = new TextButton(20, 20, 74, 40, "M");
+		oreButton = new TextButton(20, 20, 96, 40, "O");
+		modButton = new TextButton(20, 20, 118, 40, "D"); 
 
 		nbtButton.setToggleable(true);
 		metaButton.setToggleable(true);
@@ -61,15 +61,6 @@ public class GuiItemFilter extends BaseGuiContainer {
 		getButtonManager().registerButton(metaButton);
 		getButtonManager().registerButton(oreButton);
 		getButtonManager().registerButton(modButton);
-	}
-	@Override
-	public void initGui() {
-		super.initGui();
-		whitelistButton.setPosition(guiLeft+30, guiTop+40);
-		nbtButton.setPosition(guiLeft+52, guiTop+40);
-		metaButton.setPosition(guiLeft+74, guiTop+40);
-		oreButton.setPosition(guiLeft+96, guiTop+40);
-		modButton.setPosition(guiLeft+118, guiTop+40); 
 	}
 	@Override
 	public void buttonPressed(BaseButton button, ClickedState mouseButton) {

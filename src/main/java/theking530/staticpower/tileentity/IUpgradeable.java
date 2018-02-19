@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 
 public interface IUpgradeable {
 
+	public boolean isUpgradeable();
 	public boolean canAcceptUpgrade(ItemStack upgrade);
 	public ItemStack getUpgrade(Item upgradeBase);
 	public boolean hasUpgrade(Item upgradeBase);

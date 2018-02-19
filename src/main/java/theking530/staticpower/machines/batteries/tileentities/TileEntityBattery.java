@@ -1,54 +1,113 @@
 package theking530.staticpower.machines.batteries.tileentities;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import theking530.staticpower.assists.utilities.RedstoneModeList.RedstoneMode;
 import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.energy.PowerDistributor;
 import theking530.staticpower.machines.BaseMachine;
 
-public class TileEntityBattery extends BaseMachine{
+public class TileEntityBattery extends BaseMachine {
 	
-	public int MAX_INPUT;
-	public int MAX_OUTPUT;
-	protected PowerDistributor POWER_DIS;
+	private int minPowerThreshold;
+	private int maxPowerThreshold;
+	
+	private int maxPowerIO;
+
+	private int inputRFTick;
+	private int outputRFTick;
+	
+	protected PowerDistributor powerDistributor;
 	
 	public TileEntityBattery() {
-		POWER_DIS = new PowerDistributor(this, energyStorage);		
+		initializeSlots(0,0,0, false);
+		initializeBasicMachine(2, 0, 1000000, 0, 0);
+		powerDistributor = new PowerDistributor(this, energyStorage);	
+		inputRFTick = energyStorage.getMaxReceive();
+		outputRFTick = energyStorage.getMaxExtract();
+		energyStorage.setMaxExtract(getOutputLimit());
+		energyStorage.setMaxReceive(getInputLimit());
 	}
 	
 	public void process() {
-		//getWorld().markBlockForUpdate(xCoord, yCoord, zCoord);
-		int redstoneSignal = getWorld().getStrongPower(pos);
-		powerTab();
 		if(!getWorld().isRemote) {
-			if(getRedstoneMode() == RedstoneMode.Ignore) {
-				POWER_DIS.distributePower();
-			}
-			if(getRedstoneMode() == RedstoneMode.Low) {
-				if(redstoneSignal == 0) {
-					POWER_DIS.distributePower();
-				}
-			}
-			if(getRedstoneMode() == RedstoneMode.High) {
-				if(redstoneSignal > 0) {
-					POWER_DIS.distributePower();
-				}
-			}
-			updateBlock();
+			powerDistributor.distributePower();
+			energyStorage.setMaxExtract(getOutputLimit());
+			energyStorage.setMaxReceive(getInputLimit());
+			getWorld().notifyNeighborsOfStateChange(pos, blockType, true);
 		}
 	}
-	@Override
-	public void upgradeHandler() {
-		
+	public void setMinimumPowerThreshold(int newThreshold) {
+		minPowerThreshold = newThreshold;
 	}
-	  
+	public void setMaximumPowerThreshold(int newThreshold) {
+		maxPowerThreshold = newThreshold;
+	}
+	public int getMinimumPowerThreshold() {
+		return minPowerThreshold;
+	}
+	public int getMaximumPowerThreshold() {
+		return maxPowerThreshold;
+	}
+
+	public int getInputLimit() {
+		return inputRFTick;
+	}
+	public int getOutputLimit() {
+		return outputRFTick;
+	}
+	public void setInputLimit(int newLimit) {
+		inputRFTick = newLimit;
+	}
+	public void setOutputLimit(int newLimit) {
+		outputRFTick = newLimit;
+	}
+	
+	public void setMaximumPowerIO(int newMaxIO) {
+		maxPowerIO = newMaxIO;
+		setInputLimit(maxPowerIO);
+		setOutputLimit(maxPowerIO);
+	}
+	public int getMaximumPowerIO() {
+		return maxPowerIO;
+	}
+	
+    @Override  
+	public void deserializeData(NBTTagCompound nbt) {
+        super.deserializeData(nbt);
+        energyStorage.readFromNBT(nbt);
+
+    	minPowerThreshold = nbt.getInteger("MIN_THRESH");
+    	maxPowerThreshold = nbt.getInteger("MAX_THRESH");
+    	
+    	inputRFTick = nbt.getInteger("inputLimit");
+    	outputRFTick = nbt.getInteger("outputLimit");
+    	
+    	maxPowerIO = nbt.getInteger("MAX_IO");
+    }		
+    @Override
+    public NBTTagCompound serializeData(NBTTagCompound nbt) {
+        super.serializeData(nbt);
+
+        nbt.setInteger("MAX_THRESH", maxPowerThreshold);
+        nbt.setInteger("MIN_THRESH", minPowerThreshold);
+        
+        nbt.setInteger("inputLimit", inputRFTick);
+        nbt.setInteger("outputLimit", outputRFTick);
+        
+        nbt.setInteger("MAX_IO", maxPowerIO);
+        
+        return nbt;
+	}
+	
 	//Tab Integration
-	public void powerTab() {	
-		if(getEnergyLevelScaled(1)*100 > this.minPowerThreshold && getEnergyLevelScaled(1)*100 < this.maxPowerThreshold) {
-			//getWorld().setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 15, 3);
-		}else{
-			//getWorld().setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 0, 3);
+	public boolean shouldOutputRedstoneSignal() {	
+		if(minPowerThreshold == 0 && maxPowerThreshold == 0) {
+			return false;
 		}
+		if(getEnergyLevelScaled(100) > this.minPowerThreshold && getEnergyLevelScaled(100) < this.maxPowerThreshold) {
+			return true;
+		}
+		return false;
 	}
 	@Override
 	public String getName() {
@@ -57,6 +116,12 @@ public class TileEntityBattery extends BaseMachine{
 	@Override
 	public void onSidesConfigUpdate() {
 
+	}
+	
+	//Upgrades
+	@Override
+	public boolean isUpgradeable() {
+		return false;
 	}
 	
 	//Energy
@@ -73,6 +138,27 @@ public class TileEntityBattery extends BaseMachine{
 		float percentFilled = (amount/energyStorage.getMaxEnergyStored());	
 		return percentFilled * (float)i;
 	}	
+	
+	@Override
+	public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
+		if(!getWorld().isRemote) {
+			updateBlock();
+		}
+		if(from != null && getSideConfiguration(from) != Mode.Output) {
+			return 0;
+		}
+		return energyStorage.extractEnergy(maxExtract, simulate);
+	}
+	@Override
+	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
+		if(!getWorld().isRemote) {
+			updateBlock();
+		}
+		if(from != null && getSideConfiguration(from) != Mode.Input) {
+			return 0;
+		}
+		return energyStorage.receiveEnergy(maxReceive, simulate);
+	}
 }
 
 

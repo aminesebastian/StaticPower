@@ -88,8 +88,8 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 		}
 	}
 	@Override
-	public void upgradeHandler(){
-		super.upgradeHandler();
+	public void upgradeTick(){
+		super.upgradeTick();
 		outputUpgradeHandler();
 	}
 	private void outputUpgradeHandler() {

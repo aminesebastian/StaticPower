@@ -48,7 +48,7 @@ public class PacketFluidContainerComponent implements IMessage{
     		TileEntity te = ctx.getServerHandler().player.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
     		if(te != null && te instanceof BaseTileEntity) {
     			BaseTileEntity entity = (BaseTileEntity)te;
-    			if(entity.getComponents().get(message.componentIndex) instanceof FluidContainerComponent) {
+    			if(message.componentIndex > 0 && entity.getComponents().get(message.componentIndex) instanceof FluidContainerComponent) {
         			((FluidContainerComponent)entity.getComponents().get(message.componentIndex)).setMode(message.mode);
         			entity.updateBlock();
     			}

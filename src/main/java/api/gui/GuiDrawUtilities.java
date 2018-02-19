@@ -100,8 +100,6 @@ public class GuiDrawUtilities {
 		}	
 		
 		GlStateManager.popMatrix();
-		GlStateManager.enableLighting();
-		GlStateManager.enableDepth();
 	}
     public static void drawTexturedModalRect(float x, float y, float width, float height, float minU, float minV, float maxU, float maxV) {
         Tessellator tessellator = Tessellator.getInstance();

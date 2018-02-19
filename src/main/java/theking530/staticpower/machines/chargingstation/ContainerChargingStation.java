@@ -3,12 +3,16 @@ package theking530.staticpower.machines.chargingstation;
 import cofh.redstoneflux.api.IEnergyContainerItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.SlotItemHandler;
+import theking530.staticpower.container.BaseContainer;
+import theking530.staticpower.machines.tileentitycomponents.slots.BatterySlot;
+import theking530.staticpower.machines.tileentitycomponents.slots.OutputSlot;
+import theking530.staticpower.machines.tileentitycomponents.slots.StaticPowerContainerSlot;
+import theking530.staticpower.machines.tileentitycomponents.slots.UpgradeSlot;
 
-public class ContainerChargingStation extends Container {
+public class ContainerChargingStation extends BaseContainer {
 	
 	private TileEntityChargingStation C_CHARGING;
 
@@ -16,83 +20,73 @@ public class ContainerChargingStation extends Container {
 		C_CHARGING = teCharging;
 		
 		//Input
-		this.addSlotToContainer(new SlotItemHandler(teCharging.slotsInput, 0, 63, 29) {
+		this.addSlotToContainer(new StaticPowerContainerSlot(teCharging.slotsInput, 0, 49, 24) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
-		          return itemStack.getItem() instanceof IEnergyContainerItem ? true : false;
+		          return itemStack.getItem() instanceof IEnergyContainerItem;
 		    }
 		});	
-		this.addSlotToContainer(new SlotItemHandler(teCharging.slotsInput, 1, 81, 29) {
+		this.addSlotToContainer(new StaticPowerContainerSlot(teCharging.slotsInput, 1, 69, 24) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
-		          return itemStack.getItem() instanceof IEnergyContainerItem ? true : false;
+		          return itemStack.getItem() instanceof IEnergyContainerItem;
 		    }
 		});	
-		this.addSlotToContainer(new SlotItemHandler(teCharging.slotsInput, 2, 99, 29) {
+		this.addSlotToContainer(new StaticPowerContainerSlot(teCharging.slotsInput, 2, 89, 24) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
-		          return itemStack.getItem() instanceof IEnergyContainerItem ? true : false;
+		          return itemStack.getItem() instanceof IEnergyContainerItem;
 		    }
 		});	
-		this.addSlotToContainer(new SlotItemHandler(teCharging.slotsInput, 3, 117, 29) {
+		this.addSlotToContainer(new StaticPowerContainerSlot(teCharging.slotsInput, 3, 109, 24) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
-		          return itemStack.getItem() instanceof IEnergyContainerItem ? true : false;
+		          return itemStack.getItem() instanceof IEnergyContainerItem;
 		    }
 		});	
 		
 		//Output
-		this.addSlotToContainer(new SlotItemHandler(teCharging.slotsOutput, 0, 60, 61) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-		          return itemStack.getItem() instanceof IEnergyContainerItem ? true : false;
-		        }
-		});
-		this.addSlotToContainer(new SlotItemHandler(teCharging.slotsOutput, 1, 80, 61) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-		          return false;
-		    }
-		});	
-		this.addSlotToContainer(new SlotItemHandler(teCharging.slotsOutput, 2, 100, 61) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-		          return false;
-		    }
-		});	
-		this.addSlotToContainer(new SlotItemHandler(teCharging.slotsOutput, 3, 120, 61) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-		          return false;
-		    }
-		});	
+		this.addSlotToContainer(new OutputSlot(teCharging.slotsOutput, 0, 44, 52));
+		this.addSlotToContainer(new OutputSlot(teCharging.slotsOutput, 1, 68, 52));
+		this.addSlotToContainer(new OutputSlot(teCharging.slotsOutput, 2, 92, 52));
+		this.addSlotToContainer(new OutputSlot(teCharging.slotsOutput, 3, 116, 52));
+		
 		//Upgrades
-		this.addSlotToContainer(new SlotItemHandler(teCharging.slotsUpgrades, 0, 155, 8));
-		this.addSlotToContainer(new SlotItemHandler(teCharging.slotsUpgrades, 1, 155, 30));
-		this.addSlotToContainer(new SlotItemHandler(teCharging.slotsUpgrades, 2, 155, 52));
+		this.addSlotToContainer(new UpgradeSlot(teCharging.slotsUpgrades, 0, 152, 8));
+		this.addSlotToContainer(new UpgradeSlot(teCharging.slotsUpgrades, 1, 152, 30));
+		this.addSlotToContainer(new UpgradeSlot(teCharging.slotsUpgrades, 2, 152, 52));
 		
-		//Battery/Bucket
-		this.addSlotToContainer(new SlotItemHandler(teCharging.slotsInternal, 0, 8, 73) {
+		//Battery
+		this.addSlotToContainer(new BatterySlot(teCharging.slotsInternal, 0, 8, 54));
+		
+		//Armor
+		this.addSlotToContainer(new Slot(invPlayer, 39, -24, 14) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
-		          return itemStack.getItem() instanceof IEnergyContainerItem ? true : false;
+                return itemStack.getItem().isValidArmor(itemStack, EntityEquipmentSlot.HEAD, invPlayer.player);
 		    }
 		});	
-		//Inventory
-		for(int i = 0; i < 3; i++) {
-			for(int j = 0; j < 9; j++) {
-				this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 27 + j * 18, 95 + i * 18));
-			}
-		}
-		
-		//ActionBar
-		for(int i = 0; i < 9; i++) {
-			this.addSlotToContainer(new Slot(invPlayer, i, 27 + i * 18, 153));
-		}
-		//Armor
-		for (int k = 0; k < 4; ++k){
-			addSlotToContainer(new Slot(invPlayer, 36 + (3 - k), 7, 95 + k * 18));
-		}
+		this.addSlotToContainer(new Slot(invPlayer, 38, -24, 33) {
+			@Override
+	        public boolean isItemValid(ItemStack itemStack) {
+                return itemStack.getItem().isValidArmor(itemStack, EntityEquipmentSlot.CHEST, invPlayer.player);
+		    }
+		});	
+		this.addSlotToContainer(new Slot(invPlayer, 37, -24, 52) {
+			@Override
+	        public boolean isItemValid(ItemStack itemStack) {
+                return itemStack.getItem().isValidArmor(itemStack, EntityEquipmentSlot.LEGS, invPlayer.player);
+		    }
+		});	
+		this.addSlotToContainer(new Slot(invPlayer, 36, -24, 71) {
+			@Override
+	        public boolean isItemValid(ItemStack itemStack) {
+	            return itemStack.getItem().isValidArmor(itemStack, EntityEquipmentSlot.FEET, invPlayer.player);
+		    }
+		});	
+
+		this.addPlayerInventory(invPlayer, 8, 84);
+		this.addPlayerHotbar(invPlayer, 8, 142);
 	}
 	
 	//Shift Click Functionality
@@ -104,7 +98,7 @@ public class ContainerChargingStation extends Container {
 	        ItemStack itemstack1 = slot.getStack();
 	        itemstack = itemstack1.copy();
 	
-	        if (invSlot == 1 || invSlot == 0) {
+	        if (invSlot < 4) {
 	            if (!this.mergeItemStack(itemstack1, 6, 42, true)) {
 	                return ItemStack.EMPTY;
 	            }
@@ -141,10 +135,5 @@ public class ContainerChargingStation extends Container {
 	public boolean canInteractWith(EntityPlayer player) {
 		return C_CHARGING.isUseableByPlayer(player);
 	}
-	
-	//Detect Changes
-	public void detectAndSendChanges(){
-        super.detectAndSendChanges();
-    }	
 }
 

@@ -26,8 +26,8 @@ public class ItemButton extends StandardButton{
 		}
 	}
 	public void drawButtonIcon() {
-		int buttonLeft = xPosition+1;
-		int buttonTop =  yPosition+1;
+		int buttonLeft = owningGui.getGuiLeft() + xPosition+1;
+		int buttonTop =  owningGui.getGuiTop() + yPosition+1;
 		
 		RenderItem customRenderer = Minecraft.getMinecraft().getRenderItem();
 		customRenderer.renderItemIntoGUI(itemIcon, buttonLeft+1, buttonTop);

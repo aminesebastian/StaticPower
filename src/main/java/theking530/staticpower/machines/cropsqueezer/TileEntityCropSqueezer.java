@@ -6,6 +6,7 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistry;
 import theking530.staticpower.machines.BaseMachineWithTank;
+import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
 
@@ -14,9 +15,10 @@ public class TileEntityCropSqueezer extends BaseMachineWithTank {
 	public TileEntityCropSqueezer() {
 		initializeBasicMachine(2, 100, 100000, 80, 50);
 		initializeTank(5000);
-		initializeSlots(1, 2, 2);
+		initializeSlots(4, 1, 1);
 		
-		registerComponent(new FluidContainerComponent("BucketDrain", slotsInput, 1, slotsOutput, 1, this, fluidTank, fluidToContainerRate));
+		registerComponent(new FluidContainerComponent("BucketDrain", slotsInternal, 1, slotsInternal, 2, this, fluidTank, fluidToContainerRate));
+		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInternal, 3, this, this.getEnergyStorage()));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0));
 	}
 	@Override

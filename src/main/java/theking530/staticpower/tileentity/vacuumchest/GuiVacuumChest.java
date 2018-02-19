@@ -33,7 +33,7 @@ public class GuiVacuumChest extends BaseGuiContainer {
 		infoTab = new GuiInfoTab(100, 65);
 		getTabManager().registerTab(infoTab);
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teVChest));
-		getTabManager().registerTab(new GuiSideConfigTab(80, 80, teVChest));
+		getTabManager().registerTab(new GuiSideConfigTab(80, 80, false, teVChest));
 		getTabManager().setInitiallyOpenTab(infoTab);
 	}
 	protected void drawGuiContainerForegroundLayer(int i, int j) {

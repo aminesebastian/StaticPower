@@ -2,71 +2,45 @@ package theking530.staticpower.machines.mechanicalsqueezer;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.items.SlotItemHandler;
+import theking530.staticpower.container.BaseContainer;
 import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistry;
+import theking530.staticpower.machines.tileentitycomponents.slots.FluidContainerSlot;
+import theking530.staticpower.machines.tileentitycomponents.slots.OutputSlot;
+import theking530.staticpower.machines.tileentitycomponents.slots.StaticPowerContainerSlot;
+import theking530.staticpower.machines.tileentitycomponents.slots.UpgradeSlot;
 
-public class ContainerMechanicalSqueezer extends Container {
+public class ContainerMechanicalSqueezer extends BaseContainer {
 	
 	private TileEntityMechanicalSqueezer CropSqueezer;
-
-	@SuppressWarnings("unused")
-	private int upgradeSlotX;
-	@SuppressWarnings("unused")
-	private int upgradeSlotY;
 	
 	public ContainerMechanicalSqueezer(InventoryPlayer invPlayer, TileEntityMechanicalSqueezer teCropSqueezer) {
 		CropSqueezer = teCropSqueezer;
 		
 		//Input
-		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.slotsInput, 0, 103, 18));
+		this.addSlotToContainer(new StaticPowerContainerSlot(teCropSqueezer.slotsInput, 0, 80, 18) {
+			@Override
+	        public boolean isItemValid(ItemStack itemStack) {
+		          return !SqueezerRecipeRegistry.Squeezing().getSqueezingItemResult(itemStack).isEmpty();
+		    }
+		});
 		
 		//Fluid Slots
-		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.slotsInput, 1, 7, 17) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-		          return itemStack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
-		    }
-		});
-		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.slotsOutput, 1, 7, 47) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-		          return false;
-		    }
-		});
-		
+		this.addSlotToContainer(new FluidContainerSlot(teCropSqueezer.slotsInternal, 1, -24, 12));
+		this.addSlotToContainer(new OutputSlot(teCropSqueezer.slotsInternal, 2, -24, 42));
+
 		//Output
-		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.slotsOutput, 0, 103, 58) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-		          return SqueezerRecipeRegistry.Squeezing().getSqueezingItemResult(itemStack) != null;
-		        }
-		});
+		this.addSlotToContainer(new OutputSlot(teCropSqueezer.slotsOutput, 0, 80, 57));
 		
-		//Processing
-		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.slotsInternal, 0, 10000, 10000));
+		//Upgrades
+		this.addSlotToContainer(new UpgradeSlot(teCropSqueezer.slotsUpgrades, 0, -24, 76));
+		this.addSlotToContainer(new UpgradeSlot(teCropSqueezer.slotsUpgrades, 1, -24, 94));
+		this.addSlotToContainer(new UpgradeSlot(teCropSqueezer.slotsUpgrades, 2, -24, 112));
 		
-		//Inventory
-				for(int i = 0; i < 3; i++) {
-					for(int j = 0; j < 9; j++) {
-						this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 27 + j * 18, 84 + i * 18));
-					}
-				}
-				
-				//ActionBar
-				for(int i = 0; i < 9; i++) {
-					this.addSlotToContainer(new Slot(invPlayer, i, 27 + i * 18, 142));
-			}
+		this.addPlayerInventory(invPlayer, 8, 84);
+		this.addPlayerHotbar(invPlayer, 8, 142);
 	}
-	
-	public void moveUpgradeSlots(int x, int y) {
-		this.upgradeSlotY = y;
-		this.upgradeSlotX = x;
-	}
-	
 
 	//Shift Click Functionality
 	public ItemStack transferStackInSlot(EntityPlayer player, int invSlot) {

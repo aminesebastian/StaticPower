@@ -30,7 +30,7 @@ public class GuiFluidGenerator extends BaseGuiContainer {
 		registerWidget(new GuiFluidBarFromTank(teFluidGenerator.fluidTank, 30, 68, 16, 60));
 		
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teFluidGenerator));
-		getTabManager().registerTab(new GuiSideConfigTab(80, 80, teFluidGenerator));
+		getTabManager().registerTab(new GuiSideConfigTab(80, 80, false, teFluidGenerator));
 		
 		GuiPowerInfoTab powerInfoTab;
 		getTabManager().registerTab(powerInfoTab = new GuiPowerInfoTab(80, 60, teFluidGenerator.getEnergyStorage()));

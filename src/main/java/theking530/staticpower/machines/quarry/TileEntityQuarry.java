@@ -103,9 +103,9 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 			}
 		}
 	}	
-	public void upgradeHandler(){
+	public void upgradeTick(){
 		quarryingUpgrade();
-		super.upgradeHandler();
+		super.upgradeTick();
 	}
 	public void quarryingUpgrade() {
 		boolean flag = false;

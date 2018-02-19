@@ -25,7 +25,7 @@ public class GuiPoweredFurnace extends BaseGuiContainer {
 		registerWidget(new ArrowProgressBar(tileEntityFurnace, 73, 32, 32, 16));
 		
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teSmelter));
-		getTabManager().registerTab(new GuiSideConfigTab(80, 80, teSmelter));	
+		getTabManager().registerTab(new GuiSideConfigTab(80, 80, false, teSmelter));	
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(80, 80, tileEntityFurnace).setTabSide(TabSide.LEFT));	
 	}
 	

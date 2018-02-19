@@ -187,6 +187,11 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 		return nbt;	
 	}
 
+	@Override
+	public boolean isSideConfigurable() {
+		return false;
+	}
+    
     /*Upgrade Handling*/
     @Override
 	public boolean canAcceptUpgrade(ItemStack upgrade) {	

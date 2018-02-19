@@ -16,7 +16,7 @@ public class TextButton extends StandardButton{
 
 	@Override
 	protected void drawExtra() {
-		fontRenderer.drawStringWithShadow(text, xPosition+width/2-fontRenderer.getStringWidth(text)/2, yPosition-fontRenderer.FONT_HEIGHT/2+height/2, GuiUtilities.getColor(255, 255, 255));	
+		fontRenderer.drawStringWithShadow(text, owningGui.getGuiLeft() + xPosition+width/2-fontRenderer.getStringWidth(text)/2, owningGui.getGuiTop() + yPosition-fontRenderer.FONT_HEIGHT/2+height/2, GuiUtilities.getColor(255, 255, 255));	
 	}
 	public void setText(String text){
 		this.text = text;

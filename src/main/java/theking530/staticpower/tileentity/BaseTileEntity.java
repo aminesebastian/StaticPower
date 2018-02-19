@@ -62,6 +62,10 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 	public BaseTileEntity() {
 		ioSideConfiguration = new SideConfiguration();
 		components = new ArrayList<ITileEntityComponent>();
+		
+		if(isSideConfigurable()) {
+			ioSideConfiguration.setToDefault();
+		}
 	}
 	public void initializeSlots(int internalSlots, int inputSlots, int outputSlots, boolean disableFaceInteraction) {
 		slotsInput = new ItemStackHandler(inputSlots);
@@ -81,6 +85,9 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 	
 	@Override
 	public void update() {
+		if(isUpgradeable()) {
+			upgradeTick();	
+		}
 		if(evauluateRedstoneSettings()) {
 			preProcessUpdateComponents();
 			process();
@@ -95,8 +102,14 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 			markDirty();
 			updateTimer = 0;
 		}
+		if(disableFaceInteraction) {
+			setSideConfiguration(Mode.Disabled, BlockSide.FRONT);	
+		}
 	}		
 	public void process() {}
+	public void upgradeTick() {
+		
+	}
 	public void updateBlock() {
 		getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 2);
 	}
@@ -146,6 +159,7 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 	        for(int i=0; i<6; i++) {
 	        	setSideConfiguration(SideModeList.Mode.values()[nbt.getInteger("SIDEMODE" + i)], EnumFacing.values()[i]);
 	        }    
+	        disableFaceInteraction = nbt.getBoolean("DISABLE_FACE");
 		}
         if(slotsInput != null && slotsInput.getSlots() > 0 && nbt.hasKey("INPUTS")) {
         	slotsInput.deserializeNBT((NBTTagCompound) nbt.getTag("INPUTS"));	
@@ -177,6 +191,7 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 	        for(int i=0; i<6; i++) {
 	        	nbt.setInteger("SIDEMODE" + i, getSideConfiguration(EnumFacing.values()[i]).ordinal());
 	        }
+	        nbt.setBoolean("DISABLE_FACE", disableFaceInteraction);
 		}
 
         if(slotsInput != null && slotsInput.getSlots() > 0) {
@@ -400,6 +415,10 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 	public boolean canAcceptUpgrade(ItemStack upgrade) {
 		return true;
 	}
+	@Override
+	public boolean isUpgradeable() {
+		return true;
+	}
 	
 	/*Components*/
 	public void registerComponent(ITileEntityComponent component) {
@@ -492,9 +511,7 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 		
 	}
 	public void resetSideConfiguration(){
-		for(int i=0; i<6; i++) {
-			setSideConfiguration(SideModeList.Mode.Disabled, EnumFacing.values()[i]);
-		}
+		ioSideConfiguration.reset();
 		onSidesConfigUpdate();
 	}
 	@Override

@@ -6,51 +6,51 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import theking530.staticpower.machines.BaseMachine;
+import theking530.staticpower.machines.batteries.tileentities.TileEntityBattery;
   
 public class PacketPowerControlTab implements IMessage{
-    private int MAX_POWER_THRESHOLD;
-    private int MIN_POWER_THRESHOLD;
+    private int minPowerThreshold;
+    private int maxPowerThreshold;
     private int x;
     private int y;
     private int z;
 
     public PacketPowerControlTab() {}
     
-    public PacketPowerControlTab(int MAX_POWER_THRESHOLD, int MIN_POWER_THRESHOLD, BlockPos pos) {
-      this.MAX_POWER_THRESHOLD = MAX_POWER_THRESHOLD;
-      this.MIN_POWER_THRESHOLD = MIN_POWER_THRESHOLD;
-      this.x = pos.getX();
-      this.y = pos.getY();
-      this.z = pos.getY();
+    public PacketPowerControlTab(int minPowerThreshold, int maxPowerThreshold, BlockPos pos) {
+		this.maxPowerThreshold = minPowerThreshold;
+		this.minPowerThreshold = maxPowerThreshold;
+		this.x = pos.getX();
+		this.y = pos.getY();
+		this.z = pos.getZ();
     }
     
     @Override
     public void fromBytes(ByteBuf buf) {
       // the order is important
-      this.MAX_POWER_THRESHOLD = buf.readInt();
-      this.MIN_POWER_THRESHOLD = buf.readInt();
-      this.x = buf.readInt();
-      this.y = buf.readInt();
-      this.z = buf.readInt();
+		this.maxPowerThreshold = buf.readInt();
+		this.minPowerThreshold = buf.readInt();
+		this.x = buf.readInt();
+		this.y = buf.readInt();
+		this.z = buf.readInt();
     }
     
     @Override
     public void toBytes(ByteBuf buf) {
-      buf.writeInt(MAX_POWER_THRESHOLD);
-      buf.writeInt(MIN_POWER_THRESHOLD);
-      buf.writeInt(x);
-      buf.writeInt(y);
-      buf.writeInt(z);
+		buf.writeInt(maxPowerThreshold);
+		buf.writeInt(minPowerThreshold);
+		buf.writeInt(x);
+		buf.writeInt(y);
+		buf.writeInt(z);
     }
     public static class Message implements IMessageHandler<PacketPowerControlTab, IMessage> {
-    @Override
-    public IMessage onMessage(PacketPowerControlTab message, MessageContext ctx) {
+    	@Override
+    	public IMessage onMessage(PacketPowerControlTab message, MessageContext ctx) {
     		TileEntity te = ctx.getServerHandler().player.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
-    		if(te != null && te instanceof BaseMachine) {
-    			BaseMachine entity = (BaseMachine)te;
-    			entity.minPowerThreshold = message.MIN_POWER_THRESHOLD;
-    			entity.maxPowerThreshold = message.MAX_POWER_THRESHOLD;
+    		if(te != null && te instanceof TileEntityBattery) {
+    			TileEntityBattery entity = (TileEntityBattery)te;
+    			entity.setMinimumPowerThreshold(message.minPowerThreshold);
+    			entity.setMaximumPowerThreshold(message.maxPowerThreshold);
     		}
 		return null;
     	}

@@ -29,63 +29,63 @@ import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.machines.BaseMachineWithTank;
+import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent;
+import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
-import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
-import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
 
 public class TileEntityBasicFarmer extends BaseMachineWithTank {
 
-	public int INITIAL_RANGE = 2;
-	public int RANGE = INITIAL_RANGE;
-	public int BLOCKS_PER_TICK = 1;
-	public int GROWTH_BONUS_CHANCE = 50;
-	public BlockPos CURRENT_COORD;
-	private Random RAND;
-	private ArrayList<ItemStack> FARMED_STACKS;
-	public FluidContainerComponent DRAIN_COMPONENT;
+	public static final int DEFAULT_RANGE = 2;
+	
+	private int range = DEFAULT_RANGE;
+	private int blocksFarmedPerTick = 1;
+	private int growthBonusChance = 50;
+	private BlockPos currentCoordinate;
+	private Random rand;
+	private ArrayList<ItemStack> farmedStacks;
+	private FluidContainerComponent fluidInteractionComponent;
 	
 	public TileEntityBasicFarmer() {
 		initializeBasicMachine(2, 20, 100000, 100, 10);
 		initializeTank(10000);	
 		initializeSlots(3, 2, 9);
 
-		DRAIN_COMPONENT = new FluidContainerComponent("BucketDrain", slotsInternal, 1, slotsInternal, 2, this, fluidTank, fluidToContainerRate);
-		DRAIN_COMPONENT.setMode(FluidContainerInteractionMode.FillFromContainer);
+		registerComponent(fluidInteractionComponent = new FluidContainerComponent("BucketDrain", slotsInternal, 1, slotsInternal, 2, this, fluidTank, fluidToContainerRate));
+		fluidInteractionComponent.setMode(FluidContainerInteractionMode.FillFromContainer);
 
 		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInternal, 0, this, energyStorage));
 		registerComponent(new TileEntityItemOutputServo(this, 2, slotsOutput, 0, 1, 2, 3, 4, 5, 6, 7, 8));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0, 1));
 		
-		CURRENT_COORD = getStartingCoord();
-		RAND = new Random();
-		FARMED_STACKS = new ArrayList<ItemStack>();
+		currentCoordinate = getStartingCoord();
+		rand = new Random();
+		farmedStacks = new ArrayList<ItemStack>();
 	}
 	@Override
 	public void process(){
-		DRAIN_COMPONENT.preProcessUpdate();
 		updateGrowthChange();
 		if(processingTimer < processingTime && canFarm()) {
 			processingTimer++;
-			useEnergy(maxEnergyUsagePerTick() * BLOCKS_PER_TICK);
+			useEnergy(maxEnergyUsagePerTick() * blocksFarmedPerTick);
 		}else{
-			if(FARMED_STACKS.size() <= 1 && canFarm()) {
-				for(int i=0; i<BLOCKS_PER_TICK; i++) {
+			if(farmedStacks.size() <= 1 && canFarm()) {
+				for(int i=0; i<blocksFarmedPerTick; i++) {
 					incrementPosition();
-					checkFarmingPlot(CURRENT_COORD);
+					checkFarmingPlot(currentCoordinate);
 				}
-				fluidTank.drain(1 * BLOCKS_PER_TICK, true);
+				fluidTank.drain(1 * blocksFarmedPerTick, true);
 				updateBlock();
 				processingTimer = 0;
 			}else{
 				if(!getWorld().isRemote) {
-					for(int i=FARMED_STACKS.size()-1; i>=0; i--) {
-						ItemStack insertedStack = InventoryUtilities.insertItemIntoInventory(slotsOutput, FARMED_STACKS.get(i), 0, 8);
+					for(int i=farmedStacks.size()-1; i>=0; i--) {
+						ItemStack insertedStack = InventoryUtilities.insertItemIntoInventory(slotsOutput, farmedStacks.get(i), 0, 8);
 						if(insertedStack == ItemStack.EMPTY) {
-							FARMED_STACKS.remove(i);
+							farmedStacks.remove(i);
 						}else{
-							FARMED_STACKS.set(i, insertedStack);
+							farmedStacks.set(i, insertedStack);
 						}
 					}
 				}	
@@ -95,46 +95,46 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 	public void updateGrowthChange() {
 		if(fluidTank.getFluid() != null) {
 			if(fluidTank.getFluid().getFluid() == ModFluids.StaticFluid) {
-				GROWTH_BONUS_CHANCE = 15;
+				growthBonusChance = 15;
 			}else if(fluidTank.getFluid().getFluid() == ModFluids.EnergizedFluid){
-				GROWTH_BONUS_CHANCE = 25;
+				growthBonusChance = 25;
 			}else if(fluidTank.getFluid().getFluid() == ModFluids.LumumFluid){
-				GROWTH_BONUS_CHANCE = 50;
+				growthBonusChance = 50;
 			}else{
-				GROWTH_BONUS_CHANCE = 0;
+				growthBonusChance = 0;
 			}
 		}else{
-			GROWTH_BONUS_CHANCE = 1;
+			growthBonusChance = 1;
 		}
 	}
 	@Override  
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         if(nbt.hasKey("CURR_X")) {
-            CURRENT_COORD = new BlockPos(new Vec3i(nbt.getInteger("CURR_X"), nbt.getInteger("CURR_Y"), nbt.getInteger("CURR_Z")));	
+            currentCoordinate = new BlockPos(new Vec3i(nbt.getInteger("CURR_X"), nbt.getInteger("CURR_Y"), nbt.getInteger("CURR_Z")));	
         }
         if(nbt.hasKey("FARMED_COUNT")) {
             for(int i=0; i<nbt.getInteger("FARMED_COUNT"); i++) {
-            	FARMED_STACKS.add(new ItemStack(nbt.getCompoundTag("FARMED"+i)));
+            	farmedStacks.add(new ItemStack(nbt.getCompoundTag("FARMED"+i)));
             }
         }
     }		
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
-		nbt.setInteger("CURR_X", CURRENT_COORD.getX());
-		nbt.setInteger("CURR_Y", CURRENT_COORD.getY());
-		nbt.setInteger("CURR_Z", CURRENT_COORD.getZ());
-		nbt.setInteger("FARMED_COUNT", FARMED_STACKS.size());
-		for(int i=0; i<FARMED_STACKS.size(); i++) {
-			nbt.setTag("FARMED" + i, FARMED_STACKS.get(i).writeToNBT(new NBTTagCompound()));
+		nbt.setInteger("CURR_X", currentCoordinate.getX());
+		nbt.setInteger("CURR_Y", currentCoordinate.getY());
+		nbt.setInteger("CURR_Z", currentCoordinate.getZ());
+		nbt.setInteger("FARMED_COUNT", farmedStacks.size());
+		for(int i=0; i<farmedStacks.size(); i++) {
+			nbt.setTag("FARMED" + i, farmedStacks.get(i).writeToNBT(new NBTTagCompound()));
 		}
     	return nbt;
 	}
 	
-	public void upgradeHandler(){
+	public void upgradeTick(){
 		rangeUpgrade();
-		super.upgradeHandler();
+		super.upgradeTick();
 	}
 	public void rangeUpgrade() {
 		boolean flag = false;
@@ -149,30 +149,40 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 		}
 		if(flag) {
 			BaseRangeUpgrade tempUpgrade = (BaseRangeUpgrade) slotsUpgrades.getStackInSlot(slot).getItem();
-			RANGE = (int) (INITIAL_RANGE*tempUpgrade.getUpgradeValueAtIndex(slotsUpgrades.getStackInSlot(slot), 0));
+			range = (int) (DEFAULT_RANGE*tempUpgrade.getUpgradeValueAtIndex(slotsUpgrades.getStackInSlot(slot), 0));
 		}else{
-			RANGE = INITIAL_RANGE;
+			range = DEFAULT_RANGE;
 		}
 	}
 	
+	public FluidContainerComponent getFluidInteractionComponent() {
+		return fluidInteractionComponent;
+	}
+	public int getRadius() {
+		return range;
+	}
+	public int getGrowthBonus() {
+		return growthBonusChance;
+	}
+	
 	private void incrementPosition() {
-		if(CURRENT_COORD == getEndingCoord()) {
-			CURRENT_COORD = getStartingCoord();
+		if(currentCoordinate == getEndingCoord()) {
+			currentCoordinate = getStartingCoord();
 			return;
 		}
 		if(getAdjustedCurrentPos().getX() >= getAdjustedEndingPos().getX()-1) {
-			CURRENT_COORD = new BlockPos(getStartingCoord().getX(), CURRENT_COORD.getY(), CURRENT_COORD.getZ() + getZDirection());
+			currentCoordinate = new BlockPos(getStartingCoord().getX(), currentCoordinate.getY(), currentCoordinate.getZ() + getZDirection());
 		}
 		if(getAdjustedCurrentPos().getZ() >= getAdjustedEndingPos().getZ()+1) {
-			CURRENT_COORD = getStartingCoord();
+			currentCoordinate = getStartingCoord();
 		}
 		if(getAdjustedCurrentPos().getX() <= getAdjustedEndingPos().getX()){
-			CURRENT_COORD = CURRENT_COORD.add(getXDirection(), 0, 0);
+			currentCoordinate = currentCoordinate.add(getXDirection(), 0, 0);
 			return;
 		}
 	}
 	private BlockPos getAdjustedCurrentPos() {
-		BlockPos temp1 = CURRENT_COORD.subtract(getStartingCoord());
+		BlockPos temp1 = currentCoordinate.subtract(getStartingCoord());
 		BlockPos absPos = new BlockPos(Math.abs(temp1.getX()), Math.abs(temp1.getY()), Math.abs(temp1.getZ()));
 		return absPos;
 	}
@@ -182,10 +192,10 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 		return absPos;
 	}
 	private BlockPos getEndingCoord() {
-		return new BlockPos(pos.getX() + RANGE+1, pos.getY(), pos.getZ() + RANGE);
+		return new BlockPos(pos.getX() + range+1, pos.getY(), pos.getZ() + range);
 	}
 	private BlockPos getStartingCoord() {
-		return new BlockPos(pos.getX() - RANGE-1, pos.getY(), pos.getZ() - RANGE);
+		return new BlockPos(pos.getX() - range-1, pos.getY(), pos.getZ() - range);
 	}
 	private int getXDirection(){
 		if(getStartingCoord().getX() > getEndingCoord().getX()) {
@@ -202,7 +212,7 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 		}
 	}
 	public boolean canFarm() {
-		if(energyStorage.getEnergyStored() >= getProcessingCost() * BLOCKS_PER_TICK && !slotsInput.getStackInSlot(0).isEmpty() && slotsInput.getStackInSlot(0).getItem() instanceof ItemHoe
+		if(energyStorage.getEnergyStored() >= getProcessingCost() * blocksFarmedPerTick && !slotsInput.getStackInSlot(0).isEmpty() && slotsInput.getStackInSlot(0).getItem() instanceof ItemHoe
 				&& !slotsInput.getStackInSlot(1).isEmpty() && slotsInput.getStackInSlot(1).getItem() instanceof ItemAxe) {
 			return true;
 		}
@@ -210,7 +220,7 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 	}
 	public void useHoe(){
 		if(slotsInput.getStackInSlot(0) != ItemStack.EMPTY && slotsInput.getStackInSlot(0).getItem() instanceof ItemHoe) {
-			if(slotsInput.getStackInSlot(0).attemptDamageItem(1, RAND, null)) {
+			if(slotsInput.getStackInSlot(0).attemptDamageItem(1, rand, null)) {
 				slotsInput.setStackInSlot(0, ItemStack.EMPTY);
 				getWorld().playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F, false);		
 			}	
@@ -218,7 +228,7 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 	}
 	public void useAxe(){
 		if(slotsInput.getStackInSlot(1) != ItemStack.EMPTY && slotsInput.getStackInSlot(1).getItem() instanceof ItemAxe) {
-			if(slotsInput.getStackInSlot(1).attemptDamageItem(1, RAND, null)) {
+			if(slotsInput.getStackInSlot(1).attemptDamageItem(1, rand, null)) {
 				slotsInput.setStackInSlot(1, ItemStack.EMPTY);
 				getWorld().playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F, false);		
 			}	
@@ -273,13 +283,13 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 				getWorld().playSound(null, pos, getWorld().getBlockState(pos).getBlock().getSoundType(getWorld().getBlockState(pos), world, pos, null).getBreakSound(), SoundCategory.BLOCKS, 1.0F, 1.0F);
 				getWorld().spawnParticle(EnumParticleTypes.SMOKE_LARGE, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
 	        	if(!getWorld().isRemote) {
-					FARMED_STACKS.addAll(getBlockDrops(pos));
+					farmedStacks.addAll(getBlockDrops(pos));
 					getWorld().setBlockState(pos, tempCrop.withAge(0), 3);	
 					useHoe();
-					if(FARMED_STACKS.size() > 0) {
-						for(int i=FARMED_STACKS.size()-1; i>=0; i--) {
-							if(FARMED_STACKS.get(i).getItem() instanceof IPlantable) {
-								FARMED_STACKS.remove(i);
+					if(farmedStacks.size() > 0) {
+						for(int i=farmedStacks.size()-1; i>=0; i--) {
+							if(farmedStacks.get(i).getItem() instanceof IPlantable) {
+								farmedStacks.remove(i);
 								break;
 							}
 						}
@@ -294,13 +304,13 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
         	if(!getWorld().isRemote) {       		
 		        NonNullList<ItemStack> drops1 = NonNullList.create();
 				getWorld().getBlockState(pos.add(0, 1, 0)).getBlock().getDrops(drops1, getWorld(), pos.add(0, 1, 0), getWorld().getBlockState(pos.add(0, 1, 0)), 0);
-				FARMED_STACKS.addAll(getBlockDrops(pos.add(0, 1, 0)));
+				farmedStacks.addAll(getBlockDrops(pos.add(0, 1, 0)));
 				getWorld().setBlockToAir(pos.add(0, 1, 0));
         		getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 2);
         		useAxe();
             	       		
 				if(getWorld().getBlockState(pos.add(0, 2, 0)).getBlock() instanceof BlockReed) {
-					FARMED_STACKS.addAll(getBlockDrops(pos.add(0, 2, 0)));
+					farmedStacks.addAll(getBlockDrops(pos.add(0, 2, 0)));
 					getWorld().setBlockToAir(pos.add(0, 2, 0));	
 					getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 2);
 					useAxe();
@@ -315,13 +325,13 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 	public boolean harvestCactus(BlockPos pos) {
 		if(getWorld().getBlockState(pos.add(0, 1, 0)).getBlock() instanceof BlockCactus){	      
         	if(!getWorld().isRemote) {
-				FARMED_STACKS.addAll(getBlockDrops(pos.add(0, 1, 0)));
+				farmedStacks.addAll(getBlockDrops(pos.add(0, 1, 0)));
 				getWorld().setBlockToAir(pos.add(0, 1, 0));	
 				useAxe();
         		getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 3);
         		       		
 				if(getWorld().getBlockState(pos.add(0, 2, 0)).getBlock() instanceof BlockCactus) {
-					FARMED_STACKS.addAll(getBlockDrops(pos.add(0, 2, 0)));
+					farmedStacks.addAll(getBlockDrops(pos.add(0, 2, 0)));
 					getWorld().setBlockToAir(pos.add(0, 2, 0));	
 					getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 3);
 					useAxe();
@@ -336,7 +346,7 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 	public boolean harvestMelonOrPumpkin(BlockPos pos) {
 		if(getWorld().getBlockState(pos).getBlock() instanceof BlockMelon || getWorld().getBlockState(pos).getBlock() instanceof BlockPumpkin){	   
         	if(!getWorld().isRemote) {
-				FARMED_STACKS.addAll(getBlockDrops(pos));
+				farmedStacks.addAll(getBlockDrops(pos));
 				getWorld().setBlockToAir(pos);	
 				useAxe();
         		getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 3);       		       		
@@ -354,14 +364,14 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 				getWorld().playSound(null, pos, getWorld().getBlockState(pos).getBlock().getSoundType(getWorld().getBlockState(pos), world, pos, null).getBreakSound(), SoundCategory.BLOCKS, 1.0F, 1.0F);
 				getWorld().spawnParticle(EnumParticleTypes.SMOKE_LARGE, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
 	        	if(!getWorld().isRemote) {
-					FARMED_STACKS.addAll(getBlockDrops(pos));
+					farmedStacks.addAll(getBlockDrops(pos));
 		        	getWorld().setBlockState(pos, Blocks.NETHER_WART.getDefaultState(), 2);
 					useHoe();
 					getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 3);
-					if(FARMED_STACKS.size() > 0) {
-						for(int i=FARMED_STACKS.size()-1; i>=0; i--) {
-							if(FARMED_STACKS.get(i).getItem() instanceof IPlantable) {
-								FARMED_STACKS.remove(i);
+					if(farmedStacks.size() > 0) {
+						for(int i=farmedStacks.size()-1; i>=0; i--) {
+							if(farmedStacks.get(i).getItem() instanceof IPlantable) {
+								farmedStacks.remove(i);
 								break;
 							}
 						}
@@ -373,11 +383,11 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 		return false;
 	}
 	public boolean growCrop(BlockPos pos) {
-		if(RAND.nextInt(100) <= GROWTH_BONUS_CHANCE) {
+		if(rand.nextInt(100) <= growthBonusChance) {
 	        if(getWorld().getBlockState(pos) != null && getWorld().getBlockState(pos).getBlock() instanceof IGrowable) {
 	        	IGrowable tempCrop = (IGrowable) getWorld().getBlockState(pos).getBlock();
 	        	if(tempCrop.canGrow(getWorld(), pos, getWorld().getBlockState(pos), true)) {
-	        		tempCrop.grow(getWorld(), RAND, pos, getWorld().getBlockState(pos));
+	        		tempCrop.grow(getWorld(), rand, pos, getWorld().getBlockState(pos));
 	        		getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 3);
 	        		return true;
 	        	}
@@ -387,7 +397,7 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 	}
 	public List<ItemStack> getBlockDrops(BlockPos pos) {
         NonNullList<ItemStack> ret = NonNullList.create();
-		getWorld().getBlockState(CURRENT_COORD).getBlock().getDrops(ret, getWorld(), CURRENT_COORD, getWorld().getBlockState(CURRENT_COORD), 0);
+		getWorld().getBlockState(currentCoordinate).getBlock().getDrops(ret, getWorld(), currentCoordinate, getWorld().getBlockState(currentCoordinate), 0);
 		return ret;
 	}
 	@Override

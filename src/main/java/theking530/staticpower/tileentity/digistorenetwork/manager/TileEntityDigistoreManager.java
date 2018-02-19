@@ -48,6 +48,11 @@ public class TileEntityDigistoreManager extends BaseDigistoreTileEntity {
 		}
 	}
 	
+	@Override
+	public boolean isSideConfigurable() {
+		return false;
+	}
+	
 	/*Capability Handling*/
     public boolean hasCapability(net.minecraftforge.common.capabilities.Capability<?> capability, net.minecraft.util.EnumFacing facing){
     	if(facing == null) {

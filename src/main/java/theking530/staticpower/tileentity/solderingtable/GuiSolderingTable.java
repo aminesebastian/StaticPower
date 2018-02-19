@@ -23,7 +23,7 @@ public class GuiSolderingTable extends BaseGuiContainer {
 
 		infoTab = new GuiInfoTab(110, 80);
 		getTabManager().registerTab(infoTab);
-		getTabManager().registerTab(new GuiSideConfigTab(80, 80, teTable));
+		getTabManager().registerTab(new GuiSideConfigTab(80, 80, false, teTable));
 	}
 	public void drawScreen(int par1, int par2, float par3) {
     	super.drawScreen(par1, par2, par3);

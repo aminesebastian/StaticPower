@@ -48,6 +48,8 @@ public class StaticEnergyStorage implements IEnergyStorage, ITileEntityComponent
 			currentEnergy = capacity;
 		}
 		energyPerTick = nbt.getInteger("PerTick");
+		maxReceive = nbt.getInteger("MaxRecv");
+		maxExtract = nbt.getInteger("MaxExtract");
 		return this;
 	}
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
@@ -58,6 +60,8 @@ public class StaticEnergyStorage implements IEnergyStorage, ITileEntityComponent
 		nbt.setInteger("Capacity", capacity);
 		nbt.setInteger("PerTick", energyPerTick);
 
+		nbt.setInteger("MaxRecv", maxReceive);
+		nbt.setInteger("MaxExtract", maxExtract);
 		return nbt;
 	}
 	public float getEnergyRatio(){
@@ -72,7 +76,6 @@ public class StaticEnergyStorage implements IEnergyStorage, ITileEntityComponent
 		if(!simulate) {
 			currentEnergy += maxActualRecieve;
 		}
-		
 		return maxActualRecieve;
 	}
 	@Override
@@ -114,7 +117,7 @@ public class StaticEnergyStorage implements IEnergyStorage, ITileEntityComponent
 		maxReceive = newMaxRecieve;		
 	}
 	public void setMaxExtract(int newMaxExtract) {
-		maxExtract = newMaxExtract;			
+		maxExtract = newMaxExtract;		
 	}
 	
 	public int getMaxExtract() {

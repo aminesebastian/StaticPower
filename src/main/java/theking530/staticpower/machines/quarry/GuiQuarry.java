@@ -33,7 +33,7 @@ public class GuiQuarry extends BaseGuiContainer {
 		registerWidget(new GuiPowerBarFromEnergyStorage(teQuarry, 47, 66, 6, 60));
 		registerWidget(new GuiFluidBarFromTank(teQuarry.fluidTank, 27, 66, 16, 60));
 
-		getTabManager().registerTab(new GuiSideConfigTab(80, 80, teQuarry));
+		getTabManager().registerTab(new GuiSideConfigTab(80, 80, false, teQuarry));
 		
 		GuiMachinePowerInfoTab powerInfoTab;
 		getTabManager().registerTab(powerInfoTab = new GuiMachinePowerInfoTab(80, 80, teQuarry));

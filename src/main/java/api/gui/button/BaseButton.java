@@ -3,6 +3,7 @@ package api.gui.button;
 import java.util.Arrays;
 import java.util.List;
 
+import api.gui.IInteractableGui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.Gui;
@@ -33,6 +34,8 @@ public abstract class BaseButton extends Gui{
 	
 	private float clickSoundPitch;
 	
+	protected IInteractableGui owningGui;
+	
 	private List<String> tooltip;
 	
 	public BaseButton(int width, int height, int xPos, int yPos) {
@@ -43,14 +46,20 @@ public abstract class BaseButton extends Gui{
 		this.clickSoundPitch = 1.0f;
 	}
 	public void draw() {
+		if(!isVisible()) {
+			return;
+		}
 		GlStateManager.disableLighting();
 		drawButton();
 		drawExtra();
 		GlStateManager.enableLighting();
 	}
 	public void handleMouseInteraction(int mouseX, int mouseY, int button) {
-		if(mouseX > xPosition && mouseX < xPosition + width && isVisible) {
-	    	if(mouseY > yPosition && mouseY < yPosition + height) {
+		if(!isVisible()) {
+			return;
+		}
+		if(mouseX > owningGui.getGuiLeft() + xPosition && mouseX < owningGui.getGuiLeft() + xPosition + width && isVisible) {
+	    	if(mouseY > owningGui.getGuiTop() + yPosition && mouseY < owningGui.getGuiTop() + yPosition + height) {
 	    		clicked = button == 0 ? ClickedState.LEFT : ClickedState.RIGHT;
 	    		playSound(clicked);
 	    		if(toggleable) {
@@ -60,10 +69,13 @@ public abstract class BaseButton extends Gui{
 	    }
 	}
 	public void handleMouseMoveInteraction(int mouseX, int mouseY) {
+		if(!isVisible()) {
+			return;
+		}
 		this.mouseX = mouseX;
 		this.mouseY = mouseY;
-		if(mouseX > xPosition && mouseX < xPosition + width && isVisible) {
-	    	if(mouseY > yPosition && mouseY < yPosition + height) {
+		if(mouseX > owningGui.getGuiLeft() + xPosition && mouseX < owningGui.getGuiLeft() + xPosition + width && isVisible) {
+	    	if(mouseY > owningGui.getGuiTop() + yPosition && mouseY < owningGui.getGuiTop() +yPosition + height) {
 	    		hovered = true;
 	    		return;
 	    	}
@@ -72,6 +84,10 @@ public abstract class BaseButton extends Gui{
 	}
 	protected abstract void drawButton();
 	protected void drawExtra() {}
+	
+	public void setOwningGui(IInteractableGui owningGui) {
+		this.owningGui = owningGui;
+	}
 	
 	protected void playSound(ClickedState state) {
 		float pitch = state == ClickedState.LEFT ? clickSoundPitch : clickSoundPitch / 1.2f;
@@ -111,6 +127,9 @@ public abstract class BaseButton extends Gui{
 	}
 	public boolean isClicked() {
 		return clicked != ClickedState.NONE;
+	}
+	public void setVisible(boolean visible) {
+		this.isVisible = visible;
 	}
 	public ClickedState getClickedState() {
 		return clicked;

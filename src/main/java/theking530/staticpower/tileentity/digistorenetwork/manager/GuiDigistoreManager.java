@@ -19,7 +19,7 @@ public class GuiDigistoreManager extends BaseGuiContainer {
 		infoTab = new GuiInfoTab(100, 65);
 		getTabManager().registerTab(infoTab);
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, barrel));
-		getTabManager().registerTab(new GuiSideConfigTab(80, 80, barrel));
+		getTabManager().registerTab(new GuiSideConfigTab(80, 80, false, barrel));
 		getTabManager().setInitiallyOpenTab(infoTab);
 	}
 	protected void drawGuiContainerForegroundLayer(int i, int j) {

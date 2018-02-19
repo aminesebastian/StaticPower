@@ -13,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
+import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.energy.StaticEnergyStorage;
 import theking530.staticpower.items.upgrades.BasePowerUpgrade;
 import theking530.staticpower.items.upgrades.BaseSpeedUpgrade;
@@ -36,9 +37,6 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	public int initialProcessingTime;
 	public int processingTime = initialProcessingTime;
 	
-	public int maxPowerThreshold;
-	public int minPowerThreshold;
-	
 	public int moveSpeed = 4;
 	
 	public int processingTimer = 0;
@@ -52,6 +50,7 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	
 
 	public BaseMachine() {
+		initializeSlots(0, 0, 0, false);
 	}
 	
 	/**
@@ -86,10 +85,9 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		super.update();
 
 		previouslyStoredEnergyAmount = energyStorage.getEnergyStored();
-		upgradeHandler();
 	}	
-
-	public void upgradeHandler(){
+	@Override
+	public void upgradeTick(){
 		powerUpgrade();		
 		processingUpgrade();
 	}
@@ -268,6 +266,9 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing from) {
 		if(capability == CapabilityEnergy.ENERGY && energyStorage != null) {
+			if(from != null && this.getSideConfiguration(from) == Mode.Disabled) {
+				return false;
+			}
 			return true;
 		}
 		return super.hasCapability(capability, from);
@@ -276,6 +277,9 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	public <T> T getCapability(Capability<T> capability, final EnumFacing from) {
 		if (capability == CapabilityEnergy.ENERGY) {
 			if(energyStorage != null) {
+				if(from != null && this.getSideConfiguration(from) == Mode.Disabled) {
+					return null;
+				}
 				return CapabilityEnergy.ENERGY.cast(new net.minecraftforge.energy.IEnergyStorage() {
 
 					@Override

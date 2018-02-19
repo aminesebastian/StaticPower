@@ -25,7 +25,7 @@ public class GuiFusionFurnace extends BaseGuiContainer {
 		
 		getTabManager().registerTab(infoTab = new GuiInfoTab(100, 60));
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teFurnace));
-		getTabManager().registerTab(new GuiSideConfigTab(80, 80, teFurnace));
+		getTabManager().registerTab(new GuiSideConfigTab(80, 80, false, teFurnace));
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(80, 80, teFurnace).setTabSide(TabSide.LEFT));
 
 	}

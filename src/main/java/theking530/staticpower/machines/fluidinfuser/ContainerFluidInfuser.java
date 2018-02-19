@@ -2,58 +2,48 @@ package theking530.staticpower.machines.fluidinfuser;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.SlotItemHandler;
+import theking530.staticpower.container.BaseContainer;
 import theking530.staticpower.handlers.crafting.registries.InfuserRecipeRegistry;
+import theking530.staticpower.machines.tileentitycomponents.slots.BatterySlot;
+import theking530.staticpower.machines.tileentitycomponents.slots.FluidContainerSlot;
+import theking530.staticpower.machines.tileentitycomponents.slots.OutputSlot;
+import theking530.staticpower.machines.tileentitycomponents.slots.StaticPowerContainerSlot;
+import theking530.staticpower.machines.tileentitycomponents.slots.UpgradeSlot;
 
-public class ContainerFluidInfuser extends Container {
+public class ContainerFluidInfuser extends BaseContainer {
 	
-	private TileEntityFluidInfuser INFUSER;
+	private TileEntityFluidInfuser infuserTileEntity;
 	
 	public ContainerFluidInfuser(InventoryPlayer invPlayer, TileEntityFluidInfuser teFluidInfuser) {
-		INFUSER = teFluidInfuser;
+		infuserTileEntity = teFluidInfuser;
 		
 		//Input
-		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.slotsInput, 0, 74, 32));
-		
-		//Fluid Slots
-		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.slotsInternal, 1, 7, 17));
-		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.slotsInternal, 2, 7, 47));
-		
-		//Output
-		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.slotsOutput, 0, 131, 32) {
+		this.addSlotToContainer(new StaticPowerContainerSlot(teFluidInfuser.slotsInput, 0, 50, 32) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
-		          return InfuserRecipeRegistry.Infusing().getInfusingItemStackResult(itemStack, INFUSER.fluidTank.getFluid()) != null;
+		          return !InfuserRecipeRegistry.Infusing().getInfusingItemStackResult(itemStack, infuserTileEntity.fluidTank.getFluid()).isEmpty();
 		    }
 		});
 		
-		//Upgrades
-		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.slotsUpgrades, 0, 171, 12));
-		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.slotsUpgrades, 1, 171, 32));
-		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.slotsUpgrades, 2, 171, 52));
+		//FluidContainerSlots
+		this.addSlotToContainer(new FluidContainerSlot(infuserTileEntity.slotsInternal, 1, -24, 11));
+		this.addSlotToContainer(new OutputSlot(infuserTileEntity.slotsInternal, 2, -24, 43));
 		
-		//Processing
-		this.addSlotToContainer(new SlotItemHandler(teFluidInfuser.slotsInternal, 0, 10000, 10000) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-		          return false;
-		        }
-		});
-				
-		//Inventory
-				for(int i = 0; i < 3; i++) {
-					for(int j = 0; j < 9; j++) {
-						this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 27 + j * 18, 84 + i * 18));
-					}
-				}
-				
-				//ActionBar
-				for(int i = 0; i < 9; i++) {
-					this.addSlotToContainer(new Slot(invPlayer, i, 27 + i * 18, 142));
-			}
+		//Battery
+		this.addSlotToContainer(new BatterySlot(infuserTileEntity.slotsInternal, 3, 8, 54));
+		
+		//Output
+		this.addSlotToContainer(new OutputSlot(infuserTileEntity.slotsOutput, 0, 107, 32));
+		
+		//Upgrades
+		this.addSlotToContainer(new UpgradeSlot(infuserTileEntity.slotsUpgrades, 0, -24, 76));
+		this.addSlotToContainer(new UpgradeSlot(infuserTileEntity.slotsUpgrades, 1, -24, 94));
+		this.addSlotToContainer(new UpgradeSlot(infuserTileEntity.slotsUpgrades, 2, -24, 112));
+		
+		this.addPlayerInventory(invPlayer, 8, 84);
+		this.addPlayerHotbar(invPlayer, 8, 142);
 	}
 
 	//Shift Click Functionality
@@ -71,7 +61,7 @@ public class ContainerFluidInfuser extends Container {
                 }
                 slot.onSlotChange(itemstack1, itemstack);
             }else if (invSlot != 1 && invSlot != 0){
-            	if (InfuserRecipeRegistry.Infusing().getInfusingItemStackResult(itemstack1, INFUSER.fluidTank.getFluid()) != null){
+            	if (InfuserRecipeRegistry.Infusing().getInfusingItemStackResult(itemstack1, infuserTileEntity.fluidTank.getFluid()) != null){
                     if (!this.mergeItemStack(itemstack1, 0, 1, false)){
                         return ItemStack.EMPTY;
                     }
@@ -99,7 +89,7 @@ public class ContainerFluidInfuser extends Container {
 	   }
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
-		return INFUSER.isUseableByPlayer(player);
+		return infuserTileEntity.isUseableByPlayer(player);
 	}
 	public void detectAndSendChanges(){
         super.detectAndSendChanges();

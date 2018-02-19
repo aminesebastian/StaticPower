@@ -10,6 +10,7 @@ import theking530.staticpower.items.upgrades.BaseUpgrade;
 import theking530.staticpower.machines.tileentitycomponents.slots.BatterySlot;
 import theking530.staticpower.machines.tileentitycomponents.slots.OutputSlot;
 import theking530.staticpower.machines.tileentitycomponents.slots.StaticPowerContainerSlot;
+import theking530.staticpower.machines.tileentitycomponents.slots.UpgradeSlot;
 
 public class ContainerPoweredGrinder extends BaseContainer {
 	
@@ -35,9 +36,9 @@ public class ContainerPoweredGrinder extends BaseContainer {
 		this.addSlotToContainer(new OutputSlot(tePoweredGrinder.slotsOutput, 2, 54, 46));
 		
 		//Upgrades
-		this.addSlotToContainer(new StaticPowerContainerSlot(tePoweredGrinder.slotsUpgrades, 0, 152, 12));
-		this.addSlotToContainer(new StaticPowerContainerSlot(tePoweredGrinder.slotsUpgrades, 1, 152, 32));
-		this.addSlotToContainer(new StaticPowerContainerSlot(tePoweredGrinder.slotsUpgrades, 2, 152, 52));
+		this.addSlotToContainer(new UpgradeSlot(tePoweredGrinder.slotsUpgrades, 0, 152, 12));
+		this.addSlotToContainer(new UpgradeSlot(tePoweredGrinder.slotsUpgrades, 1, 152, 32));
+		this.addSlotToContainer(new UpgradeSlot(tePoweredGrinder.slotsUpgrades, 2, 152, 52));
 		
 		this.addPlayerInventory(invPlayer, 8, 84);
 		this.addPlayerHotbar(invPlayer, 8, 142);

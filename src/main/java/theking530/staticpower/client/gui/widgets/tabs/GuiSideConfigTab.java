@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -24,6 +25,7 @@ import theking530.staticpower.assists.utilities.SideUtilities;
 import theking530.staticpower.assists.utilities.SideUtilities.BlockSide;
 import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.handlers.PacketHandler;
+import theking530.staticpower.tileentity.BaseTileEntity;
 import theking530.staticpower.tileentity.ISideConfigurable;
 import theking530.staticpower.tileentity.ISideConfigurable.SideIncrementDirection;
 
@@ -39,19 +41,26 @@ public class GuiSideConfigTab extends BaseGuiTab implements IInteractableGui {
 	private TextButton leftButton;
 	private TextButton rightButton;
 	private TextButton backButton;
+	private TextButton frontButton;
 	
-	public GuiSideConfigTab(int width, int height, TileEntity te){
+	private boolean allowFaceInteraction;
+	
+	public GuiSideConfigTab(int width, int height, boolean faceInteraction, TileEntity te){
 		super(width, height, GuiTextures.BLUE_TAB, te.getBlockType());
 		tileEntity = te;
 		fontRenderer = Minecraft.getMinecraft().fontRenderer;
-		
-		topButton = new TextButton(20, 20, 0, 0, "T");
-		bottomButton = new TextButton(20, 20, 0, 0, "B");
-		leftButton = new TextButton(20, 20, 0, 0, "L");
-		rightButton = new TextButton(20, 20, 0, 0, "R");
-		backButton = new TextButton(20, 20, 0, 0, "B");
-		
+		allowFaceInteraction = faceInteraction;
 		buttonManager = new ButtonManager(this);
+		
+		int xOffset = 3;
+		int yOffset = 8;	
+		topButton = new TextButton(20, 20, xOffset + tabWidth/2, yOffset+15, "T");
+		bottomButton = new TextButton(20, 20, xOffset + tabWidth/2, yOffset+tabHeight-15, "B");
+		rightButton = new TextButton(20, 20, xOffset + tabWidth-15, yOffset+tabHeight/2, "L");
+		leftButton = new TextButton(20, 20, xOffset + 15, yOffset+tabHeight/2, "R");
+		backButton = new TextButton(20, 20, xOffset + tabWidth/2, yOffset+tabHeight/2, "B");
+		frontButton = new TextButton(20, 20, xOffset + 15, yOffset+15, "F");
+		frontButton.setVisible(allowFaceInteraction);
 		
 		updateTooltips();
 		
@@ -60,6 +69,7 @@ public class GuiSideConfigTab extends BaseGuiTab implements IInteractableGui {
 		buttonManager.registerButton(leftButton);
 		buttonManager.registerButton(rightButton);
 		buttonManager.registerButton(backButton);
+		buttonManager.registerButton(frontButton);
 	}
 	@Override
 	public void drawExtra(int xPos, int yPos, float partialTicks) {
@@ -67,15 +77,6 @@ public class GuiSideConfigTab extends BaseGuiTab implements IInteractableGui {
 	    	drawText(xPos+10, yPos+8);
 			drawButtonBG(xPos, yPos);
 			buttonManager.drawButtons(xPos, yPos);
-			
-			int xOffset = 3;
-			int yOffset = 8;
-			
-			topButton.setPosition(xOffset + xPos+tabWidth/2, yOffset+yPos+15);
-			bottomButton.setPosition(xOffset + xPos+tabWidth/2, yOffset+yPos+tabHeight-15);
-			rightButton.setPosition(xOffset + xPos+tabWidth-15, yOffset+yPos+tabHeight/2);
-			leftButton.setPosition(xOffset + xPos+15, yOffset+yPos+tabHeight/2);
-			backButton.setPosition(xOffset + xPos+tabWidth/2, yOffset+yPos+tabHeight/2);
 		}
 	}
 	public void drawText(int xPos, int yPos) {
@@ -128,6 +129,8 @@ public class GuiSideConfigTab extends BaseGuiTab implements IInteractableGui {
 			sideConfigurable.incrementSideConfiguration(SideUtilities.getEnumFacingFromSide(BlockSide.LEFT, getFacingDirection()), direction);
 		}else if(button == rightButton) {
 			sideConfigurable.incrementSideConfiguration(SideUtilities.getEnumFacingFromSide(BlockSide.RIGHT, getFacingDirection()), direction);
+		}else if(button == frontButton && allowFaceInteraction) {
+			sideConfigurable.incrementSideConfiguration(SideUtilities.getEnumFacingFromSide(BlockSide.FRONT, getFacingDirection()), direction);
 		}else{
 			sideConfigurable.incrementSideConfiguration(SideUtilities.getEnumFacingFromSide(BlockSide.BACK, getFacingDirection()), direction);
 			if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
@@ -156,16 +159,43 @@ public class GuiSideConfigTab extends BaseGuiTab implements IInteractableGui {
 			return;
 		}
 		ISideConfigurable sideConfigurable = (ISideConfigurable)tileEntity;
-		topButton.setText(sideConfigurable.getSideConfiguration(BlockSide.TOP).getFontColor() + BlockSide.TOP.getLocalizedName().substring(0, 1));
-		bottomButton.setText(sideConfigurable.getSideConfiguration(BlockSide.BOTTOM).getFontColor() + BlockSide.BOTTOM.getLocalizedName().substring(0, 2));
-		leftButton.setText(sideConfigurable.getSideConfiguration(BlockSide.LEFT).getFontColor() + BlockSide.LEFT.getLocalizedName().substring(0, 1));
-		rightButton.setText(sideConfigurable.getSideConfiguration(BlockSide.RIGHT).getFontColor() + BlockSide.RIGHT.getLocalizedName().substring(0, 1));
-		backButton.setText(sideConfigurable.getSideConfiguration(BlockSide.BACK).getFontColor() + BlockSide.BACK.getLocalizedName().substring(0, 1));
 		
-		topButton.setTooltip(BlockSide.TOP.getLocalizedName() + "=" + sideConfigurable.getSideConfiguration(BlockSide.TOP).getFontColor() +sideConfigurable.getSideConfiguration(BlockSide.TOP).getLocalizedName());
-		bottomButton.setTooltip(BlockSide.BOTTOM.getLocalizedName() + "=" + sideConfigurable.getSideConfiguration(BlockSide.BOTTOM).getFontColor() +sideConfigurable.getSideConfiguration(BlockSide.BOTTOM).getLocalizedName());
-		leftButton.setTooltip(BlockSide.LEFT.getLocalizedName() + "=" + sideConfigurable.getSideConfiguration(BlockSide.LEFT).getFontColor() +sideConfigurable.getSideConfiguration(BlockSide.LEFT).getLocalizedName());
-		rightButton.setTooltip(BlockSide.RIGHT.getLocalizedName() + "=" + sideConfigurable.getSideConfiguration(BlockSide.RIGHT).getFontColor() +sideConfigurable.getSideConfiguration(BlockSide.RIGHT).getLocalizedName());
-		backButton.setTooltip(BlockSide.BACK.getLocalizedName() + "=" +sideConfigurable.getSideConfiguration(BlockSide.BACK).getFontColor() + sideConfigurable.getSideConfiguration(BlockSide.BACK).getLocalizedName());
+		for(BlockSide side : BlockSide.values()) {
+			TextButton button = null;
+			switch(side) {
+			case TOP: button = topButton;
+				break;
+			case BOTTOM: button = bottomButton;
+				break;
+			case LEFT: button = leftButton;
+				break;
+			case RIGHT: button = rightButton;
+				break;
+			case FRONT: button = frontButton;
+				break;
+			case BACK: button = backButton;
+				break;
+			default: button = topButton;
+				break;
+			}
+			
+			button.setText(sideConfigurable.getSideConfiguration(side).getFontColor() + side.getLocalizedName().substring(0, 1));
+			button.setTooltip(side.getLocalizedName() + "=" + sideConfigurable.getSideConfiguration(side).getFontColor() +sideConfigurable.getSideConfiguration(side).getLocalizedName() + "=" + I18n.format(conditionallyGetCardinal(side)));		
+		}
     }
+    public String conditionallyGetCardinal(BlockSide side) {
+    	if(tileEntity instanceof BaseTileEntity) {
+    		BaseTileEntity te = (BaseTileEntity)tileEntity;
+    		return "gui." + SideUtilities.getEnumFacingFromSide(side, te.getFacingDirection()).toString();
+    	}
+		return "";
+    }
+	@Override
+	public int getGuiTop() {
+		return yPosition;
+	}
+	@Override
+	public int getGuiLeft() {
+		return xPosition;
+	}
 }

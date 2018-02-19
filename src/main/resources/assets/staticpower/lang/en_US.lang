@@ -309,7 +309,7 @@ container.CropGenerator=Crop Generator
 container.CropSqueezer=Crop Squeezer
 container.FluidInfuser=Fluid Infuser
 container.FluidGenerator=Fluid Generator
-container.PowereGrinder=Powered Grinder
+container.PoweredGrinder=Powered Grinder
 container.PoweredFurnace=Powered Furnace
 container.FusionFurnace=Fusion Furnace
 container.Multi-MachineController=Machine Controller
@@ -497,6 +497,19 @@ mode.Regular=Regular
 mode.Input=Input
 mode.Output=Output
 mode.Disabled=Disabled
+
+gui.RF/T=RT/t
+gui.PowerControl=Power Control
+gui.Minimum=Minimum
+gui.Maximum=Maximum
+gui.Confirm=Confirm
+
+gui.up=Up
+gui.down=Down
+gui.east=East
+gui.west=West
+gui.north=North
+gui.south=South
 
 side.Top=Top
 side.Bottom=Bottom

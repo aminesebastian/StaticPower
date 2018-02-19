@@ -43,9 +43,9 @@ public class GuiRedstoneTab extends BaseGuiTab implements IInteractableGui {
 		
 		buttonManager = new ButtonManager(this);
 		
-		ignoreRedstoneButton = new ItemButton(Items.GUNPOWDER, 20, 20, 0, 0);
-		lowRedstoneButton = new ItemButton(Items.REDSTONE, 20, 20, 0, 0);
-		highRedstoneButton = new ItemButton(Item.getItemFromBlock(Blocks.REDSTONE_TORCH), 20, 20, 0, 0);
+		ignoreRedstoneButton = new ItemButton(Items.GUNPOWDER, 20, 20, 23, 30);
+		lowRedstoneButton = new ItemButton(Items.REDSTONE, 20, 20, 53, 30);
+		highRedstoneButton = new ItemButton(Item.getItemFromBlock(Blocks.REDSTONE_TORCH), 20, 20, 83, 30);
 		
 		ignoreRedstoneButton.setClickSoundPitch(0.75f);
 		lowRedstoneButton.setClickSoundPitch(0.85f);
@@ -69,9 +69,6 @@ public class GuiRedstoneTab extends BaseGuiTab implements IInteractableGui {
 	public void drawExtra(int xPos, int yPos, float partialTicks) {
 		if(isOpen()) {
 			drawButtonBG(xPos-3, yPos-32);	
-			ignoreRedstoneButton.setPosition(xPos+23, yPos+30);
-			lowRedstoneButton.setPosition(xPos+53, yPos+30);
-			highRedstoneButton.setPosition(xPos+83, yPos+30);
 			buttonManager.drawButtons(xPos, yPos);
 			drawText(xPos+5, yPos-35);
 		}
@@ -169,4 +166,12 @@ public class GuiRedstoneTab extends BaseGuiTab implements IInteractableGui {
 		// TODO Auto-generated method stub
 		
 	}	
+	@Override
+	public int getGuiTop() {
+		return yPosition;
+	}
+	@Override
+	public int getGuiLeft() {
+		return xPosition;
+	}
 }

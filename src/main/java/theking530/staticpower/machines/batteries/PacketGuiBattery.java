@@ -1,7 +1,6 @@
 package theking530.staticpower.machines.batteries;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -47,15 +46,15 @@ public class PacketGuiBattery implements IMessage{
       buf.writeInt(z);
     }
     public static class Message implements IMessageHandler<PacketGuiBattery, IMessage> {
-    @Override
-    public IMessage onMessage(PacketGuiBattery message, MessageContext ctx) {
-	 	TileEntity tile = Minecraft.getMinecraft().world.getTileEntity(new BlockPos(message.x, message.y, message.z));
-    		if(tile != null) {
-    			TileEntityBattery battery = (TileEntityBattery)tile;
-    			battery.energyStorage.setMaxReceive(message.INPUT_PER_TICK);
-    			battery.energyStorage.setMaxExtract(message.OUTPUT_PER_TICK);
-    		}
-		return null;
-    	}
+	    @Override
+	    public IMessage onMessage(PacketGuiBattery message, MessageContext ctx) {
+			TileEntity te = ctx.getServerHandler().player.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
+			if(te != null && te instanceof TileEntityBattery) {
+				TileEntityBattery battery = (TileEntityBattery)te;
+				battery.setInputLimit(message.INPUT_PER_TICK);
+				battery.setOutputLimit(message.OUTPUT_PER_TICK);
+			}
+			return null;
+	    }
     }
 }

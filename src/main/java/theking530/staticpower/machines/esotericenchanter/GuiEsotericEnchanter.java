@@ -37,7 +37,7 @@ public class GuiEsotericEnchanter extends BaseGuiContainer {
 		
 		getTabManager().registerTab(infoTab = new GuiInfoTab(100, 70));
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, enchanter));
-		getTabManager().registerTab(new GuiSideConfigTab(80, 80, enchanter));
+		getTabManager().registerTab(new GuiSideConfigTab(80, 80, false, enchanter));
 		
 		GuiMachinePowerInfoTab powerInfoTab;
 		getTabManager().registerTab(powerInfoTab = new GuiMachinePowerInfoTab(80, 80, enchanter));

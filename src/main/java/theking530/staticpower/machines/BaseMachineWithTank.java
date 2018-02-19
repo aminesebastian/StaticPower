@@ -38,8 +38,8 @@ public class BaseMachineWithTank extends BaseMachine {
 
 	}
 	@Override
-	public void upgradeHandler(){
-		super.upgradeHandler();
+	public void upgradeTick(){
+		super.upgradeTick();
 		tankUpgrade();
 	}
 	public void tankUpgrade() {

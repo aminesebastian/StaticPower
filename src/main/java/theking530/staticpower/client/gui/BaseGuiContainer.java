@@ -99,6 +99,7 @@ public abstract class BaseGuiContainer extends GuiContainer implements IInteract
 		getTabManager().handleMouseMoveInteraction(mouseX, mouseY);
 	}
 	protected void drawButtons(int mouseX, int mouseY) {
+		buttonManager.handleMouseMoveInteraction(mouseX, mouseY);
 		buttonManager.drawButtons(mouseX, mouseY);
 	}
 	protected void drawTabs(float partialTicks) {

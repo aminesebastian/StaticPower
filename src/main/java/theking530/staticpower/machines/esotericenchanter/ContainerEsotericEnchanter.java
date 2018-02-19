@@ -12,6 +12,7 @@ import theking530.staticpower.items.upgrades.BaseUpgrade;
 import theking530.staticpower.machines.tileentitycomponents.slots.FluidContainerSlot;
 import theking530.staticpower.machines.tileentitycomponents.slots.OutputSlot;
 import theking530.staticpower.machines.tileentitycomponents.slots.StaticPowerContainerSlot;
+import theking530.staticpower.machines.tileentitycomponents.slots.UpgradeSlot;
 
 public class ContainerEsotericEnchanter extends BaseContainer {
 	
@@ -33,12 +34,12 @@ public class ContainerEsotericEnchanter extends BaseContainer {
 		
 		//FluidContainerSlots
 		this.addSlotToContainer(new FluidContainerSlot(esotericEnchanter.slotsInternal, 4, -24, 11));
-		this.addSlotToContainer(new StaticPowerContainerSlot(esotericEnchanter.slotsInternal, 5, -24, 43));
+		this.addSlotToContainer(new OutputSlot(esotericEnchanter.slotsInternal, 5, -24, 43));
 		
 		//Upgrades
-		this.addSlotToContainer(new StaticPowerContainerSlot(esotericEnchanter.slotsUpgrades, 0, -24, 76));
-		this.addSlotToContainer(new StaticPowerContainerSlot(esotericEnchanter.slotsUpgrades, 1, -24, 94));
-		this.addSlotToContainer(new StaticPowerContainerSlot(esotericEnchanter.slotsUpgrades, 2, -24, 112));
+		this.addSlotToContainer(new UpgradeSlot(esotericEnchanter.slotsUpgrades, 0, -24, 76));
+		this.addSlotToContainer(new UpgradeSlot(esotericEnchanter.slotsUpgrades, 1, -24, 94));
+		this.addSlotToContainer(new UpgradeSlot(esotericEnchanter.slotsUpgrades, 2, -24, 112));
 		
 		this.addPlayerInventory(invPlayer, 8, 84);
 		this.addPlayerHotbar(invPlayer, 8, 142);

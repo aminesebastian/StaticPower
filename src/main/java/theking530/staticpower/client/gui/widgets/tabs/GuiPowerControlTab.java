@@ -7,79 +7,78 @@ import api.gui.TextField;
 import api.gui.button.BaseButton;
 import api.gui.button.BaseButton.ClickedState;
 import api.gui.button.ButtonManager;
-import api.gui.button.StandardButton;
+import api.gui.button.TextButton;
 import api.gui.tab.BaseGuiTab;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import theking530.staticpower.assists.utilities.EnumTextFormatting;
 import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.items.ModItems;
-import theking530.staticpower.machines.BaseMachine;
+import theking530.staticpower.machines.batteries.tileentities.TileEntityBattery;
 
 public class GuiPowerControlTab extends BaseGuiTab implements IInteractableGui{
 	
-	public BaseMachine TILE_ENTITY;
-	private FontRenderer FONT_RENDERER;
+	public TileEntityBattery batteryTileEntity;
+	private FontRenderer fontRenderer;
 
-	private int MIN_VALUE;
-	private TextField MIN_PERCENTAGE;
-	private int MAX_VALUE;
-	private TextField MAX_PERCENTAGE;
-	private StandardButton SET_PERCENTAGE;
+	private TextField minimumValueTextField;
+	private TextField maximumValueTextField;
+	private TextButton confirmButton;
 	
 	private ButtonManager buttonManager;
 	
-	public GuiPowerControlTab(int guiLeft, int guiTop, BaseMachine te){
+	public GuiPowerControlTab(int guiLeft, int guiTop, TileEntityBattery te){
 		super(guiLeft, guiTop, GuiTextures.PURPLE_TAB, ModItems.StaticWrench);
-		FONT_RENDERER = Minecraft.getMinecraft().fontRenderer;
-		TILE_ENTITY = te;
+		fontRenderer = Minecraft.getMinecraft().fontRenderer;
+		batteryTileEntity = te;
 	
 		buttonManager = new ButtonManager(this);
 		
-		MIN_PERCENTAGE = new TextField(30, 15);
-		MAX_PERCENTAGE = new TextField(30, 15);
-		SET_PERCENTAGE = new StandardButton(48, 20, 0, 0);
+		minimumValueTextField = new TextField(30, 15);
+		maximumValueTextField = new TextField(30, 15);
+		confirmButton = new TextButton(48, 20, 40, 67, I18n.format("Confirm"));
 		
-		buttonManager.registerButton(SET_PERCENTAGE);
+		buttonManager.registerButton(confirmButton);
+		
+		minimumValueTextField.setText(batteryTileEntity.getMinimumPowerThreshold() + "%");
+		maximumValueTextField.setText(batteryTileEntity.getMaximumPowerThreshold() + "%");
 	}
 	@Override
 	public void drawExtra(int xPos, int yPos, float partialTicks) {
 		if(isOpen()) {
 			drawButtonBG(xPos, yPos);
-			MAX_PERCENTAGE.updateMethod();
-			MAX_PERCENTAGE.setMaxStringLength(3);		
-			MIN_PERCENTAGE.updateMethod();
-			SET_PERCENTAGE.setPosition(xPos+40, yPos+67);
-			buttonManager.drawButtons(xPos, yPos);
-			MIN_PERCENTAGE.setMaxStringLength(3);
+			maximumValueTextField.updateMethod();
+			maximumValueTextField.setMaxStringLength(3);		
+			minimumValueTextField.updateMethod();
+			minimumValueTextField.setMaxStringLength(3);
 			
 
-			MAX_PERCENTAGE.drawTextBox(xPos+60, yPos+25);
-			MIN_PERCENTAGE.drawTextBox(xPos+60, yPos+45);
+			maximumValueTextField.drawTextBox(xPos+60, yPos+45);
+			minimumValueTextField.drawTextBox(xPos+60, yPos+25);
+			
 			function();
 			drawText(xPos, yPos);
-
+			buttonManager.drawButtons(xPos, yPos);
 		}	
 	}
 	public void drawText(int xPos, int yPos) {
-		String tabName = "Power Control";
-		this.FONT_RENDERER.drawStringWithShadow(EnumTextFormatting.GREEN + tabName, xPos-this.FONT_RENDERER.getStringWidth(tabName)/2 + 64, yPos+8, 16777215);	
+		String tabName = I18n.format("gui.PowerControl");
+		this.fontRenderer.drawStringWithShadow(EnumTextFormatting.GREEN + tabName, xPos-this.fontRenderer.getStringWidth(tabName)/2 + 64, yPos+8, 16777215);	
 		
-		String min = "Minimum:";
-		String max = "Maximum:";
+		String min = I18n.format("gui.Minimum");
+		String max = I18n.format("gui.Maximum");
 		String percent = "%";
-		String buttonText = "Confirm";
 
-		this.FONT_RENDERER.drawStringWithShadow(EnumTextFormatting.RED + min, xPos+15, yPos+29, 16777215);				
-		this.FONT_RENDERER.drawStringWithShadow(EnumTextFormatting.WHITE + max, xPos+15, yPos+48, 16777215);	
-		this.FONT_RENDERER.drawStringWithShadow(EnumTextFormatting.BOLD + percent, xPos+95, yPos+29, 16777215);	
-		this.FONT_RENDERER.drawStringWithShadow(EnumTextFormatting.BOLD + percent, xPos+95, yPos+48, 16777215);
-		this.FONT_RENDERER.drawStringWithShadow(buttonText, xPos+46, yPos+73, 16777215);
+		this.fontRenderer.drawStringWithShadow(EnumTextFormatting.RED + min + ":", xPos+15, yPos+29, 16777215);				
+		this.fontRenderer.drawStringWithShadow(EnumTextFormatting.WHITE + max + ":", xPos+15, yPos+48, 16777215);	
+		this.fontRenderer.drawStringWithShadow(EnumTextFormatting.BOLD + percent, xPos+95, yPos+29, 16777215);	
+		this.fontRenderer.drawStringWithShadow(EnumTextFormatting.BOLD + percent, xPos+95, yPos+48, 16777215);
 	}
 	public void drawButtonBG(int xPos, int yPos) {
 		GL11.glEnable(GL11.GL_BLEND);
@@ -100,40 +99,56 @@ public class GuiPowerControlTab extends BaseGuiTab implements IInteractableGui{
 	}
 	@Override
 	public void handleExtraMouseInteraction(int x, int y, int button) {	
-		MAX_PERCENTAGE.mouseClicked(x, y, button);
-		MIN_PERCENTAGE.mouseClicked(x, y, button);
+		maximumValueTextField.mouseClicked(x, y, button);
+		minimumValueTextField.mouseClicked(x, y, button);
 		buttonManager.handleMouseInteraction(x, y, button);
 	}	
 	@Override
 	public void handleExtraKeyboardInteraction(char par1, int par2) {
-		MAX_PERCENTAGE.textboxKeyTyped(par1, par2);	
-		MIN_PERCENTAGE.textboxKeyTyped(par1, par2);	
+		maximumValueTextField.textboxKeyTyped(par1, par2);	
+		minimumValueTextField.textboxKeyTyped(par1, par2);	
 	}
 	@Override
 	protected void handleExtraMouseMove(int mouseX, int mouseY) {
-		
+		buttonManager.handleMouseMoveInteraction(mouseX, mouseY);
 	}
 	@Override
 	public void buttonPressed(BaseButton button, ClickedState mouseButton) {
-		if(MAX_PERCENTAGE.getText() != null) {			
+		int minValue = 0;
+		int maxValue = 0;
+		
+		if(minimumValueTextField.getText() != null) {	
 			try { 
-				MAX_VALUE = Integer.valueOf(MAX_PERCENTAGE.getText().replaceFirst(".*?(\\d+).*", "$1"));				
+				minValue = Integer.valueOf(minimumValueTextField.getText().replaceFirst(".*?(\\d+).*", "$1"));			
 			} catch(NumberFormatException e) {}				
 		}
-		if(MIN_PERCENTAGE.getText() != null) {	
+		if(maximumValueTextField.getText() != null) {			
 			try { 
-				MIN_VALUE = Integer.valueOf(MIN_PERCENTAGE.getText().replaceFirst(".*?(\\d+).*", "$1"));			
+				maxValue = Integer.valueOf(maximumValueTextField.getText().replaceFirst(".*?(\\d+).*", "$1"));				
 			} catch(NumberFormatException e) {}				
 		}
-		if(SET_PERCENTAGE == button) {
-			TILE_ENTITY.minPowerThreshold = MIN_VALUE;
-			TILE_ENTITY.maxPowerThreshold = MAX_VALUE;
-			IMessage msg = new PacketPowerControlTab(MAX_VALUE, MIN_VALUE, TILE_ENTITY.getPos());
-			PacketHandler.net.sendToServer(msg);	
-		}
+		
+		minValue = Math.max(Math.min(minValue, 100), 0);	
+		maxValue = Math.max(Math.min(maxValue, 100), 0);
+
+		minimumValueTextField.setText(minValue + "%");
+		maximumValueTextField.setText(maxValue + "%");
+		
+		batteryTileEntity.setMinimumPowerThreshold(minValue);
+		batteryTileEntity.setMaximumPowerThreshold(maxValue);
+		IMessage msg = new PacketPowerControlTab(maxValue, minValue, batteryTileEntity.getPos());
+		PacketHandler.net.sendToServer(msg);	
 	}
 	@Override
 	public void buttonHovered(BaseButton button) {
 
+	}
+	@Override
+	public int getGuiTop() {
+		return yPosition;
+	}
+	@Override
+	public int getGuiLeft() {
+		return xPosition;
 	}
 }

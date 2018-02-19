@@ -24,7 +24,7 @@ public class GuiFormer extends BaseGuiContainer{
 		
 		getTabManager().registerTab(infoTab = new GuiInfoTab(100, 60));
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, tileEntityFormer));
-		getTabManager().registerTab(new GuiSideConfigTab(80, 80, tileEntityFormer));
+		getTabManager().registerTab(new GuiSideConfigTab(80, 80, false, tileEntityFormer));
 		
 		GuiMachinePowerInfoTab powerInfoTab;
 		getTabManager().registerTab(powerInfoTab = new GuiMachinePowerInfoTab(80, 80, tileEntityFormer));

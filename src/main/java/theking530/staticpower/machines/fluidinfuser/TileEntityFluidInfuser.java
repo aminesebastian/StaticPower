@@ -6,6 +6,7 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.handlers.crafting.registries.InfuserRecipeRegistry;
 import theking530.staticpower.machines.BaseMachineWithTank;
+import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
 
@@ -17,9 +18,10 @@ public class TileEntityFluidInfuser extends BaseMachineWithTank {
 	public TileEntityFluidInfuser() {
 		initializeBasicMachine(2, 1000, 50000, 80, 100);
 		initializeTank(10000);
-		initializeSlots(3, 1, 1);
+		initializeSlots(4, 1, 1);
 		
-		DRAIN_COMPONENT = new FluidContainerComponent("BucketDrain", slotsInternal, 1, slotsInternal, 2, this, fluidTank, fluidToContainerRate);
+		registerComponent(new BatteryInteractionComponent("BatteryInteraction", slotsInput, 3, this, energyStorage));
+		registerComponent(DRAIN_COMPONENT = new FluidContainerComponent("BucketDrain", slotsInternal, 1, slotsInternal, 2, this, fluidTank, fluidToContainerRate));
 		DRAIN_COMPONENT.setMode(FluidContainerInteractionMode.FillFromContainer);
 	}
 	//IInventory				
@@ -27,7 +29,10 @@ public class TileEntityFluidInfuser extends BaseMachineWithTank {
 	public String getName() {
 		return "Fluid Infuser";		
 	}
-	
+	public FluidContainerComponent getFluidInteractionComponent() {
+		return DRAIN_COMPONENT;
+	}
+
 	//Functionality
 	@Override
  	public ItemStack getResult(ItemStack itemStack) {
@@ -85,9 +90,6 @@ public class TileEntityFluidInfuser extends BaseMachineWithTank {
 
 	@Override
 	public void process() {
-		if(!getWorld().isRemote) {
-			DRAIN_COMPONENT.preProcessUpdate();
-		}
 		if(slotsInternal.getStackInSlot(0) == ItemStack.EMPTY){
 			processingTimer = 0;
 		}

@@ -1,20 +1,17 @@
 package theking530.staticpower.machines.distillery;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.client.gui.BaseGuiContainer;
-import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.client.gui.widgets.buttons.ArrowButton;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
-import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarUtilities;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarFromTank;
+import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarUtilities;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiHeatBarFromStorage;
-import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
 import theking530.staticpower.machines.tileentitycomponents.PacketFluidContainerComponent;
@@ -25,23 +22,22 @@ public class GuiDistillery extends BaseGuiContainer {
 	private TileEntityDistillery distillery;
 	
 	public GuiDistillery(InventoryPlayer invPlayer, TileEntityDistillery teFluidGenerator) {
-		super(new ContainerDistillery(invPlayer, teFluidGenerator), 214, 173);
+		super(new ContainerDistillery(invPlayer, teFluidGenerator), 176, 176);
 		distillery = teFluidGenerator;
 		
 		heatbar = new GuiHeatBarFromStorage(teFluidGenerator.HEAT_STORAGE);
-		registerWidget(new GuiFluidBarFromTank(teFluidGenerator.fluidTank, 71, 77, 16, 60));
-		registerWidget(new GuiFluidBarFromTank(teFluidGenerator.TANK2, 127, 77, 16, 60));
-
+		registerWidget(new GuiFluidBarFromTank(teFluidGenerator.fluidTank, 50, 77, 16, 60, Mode.Input, teFluidGenerator));
+		registerWidget(new GuiFluidBarFromTank(teFluidGenerator.TANK2, 110, 77, 16, 60, Mode.Output, teFluidGenerator));
+		
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teFluidGenerator));
-		getTabManager().registerTab(new GuiSideConfigTab(80, 80, teFluidGenerator));
+		getTabManager().registerTab(new GuiSideConfigTab(80, 80, false, teFluidGenerator));
+		
+		setOutputSlotSize(20);
 	}
 	@Override
 	public void initGui() {
 		super.initGui();
-	 	int j = (width - xSize) / 2;
-	    int k = (height - ySize) / 2;
-
-	    this.buttonList.add(new ArrowButton(1, j+7, k+35, 16, 10, "<"));
+		this.buttonList.add(new ArrowButton(1, guiLeft+11, guiTop+37, 16, 10, "<"));
 	    
 	    if(distillery.DRAIN_COMPONENT_MASH.getMode() == FluidContainerInteractionMode.FillFromContainer) {
 	    	buttonList.get(0).displayString = ">";
@@ -77,15 +73,20 @@ public class GuiDistillery extends BaseGuiContainer {
 		String name = I18n.format(this.distillery.getName());
 	
 		this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2, 6,4210752 );
+		this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 3, 4210752);
 	}
 	
 	@Override
 	protected void drawExtra(float f, int i, int j) {   	
-		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.DISTILLERY_GUI);
-		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+		this.drawGenericBackground();
+		this.drawPlayerInventorySlots();
 		
+    	this.drawContainerSlots(distillery, this.inventorySlots.inventorySlots);
+    	
+		this.drawSlot(guiLeft+71, guiTop+49, 34, 5);
 		if(distillery.PROCESSING_STACK != null) {
-			GuiFluidBarUtilities.drawFluidBar(new FluidStack(ModFluids.Mash, 100), 100, 100, guiLeft + 90, guiTop + 49, 1, 20, 5);
+			int j1 = distillery.getProgressScaled(34);
+			GuiFluidBarUtilities.drawFluidBar(distillery.PROCESSING_STACK, 1000, 1000, guiLeft + 71, guiTop + 49, 1, j1, 5);
 		}
 		heatbar.drawHeatBar(guiLeft + 71, guiTop + 88, this.zLevel, 16, 8);
 	}

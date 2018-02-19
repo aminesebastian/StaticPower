@@ -1,7 +1,5 @@
 package theking530.staticpower.tileentity.vacuumchest;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -21,7 +19,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.assists.utilities.TileEntityUtilities;
 import theking530.staticpower.fluids.ModFluids;
@@ -32,9 +29,8 @@ import theking530.staticpower.items.upgrades.BaseTankUpgrade;
 import theking530.staticpower.items.upgrades.ExperienceVacuumUpgrade;
 import theking530.staticpower.items.upgrades.TeleportUpgrade;
 import theking530.staticpower.tileentity.BaseTileEntity;
-import theking530.staticpower.tileentity.IUpgradeableTileEntity;
 
-public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<EntityItem>, IUpgradeableTileEntity {
+public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<EntityItem> {
 
 	private float vacuumDiamater;
 	private float initialVacuumDiamater;
@@ -51,7 +47,6 @@ public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<E
 	}		
 	@Override
 	public void process() {
-		handleUpgrades();
 		
 	    AxisAlignedBB aabb = new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1);
 	    aabb = aabb.expand(vacuumDiamater, vacuumDiamater, vacuumDiamater);
@@ -168,7 +163,7 @@ public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<E
 	
 	/*Update Handling*/
 	@Override
-	public void handleUpgrades() {
+	public void upgradeTick() {
 		if(hasUpgrade(ModItems.BasicRangeUpgrade)) {
 			BaseRangeUpgrade tempUpgrade = (BaseRangeUpgrade) getUpgrade(ModItems.BasicRangeUpgrade).getItem();
 			vacuumDiamater = tempUpgrade.getValueMultiplied(initialVacuumDiamater, tempUpgrade.getUpgradeValueAtIndex(getUpgrade(ModItems.BasicRangeUpgrade), 0));
@@ -193,19 +188,7 @@ public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<E
 		}
 	}
 	@Override
-	public boolean isUpgradeable() {
-		return true;
-	}
-	@Override
-	public ItemStackHandler getUpgradeInventory() {
-		return slotsUpgrades;
-	}
-	@Override
-	public List<Integer> getUpgradeSlots() {
-		return new ArrayList<Integer>(Arrays.asList(0, 1, 2));
-	}
-	@Override
-	public boolean isValidUpgrade(@Nonnull ItemStack upgrade) {
+	public boolean canAcceptUpgrade(@Nonnull ItemStack upgrade) {
 		if(upgrade != ItemStack.EMPTY) {
 			if(upgrade.getItem() instanceof BaseRangeUpgrade || upgrade.getItem() instanceof TeleportUpgrade || upgrade.getItem() instanceof ExperienceVacuumUpgrade) {
 				return true;

@@ -2,60 +2,51 @@ package theking530.staticpower.machines.cropsqueezer;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.SlotItemHandler;
+import theking530.staticpower.container.BaseContainer;
+import theking530.staticpower.handlers.crafting.registries.InfuserRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistry;
+import theking530.staticpower.machines.tileentitycomponents.slots.BatterySlot;
+import theking530.staticpower.machines.tileentitycomponents.slots.FluidContainerSlot;
+import theking530.staticpower.machines.tileentitycomponents.slots.OutputSlot;
+import theking530.staticpower.machines.tileentitycomponents.slots.StaticPowerContainerSlot;
+import theking530.staticpower.machines.tileentitycomponents.slots.UpgradeSlot;
 
-public class ContainerCropSqueezer extends Container {
+public class ContainerCropSqueezer extends BaseContainer {
 	
-	private TileEntityCropSqueezer CropSqueezer;
-	
-	private int upgradeSlotX;
-	private int upgradeSlotY;
+	private TileEntityCropSqueezer cropSqueezerTileEnttiy;
+
 	public ContainerCropSqueezer(InventoryPlayer invPlayer, TileEntityCropSqueezer teCropSqueezer) {
-		CropSqueezer = teCropSqueezer;
+		cropSqueezerTileEnttiy = teCropSqueezer;
 		
 		//Input
-		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.slotsInput, 0, 103, 16));
-		
-		//Fluid Slots
-		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.slotsInput, 1, 7, 17));
-		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.slotsOutput, 1, 7, 47));
-		
-		//Output
-		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.slotsOutput, 0, 103, 56) {
+		this.addSlotToContainer(new StaticPowerContainerSlot(teCropSqueezer.slotsInput, 0, 80, 18) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
-		          return SqueezerRecipeRegistry.Squeezing().getSqueezingItemResult(itemStack) != null;
-		        }
+		          return !SqueezerRecipeRegistry.Squeezing().getSqueezingItemResult(itemStack).isEmpty();
+		    }
 		});
 		
+		//Fluid Slots
+		this.addSlotToContainer(new FluidContainerSlot(teCropSqueezer.slotsInternal, 1, -24, 12));
+		this.addSlotToContainer(new OutputSlot(teCropSqueezer.slotsInternal, 2, -24, 42));
+		
+		//BatterySlot
+		this.addSlotToContainer(new BatterySlot(teCropSqueezer.slotsInternal, 3, 8, 54));
+		
+		//Output
+		this.addSlotToContainer(new OutputSlot(teCropSqueezer.slotsOutput, 0, 80, 57));
+		
 		//Upgrades
-		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.slotsUpgrades, 0, upgradeSlotX+171, upgradeSlotY+12));
-		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.slotsUpgrades, 1, upgradeSlotX+171, upgradeSlotY+32));
-		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.slotsUpgrades, 2, upgradeSlotX+171, upgradeSlotY+52));
+		this.addSlotToContainer(new UpgradeSlot(teCropSqueezer.slotsUpgrades, 0, -24, 76));
+		this.addSlotToContainer(new UpgradeSlot(teCropSqueezer.slotsUpgrades, 1, -24, 94));
+		this.addSlotToContainer(new UpgradeSlot(teCropSqueezer.slotsUpgrades, 2, -24, 112));
 		
-		//Processing
-		this.addSlotToContainer(new SlotItemHandler(teCropSqueezer.slotsInternal, 0, 10000, 10000));
-		
-		//Inventory
-				for(int i = 0; i < 3; i++) {
-					for(int j = 0; j < 9; j++) {
-						this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 27 + j * 18, 84 + i * 18));
-					}
-				}
-				
-				//ActionBar
-				for(int i = 0; i < 9; i++) {
-					this.addSlotToContainer(new Slot(invPlayer, i, 27 + i * 18, 142));
-			}
+		this.addPlayerInventory(invPlayer, 8, 84);
+		this.addPlayerHotbar(invPlayer, 8, 142);
 	}
-	public void moveUpgradeSlots(int x, int y) {
-		this.upgradeSlotY = y;
-		this.upgradeSlotX = x;
-	}
+
 	//Shift Click Functionality
 	public ItemStack transferStackInSlot(EntityPlayer player, int invSlot) {
         ItemStack itemstack = ItemStack.EMPTY;
@@ -97,15 +88,9 @@ public class ContainerCropSqueezer extends Container {
         }
         return itemstack;
     }
-
-	
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
-		return CropSqueezer.isUseableByPlayer(player);
+		return cropSqueezerTileEnttiy.isUseableByPlayer(player);
 	}
-	
-	public void detectAndSendChanges(){
-        super.detectAndSendChanges();
-    }
 }
 
