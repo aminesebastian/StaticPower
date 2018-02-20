@@ -8,7 +8,7 @@ public class GuiMachinePowerInfoTab extends GuiPowerInfoTab {
 	private IEnergyUser energyUser;
 	
 	public GuiMachinePowerInfoTab(int width, int height, IEnergyUser machine) {
-		super(width, height, machine.getEnergyStorage());
+		super(80, 80, machine.getEnergyStorage());
 		energyUser = machine;
 	}
 	@Override

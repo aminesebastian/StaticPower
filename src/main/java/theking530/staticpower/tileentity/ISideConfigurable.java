@@ -1,5 +1,7 @@
 package theking530.staticpower.tileentity;
 
+import java.util.List;
+
 import net.minecraft.util.EnumFacing;
 import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.assists.utilities.SideUtilities.BlockSide;
@@ -16,6 +18,7 @@ public interface ISideConfigurable {
     public Mode getSideConfiguration(EnumFacing facing);
     
     public Mode[] getSideConfigurations();
+    public List<Mode> getValidSideConfigurations();
     
 	public void setSideConfiguration(Mode newMode, BlockSide side);
     public void setSideConfiguration(Mode newMode, EnumFacing facing);

@@ -14,6 +14,8 @@ import theking530.staticpower.handlers.crafting.registries.EsotericEnchanterReci
 import theking530.staticpower.machines.BaseMachineWithTank;
 import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent;
+import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
+import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
 
 public class TileEsotericEnchanter extends BaseMachineWithTank {
 
@@ -33,6 +35,9 @@ public class TileEsotericEnchanter extends BaseMachineWithTank {
 		nextOutputItemStack = ItemStack.EMPTY;
 		fluidContainerComponent = new FluidContainerComponent("Bucket Component", slotsInternal, 4, slotsInternal, 5, this, fluidTank, 40);
 		registerComponent(fluidContainerComponent);
+		
+		registerComponent(new TileEntityItemOutputServo(this, 2, slotsOutput, 0));
+		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0, 1, 2));
 	}
 	
 	@Override

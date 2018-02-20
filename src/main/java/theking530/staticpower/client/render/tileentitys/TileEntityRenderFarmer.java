@@ -1,5 +1,7 @@
 package theking530.staticpower.client.render.tileentitys;
 
+import java.awt.Color;
+
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.util.ResourceLocation;
@@ -7,6 +9,7 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.assists.utilities.RenderUtil;
 import theking530.staticpower.assists.utilities.SideModeList;
+import theking530.staticpower.client.model.ModelBlock;
 import theking530.staticpower.machines.basicfarmer.TileEntityBasicFarmer;
 
 public class TileEntityRenderFarmer extends BaseMachineTESR<TileEntityBasicFarmer> {
@@ -17,7 +20,12 @@ public class TileEntityRenderFarmer extends BaseMachineTESR<TileEntityBasicFarme
 	private static final ResourceLocation farmerSideIn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/machines/farmer_side_input.png");
 	private static final ResourceLocation farmerSideOut = new ResourceLocation(Reference.MOD_ID, "textures/blocks/machines/farmer_side_output.png");
 	private static final ResourceLocation farmerSideDis = new ResourceLocation(Reference.MOD_ID, "textures/blocks/machines/farmer_side_disabled.png");
-
+	private static final ResourceLocation farmerSideExtra1 = new ResourceLocation(Reference.MOD_ID, "textures/blocks/machines/farmer_side_extra1.png");
+	private static final ResourceLocation farmerSideExtra2 = new ResourceLocation(Reference.MOD_ID, "textures/blocks/machines/farmer_side_extra2.png");
+	private static final ResourceLocation farmerSideExtra3 = new ResourceLocation(Reference.MOD_ID, "textures/blocks/machines/farmer_side_extra3.png");
+	
+	private static final ModelBlock RADIUS_PREVIEW = new ModelBlock();
+	
 	private static float texel = 1F/64F;
 	
 	@Override
@@ -31,6 +39,9 @@ public class TileEntityRenderFarmer extends BaseMachineTESR<TileEntityBasicFarme
 			case Input: return farmerSideIn;
 			case Output: return farmerSideOut;
 			case Disabled: return farmerSideDis;
+			case Extra1: return farmerSideExtra1;
+			case Extra2: return farmerSideExtra2;
+			case Extra3: return farmerSideExtra3;
 			default: return farmerSide;
 		}
 	}
@@ -42,6 +53,12 @@ public class TileEntityRenderFarmer extends BaseMachineTESR<TileEntityBasicFarme
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			drawLiquidBar(tileentity, tileentity.fluidTank.getFluid());
 			GL11.glDisable(GL11.GL_BLEND);
+		}
+		if(tileentity.getShouldDrawRadiusPreview()) {
+			float radius = tileentity.getRadius()*2+1;
+			GL11.glPushMatrix();
+			RADIUS_PREVIEW.drawPreviewCube(new Color(100, 255, 100, 144), radius, 1, radius);
+			GL11.glPopMatrix();
 		}
 	}
 	public static void drawLiquidBar(TileEntityBasicFarmer tileentity, FluidStack fluidStack) {

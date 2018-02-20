@@ -135,16 +135,16 @@ public class ShapedRecipes {
 		'G', ingredientFromBlock((Blocks.GLASS)), 'L', ingredientFromBlock((Blocks.LEVER))});	
 		
 		//Powered Grinder --------------------------------------------------------------------------------------------------
-		RegisterHelper.addShapedRecipe("StaticPower_poweredGrinder", "StaticPower", new ItemStack(ModBlocks.PoweredGrinder), new Object[]{"FFF", "RBR", "III", 
-		'I', ingredientFromItem(Items.IRON_INGOT), 'R', ingredientFromItem(Items.REDSTONE), 'B', ingredientFromBlock(ModBlocks.MachineBlock), 'F', ingredientFromItem(Items.FLINT)});
+		RegisterHelper.addShapedRecipe("StaticPower_poweredGrinder", "StaticPower", new ItemStack(ModBlocks.PoweredGrinder), new Object[]{"FFF", "RBR", "COC", 
+		'C', ingredientFromItem(ModItems.BasicCircuit), 'R', ingredientFromBlock(Blocks.PISTON), 'B', ingredientFromBlock(ModBlocks.MachineBlock), 'F', ingredientFromItem(Items.FLINT), 'O', ingredientFromItem(ModItems.IOPort)});
 		
 		//Advanced Earth --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_advancedEarth", "StaticPower", new ItemStack(ModBlocks.AdvancedEarth), new Object[]{" E ","EDE"," E ",
 		'E', ingredientFromItem(ModItems.EnergizedPlate), 'D', ingredientFromBlock(Blocks.DIRT)});
 		
 		//Powered Furnace --------------------------------------------------------------------------------------------------
-		RegisterHelper.addShapedRecipe("StaticPower_poweredFurnace", "StaticPower", new ItemStack(ModBlocks.PoweredFurnace), new Object[]{"IUI", "RBR", "CCC", 
-		'I', ingredientFromItem(Items.IRON_INGOT), 'R', ingredientFromItem(Items.REDSTONE), 'B', ingredientFromBlock(ModBlocks.MachineBlock), 'U', ingredientFromItem(Items.BUCKET), 'C', ingredientOre("ingotCopper")});
+		RegisterHelper.addShapedRecipe("StaticPower_poweredFurnace", "StaticPower", new ItemStack(ModBlocks.PoweredFurnace), new Object[]{"IUI", "RBR", "COC", 
+		'I', ingredientFromItem(Items.IRON_INGOT), 'R', ingredientFromItem(ModItems.CopperCoil), 'B', ingredientFromBlock(ModBlocks.MachineBlock), 'U', ingredientFromItem(Items.BUCKET), 'C', ingredientFromItem(ModItems.BasicCircuit), 'O', ingredientFromItem(ModItems.IOPort)});
 		
 		//Quarry --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_quarry", "StaticPower", new ItemStack(ModBlocks.Quarry), new Object[]{"PHP", "EBE", "ELE", 
@@ -152,19 +152,19 @@ public class ShapedRecipes {
 		
 		//Fluid Infuser --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_fluidInfuser", "StaticPower", new ItemStack(ModBlocks.FluidInfuser), new Object[]{" U ", "PBP", "RIR", 
-		'I', ingredientFromItem(ModItems.IOPort), 'R', ingredientFromItem(Items.REDSTONE), 'B', ingredientFromBlock(ModBlocks.MachineBlock), 'U', ingredientFromItem(Items.BUCKET), 'P', ingredientFromBlock(Blocks.PISTON)});
+		'I', ingredientFromItem(ModItems.IOPort), 'R', ingredientFromItem(ModItems.SilverCoil), 'B', ingredientFromBlock(ModBlocks.MachineBlock), 'U', ingredientFromItem(Items.BUCKET), 'P', ingredientFromBlock(Blocks.PISTON)});
 		
 		//Crop Squeezer --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_cropSqueezer", "StaticPower", new ItemStack(ModBlocks.CropSqueezer), new Object[]{"FPF", "RBR", "IUI", 
-		'I', ingredientFromItem(Items.IRON_INGOT), 'R', ingredientFromItem(Items.REDSTONE), 'P', ingredientFromBlock(Blocks.PISTON), 'B', ingredientFromBlock(ModBlocks.MachineBlock), 'U', ingredientFromItem(Items.BUCKET), 'F', ingredientFromItem(Items.FLINT)});
+		'I', ingredientFromItem(Items.IRON_INGOT), 'R', ingredientFromItem(ModItems.SilverCoil), 'P', ingredientFromBlock(Blocks.PISTON), 'B', ingredientFromBlock(ModBlocks.MachineBlock), 'U', ingredientFromItem(Items.BUCKET), 'F', ingredientFromItem(Items.FLINT)});
 		
 		//Mechanical Squeezer --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_mechanicalSqueezer", "StaticPower", new ItemStack(ModBlocks.MechanicalSqueezer), new Object[]{"FFF", "PBP", "SSS", 
 		'P', ingredientFromBlock(Blocks.PISTON), 'B', ingredientFromItem(Items.BUCKET), 'F', ingredientFromItem(Items.FLINT), 'S', ingredientFromBlock(Blocks.STONE)});
 	
 		//Fusion Furnace --------------------------------------------------------------------------------------------------
-		RegisterHelper.addShapedRecipe("StaticPower_fusionFurnace", "StaticPower", new ItemStack(ModBlocks.FusionFurnace), new Object[]{"FIF", "RBR", "CCC", 
-		'F', ingredientFromBlock(ModBlocks.PoweredFurnace), 'R', ingredientFromItem(Items.REDSTONE), 'B', ingredientFromBlock(ModBlocks.MachineBlock), 'C', ingredientFromItem(ModItems.BasicCircuit), 'I', ingredientFromItem(ModItems.IOPort)});
+		RegisterHelper.addShapedRecipe("StaticPower_fusionFurnace", "StaticPower", new ItemStack(ModBlocks.FusionFurnace), new Object[]{"FIF", "RBR", "CHC", 
+		'F', ingredientFromBlock(ModBlocks.PoweredFurnace), 'R', ingredientFromItem(ModItems.CopperPlate), 'B', ingredientFromBlock(ModBlocks.MachineBlock), 'C', ingredientFromItem(ModItems.BasicCircuit), 'I', ingredientFromItem(ModItems.IOPort), 'H', ingredientFromBlock(ModBlocks.HeatingElement)});
 		
 		//Charging Station --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_chargingStation", "StaticPower", new ItemStack(ModBlocks.ChargingStation), new Object[]{" H ", "RMR", "CBC", 
@@ -172,15 +172,23 @@ public class ShapedRecipes {
 		
 		//Basic Farmer --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_basicFarmer", "StaticPower", new ItemStack(ModBlocks.BasicFarmer), new Object[]{" H ", "RMR", "DCD", 
-		'C', ingredientFromItem(ModItems.BasicCircuit), 'H', ingredientFromItem(Items.IRON_HOE), 'R', ingredientFromItem(ModItems.IronPlate), 'M', ingredientFromBlock(ModBlocks.MachineBlock), 'D', ingredientFromBlock(Blocks.DIRT)});
+		'C', ingredientFromItem(ModItems.BasicCircuit), 'H', ingredientFromItem(Items.IRON_HOE), 'R', ingredientFromItem(ModItems.IOPort), 'M', ingredientFromBlock(ModBlocks.MachineBlock), 'D', ingredientFromBlock(Blocks.DIRT)});
+		
+		//Tree Farmer --------------------------------------------------------------------------------------------------
+		RegisterHelper.addShapedRecipe("StaticPower_treeFarmer", "StaticPower", new ItemStack(ModBlocks.TreeFarmer), new Object[]{" H ", "RMR", "DCD", 
+		'C', ingredientFromItem(ModItems.BasicCircuit), 'H', ingredientFromItem(Items.IRON_AXE), 'R', ingredientFromItem(ModItems.IOPort), 'M', ingredientFromBlock(ModBlocks.MachineBlock), 'D', ingredientOre("treeSapling")});
 		
 		//Fluid Generator  --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_fluidGenerator", "StaticPower", new ItemStack(ModBlocks.FluidGenerator), new Object[]{" U ", "CBC", "VIV", 
-		'V', ingredientFromItem(ModItems.CopperPlate), 'C', ingredientFromItem(ModItems.BasicCircuit), 'I', ingredientFromItem(Items.GOLD_INGOT), 'B', ingredientFromBlock(ModBlocks.MachineBlock), 'U', ingredientFromItem(Items.BUCKET)});
+		'V', ingredientFromItem(ModItems.IOPort), 'C', ingredientFromItem(ModItems.BasicCircuit), 'I', ingredientFromItem(ModItems.GoldCoil), 'B', ingredientFromBlock(ModBlocks.MachineBlock), 'U', ingredientFromItem(Items.BUCKET)});
 
 		//Former  --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_former", "StaticPower", new ItemStack(ModBlocks.Former), new Object[]{" L ", "PBP", "IAI", 
 		'P', ingredientFromBlock(Blocks.PISTON), 'L', ingredientOre("plateIron"), 'I', ingredientFromItem(Items.GOLD_INGOT), 'B', ingredientFromBlock(ModBlocks.MachineBlock), 'A', ingredientFromBlock(Blocks.IRON_BLOCK), 'I', ingredientFromItem(ModItems.IOPort)});
+		
+		//Enchanter  --------------------------------------------------------------------------------------------------
+		RegisterHelper.addShapedRecipe("StaticPower_enchanter", "StaticPower", new ItemStack(ModBlocks.EsotericEnchanter), new Object[]{" E ", "UBU", "ICI", 
+		'E', ingredientFromBlock(Blocks.ENCHANTING_TABLE), 'B', ingredientFromBlock(ModBlocks.MachineBlock), 'U', ingredientFromItem(Items.BUCKET), 'I', ingredientFromItem(ModItems.IOPort), 'C', ingredientFromItem(ModItems.StaticCircuit)});
 		
 		//Batteries --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_staticBattery", "StaticPower", new ItemStack(ModBlocks.StaticBattery), new Object[]{"SSS", "BMB", "BBB", 

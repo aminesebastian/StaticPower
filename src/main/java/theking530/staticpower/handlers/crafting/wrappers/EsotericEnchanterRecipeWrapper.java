@@ -1,5 +1,7 @@
 package theking530.staticpower.handlers.crafting.wrappers;
 
+import java.util.ArrayList;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.fluids.FluidStack;
@@ -42,13 +44,35 @@ public class EsotericEnchanterRecipeWrapper {
 	}
 	public boolean isSatisfied(ItemStack input1, ItemStack input2, ItemStack input3, FluidStack inputFluid) {
 		if(inputIngredient1 != null && !input1.isEmpty() && inputIngredient1.apply(input1)) {
-			if((inputIngredient2 == null && input2.isEmpty()) || inputIngredient2.apply(input2)) {
-				if((inputIngredient3 == null && input3.isEmpty()) || inputIngredient3.apply(input3)) {
-					if(inputFluid != null && inputFluid.isFluidEqual(inputFluidStack) && inputFluid.amount >= inputFluidStack.amount) {
-						return true;
-					}
-					
+			ArrayList<ItemStack> tempInputs = new ArrayList<ItemStack>();
+			tempInputs.add(input1);
+			tempInputs.add(input2);
+			
+			if(inputIngredient2 != null) {
+				if(tempInputs.size() <= 0) {
+					return false;
 				}
+				for(int k=tempInputs.size()-1; k >= 0; k--) {
+					if(inputIngredient2.apply(tempInputs.get(k))) {
+						tempInputs.remove(k);
+						break;
+					}
+				}
+			}
+			if(inputIngredient3 != null) {
+				if(tempInputs.size() <= 0) {
+					return false;
+				}
+				for(int k=tempInputs.size()-1; k >= 0; k--) {
+					if(inputIngredient3.apply(tempInputs.get(k))) {
+						tempInputs.remove(k);
+						break;
+					}
+				}
+			}
+			
+			if(tempInputs.size() == 0 && inputFluid != null && inputFluid.isFluidEqual(inputFluidStack) && inputFluid.amount >= inputFluidStack.amount) {
+				return true;
 			}
 		}
 		return false;

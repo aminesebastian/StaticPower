@@ -6,6 +6,7 @@ import java.util.Arrays;
 import api.gui.button.BaseButton;
 import api.gui.button.BaseButton.ClickedState;
 import api.gui.button.TextButton;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -82,9 +83,10 @@ public class GuiDigistore extends BaseGuiContainer {
 		drawSlot(guiLeft + 152, guiTop + 45, 16, 16);
 		
 
-		
+		RenderHelper.enableGUIStandardItemLighting();
     	GuiDrawItem.drawItem(barrel.getStoredItem(), guiLeft, guiTop, 80, 25, this.zLevel, 1.0f);
-    	
+		RenderHelper.disableStandardItemLighting();
+		
     	String storedAmountString = "" + barrel.getStoredAmount();
     	drawStringWithSize(storedAmountString, guiLeft + 100, guiTop + 45, 0.6f,  GuiUtilities.getColor(255, 255, 255), true);
     	

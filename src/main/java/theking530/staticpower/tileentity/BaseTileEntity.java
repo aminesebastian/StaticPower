@@ -111,7 +111,9 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 		
 	}
 	public void updateBlock() {
-		getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 2);
+		if(!getWorld().isRemote) {
+			getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 2);	
+		}
 	}
 	
 	public ItemStack getInputStack(int slot) {
@@ -303,7 +305,7 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
     	if(facing == null) {
     		return null;
     	}
-       	if(getSideConfiguration(facing) == Mode.Disabled || SideUtilities.getBlockSide(facing, getFacingDirection()) == BlockSide.FRONT) {
+       	if(getSideConfiguration(facing) == Mode.Disabled || (SideUtilities.getBlockSide(facing, getFacingDirection()) == BlockSide.FRONT && this.disableFaceInteraction)) {
     		return null;
     	}
     	if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {		
@@ -521,14 +523,16 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 			setSideConfiguration(SideModeList.Mode.Disabled, side);
 		}
 		
-		SideModeList.Mode currentSideMode = getSideConfiguration(side);
-		int newIndex = direction == SideIncrementDirection.FORWARD ? currentSideMode.ordinal() + 1 : currentSideMode.ordinal() - 1;
-		if(newIndex < 0) {
-			newIndex += 4;
-		}
-		newIndex %= 4;
-		
-		setSideConfiguration(SideModeList.Mode.values()[newIndex], side);
+		int newIndex = 0;
+		do {
+			SideModeList.Mode currentSideMode = getSideConfiguration(side);
+			newIndex = direction == SideIncrementDirection.FORWARD ? currentSideMode.ordinal() + 1 : currentSideMode.ordinal() - 1;
+			if(newIndex < 0) {
+				newIndex += Mode.values().length;
+			}
+			newIndex %= Mode.values().length;
+			setSideConfiguration(SideModeList.Mode.values()[newIndex], side);
+		}while(!getValidSideConfigurations().contains(SideModeList.Mode.values()[newIndex]));
 
 		onSidesConfigUpdate();
 		updateBlock();
@@ -542,5 +546,14 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 			}
 		}
 		return count;
+	}
+	@Override
+	public List<Mode> getValidSideConfigurations() {
+		List<Mode> modes = new ArrayList<Mode>();
+		modes.add(Mode.Input);
+		modes.add(Mode.Output);
+		modes.add(Mode.Regular);
+		modes.add(Mode.Disabled);
+		return modes;
 	}
 }

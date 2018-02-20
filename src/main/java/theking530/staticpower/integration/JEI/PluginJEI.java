@@ -13,6 +13,7 @@ import theking530.staticpower.integration.JEI.esotericenchanter.EsotericEnchante
 import theking530.staticpower.integration.JEI.fermenter.FermenterRecipeCategory;
 import theking530.staticpower.integration.JEI.fluidinfuser.FluidInfuserRecipeCategory;
 import theking530.staticpower.integration.JEI.former.FormerRecipeCategory;
+import theking530.staticpower.integration.JEI.fusionfurnace.FusionFurnaceRecipeCategory;
 import theking530.staticpower.integration.JEI.grinder.PoweredGrinderRecipeCategory;
 import theking530.staticpower.integration.JEI.poweredfurnace.PoweredFurnaceRecipeCategory;
 import theking530.staticpower.integration.JEI.solderingtable.SolderingTableRecipeCategory;
@@ -29,6 +30,7 @@ public class PluginJEI implements IModPlugin{
 	public static final String SQUEEZER_UID = Reference.MOD_ID + ":squeezer";
 	public static final String FORMER_UID = Reference.MOD_ID + ":former";
 	public static final String ESOTERIC_ENCHANTER_UID = Reference.MOD_ID + ":esotericEnchanter";
+	public static final String FUSION_FURNACE_UID = Reference.MOD_ID + ":fusionFurnace";
 	
 	private static SolderingTableRecipeCategory solderingTable;
 	private static FluidInfuserRecipeCategory fluidInfuser;
@@ -38,6 +40,7 @@ public class PluginJEI implements IModPlugin{
 	private static CropSqueezerRecipeCategory squeezer;
 	private static FormerRecipeCategory former;
 	private static EsotericEnchanterRecipeCategory enchanter;
+	private static FusionFurnaceRecipeCategory fusionFurnace;
 	
     @Override
     public void registerCategories(@Nonnull IRecipeCategoryRegistration registry) {
@@ -51,6 +54,7 @@ public class PluginJEI implements IModPlugin{
     	squeezer = new CropSqueezerRecipeCategory(jeiHelpers.getGuiHelper());
     	former = new FormerRecipeCategory(jeiHelpers.getGuiHelper());
     	enchanter = new EsotericEnchanterRecipeCategory(jeiHelpers.getGuiHelper());
+    	fusionFurnace = new FusionFurnaceRecipeCategory(jeiHelpers.getGuiHelper());
     	
         registry.addRecipeCategories(solderingTable);
         registry.addRecipeCategories(fluidInfuser);
@@ -60,6 +64,7 @@ public class PluginJEI implements IModPlugin{
         registry.addRecipeCategories(squeezer);
         registry.addRecipeCategories(former);
         registry.addRecipeCategories(enchanter);
+        registry.addRecipeCategories(fusionFurnace);
     }
 
     @Override
@@ -72,7 +77,8 @@ public class PluginJEI implements IModPlugin{
     	squeezer.initialize(registry);
     	former.initialize(registry);
     	enchanter.initialize(registry);
-       	
+    	fusionFurnace.initialize(registry);
+    	
         registry.addAdvancedGuiHandlers(new JEITabSlotAdjuster());
     }
 }

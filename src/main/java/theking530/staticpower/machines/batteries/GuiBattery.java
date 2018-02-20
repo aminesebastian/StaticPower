@@ -8,6 +8,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import theking530.staticpower.client.gui.BaseGuiContainer;
+import theking530.staticpower.client.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiPowerControlTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiPowerInfoTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
@@ -23,6 +24,7 @@ public class GuiBattery extends BaseGuiContainer {
 	private TextButton inputDown;
 	private TextButton outputUp;
 	private TextButton outputDown;
+	private GuiInfoTab infoTab;
 	
 	public GuiBattery(InventoryPlayer invPlayer, TileEntityBattery teSBattery) {
 		super(new ContainerBattery(invPlayer, teSBattery), 176, 166);
@@ -32,8 +34,10 @@ public class GuiBattery extends BaseGuiContainer {
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teSBattery));
 		getTabManager().registerTab(new GuiPowerControlTab(100, 70, teSBattery));
 		getTabManager().registerTab(new GuiSideConfigTab(80, 80, true, teSBattery));
-
+		getTabManager().registerTab(infoTab = new GuiInfoTab(80, 60));
 		getTabManager().registerTab(new GuiPowerInfoTab(80, 60, teSBattery.getEnergyStorage()).setTabSide(TabSide.LEFT));
+		
+		infoTab.setTabSide(TabSide.LEFT);
 		
 		inputUp = new TextButton(20, 20, 5, 23, "+");
 		inputDown = new TextButton(20, 20, 5, 48, "-");
@@ -65,6 +69,8 @@ public class GuiBattery extends BaseGuiContainer {
 	protected void drawExtra(float f, int i, int j) {
 		drawGenericBackground();
 		drawPlayerInventorySlots();
+		
+		infoTab.setText(I18n.format(this.battery.getName()), "Regular Click: 50=Shift Click: 100=Cntrl Click: 1=Right Click: x2");
 	}		
 
 	@Override
@@ -82,7 +88,7 @@ public class GuiBattery extends BaseGuiContainer {
 		}else if(button == outputDown) {
 			deltaValue = -1;
 		}		
-		
+		deltaValue *= mouseButton == ClickedState.LEFT ? 1 : 10;
 		if (isShiftKeyDown()) {
 			deltaValue = (deltaValue*100);
 		} else if (!isCtrlKeyDown()) {

@@ -6,6 +6,8 @@ import theking530.staticpower.handlers.crafting.registries.FermenterRecipeRegist
 import theking530.staticpower.machines.BaseMachineWithTank;
 import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent;
+import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
+import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
 
 public class TileEntityFermenter extends BaseMachineWithTank {
 
@@ -19,7 +21,8 @@ public class TileEntityFermenter extends BaseMachineWithTank {
 		DRAIN_COMPONENT = new FluidContainerComponent("BucketDrain", slotsInternal, 2, slotsInternal, 3, this, fluidTank, fluidToContainerRate);
 		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInternal, 1, this, energyStorage));
 
-		//setFluidContainerSlot(9, FluidContainerMode.FILL);
+		registerComponent(new TileEntityItemOutputServo(this, 2, slotsOutput, 0));
+		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0, 1, 2, 3, 4, 5, 6, 7, 8));
 	}
 	@Override
 	public String getName() {

@@ -10,7 +10,6 @@ import theking530.staticpower.client.gui.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.GuiDrawItem;
 import theking530.staticpower.client.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
-import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticpower.items.ModItems;
 
@@ -33,7 +32,6 @@ public class GuiVacuumChest extends BaseGuiContainer {
 		infoTab = new GuiInfoTab(100, 65);
 		getTabManager().registerTab(infoTab);
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teVChest));
-		getTabManager().registerTab(new GuiSideConfigTab(80, 80, false, teVChest));
 		getTabManager().setInitiallyOpenTab(infoTab);
 	}
 	protected void drawGuiContainerForegroundLayer(int i, int j) {

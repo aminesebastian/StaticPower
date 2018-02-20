@@ -2,19 +2,19 @@ package theking530.staticpower.tileentity.solderingtable;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.SlotItemHandler;
+import theking530.staticpower.container.BaseContainer;
 import theking530.staticpower.handlers.crafting.registries.SolderingRecipeRegistry;
 import theking530.staticpower.items.tools.ISolderingIron;
+import theking530.staticpower.machines.tileentitycomponents.slots.StaticPowerContainerSlot;
 
-public class ContainerSolderingTable extends Container {
+public class ContainerSolderingTable extends BaseContainer {
 	
  /** The crafting matrix inventory (3x3). */
-    private TileEntitySolderingTable SOLDERING_TABLE;
+    private TileEntitySolderingTable solderingTableTileEntity;
     public ContainerSolderingTable(InventoryPlayer invPlayer, TileEntitySolderingTable teTable) {
-        SOLDERING_TABLE = teTable;
+        solderingTableTileEntity = teTable;
         int l;
         int i1;
                
@@ -28,7 +28,7 @@ public class ContainerSolderingTable extends Container {
         
         //Extra Slots 9 - 15
         for (l = 0; l < 7; l++) {
-        	this.addSlotToContainer(new SlotItemHandler(teTable.slotsInput, l+9, 26 + l * 18, 74));
+        	this.addSlotToContainer(new StaticPowerContainerSlot(teTable.slotsInput, l+9, 26 + l * 18, 74));
         }
         
         //Output
@@ -39,35 +39,25 @@ public class ContainerSolderingTable extends Container {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return itemStack.getItem() instanceof ISolderingIron;
-		        }
+		    }
 		});
-        
-		//Inventory
-		for(int i = 0; i < 3; i++) {
-			for(int j = 0; j < 9; j++) {
-				this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 97 + i * 18));
-			}
-		}
-		
-		//ActionBar
-		for(int i = 0; i < 9; i++) {
-			this.addSlotToContainer(new Slot(invPlayer, i, 8 + i * 18, 155));
-		}
+        this.addPlayerInventory(invPlayer, 8, 97);
+        this.addPlayerHotbar(invPlayer, 8, 155);
         this.detectAndSendChanges();
     }
     public void onSolderingAreaChanged(){
-    	if(SOLDERING_TABLE.getInputStack(16) != null && SOLDERING_TABLE.getInputStack(16).getItem() instanceof ISolderingIron) {
-    		ISolderingIron tempIron = (ISolderingIron) SOLDERING_TABLE.getInputStack(16).getItem();
-    		if(tempIron.canSolder(SOLDERING_TABLE.getInputStack(16))) {
-    			SOLDERING_TABLE.slotsOutput.setStackInSlot(0, SolderingRecipeRegistry.Soldering().getOutput(SOLDERING_TABLE.slotsInput, SOLDERING_TABLE.getWorld(), 3, 3).copy()); 		
+    	if(solderingTableTileEntity.getInputStack(16) != null && solderingTableTileEntity.getInputStack(16).getItem() instanceof ISolderingIron) {
+    		ISolderingIron tempIron = (ISolderingIron) solderingTableTileEntity.getInputStack(16).getItem();
+    		if(tempIron.canSolder(solderingTableTileEntity.getInputStack(16))) {
+    			solderingTableTileEntity.slotsOutput.setStackInSlot(0, SolderingRecipeRegistry.Soldering().getOutput(solderingTableTileEntity.slotsInput, solderingTableTileEntity.getWorld(), 3, 3).copy()); 		
     		}else{
-        		SOLDERING_TABLE.slotsOutput.setStackInSlot(0, ItemStack.EMPTY); 	
+        		solderingTableTileEntity.slotsOutput.setStackInSlot(0, ItemStack.EMPTY); 	
     		}    	
     	}else{
-    		SOLDERING_TABLE.slotsOutput.setStackInSlot(0, ItemStack.EMPTY); 
+    		solderingTableTileEntity.slotsOutput.setStackInSlot(0, ItemStack.EMPTY); 
     	}
-    	SOLDERING_TABLE.updateBlock();
-    	SOLDERING_TABLE.markDirty();
+    	solderingTableTileEntity.updateBlock();
+    	solderingTableTileEntity.markDirty();
     }
     public ItemStack transferStackInSlot(EntityPlayer p_82846_1_, int p_82846_2_){
         ItemStack itemstack = ItemStack.EMPTY;

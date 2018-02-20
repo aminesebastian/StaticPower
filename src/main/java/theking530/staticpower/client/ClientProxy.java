@@ -27,6 +27,7 @@ import theking530.staticpower.client.render.tileentitys.TileEntityRenderMechanic
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderPoweredFurnace;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderPoweredGrinder;
 import theking530.staticpower.client.render.tileentitys.TileEntityRenderQuarry;
+import theking530.staticpower.client.render.tileentitys.TileEntityRenderTreeFarmer;
 import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRenderAdder;
 import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRenderAndGate;
 import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRenderLED;
@@ -66,6 +67,7 @@ import theking530.staticpower.machines.mechanicalsqueezer.TileEntityMechanicalSq
 import theking530.staticpower.machines.poweredfurnace.TileEntityPoweredFurnace;
 import theking530.staticpower.machines.poweredgrinder.TileEntityPoweredGrinder;
 import theking530.staticpower.machines.quarry.TileEntityQuarry;
+import theking530.staticpower.machines.treefarmer.TileTreeFarmer;
 import theking530.staticpower.tileentity.chest.energizedchest.TileEntityEnergizedChest;
 import theking530.staticpower.tileentity.chest.lumumchest.TileEntityLumumChest;
 import theking530.staticpower.tileentity.chest.staticchest.TileEntityStaticChest;
@@ -97,13 +99,15 @@ public class ClientProxy extends CommonProxy {
 		//Digistore
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDigistore.class, new TileEntityRenderDigistore());
 		//Former
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFormer.class, new TileEntityRenderFormer());		
-		//Farmer
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBasicFarmer.class, new TileEntityRenderFarmer());		
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFormer.class, new TileEntityRenderFormer());			
 		//Quarry
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityQuarry.class, new TileEntityRenderQuarry());		
-		//Quarry
+		//Enchanter
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEsotericEnchanter.class, new TileEntityRenderEsotericEnchanter());	
+		//Farmer
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBasicFarmer.class, new TileEntityRenderFarmer());	
+		//Farmer
+		ClientRegistry.bindTileEntitySpecialRenderer(TileTreeFarmer.class, new TileEntityRenderTreeFarmer());	
 		
 		//Signal Multiplier
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySignalMultiplier.class, new TileEntityRenderSignalMultiplier());	

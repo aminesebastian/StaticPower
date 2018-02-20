@@ -52,7 +52,8 @@ public class GuiInfoTab extends BaseGuiTab {
     	}	
 	}
 	private void drawText(int xPos, int yPos) {
-		fontRenderer.drawStringWithShadow(tabTitle, xPos+23, yPos+8, GuiUtilities.getColor(0, 242, 255));	
+		int titleOffset = getTabSide() == TabSide.LEFT ? 8 : 23;
+		fontRenderer.drawStringWithShadow(tabTitle, xPos+titleOffset, yPos+8, GuiUtilities.getColor(0, 242, 255));	
 		float fontScale = 1.0f;
 		
 		for(int i = 0; i < info.size(); i++) {

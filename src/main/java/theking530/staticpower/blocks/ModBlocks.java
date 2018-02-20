@@ -37,6 +37,7 @@ import theking530.staticpower.machines.mechanicalsqueezer.BlockMechanicalSqueeze
 import theking530.staticpower.machines.poweredfurnace.BlockPoweredFurnace;
 import theking530.staticpower.machines.poweredgrinder.BlockPoweredGrinder;
 import theking530.staticpower.machines.quarry.BlockQuarry;
+import theking530.staticpower.machines.treefarmer.BlockTreeFarmer;
 import theking530.staticpower.tileentity.chest.energizedchest.BlockEnergizedChest;
 import theking530.staticpower.tileentity.chest.lumumchest.BlockLumumChest;
 import theking530.staticpower.tileentity.chest.staticchest.BlockStaticChest;
@@ -99,6 +100,7 @@ public class ModBlocks {
 	public static Block Condenser;
 	public static Block Former;
 	public static Block EsotericEnchanter;
+	public static Block TreeFarmer;
 	
 	//Gates
 	public static Block LogicGateBasePlate;
@@ -240,6 +242,8 @@ public class ModBlocks {
 		registry.PreRegisterBlock(FluidGenerator);		
 		BasicFarmer = new BlockBasicFarmer().setUnlocalizedName("BasicFarmer");
 		registry.PreRegisterBlock(BasicFarmer);		
+		TreeFarmer = new BlockTreeFarmer().setUnlocalizedName("TreeFarmer");
+		registry.PreRegisterBlock(TreeFarmer);	
 		CropSqueezer = new BlockCropSqueezer().setUnlocalizedName("CropSqueezer");
 		registry.PreRegisterBlock(CropSqueezer);
 		MechanicalSqueezer = new BlockMechanicalSqueezer().setUnlocalizedName("MechanicalSqueezer");

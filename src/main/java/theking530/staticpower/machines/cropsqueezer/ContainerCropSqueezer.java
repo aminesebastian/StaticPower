@@ -5,7 +5,6 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import theking530.staticpower.container.BaseContainer;
-import theking530.staticpower.handlers.crafting.registries.InfuserRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistry;
 import theking530.staticpower.machines.tileentitycomponents.slots.BatterySlot;
 import theking530.staticpower.machines.tileentitycomponents.slots.FluidContainerSlot;

@@ -37,4 +37,8 @@ public abstract class BaseDigistoreTileEntity extends BaseTileEntity {
     }
 	public void onNeighborUpdated(IBlockState observerState, World world, Block oldBlock, BlockPos changedBlockPos, Block newBlock) {
 	}
+	@Override 
+	public boolean isSideConfigurable() {
+		return false;
+	}
 }

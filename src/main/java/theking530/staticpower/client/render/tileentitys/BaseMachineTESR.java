@@ -19,6 +19,9 @@ public class BaseMachineTESR <T extends BaseTileEntity> extends TileEntitySpecia
 	private static final ResourceLocation sideIn = new ResourceLocation(Reference.MOD_ID, "textures/blocks/machines/machine_side_input.png");
 	private static final ResourceLocation sideOut = new ResourceLocation(Reference.MOD_ID, "textures/blocks/machines/machine_side_output.png");
 	private static final ResourceLocation sideDis = new ResourceLocation(Reference.MOD_ID, "textures/blocks/machines/machine_side_disabled.png");
+	private static final ResourceLocation sideExtra1 = new ResourceLocation(Reference.MOD_ID, "textures/blocks/machines/machine_side_extra1.png");
+	private static final ResourceLocation sideExtra2 = new ResourceLocation(Reference.MOD_ID, "textures/blocks/machines/machine_side_extra2.png");
+	private static final ResourceLocation sideExtra3 = new ResourceLocation(Reference.MOD_ID, "textures/blocks/machines/machine_side_extra3.png");
 	
 	@Override
 	public void render(T tileentity, double translationX, double translationY, double translationZ, float f, int dest, float alpha) {		
@@ -64,6 +67,9 @@ public class BaseMachineTESR <T extends BaseTileEntity> extends TileEntitySpecia
 			case Input: return sideIn;
 			case Output: return sideOut;
 			case Disabled: return sideDis;
+			case Extra1: return sideExtra1;
+			case Extra2: return sideExtra2;
+			case Extra3: return sideExtra3;
 			default: return side;
 		}
 	}

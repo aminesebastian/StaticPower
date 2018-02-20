@@ -12,6 +12,8 @@ import net.minecraftforge.fluids.FluidTank;
 import theking530.staticpower.handlers.crafting.registries.CondenserRecipeRegistry;
 import theking530.staticpower.machines.BaseMachineWithTank;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent;
+import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
+import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
 
 public class TileEntityCondenser extends BaseMachineWithTank  {
@@ -32,6 +34,9 @@ public class TileEntityCondenser extends BaseMachineWithTank  {
 		DRAIN_COMPONENT_EVAPORATED_MASH = new FluidContainerComponent("LeftBucketDrain", slotsInput, 0, slotsOutput, 0, this, fluidTank, fluidToContainerRate);
 		DRAIN_COMPONENT_EVAPORATED_MASH.setMode(FluidContainerInteractionMode.FillFromContainer);
 		DRAIN_COMPONENT_ETHANOL = new FluidContainerComponent("RightBucketDrain", slotsInput, 1, slotsOutput, 1, this, TANK2, fluidToContainerRate);	
+		
+		registerComponent(new TileEntityItemOutputServo(this, 2, slotsOutput, 0, 1));
+		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0, 1));
 	}
 	
 	@Override

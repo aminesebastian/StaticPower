@@ -24,7 +24,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 import theking530.staticpower.assists.Reference;
-import theking530.staticpower.assists.utilities.EnumTextFormatting;
 import theking530.staticpower.assists.utilities.GuiUtilities;
 import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.integration.ICompatibilityPlugin;
@@ -116,19 +115,8 @@ public class PluginTOP implements ICompatibilityPlugin {
 							ISideConfigurable configurable = (ISideConfigurable)tile;
 							if(configurable.isSideConfigurable() && configurable.getSideConfiguration(data.getSideHit()) != Mode.Regular) {
 								IProbeInfo infoSub = probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER));
-								switch(configurable.getSideConfiguration(data.getSideHit())) {
-									case Output:
-										infoSub.text("Side: " + EnumTextFormatting.GOLD + configurable.getSideConfiguration(data.getSideHit()));
-										break;
-									case Input:
-										infoSub.text("Side: " + EnumTextFormatting.BLUE + configurable.getSideConfiguration(data.getSideHit()));
-										break;
-									case Disabled:
-										infoSub.text("Side: " + EnumTextFormatting.RED + configurable.getSideConfiguration(data.getSideHit()));
-										break;
-									default:
-										break;
-								}	
+								Mode sideConfig = configurable.getSideConfiguration(data.getSideHit());
+								infoSub.text("Side: " + sideConfig.getFontColor() + sideConfig.getLocalizedName());							
 							}
 						}
 					}

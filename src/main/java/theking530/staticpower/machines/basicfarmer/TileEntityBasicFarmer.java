@@ -24,9 +24,11 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.fluids.ModFluids;
+import theking530.staticpower.handlers.crafting.registries.FarmerRecipeRegistry;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.machines.BaseMachineWithTank;
 import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
@@ -46,6 +48,7 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 	private Random rand;
 	private ArrayList<ItemStack> farmedStacks;
 	private FluidContainerComponent fluidInteractionComponent;
+	private boolean shouldDrawRadiusPreview;
 	
 	public TileEntityBasicFarmer() {
 		initializeBasicMachine(2, 20, 100000, 100, 10);
@@ -58,6 +61,8 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInternal, 0, this, energyStorage));
 		registerComponent(new TileEntityItemOutputServo(this, 2, slotsOutput, 0, 1, 2, 3, 4, 5, 6, 7, 8));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0, 1));
+		
+		shouldDrawRadiusPreview = false;
 		
 		currentCoordinate = getStartingCoord();
 		rand = new Random();
@@ -108,8 +113,8 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 		}
 	}
 	@Override  
-    public void readFromNBT(NBTTagCompound nbt) {
-        super.readFromNBT(nbt);
+    public void deserializeData(NBTTagCompound nbt) {
+        super.deserializeData(nbt);
         if(nbt.hasKey("CURR_X")) {
             currentCoordinate = new BlockPos(new Vec3i(nbt.getInteger("CURR_X"), nbt.getInteger("CURR_Y"), nbt.getInteger("CURR_Z")));	
         }
@@ -120,8 +125,8 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
         }
     }		
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
+    public NBTTagCompound serializeData(NBTTagCompound nbt) {
+        super.serializeData(nbt);
 		nbt.setInteger("CURR_X", currentCoordinate.getX());
 		nbt.setInteger("CURR_Y", currentCoordinate.getY());
 		nbt.setInteger("CURR_Z", currentCoordinate.getZ());
@@ -163,6 +168,12 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 	}
 	public int getGrowthBonus() {
 		return growthBonusChance;
+	}
+	public boolean getShouldDrawRadiusPreview() {
+		return shouldDrawRadiusPreview;
+	}
+	public void setShouldDrawRadiusPreview(boolean shouldDraw) {
+		shouldDrawRadiusPreview = shouldDraw;
 	}
 	
 	private void incrementPosition() {
@@ -212,9 +223,12 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 		}
 	}
 	public boolean canFarm() {
-		if(energyStorage.getEnergyStored() >= getProcessingCost() * blocksFarmedPerTick && !slotsInput.getStackInSlot(0).isEmpty() && slotsInput.getStackInSlot(0).getItem() instanceof ItemHoe
-				&& !slotsInput.getStackInSlot(1).isEmpty() && slotsInput.getStackInSlot(1).getItem() instanceof ItemAxe) {
-			return true;
+		if(energyStorage.getEnergyStored() >= getProcessingCost() * blocksFarmedPerTick && !slotsInput.getStackInSlot(0).isEmpty() && slotsInput.getStackInSlot(0).getItem() instanceof ItemHoe && !slotsInput.getStackInSlot(1).isEmpty() && slotsInput.getStackInSlot(1).getItem() instanceof ItemAxe) {
+			if(fluidTank.getFluid() != null) {
+				if(fluidTank.getFluid().amount > 0) {
+					return true;
+				}
+			}
 		}
 		return false;
 	}
@@ -315,10 +329,10 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 					getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 2);
 					useAxe();
 				}
+				getWorld().playSound(null, pos, getWorld().getBlockState(pos.add(0, 1, 0)).getBlock().getSoundType(getWorld().getBlockState(pos.add(0, 1, 0)), world, pos.add(0, 1, 0), null).getBreakSound(), SoundCategory.BLOCKS, 1.0F, 1.0F);
+				getWorld().spawnParticle(EnumParticleTypes.SMOKE_LARGE, pos.getX() + 0.5D, pos.add(0, 1, 0).getY() + 1.0D, pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
+				return true;
         	}
-			getWorld().playSound(null, pos, getWorld().getBlockState(pos.add(0, 1, 0)).getBlock().getSoundType(getWorld().getBlockState(pos.add(0, 1, 0)), world, pos.add(0, 1, 0), null).getBreakSound(), SoundCategory.BLOCKS, 1.0F, 1.0F);
-			getWorld().spawnParticle(EnumParticleTypes.SMOKE_LARGE, pos.getX() + 0.5D, pos.add(0, 1, 0).getY() + 1.0D, pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
-			return true;
 		}
 		return false;
 	}
@@ -336,10 +350,10 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 					getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 3);
 					useAxe();
 				}
+				getWorld().playSound(null, pos, getWorld().getBlockState(pos.add(0, 1, 0)).getBlock().getSoundType(getWorld().getBlockState(pos.add(0, 1, 0)), world, pos.add(0, 1, 0), null).getBreakSound(), SoundCategory.BLOCKS, 1.0F, 1.0F);
+				getWorld().spawnParticle(EnumParticleTypes.SMOKE_LARGE, pos.getX() + 0.5D, pos.add(0, 1, 0).getY() + 1.0D, pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
+	        	return true;
         	}
-			getWorld().playSound(null, pos, getWorld().getBlockState(pos.add(0, 1, 0)).getBlock().getSoundType(getWorld().getBlockState(pos.add(0, 1, 0)), world, pos.add(0, 1, 0), null).getBreakSound(), SoundCategory.BLOCKS, 1.0F, 1.0F);
-			getWorld().spawnParticle(EnumParticleTypes.SMOKE_LARGE, pos.getX() + 0.5D, pos.add(0, 1, 0).getY() + 1.0D, pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
-        	return true;
 		}
 		return false;
 	}
@@ -395,6 +409,15 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 		}
 		return false;
 	}
+	
+    @Override
+	public int fill(FluidStack resource, boolean doFill, EnumFacing facing) {
+		if(resource != null && FarmerRecipeRegistry.Farming().getOutput(resource) != null) {
+			return fluidTank.fill(resource, doFill);
+		}
+		return 0;
+	}
+	
 	public List<ItemStack> getBlockDrops(BlockPos pos) {
         NonNullList<ItemStack> ret = NonNullList.create();
 		getWorld().getBlockState(currentCoordinate).getBlock().getDrops(ret, getWorld(), currentCoordinate, getWorld().getBlockState(currentCoordinate), 0);
@@ -402,7 +425,7 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 	}
 	@Override
 	public String getName() {
-		return "Basic farmer";
+		return "container.BasicFarmer";
 	}
     @SuppressWarnings("unchecked")
 	public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.util.EnumFacing facing){

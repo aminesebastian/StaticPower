@@ -12,6 +12,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.assists.utilities.SideModeList;
 import theking530.staticpower.assists.utilities.SideUtilities;
+import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.assists.utilities.SideUtilities.BlockSide;
 import theking530.staticpower.tileentity.ISideConfigurable;
 
@@ -76,6 +77,14 @@ public class TileEntityItemInputServo implements ITileEntityComponent{
 			EnumFacing facing = tileEntity.getWorld().getBlockState(tileEntity.getPos()).getValue(BlockHorizontal.FACING);
 			TileEntity te = tileEntity.getWorld().getTileEntity(tileEntity.getPos().offset(SideUtilities.getEnumFacingFromSide(blockSide, facing)));
 			if (te != null && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, SideUtilities.getEnumFacingFromSide(blockSide, facing).getOpposite())) {
+				if(te instanceof ISideConfigurable) {
+					ISideConfigurable configurable = (ISideConfigurable)te;
+					if(configurable.isSideConfigurable()) {
+						if(configurable.getSideConfiguration(blockSide.getOpposite()) != Mode.Regular) {
+							return;
+						}
+					}
+				}			
 				IItemHandler inv = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, SideUtilities.getEnumFacingFromSide(blockSide, facing).getOpposite());
 				for(int currentTESlot = startSlot; currentTESlot < inv.getSlots(); currentTESlot++) {
 					ItemStack stack = inv.extractItem(currentTESlot, 64, true);

@@ -2,89 +2,78 @@ package theking530.staticpower.machines.fluidgenerator;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraftforge.items.SlotItemHandler;
+import theking530.staticpower.container.BaseContainer;
+import theking530.staticpower.machines.tileentitycomponents.slots.FluidContainerSlot;
+import theking530.staticpower.machines.tileentitycomponents.slots.OutputSlot;
+import theking530.staticpower.machines.tileentitycomponents.slots.UpgradeSlot;
 
-public class ContainerFluidGenerator extends Container {
+public class ContainerFluidGenerator extends BaseContainer {
 	
-	private TileEntityFluidGenerator F_GENERATOR;
+	private TileEntityFluidGenerator fluidGeneratorTileEntity;
 
 	public ContainerFluidGenerator(InventoryPlayer invPlayer, TileEntityFluidGenerator teFluidGenerator) {
-		F_GENERATOR = teFluidGenerator;
+		fluidGeneratorTileEntity = teFluidGenerator;
 		
 		//Fluid Slots
-		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.slotsInput, 0, 7, 17));
-		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.slotsOutput, 0, 7, 47));
+		this.addSlotToContainer(new FluidContainerSlot(teFluidGenerator.slotsInput, 0, -24, 11));;
+		this.addSlotToContainer(new OutputSlot(teFluidGenerator.slotsOutput, 0, -24, 43));
 		
 		//Upgrades
-		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.slotsUpgrades, 0, 171, 12));
-		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.slotsUpgrades, 1, 171, 32));
-		this.addSlotToContainer(new SlotItemHandler(teFluidGenerator.slotsUpgrades, 2, 171, 52));
+		this.addSlotToContainer(new UpgradeSlot(teFluidGenerator.slotsUpgrades, 0, -24, 76));
+		this.addSlotToContainer(new UpgradeSlot(teFluidGenerator.slotsUpgrades, 1, -24, 94));
+		this.addSlotToContainer(new UpgradeSlot(teFluidGenerator.slotsUpgrades, 2, -24, 112));
 		
-		//Inventory
-				for(int i = 0; i < 3; i++) {
-					for(int j = 0; j < 9; j++) {
-						this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 27 + j * 18, 84 + i * 18));
-					}
-				}
-				
-				//ActionBar
-				for(int i = 0; i < 9; i++) {
-					this.addSlotToContainer(new Slot(invPlayer, i, 27 + i * 18, 142));
-			}
+		this.addPlayerHotbar(invPlayer, 8, 142);
+		this.addPlayerInventory(invPlayer, 8, 84);		
 	}
 	
 	//Shift Click Functionality
 	public ItemStack transferStackInSlot(EntityPlayer player, int invSlot) {
-    ItemStack itemstack = ItemStack.EMPTY;
-    Slot slot = (Slot)this.inventorySlots.get(invSlot);
-
-    if (slot != null && slot.getHasStack()) {
-        ItemStack itemstack1 = slot.getStack();
-        itemstack = itemstack1.copy();
-
-        if (invSlot == 1 || invSlot == 0) {
-            if (!this.mergeItemStack(itemstack1, 6, 42, true)) {
-                return ItemStack.EMPTY;
-            }
-            slot.onSlotChange(itemstack1, itemstack);
-        }else if (invSlot != 1 && invSlot != 0){
-        	if (FurnaceRecipes.instance().getSmeltingResult(itemstack1) != null){
-                if (!this.mergeItemStack(itemstack1, 0, 1, false)){
-                    return ItemStack.EMPTY;
-                }
-            }else if (invSlot >= 6 && invSlot < 33) {
-                if (!this.mergeItemStack(itemstack1, 33, 42, false)) {
-                    return ItemStack.EMPTY;
-                }
-            }else if (invSlot >= 33 && invSlot < 42 && !this.mergeItemStack(itemstack1, 6, 33, false))  {
-                return ItemStack.EMPTY;
-            }
-        }else if (!this.mergeItemStack(itemstack1, 6, 42, false)) {
-            return ItemStack.EMPTY;
-        }
-        if (itemstack1.getCount() == 0){
-            slot.putStack(ItemStack.EMPTY);
-        }else {
-            slot.onSlotChanged();
-        }
-        if (itemstack1.getCount() == itemstack.getCount()){
-            return ItemStack.EMPTY;
-        }
-        slot.onTake(player, itemstack1);
-    }
-    return itemstack;
-}
+	    ItemStack itemstack = ItemStack.EMPTY;
+	    Slot slot = (Slot)this.inventorySlots.get(invSlot);
+	
+	    if (slot != null && slot.getHasStack()) {
+	        ItemStack itemstack1 = slot.getStack();
+	        itemstack = itemstack1.copy();
+	
+	        if (invSlot == 1 || invSlot == 0) {
+	            if (!this.mergeItemStack(itemstack1, 6, 42, true)) {
+	                return ItemStack.EMPTY;
+	            }
+	            slot.onSlotChange(itemstack1, itemstack);
+	        }else if (invSlot != 1 && invSlot != 0){
+	        	if (FurnaceRecipes.instance().getSmeltingResult(itemstack1) != null){
+	                if (!this.mergeItemStack(itemstack1, 0, 1, false)){
+	                    return ItemStack.EMPTY;
+	                }
+	            }else if (invSlot >= 6 && invSlot < 33) {
+	                if (!this.mergeItemStack(itemstack1, 33, 42, false)) {
+	                    return ItemStack.EMPTY;
+	                }
+	            }else if (invSlot >= 33 && invSlot < 42 && !this.mergeItemStack(itemstack1, 6, 33, false))  {
+	                return ItemStack.EMPTY;
+	            }
+	        }else if (!this.mergeItemStack(itemstack1, 6, 42, false)) {
+	            return ItemStack.EMPTY;
+	        }
+	        if (itemstack1.getCount() == 0){
+	            slot.putStack(ItemStack.EMPTY);
+	        }else {
+	            slot.onSlotChanged();
+	        }
+	        if (itemstack1.getCount() == itemstack.getCount()){
+	            return ItemStack.EMPTY;
+	        }
+	        slot.onTake(player, itemstack1);
+	    }
+	    return itemstack;
+	}
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
-		return F_GENERATOR.isUseableByPlayer(player);
+		return fluidGeneratorTileEntity.isUseableByPlayer(player);
 	}
-	public void detectAndSendChanges(){
-        super.detectAndSendChanges();
-       // F_GENERATOR.sync();
-    }
 }
 

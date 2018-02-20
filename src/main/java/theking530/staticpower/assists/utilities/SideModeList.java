@@ -11,6 +11,9 @@ public class SideModeList {
 		Regular("Regular", EnumTextFormatting.WHITE, new Color(139, 139, 139)),
 		Input("Input", EnumTextFormatting.BLUE, new Color(80, 130, 179)),
 		Output("Output", EnumTextFormatting.GOLD, new Color(200, 140, 50)),
+		Extra1("Extra1", EnumTextFormatting.DARK_PURPLE, new Color(100, 0, 200)),
+		Extra2("Extra2", EnumTextFormatting.GREEN, new Color(0, 200, 50)),
+		Extra3("Extra3", EnumTextFormatting.YELLOW, new Color(220, 220, 0)),
 		Disabled("Disabled", EnumTextFormatting.RED, new Color(200, 20, 20));
 
 	private String name;

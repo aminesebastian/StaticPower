@@ -18,13 +18,13 @@ public class SolderingRecipes {
 	public static void registerSolderingRecipes() {
 		
 		//Circuit Recipes
-		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.BasicCircuit, 4), new Object[]{"WWW", "RIR", "WWW", 
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.BasicCircuit), new Object[]{"WWW", "RIR", "WWW", 
 		'I', ingredientOre("plateIron"), 'R', Items.REDSTONE, 'W', ingredientFromItem(ModItems.CopperWire)});	
-		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.StaticCircuit, 4), new Object[]{"WWW", "RSR", "WWW", 
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.StaticCircuit), new Object[]{"WWW", "RSR", "WWW", 
 		'R', Items.REDSTONE, 'S', ModItems.StaticPlate, 'W', ingredientFromItem(ModItems.CopperWire)});		
-		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.EnergizedCircuit, 4), new Object[]{"WWW", "RER", "WWW", 
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.EnergizedCircuit), new Object[]{"WWW", "RER", "WWW", 
 		'R', Items.REDSTONE, 'E', ModItems.EnergizedPlate, 'W', ingredientFromItem(ModItems.SilverWire)});		
-		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.LumumCircuit, 4), new Object[]{"WWW", "RLR", "WWW", 
+		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.LumumCircuit), new Object[]{"WWW", "RLR", "WWW", 
 		'R', Items.REDSTONE, 'L', ModItems.LumumPlate, 'W', ingredientFromItem(ModItems.GoldWire)});
 		
 		//Batteries --------------------------------------------------------------------------------------------------

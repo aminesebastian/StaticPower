@@ -8,6 +8,8 @@ import theking530.staticpower.handlers.crafting.registries.InfuserRecipeRegistry
 import theking530.staticpower.machines.BaseMachineWithTank;
 import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent;
+import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
+import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
 
 public class TileEntityFluidInfuser extends BaseMachineWithTank {
@@ -23,6 +25,9 @@ public class TileEntityFluidInfuser extends BaseMachineWithTank {
 		registerComponent(new BatteryInteractionComponent("BatteryInteraction", slotsInput, 3, this, energyStorage));
 		registerComponent(DRAIN_COMPONENT = new FluidContainerComponent("BucketDrain", slotsInternal, 1, slotsInternal, 2, this, fluidTank, fluidToContainerRate));
 		DRAIN_COMPONENT.setMode(FluidContainerInteractionMode.FillFromContainer);
+		
+		registerComponent(new TileEntityItemOutputServo(this, 2, slotsOutput, 0));
+		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0));
 	}
 	//IInventory				
 	@Override

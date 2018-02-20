@@ -69,6 +69,9 @@ import theking530.staticpower.machines.poweredgrinder.TileEntityPoweredGrinder;
 import theking530.staticpower.machines.quarry.ContainerQuarry;
 import theking530.staticpower.machines.quarry.GuiQuarry;
 import theking530.staticpower.machines.quarry.TileEntityQuarry;
+import theking530.staticpower.machines.treefarmer.ContainerTreeFarmer;
+import theking530.staticpower.machines.treefarmer.GuiTreeFarmer;
+import theking530.staticpower.machines.treefarmer.TileTreeFarmer;
 import theking530.staticpower.tileentity.chest.energizedchest.ContainerEnergizedChest;
 import theking530.staticpower.tileentity.chest.energizedchest.GuiEnergizedChest;
 import theking530.staticpower.tileentity.chest.energizedchest.TileEntityEnergizedChest;
@@ -222,6 +225,11 @@ public class GuiHandler implements IGuiHandler {
 					return new ContainerFormer(player.inventory, (TileEntityFormer) entity);
 				}
 				return null;
+			case GuiIDRegistry.guiIDTreeFarmer:
+				if (entity instanceof TileTreeFarmer) {	
+					return new ContainerTreeFarmer(player.inventory, (TileTreeFarmer) entity);
+				}
+				return null;
 			}
 		}else{
 			switch(ID) {
@@ -368,6 +376,11 @@ public class GuiHandler implements IGuiHandler {
 			case GuiIDRegistry.guiIDFormer:
 				if (entity instanceof TileEntityFormer) {	
 					return new GuiFormer(player.inventory, (TileEntityFormer) entity);				
+				}
+				return null;
+			case GuiIDRegistry.guiIDTreeFarmer:
+				if (entity instanceof TileTreeFarmer) {	
+					return new GuiTreeFarmer(player.inventory, (TileTreeFarmer) entity);				
 				}
 				return null;
 			}

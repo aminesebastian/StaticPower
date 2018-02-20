@@ -46,7 +46,7 @@ public class GuiSideConfigTab extends BaseGuiTab implements IInteractableGui {
 	private boolean allowFaceInteraction;
 	
 	public GuiSideConfigTab(int width, int height, boolean faceInteraction, TileEntity te){
-		super(width, height, GuiTextures.BLUE_TAB, te.getBlockType());
+		super(80, 80, GuiTextures.BLUE_TAB, te.getBlockType());
 		tileEntity = te;
 		fontRenderer = Minecraft.getMinecraft().fontRenderer;
 		allowFaceInteraction = faceInteraction;

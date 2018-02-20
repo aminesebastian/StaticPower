@@ -16,6 +16,8 @@ import theking530.staticpower.machines.condenser.TileEntityCondenser;
 import theking530.staticpower.machines.heatingelement.HeatStorage;
 import theking530.staticpower.machines.heatingelement.IHeatable;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent;
+import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
+import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
 
 public class TileEntityDistillery extends BaseMachineWithTank implements IHeatable{
@@ -38,6 +40,9 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
 		DRAIN_COMPONENT_MASH = new FluidContainerComponent("LeftBucketDrain", slotsInput, 0, slotsOutput, 0, this, fluidTank, fluidToContainerRate);
 		DRAIN_COMPONENT_MASH.setMode(FluidContainerInteractionMode.FillFromContainer);
 		DRAIN_COMPONENT_EVAPORATED_MASH = new FluidContainerComponent("RightBucketDrain", slotsInput, 1, slotsOutput, 1, this, TANK2, fluidToContainerRate);
+		
+		registerComponent(new TileEntityItemOutputServo(this, 2, slotsOutput, 0, 1));
+		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0, 1));
 	}
 	@Override
 	public String getName() {

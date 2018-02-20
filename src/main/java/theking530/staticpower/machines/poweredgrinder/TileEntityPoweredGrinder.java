@@ -44,6 +44,7 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 					transferItemInternally(slotsInput, 0, slotsInternal, 0);
 					moveTimer=0;
 					processingTimer = 1;
+					updateBlock();
 				}
 			}
 			if(isProcessing() && !isMoving()) {

@@ -60,6 +60,7 @@ public class TileEntityPoweredFurnace extends BaseMachine {
 					transferItemInternally(slotsInput, 0, slotsInternal, 0);
 					processingTimer = 1;
 					moveTimer = 0;
+					updateBlock();
 				}
 			}
 			if(isProcessing() && !isMoving()) {

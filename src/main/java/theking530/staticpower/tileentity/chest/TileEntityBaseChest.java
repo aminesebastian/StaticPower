@@ -103,7 +103,10 @@ public class TileEntityBaseChest extends BaseTileEntity{
 		return "container.StaticChest";
 		
 	}					
-
+	@Override
+	public boolean isSideConfigurable() {
+		return false;
+	}
 	/* CAPABILITIES */
     public boolean hasCapability(net.minecraftforge.common.capabilities.Capability<?> capability, net.minecraft.util.EnumFacing facing){
     	if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {

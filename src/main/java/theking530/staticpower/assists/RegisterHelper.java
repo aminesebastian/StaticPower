@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import theking530.staticpower.handlers.crafting.registries.CondenserRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.DistilleryRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.EsotericEnchanterRecipeRegistry;
+import theking530.staticpower.handlers.crafting.registries.FarmerRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.FermenterRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.FluidGeneratorRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.FormerRecipeRegistry;
@@ -32,13 +33,16 @@ public class RegisterHelper  {
 	public static void registerInfuserRecipe(Ingredient input, ItemStack output, FluidStack fluidStack) {
 		InfuserRecipeRegistry.Infusing().addRecipe(input, output, fluidStack);			
 	}
-	public static void registerFusionRecipe(ItemStack output, ItemStack...inputs) {
+	public static void registerFusionRecipe(ItemStack output, Ingredient...inputs) {
 		if(output != null && inputs[0] != null) {
 			FusionRecipeRegistry.Fusing().addRecipe(output, inputs);			
 		}
 	}
 	public static void registerFormerRecipes(ItemStack output, Ingredient input, Ingredient mold) {
 		FormerRecipeRegistry.Forming().addRecipe(output, input, mold);
+	}
+	public static void registerFarmingRecipe(FluidStack input, float output) {
+		FarmerRecipeRegistry.Farming().addRecipe(input, output);
 	}
 	public static void registerSqueezerRecipe(ItemStack input, ItemStack result, FluidStack outputFluid) {
 		SqueezerRecipeRegistry.Squeezing().addRecipe(input, result, outputFluid);

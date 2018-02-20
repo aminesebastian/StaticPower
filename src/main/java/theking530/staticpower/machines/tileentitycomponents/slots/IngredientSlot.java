@@ -6,11 +6,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.items.IItemHandler;
 
-public class FilteredSlot extends StaticPowerContainerSlot {
+public class IngredientSlot extends StaticPowerContainerSlot {
 
 	private Ingredient filter;
 	
-	public FilteredSlot(ItemStack preview, Ingredient ingredient, IItemHandler itemHandler, int index, int xPosition, int yPosition) {
+	public IngredientSlot(ItemStack preview, Ingredient ingredient, IItemHandler itemHandler, int index, int xPosition, int yPosition) {
 		super(preview, itemHandler, index, xPosition, yPosition);
 		filter = ingredient;
 	}

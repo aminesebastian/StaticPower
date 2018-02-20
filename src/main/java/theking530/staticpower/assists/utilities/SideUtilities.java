@@ -27,6 +27,27 @@ public class SideUtilities {
 		public String getLocalizedName() {
 			return I18n.format(getName());
 		}
+		public BlockSide getOpposite() {
+			if(this == TOP){
+				return BOTTOM;
+			}
+			if(this == BOTTOM){
+				return TOP;
+			}
+			if(this == FRONT){
+				return BACK;
+			}
+			if(this == BACK){
+				return FRONT;
+			}
+			if(this == RIGHT){
+				return LEFT;
+			}
+			if(this == LEFT){
+				return RIGHT;
+			}
+			return null;
+		}
 	}
 	/***
 	 * @param hitSide = The Side that we want to translate to a BlockSide.

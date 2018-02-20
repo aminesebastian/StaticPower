@@ -84,6 +84,7 @@ import theking530.staticpower.machines.mechanicalsqueezer.TileEntityMechanicalSq
 import theking530.staticpower.machines.poweredfurnace.TileEntityPoweredFurnace;
 import theking530.staticpower.machines.poweredgrinder.TileEntityPoweredGrinder;
 import theking530.staticpower.machines.quarry.TileEntityQuarry;
+import theking530.staticpower.machines.treefarmer.TileTreeFarmer;
 import theking530.staticpower.potioneffects.ModPotions;
 import theking530.staticpower.tileentity.chest.energizedchest.TileEntityEnergizedChest;
 import theking530.staticpower.tileentity.chest.lumumchest.TileEntityLumumChest;
@@ -170,6 +171,7 @@ public class StaticPower {
 		GameRegistry.registerTileEntity(TileEntityDistillery.class, "Distillery");
 		GameRegistry.registerTileEntity(TileEntityCondenser.class, "Condenser");
 		GameRegistry.registerTileEntity(TileEntityFormer.class, "Former");
+		GameRegistry.registerTileEntity(TileTreeFarmer.class, "TreeFarmer");
 		
 		GameRegistry.registerTileEntity(TileEntityBasicSolarPanel.class, "BaseSolarPanel");
 		GameRegistry.registerTileEntity(TileEntityStaticSolarPanel.class, "StaticSolarPanel");

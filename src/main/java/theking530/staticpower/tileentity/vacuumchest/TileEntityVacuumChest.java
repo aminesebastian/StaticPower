@@ -161,6 +161,11 @@ public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<E
 		return shouldVacuumExperience;
 	}
 	
+	@Override
+	public boolean isSideConfigurable() {
+		return false;
+	}
+	
 	/*Update Handling*/
 	@Override
 	public void upgradeTick() {

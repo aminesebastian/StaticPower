@@ -248,6 +248,7 @@ public class ItemRenderRegistry {
 		registerBlock(ModBlocks.CreativeSolarPanel);
 
         registerBlock(ModBlocks.Quarry);
+		registerBlock(ModBlocks.TreeFarmer);
 		registerBlock(ModBlocks.BasicFarmer);
 		registerBlock(ModBlocks.ChargingStation);
 		registerBlock(ModBlocks.AdvancedEarth);

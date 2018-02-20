@@ -2,49 +2,40 @@ package theking530.staticpower.machines.quarry;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraftforge.items.SlotItemHandler;
-import theking530.staticpower.client.gui.widgets.SlotFilter;
-import theking530.staticpower.items.itemfilter.ItemFilter;
+import theking530.staticpower.container.BaseContainer;
+import theking530.staticpower.machines.tileentitycomponents.slots.BatterySlot;
+import theking530.staticpower.machines.tileentitycomponents.slots.FilterSlot;
+import theking530.staticpower.machines.tileentitycomponents.slots.FluidContainerSlot;
+import theking530.staticpower.machines.tileentitycomponents.slots.OutputSlot;
+import theking530.staticpower.machines.tileentitycomponents.slots.UpgradeSlot;
 
-public class ContainerQuarry extends Container {
+public class ContainerQuarry extends BaseContainer {
 	
-	private TileEntityQuarry QUARRY;
+	private TileEntityQuarry quarryTileEnttiy;
 
 	public ContainerQuarry(InventoryPlayer invPlayer, TileEntityQuarry teQuarry) {
-		QUARRY = teQuarry;
+		quarryTileEnttiy = teQuarry;
 		
 		//Filter
-		this.addSlotToContainer(new SlotFilter(teQuarry.slotsInternal, 0, 27, 71) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-		          return itemStack.getItem() instanceof ItemFilter;
-		    }
-		});	
+		this.addSlotToContainer(new FilterSlot(teQuarry.slotsInternal, 0, -24, 72));
 		
 		//Fluid Slots
-		this.addSlotToContainer(new SlotItemHandler(teQuarry.slotsInternal, 1, 7, 17));
-		this.addSlotToContainer(new SlotItemHandler(teQuarry.slotsInternal, 2, 7, 47));
+		this.addSlotToContainer(new FluidContainerSlot(teQuarry.slotsInternal, 1, -24, 11));
+		this.addSlotToContainer(new OutputSlot(teQuarry.slotsInternal, 2, -24, 43));
+		
+		//Battery
+		this.addSlotToContainer(new BatterySlot(teQuarry.slotsInternal, 3, 8, 54));
 		
 		//Upgrades
-		this.addSlotToContainer(new SlotItemHandler(teQuarry.slotsUpgrades, 0, 171, 17));
-		this.addSlotToContainer(new SlotItemHandler(teQuarry.slotsUpgrades, 1, 171, 37));
-		this.addSlotToContainer(new SlotItemHandler(teQuarry.slotsUpgrades, 2, 171, 57));
-			
-		//Inventory
-		for(int i = 0; i < 3; i++) {
-			for(int j = 0; j < 9; j++) {
-				this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 27 + j * 18, 92 + i * 18));
-			}
-		}
-		
-		//ActionBar
-		for(int i = 0; i < 9; i++) {
-			this.addSlotToContainer(new Slot(invPlayer, i, 27 + i * 18, 150));
-		}
+		this.addSlotToContainer(new UpgradeSlot(teQuarry.slotsUpgrades, 0, -24, 101));
+		this.addSlotToContainer(new UpgradeSlot(teQuarry.slotsUpgrades, 1, -24, 119));
+		this.addSlotToContainer(new UpgradeSlot(teQuarry.slotsUpgrades, 2, -24, 137));
+				
+		this.addPlayerInventory(invPlayer, 8, 84);
+		this.addPlayerHotbar(invPlayer, 8, 142);
 	}
 	
 	//Shift Click Functionality
@@ -91,7 +82,7 @@ public class ContainerQuarry extends Container {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
-		return QUARRY.isUseableByPlayer(player);
+		return quarryTileEnttiy.isUseableByPlayer(player);
 	}
 	
 	public void detectAndSendChanges(){

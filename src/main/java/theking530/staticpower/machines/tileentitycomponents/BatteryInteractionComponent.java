@@ -32,7 +32,6 @@ public class BatteryInteractionComponent implements ITileEntityComponent{
 					if(batteryItem.getEnergyStored(BATTERY_SLOT_HANDLER.getStackInSlot(BATTERY_SLOT)) > 0) {
 						int recieved = ENERGY_STORAGE.receiveEnergy(Math.min(batteryItem.getEnergyStored(BATTERY_SLOT_HANDLER.getStackInSlot(BATTERY_SLOT)), ENERGY_STORAGE.getMaxReceive()), false);
 						batteryItem.extractEnergy(BATTERY_SLOT_HANDLER.getStackInSlot(BATTERY_SLOT), recieved, false);					
-						TE.updateBlock();
 					}
 				}
 			}

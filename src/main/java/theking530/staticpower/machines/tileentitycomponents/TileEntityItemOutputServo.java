@@ -11,6 +11,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.assists.utilities.SideModeList;
+import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.assists.utilities.SideUtilities;
 import theking530.staticpower.assists.utilities.SideUtilities.BlockSide;
 import theking530.staticpower.tileentity.ISideConfigurable;
@@ -79,7 +80,15 @@ public class TileEntityItemOutputServo implements ITileEntityComponent{
 			if (!stack.isEmpty()) {
 				EnumFacing facing = tileEntity.getWorld().getBlockState(tileEntity.getPos()).getValue(BlockHorizontal.FACING);
 				TileEntity te = tileEntity.getWorld().getTileEntity(tileEntity.getPos().offset(SideUtilities.getEnumFacingFromSide(blockSide, facing)));
-				if (te != null && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, SideUtilities.getEnumFacingFromSide(blockSide, facing).getOpposite())) {
+				if (te != null && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, SideUtilities.getEnumFacingFromSide(blockSide, facing).getOpposite())) {	
+					if(te instanceof ISideConfigurable) {
+						ISideConfigurable configurable = (ISideConfigurable)te;
+						if(configurable.isSideConfigurable()) {
+							if(configurable.getSideConfiguration(blockSide.getOpposite()) == Mode.Output) {
+								return;
+							}
+						}
+					}
 					IItemHandler inv = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, SideUtilities.getEnumFacingFromSide(blockSide, facing).getOpposite());
 					inventory.setStackInSlot(fromSlot, InventoryUtilities.insertItemIntoInventory(inv, stack));
 				}

@@ -231,16 +231,12 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	}
 	@Override
 	public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
-		if(!getWorld().isRemote) {
-			updateBlock();
-		}
+		updateBlock();
 		return energyStorage.extractEnergy(maxExtract, simulate);
 	}
 	@Override
 	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
-		if(!getWorld().isRemote) {
-			updateBlock();
-		}
+		updateBlock();
 		return energyStorage.receiveEnergy(maxReceive, simulate);
 	}
 	
