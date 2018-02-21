@@ -42,7 +42,7 @@ public class GuiQuarry extends BaseGuiContainer {
 		super.initGui();
 	    this.buttonList.add(new ArrowButton(1, guiLeft-24, guiTop+30, 16, 10, "<"));
 	    
-	    if(quarryTileEntity.getFluidInteractionComponent().getMode() == FluidContainerInteractionMode.FillFromContainer) {
+	    if(quarryTileEntity.getFluidInteractionComponent().getMode() == FluidContainerInteractionMode.FILL) {
 	    	buttonList.get(0).displayString = ">";
 	    }else{
 	    	buttonList.get(0).displayString = "<";
@@ -55,7 +55,7 @@ public class GuiQuarry extends BaseGuiContainer {
 			PacketHandler.net.sendToServer(msg);
 			quarryTileEntity.getFluidInteractionComponent().setMode(quarryTileEntity.getFluidInteractionComponent().getInverseMode());
 			
-		    if(quarryTileEntity.getFluidInteractionComponent().getMode() == FluidContainerInteractionMode.FillFromContainer) {
+		    if(quarryTileEntity.getFluidInteractionComponent().getMode() == FluidContainerInteractionMode.FILL) {
 		    	buttonList.get(0).displayString = ">";
 		    }else{
 		    	buttonList.get(0).displayString = "<";

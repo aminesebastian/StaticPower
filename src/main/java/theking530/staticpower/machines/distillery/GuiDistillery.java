@@ -25,9 +25,9 @@ public class GuiDistillery extends BaseGuiContainer {
 		super(new ContainerDistillery(invPlayer, teFluidGenerator), 176, 176);
 		distillery = teFluidGenerator;
 		
-		heatbar = new GuiHeatBarFromStorage(teFluidGenerator.HEAT_STORAGE);
+		heatbar = new GuiHeatBarFromStorage(teFluidGenerator.heatStorage);
 		registerWidget(new GuiFluidBarFromTank(teFluidGenerator.fluidTank, 50, 77, 16, 60, Mode.Input, teFluidGenerator));
-		registerWidget(new GuiFluidBarFromTank(teFluidGenerator.TANK2, 110, 77, 16, 60, Mode.Output, teFluidGenerator));
+		registerWidget(new GuiFluidBarFromTank(teFluidGenerator.fluidTank2, 110, 77, 16, 60, Mode.Output, teFluidGenerator));
 		
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teFluidGenerator));
 		getTabManager().registerTab(new GuiSideConfigTab(80, 80, false, teFluidGenerator));
@@ -39,7 +39,7 @@ public class GuiDistillery extends BaseGuiContainer {
 		super.initGui();
 		this.buttonList.add(new ArrowButton(1, guiLeft+11, guiTop+37, 16, 10, "<"));
 	    
-	    if(distillery.DRAIN_COMPONENT_MASH.getMode() == FluidContainerInteractionMode.FillFromContainer) {
+	    if(distillery.drainComponentMash.getMode() == FluidContainerInteractionMode.FILL) {
 	    	buttonList.get(0).displayString = ">";
 	    }else{
 	    	buttonList.get(0).displayString = "<";
@@ -48,11 +48,11 @@ public class GuiDistillery extends BaseGuiContainer {
 	@Override
 	protected void actionPerformed(GuiButton B) {
 		if(B.id == 1) {
-			IMessage msg = new PacketFluidContainerComponent(distillery.DRAIN_COMPONENT_MASH.getInverseMode(), distillery.getComponents().indexOf(distillery.DRAIN_COMPONENT_MASH), distillery.getPos());
+			IMessage msg = new PacketFluidContainerComponent(distillery.drainComponentMash.getInverseMode(), distillery.getComponents().indexOf(distillery.drainComponentMash), distillery.getPos());
 			PacketHandler.net.sendToServer(msg);
-			distillery.DRAIN_COMPONENT_MASH.setMode(distillery.DRAIN_COMPONENT_MASH.getInverseMode());
+			distillery.drainComponentMash.setMode(distillery.drainComponentMash.getInverseMode());
 			
-		    if(distillery.DRAIN_COMPONENT_MASH.getMode() == FluidContainerInteractionMode.FillFromContainer) {
+		    if(distillery.drainComponentMash.getMode() == FluidContainerInteractionMode.FILL) {
 		    	buttonList.get(0).displayString = ">";
 		    }else{
 		    	buttonList.get(0).displayString = "<";
@@ -84,9 +84,9 @@ public class GuiDistillery extends BaseGuiContainer {
     	this.drawContainerSlots(distillery, this.inventorySlots.inventorySlots);
     	
 		this.drawSlot(guiLeft+71, guiTop+49, 34, 5);
-		if(distillery.PROCESSING_STACK != null) {
+		if(distillery.processingStack != null) {
 			int j1 = distillery.getProgressScaled(34);
-			GuiFluidBarUtilities.drawFluidBar(distillery.PROCESSING_STACK, 1000, 1000, guiLeft + 71, guiTop + 49, 1, j1, 5);
+			GuiFluidBarUtilities.drawFluidBar(distillery.processingStack, 1000, 1000, guiLeft + 71, guiTop + 49, 1, j1, 5);
 		}
 		heatbar.drawHeatBar(guiLeft + 71, guiTop + 88, this.zLevel, 16, 8);
 	}

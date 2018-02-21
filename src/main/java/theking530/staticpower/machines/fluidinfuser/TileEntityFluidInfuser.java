@@ -18,13 +18,13 @@ public class TileEntityFluidInfuser extends BaseMachineWithTank {
 	public FluidStack LAST_CONTAINED_FLUID;
 	
 	public TileEntityFluidInfuser() {
-		initializeBasicMachine(2, 1000, 50000, 80, 100);
+		initializeBasicMachine(2, 1000, 100000, 80, 100);
 		initializeTank(10000);
 		initializeSlots(4, 1, 1);
 		
 		registerComponent(new BatteryInteractionComponent("BatteryInteraction", slotsInput, 3, this, energyStorage));
-		registerComponent(DRAIN_COMPONENT = new FluidContainerComponent("BucketDrain", slotsInternal, 1, slotsInternal, 2, this, fluidTank, fluidToContainerRate));
-		DRAIN_COMPONENT.setMode(FluidContainerInteractionMode.FillFromContainer);
+		registerComponent(DRAIN_COMPONENT = new FluidContainerComponent("BucketDrain", slotsInternal, 1, slotsInternal, 2, this, fluidTank));
+		DRAIN_COMPONENT.setMode(FluidContainerInteractionMode.FILL);
 		
 		registerComponent(new TileEntityItemOutputServo(this, 2, slotsOutput, 0));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0));
@@ -41,13 +41,12 @@ public class TileEntityFluidInfuser extends BaseMachineWithTank {
 	//Functionality
 	@Override
  	public ItemStack getResult(ItemStack itemStack) {
-		if(itemStack != ItemStack.EMPTY) {
-			if(fluidTank.getFluid() != null) {
-				return InfuserRecipeRegistry.Infusing().getInfusingItemStackResult(itemStack, fluidTank.getFluid());
-			}else{			
+		if(!itemStack.isEmpty()) {		
+			if(LAST_CONTAINED_FLUID != null) {
 				return InfuserRecipeRegistry.Infusing().getInfusingItemStackResult(itemStack, LAST_CONTAINED_FLUID);
+			}else{
+				return InfuserRecipeRegistry.Infusing().getInfusingItemStackResult(itemStack, fluidTank.getFluid());
 			}
-
 		}else{
 			return ItemStack.EMPTY;
 		}
@@ -106,7 +105,7 @@ public class TileEntityFluidInfuser extends BaseMachineWithTank {
 			if(moveTimer >= moveSpeed) {
 				moveTimer = 0;
 				if(!getWorld().isRemote) {
-					fluidTank.drain(InfuserRecipeRegistry.Infusing().getInfusingFluidCost(slotsInput.getStackInSlot(0), fluidTank.getFluid()), true);
+					LAST_CONTAINED_FLUID = fluidTank.drain(InfuserRecipeRegistry.Infusing().getInfusingFluidCost(slotsInput.getStackInSlot(0), fluidTank.getFluid()), true);
 					useEnergy(getProcessingEnergy(slotsInput.getStackInSlot(0)));
 				}
 				transferItemInternally(slotsInput, 0, slotsInternal, 0);
@@ -120,17 +119,14 @@ public class TileEntityFluidInfuser extends BaseMachineWithTank {
 			if(processingTimer < processingTime) {
 				processingTimer++;
 			}else{
-				if(InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 0, getResult(slotsInternal.getStackInSlot(0)))) {
-					if(slotsInternal.getStackInSlot(0) != ItemStack.EMPTY && getResult(slotsInternal.getStackInSlot(0)) != ItemStack.EMPTY) { //Weird Bug when Serializing
-						slotsOutput.insertItem(0, getResult(slotsInternal.getStackInSlot(0)).copy(), false);
-					}
+				ItemStack output = slotsOutput.insertItem(0, getResult(slotsInternal.getStackInSlot(0)).copy(), false);
+				if(output.isEmpty()) {
 					slotsInternal.setStackInSlot(0, ItemStack.EMPTY);
 					processingTimer = 0;
 					updateBlock();
 				}
 			}
-		}	
-		
+		}		
 	}
 }
 

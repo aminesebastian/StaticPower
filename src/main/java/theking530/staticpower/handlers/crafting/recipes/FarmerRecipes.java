@@ -8,15 +8,15 @@ import theking530.staticpower.fluids.ModFluids;
 
 public class FarmerRecipes {
 
-	public static void register() {
-		RegisterHelper.registerFarmingRecipe(createFluidStack(FluidRegistry.WATER), 1.0f);
-		RegisterHelper.registerFarmingRecipe(createFluidStack(ModFluids.StaticFluid), 1.5f);
-		RegisterHelper.registerFarmingRecipe(createFluidStack(ModFluids.EnergizedFluid), 2.0f);
-		RegisterHelper.registerFarmingRecipe(createFluidStack(ModFluids.LumumFluid), 2.5f);
+	public static void registerFarmerRecipes() {
+		RegisterHelper.registerFarmingRecipe(createFluidStack(FluidRegistry.WATER), 0.0f);
+		RegisterHelper.registerFarmingRecipe(createFluidStack(ModFluids.StaticFluid), .05f);
+		RegisterHelper.registerFarmingRecipe(createFluidStack(ModFluids.EnergizedFluid), .1f);
+		RegisterHelper.registerFarmingRecipe(createFluidStack(ModFluids.LumumFluid), .2f);
 		
-		RegisterHelper.registerFarmingRecipe(createFluidStack(ModFluids.Mash), 3.0f);
-		RegisterHelper.registerFarmingRecipe(createFluidStack(ModFluids.EvaporatedMash), 3.5f);
-		RegisterHelper.registerFarmingRecipe(createFluidStack(ModFluids.Ethanol), 4.0f);
+		RegisterHelper.registerFarmingRecipe(createFluidStack(ModFluids.Mash), .3f);
+		RegisterHelper.registerFarmingRecipe(createFluidStack(ModFluids.EvaporatedMash), .35f);
+		RegisterHelper.registerFarmingRecipe(createFluidStack(ModFluids.Ethanol), .5f);
 	}
 	public static FluidStack createFluidStack(Fluid fluid) {
 		return new FluidStack(fluid, 1000); //Amount doesnt matter.

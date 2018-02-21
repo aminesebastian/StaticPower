@@ -27,6 +27,8 @@ import theking530.staticpower.tileentity.IProcessing;
  */
 public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEnergyReceiver, IEnergyProvider, IProcessing, IEnergyUser {
 	
+	public static final int DEFAULT_RF_CAPACITY = 100000;
+	
 	public int initialEnergyPerTick;
 	public int initialEnergyCapacity;
 	public StaticEnergyStorage energyStorage;

@@ -38,6 +38,8 @@ import theking530.staticpower.machines.tileentitycomponents.ITileEntityComponent
 
 public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneConfigurable, ISideConfigurable, IUpgradeable, INameable, IBreakSerializeable {
 
+	public static final int DEFAULT_UPDATE_TIME = 2;
+	
 	public ItemStackHandler  slotsInput;
 	public ItemStackHandler  slotsOutput;
 	public ItemStackHandler  slotsInternal;
@@ -48,7 +50,7 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 	private SideConfiguration ioSideConfiguration;
 
 	private int updateTimer = 0;
-	private int updateTime = 10;
+	private int updateTime = DEFAULT_UPDATE_TIME;
 	
 	private int internalSlotsCount;
 	private int inputSlotsCount;
@@ -97,7 +99,9 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 			updateTimer++;
 		}else{
 			if(updateQueued) {
-				//updateBlock();
+				if(!getWorld().isRemote) {
+					getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 2);	
+				}
 			}
 			markDirty();
 			updateTimer = 0;
@@ -111,9 +115,7 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 		
 	}
 	public void updateBlock() {
-		if(!getWorld().isRemote) {
-			getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 2);	
-		}
+		updateQueued = true;
 	}
 	
 	public ItemStack getInputStack(int slot) {

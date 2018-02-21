@@ -53,7 +53,7 @@ public class GuiBasicFarmer extends BaseGuiContainer{
 		updateButton();
 	}
 	public void updateButton() {
-	    if(tileEntityFarmer.getFluidInteractionComponent().getMode() == FluidContainerInteractionMode.FillFromContainer) {
+	    if(tileEntityFarmer.getFluidInteractionComponent().getMode() == FluidContainerInteractionMode.FILL) {
 	    	buttonList.get(0).displayString = ">";
 	    }else{
 	    	buttonList.get(0).displayString = "<";

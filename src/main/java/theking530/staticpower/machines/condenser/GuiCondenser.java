@@ -24,7 +24,7 @@ public class GuiCondenser extends BaseGuiContainer{
 		condenser = teFluidGenerator;
 		
 		registerWidget(new GuiFluidBarFromTank(teFluidGenerator.fluidTank, 50, 77, 16, 60, Mode.Input, teFluidGenerator));
-		registerWidget(new GuiFluidBarFromTank(teFluidGenerator.TANK2, 110, 77, 16, 60, Mode.Output, teFluidGenerator));
+		registerWidget(new GuiFluidBarFromTank(teFluidGenerator.fluidTankEthanol, 110, 77, 16, 60, Mode.Output, teFluidGenerator));
 
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teFluidGenerator));
 		getTabManager().registerTab(new GuiSideConfigTab(80, 80, false, teFluidGenerator));
@@ -37,7 +37,7 @@ public class GuiCondenser extends BaseGuiContainer{
 
 		this.buttonList.add(new ArrowButton(1, guiLeft+11, guiTop+37, 16, 10, "<"));
 	    
-	    if(condenser.DRAIN_COMPONENT_EVAPORATED_MASH.getMode() == FluidContainerInteractionMode.FillFromContainer) {
+	    if(condenser.drainComponentEvaporatedMash.getMode() == FluidContainerInteractionMode.FILL) {
 	    	buttonList.get(0).displayString = ">";
 	    }else{
 	    	buttonList.get(0).displayString = "<";
@@ -46,11 +46,11 @@ public class GuiCondenser extends BaseGuiContainer{
 	@Override
 	protected void actionPerformed(GuiButton B) {
 		if(B.id == 1) {
-			IMessage msg = new PacketFluidContainerComponent(condenser.DRAIN_COMPONENT_EVAPORATED_MASH.getInverseMode(), condenser.getComponents().indexOf(condenser.DRAIN_COMPONENT_EVAPORATED_MASH), condenser.getPos());
+			IMessage msg = new PacketFluidContainerComponent(condenser.drainComponentEvaporatedMash.getInverseMode(), condenser.getComponents().indexOf(condenser.drainComponentEvaporatedMash), condenser.getPos());
 			PacketHandler.net.sendToServer(msg);
-			condenser.DRAIN_COMPONENT_EVAPORATED_MASH.setMode(condenser.DRAIN_COMPONENT_EVAPORATED_MASH.getInverseMode());
+			condenser.drainComponentEvaporatedMash.setMode(condenser.drainComponentEvaporatedMash.getInverseMode());
 			
-		    if(condenser.DRAIN_COMPONENT_EVAPORATED_MASH.getMode() == FluidContainerInteractionMode.FillFromContainer) {
+		    if(condenser.drainComponentEvaporatedMash.getMode() == FluidContainerInteractionMode.FILL) {
 		    	buttonList.get(0).displayString = ">";
 		    }else{
 		    	buttonList.get(0).displayString = "<";
@@ -70,9 +70,9 @@ public class GuiCondenser extends BaseGuiContainer{
 		this.drawContainerSlots(condenser, inventorySlots.inventorySlots);
 		this.drawSlot(guiLeft+71, guiTop+49, 34, 5);
 		
-		if(condenser.PROCESSING_STACK != null) {
+		if(condenser.processingStack != null) {
 			int j1 = condenser.getProgressScaled(34);
-			GuiFluidBarUtilities.drawFluidBar(condenser.PROCESSING_STACK, 1000, 1000, guiLeft + 71, guiTop + 49, 1, j1, 5);
+			GuiFluidBarUtilities.drawFluidBar(condenser.processingStack, 1000, 1000, guiLeft + 71, guiTop + 49, 1, j1, 5);
 		};
 	}
 }

@@ -40,7 +40,7 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<JEIFermenterR
 	    public void initialize(@Nonnull IModRegistry registry) {
 	    	registry.handleRecipes(FermenterOutputWrapper.class, recipe -> new JEIFermenterRecipeWrapper(recipe), PluginJEI.FERMENTER_UID); 
 	        registry.addRecipes(FermenterRecipeRegistry.Fermenting().getFermentingRecipes().values(), PluginJEI.FERMENTER_UID);
-	        registry.addRecipeClickArea(GuiFermenter.class, 111, 69, 26, 19, PluginJEI.FERMENTER_UID);
+	        //registry.addRecipeClickArea(GuiFermenter.class, 111, 69, 26, 19, PluginJEI.FERMENTER_UID);
 	    	registry.addRecipeCatalyst(new ItemStack(Item.getItemFromBlock(ModBlocks.Fermenter)), PluginJEI.FERMENTER_UID);  
 	    	currentPower = 10000;
 	    }

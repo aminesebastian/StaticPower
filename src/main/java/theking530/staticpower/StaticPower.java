@@ -35,6 +35,7 @@ import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.handlers.crafting.recipes.CondenserRecipes;
 import theking530.staticpower.handlers.crafting.recipes.DistilleryRecipes;
 import theking530.staticpower.handlers.crafting.recipes.EsotericEnchanterRecipes;
+import theking530.staticpower.handlers.crafting.recipes.FarmerRecipes;
 import theking530.staticpower.handlers.crafting.recipes.FermenterRecipes;
 import theking530.staticpower.handlers.crafting.recipes.FluidGeneratorRecipes;
 import theking530.staticpower.handlers.crafting.recipes.FormerRecipes;
@@ -227,7 +228,7 @@ public class StaticPower {
 		FormerRecipes.registerFusionRecipes();
 		EsotericEnchanterRecipes.registerEsotericEnchanterRecipes();
 		ToolRecipes.registerToolRecipes();
-		
+		FarmerRecipes.registerFarmerRecipes();
 	}
 	@SubscribeEvent
 	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {

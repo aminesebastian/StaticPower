@@ -17,7 +17,7 @@ public class TileEntityCropSqueezer extends BaseMachineWithTank {
 		initializeTank(5000);
 		initializeSlots(4, 1, 1);
 		
-		registerComponent(new FluidContainerComponent("BucketDrain", slotsInternal, 1, slotsInternal, 2, this, fluidTank, fluidToContainerRate));
+		registerComponent(new FluidContainerComponent("BucketDrain", slotsInternal, 1, slotsInternal, 2, this, fluidTank));
 		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInternal, 3, this, this.getEnergyStorage()));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0));
 	}

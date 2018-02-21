@@ -35,7 +35,7 @@ public class FluidInfuserRecipeCategory extends BaseJEIRecipeCategory<JEIFluidIn
 	    public void initialize(@Nonnull IModRegistry registry) {
 	    	registry.handleRecipes(FluidInfuserOutputWrapper.class, recipe -> new JEIFluidInfuserRecipeWrapper(recipe), PluginJEI.FLUID_INFUSER_UID); 
 	        registry.addRecipes(InfuserRecipeRegistry.Infusing().getInfusingRecipes().values(), PluginJEI.FLUID_INFUSER_UID);
-	        registry.addRecipeClickArea(GuiSolderingTable.class, 111, 69, 26, 19, PluginJEI.FLUID_INFUSER_UID);
+	        //registry.addRecipeClickArea(GuiSolderingTable.class, 111, 69, 26, 19, PluginJEI.FLUID_INFUSER_UID);
 	    	registry.addRecipeCatalyst(new ItemStack(Item.getItemFromBlock(ModBlocks.FluidInfuser)), PluginJEI.FLUID_INFUSER_UID);
 	    	currentPower = 10000;     
 	    }

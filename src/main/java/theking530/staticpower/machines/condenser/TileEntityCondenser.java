@@ -18,22 +18,22 @@ import theking530.staticpower.machines.tileentitycomponents.FluidContainerCompon
 
 public class TileEntityCondenser extends BaseMachineWithTank  {
 
-	public FluidTank TANK2;
+	public FluidTank fluidTankEthanol;
 	
-	public FluidStack PROCESSING_STACK;
-	public FluidContainerComponent DRAIN_COMPONENT_EVAPORATED_MASH;
-	public FluidContainerComponent DRAIN_COMPONENT_ETHANOL;
+	public FluidStack processingStack;
+	public FluidContainerComponent drainComponentEvaporatedMash;
+	public FluidContainerComponent drainComponentEthanol;
 
 	public TileEntityCondenser() {
 		initializeBasicMachine(0, 0, 0, 0, 20);
 		initializeTank(5000);
 		initializeSlots(0, 2, 2);
 		
-		TANK2 = new FluidTank(5000);
+		fluidTankEthanol = new FluidTank(5000);
 		
-		DRAIN_COMPONENT_EVAPORATED_MASH = new FluidContainerComponent("LeftBucketDrain", slotsInput, 0, slotsOutput, 0, this, fluidTank, fluidToContainerRate);
-		DRAIN_COMPONENT_EVAPORATED_MASH.setMode(FluidContainerInteractionMode.FillFromContainer);
-		DRAIN_COMPONENT_ETHANOL = new FluidContainerComponent("RightBucketDrain", slotsInput, 1, slotsOutput, 1, this, TANK2, fluidToContainerRate);	
+		drainComponentEvaporatedMash = new FluidContainerComponent("LeftBucketDrain", slotsInput, 0, slotsOutput, 0, this, fluidTank);
+		drainComponentEvaporatedMash.setMode(FluidContainerInteractionMode.FILL);
+		drainComponentEthanol = new FluidContainerComponent("RightBucketDrain", slotsInput, 1, slotsOutput, 1, this, fluidTankEthanol);	
 		
 		registerComponent(new TileEntityItemOutputServo(this, 2, slotsOutput, 0, 1));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0, 1));
@@ -45,10 +45,10 @@ public class TileEntityCondenser extends BaseMachineWithTank  {
 	}	
 	public void process() {
 		if(!getWorld().isRemote) {
-			DRAIN_COMPONENT_EVAPORATED_MASH.preProcessUpdate();
-			DRAIN_COMPONENT_ETHANOL.preProcessUpdate();
-			if(!isProcessing() && PROCESSING_STACK == null && canProcess()) {
-				PROCESSING_STACK = fluidTank.drain(getInputFluidAmount(), true);
+			drainComponentEvaporatedMash.preProcessUpdate();
+			drainComponentEthanol.preProcessUpdate();
+			if(!isProcessing() && processingStack == null && canProcess()) {
+				processingStack = fluidTank.drain(getInputFluidAmount(), true);
 				processingTime = Math.max(getOutputCondensingTime(), 0);
 				processingTimer++;
 			}
@@ -56,9 +56,9 @@ public class TileEntityCondenser extends BaseMachineWithTank  {
 				if(processingTimer < processingTime) {
 					processingTimer++;
 				}else{
-					if(PROCESSING_STACK != null) {
-						TANK2.fill(getOutputFluid(), true);
-						PROCESSING_STACK = null;
+					if(processingStack != null) {
+						fluidTankEthanol.fill(getOutputFluid(), true);
+						processingStack = null;
 						processingTimer = 0;		
 						updateBlock();
 					}
@@ -69,12 +69,12 @@ public class TileEntityCondenser extends BaseMachineWithTank  {
 	public boolean canProcess() {
 		if(hasOutput()) {
 			if(fluidTank.getFluid().amount >= getInputFluidAmount()) {
-				if(TANK2.getFluid() == null) {
+				if(fluidTankEthanol.getFluid() == null) {
 					return true;
 				}
 				FluidStack tempOutput = getOutputFluid();
-				if(TANK2.getFluid().isFluidEqual(tempOutput)) {
-					if(TANK2.getFluid().amount + tempOutput.amount <= TANK2.getCapacity()) {
+				if(fluidTankEthanol.getFluid().isFluidEqual(tempOutput)) {
+					if(fluidTankEthanol.getFluid().amount + tempOutput.amount <= fluidTankEthanol.getCapacity()) {
 						return true;
 					}
 				}
@@ -92,8 +92,8 @@ public class TileEntityCondenser extends BaseMachineWithTank  {
 		return 0;
 	}
 	public FluidStack getOutputFluid() {
-		if(PROCESSING_STACK != null) {
-			return CondenserRecipeRegistry.Condensing().getFluidOutput(PROCESSING_STACK);
+		if(processingStack != null) {
+			return CondenserRecipeRegistry.Condensing().getFluidOutput(processingStack);
 		}else if(fluidTank.getFluid() != null) {
 			return CondenserRecipeRegistry.Condensing().getFluidOutput(fluidTank.getFluid());
 		}
@@ -108,20 +108,20 @@ public class TileEntityCondenser extends BaseMachineWithTank  {
     @Override  
 	public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
-        TANK2.setFluid(FluidStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("TANK2")));
-        PROCESSING_STACK = FluidStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("PFLUID"));
+        fluidTankEthanol.setFluid(FluidStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("TANK2")));
+        processingStack = FluidStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("PFLUID"));
     }		
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
-        if(TANK2.getFluid() != null) {
+        if(fluidTankEthanol.getFluid() != null) {
             NBTTagCompound fTag = new NBTTagCompound();
-            TANK2.getFluid().writeToNBT(fTag);
+            fluidTankEthanol.getFluid().writeToNBT(fTag);
             nbt.setTag("TANK2", fTag);    	
         }
-        if(PROCESSING_STACK != null) {
+        if(processingStack != null) {
         	NBTTagCompound pTag = new NBTTagCompound();
-        	PROCESSING_STACK.writeToNBT(pTag);
+        	processingStack.writeToNBT(pTag);
         	nbt.setTag("PFLUID", pTag);
         }
         return nbt;
@@ -130,9 +130,9 @@ public class TileEntityCondenser extends BaseMachineWithTank  {
 		super.deserializeOnPlaced(nbt, world, pos, state, placer, stack);
         FluidStack tempStack = null;
         tempStack = FluidStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("TANK2"));
-        TANK2.setFluid(tempStack);
+        fluidTankEthanol.setFluid(tempStack);
         tempStack = FluidStack.loadFluidStackFromNBT((NBTTagCompound) nbt.getTag("PFluid"));
-        PROCESSING_STACK = tempStack;
+        processingStack = tempStack;
 	}
     
 	@Override
@@ -158,14 +158,14 @@ public class TileEntityCondenser extends BaseMachineWithTank  {
 		if(!getWorld().isRemote) {
 			updateBlock();
 		}
-		return TANK2.drain(resource, doDrain);
+		return fluidTankEthanol.drain(resource, doDrain);
 	}
 	@Override
 	public FluidStack drain(int maxDrain, boolean doDrain, EnumFacing facing) {
 		if(!getWorld().isRemote) {
 			updateBlock();
 		}
-		return TANK2.drain(maxDrain, doDrain);
+		return fluidTankEthanol.drain(maxDrain, doDrain);
 	}
 }
 		

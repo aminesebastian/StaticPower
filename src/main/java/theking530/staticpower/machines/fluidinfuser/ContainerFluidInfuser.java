@@ -20,12 +20,7 @@ public class ContainerFluidInfuser extends BaseContainer {
 		infuserTileEntity = teFluidInfuser;
 		
 		//Input
-		this.addSlotToContainer(new StaticPowerContainerSlot(teFluidInfuser.slotsInput, 0, 50, 32) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-		          return !InfuserRecipeRegistry.Infusing().getInfusingItemStackResult(itemStack, infuserTileEntity.fluidTank.getFluid()).isEmpty();
-		    }
-		});
+		this.addSlotToContainer(new StaticPowerContainerSlot(teFluidInfuser.slotsInput, 0, 50, 32));
 		
 		//FluidContainerSlots
 		this.addSlotToContainer(new FluidContainerSlot(infuserTileEntity.slotsInternal, 1, -24, 11));

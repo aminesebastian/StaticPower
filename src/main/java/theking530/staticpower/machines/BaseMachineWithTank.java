@@ -17,21 +17,19 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import theking530.staticpower.assists.utilities.SideModeList.Mode;
-import theking530.staticpower.fluids.FluidDistributor;
 import theking530.staticpower.items.upgrades.BaseTankUpgrade;
 
 public class BaseMachineWithTank extends BaseMachine {
 
-	public int initialTankCapacity;
-	public int fluidToContainerRate = 10;
+	public static final int DEFAULT_FLUID_CAPACITY = 10000;
 	
-	public FluidTank fluidTank;	
-	public FluidDistributor fluidDistributor;
+	public int initialTankCapacity;
 
+	public FluidTank fluidTank;	
+	
 	public void initializeTank(int InitialTankCapacity) {	
 		initialTankCapacity = InitialTankCapacity;
 		fluidTank = new FluidTank(initialTankCapacity);
-		fluidDistributor = new FluidDistributor(this, fluidTank);
 	}
 
 	public void useFluidContainer() {
@@ -58,6 +56,9 @@ public class BaseMachineWithTank extends BaseMachine {
 			fluidTank.setCapacity((int)(tempUpgrade.getValueMultiplied(initialTankCapacity, tempUpgrade.getUpgradeValueAtIndex(slotsUpgrades.getStackInSlot(slot), 0))));
 		}else{
 			fluidTank.setCapacity(initialTankCapacity);
+		}
+		if(fluidTank.getFluid() != null && fluidTank.getFluidAmount() > fluidTank.getCapacity()) {
+			fluidTank.setFluid(new FluidStack(fluidTank.getFluid().getFluid(), fluidTank.getCapacity()));
 		}
 	}
 	

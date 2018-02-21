@@ -50,7 +50,7 @@ public class GuiFluidInfuser extends BaseGuiContainer{
 		
 	    this.buttonList.add(new ArrowButton(1, guiLeft-24, guiTop+30, 16, 10, "<"));
 	    
-	    if(infuserTileEntity.DRAIN_COMPONENT.getMode() == FluidContainerInteractionMode.FillFromContainer) {
+	    if(infuserTileEntity.DRAIN_COMPONENT.getMode() == FluidContainerInteractionMode.FILL) {
 	    	buttonList.get(0).displayString = ">";
 	    }else{
 	    	buttonList.get(0).displayString = "<";
@@ -63,7 +63,7 @@ public class GuiFluidInfuser extends BaseGuiContainer{
 			PacketHandler.net.sendToServer(msg);
 			infuserTileEntity.getFluidInteractionComponent().setMode(infuserTileEntity.getFluidInteractionComponent().getInverseMode());
 			
-		    if(infuserTileEntity.getFluidInteractionComponent().getMode() == FluidContainerInteractionMode.FillFromContainer) {
+		    if(infuserTileEntity.getFluidInteractionComponent().getMode() == FluidContainerInteractionMode.FILL) {
 		    	buttonList.get(0).displayString = ">";
 		    }else{
 		    	buttonList.get(0).displayString = "<";

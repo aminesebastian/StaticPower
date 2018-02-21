@@ -40,7 +40,7 @@ public class GuiFluidGenerator extends BaseGuiContainer {
 
 		this.buttonList.add(new ArrowButton(1, guiLeft-24, guiTop+30, 16, 10, "<"));
 	    
-	    if(fGenerator.fluidContainerComponent.getMode() == FluidContainerInteractionMode.FillFromContainer) {
+	    if(fGenerator.fluidContainerComponent.getMode() == FluidContainerInteractionMode.FILL) {
 	    	buttonList.get(0).displayString = ">";
 	    }else{
 	    	buttonList.get(0).displayString = "<";
@@ -53,7 +53,7 @@ public class GuiFluidGenerator extends BaseGuiContainer {
 			PacketHandler.net.sendToServer(msg);
 			fGenerator.fluidContainerComponent.setMode(fGenerator.fluidContainerComponent.getInverseMode());
 			
-		    if(fGenerator.fluidContainerComponent.getMode() == FluidContainerInteractionMode.FillFromContainer) {
+		    if(fGenerator.fluidContainerComponent.getMode() == FluidContainerInteractionMode.FILL) {
 		    	buttonList.get(0).displayString = ">";
 		    }else{
 		    	buttonList.get(0).displayString = "<";

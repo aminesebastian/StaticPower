@@ -52,7 +52,7 @@ public class GuiEsotericEnchanter extends BaseGuiContainer {
 
 	    this.buttonList.add(new ArrowButton(1, guiLeft-24, guiTop+30, 16, 10, "<"));
 	    
-	    if(esotericEnchanter.getFluidInteractionComponent().getMode() == FluidContainerInteractionMode.FillFromContainer) {
+	    if(esotericEnchanter.getFluidInteractionComponent().getMode() == FluidContainerInteractionMode.FILL) {
 	    	buttonList.get(0).displayString = ">";
 	    }else{
 	    	buttonList.get(0).displayString = "<";
@@ -65,7 +65,7 @@ public class GuiEsotericEnchanter extends BaseGuiContainer {
 			PacketHandler.net.sendToServer(msg);
 			esotericEnchanter.getFluidInteractionComponent().setMode(esotericEnchanter.getFluidInteractionComponent().getInverseMode());
 			
-		    if(esotericEnchanter.getFluidInteractionComponent().getMode() == FluidContainerInteractionMode.FillFromContainer) {
+		    if(esotericEnchanter.getFluidInteractionComponent().getMode() == FluidContainerInteractionMode.FILL) {
 		    	buttonList.get(0).displayString = ">";
 		    }else{
 		    	buttonList.get(0).displayString = "<";

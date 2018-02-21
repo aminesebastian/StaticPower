@@ -26,7 +26,7 @@ public class FluidInfuserOutputWrapper {
 	
 	public boolean isSatisfied(ItemStack inputItem, FluidStack inputFluidStack) {
 		if(inputIngredient.apply(inputItem)) {
-			if(inputFluidStack.isFluidEqual(requiredFluid) && inputFluidStack.amount >= requiredFluid.amount) {
+			if(inputFluidStack != null && inputFluidStack.isFluidEqual(requiredFluid) && inputFluidStack.amount >= requiredFluid.amount) {
 				return true;
 			}
 		}

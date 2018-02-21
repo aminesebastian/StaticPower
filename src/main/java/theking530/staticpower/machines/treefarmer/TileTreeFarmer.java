@@ -7,9 +7,11 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemAxe;
+import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTTagCompound;
@@ -27,7 +29,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.assists.utilities.SideUtilities;
 import theking530.staticpower.assists.utilities.SideUtilities.BlockSide;
-import theking530.staticpower.fluids.ModFluids;
+import theking530.staticpower.assists.utilities.TileEntityUtilities;
 import theking530.staticpower.handlers.crafting.CraftHelpers;
 import theking530.staticpower.handlers.crafting.registries.FarmerRecipeRegistry;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
@@ -40,13 +42,13 @@ import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutput
 
 public class TileTreeFarmer extends BaseMachineWithTank {
 
-	public static final int MAX_WOOD_RECURSIVE_DEPTH = 20;
-	public static final int MAX_LEAVES_RECURSIVE_DEPTH = 20;
+	public static final int MAX_WOOD_RECURSIVE_DEPTH = 40;
+	public static final int MAX_LEAVES_RECURSIVE_DEPTH = 40;
 	public static final int DEFAULT_RANGE = 2;
-	public static final int DEFAULT_SAPLING_SPACING = 0;
+	public static final int DEFAULT_SAPLING_SPACING = 2;
 	
 	private int range = DEFAULT_RANGE;
-	private int growthBonusChance = 50;
+	
 	private Random rand;
 	private ArrayList<ItemStack> farmedStacks;
 	private FluidContainerComponent fluidInteractionComponent;
@@ -58,79 +60,57 @@ public class TileTreeFarmer extends BaseMachineWithTank {
 	private Ingredient woodIngredient;
 	private Ingredient leafIngredient;
 	private Ingredient saplingIngredient;
-	
-	private int blocksSinceLastPlanting;
-	
+
 	public TileTreeFarmer() {
 		initializeBasicMachine(2, 20, 100000, 100, 10);
 		initializeTank(10000);	
 		initializeSlots(3, 10, 9);
 
-		blocksSinceLastPlanting = 0;
 		currentBlockIndex = 0;
 		blocks = null;
 		woodIngredient = CraftHelpers.ingredientOre("logWood");
 		leafIngredient = CraftHelpers.ingredientOre("treeLeaves");
 		saplingIngredient = CraftHelpers.ingredientOre("treeSapling");
+		shouldDrawRadiusPreview = false;
+		rand = new Random();
+		farmedStacks = new ArrayList<ItemStack>();
 		
-		registerComponent(fluidInteractionComponent = new FluidContainerComponent("BucketDrain", slotsInternal, 1, slotsInternal, 2, this, fluidTank, fluidToContainerRate));
-		fluidInteractionComponent.setMode(FluidContainerInteractionMode.FillFromContainer);
-
+		registerComponent(fluidInteractionComponent = new FluidContainerComponent("BucketDrain", slotsInternal, 1, slotsInternal, 2, this, fluidTank));
 		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInternal, 0, this, energyStorage));
 		registerComponent(new TileEntityItemOutputServo(this, 2, slotsOutput, 0, 1, 2, 3, 4, 5, 6, 7, 8));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0, 1, 2, 3, 4, 5, 6, 7));
 		
-		shouldDrawRadiusPreview = false;
-		rand = new Random();
-		farmedStacks = new ArrayList<ItemStack>();
+		fluidInteractionComponent.setMode(FluidContainerInteractionMode.FILL);
 	}
 	@Override
 	public void process(){
 		if(blocks == null) {		
 			setNewBlockRange(range);
 		}
-		updateGrowthChance();
-		if(processingTimer < processingTime && canFarm()) {
+		if(processingTimer < processingTime && canProcess()) {
 			processingTimer++;
 			useEnergy(maxEnergyUsagePerTick());
 		}else{
-			if(farmedStacks.size() <= 0 && canFarm()) {
+			if(farmedStacks.size() <= 0 && canProcess()) {
 				incrementPosition();
-				farm(getCurrentPosition());
+				farmTree(getCurrentPosition());
 				fluidTank.drain(1, true);
 				processingTimer = 0;
 				updateBlock();
 			}else{
-				if(!getWorld().isRemote) {
-					for(int i=farmedStacks.size()-1; i>=0; i--) {
-						if(saplingIngredient.apply(farmedStacks.get(i))) {
-							farmedStacks.set(i, InventoryUtilities.insertItemIntoInventory(slotsInput, farmedStacks.get(i), 0, 8));
-						}
-						ItemStack insertedStack = InventoryUtilities.insertItemIntoInventory(slotsOutput, farmedStacks.get(i), 0, 8);
-						if(insertedStack == ItemStack.EMPTY) {
-							farmedStacks.remove(i);
-						}else{
-							farmedStacks.set(i, insertedStack);
-						}
+				for(int i=farmedStacks.size()-1; i>=0; i--) {
+					if(saplingIngredient.apply(farmedStacks.get(i))) {
+						farmedStacks.set(i, InventoryUtilities.insertItemIntoInventory(slotsInput, farmedStacks.get(i), 0, 8));
 					}
-				}	
+					ItemStack insertedStack = InventoryUtilities.insertItemIntoInventory(slotsOutput, farmedStacks.get(i), 0, 8);
+					if(insertedStack == ItemStack.EMPTY) {
+						farmedStacks.remove(i);
+					}else{
+						farmedStacks.set(i, insertedStack);
+					}
+				}
 			}
 		}	
-	}
-	public void updateGrowthChance() {
-		if(fluidTank.getFluid() != null) {
-			if(fluidTank.getFluid().getFluid() == ModFluids.StaticFluid) {
-				growthBonusChance = 15;
-			}else if(fluidTank.getFluid().getFluid() == ModFluids.EnergizedFluid){
-				growthBonusChance = 25;
-			}else if(fluidTank.getFluid().getFluid() == ModFluids.LumumFluid){
-				growthBonusChance = 50;
-			}else{
-				growthBonusChance = 0;
-			}
-		}else{
-			growthBonusChance = 1;
-		}
 	}
 	
 	@Override    
@@ -153,7 +133,7 @@ public class TileTreeFarmer extends BaseMachineWithTank {
 		}
     	return nbt;
 	}
-	
+
 	public void upgradeTick(){
 		rangeUpgrade();
 		super.upgradeTick();
@@ -205,36 +185,14 @@ public class TileTreeFarmer extends BaseMachineWithTank {
 		currentBlockIndex = 0;
 	}
 	
-	public FluidContainerComponent getFluidInteractionComponent() {
-		return fluidInteractionComponent;
-	}
-	public int getRadius() {
-		return range;
-	}
-	public int getGrowthBonus() {
-		if(fluidTank.getFluid() != null) {
-			if(FarmerRecipeRegistry.Farming().getOutput(fluidTank.getFluid()) != null) {
-				return (int) (100*FarmerRecipeRegistry.Farming().getOutput(fluidTank.getFluid()).getOutputMultiplier());
-			}
-		}
-		return 100;
-	}
-	public BlockPos getCurrentPosition() {
-		return blocks.get(currentBlockIndex);
-	}
-	public boolean getShouldDrawRadiusPreview() {
-		return shouldDrawRadiusPreview;
-	}
-	public void setShouldDrawRadiusPreview(boolean shouldDraw) {
-		shouldDrawRadiusPreview = shouldDraw;
-	}
-	
 	private void incrementPosition() {
 		if(currentBlockIndex < blocks.size()-1) {
 			currentBlockIndex++;
 		}else{
 			currentBlockIndex = 0;
 		}
+		BlockPos pos = this.getCurrentPosition();
+		getWorld().spawnParticle(EnumParticleTypes.TOTEM, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
 	}
 	public void useAxe(){
 		if(slotsInput.getStackInSlot(1) != ItemStack.EMPTY && slotsInput.getStackInSlot(1).getItem() instanceof ItemAxe) {
@@ -244,28 +202,8 @@ public class TileTreeFarmer extends BaseMachineWithTank {
 			}	
 		}
 	}
-	public boolean plantSapling(BlockPos pos) {
-		blocksSinceLastPlanting++;
-		if(blocksSinceLastPlanting >= DEFAULT_SAPLING_SPACING) {
-			blocksSinceLastPlanting = 0;
-			Block block = getWorld().getBlockState(pos).getBlock();
-			if(block == Blocks.AIR) {
-				for(int i=1; i<10; i++) {
-					ItemStack inputStack = slotsInput.getStackInSlot(i);
-					if(!inputStack.isEmpty() && saplingIngredient.apply(inputStack)) {
-						FakePlayer player = FakePlayerFactory.getMinecraft((WorldServer)getWorld());
-						player.setHeldItem(EnumHand.MAIN_HAND, inputStack.copy());
-						inputStack.onItemUse(player, getWorld(), pos.offset(EnumFacing.DOWN), EnumHand.MAIN_HAND, EnumFacing.UP, 0.0f, 1.0f, 0.0f);
-						slotsInput.extractItem(i, 1, false);
-					}
-				}
-				return true;
-			}
-		}
-		return false;
-	}
 	
-	public boolean canFarm() {
+	public boolean canProcess() {
 		if(energyStorage.getEnergyStored() >= getProcessingCost() && !slotsInput.getStackInSlot(0).isEmpty() && slotsInput.getStackInSlot(0).getItem() instanceof ItemAxe) {
 			if(fluidTank.getFluid() != null) {
 				if(fluidTank.getFluid().amount > 0) {
@@ -275,24 +213,16 @@ public class TileTreeFarmer extends BaseMachineWithTank {
 		}
 		return false;
 	}
-	public boolean farm(BlockPos pos) {
+	public boolean farmTree(BlockPos pos) {
 		if(!getWorld().isRemote) {
-			if(bonemealSapling(pos)) {
-	    		getWorld().spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, pos.getX() + 0.5D, pos.getY() + 1.0D,  pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
-			}
-		}
-
-		getWorld().spawnParticle(EnumParticleTypes.REDSTONE, pos.getX() + 0.5D, pos.getY() + 0.25D, pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
-		
-		if(!getWorld().isRemote) {
-			if(plantSapling(pos)) {
-				return true;
-			}
 			for(int i=0; i<getRadius()*2; i++) {
 				if(isFarmableBlock(pos.add(0, i, 0))) {
 					farmedStacks.addAll(harvestTree(pos.add(0, i, 0), 0));		
-					return true;
 				}
+			}
+			plantSapling(pos);
+			if(bonemealSapling(pos)) {
+	    		getWorld().spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, pos.getX() + 0.5D, pos.getY() + 1.0D,  pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
 			}
 		}
 		return false;
@@ -353,7 +283,57 @@ public class TileTreeFarmer extends BaseMachineWithTank {
 		return leaves;
 	}
 	public boolean bonemealSapling(BlockPos pos) {
+		if(TileEntityUtilities.diceRoll(getGrowthBonusChance())) {
+			ItemStack bonemeal = new ItemStack(Items.DYE, 1, 0);
+			ItemDye.applyBonemeal(bonemeal, getWorld(), pos);
+		}
+		return true;
+	}
+	public boolean plantSapling(BlockPos pos) {
+		if(currentBlockIndex % DEFAULT_SAPLING_SPACING == 0) {
+			Block block = getWorld().getBlockState(pos).getBlock();
+			if(block == Blocks.AIR) {
+				for(int i=1; i<10; i++) {
+					ItemStack inputStack = slotsInput.getStackInSlot(i);
+					if(!inputStack.isEmpty() && saplingIngredient.apply(inputStack)) {
+						FakePlayer player = FakePlayerFactory.getMinecraft((WorldServer)getWorld());
+						player.setHeldItem(EnumHand.MAIN_HAND, inputStack.copy());
+						inputStack.onItemUse(player, getWorld(), pos.offset(EnumFacing.DOWN), EnumHand.MAIN_HAND, EnumFacing.UP, 0.0f, 1.0f, 0.0f);
+						slotsInput.extractItem(i, 1, false);
+					}
+				}
+				return true;
+			}
+		}
 		return false;
+	}
+	
+	public FluidContainerComponent getFluidInteractionComponent() {
+		return fluidInteractionComponent;
+	}
+	public int getRadius() {
+		return range;
+	}
+	public float getGrowthBonusChance() {
+		if(fluidTank.getFluid() != null) {
+			if(FarmerRecipeRegistry.Farming().getOutput(fluidTank.getFluid()) != null) {
+				return FarmerRecipeRegistry.Farming().getOutput(fluidTank.getFluid()).getTreeFarmerBonemealChance();
+			}
+		}
+		return 0;
+	}
+	public BlockPos getCurrentPosition() {
+		return blocks.get(currentBlockIndex);
+	}
+	public boolean getShouldDrawRadiusPreview() {
+		return shouldDrawRadiusPreview;
+	}
+	public void setShouldDrawRadiusPreview(boolean shouldDraw) {
+		shouldDrawRadiusPreview = shouldDraw;
+	}
+	@Override
+	public String getName() {
+		return "container.TreeFarmer";
 	}
 	
     @Override
@@ -363,15 +343,10 @@ public class TileTreeFarmer extends BaseMachineWithTank {
 		}
 		return 0;
 	}
-	
 	public List<ItemStack> getBlockDrops(BlockPos pos) {
         NonNullList<ItemStack> ret = NonNullList.create();
 		getWorld().getBlockState(pos).getBlock().getDrops(ret, getWorld(), pos, getWorld().getBlockState(pos), 0);
 		return ret;
-	}
-	@Override
-	public String getName() {
-		return "container.TreeFarmer";
 	}
     @SuppressWarnings("unchecked")
 	public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.util.EnumFacing facing){

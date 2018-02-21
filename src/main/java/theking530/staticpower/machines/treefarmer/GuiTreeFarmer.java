@@ -52,7 +52,7 @@ public class GuiTreeFarmer extends BaseGuiContainer{
 		updateButton();
 	}
 	public void updateButton() {
-	    if(tileEntityFarmer.getFluidInteractionComponent().getMode() == FluidContainerInteractionMode.FillFromContainer) {
+	    if(tileEntityFarmer.getFluidInteractionComponent().getMode() == FluidContainerInteractionMode.FILL) {
 	    	buttonList.get(0).displayString = ">";
 	    }else{
 	    	buttonList.get(0).displayString = "<";
@@ -76,7 +76,9 @@ public class GuiTreeFarmer extends BaseGuiContainer{
 		
     	this.drawContainerSlots(tileEntityFarmer, this.inventorySlots.inventorySlots);
     	
-		infoTab.setText("Farmer", "Farms trees in a " + EnumTextFormatting.YELLOW + ((tileEntityFarmer.getRadius()*2)+1) + "x" + ((tileEntityFarmer.getRadius()*2)+1) + "=radius.==Requires " + EnumTextFormatting.DARK_AQUA + "water" + EnumTextFormatting.REGULAR + " to operate=but other fluids may yield=better growth results...==Current Growth Factor: " + EnumTextFormatting.GOLD + tileEntityFarmer.getGrowthBonus() + "%");
+		infoTab.setText("Farmer", "Farms trees in a " + EnumTextFormatting.YELLOW + ((tileEntityFarmer.getRadius()*2)+1) + "x" + ((tileEntityFarmer.getRadius()*2)+1) + "=radius.==Requires " 
+		+ EnumTextFormatting.DARK_AQUA + "water" + EnumTextFormatting.REGULAR + " to operate=but other fluids may yield=better growth results...==Current Growth Factor: " 
+		+ EnumTextFormatting.GOLD + tileEntityFarmer.getGrowthBonusChance()*100 + "%");
 	}
 }
 

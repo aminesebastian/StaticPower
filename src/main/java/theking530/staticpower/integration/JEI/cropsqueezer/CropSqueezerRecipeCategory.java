@@ -40,7 +40,7 @@ public class CropSqueezerRecipeCategory extends BaseJEIRecipeCategory<CropSqueez
 	    public void initialize(@Nonnull IModRegistry registry) {
 	        registry.handleRecipes(SqueezerOutputWrapper.class, CropSqueezerRecipeWrapper.FACTORY, PluginJEI.SQUEEZER_UID);
 	        registry.addRecipes(SqueezerRecipeRegistry.Squeezing().getSqueezingRecipes().values(), PluginJEI.SQUEEZER_UID);
-	        registry.addRecipeClickArea(GuiCropSqueezer.class, 111, 69, 26, 19, PluginJEI.SQUEEZER_UID);
+	        //registry.addRecipeClickArea(GuiCropSqueezer.class, 111, 69, 26, 19, PluginJEI.SQUEEZER_UID);
 	    	registry.addRecipeCatalyst(new ItemStack(Item.getItemFromBlock(ModBlocks.CropSqueezer)), PluginJEI.SQUEEZER_UID);  
 	    	currentPower = 10000;
 	    }

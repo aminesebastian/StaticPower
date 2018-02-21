@@ -55,8 +55,8 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 		initializeTank(10000);	
 		initializeSlots(3, 2, 9);
 
-		registerComponent(fluidInteractionComponent = new FluidContainerComponent("BucketDrain", slotsInternal, 1, slotsInternal, 2, this, fluidTank, fluidToContainerRate));
-		fluidInteractionComponent.setMode(FluidContainerInteractionMode.FillFromContainer);
+		registerComponent(fluidInteractionComponent = new FluidContainerComponent("BucketDrain", slotsInternal, 1, slotsInternal, 2, this, fluidTank));
+		fluidInteractionComponent.setMode(FluidContainerInteractionMode.FILL);
 
 		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInternal, 0, this, energyStorage));
 		registerComponent(new TileEntityItemOutputServo(this, 2, slotsOutput, 0, 1, 2, 3, 4, 5, 6, 7, 8));
@@ -256,7 +256,7 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 		if(grown) {
     		getWorld().spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, pos.getX() + 0.5D, pos.getY() + 1.0D,  pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
 		}
-		getWorld().spawnParticle(EnumParticleTypes.REDSTONE, pos.getX() + 0.5D, pos.getY() + 0.25D, pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
+		getWorld().spawnParticle(EnumParticleTypes.TOTEM, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, new int[0]);
 		if(isFarmableBlock(pos)) {
 			harvestGenericCrop(pos);			
 			harvestSugarCane(pos);
