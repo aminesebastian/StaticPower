@@ -9,7 +9,7 @@ import theking530.staticpower.blocks.decorative.ObsidianGlass;
 import theking530.staticpower.conduits.fluidconduit.BlockFluidConduit;
 import theking530.staticpower.conduits.itemconduit.BlockItemConduit;
 import theking530.staticpower.conduits.staticconduit.BlockStaticConduit;
-import theking530.staticpower.items.ModItems;
+import theking530.staticpower.items.SPItemMaterial;
 import theking530.staticpower.logic.gates.BlockLogicGateBasePlate;
 import theking530.staticpower.logic.gates.adder.BlockAdder;
 import theking530.staticpower.logic.gates.and.BlockAndGate;
@@ -363,9 +363,9 @@ public class ModBlocks {
 		registry.PreRegisterBlock(NickelOre);
 		AluminiumOre = new Ore("AluminiumOre", "pickaxe", 2).setHardness(3.5f);
 		registry.PreRegisterBlock(AluminiumOre);
-		SapphireOre = new GemOre("SapphireOre", "pickaxe", 2, ModItems.SapphireGem, 1, 2).setHardness(3.5f);
+		SapphireOre = new GemOre("SapphireOre", "pickaxe", 2, SPItemMaterial.gemSapphire, 1, 2).setHardness(3.5f);
 		registry.PreRegisterBlock(SapphireOre);
-		RubyOre = new GemOre("RubyOre", "pickaxe", 2, ModItems.RubyGem, 1, 2).setHardness(3.5f);
+		RubyOre = new GemOre("RubyOre", "pickaxe", 2, SPItemMaterial.gemRuby, 1, 2).setHardness(3.5f);
 		registry.PreRegisterBlock(RubyOre);
 	}
 }

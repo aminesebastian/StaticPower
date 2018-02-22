@@ -39,35 +39,6 @@ public class OreDictionaryRegistration {
 		
 		OreDictionary.registerOre("itemSilicon", ModItems.Silicon);
 		
-		OreDictionary.registerOre("ingotSilver", ModItems.SilverIngot);
-		OreDictionary.registerOre("ingotTin", ModItems.TinIngot);
-		OreDictionary.registerOre("ingotLead", ModItems.LeadIngot);
-		OreDictionary.registerOre("ingotCopper", ModItems.CopperIngot);
-		OreDictionary.registerOre("ingotPlatinum", ModItems.PlatinumIngot);
-		OreDictionary.registerOre("ingotAluminium", ModItems.AluminiumIngot);
-		OreDictionary.registerOre("ingotAluminum", ModItems.AluminiumIngot);
-		OreDictionary.registerOre("ingotNickel", ModItems.NickelIngot);
-		
-		OreDictionary.registerOre("gemSapphire", ModItems.SapphireGem);
-		OreDictionary.registerOre("gemRuby", ModItems.RubyGem);
-		
-		OreDictionary.registerOre("dustTin", ModItems.TinDust);
-		OreDictionary.registerOre("dustLead", ModItems.LeadDust);
-		OreDictionary.registerOre("dustCopper", ModItems.CopperDust);
-		OreDictionary.registerOre("dustPlatinum", ModItems.PlatinumDust);
-		OreDictionary.registerOre("dustIron", ModItems.IronDust);
-		OreDictionary.registerOre("dustGold", ModItems.GoldDust);
-		OreDictionary.registerOre("dustNickel", ModItems.NickelDust);
-		OreDictionary.registerOre("dustAluminium", ModItems.AluminiumDust);
-		OreDictionary.registerOre("dustAluminum", ModItems.AluminiumDust);
-		
-		OreDictionary.registerOre("plateTin", ModItems.TinPlate);
-		OreDictionary.registerOre("plateLead", ModItems.LeadPlate);
-		OreDictionary.registerOre("plateCopper", ModItems.CopperPlate);
-		OreDictionary.registerOre("plateIron", ModItems.IronPlate);
-		OreDictionary.registerOre("plateGold", ModItems.GoldPlate);
-		OreDictionary.registerOre("plateSilver", ModItems.SilverPlate);
-		
 		OreDictionary.registerOre("wireCopper", ModItems.CopperWire);
 		OreDictionary.registerOre("wireSilver", ModItems.SilverWire);
 		OreDictionary.registerOre("wireGold", ModItems.GoldWire);

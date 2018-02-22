@@ -8,10 +8,6 @@ import theking530.staticpower.items.containers.BaseBattery;
 import theking530.staticpower.items.containers.BaseFluidCapsule;
 import theking530.staticpower.items.itemfilter.FilterTier;
 import theking530.staticpower.items.itemfilter.ItemFilter;
-import theking530.staticpower.items.materials.BaseDust;
-import theking530.staticpower.items.materials.BaseGem;
-import theking530.staticpower.items.materials.BaseIngot;
-import theking530.staticpower.items.materials.BaseNugget;
 import theking530.staticpower.items.tools.BlockReader;
 import theking530.staticpower.items.tools.CoordinateMarker;
 import theking530.staticpower.items.tools.ElectricSolderingIron;
@@ -31,6 +27,7 @@ import theking530.staticpower.items.upgrades.ExperienceVacuumUpgrade;
 import theking530.staticpower.items.upgrades.TeleportUpgrade;
 
 public class ModItems {
+	public static SPItemMaterial Materials;
 	
 	public static Item BaseFluidCapsule;
 	public static Item StaticFluidCapsule;
@@ -45,15 +42,6 @@ public class ModItems {
 	public static Item CopperCoil;
 	public static Item SilverCoil;
 	public static Item GoldCoil;
-	public static Item IronPlate;
-	public static Item CopperPlate;
-	public static Item TinPlate;
-	public static Item SilverPlate;
-	public static Item GoldPlate;
-	public static Item LeadPlate;
-	public static Item StaticPlate;
-	public static Item EnergizedPlate;
-	public static Item LumumPlate;
 	
 	public static Item BlankMould;
 	public static Item PlateMould;
@@ -144,41 +132,6 @@ public class ModItems {
 	public static Item UpgradedItemFilter;
 	public static Item AdvancedItemFilter;
 	public static Item QuarryFilter;
-	
-	public static Item SilverDust;
-	public static Item TinDust;
-	public static Item LeadDust;
-	public static Item CopperDust;
-	public static Item PlatinumDust;
-	public static Item IronDust;
-	public static Item GoldDust;
-	public static Item InertInfusionBlend;
-	public static Item StaticDust;
-	public static Item EnergizedDust;
-	public static Item LumumDust;
-	public static Item NickelDust;
-	public static Item AluminiumDust;
-	public static Item RedstoneAlloyDust;
-	
-	public static Item SilverIngot;
-	public static Item TinIngot;
-	public static Item LeadIngot;
-	public static Item CopperIngot;
-	public static Item PlatinumIngot;
-	public static Item InertIngot;
-	public static Item EnergizedIngot;
-	public static Item StaticIngot;
-	public static Item LumumIngot;
-	public static Item NickelIngot;
-	public static Item AluminiumIngot;
-	public static Item RedstoneAlloyIngot;
-	
-	public static Item SapphireGem;
-	public static Item RubyGem;
-	
-	public static Item EnergizedNugget;
-	public static Item StaticNugget;
-	public static Item LumumNugget;
 
 	public static Item WheatFlour;
 	public static Item PotatoFlour;
@@ -189,7 +142,9 @@ public class ModItems {
 	public static Item EnergizedPie;
 	public static Item LumumPie;
 
-	public static void init(Registry registry) {				
+	public static void init(Registry registry) {
+		registry.PreRegisterItem(Materials = new SPItemMaterial());
+		
 		WheatFlour = new BaseFood("WheatFlour", 2);
 		registry.PreRegisterItem(WheatFlour);	
 		PotatoFlour = new BaseFood("PotatoFlour", 2);
@@ -265,15 +220,6 @@ public class ModItems {
 		registry.PreRegisterItem(CopperCoil = new ItemBase("CopperCoil"));
 		registry.PreRegisterItem(SilverCoil = new ItemBase("SilverCoil"));
 		registry.PreRegisterItem(GoldCoil = new ItemBase("GoldCoil"));
-		registry.PreRegisterItem(IronPlate = new ItemBase("IronPlate"));
-		registry.PreRegisterItem(CopperPlate = new ItemBase("CopperPlate"));
-		registry.PreRegisterItem(TinPlate = new ItemBase("TinPlate"));
-		registry.PreRegisterItem(SilverPlate = new ItemBase("SilverPlate"));
-		registry.PreRegisterItem(GoldPlate = new ItemBase("GoldPlate"));
-		registry.PreRegisterItem(LeadPlate = new ItemBase("LeadPlate"));
-		registry.PreRegisterItem(StaticPlate = new ItemBase("StaticPlate"));
-		registry.PreRegisterItem(EnergizedPlate = new ItemBase("EnergizedPlate"));
-		registry.PreRegisterItem(LumumPlate = new ItemBase("LumumPlate"));
 		
 		registry.PreRegisterItem(PlateMould = new FormerMold("PlateMould"));
 		registry.PreRegisterItem(WireMould = new FormerMold("WireMould"));
@@ -299,47 +245,7 @@ public class ModItems {
 		registry.PreRegisterItem(LumumBattery);
 		
 		registry.PreRegisterItem(StaticBook = new StaticPowerBook("StaticBook"));	
-
-		registry.PreRegisterItem(StaticIngot = new BaseIngot("StaticIngot"));
-		registry.PreRegisterItem(EnergizedIngot = new BaseIngot("EnergizedIngot"));
-		registry.PreRegisterItem(LumumIngot = new BaseIngot("LumumIngot"));
-		
-		registry.PreRegisterItem(SilverIngot = new BaseIngot("SilverIngot"));
-		registry.PreRegisterItem(TinIngot = new BaseIngot("TinIngot"));
-		registry.PreRegisterItem(LeadIngot = new BaseIngot("LeadIngot"));
-		registry.PreRegisterItem(CopperIngot = new BaseIngot("CopperIngot"));
-		registry.PreRegisterItem(PlatinumIngot = new BaseIngot("PlatinumIngot"));
-		registry.PreRegisterItem(NickelIngot = new BaseIngot("NickelIngot"));
-		registry.PreRegisterItem(AluminiumIngot = new BaseIngot("AluminiumIngot"));
-
-		registry.PreRegisterItem(SapphireGem = new BaseGem("SapphireGem"));
-		registry.PreRegisterItem(RubyGem = new BaseGem("RubyGem"));
-
-		
-		registry.PreRegisterItem(InertIngot = new BaseIngot("InertIngot"));
-		registry.PreRegisterItem(RedstoneAlloyIngot = new BaseIngot("RedstoneAlloyIngot"));
-		
-		registry.PreRegisterItem(StaticNugget = new BaseNugget("StaticNugget"));
-		registry.PreRegisterItem(EnergizedNugget = new BaseNugget("EnergizedNugget"));
-		registry.PreRegisterItem(LumumNugget = new BaseNugget("LumumNugget"));
-
-		registry.PreRegisterItem(SilverDust = new BaseDust("SilverDust"));
-		registry.PreRegisterItem(TinDust = new BaseDust("TinDust"));
-		registry.PreRegisterItem(LeadDust = new BaseDust("LeadDust"));
-		registry.PreRegisterItem(CopperDust = new BaseDust("CopperDust"));
-		registry.PreRegisterItem(PlatinumDust = new BaseDust("PlatinumDust"));
-		registry.PreRegisterItem(IronDust = new BaseDust("IronDust"));
-		registry.PreRegisterItem(GoldDust = new BaseDust("GoldDust"));	
-		registry.PreRegisterItem(NickelDust = new BaseDust("NickelDust"));
-		registry.PreRegisterItem(AluminiumDust = new BaseDust("AluminiumDust"));	
-
-		registry.PreRegisterItem(InertInfusionBlend = new BaseDust("InertInfusionBlend"));
-		registry.PreRegisterItem(StaticDust = new BaseDust("StaticDust"));
-		registry.PreRegisterItem(EnergizedDust = new BaseDust("EnergizedDust"));
-		registry.PreRegisterItem(LumumDust = new BaseDust("LumumDust"));
-		registry.PreRegisterItem(RedstoneAlloyDust = new BaseDust("RedstoneAlloyDust"));	
-		
-		
+				
 		CreativeSpeedUpgrade = new BaseSpeedUpgrade("CreativeSpeedUpgrade", Tier.CREATIVE);
 		registry.PreRegisterItem(CreativeSpeedUpgrade);	
 		/**

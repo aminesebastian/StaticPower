@@ -11,7 +11,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.tileentity.BaseTileEntity;
 
 public class FluidContainerComponent implements ITileEntityComponent{
-	public static final int DEFAULT_FLUID_TO_CONTAINER_RATE = 5;
+	public static final int DEFAULT_FLUID_TO_CONTAINER_RATE = 15;
 	
 	private String componentName;
 	

@@ -8,7 +8,7 @@ import theking530.staticpower.assists.RegisterHelper;
 import theking530.staticpower.assists.utilities.OreDictionaryUtilities;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.handlers.crafting.CraftHelpers;
-import theking530.staticpower.items.ModItems;
+import theking530.staticpower.items.SPItemMaterial;
 
 public class FusionRecipes {
 	
@@ -17,7 +17,7 @@ public class FusionRecipes {
 		RegisterHelper.registerFusionRecipe(new ItemStack(Items.CAKE), CraftHelpers.ingredientFromItem(Items.EGG), CraftHelpers.ingredientFromItem(Items.SUGAR), CraftHelpers.ingredientFromItem(Items.WHEAT), CraftHelpers.ingredientFromItem(Items.WHEAT), CraftHelpers.ingredientFromItem(Items.MILK_BUCKET));
 		RegisterHelper.registerFusionRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.ObsidianGlass), 8), CraftHelpers.ingredientOre("obsidian"), CraftHelpers.ingredientOre("obsidian"),  CraftHelpers.ingredientOre("gemQuartz"), CraftHelpers.ingredientOre("blockGlass"), CraftHelpers.ingredientOre("blockGlass"));
 		
-		RegisterHelper.registerFusionRecipe(new ItemStack(ModItems.RedstoneAlloyIngot, 1), CraftHelpers.ingredientOre("ingotSilver"), CraftHelpers.ingredientFromItem(Items.REDSTONE));
+		RegisterHelper.registerFusionRecipe(CraftHelpers.outputItemStack(SPItemMaterial.ingotRedstoneAlloy, 1), CraftHelpers.ingredientOre("ingotSilver"), CraftHelpers.ingredientFromItem(Items.REDSTONE));
 		
 		for(int i=0; i<OreDictionary.getOres("ingotElectrum").size(); i++) {
 			ItemStack stack = OreDictionaryUtilities.getOreStack("ingotElectrum", i);

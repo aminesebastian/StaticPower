@@ -63,15 +63,82 @@ item.CopperCoil.name=Copper Coil
 item.SilverCoil.name=Silver Coil
 item.GoldCoil.name=Gold Coil
 
-item.IronPlate.name=Iron Plate
-item.CopperPlate.name=Copper Plate
-item.TinPlate.name=Tin Plate
-item.SilverPlate.name=Silver Plate
-item.GoldPlate.name=Gold Plate
-item.LeadPlate.name=Lead Plate
-item.StaticPlate.name=§aStatic Plate
-item.EnergizedPlate.name=§bEnergized Plate
-item.LumumPlate.name=§eLumum Plate
+staticpower.material.plateIron.name=Iron Plate
+staticpower.material.plateCopper.name=Copper Plate
+staticpower.material.plateTin.name=Tin Plate
+staticpower.material.plateSilver.name=Silver Plate
+staticpower.material.plateGold.name=Gold Plate
+staticpower.material.plateLead.name=Lead Plate
+staticpower.material.plateNickel.name=Nickel Plate
+staticpower.material.platePlatinum.name=Platinum Plate
+staticpower.material.plateAluminium.name=Aluminium Plate
+staticpower.material.plateRedstoneAlloy.name=Redstone Alloy Plate
+staticpower.material.plateInertInfusion.name=Inert Infusion Plate
+staticpower.material.plateStatic.name=§aStatic Plate
+staticpower.material.plateEnergized.name=§bEnergized Plate
+staticpower.material.plateLumum.name=§eLumum Plate
+
+staticpower.material.ingotIron.name=Iron Ingot
+staticpower.material.ingotCopper.name=Copper Ingot
+staticpower.material.ingotTin.name=Tin Ingot
+staticpower.material.ingotSilver.name=Silver Ingot
+staticpower.material.ingotGold.name=Gold Ingot
+staticpower.material.ingotLead.name=Lead Ingot
+staticpower.material.ingotNickel.name=Nickel Ingot
+staticpower.material.ingotPlatinum.name=Platinum Ingot
+staticpower.material.ingotAluminium.name=Aluminium Ingot
+staticpower.material.ingotRedstoneAlloy.name=Redstone Alloy Ingot
+staticpower.material.ingotInertInfusion.name=Inert Infusion Ingot
+staticpower.material.ingotStatic.name=§aStatic Ingot
+staticpower.material.ingotEnergized.name=§bEnergized Ingot
+staticpower.material.ingotLumum.name=§eLumum Ingot
+
+staticpower.material.dustIron.name=Iron Dust
+staticpower.material.dustCopper.name=Copper Dust
+staticpower.material.dustTin.name=Tin Dust
+staticpower.material.dustSilver.name=Silver Dust
+staticpower.material.dustGold.name=Gold Dust
+staticpower.material.dustLead.name=Lead Dust
+staticpower.material.dustNickel.name=Nickel Dust
+staticpower.material.dustPlatinum.name=Platinum Dust
+staticpower.material.dustAluminium.name=Aluminium Dust
+staticpower.material.dustRedstoneAlloy.name=Redstone Alloy Dust
+staticpower.material.dustInertInfusion.name=Inert Infusion Dust
+staticpower.material.dustStatic.name=§aStatic Dust
+staticpower.material.dustEnergized.name=§bEnergized Dust
+staticpower.material.dustLumum.name=§eLumum Dust
+staticpower.material.dustCoal.name=Coal Dust
+staticpower.material.dustRuby.name=Ruby Dust
+staticpower.material.dustSapphire.name=Sapphire Dust
+staticpower.material.dustObsidian.name=Obsidian Dust
+
+staticpower.material.nuggetCopper.name=Copper Nugget
+staticpower.material.nuggetTin.name=Tin Nugget
+staticpower.material.nuggetSilver.name=Silver Nugget
+staticpower.material.nuggetLead.name=Lead Nugget
+staticpower.material.nuggetNickel.name=Nickel Nugget
+staticpower.material.nuggetPlatinum.name=Platinum Nugget
+staticpower.material.nuggetAluminium.name=Aluminium Nugget
+staticpower.material.nuggetRedstoneAlloy.name=Redstone Alloy Nugget
+staticpower.material.nuggetInertInfusion.name=Inert Infusion Nugget
+staticpower.material.nuggetStatic.name=§aStatic Nugget
+staticpower.material.nuggetEnergized.name=§bEnergized Nugget
+staticpower.material.nuggetLumum.name=§eLumum Nugget
+
+staticpower.material.gearIron.name=Iron Gear
+staticpower.material.gearCopper.name=Copper Gear
+staticpower.material.gearTin.name=Tin Gear
+staticpower.material.gearSilver.name=Silver Gear
+staticpower.material.gearGold.name=Gold Gear
+staticpower.material.gearLead.name=Lead Gear
+staticpower.material.gearNickel.name=Nickel Gear
+staticpower.material.gearPlatinum.name=Platinum Gear
+staticpower.material.gearAluminium.name=Aluminium Gear
+staticpower.material.gearRedstoneAlloy.name=Redstone Alloy Gear
+staticpower.material.gearInertInfusion.name=Inert Infusion Gear
+staticpower.material.gearStatic.name=§aStatic Gear
+staticpower.material.gearEnergized.name=§bEnergized Gear
+staticpower.material.gearLumum.name=§eLumum Gear
 
 item.PlateMould.name=Plate Mold
 item.WireMould.name=Wire Mold
@@ -114,44 +181,6 @@ item.LumumUpgradePlate.name=Lumum Upgrade Plate
 item.DigistoreCapacityUpgrade=Digistore Capacity Upgrade
 item.DigistoreVoidUpgrade=§5Digistore Void Upgrade
 
-//Ingots
-item.SilverIngot.name=Silver Ingot
-item.TinIngot.name=Tin Ingot
-item.CopperIngot.name=Copper Ingot
-item.LeadIngot.name=Lead Ingot
-item.PlatinumIngot.name=Platinum Ingot
-item.SteelIngot.name=Steel Ingot
-item.InertIngot.name=Inert Ingot
-item.NickelIngot.name=Nickel Ingot
-item.AluminiumIngot.name=Aluminium Ingot
-item.StaticIngot.name=§aStatic Metal Ingot
-item.EnergizedIngot.name=§bEnergized Metal Ingot
-item.LumumIngot.name=§eLumum Metal Ingot
-item.RedstoneAlloyIngot.name=Redstone Alloy Ingot
-item.StaticNugget.name=Static Nugget
-item.EnergizedNugget.name=Energized Nugget
-item.LumumNugget.name=Lumum Nugget
-item.IronNugget.name=Iron Nugget
-
-//Gems
-item.SapphireGem.name=Sapphire
-item.RubyGem.name=Ruby
-
-//Dusts
-item.SilverDust.name=Silver Dust
-item.TinDust.name=Tin Dust
-item.CopperDust.name=Copper Dust
-item.LeadDust.name=Lead Dust
-item.PlatinumDust.name=Platinum Dust
-item.IronDust.name=Iron Dust
-item.GoldDust.name=Gold Dust
-item.NickelDust.name=Nickel Dust
-item.AluminiumDust.name=Aluminium Dust
-item.InertInfusionBlend.name=Inert Infusion Blend
-item.StaticDust.name=§aStatic Dust
-item.EnergizedDust.name=§bEnergized Dust
-item.LumumDust.name=§eLumum Dust
-item.RedstoneAlloyDust.name=Redstone Alloy Dust
 
 //Crops
 tile.StaticCropPlant.name=Static Plant

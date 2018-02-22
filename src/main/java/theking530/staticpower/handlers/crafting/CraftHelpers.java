@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.oredict.OreIngredient;
 
 public class CraftHelpers {
@@ -18,5 +19,11 @@ public class CraftHelpers {
 	}
 	public static Ingredient ingredientFromItemstack(ItemStack item) {
 		return Ingredient.fromStacks(item);
+	}
+	public static ItemStack outputItemStack(ItemStack item, int amount) {
+		return ItemHandlerHelper.copyStackWithSize(item, amount);
+	}	
+	public static ItemStack outputItemStack(ItemStack item) {
+		return ItemHandlerHelper.copyStackWithSize(item, 1);
 	}
 }

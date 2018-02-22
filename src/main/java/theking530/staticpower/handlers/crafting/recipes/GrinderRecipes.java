@@ -10,6 +10,7 @@ import theking530.staticpower.assists.utilities.OreDictionaryUtilities;
 import theking530.staticpower.handlers.crafting.CraftHelpers;
 import theking530.staticpower.handlers.crafting.wrappers.GrinderOutputWrapper.GrinderOutput;
 import theking530.staticpower.items.ModItems;
+import theking530.staticpower.items.SPItemMaterial;
 
 public class GrinderRecipes {
 
@@ -20,34 +21,34 @@ public class GrinderRecipes {
 		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientFromItem(Items.POTATO),  newOutput(new ItemStack(ModItems.PotatoFlour, 2)),  newOutput(new ItemStack(ModItems.PotatoFlour, 1), 0.15f));
 		
 
-		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("oreCopper"), newOutput(new ItemStack(ModItems.CopperDust, 2)), newOutput(new ItemStack(ModItems.GoldDust, 1), 0.05f));
-		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("oreSilver"), newOutput(new ItemStack(ModItems.SilverDust, 2)), newOutput(new ItemStack(ModItems.TinDust, 1), 0.05f));
-		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("oreTin"), newOutput(new ItemStack(ModItems.TinDust, 2)), newOutput(new ItemStack(ModItems.SilverDust, 1), 0.05f));
-		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("oreLead"), newOutput(new ItemStack(ModItems.LeadDust, 2)), newOutput(new ItemStack(ModItems.RubyGem, 1), 0.02f));
-		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("orePlatinum"), newOutput(new ItemStack(ModItems.PlatinumDust, 2)), newOutput(new ItemStack(Items.DIAMOND, 1), 0.01f));
-		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("oreNickel"), newOutput(new ItemStack(ModItems.NickelDust, 2)), newOutput(new ItemStack(ModItems.PlatinumDust, 1), 0.01f));	
-		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("oreAluminium"), newOutput(new ItemStack(ModItems.AluminiumDust, 2)), newOutput(new ItemStack(ModItems.SapphireGem, 1), 0.02f));	
-		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("oreAluminum"), newOutput(new ItemStack(ModItems.AluminiumDust, 2)), newOutput(new ItemStack(ModItems.SapphireGem, 1), 0.02f));
-		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("oreIron"), newOutput(new ItemStack(ModItems.IronDust, 2)), newOutput(new ItemStack(ModItems.NickelDust), 0.05f));			
-		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("oreGold"), newOutput(new ItemStack(ModItems.GoldDust, 2)), newOutput(new ItemStack(ModItems.CopperDust, 1), 0.05f));
+		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("oreCopper"), newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustCopper, 2)), newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustGold, 1), 0.05f));
+		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("oreSilver"), newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustSilver, 2)), newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustTin, 1), 0.05f));
+		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("oreTin"), newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustTin, 2)), newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustSilver, 1), 0.05f));
+		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("oreLead"), newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustLead, 2)), newOutput(CraftHelpers.outputItemStack(SPItemMaterial.gemRuby, 1), 0.02f));
+		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("orePlatinum"), newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustPlatinum, 2)), newOutput(new ItemStack(Items.DIAMOND, 1), 0.01f));
+		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("oreNickel"), newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustNickel, 2)), newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustPlatinum, 1), 0.01f));	
+		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("oreAluminium"), newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustAluminium, 2)), newOutput(CraftHelpers.outputItemStack(SPItemMaterial.gemSapphire, 1), 0.02f));	
+		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("oreAluminum"), newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustAluminium, 2)), newOutput(CraftHelpers.outputItemStack(SPItemMaterial.gemSapphire, 1), 0.02f));
+		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("oreIron"), newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustIron, 2)), newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustNickel, 1), 0.05f));			
+		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("oreGold"), newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustGold, 2)), newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustCopper, 1), 0.05f));
 		
 		
-		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientFromItem(ModItems.StaticIngot),  newOutput(new ItemStack(ModItems.StaticDust)));
-		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientFromItem(ModItems.EnergizedIngot),  newOutput(new ItemStack(ModItems.EnergizedDust)));
-		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientFromItem(ModItems.LumumIngot),  newOutput(new ItemStack(ModItems.LumumDust)));
-		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientFromItem(ModItems.InertIngot),  newOutput(new ItemStack(ModItems.InertInfusionBlend)));		
-		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientFromItem(Items.IRON_INGOT), newOutput(new ItemStack(ModItems.IronDust, 1)));
-		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientFromItem(Items.GOLD_INGOT), newOutput(new ItemStack(ModItems.GoldDust, 1)));
-		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientFromItem(ModItems.RedstoneAlloyIngot), newOutput(new ItemStack(ModItems.RedstoneAlloyDust, 1)));
+		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientFromItemstack(SPItemMaterial.ingotStatic),  newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustStatic, 1)));
+		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientFromItemstack(SPItemMaterial.ingotEnergized),  newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustEnergized, 1)));
+		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientFromItemstack(SPItemMaterial.ingotLumum),  newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustLumum, 1)));
+		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientFromItemstack(SPItemMaterial.ingotInertInfusion),  newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustInertInfusion, 1)));		
+		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientFromItem(Items.IRON_INGOT), newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustIron, 1)));
+		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientFromItem(Items.GOLD_INGOT), newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustGold, 1)));
+		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientFromItemstack(SPItemMaterial.ingotRedstoneAlloy), newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustRedstoneAlloy, 1)));
 		
-		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("ingotCopper"), newOutput(new ItemStack(ModItems.CopperDust, 1)));
-		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("ingotSilver"), newOutput(new ItemStack(ModItems.SilverDust, 1)));
-		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("ingotTin"), newOutput(new ItemStack(ModItems.TinDust, 1)));
-		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("ingotLead"), newOutput(new ItemStack(ModItems.LeadDust, 1)));
-		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("ingotPlatinum"), newOutput(new ItemStack(ModItems.PlatinumDust, 1)));
-		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("ingotNickel"), newOutput(new ItemStack(ModItems.NickelDust, 1)));
-		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("ingotAluminium"), newOutput(new ItemStack(ModItems.AluminiumDust, 1)));
-		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("ingotAluminum"), newOutput(new ItemStack(ModItems.AluminiumDust, 1)));
+		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("ingotCopper"), newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustCopper, 1)));
+		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("ingotSilver"), newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustSilver, 1)));
+		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("ingotTin"), newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustTin, 1)));
+		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("ingotLead"), newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustLead, 1)));
+		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("ingotPlatinum"), newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustPlatinum, 1)));
+		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("ingotNickel"), newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustNickel, 1)));
+		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("ingotAluminium"), newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustAluminium, 1)));
+		RegisterHelper.registerGrinderRecipe(CraftHelpers.ingredientOre("ingotAluminum"), newOutput(CraftHelpers.outputItemStack(SPItemMaterial.dustAluminium, 1)));
 		
 
 		oreDictionaryRecipe("QuartzBlack", 2);

@@ -15,6 +15,8 @@ import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.blocks.crops.ModPlants;
 import theking530.staticpower.items.IVariantItem;
 import theking530.staticpower.items.ModItems;
+import theking530.staticpower.items.MultiItem;
+import theking530.staticpower.items.MultiItem.MultiItemWrapper;
 import theking530.staticpower.items.armor.ModArmor;
 import theking530.staticpower.items.tools.basictools.ModTools;
 
@@ -97,26 +99,6 @@ public class ItemRenderRegistry {
 		registerItem(ModArmor.RubyLeggings);
 		registerItem(ModArmor.RubyBoots);
 
-		registerItem(ModItems.SilverDust);
-		registerItem(ModItems.CopperDust);
-		registerItem(ModItems.IronDust);
-		registerItem(ModItems.GoldDust);
-		registerItem(ModItems.SilverDust);
-		registerItem(ModItems.TinDust);
-		registerItem(ModItems.LeadDust);
-		registerItem(ModItems.PlatinumDust);
-		registerItem(ModItems.NickelDust);
-		registerItem(ModItems.AluminiumDust);
-		registerItem(ModItems.StaticDust);
-		registerItem(ModItems.EnergizedDust);
-		registerItem(ModItems.LumumDust);
-		registerItem(ModItems.InertInfusionBlend);
-		registerItem(ModItems.RedstoneAlloyDust);
-		
-		registerItem(ModItems.StaticNugget);
-		registerItem(ModItems.EnergizedNugget);
-		registerItem(ModItems.LumumNugget);
-
 		registerItem(ModItems.EnergizedInfusionBlend);
 		registerItem(ModItems.LumumInfusionBlend);	
 		registerItem(ModItems.EnergizedEnergyCrystal);
@@ -127,34 +109,10 @@ public class ItemRenderRegistry {
 		registerItem(ModItems.CopperWire);
 		registerItem(ModItems.SilverWire);
 		registerItem(ModItems.GoldWire);
-		registerItem(ModItems.IronPlate);
-		registerItem(ModItems.CopperPlate);
-		registerItem(ModItems.TinPlate);
-		registerItem(ModItems.SilverPlate);
-		registerItem(ModItems.GoldPlate);
-		registerItem(ModItems.LeadPlate);
-		registerItem(ModItems.StaticPlate);
-		registerItem(ModItems.EnergizedPlate);
-		registerItem(ModItems.LumumPlate);
 		
 		registerItem(ModItems.PlateMould);
 		registerItem(ModItems.WireMould);
 		registerItem(ModItems.BlankMould);
-		
-		registerItem(ModItems.SilverIngot);
-		registerItem(ModItems.CopperIngot);
-		registerItem(ModItems.TinIngot);
-		registerItem(ModItems.LeadIngot);
-		registerItem(ModItems.PlatinumIngot);
-		registerItem(ModItems.StaticIngot);
-		registerItem(ModItems.EnergizedIngot);
-		registerItem(ModItems.LumumIngot);
-		registerItem(ModItems.InertIngot);
-		registerItem(ModItems.RedstoneAlloyIngot);
-		registerItem(ModItems.NickelIngot);
-		registerItem(ModItems.AluminiumIngot);
-		registerItem(ModItems.SapphireGem);
-		registerItem(ModItems.RubyGem);
 		
 		registerItem(ModItems.StaticWrench);
 		registerItem(ModItems.SolderingIron);
@@ -405,6 +363,7 @@ public class ItemRenderRegistry {
 	    
 	    registerItemWithVariants(ModItems.DigistoreCapacityUpgrade);
 	    registerItemWithVariants(ModItems.DigistoreMiscUpgrade);
+	    registerMultiItem(ModItems.Materials);
 	}
     public static void registerCannister(Item item, String blockstate) {
     	ModelResourceLocation location =  new ModelResourceLocation(new ResourceLocation(Reference.MOD_ID, blockstate), "inventory");
@@ -433,6 +392,15 @@ public class ItemRenderRegistry {
         	Map<ItemStack, String> subItems = variantItem.getSubItemMap();
         	for(Entry<ItemStack, String> entry : subItems.entrySet()) {
         		registerItemModelForMeta(baseItem, entry.getKey().getMetadata(), "model" + "=" + entry.getValue());
+        	}
+    	}
+	}
+    public static void registerMultiItem(Item baseItem) {
+    	if(baseItem instanceof MultiItem) {
+    		MultiItem variantItem = (MultiItem)baseItem;
+        	Map<Integer, MultiItemWrapper> subItems = variantItem.getSubItemMap();
+        	for(Entry<Integer, MultiItemWrapper> entry : subItems.entrySet()) {
+        		registerItemModelForMeta(baseItem, entry.getValue().getMetadata(), "variant" + "=" + entry.getValue().getName());
         	}
     	}
 	}

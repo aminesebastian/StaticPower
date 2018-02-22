@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.items.ModItems;
+import theking530.staticpower.items.SPItemMaterial;
 
 public class SmeltingRecipes {
 
@@ -17,62 +18,62 @@ public class SmeltingRecipes {
 		GameRegistry.addSmelting(new ItemStack(ModItems.PotatoFlour), new ItemStack(ModItems.PotatoBread), 0.1f);
 		
 		//Silver
-		ItemStack dustSilver = new ItemStack(ModItems.SilverDust);
-		ItemStack ingotSilver = new ItemStack(ModItems.SilverIngot, 1);
+		ItemStack dustSilver = SPItemMaterial.dustSilver;
+		ItemStack ingotSilver = SPItemMaterial.ingotSilver;
 		GameRegistry.addSmelting(dustSilver, ingotSilver, 0.1f);
-		GameRegistry.addSmelting(new ItemStack(Item.getItemFromBlock(ModBlocks.SilverOre)), new ItemStack(ModItems.SilverIngot, 1), 0.1f);
+		GameRegistry.addSmelting(new ItemStack(Item.getItemFromBlock(ModBlocks.SilverOre)), SPItemMaterial.ingotSilver, 0.1f);
 		//Tin
-		ItemStack dustTin = new ItemStack(ModItems.TinDust);
-		ItemStack ingotTin = new ItemStack(ModItems.TinIngot, 1);
+		ItemStack dustTin = SPItemMaterial.dustTin;
+		ItemStack ingotTin = SPItemMaterial.ingotTin;
 		GameRegistry.addSmelting(dustTin, ingotTin, 0.1f);
-		GameRegistry.addSmelting(new ItemStack(Item.getItemFromBlock(ModBlocks.TinOre)), new ItemStack(ModItems.TinIngot, 1), 0.1f);
+		GameRegistry.addSmelting(new ItemStack(Item.getItemFromBlock(ModBlocks.TinOre)), SPItemMaterial.ingotTin, 0.1f);
 		//Lead
-		ItemStack dustLead = new ItemStack(ModItems.LeadDust);
-		ItemStack ingotLead = new ItemStack(ModItems.LeadIngot, 1);
+		ItemStack dustLead = SPItemMaterial.dustLead;
+		ItemStack ingotLead = SPItemMaterial.ingotLead;
 		GameRegistry.addSmelting(dustLead, ingotLead, 0.1f);
-		GameRegistry.addSmelting(new ItemStack(Item.getItemFromBlock(ModBlocks.LeadOre)), new ItemStack(ModItems.LeadIngot, 1), 0.1f);
+		GameRegistry.addSmelting(new ItemStack(Item.getItemFromBlock(ModBlocks.LeadOre)), SPItemMaterial.ingotLead, 0.1f);
 		//Copper
-		ItemStack dustCopper = new ItemStack(ModItems.CopperDust);
-		ItemStack ingotCopper = new ItemStack(ModItems.CopperIngot, 1);
+		ItemStack dustCopper = SPItemMaterial.dustCopper;
+		ItemStack ingotCopper = SPItemMaterial.ingotCopper;
 		GameRegistry.addSmelting(dustCopper, ingotCopper, 0.1f);
-		GameRegistry.addSmelting(new ItemStack(Item.getItemFromBlock(ModBlocks.CopperOre)), new ItemStack(ModItems.CopperIngot, 1), 0.1f);
+		GameRegistry.addSmelting(new ItemStack(Item.getItemFromBlock(ModBlocks.CopperOre)), SPItemMaterial.ingotCopper, 0.1f);
 		//Platinum
-		ItemStack dustPlatinum = new ItemStack(ModItems.PlatinumDust);
-		ItemStack ingotPlatinum = new ItemStack(ModItems.PlatinumIngot, 1);
+		ItemStack dustPlatinum = SPItemMaterial.dustPlatinum;
+		ItemStack ingotPlatinum = SPItemMaterial.ingotPlatinum;
 		GameRegistry.addSmelting(dustPlatinum, ingotPlatinum, 0.1f);
-		GameRegistry.addSmelting(new ItemStack(Item.getItemFromBlock(ModBlocks.PlatinumOre)), new ItemStack(ModItems.PlatinumIngot, 1), 0.1f);
+		GameRegistry.addSmelting(new ItemStack(Item.getItemFromBlock(ModBlocks.PlatinumOre)), SPItemMaterial.ingotPlatinum, 0.1f);
 		//Iron
-		ItemStack dustIron = new ItemStack(ModItems.IronDust);
-		ItemStack ingotIron = new ItemStack(Items.IRON_INGOT, 1);
+		ItemStack dustIron = SPItemMaterial.dustIron;
+		ItemStack ingotIron = new ItemStack(Items.IRON_INGOT);
 		GameRegistry.addSmelting(dustIron, ingotIron, 0.1f);
 		//Gold
-		ItemStack dustGold = new ItemStack(ModItems.GoldDust);
-		ItemStack ingotGold = new ItemStack(Items.GOLD_INGOT, 1);
+		ItemStack dustGold = SPItemMaterial.dustGold;
+		ItemStack ingotGold = new ItemStack(Items.GOLD_INGOT);
 		GameRegistry.addSmelting(dustGold, ingotGold, 0.1f);
 		//Static
-		ItemStack dustStatic = new ItemStack(ModItems.StaticDust);
-		ItemStack ingotStatic = new ItemStack(ModItems.StaticIngot, 1);
+		ItemStack dustStatic = SPItemMaterial.dustStatic;
+		ItemStack ingotStatic = SPItemMaterial.ingotStatic;
 		GameRegistry.addSmelting(dustStatic, ingotStatic, 0.1f);
 		//Energized
-		ItemStack dustEnergized = new ItemStack(ModItems.EnergizedDust);
-		ItemStack ingotEnergized = new ItemStack(ModItems.EnergizedIngot, 1);
+		ItemStack dustEnergized = SPItemMaterial.dustEnergized;
+		ItemStack ingotEnergized = SPItemMaterial.ingotEnergized;
 		GameRegistry.addSmelting(dustEnergized, ingotEnergized, 0.1f);
 		//Inert
-		ItemStack dustInert = new ItemStack(ModItems.InertInfusionBlend);
-		ItemStack ingotInert = new ItemStack(ModItems.InertIngot, 1);
+		ItemStack dustInert = SPItemMaterial.dustInertInfusion;
+		ItemStack ingotInert = SPItemMaterial.ingotInertInfusion;
 		GameRegistry.addSmelting(dustInert, ingotInert, 0.1f);
 		//Nickel
-		ItemStack dustNickel = new ItemStack(ModItems.NickelDust);
-		ItemStack ingotNickel = new ItemStack(ModItems.NickelIngot, 1);
+		ItemStack dustNickel = SPItemMaterial.dustNickel;
+		ItemStack ingotNickel = SPItemMaterial.ingotNickel;
 		GameRegistry.addSmelting(dustNickel, ingotNickel, 0.1f);
-		GameRegistry.addSmelting(new ItemStack(Item.getItemFromBlock(ModBlocks.NickelOre)), new ItemStack(ModItems.NickelIngot, 1), 0.1f);
+		GameRegistry.addSmelting(new ItemStack(Item.getItemFromBlock(ModBlocks.NickelOre)), SPItemMaterial.ingotNickel, 0.1f);
 		//Aluminium
-		ItemStack dustAluminium = new ItemStack(ModItems.AluminiumDust);
-		ItemStack ingotAluminium = new ItemStack(ModItems.AluminiumIngot, 1);
+		ItemStack dustAluminium = SPItemMaterial.dustAluminium;
+		ItemStack ingotAluminium = SPItemMaterial.ingotAluminium;
 		GameRegistry.addSmelting(dustAluminium, ingotAluminium, 0.1f);
-		GameRegistry.addSmelting(new ItemStack(Item.getItemFromBlock(ModBlocks.AluminiumOre)), new ItemStack(ModItems.AluminiumIngot, 1), 0.1f);
+		GameRegistry.addSmelting(new ItemStack(Item.getItemFromBlock(ModBlocks.AluminiumOre)), SPItemMaterial.ingotAluminium, 0.1f);
 		
-		GameRegistry.addSmelting(new ItemStack(ModItems.RedstoneAlloyDust), new ItemStack(ModItems.RedstoneAlloyIngot), 0.1F);
+		GameRegistry.addSmelting(SPItemMaterial.dustRedstoneAlloy, SPItemMaterial.ingotRedstoneAlloy, 0.1F);
 	}
 	public static void registerFullRecipes() {
 		registerSmeltingRecipes();

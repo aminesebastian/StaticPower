@@ -5,20 +5,21 @@ import net.minecraft.item.ItemStack;
 import theking530.staticpower.assists.RegisterHelper;
 import theking530.staticpower.handlers.crafting.CraftHelpers;
 import theking530.staticpower.handlers.crafting.MultiOreIngredient;
+import theking530.staticpower.items.SPItemMaterial;
 import theking530.staticpower.items.ModItems;
 
 public class FormerRecipes {
 	
 	public static void registerFusionRecipes() {
-		RegisterHelper.registerFormerRecipes(new ItemStack(ModItems.IronPlate, 2), CraftHelpers.ingredientFromItem(Items.IRON_INGOT), CraftHelpers.ingredientFromItem(ModItems.PlateMould));
-		RegisterHelper.registerFormerRecipes(new ItemStack(ModItems.GoldPlate, 2), CraftHelpers.ingredientFromItem(Items.GOLD_INGOT), CraftHelpers.ingredientFromItem(ModItems.PlateMould));
-		RegisterHelper.registerFormerRecipes(new ItemStack(ModItems.TinPlate, 2), CraftHelpers.ingredientOre("ingotTin"), CraftHelpers.ingredientFromItem(ModItems.PlateMould));
-		RegisterHelper.registerFormerRecipes(new ItemStack(ModItems.CopperPlate, 2), CraftHelpers.ingredientOre("ingotCopper"), CraftHelpers.ingredientFromItem(ModItems.PlateMould));
-		RegisterHelper.registerFormerRecipes(new ItemStack(ModItems.SilverPlate, 2), CraftHelpers.ingredientOre("ingotSilver"), CraftHelpers.ingredientFromItem(ModItems.PlateMould));
-		RegisterHelper.registerFormerRecipes(new ItemStack(ModItems.LeadPlate, 2), CraftHelpers.ingredientOre("ingotLead"), CraftHelpers.ingredientFromItem(ModItems.PlateMould));
-		RegisterHelper.registerFormerRecipes(new ItemStack(ModItems.StaticPlate, 2), CraftHelpers.ingredientFromItem(ModItems.StaticIngot), CraftHelpers.ingredientFromItem(ModItems.PlateMould));
-		RegisterHelper.registerFormerRecipes(new ItemStack(ModItems.EnergizedPlate, 2), CraftHelpers.ingredientFromItem(ModItems.EnergizedIngot), CraftHelpers.ingredientFromItem(ModItems.PlateMould));
-		RegisterHelper.registerFormerRecipes(new ItemStack(ModItems.LumumPlate, 2), CraftHelpers.ingredientFromItem(ModItems.LumumIngot), CraftHelpers.ingredientFromItem(ModItems.PlateMould));
+		RegisterHelper.registerFormerRecipes(CraftHelpers.outputItemStack(SPItemMaterial.plateIron, 2), CraftHelpers.ingredientFromItem(Items.IRON_INGOT), CraftHelpers.ingredientFromItem(ModItems.PlateMould));
+		RegisterHelper.registerFormerRecipes(CraftHelpers.outputItemStack(SPItemMaterial.plateGold, 2), CraftHelpers.ingredientFromItem(Items.GOLD_INGOT), CraftHelpers.ingredientFromItem(ModItems.PlateMould));
+		RegisterHelper.registerFormerRecipes(CraftHelpers.outputItemStack(SPItemMaterial.plateTin, 2), CraftHelpers.ingredientOre("ingotTin"), CraftHelpers.ingredientFromItem(ModItems.PlateMould));
+		RegisterHelper.registerFormerRecipes(CraftHelpers.outputItemStack(SPItemMaterial.plateCopper, 2), CraftHelpers.ingredientOre("ingotCopper"), CraftHelpers.ingredientFromItem(ModItems.PlateMould));
+		RegisterHelper.registerFormerRecipes(CraftHelpers.outputItemStack(SPItemMaterial.plateSilver, 2), CraftHelpers.ingredientOre("ingotSilver"), CraftHelpers.ingredientFromItem(ModItems.PlateMould));
+		RegisterHelper.registerFormerRecipes(CraftHelpers.outputItemStack(SPItemMaterial.plateLead, 2), CraftHelpers.ingredientOre("ingotLead"), CraftHelpers.ingredientFromItem(ModItems.PlateMould));
+		RegisterHelper.registerFormerRecipes(CraftHelpers.outputItemStack(SPItemMaterial.plateStatic, 2), CraftHelpers.ingredientFromItemstack(SPItemMaterial.ingotStatic), CraftHelpers.ingredientFromItem(ModItems.PlateMould));
+		RegisterHelper.registerFormerRecipes(CraftHelpers.outputItemStack(SPItemMaterial.plateEnergized, 2), CraftHelpers.ingredientFromItemstack(SPItemMaterial.ingotEnergized), CraftHelpers.ingredientFromItem(ModItems.PlateMould));
+		RegisterHelper.registerFormerRecipes(CraftHelpers.outputItemStack(SPItemMaterial.plateLumum, 2), CraftHelpers.ingredientFromItemstack(SPItemMaterial.ingotLumum), CraftHelpers.ingredientFromItem(ModItems.PlateMould));
 
 		RegisterHelper.registerFormerRecipes(new ItemStack(ModItems.CopperWire, 8), CraftHelpers.ingredientOre("plateCopper"), CraftHelpers.ingredientFromItem(ModItems.WireMould));
 		RegisterHelper.registerFormerRecipes(new ItemStack(ModItems.SilverWire, 8), CraftHelpers.ingredientOre("plateSilver"), CraftHelpers.ingredientFromItem(ModItems.WireMould));

@@ -313,23 +313,30 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
     	if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {		
     		Mode sideConfig = getSideConfiguration(facing);		
 			return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(new IItemHandler() {
+				ItemStackHandler handler = sideConfig == Mode.Input ? slotsInput : slotsOutput;
 				public int getSlots() {
-			    	return BaseTileEntity.this.getSlots(sideConfig);
+			    	return handler.getSlots();
 			    }
 			    @Nonnull
 			    public ItemStack getStackInSlot(int slot) {
-			    	return BaseTileEntity.this.getStackInSlot(sideConfig, slot);
+			    	return handler.getStackInSlot(slot);
 			    }
 			    @Nonnull
-			    public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {			    
-		    		return BaseTileEntity.this.insertItem(sideConfig, slot, stack, simulate);
+			    public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {	
+			    	if(BaseTileEntity.this.canInsertItem(handler, slot, stack)) {
+			    		return handler.insertItem(slot, stack, simulate);
+			    	}
+			    	return stack;
 			    }
 			    @Nonnull
 			    public ItemStack extractItem(int slot, int amount, boolean simulate) {
-			    	return BaseTileEntity.this.extractItem(sideConfig, slot, amount, simulate);	
+			    	if(BaseTileEntity.this.canExtractItem(handler, slot, amount)) {
+			    		return handler.extractItem(slot, amount, simulate);
+			    	}
+			    	return ItemStack.EMPTY;
 			    }
 			    public int getSlotLimit(int slot) {
-			    	return BaseTileEntity.this.getSlotLimit(sideConfig, slot);
+			    	return handler.getSlotLimit(slot);
 			    }
 			});
     	}
@@ -337,39 +344,11 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
     }
     
     /*Item Handling*/
-    public int getSlots(Mode sideMode) {
-    	return sideMode == Mode.Input ? slotsInput.getSlots() : sideMode == Mode.Output ? slotsOutput.getSlots() : 0;
+    public boolean canInsertItem(ItemStackHandler itemHandler, int slot, ItemStack stack) {
+    	return true;
     }
-    @Nonnull
-    public ItemStack getStackInSlot(Mode sideMode, int slot) {
-    	IItemHandler handler = sideMode == Mode.Input ? slotsInput : sideMode == Mode.Output ? slotsOutput : null;
-    	if(handler != null) {
-        	return handler.getStackInSlot(slot);
-    	}
-    	return ItemStack.EMPTY;
-    }
-    @Nonnull
-    public ItemStack insertItem(Mode sideMode, int slot, @Nonnull ItemStack stack, boolean simulate) {
-    	IItemHandler handler = sideMode == Mode.Input ? slotsInput : sideMode == Mode.Output ? slotsOutput : null;
-    	if(handler != null) {
-        	return handler.insertItem(slot, stack, simulate);
-    	}
-    	return stack;
-    }
-    @Nonnull
-    public ItemStack extractItem(Mode sideMode, int slot, int amount, boolean simulate) {
-    	IItemHandler handler = sideMode == Mode.Input ? slotsInput : sideMode == Mode.Output ? slotsOutput : null;
-    	if(handler != null) {
-        	return handler.extractItem(slot, amount, simulate);
-    	}
-    	return ItemStack.EMPTY;
-    }
-    public int getSlotLimit(Mode sideMode, int slot) {
-    	IItemHandler handler = sideMode == Mode.Input ? slotsInput : sideMode == Mode.Output ? slotsOutput : null;
-    	if(handler != null) {
-        	return handler.getSlotLimit(slot);
-    	}
-    	return 0;
+    public boolean canExtractItem(ItemStackHandler itemHandler, int slot, int amount) {
+    	return true;
     }
     
 	/*Upgrade Handling*/

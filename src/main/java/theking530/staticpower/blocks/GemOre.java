@@ -8,17 +8,18 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import theking530.staticpower.StaticPower;
 
 public class GemOre extends Block{
 	
-	private Item droppedGem;
+	private ItemStack droppedGem;
 	private int dropMin;
 	private int dropMax;
 	
-	public GemOre(String name, String tool, int level, Item gemDrop, int dropMin, int dropMax) {
+	public GemOre(String name, String tool, int level, ItemStack gemDrop, int dropMin, int dropMax) {
 		super(Material.ROCK);
 		setCreativeTab(StaticPower.StaticPower);
 		setUnlocalizedName(name);	
@@ -34,9 +35,12 @@ public class GemOre extends Block{
      */
     @Nullable
     public Item getItemDropped(IBlockState state, Random rand, int fortune) {
-        return droppedGem;
+        return droppedGem.getItem();
     }
-
+    public int damageDropped(IBlockState state)
+    {
+        return droppedGem.getItemDamage();
+    }
     /**
      * Get the quantity dropped based on the given fortune level
      */

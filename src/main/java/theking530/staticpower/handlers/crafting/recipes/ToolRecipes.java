@@ -7,7 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.oredict.OreIngredient;
 import theking530.staticpower.assists.RegisterHelper;
-import theking530.staticpower.items.ModItems;
+import theking530.staticpower.handlers.crafting.CraftHelpers;
+import theking530.staticpower.items.SPItemMaterial;
 import theking530.staticpower.items.tools.basictools.ModTools;
 
 public class ToolRecipes {
@@ -18,9 +19,9 @@ public class ToolRecipes {
 		registerToolSet(ingredientOre("ingotSilver"), "silver", new ItemStack(ModTools.SilverAxe), new ItemStack(ModTools.SilverHoe), new ItemStack(ModTools.SilverPickaxe), new ItemStack(ModTools.SilverShovel), new ItemStack(ModTools.SilverSword));
 		registerToolSet(ingredientOre("ingotLead"), "lead", new ItemStack(ModTools.LeadAxe), new ItemStack(ModTools.LeadHoe), new ItemStack(ModTools.LeadPickaxe), new ItemStack(ModTools.LeadShovel), new ItemStack(ModTools.LeadSword));
 		registerToolSet(ingredientOre("ingotPlatinum"), "platinum", new ItemStack(ModTools.PlatinumAxe), new ItemStack(ModTools.PlatinumHoe), new ItemStack(ModTools.PlatinumPickaxe), new ItemStack(ModTools.PlatinumShovel), new ItemStack(ModTools.PlatinumSword));
-		registerToolSet(ingredientFromItem(ModItems.StaticIngot), "static", new ItemStack(ModTools.StaticAxe), new ItemStack(ModTools.StaticHoe), new ItemStack(ModTools.StaticPickaxe), new ItemStack(ModTools.StaticShovel), new ItemStack(ModTools.StaticSword));
-		registerToolSet(ingredientFromItem(ModItems.EnergizedIngot), "energized", new ItemStack(ModTools.EnergizedAxe), new ItemStack(ModTools.EnergizedHoe), new ItemStack(ModTools.EnergizedPickaxe), new ItemStack(ModTools.EnergizedShovel), new ItemStack(ModTools.EnergizedSword));
-		registerToolSet(ingredientFromItem(ModItems.LumumIngot), "lumum", new ItemStack(ModTools.LumumAxe), new ItemStack(ModTools.LumumHoe), new ItemStack(ModTools.LumumPickaxe), new ItemStack(ModTools.LumumShovel), new ItemStack(ModTools.LumumSword));
+		registerToolSet(CraftHelpers.ingredientFromItemstack(SPItemMaterial.ingotStatic), "static", new ItemStack(ModTools.StaticAxe), new ItemStack(ModTools.StaticHoe), new ItemStack(ModTools.StaticPickaxe), new ItemStack(ModTools.StaticShovel), new ItemStack(ModTools.StaticSword));
+		registerToolSet(CraftHelpers.ingredientFromItemstack(SPItemMaterial.ingotEnergized), "energized", new ItemStack(ModTools.EnergizedAxe), new ItemStack(ModTools.EnergizedHoe), new ItemStack(ModTools.EnergizedPickaxe), new ItemStack(ModTools.EnergizedShovel), new ItemStack(ModTools.EnergizedSword));
+		registerToolSet(CraftHelpers.ingredientFromItemstack(SPItemMaterial.ingotLumum), "lumum", new ItemStack(ModTools.LumumAxe), new ItemStack(ModTools.LumumHoe), new ItemStack(ModTools.LumumPickaxe), new ItemStack(ModTools.LumumShovel), new ItemStack(ModTools.LumumSword));
 	}
 	public static void registerToolSet(Ingredient material, String prefix, ItemStack axe, ItemStack hoe, ItemStack pickaxe, ItemStack shovel, ItemStack sword) {
 		RegisterHelper.registerSolderingRecipe(axe, new Object[]{"MM ","MS "," S ",
