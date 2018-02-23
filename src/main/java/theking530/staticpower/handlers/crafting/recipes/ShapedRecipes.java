@@ -7,9 +7,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.oredict.OreIngredient;
+import theking530.staticpower.assists.MaterialSet;
+import theking530.staticpower.assists.MaterialSets;
 import theking530.staticpower.assists.RegisterHelper;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.blocks.crops.ModPlants;
+import theking530.staticpower.handlers.crafting.CraftHelpers;
+import theking530.staticpower.items.ItemMaterials;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.items.armor.ModArmor;
 
@@ -17,6 +21,27 @@ public class ShapedRecipes {
 
 	@SuppressWarnings("all")
 	private static void registerShapedRecipes() {		
+		
+		//Blocks ------------------------------------------------------------------------------------------------------------
+		for(MaterialSet set : MaterialSets.MATERIALS) {
+			if(set.getBlock() == null) { continue; }
+			RegisterHelper.addShapedRecipe("StaticPower_" + set.getName() + "BlockFromIngot", "StaticPower", new ItemStack(Item.getItemFromBlock(set.getBlock())), new Object[]{"XXX","XXX","XXX",
+					'X', CraftHelpers.ingredientFromItemstack(set.getIngot())});
+		}	
+		
+		//Ingots ------------------------------------------------------------------------------------------------------------
+		for(MaterialSet set : MaterialSets.MATERIALS) {
+			if(set.getIngot() == null) { continue; }
+			RegisterHelper.addShapedRecipe("StaticPower_" + set.getName() + "IngotFromNugget", "StaticPower", set.getIngot(), new Object[]{"XXX","XXX","XXX",
+					'X', CraftHelpers.ingredientFromItemstack(set.getNugget())});
+		}		
+		
+		//Gears ------------------------------------------------------------------------------------------------------------
+		for(MaterialSet set : MaterialSets.MATERIALS) {
+			if(set.getGear() == null) { continue; }
+			RegisterHelper.addShapedRecipe("StaticPower_" + set.getName() + "GearFromIngot", "StaticPower", set.getGear(), new Object[]{" X ","XSX"," X ",
+					'X', CraftHelpers.ingredientFromItemstack(set.getIngot()), 'S', ingredientFromItem(Items.STICK)});
+		}	
 		
 		//Static Wrench --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_staticWrench", "StaticPower", new ItemStack(ModItems.StaticWrench), new Object[]{" IC"," SI","S  ",
@@ -52,42 +77,11 @@ public class ShapedRecipes {
 		RegisterHelper.addShapedRecipe("StaticPower_staticConduit", "StaticPower", new ItemStack(Item.getItemFromBlock(ModBlocks.StaticConduit), 8), new Object[]{" S ","SGS"," S ",
 		'S', ingredientOre("ingotGold"), 'G', ingredientFromBlock(Blocks.GLASS)});
 		
-		//Metal Blocks --------------------------------------------------------------------------------------------------
-		RegisterHelper.addShapedRecipe("StaticPower_staticBlock", "StaticPower", new ItemStack(ModBlocks.StaticBlock), new Object[]{"XXX","XXX","XXX",
-		'X', ingredientFromItem(ModItems.StaticIngot)});
-		RegisterHelper.addShapedRecipe("StaticPower_energizedBlock", "StaticPower", new ItemStack(ModBlocks.EnergizedBlock), new Object[]{"XXX","XXX","XXX",
-		'X', ingredientFromItem(ModItems.EnergizedIngot)});
-		RegisterHelper.addShapedRecipe("StaticPower_lumumBlock", "StaticPower", new ItemStack(ModBlocks.LumumBlock), new Object[]{"XXX","XXX","XXX",
-		'X', ingredientFromItem(ModItems.LumumIngot)});
-		
-		RegisterHelper.addShapedRecipe("StaticPower_cooperBlock", "StaticPower", new ItemStack(ModBlocks.BlockCopper), new Object[]{"XXX","XXX","XXX",
-		'X', ingredientFromItem(ModItems.CopperIngot)});
-		RegisterHelper.addShapedRecipe("StaticPower_tinBlock", "StaticPower", new ItemStack(ModBlocks.BlockTin), new Object[]{"XXX","XXX","XXX",
-		'X', ingredientFromItem(ModItems.TinIngot)});
-		RegisterHelper.addShapedRecipe("StaticPower_silverBlock", "StaticPower", new ItemStack(ModBlocks.BlockSilver), new Object[]{"XXX","XXX","XXX",
-		'X', ingredientFromItem(ModItems.SilverIngot)});
-		RegisterHelper.addShapedRecipe("StaticPower_leadBlock", "StaticPower", new ItemStack(ModBlocks.BlockLead), new Object[]{"XXX","XXX","XXX",
-		'X', ingredientFromItem(ModItems.LeadIngot)});
-		RegisterHelper.addShapedRecipe("StaticPower_platinumBlock", "StaticPower", new ItemStack(ModBlocks.BlockPlatinum), new Object[]{"XXX","XXX","XXX",
-		'X', ingredientFromItem(ModItems.PlatinumIngot)});
-		
-		RegisterHelper.addShapedRecipe("StaticPower_nickelBlock", "StaticPower", new ItemStack(ModBlocks.BlockNickel), new Object[]{"XXX","XXX","XXX",
-		'X', ingredientFromItem(ModItems.NickelIngot)});
-		RegisterHelper.addShapedRecipe("StaticPower_aluminiumBlock", "StaticPower", new ItemStack(ModBlocks.BlockAluminium), new Object[]{"XXX","XXX","XXX",
-		'X', ingredientFromItem(ModItems.AluminiumIngot)});
 		RegisterHelper.addShapedRecipe("StaticPower_sapphireBlock", "StaticPower", new ItemStack(ModBlocks.BlockSapphire), new Object[]{"XXX","XXX","XXX",
-		'X', ingredientFromItem(ModItems.SapphireGem)});
+		'X', CraftHelpers.ingredientFromItemstack(ItemMaterials.gemSapphire)});
 		RegisterHelper.addShapedRecipe("StaticPower_rubyBlock", "StaticPower", new ItemStack(ModBlocks.BlockRuby), new Object[]{"XXX","XXX","XXX",
-		'X', ingredientFromItem(ModItems.RubyGem)});
-		
-		//Ingots ------------------------------------------------------------------------------------------------------------
-		RegisterHelper.addShapedRecipe("StaticPower_staticIngot", "StaticPower", new ItemStack(ModItems.StaticIngot), new Object[]{"XXX","XXX","XXX",
-		'X', ingredientFromItem(ModItems.StaticNugget)});
-		RegisterHelper.addShapedRecipe("StaticPower_energizedIngot", "StaticPower", new ItemStack(ModItems.EnergizedIngot), new Object[]{"XXX","XXX","XXX",
-		'X', ingredientFromItem(ModItems.EnergizedNugget)});
-		RegisterHelper.addShapedRecipe("StaticPower_lumumIngot", "StaticPower", new ItemStack(ModItems.LumumIngot), new Object[]{"XXX","XXX","XXX",
-		'X', ingredientFromItem(ModItems.LumumNugget)});
-		
+		'X', CraftHelpers.ingredientFromItemstack(ItemMaterials.gemRuby)});
+
 		//Coils ------------------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_copperCoil", "StaticPower", new ItemStack(ModItems.CopperCoil), new Object[]{"XXX","XSX","XXX",
 		'X', ingredientFromItem(ModItems.CopperWire), 'S', ingredientFromItem(Items.STICK)});
@@ -108,19 +102,19 @@ public class ShapedRecipes {
 		
 		//Heating Element --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_heatingElement", "StaticPower", new ItemStack(ModBlocks.HeatingElement), new Object[]{"WCW", "W W", "WCW", 
-		'C', ingredientFromItem(ModItems.CopperPlate), 'W', ingredientFromItem(ModItems.CopperCoil)});
+		'C', CraftHelpers.ingredientOre("plateCopper"), 'W', ingredientFromItem(ModItems.CopperCoil)});
 		
 		//Fermenter --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_fermenter", "StaticPower", new ItemStack(ModBlocks.Fermenter), new Object[]{"IPI", "GMG", "IPI", 
-		'G', ingredientFromBlock((Blocks.GLASS)) , 'I', ingredientFromItem(ModItems.IronPlate), 'P', ingredientFromBlock(Blocks.PISTON), 'M', ingredientFromBlock(ModBlocks.MachineBlock)});
+		'G', ingredientFromBlock((Blocks.GLASS)) , 'I', CraftHelpers.ingredientOre("plateIron"), 'P', ingredientFromBlock(Blocks.PISTON), 'M', ingredientFromBlock(ModBlocks.MachineBlock)});
 		
 		//Distillery --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_distillery", "StaticPower", new ItemStack(ModBlocks.Distillery), new Object[]{"GGG", "BMB", "CCC", 
-		'G', ingredientFromBlock((Blocks.GLASS)) , 'C', ingredientFromItem(ModItems.CopperPlate), 'B', ingredientFromItem(Items.BUCKET), 'M', ingredientFromBlock(ModBlocks.MachineBlock)});
+		'G', ingredientFromBlock((Blocks.GLASS)) , 'C', CraftHelpers.ingredientOre("plateCopper"), 'B', ingredientFromItem(Items.BUCKET), 'M', ingredientFromBlock(ModBlocks.MachineBlock)});
 		
 		//Condenser --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_condenser", "StaticPower", new ItemStack(ModBlocks.Condenser), new Object[]{"CCC", "BMB", "GGG", 
-		'G', ingredientFromBlock((Blocks.GLASS)) , 'C', ingredientFromItem(ModItems.CopperPlate), 'B', ingredientFromItem(Items.BUCKET), 'M', ingredientFromBlock(ModBlocks.MachineBlock)});
+		'G', ingredientFromBlock((Blocks.GLASS)) , 'C', CraftHelpers.ingredientOre("plateCopper"), 'B', ingredientFromItem(Items.BUCKET), 'M', ingredientFromBlock(ModBlocks.MachineBlock)});
 		
 		//Obsidian Glass --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_obsidianGlass", "StaticPower", new ItemStack(ModBlocks.ObsidianGlass, 4), new Object[]{"O O", " G ", "O O", 
@@ -140,7 +134,7 @@ public class ShapedRecipes {
 		
 		//Advanced Earth --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_advancedEarth", "StaticPower", new ItemStack(ModBlocks.AdvancedEarth), new Object[]{" E ","EDE"," E ",
-		'E', ingredientFromItem(ModItems.EnergizedPlate), 'D', ingredientFromBlock(Blocks.DIRT)});
+		'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.plateEnergized), 'D', ingredientFromBlock(Blocks.DIRT)});
 		
 		//Powered Furnace --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_poweredFurnace", "StaticPower", new ItemStack(ModBlocks.PoweredFurnace), new Object[]{"IUI", "RBR", "COC", 
@@ -164,11 +158,11 @@ public class ShapedRecipes {
 	
 		//Fusion Furnace --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_fusionFurnace", "StaticPower", new ItemStack(ModBlocks.FusionFurnace), new Object[]{"FIF", "RBR", "CHC", 
-		'F', ingredientFromBlock(ModBlocks.PoweredFurnace), 'R', ingredientFromItem(ModItems.CopperPlate), 'B', ingredientFromBlock(ModBlocks.MachineBlock), 'C', ingredientFromItem(ModItems.BasicCircuit), 'I', ingredientFromItem(ModItems.IOPort), 'H', ingredientFromBlock(ModBlocks.HeatingElement)});
+		'F', ingredientFromBlock(ModBlocks.PoweredFurnace), 'R', CraftHelpers.ingredientOre("plateCopper"), 'B', ingredientFromBlock(ModBlocks.MachineBlock), 'C', ingredientFromItem(ModItems.BasicCircuit), 'I', ingredientFromItem(ModItems.IOPort), 'H', ingredientFromBlock(ModBlocks.HeatingElement)});
 		
 		//Charging Station --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_chargingStation", "StaticPower", new ItemStack(ModBlocks.ChargingStation), new Object[]{" H ", "RMR", "CBC", 
-		'C', ingredientFromItem(ModItems.BasicCircuit), 'H', ingredientFromItem(ModItems.CopperPlate), 'R', ingredientFromItem(ModItems.GoldPlate), 'M', ingredientFromBlock(ModBlocks.MachineBlock), 'B', ingredientFromItem(ModItems.BasicBattery)});
+		'C', ingredientFromItem(ModItems.BasicCircuit), 'H', CraftHelpers.ingredientOre("plateCopper"), 'R', CraftHelpers.ingredientOre("plateGold"), 'M', ingredientFromBlock(ModBlocks.MachineBlock), 'B', ingredientFromItem(ModItems.BasicBattery)});
 		
 		//Basic Farmer --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_basicFarmer", "StaticPower", new ItemStack(ModBlocks.BasicFarmer), new Object[]{" H ", "RMR", "DCD", 
@@ -192,11 +186,11 @@ public class ShapedRecipes {
 		
 		//Batteries --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_staticBattery", "StaticPower", new ItemStack(ModBlocks.StaticBattery), new Object[]{"SSS", "BMB", "BBB", 
-		'S', ingredientFromItem(ModItems.StaticPlate), 'B', ingredientFromItem(ModItems.StaticBattery), 'M', ingredientFromBlock(ModBlocks.MachineBlock)});			
+		'S', CraftHelpers.ingredientFromItemstack(ItemMaterials.plateStatic), 'B', ingredientFromItem(ModItems.StaticBattery), 'M', ingredientFromBlock(ModBlocks.MachineBlock)});			
 		RegisterHelper.addShapedRecipe("StaticPower_energizedBattery", "StaticPower", new ItemStack(ModBlocks.EnergizedBattery), new Object[]{"SSS", "BMB", "BBB", 
-		'S', ingredientFromItem(ModItems.EnergizedPlate), 'B', ModItems.EnergizedBattery, 'M', ingredientFromBlock(ModBlocks.MachineBlock)});		
+		'S', CraftHelpers.ingredientFromItemstack(ItemMaterials.plateEnergized), 'B', ModItems.EnergizedBattery, 'M', ingredientFromBlock(ModBlocks.MachineBlock)});		
 		RegisterHelper.addShapedRecipe("StaticPower_lumumBattery", "StaticPower", new ItemStack(ModBlocks.LumumBattery), new Object[]{"SSS", "BMB", "BBB",  
-		'S', ingredientFromItem(ModItems.LumumPlate), 'B', ingredientFromItem(ModItems.LumumBattery), 'M', ingredientFromBlock(ModBlocks.MachineBlock)});		
+		'S', CraftHelpers.ingredientFromItemstack(ItemMaterials.plateLumum), 'B', ingredientFromItem(ModItems.LumumBattery), 'M', ingredientFromBlock(ModBlocks.MachineBlock)});		
 		
 		//Digistore
 		RegisterHelper.addShapedRecipe("StaticPower_digistore", "StaticPower", new ItemStack(ModBlocks.Digistore), new Object[]{"TTT","TCT","TMT",
@@ -240,80 +234,80 @@ public class ShapedRecipes {
 		
 		//Static Chest --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_staticChest", "StaticPower", new ItemStack(ModBlocks.StaticChest), new Object[]{"SSS", "SCS", "SSS", 
-		'S', ingredientFromItem(ModItems.StaticIngot), 'C', ingredientFromBlock(Blocks.CHEST)});		
+		'S', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotStatic), 'C', ingredientFromBlock(Blocks.CHEST)});		
 		
 		//Fluid Capsules --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_baseFluidCapsule", "StaticPower", new ItemStack(ModItems.BaseFluidCapsule), new Object[]{"PGP", "PGP", "PGP", 
-		'P', ingredientFromItem(ModItems.IronPlate), 'G', ingredientFromBlock(Blocks.GLASS_PANE)});			
+		'P', CraftHelpers.ingredientOre("plateIron"), 'G', ingredientFromBlock(Blocks.GLASS_PANE)});			
 
 		//Energized Chest --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_energizedChest", "StaticPower", new ItemStack(ModBlocks.EnergizedChest), new Object[]{"EEE", "ECE", "EEE", 
-		'E', ingredientFromItem(ModItems.EnergizedIngot), 'C',  ingredientFromBlock(ModBlocks.StaticChest)});		
+		'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotEnergized), 'C',  ingredientFromBlock(ModBlocks.StaticChest)});		
 		
 		//Lumum Chest --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_lumumChest", "StaticPower", new ItemStack(ModBlocks.LumumChest), new Object[]{"LLL", "LCL", "LLL", 
-		'L', ingredientFromItem(ModItems.LumumIngot), 'C',  ingredientFromBlock(ModBlocks.EnergizedChest)});		
+		'L', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotLumum), 'C',  ingredientFromBlock(ModBlocks.EnergizedChest)});		
 		
 		//Vacuum Chest
 		RegisterHelper.addShapedRecipe("StaticPower_vacuumChest", "StaticPower", new ItemStack(ModBlocks.VacuumChest), new Object[]{"EHE", " C ", "IBI", 
 		'H',  ingredientFromBlock(Blocks.HOPPER), 'C',  ingredientFromBlock(Blocks.CHEST), 'B', ingredientFromItem(ModItems.StaticCircuit), 'E', ingredientFromItem(Items.ENDER_PEARL), 'I', ingredientFromItem(Items.IRON_INGOT)});	
 		
 		//Static Armor --------------------------------------------------------------------------------------------------
-		RegisterHelper.addShapedRecipe("StaticPower_staticHelmet", "StaticPower", new ItemStack(ModArmor.StaticHelmet), new Object[]{"EEE", "EBE", "   ",  'E', ingredientFromItem(ModItems.StaticIngot), 'B', ingredientFromItem(ModItems.StaticBattery)});
-		RegisterHelper.addShapedRecipe("StaticPower_staticChestplate", "StaticPower", new ItemStack(ModArmor.StaticChestplate), new Object[]{"EBE", "EEE", "EEE",  'E', ingredientFromItem(ModItems.StaticIngot), 'B', ingredientFromItem(ModItems.StaticBattery)});
-		RegisterHelper.addShapedRecipe("StaticPower_staticLeggings", "StaticPower", new ItemStack(ModArmor.StaticLeggings), new Object[]{"EEE", "EBE", "E E",  'E', ingredientFromItem(ModItems.StaticIngot), 'B', ingredientFromItem(ModItems.StaticBattery)});
-		RegisterHelper.addShapedRecipe("StaticPower_staticBoots", "StaticPower", new ItemStack(ModArmor.StaticBoots), new Object[]{"   ", "EBE", "E E",  'E', ingredientFromItem(ModItems.StaticIngot), 'B', ingredientFromItem(ModItems.StaticBattery)});		
+		RegisterHelper.addShapedRecipe("StaticPower_staticHelmet", "StaticPower", new ItemStack(ModArmor.StaticHelmet), new Object[]{"EEE", "EBE", "   ",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotStatic), 'B', ingredientFromItem(ModItems.StaticBattery)});
+		RegisterHelper.addShapedRecipe("StaticPower_staticChestplate", "StaticPower", new ItemStack(ModArmor.StaticChestplate), new Object[]{"EBE", "EEE", "EEE",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotStatic), 'B', ingredientFromItem(ModItems.StaticBattery)});
+		RegisterHelper.addShapedRecipe("StaticPower_staticLeggings", "StaticPower", new ItemStack(ModArmor.StaticLeggings), new Object[]{"EEE", "EBE", "E E",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotStatic), 'B', ingredientFromItem(ModItems.StaticBattery)});
+		RegisterHelper.addShapedRecipe("StaticPower_staticBoots", "StaticPower", new ItemStack(ModArmor.StaticBoots), new Object[]{"   ", "EBE", "E E",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotStatic), 'B', ingredientFromItem(ModItems.StaticBattery)});		
 		//Energized Armor --------------------------------------------------------------------------------------------------
-		RegisterHelper.addShapedRecipe("StaticPower_energizedHelmet", "StaticPower", new ItemStack(ModArmor.EnergizedHelmet), new Object[]{"EEE", "EBE", "   ",  'E', ingredientFromItem(ModItems.EnergizedIngot), 'B', ingredientFromItem(ModItems.EnergizedBattery)});
-		RegisterHelper.addShapedRecipe("StaticPower_energizedChestplate", "StaticPower", new ItemStack(ModArmor.EnergizedChestplate), new Object[]{"EBE", "EEE", "EEE",  'E', ingredientFromItem(ModItems.EnergizedIngot), 'B', ingredientFromItem(ModItems.EnergizedBattery)});
-		RegisterHelper.addShapedRecipe("StaticPower_energizedLeggings", "StaticPower", new ItemStack(ModArmor.EnergizedLeggings), new Object[]{"EEE", "EBE", "E E",  'E', ingredientFromItem(ModItems.EnergizedIngot), 'B', ingredientFromItem(ModItems.EnergizedBattery)});
-		RegisterHelper.addShapedRecipe("StaticPower_energizedBoots", "StaticPower", new ItemStack(ModArmor.EnergizedBoots), new Object[]{"   ", "EBE", "E E",  'E', ingredientFromItem(ModItems.EnergizedIngot), 'B', ingredientFromItem(ModItems.EnergizedBattery)});		
+		RegisterHelper.addShapedRecipe("StaticPower_energizedHelmet", "StaticPower", new ItemStack(ModArmor.EnergizedHelmet), new Object[]{"EEE", "EBE", "   ",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotEnergized), 'B', ingredientFromItem(ModItems.EnergizedBattery)});
+		RegisterHelper.addShapedRecipe("StaticPower_energizedChestplate", "StaticPower", new ItemStack(ModArmor.EnergizedChestplate), new Object[]{"EBE", "EEE", "EEE",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotEnergized), 'B', ingredientFromItem(ModItems.EnergizedBattery)});
+		RegisterHelper.addShapedRecipe("StaticPower_energizedLeggings", "StaticPower", new ItemStack(ModArmor.EnergizedLeggings), new Object[]{"EEE", "EBE", "E E",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotEnergized), 'B', ingredientFromItem(ModItems.EnergizedBattery)});
+		RegisterHelper.addShapedRecipe("StaticPower_energizedBoots", "StaticPower", new ItemStack(ModArmor.EnergizedBoots), new Object[]{"   ", "EBE", "E E",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotEnergized), 'B', ingredientFromItem(ModItems.EnergizedBattery)});		
 		//Lumum Armor --------------------------------------------------------------------------------------------------
-		RegisterHelper.addShapedRecipe("StaticPower_lumumHelmet", "StaticPower", new ItemStack(ModArmor.LumumHelmet), new Object[]{"EEE", "EBE", "   ",  'E', ingredientFromItem(ModItems.LumumIngot), 'B', ingredientFromItem(ModItems.LumumBattery)});
-		RegisterHelper.addShapedRecipe("StaticPower_lumumChestplate", "StaticPower", new ItemStack(ModArmor.LumumChestplate), new Object[]{"EBE", "EEE", "EEE",  'E', ingredientFromItem(ModItems.LumumIngot), 'B', ingredientFromItem(ModItems.LumumBattery)});
-		RegisterHelper.addShapedRecipe("StaticPower_lumumLeggings", "StaticPower", new ItemStack(ModArmor.LumumLeggings), new Object[]{"EEE", "EBE", "E E",  'E', ingredientFromItem(ModItems.LumumIngot), 'B', ingredientFromItem(ModItems.LumumBattery)});
-		RegisterHelper.addShapedRecipe("StaticPower_lumumBoots", "StaticPower", new ItemStack(ModArmor.LumumBoots), new Object[]{"   ", "EBE", "E E",  'E', ingredientFromItem(ModItems.LumumIngot), 'B', ingredientFromItem(ModItems.LumumBattery)});		
+		RegisterHelper.addShapedRecipe("StaticPower_lumumHelmet", "StaticPower", new ItemStack(ModArmor.LumumHelmet), new Object[]{"EEE", "EBE", "   ",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotLumum), 'B', ingredientFromItem(ModItems.LumumBattery)});
+		RegisterHelper.addShapedRecipe("StaticPower_lumumChestplate", "StaticPower", new ItemStack(ModArmor.LumumChestplate), new Object[]{"EBE", "EEE", "EEE",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotLumum), 'B', ingredientFromItem(ModItems.LumumBattery)});
+		RegisterHelper.addShapedRecipe("StaticPower_lumumLeggings", "StaticPower", new ItemStack(ModArmor.LumumLeggings), new Object[]{"EEE", "EBE", "E E",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotLumum), 'B', ingredientFromItem(ModItems.LumumBattery)});
+		RegisterHelper.addShapedRecipe("StaticPower_lumumBoots", "StaticPower", new ItemStack(ModArmor.LumumBoots), new Object[]{"   ", "EBE", "E E",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotLumum), 'B', ingredientFromItem(ModItems.LumumBattery)});		
 		
 		//Copper Armor --------------------------------------------------------------------------------------------------
-		RegisterHelper.addShapedRecipe("StaticPower_copperHelmet", "StaticPower", new ItemStack(ModArmor.CopperHelmet), new Object[]{"EEE", "E E", "   ",  'E', ingredientFromItem(ModItems.CopperIngot)});
-		RegisterHelper.addShapedRecipe("StaticPower_copperChestplate", "StaticPower", new ItemStack(ModArmor.CopperChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ingredientFromItem(ModItems.CopperIngot)});
-		RegisterHelper.addShapedRecipe("StaticPower_copperLeggings", "StaticPower", new ItemStack(ModArmor.CopperLeggings), new Object[]{"EEE", "E E", "E E",  'E', ingredientFromItem(ModItems.CopperIngot)});
-		RegisterHelper.addShapedRecipe("StaticPower_copperBoots", "StaticPower", new ItemStack(ModArmor.CopperBoots), new Object[]{"   ", "E E", "E E",  'E', ingredientFromItem(ModItems.CopperIngot)});		
+		RegisterHelper.addShapedRecipe("StaticPower_copperHelmet", "StaticPower", new ItemStack(ModArmor.CopperHelmet), new Object[]{"EEE", "E E", "   ",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotCopper)});
+		RegisterHelper.addShapedRecipe("StaticPower_copperChestplate", "StaticPower", new ItemStack(ModArmor.CopperChestplate), new Object[]{"E E", "EEE", "EEE",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotCopper)});
+		RegisterHelper.addShapedRecipe("StaticPower_copperLeggings", "StaticPower", new ItemStack(ModArmor.CopperLeggings), new Object[]{"EEE", "E E", "E E",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotCopper)});
+		RegisterHelper.addShapedRecipe("StaticPower_copperBoots", "StaticPower", new ItemStack(ModArmor.CopperBoots), new Object[]{"   ", "E E", "E E",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotCopper)});		
 		//Tin Armor --------------------------------------------------------------------------------------------------
-		RegisterHelper.addShapedRecipe("StaticPower_tinHelmet", "StaticPower", new ItemStack(ModArmor.TinHelmet), new Object[]{"EEE", "E E", "   ",  'E', ingredientFromItem(ModItems.TinIngot)});
-		RegisterHelper.addShapedRecipe("StaticPower_tinChestplate", "StaticPower", new ItemStack(ModArmor.TinChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ingredientFromItem(ModItems.TinIngot)});
-		RegisterHelper.addShapedRecipe("StaticPower_tinLeggings", "StaticPower", new ItemStack(ModArmor.TinLeggings), new Object[]{"EEE", "E E", "E E",  'E', ingredientFromItem(ModItems.TinIngot)});
-		RegisterHelper.addShapedRecipe("StaticPower_tinBoots", "StaticPower", new ItemStack(ModArmor.TinBoots), new Object[]{"   ", "E E", "E E",  'E', ingredientFromItem(ModItems.TinIngot)});		
+		RegisterHelper.addShapedRecipe("StaticPower_tinHelmet", "StaticPower", new ItemStack(ModArmor.TinHelmet), new Object[]{"EEE", "E E", "   ",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotTin)});
+		RegisterHelper.addShapedRecipe("StaticPower_tinChestplate", "StaticPower", new ItemStack(ModArmor.TinChestplate), new Object[]{"E E", "EEE", "EEE",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotTin)});
+		RegisterHelper.addShapedRecipe("StaticPower_tinLeggings", "StaticPower", new ItemStack(ModArmor.TinLeggings), new Object[]{"EEE", "E E", "E E",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotTin)});
+		RegisterHelper.addShapedRecipe("StaticPower_tinBoots", "StaticPower", new ItemStack(ModArmor.TinBoots), new Object[]{"   ", "E E", "E E",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotTin)});		
 		//Lead Armor --------------------------------------------------------------------------------------------------
-		RegisterHelper.addShapedRecipe("StaticPower_leadHelmet", "StaticPower", new ItemStack(ModArmor.LeadHelmet), new Object[]{"EEE", "E E", "   ",  'E', ingredientFromItem(ModItems.LeadIngot)});
-		RegisterHelper.addShapedRecipe("StaticPower_leadChestplate", "StaticPower", new ItemStack(ModArmor.LeadChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ingredientFromItem(ModItems.LeadIngot)});
-		RegisterHelper.addShapedRecipe("StaticPower_leadLeggings", "StaticPower", new ItemStack(ModArmor.LeadLeggings), new Object[]{"EEE", "E E", "E E",  'E', ingredientFromItem(ModItems.LeadIngot)});
-		RegisterHelper.addShapedRecipe("StaticPower_leadBoots", "StaticPower", new ItemStack(ModArmor.LeadBoots), new Object[]{"   ", "E E", "E E",  'E', ingredientFromItem(ModItems.LeadIngot)});		
+		RegisterHelper.addShapedRecipe("StaticPower_leadHelmet", "StaticPower", new ItemStack(ModArmor.LeadHelmet), new Object[]{"EEE", "E E", "   ",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotLead)});
+		RegisterHelper.addShapedRecipe("StaticPower_leadChestplate", "StaticPower", new ItemStack(ModArmor.LeadChestplate), new Object[]{"E E", "EEE", "EEE",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotLead)});
+		RegisterHelper.addShapedRecipe("StaticPower_leadLeggings", "StaticPower", new ItemStack(ModArmor.LeadLeggings), new Object[]{"EEE", "E E", "E E",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotLead)});
+		RegisterHelper.addShapedRecipe("StaticPower_leadBoots", "StaticPower", new ItemStack(ModArmor.LeadBoots), new Object[]{"   ", "E E", "E E",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotLead)});		
 		//Silver Armor --------------------------------------------------------------------------------------------------
-		RegisterHelper.addShapedRecipe("StaticPower_silverHelmet", "StaticPower", new ItemStack(ModArmor.SilverHelmet), new Object[]{"EEE", "E E", "   ",  'E', ingredientFromItem(ModItems.SilverIngot)});
-		RegisterHelper.addShapedRecipe("StaticPower_silverChestplate", "StaticPower", new ItemStack(ModArmor.SilverChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ingredientFromItem(ModItems.SilverIngot)});
-		RegisterHelper.addShapedRecipe("StaticPower_silverLeggings", "StaticPower", new ItemStack(ModArmor.SilverLeggings), new Object[]{"EEE", "E E", "E E",  'E', ingredientFromItem(ModItems.SilverIngot)});
-		RegisterHelper.addShapedRecipe("StaticPower_silverBoots", "StaticPower", new ItemStack(ModArmor.SilverBoots), new Object[]{"   ", "E E", "E E",  'E', ingredientFromItem(ModItems.SilverIngot)});		
+		RegisterHelper.addShapedRecipe("StaticPower_silverHelmet", "StaticPower", new ItemStack(ModArmor.SilverHelmet), new Object[]{"EEE", "E E", "   ",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotSilver)});
+		RegisterHelper.addShapedRecipe("StaticPower_silverChestplate", "StaticPower", new ItemStack(ModArmor.SilverChestplate), new Object[]{"E E", "EEE", "EEE",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotSilver)});
+		RegisterHelper.addShapedRecipe("StaticPower_silverLeggings", "StaticPower", new ItemStack(ModArmor.SilverLeggings), new Object[]{"EEE", "E E", "E E",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotSilver)});
+		RegisterHelper.addShapedRecipe("StaticPower_silverBoots", "StaticPower", new ItemStack(ModArmor.SilverBoots), new Object[]{"   ", "E E", "E E",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotSilver)});		
 		//Platinum Armor --------------------------------------------------------------------------------------------------
-		RegisterHelper.addShapedRecipe("StaticPower_platinumHelmet", "StaticPower", new ItemStack(ModArmor.PlatinumHelmet), new Object[]{"EEE", "E E", "   ",  'E', ingredientFromItem(ModItems.PlatinumIngot)});
-		RegisterHelper.addShapedRecipe("StaticPower_platinumChestplate", "StaticPower", new ItemStack(ModArmor.PlatinumChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ingredientFromItem(ModItems.PlatinumIngot)});
-		RegisterHelper.addShapedRecipe("StaticPower_platinumLeggings", "StaticPower", new ItemStack(ModArmor.PlatinumLeggings), new Object[]{"EEE", "E E", "E E",  'E', ingredientFromItem(ModItems.PlatinumIngot)});
-		RegisterHelper.addShapedRecipe("StaticPower_platinumBoots", "StaticPower", new ItemStack(ModArmor.PlatinumBoots), new Object[]{"   ", "E E", "E E",  'E', ingredientFromItem(ModItems.PlatinumIngot)});		
+		RegisterHelper.addShapedRecipe("StaticPower_platinumHelmet", "StaticPower", new ItemStack(ModArmor.PlatinumHelmet), new Object[]{"EEE", "E E", "   ",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotPlatinum)});
+		RegisterHelper.addShapedRecipe("StaticPower_platinumChestplate", "StaticPower", new ItemStack(ModArmor.PlatinumChestplate), new Object[]{"E E", "EEE", "EEE",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotPlatinum)});
+		RegisterHelper.addShapedRecipe("StaticPower_platinumLeggings", "StaticPower", new ItemStack(ModArmor.PlatinumLeggings), new Object[]{"EEE", "E E", "E E",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotPlatinum)});
+		RegisterHelper.addShapedRecipe("StaticPower_platinumBoots", "StaticPower", new ItemStack(ModArmor.PlatinumBoots), new Object[]{"   ", "E E", "E E",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotPlatinum)});		
 		//Aluminium Armor --------------------------------------------------------------------------------------------------
-		RegisterHelper.addShapedRecipe("StaticPower_aluminiumHelmet", "StaticPower", new ItemStack(ModArmor.AluminiumHelmet), new Object[]{"EEE", "E E", "   ",  'E', ingredientFromItem(ModItems.AluminiumIngot)});
-		RegisterHelper.addShapedRecipe("StaticPower_aluminiumChestplate", "StaticPower", new ItemStack(ModArmor.AluminiumChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ingredientFromItem(ModItems.AluminiumIngot)});
-		RegisterHelper.addShapedRecipe("StaticPower_aluminiumLeggings", "StaticPower", new ItemStack(ModArmor.AluminiumLeggings), new Object[]{"EEE", "E E", "E E",  'E', ingredientFromItem(ModItems.AluminiumIngot)});
-		RegisterHelper.addShapedRecipe("StaticPower_aluminiumBoots", "StaticPower", new ItemStack(ModArmor.AluminiumBoots), new Object[]{"   ", "E E", "E E",  'E', ingredientFromItem(ModItems.AluminiumIngot)});		
+		RegisterHelper.addShapedRecipe("StaticPower_aluminiumHelmet", "StaticPower", new ItemStack(ModArmor.AluminiumHelmet), new Object[]{"EEE", "E E", "   ",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotAluminium)});
+		RegisterHelper.addShapedRecipe("StaticPower_aluminiumChestplate", "StaticPower", new ItemStack(ModArmor.AluminiumChestplate), new Object[]{"E E", "EEE", "EEE",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotAluminium)});
+		RegisterHelper.addShapedRecipe("StaticPower_aluminiumLeggings", "StaticPower", new ItemStack(ModArmor.AluminiumLeggings), new Object[]{"EEE", "E E", "E E",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotAluminium)});
+		RegisterHelper.addShapedRecipe("StaticPower_aluminiumBoots", "StaticPower", new ItemStack(ModArmor.AluminiumBoots), new Object[]{"   ", "E E", "E E",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotAluminium)});		
 		//Sapphire Armor --------------------------------------------------------------------------------------------------
-		RegisterHelper.addShapedRecipe("StaticPower_sapphireHelmet", "StaticPower", new ItemStack(ModArmor.SapphireHelmet), new Object[]{"EEE", "E E", "   ",  'E', ingredientFromItem(ModItems.SapphireGem)});
-		RegisterHelper.addShapedRecipe("StaticPower_sapphireChestplate", "StaticPower", new ItemStack(ModArmor.SapphireChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ingredientFromItem(ModItems.SapphireGem)});
-		RegisterHelper.addShapedRecipe("StaticPower_sapphireLeggings", "StaticPower", new ItemStack(ModArmor.SapphireLeggings), new Object[]{"EEE", "E E", "E E",  'E', ingredientFromItem(ModItems.SapphireGem)});
-		RegisterHelper.addShapedRecipe("StaticPower_sapphireBoots", "StaticPower", new ItemStack(ModArmor.SapphireBoots), new Object[]{"   ", "E E", "E E",  'E', ingredientFromItem(ModItems.SapphireGem)});		
+		RegisterHelper.addShapedRecipe("StaticPower_sapphireHelmet", "StaticPower", new ItemStack(ModArmor.SapphireHelmet), new Object[]{"EEE", "E E", "   ",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.gemSapphire)});
+		RegisterHelper.addShapedRecipe("StaticPower_sapphireChestplate", "StaticPower", new ItemStack(ModArmor.SapphireChestplate), new Object[]{"E E", "EEE", "EEE",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.gemSapphire)});
+		RegisterHelper.addShapedRecipe("StaticPower_sapphireLeggings", "StaticPower", new ItemStack(ModArmor.SapphireLeggings), new Object[]{"EEE", "E E", "E E",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.gemSapphire)});
+		RegisterHelper.addShapedRecipe("StaticPower_sapphireBoots", "StaticPower", new ItemStack(ModArmor.SapphireBoots), new Object[]{"   ", "E E", "E E",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.gemSapphire)});		
 		//Ruby Armor --------------------------------------------------------------------------------------------------
-		RegisterHelper.addShapedRecipe("StaticPower_rubyHelmet", "StaticPower", new ItemStack(ModArmor.RubyHelmet), new Object[]{"EEE", "E E", "   ",  'E', ingredientFromItem(ModItems.RubyGem)});
-		RegisterHelper.addShapedRecipe("StaticPower_rubyChestplate", "StaticPower", new ItemStack(ModArmor.RubyChestplate), new Object[]{"E E", "EEE", "EEE",  'E', ingredientFromItem(ModItems.RubyGem)});
-		RegisterHelper.addShapedRecipe("StaticPower_rubyLeggings", "StaticPower", new ItemStack(ModArmor.RubyLeggings), new Object[]{"EEE", "E E", "E E",  'E', ingredientFromItem(ModItems.RubyGem)});
-		RegisterHelper.addShapedRecipe("StaticPower_rubyBoots", "StaticPower", new ItemStack(ModArmor.RubyBoots), new Object[]{"   ", "E E", "E E",  'E', ingredientFromItem(ModItems.RubyGem)});		
+		RegisterHelper.addShapedRecipe("StaticPower_rubyHelmet", "StaticPower", new ItemStack(ModArmor.RubyHelmet), new Object[]{"EEE", "E E", "   ",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.gemRuby)});
+		RegisterHelper.addShapedRecipe("StaticPower_rubyChestplate", "StaticPower", new ItemStack(ModArmor.RubyChestplate), new Object[]{"E E", "EEE", "EEE",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.gemRuby)});
+		RegisterHelper.addShapedRecipe("StaticPower_rubyLeggings", "StaticPower", new ItemStack(ModArmor.RubyLeggings), new Object[]{"EEE", "E E", "E E",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.gemRuby)});
+		RegisterHelper.addShapedRecipe("StaticPower_rubyBoots", "StaticPower", new ItemStack(ModArmor.RubyBoots), new Object[]{"   ", "E E", "E E",  'E', CraftHelpers.ingredientFromItemstack(ItemMaterials.gemRuby)});		
 	
 		//Apple Pie
 		RegisterHelper.addShapedRecipe("StaticPower_applePie", "StaticPower", new ItemStack(ModItems.ApplePie), new Object[]{"AS ","E  ","   ",

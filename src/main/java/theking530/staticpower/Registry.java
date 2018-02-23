@@ -10,6 +10,7 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -21,6 +22,7 @@ import theking530.staticpower.blocks.IItemBlockProvider;
 import theking530.staticpower.client.ItemRenderRegistry;
 import theking530.staticpower.client.model.fluidcapsule.ModelFluidCapsule.LoaderFluidCapsule;
 import theking530.staticpower.fluids.ModFluids;
+import theking530.staticpower.items.MultiItem;
 
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
 public class Registry {
@@ -35,6 +37,11 @@ public class Registry {
     
     public void PreRegisterItem(Item item) {
     	ITEMS.add(item);
+    	if(item instanceof MultiItem) {
+        	ItemRenderRegistry.addMultiItem((MultiItem)item);
+    	}else{
+        	ItemRenderRegistry.addItem(item);
+    	}
     }
     public void PreRegisterBlock(Block block) {
     	BLOCKS.add(block);
@@ -45,6 +52,9 @@ public class Registry {
     		}
     	}else{
         	ITEMS.add(new BaseItemBlock(block, block.getUnlocalizedName()));	
+    	}
+    	if(!(block instanceof IFluidBlock)) {
+        	ItemRenderRegistry.addBlock(block);
     	}
     }
     @SideOnly(Side.CLIENT)

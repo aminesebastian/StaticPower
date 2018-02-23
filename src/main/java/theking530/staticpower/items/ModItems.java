@@ -27,7 +27,8 @@ import theking530.staticpower.items.upgrades.ExperienceVacuumUpgrade;
 import theking530.staticpower.items.upgrades.TeleportUpgrade;
 
 public class ModItems {
-	public static SPItemMaterial Materials;
+	public static ItemMaterials Materials;
+	public static FormerMolds FormerMolds;
 	
 	public static Item BaseFluidCapsule;
 	public static Item StaticFluidCapsule;
@@ -42,10 +43,6 @@ public class ModItems {
 	public static Item CopperCoil;
 	public static Item SilverCoil;
 	public static Item GoldCoil;
-	
-	public static Item BlankMould;
-	public static Item PlateMould;
-	public static Item WireMould;
 	
 	public static Item BasicCircuit;
 	public static Item StaticCircuit;
@@ -64,7 +61,6 @@ public class ModItems {
 	
 	public static Item TeleportUpgrade;
 	public static Item ExperienceVacuumUpgrade;
-	
 	public static Item BasicSpeedUpgrade;
 	public static Item StaticSpeedUpgrade;
 	public static Item EnergizedSpeedUpgrade;
@@ -143,7 +139,7 @@ public class ModItems {
 	public static Item LumumPie;
 
 	public static void init(Registry registry) {
-		registry.PreRegisterItem(Materials = new SPItemMaterial());
+		registry.PreRegisterItem(Materials = new ItemMaterials());
 		
 		WheatFlour = new BaseFood("WheatFlour", 2);
 		registry.PreRegisterItem(WheatFlour);	
@@ -221,9 +217,7 @@ public class ModItems {
 		registry.PreRegisterItem(SilverCoil = new ItemBase("SilverCoil"));
 		registry.PreRegisterItem(GoldCoil = new ItemBase("GoldCoil"));
 		
-		registry.PreRegisterItem(PlateMould = new FormerMold("PlateMould"));
-		registry.PreRegisterItem(WireMould = new FormerMold("WireMould"));
-		registry.PreRegisterItem(BlankMould = new ItemBase("BlankMould"));
+		registry.PreRegisterItem(FormerMolds = new FormerMolds());
 		
 		EnergizedEnergyCrystal = new ItemBase("EnergizedEnergyCrystal");
 		registry.PreRegisterItem(EnergizedEnergyCrystal);

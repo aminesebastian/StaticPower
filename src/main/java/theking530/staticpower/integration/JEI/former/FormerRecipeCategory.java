@@ -95,9 +95,7 @@ public class FormerRecipeCategory extends BaseJEIRecipeCategory<JEIFormerRecipeW
         
         //Output
         guiStacks.init(slotId++, false, 112, 25);
-        	              
-        System.out.print( ingredients.getInputs(ItemStack.class) + "\n");
-        
+        	                  
         guiStacks.set(ingredients);
     }
 }

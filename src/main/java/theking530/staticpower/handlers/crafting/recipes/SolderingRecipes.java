@@ -11,7 +11,7 @@ import net.minecraftforge.oredict.OreIngredient;
 import theking530.staticpower.assists.RegisterHelper;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.items.ModItems;
-import theking530.staticpower.items.SPItemMaterial;
+import theking530.staticpower.items.ItemMaterials;
 
 public class SolderingRecipes {
 	
@@ -22,11 +22,11 @@ public class SolderingRecipes {
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.BasicCircuit), new Object[]{"WWW", "RIR", "WWW", 
 		'I', ingredientOre("plateIron"), 'R', Items.REDSTONE, 'W', ingredientFromItem(ModItems.CopperWire)});	
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.StaticCircuit), new Object[]{"WWW", "RSR", "WWW", 
-		'R', Items.REDSTONE, 'S', SPItemMaterial.plateStatic, 'W', ingredientFromItem(ModItems.CopperWire)});		
+		'R', Items.REDSTONE, 'S', ItemMaterials.plateStatic, 'W', ingredientFromItem(ModItems.CopperWire)});		
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.EnergizedCircuit), new Object[]{"WWW", "RER", "WWW", 
-		'R', Items.REDSTONE, 'E', SPItemMaterial.plateEnergized, 'W', ingredientFromItem(ModItems.SilverWire)});		
+		'R', Items.REDSTONE, 'E', ItemMaterials.plateEnergized, 'W', ingredientFromItem(ModItems.SilverWire)});		
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.LumumCircuit), new Object[]{"WWW", "RLR", "WWW", 
-		'R', Items.REDSTONE, 'L', SPItemMaterial.plateLumum, 'W', ingredientFromItem(ModItems.GoldWire)});
+		'R', Items.REDSTONE, 'L', ItemMaterials.plateLumum, 'W', ingredientFromItem(ModItems.GoldWire)});
 		
 		//Batteries --------------------------------------------------------------------------------------------------
 		for(int i=0; i<OreDictionary.getOres("nuggetIron").size(); i++) {
@@ -34,11 +34,11 @@ public class SolderingRecipes {
 					'I', ingredientOre("plateIron"), 'R', Blocks.REDSTONE_BLOCK, 'C', Items.IRON_NUGGET});		
 		}
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.StaticBattery), new Object[]{" S ", "IDI", "IRI", 
-		'I', SPItemMaterial.ingotStatic, 'R', Blocks.REDSTONE_BLOCK, 'S', SPItemMaterial.nuggetStatic, 'D', Items.DIAMOND});	
+		'I', ItemMaterials.ingotStatic, 'R', Blocks.REDSTONE_BLOCK, 'S', ItemMaterials.nuggetStatic, 'D', Items.DIAMOND});	
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.EnergizedBattery), new Object[]{" E ", "IDI", "IRI", 
-		'I', SPItemMaterial.ingotEnergized, 'R', Blocks.REDSTONE_BLOCK, 'E', SPItemMaterial.nuggetEnergized, 'D', ModItems.EnergizedEnergyCrystal});	
+		'I', ItemMaterials.ingotEnergized, 'R', Blocks.REDSTONE_BLOCK, 'E', ItemMaterials.nuggetEnergized, 'D', ModItems.EnergizedEnergyCrystal});	
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.LumumBattery), new Object[]{" L ", "IDI", "IRI", 
-		'I', SPItemMaterial.ingotLumum, 'R', Blocks.REDSTONE_BLOCK, 'L', SPItemMaterial.nuggetLumum, 'D', ModItems.LumumEnergyCrystal});	
+		'I', ItemMaterials.ingotLumum, 'R', Blocks.REDSTONE_BLOCK, 'L', ItemMaterials.nuggetLumum, 'D', ModItems.LumumEnergyCrystal});	
 		
 		//Tools -------------------------------------------------------------------------------------------------------
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.ElectricSolderingIron), new Object[]{"I  "," IL"," LR",
@@ -66,7 +66,7 @@ public class SolderingRecipes {
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.StaticQuarryingUpgrade), new Object[]{" P "," G ","P P",
 		'P', Items.IRON_PICKAXE, 'G', ModItems.StaticUpgradePlate});
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.StaticRangeUpgrade), new Object[]{"PPP"," G ","PPP",
-		'P', SPItemMaterial.plateStatic, 'G',  ModItems.StaticUpgradePlate});
+		'P', ItemMaterials.plateStatic, 'G',  ModItems.StaticUpgradePlate});
 			
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.EnergizedTankUpgrade), new Object[]{" B ","LGL","I I",
 		'B', Items.BUCKET, 'I', ingredientOre("plateTin"), 'L', new ItemStack(Items.DYE, 1, 4), 'G', ModItems.EnergizedUpgradePlate});
@@ -77,7 +77,7 @@ public class SolderingRecipes {
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.EnergizedQuarryingUpgrade), new Object[]{" P "," G ","P P",
 		'P', Items.GOLDEN_PICKAXE, 'G', ModItems.EnergizedUpgradePlate});
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.EnergizedRangeUpgrade), new Object[]{"PPP"," G ","PPP",
-		'P', SPItemMaterial.plateEnergized, 'G',  ModItems.EnergizedUpgradePlate});
+		'P', ItemMaterials.plateEnergized, 'G',  ModItems.EnergizedUpgradePlate});
 		
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.LumumTankUpgrade), new Object[]{" B ","LGL","I I",
 		'B', Items.BUCKET, 'I', ingredientOre("plateTin"), 'L', Blocks.LAPIS_BLOCK, 'G', ModItems.LumumUpgradePlate});
@@ -88,7 +88,7 @@ public class SolderingRecipes {
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.LumumQuarryingUpgrade), new Object[]{" P "," G ","P P",
 		'P', Items.DIAMOND_PICKAXE, 'G', ModItems.LumumUpgradePlate});
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.LumumRangeUpgrade), new Object[]{"PPP"," G ","PPP",
-		'P', SPItemMaterial.plateLumum, 'G',  ModItems.LumumUpgradePlate});
+		'P', ItemMaterials.plateLumum, 'G',  ModItems.LumumUpgradePlate});
 		
 		RegisterHelper.registerSolderingRecipe(ModItems.DigistoreCapacityUpgrade.basicCapacityUpgrade, new Object[]{"SCS"," G ","SCS",
 		'S', Items.STICK, 'C',  ingredientOre("chestWood"), 'G',  ModItems.BasicUpgradePlate});	
@@ -102,11 +102,11 @@ public class SolderingRecipes {
 		'C', Blocks.OBSIDIAN, 'G',  ModItems.BasicUpgradePlate});
 		
 		RegisterHelper.registerSolderingRecipe(ModItems.DigistoreCapacityUpgrade.staticCapacityUpgrade, new Object[]{" P ","UPU"," P ",
-		'P', SPItemMaterial.plateStatic, 'U', ModItems.DigistoreCapacityUpgrade.goldCapacityUpgrade});		
+		'P', ItemMaterials.plateStatic, 'U', ModItems.DigistoreCapacityUpgrade.goldCapacityUpgrade});		
 		RegisterHelper.registerSolderingRecipe(ModItems.DigistoreCapacityUpgrade.energizedCapacityUpgrade, new Object[]{" P ","UPU"," P ",
-		'P', SPItemMaterial.plateEnergized, 'U', ModItems.DigistoreCapacityUpgrade.staticCapacityUpgrade});		
+		'P', ItemMaterials.plateEnergized, 'U', ModItems.DigistoreCapacityUpgrade.staticCapacityUpgrade});		
 		RegisterHelper.registerSolderingRecipe(ModItems.DigistoreCapacityUpgrade.lumumCapacityUpgrade, new Object[]{" P ","UPU"," P ",
-		'P', SPItemMaterial.plateLumum, 'U', ModItems.DigistoreCapacityUpgrade.energizedCapacityUpgrade});
+		'P', ItemMaterials.plateLumum, 'U', ModItems.DigistoreCapacityUpgrade.energizedCapacityUpgrade});
 		
 		RegisterHelper.registerSolderingRecipe(ModItems.DigistoreMiscUpgrade.VoidUprgade, new Object[]{"OOO","OBO","OOO",
 		'O', Blocks.OBSIDIAN, 'B', ModItems.BasicUpgradePlate});
@@ -130,9 +130,9 @@ public class SolderingRecipes {
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.BasicItemFilter), new Object[]{" P ","PGP"," C ",
 		'P', Items.PAPER, 'C', ModItems.BasicCircuit, 'G', Items.IRON_NUGGET});
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.UpgradedItemFilter), new Object[]{" P ","PGP"," C ",
-		'P', Items.PAPER, 'C', ModItems.StaticCircuit, 'G', SPItemMaterial.nuggetStatic});
+		'P', Items.PAPER, 'C', ModItems.StaticCircuit, 'G', ItemMaterials.nuggetStatic});
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.AdvancedItemFilter), new Object[]{" P ","PGP"," C ",
-		'P', Items.PAPER, 'C', ModItems.EnergizedCircuit, 'G', SPItemMaterial.nuggetEnergized});
+		'P', Items.PAPER, 'C', ModItems.EnergizedCircuit, 'G', ItemMaterials.nuggetEnergized});
 		
 		//Gate Components
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModBlocks.LogicGateBasePlate, 2), new Object[]{"   ", "   ", "SBS", 
@@ -152,11 +152,11 @@ public class SolderingRecipes {
 		
 		//Fluid Canisters
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.StaticFluidCapsule), new Object[]{"PPP", "CPC", "PPP", 
-		'P', SPItemMaterial.plateStatic, 'C', ModItems.BaseFluidCapsule});		
+		'P', ItemMaterials.plateStatic, 'C', ModItems.BaseFluidCapsule});		
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.EnergizedFluidCapsule), new Object[]{"PPP", "CPC", "PPP", 
-		'P', SPItemMaterial.plateEnergized, 'C', ModItems.StaticFluidCapsule});		
+		'P', ItemMaterials.plateEnergized, 'C', ModItems.StaticFluidCapsule});		
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.LumumFluidCapsule), new Object[]{"PPP", "CPC", "PPP", 
-		'P', SPItemMaterial.plateLumum, 'C', ModItems.EnergizedFluidCapsule});	
+		'P', ItemMaterials.plateLumum, 'C', ModItems.EnergizedFluidCapsule});	
 		
 		RegisterHelper.registerSolderingRecipe(new ItemStack(ModItems.MemoryChip, 8), new Object[]{"PPP", "SSS", "QCQ", 
 		'P', ingredientOre("plateIron"), 'Q', ingredientOre("wireSilver"), 'S', ingredientOre("itemSilicon"), 'C', ModItems.BasicCircuit});

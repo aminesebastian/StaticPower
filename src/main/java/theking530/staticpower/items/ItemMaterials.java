@@ -2,7 +2,7 @@ package theking530.staticpower.items;
 
 import net.minecraft.item.ItemStack;
 
-public class SPItemMaterial extends MultiItem {
+public class ItemMaterials extends MultiItem {
 	
 	public static ItemStack ingotCopper;
 	public static ItemStack ingotTin;	
@@ -76,13 +76,14 @@ public class SPItemMaterial extends MultiItem {
 	public static ItemStack gearLumum;
 	public static ItemStack gearInertInfusion;
 	public static ItemStack gearRedstoneAlloy;
-		
+	public static ItemStack gearIron;
+	public static ItemStack gearGold;
+	
 	public static ItemStack gemRuby;
 	public static ItemStack gemSapphire;
 	
-	public SPItemMaterial() {
+	public ItemMaterials() {
 		super("material");
-		registerSubItems();
 	}
 	@Override
 	protected void registerSubItems() {
@@ -156,8 +157,10 @@ public class SPItemMaterial extends MultiItem {
 		gearStatic = createSubOreItem(207, "gearStatic");
 		gearEnergized = createSubOreItem(208, "gearEnergized");
 		gearLumum = createSubOreItem(209, "gearLumum");
-		gearInertInfusion = createSubOreItem(208, "gearInertInfusion");
-		gearRedstoneAlloy = createSubOreItem(209, "gearRedstoneAlloy");
+		gearInertInfusion = createSubOreItem(2010, "gearInertInfusion");
+		gearRedstoneAlloy = createSubOreItem(211, "gearRedstoneAlloy");
+		gearIron = createSubOreItem(212, "gearIron");
+		gearGold = createSubOreItem(213, "gearGold");
 		
 		gemRuby = createSubOreItem(250, "gemRuby");
 		gemSapphire = createSubOreItem(251, "gemSapphire");

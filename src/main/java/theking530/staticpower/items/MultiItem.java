@@ -17,6 +17,7 @@ public class MultiItem extends ItemBase {
 		super(name);
 		itemMap = new HashMap<Integer, MultiItemWrapper>();
 		setHasSubtypes(true);
+		registerSubItems();
 	}
 	protected void registerSubItems() {
 		

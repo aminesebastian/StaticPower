@@ -13,6 +13,7 @@ import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.integration.ICompatibilityPlugin;
 import theking530.staticpower.items.ModItems;
+import theking530.staticpower.items.ItemMaterials;
 
 public class PluginTinkersConstruct implements ICompatibilityPlugin {
 
@@ -44,9 +45,9 @@ public class PluginTinkersConstruct implements ICompatibilityPlugin {
 	}
 	
 	public void initializeTinkersMaterials() {
-		createTinkersMaterial(250, new ItemStack(ModItems.StaticIngot), "Static Metal", 2, 700, 800, 4, 0.8f, EnumTextFormatting.GREEN.toString(), 255 << 24 | 51 << 16 | 255 << 8 | 53, 180, 1.0f, 2.0f, 0.8f);
-		createTinkersMaterial(251, new ItemStack(ModItems.EnergizedIngot), "Energized Metal", 3, 1100, 1300, 8, 1.0f, EnumTextFormatting.AQUA.toString(), 255 << 24 | 51 << 16 | 255 << 8 | 255, 80, 1.2f, 2.0f, 0.9f);
-		createTinkersMaterial(252, new ItemStack(ModItems.LumumIngot), "Lumum Metal", 5, 2000, 1500, 10, 1.3f, EnumTextFormatting.YELLOW.toString(), 255 << 24 | 255 << 16 | 255 << 8 | 90, 40, 1.5f, 2.0f, 1.0f);
+		createTinkersMaterial(250, ItemMaterials.ingotStatic, "Static Metal", 2, 700, 800, 4, 0.8f, EnumTextFormatting.GREEN.toString(), 255 << 24 | 51 << 16 | 255 << 8 | 53, 180, 1.0f, 2.0f, 0.8f);
+		createTinkersMaterial(251, ItemMaterials.ingotEnergized, "Energized Metal", 3, 1100, 1300, 8, 1.0f, EnumTextFormatting.AQUA.toString(), 255 << 24 | 51 << 16 | 255 << 8 | 255, 80, 1.2f, 2.0f, 0.9f);
+		createTinkersMaterial(252, ItemMaterials.ingotLumum, "Lumum Metal", 5, 2000, 1500, 10, 1.3f, EnumTextFormatting.YELLOW.toString(), 255 << 24 | 255 << 16 | 255 << 8 | 90, 40, 1.5f, 2.0f, 1.0f);
 	}
 	public void createTinkersMaterial(int ID, ItemStack item, String name, int harvestLevel, int durability, int miningSpeed, int attack, float handlerModifier, String textColor, int color,
 			int drawSpeed, float projectileSpeed, float projectileMass, float projectileFragility) {
@@ -94,14 +95,18 @@ public class PluginTinkersConstruct implements ICompatibilityPlugin {
 	}
 	
 	public void initializeTinkersFluids(){
-		createTinkersFluid(250, new ItemStack(ModItems.StaticIngot), ModBlocks.StaticBlock, new FluidStack(ModFluids.StaticFluid, 144), 700);
+		createTinkersFluid(250, ItemMaterials.ingotStatic, ModBlocks.StaticBlock, new FluidStack(ModFluids.StaticFluid, 144), 700);
 		createTinkersFluid(250, new ItemStack(Item.getItemFromBlock(ModBlocks.StaticBlock)), ModBlocks.StaticBlock, new FluidStack(ModFluids.StaticFluid, 1296), 700);
+		createTinkersFluid(250, ItemMaterials.nuggetStatic, ModBlocks.LumumBlock, new FluidStack(ModFluids.LumumFluid, 6), 1100);
 		
-		createTinkersFluid(251, new ItemStack(ModItems.EnergizedIngot), ModBlocks.EnergizedBlock, new FluidStack(ModFluids.EnergizedFluid, 144), 900);
+		createTinkersFluid(251, ItemMaterials.ingotEnergized, ModBlocks.EnergizedBlock, new FluidStack(ModFluids.EnergizedFluid, 144), 900);
 		createTinkersFluid(251, new ItemStack(Item.getItemFromBlock(ModBlocks.EnergizedBlock)), ModBlocks.EnergizedBlock, new FluidStack(ModFluids.EnergizedFluid, 1296), 900);
+		createTinkersFluid(251, ItemMaterials.nuggetEnergized, ModBlocks.LumumBlock, new FluidStack(ModFluids.LumumFluid, 6), 1100);
 		
-		createTinkersFluid(252, new ItemStack(ModItems.LumumIngot), ModBlocks.LumumBlock, new FluidStack(ModFluids.LumumFluid, 144), 1100);
-		createTinkersFluid(252, new ItemStack(Item.getItemFromBlock(ModBlocks.LumumBlock)), ModBlocks.LumumBlock, new FluidStack(ModFluids.LumumFluid, 1296), 900);
+		createTinkersFluid(252, ItemMaterials.ingotLumum, ModBlocks.LumumBlock, new FluidStack(ModFluids.LumumFluid, 144), 1100);
+		createTinkersFluid(252, new ItemStack(Item.getItemFromBlock(ModBlocks.LumumBlock)), ModBlocks.LumumBlock, new FluidStack(ModFluids.LumumFluid, 1296), 1100);
+		createTinkersFluid(252, ItemMaterials.nuggetLumum, ModBlocks.LumumBlock, new FluidStack(ModFluids.LumumFluid, 6), 1100);
+		
 	}
 	public void createTinkersFluid(int ID, ItemStack meltingItem, Block displayItem, FluidStack fluid, int temperature) {
 		NBTTagCompound tag = new NBTTagCompound();

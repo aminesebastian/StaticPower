@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import theking530.staticpower.container.BaseContainer;
 import theking530.staticpower.handlers.crafting.registries.FormerRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.GrinderRecipeRegistry;
-import theking530.staticpower.items.ModItems;
+import theking530.staticpower.items.FormerMolds;
 import theking530.staticpower.machines.tileentitycomponents.slots.BatterySlot;
 import theking530.staticpower.machines.tileentitycomponents.slots.OutputSlot;
 import theking530.staticpower.machines.tileentitycomponents.slots.StaticPowerContainerSlot;
@@ -28,7 +28,7 @@ public class ContainerFormer extends BaseContainer {
 		    }
 		});
 		//Input Mold
-		addSlotToContainer(new StaticPowerContainerSlot(new ItemStack(ModItems.PlateMould), 0.3f, tePoweredGrinder.slotsInput, 1, 37, 34) {
+		addSlotToContainer(new StaticPowerContainerSlot(FormerMolds.moldPlate, 0.3f, tePoweredGrinder.slotsInput, 1, 37, 34) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 				return FormerRecipeRegistry.Forming().isValidMold(itemStack);	          

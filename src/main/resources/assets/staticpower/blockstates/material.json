@@ -55,6 +55,8 @@
 			"dustruby":    			{"textures": {"layer0": "staticpower:items/materials/dust_ruby"}},
 			"dustsapphire": 		{"textures": {"layer0": "staticpower:items/materials/dust_sapphire"}},
 			
+			"plateiron":     		{"textures": {"layer0": "staticpower:items/materials/plate_iron"}},
+			"plategold":   	 		{"textures": {"layer0": "staticpower:items/materials/plate_gold"}},
 			"platecopper":     		{"textures": {"layer0": "staticpower:items/materials/plate_copper"}},
 			"platetin":   	 		{"textures": {"layer0": "staticpower:items/materials/plate_tin"}},
 			"platesilver":   		{"textures": {"layer0": "staticpower:items/materials/plate_silver"}},
@@ -68,6 +70,8 @@
 			"plateinertinfusion":   {"textures": {"layer0": "staticpower:items/materials/plate_inert_infusion"}},
 			"plateredstonealloy": 	{"textures": {"layer0": "staticpower:items/materials/plate_redstone_alloy"}},
 			
+			"geariron":     		{"textures": {"layer0": "staticpower:items/materials/gear_iron"}},
+			"geargold":   	 		{"textures": {"layer0": "staticpower:items/materials/gear_gold"}},
 			"gearcopper":     		{"textures": {"layer0": "staticpower:items/materials/gear_copper"}},
 			"geartin":   	 		{"textures": {"layer0": "staticpower:items/materials/gear_tin"}},
 			"gearsilver":   		{"textures": {"layer0": "staticpower:items/materials/gear_silver"}},

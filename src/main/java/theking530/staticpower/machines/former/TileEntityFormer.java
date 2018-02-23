@@ -22,7 +22,7 @@ public class TileEntityFormer extends BaseMachine {
 	//IInventory				
 	@Override
 	public String getName() {
-		return "Former";		
+		return "container.Former";		
 	}
 	
 	@Override

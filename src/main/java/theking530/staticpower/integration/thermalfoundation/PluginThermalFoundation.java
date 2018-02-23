@@ -7,7 +7,7 @@ import theking530.staticpower.assists.RegisterHelper;
 import theking530.staticpower.assists.utilities.OreDictionaryUtilities;
 import theking530.staticpower.handlers.crafting.CraftHelpers;
 import theking530.staticpower.integration.ICompatibilityPlugin;
-import theking530.staticpower.items.SPItemMaterial;
+import theking530.staticpower.items.ItemMaterials;
 
 public class PluginThermalFoundation implements ICompatibilityPlugin {
 
@@ -21,8 +21,8 @@ public class PluginThermalFoundation implements ICompatibilityPlugin {
 		registered = true;
 
 	
-		RegisterHelper.registerInfuserRecipe(CraftHelpers.ingredientFromItemstack(SPItemMaterial.ingotInertInfusion), CraftHelpers.outputItemStack(SPItemMaterial.ingotRedstoneAlloy), new FluidStack(FluidRegistry.getFluid("redstone"), 200));
-		RegisterHelper.registerInfuserRecipe(CraftHelpers.ingredientFromItemstack(SPItemMaterial.ingotInertInfusion), OreDictionaryUtilities.getOreStack("ingotEnderium", 0), new FluidStack(FluidRegistry.getFluid("ender"), 250));
+		RegisterHelper.registerInfuserRecipe(CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotInertInfusion), CraftHelpers.outputItemStack(ItemMaterials.ingotRedstoneAlloy), new FluidStack(FluidRegistry.getFluid("redstone"), 200));
+		RegisterHelper.registerInfuserRecipe(CraftHelpers.ingredientFromItemstack(ItemMaterials.ingotInertInfusion), OreDictionaryUtilities.getOreStack("ingotEnderium", 0), new FluidStack(FluidRegistry.getFluid("ender"), 250));
 	}
 	@Override
 	public boolean isRegistered() {

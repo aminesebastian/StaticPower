@@ -33,7 +33,6 @@ item.StaticCrop.name=§aStatic Crop
 item.EnergizedSeeds.name=§bEnergized Seeds
 item.EnergizedCrop.name=§bEnergized Crop
 item.LumumSeeds.name=§eLumum Seeds
-item.LumumCrop.name=§eLumum Crop
 item.DepletedCrop.name=Depleted Crop
 item.EnergizedBucket.name=§bEnergized Fluid Bucket
 item.LumumBucket.name=§eLumum Fluid Bucket
@@ -140,9 +139,13 @@ staticpower.material.gearStatic.name=§aStatic Gear
 staticpower.material.gearEnergized.name=§bEnergized Gear
 staticpower.material.gearLumum.name=§eLumum Gear
 
-item.PlateMould.name=Plate Mold
-item.WireMould.name=Wire Mold
-item.BlankMould.name=Blank Mold
+staticpower.material.gemRuby.name=Ruby
+staticpower.material.gemSapphire.name=Sapphire
+
+staticpower.mold.moldGear.name=Gear Mold
+staticpower.mold.moldPlate.name=Plate Mold
+staticpower.mold.moldWire.name=Wire Mold
+staticpower.mold.moldBlank.name=Blank Mold
 
 //Upgrades
 item.BasicSpeedUpgrade.name=Basic Speed Upgrade
@@ -359,13 +362,12 @@ container.IndustrialGrinder=Industrial Grinder
 container.SolderingTable=Soldering Table
 container.VacuumChest=Vacuum Chest
 container.Fermenter=Fermenter
-
+container.Former=Former		
 container.BasicItemFilter=Basic Item Filter
 container.UpgradedItemFilter=Upgraded Item Filter
 container.AdvancedItemFilter=Advanced Item Filter
 container.Digistore=Digistore
 container.DigistoreManager=Digistore Manager
-
 container.EsotericEnchanter=Esoteric Enchanter
 
 //Tools

@@ -20,6 +20,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import theking530.staticpower.assists.MaterialSets;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.blocks.crops.ModPlants;
@@ -211,6 +212,8 @@ public class StaticPower {
 	public void Init(FMLInitializationEvent Event){
 		proxy.registerProxies();
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());	
+		
+		MaterialSets.initialize();
 		
 		OreDictionaryRegistration.registerOres();
 		ShapedRecipes.registerFullRecipes();   
