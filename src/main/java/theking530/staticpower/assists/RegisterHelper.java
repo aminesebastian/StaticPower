@@ -7,6 +7,7 @@ import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.CraftingHelper.ShapedPrimer;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import theking530.staticpower.handlers.crafting.registries.CentrifugeRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.CondenserRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.DistilleryRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.EsotericEnchanterRecipeRegistry;
@@ -38,7 +39,10 @@ public class RegisterHelper  {
 			FusionRecipeRegistry.Fusing().addRecipe(output, inputs);			
 		}
 	}
-	public static void registerFormerRecipes(ItemStack output, Ingredient input, Ingredient mold) {
+	public static void registerCentrifugeRecipe(Ingredient input, int minimumSpeed, ItemStack... outputs) {
+		CentrifugeRecipeRegistry.Centrifuging().addRecipe(input, minimumSpeed, outputs);
+	}
+	public static void registerFormerRecipe(ItemStack output, Ingredient input, Ingredient mold) {
 		FormerRecipeRegistry.Forming().addRecipe(output, input, mold);
 	}
 	public static void registerFarmingRecipe(FluidStack input, float output) {

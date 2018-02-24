@@ -33,6 +33,7 @@ import theking530.staticpower.handlers.GuiHandler;
 import theking530.staticpower.handlers.OreDictionaryRegistration;
 import theking530.staticpower.handlers.OreGenerationHandler;
 import theking530.staticpower.handlers.PacketHandler;
+import theking530.staticpower.handlers.crafting.recipes.CentrifugeRecipes;
 import theking530.staticpower.handlers.crafting.recipes.CondenserRecipes;
 import theking530.staticpower.handlers.crafting.recipes.DistilleryRecipes;
 import theking530.staticpower.handlers.crafting.recipes.EsotericEnchanterRecipes;
@@ -71,6 +72,7 @@ import theking530.staticpower.machines.batteries.tileentities.TileEntityBasicBat
 import theking530.staticpower.machines.batteries.tileentities.TileEntityEnergizedBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityLumumBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityStaticBattery;
+import theking530.staticpower.machines.centrifuge.TileCentrifuge;
 import theking530.staticpower.machines.chargingstation.TileEntityChargingStation;
 import theking530.staticpower.machines.condenser.TileEntityCondenser;
 import theking530.staticpower.machines.cropsqueezer.TileEntityCropSqueezer;
@@ -203,6 +205,7 @@ public class StaticPower {
 		GameRegistry.registerTileEntity(TileEntityVacuumChest.class, "VacuumChest");
 		
 		GameRegistry.registerTileEntity(TileEsotericEnchanter.class, "Esoteric Enchanter");
+		GameRegistry.registerTileEntity(TileCentrifuge.class, "Centrifuge");
 		
 		GameRegistry.registerTileEntity(TileEntityDigistore.class, "Digistore");
 		GameRegistry.registerTileEntity(TileEntityDigistoreManager.class, "DigistoreManager");
@@ -232,6 +235,7 @@ public class StaticPower {
 		EsotericEnchanterRecipes.registerEsotericEnchanterRecipes();
 		ToolRecipes.registerToolRecipes();
 		FarmerRecipes.registerFarmerRecipes();
+		CentrifugeRecipes.registerCentrigureRecipes();
 	}
 	@SubscribeEvent
 	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {

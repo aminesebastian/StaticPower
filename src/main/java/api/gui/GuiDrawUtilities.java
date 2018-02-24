@@ -67,7 +67,11 @@ public class GuiDrawUtilities {
 		Gui.drawRect(xPos+width, yPos, xPos+width+1, yPos+height+1, GuiUtilities.getColor(255, 255, 255));
 		
 		Gui.drawRect(xPos, yPos, xPos+width, yPos+height, GuiUtilities.getColor(139, 139, 139));
-		GL11.glColor3f(1.0f, 1.0f, 1.0f);
+		
+		if(color != null) {
+			Gui.drawRect(xPos, yPos, xPos+width, yPos+height, GuiUtilities.getColor(color.getRed(), color.getGreen(), color.getBlue(), 35));
+		}
+
 	}
 	public static void drawSlot(int xPos, int yPos, int width, int height) {
 		drawSlot(xPos, yPos, width, height, null);

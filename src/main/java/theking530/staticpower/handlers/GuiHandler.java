@@ -27,6 +27,9 @@ import theking530.staticpower.machines.basicfarmer.TileEntityBasicFarmer;
 import theking530.staticpower.machines.batteries.ContainerBattery;
 import theking530.staticpower.machines.batteries.GuiBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityBattery;
+import theking530.staticpower.machines.centrifuge.ContainerCentrifuge;
+import theking530.staticpower.machines.centrifuge.GuiCentrifuge;
+import theking530.staticpower.machines.centrifuge.TileCentrifuge;
 import theking530.staticpower.machines.chargingstation.ContainerChargingStation;
 import theking530.staticpower.machines.chargingstation.GuiChargingStation;
 import theking530.staticpower.machines.chargingstation.TileEntityChargingStation;
@@ -230,6 +233,11 @@ public class GuiHandler implements IGuiHandler {
 					return new ContainerTreeFarmer(player.inventory, (TileTreeFarmer) entity);
 				}
 				return null;
+			case GuiIDRegistry.guiIDCentrifuge:
+				if (entity instanceof TileCentrifuge) {	
+					return new ContainerCentrifuge(player.inventory, (TileCentrifuge) entity);
+				}
+				return null;
 			}
 		}else{
 			switch(ID) {
@@ -381,6 +389,10 @@ public class GuiHandler implements IGuiHandler {
 			case GuiIDRegistry.guiIDTreeFarmer:
 				if (entity instanceof TileTreeFarmer) {	
 					return new GuiTreeFarmer(player.inventory, (TileTreeFarmer) entity);				
+				}
+			case GuiIDRegistry.guiIDCentrifuge:
+				if (entity instanceof TileCentrifuge) {	
+					return new GuiCentrifuge(player.inventory, (TileCentrifuge) entity);				
 				}
 				return null;
 			}

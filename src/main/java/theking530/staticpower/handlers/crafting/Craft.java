@@ -7,17 +7,17 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.oredict.OreIngredient;
 
-public class CraftHelpers {
-	public static Ingredient ingredientFromBlock(Block block) {
-		return ingredientFromItem(Item.getItemFromBlock(block));
+public class Craft {
+	public static Ingredient block(Block block) {
+		return item(Item.getItemFromBlock(block));
 	}
-	public static Ingredient ingredientOre(String ore) {
+	public static Ingredient ore(String ore) {
 		return new OreIngredient(ore);
 	}
-	public static Ingredient ingredientFromItem(Item item) {
+	public static Ingredient item(Item item) {
 		return Ingredient.fromItem(item);
 	}
-	public static Ingredient ingredientFromItemstack(ItemStack item) {
+	public static Ingredient itemstack(ItemStack item) {
 		return Ingredient.fromStacks(item);
 	}
 	public static ItemStack outputItemStack(ItemStack item, int amount) {

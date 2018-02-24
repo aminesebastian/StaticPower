@@ -30,7 +30,7 @@ import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.assists.utilities.SideUtilities;
 import theking530.staticpower.assists.utilities.SideUtilities.BlockSide;
 import theking530.staticpower.assists.utilities.TileEntityUtilities;
-import theking530.staticpower.handlers.crafting.CraftHelpers;
+import theking530.staticpower.handlers.crafting.Craft;
 import theking530.staticpower.handlers.crafting.registries.FarmerRecipeRegistry;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.machines.BaseMachineWithTank;
@@ -68,9 +68,9 @@ public class TileTreeFarmer extends BaseMachineWithTank {
 
 		currentBlockIndex = 0;
 		blocks = null;
-		woodIngredient = CraftHelpers.ingredientOre("logWood");
-		leafIngredient = CraftHelpers.ingredientOre("treeLeaves");
-		saplingIngredient = CraftHelpers.ingredientOre("treeSapling");
+		woodIngredient = Craft.ore("logWood");
+		leafIngredient = Craft.ore("treeLeaves");
+		saplingIngredient = Craft.ore("treeSapling");
 		shouldDrawRadiusPreview = false;
 		rand = new Random();
 		farmedStacks = new ArrayList<ItemStack>();

@@ -9,34 +9,39 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public class InventoryUtilities {
 
-	public static boolean canInsertItemsIntoInventory(IItemHandler inv, List<ItemStack> items) {
+	public static boolean canInsertItemsIntoInventory(IItemHandler inv, ItemStack[] items) {
 		IItemHandler dupInv = new ItemStackHandler(inv.getSlots());
 		List<ItemStack> dupItems = new ArrayList<ItemStack>();
 		
 		for(int i=0; i<inv.getSlots(); i++) {
 			dupInv.insertItem(i, inv.getStackInSlot(i).copy(), false);
 		}
-		for(int i=0; i<items.size(); i++) {
-			dupItems.add(items.get(i).copy());
+		for(int i=0; i<items.length; i++) {
+			dupItems.add(items[i].copy());
 		}
 		
 		for(int i=0; i<dupInv.getSlots(); i++) {		
 			for(int j=dupItems.size()-1; j>=0; j--) {
-				if(dupItems.get(j) == ItemStack.EMPTY) {
+				if(dupItems.get(j).isEmpty()) {
 					continue;
 				}
 				dupItems.set(j, dupInv.insertItem(i, dupItems.get(j), false));
 			}
 		}		
 		for(int i=0; i<dupItems.size(); i++) {
-			if(dupItems.get(i) != ItemStack.EMPTY) {
+			if(!dupItems.get(i).isEmpty()) {
 				return false;
 			}
 		}
 		return true;
 	}	
+	public static boolean canInsertItemsIntoInventory(IItemHandler inv, List<ItemStack> items) {
+		ItemStack[] itemArray = new ItemStack[items.size()];
+		items.toArray(itemArray);
+		return canInsertItemsIntoInventory(inv, itemArray);
+	}
 	public static boolean canFullyInsertItemIntoSlot(IItemHandler inv, int slot, ItemStack stack) {
-		return inv.insertItem(slot, stack, true) == ItemStack.EMPTY;
+		return inv.insertItem(slot, stack, true).isEmpty();
 	}
 	public static boolean canInsertItemIntoSlot(IItemHandler inv, int slot, ItemStack stack) {
 		return inv.insertItem(slot, stack, true).getCount() != stack.getCount();

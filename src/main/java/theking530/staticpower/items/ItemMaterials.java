@@ -82,6 +82,9 @@ public class ItemMaterials extends MultiItem {
 	public static ItemStack gemRuby;
 	public static ItemStack gemSapphire;
 	
+	public static ItemStack dustSulfur;
+	public static ItemStack dustSaltpeter;
+	
 	public ItemMaterials() {
 		super("material");
 	}
@@ -164,5 +167,9 @@ public class ItemMaterials extends MultiItem {
 		
 		gemRuby = createSubOreItem(250, "gemRuby");
 		gemSapphire = createSubOreItem(251, "gemSapphire");
+		
+		dustSulfur = createSubOreItem(280, "dustSulfur");
+		dustSaltpeter = createSubOreItem(281, "dustSaltpeter");
+		
 	}
 }

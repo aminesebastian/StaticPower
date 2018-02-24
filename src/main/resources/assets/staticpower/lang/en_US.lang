@@ -362,13 +362,14 @@ container.IndustrialGrinder=Industrial Grinder
 container.SolderingTable=Soldering Table
 container.VacuumChest=Vacuum Chest
 container.Fermenter=Fermenter
-container.Former=Former		
+container.Former=Former
 container.BasicItemFilter=Basic Item Filter
 container.UpgradedItemFilter=Upgraded Item Filter
 container.AdvancedItemFilter=Advanced Item Filter
 container.Digistore=Digistore
 container.DigistoreManager=Digistore Manager
 container.EsotericEnchanter=Esoteric Enchanter
+container.Centrifuge=Supersonic Centrifuge
 
 //Tools
 item.StaticWrench.name=Static Wrench

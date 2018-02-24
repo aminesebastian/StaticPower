@@ -95,9 +95,9 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 			process();
 			postProcessUpdateComponents();
 		}
-		if(updateTimer < updateTime) {
-			updateTimer++;
-		}else{
+//		if(updateTimer < updateTime) {
+//			updateTimer++;
+//		}else{
 			if(updateQueued) {
 				if(!getWorld().isRemote) {
 					getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 2);	
@@ -105,7 +105,7 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 			}
 			markDirty();
 			updateTimer = 0;
-		}
+//		}
 		if(disableFaceInteraction) {
 			setSideConfiguration(Mode.Disabled, BlockSide.FRONT);	
 		}

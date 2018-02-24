@@ -22,6 +22,7 @@ import theking530.staticpower.logic.gates.timer.BlockTimer;
 import theking530.staticpower.logic.gates.transducer.BlockSignalMultiplier;
 import theking530.staticpower.machines.basicfarmer.BlockBasicFarmer;
 import theking530.staticpower.machines.batteries.BlockBattery;
+import theking530.staticpower.machines.centrifuge.BlockCentrifuge;
 import theking530.staticpower.machines.chargingstation.BlockChargingStation;
 import theking530.staticpower.machines.condenser.BlockCondenser;
 import theking530.staticpower.machines.cropsqueezer.BlockCropSqueezer;
@@ -101,6 +102,7 @@ public class ModBlocks {
 	public static Block Former;
 	public static Block EsotericEnchanter;
 	public static Block TreeFarmer;
+	public static Block Centrifuge;
 	
 	//Gates
 	public static Block LogicGateBasePlate;
@@ -256,6 +258,8 @@ public class ModBlocks {
 		registry.PreRegisterBlock(PoweredFurnace);
 		Former = new BlockFormer().setHardness(3.5f);
 		registry.PreRegisterBlock(Former);
+		Centrifuge = new BlockCentrifuge().setHardness(3.5f);
+		registry.PreRegisterBlock(Centrifuge);
 		
 		EsotericEnchanter = new BlockEsotericEnchanter("EsotericEnchanter").setHardness(3.5f);
 		registry.PreRegisterBlock(EsotericEnchanter);
