@@ -14,6 +14,7 @@ public class FluidGeneratorRecipes {
 		registerRecipe(ModFluids.Mash, 20);
 		registerRecipe(ModFluids.EvaporatedMash, 40);
 		registerRecipe(ModFluids.Ethanol, 200);
+		registerRecipe(ModFluids.RefinedFluid, 16384);
 	}
 	public static void registerRecipe(Fluid fluid, int output) {
 		RegisterHelper.registerFluidGeneratorRecipe(new FluidStack(fluid, 1),  output);

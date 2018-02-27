@@ -32,4 +32,7 @@ public class GuiIDRegistry {
 	public static final int guiFermenter = 28;
 	public static final int guiDistilery = 29;
 	public static final int guiCondenser = 30;
+	public static final int guiIDAstralQuary = 31;
+	public static final int guiIDFluidRefineryController = 32;
 }
+

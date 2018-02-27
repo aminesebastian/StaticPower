@@ -22,6 +22,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.StaticPower;
@@ -71,11 +72,31 @@ public class BaseMachineBlock extends Block implements IWrenchable, IItemBlockPr
                 enumfacing = EnumFacing.WEST;
             }
 
-            worldIn.setBlockState(pos, state.withProperty(FACING, enumfacing), 2);
+            worldIn.setBlockState(pos, state.withProperty(FACING,enumfacing), 2);
         }
     }
+    protected EnumFacing getFacingDirection(IBlockAccess world, BlockPos pos, IBlockState state) {
+        IBlockState iblockstate = world.getBlockState(pos.north());
+        IBlockState iblockstate1 = world.getBlockState(pos.south());
+        IBlockState iblockstate2 = world.getBlockState(pos.west());
+        IBlockState iblockstate3 = world.getBlockState(pos.east());
+        EnumFacing enumfacing = (EnumFacing)state.getValue(FACING);
+
+        if (enumfacing == EnumFacing.NORTH && iblockstate.isFullBlock() && !iblockstate1.isFullBlock()) {
+            enumfacing = EnumFacing.SOUTH;
+        } else if (enumfacing == EnumFacing.SOUTH && iblockstate1.isFullBlock() && !iblockstate.isFullBlock()) {
+            enumfacing = EnumFacing.NORTH;
+        } else if (enumfacing == EnumFacing.WEST && iblockstate2.isFullBlock() && !iblockstate3.isFullBlock()) {
+            enumfacing = EnumFacing.EAST;
+        } else if (enumfacing == EnumFacing.EAST && iblockstate3.isFullBlock() && !iblockstate2.isFullBlock()) {
+            enumfacing = EnumFacing.WEST;
+        }
+
+        return enumfacing;
+    }
+    
     public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
-        this.setDefaultFacing(worldIn, pos, state);
+        setDefaultFacing(worldIn, pos, state);
     }
     public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
         return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
@@ -93,8 +114,8 @@ public class BaseMachineBlock extends Block implements IWrenchable, IItemBlockPr
 				}
 			}
 		}
-
     }
+    
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
     	if(shouldDropContents && worldIn.getTileEntity(pos) instanceof BaseTileEntity) {
     		 BaseTileEntity tileentity = (BaseTileEntity) worldIn.getTileEntity(pos);
@@ -186,46 +207,36 @@ public class BaseMachineBlock extends Block implements IWrenchable, IItemBlockPr
 		}
 	}
 
-    public IBlockState getStateFromMeta(int meta)
-    {
+    public IBlockState getStateFromMeta(int meta) {
         EnumFacing enumfacing = EnumFacing.getFront(meta);
 
-        if (enumfacing.getAxis() == EnumFacing.Axis.Y)
-        {
+        if (enumfacing.getAxis() == EnumFacing.Axis.Y) {
             enumfacing = EnumFacing.NORTH;
         }
 
         return this.getDefaultState().withProperty(FACING, enumfacing);
     }
-
     /**
      * Convert the BlockState into the correct metadata value
      */
-    public int getMetaFromState(IBlockState state)
-    {
+    public int getMetaFromState(IBlockState state) {
         return ((EnumFacing)state.getValue(FACING)).getIndex();
     }
-
     /**
      * Returns the blockstate with the given rotation from the passed blockstate. If inapplicable, returns the passed
      * blockstate.
      */
-    public IBlockState withRotation(IBlockState state, Rotation rot)
-    {
+    public IBlockState withRotation(IBlockState state, Rotation rot)  {
         return state.withProperty(FACING, rot.rotate((EnumFacing)state.getValue(FACING)));
     }
-
     /**
      * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed
      * blockstate.
      */
-    public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
-    {
+    public IBlockState withMirror(IBlockState state, Mirror mirrorIn) {
         return state.withRotation(mirrorIn.toRotation((EnumFacing)state.getValue(FACING)));
     }
-
-    protected BlockStateContainer createBlockState()
-    {
+    protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, new IProperty[] {FACING});
     }
 

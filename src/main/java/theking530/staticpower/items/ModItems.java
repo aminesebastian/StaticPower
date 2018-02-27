@@ -140,7 +140,7 @@ public class ModItems {
 
 	public static void init(Registry registry) {
 		registry.PreRegisterItem(Materials = new ItemMaterials());
-		
+
 		WheatFlour = new BaseFood("WheatFlour", 2);
 		registry.PreRegisterItem(WheatFlour);	
 		PotatoFlour = new BaseFood("PotatoFlour", 2);

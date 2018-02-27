@@ -8,6 +8,6 @@ import theking530.staticpower.items.ItemMaterials;
 public class CentrifugeRecipes {
 
 	public static void registerCentrigureRecipes() {
-		RegisterHelper.registerCentrifugeRecipe(Craft.item(Items.GUNPOWDER), 500, ItemMaterials.dustCoal, ItemMaterials.dustSaltpeter, ItemMaterials.dustSulfur);
+		RegisterHelper.registerCentrifugeRecipe(Craft.item(Items.GUNPOWDER), 500, ItemMaterials.dustCharcoal, Craft.outputItemStack(ItemMaterials.dustSaltpeter, 2), ItemMaterials.dustSulfur);
 	}
 }

@@ -21,7 +21,7 @@ public class BlockCentrifuge extends BaseMachineBlock{
 	    setResistance(5.0f);
 	}
 	public EnumBlockRenderType getRenderType(IBlockState state) {
-		return EnumBlockRenderType.MODEL;
+		return EnumBlockRenderType.INVISIBLE;
 	}
 	public boolean isOpaqueCube(IBlockState state) {
 		return true;

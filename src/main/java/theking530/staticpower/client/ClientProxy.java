@@ -9,25 +9,6 @@ import theking530.staticpower.assists.Tier;
 import theking530.staticpower.client.render.conduit.TileEntityRenderFluidConduit;
 import theking530.staticpower.client.render.conduit.TileEntityRenderItemConduit;
 import theking530.staticpower.client.render.conduit.TileEntityRenderStaticConduit;
-import theking530.staticpower.client.render.tileentitys.TileEntityRenderBattery;
-import theking530.staticpower.client.render.tileentitys.TileEntityRenderChargingStation;
-import theking530.staticpower.client.render.tileentitys.TileEntityRenderChest;
-import theking530.staticpower.client.render.tileentitys.TileEntityRenderCondenser;
-import theking530.staticpower.client.render.tileentitys.TileEntityRenderCropSqueezer;
-import theking530.staticpower.client.render.tileentitys.TileEntityRenderDigistore;
-import theking530.staticpower.client.render.tileentitys.TileEntityRenderDistillery;
-import theking530.staticpower.client.render.tileentitys.TileEntityRenderEsotericEnchanter;
-import theking530.staticpower.client.render.tileentitys.TileEntityRenderFarmer;
-import theking530.staticpower.client.render.tileentitys.TileEntityRenderFermenter;
-import theking530.staticpower.client.render.tileentitys.TileEntityRenderFluidGenerator;
-import theking530.staticpower.client.render.tileentitys.TileEntityRenderFluidInfuser;
-import theking530.staticpower.client.render.tileentitys.TileEntityRenderFormer;
-import theking530.staticpower.client.render.tileentitys.TileEntityRenderFusionFurnace;
-import theking530.staticpower.client.render.tileentitys.TileEntityRenderMechanicalSqueezer;
-import theking530.staticpower.client.render.tileentitys.TileEntityRenderPoweredFurnace;
-import theking530.staticpower.client.render.tileentitys.TileEntityRenderPoweredGrinder;
-import theking530.staticpower.client.render.tileentitys.TileEntityRenderQuarry;
-import theking530.staticpower.client.render.tileentitys.TileEntityRenderTreeFarmer;
 import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRenderAdder;
 import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRenderAndGate;
 import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRenderLED;
@@ -37,6 +18,31 @@ import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRen
 import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRenderSignalMultiplier;
 import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRenderSubtractor;
 import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRenderTimer;
+import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderBattery;
+import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderCentrifuge;
+import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderChargingStation;
+import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderChest;
+import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderCondenser;
+import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderCropSqueezer;
+import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderDigistore;
+import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderDistillery;
+import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderEsotericEnchanter;
+import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderFarmer;
+import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderFermenter;
+import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderFluidGenerator;
+import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderFluidInfuser;
+import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderFormer;
+import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderFusionFurnace;
+import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderMechanicalSqueezer;
+import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderPoweredFurnace;
+import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderPoweredGrinder;
+import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderQuarry;
+import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderTreeFarmer;
+import theking530.staticpower.client.render.tileentitys.multiblock.TileEntityRenderFluidRefineryController;
+import theking530.staticpower.client.render.tileentitys.multiblock.TileEntityRenderFluidRefineryInterface;
+import theking530.staticpower.client.render.tileentitys.multiblock.TileEntityRenderFluidRefineryMixer;
+import theking530.staticpower.client.render.tileentitys.multiblock.TileEntityRenderFluidRefineryReactor;
+import theking530.staticpower.client.render.tileentitys.multiblock.TileEntityRenderFluidRefineryVent;
 import theking530.staticpower.conduits.fluidconduit.TileEntityFluidConduit;
 import theking530.staticpower.conduits.itemconduit.TileEntityItemConduit;
 import theking530.staticpower.conduits.staticconduit.TileEntityStaticConduit;
@@ -53,6 +59,7 @@ import theking530.staticpower.machines.basicfarmer.TileEntityBasicFarmer;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityEnergizedBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityLumumBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityStaticBattery;
+import theking530.staticpower.machines.centrifuge.TileCentrifuge;
 import theking530.staticpower.machines.chargingstation.TileEntityChargingStation;
 import theking530.staticpower.machines.condenser.TileEntityCondenser;
 import theking530.staticpower.machines.cropsqueezer.TileEntityCropSqueezer;
@@ -67,6 +74,11 @@ import theking530.staticpower.machines.mechanicalsqueezer.TileEntityMechanicalSq
 import theking530.staticpower.machines.poweredfurnace.TileEntityPoweredFurnace;
 import theking530.staticpower.machines.poweredgrinder.TileEntityPoweredGrinder;
 import theking530.staticpower.machines.quarry.TileEntityQuarry;
+import theking530.staticpower.machines.refinery.controller.TileEntityFluidRefineryController;
+import theking530.staticpower.machines.refinery.fluidinterface.TileEntityRefineryFluidInterface;
+import theking530.staticpower.machines.refinery.mixer.TileEntityRefineryMixer;
+import theking530.staticpower.machines.refinery.reactor.TileEntityRefineryReactor;
+import theking530.staticpower.machines.refinery.vent.TileEntityRefineryVent;
 import theking530.staticpower.machines.treefarmer.TileTreeFarmer;
 import theking530.staticpower.tileentity.chest.energizedchest.TileEntityEnergizedChest;
 import theking530.staticpower.tileentity.chest.lumumchest.TileEntityLumumChest;
@@ -106,8 +118,21 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEsotericEnchanter.class, new TileEntityRenderEsotericEnchanter());	
 		//Farmer
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBasicFarmer.class, new TileEntityRenderFarmer());	
-		//Farmer
+		//Tree Farmer
 		ClientRegistry.bindTileEntitySpecialRenderer(TileTreeFarmer.class, new TileEntityRenderTreeFarmer());	
+		//Centrifuge
+		ClientRegistry.bindTileEntitySpecialRenderer(TileCentrifuge.class, new TileEntityRenderCentrifuge());	
+		
+		//FluidRefineryController
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFluidRefineryController.class, new TileEntityRenderFluidRefineryController());	
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRefineryFluidInterface.class, new TileEntityRenderFluidRefineryInterface());	
+		
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRefineryReactor.class, new TileEntityRenderFluidRefineryReactor());	
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRefineryMixer.class, new TileEntityRenderFluidRefineryMixer());	
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRefineryVent.class, new TileEntityRenderFluidRefineryVent());	
+		
+		
+		
 		
 		//Signal Multiplier
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySignalMultiplier.class, new TileEntityRenderSignalMultiplier());	

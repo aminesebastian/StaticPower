@@ -8,13 +8,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.assists.utilities.InventoryUtilities;
-import theking530.staticpower.assists.utilities.SideModeList;
 import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.assists.utilities.SideUtilities;
 import theking530.staticpower.assists.utilities.SideUtilities.BlockSide;
 import theking530.staticpower.tileentity.ISideConfigurable;
+import theking530.staticpower.tileentity.TileEntityInventory;
 
 public class TileEntityItemOutputServo implements ITileEntityComponent{
 
@@ -24,19 +23,24 @@ public class TileEntityItemOutputServo implements ITileEntityComponent{
 	private int outputTime;
 	private ISideConfigurable sideConfigurable;
 	private TileEntity tileEntity;
-	private ItemStackHandler inventory;
+	private TileEntityInventory inventory;
 	private int[] slots;
 	private boolean isEnabled;
+	private Mode outputMode;
 	
-	public TileEntityItemOutputServo(TileEntity tileEntity, int outputTime, ItemStackHandler inventory, int... slots) {
+	public TileEntityItemOutputServo(TileEntity tileEntity, int outputTime, TileEntityInventory inventory,  Mode mode, int... slots) {
 		this.tileEntity = tileEntity;
 		this.outputTime = outputTime;
 		this.inventory = inventory;
 		this.slots = slots;
+		this.outputMode = mode;
 		
 		if(tileEntity instanceof ISideConfigurable) {
 			sideConfigurable = (ISideConfigurable)tileEntity;
 		}
+	}
+	public TileEntityItemOutputServo(TileEntity tileEntity, int outputTime, TileEntityInventory inventory, int... slots) {
+		this(tileEntity, outputTime, inventory, Mode.Output, slots);
 	}
 	@Override
 	public String getComponentName() {
@@ -75,7 +79,7 @@ public class TileEntityItemOutputServo implements ITileEntityComponent{
 		}
 	}
     public void outputItem(int fromSlot, theking530.staticpower.assists.utilities.SideUtilities.BlockSide blockSide, int startSlot, boolean backwards) {
-		if (sideConfigurable == null || sideConfigurable.getSideConfiguration(blockSide) == SideModeList.Mode.Output) {
+		if (sideConfigurable == null || sideConfigurable.getSideConfiguration(blockSide) == outputMode) {
 			ItemStack stack = inventory.getStackInSlot(fromSlot);
 			if (!stack.isEmpty()) {
 				EnumFacing facing = tileEntity.getWorld().getBlockState(tileEntity.getPos()).getValue(BlockHorizontal.FACING);
@@ -84,7 +88,7 @@ public class TileEntityItemOutputServo implements ITileEntityComponent{
 					if(te instanceof ISideConfigurable) {
 						ISideConfigurable configurable = (ISideConfigurable)te;
 						if(configurable.isSideConfigurable()) {
-							if(configurable.getSideConfiguration(blockSide.getOpposite()) == Mode.Output) {
+							if(configurable.getSideConfiguration(blockSide.getOpposite()).isOutputMode()) {
 								return;
 							}
 						}

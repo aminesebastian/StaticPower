@@ -1,12 +1,11 @@
 package theking530.staticpower.machines.centrifuge;
 
 import api.gui.tab.BaseGuiTab.TabSide;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import theking530.staticpower.assists.utilities.GuiUtilities;
 import theking530.staticpower.client.gui.BaseGuiContainer;
-import theking530.staticpower.client.gui.widgets.progressbars.GrinderProgressBar;
+import theking530.staticpower.client.gui.widgets.progressbars.CentrifugeProgressBar;
 import theking530.staticpower.client.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiMachinePowerInfoTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
@@ -22,7 +21,7 @@ public class GuiCentrifuge extends BaseGuiContainer{
 		super(new ContainerCentrifuge(invPlayer, tileEntityCentrifuge), 176, 166);
 		centrifuge = tileEntityCentrifuge;
 		registerWidget(new GuiPowerBarFromEnergyStorage(tileEntityCentrifuge, 8, 62, 16, 54));
-		registerWidget(new GrinderProgressBar(tileEntityCentrifuge, 80, 39, 16, 14));
+		registerWidget(new CentrifugeProgressBar(tileEntityCentrifuge, 80, 39, 15, 15));
 		
 		getTabManager().registerTab(infoTab = new GuiInfoTab(100, 70));
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, tileEntityCentrifuge));
@@ -40,15 +39,8 @@ public class GuiCentrifuge extends BaseGuiContainer{
 		drawGenericBackground();
 		drawContainerSlots(centrifuge, inventorySlots.inventorySlots);
 		drawPlayerInventorySlots();		
-		
-		int barXPos = 60;
-		int barYPos = 30;
-		int barWidth = 2;
-		int barHeight = 16;
-		
-		int barFill = (int) (16 * centrifuge.getMultiplier());
-		drawSlot(guiLeft+barXPos, guiTop+barYPos, barWidth, barHeight);
-		Gui.drawRect(guiLeft+barXPos, guiTop+barYPos+(barHeight-barFill), guiLeft+barXPos+barWidth, guiTop+barYPos+barHeight, GuiUtilities.getColor(175, 0, 0, 255));
+
+		drawVerticalBar(60, 30, 2, 16, centrifuge.getMultiplier(), GuiUtilities.getColor(175, 0, 0, 255));
 		
 		String formerInfo = "The centrifuge seperates=items into other items=by spinning them in=a separation chamber.=Current Speed: " + centrifuge.getRotationSpeed() + " RPM";
 		infoTab.setText("Centrifuge", formerInfo);

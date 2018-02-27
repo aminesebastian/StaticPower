@@ -25,6 +25,10 @@ public class InventoryUtilities {
 				if(dupItems.get(j).isEmpty()) {
 					continue;
 				}
+				if(dupInv.getStackInSlot(i).isEmpty()) {
+					dupItems.set(j, ItemStack.EMPTY);
+					continue;
+				}
 				dupItems.set(j, dupInv.insertItem(i, dupItems.get(j), false));
 			}
 		}		

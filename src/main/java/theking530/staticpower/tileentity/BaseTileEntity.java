@@ -40,16 +40,18 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 
 	public static final int DEFAULT_UPDATE_TIME = 2;
 	
-	public ItemStackHandler  slotsInput;
-	public ItemStackHandler  slotsOutput;
-	public ItemStackHandler  slotsInternal;
-	public ItemStackHandler  slotsUpgrades;
+	public TileEntityInventory  slotsInput;
+	public TileEntityInventory  slotsOutput;
+	public TileEntityInventory  slotsInternal;
+	public TileEntityInventory  slotsUpgrades;
 	
 	private List<ITileEntityComponent> components;	
 	private RedstoneMode redstoneMode = RedstoneMode.Ignore;
 	private SideConfiguration ioSideConfiguration;
 
+	@SuppressWarnings("unused")
 	private int updateTimer = 0;
+	@SuppressWarnings("unused")
 	private int updateTime = DEFAULT_UPDATE_TIME;
 	
 	private int internalSlotsCount;
@@ -57,7 +59,7 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 	private int outputSlotsCount;
 	
 	private boolean updateQueued = false;
-	private boolean disableFaceInteraction;
+	protected boolean disableFaceInteraction;
 	
 	public boolean wasWrenchedDoNotBreak = false;
 	
@@ -66,14 +68,14 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 		components = new ArrayList<ITileEntityComponent>();
 		
 		if(isSideConfigurable()) {
-			ioSideConfiguration.setToDefault();
+			setDefaultSideConfiguration(ioSideConfiguration);
 		}
 	}
 	public void initializeSlots(int internalSlots, int inputSlots, int outputSlots, boolean disableFaceInteraction) {
-		slotsInput = new ItemStackHandler(inputSlots);
-		slotsOutput = new ItemStackHandler(outputSlots);
-		slotsInternal = new ItemStackHandler(internalSlots);
-		slotsUpgrades = new ItemStackHandler(3);
+		slotsInput = new TileEntityInventory(inputSlots);
+		slotsOutput = new TileEntityInventory(outputSlots);
+		slotsInternal = new TileEntityInventory(internalSlots);
+		slotsUpgrades = new TileEntityInventory(3);
 		
 		internalSlotsCount = internalSlots;
 		inputSlotsCount = inputSlots;
@@ -106,7 +108,7 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 			markDirty();
 			updateTimer = 0;
 //		}
-		if(disableFaceInteraction) {
+		if(disableFaceInteraction && isSideConfigurable()) {
 			setSideConfiguration(Mode.Disabled, BlockSide.FRONT);	
 		}
 	}		
@@ -259,6 +261,10 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
     	}
     }
 
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
+        return oldState.getBlock() != newState.getBlock();
+    }
+    
     /*Nameable*/
 	@Override
     public String getName(){
@@ -311,9 +317,9 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
     		return null;
     	}
     	if(capability==CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {		
-    		Mode sideConfig = getSideConfiguration(facing);		
+    		Mode sideMode = getSideConfiguration(facing);		
 			return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(new IItemHandler() {
-				ItemStackHandler handler = sideConfig == Mode.Input ? slotsInput : slotsOutput;
+				TileEntityInventory handler = sideMode == Mode.Input ? slotsInput : slotsOutput;
 				public int getSlots() {
 			    	return handler.getSlots();
 			    }
@@ -323,17 +329,11 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 			    }
 			    @Nonnull
 			    public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {	
-			    	if(BaseTileEntity.this.canInsertItem(handler, slot, stack)) {
-			    		return handler.insertItem(slot, stack, simulate);
-			    	}
-			    	return stack;
+			    	return handler.insertItemToSide(sideMode, slot, stack, simulate);
 			    }
 			    @Nonnull
 			    public ItemStack extractItem(int slot, int amount, boolean simulate) {
-			    	if(BaseTileEntity.this.canExtractItem(handler, slot, amount)) {
-			    		return handler.extractItem(slot, amount, simulate);
-			    	}
-			    	return ItemStack.EMPTY;
+			    	return handler.extractItem(slot, amount, simulate);
 			    }
 			    public int getSlotLimit(int slot) {
 			    	return handler.getSlotLimit(slot);
@@ -341,14 +341,6 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 			});
     	}
     	return super.getCapability(capability, facing);
-    }
-    
-    /*Item Handling*/
-    public boolean canInsertItem(ItemStackHandler itemHandler, int slot, ItemStack stack) {
-    	return true;
-    }
-    public boolean canExtractItem(ItemStackHandler itemHandler, int slot, int amount) {
-    	return true;
     }
     
 	/*Upgrade Handling*/
@@ -527,6 +519,9 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 			}
 		}
 		return count;
+	}
+	public void setDefaultSideConfiguration(SideConfiguration configuration) {
+		configuration.setToDefault();
 	}
 	@Override
 	public List<Mode> getValidSideConfigurations() {

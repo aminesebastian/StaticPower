@@ -45,7 +45,7 @@ public class FluidGeneratorRecipeRegistry {
 	private boolean isValidCombination(Entry entry, FluidStack fluidInput) {
 		FluidGeneratorRecipeWrapper tempWrapper = (FluidGeneratorRecipeWrapper)entry.getValue();
 		
-		if(tempWrapper.getFluid() != null && fluidInput != null && tempWrapper.getFluid().isFluidEqual(fluidInput)) {
+		if(tempWrapper.getFluid() != null && fluidInput != null && tempWrapper.getFluid().getFluid() == fluidInput.getFluid()) {
 			return true;
 		}
 		return false;

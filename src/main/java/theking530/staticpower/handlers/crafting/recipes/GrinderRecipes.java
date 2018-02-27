@@ -52,7 +52,8 @@ public class GrinderRecipes {
 		RegisterHelper.registerGrinderRecipe(Craft.ore("ingotAluminum"), newOutput(Craft.outputItemStack(ItemMaterials.dustAluminium, 1)));
 		RegisterHelper.registerGrinderRecipe(Craft.ore("gemRuby"), newOutput(ItemMaterials.dustRuby));
 		RegisterHelper.registerGrinderRecipe(Craft.ore("gemSapphire"), newOutput(ItemMaterials.dustSapphire));
-		RegisterHelper.registerGrinderRecipe(Craft.item(Items.COAL), newOutput(ItemMaterials.dustCoal));	
+		RegisterHelper.registerGrinderRecipe(Craft.itemstack(new ItemStack(Items.COAL, 1, 0)), newOutput(ItemMaterials.dustCoal));	
+		RegisterHelper.registerGrinderRecipe(Craft.itemstack(new ItemStack(Items.COAL, 1, 1)), newOutput(ItemMaterials.dustCharcoal));	
 		RegisterHelper.registerGrinderRecipe(Craft.block(Blocks.OBSIDIAN), newOutput(Craft.outputItemStack(ItemMaterials.dustObsidian, 8), 1.0f));	
 		
 		oreDictionaryRecipe("QuartzBlack", 2);

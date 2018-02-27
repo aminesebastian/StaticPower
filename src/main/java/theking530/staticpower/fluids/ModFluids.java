@@ -28,6 +28,7 @@ public class ModFluids {
 	public static Fluid Mash;
 	public static Fluid EvaporatedMash;
 	public static Fluid LiquidExperience;
+	public static Fluid RefinedFluid;
 	
 	public static String StaticFluidName = "StaticFluid";
 	public static String EnergizedFluidName = "EnergizedFluid";
@@ -37,6 +38,7 @@ public class ModFluids {
 	public static String MashName = "Mash";
 	public static String EvaporatedMashName = "EvaporatedMash";
 	public static String LiquidExperienceName = "LiquidExperience";
+	public static String RefinedFluidName = "RefinedFluid";
 	
 	public static Block BlockStaticFluid;
 	public static Block BlockEnergizedFluid;
@@ -46,6 +48,7 @@ public class ModFluids {
 	public static Block BlockMash;
 	public static Block BlockEvaporatedMash;
 	public static Block BlockLiquidExperience;
+	public static Block BlockRefinedFluid;
 	
 	public static void init(Registry registry) {
 		Fluid f  = new Fluid(StaticFluidName, getStill(StaticFluidName), getFlowing(StaticFluidName))
@@ -71,6 +74,14 @@ public class ModFluids {
 	    BlockLumumFluid = new BaseFluidBlock(LumumFluid, new MaterialLiquid(MapColor.GOLD), LumumFluidName);
 		registry.PreRegisterBlock(BlockLumumFluid);
 	    registerBucket(LumumFluid);
+	    
+	    f  = new Fluid(RefinedFluidName, getStill(RefinedFluidName), getFlowing(RefinedFluidName))
+		        .setDensity(1500).setViscosity(3000).setTemperature(2300);
+	    FluidRegistry.registerFluid(f);
+	    RefinedFluid = FluidRegistry.getFluid(f.getName());
+	    BlockRefinedFluid = new BaseFluidBlock(RefinedFluid, new MaterialLiquid(MapColor.PURPLE), RefinedFluidName);
+		registry.PreRegisterBlock(BlockRefinedFluid);
+	    registerBucket(RefinedFluid);
 	    
 	    f  = new Fluid(SteamFluidName, getStill(SteamFluidName), getFlowing(SteamFluidName))
 		        .setDensity(1500).setViscosity(3000).setGaseous(true).setTemperature(100);;
@@ -122,6 +133,7 @@ public class ModFluids {
 	    registerFluidBlockRendering(Mash, MashName);
 	    registerFluidBlockRendering(EvaporatedMash, EvaporatedMashName);		
 	    registerFluidBlockRendering(LiquidExperience, LiquidExperienceName);
+	    registerFluidBlockRendering(RefinedFluid, RefinedFluidName);
 	}
 
 	public static void initItemRendering() {
@@ -133,6 +145,7 @@ public class ModFluids {
 	    registerFluidItemRendering(Mash, MashName);
 	    registerFluidItemRendering(EvaporatedMash, EvaporatedMashName);		
 	    registerFluidItemRendering(LiquidExperience, LiquidExperienceName);	
+	    registerFluidItemRendering(RefinedFluid, RefinedFluidName);
 	}
 	public static Fluid createFluid(Registry registry, String name, Fluid fluid, Block fluidBlock, MapColor color) {
 		Fluid f  = new Fluid(name, getStill(name), getFlowing(name))

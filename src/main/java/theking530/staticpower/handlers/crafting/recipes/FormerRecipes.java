@@ -19,7 +19,6 @@ public class FormerRecipes {
 			
 			if(set.getBlock() != null) {
 				RegisterHelper.registerFormerRecipe(Craft.outputItemStack(set.getPlate(), 18), Craft.block(set.getBlock()), Craft.itemstack(FormerMolds.moldPlate));
-				RegisterHelper.registerFormerRecipe(Craft.outputItemStack(set.getGear(), 9), Craft.block(set.getBlock()), Craft.itemstack(FormerMolds.moldGear));
 			}
 		}
 		

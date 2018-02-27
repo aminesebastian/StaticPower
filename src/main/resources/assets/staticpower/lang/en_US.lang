@@ -142,6 +142,10 @@ staticpower.material.gearLumum.name=§eLumum Gear
 staticpower.material.gemRuby.name=Ruby
 staticpower.material.gemSapphire.name=Sapphire
 
+staticpower.material.dustSulfur.name=Sulfur
+staticpower.material.dustSaltpeter.name=Saltpeter
+staticpower.material.dustCharcoal.name=Charcoal Dust
+
 staticpower.mold.moldGear.name=Gear Mold
 staticpower.mold.moldPlate.name=Plate Mold
 staticpower.mold.moldWire.name=Wire Mold
@@ -232,7 +236,7 @@ tile.Distillery.name=Distillery
 tile.MechanicalSqueezer.name=Mechanical Squeezer
 tile.Former.name=Former
 tile.EsotericEnchanter.name=Esoteric Enchanter
-
+tile.Centrifuge.name=Supersonic Centrifuge 
 tile.Digistore.name=Digistore
 tile.DigistoreManager.name=Digistore Manager
 tile.DigistoreNetworkExtender.name=Digistore Network Extender
@@ -301,6 +305,8 @@ fluid.EnergizedFluid=§bEnergized Fluid
 tile.EnergizedFluid.name=§bEnergized Fluid
 fluid.LumumFluid=§eLumum Fluid
 tile.LumumFluid.name=§eLumum Fluid
+fluid.RefinedFluid=§5Refined Fluid
+tile.RefinedFluid.name=§5Refined Fluid
 tile.Ethanol.name=Ethanol
 fluid.Ethanol=Ethanol
 tile.Steam.name=Steam
@@ -370,6 +376,7 @@ container.Digistore=Digistore
 container.DigistoreManager=Digistore Manager
 container.EsotericEnchanter=Esoteric Enchanter
 container.Centrifuge=Supersonic Centrifuge
+container.FluidRefineryController=Fluid Refinery Controller
 
 //Tools
 item.StaticWrench.name=Static Wrench
@@ -529,10 +536,10 @@ material.lumummetal=Lumum Metal
 //UI
 mode.Regular=Regular
 mode.Input=Input
+mode.Input2=Input 2
 mode.Output=Output
-mode.Extra1=Extra 1
-mode.Extra2=Extra 2
-mode.Extra3=Extra 3
+mode.Output2=Output 2
+mode.Output3=Output 3
 mode.Disabled=Disabled
 
 gui.RF/T=RF/t

@@ -72,9 +72,15 @@ import theking530.staticpower.machines.poweredgrinder.TileEntityPoweredGrinder;
 import theking530.staticpower.machines.quarry.ContainerQuarry;
 import theking530.staticpower.machines.quarry.GuiQuarry;
 import theking530.staticpower.machines.quarry.TileEntityQuarry;
+import theking530.staticpower.machines.refinery.controller.ContainerFluidRefineryController;
+import theking530.staticpower.machines.refinery.controller.GuiFluidRefineryController;
+import theking530.staticpower.machines.refinery.controller.TileEntityFluidRefineryController;
 import theking530.staticpower.machines.treefarmer.ContainerTreeFarmer;
 import theking530.staticpower.machines.treefarmer.GuiTreeFarmer;
 import theking530.staticpower.machines.treefarmer.TileTreeFarmer;
+import theking530.staticpower.tileentity.astralquary.brain.ContainerAstralQuarryBrain;
+import theking530.staticpower.tileentity.astralquary.brain.GuiAstralQuarryBrain;
+import theking530.staticpower.tileentity.astralquary.brain.TileEntityAstralQuarryBrain;
 import theking530.staticpower.tileentity.chest.energizedchest.ContainerEnergizedChest;
 import theking530.staticpower.tileentity.chest.energizedchest.GuiEnergizedChest;
 import theking530.staticpower.tileentity.chest.energizedchest.TileEntityEnergizedChest;
@@ -238,6 +244,16 @@ public class GuiHandler implements IGuiHandler {
 					return new ContainerCentrifuge(player.inventory, (TileCentrifuge) entity);
 				}
 				return null;
+			case GuiIDRegistry.guiIDAstralQuary:
+				if (entity instanceof TileEntityAstralQuarryBrain) {	
+					return new ContainerAstralQuarryBrain(player.inventory, (TileEntityAstralQuarryBrain) entity);
+				}
+				return null;
+			case GuiIDRegistry.guiIDFluidRefineryController:
+				if (entity instanceof TileEntityFluidRefineryController) {	
+					return new ContainerFluidRefineryController(player.inventory, (TileEntityFluidRefineryController) entity);
+				}
+				return null;
 			}
 		}else{
 			switch(ID) {
@@ -393,6 +409,16 @@ public class GuiHandler implements IGuiHandler {
 			case GuiIDRegistry.guiIDCentrifuge:
 				if (entity instanceof TileCentrifuge) {	
 					return new GuiCentrifuge(player.inventory, (TileCentrifuge) entity);				
+				}
+				return null;
+			case GuiIDRegistry.guiIDAstralQuary:
+				if (entity instanceof TileEntityAstralQuarryBrain) {	
+					return new GuiAstralQuarryBrain(player.inventory, (TileEntityAstralQuarryBrain) entity);				
+				}
+				return null;
+			case GuiIDRegistry.guiIDFluidRefineryController:
+				if (entity instanceof TileEntityFluidRefineryController) {	
+					return new GuiFluidRefineryController(player.inventory, (TileEntityFluidRefineryController) entity);				
 				}
 				return null;
 			}

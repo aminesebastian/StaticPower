@@ -83,7 +83,11 @@
 			"gearenergized":  		{"textures": {"layer0": "staticpower:items/materials/gear_energized"}},
 			"gearlumum":  			{"textures": {"layer0": "staticpower:items/materials/gear_lumum"}},
 			"gearinertinfusion":   	{"textures": {"layer0": "staticpower:items/materials/gear_inert_infusion"}},
-			"gearredstonealloy": 	{"textures": {"layer0": "staticpower:items/materials/gear_redstone_alloy"}}
+			"gearredstonealloy": 	{"textures": {"layer0": "staticpower:items/materials/gear_redstone_alloy"}},
+			
+			"dustsulfur":   		{"textures": {"layer0": "staticpower:items/materials/dust_sulfur"}},
+			"dustsaltpeter": 		{"textures": {"layer0": "staticpower:items/materials/dust_saltpeter"}},
+			"dustcharcoal": 		{"textures": {"layer0": "staticpower:items/materials/dust_charcoal"}}
 		}
 	}
 }

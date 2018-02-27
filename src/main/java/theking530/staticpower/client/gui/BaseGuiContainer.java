@@ -14,6 +14,7 @@ import api.gui.button.BaseButton;
 import api.gui.button.BaseButton.ClickedState;
 import api.gui.button.ButtonManager;
 import api.gui.tab.GuiTabManager;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -136,8 +137,7 @@ public abstract class BaseGuiContainer extends GuiContainer implements IInteract
 		if(slotMode == Mode.Regular) {
 			GuiDrawUtilities.drawSlot(xPos, yPos, width, height);
 		}else{
-			Color color = slotMode == Mode.Input ? new Color(80, 130, 179) : new Color(200, 140, 50);
-			GuiDrawUtilities.drawSlot(xPos, yPos, width, height, color);
+			GuiDrawUtilities.drawSlot(xPos, yPos, width, height, slotMode.getBorderColor());
 		}
 	}
 	public void drawSlot(int xPos, int yPos, int width, int height) {
@@ -150,7 +150,7 @@ public abstract class BaseGuiContainer extends GuiContainer implements IInteract
 		for(Slot slot : slots) {
 			if(slot instanceof StaticPowerContainerSlot) {
 				StaticPowerContainerSlot handlerSlot = (StaticPowerContainerSlot)slot;
-				Mode intendedMode = handlerSlot.getItemHandler() == te.slotsInput ? Mode.Input : handlerSlot.getItemHandler() == te.slotsOutput ? Mode.Output : Mode.Regular;
+				Mode intendedMode = handlerSlot.getMode() != null ? handlerSlot.getMode() : handlerSlot.getItemHandler() == te.slotsInput ? Mode.Input : handlerSlot.getItemHandler() == te.slotsOutput ? Mode.Output : Mode.Regular;
 				int slotSize = intendedMode == Mode.Input ? inputSlotSize : outputSlotSize;
 				int adjustment = (slotSize - 16)/2;
 				if(intendedMode != Mode.Regular) {
@@ -210,6 +210,13 @@ public abstract class BaseGuiContainer extends GuiContainer implements IInteract
         bufferbuilder.pos(xCoord+width, yCoord, this.zLevel).tex(maxU, minV).endVertex();
         bufferbuilder.pos(xCoord, yCoord, this.zLevel).tex(minU, minV).endVertex();
         tessellator.draw();
+    }
+    
+    public void drawVerticalBar(int xPos, int yPos, int width, int height, float fillAmount, int color) {
+		drawSlot(guiLeft+xPos, guiTop+yPos, width, height);
+		int filledHeight = (int) (fillAmount * height);
+		Gui.drawRect(guiLeft+xPos, guiTop+yPos+(height-filledHeight), guiLeft+xPos+width, guiTop+yPos+height, color);
+		
     }
     
 	public void setInputSlotSize(int size) {

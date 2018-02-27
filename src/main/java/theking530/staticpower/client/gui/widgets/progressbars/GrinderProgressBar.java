@@ -68,6 +68,7 @@ public class GrinderProgressBar implements IGuiWidget {
 			double perSecond = (partialTicks)/seconds;
 			interp += perSecond;
 		}
+		interp = Math.min(interp, processingEntity.getProcessingTime());
 		float xPosition = owningGui.getGuiLeft() + this.xPosition;
 		float yPosition = owningGui.getGuiTop() + this.yPosition;
 		float adjustedProgress = 0.9f*interp/(float)processingEntity.getProcessingTime();

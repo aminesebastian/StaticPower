@@ -69,7 +69,7 @@ public class GuiDrawUtilities {
 		Gui.drawRect(xPos, yPos, xPos+width, yPos+height, GuiUtilities.getColor(139, 139, 139));
 		
 		if(color != null) {
-			Gui.drawRect(xPos, yPos, xPos+width, yPos+height, GuiUtilities.getColor(color.getRed(), color.getGreen(), color.getBlue(), 35));
+			//Gui.drawRect(xPos, yPos, xPos+width, yPos+height, GuiUtilities.getColor(color.getRed(), color.getGreen(), color.getBlue(), 150));
 		}
 
 	}

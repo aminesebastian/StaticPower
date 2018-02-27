@@ -15,9 +15,11 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.fluids.FluidStack;
+import theking530.staticpower.assists.utilities.EnumTextFormatting;
 import theking530.staticpower.assists.utilities.GuiUtilities;
 import theking530.staticpower.assists.utilities.RenderUtil;
 import theking530.staticpower.assists.utilities.SideModeList.Mode;
+import theking530.staticpower.fluids.ModFluids;
 
 public class GuiFluidBarUtilities {
 	
@@ -88,6 +90,11 @@ public class GuiFluidBarUtilities {
 		if(fluid != null) {	
 			String name = fluid.getLocalizedName();
 			String text = (name + "=" + NumberFormat.getNumberInstance(Locale.US).format(fluidAmount) + "/" + NumberFormat.getNumberInstance(Locale.US).format(maxCapacity)+ "mB");
+			if(fluid.tag != null && fluid.getFluid() == ModFluids.RefinedFluid) {
+				text += "==" + EnumTextFormatting.AQUA + "Purity: " + fluid.tag.getFloat("Purity");
+				text += "=" + EnumTextFormatting.GREEN + "Reactivity: " + fluid.tag.getFloat("Reactivity");
+				text += "=" + EnumTextFormatting.YELLOW + "Balance: " + fluid.tag.getFloat("Balance");
+			}
 			String[] splitMsg = text.split("=");
 			return Arrays.asList(splitMsg);
 		}	

@@ -29,6 +29,10 @@
             "model": "forge:fluid",
             "custom": { "fluid": "steam" }
         },
+		"refinedfluid": {
+            "model": "forge:fluid",
+            "custom": { "fluid": "refinedfluid" }
+        },
 		"liquidexperience": {
             "model": "forge:fluid",
             "custom": { "fluid": "liquidexperience" }

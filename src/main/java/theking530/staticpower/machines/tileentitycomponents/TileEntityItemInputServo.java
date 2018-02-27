@@ -8,13 +8,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
-import theking530.staticpower.assists.utilities.InventoryUtilities;
-import theking530.staticpower.assists.utilities.SideModeList;
-import theking530.staticpower.assists.utilities.SideUtilities;
 import theking530.staticpower.assists.utilities.SideModeList.Mode;
+import theking530.staticpower.assists.utilities.SideUtilities;
 import theking530.staticpower.assists.utilities.SideUtilities.BlockSide;
 import theking530.staticpower.tileentity.ISideConfigurable;
+import theking530.staticpower.tileentity.TileEntityInventory;
 
 public class TileEntityItemInputServo implements ITileEntityComponent{
 
@@ -24,23 +22,31 @@ public class TileEntityItemInputServo implements ITileEntityComponent{
 	private int inputTime;
 	private ISideConfigurable sideConfigurable;
 	private TileEntity tileEntity;
-	private ItemStackHandler inventory;
+	private TileEntityInventory inventory;
 	private int[] slots;
 	private boolean isEnabled;
+	private Mode inputMode;
 	
-	public TileEntityItemInputServo(TileEntity tileEntity, int inputTime, ItemStackHandler inventory, int... slots) {
+	public TileEntityItemInputServo(TileEntity tileEntity, int inputTime, TileEntityInventory inventory, Mode mode, int... slots) {
 		this.tileEntity = tileEntity;
 		this.inputTime = inputTime;
 		this.inventory = inventory;
 		this.slots = slots;
+		this.inputMode = mode;
 		
 		if(tileEntity instanceof ISideConfigurable) {
 			sideConfigurable = (ISideConfigurable)tileEntity;
 		}
 	}
+	public TileEntityItemInputServo(TileEntity tileEntity, int inputTime, TileEntityInventory inventory, int... slots) {
+		this(tileEntity, inputTime, inventory, Mode.Input, slots);
+	}
 	@Override
 	public String getComponentName() {
 		return "Input Servo";
+	}
+	public Mode getMode() {
+		return inputMode;
 	}
 	@Override
 	public void preProcessUpdate() {
@@ -73,7 +79,7 @@ public class TileEntityItemInputServo implements ITileEntityComponent{
 		}
 	}
 	public void inputItem(int inputSlot, BlockSide blockSide, int startSlot) {
-		if (sideConfigurable == null || sideConfigurable.getSideConfiguration(blockSide) == SideModeList.Mode.Input) {
+		if (sideConfigurable == null || sideConfigurable.getSideConfiguration(blockSide) == inputMode) {
 			EnumFacing facing = tileEntity.getWorld().getBlockState(tileEntity.getPos()).getValue(BlockHorizontal.FACING);
 			TileEntity te = tileEntity.getWorld().getTileEntity(tileEntity.getPos().offset(SideUtilities.getEnumFacingFromSide(blockSide, facing)));
 			if (te != null && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, SideUtilities.getEnumFacingFromSide(blockSide, facing).getOpposite())) {
@@ -87,12 +93,11 @@ public class TileEntityItemInputServo implements ITileEntityComponent{
 				}			
 				IItemHandler inv = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, SideUtilities.getEnumFacingFromSide(blockSide, facing).getOpposite());
 				for(int currentTESlot = startSlot; currentTESlot < inv.getSlots(); currentTESlot++) {
-					ItemStack stack = inv.extractItem(currentTESlot, 64, true);
-					if(stack != null) { //Find a way to check if input item is valid.
-						if (InventoryUtilities.canInsertItemIntoSlot(inventory, inputSlot, stack)) {
-							ItemStack actualPull = inv.extractItem(currentTESlot, 64, false);
-							inventory.insertItem(inputSlot, actualPull, false);																
-						}
+					ItemStack actualPull = inv.extractItem(currentTESlot, 64, true);
+					if(!actualPull.isEmpty()) {
+						ItemStack remaining = inventory.insertItemToSide(inputMode, inputSlot, actualPull.copy(), false);	
+						inv.extractItem(currentTESlot, actualPull.getCount() - remaining.getCount(), false);
+						break;
 					}
 				}		
 			}

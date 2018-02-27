@@ -38,7 +38,14 @@ import theking530.staticpower.machines.mechanicalsqueezer.BlockMechanicalSqueeze
 import theking530.staticpower.machines.poweredfurnace.BlockPoweredFurnace;
 import theking530.staticpower.machines.poweredgrinder.BlockPoweredGrinder;
 import theking530.staticpower.machines.quarry.BlockQuarry;
+import theking530.staticpower.machines.refinery.BlockFluidRefineryCasing;
+import theking530.staticpower.machines.refinery.controller.BlockFluidRefineryController;
+import theking530.staticpower.machines.refinery.fluidinterface.BlockRefineryFluidInterface;
+import theking530.staticpower.machines.refinery.mixer.BlockRefineryMixer;
+import theking530.staticpower.machines.refinery.reactor.BlockRefineryReactor;
+import theking530.staticpower.machines.refinery.vent.BlockRefineryVent;
 import theking530.staticpower.machines.treefarmer.BlockTreeFarmer;
+import theking530.staticpower.tileentity.astralquary.brain.BlockAstralQuarryBrain;
 import theking530.staticpower.tileentity.chest.energizedchest.BlockEnergizedChest;
 import theking530.staticpower.tileentity.chest.lumumchest.BlockLumumChest;
 import theking530.staticpower.tileentity.chest.staticchest.BlockStaticChest;
@@ -103,6 +110,17 @@ public class ModBlocks {
 	public static Block EsotericEnchanter;
 	public static Block TreeFarmer;
 	public static Block Centrifuge;
+	
+	//Astral Quary
+	public static Block AstralQuary;
+	
+	//Fluid Refinery
+	public static Block FluidRefineryController;
+	public static Block FluidRefineryCasing;
+	public static Block FluidRefineryFluidInterface;
+	public static Block FluidRefineryVent;
+	public static Block FluidRefineryMixer;
+	public static Block FluidRefineryReactor;
 	
 	//Gates
 	public static Block LogicGateBasePlate;
@@ -264,6 +282,20 @@ public class ModBlocks {
 		EsotericEnchanter = new BlockEsotericEnchanter("EsotericEnchanter").setHardness(3.5f);
 		registry.PreRegisterBlock(EsotericEnchanter);
 		
+		FluidRefineryController = new BlockFluidRefineryController("FluidRefineryController").setHardness(3.5f);
+		registry.PreRegisterBlock(FluidRefineryController);
+		FluidRefineryCasing = new BlockFluidRefineryCasing("FluidRefineryCasing").setHardness(3.5f);
+		registry.PreRegisterBlock(FluidRefineryCasing);
+		FluidRefineryFluidInterface = new BlockRefineryFluidInterface("FluidRefineryFluidInterface").setHardness(3.5f);
+		registry.PreRegisterBlock(FluidRefineryFluidInterface);
+		
+		FluidRefineryVent  = new BlockRefineryVent("FluidRefineryVent").setHardness(3.5f);
+		registry.PreRegisterBlock(FluidRefineryVent);
+		FluidRefineryMixer  = new BlockRefineryMixer("FluidRefineryMixer").setHardness(3.5f);
+		registry.PreRegisterBlock(FluidRefineryMixer);
+		FluidRefineryReactor  = new BlockRefineryReactor("FluidRefineryReactor").setHardness(3.5f);
+		registry.PreRegisterBlock(FluidRefineryReactor);
+		
 		LogicGateBasePlate = new BlockLogicGateBasePlate(Material.IRON, "LogicGateBasePlate");
 		registry.PreRegisterBlock(LogicGateBasePlate);
 		SignalMultiplier = new BlockSignalMultiplier("SignalMultiplier").setHardness(3.5f);
@@ -285,6 +317,8 @@ public class ModBlocks {
 		LED = new BlockLED("LED").setHardness(3.5f);
 		registry.PreRegisterBlock(LED);
 		
+		AstralQuary = new BlockAstralQuarryBrain("AstralQuary").setHardness(3.5f);
+		registry.PreRegisterBlock(AstralQuary);
 		
 		SolderingTable = new BlockSolderingTable().setUnlocalizedName("SolderingTable").setHardness(3.5f);
 		registry.PreRegisterBlock(SolderingTable);

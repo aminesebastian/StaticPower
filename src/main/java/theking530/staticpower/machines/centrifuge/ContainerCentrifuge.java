@@ -2,8 +2,10 @@ package theking530.staticpower.machines.centrifuge;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.container.BaseContainer;
 import theking530.staticpower.handlers.crafting.registries.GrinderRecipeRegistry;
 import theking530.staticpower.machines.tileentitycomponents.slots.BatterySlot;
@@ -21,7 +23,7 @@ public class ContainerCentrifuge extends BaseContainer {
 		
 		//Input
 		addSlotToContainer(new StaticPowerContainerSlot(teCentrifuge.slotsInput, 0, 80, 20));
-		addSlotToContainer(new StaticPowerContainerSlot(teCentrifuge.slotsInput, 1, 40, 30));
+		addSlotToContainer(new StaticPowerContainerSlot(new ItemStack(Items.FLINT), teCentrifuge.slotsInput, 1, 40, 30).setMode(Mode.Input2));
 		
 		//Battery
 		addSlotToContainer(new BatterySlot(teCentrifuge.slotsInternal, 1, 8, 65));

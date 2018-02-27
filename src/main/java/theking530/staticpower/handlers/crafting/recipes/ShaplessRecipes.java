@@ -164,6 +164,12 @@ public class ShaplessRecipes {
 			Ingredient.fromItem(Item.getItemFromBlock(ModBlocks.LumumWood))});
 		
 
+		//Gunpowder
+		RegisterHelper.addShapelessRecipe("StaticPower_gunpowder", "StaticPower", new ItemStack(Items.GUNPOWDER), new Ingredient[]{ 
+			Craft.itemstack(ItemMaterials.dustSaltpeter), Craft.itemstack(ItemMaterials.dustSaltpeter), Craft.itemstack(ItemMaterials.dustCoal), Craft.itemstack(ItemMaterials.dustSulfur)});
+		RegisterHelper.addShapelessRecipe("StaticPower_gunpowder", "StaticPower", new ItemStack(Items.GUNPOWDER), new Ingredient[]{ 
+				Craft.itemstack(ItemMaterials.dustSaltpeter), Craft.itemstack(ItemMaterials.dustSaltpeter), Craft.itemstack(ItemMaterials.dustCharcoal), Craft.itemstack(ItemMaterials.dustSulfur)});
+			
 		//Filters --------------------------------------------------------------------------------------------------
 		ItemStack quarryFilter = new ItemStack(ModItems.UpgradedItemFilter, 1);
 		ItemFilter.writeQuarryFilter(quarryFilter);

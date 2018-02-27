@@ -16,6 +16,7 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import theking530.staticpower.conduits.TileEntityBaseConduit;
 import theking530.staticpower.items.ItemBase;
+import theking530.staticpower.machines.refinery.BaseRefineryTileEntity;
 import theking530.staticpower.tileentity.digistorenetwork.BaseDigistoreTileEntity;
 
 public class BlockReader extends ItemBase{
@@ -52,6 +53,15 @@ public class BlockReader extends ItemBase{
     			if(!world.isRemote) {
         			player.sendMessage(new TextComponentString(te.getManager().getNetwork().getMasterList().toString()));	
     				player.sendMessage(new TextComponentString(te.getManager().getNetwork().getMasterList().size() + ""));
+    			}    		
+    	    	return EnumActionResult.SUCCESS;
+    		}
+    	}else if(tile instanceof BaseRefineryTileEntity) {
+    		BaseRefineryTileEntity te = (BaseRefineryTileEntity) tile;
+    		if(te.hasController() && te.getContorller().getNetwork() != null) {
+    			if(!world.isRemote) {
+        			player.sendMessage(new TextComponentString(te.getContorller().getNetwork().getMasterList().toString()));
+    				player.sendMessage(new TextComponentString((te.getContorller().getNetwork().getMasterList().size() + te.getContorller().getNetwork().getExtenderPositionList().size()) + ""));
     			}    		
     	    	return EnumActionResult.SUCCESS;
     		}

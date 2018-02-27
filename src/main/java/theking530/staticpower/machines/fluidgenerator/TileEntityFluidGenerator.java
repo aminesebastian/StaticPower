@@ -16,7 +16,7 @@ public class TileEntityFluidGenerator extends BaseMachineWithTank {
 	public FluidContainerComponent fluidContainerComponent;
 	
 	public TileEntityFluidGenerator() {
-		initializeBasicMachine(1, 0, 50000, 480, 0);
+		initializeBasicMachine(1, 0, 50000, 32000, 0);
 		initializeTank(5000);
 		initializeSlots(0, 1, 1);
 		

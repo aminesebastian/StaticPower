@@ -88,8 +88,14 @@ import theking530.staticpower.machines.mechanicalsqueezer.TileEntityMechanicalSq
 import theking530.staticpower.machines.poweredfurnace.TileEntityPoweredFurnace;
 import theking530.staticpower.machines.poweredgrinder.TileEntityPoweredGrinder;
 import theking530.staticpower.machines.quarry.TileEntityQuarry;
+import theking530.staticpower.machines.refinery.controller.TileEntityFluidRefineryController;
+import theking530.staticpower.machines.refinery.fluidinterface.TileEntityRefineryFluidInterface;
+import theking530.staticpower.machines.refinery.mixer.TileEntityRefineryMixer;
+import theking530.staticpower.machines.refinery.reactor.TileEntityRefineryReactor;
+import theking530.staticpower.machines.refinery.vent.TileEntityRefineryVent;
 import theking530.staticpower.machines.treefarmer.TileTreeFarmer;
 import theking530.staticpower.potioneffects.ModPotions;
+import theking530.staticpower.tileentity.astralquary.brain.TileEntityAstralQuarryBrain;
 import theking530.staticpower.tileentity.chest.energizedchest.TileEntityEnergizedChest;
 import theking530.staticpower.tileentity.chest.lumumchest.TileEntityLumumChest;
 import theking530.staticpower.tileentity.chest.staticchest.TileEntityStaticChest;
@@ -206,6 +212,15 @@ public class StaticPower {
 		
 		GameRegistry.registerTileEntity(TileEsotericEnchanter.class, "Esoteric Enchanter");
 		GameRegistry.registerTileEntity(TileCentrifuge.class, "Centrifuge");
+		
+		GameRegistry.registerTileEntity(TileEntityAstralQuarryBrain.class, "Astral Quarry");
+		
+		GameRegistry.registerTileEntity(TileEntityFluidRefineryController.class, "Fluid Refinery Controller");
+		GameRegistry.registerTileEntity(TileEntityRefineryFluidInterface.class, "Fluid Refinery Interface");
+		
+		GameRegistry.registerTileEntity(TileEntityRefineryReactor.class, "Fluid Refinery Reactor");
+		GameRegistry.registerTileEntity(TileEntityRefineryMixer.class, "Fluid Refinery Mixer");
+		GameRegistry.registerTileEntity(TileEntityRefineryVent.class, "Fluid Refinery Vent");
 		
 		GameRegistry.registerTileEntity(TileEntityDigistore.class, "Digistore");
 		GameRegistry.registerTileEntity(TileEntityDigistoreManager.class, "DigistoreManager");

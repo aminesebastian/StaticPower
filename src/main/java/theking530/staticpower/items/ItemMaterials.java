@@ -84,6 +84,7 @@ public class ItemMaterials extends MultiItem {
 	
 	public static ItemStack dustSulfur;
 	public static ItemStack dustSaltpeter;
+	public static ItemStack dustCharcoal;
 	
 	public ItemMaterials() {
 		super("material");
@@ -170,6 +171,6 @@ public class ItemMaterials extends MultiItem {
 		
 		dustSulfur = createSubOreItem(280, "dustSulfur");
 		dustSaltpeter = createSubOreItem(281, "dustSaltpeter");
-		
+		dustCharcoal = createSubOreItem(282, "dustCharcoal");
 	}
 }
