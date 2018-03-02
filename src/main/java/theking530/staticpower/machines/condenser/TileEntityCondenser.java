@@ -35,7 +35,7 @@ public class TileEntityCondenser extends BaseMachineWithTank  {
 		drainComponentEvaporatedMash.setMode(FluidContainerInteractionMode.FILL);
 		drainComponentEthanol = new FluidContainerComponent("RightBucketDrain", slotsInput, 1, slotsOutput, 1, this, fluidTankEthanol);	
 		
-		registerComponent(new TileEntityItemOutputServo(this, 2, slotsOutput, 0, 1));
+		registerComponent(new TileEntityItemOutputServo(this, 1, slotsOutput, 0, 1));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0, 1));
 	}
 	

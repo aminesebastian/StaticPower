@@ -12,7 +12,7 @@ public class TileEntityAstralQuarryBrain extends BaseTileEntity {
 
 	public TileEntityAstralQuarryBrain() {
 		initializeSlots(0, 0, 9);
-		registerComponent(new TileEntityItemOutputServo(this, 2, slotsOutput, 0, 1, 2, 3, 4, 5, 6, 7, 8));
+		registerComponent(new TileEntityItemOutputServo(this, 1, slotsOutput, 0, 1, 2, 3, 4, 5, 6, 7, 8));
 	}
 	@Override
 	public void process() {

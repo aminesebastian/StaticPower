@@ -58,18 +58,18 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 	private int inputSlotsCount;
 	private int outputSlotsCount;
 	
-	private boolean updateQueued = false;
+	private boolean updateQueued;
 	protected boolean disableFaceInteraction;
 	
-	public boolean wasWrenchedDoNotBreak = false;
+	public boolean wasWrenchedDoNotBreak;
+	public boolean wasPlaced;
 	
 	public BaseTileEntity() {
 		ioSideConfiguration = new SideConfiguration();
 		components = new ArrayList<ITileEntityComponent>();
-		
-		if(isSideConfigurable()) {
-			setDefaultSideConfiguration(ioSideConfiguration);
-		}
+		wasPlaced = false;
+		wasWrenchedDoNotBreak = false;
+		updateQueued = false;
 	}
 	public void initializeSlots(int internalSlots, int inputSlots, int outputSlots, boolean disableFaceInteraction) {
 		slotsInput = new TileEntityInventory(inputSlots);
@@ -108,8 +108,9 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 			markDirty();
 			updateTimer = 0;
 //		}
-		if(disableFaceInteraction && isSideConfigurable()) {
-			setSideConfiguration(Mode.Disabled, BlockSide.FRONT);	
+		if(!wasPlaced) {
+			onPlaced();
+			wasPlaced = true;
 		}
 	}		
 	public void process() {}
@@ -118,6 +119,17 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
 	}
 	public void updateBlock() {
 		updateQueued = true;
+	}
+	
+	public void onPlaced() {
+		if(isSideConfigurable()) {
+			if(disableFaceInteraction) {
+				setDefaultSideConfiguration(ioSideConfiguration);
+			}else{
+				setSideConfiguration(Mode.Disabled, BlockSide.FRONT);
+			}
+
+		}
 	}
 	
 	public ItemStack getInputStack(int slot) {
@@ -188,6 +200,9 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
         if(slotsUpgrades != null && slotsUpgrades.getSlots() > 0 && nbt.hasKey("UPGRADES")) {
             slotsUpgrades.deserializeNBT((NBTTagCompound) nbt.getTag("UPGRADES"));
         }
+        if(nbt.hasKey("placed")) {
+        	wasPlaced = nbt.getBoolean("placed");
+        }
     }
     public NBTTagCompound serializeData(NBTTagCompound nbt) {
         if(this.isRedstoneControllable()) {
@@ -212,7 +227,7 @@ public class BaseTileEntity extends TileEntity implements ITickable, IRedstoneCo
         if(slotsUpgrades != null && slotsUpgrades.getSlots() > 0) {
         	nbt.setTag("UPGRADES", slotsUpgrades.serializeNBT());
         }
-        nbt.setBoolean("PLACED", true);
+        nbt.setBoolean("placed", wasPlaced);
 		return nbt;	
     }
     

@@ -15,7 +15,7 @@ public class FusionRecipes {
 	public static void registerFusionRecipes() {
 		RegisterHelper.registerFusionRecipe(new ItemStack(Items.SADDLE), Craft.item(Items.LEATHER), Craft.item(Items.LEATHER), Craft.item(Items.LEATHER), Craft.ore("ingotIron"), Craft.ore("ingotIron"));
 		RegisterHelper.registerFusionRecipe(new ItemStack(Items.CAKE), Craft.item(Items.EGG), Craft.item(Items.SUGAR), Craft.item(Items.WHEAT), Craft.item(Items.WHEAT), Craft.item(Items.MILK_BUCKET));
-		RegisterHelper.registerFusionRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.ObsidianGlass), 8), Craft.ore("dustObisidan"), Craft.ore("dustObisidan"),  Craft.ore("gemQuartz"), Craft.ore("blockGlass"), Craft.ore("blockGlass"));
+		RegisterHelper.registerFusionRecipe(new ItemStack(Item.getItemFromBlock(ModBlocks.ObsidianGlass), 8), Craft.ore("dustObsidian"), Craft.ore("dustObsidian"),  Craft.ore("gemQuartz"), Craft.ore("blockGlass"), Craft.ore("blockGlass"));
 		
 		RegisterHelper.registerFusionRecipe(Craft.outputItemStack(ItemMaterials.ingotRedstoneAlloy, 1), Craft.ore("ingotSilver"), Craft.item(Items.REDSTONE));
 		

@@ -8,12 +8,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.assists.utilities.SideModeList.Mode;
+import theking530.staticpower.assists.utilities.SideUtilities;
+import theking530.staticpower.assists.utilities.SideUtilities.BlockSide;
 import theking530.staticpower.handlers.crafting.registries.CentrifugeRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.CentrifugeRecipeWrapper;
 import theking530.staticpower.machines.BaseMachine;
 import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
+import theking530.staticpower.tileentity.SideConfiguration;
 
 public class TileCentrifuge extends BaseMachine {
 	public static final int DEFAULT_MAX_ROTATION_SPEED = 1000;
@@ -27,7 +30,7 @@ public class TileCentrifuge extends BaseMachine {
 		initializeSlots(2, 2, 3);
 		initializeBasicMachine(2, 1000, 100000, 80, 100);
 		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInternal, 1, this, energyStorage));
-		registerComponent(new TileEntityItemOutputServo(this, 2, slotsOutput, 0, 1, 2));
+		registerComponent(new TileEntityItemOutputServo(this, 1, slotsOutput, 0, 1, 2));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, Mode.Input2, 1));
 	}
@@ -84,7 +87,6 @@ public class TileCentrifuge extends BaseMachine {
 	
 	public void process() {
 		if(!getWorld().isRemote) {
-
 			if(!slotsInput.getStackInSlot(1).isEmpty() && multiplier < 1.0f) {
 				slotsInput.extractItem(1, 1, false);
 				multiplier += 0.01f;
@@ -141,6 +143,10 @@ public class TileCentrifuge extends BaseMachine {
     	return true;
     }
     
+	public void setDefaultSideConfiguration(SideConfiguration configuration) {
+		configuration.setToDefault();
+		configuration.setSideConfiguration(Mode.Input2, SideUtilities.getEnumFacingFromSide(BlockSide.BACK, getFacingDirection()));
+	}
 	@Override
 	public List<Mode> getValidSideConfigurations() {
 		List<Mode> modes = new ArrayList<Mode>();

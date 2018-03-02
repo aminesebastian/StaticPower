@@ -41,7 +41,7 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
 		drainComponentMash.setMode(FluidContainerInteractionMode.FILL);
 		drainComponentEvaporatedMash = new FluidContainerComponent("RightBucketDrain", slotsInput, 1, slotsOutput, 1, this, fluidTank2);
 		
-		registerComponent(new TileEntityItemOutputServo(this, 2, slotsOutput, 0, 1));
+		registerComponent(new TileEntityItemOutputServo(this, 1, slotsOutput, 0, 1));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0, 1));
 	}
 	@Override

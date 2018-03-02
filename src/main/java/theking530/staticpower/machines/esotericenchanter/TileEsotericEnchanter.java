@@ -36,7 +36,7 @@ public class TileEsotericEnchanter extends BaseMachineWithTank {
 		fluidContainerComponent = new FluidContainerComponent("Bucket Component", slotsInternal, 4, slotsInternal, 5, this, fluidTank, 40);
 		registerComponent(fluidContainerComponent);
 		
-		registerComponent(new TileEntityItemOutputServo(this, 2, slotsOutput, 0));
+		registerComponent(new TileEntityItemOutputServo(this, 1, slotsOutput, 0));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0, 1, 2));
 	}
 	

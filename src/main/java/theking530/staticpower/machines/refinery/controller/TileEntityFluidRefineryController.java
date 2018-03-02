@@ -49,7 +49,7 @@ public class TileEntityFluidRefineryController extends BaseRefineryTileEntity {
 	
 	public TileEntityFluidRefineryController() {
 		initializeSlots(0, 3, 0);
-		registerComponent(new TileEntityItemOutputServo(this, 2, slotsOutput, 0, 1, 2, 3, 4, 5, 6, 7, 8));
+		registerComponent(new TileEntityItemOutputServo(this, 1, slotsOutput, 0, 1, 2, 3, 4, 5, 6, 7, 8));
 		
 		staticInputTank = new FluidTank(10000);
 		energizedInputTank = new FluidTank(10000);
