@@ -9,6 +9,7 @@ import theking530.staticpower.assists.Tier;
 import theking530.staticpower.client.render.conduit.TileEntityRenderFluidConduit;
 import theking530.staticpower.client.render.conduit.TileEntityRenderItemConduit;
 import theking530.staticpower.client.render.conduit.TileEntityRenderStaticConduit;
+import theking530.staticpower.client.render.tileentitys.digistore.TileEntityRenderDigistore;
 import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRenderAdder;
 import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRenderAndGate;
 import theking530.staticpower.client.render.tileentitys.logicgates.TileEntityRenderLED;
@@ -24,7 +25,6 @@ import theking530.staticpower.client.render.tileentitys.machines.TileEntityRende
 import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderChest;
 import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderCondenser;
 import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderCropSqueezer;
-import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderDigistore;
 import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderDistillery;
 import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderEsotericEnchanter;
 import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderFarmer;
@@ -110,6 +110,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMechanicalSqueezer.class, new TileEntityRenderMechanicalSqueezer());
 		//Digistore
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDigistore.class, new TileEntityRenderDigistore());
+		//ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDigistoreWire.class, new TileEntityRenderDigistoreWire());
 		//Former
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFormer.class, new TileEntityRenderFormer());			
 		//Quarry

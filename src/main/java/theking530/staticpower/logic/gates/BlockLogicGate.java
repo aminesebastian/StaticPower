@@ -70,6 +70,7 @@ public class BlockLogicGate extends Block implements IWrenchable, IItemBlockProv
     		return true;
     	}else if (!player.isSneaking()) {
     		TileEntityBaseLogicGate entity = (TileEntityBaseLogicGate) world.getTileEntity(pos);
+    		int orientation = entity.getBlockMetadata();
     		if(entity != null) {
     			if(hitX > .25 && hitX < .75 && hitZ > .25 && hitZ < .75) {
     				if(GUI_ID != 0) {
@@ -77,15 +78,22 @@ public class BlockLogicGate extends Block implements IWrenchable, IItemBlockProv
                 		return true;					
     				}
         		}else{
+        			EnumFacing direction = null;
         			if(hitX > .75) {
-        				entity.sideRightClicked(EnumFacing.EAST);	     
+        				direction=EnumFacing.EAST;	     
         			}else if(hitX < .25) {
-        				entity.sideRightClicked(EnumFacing.WEST);	
+        				direction=EnumFacing.WEST;	
         			}else if(hitZ > .75) {
-        				entity.sideRightClicked(EnumFacing.SOUTH);
+        				direction=EnumFacing.SOUTH;
         			}else if(hitZ < .25) {
-        				entity.sideRightClicked(EnumFacing.NORTH);	  
+        				direction=EnumFacing.NORTH;	  
+        			}else if(hitY > .75) {
+        				direction=EnumFacing.UP;
+        			}else if(hitY < .25) {
+        				direction=EnumFacing.DOWN;	  
         			}
+        			System.out.println("Hit X: " + hitX + "Hit Y: " + hitY + "Hit Z: " + hitZ + '\n');
+     				entity.sideRightClicked(direction);	
         			return true;
         		}	
     		} 	

@@ -103,6 +103,7 @@ import theking530.staticpower.tileentity.chunkloader.TileEntityChunkLoader;
 import theking530.staticpower.tileentity.digistorenetwork.digistore.TileEntityDigistore;
 import theking530.staticpower.tileentity.digistorenetwork.ioport.TileEntityDigistoreIOPort;
 import theking530.staticpower.tileentity.digistorenetwork.manager.TileEntityDigistoreManager;
+import theking530.staticpower.tileentity.digistorenetwork.networkwire.TileEntityDigistoreWire;
 import theking530.staticpower.tileentity.solarpanels.TileEntityBasicSolarPanel;
 import theking530.staticpower.tileentity.solarpanels.TileEntityCreativeSolarPanel;
 import theking530.staticpower.tileentity.solarpanels.TileEntityEnergizedSolarPanel;
@@ -225,6 +226,7 @@ public class StaticPower {
 		GameRegistry.registerTileEntity(TileEntityDigistore.class, "Digistore");
 		GameRegistry.registerTileEntity(TileEntityDigistoreManager.class, "DigistoreManager");
 		GameRegistry.registerTileEntity(TileEntityDigistoreIOPort.class, "DigistoreIOPort");
+		GameRegistry.registerTileEntity(TileEntityDigistoreWire.class, "DigistoreWire");
 	}	
 	@EventHandler
 	public void Init(FMLInitializationEvent Event){

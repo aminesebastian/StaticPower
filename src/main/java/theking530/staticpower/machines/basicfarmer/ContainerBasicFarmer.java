@@ -1,5 +1,6 @@
 package theking530.staticpower.machines.basicfarmer;
 
+import cofh.redstoneflux.api.IEnergyContainerItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
@@ -7,8 +8,9 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemHoe;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import theking530.staticpower.container.BaseContainer;
+import theking530.staticpower.items.upgrades.BaseUpgrade;
 import theking530.staticpower.machines.tileentitycomponents.slots.BatterySlot;
 import theking530.staticpower.machines.tileentitycomponents.slots.FluidContainerSlot;
 import theking530.staticpower.machines.tileentitycomponents.slots.OutputSlot;
@@ -17,11 +19,7 @@ import theking530.staticpower.machines.tileentitycomponents.slots.UpgradeSlot;
 
 public class ContainerBasicFarmer extends BaseContainer {
 	
-	private TileEntityBasicFarmer farmerTileEntity;
-	
 	public ContainerBasicFarmer(InventoryPlayer invPlayer, TileEntityBasicFarmer teFarmer) {
-		farmerTileEntity = teFarmer;
-		
         for (int l = 0; l < 3; ++l) {
             for (int i1 = 0; i1 < 3; ++i1){
                 this.addSlotToContainer(new OutputSlot(teFarmer.slotsOutput, i1 + l * 3, 76 + i1 * 18, 20 + l * 18));
@@ -59,52 +57,24 @@ public class ContainerBasicFarmer extends BaseContainer {
 		this.addPlayerInventory(invPlayer, 8, 90);
 		this.addPlayerHotbar(invPlayer, 8, 148);
 	}
-	
-	//Shift Click Functionality
-	public ItemStack transferStackInSlot(EntityPlayer player, int invSlot) {
-	    ItemStack itemstack = ItemStack.EMPTY;
-	    Slot slot = (Slot)this.inventorySlots.get(invSlot);
-	
-	    if (slot != null && slot.getHasStack()) {
-	        ItemStack itemstack1 = slot.getStack();
-	        itemstack = itemstack1.copy();
-	
-	        if (invSlot == 1 || invSlot == 0) {
-	            if (!this.mergeItemStack(itemstack1, 6, 42, true)) {
-	                return ItemStack.EMPTY;
-	            }
-	            slot.onSlotChange(itemstack1, itemstack);
-	        }else if (invSlot != 1 && invSlot != 0){
-	        	if (FurnaceRecipes.instance().getSmeltingResult(itemstack1) != null){
-	                if (!this.mergeItemStack(itemstack1, 0, 1, false)){
-	                    return ItemStack.EMPTY;
-	                }
-	            }else if (invSlot >= 6 && invSlot < 33) {
-	                if (!this.mergeItemStack(itemstack1, 33, 42, false)) {
-	                    return ItemStack.EMPTY;
-	                }
-	            }else if (invSlot >= 33 && invSlot < 42 && !this.mergeItemStack(itemstack1, 6, 33, false))  {
-	                return ItemStack.EMPTY;
-	            }
-	        }else if (!this.mergeItemStack(itemstack1, 6, 42, false)) {
-	            return ItemStack.EMPTY;
-	        }
-	        if (itemstack1.getCount() == 0){
-	            slot.putStack(ItemStack.EMPTY);
-	        }else {
-	            slot.onSlotChanged();
-	        }
-	        if (itemstack1.getCount() == itemstack.getCount()){
-	            return ItemStack.EMPTY;
-	        }
-	        slot.onTake(player, itemstack1);
-	    }
-	    return itemstack;
-	}
-
 	@Override
-	public boolean canInteractWith(EntityPlayer player) {
-		return farmerTileEntity.isUseableByPlayer(player);
+	protected boolean playerItemShiftClicked(ItemStack stack, EntityPlayer player, InventoryPlayer invPlayer, Slot slot, int slotIndex) {
+        if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null) && !mergeItemStack(stack, 9)) {
+        	return true;
+        }
+        if (stack.getItem() instanceof ItemHoe && !mergeItemStack(stack, 11)) {
+        	return true;
+        }
+        if (stack.getItem() instanceof ItemAxe && !mergeItemStack(stack, 12)) {
+        	return true;
+        }
+        if (stack.getItem() instanceof IEnergyContainerItem && !mergeItemStack(stack, 13)) {
+        	return true;
+        }
+        if (stack.getItem() instanceof BaseUpgrade && !mergeItemStack(stack, 14, 17, false)) {
+        	return true;
+        }
+		return false;	
 	}
 }
 

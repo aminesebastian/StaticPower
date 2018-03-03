@@ -22,11 +22,11 @@ import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.fluids.ModFluids;
 
 public class GuiFluidBarUtilities {
-	
-	public static void drawFluidBar(FluidStack fluid, int capacity, int amount, double x, double y, double zLevel, double width, double height) {
-		drawFluidBar(fluid, capacity, amount, x, y, zLevel, width, height, null);
+
+	public static void drawFluidBar(FluidStack fluid, int capacity, int amount, double x, double y, double zLevel, double width, double height, boolean drawOverlay) {
+		drawFluidBar(fluid, capacity, amount, x, y, zLevel, width, height, null, drawOverlay);
 	}
-	public static void drawFluidBar(FluidStack fluid, int capacity, int amount, double x, double y, double zLevel, double width, double height, Mode mode) {
+	public static void drawFluidBar(FluidStack fluid, int capacity, int amount, double x, double y, double zLevel, double width, double height, Mode mode, boolean drawOverlay) {
 		if(mode != null) {
 			GuiDrawUtilities.drawSlot((int)x, (int)(y-height), (int)width, (int)height, mode.getBorderColor());	
 		}else{
@@ -74,14 +74,15 @@ public class GuiFluidBarUtilities {
 	    }
 	    GlStateManager.enableAlpha();
 	    GlStateManager.disableBlend();
-	    
-	    int linesColor = GuiUtilities.getColor(40, 40, 120);
-	    for(int i=0; i<height/10; i++) {
-	        Gui.drawRect((int)x, (int)(y-height)+2, (int)(x+width-10), (int)(y-height+3) , linesColor);
-	        Gui.drawRect((int)x, (int)(y-height+7+(i*10)), (int)(x+width-10), (int)(y-height+8+(i*10)) , linesColor);
-	        if(i != height/10 - 1) {
-		        Gui.drawRect((int)x, (int)(y-height+12+(i*10)), (int)(x+width-7), (int)(y-height+13+(i*10)) , linesColor);	
-	        }
+	    if(drawOverlay) {
+		    int linesColor = GuiUtilities.getColor(40, 40, 120);
+		    for(int i=0; i<height/10; i++) {
+		        Gui.drawRect((int)x, (int)(y-height)+2, (int)(x+width-10), (int)(y-height+3) , linesColor);
+		        Gui.drawRect((int)x, (int)(y-height+7+(i*10)), (int)(x+width-10), (int)(y-height+8+(i*10)) , linesColor);
+		        if(i != height/10 - 1) {
+			        Gui.drawRect((int)x, (int)(y-height+12+(i*10)), (int)(x+width-7), (int)(y-height+13+(i*10)) , linesColor);	
+		        }
+		    }
 	    }
 		GlStateManager.enableLighting();
 	}

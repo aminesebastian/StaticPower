@@ -19,7 +19,7 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 	public TileEntityPoweredGrinder() {
 		initializeSlots(2, 1, 3);
 		initializeBasicMachine(2, 1000, 100000, 80, 100);
-		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInternal, 1, this, energyStorage));
+		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInternal, 1, energyStorage));
 		registerComponent(new TileEntityItemOutputServo(this, 1, slotsOutput, 0, 1, 2));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0));
 		bonusOutputChance = 0.0f;
@@ -109,7 +109,7 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 	
 	public GrinderOutputWrapper getGrindingResult(ItemStack stack) {
 		if(stack != ItemStack.EMPTY) {
-			return GrinderRecipeRegistry.Grinding().getGrindingResult(stack);
+			return GrinderRecipeRegistry.Grinding().getGrindingRecipe(stack);
 		}else{
 			return null;
 		}

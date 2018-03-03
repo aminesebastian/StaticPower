@@ -3,7 +3,6 @@ package theking530.staticpower.machines.tileentitycomponents;
 import cofh.redstoneflux.api.IEnergyContainerItem;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.energy.StaticEnergyStorage;
-import theking530.staticpower.tileentity.BaseTileEntity;
 
 public class BatteryInteractionComponent implements ITileEntityComponent{
 
@@ -12,14 +11,11 @@ public class BatteryInteractionComponent implements ITileEntityComponent{
 	
 	private ItemStackHandler BATTERY_SLOT_HANDLER;
 	private int BATTERY_SLOT;
-	private BaseTileEntity TE;
 	private StaticEnergyStorage ENERGY_STORAGE;
-	public BatteryInteractionComponent(String componentName, ItemStackHandler batterySlotHandler, int batterySlot,
-			BaseTileEntity tileEntity, StaticEnergyStorage energyHandler) {	
+	public BatteryInteractionComponent(String componentName, ItemStackHandler batterySlotHandler, int batterySlot, StaticEnergyStorage energyHandler) {	
 		NAME = componentName;
 		BATTERY_SLOT_HANDLER = batterySlotHandler;
 		BATTERY_SLOT = batterySlot;
-		TE = tileEntity;
 		ENERGY_STORAGE = energyHandler;
 	}
 

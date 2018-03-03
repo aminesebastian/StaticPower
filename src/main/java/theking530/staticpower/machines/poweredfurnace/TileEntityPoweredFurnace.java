@@ -15,7 +15,7 @@ public class TileEntityPoweredFurnace extends BaseMachine {
 		initializeBasicMachine(2, 1000, 100000, 80, 150);
 		registerComponent(new TileEntityItemOutputServo(this, 1, slotsOutput, 0));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0));
-		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInternal, 1, this, energyStorage));
+		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInternal, 1, energyStorage));
 	}
 	@Override
 	public String getName() {
@@ -33,7 +33,7 @@ public class TileEntityPoweredFurnace extends BaseMachine {
 	}
 	public boolean hasResult(ItemStack itemStack) {
 		if(itemStack != null) {
-			if(FurnaceRecipes.instance().getSmeltingResult(itemStack) != ItemStack.EMPTY) {
+			if(!FurnaceRecipes.instance().getSmeltingResult(itemStack).isEmpty()) {
 				return true;
 			}
 		}

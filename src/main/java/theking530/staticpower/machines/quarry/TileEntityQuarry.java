@@ -45,7 +45,7 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 		currentQuarryingPosition = startCorner;
 		isConfigured = false;
 		
-		registerComponent(new BatteryInteractionComponent("BatteryInteraction", slotsInternal, 3, this, energyStorage));
+		registerComponent(new BatteryInteractionComponent("BatteryInteraction", slotsInternal, 3, energyStorage));
 		registerComponent(fluidInteractionComponent = new FluidContainerComponent("BucketDrain", slotsInternal, 1, slotsInternal, 2, this, fluidTank));
 		fluidInteractionComponent.setMode(FluidContainerInteractionMode.FILL);
 	}

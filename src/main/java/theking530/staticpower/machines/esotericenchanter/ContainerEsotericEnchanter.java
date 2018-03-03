@@ -1,5 +1,6 @@
 package theking530.staticpower.machines.esotericenchanter;
 
+import cofh.redstoneflux.api.IEnergyContainerItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
@@ -44,61 +45,24 @@ public class ContainerEsotericEnchanter extends BaseContainer {
 		this.addPlayerInventory(invPlayer, 8, 84);
 		this.addPlayerHotbar(invPlayer, 8, 142);
 	}
-	
-	//Shift Click Functionality
-	public ItemStack transferStackInSlot(EntityPlayer player, int invSlot) {
-	    ItemStack itemstack = ItemStack.EMPTY;
-	    Slot slot = (Slot)this.inventorySlots.get(invSlot);
-	
-	    if (slot != null && slot.getHasStack()) {
-	        ItemStack itemstack1 = slot.getStack();
-	        itemstack = itemstack1.copy();
-	        
-	        if(invSlot >= 10) {
-	        	if(itemstack1.getItem() == Items.BOOK) {
-		            if (!this.mergeItemStack(itemstack1, 0, 1, false)) {
-		                return ItemStack.EMPTY;
-		            }
-	        	}
-	        	if(itemstack1.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
-		            if (!this.mergeItemStack(itemstack1, 5, 6, false)) {
-		                return ItemStack.EMPTY;
-		            }
-	        	}	   
-	        	if(itemstack1.getItem() instanceof BaseUpgrade && esotericEnchanter.canAcceptUpgrade(itemstack1)) {
-		            if (!this.mergeItemStack(itemstack1, 7, 10, false)) {
-		                return ItemStack.EMPTY;
-		            }
-	        	}    
-	            if (!this.mergeItemStack(itemstack1, 1, 3, false)) {
-	                return ItemStack.EMPTY;
-	            }
-	        }else{
-	            if (!this.mergeItemStack(itemstack1, 38, 46, false)) {
-	                return ItemStack.EMPTY;
-	            }
-	            if (!this.mergeItemStack(itemstack1, 10, 38, false)) {
-	                return ItemStack.EMPTY;
-	            }
-	        }
-	        if (itemstack1.getCount() == 0){
-	            slot.putStack(ItemStack.EMPTY);
-	        }else {
-	            slot.onSlotChanged();
-	        }
-	        if (itemstack1.getCount() == itemstack.getCount()){
-	            return ItemStack.EMPTY;
-	        }
-	        slot.onTake(player, itemstack1);
-	    }
-	    return itemstack;
-	}
 	@Override
-	public boolean canInteractWith(EntityPlayer player) {
-		return esotericEnchanter.isUseableByPlayer(player);
+	protected boolean playerItemShiftClicked(ItemStack stack, EntityPlayer player, InventoryPlayer invPlayer, Slot slot, int slotIndex) {
+        if (stack.getItem() == Items.BOOK && !mergeItemStack(stack, 0)) {
+        	return true;
+        }
+        if (stack.getItem() instanceof IEnergyContainerItem && !mergeItemStack(stack, 4)) {
+        	return true;
+        }
+        if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null) && !mergeItemStack(stack, 5)) {
+        	return true;
+        }
+        if (stack.getItem() instanceof BaseUpgrade && !mergeItemStack(stack, 7, 10, false)) {
+        	return true;
+        }
+        if (!mergeItemStack(stack, 1, 3, false)) {
+        	return true;
+        }
+		return false;	
 	}
-	public void detectAndSendChanges(){
-        super.detectAndSendChanges();
-    }
 }
 

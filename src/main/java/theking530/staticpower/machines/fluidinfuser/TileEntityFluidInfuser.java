@@ -22,7 +22,7 @@ public class TileEntityFluidInfuser extends BaseMachineWithTank {
 		initializeTank(10000);
 		initializeSlots(4, 1, 1);
 		
-		registerComponent(new BatteryInteractionComponent("BatteryInteraction", slotsInput, 3, this, energyStorage));
+		registerComponent(new BatteryInteractionComponent("BatteryInteraction", slotsInput, 3, energyStorage));
 		registerComponent(DRAIN_COMPONENT = new FluidContainerComponent("BucketDrain", slotsInternal, 1, slotsInternal, 2, this, fluidTank));
 		DRAIN_COMPONENT.setMode(FluidContainerInteractionMode.FILL);
 		

@@ -17,11 +17,6 @@ public class GuiLumumChest extends GuiContainer{
 		this.xSize = 230;
 		this.ySize = 254;		
 	}
-	public void drawScreen(int par1, int par2, float par3) {
-	    	super.drawScreen(par1, par2, par3);
-	    	int var1 = (this.width - this.xSize) / 2;
-	        int var2 = (this.height - this.ySize) / 2;       
-	}
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name =  I18n.format(this.LUMUM_CHEST.getName());
 		this.fontRenderer.drawString(name, this.xSize - 222, 7, 4210752 );

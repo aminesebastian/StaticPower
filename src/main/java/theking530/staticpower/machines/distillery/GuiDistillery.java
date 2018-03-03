@@ -86,7 +86,7 @@ public class GuiDistillery extends BaseGuiContainer {
 		this.drawSlot(guiLeft+71, guiTop+49, 34, 5);
 		if(distillery.processingStack != null) {
 			int j1 = distillery.getProgressScaled(34);
-			GuiFluidBarUtilities.drawFluidBar(distillery.processingStack, 1000, 1000, guiLeft + 71, guiTop + 49, 1, j1, 5);
+			GuiFluidBarUtilities.drawFluidBar(distillery.processingStack, 1000, 1000, guiLeft + 71, guiTop + 49, 1, j1, 5, true);
 		}
 		heatbar.drawHeatBar(guiLeft + 71, guiTop + 88, this.zLevel, 16, 8);
 	}

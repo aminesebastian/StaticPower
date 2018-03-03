@@ -97,10 +97,10 @@ public class TileEntityBaseLogicGate extends TileEntity implements ITickable{
 		if(side != null) {
 			int strength = 0;
 			for(int i=0; i<6; i++) {
-				//int temp = getWorld().getStrongPower(pos.offset(side), EnumFacing.values()[i]);
-//				if(temp > strength) {
-					//strength = temp;
-				//}
+				int temp = getWorld().getStrongPower(pos.offset(side), EnumFacing.values()[i]);
+				if(temp > strength) {
+					strength = temp;
+				}
 			}
 
 			return strength;			

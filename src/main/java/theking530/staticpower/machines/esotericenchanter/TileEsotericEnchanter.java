@@ -30,7 +30,7 @@ public class TileEsotericEnchanter extends BaseMachineWithTank {
 		this.initializeSlots(6, 3, 1);
 		this.initializeTank(5000);
 		
-		this.registerComponent(new BatteryInteractionComponent("Battery Component", slotsInternal, 3, this, getEnergyStorage()));
+		this.registerComponent(new BatteryInteractionComponent("Battery Component", slotsInternal, 3, getEnergyStorage()));
 		
 		nextOutputItemStack = ItemStack.EMPTY;
 		fluidContainerComponent = new FluidContainerComponent("Bucket Component", slotsInternal, 4, slotsInternal, 5, this, fluidTank, 40);

@@ -1,11 +1,14 @@
 package theking530.staticpower.machines.cropsqueezer;
 
+import cofh.redstoneflux.api.IEnergyContainerItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import theking530.staticpower.container.BaseContainer;
 import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistry;
+import theking530.staticpower.items.upgrades.BaseUpgrade;
 import theking530.staticpower.machines.tileentitycomponents.slots.BatterySlot;
 import theking530.staticpower.machines.tileentitycomponents.slots.FluidContainerSlot;
 import theking530.staticpower.machines.tileentitycomponents.slots.OutputSlot;
@@ -14,11 +17,7 @@ import theking530.staticpower.machines.tileentitycomponents.slots.UpgradeSlot;
 
 public class ContainerCropSqueezer extends BaseContainer {
 	
-	private TileEntityCropSqueezer cropSqueezerTileEnttiy;
-
 	public ContainerCropSqueezer(InventoryPlayer invPlayer, TileEntityCropSqueezer teCropSqueezer) {
-		cropSqueezerTileEnttiy = teCropSqueezer;
-		
 		//Input
 		this.addSlotToContainer(new StaticPowerContainerSlot(teCropSqueezer.slotsInput, 0, 80, 18) {
 			@Override
@@ -45,51 +44,21 @@ public class ContainerCropSqueezer extends BaseContainer {
 		this.addPlayerInventory(invPlayer, 8, 84);
 		this.addPlayerHotbar(invPlayer, 8, 142);
 	}
-
-	//Shift Click Functionality
-	public ItemStack transferStackInSlot(EntityPlayer player, int invSlot) {
-        ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = (Slot)this.inventorySlots.get(invSlot);
-
-        if (slot != null && slot.getHasStack()) {
-            ItemStack itemstack1 = slot.getStack();
-            itemstack = itemstack1.copy();
-
-            if (invSlot == 1 || invSlot == 0) {
-                if (!this.mergeItemStack(itemstack1, 6, 42, true)) {
-                    return ItemStack.EMPTY;
-                }
-                slot.onSlotChange(itemstack1, itemstack);
-            }else if (invSlot != 1 && invSlot != 0){
-                if (SqueezerRecipeRegistry.Squeezing().getSqueezingItemResult(itemstack1) != null){
-                    if (!this.mergeItemStack(itemstack1, 0, 1, false)){
-                        return ItemStack.EMPTY;
-                    }
-                }else if (invSlot >= 6 && invSlot < 33) {
-                    if (!this.mergeItemStack(itemstack1, 30, 39, false)) {
-                        return ItemStack.EMPTY;
-                    }
-                }else if (invSlot >= 33 && invSlot < 42 && !this.mergeItemStack(itemstack1, 6, 33, false))  {
-                    return ItemStack.EMPTY;
-                }
-            }else if (!this.mergeItemStack(itemstack1, 6, 42, false)) {
-                return ItemStack.EMPTY;
-            }
-            if (itemstack1.getCount() == 0){
-                slot.putStack(ItemStack.EMPTY);
-            }else {
-                slot.onSlotChanged();
-            }
-            if (itemstack1.getCount() == itemstack.getCount()){
-                return ItemStack.EMPTY;
-            }
-            slot.onTake(player, itemstack1);
-        }
-        return itemstack;
-    }
 	@Override
-	public boolean canInteractWith(EntityPlayer player) {
-		return cropSqueezerTileEnttiy.isUseableByPlayer(player);
+	protected boolean playerItemShiftClicked(ItemStack stack, EntityPlayer player, InventoryPlayer invPlayer, Slot slot, int slotIndex) {
+        if (!SqueezerRecipeRegistry.Squeezing().getSqueezingItemResult(stack).isEmpty() && !mergeItemStack(stack, 0)) {
+        	return true;
+        }
+        if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null) && !mergeItemStack(stack, 1)) {
+        	return true;
+        }
+        if (stack.getItem() instanceof IEnergyContainerItem && !mergeItemStack(stack, 3)) {
+        	return true;
+        }
+        if (stack.getItem() instanceof BaseUpgrade && !mergeItemStack(stack, 5, 8, false)) {
+        	return true;
+        }
+		return false;	
 	}
 }
 

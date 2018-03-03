@@ -126,7 +126,7 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		}
 		if(flag) {
 			BaseSpeedUpgrade tempUpgrade = (BaseSpeedUpgrade) slotsUpgrades.getStackInSlot(slot).getItem();
-			processingTime = (int) (initialProcessingTime/(1+(tempUpgrade.getUpgradeValueAtIndex(slotsUpgrades.getStackInSlot(slot), 0))));
+			processingTime = Math.max(1, (int) (initialProcessingTime/(1+(tempUpgrade.getUpgradeValueAtIndex(slotsUpgrades.getStackInSlot(slot), 0)))));
 			processingEnergyMult = (int)(tempUpgrade.getValueMultiplied(initialProcessingEnergyMult, tempUpgrade.getUpgradeValueAtIndex(slotsUpgrades.getStackInSlot(slot), 1)));
 		}else{
 			processingEnergyMult = initialProcessingEnergyMult;
@@ -184,7 +184,7 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		return moveTimer > 0;
 	}
 	public int getProgressScaled(int i) {
-		return (processingTimer * i) / processingTime;
+		return (processingTimer * i) / Math.max(processingTime, 1);
 	}
 	public int getProcessingCost(){
 		return (int) (initialPowerUse*processingEnergyMult);

@@ -1,4 +1,4 @@
-package theking530.staticpower.client.render.tileentitys.machines;
+package theking530.staticpower.client.render.tileentitys.digistore;
 
 import org.lwjgl.opengl.GL11;
 

@@ -53,7 +53,7 @@ import theking530.staticpower.tileentity.chunkloader.BlockChunkLoader;
 import theking530.staticpower.tileentity.digistorenetwork.digistore.BlockDigistore;
 import theking530.staticpower.tileentity.digistorenetwork.ioport.BlockDigistoreIOPort;
 import theking530.staticpower.tileentity.digistorenetwork.manager.BlockDigistoreManager;
-import theking530.staticpower.tileentity.digistorenetwork.networkextender.BlockDigistoreNetworkExtender;
+import theking530.staticpower.tileentity.digistorenetwork.networkwire.BlockDigistoreNetworkWire;
 import theking530.staticpower.tileentity.solarpanels.BlockSolarPanel;
 import theking530.staticpower.tileentity.solderingtable.BlockSolderingTable;
 import theking530.staticpower.tileentity.vacuumchest.BlockVacuumChest;
@@ -231,7 +231,7 @@ public class ModBlocks {
 		DigistoreManager = new BlockDigistoreManager("DigistoreManager").setUnlocalizedName("DigistoreManager").setHardness(3.5f);
 		registry.PreRegisterBlock(DigistoreManager);
 			
-		DigistoreNetworkExtender = new BlockDigistoreNetworkExtender("DigistoreNetworkExtender").setUnlocalizedName("DigistoreNetworkExtender").setHardness(3.5f);
+		DigistoreNetworkExtender = new BlockDigistoreNetworkWire("DigistoreNetworkExtender").setUnlocalizedName("DigistoreNetworkExtender").setHardness(3.5f);
 		registry.PreRegisterBlock(DigistoreNetworkExtender);
 		
 		DigistoreIOPort = new BlockDigistoreIOPort("DigistoreIOPort").setUnlocalizedName("DigistoreIOPort").setHardness(3.5f);

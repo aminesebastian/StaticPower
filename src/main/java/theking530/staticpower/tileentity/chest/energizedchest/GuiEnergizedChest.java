@@ -17,11 +17,6 @@ public class GuiEnergizedChest extends GuiContainer{
 		this.xSize = 176;
 		this.ySize = 253;		
 	}
-	public void drawScreen(int par1, int par2, float par3) {
-	    	super.drawScreen(par1, par2, par3);
-	    	int var1 = (this.width - this.xSize) / 2;
-	        int var2 = (this.height - this.ySize) / 2;       
-	}
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = I18n.format(this.ENERGIZED_CHEST.getName());
 		this.fontRenderer.drawString(name, this.xSize - 169, 7, 4210752 );

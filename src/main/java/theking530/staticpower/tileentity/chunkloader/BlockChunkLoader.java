@@ -34,6 +34,7 @@ public class BlockChunkLoader extends BlockContainer{
 			loader.placedByPlayer(placer);
 		}
     }
+	@SuppressWarnings("deprecation")
 	@Override
     public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
 	    super.onBlockAdded(world, pos, state);

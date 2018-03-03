@@ -70,11 +70,11 @@ public class GuiFluidBarFromTank implements IGuiWidget{
 	public void renderBackground(int mouseX, int mouseY, float partialTicks) {
 		if(sideConfigurable != null && mode != null) {
 			if(sideConfigurable.getSideWithModeCount(mode) > 0) {
-				GuiFluidBarUtilities.drawFluidBar(tank.getFluid(),tank.getCapacity(), tank.getFluidAmount(),owningGui.getGuiLeft()+xPosition, owningGui.getGuiTop()+yPosition, 0.0f, xSize, ySize, mode);	
+				GuiFluidBarUtilities.drawFluidBar(tank.getFluid(),tank.getCapacity(), tank.getFluidAmount(),owningGui.getGuiLeft()+xPosition, owningGui.getGuiTop()+yPosition, 0.0f, xSize, ySize, mode, true);	
 				return;
 			}
 		}
-		GuiFluidBarUtilities.drawFluidBar(tank.getFluid(),tank.getCapacity(), tank.getFluidAmount(),owningGui.getGuiLeft()+xPosition, owningGui.getGuiTop()+yPosition, 0.0f, xSize, ySize);	
+		GuiFluidBarUtilities.drawFluidBar(tank.getFluid(),tank.getCapacity(), tank.getFluidAmount(),owningGui.getGuiLeft()+xPosition, owningGui.getGuiTop()+yPosition, 0.0f, xSize, ySize, true);	
 	}
 	@Override
 	public void renderForeground(int mouseX, int mouseY, float partialTicks) {}

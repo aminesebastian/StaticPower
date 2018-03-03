@@ -19,7 +19,7 @@ public class TileEntityFermenter extends BaseMachineWithTank {
 		initializeSlots(4, 9, 1);
 		
 		DRAIN_COMPONENT = new FluidContainerComponent("BucketDrain", slotsInternal, 2, slotsInternal, 3, this, fluidTank);
-		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInternal, 1, this, energyStorage));
+		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInternal, 1, energyStorage));
 
 		registerComponent(new TileEntityItemOutputServo(this, 1, slotsOutput, 0));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0, 1, 2, 3, 4, 5, 6, 7, 8));

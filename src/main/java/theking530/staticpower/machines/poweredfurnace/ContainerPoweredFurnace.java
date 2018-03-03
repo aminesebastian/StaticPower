@@ -1,5 +1,6 @@
 package theking530.staticpower.machines.poweredfurnace;
 
+import cofh.redstoneflux.api.IEnergyContainerItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
@@ -14,11 +15,7 @@ import theking530.staticpower.machines.tileentitycomponents.slots.UpgradeSlot;
 
 public class ContainerPoweredFurnace extends BaseContainer {
 	
-	private TileEntityPoweredFurnace tileEntityFurnace;
-
 	public ContainerPoweredFurnace(InventoryPlayer invPlayer, TileEntityPoweredFurnace tePoweredSmelter) {
-		tileEntityFurnace = tePoweredSmelter;
-		
 		//Input
 		this.addSlotToContainer(new StaticPowerContainerSlot(tePoweredSmelter.slotsInput, 0, 50, 28) {
 			@Override
@@ -41,51 +38,18 @@ public class ContainerPoweredFurnace extends BaseContainer {
 		this.addPlayerInventory(invPlayer, 8, 84);
 		this.addPlayerHotbar(invPlayer, 8, 142);	
 	}
-	
-	//Shift Click Functionality
-	public ItemStack transferStackInSlot(EntityPlayer player, int invSlot) {
-		ItemStack itemstack = ItemStack.EMPTY;
-	    Slot slot = (Slot)this.inventorySlots.get(invSlot);
-	
-	    if (slot != null && slot.getHasStack()) {
-	        ItemStack itemstack1 = slot.getStack();
-	        itemstack = itemstack1.copy();
-	        
-	        if(invSlot >= 10) {
-	        	if(!FurnaceRecipes.instance().getSmeltingResult(itemstack1).isEmpty()) {
-		            if (!this.mergeItemStack(itemstack1, 0, 1, false)) {
-		                return ItemStack.EMPTY;
-		            }
-	        	}  
-	        	if(itemstack1.getItem() instanceof BaseUpgrade && tileEntityFurnace.canAcceptUpgrade(itemstack1)) {
-		            if (!this.mergeItemStack(itemstack1, 3, 6, false)) {
-		                return ItemStack.EMPTY;
-		            }
-	        	}    
-	        }else{
-	            if (!this.mergeItemStack(itemstack1, 33, 41, false)) {
-	                return ItemStack.EMPTY;
-	            }
-	            if (!this.mergeItemStack(itemstack1, 6, 33, false)) {
-	                return ItemStack.EMPTY;
-	            }
-	        }
-	        if (itemstack1.getCount() == 0){
-	            slot.putStack(ItemStack.EMPTY);
-	        }else {
-	            slot.onSlotChanged();
-	        }
-	        if (itemstack1.getCount() == itemstack.getCount()){
-	            return ItemStack.EMPTY;
-	        }
-	        slot.onTake(player, itemstack1);
-	    }
-	    return itemstack;
-	}
-
 	@Override
-	public boolean canInteractWith(EntityPlayer player) {
-		return tileEntityFurnace.isUseableByPlayer(player);
+	protected boolean playerItemShiftClicked(ItemStack stack, EntityPlayer player, InventoryPlayer invPlayer, Slot slot, int slotIndex) {
+        if (!FurnaceRecipes.instance().getSmeltingResult(stack).isEmpty() && !mergeItemStack(stack, 0)) {
+        	return true;
+        }
+        if (stack.getItem() instanceof IEnergyContainerItem && !mergeItemStack(stack, 1)) {
+        	return true;
+        }
+        if (stack.getItem() instanceof BaseUpgrade && !mergeItemStack(stack, 3, 6, false)) {
+        	return true;
+        }
+		return false;	
 	}
 }
 

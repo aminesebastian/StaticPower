@@ -5,7 +5,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import theking530.staticpower.container.BaseContainer;
-import theking530.staticpower.container.SlotUpgrade;
+import theking530.staticpower.machines.tileentitycomponents.slots.UpgradeSlot;
 
 public class ContainerDigistoreManager extends BaseContainer {
 	
@@ -14,9 +14,9 @@ public class ContainerDigistoreManager extends BaseContainer {
 	public ContainerDigistoreManager(InventoryPlayer invPlayer, TileEntityDigistoreManager teBarrel) {
 		barrel = teBarrel;
 
-		addSlotToContainer(new SlotUpgrade(barrel, barrel.slotsUpgrades, 0, 152, 9));
-		addSlotToContainer(new SlotUpgrade(barrel, barrel.slotsUpgrades, 1, 152, 27));
-		addSlotToContainer(new SlotUpgrade(barrel, barrel.slotsUpgrades, 2, 152, 45));
+		addSlotToContainer(new UpgradeSlot(barrel.slotsUpgrades, 0, 152, 9));
+		addSlotToContainer(new UpgradeSlot(barrel.slotsUpgrades, 1, 152, 27));
+		addSlotToContainer(new UpgradeSlot(barrel.slotsUpgrades, 2, 152, 45));
 		
 		addPlayerHotbar(invPlayer, 8, 126);
 		addPlayerInventory(invPlayer, 8, 68);

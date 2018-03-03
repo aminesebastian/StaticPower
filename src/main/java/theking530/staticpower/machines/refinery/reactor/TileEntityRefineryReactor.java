@@ -1,6 +1,5 @@
 package theking530.staticpower.machines.refinery.reactor;
 
-import net.minecraft.util.EnumParticleTypes;
 import theking530.staticpower.machines.refinery.BaseRefineryTileEntity;
 
 public class TileEntityRefineryReactor extends BaseRefineryTileEntity {	

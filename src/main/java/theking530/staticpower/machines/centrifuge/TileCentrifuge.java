@@ -29,7 +29,7 @@ public class TileCentrifuge extends BaseMachine {
 		
 		initializeSlots(2, 2, 3);
 		initializeBasicMachine(2, 1000, 100000, 80, 100);
-		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInternal, 1, this, energyStorage));
+		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInternal, 1, energyStorage));
 		registerComponent(new TileEntityItemOutputServo(this, 1, slotsOutput, 0, 1, 2));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, Mode.Input2, 1));

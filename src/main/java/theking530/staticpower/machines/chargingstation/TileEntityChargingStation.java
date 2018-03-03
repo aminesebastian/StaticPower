@@ -16,7 +16,7 @@ public class TileEntityChargingStation extends BaseMachine {
 		initializeBasicMachine(2, 0, 100000, 500, 2);
 		energyStorage.setMaxExtract(512);
 		
-		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInternal, 0, this, energyStorage));
+		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInternal, 0, energyStorage));
 		registerComponent(new TileEntityItemOutputServo(this, 1, slotsOutput, 0, 1, 2, 3));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0, 1, 2, 3));
 		

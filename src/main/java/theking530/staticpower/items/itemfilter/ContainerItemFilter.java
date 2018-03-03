@@ -3,15 +3,15 @@ package theking530.staticpower.items.itemfilter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ClickType;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import theking530.staticpower.client.gui.widgets.SlotPhantom;
+import theking530.staticpower.container.BaseContainer;
+import theking530.staticpower.items.upgrades.BaseUpgrade;
 
-public class ContainerItemFilter extends Container {
+public class ContainerItemFilter extends BaseContainer {
 	
 	private InventoryItemFilter filterInventory;
-	private int numRows = 1;
 	
 	public ContainerItemFilter(InventoryPlayer invPlayer, InventoryItemFilter invFilter) {
 		filterInventory = invFilter;
@@ -32,46 +32,15 @@ public class ContainerItemFilter extends Container {
 		}
 	}
     public boolean canDragIntoSlot(Slot slot){
-        return true;
+        return false;
     }
-	//Shift Click Functionality
-	public ItemStack transferStackInSlot(EntityPlayer p_82846_1_, int p_82846_2_)
-	{
-        ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = (Slot)this.inventorySlots.get(p_82846_2_);
-
-        if (slot != null && slot.getHasStack())
-        {
-            ItemStack itemstack1 = slot.getStack();
-            itemstack = itemstack1.copy();
-
-            if (p_82846_2_ < this.numRows * 9)
-            {
-                if (!this.mergeItemStack(itemstack1, this.numRows * 9, this.inventorySlots.size(), true))
-                {
-                    return ItemStack.EMPTY;
-                }
-            }
-            else if (!this.mergeItemStack(itemstack1, 0, this.numRows * 9, false))
-            {
-                return ItemStack.EMPTY;
-            }
-
-            if (itemstack1.getCount() == 0)
-            {
-                slot.putStack(ItemStack.EMPTY);
-            }
-            else
-            {
-                slot.onSlotChanged();
-            }
+	@Override
+	protected boolean playerItemShiftClicked(ItemStack stack, EntityPlayer player, InventoryPlayer invPlayer, Slot slot, int slotIndex) {
+        if (stack.getItem() instanceof BaseUpgrade && !mergeItemStack(stack, 0, filterInventory.getFilterTier().getSlotCount(), false)) {
+        	return true;
         }
-
-        return itemstack;
-    }
-	public void onContainerClosed(EntityPlayer playerIn) {
-		super.onContainerClosed(playerIn);
-    }
+		return false;	
+	}
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
 		return true;
@@ -82,10 +51,6 @@ public class ContainerItemFilter extends Container {
 			return ItemStack.EMPTY;
 		}
 		return super.slotClick(slot, dragType, clickTypeIn, player);
-	}
-	//Detect Changes
-	public void detectAndSendChanges() {
-		super.detectAndSendChanges();		
 	}
 }
 	

@@ -1,3 +1,4 @@
+package theking530.staticpower.energy;
 
 public interface IStaticVoltHandler {
         /*

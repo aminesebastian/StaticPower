@@ -52,6 +52,9 @@ public class CentrifugeRecipeRegistry {
 		}	
 		return null;
 	}
+	public CentrifugeRecipeWrapper getRecipe(ItemStack inputItem) {
+		return getRecipe(inputItem, Integer.MAX_VALUE);
+	}
 	public CentrifugeRecipeWrapper isValidInput(ItemStack inputItem) {
 		for(Entry<Ingredient, CentrifugeRecipeWrapper> entry : centrifugingList.entrySet()) {
 			if(!inputItem.isEmpty() && entry.getValue().getInput().apply((inputItem))) {

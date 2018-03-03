@@ -47,13 +47,10 @@ public class GuiFermenter extends BaseGuiContainer {
     	this.drawContainerSlots(fermenter, this.inventorySlots.inventorySlots);
 		this.drawSlot(guiLeft+97, guiTop+40, 48, 5);
 		if(!fermenter.slotsInternal.getStackInSlot(0).isEmpty()) {
-			int j1 = fermenter.getProgressScaled(32);
+			int progress = fermenter.getProgressScaled(48);
 			FluidStack fluid = FermenterRecipeRegistry.Fermenting().getFluidResult(fermenter.slotsInternal.getStackInSlot(0));
-			GuiFluidBarUtilities.drawFluidBar(fluid, 1000, 1000, guiLeft + 86 - j1, guiTop + 44, 1, j1, 5);
-		}
-		
-		
-		
+			GuiFluidBarUtilities.drawFluidBar(fluid, 1000, 1000, guiLeft + 97, guiTop + 45, 1, progress, 5, false);
+		}	
 	}
 }
 

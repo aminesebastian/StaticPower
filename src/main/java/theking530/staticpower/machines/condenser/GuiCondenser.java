@@ -72,7 +72,7 @@ public class GuiCondenser extends BaseGuiContainer{
 		
 		if(condenser.processingStack != null) {
 			int j1 = condenser.getProgressScaled(34);
-			GuiFluidBarUtilities.drawFluidBar(condenser.processingStack, 1000, 1000, guiLeft + 71, guiTop + 49, 1, j1, 5);
+			GuiFluidBarUtilities.drawFluidBar(condenser.processingStack, 1000, 1000, guiLeft + 71, guiTop + 49, 1, j1, 5, true);
 		};
 	}
 }

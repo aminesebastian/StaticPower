@@ -7,7 +7,6 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import theking530.staticpower.client.gui.GuiTextures;
-import theking530.staticpower.items.ModItems;
 
 public class GuiStaticChest extends GuiContainer{
 	
@@ -17,11 +16,6 @@ public class GuiStaticChest extends GuiContainer{
 		staticChest = teStaticChest;		
 		this.xSize = 176;
 		this.ySize = 205;		
-	}
-	public void drawScreen(int par1, int par2, float par3) {
-	    	super.drawScreen(par1, par2, par3);
-	    	int var1 = (this.width - this.xSize) / 2;
-	        int var2 = (this.height - this.ySize) / 2;       
 	}
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = I18n.format(this.staticChest.getName());

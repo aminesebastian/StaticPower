@@ -76,7 +76,7 @@ public class TileTreeFarmer extends BaseMachineWithTank {
 		farmedStacks = new ArrayList<ItemStack>();
 		
 		registerComponent(fluidInteractionComponent = new FluidContainerComponent("BucketDrain", slotsInternal, 1, slotsInternal, 2, this, fluidTank));
-		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInternal, 0, this, energyStorage));
+		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInternal, 0, energyStorage));
 		registerComponent(new TileEntityItemOutputServo(this, 1, slotsOutput, 0, 1, 2, 3, 4, 5, 6, 7, 8));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0, 1, 2, 3, 4, 5, 6, 7));
 		

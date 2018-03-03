@@ -56,17 +56,18 @@ public class BlockSolarPanel extends BaseMachineBlock {
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
 		switch(TIER) {
-		case BASIC:
-			return new TileEntityBasicSolarPanel();
-		case STATIC:
-			return new TileEntityStaticSolarPanel();
-		case ENERGIZED:
-			return new TileEntityEnergizedSolarPanel();	
-		case LUMUM:
-			return new TileEntityLumumSolarPanel();
-		case CREATIVE:
-			return new TileEntityCreativeSolarPanel();
+			case BASIC:
+				return new TileEntityBasicSolarPanel();
+			case STATIC:
+				return new TileEntityStaticSolarPanel();
+			case ENERGIZED:
+				return new TileEntityEnergizedSolarPanel();	
+			case LUMUM:
+				return new TileEntityLumumSolarPanel();
+			case CREATIVE:
+				return new TileEntityCreativeSolarPanel();
+			default:
+				return new TileEntityBasicSolarPanel();
 		}
-		return new TileEntityBasicSolarPanel();
 	}
 }

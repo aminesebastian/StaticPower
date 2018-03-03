@@ -36,6 +36,14 @@ public class InfuserRecipeRegistry {
 		}
 		return ItemStack.EMPTY;
 	}
+	public FluidInfuserOutputWrapper getInfusingRecipe(ItemStack inputItemstack, FluidStack infuserfluidstack) {
+		for(Entry<Ingredient, FluidInfuserOutputWrapper> entry : infusionList.entrySet()) {
+			if(entry.getValue().isSatisfied(inputItemstack, infuserfluidstack)) {
+				return entry.getValue();
+			}
+		}
+		return null;
+	}
 	public int getInfusingFluidCost(ItemStack inputItemstack, FluidStack infuserfluidstack) {
 		for(Entry<Ingredient, FluidInfuserOutputWrapper> entry : infusionList.entrySet()) {
 			if(entry.getValue().isSatisfied(inputItemstack, infuserfluidstack)) {

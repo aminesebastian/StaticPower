@@ -83,7 +83,7 @@ public class GuiEsotericEnchanter extends BaseGuiContainer {
 		this.drawGenericBackground(-30, 5, 28, 60, new Color(198, 198, 198), new Color(50, 50, 50));
 		this.drawGenericBackground(-30, 70, 28, 64, new Color(198, 198, 198), new Color(50, 50, 50));
 		this.drawGenericBackground(0, 0, xSize, ySize, new Color(198, 198, 198), new Color(50, 50, 50));
-		this.drawPlayerInventorySlots();
+		this.drawPlayerInventorySlots(guiLeft+8, guiTop + 83);
 		
 		this.drawSlot(8+guiLeft, 8+guiTop, 16, 42);
 
