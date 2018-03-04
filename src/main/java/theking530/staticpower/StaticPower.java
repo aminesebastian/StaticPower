@@ -44,6 +44,7 @@ import theking530.staticpower.handlers.crafting.recipes.FormerRecipes;
 import theking530.staticpower.handlers.crafting.recipes.FusionRecipes;
 import theking530.staticpower.handlers.crafting.recipes.GrinderRecipes;
 import theking530.staticpower.handlers.crafting.recipes.InfuserRecipes;
+import theking530.staticpower.handlers.crafting.recipes.LumberMillRecipes;
 import theking530.staticpower.handlers.crafting.recipes.ShapedRecipes;
 import theking530.staticpower.handlers.crafting.recipes.ShaplessRecipes;
 import theking530.staticpower.handlers.crafting.recipes.SmeltingRecipes;
@@ -84,6 +85,7 @@ import theking530.staticpower.machines.fluidinfuser.TileEntityFluidInfuser;
 import theking530.staticpower.machines.former.TileEntityFormer;
 import theking530.staticpower.machines.fusionfurnace.TileEntityFusionFurnace;
 import theking530.staticpower.machines.heatingelement.TileEntityHeatingElement;
+import theking530.staticpower.machines.lumbermill.TileLumberMill;
 import theking530.staticpower.machines.mechanicalsqueezer.TileEntityMechanicalSqueezer;
 import theking530.staticpower.machines.poweredfurnace.TileEntityPoweredFurnace;
 import theking530.staticpower.machines.poweredgrinder.TileEntityPoweredGrinder;
@@ -183,6 +185,7 @@ public class StaticPower {
 		GameRegistry.registerTileEntity(TileEntityCondenser.class, "Condenser");
 		GameRegistry.registerTileEntity(TileEntityFormer.class, "Former");
 		GameRegistry.registerTileEntity(TileTreeFarmer.class, "TreeFarmer");
+		GameRegistry.registerTileEntity(TileLumberMill.class, "LumberMill");
 		
 		GameRegistry.registerTileEntity(TileEntityBasicSolarPanel.class, "BaseSolarPanel");
 		GameRegistry.registerTileEntity(TileEntityStaticSolarPanel.class, "StaticSolarPanel");
@@ -226,8 +229,9 @@ public class StaticPower {
 		GameRegistry.registerTileEntity(TileEntityDigistore.class, "Digistore");
 		GameRegistry.registerTileEntity(TileEntityDigistoreManager.class, "DigistoreManager");
 		GameRegistry.registerTileEntity(TileEntityDigistoreIOPort.class, "DigistoreIOPort");
-		GameRegistry.registerTileEntity(TileEntityDigistoreWire.class, "DigistoreWire");
+		GameRegistry.registerTileEntity(TileEntityDigistoreWire.class, "DigistoreWire");	
 	}	
+	
 	@EventHandler
 	public void Init(FMLInitializationEvent Event){
 		proxy.registerProxies();
@@ -237,7 +241,7 @@ public class StaticPower {
 		
 		OreDictionaryRegistration.registerOres();
 		ShapedRecipes.registerFullRecipes();   
-		ShaplessRecipes.registerFullRecipes(); 
+		ShaplessRecipes.registerShapelessRecipes(); 
 		SmeltingRecipes.registerFullRecipes();
 		FusionRecipes.registerFusionRecipes();
 		SolderingRecipes.registerSolderingRecipes();
@@ -253,6 +257,7 @@ public class StaticPower {
 		ToolRecipes.registerToolRecipes();
 		FarmerRecipes.registerFarmerRecipes();
 		CentrifugeRecipes.registerCentrigureRecipes();
+		LumberMillRecipes.registerLumberMillRecipes();
 	}
 	@SubscribeEvent
 	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {

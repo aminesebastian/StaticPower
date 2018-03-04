@@ -20,13 +20,11 @@ import net.minecraft.item.ItemStack;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.assists.utilities.GuiUtilities;
 import theking530.staticpower.blocks.ModBlocks;
-import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticpower.handlers.crafting.registries.FermenterRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.FermenterOutputWrapper;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.integration.JEI.PluginJEI;
-import theking530.staticpower.machines.fermenter.GuiFermenter;
 
 public class FermenterRecipeCategory extends BaseJEIRecipeCategory<JEIFermenterRecipeWrapper>{
 	 	private final String locTitle;
@@ -35,7 +33,7 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<JEIFermenterR
 	    
 	    public FermenterRecipeCategory(IGuiHelper guiHelper) {
 	        locTitle = "Fermenter";
-	        background = guiHelper.createDrawable(GuiTextures.FERMENTER_GUI, 54, 3, 116, 67, 0, 0, 30, 0);
+	        background = guiHelper.createBlankDrawable(176, 60);
 	    }
 	    public void initialize(@Nonnull IModRegistry registry) {
 	    	registry.handleRecipes(FermenterOutputWrapper.class, recipe -> new JEIFermenterRecipeWrapper(recipe), PluginJEI.FERMENTER_UID); 

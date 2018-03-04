@@ -24,9 +24,6 @@ public class OreGenerationHandler implements IWorldGenerator {
     }
     private void generateSurface(World world, Random rand, int chunkX, int chunkZ) {
         for (int k = 0; k < 16; k++) {
-            int firstBlockXCoord = chunkX + rand.nextInt(16);
-            int firstBlockZCoord = chunkZ + rand.nextInt(16);
-
             if (StaticPowerConfig.COPPER_ORE_GEN) {
                 generateOre(ModBlocks.CopperOre, world, rand, chunkX, chunkZ,2,6,4,30,90);
             }

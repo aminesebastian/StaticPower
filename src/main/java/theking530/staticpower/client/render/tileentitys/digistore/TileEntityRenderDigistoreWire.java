@@ -18,8 +18,7 @@ public class TileEntityRenderDigistoreWire extends TileEntitySpecialRenderer<Til
 	private static final float sideBrightness = 0.7f;
 	private static final float topBrightness = 1.0f;
 	private static final float bottomBrightness = 0.5f;
-	private static final float backBrightness = 0.7f;
-	
+
 	private static final float pixel = 1F/16F;
 	private static final float texel = 1F/64F;
 

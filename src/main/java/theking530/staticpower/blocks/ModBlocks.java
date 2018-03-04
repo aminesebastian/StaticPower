@@ -34,6 +34,7 @@ import theking530.staticpower.machines.fluidinfuser.BlockFluidInfuser;
 import theking530.staticpower.machines.former.BlockFormer;
 import theking530.staticpower.machines.fusionfurnace.BlockFusionFurnace;
 import theking530.staticpower.machines.heatingelement.BlockHeatingElement;
+import theking530.staticpower.machines.lumbermill.BlockLumberMill;
 import theking530.staticpower.machines.mechanicalsqueezer.BlockMechanicalSqueezer;
 import theking530.staticpower.machines.poweredfurnace.BlockPoweredFurnace;
 import theking530.staticpower.machines.poweredgrinder.BlockPoweredGrinder;
@@ -110,6 +111,7 @@ public class ModBlocks {
 	public static Block EsotericEnchanter;
 	public static Block TreeFarmer;
 	public static Block Centrifuge;
+	public static Block LumberMill;
 	
 	//Astral Quary
 	public static Block AstralQuary;
@@ -278,6 +280,8 @@ public class ModBlocks {
 		registry.PreRegisterBlock(Former);
 		Centrifuge = new BlockCentrifuge().setHardness(3.5f);
 		registry.PreRegisterBlock(Centrifuge);
+		LumberMill = new BlockLumberMill().setHardness(3.5f);
+		registry.PreRegisterBlock(LumberMill);
 		
 		EsotericEnchanter = new BlockEsotericEnchanter("EsotericEnchanter").setHardness(3.5f);
 		registry.PreRegisterBlock(EsotericEnchanter);

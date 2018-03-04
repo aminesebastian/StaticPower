@@ -26,7 +26,7 @@ public class DigistoreMiscUpgrades extends BaseUpgrade implements IVariantItem {
 	public DigistoreMiscUpgrades(String name) {
 		super(name, Tier.BASIC);
 		setMaxStackSize(1);
-		
+		setHasSubtypes(true);
 		upgrades = new HashMap<ItemStack, String>();
     	
 		VoidUprgade = new ItemStack(this, 1, 0).setTranslatableName("item.DigistoreVoidUpgrade");

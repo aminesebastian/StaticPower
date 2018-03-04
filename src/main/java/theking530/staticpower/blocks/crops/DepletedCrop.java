@@ -1,11 +1,9 @@
 package theking530.staticpower.blocks.crops;
 
 import java.util.List;
-import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
@@ -16,9 +14,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.common.util.FakePlayerFactory;
 import theking530.staticpower.items.ItemBase;
 
 public class DepletedCrop extends ItemBase {

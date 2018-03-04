@@ -36,6 +36,7 @@ public class BaseDigistoreCapacityUpgrade extends BaseUpgrade implements IVarian
 	public BaseDigistoreCapacityUpgrade(String name) {
 		super(name, Tier.BASIC);
 		setMaxStackSize(8);
+		setHasSubtypes(true);
 		
 		upgrades = new HashMap<ItemStack, String>();
         

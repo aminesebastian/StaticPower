@@ -17,13 +17,13 @@ public class ContainerChargingStation extends BaseContainer {
 
 	public ContainerChargingStation(InventoryPlayer invPlayer, TileEntityChargingStation teChargingStation) {	
 		//Input
-		this.addSlotToContainer(new StaticPowerContainerSlot(teChargingStation.slotsInput, 0, 49, 24) {
+		this.addSlotToContainer(new StaticPowerContainerSlot(teChargingStation.slotsInput, 0, 51, 24) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return itemStack.getItem() instanceof IEnergyContainerItem;
 		    }
 		});	
-		this.addSlotToContainer(new StaticPowerContainerSlot(teChargingStation.slotsInput, 1, 69, 24) {
+		this.addSlotToContainer(new StaticPowerContainerSlot(teChargingStation.slotsInput, 1, 70, 24) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return itemStack.getItem() instanceof IEnergyContainerItem;
@@ -35,7 +35,7 @@ public class ContainerChargingStation extends BaseContainer {
 		          return itemStack.getItem() instanceof IEnergyContainerItem;
 		    }
 		});	
-		this.addSlotToContainer(new StaticPowerContainerSlot(teChargingStation.slotsInput, 3, 109, 24) {
+		this.addSlotToContainer(new StaticPowerContainerSlot(teChargingStation.slotsInput, 3, 108, 24) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return itemStack.getItem() instanceof IEnergyContainerItem;
@@ -43,10 +43,10 @@ public class ContainerChargingStation extends BaseContainer {
 		});	
 		
 		//Output
-		this.addSlotToContainer(new OutputSlot(teChargingStation.slotsOutput, 0, 44, 52));
-		this.addSlotToContainer(new OutputSlot(teChargingStation.slotsOutput, 1, 68, 52));
+		this.addSlotToContainer(new OutputSlot(teChargingStation.slotsOutput, 0, 46, 52));
+		this.addSlotToContainer(new OutputSlot(teChargingStation.slotsOutput, 1, 69, 52));
 		this.addSlotToContainer(new OutputSlot(teChargingStation.slotsOutput, 2, 92, 52));
-		this.addSlotToContainer(new OutputSlot(teChargingStation.slotsOutput, 3, 116, 52));
+		this.addSlotToContainer(new OutputSlot(teChargingStation.slotsOutput, 3, 115, 52));
 		
 		//Upgrades
 		this.addSlotToContainer(new UpgradeSlot(teChargingStation.slotsUpgrades, 0, 152, 8));

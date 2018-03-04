@@ -18,6 +18,7 @@ import theking530.staticpower.handlers.crafting.registries.FormerRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.FusionRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.GrinderRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.InfuserRecipeRegistry;
+import theking530.staticpower.handlers.crafting.registries.LumberMillRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.SolderingRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.GrinderOutputWrapper.GrinderOutput;
@@ -51,6 +52,20 @@ public class RegisterHelper  {
 	public static void registerSqueezerRecipe(ItemStack input, ItemStack result, FluidStack outputFluid) {
 		SqueezerRecipeRegistry.Squeezing().addRecipe(input, result, outputFluid);
 	}
+	
+	public static void registerLumberMillRecipe(Ingredient input, ItemStack output1, FluidStack outputFluid) {
+		LumberMillRecipeRegistry.Milling().addRecipe(input, output1, outputFluid);
+	}
+	public static void registerLumberMillRecipe(Ingredient input, ItemStack output1, ItemStack output2, FluidStack outputFluid) {
+		LumberMillRecipeRegistry.Milling().addRecipe(input, output1, output2, outputFluid);
+	}
+	public static void registerLumberMillRecipe(Ingredient input, ItemStack output1) {
+		LumberMillRecipeRegistry.Milling().addRecipe(input, output1);
+	}
+	public static void registerLumberMillRecipe(Ingredient input, ItemStack output1, ItemStack output2) {
+		LumberMillRecipeRegistry.Milling().addRecipe(input, output1, output2);
+	}
+	
 	public static void registerSolderingRecipe(ItemStack outputStack, Object ... inputParams) {
         ShapedPrimer primer = CraftingHelper.parseShaped(inputParams);
 		SolderingRecipeRegistry.Soldering().addRecipe(new SolderingRecipeWrapper("", primer.width, primer.height, primer.input, outputStack));

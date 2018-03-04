@@ -37,6 +37,7 @@ public class PacketHandler {
 		registerMessage(PacketFluidRefineryController.Message.class, PacketFluidRefineryController.class);
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static void registerMessage(Class packet, Class message) {
 	    net.registerMessage(packet, message, nextPacketId, Side.CLIENT);
 	    net.registerMessage(packet, message, nextPacketId, Side.SERVER);

@@ -24,7 +24,6 @@ tier.Lumum=Lumum
 item.WoodenWheel.name=WoodenWheel
 item.BootMold.name=Boot Mold
 item.ReinforcedBasicBoot.name=Reinforced Basic Boot
-item.Rubber.name=Rubber
 item.BasicRollerSkate.name=Basic Roller Skate
 item.ReinforcedRollerBlade.name=Reinforced Roller Blade
 item.ElectricRollerBlade.name=Electric Roller Blade
@@ -37,30 +36,14 @@ item.DepletedCrop.name=Depleted Crop
 item.EnergizedBucket.name=§bEnergized Fluid Bucket
 item.LumumBucket.name=§eLumum Fluid Bucket
 item.StaticBucket.name=§aStatic Fluid Bucket
-item.IOPort.name=I/O Port
-item.BasicCircuit.name=Basic Circuit
-item.StaticCircuit.name=Static Circuit
-item.EnergizedCircuit.name=Energized Circuit
-item.LumumCircuit.name=Lumum Circuit
 item.BasicPortableBattery.name=Basic Portable Battery
 item.StaticPortableBattery.name=Static Portable Battery
 item.EnergizedPortableBattery.name=Energized Portable Battery
 item.LumumPortableBattery.name=Lumum Portable Battery
-item.EnergizedInfusionBlend.name=Energized Infusion Blend
-item.LumumInfusionBlend.name=Lumum Infusion Blend
-item.EnergizedEnergyCrystal.name=Energized Energy Crystal
-item.LumumEnergyCrystal.name=Lumum Energy Crystal
+
 item.BasicItemFilter.name=Basic Item Filter
 item.UpgradedItemFilter.name=Upgraded Item Filter
 item.AdvancedItemFilter.name=Advanced Item Filter
-
-item.CopperWire.name=Copper Wire
-item.SilverWire.name=Silver Wire
-item.GoldWire.name=Gold Wire
-
-item.CopperCoil.name=Copper Coil
-item.SilverCoil.name=Silver Coil
-item.GoldCoil.name=Gold Coil
 
 staticpower.material.plateIron.name=Iron Plate
 staticpower.material.plateCopper.name=Copper Plate
@@ -145,6 +128,53 @@ staticpower.material.gemSapphire.name=Sapphire
 staticpower.material.dustSulfur.name=Sulfur
 staticpower.material.dustSaltpeter.name=Saltpeter
 staticpower.material.dustCharcoal.name=Charcoal Dust
+staticpower.material.dustStaticInfusion.name=§aStatic Infusion Blend
+staticpower.material.dustEnergizedInfusion.name=§bEnergized Infusion Blend
+staticpower.material.dustLumumInfusion.name=§eLumum Infusion Blend
+staticpower.material.crystalStatic.name=§aStatic Energy Crystal
+staticpower.material.crystalEnergized.name=§bEnergized Energy Crystal
+staticpower.material.crystalLumum.name=§eLumum Energy Crystal
+staticpower.material.silicon.name=Silicon
+staticpower.material.rubber.name=Rubber
+staticpower.material.dustWood.name=Wood Pulp
+
+staticpower.component.ioPort.name=I/O Port
+staticpower.component.basicProcessor.name=Basic Processor
+staticpower.component.staticProcessor.name=§aStatic Processor
+staticpower.component.energizedProcessor.name=§bEnergized Processor
+staticpower.component.lumumProcessor.name=§eLumum Processor
+
+staticpower.component.wireCopper.name=Copper Wire
+staticpower.component.wireSilver.name=Silver Wire
+staticpower.component.wireGold.name=Gold Wire
+
+staticpower.component.coilCopper.name=Copper Coil
+staticpower.component.coilSilver.name=Silver Coil
+staticpower.component.coilGold.name=Gold Coil
+
+staticpower.component.logicGatePlate.name=Base Gate Plate
+staticpower.component.logicGatePowerSync.name=Gate Power Sync
+staticpower.component.invertedLogicGatePowerSync.name=Inverted Gate Power Sync
+staticpower.component.logicGateServo.name=Gate Servo
+staticpower.component.diode.name=Diode
+staticpower.component.transistor.name=Transistor
+staticpower.component.memoryChip.name=Memory Chip
+staticpower.component.internalClock.name=Internal Clock
+staticpower.component.logicGateBasePlate.name=Logic Gate Base Plate
+
+staticpower.component.basicUpgradePlate.name=Basic Upgrade Plate
+staticpower.component.staticUpgradePlate.name=Static Upgrade Plate
+staticpower.component.energizedUpgradePlate.name=Energized Upgrade Plate
+staticpower.component.lumumUpgradePlate.name=Lumum Upgrade Plate
+
+staticpower.misc.distilleryGrain.name=Distillery Grain
+staticpower.misc.flourWheat.name=Wheat Flour
+staticpower.misc.flourPotato.name=Potato Flour
+staticpower.misc.potatoBread.name=Potato Bread
+staticpower.misc.applePie.name=Apple Pie
+staticpower.misc.staticPie.name=§aStatic Pie
+staticpower.misc.energizedPie.name=§bEnergized Pie
+staticpower.misc.lumumPie.name=§eLumum Pie
 
 staticpower.mold.moldGear.name=Gear Mold
 staticpower.mold.moldPlate.name=Plate Mold
@@ -179,11 +209,6 @@ item.BasicOutputMultiplierUpgrade.name=Basic Output Multiplier Upgrade
 item.StaticOutputMultiplierUpgrade.name=Static Output Multiplier Upgrade
 item.EnergizedOutputMultiplierUpgrade.name=Energized Output Multiplier Upgrade
 item.LumumOutputMultiplierUpgrade.name=Lumum Output Multiplier Upgrade
-
-item.BasicUpgradePlate.name=Basic Upgrade Plate
-item.StaticUpgradePlate.name=Static Upgrade Plate
-item.EnergizedUpgradePlate.name=Energized Upgrade Plate
-item.LumumUpgradePlate.name=Lumum Upgrade Plate
 
 item.DigistoreCapacityUpgrade=Digistore Capacity Upgrade
 item.DigistoreVoidUpgrade=§5Digistore Void Upgrade
@@ -241,6 +266,7 @@ tile.Digistore.name=Digistore
 tile.DigistoreManager.name=Digistore Manager
 tile.DigistoreNetworkExtender.name=Digistore Network Extender
 tile.DigistoreIOPort.name=Digistore I/O Port
+tile.LumberMill.name=Lumber Mill
 
 //Blocks
 tile.StaticLamp.name=Static Lamp
@@ -331,17 +357,6 @@ tile.Or.name=Or Gate
 tile.Subtractor.name=Subtractor
 tile.LED.name=LED
 
-//Gate Components
-item.LogicGatePlate.name=Base Gate Plate
-item.LogicGatePowerSync.name=Gate Power Sync
-item.InvertedLogicGatePowerSync.name=Inverted Gate Power Sync
-item.LogicGateServo.name=Gate Servo
-item.Diode.name=Diode
-item.Transistor.name=Transistor
-item.MemoryChip.name=Memory Chip
-item.Silicon.name=Silicon
-item.InternalClock.name=Internal Clock
-tile.LogicGateBasePlate.name=Logic Gate Base Plate
 
 //GUI
 container.CropGenerator=Crop Generator
@@ -377,6 +392,7 @@ container.DigistoreManager=Digistore Manager
 container.EsotericEnchanter=Esoteric Enchanter
 container.Centrifuge=Supersonic Centrifuge
 container.FluidRefineryController=Fluid Refinery Controller
+container.LumberMill=Lumber Mill
 
 //Tools
 item.StaticWrench.name=Static Wrench
@@ -518,16 +534,6 @@ item.StaticFluidCapsule.name=Canister
 item.EnergizedFluidCapsule.name=Canister
 item.LumumFluidCapsule.name=Canister
 
-//Food
-item.WheatFlour.name=Wheat Flour
-item.PotatoFlour.name=Potato Flour
-item.PotatoBread.name=Potato Bread
-
-item.ApplePie.name=Apple Pie
-item.StaticPie.name=§aStatic Pie
-item.EnergizedPie.name=§bEnergized Pie
-item.LumumPie.name=§eLumum Pie
-
 //TIC
 material.staticmetal=Static Metal
 material.energizedmetal=Energized Metal
@@ -547,6 +553,7 @@ gui.PowerControl=Power Control
 gui.Minimum=Minimum
 gui.Maximum=Maximum
 gui.Confirm=Confirm
+gui.RPM=RPM
 
 gui.up=Up
 gui.down=Down

@@ -82,9 +82,6 @@ public class GuiItemFilter extends BaseGuiContainer {
 		
 		IMessage msg = new PacketItemFilter(inventoryItemFilter.getWhiteListMode(), inventoryItemFilter.getMatchMetadata(), inventoryItemFilter.getMatchNBT(), inventoryItemFilter.getMatchOreDictionary());
 		PacketHandler.net.sendToServer(msg);
-		inventoryItemFilter.markDirty();
-		
-	
 	}
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = I18n.format(inventoryItemFilter.getName());
@@ -94,7 +91,7 @@ public class GuiItemFilter extends BaseGuiContainer {
 	protected void drawExtra(float f, int i, int j) {	
 		drawGenericBackground();
 		drawPlayerInventorySlots();
-		drawSlot(guiLeft+8, guiTop+41, 16, 16);
+
 		int slotOffset = inventoryItemFilter.getFilterTier() == FilterTier.BASIC ? 3 : inventoryItemFilter.getFilterTier()  == FilterTier.UPGRADED ? 1 : 0;
 		for(int k=0; k<inventoryItemFilter.getFilterTier() .getSlotCount(); k++) {
 			drawSlot(guiLeft+8 + (k+slotOffset) * 18, guiTop+19, 16, 16);

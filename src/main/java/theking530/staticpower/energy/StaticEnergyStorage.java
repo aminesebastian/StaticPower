@@ -141,10 +141,7 @@ public class StaticEnergyStorage implements IEnergyStorage, ITileEntityComponent
 		if(powerPerTickList.size() > powerPerTickSmoothingFactor) {
 			powerPerTickList.remove(0);
 		}
-		int sum = 0;
-		for(int i=0; i<powerPerTickList.size(); i++) {
-			sum += powerPerTickList.get(i);
-		}
+
 		energyPerTick = currentEnergy - lastEnergyStored; //sum/powerPerTickList.size();
 	}
 	@Override

@@ -34,5 +34,6 @@ public class GuiIDRegistry {
 	public static final int guiCondenser = 30;
 	public static final int guiIDAstralQuary = 31;
 	public static final int guiIDFluidRefineryController = 32;
+	public static final int guiIDLumberMill = 33;
 }
 

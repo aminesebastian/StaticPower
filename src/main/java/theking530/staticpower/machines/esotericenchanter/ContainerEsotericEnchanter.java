@@ -8,8 +8,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import theking530.staticpower.container.BaseContainer;
-import theking530.staticpower.items.ModItems;
 import theking530.staticpower.items.upgrades.BaseUpgrade;
+import theking530.staticpower.machines.tileentitycomponents.slots.BatterySlot;
 import theking530.staticpower.machines.tileentitycomponents.slots.FluidContainerSlot;
 import theking530.staticpower.machines.tileentitycomponents.slots.OutputSlot;
 import theking530.staticpower.machines.tileentitycomponents.slots.StaticPowerContainerSlot;
@@ -31,7 +31,7 @@ public class ContainerEsotericEnchanter extends BaseContainer {
 		this.addSlotToContainer(new OutputSlot(esotericEnchanter.slotsOutput, 0, 126, 35));
 			
 		//BatterySlot
-		this.addSlotToContainer(new StaticPowerContainerSlot(new ItemStack(ModItems.BasicBattery), esotericEnchanter.slotsInternal, 3, 8, 54));
+		this.addSlotToContainer(new BatterySlot(esotericEnchanter.slotsInternal, 3, 8, 54));
 		
 		//FluidContainerSlots
 		this.addSlotToContainer(new FluidContainerSlot(esotericEnchanter.slotsInternal, 4, -24, 11));

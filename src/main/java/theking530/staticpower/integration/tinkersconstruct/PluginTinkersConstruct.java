@@ -12,7 +12,6 @@ import theking530.staticpower.assists.utilities.EnumTextFormatting;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.integration.ICompatibilityPlugin;
-import theking530.staticpower.items.ModItems;
 import theking530.staticpower.items.ItemMaterials;
 
 public class PluginTinkersConstruct implements ICompatibilityPlugin {

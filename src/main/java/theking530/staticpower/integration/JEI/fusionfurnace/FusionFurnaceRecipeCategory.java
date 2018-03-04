@@ -24,7 +24,6 @@ import theking530.staticpower.handlers.crafting.registries.FusionRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.FusionFurnaceRecipeWrapper;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.integration.JEI.PluginJEI;
-import theking530.staticpower.machines.tileentitycomponents.slots.StaticPowerContainerSlot;
 
 public class FusionFurnaceRecipeCategory extends BaseJEIRecipeCategory<JEIFusionFurnaceRecipeWrapper>{
 	 	private final String locTitle;

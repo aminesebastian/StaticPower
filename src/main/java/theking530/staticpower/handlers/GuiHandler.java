@@ -60,6 +60,9 @@ import theking530.staticpower.machines.former.TileEntityFormer;
 import theking530.staticpower.machines.fusionfurnace.ContainerFusionFurnace;
 import theking530.staticpower.machines.fusionfurnace.GuiFusionFurnace;
 import theking530.staticpower.machines.fusionfurnace.TileEntityFusionFurnace;
+import theking530.staticpower.machines.lumbermill.ContainerLumberMill;
+import theking530.staticpower.machines.lumbermill.GuiLumberMill;
+import theking530.staticpower.machines.lumbermill.TileLumberMill;
 import theking530.staticpower.machines.mechanicalsqueezer.ContainerMechanicalSqueezer;
 import theking530.staticpower.machines.mechanicalsqueezer.GuiMechanicalSqueezer;
 import theking530.staticpower.machines.mechanicalsqueezer.TileEntityMechanicalSqueezer;
@@ -254,6 +257,11 @@ public class GuiHandler implements IGuiHandler {
 					return new ContainerFluidRefineryController(player.inventory, (TileEntityFluidRefineryController) entity);
 				}
 				return null;
+			case GuiIDRegistry.guiIDLumberMill:
+				if (entity instanceof TileLumberMill) {	
+					return new ContainerLumberMill(player.inventory, (TileLumberMill) entity);
+				}
+				return null;
 			}
 		}else{
 			switch(ID) {
@@ -419,6 +427,11 @@ public class GuiHandler implements IGuiHandler {
 			case GuiIDRegistry.guiIDFluidRefineryController:
 				if (entity instanceof TileEntityFluidRefineryController) {	
 					return new GuiFluidRefineryController(player.inventory, (TileEntityFluidRefineryController) entity);				
+				}
+				return null;
+			case GuiIDRegistry.guiIDLumberMill:
+				if (entity instanceof TileLumberMill) {	
+					return new GuiLumberMill(player.inventory, (TileLumberMill) entity);				
 				}
 				return null;
 			}

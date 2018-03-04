@@ -1,5 +1,8 @@
 package theking530.staticpower.machines.esotericenchanter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Nonnull;
 
 import net.minecraft.init.Items;
@@ -8,7 +11,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.assists.utilities.InventoryUtilities;
+import theking530.staticpower.assists.utilities.SideUtilities;
 import theking530.staticpower.assists.utilities.SideModeList.Mode;
+import theking530.staticpower.assists.utilities.SideUtilities.BlockSide;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.handlers.crafting.registries.EsotericEnchanterRecipeRegistry;
 import theking530.staticpower.machines.BaseMachineWithTank;
@@ -16,6 +21,7 @@ import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionCo
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
+import theking530.staticpower.tileentity.SideConfiguration;
 
 public class TileEsotericEnchanter extends BaseMachineWithTank {
 
@@ -37,7 +43,7 @@ public class TileEsotericEnchanter extends BaseMachineWithTank {
 		registerComponent(fluidContainerComponent);
 		
 		registerComponent(new TileEntityItemOutputServo(this, 1, slotsOutput, 0));
-		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0, 1, 2));
+		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, Mode.Input, 0, 1, 2));
 	}
 	
 	@Override
@@ -139,5 +145,19 @@ public class TileEsotericEnchanter extends BaseMachineWithTank {
 			return fluidTank.fill(resource, doFill);
 		}
 		return 0;
+	}
+	@Override
+	public List<Mode> getValidSideConfigurations() {
+		List<Mode> modes = new ArrayList<Mode>();
+		modes.add(Mode.Input);
+		modes.add(Mode.Input2);
+		modes.add(Mode.Output);
+		modes.add(Mode.Regular);
+		modes.add(Mode.Disabled);
+		return modes;
+	}
+	public void setDefaultSideConfiguration(SideConfiguration configuration) {
+		configuration.setToDefault();
+		configuration.setSideConfiguration(Mode.Input2, SideUtilities.getEnumFacingFromSide(BlockSide.BACK, getFacingDirection()));
 	}
 }

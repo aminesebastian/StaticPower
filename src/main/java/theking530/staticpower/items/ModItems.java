@@ -29,35 +29,20 @@ import theking530.staticpower.items.upgrades.TeleportUpgrade;
 public class ModItems {
 	public static ItemMaterials Materials;
 	public static FormerMolds FormerMolds;
+	public static MiscItems MiscItems;
+	public static ItemComponents Components;
+	public static BaseDigistoreCapacityUpgrade DigistoreCapacityUpgrade;
+	public static DigistoreMiscUpgrades DigistoreMiscUpgrade;
 	
-	public static Item BaseFluidCapsule;
-	public static Item StaticFluidCapsule;
-	public static Item EnergizedFluidCapsule;
-	public static Item LumumFluidCapsule;
+	public static BaseFluidCapsule BaseFluidCapsule;
+	public static BaseFluidCapsule StaticFluidCapsule;
+	public static BaseFluidCapsule EnergizedFluidCapsule;
+	public static BaseFluidCapsule LumumFluidCapsule;
 	
-	public static Item Rubber;
-	public static Item IOPort;
-	public static Item CopperWire;
-	public static Item SilverWire;
-	public static Item GoldWire;
-	public static Item CopperCoil;
-	public static Item SilverCoil;
-	public static Item GoldCoil;
-	
-	public static Item BasicCircuit;
-	public static Item StaticCircuit;
-	public static Item EnergizedCircuit;
-	public static Item LumumCircuit;
-	
-	public static Item BasicBattery;
-	public static Item StaticBattery;
-	public static Item EnergizedBattery;
-	public static Item LumumBattery;
-	
-	public static Item BasicUpgradePlate;
-	public static Item StaticUpgradePlate;
-	public static Item EnergizedUpgradePlate;
-	public static Item LumumUpgradePlate;
+	public static BaseBattery BasicBattery;
+	public static BaseBattery StaticBattery;
+	public static BaseBattery EnergizedBattery;
+	public static BaseBattery LumumBattery;	
 	
 	public static Item TeleportUpgrade;
 	public static Item ExperienceVacuumUpgrade;
@@ -81,14 +66,6 @@ public class ModItems {
 	public static Item EnergizedPowerUpgrade;
 	public static Item LumumPowerUpgrade;
 	
-	public static Item StaticEnergyCrystal;
-	public static Item EnergizedEnergyCrystal;
-	public static Item LumumEnergyCrystal;
-	
-	public static Item StaticInfusionBlend;
-	public static Item EnergizedInfusionBlend;
-	public static Item LumumInfusionBlend;
-	
 	public static Item StaticQuarryingUpgrade;
 	public static Item EnergizedQuarryingUpgrade;
 	public static Item LumumQuarryingUpgrade;
@@ -96,24 +73,11 @@ public class ModItems {
 	public static Item CreativePowerUpgrade;
 	public static Item CreativeTankUpgrade;
 	public static Item CreativeSpeedUpgrade;
-
-	public static BaseDigistoreCapacityUpgrade DigistoreCapacityUpgrade;
-	public static DigistoreMiscUpgrades DigistoreMiscUpgrade;
 	
 	public static Item BasicOutputMultiplierUpgrade;
 	public static Item StaticOutputMultiplierUpgrade;
 	public static Item EnergizedOutputMultiplierUpgrade;
 	public static Item LumumOutputMultiplierUpgrade;
-	
-	public static Item Silicon;
-	public static Item MemoryChip;
-	
-	public static Item LogicGatePowerSync;
-	public static Item InvertedLogicGatePowerSync;
-	public static Item LogicGateServo;
-	public static Item Diode;
-	public static Item Transistor;
-	public static Item InternalClock;
 	
 	public static Item StaticWrench;
 	public static Item SolderingIron;
@@ -127,35 +91,12 @@ public class ModItems {
 	public static Item BasicItemFilter;
 	public static Item UpgradedItemFilter;
 	public static Item AdvancedItemFilter;
-	public static Item QuarryFilter;
-
-	public static Item WheatFlour;
-	public static Item PotatoFlour;
-	public static Item PotatoBread;
-	
-	public static Item ApplePie;
-	public static Item StaticPie;
-	public static Item EnergizedPie;
-	public static Item LumumPie;
 
 	public static void init(Registry registry) {
 		registry.PreRegisterItem(Materials = new ItemMaterials());
-
-		WheatFlour = new BaseFood("WheatFlour", 2);
-		registry.PreRegisterItem(WheatFlour);	
-		PotatoFlour = new BaseFood("PotatoFlour", 2);
-		registry.PreRegisterItem(PotatoFlour);
-		PotatoBread = new BaseFood("PotatoBread", 8);
-		registry.PreRegisterItem(PotatoBread);
-		
-		ApplePie = new BaseFood("ApplePie", 6);
-		registry.PreRegisterItem(ApplePie);
-		StaticPie = new BaseFood("StaticPie", 7);
-		registry.PreRegisterItem(StaticPie);
-		EnergizedPie = new BaseFood("EnergizedPie", 8);
-		registry.PreRegisterItem(EnergizedPie);
-		LumumPie = new BaseFood("LumumPie", 9);
-		registry.PreRegisterItem(LumumPie);
+		registry.PreRegisterItem(MiscItems = new MiscItems());
+		registry.PreRegisterItem(Components = new ItemComponents());
+		registry.PreRegisterItem(FormerMolds = new FormerMolds());
 		
 		StaticWrench = new StaticWrench().setUnlocalizedName("StaticWrench");
 		registry.PreRegisterItem(StaticWrench);
@@ -169,18 +110,9 @@ public class ModItems {
 		registry.PreRegisterItem(WireCutters);
 		MetalHammer = new MetalHammer(64);
 		registry.PreRegisterItem(MetalHammer);
+		
 		NetworkReader = new BlockReader("NetworkReader");
 		registry.PreRegisterItem(NetworkReader);
-		
-		registry.PreRegisterItem(Silicon = new ItemBase("Silicon"));
-		registry.PreRegisterItem(MemoryChip = new ItemBase("MemoryChip"));
-		registry.PreRegisterItem(LogicGatePowerSync = new ItemBase("LogicGatePowerSync"));
-		registry.PreRegisterItem(InvertedLogicGatePowerSync = new ItemBase("InvertedLogicGatePowerSync"));
-		registry.PreRegisterItem(LogicGateServo = new ItemBase("LogicGateServo"));
-		registry.PreRegisterItem(Diode = new ItemBase("Diode"));
-		registry.PreRegisterItem(Transistor = new ItemBase("Transistor"));
-		registry.PreRegisterItem(InternalClock = new ItemBase("InternalClock"));
-		
 		BasicItemFilter = new ItemFilter("BasicItemFilter", FilterTier.BASIC);
 		registry.PreRegisterItem(BasicItemFilter);
 		UpgradedItemFilter = new ItemFilter("UpgradedItemFilter", FilterTier.UPGRADED);
@@ -188,47 +120,6 @@ public class ModItems {
 		AdvancedItemFilter = new ItemFilter("AdvancedItemFilter", FilterTier.ADVANCED);
 		registry.PreRegisterItem(AdvancedItemFilter);
 
-		registry.PreRegisterItem(Rubber = new ItemBase("Rubber"));
-		registry.PreRegisterItem(IOPort = new ItemBase("IOPort"));
-		
-		
-		BasicCircuit = new ItemBase("BasicCircuit");
-		registry.PreRegisterItem(BasicCircuit);
-		StaticCircuit = new ItemBase("StaticCircuit");
-		registry.PreRegisterItem(StaticCircuit);
-		EnergizedCircuit = new ItemBase("EnergizedCircuit");
-		registry.PreRegisterItem(EnergizedCircuit);
-		LumumCircuit = new ItemBase("LumumCircuit");
-		registry.PreRegisterItem(LumumCircuit);
-		
-		BasicUpgradePlate = new ItemBase("BasicUpgradePlate");
-		registry.PreRegisterItem(BasicUpgradePlate);
-		StaticUpgradePlate = new ItemBase("StaticUpgradePlate");
-		registry.PreRegisterItem(StaticUpgradePlate);
-		EnergizedUpgradePlate = new ItemBase("EnergizedUpgradePlate");
-		registry.PreRegisterItem(EnergizedUpgradePlate);
-		LumumUpgradePlate = new ItemBase("LumumUpgradePlate");
-		registry.PreRegisterItem(LumumUpgradePlate);
-		
-		registry.PreRegisterItem(CopperWire = new ItemBase("CopperWire"));
-		registry.PreRegisterItem(SilverWire = new ItemBase("SilverWire"));
-		registry.PreRegisterItem(GoldWire = new ItemBase("GoldWire"));
-		registry.PreRegisterItem(CopperCoil = new ItemBase("CopperCoil"));
-		registry.PreRegisterItem(SilverCoil = new ItemBase("SilverCoil"));
-		registry.PreRegisterItem(GoldCoil = new ItemBase("GoldCoil"));
-		
-		registry.PreRegisterItem(FormerMolds = new FormerMolds());
-		
-		EnergizedEnergyCrystal = new ItemBase("EnergizedEnergyCrystal");
-		registry.PreRegisterItem(EnergizedEnergyCrystal);
-		LumumEnergyCrystal = new ItemBase("LumumEnergyCrystal");
-		registry.PreRegisterItem(LumumEnergyCrystal);
-		
-		EnergizedInfusionBlend = new ItemBase("EnergizedInfusionBlend");
-		registry.PreRegisterItem(EnergizedInfusionBlend);
-		LumumInfusionBlend = new ItemBase("LumumInfusionBlend");
-		registry.PreRegisterItem(LumumInfusionBlend);
-		
 		BasicBattery = new BaseBattery("BasicPortableBattery", Tier.BASIC.getPortableBatteryCapacity());
 		registry.PreRegisterItem(BasicBattery);
 		StaticBattery = new BaseBattery("StaticPortableBattery", Tier.STATIC.getPortableBatteryCapacity());

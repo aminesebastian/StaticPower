@@ -1,5 +1,8 @@
 package theking530.staticpower.machines.treefarmer;
 
+import api.gui.button.BaseButton;
+import api.gui.button.TextButton;
+import api.gui.button.BaseButton.ClickedState;
 import api.gui.tab.BaseGuiTab.TabSide;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
@@ -23,6 +26,7 @@ public class GuiTreeFarmer extends BaseGuiContainer{
 	
 	private TileTreeFarmer tileEntityFarmer;
 	private GuiInfoTab infoTab;
+	private TextButton drawPreviewButton;
 	
 	public GuiTreeFarmer(InventoryPlayer invPlayer, TileTreeFarmer teFarmer) {
 		super(new ContainerTreeFarmer(invPlayer, teFarmer), 176, 172);
@@ -36,6 +40,12 @@ public class GuiTreeFarmer extends BaseGuiContainer{
 		getTabManager().registerTab(new GuiSideConfigTab(80, 80, false, teFarmer));			
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(80, 80, teFarmer).setTabSide(TabSide.LEFT).setOffsets(-31, 0));
 		
+		drawPreviewButton = new TextButton(14, 14, 151, 72, "▦");
+		drawPreviewButton.setTooltip("Draw Preview");
+		drawPreviewButton.setToggleable(true);
+		getButtonManager().registerButton(drawPreviewButton);
+	    drawPreviewButton.setToggled(tileEntityFarmer.getShouldDrawRadiusPreview());
+	    
 		setOutputSlotSize(16);
 	}
 	@Override
@@ -57,8 +67,11 @@ public class GuiTreeFarmer extends BaseGuiContainer{
 	    }else{
 	    	buttonList.get(0).displayString = "<";
 	    }
+	}	
+	@Override
+	public void buttonPressed(BaseButton button, ClickedState mouseButton) {
+		tileEntityFarmer.setShouldDrawRadiusPreview(button.isToggled());
 	}
-	
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		super.drawGuiContainerForegroundLayer(i, j);
 		String name = I18n.format(this.tileEntityFarmer.getName());

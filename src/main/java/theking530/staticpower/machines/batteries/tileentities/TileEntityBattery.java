@@ -1,5 +1,8 @@
 package theking530.staticpower.machines.batteries.tileentities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import theking530.staticpower.assists.utilities.SideModeList.Mode;
@@ -158,6 +161,14 @@ public class TileEntityBattery extends BaseMachine {
 			return 0;
 		}
 		return energyStorage.receiveEnergy(maxReceive, simulate);
+	}
+	@Override
+	public List<Mode> getValidSideConfigurations() {
+		List<Mode> modes = new ArrayList<Mode>();
+		modes.add(Mode.Input);
+		modes.add(Mode.Output);
+		modes.add(Mode.Disabled);
+		return modes;
 	}
 }
 

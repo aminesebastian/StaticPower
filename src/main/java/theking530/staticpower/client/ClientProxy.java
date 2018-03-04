@@ -33,6 +33,7 @@ import theking530.staticpower.client.render.tileentitys.machines.TileEntityRende
 import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderFluidInfuser;
 import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderFormer;
 import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderFusionFurnace;
+import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderLumberMill;
 import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderMechanicalSqueezer;
 import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderPoweredFurnace;
 import theking530.staticpower.client.render.tileentitys.machines.TileEntityRenderPoweredGrinder;
@@ -70,6 +71,7 @@ import theking530.staticpower.machines.fluidgenerator.TileEntityFluidGenerator;
 import theking530.staticpower.machines.fluidinfuser.TileEntityFluidInfuser;
 import theking530.staticpower.machines.former.TileEntityFormer;
 import theking530.staticpower.machines.fusionfurnace.TileEntityFusionFurnace;
+import theking530.staticpower.machines.lumbermill.TileLumberMill;
 import theking530.staticpower.machines.mechanicalsqueezer.TileEntityMechanicalSqueezer;
 import theking530.staticpower.machines.poweredfurnace.TileEntityPoweredFurnace;
 import theking530.staticpower.machines.poweredgrinder.TileEntityPoweredGrinder;
@@ -123,6 +125,8 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileTreeFarmer.class, new TileEntityRenderTreeFarmer());	
 		//Centrifuge
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCentrifuge.class, new TileEntityRenderCentrifuge());	
+		//Centrifuge
+		ClientRegistry.bindTileEntitySpecialRenderer(TileLumberMill.class, new TileEntityRenderLumberMill());	
 		
 		//FluidRefineryController
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFluidRefineryController.class, new TileEntityRenderFluidRefineryController());	

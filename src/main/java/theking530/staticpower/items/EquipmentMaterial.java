@@ -6,59 +6,54 @@ import net.minecraft.util.text.TextFormatting;
 
 public class EquipmentMaterial {
 
-	private String NAME;
-	private TextFormatting COLOR;
-	private ArmorMaterial ARMOR_MATERIAL;
-	private ToolMaterial TOOL_MATERIAL;
-	private EquipmentMaterial PARENT_MATERIAL;
-	
-	private boolean IS_VALID_TOOL;
-	private boolean IS_VALID_ARMOR;
-	
+	private String name;
+	private TextFormatting color;
+	private ArmorMaterial armorMaterial;
+	private ToolMaterial toolMaterial;
+	private EquipmentMaterial parentMaterial;
+
 	public EquipmentMaterial(String name, TextFormatting color, EquipmentMaterial parentMaterial, boolean validArmor, boolean validTool) {
-		NAME = name;
-		COLOR = color;
-		PARENT_MATERIAL = parentMaterial;
-		IS_VALID_ARMOR = validArmor;
-		IS_VALID_TOOL = validTool;
+		this.name = name;
+		this.color = color;
+		this.parentMaterial = parentMaterial;
 	}
 	
 	public EquipmentMaterial getParentMaterial() {
-		if(PARENT_MATERIAL != null) {
-			return getParentMaterialWorker(PARENT_MATERIAL);
+		if(parentMaterial != null) {
+			return getParentMaterialWorker(parentMaterial);
 		}else{
 			return this;
 		}
 	}
 	private EquipmentMaterial getParentMaterialWorker(EquipmentMaterial parentMaterial) {
-		if(parentMaterial.PARENT_MATERIAL != null) {
+		if(parentMaterial.parentMaterial != null) {
 			return getParentMaterialWorker(parentMaterial);
 		}else{
 			return parentMaterial;
 		}
 	}
 	public void initArmorMaterial(ArmorMaterial material){
-		ARMOR_MATERIAL = material;
+		armorMaterial = material;
 	}
 	public void initToolMaterial(ToolMaterial material) {
-		TOOL_MATERIAL = material;
+		toolMaterial = material;
 	}
 	
 	public ArmorMaterial getArmorMaterial() {
-		return ARMOR_MATERIAL;
+		return armorMaterial;
 	}
 	public boolean isValidArmorMaterial() {
 		return getArmorMaterial() != null;
 	}
 	
 	public ToolMaterial getToolMaterial() {
-		return TOOL_MATERIAL;
+		return toolMaterial;
 	}
 	public boolean isValidToolMaterial() {
 		return getToolMaterial() != null;
 	}
 
 	public String toColorString() {
-		return COLOR + NAME;
+		return color + name;
 	}
 }

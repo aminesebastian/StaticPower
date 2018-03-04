@@ -12,8 +12,7 @@ public class CondenserRecipeRegistry {
 
 private static final CondenserRecipeRegistry CONDENSER_BASE = new CondenserRecipeRegistry();
 	
-	@SuppressWarnings("rawtypes")
-	private Map condensing_list = new HashMap();
+	private Map<FluidStack, CondenserRecipeWrapper> condensing_list = new HashMap<FluidStack, CondenserRecipeWrapper>();
 	
 	public static CondenserRecipeRegistry Condensing() {
 		return CONDENSER_BASE;
@@ -25,50 +24,47 @@ private static final CondenserRecipeRegistry CONDENSER_BASE = new CondenserRecip
 		CondenserRecipeWrapper tempWrapper = new CondenserRecipeWrapper(fluidInput, fluidOutput, condensingTime);
 		condensing_list.put(fluidInput, tempWrapper);
 	}
-    public Map getCondenserRecipes() {
+    public Map<FluidStack, CondenserRecipeWrapper> getCondenserRecipes() {
         return this.condensing_list;
     }
-	@SuppressWarnings("rawtypes")
 	public int getFluidInputAmount(FluidStack fluidInput) {
-		Iterator iterator = this.condensing_list.entrySet().iterator();
-		Entry entry;
+		Iterator<Entry<FluidStack, CondenserRecipeWrapper> >iterator = this.condensing_list.entrySet().iterator();
+		Entry<FluidStack, CondenserRecipeWrapper> entry;
 		do {
 			if (!iterator.hasNext()) {
 				return 0;
 			}
-			entry = (Entry) iterator.next();
+			entry = iterator.next();
 		} while (!isValidCombination(entry, fluidInput));
-		CondenserRecipeWrapper tempWrapper = (CondenserRecipeWrapper)entry.getValue();
+		CondenserRecipeWrapper tempWrapper = entry.getValue();
 		return tempWrapper.getInputFluid().amount;
 	}
-	@SuppressWarnings("rawtypes")
 	public FluidStack getFluidOutput(FluidStack fluidInput) {
-		Iterator iterator = this.condensing_list.entrySet().iterator();
-		Entry entry;
+		Iterator<Entry<FluidStack, CondenserRecipeWrapper>> iterator = this.condensing_list.entrySet().iterator();
+		Entry<FluidStack, CondenserRecipeWrapper> entry;
 		do {
 			if (!iterator.hasNext()) {
 				return null;
 			}
-			entry = (Entry) iterator.next();
+			entry = iterator.next();
 		} while (!isValidCombination(entry, fluidInput));
 		CondenserRecipeWrapper tempWrapper = (CondenserRecipeWrapper)entry.getValue();
 		return tempWrapper.getOutputFluid();
 	}
-	@SuppressWarnings("rawtypes")
 	public int getCondensingTime(FluidStack fluidInput) {
-		Iterator iterator = this.condensing_list.entrySet().iterator();
-		Entry entry;
+		Iterator<Entry<FluidStack, CondenserRecipeWrapper>> iterator = this.condensing_list.entrySet().iterator();
+		Entry<FluidStack, CondenserRecipeWrapper> entry;
 		do {
 			if (!iterator.hasNext()) {
 				return 0;
 			}
-			entry = (Entry) iterator.next();
+			entry = iterator.next();
 		} while (!isValidCombination(entry, fluidInput));
-		CondenserRecipeWrapper tempWrapper = (CondenserRecipeWrapper)entry.getValue();
+		CondenserRecipeWrapper tempWrapper = entry.getValue();
 		return tempWrapper.getCondensingTime();
 	}
-	private boolean isValidCombination(Entry entry, FluidStack fluidInput) {
-		CondenserRecipeWrapper tempWrapper = (CondenserRecipeWrapper)entry.getValue();
+	private boolean isValidCombination(Entry<FluidStack, CondenserRecipeWrapper> entry, FluidStack fluidInput) {
+		CondenserRecipeWrapper tempWrapper = entry.getValue();
 		
 		if(tempWrapper.getInputFluid() != null && fluidInput != null && tempWrapper.getInputFluid().isFluidEqual(fluidInput)) {
 			return true;

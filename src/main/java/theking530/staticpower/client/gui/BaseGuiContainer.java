@@ -62,17 +62,20 @@ public abstract class BaseGuiContainer extends GuiContainer implements IInteract
 		
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		drawExtra(partialTicks, mouseX, mouseY);
-        GL11.glColor3f(1.0f, 1.0f, 1.0f);
-		drawTabs(partialTicks);
-        GL11.glColor3f(1.0f, 1.0f, 1.0f);
-		drawButtons(mouseX, mouseY);
 		
+        GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		for(int i=0; i<widgets.size(); i++) {
 	        GL11.glColor3f(1.0f, 1.0f, 1.0f);
 	        if(widgets.get(i).isVisible()) {
 				widgets.get(i).renderBackground(mouseX, mouseY, partialTicks);
 	        }
 		}
+		
+        GL11.glColor3f(1.0f, 1.0f, 1.0f);
+		drawTabs(partialTicks);
+        GL11.glColor3f(1.0f, 1.0f, 1.0f);
+		drawButtons(mouseX, mouseY);
+		
 		animateScreenSize();
 	}
 	@Override
@@ -151,7 +154,7 @@ public abstract class BaseGuiContainer extends GuiContainer implements IInteract
 			if(slot instanceof StaticPowerContainerSlot) {
 				StaticPowerContainerSlot handlerSlot = (StaticPowerContainerSlot)slot;
 				Mode intendedMode = handlerSlot.getMode() != null ? handlerSlot.getMode() : handlerSlot.getItemHandler() == te.slotsInput ? Mode.Input : handlerSlot.getItemHandler() == te.slotsOutput ? Mode.Output : Mode.Regular;
-				int slotSize = intendedMode == Mode.Input ? inputSlotSize : outputSlotSize;
+				int slotSize = intendedMode.isInputMode() ? inputSlotSize : outputSlotSize;
 				int adjustment = (slotSize - 16)/2;
 				if(intendedMode != Mode.Regular) {
 					drawSlot(slot.xPos + guiLeft - adjustment, slot.yPos + guiTop - adjustment, slotSize, slotSize, te.getSideWithModeCount(intendedMode) > 0 ? intendedMode : Mode.Regular);

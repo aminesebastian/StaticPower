@@ -20,9 +20,9 @@ public class PluginThermalFoundation implements ICompatibilityPlugin {
 		}
 		registered = true;
 
-	
-		RegisterHelper.registerInfuserRecipe(Craft.itemstack(ItemMaterials.ingotInertInfusion), Craft.outputItemStack(ItemMaterials.ingotRedstoneAlloy), new FluidStack(FluidRegistry.getFluid("redstone"), 200));
-		RegisterHelper.registerInfuserRecipe(Craft.itemstack(ItemMaterials.ingotInertInfusion), OreDictionaryUtilities.getOreStack("ingotEnderium", 0), new FluidStack(FluidRegistry.getFluid("ender"), 250));
+		RegisterHelper.registerInfuserRecipe(Craft.ing(ItemMaterials.ingotInertInfusion), OreDictionaryUtilities.getOreStack("ingotSignalum", 0), new FluidStack(FluidRegistry.getFluid("redstone"), 250));
+		RegisterHelper.registerInfuserRecipe(Craft.ing(ItemMaterials.ingotSilver), Craft.outputStack(ItemMaterials.ingotRedstoneAlloy), new FluidStack(FluidRegistry.getFluid("redstone"), 250));
+		RegisterHelper.registerInfuserRecipe(Craft.ing(ItemMaterials.ingotInertInfusion), OreDictionaryUtilities.getOreStack("ingotEnderium", 0), new FluidStack(FluidRegistry.getFluid("ender"), 250));
 	}
 	@Override
 	public boolean isRegistered() {

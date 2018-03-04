@@ -152,6 +152,7 @@ public class ModEvents {
 
 		return player.world.isRemote ? getBlockReachDistanceClient() : player instanceof EntityPlayerMP ? getBlockReachDistanceServer((EntityPlayerMP) player) : 5D;
 	}
+	@SuppressWarnings("deprecation")
 	private static double getBlockReachDistanceServer(EntityPlayerMP player) {
 
 		return player.interactionManager.getBlockReachDistance();

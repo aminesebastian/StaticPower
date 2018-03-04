@@ -1,9 +1,9 @@
 package theking530.staticpower.tileentity.solderingtable;
 
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
+import theking530.staticpower.machines.tileentitycomponents.slots.StaticPowerContainerSlot;
 
-public class SlotSolderingTableInput extends SlotItemHandler{
+public class SlotSolderingTableInput extends StaticPowerContainerSlot{
 
 	TileEntitySolderingTable TABLE;
 	ContainerSolderingTable CONTAINER;

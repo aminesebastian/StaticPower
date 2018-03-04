@@ -68,9 +68,9 @@ public class TileTreeFarmer extends BaseMachineWithTank {
 
 		currentBlockIndex = 0;
 		blocks = null;
-		woodIngredient = Craft.ore("logWood");
-		leafIngredient = Craft.ore("treeLeaves");
-		saplingIngredient = Craft.ore("treeSapling");
+		woodIngredient = Craft.ing("logWood");
+		leafIngredient = Craft.ing("treeLeaves");
+		saplingIngredient = Craft.ing("treeSapling");
 		shouldDrawRadiusPreview = false;
 		rand = new Random();
 		farmedStacks = new ArrayList<ItemStack>();

@@ -34,6 +34,7 @@ public class RenderUtil {
 	    engine().bindTexture(BLOCK_TEX);
 	}
 	public static void drawFluidInWorld(FluidStack fluidStack, int capacity, float x, float y, float z, float width, float height) {
+		if(fluidStack == null) { return; }
 	    TextureAtlasSprite icon = RenderUtil.getStillTexture(fluidStack.getFluid());
 		if(icon != null) {
 			
@@ -63,7 +64,6 @@ public class RenderUtil {
 			tessellator.draw();		
 			GL11.glPopMatrix();
 		}
-
 	}
 	public static void drawPowerBarInWorld(float ratio, float x, float y, float z, float width, float height) {	
 		engine().bindTexture(GuiTextures.POWER_BAR_FG);

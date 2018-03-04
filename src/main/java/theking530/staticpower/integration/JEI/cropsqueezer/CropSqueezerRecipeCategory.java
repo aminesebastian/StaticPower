@@ -26,7 +26,6 @@ import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistr
 import theking530.staticpower.handlers.crafting.wrappers.SqueezerOutputWrapper;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.integration.JEI.PluginJEI;
-import theking530.staticpower.machines.cropsqueezer.GuiCropSqueezer;
 
 public class CropSqueezerRecipeCategory extends BaseJEIRecipeCategory<CropSqueezerRecipeWrapper>{
 	 	private final String locTitle;
@@ -42,6 +41,7 @@ public class CropSqueezerRecipeCategory extends BaseJEIRecipeCategory<CropSqueez
 	        registry.addRecipes(SqueezerRecipeRegistry.Squeezing().getSqueezingRecipes().values(), PluginJEI.SQUEEZER_UID);
 	        //registry.addRecipeClickArea(GuiCropSqueezer.class, 111, 69, 26, 19, PluginJEI.SQUEEZER_UID);
 	    	registry.addRecipeCatalyst(new ItemStack(Item.getItemFromBlock(ModBlocks.CropSqueezer)), PluginJEI.SQUEEZER_UID);  
+	    	registry.addRecipeCatalyst(new ItemStack(Item.getItemFromBlock(ModBlocks.MechanicalSqueezer)), PluginJEI.SQUEEZER_UID);  
 	    	currentPower = 10000;
 	    }
 	    

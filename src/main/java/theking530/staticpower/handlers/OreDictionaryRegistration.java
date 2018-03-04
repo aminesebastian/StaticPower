@@ -2,7 +2,6 @@ package theking530.staticpower.handlers;
 
 import net.minecraftforge.oredict.OreDictionary;
 import theking530.staticpower.blocks.ModBlocks;
-import theking530.staticpower.items.ModItems;
 
 public class OreDictionaryRegistration {
 	
@@ -36,13 +35,5 @@ public class OreDictionaryRegistration {
 		OreDictionary.registerOre("oreAluminum", ModBlocks.AluminiumOre);
 		OreDictionary.registerOre("oreSapphire", ModBlocks.SapphireOre);
 		OreDictionary.registerOre("oreRuby", ModBlocks.RubyOre);
-		
-		OreDictionary.registerOre("itemSilicon", ModItems.Silicon);
-		
-		OreDictionary.registerOre("wireCopper", ModItems.CopperWire);
-		OreDictionary.registerOre("wireSilver", ModItems.SilverWire);
-		OreDictionary.registerOre("wireGold", ModItems.GoldWire);
-		
-		OreDictionary.registerOre("itemSilicon", ModItems.Silicon);
 	}
 }

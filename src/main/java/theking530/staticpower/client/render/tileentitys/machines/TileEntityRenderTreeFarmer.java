@@ -4,7 +4,6 @@ import java.awt.Color;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.assists.Reference;
@@ -58,7 +57,8 @@ public class TileEntityRenderTreeFarmer extends BaseMachineTESR<TileTreeFarmer> 
 		if(tileentity.getShouldDrawRadiusPreview()) {
 			float radius = tileentity.getRadius()*2+1;
 			GL11.glPushMatrix();
-			RADIUS_PREVIEW.drawPreviewCube(new Color(100, 255, 100, 144), radius, 1, radius);
+			GL11.glTranslated(0, -0.5f, -radius/2-0.5f);
+			RADIUS_PREVIEW.drawPreviewCube(new Color(100, 255, 100, 144), radius, 0, radius);
 			GL11.glPopMatrix();
 		}
 	}

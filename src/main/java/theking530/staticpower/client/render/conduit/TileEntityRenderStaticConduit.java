@@ -172,7 +172,6 @@ public class TileEntityRenderStaticConduit extends TileEntityRenderBaseConduit {
         BufferBuilder vertextBuffer = tessellator.getBuffer();
         vertextBuffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         
-        float energy;
 		{
 			GL11.glPushMatrix();
 			GL11.glTranslatef(0.5F, 0.5F, 0.5F);

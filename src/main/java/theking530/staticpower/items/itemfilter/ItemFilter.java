@@ -12,13 +12,12 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.assists.utilities.EnumTextFormatting;
 import theking530.staticpower.assists.utilities.ItemUtilities;
@@ -50,16 +49,15 @@ public class ItemFilter extends ItemBase {
 		super.onCreated(item, world, player);
 	}
 	public boolean evaluateFilter(ItemStack filter, ItemStack itemstack) {
-		int slotCount = filterTier.getSlotCount();
 		List<ItemStack> slots = new ArrayList<ItemStack>();
-		
+
 		if(filter.hasTagCompound()) {
-			NBTTagList items = filter.getTagCompound().getTagList("ItemInventory", Constants.NBT.TAG_COMPOUND);
-			for (int i = 0; i < items.tagCount(); ++i){
-				NBTTagCompound item = (NBTTagCompound) items.getCompoundTagAt(i);
-				int slot = item.getInteger("Slot");
-				if (slot >= 0 && slot < slotCount) {
-					slots.add(new ItemStack(item));
+			ItemStackHandler tempHandler = new ItemStackHandler();
+			tempHandler.deserializeNBT(filter.getTagCompound());
+			
+			for(int i=0; i<tempHandler.getSlots(); i++) {
+				if(!tempHandler.getStackInSlot(i).isEmpty()) {
+					slots.add(tempHandler.getStackInSlot(i).copy());
 				}
 			}
 			
@@ -89,25 +87,15 @@ public class ItemFilter extends ItemBase {
 		return 1; 
 	}
 	@Override  
-	public void addInformation(ItemStack itemstack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn) {
-		int slotCount = filterTier.getSlotCount();
-		ItemStack[] slots = new ItemStack[slotCount];
-		
-		if(itemstack.hasTagCompound()) {
-			NBTTagList items = itemstack.getTagCompound().getTagList("ItemInventory", Constants.NBT.TAG_COMPOUND);
-			for (int i = 0; i < items.tagCount(); ++i){
-				NBTTagCompound item = (NBTTagCompound) items.getCompoundTagAt(i);
-				int slot = item.getInteger("Slot");
-				if (slot >= 0 && slot < slotCount) {
-					slots[slot] = new ItemStack(item);
-				}
-			}
-		}
+	public void addInformation(ItemStack itemstack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn) {	
     	if(showHiddenTooltips()) {
+    		ItemStackHandler tempHandler = new ItemStackHandler();
+    		tempHandler.deserializeNBT(itemstack.getTagCompound());
+    		
     		boolean empty = true;
-    		for(int i=0; i<slotCount; i++) {
-    			if(slots[i] != null && !slots[i].isEmpty()) {
-    				list.add("Slot " + (i+1) + ": " + slots[i].getDisplayName());
+    		for(int i=0; i<tempHandler.getSlots(); i++) {
+    			if(!tempHandler.getStackInSlot(i).isEmpty()) {
+    				list.add("Slot " + (i+1) + ": " + tempHandler.getStackInSlot(i).getDisplayName());
     				empty=false;
     			}
     		}
@@ -119,17 +107,14 @@ public class ItemFilter extends ItemBase {
 	    }
 	}
 	public static void writePremadeFilter(ItemStack stack, ItemStack...filterItems) {
-		NBTTagCompound tagCompound = new NBTTagCompound();
-		NBTTagList items = new NBTTagList();		
+		ItemStackHandler tempHandler = new ItemStackHandler(filterItems.length);
+		NBTTagCompound tagCompound = tempHandler.serializeNBT();
+		
 		for (int i = 0; i < filterItems.length; ++i){
-			if (filterItems[i] != null){
-				NBTTagCompound item = new NBTTagCompound();
-				item.setInteger("Slot", i);
-				filterItems[i].writeToNBT(item);
-				items.appendTag(item);
+			if (!filterItems[i].isEmpty()){
+				tempHandler.insertItem(i, filterItems[i], false);
 			}
 		}
-		tagCompound.setTag("ItemInventory", items);
 		stack.setTagCompound(tagCompound);
 	}
 	public static void writeQuarryFilter(ItemStack stack) {

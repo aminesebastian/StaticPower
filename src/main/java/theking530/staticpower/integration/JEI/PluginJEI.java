@@ -8,13 +8,18 @@ import mezz.jei.api.IModRegistry;
 import mezz.jei.api.JEIPlugin;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import theking530.staticpower.assists.Reference;
+import theking530.staticpower.integration.JEI.centrifuge.CentrifugeRecipeCategory;
+import theking530.staticpower.integration.JEI.condenser.CondenserRecipeCategory;
 import theking530.staticpower.integration.JEI.cropsqueezer.CropSqueezerRecipeCategory;
+import theking530.staticpower.integration.JEI.distillery.DistilleryRecipeCategory;
 import theking530.staticpower.integration.JEI.esotericenchanter.EsotericEnchanterRecipeCategory;
 import theking530.staticpower.integration.JEI.fermenter.FermenterRecipeCategory;
+import theking530.staticpower.integration.JEI.fluidgenerator.FluidGeneratorRecipeCategory;
 import theking530.staticpower.integration.JEI.fluidinfuser.FluidInfuserRecipeCategory;
 import theking530.staticpower.integration.JEI.former.FormerRecipeCategory;
 import theking530.staticpower.integration.JEI.fusionfurnace.FusionFurnaceRecipeCategory;
 import theking530.staticpower.integration.JEI.grinder.PoweredGrinderRecipeCategory;
+import theking530.staticpower.integration.JEI.lumbermill.LumberMillRecipeCategory;
 import theking530.staticpower.integration.JEI.poweredfurnace.PoweredFurnaceRecipeCategory;
 import theking530.staticpower.integration.JEI.solderingtable.SolderingTableRecipeCategory;
 
@@ -31,6 +36,11 @@ public class PluginJEI implements IModPlugin{
 	public static final String FORMER_UID = Reference.MOD_ID + ":former";
 	public static final String ESOTERIC_ENCHANTER_UID = Reference.MOD_ID + ":esotericEnchanter";
 	public static final String FUSION_FURNACE_UID = Reference.MOD_ID + ":fusionFurnace";
+	public static final String FLUID_GENETATOR_UID = Reference.MOD_ID + ":fluidGenerator";
+	public static final String CONDENSER_UID = Reference.MOD_ID + ":condenser";
+	public static final String DISTILLERY_UID = Reference.MOD_ID + ":distillery";
+	public static final String CENTRIFUGE_UID = Reference.MOD_ID + ":centrifuge";
+	public static final String LUMBER_MILL_UID = Reference.MOD_ID + ":lumberMill";
 	
 	private static SolderingTableRecipeCategory solderingTable;
 	private static FluidInfuserRecipeCategory fluidInfuser;
@@ -41,6 +51,11 @@ public class PluginJEI implements IModPlugin{
 	private static FormerRecipeCategory former;
 	private static EsotericEnchanterRecipeCategory enchanter;
 	private static FusionFurnaceRecipeCategory fusionFurnace;
+	private static FluidGeneratorRecipeCategory fluidGenerator;
+	private static CondenserRecipeCategory condenser;
+	private static DistilleryRecipeCategory distillery;
+	private static CentrifugeRecipeCategory centrifuge;
+	private static LumberMillRecipeCategory lumberMill;
 	
     @Override
     public void registerCategories(@Nonnull IRecipeCategoryRegistration registry) {
@@ -55,6 +70,11 @@ public class PluginJEI implements IModPlugin{
     	former = new FormerRecipeCategory(jeiHelpers.getGuiHelper());
     	enchanter = new EsotericEnchanterRecipeCategory(jeiHelpers.getGuiHelper());
     	fusionFurnace = new FusionFurnaceRecipeCategory(jeiHelpers.getGuiHelper());
+    	fluidGenerator = new FluidGeneratorRecipeCategory(jeiHelpers.getGuiHelper()); 
+    	condenser = new CondenserRecipeCategory(jeiHelpers.getGuiHelper()); 
+    	distillery = new DistilleryRecipeCategory(jeiHelpers.getGuiHelper()); 
+    	centrifuge = new CentrifugeRecipeCategory(jeiHelpers.getGuiHelper()); 
+    	lumberMill = new LumberMillRecipeCategory(jeiHelpers.getGuiHelper()); 
     	
         registry.addRecipeCategories(solderingTable);
         registry.addRecipeCategories(fluidInfuser);
@@ -65,6 +85,11 @@ public class PluginJEI implements IModPlugin{
         registry.addRecipeCategories(former);
         registry.addRecipeCategories(enchanter);
         registry.addRecipeCategories(fusionFurnace);
+        registry.addRecipeCategories(fluidGenerator);
+        registry.addRecipeCategories(condenser);
+        registry.addRecipeCategories(distillery);
+        registry.addRecipeCategories(centrifuge);
+        registry.addRecipeCategories(lumberMill);
     }
 
     @Override
@@ -78,6 +103,11 @@ public class PluginJEI implements IModPlugin{
     	former.initialize(registry);
     	enchanter.initialize(registry);
     	fusionFurnace.initialize(registry);
+    	fluidGenerator.initialize(registry);
+    	condenser.initialize(registry);
+    	distillery.initialize(registry);
+    	centrifuge.initialize(registry);
+    	lumberMill.initialize(registry);
     	
         registry.addAdvancedGuiHandlers(new JEITabSlotAdjuster());
     }

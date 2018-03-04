@@ -11,9 +11,7 @@ import theking530.staticpower.handlers.crafting.wrappers.FluidGeneratorRecipeWra
 public class FluidGeneratorRecipeRegistry {
 
 	private static final FluidGeneratorRecipeRegistry FGENERATOR_BASE = new FluidGeneratorRecipeRegistry();
-	
-	@SuppressWarnings("rawtypes")
-	private Map fGenerating_list = new HashMap();
+	private Map<FluidStack, FluidGeneratorRecipeWrapper> fGenerating_list = new HashMap<FluidStack, FluidGeneratorRecipeWrapper>();
 	
 	public static FluidGeneratorRecipeRegistry Generating() {
 		return FGENERATOR_BASE;
@@ -25,24 +23,23 @@ public class FluidGeneratorRecipeRegistry {
 		FluidGeneratorRecipeWrapper tempWrapper = new FluidGeneratorRecipeWrapper(fluidInput, powerOutput);
 		fGenerating_list.put(fluidInput, tempWrapper);
 	}
-    public Map getGeneratingRecipes() {
+    public Map<FluidStack, FluidGeneratorRecipeWrapper> getGeneratingRecipes() {
         return this.fGenerating_list;
     }
     /** Given input item stack and the fluidstack in the infuser */
-	@SuppressWarnings("rawtypes")
 	public int getPowerOutput(FluidStack fluidInput) {
-		Iterator iterator = this.fGenerating_list.entrySet().iterator();
-		Entry entry;
+		Iterator<Entry<FluidStack, FluidGeneratorRecipeWrapper>> iterator = this.fGenerating_list.entrySet().iterator();
+		Entry<FluidStack, FluidGeneratorRecipeWrapper> entry;
 		do {
 			if (!iterator.hasNext()) {
 				return -1;
 			}
-			entry = (Entry) iterator.next();
+			entry = iterator.next();
 		} while (!isValidCombination(entry, fluidInput));
 		FluidGeneratorRecipeWrapper tempWrapper = (FluidGeneratorRecipeWrapper)entry.getValue();
 		return tempWrapper.getPowerPerTick();
 	}
-	private boolean isValidCombination(Entry entry, FluidStack fluidInput) {
+	private boolean isValidCombination(Entry<FluidStack, FluidGeneratorRecipeWrapper> entry, FluidStack fluidInput) {
 		FluidGeneratorRecipeWrapper tempWrapper = (FluidGeneratorRecipeWrapper)entry.getValue();
 		
 		if(tempWrapper.getFluid() != null && fluidInput != null && tempWrapper.getFluid().getFluid() == fluidInput.getFluid()) {

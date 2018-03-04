@@ -1,5 +1,8 @@
 package theking530.staticpower.machines.basicfarmer;
 
+import api.gui.button.BaseButton;
+import api.gui.button.TextButton;
+import api.gui.button.BaseButton.ClickedState;
 import api.gui.tab.BaseGuiTab.TabSide;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
@@ -23,19 +26,27 @@ public class GuiBasicFarmer extends BaseGuiContainer{
 	
 	private TileEntityBasicFarmer tileEntityFarmer;
 	private GuiInfoTab infoTab;
+	private TextButton drawPreviewButton;
 	
 	public GuiBasicFarmer(InventoryPlayer invPlayer, TileEntityBasicFarmer teFarmer) {
 		super(new ContainerBasicFarmer(invPlayer, teFarmer), 176, 172);
 		tileEntityFarmer = teFarmer;
 		
 		registerWidget(new GuiPowerBarFromEnergyStorage(teFarmer, 8, 54, 16, 46));
-		registerWidget(new GuiFluidBarFromTank(teFarmer.fluidTank, 154, 68, 16, 60, Mode.Input, teFarmer));
+		registerWidget(new GuiFluidBarFromTank(teFarmer.fluidTank, 150, 68, 16, 60, Mode.Input, teFarmer));
 
 		getTabManager().registerTab(infoTab = new GuiInfoTab(100, 100));
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, teFarmer));
 		getTabManager().registerTab(new GuiSideConfigTab(80, 80, false, teFarmer));			
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(80, 80, teFarmer).setTabSide(TabSide.LEFT).setOffsets(-31, 0));
 		getTabManager().setInitiallyOpenTab(infoTab);
+		
+		drawPreviewButton = new TextButton(14, 14, 151, 72, "▦");
+		drawPreviewButton.setTooltip("Draw Preview");
+		drawPreviewButton.setToggleable(true);
+		getButtonManager().registerButton(drawPreviewButton);
+		setOutputSlotSize(16);
+	    drawPreviewButton.setToggled(tileEntityFarmer.getShouldDrawRadiusPreview());
 		
 		setOutputSlotSize(16);
 	}
@@ -51,6 +62,10 @@ public class GuiBasicFarmer extends BaseGuiContainer{
 		PacketHandler.net.sendToServer(msg);
 		tileEntityFarmer.getFluidInteractionComponent().setMode(tileEntityFarmer.getFluidInteractionComponent().getInverseMode());
 		updateButton();
+	}
+	@Override
+	public void buttonPressed(BaseButton button, ClickedState mouseButton) {
+		tileEntityFarmer.setShouldDrawRadiusPreview(button.isToggled());
 	}
 	public void updateButton() {
 	    if(tileEntityFarmer.getFluidInteractionComponent().getMode() == FluidContainerInteractionMode.FILL) {

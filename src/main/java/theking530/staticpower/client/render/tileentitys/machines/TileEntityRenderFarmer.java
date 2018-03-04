@@ -57,7 +57,7 @@ public class TileEntityRenderFarmer extends BaseMachineTESR<TileEntityBasicFarme
 		if(tileentity.getShouldDrawRadiusPreview()) {
 			float radius = tileentity.getRadius()*2+1;
 			GL11.glPushMatrix();
-			RADIUS_PREVIEW.drawPreviewCube(new Color(100, 255, 100, 144), radius, 1, radius);
+			RADIUS_PREVIEW.drawPreviewCube(new Color(200, 25, 25, 150), radius, 1, radius);
 			GL11.glPopMatrix();
 		}
 	}

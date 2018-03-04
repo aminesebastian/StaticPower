@@ -19,6 +19,9 @@ public class StandardButton extends BaseButton{
 	protected void drawButton() {
 		int buttonLeft = owningGui.getGuiLeft() + xPosition;
 		int buttonTop = owningGui.getGuiTop() + yPosition;
+		float uPixel = 1.0f/200.0f;
+		float vPixel = 1.0f/20.0f;
+		
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder tes = tessellator.getBuffer();
         tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
@@ -31,34 +34,34 @@ public class StandardButton extends BaseButton{
 		
 		GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		//Top
-		StaticVertexBuffer.pos(buttonLeft+width, buttonTop+3, 0, 0, .15);
+		StaticVertexBuffer.pos(buttonLeft+width, buttonTop+2, 0, 0, vPixel*2);
 		StaticVertexBuffer.pos(buttonLeft+width, buttonTop, 0, 0, 0);
 		StaticVertexBuffer.pos(buttonLeft, buttonTop, 0, 1, 0);
-		StaticVertexBuffer.pos(buttonLeft, buttonTop+3, 0, 1, .15);
+		StaticVertexBuffer.pos(buttonLeft, buttonTop+2, 0, 1, vPixel*2);
 		
 		//Bottom
-		StaticVertexBuffer.pos(buttonLeft+width, buttonTop+(height), 0, 0, 1);
-		StaticVertexBuffer.pos(buttonLeft+width, buttonTop+(height - 3), 0, 0, .85);
-		StaticVertexBuffer.pos(buttonLeft, buttonTop+(height - 3), 0, 1, .85);
-		StaticVertexBuffer.pos(buttonLeft, buttonTop+(height), 0, 1, 1);
+		StaticVertexBuffer.pos(buttonLeft+width, buttonTop+(height), 0, 0, vPixel*20);
+		StaticVertexBuffer.pos(buttonLeft+width, buttonTop+(height - 3), 0, 0, vPixel*17);
+		StaticVertexBuffer.pos(buttonLeft, buttonTop+(height - 3), 0, 1, vPixel*17);
+		StaticVertexBuffer.pos(buttonLeft, buttonTop+(height), 0, 1, vPixel*20);
 	
 		//Right
-		StaticVertexBuffer.pos(buttonLeft+width, buttonTop+(height), 0, 0, 1);
+		StaticVertexBuffer.pos(buttonLeft+width, buttonTop+(height), 0, 0, vPixel*20);
 		StaticVertexBuffer.pos(buttonLeft+width, buttonTop, 0, 0, 0);
-		StaticVertexBuffer.pos(buttonLeft-3+width, buttonTop, 0, .02, 0);
-		StaticVertexBuffer.pos(buttonLeft-3+width, buttonTop+(height), 0, .02, 1);
+		StaticVertexBuffer.pos(buttonLeft-2+width, buttonTop, 0, uPixel*2, 0);
+		StaticVertexBuffer.pos(buttonLeft-2+width, buttonTop+(height), 0, uPixel*2, vPixel*20);
 
 		//Left
-		StaticVertexBuffer.pos(buttonLeft+3, buttonTop+(height), 0, .98, 1);
-		StaticVertexBuffer.pos(buttonLeft+3, buttonTop, 0, .98, 0);
+		StaticVertexBuffer.pos(buttonLeft+2, buttonTop+(height), 0, uPixel*198, 1);
+		StaticVertexBuffer.pos(buttonLeft+2, buttonTop, 0, uPixel*198, 0);
 		StaticVertexBuffer.pos(buttonLeft, buttonTop, 0, 1, 0);
 		StaticVertexBuffer.pos(buttonLeft, buttonTop+(height), 0, 1, 1);
 
 		//Body
-		StaticVertexBuffer.pos(buttonLeft+width-3, buttonTop-3+(height), 0, 0.2, .8);
-		StaticVertexBuffer.pos(buttonLeft+width-3, buttonTop+3, 0, 0.2, 0.2);
-		StaticVertexBuffer.pos(buttonLeft+3, buttonTop+3, 0, .8, 0.2);
-		StaticVertexBuffer.pos(buttonLeft+3, buttonTop-3+(height), 0, .8, .8);
+		StaticVertexBuffer.pos(buttonLeft+width-2, buttonTop-3+(height), 0, uPixel*2, vPixel*17);
+		StaticVertexBuffer.pos(buttonLeft+width-2, buttonTop+2, 0, uPixel*2, vPixel*2);
+		StaticVertexBuffer.pos(buttonLeft+2, buttonTop+2, 0, uPixel*198, vPixel*2);
+		StaticVertexBuffer.pos(buttonLeft+2, buttonTop-3+(height), 0, uPixel*198, vPixel*17);
 		
 		tessellator.draw();	
 	}

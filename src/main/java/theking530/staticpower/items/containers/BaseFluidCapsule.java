@@ -31,7 +31,6 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
-import theking530.staticpower.StaticPower;
 import theking530.staticpower.assists.utilities.EnumTextFormatting;
 import theking530.staticpower.items.ItemBase;
 
@@ -39,7 +38,8 @@ public class BaseFluidCapsule extends ItemBase {
 
 	public int capacity;
 	public int damageDivisor;
-
+	public ItemStack capsule;
+	
 	public BaseFluidCapsule(String name, int fluidCapacity) {
 		super(name);
 		capacity = fluidCapacity;
@@ -48,6 +48,7 @@ public class BaseFluidCapsule extends ItemBase {
 		setMaxDamage(capacity/damageDivisor);
 		setMaxStackSize(1);
 		setNoRepair();
+		setHasSubtypes(true);
 	}
 	@Override
     public boolean showDurabilityBar(ItemStack stack) {
@@ -69,8 +70,9 @@ public class BaseFluidCapsule extends ItemBase {
 
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-    	if(tab == StaticPower.StaticPower) {
-        	items.add(new ItemStack(this));
+		if (isInCreativeTab(tab)) {
+			capsule = new ItemStack(this, 1, 0);
+        	items.add(capsule);
         	int meta = 0;
             for (Fluid fluid : FluidRegistry.getRegisteredFluids().values()) {
                 // add all fluids that the bucket can be filled  with

@@ -11,9 +11,8 @@ import theking530.staticpower.handlers.crafting.wrappers.DistilleryRecipeWrapper
 public class DistilleryRecipeRegistry {
 
 private static final DistilleryRecipeRegistry DISTILLERY_BASE = new DistilleryRecipeRegistry();
-	
-	@SuppressWarnings("rawtypes")
-	private Map distillery_list = new HashMap();
+
+	private Map<FluidStack, DistilleryRecipeWrapper> distillery_list = new HashMap<FluidStack, DistilleryRecipeWrapper>();
 	
 	public static DistilleryRecipeRegistry Distillery() {
 		return DISTILLERY_BASE;
@@ -25,63 +24,60 @@ private static final DistilleryRecipeRegistry DISTILLERY_BASE = new DistilleryRe
 		DistilleryRecipeWrapper tempWrapper = new DistilleryRecipeWrapper(fluidInput, fluidOutput, heatMin, heatCost);
 		distillery_list.put(fluidInput, tempWrapper);
 	}
-    public Map getDistilleryRecipes() {
+    public Map<FluidStack, DistilleryRecipeWrapper> getDistilleryRecipes() {
         return this.distillery_list;
     }   
-	@SuppressWarnings("rawtypes")
 	public int getFluidInputAmount(FluidStack fluidInput, int currentHeat) {
-		Iterator iterator = this.distillery_list.entrySet().iterator();
-		Entry entry;
+		Iterator<Entry<FluidStack, DistilleryRecipeWrapper>> iterator = this.distillery_list.entrySet().iterator();
+		Entry<FluidStack, DistilleryRecipeWrapper> entry;
 		do {
 			if (!iterator.hasNext()) {
 				return 0;
 			}
-			entry = (Entry) iterator.next();
+			entry = iterator.next();
 		} while (!isValidCombination(entry, fluidInput, currentHeat));
-		DistilleryRecipeWrapper tempWrapper = (DistilleryRecipeWrapper)entry.getValue();
+		DistilleryRecipeWrapper tempWrapper = entry.getValue();
 		return tempWrapper.getInputFluid().amount;
 	}
-	@SuppressWarnings("rawtypes")
 	public FluidStack getFluidOutput(FluidStack fluidInput, int currentHeat) {
-		Iterator iterator = this.distillery_list.entrySet().iterator();
-		Entry entry;
+		Iterator<Entry<FluidStack, DistilleryRecipeWrapper>> iterator = this.distillery_list.entrySet().iterator();
+		Entry<FluidStack, DistilleryRecipeWrapper> entry;
 		do {
 			if (!iterator.hasNext()) {
 				return null;
 			}
-			entry = (Entry) iterator.next();
+			entry = iterator.next();
 		} while (!isValidCombination(entry, fluidInput, currentHeat));
-		DistilleryRecipeWrapper tempWrapper = (DistilleryRecipeWrapper)entry.getValue();
+		DistilleryRecipeWrapper tempWrapper = entry.getValue();
 		return tempWrapper.getOutputFluid();
 	}
-	@SuppressWarnings("rawtypes")
 	public int getHeatCost(FluidStack fluidInput, int currentHeat) {
-		Iterator iterator = this.distillery_list.entrySet().iterator();
-		Entry entry;
+		Iterator<Entry<FluidStack, DistilleryRecipeWrapper>> iterator = this.distillery_list.entrySet().iterator();
+		Entry<FluidStack, DistilleryRecipeWrapper> entry;
 		do {
 			if (!iterator.hasNext()) {
 				return 0;
 			}
-			entry = (Entry) iterator.next();
+			entry = iterator.next();
 		} while (!isValidCombination(entry, fluidInput, currentHeat));
-		DistilleryRecipeWrapper tempWrapper = (DistilleryRecipeWrapper)entry.getValue();
+		DistilleryRecipeWrapper tempWrapper = entry.getValue();
 		return tempWrapper.getHeatCost();
 	}
-	@SuppressWarnings("rawtypes")
+
 	public int getHeatMin(FluidStack fluidInput, int currentHeat) {
-		Iterator iterator = this.distillery_list.entrySet().iterator();
-		Entry entry;
+		Iterator<Entry<FluidStack, DistilleryRecipeWrapper>> iterator = this.distillery_list.entrySet().iterator();
+		Entry<FluidStack, DistilleryRecipeWrapper> entry;
 		do {
 			if (!iterator.hasNext()) {
 				return 0;
 			}
-			entry = (Entry) iterator.next();
+			entry = iterator.next();
 		} while (!isValidCombination(entry, fluidInput, currentHeat));
-		DistilleryRecipeWrapper tempWrapper = (DistilleryRecipeWrapper)entry.getValue();
+		DistilleryRecipeWrapper tempWrapper = entry.getValue();
 		return tempWrapper.getMinHeat();
 	}
-	private boolean isValidCombination(Entry entry, FluidStack fluidInput, int currentHeat) {
-		DistilleryRecipeWrapper tempWrapper = (DistilleryRecipeWrapper)entry.getValue();
+	private boolean isValidCombination(Entry<FluidStack, DistilleryRecipeWrapper> entry, FluidStack fluidInput, int currentHeat) {
+		DistilleryRecipeWrapper tempWrapper = entry.getValue();
 		
 		if(tempWrapper.getInputFluid() != null && fluidInput != null && tempWrapper.getInputFluid().isFluidEqual(fluidInput)) {
 			if(currentHeat >= tempWrapper.getMinHeat() && currentHeat >= tempWrapper.getHeatCost()) {

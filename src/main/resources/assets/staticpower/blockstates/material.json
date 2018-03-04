@@ -87,7 +87,16 @@
 			
 			"dustsulfur":   		{"textures": {"layer0": "staticpower:items/materials/dust_sulfur"}},
 			"dustsaltpeter": 		{"textures": {"layer0": "staticpower:items/materials/dust_saltpeter"}},
-			"dustcharcoal": 		{"textures": {"layer0": "staticpower:items/materials/dust_charcoal"}}
+			"dustcharcoal": 		{"textures": {"layer0": "staticpower:items/materials/dust_charcoal"}},
+			
+			"duststaticinfusion":   {"textures": {"layer0": "staticpower:items/materials/dust_static_infusion"}},
+			"dustenergizedinfusion": {"textures": {"layer0": "staticpower:items/materials/dust_energized_infusion"}},
+			"dustlumuminfusion":    {"textures": {"layer0": "staticpower:items/materials/dust_lumum_infusion"}},		
+			"itemsilicon":  		{"textures": {"layer0": "staticpower:items/materials/silicon"}},
+			"crystalstatic":  		{"textures": {"layer0": "staticpower:items/materials/crysta_static"}},
+			"crystalenergized":   	{"textures": {"layer0": "staticpower:items/materials/crystal_energized"}},
+			"crystallumum": 		{"textures": {"layer0": "staticpower:items/materials/crystal_lumum"}},
+			"dustwood": 			{"textures": {"layer0": "staticpower:items/materials/dust_wood"}}
 		}
 	}
 }
