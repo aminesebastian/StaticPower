@@ -11,7 +11,7 @@ import theking530.staticpower.handlers.crafting.wrappers.FermenterOutputWrapper;
 
 public class JEIFermenterRecipeWrapper implements IRecipeWrapper{
 	
-	private FermenterOutputWrapper recipe;
+	public FermenterOutputWrapper recipe;
 	
 	public JEIFermenterRecipeWrapper(FermenterOutputWrapper recipe) {
 		this.recipe = recipe;

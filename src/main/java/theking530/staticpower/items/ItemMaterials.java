@@ -86,8 +86,8 @@ public class ItemMaterials extends MultiItem {
 	public static ItemStack dustSaltpeter;
 	public static ItemStack dustCharcoal;
 	public static ItemStack dustStaticInfusion;
-	public static ItemStack dustenergizedInfusion;
-	public static ItemStack dustlumumInfusion;
+	public static ItemStack dustEnergizedInfusion;
+	public static ItemStack dustLumumInfusion;
 	public static ItemStack silicon;
 	public static ItemStack crystalStatic;
 	public static ItemStack crystalEnergized;
@@ -181,8 +181,8 @@ public class ItemMaterials extends MultiItem {
 		dustSaltpeter = createSubOreItem(281, "dustSaltpeter");
 		dustCharcoal = createSubOreItem(282, "dustCharcoal");
 		dustStaticInfusion = createSubOreItem(283, "dustStaticInfusion");
-		dustenergizedInfusion = createSubOreItem(284, "dustEnergizedInfusion");
-		dustlumumInfusion = createSubOreItem(285, "dustLumumInfusion");
+		dustEnergizedInfusion = createSubOreItem(284, "dustEnergizedInfusion");
+		dustLumumInfusion = createSubOreItem(285, "dustLumumInfusion");
 		silicon = createSubOreItem(286, "itemSilicon");
 		crystalStatic = createSubItem(287, "crystalStatic");
 		crystalEnergized = createSubItem(288, "crystalEnergized");

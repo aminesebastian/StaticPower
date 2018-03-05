@@ -14,11 +14,13 @@ public class CropSqueezerRecipeWrapper implements IRecipeWrapper{
 	 	public ItemStack inputItem;
 	 	public ItemStack outputItem;
 	    public FluidStack outputFluid;
+	    public SqueezerOutputWrapper recipe;
 	    
 	    public CropSqueezerRecipeWrapper(SqueezerOutputWrapper recipe) {
 	    	inputItem = recipe.getInputItem();
 	    	outputItem = recipe.getOutputItem();
 	    	outputFluid = recipe.getOutputFluid();
+	    	this.recipe = recipe;
 	    }
 
 	    @Override

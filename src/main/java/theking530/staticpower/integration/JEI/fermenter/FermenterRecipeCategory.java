@@ -19,7 +19,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.assists.utilities.GuiUtilities;
+import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.blocks.ModBlocks;
+import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarUtilities;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticpower.handlers.crafting.registries.FermenterRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.FermenterOutputWrapper;
@@ -67,10 +69,14 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<JEIFermenterR
 	    }
 	    @Override
 	    public void drawExtras(@Nonnull Minecraft minecraft) {
-	    	GuiDrawUtilities.drawSlot(13, 2, 16, 60);
+	    	GuiPowerBarUtilities.drawPowerBar(0, 62, 16, 60, 1.0f, currentPower, 10000);
+	    	GuiFluidBarUtilities.drawFluidBar(null, 0, 0, 23, 62, 1, 16, 60, Mode.Output, true);
+	    	for (int i= 0; i < 3; ++i) {
+	            for (int j = 0; j < 3; ++j){
+	    	    	GuiDrawUtilities.drawSlot(63 + j * 18,  2+i * 18, 16, 16);
+	            }
+	        }
 	    	
-	    	GuiPowerBarUtilities.drawPowerBar(0, 62, 6, 60, 1.0f, currentPower, 10000);
-	    	GuiDrawUtilities.drawSlot(0, 2, 6, 60);
 	    	
 	    	currentPower -= 2;
 	    	if(currentPower <= 0) {
@@ -79,7 +85,7 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<JEIFermenterR
 	    }
 	    @Override
 		public List<String> getTooltipStrings(int mouseX, int mouseY) {
-	    	if(mouseX >= 0 && mouseX <= 0 + 6 && mouseY >= 2 && mouseY <= 62) {
+	    	if(mouseX >= 0 && mouseX <= 16 && mouseY >= 2 && mouseY <= 62) {
 	    		List<String> temp = new ArrayList<String>();
 	    		temp.add("Energy:");
 	    		temp.add(GuiUtilities.formatIntegerWithCommas(1000) + " RF");
@@ -95,10 +101,17 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<JEIFermenterR
 	        int slotId = 0;
 
 	        //Input
-	        guiStacks.init(slotId++, true, 62, 12);  
+	        guiStacks.init(slotId++, true, 62, 1);  
+	        
+	        guiStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
+				if (slotIndex == 0) {
+					tooltip.add(recipeWrapper.recipe.getOutputFluidStack().amount + " mb");
+				}
+			});
+	        
 	        
 	        //Output
-	        guiFluidStacks.init(0, false, 13, 2, 16, 60, 300, false, null);
+	        guiFluidStacks.init(0, false, 23, 2, 16, 60, 300, false, null);
 	        
 	        guiStacks.set(ingredients);
 	        guiFluidStacks.set(ingredients);

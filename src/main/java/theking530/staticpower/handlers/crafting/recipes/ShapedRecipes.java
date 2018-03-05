@@ -94,10 +94,12 @@ public class ShapedRecipes {
 		'X', Craft.ing("wireGold"), 'S', ingredientFromItem(Items.STICK)});
 		
 		//Energy Crystals ---------------------------------------------------------------------------------------------------
+		RegisterHelper.addShapedRecipe("StaticPower_staticEnergyCrystal", "StaticPower", ItemMaterials.crystalStatic, new Object[]{" B ","BDB"," B ",
+		'B', ItemMaterials.dustStaticInfusion, 'D', ingredientFromItem(Items.DIAMOND)});
 		RegisterHelper.addShapedRecipe("StaticPower_energizedEnergyCrystal", "StaticPower", ItemMaterials.crystalEnergized, new Object[]{" B ","BDB"," B ",
-		'B', ItemMaterials.dustenergizedInfusion, 'D', ingredientFromItem(Items.DIAMOND)});
+		'B', ItemMaterials.dustEnergizedInfusion, 'D', ingredientFromItem(Items.DIAMOND)});
 		RegisterHelper.addShapedRecipe("StaticPower_lumumEnergyCrystal", "StaticPower", ItemMaterials.crystalLumum, new Object[]{" B ","BDB"," B ",
-		'B', ItemMaterials.dustlumumInfusion, 'D', ingredientFromItem(Items.DIAMOND)});
+		'B', ItemMaterials.dustLumumInfusion, 'D', ingredientFromItem(Items.DIAMOND)});
 		
 		//Machine Block --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapedRecipe("StaticPower_machineBlock", "StaticPower", new ItemStack(ModBlocks.MachineBlock), new Object[]{"TGT", "GCG", "TGT", 

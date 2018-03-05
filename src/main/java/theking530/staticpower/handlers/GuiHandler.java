@@ -5,6 +5,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
+import theking530.staticpower.assists.Tier;
 import theking530.staticpower.client.GuiIDRegistry;
 import theking530.staticpower.items.book.ContainerStaticBook;
 import theking530.staticpower.items.book.GuiStaticBook;
@@ -84,14 +85,10 @@ import theking530.staticpower.machines.treefarmer.TileTreeFarmer;
 import theking530.staticpower.tileentity.astralquary.brain.ContainerAstralQuarryBrain;
 import theking530.staticpower.tileentity.astralquary.brain.GuiAstralQuarryBrain;
 import theking530.staticpower.tileentity.astralquary.brain.TileEntityAstralQuarryBrain;
-import theking530.staticpower.tileentity.chest.energizedchest.ContainerEnergizedChest;
-import theking530.staticpower.tileentity.chest.energizedchest.GuiEnergizedChest;
+import theking530.staticpower.tileentity.chest.ContainerChest;
+import theking530.staticpower.tileentity.chest.GuiChest;
 import theking530.staticpower.tileentity.chest.energizedchest.TileEntityEnergizedChest;
-import theking530.staticpower.tileentity.chest.lumumchest.ContainerLumumChest;
-import theking530.staticpower.tileentity.chest.lumumchest.GuiLumumChest;
 import theking530.staticpower.tileentity.chest.lumumchest.TileEntityLumumChest;
-import theking530.staticpower.tileentity.chest.staticchest.ContainerStaticChest;
-import theking530.staticpower.tileentity.chest.staticchest.GuiStaticChest;
 import theking530.staticpower.tileentity.chest.staticchest.TileEntityStaticChest;
 import theking530.staticpower.tileentity.digistorenetwork.digistore.ContainerDigistore;
 import theking530.staticpower.tileentity.digistorenetwork.digistore.GuiDigistore;
@@ -204,17 +201,17 @@ public class GuiHandler implements IGuiHandler {
 				return null;
 			case GuiIDRegistry.guiIDStaticChest:
 				if (entity instanceof TileEntityStaticChest) {	
-					return new ContainerStaticChest(player.inventory, (TileEntityStaticChest) entity);
+					return new ContainerChest(Tier.STATIC, player.inventory, (TileEntityStaticChest) entity);
 				}
 				return null;
 			case GuiIDRegistry.guiIDEnergizedChest:
 				if (entity instanceof TileEntityEnergizedChest) {	
-					return new ContainerEnergizedChest(player.inventory, (TileEntityEnergizedChest) entity);
+					return new ContainerChest(Tier.ENERGIZED, player.inventory, (TileEntityEnergizedChest) entity);
 				}
 				return null;
 			case GuiIDRegistry.guiIDLumumChest:
 				if (entity instanceof TileEntityLumumChest) {	
-					return new ContainerLumumChest(player.inventory, (TileEntityLumumChest) entity);
+					return new ContainerChest(Tier.LUMUM, player.inventory, (TileEntityLumumChest) entity);
 				}
 				return null;
 			case GuiIDRegistry.guiIDSignalMultiplier:
@@ -377,17 +374,17 @@ public class GuiHandler implements IGuiHandler {
 				return null;
 			case GuiIDRegistry.guiIDStaticChest:
 				if (entity instanceof TileEntityStaticChest) {	
-					return new GuiStaticChest(player.inventory, (TileEntityStaticChest) entity);				
+					return new GuiChest(Tier.STATIC, player.inventory, (TileEntityStaticChest) entity);				
 				}
 				return null;
 			case GuiIDRegistry.guiIDEnergizedChest:
 				if (entity instanceof TileEntityEnergizedChest) {	
-					return new GuiEnergizedChest(player.inventory, (TileEntityEnergizedChest) entity);			
+					return new GuiChest(Tier.ENERGIZED, player.inventory, (TileEntityEnergizedChest) entity);			
 				}
 				return null;
 			case GuiIDRegistry.guiIDLumumChest:
 				if (entity instanceof TileEntityLumumChest) {	
-					return new GuiLumumChest(player.inventory, (TileEntityLumumChest) entity);				
+					return new GuiChest(Tier.LUMUM, player.inventory, (TileEntityLumumChest) entity);				
 				}
 				return null;
 			case GuiIDRegistry.guiIDSignalMultiplier:

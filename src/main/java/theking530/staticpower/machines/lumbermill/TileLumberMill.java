@@ -4,19 +4,26 @@ import net.minecraft.item.ItemStack;
 import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.handlers.crafting.registries.LumberMillRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.LumberMillRecipeWrapper;
-import theking530.staticpower.machines.BaseMachine;
+import theking530.staticpower.machines.BaseMachineWithTank;
 import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
+import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
+import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
 
-public class TileLumberMill extends BaseMachine {
+public class TileLumberMill extends BaseMachineWithTank {
 
 	public TileLumberMill() {
-		initializeSlots(2, 1, 2);
+		initializeSlots(4, 1, 2);
 		initializeBasicMachine(2, 1000, 100000, 80, 150);
+		initializeTank(5000);
 		registerComponent(new TileEntityItemOutputServo(this, 1, slotsOutput, 0, 1));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0));
 		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInternal, 1, energyStorage));
+		
+		FluidContainerComponent drainComponent;
+		registerComponent(drainComponent = new FluidContainerComponent("BucketDrain", slotsInternal, 2, slotsInternal, 3, this, fluidTank));
+		drainComponent.setMode(FluidContainerInteractionMode.DRAIN);
 	}
 	@Override
 	public String getName() {

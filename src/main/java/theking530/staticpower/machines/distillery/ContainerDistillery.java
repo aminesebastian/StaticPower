@@ -18,7 +18,7 @@ public class ContainerDistillery extends BaseContainer {
 		this.addSlotToContainer(new OutputSlot(teDistillery.slotsOutput, 1, 150, 53));
 
 		this.addPlayerInventory(invPlayer, 8, 94);
-		this.addPlayerHotbar(invPlayer, 8, 153);
+		this.addPlayerHotbar(invPlayer, 8, 152);
 	}
 }
 

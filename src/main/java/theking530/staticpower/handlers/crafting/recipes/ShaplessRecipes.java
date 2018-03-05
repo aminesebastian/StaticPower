@@ -32,9 +32,11 @@ public class ShaplessRecipes {
 				Ingredient.fromItem(ModPlants.StaticSeeds), Ingredient.fromItem(Items.BOOK)});
 		
 		//Infusion Blends
-		RegisterHelper.addShapelessRecipe("StaticPower_energizedInfusionBlend", "StaticPower", Craft.outputStack(ItemMaterials.dustenergizedInfusion, 2), new Ingredient[]{
+		RegisterHelper.addShapelessRecipe("StaticPower_energizedInfusionBlend", "StaticPower", ItemMaterials.dustStaticInfusion, new Ingredient[]{
+				Craft.ing(ItemMaterials.dustInertInfusion), Craft.ing(ItemMaterials.dustStatic)});
+		RegisterHelper.addShapelessRecipe("StaticPower_energizedInfusionBlend", "StaticPower", ItemMaterials.dustEnergizedInfusion, new Ingredient[]{
 				Craft.ing(ItemMaterials.dustInertInfusion), Craft.ing(ItemMaterials.dustEnergized)});
-		RegisterHelper.addShapelessRecipe("StaticPower_lumumInfusionBlend", "StaticPower", Craft.outputStack(ItemMaterials.dustStaticInfusion, 2), new Ingredient[]{
+		RegisterHelper.addShapelessRecipe("StaticPower_lumumInfusionBlend", "StaticPower", ItemMaterials.dustStaticInfusion, new Ingredient[]{
 				Craft.ing(ItemMaterials.dustInertInfusion), Craft.ing(ItemMaterials.dustLumum)});
 		
 		//Wires ---------------------------------------------------------------------------------------------------------

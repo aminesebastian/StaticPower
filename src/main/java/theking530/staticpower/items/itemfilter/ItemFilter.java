@@ -89,15 +89,17 @@ public class ItemFilter extends ItemBase {
 	@Override  
 	public void addInformation(ItemStack itemstack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn) {	
     	if(showHiddenTooltips()) {
-    		ItemStackHandler tempHandler = new ItemStackHandler();
-    		tempHandler.deserializeNBT(itemstack.getTagCompound());
-    		
     		boolean empty = true;
-    		for(int i=0; i<tempHandler.getSlots(); i++) {
-    			if(!tempHandler.getStackInSlot(i).isEmpty()) {
-    				list.add("Slot " + (i+1) + ": " + tempHandler.getStackInSlot(i).getDisplayName());
-    				empty=false;
-    			}
+    		if(itemstack.hasTagCompound() && itemstack.getTagCompound().hasKey("Items")) {
+        		ItemStackHandler tempHandler = new ItemStackHandler();
+        		tempHandler.deserializeNBT(itemstack.getTagCompound());
+        	
+        		for(int i=0; i<tempHandler.getSlots(); i++) {
+        			if(!tempHandler.getStackInSlot(i).isEmpty()) {
+        				list.add("Slot " + (i+1) + ": " + tempHandler.getStackInSlot(i).getDisplayName());
+        				empty=false;
+        			}
+        		}
     		}
     		if(empty) {
     			list.add(EnumTextFormatting.ITALIC + "Empty");

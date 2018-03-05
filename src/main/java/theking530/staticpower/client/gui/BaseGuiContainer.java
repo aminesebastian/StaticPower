@@ -228,9 +228,15 @@ public abstract class BaseGuiContainer extends GuiContainer implements IInteract
 	public void setOutputSlotSize(int size) {
 		outputSlotSize = size;
 	}
-	public void setScreenSizeTarget(int xSizeTarget, int ySizeTarget) {
+	public void setGuiSizeTarget(int xSizeTarget, int ySizeTarget) {
 		this.xSizeTarget = xSizeTarget;
 		this.ySizeTarget = ySizeTarget;
+	}
+	public void setDesieredGuiSize(int xSize, int ySize) {
+		this.xSize = xSize;
+		this.ySize = ySize;
+		this.xSizeTarget = xSize;
+		this.ySizeTarget = ySize;
 	}
 	
 	@Override	

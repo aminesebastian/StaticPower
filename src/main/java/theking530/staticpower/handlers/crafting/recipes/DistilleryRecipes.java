@@ -8,5 +8,6 @@ public class DistilleryRecipes {
 
 	public static void registerDistilleryRecipes() {
 		RegisterHelper.registerDistilleryRecipe(new FluidStack(ModFluids.Mash, 1), new FluidStack(ModFluids.EvaporatedMash, 1), 100, 10);
+		RegisterHelper.registerDistilleryRecipe(new FluidStack(ModFluids.TreeOil, 1), new FluidStack(ModFluids.TreeSap, 1), 100, 10);
 	}
 }

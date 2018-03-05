@@ -1,5 +1,9 @@
 package theking530.staticpower.fluids;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.MaterialLiquid;
@@ -20,195 +24,108 @@ import theking530.staticpower.assists.Reference;
 
 public class ModFluids {
 	
+	private static final Map<String, Fluid> fluid_map = new HashMap<String, Fluid>();
+	
 	public static Fluid StaticFluid;
 	public static Fluid EnergizedFluid;
 	public static Fluid LumumFluid;
+	public static Fluid RefinedFluid;	
 	public static Fluid Steam;
 	public static Fluid Ethanol;
 	public static Fluid Mash;
 	public static Fluid EvaporatedMash;
 	public static Fluid LiquidExperience;
-	public static Fluid RefinedFluid;
-	
-	public static String StaticFluidName = "StaticFluid";
-	public static String EnergizedFluidName = "EnergizedFluid";
-	public static String LumumFluidName = "LumumFluid";
-	public static String EthanolName = "Ethanol";
-	public static String SteamFluidName = "Steam";
-	public static String MashName = "Mash";
-	public static String EvaporatedMashName = "EvaporatedMash";
-	public static String LiquidExperienceName = "LiquidExperience";
-	public static String RefinedFluidName = "RefinedFluid";
-	
-	public static Block BlockStaticFluid;
-	public static Block BlockEnergizedFluid;
-	public static Block BlockLumumFluid;
-	public static Block BlockSteamFluid;
-	public static Block BlockEthanol;
-	public static Block BlockMash;
-	public static Block BlockEvaporatedMash;
-	public static Block BlockLiquidExperience;
-	public static Block BlockRefinedFluid;
+	public static Fluid TreeOil;
+	public static Fluid TreeSap;
 	
 	public static void init(Registry registry) {
-		Fluid f  = new Fluid(StaticFluidName, getStill(StaticFluidName), getFlowing(StaticFluidName))
-		        .setDensity(1500).setViscosity(3000).setTemperature(300);;
-	    FluidRegistry.registerFluid(f);
-	    StaticFluid = FluidRegistry.getFluid(f.getName());
-	    BlockStaticFluid = new BaseFluidBlock(StaticFluid, new MaterialLiquid(MapColor.EMERALD), StaticFluidName);
-		registry.PreRegisterBlock(BlockStaticFluid);
-	    registerBucket(StaticFluid);
-	    
-	    f  = new Fluid(EnergizedFluidName, getStill(EnergizedFluidName), getFlowing(EnergizedFluidName))
-		        .setDensity(1500).setViscosity(3000).setTemperature(600);;
-	    FluidRegistry.registerFluid(f);
-	    EnergizedFluid = FluidRegistry.getFluid(f.getName());
-	    BlockEnergizedFluid = new BaseFluidBlock(EnergizedFluid, new MaterialLiquid(MapColor.DIAMOND), EnergizedFluidName);
-		registry.PreRegisterBlock(BlockEnergizedFluid);
-	    registerBucket(EnergizedFluid);
-	    
-	    f  = new Fluid(LumumFluidName, getStill(LumumFluidName), getFlowing(LumumFluidName))
-		        .setDensity(1500).setViscosity(3000).setTemperature(1000);
-	    FluidRegistry.registerFluid(f);
-	    LumumFluid = FluidRegistry.getFluid(f.getName());
-	    BlockLumumFluid = new BaseFluidBlock(LumumFluid, new MaterialLiquid(MapColor.GOLD), LumumFluidName);
-		registry.PreRegisterBlock(BlockLumumFluid);
-	    registerBucket(LumumFluid);
-	    
-	    f  = new Fluid(RefinedFluidName, getStill(RefinedFluidName), getFlowing(RefinedFluidName))
-		        .setDensity(1500).setViscosity(3000).setTemperature(2300);
-	    FluidRegistry.registerFluid(f);
-	    RefinedFluid = FluidRegistry.getFluid(f.getName());
-	    BlockRefinedFluid = new BaseFluidBlock(RefinedFluid, new MaterialLiquid(MapColor.PURPLE), RefinedFluidName);
-		registry.PreRegisterBlock(BlockRefinedFluid);
-	    registerBucket(RefinedFluid);
-	    
-	    f  = new Fluid(SteamFluidName, getStill(SteamFluidName), getFlowing(SteamFluidName))
-		        .setDensity(1500).setViscosity(3000).setGaseous(true).setTemperature(100);;
-	    FluidRegistry.registerFluid(f);
-	    Steam = FluidRegistry.getFluid(f.getName());
-	    BlockSteamFluid = new BaseFluidBlock(Steam, new MaterialLiquid(MapColor.QUARTZ), SteamFluidName);
-		registry.PreRegisterBlock(BlockSteamFluid);
-	    registerBucket(Steam);
-	    
-	    f  = new Fluid(EthanolName, getStill(EthanolName), getFlowing(EthanolName))
-		        .setDensity(150).setViscosity(1000).setTemperature(75);;
-	    FluidRegistry.registerFluid(f);
-	    Ethanol = FluidRegistry.getFluid(f.getName());
-	    BlockEthanol = new BaseFluidBlock(Ethanol, new MaterialLiquid(MapColor.ICE), EthanolName);
-		registry.PreRegisterBlock(BlockEthanol);
-	    registerBucket(Ethanol);
-	    
-	    f  = new Fluid(MashName, getStill(MashName), getFlowing(MashName))
-		        .setDensity(150).setViscosity(1000).setTemperature(50);;
-	    FluidRegistry.registerFluid(f);
-	    Mash = FluidRegistry.getFluid(f.getName());
-	    BlockMash = new BaseFluidBlock(Mash, new MaterialLiquid(MapColor.WOOD), MashName);
-		registry.PreRegisterBlock(BlockMash);
-	    registerBucket(Mash);
-	    
-	    f  = new Fluid(EvaporatedMashName, getStill(EvaporatedMashName), getFlowing(EvaporatedMashName))
-		        .setDensity(150).setViscosity(1000).setTemperature(110);
-	    FluidRegistry.registerFluid(f);
-	    EvaporatedMash = FluidRegistry.getFluid(f.getName());
-	    BlockEvaporatedMash = new BaseFluidBlock(EvaporatedMash, new MaterialLiquid(MapColor.WOOD), EvaporatedMashName);
-		registry.PreRegisterBlock(BlockEvaporatedMash);
-	    registerBucket(EvaporatedMash);   
+		StaticFluid = registerFluid(registry, "StaticFluid", MapColor.EMERALD, 1500, 3000, 100);
+
+		EnergizedFluid = registerFluid(registry, "EnergizedFluid", MapColor.DIAMOND, 1500, 3000, 300);
+
+		LumumFluid = registerFluid(registry, "LumumFluid", MapColor.GOLD, 1500, 3000, 500);
+
+		RefinedFluid = registerFluid(registry, "RefinedFluid", MapColor.PURPLE, 1500, 3000, 800);
+
+		Steam = registerFluid(registry, "Steam", MapColor.WHITE_STAINED_HARDENED_CLAY, 1500, 3000, 100);
+
+		Ethanol = registerFluid(registry, "Ethanol", MapColor.CYAN, 150, 1000, 72);
+
+		Mash = registerFluid(registry, "Mash", MapColor.WOOD, 1500, 1000, 72);
+
+		EvaporatedMash = registerFluid(registry, "EvaporatedMash", MapColor.WOOD, 1500, 1000, 110);
+
+		LiquidExperience = registerFluid(registry, "LiquidExperience", MapColor.EMERALD, 150, 1000, 80);
 		
-	    f  = new Fluid(LiquidExperienceName, getStill(LiquidExperienceName), getFlowing(LiquidExperienceName))
-		        .setDensity(150).setViscosity(1000).setTemperature(300);
-	    FluidRegistry.registerFluid(f);
-	    LiquidExperience = FluidRegistry.getFluid(f.getName());
-	    BlockLiquidExperience = new BaseFluidBlock(LiquidExperience, new MaterialLiquid(MapColor.EMERALD), LiquidExperienceName);
-		registry.PreRegisterBlock(BlockLiquidExperience);
-	    registerBucket(LiquidExperience);     
-	}
+		TreeSap = registerFluid(registry, "TreeSap", MapColor.WOOD, 200, 2000, 72);
 
+		TreeOil = registerFluid(registry, "TreeOil", MapColor.SAND, 150, 1000, 72);
+		
+	}
 	public static void initBlockRendering() {
-	    registerFluidBlockRendering(StaticFluid, StaticFluidName);
-	    registerFluidBlockRendering(EnergizedFluid, EnergizedFluidName);
-	    registerFluidBlockRendering(LumumFluid, LumumFluidName);
-	    registerFluidBlockRendering(Steam, SteamFluidName);
-	    registerFluidBlockRendering(Ethanol, EthanolName);
-	    registerFluidBlockRendering(Mash, MashName);
-	    registerFluidBlockRendering(EvaporatedMash, EvaporatedMashName);		
-	    registerFluidBlockRendering(LiquidExperience, LiquidExperienceName);
-	    registerFluidBlockRendering(RefinedFluid, RefinedFluidName);
+		for(Entry<String, Fluid> entry : fluid_map.entrySet()) {
+		    registerFluidBlockRendering(entry.getValue(), entry.getKey());
+		}
 	}
-
 	public static void initItemRendering() {
-		registerFluidItemRendering(StaticFluid, StaticFluidName);
-	    registerFluidItemRendering(EnergizedFluid, EnergizedFluidName);
-	    registerFluidItemRendering(LumumFluid, LumumFluidName);
-	    registerFluidItemRendering(Steam, SteamFluidName);
-	    registerFluidItemRendering(Ethanol, EthanolName);
-	    registerFluidItemRendering(Mash, MashName);
-	    registerFluidItemRendering(EvaporatedMash, EvaporatedMashName);		
-	    registerFluidItemRendering(LiquidExperience, LiquidExperienceName);	
-	    registerFluidItemRendering(RefinedFluid, RefinedFluidName);
+		for(Entry<String, Fluid> entry : fluid_map.entrySet()) {
+			registerFluidItemRendering(entry.getValue(), entry.getKey());
+		}
 	}
-	public static Fluid createFluid(Registry registry, String name, Fluid fluid, Block fluidBlock, MapColor color) {
-		Fluid f  = new Fluid(name, getStill(name), getFlowing(name))
-		        .setDensity(1500).setViscosity(3000);
+	
+	private static Fluid registerFluid(Registry registry, String fluidName, MapColor color, int density, int viscosity, int temperature) {
+	    Fluid f  = new Fluid(fluidName, getStill(fluidName), getFlowing(fluidName)).setDensity(density).setViscosity(viscosity).setTemperature(temperature);
 	    FluidRegistry.registerFluid(f);
-	    fluid = FluidRegistry.getFluid(f.getName());
-	    fluidBlock = new BaseFluidBlock(fluid, new MaterialLiquid(color), name);
+	    f = FluidRegistry.getFluid(f.getName());
+	    Block fluidBlock = new BaseFluidBlock(f, new MaterialLiquid(color), fluidName);
 		registry.PreRegisterBlock(fluidBlock);
-	    registerBucket(fluid);
-	    registerFluidBlockRendering(fluid, name);
-		return f;
+		FluidRegistry.addBucketForFluid(f);    
+	    fluid_map.put(fluidName, f);
+	    return f;
 	}
-	public static ResourceLocation getStill(String fluidName) {
-			return new ResourceLocation(Reference.MOD_ID + ":blocks/fluids/" + fluidName + "Still");
+	private static ResourceLocation getStill(String fluidName) {
+		return new ResourceLocation(Reference.MOD_ID + ":blocks/fluids/" + fluidName + "Still");
 	}
-	public static ResourceLocation getFlowing(String fluidName) {
-			return new ResourceLocation(Reference.MOD_ID  + ":blocks/fluids/" + fluidName + "Flow");
-	}
-	private static void registerBucket(Fluid fluid) {
-		FluidRegistry.addBucketForFluid(fluid);
+	private static ResourceLocation getFlowing(String fluidName) {
+		return new ResourceLocation(Reference.MOD_ID  + ":blocks/fluids/" + fluidName + "Flow");
 	}
 	@SideOnly(Side.CLIENT)
-	public static void registerFluidBlockRendering(Fluid fluid, String name) {
-
+	private static void registerFluidBlockRendering(Fluid fluid, String name) {
 	    FluidStateMapper mapper = new FluidStateMapper(fluid);
 	    Block block = fluid.getBlock();
-	    // block-model
+
 	    if (block != null) {
 	      ModelLoader.setCustomStateMapper(block, mapper);
 	    }
 	}
 	@SideOnly(Side.CLIENT)
-	public static void registerFluidItemRendering(Fluid fluid, String name) {
-
+	private static void registerFluidItemRendering(Fluid fluid, String name) {
 	    FluidStateMapper mapper = new FluidStateMapper(fluid);
 	    Block block = fluid.getBlock();
 	    Item item = Item.getItemFromBlock(block);
 
-	    // item-model
 	    if (item != null) {
 	      ModelLoader.registerItemVariants(item);
 	      ModelLoader.setCustomMeshDefinition(item, mapper);
 	    }
 	}
-	 public static class FluidStateMapper extends StateMapperBase implements ItemMeshDefinition {
+	private static class FluidStateMapper extends StateMapperBase implements ItemMeshDefinition {
 
-		    public final Fluid fluid;
-		    public final ModelResourceLocation location;
+	    public final ModelResourceLocation location;
 
-		    public FluidStateMapper(Fluid fluid) {
-		      this.fluid = fluid;
-		      location = new ModelResourceLocation(Reference.MOD_ID + ":Fluid", fluid.getName());
-		    }
+	    public FluidStateMapper(Fluid fluid) {
+	    	location = new ModelResourceLocation(Reference.MOD_ID + ":Fluid", fluid.getName());
+	    }
 
-		    @Override
-		    protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-		      return location;
-		    }
+	    @Override
+	    protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+	      return location;
+	    }
 
-		    @Override
-		    public ModelResourceLocation getModelLocation(ItemStack stack) {
-		      return location;
-		    }
+	    @Override
+	    public ModelResourceLocation getModelLocation(ItemStack stack) {
+	      return location;
+	    }
 	}
 }
 

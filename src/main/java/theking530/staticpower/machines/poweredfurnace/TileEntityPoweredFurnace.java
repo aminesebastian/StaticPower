@@ -12,7 +12,7 @@ public class TileEntityPoweredFurnace extends BaseMachine {
 
 	public TileEntityPoweredFurnace() {
 		initializeSlots(2, 1, 1);
-		initializeBasicMachine(2, 1000, 100000, 80, 150);
+		initializeBasicMachine(2, 1000, 100000, 80, 180);
 		registerComponent(new TileEntityItemOutputServo(this, 1, slotsOutput, 0));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0));
 		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInternal, 1, energyStorage));

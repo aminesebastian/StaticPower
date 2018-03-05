@@ -13,16 +13,17 @@ public class HeatDistributor {
 		STORAGE = storage;
 	}
  	public int provideHeat() {
-		for(int i=0; i<6; i++) {
+ 		for(EnumFacing facing : EnumFacing.values()) {
 			if(STORAGE.getHeat() > 0) {
-				if(TE.getWorld().getTileEntity(TE.getPos().offset(EnumFacing.values()[i])) instanceof IHeatable) {
-					IHeatable heatable = (IHeatable) TE.getWorld().getTileEntity(TE.getPos().offset(EnumFacing.values()[i]));
-					if(heatable.canHeat() && heatable.getHeat() < heatable.getMaxHeat()) {
+				TileEntity te = TE.getWorld().getTileEntity(TE.getPos().offset(facing));
+				if(te != null && te instanceof IHeatable) {
+					IHeatable heatable = (IHeatable)te;
+					if(heatable.getHeat() < heatable.getMaxHeat()) {
 						return STORAGE.extractHeat(heatable.recieveHeat(Math.min(10, STORAGE.getHeat())));
 					}
 				}	
 			}
-		}
+ 		}
 		return 0;	
 	}
 }

@@ -11,46 +11,49 @@ import theking530.staticpower.machines.BaseMachine;
 
 public class TileEntityHeatingElement extends BaseMachine implements ITickable, IHeatProvider {
 
-	public HeatStorage HEAT_STORAGE;
-	public HeatDistributor HEAT_DIST;
+	public HeatStorage heatStorage;
+	public HeatDistributor heatDistributor;
 	
 	public TileEntityHeatingElement() {
 		initializeSlots(0, 0, 0);
 		initializeBasicMachine(1, 5, 100, 100, 20);
-		HEAT_STORAGE = new HeatStorage(200);
-		HEAT_DIST = new HeatDistributor(this, HEAT_STORAGE);
+		heatStorage = new HeatStorage(1);
+		heatDistributor = new HeatDistributor(this, heatStorage);
 	}
 	@Override
 	public void process(){
-		if(!getWorld().isRemote) {
+		if(!getWorld().isRemote && energyStorage.getEnergyStored() > getProcessingCost()) {
 			if(processingTimer >= processingTime) {
-				if(HEAT_STORAGE.getHeat() < HEAT_STORAGE.getMaxHeat() && energyStorage.getEnergyStored() > getProcessingCost()) {
-					HEAT_STORAGE.recieveHeat(1);
+				if(heatStorage.getHeat() < heatStorage.getMaxHeat() && energyStorage.getEnergyStored() > getProcessingCost()) {
+					heatStorage.recieveHeat(1);
 					energyStorage.extractEnergy(getProcessingCost(), false);
-				}
-				HEAT_DIST.provideHeat();		
+				}	
 				processingTimer = 0;
-				
-				markDirty();
+				updateBlock();
 			}else{
 				processingTimer++;
 				energyStorage.extractEnergy(getProcessingCost(), false);
-			}	
+			}
+			heatDistributor.provideHeat();	
 		}
 	}
     @Override  
 	public void deserializeData(NBTTagCompound nbt) {
         super.deserializeData(nbt);
-        HEAT_STORAGE.readFromNBT(nbt);
+        heatStorage.readFromNBT(nbt);
     }		
     @Override
     public NBTTagCompound serializeData(NBTTagCompound nbt) {
         super.serializeData(nbt);
-        HEAT_STORAGE.writeToNBT(nbt);
+        heatStorage.writeToNBT(nbt);
         return nbt;
 	}	
 	public void deserializeOnPlaced(NBTTagCompound nbt, World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)  {
 		super.deserializeOnPlaced(nbt, world, pos, state, placer, stack);
-		HEAT_STORAGE.readFromNBT(nbt);
+		heatStorage.readFromNBT(nbt);
+	}
+	@Override
+	public boolean isSideConfigurable() {
+		return false;
 	}
 }

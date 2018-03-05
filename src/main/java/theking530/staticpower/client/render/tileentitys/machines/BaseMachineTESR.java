@@ -53,7 +53,6 @@ public class BaseMachineTESR <T extends BaseTileEntity> extends TileEntitySpecia
 		GL11.glTranslated(-translationX, -translationY, -translationZ);	
 		GL11.glColor3f(1.0F, 1.0F, 1.0F);	
 		GL11.glPopMatrix();
-
 	}
 	public void drawExtra(T tileentity, double translationX, double translationY, double translationZ, float f, int dest, float alpha) {
 		

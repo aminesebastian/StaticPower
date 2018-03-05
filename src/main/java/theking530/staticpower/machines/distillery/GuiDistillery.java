@@ -64,7 +64,7 @@ public class GuiDistillery extends BaseGuiContainer {
 		
 		int var1 = (this.width - this.xSize) / 2;
 		int var2 = (this.height - this.ySize) / 2;    
-		if(par1 >= 71 + var1 && par2 >= 80 + var2 && par1 <= 87 + var1 && par2 <= 88 + var2) {	
+		if(par1 >= 71 + var1 && par2 >= 60 + var2 && par1 <= 105 + var1 && par2 <= 77 + var2) {	
 			drawHoveringText(heatbar.drawText(), par1, par2, fontRenderer); 
 		}	  
 	}
@@ -88,7 +88,8 @@ public class GuiDistillery extends BaseGuiContainer {
 			int j1 = distillery.getProgressScaled(34);
 			GuiFluidBarUtilities.drawFluidBar(distillery.processingStack, 1000, 1000, guiLeft + 71, guiTop + 49, 1, j1, 5, true);
 		}
-		heatbar.drawHeatBar(guiLeft + 71, guiTop + 88, this.zLevel, 16, 8);
+		this.drawSlot(guiLeft+71, guiTop+60, 34, 17);
+		heatbar.drawHeatBar(guiLeft+71, guiTop+77, this.zLevel, 34, 17);
 	}
 }
 

@@ -30,7 +30,7 @@ public class GuiHeatBar {
 		    float renderAmount = ratio * (float) height;
 		    RenderUtil.bindBlockTexture();	    
 		    GlStateManager.enableBlend();    
-
+			GlStateManager.color(1.0f, 1.0f, 1.0f);
 	        double minU = icon.getMinU();
 	        double maxU = icon.getMaxU();
 	        double minV = icon.getMinV();

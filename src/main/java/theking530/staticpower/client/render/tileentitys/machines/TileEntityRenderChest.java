@@ -1,9 +1,9 @@
 package theking530.staticpower.client.render.tileentitys.machines;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
 import net.minecraft.client.model.ModelChest;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -56,39 +56,45 @@ public class TileEntityRenderChest extends TileEntitySpecialRenderer<TileEntity>
     		texture = new ResourceLocation(Reference.MOD_ID, "textures/models/tileentity/StaticChest.png");
     		break;
     	}
-        
-        ModelChest modelchest;
-        modelchest = this.model;
-        this.bindTexture(texture);
 
-        GL11.glPushMatrix();
-        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        GL11.glTranslatef((float)x, (float)y + 1.0F, (float)z + 1.0F);
-        GL11.glScalef(1.0F, -1.0F, -1.0F);
-        GL11.glTranslatef(0.5F, 0.5F, 0.5F);
-		EnumFacing facing = EnumFacing.getHorizontal(te.getBlockMetadata());
+    	if (destroyStage >= 0)
+        {
+            bindTexture(DESTROY_STAGES[destroyStage]);
+            GlStateManager.matrixMode(5890);
+            GlStateManager.pushMatrix();
+            GlStateManager.scale(4.0F, 4.0F, 1.0F);
+            GlStateManager.translate(0.0625F, 0.0625F, 0.0625F);
+            GlStateManager.matrixMode(5888);
+        } else {
+            this.bindTexture(texture);
+        }
+
+
+		EnumFacing facing = staticChest.getFacingDirection();
+		
+		GL11.glPushMatrix();
+		GL11.glTranslated(x, y, z);
 		if(facing == EnumFacing.WEST) {
-			GL11.glRotated(90, 0, 1, 0);
-			GL11.glTranslated(0, 0, 0);
+			GL11.glRotated(-90, 0, 1, 0);
+			GL11.glTranslated(0, 0, -1);
 			}
 		if(facing == EnumFacing.NORTH) {
 			GL11.glRotated(180, 0, 1, 0);
-			GL11.glTranslated(0, 0, 0);
+			GL11.glTranslated(-1, 0, -1);
 			}
 		if(facing == EnumFacing.EAST) {
-			GL11.glRotated(-90, 0, 1, 0);
-			GL11.glTranslated(0, 0, 0);
+			GL11.glRotated(90, 0, 1, 0);
+			GL11.glTranslated(-1, 0, 0);
 		}
-        GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
+		GL11.glRotated(180, 1, 0, 0);
+		GL11.glTranslated(0, -1, -1);
+		
         float f1 = staticChest.prevLidAngle + (staticChest.lidAngle - staticChest.prevLidAngle) * partialTicks;
         f1 = 1.0F - f1;
         f1 = 1.0F - f1 * f1 * f1;
-        modelchest.chestLid.rotateAngleX = -(f1 * (float)Math.PI / 2.0F);
-        modelchest.renderAll();
-        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+        model.chestLid.rotateAngleX = -(f1 * (float)Math.PI / 2.0F);
+        model.renderAll();
         GL11.glPopMatrix();
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
 }

@@ -28,7 +28,14 @@ public class FermenterRecipeRegistry {
     public Map<Ingredient, FermenterOutputWrapper> getFermentingRecipes() {
         return this.fermenting_list;
     }
-
+	public FermenterOutputWrapper getRecipe(ItemStack inputItemstack) {
+		for(Entry<Ingredient, FermenterOutputWrapper> entry : fermenting_list.entrySet()) {
+			if(entry.getValue().isSatisfied(inputItemstack)) {
+				return entry.getValue();
+			}
+		}
+		return null;
+	}
 	public FluidStack getFluidResult(ItemStack inputItemstack) {
 		for(Entry<Ingredient, FermenterOutputWrapper> entry : fermenting_list.entrySet()) {
 			if(entry.getValue().isSatisfied(inputItemstack)) {

@@ -32,7 +32,7 @@ public class RegisterHelper  {
 	public static void registerGrinderRecipe(Ingredient itemstack, GrinderOutput... outputs) {
 		GrinderRecipeRegistry.Grinding().addRecipe(itemstack, outputs);
 	}
-	public static void registerInfuserRecipe(Ingredient input, ItemStack output, FluidStack fluidStack) {
+	public static void registerInfuserRecipe(ItemStack output, Ingredient input, FluidStack fluidStack) {
 		InfuserRecipeRegistry.Infusing().addRecipe(input, output, fluidStack);			
 	}
 	public static void registerFusionRecipe(ItemStack output, Ingredient...inputs) {

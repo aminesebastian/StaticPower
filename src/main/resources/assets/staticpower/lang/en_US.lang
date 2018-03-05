@@ -327,22 +327,38 @@ tile.LumumPlanks.name=Lumum Planks
 //Fluids
 fluid.StaticFluid=§aStatic Fluid
 tile.StaticFluid.name=§aStatic Fluid
+
 fluid.EnergizedFluid=§bEnergized Fluid
 tile.EnergizedFluid.name=§bEnergized Fluid
+
 fluid.LumumFluid=§eLumum Fluid
 tile.LumumFluid.name=§eLumum Fluid
+
 fluid.RefinedFluid=§5Refined Fluid
 tile.RefinedFluid.name=§5Refined Fluid
-tile.Ethanol.name=Ethanol
+
 fluid.Ethanol=Ethanol
-tile.Steam.name=Steam
+tile.Ethanol.name=Ethanol
+
 fluid.Steam=Steam
-tile.Mash.name=Mash
+tile.Steam.name=Steam
+
 fluid.Mash=Mash
-tile.EvaporatedMash.name=Evaporated Mash
+tile.Mash.name=Mash
+
 fluid.EvaporatedMash=Evaporated Mash
+tile.EvaporatedMash.name=Evaporated Mash
+
 fluid.LiquidExperience=Liquid Experience
 tile.LiquidExperience.name=Liquid Experience
+
+fluid.TreeSap=Tree Sap
+tile.TreeSap.name=Tree Sap
+
+fluid.TreeOil=Tree Oil
+tile.TreeOil.name=Tree Oil
+
+
 //Gates
 tile.SignalMultiplier.name=Redstone Transducer
 container.SignalMultiplier=Redstone Transducer

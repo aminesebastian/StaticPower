@@ -56,7 +56,6 @@ public class MachineTileEntityRenderer extends TileEntitySpecialRenderer<BaseTil
 		GL11.glTranslated(-translationX, -translationY, -translationZ);	
 		GL11.glColor3f(1.0F, 1.0F, 1.0F);	
 		GL11.glPopMatrix();
-
 	}
 	
 	public void checkAndRenderSides(TileEntity tileentity, int side) {

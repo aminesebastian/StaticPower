@@ -61,10 +61,6 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 	 * @param InitialEnergyCapacity
 	 * @param InitialEntryPerTick
 	 * @param InitialProcessingTime
-	 * @param slotCount
-	 * @param outputSlots
-	 * @param inputSlots
-	 * @param disableFaceInteraction
 	 */
 	public void initializeBasicMachine(float InitialEnergyMult, int InitialPowerUse, int InitialEnergyCapacity, int InitialEntryPerTick, int InitialProcessingTime) {	
 		initialProcessingEnergyMult = InitialEnergyMult;
@@ -180,6 +176,19 @@ public class BaseMachine extends BaseTileEntity implements IEnergyHandler, IEner
 		return 0;
 	}
 
+	@Override
+	public boolean canProcess() {
+		return false;
+	}
+	@Override
+	public boolean canMove() {
+		return false;
+	}
+	@Override
+	public boolean hasValidRecipe() {
+		return false;
+	}
+	
 	public boolean isMoving() {
 		return moveTimer > 0;
 	}

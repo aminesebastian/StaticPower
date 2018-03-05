@@ -49,10 +49,10 @@ public class GuiVacuumChest extends BaseGuiContainer {
 		infoTab.setText(vacuumChest.getBlockType().getLocalizedName(), Arrays.asList(splitMsg));
 
 		if(!vacuumChest.showTank()) {
-			setScreenSizeTarget(176, 185);
+			setGuiSizeTarget(176, 185);
 			fluidBar.setVisible(false);
 		}else{
-			setScreenSizeTarget(200, 185);
+			setGuiSizeTarget(200, 185);
 	    	drawSlot(guiLeft+176, guiTop+12, 16, 60);
 			fluidBar.setVisible(true);
 		}

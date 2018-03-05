@@ -18,7 +18,7 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 	
 	public TileEntityPoweredGrinder() {
 		initializeSlots(2, 1, 3);
-		initializeBasicMachine(2, 1000, 100000, 80, 100);
+		initializeBasicMachine(2, 1000, 100000, 80, 180);
 		registerComponent(new BatteryInteractionComponent("BatteryComponent", slotsInternal, 1, energyStorage));
 		registerComponent(new TileEntityItemOutputServo(this, 1, slotsOutput, 0, 1, 2));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0));

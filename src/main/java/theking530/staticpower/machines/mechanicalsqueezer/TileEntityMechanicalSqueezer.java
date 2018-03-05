@@ -15,7 +15,7 @@ import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutput
 import theking530.staticpower.tileentity.BaseTileEntity;
 import theking530.staticpower.tileentity.IProcessing;
 
-public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFluidHandler, IProcessing{
+public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFluidHandler, IProcessing {
 
 	public FluidTank fluidTank;
 	public int processingTimer = 0;
@@ -183,8 +183,6 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFlu
 	public FluidStack drain(int maxDrain, boolean doDrain) {
 		return fluidTank.drain(maxDrain, doDrain);
 	}
-	
-	/*Processing*/
 	@Override
 	public int getProcessingTime() {
 		return processingTime;
@@ -196,6 +194,18 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFlu
 	@Override
 	public float getProcessingPercentage() {
 		return (float)processingTimer/(float)processingTime;
+	}
+	@Override
+	public boolean canProcess() {
+		return false;
+	}
+	@Override
+	public boolean canMove() {
+		return true;
+	}
+	@Override
+	public boolean hasValidRecipe() {
+		return false;
 	}
 }
 	

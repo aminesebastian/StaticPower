@@ -98,6 +98,12 @@ public class CropSqueezerRecipeCategory extends BaseJEIRecipeCategory<CropSqueez
 
 	        //Input
 	        guiStacks.init(slotId++, true, 75, 12);  
+	        guiStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
+				if (slotIndex == 0) {
+					tooltip.add(recipeWrapper.recipe.getOutputFluid().getLocalizedName());
+					tooltip.add(recipeWrapper.recipe.getOutputFluid().amount + " mb");
+				}
+			});
 	        
 	        //Output
 	        guiStacks.init(slotId++, false, 75, 52); 

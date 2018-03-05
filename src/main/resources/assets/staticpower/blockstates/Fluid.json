@@ -36,6 +36,14 @@
 		"liquidexperience": {
             "model": "forge:fluid",
             "custom": { "fluid": "liquidexperience" }
+        },
+		"treesap": {
+            "model": "forge:fluid",
+            "custom": { "fluid": "treesap" }
+        },
+		"treeoil": {
+            "model": "forge:fluid",
+            "custom": { "fluid": "treeoil" }
         }
     }
 }

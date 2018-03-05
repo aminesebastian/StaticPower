@@ -175,6 +175,7 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
 	}
 	@Override
 	public int recieveHeat(int heat) {
+		updateBlock();
 		return heatStorage.recieveHeat(heat);
 	}
 	@Override
@@ -183,6 +184,7 @@ public class TileEntityDistillery extends BaseMachineWithTank implements IHeatab
 	}
 	@Override
 	public int extractHeat(int heat) {
+		updateBlock();
 		return heatStorage.extractHeat(heat);
 	}
 	@Override

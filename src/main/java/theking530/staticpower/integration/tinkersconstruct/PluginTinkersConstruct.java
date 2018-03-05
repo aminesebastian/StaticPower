@@ -96,15 +96,15 @@ public class PluginTinkersConstruct implements ICompatibilityPlugin {
 	public void initializeTinkersFluids(){
 		createTinkersFluid(250, ItemMaterials.ingotStatic, ModBlocks.StaticBlock, new FluidStack(ModFluids.StaticFluid, 144), 700);
 		createTinkersFluid(250, new ItemStack(Item.getItemFromBlock(ModBlocks.StaticBlock)), ModBlocks.StaticBlock, new FluidStack(ModFluids.StaticFluid, 1296), 700);
-		createTinkersFluid(250, ItemMaterials.nuggetStatic, ModBlocks.LumumBlock, new FluidStack(ModFluids.LumumFluid, 6), 1100);
+		createTinkersFluid(250, ItemMaterials.nuggetStatic, ModBlocks.LumumBlock, new FluidStack(ModFluids.LumumFluid, 16), 1100);
 		
 		createTinkersFluid(251, ItemMaterials.ingotEnergized, ModBlocks.EnergizedBlock, new FluidStack(ModFluids.EnergizedFluid, 144), 900);
 		createTinkersFluid(251, new ItemStack(Item.getItemFromBlock(ModBlocks.EnergizedBlock)), ModBlocks.EnergizedBlock, new FluidStack(ModFluids.EnergizedFluid, 1296), 900);
-		createTinkersFluid(251, ItemMaterials.nuggetEnergized, ModBlocks.LumumBlock, new FluidStack(ModFluids.LumumFluid, 6), 1100);
+		createTinkersFluid(251, ItemMaterials.nuggetEnergized, ModBlocks.LumumBlock, new FluidStack(ModFluids.LumumFluid, 16), 1100);
 		
 		createTinkersFluid(252, ItemMaterials.ingotLumum, ModBlocks.LumumBlock, new FluidStack(ModFluids.LumumFluid, 144), 1100);
 		createTinkersFluid(252, new ItemStack(Item.getItemFromBlock(ModBlocks.LumumBlock)), ModBlocks.LumumBlock, new FluidStack(ModFluids.LumumFluid, 1296), 1100);
-		createTinkersFluid(252, ItemMaterials.nuggetLumum, ModBlocks.LumumBlock, new FluidStack(ModFluids.LumumFluid, 6), 1100);
+		createTinkersFluid(252, ItemMaterials.nuggetLumum, ModBlocks.LumumBlock, new FluidStack(ModFluids.LumumFluid, 16), 1100);
 		
 	}
 	public void createTinkersFluid(int ID, ItemStack meltingItem, Block displayItem, FluidStack fluid, int temperature) {
