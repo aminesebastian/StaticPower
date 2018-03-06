@@ -3,7 +3,6 @@ package theking530.staticpower.handlers.crafting.registries;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.handlers.crafting.wrappers.SolderingRecipeWrapper;
@@ -19,16 +18,16 @@ public class SolderingRecipeRegistry {
     public SolderingRecipeWrapper addRecipe(SolderingRecipeWrapper wrapper) {
         recipeList.add(wrapper);
         return wrapper;
-    }  
-    public ItemStack getOutput(IItemHandler inv, World worldIn, int craftingInvWidth, int craftingInvHeight) {
-    	for(SolderingRecipeWrapper wrapper : recipeList) {
-    		if(wrapper.matches(inv, worldIn, craftingInvWidth, craftingInvHeight)) {
-    			return wrapper.getRecipeOutput();
-    		}
-    	}
-    	return ItemStack.EMPTY;
     }
     public List<SolderingRecipeWrapper> getRecipeList(){
         return recipeList;
+    }
+    public SolderingRecipeWrapper getRecipe(IItemHandler inv, World worldIn, int craftingInvWidth, int craftingInvHeight) {
+    	for(SolderingRecipeWrapper wrapper : recipeList) {
+    		if(wrapper.matches(inv, worldIn, craftingInvWidth, craftingInvHeight)) {
+    			return wrapper;
+    		}
+    	}
+    	return null;
     }
 }

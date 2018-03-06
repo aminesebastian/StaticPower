@@ -10,9 +10,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.GuiIDRegistry;
-import theking530.staticpower.machines.BaseMachineBlock;
+import theking530.staticpower.machines.BlockMachineBase;
 
-public class BlockFusionFurnace extends BaseMachineBlock{
+public class BlockFusionFurnace extends BlockMachineBase{
 
 	public BlockFusionFurnace() {
 		super("FusionFurnace");

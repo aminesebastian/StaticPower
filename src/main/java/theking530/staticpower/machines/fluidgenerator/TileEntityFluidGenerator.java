@@ -4,11 +4,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.energy.PowerDistributor;
 import theking530.staticpower.handlers.crafting.registries.FluidGeneratorRecipeRegistry;
-import theking530.staticpower.machines.BaseMachineWithTank;
+import theking530.staticpower.machines.TileEntityMachineWithTank;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
 
-public class TileEntityFluidGenerator extends BaseMachineWithTank {
+public class TileEntityFluidGenerator extends TileEntityMachineWithTank {
 
 	private PowerDistributor energyDistributor;
 	public int soundTimer = 15;

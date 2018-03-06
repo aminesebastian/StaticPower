@@ -4,12 +4,12 @@ import cofh.redstoneflux.api.IEnergyContainerItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import theking530.staticpower.assists.utilities.InventoryUtilities;
-import theking530.staticpower.machines.BaseMachine;
+import theking530.staticpower.machines.TileEntityMachine;
 import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
 
-public class TileEntityChargingStation extends BaseMachine {
+public class TileEntityChargingStation extends TileEntityMachine {
 	
 	public TileEntityChargingStation() {
 		initializeSlots(1, 4, 4);
@@ -37,7 +37,7 @@ public class TileEntityChargingStation extends BaseMachine {
 	}
 	public void outputItem(int fromSlot){
 		for(int i=0; i<4; i++) {
-			if(InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, i, slotsInput.getStackInSlot(fromSlot))) {
+			if(InventoryUtilities.canFullyInsertStackIntoSlot(slotsOutput, i, slotsInput.getStackInSlot(fromSlot))) {
 				slotsOutput.insertItem(i, slotsInput.getStackInSlot(fromSlot).copy(), false);
 				slotsInput.extractItem(fromSlot, 1, false);
 				return;

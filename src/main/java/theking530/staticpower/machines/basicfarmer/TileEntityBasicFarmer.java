@@ -30,14 +30,14 @@ import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.handlers.crafting.registries.FarmerRecipeRegistry;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
-import theking530.staticpower.machines.BaseMachineWithTank;
+import theking530.staticpower.machines.TileEntityMachineWithTank;
 import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
 
-public class TileEntityBasicFarmer extends BaseMachineWithTank {
+public class TileEntityBasicFarmer extends TileEntityMachineWithTank {
 
 	public static final int DEFAULT_RANGE = 2;
 	
@@ -223,7 +223,7 @@ public class TileEntityBasicFarmer extends BaseMachineWithTank {
 		}
 	}
 	public boolean canFarm() {
-		if(energyStorage.getEnergyStored() >= getProcessingCost() * blocksFarmedPerTick && !slotsInput.getStackInSlot(0).isEmpty() && slotsInput.getStackInSlot(0).getItem() instanceof ItemHoe && !slotsInput.getStackInSlot(1).isEmpty() && slotsInput.getStackInSlot(1).getItem() instanceof ItemAxe) {
+		if(energyStorage.getEnergyStored() >= getProcessingEnergy() * blocksFarmedPerTick && !slotsInput.getStackInSlot(0).isEmpty() && slotsInput.getStackInSlot(0).getItem() instanceof ItemHoe && !slotsInput.getStackInSlot(1).isEmpty() && slotsInput.getStackInSlot(1).getItem() instanceof ItemAxe) {
 			if(fluidTank.getFluid() != null) {
 				if(fluidTank.getFluid().amount > 0) {
 					return true;

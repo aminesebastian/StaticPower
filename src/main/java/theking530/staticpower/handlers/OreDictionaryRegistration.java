@@ -35,5 +35,7 @@ public class OreDictionaryRegistration {
 		OreDictionary.registerOre("oreAluminum", ModBlocks.AluminiumOre);
 		OreDictionary.registerOre("oreSapphire", ModBlocks.SapphireOre);
 		OreDictionary.registerOre("oreRuby", ModBlocks.RubyOre);
+		
+		OreDictionary.registerOre("blockGlassHardened", ModBlocks.ObsidianGlass);
 	}
 }

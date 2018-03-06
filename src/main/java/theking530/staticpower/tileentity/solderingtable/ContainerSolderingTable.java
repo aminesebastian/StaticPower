@@ -24,11 +24,15 @@ public class ContainerSolderingTable extends BaseContainer {
                 this.addSlotToContainer(new SlotSolderingTableInput(this, teTable.slotsInput, i1 + l * 3, 62 + i1 * 18, 17 + l * 18));
             }
         }
-        
-        
+         
         //Extra Slots 9 - 15
         for (l = 0; l < 7; l++) {
-        	this.addSlotToContainer(new StaticPowerContainerSlot(teTable.slotsInput, l+9, 26 + l * 18, 74));
+        	this.addSlotToContainer(new StaticPowerContainerSlot(teTable.slotsInput, l+9, 26 + l * 18, 74) {
+    			@Override
+    	        public void onSlotChanged() {
+    				onSolderingAreaChanged();
+    		    }
+    		});
         }
         
         //Output
@@ -46,10 +50,10 @@ public class ContainerSolderingTable extends BaseContainer {
         this.detectAndSendChanges();
     }
     public void onSolderingAreaChanged(){
-    	if(solderingTableTileEntity.getInputStack(16) != null && solderingTableTileEntity.getInputStack(16).getItem() instanceof ISolderingIron) {
+    	if(!solderingTableTileEntity.getInputStack(16).isEmpty() && solderingTableTileEntity.getInputStack(16).getItem() instanceof ISolderingIron && solderingTableTileEntity.canProcess()) {
     		ISolderingIron tempIron = (ISolderingIron) solderingTableTileEntity.getInputStack(16).getItem();
     		if(tempIron.canSolder(solderingTableTileEntity.getInputStack(16))) {
-    			solderingTableTileEntity.slotsOutput.setStackInSlot(0, SolderingRecipeRegistry.Soldering().getOutput(solderingTableTileEntity.slotsInput, solderingTableTileEntity.getWorld(), 3, 3).copy()); 		
+    			solderingTableTileEntity.slotsOutput.setStackInSlot(0, SolderingRecipeRegistry.Soldering().getRecipe(solderingTableTileEntity.slotsInput, solderingTableTileEntity.getWorld(), 3, 3).getRecipeOutput().copy()); 		
     		}else{
         		solderingTableTileEntity.slotsOutput.setStackInSlot(0, ItemStack.EMPTY); 	
     		}    	

@@ -10,12 +10,14 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
+import net.minecraftforge.items.ItemHandlerHelper;
 import theking530.staticpower.assists.utilities.SideModeList.Mode;
+import theking530.staticpower.handlers.crafting.registries.SolderingRecipeRegistry;
 import theking530.staticpower.items.tools.ISolderingIron;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
-import theking530.staticpower.tileentity.BaseTileEntity;
+import theking530.staticpower.tileentity.TileEntityBase;
 
-public class TileEntitySolderingTable extends BaseTileEntity {
+public class TileEntitySolderingTable extends TileEntityBase {
 		
 	public TileEntitySolderingTable() {
 		initializeSlots(1, 17, 1);
@@ -24,6 +26,30 @@ public class TileEntitySolderingTable extends BaseTileEntity {
 	@Override
 	public String getName() {
 		return "SolderingTable";		
+	}
+	public boolean hasValidRecipe() {
+		return SolderingRecipeRegistry.Soldering().getRecipe(slotsInput, getWorld(), 3, 3) != null;
+	}
+	public boolean canProcess() {
+		if(hasValidRecipe()) {
+			for (int i = 0; i < 9; ++i){
+				boolean flag = false;
+	            ItemStack itemstack1 = getInputStack(i);
+	            if (!itemstack1.isEmpty()) {
+	            	for(int j=9; j<16; j++) {
+	            		if(!getInputStack(j).isEmpty() && ItemHandlerHelper.canItemStacksStack(getInputStack(j), getInputStack(i))) {
+	        				flag = true;
+	        				break;
+	            		}
+	            	}
+	            }
+	            if(!flag) {
+	            	return false;
+	            }
+			}
+			return true;
+		}
+		return false;
 	}
 	public void onCrafted(EntityPlayer player, ItemStack item, int amount) {
 		MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(player, getInputStack(16), EnumHand.MAIN_HAND));
@@ -39,21 +65,15 @@ public class TileEntitySolderingTable extends BaseTileEntity {
 				}
 			}
 		}
-    	boolean flag = false;
-		for (int i = 0; i < 9; ++i){
-    		flag = false;
-            ItemStack itemstack1 = getInputStack(i);
+    	for (int i = 0; i < 9; ++i){
+    		ItemStack itemstack1 = getInputStack(i);
             if (itemstack1 != ItemStack.EMPTY) {
             	for(int j=9; j<16; j++) {
             		if(getInputStack(j) != ItemStack.EMPTY && getInputStack(j).isItemEqual(getInputStack(i))) {
         				slotsInput.extractItem(j, 1, false);
-        				flag = true;
         				break;
             		}
             	}
-                if(!flag) {
-    				slotsInput.extractItem(i, 1, false);
-                }
             }
 		}
 	}

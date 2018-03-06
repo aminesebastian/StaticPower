@@ -22,7 +22,7 @@ public class ContainerCropSqueezer extends BaseContainer {
 		this.addSlotToContainer(new StaticPowerContainerSlot(teCropSqueezer.slotsInput, 0, 80, 18) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
-		          return !SqueezerRecipeRegistry.Squeezing().getSqueezingItemResult(itemStack).isEmpty();
+		          return SqueezerRecipeRegistry.Squeezing().getSqueezingRecipe(itemStack) != null;
 		    }
 		});
 		
@@ -46,7 +46,7 @@ public class ContainerCropSqueezer extends BaseContainer {
 	}
 	@Override
 	protected boolean playerItemShiftClicked(ItemStack stack, EntityPlayer player, InventoryPlayer invPlayer, Slot slot, int slotIndex) {
-        if (!SqueezerRecipeRegistry.Squeezing().getSqueezingItemResult(stack).isEmpty() && !mergeItemStack(stack, 0)) {
+        if (SqueezerRecipeRegistry.Squeezing().getSqueezingRecipe(stack) != null && !mergeItemStack(stack, 0)) {
         	return true;
         }
         if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null) && !mergeItemStack(stack, 1)) {

@@ -28,7 +28,7 @@ public class GuiDigistore extends BaseGuiContainer {
 		super(new ContainerDigistore(invPlayer, teBarrel), 176, 150);
 		barrel = teBarrel;	
 		
-		lockedButton = new TextButton(50, 18, guiLeft+20, guiTop+20, "Locked");
+		lockedButton = new TextButton(50, 18, 20, 20, "Locked");
 		lockedButton.setToggleable(true);
 		lockedButton.setText(barrel.isLocked() ? "Locked" : "Unlocked");	
 		lockedButton.setToggled(barrel.isLocked());
@@ -71,9 +71,6 @@ public class GuiDigistore extends BaseGuiContainer {
 	@Override
 	protected void drawExtra(float f, int i, int j) {			
 		drawGenericBackground();
-		
-		lockedButton.setPosition(guiLeft+8, guiTop+26);
-		
 		drawPlayerInventorySlots(guiLeft+8, guiTop+ySize-83);
 
 		drawSlot(guiLeft + 76, guiTop + 21, 24, 24);

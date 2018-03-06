@@ -28,9 +28,9 @@ import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.items.upgrades.BaseTankUpgrade;
 import theking530.staticpower.items.upgrades.ExperienceVacuumUpgrade;
 import theking530.staticpower.items.upgrades.TeleportUpgrade;
-import theking530.staticpower.tileentity.BaseTileEntity;
+import theking530.staticpower.tileentity.TileEntityBase;
 
-public class TileEntityVacuumChest extends BaseTileEntity implements Predicate<EntityItem> {
+public class TileEntityVacuumChest extends TileEntityBase implements Predicate<EntityItem> {
 
 	private float vacuumDiamater;
 	private float initialVacuumDiamater;

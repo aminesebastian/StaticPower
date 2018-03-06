@@ -3,6 +3,7 @@ package theking530.staticpower.items.armor;
 import javax.annotation.Nullable;
 
 import net.minecraft.block.BlockDispenser;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -16,7 +17,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -30,13 +30,8 @@ import theking530.staticpower.items.armor.BaseArmor.ArmorType;
 
 public class BaseShield extends ItemShield{
 	
-	private EquipmentMaterial MATERIAL;
-	private ArmorType ARMOR_TYPE;
-	
 	public BaseShield(String name, ArmorType type, EquipmentMaterial materialIn) {	
-	    MATERIAL = materialIn;
-	    ARMOR_TYPE = type;
-		setCreativeTab(StaticPower.StaticPower);
+	    setCreativeTab(StaticPower.StaticPower);
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setMaxStackSize(1);
@@ -57,9 +52,9 @@ public class BaseShield extends ItemShield{
             String s = getUnlocalizedName();
             EnumDyeColor enumdyecolor = ItemBanner.getBaseColor(stack);
             s = s + enumdyecolor.getUnlocalizedName() + ".name";
-            return I18n.translateToLocal(s);
+            return I18n.format(s);
         } else {
-            return I18n.translateToLocal(getUnlocalizedName());
+            return I18n.format(getUnlocalizedName());
         }
     }
     @SubscribeEvent

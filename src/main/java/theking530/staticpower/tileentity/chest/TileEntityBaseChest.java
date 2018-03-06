@@ -6,9 +6,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.items.CapabilityItemHandler;
-import theking530.staticpower.tileentity.BaseTileEntity;
+import theking530.staticpower.tileentity.TileEntityBase;
 
-public class TileEntityBaseChest extends BaseTileEntity {
+public class TileEntityBaseChest extends TileEntityBase {
 
     public float lidAngle;
     public float prevLidAngle;

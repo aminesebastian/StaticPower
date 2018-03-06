@@ -192,67 +192,67 @@ public class ModBlocks {
 	
 	public static void init(Registry registry) {
 		
-		ChunkLoader = new BlockChunkLoader("ChunkLoader").setHardness(3.5f);
+		ChunkLoader = new BlockChunkLoader("ChunkLoader");
 		registry.PreRegisterBlock(ChunkLoader);		
-		HeatingElement = new BlockHeatingElement().setHardness(3.5f);
+		HeatingElement = new BlockHeatingElement();
 		registry.PreRegisterBlock(HeatingElement);
 			
-		StaticWood = new InfusedWood("StaticWood").setHardness(3.5f);
+		StaticWood = new InfusedWood("StaticWood");
 		registry.PreRegisterBlock(StaticWood);		
-		EnergizedWood = new InfusedWood("EnergizedWood").setHardness(3.5f);
+		EnergizedWood = new InfusedWood("EnergizedWood");
 		registry.PreRegisterBlock(EnergizedWood);
-		LumumWood = new InfusedWood("LumumWood").setHardness(3.5f);
+		LumumWood = new InfusedWood("LumumWood");
 		registry.PreRegisterBlock(LumumWood);
 		
-		StaticPlanks = new BaseBlock(Material.WOOD, "StaticPlanks").setHardness(3.5f);
+		StaticPlanks = new BaseBlock(Material.WOOD, "StaticPlanks");
 		registry.PreRegisterBlock(StaticPlanks);
-		EnergizedPlanks = new BaseBlock(Material.WOOD, "EnergizedPlanks").setHardness(3.5f);
+		EnergizedPlanks = new BaseBlock(Material.WOOD, "EnergizedPlanks");
 		registry.PreRegisterBlock(EnergizedPlanks);		
-		LumumPlanks = new BaseBlock(Material.WOOD, "LumumPlanks").setHardness(3.5f);
+		LumumPlanks = new BaseBlock(Material.WOOD, "LumumPlanks");
 		registry.PreRegisterBlock(LumumPlanks);
 
-		StaticCobblestone = new BaseBlock(Material.ROCK, "StaticCobblestone").setHardness(3.5f);
+		StaticCobblestone = new BaseBlock(Material.ROCK, "StaticCobblestone");
 		registry.PreRegisterBlock(StaticCobblestone);		
-		EnergizedCobblestone = new BaseBlock(Material.ROCK, "EnergizedCobblestone").setHardness(3.5f);
+		EnergizedCobblestone = new BaseBlock(Material.ROCK, "EnergizedCobblestone");
 		registry.PreRegisterBlock(EnergizedCobblestone);		
-		LumumCobblestone = new BaseBlock(Material.ROCK, "LumumCobblestone").setHardness(3.5f);
+		LumumCobblestone = new BaseBlock(Material.ROCK, "LumumCobblestone");
 		registry.PreRegisterBlock(LumumCobblestone);
 
-		StaticChest = new BlockStaticChest("StaticChest").setUnlocalizedName("StaticChest").setHardness(3.5f);
+		StaticChest = new BlockStaticChest("StaticChest").setUnlocalizedName("StaticChest");
 		registry.PreRegisterBlock(StaticChest);		
-		EnergizedChest = new BlockEnergizedChest("EnergizedChest").setUnlocalizedName("EnergizedChest").setHardness(3.5f);
+		EnergizedChest = new BlockEnergizedChest("EnergizedChest").setUnlocalizedName("EnergizedChest");
 		registry.PreRegisterBlock(EnergizedChest);		
-		LumumChest = new BlockLumumChest("LumumChest").setUnlocalizedName("LumumChest").setHardness(3.5f);
+		LumumChest = new BlockLumumChest("LumumChest").setUnlocalizedName("LumumChest");
 		registry.PreRegisterBlock(LumumChest);		
-		VacuumChest = new BlockVacuumChest("VacuumChest").setUnlocalizedName("VacuumChest").setHardness(3.5f);
+		VacuumChest = new BlockVacuumChest("VacuumChest").setUnlocalizedName("VacuumChest");
 		registry.PreRegisterBlock(VacuumChest);
 		
-		Digistore = new BlockDigistore("Digistore").setUnlocalizedName("Digistore").setHardness(3.5f);
+		Digistore = new BlockDigistore("Digistore").setUnlocalizedName("Digistore");
 		registry.PreRegisterBlock(Digistore);
 		
-		DigistoreManager = new BlockDigistoreManager("DigistoreManager").setUnlocalizedName("DigistoreManager").setHardness(3.5f);
+		DigistoreManager = new BlockDigistoreManager("DigistoreManager").setUnlocalizedName("DigistoreManager");
 		registry.PreRegisterBlock(DigistoreManager);
 			
-		DigistoreNetworkExtender = new BlockDigistoreNetworkWire("DigistoreNetworkExtender").setUnlocalizedName("DigistoreNetworkExtender").setHardness(3.5f);
+		DigistoreNetworkExtender = new BlockDigistoreNetworkWire("DigistoreNetworkExtender").setUnlocalizedName("DigistoreNetworkExtender");
 		registry.PreRegisterBlock(DigistoreNetworkExtender);
 		
-		DigistoreIOPort = new BlockDigistoreIOPort("DigistoreIOPort").setUnlocalizedName("DigistoreIOPort").setHardness(3.5f);
+		DigistoreIOPort = new BlockDigistoreIOPort("DigistoreIOPort").setUnlocalizedName("DigistoreIOPort");
 		registry.PreRegisterBlock(DigistoreIOPort);
 		
-		BasicBattery = new BlockBattery("BasicBattery", Tier.BASIC).setHardness(3.5f);
+		BasicBattery = new BlockBattery("BasicBattery", Tier.BASIC);
 		registry.PreRegisterBlock(BasicBattery);
-		StaticBattery = new BlockBattery("StaticBattery", Tier.STATIC).setHardness(3.5f);
+		StaticBattery = new BlockBattery("StaticBattery", Tier.STATIC);
 		registry.PreRegisterBlock(StaticBattery);	
-		LumumBattery = new BlockBattery("LumumBattery", Tier.LUMUM).setHardness(3.5f);
+		LumumBattery = new BlockBattery("LumumBattery", Tier.LUMUM);
 		registry.PreRegisterBlock(LumumBattery);			
-		EnergizedBattery = new BlockBattery("EnergizedBattery", Tier.ENERGIZED).setHardness(3.5f);
+		EnergizedBattery = new BlockBattery("EnergizedBattery", Tier.ENERGIZED);
 		registry.PreRegisterBlock(EnergizedBattery);
 		
 		FluidInfuser = new BlockFluidInfuser().setUnlocalizedName("FluidInfuser");
 		registry.PreRegisterBlock(FluidInfuser);		
-		FusionFurnace = new BlockFusionFurnace().setHardness(3.5f);
+		FusionFurnace = new BlockFusionFurnace();
 		registry.PreRegisterBlock(FusionFurnace);		
-		ChargingStation = new BlockChargingStation().setHardness(3.5f);
+		ChargingStation = new BlockChargingStation();
 		registry.PreRegisterBlock(ChargingStation);		
 		Quarry = new BlockQuarry();
 		registry.PreRegisterBlock(Quarry);		
@@ -272,70 +272,70 @@ public class ModBlocks {
 		registry.PreRegisterBlock(MechanicalSqueezer);		
 		Fermenter = new BlockFermenter().setUnlocalizedName("Fermenter");
 		registry.PreRegisterBlock(Fermenter);
-		PoweredGrinder = new BlockPoweredGrinder().setUnlocalizedName("PoweredGrinder").setHardness(3.5f);
+		PoweredGrinder = new BlockPoweredGrinder().setUnlocalizedName("PoweredGrinder");
 		registry.PreRegisterBlock(PoweredGrinder);	
-		PoweredFurnace = new BlockPoweredFurnace().setUnlocalizedName("PoweredFurnace").setHardness(3.5f);
+		PoweredFurnace = new BlockPoweredFurnace().setUnlocalizedName("PoweredFurnace");
 		registry.PreRegisterBlock(PoweredFurnace);
-		Former = new BlockFormer().setHardness(3.5f);
+		Former = new BlockFormer();
 		registry.PreRegisterBlock(Former);
-		Centrifuge = new BlockCentrifuge().setHardness(3.5f);
+		Centrifuge = new BlockCentrifuge();
 		registry.PreRegisterBlock(Centrifuge);
-		LumberMill = new BlockLumberMill().setHardness(3.5f);
+		LumberMill = new BlockLumberMill();
 		registry.PreRegisterBlock(LumberMill);
 		
-		EsotericEnchanter = new BlockEsotericEnchanter("EsotericEnchanter").setHardness(3.5f);
+		EsotericEnchanter = new BlockEsotericEnchanter("EsotericEnchanter");
 		registry.PreRegisterBlock(EsotericEnchanter);
 		
-		FluidRefineryController = new BlockFluidRefineryController("FluidRefineryController").setHardness(3.5f);
+		FluidRefineryController = new BlockFluidRefineryController("FluidRefineryController");
 		registry.PreRegisterBlock(FluidRefineryController);
-		FluidRefineryCasing = new BlockFluidRefineryCasing("FluidRefineryCasing").setHardness(3.5f);
+		FluidRefineryCasing = new BlockFluidRefineryCasing("FluidRefineryCasing");
 		registry.PreRegisterBlock(FluidRefineryCasing);
-		FluidRefineryFluidInterface = new BlockRefineryFluidInterface("FluidRefineryFluidInterface").setHardness(3.5f);
+		FluidRefineryFluidInterface = new BlockRefineryFluidInterface("FluidRefineryFluidInterface");
 		registry.PreRegisterBlock(FluidRefineryFluidInterface);
 		
-		FluidRefineryVent  = new BlockRefineryVent("FluidRefineryVent").setHardness(3.5f);
+		FluidRefineryVent  = new BlockRefineryVent("FluidRefineryVent");
 		registry.PreRegisterBlock(FluidRefineryVent);
-		FluidRefineryMixer  = new BlockRefineryMixer("FluidRefineryMixer").setHardness(3.5f);
+		FluidRefineryMixer  = new BlockRefineryMixer("FluidRefineryMixer");
 		registry.PreRegisterBlock(FluidRefineryMixer);
-		FluidRefineryReactor  = new BlockRefineryReactor("FluidRefineryReactor").setHardness(3.5f);
+		FluidRefineryReactor  = new BlockRefineryReactor("FluidRefineryReactor");
 		registry.PreRegisterBlock(FluidRefineryReactor);
 		
 		LogicGateBasePlate = new BlockLogicGateBasePlate(Material.IRON, "LogicGateBasePlate");
 		registry.PreRegisterBlock(LogicGateBasePlate);
-		SignalMultiplier = new BlockSignalMultiplier("SignalMultiplier").setHardness(3.5f);
+		SignalMultiplier = new BlockSignalMultiplier("SignalMultiplier");
 		registry.PreRegisterBlock(SignalMultiplier);
-		NotGate = new BlockNotGate("NotGate").setHardness(3.5f);
+		NotGate = new BlockNotGate("NotGate");
 		registry.PreRegisterBlock(NotGate);
-		PowerCell = new BlockPowerCell("PowerCell").setHardness(3.5f);
+		PowerCell = new BlockPowerCell("PowerCell");
 		registry.PreRegisterBlock(PowerCell);
-		Timer = new BlockTimer("Timer").setHardness(3.5f);
+		Timer = new BlockTimer("Timer");
 		registry.PreRegisterBlock(Timer);
-		Adder = new BlockAdder("Adder").setHardness(3.5f);
+		Adder = new BlockAdder("Adder");
 		registry.PreRegisterBlock(Adder);
-		And = new BlockAndGate("And").setHardness(3.5f);
+		And = new BlockAndGate("And");
 		registry.PreRegisterBlock(And);
-		Or = new BlockOrGate("Or").setHardness(3.5f);
+		Or = new BlockOrGate("Or");
 		registry.PreRegisterBlock(Or	);
-		Subtractor = new BlockSubtractorGate("Subtractor").setHardness(3.5f);
+		Subtractor = new BlockSubtractorGate("Subtractor");
 		registry.PreRegisterBlock(Subtractor);
-		LED = new BlockLED("LED").setHardness(3.5f);
+		LED = new BlockLED("LED");
 		registry.PreRegisterBlock(LED);
 		
-		AstralQuary = new BlockAstralQuarryBrain("AstralQuary").setHardness(3.5f);
+		AstralQuary = new BlockAstralQuarryBrain("AstralQuary");
 		registry.PreRegisterBlock(AstralQuary);
 		
-		SolderingTable = new BlockSolderingTable().setUnlocalizedName("SolderingTable").setHardness(3.5f);
+		SolderingTable = new BlockSolderingTable().setUnlocalizedName("SolderingTable");
 		registry.PreRegisterBlock(SolderingTable);
 		
-		BasicSolarPanel = new BlockSolarPanel("BasicSolarPanel", Tier.BASIC).setHardness(3.5f);
+		BasicSolarPanel = new BlockSolarPanel("BasicSolarPanel", Tier.BASIC);
 		registry.PreRegisterBlock(BasicSolarPanel);
-		StaticSolarPanel = new BlockSolarPanel("StaticSolarPanel", Tier.STATIC).setHardness(3.5f);
+		StaticSolarPanel = new BlockSolarPanel("StaticSolarPanel", Tier.STATIC);
 		registry.PreRegisterBlock(StaticSolarPanel);
-		EnergizedSolarPanel = new BlockSolarPanel("EnergizedSolarPanel", Tier.ENERGIZED).setHardness(3.5f);
+		EnergizedSolarPanel = new BlockSolarPanel("EnergizedSolarPanel", Tier.ENERGIZED);
 		registry.PreRegisterBlock(EnergizedSolarPanel);	
-		LumumSolarPanel = new BlockSolarPanel("LumumSolarPanel", Tier.LUMUM).setHardness(3.5f);
+		LumumSolarPanel = new BlockSolarPanel("LumumSolarPanel", Tier.LUMUM);
 		registry.PreRegisterBlock(LumumSolarPanel);
-		CreativeSolarPanel = new BlockSolarPanel("CreativeSolarPanel", Tier.CREATIVE).setHardness(3.5f);
+		CreativeSolarPanel = new BlockSolarPanel("CreativeSolarPanel", Tier.CREATIVE);
 		registry.PreRegisterBlock(CreativeSolarPanel);
 		
 		StaticLamp = new Lamp("StaticLamp").setUnlocalizedName("StaticLamp");
@@ -381,7 +381,7 @@ public class ModBlocks {
 		ObsidianGlass = new ObsidianGlass();
 		registry.PreRegisterBlock(ObsidianGlass);
 	
-		AdvancedEarth = new AdvancedEarth().setUnlocalizedName("AdvancedEarth").setHardness(3.5f);
+		AdvancedEarth = new AdvancedEarth().setUnlocalizedName("AdvancedEarth");
 		registry.PreRegisterBlock(AdvancedEarth);
 	
 		StaticConduit = new BlockStaticConduit();
@@ -391,23 +391,23 @@ public class ModBlocks {
 		ItemConduit = new BlockItemConduit();
 		registry.PreRegisterBlock(ItemConduit);	
 				
-		CopperOre = new Ore("CopperOre", "pickaxe", 1).setHardness(3.5f);
+		CopperOre = new Ore("CopperOre", "pickaxe", 1);
 		registry.PreRegisterBlock(CopperOre);
-		TinOre = new Ore("TinOre", "pickaxe", 1).setHardness(3.5f);
+		TinOre = new Ore("TinOre", "pickaxe", 1);
 		registry.PreRegisterBlock(TinOre);
-		SilverOre = new Ore("SilverOre", "pickaxe", 2).setHardness(3.5f);
+		SilverOre = new Ore("SilverOre", "pickaxe", 2);
 		registry.PreRegisterBlock(SilverOre);
-		LeadOre = new Ore("LeadOre", "pickaxe", 2).setHardness(3.5f);
+		LeadOre = new Ore("LeadOre", "pickaxe", 2);
 		registry.PreRegisterBlock(LeadOre);			
-		PlatinumOre = new Ore("PlatinumOre", "pickaxe", 2).setHardness(3.5f);
+		PlatinumOre = new Ore("PlatinumOre", "pickaxe", 2);
 		registry.PreRegisterBlock(PlatinumOre);	
-		NickelOre = new Ore("NickelOre", "pickaxe", 1).setHardness(3.5f);
+		NickelOre = new Ore("NickelOre", "pickaxe", 1);
 		registry.PreRegisterBlock(NickelOre);
-		AluminiumOre = new Ore("AluminiumOre", "pickaxe", 2).setHardness(3.5f);
+		AluminiumOre = new Ore("AluminiumOre", "pickaxe", 2);
 		registry.PreRegisterBlock(AluminiumOre);
-		SapphireOre = new GemOre("SapphireOre", "pickaxe", 2, ItemMaterials.gemSapphire, 1, 2).setHardness(3.5f);
+		SapphireOre = new GemOre("SapphireOre", "pickaxe", 2, ItemMaterials.gemSapphire, 1, 2);
 		registry.PreRegisterBlock(SapphireOre);
-		RubyOre = new GemOre("RubyOre", "pickaxe", 2, ItemMaterials.gemRuby, 1, 2).setHardness(3.5f);
+		RubyOre = new GemOre("RubyOre", "pickaxe", 2, ItemMaterials.gemRuby, 1, 2);
 		registry.PreRegisterBlock(RubyOre);
 	}
 }

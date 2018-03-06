@@ -30,7 +30,7 @@ import theking530.staticpower.machines.batteries.GuiBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityBattery;
 import theking530.staticpower.machines.centrifuge.ContainerCentrifuge;
 import theking530.staticpower.machines.centrifuge.GuiCentrifuge;
-import theking530.staticpower.machines.centrifuge.TileCentrifuge;
+import theking530.staticpower.machines.centrifuge.TileEntityCentrifuge;
 import theking530.staticpower.machines.chargingstation.ContainerChargingStation;
 import theking530.staticpower.machines.chargingstation.GuiChargingStation;
 import theking530.staticpower.machines.chargingstation.TileEntityChargingStation;
@@ -81,7 +81,7 @@ import theking530.staticpower.machines.refinery.controller.GuiFluidRefineryContr
 import theking530.staticpower.machines.refinery.controller.TileEntityFluidRefineryController;
 import theking530.staticpower.machines.treefarmer.ContainerTreeFarmer;
 import theking530.staticpower.machines.treefarmer.GuiTreeFarmer;
-import theking530.staticpower.machines.treefarmer.TileTreeFarmer;
+import theking530.staticpower.machines.treefarmer.TileEntityTreeFarm;
 import theking530.staticpower.tileentity.astralquary.brain.ContainerAstralQuarryBrain;
 import theking530.staticpower.tileentity.astralquary.brain.GuiAstralQuarryBrain;
 import theking530.staticpower.tileentity.astralquary.brain.TileEntityAstralQuarryBrain;
@@ -235,13 +235,13 @@ public class GuiHandler implements IGuiHandler {
 				}
 				return null;
 			case GuiIDRegistry.guiIDTreeFarmer:
-				if (entity instanceof TileTreeFarmer) {	
-					return new ContainerTreeFarmer(player.inventory, (TileTreeFarmer) entity);
+				if (entity instanceof TileEntityTreeFarm) {	
+					return new ContainerTreeFarmer(player.inventory, (TileEntityTreeFarm) entity);
 				}
 				return null;
 			case GuiIDRegistry.guiIDCentrifuge:
-				if (entity instanceof TileCentrifuge) {	
-					return new ContainerCentrifuge(player.inventory, (TileCentrifuge) entity);
+				if (entity instanceof TileEntityCentrifuge) {	
+					return new ContainerCentrifuge(player.inventory, (TileEntityCentrifuge) entity);
 				}
 				return null;
 			case GuiIDRegistry.guiIDAstralQuary:
@@ -408,12 +408,12 @@ public class GuiHandler implements IGuiHandler {
 				}
 				return null;
 			case GuiIDRegistry.guiIDTreeFarmer:
-				if (entity instanceof TileTreeFarmer) {	
-					return new GuiTreeFarmer(player.inventory, (TileTreeFarmer) entity);				
+				if (entity instanceof TileEntityTreeFarm) {	
+					return new GuiTreeFarmer(player.inventory, (TileEntityTreeFarm) entity);				
 				}
 			case GuiIDRegistry.guiIDCentrifuge:
-				if (entity instanceof TileCentrifuge) {	
-					return new GuiCentrifuge(player.inventory, (TileCentrifuge) entity);				
+				if (entity instanceof TileEntityCentrifuge) {	
+					return new GuiCentrifuge(player.inventory, (TileEntityCentrifuge) entity);				
 				}
 				return null;
 			case GuiIDRegistry.guiIDAstralQuary:

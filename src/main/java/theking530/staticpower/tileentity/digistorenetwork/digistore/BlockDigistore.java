@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.assists.utilities.WorldUtilities;
 import theking530.staticpower.client.GuiIDRegistry;
-import theking530.staticpower.tileentity.BaseTileEntity;
+import theking530.staticpower.tileentity.TileEntityBase;
 import theking530.staticpower.tileentity.digistorenetwork.BaseDigistoreBlock;
 
 public class BlockDigistore extends BaseDigistoreBlock {
@@ -49,7 +49,7 @@ public class BlockDigistore extends BaseDigistoreBlock {
 	}
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         super.breakBlock(worldIn, pos, state);
-    	if(!worldIn.isRemote && worldIn.getTileEntity(pos) instanceof BaseTileEntity) {
+    	if(!worldIn.isRemote && worldIn.getTileEntity(pos) instanceof TileEntityBase) {
     		TileEntityDigistore barrel = (TileEntityDigistore) worldIn.getTileEntity(pos);
 	        if(!barrel.wasWrenchedDoNotBreak) {
 	        	int storedAmount = barrel.getStoredAmount();

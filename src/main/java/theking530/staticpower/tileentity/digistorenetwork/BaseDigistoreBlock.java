@@ -6,9 +6,9 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import theking530.staticpower.machines.BaseMachineBlock;
+import theking530.staticpower.machines.BlockMachineBase;
 
-public abstract class BaseDigistoreBlock extends BaseMachineBlock {
+public abstract class BaseDigistoreBlock extends BlockMachineBase {
 
 	public BaseDigistoreBlock(String name) {
 		super(name);

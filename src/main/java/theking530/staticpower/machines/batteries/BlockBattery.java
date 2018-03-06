@@ -13,14 +13,14 @@ import theking530.staticpower.StaticPower;
 import theking530.staticpower.assists.Tier;
 import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.client.GuiIDRegistry;
-import theking530.staticpower.machines.BaseMachineBlock;
+import theking530.staticpower.machines.BlockMachineBase;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityBasicBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityEnergizedBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityLumumBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityStaticBattery;
 
-public class BlockBattery extends BaseMachineBlock{
+public class BlockBattery extends BlockMachineBase{
 
 	public Tier TIER;
 	

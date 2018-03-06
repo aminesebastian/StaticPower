@@ -15,9 +15,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.assists.Tier;
-import theking530.staticpower.machines.BaseMachineBlock;
+import theking530.staticpower.machines.BlockMachineBase;
 
-public class BlockSolarPanel extends BaseMachineBlock {
+public class BlockSolarPanel extends BlockMachineBase {
 
 	public Tier TIER;
 	static float PIXEL = 1F/16F;

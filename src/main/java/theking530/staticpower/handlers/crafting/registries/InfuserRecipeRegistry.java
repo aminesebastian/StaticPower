@@ -28,28 +28,12 @@ public class InfuserRecipeRegistry {
     public Map<Ingredient, FluidInfuserOutputWrapper> getInfusingRecipes() {
         return this.infusionList;
     }
-	public ItemStack getInfusingItemStackResult(ItemStack inputItemstack, FluidStack infuserfluidstack) {
+	public FluidInfuserOutputWrapper getInfusingRecipe(ItemStack inputItemstack, FluidStack infuserfluidstack, boolean ignoreFluid) {
 		for(Entry<Ingredient, FluidInfuserOutputWrapper> entry : infusionList.entrySet()) {
-			if(entry.getValue().isSatisfied(inputItemstack, infuserfluidstack)) {
-				return entry.getValue().getOutputItemStack();
-			}
-		}
-		return ItemStack.EMPTY;
-	}
-	public FluidInfuserOutputWrapper getInfusingRecipe(ItemStack inputItemstack, FluidStack infuserfluidstack) {
-		for(Entry<Ingredient, FluidInfuserOutputWrapper> entry : infusionList.entrySet()) {
-			if(entry.getValue().isSatisfied(inputItemstack, infuserfluidstack)) {
+			if(entry.getValue().isSatisfied(inputItemstack, infuserfluidstack, ignoreFluid)) {
 				return entry.getValue();
 			}
 		}
 		return null;
-	}
-	public int getInfusingFluidCost(ItemStack inputItemstack, FluidStack infuserfluidstack) {
-		for(Entry<Ingredient, FluidInfuserOutputWrapper> entry : infusionList.entrySet()) {
-			if(entry.getValue().isSatisfied(inputItemstack, infuserfluidstack)) {
-				return entry.getValue().getRequiredFluidStack().amount;
-			}
-		}
-		return -1;
 	}
 }

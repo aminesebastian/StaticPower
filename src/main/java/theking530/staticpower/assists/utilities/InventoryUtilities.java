@@ -44,10 +44,10 @@ public class InventoryUtilities {
 		items.toArray(itemArray);
 		return canInsertItemsIntoInventory(inv, itemArray);
 	}
-	public static boolean canFullyInsertItemIntoSlot(IItemHandler inv, int slot, ItemStack stack) {
+	public static boolean canFullyInsertStackIntoSlot(IItemHandler inv, int slot, ItemStack stack) {
 		return inv.insertItem(slot, stack, true).isEmpty();
 	}
-	public static boolean canInsertItemIntoSlot(IItemHandler inv, int slot, ItemStack stack) {
+	public static boolean canPartiallyInsertItemIntoSlot(IItemHandler inv, int slot, ItemStack stack) {
 		return inv.insertItem(slot, stack, true).getCount() != stack.getCount();
 	}
 	public static boolean canFullyInsertItemIntoInventory(IItemHandler inv, ItemStack stack) {
@@ -62,7 +62,7 @@ public class InventoryUtilities {
 	}
 	public static boolean canInsertItemIntoInventory(IItemHandler inv, ItemStack stack) {
 		for(int i=0; i<inv.getSlots(); i++) {
-			if(canInsertItemIntoSlot(inv, i, stack)) {
+			if(canPartiallyInsertItemIntoSlot(inv, i, stack)) {
 				return true;
 			}
 		}
@@ -80,7 +80,7 @@ public class InventoryUtilities {
 	}
 	public static ItemStack insertItemIntoInventory(IItemHandler inv, ItemStack stack, int start, int stop) {
 		for(int i=start; i<stop+1; i++) {
-			if(canInsertItemIntoSlot(inv, i, stack)) {
+			if(canPartiallyInsertItemIntoSlot(inv, i, stack)) {
 				return inv.insertItem(i, stack.copy(), false);
 			}
 		}
@@ -88,7 +88,7 @@ public class InventoryUtilities {
 	}
 	public static ItemStack fullyInsertItemIntoInventory(IItemHandler inv, ItemStack stack) {
 		for(int i=0; i<inv.getSlots(); i++) {
-			if(canFullyInsertItemIntoSlot(inv, i, stack)) {
+			if(canFullyInsertStackIntoSlot(inv, i, stack)) {
 				return inv.insertItem(i, stack, false);
 			}
 		}

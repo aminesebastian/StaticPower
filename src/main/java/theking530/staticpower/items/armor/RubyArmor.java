@@ -16,8 +16,8 @@ public class RubyArmor extends BaseArmor {
 	}
 	
 	@Override
-	public List getSetInfo() {
-		List tempList = new ArrayList();
+	public List<String>  getSetInfo() {
+		List<String>  tempList = new ArrayList<String> ();
 		tempList.add("Pay a Bodyguard: " + EnumTextFormatting.RED + "-12 Damage");
 		tempList.add("Luck: " + EnumTextFormatting.DARK_AQUA + "+4 Luck");
 		tempList.add("Don't Get Lost: " + EnumTextFormatting.GOLD + "Glowing");

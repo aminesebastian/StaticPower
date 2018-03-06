@@ -15,10 +15,10 @@ import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarFromEnergy
 
 public class GuiCentrifuge extends BaseGuiContainer{
 
-	private TileCentrifuge centrifuge;
+	private TileEntityCentrifuge centrifuge;
 	private GuiInfoTab infoTab;
 
-	public GuiCentrifuge(InventoryPlayer invPlayer, TileCentrifuge tileEntityCentrifuge) {
+	public GuiCentrifuge(InventoryPlayer invPlayer, TileEntityCentrifuge tileEntityCentrifuge) {
 		super(new ContainerCentrifuge(invPlayer, tileEntityCentrifuge), 176, 166);
 		centrifuge = tileEntityCentrifuge;
 		registerWidget(new GuiPowerBarFromEnergyStorage(tileEntityCentrifuge, 8, 62, 16, 54));

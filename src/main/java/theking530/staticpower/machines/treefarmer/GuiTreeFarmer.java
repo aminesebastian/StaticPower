@@ -24,11 +24,11 @@ import theking530.staticpower.machines.tileentitycomponents.PacketFluidContainer
 
 public class GuiTreeFarmer extends BaseGuiContainer{
 	
-	private TileTreeFarmer tileEntityFarmer;
+	private TileEntityTreeFarm tileEntityFarmer;
 	private GuiInfoTab infoTab;
 	private TextButton drawPreviewButton;
 	
-	public GuiTreeFarmer(InventoryPlayer invPlayer, TileTreeFarmer teFarmer) {
+	public GuiTreeFarmer(InventoryPlayer invPlayer, TileEntityTreeFarm teFarmer) {
 		super(new ContainerTreeFarmer(invPlayer, teFarmer), 176, 172);
 		tileEntityFarmer = teFarmer;
 		

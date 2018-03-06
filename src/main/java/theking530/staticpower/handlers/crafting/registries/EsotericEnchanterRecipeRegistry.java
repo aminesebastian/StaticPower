@@ -31,9 +31,9 @@ public class EsotericEnchanterRecipeRegistry {
     public List<EsotericEnchanterRecipeWrapper> getEnchantingRecipes() {
         return enchantingList;
     }
-	public EsotericEnchanterRecipeWrapper getEnchantingResult(ItemStack input1, ItemStack input2, ItemStack input3, FluidStack inputFluidStack) {
+	public EsotericEnchanterRecipeWrapper getEnchantingRecipe(ItemStack input1, ItemStack input2, ItemStack input3, FluidStack inputFluidStack, boolean ignoreFluid) {
 		for(EsotericEnchanterRecipeWrapper recipe : enchantingList) {
-			if(recipe.isSatisfied(input1, input2, input3, inputFluidStack)) {
+			if(recipe.isSatisfied(input1, input2, input3, inputFluidStack, ignoreFluid)) {
 				return recipe;
 			}
 		}

@@ -57,7 +57,7 @@ public class CoordinateMarker extends ItemBase {
 				player.sendMessage(new TextComponentString(EnumTextFormatting.RED + "Positions Cleared!"));
 			}
 	    }	
-		return new ActionResult(EnumActionResult.PASS, itemStack);    
+		return new ActionResult<ItemStack>(EnumActionResult.PASS, itemStack);    
 	}
     public void onUpdate(ItemStack itemstack, World world, Entity entity, int par4, boolean par5) {
     	if(entity instanceof EntityPlayer) {

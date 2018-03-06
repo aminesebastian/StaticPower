@@ -70,7 +70,6 @@ public class BlockLogicGate extends Block implements IWrenchable, IItemBlockProv
     		return true;
     	}else if (!player.isSneaking()) {
     		TileEntityBaseLogicGate entity = (TileEntityBaseLogicGate) world.getTileEntity(pos);
-    		int orientation = entity.getBlockMetadata();
     		if(entity != null) {
     			if(hitX > .25 && hitX < .75 && hitZ > .25 && hitZ < .75) {
     				if(GUI_ID != 0) {

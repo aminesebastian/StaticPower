@@ -9,9 +9,9 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.machines.BaseMachineBlock;
+import theking530.staticpower.machines.BlockMachineBase;
 
-public class BlockHeatingElement extends BaseMachineBlock{
+public class BlockHeatingElement extends BlockMachineBase{
 	
 	public BlockHeatingElement() {
 		super("HeatingElement");

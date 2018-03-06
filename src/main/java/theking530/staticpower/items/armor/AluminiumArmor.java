@@ -16,8 +16,8 @@ public class AluminiumArmor extends BaseArmor {
 	}
 	
 	@Override
-	public List getSetInfo() {
-		List tempList = new ArrayList();
+	public List<String>  getSetInfo() {
+		List<String>  tempList = new ArrayList<String> ();
 		tempList.add("Weak: " + EnumTextFormatting.RED + "-4 Attack");
 		tempList.add("Quick: " + EnumTextFormatting.DARK_AQUA + "+20% Speed");
 		return tempList;

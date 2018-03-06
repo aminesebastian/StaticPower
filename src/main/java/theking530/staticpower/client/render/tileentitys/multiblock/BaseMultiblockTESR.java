@@ -5,9 +5,9 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
 import theking530.staticpower.client.model.ModelBlock;
-import theking530.staticpower.tileentity.BaseTileEntity;
+import theking530.staticpower.tileentity.TileEntityBase;
 
-public class BaseMultiblockTESR <T extends BaseTileEntity> extends TileEntitySpecialRenderer<T> {
+public class BaseMultiblockTESR <T extends TileEntityBase> extends TileEntitySpecialRenderer<T> {
 	
 	protected static final ModelBlock BLOCK = new ModelBlock();
 	

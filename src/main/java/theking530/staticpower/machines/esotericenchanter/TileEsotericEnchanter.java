@@ -16,14 +16,15 @@ import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.assists.utilities.SideUtilities.BlockSide;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.handlers.crafting.registries.EsotericEnchanterRecipeRegistry;
-import theking530.staticpower.machines.BaseMachineWithTank;
+import theking530.staticpower.handlers.crafting.wrappers.EsotericEnchanterRecipeWrapper;
+import theking530.staticpower.machines.TileEntityMachineWithTank;
 import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
 import theking530.staticpower.tileentity.SideConfiguration;
 
-public class TileEsotericEnchanter extends BaseMachineWithTank {
+public class TileEsotericEnchanter extends TileEntityMachineWithTank {
 
 	private ItemStack nextOutputItemStack;
 	private int fluidLeftToExtract;
@@ -44,20 +45,37 @@ public class TileEsotericEnchanter extends BaseMachineWithTank {
 		
 		registerComponent(new TileEntityItemOutputServo(this, 1, slotsOutput, 0));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, Mode.Input, 0, 1, 2));
+		
+		setName("container.EsotericEnchanter");
 	}
 	
 	@Override
+	public boolean hasValidRecipe() {
+		return EsotericEnchanterRecipeRegistry.Enchanting().getEnchantingRecipe(getInputStack(0), getInputStack(1), getInputStack(2), null, true) != null;
+	}
+	@Override
+	public boolean canProcess() {
+		EsotericEnchanterRecipeWrapper recipe =  EsotericEnchanterRecipeRegistry.Enchanting().getEnchantingRecipe(getInputStack(0), getInputStack(1), getInputStack(2), fluidTank.getFluid(), false);
+		if(recipe != null && InventoryUtilities.canFullyInsertStackIntoSlot(slotsOutput, 0, recipe.getOutputItemStack())) {
+			if(getEnergyStorage().getEnergyStored() > getProcessingEnergy()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	@Override
 	public void process() {
 		if(!getWorld().isRemote) {
-			if(!isProcessing() && !isMoving() && getOutputStack(0).isEmpty() && energyStorage.getEnergyStored() >= getProcessingCost() && EsotericEnchanterRecipeRegistry.Enchanting().getEnchantingResult(getInputStack(0), getInputStack(1), getInputStack(2), fluidTank.getFluid()) != null) {
+			if(!isProcessing() && !isMoving() && canProcess()) {
 				moveTimer = 1;
 			}	
-			if(!isProcessing() && isMoving() && EsotericEnchanterRecipeRegistry.Enchanting().getEnchantingResult(getInputStack(0), getInputStack(1), getInputStack(2), fluidTank.getFluid()) != null) {
+			if(!isProcessing() && isMoving() && canProcess()) {
 				if(moveTimer < moveSpeed) {
 					moveTimer++;
 				}else{
-					nextOutputItemStack = EsotericEnchanterRecipeRegistry.Enchanting().getEnchantingResult(getInputStack(0), getInputStack(1), getInputStack(2), fluidTank.getFluid()).getOutputItemStack().copy();
-					fluidLeftToExtract = EsotericEnchanterRecipeRegistry.Enchanting().getEnchantingResult(getInputStack(0), getInputStack(1), getInputStack(2), fluidTank.getFluid()).getInputFluidStack().amount;
+					EsotericEnchanterRecipeWrapper recipe =  EsotericEnchanterRecipeRegistry.Enchanting().getEnchantingRecipe(getInputStack(0), getInputStack(1), getInputStack(2), fluidTank.getFluid(), false);
+					nextOutputItemStack = recipe.getOutputItemStack().copy();
+					fluidLeftToExtract = recipe.getInputFluidStack().amount;
 						
 					transferItemInternally(slotsInput, 0, slotsInternal, 0);
 					transferItemInternally(slotsInput, 1, slotsInternal, 1);
@@ -72,7 +90,7 @@ public class TileEsotericEnchanter extends BaseMachineWithTank {
 			}
 			if(isProcessing() && !isMoving()) {
 				if(processingTimer < processingTime) {
-					useEnergy(getProcessingCost() / processingTime);
+					useEnergy(getProcessingEnergy() / processingTime);
 					int drainAmount = fluidRequired/processingTime;
 					fluidLeftToExtract -= drainAmount;
 					fluidTank.drain(drainAmount, true);
@@ -82,29 +100,16 @@ public class TileEsotericEnchanter extends BaseMachineWithTank {
 					processingTimer=0;
 					fluidTank.drain(fluidLeftToExtract, true);
 					updateBlock();
-					if(InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 0, nextOutputItemStack)) {
+					if(!nextOutputItemStack.isEmpty() && InventoryUtilities.canFullyInsertStackIntoSlot(slotsOutput, 0, nextOutputItemStack)) {
 						InventoryUtilities.insertItemIntoInventory(slotsOutput, nextOutputItemStack, 0, 0);
 						setInternalStack(0, ItemStack.EMPTY);
 						setInternalStack(1, ItemStack.EMPTY);
 						setInternalStack(2, ItemStack.EMPTY);
-						moveTimer = 0;
 					}
 				}
 			}
 		}
 	}
-	@Override
-	public ItemStack getResult(ItemStack itemstack) {
-		return null;	
-	}	
-	@Override
-	public boolean canProcess(ItemStack itemstack) {
-		return false;
-	}
-	@Override
-    public String getName(){
-    	return "container.EsotericEnchanter";
-    }
 	public FluidContainerComponent getFluidInteractionComponent() {
 		return fluidContainerComponent;
 	}

@@ -10,13 +10,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import theking530.staticpower.handlers.crafting.registries.CondenserRecipeRegistry;
-import theking530.staticpower.machines.BaseMachineWithTank;
+import theking530.staticpower.machines.TileEntityMachineWithTank;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
 
-public class TileEntityCondenser extends BaseMachineWithTank  {
+public class TileEntityCondenser extends TileEntityMachineWithTank  {
 
 	public FluidTank fluidTankEthanol;
 	

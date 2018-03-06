@@ -42,7 +42,7 @@ public class EsotericEnchanterRecipeWrapper {
 	public FluidStack getInputFluidStack() {
 		return inputFluidStack;
 	}
-	public boolean isSatisfied(ItemStack input1, ItemStack input2, ItemStack input3, FluidStack inputFluid) {
+	public boolean isSatisfied(ItemStack input1, ItemStack input2, ItemStack input3, FluidStack inputFluid, boolean ignoreFluid) {
 		if(inputIngredient1 != null && !input1.isEmpty() && inputIngredient1.apply(input1)) {
 			ArrayList<ItemStack> tempInputs = new ArrayList<ItemStack>();
 			tempInputs.add(input1);
@@ -71,8 +71,10 @@ public class EsotericEnchanterRecipeWrapper {
 				}
 			}
 			
-			if(tempInputs.size() == 0 && inputFluid != null && inputFluid.isFluidEqual(inputFluidStack) && inputFluid.amount >= inputFluidStack.amount) {
-				return true;
+			if(tempInputs.size() == 0 && inputFluid != null) {
+				if(ignoreFluid || (inputFluid.isFluidEqual(inputFluidStack) && inputFluid.amount >= inputFluidStack.amount)) {
+					return true;
+				}
 			}
 		}
 		return false;

@@ -60,6 +60,9 @@ public class GrinderOutputWrapper {
 		}
 		return 0f;
 	}
+	public boolean isSatisfied(ItemStack input) {
+		return !input.isEmpty() && inputItem.apply(input);
+	}
 	public static GrinderOutput getnullOutput() {
 		return new GrinderOutput(null, 0);
 	}
@@ -84,5 +87,5 @@ public class GrinderOutputWrapper {
 			return PERCENTAGE;
 		}
 	}
-
+	
 }

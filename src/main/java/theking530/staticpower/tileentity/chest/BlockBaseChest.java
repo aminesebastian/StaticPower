@@ -5,9 +5,9 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import theking530.staticpower.machines.BaseMachineBlock;
+import theking530.staticpower.machines.BlockMachineBase;
 
-public class BlockBaseChest extends BaseMachineBlock{
+public class BlockBaseChest extends BlockMachineBase{
 
 	//private final Random rand = new Random();
     private static final AxisAlignedBB AA_BB = new AxisAlignedBB(0.05D, 0.0D, 0.05D, 0.95D, 0.9D, 0.95D);

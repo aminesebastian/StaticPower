@@ -16,8 +16,8 @@ public class LeadArmor extends BaseArmor {
 	}
 	
 	@Override
-	public List getSetInfo() {
-		List tempList = new ArrayList();
+	public List<String>  getSetInfo() {
+		List<String>  tempList = new ArrayList<String> ();
 		tempList.add("Heavy: " + EnumTextFormatting.RED + "-30% Speed");
 		tempList.add("Dense: " + EnumTextFormatting.DARK_AQUA + "+10 Hearts");
 		tempList.add("Tough: " + EnumTextFormatting.DARK_AQUA + "+20% Resistance");

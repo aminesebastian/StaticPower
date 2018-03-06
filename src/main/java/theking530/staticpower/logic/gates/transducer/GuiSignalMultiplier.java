@@ -22,11 +22,6 @@ public class GuiSignalMultiplier extends GuiContainer{
 		this.xSize = 138;
 		this.ySize = 86;		
 	}
-	public void drawScreen(int par1, int par2, float par3) {
-	    	super.drawScreen(par1, par2, par3);
-	    	int var1 = (this.width - this.xSize) / 2;
-	        int var2 = (this.height - this.ySize) / 2;       
-	}
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = I18n.format(this.sMultiplier.getName());
 		String input = String.valueOf(sMultiplier.INPUT_SIGNAL_LIMIT);
@@ -114,6 +109,8 @@ public class GuiSignalMultiplier extends GuiContainer{
 	}	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
+    	this.drawDefaultBackground();
+    	
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.MULTIPLIER_GUI);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);

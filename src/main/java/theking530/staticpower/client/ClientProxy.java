@@ -60,7 +60,7 @@ import theking530.staticpower.machines.basicfarmer.TileEntityBasicFarmer;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityEnergizedBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityLumumBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityStaticBattery;
-import theking530.staticpower.machines.centrifuge.TileCentrifuge;
+import theking530.staticpower.machines.centrifuge.TileEntityCentrifuge;
 import theking530.staticpower.machines.chargingstation.TileEntityChargingStation;
 import theking530.staticpower.machines.condenser.TileEntityCondenser;
 import theking530.staticpower.machines.cropsqueezer.TileEntityCropSqueezer;
@@ -81,7 +81,7 @@ import theking530.staticpower.machines.refinery.fluidinterface.TileEntityRefiner
 import theking530.staticpower.machines.refinery.mixer.TileEntityRefineryMixer;
 import theking530.staticpower.machines.refinery.reactor.TileEntityRefineryReactor;
 import theking530.staticpower.machines.refinery.vent.TileEntityRefineryVent;
-import theking530.staticpower.machines.treefarmer.TileTreeFarmer;
+import theking530.staticpower.machines.treefarmer.TileEntityTreeFarm;
 import theking530.staticpower.tileentity.chest.energizedchest.TileEntityEnergizedChest;
 import theking530.staticpower.tileentity.chest.lumumchest.TileEntityLumumChest;
 import theking530.staticpower.tileentity.chest.staticchest.TileEntityStaticChest;
@@ -122,9 +122,9 @@ public class ClientProxy extends CommonProxy {
 		//Farmer
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBasicFarmer.class, new TileEntityRenderFarmer());	
 		//Tree Farmer
-		ClientRegistry.bindTileEntitySpecialRenderer(TileTreeFarmer.class, new TileEntityRenderTreeFarmer());	
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTreeFarm.class, new TileEntityRenderTreeFarmer());	
 		//Centrifuge
-		ClientRegistry.bindTileEntitySpecialRenderer(TileCentrifuge.class, new TileEntityRenderCentrifuge());	
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCentrifuge.class, new TileEntityRenderCentrifuge());	
 		//Centrifuge
 		ClientRegistry.bindTileEntitySpecialRenderer(TileLumberMill.class, new TileEntityRenderLumberMill());	
 		

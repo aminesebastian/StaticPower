@@ -38,7 +38,6 @@ public class TileEntityRenderDigistore extends TileEntitySpecialRenderer<TileEnt
 			GL11.glRotated(90, 0, 1, 0);
 			GL11.glTranslated(-1, 0, 0);
 		}
-		//drawItemBackground(tileentity, translationX, translationY, translationZ,f, dest, alpha);
 		drawItem(tileentity, translationX, translationY, translationZ, f, dest, alpha);
 		drawFillBar(tileentity, translationX, translationY, translationZ, f, dest, alpha);
 		drawText(tileentity, translationX, translationY, translationZ, f, dest, alpha);
@@ -55,7 +54,7 @@ public class TileEntityRenderDigistore extends TileEntitySpecialRenderer<TileEnt
 	        
 	        GlStateManager.pushMatrix();
 	        RenderHelper.enableStandardItemLighting();
-
+	        GlStateManager.disableLighting();
 	        double scale = 0.02;
 	        GlStateManager.scale(scale, -scale, scale/10);
 	        GlStateManager.translate(17, -37, 404);

@@ -11,7 +11,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import theking530.staticpower.handlers.crafting.registries.CondenserRecipeRegistry;
 import theking530.staticpower.handlers.crafting.registries.DistilleryRecipeRegistry;
-import theking530.staticpower.machines.BaseMachineWithTank;
+import theking530.staticpower.machines.TileEntityMachineWithTank;
 import theking530.staticpower.machines.condenser.TileEntityCondenser;
 import theking530.staticpower.machines.heatingelement.HeatStorage;
 import theking530.staticpower.machines.heatingelement.IHeatable;
@@ -20,7 +20,7 @@ import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputS
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
 
-public class TileEntityDistillery extends BaseMachineWithTank implements IHeatable{
+public class TileEntityDistillery extends TileEntityMachineWithTank implements IHeatable{
 
 	public HeatStorage heatStorage;
 	public FluidTank fluidTank2;

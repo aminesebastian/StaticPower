@@ -17,7 +17,7 @@ import theking530.staticpower.machines.tileentitycomponents.slots.UpgradeSlot;
 
 public class ContainerCentrifuge extends BaseContainer {
 	
-	public ContainerCentrifuge(InventoryPlayer invPlayer, TileCentrifuge teCentrifuge) {
+	public ContainerCentrifuge(InventoryPlayer invPlayer, TileEntityCentrifuge teCentrifuge) {
 		//Input
 		addSlotToContainer(new StaticPowerContainerSlot(teCentrifuge.slotsInput, 0, 80, 20));
 		addSlotToContainer(new StaticPowerContainerSlot(new ItemStack(Items.FLINT), teCentrifuge.slotsInput, 1, 40, 30).setMode(Mode.Input2));

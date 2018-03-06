@@ -24,31 +24,16 @@ public class SqueezerRecipeRegistry {
 	public Map<ItemStack, SqueezerOutputWrapper> getSqueezingRecipes() {
 		return SQUEEZE_MAP;
 	}
-	public ItemStack getSqueezingItemResult(ItemStack input) {
-	    Iterator<?> iterator = SQUEEZE_MAP.entrySet().iterator();
-	    Entry<?, ?> pair;
-	    do {
-	    	if(!iterator.hasNext()) {
-	    		return ItemStack.EMPTY;
-	    	}
-	    	pair = (Entry<?, ?>) iterator.next();
-	    }while(!isValidRecipe(pair, input));
-	    
-	    SqueezerOutputWrapper outputWrapper = (SqueezerOutputWrapper)pair.getValue();
-		return outputWrapper.getOutputItem();
-	}
-	public FluidStack getSqueezingFluidResult(ItemStack input) {
-	    Iterator<?> iterator = SQUEEZE_MAP.entrySet().iterator();
-	    Entry<?, ?> pair;
+	public SqueezerOutputWrapper getSqueezingRecipe(ItemStack input) {
+	    Iterator<Entry<ItemStack, SqueezerOutputWrapper>> iterator = SQUEEZE_MAP.entrySet().iterator();
+	    Entry<ItemStack, SqueezerOutputWrapper> pair;
 	    do {
 	    	if(!iterator.hasNext()) {
 	    		return null;
 	    	}
-	    	pair = (Entry<?, ?>) iterator.next();
+	    	pair = iterator.next();
 	    }while(!isValidRecipe(pair, input));
-	    
-	    SqueezerOutputWrapper outputWrapper = (SqueezerOutputWrapper)pair.getValue();	
-		return outputWrapper.getOutputFluid();
+		return pair.getValue();
 	}
 	public boolean isValidRecipe(Entry<?, ?> entry, ItemStack input) {
 		if(entry == null) {

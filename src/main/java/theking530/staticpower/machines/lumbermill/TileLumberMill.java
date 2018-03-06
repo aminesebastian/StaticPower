@@ -4,14 +4,14 @@ import net.minecraft.item.ItemStack;
 import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.handlers.crafting.registries.LumberMillRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.LumberMillRecipeWrapper;
-import theking530.staticpower.machines.BaseMachineWithTank;
+import theking530.staticpower.machines.TileEntityMachineWithTank;
 import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
 
-public class TileLumberMill extends BaseMachineWithTank {
+public class TileLumberMill extends TileEntityMachineWithTank {
 
 	public TileLumberMill() {
 		initializeSlots(4, 1, 2);
@@ -24,37 +24,35 @@ public class TileLumberMill extends BaseMachineWithTank {
 		FluidContainerComponent drainComponent;
 		registerComponent(drainComponent = new FluidContainerComponent("BucketDrain", slotsInternal, 2, slotsInternal, 3, this, fluidTank));
 		drainComponent.setMode(FluidContainerInteractionMode.DRAIN);
-	}
-	@Override
-	public String getName() {
-		return "container.LumberMill";		
-	}			
+		setName("container.LumberMill");
+		setCanFillExternally(false);
+	}	
 	
 	//Functionality
-	public boolean hasResult(ItemStack itemStack) {
-		return LumberMillRecipeRegistry.Milling().getMillingRecipe(itemStack) != null;
+	@Override
+	public boolean hasValidRecipe() {
+		return LumberMillRecipeRegistry.Milling().getMillingRecipe(slotsInput.getStackInSlot(0)) != null;
 	}
 	@Override
-	public boolean canProcess(ItemStack itemStack) {
-		if(hasResult(itemStack)) {
-			LumberMillRecipeWrapper recipe = LumberMillRecipeRegistry.Milling().getMillingRecipe(itemStack);
-			if(InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 0, recipe.getMainOutput()) && energyStorage.getEnergyStored() >= getProcessingCost()) {
-				if(!recipe.getSecondaryOutput().isEmpty()) {
-					if(!InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 1, recipe.getSecondaryOutput())) {
-						return false;
-					}
+	public boolean canProcess() {
+		if(hasValidRecipe()) {
+			LumberMillRecipeWrapper recipe = LumberMillRecipeRegistry.Milling().getMillingRecipe(slotsInput.getStackInSlot(0));
+			if(InventoryUtilities.canFullyInsertStackIntoSlot(slotsOutput, 0, recipe.getMainOutput()) && energyStorage.getEnergyStored() >= getProcessingEnergy()) {
+				if(!recipe.hasOutputFluid() || (recipe.hasOutputFluid() && fluidTank.canFill(recipe.getOutputFluid()))) {
+					if(recipe.getSecondaryOutput().isEmpty() || (!recipe.getSecondaryOutput().isEmpty() && InventoryUtilities.canFullyInsertStackIntoSlot(slotsOutput, 1, recipe.getSecondaryOutput()))) {
+						return true;
+					}	
 				}
-				return true;
 			}
 		}
 		return false;
 	}
 	public void process() {
 		if(!getWorld().isRemote) {
-			if(!isProcessing() && !isMoving() && canProcess(getInputStack(0))) {
+			if(canProcess() && !isProcessing() && !isMoving()) {
 				moveTimer++;
 			}
-			if(!isProcessing() && isMoving() && canProcess(getInputStack(0))) {
+			if(canProcess() && !isProcessing() && isMoving()) {
 				if(moveTimer < moveSpeed) {
 					moveTimer++;
 				}else{
@@ -63,18 +61,23 @@ public class TileLumberMill extends BaseMachineWithTank {
 					moveTimer = 0;
 					updateBlock();
 				}
+			}else{
+				moveTimer = 0;
 			}
 			if(isProcessing() && !isMoving()) {
 				if(processingTimer < processingTime) {
-					useEnergy(getProcessingCost() / processingTime);
+					useEnergy(getProcessingEnergy() / processingTime);
 					processingTimer++;
 				}else{
 					processingTimer=0;
 					updateBlock();
 					LumberMillRecipeWrapper recipe = LumberMillRecipeRegistry.Milling().getMillingRecipe(getInternalStack(0));
-					if(InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 0, recipe.getMainOutput()) && InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 1, recipe.getSecondaryOutput())) {
+					if(InventoryUtilities.canFullyInsertStackIntoSlot(slotsOutput, 0, recipe.getMainOutput()) && InventoryUtilities.canFullyInsertStackIntoSlot(slotsOutput, 1, recipe.getSecondaryOutput())) {
 						slotsOutput.insertItem(0, recipe.getMainOutput().copy(), false);
 						slotsOutput.insertItem(1, recipe.getSecondaryOutput().copy(), false);
+						if(recipe.hasOutputFluid()) {
+							fluidTank.fill(recipe.getOutputFluid(), true);
+						}
 						setInternalStack(0, ItemStack.EMPTY);
 						moveTimer = 0;
 					}

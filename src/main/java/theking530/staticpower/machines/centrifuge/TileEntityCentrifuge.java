@@ -12,19 +12,19 @@ import theking530.staticpower.assists.utilities.SideUtilities;
 import theking530.staticpower.assists.utilities.SideUtilities.BlockSide;
 import theking530.staticpower.handlers.crafting.registries.CentrifugeRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.CentrifugeRecipeWrapper;
-import theking530.staticpower.machines.BaseMachine;
+import theking530.staticpower.machines.TileEntityMachine;
 import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
 import theking530.staticpower.tileentity.SideConfiguration;
 
-public class TileCentrifuge extends BaseMachine {
+public class TileEntityCentrifuge extends TileEntityMachine {
 	public static final int DEFAULT_MAX_ROTATION_SPEED = 1000;
 	private int rotationSpeed;
 	private int maxRotationSpeed = DEFAULT_MAX_ROTATION_SPEED;
 	private float multiplier;
 	
-	public TileCentrifuge() {
+	public TileEntityCentrifuge() {
 		multiplier = 0.0f;
 		
 		initializeSlots(2, 2, 3);
@@ -34,7 +34,10 @@ public class TileCentrifuge extends BaseMachine {
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, Mode.Input2, 1));
 	}
-		
+	@Override
+	public String getName() {
+		return "container.Centrifuge";		
+	}
 	public int getRotationSpeed() {
 		return rotationSpeed;
 	}
@@ -45,23 +48,18 @@ public class TileCentrifuge extends BaseMachine {
 		return multiplier;
 	}
 	
-	
-	//IInventory				
-	@Override
-	public String getName() {
-		return "container.Centrifuge";		
-	}
-	
    	public List<ItemStack> getResult() {
    		CentrifugeRecipeWrapper recipe = CentrifugeRecipeRegistry.Centrifuging().getRecipe(slotsInput.getStackInSlot(0), rotationSpeed);
 		return recipe != null ? recipe.getOutputItems() : null;
 	}
-	public boolean hasResult() {
+	@Override   	
+	public boolean hasValidRecipe() {
 		return getResult() != null;
 	}
+	@Override
 	public boolean canProcess() {
-		if(hasResult()) {
-			if(energyStorage.getEnergyStored() >= getProcessingCost()) {
+		if(hasValidRecipe()) {
+			if(energyStorage.getEnergyStored() >= getProcessingEnergy()) {
 				List<ItemStack>items = getResult();
 				if(items != null) {
 					return InventoryUtilities.canInsertItemsIntoInventory(slotsOutput, items);
@@ -113,7 +111,7 @@ public class TileCentrifuge extends BaseMachine {
 			}
 			if(isProcessing() && !isMoving()) {
 				if(processingTimer < processingTime) {
-					useEnergy(getProcessingCost() / processingTime);
+					useEnergy(getProcessingEnergy() / processingTime);
 					processingTimer++;
 				}else{
 					List<ItemStack> items = CentrifugeRecipeRegistry.Centrifuging().getOutputs(slotsInternal.getStackInSlot(0), rotationSpeed);

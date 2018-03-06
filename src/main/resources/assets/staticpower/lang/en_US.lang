@@ -229,7 +229,7 @@ tile.CropGeneratorIdle.name=Crop Generator
 tile.CropGeneratorActive.name=Crop Generator
 tile.FluidInfuser.name=Fluid Infuser
 tile.FluidGenerator.name=Fluid Generator
-tile.CropSqueezer.name=Crop Squeezer
+tile.CropSqueezer.name=Squeezer
 tile.PoweredGrinder.name=Powered Grinder
 tile.PoweredFurnace.name=Powered Furnace
 tile.FusionFurnace.name=Fusion Furnace
@@ -252,7 +252,7 @@ tile.CreativeSolarPanel.name=Creative Solar Panel
 tile.SolderingTable.name=Soldering Table
 tile.Quarry.name=Quarry
 tile.BasicFarmer.name=Basic Farmer
-tile.TreeFarmer.name=Tree Farmer
+tile.TreeFarmer.name=Powered Lumberjack
 tile.ChargingStation.name=Charging Station
 tile.Fermenter.name=Fermenter
 tile.HeatingElement.name=Heating Element 
@@ -376,7 +376,7 @@ tile.LED.name=LED
 
 //GUI
 container.CropGenerator=Crop Generator
-container.CropSqueezer=Crop Squeezer
+container.CropSqueezer=Squeezer
 container.FluidInfuser=Fluid Infuser
 container.FluidGenerator=Fluid Generator
 container.PoweredGrinder=Powered Grinder
@@ -384,7 +384,7 @@ container.PoweredFurnace=Powered Furnace
 container.FusionFurnace=Fusion Furnace
 container.Multi-MachineController=Machine Controller
 container.BasicFarmer=Basic Farmer
-container.TreeFarmer=Tree Farmer
+container.TreeFarmer=Powered Lumberjack
 container.StaticBattery=Static Battery
 container.EnergizedBattery=Energized Battery
 container.LumumBattery=Lumum Battery
@@ -409,6 +409,9 @@ container.EsotericEnchanter=Esoteric Enchanter
 container.Centrifuge=Supersonic Centrifuge
 container.FluidRefineryController=Fluid Refinery Controller
 container.LumberMill=Lumber Mill
+container.Quarry=Quarry
+container.MechanicalSqueezer=Mechanical Squeezer
+
 
 //Tools
 item.StaticWrench.name=Static Wrench

@@ -16,8 +16,8 @@ public class TinArmor extends BaseArmor {
 	}
 	
 	@Override
-	public List getSetInfo() {
-		List tempList = new ArrayList();
+	public List<String>  getSetInfo() {
+		List<String>  tempList = new ArrayList<String> ();
 		tempList.add("Glass: " + EnumTextFormatting.RED + "-1 Heart Per 5 Seconds");
 		tempList.add("Cannon: " + EnumTextFormatting.DARK_AQUA + "+12 Damage");
 		return tempList;

@@ -16,8 +16,8 @@ public class SilverArmor extends BaseArmor {
 	}
 	
 	@Override
-	public List getSetInfo() {
-		List tempList = new ArrayList();
+	public List<String>  getSetInfo() {
+		List<String>  tempList = new ArrayList<String> ();
 		tempList.add("Holy Light: " + EnumTextFormatting.RED + "Blinded");
 		tempList.add("Lucky: " + EnumTextFormatting.DARK_AQUA + "+10 Luck");
 		tempList.add("Angelic: " + EnumTextFormatting.GOLD + "Visible Through Blocks");

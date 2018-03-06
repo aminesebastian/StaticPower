@@ -11,9 +11,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.GuiIDRegistry;
-import theking530.staticpower.machines.BaseMachineBlock;
+import theking530.staticpower.machines.BlockMachineBase;
 
-public class BlockTreeFarmer extends BaseMachineBlock{
+public class BlockTreeFarmer extends BlockMachineBase{
 
 	public BlockTreeFarmer() {
 		super("TreeFarmer");
@@ -26,7 +26,7 @@ public class BlockTreeFarmer extends BaseMachineBlock{
     	if (world.isRemote) {
     		return true;
     	}else if (!player.isSneaking()) {
-    		TileTreeFarmer entity = (TileTreeFarmer) world.getTileEntity(pos);
+    		TileEntityTreeFarm entity = (TileEntityTreeFarm) world.getTileEntity(pos);
     		if (entity != null) {
     			FMLNetworkHandler.openGui(player, StaticPower.staticpower, GuiIDRegistry.guiIDTreeFarmer, world, pos.getX(), pos.getY(), pos.getZ());
 
@@ -38,6 +38,6 @@ public class BlockTreeFarmer extends BaseMachineBlock{
 	}
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
-		return new TileTreeFarmer();
+		return new TileEntityTreeFarm();
 	}
 }

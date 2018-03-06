@@ -3,21 +3,22 @@ package theking530.staticpower.machines.mechanicalsqueezer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import theking530.staticpower.assists.utilities.InventoryUtilities;
+import theking530.staticpower.fluids.StaticTankStorage;
 import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistry;
+import theking530.staticpower.handlers.crafting.wrappers.SqueezerOutputWrapper;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
-import theking530.staticpower.tileentity.BaseTileEntity;
+import theking530.staticpower.tileentity.TileEntityBase;
 import theking530.staticpower.tileentity.IProcessing;
 
-public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFluidHandler, IProcessing {
+public class TileEntityMechanicalSqueezer extends TileEntityBase implements IFluidHandler, IProcessing {
 
-	public FluidTank fluidTank;
+	public StaticTankStorage fluidTank;
 	public int processingTimer = 0;
 	public int processingTime = 20;
 	public int moveTimer = 0;
@@ -26,16 +27,14 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFlu
 	
 	public TileEntityMechanicalSqueezer() {
 		initializeSlots(3, 1, 1);
-		fluidTank = new FluidTank(1000);
+		fluidTank = new StaticTankStorage("MainFluidTank", 1000);
 		this.registerComponent(new FluidContainerComponent("BucketDrain", slotsInternal, 1, slotsInternal, 2, this, fluidTank, fluidToContainerRate));
 		
 		registerComponent(new TileEntityItemOutputServo(this, 1, slotsOutput, 0));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0));
+		setName("container.MechanicalSqueezer");
 	}
-	@Override
-	public String getName() {
-		return "Mechanical Squeezer";		
-	}		
+	
 	
 	public void readFromSyncNBT(NBTTagCompound nbt) {
         fluidTank.readFromNBT(nbt);
@@ -62,44 +61,20 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFlu
 	}
 	
     /*Process*/
-	public ItemStack getResult(ItemStack itemStack) {
-		return SqueezerRecipeRegistry.Squeezing().getSqueezingItemResult(itemStack);
+    @Override
+	public boolean hasValidRecipe() {
+		return SqueezerRecipeRegistry.Squeezing().getSqueezingRecipe(slotsInput.getStackInSlot(0)) != null;
 	}
-	public boolean hasResult(ItemStack itemstack) {
-		if(itemstack != null && getResult(itemstack) != ItemStack.EMPTY) {
-			return true;
+	public boolean canProcess() {
+		if(hasValidRecipe()) {
+			SqueezerOutputWrapper recipe = SqueezerRecipeRegistry.Squeezing().getSqueezingRecipe(slotsInput.getStackInSlot(0));
+			if(InventoryUtilities.canFullyInsertStackIntoSlot(slotsOutput, 0, recipe.getOutputItem())) {
+				if(fluidTank.canFill(recipe.getOutputFluid())) {
+					return true;
+				}
+			}
 		}
 		return false;
-	}
-	public FluidStack getFluidResult(ItemStack itemStack) {
-    	if(itemStack != null) {
-    		return SqueezerRecipeRegistry.Squeezing().getSqueezingFluidResult(itemStack);
-    	}
-    	return null;
-    }
-	public boolean canProcess(ItemStack itemstack) {
-		FluidStack fluidstack = SqueezerRecipeRegistry.Squeezing().getSqueezingFluidResult(itemstack);
-		if(hasResult(itemstack) && fluidstack != null && InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 0, getResult(itemstack))) {
-			if (fluidTank.getFluid() != null && !fluidstack.isFluidEqual(fluidTank.getFluid())) {
-				return false;
-			}
-			if(fluidTank.getFluid() == null) {
-				return true;
-			}
-			if(fluidTank.getFluidAmount() + fluidstack.amount > fluidTank.getCapacity()) {
-				return false;
-			}
-			if (fluidTank.getFluid() != null && fluidstack.isFluidEqual(fluidTank.getFluid())) {
-				return true;
-			}				
-		}
-		return false;
-	}
-	public boolean isProcessing(){
-		return processingTimer > 0;
-	}
-	public boolean isMoving(){
-		return moveTimer > 0;
 	}
 	public int getProgressScaled(int i) {
 		float ratio = (float)processingTimer/(float)processingTime;
@@ -107,15 +82,12 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFlu
 	}
 	public void rightClick() {
 		if(!getWorld().isRemote) {
-			if(slotsInternal.getStackInSlot(0) == ItemStack.EMPTY){
-				processingTimer = 0;
-			}
 			//Start Process
-			if(!isProcessing() && !isMoving() && canProcess(slotsInput.getStackInSlot(0))) {
+			if(canProcess() && !isProcessing() && !isMoving()) {
 				moveTimer = 1;
 			}
 			//Start Moving
-			if(!isProcessing() && isMoving() && canProcess(slotsInput.getStackInSlot(0))) {
+			if(canProcess() && !isProcessing() && isMoving()) {
 				moveTimer++;
 				if(moveTimer >= moveTime) {
 					moveTimer = 0;
@@ -126,14 +98,15 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFlu
 				moveTimer = 0;
 			}
 			//Start Processing
-			if(isProcessing() && !isMoving() && canProcess(slotsInternal.getStackInSlot(0))) {
+			if(isProcessing() && !isMoving()) {
 				if(processingTimer < processingTime) {
 					processingTimer++;
 					updateBlock();
-				}else{				
-					if(InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 0, getResult(slotsInternal.getStackInSlot(0)))) {
-						fluidTank.fill(getFluidResult(slotsInternal.getStackInSlot(0)), true);
-						slotsOutput.insertItem(0, getResult(slotsInternal.getStackInSlot(0)).copy(), false);
+				}else{			
+					SqueezerOutputWrapper recipe = SqueezerRecipeRegistry.Squeezing().getSqueezingRecipe(slotsInternal.getStackInSlot(0));
+					if(InventoryUtilities.canFullyInsertStackIntoSlot(slotsOutput, 0, recipe.getOutputItem())) {
+						fluidTank.fill(recipe.getOutputFluid(), true);
+						slotsOutput.insertItem(0, recipe.getOutputItem().copy(), false);
 						slotsInternal.setStackInSlot(0, ItemStack.EMPTY);
 						processingTimer = 0;
 						updateBlock();
@@ -183,6 +156,12 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFlu
 	public FluidStack drain(int maxDrain, boolean doDrain) {
 		return fluidTank.drain(maxDrain, doDrain);
 	}
+	public boolean isProcessing(){
+		return processingTimer > 0;
+	}
+	public boolean isMoving(){
+		return moveTimer > 0;
+	}
 	@Override
 	public int getProcessingTime() {
 		return processingTime;
@@ -194,18 +173,6 @@ public class TileEntityMechanicalSqueezer extends BaseTileEntity implements IFlu
 	@Override
 	public float getProcessingPercentage() {
 		return (float)processingTimer/(float)processingTime;
-	}
-	@Override
-	public boolean canProcess() {
-		return false;
-	}
-	@Override
-	public boolean canMove() {
-		return true;
-	}
-	@Override
-	public boolean hasValidRecipe() {
-		return false;
 	}
 }
 	

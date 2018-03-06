@@ -7,9 +7,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.energy.PowerDistributor;
-import theking530.staticpower.machines.BaseMachine;
+import theking530.staticpower.machines.TileEntityMachine;
 
-public class TileEntityBattery extends BaseMachine {
+public class TileEntityBattery extends TileEntityMachine {
 	
 	private int minPowerThreshold;
 	private int maxPowerThreshold;

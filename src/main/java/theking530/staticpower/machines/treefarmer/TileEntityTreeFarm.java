@@ -33,14 +33,14 @@ import theking530.staticpower.assists.utilities.TileEntityUtilities;
 import theking530.staticpower.handlers.crafting.Craft;
 import theking530.staticpower.handlers.crafting.registries.FarmerRecipeRegistry;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
-import theking530.staticpower.machines.BaseMachineWithTank;
+import theking530.staticpower.machines.TileEntityMachineWithTank;
 import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
 
-public class TileTreeFarmer extends BaseMachineWithTank {
+public class TileEntityTreeFarm extends TileEntityMachineWithTank {
 
 	public static final int MAX_WOOD_RECURSIVE_DEPTH = 40;
 	public static final int MAX_LEAVES_RECURSIVE_DEPTH = 40;
@@ -61,7 +61,7 @@ public class TileTreeFarmer extends BaseMachineWithTank {
 	private Ingredient leafIngredient;
 	private Ingredient saplingIngredient;
 
-	public TileTreeFarmer() {
+	public TileEntityTreeFarm() {
 		initializeBasicMachine(2, 20, 100000, 100, 10);
 		initializeTank(10000);	
 		initializeSlots(3, 10, 9);
@@ -81,6 +81,7 @@ public class TileTreeFarmer extends BaseMachineWithTank {
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0, 1, 2, 3, 4, 5, 6, 7));
 		
 		fluidInteractionComponent.setMode(FluidContainerInteractionMode.FILL);
+		setName("container.TreeFarmer");
 	}
 	@Override
 	public void process(){
@@ -204,7 +205,7 @@ public class TileTreeFarmer extends BaseMachineWithTank {
 	}
 	
 	public boolean canProcess() {
-		if(energyStorage.getEnergyStored() >= getProcessingCost() && !slotsInput.getStackInSlot(0).isEmpty() && slotsInput.getStackInSlot(0).getItem() instanceof ItemAxe) {
+		if(energyStorage.getEnergyStored() >= getProcessingEnergy() && !slotsInput.getStackInSlot(0).isEmpty() && slotsInput.getStackInSlot(0).getItem() instanceof ItemAxe) {
 			if(fluidTank.getFluid() != null) {
 				if(fluidTank.getFluid().amount > 0) {
 					return true;
@@ -330,10 +331,6 @@ public class TileTreeFarmer extends BaseMachineWithTank {
 	}
 	public void setShouldDrawRadiusPreview(boolean shouldDraw) {
 		shouldDrawRadiusPreview = shouldDraw;
-	}
-	@Override
-	public String getName() {
-		return "container.TreeFarmer";
 	}
 	
     @Override

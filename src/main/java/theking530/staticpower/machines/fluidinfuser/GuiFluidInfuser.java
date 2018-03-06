@@ -1,15 +1,10 @@
 package theking530.staticpower.machines.fluidinfuser;
 
-import java.text.NumberFormat;
-import java.util.Locale;
-
 import api.gui.tab.BaseGuiTab.TabSide;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import theking530.staticpower.assists.utilities.EnumTextFormatting;
 import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.client.gui.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.buttons.ArrowButton;
@@ -21,7 +16,6 @@ import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.handlers.PacketHandler;
-import theking530.staticpower.handlers.crafting.registries.InfuserRecipeRegistry;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
 import theking530.staticpower.machines.tileentitycomponents.PacketFluidContainerComponent;
 
@@ -50,7 +44,7 @@ public class GuiFluidInfuser extends BaseGuiContainer{
 		
 	    this.buttonList.add(new ArrowButton(1, guiLeft-24, guiTop+30, 16, 10, "<"));
 	    
-	    if(infuserTileEntity.DRAIN_COMPONENT.getMode() == FluidContainerInteractionMode.FILL) {
+	    if(infuserTileEntity.fluidContainerInteractionComponent.getMode() == FluidContainerInteractionMode.FILL) {
 	    	buttonList.get(0).displayString = ">";
 	    }else{
 	    	buttonList.get(0).displayString = "<";
@@ -86,20 +80,20 @@ public class GuiFluidInfuser extends BaseGuiContainer{
 		
     	this.drawContainerSlots(infuserTileEntity, this.inventorySlots.inventorySlots);
     	
-		int powerCost; 
-		int fluidCost; 
-		if(infuserTileEntity.slotsInternal.getStackInSlot(0) != ItemStack.EMPTY) {
-			fluidCost = InfuserRecipeRegistry.Infusing().getInfusingFluidCost(infuserTileEntity.slotsInternal.getStackInSlot(0), infuserTileEntity.fluidTank.getFluid());
-			powerCost = infuserTileEntity.getProcessingEnergy(infuserTileEntity.slotsInternal.getStackInSlot(0));
-		}else{
-			fluidCost = InfuserRecipeRegistry.Infusing().getInfusingFluidCost(infuserTileEntity.slotsInput.getStackInSlot(0), infuserTileEntity.fluidTank.getFluid());
-			powerCost = infuserTileEntity.getProcessingEnergy(infuserTileEntity.slotsInput.getStackInSlot(0));
-		}
-		String power = NumberFormat.getNumberInstance(Locale.US).format(powerCost);
-		String fluid = NumberFormat.getNumberInstance(Locale.US).format(fluidCost);
-    	String text = ("Infuse items with the" + "=" + "power of exceptional" + "=" + "Liquids." + "=" + "=" + EnumTextFormatting.GREEN +"Power Cost: " +  power + "=" + EnumTextFormatting.AQUA +"Fluid Cost: "+ fluid + EnumTextFormatting.WHITE);
-
-		infoTab.setText(infuserTileEntity.getBlockType().getLocalizedName(), text);
+//		int powerCost; 
+//		int fluidCost; 
+//		if(infuserTileEntity.slotsInternal.getStackInSlot(0) != ItemStack.EMPTY) {
+//			fluidCost = InfuserRecipeRegistry.Infusing().getInfusingFluidCost(infuserTileEntity.slotsInternal.getStackInSlot(0), infuserTileEntity.fluidTank.getFluid());
+//			powerCost = infuserTileEntity.getProcessingEnergy(infuserTileEntity.slotsInternal.getStackInSlot(0));
+//		}else{
+//			fluidCost = InfuserRecipeRegistry.Infusing().getInfusingFluidCost(infuserTileEntity.slotsInput.getStackInSlot(0), infuserTileEntity.fluidTank.getFluid());
+//			powerCost = infuserTileEntity.getProcessingEnergy(infuserTileEntity.slotsInput.getStackInSlot(0));
+//		}
+//		String power = NumberFormat.getNumberInstance(Locale.US).format(powerCost);
+//		String fluid = NumberFormat.getNumberInstance(Locale.US).format(fluidCost);
+//    	String text = ("Infuse items with the" + "=" + "power of exceptional" + "=" + "Liquids." + "=" + "=" + EnumTextFormatting.GREEN +"Power Cost: " +  power + "=" + EnumTextFormatting.AQUA +"Fluid Cost: "+ fluid + EnumTextFormatting.WHITE);
+//
+		infoTab.setText(infuserTileEntity.getBlockType().getLocalizedName(), "test");
 	}	
 }
 

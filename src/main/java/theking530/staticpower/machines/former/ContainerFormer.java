@@ -24,7 +24,7 @@ public class ContainerFormer extends BaseContainer {
 		addSlotToContainer(new StaticPowerContainerSlot(tePoweredGrinder.slotsInput, 0, 59, 34) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
-		        return tePoweredGrinder.hasResult(itemStack);		          
+				return FormerRecipeRegistry.Forming().getFormingResult(itemStack, tePoweredGrinder.slotsInput.getStackInSlot(1)) != null;	          
 		    }
 		});
 		//Input Mold
@@ -51,7 +51,7 @@ public class ContainerFormer extends BaseContainer {
 	}
 	@Override
 	protected boolean playerItemShiftClicked(ItemStack stack, EntityPlayer player, InventoryPlayer invPlayer, Slot slot, int slotIndex) {
-        if (formerTileEntity.hasResult(stack) && !mergeItemStack(stack, 0)) {
+        if (FormerRecipeRegistry.Forming().getFormingResult(stack, formerTileEntity.slotsInput.getStackInSlot(1)) != null && !mergeItemStack(stack, 0)) {
         	return true;
         }
         if (FormerRecipeRegistry.Forming().isValidMold(stack) && !mergeItemStack(stack, 1)) {

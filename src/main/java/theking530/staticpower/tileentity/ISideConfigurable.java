@@ -13,7 +13,6 @@ public interface ISideConfigurable {
 	}
 	
 	public boolean isSideConfigurable();
-	
 	public Mode getSideConfiguration(BlockSide side);
     public Mode getSideConfiguration(EnumFacing facing);
     
@@ -24,6 +23,5 @@ public interface ISideConfigurable {
     public void setSideConfiguration(Mode newMode, EnumFacing facing);
     
 	public void incrementSideConfiguration(EnumFacing side, SideIncrementDirection direction);
-	
 	public int getSideWithModeCount(Mode mode);
 }

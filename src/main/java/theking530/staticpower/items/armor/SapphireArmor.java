@@ -16,8 +16,8 @@ public class SapphireArmor extends BaseArmor {
 	}
 	
 	@Override
-	public List getSetInfo() {
-		List tempList = new ArrayList();
+	public List<String>  getSetInfo() {
+		List<String>  tempList = new ArrayList<String> ();
 		tempList.add("Pay a Bodyguard: " + EnumTextFormatting.RED + "-12 Damage");
 		tempList.add("Night Vision: " + EnumTextFormatting.DARK_AQUA + "Can't you read?");
 		tempList.add("Miner's Dream: " + EnumTextFormatting.DARK_AQUA + "+40% Swing Speed");

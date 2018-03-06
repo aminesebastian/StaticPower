@@ -21,8 +21,8 @@ public class UndeadArmor extends BaseArmor {
 	}
 	
 	@Override
-	public List getSetInfo() {
-		List tempList = new ArrayList();
+	public List<String>  getSetInfo() {
+		List<String>  tempList = new ArrayList<String> ();
 		tempList.add("Arise: " + EnumTextFormatting.DARK_GREEN + " When killed, temporarily");
 		tempList.add("        " + EnumTextFormatting.DARK_GREEN + " transform into an undead,");
 		tempList.add("        " + EnumTextFormatting.DARK_GREEN + " flying thrall.");

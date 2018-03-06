@@ -8,7 +8,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
 import net.minecraftforge.items.ItemStackHandler;
-import theking530.staticpower.tileentity.BaseTileEntity;
+import theking530.staticpower.tileentity.TileEntityBase;
 
 public class FluidContainerComponent implements ITileEntityComponent{
 	public static final int DEFAULT_FLUID_TO_CONTAINER_RATE = 15;
@@ -25,8 +25,11 @@ public class FluidContainerComponent implements ITileEntityComponent{
 	private ItemStackHandler fillterBucketHandler;
 	private int filledBucketSlot;
 	
+	/**
+	 * Must use a fluid handler reference and not a capability because capabilities for certain blocks are not allowed to fill depending on machine rules.
+	 */
 	private IFluidHandler fluidHandler;
-	private BaseTileEntity tileEntity;
+	private TileEntityBase tileEntity;
 	private int fluidToContainerRate;
 	private FluidContainerInteractionMode interactionMode = FluidContainerInteractionMode.DRAIN;
 
@@ -39,11 +42,11 @@ public class FluidContainerComponent implements ITileEntityComponent{
 		FILL, DRAIN;
 	}
 	
-	public FluidContainerComponent(String componentName, ItemStackHandler EmptyBucketHandler, int EmptyBucketSlot, ItemStackHandler FilledBucketHandler, int FilledBucketSlot, BaseTileEntity tileEntity, IFluidHandler fluidHandler) {
+	public FluidContainerComponent(String componentName, ItemStackHandler EmptyBucketHandler, int EmptyBucketSlot, ItemStackHandler FilledBucketHandler, int FilledBucketSlot, TileEntityBase tileEntity, IFluidHandler fluidHandler) {
 		this(componentName, EmptyBucketHandler, EmptyBucketSlot, FilledBucketHandler, FilledBucketSlot, tileEntity, fluidHandler, DEFAULT_FLUID_TO_CONTAINER_RATE);
 	}
 	public FluidContainerComponent(String componentName, ItemStackHandler EmptyBucketHandler, int EmptyBucketSlot, ItemStackHandler FilledBucketHandler, int FilledBucketSlot,
-			BaseTileEntity tileEntity, IFluidHandler fluidHandler, int drainRate) {
+			TileEntityBase tileEntity, IFluidHandler fluidHandler, int drainRate) {
 
 		this.componentName = componentName;
 		this.initialEmptyBucketHandler = EmptyBucketHandler;

@@ -25,7 +25,7 @@ import theking530.staticpower.assists.utilities.SideUtilities;
 import theking530.staticpower.assists.utilities.SideUtilities.BlockSide;
 import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.handlers.PacketHandler;
-import theking530.staticpower.tileentity.BaseTileEntity;
+import theking530.staticpower.tileentity.TileEntityBase;
 import theking530.staticpower.tileentity.ISideConfigurable;
 import theking530.staticpower.tileentity.ISideConfigurable.SideIncrementDirection;
 
@@ -184,8 +184,8 @@ public class GuiSideConfigTab extends BaseGuiTab implements IInteractableGui {
 		}
     }
     public String conditionallyGetCardinal(BlockSide side) {
-    	if(tileEntity instanceof BaseTileEntity) {
-    		BaseTileEntity te = (BaseTileEntity)tileEntity;
+    	if(tileEntity instanceof TileEntityBase) {
+    		TileEntityBase te = (TileEntityBase)tileEntity;
     		return "gui." + SideUtilities.getEnumFacingFromSide(side, te.getFacingDirection()).toString();
     	}
 		return "";

@@ -7,12 +7,12 @@ import theking530.staticpower.handlers.crafting.registries.GrinderRecipeRegistry
 import theking530.staticpower.handlers.crafting.wrappers.GrinderOutputWrapper;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.items.upgrades.BaseOutputMultiplierUpgrade;
-import theking530.staticpower.machines.BaseMachine;
+import theking530.staticpower.machines.TileEntityMachine;
 import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
 
-public class TileEntityPoweredGrinder extends BaseMachine {
+public class TileEntityPoweredGrinder extends TileEntityMachine {
 	
 	private float bonusOutputChance;
 	
@@ -23,21 +23,50 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 		registerComponent(new TileEntityItemOutputServo(this, 1, slotsOutput, 0, 1, 2));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0));
 		bonusOutputChance = 0.0f;
+		setName("container.PoweredGrinder");
 	}
-		
-	//IInventory				
+
 	@Override
-	public String getName() {
-		return "container.PoweredGrinder";		
+	public boolean hasValidRecipe() {
+		return GrinderRecipeRegistry.Grinding().getGrindingRecipe(slotsInput.getStackInSlot(0)) != null;
+	}
+	@Override
+	public boolean canProcess() {
+		if(hasValidRecipe()) {
+			GrinderOutputWrapper recipe = GrinderRecipeRegistry.Grinding().getGrindingRecipe(slotsInput.getStackInSlot(0));
+			if(recipe.getOutputItemCount() > 0) {
+				boolean itemOutputValidFlag = true;
+				boolean slot1 = false;
+				boolean slot2 = false;
+				boolean slot3 = false;
+				for(int i=0; i<recipe.getOutputItemCount(); i++) {
+					if(recipe.getOutputItems().get(i).isValid()) {
+						if(InventoryUtilities.canFullyInsertStackIntoSlot(slotsOutput, 0, recipe.getOutputItems().get(i).getOutput()) && slot1 == false) {
+							slot1 = true;
+						}else if(InventoryUtilities.canFullyInsertStackIntoSlot(slotsOutput, 1, recipe.getOutputItems().get(i).getOutput()) && slot2 == false) {
+							slot2 = true;
+						}else if(InventoryUtilities.canFullyInsertStackIntoSlot(slotsOutput, 2, recipe.getOutputItems().get(i).getOutput()) && slot3 == false) {
+							slot3 = true;
+						}else{
+							itemOutputValidFlag = false;
+						}
+					}
+				}
+				if(energyStorage.getEnergyStored() >= getProcessingEnergy() && itemOutputValidFlag == true) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 	//Process 
 	public void process() {
 		if(!getWorld().isRemote) {
-			if(!isProcessing() && !isMoving() && canProcess(getInputStack(0))) {
+			if(canProcess() && !isProcessing() && !isMoving()) {
 				moveTimer = 1;
 			}
-			if(!isProcessing() && isMoving() && canProcess(getInputStack(0))) {
+			if(canProcess() && !isProcessing() && isMoving() ) {
 				if(moveTimer < moveSpeed) {
 					moveTimer++;
 				}else{
@@ -49,36 +78,38 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 			}
 			if(isProcessing() && !isMoving()) {
 				if(processingTimer < processingTime) {
-					energyStorage.setMaxExtract(getProcessingCost() / processingTime);
-					useEnergy(getProcessingCost() / processingTime);
+					useEnergy(getProcessingEnergy() / processingTime);
 					processingTimer++;
 				}else{
-					if(getGrindingResult(getInternalStack(0)) != null) {
-						for(int j=0; j<getGrindingResult(getInternalStack(0)).getOutputItemCount(); j++) {
-							ItemStack result = getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getOutput();
-							if(TileEntityUtilities.diceRoll(getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getPercentage()+bonusOutputChance)) {
-								boolean flag = false;
-								int slot = -1;
+					GrinderOutputWrapper recipe = GrinderRecipeRegistry.Grinding().getGrindingRecipe(slotsInternal.getStackInSlot(0));
+					if(recipe == null) {
+						processingTimer = 0;
+						return;
+					}
+					for(int j=0; j<recipe.getOutputItemCount(); j++) {
+						ItemStack result = recipe.getOutputItems().get(j).getOutput();
+						if(TileEntityUtilities.diceRoll(recipe.getOutputItems().get(j).getPercentage()+bonusOutputChance)) {
+							boolean flag = false;
+							int slot = -1;
+							for(int i=0; i<3; i++) {
+								if(InventoryUtilities.canFullyInsertStackIntoSlot(slotsOutput, i, recipe.getOutputItems().get(j).getOutput())) {
+									slot = i;
+									flag = true;
+									break;
+								}	
+							}
+							if(!flag) {
 								for(int i=0; i<3; i++) {
-									if(ItemStack.areItemStacksEqual(slotsOutput.getStackInSlot(0), result) && InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, i, getGrindingResult(getInternalStack(0)).getOutputItems().get(j).getOutput())) {
+									if(InventoryUtilities.canFullyInsertStackIntoSlot(slotsOutput, i, result)) {
 										slot = i;
-										flag = true;
 										break;
 									}	
 								}
-								if(!flag) {
-									for(int i=0; i<3; i++) {
-										if(InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, i, result)) {
-											slot = i;
-											break;
-										}	
-									}
-								}
-								if(slot != -1) {
-									slotsOutput.insertItem(slot, result.copy(), false);
-								}
-							}						
-						}
+							}
+							if(slot != -1) {
+								slotsOutput.insertItem(slot, result.copy(), false);
+							}
+						}						
 					}
 					setInternalStack(0, ItemStack.EMPTY);
 					updateBlock();
@@ -105,50 +136,5 @@ public class TileEntityPoweredGrinder extends BaseMachine {
 	
 	public float getBonusOutputChance() {
 		return Math.min(1.0f, bonusOutputChance);
-	}
-	
-	public GrinderOutputWrapper getGrindingResult(ItemStack stack) {
-		if(stack != ItemStack.EMPTY) {
-			return GrinderRecipeRegistry.Grinding().getGrindingRecipe(stack);
-		}else{
-			return null;
-		}
-		
-	}
-	public boolean hasResult(ItemStack stack) {
-		if(stack != ItemStack.EMPTY && getGrindingResult(stack) != null) {
-			return true;
-		}
-		return false;
-	}
-	@Override
-	public boolean canProcess(ItemStack stack) {
-		if(hasResult(stack) == true) {
-			if(getGrindingResult(stack).getOutputItemCount() > 0) {
-				boolean flag = true;
-				boolean slot1 = false;
-				boolean slot2 = false;
-				boolean slot3 = false;
-				GrinderOutputWrapper tempWrapper = getGrindingResult(stack);
-				for(int i=0; i<tempWrapper.getOutputItemCount(); i++) {
-					if(tempWrapper.getOutputItems().get(i).isValid()) {
-						if(InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 0, tempWrapper.getOutputItems().get(i).getOutput()) && slot1 == false) {
-							slot1 = true;
-						}else if(InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 1, tempWrapper.getOutputItems().get(i).getOutput()) && slot2 == false) {
-							slot2 = true;
-						}else if(InventoryUtilities.canFullyInsertItemIntoSlot(slotsOutput, 2, tempWrapper.getOutputItems().get(i).getOutput()) && slot3 == false) {
-							slot3 = true;
-						}else{
-							flag = false;
-						}
-					}
-
-				}
-				if(energyStorage.getEnergyStored() >= getProcessingCost() && flag == true) {
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 }

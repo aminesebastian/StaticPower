@@ -7,9 +7,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import theking530.staticpower.machines.BaseMachine;
+import theking530.staticpower.machines.TileEntityMachine;
 
-public class TileEntityHeatingElement extends BaseMachine implements ITickable, IHeatProvider {
+public class TileEntityHeatingElement extends TileEntityMachine implements ITickable, IHeatProvider {
 
 	public HeatStorage heatStorage;
 	public HeatDistributor heatDistributor;
@@ -19,20 +19,21 @@ public class TileEntityHeatingElement extends BaseMachine implements ITickable, 
 		initializeBasicMachine(1, 5, 100, 100, 20);
 		heatStorage = new HeatStorage(1);
 		heatDistributor = new HeatDistributor(this, heatStorage);
+		setName("container.HeatingElement");
 	}
 	@Override
 	public void process(){
-		if(!getWorld().isRemote && energyStorage.getEnergyStored() > getProcessingCost()) {
+		if(!getWorld().isRemote && energyStorage.getEnergyStored() > getProcessingEnergy()) {
 			if(processingTimer >= processingTime) {
-				if(heatStorage.getHeat() < heatStorage.getMaxHeat() && energyStorage.getEnergyStored() > getProcessingCost()) {
+				if(heatStorage.getHeat() < heatStorage.getMaxHeat() && energyStorage.getEnergyStored() > getProcessingEnergy()) {
 					heatStorage.recieveHeat(1);
-					energyStorage.extractEnergy(getProcessingCost(), false);
+					energyStorage.extractEnergy(getProcessingEnergy(), false);
 				}	
 				processingTimer = 0;
 				updateBlock();
 			}else{
 				processingTimer++;
-				energyStorage.extractEnergy(getProcessingCost(), false);
+				energyStorage.extractEnergy(getProcessingEnergy(), false);
 			}
 			heatDistributor.provideHeat();	
 		}

@@ -45,7 +45,7 @@ public class ContainerFluidInfuser extends BaseContainer {
 	}
 	@Override
 	protected boolean playerItemShiftClicked(ItemStack stack, EntityPlayer player, InventoryPlayer invPlayer, Slot slot, int slotIndex) {
-        if (InfuserRecipeRegistry.Infusing().getInfusingRecipe(stack, infuserTileEntity.fluidTank.getFluid()) != null && !mergeItemStack(stack, 0)) {
+        if (InfuserRecipeRegistry.Infusing().getInfusingRecipe(stack, infuserTileEntity.fluidTank.getFluid(), true) != null && !mergeItemStack(stack, 0)) {
         	return true;
         }
         if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null) && !mergeItemStack(stack, 1)) {

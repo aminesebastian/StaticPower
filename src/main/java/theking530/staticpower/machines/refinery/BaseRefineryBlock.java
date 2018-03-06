@@ -15,9 +15,9 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import theking530.staticpower.machines.BaseMachineBlock;
+import theking530.staticpower.machines.BlockMachineBase;
 
-public class BaseRefineryBlock extends BaseMachineBlock { 
+public class BaseRefineryBlock extends BlockMachineBase { 
 
     public static final PropertyBool CONNECTED_DOWN = PropertyBool.create("connected_down");
     public static final PropertyBool CONNECTED_UP = PropertyBool.create("connected_up");

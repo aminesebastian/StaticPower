@@ -1,14 +1,14 @@
 package theking530.staticpower.tileentity.solderingtable;
 
-import net.minecraftforge.items.IItemHandler;
-import theking530.staticpower.machines.tileentitycomponents.slots.StaticPowerContainerSlot;
+import net.minecraftforge.items.ItemStackHandler;
+import theking530.staticpower.client.gui.widgets.SlotPhantom;
 
-public class SlotSolderingTableInput extends StaticPowerContainerSlot{
+public class SlotSolderingTableInput extends SlotPhantom {
 
 	TileEntitySolderingTable TABLE;
 	ContainerSolderingTable CONTAINER;
 	
-	public SlotSolderingTableInput(ContainerSolderingTable container,  IItemHandler teTable, int i, int j, int k) {
+	public SlotSolderingTableInput(ContainerSolderingTable container,  ItemStackHandler teTable, int i, int j, int k) {
 		super(teTable, i, j, k);
 		CONTAINER = container;
 	}

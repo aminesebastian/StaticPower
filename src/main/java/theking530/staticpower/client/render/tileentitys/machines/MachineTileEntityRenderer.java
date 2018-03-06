@@ -12,10 +12,10 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.assists.Reference;
 import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.client.model.ModelBlock;
-import theking530.staticpower.machines.BaseMachine;
-import theking530.staticpower.tileentity.BaseTileEntity;
+import theking530.staticpower.machines.TileEntityMachine;
+import theking530.staticpower.tileentity.TileEntityBase;
 
-public class MachineTileEntityRenderer extends TileEntitySpecialRenderer<BaseTileEntity> {
+public class MachineTileEntityRenderer extends TileEntitySpecialRenderer<TileEntityBase> {
 
 
 	ResourceLocation side = new ResourceLocation(Reference.MOD_ID, "textures/blocks/MachineSide.png");
@@ -27,7 +27,7 @@ public class MachineTileEntityRenderer extends TileEntitySpecialRenderer<BaseTil
 	static float texel = 1F/16F;
 	
 	@Override
-    public void render(BaseTileEntity tileentity, double translationX, double translationY, double translationZ, float partialTicks, int destroyStage, float alpha) {	
+    public void render(TileEntityBase tileentity, double translationX, double translationY, double translationZ, float partialTicks, int destroyStage, float alpha) {	
 		EnumFacing facing = tileentity.getFacingDirection();
 		GL11.glPushMatrix();
 		GL11.glTranslated(translationX, translationY, translationZ);
@@ -59,7 +59,7 @@ public class MachineTileEntityRenderer extends TileEntitySpecialRenderer<BaseTil
 	}
 	
 	public void checkAndRenderSides(TileEntity tileentity, int side) {
-		BaseMachine machine = (BaseMachine)tileentity;	
+		TileEntityMachine machine = (TileEntityMachine)tileentity;	
 		
 		if(side != 3) {
 			if(machine.getSideConfiguration(EnumFacing.values()[side]) == Mode.Regular) {

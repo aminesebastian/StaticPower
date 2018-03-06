@@ -26,7 +26,7 @@ public class TileEntityItemConduit extends TileEntityBaseConduit {
 	public int PULL_RATE = 20;
 	public int PULL_TIMER = 0;
 	
-	public int PULL_ITEMS = 4;
+	public int PULL_ITEMS = 16;
 	
 	public int MOVE_RATE = 10;
 	public int MOVE_TIMER = 0;

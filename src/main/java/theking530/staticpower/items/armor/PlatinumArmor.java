@@ -16,8 +16,8 @@ public class PlatinumArmor extends BaseArmor {
 	}
 	
 	@Override
-	public List getSetInfo() {
-		List tempList = new ArrayList();
+	public List<String>  getSetInfo() {
+		List<String> tempList = new ArrayList<String> ();
 		tempList.add("Pay a Bodyguard: " + EnumTextFormatting.RED + "Unable to Melee Attack");
 		tempList.add("Spoon Fed: " + EnumTextFormatting.DARK_AQUA + "Who Needs Food?");
 		return tempList;

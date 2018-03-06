@@ -16,8 +16,8 @@ public class CopperArmor extends BaseArmor {
 	}
 	
 	@Override
-	public List getSetInfo() {
-		List tempList = new ArrayList();
+	public List<String>  getSetInfo() {
+		List<String>  tempList = new ArrayList<String> ();
 		tempList.add("Black Lung: " + EnumTextFormatting.RED + "-1 Hunger Per 10 Seconds");
 		tempList.add("Dying Industry: " + EnumTextFormatting.RED + "-4 Luck");
 		tempList.add("Thanks Donald: " + EnumTextFormatting.DARK_AQUA + "+20% Mining Speed");

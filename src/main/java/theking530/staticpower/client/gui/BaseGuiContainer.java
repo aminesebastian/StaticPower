@@ -27,7 +27,7 @@ import theking530.staticpower.assists.utilities.GuiUtilities;
 import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.client.gui.widgets.GuiDrawItem;
 import theking530.staticpower.machines.tileentitycomponents.slots.StaticPowerContainerSlot;
-import theking530.staticpower.tileentity.BaseTileEntity;
+import theking530.staticpower.tileentity.TileEntityBase;
 
 public abstract class BaseGuiContainer extends GuiContainer implements IInteractableGui {
 
@@ -149,7 +149,7 @@ public abstract class BaseGuiContainer extends GuiContainer implements IInteract
 	public void drawStringWithSize(String text, int xPos, int yPos, float scale, int color, boolean withShadow) {
 		GuiDrawUtilities.drawStringWithSize(text, xPos, yPos, scale, color, withShadow);
 	}
-	public void drawContainerSlots(BaseTileEntity te, List<Slot> slots) {
+	public void drawContainerSlots(TileEntityBase te, List<Slot> slots) {
 		for(Slot slot : slots) {
 			if(slot instanceof StaticPowerContainerSlot) {
 				StaticPowerContainerSlot handlerSlot = (StaticPowerContainerSlot)slot;

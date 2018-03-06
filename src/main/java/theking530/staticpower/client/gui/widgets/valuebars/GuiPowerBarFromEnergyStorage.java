@@ -4,11 +4,11 @@ import java.util.List;
 
 import api.gui.IGuiWidget;
 import theking530.staticpower.client.gui.BaseGuiContainer;
-import theking530.staticpower.machines.BaseMachine;
+import theking530.staticpower.machines.TileEntityMachine;
 
 public class GuiPowerBarFromEnergyStorage implements IGuiWidget {
 
-	private BaseMachine machine;
+	private TileEntityMachine machine;
 	
 	private BaseGuiContainer owningGui;
 	private boolean isVisible;
@@ -18,7 +18,7 @@ public class GuiPowerBarFromEnergyStorage implements IGuiWidget {
 	private int xSize;
 	private int ySize;
 	
-	public GuiPowerBarFromEnergyStorage(BaseMachine machine, int xPosition, int yPosition, int xSize, int ySize) {
+	public GuiPowerBarFromEnergyStorage(TileEntityMachine machine, int xPosition, int yPosition, int xSize, int ySize) {
 		this.machine = machine;
 		isVisible = true;
 		this.xPosition = xPosition;
@@ -26,7 +26,7 @@ public class GuiPowerBarFromEnergyStorage implements IGuiWidget {
 		this.xSize = xSize;
 		this.ySize = ySize;
 	}
-	public GuiPowerBarFromEnergyStorage(BaseMachine machine) {
+	public GuiPowerBarFromEnergyStorage(TileEntityMachine machine) {
 		this.machine = machine;
 		isVisible = true;
 	}
@@ -71,7 +71,7 @@ public class GuiPowerBarFromEnergyStorage implements IGuiWidget {
 		if(machine.processingTime == 0) {
 			return GuiPowerBarUtilities.getTooltip(machine.energyStorage.getEnergyStored(), machine.energyStorage.getMaxEnergyStored(), machine.energyStorage.getMaxReceive(), 0);
 		}
-		return GuiPowerBarUtilities.getTooltip(machine.energyStorage.getEnergyStored(), machine.energyStorage.getMaxEnergyStored(), machine.energyStorage.getMaxReceive(), machine.getProcessingCost()/machine.processingTime);
+		return GuiPowerBarUtilities.getTooltip(machine.energyStorage.getEnergyStored(), machine.energyStorage.getMaxEnergyStored(), machine.energyStorage.getMaxReceive(), machine.getProcessingEnergy()/machine.processingTime);
 	}
 
 	@Override

@@ -22,7 +22,7 @@ public class ContainerTreeFarmer extends BaseContainer {
 	
 	private Ingredient saplingIngredient;
 	
-	public ContainerTreeFarmer(InventoryPlayer invPlayer, TileTreeFarmer teFarmer) {
+	public ContainerTreeFarmer(InventoryPlayer invPlayer, TileEntityTreeFarm teFarmer) {
 		saplingIngredient = Craft.ing("treeSapling");
 		//Inputs
         for (int l = 0; l < 3; ++l) {

@@ -4,13 +4,13 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.handlers.crafting.registries.FermenterRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.FermenterOutputWrapper;
 import theking530.staticpower.items.MiscItems;
-import theking530.staticpower.machines.BaseMachineWithTank;
+import theking530.staticpower.machines.TileEntityMachineWithTank;
 import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
 
-public class TileEntityFermenter extends BaseMachineWithTank {
+public class TileEntityFermenter extends TileEntityMachineWithTank {
 
 	public FluidContainerComponent fluidContainerInteractionComponent;
 	
@@ -24,20 +24,27 @@ public class TileEntityFermenter extends BaseMachineWithTank {
 
 		registerComponent(new TileEntityItemOutputServo(this, 1, slotsOutput, 0));
 		registerComponent(new TileEntityItemInputServo(this, 2, slotsInput, 0, 1, 2, 3, 4, 5, 6, 7, 8));
-	}
+		setName("container.Fermenter");
+		setCanFillExternally(false);
+	}	
 	@Override
-	public String getName() {
-		return "container.Fermenter";		
-	}		
-	
+	public boolean hasValidRecipe() {
+		for(int i=0; i<9; i++) {
+			FermenterOutputWrapper recipe = FermenterRecipeRegistry.Fermenting().getRecipe(slotsInput.getStackInSlot(i));
+			if(recipe != null) {
+				return true;
+			}
+		}
+		return false;
+	}
 	@Override
 	public boolean canProcess() {
 		for(int i=0; i<9; i++) {
 			FermenterOutputWrapper recipe = FermenterRecipeRegistry.Fermenting().getRecipe(slotsInput.getStackInSlot(i));
 			if(recipe != null) {
 				FluidStack fermentingResult = recipe.getOutputFluidStack();
-				if(fluidTank.fill(fermentingResult, false) == fermentingResult.amount) {
-					if(getEnergyStorage().getEnergyStored() >= getProcessingCost()) {
+				if(fluidTank.canFill(fermentingResult)) {
+					if(getEnergyStorage().getEnergyStored() >= getProcessingEnergy()) {
 						return slotsOutput.insertItem(0, MiscItems.distilleryGrain, true).isEmpty();
 					}
 				}
@@ -64,11 +71,13 @@ public class TileEntityFermenter extends BaseMachineWithTank {
 						}
 					}	
 				}
+			}else{
+				moveTimer = 0;
 			}
 			if(isProcessing() && !isMoving()) {
 				if(processingTimer < processingTime) {
 					processingTimer++;
-					energyStorage.extractEnergy(getProcessingCost()/processingTime, false);
+					energyStorage.extractEnergy(getProcessingEnergy()/processingTime, false);
 					updateBlock();
 				}else{
 					FermenterOutputWrapper recipe = FermenterRecipeRegistry.Fermenting().getRecipe(slotsInternal.getStackInSlot(0));

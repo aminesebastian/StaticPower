@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
-import theking530.staticpower.tileentity.BaseTileEntity;
+import theking530.staticpower.tileentity.TileEntityBase;
 
 public class PacketFluidContainerComponent implements IMessage{
 	
@@ -46,8 +46,8 @@ public class PacketFluidContainerComponent implements IMessage{
     @Override
     public IMessage onMessage(PacketFluidContainerComponent message, MessageContext ctx) {
     		TileEntity te = ctx.getServerHandler().player.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
-    		if(te != null && te instanceof BaseTileEntity) {
-    			BaseTileEntity entity = (BaseTileEntity)te;
+    		if(te != null && te instanceof TileEntityBase) {
+    			TileEntityBase entity = (TileEntityBase)te;
     			if(message.componentIndex > 0 && entity.getComponents().get(message.componentIndex) instanceof FluidContainerComponent) {
         			((FluidContainerComponent)entity.getComponents().get(message.componentIndex)).setMode(message.mode);
         			entity.updateBlock();

@@ -73,7 +73,7 @@ import theking530.staticpower.machines.batteries.tileentities.TileEntityBasicBat
 import theking530.staticpower.machines.batteries.tileentities.TileEntityEnergizedBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityLumumBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityStaticBattery;
-import theking530.staticpower.machines.centrifuge.TileCentrifuge;
+import theking530.staticpower.machines.centrifuge.TileEntityCentrifuge;
 import theking530.staticpower.machines.chargingstation.TileEntityChargingStation;
 import theking530.staticpower.machines.condenser.TileEntityCondenser;
 import theking530.staticpower.machines.cropsqueezer.TileEntityCropSqueezer;
@@ -95,7 +95,7 @@ import theking530.staticpower.machines.refinery.fluidinterface.TileEntityRefiner
 import theking530.staticpower.machines.refinery.mixer.TileEntityRefineryMixer;
 import theking530.staticpower.machines.refinery.reactor.TileEntityRefineryReactor;
 import theking530.staticpower.machines.refinery.vent.TileEntityRefineryVent;
-import theking530.staticpower.machines.treefarmer.TileTreeFarmer;
+import theking530.staticpower.machines.treefarmer.TileEntityTreeFarm;
 import theking530.staticpower.potioneffects.ModPotions;
 import theking530.staticpower.tileentity.astralquary.brain.TileEntityAstralQuarryBrain;
 import theking530.staticpower.tileentity.chest.energizedchest.TileEntityEnergizedChest;
@@ -184,7 +184,7 @@ public class StaticPower {
 		GameRegistry.registerTileEntity(TileEntityDistillery.class, "Distillery");
 		GameRegistry.registerTileEntity(TileEntityCondenser.class, "Condenser");
 		GameRegistry.registerTileEntity(TileEntityFormer.class, "Former");
-		GameRegistry.registerTileEntity(TileTreeFarmer.class, "TreeFarmer");
+		GameRegistry.registerTileEntity(TileEntityTreeFarm.class, "TreeFarmer");
 		GameRegistry.registerTileEntity(TileLumberMill.class, "LumberMill");
 		
 		GameRegistry.registerTileEntity(TileEntityBasicSolarPanel.class, "BaseSolarPanel");
@@ -215,7 +215,7 @@ public class StaticPower {
 		GameRegistry.registerTileEntity(TileEntityVacuumChest.class, "VacuumChest");
 		
 		GameRegistry.registerTileEntity(TileEsotericEnchanter.class, "Esoteric Enchanter");
-		GameRegistry.registerTileEntity(TileCentrifuge.class, "Centrifuge");
+		GameRegistry.registerTileEntity(TileEntityCentrifuge.class, "Centrifuge");
 		
 		GameRegistry.registerTileEntity(TileEntityAstralQuarryBrain.class, "Astral Quarry");
 		

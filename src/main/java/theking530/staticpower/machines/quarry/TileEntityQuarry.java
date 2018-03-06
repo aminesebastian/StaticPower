@@ -16,12 +16,12 @@ import theking530.staticpower.assists.utilities.WorldUtilities;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.items.upgrades.BaseQuarryingUpgrade;
-import theking530.staticpower.machines.BaseMachineWithTank;
+import theking530.staticpower.machines.TileEntityMachineWithTank;
 import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
 
-public class TileEntityQuarry extends BaseMachineWithTank {
+public class TileEntityQuarry extends TileEntityMachineWithTank {
 	public static final int INITIAL_BLOCKS_PER_TICK = 1;
 	
 	private BlockPos startCorner;
@@ -48,6 +48,7 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 		registerComponent(new BatteryInteractionComponent("BatteryInteraction", slotsInternal, 3, energyStorage));
 		registerComponent(fluidInteractionComponent = new FluidContainerComponent("BucketDrain", slotsInternal, 1, slotsInternal, 2, this, fluidTank));
 		fluidInteractionComponent.setMode(FluidContainerInteractionMode.FILL);
+		setName("container.Quarry");
 	}
 	
 	@Override
@@ -65,7 +66,7 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 									fluidTank.drain(1, true);
 								}
 							}
-							energyStorage.extractEnergy(getProcessingCost(), false);
+							energyStorage.extractEnergy(getProcessingEnergy(), false);
 						}
 						updateBlock();
 						processingTimer = 0;		
@@ -256,10 +257,6 @@ public class TileEntityQuarry extends BaseMachineWithTank {
 		return fluidInteractionComponent;
 	}
 	
-	@Override
-	public String getName() {
-		return "Quarry";
-	}
 	public int getFortuneMultiplier() {
 		if(fluidTank.getFluid() != null) {
 			if(fluidTank.getFluid().getFluid() == ModFluids.StaticFluid) {

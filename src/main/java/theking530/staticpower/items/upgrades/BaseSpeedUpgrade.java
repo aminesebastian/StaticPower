@@ -37,6 +37,8 @@ public class BaseSpeedUpgrade extends BaseUpgrade implements IMachineUpgrade{
 			SPEED = (10f/maxStackSize);
 			POWER_MULT = (0f/maxStackSize);
 			break;
+		default:
+			break;
 		}
 	}
 	@Override

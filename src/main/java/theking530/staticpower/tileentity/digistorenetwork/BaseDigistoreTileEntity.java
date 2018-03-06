@@ -6,10 +6,10 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import theking530.staticpower.tileentity.BaseTileEntity;
+import theking530.staticpower.tileentity.TileEntityBase;
 import theking530.staticpower.tileentity.digistorenetwork.manager.TileEntityDigistoreManager;
 
-public abstract class BaseDigistoreTileEntity extends BaseTileEntity {
+public abstract class BaseDigistoreTileEntity extends TileEntityBase {
 
 	private TileEntityDigistoreManager manager;
 	

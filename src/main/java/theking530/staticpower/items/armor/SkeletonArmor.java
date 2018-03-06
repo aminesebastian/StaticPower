@@ -21,8 +21,8 @@ public class SkeletonArmor extends BaseArmor {
 	}
 	
 	@Override
-	public List getSetInfo() {
-		List tempList = new ArrayList();
+	public List<String>  getSetInfo() {
+		List<String>  tempList = new ArrayList<String> ();
 		tempList.add("Fleshless: " + EnumTextFormatting.DARK_GREEN + "Your lack of flesh");
 		tempList.add(EnumTextFormatting.DARK_GREEN + "makes it 33% harder for");
 		tempList.add(EnumTextFormatting.DARK_GREEN + "arrow to hit.");

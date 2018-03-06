@@ -10,9 +10,9 @@ import theking530.staticpower.assists.Reference;
 import theking530.staticpower.assists.utilities.RenderUtil;
 import theking530.staticpower.assists.utilities.SideModeList;
 import theking530.staticpower.client.model.ModelBlock;
-import theking530.staticpower.machines.treefarmer.TileTreeFarmer;
+import theking530.staticpower.machines.treefarmer.TileEntityTreeFarm;
 
-public class TileEntityRenderTreeFarmer extends BaseMachineTESR<TileTreeFarmer> {
+public class TileEntityRenderTreeFarmer extends BaseMachineTESR<TileEntityTreeFarm> {
 
 	private static final ResourceLocation front = new ResourceLocation(Reference.MOD_ID, "textures/blocks/machines/tree_farmer_front.png");
 	
@@ -47,7 +47,7 @@ public class TileEntityRenderTreeFarmer extends BaseMachineTESR<TileTreeFarmer> 
 	}
 	
 	@Override
-	public void drawExtra(TileTreeFarmer tileentity, double translationX, double translationY, double translationZ, float f, int dest, float alpha) {
+	public void drawExtra(TileEntityTreeFarm tileentity, double translationX, double translationY, double translationZ, float f, int dest, float alpha) {
 		if(tileentity.fluidTank.getFluid() != null) {	
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -62,7 +62,7 @@ public class TileEntityRenderTreeFarmer extends BaseMachineTESR<TileTreeFarmer> 
 			GL11.glPopMatrix();
 		}
 	}
-	public static void drawLiquidBar(TileTreeFarmer tileentity, FluidStack fluidStack) {
+	public static void drawLiquidBar(TileEntityTreeFarm tileentity, FluidStack fluidStack) {
 		RenderUtil.drawFluidInWorld(fluidStack, tileentity.fluidTank.getCapacity(), 41.0F*texel, 34.0F*texel, 1.0001F, 5.0F*texel, 13.0f*texel);		
 		RenderUtil.drawFluidInWorld(fluidStack, tileentity.fluidTank.getCapacity(), 18.0F*texel, 34.0F*texel, 1.0001F, 5.0F*texel, 13.0f*texel);
 	}

@@ -1,7 +1,6 @@
 package theking530.staticpower.handlers.crafting.registries;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -41,17 +40,11 @@ public class GrinderRecipeRegistry {
         return this.grindingList;
     }
 	public GrinderOutputWrapper getGrindingRecipe(ItemStack itemstack) {
-		Iterator<Entry<Ingredient, GrinderOutputWrapper>> iterator = grindingList.entrySet().iterator();
-		Entry<Ingredient, GrinderOutputWrapper> entry;
-		do {
-			if (!iterator.hasNext()) {
-				return null;
+		for(Entry<Ingredient, GrinderOutputWrapper> entry : grindingList.entrySet()) {
+			if(entry.getValue().isSatisfied(itemstack)) {
+				return entry.getValue();
 			}
-			entry = iterator.next();
-		} while (!canBeGrinded(itemstack, entry.getKey()));
-		return (GrinderOutputWrapper) entry.getValue();
-	}
-	private boolean canBeGrinded(ItemStack itemstack, Ingredient ingredient) {
-		return ingredient.apply(itemstack);
+		}
+		return null;
 	}
 }

@@ -2,9 +2,9 @@ package theking530.staticpower.client.render.tileentitys.machines;
 
 import net.minecraft.util.ResourceLocation;
 import theking530.staticpower.assists.Reference;
-import theking530.staticpower.machines.centrifuge.TileCentrifuge;
+import theking530.staticpower.machines.centrifuge.TileEntityCentrifuge;
 
-public class TileEntityRenderCentrifuge extends BaseMachineTESR<TileCentrifuge> {
+public class TileEntityRenderCentrifuge extends BaseMachineTESR<TileEntityCentrifuge> {
 
 	static float texel = 1F/64F;
 

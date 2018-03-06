@@ -8,7 +8,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import theking530.staticpower.assists.utilities.SideModeList.Mode;
-import theking530.staticpower.tileentity.BaseTileEntity;
+import theking530.staticpower.tileentity.TileEntityBase;
 
 public class FluidDistributor {
 
@@ -27,8 +27,8 @@ public class FluidDistributor {
 			if(!TE.getWorld().isRemote) {
 				for(int i=0; i<6; i++) {
 					EnumFacing facing = EnumFacing.values()[i];
-					if(TE instanceof BaseTileEntity) {
-						BaseTileEntity tempTe = (BaseTileEntity)TE;
+					if(TE instanceof TileEntityBase) {
+						TileEntityBase tempTe = (TileEntityBase)TE;
 						if(tempTe != null) {
 							if(tempTe.getSideConfiguration(EnumFacing.values()[i]) == Mode.Output && TANK.getFluidAmount() > 0) {
 								if(TANK.getFluidAmount() > FLUID_OUTPUT_RATE) {

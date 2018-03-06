@@ -11,9 +11,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.GuiIDRegistry;
-import theking530.staticpower.machines.BaseMachineBlock;
+import theking530.staticpower.machines.BlockMachineBase;
 
-public class BlockCentrifuge extends BaseMachineBlock{
+public class BlockCentrifuge extends BlockMachineBase{
 
 	public BlockCentrifuge() {
 		super("Centrifuge");
@@ -31,7 +31,7 @@ public class BlockCentrifuge extends BaseMachineBlock{
     	if (world.isRemote) {
     		return true;
     	}else if (!player.isSneaking()) {
-    		TileCentrifuge entity = (TileCentrifuge) world.getTileEntity(pos);
+    		TileEntityCentrifuge entity = (TileEntityCentrifuge) world.getTileEntity(pos);
     		if (entity != null) {
     			FMLNetworkHandler.openGui(player, StaticPower.staticpower, GuiIDRegistry.guiIDCentrifuge, world, pos.getX(), pos.getY(), pos.getZ());
 
@@ -43,6 +43,6 @@ public class BlockCentrifuge extends BaseMachineBlock{
 	}
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
-		return new TileCentrifuge();
+		return new TileEntityCentrifuge();
 	}
 }

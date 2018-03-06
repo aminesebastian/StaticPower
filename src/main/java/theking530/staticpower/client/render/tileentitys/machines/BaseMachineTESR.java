@@ -9,10 +9,10 @@ import theking530.staticpower.assists.Reference;
 import theking530.staticpower.assists.utilities.SideModeList;
 import theking530.staticpower.assists.utilities.SideUtilities;
 import theking530.staticpower.client.model.ModelBlock;
-import theking530.staticpower.tileentity.BaseTileEntity;
+import theking530.staticpower.tileentity.TileEntityBase;
 import theking530.staticpower.tileentity.IProcessing;
 
-public class BaseMachineTESR <T extends BaseTileEntity> extends TileEntitySpecialRenderer<T> {
+public class BaseMachineTESR <T extends TileEntityBase> extends TileEntitySpecialRenderer<T> {
 
 	private static final ModelBlock BLOCK = new ModelBlock();
 	private static final ResourceLocation side = new ResourceLocation(Reference.MOD_ID, "textures/blocks/machines/machine_side.png");
