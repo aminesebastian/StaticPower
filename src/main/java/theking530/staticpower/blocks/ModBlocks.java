@@ -345,29 +345,29 @@ public class ModBlocks {
 		LumumLamp = new Lamp("LumumLamp").setUnlocalizedName("LumumLamp");
 		registry.PreRegisterBlock(LumumLamp);	
 		
-		StaticBlock = new BaseBlock(Material.IRON, "StaticBlock");
+		StaticBlock = new BaseBlock(Material.IRON, "StaticBlock").setHardness(4.5f);
 		registry.PreRegisterBlock(StaticBlock);	
-		EnergizedBlock = new BaseBlock(Material.IRON, "EnergizedBlock");
+		EnergizedBlock = new BaseBlock(Material.IRON, "EnergizedBlock").setHardness(4.5f);
 		registry.PreRegisterBlock(EnergizedBlock);	
-		LumumBlock = new BaseBlock(Material.IRON, "LumumBlock");
+		LumumBlock = new BaseBlock(Material.IRON, "LumumBlock").setHardness(4.5f);
 		registry.PreRegisterBlock(LumumBlock);
-		BlockCopper = new BaseBlock(Material.IRON, "BlockCopper");
+		BlockCopper = new BaseBlock(Material.IRON, "BlockCopper").setHardness(2.5f);
 		registry.PreRegisterBlock(BlockCopper);	
-		BlockTin = new BaseBlock(Material.IRON, "BlockTin");
+		BlockTin = new BaseBlock(Material.IRON, "BlockTin").setHardness(2.5f);
 		registry.PreRegisterBlock(BlockTin);	
-		BlockSilver = new BaseBlock(Material.IRON, "BlockSilver");
+		BlockSilver = new BaseBlock(Material.IRON, "BlockSilver").setHardness(3.5f);
 		registry.PreRegisterBlock(BlockSilver);
-		BlockLead = new BaseBlock(Material.IRON, "BlockLead");
+		BlockLead = new BaseBlock(Material.IRON, "BlockLead").setHardness(2.0f);
 		registry.PreRegisterBlock(BlockLead);	;
-		BlockPlatinum = new BaseBlock(Material.IRON, "BlockPlatinum");
+		BlockPlatinum = new BaseBlock(Material.IRON, "BlockPlatinum").setHardness(4.5f);
 		registry.PreRegisterBlock(BlockPlatinum);
-		BlockNickel = new BaseBlock(Material.IRON, "BlockNickel");
+		BlockNickel = new BaseBlock(Material.IRON, "BlockNickel").setHardness(3.5f);
 		registry.PreRegisterBlock(BlockNickel);	
-		BlockAluminium = new BaseBlock(Material.IRON, "BlockAluminium");
+		BlockAluminium = new BaseBlock(Material.IRON, "BlockAluminium").setHardness(2.75f);
 		registry.PreRegisterBlock(BlockAluminium);
-		BlockSapphire = new BaseBlock(Material.IRON, "BlockSapphire");
+		BlockSapphire = new BaseBlock(Material.IRON, "BlockSapphire").setHardness(5.5f);
 		registry.PreRegisterBlock(BlockSapphire);	
-		BlockRuby = new BaseBlock(Material.IRON, "BlockRuby");
+		BlockRuby = new BaseBlock(Material.IRON, "BlockRuby").setHardness(5.5f);
 		registry.PreRegisterBlock(BlockRuby);
 		
 		StaticGrass = new StaticGrass();
@@ -391,23 +391,23 @@ public class ModBlocks {
 		ItemConduit = new BlockItemConduit();
 		registry.PreRegisterBlock(ItemConduit);	
 				
-		CopperOre = new Ore("CopperOre", "pickaxe", 1);
+		CopperOre = new Ore("CopperOre", "pickaxe", 1, 2.5f);
 		registry.PreRegisterBlock(CopperOre);
-		TinOre = new Ore("TinOre", "pickaxe", 1);
+		TinOre = new Ore("TinOre", "pickaxe", 1, 2.1f);
 		registry.PreRegisterBlock(TinOre);
-		SilverOre = new Ore("SilverOre", "pickaxe", 2);
+		SilverOre = new Ore("SilverOre", "pickaxe", 2, 3.4f);
 		registry.PreRegisterBlock(SilverOre);
-		LeadOre = new Ore("LeadOre", "pickaxe", 2);
+		LeadOre = new Ore("LeadOre", "pickaxe", 2, 2.5f);
 		registry.PreRegisterBlock(LeadOre);			
-		PlatinumOre = new Ore("PlatinumOre", "pickaxe", 2);
+		PlatinumOre = new Ore("PlatinumOre", "pickaxe", 2, 4f);
 		registry.PreRegisterBlock(PlatinumOre);	
-		NickelOre = new Ore("NickelOre", "pickaxe", 1);
+		NickelOre = new Ore("NickelOre", "pickaxe", 1, 3f);
 		registry.PreRegisterBlock(NickelOre);
-		AluminiumOre = new Ore("AluminiumOre", "pickaxe", 2);
+		AluminiumOre = new Ore("AluminiumOre", "pickaxe", 2, 2.5f);
 		registry.PreRegisterBlock(AluminiumOre);
-		SapphireOre = new GemOre("SapphireOre", "pickaxe", 2, ItemMaterials.gemSapphire, 1, 2);
+		SapphireOre = new GemOre("SapphireOre", "pickaxe", 2, ItemMaterials.gemSapphire, 1, 2, 4f);
 		registry.PreRegisterBlock(SapphireOre);
-		RubyOre = new GemOre("RubyOre", "pickaxe", 2, ItemMaterials.gemRuby, 1, 2);
+		RubyOre = new GemOre("RubyOre", "pickaxe", 2, ItemMaterials.gemRuby, 1, 2, 4);
 		registry.PreRegisterBlock(RubyOre);
 	}
 }

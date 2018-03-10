@@ -19,12 +19,13 @@ public class GemOre extends Block{
 	private int dropMin;
 	private int dropMax;
 	
-	public GemOre(String name, String tool, int level, ItemStack gemDrop, int dropMin, int dropMax) {
+	public GemOre(String name, String tool, int level, ItemStack gemDrop, int dropMin, int dropMax, float hardness) {
 		super(Material.ROCK);
 		setCreativeTab(StaticPower.StaticPower);
 		setUnlocalizedName(name);	
 		setRegistryName(name);
 		setHarvestLevel(tool, level);
+		setHardness(hardness);
 		//RegisterHelper.registerItem(new BaseItemBlock(this, name));
 		droppedGem = gemDrop;
 		this.dropMin = dropMin;
