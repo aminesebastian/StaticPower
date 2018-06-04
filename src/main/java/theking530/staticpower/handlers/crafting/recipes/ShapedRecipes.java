@@ -16,7 +16,6 @@ import theking530.staticpower.blocks.crops.ModPlants;
 import theking530.staticpower.handlers.crafting.Craft;
 import theking530.staticpower.items.ItemComponents;
 import theking530.staticpower.items.ItemMaterials;
-import theking530.staticpower.items.MiscItems;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.items.armor.ModArmor;
 
@@ -318,10 +317,6 @@ public class ShapedRecipes {
 		RegisterHelper.addShapedRecipe("StaticPower_rubyChestplate", "StaticPower", new ItemStack(ModArmor.RubyChestplate), new Object[]{"E E", "EEE", "EEE",  'E', Craft.ing(ItemMaterials.gemRuby)});
 		RegisterHelper.addShapedRecipe("StaticPower_rubyLeggings", "StaticPower", new ItemStack(ModArmor.RubyLeggings), new Object[]{"EEE", "E E", "E E",  'E', Craft.ing(ItemMaterials.gemRuby)});
 		RegisterHelper.addShapedRecipe("StaticPower_rubyBoots", "StaticPower", new ItemStack(ModArmor.RubyBoots), new Object[]{"   ", "E E", "E E",  'E', Craft.ing(ItemMaterials.gemRuby)});		
-	
-		//Apple Pie
-		RegisterHelper.addShapedRecipe("StaticPower_applePie", "StaticPower", MiscItems.applePie, new Object[]{"AS ","E  ","   ",
-		'S', ingredientFromItem(Items.SUGAR), 'A', ingredientFromItem(Items.EGG), 'E', ingredientFromItem(Items.APPLE)});
 	}
 	public static Ingredient ingredientFromBlock(Block block) {
 		return ingredientFromItem(Item.getItemFromBlock(block));

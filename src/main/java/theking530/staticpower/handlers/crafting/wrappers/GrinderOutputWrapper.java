@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class GrinderOutputWrapper {
 
@@ -64,15 +65,37 @@ public class GrinderOutputWrapper {
 		return !input.isEmpty() && inputItem.apply(input);
 	}
 	public static GrinderOutput getnullOutput() {
-		return new GrinderOutput(null, 0);
+		return new GrinderOutput(null, 0, 0.0f);
 	}
 	public static class GrinderOutput {
 		private final ItemStack OUTPUT_ITEM;
 		private final float PERCENTAGE;
 		
+		public GrinderOutput(ItemStack output) {
+			this(output, 1.0f);
+		}
 		public GrinderOutput(ItemStack output, float percentage) {
 			OUTPUT_ITEM = output;
 			PERCENTAGE = percentage;
+		}
+		public GrinderOutput(String output) {
+			this(output, 1, 1.0f);
+		}
+		public GrinderOutput(String output, float percentage) {
+			this(output, 1, percentage);
+		}
+		public GrinderOutput(String output, int count) {
+			this(output, count, 1.0f);
+		}
+		public GrinderOutput(String output, int count, float percentage) {
+			if(OreDictionary.doesOreNameExist(output)) {
+				OUTPUT_ITEM = OreDictionary.getOres(output).get(0).copy();
+				OUTPUT_ITEM.setCount(count);
+				PERCENTAGE = percentage;
+			}else{
+				PERCENTAGE = 0.0f;
+				OUTPUT_ITEM = null;
+			}
 		}
 		public boolean isValid() {
 			if(OUTPUT_ITEM != null) {

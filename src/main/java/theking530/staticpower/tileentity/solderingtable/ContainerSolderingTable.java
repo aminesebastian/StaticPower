@@ -6,6 +6,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import theking530.staticpower.container.BaseContainer;
 import theking530.staticpower.handlers.crafting.registries.SolderingRecipeRegistry;
+import theking530.staticpower.items.ModItems;
 import theking530.staticpower.items.tools.ISolderingIron;
 import theking530.staticpower.machines.tileentitycomponents.slots.StaticPowerContainerSlot;
 
@@ -39,7 +40,7 @@ public class ContainerSolderingTable extends BaseContainer {
         this.addSlotToContainer(new SlotSolderingTable(this, invPlayer.player, teTable, teTable.slotsOutput, 0, 140, 39));
         
         //Soldering Iron
-		this.addSlotToContainer(new SlotSolderingTableInput(this, teTable.slotsInput, 16, 11, 17) {
+		this.addSlotToContainer(new StaticPowerContainerSlot(new ItemStack(ModItems.SolderingIron), teTable.slotsInput, 16, 11, 17) {
 			@Override
 	        public boolean isItemValid(ItemStack itemStack) {
 		          return itemStack.getItem() instanceof ISolderingIron;

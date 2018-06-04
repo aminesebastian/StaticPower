@@ -72,14 +72,9 @@ public class ModArmor {
 	public static Item SkeletonChestplate;
 	public static Item SkeletonLeggings;
 	public static Item SkeletonBoots;
-	
-	public static Item BaseShield;
-	
+
 	public static void init(Registry registry) {		
 		
-		BaseShield = new BaseShield("BaseShield", BaseArmor.ArmorType.MEDIUM, ModMaterials.COPPER);
-		registry.PreRegisterItem(BaseShield);	
-			
 		SkeletonHelmet = new SkeletonArmor("SkeletonHelmet", BaseArmor.ArmorType.LIGHT, ModMaterials.SKELETON, EntityEquipmentSlot.HEAD);
 		registry.PreRegisterItem(SkeletonHelmet);	
 		SkeletonChestplate = new SkeletonArmor("SkeletonChestplate", BaseArmor.ArmorType.LIGHT, ModMaterials.SKELETON, EntityEquipmentSlot.CHEST);

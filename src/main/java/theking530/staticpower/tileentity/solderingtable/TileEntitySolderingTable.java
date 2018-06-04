@@ -10,9 +10,9 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
-import net.minecraftforge.items.ItemHandlerHelper;
 import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.handlers.crafting.registries.SolderingRecipeRegistry;
+import theking530.staticpower.handlers.crafting.wrappers.SolderingRecipeWrapper;
 import theking530.staticpower.items.tools.ISolderingIron;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
 import theking530.staticpower.tileentity.TileEntityBase;
@@ -25,27 +25,16 @@ public class TileEntitySolderingTable extends TileEntityBase {
 	}
 	@Override
 	public String getName() {
-		return "SolderingTable";		
+		return "container.SolderingTable";				
 	}
 	public boolean hasValidRecipe() {
 		return SolderingRecipeRegistry.Soldering().getRecipe(slotsInput, getWorld(), 3, 3) != null;
 	}
 	public boolean canProcess() {
 		if(hasValidRecipe()) {
-			for (int i = 0; i < 9; ++i){
-				boolean flag = false;
-	            ItemStack itemstack1 = getInputStack(i);
-	            if (!itemstack1.isEmpty()) {
-	            	for(int j=9; j<16; j++) {
-	            		if(!getInputStack(j).isEmpty() && ItemHandlerHelper.canItemStacksStack(getInputStack(j), getInputStack(i))) {
-	        				flag = true;
-	        				break;
-	            		}
-	            	}
-	            }
-	            if(!flag) {
-	            	return false;
-	            }
+			SolderingRecipeWrapper recipe = SolderingRecipeRegistry.Soldering().getRecipe(slotsInput, getWorld(), 3, 3);
+			if(!recipe.satisfiesCount(getInputStack(9), getInputStack(10), getInputStack(11), getInputStack(12), getInputStack(13), getInputStack(14), getInputStack(15))) {
+				return false;
 			}
 			return true;
 		}

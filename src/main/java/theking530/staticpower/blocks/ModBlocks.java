@@ -405,9 +405,9 @@ public class ModBlocks {
 		registry.PreRegisterBlock(NickelOre);
 		AluminiumOre = new Ore("AluminiumOre", "pickaxe", 2, 2.5f);
 		registry.PreRegisterBlock(AluminiumOre);
-		SapphireOre = new GemOre("SapphireOre", "pickaxe", 2, ItemMaterials.gemSapphire, 1, 2, 4f);
+		SapphireOre = new GemOre("SapphireOre", "pickaxe", 2, ItemMaterials.gemSapphire, 1, 2, 4.0f);
 		registry.PreRegisterBlock(SapphireOre);
-		RubyOre = new GemOre("RubyOre", "pickaxe", 2, ItemMaterials.gemRuby, 1, 2, 4);
+		RubyOre = new GemOre("RubyOre", "pickaxe", 2, ItemMaterials.gemRuby, 1, 2, 4.0f);
 		registry.PreRegisterBlock(RubyOre);
 	}
 }

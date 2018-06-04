@@ -26,11 +26,13 @@ public class ShaplessRecipes {
 			Ingredient.fromItem(Items.POTATO)});
 		RegisterHelper.addShapelessRecipe("StaticPower_wheatFlour", "StaticPower", MiscItems.wheatFlour, new Ingredient[]{
 				Ingredient.fromItem(Items.WHEAT)});
+		RegisterHelper.addShapelessRecipe("StaticPower_applePie", "StaticPower", MiscItems.applePie, new Ingredient[]{
+				Craft.ing(Items.APPLE), Craft.ing(Items.EGG), Craft.ing(Items.SUGAR), Craft.ing(MiscItems.wheatFlour)});
 		
 		//Static Book --------------------------------------------------------------------------------------------------
 		RegisterHelper.addShapelessRecipe("StaticPower_staticBook", "StaticPower", new ItemStack(ModItems.StaticBook), new Ingredient[]{
 				Ingredient.fromItem(ModPlants.StaticSeeds), Ingredient.fromItem(Items.BOOK)});
-		
+
 		//Infusion Blends
 		RegisterHelper.addShapelessRecipe("StaticPower_energizedInfusionBlend", "StaticPower", ItemMaterials.dustStaticInfusion, new Ingredient[]{
 				Craft.ing(ItemMaterials.dustInertInfusion), Craft.ing(ItemMaterials.dustStatic)});

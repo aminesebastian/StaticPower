@@ -1,5 +1,6 @@
 package theking530.staticpower.handlers.crafting.wrappers;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -36,7 +37,8 @@ public class SolderingRecipeWrapper extends net.minecraftforge.registries.IForge
     /** Is the ItemStack that you get when craft the recipe. */
     private final ItemStack recipeOutput;
     private final String group;
-
+    private final HashMap<Ingredient, Integer> recipeMap;
+    
     public SolderingRecipeWrapper(String group, int width, int height, NonNullList<Ingredient> ingredients, ItemStack result)
     {
         this.group = group;
@@ -44,8 +46,38 @@ public class SolderingRecipeWrapper extends net.minecraftforge.registries.IForge
         this.recipeHeight = height;
         this.recipeItems = ingredients;
         this.recipeOutput = result;
+        
+        this.recipeMap = new HashMap<Ingredient, Integer>();
+        for(Ingredient ing : ingredients) {
+        	if(recipeMap.containsKey(ing)) {
+        		recipeMap.put(ing, recipeMap.get(ing)+1);
+        	}else{
+        		recipeMap.put(ing, 1);
+        	}
+        }
     }
-
+    public boolean satisfiesCount(ItemStack... inputs) {
+    	HashMap<Ingredient, Integer> tempMap = new HashMap<Ingredient, Integer>();
+    	for(Entry<Ingredient, Integer> entry : recipeMap.entrySet()) {
+    		tempMap.put(entry.getKey(), entry.getValue());
+    	}
+    	for(ItemStack inputItem : inputs) {
+    		if(inputItem.isEmpty()) {
+    			continue;
+    		}
+        	for(Entry<Ingredient, Integer> entry : tempMap.entrySet()) {
+        		if(entry.getKey().apply(inputItem)) {
+            		tempMap.put(entry.getKey(), entry.getValue()-inputItem.getCount());
+        		}
+        	}
+    	}
+    	for(Entry<Ingredient, Integer> entry : tempMap.entrySet()) {
+    		if(entry.getValue() > 0 && entry.getKey() != Ingredient.EMPTY) {
+        		return false;
+    		}
+    	}
+		return true;	
+    }
     public String getGroup()
     {
         return this.group;
@@ -86,59 +118,25 @@ public class SolderingRecipeWrapper extends net.minecraftforge.registries.IForge
     /**
      * Used to check if a recipe matches current crafting inventory
      */
-    public boolean matches(IItemHandler inv, World worldIn, int craftingInvWidth, int craftingInvHeight)
-    {
-        for (int i = 0; i <= craftingInvWidth - this.recipeWidth; ++i)
-        {
-            for (int j = 0; j <= craftingInvHeight - this.recipeHeight; ++j)
-            {
-                if (this.checkMatch(inv, i, j, true, craftingInvWidth, craftingInvHeight))
-                {
-                    return true;
-                }
-
-                if (this.checkMatch(inv, i, j, false, craftingInvWidth, craftingInvHeight))
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Checks if the region of a crafting inventory is match for the recipe.
-     */
-    private boolean checkMatch(IItemHandler inv, int p_77573_2_, int p_77573_3_, boolean p_77573_4_, int craftingInvWidth, int craftingInvHeight)
-    {
-        for (int i = 0; i < craftingInvWidth; ++i)
-        {
-            for (int j = 0; j < craftingInvHeight; ++j)
-            {
-                int k = i - p_77573_2_;
-                int l = j - p_77573_3_;
-                Ingredient ingredient = Ingredient.EMPTY;
-
-                if (k >= 0 && l >= 0 && k < this.recipeWidth && l < this.recipeHeight)
-                {
-                    if (p_77573_4_)
-                    {
-                        ingredient = this.recipeItems.get(this.recipeWidth - k - 1 + l * this.recipeWidth);
-                    }
-                    else
-                    {
-                        ingredient = this.recipeItems.get(k + l * this.recipeWidth);
-                    }
-                }
-
-                if (!ingredient.apply(getStackInHandlerRowAndColumn(inv, craftingInvWidth, craftingInvHeight, i, j)))
-                {
-                    return false;
+    public boolean matches(IItemHandler inv, World worldIn, int craftingInvWidth, int craftingInvHeight) {
+    	if(recipeWidth != craftingInvWidth) {
+    		return false;
+    	}
+    	if(recipeHeight != craftingInvHeight) {
+    		return false;
+    	}
+        for (int i = 0; i < this.recipeWidth; i++) {
+            for (int j = 0; j < this.recipeHeight; j++) {
+                Ingredient ingAtSlot = this.recipeItems.get((i*3)+j);;
+                if(ingAtSlot == Ingredient.EMPTY) {
+                	continue;
+                }else{
+                	if(!ingAtSlot.apply(inv.getStackInSlot((i*3)+j))) {
+                		return false;
+                	}
                 }
             }
         }
-
         return true;
     }
     public ItemStack getStackInHandlerRowAndColumn(IItemHandler inv, int craftingInvWidth, int craftingInvHeight, int row, int column)

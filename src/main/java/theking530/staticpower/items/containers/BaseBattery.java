@@ -11,8 +11,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import theking530.staticpower.items.BasePoweredItem;
 
 public class BaseBattery extends BasePoweredItem { 
@@ -24,7 +22,6 @@ public class BaseBattery extends BasePoweredItem {
 		setMaxStackSize(1);
 		setHasSubtypes(true);
 	}
-    @SideOnly(Side.CLIENT)
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
 		if (isInCreativeTab(tab)) {

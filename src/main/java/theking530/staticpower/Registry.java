@@ -29,16 +29,17 @@ public class Registry {
 
 	public List<Item> ITEMS = new LinkedList<>();
 	public List<Block> BLOCKS = new LinkedList<>();
+	public List<MultiItem> MULTI_ITEM = new LinkedList<MultiItem>();
 
     public void preInit(FMLPreInitializationEvent e) {
     	 MinecraftForge.EVENT_BUS.register(this);
-    	 //ModelLoaderRegistry.registerLoader(theking530.staticpower.client.model.fluidcapsule.ModelFluidCapsule.LoaderFluidCapsule.INSTANCE);
     }
     
     public void PreRegisterItem(Item item) {
     	ITEMS.add(item);
     	if(item instanceof MultiItem) {
         	ItemRenderRegistry.addMultiItem((MultiItem)item);
+        	MULTI_ITEM.add((MultiItem)item);
     	}else{
         	ItemRenderRegistry.addItem(item);
     	}
@@ -69,6 +70,9 @@ public class Registry {
     @SubscribeEvent
     public void registerItems(RegistryEvent.Register<Item> e) {
     	ITEMS.forEach(e.getRegistry()::register);
+    	for(MultiItem item : MULTI_ITEM) {
+    		item.registerOreDictionaryEntries();
+    	}
     }
 
     @SideOnly(Side.CLIENT)

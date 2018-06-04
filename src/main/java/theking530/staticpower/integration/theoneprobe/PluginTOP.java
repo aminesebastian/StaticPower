@@ -43,8 +43,17 @@ public class PluginTOP implements ICompatibilityPlugin {
 			return;
 		}
 		registered = true;
+	}	
+
+	@Override
+	public void preInit() {
 		FMLInterModComms.sendFunctionMessage("theoneprobe", "getTheOneProbe", OneProbeCompatibility.class.getName());
 	}
+	@Override
+	public void init() {}
+	@Override
+	public void postInit() {}
+	
 	@Override
 	public boolean isRegistered() {
 		return registered;
@@ -56,8 +65,7 @@ public class PluginTOP implements ICompatibilityPlugin {
 	@Override
 	public String getPluginName() {
 		return "The One Probe";
-	}
-	
+	}	
 	public static class OneProbeCompatibility implements Function<ITheOneProbe, Void> {
 	    @Nullable
 		@Override

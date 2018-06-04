@@ -15,16 +15,13 @@ import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.CombatRules;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
@@ -34,7 +31,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -46,7 +42,6 @@ import theking530.staticpower.assists.customboundingbox.CustomBoundingBox;
 import theking530.staticpower.assists.customboundingbox.ICustomBoundingBox;
 import theking530.staticpower.assists.customboundingbox.RenderCustomBoundingBox;
 import theking530.staticpower.items.armor.BaseArmor;
-import theking530.staticpower.items.armor.BaseShield;
 import theking530.staticpower.items.armor.ModArmor;
 import theking530.staticpower.items.armor.SkeletonArmor;
 import theking530.staticpower.items.armor.UndeadArmor;
@@ -72,7 +67,6 @@ public class ModEvents {
 	}
     @SubscribeEvent(priority=EventPriority.HIGH, receiveCanceled=true)
 	public void attackEvent(LivingAttackEvent e) {
-    	handleShieldDamage(e);
     	handleArmorDamage(e);
 	}
     @SubscribeEvent(priority=EventPriority.NORMAL, receiveCanceled=true)
@@ -171,46 +165,6 @@ public class ModEvents {
 
 		return new Vec3d(player.posX, player.posY + player.getEyeHeight(), player.posZ);
 	}
-	
-	
-	
-	
-	
-    public void handleShieldDamage(LivingAttackEvent e) {
-		float damage = e.getAmount();
-		ItemStack activeItemStack;
-		EntityPlayer player;
-		if (!(e.getEntityLiving() instanceof EntityPlayer)) {
-			return;
-		}
-		player = (EntityPlayer) e.getEntityLiving();
-		if (player.getActiveItemStack() == null) {
-			return;
-		}
-		activeItemStack = player.getActiveItemStack();
-
-		if (damage > 0.0F && activeItemStack != null && activeItemStack.getItem() instanceof BaseShield) {
-			int i = 1 + MathHelper.floor(damage);
-			activeItemStack.damageItem(i, player);
-
-			if (activeItemStack.getCount() <= 0) {
-				EnumHand enumhand = player.getActiveHand();
-				net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(player, activeItemStack, enumhand);
-
-				if (enumhand == EnumHand.MAIN_HAND) {
-					player.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, (ItemStack) null);
-				}
-				else {
-					player.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, (ItemStack) null);
-				}
-
-				activeItemStack = null;
-				if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
-					player.playSound(SoundEvents.ITEM_SHIELD_BREAK, 0.8F, 0.8F + player.getEntityWorld().rand.nextFloat() * 0.4F);
-				}
-			}
-		}
-    }
     public void handleArmorDamage(LivingAttackEvent e) {
 		if (!(e.getEntityLiving() instanceof EntityPlayer)) {
 			return;

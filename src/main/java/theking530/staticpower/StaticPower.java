@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -159,9 +160,7 @@ public class StaticPower {
 	    OreGenerationHandler.intialize();
 	    CommonProxy.preInit();
 
-	    loadCompatibilityPlugins();
-	    
-	    
+	    loadCompatibilityPlugins();	 
 
 		GameRegistry.registerTileEntity(TileEntityChunkLoader.class, "BaseChunkLoader");
 		
@@ -198,7 +197,6 @@ public class StaticPower {
 		GameRegistry.registerTileEntity(TileEntityEnergizedBattery.class, "EnergizedBattery");
 		GameRegistry.registerTileEntity(TileEntityLumumBattery.class, "LumumBattery");
 
-
 		GameRegistry.registerTileEntity(TileEntitySignalMultiplier.class, "SignalMultiplier");
 		GameRegistry.registerTileEntity(TileEntityNotGate.class, "NotGate");
 		GameRegistry.registerTileEntity(TileEntityPowerCell.class, "PowerCell");
@@ -229,14 +227,16 @@ public class StaticPower {
 		GameRegistry.registerTileEntity(TileEntityDigistore.class, "Digistore");
 		GameRegistry.registerTileEntity(TileEntityDigistoreManager.class, "DigistoreManager");
 		GameRegistry.registerTileEntity(TileEntityDigistoreIOPort.class, "DigistoreIOPort");
-		GameRegistry.registerTileEntity(TileEntityDigistoreWire.class, "DigistoreWire");	
+		GameRegistry.registerTileEntity(TileEntityDigistoreWire.class, "DigistoreWire");
+		
+		
+		pluginsPreInit();
 	}	
 	
 	@EventHandler
 	public void Init(FMLInitializationEvent Event){
 		proxy.registerProxies();
-		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());	
-		
+		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());		
 		MaterialSets.initialize();
 		
 		OreDictionaryRegistration.registerOres();
@@ -258,6 +258,12 @@ public class StaticPower {
 		FarmerRecipes.registerFarmerRecipes();
 		CentrifugeRecipes.registerCentrigureRecipes();
 		LumberMillRecipes.registerLumberMillRecipes();
+		
+		pluginsInit();
+	}
+	@EventHandler
+	public void PostInit(FMLPostInitializationEvent Event){
+		pluginsPostInit();
 	}
 	@SubscribeEvent
 	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
@@ -282,14 +288,41 @@ public class StaticPower {
 			if(plugin.shouldRegister()) {
 		        try {
 		        	plugin.register();
-					LOGGER.log(Level.INFO, "Static Power: Loading " + plugin.getPluginName() + " compatibility plugin.");
+					LOGGER.log(Level.INFO, "Loading " + plugin.getPluginName() + " compatibility plugin.");
 		        } catch (Exception e) {
-					LOGGER.log(Level.INFO, "Static Power: Error while loading " + plugin.getPluginName() + " compatibility plugin.");
+					LOGGER.log(Level.ERROR, "Error while loading " + plugin.getPluginName() + " compatibility plugin.");
 	                e.printStackTrace(System.err);
+	                plugins.remove(plugin);
 	            }
 			}
+		}	
+	}
+	public void pluginsPreInit() {
+		for(ICompatibilityPlugin plugin : plugins) {
+			if(!plugin.isRegistered()) {
+				continue;
+			}
+			plugin.preInit();
+			LOGGER.log(Level.INFO, "Completed Pre Init for " + plugin.getPluginName() + " compatibility plugin.");
 		}
-		
+	}
+	public void pluginsInit() {
+		for(ICompatibilityPlugin plugin : plugins) {
+			if(!plugin.isRegistered()) {
+				continue;
+			}
+			plugin.init();
+			LOGGER.log(Level.INFO, "Completed Init for " + plugin.getPluginName() + " compatibility plugin.");
+		}
+	}
+	public void pluginsPostInit() {
+		for(ICompatibilityPlugin plugin : plugins) {
+			if(!plugin.isRegistered()) {
+				continue;
+			}
+			plugin.postInit();
+			LOGGER.log(Level.INFO, "Completed Post Init for " + plugin.getPluginName() + " compatibility plugin.");
+		}
 	}
 }
 	

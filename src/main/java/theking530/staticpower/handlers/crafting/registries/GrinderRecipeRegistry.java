@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import theking530.staticpower.handlers.crafting.Craft;
 import theking530.staticpower.handlers.crafting.wrappers.GrinderOutputWrapper;
 import theking530.staticpower.handlers.crafting.wrappers.GrinderOutputWrapper.GrinderOutput;
 
@@ -23,7 +24,7 @@ public class GrinderRecipeRegistry {
 	}
 	public void addRecipe(Ingredient input, GrinderOutput... outputs){
 		GrinderOutputWrapper tempWrapper = null;
-		GrinderOutput nullOutput = new GrinderOutput(null, 0);
+		GrinderOutput nullOutput = new GrinderOutput(null, 0, 0.0f);
 		if(outputs.length == 1) {
 			tempWrapper = new GrinderOutputWrapper(input, outputs[0], nullOutput, nullOutput);
 		}else if(outputs.length == 2) {
@@ -34,6 +35,12 @@ public class GrinderRecipeRegistry {
 		putLists(input, tempWrapper);
 	}
 	public void putLists(Ingredient input, GrinderOutputWrapper outputs){
+		for(Entry<Ingredient, GrinderOutputWrapper> entry : grindingList.entrySet()) {
+			if(Craft.areIngredientsEqual(entry.getKey(), input)) {
+				grindingList.put(entry.getKey(), outputs);
+				return;
+			}
+		}
 		grindingList.put(input, outputs);
 	}
     public Map<Ingredient, GrinderOutputWrapper> getGrindingList() {

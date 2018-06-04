@@ -34,5 +34,20 @@ public class FusionRecipes {
 			stack.setCount(2);
 			RegisterHelper.registerFusionRecipe(stack, Craft.ing("ingotCopper"), Craft.ing("ingotNickel"));
 		}
+		for(int i=0; i<OreDictionary.getOres("ingotManyullyn").size(); i++) {
+			ItemStack stack = OreDictionaryUtilities.getOreStack("ingotManyullyn", i);
+			stack.setCount(1);
+			RegisterHelper.registerFusionRecipe(stack, Craft.ing("ingotCobalt"), Craft.ing("ingotArdite"));
+		}
+		for(int i=0; i<OreDictionary.getOres("dustManyullyn").size(); i++) {
+			ItemStack stack = OreDictionaryUtilities.getOreStack("dustManyullyn", i);
+			stack.setCount(1);
+			RegisterHelper.registerFusionRecipe(stack, Craft.ing("dustCobalt"), Craft.ing("dustArdite"));
+		}
+		for(int i=0; i<OreDictionary.getOres("blockManyullyn").size(); i++) {
+			ItemStack stack = OreDictionaryUtilities.getOreStack("blockManyullyn", i);
+			stack.setCount(1);
+			RegisterHelper.registerFusionRecipe(stack, Craft.ing("blockCobalt"), Craft.ing("blockArdite"));
+		}
 	}
 }

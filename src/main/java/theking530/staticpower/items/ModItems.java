@@ -97,7 +97,7 @@ public class ModItems {
 		registry.PreRegisterItem(MiscItems = new MiscItems());
 		registry.PreRegisterItem(Components = new ItemComponents());
 		registry.PreRegisterItem(FormerMolds = new FormerMolds());
-		
+
 		StaticWrench = new StaticWrench().setUnlocalizedName("StaticWrench");
 		registry.PreRegisterItem(StaticWrench);
 		SolderingIron = new SolderingIron("SolderingIron", 20);

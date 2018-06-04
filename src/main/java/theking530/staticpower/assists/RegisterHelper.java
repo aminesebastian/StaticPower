@@ -29,8 +29,8 @@ public class RegisterHelper  {
 	public static void registerFermenterRecipe(Ingredient input, FluidStack output) {
 		FermenterRecipeRegistry.Fermenting().addRecipe(input, output);
 	}
-	public static void registerGrinderRecipe(Ingredient itemstack, GrinderOutput... outputs) {
-		GrinderRecipeRegistry.Grinding().addRecipe(itemstack, outputs);
+	public static void registerGrinderRecipe(Ingredient ingredient, GrinderOutput... outputs) {
+		GrinderRecipeRegistry.Grinding().addRecipe(ingredient, outputs);
 	}
 	public static void registerInfuserRecipe(ItemStack output, Ingredient input, FluidStack fluidStack) {
 		InfuserRecipeRegistry.Infusing().addRecipe(input, output, fluidStack);			

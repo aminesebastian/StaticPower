@@ -2,6 +2,7 @@ package theking530.staticpower.items;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
@@ -12,10 +13,12 @@ import theking530.staticpower.assists.Reference;
 public class MultiItem extends ItemBase {
 	
 	protected Map<Integer, MultiItemWrapper> itemMap;
+	protected Map<ItemStack, String> oreDictionaryMap;
 	
 	public MultiItem(String name) {
 		super(name);
 		itemMap = new HashMap<Integer, MultiItemWrapper>();
+		oreDictionaryMap = new HashMap<ItemStack, String>();
 		setHasSubtypes(true);
 		registerSubItems();
 	}
@@ -24,12 +27,12 @@ public class MultiItem extends ItemBase {
 	}
 	public ItemStack createSubOreItem(int metadata, String itemName) {
 		ItemStack stack = createSubItem(metadata, itemName);
-		OreDictionary.registerOre(itemName, stack);
+		oreDictionaryMap.put(stack, itemName);
 		return stack;
 	}
 	public ItemStack createSubOreItem(int metadata, String itemName, String oreDictName) {
 		ItemStack stack = createSubItem(metadata, itemName);
-		OreDictionary.registerOre(oreDictName, stack);
+		oreDictionaryMap.put(stack, itemName);
 		return stack;
 	}
 	public ItemStack createSubItem(int metadata, String itemName) {
@@ -37,7 +40,11 @@ public class MultiItem extends ItemBase {
 		itemMap.put(metadata, new MultiItemWrapper(temp, metadata, itemName));
 		return temp;
 	}
-	
+	public void registerOreDictionaryEntries() {
+		for(Entry<ItemStack, String> entry : oreDictionaryMap.entrySet()) {
+			OreDictionary.registerOre(entry.getValue(), entry.getKey());
+		}
+	}
 	public Map<Integer, MultiItemWrapper> getSubItemMap() {
 		return itemMap;
 	}

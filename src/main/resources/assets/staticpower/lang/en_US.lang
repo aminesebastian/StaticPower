@@ -588,3 +588,6 @@ side.Left=Left
 side.Front=Front
 side.Back=Back
 
+material.staticmetal.name=§aStatic Metal
+material.energizedmetal.name=§bEnergized Metal
+material.lumummetal.name=§eLumum Metal

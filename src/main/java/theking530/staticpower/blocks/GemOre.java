@@ -4,30 +4,22 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import theking530.staticpower.StaticPower;
 
-public class GemOre extends Block{
+public class GemOre extends BaseBlock {
 	
 	private ItemStack droppedGem;
 	private int dropMin;
 	private int dropMax;
 	
 	public GemOre(String name, String tool, int level, ItemStack gemDrop, int dropMin, int dropMax, float hardness) {
-		super(Material.ROCK);
-		setCreativeTab(StaticPower.StaticPower);
-		setUnlocalizedName(name);	
-		setRegistryName(name);
-		setHarvestLevel(tool, level);
-		setHardness(hardness);
-		//RegisterHelper.registerItem(new BaseItemBlock(this, name));
-		droppedGem = gemDrop;
+		super(Material.ROCK, name, tool, level, hardness);
+		this.droppedGem = gemDrop;
 		this.dropMin = dropMin;
 		this.dropMax = dropMax;
 	}
