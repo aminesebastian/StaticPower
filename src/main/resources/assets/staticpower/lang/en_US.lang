@@ -94,6 +94,9 @@ staticpower.material.dustRuby.name=Ruby Dust
 staticpower.material.dustSapphire.name=Sapphire Dust
 staticpower.material.dustObsidian.name=Obsidian Dust
 
+staticpower.material.dustCobalt.name=Cobalt Dust
+staticpower.material.dustArdite.name=Ardite Dust
+
 staticpower.material.nuggetCopper.name=Copper Nugget
 staticpower.material.nuggetTin.name=Tin Nugget
 staticpower.material.nuggetSilver.name=Silver Nugget

@@ -64,6 +64,9 @@ public class ItemMaterials extends MultiItem {
 	public static ItemStack dustRuby;
 	public static ItemStack dustSapphire;
 	
+	public static ItemStack dustCobalt;
+	public static ItemStack dustArdite;
+	
 	public static ItemStack gearCopper;
 	public static ItemStack gearTin;	
 	public static ItemStack gearSilver;	
@@ -158,7 +161,7 @@ public class ItemMaterials extends MultiItem {
 		dustObsidian = createSubOreItem(165, "dustObsidian");
 		dustRuby = createSubOreItem(166, "dustRuby");
 		dustSapphire = createSubOreItem(167, "dustSapphire");
-		
+
 		gearCopper = createSubOreItem(200, "gearCopper");
 		gearTin = createSubOreItem(201, "gearTin");
 		gearSilver = createSubOreItem(202, "gearSilver");

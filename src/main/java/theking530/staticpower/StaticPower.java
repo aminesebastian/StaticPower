@@ -1,7 +1,10 @@
 package theking530.staticpower;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.logging.log4j.Level;
 
@@ -130,7 +133,8 @@ public class StaticPower {
     public static org.apache.logging.log4j.Logger LOGGER;
     public static Registry REGISTRY;
     
-    public static List<ICompatibilityPlugin> plugins = new ArrayList<ICompatibilityPlugin>();
+    public static Map<String, Class<? extends ICompatibilityPlugin>> plugins = new HashMap<String,  Class<? extends ICompatibilityPlugin>>();
+    public static List<ICompatibilityPlugin> registeredPlugins = new ArrayList<ICompatibilityPlugin>();
     
     @Mod.Instance(Reference.MOD_ID)
     public static StaticPower instance;
@@ -240,6 +244,11 @@ public class StaticPower {
 		MaterialSets.initialize();
 		
 		OreDictionaryRegistration.registerOres();
+		
+		pluginsInit();
+	}
+	@EventHandler
+	public void PostInit(FMLPostInitializationEvent Event){
 		ShapedRecipes.registerFullRecipes();   
 		ShaplessRecipes.registerShapelessRecipes(); 
 		SmeltingRecipes.registerFullRecipes();
@@ -258,11 +267,6 @@ public class StaticPower {
 		FarmerRecipes.registerFarmerRecipes();
 		CentrifugeRecipes.registerCentrigureRecipes();
 		LumberMillRecipes.registerLumberMillRecipes();
-		
-		pluginsInit();
-	}
-	@EventHandler
-	public void PostInit(FMLPostInitializationEvent Event){
 		pluginsPostInit();
 	}
 	@SubscribeEvent
@@ -280,25 +284,29 @@ public class StaticPower {
 	public void loadCompatibilityPlugins() {
 	    Loader.instance();
 
-		plugins.add(new PluginTOP());
-		plugins.add(new PluginTinkersConstruct());
-		plugins.add(new PluginThermalFoundation());
+		plugins.put("theoneprobe", PluginTOP.class);
+		plugins.put("tconstruct", PluginTinkersConstruct.class);
+		plugins.put("thermalfoundation", PluginThermalFoundation.class);
 		
-		for(ICompatibilityPlugin plugin : plugins) {
-			if(plugin.shouldRegister()) {
-		        try {
+		for(Entry<String,  Class<? extends ICompatibilityPlugin>> pluginEntry : plugins.entrySet()) {
+			if(!Loader.isModLoaded(pluginEntry.getKey())){
+				continue;
+			}
+			try {
+				ICompatibilityPlugin plugin = pluginEntry.getValue().newInstance();
+				if(plugin.shouldRegister()) {
 		        	plugin.register();
 					LOGGER.log(Level.INFO, "Loading " + plugin.getPluginName() + " compatibility plugin.");
-		        } catch (Exception e) {
-					LOGGER.log(Level.ERROR, "Error while loading " + plugin.getPluginName() + " compatibility plugin.");
-	                e.printStackTrace(System.err);
-	                plugins.remove(plugin);
-	            }
-			}
+	                registeredPlugins.add(plugin);
+				}
+			} catch (Exception e) {
+				LOGGER.log(Level.ERROR, "Error while loading compatibility plugin for mod" + pluginEntry.getKey() + " compatibility plugin.");
+				LOGGER.log(Level.ERROR, e.getMessage());
+			}	
 		}	
 	}
 	public void pluginsPreInit() {
-		for(ICompatibilityPlugin plugin : plugins) {
+		for(ICompatibilityPlugin plugin : registeredPlugins) {
 			if(!plugin.isRegistered()) {
 				continue;
 			}
@@ -307,7 +315,7 @@ public class StaticPower {
 		}
 	}
 	public void pluginsInit() {
-		for(ICompatibilityPlugin plugin : plugins) {
+		for(ICompatibilityPlugin plugin : registeredPlugins) {
 			if(!plugin.isRegistered()) {
 				continue;
 			}
@@ -316,7 +324,7 @@ public class StaticPower {
 		}
 	}
 	public void pluginsPostInit() {
-		for(ICompatibilityPlugin plugin : plugins) {
+		for(ICompatibilityPlugin plugin : registeredPlugins) {
 			if(!plugin.isRegistered()) {
 				continue;
 			}

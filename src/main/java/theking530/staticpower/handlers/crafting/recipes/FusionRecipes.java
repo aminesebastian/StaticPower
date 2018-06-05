@@ -3,9 +3,9 @@ package theking530.staticpower.handlers.crafting.recipes;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.oredict.OreDictionary;
 import theking530.staticpower.assists.RegisterHelper;
-import theking530.staticpower.assists.utilities.OreDictionaryUtilities;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.handlers.crafting.Craft;
 import theking530.staticpower.items.ItemMaterials;
@@ -19,35 +19,15 @@ public class FusionRecipes {
 		
 		RegisterHelper.registerFusionRecipe(Craft.outputStack(ItemMaterials.ingotRedstoneAlloy, 1), Craft.ing("ingotSilver"), Craft.ing(Items.REDSTONE));
 		
-		for(int i=0; i<OreDictionary.getOres("ingotElectrum").size(); i++) {
-			ItemStack stack = OreDictionaryUtilities.getOreStack("ingotElectrum", i);
-			stack.setCount(2);
-			RegisterHelper.registerFusionRecipe(stack, Craft.ing("ingotGold"), Craft.ing("ingotSilver"));
-		}
-		for(int i=0; i<OreDictionary.getOres("ingotInvar").size(); i++) {
-			ItemStack stack = OreDictionaryUtilities.getOreStack("ingotInvar", i);
-			stack.setCount(3);
-			RegisterHelper.registerFusionRecipe(stack, Craft.ing("ingotIron"), Craft.ing("ingotIron"), Craft.ing("ingotNickel"));
-		}
-		for(int i=0; i<OreDictionary.getOres("ingotConstantan").size(); i++) {
-			ItemStack stack = OreDictionaryUtilities.getOreStack("ingotConstantan", i);
-			stack.setCount(2);
-			RegisterHelper.registerFusionRecipe(stack, Craft.ing("ingotCopper"), Craft.ing("ingotNickel"));
-		}
-		for(int i=0; i<OreDictionary.getOres("ingotManyullyn").size(); i++) {
-			ItemStack stack = OreDictionaryUtilities.getOreStack("ingotManyullyn", i);
-			stack.setCount(1);
-			RegisterHelper.registerFusionRecipe(stack, Craft.ing("ingotCobalt"), Craft.ing("ingotArdite"));
-		}
-		for(int i=0; i<OreDictionary.getOres("dustManyullyn").size(); i++) {
-			ItemStack stack = OreDictionaryUtilities.getOreStack("dustManyullyn", i);
-			stack.setCount(1);
-			RegisterHelper.registerFusionRecipe(stack, Craft.ing("dustCobalt"), Craft.ing("dustArdite"));
-		}
-		for(int i=0; i<OreDictionary.getOres("blockManyullyn").size(); i++) {
-			ItemStack stack = OreDictionaryUtilities.getOreStack("blockManyullyn", i);
-			stack.setCount(1);
-			RegisterHelper.registerFusionRecipe(stack, Craft.ing("blockCobalt"), Craft.ing("blockArdite"));
+		registerOreRecipe("ingotElectrum", 2, Craft.ing("ingotGold"), Craft.ing("ingotSilver"));
+		registerOreRecipe("ingotInvar", 3, Craft.ing("ingotIron"), Craft.ing("ingotIron"), Craft.ing("ingotNickel"));
+		registerOreRecipe("ingotConstantan", 2, Craft.ing("ingotCopper"), Craft.ing("ingotNickel"));
+	}
+	public static void registerOreRecipe(String output, int outputCount, Ingredient... inputs) {
+		if(OreDictionary.getOres(output).size() > 0) {
+			ItemStack stack = OreDictionary.getOres(output).get(0).copy();
+			stack.setCount(outputCount);
+			RegisterHelper.registerFusionRecipe(stack, inputs);
 		}
 	}
 }

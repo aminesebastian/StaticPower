@@ -1,12 +1,12 @@
 package theking530.staticpower.integration.tinkersconstruct;
 
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
+import net.minecraftforge.oredict.OreDictionary;
 import slimeknights.tconstruct.library.TinkerRegistry;
 import slimeknights.tconstruct.library.materials.ExtraMaterialStats;
 import slimeknights.tconstruct.library.materials.HandleMaterialStats;
@@ -14,7 +14,12 @@ import slimeknights.tconstruct.library.materials.HeadMaterialStats;
 import slimeknights.tconstruct.library.materials.Material;
 import slimeknights.tconstruct.library.utils.HarvestLevels;
 import theking530.staticpower.fluids.ModFluids;
+import theking530.staticpower.handlers.crafting.Craft;
+import theking530.staticpower.handlers.crafting.recipes.FusionRecipes;
+import theking530.staticpower.handlers.crafting.recipes.SmeltingRecipes;
 import theking530.staticpower.integration.ICompatibilityPlugin;
+import theking530.staticpower.items.ItemMaterials;
+import theking530.staticpower.items.ModItems;
 
 public class PluginTinkersConstruct implements ICompatibilityPlugin {
 
@@ -43,6 +48,10 @@ public class PluginTinkersConstruct implements ICompatibilityPlugin {
 	@Override
 	public void preInit() {
 		initializeTinkersMaterials();	
+		
+		ItemMaterials.dustCobalt = ModItems.Materials.createSubOreItem(168, "dustCobalt");
+		ItemMaterials.dustArdite = ModItems.Materials.createSubOreItem(169, "dustArdite");
+	
 	}	
 	@Override
 	public void init() {
@@ -65,7 +74,17 @@ public class PluginTinkersConstruct implements ICompatibilityPlugin {
 		lumumMetal.addItem("blocklumum", 1, Material.VALUE_Block);
 	}	
 	@Override
-	public void postInit() {}
+	public void postInit() {
+		FusionRecipes.registerOreRecipe("dustManyullyn", 1, Craft.ing("dustCobalt"), Craft.ing("dustArdite"));
+		FusionRecipes.registerOreRecipe("ingotManyullyn", 1, Craft.ing("dustCobalt"), Craft.ing("ingotArdite"));
+		FusionRecipes.registerOreRecipe("ingotManyullyn", 1, Craft.ing("ingotCobalt"), Craft.ing("dustArdite"));
+		FusionRecipes.registerOreRecipe("ingotManyullyn", 1, Craft.ing("ingotCobalt"), Craft.ing("ingotArdite"));
+		FusionRecipes.registerOreRecipe("blockManyullyn", 1, Craft.ing("blockCobalt"), Craft.ing("blockArdite"));
+		FusionRecipes.registerOreRecipe("ingotManyullyn", 2, Craft.ing("oreCobalt"), Craft.ing("oreArdite"));
+		
+		SmeltingRecipes.registerRecipe(ItemMaterials.dustCobalt, OreDictionary.getOres("ingotCobalt").get(0), 1.0f);
+		SmeltingRecipes.registerRecipe(ItemMaterials.dustArdite, OreDictionary.getOres("dustArdite").get(0), 1.0f);
+	}
 	
 	@Override
 	public String getPluginName() {

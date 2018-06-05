@@ -23,6 +23,10 @@ public class GrinderRecipeRegistry {
 		
 	}
 	public void addRecipe(Ingredient input, GrinderOutput... outputs){
+		//Sanity check in case someone tries to add a recipe with a null input
+		if(input == null) {
+			return;
+		}
 		GrinderOutputWrapper tempWrapper = null;
 		GrinderOutput nullOutput = new GrinderOutput(null, 0, 0.0f);
 		if(outputs.length == 1) {
