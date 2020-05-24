@@ -1,0 +1,8 @@
+{
+    "parent": "block/orientable",
+    "textures": {
+        "top": "staticpower:blocks/VacuumChest",
+		"front": "staticpower:blocks/VacuumChest",
+		"side": "staticpower:blocks/VacuumChest"
+    }
+}

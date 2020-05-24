@@ -1,0 +1,8 @@
+{
+    "parent": "block/orientable",
+    "textures": {
+	    "top": "staticpower:blocks/lumum_battery_top",
+        "front": "staticpower:blocks/lumum_battery_sides",
+        "side": "staticpower:blocks/lumum_battery_sides"
+    }
+}

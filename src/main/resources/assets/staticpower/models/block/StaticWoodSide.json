@@ -1,7 +1,0 @@
-{
-    "parent": "block/column_side",
-    "textures": {
-        "end": "staticpower:blocks/StaticWoodTop",
-        "side": "staticpower:blocks/StaticWood"
-    }
-}

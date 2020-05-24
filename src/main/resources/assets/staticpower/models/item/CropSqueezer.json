@@ -1,8 +1,0 @@
-{
-    "parent": "block/orientable",
-    "textures": {
-	    "top": "staticpower:blocks/machines/machine_side",
-        "front": "staticpower:blocks/machines/crop_squeezer_front_off",
-        "side": "staticpower:blocks/machines/machine_side"
-    }
-}

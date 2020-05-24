@@ -1,8 +1,0 @@
-{
-    "parent": "block/farmland",
-    "textures": {
-        "particle": "staticpower:blocks/AdvancedEarthSides",
-        "dirt": "staticpower:blocks/AdvancedEarthSides",
-        "top": "staticpower:blocks/AdvancedEarthTop"
-    }
-}

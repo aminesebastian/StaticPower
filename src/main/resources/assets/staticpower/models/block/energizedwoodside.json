@@ -1,0 +1,7 @@
+{
+    "parent": "block/column_side",
+    "textures": {
+        "end": "staticpower:blocks/EnergizedWoodTop",
+        "side": "staticpower:blocks/EnergizedWood"
+    }
+}
