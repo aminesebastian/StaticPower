@@ -7,11 +7,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.oredict.OreDictionary;
-import theking530.staticpower.assists.RegisterHelper;
 import theking530.staticpower.handlers.crafting.Craft;
 import theking530.staticpower.handlers.crafting.wrappers.GrinderOutputWrapper.GrinderOutput;
 import theking530.staticpower.items.ItemMaterials;
 import theking530.staticpower.items.MiscItems;
+import theking530.staticpower.utilities.RegisterHelper;
 
 public class GrinderRecipes {
 

@@ -1,12 +1,12 @@
 package theking530.staticpower.handlers.crafting.recipes;
 
 import net.minecraft.init.Items;
-import theking530.staticpower.assists.MaterialSet;
-import theking530.staticpower.assists.MaterialSets;
-import theking530.staticpower.assists.RegisterHelper;
 import theking530.staticpower.handlers.crafting.Craft;
 import theking530.staticpower.items.FormerMolds;
 import theking530.staticpower.items.ItemComponents;
+import theking530.staticpower.utilities.MaterialSet;
+import theking530.staticpower.utilities.MaterialSets;
+import theking530.staticpower.utilities.RegisterHelper;
 
 public class FormerRecipes {
 	

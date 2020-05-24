@@ -141,7 +141,7 @@ public class BlockMachineBase extends Block implements IWrenchable, IItemBlockPr
 		world.markAndNotifyBlock(pos, world.getChunkFromBlockCoords(pos), world.getBlockState(pos), world.getBlockState(pos), 2);
 	}	
 	@Override
-	public void sneakWrenchBlock(EntityPlayer player, SneakWrenchMode mode, ItemStack wrench, World world, BlockPos pos, EnumFacing facing, boolean returnDrops){
+	public void sneakWrenchBlock(EntityPlayer player, SneakWrenchMode mode, ItemStack wrench, World world, BlockPos pos, EnumFacing facing, boolean returnDrops) {
 		if(!world.isRemote) {
 			NBTTagCompound nbt = new NBTTagCompound();
 			ItemStack machineStack = new ItemStack(Item.getItemFromBlock(this));

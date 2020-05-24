@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "staticpower:BlockRuby" }
+        "normal": { "model": "staticpower:blockruby_model" }
     }
 }

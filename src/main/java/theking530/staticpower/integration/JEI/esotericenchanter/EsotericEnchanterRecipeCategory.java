@@ -18,7 +18,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import theking530.staticpower.assists.Reference;
 import theking530.staticpower.assists.utilities.GuiUtilities;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarUtilities;
@@ -26,6 +25,7 @@ import theking530.staticpower.handlers.crafting.registries.EsotericEnchanterReci
 import theking530.staticpower.handlers.crafting.wrappers.EsotericEnchanterRecipeWrapper;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.integration.JEI.PluginJEI;
+import theking530.staticpower.utilities.Reference;
 
 public class EsotericEnchanterRecipeCategory extends BaseJEIRecipeCategory<JEIEsotericEnchanterRecipeWrapper>{
 	 private final String locTitle;

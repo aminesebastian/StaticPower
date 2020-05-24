@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "staticpower:LeadOre" }
+        "normal": { "model": "staticpower:leadore_model" }
     }
 }

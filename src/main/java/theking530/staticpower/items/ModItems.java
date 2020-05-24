@@ -2,7 +2,6 @@ package theking530.staticpower.items;
 
 import net.minecraft.item.Item;
 import theking530.staticpower.Registry;
-import theking530.staticpower.assists.Tier;
 import theking530.staticpower.items.book.StaticPowerBook;
 import theking530.staticpower.items.containers.BaseBattery;
 import theking530.staticpower.items.containers.BaseFluidCapsule;
@@ -25,6 +24,7 @@ import theking530.staticpower.items.upgrades.BaseTankUpgrade;
 import theking530.staticpower.items.upgrades.DigistoreMiscUpgrades;
 import theking530.staticpower.items.upgrades.ExperienceVacuumUpgrade;
 import theking530.staticpower.items.upgrades.TeleportUpgrade;
+import theking530.staticpower.utilities.Tier;
 
 public class ModItems {
 	public static ItemMaterials Materials;

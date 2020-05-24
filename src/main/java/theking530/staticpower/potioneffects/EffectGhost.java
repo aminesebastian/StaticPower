@@ -7,7 +7,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
-import theking530.staticpower.assists.Reference;
+import theking530.staticpower.utilities.Reference;
 
 public class EffectGhost extends BasePotion {
 

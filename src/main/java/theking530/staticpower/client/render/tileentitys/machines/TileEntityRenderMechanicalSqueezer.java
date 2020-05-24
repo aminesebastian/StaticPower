@@ -6,11 +6,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.staticpower.assists.Reference;
 import theking530.staticpower.assists.utilities.RenderUtil;
 import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.SqueezerOutputWrapper;
 import theking530.staticpower.machines.mechanicalsqueezer.TileEntityMechanicalSqueezer;
+import theking530.staticpower.utilities.Reference;
 
 public class TileEntityRenderMechanicalSqueezer extends BaseMachineTESR<TileEntityMechanicalSqueezer> {
 

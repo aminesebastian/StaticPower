@@ -15,9 +15,9 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import theking530.staticpower.assists.Reference;
 import theking530.staticpower.assists.utilities.StaticVertexBuffer;
 import theking530.staticpower.client.gui.widgets.GuiDrawItem;
+import theking530.staticpower.utilities.Reference;
 
 public class StringButton extends Gui implements MouseListener{
 	

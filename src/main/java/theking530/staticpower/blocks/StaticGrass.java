@@ -21,11 +21,10 @@ import net.minecraft.world.World;
 public class StaticGrass extends BaseBlock{
 	
 	public StaticGrass() {
-		super(Material.GRASS, "StaticGrass");
+		super(Material.GRASS, "StaticGrass", 0.6f, "shovel", 0);
 		setSoundType(SoundType.GROUND);
 		setLightLevel(0.5F);
 		setTickRandomly(true);
-		setHardness(0.6F);	
 		setHarvestLevel("shovel",0);
 	}
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn) {

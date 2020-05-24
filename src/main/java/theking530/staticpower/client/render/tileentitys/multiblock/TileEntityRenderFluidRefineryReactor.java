@@ -1,8 +1,8 @@
 package theking530.staticpower.client.render.tileentitys.multiblock;
 
 import net.minecraft.util.ResourceLocation;
-import theking530.staticpower.assists.Reference;
 import theking530.staticpower.machines.refinery.reactor.TileEntityRefineryReactor;
+import theking530.staticpower.utilities.Reference;
 
 public class TileEntityRenderFluidRefineryReactor extends BaseMultiblockTESR<TileEntityRefineryReactor> {
 	

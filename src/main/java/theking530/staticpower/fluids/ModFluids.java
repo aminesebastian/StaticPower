@@ -20,7 +20,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import theking530.staticpower.Registry;
-import theking530.staticpower.assists.Reference;
+import theking530.staticpower.utilities.Reference;
 
 public class ModFluids {
 	

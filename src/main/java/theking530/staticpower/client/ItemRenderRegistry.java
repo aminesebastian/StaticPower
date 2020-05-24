@@ -12,12 +12,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
-import theking530.staticpower.assists.Reference;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.items.IVariantItem;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.items.MultiItem;
 import theking530.staticpower.items.MultiItem.MultiItemWrapper;
+import theking530.staticpower.utilities.Reference;
 
 public class ItemRenderRegistry {
 	

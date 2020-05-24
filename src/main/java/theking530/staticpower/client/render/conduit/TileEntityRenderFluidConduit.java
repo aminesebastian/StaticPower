@@ -5,9 +5,9 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.staticpower.assists.Reference;
 import theking530.staticpower.conduits.TileEntityBaseConduit;
 import theking530.staticpower.conduits.fluidconduit.TileEntityFluidConduit;
+import theking530.staticpower.utilities.Reference;
 
 public class TileEntityRenderFluidConduit extends TileEntityRenderBaseConduit {
 	

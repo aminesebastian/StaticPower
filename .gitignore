@@ -13,10 +13,9 @@ out
 *.iml
 .idea
 
-#gradle
+# gradle
 build
 .gradle
-gradle
 
 # other
 eclipse

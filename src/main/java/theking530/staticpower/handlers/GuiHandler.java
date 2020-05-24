@@ -5,7 +5,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
-import theking530.staticpower.assists.Tier;
 import theking530.staticpower.client.GuiIDRegistry;
 import theking530.staticpower.items.book.ContainerStaticBook;
 import theking530.staticpower.items.book.GuiStaticBook;
@@ -99,6 +98,7 @@ import theking530.staticpower.tileentity.solderingtable.TileEntitySolderingTable
 import theking530.staticpower.tileentity.vacuumchest.ContainerVacuumChest;
 import theking530.staticpower.tileentity.vacuumchest.GuiVacuumChest;
 import theking530.staticpower.tileentity.vacuumchest.TileEntityVacuumChest;
+import theking530.staticpower.utilities.Tier;
 
 public class GuiHandler implements IGuiHandler {
 	//Server

@@ -1,5 +1,5 @@
 {
-    "parent": "staticpower:block/StaticPlanks",
+    "parent": "staticpower:block/staticplanks",
     "display": {
         "thirdperson": {
             "rotation": [ 10, -45, 170 ],

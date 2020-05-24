@@ -3,7 +3,6 @@ package theking530.staticpower.handlers;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
-import theking530.staticpower.assists.Reference;
 import theking530.staticpower.client.gui.widgets.tabs.PacketPowerControlTab;
 import theking530.staticpower.client.gui.widgets.tabs.PacketRedstoneTab;
 import theking530.staticpower.client.gui.widgets.tabs.PacketSideConfigTab;
@@ -15,6 +14,7 @@ import theking530.staticpower.machines.batteries.PacketGuiBattery;
 import theking530.staticpower.machines.refinery.controller.PacketFluidRefineryController;
 import theking530.staticpower.machines.tileentitycomponents.PacketFluidContainerComponent;
 import theking530.staticpower.tileentity.digistorenetwork.digistore.PacketLockDigistore;
+import theking530.staticpower.utilities.Reference;
 
 public class PacketHandler {
 	public static SimpleNetworkWrapper net;

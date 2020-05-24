@@ -1,8 +1,8 @@
 package theking530.staticpower.items.upgrades;
 
 import net.minecraft.item.ItemStack;
-import theking530.staticpower.assists.Tier;
 import theking530.staticpower.items.ItemBase;
+import theking530.staticpower.utilities.Tier;
 
 public class BaseUpgrade extends ItemBase implements IMachineUpgrade{
 

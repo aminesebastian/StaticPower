@@ -3,8 +3,8 @@ package theking530.staticpower.handlers.crafting.recipes;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.staticpower.assists.RegisterHelper;
 import theking530.staticpower.fluids.ModFluids;
+import theking530.staticpower.utilities.RegisterHelper;
 
 public class FarmerRecipes {
 

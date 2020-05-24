@@ -8,7 +8,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
-import theking530.staticpower.assists.Reference;
+import theking530.staticpower.utilities.Reference;
 
 public class MultiItem extends ItemBase {
 	

@@ -24,8 +24,6 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import theking530.staticpower.assists.MaterialSets;
-import theking530.staticpower.assists.Reference;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.blocks.crops.ModPlants;
 import theking530.staticpower.client.CommonProxy;
@@ -117,6 +115,8 @@ import theking530.staticpower.tileentity.solarpanels.TileEntityLumumSolarPanel;
 import theking530.staticpower.tileentity.solarpanels.TileEntityStaticSolarPanel;
 import theking530.staticpower.tileentity.solderingtable.TileEntitySolderingTable;
 import theking530.staticpower.tileentity.vacuumchest.TileEntityVacuumChest;
+import theking530.staticpower.utilities.MaterialSets;
+import theking530.staticpower.utilities.Reference;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, dependencies = "after:thermalfoundation;")
 

@@ -3,7 +3,6 @@ package theking530.staticpower.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import theking530.staticpower.Registry;
-import theking530.staticpower.assists.Tier;
 import theking530.staticpower.blocks.decorative.Lamp;
 import theking530.staticpower.blocks.decorative.ObsidianGlass;
 import theking530.staticpower.conduits.fluidconduit.BlockFluidConduit;
@@ -58,6 +57,7 @@ import theking530.staticpower.tileentity.digistorenetwork.networkwire.BlockDigis
 import theking530.staticpower.tileentity.solarpanels.BlockSolarPanel;
 import theking530.staticpower.tileentity.solderingtable.BlockSolderingTable;
 import theking530.staticpower.tileentity.vacuumchest.BlockVacuumChest;
+import theking530.staticpower.utilities.Tier;
 
 public class ModBlocks {
 

@@ -7,8 +7,8 @@ import javax.annotation.Nullable;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import theking530.staticpower.assists.Tier;
 import theking530.staticpower.assists.utilities.EnumTextFormatting;
+import theking530.staticpower.utilities.Tier;
 
 public class ExperienceVacuumUpgrade extends BaseUpgrade implements IMachineUpgrade{
 

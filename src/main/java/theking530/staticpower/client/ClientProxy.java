@@ -5,7 +5,6 @@ import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import theking530.staticpower.assists.Tier;
 import theking530.staticpower.client.render.conduit.TileEntityRenderFluidConduit;
 import theking530.staticpower.client.render.conduit.TileEntityRenderItemConduit;
 import theking530.staticpower.client.render.conduit.TileEntityRenderStaticConduit;
@@ -86,6 +85,7 @@ import theking530.staticpower.tileentity.chest.energizedchest.TileEntityEnergize
 import theking530.staticpower.tileentity.chest.lumumchest.TileEntityLumumChest;
 import theking530.staticpower.tileentity.chest.staticchest.TileEntityStaticChest;
 import theking530.staticpower.tileentity.digistorenetwork.digistore.TileEntityDigistore;
+import theking530.staticpower.utilities.Tier;
 
 public class ClientProxy extends CommonProxy {
 

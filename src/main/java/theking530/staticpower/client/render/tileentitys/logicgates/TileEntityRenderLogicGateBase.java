@@ -10,9 +10,9 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import theking530.staticpower.assists.Reference;
 import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.logic.gates.TileEntityBaseLogicGate;
+import theking530.staticpower.utilities.Reference;
 
 public class TileEntityRenderLogicGateBase extends TileEntitySpecialRenderer<TileEntityBaseLogicGate> {
 

@@ -8,9 +8,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.OreIngredient;
-import theking530.staticpower.assists.MaterialSet;
-import theking530.staticpower.assists.MaterialSets;
-import theking530.staticpower.assists.RegisterHelper;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.blocks.crops.ModPlants;
 import theking530.staticpower.handlers.crafting.Craft;
@@ -18,6 +15,9 @@ import theking530.staticpower.items.ItemComponents;
 import theking530.staticpower.items.ItemMaterials;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.items.armor.ModArmor;
+import theking530.staticpower.utilities.MaterialSet;
+import theking530.staticpower.utilities.MaterialSets;
+import theking530.staticpower.utilities.RegisterHelper;
 
 public class ShapedRecipes {
 

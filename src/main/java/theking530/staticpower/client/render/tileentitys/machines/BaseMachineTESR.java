@@ -5,11 +5,11 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import theking530.staticpower.assists.Reference;
 import theking530.staticpower.assists.utilities.SideModeList;
 import theking530.staticpower.assists.utilities.SideUtilities;
 import theking530.staticpower.client.model.ModelBlock;
 import theking530.staticpower.tileentity.TileEntityBase;
+import theking530.staticpower.utilities.Reference;
 import theking530.staticpower.tileentity.IProcessing;
 
 public class BaseMachineTESR <T extends TileEntityBase> extends TileEntitySpecialRenderer<T> {

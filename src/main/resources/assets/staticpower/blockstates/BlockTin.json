@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "staticpower:BlockTin" }
+        "normal": { "model": "staticpower:blocktin_model" }
     }
 }

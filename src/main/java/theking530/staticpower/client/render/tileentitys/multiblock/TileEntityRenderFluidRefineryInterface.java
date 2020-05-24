@@ -2,10 +2,10 @@ package theking530.staticpower.client.render.tileentitys.multiblock;
 
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import theking530.staticpower.assists.Reference;
 import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.assists.utilities.SideUtilities;
 import theking530.staticpower.machines.refinery.fluidinterface.TileEntityRefineryFluidInterface;
+import theking530.staticpower.utilities.Reference;
 
 public class TileEntityRenderFluidRefineryInterface extends BaseMultiblockTESR<TileEntityRefineryFluidInterface> {
 

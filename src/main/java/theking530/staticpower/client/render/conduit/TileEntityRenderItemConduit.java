@@ -8,9 +8,9 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import theking530.staticpower.assists.Reference;
 import theking530.staticpower.conduits.TileEntityBaseConduit;
 import theking530.staticpower.conduits.itemconduit.TileEntityItemConduit;
+import theking530.staticpower.utilities.Reference;
 
 public class TileEntityRenderItemConduit extends TileEntityRenderBaseConduit {
 	

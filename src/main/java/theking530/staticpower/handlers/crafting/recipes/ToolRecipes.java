@@ -3,10 +3,10 @@ package theking530.staticpower.handlers.crafting.recipes;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
-import theking530.staticpower.assists.RegisterHelper;
 import theking530.staticpower.handlers.crafting.Craft;
 import theking530.staticpower.items.ItemMaterials;
 import theking530.staticpower.items.tools.basictools.ModTools;
+import theking530.staticpower.utilities.RegisterHelper;
 
 public class ToolRecipes {
 	

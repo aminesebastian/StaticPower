@@ -21,12 +21,10 @@ import net.minecraft.world.World;
 public class EnergizedGrass extends BaseBlock{
 	
 	public EnergizedGrass() {
-		super(Material.GRASS, "EnergizedGrass");
+		super(Material.GRASS, "EnergizedGrass", 0.6f, "shovel", 0);
 		setSoundType(SoundType.GROUND);
 		setLightLevel(0.5F);
 		setTickRandomly(true);
-		setHardness(0.6F);
-		setHarvestLevel("shovel",0);
 	}	
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn) {
 	    list.add("Walk On Top.");

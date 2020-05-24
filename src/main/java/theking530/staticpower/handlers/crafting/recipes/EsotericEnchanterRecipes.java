@@ -8,10 +8,10 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.staticpower.assists.RegisterHelper;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.handlers.crafting.Craft;
 import theking530.staticpower.handlers.crafting.StaticPowerIngredient;
+import theking530.staticpower.utilities.RegisterHelper;
 
 public class EsotericEnchanterRecipes {
 

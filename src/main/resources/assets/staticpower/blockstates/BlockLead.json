@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "staticpower:BlockLead" }
+        "normal": { "model": "staticpower:blocklead_model" }
     }
 }

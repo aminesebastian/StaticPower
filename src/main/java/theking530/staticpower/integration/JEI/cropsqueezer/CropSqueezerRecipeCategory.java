@@ -17,7 +17,6 @@ import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import theking530.staticpower.assists.Reference;
 import theking530.staticpower.assists.utilities.GuiUtilities;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.client.gui.GuiTextures;
@@ -26,6 +25,7 @@ import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistr
 import theking530.staticpower.handlers.crafting.wrappers.SqueezerOutputWrapper;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.integration.JEI.PluginJEI;
+import theking530.staticpower.utilities.Reference;
 
 public class CropSqueezerRecipeCategory extends BaseJEIRecipeCategory<CropSqueezerRecipeWrapper>{
 	 	private final String locTitle;

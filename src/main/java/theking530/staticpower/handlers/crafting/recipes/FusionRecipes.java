@@ -5,10 +5,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.oredict.OreDictionary;
-import theking530.staticpower.assists.RegisterHelper;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.handlers.crafting.Craft;
 import theking530.staticpower.items.ItemMaterials;
+import theking530.staticpower.utilities.RegisterHelper;
 
 public class FusionRecipes {
 	

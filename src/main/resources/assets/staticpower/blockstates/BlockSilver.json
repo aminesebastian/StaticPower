@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "staticpower:BlockSilver" }
+        "normal": { "model": "staticpower:blocksilver_model" }
     }
 }

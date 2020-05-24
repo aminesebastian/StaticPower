@@ -4,9 +4,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import theking530.staticpower.assists.Tier;
 import theking530.staticpower.container.BaseContainer;
 import theking530.staticpower.machines.tileentitycomponents.slots.StaticPowerContainerSlot;
+import theking530.staticpower.utilities.Tier;
 
 public class ContainerChest extends BaseContainer {
 	

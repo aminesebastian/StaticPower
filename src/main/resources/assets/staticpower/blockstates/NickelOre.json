@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "staticpower:NickelOre" }
+        "normal": { "model": "staticpower:nickelore_model" }
     }
 }

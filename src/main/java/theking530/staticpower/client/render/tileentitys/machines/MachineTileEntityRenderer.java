@@ -9,11 +9,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.staticpower.assists.Reference;
 import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.client.model.ModelBlock;
 import theking530.staticpower.machines.TileEntityMachine;
 import theking530.staticpower.tileentity.TileEntityBase;
+import theking530.staticpower.utilities.Reference;
 
 public class MachineTileEntityRenderer extends TileEntitySpecialRenderer<TileEntityBase> {
 

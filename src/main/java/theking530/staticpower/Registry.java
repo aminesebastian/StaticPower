@@ -16,13 +16,13 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import theking530.staticpower.assists.Reference;
 import theking530.staticpower.blocks.BaseItemBlock;
 import theking530.staticpower.blocks.IItemBlockProvider;
 import theking530.staticpower.client.ItemRenderRegistry;
 import theking530.staticpower.client.model.fluidcapsule.ModelFluidCapsule.LoaderFluidCapsule;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.items.MultiItem;
+import theking530.staticpower.utilities.Reference;
 
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
 public class Registry {

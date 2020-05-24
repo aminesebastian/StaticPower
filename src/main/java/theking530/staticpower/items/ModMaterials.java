@@ -3,8 +3,8 @@ package theking530.staticpower.items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.EnumHelper;
-import theking530.staticpower.assists.Reference;
 import theking530.staticpower.assists.utilities.EnumTextFormatting;
+import theking530.staticpower.utilities.Reference;
 
 public class ModMaterials {
 

@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "staticpower:SapphireOre" }
+        "normal": { "model": "staticpower:sapphireore_model" }
     }
 }

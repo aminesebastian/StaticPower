@@ -7,7 +7,6 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.JEIPlugin;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
-import theking530.staticpower.assists.Reference;
 import theking530.staticpower.integration.JEI.centrifuge.CentrifugeRecipeCategory;
 import theking530.staticpower.integration.JEI.condenser.CondenserRecipeCategory;
 import theking530.staticpower.integration.JEI.cropsqueezer.CropSqueezerRecipeCategory;
@@ -22,6 +21,7 @@ import theking530.staticpower.integration.JEI.grinder.PoweredGrinderRecipeCatego
 import theking530.staticpower.integration.JEI.lumbermill.LumberMillRecipeCategory;
 import theking530.staticpower.integration.JEI.poweredfurnace.PoweredFurnaceRecipeCategory;
 import theking530.staticpower.integration.JEI.solderingtable.SolderingTableRecipeCategory;
+import theking530.staticpower.utilities.Reference;
 
 @JEIPlugin
 public class PluginJEI implements IModPlugin{

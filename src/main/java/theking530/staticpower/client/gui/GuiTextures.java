@@ -1,7 +1,7 @@
 package theking530.staticpower.client.gui;
 
 import net.minecraft.util.ResourceLocation;
-import theking530.staticpower.assists.Reference;
+import theking530.staticpower.utilities.Reference;
 
 public class GuiTextures {
 	public static final ResourceLocation GENERIC_GUI = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/generic_gui_sampler.png");

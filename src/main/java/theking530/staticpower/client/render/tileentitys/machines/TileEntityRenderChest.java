@@ -10,9 +10,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import theking530.staticpower.assists.Reference;
-import theking530.staticpower.assists.Tier;
 import theking530.staticpower.tileentity.chest.TileEntityBaseChest;
+import theking530.staticpower.utilities.Reference;
+import theking530.staticpower.utilities.Tier;
 
 @SideOnly(Side.CLIENT)
 public class TileEntityRenderChest extends TileEntitySpecialRenderer<TileEntity> {

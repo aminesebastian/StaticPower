@@ -7,7 +7,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.OreIngredient;
-import theking530.staticpower.assists.RegisterHelper;
 import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.blocks.crops.ModPlants;
 import theking530.staticpower.handlers.crafting.Craft;
@@ -16,6 +15,7 @@ import theking530.staticpower.items.ItemMaterials;
 import theking530.staticpower.items.MiscItems;
 import theking530.staticpower.items.ModItems;
 import theking530.staticpower.items.itemfilter.ItemFilter;
+import theking530.staticpower.utilities.RegisterHelper;
 
 public class ShaplessRecipes {
 

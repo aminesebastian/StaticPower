@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "staticpower:BlockAluminium" }
+        "normal": { "model": "staticpower:blockaluminium_model" }
     }
 }

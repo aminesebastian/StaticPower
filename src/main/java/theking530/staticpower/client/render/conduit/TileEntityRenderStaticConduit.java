@@ -8,10 +8,10 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import theking530.staticpower.assists.Reference;
 import theking530.staticpower.assists.utilities.StaticVertexBuffer;
 import theking530.staticpower.conduits.TileEntityBaseConduit;
 import theking530.staticpower.conduits.staticconduit.TileEntityStaticConduit;
+import theking530.staticpower.utilities.Reference;
 
 public class TileEntityRenderStaticConduit extends TileEntityRenderBaseConduit {
 	

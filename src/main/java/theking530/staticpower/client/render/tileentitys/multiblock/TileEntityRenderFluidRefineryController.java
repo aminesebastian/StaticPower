@@ -7,8 +7,8 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
-import theking530.staticpower.assists.Reference;
 import theking530.staticpower.machines.refinery.controller.TileEntityFluidRefineryController;
+import theking530.staticpower.utilities.Reference;
 
 public class TileEntityRenderFluidRefineryController extends BaseMultiblockTESR<TileEntityFluidRefineryController> {
 	

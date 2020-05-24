@@ -3,11 +3,11 @@ package theking530.staticpower.integration.thermalfoundation;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.Loader;
-import theking530.staticpower.assists.RegisterHelper;
 import theking530.staticpower.assists.utilities.OreDictionaryUtilities;
 import theking530.staticpower.handlers.crafting.Craft;
 import theking530.staticpower.integration.ICompatibilityPlugin;
 import theking530.staticpower.items.ItemMaterials;
+import theking530.staticpower.utilities.RegisterHelper;
 
 public class PluginThermalFoundation implements ICompatibilityPlugin {
 
