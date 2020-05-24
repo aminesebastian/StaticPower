@@ -23,15 +23,15 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
-import theking530.staticpower.assists.utilities.GuiUtilities;
-import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.integration.ICompatibilityPlugin;
 import theking530.staticpower.machines.TileEntityMachineWithTank;
 import theking530.staticpower.tileentity.TileEntityBase;
 import theking530.staticpower.tileentity.IProcessing;
 import theking530.staticpower.tileentity.ISideConfigurable;
 import theking530.staticpower.tileentity.digistorenetwork.digistore.TileEntityDigistore;
+import theking530.staticpower.utilities.GuiUtilities;
 import theking530.staticpower.utilities.Reference;
+import theking530.staticpower.utilities.SideModeList.Mode;
 
 public class PluginTOP implements ICompatibilityPlugin {
 

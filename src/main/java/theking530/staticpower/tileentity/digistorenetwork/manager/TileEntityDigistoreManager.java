@@ -12,10 +12,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.tileentity.digistorenetwork.BaseDigistoreTileEntity;
 import theking530.staticpower.tileentity.digistorenetwork.DigistoreNetwork;
 import theking530.staticpower.tileentity.digistorenetwork.digistore.TileEntityDigistore;
+import theking530.staticpower.utilities.SideModeList.Mode;
 
 public class TileEntityDigistoreManager extends BaseDigistoreTileEntity {
 	

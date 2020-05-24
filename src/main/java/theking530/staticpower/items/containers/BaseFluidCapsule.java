@@ -31,8 +31,8 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
-import theking530.staticpower.assists.utilities.EnumTextFormatting;
 import theking530.staticpower.items.ItemBase;
+import theking530.staticpower.utilities.EnumTextFormatting;
 
 public class BaseFluidCapsule extends ItemBase { 
 

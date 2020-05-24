@@ -26,19 +26,19 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.CapabilityItemHandler;
-import theking530.staticpower.assists.utilities.InventoryUtilities;
-import theking530.staticpower.assists.utilities.SideUtilities;
-import theking530.staticpower.assists.utilities.SideUtilities.BlockSide;
-import theking530.staticpower.assists.utilities.TileEntityUtilities;
 import theking530.staticpower.handlers.crafting.Craft;
 import theking530.staticpower.handlers.crafting.registries.FarmerRecipeRegistry;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.machines.TileEntityMachineWithTank;
 import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent;
-import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
+import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
+import theking530.staticpower.utilities.InventoryUtilities;
+import theking530.staticpower.utilities.SideUtilities;
+import theking530.staticpower.utilities.TileEntityUtilities;
+import theking530.staticpower.utilities.SideUtilities.BlockSide;
 
 public class TileEntityTreeFarm extends TileEntityMachineWithTank {
 

@@ -9,8 +9,8 @@ import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
-import theking530.staticpower.assists.utilities.GuiUtilities;
 import theking530.staticpower.handlers.crafting.wrappers.CentrifugeRecipeWrapper;
+import theking530.staticpower.utilities.GuiUtilities;
 
 public class JEICentrifugeRecipeWrapper implements IRecipeWrapper{
 

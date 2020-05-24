@@ -28,13 +28,13 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.assists.utilities.RedstoneModeList.RedstoneMode;
-import theking530.staticpower.assists.utilities.SideModeList;
-import theking530.staticpower.assists.utilities.SideModeList.Mode;
-import theking530.staticpower.assists.utilities.SideUtilities;
-import theking530.staticpower.assists.utilities.SideUtilities.BlockSide;
 import theking530.staticpower.machines.tileentitycomponents.ITileEntityComponent;
 import theking530.staticpower.utilities.INameable;
+import theking530.staticpower.utilities.SideModeList;
+import theking530.staticpower.utilities.SideUtilities;
+import theking530.staticpower.utilities.RedstoneModeList.RedstoneMode;
+import theking530.staticpower.utilities.SideModeList.Mode;
+import theking530.staticpower.utilities.SideUtilities.BlockSide;
 
 public class TileEntityBase extends TileEntity implements ITickable, IRedstoneConfigurable, ISideConfigurable, IUpgradeable, INameable, IBreakSerializeable {
 

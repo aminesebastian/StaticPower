@@ -16,12 +16,12 @@ import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import theking530.staticpower.assists.utilities.GuiUtilities;
-import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarUtilities;
+import theking530.staticpower.initialization.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.integration.JEI.PluginJEI;
+import theking530.staticpower.utilities.GuiUtilities;
 import theking530.staticpower.utilities.Reference;
 
 public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<StaticSmeltingRecipe>{

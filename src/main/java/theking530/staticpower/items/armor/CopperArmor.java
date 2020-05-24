@@ -6,8 +6,8 @@ import java.util.List;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.potion.PotionEffect;
-import theking530.staticpower.assists.utilities.EnumTextFormatting;
 import theking530.staticpower.items.EquipmentMaterial;
+import theking530.staticpower.utilities.EnumTextFormatting;
 
 public class CopperArmor extends BaseArmor {
 

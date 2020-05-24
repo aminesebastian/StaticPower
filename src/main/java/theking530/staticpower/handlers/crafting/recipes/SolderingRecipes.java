@@ -5,11 +5,11 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
-import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.handlers.crafting.Craft;
+import theking530.staticpower.initialization.ModBlocks;
+import theking530.staticpower.initialization.ModItems;
 import theking530.staticpower.items.ItemComponents;
 import theking530.staticpower.items.ItemMaterials;
-import theking530.staticpower.items.ModItems;
 import theking530.staticpower.utilities.RegisterHelper;
 
 public class SolderingRecipes {

@@ -8,8 +8,8 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import theking530.staticpower.assists.utilities.EnumTextFormatting;
 import theking530.staticpower.items.ItemBase;
+import theking530.staticpower.utilities.EnumTextFormatting;
 
 public class WireCutters extends ItemBase {
 

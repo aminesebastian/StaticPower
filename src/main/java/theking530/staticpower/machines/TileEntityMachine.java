@@ -13,11 +13,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
-import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.energy.StaticEnergyStorage;
 import theking530.staticpower.items.upgrades.BasePowerUpgrade;
 import theking530.staticpower.items.upgrades.BaseSpeedUpgrade;
 import theking530.staticpower.tileentity.TileEntityBase;
+import theking530.staticpower.utilities.SideModeList.Mode;
 import theking530.staticpower.tileentity.IEnergyUser;
 import theking530.staticpower.tileentity.IProcessing;
 

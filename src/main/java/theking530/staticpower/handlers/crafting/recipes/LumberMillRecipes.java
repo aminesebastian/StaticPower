@@ -4,9 +4,9 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.handlers.crafting.Craft;
+import theking530.staticpower.initialization.ModBlocks;
 import theking530.staticpower.items.ItemMaterials;
 import theking530.staticpower.utilities.RegisterHelper;
 

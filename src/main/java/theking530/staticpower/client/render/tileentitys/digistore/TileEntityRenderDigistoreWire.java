@@ -8,9 +8,9 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import theking530.staticpower.assists.utilities.StaticVertexBuffer;
 import theking530.staticpower.tileentity.digistorenetwork.networkwire.TileEntityDigistoreWire;
 import theking530.staticpower.utilities.Reference;
+import theking530.staticpower.utilities.StaticVertexBuffer;
 
 public class TileEntityRenderDigistoreWire extends TileEntitySpecialRenderer<TileEntityDigistoreWire> {
 

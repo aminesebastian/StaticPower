@@ -8,9 +8,9 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import theking530.staticpower.assists.utilities.GuiUtilities;
 import theking530.staticpower.client.gui.BaseGuiContainer;
 import theking530.staticpower.tileentity.IProcessing;
+import theking530.staticpower.utilities.GuiUtilities;
 
 public class SquareProgressBar implements IGuiWidget {
 

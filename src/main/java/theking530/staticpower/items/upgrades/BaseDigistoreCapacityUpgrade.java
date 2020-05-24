@@ -15,8 +15,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.assists.utilities.EnumTextFormatting;
 import theking530.staticpower.items.IVariantItem;
+import theking530.staticpower.utilities.EnumTextFormatting;
 import theking530.staticpower.utilities.Tier;
 
 public class BaseDigistoreCapacityUpgrade extends BaseUpgrade implements IVariantItem {

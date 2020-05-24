@@ -5,9 +5,9 @@ import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.energy.PowerDistributor;
 import theking530.staticpower.machines.TileEntityMachine;
+import theking530.staticpower.utilities.SideModeList.Mode;
 
 public class TileEntityBattery extends TileEntityMachine {
 	

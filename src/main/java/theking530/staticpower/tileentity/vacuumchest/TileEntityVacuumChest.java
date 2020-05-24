@@ -19,16 +19,16 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
-import theking530.staticpower.assists.utilities.InventoryUtilities;
-import theking530.staticpower.assists.utilities.TileEntityUtilities;
 import theking530.staticpower.fluids.ModFluids;
-import theking530.staticpower.items.ModItems;
+import theking530.staticpower.initialization.ModItems;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.items.upgrades.BaseTankUpgrade;
 import theking530.staticpower.items.upgrades.ExperienceVacuumUpgrade;
 import theking530.staticpower.items.upgrades.TeleportUpgrade;
 import theking530.staticpower.tileentity.TileEntityBase;
+import theking530.staticpower.utilities.InventoryUtilities;
+import theking530.staticpower.utilities.TileEntityUtilities;
 
 public class TileEntityVacuumChest extends TileEntityBase implements Predicate<EntityItem> {
 

@@ -6,8 +6,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
-import theking530.staticpower.assists.utilities.GuiUtilities;
 import theking530.staticpower.client.gui.BaseGuiContainer;
+import theking530.staticpower.utilities.GuiUtilities;
 
 public class GuiStaticBook extends BaseGuiContainer {
 	

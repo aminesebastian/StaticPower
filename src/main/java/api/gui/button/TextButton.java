@@ -2,7 +2,7 @@ package api.gui.button;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import theking530.staticpower.assists.utilities.GuiUtilities;
+import theking530.staticpower.utilities.GuiUtilities;
 
 public class TextButton extends StandardButton{
 

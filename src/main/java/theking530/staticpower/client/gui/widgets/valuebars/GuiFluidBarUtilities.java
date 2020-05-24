@@ -15,11 +15,11 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.staticpower.assists.utilities.EnumTextFormatting;
-import theking530.staticpower.assists.utilities.GuiUtilities;
-import theking530.staticpower.assists.utilities.RenderUtil;
-import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.fluids.ModFluids;
+import theking530.staticpower.utilities.EnumTextFormatting;
+import theking530.staticpower.utilities.GuiUtilities;
+import theking530.staticpower.utilities.RenderUtil;
+import theking530.staticpower.utilities.SideModeList.Mode;
 
 public class GuiFluidBarUtilities {
 

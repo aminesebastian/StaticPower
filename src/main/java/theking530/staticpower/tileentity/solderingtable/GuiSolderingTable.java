@@ -10,7 +10,7 @@ import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.client.gui.widgets.GuiDrawItem;
 import theking530.staticpower.client.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
-import theking530.staticpower.items.ModItems;
+import theking530.staticpower.initialization.ModItems;
 
 public class GuiSolderingTable extends BaseGuiContainer {
 

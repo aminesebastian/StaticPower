@@ -4,7 +4,7 @@ import java.util.List;
 
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import theking530.staticpower.assists.utilities.WorldUtilities;
+import theking530.staticpower.utilities.WorldUtilities;
 
 public class ConduitPath {
 	private List<BlockPos> path;

@@ -3,7 +3,6 @@ package theking530.staticpower.machines.lumbermill;
 import api.gui.tab.BaseGuiTab.TabSide;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.client.gui.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticpower.client.gui.widgets.tabs.GuiMachinePowerInfoTab;
@@ -11,6 +10,7 @@ import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
+import theking530.staticpower.utilities.SideModeList.Mode;
 
 public class GuiLumberMill extends BaseGuiContainer {
 	

@@ -6,7 +6,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.fluids.StaticTankStorage;
 import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.SqueezerOutputWrapper;
@@ -14,6 +13,7 @@ import theking530.staticpower.machines.tileentitycomponents.FluidContainerCompon
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
 import theking530.staticpower.tileentity.TileEntityBase;
+import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.tileentity.IProcessing;
 
 public class TileEntityMechanicalSqueezer extends TileEntityBase implements IFluidHandler, IProcessing {

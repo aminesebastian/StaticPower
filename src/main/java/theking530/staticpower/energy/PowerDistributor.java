@@ -5,8 +5,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.tileentity.ISideConfigurable;
+import theking530.staticpower.utilities.SideModeList.Mode;
 
 public class PowerDistributor {
 

@@ -5,9 +5,9 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.staticpower.assists.utilities.RenderUtil;
 import theking530.staticpower.machines.fluidgenerator.TileEntityFluidGenerator;
 import theking530.staticpower.utilities.Reference;
+import theking530.staticpower.utilities.RenderUtil;
 
 public class TileEntityRenderFluidGenerator extends BaseMachineTESR<TileEntityFluidGenerator> {
 
@@ -33,11 +33,11 @@ public class TileEntityRenderFluidGenerator extends BaseMachineTESR<TileEntityFl
 	}
 	public static void drawLiquidBar(TileEntity tileentity, FluidStack fluidStack) {
 		TileEntityFluidGenerator fGen = (TileEntityFluidGenerator)tileentity;
-		RenderUtil.drawFluidInWorld(fluidStack, fGen.fluidTank.getCapacity(), 41.0F*texel, 12.0F*texel, 1.0005F, 8.0F*texel, 40.0f*texel);
+		RenderUtil.drawFluidInWorld(fluidStack, fGen.fluidTank.getCapacity(), 42.0F*texel, 12.0F*texel, 1.0005F, 8.0F*texel, 40.0f*texel);
 	}
 	public static void drawEnergyBar(TileEntity tileentity) {
 		TileEntityFluidGenerator fGen = (TileEntityFluidGenerator)tileentity;
 		float height = ((float)(fGen.energyStorage.getEnergyStored()/(float)fGen.energyStorage.getMaxEnergyStored())) > 0 ? ((float)(fGen.energyStorage.getEnergyStored()/(float)fGen.energyStorage.getMaxEnergyStored())) : 0;	
-		RenderUtil.drawPowerBarInWorld(height, 15.0F*texel, 12.0F*texel, 1.0005F, 8.0F*texel, 40.0f*texel);
+		RenderUtil.drawPowerBarInWorld(height, 14.0F*texel, 12.0F*texel, 1.0005F, 8.0F*texel, 40.0f*texel);
 	}
 }

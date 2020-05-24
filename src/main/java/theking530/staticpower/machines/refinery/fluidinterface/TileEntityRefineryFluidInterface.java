@@ -7,10 +7,10 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.machines.refinery.BaseRefineryTileEntity;
 import theking530.staticpower.machines.refinery.controller.TileEntityFluidRefineryController;
 import theking530.staticpower.tileentity.SideConfiguration;
+import theking530.staticpower.utilities.SideModeList.Mode;
 
 public class TileEntityRefineryFluidInterface extends BaseRefineryTileEntity {	
 

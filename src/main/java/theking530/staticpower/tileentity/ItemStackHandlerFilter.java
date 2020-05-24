@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentity;
 
 import net.minecraft.item.ItemStack;
-import theking530.staticpower.assists.utilities.SideModeList.Mode;
+import theking530.staticpower.utilities.SideModeList.Mode;
 
 public interface ItemStackHandlerFilter {
 

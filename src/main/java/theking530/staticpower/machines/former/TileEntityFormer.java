@@ -4,10 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
-import theking530.staticpower.assists.utilities.InventoryUtilities;
-import theking530.staticpower.assists.utilities.SideUtilities;
-import theking530.staticpower.assists.utilities.SideModeList.Mode;
-import theking530.staticpower.assists.utilities.SideUtilities.BlockSide;
 import theking530.staticpower.handlers.crafting.registries.FormerRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.FormerRecipeWrapper;
 import theking530.staticpower.machines.TileEntityMachine;
@@ -15,6 +11,10 @@ import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionCo
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
 import theking530.staticpower.tileentity.SideConfiguration;
+import theking530.staticpower.utilities.InventoryUtilities;
+import theking530.staticpower.utilities.SideUtilities;
+import theking530.staticpower.utilities.SideModeList.Mode;
+import theking530.staticpower.utilities.SideUtilities.BlockSide;
 
 public class TileEntityFormer extends TileEntityMachine {
 	

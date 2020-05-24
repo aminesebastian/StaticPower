@@ -10,7 +10,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.client.GuiIDRegistry;
 import theking530.staticpower.machines.BlockMachineBase;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityBasicBattery;
@@ -19,6 +18,7 @@ import theking530.staticpower.machines.batteries.tileentities.TileEntityEnergize
 import theking530.staticpower.machines.batteries.tileentities.TileEntityLumumBattery;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityStaticBattery;
 import theking530.staticpower.utilities.Tier;
+import theking530.staticpower.utilities.SideModeList.Mode;
 
 public class BlockBattery extends BlockMachineBase{
 

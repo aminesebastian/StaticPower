@@ -19,11 +19,11 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import theking530.staticpower.assists.utilities.EnumTextFormatting;
-import theking530.staticpower.assists.utilities.RedstoneModeList.RedstoneMode;
 import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.tileentity.IRedstoneConfigurable;
+import theking530.staticpower.utilities.EnumTextFormatting;
+import theking530.staticpower.utilities.RedstoneModeList.RedstoneMode;
 
 public class GuiRedstoneTab extends BaseGuiTab implements IInteractableGui {
 

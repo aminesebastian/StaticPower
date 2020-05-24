@@ -10,10 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.staticpower.assists.utilities.InventoryUtilities;
-import theking530.staticpower.assists.utilities.SideUtilities;
-import theking530.staticpower.assists.utilities.SideModeList.Mode;
-import theking530.staticpower.assists.utilities.SideUtilities.BlockSide;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.handlers.crafting.registries.EsotericEnchanterRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.EsotericEnchanterRecipeWrapper;
@@ -23,6 +19,10 @@ import theking530.staticpower.machines.tileentitycomponents.FluidContainerCompon
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
 import theking530.staticpower.tileentity.SideConfiguration;
+import theking530.staticpower.utilities.InventoryUtilities;
+import theking530.staticpower.utilities.SideUtilities;
+import theking530.staticpower.utilities.SideModeList.Mode;
+import theking530.staticpower.utilities.SideUtilities.BlockSide;
 
 public class TileEsotericEnchanter extends TileEntityMachineWithTank {
 

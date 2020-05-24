@@ -5,7 +5,7 @@ import javax.annotation.Nonnull;
 import cofh.redstoneflux.api.IEnergyContainerItem;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
-import theking530.staticpower.items.ModItems;
+import theking530.staticpower.initialization.ModItems;
 
 public class BatterySlot extends StaticPowerContainerSlot {
 

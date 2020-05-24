@@ -20,8 +20,8 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.assists.utilities.EnumTextFormatting;
 import theking530.staticpower.items.EquipmentMaterial;
+import theking530.staticpower.utilities.EnumTextFormatting;
 
 public class BaseArmor extends ItemArmor {
 

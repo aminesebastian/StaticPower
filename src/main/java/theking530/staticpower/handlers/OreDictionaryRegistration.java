@@ -1,7 +1,7 @@
 package theking530.staticpower.handlers;
 
 import net.minecraftforge.oredict.OreDictionary;
-import theking530.staticpower.blocks.ModBlocks;
+import theking530.staticpower.initialization.ModBlocks;
 
 public class OreDictionaryRegistration {
 	

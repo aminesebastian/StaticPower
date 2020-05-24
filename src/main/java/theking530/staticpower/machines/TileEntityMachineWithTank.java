@@ -15,9 +15,9 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.fluids.StaticTankStorage;
 import theking530.staticpower.items.upgrades.BaseTankUpgrade;
+import theking530.staticpower.utilities.SideModeList.Mode;
 
 public class TileEntityMachineWithTank extends TileEntityMachine {
 

@@ -17,9 +17,9 @@ import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.handlers.crafting.Craft;
 import theking530.staticpower.handlers.crafting.recipes.FusionRecipes;
 import theking530.staticpower.handlers.crafting.recipes.SmeltingRecipes;
+import theking530.staticpower.initialization.ModItems;
 import theking530.staticpower.integration.ICompatibilityPlugin;
 import theking530.staticpower.items.ItemMaterials;
-import theking530.staticpower.items.ModItems;
 
 public class PluginTinkersConstruct implements ICompatibilityPlugin {
 

@@ -8,9 +8,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import theking530.staticpower.assists.utilities.GuiUtilities;
-import theking530.staticpower.assists.utilities.SideModeList.Mode;
-import theking530.staticpower.assists.utilities.WorldUtilities;
 import theking530.staticpower.client.gui.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.buttons.ArrowButton;
 import theking530.staticpower.client.gui.widgets.tabs.GuiMachinePowerInfoTab;
@@ -19,8 +16,11 @@ import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.handlers.PacketHandler;
-import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
 import theking530.staticpower.machines.tileentitycomponents.PacketFluidContainerComponent;
+import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
+import theking530.staticpower.utilities.GuiUtilities;
+import theking530.staticpower.utilities.WorldUtilities;
+import theking530.staticpower.utilities.SideModeList.Mode;
 
 public class GuiQuarry extends BaseGuiContainer {
 	

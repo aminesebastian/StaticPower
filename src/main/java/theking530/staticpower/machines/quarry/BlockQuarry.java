@@ -12,10 +12,10 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.assists.utilities.WorldUtilities;
 import theking530.staticpower.client.GuiIDRegistry;
 import theking530.staticpower.items.tools.CoordinateMarker;
 import theking530.staticpower.machines.BlockMachineBase;
+import theking530.staticpower.utilities.WorldUtilities;
 
 public class BlockQuarry extends BlockMachineBase{
 

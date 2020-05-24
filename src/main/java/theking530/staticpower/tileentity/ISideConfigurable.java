@@ -3,8 +3,8 @@ package theking530.staticpower.tileentity;
 import java.util.List;
 
 import net.minecraft.util.EnumFacing;
-import theking530.staticpower.assists.utilities.SideModeList.Mode;
-import theking530.staticpower.assists.utilities.SideUtilities.BlockSide;
+import theking530.staticpower.utilities.SideModeList.Mode;
+import theking530.staticpower.utilities.SideUtilities.BlockSide;
 
 public interface ISideConfigurable {
 

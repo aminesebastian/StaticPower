@@ -1,7 +1,6 @@
 package theking530.staticpower.machines.lumbermill;
 
 import net.minecraft.item.ItemStack;
-import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.handlers.crafting.registries.LumberMillRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.LumberMillRecipeWrapper;
 import theking530.staticpower.machines.TileEntityMachineWithTank;
@@ -10,6 +9,7 @@ import theking530.staticpower.machines.tileentitycomponents.FluidContainerCompon
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
+import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileLumberMill extends TileEntityMachineWithTank {
 

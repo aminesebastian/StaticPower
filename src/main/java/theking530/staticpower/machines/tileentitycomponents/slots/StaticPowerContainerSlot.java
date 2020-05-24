@@ -3,7 +3,7 @@ package theking530.staticpower.machines.tileentitycomponents.slots;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
-import theking530.staticpower.assists.utilities.SideModeList.Mode;
+import theking530.staticpower.utilities.SideModeList.Mode;
 
 public class StaticPowerContainerSlot extends SlotItemHandler {
 

@@ -12,10 +12,10 @@ import net.minecraft.util.SoundCategory;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import theking530.staticpower.assists.utilities.WorldUtilities;
 import theking530.staticpower.items.upgrades.BaseDigistoreCapacityUpgrade;
 import theking530.staticpower.items.upgrades.DigistoreMiscUpgrades;
 import theking530.staticpower.tileentity.digistorenetwork.BaseDigistoreTileEntity;
+import theking530.staticpower.utilities.WorldUtilities;
 
 public class TileEntityDigistore extends BaseDigistoreTileEntity {
 	public static final int DEFAULT_CAPACITY = 1024;

@@ -9,11 +9,11 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.client.model.ModelBlock;
 import theking530.staticpower.machines.batteries.tileentities.TileEntityBattery;
 import theking530.staticpower.utilities.Reference;
 import theking530.staticpower.utilities.Tier;
+import theking530.staticpower.utilities.SideModeList.Mode;
 
 public class TileEntityRenderBattery extends TileEntitySpecialRenderer<TileEntityBattery> {
 

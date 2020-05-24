@@ -1,9 +1,9 @@
 package theking530.staticpower.client.render.tileentitys.machines;
 
 import net.minecraft.util.ResourceLocation;
-import theking530.staticpower.assists.utilities.SideModeList;
 import theking530.staticpower.machines.esotericenchanter.TileEsotericEnchanter;
 import theking530.staticpower.utilities.Reference;
+import theking530.staticpower.utilities.SideModeList;
 
 public class TileEntityRenderEsotericEnchanter extends BaseMachineTESR<TileEsotericEnchanter> {
 

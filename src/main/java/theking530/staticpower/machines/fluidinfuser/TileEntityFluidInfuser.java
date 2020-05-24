@@ -3,15 +3,15 @@ package theking530.staticpower.machines.fluidinfuser;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.handlers.crafting.registries.InfuserRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.FluidInfuserOutputWrapper;
 import theking530.staticpower.machines.TileEntityMachineWithTank;
 import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent;
-import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
+import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
+import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityFluidInfuser extends TileEntityMachineWithTank {
 	

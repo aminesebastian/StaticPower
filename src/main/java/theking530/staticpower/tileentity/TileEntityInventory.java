@@ -4,7 +4,7 @@ import javax.annotation.Nonnull;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
-import theking530.staticpower.assists.utilities.SideModeList.Mode;
+import theking530.staticpower.utilities.SideModeList.Mode;
 
 public class TileEntityInventory extends ItemStackHandler {
 	

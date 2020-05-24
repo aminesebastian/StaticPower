@@ -7,10 +7,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.conduits.TileEntityNetwork;
 import theking530.staticpower.conduits.TileEntityBaseConduit;
 import theking530.staticpower.tileentity.chest.staticchest.TileEntityStaticChest;
+import theking530.staticpower.utilities.InventoryUtilities;
 
 public class ItemConduitGrid extends TileEntityNetwork<TileEntityBaseConduit, Capability<IItemHandler>, IItemHandler>{
 	

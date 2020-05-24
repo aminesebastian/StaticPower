@@ -1,13 +1,13 @@
 package theking530.staticpower.machines.cropsqueezer;
 
 import net.minecraft.item.ItemStack;
-import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.handlers.crafting.registries.SqueezerRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.SqueezerOutputWrapper;
 import theking530.staticpower.machines.TileEntityMachineWithTank;
 import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
+import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityCropSqueezer extends TileEntityMachineWithTank {
 

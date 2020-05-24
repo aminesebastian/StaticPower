@@ -5,7 +5,7 @@ import javax.annotation.Nonnull;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.IItemHandler;
-import theking530.staticpower.items.ModItems;
+import theking530.staticpower.initialization.ModItems;
 
 public class FluidContainerSlot extends StaticPowerContainerSlot {
 

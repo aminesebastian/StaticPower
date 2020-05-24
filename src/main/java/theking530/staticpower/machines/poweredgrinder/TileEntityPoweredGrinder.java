@@ -1,16 +1,16 @@
 package theking530.staticpower.machines.poweredgrinder;
 
 import net.minecraft.item.ItemStack;
-import theking530.staticpower.assists.utilities.InventoryUtilities;
-import theking530.staticpower.assists.utilities.TileEntityUtilities;
 import theking530.staticpower.handlers.crafting.registries.GrinderRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.GrinderOutputWrapper;
-import theking530.staticpower.items.ModItems;
+import theking530.staticpower.initialization.ModItems;
 import theking530.staticpower.items.upgrades.BaseOutputMultiplierUpgrade;
 import theking530.staticpower.machines.TileEntityMachine;
 import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
+import theking530.staticpower.utilities.InventoryUtilities;
+import theking530.staticpower.utilities.TileEntityUtilities;
 
 public class TileEntityPoweredGrinder extends TileEntityMachine {
 	

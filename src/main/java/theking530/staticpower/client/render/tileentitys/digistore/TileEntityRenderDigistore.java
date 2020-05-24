@@ -5,71 +5,25 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
+import theking530.staticpower.client.render.StaticPowerTileEntitySpecialRenderer;
+import theking530.staticpower.client.render.TileEntitySpecialRendererTextures;
 import theking530.staticpower.tileentity.digistorenetwork.digistore.TileEntityDigistore;
-import theking530.staticpower.utilities.Reference;
 
-public class TileEntityRenderDigistore extends TileEntitySpecialRenderer<TileEntityDigistore> {
+public class TileEntityRenderDigistore extends StaticPowerTileEntitySpecialRenderer<TileEntityDigistore> {
 
-	private static final ResourceLocation voidIndicator = new ResourceLocation(Reference.MOD_ID, "textures/blocks/digistore/void_indicator.png");
-	private static final ResourceLocation lockedIndicator = new ResourceLocation(Reference.MOD_ID, "textures/blocks/digistore/locked_indicator.png");
-	private static final ResourceLocation fillBar = new ResourceLocation(Reference.MOD_ID, "textures/blocks/digistore/digistore_fill_bar.png");
-	
 	@Override
-	public void render(TileEntityDigistore tileentity, double translationX, double translationY, double translationZ, float f, int dest, float alpha) {		
-		EnumFacing facing = tileentity.getFacingDirection();
-		
-		GL11.glPushMatrix();
-		GL11.glTranslated(translationX, translationY, translationZ);
-		if(facing == EnumFacing.WEST) {
-			GL11.glRotated(-90, 0, 1, 0);
-			GL11.glTranslated(0, 0, -1);
-			}
-		if(facing == EnumFacing.NORTH) {
-			GL11.glRotated(180, 0, 1, 0);
-			GL11.glTranslated(-1, 0, -1);
-			}
-		if(facing == EnumFacing.EAST) {
-			GL11.glRotated(90, 0, 1, 0);
-			GL11.glTranslated(-1, 0, 0);
+	public void renderTileEntityBase(TileEntityDigistore tileentity, double translationX, double translationY, double translationZ, float f, int dest, float alpha) {		
+		if(!tileentity.getStoredItem().isEmpty()) {
+			drawItemInWorld(tileentity.getStoredItem(), translationX, translationY, translationZ, alpha);
 		}
-		drawItem(tileentity, translationX, translationY, translationZ, f, dest, alpha);
+
 		drawFillBar(tileentity, translationX, translationY, translationZ, f, dest, alpha);
 		drawText(tileentity, translationX, translationY, translationZ, f, dest, alpha);
 		drawIndicators(tileentity, translationX, translationY, translationZ, f, dest, alpha);
-		
-		GL11.glTranslated(-translationX, -translationY, -translationZ);	
-		GL11.glColor3f(1.0F, 1.0F, 1.0F);	
-		GL11.glPopMatrix();
 	}
 	
-	public void drawItem(TileEntityDigistore barrel, double translationX, double translationY, double translationZ, float f, int dest, float alpha) {	
-		if(!barrel.getStoredItem().isEmpty()) {
-	        GlStateManager.enableTexture2D(); 
-	        
-	        GlStateManager.pushMatrix();
-	        RenderHelper.enableStandardItemLighting();
-	        GlStateManager.disableLighting();
-	        double scale = 0.02;
-	        GlStateManager.scale(scale, -scale, scale/10);
-	        GlStateManager.translate(17, -37, 404);
-	        
-	        try {
-	            Minecraft.getMinecraft().getRenderItem().renderItemIntoGUI(barrel.getStoredItem(), 0, 0);
-	        } catch (Exception e) {
-	            System.out.println(e.getMessage());
-	        }
-	        
-	        GlStateManager.disableBlend(); 
-	        GlStateManager.enableAlpha(); 
-	        GlStateManager.popMatrix();
-		}
-	}
 	public void drawIndicators(TileEntityDigistore barrel, double translationX, double translationY, double translationZ, float f, int dest, float alpha) {
 		float offset = 0.0f;
 		if(barrel.isLocked()) {
@@ -78,7 +32,7 @@ public class TileEntityRenderDigistore extends TileEntitySpecialRenderer<TileEnt
 			Tessellator tessellator = Tessellator.getInstance();
 	        BufferBuilder vertexbuffer = tessellator.getBuffer();
 	        
-			Minecraft.getMinecraft().getTextureManager().bindTexture(lockedIndicator);
+			Minecraft.getMinecraft().getTextureManager().bindTexture(TileEntitySpecialRendererTextures.DIGISTORE_LOCKED_INDICATOR);
 	        
 	        vertexbuffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			GL11.glRotated(180, 0, 1, 0);
@@ -100,7 +54,7 @@ public class TileEntityRenderDigistore extends TileEntitySpecialRenderer<TileEnt
 			Tessellator tessellator = Tessellator.getInstance();
 	        BufferBuilder vertexbuffer = tessellator.getBuffer();
 	        
-			Minecraft.getMinecraft().getTextureManager().bindTexture(voidIndicator);
+			Minecraft.getMinecraft().getTextureManager().bindTexture(TileEntitySpecialRendererTextures.DIGISTORE_VOID_INDICATOR);
 	        
 	        vertexbuffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			GL11.glRotated(180, 0, 1, 0);
@@ -144,7 +98,7 @@ public class TileEntityRenderDigistore extends TileEntitySpecialRenderer<TileEnt
 		Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder vertexbuffer = tessellator.getBuffer();
         
-		Minecraft.getMinecraft().getTextureManager().bindTexture(fillBar);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(TileEntitySpecialRendererTextures.DIGISTORE_FILL_BAR);
         
 		GL11.glPushMatrix();
         vertexbuffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);

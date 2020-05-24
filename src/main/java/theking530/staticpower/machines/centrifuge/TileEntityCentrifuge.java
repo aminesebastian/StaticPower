@@ -6,10 +6,6 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.items.ItemStackHandler;
-import theking530.staticpower.assists.utilities.InventoryUtilities;
-import theking530.staticpower.assists.utilities.SideModeList.Mode;
-import theking530.staticpower.assists.utilities.SideUtilities;
-import theking530.staticpower.assists.utilities.SideUtilities.BlockSide;
 import theking530.staticpower.handlers.crafting.registries.CentrifugeRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.CentrifugeRecipeWrapper;
 import theking530.staticpower.machines.TileEntityMachine;
@@ -17,6 +13,10 @@ import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionCo
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
 import theking530.staticpower.tileentity.SideConfiguration;
+import theking530.staticpower.utilities.InventoryUtilities;
+import theking530.staticpower.utilities.SideUtilities;
+import theking530.staticpower.utilities.SideModeList.Mode;
+import theking530.staticpower.utilities.SideUtilities.BlockSide;
 
 public class TileEntityCentrifuge extends TileEntityMachine {
 	public static final int DEFAULT_MAX_ROTATION_SPEED = 1000;

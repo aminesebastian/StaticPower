@@ -10,9 +10,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import theking530.staticpower.assists.utilities.EnumTextFormatting;
 import theking530.staticpower.items.EquipmentMaterial;
 import theking530.staticpower.potioneffects.ModPotions;
+import theking530.staticpower.utilities.EnumTextFormatting;
 
 public class SkeletonArmor extends BaseArmor {
 	

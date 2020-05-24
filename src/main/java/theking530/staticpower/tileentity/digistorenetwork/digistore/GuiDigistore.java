@@ -10,13 +10,13 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import theking530.staticpower.assists.utilities.EnumTextFormatting;
-import theking530.staticpower.assists.utilities.GuiUtilities;
 import theking530.staticpower.client.gui.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.GuiDrawItem;
 import theking530.staticpower.client.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
 import theking530.staticpower.handlers.PacketHandler;
+import theking530.staticpower.utilities.EnumTextFormatting;
+import theking530.staticpower.utilities.GuiUtilities;
 
 public class GuiDigistore extends BaseGuiContainer {
 	

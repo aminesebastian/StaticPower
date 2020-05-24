@@ -3,7 +3,7 @@ package theking530.staticpower.items.armor;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import theking530.staticpower.Registry;
-import theking530.staticpower.items.ModMaterials;
+import theking530.staticpower.initialization.ModMaterials;
 
 public class ModArmor {
 

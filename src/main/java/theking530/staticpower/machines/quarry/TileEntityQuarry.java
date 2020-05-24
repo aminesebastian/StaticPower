@@ -11,8 +11,6 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
-import theking530.staticpower.assists.utilities.InventoryUtilities;
-import theking530.staticpower.assists.utilities.WorldUtilities;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.items.upgrades.BaseQuarryingUpgrade;
@@ -20,6 +18,8 @@ import theking530.staticpower.machines.TileEntityMachineWithTank;
 import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
+import theking530.staticpower.utilities.InventoryUtilities;
+import theking530.staticpower.utilities.WorldUtilities;
 
 public class TileEntityQuarry extends TileEntityMachineWithTank {
 	public static final int INITIAL_BLOCKS_PER_TICK = 1;

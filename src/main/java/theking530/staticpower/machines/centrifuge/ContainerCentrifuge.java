@@ -6,7 +6,6 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.container.BaseContainer;
 import theking530.staticpower.handlers.crafting.registries.CentrifugeRecipeRegistry;
 import theking530.staticpower.items.upgrades.BaseUpgrade;
@@ -14,6 +13,7 @@ import theking530.staticpower.machines.tileentitycomponents.slots.BatterySlot;
 import theking530.staticpower.machines.tileentitycomponents.slots.OutputSlot;
 import theking530.staticpower.machines.tileentitycomponents.slots.StaticPowerContainerSlot;
 import theking530.staticpower.machines.tileentitycomponents.slots.UpgradeSlot;
+import theking530.staticpower.utilities.SideModeList.Mode;
 
 public class ContainerCentrifuge extends BaseContainer {
 	

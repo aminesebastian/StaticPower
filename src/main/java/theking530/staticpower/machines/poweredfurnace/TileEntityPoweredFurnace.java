@@ -2,11 +2,11 @@ package theking530.staticpower.machines.poweredfurnace;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
-import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.machines.TileEntityMachine;
 import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
+import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityPoweredFurnace extends TileEntityMachine {
 

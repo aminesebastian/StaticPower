@@ -23,11 +23,11 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.math.Vec3i;
-import theking530.staticpower.assists.utilities.GuiUtilities;
-import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.client.gui.widgets.GuiDrawItem;
 import theking530.staticpower.machines.tileentitycomponents.slots.StaticPowerContainerSlot;
 import theking530.staticpower.tileentity.TileEntityBase;
+import theking530.staticpower.utilities.GuiUtilities;
+import theking530.staticpower.utilities.SideModeList.Mode;
 
 public abstract class BaseGuiContainer extends GuiContainer implements IInteractableGui {
 

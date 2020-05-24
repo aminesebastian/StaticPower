@@ -3,10 +3,10 @@ package theking530.staticpower.tileentity.astralquary.brain;
 import java.util.Random;
 
 import net.minecraft.item.ItemStack;
-import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
 import theking530.staticpower.tileentity.TileEntityBase;
 import theking530.staticpower.tileentity.astralquary.AstralQuarryOreGenerator;
+import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityAstralQuarryBrain extends TileEntityBase {
 

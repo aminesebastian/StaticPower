@@ -6,11 +6,11 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.staticpower.assists.utilities.RenderUtil;
-import theking530.staticpower.assists.utilities.SideModeList;
 import theking530.staticpower.client.model.ModelBlock;
 import theking530.staticpower.machines.basicfarmer.TileEntityBasicFarmer;
 import theking530.staticpower.utilities.Reference;
+import theking530.staticpower.utilities.RenderUtil;
+import theking530.staticpower.utilities.SideModeList;
 
 public class TileEntityRenderFarmer extends BaseMachineTESR<TileEntityBasicFarmer> {
 

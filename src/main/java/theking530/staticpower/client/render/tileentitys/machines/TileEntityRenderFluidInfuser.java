@@ -5,9 +5,9 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.staticpower.assists.utilities.RenderUtil;
 import theking530.staticpower.machines.fluidinfuser.TileEntityFluidInfuser;
 import theking530.staticpower.utilities.Reference;
+import theking530.staticpower.utilities.RenderUtil;
 
 public class TileEntityRenderFluidInfuser extends BaseMachineTESR<TileEntityFluidInfuser> {
 

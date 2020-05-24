@@ -7,8 +7,8 @@ import javax.annotation.Nullable;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import theking530.staticpower.assists.utilities.EnumTextFormatting;
 import theking530.staticpower.items.ItemBase;
+import theking530.staticpower.utilities.EnumTextFormatting;
 
 public class SolderingIron extends ItemBase implements ISolderingIron{
 	

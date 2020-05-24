@@ -26,16 +26,16 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.CapabilityItemHandler;
-import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.handlers.crafting.registries.FarmerRecipeRegistry;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.machines.TileEntityMachineWithTank;
 import theking530.staticpower.machines.tileentitycomponents.BatteryInteractionComponent;
 import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent;
-import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
+import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
+import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityBasicFarmer extends TileEntityMachineWithTank {
 

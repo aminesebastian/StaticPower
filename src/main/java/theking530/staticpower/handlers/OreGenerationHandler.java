@@ -11,7 +11,7 @@ import net.minecraft.world.gen.feature.WorldGenMinable;
 import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import theking530.staticpower.StaticPowerConfig;
-import theking530.staticpower.blocks.ModBlocks;
+import theking530.staticpower.initialization.ModBlocks;
 
 public class OreGenerationHandler implements IWorldGenerator {
 	

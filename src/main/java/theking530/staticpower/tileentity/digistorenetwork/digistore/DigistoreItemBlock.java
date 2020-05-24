@@ -10,8 +10,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.items.ItemStackHandler;
-import theking530.staticpower.assists.utilities.EnumTextFormatting;
 import theking530.staticpower.blocks.BaseItemBlock;
+import theking530.staticpower.utilities.EnumTextFormatting;
 
 public class DigistoreItemBlock extends BaseItemBlock {
 

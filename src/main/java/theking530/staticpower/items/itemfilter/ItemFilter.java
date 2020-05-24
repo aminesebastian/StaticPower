@@ -19,11 +19,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.assists.utilities.EnumTextFormatting;
-import theking530.staticpower.assists.utilities.ItemUtilities;
-import theking530.staticpower.blocks.ModBlocks;
 import theking530.staticpower.client.GuiIDRegistry;
+import theking530.staticpower.initialization.ModBlocks;
 import theking530.staticpower.items.ItemBase;
+import theking530.staticpower.utilities.EnumTextFormatting;
+import theking530.staticpower.utilities.ItemUtilities;
 
 public class ItemFilter extends ItemBase {
 	

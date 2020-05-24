@@ -4,9 +4,9 @@ import java.util.List;
 
 import api.gui.IGuiWidget;
 import net.minecraftforge.fluids.IFluidTank;
-import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.client.gui.BaseGuiContainer;
 import theking530.staticpower.tileentity.ISideConfigurable;
+import theking530.staticpower.utilities.SideModeList.Mode;
 
 public class GuiFluidBarFromTank implements IGuiWidget{
 	

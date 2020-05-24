@@ -11,8 +11,8 @@ import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.assists.utilities.EnumTextFormatting;
 import theking530.staticpower.items.EquipmentMaterial;
+import theking530.staticpower.utilities.EnumTextFormatting;
 
 
 public class BaseAxe extends ItemAxe {

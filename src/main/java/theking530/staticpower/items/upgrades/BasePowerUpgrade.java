@@ -7,7 +7,7 @@ import javax.annotation.Nullable;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import theking530.staticpower.assists.utilities.EnumTextFormatting;
+import theking530.staticpower.utilities.EnumTextFormatting;
 import theking530.staticpower.utilities.Tier;
 
 public class BasePowerUpgrade  extends BaseUpgrade implements IMachineUpgrade{

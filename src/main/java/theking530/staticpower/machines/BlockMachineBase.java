@@ -26,11 +26,11 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.assists.utilities.WorldUtilities;
 import theking530.staticpower.blocks.BaseItemBlock;
 import theking530.staticpower.blocks.IItemBlockProvider;
 import theking530.staticpower.tileentity.TileEntityBase;
 import theking530.staticpower.tileentity.ISideConfigurable.SideIncrementDirection;
+import theking530.staticpower.utilities.WorldUtilities;
 
 public class BlockMachineBase extends Block implements IWrenchable, IItemBlockProvider {
 

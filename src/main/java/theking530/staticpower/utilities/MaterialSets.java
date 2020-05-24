@@ -6,7 +6,7 @@ import java.util.List;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import theking530.staticpower.blocks.ModBlocks;
+import theking530.staticpower.initialization.ModBlocks;
 import theking530.staticpower.items.ItemMaterials;
 
 public class MaterialSets {

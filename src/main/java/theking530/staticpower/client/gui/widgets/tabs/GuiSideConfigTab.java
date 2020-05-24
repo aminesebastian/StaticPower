@@ -20,14 +20,14 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import theking530.staticpower.assists.utilities.SideModeList.Mode;
-import theking530.staticpower.assists.utilities.SideUtilities;
-import theking530.staticpower.assists.utilities.SideUtilities.BlockSide;
 import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.handlers.PacketHandler;
 import theking530.staticpower.tileentity.TileEntityBase;
 import theking530.staticpower.tileentity.ISideConfigurable;
 import theking530.staticpower.tileentity.ISideConfigurable.SideIncrementDirection;
+import theking530.staticpower.utilities.SideUtilities;
+import theking530.staticpower.utilities.SideModeList.Mode;
+import theking530.staticpower.utilities.SideUtilities.BlockSide;
 
 public class GuiSideConfigTab extends BaseGuiTab implements IInteractableGui {
 

@@ -5,9 +5,9 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import theking530.staticpower.assists.utilities.RenderUtil;
 import theking530.staticpower.machines.fermenter.TileEntityFermenter;
 import theking530.staticpower.utilities.Reference;
+import theking530.staticpower.utilities.RenderUtil;
 
 public class TileEntityRenderFermenter extends BaseMachineTESR<TileEntityFermenter> {
 

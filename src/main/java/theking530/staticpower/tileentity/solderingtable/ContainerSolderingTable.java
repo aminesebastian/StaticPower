@@ -6,7 +6,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import theking530.staticpower.container.BaseContainer;
 import theking530.staticpower.handlers.crafting.registries.SolderingRecipeRegistry;
-import theking530.staticpower.items.ModItems;
+import theking530.staticpower.initialization.ModItems;
 import theking530.staticpower.items.tools.ISolderingIron;
 import theking530.staticpower.machines.tileentitycomponents.slots.StaticPowerContainerSlot;
 

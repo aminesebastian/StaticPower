@@ -11,8 +11,8 @@ import org.lwjgl.input.Keyboard;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import theking530.staticpower.assists.utilities.EnumTextFormatting;
 import theking530.staticpower.items.BasePoweredItem;
+import theking530.staticpower.utilities.EnumTextFormatting;
 
 public class ElectricSolderingIron extends BasePoweredItem implements ISolderingIron {
 	

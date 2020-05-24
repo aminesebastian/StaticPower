@@ -8,12 +8,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import theking530.staticpower.assists.utilities.InventoryUtilities;
-import theking530.staticpower.assists.utilities.SideModeList.Mode;
-import theking530.staticpower.assists.utilities.SideUtilities;
-import theking530.staticpower.assists.utilities.SideUtilities.BlockSide;
 import theking530.staticpower.tileentity.ISideConfigurable;
 import theking530.staticpower.tileentity.TileEntityInventory;
+import theking530.staticpower.utilities.InventoryUtilities;
+import theking530.staticpower.utilities.SideUtilities;
+import theking530.staticpower.utilities.SideModeList.Mode;
+import theking530.staticpower.utilities.SideUtilities.BlockSide;
 
 public class TileEntityItemOutputServo implements ITileEntityComponent{
 
@@ -78,7 +78,7 @@ public class TileEntityItemOutputServo implements ITileEntityComponent{
 			}
 		}
 	}
-    public void outputItem(int fromSlot, theking530.staticpower.assists.utilities.SideUtilities.BlockSide blockSide, int startSlot, boolean backwards) {
+    public void outputItem(int fromSlot, theking530.staticpower.utilities.SideUtilities.BlockSide blockSide, int startSlot, boolean backwards) {
 		if (sideConfigurable == null || sideConfigurable.getSideConfiguration(blockSide) == outputMode) {
 			ItemStack stack = inventory.getStackInSlot(fromSlot);
 			if (!stack.isEmpty()) {

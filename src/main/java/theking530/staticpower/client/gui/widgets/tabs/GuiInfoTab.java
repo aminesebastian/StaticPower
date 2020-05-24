@@ -13,8 +13,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.Items;
-import theking530.staticpower.assists.utilities.GuiUtilities;
 import theking530.staticpower.client.gui.GuiTextures;
+import theking530.staticpower.utilities.GuiUtilities;
 
 public class GuiInfoTab extends BaseGuiTab {
 

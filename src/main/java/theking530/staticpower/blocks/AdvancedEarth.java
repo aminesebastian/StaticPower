@@ -20,12 +20,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.assists.utilities.EnumTextFormatting;
-import theking530.staticpower.assists.utilities.ItemUtilities;
+import theking530.staticpower.initialization.ModBlocks;
+import theking530.staticpower.utilities.EnumTextFormatting;
+import theking530.staticpower.utilities.ItemUtilities;
 
 public class AdvancedEarth extends BlockFarmland {
 	
-    protected AdvancedEarth() {
+    public AdvancedEarth() {
         setDefaultState(this.blockState.getBaseState().withProperty(MOISTURE, Integer.valueOf(7)));
         setTickRandomly(true);
         setLightOpacity(255);

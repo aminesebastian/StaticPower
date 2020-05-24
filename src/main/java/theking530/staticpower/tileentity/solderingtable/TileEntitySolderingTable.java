@@ -10,12 +10,12 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
-import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.handlers.crafting.registries.SolderingRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.SolderingRecipeWrapper;
 import theking530.staticpower.items.tools.ISolderingIron;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
 import theking530.staticpower.tileentity.TileEntityBase;
+import theking530.staticpower.utilities.SideModeList.Mode;
 
 public class TileEntitySolderingTable extends TileEntityBase {
 		

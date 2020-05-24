@@ -1,6 +1,6 @@
 package theking530.staticpower.tileentity;
 
-import theking530.staticpower.assists.utilities.RedstoneModeList.RedstoneMode;
+import theking530.staticpower.utilities.RedstoneModeList.RedstoneMode;
 
 public interface IRedstoneConfigurable {
 

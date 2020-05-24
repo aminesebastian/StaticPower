@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
-import theking530.staticpower.assists.utilities.InventoryUtilities;
 import theking530.staticpower.handlers.crafting.registries.FusionRecipeRegistry;
 import theking530.staticpower.handlers.crafting.wrappers.FusionFurnaceRecipeWrapper;
 import theking530.staticpower.machines.TileEntityMachine;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemInputServo;
 import theking530.staticpower.machines.tileentitycomponents.TileEntityItemOutputServo;
+import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityFusionFurnace extends TileEntityMachine {
 	

@@ -4,7 +4,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import theking530.staticpower.assists.utilities.SideModeList.Mode;
 import theking530.staticpower.client.gui.BaseGuiContainer;
 import theking530.staticpower.client.gui.widgets.buttons.ArrowButton;
 import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
@@ -13,8 +12,9 @@ import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiFluidBarUtilities;
 import theking530.staticpower.client.gui.widgets.valuebars.GuiHeatBarFromStorage;
 import theking530.staticpower.handlers.PacketHandler;
-import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
 import theking530.staticpower.machines.tileentitycomponents.PacketFluidContainerComponent;
+import theking530.staticpower.machines.tileentitycomponents.FluidContainerComponent.FluidContainerInteractionMode;
+import theking530.staticpower.utilities.SideModeList.Mode;
 
 public class GuiDistillery extends BaseGuiContainer {
 

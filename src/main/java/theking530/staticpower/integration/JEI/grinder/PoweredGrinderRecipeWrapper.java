@@ -8,8 +8,8 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import theking530.staticpower.assists.utilities.GuiUtilities;
 import theking530.staticpower.handlers.crafting.wrappers.GrinderOutputWrapper;
+import theking530.staticpower.utilities.GuiUtilities;
 
 public class PoweredGrinderRecipeWrapper implements IRecipeWrapper{
 

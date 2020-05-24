@@ -13,8 +13,8 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import theking530.staticpower.assists.utilities.StaticVertexBuffer;
 import theking530.staticpower.client.gui.GuiTextures;
+import theking530.staticpower.utilities.StaticVertexBuffer;
 
 public abstract class BaseGuiTab extends Gui {
 	
