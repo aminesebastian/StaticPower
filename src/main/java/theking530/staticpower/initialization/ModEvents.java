@@ -1,4 +1,4 @@
-package theking530.staticpower.handlers;
+package theking530.staticpower.initialization;
 
 import java.util.ArrayList;
 import java.util.Collection;

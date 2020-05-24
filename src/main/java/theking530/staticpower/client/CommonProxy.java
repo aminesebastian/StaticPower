@@ -1,6 +1,6 @@
 package theking530.staticpower.client;
 
-import theking530.staticpower.handlers.ModEvents;
+import theking530.staticpower.initialization.ModEvents;
 
 public class CommonProxy  {
 	

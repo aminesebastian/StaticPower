@@ -21,6 +21,5 @@ build
 eclipse
 run
 
-# libraries
-/libs
-/gradle
+# Files from Forge MDK
+forge*changelog.txt

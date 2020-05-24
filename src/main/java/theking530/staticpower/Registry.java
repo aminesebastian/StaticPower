@@ -5,17 +5,19 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 import theking530.staticpower.blocks.BaseItemBlock;
 import theking530.staticpower.blocks.IItemBlockProvider;
 import theking530.staticpower.client.ItemRenderRegistry;
@@ -23,18 +25,16 @@ import theking530.staticpower.client.model.fluidcapsule.ModelFluidCapsule.Loader
 import theking530.staticpower.fluids.ModFluids;
 import theking530.staticpower.items.MultiItem;
 import theking530.staticpower.utilities.Reference;
+import theking530.staticpower.utilities.SidePicker.Side;
 
-@Mod.EventBusSubscriber(modid = Reference.MOD_ID)
+@Mod.EventBusSubscriber(modid = Reference.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class Registry {
 
-	public List<Item> ITEMS = new LinkedList<>();
+	public static List<Item> ITEMS = new LinkedList<>();
 	public List<Block> BLOCKS = new LinkedList<>();
-	public List<MultiItem> MULTI_ITEM = new LinkedList<MultiItem>();
+	public static List<MultiItem> MULTI_ITEM = new LinkedList<MultiItem>();
 
-    public void preInit(FMLPreInitializationEvent e) {
-    	 MinecraftForge.EVENT_BUS.register(this);
-    }
-    
+
     public void PreRegisterItem(Item item) {
     	ITEMS.add(item);
     	if(item instanceof MultiItem) {
@@ -52,13 +52,32 @@ public class Registry {
             	ITEMS.add(provider.getItemBlock());	
     		}
     	}else{
-        	ITEMS.add(new BaseItemBlock(block, block.getUnlocalizedName()));	
+        	ITEMS.add(new BaseItemBlock(block, block.getRegistryName()));	
     	}
     	if(!(block instanceof IFluidBlock)) {
         	ItemRenderRegistry.addBlock(block);
     	}
     }
-    @SideOnly(Side.CLIENT)
+    
+    
+    @SubscribeEvent
+    public static void onRegisterItems(RegistryEvent.Register<Item> event) {
+    	ITEMS.forEach(event.getRegistry()::register);
+    	event.getRegistry().registerAll((Item[]) ITEMS.toArray());
+    	for(MultiItem item : MULTI_ITEM) {
+    		item.registerOreDictionaryEntries();
+    	}
+    }
+    public static <T extends IForgeRegistryEntry<T>> T setup(final T entry, final String name) {
+    	return setup(entry, new ResourceLocation(Reference.MOD_ID, name));
+    }
+
+    public static <T extends IForgeRegistryEntry<T>> T setup(final T entry, final ResourceLocation registryName) {
+    	entry.setRegistryName(registryName);
+    	return entry;
+    }
+    
+	@OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public static void onTextureStitchedPre(TextureStitchEvent.Pre e) {
     	LoaderFluidCapsule.INSTANCE.register(e.getMap());
@@ -67,18 +86,11 @@ public class Registry {
     public void registerBlocks(RegistryEvent.Register<Block> e) {
     	BLOCKS.forEach(e.getRegistry()::register);
     }
-    @SubscribeEvent
-    public void registerItems(RegistryEvent.Register<Item> e) {
-    	ITEMS.forEach(e.getRegistry()::register);
-    	for(MultiItem item : MULTI_ITEM) {
-    		item.registerOreDictionaryEntries();
-    	}
-    }
 
-    @SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	@SubscribeEvent
     public void registerModels(ModelRegistryEvent event) {	
-		OBJLoader.INSTANCE.addDomain(Reference.MOD_ID);
+		//OBJLoader.INSTANCE.add(Reference.MOD_ID);
 	    ItemRenderRegistry.initItemRenderers();
 	    ModFluids.initBlockRendering();
 	    ModFluids.initItemRendering();	    

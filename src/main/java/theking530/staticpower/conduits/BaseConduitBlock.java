@@ -28,7 +28,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.handlers.ModEvents;
+import theking530.staticpower.initialization.ModEvents;
 
 public class BaseConduitBlock extends Block implements IWrenchable {
 

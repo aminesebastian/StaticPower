@@ -1,8 +1,8 @@
 package theking530.staticpower.blocks;
 
-import net.minecraft.item.ItemBlock;
+import net.minecraft.item.BlockItem;
 
 public interface IItemBlockProvider {
 
-	public ItemBlock getItemBlock();
+	public BlockItem getItemBlock();
 }
