@@ -1,0 +1,16 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"nnn",
+		"nnn",
+		"nnn"
+	],
+	"key": {
+		"n": {
+			"item": "staticpower:nugget_silver"
+		}
+	},
+	"result": {
+		"item": "staticpower:ingot_silver"
+	}
+}

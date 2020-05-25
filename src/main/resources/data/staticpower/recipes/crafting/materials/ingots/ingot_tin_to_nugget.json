@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{
+			"item": "staticpower:ingot_tin"
+		}
+	],
+	"result": {
+		"item": "staticpower:nugget_tin",
+		"count": 9
+	}
+}

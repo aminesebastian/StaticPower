@@ -1,8 +1,0 @@
-{
-    "parent": "block/orientable",
-    "textures": {
-	    "top": "staticpower:blocks/machines/quarry_side",
-        "front": "staticpower:blocks/machines/quarry_front",
-        "side": "staticpower:blocks/machines/quarry_side"
-    }
-}

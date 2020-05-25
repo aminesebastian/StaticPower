@@ -1,0 +1,16 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"nnn",
+		"nnn",
+		"nnn"
+	],
+	"key": {
+		"n": {
+			"item": "staticpower:nugget_inert_infusion"
+		}
+	},
+	"result": {
+		"item": "staticpower:ingot_inert_infusion"
+	}
+}

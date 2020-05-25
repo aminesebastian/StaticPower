@@ -1,8 +1,0 @@
-{
-    "parent": "block/orientable",
-    "textures": {
-	    "top": "staticpower:blocks/multiblock/connected_cube0C",
-        "front": "staticpower:blocks/multiblock/fluid_refinery_controller_front",
-        "side": "staticpower:blocks/multiblock/connected_cube0C"
-    }
-}
