@@ -1,1 +1,2 @@
-gradlew eclipse --refresh-dependencies --no-daemon
+start gradlew eclipse --refresh-dependencies --no-daemon
+pause

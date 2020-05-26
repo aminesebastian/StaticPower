@@ -1,0 +1,7 @@
+{
+    "variants": {
+        "axis=y": { "model": "staticpower:block/wood_static" },
+        "axis=z": { "model": "staticpower:block/wood_static", "x": 90 },
+        "axis=x": { "model": "staticpower:block/wood_static", "x": 90, "y": 90 }
+    }
+}

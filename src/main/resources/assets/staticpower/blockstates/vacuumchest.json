@@ -1,8 +1,0 @@
-{
-    "variants": {
-        "facing=north": { "model": "staticpower:VacuumChest" },
-        "facing=south": { "model": "staticpower:VacuumChest", "y": 180 },
-        "facing=west":  { "model": "staticpower:VacuumChest", "y": 270 },
-        "facing=east":  { "model": "staticpower:VacuumChest", "y": 90 }
-    }
-}

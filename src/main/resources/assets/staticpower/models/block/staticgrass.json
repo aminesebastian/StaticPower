@@ -1,8 +1,0 @@
-{
-    "parent": "block/orientable",
-    "textures": {
-        "top": "staticpower:blocks/static_grass_top",
-        "front": "staticpower:blocks/static_grass_side",
-        "side": "staticpower:blocks/static_grass_side"
-    }
-}

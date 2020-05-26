@@ -95,6 +95,8 @@ dependencies {
 	compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api")
 	// at runtime, use the full JEI jar
 	runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
+		
+	compile "codechicken:CodeChickenLib:${mc_version}-${codechickenlib_version}:deobf"
 }
 
 repositories {
@@ -107,6 +109,10 @@ repositories {
 		// location of a maven mirror for JEI files, as a fallback
 		name = "ModMaven"
 		url = "https://modmaven.k-4u.nl"
+	}
+	maven {
+		name = "ChickenBones Maven"
+		url = "http://chickenbones.net/maven/"
 	}
 }
 
@@ -152,19 +158,12 @@ artifacts {
     archives deobfJar
 }
 
-task sourceJar(type: Jar, dependsOn: 'sourceMainJava') {
-    from "build/sources/java"
-    from "build/resources/main/java"
-    classifier "sources"
+task sourcesJar(type: Jar, dependsOn: classes) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
 }
-artifacts {
-    archives sourceJar
-}
+build.dependsOn sourcesJar
 
-task javadocJar(type: Jar, dependsOn: 'javadoc') {
-    from "build/docs/javadoc"
-    classifier "javadoc"
-}
 artifacts {
-    archives javadocJar
+	archives sourcesJar
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -83,9 +84,9 @@ public class StaticPowerItem extends Item {
 
 		// Add the advanced tooltips if any were requested.
 		if (advancedToolTips.size() > 0) {
-			// If shift is not held, indicate that the user should hold shift, otherwise add
+			// If sneak is not held, indicate that the user should hold sneak, otherwise add
 			// the advanced tooltips.
-			if (flagIn.isAdvanced()) {
+			if (Screen.hasShiftDown()) {
 				tooltip.addAll(advancedToolTips);
 			} else {
 				tooltip.add(new StringTextComponent("Hold Shift").applyTextStyle(TextFormatting.ITALIC));

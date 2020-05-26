@@ -1,7 +1,5 @@
 package theking530.staticpower.items;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 import javax.annotation.Nonnull;
 
 import net.minecraft.item.ItemStack;
@@ -12,30 +10,37 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 /***
- * Template capability provider for itemstacks that require energy storage.
+ * Template capability provider for any {@link ItemStack] that requires energy storage.
  * 
  * @author Amine Sebastian
  *
  */
 public class EnergyHandlerItemStack implements IEnergyStorage, ICapabilityProvider {
-	public static final String STORED_ENERGY_NBT_KEY = "StoredEnergy";
-	public static final String MAX_ENERGY_NBT_KEY = "MaxEnergy";
-	public static final String MAX_RECEIVE_ENERGY_NBT_KEY = "MaxReceieveEnery";
-	public static final String MAX_DRAIN_ENERGY_NBT_KEY = "MaxDrainEnergy";
+	/** Lazy optional wrapper for this class. */
+	private final LazyOptional<IEnergyStorage> holder;
 
-	private final LazyOptional<IEnergyStorage> holder = LazyOptional.of(() -> this);
-
+	/** Handle to the container {@link ItemStack} this class represents. */
 	@Nonnull
 	protected ItemStack container;
 
-	public EnergyHandlerItemStack(@Nonnull ItemStack container, int capacity, int maxRecieve, int maxDrain) {
+	/**
+	 * Initializes the provided container {@link ItemStack} with energy
+	 * capabilities.
+	 * 
+	 * @param container  The {@link ItemStack} to add energy storage capabilities
+	 *                   to.
+	 * @param capacity   The default initial capacity of the energy storage item.
+	 * @param maxReceive The maximum amount of energy that can be drained from the
+	 *                   item per tick.
+	 * @param maxDrain   The maximum amount of energy that be received by the item.
+	 */
+	public EnergyHandlerItemStack(@Nonnull ItemStack container, int capacity, int maxReceive, int maxDrain) {
+		this.holder = LazyOptional.of(() -> this);
 		this.container = container;
-		this.container.getTag().putInt(STORED_ENERGY_NBT_KEY, 0);
-		this.container.getTag().putInt(MAX_ENERGY_NBT_KEY, capacity);
-		this.container.getTag().putInt(MAX_RECEIVE_ENERGY_NBT_KEY, maxRecieve);
-		this.container.getTag().putInt(MAX_DRAIN_ENERGY_NBT_KEY, maxDrain);
+		initializeContainer(capacity, maxReceive, maxDrain);
 	}
 
 	@Override
@@ -52,8 +57,10 @@ public class EnergyHandlerItemStack implements IEnergyStorage, ICapabilityProvid
 		int current = getEnergyStored();
 		int candidateReceive = Math.min(maxReceive, max - current);
 		int received = Math.min(candidateReceive, getMaxReceiveRate());
+
 		if (!simulate) {
-			container.getTag().putInt(STORED_ENERGY_NBT_KEY, getEnergyStored() + received);
+			EnergyHandlerItemStackUtilities.getEnergyStorageNBTTag(container).putInt(EnergyHandlerItemStackUtilities.CURRENT_ENERGY_NBT_KEY, getEnergyStored() + received);
+			EnergyHandlerItemStackUtilities.updateDamageUsingEnergyStorage(container);
 		}
 		return received;
 	}
@@ -77,7 +84,8 @@ public class EnergyHandlerItemStack implements IEnergyStorage, ICapabilityProvid
 		int candidateDrain = Math.min(maxExtract, current);
 		int drained = Math.min(candidateDrain, getMaxDrainRate());
 		if (!simulate) {
-			container.getTag().putInt(STORED_ENERGY_NBT_KEY, getEnergyStored() - drained);
+			EnergyHandlerItemStackUtilities.getEnergyStorageNBTTag(container).putInt(EnergyHandlerItemStackUtilities.CURRENT_ENERGY_NBT_KEY, getEnergyStored() - drained);
+			EnergyHandlerItemStackUtilities.updateDamageUsingEnergyStorage(container);
 		}
 		return drained;
 	}
@@ -87,9 +95,9 @@ public class EnergyHandlerItemStack implements IEnergyStorage, ICapabilityProvid
 	 */
 	@Override
 	public int getEnergyStored() {
-		CompoundNBT tagCompound = container.getTag();
-		if (tagCompound != null && tagCompound.contains(STORED_ENERGY_NBT_KEY)) {
-			return tagCompound.getInt(STORED_ENERGY_NBT_KEY);
+		CompoundNBT tagCompound = EnergyHandlerItemStackUtilities.getEnergyStorageNBTTag(container);
+		if (tagCompound != null && tagCompound.contains(EnergyHandlerItemStackUtilities.CURRENT_ENERGY_NBT_KEY)) {
+			return tagCompound.getInt(EnergyHandlerItemStackUtilities.CURRENT_ENERGY_NBT_KEY);
 		}
 		return 0;
 	}
@@ -99,9 +107,9 @@ public class EnergyHandlerItemStack implements IEnergyStorage, ICapabilityProvid
 	 */
 	@Override
 	public int getMaxEnergyStored() {
-		CompoundNBT tagCompound = container.getTag();
-		if (tagCompound != null && tagCompound.contains(MAX_ENERGY_NBT_KEY)) {
-			return tagCompound.getInt(MAX_ENERGY_NBT_KEY);
+		CompoundNBT tagCompound = EnergyHandlerItemStackUtilities.getEnergyStorageNBTTag(container);
+		if (tagCompound != null && tagCompound.contains(EnergyHandlerItemStackUtilities.MAX_ENERGY_NBT_KEY)) {
+			return tagCompound.getInt(EnergyHandlerItemStackUtilities.MAX_ENERGY_NBT_KEY);
 		}
 		return 0;
 	}
@@ -128,9 +136,9 @@ public class EnergyHandlerItemStack implements IEnergyStorage, ICapabilityProvid
 	 * @return
 	 */
 	public int getMaxReceiveRate() {
-		CompoundNBT tagCompound = container.getTag();
-		if (tagCompound != null && tagCompound.contains(MAX_RECEIVE_ENERGY_NBT_KEY)) {
-			return tagCompound.getInt(MAX_RECEIVE_ENERGY_NBT_KEY);
+		CompoundNBT tagCompound = EnergyHandlerItemStackUtilities.getEnergyStorageNBTTag(container);
+		if (tagCompound != null && tagCompound.contains(EnergyHandlerItemStackUtilities.MAX_RECEIVE_ENERGY_NBT_KEY)) {
+			return tagCompound.getInt(EnergyHandlerItemStackUtilities.MAX_RECEIVE_ENERGY_NBT_KEY);
 		}
 		return 0;
 	}
@@ -142,116 +150,48 @@ public class EnergyHandlerItemStack implements IEnergyStorage, ICapabilityProvid
 	 * @return
 	 */
 	public int getMaxDrainRate() {
-		CompoundNBT tagCompound = container.getTag();
-		if (tagCompound != null && tagCompound.contains(MAX_DRAIN_ENERGY_NBT_KEY)) {
-			return tagCompound.getInt(MAX_DRAIN_ENERGY_NBT_KEY);
+		CompoundNBT tagCompound = EnergyHandlerItemStackUtilities.getEnergyStorageNBTTag(container);
+		if (tagCompound != null && tagCompound.contains(EnergyHandlerItemStackUtilities.MAX_DRAIN_ENERGY_NBT_KEY)) {
+			return tagCompound.getInt(EnergyHandlerItemStackUtilities.MAX_DRAIN_ENERGY_NBT_KEY);
 		}
 		return 0;
 	}
-	
-	
-	
-	
+
 	/**
-	 * Checks to see if the provided {@link ItemStack} is a valid energy container.
+	 * Creates the default nbt tag to be added to the itemstack container.
 	 * 
-	 * @param container The itemstack to check.
-	 * @return True if the itemstack is a valid energy containing itemstack, false
-	 *         otherwise.
+	 * @return The energy NBT tag.
 	 */
-	public static boolean isValidEnergyContainingItemstack(ItemStack container) {
-		return container.hasTag() && container.getTag().contains(EnergyHandlerItemStack.MAX_DRAIN_ENERGY_NBT_KEY) && container.getTag().contains(EnergyHandlerItemStack.MAX_RECEIVE_ENERGY_NBT_KEY)
-				&& container.getTag().contains(EnergyHandlerItemStack.MAX_ENERGY_NBT_KEY) && container.getTag().contains(EnergyHandlerItemStack.STORED_ENERGY_NBT_KEY);
+	private CompoundNBT createDefaultNBT(int initialEnergy, int capacity, int maxReceive, int maxDrain) {
+		CompoundNBT nbt = new CompoundNBT();
+		nbt.putInt(EnergyHandlerItemStackUtilities.CURRENT_ENERGY_NBT_KEY, 0);
+		nbt.putInt(EnergyHandlerItemStackUtilities.MAX_ENERGY_NBT_KEY, capacity);
+		nbt.putInt(EnergyHandlerItemStackUtilities.MAX_RECEIVE_ENERGY_NBT_KEY, maxReceive);
+		nbt.putInt(EnergyHandlerItemStackUtilities.MAX_DRAIN_ENERGY_NBT_KEY, maxDrain);
+		return nbt;
 	}
 
 	/**
-	 * Helper method to set the amount of energy in an energy containing itemstack.
-	 * This respects the itemstack's max stored energy property.
+	 * Initializes the container with the nbt required to store energy information
+	 * if it is not already present. If already present, does nothing.
 	 * 
-	 * @param container The itemstack to add the energy to.
-	 * @param energy    The amount of energy to set this itemstack's stored energy
-	 *                  to.
+	 * @param capacity   The initial capacity.
+	 * @param maxReceive The maximum amount of energy that can be gained per tick.
+	 * @param maxDrain   The maximum amount of energy that can be drained per tick.
 	 */
-	public static void setEnergy(ItemStack container, int energy) {
-		int maxEnergy = container.getTag().getInt(EnergyHandlerItemStack.MAX_ENERGY_NBT_KEY);
-		container.getTag().putInt(EnergyHandlerItemStack.STORED_ENERGY_NBT_KEY, Math.min(maxEnergy, energy));
-		updateDamageUsingEnergyStorage(container);
-	}
+	private void initializeContainer(int capacity, int maxReceive, int maxDrain) {
+		// If this ItemStack does not have an nbt tag, make one.
+		if (container.getTag() == null) {
+			container.setTag(new CompoundNBT());
+		}
 
-	/**
-	 * Helper method to get the amount of energy in an energy containing itemstack.
-	 * 
-	 * @param container The itemstack to check.
-	 */
-	public static int getEnergyStored(ItemStack container) {
-		AtomicInteger energy = new AtomicInteger(0);
-		container.getCapability(CapabilityEnergy.ENERGY).ifPresent((IEnergyStorage instance) -> {
-			energy.set(instance.getEnergyStored());
-		});
-		return energy.get();
-	}
-
-	/**
-	 * Helper method to get the maximum amount of energy in an energy containing
-	 * itemstack.
-	 * 
-	 * @param container The itemstack to check.
-	 */
-	public static int getEnergyStorageCapacity(ItemStack container) {
-		AtomicInteger energy = new AtomicInteger(0);
-		container.getCapability(CapabilityEnergy.ENERGY).ifPresent((IEnergyStorage instance) -> {
-			energy.set(instance.getMaxEnergyStored());
-		});
-		return energy.get();
-	}
-
-	/**
-	 * Helper method to add energy to an energy containing itemstack.
-	 * 
-	 * @param container  The itemstack to add the energy to.
-	 * @param maxReceive The amount of energy to add.
-	 * @param simulate   If true, the process will only be simulated.
-	 * @return The actual amount of energy added.
-	 */
-	public static int addEnergyToItemstack(ItemStack container, int maxReceive, boolean simulate) {
-		AtomicInteger received = new AtomicInteger(0);
-		container.getCapability(CapabilityEnergy.ENERGY).ifPresent((IEnergyStorage instance) -> {
-			received.set(instance.receiveEnergy(maxReceive, simulate));
-			if (!simulate) {
-				updateDamageUsingEnergyStorage(container);
-			}
-		});
-		return received.get();
-	}
-
-	/**
-	 * Helper method to use energy from an energy containing itemstack.
-	 * 
-	 * @param container  The itemstack to add the energy to.
-	 * @param maxExtract The amount of energy to drain.
-	 * @param simulate   If true, the process will only be simulated.
-	 * @return The actual amount of energy drained.
-	 */
-	public static int useEnergyFromItemstack(ItemStack container, int maxExtract, boolean simulate) {
-		AtomicInteger extracted = new AtomicInteger(0);
-		container.getCapability(CapabilityEnergy.ENERGY).ifPresent((IEnergyStorage instance) -> {
-			extracted.set(instance.receiveEnergy(maxExtract, simulate));
-			if (!simulate) {
-				updateDamageUsingEnergyStorage(container);
-			}
-		});
-		return extracted.get();
-	}
-
-	/**
-	 * Updates the amount of damage on the itemstack based on the amount of energy
-	 * stored vs the maximum amount that can be stored on this itemstack.
-	 * 
-	 * @param container The itemstack to update.
-	 */
-	public static void updateDamageUsingEnergyStorage(ItemStack container) {
-		int maxEnergy = getEnergyStorageCapacity(container);
-		int energy = getEnergyStored(container);
-		container.setDamage((maxEnergy - energy) / container.getMaxDamage());
+		// Create the default energy tag if one doesnt exist on this item, and then add
+		// it as a sub tag to the item's
+		// nbt.
+		if (EnergyHandlerItemStackUtilities.getEnergyStorageNBTTag(container) == null) {
+			CompoundNBT nbt = createDefaultNBT(0, capacity, maxReceive, maxDrain);
+			container.getTag().put(EnergyHandlerItemStackUtilities.ENERGY_STORAGE_NBT_KEY, nbt);
+			EnergyHandlerItemStackUtilities.updateDamageUsingEnergyStorage(container);
+		}
 	}
 }
