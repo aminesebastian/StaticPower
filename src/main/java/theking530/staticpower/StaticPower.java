@@ -12,6 +12,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import theking530.staticpower.initialization.ModBlocks;
 import theking530.staticpower.initialization.ModItems;
+import theking530.staticpower.initialization.ModTileEntityTypes;
 import theking530.staticpower.utilities.Reference;
 
 @Mod(Reference.MOD_ID)
@@ -23,6 +24,7 @@ public class StaticPower {
 	public StaticPower() {
 		ModBlocks.init();
 		ModItems.init();
+		ModTileEntityTypes.init();
 	}
 
 	@SubscribeEvent

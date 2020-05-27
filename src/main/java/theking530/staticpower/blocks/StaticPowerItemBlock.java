@@ -58,7 +58,7 @@ public class StaticPowerItemBlock extends BlockItem {
 		OWNING_BLOCK.getAdvancedTooltip(stack, worldIn, advancedToolTips);
 
 		// Add the advanced tooltips if any were requested.
-		if (advancedToolTips != null) {
+		if (advancedToolTips.size() > 0) {
 			// If shift is not held, indicate that the user should hold shift, otherwise add
 			// the advanced tooltips.
 			if (flagIn.isAdvanced()) {

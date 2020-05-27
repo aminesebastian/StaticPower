@@ -97,6 +97,9 @@ dependencies {
 	runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
 		
 	compile "codechicken:CodeChickenLib:${mc_version}-${codechickenlib_version}:deobf"
+	
+	compileOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-${mc_major_version}:${mc_major_version}-${one_probe_version}:api")
+    runtimeOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-${mc_major_version}:${mc_major_version}-${one_probe_version}")
 }
 
 repositories {
@@ -113,6 +116,10 @@ repositories {
 	maven {
 		name = "ChickenBones Maven"
 		url = "http://chickenbones.net/maven/"
+	}
+	maven {
+		name = "tterrag maven"
+		url = "http://maven.tterrag.com/"
 	}
 }
 

@@ -1,12 +1,15 @@
 package theking530.staticpower;
 
 import java.util.HashSet;
+import java.util.function.Supplier;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -15,6 +18,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import theking530.staticpower.blocks.IBlockRenderLayerProvider;
 import theking530.staticpower.blocks.IItemBlockProvider;
+import theking530.staticpower.initialization.ModBlocks;
 import theking530.staticpower.utilities.Reference;
 
 /**
@@ -27,6 +31,7 @@ import theking530.staticpower.utilities.Reference;
 public class Registry {
 	private static final HashSet<Item> ITEMS = new HashSet<>();
 	private static final HashSet<Block> BLOCKS = new HashSet<>();
+	private static final HashSet<TileEntityType<?>> TILE_ENTITY_TYPES = new HashSet<>();
 
 	/**
 	 * Pre-registers an item for registration through the registry event.
@@ -52,13 +57,21 @@ public class Registry {
 		if (block instanceof IItemBlockProvider) {
 			IItemBlockProvider provider = (IItemBlockProvider) block;
 			BlockItem itemBlock = provider.getItemBlock();
-			
+
 			// Skip items with null item blocks.
-			if(itemBlock != null) {
+			if (itemBlock != null) {
 				preRegisterItem(provider.getItemBlock());
 			}
 		}
 		return block;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static <T extends TileEntity> TileEntityType<T> preRegisterTileEntity(Supplier<? extends T> factory, Block tileEntityBlock) {
+		TileEntityType teType = TileEntityType.Builder.create(factory, tileEntityBlock).build(null);
+		teType.setRegistryName(tileEntityBlock.getRegistryName());
+		TILE_ENTITY_TYPES.add(teType);
+		return teType;
 	}
 
 	/**
@@ -103,6 +116,13 @@ public class Registry {
 	public static void onRegisterBlocks(RegistryEvent.Register<Block> event) {
 		for (Block item : BLOCKS) {
 			event.getRegistry().register(item);
+		}
+	}
+
+	@SubscribeEvent
+	public static void onRegisterTileEntityTypes(RegistryEvent.Register<TileEntityType<?>> event) {
+		for (TileEntityType<?> teType : TILE_ENTITY_TYPES) {
+			event.getRegistry().registerAll(teType);
 		}
 	}
 }
