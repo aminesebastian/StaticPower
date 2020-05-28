@@ -1,6 +1,5 @@
 package theking530.staticpower.tileentity;
 
-
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 import theking530.api.utilities.Color;
@@ -8,13 +7,13 @@ import theking530.api.utilities.Color;
 public class SideModeList {
 	
 	public enum Mode {
-		Regular("Regular", TextFormatting.WHITE, new Color(139, 139, 139)),
-		Input("Input", TextFormatting.BLUE, new Color(80, 130, 179)),
-		Input2("Input2", TextFormatting.DARK_PURPLE, new Color(100, 0, 200)),
-		Output("Output", TextFormatting.GOLD, new Color(200, 140, 50)),
-		Output2("Output1", TextFormatting.GREEN, new Color(0, 200, 50)),
-		Output3("Output2", TextFormatting.YELLOW, new Color(220, 220, 0)),
-		Disabled("Disabled", TextFormatting.RED, new Color(200, 20, 20));
+		Regular("Regular", TextFormatting.WHITE, new Color(139, 139, 139).fromEightBitToFloat()),
+		Input("Input", TextFormatting.BLUE, new Color(80, 130, 179).fromEightBitToFloat()),
+		Input2("Input2", TextFormatting.DARK_PURPLE, new Color(100, 0, 200).fromEightBitToFloat()),
+		Output("Output", TextFormatting.GOLD, new Color(200, 140, 50).fromEightBitToFloat()),
+		Output2("Output1", TextFormatting.GREEN, new Color(0, 200, 50).fromEightBitToFloat()),
+		Output3("Output2", TextFormatting.YELLOW, new Color(220, 220, 0).fromEightBitToFloat()),
+		Disabled("Disabled", TextFormatting.RED, new Color(200, 20, 20).fromEightBitToFloat());
 
 	private String name;
     private TextFormatting fontColor;

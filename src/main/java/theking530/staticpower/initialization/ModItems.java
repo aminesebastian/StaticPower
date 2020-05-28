@@ -191,7 +191,7 @@ public class ModItems {
 	public static SolderingIron SolderingIron;
 	public static ElectricSolderingIron ElectringSolderingIron;
 	public static StaticWrench StaticWrench;
-
+		
 	public static void init() {
 		// Book
 		Registry.preRegisterItem(StaticPowerBook = new StaticPowerBook("tutorial_book"));

@@ -11,8 +11,10 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import theking530.staticpower.initialization.ModBlocks;
+import theking530.staticpower.initialization.ModContainerTypes;
 import theking530.staticpower.initialization.ModItems;
 import theking530.staticpower.initialization.ModTileEntityTypes;
+import theking530.staticpower.initialization.ModUpgrades;
 import theking530.staticpower.utilities.Reference;
 
 @Mod(Reference.MOD_ID)
@@ -24,7 +26,9 @@ public class StaticPower {
 	public StaticPower() {
 		ModBlocks.init();
 		ModItems.init();
+		ModUpgrades.init();
 		ModTileEntityTypes.init();
+		ModContainerTypes.init();
 	}
 
 	@SubscribeEvent
@@ -38,8 +42,9 @@ public class StaticPower {
 		LOGGER.info("Performing Static Power Client Side Setup");
 		Registry.onClientSetupEvent(event);
 	}
-	@SubscribeEvent
-    public static void onLootTableLoad(LootTableLoadEvent evt) {
 
-    }
+	@SubscribeEvent
+	public static void onLootTableLoad(LootTableLoadEvent evt) {
+
+	}
 }

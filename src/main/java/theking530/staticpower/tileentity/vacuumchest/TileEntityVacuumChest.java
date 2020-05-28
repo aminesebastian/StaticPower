@@ -1,19 +1,33 @@
 package theking530.staticpower.tileentity.vacuumchest;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.entity.item.ExperienceOrbEntity;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.CapabilityItemHandler;
+import theking530.staticpower.initialization.ModBlocks;
 import theking530.staticpower.initialization.ModTileEntityTypes;
 import theking530.staticpower.tileentity.TileEntityBase;
+import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityVacuumChest extends TileEntityBase implements Predicate<ItemEntity> {
 
@@ -34,48 +48,45 @@ public class TileEntityVacuumChest extends TileEntityBase implements Predicate<I
 
 	@Override
 	public void process() {
-//		
-//	    AxisAlignedBB aabb = new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1);
-//	    aabb = aabb.expand(vacuumDiamater, vacuumDiamater, vacuumDiamater);
-//	    aabb = aabb.offset(-vacuumDiamater/2, -vacuumDiamater/2, -vacuumDiamater/2);
-//	    List<ItemEntity> droppedItems = getWorld().getEntitiesWithinAABB(ItemEntity.class, aabb, this);
-//	    List<EntityXPOrb> xpOrbs = getWorld().getEntitiesWithinAABB(EntityXPOrb.class, aabb);
-//	    
-//		for (ItemEntity entity : droppedItems) {
-//
-//			double x = (pos.getX() + 0.5D - entity.posX);
-//			double y = (pos.getY() + 0.5D - entity.posY);
-//			double z = (pos.getZ() + 0.5D - entity.posZ);
-//			ItemStack stack = entity.getItem().copy();
-//			if(InventoryUtilities.canFullyInsertItemIntoInventory(slotsOutput, stack) && doesItemPassFilter(stack)) {
-//				double distance = Math.sqrt(x * x + y * y + z * z);
-//				if (distance < 1.1 || (shouldTeleport && distance < getRadius()-0.1f)) {
-//					if(InventoryUtilities.canFullyInsertItemIntoInventory(slotsOutput, stack)) {
-//						if(!getWorld().isRemote) {
-//							InventoryUtilities.insertItemIntoInventory(slotsOutput, stack);	
-//						}
-//						entity.setDead();
-//						getWorld().spawnParticle(EnumParticleTypes.PORTAL, (double)pos.getX()+0.5, (double)pos.getY()+1.0, (double)pos.getZ()+0.5, 0.0D, 0.0D, 0.0D, new int[0]);
-//						getWorld().playSound((double)pos.getX(), (double)pos.getY(), (double)pos.getZ(), SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 0.5F, 1.0F, false);
-//					}
-//				} else {
-//					double var11 = 1.0 - distance / 15.0;
-//					if (var11 > 0.0D) {
-//						var11 *= var11;
-//						entity.motionX += x / distance * var11 * 0.06;
-//						entity.motionY += y / distance * var11 * 0.15;
-//						entity.motionZ += z / distance * var11 * 0.06;
-//						Vec3d entityPos = entity.getPositionVector();
-//						getWorld().spawnParticle(EnumParticleTypes.PORTAL, entityPos.x, entityPos.y-0.5, entityPos.z, 0.0D, 0.0D, 0.0D, new int[0]);
-//					}
-//				}
-//			}
-//		}
+		AxisAlignedBB aabb = new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1);
+		aabb = aabb.expand(vacuumDiamater, vacuumDiamater, vacuumDiamater);
+		aabb = aabb.offset(-vacuumDiamater / 2, -vacuumDiamater / 2, -vacuumDiamater / 2);
+		List<ItemEntity> droppedItems = getWorld().getEntitiesWithinAABB(ItemEntity.class, aabb, this);
+		List<ExperienceOrbEntity> xpOrbs = getWorld().getEntitiesWithinAABB(ExperienceOrbEntity.class, aabb);
+
+		for (ItemEntity entity : droppedItems) {
+
+			double x = (pos.getX() + 0.5D - entity.getPosX());
+			double y = (pos.getY() + 0.5D - entity.getPosY());
+			double z = (pos.getZ() + 0.5D - entity.getPosZ());
+			ItemStack stack = entity.getItem().copy();
+			if (InventoryUtilities.canFullyInsertItemIntoInventory(slotsOutput, stack) && doesItemPassFilter(stack)) {
+				double distance = Math.sqrt(x * x + y * y + z * z);
+				if (distance < 1.1 || (shouldTeleport && distance < getRadius() - 0.1f)) {
+					if (InventoryUtilities.canFullyInsertItemIntoInventory(slotsOutput, stack)) {
+						if (!getWorld().isRemote) {
+							InventoryUtilities.insertItemIntoInventory(slotsOutput, stack);
+						}
+						entity.remove();
+						getWorld().addParticle(ParticleTypes.PORTAL, (double) pos.getX() + 0.5, (double) pos.getY() + 1.0, (double) pos.getZ() + 0.5, 0.0D, 0.0D, 0.0D);
+						getWorld().playSound((double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 0.5F, 1.0F, false);
+					}
+				} else {
+					double var11 = 1.0 - distance / 15.0;
+					if (var11 > 0.0D) {
+						var11 *= var11;
+						entity.addVelocity(x / distance * var11 * 0.06, y / distance * var11 * 0.15, z / distance * var11 * 0.06);
+						Vec3d entityPos = entity.getPositionVector();
+						getWorld().addParticle(ParticleTypes.PORTAL, entityPos.x, entityPos.y - 0.5, entityPos.z, 0.0D, 0.0D, 0.0D);
+					}
+				}
+			}
+		}
 //		if(shouldVacuumExperience) {
-//			for (EntityXPOrb orb : xpOrbs) {			
-//				double x = (pos.getX() + 0.5D - orb.posX);
-//				double y = (pos.getY() + 0.5D - orb.posY);
-//				double z = (pos.getZ() + 0.5D - orb.posZ);
+//			for (ExperienceOrbEntity orb : xpOrbs) {			
+//				double x = (pos.getX() + 0.5D - orb.getPosX());
+//				double y = (pos.getY() + 0.5D - orb.getPosY());
+//				double z = (pos.getZ() + 0.5D - orb.getPosZ());
 //				
 //				double distance = Math.sqrt(x * x + y * y + z * z);
 //				if (distance < 1.1 || (shouldTeleport && distance < getRadius()-0.1f)) {
@@ -118,7 +129,7 @@ public class TileEntityVacuumChest extends TileEntityBase implements Predicate<I
 	// IInventory
 	@Override
 	public String getName() {
-		return "container.VacuumChest";
+		return "chest_vacuum";
 	}
 
 	public float getRadius() {
@@ -193,6 +204,17 @@ public class TileEntityVacuumChest extends TileEntityBase implements Predicate<I
 	@Override
 	public boolean test(ItemEntity t) {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
+	}
+
+	@Override
+	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+		// TODO Auto-generated method stub
+		return new ContainerVacuumChest(windowId, inventory, this);
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
+		return new TranslationTextComponent(ModBlocks.VacuumChest.getTranslationKey());
 	}
 }

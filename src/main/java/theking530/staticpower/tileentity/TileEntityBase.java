@@ -7,16 +7,22 @@ import javax.annotation.Nonnull;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.ITickable;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -31,7 +37,7 @@ import theking530.staticpower.tileentity.RedstoneModeList.RedstoneMode;
 import theking530.staticpower.tileentity.SideModeList.Mode;
 import theking530.staticpower.tileentity.SideUtilities.BlockSide;
 
-public class TileEntityBase extends TileEntity implements ITickable, IRedstoneConfigurable, ISideConfigurable, IUpgradeable, INameable, IBreakSerializeable {
+public class TileEntityBase extends TileEntity implements ITickableTileEntity, IRedstoneConfigurable, ISideConfigurable, IUpgradeable, INameable, IBreakSerializeable, INamedContainerProvider {
 
 	public static final int DEFAULT_UPDATE_TIME = 2;
 
@@ -564,5 +570,16 @@ public class TileEntityBase extends TileEntity implements ITickable, IRedstoneCo
 		modes.add(Mode.Regular);
 		modes.add(Mode.Disabled);
 		return modes;
+	}
+
+	@Override
+	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
+		return new StringTextComponent("ERROR");
 	}
 }
