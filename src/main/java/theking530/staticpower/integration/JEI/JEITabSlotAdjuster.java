@@ -8,11 +8,11 @@ import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.Rectangle2d;
 import theking530.api.gui.RectangleBounds;
 import theking530.api.gui.widgets.tabs.BaseGuiTab;
-import theking530.staticpower.client.gui.BaseContainerGui;
+import theking530.staticpower.client.gui.StaticPowerContainerGui;
 
-public class JEITabSlotAdjuster<T extends ContainerScreen<?>> implements IGuiContainerHandler<BaseContainerGui<?>> {
+public class JEITabSlotAdjuster<T extends ContainerScreen<?>> implements IGuiContainerHandler<StaticPowerContainerGui<?>> {
 	@Override
-	public List<Rectangle2d> getGuiExtraAreas(BaseContainerGui<?> containerScreen) {
+	public List<Rectangle2d> getGuiExtraAreas(StaticPowerContainerGui<?> containerScreen) {
 		List<Rectangle2d> tabBoxes = new ArrayList<>();
 
 		for (BaseGuiTab tab : containerScreen.getTabManager().getRegisteredTabs()) {

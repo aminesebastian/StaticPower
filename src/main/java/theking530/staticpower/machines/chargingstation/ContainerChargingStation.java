@@ -1,100 +1,89 @@
 package theking530.staticpower.machines.chargingstation;
 
-import cofh.redstoneflux.api.IEnergyContainerItem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import theking530.staticpower.container.BaseContainer;
+import net.minecraft.network.PacketBuffer;
+import theking530.api.container.StaticPowerContainerSlot;
+import theking530.staticpower.client.container.BatterySlot;
+import theking530.staticpower.client.container.OutputSlot;
+import theking530.staticpower.client.container.PlayerArmorSlot;
+import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
+import theking530.staticpower.client.container.UpgradeSlot;
+import theking530.staticpower.initialization.ModContainerTypes;
 import theking530.staticpower.items.upgrades.BaseUpgrade;
-import theking530.staticpower.machines.tileentitycomponents.slots.BatterySlot;
-import theking530.staticpower.machines.tileentitycomponents.slots.OutputSlot;
-import theking530.staticpower.machines.tileentitycomponents.slots.StaticPowerContainerSlot;
-import theking530.staticpower.machines.tileentitycomponents.slots.UpgradeSlot;
+import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
-public class ContainerChargingStation extends BaseContainer {
+public class ContainerChargingStation extends StaticPowerTileEntityContainer<TileEntityChargingStation> {
 
-	public ContainerChargingStation(PlayerInventory invPlayer, TileEntityChargingStation teChargingStation) {	
-		//Input
-		this.addSlot(new StaticPowerContainerSlot(teChargingStation.slotsInput, 0, 51, 24) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-		          return itemStack.getItem() instanceof IEnergyContainerItem;
-		    }
-		});	
-		this.addSlot(new StaticPowerContainerSlot(teChargingStation.slotsInput, 1, 70, 24) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-		          return itemStack.getItem() instanceof IEnergyContainerItem;
-		    }
-		});	
-		this.addSlot(new StaticPowerContainerSlot(teChargingStation.slotsInput, 2, 89, 24) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-		          return itemStack.getItem() instanceof IEnergyContainerItem;
-		    }
-		});	
-		this.addSlot(new StaticPowerContainerSlot(teChargingStation.slotsInput, 3, 108, 24) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-		          return itemStack.getItem() instanceof IEnergyContainerItem;
-		    }
-		});	
-		
-		//Output
-		this.addSlot(new OutputSlot(teChargingStation.slotsOutput, 0, 46, 52));
-		this.addSlot(new OutputSlot(teChargingStation.slotsOutput, 1, 69, 52));
-		this.addSlot(new OutputSlot(teChargingStation.slotsOutput, 2, 92, 52));
-		this.addSlot(new OutputSlot(teChargingStation.slotsOutput, 3, 115, 52));
-		
-		//Upgrades
-		this.addSlot(new UpgradeSlot(teChargingStation.slotsUpgrades, 0, 152, 8));
-		this.addSlot(new UpgradeSlot(teChargingStation.slotsUpgrades, 1, 152, 30));
-		this.addSlot(new UpgradeSlot(teChargingStation.slotsUpgrades, 2, 152, 52));
-		
-		//Battery
-		this.addSlot(new BatterySlot(teChargingStation.slotsInternal, 0, 8, 54));
-		
-		//Armor
-		this.addSlot(new Slot(invPlayer, 39, -24, 14) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-                return itemStack.getItem().isValidArmor(itemStack, EquipmentSlotType.HEAD, invPlayer.player);
-		    }
-		});	
-		this.addSlot(new Slot(invPlayer, 38, -24, 33) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-                return itemStack.getItem().isValidArmor(itemStack, EquipmentSlotType.CHEST, invPlayer.player);
-		    }
-		});	
-		this.addSlot(new Slot(invPlayer, 37, -24, 52) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-                return itemStack.getItem().isValidArmor(itemStack, EquipmentSlotType.LEGS, invPlayer.player);
-		    }
-		});	
-		this.addSlot(new Slot(invPlayer, 36, -24, 71) {
-			@Override
-	        public boolean isItemValid(ItemStack itemStack) {
-	            return itemStack.getItem().isValidArmor(itemStack, EquipmentSlotType.FEET, invPlayer.player);
-		    }
-		});	
-
-		this.addPlayerInventory(invPlayer, 8, 84);
-		this.addPlayerHotbar(invPlayer, 8, 142);
+	public ContainerChargingStation(int windowId, PlayerInventory inv, PacketBuffer data) {
+		this(windowId, inv, (TileEntityChargingStation) resolveTileEntityFromDataPacket(inv, data));
 	}
-	
+	public ContainerChargingStation(int windowId, PlayerInventory playerInventory, TileEntityChargingStation owner) {
+		super(ModContainerTypes.CHARGING_STATION_CONTAINER, windowId, playerInventory, owner);
+	}
+	@Override
+	public void initializeContainer() {
+		// Input
+		this.addSlot(new StaticPowerContainerSlot(getTileEntity().slotsInput, 0, 51, 24) {
+			@Override
+			public boolean isItemValid(ItemStack itemStack) {
+				return EnergyHandlerItemStackUtilities.isEnergyContainer(itemStack);
+			}
+		});
+		this.addSlot(new StaticPowerContainerSlot(getTileEntity().slotsInput, 1, 70, 24) {
+			@Override
+			public boolean isItemValid(ItemStack itemStack) {
+				return EnergyHandlerItemStackUtilities.isEnergyContainer(itemStack);
+			}
+		});
+		this.addSlot(new StaticPowerContainerSlot(getTileEntity().slotsInput, 2, 89, 24) {
+			@Override
+			public boolean isItemValid(ItemStack itemStack) {
+				return EnergyHandlerItemStackUtilities.isEnergyContainer(itemStack);
+			}
+		});
+		this.addSlot(new StaticPowerContainerSlot(getTileEntity().slotsInput, 3, 108, 24) {
+			@Override
+			public boolean isItemValid(ItemStack itemStack) {
+				return EnergyHandlerItemStackUtilities.isEnergyContainer(itemStack);
+			}
+		});
+
+		// Output
+		this.addSlot(new OutputSlot(getTileEntity().slotsOutput, 0, 46, 52));
+		this.addSlot(new OutputSlot(getTileEntity().slotsOutput, 1, 69, 52));
+		this.addSlot(new OutputSlot(getTileEntity().slotsOutput, 2, 92, 52));
+		this.addSlot(new OutputSlot(getTileEntity().slotsOutput, 3, 115, 52));
+
+		// Upgrades
+		this.addSlot(new UpgradeSlot(getTileEntity().slotsUpgrades, 0, 152, 8));
+		this.addSlot(new UpgradeSlot(getTileEntity().slotsUpgrades, 1, 152, 30));
+		this.addSlot(new UpgradeSlot(getTileEntity().slotsUpgrades, 2, 152, 52));
+
+		// Battery
+		this.addSlot(new BatterySlot(getTileEntity().slotsInternal, 0, 8, 54));
+
+		// Armor
+		this.addSlot(new PlayerArmorSlot(getPlayerInventory(), 39, -24, 14, EquipmentSlotType.HEAD));
+		this.addSlot(new PlayerArmorSlot(getPlayerInventory(), 38, -24, 33, EquipmentSlotType.CHEST));
+		this.addSlot(new PlayerArmorSlot(getPlayerInventory(), 37, -24, 52, EquipmentSlotType.LEGS));
+		this.addSlot(new PlayerArmorSlot(getPlayerInventory(), 36, -24, 71, EquipmentSlotType.FEET));
+
+		this.addPlayerInventory(getPlayerInventory(), 8, 84);
+		this.addPlayerHotbar(getPlayerInventory(), 8, 142);
+	}
+
 	@Override
 	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, PlayerInventory invPlayer, Slot slot, int slotIndex) {
-        if (stack.getItem() instanceof IEnergyContainerItem && !mergeItemStack(stack, 0, 4, false)) {
-        	return true;
-        }
-        if (stack.getItem() instanceof BaseUpgrade && !mergeItemStack(stack, 8, 11, false)) {
-        	return true;
-        }
-		return false;	
+		if (EnergyHandlerItemStackUtilities.isEnergyContainer(stack) && !mergeItemStack(stack, 0, 4, false)) {
+			return true;
+		}
+		if (stack.getItem() instanceof BaseUpgrade && !mergeItemStack(stack, 8, 11, false)) {
+			return true;
+		}
+		return false;
 	}
 }
-

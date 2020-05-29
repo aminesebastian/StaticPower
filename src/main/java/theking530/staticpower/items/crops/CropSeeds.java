@@ -42,7 +42,7 @@ public class CropSeeds extends StaticPowerItem implements IPlantable {
 	 * Attempts to plant the item on the block it was used on.
 	 */
 	@Override
-	public ActionResultType onStaticPowerItemUsed(ItemUseContext context, World world, BlockPos pos, Direction face, PlayerEntity player, ItemStack item) {
+	public ActionResultType onStaticPowerItemUsedOnBlock(ItemUseContext context, World world, BlockPos pos, Direction face, PlayerEntity player, ItemStack item) {
 		BlockState state = world.getBlockState(pos);
 		if (context.getFace() == Direction.UP && player.canPlayerEdit(pos.offset(face), face, item) && state.getBlock().canSustainPlant(state, world, pos, Direction.UP, this)
 				&& world.isAirBlock(pos.up())) {

@@ -1,4 +1,4 @@
-package theking530.api.gui;
+package theking530.api.gui.widgets.valuebars;
 
 import java.text.NumberFormat;
 import java.util.Arrays;
@@ -20,6 +20,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
+import theking530.api.gui.GuiDrawUtilities;
 import theking530.api.utilities.Color;
 import theking530.staticpower.tileentity.SideModeList.Mode;
 
@@ -35,7 +36,7 @@ public class GuiFluidBarUtilities {
 		} else {
 			GuiDrawUtilities.drawSlot((int) x, (int) (y - height), (int) width, (int) height);
 		}
-		GlStateManager.disableLighting();
+
 		if (fluid != null && fluid.getFluid() != null) {
 
 			TextureAtlasSprite icon = getStillFluidSprite(fluid);
@@ -75,7 +76,7 @@ public class GuiFluidBarUtilities {
 				}
 			}
 		}
-		GlStateManager.enableAlphaTest();
+
 		GlStateManager.disableBlend();
 		if (drawOverlay) {
 			Color linesColor = new Color(40, 40, 120);
@@ -87,7 +88,6 @@ public class GuiFluidBarUtilities {
 				}
 			}
 		}
-		GlStateManager.enableLighting();
 	}
 
 	public static TextureAtlasSprite getStillFluidSprite(FluidStack fluidStack) {

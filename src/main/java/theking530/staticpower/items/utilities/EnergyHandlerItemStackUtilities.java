@@ -1,5 +1,6 @@
 package theking530.staticpower.items.utilities;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import net.minecraft.item.ItemStack;
@@ -33,7 +34,7 @@ public class EnergyHandlerItemStackUtilities {
 	 */
 	public static CompoundNBT getEnergyStorageNBTTag(ItemStack itemstack) {
 		if (itemstack.hasTag()) {
-			if(itemstack.getTag().contains(ENERGY_STORAGE_NBT_KEY)) {
+			if (itemstack.getTag().contains(ENERGY_STORAGE_NBT_KEY)) {
 				return itemstack.getTag().getCompound(ENERGY_STORAGE_NBT_KEY);
 			}
 		}
@@ -47,9 +48,24 @@ public class EnergyHandlerItemStackUtilities {
 	 * @return True if the itemstack is a valid energy containing itemstack, false
 	 *         otherwise.
 	 */
-	public static boolean isValidEnergyContainingItemstack(ItemStack container) {
+	public static boolean isValidStaticPowerEnergyContainingItemstack(ItemStack container) {
 		return container.hasTag() && container.getTag().contains(MAX_DRAIN_ENERGY_NBT_KEY) && container.getTag().contains(MAX_RECEIVE_ENERGY_NBT_KEY) && container.getTag().contains(MAX_ENERGY_NBT_KEY)
 				&& container.getTag().contains(CURRENT_ENERGY_NBT_KEY);
+	}
+
+	/**
+	 * Checks and returns if the provided {@link ItemStack} has the Energy storage
+	 * capability.
+	 * 
+	 * @param container The itemstack to check.
+	 * @return True if the itemstack contains the energy capability, false otherwise.
+	 */
+	public static boolean isEnergyContainer(ItemStack container) {
+		AtomicBoolean exists = new AtomicBoolean(false);
+		container.getCapability(CapabilityEnergy.ENERGY).ifPresent((IEnergyStorage instance) -> {
+			exists.set(true);
+		});
+		return exists.get();
 	}
 
 	/**

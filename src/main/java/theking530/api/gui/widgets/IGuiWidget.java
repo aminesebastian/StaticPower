@@ -2,14 +2,14 @@ package theking530.api.gui.widgets;
 
 import java.util.List;
 
-import theking530.staticpower.client.gui.BaseContainerGui;
+import theking530.staticpower.client.gui.StaticPowerContainerGui;
 
 public interface IGuiWidget {
 	enum EInputResult {
 		HANDLED, UNHANDLED
 	}
 
-	public void setOwningGui(BaseContainerGui owningGui);
+	public void setOwningGui(StaticPowerContainerGui<?> owningGui);
 
 	/* Misc */
 	public boolean isVisible();

@@ -5,25 +5,25 @@ import java.util.List;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.energy.IEnergyStorage;
-import theking530.staticpower.tileentity.ITileEntityComponent;
+import theking530.staticpower.tileentity.tileentitycomponents.ITileEntityComponent;
 
 public class StaticEnergyStorage implements IEnergyStorage, ITileEntityComponent {
 
-	private int capacity;
-	private int currentEnergy;
+	protected int capacity;
+	protected int currentEnergy;
 
-	private int maxReceive;
-	private int maxExtract;
+	protected int maxReceive;
+	protected int maxExtract;
 
-	private int lastEnergyStored;
-	private int energyPerTick;
-	private List<Integer> powerPerTickList;
-	private int powerPerTickSmoothingFactor = 1;
+	protected int lastEnergyStored;
+	protected int energyPerTick;
+	protected List<Integer> powerPerTickList;
+	protected int powerPerTickSmoothingFactor = 1;
 
-	private boolean canExtract;
-	private boolean canRecieve;
+	protected boolean canExtract;
+	protected boolean canRecieve;
 
-	private boolean isEnabled;
+	protected boolean isEnabled;
 
 	public StaticEnergyStorage(int capacity) {
 		this(capacity, Integer.MAX_VALUE);
@@ -128,6 +128,33 @@ public class StaticEnergyStorage implements IEnergyStorage, ITileEntityComponent
 
 	public void setMaxExtract(int newMaxExtract) {
 		maxExtract = newMaxExtract;
+	}
+
+	/**
+	 * This is a helper method that returns the min between the amount of energy
+	 * stored in this storage and the maximum amount that can be output per tick.
+	 * For example, if our max extract is 256FE/t and we have 100FE left in this
+	 * storage, this will return 100. Otherwise, if we have >250FE left in this
+	 * storage, this will return 250FE.
+	 * 
+	 * @return The amount of energy that can be output by this storage on this tick.
+	 */
+	public int getCurrentMaximumPowerOutput() {
+		return Math.min(getEnergyStored(), getMaxExtract());
+	}
+
+	/**
+	 * This is a helper method that returns the min between the amount of energy
+	 * space remaining in this storage and the maximum amount that can be received
+	 * per tick. For example, if our max receive is 256FE/t and we have 100FE left
+	 * to store in this storage, this will return 100. Otherwise, if we have >250FE
+	 * left to store in this storage, this will return 250FE.
+	 * 
+	 * @return The amount of energy that can be input into this storage on this
+	 *         tick.
+	 */
+	public int getCurrentMaximumPowerInput() {
+		return Math.min(getMaxEnergyStored() - getEnergyStored(), getMaxReceive());
 	}
 
 	public int getMaxExtract() {

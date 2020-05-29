@@ -1,0 +1,27 @@
+package theking530.staticpower.client.gui;
+
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.util.text.ITextComponent;
+import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
+import theking530.staticpower.tileentity.TileEntityBase;
+
+/**
+ * Base GUI class for tile entities.
+ * 
+ * @author Amine Sebastian
+ *
+ * @param <T> The container type.
+ */
+public abstract class StaticPowerTileEntityGui<T extends StaticPowerTileEntityContainer<K>, K extends TileEntityBase> extends StaticPowerContainerGui<T> {
+	private final K owningTileEntity;
+
+	public StaticPowerTileEntityGui(T container, final PlayerInventory playerInventory, ITextComponent title, int guiXSize, int guiYSize) {
+		super(container, playerInventory, title, guiXSize, guiYSize);
+		owningTileEntity = container.getTileEntity();
+		initializeGui();
+	}
+
+	protected K getTileEntity() {
+		return owningTileEntity;
+	}
+}

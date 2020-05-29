@@ -3,9 +3,8 @@ package theking530.api.gui.widgets.valuebars;
 import java.util.List;
 
 import net.minecraftforge.fluids.IFluidTank;
-import theking530.api.gui.GuiFluidBarUtilities;
 import theking530.api.gui.widgets.IGuiWidget;
-import theking530.staticpower.client.gui.BaseContainerGui;
+import theking530.staticpower.client.gui.StaticPowerContainerGui;
 import theking530.staticpower.tileentity.ISideConfigurable;
 import theking530.staticpower.tileentity.SideModeList.Mode;
 
@@ -17,7 +16,7 @@ public class GuiFluidBarFromTank implements IGuiWidget {
 	private int yPosition;
 	private int xSize;
 	private int ySize;
-	private BaseContainerGui owningGui;
+	private StaticPowerContainerGui<?> owningGui;
 
 	private Mode mode;
 	private ISideConfigurable sideConfigurable;
@@ -42,7 +41,7 @@ public class GuiFluidBarFromTank implements IGuiWidget {
 	}
 
 	@Override
-	public void setOwningGui(BaseContainerGui owningGui) {
+	public void setOwningGui(StaticPowerContainerGui<?> owningGui) {
 		this.owningGui = owningGui;
 	}
 

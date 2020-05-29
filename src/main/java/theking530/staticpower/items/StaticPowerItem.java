@@ -11,8 +11,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -58,12 +60,23 @@ public class StaticPowerItem extends Item {
 	}
 
 	/**
-	 * Override of onItemUse that calls an expanded version for easier
-	 * implementation.
+	 * Override of onItemRickClick that calls expanded version
+	 * {@link #onStaticPowerItemRightClicked(World, PlayerEntity, Hand, ItemStack)}
+	 * for easier implementation.
+	 */
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
+		return onStaticPowerItemRightClicked(worldIn, playerIn, handIn, playerIn.getHeldItem(handIn));
+	}
+
+	/**
+	 * Override of onItemUse that calls expanded version
+	 * {@link #onStaticPowerItemUsedOnBlock(ItemUseContext, World, BlockPos, Direction, PlayerEntity, ItemStack)}
+	 * for easier implementation.
 	 */
 	@Override
 	public ActionResultType onItemUse(ItemUseContext context) {
-		return onStaticPowerItemUsed(context, context.getWorld(), context.getPos(), context.getFace(), context.getPlayer(), context.getItem());
+		return onStaticPowerItemUsedOnBlock(context, context.getWorld(), context.getPos(), context.getFace(), context.getPlayer(), context.getItem());
 	}
 
 	@Override
@@ -95,6 +108,19 @@ public class StaticPowerItem extends Item {
 	}
 
 	/**
+	 * Expanded version of onItemRightClick.
+	 * 
+	 * @param world  The world the item was right clicked in.
+	 * @param player The player holding the item.
+	 * @param hand   The hand the item was held in.
+	 * @param item   The {@link ItemStack}.
+	 * @return The result of the action.
+	 */
+	protected ActionResult<ItemStack> onStaticPowerItemRightClicked(World world, PlayerEntity player, Hand hand, ItemStack item) {
+		return ActionResult.resultPass(item);
+	}
+
+	/**
 	 * Expanded version of onItemUse.
 	 * 
 	 * @param context The context of the item's use.
@@ -105,7 +131,7 @@ public class StaticPowerItem extends Item {
 	 * @param item    The item stack that was used.
 	 * @return The result of the action (SUCCESS, PASS, FAIL, CONSUME).
 	 */
-	protected ActionResultType onStaticPowerItemUsed(ItemUseContext context, World world, BlockPos pos, Direction face, PlayerEntity player, ItemStack item) {
+	protected ActionResultType onStaticPowerItemUsedOnBlock(ItemUseContext context, World world, BlockPos pos, Direction face, PlayerEntity player, ItemStack item) {
 		return ActionResultType.PASS;
 	}
 

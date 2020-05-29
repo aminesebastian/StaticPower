@@ -66,16 +66,11 @@ public class GuiInfoTab extends BaseGuiTab {
 			int textX = (int) ((xPos + 17 - fontScale) / fontScale) - 1;
 			int textY = (int) ((yPos + 34 + (11 * i) - 7 * fontScale) / fontScale) - 1;
 
-			GlStateManager.disableLighting();
 			GlStateManager.disableDepthTest();
 			GlStateManager.disableBlend();
-			GlStateManager.pushMatrix();
-			GlStateManager.scalef(fontScale, fontScale, fontScale);
 
 			fontRenderer.drawStringWithShadow(string, textX, textY, 16777215);
 
-			GlStateManager.popMatrix();
-			GlStateManager.enableLighting();
 			GlStateManager.enableDepthTest();
 		}
 	}

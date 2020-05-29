@@ -14,8 +14,11 @@ import theking530.staticpower.blocks.StaticPowerRotatePillarBlock;
 import theking530.staticpower.blocks.crops.BaseSimplePlant;
 import theking530.staticpower.blocks.decorative.Lamp;
 import theking530.staticpower.blocks.decorative.StaticPowerGlassBlock;
+import theking530.staticpower.machines.chargingstation.BlockChargingStation;
+import theking530.staticpower.tileentity.solarpanels.BlockSolarPanel;
 import theking530.staticpower.tileentity.vacuumchest.BlockVacuumChest;
 import theking530.staticpower.utilities.EHarvestLevel;
+import theking530.staticpower.utilities.Tier;
 
 public class ModBlocks {
 	// Decorative
@@ -58,7 +61,9 @@ public class ModBlocks {
 
 	// Machines
 	public static BlockVacuumChest VacuumChest;
-	
+	public static BlockChargingStation ChargingStation;
+	public static BlockSolarPanel SolarPanelBasic;
+
 	public static void init() {
 		// Decorative
 		Registry.preRegisterBlock(StaticLamp = new Lamp("lamp_static"));
@@ -96,8 +101,10 @@ public class ModBlocks {
 		Registry.preRegisterBlock(OreRuby = new StaticPowerOre("ore_ruby", ToolType.PICKAXE, EHarvestLevel.IRON_TOOL, 3.0f));
 		Registry.preRegisterBlock(OreSapphire = new StaticPowerOre("ore_sapphire", ToolType.PICKAXE, EHarvestLevel.IRON_TOOL, 3.0f));
 		Registry.preRegisterBlock(OreTungsten = new StaticPowerOre("ore_tungsten", ToolType.PICKAXE, EHarvestLevel.DIAMOND_TOOL, 4.0f));
-		
+
 		// Machines
 		Registry.preRegisterBlock(VacuumChest = new BlockVacuumChest("chest_vacuum"));
+		Registry.preRegisterBlock(ChargingStation = new BlockChargingStation("machine_charging_station"));
+		Registry.preRegisterBlock(SolarPanelBasic = new BlockSolarPanel("solar_panel_basic", Tier.BASIC));
 	}
 }

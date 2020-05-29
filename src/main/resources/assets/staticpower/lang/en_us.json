@@ -46,5 +46,6 @@
 	"item.staticpower.mold_gear": "Gear Mold",
 	"item.staticpower.mold_plate": "Plate Mold",
 	"item.staticpower.mold_wire": "Wire Mold",
-	"container.staticpower.chest_vacuum": "Vacuum Chest"
+	"block.staticpower.machine_charging_station": "Charging Station",
+	"block.staticpower.chest_vacuum": "Vacuum Chest"
 }

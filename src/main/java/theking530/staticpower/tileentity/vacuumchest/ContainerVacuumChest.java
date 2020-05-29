@@ -6,34 +6,37 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import theking530.api.container.StaticPowerContainerSlot;
-import theking530.staticpower.client.container.BaseTileEntityContainer;
 import theking530.staticpower.client.container.FilterSlot;
+import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.client.container.UpgradeSlot;
 import theking530.staticpower.initialization.ModContainerTypes;
 import theking530.staticpower.items.upgrades.BaseUpgrade;
 
-public class ContainerVacuumChest extends BaseTileEntityContainer<TileEntityVacuumChest> {
+public class ContainerVacuumChest extends StaticPowerTileEntityContainer<TileEntityVacuumChest> {
 
-	public ContainerVacuumChest(int windowId, PlayerInventory playerInventory, PacketBuffer data) {
-		this(windowId, playerInventory, (TileEntityVacuumChest) getTileEntity(playerInventory, data));
+	public ContainerVacuumChest(int windowId, PlayerInventory inv, PacketBuffer data) {
+		this(windowId, inv, (TileEntityVacuumChest) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerVacuumChest(final int windowId, PlayerInventory invPlayer, TileEntityVacuumChest teVChest) {
-		super(windowId, ModContainerTypes.VACUUM_CHEST_CONTAINER, invPlayer, teVChest);
+	public ContainerVacuumChest(int windowId, PlayerInventory playerInventory, TileEntityVacuumChest owner) {
+		super(ModContainerTypes.VACUUM_CHEST_CONTAINER, windowId, playerInventory, owner);
+	}
 
+	@Override
+	public void initializeContainer() {
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 9; x++) {
-				this.addSlot(new StaticPowerContainerSlot(owningTileEntity.slotsOutput, x + y * 9, 8 + x * 18, 20 + y * 18));
+				this.addSlot(new StaticPowerContainerSlot(getTileEntity().slotsOutput, x + y * 9, 8 + x * 18, 20 + y * 18));
 			}
 		}
-		this.addSlot(new FilterSlot(owningTileEntity.slotsInternal, 0, 8, 78));
+		this.addSlot(new FilterSlot(getTileEntity().slotsInternal, 0, 8, 78));
 
-		this.addSlot(new UpgradeSlot(owningTileEntity.slotsUpgrades, 0, 116, 78));
-		this.addSlot(new UpgradeSlot(owningTileEntity.slotsUpgrades, 1, 134, 78));
-		this.addSlot(new UpgradeSlot(owningTileEntity.slotsUpgrades, 2, 152, 78));
+		this.addSlot(new UpgradeSlot(getTileEntity().slotsUpgrades, 0, 116, 78));
+		this.addSlot(new UpgradeSlot(getTileEntity().slotsUpgrades, 1, 134, 78));
+		this.addSlot(new UpgradeSlot(getTileEntity().slotsUpgrades, 2, 152, 78));
 
-		this.addPlayerInventory(invPlayer, 8, 103);
-		this.addPlayerHotbar(invPlayer, 8, 161);
+		this.addPlayerInventory(getPlayerInventory(), 8, 103);
+		this.addPlayerHotbar(getPlayerInventory(), 8, 161);
 	}
 
 	@Override

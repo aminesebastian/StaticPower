@@ -1,28 +1,32 @@
 package theking530.staticpower.client.container;
 
-import java.util.Objects;
-
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
 import theking530.api.container.StaticPowerContainerSlot;
-import theking530.staticpower.tileentity.TileEntityBase;
 
-public abstract class BaseTileEntityContainer<T extends TileEntityBase> extends Container {
+public abstract class StaticPowerContainer extends Container {
 	protected int playerInventoryStart;
 	protected int playerHotbarStart;
 	protected int playerInventoryEnd;
 	protected int playerHotbarEnd;
-	protected T owningTileEntity;
+	private final PlayerInventory playerInventory;
 
-	public BaseTileEntityContainer(int windowId, ContainerType<?> containerType, PlayerInventory inv, T owner) {
-		super(containerType, windowId);
-		this.owningTileEntity = owner;
+	protected StaticPowerContainer(ContainerType<?> type, int id, PlayerInventory inv) {
+		super(type, id);
+		playerInventory = inv;
+	}
+
+	/**
+	 * Gets the inventory of the player that is using this container.
+	 * 
+	 * @return The inventory of the player using this container.
+	 */
+	public PlayerInventory getPlayerInventory() {
+		return playerInventory;
 	}
 
 	protected void addPlayerInventory(PlayerInventory invPlayer, int xPosition, int yPosition) {
@@ -42,6 +46,14 @@ public abstract class BaseTileEntityContainer<T extends TileEntityBase> extends 
 		}
 		playerHotbarEnd = this.inventorySlots.size() - 1;
 	}
+
+	/**
+	 * This method is raised AFTER all the constructor calls have been made. This is
+	 * where the implementer can initialize the container (set up slots, etc). Any
+	 * inheritors from this class specifically (and not from any of the provided
+	 * implementations) must call this method at the end of their constructor.
+	 */
+	public abstract void initializeContainer();
 
 	/**
 	 * Returns false if no conditions were met, otherwise returns true. If false,
@@ -71,9 +83,7 @@ public abstract class BaseTileEntityContainer<T extends TileEntityBase> extends 
 	protected boolean mergeItemStack(ItemStack stack, int index) {
 		return mergeItemStack(stack, index, index + 1, false);
 	}
-	public T getOwningTileEntity() {
-		return owningTileEntity;
-	}
+
 	public ItemStack transferStackInSlot(PlayerEntity player, int invSlot) {
 		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = (Slot) this.inventorySlots.get(invSlot);
@@ -108,19 +118,8 @@ public abstract class BaseTileEntityContainer<T extends TileEntityBase> extends 
 		return itemstack;
 	}
 
-	protected static TileEntityBase getTileEntity(final PlayerInventory playerInventory, final PacketBuffer data) {
-		Objects.requireNonNull(playerInventory, "playerInventory cannot be null!");
-		Objects.requireNonNull(data, "data cannot be null!");
-		final TileEntity tileAtPos = playerInventory.player.world.getTileEntity(data.readBlockPos());
-		if (tileAtPos instanceof TileEntityBase) {
-			return (TileEntityBase) tileAtPos;
-		}else {
-			throw new IllegalStateException("Tile entity is not correct! " + tileAtPos);
-		}
-	}
-
 	@Override
-	public boolean canInteractWith(PlayerEntity player) {
+	public boolean canInteractWith(PlayerEntity playerIn) {
 		return true;
 	}
 }

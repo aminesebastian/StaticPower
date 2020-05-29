@@ -25,6 +25,7 @@ import net.minecraftforge.common.ToolType;
 import theking530.api.wrench.IWrenchable;
 import theking530.api.wrench.RegularWrenchMode;
 import theking530.api.wrench.SneakWrenchMode;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.blocks.IItemBlockProvider;
 import theking530.staticpower.blocks.StaticPowerBlock;
 import theking530.staticpower.tileentity.ISideConfigurable.SideIncrementDirection;
@@ -103,8 +104,13 @@ public class BlockMachineBase extends StaticPowerBlock implements IWrenchable, I
 		return true;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
+		if (hasTileEntity()) {
+			StaticPower.LOGGER
+					.error("StaticPowerBlock inherting from BlockMachineBase indicates that is has a tile entity, but the createTileEntity method has not been overriden and will return null.");
+		}
 		return null;
 	}
 

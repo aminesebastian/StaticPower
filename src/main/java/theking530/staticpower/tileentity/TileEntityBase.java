@@ -2,6 +2,7 @@ package theking530.staticpower.tileentity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.annotation.Nonnull;
 
@@ -36,18 +37,23 @@ import theking530.staticpower.StaticPower;
 import theking530.staticpower.tileentity.RedstoneModeList.RedstoneMode;
 import theking530.staticpower.tileentity.SideModeList.Mode;
 import theking530.staticpower.tileentity.SideUtilities.BlockSide;
+import theking530.staticpower.tileentity.tileentitycomponents.ITileEntityComponent;
 
-public class TileEntityBase extends TileEntity implements ITickableTileEntity, IRedstoneConfigurable, ISideConfigurable, IUpgradeable, INameable, IBreakSerializeable, INamedContainerProvider {
-
+public class TileEntityBase extends TileEntity implements ITickableTileEntity, IRedstoneConfigurable, ISideConfigurable, IUpgradeable, IBreakSerializeable, INamedContainerProvider {
 	public static final int DEFAULT_UPDATE_TIME = 2;
+	protected final static Random RANDOM = new Random();
 
 	public TileEntityInventory slotsInput;
 	public TileEntityInventory slotsOutput;
 	public TileEntityInventory slotsInternal;
 	public TileEntityInventory slotsUpgrades;
 
+	protected boolean disableFaceInteraction;
+	protected boolean wasWrenchedDoNotBreak;
+	protected boolean wasPlaced;
+
 	private List<ITileEntityComponent> components;
-	private RedstoneMode redstoneMode = RedstoneMode.Ignore;
+	private RedstoneMode redstoneMode;
 	private SideConfiguration ioSideConfiguration;
 
 	@SuppressWarnings("unused")
@@ -60,37 +66,47 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 	private int outputSlotsCount;
 
 	private boolean updateQueued;
-	protected boolean disableFaceInteraction;
-
-	public boolean wasWrenchedDoNotBreak;
-	public boolean wasPlaced;
-
-	private String name;
 
 	public TileEntityBase(TileEntityType<?> teType) {
 		super(teType);
+		redstoneMode = RedstoneMode.Ignore;
 		ioSideConfiguration = new SideConfiguration();
+		setDefaultSideConfiguration(ioSideConfiguration);
 		components = new ArrayList<ITileEntityComponent>();
 		wasPlaced = false;
 		wasWrenchedDoNotBreak = false;
 		updateQueued = false;
 	}
 
-	public void initializeSlots(int internalSlots, int inputSlots, int outputSlots, boolean disableFaceInteraction) {
-		slotsInput = new TileEntityInventory(inputSlots);
-		slotsOutput = new TileEntityInventory(outputSlots);
-		slotsInternal = new TileEntityInventory(internalSlots);
-		slotsUpgrades = new TileEntityInventory(3);
+	/**
+	 * Disables pipe interaction with the face of this block.
+	 */
+	public void disableFaceInteraction() {
+		disableFaceInteraction = false;
+	}
 
+	/**
+	 * Indicates how many of each type of slot this {@link TileEntity} should have.
+	 * 
+	 * @param internalSlots The amount of internal slots. These are slots that will
+	 *                      never be exposed to external systems. For example, this
+	 *                      might be a slot for an item that is being processed.
+	 * @param inputSlots    The amount of input slots. These are slots that can be
+	 *                      piped into or auto suck in if enabled.
+	 * @param outputSlots   The amount of output slots. These are slots that can be
+	 *                      piped out of or auto pipe out if enabled.
+	 * @param upgradeSlots  The amount of upgrade slots.
+	 */
+	public void initializeSlots(int internalSlots, int inputSlots, int outputSlots, int upgradeSlots) {
+		slotsInternal = new TileEntityInventory(internalSlots, null);
+		slotsInput = new TileEntityInventory(inputSlots, Mode.Input);
+		slotsOutput = new TileEntityInventory(outputSlots, Mode.Output);
+		slotsUpgrades = new TileEntityInventory(upgradeSlots, null);
+
+		
 		internalSlotsCount = internalSlots;
 		inputSlotsCount = inputSlots;
 		outputSlotsCount = outputSlots;
-
-		this.disableFaceInteraction = disableFaceInteraction;
-	}
-
-	public void initializeSlots(int internalSlots, int inputSlots, int outputSlots) {
-		initializeSlots(internalSlots, inputSlots, outputSlots, true);
 	}
 
 	@Override
@@ -267,16 +283,6 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 		return oldState.getBlock() != newState.getBlock();
 	}
 
-	/* Nameable */
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	/* Serializeable */
 	public CompoundNBT serializeOnBroken(CompoundNBT nbt) {
 		serializeData(nbt);
@@ -432,7 +438,8 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 				components.get(i).preProcessUpdate();
 			}
 		} catch (Exception e) {
-			StaticPower.LOGGER.warn(this.getName() + " at position " + getPos() + ": " + e.getMessage());
+			StaticPower.LOGGER.warn(String.format("An error occured while attempting to perform the TileEntityComponent's preprocess update for Tile Entity: $1%s at position: %2$s.",
+					getDisplayName().getString(), getPos()), e);
 		}
 	}
 
@@ -442,7 +449,8 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 				components.get(i).postProcessUpdate();
 			}
 		} catch (Exception e) {
-			StaticPower.LOGGER.warn(this.getName() + " at position " + getPos() + ": " + e.getMessage());
+			StaticPower.LOGGER.warn(String.format("An error occured while attempting to perform the TileEntityComponent's postprocess update for Tile Entity: $1%s at position: %2$s.",
+					getDisplayName().getString(), getPos()), e);
 		}
 	}
 

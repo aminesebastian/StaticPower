@@ -35,7 +35,7 @@ public class DepletedCrop extends StaticPowerItem {
 	/**
 	 * Attempts to use this as bonemeal on the targeted crop.
 	 */
-	public ActionResultType onStaticPowerItemUsed(ItemUseContext context, World world, BlockPos pos, Direction face, PlayerEntity player, ItemStack item) {
+	public ActionResultType onStaticPowerItemUsedOnBlock(ItemUseContext context, World world, BlockPos pos, Direction face, PlayerEntity player, ItemStack item) {
 		if (!player.canPlayerEdit(pos.offset(face), face, item)) {
 			return ActionResultType.FAIL;
 		} else {

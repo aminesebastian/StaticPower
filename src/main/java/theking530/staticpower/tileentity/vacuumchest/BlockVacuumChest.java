@@ -20,22 +20,6 @@ public class BlockVacuumChest extends BlockMachineBase {
 		super(name);
 	}
 
-	/**
-	 * Called when a player right clicks our block. We use this method to open our
-	 * gui.
-	 *
-	 * @deprecated Call via
-	 *             {@link BlockState#onBlockActivated(World, PlayerEntity, Hand, BlockRayTraceResult)}
-	 *             whenever possible. Implementing/overriding is fine.
-	 */
-	/**
-	 * Called when a player right clicks our block. We use this method to open our
-	 * gui.
-	 *
-	 * @deprecated Call via
-	 *             {@link BlockState#onBlockActivated(World, PlayerEntity, Hand, BlockRayTraceResult)}
-	 *             whenever possible. Implementing/overriding is fine.
-	 */
 	@Override
 	public ActionResultType onBlockActivated(final BlockState state, final World worldIn, final BlockPos pos, final PlayerEntity player, final Hand handIn, final BlockRayTraceResult hit) {
 		if (!worldIn.isRemote) {
@@ -44,11 +28,6 @@ public class BlockVacuumChest extends BlockMachineBase {
 				NetworkHooks.openGui((ServerPlayerEntity) player, (TileEntityVacuumChest) tileEntity, pos);
 		}
 		return ActionResultType.SUCCESS;
-	}
-
-	@Override
-	public boolean hasTileEntity(final BlockState state) {
-		return true;
 	}
 
 	@Override

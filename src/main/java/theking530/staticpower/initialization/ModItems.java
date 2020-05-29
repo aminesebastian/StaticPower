@@ -7,6 +7,8 @@ import theking530.staticpower.items.book.StaticPowerBook;
 import theking530.staticpower.items.crops.DepletedCrop;
 import theking530.staticpower.items.crops.StaticPlantCrop;
 import theking530.staticpower.items.crops.StaticPlantSeeds;
+import theking530.staticpower.items.itemfilter.FilterTier;
+import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.items.tools.ElectricSolderingIron;
 import theking530.staticpower.items.tools.MetalHammer;
 import theking530.staticpower.items.tools.SolderingIron;
@@ -185,13 +187,15 @@ public class ModItems {
 	public static StaticPlantCrop EnergizedCrop;
 	public static StaticPlantCrop LumumCrop;
 	public static DepletedCrop DepletedCrop;
-		
+
 	public static MetalHammer MetalHammer;
 	public static WireCutters WireCutters;
 	public static SolderingIron SolderingIron;
 	public static ElectricSolderingIron ElectringSolderingIron;
 	public static StaticWrench StaticWrench;
-		
+
+	public static ItemFilter BasicFilter;
+
 	public static void init() {
 		// Book
 		Registry.preRegisterItem(StaticPowerBook = new StaticPowerBook("tutorial_book"));
@@ -242,7 +246,10 @@ public class ModItems {
 		Registry.preRegisterItem(SolderingIron = new SolderingIron("soldering_iron", 100));
 		Registry.preRegisterItem(ElectringSolderingIron = new ElectricSolderingIron("soldering_iron_electric", 10000));
 		Registry.preRegisterItem(StaticWrench = new StaticWrench("static_wrench"));
-		
+
+		// Filters
+		Registry.preRegisterItem(BasicFilter = new ItemFilter("filter_item_basic", FilterTier.BASIC));
+
 		// Components
 		Registry.preRegisterItem(MemoryChip = new StaticPowerItem("memory_chip"));
 		Registry.preRegisterItem(LogicGatePowerSync = new StaticPowerItem("logic_gate_power_sync"));

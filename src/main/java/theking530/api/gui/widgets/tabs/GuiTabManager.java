@@ -5,15 +5,15 @@ import java.util.List;
 
 import theking530.api.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.api.gui.widgets.tabs.BaseGuiTab.TabState;
-import theking530.staticpower.client.gui.BaseContainerGui;
+import theking530.staticpower.client.gui.StaticPowerContainerGui;
 
 public class GuiTabManager {
 
 	private List<BaseGuiTab> registeredTabs;
 	private BaseGuiTab initiallyOpenTab;
-	private BaseContainerGui<?> owningGui;
+	private StaticPowerContainerGui<?> owningGui;
 
-	public GuiTabManager(BaseContainerGui<?> owner) {
+	public GuiTabManager(StaticPowerContainerGui<?> owner) {
 		registeredTabs = new ArrayList<BaseGuiTab>();
 		owningGui = owner;
 	}

@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -26,6 +24,7 @@ import theking530.api.utilities.Color;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.tileentity.SideModeList.Mode;
 import theking530.staticpower.tileentity.TileEntityBase;
+import theking530.staticpower.tileentity.TileEntityInventory;
 
 /**
  * Base GUI class containing useful features including tabs, button management,
@@ -35,7 +34,7 @@ import theking530.staticpower.tileentity.TileEntityBase;
  *
  * @param <T> The container type.
  */
-public abstract class BaseContainerGui<T extends Container> extends ContainerScreen<T> implements IInteractableGui {
+public abstract class StaticPowerContainerGui<T extends Container> extends ContainerScreen<T> implements IInteractableGui {
 	protected final FontRenderer fontRenderer;
 	protected final GuiTabManager tabManager;
 	protected final ButtonManager buttonManager;
@@ -47,7 +46,7 @@ public abstract class BaseContainerGui<T extends Container> extends ContainerScr
 	protected int outputSlotSize;
 	protected int inputSlotSize;
 
-	public BaseContainerGui(T container, final PlayerInventory playerInventory, ITextComponent title, int guiXSize, int guiYSize) {
+	public StaticPowerContainerGui(T container, final PlayerInventory playerInventory, ITextComponent title, int guiXSize, int guiYSize) {
 		super(container, playerInventory, title);
 		xSize = guiXSize;
 		ySize = guiYSize;
@@ -61,6 +60,12 @@ public abstract class BaseContainerGui<T extends Container> extends ContainerScr
 		inputSlotSize = 16;
 		itemDrawer = new GuiDrawItem(true);
 	}
+
+	/**
+	 * This method is raised after all the constructors and should be used by the
+	 * implementer to initialize the GUI (register widgets, etc).
+	 */
+	public abstract void initializeGui();
 
 	/**
 	 * This method's only responsibility is to make a super call and then draw the
@@ -84,9 +89,9 @@ public abstract class BaseContainerGui<T extends Container> extends ContainerScr
 
 		drawBackgroundExtras(partialTicks, mouseX, mouseY);
 
-		for (int i = 0; i < widgets.size(); i++) {
-			if (widgets.get(i).isVisible()) {
-				widgets.get(i).renderBackground(mouseX, mouseY, partialTicks);
+		for (IGuiWidget widget : widgets) {
+			if (widget.isVisible()) {
+				widget.renderBackground(mouseX, mouseY, partialTicks);
 			}
 		}
 
@@ -144,14 +149,14 @@ public abstract class BaseContainerGui<T extends Container> extends ContainerScr
 
 		for (IGuiWidget widget : widgets) {
 			if (widget.isVisible()) {
-				widget.mouseClick((int)mouseX, (int)mouseY, button);
+				widget.mouseClick((int) mouseX, (int) mouseY, button);
 			}
 		}
-		
+
 		// Handle click events for tabs and buttons.
-		tabManager.handleMouseInteraction((int)mouseX, (int)mouseY, button);
-		buttonManager.handleMouseInteraction((int)mouseX, (int)mouseY, button);
-		
+		tabManager.handleMouseInteraction((int) mouseX, (int) mouseY, button);
+		buttonManager.handleMouseInteraction((int) mouseX, (int) mouseY, button);
+
 		return superCallResult;
 	}
 
@@ -162,7 +167,7 @@ public abstract class BaseContainerGui<T extends Container> extends ContainerScr
 	 * @param mouseY The mouse's y position.
 	 */
 	protected void drawContainerTitle(int mouseX, int mouseY) {
-		ITextComponent containerName = getContainerName();
+		ITextComponent containerName = getTitle();
 		String containerString = containerName.getString();
 		fontRenderer.drawString(containerString, xSize / 2 - fontRenderer.getStringWidth(containerString) / 2, 6, 4210752);
 	}
@@ -188,14 +193,6 @@ public abstract class BaseContainerGui<T extends Container> extends ContainerScr
 	 */
 	protected void drawForegroundExtras(float partialTicks, int mouseX, int mouseY) {
 	}
-
-	/**
-	 * This should return the container name. Options are usualy
-	 * {@link StringTextComponent} or {@link TranslationTextComponent}.
-	 * 
-	 * @return
-	 */
-	protected abstract ITextComponent getContainerName();
 
 	/**
 	 * Draws the default Minecraft UI background using the xSize and ySize of the UI
@@ -311,20 +308,27 @@ public abstract class BaseContainerGui<T extends Container> extends ContainerScr
 		for (Slot slot : slots) {
 			// Skip null slots
 			if (slot == null) {
-				StaticPower.LOGGER.error(String.format("Encountered an invalid slot in tile entity: %1$s at location: %2$s.", te.getName(), te.getPos()));
+				StaticPower.LOGGER.error(String.format("Encountered an invalid slot in tile entity: %1$s at location: %2$s.", te.getDisplayName().getString(), te.getPos()));
 				continue;
 			}
 
 			if (slot instanceof StaticPowerContainerSlot) {
 				StaticPowerContainerSlot handlerSlot = (StaticPowerContainerSlot) slot;
 				if (handlerSlot.getItemHandler() == null) {
-					StaticPower.LOGGER.error(String.format("Encountered an invalid item handler for a slot in tile entity: %1$s at location: %2$s.", te.getName(), te.getPos()));
+					StaticPower.LOGGER.error(String.format("Encountered an invalid item handler for a slot in tile entity: %1$s at location: %2$s.", te.getDisplayName().getString(), te.getPos()));
 					continue;
 				}
 
-				Mode intendedMode = handlerSlot.getMode() != null ? handlerSlot.getMode()
-						: handlerSlot.getItemHandler() == te.slotsInput ? Mode.Input : handlerSlot.getItemHandler() == te.slotsOutput ? Mode.Output : Mode.Regular;
-				int slotSize = intendedMode.isInputMode() ? inputSlotSize : outputSlotSize;
+				// Check the intended mode of the handler slot. If it ends up being null, just
+				// assume the mode is regular.
+				Mode intendedMode = handlerSlot.getMode();
+				if (handlerSlot.getItemHandler() instanceof TileEntityInventory) {
+					intendedMode = ((TileEntityInventory) handlerSlot.getItemHandler()).getMode();
+				}
+				intendedMode = intendedMode == null ? Mode.Regular : intendedMode;
+
+				// If the slot is an output slot, increase the size of the slot.
+				int slotSize = intendedMode.isOutputMode() ? outputSlotSize : inputSlotSize;
 				int adjustment = (slotSize - 16) / 2;
 				if (intendedMode != Mode.Regular) {
 					drawSlot(slot.xPos + guiLeft - adjustment, slot.yPos + guiTop - adjustment, slotSize, slotSize, te.getSideWithModeCount(intendedMode) > 0 ? intendedMode : Mode.Regular);
@@ -332,7 +336,7 @@ public abstract class BaseContainerGui<T extends Container> extends ContainerScr
 					drawSlot(slot.xPos + guiLeft, slot.yPos + guiTop, 16, 16);
 				}
 				if (!handlerSlot.getPreviewItem().isEmpty()) {
-					itemDrawer.drawItem(handlerSlot.getPreviewItem(), guiLeft, guiTop, slot.xPos, slot.yPos, 1.0f);
+					itemDrawer.drawItem(handlerSlot.getPreviewItem(), guiLeft, guiTop, slot.xPos, slot.yPos, handlerSlot.getPreviewAlpha());
 				}
 			}
 		}
@@ -400,6 +404,7 @@ public abstract class BaseContainerGui<T extends Container> extends ContainerScr
 			}
 		}
 	}
+
 	public GuiTabManager getTabManager() {
 		return tabManager;
 	}

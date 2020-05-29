@@ -46,7 +46,7 @@ public class StaticWrench extends StaticPowerItem implements IWrenchTool {
 	}
 
 	@Override
-	protected ActionResultType onStaticPowerItemUsed(ItemUseContext context, World world, BlockPos pos, Direction face, PlayerEntity player, ItemStack item) {
+	protected ActionResultType onStaticPowerItemUsedOnBlock(ItemUseContext context, World world, BlockPos pos, Direction face, PlayerEntity player, ItemStack item) {
 		if (item != null) {
 			if (world.getBlockState(pos).getBlock() instanceof IWrenchable) {
 				IWrenchable block = (IWrenchable) world.getBlockState(pos).getBlock();

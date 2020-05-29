@@ -1,10 +1,12 @@
-package theking530.staticpower.tileentity;
+package theking530.staticpower.tileentity.tileentitycomponents;
 
 public interface ITileEntityComponent {
 
-	public void preProcessUpdate();
+	default public void preProcessUpdate() {
+	}
 
-	public void postProcessUpdate();
+	default public void postProcessUpdate() {
+	}
 
 	public String getComponentName();
 

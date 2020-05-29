@@ -1,7 +1,5 @@
 package theking530.api.gui;
 
-import org.lwjgl.opengl.GL11;
-
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.Minecraft;
@@ -58,7 +56,7 @@ public class GuiDrawUtilities {
 		float zLevel = 0.0f;
 
 		if (color != null) {
-			drawColoredRectangle(xPos - 2, yPos - 2, xPos + width + 2, yPos + height + 2, zLevel, color);
+			drawColoredRectangle(xPos - 2, yPos - 2, width + 4, height + 4, zLevel, color);
 		}
 
 		drawColoredRectangle(xPos - 1, yPos - 1, 1, 1 + height, zLevel, defaultSlotDarkEdgeColor);
@@ -108,22 +106,22 @@ public class GuiDrawUtilities {
 	}
 
 	public static void drawStringWithSize(String text, int xPos, int yPos, float scale, int color, boolean withShadow) {
-		int textX = (int) ((xPos - Minecraft.getInstance().fontRenderer.getStringWidth(text) * scale) / scale) - 1;
-		int textY = (int) ((yPos - 7 * scale) / scale) - 1;
-
-		GlStateManager.disableLighting();
-		GlStateManager.disableDepthTest();
-		GlStateManager.disableBlend();
-		GlStateManager.pushMatrix();
-		GlStateManager.scalef(scale, scale, scale);
-
-		if (withShadow) {
-			Minecraft.getInstance().fontRenderer.drawStringWithShadow(text, textX, textY, color);
-		} else {
-			Minecraft.getInstance().fontRenderer.drawString(text, textX, textY, color);
-		}
-
-		GlStateManager.popMatrix();
+//		int textX = (int) ((xPos - Minecraft.getInstance().fontRenderer.getStringWidth(text) * scale) / scale) - 1;
+//		int textY = (int) ((yPos - 7 * scale) / scale) - 1;
+//
+//		GlStateManager.disableLighting();
+//		GlStateManager.disableDepthTest();
+//		GlStateManager.disableBlend();
+//		GlStateManager.pushMatrix();
+//		GlStateManager.scalef(scale, scale, scale);
+//
+//		if (withShadow) {
+//			Minecraft.getInstance().fontRenderer.drawStringWithShadow(text, textX, textY, color);
+//		} else {
+//			Minecraft.getInstance().fontRenderer.drawString(text, textX, textY, color);
+//		}
+//
+//		GlStateManager.popMatrix();
 	}
 
 	public static void drawTexturedModalRect(float x, float y, float width, float height, float minU, float minV, float maxU, float maxV) {

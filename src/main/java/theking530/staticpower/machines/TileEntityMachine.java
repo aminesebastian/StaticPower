@@ -11,13 +11,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.items.CapabilityItemHandler;
 import theking530.staticpower.energy.StaticEnergyStorage;
 import theking530.staticpower.items.upgrades.BasePowerUpgrade;
 import theking530.staticpower.items.upgrades.BaseSpeedUpgrade;
 import theking530.staticpower.tileentity.SideModeList.Mode;
-import theking530.staticpower.tileentity.SideUtilities.BlockSide;
-import theking530.staticpower.tileentity.SideUtilities;
 import theking530.staticpower.tileentity.TileEntityBase;
 
 /**
@@ -30,7 +27,8 @@ public class TileEntityMachine extends TileEntityBase implements IProcessing, IE
 
 	public int initialEnergyPerTick;
 	public int initialEnergyCapacity;
-	public StaticEnergyStorage energyStorage;
+
+	protected StaticEnergyStorage energyStorage;
 
 	public int initialPowerUse = 100;
 	public float initialProcessingEnergyMult;
@@ -51,7 +49,8 @@ public class TileEntityMachine extends TileEntityBase implements IProcessing, IE
 
 	public TileEntityMachine(TileEntityType<?> tileEntityType) {
 		super(tileEntityType);
-		initializeSlots(0, 0, 0, false);
+		initializeSlots(0, 0, 0, 0);
+		disableFaceInteraction();
 	}
 
 	/**
@@ -226,7 +225,7 @@ public class TileEntityMachine extends TileEntityBase implements IProcessing, IE
 	}
 
 	public int useEnergy(int energyCost) {
-		return extractEnergy(null, energyCost, false);
+		return 0; // extractEnergy(null, energyCost, false);
 	}
 
 	/* ENERGY AND PROCESSING */
@@ -258,69 +257,11 @@ public class TileEntityMachine extends TileEntityBase implements IProcessing, IE
 				if (side != null && this.getSideConfiguration(side) == Mode.Disabled) {
 					return null;
 				}
-				net.minecraftforge.common.util.LazyOptional.of(energyStorage).cast();			
-			}
-		}
-		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-			if (getSideConfiguration(side) != Mode.Disabled && (SideUtilities.getBlockSide(side, getFacingDirection()) != BlockSide.FRONT && this.disableFaceInteraction)) {
-				Mode sideMode = side == null ? Mode.Regular : getSideConfiguration(side);
-				return net.minecraftforge.common.util.LazyOptional.of(() -> {
-					return createHandler(sideMode);
+				return LazyOptional.of(() -> {
+					return energyStorage;
 				}).cast();
 			}
 		}
 		return super.getCapability(cap, side);
-	}
-	protected IEnergyStorage getEnergyStorageCapability() {
-		
-	}
-	@Override
-	public <T> T getCapability(Capability<T> capability, final Direction from) {
-		if (capability == CapabilityEnergy.ENERGY) {
-			if (energyStorage != null) {
-				if (from != null && this.getSideConfiguration(from) == Mode.Disabled) {
-					return null;
-				}
-				return CapabilityEnergy.ENERGY.cast(new net.minecraftforge.energy.IEnergyStorage() {
-
-					@Override
-					public int receiveEnergy(int maxReceive, boolean simulate) {
-
-						return TileEntityMachine.this.receiveEnergy(from, maxReceive, simulate);
-					}
-
-					@Override
-					public int extractEnergy(int maxExtract, boolean simulate) {
-
-						return TileEntityMachine.this.extractEnergy(from, maxExtract, simulate);
-					}
-
-					@Override
-					public int getEnergyStored() {
-
-						return TileEntityMachine.this.getEnergyStored(from);
-					}
-
-					@Override
-					public int getMaxEnergyStored() {
-
-						return TileEntityMachine.this.getMaxEnergyStored(from);
-					}
-
-					@Override
-					public boolean canExtract() {
-
-						return false;
-					}
-
-					@Override
-					public boolean canReceive() {
-
-						return true;
-					}
-				});
-			}
-		}
-		return super.getCapability(capability, from);
 	}
 }

@@ -7,22 +7,32 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import theking530.staticpower.Registry;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.items.itemfilter.ContainerItemFilter;
+import theking530.staticpower.items.itemfilter.GuiItemFilter;
+import theking530.staticpower.machines.chargingstation.ContainerChargingStation;
+import theking530.staticpower.machines.chargingstation.GuiChargingStation;
 import theking530.staticpower.tileentity.vacuumchest.ContainerVacuumChest;
 import theking530.staticpower.tileentity.vacuumchest.GuiVacuumChest;
 
+@SuppressWarnings("deprecation")
 public class ModContainerTypes {
 	public static ContainerType<ContainerVacuumChest> VACUUM_CHEST_CONTAINER;
+	public static ContainerType<ContainerChargingStation> CHARGING_STATION_CONTAINER;
+	public static ContainerType<ContainerItemFilter> ITEM_FILTER_CONTAINER;
 
 	public static void init() {
 		VACUUM_CHEST_CONTAINER = Registry.preRegisterContainer("chest_vacuum", ContainerVacuumChest::new);
+		CHARGING_STATION_CONTAINER = Registry.preRegisterContainer("machine_charging_station", ContainerChargingStation::new);
+		ITEM_FILTER_CONTAINER = Registry.preRegisterContainer("filter_item", ContainerItemFilter::new);
 	}
 
-	@SuppressWarnings("deprecation")
 	@OnlyIn(Dist.CLIENT)
 	public static void initializeGui() {
 		DeferredWorkQueue.runLater(() -> {
 			ScreenManager.registerFactory(VACUUM_CHEST_CONTAINER, GuiVacuumChest::new);
-			StaticPower.LOGGER.debug("Registered ContainerType Screens");
+			ScreenManager.registerFactory(CHARGING_STATION_CONTAINER, GuiChargingStation::new);
+			ScreenManager.registerFactory(ITEM_FILTER_CONTAINER, GuiItemFilter::new);
+			StaticPower.LOGGER.debug("Registered all Static Power container types.");
 		});
 	}
 }
