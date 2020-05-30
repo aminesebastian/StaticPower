@@ -2,15 +2,15 @@ package theking530.staticpower.items.itemfilter;
 
 import java.util.Arrays;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.api.gui.button.BaseButton;
-import theking530.api.gui.button.BaseButton.ClickedState;
 import theking530.api.gui.button.TextButton;
 import theking530.api.gui.widgets.tabs.GuiInfoTab;
+import theking530.api.utilities.Vector;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.gui.StaticPowerItemStackGui;
 import theking530.staticpower.network.NetworkMessage;
@@ -31,6 +31,7 @@ public class GuiItemFilter extends StaticPowerItemStackGui<ContainerItemFilter, 
 		super(container, invPlayer, name, 176, 151);
 	}
 
+	@Override
 	public void initializeGui() {
 		// Attempt to get the item filter inventory.
 		getItemStack().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((IItemHandler handler) -> {
@@ -46,47 +47,37 @@ public class GuiItemFilter extends StaticPowerItemStackGui<ContainerItemFilter, 
 		guiLeft = (this.width - this.xSize) / 2;
 		guiTop = (this.height - this.ySize) / 2;
 
-		infoTab = new GuiInfoTab(110, 40);
-		getTabManager().registerTab(infoTab);
-		getTabManager().setInitiallyOpenTab(infoTab);
+		// Update the info tab label.
+		getTabManager().registerTab(infoTab = new GuiInfoTab(110, 40));
+		String text = ("Filter items going=into an inventory.");
+		String[] splitMsg = text.split("=");
+		infoTab.setText(inventoryItemFilter.owningItemStack.getDisplayName().getFormattedText(), Arrays.asList(splitMsg));
 
-		whitelistButton = new TextButton(20, 20, 30, 40, "W");
-		nbtButton = new TextButton(20, 20, 52, 40, "N");
-		metaButton = new TextButton(20, 20, 74, 40, "M");
-		oreButton = new TextButton(20, 20, 96, 40, "O");
-		modButton = new TextButton(20, 20, 118, 40, "D");
+		registerWidget(whitelistButton = new TextButton(20, 20, 30, 40, "W", this::buttonPressed));
+		registerWidget(nbtButton = new TextButton(20, 20, 52, 40, "N", this::buttonPressed));
+		registerWidget(metaButton = new TextButton(20, 20, 74, 40, "M", this::buttonPressed));
+		registerWidget(oreButton = new TextButton(20, 20, 96, 40, "O", this::buttonPressed));
+		registerWidget(modButton = new TextButton(20, 20, 118, 40, "D", this::buttonPressed));
 
-		nbtButton.setToggleable(true);
-		metaButton.setToggleable(true);
-		oreButton.setToggleable(true);
-		modButton.setToggleable(true);
+		whitelistButton.setText(inventoryItemFilter.getWhiteListMode() ? "W" : "B").setTooltip(new TranslationTextComponent(inventoryItemFilter.getWhiteListMode() ? "Whitelist" : "Blacklist"));
 
-		nbtButton.setToggled(inventoryItemFilter.getMatchNBT());
-		metaButton.setToggled(inventoryItemFilter.getMatchMetadata());
-		oreButton.setToggled(inventoryItemFilter.getMatchOreDictionary());
-		modButton.setToggled(inventoryItemFilter.getMatchModID());
-
-		whitelistButton.setText(inventoryItemFilter.getWhiteListMode() ? "W" : "B");
-		whitelistButton.setTooltip(inventoryItemFilter.getWhiteListMode() ? "Whitelist" : "Blacklist");
-		nbtButton.setTooltip("Enable NBT Match");
-		metaButton.setTooltip("Enable Metadata Match");
-		oreButton.setTooltip("Enable Ore Dictionary Match");
-		modButton.setTooltip("Enable Mod Match");
-
-		buttonManager.registerButton(whitelistButton);
-		buttonManager.registerButton(nbtButton);
-		buttonManager.registerButton(metaButton);
-		buttonManager.registerButton(oreButton);
-		buttonManager.registerButton(modButton);
+		nbtButton.setToggleable(true).setToggled(inventoryItemFilter.getMatchNBT()).setTooltip(new TranslationTextComponent("Enable NBT Match"));
+		metaButton.setToggleable(true).setToggled(inventoryItemFilter.getMatchMetadata()).setTooltip(new TranslationTextComponent("Enable Metadata Match"));
+		oreButton.setToggleable(true).setToggled(inventoryItemFilter.getMatchOreDictionary()).setTooltip(new TranslationTextComponent("Enable Ore Dictionary Match"));
+		modButton.setToggleable(true).setToggled(inventoryItemFilter.getMatchModID()).setTooltip(new TranslationTextComponent("Enable Mod Match"));
 	}
 
 	@Override
-	public void buttonPressed(BaseButton button, ClickedState mouseButton) {
+	protected Vector getInventoryLabelDrawLocation() {
+		return new Vector(8, 97);
+	}
+
+	public void buttonPressed(BaseButton button) {
 		if (button == whitelistButton) {
 			inventoryItemFilter.setWhiteListMode(!inventoryItemFilter.getWhiteListMode());
 			String mode = inventoryItemFilter.getWhiteListMode() == true ? "W" : "B";
 			whitelistButton.setText(mode);
-			whitelistButton.setTooltip(inventoryItemFilter.getWhiteListMode() ? "Whitelist" : "Blacklist");
+			whitelistButton.setTooltip(new TranslationTextComponent(inventoryItemFilter.getWhiteListMode() ? "Whitelist" : "Blacklist"));
 		}
 		if (button == nbtButton) {
 			inventoryItemFilter.setMatchNBT(!inventoryItemFilter.getMatchNBT());
@@ -104,23 +95,15 @@ public class GuiItemFilter extends StaticPowerItemStackGui<ContainerItemFilter, 
 		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
 	}
 
-	protected void drawGuiContainerForegroundLayer(int i, int j) {
-		String name = I18n.format(inventoryItemFilter.getName());
-		this.fontRenderer.drawString(name, this.xSize - 169, 6, 4210752);
-	}
-
 	@Override
 	protected void drawBackgroundExtras(float f, int i, int j) {
 		drawGenericBackground();
 		drawPlayerInventorySlots();
 
+		// Draw the filter slots.
 		int slotOffset = inventoryItemFilter.getFilterTier() == FilterTier.BASIC ? 3 : inventoryItemFilter.getFilterTier() == FilterTier.UPGRADED ? 1 : 0;
 		for (int k = 0; k < inventoryItemFilter.getFilterTier().getSlotCount(); k++) {
 			drawSlot(guiLeft + 8 + (k + slotOffset) * 18, guiTop + 19, 16, 16);
 		}
-
-		String text = ("Filter items going=into an inventory.");
-		String[] splitMsg = text.split("=");
-		infoTab.setText(inventoryItemFilter.owningItemStack.getDisplayName().getFormattedText(), Arrays.asList(splitMsg));
 	}
 }

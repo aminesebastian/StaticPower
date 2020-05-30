@@ -3,7 +3,7 @@ package theking530.api.container;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
-import theking530.staticpower.tileentity.SideModeList.Mode;
+import theking530.staticpower.tileentities.utilities.SideModeList.Mode;
 
 public class StaticPowerContainerSlot extends SlotItemHandler {
 

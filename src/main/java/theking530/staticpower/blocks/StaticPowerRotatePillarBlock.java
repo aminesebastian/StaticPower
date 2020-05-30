@@ -3,15 +3,11 @@ package theking530.staticpower.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Rotation;
 
 public class StaticPowerRotatePillarBlock extends StaticPowerBlock {
-	public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
-
 	public StaticPowerRotatePillarBlock(String name, Properties properties) {
 		super(name, properties);
 		this.setDefaultState(this.getDefaultState().with(AXIS, Direction.Axis.Y));

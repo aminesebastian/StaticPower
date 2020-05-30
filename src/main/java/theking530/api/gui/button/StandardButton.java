@@ -1,5 +1,7 @@
 package theking530.api.gui.button;
 
+import java.util.function.Consumer;
+
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
@@ -11,8 +13,8 @@ import theking530.api.utilities.StaticVertexBuffer;
 
 public class StandardButton extends BaseButton {
 
-	public StandardButton(int width, int height, int xPos, int yPos) {
-		super(width, height, xPos, yPos);
+	public StandardButton(int width, int height, int xPos, int yPos, Consumer<BaseButton> onClicked) {
+		super(width, height, xPos, yPos, onClicked);
 	}
 
 	@Override
@@ -65,4 +67,5 @@ public class StandardButton extends BaseButton {
 
 		tessellator.draw();
 	}
+
 }

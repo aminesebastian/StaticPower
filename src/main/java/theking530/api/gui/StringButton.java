@@ -86,7 +86,7 @@ public class StringButton extends AbstractGui implements MouseListener {
 		int buttonLeft = GUI_LEFT + j + BUTTON_XPOS;
 		int buttonTop = GUI_TOP + k + BUTTON_YPOS;
 
-		Item item = Item.getItemFromBlock(BLOCK);
+		Item item = BLOCK.asItem();
 		itemDrawer.drawItem(item, buttonLeft, buttonTop, 1, -2, 1.0f);
 	}
 

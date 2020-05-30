@@ -23,7 +23,7 @@ public class GuiDrawUtilities {
 		drawColoredRectangle(guiLeft + 3, guiTop + 3, width - 4, height - 4, zLevel, mainBackgroundColor);
 
 		Minecraft.getInstance().getTextureManager().bindTexture(GuiTextures.GENERIC_GUI);
-		
+
 		// Corners
 		drawTexturedGenericRect(guiLeft, guiTop, 4, 4, 0.0f, 0.0f, zLevel, 4 * genericBackgroundPixel, 4 * genericBackgroundPixel);
 		drawTexturedGenericRect(guiLeft + width - 5, guiTop, 5, 4, zLevel, 4 * genericBackgroundPixel, 0.0f, 9 * genericBackgroundPixel, 4 * genericBackgroundPixel);
@@ -52,7 +52,7 @@ public class GuiDrawUtilities {
 		}
 	}
 
-	public static void drawSlot(int xPos, int yPos, int width, int height, Color color) {
+	public static void drawSlot(float xPos, float yPos, float width, float height, Color color) {
 		float zLevel = 0.0f;
 
 		if (color != null) {
@@ -64,16 +64,16 @@ public class GuiDrawUtilities {
 		drawColoredRectangle(xPos + width, yPos - 1, 1, 1, zLevel, defaultSlotCornerColor);
 
 		drawColoredRectangle(xPos - 1, yPos + height, 1, 1, zLevel, defaultSlotCornerColor);
-		drawColoredRectangle(xPos, yPos + height, width+1, 1, zLevel, defaultSlotLightEdgeColor);
+		drawColoredRectangle(xPos, yPos + height, width + 1, 1, zLevel, defaultSlotLightEdgeColor);
 		drawColoredRectangle(xPos + width, yPos, 1, height, zLevel, defaultSlotLightEdgeColor);
 		drawColoredRectangle(xPos, yPos, width, height, zLevel, defaultSlotCornerColor);
 	}
 
-	public static void drawSlot(int xPos, int yPos, int width, int height) {
+	public static void drawSlot(float xPos, float yPos, float width, float height) {
 		drawSlot(xPos, yPos, width, height, null);
 	}
 
-	public void drawVerticalBar(int xPos, int yPos, int width, int height, float fillAmount, Color color) {
+	public void drawVerticalBar(float xPos, float yPos, float width, float height, float fillAmount, Color color) {
 		drawSlot(xPos, yPos, width, height);
 		int filledHeight = (int) (fillAmount * height);
 		float zLevel = 0.0f;
@@ -81,7 +81,8 @@ public class GuiDrawUtilities {
 
 	}
 
-	public static void drawTexturedGenericRect(int xCoord, int yCoord, int width, int height, float zLevel, float minU, float minV, float maxU, float maxV) {;
+	public static void drawTexturedGenericRect(float xCoord, float yCoord, float width, float height, float zLevel, float minU, float minV, float maxU, float maxV) {
+		;
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
 		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
@@ -92,7 +93,7 @@ public class GuiDrawUtilities {
 		tessellator.draw();
 	}
 
-	public static void drawColoredRectangle(int xCoord, int yCoord, int width, int height, float zLevel, Color color) {
+	public static void drawColoredRectangle(float xCoord, float yCoord, float width, float height, float zLevel, Color color) {
 		GlStateManager.disableTexture();
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();

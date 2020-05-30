@@ -14,9 +14,10 @@ import theking530.staticpower.blocks.StaticPowerRotatePillarBlock;
 import theking530.staticpower.blocks.crops.BaseSimplePlant;
 import theking530.staticpower.blocks.decorative.Lamp;
 import theking530.staticpower.blocks.decorative.StaticPowerGlassBlock;
-import theking530.staticpower.machines.chargingstation.BlockChargingStation;
-import theking530.staticpower.tileentity.solarpanels.BlockSolarPanel;
-import theking530.staticpower.tileentity.vacuumchest.BlockVacuumChest;
+import theking530.staticpower.tileentities.nonpowered.vacuumchest.BlockVacuumChest;
+import theking530.staticpower.tileentities.powered.chargingstation.BlockChargingStation;
+import theking530.staticpower.tileentities.powered.poweredfurnace.BlockPoweredFurnace;
+import theking530.staticpower.tileentities.powered.solarpanels.BlockSolarPanel;
 import theking530.staticpower.utilities.EHarvestLevel;
 import theking530.staticpower.utilities.Tier;
 
@@ -63,6 +64,7 @@ public class ModBlocks {
 	public static BlockVacuumChest VacuumChest;
 	public static BlockChargingStation ChargingStation;
 	public static BlockSolarPanel SolarPanelBasic;
+	public static BlockPoweredFurnace PoweredFurnace;
 
 	public static void init() {
 		// Decorative
@@ -106,5 +108,6 @@ public class ModBlocks {
 		Registry.preRegisterBlock(VacuumChest = new BlockVacuumChest("chest_vacuum"));
 		Registry.preRegisterBlock(ChargingStation = new BlockChargingStation("machine_charging_station"));
 		Registry.preRegisterBlock(SolarPanelBasic = new BlockSolarPanel("solar_panel_basic", Tier.BASIC));
+		Registry.preRegisterBlock(PoweredFurnace = new BlockPoweredFurnace("machine_powered_furnace"));
 	}
 }

@@ -2,9 +2,10 @@ package theking530.api.gui.widgets.valuebars;
 
 import java.util.List;
 
+import net.minecraft.util.text.ITextComponent;
 import theking530.api.gui.widgets.IGuiWidget;
 import theking530.staticpower.client.gui.StaticPowerContainerGui;
-import theking530.staticpower.machines.TileEntityMachine;
+import theking530.staticpower.tileentities.TileEntityMachine;
 
 public class GuiPowerBarFromEnergyStorage implements IGuiWidget {
 
@@ -43,20 +44,23 @@ public class GuiPowerBarFromEnergyStorage implements IGuiWidget {
 	}
 
 	@Override
-	public void setVisible(boolean isVisible) {
+	public IGuiWidget setVisible(boolean isVisible) {
 		this.isVisible = isVisible;
+		return this;
 	}
 
 	@Override
-	public void setPosition(int xPos, int yPos) {
+	public IGuiWidget setPosition(int xPos, int yPos) {
 		xPosition = xPos;
 		yPosition = yPos;
+		return this;
 	}
 
 	@Override
-	public void setSize(int xSize, int ySize) {
+	public IGuiWidget setSize(int xSize, int ySize) {
 		this.xSize = xSize;
 		this.ySize = ySize;
+		return this;
 	}
 
 	@Override
@@ -79,12 +83,13 @@ public class GuiPowerBarFromEnergyStorage implements IGuiWidget {
 	}
 
 	@Override
-	public List<String> getTooltip() {
+	public void getTooltips(List<ITextComponent> tooltips, boolean showAdvanced) {
 		if (machine.processingTime == 0) {
-			return GuiPowerBarUtilities.getTooltip(machine.getEnergyStorage().getEnergyStored(), machine.getEnergyStorage().getMaxEnergyStored(), machine.getEnergyStorage().getMaxReceive(), 0);
+			tooltips.addAll(
+					GuiPowerBarUtilities.getTooltip(machine.getEnergyStorage().getEnergyStored(), machine.getEnergyStorage().getMaxEnergyStored(), machine.getEnergyStorage().getMaxReceive(), 0));
 		}
-		return GuiPowerBarUtilities.getTooltip(machine.getEnergyStorage().getEnergyStored(), machine.getEnergyStorage().getMaxEnergyStored(), machine.getEnergyStorage().getMaxReceive(),
-				machine.getProcessingEnergy() / machine.processingTime);
+		tooltips.addAll(GuiPowerBarUtilities.getTooltip(machine.getEnergyStorage().getEnergyStored(), machine.getEnergyStorage().getMaxEnergyStored(), machine.getEnergyStorage().getMaxReceive(),
+				machine.getProcessingEnergy() / machine.processingTime));
 	}
 
 	@Override

@@ -6,7 +6,6 @@ import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -17,7 +16,7 @@ import theking530.api.gui.GuiTextures;
 import theking530.api.gui.RectangleBounds;
 import theking530.api.utilities.StaticVertexBuffer;
 
-public abstract class BaseGuiTab extends AbstractGui {
+public abstract class BaseGuiTab {
 
 	public enum TabState {
 		CLOSED, OPENING, OPEN, CLOSING;
@@ -67,7 +66,7 @@ public abstract class BaseGuiTab extends AbstractGui {
 	}
 
 	public BaseGuiTab(int tabWidth, int tabHeight, ResourceLocation texture, Block block) {
-		this(tabWidth, tabHeight, texture, Item.getItemFromBlock(block));
+		this(tabWidth, tabHeight, texture, block.asItem());
 	}
 
 	public void update(int xPos, int yPos, float partialTicks) {
@@ -239,7 +238,6 @@ public abstract class BaseGuiTab extends AbstractGui {
 
 		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_CULL_FACE);
-		GlStateManager.disableLighting();
 		if (getTabSide() == TabSide.LEFT) {
 			GL11.glTranslatef(xPos, yPos, 0.0f);
 			GL11.glScalef(-1.0f, 1.0f, 1.0f);
@@ -284,7 +282,6 @@ public abstract class BaseGuiTab extends AbstractGui {
 
 		tessellator.draw();
 		GL11.glEnable(GL11.GL_CULL_FACE);
-		GlStateManager.enableLighting();
 		GL11.glPopMatrix();
 	}
 

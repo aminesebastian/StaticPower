@@ -2,6 +2,7 @@ package theking530.api.gui.widgets;
 
 import java.util.List;
 
+import net.minecraft.util.text.ITextComponent;
 import theking530.staticpower.client.gui.StaticPowerContainerGui;
 
 public interface IGuiWidget {
@@ -14,11 +15,11 @@ public interface IGuiWidget {
 	/* Misc */
 	public boolean isVisible();
 
-	public void setVisible(boolean isVisible);
+	public IGuiWidget setVisible(boolean isVisible);
 
-	public void setPosition(int xPos, int yPos);
+	public IGuiWidget setPosition(int xPos, int yPos);
 
-	public void setSize(int xSize, int ySize);
+	public IGuiWidget setSize(int xSize, int ySize);
 
 	/* Render Events */
 	public void renderBackground(int mouseX, int mouseY, float partialTicks);
@@ -28,7 +29,7 @@ public interface IGuiWidget {
 	/* Tooltip */
 	public boolean shouldDrawTooltip(int mouseX, int mouseY);
 
-	public List<String> getTooltip();
+	public void getTooltips(List<ITextComponent> tooltips, boolean showAdvanced);
 
 	/* Input Events */
 	public default EInputResult mouseClick(int mouseX, int mouseY, int button) {

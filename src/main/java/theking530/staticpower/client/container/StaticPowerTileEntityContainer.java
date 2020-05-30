@@ -5,7 +5,7 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.tileentity.TileEntityBase;
+import theking530.staticpower.tileentities.TileEntityBase;
 
 public abstract class StaticPowerTileEntityContainer<T extends TileEntityBase> extends StaticPowerContainer {
 	private final T owningTileEntity;

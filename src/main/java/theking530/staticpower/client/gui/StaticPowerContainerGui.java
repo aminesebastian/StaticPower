@@ -1,11 +1,10 @@
 package theking530.staticpower.client.gui;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
+import com.google.common.collect.Lists;
+
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -13,18 +12,15 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.text.ITextComponent;
 import theking530.api.container.StaticPowerContainerSlot;
 import theking530.api.gui.GuiDrawUtilities;
-import theking530.api.gui.IInteractableGui;
-import theking530.api.gui.button.BaseButton;
-import theking530.api.gui.button.BaseButton.ClickedState;
-import theking530.api.gui.button.ButtonManager;
 import theking530.api.gui.widgets.GuiDrawItem;
 import theking530.api.gui.widgets.IGuiWidget;
 import theking530.api.gui.widgets.tabs.GuiTabManager;
 import theking530.api.utilities.Color;
+import theking530.api.utilities.Vector;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.tileentity.SideModeList.Mode;
-import theking530.staticpower.tileentity.TileEntityBase;
-import theking530.staticpower.tileentity.TileEntityInventory;
+import theking530.staticpower.tileentities.TileEntityBase;
+import theking530.staticpower.tileentities.components.TileEntityInventoryComponent;
+import theking530.staticpower.tileentities.utilities.SideModeList.Mode;
 
 /**
  * Base GUI class containing useful features including tabs, button management,
@@ -34,10 +30,8 @@ import theking530.staticpower.tileentity.TileEntityInventory;
  *
  * @param <T> The container type.
  */
-public abstract class StaticPowerContainerGui<T extends Container> extends ContainerScreen<T> implements IInteractableGui {
-	protected final FontRenderer fontRenderer;
+public abstract class StaticPowerContainerGui<T extends Container> extends ContainerScreen<T> {
 	protected final GuiTabManager tabManager;
-	protected final ButtonManager buttonManager;
 	protected final List<IGuiWidget> widgets;
 	protected final GuiDrawItem itemDrawer;
 
@@ -53,9 +47,7 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 		xSizeTarget = guiXSize;
 		ySizeTarget = guiYSize;
 		tabManager = new GuiTabManager(this);
-		buttonManager = new ButtonManager(this);
 		widgets = new ArrayList<IGuiWidget>();
-		fontRenderer = Minecraft.getInstance().fontRenderer;
 		outputSlotSize = 24;
 		inputSlotSize = 16;
 		itemDrawer = new GuiDrawItem(true);
@@ -96,7 +88,6 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 		}
 
 		tabManager.drawTabs(guiLeft + xSize - 1, guiTop + 10, xSize, ySize, partialTicks);
-		buttonManager.drawButtons(mouseX, mouseY);
 
 		// Animations the screensize if the target sizes have changed.
 		animateScreenSize();
@@ -126,18 +117,23 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 			}
 		}
 
-		// Draws the tooltips for all the widgets.
+		// Capture all the tooltips for all the widgets..
+		List<ITextComponent> tooltips = new ArrayList<ITextComponent>();
 		for (IGuiWidget widget : widgets) {
 			if (widget.isVisible() && widget.shouldDrawTooltip(mouseX, mouseY)) {
-				renderTooltip(widget.getTooltip(), mouseX, mouseY, Minecraft.getInstance().fontRenderer);
+				// Get all the tooltips.
+				widget.getTooltips(tooltips, false);
 			}
+		}
+
+		// If there are any tooltips to render, render them.
+		if (tooltips.size() > 0) {
+			// Format them and then draw them.
+			renderTooltip(Lists.transform(tooltips, (ITextComponent comp) -> comp.getFormattedText()), mouseX, mouseY, font);
 		}
 
 		// Let the tab manager handle any mouse over events.
 		tabManager.handleMouseMoveInteraction(mouseX, mouseY);
-
-		// Let the button manager handle any mouse over events.
-		buttonManager.handleMouseMoveInteraction(mouseX, mouseY);
 
 		// Draw any additional foreground elements.
 		drawForegroundExtras(partialTicks, mouseX, mouseY);
@@ -155,7 +151,6 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 
 		// Handle click events for tabs and buttons.
 		tabManager.handleMouseInteraction((int) mouseX, (int) mouseY, button);
-		buttonManager.handleMouseInteraction((int) mouseX, (int) mouseY, button);
 
 		return superCallResult;
 	}
@@ -167,9 +162,63 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	 * @param mouseY The mouse's y position.
 	 */
 	protected void drawContainerTitle(int mouseX, int mouseY) {
+		// Draw the container title if requested at the designated location.
+		if (shouldDrawContainerLabel()) {
+			Vector inventoryLabelLocation = getContainerLabelDrawLocation();
+			ITextComponent containerName = getTitle();
+			String containerString = containerName.getString();
+			font.drawString(containerString, inventoryLabelLocation.getX(), inventoryLabelLocation.getY(), 4210752);
+		}
+
+		// Draw the inventory label if requested at the designated location.
+		if (shouldDrawInventoryLabel()) {
+			Vector inventoryLabelLocation = getInventoryLabelDrawLocation();
+			font.drawString(playerInventory.getDisplayName().getFormattedText(), inventoryLabelLocation.getX(), inventoryLabelLocation.getY(), 4210752);
+		}
+	}
+
+	/**
+	 * This method should return a vector (2D) where the "Inventory" label should be
+	 * rendered in the UI. To disable the rendering all together, override the
+	 * {@link #shouldDrawInventoryLabel()} method.
+	 * 
+	 * @return A vector indicating the position where the inventory label should
+	 *         render.
+	 */
+	protected Vector getInventoryLabelDrawLocation() {
+		return new Vector(8, 97);
+	}
+
+	/**
+	 * This method should return whether or not the container label should be drawn.
+	 * 
+	 * @return True if the container label should be drawn, false otherwise.
+	 */
+	protected boolean shouldDrawContainerLabel() {
+		return true;
+	}
+
+	/**
+	 * This method should return a vector (2D) where the container label should be
+	 * rendered in the UI. To disable the rendering all together, override the
+	 * {@link #shouldDrawContainerLabel()} method.
+	 * 
+	 * @return A vector indicating the position where the container label should
+	 *         render.
+	 */
+	protected Vector getContainerLabelDrawLocation() {
 		ITextComponent containerName = getTitle();
 		String containerString = containerName.getString();
-		fontRenderer.drawString(containerString, xSize / 2 - fontRenderer.getStringWidth(containerString) / 2, 6, 4210752);
+		return new Vector(xSize / 2 - font.getStringWidth(containerString) / 2, 6);
+	}
+
+	/**
+	 * This method should return whether or not the Inventory label should be drawn.
+	 * 
+	 * @return True if the inventory label should be drawn, false otherwise.
+	 */
+	protected boolean shouldDrawInventoryLabel() {
+		return false;
 	}
 
 	/**
@@ -185,7 +234,7 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 
 	/**
 	 * Override this method to draw any additional foreground features (features
-	 * that should appear infront of items).
+	 * that should appear in front of items).
 	 * 
 	 * @param partialTicks The delta time.
 	 * @param mouseX       The mouse's x position.
@@ -322,8 +371,8 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 				// Check the intended mode of the handler slot. If it ends up being null, just
 				// assume the mode is regular.
 				Mode intendedMode = handlerSlot.getMode();
-				if (handlerSlot.getItemHandler() instanceof TileEntityInventory) {
-					intendedMode = ((TileEntityInventory) handlerSlot.getItemHandler()).getMode();
+				if (handlerSlot.getItemHandler() instanceof TileEntityInventoryComponent) {
+					intendedMode = ((TileEntityInventoryComponent) handlerSlot.getItemHandler()).getMode();
 				}
 				intendedMode = intendedMode == null ? Mode.Regular : intendedMode;
 
@@ -362,28 +411,9 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 		this.ySizeTarget = ySize;
 	}
 
-	protected void mouseClicked(int x, int y, int button) throws IOException {
-		// super.mouseClicked(x, y, button);
-		tabManager.handleMouseInteraction(x, y, button);
-		buttonManager.handleMouseInteraction(x, y, button);
-		for (int i = 0; i < widgets.size(); i++) {
-			widgets.get(i).mouseClick(x, y, button);
-		}
-	}
-
-	protected void keyTyped(char par1, int par2) throws IOException {
-		// super.keyTyped(par1, par2);
-		tabManager.handleKeyboardInteraction(par1, par2);
-	}
-
 	public void registerWidget(IGuiWidget widget) {
 		widgets.add(widget);
 		widget.setOwningGui(this);
-	}
-
-	@Override
-	public void buttonPressed(BaseButton button, ClickedState mouseButton) {
-
 	}
 
 	private void animateScreenSize() {

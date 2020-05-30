@@ -5,7 +5,7 @@ import java.util.List;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.energy.IEnergyStorage;
-import theking530.staticpower.tileentity.tileentitycomponents.ITileEntityComponent;
+import theking530.staticpower.tileentities.components.ITileEntityComponent;
 
 public class StaticEnergyStorage implements IEnergyStorage, ITileEntityComponent {
 

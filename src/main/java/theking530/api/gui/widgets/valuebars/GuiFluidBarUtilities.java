@@ -1,13 +1,11 @@
 package theking530.api.gui.widgets.valuebars;
 
 import java.text.NumberFormat;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import org.lwjgl.opengl.GL11;
-
-import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -18,11 +16,13 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.api.gui.GuiDrawUtilities;
 import theking530.api.utilities.Color;
-import theking530.staticpower.tileentity.SideModeList.Mode;
+import theking530.staticpower.tileentities.utilities.SideModeList.Mode;
 
 public class GuiFluidBarUtilities {
 
@@ -44,9 +44,6 @@ public class GuiFluidBarUtilities {
 				float ratio = ((float) amount / (float) capacity);
 				float renderAmount = ratio * (float) height;
 
-				// RenderUtil.bindBlockTexture();
-				GlStateManager.enableBlend();
-
 				float segmentCapacity = capacity / ((float) height / 16);
 				int segmentsUsed = (int) ((renderAmount + 16) / 16);
 
@@ -66,26 +63,21 @@ public class GuiFluidBarUtilities {
 					float yMax = ((i + 1) * 16) * fillRatio;
 					Tessellator tessellator = Tessellator.getInstance();
 					BufferBuilder tes = tessellator.getBuffer();
-					tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-					tes.pos(x + width, y - yMin, zLevel).tex(maxU, minV).endVertex();
-					tes.pos(x + width, y - yMax, zLevel).tex(maxU, minV + (fillRatio * diffV)).endVertex();
-					tes.pos(x, y - yMax, zLevel).tex(minU, minV + (fillRatio * diffV)).endVertex();
-					tes.pos(x, y - yMin, zLevel).tex(minU, minV).endVertex();
+					tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
+					tes.pos(x + width, y - yMin, zLevel).color(0.0f, 0.2f, 1.0f, 1.0f).tex(maxU, minV).endVertex();
+					tes.pos(x + width, y - yMax, zLevel).color(0.0f, 0.2f, 1.0f, 1.0f).tex(maxU, minV + (fillRatio * diffV)).endVertex();
+					tes.pos(x, y - yMax, zLevel).color(0.0f, 0.2f, 1.0f, 1.0f).tex(minU, minV + (fillRatio * diffV)).endVertex();
+					tes.pos(x, y - yMin, zLevel).color(0.0f, 0.2f, 1.0f, 1.0f).tex(minU, minV).endVertex();
 					tessellator.draw();
 
 				}
 			}
 		}
-
-		GlStateManager.disableBlend();
 		if (drawOverlay) {
-			Color linesColor = new Color(40, 40, 120);
+			Color linesColor = new Color(0.2f, 0.2f, 0.2f, 0.5f);
 			for (int i = 0; i < height / 10; i++) {
-				GuiDrawUtilities.drawColoredRectangle((int) x, (int) (y - height) + 2, (int) (x + width - 10), (int) (y - height + 3), zLevel, linesColor);
-				GuiDrawUtilities.drawColoredRectangle((int) x, (int) (y - height + 7 + (i * 10)), (int) (x + width - 10), (int) (y - height + 8 + (i * 10)), zLevel, linesColor);
-				if (i != height / 10 - 1) {
-					GuiDrawUtilities.drawColoredRectangle((int) x, (int) (y - height + 12 + (i * 10)), (int) (x + width - 7), (int) (y - height + 13 + (i * 10)), zLevel, linesColor);
-				}
+				GuiDrawUtilities.drawColoredRectangle(x, y - height + 2 + (i * 10), width - 3, 1, zLevel, linesColor);
+				GuiDrawUtilities.drawColoredRectangle(x, y - height + 7 + (i * 10), width - 7, 1, zLevel, linesColor);
 			}
 		}
 	}
@@ -97,15 +89,17 @@ public class GuiFluidBarUtilities {
 		return Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(fluidStill);
 	}
 
-	public static List<String> getTooltip(int fluidAmount, int maxCapacity, FluidStack fluid) {
+	public static List<ITextComponent> getTooltip(int fluidAmount, int maxCapacity, FluidStack fluid) {
+		List<ITextComponent> tooltip = new ArrayList<ITextComponent>();
+
 		if (fluid != null) {
 			ITextComponent name = fluid.getDisplayName();
-			String text = (name + "=" + NumberFormat.getNumberInstance(Locale.US).format(fluidAmount) + "/" + NumberFormat.getNumberInstance(Locale.US).format(maxCapacity) + "mB");
-			String[] splitMsg = text.split("=");
-			return Arrays.asList(splitMsg);
+			tooltip.add(name);
+			tooltip.add(new StringTextComponent(NumberFormat.getNumberInstance(Locale.US).format(fluidAmount) + "/" + NumberFormat.getNumberInstance(Locale.US).format(maxCapacity) + "mB"));
+			return tooltip;
+		} else {
+			tooltip.add(new TranslationTextComponent("staticpower.gui.empty"));
+			return tooltip;
 		}
-		String text = ("Empty" + "=" + NumberFormat.getNumberInstance(Locale.US).format(fluidAmount) + "/" + NumberFormat.getNumberInstance(Locale.US).format(maxCapacity) + "mB");
-		String[] splitMsg = text.split("=");
-		return Arrays.asList(splitMsg);
 	}
 }

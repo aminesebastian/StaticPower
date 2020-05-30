@@ -2,11 +2,12 @@ package theking530.api.gui.widgets.valuebars;
 
 import java.util.List;
 
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fluids.IFluidTank;
 import theking530.api.gui.widgets.IGuiWidget;
 import theking530.staticpower.client.gui.StaticPowerContainerGui;
-import theking530.staticpower.tileentity.ISideConfigurable;
-import theking530.staticpower.tileentity.SideModeList.Mode;
+import theking530.staticpower.tileentities.utilities.SideModeList.Mode;
+import theking530.staticpower.tileentities.utilities.interfaces.ISideConfigurable;
 
 public class GuiFluidBarFromTank implements IGuiWidget {
 
@@ -45,7 +46,7 @@ public class GuiFluidBarFromTank implements IGuiWidget {
 		this.owningGui = owningGui;
 	}
 
-	public List<String> drawText() {
+	public List<ITextComponent> drawText() {
 		return GuiFluidBarUtilities.getTooltip(tank.getFluidAmount(), tank.getCapacity(), tank.getFluid());
 	}
 
@@ -59,20 +60,23 @@ public class GuiFluidBarFromTank implements IGuiWidget {
 	}
 
 	@Override
-	public void setVisible(boolean isVisible) {
+	public IGuiWidget setVisible(boolean isVisible) {
 		this.isVisible = isVisible;
+		return this;
 	}
 
 	@Override
-	public void setPosition(int xPos, int yPos) {
+	public IGuiWidget setPosition(int xPos, int yPos) {
 		xPosition = xPos;
 		yPosition = yPos;
+		return this;
 	}
 
 	@Override
-	public void setSize(int xSize, int ySize) {
+	public IGuiWidget setSize(int xSize, int ySize) {
 		this.xSize = xSize;
 		this.ySize = ySize;
+		return this;
 	}
 
 	@Override
@@ -101,8 +105,8 @@ public class GuiFluidBarFromTank implements IGuiWidget {
 	}
 
 	@Override
-	public List<String> getTooltip() {
-		return GuiFluidBarUtilities.getTooltip(tank.getFluidAmount(), tank.getCapacity(), tank.getFluid());
+	public void getTooltips(List<ITextComponent> tooltips, boolean showAdvanced) {
+		tooltips.addAll(GuiFluidBarUtilities.getTooltip(tank.getFluidAmount(), tank.getCapacity(), tank.getFluid()));
 	}
 
 	@Override

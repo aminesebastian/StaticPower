@@ -1,5 +1,7 @@
 package theking530.staticpower.items.itemfilter;
 
+import javax.annotation.Nonnull;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.items.ItemStackHandler;
@@ -24,7 +26,7 @@ public class InventoryItemFilter extends ItemStackHandler {
 	private boolean checkModDomain = false;
 	private FilterTier filterTier;
 
-	public InventoryItemFilter(ItemStack stack, FilterTier tier) {
+	public InventoryItemFilter(@Nonnull ItemStack stack, FilterTier tier) {
 		super(tier.getSlotCount());
 		owningItemStack = stack;
 		filterTier = tier;
@@ -115,6 +117,8 @@ public class InventoryItemFilter extends ItemStackHandler {
 			owningItemStack.getTag().put(ITEM_FILTER_NBT_KEY, serializeNBT());
 		}
 
+		// Finally, deserialize into this inventory from the NBT.
+		deserializeNBT(owningItemStack.getTag());
 	}
 
 	public String getName() {

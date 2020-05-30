@@ -125,7 +125,7 @@ public class ItemFilter extends StaticPowerItem {
 
 			for (int i = 0; i < tempHandler.getSlots(); i++) {
 				if (!tempHandler.getStackInSlot(i).isEmpty()) {
-					tooltip.add(new StringTextComponent("Slot " + (i + 1) + ": " + tempHandler.getStackInSlot(i).getDisplayName()));
+					tooltip.add(new StringTextComponent("Slot " + (i + 1) + ": ").appendSibling(tempHandler.getStackInSlot(i).getDisplayName()));
 					empty = false;
 				}
 			}

@@ -1,7 +1,7 @@
 package theking530.api.gui.widgets.valuebars;
 
 import java.text.NumberFormat;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -9,19 +9,30 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import theking530.api.gui.GuiDrawUtilities;
 import theking530.api.gui.GuiTextures;
 
 public class GuiPowerBarUtilities {
 
-	public static List<String> getTooltip(int currentEnergy, int maxEnergy, int energyPerTick, int powerUse) {
-		String text = ("Input: " + energyPerTick + " RF/t");
+	public static List<ITextComponent> getTooltip(int currentEnergy, int maxEnergy, int energyPerTick, int powerUse) {
+		List<ITextComponent> tooltip = new ArrayList<ITextComponent>();
+
+		// Add the input rate to the tooltip.
+		tooltip.add(new TranslationTextComponent("staticpower.gui.input").appendText(": " + energyPerTick).appendSibling(new TranslationTextComponent("staticpower.gui.energy_unit_per_tick")));
+
+		// If the energy usage is > 0, show the usage.
 		if (powerUse > 0) {
-			text += "=" + "Usage: " + powerUse + " RF/t";
+			tooltip.add(new TranslationTextComponent("staticpower.gui.usage").appendText(": " + powerUse).appendSibling(new TranslationTextComponent("staticpower.gui.energy_unit_per_tick")));
 		}
-		text += "=" + NumberFormat.getNumberInstance(Locale.US).format(currentEnergy) + "/" + NumberFormat.getNumberInstance(Locale.US).format(maxEnergy) + " " + "RF";
-		String[] splitMsg = text.split("=");
-		return Arrays.asList(splitMsg);
+
+		// Show the total amount of energy remaining / total energy capacity.
+		tooltip.add(new StringTextComponent(NumberFormat.getNumberInstance(Locale.US).format(currentEnergy) + "/" + NumberFormat.getNumberInstance(Locale.US).format(maxEnergy)).appendText(" ")
+				.appendSibling(new TranslationTextComponent("staticpower.gui.energy_unit")));
+
+		return tooltip;
 	}
 
 	public static void drawPowerBar(int xpos, int ypos, int width, int height, float zLevel, int currentEnergy, int maxEnergy) {

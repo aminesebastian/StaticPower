@@ -6,8 +6,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import theking530.staticpower.tileentity.ISideConfigurable;
-import theking530.staticpower.tileentity.SideModeList.Mode;
+import theking530.staticpower.tileentities.utilities.SideModeList.Mode;
+import theking530.staticpower.tileentities.utilities.interfaces.ISideConfigurable;
 
 public class PowerDistributor {
 
