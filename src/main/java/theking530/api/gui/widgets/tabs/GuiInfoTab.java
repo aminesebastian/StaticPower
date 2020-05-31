@@ -46,12 +46,11 @@ public class GuiInfoTab extends BaseGuiTab {
 	}
 
 	@Override
-	protected void drawExtra(int xPos, int yPos, float partialTicks) {
-		if (isOpen()) {
-			if (info != null && info.size() > 0) {
-				drawTextBG(xPos, yPos);
-				drawText(xPos, yPos);
-			}
+	protected void renderBackground(int mouseX, int mouseY, float partialTicks) {
+		super.renderBackground(mouseX, mouseY, partialTicks);
+		if (info != null && info.size() > 0) {
+			drawTextBG(xPosition, yPosition);
+			drawText(xPosition, yPosition);
 		}
 	}
 
@@ -94,18 +93,4 @@ public class GuiInfoTab extends BaseGuiTab {
 		GL11.glDisable(GL11.GL_BLEND);
 	}
 
-	@Override
-	protected void handleExtraMouseInteraction(int mouseX, int mouseY, int button) {
-
-	}
-
-	@Override
-	protected void handleExtraKeyboardInteraction(char par1, int par2) {
-
-	}
-
-	@Override
-	protected void handleExtraMouseMove(int mouseX, int mouseY) {
-
-	}
 }

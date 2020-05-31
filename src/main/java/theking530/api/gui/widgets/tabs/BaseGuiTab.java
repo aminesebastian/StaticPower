@@ -14,20 +14,47 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import theking530.api.gui.GuiTextures;
 import theking530.api.gui.RectangleBounds;
+import theking530.api.gui.WidgetContainer;
+import theking530.api.gui.widgets.AbstractGuiWidget.EInputResult;
 import theking530.api.utilities.StaticVertexBuffer;
+import theking530.api.utilities.Vector2D;
 
+/**
+ * Base class for any GUI tabs.
+ * 
+ * @author Amine Sebastian
+ *
+ */
 public abstract class BaseGuiTab {
-
+	/**
+	 * Data type for the animation state of the tab.
+	 * 
+	 * @author Amine Sebastian
+	 *
+	 */
 	public enum TabState {
-		CLOSED, OPENING, OPEN, CLOSING;
-
-		static TabState incrementState(TabState curr) {
-			int newIndex = curr.ordinal() + 1;
+		CLOSED, OPENING, OPEN, CLOSING; // The order that these are defined in is very important, do not reorder.
+		/**
+		 * Helper method for incrementing the current animation state of the tab.
+		 * Returns a new {@link TabState} that is one state further along than the
+		 * current state.
+		 * 
+		 * @param curr The current tab state.
+		 * @return
+		 */
+		public TabState incrementState() {
+			int newIndex = ordinal() + 1;
 			newIndex = newIndex % 3;
 			return TabState.values()[newIndex];
 		}
 	}
 
+	/**
+	 * Data type to indicate which side of the UI the tab should render on.
+	 * 
+	 * @author Amine Sebastian
+	 *
+	 */
 	public enum TabSide {
 		LEFT, RIGHT;
 	}
@@ -36,23 +63,28 @@ public abstract class BaseGuiTab {
 	protected int tabHeight;
 	protected int xPosition;
 	protected int yPosition;
-
-	protected int xPositionOffset;
-	protected int yPositionOffset;
+	protected final WidgetContainer widgetContainer;
 
 	private float currentWidth;
 	private float currentHeight;
 
-	protected float animationTimer = 0;
-	protected float animationTime = 4.0f;
-	protected Item itemIcon;
-	protected ResourceLocation tabTexture;
-
-	protected TabState tabState;
-	protected TabSide tabSide;
+	private float animationTimer = 0;
+	private float animationTime = 4.0f;
+	private Item itemIcon;
+	private ResourceLocation tabTexture;
+	private TabState tabState;
+	private TabSide tabSide;
 
 	private GuiTabManager owningManager;
 
+	/**
+	 * Creates a {@link BaseGuiTab}.
+	 * 
+	 * @param tabWidth  The width of the tab.
+	 * @param tabHeight The height of the tab.
+	 * @param texture   The background texture of the tab.
+	 * @param item      The item that should render as the icon for the tab.
+	 */
 	public BaseGuiTab(int tabWidth, int tabHeight, ResourceLocation texture, Item item) {
 		this.tabWidth = tabWidth;
 		this.tabHeight = tabHeight;
@@ -60,46 +92,88 @@ public abstract class BaseGuiTab {
 		tabTexture = texture;
 		tabState = TabState.CLOSED;
 		tabSide = TabSide.RIGHT;
-
-		xPositionOffset = 0;
-		yPositionOffset = 0;
+		widgetContainer = new WidgetContainer();
 	}
 
+	/**
+	 * Creates a {@link BaseGuiTab}.
+	 * 
+	 * @param tabWidth  The width of the tab.
+	 * @param tabHeight The height of the tab.
+	 * @param texture   The background texture of the tab.
+	 * @param block     The block that should render as the icon for the tab.
+	 */
 	public BaseGuiTab(int tabWidth, int tabHeight, ResourceLocation texture, Block block) {
 		this(tabWidth, tabHeight, texture, block.asItem());
 	}
 
-	public void update(int xPos, int yPos, float partialTicks) {
+	/**
+	 * Updates this tab's position data in the case where a tab above it may be
+	 * opening or closing.
+	 * 
+	 * @param tabXPosition The new x position.
+	 * @param tabYPosition The new y position.
+	 * @param partialTicks The partial ticks (delta time).
+	 */
+	public void updateTabPosition(int tabXPosition, int tabYPosition, float partialTicks) {
 		updateAnimation(partialTicks);
 
-		xPosition = xPos + xPositionOffset;
-		yPosition = yPos + yPositionOffset;
+		xPosition = getTabSide() == TabSide.RIGHT ? tabXPosition : tabXPosition - tabWidth;
+		yPosition = tabYPosition;
 
-		GL11.glColor3f(1.0f, 1.0f, 1.0f);
-		drawTab(xPosition, yPosition, partialTicks);
-		drawExtra(getTabSide() == TabSide.RIGHT ? xPosition : xPosition - tabWidth, yPosition, partialTicks);
-
+		widgetContainer.update(new Vector2D(xPosition, yPosition), new Vector2D(tabWidth, tabHeight));
 	}
 
-	public void mouseInteraction(int mouseX, int mouseY, int button) {
+	/**
+	 * This event is raised when the mouse is clicked.
+	 * 
+	 * @param mouseX The mouse x position.
+	 * @param mouseY The mouse y position.
+	 * @param button The button that was clicked.
+	 * @return True if the event was handled, false otherwise.
+	 */
+	public EInputResult mouseClick(int mouseX, int mouseY, int button) {
 		if (mouseX > xPosition && mouseX < xPosition + 24) {
 			if (mouseY > yPosition && mouseY < yPosition + 24) {
 				if (tabState == TabState.CLOSED) {
 					tabState = TabState.OPENING;
 					owningManager.tabOpening(this);
-				}
-				if (tabState == TabState.OPEN) {
+					return EInputResult.HANDLED;
+				} else if (tabState == TabState.OPEN) {
 					tabState = TabState.CLOSING;
 					owningManager.tabClosing(this);
+					return EInputResult.HANDLED;
 				}
 			}
+		} else {
+			if (widgetContainer.handleMouseClick(mouseX, mouseY, button) == EInputResult.HANDLED) {
+				return EInputResult.HANDLED;
+			}
 		}
-		if (isOpen()) {
-			handleExtraMouseInteraction(mouseX, mouseY, button);
-		}
+		return EInputResult.UNHANDLED;
 	}
 
-	public void drawDarkBackground(int xPos, int yPos, int width, int height) {
+	/**
+	 * This even is raised when the mouse moves.
+	 * 
+	 * @param x The x position of the mouse.
+	 * @param y The y position of the mouse.
+	 */
+	public void mouseHover(int x, int y) {
+		widgetContainer.handleMouseMove(x, y);
+	}
+
+	/**
+	 * Handles keyboard interation.
+	 * 
+	 * @param par1
+	 * @param par2
+	 */
+	public void keyboardInteraction(char par1, int par2) {
+	}
+
+	@Deprecated
+	protected void drawDarkBackground(int xPos, int yPos, int width, int height) {
 		GL11.glEnable(GL11.GL_BLEND);
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder vertexbuffer = tessellator.getBuffer();
@@ -114,39 +188,60 @@ public abstract class BaseGuiTab {
 		GL11.glDisable(GL11.GL_BLEND);
 	}
 
-	public void keyboardInteraction(char par1, int par2) {
-		if (isOpen()) {
-			handleExtraKeyboardInteraction(par1, par2);
-		}
-	}
-
-	public void mouseMoveIntraction(int x, int y) {
-		if (isOpen()) {
-			handleExtraMouseMove(x, y);
-		}
-	}
-
+	/**
+	 * Returns true if this tab is open.
+	 * 
+	 * @return
+	 */
 	public boolean isOpen() {
 		return tabState == TabState.OPEN;
 	}
 
+	/**
+	 * Returns true if this tab is closed.
+	 * 
+	 * @return
+	 */
 	public boolean isClosed() {
 		return tabState == TabState.CLOSED;
 	}
 
+	/**
+	 * Returns the {@link TabState} of this tab.
+	 * 
+	 * @return
+	 */
 	public TabState getTabState() {
 		return tabState;
 	}
 
+	/**
+	 * Returns the {@link TabSide} of this tab.
+	 * 
+	 * @return
+	 */
 	public TabSide getTabSide() {
 		return tabSide;
 	}
 
+	/**
+	 * Updates the side that this tab renders on.
+	 * 
+	 * @param newSide The new side that the tab should render on.
+	 * @return
+	 */
 	public BaseGuiTab setTabSide(TabSide newSide) {
 		this.tabSide = newSide;
 		return this;
 	}
 
+	/**
+	 * Updates the {@link TabState} of this tab. This should only be called by the
+	 * {@link GuiTabManager} that own's this tab.
+	 * 
+	 * @param newState The new state of the tab.
+	 * @return
+	 */
 	public boolean setTabState(TabState newState) {
 		if (newState == TabState.CLOSED || newState == TabState.CLOSING) {
 			if (getTabState() == TabState.OPEN) {
@@ -162,32 +257,44 @@ public abstract class BaseGuiTab {
 		return false;
 	}
 
+	/**
+	 * Updates the manager of this tab.
+	 * 
+	 * @param manager The owning mangager.
+	 */
 	public void setManager(GuiTabManager manager) {
 		owningManager = manager;
 	}
 
-	public BaseGuiTab setOffsets(int xOffset, int yOffset) {
-		xPositionOffset = xOffset;
-		yPositionOffset = yOffset;
-		return this;
+	/**
+	 * Override this method to draw any tab contents that should appear BEHIND
+	 * items.
+	 * 
+	 * @param mouseX       The x position of the mouse.
+	 * @param mouseY       The y position of the mouse.
+	 * @param partialTicks The partial ticks (delta time).
+	 */
+	protected void renderBackground(int mouseX, int mouseY, float partialTicks) {
+		widgetContainer.renderBackground(mouseX, mouseY, partialTicks);
 	}
 
-	public int getXOffset() {
-		return xPositionOffset;
+	/**
+	 * Override this method to draw any tab contents that should appear INFRONT
+	 * items.
+	 * 
+	 * @param xPos         The x position of the mouse.
+	 * @param yPos         The y position of the mouse.
+	 * @param partialTicks The partial ticks (delta time).
+	 */
+	protected void renderForeground(int mouseX, int mouseY, float partialTicks) {
+
 	}
 
-	public int getYOffset() {
-		return yPositionOffset;
-	}
-
-	protected abstract void drawExtra(int xPos, int yPos, float partialTicks);
-
-	protected abstract void handleExtraMouseInteraction(int mouseX, int mouseY, int button);
-
-	protected abstract void handleExtraKeyboardInteraction(char par1, int par2);
-
-	protected abstract void handleExtraMouseMove(int mouseX, int mouseY);
-
+	/**
+	 * Updates the animation state of this tab.
+	 * 
+	 * @param partialTicks
+	 */
 	private void updateAnimation(float partialTicks) {
 		if (tabState == TabState.OPENING && animationTimer < animationTime) {
 			animationTimer = Math.min(animationTime, animationTimer + partialTicks * 2);
@@ -211,22 +318,42 @@ public abstract class BaseGuiTab {
 		}
 	}
 
-	private void drawTab(int xPos, int yPos, float partialTicks) {
-		GL11.glEnable(GL11.GL_BLEND);
-		drawBaseTab(xPos, yPos, partialTicks);
-		drawButtonIcon(xPos, yPos, partialTicks);
+	/**
+	 * Draws the base tab (the background and the tab icon).
+	 * 
+	 * @param xPos
+	 * @param yPos
+	 * @param partialTicks
+	 */
+	public void drawTabPanel(float partialTicks) {
+		drawTabBackground(partialTicks);
+		drawButtonIcon(partialTicks);
 	}
 
-	private void drawButtonIcon(int xPos, int yPos, float partialTicks) {
+	/**
+	 * Draws the tab's button icon.
+	 * 
+	 * @param xPos
+	 * @param yPos
+	 * @param partialTicks
+	 */
+	protected void drawButtonIcon(float partialTicks) {
 		if (itemIcon != null) {
 			GlStateManager.disableDepthTest();
-			Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(new ItemStack(itemIcon), getTabSide() == TabSide.RIGHT ? xPos + 3 : xPos + 5, yPos + 4);
+			Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(new ItemStack(itemIcon), getTabSide() == TabSide.RIGHT ? xPosition + 3 : xPosition + 5, yPosition + 4);
 		}
 	}
 
-	private void drawBaseTab(int xPos, int yPos, float partialTicks) {
-		int tabLeft = xPos - (getTabSide() == TabSide.RIGHT ? 0 : 24);
-		int tabTop = yPos;
+	/**
+	 * Draws the tab background (the empty panel that opens when the tab is clicked.
+	 * 
+	 * @param xPos
+	 * @param yPos
+	 * @param partialTicks
+	 */
+	protected void drawTabBackground(float partialTicks) {
+		int tabLeft = xPosition - (getTabSide() == TabSide.RIGHT ? 0 : 24);
+		int tabTop = yPosition;
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder tes = tessellator.getBuffer();
 		tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
@@ -239,10 +366,10 @@ public abstract class BaseGuiTab {
 		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_CULL_FACE);
 		if (getTabSide() == TabSide.LEFT) {
-			GL11.glTranslatef(xPos, yPos, 0.0f);
+			GL11.glTranslatef(xPosition, yPosition, 0.0f);
 			GL11.glScalef(-1.0f, 1.0f, 1.0f);
 			;
-			GL11.glTranslatef(-xPos, -yPos, 0.0f);
+			GL11.glTranslatef(-xPosition, -yPosition, 0.0f);
 		}
 		// Top
 		StaticVertexBuffer.pos(tabLeft + 20 + (tabWidth * animationTimer / animationTime), tabTop + 3, 0, .976, .03);
@@ -285,6 +412,11 @@ public abstract class BaseGuiTab {
 		GL11.glPopMatrix();
 	}
 
+	/**
+	 * Gets the bounds of this tab.
+	 * 
+	 * @return
+	 */
 	public RectangleBounds getBounds() {
 		return new RectangleBounds(xPosition, yPosition, currentWidth + 24, currentHeight + 24);
 	}

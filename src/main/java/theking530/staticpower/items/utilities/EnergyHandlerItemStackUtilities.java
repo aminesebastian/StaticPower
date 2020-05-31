@@ -139,7 +139,7 @@ public class EnergyHandlerItemStackUtilities {
 	public static int useEnergyFromItemstack(ItemStack container, int maxExtract, boolean simulate) {
 		AtomicInteger extracted = new AtomicInteger(0);
 		container.getCapability(CapabilityEnergy.ENERGY).ifPresent((IEnergyStorage instance) -> {
-			extracted.set(instance.receiveEnergy(maxExtract, simulate));
+			extracted.set(instance.extractEnergy(maxExtract, simulate));
 			if (!simulate) {
 				updateDamageUsingEnergyStorage(container);
 			}

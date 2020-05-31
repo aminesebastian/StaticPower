@@ -18,40 +18,38 @@ import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.TileEntityRedstoneControlComponent;
 import theking530.staticpower.tileentities.utilities.RedstoneModeList.RedstoneMode;
-import theking530.staticpower.tileentities.utilities.interfaces.IRedstoneConfigurable;
 
 public class GuiRedstoneTab extends BaseGuiTab {
 
-	public TileEntityBase tileEntity;
-	private FontRenderer fontRenderer;
-
-	public ItemButton ignoreRedstoneButton;
-	public ItemButton lowRedstoneButton;
-	public ItemButton highRedstoneButton;
+	public final TileEntityBase tileEntity;
+	private final FontRenderer fontRenderer;
+	public final ItemButton ignoreRedstoneButton;
+	public final ItemButton lowRedstoneButton;
+	public final ItemButton highRedstoneButton;
 
 	public GuiRedstoneTab(int width, int height, TileEntityBase te) {
 		super(100, 85, GuiTextures.RED_TAB, Items.REDSTONE);
 		fontRenderer = Minecraft.getInstance().fontRenderer;
 		tileEntity = te;
 
-		ignoreRedstoneButton = new ItemButton(Items.GUNPOWDER, 20, 20, 23, 30, (BaseButton button) -> {
+		widgetContainer.registerWidget(ignoreRedstoneButton = new ItemButton(Items.GUNPOWDER, 23, 30, 20, 20, (BaseButton button) -> {
 			synchronizeRedstoneMode(RedstoneMode.High);
-		});
-		lowRedstoneButton = new ItemButton(Items.REDSTONE, 20, 20, 53, 30, (BaseButton button) -> {
+		}));
+		widgetContainer.registerWidget(lowRedstoneButton = new ItemButton(Items.REDSTONE, 53, 30, 20, 20, (BaseButton button) -> {
 			synchronizeRedstoneMode(RedstoneMode.Low);
-		});
-		highRedstoneButton = new ItemButton(Blocks.REDSTONE_TORCH.asItem(), 20, 20, 83, 30, (BaseButton button) -> {
+		}));
+		widgetContainer.registerWidget(highRedstoneButton = new ItemButton(Blocks.REDSTONE_TORCH.asItem(), 83, 30, 20, 20, (BaseButton button) -> {
 			synchronizeRedstoneMode(RedstoneMode.Ignore);
-		});
+		}));
 
 		ignoreRedstoneButton.setClickSoundPitch(0.75f);
 		lowRedstoneButton.setClickSoundPitch(0.85f);
 
-		if (tileEntity instanceof IRedstoneConfigurable) {
-			RedstoneMode currentMode = ((IRedstoneConfigurable) tileEntity).getRedstoneMode();
-			if (currentMode == RedstoneMode.Ignore) {
+		if (tileEntity != null && tileEntity.hasComponentOfType(TileEntityRedstoneControlComponent.class)) {
+			TileEntityRedstoneControlComponent component = tileEntity.getFirstComponentOfType(TileEntityRedstoneControlComponent.class);
+			if (component.getRedstoneMode() == RedstoneMode.Ignore) {
 				ignoreRedstoneButton.setToggled(true);
-			} else if (currentMode == RedstoneMode.Low) {
+			} else if (component.getRedstoneMode() == RedstoneMode.Low) {
 				lowRedstoneButton.setToggled(true);
 			} else {
 				highRedstoneButton.setToggled(true);
@@ -60,14 +58,10 @@ public class GuiRedstoneTab extends BaseGuiTab {
 	}
 
 	@Override
-	public void drawExtra(int xPos, int yPos, float partialTicks) {
-		if (isOpen()) {
-			drawButtonBG(xPos - 3, yPos - 32);
-			ignoreRedstoneButton.renderBackground(xPos, yPos, partialTicks);
-			lowRedstoneButton.renderBackground(xPos, yPos, partialTicks);
-			highRedstoneButton.renderBackground(xPos, yPos, partialTicks);
-			drawText(xPos + 5, yPos - 35);
-		}
+	public void renderBackground(int mouseX, int mouseY, float partialTicks) {
+		drawButtonBG(xPosition - 3, yPosition - 32);
+		super.renderBackground(mouseX, mouseY, partialTicks);
+		drawText(xPosition + 5, yPosition - 35);
 	}
 
 	public void drawText(int xPos, int yPos) {
@@ -80,19 +74,19 @@ public class GuiRedstoneTab extends BaseGuiTab {
 	}
 
 	public void modeText(int tabLeft, int tabTop) {
-		if (tileEntity instanceof IRedstoneConfigurable) {
-			IRedstoneConfigurable entity = (IRedstoneConfigurable) tileEntity;
-			if (entity.getRedstoneMode() == RedstoneMode.Low) {
+		if (tileEntity != null && tileEntity.hasComponentOfType(TileEntityRedstoneControlComponent.class)) {
+			TileEntityRedstoneControlComponent component = tileEntity.getFirstComponentOfType(TileEntityRedstoneControlComponent.class);
+			if (component.getRedstoneMode() == RedstoneMode.Low) {
 				fontRenderer.drawStringWithShadow("Low", tabLeft + 37, tabTop + 95, 16777215);
 				fontRenderer.drawStringWithShadow("This machine will", tabLeft + 8, tabTop + 110, 16777215);
 				fontRenderer.drawStringWithShadow("only operate with no", tabLeft + 8, tabTop + 118, 16777215);
 				fontRenderer.drawStringWithShadow("signal.", tabLeft + 8, tabTop + 127, 16777215);
-			} else if (entity.getRedstoneMode() == RedstoneMode.High) {
+			} else if (component.getRedstoneMode() == RedstoneMode.High) {
 				fontRenderer.drawStringWithShadow("High", tabLeft + 37, tabTop + 95, 16777215);
 				fontRenderer.drawStringWithShadow("This machine will", tabLeft + 8, tabTop + 110, 16777215);
 				fontRenderer.drawStringWithShadow("only operate with a", tabLeft + 8, tabTop + 118, 16777215);
 				fontRenderer.drawStringWithShadow("redstone signal.", tabLeft + 8, tabTop + 127, 16777215);
-			} else if (entity.getRedstoneMode() == RedstoneMode.Ignore) {
+			} else if (component.getRedstoneMode() == RedstoneMode.Ignore) {
 				fontRenderer.drawStringWithShadow("Ignore", tabLeft + 37, tabTop + 95, 16777215);
 				fontRenderer.drawStringWithShadow("This machine will", tabLeft + 8, tabTop + 110, 16777215);
 				fontRenderer.drawStringWithShadow("ignore any redstone", tabLeft + 8, tabTop + 118, 16777215);
@@ -116,20 +110,6 @@ public class GuiRedstoneTab extends BaseGuiTab {
 
 	}
 
-	@Override
-	protected void handleExtraMouseInteraction(int mouseX, int mouseY, int button) {
-		ignoreRedstoneButton.mouseClick(mouseX, mouseY, button);
-		lowRedstoneButton.mouseClick(mouseX, mouseY, button);
-		highRedstoneButton.mouseClick(mouseX, mouseY, button);
-	}
-
-	@Override
-	protected void handleExtraMouseMove(int mouseX, int mouseY) {
-		ignoreRedstoneButton.mouseHover(mouseX, mouseY);
-		lowRedstoneButton.mouseHover(mouseX, mouseY);
-		highRedstoneButton.mouseHover(mouseX, mouseY);
-	}
-
 	protected void synchronizeRedstoneMode(RedstoneMode mode) {
 		// Ensure this tile entity is valid and has the requested component.
 		if (tileEntity != null && tileEntity.hasComponentOfType(TileEntityRedstoneControlComponent.class)) {
@@ -143,10 +123,5 @@ public class GuiRedstoneTab extends BaseGuiTab {
 			NetworkMessage msg = new PacketRedstoneTab(mode, tileEntity.getPos());
 			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
 		}
-	}
-
-	@Override
-	protected void handleExtraKeyboardInteraction(char par1, int par2) {
-
 	}
 }

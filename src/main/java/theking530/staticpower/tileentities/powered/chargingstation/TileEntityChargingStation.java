@@ -14,7 +14,7 @@ import theking530.staticpower.tileentities.components.TileEntityBatteryComponent
 import theking530.staticpower.tileentities.components.TileEntityInputServoComponent;
 import theking530.staticpower.tileentities.components.TileEntityInventoryComponent;
 import theking530.staticpower.tileentities.components.TileEntityOutputServoComponent;
-import theking530.staticpower.tileentities.utilities.SideModeList.Mode;
+import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityChargingStation extends TileEntityMachine {
@@ -27,9 +27,9 @@ public class TileEntityChargingStation extends TileEntityMachine {
 		initializeBasicMachine(2, 0, 100000, 500, 2);
 		energyStorage.setMaxExtract(512);
 
-		registerComponent(unchargedInventory = new TileEntityInventoryComponent("unchargedInventory", 4, Mode.Input));
-		registerComponent(chargedInventory = new TileEntityInventoryComponent("chargedInventory", 4, Mode.Output));
-		registerComponent(batterySlot = new TileEntityInventoryComponent("batterySlot", 1, Mode.Never));
+		registerComponent(unchargedInventory = new TileEntityInventoryComponent("unchargedInventory", 4, MachineSideMode.Input));
+		registerComponent(chargedInventory = new TileEntityInventoryComponent("chargedInventory", 4, MachineSideMode.Output));
+		registerComponent(batterySlot = new TileEntityInventoryComponent("batterySlot", 1, MachineSideMode.Never));
 
 		registerComponent(new TileEntityBatteryComponent("BatteryComponent", batterySlot, 0, energyStorage));
 		registerComponent(new TileEntityOutputServoComponent(this, 1, chargedInventory, 0, 1, 2, 3));
@@ -46,7 +46,6 @@ public class TileEntityChargingStation extends TileEntityMachine {
 						int maxOutput = this.getEnergyStorage().getCurrentMaximumPowerOutput();
 						int charged = EnergyHandlerItemStackUtilities.addEnergyToItemstack(stack, maxOutput, false);
 						getEnergyStorage().extractEnergy(charged, false);
-						System.out.println(maxOutput);
 					} else {
 						moveChargedItemToOutputs(i);
 					}

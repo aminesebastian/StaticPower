@@ -6,7 +6,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import theking530.staticpower.tileentities.utilities.SideModeList.Mode;
+import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.interfaces.ISideConfigurable;
 
 public class PowerDistributor {
@@ -26,7 +26,7 @@ public class PowerDistributor {
 		if(energyStorage != null && poweredTileEntity != null) { 
 			if(energyStorage.getEnergyStored() > 0) {
 				for(Direction facing : Direction.values()) {
-					if(sideConfigurable == null || (sideConfigurable != null && sideConfigurable.getSideConfiguration(facing) == Mode.Output)) {
+					if(sideConfigurable == null || (sideConfigurable != null && sideConfigurable.getSideConfiguration(facing) == MachineSideMode.Output)) {
 						int maxExtract = energyStorage.extractEnergy(Integer.MAX_VALUE, true);
 						provideRF(facing, Math.min(maxExtract, energyStorage.getEnergyStored()));
 					}

@@ -21,21 +21,21 @@ public class GuiPowerBarUtilities {
 		List<ITextComponent> tooltip = new ArrayList<ITextComponent>();
 
 		// Add the input rate to the tooltip.
-		tooltip.add(new TranslationTextComponent("staticpower.gui.input").appendText(": " + energyPerTick).appendSibling(new TranslationTextComponent("staticpower.gui.energy_unit_per_tick")));
+		tooltip.add(new TranslationTextComponent("gui.staticpower.input").appendText(": " + energyPerTick).appendText(" ").appendSibling(new TranslationTextComponent("gui.staticpower.energy_unit_per_tick")));
 
 		// If the energy usage is > 0, show the usage.
 		if (powerUse > 0) {
-			tooltip.add(new TranslationTextComponent("staticpower.gui.usage").appendText(": " + powerUse).appendSibling(new TranslationTextComponent("staticpower.gui.energy_unit_per_tick")));
+			tooltip.add(new TranslationTextComponent("gui.staticpower.usage").appendText(": " + powerUse).appendText(" ").appendSibling(new TranslationTextComponent("gui.staticpower.energy_unit_per_tick")));
 		}
 
 		// Show the total amount of energy remaining / total energy capacity.
 		tooltip.add(new StringTextComponent(NumberFormat.getNumberInstance(Locale.US).format(currentEnergy) + "/" + NumberFormat.getNumberInstance(Locale.US).format(maxEnergy)).appendText(" ")
-				.appendSibling(new TranslationTextComponent("staticpower.gui.energy_unit")));
+				.appendSibling(new TranslationTextComponent("gui.staticpower.energy_unit")));
 
 		return tooltip;
 	}
 
-	public static void drawPowerBar(int xpos, int ypos, int width, int height, float zLevel, int currentEnergy, int maxEnergy) {
+	public static void drawPowerBar(float xpos, float ypos, float width, float height, float zLevel, int currentEnergy, int maxEnergy) {
 		float u1 = (float) currentEnergy / (float) maxEnergy;
 		float k1 = u1 * height;
 

@@ -3,9 +3,7 @@ package theking530.staticpower.tileentities.utilities.interfaces;
 import java.util.List;
 
 import net.minecraft.util.Direction;
-import theking530.staticpower.tileentities.utilities.SideModeList;
-import theking530.staticpower.tileentities.utilities.SideUtilities;
-import theking530.staticpower.tileentities.utilities.SideModeList.Mode;
+import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.SideUtilities.BlockSide;
 
 public interface ISideConfigurable {
@@ -16,19 +14,19 @@ public interface ISideConfigurable {
 
 	public boolean isSideConfigurable();
 
-	public Mode getSideConfiguration(BlockSide side);
+	public MachineSideMode getSideConfiguration(BlockSide side);
 
-	public Mode getSideConfiguration(Direction facing);
+	public MachineSideMode getSideConfiguration(Direction facing);
 
-	public Mode[] getSideConfigurations();
+	public MachineSideMode[] getSideConfigurations();
 
-	public List<Mode> getValidSideConfigurations();
+	public List<MachineSideMode> getValidSideConfigurations();
 
-	public void setSideConfiguration(Mode newMode, BlockSide side);
+	public void setSideConfiguration(MachineSideMode newMode, BlockSide side);
 
-	public void setSideConfiguration(Mode newMode, Direction facing);
+	public void setSideConfiguration(MachineSideMode newMode, Direction facing);
 
 	public void incrementSideConfiguration(Direction side, SideIncrementDirection direction);
 
-	public int getSideWithModeCount(Mode mode);
+	public int getSideWithModeCount(MachineSideMode mode);
 }

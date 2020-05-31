@@ -9,7 +9,7 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import theking530.staticpower.energy.StaticEnergyStorage;
 import theking530.staticpower.items.upgrades.BasePowerUpgrade;
 import theking530.staticpower.items.upgrades.BaseSpeedUpgrade;
-import theking530.staticpower.tileentities.utilities.SideModeList.Mode;
+import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.interfaces.IEnergyUser;
 import theking530.staticpower.tileentities.utilities.interfaces.IProcessing;
 
@@ -78,8 +78,8 @@ public class TileEntityMachine extends TileEntityBase implements IProcessing, IE
 	public void tick() {
 		currentEnergyPerTick = energyStorage.getEnergyStored() - previouslyStoredEnergyAmount;
 		super.tick();
-		this.markDirty();
-		this.markTileEntityForSynchronization();
+		markDirty();
+		markTileEntityForSynchronization();
 		previouslyStoredEnergyAmount = energyStorage.getEnergyStored();
 	}
 
@@ -245,7 +245,7 @@ public class TileEntityMachine extends TileEntityBase implements IProcessing, IE
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		if (cap == CapabilityEnergy.ENERGY) {
 			if (energyStorage != null) {
-				if (side != null && this.getSideConfiguration(side) == Mode.Disabled) {
+				if (side != null && this.getSideConfiguration(side) == MachineSideMode.Disabled) {
 					return null;
 				}
 				return LazyOptional.of(() -> {

@@ -1,51 +1,59 @@
 package theking530.staticpower.tileentities.utilities;
 
+import javax.annotation.Nonnull;
+
 import net.minecraft.util.Direction;
-import theking530.staticpower.tileentities.utilities.SideModeList.Mode;
+
 public class SideConfiguration {
 
-	private final Mode[] configuration;
-	
+	private MachineSideMode[] configuration;
+
 	public SideConfiguration() {
-		configuration = new Mode[]{Mode.Regular, Mode.Regular, Mode.Regular, Mode.Regular, Mode.Regular, Mode.Regular};
+		configuration = new MachineSideMode[6];
+		setToDefault();
 	}
-	
-	public Mode[] getConfiguration() {
+
+	public MachineSideMode[] getConfiguration() {
 		return configuration;
 	}
-    public Mode getSideConfiguration(Direction facing) {
-		if(facing == null) {
+
+	public MachineSideMode getSideConfiguration(Direction facing) {
+		if (facing == null) {
 			return null;
 		}
-    	return configuration[facing.ordinal()];
-    }
-    public void setSideConfiguration(Mode newMode, Direction facing) {
-    	if(facing == null) {
-    		return;
-    	}
-    	configuration[facing.ordinal()] = newMode;
-    }
-    public void setToDefault() {
-		setSideConfiguration(Mode.Input, Direction.UP);
-		setSideConfiguration(Mode.Input, Direction.DOWN);
-		
-		setSideConfiguration(Mode.Output, Direction.EAST);
-		setSideConfiguration(Mode.Output, Direction.WEST);
-		setSideConfiguration(Mode.Output, Direction.NORTH);
-		setSideConfiguration(Mode.Output, Direction.SOUTH);
-    }
-    public void reset() {
-    	for(int i=0; i<6; i++) {
-    		configuration[i] = Mode.Regular;
-    	}
-    }
-	public void setAllToMode(Mode mode) {
-		setSideConfiguration(mode, Direction.UP);
-		setSideConfiguration(mode, Direction.DOWN);
-		
-		setSideConfiguration(mode, Direction.EAST);
-		setSideConfiguration(mode, Direction.WEST);
-		setSideConfiguration(mode, Direction.NORTH);
-		setSideConfiguration(mode, Direction.SOUTH);
+		return configuration[facing.ordinal()];
+	}
+
+	public void setSideConfiguration(@Nonnull Direction facing, @Nonnull MachineSideMode newMode) {
+		if (facing == null || newMode == null) {
+			return;
+		}
+		configuration[facing.ordinal()] = newMode;
+	}
+
+	public void setToDefault() {
+		setSideConfiguration(Direction.UP, MachineSideMode.Input);
+		setSideConfiguration(Direction.DOWN, MachineSideMode.Input);
+
+		setSideConfiguration(Direction.EAST, MachineSideMode.Output);
+		setSideConfiguration(Direction.WEST, MachineSideMode.Output);
+		setSideConfiguration(Direction.NORTH, MachineSideMode.Output);
+		setSideConfiguration(Direction.SOUTH, MachineSideMode.Output);
+	}
+
+	public void reset() {
+		for (int i = 0; i < 6; i++) {
+			configuration[i] = MachineSideMode.Regular;
+		}
+	}
+
+	public void setAllToMode(MachineSideMode mode) {
+		setSideConfiguration(Direction.UP, mode);
+		setSideConfiguration(Direction.DOWN, mode);
+
+		setSideConfiguration(Direction.EAST, mode);
+		setSideConfiguration(Direction.WEST, mode);
+		setSideConfiguration(Direction.NORTH, mode);
+		setSideConfiguration(Direction.SOUTH, mode);
 	}
 }

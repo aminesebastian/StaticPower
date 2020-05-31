@@ -3,28 +3,29 @@ package theking530.api.gui.widgets.tabs;
 import java.util.ArrayList;
 import java.util.List;
 
+import theking530.api.gui.widgets.AbstractGuiWidget;
 import theking530.api.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.api.gui.widgets.tabs.BaseGuiTab.TabState;
-import theking530.staticpower.client.gui.StaticPowerContainerGui;
 
-public class GuiTabManager {
+public class GuiTabManager extends AbstractGuiWidget {
 
 	private List<BaseGuiTab> registeredTabs;
 	private BaseGuiTab initiallyOpenTab;
-	private StaticPowerContainerGui<?> owningGui;
 
-	public GuiTabManager(StaticPowerContainerGui<?> owner) {
+	public GuiTabManager() {
+		super(0, 0, 0, 0);
 		registeredTabs = new ArrayList<BaseGuiTab>();
-		owningGui = owner;
 	}
 
-	public void registerTab(BaseGuiTab tab) {
+	public GuiTabManager registerTab(BaseGuiTab tab) {
 		registeredTabs.add(tab);
 		tab.setManager(this);
+		return this;
 	}
 
-	public void removeTab(BaseGuiTab tab) {
+	public GuiTabManager removeTab(BaseGuiTab tab) {
 		registeredTabs.remove(tab);
+		return this;
 	}
 
 	public List<BaseGuiTab> getRegisteredTabs() {
@@ -36,19 +37,40 @@ public class GuiTabManager {
 		initiallyOpenTab.setTabState(TabState.OPEN);
 	}
 
-	public void drawTabs(int tabPositionX, int tabPositionY, int guiWidth, int guiHeight, float partialTicks) {
+	public void tabClosed(BaseGuiTab tab) {
+	}
+
+	public void tabOpened(BaseGuiTab tab) {
+	}
+
+	public void tabOpening(BaseGuiTab tabIn) {
+		for (BaseGuiTab tab : registeredTabs) {
+			if (tab != tabIn && tab.getTabSide() == tabIn.getTabSide()) {
+				tab.setTabState(TabState.CLOSED);
+			}
+		}
+	}
+
+	public void tabClosing(BaseGuiTab tab) {
+	}
+
+	@Override
+	public void renderBackground(int mouseX, int mouseY, float partialTicks) {
+		int tabPositionX = (int) (getOwnerPosition().getX() + getOwnerSize().getX() - 1);
+		int tabPositionY = (int) (getOwnerPosition().getY() + 10);
+
 		List<BaseGuiTab> leftTabs = new ArrayList<BaseGuiTab>();
 		List<BaseGuiTab> rightTabs = new ArrayList<BaseGuiTab>();
 
-		for (int i = 0; i < registeredTabs.size(); i++) {
-			if (registeredTabs.get(i).getTabSide() == TabSide.RIGHT) {
-				rightTabs.add(registeredTabs.get(i));
+		for (BaseGuiTab tab : registeredTabs) {
+			if (tab.getTabSide() == TabSide.RIGHT) {
+				rightTabs.add(tab);
 			} else {
-				leftTabs.add(registeredTabs.get(i));
+				leftTabs.add(tab);
 			}
 
 		}
-		int maxOffset = owningGui.getGuiTop() + owningGui.getYSize() - (25);
+		int maxOffset = (int) (getOwnerPosition().getY() + getOwnerSize().getY() - 25);
 
 		for (int i = rightTabs.size() - 1; i >= 0; i--) {
 			int offset = 0;
@@ -58,7 +80,11 @@ public class GuiTabManager {
 				}
 			}
 			int adjustedOffset = Math.min(tabPositionY + (i * 25) + offset, maxOffset);
-			rightTabs.get(i).update(tabPositionX, adjustedOffset, partialTicks);
+			rightTabs.get(i).updateTabPosition(tabPositionX, adjustedOffset, partialTicks);
+			rightTabs.get(i).drawTabPanel(partialTicks);
+			if(rightTabs.get(i).isOpen()) {
+				rightTabs.get(i).renderBackground(mouseX, mouseY, partialTicks);
+			}
 		}
 
 		for (int i = leftTabs.size() - 1; i >= 0; i--) {
@@ -69,42 +95,38 @@ public class GuiTabManager {
 				}
 			}
 			int adjustedOffset = Math.min(tabPositionY + (i * 25) + offset, maxOffset);
-			leftTabs.get(i).update(tabPositionX - guiWidth - 21, adjustedOffset, partialTicks);
-		}
-	}
-
-	public void tabClosed(BaseGuiTab tab) {
-	}
-
-	public void tabOpened(BaseGuiTab tab) {
-	}
-
-	public void tabOpening(BaseGuiTab tab) {
-		for (int i = 0; i < registeredTabs.size(); i++) {
-			if (registeredTabs.get(i) != tab && registeredTabs.get(i).getTabSide() == tab.getTabSide()) {
-				registeredTabs.get(i).setTabState(TabState.CLOSED);
+			leftTabs.get(i).updateTabPosition((int) (tabPositionX - getOwnerSize().getX() - 21), adjustedOffset, partialTicks);
+			leftTabs.get(i).drawTabPanel(partialTicks);
+			if(leftTabs.get(i).isOpen()) {
+				leftTabs.get(i).renderBackground(mouseX, mouseY, partialTicks);
 			}
 		}
 	}
 
-	public void tabClosing(BaseGuiTab tab) {
-	}
-
-	public void handleMouseInteraction(int mouseX, int mouseY, int button) {
-		for (int i = 0; i < registeredTabs.size(); i++) {
-			registeredTabs.get(i).mouseInteraction(mouseX, mouseY, button);
+	@Override
+	public void renderForeground(int mouseX, int mouseY, float partialTicks) {
+		for (BaseGuiTab tab : registeredTabs) {
+			tab.renderForeground(mouseX, mouseY, partialTicks);
 		}
 	}
 
-	public void handleKeyboardInteraction(char par1, int par2) {
-		for (int i = 0; i < registeredTabs.size(); i++) {
-			registeredTabs.get(i).keyboardInteraction(par1, par2);
+	@Override
+	public EInputResult mouseClick(int mouseX, int mouseY, int button) {
+		for (BaseGuiTab tab : registeredTabs) {
+			EInputResult inputUsed = tab.mouseClick(mouseX, mouseY, button);
+			if (inputUsed == EInputResult.HANDLED) {
+				return EInputResult.HANDLED;
+			}
 		}
+		return EInputResult.UNHANDLED;
 	}
 
-	public void handleMouseMoveInteraction(int x, int y) {
-		for (int i = 0; i < registeredTabs.size(); i++) {
-			registeredTabs.get(i).mouseMoveIntraction(x, y);
+	@Override
+	public void mouseHover(int mouseX, int mouseY) {
+		for (BaseGuiTab tab : registeredTabs) {
+			if (tab.isOpen()) {
+				tab.mouseHover(mouseX, mouseY);
+			}
 		}
 	}
 }

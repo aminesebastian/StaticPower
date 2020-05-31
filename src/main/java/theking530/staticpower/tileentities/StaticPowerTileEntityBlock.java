@@ -32,7 +32,7 @@ public class StaticPowerTileEntityBlock extends StaticPowerBlock {
 	protected StaticPowerTileEntityBlock(String name) {
 		super(name, Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).hardnessAndResistance(3.5f, 5.0f).sound(SoundType.METAL));
 		this.shouldDropContents = true;
-		this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH));
+		this.setDefaultState(stateContainer.getBaseState().with(FACING, Direction.NORTH));
 	}
 
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
@@ -82,22 +82,18 @@ public class StaticPowerTileEntityBlock extends StaticPowerBlock {
 
 	@Override
 	public void wrenchBlock(PlayerEntity player, RegularWrenchMode mode, ItemStack wrench, World world, BlockPos pos, Direction facing, boolean returnDrops) {
-		if (!world.isRemote) {
-			if (mode == RegularWrenchMode.ROTATE) {
-				if (facing != Direction.UP && facing != Direction.DOWN) {
-					if (facing != world.getBlockState(pos).get(FACING)) {
-						world.setBlockState(pos, world.getBlockState(pos).with(FACING, facing), 2);
-					} else {
-						world.setBlockState(pos, world.getBlockState(pos).with(FACING, facing.getOpposite()), 2);
-					}
+		if (mode == RegularWrenchMode.ROTATE) {
+			if (facing != Direction.UP && facing != Direction.DOWN) {
+				if (facing != world.getBlockState(pos).get(FACING)) {
+					world.setBlockState(pos, world.getBlockState(pos).with(FACING, facing), 1 | 2);
+				} else {
+					world.setBlockState(pos, world.getBlockState(pos).with(FACING, facing.getOpposite()), 1 | 2);
 				}
-			} else {
-				TileEntityBase TE = (TileEntityBase) world.getTileEntity(pos);
-				TE.incrementSideConfiguration(facing, SideIncrementDirection.FORWARD);
-				TE.markTileEntityForSynchronization();
 			}
+		} else {
+			TileEntityBase TE = (TileEntityBase) world.getTileEntity(pos);
+			TE.incrementSideConfiguration(facing, SideIncrementDirection.FORWARD);
 		}
-		world.markAndNotifyBlock(pos, world.getChunkAt(pos), world.getBlockState(pos), world.getBlockState(pos), 2);
 	}
 
 	@Override

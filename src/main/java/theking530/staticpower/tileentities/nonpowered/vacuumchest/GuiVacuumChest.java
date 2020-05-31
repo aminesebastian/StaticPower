@@ -22,7 +22,7 @@ public class GuiVacuumChest extends StaticPowerTileEntityGui<ContainerVacuumChes
 
 	@Override
 	public void initializeGui() {
-		registerWidget(fluidBar = new GuiFluidBarFromTank(getTileEntity().getTank(), 176, 72, 16, 60));
+		registerWidget(fluidBar = new GuiFluidBarFromTank(getTileEntity().getTank(), 176, 20, 16, 74));
 		tabManager.registerTab(infoTab = new GuiInfoTab(100, 65));
 
 		if (getTileEntity().showTank()) {
@@ -49,7 +49,6 @@ public class GuiVacuumChest extends StaticPowerTileEntityGui<ContainerVacuumChes
 			fluidBar.setVisible(false);
 		} else {
 			setGuiSizeTarget(200, 185);
-			drawSlot(guiLeft + 176, guiTop + 12, 16, 60);
 			fluidBar.setVisible(true);
 		}
 	}

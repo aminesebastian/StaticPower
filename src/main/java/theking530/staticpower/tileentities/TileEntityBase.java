@@ -8,6 +8,7 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.HorizontalBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,7 +20,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -37,10 +37,9 @@ import theking530.staticpower.StaticPower;
 import theking530.staticpower.tileentities.components.ITileEntityComponent;
 import theking530.staticpower.tileentities.components.TileEntityInventoryComponent;
 import theking530.staticpower.tileentities.components.TileEntityRedstoneControlComponent;
+import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.RedstoneModeList.RedstoneMode;
 import theking530.staticpower.tileentities.utilities.SideConfiguration;
-import theking530.staticpower.tileentities.utilities.SideModeList;
-import theking530.staticpower.tileentities.utilities.SideModeList.Mode;
 import theking530.staticpower.tileentities.utilities.SideUtilities;
 import theking530.staticpower.tileentities.utilities.SideUtilities.BlockSide;
 import theking530.staticpower.tileentities.utilities.interfaces.IBreakSerializeable;
@@ -80,22 +79,20 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 	public TileEntityBase(TileEntityType<?> teType, int upgradeSlotsCount) {
 		super(teType);
 		components = new HashSet<ITileEntityComponent>();
-
-		ioSideConfiguration = new SideConfiguration();
-		setDefaultSideConfiguration(ioSideConfiguration);
-
 		wasPlaced = false;
 		wasWrenchedDoNotBreak = false;
+		ioSideConfiguration = new SideConfiguration();
 		updateQueued = false;
+		disableFaceInteraction();
 		registerComponent(redstoneControlComponent = new TileEntityRedstoneControlComponent("RedstoneControl", RedstoneMode.Ignore));
-		registerComponent(upgradesInventoryComponent = new TileEntityInventoryComponent("Upgrades", upgradeSlotsCount, Mode.Never));
+		registerComponent(upgradesInventoryComponent = new TileEntityInventoryComponent("Upgrades", upgradeSlotsCount, MachineSideMode.Never));
 	}
 
 	/**
 	 * Disables pipe interaction with the face of this block.
 	 */
 	public void disableFaceInteraction() {
-		disableFaceInteraction = false;
+		disableFaceInteraction = true;
 	}
 
 	@Override
@@ -112,9 +109,8 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 		}
 		// If an update is queued, perform the update.
 		if (updateQueued) {
-			if (!getWorld().isRemote) {
-				getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 2);
-			}
+			world.markAndNotifyBlock(pos, world.getChunkAt(pos), world.getBlockState(pos), world.getBlockState(pos), 1 | 2);
+			updateQueued = false;
 		}
 		// Always mark this tile entity as dirty.
 		markDirty();
@@ -147,9 +143,9 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 	public void onPlaced() {
 		if (isSideConfigurable()) {
 			if (disableFaceInteraction) {
-				setDefaultSideConfiguration(ioSideConfiguration);
+				setSideConfiguration(MachineSideMode.Never, BlockSide.FRONT);
 			} else {
-				setSideConfiguration(Mode.Disabled, BlockSide.FRONT);
+				setSideConfiguration(MachineSideMode.Disabled, BlockSide.FRONT);
 			}
 
 		}
@@ -165,8 +161,8 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 	}
 
 	public Direction getFacingDirection() {
-		if (getWorld().getBlockState(pos).has(BlockStateProperties.FACING)) {
-			return getWorld().getBlockState(getPos()).get(BlockStateProperties.FACING);
+		if (getWorld().getBlockState(pos).has(HorizontalBlock.HORIZONTAL_FACING)) {
+			return getWorld().getBlockState(getPos()).get(HorizontalBlock.HORIZONTAL_FACING);
 		} else {
 			return Direction.UP;
 		}
@@ -358,30 +354,30 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 	}
 
 	@Override
-	public Mode getSideConfiguration(BlockSide side) {
+	public MachineSideMode getSideConfiguration(BlockSide side) {
 		Direction facing = SideUtilities.getDirectionFromSide(side, getFacingDirection());
 		return getSideConfiguration(facing);
 	}
 
 	@Override
-	public Mode getSideConfiguration(Direction facing) {
+	public MachineSideMode getSideConfiguration(Direction facing) {
 		return ioSideConfiguration.getSideConfiguration(facing);
 	}
 
 	@Override
-	public Mode[] getSideConfigurations() {
+	public MachineSideMode[] getSideConfigurations() {
 		return ioSideConfiguration.getConfiguration();
 	}
 
 	@Override
-	public void setSideConfiguration(Mode newMode, BlockSide side) {
+	public void setSideConfiguration(MachineSideMode newMode, BlockSide side) {
 		Direction facing = SideUtilities.getDirectionFromSide(side, getFacingDirection());
 		setSideConfiguration(newMode, facing);
 	}
 
 	@Override
-	public void setSideConfiguration(Mode newMode, Direction facing) {
-		ioSideConfiguration.setSideConfiguration(newMode, facing);
+	public void setSideConfiguration(MachineSideMode newMode, Direction facing) {
+		ioSideConfiguration.setSideConfiguration(facing, newMode);
 	}
 
 	public void onSidesConfigUpdate() {
@@ -396,29 +392,30 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 	@Override
 	public void incrementSideConfiguration(Direction side, SideIncrementDirection direction) {
 		BlockSide blockSideEquiv = SideUtilities.getBlockSide(side, getFacingDirection());
-		if (blockSideEquiv == BlockSide.FRONT && disableFaceInteraction) {
-			setSideConfiguration(SideModeList.Mode.Disabled, side);
-		}
 
 		int newIndex = 0;
 		do {
-			SideModeList.Mode currentSideMode = getSideConfiguration(side);
+			MachineSideMode currentSideMode = getSideConfiguration(side);
 			newIndex = direction == SideIncrementDirection.FORWARD ? currentSideMode.ordinal() + 1 : currentSideMode.ordinal() - 1;
 			if (newIndex < 0) {
-				newIndex += Mode.values().length;
+				newIndex += MachineSideMode.values().length;
 			}
-			newIndex %= Mode.values().length;
-			setSideConfiguration(SideModeList.Mode.values()[newIndex], side);
-		} while (!getValidSideConfigurations().contains(SideModeList.Mode.values()[newIndex]));
+			newIndex %= MachineSideMode.values().length;
+			setSideConfiguration(MachineSideMode.values()[newIndex], side);
+		} while (!getValidSideConfigurations().contains(MachineSideMode.values()[newIndex]));
+
+		if (disableFaceInteraction) {
+			setSideConfiguration(MachineSideMode.Never, BlockSide.FRONT);
+		}
 
 		onSidesConfigUpdate();
 		markTileEntityForSynchronization();
 	}
 
 	@Override
-	public int getSideWithModeCount(Mode mode) {
+	public int getSideWithModeCount(MachineSideMode mode) {
 		int count = 0;
-		for (Mode sideMode : getSideConfigurations()) {
+		for (MachineSideMode sideMode : getSideConfigurations()) {
 			if (sideMode == mode) {
 				count++;
 			}
@@ -427,19 +424,25 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 	}
 
 	public void setDefaultSideConfiguration(SideConfiguration configuration) {
-		configuration.setToDefault();
-		if (disableFaceInteraction) {
-			setSideConfiguration(Mode.Disabled, BlockSide.FRONT);
+		if (wasPlaced) {
+			ioSideConfiguration = configuration;
+			if (disableFaceInteraction) {
+				setSideConfiguration(MachineSideMode.Disabled, BlockSide.FRONT);
+			}
+		} else {
+			StaticPower.LOGGER.warn(String.format(
+					"Tile Entity: %1$s attempted to change it's side configuration without having first been placed in the world. This is usually because an attempt was made to change the side configuration from within the constructor.",
+					getDisplayName().getFormattedText()));
 		}
 	}
 
 	@Override
-	public List<Mode> getValidSideConfigurations() {
-		List<Mode> modes = new ArrayList<Mode>();
-		modes.add(Mode.Input);
-		modes.add(Mode.Output);
-		modes.add(Mode.Regular);
-		modes.add(Mode.Disabled);
+	public List<MachineSideMode> getValidSideConfigurations() {
+		List<MachineSideMode> modes = new ArrayList<MachineSideMode>();
+		modes.add(MachineSideMode.Input);
+		modes.add(MachineSideMode.Output);
+		modes.add(MachineSideMode.Regular);
+		modes.add(MachineSideMode.Disabled);
 		return modes;
 	}
 
@@ -457,6 +460,12 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 		for (ITileEntityComponent component : components) {
 			component.serializeUpdateNbt(nbt);
 		}
+		if (isSideConfigurable()) {
+			for (int i = 0; i < 6; i++) {
+				nbt.putInt("SIDEMODE" + i, getSideConfiguration(Direction.values()[i]).ordinal());
+			}
+			nbt.putBoolean("DISABLE_FACE", disableFaceInteraction);
+		}
 		return nbt;
 	}
 
@@ -469,6 +478,12 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 	public void deserializeUpdateNbt(CompoundNBT nbt) {
 		for (ITileEntityComponent component : components) {
 			component.deserializeUpdateNbt(nbt);
+		}
+		if (isSideConfigurable()) {
+			for (int i = 0; i < 6; i++) {
+				setSideConfiguration(MachineSideMode.values()[nbt.getInt("SIDEMODE" + i)], Direction.values()[i]);
+			}
+			disableFaceInteraction = nbt.getBoolean("DISABLE_FACE");
 		}
 	}
 
@@ -485,13 +500,6 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 	 * @return The same {@link CompoundNBT} that was provided.
 	 */
 	public CompoundNBT serializeSaveNbt(CompoundNBT nbt) {
-		if (isSideConfigurable()) {
-			for (int i = 0; i < 6; i++) {
-				nbt.putInt("SIDEMODE" + i, getSideConfiguration(Direction.values()[i]).ordinal());
-			}
-			nbt.putBoolean("DISABLE_FACE", disableFaceInteraction);
-		}
-
 		for (ITileEntityComponent component : components) {
 			component.serializeSaveNbt(nbt);
 		}
@@ -507,13 +515,6 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 	 * @param nbt The {@link CompoundNBT} to deserialize from.
 	 */
 	public void deserializeSaveNbt(CompoundNBT nbt) {
-		if (isSideConfigurable()) {
-			for (int i = 0; i < 6; i++) {
-				setSideConfiguration(SideModeList.Mode.values()[nbt.getInt("SIDEMODE" + i)], Direction.values()[i]);
-			}
-			disableFaceInteraction = nbt.getBoolean("DISABLE_FACE");
-		}
-
 		for (ITileEntityComponent component : components) {
 			component.deserializeSaveNbt(nbt);
 		}

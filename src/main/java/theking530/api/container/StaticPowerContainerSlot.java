@@ -3,13 +3,13 @@ package theking530.api.container;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
-import theking530.staticpower.tileentities.utilities.SideModeList.Mode;
+import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
 public class StaticPowerContainerSlot extends SlotItemHandler {
 
 	private ItemStack previewItem;
 	private float previewAlpha;
-	private Mode mode;
+	private MachineSideMode mode;
 
 	public StaticPowerContainerSlot(ItemStack previewItem, float alpha, IItemHandler itemHandler, int index, int xPosition, int yPosition) {
 		super(itemHandler, index, xPosition, yPosition);
@@ -26,11 +26,11 @@ public class StaticPowerContainerSlot extends SlotItemHandler {
 		this(ItemStack.EMPTY, 1.0f, itemHandler, index, xPosition, yPosition);
 	}
 
-	public Mode getMode() {
+	public MachineSideMode getMode() {
 		return mode;
 	}
 
-	public StaticPowerContainerSlot setMode(Mode newMode) {
+	public StaticPowerContainerSlot setMode(MachineSideMode newMode) {
 		mode = newMode;
 		return this;
 	}

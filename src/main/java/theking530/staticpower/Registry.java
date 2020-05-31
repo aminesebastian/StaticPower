@@ -4,15 +4,22 @@ import java.util.HashSet;
 import java.util.function.Supplier;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -23,6 +30,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.network.IContainerFactory;
 import theking530.staticpower.blocks.IBlockRenderLayerProvider;
 import theking530.staticpower.blocks.IItemBlockProvider;
+import theking530.staticpower.client.rendering.blocks.MachineBakedModel;
+import theking530.staticpower.initialization.ModBlocks;
 import theking530.staticpower.initialization.ModContainerTypes;
 import theking530.staticpower.utilities.Reference;
 
@@ -140,6 +149,8 @@ public class Registry {
 				RenderTypeLookup.setRenderLayer(block, renderLayerProvider.getRenderType());
 			}
 		}
+
+		// Initialize the guis.
 		ModContainerTypes.initializeGui();
 	}
 
@@ -160,7 +171,6 @@ public class Registry {
 	@SubscribeEvent
 	public static void onRegisterTileEntityTypes(RegistryEvent.Register<TileEntityType<?>> event) {
 		for (TileEntityType<?> teType : TILE_ENTITY_TYPES) {
-			System.out.println("STATIC POWER TE" + teType.getRegistryName());
 			event.getRegistry().register(teType);
 		}
 	}
@@ -169,6 +179,33 @@ public class Registry {
 	public static void onRegisterContainerTypes(RegistryEvent.Register<ContainerType<?>> event) {
 		for (ContainerType<?> container : CONTAINER_TYPES) {
 			event.getRegistry().register(container);
+		}
+	}
+
+	@SubscribeEvent
+	public static void onModelBakeEvent(ModelBakeEvent event) {
+		for (BlockState blockState : ModBlocks.ChargingStation.getStateContainer().getValidStates()) {
+			ModelResourceLocation variantMRL = BlockModelShapes.getModelLocation(blockState);
+			IBakedModel existingModel = event.getModelRegistry().get(variantMRL);
+			if (existingModel == null) {
+				StaticPower.LOGGER.warn("Did not find the expected vanilla baked model(s) for blockCamouflage in registry");
+			} else if (existingModel instanceof MachineBakedModel) {
+				StaticPower.LOGGER.warn("Tried to replace MachineBakedModel twice");
+			} else {
+				MachineBakedModel customModel = new MachineBakedModel(existingModel);
+				event.getModelRegistry().put(variantMRL, customModel);
+			}
+		}
+	}
+
+	@SuppressWarnings("deprecation")
+	@SubscribeEvent
+	public static void onTextureStitchEvent(TextureStitchEvent.Pre event) {
+		if (event.getMap().getTextureLocation() == AtlasTexture.LOCATION_BLOCKS_TEXTURE) {
+			event.addSprite(MachineBakedModel.machineSideNormal);
+			event.addSprite(MachineBakedModel.machineSideInput);
+			event.addSprite(MachineBakedModel.machineSideOutput);
+			event.addSprite(MachineBakedModel.machineSideDisabled);
 		}
 	}
 }

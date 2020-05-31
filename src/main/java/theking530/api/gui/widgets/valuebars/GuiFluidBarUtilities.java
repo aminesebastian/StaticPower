@@ -22,7 +22,7 @@ import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.api.gui.GuiDrawUtilities;
 import theking530.api.utilities.Color;
-import theking530.staticpower.tileentities.utilities.SideModeList.Mode;
+import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
 public class GuiFluidBarUtilities {
 
@@ -30,9 +30,9 @@ public class GuiFluidBarUtilities {
 		drawFluidBar(fluid, capacity, amount, x, y, zLevel, width, height, null, drawOverlay);
 	}
 
-	public static void drawFluidBar(FluidStack fluid, int capacity, int amount, float x, float y, float zLevel, float width, float height, Mode mode, boolean drawOverlay) {
+	public static void drawFluidBar(FluidStack fluid, int capacity, int amount, float x, float y, float zLevel, float width, float height, MachineSideMode mode, boolean drawOverlay) {
 		if (mode != null) {
-			GuiDrawUtilities.drawSlot((int) x, (int) (y - height), (int) width, (int) height, mode.getBorderColor());
+			GuiDrawUtilities.drawSlot((int) x, (int) (y - height), (int) width, (int) height, mode.getColor());
 		} else {
 			GuiDrawUtilities.drawSlot((int) x, (int) (y - height), (int) width, (int) height);
 		}
@@ -76,8 +76,12 @@ public class GuiFluidBarUtilities {
 		if (drawOverlay) {
 			Color linesColor = new Color(0.2f, 0.2f, 0.2f, 0.5f);
 			for (int i = 0; i < height / 10; i++) {
-				GuiDrawUtilities.drawColoredRectangle(x, y - height + 2 + (i * 10), width - 3, 1, zLevel, linesColor);
-				GuiDrawUtilities.drawColoredRectangle(x, y - height + 7 + (i * 10), width - 7, 1, zLevel, linesColor);
+				if (y - height + 2 + (i * 10) < y) {
+					GuiDrawUtilities.drawColoredRectangle(x, y - height + 2 + (i * 10), width - 3, 0.5f, zLevel, linesColor);
+				}
+				if (y - height + 7 + (i * 10) < y) {
+					GuiDrawUtilities.drawColoredRectangle(x, y - height + 7 + (i * 10), width - 7, 0.5f, zLevel, linesColor);
+				}
 			}
 		}
 	}
@@ -92,13 +96,14 @@ public class GuiFluidBarUtilities {
 	public static List<ITextComponent> getTooltip(int fluidAmount, int maxCapacity, FluidStack fluid) {
 		List<ITextComponent> tooltip = new ArrayList<ITextComponent>();
 
-		if (fluid != null) {
+		if (fluid != null && !fluid.isEmpty()) {
 			ITextComponent name = fluid.getDisplayName();
 			tooltip.add(name);
-			tooltip.add(new StringTextComponent(NumberFormat.getNumberInstance(Locale.US).format(fluidAmount) + "/" + NumberFormat.getNumberInstance(Locale.US).format(maxCapacity) + "mB"));
+			tooltip.add(new StringTextComponent(NumberFormat.getNumberInstance(Locale.US).format(fluidAmount) + "/" + NumberFormat.getNumberInstance(Locale.US).format(maxCapacity)).appendSibling(new TranslationTextComponent("gui.staticpower.millbuckets")));
 			return tooltip;
 		} else {
-			tooltip.add(new TranslationTextComponent("staticpower.gui.empty"));
+			tooltip.add(new TranslationTextComponent("gui.staticpower.empty"));
+			tooltip.add(new StringTextComponent("0/" + NumberFormat.getNumberInstance(Locale.US).format(maxCapacity)).appendSibling(new TranslationTextComponent("gui.staticpower.millbuckets")));
 			return tooltip;
 		}
 	}

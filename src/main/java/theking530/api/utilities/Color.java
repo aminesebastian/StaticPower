@@ -6,7 +6,7 @@ package theking530.api.utilities;
  * @author Amine Sebastian
  *
  */
-public class Color extends Vector {
+public class Color extends Vector4D {
 
 	public Color(float x, float y, float z) {
 		super(x, y, z, 1.0f);
@@ -17,19 +17,19 @@ public class Color extends Vector {
 	}
 
 	public float getRed() {
-		return X;
+		return getX();
 	}
 
 	public float getGreen() {
-		return Y;
+		return getY();
 	}
 
 	public float getBlue() {
-		return Z;
+		return getZ();
 	}
 
 	public float getAlpha() {
-		return W;
+		return getW();
 	}
 
 	/**
@@ -38,7 +38,7 @@ public class Color extends Vector {
 	 * @return A new instance of the color normalized.
 	 */
 	public Color fromEightBitToFloat() {
-		return new Color(X / 255.0f, Y / 255.0f, Z / 255.0f);
+		return new Color(getRed() / 255.0f, getGreen() / 255.0f, getBlue() / 255.0f);
 
 	}
 
@@ -50,6 +50,6 @@ public class Color extends Vector {
 	 * @return
 	 */
 	public int encodeInInteger() {
-		return (int) W << 24 | (int) X << 16 | (int) Y << 8 | (int) Z;
+		return (int) getAlpha() << 24 | (int) getRed() << 16 | (int) getGreen() << 8 | (int) getBlue();
 	}
 }

@@ -8,8 +8,8 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.tileentities.StaticPowerTileEntityBlock;
+import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.SideUtilities;
-import theking530.staticpower.tileentities.utilities.SideModeList.Mode;
 import theking530.staticpower.tileentities.utilities.SideUtilities.BlockSide;
 import theking530.staticpower.tileentities.utilities.interfaces.ISideConfigurable;
 
@@ -24,9 +24,9 @@ public class TileEntityInputServoComponent implements ITileEntityComponent {
 	private TileEntityInventoryComponent inventory;
 	private int[] slots;
 	private boolean isEnabled;
-	private Mode inputMode;
+	private MachineSideMode inputMode;
 
-	public TileEntityInputServoComponent(TileEntity tileEntity, int inputTime, TileEntityInventoryComponent inventory, Mode mode, int... slots) {
+	public TileEntityInputServoComponent(TileEntity tileEntity, int inputTime, TileEntityInventoryComponent inventory, MachineSideMode mode, int... slots) {
 		this.tileEntity = tileEntity;
 		this.inputTime = inputTime;
 		this.inventory = inventory;
@@ -39,7 +39,7 @@ public class TileEntityInputServoComponent implements ITileEntityComponent {
 	}
 
 	public TileEntityInputServoComponent(TileEntity tileEntity, int inputTime, TileEntityInventoryComponent inventory, int... slots) {
-		this(tileEntity, inputTime, inventory, Mode.Input, slots);
+		this(tileEntity, inputTime, inventory, MachineSideMode.Input, slots);
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class TileEntityInputServoComponent implements ITileEntityComponent {
 		return "Input Servo";
 	}
 
-	public Mode getMode() {
+	public MachineSideMode getMode() {
 		return inputMode;
 	}
 
@@ -96,7 +96,7 @@ public class TileEntityInputServoComponent implements ITileEntityComponent {
 					if (te instanceof ISideConfigurable) {
 						ISideConfigurable configurable = (ISideConfigurable) te;
 						if (configurable.isSideConfigurable()) {
-							if (configurable.getSideConfiguration(blockSide.getOpposite()) != Mode.Regular) {
+							if (configurable.getSideConfiguration(blockSide.getOpposite()) != MachineSideMode.Regular) {
 								return;
 							}
 						}

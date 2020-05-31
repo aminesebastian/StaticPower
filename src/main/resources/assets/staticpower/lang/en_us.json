@@ -52,5 +52,11 @@
 	"item.staticpower.portable_battery_lumum": "Lumum Portable Battery",
 	"item.staticpower.filter_item_basic": "Basic Item Filter",
 	"block.staticpower.machine_charging_station": "Charging Station",
-	"block.staticpower.chest_vacuum": "Vacuum Chest"
+	"block.staticpower.chest_vacuum": "Vacuum Chest",
+	"gui.staticpower.empty": "Empty",
+	"gui.staticpower.input": "Input",
+	"gui.staticpower.usage": "Usage",
+	"gui.staticpower.millbuckets": "mB",
+	"gui.staticpower.energy_unit": "FE",
+	"gui.staticpower.energy_unit_per_tick": "FE/t"
 }

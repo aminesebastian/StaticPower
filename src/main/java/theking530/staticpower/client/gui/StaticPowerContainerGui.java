@@ -1,9 +1,6 @@
 package theking530.staticpower.client.gui;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
@@ -12,15 +9,16 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.text.ITextComponent;
 import theking530.api.container.StaticPowerContainerSlot;
 import theking530.api.gui.GuiDrawUtilities;
+import theking530.api.gui.WidgetContainer;
+import theking530.api.gui.widgets.AbstractGuiWidget;
 import theking530.api.gui.widgets.GuiDrawItem;
-import theking530.api.gui.widgets.IGuiWidget;
 import theking530.api.gui.widgets.tabs.GuiTabManager;
 import theking530.api.utilities.Color;
-import theking530.api.utilities.Vector;
+import theking530.api.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.TileEntityInventoryComponent;
-import theking530.staticpower.tileentities.utilities.SideModeList.Mode;
+import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
 /**
  * Base GUI class containing useful features including tabs, button management,
@@ -32,7 +30,7 @@ import theking530.staticpower.tileentities.utilities.SideModeList.Mode;
  */
 public abstract class StaticPowerContainerGui<T extends Container> extends ContainerScreen<T> {
 	protected final GuiTabManager tabManager;
-	protected final List<IGuiWidget> widgets;
+	protected final WidgetContainer widgetContainer;
 	protected final GuiDrawItem itemDrawer;
 
 	protected int xSizeTarget;
@@ -42,15 +40,15 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 
 	public StaticPowerContainerGui(T container, final PlayerInventory playerInventory, ITextComponent title, int guiXSize, int guiYSize) {
 		super(container, playerInventory, title);
+		widgetContainer = new WidgetContainer();
 		xSize = guiXSize;
 		ySize = guiYSize;
 		xSizeTarget = guiXSize;
 		ySizeTarget = guiYSize;
-		tabManager = new GuiTabManager(this);
-		widgets = new ArrayList<IGuiWidget>();
 		outputSlotSize = 24;
 		inputSlotSize = 16;
 		itemDrawer = new GuiDrawItem(true);
+		registerWidget(tabManager = new GuiTabManager());
 	}
 
 	/**
@@ -68,6 +66,7 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		drawContainerTitle(mouseX, mouseY);
+		//widgetContainer.renderForegound(mouseX, mouseY);
 	}
 
 	/**
@@ -80,14 +79,8 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 		renderBackground();
 
 		drawBackgroundExtras(partialTicks, mouseX, mouseY);
-
-		for (IGuiWidget widget : widgets) {
-			if (widget.isVisible()) {
-				widget.renderBackground(mouseX, mouseY, partialTicks);
-			}
-		}
-
-		tabManager.drawTabs(guiLeft + xSize - 1, guiTop + 10, xSize, ySize, partialTicks);
+		widgetContainer.update(new Vector2D(getGuiLeft(), getGuiTop()), new Vector2D(getXSize(), getYSize()));
+		widgetContainer.renderBackground(mouseX, mouseY, partialTicks);
 
 		// Animations the screensize if the target sizes have changed.
 		animateScreenSize();
@@ -104,36 +97,13 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 		renderHoveredToolTip(mouseX, mouseY);
 
 		// Raise the mouse hovered event for all the widgets,
-		for (IGuiWidget widget : widgets) {
-			if (widget.isVisible()) {
-				widget.mouseHover(mouseX, mouseY);
-			}
-		}
+		widgetContainer.handleMouseMove(mouseX, mouseY);
 
 		// Render the foreground of all the widgets.
-		for (IGuiWidget widget : widgets) {
-			if (widget.isVisible()) {
-				widget.renderForeground(mouseX, mouseY, partialTicks);
-			}
-		}
+		widgetContainer.renderForegound(mouseX, mouseY, partialTicks);
 
-		// Capture all the tooltips for all the widgets..
-		List<ITextComponent> tooltips = new ArrayList<ITextComponent>();
-		for (IGuiWidget widget : widgets) {
-			if (widget.isVisible() && widget.shouldDrawTooltip(mouseX, mouseY)) {
-				// Get all the tooltips.
-				widget.getTooltips(tooltips, false);
-			}
-		}
-
-		// If there are any tooltips to render, render them.
-		if (tooltips.size() > 0) {
-			// Format them and then draw them.
-			renderTooltip(Lists.transform(tooltips, (ITextComponent comp) -> comp.getFormattedText()), mouseX, mouseY, font);
-		}
-
-		// Let the tab manager handle any mouse over events.
-		tabManager.handleMouseMoveInteraction(mouseX, mouseY);
+		// Render the widget tooltips as needed.
+		widgetContainer.renderTooltips(mouseX, mouseY);
 
 		// Draw any additional foreground elements.
 		drawForegroundExtras(partialTicks, mouseX, mouseY);
@@ -143,15 +113,7 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
 		boolean superCallResult = super.mouseClicked(mouseX, mouseY, button);
 
-		for (IGuiWidget widget : widgets) {
-			if (widget.isVisible()) {
-				widget.mouseClick((int) mouseX, (int) mouseY, button);
-			}
-		}
-
-		// Handle click events for tabs and buttons.
-		tabManager.handleMouseInteraction((int) mouseX, (int) mouseY, button);
-
+		widgetContainer.handleMouseClick(mouseX, mouseY, button);
 		return superCallResult;
 	}
 
@@ -164,7 +126,7 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	protected void drawContainerTitle(int mouseX, int mouseY) {
 		// Draw the container title if requested at the designated location.
 		if (shouldDrawContainerLabel()) {
-			Vector inventoryLabelLocation = getContainerLabelDrawLocation();
+			Vector2D inventoryLabelLocation = getContainerLabelDrawLocation();
 			ITextComponent containerName = getTitle();
 			String containerString = containerName.getString();
 			font.drawString(containerString, inventoryLabelLocation.getX(), inventoryLabelLocation.getY(), 4210752);
@@ -172,7 +134,7 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 
 		// Draw the inventory label if requested at the designated location.
 		if (shouldDrawInventoryLabel()) {
-			Vector inventoryLabelLocation = getInventoryLabelDrawLocation();
+			Vector2D inventoryLabelLocation = getInventoryLabelDrawLocation();
 			font.drawString(playerInventory.getDisplayName().getFormattedText(), inventoryLabelLocation.getX(), inventoryLabelLocation.getY(), 4210752);
 		}
 	}
@@ -185,8 +147,8 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	 * @return A vector indicating the position where the inventory label should
 	 *         render.
 	 */
-	protected Vector getInventoryLabelDrawLocation() {
-		return new Vector(8, 97);
+	protected Vector2D getInventoryLabelDrawLocation() {
+		return new Vector2D(8, 97);
 	}
 
 	/**
@@ -206,10 +168,10 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	 * @return A vector indicating the position where the container label should
 	 *         render.
 	 */
-	protected Vector getContainerLabelDrawLocation() {
+	protected Vector2D getContainerLabelDrawLocation() {
 		ITextComponent containerName = getTitle();
 		String containerString = containerName.getString();
-		return new Vector(xSize / 2 - font.getStringWidth(containerString) / 2, 6);
+		return new Vector2D(xSize / 2 - font.getStringWidth(containerString) / 2, 6);
 	}
 
 	/**
@@ -322,11 +284,11 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	 * @param slotMode The mode of the slot (this dictates the potential color
 	 *                 border).
 	 */
-	public void drawSlot(int xPos, int yPos, int width, int height, Mode slotMode) {
-		if (slotMode == Mode.Regular) {
+	public void drawSlot(int xPos, int yPos, int width, int height, MachineSideMode slotMode) {
+		if (slotMode == MachineSideMode.Regular) {
 			GuiDrawUtilities.drawSlot(xPos, yPos, width, height);
 		} else {
-			GuiDrawUtilities.drawSlot(xPos, yPos, width, height, slotMode.getBorderColor());
+			GuiDrawUtilities.drawSlot(xPos, yPos, width, height, slotMode.getColor());
 		}
 	}
 
@@ -370,17 +332,17 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 
 				// Check the intended mode of the handler slot. If it ends up being null, just
 				// assume the mode is regular.
-				Mode intendedMode = handlerSlot.getMode();
+				MachineSideMode intendedMode = handlerSlot.getMode();
 				if (handlerSlot.getItemHandler() instanceof TileEntityInventoryComponent) {
 					intendedMode = ((TileEntityInventoryComponent) handlerSlot.getItemHandler()).getMode();
 				}
-				intendedMode = intendedMode == null ? Mode.Regular : intendedMode;
+				intendedMode = intendedMode == null ? MachineSideMode.Regular : intendedMode;
 
 				// If the slot is an output slot, increase the size of the slot.
 				int slotSize = intendedMode.isOutputMode() ? outputSlotSize : inputSlotSize;
 				int adjustment = (slotSize - 16) / 2;
-				if (intendedMode != Mode.Regular) {
-					drawSlot(slot.xPos + guiLeft - adjustment, slot.yPos + guiTop - adjustment, slotSize, slotSize, te.getSideWithModeCount(intendedMode) > 0 ? intendedMode : Mode.Regular);
+				if (intendedMode != MachineSideMode.Regular && intendedMode != MachineSideMode.Never) {
+					drawSlot(slot.xPos + guiLeft - adjustment, slot.yPos + guiTop - adjustment, slotSize, slotSize, te.getSideWithModeCount(intendedMode) > 0 ? intendedMode : MachineSideMode.Regular);
 				} else {
 					drawSlot(slot.xPos + guiLeft, slot.yPos + guiTop, 16, 16);
 				}
@@ -411,9 +373,8 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 		this.ySizeTarget = ySize;
 	}
 
-	public void registerWidget(IGuiWidget widget) {
-		widgets.add(widget);
-		widget.setOwningGui(this);
+	public void registerWidget(AbstractGuiWidget widget) {
+		widgetContainer.registerWidget(widget);
 	}
 
 	private void animateScreenSize() {

@@ -18,7 +18,7 @@ import theking530.staticpower.tileentities.components.TileEntityBatteryComponent
 import theking530.staticpower.tileentities.components.TileEntityInputServoComponent;
 import theking530.staticpower.tileentities.components.TileEntityInventoryComponent;
 import theking530.staticpower.tileentities.components.TileEntityOutputServoComponent;
-import theking530.staticpower.tileentities.utilities.SideModeList.Mode;
+import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityPoweredFurnace extends TileEntityMachine {
@@ -31,10 +31,10 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 		super(ModTileEntityTypes.POWERED_FURNACE, 3);
 		initializeBasicMachine(2, 1000, 100000, 80, 180);
 		
-		registerComponent(inputInventory = new TileEntityInventoryComponent("inputInventory", 1, Mode.Input));
-		registerComponent(internalInventory = new TileEntityInventoryComponent("internalInventory", 1, Mode.Never));
-		registerComponent(outputInventory = new TileEntityInventoryComponent("outputInventory", 1, Mode.Output));
-		registerComponent(batterySlot = new TileEntityInventoryComponent("batterySlot", 1, Mode.Never));
+		registerComponent(inputInventory = new TileEntityInventoryComponent("inputInventory", 1, MachineSideMode.Input));
+		registerComponent(internalInventory = new TileEntityInventoryComponent("internalInventory", 1, MachineSideMode.Never));
+		registerComponent(outputInventory = new TileEntityInventoryComponent("outputInventory", 1, MachineSideMode.Output));
+		registerComponent(batterySlot = new TileEntityInventoryComponent("batterySlot", 1, MachineSideMode.Never));
 
 		registerComponent(new TileEntityInputServoComponent(this, 2, inputInventory, 0));
 		registerComponent(new TileEntityOutputServoComponent(this, 1, outputInventory, 0));

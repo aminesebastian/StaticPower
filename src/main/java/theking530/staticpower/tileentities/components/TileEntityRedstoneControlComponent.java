@@ -17,6 +17,10 @@ public class TileEntityRedstoneControlComponent implements ITileEntityComponent 
 		redstoneMode = defaultMode;
 	}
 
+	public RedstoneMode getRedstoneMode() {
+		return redstoneMode;
+	}
+
 	public void setRedstoneMode(RedstoneMode newMode) {
 		redstoneMode = newMode;
 	}

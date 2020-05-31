@@ -10,7 +10,6 @@ import net.minecraftforge.items.IItemHandler;
 import theking530.api.gui.button.BaseButton;
 import theking530.api.gui.button.TextButton;
 import theking530.api.gui.widgets.tabs.GuiInfoTab;
-import theking530.api.utilities.Vector;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.gui.StaticPowerItemStackGui;
 import theking530.staticpower.network.NetworkMessage;
@@ -53,11 +52,11 @@ public class GuiItemFilter extends StaticPowerItemStackGui<ContainerItemFilter, 
 		String[] splitMsg = text.split("=");
 		infoTab.setText(inventoryItemFilter.owningItemStack.getDisplayName().getFormattedText(), Arrays.asList(splitMsg));
 
-		registerWidget(whitelistButton = new TextButton(20, 20, 30, 40, "W", this::buttonPressed));
-		registerWidget(nbtButton = new TextButton(20, 20, 52, 40, "N", this::buttonPressed));
-		registerWidget(metaButton = new TextButton(20, 20, 74, 40, "M", this::buttonPressed));
-		registerWidget(oreButton = new TextButton(20, 20, 96, 40, "O", this::buttonPressed));
-		registerWidget(modButton = new TextButton(20, 20, 118, 40, "D", this::buttonPressed));
+		registerWidget(whitelistButton = new TextButton(30, 40, 20, 20, "W", this::buttonPressed));
+		registerWidget(nbtButton = new TextButton(52, 40, 20, 20, "N", this::buttonPressed));
+		registerWidget(metaButton = new TextButton(74, 40, 20, 20, "M", this::buttonPressed));
+		registerWidget(oreButton = new TextButton(96, 40, 20, 20, "O", this::buttonPressed));
+		registerWidget(modButton = new TextButton(118, 40, 20, 20, "D", this::buttonPressed));
 
 		whitelistButton.setText(inventoryItemFilter.getWhiteListMode() ? "W" : "B").setTooltip(new TranslationTextComponent(inventoryItemFilter.getWhiteListMode() ? "Whitelist" : "Blacklist"));
 
@@ -65,11 +64,6 @@ public class GuiItemFilter extends StaticPowerItemStackGui<ContainerItemFilter, 
 		metaButton.setToggleable(true).setToggled(inventoryItemFilter.getMatchMetadata()).setTooltip(new TranslationTextComponent("Enable Metadata Match"));
 		oreButton.setToggleable(true).setToggled(inventoryItemFilter.getMatchOreDictionary()).setTooltip(new TranslationTextComponent("Enable Ore Dictionary Match"));
 		modButton.setToggleable(true).setToggled(inventoryItemFilter.getMatchModID()).setTooltip(new TranslationTextComponent("Enable Mod Match"));
-	}
-
-	@Override
-	protected Vector getInventoryLabelDrawLocation() {
-		return new Vector(8, 97);
 	}
 
 	public void buttonPressed(BaseButton button) {

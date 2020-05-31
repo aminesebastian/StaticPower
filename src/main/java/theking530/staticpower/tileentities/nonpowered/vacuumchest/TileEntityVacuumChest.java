@@ -37,7 +37,7 @@ import theking530.staticpower.items.upgrades.ExperienceVacuumUpgrade;
 import theking530.staticpower.items.upgrades.TeleportUpgrade;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.TileEntityInventoryComponent;
-import theking530.staticpower.tileentities.utilities.SideModeList.Mode;
+import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityVacuumChest extends TileEntityBase implements Predicate<ItemEntity> {
@@ -57,8 +57,8 @@ public class TileEntityVacuumChest extends TileEntityBase implements Predicate<I
 		vacuumDiamater = initialVacuumDiamater;
 		shouldTeleport = false;
 		experienceTank = new FluidTank(5000);
-		registerComponent(inventory = new TileEntityInventoryComponent("inventory", 30, Mode.Regular));
-		registerComponent(filterSlot = new TileEntityInventoryComponent("filterSlot", 1, Mode.Never));
+		registerComponent(inventory = new TileEntityInventoryComponent("inventory", 30, MachineSideMode.Regular));
+		registerComponent(filterSlot = new TileEntityInventoryComponent("filterSlot", 1, MachineSideMode.Never));
 	}
 
 	@Override

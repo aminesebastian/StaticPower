@@ -9,49 +9,37 @@ import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
-import theking530.api.gui.widgets.IGuiWidget;
-import theking530.staticpower.client.gui.StaticPowerContainerGui;
+import theking530.api.gui.widgets.AbstractGuiWidget;
+import theking530.api.utilities.Vector2D;
 
-public abstract class BaseButton implements IGuiWidget {
+public abstract class BaseButton extends AbstractGuiWidget {
 
 	public enum ClickedButton {
 		NONE, LEFT, RIGHT, MIDDLE;
 	}
 
-	protected int width;
-	protected int height;
-	protected int xPosition;
-	protected int yPosition;
 	protected int mouseX;
 	protected int mouseY;
 
 	private boolean hovered = false;
-	private boolean isVisible = true;
 	private ClickedButton clicked = ClickedButton.NONE;
 
 	private boolean toggleable = false;
 	private boolean toggled = false;
 
 	private float clickSoundPitch;
-	protected StaticPowerContainerGui<?> owningGui;
 	protected Consumer<BaseButton> onClicked;
 
 	private List<ITextComponent> tooltip;
 
-	public BaseButton(int width, int height, int xPos, int yPos, Consumer<BaseButton> onClickedEvent) {
-		this.width = width;
-		this.height = height;
-		xPosition = xPos;
-		yPosition = yPos;
+	public BaseButton(int xPos, int yPos, int width, int height, Consumer<BaseButton> onClickedEvent) {
+		super(xPos, yPos, width, height);
 		clickSoundPitch = 1.0f;
 		onClicked = onClickedEvent;
 	}
 
 	@Override
 	public void renderBackground(int mouseX, int mouseY, float partialTicks) {
-		if (owningGui == null) {
-			return;
-		}
 		if (!isVisible()) {
 			return;
 		}
@@ -64,29 +52,24 @@ public abstract class BaseButton implements IGuiWidget {
 
 	@Override
 	public EInputResult mouseClick(int mouseX, int mouseY, int button) {
-		if (owningGui == null) {
-			return EInputResult.UNHANDLED;
-		}
 		if (!isVisible()) {
 			return EInputResult.UNHANDLED;
 		}
-		if (mouseX > owningGui.getGuiLeft() + xPosition && mouseX < owningGui.getGuiLeft() + xPosition + width && isVisible) {
-			if (mouseY > owningGui.getGuiTop() + yPosition && mouseY < owningGui.getGuiTop() + yPosition + height) {
-				// Set the clicked state.
-				clicked = button == 0 ? ClickedButton.LEFT : ClickedButton.RIGHT;
+		if (this.isPointInsideBounds(new Vector2D(mouseX, mouseY))) {
+			// Set the clicked state.
+			clicked = button == 0 ? ClickedButton.LEFT : ClickedButton.RIGHT;
 
-				// Play the clicked sound.
-				playSound(clicked);
+			// Play the clicked sound.
+			playSound(clicked);
 
-				// If toggleable, update the toggled state.
-				if (toggleable) {
-					toggled = !toggled;
-				}
-
-				// Raise the on clicked event.
-				onClicked.accept(this);
-				return EInputResult.HANDLED;
+			// If toggleable, update the toggled state.
+			if (toggleable) {
+				toggled = !toggled;
 			}
+
+			// Raise the on clicked event.
+			onClicked.accept(this);
+			return EInputResult.HANDLED;
 		}
 		return EInputResult.UNHANDLED;
 	}
@@ -96,20 +79,15 @@ public abstract class BaseButton implements IGuiWidget {
 		// Always just update the clicked state to NONE here.
 		clicked = ClickedButton.NONE;
 
-		if (owningGui == null) {
-			return;
-		}
 		if (!isVisible()) {
 			return;
 		}
 
 		this.mouseX = mouseX;
 		this.mouseY = mouseY;
-		if (mouseX > owningGui.getGuiLeft() + xPosition && mouseX < owningGui.getGuiLeft() + xPosition + width && isVisible) {
-			if (mouseY > owningGui.getGuiTop() + yPosition && mouseY < owningGui.getGuiTop() + yPosition + height) {
-				hovered = true;
-				return;
-			}
+		if (isPointInsideBounds(new Vector2D(mouseX, mouseY))) {
+			hovered = true;
+			return;
 		}
 		hovered = false;
 	}
@@ -175,42 +153,7 @@ public abstract class BaseButton implements IGuiWidget {
 	}
 
 	@Override
-	public IGuiWidget setPosition(int xPosition, int yPosition) {
-		this.xPosition = xPosition;
-		this.yPosition = yPosition;
-		return this;
-	}
-
-	@Override
-	public IGuiWidget setSize(int xSize, int ySize) {
-		width = xSize;
-		height = ySize;
-		return this;
-	}
-
-	@Override
-	public void getTooltips(List<ITextComponent> tooltips, boolean showAdvanced) {
+	public void getTooltips(Vector2D mousePosition, List<ITextComponent> tooltips, boolean showAdvanced) {
 		tooltips.addAll(tooltip);
-	}
-
-	@Override
-	public boolean shouldDrawTooltip(int mouseX, int mouseY) {
-		return isHovered();
-	}
-
-	@Override
-	public boolean isVisible() {
-		return isVisible;
-	}
-
-	@Override
-	public IGuiWidget setVisible(boolean visible) {
-		this.isVisible = visible;
-		return this;
-	}
-
-	@Override
-	public void setOwningGui(StaticPowerContainerGui<?> owningGui) {
-		this.owningGui = owningGui;
 	}
 }

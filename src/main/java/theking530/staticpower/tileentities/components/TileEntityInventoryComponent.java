@@ -7,17 +7,17 @@ import javax.annotation.Nonnull;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.items.ItemStackHandler;
-import theking530.staticpower.tileentities.utilities.SideModeList.Mode;
+import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 
 public class TileEntityInventoryComponent extends ItemStackHandler implements Iterable<ItemStack>, ITileEntityComponent {
 
 	private ItemStackHandlerFilter filter;
-	private Mode inventoryMode;
+	private MachineSideMode inventoryMode;
 	private String name;
 	private boolean isEnabled;
 
-	public TileEntityInventoryComponent(String name, int size, Mode mode) {
+	public TileEntityInventoryComponent(String name, int size, MachineSideMode mode) {
 		super(size);
 		this.inventoryMode = mode;
 		this.name = name;
@@ -38,9 +38,9 @@ public class TileEntityInventoryComponent extends ItemStackHandler implements It
 	/**
 	 * Gets the mode of this inventory.
 	 * 
-	 * @return The {@link Mode} of this inventory.
+	 * @return The {@link MachineSideMode} of this inventory.
 	 */
-	public Mode getMode() {
+	public MachineSideMode getMode() {
 		return inventoryMode;
 	}
 

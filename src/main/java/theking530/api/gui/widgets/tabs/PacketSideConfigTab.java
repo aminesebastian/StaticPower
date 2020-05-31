@@ -8,22 +8,22 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import theking530.staticpower.network.NetworkMessage;
-import theking530.staticpower.tileentities.utilities.SideModeList.Mode;
+import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.interfaces.ISideConfigurable;
 
 public class PacketSideConfigTab extends NetworkMessage {
-	private Mode side0;
-	private Mode side1;
-	private Mode side2;
-	private Mode side3;
-	private Mode side4;
-	private Mode side5;
+	private MachineSideMode side0;
+	private MachineSideMode side1;
+	private MachineSideMode side2;
+	private MachineSideMode side3;
+	private MachineSideMode side4;
+	private MachineSideMode side5;
 	private BlockPos position;
 
 	public PacketSideConfigTab() {
 	}
 
-	public PacketSideConfigTab(Mode[] sideModes, BlockPos pos) {
+	public PacketSideConfigTab(MachineSideMode[] sideModes, BlockPos pos) {
 		side0 = sideModes[0];
 		side1 = sideModes[1];
 		side2 = sideModes[2];
@@ -36,12 +36,12 @@ public class PacketSideConfigTab extends NetworkMessage {
 	@Override
 	public void decode(PacketBuffer buf) {
 		// the order is important
-		this.side0 = Mode.values()[buf.readInt()];
-		this.side1 = Mode.values()[buf.readInt()];
-		this.side2 = Mode.values()[buf.readInt()];
-		this.side3 = Mode.values()[buf.readInt()];
-		this.side4 = Mode.values()[buf.readInt()];
-		this.side5 = Mode.values()[buf.readInt()];
+		this.side0 = MachineSideMode.values()[buf.readInt()];
+		this.side1 = MachineSideMode.values()[buf.readInt()];
+		this.side2 = MachineSideMode.values()[buf.readInt()];
+		this.side3 = MachineSideMode.values()[buf.readInt()];
+		this.side4 = MachineSideMode.values()[buf.readInt()];
+		this.side5 = MachineSideMode.values()[buf.readInt()];
 
 		position = buf.readBlockPos();
 	}

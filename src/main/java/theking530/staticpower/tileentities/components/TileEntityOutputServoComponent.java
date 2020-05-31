@@ -8,8 +8,8 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.tileentities.StaticPowerTileEntityBlock;
+import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.SideUtilities;
-import theking530.staticpower.tileentities.utilities.SideModeList.Mode;
 import theking530.staticpower.tileentities.utilities.SideUtilities.BlockSide;
 import theking530.staticpower.tileentities.utilities.interfaces.ISideConfigurable;
 import theking530.staticpower.utilities.InventoryUtilities;
@@ -25,9 +25,9 @@ public class TileEntityOutputServoComponent implements ITileEntityComponent {
 	private TileEntityInventoryComponent inventory;
 	private int[] slots;
 	private boolean isEnabled;
-	private Mode outputMode;
+	private MachineSideMode outputMode;
 
-	public TileEntityOutputServoComponent(TileEntity tileEntity, int outputTime, TileEntityInventoryComponent inventory, Mode mode, int... slots) {
+	public TileEntityOutputServoComponent(TileEntity tileEntity, int outputTime, TileEntityInventoryComponent inventory, MachineSideMode mode, int... slots) {
 		this.tileEntity = tileEntity;
 		this.outputTime = outputTime;
 		this.inventory = inventory;
@@ -40,7 +40,7 @@ public class TileEntityOutputServoComponent implements ITileEntityComponent {
 	}
 
 	public TileEntityOutputServoComponent(TileEntity tileEntity, int outputTime, TileEntityInventoryComponent inventory, int... slots) {
-		this(tileEntity, outputTime, inventory, Mode.Output, slots);
+		this(tileEntity, outputTime, inventory, MachineSideMode.Output, slots);
 	}
 
 	@Override

@@ -7,8 +7,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.text.StringTextComponent;
 import theking530.api.gui.GuiTextures;
 import theking530.api.gui.button.BaseButton;
 import theking530.api.gui.button.BaseButton.ClickedButton;
@@ -32,7 +30,6 @@ public class GuiSideConfigTab extends BaseGuiTab {
 	private TextButton rightButton;
 	private TextButton backButton;
 	private TextButton frontButton;
-	private TextButton[] buttons;
 
 	private boolean allowFaceInteraction;
 
@@ -41,38 +38,25 @@ public class GuiSideConfigTab extends BaseGuiTab {
 		tileEntity = te;
 		fontRenderer = Minecraft.getInstance().fontRenderer;
 		allowFaceInteraction = faceInteraction;
-		buttons = new TextButton[6];
 
 		int xOffset = 3;
 		int yOffset = 8;
-		topButton = new TextButton(20, 20, xOffset + tabWidth / 2, yOffset + 15, "T", this::buttonPressed);
-		bottomButton = new TextButton(20, 20, xOffset + tabWidth / 2, yOffset + tabHeight - 15, "B", this::buttonPressed);
-		rightButton = new TextButton(20, 20, xOffset + tabWidth - 15, yOffset + tabHeight / 2, "L", this::buttonPressed);
-		leftButton = new TextButton(20, 20, xOffset + 15, yOffset + tabHeight / 2, "R", this::buttonPressed);
-		backButton = new TextButton(20, 20, xOffset + tabWidth / 2, yOffset + tabHeight / 2, "B", this::buttonPressed);
-		frontButton = new TextButton(20, 20, xOffset + 15, yOffset + 15, "F", this::buttonPressed);
+		widgetContainer.registerWidget(topButton = new TextButton(xOffset + tabWidth / 2, yOffset + 15, 20, 20, "T", this::buttonPressed));
+		widgetContainer.registerWidget(bottomButton = new TextButton(xOffset + tabWidth / 2, yOffset + tabHeight - 15, 20, 20, "B", this::buttonPressed));
+		widgetContainer.registerWidget(rightButton = new TextButton(xOffset + tabWidth - 15, yOffset + tabHeight / 2, 20, 20, "L", this::buttonPressed));
+		widgetContainer.registerWidget(leftButton = new TextButton(xOffset + 15, yOffset + tabHeight / 2, 20, 20, "R", this::buttonPressed));
+		widgetContainer.registerWidget(backButton = new TextButton(xOffset + tabWidth / 2, yOffset + tabHeight / 2, 20, 20, "B", this::buttonPressed));
+		widgetContainer.registerWidget(frontButton = new TextButton(xOffset + 15, yOffset + 15, 20, 20, "F", this::buttonPressed));
 		frontButton.setVisible(allowFaceInteraction);
-
-		buttons[0] = topButton;
-		buttons[1] = bottomButton;
-		buttons[2] = rightButton;
-		buttons[3] = leftButton;
-		buttons[4] = backButton;
-		buttons[5] = frontButton;
 
 		updateTooltips();
 	}
 
 	@Override
-	public void drawExtra(int xPos, int yPos, float partialTicks) {
-		if (isOpen()) {
-			drawText(xPos + 10, yPos + 8);
-			drawButtonBG(xPos, yPos);
-			for (TextButton button : buttons) {
-				button.renderBackground(xPos, yPos, partialTicks);
-				button.renderForeground(xPos, yPos, partialTicks);
-			}
-		}
+	public void renderBackground(int mouseX, int mouseY, float partialTicks) {
+		drawText(xPosition + 10, yPosition + 8);
+		drawButtonBG(xPosition, yPosition);
+		super.renderBackground(mouseX, mouseY, partialTicks);
 	}
 
 	public void drawText(int xPos, int yPos) {
@@ -97,25 +81,6 @@ public class GuiSideConfigTab extends BaseGuiTab {
 		vertexbuffer.pos(xPos + 10, yPos + 95, 0).tex(1, 1).endVertex();
 		tessellator.draw();
 		GL11.glDisable(GL11.GL_BLEND);
-	}
-
-	@Override
-	public void handleExtraMouseInteraction(int mouseX, int mouseY, int button) {
-		for (TextButton textButton : buttons) {
-			textButton.mouseClick(mouseX, mouseY, button);
-		}
-	}
-
-	@Override
-	protected void handleExtraKeyboardInteraction(char par1, int par2) {
-
-	}
-
-	@Override
-	protected void handleExtraMouseMove(int mouseX, int mouseY) {
-		for (TextButton textButton : buttons) {
-			textButton.mouseHover(mouseX, mouseY);
-		}
 	}
 
 	public void buttonPressed(BaseButton button) {

@@ -1,0 +1,40 @@
+package theking530.api.gui.widgets.progressbars;
+
+import com.mojang.blaze3d.platform.GlStateManager;
+
+import net.minecraft.client.Minecraft;
+import theking530.api.gui.GuiDrawUtilities;
+import theking530.api.gui.GuiTextures;
+import theking530.api.utilities.Vector2D;
+import theking530.staticpower.tileentities.utilities.interfaces.IProcessing;
+
+public class ArrowProgressBar extends AbstractProgressBar {
+	private IProcessing processingEntity;
+
+	public ArrowProgressBar(IProcessing processingEntity, int xPosition, int yPosition, int xSize, int ySize) {
+		super(xPosition, yPosition, xSize, ySize);
+		this.processingEntity = processingEntity;
+	}
+
+	@Override
+	public void renderBackground(int mouseX, int mouseY, float partialTicks) {
+		if (lastValue != processingEntity.getCurrentProgress()) {
+			lastValue = processingEntity.getCurrentProgress();
+			interp = lastValue;
+		}
+		if (processingEntity.isProcessing()) {
+			double seconds = processingEntity.getProcessingTime() / 20.0;
+			double perSecond = (partialTicks) / seconds;
+			interp += perSecond;
+		}
+		Vector2D screenSpacePosition = this.getScreenSpacePosition();
+		float adjustedProgress = 0.6875f * interp / (float) processingEntity.getProcessingTime();
+
+		GlStateManager.enableBlend();
+		Minecraft.getInstance().getTextureManager().bindTexture(GuiTextures.ARROW_PROGRESS_BAR);
+		GuiDrawUtilities.drawTexturedModalRect(screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY(), 0, 0.5f, 1.0f, 1.0f);
+		GuiDrawUtilities.drawTexturedModalRect(screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX() * adjustedProgress, getSize().getY(), 0, 0, adjustedProgress, 0.5f);
+
+		GlStateManager.disableBlend();
+	}
+}

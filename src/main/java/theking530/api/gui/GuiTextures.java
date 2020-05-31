@@ -5,7 +5,8 @@ import theking530.staticpower.utilities.Reference;
 
 public class GuiTextures {
 	public static final ResourceLocation GENERIC_GUI = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/generic_gui_sampler.png");
-	
+	public static final ResourceLocation VANILLA_FURNACE_GUI = new ResourceLocation("textures/gui/container/furnace.png");
+
 	public static final ResourceLocation TANK_OVERLAY = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/tank_overlay.png");
 	public static final ResourceLocation BATTERY_GUI = new ResourceLocation(Reference.MOD_ID, "textures/gui/battery_gui.png");
 	public static final ResourceLocation MULTIPLIER_GUI = new ResourceLocation(Reference.MOD_ID, "textures/gui/multiplier_gui.png");
@@ -29,30 +30,30 @@ public class GuiTextures {
 	public static final ResourceLocation CONDENSER_GUI = new ResourceLocation(Reference.MOD_ID, "textures/gui/condenser_gui.png");
 	public static final ResourceLocation MSQUEEZER_GUI = new ResourceLocation(Reference.MOD_ID, "textures/gui/mechanical_squeezer_gui.png");
 	public static final ResourceLocation FORMER_GUI = new ResourceLocation(Reference.MOD_ID, "textures/gui/former_gui.png");
-	
+
 	public static final ResourceLocation SCHEST_GUI = new ResourceLocation(Reference.MOD_ID, "textures/gui/static_chest_gui.png");
 	public static final ResourceLocation ECHEST_GUI = new ResourceLocation(Reference.MOD_ID, "textures/gui/energized_chest_gui.png");
 	public static final ResourceLocation LCHEST_GUI = new ResourceLocation(Reference.MOD_ID, "textures/gui/lumum_chest_gui.png");
 	public static final ResourceLocation VCHEST_GUI = new ResourceLocation(Reference.MOD_ID, "textures/gui/vacuum_chest_gui.png");
-	
+
 	public static final ResourceLocation BFILTER_GUI = new ResourceLocation(Reference.MOD_ID, "textures/gui/basic_item_filter_gui.png");
 	public static final ResourceLocation UFILTER_GUI = new ResourceLocation(Reference.MOD_ID, "textures/gui/upgraded_item_filter_gui.png");
 	public static final ResourceLocation AFILTER_GUI = new ResourceLocation(Reference.MOD_ID, "textures/gui/advanced_item_filter_gui.png");
-	
+
 	public static final ResourceLocation GREEN_TAB = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/green_tab.png");
 	public static final ResourceLocation PURPLE_TAB = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/purple_tab.png");
 	public static final ResourceLocation RED_TAB = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/red_tab.png");
 	public static final ResourceLocation BLUE_TAB = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/blue_tab.png");
 	public static final ResourceLocation YELLOW_TAB = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/yellow_tab.png");
-	
+
 	public static final ResourceLocation POWER_BAR_FG = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/power_bar_power.png");
 	public static final ResourceLocation POWER_BAR_BG = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/power_bar_bg.png");
-	
+
 	public static final ResourceLocation BUTTON_BG = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/button_bg.png");
 	public static final ResourceLocation ARROW_TEXTURES = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/arrow_buttons.png");
 	public static final ResourceLocation BUTTON = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/button.png");
 	public static final ResourceLocation BUTTON_HOVER = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/button_hover.png");
-	
+
 	public static final ResourceLocation GUI_ICONS = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/gui_icons.png");
 	public static final ResourceLocation ARROW_PROGRESS_BAR = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/arrow_progress_bar.png");
 	public static final ResourceLocation GRINDER_PROGRESS_BAR = new ResourceLocation(Reference.MOD_ID + ":" + "textures/gui/grinder_progress_bar.png");

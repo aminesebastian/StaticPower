@@ -21,8 +21,9 @@ public class ItemButton extends StandardButton {
 	 * @param xPos   The xPosition of the button.
 	 * @param yPos   The yPosition of the button.
 	 */
-	public ItemButton(ItemStack icon, int width, int height, int xPos, int yPos, Consumer<BaseButton> onClicked) {
-		super(width, height, xPos, yPos, onClicked);
+	public ItemButton(ItemStack icon, int xPos, int yPos, int width, int height, Consumer<BaseButton> onClicked) {
+		super(xPos, yPos, width, height, onClicked);
+
 		itemIcon = icon;
 		customRenderer = Minecraft.getInstance().getItemRenderer();
 	}
@@ -36,8 +37,8 @@ public class ItemButton extends StandardButton {
 	 * @param xPos   The xPosition of the button.
 	 * @param yPos   The yPosition of the button.
 	 */
-	public ItemButton(Item icon, int width, int height, int xPos, int yPos, Consumer<BaseButton> onClicked) {
-		this(new ItemStack(icon), width, height, xPos, yPos, onClicked);
+	public ItemButton(Item icon, int xPos, int yPos, int width, int height, Consumer<BaseButton> onClicked) {
+		this(new ItemStack(icon), xPos, yPos, width, height, onClicked);
 	}
 
 	/**
@@ -46,9 +47,9 @@ public class ItemButton extends StandardButton {
 	@Override
 	protected void drawButtonOverlay() {
 		if (!itemIcon.isEmpty()) {
-			int buttonLeft = owningGui.getGuiLeft() + xPosition + 1;
-			int buttonTop = owningGui.getGuiTop() + yPosition + 1;
-			customRenderer.renderItemIntoGUI(itemIcon, buttonLeft + 1, buttonTop);
+			float buttonLeft = getScreenSpacePosition().getX() + 1;
+			float buttonTop = getScreenSpacePosition().getY() + 1;
+			customRenderer.renderItemIntoGUI(itemIcon, (int) buttonLeft + 1, (int) buttonTop);
 		}
 	}
 }
