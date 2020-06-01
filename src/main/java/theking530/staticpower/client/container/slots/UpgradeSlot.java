@@ -1,11 +1,10 @@
-package theking530.staticpower.client.container;
+package theking530.staticpower.client.container.slots;
 
 import javax.annotation.Nonnull;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
-import theking530.api.container.StaticPowerContainerSlot;
-import theking530.staticpower.items.upgrades.IMachineUpgrade;
+import theking530.staticpower.items.upgrades.IUpgradeItem;
 
 public class UpgradeSlot extends StaticPowerContainerSlot {
 
@@ -15,7 +14,7 @@ public class UpgradeSlot extends StaticPowerContainerSlot {
 
 	@Override
 	public boolean isItemValid(@Nonnull ItemStack stack) {
-		return !stack.isEmpty() && stack.getItem() instanceof IMachineUpgrade;
+		return !stack.isEmpty() && stack.getItem() instanceof IUpgradeItem;
 	}
 
 }

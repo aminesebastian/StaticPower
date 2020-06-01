@@ -1,12 +1,18 @@
 package theking530.staticpower.client.container;
 
+import java.lang.reflect.Field;
+import java.util.List;
+
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import theking530.api.container.StaticPowerContainerSlot;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import theking530.staticpower.StaticPower;
+import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 
 public abstract class StaticPowerContainer extends Container {
 	protected int playerInventoryStart;
@@ -14,10 +20,12 @@ public abstract class StaticPowerContainer extends Container {
 	protected int playerInventoryEnd;
 	protected int playerHotbarEnd;
 	private final PlayerInventory playerInventory;
+	private final Field listenersField;
 
 	protected StaticPowerContainer(ContainerType<?> type, int id, PlayerInventory inv) {
 		super(type, id);
 		playerInventory = inv;
+		listenersField = getListnersField();
 	}
 
 	/**
@@ -121,5 +129,30 @@ public abstract class StaticPowerContainer extends Container {
 	@Override
 	public boolean canInteractWith(PlayerEntity playerIn) {
 		return true;
+	}
+
+	/**
+	 * Gets the list of all listeners to this container. Access the private
+	 * "listeners" field through cached reflection.
+	 * 
+	 * @return The list of all listeners to this container.
+	 */
+	@SuppressWarnings("unchecked")
+	public List<IContainerListener> getListeners() {
+		try {
+			return (List<IContainerListener>) listenersField.get(this);
+		} catch (Exception e) {
+			StaticPower.LOGGER.error(String.format("An error occured when attempting to access (through reflection) the listeners to this container: %1$s.", this.toString()), e);
+		}
+		return null;
+	}
+
+	/**
+	 * Gets the private listeners field.
+	 * 
+	 * @return
+	 */
+	private Field getListnersField() {
+		return ObfuscationReflectionHelper.findField(Container.class, "field_177758_a");
 	}
 }

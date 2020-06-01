@@ -14,7 +14,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticpower.utilities.Tier;
 
-public class BaseQuarryingUpgrade extends BaseUpgrade implements IMachineUpgrade {
+public class BaseQuarryingUpgrade extends BaseUpgrade implements IUpgradeItem {
 
 	public BaseQuarryingUpgrade(String name, Tier tier) {
 		super(name, tier, new Properties().maxStackSize(1));

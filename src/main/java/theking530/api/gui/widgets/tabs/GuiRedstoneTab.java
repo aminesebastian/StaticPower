@@ -1,5 +1,7 @@
 package theking530.api.gui.widgets.tabs;
 
+import java.util.Optional;
+
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.block.Blocks;
@@ -16,7 +18,8 @@ import theking530.api.gui.button.ItemButton;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.components.TileEntityRedstoneControlComponent;
+import theking530.staticpower.tileentities.components.ComponentUtilities;
+import theking530.staticpower.tileentities.components.RedstoneControlComponent;
 import theking530.staticpower.tileentities.utilities.RedstoneModeList.RedstoneMode;
 
 public class GuiRedstoneTab extends BaseGuiTab {
@@ -45,11 +48,12 @@ public class GuiRedstoneTab extends BaseGuiTab {
 		ignoreRedstoneButton.setClickSoundPitch(0.75f);
 		lowRedstoneButton.setClickSoundPitch(0.85f);
 
-		if (tileEntity != null && tileEntity.hasComponentOfType(TileEntityRedstoneControlComponent.class)) {
-			TileEntityRedstoneControlComponent component = tileEntity.getFirstComponentOfType(TileEntityRedstoneControlComponent.class);
-			if (component.getRedstoneMode() == RedstoneMode.Ignore) {
+		// Get the component if present, and then initialize the correct button.
+		Optional<RedstoneControlComponent> redstoneComponent = ComponentUtilities.getComponent(RedstoneControlComponent.class, tileEntity);
+		if (redstoneComponent.isPresent()) {
+			if (redstoneComponent.get().getRedstoneMode() == RedstoneMode.Ignore) {
 				ignoreRedstoneButton.setToggled(true);
-			} else if (component.getRedstoneMode() == RedstoneMode.Low) {
+			} else if (redstoneComponent.get().getRedstoneMode() == RedstoneMode.Low) {
 				lowRedstoneButton.setToggled(true);
 			} else {
 				highRedstoneButton.setToggled(true);
@@ -74,19 +78,19 @@ public class GuiRedstoneTab extends BaseGuiTab {
 	}
 
 	public void modeText(int tabLeft, int tabTop) {
-		if (tileEntity != null && tileEntity.hasComponentOfType(TileEntityRedstoneControlComponent.class)) {
-			TileEntityRedstoneControlComponent component = tileEntity.getFirstComponentOfType(TileEntityRedstoneControlComponent.class);
-			if (component.getRedstoneMode() == RedstoneMode.Low) {
+		Optional<RedstoneControlComponent> redstoneComponent = ComponentUtilities.getComponent(RedstoneControlComponent.class, tileEntity);
+		if (redstoneComponent.isPresent()) {
+			if (redstoneComponent.get().getRedstoneMode() == RedstoneMode.Low) {
 				fontRenderer.drawStringWithShadow("Low", tabLeft + 37, tabTop + 95, 16777215);
 				fontRenderer.drawStringWithShadow("This machine will", tabLeft + 8, tabTop + 110, 16777215);
 				fontRenderer.drawStringWithShadow("only operate with no", tabLeft + 8, tabTop + 118, 16777215);
 				fontRenderer.drawStringWithShadow("signal.", tabLeft + 8, tabTop + 127, 16777215);
-			} else if (component.getRedstoneMode() == RedstoneMode.High) {
+			} else if (redstoneComponent.get().getRedstoneMode() == RedstoneMode.High) {
 				fontRenderer.drawStringWithShadow("High", tabLeft + 37, tabTop + 95, 16777215);
 				fontRenderer.drawStringWithShadow("This machine will", tabLeft + 8, tabTop + 110, 16777215);
 				fontRenderer.drawStringWithShadow("only operate with a", tabLeft + 8, tabTop + 118, 16777215);
 				fontRenderer.drawStringWithShadow("redstone signal.", tabLeft + 8, tabTop + 127, 16777215);
-			} else if (component.getRedstoneMode() == RedstoneMode.Ignore) {
+			} else if (redstoneComponent.get().getRedstoneMode() == RedstoneMode.Ignore) {
 				fontRenderer.drawStringWithShadow("Ignore", tabLeft + 37, tabTop + 95, 16777215);
 				fontRenderer.drawStringWithShadow("This machine will", tabLeft + 8, tabTop + 110, 16777215);
 				fontRenderer.drawStringWithShadow("ignore any redstone", tabLeft + 8, tabTop + 118, 16777215);
@@ -112,12 +116,10 @@ public class GuiRedstoneTab extends BaseGuiTab {
 
 	protected void synchronizeRedstoneMode(RedstoneMode mode) {
 		// Ensure this tile entity is valid and has the requested component.
-		if (tileEntity != null && tileEntity.hasComponentOfType(TileEntityRedstoneControlComponent.class)) {
-			// Get a reference to the redstone control component.
-			TileEntityRedstoneControlComponent component = tileEntity.getFirstComponentOfType(TileEntityRedstoneControlComponent.class);
-
+		Optional<RedstoneControlComponent> redstoneComponent = ComponentUtilities.getComponent(RedstoneControlComponent.class, tileEntity);
+		if (redstoneComponent.isPresent()) {
 			// Set the mode.
-			component.setRedstoneMode(mode);
+			redstoneComponent.get().setRedstoneMode(mode);
 
 			// Send a packet to the server with the updated values.
 			NetworkMessage msg = new PacketRedstoneTab(mode, tileEntity.getPos());

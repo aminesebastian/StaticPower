@@ -14,7 +14,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.utilities.Tier;
 
-public class BaseUpgrade extends StaticPowerItem implements IMachineUpgrade {
+public class BaseUpgrade extends StaticPowerItem implements IUpgradeItem {
 	private final Tier TIER;
 
 	BaseUpgrade(String name, Tier tier, Properties properties) {

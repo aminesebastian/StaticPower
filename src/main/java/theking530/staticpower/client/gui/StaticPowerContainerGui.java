@@ -1,13 +1,13 @@
 package theking530.staticpower.client.gui;
 
 import java.util.List;
+import java.util.Optional;
 
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.text.ITextComponent;
-import theking530.api.container.StaticPowerContainerSlot;
 import theking530.api.gui.GuiDrawUtilities;
 import theking530.api.gui.WidgetContainer;
 import theking530.api.gui.widgets.AbstractGuiWidget;
@@ -16,8 +16,10 @@ import theking530.api.gui.widgets.tabs.GuiTabManager;
 import theking530.api.utilities.Color;
 import theking530.api.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.components.TileEntityInventoryComponent;
+import theking530.staticpower.tileentities.components.SideConfigurationComponent;
+import theking530.staticpower.tileentities.components.ComponentUtilities;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
 /**
@@ -29,8 +31,11 @@ import theking530.staticpower.tileentities.utilities.MachineSideMode;
  * @param <T> The container type.
  */
 public abstract class StaticPowerContainerGui<T extends Container> extends ContainerScreen<T> {
-	protected final GuiTabManager tabManager;
+	/** The container responsible for managing all the widget. */
 	protected final WidgetContainer widgetContainer;
+	/** The tab manager widget. */
+	protected final GuiTabManager tabManager;
+	/** The item renderer. */
 	protected final GuiDrawItem itemDrawer;
 
 	protected int xSizeTarget;
@@ -38,6 +43,15 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	protected int outputSlotSize;
 	protected int inputSlotSize;
 
+	/**
+	 * Creates a new Gui.
+	 * 
+	 * @param container       The container that this GUI represents.
+	 * @param playerInventory The player's inventory.
+	 * @param title           The title of this GUI.
+	 * @param guiXSize        The gui's xSize.
+	 * @param guiYSize        The gui's ySize;
+	 */
 	public StaticPowerContainerGui(T container, final PlayerInventory playerInventory, ITextComponent title, int guiXSize, int guiYSize) {
 		super(container, playerInventory, title);
 		widgetContainer = new WidgetContainer();
@@ -66,7 +80,7 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		drawContainerTitle(mouseX, mouseY);
-		//widgetContainer.renderForegound(mouseX, mouseY);
+		// widgetContainer.renderForegound(mouseX, mouseY);
 	}
 
 	/**
@@ -311,44 +325,56 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 		GuiDrawUtilities.drawStringWithSize(text, xPos, yPos, scale, color, withShadow);
 	}
 
-	public void drawContainerSlots(TileEntityBase te, List<Slot> slots) {
-		if (te == null) {
+	public void drawContainerSlots(TileEntityBase tileEntity, List<Slot> slots) {
+		if (tileEntity == null) {
 			StaticPower.LOGGER.error("Encountered null tile entity when attempting to draw container slots.");
 			return;
 		}
 		for (Slot slot : slots) {
 			// Skip null slots
 			if (slot == null) {
-				StaticPower.LOGGER.error(String.format("Encountered an invalid slot in tile entity: %1$s at location: %2$s.", te.getDisplayName().getString(), te.getPos()));
+				StaticPower.LOGGER.error(String.format("Encountered an invalid slot in tile entity: %1$s at location: %2$s.", tileEntity.getDisplayName().getString(), tileEntity.getPos()));
 				continue;
 			}
 
+			// If the slot is a static power container slot, perform some additional checks
+			// before drawing, otheriwse just draw the slot.
 			if (slot instanceof StaticPowerContainerSlot) {
 				StaticPowerContainerSlot handlerSlot = (StaticPowerContainerSlot) slot;
 				if (handlerSlot.getItemHandler() == null) {
-					StaticPower.LOGGER.error(String.format("Encountered an invalid item handler for a slot in tile entity: %1$s at location: %2$s.", te.getDisplayName().getString(), te.getPos()));
+					StaticPower.LOGGER.error(
+							String.format("Encountered an invalid item handler for a slot in tile entity: %1$s at location: %2$s.", tileEntity.getDisplayName().getString(), tileEntity.getPos()));
 					continue;
 				}
 
 				// Check the intended mode of the handler slot. If it ends up being null, just
 				// assume the mode is regular.
 				MachineSideMode intendedMode = handlerSlot.getMode();
-				if (handlerSlot.getItemHandler() instanceof TileEntityInventoryComponent) {
-					intendedMode = ((TileEntityInventoryComponent) handlerSlot.getItemHandler()).getMode();
-				}
-				intendedMode = intendedMode == null ? MachineSideMode.Regular : intendedMode;
 
 				// If the slot is an output slot, increase the size of the slot.
 				int slotSize = intendedMode.isOutputMode() ? outputSlotSize : inputSlotSize;
-				int adjustment = (slotSize - 16) / 2;
-				if (intendedMode != MachineSideMode.Regular && intendedMode != MachineSideMode.Never) {
-					drawSlot(slot.xPos + guiLeft - adjustment, slot.yPos + guiTop - adjustment, slotSize, slotSize, te.getSideWithModeCount(intendedMode) > 0 ? intendedMode : MachineSideMode.Regular);
+				int positionAdjustment = (slotSize - 16) / 2;
+
+				// Attempt to get the side configuration.
+				Optional<SideConfigurationComponent> sideComp = ComponentUtilities.getComponent(SideConfigurationComponent.class, tileEntity);
+
+				// If side configuration is present, draw the slow with a border.
+				if (sideComp.isPresent()) {
+					if (intendedMode != MachineSideMode.Regular && intendedMode != MachineSideMode.Never) {
+						drawSlot(slot.xPos + guiLeft - positionAdjustment, slot.yPos + guiTop - positionAdjustment, slotSize, slotSize,
+								sideComp.get().getCountOfSidesWithMode(intendedMode) > 0 ? intendedMode : MachineSideMode.Regular);
+					} else {
+						drawSlot(slot.xPos + guiLeft, slot.yPos + guiTop, 16, 16);
+					}
 				} else {
 					drawSlot(slot.xPos + guiLeft, slot.yPos + guiTop, 16, 16);
 				}
+				// Draw the preview item.
 				if (!handlerSlot.getPreviewItem().isEmpty()) {
 					itemDrawer.drawItem(handlerSlot.getPreviewItem(), guiLeft, guiTop, slot.xPos, slot.yPos, handlerSlot.getPreviewAlpha());
 				}
+			} else {
+				drawSlot(slot.xPos + guiLeft, slot.yPos + guiTop, 16, 16);
 			}
 		}
 	}

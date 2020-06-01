@@ -10,42 +10,42 @@ import theking530.staticpower.initialization.ModBlocks;
 import theking530.staticpower.initialization.ModTileEntityTypes;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 import theking530.staticpower.tileentities.TileEntityMachine;
-import theking530.staticpower.tileentities.components.TileEntityBatteryComponent;
-import theking530.staticpower.tileentities.components.TileEntityInputServoComponent;
-import theking530.staticpower.tileentities.components.TileEntityInventoryComponent;
-import theking530.staticpower.tileentities.components.TileEntityOutputServoComponent;
+import theking530.staticpower.tileentities.components.BatteryComponent;
+import theking530.staticpower.tileentities.components.InputServoComponent;
+import theking530.staticpower.tileentities.components.InventoryComponent;
+import theking530.staticpower.tileentities.components.OutputServoComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityChargingStation extends TileEntityMachine {
-	public final TileEntityInventoryComponent unchargedInventory;
-	public final TileEntityInventoryComponent chargedInventory;
-	public final TileEntityInventoryComponent batterySlot;
+	public final InventoryComponent unchargedInventory;
+	public final InventoryComponent chargedInventory;
+	public final InventoryComponent batterySlot;
+	public final InventoryComponent upgradesInventory;
 
 	public TileEntityChargingStation() {
-		super(ModTileEntityTypes.CHARGING_STATION, 3);
-		initializeBasicMachine(2, 0, 100000, 500, 2);
-		energyStorage.setMaxExtract(512);
+		super(ModTileEntityTypes.CHARGING_STATION, 3, 5000, 0, 50, 0);
 
-		registerComponent(unchargedInventory = new TileEntityInventoryComponent("unchargedInventory", 4, MachineSideMode.Input));
-		registerComponent(chargedInventory = new TileEntityInventoryComponent("chargedInventory", 4, MachineSideMode.Output));
-		registerComponent(batterySlot = new TileEntityInventoryComponent("batterySlot", 1, MachineSideMode.Never));
-
-		registerComponent(new TileEntityBatteryComponent("BatteryComponent", batterySlot, 0, energyStorage));
-		registerComponent(new TileEntityOutputServoComponent(this, 1, chargedInventory, 0, 1, 2, 3));
-		registerComponent(new TileEntityInputServoComponent(this, 2, unchargedInventory, 0, 1, 2, 3));
+		registerComponent(unchargedInventory = new InventoryComponent("unchargedInventory", 4, MachineSideMode.Input));
+		registerComponent(chargedInventory = new InventoryComponent("chargedInventory", 4, MachineSideMode.Output));
+		registerComponent(batterySlot = new InventoryComponent("batterySlot", 1, MachineSideMode.Never));
+		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
+		
+		registerComponent(new BatteryComponent("BatteryComponent", batterySlot.getInventory(), 0, energyStorage));
+		registerComponent(new OutputServoComponent("OutputServo", 1, chargedInventory, 0, 1, 2, 3));
+		registerComponent(new InputServoComponent("InputServo", 2, unchargedInventory, 0, 1, 2, 3));
 	}
 
 	@Override
 	public void process() {
 		if (energyStorage.getEnergyStored() > 0) {
-			for (int i = 0; i < unchargedInventory.getSlots(); i++) {
+			for (int i = 0; i < unchargedInventory.getSlotCount(); i++) {
 				ItemStack stack = unchargedInventory.getStackInSlot(i);
 				if (stack != ItemStack.EMPTY && EnergyHandlerItemStackUtilities.isEnergyContainer(stack)) {
 					if (EnergyHandlerItemStackUtilities.getEnergyStored(stack) < EnergyHandlerItemStackUtilities.getEnergyStorageCapacity(stack)) {
-						int maxOutput = this.getEnergyStorage().getCurrentMaximumPowerOutput();
+						int maxOutput = energyStorage.getCurrentMaximumPowerOutput();
 						int charged = EnergyHandlerItemStackUtilities.addEnergyToItemstack(stack, maxOutput, false);
-						getEnergyStorage().extractEnergy(charged, false);
+						energyStorage.extractEnergy(charged, false);
 					} else {
 						moveChargedItemToOutputs(i);
 					}
@@ -66,7 +66,7 @@ public class TileEntityChargingStation extends TileEntityMachine {
 			// If we can place the charged item into an output slot, do so. There's no need
 			// to check the result of the call to insertItem as we already know the result
 			// is going to be empty.
-			if (InventoryUtilities.canFullyInsertStackIntoSlot(chargedInventory, i, unchargedInventory.getStackInSlot(fromSlot))) {
+			if (InventoryUtilities.canFullyInsertStackIntoSlot(chargedInventory.getInventory(), i, unchargedInventory.getStackInSlot(fromSlot))) {
 				System.out.println(unchargedInventory.getStackInSlot(fromSlot));
 				ItemStack stack = unchargedInventory.extractItem(fromSlot, 1, false);
 				chargedInventory.insertItem(i, stack, false);

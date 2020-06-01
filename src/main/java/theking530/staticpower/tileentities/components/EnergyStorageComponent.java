@@ -1,13 +1,17 @@
-package theking530.staticpower.energy;
+package theking530.staticpower.tileentities.components;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import theking530.staticpower.tileentities.components.ITileEntityComponent;
 
-public class StaticEnergyStorage implements IEnergyStorage, ITileEntityComponent {
+public class EnergyStorageComponent extends AbstractTileEntityComponent implements IEnergyStorage {
 
 	protected int capacity;
 	protected int currentEnergy;
@@ -18,52 +22,60 @@ public class StaticEnergyStorage implements IEnergyStorage, ITileEntityComponent
 	protected int lastEnergyStored;
 	protected int energyPerTick;
 	protected List<Integer> powerPerTickList;
-	protected int powerPerTickSmoothingFactor = 1;
+	protected int powerPerTickSmoothingFactor;
+	protected long lastUpdateTime;
 
 	protected boolean canExtract;
 	protected boolean canRecieve;
 
-	protected boolean isEnabled;
-
-	public StaticEnergyStorage(int capacity) {
-		this(capacity, Integer.MAX_VALUE);
+	public EnergyStorageComponent(String name, int capacity) {
+		this(name, capacity, Integer.MAX_VALUE);
 	}
 
-	public StaticEnergyStorage(int capacity, int maxInput) {
-		this(capacity, maxInput, Integer.MAX_VALUE);
+	public EnergyStorageComponent(String name, int capacity, int maxInput) {
+		this(name, capacity, maxInput, Integer.MAX_VALUE);
 	}
 
-	public StaticEnergyStorage(int capacity, int maxInput, int maxExtract) {
+	public EnergyStorageComponent(String name, int capacity, int maxInput, int maxExtract) {
+		super(name);
 		this.capacity = capacity;
 		this.maxReceive = maxInput;
 		this.maxExtract = maxExtract;
 		canRecieve = true;
 		canExtract = false;
+		powerPerTickSmoothingFactor = 2;
 		powerPerTickList = new ArrayList<Integer>();
 	}
 
-	public StaticEnergyStorage readFromNBT(CompoundNBT nbt) {
-		currentEnergy = nbt.getInt("Energy");
-		capacity = nbt.getInt("Capacity");
+	@Override
+	public void deserializeUpdateNbt(CompoundNBT nbt) {
 		if (currentEnergy > capacity) {
 			currentEnergy = capacity;
 		}
+
 		energyPerTick = nbt.getInt("PerTick");
+		currentEnergy = nbt.getInt("Energy");
+		capacity = nbt.getInt("Capacity");
 		maxReceive = nbt.getInt("MaxRecv");
 		maxExtract = nbt.getInt("MaxExtract");
-		return this;
 	}
 
-	public CompoundNBT writeToNBT(CompoundNBT nbt) {
+	@Override
+	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt) {
 		if (currentEnergy < 0) {
 			currentEnergy = 0;
 		}
+
+		long ticksSinceLastUpdate = getTileEntity().getWorld().getGameTime() - lastUpdateTime;
+		int energyUsedPerTickSinceLastPacket = (int) ((currentEnergy - lastEnergyStored) / ticksSinceLastUpdate);
+
 		nbt.putInt("Energy", currentEnergy);
 		nbt.putInt("Capacity", capacity);
-		nbt.putInt("PerTick", energyPerTick);
-
 		nbt.putInt("MaxRecv", maxReceive);
 		nbt.putInt("MaxExtract", maxExtract);
+		nbt.putInt("PerTick", energyUsedPerTickSinceLastPacket);
+		lastUpdateTime = getTileEntity().getWorld().getGameTime();
+		lastEnergyStored = currentEnergy;
 		return nbt;
 	}
 
@@ -176,31 +188,34 @@ public class StaticEnergyStorage implements IEnergyStorage, ITileEntityComponent
 
 	@Override
 	public void preProcessUpdate() {
-		powerPerTickList.add(currentEnergy - lastEnergyStored);
+		// powerPerTickList.add(currentEnergy - lastEnergyStored);
 		if (powerPerTickList.size() > powerPerTickSmoothingFactor) {
 			powerPerTickList.remove(0);
 		}
 
-		energyPerTick = currentEnergy - lastEnergyStored; // sum/powerPerTickList.size();
-	}
-
-	@Override
-	public String getComponentName() {
-		return "Energy Storage";
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return isEnabled;
-	}
-
-	@Override
-	public void setEnabled(boolean isEnabled) {
-		this.isEnabled = isEnabled;
+//		energyPerTick = 0;
+//		for (int i = 0; i < powerPerTickList.size(); i++) {
+//			if (Math.abs(powerPerTickList.get(i)) > Math.abs(energyPerTick)) {
+//				energyPerTick = powerPerTickList.get(i);
+//			}
+//		}
 	}
 
 	@Override
 	public void postProcessUpdate() {
-		lastEnergyStored = currentEnergy;
+
+	}
+
+	@Override
+	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
+		if (cap == CapabilityEnergy.ENERGY) {
+			Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getTileEntity());
+			if (side == null || !sideConfig.isPresent() || !sideConfig.get().getWorldSpaceDirectionConfiguration(side).isDisabledMode()) {
+				return LazyOptional.of(() -> {
+					return this;
+				}).cast();
+			}
+		}
+		return LazyOptional.empty();
 	}
 }

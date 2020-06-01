@@ -2,18 +2,13 @@ package theking530.staticpower.tileentities.components;
 
 import net.minecraft.nbt.CompoundNBT;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.utilities.RedstoneModeList.RedstoneMode;
 
-public class TileEntityRedstoneControlComponent implements ITileEntityComponent {
-
-	private String name;
-	private boolean isEnabled;
-	private TileEntityBase owner;
+public class RedstoneControlComponent extends AbstractTileEntityComponent {
 	private RedstoneMode redstoneMode;
 
-	public TileEntityRedstoneControlComponent(String componentName, RedstoneMode defaultMode) {
-		name = componentName;
+	public RedstoneControlComponent(String name, RedstoneMode defaultMode) {
+		super(name);
 		redstoneMode = defaultMode;
 	}
 
@@ -27,13 +22,13 @@ public class TileEntityRedstoneControlComponent implements ITileEntityComponent 
 
 	public boolean passesRedstoneCheck() {
 		// If the owner is null, log it and return false.
-		if (owner == null) {
-			StaticPower.LOGGER.error("Encountered invalid tile entity owner in %1$s of name: %2$s.", getClass().toString(), name);
+		if (getTileEntity() == null) {
+			StaticPower.LOGGER.error("Encountered invalid tile entity owner in %1$s of name: %2$s.", getClass().toString(), getComponentName());
 			return false;
 		}
 
 		// Get the redstone signal at the block.
-		int redstoneSignal = owner.getWorld().getStrongPower(owner.getPos());
+		int redstoneSignal = getTileEntity().getWorld().getStrongPower(getTileEntity().getPos());
 
 		// If we're ignoring, just return true.
 		if (redstoneMode == RedstoneMode.Ignore) {
@@ -56,32 +51,12 @@ public class TileEntityRedstoneControlComponent implements ITileEntityComponent 
 
 	@Override
 	public CompoundNBT serializeSaveNbt(CompoundNBT nbt) {
-		nbt.putShort(name, (short) redstoneMode.ordinal());
+		nbt.putShort(getComponentName(), (short) redstoneMode.ordinal());
 		return nbt;
 	}
 
 	@Override
 	public void deserializeSaveNbt(CompoundNBT nbt) {
-		redstoneMode = RedstoneMode.getModeFromInt(nbt.getShort(name));
-	}
-
-	@Override
-	public void onRegistered(TileEntityBase owner) {
-		this.owner = owner;
-	}
-
-	@Override
-	public String getComponentName() {
-		return name;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return isEnabled;
-	}
-
-	@Override
-	public void setEnabled(boolean isEnabled) {
-		this.isEnabled = isEnabled;
+		redstoneMode = RedstoneMode.getModeFromInt(nbt.getShort(getComponentName()));
 	}
 }

@@ -49,10 +49,10 @@ public class SquareProgressBar extends AbstractProgressBar {
 			bottom = j;
 		}
 
-		float f3 = (float) (color >> 24 & 255) / 255.0F;
-		float f = (float) (color >> 16 & 255) / 255.0F;
-		float f1 = (float) (color >> 8 & 255) / 255.0F;
-		float f2 = (float) (color & 255) / 255.0F;
+//		float f3 = (float) (color >> 24 & 255) / 255.0F;
+//		float f = (float) (color >> 16 & 255) / 255.0F;
+//		float f1 = (float) (color >> 8 & 255) / 255.0F;
+//		float f2 = (float) (color & 255) / 255.0F;
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
 		GlStateManager.enableBlend();

@@ -4,7 +4,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -26,7 +25,7 @@ public class BlockSolarPanel extends StaticPowerTileEntityBlock {
 
 	@Override
 	public void sneakWrenchBlock(PlayerEntity player, SneakWrenchMode mode, ItemStack wrench, World world, BlockPos pos, Direction facing, boolean returnDrops) {
-		ItemStack machineStack = new ItemStack(Item.getItemFromBlock(this));
+		ItemStack machineStack = new ItemStack(asItem());
 		ItemEntity droppedItem = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), machineStack);
 		world.addEntity(droppedItem);
 		world.setBlockState(pos, Blocks.AIR.getDefaultState());

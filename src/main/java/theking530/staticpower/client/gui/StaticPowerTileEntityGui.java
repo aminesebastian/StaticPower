@@ -21,6 +21,11 @@ public abstract class StaticPowerTileEntityGui<T extends StaticPowerTileEntityCo
 		initializeGui();
 	}
 
+	/**
+	 * Gets the owning tile entity for this container.
+	 * 
+	 * @return The owning tile entity for this container.
+	 */
 	protected K getTileEntity() {
 		return owningTileEntity;
 	}

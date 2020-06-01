@@ -9,7 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.components.TileEntityRedstoneControlComponent;
+import theking530.staticpower.tileentities.components.RedstoneControlComponent;
 import theking530.staticpower.tileentities.utilities.RedstoneModeList.RedstoneMode;
 
 public class PacketRedstoneTab extends NetworkMessage {
@@ -42,9 +42,9 @@ public class PacketRedstoneTab extends NetworkMessage {
 		if (rawTileEntity != null && rawTileEntity instanceof TileEntityBase) {
 			TileEntityBase tileEntity = (TileEntityBase) rawTileEntity;
 			// Ensure this tile entity is valid and has the requested component.
-			if (tileEntity.hasComponentOfType(TileEntityRedstoneControlComponent.class)) {
+			if (tileEntity.hasComponentOfType(RedstoneControlComponent.class)) {
 				// Get a reference to the redstone control component.
-				TileEntityRedstoneControlComponent component = tileEntity.getFirstComponentOfType(TileEntityRedstoneControlComponent.class);
+				RedstoneControlComponent component = tileEntity.getComponent(RedstoneControlComponent.class);
 
 				// Set the mode.
 				component.setRedstoneMode(redstoneMode);

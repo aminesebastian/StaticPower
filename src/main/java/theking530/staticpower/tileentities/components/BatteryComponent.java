@@ -2,20 +2,16 @@ package theking530.staticpower.tileentities.components;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
-import theking530.staticpower.energy.StaticEnergyStorage;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
-public class TileEntityBatteryComponent implements ITileEntityComponent {
-
-	private String NAME;
-	private boolean isEnabled;
+public class BatteryComponent extends AbstractTileEntityComponent {
 
 	private ItemStackHandler BATTERY_SLOT_HANDLER;
 	private int BATTERY_SLOT;
-	private StaticEnergyStorage ENERGY_STORAGE;
+	private EnergyStorageComponent ENERGY_STORAGE;
 
-	public TileEntityBatteryComponent(String componentName, ItemStackHandler batterySlotHandler, int batterySlot, StaticEnergyStorage energyHandler) {
-		NAME = componentName;
+	public BatteryComponent(String name, ItemStackHandler batterySlotHandler, int batterySlot, EnergyStorageComponent energyHandler) {
+		super(name);
 		BATTERY_SLOT_HANDLER = batterySlotHandler;
 		BATTERY_SLOT = batterySlot;
 		ENERGY_STORAGE = energyHandler;
@@ -35,20 +31,5 @@ public class TileEntityBatteryComponent implements ITileEntityComponent {
 				}
 			}
 		}
-	}
-
-	@Override
-	public String getComponentName() {
-		return NAME;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return isEnabled;
-	}
-
-	@Override
-	public void setEnabled(boolean isEnabled) {
-		this.isEnabled = isEnabled;
 	}
 }

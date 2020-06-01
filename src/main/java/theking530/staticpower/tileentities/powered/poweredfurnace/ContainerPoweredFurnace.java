@@ -5,10 +5,10 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
-import theking530.api.container.StaticPowerContainerSlot;
-import theking530.staticpower.client.container.BatterySlot;
 import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
-import theking530.staticpower.client.container.UpgradeSlot;
+import theking530.staticpower.client.container.slots.BatterySlot;
+import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
+import theking530.staticpower.client.container.slots.UpgradeSlot;
 import theking530.staticpower.initialization.ModContainerTypes;
 import theking530.staticpower.items.upgrades.BaseUpgrade;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
@@ -26,7 +26,7 @@ public class ContainerPoweredFurnace extends StaticPowerTileEntityContainer<Tile
 	@Override
 	public void initializeContainer() {
 		// Input
-		this.addSlot(new StaticPowerContainerSlot(getTileEntity().inputInventory, 0, 50, 28) {
+		this.addSlot(new StaticPowerContainerSlot(getTileEntity().inputInventory.getInventory(), 0, 50, 28) {
 			@Override
 			public boolean isItemValid(ItemStack itemStack) {
 				return getTileEntity().getRecipe(itemStack).isPresent();
@@ -34,15 +34,15 @@ public class ContainerPoweredFurnace extends StaticPowerTileEntityContainer<Tile
 		});
 
 		// Battery
-		this.addSlot(new BatterySlot(getTileEntity().batterySlot, 0, 8, 65));
+		this.addSlot(new BatterySlot(getTileEntity().batteryInventory.getInventory(), 0, 8, 65));
 
 		// Output
-		this.addSlot(new StaticPowerContainerSlot(getTileEntity().outputInventory, 0, 109, 32));
+		this.addSlot(new StaticPowerContainerSlot(getTileEntity().outputInventory.getInventory(), 0, 109, 32));
 
 		// Upgrades
-		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventoryComponent, 0, 152, 12));
-		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventoryComponent, 1, 152, 32));
-		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventoryComponent, 2, 152, 52));
+		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory.getInventory(), 0, 152, 12));
+		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory.getInventory(), 1, 152, 32));
+		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory.getInventory(), 2, 152, 52));
 
 		this.addPlayerInventory(getPlayerInventory(), 8, 84);
 		this.addPlayerHotbar(getPlayerInventory(), 8, 142);

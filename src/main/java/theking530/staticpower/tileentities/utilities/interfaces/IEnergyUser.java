@@ -1,10 +1,10 @@
 package theking530.staticpower.tileentities.utilities.interfaces;
 
-import theking530.staticpower.energy.StaticEnergyStorage;
+import theking530.staticpower.tileentities.components.EnergyStorageComponent;
 
 public interface IEnergyUser {
 
-	public StaticEnergyStorage getEnergyStorage();
+	public EnergyStorageComponent getEnergyStorage();
 
 	public boolean isUsingEnergy();
 

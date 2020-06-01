@@ -13,7 +13,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticpower.utilities.Tier;
 
-public class BaseOutputMultiplierUpgrade extends BaseUpgrade implements IMachineUpgrade {
+public class BaseOutputMultiplierUpgrade extends BaseUpgrade implements IUpgradeItem {
 
 	public BaseOutputMultiplierUpgrade(String name, Tier tier) {
 		super(name, tier, new Properties().maxStackSize(8));

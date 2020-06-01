@@ -1,44 +1,38 @@
 package theking530.staticpower.tileentities.powered.solarpanels;
 
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.LightType;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
-import theking530.staticpower.energy.PowerDistributor;
-import theking530.staticpower.energy.StaticEnergyStorage;
+import theking530.staticpower.initialization.ModBlocks;
 import theking530.staticpower.initialization.ModTileEntityTypes;
+import theking530.staticpower.tileentities.TileEntityBase;
+import theking530.staticpower.tileentities.components.PowerDistributionComponent;
+import theking530.staticpower.tileentities.components.EnergyStorageComponent;
 
-public class TileEntityBasicSolarPanel extends TileEntity implements ITickableTileEntity {
+public class TileEntityBasicSolarPanel extends TileEntityBase implements ITickableTileEntity {
 
-	public StaticEnergyStorage energyStorage;
-	public PowerDistributor energyDistributor;
+	public EnergyStorageComponent energyStorage;
 
 	public TileEntityBasicSolarPanel() {
 		super(ModTileEntityTypes.SOLAR_PANEL_BASIC);
-		initializeSolarPanel();
-		energyDistributor = new PowerDistributor(this, energyStorage);
-	}
-
-	public void initializeSolarPanel() {
-		energyStorage = new StaticEnergyStorage(64);
+		registerComponent(energyStorage = new EnergyStorageComponent("PowerBuffer", 64));
 		energyStorage.setMaxReceive(10);
-		energyStorage.setMaxExtract(10 * 2);
+		energyStorage.setMaxExtract(10);
+
+		registerComponent(new PowerDistributionComponent("PowerDistribution", energyStorage));
 	}
 
 	@Override
-	public void tick() {
-		if (!getWorld().isRemote) {
-			generateRF();
-			if (energyStorage.getEnergyStored() > 0) {
-				energyDistributor.provideRF(Direction.DOWN, energyStorage.getMaxReceive());
-			}
-		}
+	public void process() {
+		// Perform the generation on both the client and the server. The client
+		// generation is only for immediate visual response.
+		generateRF();
 	}
 
 	// Functionality
@@ -64,7 +58,7 @@ public class TileEntityBasicSolarPanel extends TileEntity implements ITickableTi
 		return calculateLightRatio(getWorld(), pos);
 	}
 
-	public float calculateLightRatio(World world, BlockPos pos) {	
+	public float calculateLightRatio(World world, BlockPos pos) {
 		int lightValue = 128;
 		float sunAngle = world.getCelestialAngleRadians(1.0F);
 		if (sunAngle < (float) Math.PI) {
@@ -79,16 +73,13 @@ public class TileEntityBasicSolarPanel extends TileEntity implements ITickableTi
 		return lightValue / 15f;
 	}
 
-	/* CAPABILITIES */
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (cap == CapabilityEnergy.ENERGY) {
-			if (energyStorage != null) {
-				return LazyOptional.of(() -> {
-					return energyStorage;
-				}).cast();
-			}
-		}
-		return super.getCapability(cap, side);
+	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+		return null;
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
+		return new TranslationTextComponent(ModBlocks.SolarPanelBasic.getTranslationKey());
 	}
 }

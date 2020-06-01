@@ -6,20 +6,21 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fluids.IFluidTank;
 import theking530.api.gui.widgets.AbstractGuiWidget;
 import theking530.api.utilities.Vector2D;
+import theking530.staticpower.tileentities.TileEntityBase;
+import theking530.staticpower.tileentities.components.SideConfigurationComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
-import theking530.staticpower.tileentities.utilities.interfaces.ISideConfigurable;
 
 public class GuiFluidBarFromTank extends AbstractGuiWidget {
 
 	private IFluidTank tank;
 	private MachineSideMode mode;
-	private ISideConfigurable sideConfigurable;
+	private TileEntityBase owningTileEntity;
 
-	public GuiFluidBarFromTank(IFluidTank tank, int xPosition, int yPosition, int xSize, int ySize, MachineSideMode mode, ISideConfigurable sideConfigurable) {
+	public GuiFluidBarFromTank(IFluidTank tank, int xPosition, int yPosition, int xSize, int ySize, MachineSideMode mode, TileEntityBase owningTileEntity) {
 		super(xPosition, yPosition, xSize, ySize);
 		this.tank = tank;
 		this.mode = mode;
-		this.sideConfigurable = sideConfigurable;
+		this.owningTileEntity = owningTileEntity;
 	}
 
 	public GuiFluidBarFromTank(IFluidTank tank, int xPosition, int yPosition, int xSize, int ySize) {
@@ -29,8 +30,14 @@ public class GuiFluidBarFromTank extends AbstractGuiWidget {
 	@Override
 	public void renderBackground(int mouseX, int mouseY, float partialTicks) {
 		Vector2D ownerRelativePosition = getScreenSpacePosition();
-		if (sideConfigurable != null && mode != null) {
-			if (sideConfigurable.getSideWithModeCount(mode) > 0) {
+		if (!owningTileEntity.hasComponentOfType(SideConfigurationComponent.class)) {
+			return;
+		}
+		SideConfigurationComponent sideComp = owningTileEntity.getComponent(SideConfigurationComponent.class);
+		
+		
+		if (sideComp != null && mode != null) {
+			if (sideComp.getCountOfSidesWithMode(mode) > 0) {
 				GuiFluidBarUtilities.drawFluidBar(tank.getFluid(), tank.getCapacity(), tank.getFluidAmount(), ownerRelativePosition.getX(), ownerRelativePosition.getY() + getSize().getY(), 0.0f,
 						getSize().getX(), getSize().getY(), mode, true);
 				return;

@@ -13,7 +13,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticpower.utilities.Tier;
 
-public class ExperienceVacuumUpgrade extends BaseUpgrade implements IMachineUpgrade{
+public class ExperienceVacuumUpgrade extends BaseUpgrade implements IUpgradeItem{
 
 	public  ExperienceVacuumUpgrade(String name){
 		super(name, Tier.STATIC, new Properties().maxStackSize(1));

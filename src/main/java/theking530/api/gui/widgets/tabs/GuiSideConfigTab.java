@@ -14,10 +14,10 @@ import theking530.api.gui.button.TextButton;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.utilities.SideUtilities;
-import theking530.staticpower.tileentities.utilities.SideUtilities.BlockSide;
-import theking530.staticpower.tileentities.utilities.interfaces.ISideConfigurable;
-import theking530.staticpower.tileentities.utilities.interfaces.ISideConfigurable.SideIncrementDirection;
+import theking530.staticpower.tileentities.components.SideConfigurationComponent;
+import theking530.staticpower.tileentities.components.SideConfigurationComponent.SideIncrementDirection;
+import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities;
+import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities.BlockSide;
 
 public class GuiSideConfigTab extends BaseGuiTab {
 
@@ -84,73 +84,74 @@ public class GuiSideConfigTab extends BaseGuiTab {
 	}
 
 	public void buttonPressed(BaseButton button) {
-		if (!(tileEntity instanceof ISideConfigurable)) {
+		if (!tileEntity.hasComponentOfType(SideConfigurationComponent.class)) {
 			return;
 		}
-		ISideConfigurable sideConfigurable = (ISideConfigurable) tileEntity;
+		SideConfigurationComponent sideComp = tileEntity.getComponent(SideConfigurationComponent.class);
+
 		SideIncrementDirection direction = button.getClickedState() == ClickedButton.LEFT ? SideIncrementDirection.FORWARD : SideIncrementDirection.BACKWARDS;
 		if (button == topButton) {
-			sideConfigurable.incrementSideConfiguration(SideUtilities.getDirectionFromSide(BlockSide.TOP, tileEntity.getFacingDirection()), direction);
+			sideComp.modulateWorldSpaceSideMode(SideConfigurationUtilities.getDirectionFromSide(BlockSide.TOP, tileEntity.getFacingDirection()), direction);
 		} else if (button == bottomButton) {
-			sideConfigurable.incrementSideConfiguration(SideUtilities.getDirectionFromSide(BlockSide.BOTTOM, tileEntity.getFacingDirection()), direction);
+			sideComp.modulateWorldSpaceSideMode(SideConfigurationUtilities.getDirectionFromSide(BlockSide.BOTTOM, tileEntity.getFacingDirection()), direction);
 		} else if (button == leftButton) {
-			sideConfigurable.incrementSideConfiguration(SideUtilities.getDirectionFromSide(BlockSide.LEFT, tileEntity.getFacingDirection()), direction);
+			sideComp.modulateWorldSpaceSideMode(SideConfigurationUtilities.getDirectionFromSide(BlockSide.LEFT, tileEntity.getFacingDirection()), direction);
 		} else if (button == rightButton) {
-			sideConfigurable.incrementSideConfiguration(SideUtilities.getDirectionFromSide(BlockSide.RIGHT, tileEntity.getFacingDirection()), direction);
+			sideComp.modulateWorldSpaceSideMode(SideConfigurationUtilities.getDirectionFromSide(BlockSide.RIGHT, tileEntity.getFacingDirection()), direction);
 		} else if (button == frontButton && allowFaceInteraction) {
-			sideConfigurable.incrementSideConfiguration(SideUtilities.getDirectionFromSide(BlockSide.FRONT, tileEntity.getFacingDirection()), direction);
-		} else {
-			sideConfigurable.incrementSideConfiguration(SideUtilities.getDirectionFromSide(BlockSide.BACK, tileEntity.getFacingDirection()), direction);
+			sideComp.modulateWorldSpaceSideMode(SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, tileEntity.getFacingDirection()), direction);
+		} else if (button == backButton) {
+			sideComp.modulateWorldSpaceSideMode(SideConfigurationUtilities.getDirectionFromSide(BlockSide.BACK, tileEntity.getFacingDirection()), direction);
 		}
 		updateTooltips();
 
 		// Send a packet to the server with the updated values.
-		NetworkMessage msg = new PacketSideConfigTab(sideConfigurable.getSideConfigurations(), tileEntity.getPos());
+		NetworkMessage msg = new PacketSideConfigTab(sideComp.getWorldSpaceConfiguration(), tileEntity.getPos());
 		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
 	}
 
 	public void updateTooltips() {
-		if (!(tileEntity instanceof ISideConfigurable)) {
-			return;
-		}
-		ISideConfigurable sideConfigurable = (ISideConfigurable) tileEntity;
-
-		for (BlockSide side : BlockSide.values()) {
-			TextButton button = null;
-			switch (side) {
-			case TOP:
-				button = topButton;
-				break;
-			case BOTTOM:
-				button = bottomButton;
-				break;
-			case LEFT:
-				button = leftButton;
-				break;
-			case RIGHT:
-				button = rightButton;
-				break;
-			case FRONT:
-				button = frontButton;
-				break;
-			case BACK:
-				button = backButton;
-				break;
-			default:
-				button = topButton;
-				break;
-			}
-
+//		if (!tileEntity.hasComponentOfType(SideConfigurationComponent.class)) {
+//			return;
+//		}
+//		SideConfigurationComponent sideComp = tileEntity.getComponent(SideConfigurationComponent.class);
+//
+//		for (BlockSide side : BlockSide.values()) {
+//			TextButton button = null;
+//			switch (side) {
+//			case TOP:
+//				button = topButton;
+//				break;
+//			case BOTTOM:
+//				button = bottomButton;
+//				break;
+//			case LEFT:
+//				button = leftButton;
+//				break;
+//			case RIGHT:
+//				button = rightButton;
+//				break;
+//			case FRONT:
+//				button = frontButton;
+//				break;
+//			case BACK:
+//				button = backButton;
+//				break;
+//			default:
+//				button = topButton;
+//				break;
+//			}
+//
 //			button.setText(sideConfigurable.getSideConfiguration(side).getFontColor() + side.getLocalizedName().substring(0, 1));
 //			button.setTooltip(new StringTextComponent(side.getLocalizedName() + "=" + sideConfigurable.getSideConfiguration(side).getFontColor()
 //					+ sideConfigurable.getSideConfiguration(side).getLocalizedName() + "=" + I18n.format(conditionallyGetCardinal(side))));
-		}
+//		}
 	}
 
 	public String conditionallyGetCardinal(BlockSide side) {
 		if (tileEntity instanceof TileEntityBase) {
 			TileEntityBase te = (TileEntityBase) tileEntity;
-			return "gui." + SideUtilities.getDirectionFromSide(side, te.getFacingDirection()).toString();
+			return "gui." + SideConfigurationUtilities.getDirectionFromSide(side, te.getFacingDirection()).toString();
 		}
 		return "";
 	}

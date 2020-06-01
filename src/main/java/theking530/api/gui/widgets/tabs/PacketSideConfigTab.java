@@ -8,8 +8,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import theking530.staticpower.network.NetworkMessage;
+import theking530.staticpower.tileentities.TileEntityBase;
+import theking530.staticpower.tileentities.components.SideConfigurationComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
-import theking530.staticpower.tileentities.utilities.interfaces.ISideConfigurable;
 
 public class PacketSideConfigTab extends NetworkMessage {
 	private MachineSideMode side0;
@@ -60,14 +61,20 @@ public class PacketSideConfigTab extends NetworkMessage {
 	@Override
 	public void handle(Supplier<Context> context) {
 		TileEntity te = Minecraft.getInstance().player.world.getTileEntity(position);
-		if (te != null && te instanceof ISideConfigurable) {
-			ISideConfigurable entity = (ISideConfigurable) te;
-			entity.getSideConfigurations()[0] = side0;
-			entity.getSideConfigurations()[1] = side1;
-			entity.getSideConfigurations()[2] = side2;
-			entity.getSideConfigurations()[3] = side3;
-			entity.getSideConfigurations()[4] = side4;
-			entity.getSideConfigurations()[5] = side5;
+
+		if (te instanceof TileEntityBase) {
+			TileEntityBase tileEntity = (TileEntityBase) te;
+			if (!tileEntity.hasComponentOfType(SideConfigurationComponent.class)) {
+				return;
+			}
+			SideConfigurationComponent sideComp = tileEntity.getComponent(SideConfigurationComponent.class);
+
+			sideComp.getWorldSpaceConfiguration()[0] = side0;
+			sideComp.getWorldSpaceConfiguration()[1] = side1;
+			sideComp.getWorldSpaceConfiguration()[2] = side2;
+			sideComp.getWorldSpaceConfiguration()[3] = side3;
+			sideComp.getWorldSpaceConfiguration()[4] = side4;
+			sideComp.getWorldSpaceConfiguration()[5] = side5;
 		}
 	}
 }

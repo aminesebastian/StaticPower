@@ -13,7 +13,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticpower.utilities.Tier;
 
-public class BaseTankUpgrade extends BaseUpgrade implements IMachineUpgrade {
+public class BaseTankUpgrade extends BaseUpgrade implements IUpgradeItem {
 	public BaseTankUpgrade(String name, Tier tier) {
 		super(name, tier);
 	}

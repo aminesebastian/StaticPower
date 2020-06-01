@@ -1,7 +1,8 @@
 package theking530.staticpower.tileentities;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -15,7 +16,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -26,27 +26,22 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.tileentities.components.ITileEntityComponent;
-import theking530.staticpower.tileentities.components.TileEntityInventoryComponent;
-import theking530.staticpower.tileentities.components.TileEntityRedstoneControlComponent;
+import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.tileentities.components.InventoryComponent;
+import theking530.staticpower.tileentities.components.RedstoneControlComponent;
+import theking530.staticpower.tileentities.components.SideConfigurationComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
-import theking530.staticpower.tileentities.utilities.RedstoneModeList.RedstoneMode;
-import theking530.staticpower.tileentities.utilities.SideConfiguration;
-import theking530.staticpower.tileentities.utilities.SideUtilities;
-import theking530.staticpower.tileentities.utilities.SideUtilities.BlockSide;
+import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities;
+import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.utilities.interfaces.IBreakSerializeable;
-import theking530.staticpower.tileentities.utilities.interfaces.ISideConfigurable;
-import theking530.staticpower.tileentities.utilities.interfaces.IUpgradeable;
 
-public class TileEntityBase extends TileEntity implements ITickableTileEntity, ISideConfigurable, IUpgradeable, IBreakSerializeable, INamedContainerProvider {
+public abstract class TileEntityBase extends TileEntity implements ITickableTileEntity, IBreakSerializeable, INamedContainerProvider {
 	protected static final int DEFAULT_UPDATE_TIME = 2;
 	protected final static Random RANDOM = new Random();
 
@@ -54,16 +49,12 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 	protected boolean wasWrenchedDoNotBreak;
 	protected boolean wasPlaced;
 
-	private HashSet<ITileEntityComponent> components;
-	protected SideConfiguration ioSideConfiguration;
+	private HashMap<String, AbstractTileEntityComponent> components;
 
 	@SuppressWarnings("unused")
 	private int updateTimer = 0;
 	@SuppressWarnings("unused")
 	private int updateTime = DEFAULT_UPDATE_TIME;
-
-	public final TileEntityRedstoneControlComponent redstoneControlComponent;
-	public final TileEntityInventoryComponent upgradesInventoryComponent;
 
 	/**
 	 * If true, on the next tick, the tile entity will be synced using the methods
@@ -73,19 +64,12 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 	private boolean updateQueued;
 
 	public TileEntityBase(TileEntityType<?> teType) {
-		this(teType, 0);
-	}
-
-	public TileEntityBase(TileEntityType<?> teType, int upgradeSlotsCount) {
 		super(teType);
-		components = new HashSet<ITileEntityComponent>();
+		components = new HashMap<String, AbstractTileEntityComponent>();
 		wasPlaced = false;
 		wasWrenchedDoNotBreak = false;
-		ioSideConfiguration = new SideConfiguration();
 		updateQueued = false;
 		disableFaceInteraction();
-		registerComponent(redstoneControlComponent = new TileEntityRedstoneControlComponent("RedstoneControl", RedstoneMode.Ignore));
-		registerComponent(upgradesInventoryComponent = new TileEntityInventoryComponent("Upgrades", upgradeSlotsCount, MachineSideMode.Never));
 	}
 
 	/**
@@ -97,22 +81,19 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 
 	@Override
 	public void tick() {
-		// If this tile entity is upgradeable, perform the ugprade tick.
-		if (isUpgradeable()) {
-			upgradeTick();
-		}
-		// If the redstone settings are valid, call the process method.
-		if (redstoneControlComponent.passesRedstoneCheck()) {
-			preProcessUpdateComponents();
-			process();
-			postProcessUpdateComponents();
-		}
+		// Pre process all the components.
+		preProcessUpdateComponents();
+
+		// Call the process method for any inheritors to use.
+		process();
+
 		// If an update is queued, perform the update.
 		if (updateQueued) {
 			world.markAndNotifyBlock(pos, world.getChunkAt(pos), world.getBlockState(pos), world.getBlockState(pos), 1 | 2);
 			updateQueued = false;
 		}
-		// Always mark this tile entity as dirty.
+
+		// Always mark this tile entity as dirty. (This should be revisited later).
 		markDirty();
 
 		// Raise the on placed method if it was just placed.
@@ -120,34 +101,29 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 			onPlaced();
 			wasPlaced = true;
 		}
+
+		// Post process all the components
+		postProcessUpdateComponents();
 	}
 
 	/**
-	 * This method should be overriden for any processing.
+	 * This method is raised on tick after the component have had their
+	 * {@link #AbstractTileEntityComponent.preProcessUpdate()} and before they've
+	 * had their {@link #AbstractTileEntityComponent.postProcessUpdate()} called. Do
+	 * NOT override {@link #tick()} unless explicitly required.
 	 */
-	public void process() {
-	}
-
-	/**
-	 * This method should be overriden to perform any on tick logic for any present
-	 * upgrades.
-	 */
-	public void upgradeTick() {
-
-	}
+	public abstract void process();
 
 	public void markTileEntityForSynchronization() {
 		updateQueued = true;
 	}
 
 	public void onPlaced() {
-		if (isSideConfigurable()) {
+		if (hasComponentOfType(SideConfigurationComponent.class)) {
 			if (disableFaceInteraction) {
-				setSideConfiguration(MachineSideMode.Never, BlockSide.FRONT);
-			} else {
-				setSideConfiguration(MachineSideMode.Disabled, BlockSide.FRONT);
+				getComponent(SideConfigurationComponent.class).setWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, getFacingDirection()),
+						MachineSideMode.Never);
 			}
-
 		}
 	}
 
@@ -156,11 +132,19 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 		return Minecraft.getInstance().playerController.getBlockReachDistance();
 	}
 
-	public void transferItemInternally(ItemStackHandler fromInv, int fromSlot, ItemStackHandler toInv, int toSlot) {
+	public void transferItemInternally(InventoryComponent fromInv, int fromSlot, InventoryComponent toInv, int toSlot) {
 		toInv.insertItem(toSlot, fromInv.extractItem(fromSlot, 1, false), false);
 	}
 
 	public Direction getFacingDirection() {
+		// If the world is null, return UP and log the error.
+		if (getWorld() == null) {
+			StaticPower.LOGGER.error("There was an attempt to get the facing direction before the block has been fully placed in the world! TileEntity: %1$s at position: %2$s.",
+					getDisplayName().getFormattedText(), pos);
+			return Direction.UP;
+		}
+
+		// Attempt to get the block state for horizontal facing.
 		if (getWorld().getBlockState(pos).has(HorizontalBlock.HORIZONTAL_FACING)) {
 			return getWorld().getBlockState(getPos()).get(HorizontalBlock.HORIZONTAL_FACING);
 		} else {
@@ -194,46 +178,13 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+		for (AbstractTileEntityComponent comp : components.values()) {
+			LazyOptional<T> capability = comp.provideCapability(cap, side);
+			if (capability.isPresent()) {
+				return capability;
+			}
+		}
 		return super.getCapability(cap, side);
-	}
-
-	/* Upgrade Handling */
-	public boolean hasUpgrade(Item upgradeBase) {
-		return !getUpgrade(upgradeBase).isEmpty();
-	}
-
-	public ItemStack getUpgrade(Item upgradeBase) {
-		for (int i = 0; i < upgradesInventoryComponent.getSlots(); i++) {
-			if (!upgradesInventoryComponent.getStackInSlot(i).isEmpty() && upgradesInventoryComponent.getStackInSlot(i).getItem() == upgradeBase) {
-				return upgradesInventoryComponent.getStackInSlot(i);
-			}
-		}
-		return ItemStack.EMPTY;
-	}
-
-	@Override
-	public List<ItemStack> getAllUpgrades() {
-		List<ItemStack> list = new ArrayList<ItemStack>();
-		ItemStack upgrade = ItemStack.EMPTY;
-		int slot = -1;
-		for (int i = 0; i < upgradesInventoryComponent.getSlots(); i++) {
-			slot = i;
-			upgrade = upgradesInventoryComponent.getStackInSlot(slot);
-			if (!upgrade.isEmpty()) {
-				list.add(upgrade);
-			}
-		}
-		return list;
-	}
-
-	@Override
-	public boolean canAcceptUpgrade(ItemStack upgrade) {
-		return true;
-	}
-
-	@Override
-	public boolean isUpgradeable() {
-		return true;
 	}
 
 	/* Components */
@@ -242,8 +193,8 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 	 * 
 	 * @param component The component to register.
 	 */
-	public void registerComponent(ITileEntityComponent component) {
-		components.add(component);
+	public void registerComponent(AbstractTileEntityComponent component) {
+		components.put(component.getComponentName(), component);
 		component.onRegistered(this);
 	}
 
@@ -253,8 +204,8 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 	 * @param component The component to remove.
 	 * @return True if the component was removed, false otherwise.
 	 */
-	public boolean removeComponents(ITileEntityComponent component) {
-		return components.remove(component);
+	public boolean removeComponent(AbstractTileEntityComponent component) {
+		return components.remove(component.getComponentName()) != null;
 	}
 
 	/**
@@ -262,8 +213,8 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 	 * 
 	 * @return The list of all components registered to this tile entity.
 	 */
-	public HashSet<ITileEntityComponent> getComponents() {
-		return components;
+	public Collection<AbstractTileEntityComponent> getComponents() {
+		return components.values();
 	}
 
 	/**
@@ -274,9 +225,9 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 	 * @return A list of tile entity components that inherit from the provided type.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends ITileEntityComponent> List<T> getComponentsOfType(Class<T> type) {
+	public <T extends AbstractTileEntityComponent> List<T> getComponents(Class<T> type) {
 		List<T> output = new ArrayList<>();
-		for (ITileEntityComponent component : components) {
+		for (AbstractTileEntityComponent component : components.values()) {
 			if (type.isInstance(component)) {
 				output.add((T) component);
 			}
@@ -285,17 +236,35 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 	}
 
 	/**
+	 * Gets a component using the component's name.
+	 * 
+	 * @param <T>           The type of the tile entity component.
+	 * @param type          The class of the tile entity component.
+	 * @param componentName The name of the component.
+	 * @return The component with the provided name if one exists, null otherwise.
+	 */
+	@SuppressWarnings("unchecked")
+	public <T extends AbstractTileEntityComponent> T getComponent(Class<T> type, String componentName) {
+		;
+		if (components.containsKey(componentName)) {
+			return (T) components.get(componentName);
+		}
+		return null;
+	}
+
+	/**
 	 * Gets the first component of the provided type. This is useful for trying to
 	 * access components that there should only really be one of (ex.
-	 * {@link TileEntityRedstoneControlComponent}).
+	 * {@link RedstoneControlComponent}).
 	 * 
 	 * @param <T>  The type of the tile entity component.
 	 * @param type The class of the tile entity component.
+	 * 
 	 * @return A reference to the component if found, or null otherwise.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends ITileEntityComponent> T getFirstComponentOfType(Class<T> type) {
-		for (ITileEntityComponent component : components) {
+	public <T extends AbstractTileEntityComponent> T getComponent(Class<T> type) {
+		for (AbstractTileEntityComponent component : components.values()) {
 			if (type.isInstance(component)) {
 				return (T) component;
 			}
@@ -310,8 +279,8 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 	 * @return True if this tile entity has at least one component of that type,
 	 *         false otherwise.
 	 */
-	public <T extends ITileEntityComponent> boolean hasComponentOfType(Class<T> type) {
-		for (ITileEntityComponent component : components) {
+	public <T extends AbstractTileEntityComponent> boolean hasComponentOfType(Class<T> type) {
+		for (AbstractTileEntityComponent component : components.values()) {
 			if (type.isInstance(component)) {
 				return true;
 			}
@@ -324,7 +293,7 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 	 */
 	private void preProcessUpdateComponents() {
 		try {
-			for (ITileEntityComponent component : components) {
+			for (AbstractTileEntityComponent component : components.values()) {
 				component.preProcessUpdate();
 			}
 		} catch (Exception e) {
@@ -338,7 +307,7 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 	 */
 	private void postProcessUpdateComponents() {
 		try {
-			for (ITileEntityComponent component : components) {
+			for (AbstractTileEntityComponent component : components.values()) {
 				component.postProcessUpdate();
 			}
 		} catch (Exception e) {
@@ -347,96 +316,6 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 		}
 	}
 
-	/* Side Control */
-	@Override
-	public boolean isSideConfigurable() {
-		return true;
-	}
-
-	@Override
-	public MachineSideMode getSideConfiguration(BlockSide side) {
-		Direction facing = SideUtilities.getDirectionFromSide(side, getFacingDirection());
-		return getSideConfiguration(facing);
-	}
-
-	@Override
-	public MachineSideMode getSideConfiguration(Direction facing) {
-		return ioSideConfiguration.getSideConfiguration(facing);
-	}
-
-	@Override
-	public MachineSideMode[] getSideConfigurations() {
-		return ioSideConfiguration.getConfiguration();
-	}
-
-	@Override
-	public void setSideConfiguration(MachineSideMode newMode, BlockSide side) {
-		Direction facing = SideUtilities.getDirectionFromSide(side, getFacingDirection());
-		setSideConfiguration(newMode, facing);
-	}
-
-	@Override
-	public void setSideConfiguration(MachineSideMode newMode, Direction facing) {
-		ioSideConfiguration.setSideConfiguration(facing, newMode);
-	}
-
-	public void onSidesConfigUpdate() {
-
-	}
-
-	public void resetSideConfiguration() {
-		ioSideConfiguration.reset();
-		onSidesConfigUpdate();
-	}
-
-	@Override
-	public void incrementSideConfiguration(Direction side, SideIncrementDirection direction) {
-		BlockSide blockSideEquiv = SideUtilities.getBlockSide(side, getFacingDirection());
-
-		int newIndex = 0;
-		do {
-			MachineSideMode currentSideMode = getSideConfiguration(side);
-			newIndex = direction == SideIncrementDirection.FORWARD ? currentSideMode.ordinal() + 1 : currentSideMode.ordinal() - 1;
-			if (newIndex < 0) {
-				newIndex += MachineSideMode.values().length;
-			}
-			newIndex %= MachineSideMode.values().length;
-			setSideConfiguration(MachineSideMode.values()[newIndex], side);
-		} while (!getValidSideConfigurations().contains(MachineSideMode.values()[newIndex]));
-
-		if (disableFaceInteraction) {
-			setSideConfiguration(MachineSideMode.Never, BlockSide.FRONT);
-		}
-
-		onSidesConfigUpdate();
-		markTileEntityForSynchronization();
-	}
-
-	@Override
-	public int getSideWithModeCount(MachineSideMode mode) {
-		int count = 0;
-		for (MachineSideMode sideMode : getSideConfigurations()) {
-			if (sideMode == mode) {
-				count++;
-			}
-		}
-		return count;
-	}
-
-	public void setDefaultSideConfiguration(SideConfiguration configuration) {
-		if (wasPlaced) {
-			ioSideConfiguration = configuration;
-			if (disableFaceInteraction) {
-				setSideConfiguration(MachineSideMode.Disabled, BlockSide.FRONT);
-			}
-		} else {
-			StaticPower.LOGGER.warn(String.format(
-					"Tile Entity: %1$s attempted to change it's side configuration without having first been placed in the world. This is usually because an attempt was made to change the side configuration from within the constructor.",
-					getDisplayName().getFormattedText()));
-		}
-	}
-
-	@Override
 	public List<MachineSideMode> getValidSideConfigurations() {
 		List<MachineSideMode> modes = new ArrayList<MachineSideMode>();
 		modes.add(MachineSideMode.Input);
@@ -457,15 +336,20 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 	 * @return The same {@link CompoundNBT} that was provided.
 	 */
 	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt) {
-		for (ITileEntityComponent component : components) {
-			component.serializeUpdateNbt(nbt);
-		}
-		if (isSideConfigurable()) {
-			for (int i = 0; i < 6; i++) {
-				nbt.putInt("SIDEMODE" + i, getSideConfiguration(Direction.values()[i]).ordinal());
+		// Serialize each component to its own NBT tag and then add that to the master
+		// tag. Catch errors on a per component basis to prevent one component from
+		// breaking all the rest.
+		for (AbstractTileEntityComponent component : components.values()) {
+			try {
+				CompoundNBT componentTag = new CompoundNBT();
+				component.serializeUpdateNbt(componentTag);
+				nbt.put(component.getComponentName(), componentTag);
+			} catch (Exception e) {
+				StaticPower.LOGGER.error(String.format("An error occured when attempting to serialize update NBT for Component: %1$s for TileEntity: %2$s at Location: %3$s.",
+						component.getComponentName(), getDisplayName().getFormattedText(), pos));
 			}
-			nbt.putBoolean("DISABLE_FACE", disableFaceInteraction);
 		}
+		nbt.putBoolean("DISABLE_FACE", disableFaceInteraction);
 		return nbt;
 	}
 
@@ -476,15 +360,19 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 	 * @param nbt The NBT data to deserialize from from.
 	 */
 	public void deserializeUpdateNbt(CompoundNBT nbt) {
-		for (ITileEntityComponent component : components) {
-			component.deserializeUpdateNbt(nbt);
-		}
-		if (isSideConfigurable()) {
-			for (int i = 0; i < 6; i++) {
-				setSideConfiguration(MachineSideMode.values()[nbt.getInt("SIDEMODE" + i)], Direction.values()[i]);
+		// Iterate through all the components and deserialize each one. Catch errors on
+		// a per component basis to prevent one component from breaking all the rest.
+		for (AbstractTileEntityComponent component : components.values()) {
+			try {
+				if (nbt.contains(component.getComponentName())) {
+					component.deserializeUpdateNbt(nbt.getCompound(component.getComponentName()));
+				}
+			} catch (Exception e) {
+				StaticPower.LOGGER.error(String.format("An error occured when attempting to deserialize update NBT for Component: %1$s for TileEntity: %2$s at Location: %3$s.",
+						component.getComponentName(), getDisplayName().getFormattedText(), pos));
 			}
-			disableFaceInteraction = nbt.getBoolean("DISABLE_FACE");
 		}
+		disableFaceInteraction = nbt.getBoolean("DISABLE_FACE");
 	}
 
 	/**
@@ -500,8 +388,18 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 	 * @return The same {@link CompoundNBT} that was provided.
 	 */
 	public CompoundNBT serializeSaveNbt(CompoundNBT nbt) {
-		for (ITileEntityComponent component : components) {
-			component.serializeSaveNbt(nbt);
+		// Serialize each component to its own NBT tag and then add that to the master
+		// tag. Catch errors on a per component basis to prevent one component from
+		// breaking all the rest.
+		for (AbstractTileEntityComponent component : components.values()) {
+			try {
+				CompoundNBT componentTag = new CompoundNBT();
+				component.serializeSaveNbt(componentTag);
+				nbt.put(component.getComponentName(), componentTag);
+			} catch (Exception e) {
+				StaticPower.LOGGER.error(String.format("An error occured when attempting to serialize save NBT for Component: %1$s for TileEntity: %2$s at Location: %3$s.",
+						component.getComponentName(), getDisplayName().getFormattedText(), pos), e);
+			}
 		}
 
 		nbt.putBoolean("placed", wasPlaced);
@@ -515,8 +413,17 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 	 * @param nbt The {@link CompoundNBT} to deserialize from.
 	 */
 	public void deserializeSaveNbt(CompoundNBT nbt) {
-		for (ITileEntityComponent component : components) {
-			component.deserializeSaveNbt(nbt);
+		// Iterate through all the components and deserialize each one. Catch errors on
+		// a per component basis to prevent one component from breaking all the rest.
+		for (AbstractTileEntityComponent component : components.values()) {
+			try {
+				if (nbt.contains(component.getComponentName())) {
+					component.deserializeSaveNbt(nbt.getCompound(component.getComponentName()));
+				}
+			} catch (Exception e) {
+				StaticPower.LOGGER.error(String.format("An error occured when attempting to deserialize save NBT for Component: %1$s for TileEntity: %2$s at Location: %3$s.",
+						component.getComponentName(), getDisplayName().getFormattedText(), pos), e);
+			}
 		}
 		if (nbt.contains("placed")) {
 			wasPlaced = nbt.getBoolean("placed");
@@ -596,12 +503,11 @@ public class TileEntityBase extends TileEntity implements ITickableTileEntity, I
 	 * Create the container here.
 	 */
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
-		return null;
-	}
+	public abstract Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player);
 
+	/**
+	 * Return the name of this tile entity.
+	 */
 	@Override
-	public ITextComponent getDisplayName() {
-		return new StringTextComponent("ERROR");
-	}
+	public abstract ITextComponent getDisplayName();
 }

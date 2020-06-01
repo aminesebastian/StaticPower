@@ -42,4 +42,8 @@ public enum MachineSideMode {
 	public boolean isOutputMode() {
 		return this == Output || this == Output2 || this == Output3;
 	}
+
+	public boolean isDisabledMode() {
+		return this == Disabled || this == Never;
+	}
 }

@@ -133,7 +133,8 @@ public abstract class BaseGuiTab {
 	 * @return True if the event was handled, false otherwise.
 	 */
 	public EInputResult mouseClick(int mouseX, int mouseY, int button) {
-		if (mouseX > xPosition && mouseX < xPosition + 24) {
+		int adjustedXPosition = tabSide == TabSide.RIGHT ? xPosition : xPosition + tabWidth;
+		if (mouseX > adjustedXPosition && mouseX < adjustedXPosition + 24) {
 			if (mouseY > yPosition && mouseY < yPosition + 24) {
 				if (tabState == TabState.CLOSED) {
 					tabState = TabState.OPENING;
@@ -340,7 +341,7 @@ public abstract class BaseGuiTab {
 	protected void drawButtonIcon(float partialTicks) {
 		if (itemIcon != null) {
 			GlStateManager.disableDepthTest();
-			Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(new ItemStack(itemIcon), getTabSide() == TabSide.RIGHT ? xPosition + 3 : xPosition + 5, yPosition + 4);
+			Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(new ItemStack(itemIcon), getTabSide() == TabSide.RIGHT ? xPosition + 3 : xPosition + tabWidth + 5, yPosition + 4);
 		}
 	}
 
@@ -352,7 +353,7 @@ public abstract class BaseGuiTab {
 	 * @param partialTicks
 	 */
 	protected void drawTabBackground(float partialTicks) {
-		int tabLeft = xPosition - (getTabSide() == TabSide.RIGHT ? 0 : 24);
+		int tabLeft = xPosition - (getTabSide() == TabSide.RIGHT ? 0 : tabWidth + 24);
 		int tabTop = yPosition;
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder tes = tessellator.getBuffer();

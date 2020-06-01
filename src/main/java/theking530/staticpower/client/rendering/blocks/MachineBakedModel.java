@@ -32,8 +32,9 @@ import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.tileentities.TileEntityBase;
+import theking530.staticpower.tileentities.components.SideConfigurationComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
-import theking530.staticpower.tileentities.utilities.interfaces.ISideConfigurable;
 
 public class MachineBakedModel implements IBakedModel {
 	public static ResourceLocation machineSideNormal = new ResourceLocation("staticpower:blocks/machines/machine_side");
@@ -134,9 +135,11 @@ public class MachineBakedModel implements IBakedModel {
 		}
 
 		TileEntity rawTileEntity = world.getTileEntity(blockPos);
-		if (rawTileEntity != null && rawTileEntity instanceof ISideConfigurable) {
-			ISideConfigurable configurable = (ISideConfigurable) rawTileEntity;
-			return Optional.of(configurable.getSideConfigurations());
+		if (rawTileEntity != null && rawTileEntity instanceof TileEntityBase) {
+			TileEntityBase configurable = (TileEntityBase) rawTileEntity;
+			if (configurable.hasComponentOfType(SideConfigurationComponent.class)) {
+				return Optional.of(configurable.getComponent(SideConfigurationComponent.class).getWorldSpaceConfiguration());
+			}
 		}
 
 		return Optional.empty();
@@ -174,6 +177,7 @@ public class MachineBakedModel implements IBakedModel {
 		return baseModel.isBuiltInRenderer();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public TextureAtlasSprite getParticleTexture() {
 		return baseModel.getParticleTexture();

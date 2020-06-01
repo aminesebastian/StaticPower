@@ -53,6 +53,7 @@
 	"item.staticpower.filter_item_basic": "Basic Item Filter",
 	"block.staticpower.machine_charging_station": "Charging Station",
 	"block.staticpower.chest_vacuum": "Vacuum Chest",
+	"block.staticpower.machine_powered_furnace": "Powered Furnace",
 	"gui.staticpower.empty": "Empty",
 	"gui.staticpower.input": "Input",
 	"gui.staticpower.usage": "Usage",

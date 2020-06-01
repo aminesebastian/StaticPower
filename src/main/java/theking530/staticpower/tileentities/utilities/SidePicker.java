@@ -119,6 +119,7 @@ public class SidePicker {
 			map.put(side, value);
 	}
 
+	@SuppressWarnings("unused")
 	private Map<Side, Vec3d> calculateHitPoints(Vec3d near, Vec3d far) {
 		Vec3d diff = far.subtract(near);
 

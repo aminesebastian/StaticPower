@@ -1,14 +1,13 @@
-package theking530.api.gui.widgets;
+package theking530.staticpower.client.container.slots;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
-import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 
-public class SlotPhantom extends StaticPowerContainerSlot {
+public class PhantomSlot extends StaticPowerContainerSlot {
 	private ItemStackHandler itemHandler;
 
-	public SlotPhantom(ItemStackHandler inv, int index, int x, int y) {
+	public PhantomSlot(ItemStackHandler inv, int index, int x, int y) {
 		super(inv, index, x, y);
 		itemHandler = inv;
 	}
@@ -20,6 +19,7 @@ public class SlotPhantom extends StaticPowerContainerSlot {
 		return false;
 	}
 
+	@Override
 	public boolean isItemValid(ItemStack itemStack) {
 		ItemStack tempItemStack = itemStack.copy();
 		tempItemStack.setCount(1);

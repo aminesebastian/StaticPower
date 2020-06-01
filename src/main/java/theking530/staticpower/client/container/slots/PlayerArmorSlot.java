@@ -1,4 +1,4 @@
-package theking530.staticpower.client.container;
+package theking530.staticpower.client.container.slots;
 
 import javax.annotation.Nonnull;
 

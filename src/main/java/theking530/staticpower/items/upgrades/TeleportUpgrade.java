@@ -13,7 +13,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticpower.utilities.Tier;
 
-public class TeleportUpgrade  extends BaseUpgrade implements IMachineUpgrade{
+public class TeleportUpgrade  extends BaseUpgrade implements IUpgradeItem{
 
 	public  TeleportUpgrade(String name){
 		super(name, Tier.ENERGIZED, new Properties().maxStackSize(1));

@@ -10,18 +10,15 @@ import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 
-public class TileEntityInventoryComponent extends ItemStackHandler implements Iterable<ItemStack>, ITileEntityComponent {
-
+public class InventoryComponent extends AbstractTileEntityComponent implements Iterable<ItemStack> {
+	private ItemStackHandler inventory;
 	private ItemStackHandlerFilter filter;
 	private MachineSideMode inventoryMode;
-	private String name;
-	private boolean isEnabled;
 
-	public TileEntityInventoryComponent(String name, int size, MachineSideMode mode) {
-		super(size);
+	public InventoryComponent(String name, int size, MachineSideMode mode) {
+		super(name);
+		this.inventory = new ItemStackHandler(size);
 		this.inventoryMode = mode;
-		this.name = name;
-		this.isEnabled = true;
 	}
 
 	/**
@@ -30,7 +27,7 @@ public class TileEntityInventoryComponent extends ItemStackHandler implements It
 	 * @param filter The filter to use.
 	 * @return This component for chaining calls.
 	 */
-	public TileEntityInventoryComponent setFilter(ItemStackHandlerFilter filter) {
+	public InventoryComponent setFilter(ItemStackHandlerFilter filter) {
 		this.filter = filter;
 		return this;
 	}
@@ -44,77 +41,69 @@ public class TileEntityInventoryComponent extends ItemStackHandler implements It
 		return inventoryMode;
 	}
 
+	public ItemStackHandler getInventory() {
+		return inventory;
+	}
+
 	@Override
 	public CompoundNBT serializeSaveNbt(CompoundNBT nbt) {
-		nbt.put(name, serializeNBT());
+		nbt.put(getComponentName(), inventory.serializeNBT());
 		return nbt;
 	}
 
 	@Override
 	public void deserializeSaveNbt(CompoundNBT nbt) {
-		if (nbt.contains(name)) {
-			deserializeNBT(nbt.getCompound(name));
+		if (nbt.contains(getComponentName())) {
+			inventory.deserializeNBT(nbt.getCompound(getComponentName()));
 		}
 	}
 
-	@Override
 	public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-		if (filter != null) {
-			if (!filter.canInsertItem(slot, stack)) {
-				return stack;
-			}
-		}
-		return super.insertItem(slot, stack, simulate);
+		return inventory.insertItem(slot, stack, simulate);
 	}
 
-	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
 		if (filter != null) {
 			if (!filter.canExtractItem(slot, amount)) {
 				return ItemStack.EMPTY;
 			}
 		}
-		return super.extractItem(slot, amount, simulate);
+		return inventory.extractItem(slot, amount, simulate);
+	}
+
+	public void setStackInSlot(int slot, ItemStack stack) {
+		inventory.setStackInSlot(slot, stack);
+	}
+
+	public ItemStack getStackInSlot(int slot) {
+		return inventory.getStackInSlot(slot);
+	}
+
+	public int getSlotCount() {
+		return inventory.getSlots();
 	}
 
 	@Override
 	public Iterator<ItemStack> iterator() {
-		return new TileEntityInventoryIterator(this);
-	}
-
-	@Override
-	public String getComponentName() {
-		return name;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return isEnabled;
-	}
-
-	@Override
-	public void setEnabled(boolean isEnabled) {
-		this.isEnabled = isEnabled;
+		return new TileEntityInventoryIterator();
 	}
 
 	/**
 	 * Iterator to help iterate through the items in this inventory.
 	 */
 	protected class TileEntityInventoryIterator implements Iterator<ItemStack> {
-		private TileEntityInventoryComponent teInventory;
 		private int currentIndex;
 
-		TileEntityInventoryIterator(TileEntityInventoryComponent inventory) {
-			teInventory = inventory;
+		TileEntityInventoryIterator() {
 			currentIndex = 0;
 		}
 
 		public boolean hasNext() {
-			return currentIndex < teInventory.getSlots() - 1;
+			return currentIndex < getInventory().getSlots() - 1;
 		}
 
 		public ItemStack next() {
-			ItemStack stackInSlot = teInventory.getStackInSlot(currentIndex);
+			ItemStack stackInSlot = getInventory().getStackInSlot(currentIndex);
 			currentIndex++;
 			return stackInSlot;
 		}

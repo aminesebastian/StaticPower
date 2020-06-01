@@ -23,8 +23,9 @@ import theking530.api.wrench.RegularWrenchMode;
 import theking530.api.wrench.SneakWrenchMode;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blocks.StaticPowerBlock;
+import theking530.staticpower.tileentities.components.SideConfigurationComponent;
+import theking530.staticpower.tileentities.components.SideConfigurationComponent.SideIncrementDirection;
 import theking530.staticpower.tileentities.utilities.interfaces.IBreakSerializeable;
-import theking530.staticpower.tileentities.utilities.interfaces.ISideConfigurable.SideIncrementDirection;
 
 public class StaticPowerTileEntityBlock extends StaticPowerBlock {
 	protected boolean shouldDropContents;
@@ -92,7 +93,9 @@ public class StaticPowerTileEntityBlock extends StaticPowerBlock {
 			}
 		} else {
 			TileEntityBase TE = (TileEntityBase) world.getTileEntity(pos);
-			TE.incrementSideConfiguration(facing, SideIncrementDirection.FORWARD);
+			if (TE.hasComponentOfType(SideConfigurationComponent.class)) {
+				TE.getComponent(SideConfigurationComponent.class).modulateWorldSpaceSideMode(facing, SideIncrementDirection.FORWARD);
+			}
 		}
 	}
 
