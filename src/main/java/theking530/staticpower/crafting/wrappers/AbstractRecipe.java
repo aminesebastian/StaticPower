@@ -38,4 +38,9 @@ public abstract class AbstractRecipe implements IRecipe<IInventory> {
 		return ItemStack.EMPTY;
 	}
 
+	@Override
+	public String toString() {
+		return getId().toString();
+	}
+
 }

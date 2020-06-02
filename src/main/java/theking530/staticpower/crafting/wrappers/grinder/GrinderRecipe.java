@@ -43,7 +43,7 @@ public class GrinderRecipe extends AbstractRecipe {
 		return powerCost;
 	}
 
-	public class GrinderOutput {
+	public static class GrinderOutput {
 		private final ItemStack item;
 		private final float percentChance;
 
@@ -90,7 +90,7 @@ public class GrinderRecipe extends AbstractRecipe {
 			} else {
 				return new GrinderOutput(output);
 			}
-		}
+		} 
 	}
 
 	@Override
@@ -102,5 +102,4 @@ public class GrinderRecipe extends AbstractRecipe {
 	public IRecipeType<?> getType() {
 		return RECIPE_TYPE;
 	}
-
 }

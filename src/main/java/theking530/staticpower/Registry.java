@@ -16,12 +16,15 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -31,6 +34,7 @@ import net.minecraftforge.fml.network.IContainerFactory;
 import theking530.staticpower.blocks.IBlockRenderLayerProvider;
 import theking530.staticpower.blocks.IItemBlockProvider;
 import theking530.staticpower.client.rendering.blocks.MachineBakedModel;
+import theking530.staticpower.crafting.wrappers.grinder.GrinderRecipe;
 import theking530.staticpower.initialization.ModBlocks;
 import theking530.staticpower.initialization.ModContainerTypes;
 import theking530.staticpower.utilities.Reference;
@@ -180,6 +184,21 @@ public class Registry {
 		for (ContainerType<?> container : CONTAINER_TYPES) {
 			event.getRegistry().register(container);
 		}
+	}
+
+	@SubscribeEvent
+	public static void registerRecipeSerializers(RegistryEvent.Register<IRecipeSerializer<?>> event) {
+
+		// Vanilla has a registry for recipe types, but it does not actively use this
+		// registry.
+		// While this makes registering your recipe type an optional step, I recommend
+		// registering it anyway to allow other mods to discover your custom recipe
+		// types.
+		Registry.register(GrinderRecipe.RECIPE_TYPE, new ResourceLocation(CLICK_BLOCK_RECIPE.toString()), CLICK_BLOCK_RECIPE);
+
+		// Register the recipe serializer. This handles from json, from packet, and to
+		// packet.
+		event.getRegistry().register(ClickBlockRecipe.SERIALIZER);
 	}
 
 	@SubscribeEvent
