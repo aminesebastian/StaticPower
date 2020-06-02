@@ -66,7 +66,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent implemen
 			currentEnergy = 0;
 		}
 
-		long ticksSinceLastUpdate = getTileEntity().getWorld().getGameTime() - lastUpdateTime;
+		long ticksSinceLastUpdate = Math.min(getTileEntity().getWorld().getGameTime() - lastUpdateTime, 1);
 		int energyUsedPerTickSinceLastPacket = (int) ((currentEnergy - lastEnergyStored) / ticksSinceLastUpdate);
 
 		nbt.putInt("Energy", currentEnergy);

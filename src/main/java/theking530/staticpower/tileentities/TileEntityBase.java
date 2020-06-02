@@ -346,7 +346,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 				nbt.put(component.getComponentName(), componentTag);
 			} catch (Exception e) {
 				StaticPower.LOGGER.error(String.format("An error occured when attempting to serialize update NBT for Component: %1$s for TileEntity: %2$s at Location: %3$s.",
-						component.getComponentName(), getDisplayName().getFormattedText(), pos));
+						component.getComponentName(), getDisplayName().getFormattedText(), pos), e);
 			}
 		}
 		nbt.putBoolean("DISABLE_FACE", disableFaceInteraction);
@@ -369,7 +369,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 				}
 			} catch (Exception e) {
 				StaticPower.LOGGER.error(String.format("An error occured when attempting to deserialize update NBT for Component: %1$s for TileEntity: %2$s at Location: %3$s.",
-						component.getComponentName(), getDisplayName().getFormattedText(), pos));
+						component.getComponentName(), getDisplayName().getFormattedText(), pos), e);
 			}
 		}
 		disableFaceInteraction = nbt.getBoolean("DISABLE_FACE");

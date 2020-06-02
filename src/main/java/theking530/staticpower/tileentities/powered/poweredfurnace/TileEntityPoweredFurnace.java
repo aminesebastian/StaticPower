@@ -78,13 +78,11 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 		if (canProcess()) {
 			moveComponent.startProcessing();
 		} else if (processingComponent.isProcessing()) {
-			if (!world.isRemote) {
-				if (energyStorage.getEnergyStored() > (getProcessingEnergy() / processingTime)) {
-					processingComponent.continueProcessing();
-					energyStorage.extractEnergy(getProcessingEnergy() / processingTime, false);
-				} else {
-					processingComponent.pauseProcessing();
-				}
+			if (energyStorage.getEnergyStored() >= (getProcessingEnergy() / processingTime)) {
+				processingComponent.continueProcessing();
+				energyStorage.extractEnergy(getProcessingEnergy() / processingTime, false);
+			} else {
+				processingComponent.pauseProcessing();
 			}
 		}
 	}
