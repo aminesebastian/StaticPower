@@ -17,16 +17,12 @@ import theking530.api.gui.GuiTextures;
 
 public class GuiPowerBarUtilities {
 
-	public static List<ITextComponent> getTooltip(int currentEnergy, int maxEnergy, int energyPerTick, int powerUse) {
+	public static List<ITextComponent> getTooltip(int currentEnergy, int maxEnergy, int energyPerTick) {
 		List<ITextComponent> tooltip = new ArrayList<ITextComponent>();
 
 		// Add the input rate to the tooltip.
-		tooltip.add(new TranslationTextComponent("gui.staticpower.input").appendText(": " + energyPerTick).appendText(" ").appendSibling(new TranslationTextComponent("gui.staticpower.energy_unit_per_tick")));
-
-		// If the energy usage is > 0, show the usage.
-		if (powerUse > 0) {
-			tooltip.add(new TranslationTextComponent("gui.staticpower.usage").appendText(": " + powerUse).appendText(" ").appendSibling(new TranslationTextComponent("gui.staticpower.energy_unit_per_tick")));
-		}
+		tooltip.add(new TranslationTextComponent("gui.staticpower.input").appendText(": " + energyPerTick).appendText(" ")
+				.appendSibling(new TranslationTextComponent("gui.staticpower.energy_unit_per_tick")));
 
 		// Show the total amount of energy remaining / total energy capacity.
 		tooltip.add(new StringTextComponent(NumberFormat.getNumberInstance(Locale.US).format(currentEnergy) + "/" + NumberFormat.getNumberInstance(Locale.US).format(maxEnergy)).appendText(" ")

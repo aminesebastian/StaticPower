@@ -1,6 +1,6 @@
 package theking530.staticpower.initialization;
 
-import theking530.staticpower.Registry;
+import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.items.upgrades.BaseDigistoreCapacityUpgrade;
 import theking530.staticpower.items.upgrades.BaseOutputMultiplierUpgrade;
 import theking530.staticpower.items.upgrades.BasePowerUpgrade;
@@ -58,46 +58,46 @@ public class ModUpgrades {
 	public static BaseQuarryingUpgrade LumumQuarryingUpgrade;
 
 	public static void init() {
-		Registry.preRegisterItem(TeleportUpgrade = new TeleportUpgrade("upgrade_teleport"));
-		Registry.preRegisterItem(ExperienceVacuumUpgrade = new ExperienceVacuumUpgrade("upgrade_experience_vacuum"));
-		Registry.preRegisterItem(DigistoreVoidUpgrade = new DigistoreVoidUpgrade("upgrade_digistore_void"));
+		StaticPowerRegistry.preRegisterItem(TeleportUpgrade = new TeleportUpgrade("upgrade_teleport"));
+		StaticPowerRegistry.preRegisterItem(ExperienceVacuumUpgrade = new ExperienceVacuumUpgrade("upgrade_experience_vacuum"));
+		StaticPowerRegistry.preRegisterItem(DigistoreVoidUpgrade = new DigistoreVoidUpgrade("upgrade_digistore_void"));
 
-		Registry.preRegisterItem(BasicDigistoreCapacityUpgrade = new BaseDigistoreCapacityUpgrade("upgrade_digistore_capacity_basic", Tier.BASIC));
-		Registry.preRegisterItem(IronDigistoreCapacityUpgrade = new BaseDigistoreCapacityUpgrade("upgrade_digistore_capacity_iron", Tier.IRON));
-		Registry.preRegisterItem(GoldDigistoreCapacityUpgrade = new BaseDigistoreCapacityUpgrade("upgrade_digistore_capacity_gold", Tier.GOLD));
-		Registry.preRegisterItem(LeadDigistoreCapacityUpgrade = new BaseDigistoreCapacityUpgrade("upgrade_digistore_capacity_lead", Tier.LEAD));
-		Registry.preRegisterItem(ObsidianDigistoreCapacityUpgrade = new BaseDigistoreCapacityUpgrade("upgrade_digistore_capacity_obsidian", Tier.OBSIDIAN));
-		Registry.preRegisterItem(StaticDigistoreCapacityUpgrade = new BaseDigistoreCapacityUpgrade("upgrade_digistore_capacity_static", Tier.STATIC));
-		Registry.preRegisterItem(EnergizedDigistoreCapacityUpgrade = new BaseDigistoreCapacityUpgrade("upgrade_digistore_capacity_energized", Tier.ENERGIZED));
-		Registry.preRegisterItem(LumumDigistoreCapacityUpgrade = new BaseDigistoreCapacityUpgrade("upgrade_digistore_capacity_lumum", Tier.LUMUM));
+		StaticPowerRegistry.preRegisterItem(BasicDigistoreCapacityUpgrade = new BaseDigistoreCapacityUpgrade("upgrade_digistore_capacity_basic", Tier.BASIC));
+		StaticPowerRegistry.preRegisterItem(IronDigistoreCapacityUpgrade = new BaseDigistoreCapacityUpgrade("upgrade_digistore_capacity_iron", Tier.IRON));
+		StaticPowerRegistry.preRegisterItem(GoldDigistoreCapacityUpgrade = new BaseDigistoreCapacityUpgrade("upgrade_digistore_capacity_gold", Tier.GOLD));
+		StaticPowerRegistry.preRegisterItem(LeadDigistoreCapacityUpgrade = new BaseDigistoreCapacityUpgrade("upgrade_digistore_capacity_lead", Tier.LEAD));
+		StaticPowerRegistry.preRegisterItem(ObsidianDigistoreCapacityUpgrade = new BaseDigistoreCapacityUpgrade("upgrade_digistore_capacity_obsidian", Tier.OBSIDIAN));
+		StaticPowerRegistry.preRegisterItem(StaticDigistoreCapacityUpgrade = new BaseDigistoreCapacityUpgrade("upgrade_digistore_capacity_static", Tier.STATIC));
+		StaticPowerRegistry.preRegisterItem(EnergizedDigistoreCapacityUpgrade = new BaseDigistoreCapacityUpgrade("upgrade_digistore_capacity_energized", Tier.ENERGIZED));
+		StaticPowerRegistry.preRegisterItem(LumumDigistoreCapacityUpgrade = new BaseDigistoreCapacityUpgrade("upgrade_digistore_capacity_lumum", Tier.LUMUM));
 
-		Registry.preRegisterItem(BasicPowerUpgrade = new BasePowerUpgrade("upgrade_power_basic", Tier.BASIC));
-		Registry.preRegisterItem(StaticPowerUpgrade = new BasePowerUpgrade("upgrade_power_static", Tier.STATIC));
-		Registry.preRegisterItem(EnergizedPowerUpgrade = new BasePowerUpgrade("upgrade_power_energized", Tier.ENERGIZED));
-		Registry.preRegisterItem(LumumPowerUpgrade = new BasePowerUpgrade("upgrade_power_lumum", Tier.LUMUM));
+		StaticPowerRegistry.preRegisterItem(BasicPowerUpgrade = new BasePowerUpgrade("upgrade_power_basic", Tier.BASIC));
+		StaticPowerRegistry.preRegisterItem(StaticPowerUpgrade = new BasePowerUpgrade("upgrade_power_static", Tier.STATIC));
+		StaticPowerRegistry.preRegisterItem(EnergizedPowerUpgrade = new BasePowerUpgrade("upgrade_power_energized", Tier.ENERGIZED));
+		StaticPowerRegistry.preRegisterItem(LumumPowerUpgrade = new BasePowerUpgrade("upgrade_power_lumum", Tier.LUMUM));
 
-		Registry.preRegisterItem(BasicOutputMultiplierUpgrade = new BaseOutputMultiplierUpgrade("upgrade_output_multiplier_basic", Tier.BASIC));
-		Registry.preRegisterItem(StaticOutputMultiplierUpgrade = new BaseOutputMultiplierUpgrade("upgrade_output_multiplier_static", Tier.STATIC));
-		Registry.preRegisterItem(EnergizedOutputMultiplierUpgrade = new BaseOutputMultiplierUpgrade("upgrade_output_multiplier_energized", Tier.ENERGIZED));
-		Registry.preRegisterItem(LumumOutputMultiplierUpgrade = new BaseOutputMultiplierUpgrade("upgrade_output_multiplier_lumum", Tier.LUMUM));
+		StaticPowerRegistry.preRegisterItem(BasicOutputMultiplierUpgrade = new BaseOutputMultiplierUpgrade("upgrade_output_multiplier_basic", Tier.BASIC));
+		StaticPowerRegistry.preRegisterItem(StaticOutputMultiplierUpgrade = new BaseOutputMultiplierUpgrade("upgrade_output_multiplier_static", Tier.STATIC));
+		StaticPowerRegistry.preRegisterItem(EnergizedOutputMultiplierUpgrade = new BaseOutputMultiplierUpgrade("upgrade_output_multiplier_energized", Tier.ENERGIZED));
+		StaticPowerRegistry.preRegisterItem(LumumOutputMultiplierUpgrade = new BaseOutputMultiplierUpgrade("upgrade_output_multiplier_lumum", Tier.LUMUM));
 
-		Registry.preRegisterItem(BasicSpeedUpgrade = new BaseSpeedUpgrade("upgrade_speed_basic", Tier.BASIC));
-		Registry.preRegisterItem(StaticSpeedUpgrade = new BaseSpeedUpgrade("upgrade_speed_static", Tier.STATIC));
-		Registry.preRegisterItem(EnergizedSpeedUpgrade = new BaseSpeedUpgrade("upgrade_speed_energized", Tier.ENERGIZED));
-		Registry.preRegisterItem(LumumSpeedUpgrade = new BaseSpeedUpgrade("upgrade_speed_lumum", Tier.LUMUM));
+		StaticPowerRegistry.preRegisterItem(BasicSpeedUpgrade = new BaseSpeedUpgrade("upgrade_speed_basic", Tier.BASIC));
+		StaticPowerRegistry.preRegisterItem(StaticSpeedUpgrade = new BaseSpeedUpgrade("upgrade_speed_static", Tier.STATIC));
+		StaticPowerRegistry.preRegisterItem(EnergizedSpeedUpgrade = new BaseSpeedUpgrade("upgrade_speed_energized", Tier.ENERGIZED));
+		StaticPowerRegistry.preRegisterItem(LumumSpeedUpgrade = new BaseSpeedUpgrade("upgrade_speed_lumum", Tier.LUMUM));
 
-		Registry.preRegisterItem(BasicRangeUpgrade = new BaseRangeUpgrade("upgrade_range_basic", Tier.BASIC));
-		Registry.preRegisterItem(StaticRangeUpgrade = new BaseRangeUpgrade("upgrade_range_static", Tier.STATIC));
-		Registry.preRegisterItem(EnergizedRangeUpgrade = new BaseRangeUpgrade("upgrade_range_energized", Tier.ENERGIZED));
-		Registry.preRegisterItem(LumumRangeUpgrade = new BaseRangeUpgrade("upgrade_range_lumum", Tier.LUMUM));
+		StaticPowerRegistry.preRegisterItem(BasicRangeUpgrade = new BaseRangeUpgrade("upgrade_range_basic", Tier.BASIC));
+		StaticPowerRegistry.preRegisterItem(StaticRangeUpgrade = new BaseRangeUpgrade("upgrade_range_static", Tier.STATIC));
+		StaticPowerRegistry.preRegisterItem(EnergizedRangeUpgrade = new BaseRangeUpgrade("upgrade_range_energized", Tier.ENERGIZED));
+		StaticPowerRegistry.preRegisterItem(LumumRangeUpgrade = new BaseRangeUpgrade("upgrade_range_lumum", Tier.LUMUM));
 
-		Registry.preRegisterItem(BasicTankUpgrade = new BaseTankUpgrade("upgrade_tank_basic", Tier.BASIC));
-		Registry.preRegisterItem(StaticTankUpgrade = new BaseTankUpgrade("upgrade_tank_static", Tier.STATIC));
-		Registry.preRegisterItem(EnergizedTankUpgrade = new BaseTankUpgrade("upgrade_tank_energized", Tier.ENERGIZED));
-		Registry.preRegisterItem(LumumTankUpgrade = new BaseTankUpgrade("upgrade_tank_lumum", Tier.LUMUM));
+		StaticPowerRegistry.preRegisterItem(BasicTankUpgrade = new BaseTankUpgrade("upgrade_tank_basic", Tier.BASIC));
+		StaticPowerRegistry.preRegisterItem(StaticTankUpgrade = new BaseTankUpgrade("upgrade_tank_static", Tier.STATIC));
+		StaticPowerRegistry.preRegisterItem(EnergizedTankUpgrade = new BaseTankUpgrade("upgrade_tank_energized", Tier.ENERGIZED));
+		StaticPowerRegistry.preRegisterItem(LumumTankUpgrade = new BaseTankUpgrade("upgrade_tank_lumum", Tier.LUMUM));
 
-		Registry.preRegisterItem(StaticQuarryingUpgrade = new BaseQuarryingUpgrade("upgrade_quarrying_static", Tier.STATIC));
-		Registry.preRegisterItem(EnergizedQuarryingUpgrade = new BaseQuarryingUpgrade("upgrade_quarrying_energized", Tier.ENERGIZED));
-		Registry.preRegisterItem(LumumQuarryingUpgrade = new BaseQuarryingUpgrade("upgrade_quarrying_lumum", Tier.LUMUM));
+		StaticPowerRegistry.preRegisterItem(StaticQuarryingUpgrade = new BaseQuarryingUpgrade("upgrade_quarrying_static", Tier.STATIC));
+		StaticPowerRegistry.preRegisterItem(EnergizedQuarryingUpgrade = new BaseQuarryingUpgrade("upgrade_quarrying_energized", Tier.ENERGIZED));
+		StaticPowerRegistry.preRegisterItem(LumumQuarryingUpgrade = new BaseQuarryingUpgrade("upgrade_quarrying_lumum", Tier.LUMUM));
 	}
 }

@@ -1,6 +1,7 @@
 package theking530.staticpower.tileentities.components;
 
 import java.util.Random;
+import java.util.function.Predicate;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -21,8 +22,9 @@ public class InputServoComponent extends AbstractTileEntityComponent {
 	private InventoryComponent inventory;
 	private int[] slots;
 	private MachineSideMode inputMode;
+	private Predicate<ItemStack> filter;
 
-	public InputServoComponent(String name, int inputTime, InventoryComponent inventory, MachineSideMode mode, int... slots) {
+	public InputServoComponent(String name, int inputTime, InventoryComponent inventory, MachineSideMode mode, Predicate<ItemStack> filter, int... slots) {
 		super(name);
 		this.inputTime = inputTime;
 		this.inventory = inventory;
@@ -30,7 +32,15 @@ public class InputServoComponent extends AbstractTileEntityComponent {
 		this.inputMode = mode;
 	}
 
-	public InputServoComponent(String name,  int inputTime, InventoryComponent inventory, int... slots) {
+	public InputServoComponent(String name, int inputTime, InventoryComponent inventory, MachineSideMode mode, int... slots) {
+		this(name, inputTime, inventory, mode, null, slots);
+	}
+
+	public InputServoComponent(String name, int inputTime, InventoryComponent inventory, Predicate<ItemStack> filter, int... slots) {
+		this(name, inputTime, inventory, MachineSideMode.Input, filter, slots);
+	}
+
+	public InputServoComponent(String name, int inputTime, InventoryComponent inventory, int... slots) {
 		this(name, inputTime, inventory, MachineSideMode.Input, slots);
 	}
 
@@ -86,9 +96,21 @@ public class InputServoComponent extends AbstractTileEntityComponent {
 			if (te != null) {
 				te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, SideConfigurationUtilities.getDirectionFromSide(blockSide, facing).getOpposite()).ifPresent((IItemHandler instance) -> {
 					for (int currentTESlot = startSlot; currentTESlot < instance.getSlots(); currentTESlot++) {
+						// Attempt to pull the item, but only simulate it.
 						ItemStack actualPull = instance.extractItem(currentTESlot, 64, true);
+
+						// If the item is not empty, continue checking.
 						if (!actualPull.isEmpty()) {
+							// If there is a filter supplied, use it to check the item that was simulated.
+							// If it does not pass, skip this item.
+							if (filter != null && !filter.test(actualPull)) {
+								continue;
+							}
+
+							// If we made it this far, attempt to insert the item and see what's remaining.
 							ItemStack remaining = inventory.insertItem(inputSlot, actualPull.copy(), false);
+
+							// Based on what is remaining, extract that from the input inventory.
 							instance.extractItem(currentTESlot, actualPull.getCount() - remaining.getCount(), false);
 							break;
 						}

@@ -27,11 +27,10 @@ public class ArrowProgressBar extends AbstractProgressBar {
 			Vector2D screenSpacePosition = this.getScreenSpacePosition();
 			float adjustedProgress = 0.6875f * interp / (float) machineProcessingComponent.getProcessingTime();
 
-			GlStateManager.enableBlend();
 			Minecraft.getInstance().getTextureManager().bindTexture(GuiTextures.ARROW_PROGRESS_BAR);
+			GlStateManager.enableBlend();
 			GuiDrawUtilities.drawTexturedModalRect(screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY(), 0, 0.5f, 1.0f, 1.0f);
 			GuiDrawUtilities.drawTexturedModalRect(screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX() * adjustedProgress, getSize().getY(), 0, 0, adjustedProgress, 0.5f);
-
 			GlStateManager.disableBlend();
 		}
 	}

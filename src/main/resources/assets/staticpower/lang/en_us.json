@@ -54,6 +54,7 @@
 	"block.staticpower.machine_charging_station": "Charging Station",
 	"block.staticpower.chest_vacuum": "Vacuum Chest",
 	"block.staticpower.machine_powered_furnace": "Powered Furnace",
+	"block.staticpower.machine_powered_grinder": "Powered Grinder",
 	"gui.staticpower.empty": "Empty",
 	"gui.staticpower.input": "Input",
 	"gui.staticpower.usage": "Usage",

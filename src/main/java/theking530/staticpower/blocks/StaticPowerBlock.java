@@ -16,8 +16,11 @@ import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -26,10 +29,19 @@ import net.minecraftforge.common.ToolType;
 import theking530.api.wrench.IWrenchable;
 import theking530.api.wrench.RegularWrenchMode;
 import theking530.api.wrench.SneakWrenchMode;
+import theking530.staticpower.items.tools.StaticWrench;
 
 /**
  * Basic implmentation of a static power block.
  * 
+ * @author Amine Sebastian
+ *
+ */
+/**
+ * @author Amine Sebastian
+ *
+ */
+/**
  * @author Amine Sebastian
  *
  */
@@ -133,6 +145,27 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IBloc
 
 	}
 
+	/**
+	 * This is a helper event that is raised when a block is activated by the
+	 * player. It is NOT called when the player activates this block with a wrench
+	 * in their hand. To override the behaviour when that occurs, use the
+	 * {@link #wrenchBlock(PlayerEntity, RegularWrenchMode, ItemStack, World, BlockPos, Direction, boolean)}
+	 * and
+	 * {@link #sneakWrenchBlock(PlayerEntity, SneakWrenchMode, ItemStack, World, BlockPos, Direction, boolean)}
+	 * methods.
+	 * 
+	 * @param state  The state of the block at the point of harvest.
+	 * @param world  The world the block was harvested in.
+	 * @param pos    The position that the block was at.
+	 * @param player The player that harvested the block.
+	 * @param hand   The hand the block was right-clicked with.
+	 * @param hit    The hit result of the activation.
+	 * @return The result of the activation.
+	 */
+	public ActionResultType onStaticPowerBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+		return ActionResultType.PASS;
+	}
+
 	// ***********//
 	// Overrides //
 	// ***********//
@@ -198,5 +231,14 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IBloc
 	public void harvestBlock(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity te, ItemStack stack) {
 		onStaticPowerBlockHarvested(worldIn, player, pos, state, te, stack);
 		super.harvestBlock(worldIn, player, pos, state, te, stack);
+	}
+
+	@Override
+	public ActionResultType onBlockActivated(final BlockState state, final World worldIn, final BlockPos pos, final PlayerEntity player, final Hand handIn, final BlockRayTraceResult hit) {
+		if (!player.getHeldItem(handIn).isEmpty() && player.getHeldItem(handIn).getItem() instanceof StaticWrench) {
+			return ActionResultType.PASS;
+		}
+		onStaticPowerBlockActivated(state, worldIn, pos, player, handIn, hit);
+		return ActionResultType.SUCCESS;
 	}
 }

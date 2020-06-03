@@ -10,6 +10,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import theking530.staticpower.tileentities.powered.poweredgrinder.TileEntityPoweredGrinder;
 import theking530.staticpower.utilities.Reference;
 
 public class GrinderRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<GrinderRecipe> {
@@ -25,13 +26,19 @@ public class GrinderRecipeSerializer extends ForgeRegistryEntry<IRecipeSerialize
 		JsonObject inputElement = JSONUtils.getJsonObject(json, "input");
 		Ingredient input = Ingredient.deserialize(inputElement);
 
+		// Start with the default processing values.
+		int powerCost = TileEntityPoweredGrinder.DEFAULT_PROCESSING_COST;
+		int processingTime = TileEntityPoweredGrinder.DEFAULT_PROCESSING_TIME;
+
 		// Capture the processing and power costs.
-		JsonObject processingElement = JSONUtils.getJsonObject(json, "processing");
-		int powerCost = processingElement.get("time").getAsInt();
-		int processingTime = processingElement.get("power").getAsInt();
+		if (JSONUtils.hasField(json, "processing")) {
+			JsonObject processingElement = JSONUtils.getJsonObject(json, "processing");
+			powerCost = processingElement.get("time").getAsInt();
+			processingTime = processingElement.get("power").getAsInt();
+		}
 
 		// Check the outputs. If it is an array, get all the outputs and make a new
-		// ecipe. Otherwise, just get the single output and make a new recipe.
+		// recipe. Otherwise, just get the single output and make a new recipe.
 		JsonElement outputElement = JSONUtils.isJsonArray(json, "output") ? JSONUtils.getJsonArray(json, "output") : JSONUtils.getJsonObject(json, "output");
 		if (outputElement.isJsonArray()) {
 			JsonArray outputArray = outputElement.getAsJsonArray();

@@ -1,0 +1,22 @@
+{
+	"type": "staticpower:grinder_recipe",
+	"input": {
+		"item": "minecraft:diamond_ore"
+	},
+	"output": [
+		{
+			"item": "minecraft:diamond",
+			"count": 2
+		},
+		{
+			"item": "minecraft:diamond",
+			"count": 1,
+			"chance": 0.2
+		},
+				{
+			"item": "minecraft:diamond",
+			"count": 1,
+			"chance": 0.02
+		}
+	]
+}

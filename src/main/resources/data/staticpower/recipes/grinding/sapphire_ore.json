@@ -1,0 +1,22 @@
+{
+	"type": "staticpower:grinder_recipe",
+	"input": {
+		"item": "staticpower:ore_sapphire"
+	},
+	"output": [
+		{
+			"item": "staticpower:gem_sapphire",
+			"count": 3
+		},
+		{
+			"item": "staticpower:gem_sapphire",
+			"count": 1,
+			"chance": 0.5
+		},
+		{
+			"item": "staticpower:gem_sapphire",
+			"count": 1,
+			"chance": 0.1
+		}
+	]
+}

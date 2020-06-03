@@ -1,0 +1,17 @@
+{
+	"type": "staticpower:grinder_recipe",
+	"input": {
+		"item": "minecraft:iron_ore"
+	},
+	"output": [
+		{
+			"item": "staticpower:dust_iron",
+			"count": 2
+		},
+		{
+			"item": "staticpower:dust_zinc",
+			"count": 1,
+			"chance": 0.05
+		}
+	]
+}

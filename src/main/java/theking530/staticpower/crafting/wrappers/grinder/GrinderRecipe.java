@@ -10,11 +10,17 @@ import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import theking530.staticpower.crafting.wrappers.AbstractRecipe;
+import theking530.staticpower.crafting.wrappers.RecipeMatchParameters;
 
 public class GrinderRecipe extends AbstractRecipe {
 	public static final IRecipeType<GrinderRecipe> RECIPE_TYPE = IRecipeType.register("grinder");
 
 	private final GrinderOutput[] outputs;
+	/**
+	 * This is a helper datatype to use whenever you need access just to the items
+	 * (for example, to see if an inventory can take the items).
+	 */
+	private final ItemStack[] outputItems;
 	private final int processingTime;
 	private final int powerCost;
 	private final Ingredient inputItem;
@@ -25,10 +31,20 @@ public class GrinderRecipe extends AbstractRecipe {
 		this.powerCost = powerCost;
 		this.inputItem = input;
 		this.outputs = outputs;
+
+		// Cache the output items.
+		this.outputItems = new ItemStack[outputs.length];
+		for (int i = 0; i < outputs.length; i++) {
+			outputItems[i] = outputs[i].getItem();
+		}
 	}
 
 	public GrinderOutput[] getOutputItems() {
 		return outputs;
+	}
+
+	public ItemStack[] getRawOutputItems() {
+		return outputItems;
 	}
 
 	public Ingredient getInputIngredient() {
@@ -41,6 +57,11 @@ public class GrinderRecipe extends AbstractRecipe {
 
 	public int getPowerCost() {
 		return powerCost;
+	}
+
+	@Override
+	public boolean isValid(RecipeMatchParameters matchParams) {
+		return inputItem.test(matchParams.getItems()[0]);
 	}
 
 	public static class GrinderOutput {
@@ -63,7 +84,7 @@ public class GrinderRecipe extends AbstractRecipe {
 			return false;
 		}
 
-		public ItemStack getOutput() {
+		public ItemStack getItem() {
 			return item;
 		}
 
@@ -79,8 +100,7 @@ public class GrinderRecipe extends AbstractRecipe {
 		 */
 		public static GrinderOutput parseFromJSON(JsonObject json) {
 			// Capture the output item.
-			JsonObject outputItemStackElement = JSONUtils.getJsonObject(json, "item");
-			ItemStack output = ShapedRecipe.deserializeItem(outputItemStackElement);
+			ItemStack output = ShapedRecipe.deserializeItem(json);
 
 			// If the chance value is provided, use it, otherwise assume 100% chance and
 			// return.
@@ -90,12 +110,12 @@ public class GrinderRecipe extends AbstractRecipe {
 			} else {
 				return new GrinderOutput(output);
 			}
-		} 
+		}
 	}
 
 	@Override
 	public IRecipeSerializer<?> getSerializer() {
-		return null;
+		return GrinderRecipeSerializer.INSTANCE;
 	}
 
 	@Override

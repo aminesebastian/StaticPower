@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:grinder_recipe",
+	"input": {
+		"item": "staticpower:ore_tungsten"
+	},
+	"output": [
+		{
+			"item": "staticpower:dust_tungsten",
+			"count": 2
+		}
+	]
+}

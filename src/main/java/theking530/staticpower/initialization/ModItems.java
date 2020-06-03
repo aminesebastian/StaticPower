@@ -1,6 +1,6 @@
 package theking530.staticpower.initialization;
 
-import theking530.staticpower.Registry;
+import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.items.book.StaticPowerBook;
@@ -198,196 +198,196 @@ public class ModItems {
 
 	public static void init() {
 		// Book
-		Registry.preRegisterItem(StaticPowerBook = new StaticPowerBook("tutorial_book"));
+		StaticPowerRegistry.preRegisterItem(StaticPowerBook = new StaticPowerBook("tutorial_book"));
 
 		// Misc.
-		Registry.preRegisterItem(DistilleryGrain = new StaticPowerItem("distillery_grain"));
+		StaticPowerRegistry.preRegisterItem(DistilleryGrain = new StaticPowerItem("distillery_grain"));
 
 		// Food
-		Registry.preRegisterItem(WheatFlour = new StaticPowerItem("flour_wheat"));
-		Registry.preRegisterItem(PotatoFlour = new StaticPowerItem("flour_potato"));
-		Registry.preRegisterItem(PotatoBread = new StaticPowerItem("bread_potato"));
-		Registry.preRegisterItem(ApplePie = new StaticPowerItem("pie_apple"));
-		Registry.preRegisterItem(StaticPie = new StaticPowerItem("pie_static"));
-		Registry.preRegisterItem(EnergizedPie = new StaticPowerItem("pie_energized"));
-		Registry.preRegisterItem(LumumPie = new StaticPowerItem("pie_lumum"));
+		StaticPowerRegistry.preRegisterItem(WheatFlour = new StaticPowerItem("flour_wheat"));
+		StaticPowerRegistry.preRegisterItem(PotatoFlour = new StaticPowerItem("flour_potato"));
+		StaticPowerRegistry.preRegisterItem(PotatoBread = new StaticPowerItem("bread_potato"));
+		StaticPowerRegistry.preRegisterItem(ApplePie = new StaticPowerItem("pie_apple"));
+		StaticPowerRegistry.preRegisterItem(StaticPie = new StaticPowerItem("pie_static"));
+		StaticPowerRegistry.preRegisterItem(EnergizedPie = new StaticPowerItem("pie_energized"));
+		StaticPowerRegistry.preRegisterItem(LumumPie = new StaticPowerItem("pie_lumum"));
 
 		// Molds
-		Registry.preRegisterItem(MoldBlank = new StaticPowerItem("mold_blank"));
-		Registry.preRegisterItem(MoldPlate = new StaticPowerItem("mold_plate"));
-		Registry.preRegisterItem(MoldWire = new StaticPowerItem("mold_wire"));
-		Registry.preRegisterItem(MoldGear = new StaticPowerItem("mold_gear"));
+		StaticPowerRegistry.preRegisterItem(MoldBlank = new StaticPowerItem("mold_blank"));
+		StaticPowerRegistry.preRegisterItem(MoldPlate = new StaticPowerItem("mold_plate"));
+		StaticPowerRegistry.preRegisterItem(MoldWire = new StaticPowerItem("mold_wire"));
+		StaticPowerRegistry.preRegisterItem(MoldGear = new StaticPowerItem("mold_gear"));
 
 		// Plants
-		Registry.preRegisterItem(StaticSeeds = new StaticPlantSeeds("seed_static", ModBlocks.StaticPlant));
-		Registry.preRegisterItem(EnergizedSeeds = new StaticPlantSeeds("seed_energized", ModBlocks.EnergizedPlant));
-		Registry.preRegisterItem(LumumSeeds = new StaticPlantSeeds("seed_lumum", ModBlocks.LumumPlant));
+		StaticPowerRegistry.preRegisterItem(StaticSeeds = new StaticPlantSeeds("seed_static", ModBlocks.StaticPlant));
+		StaticPowerRegistry.preRegisterItem(EnergizedSeeds = new StaticPlantSeeds("seed_energized", ModBlocks.EnergizedPlant));
+		StaticPowerRegistry.preRegisterItem(LumumSeeds = new StaticPlantSeeds("seed_lumum", ModBlocks.LumumPlant));
 
-		Registry.preRegisterItem(StaticCrop = new StaticPlantCrop("crop_static", ModFoods.STATIC_CROP));
-		Registry.preRegisterItem(EnergizedCrop = new StaticPlantCrop("crop_energized", ModFoods.ENERGIZED_CROP));
-		Registry.preRegisterItem(LumumCrop = new StaticPlantCrop("crop_lumum", ModFoods.LUMUM_CROP));
-		Registry.preRegisterItem(DepletedCrop = new DepletedCrop("crop_depleted"));
+		StaticPowerRegistry.preRegisterItem(StaticCrop = new StaticPlantCrop("crop_static", ModFoods.STATIC_CROP));
+		StaticPowerRegistry.preRegisterItem(EnergizedCrop = new StaticPlantCrop("crop_energized", ModFoods.ENERGIZED_CROP));
+		StaticPowerRegistry.preRegisterItem(LumumCrop = new StaticPlantCrop("crop_lumum", ModFoods.LUMUM_CROP));
+		StaticPowerRegistry.preRegisterItem(DepletedCrop = new DepletedCrop("crop_depleted"));
 
 		// Processors
-		Registry.preRegisterItem(BasicProcessor = new StaticPowerItem("processor_basic"));
-		Registry.preRegisterItem(StaticProcessor = new StaticPowerItem("processor_static"));
-		Registry.preRegisterItem(EnergizedProcessor = new StaticPowerItem("processor_energized"));
-		Registry.preRegisterItem(LumumProcessor = new StaticPowerItem("processor_lumum"));
+		StaticPowerRegistry.preRegisterItem(BasicProcessor = new StaticPowerItem("processor_basic"));
+		StaticPowerRegistry.preRegisterItem(StaticProcessor = new StaticPowerItem("processor_static"));
+		StaticPowerRegistry.preRegisterItem(EnergizedProcessor = new StaticPowerItem("processor_energized"));
+		StaticPowerRegistry.preRegisterItem(LumumProcessor = new StaticPowerItem("processor_lumum"));
 
 		// Batteries
-		Registry.preRegisterItem(BasicPortableBattery = new StaticPowerEnergyStoringItem("portable_battery_basic", 50000));
-		Registry.preRegisterItem(EnergizedPortableBattery = new StaticPowerEnergyStoringItem("portable_battery_static", 500000));
-		Registry.preRegisterItem(LumumPortableBattery = new StaticPowerEnergyStoringItem("portable_battery_energized", 5000000));
-		Registry.preRegisterItem(StaticPortableBattery = new StaticPowerEnergyStoringItem("portable_battery_lumum", 50000000));
+		StaticPowerRegistry.preRegisterItem(BasicPortableBattery = new StaticPowerEnergyStoringItem("portable_battery_basic", 50000));
+		StaticPowerRegistry.preRegisterItem(EnergizedPortableBattery = new StaticPowerEnergyStoringItem("portable_battery_static", 500000));
+		StaticPowerRegistry.preRegisterItem(LumumPortableBattery = new StaticPowerEnergyStoringItem("portable_battery_energized", 5000000));
+		StaticPowerRegistry.preRegisterItem(StaticPortableBattery = new StaticPowerEnergyStoringItem("portable_battery_lumum", 50000000));
 
 		// Tools
-		Registry.preRegisterItem(MetalHammer = new MetalHammer("metal_hammer", 100));
-		Registry.preRegisterItem(WireCutters = new WireCutters("wire_cutters", 100));
-		Registry.preRegisterItem(SolderingIron = new SolderingIron("soldering_iron", 100));
-		Registry.preRegisterItem(ElectringSolderingIron = new ElectricSolderingIron("soldering_iron_electric", 10000));
-		Registry.preRegisterItem(StaticWrench = new StaticWrench("static_wrench"));
+		StaticPowerRegistry.preRegisterItem(MetalHammer = new MetalHammer("metal_hammer", 100));
+		StaticPowerRegistry.preRegisterItem(WireCutters = new WireCutters("wire_cutters", 100));
+		StaticPowerRegistry.preRegisterItem(SolderingIron = new SolderingIron("soldering_iron", 100));
+		StaticPowerRegistry.preRegisterItem(ElectringSolderingIron = new ElectricSolderingIron("soldering_iron_electric", 10000));
+		StaticPowerRegistry.preRegisterItem(StaticWrench = new StaticWrench("static_wrench"));
 
 		// Filters
-		Registry.preRegisterItem(BasicFilter = new ItemFilter("filter_item_basic", FilterTier.BASIC));
+		StaticPowerRegistry.preRegisterItem(BasicFilter = new ItemFilter("filter_item_basic", FilterTier.BASIC));
 
 		// Components
-		Registry.preRegisterItem(MemoryChip = new StaticPowerItem("memory_chip"));
-		Registry.preRegisterItem(LogicGatePowerSync = new StaticPowerItem("logic_gate_power_sync"));
-		Registry.preRegisterItem(InvertedLogicGatePowerSync = new StaticPowerItem("inverted_logic_gate_power_sync"));
-		Registry.preRegisterItem(LogicGateServo = new StaticPowerItem("logic_gate_servo"));
-		Registry.preRegisterItem(Diode = new StaticPowerItem("diode"));
-		Registry.preRegisterItem(Transistor = new StaticPowerItem("transistor"));
-		Registry.preRegisterItem(InternalClock = new StaticPowerItem("internal_clock"));
-		Registry.preRegisterItem(IOPort = new StaticPowerItem("io_port"));
-		Registry.preRegisterItem(WireCopper = new StaticPowerItem("wire_copper"));
-		Registry.preRegisterItem(WireSilver = new StaticPowerItem("wire_silver"));
-		Registry.preRegisterItem(WireGold = new StaticPowerItem("wire_gold"));
-		Registry.preRegisterItem(CoilCopper = new StaticPowerItem("coil_copper"));
-		Registry.preRegisterItem(CoilSilver = new StaticPowerItem("coil_silver"));
-		Registry.preRegisterItem(CoilGold = new StaticPowerItem("coil_gold"));
+		StaticPowerRegistry.preRegisterItem(MemoryChip = new StaticPowerItem("memory_chip"));
+		StaticPowerRegistry.preRegisterItem(LogicGatePowerSync = new StaticPowerItem("logic_gate_power_sync"));
+		StaticPowerRegistry.preRegisterItem(InvertedLogicGatePowerSync = new StaticPowerItem("inverted_logic_gate_power_sync"));
+		StaticPowerRegistry.preRegisterItem(LogicGateServo = new StaticPowerItem("logic_gate_servo"));
+		StaticPowerRegistry.preRegisterItem(Diode = new StaticPowerItem("diode"));
+		StaticPowerRegistry.preRegisterItem(Transistor = new StaticPowerItem("transistor"));
+		StaticPowerRegistry.preRegisterItem(InternalClock = new StaticPowerItem("internal_clock"));
+		StaticPowerRegistry.preRegisterItem(IOPort = new StaticPowerItem("io_port"));
+		StaticPowerRegistry.preRegisterItem(WireCopper = new StaticPowerItem("wire_copper"));
+		StaticPowerRegistry.preRegisterItem(WireSilver = new StaticPowerItem("wire_silver"));
+		StaticPowerRegistry.preRegisterItem(WireGold = new StaticPowerItem("wire_gold"));
+		StaticPowerRegistry.preRegisterItem(CoilCopper = new StaticPowerItem("coil_copper"));
+		StaticPowerRegistry.preRegisterItem(CoilSilver = new StaticPowerItem("coil_silver"));
+		StaticPowerRegistry.preRegisterItem(CoilGold = new StaticPowerItem("coil_gold"));
 
 		// Materials
-		Registry.preRegisterItem(GemRuby = new StaticPowerItem("gem_ruby"));
-		Registry.preRegisterItem(GemSapphire = new StaticPowerItem("gem_sapphire"));
-		Registry.preRegisterItem(Rubber = new StaticPowerItem("rubber"));
-		Registry.preRegisterItem(Silicon = new StaticPowerItem("silicon"));
-		Registry.preRegisterItem(CrystalStatic = new StaticPowerItem("crystal_static"));
-		Registry.preRegisterItem(CrystalEnergized = new StaticPowerItem("crystal_energized"));
-		Registry.preRegisterItem(CrystalLumum = new StaticPowerItem("crystal_lumum"));
+		StaticPowerRegistry.preRegisterItem(GemRuby = new StaticPowerItem("gem_ruby"));
+		StaticPowerRegistry.preRegisterItem(GemSapphire = new StaticPowerItem("gem_sapphire"));
+		StaticPowerRegistry.preRegisterItem(Rubber = new StaticPowerItem("rubber"));
+		StaticPowerRegistry.preRegisterItem(Silicon = new StaticPowerItem("silicon"));
+		StaticPowerRegistry.preRegisterItem(CrystalStatic = new StaticPowerItem("crystal_static"));
+		StaticPowerRegistry.preRegisterItem(CrystalEnergized = new StaticPowerItem("crystal_energized"));
+		StaticPowerRegistry.preRegisterItem(CrystalLumum = new StaticPowerItem("crystal_lumum"));
 
 		// Plates
-		Registry.preRegisterItem(PlateIron = new StaticPowerItem("plate_iron"));
-		Registry.preRegisterItem(PlateGold = new StaticPowerItem("plate_gold"));
-		Registry.preRegisterItem(PlateCopper = new StaticPowerItem("plate_copper"));
-		Registry.preRegisterItem(PlateTin = new StaticPowerItem("plate_tin"));
-		Registry.preRegisterItem(PlateZinc = new StaticPowerItem("plate_zinc"));
-		Registry.preRegisterItem(PlateSilver = new StaticPowerItem("plate_silver"));
-		Registry.preRegisterItem(PlateLead = new StaticPowerItem("plate_lead"));
-		Registry.preRegisterItem(PlateTungsten = new StaticPowerItem("plate_tungsten"));
-		Registry.preRegisterItem(PlateMagnesium = new StaticPowerItem("plate_magnesium"));
-		Registry.preRegisterItem(PlatePlatinum = new StaticPowerItem("plate_platinum"));
-		Registry.preRegisterItem(PlateAluminium = new StaticPowerItem("plate_aluminium"));
-		Registry.preRegisterItem(PlateStatic = new StaticPowerItem("plate_static"));
-		Registry.preRegisterItem(PlateEnergized = new StaticPowerItem("plate_energized"));
-		Registry.preRegisterItem(PlateLumum = new StaticPowerItem("plate_lumum"));
-		Registry.preRegisterItem(PlateInertInfusion = new StaticPowerItem("plate_inert_infusion"));
-		Registry.preRegisterItem(PlateRedstoneAlloy = new StaticPowerItem("plate_redstone_alloy"));
-		Registry.preRegisterItem(PlateBrass = new StaticPowerItem("plate_brass"));
-		Registry.preRegisterItem(PlateBronze = new StaticPowerItem("plate_bronze"));
+		StaticPowerRegistry.preRegisterItem(PlateIron = new StaticPowerItem("plate_iron"));
+		StaticPowerRegistry.preRegisterItem(PlateGold = new StaticPowerItem("plate_gold"));
+		StaticPowerRegistry.preRegisterItem(PlateCopper = new StaticPowerItem("plate_copper"));
+		StaticPowerRegistry.preRegisterItem(PlateTin = new StaticPowerItem("plate_tin"));
+		StaticPowerRegistry.preRegisterItem(PlateZinc = new StaticPowerItem("plate_zinc"));
+		StaticPowerRegistry.preRegisterItem(PlateSilver = new StaticPowerItem("plate_silver"));
+		StaticPowerRegistry.preRegisterItem(PlateLead = new StaticPowerItem("plate_lead"));
+		StaticPowerRegistry.preRegisterItem(PlateTungsten = new StaticPowerItem("plate_tungsten"));
+		StaticPowerRegistry.preRegisterItem(PlateMagnesium = new StaticPowerItem("plate_magnesium"));
+		StaticPowerRegistry.preRegisterItem(PlatePlatinum = new StaticPowerItem("plate_platinum"));
+		StaticPowerRegistry.preRegisterItem(PlateAluminium = new StaticPowerItem("plate_aluminium"));
+		StaticPowerRegistry.preRegisterItem(PlateStatic = new StaticPowerItem("plate_static"));
+		StaticPowerRegistry.preRegisterItem(PlateEnergized = new StaticPowerItem("plate_energized"));
+		StaticPowerRegistry.preRegisterItem(PlateLumum = new StaticPowerItem("plate_lumum"));
+		StaticPowerRegistry.preRegisterItem(PlateInertInfusion = new StaticPowerItem("plate_inert_infusion"));
+		StaticPowerRegistry.preRegisterItem(PlateRedstoneAlloy = new StaticPowerItem("plate_redstone_alloy"));
+		StaticPowerRegistry.preRegisterItem(PlateBrass = new StaticPowerItem("plate_brass"));
+		StaticPowerRegistry.preRegisterItem(PlateBronze = new StaticPowerItem("plate_bronze"));
 
 		// Gears
-		Registry.preRegisterItem(GearCopper = new StaticPowerItem("gear_copper"));
-		Registry.preRegisterItem(GearTin = new StaticPowerItem("gear_tin"));
-		Registry.preRegisterItem(GearZinc = new StaticPowerItem("gear_zinc"));
-		Registry.preRegisterItem(GearSilver = new StaticPowerItem("gear_silver"));
-		Registry.preRegisterItem(GearLead = new StaticPowerItem("gear_lead"));
-		Registry.preRegisterItem(GearTungsten = new StaticPowerItem("gear_tungsten"));
-		Registry.preRegisterItem(GearMagnesium = new StaticPowerItem("gear_magnesium"));
-		Registry.preRegisterItem(GearPlatinum = new StaticPowerItem("gear_platinum"));
-		Registry.preRegisterItem(GearAluminium = new StaticPowerItem("gear_aluminium"));
-		Registry.preRegisterItem(GearStatic = new StaticPowerItem("gear_static"));
-		Registry.preRegisterItem(GearEnergized = new StaticPowerItem("gear_energized"));
-		Registry.preRegisterItem(GearLumum = new StaticPowerItem("gear_lumum"));
-		Registry.preRegisterItem(GearInertInfusion = new StaticPowerItem("gear_inert_infusion"));
-		Registry.preRegisterItem(GearRedstoneAlloy = new StaticPowerItem("gear_redstone_alloy"));
-		Registry.preRegisterItem(GearIron = new StaticPowerItem("gear_iron"));
-		Registry.preRegisterItem(GearGold = new StaticPowerItem("gear_gold"));
-		Registry.preRegisterItem(GearBrass = new StaticPowerItem("gear_brass"));
-		Registry.preRegisterItem(GearBronze = new StaticPowerItem("gear_bronze"));
+		StaticPowerRegistry.preRegisterItem(GearCopper = new StaticPowerItem("gear_copper"));
+		StaticPowerRegistry.preRegisterItem(GearTin = new StaticPowerItem("gear_tin"));
+		StaticPowerRegistry.preRegisterItem(GearZinc = new StaticPowerItem("gear_zinc"));
+		StaticPowerRegistry.preRegisterItem(GearSilver = new StaticPowerItem("gear_silver"));
+		StaticPowerRegistry.preRegisterItem(GearLead = new StaticPowerItem("gear_lead"));
+		StaticPowerRegistry.preRegisterItem(GearTungsten = new StaticPowerItem("gear_tungsten"));
+		StaticPowerRegistry.preRegisterItem(GearMagnesium = new StaticPowerItem("gear_magnesium"));
+		StaticPowerRegistry.preRegisterItem(GearPlatinum = new StaticPowerItem("gear_platinum"));
+		StaticPowerRegistry.preRegisterItem(GearAluminium = new StaticPowerItem("gear_aluminium"));
+		StaticPowerRegistry.preRegisterItem(GearStatic = new StaticPowerItem("gear_static"));
+		StaticPowerRegistry.preRegisterItem(GearEnergized = new StaticPowerItem("gear_energized"));
+		StaticPowerRegistry.preRegisterItem(GearLumum = new StaticPowerItem("gear_lumum"));
+		StaticPowerRegistry.preRegisterItem(GearInertInfusion = new StaticPowerItem("gear_inert_infusion"));
+		StaticPowerRegistry.preRegisterItem(GearRedstoneAlloy = new StaticPowerItem("gear_redstone_alloy"));
+		StaticPowerRegistry.preRegisterItem(GearIron = new StaticPowerItem("gear_iron"));
+		StaticPowerRegistry.preRegisterItem(GearGold = new StaticPowerItem("gear_gold"));
+		StaticPowerRegistry.preRegisterItem(GearBrass = new StaticPowerItem("gear_brass"));
+		StaticPowerRegistry.preRegisterItem(GearBronze = new StaticPowerItem("gear_bronze"));
 
 		// Dusts
-		Registry.preRegisterItem(DustWood = new StaticPowerItem("dust_wood"));
-		Registry.preRegisterItem(DustCopper = new StaticPowerItem("dust_copper"));
-		Registry.preRegisterItem(DustTin = new StaticPowerItem("dust_tin"));
-		Registry.preRegisterItem(DustZinc = new StaticPowerItem("dust_zinc"));
-		Registry.preRegisterItem(DustSilver = new StaticPowerItem("dust_silver"));
-		Registry.preRegisterItem(DustLead = new StaticPowerItem("dust_lead"));
-		Registry.preRegisterItem(DustTungsten = new StaticPowerItem("dust_tungsten"));
-		Registry.preRegisterItem(DustMagnesium = new StaticPowerItem("dust_magnesium"));
-		Registry.preRegisterItem(DustPlatinum = new StaticPowerItem("dust_platinum"));
-		Registry.preRegisterItem(DustAluminium = new StaticPowerItem("dust_aluminium"));
-		Registry.preRegisterItem(DustStatic = new StaticPowerItem("dust_static"));
-		Registry.preRegisterItem(DustEnergized = new StaticPowerItem("dust_energized"));
-		Registry.preRegisterItem(DustLumum = new StaticPowerItem("dust_lumum"));
-		Registry.preRegisterItem(DustInertInfusion = new StaticPowerItem("dust_inert_infusion"));
-		Registry.preRegisterItem(DustRedstoneAlloy = new StaticPowerItem("dust_redstone_alloy"));
-		Registry.preRegisterItem(DustCoal = new StaticPowerItem("dust_coal"));
-		Registry.preRegisterItem(DustObsidian = new StaticPowerItem("dust_obsidian"));
-		Registry.preRegisterItem(DustGold = new StaticPowerItem("dust_gold"));
-		Registry.preRegisterItem(DustIron = new StaticPowerItem("dust_iron"));
-		Registry.preRegisterItem(DustRuby = new StaticPowerItem("dust_ruby"));
-		Registry.preRegisterItem(DustSapphire = new StaticPowerItem("dust_sapphire"));
-		Registry.preRegisterItem(DustSulfur = new StaticPowerItem("dust_sulfur"));
-		Registry.preRegisterItem(DustSaltpeter = new StaticPowerItem("dust_saltpeter"));
-		Registry.preRegisterItem(DustCharcoal = new StaticPowerItem("dust_charcoal"));
-		Registry.preRegisterItem(DustStaticInfusion = new StaticPowerItem("dust_static_infusion"));
-		Registry.preRegisterItem(DustEnergizedInfusion = new StaticPowerItem("dust_energized_infusion"));
-		Registry.preRegisterItem(DustLumumInfusion = new StaticPowerItem("dust_lumum_infusion"));
-		Registry.preRegisterItem(DustBrass = new StaticPowerItem("dust_brass"));
-		Registry.preRegisterItem(DustBronze = new StaticPowerItem("dust_bronze"));
-		Registry.preRegisterItem(DustCobalt = new StaticPowerItem("dust_cobolt"));
-		Registry.preRegisterItem(DustArdite = new StaticPowerItem("dust_ardite"));
+		StaticPowerRegistry.preRegisterItem(DustWood = new StaticPowerItem("dust_wood"));
+		StaticPowerRegistry.preRegisterItem(DustCopper = new StaticPowerItem("dust_copper"));
+		StaticPowerRegistry.preRegisterItem(DustTin = new StaticPowerItem("dust_tin"));
+		StaticPowerRegistry.preRegisterItem(DustZinc = new StaticPowerItem("dust_zinc"));
+		StaticPowerRegistry.preRegisterItem(DustSilver = new StaticPowerItem("dust_silver"));
+		StaticPowerRegistry.preRegisterItem(DustLead = new StaticPowerItem("dust_lead"));
+		StaticPowerRegistry.preRegisterItem(DustTungsten = new StaticPowerItem("dust_tungsten"));
+		StaticPowerRegistry.preRegisterItem(DustMagnesium = new StaticPowerItem("dust_magnesium"));
+		StaticPowerRegistry.preRegisterItem(DustPlatinum = new StaticPowerItem("dust_platinum"));
+		StaticPowerRegistry.preRegisterItem(DustAluminium = new StaticPowerItem("dust_aluminium"));
+		StaticPowerRegistry.preRegisterItem(DustStatic = new StaticPowerItem("dust_static"));
+		StaticPowerRegistry.preRegisterItem(DustEnergized = new StaticPowerItem("dust_energized"));
+		StaticPowerRegistry.preRegisterItem(DustLumum = new StaticPowerItem("dust_lumum"));
+		StaticPowerRegistry.preRegisterItem(DustInertInfusion = new StaticPowerItem("dust_inert_infusion"));
+		StaticPowerRegistry.preRegisterItem(DustRedstoneAlloy = new StaticPowerItem("dust_redstone_alloy"));
+		StaticPowerRegistry.preRegisterItem(DustCoal = new StaticPowerItem("dust_coal"));
+		StaticPowerRegistry.preRegisterItem(DustObsidian = new StaticPowerItem("dust_obsidian"));
+		StaticPowerRegistry.preRegisterItem(DustGold = new StaticPowerItem("dust_gold"));
+		StaticPowerRegistry.preRegisterItem(DustIron = new StaticPowerItem("dust_iron"));
+		StaticPowerRegistry.preRegisterItem(DustRuby = new StaticPowerItem("dust_ruby"));
+		StaticPowerRegistry.preRegisterItem(DustSapphire = new StaticPowerItem("dust_sapphire"));
+		StaticPowerRegistry.preRegisterItem(DustSulfur = new StaticPowerItem("dust_sulfur"));
+		StaticPowerRegistry.preRegisterItem(DustSaltpeter = new StaticPowerItem("dust_saltpeter"));
+		StaticPowerRegistry.preRegisterItem(DustCharcoal = new StaticPowerItem("dust_charcoal"));
+		StaticPowerRegistry.preRegisterItem(DustStaticInfusion = new StaticPowerItem("dust_static_infusion"));
+		StaticPowerRegistry.preRegisterItem(DustEnergizedInfusion = new StaticPowerItem("dust_energized_infusion"));
+		StaticPowerRegistry.preRegisterItem(DustLumumInfusion = new StaticPowerItem("dust_lumum_infusion"));
+		StaticPowerRegistry.preRegisterItem(DustBrass = new StaticPowerItem("dust_brass"));
+		StaticPowerRegistry.preRegisterItem(DustBronze = new StaticPowerItem("dust_bronze"));
+		StaticPowerRegistry.preRegisterItem(DustCobalt = new StaticPowerItem("dust_cobolt"));
+		StaticPowerRegistry.preRegisterItem(DustArdite = new StaticPowerItem("dust_ardite"));
 
 		// Upgrade Plates
-		Registry.preRegisterItem(BasicUpgradePlate = new StaticPowerItem("upgrade_plate_basic"));
-		Registry.preRegisterItem(StaticUpgradePlate = new StaticPowerItem("upgrade_plate_static"));
-		Registry.preRegisterItem(EnergizedUpgradePlate = new StaticPowerItem("upgrade_plate_energized"));
-		Registry.preRegisterItem(LumumUpgradePlate = new StaticPowerItem("upgrade_plate_lumum"));
+		StaticPowerRegistry.preRegisterItem(BasicUpgradePlate = new StaticPowerItem("upgrade_plate_basic"));
+		StaticPowerRegistry.preRegisterItem(StaticUpgradePlate = new StaticPowerItem("upgrade_plate_static"));
+		StaticPowerRegistry.preRegisterItem(EnergizedUpgradePlate = new StaticPowerItem("upgrade_plate_energized"));
+		StaticPowerRegistry.preRegisterItem(LumumUpgradePlate = new StaticPowerItem("upgrade_plate_lumum"));
 
 		// Ingots
-		Registry.preRegisterItem(IngotCopper = new StaticPowerItem("ingot_copper"));
-		Registry.preRegisterItem(IngotTin = new StaticPowerItem("ingot_tin"));
-		Registry.preRegisterItem(IngotZinc = new StaticPowerItem("ingot_zinc"));
-		Registry.preRegisterItem(IngotSilver = new StaticPowerItem("ingot_silver"));
-		Registry.preRegisterItem(IngotLead = new StaticPowerItem("ingot_lead"));
-		Registry.preRegisterItem(IngotMagnesium = new StaticPowerItem("ingot_magnesium"));
-		Registry.preRegisterItem(IngotTungsten = new StaticPowerItem("ingot_tungsten"));
-		Registry.preRegisterItem(IngotPlatinum = new StaticPowerItem("ingot_platinum"));
-		Registry.preRegisterItem(IngotBrass = new StaticPowerItem("ingot_brass"));
-		Registry.preRegisterItem(IngotBronze = new StaticPowerItem("ingot_bronze"));
-		Registry.preRegisterItem(IngotAluminium = new StaticPowerItem("ingot_aluminium"));
-		Registry.preRegisterItem(IngotStatic = new StaticPowerItem("ingot_static"));
-		Registry.preRegisterItem(IngotEnergized = new StaticPowerItem("ingot_energized"));
-		Registry.preRegisterItem(IngotLumum = new StaticPowerItem("ingot_lumum"));
-		Registry.preRegisterItem(IngotInertInfusion = new StaticPowerItem("ingot_inert_infusion"));
-		Registry.preRegisterItem(IngotRedstoneAlloy = new StaticPowerItem("ingot_redstone_alloy"));
+		StaticPowerRegistry.preRegisterItem(IngotCopper = new StaticPowerItem("ingot_copper"));
+		StaticPowerRegistry.preRegisterItem(IngotTin = new StaticPowerItem("ingot_tin"));
+		StaticPowerRegistry.preRegisterItem(IngotZinc = new StaticPowerItem("ingot_zinc"));
+		StaticPowerRegistry.preRegisterItem(IngotSilver = new StaticPowerItem("ingot_silver"));
+		StaticPowerRegistry.preRegisterItem(IngotLead = new StaticPowerItem("ingot_lead"));
+		StaticPowerRegistry.preRegisterItem(IngotMagnesium = new StaticPowerItem("ingot_magnesium"));
+		StaticPowerRegistry.preRegisterItem(IngotTungsten = new StaticPowerItem("ingot_tungsten"));
+		StaticPowerRegistry.preRegisterItem(IngotPlatinum = new StaticPowerItem("ingot_platinum"));
+		StaticPowerRegistry.preRegisterItem(IngotBrass = new StaticPowerItem("ingot_brass"));
+		StaticPowerRegistry.preRegisterItem(IngotBronze = new StaticPowerItem("ingot_bronze"));
+		StaticPowerRegistry.preRegisterItem(IngotAluminium = new StaticPowerItem("ingot_aluminium"));
+		StaticPowerRegistry.preRegisterItem(IngotStatic = new StaticPowerItem("ingot_static"));
+		StaticPowerRegistry.preRegisterItem(IngotEnergized = new StaticPowerItem("ingot_energized"));
+		StaticPowerRegistry.preRegisterItem(IngotLumum = new StaticPowerItem("ingot_lumum"));
+		StaticPowerRegistry.preRegisterItem(IngotInertInfusion = new StaticPowerItem("ingot_inert_infusion"));
+		StaticPowerRegistry.preRegisterItem(IngotRedstoneAlloy = new StaticPowerItem("ingot_redstone_alloy"));
 
 		// Nuggets
-		Registry.preRegisterItem(NuggetCopper = new StaticPowerItem("nugget_copper"));
-		Registry.preRegisterItem(NuggetTin = new StaticPowerItem("nugget_tin"));
-		Registry.preRegisterItem(NuggetZinc = new StaticPowerItem("nugget_zinc"));
-		Registry.preRegisterItem(NuggetSilver = new StaticPowerItem("nugget_silver"));
-		Registry.preRegisterItem(NuggetLead = new StaticPowerItem("nugget_lead"));
-		Registry.preRegisterItem(NuggetMagnesium = new StaticPowerItem("nugget_magnesium"));
-		Registry.preRegisterItem(NuggetTungsten = new StaticPowerItem("nugget_tungsten"));
-		Registry.preRegisterItem(NuggetPlatinum = new StaticPowerItem("nugget_platinum"));
-		Registry.preRegisterItem(NuggetAluminium = new StaticPowerItem("nugget_aluminium"));
-		Registry.preRegisterItem(NuggetStatic = new StaticPowerItem("nugget_static"));
-		Registry.preRegisterItem(NuggetEnergized = new StaticPowerItem("nugget_energized"));
-		Registry.preRegisterItem(NuggetLumum = new StaticPowerItem("nugget_lumum"));
-		Registry.preRegisterItem(NuggetInertInfusion = new StaticPowerItem("nugget_inert_infusion"));
-		Registry.preRegisterItem(NuggetRedstoneAlloy = new StaticPowerItem("nugget_redstone_alloy"));
-		Registry.preRegisterItem(NuggetBrass = new StaticPowerItem("nugget_brass"));
-		Registry.preRegisterItem(NuggetBronze = new StaticPowerItem("nugget_bronze"));
+		StaticPowerRegistry.preRegisterItem(NuggetCopper = new StaticPowerItem("nugget_copper"));
+		StaticPowerRegistry.preRegisterItem(NuggetTin = new StaticPowerItem("nugget_tin"));
+		StaticPowerRegistry.preRegisterItem(NuggetZinc = new StaticPowerItem("nugget_zinc"));
+		StaticPowerRegistry.preRegisterItem(NuggetSilver = new StaticPowerItem("nugget_silver"));
+		StaticPowerRegistry.preRegisterItem(NuggetLead = new StaticPowerItem("nugget_lead"));
+		StaticPowerRegistry.preRegisterItem(NuggetMagnesium = new StaticPowerItem("nugget_magnesium"));
+		StaticPowerRegistry.preRegisterItem(NuggetTungsten = new StaticPowerItem("nugget_tungsten"));
+		StaticPowerRegistry.preRegisterItem(NuggetPlatinum = new StaticPowerItem("nugget_platinum"));
+		StaticPowerRegistry.preRegisterItem(NuggetAluminium = new StaticPowerItem("nugget_aluminium"));
+		StaticPowerRegistry.preRegisterItem(NuggetStatic = new StaticPowerItem("nugget_static"));
+		StaticPowerRegistry.preRegisterItem(NuggetEnergized = new StaticPowerItem("nugget_energized"));
+		StaticPowerRegistry.preRegisterItem(NuggetLumum = new StaticPowerItem("nugget_lumum"));
+		StaticPowerRegistry.preRegisterItem(NuggetInertInfusion = new StaticPowerItem("nugget_inert_infusion"));
+		StaticPowerRegistry.preRegisterItem(NuggetRedstoneAlloy = new StaticPowerItem("nugget_redstone_alloy"));
+		StaticPowerRegistry.preRegisterItem(NuggetBrass = new StaticPowerItem("nugget_brass"));
+		StaticPowerRegistry.preRegisterItem(NuggetBronze = new StaticPowerItem("nugget_bronze"));
 	}
 }

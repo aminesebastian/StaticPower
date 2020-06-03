@@ -1,6 +1,10 @@
 package theking530.staticpower;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import net.minecraft.block.Block;
@@ -16,15 +20,16 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -34,7 +39,9 @@ import net.minecraftforge.fml.network.IContainerFactory;
 import theking530.staticpower.blocks.IBlockRenderLayerProvider;
 import theking530.staticpower.blocks.IItemBlockProvider;
 import theking530.staticpower.client.rendering.blocks.MachineBakedModel;
-import theking530.staticpower.crafting.wrappers.grinder.GrinderRecipe;
+import theking530.staticpower.crafting.wrappers.AbstractRecipe;
+import theking530.staticpower.crafting.wrappers.RecipeMatchParameters;
+import theking530.staticpower.crafting.wrappers.grinder.GrinderRecipeSerializer;
 import theking530.staticpower.initialization.ModBlocks;
 import theking530.staticpower.initialization.ModContainerTypes;
 import theking530.staticpower.utilities.Reference;
@@ -46,11 +53,13 @@ import theking530.staticpower.utilities.Reference;
  *
  */
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
-public class Registry {
+@SuppressWarnings("rawtypes")
+public class StaticPowerRegistry {
 	private static final HashSet<Item> ITEMS = new HashSet<>();
 	private static final HashSet<Block> BLOCKS = new HashSet<>();
 	private static final HashSet<TileEntityType<?>> TILE_ENTITY_TYPES = new HashSet<>();
 	private static final HashSet<ContainerType<? extends Container>> CONTAINER_TYPES = new HashSet<>();
+	private static final HashMap<IRecipeType, LinkedList<AbstractRecipe>> RECIPES = new HashMap<IRecipeType, LinkedList<AbstractRecipe>>();
 
 	/**
 	 * Pre-registers an item for registration through the registry event.
@@ -97,7 +106,7 @@ public class Registry {
 	 * @return An instance of the {@link TileEntityType} for the provided
 	 *         {@link TileEntity} & {@link Block}.
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked" })
 	public static <T extends TileEntity> TileEntityType<T> preRegisterTileEntity(Supplier<? extends T> factory, Block tileEntityBlock) {
 		TileEntityType teType = TileEntityType.Builder.create(factory, tileEntityBlock).build(null);
 		teType.setRegistryName(tileEntityBlock.getRegistryName());
@@ -116,7 +125,7 @@ public class Registry {
 	 * @return An instance of {@link ContainerType} for the provided
 	 *         {@link Container}.
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked" })
 	public static <T extends Container, K extends ContainerScreen<T>> ContainerType<T> preRegisterContainer(String name, IContainerFactory factory) {
 		ContainerType containerType = IForgeContainerType.create(factory);
 		containerType.setRegistryName(name);
@@ -130,7 +139,7 @@ public class Registry {
 	 * @param event The common setup event.
 	 */
 	public static void onCommonSetupEvent(FMLCommonSetupEvent event) {
-
+		StaticPower.LOGGER.info("Static Power Common Setup Completed!");
 	}
 
 	/**
@@ -156,6 +165,39 @@ public class Registry {
 
 		// Initialize the guis.
 		ModContainerTypes.initializeGui();
+
+		// Log the completion.
+		StaticPower.LOGGER.info("Static Power Client Setup Completed!");
+	}
+
+	/**
+	 * This event is raised when the resources are loaded/reloaded.
+	 */
+	@SubscribeEvent
+	public static void onResourcesReloaded(RecipesUpdatedEvent event) {
+		// Capture if this is the first time we are caching.
+		boolean firstTime = RECIPES.size() == 0;
+
+		// Log that caching has started.
+		StaticPower.LOGGER.info(String.format("%1$s Static Power recipes.", (firstTime ? "caching" : "re-caching")));
+
+		// Clear the recipes list.
+		RECIPES.clear();
+
+		// Keep track of how many recipes are cached.
+		int recipeCount = 0;
+
+		// Iterate through all the recipes and cache the Static Power ones.
+		Collection<IRecipe<?>> recipes = event.getRecipeManager().getRecipes();
+		for (IRecipe<?> recipe : recipes) {
+			if (recipe instanceof AbstractRecipe) {
+				addRecipe((AbstractRecipe) recipe);
+				recipeCount++;
+			}
+		}
+
+		// Log the completion.
+		StaticPower.LOGGER.info(String.format("Succesfully %1$s %2$d Static Power recipes.", (firstTime ? "cached" : "re-cached"), recipeCount));
 	}
 
 	@SubscribeEvent
@@ -188,22 +230,12 @@ public class Registry {
 
 	@SubscribeEvent
 	public static void registerRecipeSerializers(RegistryEvent.Register<IRecipeSerializer<?>> event) {
-
-		// Vanilla has a registry for recipe types, but it does not actively use this
-		// registry.
-		// While this makes registering your recipe type an optional step, I recommend
-		// registering it anyway to allow other mods to discover your custom recipe
-		// types.
-		Registry.register(GrinderRecipe.RECIPE_TYPE, new ResourceLocation(CLICK_BLOCK_RECIPE.toString()), CLICK_BLOCK_RECIPE);
-
-		// Register the recipe serializer. This handles from json, from packet, and to
-		// packet.
-		event.getRegistry().register(ClickBlockRecipe.SERIALIZER);
+		event.getRegistry().register(GrinderRecipeSerializer.INSTANCE);
 	}
 
 	@SubscribeEvent
 	public static void onModelBakeEvent(ModelBakeEvent event) {
-		for (BlockState blockState : ModBlocks.ChargingStation.getStateContainer().getValidStates()) {
+		for (BlockState blockState : ModBlocks.PoweredGrinder.getStateContainer().getValidStates()) {
 			ModelResourceLocation variantMRL = BlockModelShapes.getModelLocation(blockState);
 			IBakedModel existingModel = event.getModelRegistry().get(variantMRL);
 			if (existingModel == null) {
@@ -226,5 +258,45 @@ public class Registry {
 			event.addSprite(MachineBakedModel.machineSideOutput);
 			event.addSprite(MachineBakedModel.machineSideDisabled);
 		}
+	}
+
+	/**
+	 * Attempts to find a recipe of the given type that matches the provided
+	 * parameters.
+	 * 
+	 * @param <T>             The type of the recipe.
+	 * @param recipeType      The {@link IRecipeType} of the recipe.
+	 * @param matchParameters The match parameters to used.
+	 * @return Optional of the recipe if it exists, otherwise empty.
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T extends AbstractRecipe> Optional<T> getRecipe(IRecipeType<T> recipeType, RecipeMatchParameters matchParameters) {
+		// If no recipes of this type exist, return empty.
+		if (!RECIPES.containsKey(recipeType)) {
+			return Optional.empty();
+		}
+
+		// Iterate through the recipe linked list and return the first instance that
+		// matches.
+		for (AbstractRecipe recipe : RECIPES.get(recipeType)) {
+			if (recipe.isValid(matchParameters)) {
+				return Optional.of((T) recipe);
+			}
+		}
+
+		// If we find no match, return empty.
+		return Optional.empty();
+	}
+
+	/**
+	 * Adds a recipe to the recipes list.
+	 * 
+	 * @param recipe
+	 */
+	private static void addRecipe(AbstractRecipe recipe) {
+		if (!RECIPES.containsKey(recipe.getType())) {
+			RECIPES.put(recipe.getType(), new LinkedList<AbstractRecipe>());
+		}
+		RECIPES.get(recipe.getType()).add(recipe);
 	}
 }

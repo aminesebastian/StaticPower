@@ -1,0 +1,8 @@
+{
+    "variants": {
+		"facing=north": { "model": "staticpower:block/machines/machine_powered_grinder" },
+        "facing=south": { "model": "staticpower:block/machines/machine_powered_grinder", "y": 180 },
+        "facing=west":  { "model": "staticpower:block/machines/machine_powered_grinder", "y": 270 },
+        "facing=east":  { "model": "staticpower:block/machines/machine_powered_grinder", "y": 90 }
+    }
+}

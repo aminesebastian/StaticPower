@@ -84,7 +84,7 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	 */
 	public MachineSideMode modulateWorldSpaceSideMode(Direction side, SideIncrementDirection direction) {
 		int currentIndex = getWorldSpaceDirectionConfiguration(side).ordinal();
-		currentIndex += (currentIndex + 1) % MachineSideMode.values().length;
+		currentIndex = (currentIndex + 1) % MachineSideMode.values().length;
 		MachineSideMode newMode = MachineSideMode.values()[currentIndex];
 		setWorldSpaceDirectionConfiguration(side, MachineSideMode.values()[currentIndex]);
 		return newMode;

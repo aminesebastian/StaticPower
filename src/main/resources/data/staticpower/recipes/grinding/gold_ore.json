@@ -1,0 +1,17 @@
+{
+	"type": "staticpower:grinder_recipe",
+	"input": {
+		"item": "minecraft:gold_ore"
+	},
+	"output": [
+		{
+			"item": "staticpower:dust_gold",
+			"count": 2
+		},
+		{
+			"item": "staticpower:dust_copper",
+			"count": 1,
+			"chance": 0.05
+		}
+	]
+}

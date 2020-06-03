@@ -7,6 +7,9 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.util.Direction;
+import net.minecraft.util.text.StringTextComponent;
 import theking530.api.gui.GuiTextures;
 import theking530.api.gui.button.BaseButton;
 import theking530.api.gui.button.BaseButton.ClickedButton;
@@ -16,6 +19,7 @@ import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.SideConfigurationComponent;
 import theking530.staticpower.tileentities.components.SideConfigurationComponent.SideIncrementDirection;
+import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities;
 import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities.BlockSide;
 
@@ -111,41 +115,42 @@ public class GuiSideConfigTab extends BaseGuiTab {
 	}
 
 	public void updateTooltips() {
-//		if (!tileEntity.hasComponentOfType(SideConfigurationComponent.class)) {
-//			return;
-//		}
-//		SideConfigurationComponent sideComp = tileEntity.getComponent(SideConfigurationComponent.class);
-//
-//		for (BlockSide side : BlockSide.values()) {
-//			TextButton button = null;
-//			switch (side) {
-//			case TOP:
-//				button = topButton;
-//				break;
-//			case BOTTOM:
-//				button = bottomButton;
-//				break;
-//			case LEFT:
-//				button = leftButton;
-//				break;
-//			case RIGHT:
-//				button = rightButton;
-//				break;
-//			case FRONT:
-//				button = frontButton;
-//				break;
-//			case BACK:
-//				button = backButton;
-//				break;
-//			default:
-//				button = topButton;
-//				break;
-//			}
-//
-//			button.setText(sideConfigurable.getSideConfiguration(side).getFontColor() + side.getLocalizedName().substring(0, 1));
-//			button.setTooltip(new StringTextComponent(side.getLocalizedName() + "=" + sideConfigurable.getSideConfiguration(side).getFontColor()
-//					+ sideConfigurable.getSideConfiguration(side).getLocalizedName() + "=" + I18n.format(conditionallyGetCardinal(side))));
-//		}
+		if (!tileEntity.hasComponentOfType(SideConfigurationComponent.class)) {
+			return;
+		}
+		SideConfigurationComponent sideComp = tileEntity.getComponent(SideConfigurationComponent.class);
+
+		for (BlockSide side : BlockSide.values()) {
+			TextButton button = null;
+			switch (side) {
+			case TOP:
+				button = topButton;
+				break;
+			case BOTTOM:
+				button = bottomButton;
+				break;
+			case LEFT:
+				button = leftButton;
+				break;
+			case RIGHT:
+				button = rightButton;
+				break;
+			case FRONT:
+				button = frontButton;
+				break;
+			case BACK:
+				button = backButton;
+				break;
+			default:
+				button = topButton;
+				break;
+			}
+
+			Direction worldSpaceSide = SideConfigurationUtilities.getDirectionFromSide(side, tileEntity.getFacingDirection());
+			MachineSideMode currentMode = sideComp.getWorldSpaceDirectionConfiguration(worldSpaceSide);
+			button.setText(currentMode.getFontColor() + side.getLocalizedName().substring(0, 1));
+			button.setTooltip(new StringTextComponent(side.getLocalizedName() + "=" + currentMode.getFontColor() + currentMode.getLocalizedName() + "=" + I18n.format(conditionallyGetCardinal(side))));
+		}
 	}
 
 	public String conditionallyGetCardinal(BlockSide side) {

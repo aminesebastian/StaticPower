@@ -1,0 +1,17 @@
+{
+	"type": "staticpower:grinder_recipe",
+	"input": {
+		"item": "minecraft:nether_quartz_ore"
+	},
+	"output": [
+		{
+			"item": "minecraft:quartz",
+			"count": 3
+		},
+		{
+			"item": "minecraft:quartz",
+			"count": 1,
+			"chance": 0.4
+		}
+	]
+}

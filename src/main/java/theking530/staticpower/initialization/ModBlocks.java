@@ -4,7 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraftforge.common.ToolType;
-import theking530.staticpower.Registry;
+import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.blocks.AdvancedEarth;
 import theking530.staticpower.blocks.EnergizedGrass;
 import theking530.staticpower.blocks.StaticGrass;
@@ -17,6 +17,7 @@ import theking530.staticpower.blocks.decorative.StaticPowerGlassBlock;
 import theking530.staticpower.tileentities.nonpowered.vacuumchest.BlockVacuumChest;
 import theking530.staticpower.tileentities.powered.chargingstation.BlockChargingStation;
 import theking530.staticpower.tileentities.powered.poweredfurnace.BlockPoweredFurnace;
+import theking530.staticpower.tileentities.powered.poweredgrinder.BlockPoweredGrinder;
 import theking530.staticpower.tileentities.powered.solarpanels.BlockSolarPanel;
 import theking530.staticpower.utilities.EHarvestLevel;
 import theking530.staticpower.utilities.Tier;
@@ -55,7 +56,6 @@ public class ModBlocks {
 	public static StaticPowerOre OreTungsten;
 	public static StaticPowerOre OreMagnesium;
 	public static StaticPowerOre OrePlatinum;
-	public static StaticPowerOre OreNickel;
 	public static StaticPowerOre OreAluminium;
 	public static StaticPowerOre OreRuby;
 	public static StaticPowerOre OreSapphire;
@@ -65,49 +65,51 @@ public class ModBlocks {
 	public static BlockChargingStation ChargingStation;
 	public static BlockSolarPanel SolarPanelBasic;
 	public static BlockPoweredFurnace PoweredFurnace;
-
+	public static BlockPoweredGrinder PoweredGrinder;
+	
 	public static void init() {
 		// Decorative
-		Registry.preRegisterBlock(StaticLamp = new Lamp("lamp_static"));
-		Registry.preRegisterBlock(EnergizedLamp = new Lamp("lamp_energized"));
-		Registry.preRegisterBlock(LumumLamp = new Lamp("lamp_lumum"));
-		Registry.preRegisterBlock(ObsidianGlass = new StaticPowerGlassBlock("glass_obsidian"));
-		Registry.preRegisterBlock(AdvancedEarth = new AdvancedEarth("advanced_earth"));
-		Registry.preRegisterBlock(StaticGrass = new StaticGrass("grass_static"));
-		Registry.preRegisterBlock(EnergizedGrass = new EnergizedGrass("grass_energized"));
+		StaticPowerRegistry.preRegisterBlock(StaticLamp = new Lamp("lamp_static"));
+		StaticPowerRegistry.preRegisterBlock(EnergizedLamp = new Lamp("lamp_energized"));
+		StaticPowerRegistry.preRegisterBlock(LumumLamp = new Lamp("lamp_lumum"));
+		StaticPowerRegistry.preRegisterBlock(ObsidianGlass = new StaticPowerGlassBlock("glass_obsidian"));
+		StaticPowerRegistry.preRegisterBlock(AdvancedEarth = new AdvancedEarth("advanced_earth"));
+		StaticPowerRegistry.preRegisterBlock(StaticGrass = new StaticGrass("grass_static"));
+		StaticPowerRegistry.preRegisterBlock(EnergizedGrass = new EnergizedGrass("grass_energized"));
 
 		// Plants
-		Registry.preRegisterBlock(StaticPlant = new BaseSimplePlant("plant_static"));
-		Registry.preRegisterBlock(EnergizedPlant = new BaseSimplePlant("plant_energized"));
-		Registry.preRegisterBlock(LumumPlant = new BaseSimplePlant("plant_lumum"));
+		StaticPowerRegistry.preRegisterBlock(StaticPlant = new BaseSimplePlant("plant_static"));
+		StaticPowerRegistry.preRegisterBlock(EnergizedPlant = new BaseSimplePlant("plant_energized"));
+		StaticPowerRegistry.preRegisterBlock(LumumPlant = new BaseSimplePlant("plant_lumum"));
 
 		// Wood
-		Registry.preRegisterBlock(StaticWood = new StaticPowerRotatePillarBlock("wood_static", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
-		Registry.preRegisterBlock(EnergizedWood = new StaticPowerRotatePillarBlock("wood_energized", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
-		Registry.preRegisterBlock(LumumWood = new StaticPowerRotatePillarBlock("wood_lumum", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
+		StaticPowerRegistry.preRegisterBlock(StaticWood = new StaticPowerRotatePillarBlock("wood_static", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
+		StaticPowerRegistry.preRegisterBlock(EnergizedWood = new StaticPowerRotatePillarBlock("wood_energized", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
+		StaticPowerRegistry.preRegisterBlock(LumumWood = new StaticPowerRotatePillarBlock("wood_lumum", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
 
 		// Planks
-		Registry.preRegisterBlock(StaticPlanks = new StaticPowerBlock("planks_static", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
-		Registry.preRegisterBlock(EnergizedPlanks = new StaticPowerBlock("planks_energized", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
-		Registry.preRegisterBlock(LumumPlanks = new StaticPowerBlock("planks_lumum", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
+		StaticPowerRegistry.preRegisterBlock(StaticPlanks = new StaticPowerBlock("planks_static", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
+		StaticPowerRegistry.preRegisterBlock(EnergizedPlanks = new StaticPowerBlock("planks_energized", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
+		StaticPowerRegistry.preRegisterBlock(LumumPlanks = new StaticPowerBlock("planks_lumum", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
 
 		// Ore
-		Registry.preRegisterBlock(OreCopper = new StaticPowerOre("ore_copper", ToolType.PICKAXE, EHarvestLevel.STONE_TOOL, 1.9f));
-		Registry.preRegisterBlock(OreTin = new StaticPowerOre("ore_tin", ToolType.PICKAXE, EHarvestLevel.STONE_TOOL, 1.7f));
-		Registry.preRegisterBlock(OreZinc = new StaticPowerOre("ore_zinc", ToolType.PICKAXE, EHarvestLevel.STONE_TOOL, 1.0f));
-		Registry.preRegisterBlock(OreAluminium = new StaticPowerOre("ore_aluminium", ToolType.PICKAXE, EHarvestLevel.STONE_TOOL, 1.0f));
-		Registry.preRegisterBlock(OreMagnesium = new StaticPowerOre("ore_magnesium", ToolType.PICKAXE, EHarvestLevel.STONE_TOOL, 2.0f));
-		Registry.preRegisterBlock(OreSilver = new StaticPowerOre("ore_silver", ToolType.PICKAXE, EHarvestLevel.IRON_TOOL, 1.5f));
-		Registry.preRegisterBlock(OreLead = new StaticPowerOre("ore_lead", ToolType.PICKAXE, EHarvestLevel.IRON_TOOL, 1.5f));
-		Registry.preRegisterBlock(OrePlatinum = new StaticPowerOre("ore_platinum", ToolType.PICKAXE, EHarvestLevel.IRON_TOOL, 2.0f));
-		Registry.preRegisterBlock(OreRuby = new StaticPowerOre("ore_ruby", ToolType.PICKAXE, EHarvestLevel.IRON_TOOL, 3.0f));
-		Registry.preRegisterBlock(OreSapphire = new StaticPowerOre("ore_sapphire", ToolType.PICKAXE, EHarvestLevel.IRON_TOOL, 3.0f));
-		Registry.preRegisterBlock(OreTungsten = new StaticPowerOre("ore_tungsten", ToolType.PICKAXE, EHarvestLevel.DIAMOND_TOOL, 4.0f));
+		StaticPowerRegistry.preRegisterBlock(OreCopper = new StaticPowerOre("ore_copper", ToolType.PICKAXE, EHarvestLevel.STONE_TOOL, 1.9f));
+		StaticPowerRegistry.preRegisterBlock(OreTin = new StaticPowerOre("ore_tin", ToolType.PICKAXE, EHarvestLevel.STONE_TOOL, 1.7f));
+		StaticPowerRegistry.preRegisterBlock(OreZinc = new StaticPowerOre("ore_zinc", ToolType.PICKAXE, EHarvestLevel.STONE_TOOL, 1.0f));
+		StaticPowerRegistry.preRegisterBlock(OreAluminium = new StaticPowerOre("ore_aluminium", ToolType.PICKAXE, EHarvestLevel.STONE_TOOL, 1.0f));
+		StaticPowerRegistry.preRegisterBlock(OreMagnesium = new StaticPowerOre("ore_magnesium", ToolType.PICKAXE, EHarvestLevel.STONE_TOOL, 2.0f));
+		StaticPowerRegistry.preRegisterBlock(OreSilver = new StaticPowerOre("ore_silver", ToolType.PICKAXE, EHarvestLevel.IRON_TOOL, 1.5f));
+		StaticPowerRegistry.preRegisterBlock(OreLead = new StaticPowerOre("ore_lead", ToolType.PICKAXE, EHarvestLevel.IRON_TOOL, 1.5f));
+		StaticPowerRegistry.preRegisterBlock(OrePlatinum = new StaticPowerOre("ore_platinum", ToolType.PICKAXE, EHarvestLevel.IRON_TOOL, 2.0f));
+		StaticPowerRegistry.preRegisterBlock(OreRuby = new StaticPowerOre("ore_ruby", ToolType.PICKAXE, EHarvestLevel.IRON_TOOL, 3.0f));
+		StaticPowerRegistry.preRegisterBlock(OreSapphire = new StaticPowerOre("ore_sapphire", ToolType.PICKAXE, EHarvestLevel.IRON_TOOL, 3.0f));
+		StaticPowerRegistry.preRegisterBlock(OreTungsten = new StaticPowerOre("ore_tungsten", ToolType.PICKAXE, EHarvestLevel.DIAMOND_TOOL, 4.0f));
 
 		// Machines
-		Registry.preRegisterBlock(VacuumChest = new BlockVacuumChest("chest_vacuum"));
-		Registry.preRegisterBlock(ChargingStation = new BlockChargingStation("machine_charging_station"));
-		Registry.preRegisterBlock(SolarPanelBasic = new BlockSolarPanel("solar_panel_basic", Tier.BASIC));
-		Registry.preRegisterBlock(PoweredFurnace = new BlockPoweredFurnace("machine_powered_furnace"));
+		StaticPowerRegistry.preRegisterBlock(VacuumChest = new BlockVacuumChest("chest_vacuum"));
+		StaticPowerRegistry.preRegisterBlock(ChargingStation = new BlockChargingStation("machine_charging_station"));
+		StaticPowerRegistry.preRegisterBlock(SolarPanelBasic = new BlockSolarPanel("solar_panel_basic", Tier.BASIC));
+		StaticPowerRegistry.preRegisterBlock(PoweredFurnace = new BlockPoweredFurnace("machine_powered_furnace"));
+		StaticPowerRegistry.preRegisterBlock(PoweredGrinder = new BlockPoweredGrinder("machine_powered_grinder"));
 	}
 }

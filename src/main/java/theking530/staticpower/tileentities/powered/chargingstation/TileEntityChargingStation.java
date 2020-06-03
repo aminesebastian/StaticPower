@@ -24,13 +24,13 @@ public class TileEntityChargingStation extends TileEntityMachine {
 	public final InventoryComponent upgradesInventory;
 
 	public TileEntityChargingStation() {
-		super(ModTileEntityTypes.CHARGING_STATION, 3, 5000, 0, 50, 0);
+		super(ModTileEntityTypes.CHARGING_STATION);
 
 		registerComponent(unchargedInventory = new InventoryComponent("unchargedInventory", 4, MachineSideMode.Input));
 		registerComponent(chargedInventory = new InventoryComponent("chargedInventory", 4, MachineSideMode.Output));
 		registerComponent(batterySlot = new InventoryComponent("batterySlot", 1, MachineSideMode.Never));
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
-		
+
 		registerComponent(new BatteryComponent("BatteryComponent", batterySlot.getInventory(), 0, energyStorage));
 		registerComponent(new OutputServoComponent("OutputServo", 1, chargedInventory, 0, 1, 2, 3));
 		registerComponent(new InputServoComponent("InputServo", 2, unchargedInventory, 0, 1, 2, 3));

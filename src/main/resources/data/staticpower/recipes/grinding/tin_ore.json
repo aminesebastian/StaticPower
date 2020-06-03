@@ -1,0 +1,17 @@
+{
+	"type": "staticpower:grinder_recipe",
+	"input": {
+		"item": "staticpower:ore_tin"
+	},
+	"output": [
+		{
+			"item": "staticpower:dust_tin",
+			"count": 2
+		},
+		{
+			"item": "staticpower:dust_silver",
+			"count": 1,
+			"chance": 0.1
+		}
+	]
+}

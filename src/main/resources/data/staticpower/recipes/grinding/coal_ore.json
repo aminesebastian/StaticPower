@@ -1,0 +1,22 @@
+{
+	"type": "staticpower:grinder_recipe",
+	"input": {
+		"item": "minecraft:coal_ore"
+	},
+	"output": [
+		{
+			"item": "minecraft:coal",
+			"count": 2
+		},
+		{
+			"item": "minecraft:coal",
+			"count": 1,
+			"chance": 0.4
+		},
+				{
+			"item": "minecraft:coal",
+			"count": 1,
+			"chance": 0.1
+		}
+	]
+}

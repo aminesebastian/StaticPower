@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:grinder_recipe",
+	"input": {
+		"item": "staticpower:ore_zinc"
+	},
+	"output": [
+		{
+			"item": "staticpower:dust_zinc",
+			"count": 2
+		}
+	]
+}

@@ -1,0 +1,17 @@
+{
+	"type": "staticpower:grinder_recipe",
+	"input": {
+		"item": "minecraft:lapis_ore"
+	},
+	"output": [
+		{
+			"item": "minecraft:lapis_lazuli",
+			"count": 5
+		},
+		{
+			"item": "minecraft:lapis_lazuli",
+			"count": 1,
+			"chance": 0.4
+		}
+	]
+}

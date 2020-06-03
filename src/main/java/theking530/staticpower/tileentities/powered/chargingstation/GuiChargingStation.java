@@ -15,7 +15,7 @@ public class GuiChargingStation extends StaticPowerTileEntityGui<ContainerChargi
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity(), 8, 8, 16, 42));
+		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage, 8, 8, 16, 42));
 
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, getTileEntity()));
 		getTabManager().registerTab(new GuiSideConfigTab(80, 80, false, getTileEntity()));

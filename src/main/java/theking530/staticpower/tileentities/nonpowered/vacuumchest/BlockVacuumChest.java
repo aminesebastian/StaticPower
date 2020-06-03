@@ -21,7 +21,7 @@ public class BlockVacuumChest extends StaticPowerTileEntityBlock {
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(final BlockState state, final World worldIn, final BlockPos pos, final PlayerEntity player, final Hand handIn, final BlockRayTraceResult hit) {
+	public ActionResultType onStaticPowerBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 		if (!worldIn.isRemote) {
 			final TileEntity tileEntity = worldIn.getTileEntity(pos);
 			if (tileEntity instanceof TileEntityVacuumChest)

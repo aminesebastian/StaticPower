@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:grinder_recipe",
+	"input": {
+		"item": "staticpower:ore_platinum"
+	},
+	"output": [
+		{
+			"item": "staticpower:dust_platinum",
+			"count": 2
+		}
+	]
+}

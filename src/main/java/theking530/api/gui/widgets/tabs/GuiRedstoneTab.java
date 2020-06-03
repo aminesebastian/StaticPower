@@ -45,7 +45,7 @@ public class GuiRedstoneTab extends BaseGuiTab {
 			synchronizeRedstoneMode(RedstoneMode.Ignore);
 		}));
 
-		ignoreRedstoneButton.setClickSoundPitch(0.75f);
+		ignoreRedstoneButton.setClickSoundPitch(0.7f);
 		lowRedstoneButton.setClickSoundPitch(0.85f);
 
 		// Get the component if present, and then initialize the correct button.

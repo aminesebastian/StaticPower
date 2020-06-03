@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.powered.poweredfurnace;
+package theking530.staticpower.tileentities.powered.poweredgrinder;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,9 +13,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 import theking530.staticpower.tileentities.StaticPowerTileEntityBlock;
 
-public class BlockPoweredFurnace extends StaticPowerTileEntityBlock {
+public class BlockPoweredGrinder extends StaticPowerTileEntityBlock {
 
-	public BlockPoweredFurnace(String name) {
+	public BlockPoweredGrinder(String name) {
 		super(name);
 	}
 
@@ -23,14 +23,14 @@ public class BlockPoweredFurnace extends StaticPowerTileEntityBlock {
 	public ActionResultType onStaticPowerBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 		if (!worldIn.isRemote) {
 			final TileEntity tileEntity = worldIn.getTileEntity(pos);
-			if (tileEntity instanceof TileEntityPoweredFurnace)
-				NetworkHooks.openGui((ServerPlayerEntity) player, (TileEntityPoweredFurnace) tileEntity, pos);
+			if (tileEntity instanceof TileEntityPoweredGrinder)
+				NetworkHooks.openGui((ServerPlayerEntity) player, (TileEntityPoweredGrinder) tileEntity, pos);
 		}
 		return ActionResultType.SUCCESS;
 	}
 
 	@Override
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
-		return new TileEntityPoweredFurnace();
+		return new TileEntityPoweredGrinder();
 	}
 }

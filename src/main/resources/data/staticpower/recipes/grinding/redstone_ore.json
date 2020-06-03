@@ -1,0 +1,17 @@
+{
+	"type": "staticpower:grinder_recipe",
+	"input": {
+		"item": "minecraft:redstone_ore"
+	},
+	"output": [
+		{
+			"item": "minecraft:redstone",
+			"count": 4
+		},
+		{
+			"item": "minecraft:redstone",
+			"count": 2,
+			"chance": 0.4
+		}
+	]
+}

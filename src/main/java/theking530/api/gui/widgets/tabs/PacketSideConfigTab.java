@@ -2,9 +2,9 @@ package theking530.api.gui.widgets.tabs;
 
 import java.util.function.Supplier;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import theking530.staticpower.network.NetworkMessage;
@@ -60,7 +60,7 @@ public class PacketSideConfigTab extends NetworkMessage {
 
 	@Override
 	public void handle(Supplier<Context> context) {
-		TileEntity te = Minecraft.getInstance().player.world.getTileEntity(position);
+		TileEntity te = context.get().getSender().world.getTileEntity(position);
 
 		if (te instanceof TileEntityBase) {
 			TileEntityBase tileEntity = (TileEntityBase) te;
@@ -68,13 +68,12 @@ public class PacketSideConfigTab extends NetworkMessage {
 				return;
 			}
 			SideConfigurationComponent sideComp = tileEntity.getComponent(SideConfigurationComponent.class);
-
-			sideComp.getWorldSpaceConfiguration()[0] = side0;
-			sideComp.getWorldSpaceConfiguration()[1] = side1;
-			sideComp.getWorldSpaceConfiguration()[2] = side2;
-			sideComp.getWorldSpaceConfiguration()[3] = side3;
-			sideComp.getWorldSpaceConfiguration()[4] = side4;
-			sideComp.getWorldSpaceConfiguration()[5] = side5;
+			sideComp.setWorldSpaceDirectionConfiguration(Direction.DOWN, side0);
+			sideComp.setWorldSpaceDirectionConfiguration(Direction.UP, side1);
+			sideComp.setWorldSpaceDirectionConfiguration(Direction.NORTH, side2);
+			sideComp.setWorldSpaceDirectionConfiguration(Direction.SOUTH, side3);
+			sideComp.setWorldSpaceDirectionConfiguration(Direction.WEST, side4);
+			sideComp.setWorldSpaceDirectionConfiguration(Direction.EAST, side5);
 		}
 	}
 }

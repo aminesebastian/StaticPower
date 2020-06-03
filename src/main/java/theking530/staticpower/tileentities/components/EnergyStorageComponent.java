@@ -66,7 +66,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent implemen
 			currentEnergy = 0;
 		}
 
-		long ticksSinceLastUpdate = Math.min(getTileEntity().getWorld().getGameTime() - lastUpdateTime, 1);
+		long ticksSinceLastUpdate = Math.max(getTileEntity().getWorld().getGameTime() - lastUpdateTime, 1);
 		int energyUsedPerTickSinceLastPacket = (int) ((currentEnergy - lastEnergyStored) / ticksSinceLastUpdate);
 
 		nbt.putInt("Energy", currentEnergy);
@@ -188,17 +188,9 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent implemen
 
 	@Override
 	public void preProcessUpdate() {
-		// powerPerTickList.add(currentEnergy - lastEnergyStored);
 		if (powerPerTickList.size() > powerPerTickSmoothingFactor) {
 			powerPerTickList.remove(0);
 		}
-
-//		energyPerTick = 0;
-//		for (int i = 0; i < powerPerTickList.size(); i++) {
-//			if (Math.abs(powerPerTickList.get(i)) > Math.abs(energyPerTick)) {
-//				energyPerTick = powerPerTickList.get(i);
-//			}
-//		}
 	}
 
 	@Override
