@@ -8,7 +8,6 @@ import net.minecraft.entity.item.ExperienceOrbEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
@@ -22,6 +21,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import theking530.staticpower.initialization.ModBlocks;
+import theking530.staticpower.initialization.ModFluids;
 import theking530.staticpower.initialization.ModTileEntityTypes;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
@@ -117,7 +117,7 @@ public class TileEntityVacuumChest extends TileEntityBase {
 			if (distance < 1.1 || (shouldTeleport && distance < getRadius() - 0.1f)) {
 				if (true) {// experienceTank.canFill() && experienceTank.fill(new
 							// FluidStack(ModFluids.LiquidExperience, orb.getXpValue()), false) > 0) {
-					experienceTank.fill(new FluidStack(Fluids.WATER, 10), FluidAction.EXECUTE);
+					experienceTank.fill(new FluidStack(ModFluids.LiquidExperience.Fluid, orb.xpValue), FluidAction.EXECUTE);
 					markTileEntityForSynchronization();
 					orb.remove();
 					getWorld().playSound((double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.BLOCKS, 0.5F,
@@ -176,8 +176,6 @@ public class TileEntityVacuumChest extends TileEntityBase {
 		}
 		if (upgrade.getItem() instanceof ExperienceVacuumUpgrade) {
 			shouldVacuumExperience = true;
-		} else {
-			shouldVacuumExperience = false;
 		}
 		if (upgrade.getItem() instanceof BaseTankUpgrade) {
 			BaseTankUpgrade tempUpgrade = (BaseTankUpgrade) upgrade.getItem();

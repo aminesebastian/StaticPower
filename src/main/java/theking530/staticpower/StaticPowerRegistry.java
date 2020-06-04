@@ -16,6 +16,8 @@ import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.fluid.FlowingFluid;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
@@ -60,6 +62,7 @@ public class StaticPowerRegistry {
 	private static final HashSet<TileEntityType<?>> TILE_ENTITY_TYPES = new HashSet<>();
 	private static final HashSet<ContainerType<? extends Container>> CONTAINER_TYPES = new HashSet<>();
 	private static final HashMap<IRecipeType, LinkedList<AbstractRecipe>> RECIPES = new HashMap<IRecipeType, LinkedList<AbstractRecipe>>();
+	private static final HashSet<FlowingFluid> FLUIDS = new HashSet<FlowingFluid>();
 
 	/**
 	 * Pre-registers an item for registration through the registry event.
@@ -92,6 +95,11 @@ public class StaticPowerRegistry {
 			}
 		}
 		return block;
+	}
+
+	public static FlowingFluid preRegisterFluid(FlowingFluid fluid) {
+		FLUIDS.add(fluid);
+		return fluid;
 	}
 
 	/**
@@ -209,8 +217,15 @@ public class StaticPowerRegistry {
 
 	@SubscribeEvent
 	public static void onRegisterBlocks(RegistryEvent.Register<Block> event) {
-		for (Block item : BLOCKS) {
-			event.getRegistry().register(item);
+		for (Block block : BLOCKS) {
+			event.getRegistry().register(block);
+		}
+	}
+
+	@SubscribeEvent
+	public static void onRegisterFluids(RegistryEvent.Register<Fluid> event) {
+		for (Fluid fluid : FLUIDS) {
+			event.getRegistry().register(fluid);
 		}
 	}
 

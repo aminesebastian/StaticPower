@@ -30,21 +30,26 @@ public class GuiFluidBarFromTank extends AbstractGuiWidget {
 	@Override
 	public void renderBackground(int mouseX, int mouseY, float partialTicks) {
 		Vector2D ownerRelativePosition = getScreenSpacePosition();
-		if (!owningTileEntity.hasComponentOfType(SideConfigurationComponent.class)) {
-			return;
-		}
-		SideConfigurationComponent sideComp = owningTileEntity.getComponent(SideConfigurationComponent.class);
-		
-		
-		if (sideComp != null && mode != null) {
-			if (sideComp.getCountOfSidesWithMode(mode) > 0) {
-				GuiFluidBarUtilities.drawFluidBar(tank.getFluid(), tank.getCapacity(), tank.getFluidAmount(), ownerRelativePosition.getX(), ownerRelativePosition.getY() + getSize().getY(), 0.0f,
-						getSize().getX(), getSize().getY(), mode, true);
+		if (owningTileEntity != null) {
+			if (!owningTileEntity.hasComponentOfType(SideConfigurationComponent.class)) {
 				return;
 			}
+			SideConfigurationComponent sideComp = owningTileEntity.getComponent(SideConfigurationComponent.class);
+
+			if (sideComp != null && mode != null) {
+				if (sideComp.getCountOfSidesWithMode(mode) > 0) {
+					GuiFluidBarUtilities.drawFluidBar(tank.getFluid(), tank.getCapacity(), tank.getFluidAmount(), ownerRelativePosition.getX(), ownerRelativePosition.getY() + getSize().getY(), 0.0f,
+							getSize().getX(), getSize().getY(), mode, true);
+					return;
+				}
+			}
+			GuiFluidBarUtilities.drawFluidBar(tank.getFluid(), tank.getCapacity(), tank.getFluidAmount(), ownerRelativePosition.getX(), ownerRelativePosition.getY() + getSize().getY(), 0.0f,
+					getSize().getX(), getSize().getY(), true);
+		} else {
+			GuiFluidBarUtilities.drawFluidBar(tank.getFluid(), tank.getCapacity(), tank.getFluidAmount(), ownerRelativePosition.getX(), ownerRelativePosition.getY() + getSize().getY(), 0.0f,
+					getSize().getX(), getSize().getY(), true);
 		}
-		GuiFluidBarUtilities.drawFluidBar(tank.getFluid(), tank.getCapacity(), tank.getFluidAmount(), ownerRelativePosition.getX(), ownerRelativePosition.getY() + getSize().getY(), 0.0f,
-				getSize().getX(), getSize().getY(), true);
+
 	}
 
 	@Override

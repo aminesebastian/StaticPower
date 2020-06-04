@@ -7,7 +7,6 @@ import javax.annotation.Nonnull;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
-import theking530.staticpower.items.upgrades.IUpgradeItem;
 
 public class UpgradeProcessingComponent extends AbstractTileEntityComponent {
 	private BiConsumer<UpgradeProcessingComponent, ItemStack> upgradeCallback;
@@ -29,9 +28,7 @@ public class UpgradeProcessingComponent extends AbstractTileEntityComponent {
 	public void preProcessUpdate() {
 		for (int i = 0; i < upgradeInventory.getSlots(); i++) {
 			ItemStack stack = upgradeInventory.getStackInSlot(i);
-			if (stack.getItem() instanceof IUpgradeItem) {
-				upgradeCallback.accept(this, stack);
-			}
+			upgradeCallback.accept(this, stack);
 		}
 	}
 

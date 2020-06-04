@@ -12,6 +12,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import theking530.staticpower.initialization.ModBlocks;
 import theking530.staticpower.initialization.ModContainerTypes;
+import theking530.staticpower.initialization.ModFluids;
 import theking530.staticpower.initialization.ModItems;
 import theking530.staticpower.initialization.ModNetworkMessages;
 import theking530.staticpower.initialization.ModTileEntityTypes;
@@ -29,6 +30,7 @@ public class StaticPower {
 		ModBlocks.init();
 		ModItems.init();
 		ModUpgrades.init();
+		ModFluids.init();
 		ModNetworkMessages.init();
 		ModTileEntityTypes.init();
 		ModContainerTypes.init();

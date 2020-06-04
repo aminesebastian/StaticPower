@@ -63,11 +63,11 @@ public class GuiFluidBarUtilities {
 					float yMax = ((i + 1) * 16) * fillRatio;
 					Tessellator tessellator = Tessellator.getInstance();
 					BufferBuilder tes = tessellator.getBuffer();
-					tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
-					tes.pos(x + width, y - yMin, zLevel).color(0.0f, 0.2f, 1.0f, 1.0f).tex(maxU, minV).endVertex();
-					tes.pos(x + width, y - yMax, zLevel).color(0.0f, 0.2f, 1.0f, 1.0f).tex(maxU, minV + (fillRatio * diffV)).endVertex();
-					tes.pos(x, y - yMax, zLevel).color(0.0f, 0.2f, 1.0f, 1.0f).tex(minU, minV + (fillRatio * diffV)).endVertex();
-					tes.pos(x, y - yMin, zLevel).color(0.0f, 0.2f, 1.0f, 1.0f).tex(minU, minV).endVertex();
+					tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+					tes.pos(x + width, y - yMin, zLevel).tex(maxU, minV).endVertex();
+					tes.pos(x + width, y - yMax, zLevel).tex(maxU, minV + (fillRatio * diffV)).endVertex();
+					tes.pos(x, y - yMax, zLevel).tex(minU, minV + (fillRatio * diffV)).endVertex();
+					tes.pos(x, y - yMin, zLevel).tex(minU, minV).endVertex();
 					tessellator.draw();
 
 				}

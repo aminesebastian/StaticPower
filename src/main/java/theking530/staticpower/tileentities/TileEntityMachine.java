@@ -33,7 +33,7 @@ public abstract class TileEntityMachine extends TileEntityBase {
 		disableFaceInteraction();
 
 		registerComponent(energyStorage = new EnergyStorageComponent("MainEnergyStorage", DEFAULT_RF_CAPACITY));
-		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", this::onSidesConfigUpdate));
+		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", this::onSidesConfigUpdate, this::checkSideConfiguration));
 		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent", RedstoneMode.Ignore));
 
 		energyStorage.setMaxReceive(DEFAULT_POWER_TRANSFER);
@@ -41,7 +41,7 @@ public abstract class TileEntityMachine extends TileEntityBase {
 	}
 
 	/* Side Control */
-	public void onSidesConfigUpdate(Direction worldSpaceSide, MachineSideMode newMode) {
+	protected void onSidesConfigUpdate(Direction worldSpaceSide, MachineSideMode newMode) {
 		if (newMode != MachineSideMode.Input && newMode != MachineSideMode.Output && newMode != MachineSideMode.Disabled) {
 			this.ioSideConfiguration.modulateWorldSpaceSideMode(worldSpaceSide, SideIncrementDirection.FORWARD);
 			return;
@@ -53,12 +53,19 @@ public abstract class TileEntityMachine extends TileEntityBase {
 		markTileEntityForSynchronization();
 	}
 
+	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
+		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Regular || mode == MachineSideMode.Output || mode == MachineSideMode.Input;
+	}
+
+	private boolean checkSideConfiguration(Direction direction, MachineSideMode mode) {
+		return isValidSideConfiguration(SideConfigurationUtilities.getBlockSide(direction, getFacingDirection()), mode);
+	}
+
 	/* ENERGY */
 	public float getEnergyPercent() {
 		float amount = energyStorage.getEnergyStored();
 		float capacity = energyStorage.getMaxEnergyStored();
-		float volume = (amount / capacity);
-		return volume;
+		return (amount / capacity);
 	}
 
 	public boolean hasPower() {

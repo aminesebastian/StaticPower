@@ -1,0 +1,7 @@
+{
+	"replace": "false",
+	"values": [
+		"staticpower:tree_oil_still",
+		"staticpower:tree_oil_flowing"
+	]
+}

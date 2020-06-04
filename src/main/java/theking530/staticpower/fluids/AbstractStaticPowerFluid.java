@@ -1,0 +1,152 @@
+package theking530.staticpower.fluids;
+
+import java.util.function.Supplier;
+
+import net.minecraft.block.BlockState;
+import net.minecraft.block.FlowingFluidBlock;
+import net.minecraft.fluid.FlowingFluid;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.IFluidState;
+import net.minecraft.item.Item;
+import net.minecraft.state.StateContainer.Builder;
+import net.minecraft.tags.Tag;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
+import net.minecraft.world.IWorldReader;
+import net.minecraftforge.fluids.FluidAttributes;
+import theking530.staticpower.items.StaticPowerFluidBucket;
+import theking530.staticpower.utilities.Reference;
+
+public abstract class AbstractStaticPowerFluid extends FlowingFluid {
+
+	public Supplier<StaticPowerFluidBucket> Bucket;
+	public Supplier<StaticPowerFluidBlock> FluidBlock;
+	public Supplier<Source> StillFluid;
+	public Supplier<Flowing> FlowingFluid;
+	public String StillTexture;
+	public String FlowingTexture;
+	public Tag<Fluid> Tag;
+
+	public AbstractStaticPowerFluid(String name, Supplier<StaticPowerFluidBucket> bucket, Supplier<StaticPowerFluidBlock> fluidBlock, Supplier<Source> stillFluid, Supplier<Flowing> flowingFluid,
+			String stillTexture, String flowingTexture, net.minecraft.tags.Tag<Fluid> tag) {
+		setRegistryName(name);
+		Bucket = bucket;
+		FluidBlock = fluidBlock;
+		StillFluid = stillFluid;
+		FlowingFluid = flowingFluid;
+		StillTexture = stillTexture;
+		FlowingTexture = flowingTexture;
+		Tag = tag;
+	}
+
+	@Override
+	public Fluid getFlowingFluid() {
+		return FlowingFluid.get();
+	}
+
+	@Override
+	public Fluid getStillFluid() {
+		return StillFluid.get();
+	}
+
+	@Override
+	public Item getFilledBucket() {
+		return Bucket.get();
+	}
+
+	@Override
+	protected boolean canSourcesMultiply() {
+		return false;
+	}
+
+	@Override
+	protected void beforeReplacingBlock(IWorld worldIn, BlockPos pos, BlockState state) {
+
+	}
+
+	@Override
+	protected int getSlopeFindDistance(IWorldReader worldIn) {
+		return 4;
+	}
+
+	@Override
+	protected int getLevelDecreasePerBlock(IWorldReader worldIn) {
+		return 1;
+	}
+
+	@Override
+	protected boolean canDisplace(IFluidState fluidState, IBlockReader blockReader, BlockPos pos, Fluid fluid, Direction direction) {
+		return false; //!fluid.isIn(Tag) && !(blockReader.getBlockState(pos).has(LEVEL_1_8));
+	}
+
+	@Override
+	public int getTickRate(IWorldReader reader) {
+		return 5;
+	}
+
+	@Override
+	protected float getExplosionResistance() {
+		return 100;
+	}
+
+	@Override
+	protected BlockState getBlockState(IFluidState state) {
+		return FluidBlock.get().getDefaultState().with(FlowingFluidBlock.LEVEL, Integer.valueOf(getLevelFromState(state)));
+	}
+
+	@Override
+	public boolean isEquivalentTo(Fluid fluidIn) {
+		return fluidIn == getFlowingFluid() || fluidIn == getStillFluid();
+	}
+
+	@Override
+	protected FluidAttributes createAttributes() {
+		return FluidAttributes.builder(new ResourceLocation(Reference.MOD_ID, StillTexture), new ResourceLocation(Reference.MOD_ID, FlowingTexture))
+				.translationKey(FluidBlock.get().getTranslationKey()).build(this);
+	}
+
+	public static class Source extends AbstractStaticPowerFluid {
+
+		public Source(String name, Supplier<StaticPowerFluidBucket> bucket, Supplier<StaticPowerFluidBlock> fluidBlock, Supplier<Source> stillFluid, Supplier<Flowing> flowingFluid,
+				String stillTexture, String flowingTexture, net.minecraft.tags.Tag<Fluid> tag) {
+			super(name + "_still", bucket, fluidBlock, stillFluid, flowingFluid, stillTexture, flowingTexture, tag);
+		}
+
+		@Override
+		public boolean isSource(IFluidState state) {
+			return true;
+		}
+
+		@Override
+		public int getLevel(IFluidState p_207192_1_) {
+			return 8;
+		}
+	}
+
+	public static class Flowing extends AbstractStaticPowerFluid {
+
+		public Flowing(String name, Supplier<StaticPowerFluidBucket> bucket, Supplier<StaticPowerFluidBlock> fluidBlock, Supplier<Source> stillFluid, Supplier<Flowing> flowingFluid,
+				String stillTexture, String flowingTexture, net.minecraft.tags.Tag<Fluid> tag) {
+			super(name + "_flowing", bucket, fluidBlock, stillFluid, flowingFluid, stillTexture, flowingTexture, tag);
+		}
+
+		@Override
+		protected void fillStateContainer(Builder<Fluid, IFluidState> builder) {
+			super.fillStateContainer(builder);
+			builder.add(LEVEL_1_8);
+		}
+
+		@Override
+		public boolean isSource(IFluidState state) {
+			return false;
+		}
+
+		@Override
+		public int getLevel(IFluidState state) {
+			return state.get(AbstractStaticPowerFluid.LEVEL_1_8);
+		}
+	}
+}

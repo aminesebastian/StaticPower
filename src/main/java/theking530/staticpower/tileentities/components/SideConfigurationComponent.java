@@ -2,6 +2,7 @@ package theking530.staticpower.tileentities.components;
 
 import java.util.Arrays;
 import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
 
 import javax.annotation.Nonnull;
 
@@ -23,15 +24,18 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	private final MachineSideMode[] configuration;
 	private final MachineSideMode[] defaultConfiguration;
 	private final BiConsumer<Direction, MachineSideMode> callback;
+	private final BiPredicate<Direction, MachineSideMode> sideModeFilter;
 
-	public SideConfigurationComponent(String name, BiConsumer<Direction, MachineSideMode> onConfigurationChangedCallback) {
-		this(name, onConfigurationChangedCallback,
+	public SideConfigurationComponent(String name, BiConsumer<Direction, MachineSideMode> onConfigurationChangedCallback, BiPredicate<Direction, MachineSideMode> sideModeFilter) {
+		this(name, onConfigurationChangedCallback, sideModeFilter,
 				new MachineSideMode[] { MachineSideMode.Regular, MachineSideMode.Regular, MachineSideMode.Regular, MachineSideMode.Regular, MachineSideMode.Regular, MachineSideMode.Regular });
 	}
 
-	public SideConfigurationComponent(String name, BiConsumer<Direction, MachineSideMode> onConfigurationChangedCallback, MachineSideMode[] defaultConfiguration) {
+	public SideConfigurationComponent(String name, BiConsumer<Direction, MachineSideMode> onConfigurationChangedCallback, BiPredicate<Direction, MachineSideMode> sideModeFilter,
+			MachineSideMode[] defaultConfiguration) {
 		super(name);
 		this.callback = onConfigurationChangedCallback;
+		this.sideModeFilter = sideModeFilter;
 		this.defaultConfiguration = defaultConfiguration;
 		configuration = new MachineSideMode[6];
 
@@ -84,9 +88,19 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	 */
 	public MachineSideMode modulateWorldSpaceSideMode(Direction side, SideIncrementDirection direction) {
 		int currentIndex = getWorldSpaceDirectionConfiguration(side).ordinal();
-		currentIndex = (currentIndex + 1) % MachineSideMode.values().length;
-		MachineSideMode newMode = MachineSideMode.values()[currentIndex];
-		setWorldSpaceDirectionConfiguration(side, MachineSideMode.values()[currentIndex]);
+		// Capture the original side mode.
+		MachineSideMode originalMode = getWorldSpaceDirectionConfiguration(side);
+
+		MachineSideMode newMode;
+		// Loop until we hit an acceptable side mode.
+		do {
+			currentIndex = (currentIndex + 1) % MachineSideMode.values().length;
+			newMode = MachineSideMode.values()[currentIndex];
+			configuration[currentIndex] = newMode;
+		} while (!sideModeFilter.test(side, newMode) && newMode != originalMode);
+
+		// Finally, raise the changed callback.
+		callback.accept(side, newMode);
 		return newMode;
 	}
 
