@@ -74,6 +74,7 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	public void setWorldSpaceDirectionConfiguration(@Nonnull Direction facing, @Nonnull MachineSideMode newMode) {
 		configuration[facing.ordinal()] = newMode;
 		callback.accept(facing, newMode);
+		getTileEntity().markTileEntityForSynchronization();
 	}
 
 	/**
@@ -87,20 +88,21 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	 *         is not useful, call it again until you hit a useful mode.
 	 */
 	public MachineSideMode modulateWorldSpaceSideMode(Direction side, SideIncrementDirection direction) {
-		int currentIndex = getWorldSpaceDirectionConfiguration(side).ordinal();
+		int currentModeIndex = getWorldSpaceDirectionConfiguration(side).ordinal();
 		// Capture the original side mode.
 		MachineSideMode originalMode = getWorldSpaceDirectionConfiguration(side);
 
 		MachineSideMode newMode;
 		// Loop until we hit an acceptable side mode.
 		do {
-			currentIndex = (currentIndex + 1) % MachineSideMode.values().length;
-			newMode = MachineSideMode.values()[currentIndex];
-			configuration[currentIndex] = newMode;
+			currentModeIndex = (currentModeIndex + 1) % (MachineSideMode.values().length);
+			newMode = MachineSideMode.values()[currentModeIndex];
+			configuration[side.ordinal()] = newMode;
 		} while (!sideModeFilter.test(side, newMode) && newMode != originalMode);
 
 		// Finally, raise the changed callback.
 		callback.accept(side, newMode);
+		getTileEntity().markTileEntityForSynchronization();
 		return newMode;
 	}
 
@@ -117,6 +119,7 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 			configuration[i] = defaultConfiguration[i];
 			if (!suppressEvent) {
 				callback.accept(Direction.values()[i], defaultConfiguration[i]);
+				getTileEntity().markTileEntityForSynchronization();
 			}
 		}
 	}

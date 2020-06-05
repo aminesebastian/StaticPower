@@ -1,9 +1,9 @@
 package theking530.staticpower.tileentities.utilities;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class SideConfigurationUtilities {
 
@@ -16,12 +16,8 @@ public class SideConfigurationUtilities {
 			this.name = name;
 		}
 
-		public String getName() {
-			return "side." + name;
-		}
-
-		public String getLocalizedName() {
-			return I18n.format(getName());
+		public TranslationTextComponent getName() {
+			return new TranslationTextComponent("gui.staticpower.side." + name.toLowerCase());
 		}
 
 		public BlockSide getOpposite() {

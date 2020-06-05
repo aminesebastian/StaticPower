@@ -46,6 +46,7 @@ public class RedstoneControlComponent extends AbstractTileEntityComponent {
 		if (redstoneMode == RedstoneMode.High) {
 			return redstoneSignal > 0;
 		}
+		
 		return false;
 	}
 

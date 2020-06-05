@@ -73,7 +73,7 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 
 	@Override
 	public void process() {
-		if (canStartProcess()) {
+		if (canStartProcess() && redstoneControlComponent.passesRedstoneCheck()) {
 			moveComponent.startProcessing();
 		} else if (processingComponent.isProcessing()) {
 			if (energyStorage.getEnergyStored() >= (DEFAULT_PROCESSING_COST / DEFAULT_PROCESSING_TIME)) {

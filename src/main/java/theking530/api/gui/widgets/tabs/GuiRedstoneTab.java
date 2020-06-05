@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Items;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import theking530.api.gui.GuiTextures;
 import theking530.api.gui.button.BaseButton;
 import theking530.api.gui.button.ItemButton;
@@ -26,9 +27,9 @@ public class GuiRedstoneTab extends BaseGuiTab {
 
 	public final TileEntityBase tileEntity;
 	private final FontRenderer fontRenderer;
-	public final ItemButton ignoreRedstoneButton;
-	public final ItemButton lowRedstoneButton;
-	public final ItemButton highRedstoneButton;
+	public ItemButton ignoreRedstoneButton;
+	public ItemButton lowRedstoneButton;
+	public ItemButton highRedstoneButton;
 
 	public GuiRedstoneTab(int width, int height, TileEntityBase te) {
 		super(100, 85, GuiTextures.RED_TAB, Items.REDSTONE);
@@ -36,17 +37,21 @@ public class GuiRedstoneTab extends BaseGuiTab {
 		tileEntity = te;
 
 		widgetContainer.registerWidget(ignoreRedstoneButton = new ItemButton(Items.GUNPOWDER, 23, 30, 20, 20, (BaseButton button) -> {
-			synchronizeRedstoneMode(RedstoneMode.High);
+			synchronizeRedstoneMode(RedstoneMode.Ignore);
+			updateToggledButton(ignoreRedstoneButton);
 		}));
 		widgetContainer.registerWidget(lowRedstoneButton = new ItemButton(Items.REDSTONE, 53, 30, 20, 20, (BaseButton button) -> {
 			synchronizeRedstoneMode(RedstoneMode.Low);
+			updateToggledButton(lowRedstoneButton);
 		}));
 		widgetContainer.registerWidget(highRedstoneButton = new ItemButton(Blocks.REDSTONE_TORCH.asItem(), 83, 30, 20, 20, (BaseButton button) -> {
-			synchronizeRedstoneMode(RedstoneMode.Ignore);
+			synchronizeRedstoneMode(RedstoneMode.High);
+			updateToggledButton(highRedstoneButton);
 		}));
 
-		ignoreRedstoneButton.setClickSoundPitch(0.7f);
-		lowRedstoneButton.setClickSoundPitch(0.85f);
+		highRedstoneButton.setTooltip(new TranslationTextComponent("gui.staticpower.redstone_mode.high"));
+		ignoreRedstoneButton.setClickSoundPitch(0.7f).setTooltip(new TranslationTextComponent("gui.staticpower.redstone_mode.ignore"));
+		lowRedstoneButton.setClickSoundPitch(0.85f).setTooltip(new TranslationTextComponent("gui.staticpower.redstone_mode.low"));
 
 		// Get the component if present, and then initialize the correct button.
 		Optional<RedstoneControlComponent> redstoneComponent = ComponentUtilities.getComponent(RedstoneControlComponent.class, tileEntity);
@@ -112,6 +117,13 @@ public class GuiRedstoneTab extends BaseGuiTab {
 		tessellator.draw();
 		GL11.glDisable(GL11.GL_BLEND);
 
+	}
+
+	protected void updateToggledButton(BaseButton selectedButton) {
+		ignoreRedstoneButton.setToggled(false);
+		lowRedstoneButton.setToggled(false);
+		highRedstoneButton.setToggled(false);
+		selectedButton.setToggled(true);
 	}
 
 	protected void synchronizeRedstoneMode(RedstoneMode mode) {

@@ -60,5 +60,14 @@
 	"gui.staticpower.usage": "Usage",
 	"gui.staticpower.millbuckets": "mB",
 	"gui.staticpower.energy_unit": "FE",
-	"gui.staticpower.energy_unit_per_tick": "FE/t"
+	"gui.staticpower.energy_unit_per_tick": "FE/t",
+	"gui.staticpower.side.top": "Top",
+	"gui.staticpower.side.bottom": "Bottom",
+	"gui.staticpower.side.from": "Front",
+	"gui.staticpower.side.back": "Back",
+	"gui.staticpower.side.left": "Left",
+	"gui.staticpower.side.right": "Right",
+	"gui.staticpower.redstone_mode.low": "Low",
+	"gui.staticpower.redstone_mode.high": "High",
+	"gui.staticpower.redstone_mode.ignore": " Ignore"
 }

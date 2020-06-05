@@ -1,0 +1,9 @@
+{
+  "parent": "forge:block/default",
+  "loader": "forge:obj",
+  "model": "staticpower:models/block/machines/solar_panel.obj",
+  "flip-v": true,
+  "textures": {
+	"particle": "staticpower:block/machines/solar_panel_basic"
+  }
+}

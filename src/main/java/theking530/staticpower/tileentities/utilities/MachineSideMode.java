@@ -27,7 +27,7 @@ public enum MachineSideMode {
 		return fontColor;
 	}
 
-	public TranslationTextComponent getLocalizedName() {
+	public TranslationTextComponent getName() {
 		return new TranslationTextComponent(name);
 	}
 

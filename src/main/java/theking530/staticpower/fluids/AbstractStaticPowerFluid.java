@@ -1,5 +1,6 @@
 package theking530.staticpower.fluids;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import net.minecraft.block.BlockState;
@@ -26,6 +27,7 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid {
 	public Supplier<StaticPowerFluidBlock> FluidBlock;
 	public Supplier<Source> StillFluid;
 	public Supplier<Flowing> FlowingFluid;
+	public Consumer<FluidAttributes.Builder> AdditionalAtrributesDelegate;
 	public String StillTexture;
 	public String FlowingTexture;
 	public Tag<Fluid> Tag;
@@ -79,7 +81,7 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid {
 
 	@Override
 	protected boolean canDisplace(IFluidState fluidState, IBlockReader blockReader, BlockPos pos, Fluid fluid, Direction direction) {
-		return false; //!fluid.isIn(Tag) && !(blockReader.getBlockState(pos).has(LEVEL_1_8));
+		return false; // !fluid.isIn(Tag) && !(blockReader.getBlockState(pos).has(LEVEL_1_8));
 	}
 
 	@Override
@@ -104,8 +106,12 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid {
 
 	@Override
 	protected FluidAttributes createAttributes() {
-		return FluidAttributes.builder(new ResourceLocation(Reference.MOD_ID, StillTexture), new ResourceLocation(Reference.MOD_ID, FlowingTexture))
-				.translationKey(FluidBlock.get().getTranslationKey()).build(this);
+		FluidAttributes.Builder attributes = FluidAttributes.builder(new ResourceLocation(Reference.MOD_ID, StillTexture), new ResourceLocation(Reference.MOD_ID, FlowingTexture))
+				.translationKey(FluidBlock.get().getTranslationKey().replace("block", "fluid"));
+		if (AdditionalAtrributesDelegate != null) {
+			AdditionalAtrributesDelegate.accept(attributes);
+		}
+		return attributes.build(this);
 	}
 
 	public static class Source extends AbstractStaticPowerFluid {

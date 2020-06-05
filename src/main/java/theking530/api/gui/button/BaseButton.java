@@ -154,6 +154,8 @@ public abstract class BaseButton extends AbstractGuiWidget {
 
 	@Override
 	public void getTooltips(Vector2D mousePosition, List<ITextComponent> tooltips, boolean showAdvanced) {
-		tooltips.addAll(tooltip);
+		if(tooltip != null) {
+			tooltips.addAll(tooltip);
+		}
 	}
 }

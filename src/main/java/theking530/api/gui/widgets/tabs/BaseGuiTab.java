@@ -277,6 +277,7 @@ public abstract class BaseGuiTab {
 	 */
 	protected void renderBackground(int mouseX, int mouseY, float partialTicks) {
 		widgetContainer.renderBackground(mouseX, mouseY, partialTicks);
+		widgetContainer.renderTooltips(mouseX, mouseY);
 	}
 
 	/**

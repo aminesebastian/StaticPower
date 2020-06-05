@@ -8,7 +8,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import theking530.staticpower.tileentities.components.EnergyStorageComponent;
 import theking530.staticpower.tileentities.components.RedstoneControlComponent;
 import theking530.staticpower.tileentities.components.SideConfigurationComponent;
-import theking530.staticpower.tileentities.components.SideConfigurationComponent.SideIncrementDirection;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.RedstoneModeList.RedstoneMode;
 import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities;
@@ -42,10 +41,6 @@ public abstract class TileEntityMachine extends TileEntityBase {
 
 	/* Side Control */
 	protected void onSidesConfigUpdate(Direction worldSpaceSide, MachineSideMode newMode) {
-		if (newMode != MachineSideMode.Input && newMode != MachineSideMode.Output && newMode != MachineSideMode.Disabled) {
-			this.ioSideConfiguration.modulateWorldSpaceSideMode(worldSpaceSide, SideIncrementDirection.FORWARD);
-			return;
-		}
 		Direction relativeSpaceSide = SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, getFacingDirection());
 		if (disableFaceInteraction && ioSideConfiguration.getWorldSpaceDirectionConfiguration(relativeSpaceSide) != MachineSideMode.Never) {
 			ioSideConfiguration.setWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, getFacingDirection()), MachineSideMode.Never);

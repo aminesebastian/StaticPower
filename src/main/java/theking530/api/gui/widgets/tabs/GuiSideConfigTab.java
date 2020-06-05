@@ -7,9 +7,8 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.Direction;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import theking530.api.gui.GuiTextures;
 import theking530.api.gui.button.BaseButton;
 import theking530.api.gui.button.BaseButton.ClickedButton;
@@ -145,19 +144,25 @@ public class GuiSideConfigTab extends BaseGuiTab {
 				button = topButton;
 				break;
 			}
-
+			
+			// Get the world space direction and current side mode.
 			Direction worldSpaceSide = SideConfigurationUtilities.getDirectionFromSide(side, tileEntity.getFacingDirection());
 			MachineSideMode currentMode = sideComp.getWorldSpaceDirectionConfiguration(worldSpaceSide);
-			button.setText(currentMode.getFontColor() + side.getLocalizedName().substring(0, 1));
-			button.setTooltip(new StringTextComponent(side.getLocalizedName() + "=" + currentMode.getFontColor() + currentMode.getLocalizedName() + "=" + I18n.format(conditionallyGetCardinal(side))));
+			
+			// Get the translation components.
+			TranslationTextComponent translatedSideName = side.getName();
+			TranslationTextComponent translatedModeName = currentMode.getName();
+
+			button.setText(currentMode.getFontColor() + translatedSideName.getFormattedText().substring(0, 1));
+			button.setTooltip(translatedSideName.appendText("=").appendSibling(translatedModeName));
 		}
 	}
 
-	public String conditionallyGetCardinal(BlockSide side) {
+	public TranslationTextComponent conditionallyGetCardinal(BlockSide side) {
 		if (tileEntity instanceof TileEntityBase) {
 			TileEntityBase te = (TileEntityBase) tileEntity;
-			return "gui." + SideConfigurationUtilities.getDirectionFromSide(side, te.getFacingDirection()).toString();
+			return new TranslationTextComponent("gui." + SideConfigurationUtilities.getDirectionFromSide(side, te.getFacingDirection()).toString().toLowerCase());
 		}
-		return "";
+		return new TranslationTextComponent("ERROR");
 	}
 }

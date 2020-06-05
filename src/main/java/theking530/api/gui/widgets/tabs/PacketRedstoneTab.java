@@ -2,7 +2,6 @@ package theking530.api.gui.widgets.tabs;
 
 import java.util.function.Supplier;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -38,9 +37,11 @@ public class PacketRedstoneTab extends NetworkMessage {
 
 	@Override
 	public void handle(Supplier<Context> context) {
-		TileEntity rawTileEntity = Minecraft.getInstance().player.world.getTileEntity(position);
+		TileEntity rawTileEntity = context.get().getSender().world.getTileEntity(position);
+
 		if (rawTileEntity != null && rawTileEntity instanceof TileEntityBase) {
 			TileEntityBase tileEntity = (TileEntityBase) rawTileEntity;
+
 			// Ensure this tile entity is valid and has the requested component.
 			if (tileEntity.hasComponentOfType(RedstoneControlComponent.class)) {
 				// Get a reference to the redstone control component.
