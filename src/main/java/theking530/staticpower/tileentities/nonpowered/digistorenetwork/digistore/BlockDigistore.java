@@ -1,86 +1,80 @@
-package theking530.staticpower.tileentity.digistorenetwork.digistore;
+package theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore;
 
-import net.minecraft.block.state.BlockState;
+import javax.annotation.Nullable;
+
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemBlock;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
-import theking530.staticpower.StaticPower;
-import theking530.staticpower.client.GuiIDRegistry;
-import theking530.staticpower.tileentity.TileEntityBase;
-import theking530.staticpower.tileentity.digistorenetwork.BaseDigistoreBlock;
-import theking530.staticpower.utilities.WorldUtilities;
+import net.minecraftforge.fml.network.NetworkHooks;
+import theking530.staticpower.tileentities.TileEntityBase;
+import theking530.staticpower.tileentities.nonpowered.digistorenetwork.BaseDigistoreBlock;
 
 public class BlockDigistore extends BaseDigistoreBlock {
 
 	public BlockDigistore(String name) {
 		super(name);
-		setHardness(3.5f);
-	    setResistance(5.0f);
-	}	
-	public EnumBlockRenderType getRenderType(BlockState state) {
-		return EnumBlockRenderType.MODEL;
 	}
+
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, BlockState state, PlayerEntity player, EnumHand hand, Direction facing, float hitX, float hitY, float hitZ) {
-    	if (world.isRemote) {
-    		return true;
-    	}else if (!player.isSneaking()) {
-    		TileEntityDigistore entity = (TileEntityDigistore) world.getTileEntity(pos);
-    		if (entity != null) {
-    			entity.onBarrelRightClicked(player, hand, facing, hitX, hitY, hitZ);
-    		}
-    		return true;
-    	}else{
-    		if(player.getHeldItem(hand).isEmpty()) {
-        		TileEntityDigistore entity = (TileEntityDigistore) world.getTileEntity(pos);
-        		if (entity != null) {
-        			FMLNetworkHandler.openGui(player, StaticPower.staticpower, GuiIDRegistry.guiIDDigistore, world, pos.getX(), pos.getY(), pos.getZ());
-        		}
-    		}
-    		return false;
-    	}
+	public ActionResultType onStaticPowerBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+		TileEntity tileEntity = worldIn.getTileEntity(pos);
+		if (tileEntity != null && tileEntity instanceof TileEntityDigistore) {
+			TileEntityDigistore digistore = (TileEntityDigistore) worldIn.getTileEntity(pos);
+			if (player.isSneaking()) {
+				if (!worldIn.isRemote) {
+					NetworkHooks.openGui((ServerPlayerEntity) player, (TileEntityDigistore) digistore, pos);
+					return ActionResultType.CONSUME;
+				}
+			} else {
+				digistore.onBarrelRightClicked(player, handIn, hit);
+				return ActionResultType.PASS;
+			}
+		}
+		return ActionResultType.SUCCESS;
 	}
-    public void breakBlock(World worldIn, BlockPos pos, BlockState state) {
-        super.breakBlock(worldIn, pos, state);
-    	if(!worldIn.isRemote && worldIn.getTileEntity(pos) instanceof TileEntityBase) {
-    		TileEntityDigistore barrel = (TileEntityDigistore) worldIn.getTileEntity(pos);
-	        if(!barrel.wasWrenchedDoNotBreak) {
-	        	int storedAmount = barrel.getStoredAmount();
-	        	while(storedAmount > 0) {
-	        		ItemStack droppedItem = barrel.getStoredItem().copy();
-	        		droppedItem.setCount(Math.min(storedAmount, droppedItem.getMaxStackSize()));
-	        		storedAmount -= droppedItem.getCount();
-					WorldUtilities.dropItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), droppedItem);
-	        	}
-		        for(int i=0; i<barrel.slotsUpgrades.getSlots(); i++) {
-		        	if(!barrel.slotsUpgrades.getStackInSlot(i).isEmpty()) {
-						WorldUtilities.dropItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), barrel.slotsUpgrades.getStackInSlot(i));
-		        	}
-		        }
-	        }
-    	}     
-    }
+
 	@Override
-    public void onBlockClicked(World world, BlockPos pos, PlayerEntity playerIn) {
-		TileEntityDigistore entity = (TileEntityDigistore) world.getTileEntity(pos);
+	public void onBlockClicked(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn) {
+		TileEntityDigistore entity = (TileEntityDigistore) worldIn.getTileEntity(pos);
 		if (entity != null) {
 			entity.onBarrelLeftClicked(playerIn);
 		}
-    }
-	@Override
-	public TileEntity createTileEntity(World world, BlockState state){
-		return new TileEntityDigistore();
 	}
-	
+
 	@Override
-	public ItemBlock getItemBlock() {
-		return new DigistoreItemBlock(this, getUnlocalizedName());
+	public void onStaticPowerBlockHarvested(World world, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity te, ItemStack stack) {
+		super.onStaticPowerBlockHarvested(world, player, pos, state, te, stack);
+		if (!world.isRemote && world.getTileEntity(pos) instanceof TileEntityBase) {
+			TileEntityDigistore barrel = (TileEntityDigistore) world.getTileEntity(pos);
+			if (!barrel.wasWrenchedDoNotBreak) {
+				int storedAmount = barrel.getStoredAmount();
+				while (storedAmount > 0) {
+					ItemStack droppedItem = barrel.getStoredItem().copy();
+					droppedItem.setCount(Math.min(storedAmount, droppedItem.getMaxStackSize()));
+					storedAmount -= droppedItem.getCount();
+					// WorldUtilities.dropItem(worldIn, pos.getX(), pos.getY(), pos.getZ(),
+					// droppedItem);
+				}
+				// for (int i = 0; i < barrel.slotsUpgrades.getSlots(); i++) {
+				// if (!barrel.slotsUpgrades.getStackInSlot(i).isEmpty()) {
+				// WorldUtilities.dropItem(worldIn, pos.getX(), pos.getY(), pos.getZ(),
+				// barrel.slotsUpgrades.getStackInSlot(i));
+				// }
+				// }
+			}
+		}
+	}
+
+	@Override
+	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
+		return new TileEntityDigistore();
 	}
 }

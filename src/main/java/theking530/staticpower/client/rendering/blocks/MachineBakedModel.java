@@ -32,15 +32,12 @@ import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.client.rendering.StaticPowerRendererTextures;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.SideConfigurationComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
 public class MachineBakedModel implements IBakedModel {
-	public static ResourceLocation machineSideNormal = new ResourceLocation("staticpower:blocks/machines/machine_side");
-	public static ResourceLocation machineSideInput = new ResourceLocation("staticpower:blocks/machines/machine_side_input");
-	public static ResourceLocation machineSideOutput = new ResourceLocation("staticpower:blocks/machines/machine_side_output");
-	public static ResourceLocation machineSideDisabled = new ResourceLocation("staticpower:blocks/machines/machine_side_disabled");
 
 	private static final ModelProperty<Optional<MachineSideMode[]>> SIDE_CONFIG = new ModelProperty<>();
 
@@ -97,16 +94,16 @@ public class MachineBakedModel implements IBakedModel {
 		for (BakedQuad quad : baseQuads) {
 			switch (sideConfigurations.get()[side.ordinal()]) {
 			case Input:
-				sideSprite = blocksStitchedTextures.getSprite(new ResourceLocation("staticpower:blocks/machines/machine_side_input"));
+				sideSprite = blocksStitchedTextures.getSprite(StaticPowerRendererTextures.MACHINE_SIDE_INPUT);
 				break;
 			case Output:
-				sideSprite = blocksStitchedTextures.getSprite(new ResourceLocation("staticpower:blocks/machines/machine_side_output"));
+				sideSprite = blocksStitchedTextures.getSprite(StaticPowerRendererTextures.MACHINE_SIDE_OUTPUT);
 				break;
 			case Disabled:
-				sideSprite = blocksStitchedTextures.getSprite(new ResourceLocation("staticpower:blocks/machines/machine_side_disabled"));
+				sideSprite = blocksStitchedTextures.getSprite(StaticPowerRendererTextures.MACHINE_SIDE_DISABLED);
 				break;
 			default:
-				sideSprite = blocksStitchedTextures.getSprite(new ResourceLocation("staticpower:blocks/machines/machine_side"));
+				sideSprite = blocksStitchedTextures.getSprite(StaticPowerRendererTextures.MACHINE_SIDE_NORMAL);
 				break;
 			}
 			if (sideConfigurations.get()[side.ordinal()] != MachineSideMode.Never) {

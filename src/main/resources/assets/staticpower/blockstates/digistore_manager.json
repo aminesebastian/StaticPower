@@ -1,0 +1,8 @@
+{
+    "variants": {
+		"facing=north": { "model": "staticpower:block/machines/digistore_manager" },
+        "facing=south": { "model": "staticpower:block/machines/digistore_manager", "y": 180 },
+        "facing=west":  { "model": "staticpower:block/machines/digistore_manager", "y": 270 },
+        "facing=east":  { "model": "staticpower:block/machines/digistore_manager", "y": 90 }
+    }
+}

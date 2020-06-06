@@ -1,45 +1,30 @@
-package theking530.staticpower.tileentity.digistorenetwork.manager;
+package theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
-import theking530.staticpower.client.gui.BaseGuiContainer;
-import theking530.staticpower.client.gui.widgets.tabs.GuiInfoTab;
-import theking530.staticpower.client.gui.widgets.tabs.GuiRedstoneTab;
-import theking530.staticpower.client.gui.widgets.tabs.GuiSideConfigTab;
+import net.minecraft.util.text.ITextComponent;
+import theking530.api.gui.widgets.tabs.GuiInfoTab;
+import theking530.api.gui.widgets.tabs.GuiRedstoneTab;
+import theking530.api.gui.widgets.tabs.GuiSideConfigTab;
+import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 
-public class GuiDigistoreManager extends BaseGuiContainer {
-	
-	private TileEntityDigistoreManager barrel;
+public class GuiDigistoreManager extends StaticPowerTileEntityGui<ContainerDigistoreManager, TileEntityDigistoreManager> {
 	private GuiInfoTab infoTab;
-	
-	public GuiDigistoreManager(PlayerInventory invPlayer, TileEntityDigistoreManager teBarrel) {
-		super(new ContainerDigistoreManager(invPlayer, teBarrel), 176, 150);
-		barrel = teBarrel;	
-		
-		infoTab = new GuiInfoTab(100, 65);
-		getTabManager().registerTab(infoTab);
-		getTabManager().registerTab(new GuiRedstoneTab(100, 85, barrel));
-		getTabManager().registerTab(new GuiSideConfigTab(80, 80, false, barrel));
-		getTabManager().setInitiallyOpenTab(infoTab);
-	}
-	protected void drawGuiContainerForegroundLayer(int i, int j) {
-		String name = I18n.format(barrel.getName());
-		this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2, 6,4210752 );
-		
 
-	}	
-	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		super.drawScreen(mouseX, mouseY, partialTicks);
-
+	public GuiDigistoreManager(ContainerDigistoreManager container, PlayerInventory invPlayer, ITextComponent name) {
+		super(container, invPlayer, name, 176, 150);
 	}
+
 	@Override
-	protected void drawExtra(float f, int i, int j) {			
+	public void initializeGui() {
+		getTabManager().registerTab(infoTab = new GuiInfoTab(100, 65));
+		getTabManager().registerTab(new GuiRedstoneTab(100, 85, getTileEntity()));
+		getTabManager().registerTab(new GuiSideConfigTab(80, 80, false, getTileEntity()));
+	}
+
+	@Override
+	protected void drawBackgroundExtras(float partialTicks, int mouseX, int mouseY) {
 		drawGenericBackground();
-		drawPlayerInventorySlots(guiLeft+8, guiTop+ySize-83);
-    
-	}	
+		drawPlayerInventorySlots(guiLeft + 8, guiTop + ySize - 83);
+
+	}
 }
-
-
-

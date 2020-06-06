@@ -1,49 +1,44 @@
-package theking530.staticpower.tileentity.digistorenetwork.digistore;
+package theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore;
 
-import io.netty.buffer.ByteBuf;
+import java.util.function.Supplier;
+
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
- 
-public class PacketLockDigistore implements IMessage{
-    private boolean isLocked;
-    private int x;
-    private int y;
-    private int z;
+import net.minecraftforge.fml.network.NetworkEvent.Context;
+import theking530.staticpower.network.NetworkMessage;
 
-    public PacketLockDigistore() {}
-    
-    public PacketLockDigistore(boolean isLocked, BlockPos pos) {
-      this.isLocked = isLocked;
-      this.x = pos.getX();
-      this.y = pos.getY();
-      this.z = pos.getZ();
-    }   
-    @Override
-    public void fromBytes(ByteBuf buf) {
-      this.isLocked = buf.readBoolean();
-      this.x = buf.readInt();
-      this.y = buf.readInt();
-      this.z = buf.readInt();
-    }    
-    @Override
-    public void toBytes(ByteBuf buf) {
-      buf.writeBoolean(isLocked);
-      buf.writeInt(x);
-      buf.writeInt(y);
-      buf.writeInt(z);
-    }
-    public static class Message implements IMessageHandler<PacketLockDigistore, IMessage> {
-	    @Override
-	    public IMessage onMessage(PacketLockDigistore message, MessageContext ctx) {
-			TileEntity te = ctx.getServerHandler().player.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
-			if(te != null && te instanceof TileEntityDigistore) {
-				TileEntityDigistore entity = (TileEntityDigistore)te;
-				entity.setLocked(message.isLocked);
-			}
-			return null;
-    	}
-    }
+public class PacketLockDigistore extends NetworkMessage {
+	private boolean isLocked;
+	private BlockPos tePosition;
+
+	public PacketLockDigistore() {
+	}
+
+	public PacketLockDigistore(boolean isLocked, BlockPos pos) {
+		this.isLocked = isLocked;
+		this.tePosition = pos;
+	}
+
+	@Override
+	public void decode(PacketBuffer buf) {
+		isLocked = buf.readBoolean();
+		tePosition = buf.readBlockPos();
+	}
+
+	@Override
+	public void encode(PacketBuffer buf) {
+		buf.writeBoolean(isLocked);
+		buf.writeBlockPos(tePosition);
+	}
+
+	@Override
+	public void handle(Supplier<Context> context) {
+		TileEntity rawTileEntity = context.get().getSender().world.getTileEntity(tePosition);
+
+		if (rawTileEntity != null && rawTileEntity instanceof TileEntityDigistore) {
+			TileEntityDigistore digistore = (TileEntityDigistore) rawTileEntity;
+			digistore.setLocked(isLocked);
+		}
+	}
 }

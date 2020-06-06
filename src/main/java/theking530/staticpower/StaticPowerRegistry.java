@@ -9,6 +9,8 @@ import java.util.function.Supplier;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.gui.ScreenManager.IScreenFactory;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.RenderType;
@@ -27,12 +29,17 @@ import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DeferredWorkQueue;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -40,12 +47,14 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.network.IContainerFactory;
 import theking530.staticpower.blocks.IBlockRenderLayerProvider;
 import theking530.staticpower.blocks.IItemBlockProvider;
+import theking530.staticpower.client.rendering.StaticPowerRendererTextures;
 import theking530.staticpower.client.rendering.blocks.MachineBakedModel;
+import theking530.staticpower.client.rendering.tileentity.TileEntityRenderDigistore;
 import theking530.staticpower.crafting.wrappers.AbstractRecipe;
 import theking530.staticpower.crafting.wrappers.RecipeMatchParameters;
 import theking530.staticpower.crafting.wrappers.grinder.GrinderRecipeSerializer;
 import theking530.staticpower.initialization.ModBlocks;
-import theking530.staticpower.initialization.ModContainerTypes;
+import theking530.staticpower.initialization.ModTileEntityTypes;
 import theking530.staticpower.utilities.Reference;
 
 /**
@@ -55,7 +64,7 @@ import theking530.staticpower.utilities.Reference;
  *
  */
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
-@SuppressWarnings("rawtypes")
+@SuppressWarnings({ "rawtypes", "deprecation" })
 public class StaticPowerRegistry {
 	private static final HashSet<Item> ITEMS = new HashSet<>();
 	private static final HashSet<Block> BLOCKS = new HashSet<>();
@@ -63,6 +72,7 @@ public class StaticPowerRegistry {
 	private static final HashSet<ContainerType<? extends Container>> CONTAINER_TYPES = new HashSet<>();
 	private static final HashMap<IRecipeType, LinkedList<AbstractRecipe>> RECIPES = new HashMap<IRecipeType, LinkedList<AbstractRecipe>>();
 	private static final HashSet<FlowingFluid> FLUIDS = new HashSet<FlowingFluid>();
+	private static HashMap<ContainerType, IScreenFactory> SCREEN_FACTORIES = new HashMap<>();
 
 	/**
 	 * Pre-registers an item for registration through the registry event.
@@ -134,10 +144,11 @@ public class StaticPowerRegistry {
 	 *         {@link Container}.
 	 */
 	@SuppressWarnings({ "unchecked" })
-	public static <T extends Container, K extends ContainerScreen<T>> ContainerType<T> preRegisterContainer(String name, IContainerFactory factory) {
+	public static <T extends Container, K extends ContainerScreen<T>> ContainerType<T> preRegisterContainer(String name, IContainerFactory factory, IScreenFactory<T, K> screen) {
 		ContainerType containerType = IForgeContainerType.create(factory);
 		containerType.setRegistryName(name);
 		CONTAINER_TYPES.add(containerType);
+		SCREEN_FACTORIES.put(containerType, screen);
 		return containerType;
 	}
 
@@ -172,7 +183,10 @@ public class StaticPowerRegistry {
 		}
 
 		// Initialize the guis.
-		ModContainerTypes.initializeGui();
+		initializeGui();
+
+		// Temp TESR
+		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.DIGISTORE, TileEntityRenderDigistore::new);
 
 		// Log the completion.
 		StaticPower.LOGGER.info("Static Power Client Setup Completed!");
@@ -264,15 +278,16 @@ public class StaticPowerRegistry {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@SubscribeEvent
 	public static void onTextureStitchEvent(TextureStitchEvent.Pre event) {
+		int spriteCount = 0;
 		if (event.getMap().getTextureLocation() == AtlasTexture.LOCATION_BLOCKS_TEXTURE) {
-			event.addSprite(MachineBakedModel.machineSideNormal);
-			event.addSprite(MachineBakedModel.machineSideInput);
-			event.addSprite(MachineBakedModel.machineSideOutput);
-			event.addSprite(MachineBakedModel.machineSideDisabled);
+			for (ResourceLocation sprite : StaticPowerRendererTextures.SPRITES) {
+				event.addSprite(sprite);
+				spriteCount++;
+			}
 		}
+		StaticPower.LOGGER.info("Registered %1$s Static Power sprites.", spriteCount);
 	}
 
 	/**
@@ -313,5 +328,16 @@ public class StaticPowerRegistry {
 			RECIPES.put(recipe.getType(), new LinkedList<AbstractRecipe>());
 		}
 		RECIPES.get(recipe.getType()).add(recipe);
+	}
+
+	@SuppressWarnings({ "unchecked" })
+	@OnlyIn(Dist.CLIENT)
+	private static void initializeGui() {
+		DeferredWorkQueue.runLater(() -> {
+			SCREEN_FACTORIES.forEach((containerType, screenFactory) -> {
+				ScreenManager.registerFactory(containerType, screenFactory);
+			});
+			StaticPower.LOGGER.info("Registered all Static Power container types.");
+		});
 	}
 }

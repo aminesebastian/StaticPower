@@ -9,6 +9,7 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.SoundCategory;
@@ -34,7 +35,7 @@ import theking530.staticpower.tileentities.components.UpgradeProcessingComponent
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.utilities.InventoryUtilities;
 
-public class TileEntityVacuumChest extends TileEntityBase {
+public class TileEntityVacuumChest extends TileEntityBase implements INamedContainerProvider {
 	public final InventoryComponent inventory;
 	public final InventoryComponent filterSlotInventory;
 	public final InventoryComponent upgradesInventory;

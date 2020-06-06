@@ -14,6 +14,10 @@ import theking530.staticpower.blocks.StaticPowerRotatePillarBlock;
 import theking530.staticpower.blocks.crops.BaseSimplePlant;
 import theking530.staticpower.blocks.decorative.Lamp;
 import theking530.staticpower.blocks.decorative.StaticPowerGlassBlock;
+import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.BlockDigistore;
+import theking530.staticpower.tileentities.nonpowered.digistorenetwork.ioport.BlockDigistoreIOPort;
+import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.BlockDigistoreManager;
+import theking530.staticpower.tileentities.nonpowered.digistorenetwork.networkwire.BlockDigistoreNetworkWire;
 import theking530.staticpower.tileentities.nonpowered.vacuumchest.BlockVacuumChest;
 import theking530.staticpower.tileentities.powered.chargingstation.BlockChargingStation;
 import theking530.staticpower.tileentities.powered.poweredfurnace.BlockPoweredFurnace;
@@ -66,7 +70,11 @@ public class ModBlocks {
 	public static BlockSolarPanel SolarPanelBasic;
 	public static BlockPoweredFurnace PoweredFurnace;
 	public static BlockPoweredGrinder PoweredGrinder;
-	
+	public static BlockDigistoreNetworkWire DigistoreWire;
+	public static BlockDigistoreManager DigistoreManager;
+	public static BlockDigistoreIOPort DigistoreIOPort;
+	public static BlockDigistore Digistore;
+
 	public static void init() {
 		// Decorative
 		StaticPowerRegistry.preRegisterBlock(StaticLamp = new Lamp("lamp_static"));
@@ -84,7 +92,8 @@ public class ModBlocks {
 
 		// Wood
 		StaticPowerRegistry.preRegisterBlock(StaticWood = new StaticPowerRotatePillarBlock("wood_static", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
-		StaticPowerRegistry.preRegisterBlock(EnergizedWood = new StaticPowerRotatePillarBlock("wood_energized", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
+		StaticPowerRegistry
+				.preRegisterBlock(EnergizedWood = new StaticPowerRotatePillarBlock("wood_energized", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
 		StaticPowerRegistry.preRegisterBlock(LumumWood = new StaticPowerRotatePillarBlock("wood_lumum", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
 
 		// Planks
@@ -111,5 +120,10 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(SolarPanelBasic = new BlockSolarPanel("solar_panel_basic", Tier.BASIC));
 		StaticPowerRegistry.preRegisterBlock(PoweredFurnace = new BlockPoweredFurnace("machine_powered_furnace"));
 		StaticPowerRegistry.preRegisterBlock(PoweredGrinder = new BlockPoweredGrinder("machine_powered_grinder"));
+
+		StaticPowerRegistry.preRegisterBlock(DigistoreWire = new BlockDigistoreNetworkWire("digistore_wire"));
+		StaticPowerRegistry.preRegisterBlock(DigistoreManager = new BlockDigistoreManager("digistore_manager"));
+		StaticPowerRegistry.preRegisterBlock(DigistoreIOPort = new BlockDigistoreIOPort("digistore_io_port"));
+		StaticPowerRegistry.preRegisterBlock(Digistore = new BlockDigistore("digistore"));
 	}
 }

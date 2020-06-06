@@ -1,38 +1,11 @@
-package theking530.staticpower.tileentity.digistorenetwork.networkwire;
+package theking530.staticpower.tileentities.nonpowered.digistorenetwork.networkwire;
 
-import net.minecraft.block.state.BlockState;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import theking530.staticpower.tileentity.digistorenetwork.BaseDigistoreBlock;
+import net.minecraft.block.material.Material;
+import theking530.staticpower.blocks.StaticPowerBlock;
 
-public class BlockDigistoreNetworkWire extends BaseDigistoreBlock {
+public class BlockDigistoreNetworkWire extends StaticPowerBlock {
 
 	public BlockDigistoreNetworkWire(String name) {
-		super(name);
-		setHardness(3.5f);
-	    setResistance(5.0f);
-	}	
-	public EnumBlockRenderType getRenderType(BlockState state) {
-		return EnumBlockRenderType.MODEL;
+		super(name, Material.IRON);
 	}
-	public boolean isOpaqueCube(BlockState state) {
-		return true;
-	}
-	public boolean isFullCube(BlockState state) {
-		return true;		
-	}
-    public void breakBlock(World worldIn, BlockPos pos, BlockState state) {
-    	this.shouldDropContents = false;
-        super.breakBlock(worldIn, pos, state);    
-    }
-    @Override
-	public TileEntity createTileEntity(World world, BlockState state) {
-		return null; //new TileEntityDigistoreWire();
-	}
-    @Override
-    public boolean hasTileEntity(BlockState state) {
-		return false;    	
-    }
 }

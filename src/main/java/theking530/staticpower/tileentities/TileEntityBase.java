@@ -26,6 +26,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -46,7 +47,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	protected final static Random RANDOM = new Random();
 
 	protected boolean disableFaceInteraction;
-	protected boolean wasWrenchedDoNotBreak;
+	public boolean wasWrenchedDoNotBreak;
 	protected boolean wasPlaced;
 
 	private HashMap<String, AbstractTileEntityComponent> components;
@@ -112,7 +113,9 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 * had their {@link #AbstractTileEntityComponent.postProcessUpdate()} called. Do
 	 * NOT override {@link #tick()} unless explicitly required.
 	 */
-	public abstract void process();
+	public void process() {
+
+	}
 
 	public void markTileEntityForSynchronization() {
 		updateQueued = true;
@@ -500,14 +503,18 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	}
 
 	/**
-	 * Create the container here.
+	 * Create the container here. Null by default.
 	 */
 	@Override
-	public abstract Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player);
+	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+		return null;
+	}
 
 	/**
 	 * Return the name of this tile entity.
 	 */
 	@Override
-	public abstract ITextComponent getDisplayName();
+	public ITextComponent getDisplayName() {
+		return new StringTextComponent("**ERROR**");
+	}
 }
