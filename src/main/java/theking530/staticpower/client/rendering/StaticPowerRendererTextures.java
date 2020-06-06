@@ -8,9 +8,9 @@ import theking530.staticpower.utilities.Reference;
 public class StaticPowerRendererTextures {
 	public static final HashSet<ResourceLocation> SPRITES = new HashSet<ResourceLocation>();
 
-	public static final ResourceLocation DIGISTORE_VOID_INDICATOR = registerSprite("textures/blocks/digistore/void_indicator.png");
-	public static final ResourceLocation DIGISTORE_LOCKED_INDICATOR = registerSprite("textures/blocks/digistore/locked_indicator.png");
-	public static final ResourceLocation DIGISTORE_FILL_BAR = registerSprite("textures/blocks/digistore/digistore_fill_bar.png");
+	public static final ResourceLocation DIGISTORE_VOID_INDICATOR = registerSprite("blocks/digistore/void_indicator");
+	public static final ResourceLocation DIGISTORE_LOCKED_INDICATOR = registerSprite("blocks/digistore/locked_indicator");
+	public static final ResourceLocation DIGISTORE_FILL_BAR = registerSprite("blocks/digistore/digistore_fill_bar");
 
 	public static final ResourceLocation LOGIC_GATE_INPUT = registerSprite("blocks/logicgates/logic_gate_input");
 	public static final ResourceLocation LOGIC_GATE_OUTPUT = registerSprite("blocks/logicgates/logic_gate_output");

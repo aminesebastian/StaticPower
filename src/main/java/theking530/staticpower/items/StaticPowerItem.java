@@ -76,6 +76,7 @@ public class StaticPowerItem extends Item {
 	 */
 	@Override
 	public ActionResultType onItemUse(ItemUseContext context) {
+		super.onItemUse(context);
 		return onStaticPowerItemUsedOnBlock(context, context.getWorld(), context.getPos(), context.getFace(), context.getPlayer(), context.getItem());
 	}
 

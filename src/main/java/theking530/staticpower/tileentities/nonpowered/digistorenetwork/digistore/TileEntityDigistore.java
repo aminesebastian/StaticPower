@@ -1,9 +1,11 @@
 package theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
@@ -41,12 +43,14 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 		super.process();
 	}
 
-	public void onBarrelRightClicked(PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-
+	@Override
+	public ActionResultType onBlockActivated(BlockState state, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+		return super.onBlockActivated(state, player, hand, hit);
 	}
 
-	public void onBarrelLeftClicked(PlayerEntity playerIn) {
-
+	@Override
+	public void onBlockLeftClicked(BlockState state, PlayerEntity player) {
+		super.onBlockLeftClicked(state, player);
 	}
 
 	public ItemStack getStoredItem() {

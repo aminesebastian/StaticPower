@@ -1,29 +1,28 @@
 package theking530.staticpower.client.rendering.tileentity;
 
-import org.lwjgl.opengl.GL11;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Quaternion;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import theking530.api.utilities.Color;
+import theking530.api.utilities.Vector3D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.tileentities.TileEntityBase;
 
@@ -64,23 +63,7 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 			StaticPower.LOGGER.error("An error occured when attempting to draw tile entity base: %1$s.", tileEntity, e);
 		}
 
-		matrixStack.push();
-
-		ActiveRenderInfo renderInfo = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();
-		matrixStack.translate(-tileEntityPos.getX(), -tileEntityPos.getY(), -tileEntityPos.getZ()); 
-		Minecraft.getInstance().getTextureManager().bindTexture(new ResourceLocation("textures/block/stone.png"));
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder vertexbuffer = tessellator.getBuffer();
-		vertexbuffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vertexbuffer.pos(-100, 10, -100).tex(1.0f, 1.0f).endVertex();
-		vertexbuffer.pos(-100, 10, 100).tex(1.0f, 0.0f).endVertex();
-		vertexbuffer.pos(100, 10, 100).tex(0.0f, 0.0f).endVertex();
-		vertexbuffer.pos(100, 10, -100).tex(0.0f, 1.0f).endVertex();
-		tessellator.draw();
 		matrixStack.pop();
-		
-		matrixStack.pop();
-
 	}
 
 	/**
@@ -148,6 +131,67 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 
 		fontRenderer.renderString(text, -textWidth / 2f, 0.5f, color.encodeInInteger(), false, matrixStack.getLast().getMatrix(), buffer, false, 0, 15728880); // 15728880
 
+		matrixStack.pop();
+	}
+
+	/**
+	 * Draws a texture quad at the face of the block.
+	 * 
+	 * @param texture       The sprite to draw.
+	 * @param matrixStack   The matrix stack to work with.
+	 * @param buffer        The buffer to draw to.
+	 * @param offset        The offset from the face of the block.
+	 * @param scale         The scale.
+	 * @param tint          The tint to apply.
+	 * @param combinedLight The combined light level at the block.
+	 */
+	protected void drawTexturedQuadLit(ResourceLocation texture, MatrixStack matrixStack, IRenderTypeBuffer buffer, Vector3D offset, Vector3D scale, Color tint, int combinedLight) {
+		matrixStack.push();
+		IVertexBuilder builder = buffer.getBuffer(RenderType.getCutout());
+		TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(texture);
+
+		matrixStack.translate(offset.getX(), offset.getY(), offset.getZ());
+		matrixStack.scale(scale.getX(), scale.getY(), scale.getZ());
+		builder.pos(matrixStack.getLast().getMatrix(), 0.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMaxU(), sprite.getMinV())
+				.lightmap(combinedLight).normal(-1, 0, 0).endVertex();
+		builder.pos(matrixStack.getLast().getMatrix(), 0.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMaxU(), sprite.getMaxV())
+				.lightmap(combinedLight).normal(-1, 0, 0).endVertex();
+		builder.pos(matrixStack.getLast().getMatrix(), 1.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), sprite.getMaxV())
+				.lightmap(combinedLight).normal(-1, 0, 0).endVertex();
+		builder.pos(matrixStack.getLast().getMatrix(), 1.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), sprite.getMinV())
+				.lightmap(combinedLight).normal(-1, 0, 0).endVertex();
+		matrixStack.pop();
+	}
+
+	protected void drawTexturedQuadUnlit(ResourceLocation texture, MatrixStack matrixStack, IRenderTypeBuffer buffer, Vector3D offset, Vector3D scale, Color tint) {
+		matrixStack.push();
+		IVertexBuilder builder = buffer.getBuffer(RenderType.getCutout());
+		TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(texture);
+
+		matrixStack.translate(offset.getX(), offset.getY(), offset.getZ());
+		matrixStack.scale(scale.getX(), scale.getY(), scale.getZ());
+		builder.pos(matrixStack.getLast().getMatrix(), 0.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMaxU(), sprite.getMinV())
+				.lightmap(15728880).normal(-1, 0, 0).endVertex();
+		builder.pos(matrixStack.getLast().getMatrix(), 0.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMaxU(), sprite.getMaxV())
+				.lightmap(15728880).normal(-1, 0, 0).endVertex();
+		builder.pos(matrixStack.getLast().getMatrix(), 1.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), sprite.getMaxV())
+				.lightmap(15728880).normal(-1, 0, 0).endVertex();
+		builder.pos(matrixStack.getLast().getMatrix(), 1.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), sprite.getMinV())
+				.lightmap(15728880).normal(-1, 0, 0).endVertex();
+		matrixStack.pop();
+	}
+
+	protected void drawTexturedQuad(ResourceLocation texture, MatrixStack matrixStack, IRenderTypeBuffer buffer, Vector3D offset, Vector3D scale) {
+		matrixStack.push();
+		IVertexBuilder builder = buffer.getBuffer(RenderType.getCutout());
+		TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(texture);
+
+		matrixStack.translate(offset.getX(), offset.getY(), offset.getZ());
+		matrixStack.scale(scale.getX(), scale.getY(), scale.getZ());
+		builder.pos(matrixStack.getLast().getMatrix(), 0.0f, 1.0f, 1.0f).color(1.0f, 1.0f, 1.0f, 1.0f).tex(sprite.getMaxU(), sprite.getMinV()).lightmap(15728880).normal(-1, 0, 0).endVertex();
+		builder.pos(matrixStack.getLast().getMatrix(), 0.0f, 0.0f, 1.0f).color(1.0f, 1.0f, 1.0f, 1.0f).tex(sprite.getMaxU(), sprite.getMaxV()).lightmap(15728880).normal(-1, 0, 0).endVertex();
+		builder.pos(matrixStack.getLast().getMatrix(), 1.0f, 0.0f, 1.0f).color(1.0f, 1.0f, 1.0f, 1.0f).tex(sprite.getMinU(), sprite.getMaxV()).lightmap(15728880).normal(-1, 0, 0).endVertex();
+		builder.pos(matrixStack.getLast().getMatrix(), 1.0f, 1.0f, 1.0f).color(1.0f, 1.0f, 1.0f, 1.0f).tex(sprite.getMinU(), sprite.getMinV()).lightmap(15728880).normal(-1, 0, 0).endVertex();
 		matrixStack.pop();
 	}
 }

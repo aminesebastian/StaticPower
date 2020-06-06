@@ -9,6 +9,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
@@ -22,6 +23,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -30,6 +32,7 @@ import theking530.api.wrench.IWrenchable;
 import theking530.api.wrench.RegularWrenchMode;
 import theking530.api.wrench.SneakWrenchMode;
 import theking530.staticpower.items.tools.StaticWrench;
+import theking530.staticpower.tileentities.TileEntityBase;
 
 /**
  * Basic implmentation of a static power block.
@@ -166,6 +169,18 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IBloc
 		return ActionResultType.PASS;
 	}
 
+	public void onStaticPowerBlockPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+
+	}
+
+	public void onStaticPowerBlockClicked(BlockState state, World world, BlockPos pos, PlayerEntity player) {
+
+	}
+
+	public void onStaticPowerNeighborChanged(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
+
+	}
+
 	// ***********//
 	// Overrides //
 	// ***********//
@@ -228,17 +243,72 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IBloc
 	}
 
 	@Override
-	public void harvestBlock(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity te, ItemStack stack) {
-		onStaticPowerBlockHarvested(worldIn, player, pos, state, te, stack);
-		super.harvestBlock(worldIn, player, pos, state, te, stack);
+	public void harvestBlock(World world, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity te, ItemStack stack) {
+		// Raise the tile entity's harvest method.
+		if (world.getTileEntity(pos) != null && world.getTileEntity(pos) instanceof TileEntityBase) {
+			((TileEntityBase) world.getTileEntity(pos)).onBlockHarvested(player, state, stack);
+		}
+
+		// Raise the inheritor's method.
+		onStaticPowerBlockHarvested(world, player, pos, state, te, stack);
+
+		// Super call.
+		super.harvestBlock(world, player, pos, state, te, stack);
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(final BlockState state, final World worldIn, final BlockPos pos, final PlayerEntity player, final Hand handIn, final BlockRayTraceResult hit) {
-		if (!player.getHeldItem(handIn).isEmpty() && player.getHeldItem(handIn).getItem() instanceof StaticWrench) {
+	public ActionResultType onBlockActivated(final BlockState state, final World world, final BlockPos pos, final PlayerEntity player, final Hand hand, final BlockRayTraceResult hit) {
+		// Return the super call if needed.
+		@SuppressWarnings("deprecation")
+		ActionResultType superResult = super.onBlockActivated(state, world, pos, player, hand, hit);
+		if (superResult != ActionResultType.PASS) {
+			return superResult;
+		}
+
+		// Raise the tile entity's activated method and return here if it does not
+		// pass.
+		if (world.getTileEntity(pos) != null && world.getTileEntity(pos) instanceof TileEntityBase) {
+			ActionResultType teResult = ((TileEntityBase) world.getTileEntity(pos)).onBlockActivated(state, player, hand, hit);
+			if (teResult != ActionResultType.PASS) {
+				return teResult;
+			}
+		}
+
+		// Stop here if the item is a wrench. The wrench methods will handle that.
+		if (!player.getHeldItem(hand).isEmpty() && player.getHeldItem(hand).getItem() instanceof StaticWrench) {
 			return ActionResultType.PASS;
 		}
-		onStaticPowerBlockActivated(state, worldIn, pos, player, handIn, hit);
+
+		// Pass through to inheritors.
+		onStaticPowerBlockActivated(state, world, pos, player, hand, hit);
 		return ActionResultType.SUCCESS;
+	}
+
+	@Override
+	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+		super.onBlockPlacedBy(world, pos, state, placer, stack);
+		if (world.getTileEntity(pos) != null && world.getTileEntity(pos) instanceof TileEntityBase) {
+			((TileEntityBase) world.getTileEntity(pos)).onPlaced(state, placer, stack);
+		}
+		onStaticPowerBlockPlaced(world, pos, state, placer, stack);
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public void onBlockClicked(BlockState state, World world, BlockPos pos, PlayerEntity player) {
+		super.onBlockClicked(state, world, pos, player);
+		if (world.getTileEntity(pos) != null && world.getTileEntity(pos) instanceof TileEntityBase) {
+			((TileEntityBase) world.getTileEntity(pos)).onBlockLeftClicked(state, player);
+		}
+		onStaticPowerBlockClicked(state, world, pos, player);
+	}
+
+	@Override
+	public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
+		super.onNeighborChange(state, world, pos, neighbor);
+//		if (world.getTileEntity(pos) != null && world.getTileEntity(pos) instanceof TileEntityBase) {
+//			((TileEntityBase) world.getTileEntity(pos)).onNeighborChanged(state, neighbor);
+//		}
+//		onStaticPowerNeighborChanged(state, world, pos, neighbor);
 	}
 }

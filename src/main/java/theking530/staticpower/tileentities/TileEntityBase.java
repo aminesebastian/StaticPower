@@ -23,8 +23,11 @@ import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
@@ -48,7 +51,6 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 
 	protected boolean disableFaceInteraction;
 	public boolean wasWrenchedDoNotBreak;
-	protected boolean wasPlaced;
 
 	private HashMap<String, AbstractTileEntityComponent> components;
 
@@ -67,7 +69,6 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	public TileEntityBase(TileEntityType<?> teType) {
 		super(teType);
 		components = new HashMap<String, AbstractTileEntityComponent>();
-		wasPlaced = false;
 		wasWrenchedDoNotBreak = false;
 		updateQueued = false;
 		disableFaceInteraction();
@@ -97,12 +98,6 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		// Always mark this tile entity as dirty. (This should be revisited later).
 		markDirty();
 
-		// Raise the on placed method if it was just placed.
-		if (!wasPlaced) {
-			onPlaced();
-			wasPlaced = true;
-		}
-
 		// Post process all the components
 		postProcessUpdateComponents();
 	}
@@ -121,13 +116,34 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		updateQueued = true;
 	}
 
-	public void onPlaced() {
+	public void onPlaced(BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
 		if (hasComponentOfType(SideConfigurationComponent.class)) {
 			if (disableFaceInteraction) {
 				getComponent(SideConfigurationComponent.class).setWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, getFacingDirection()),
 						MachineSideMode.Never);
 			}
 		}
+	}
+
+	public ActionResultType onBlockActivated(BlockState currentState, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+		StaticPower.LOGGER.debug(String.format("TileEntity: %1$s was activated by player: %2$s.", getDisplayName().getFormattedText(), player.getDisplayName().getFormattedText()));
+		return ActionResultType.PASS;
+	}
+
+	public void onGuiEntered(BlockState currentState, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+		StaticPower.LOGGER.debug(String.format("TileEntity: %1$s's gui was entered by player: %2$s.", getDisplayName().getFormattedText(), player.getDisplayName().getFormattedText()));
+	}
+
+	public void onBlockHarvested(PlayerEntity player, BlockState currentState, ItemStack stack) {
+		StaticPower.LOGGER.debug(String.format("TileEntity: %1$s was harvested by player: %2$s.", getDisplayName().getFormattedText(), player.getDisplayName().getFormattedText()));
+	}
+
+	public void onBlockLeftClicked(BlockState currentState, PlayerEntity player) {
+		StaticPower.LOGGER.debug(String.format("TileEntity: %1$s was left clicked by player: %2$s.", getDisplayName().getFormattedText(), player.getDisplayName().getFormattedText()));
+	}
+
+	public void onNeighborChanged(BlockState currentState, BlockPos neighborPos) {
+		StaticPower.LOGGER.debug(String.format("TileEntity: %1$s's neighbor at position: %2$s changed.", getDisplayName().getFormattedText(), neighborPos.toString()));
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -405,7 +421,6 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 			}
 		}
 
-		nbt.putBoolean("placed", wasPlaced);
 		return nbt;
 	}
 
@@ -427,9 +442,6 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 				StaticPower.LOGGER.error(String.format("An error occured when attempting to deserialize save NBT for Component: %1$s for TileEntity: %2$s at Location: %3$s.",
 						component.getComponentName(), getDisplayName().getFormattedText(), pos), e);
 			}
-		}
-		if (nbt.contains("placed")) {
-			wasPlaced = nbt.getBoolean("placed");
 		}
 	}
 
