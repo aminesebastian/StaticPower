@@ -24,13 +24,12 @@ import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.network.NetworkHooks;
 import theking530.api.wrench.RegularWrenchMode;
 import theking530.api.wrench.SneakWrenchMode;
-import theking530.staticpower.StaticPower;
 import theking530.staticpower.blocks.StaticPowerBlock;
 import theking530.staticpower.tileentities.components.SideConfigurationComponent;
 import theking530.staticpower.tileentities.components.SideConfigurationComponent.SideIncrementDirection;
 import theking530.staticpower.tileentities.utilities.interfaces.IBreakSerializeable;
 
-public class StaticPowerTileEntityBlock extends StaticPowerBlock {
+public abstract class StaticPowerTileEntityBlock extends StaticPowerBlock {
 	protected enum HasGuiType {
 		NEVER, ALWAYS, SNEAKING_ONLY;
 	}
@@ -38,7 +37,11 @@ public class StaticPowerTileEntityBlock extends StaticPowerBlock {
 	protected boolean shouldDropContents;
 
 	protected StaticPowerTileEntityBlock(String name) {
-		super(name, Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).hardnessAndResistance(3.5f, 5.0f).sound(SoundType.METAL));
+		this(name, Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).hardnessAndResistance(3.5f, 5.0f).sound(SoundType.METAL));
+	}
+
+	protected StaticPowerTileEntityBlock(String name, Properties properies) {
+		super(name, properies);
 		this.shouldDropContents = true;
 		this.setDefaultState(stateContainer.getBaseState().with(FACING, Direction.NORTH));
 	}
@@ -127,15 +130,8 @@ public class StaticPowerTileEntityBlock extends StaticPowerBlock {
 		return HasGuiType.NEVER;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
-	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
-		if (hasTileEntity()) {
-			StaticPower.LOGGER
-					.error("StaticPowerBlock inherting from BlockMachineBase indicates that is has a tile entity, but the createTileEntity method has not been overriden and will return null.");
-		}
-		return null;
-	}
+	public abstract TileEntity createTileEntity(final BlockState state, final IBlockReader world);
 
 	@Override
 	public boolean canBeWrenched(PlayerEntity player, World world, BlockPos pos, Direction facing, boolean sneaking) {

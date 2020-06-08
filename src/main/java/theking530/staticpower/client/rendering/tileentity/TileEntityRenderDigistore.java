@@ -5,8 +5,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
 import theking530.api.utilities.Color;
 import theking530.api.utilities.Vector3D;
@@ -23,7 +21,7 @@ public class TileEntityRenderDigistore extends StaticPowerTileEntitySpecialRende
 	@Override
 	public void renderTileEntityBase(TileEntityDigistore tileEntity, BlockPos pos, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
 		if (!tileEntity.getStoredItem().isEmpty()) {
-			drawItemInWorld(tileEntity, new ItemStack(Items.GRASS_BLOCK), new Vector3f(0.5f, 0.57f, 1.01f), partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+			drawItemInWorld(tileEntity, tileEntity.getStoredItem(), new Vector3f(0.5f, 0.57f, 1.01f), partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 			drawFillBar(tileEntity, pos, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 			drawTextInWorld(Integer.toString(tileEntity.getStoredAmount()), tileEntity, new Color(255.0f, 255.0f, 255.0f, 255.0f), new Vector3f(0.5f, 0.315f, 1.0f), 0.01f, partialTicks, matrixStack,
 					buffer, combinedLight, combinedOverlay);

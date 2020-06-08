@@ -8,9 +8,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import theking530.staticpower.tileentities.StaticPowerTileEntityBlock;
+import theking530.staticpower.tileentities.StaticPowerDefaultMachineBlock;
 
-public class BlockPoweredFurnace extends StaticPowerTileEntityBlock {
+public class BlockPoweredFurnace extends StaticPowerDefaultMachineBlock {
 
 	public BlockPoweredFurnace(String name) {
 		super(name);

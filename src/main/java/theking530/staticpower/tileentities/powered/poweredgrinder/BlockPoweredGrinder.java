@@ -8,9 +8,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import theking530.staticpower.tileentities.StaticPowerTileEntityBlock;
+import theking530.staticpower.tileentities.StaticPowerDefaultMachineBlock;
 
-public class BlockPoweredGrinder extends StaticPowerTileEntityBlock {
+public class BlockPoweredGrinder extends StaticPowerDefaultMachineBlock {
 
 	public BlockPoweredGrinder(String name) {
 		super(name);

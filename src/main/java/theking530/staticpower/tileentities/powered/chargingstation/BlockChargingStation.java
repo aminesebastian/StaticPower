@@ -9,9 +9,9 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import theking530.staticpower.initialization.ModTileEntityTypes;
-import theking530.staticpower.tileentities.StaticPowerTileEntityBlock;
+import theking530.staticpower.tileentities.StaticPowerDefaultMachineBlock;
 
-public class BlockChargingStation extends StaticPowerTileEntityBlock {
+public class BlockChargingStation extends StaticPowerDefaultMachineBlock {
 
 	public BlockChargingStation(String name) {
 		super(name);

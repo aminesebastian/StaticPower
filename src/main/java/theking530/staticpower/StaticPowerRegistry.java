@@ -46,14 +46,13 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.network.IContainerFactory;
 import theking530.staticpower.blocks.IBlockRenderLayerProvider;
+import theking530.staticpower.blocks.ICustomModelSupplier;
 import theking530.staticpower.blocks.IItemBlockProvider;
 import theking530.staticpower.client.rendering.StaticPowerRendererTextures;
-import theking530.staticpower.client.rendering.blocks.MachineBakedModel;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderDigistore;
 import theking530.staticpower.crafting.wrappers.AbstractRecipe;
 import theking530.staticpower.crafting.wrappers.RecipeMatchParameters;
 import theking530.staticpower.crafting.wrappers.grinder.GrinderRecipeSerializer;
-import theking530.staticpower.initialization.ModBlocks;
 import theking530.staticpower.initialization.ModTileEntityTypes;
 import theking530.staticpower.utilities.Reference;
 
@@ -264,16 +263,32 @@ public class StaticPowerRegistry {
 
 	@SubscribeEvent
 	public static void onModelBakeEvent(ModelBakeEvent event) {
-		for (BlockState blockState : ModBlocks.PoweredGrinder.getStateContainer().getValidStates()) {
-			ModelResourceLocation variantMRL = BlockModelShapes.getModelLocation(blockState);
-			IBakedModel existingModel = event.getModelRegistry().get(variantMRL);
-			if (existingModel == null) {
-				StaticPower.LOGGER.warn("Did not find the expected vanilla baked model(s) for blockCamouflage in registry");
-			} else if (existingModel instanceof MachineBakedModel) {
-				StaticPower.LOGGER.warn("Tried to replace MachineBakedModel twice");
-			} else {
-				MachineBakedModel customModel = new MachineBakedModel(existingModel);
-				event.getModelRegistry().put(variantMRL, customModel);
+		// Loop through all the blocks, and check to see if they are a model supplier.
+		for (Block block : BLOCKS) {
+			if (block instanceof ICustomModelSupplier) {
+
+				// Get the supplier and see if has any overrides.
+				ICustomModelSupplier supplier = ((ICustomModelSupplier) block);
+				if (supplier.hasModelOverride()) {
+
+					// Loop through all the blockstates and override their models.
+					for (BlockState blockState : block.getStateContainer().getValidStates()) {
+						// Get the existing model.
+						ModelResourceLocation variantMRL = BlockModelShapes.getModelLocation(blockState);
+						IBakedModel existingModel = event.getModelRegistry().get(variantMRL);
+
+						if (existingModel instanceof ICustomModelSupplier) {
+							StaticPower.LOGGER.warn("Tried to replace %1$s's model twice.", block.getNameTextComponent().getFormattedText());
+						} else {
+							IBakedModel override = supplier.getModelOverride(existingModel);
+							if (override != null) {
+								event.getModelRegistry().put(variantMRL, override);
+							} else {
+								StaticPower.LOGGER.error(String.format("Encountered null model override for block: %1$s.", block.getNameTextComponent().getFormattedText()));
+							}
+						}
+					}
+				}
 			}
 		}
 	}

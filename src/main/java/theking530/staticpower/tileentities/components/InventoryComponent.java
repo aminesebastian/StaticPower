@@ -1,11 +1,16 @@
 package theking530.staticpower.tileentities.components;
 
 import java.util.Iterator;
+import java.util.Optional;
 
 import javax.annotation.Nonnull;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
@@ -86,6 +91,21 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 	@Override
 	public Iterator<ItemStack> iterator() {
 		return new TileEntityInventoryIterator();
+	}
+
+	@Override
+	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
+		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+			// Check if the owner is side configurable. If it is, check to make sure it's
+			// not disabled, if not, return the inventory.
+			Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getTileEntity());
+			if (side == null || !sideConfig.isPresent() || !sideConfig.get().getWorldSpaceDirectionConfiguration(side).isDisabledMode()) {
+				return LazyOptional.of(() -> {
+					return inventory;
+				}).cast();
+			}
+		}
+		return LazyOptional.empty();
 	}
 
 	/**

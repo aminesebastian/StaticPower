@@ -48,6 +48,7 @@ import theking530.staticpower.tileentities.utilities.interfaces.IBreakSerializea
 public abstract class TileEntityBase extends TileEntity implements ITickableTileEntity, IBreakSerializeable, INamedContainerProvider {
 	protected static final int DEFAULT_UPDATE_TIME = 2;
 	protected final static Random RANDOM = new Random();
+	private boolean isValid;
 
 	protected boolean disableFaceInteraction;
 	public boolean wasWrenchedDoNotBreak;
@@ -71,6 +72,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		components = new HashMap<String, AbstractTileEntityComponent>();
 		wasWrenchedDoNotBreak = false;
 		updateQueued = false;
+		isValid = true;
 		disableFaceInteraction();
 	}
 
@@ -95,11 +97,14 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 			updateQueued = false;
 		}
 
-		// Always mark this tile entity as dirty. (This should be revisited later).
-		markDirty();
-
 		// Post process all the components
 		postProcessUpdateComponents();
+	}
+
+	@Override
+	public void setWorldAndPos(World world, BlockPos pos) {
+		super.setWorldAndPos(world, pos);
+		onInitializedInWorld(world, pos);
 	}
 
 	/**
@@ -114,6 +119,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 
 	public void markTileEntityForSynchronization() {
 		updateQueued = true;
+		markDirty();
 	}
 
 	public void onPlaced(BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
@@ -126,24 +132,45 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	}
 
 	public ActionResultType onBlockActivated(BlockState currentState, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-		StaticPower.LOGGER.debug(String.format("TileEntity: %1$s was activated by player: %2$s.", getDisplayName().getFormattedText(), player.getDisplayName().getFormattedText()));
 		return ActionResultType.PASS;
 	}
 
 	public void onGuiEntered(BlockState currentState, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-		StaticPower.LOGGER.debug(String.format("TileEntity: %1$s's gui was entered by player: %2$s.", getDisplayName().getFormattedText(), player.getDisplayName().getFormattedText()));
+
 	}
 
-	public void onBlockHarvested(PlayerEntity player, BlockState currentState, ItemStack stack) {
-		StaticPower.LOGGER.debug(String.format("TileEntity: %1$s was harvested by player: %2$s.", getDisplayName().getFormattedText(), player.getDisplayName().getFormattedText()));
+	public void onBlockBroken(BlockState state, BlockState newState, boolean isMoving) {
+		isValid = false;
+	}
+
+	public void onBlockReplaced(BlockState state, BlockState newState, boolean isMoving) {
+
 	}
 
 	public void onBlockLeftClicked(BlockState currentState, PlayerEntity player) {
-		StaticPower.LOGGER.debug(String.format("TileEntity: %1$s was left clicked by player: %2$s.", getDisplayName().getFormattedText(), player.getDisplayName().getFormattedText()));
+
 	}
 
 	public void onNeighborChanged(BlockState currentState, BlockPos neighborPos) {
-		StaticPower.LOGGER.debug(String.format("TileEntity: %1$s's neighbor at position: %2$s changed.", getDisplayName().getFormattedText(), neighborPos.toString()));
+
+	}
+
+	public void onInitializedInWorld(World world, BlockPos pos) {
+
+	}
+
+	/**
+	 * Checks to see if this tile entity is still valid. This value is set to true
+	 * when the tile entity is created and set to false when
+	 * {@link #onBlockBroken(BlockState, BlockState, boolean)} or
+	 * {@link #onBlockReplaced(BlockState, BlockState, boolean)} are called. This is
+	 * useful as {@link #isRemoved()} is not set until after those methods have been
+	 * called.
+	 * 
+	 * @return
+	 */
+	public boolean isValid() {
+		return isValid;
 	}
 
 	@OnlyIn(Dist.CLIENT)

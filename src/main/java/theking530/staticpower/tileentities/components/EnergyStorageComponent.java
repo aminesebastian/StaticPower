@@ -2,7 +2,6 @@ package theking530.staticpower.tileentities.components;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
@@ -29,11 +28,11 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent implemen
 	protected boolean canRecieve;
 
 	public EnergyStorageComponent(String name, int capacity) {
-		this(name, capacity, Integer.MAX_VALUE);
+		this(name, capacity, Integer.MAX_VALUE, Integer.MAX_VALUE);
 	}
 
 	public EnergyStorageComponent(String name, int capacity, int maxInput) {
-		this(name, capacity, maxInput, Integer.MAX_VALUE);
+		this(name, capacity, maxInput, 0);
 	}
 
 	public EnergyStorageComponent(String name, int capacity, int maxInput, int maxExtract) {
@@ -41,8 +40,10 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent implemen
 		this.capacity = capacity;
 		this.maxReceive = maxInput;
 		this.maxExtract = maxExtract;
+
 		canRecieve = true;
-		canExtract = false;
+		canExtract = true;
+
 		powerPerTickSmoothingFactor = 2;
 		powerPerTickList = new ArrayList<Integer>();
 	}
@@ -85,6 +86,9 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent implemen
 
 	@Override
 	public int receiveEnergy(int maxReceive, boolean simulate) {
+		if (!canReceive()) {
+			return 0;
+		}
 		int maxPossibleRecieve = Math.min(maxReceive, this.maxReceive);
 		int maxActualRecieve = Math.min(maxPossibleRecieve, capacity - currentEnergy);
 
@@ -96,6 +100,9 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent implemen
 
 	@Override
 	public int extractEnergy(int maxExtract, boolean simulate) {
+		if (!canExtract()) {
+			return 0;
+		}
 		int maxPossibleExtract = Math.min(maxExtract, this.maxExtract);
 		int maxActualExtract = Math.min(currentEnergy, maxPossibleExtract);
 
@@ -201,12 +208,9 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent implemen
 	@Override
 	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
 		if (cap == CapabilityEnergy.ENERGY) {
-			Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getTileEntity());
-			if (side == null || !sideConfig.isPresent() || !sideConfig.get().getWorldSpaceDirectionConfiguration(side).isDisabledMode()) {
-				return LazyOptional.of(() -> {
-					return this;
-				}).cast();
-			}
+			return LazyOptional.of(() -> {
+				return this;
+			}).cast();
 		}
 		return LazyOptional.empty();
 	}

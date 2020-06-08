@@ -40,14 +40,6 @@ import theking530.staticpower.tileentities.TileEntityBase;
  * @author Amine Sebastian
  *
  */
-/**
- * @author Amine Sebastian
- *
- */
-/**
- * @author Amine Sebastian
- *
- */
 public class StaticPowerBlock extends Block implements IItemBlockProvider, IBlockRenderLayerProvider, IWrenchable {
 	/**
 	 * Facing property used by blocks that require keeping track of the direction
@@ -181,6 +173,10 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IBloc
 
 	}
 
+	public void onStaticPowerBlockReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving, boolean newBlock) {
+
+	}
+
 	// ***********//
 	// Overrides //
 	// ***********//
@@ -244,16 +240,32 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IBloc
 
 	@Override
 	public void harvestBlock(World world, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity te, ItemStack stack) {
-		// Raise the tile entity's harvest method.
-		if (world.getTileEntity(pos) != null && world.getTileEntity(pos) instanceof TileEntityBase) {
-			((TileEntityBase) world.getTileEntity(pos)).onBlockHarvested(player, state, stack);
-		}
-
 		// Raise the inheritor's method.
 		onStaticPowerBlockHarvested(world, player, pos, state, te, stack);
 
 		// Super call.
 		super.harvestBlock(world, player, pos, state, te, stack);
+	}
+
+	@Deprecated
+	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+		// Raise the inheritor's method.
+		onStaticPowerBlockReplaced(state, world, pos, newState, isMoving, state.getBlock() != newState.getBlock());
+
+		if (state.getBlock() != newState.getBlock()) {
+			// Raise the tile entity's broken method.
+			if (world.getTileEntity(pos) != null && world.getTileEntity(pos) instanceof TileEntityBase) {
+				((TileEntityBase) world.getTileEntity(pos)).onBlockBroken(state, newState, isMoving);
+			}
+
+			// Only call the super if the blocks are not equal.
+			super.onReplaced(state, world, pos, newState, isMoving);
+		} else {
+			// Raise the tile entity's changed method.
+			if (world.getTileEntity(pos) != null && world.getTileEntity(pos) instanceof TileEntityBase) {
+				((TileEntityBase) world.getTileEntity(pos)).onBlockReplaced(state, newState, isMoving);
+			}
+		}
 	}
 
 	@Override
@@ -280,8 +292,7 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IBloc
 		}
 
 		// Pass through to inheritors.
-		onStaticPowerBlockActivated(state, world, pos, player, hand, hit);
-		return ActionResultType.SUCCESS;
+		return onStaticPowerBlockActivated(state, world, pos, player, hand, hit);
 	}
 
 	@Override
@@ -306,9 +317,9 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IBloc
 	@Override
 	public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
 		super.onNeighborChange(state, world, pos, neighbor);
-//		if (world.getTileEntity(pos) != null && world.getTileEntity(pos) instanceof TileEntityBase) {
-//			((TileEntityBase) world.getTileEntity(pos)).onNeighborChanged(state, neighbor);
-//		}
-//		onStaticPowerNeighborChanged(state, world, pos, neighbor);
+		if (world.getTileEntity(pos) != null && world.getTileEntity(pos) instanceof TileEntityBase) {
+			((TileEntityBase) world.getTileEntity(pos)).onNeighborChanged(state, neighbor);
+		}
+		onStaticPowerNeighborChanged(state, world, pos, neighbor);
 	}
 }

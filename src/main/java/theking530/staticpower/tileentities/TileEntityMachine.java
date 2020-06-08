@@ -31,12 +31,9 @@ public abstract class TileEntityMachine extends TileEntityBase {
 		super(tileEntityType);
 		disableFaceInteraction();
 
-		registerComponent(energyStorage = new EnergyStorageComponent("MainEnergyStorage", DEFAULT_RF_CAPACITY));
+		registerComponent(energyStorage = new EnergyStorageComponent("MainEnergyStorage", DEFAULT_RF_CAPACITY, DEFAULT_POWER_TRANSFER, DEFAULT_POWER_TRANSFER));
 		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", this::onSidesConfigUpdate, this::checkSideConfiguration));
 		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent", RedstoneMode.Ignore));
-
-		energyStorage.setMaxReceive(DEFAULT_POWER_TRANSFER);
-		energyStorage.setMaxExtract(DEFAULT_POWER_TRANSFER);
 	}
 
 	/* Side Control */

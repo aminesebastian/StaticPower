@@ -21,9 +21,8 @@ public class TileEntityBasicSolarPanel extends TileEntityBase implements ITickab
 
 	public TileEntityBasicSolarPanel() {
 		super(ModTileEntityTypes.SOLAR_PANEL_BASIC);
-		registerComponent(energyStorage = new EnergyStorageComponent("PowerBuffer", 64));
-		energyStorage.setMaxReceive(10);
-		energyStorage.setMaxExtract(10);
+		registerComponent(energyStorage = new EnergyStorageComponent("PowerBuffer", 64, 10, 10));
+		energyStorage.setCanRecieve(false);
 
 		registerComponent(new PowerDistributionComponent("PowerDistribution", energyStorage));
 	}
@@ -39,7 +38,9 @@ public class TileEntityBasicSolarPanel extends TileEntityBase implements ITickab
 	public void generateRF() {
 		if (getWorld().canBlockSeeSky(pos)) {
 			if (energyStorage.getEnergyStored() < energyStorage.getMaxEnergyStored()) {
+				energyStorage.setCanRecieve(true);
 				energyStorage.receiveEnergy(energyStorage.getMaxReceive(), false);
+				energyStorage.setCanRecieve(false);
 			}
 		}
 	}

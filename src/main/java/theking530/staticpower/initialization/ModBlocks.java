@@ -14,6 +14,7 @@ import theking530.staticpower.blocks.StaticPowerRotatePillarBlock;
 import theking530.staticpower.blocks.crops.BaseSimplePlant;
 import theking530.staticpower.blocks.decorative.Lamp;
 import theking530.staticpower.blocks.decorative.StaticPowerGlassBlock;
+import theking530.staticpower.tileentities.cables.BlockPowerCable;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.BlockDigistore;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.ioport.BlockDigistoreIOPort;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.BlockDigistoreManager;
@@ -75,6 +76,9 @@ public class ModBlocks {
 	public static BlockDigistoreIOPort DigistoreIOPort;
 	public static BlockDigistore Digistore;
 
+	// Cables
+	public static BlockPowerCable PowerCable;
+	
 	public static void init() {
 		// Decorative
 		StaticPowerRegistry.preRegisterBlock(StaticLamp = new Lamp("lamp_static"));
@@ -125,5 +129,8 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(DigistoreManager = new BlockDigistoreManager("digistore_manager"));
 		StaticPowerRegistry.preRegisterBlock(DigistoreIOPort = new BlockDigistoreIOPort("digistore_io_port"));
 		StaticPowerRegistry.preRegisterBlock(Digistore = new BlockDigistore("digistore"));
+		
+		// Cables
+		StaticPowerRegistry.preRegisterBlock(PowerCable = new BlockPowerCable("cable_power"));
 	}
 }
