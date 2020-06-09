@@ -8,6 +8,8 @@ import theking530.staticpower.utilities.Reference;
 public class StaticPowerRendererTextures {
 	public static final HashSet<ResourceLocation> SPRITES = new HashSet<ResourceLocation>();
 
+	public static final ResourceLocation BLANK_TEXTURE = registerSprite("blank_texture");
+	
 	public static final ResourceLocation DIGISTORE_VOID_INDICATOR = registerSprite("blocks/digistore/void_indicator");
 	public static final ResourceLocation DIGISTORE_LOCKED_INDICATOR = registerSprite("blocks/digistore/locked_indicator");
 	public static final ResourceLocation DIGISTORE_FILL_BAR = registerSprite("blocks/digistore/digistore_fill_bar");

@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities;
+package theking530.staticpower.tileentities.network;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,8 +28,9 @@ public class TileEntityNetwork<T extends TileEntity> {
 	 *                                 entity should be added to the network. Note:
 	 *                                 the second parameter is the Direction that
 	 *                                 the provided tile entity was approached FROM.
-	 *                                 To check capabilities, for example, make sure
-	 *                                 to use the opposite of the direction.
+	 *                                 Meaning it is the value that should be
+	 *                                 provided when attempting to get a capability.
+	 * 
 	 * @param validExtenderPredicate   This method is called to determine if a
 	 *                                 position should be added to the search list.
 	 *                                 For example, in the digistore network, this
@@ -39,7 +40,7 @@ public class TileEntityNetwork<T extends TileEntity> {
 	 *                                 powercable is considered an extender. These
 	 *                                 locations are not cached, so any positions
 	 *                                 that are not required to be queryable later
-	 *                                 should be included here.
+	 *                                 should be included here instead.
 	 */
 	public TileEntityNetwork(World world, BiPredicate<TileEntity, Direction> validTileEntityPredicate, BiPredicate<BlockPos, Direction> validExtenderPredicate) {
 		this.world = world;
@@ -110,6 +111,12 @@ public class TileEntityNetwork<T extends TileEntity> {
 		dirty = true;
 	}
 
+	/**
+	 * Recursive graph update worker.
+	 * 
+	 * @param visited
+	 * @param currentPosition
+	 */
 	@SuppressWarnings("unchecked")
 	protected void _updateNetworkWorker(HashSet<BlockPos> visited, BlockPos currentPosition) {
 		for (Direction facing : Direction.values()) {
@@ -132,13 +139,13 @@ public class TileEntityNetwork<T extends TileEntity> {
 			// Get the tileentiy at the block position and check if it is in our set of
 			// valid tile entities. If it is, add it to the list.
 			TileEntity te = world.getTileEntity(testPos);
-			if (te != null && !te.isRemoved() && ValidTileEntityPredicate.test(te, facing)) {
+			if (te != null && !te.isRemoved() && ValidTileEntityPredicate.test(te, facing.getOpposite())) {
 				NetworkMap.put(testPos, (T) te);
 			}
 
 			// Now check if the provided position is valid to extend our network. If it is,
 			// recurse, if not, this was a terminus.
-			if (ValidExtenderPredicate.test(testPos, facing)) {
+			if (ValidExtenderPredicate.test(testPos, facing.getOpposite())) {
 				_updateNetworkWorker(visited, testPos);
 			}
 		}

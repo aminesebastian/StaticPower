@@ -5,6 +5,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import theking530.staticpower.tileentities.cables.power.BlockPowerCable;
 
 public class CableStateWrapper {
 	public enum CableConnectionState {

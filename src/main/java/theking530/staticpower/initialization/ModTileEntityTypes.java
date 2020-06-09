@@ -2,7 +2,8 @@ package theking530.staticpower.initialization;
 
 import net.minecraft.tileentity.TileEntityType;
 import theking530.staticpower.StaticPowerRegistry;
-import theking530.staticpower.tileentities.cables.TileEntityPowerCable;
+import theking530.staticpower.tileentities.cables.item.TileEntityItemCable;
+import theking530.staticpower.tileentities.cables.power.TileEntityPowerCable;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.TileEntityDigistore;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.ioport.TileEntityDigistoreIOPort;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.TileEntityDigistoreManager;
@@ -21,6 +22,7 @@ public class ModTileEntityTypes {
 	public static TileEntityType<TileEntityPoweredGrinder> POWERED_GRINDER;
 
 	public static TileEntityType<TileEntityPowerCable> POWER_CABLE;
+	public static TileEntityType<TileEntityItemCable> ITEM_CABLE;
 
 	public static TileEntityType<TileEntityDigistore> DIGISTORE;
 	public static TileEntityType<TileEntityDigistoreManager> DIGISTORE_MANAGER;
@@ -35,7 +37,8 @@ public class ModTileEntityTypes {
 		POWERED_GRINDER = StaticPowerRegistry.preRegisterTileEntity(TileEntityPoweredGrinder::new, ModBlocks.PoweredGrinder);
 
 		POWER_CABLE = StaticPowerRegistry.preRegisterTileEntity(TileEntityPowerCable::new, ModBlocks.PowerCable);
-		
+		ITEM_CABLE = StaticPowerRegistry.preRegisterTileEntity(TileEntityItemCable::new, ModBlocks.ItemCable);
+
 		DIGISTORE = StaticPowerRegistry.preRegisterTileEntity(TileEntityDigistore::new, ModBlocks.Digistore);
 		DIGISTORE_MANAGER = StaticPowerRegistry.preRegisterTileEntity(TileEntityDigistoreManager::new, ModBlocks.DigistoreManager);
 		DIGISTORE_IO_PORT = StaticPowerRegistry.preRegisterTileEntity(TileEntityDigistoreIOPort::new, ModBlocks.DigistoreIOPort);

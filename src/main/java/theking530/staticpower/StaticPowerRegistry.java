@@ -34,6 +34,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
@@ -48,6 +49,7 @@ import net.minecraftforge.fml.network.IContainerFactory;
 import theking530.staticpower.blocks.IBlockRenderLayerProvider;
 import theking530.staticpower.blocks.ICustomModelSupplier;
 import theking530.staticpower.blocks.IItemBlockProvider;
+import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.client.rendering.StaticPowerRendererTextures;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderDigistore;
 import theking530.staticpower.crafting.wrappers.AbstractRecipe;
@@ -72,6 +74,7 @@ public class StaticPowerRegistry {
 	private static final HashMap<IRecipeType, LinkedList<AbstractRecipe>> RECIPES = new HashMap<IRecipeType, LinkedList<AbstractRecipe>>();
 	private static final HashSet<FlowingFluid> FLUIDS = new HashSet<FlowingFluid>();
 	private static HashMap<ContainerType, IScreenFactory> SCREEN_FACTORIES = new HashMap<>();
+	private static final CustomRenderer TEST_RENDERER = new CustomRenderer();
 
 	/**
 	 * Pre-registers an item for registration through the registry event.
@@ -304,6 +307,11 @@ public class StaticPowerRegistry {
 			}
 		}
 		StaticPower.LOGGER.info(String.format("Registered %1$s Static Power sprites.", spriteCount));
+	}
+
+	@SubscribeEvent
+	public static void render(RenderWorldLastEvent event) {
+		TEST_RENDERER.render(event);
 	}
 
 	/**

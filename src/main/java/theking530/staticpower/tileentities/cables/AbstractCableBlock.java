@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -19,16 +18,14 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.energy.CapabilityEnergy;
 import theking530.staticpower.blocks.ICustomModelSupplier;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
 import theking530.staticpower.tileentities.StaticPowerTileEntityBlock;
 import theking530.staticpower.utilities.Reference;
 
-public class BlockPowerCable extends StaticPowerTileEntityBlock implements ICustomModelSupplier {
-	public static final ResourceLocation CORE = new ResourceLocation(Reference.MOD_ID, "block/cables/power/core");
-	public static final ResourceLocation STRAIGHT = new ResourceLocation(Reference.MOD_ID, "block/cables/power/straight");
-	public static final ResourceLocation EXTENSION = new ResourceLocation(Reference.MOD_ID, "block/cables/power/extension");
+public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock implements ICustomModelSupplier {
+	public final ResourceLocation StraightModel;
+	public final ResourceLocation Extension;
 
 	public static final BooleanProperty CABLE_NORTH = BooleanProperty.create("cable_north");
 	public static final BooleanProperty CABLE_SOUTH = BooleanProperty.create("cable_south");
@@ -44,16 +41,13 @@ public class BlockPowerCable extends StaticPowerTileEntityBlock implements ICust
 	public static final BooleanProperty ATTACHMENT_UP = BooleanProperty.create("attachment_up");
 	public static final BooleanProperty ATTACHMENT_DOWN = BooleanProperty.create("attachment_down");
 
-	public BlockPowerCable(String name) {
+	public AbstractCableBlock(String name, String modelFolder) {
 		super(name, Block.Properties.create(Material.IRON).notSolid());
+		StraightModel = new ResourceLocation(Reference.MOD_ID, "block/cables/" + modelFolder + "/straight");
+		Extension = new ResourceLocation(Reference.MOD_ID, "block/cables/" + modelFolder + "/extension");
 
 		setDefaultState(getDefaultState().with(CABLE_NORTH, false).with(CABLE_EAST, false).with(CABLE_SOUTH, false).with(CABLE_WEST, false).with(CABLE_UP, false).with(CABLE_DOWN, false)
 				.with(ATTACHMENT_NORTH, false).with(ATTACHMENT_EAST, false).with(ATTACHMENT_SOUTH, false).with(ATTACHMENT_WEST, false).with(ATTACHMENT_UP, false).with(ATTACHMENT_DOWN, false));
-	}
-
-	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new TileEntityPowerCable();
 	}
 
 	@Deprecated
@@ -75,9 +69,8 @@ public class BlockPowerCable extends StaticPowerTileEntityBlock implements ICust
 
 	@Override
 	public void registerAdditionalModels() {
-		ModelLoader.addSpecialModel(CORE);
-		ModelLoader.addSpecialModel(STRAIGHT);
-		ModelLoader.addSpecialModel(EXTENSION);
+		ModelLoader.addSpecialModel(StraightModel);
+		ModelLoader.addSpecialModel(Extension);
 	}
 
 	@Nullable
@@ -100,29 +93,29 @@ public class BlockPowerCable extends StaticPowerTileEntityBlock implements ICust
 				.with(ATTACHMENT_UP, isConnectedToAttachableInDirection(world, pos, Direction.UP)).with(ATTACHMENT_DOWN, isConnectedToAttachableInDirection(world, pos, Direction.DOWN));
 	}
 
-	protected boolean isConnectedToCableInDirection(IWorld world, BlockPos pos, Direction direction) {
-		if (world.getTileEntity(pos) instanceof TileEntityPowerCable) {
-			TileEntityPowerCable cable = (TileEntityPowerCable) world.getTileEntity(pos);
-			return cable.isValidExtenderForNetwork(pos.offset(direction), direction.getOpposite());
-		}
-		return false;
-	}
-
-	protected boolean isConnectedToAttachableInDirection(IWorld world, BlockPos pos, Direction direction) {
-		if (world.getTileEntity(pos.offset(direction)) != null) {
-			TileEntity attachable = world.getTileEntity(pos.offset(direction));
-			return attachable.getCapability(CapabilityEnergy.ENERGY, direction.getOpposite()).isPresent();
-		}
-		return false;
-	}
-
 	/**
 	 * The existing model will be the core model.
 	 */
 	@Override
 	public IBakedModel getModelOverride(BlockState state, @Nullable IBakedModel existingModel, ModelBakeEvent event) {
-		IBakedModel extensionModel = event.getModelRegistry().get(EXTENSION);
-		IBakedModel straightModel = event.getModelRegistry().get(STRAIGHT);
+		IBakedModel extensionModel = event.getModelRegistry().get(Extension);
+		IBakedModel straightModel = event.getModelRegistry().get(StraightModel);
 		return new CableBakedModel(existingModel, extensionModel, straightModel);
+	}
+
+	protected boolean isConnectedToCableInDirection(IWorld world, BlockPos pos, Direction direction) {
+		if (world.getTileEntity(pos) instanceof AbstractCableTileEntity) {
+			AbstractCableTileEntity cable = (AbstractCableTileEntity) world.getTileEntity(pos);
+			return cable.isValidCableForNetwork(pos.offset(direction), direction.getOpposite());
+		}
+		return false;
+	}
+
+	protected boolean isConnectedToAttachableInDirection(IWorld world, BlockPos pos, Direction direction) {
+		if (world.getTileEntity(pos) instanceof AbstractCableTileEntity && world.getTileEntity(pos.offset(direction)) != null) {
+			AbstractCableTileEntity cable = (AbstractCableTileEntity) world.getTileEntity(pos);
+			return cable.isValidDestinationForNetwork(world.getTileEntity(pos.offset(direction)), direction.getOpposite());
+		}
+		return false;
 	}
 }
