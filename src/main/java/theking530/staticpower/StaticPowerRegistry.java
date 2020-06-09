@@ -169,15 +169,20 @@ public class StaticPowerRegistry {
 		// If the block does not request the standard solid render type, set the new
 		// render type for the block.
 		for (Block block : BLOCKS) {
-			// Skip non static power blocks.
-			if (!(block instanceof IBlockRenderLayerProvider)) {
-				continue;
-			}
 
 			// Check and update the render type as needed.
-			IBlockRenderLayerProvider renderLayerProvider = (IBlockRenderLayerProvider) block;
-			if (renderLayerProvider.getRenderType() != RenderType.getSolid()) {
-				RenderTypeLookup.setRenderLayer(block, renderLayerProvider.getRenderType());
+			if (block instanceof IBlockRenderLayerProvider) {
+				IBlockRenderLayerProvider renderLayerProvider = (IBlockRenderLayerProvider) block;
+				if (renderLayerProvider.getRenderType() != RenderType.getSolid()) {
+					RenderTypeLookup.setRenderLayer(block, renderLayerProvider.getRenderType());
+				}
+			}
+
+			// Check to see if we should register any additional models.
+			if (block instanceof ICustomModelSupplier) {
+				// Get the supplier.
+				ICustomModelSupplier supplier = ((ICustomModelSupplier) block);
+				supplier.registerAdditionalModels();
 			}
 		}
 
@@ -267,25 +272,21 @@ public class StaticPowerRegistry {
 		for (Block block : BLOCKS) {
 			if (block instanceof ICustomModelSupplier) {
 
-				// Get the supplier and see if has any overrides.
+				// Get the supplier.
 				ICustomModelSupplier supplier = ((ICustomModelSupplier) block);
-				if (supplier.hasModelOverride()) {
 
-					// Loop through all the blockstates and override their models.
-					for (BlockState blockState : block.getStateContainer().getValidStates()) {
+				// Loop through all the blockstates and override their models if they have an
+				// override.
+				for (BlockState blockState : block.getStateContainer().getValidStates()) {
+					if (supplier.hasModelOverride(blockState)) {
 						// Get the existing model.
 						ModelResourceLocation variantMRL = BlockModelShapes.getModelLocation(blockState);
 						IBakedModel existingModel = event.getModelRegistry().get(variantMRL);
-
-						if (existingModel instanceof ICustomModelSupplier) {
-							StaticPower.LOGGER.warn("Tried to replace %1$s's model twice.", block.getNameTextComponent().getFormattedText());
+						IBakedModel override = supplier.getModelOverride(blockState, existingModel, event);
+						if (override != null) {
+							event.getModelRegistry().put(variantMRL, override);
 						} else {
-							IBakedModel override = supplier.getModelOverride(existingModel);
-							if (override != null) {
-								event.getModelRegistry().put(variantMRL, override);
-							} else {
-								StaticPower.LOGGER.error(String.format("Encountered null model override for block: %1$s.", block.getNameTextComponent().getFormattedText()));
-							}
+							StaticPower.LOGGER.error(String.format("Encountered null model override for block: %1$s.", block.getNameTextComponent().getFormattedText()));
 						}
 					}
 				}
@@ -302,7 +303,7 @@ public class StaticPowerRegistry {
 				spriteCount++;
 			}
 		}
-		StaticPower.LOGGER.info("Registered %1$s Static Power sprites.", spriteCount);
+		StaticPower.LOGGER.info(String.format("Registered %1$s Static Power sprites.", spriteCount));
 	}
 
 	/**

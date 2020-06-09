@@ -1,5 +1,5 @@
 {
     "variants": {
-        "": { "model": "staticpower:block/cables/cable_power" }
+        "": { "model": "staticpower:block/cables/power/core", "uvlock": true }
     }
 }

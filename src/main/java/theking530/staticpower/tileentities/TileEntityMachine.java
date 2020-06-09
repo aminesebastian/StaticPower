@@ -42,7 +42,6 @@ public abstract class TileEntityMachine extends TileEntityBase {
 		if (disableFaceInteraction && ioSideConfiguration.getWorldSpaceDirectionConfiguration(relativeSpaceSide) != MachineSideMode.Never) {
 			ioSideConfiguration.setWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, getFacingDirection()), MachineSideMode.Never);
 		}
-		markTileEntityForSynchronization();
 	}
 
 	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {

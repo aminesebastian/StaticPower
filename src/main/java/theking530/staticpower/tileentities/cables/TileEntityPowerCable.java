@@ -68,7 +68,10 @@ public class TileEntityPowerCable extends TileEntityBase {
 		}
 	}
 
-	private boolean isValidTileEntityForNetwork(TileEntity tileEntity, Direction dir) {
+	public boolean isValidTileEntityForNetwork(TileEntity tileEntity, Direction dir) {
+		if (tileEntity == null) {
+			return false;
+		}
 		// If the tile entity is another power cable, don't consider supplying it with
 		// power.
 		if (tileEntity instanceof TileEntityPowerCable) {
@@ -76,7 +79,7 @@ public class TileEntityPowerCable extends TileEntityBase {
 		}
 
 		// Get the energy storage. If it is not present, return false.
-		LazyOptional<IEnergyStorage> energy = tileEntity.getCapability(CapabilityEnergy.ENERGY, dir);
+		LazyOptional<IEnergyStorage> energy = tileEntity.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite());
 		if (!energy.isPresent()) {
 			return false;
 		}
@@ -89,7 +92,7 @@ public class TileEntityPowerCable extends TileEntityBase {
 		return canRecieve.get();
 	}
 
-	private boolean isValidExtenderForNetwork(BlockPos position, Direction dir) {
+	public boolean isValidExtenderForNetwork(BlockPos position, Direction dir) {
 		if (world.getTileEntity(position) instanceof TileEntityPowerCable) {
 			return true;
 		}

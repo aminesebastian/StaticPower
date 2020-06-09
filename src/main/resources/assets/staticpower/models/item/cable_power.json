@@ -1,0 +1,57 @@
+{
+	"parent": "staticpower:block/cables/power/core",
+	"transform": {
+		"gui": {
+			"rotation": [
+				30,
+				225,
+				0
+			],
+			"translation": [
+				-4.16,
+				0.94,
+				0.0
+			],
+			"scale": [
+				2.25,
+				2.25,
+				2.25
+			]
+		},
+		"ground": {
+			"scale": [
+				1.0,
+				1.0,
+				1.0
+			]
+		},
+		"firstperson_righthand": {
+			"scale": [
+				1.0,
+				1.0,
+				1.0
+			]
+		},
+		"firstperson_lefthand": {
+			"scale": [
+				1.0,
+				1.0,
+				1.0
+			]
+		},
+		"thirdperson_righthand": {
+			"scale": [
+				1.0,
+				1.0,
+				1.0
+			]
+		},
+		"thirdperson_lefthand": {
+			"scale": [
+				1.0,
+				1.0,
+				1.0
+			]
+		}
+	}
+}
