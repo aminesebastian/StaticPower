@@ -5,11 +5,8 @@ import org.apache.logging.log4j.Logger;
 
 import net.minecraft.item.ItemGroup;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import theking530.staticpower.initialization.ModBlocks;
 import theking530.staticpower.initialization.ModContainerTypes;
 import theking530.staticpower.initialization.ModFluids;
@@ -34,17 +31,5 @@ public class StaticPower {
 		ModNetworkMessages.init();
 		ModTileEntityTypes.init();
 		ModContainerTypes.init();
-	}
-
-	@SubscribeEvent
-	public static void setup(final FMLCommonSetupEvent event) {
-		LOGGER.info("Performing Static Power Common Setup");
-		StaticPowerRegistry.onCommonSetupEvent(event);
-	}
-
-	@SubscribeEvent
-	public static void clientSetup(final FMLClientSetupEvent event) {
-		LOGGER.info("Performing Static Power Client Side Setup");
-		StaticPowerRegistry.onClientSetupEvent(event);
 	}
 }

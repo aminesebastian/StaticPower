@@ -5,13 +5,13 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
-import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.client.container.slots.BatterySlot;
 import theking530.staticpower.client.container.slots.OutputSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.client.container.slots.UpgradeSlot;
 import theking530.staticpower.crafting.wrappers.RecipeMatchParameters;
+import theking530.staticpower.crafting.wrappers.StaticPowerRecipeRegistry;
 import theking530.staticpower.crafting.wrappers.grinder.GrinderRecipe;
 import theking530.staticpower.initialization.ModContainerTypes;
 import theking530.staticpower.items.upgrades.BaseUpgrade;
@@ -33,7 +33,7 @@ public class ContainerPoweredGrinder extends StaticPowerTileEntityContainer<Tile
 		this.addSlot(new StaticPowerContainerSlot(getTileEntity().inputInventory.getInventory(), 0, 80, 18) {
 			@Override
 			public boolean isItemValid(ItemStack itemStack) {
-				return StaticPowerRegistry.getRecipe(GrinderRecipe.RECIPE_TYPE, new RecipeMatchParameters(itemStack)).isPresent();
+				return StaticPowerRecipeRegistry.getRecipe(GrinderRecipe.RECIPE_TYPE, new RecipeMatchParameters(itemStack)).isPresent();
 			}
 		});
 

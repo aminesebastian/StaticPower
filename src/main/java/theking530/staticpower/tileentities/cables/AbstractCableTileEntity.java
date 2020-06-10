@@ -1,29 +1,30 @@
 package theking530.staticpower.tileentities.cables;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.network.TileEntityNetwork;
+import theking530.staticpower.tileentities.network.CableNetworkManager;
 
-public abstract class AbstractCableTileEntity extends TileEntityBase {
-	/**
-	 * The container to keep track of the network. This only exists on the server.
-	 */
-	protected TileEntityNetwork<TileEntity> network;
+public abstract class AbstractCableTileEntity<T extends AbstractCableWrapper> extends TileEntityBase {
+	private T Wrapper;
 
 	public AbstractCableTileEntity(TileEntityType<?> teType) {
 		super(teType);
 	}
 
-	@Override
-	public void onInitializedInWorld(World world, BlockPos pos) {
-		super.onInitializedInWorld(world, pos);
-		if (!world.isRemote()) {
-			makeNetwork();
+	/**
+	 * Checks to make sure that this cable is being properly tracked, and if not,
+	 * registers it for tracking.
+	 */
+	public void validateTrackedByNetwork() {
+		// If we're on the server, check to see if the cable network manager for this
+		// world is tracking a cable at this position. If it is not, add this cable for
+		// tracking.
+		if (!world.isRemote) {
+			CableNetworkManager manager = CableNetworkManager.get(world);
+			if (!manager.isTrackingCable(pos)) {
+				manager.addCable(getWrapper());
+			}
 		}
 	}
 
@@ -32,13 +33,12 @@ public abstract class AbstractCableTileEntity extends TileEntityBase {
 		super.onBlockBroken(state, newState, isMoving);
 	}
 
-	protected void makeNetwork() {
-		if (!world.isRemote()) {
-			network = new TileEntityNetwork<TileEntity>(getWorld(), this::isValidDestinationForNetwork, this::isValidCableForNetwork);
+	public T getWrapper() {
+		if (Wrapper == null) {
+			Wrapper = createWrapper();
 		}
+		return Wrapper;
 	}
 
-	public abstract boolean isValidDestinationForNetwork(TileEntity tileEntity, Direction dir);
-
-	public abstract boolean isValidCableForNetwork(BlockPos position, Direction dir);
+	public abstract T createWrapper();
 }

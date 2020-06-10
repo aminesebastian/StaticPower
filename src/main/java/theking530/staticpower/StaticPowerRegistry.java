@@ -1,80 +1,40 @@
 package theking530.staticpower;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.gui.ScreenManager.IScreenFactory;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.renderer.BlockModelShapes;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ModelResourceLocation;
-import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.fluid.FlowingFluid;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.client.event.RecipesUpdatedEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DeferredWorkQueue;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.network.IContainerFactory;
-import theking530.staticpower.blocks.IBlockRenderLayerProvider;
-import theking530.staticpower.blocks.ICustomModelSupplier;
 import theking530.staticpower.blocks.IItemBlockProvider;
-import theking530.staticpower.client.rendering.CustomRenderer;
-import theking530.staticpower.client.rendering.StaticPowerRendererTextures;
-import theking530.staticpower.client.rendering.tileentity.TileEntityRenderDigistore;
-import theking530.staticpower.crafting.wrappers.AbstractRecipe;
-import theking530.staticpower.crafting.wrappers.RecipeMatchParameters;
-import theking530.staticpower.crafting.wrappers.grinder.GrinderRecipeSerializer;
-import theking530.staticpower.initialization.ModTileEntityTypes;
-import theking530.staticpower.utilities.Reference;
 
 /**
- * Main registry class responsible for preparing entites for registration.
+ * Main registry class responsible for preparing entities for registration and
+ * then registering them.
  * 
  * @author Amine Sebastian
  *
  */
-@Mod.EventBusSubscriber(modid = Reference.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
-@SuppressWarnings({ "rawtypes", "deprecation" })
+@SuppressWarnings({ "rawtypes" })
 public class StaticPowerRegistry {
-	private static final HashSet<Item> ITEMS = new HashSet<>();
-	private static final HashSet<Block> BLOCKS = new HashSet<>();
-	private static final HashSet<TileEntityType<?>> TILE_ENTITY_TYPES = new HashSet<>();
-	private static final HashSet<ContainerType<? extends Container>> CONTAINER_TYPES = new HashSet<>();
-	private static final HashMap<IRecipeType, LinkedList<AbstractRecipe>> RECIPES = new HashMap<IRecipeType, LinkedList<AbstractRecipe>>();
-	private static final HashSet<FlowingFluid> FLUIDS = new HashSet<FlowingFluid>();
-	private static HashMap<ContainerType, IScreenFactory> SCREEN_FACTORIES = new HashMap<>();
-	private static final CustomRenderer TEST_RENDERER = new CustomRenderer();
+	public static final HashSet<Item> ITEMS = new HashSet<>();
+	public static final HashSet<Block> BLOCKS = new HashSet<>();
+	public static final HashSet<TileEntityType<?>> TILE_ENTITY_TYPES = new HashSet<>();
+	public static final HashSet<ContainerType<? extends Container>> CONTAINER_TYPES = new HashSet<>();
+	public static final HashSet<FlowingFluid> FLUIDS = new HashSet<FlowingFluid>();
+	public static HashMap<ContainerType, IScreenFactory> SCREEN_FACTORIES = new HashMap<>();
 
 	/**
 	 * Pre-registers an item for registration through the registry event.
@@ -154,214 +114,33 @@ public class StaticPowerRegistry {
 		return containerType;
 	}
 
-	/**
-	 * This event is raised by the common setup event.
-	 * 
-	 * @param event The common setup event.
-	 */
-	public static void onCommonSetupEvent(FMLCommonSetupEvent event) {
-		StaticPower.LOGGER.info("Static Power Common Setup Completed!");
-	}
-
-	/**
-	 * This event is raised by the client setup event.
-	 * 
-	 * @param event The client setup event.
-	 */
-	public static void onClientSetupEvent(FMLClientSetupEvent event) {
-		// If the block does not request the standard solid render type, set the new
-		// render type for the block.
-		for (Block block : BLOCKS) {
-
-			// Check and update the render type as needed.
-			if (block instanceof IBlockRenderLayerProvider) {
-				IBlockRenderLayerProvider renderLayerProvider = (IBlockRenderLayerProvider) block;
-				if (renderLayerProvider.getRenderType() != RenderType.getSolid()) {
-					RenderTypeLookup.setRenderLayer(block, renderLayerProvider.getRenderType());
-				}
-			}
-
-			// Check to see if we should register any additional models.
-			if (block instanceof ICustomModelSupplier) {
-				// Get the supplier.
-				ICustomModelSupplier supplier = ((ICustomModelSupplier) block);
-				supplier.registerAdditionalModels();
-			}
-		}
-
-		// Initialize the guis.
-		initializeGui();
-
-		// Temp TESR
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.DIGISTORE, TileEntityRenderDigistore::new);
-
-		// Log the completion.
-		StaticPower.LOGGER.info("Static Power Client Setup Completed!");
-	}
-
-	/**
-	 * This event is raised when the resources are loaded/reloaded.
-	 */
-	@SubscribeEvent
-	public static void onResourcesReloaded(RecipesUpdatedEvent event) {
-		// Capture if this is the first time we are caching.
-		boolean firstTime = RECIPES.size() == 0;
-
-		// Log that caching has started.
-		StaticPower.LOGGER.info(String.format("%1$s Static Power recipes.", (firstTime ? "caching" : "re-caching")));
-
-		// Clear the recipes list.
-		RECIPES.clear();
-
-		// Keep track of how many recipes are cached.
-		int recipeCount = 0;
-
-		// Iterate through all the recipes and cache the Static Power ones.
-		Collection<IRecipe<?>> recipes = event.getRecipeManager().getRecipes();
-		for (IRecipe<?> recipe : recipes) {
-			if (recipe instanceof AbstractRecipe) {
-				addRecipe((AbstractRecipe) recipe);
-				recipeCount++;
-			}
-		}
-
-		// Log the completion.
-		StaticPower.LOGGER.info(String.format("Succesfully %1$s %2$d Static Power recipes.", (firstTime ? "cached" : "re-cached"), recipeCount));
-	}
-
-	@SubscribeEvent
 	public static void onRegisterItems(RegistryEvent.Register<Item> event) {
 		for (Item item : ITEMS) {
 			event.getRegistry().register(item);
 		}
 	}
 
-	@SubscribeEvent
 	public static void onRegisterBlocks(RegistryEvent.Register<Block> event) {
 		for (Block block : BLOCKS) {
 			event.getRegistry().register(block);
 		}
 	}
 
-	@SubscribeEvent
 	public static void onRegisterFluids(RegistryEvent.Register<Fluid> event) {
 		for (Fluid fluid : FLUIDS) {
 			event.getRegistry().register(fluid);
 		}
 	}
 
-	@SubscribeEvent
 	public static void onRegisterTileEntityTypes(RegistryEvent.Register<TileEntityType<?>> event) {
 		for (TileEntityType<?> teType : TILE_ENTITY_TYPES) {
 			event.getRegistry().register(teType);
 		}
 	}
 
-	@SubscribeEvent
 	public static void onRegisterContainerTypes(RegistryEvent.Register<ContainerType<?>> event) {
 		for (ContainerType<?> container : CONTAINER_TYPES) {
 			event.getRegistry().register(container);
 		}
-	}
-
-	@SubscribeEvent
-	public static void registerRecipeSerializers(RegistryEvent.Register<IRecipeSerializer<?>> event) {
-		event.getRegistry().register(GrinderRecipeSerializer.INSTANCE);
-	}
-
-	@SubscribeEvent
-	public static void onModelBakeEvent(ModelBakeEvent event) {
-		// Loop through all the blocks, and check to see if they are a model supplier.
-		for (Block block : BLOCKS) {
-			if (block instanceof ICustomModelSupplier) {
-
-				// Get the supplier.
-				ICustomModelSupplier supplier = ((ICustomModelSupplier) block);
-
-				// Loop through all the blockstates and override their models if they have an
-				// override.
-				for (BlockState blockState : block.getStateContainer().getValidStates()) {
-					if (supplier.hasModelOverride(blockState)) {
-						// Get the existing model.
-						ModelResourceLocation variantMRL = BlockModelShapes.getModelLocation(blockState);
-						IBakedModel existingModel = event.getModelRegistry().get(variantMRL);
-						IBakedModel override = supplier.getModelOverride(blockState, existingModel, event);
-						if (override != null) {
-							event.getModelRegistry().put(variantMRL, override);
-						} else {
-							StaticPower.LOGGER.error(String.format("Encountered null model override for block: %1$s.", block.getNameTextComponent().getFormattedText()));
-						}
-					}
-				}
-			}
-		}
-	}
-
-	@SubscribeEvent
-	public static void onTextureStitchEvent(TextureStitchEvent.Pre event) {
-		int spriteCount = 0;
-		if (event.getMap().getTextureLocation() == AtlasTexture.LOCATION_BLOCKS_TEXTURE) {
-			for (ResourceLocation sprite : StaticPowerRendererTextures.SPRITES) {
-				event.addSprite(sprite);
-				spriteCount++;
-			}
-		}
-		StaticPower.LOGGER.info(String.format("Registered %1$s Static Power sprites.", spriteCount));
-	}
-
-	@SubscribeEvent
-	public static void render(RenderWorldLastEvent event) {
-		TEST_RENDERER.render(event);
-	}
-
-	/**
-	 * Attempts to find a recipe of the given type that matches the provided
-	 * parameters.
-	 * 
-	 * @param <T>             The type of the recipe.
-	 * @param recipeType      The {@link IRecipeType} of the recipe.
-	 * @param matchParameters The match parameters to used.
-	 * @return Optional of the recipe if it exists, otherwise empty.
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T extends AbstractRecipe> Optional<T> getRecipe(IRecipeType<T> recipeType, RecipeMatchParameters matchParameters) {
-		// If no recipes of this type exist, return empty.
-		if (!RECIPES.containsKey(recipeType)) {
-			return Optional.empty();
-		}
-
-		// Iterate through the recipe linked list and return the first instance that
-		// matches.
-		for (AbstractRecipe recipe : RECIPES.get(recipeType)) {
-			if (recipe.isValid(matchParameters)) {
-				return Optional.of((T) recipe);
-			}
-		}
-
-		// If we find no match, return empty.
-		return Optional.empty();
-	}
-
-	/**
-	 * Adds a recipe to the recipes list.
-	 * 
-	 * @param recipe
-	 */
-	private static void addRecipe(AbstractRecipe recipe) {
-		if (!RECIPES.containsKey(recipe.getType())) {
-			RECIPES.put(recipe.getType(), new LinkedList<AbstractRecipe>());
-		}
-		RECIPES.get(recipe.getType()).add(recipe);
-	}
-
-	@SuppressWarnings({ "unchecked" })
-	@OnlyIn(Dist.CLIENT)
-	private static void initializeGui() {
-		DeferredWorkQueue.runLater(() -> {
-			SCREEN_FACTORIES.forEach((containerType, screenFactory) -> {
-				ScreenManager.registerFactory(containerType, screenFactory);
-			});
-			StaticPower.LOGGER.info("Registered all Static Power container types.");
-		});
 	}
 }

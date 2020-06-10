@@ -16,8 +16,8 @@ import net.minecraft.util.text.TranslationTextComponent;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.initialization.ModBlocks;
 import theking530.staticpower.initialization.ModTileEntityTypes;
+import theking530.staticpower.tileentities.TileEntityNetwork;
 import theking530.staticpower.tileentities.components.InventoryComponent;
-import theking530.staticpower.tileentities.network.TileEntityNetwork;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.BaseDigistoreTileEntity;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 

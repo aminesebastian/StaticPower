@@ -105,16 +105,16 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 
 	protected boolean isConnectedToCableInDirection(IWorld world, BlockPos pos, Direction direction) {
 		if (world.getTileEntity(pos) instanceof AbstractCableTileEntity) {
-			AbstractCableTileEntity cable = (AbstractCableTileEntity) world.getTileEntity(pos);
-			return cable.isValidCableForNetwork(pos.offset(direction), direction.getOpposite());
+			AbstractCableTileEntity<?> cable = (AbstractCableTileEntity<?>) world.getTileEntity(pos);
+			return cable.getWrapper().isConnectedToCableOnSide(direction);
 		}
 		return false;
 	}
 
 	protected boolean isConnectedToAttachableInDirection(IWorld world, BlockPos pos, Direction direction) {
 		if (world.getTileEntity(pos) instanceof AbstractCableTileEntity && world.getTileEntity(pos.offset(direction)) != null) {
-			AbstractCableTileEntity cable = (AbstractCableTileEntity) world.getTileEntity(pos);
-			return cable.isValidDestinationForNetwork(world.getTileEntity(pos.offset(direction)), direction.getOpposite());
+			AbstractCableTileEntity<?> cable = (AbstractCableTileEntity<?>) world.getTileEntity(pos);
+			return cable.getWrapper().isAttachedOnSide(direction);
 		}
 		return false;
 	}

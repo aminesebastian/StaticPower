@@ -7,8 +7,8 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import theking530.api.utilities.SDMath;
-import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.crafting.wrappers.RecipeMatchParameters;
+import theking530.staticpower.crafting.wrappers.StaticPowerRecipeRegistry;
 import theking530.staticpower.crafting.wrappers.grinder.GrinderRecipe;
 import theking530.staticpower.crafting.wrappers.grinder.GrinderRecipe.GrinderOutput;
 import theking530.staticpower.initialization.ModTileEntityTypes;
@@ -68,7 +68,7 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 	 * @return
 	 */
 	public Optional<GrinderRecipe> getRecipe(ItemStack itemStackInput) {
-		return StaticPowerRegistry.getRecipe(GrinderRecipe.RECIPE_TYPE, new RecipeMatchParameters(itemStackInput));
+		return StaticPowerRecipeRegistry.getRecipe(GrinderRecipe.RECIPE_TYPE, new RecipeMatchParameters(itemStackInput));
 	}
 
 	@Override
