@@ -18,8 +18,8 @@ import net.minecraft.world.ILightReader;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
-import theking530.staticpower.tileentities.cables.CableStateWrapper;
-import theking530.staticpower.tileentities.cables.CableStateWrapper.CableConnectionState;
+import theking530.staticpower.tileentities.network.CableStateWrapper;
+import theking530.staticpower.tileentities.network.CableStateWrapper.CableConnectionState;
 
 public class CableBakedModel extends AbstractBakedModel {
 	private static final ModelProperty<CableStateWrapper> CABLE_STATE = new ModelProperty<>();

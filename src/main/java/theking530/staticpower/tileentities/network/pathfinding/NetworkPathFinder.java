@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.network;
+package theking530.staticpower.tileentities.network.pathfinding;
 
 import java.util.ArrayList;
 import java.util.Collections;

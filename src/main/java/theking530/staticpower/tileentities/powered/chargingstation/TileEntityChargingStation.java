@@ -31,21 +31,21 @@ public class TileEntityChargingStation extends TileEntityMachine {
 		registerComponent(batterySlot = new InventoryComponent("batterySlot", 1, MachineSideMode.Never));
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
 
-		registerComponent(new BatteryComponent("BatteryComponent", batterySlot.getInventory(), 0, energyStorage));
+		registerComponent(new BatteryComponent("BatteryComponent", batterySlot.getInventory(), 0, energyStorage.getStorage()));
 		registerComponent(new OutputServoComponent("OutputServo", 1, chargedInventory, 0, 1, 2, 3));
 		registerComponent(new InputServoComponent("InputServo", 2, unchargedInventory, 0, 1, 2, 3));
 	}
 
 	@Override
 	public void process() {
-		if (energyStorage.getEnergyStored() > 0) {
+		if (energyStorage.getStorage().getEnergyStored() > 0) {
 			for (int i = 0; i < unchargedInventory.getSlotCount(); i++) {
 				ItemStack stack = unchargedInventory.getStackInSlot(i);
 				if (stack != ItemStack.EMPTY && EnergyHandlerItemStackUtilities.isEnergyContainer(stack)) {
 					if (EnergyHandlerItemStackUtilities.getEnergyStored(stack) < EnergyHandlerItemStackUtilities.getEnergyStorageCapacity(stack)) {
-						int maxOutput = energyStorage.getCurrentMaximumPowerOutput();
+						int maxOutput = energyStorage.getStorage().getCurrentMaximumPowerOutput();
 						int charged = EnergyHandlerItemStackUtilities.addEnergyToItemstack(stack, maxOutput, false);
-						energyStorage.extractEnergy(charged, false);
+						energyStorage.getStorage().extractEnergy(charged, false);
 					} else {
 						moveChargedItemToOutputs(i);
 					}

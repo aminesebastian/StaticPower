@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.cables;
+package theking530.staticpower.tileentities.network;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

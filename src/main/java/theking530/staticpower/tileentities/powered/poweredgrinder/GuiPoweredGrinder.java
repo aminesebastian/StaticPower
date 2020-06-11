@@ -23,7 +23,7 @@ public class GuiPoweredGrinder extends StaticPowerTileEntityGui<ContainerPowered
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage, 8, 8, 16, 54));
+		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 54));
 		registerWidget(new GrinderProgressBar(79, 38, 18, 17).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
 		getTabManager().registerTab(infoTab = new GuiInfoTab(100, 60));

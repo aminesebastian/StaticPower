@@ -50,10 +50,8 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	protected final static Random RANDOM = new Random();
 	private boolean isValid;
 
-	protected boolean disableFaceInteraction;
-	public boolean wasWrenchedDoNotBreak;
-
-	private HashMap<String, AbstractTileEntityComponent> components;
+	protected boolean DisableFaceInteraction;
+	private HashMap<String, AbstractTileEntityComponent> Components;
 
 	@SuppressWarnings("unused")
 	private int updateTimer = 0;
@@ -69,8 +67,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 
 	public TileEntityBase(TileEntityType<?> teType) {
 		super(teType);
-		components = new HashMap<String, AbstractTileEntityComponent>();
-		wasWrenchedDoNotBreak = false;
+		Components = new HashMap<String, AbstractTileEntityComponent>();
 		updateQueued = false;
 		isValid = true;
 		disableFaceInteraction();
@@ -80,7 +77,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 * Disables pipe interaction with the face of this block.
 	 */
 	public void disableFaceInteraction() {
-		disableFaceInteraction = true;
+		DisableFaceInteraction = true;
 	}
 
 	@Override
@@ -107,6 +104,22 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		onInitializedInWorld(world, pos);
 	}
 
+	@Override
+	public void validate() {
+		super.validate();
+		for (AbstractTileEntityComponent component : Components.values()) {
+			component.onOwningTileEntityValidate();
+		}
+	}
+
+	@Override
+	public void remove() {
+		super.remove();
+		for (AbstractTileEntityComponent component : Components.values()) {
+			component.onOwningTileEntityRemoved();
+		}
+	}
+
 	/**
 	 * This method is raised on tick after the component have had their
 	 * {@link #AbstractTileEntityComponent.preProcessUpdate()} and before they've
@@ -124,7 +137,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 
 	public void onPlaced(BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
 		if (hasComponentOfType(SideConfigurationComponent.class)) {
-			if (disableFaceInteraction) {
+			if (DisableFaceInteraction) {
 				getComponent(SideConfigurationComponent.class).setWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, getFacingDirection()),
 						MachineSideMode.Never);
 			}
@@ -224,7 +237,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		for (AbstractTileEntityComponent comp : components.values()) {
+		for (AbstractTileEntityComponent comp : Components.values()) {
 			LazyOptional<T> capability = comp.provideCapability(cap, side);
 			if (capability.isPresent()) {
 				return capability;
@@ -240,7 +253,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 * @param component The component to register.
 	 */
 	public void registerComponent(AbstractTileEntityComponent component) {
-		components.put(component.getComponentName(), component);
+		Components.put(component.getComponentName(), component);
 		component.onRegistered(this);
 	}
 
@@ -251,7 +264,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 * @return True if the component was removed, false otherwise.
 	 */
 	public boolean removeComponent(AbstractTileEntityComponent component) {
-		return components.remove(component.getComponentName()) != null;
+		return Components.remove(component.getComponentName()) != null;
 	}
 
 	/**
@@ -260,7 +273,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 * @return The list of all components registered to this tile entity.
 	 */
 	public Collection<AbstractTileEntityComponent> getComponents() {
-		return components.values();
+		return Components.values();
 	}
 
 	/**
@@ -273,7 +286,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	@SuppressWarnings("unchecked")
 	public <T extends AbstractTileEntityComponent> List<T> getComponents(Class<T> type) {
 		List<T> output = new ArrayList<>();
-		for (AbstractTileEntityComponent component : components.values()) {
+		for (AbstractTileEntityComponent component : Components.values()) {
 			if (type.isInstance(component)) {
 				output.add((T) component);
 			}
@@ -292,8 +305,8 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	@SuppressWarnings("unchecked")
 	public <T extends AbstractTileEntityComponent> T getComponent(Class<T> type, String componentName) {
 		;
-		if (components.containsKey(componentName)) {
-			return (T) components.get(componentName);
+		if (Components.containsKey(componentName)) {
+			return (T) Components.get(componentName);
 		}
 		return null;
 	}
@@ -310,7 +323,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends AbstractTileEntityComponent> T getComponent(Class<T> type) {
-		for (AbstractTileEntityComponent component : components.values()) {
+		for (AbstractTileEntityComponent component : Components.values()) {
 			if (type.isInstance(component)) {
 				return (T) component;
 			}
@@ -326,7 +339,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 *         false otherwise.
 	 */
 	public <T extends AbstractTileEntityComponent> boolean hasComponentOfType(Class<T> type) {
-		for (AbstractTileEntityComponent component : components.values()) {
+		for (AbstractTileEntityComponent component : Components.values()) {
 			if (type.isInstance(component)) {
 				return true;
 			}
@@ -339,7 +352,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 */
 	private void preProcessUpdateComponents() {
 		try {
-			for (AbstractTileEntityComponent component : components.values()) {
+			for (AbstractTileEntityComponent component : Components.values()) {
 				component.preProcessUpdate();
 			}
 		} catch (Exception e) {
@@ -353,7 +366,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 */
 	private void postProcessUpdateComponents() {
 		try {
-			for (AbstractTileEntityComponent component : components.values()) {
+			for (AbstractTileEntityComponent component : Components.values()) {
 				component.postProcessUpdate();
 			}
 		} catch (Exception e) {
@@ -385,7 +398,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		// Serialize each component to its own NBT tag and then add that to the master
 		// tag. Catch errors on a per component basis to prevent one component from
 		// breaking all the rest.
-		for (AbstractTileEntityComponent component : components.values()) {
+		for (AbstractTileEntityComponent component : Components.values()) {
 			try {
 				CompoundNBT componentTag = new CompoundNBT();
 				component.serializeUpdateNbt(componentTag);
@@ -395,7 +408,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 						component.getComponentName(), getDisplayName().getFormattedText(), pos), e);
 			}
 		}
-		nbt.putBoolean("DISABLE_FACE", disableFaceInteraction);
+		nbt.putBoolean("DISABLE_FACE", DisableFaceInteraction);
 		return nbt;
 	}
 
@@ -408,7 +421,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	public void deserializeUpdateNbt(CompoundNBT nbt) {
 		// Iterate through all the components and deserialize each one. Catch errors on
 		// a per component basis to prevent one component from breaking all the rest.
-		for (AbstractTileEntityComponent component : components.values()) {
+		for (AbstractTileEntityComponent component : Components.values()) {
 			try {
 				if (nbt.contains(component.getComponentName())) {
 					component.deserializeUpdateNbt(nbt.getCompound(component.getComponentName()));
@@ -418,7 +431,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 						component.getComponentName(), getDisplayName().getFormattedText(), pos), e);
 			}
 		}
-		disableFaceInteraction = nbt.getBoolean("DISABLE_FACE");
+		DisableFaceInteraction = nbt.getBoolean("DISABLE_FACE");
 	}
 
 	/**
@@ -437,7 +450,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		// Serialize each component to its own NBT tag and then add that to the master
 		// tag. Catch errors on a per component basis to prevent one component from
 		// breaking all the rest.
-		for (AbstractTileEntityComponent component : components.values()) {
+		for (AbstractTileEntityComponent component : Components.values()) {
 			try {
 				CompoundNBT componentTag = new CompoundNBT();
 				component.serializeSaveNbt(componentTag);
@@ -460,7 +473,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	public void deserializeSaveNbt(CompoundNBT nbt) {
 		// Iterate through all the components and deserialize each one. Catch errors on
 		// a per component basis to prevent one component from breaking all the rest.
-		for (AbstractTileEntityComponent component : components.values()) {
+		for (AbstractTileEntityComponent component : Components.values()) {
 			try {
 				if (nbt.contains(component.getComponentName())) {
 					component.deserializeSaveNbt(nbt.getCompound(component.getComponentName()));

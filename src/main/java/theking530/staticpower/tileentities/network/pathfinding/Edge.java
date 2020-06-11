@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.network;
+package theking530.staticpower.tileentities.network.pathfinding;
 
 public class Edge<T> {
 	private final String ID;

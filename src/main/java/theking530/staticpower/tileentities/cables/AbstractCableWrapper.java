@@ -1,8 +1,11 @@
 package theking530.staticpower.tileentities.cables;
 
+import java.util.Objects;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import theking530.staticpower.tileentities.network.CableNetwork;
@@ -15,14 +18,20 @@ public abstract class AbstractCableWrapper {
 	protected CableAttachmentType[] Attachments;
 	protected CableNetwork Network;
 	protected final World World;
-	protected final CableType Type;
+	protected final ResourceLocation Type;
 	private final BlockPos Position;
 
-	public AbstractCableWrapper(World world, BlockPos position, CableType type) {
+	public AbstractCableWrapper(World world, BlockPos position, ResourceLocation type) {
 		Position = position;
 		World = world;
 		Attachments = new CableAttachmentType[6];
 		Type = type;
+	}
+
+	public void tick() {
+		if (World.getTileEntity(Position) == null) {
+			System.out.println("HOW"); // Replace with log/auto repair later.
+		}
 	}
 
 	public BlockPos getPos() {
@@ -42,6 +51,10 @@ public abstract class AbstractCableWrapper {
 		updateCableBlock();
 	}
 
+	public ResourceLocation getType() {
+		return Type;
+	}
+
 	public void onNetworkLeft() {
 		Network = null;
 		updateCableBlock();
@@ -52,13 +65,27 @@ public abstract class AbstractCableWrapper {
 		World.notifyBlockUpdate(Position, state, state, 1 | 2);
 	}
 
-	public abstract boolean isAttachedOnSide(Direction direction);
-
-	public abstract boolean isConnectedToCableOnSide(Direction direction);
+	public abstract CableAttachmentType getSideAttachmentType(Direction direction);
 
 	public CompoundNBT writeToNbt(CompoundNBT tag) {
 		tag.putLong("position", Position.toLong());
-		tag.putInt("type", Type.ordinal());
 		return tag;
+	}
+
+	@Override
+	public boolean equals(Object other) {
+		if (this == other) {
+			return true;
+		}
+		if (other == null || getClass() != other.getClass()) {
+			return false;
+		}
+		AbstractCableWrapper cable = (AbstractCableWrapper) other;
+		return World.equals(cable.World) && Position.equals(cable.Position);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(World, Position);
 	}
 }

@@ -55,7 +55,7 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory, 0));
 		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory, 0));
-		registerComponent(new BatteryComponent("BatteryComponent", internalInventory.getInventory(), 0, energyStorage));
+		registerComponent(new BatteryComponent("BatteryComponent", internalInventory.getInventory(), 0, energyStorage.getStorage()));
 	}
 
 	/**
@@ -80,9 +80,9 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 	@Override
 	public void process() {
 		if (processingComponent.isProcessing()) {
-			if (energyStorage.getEnergyStored() >= (DEFAULT_PROCESSING_COST / DEFAULT_PROCESSING_TIME)) {
+			if (energyStorage.getStorage().getEnergyStored() >= (DEFAULT_PROCESSING_COST / DEFAULT_PROCESSING_TIME)) {
 				processingComponent.continueProcessing();
-				energyStorage.extractEnergy(DEFAULT_PROCESSING_COST / DEFAULT_PROCESSING_TIME, false);
+				energyStorage.getStorage().extractEnergy(DEFAULT_PROCESSING_COST / DEFAULT_PROCESSING_TIME, false);
 			} else {
 				processingComponent.pauseProcessing();
 			}
@@ -101,7 +101,7 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 	 */
 	public boolean canStartProcess() {
 		if (hasValidRecipe() && !moveComponent.isProcessing() && !processingComponent.isProcessing() && internalInventory.getStackInSlot(0).isEmpty()
-				&& energyStorage.getEnergyStored() >= DEFAULT_PROCESSING_COST) {
+				&& energyStorage.getStorage().getEnergyStored() >= DEFAULT_PROCESSING_COST) {
 			ItemStack output = getRecipe(inputInventory.getStackInSlot(0)).get().getRecipeOutput();
 			return InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory.getInventory(), 0, output);
 		}

@@ -12,13 +12,11 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import theking530.staticpower.tileentities.network.Graph;
 
 public class TileEntityNetwork<T extends TileEntity> {
 	private BiPredicate<TileEntity, Direction> ValidTileEntityPredicate;
 	private BiPredicate<BlockPos, Direction> ValidExtenderPredicate;
 	private HashMap<BlockPos, T> NetworkMap;
-	private Graph<BlockPos> TestGraph;
 
 	private World world;
 	private boolean dirty;
@@ -50,7 +48,6 @@ public class TileEntityNetwork<T extends TileEntity> {
 		ValidTileEntityPredicate = validTileEntityPredicate;
 		ValidExtenderPredicate = validExtenderPredicate;
 		NetworkMap = new HashMap<BlockPos, T>();
-		TestGraph = new Graph<BlockPos>(null, null);
 	}
 
 	public void tick(ServerWorld world) {

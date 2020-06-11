@@ -21,6 +21,9 @@ import net.minecraftforge.client.model.ModelLoader;
 import theking530.staticpower.blocks.ICustomModelSupplier;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
 import theking530.staticpower.tileentities.StaticPowerTileEntityBlock;
+import theking530.staticpower.tileentities.TileEntityBase;
+import theking530.staticpower.tileentities.components.CableWrapperProviderComponent;
+import theking530.staticpower.tileentities.network.CableStateWrapper;
 import theking530.staticpower.utilities.Reference;
 
 public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock implements ICustomModelSupplier {
@@ -84,6 +87,14 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 		return getState(state, world, pos);
 	}
 
+	/**
+	 * Provide the cable state.
+	 * 
+	 * @param currentState
+	 * @param world
+	 * @param pos
+	 * @return
+	 */
 	private BlockState getState(BlockState currentState, IWorld world, BlockPos pos) {
 		return currentState.with(CABLE_NORTH, isConnectedToCableInDirection(world, pos, Direction.NORTH)).with(CABLE_EAST, isConnectedToCableInDirection(world, pos, Direction.EAST))
 				.with(CABLE_SOUTH, isConnectedToCableInDirection(world, pos, Direction.SOUTH)).with(CABLE_WEST, isConnectedToCableInDirection(world, pos, Direction.WEST))
@@ -103,19 +114,25 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 		return new CableBakedModel(existingModel, extensionModel, straightModel);
 	}
 
-	protected boolean isConnectedToCableInDirection(IWorld world, BlockPos pos, Direction direction) {
-		if (world.getTileEntity(pos) instanceof AbstractCableTileEntity) {
-			AbstractCableTileEntity<?> cable = (AbstractCableTileEntity<?>) world.getTileEntity(pos);
-			return cable.getWrapper().isConnectedToCableOnSide(direction);
+	/**
+	 * Get the cable wrapper at the provided location if one exists, otherwise
+	 * returns null.
+	 * 
+	 * @param world The world to check for the cable wrapper component.
+	 * @param pos   The location to check.
+	 * @return The cable wrapper component if one is found, null otherwise.
+	 */
+	protected @Nullable CableWrapperProviderComponent getCableWrapperComponent(IWorld world, BlockPos pos) {
+		if (world.getTileEntity(pos) instanceof TileEntityBase) {
+			TileEntityBase tileEntityBase = (TileEntityBase) world.getTileEntity(pos);
+			if (tileEntityBase.hasComponentOfType(CableWrapperProviderComponent.class)) {
+				return tileEntityBase.getComponent(CableWrapperProviderComponent.class);
+			}
 		}
-		return false;
+		return null;
 	}
 
-	protected boolean isConnectedToAttachableInDirection(IWorld world, BlockPos pos, Direction direction) {
-		if (world.getTileEntity(pos) instanceof AbstractCableTileEntity && world.getTileEntity(pos.offset(direction)) != null) {
-			AbstractCableTileEntity<?> cable = (AbstractCableTileEntity<?>) world.getTileEntity(pos);
-			return cable.getWrapper().isAttachedOnSide(direction);
-		}
-		return false;
-	}
+	protected abstract boolean isConnectedToCableInDirection(IWorld world, BlockPos pos, Direction direction);
+
+	protected abstract boolean isConnectedToAttachableInDirection(IWorld world, BlockPos pos, Direction direction);
 }

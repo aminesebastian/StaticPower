@@ -11,20 +11,20 @@ import net.minecraft.world.World;
 import theking530.staticpower.tileentities.cables.AbstractCableWrapper;
 
 public class NetworkMapper {
-	private final Set<AbstractCableWrapper> DiscoveredPipes;
-	private final Set<AbstractCableWrapper> NewlyAddedPipes;
-	private final Set<AbstractCableWrapper> RemovedPipes;
-	private final Set<AbstractCableWrapper> InitialPipes;
+	private final Set<AbstractCableWrapper> DiscoveredCables;
+	private final Set<AbstractCableWrapper> NewlyAddedCables;
+	private final Set<AbstractCableWrapper> RemovedCables;
+	private final Set<AbstractCableWrapper> InitialCables;
 	private final Set<TileEntity> Destinations;
 
-	public NetworkMapper(Set<AbstractCableWrapper> startingPipes) {
-		InitialPipes = startingPipes;
-		DiscoveredPipes = new HashSet<AbstractCableWrapper>();
-		NewlyAddedPipes = new HashSet<AbstractCableWrapper>();
-		RemovedPipes = new HashSet<AbstractCableWrapper>();
+	public NetworkMapper(Set<AbstractCableWrapper> startingCables) {
+		InitialCables = startingCables;
+		DiscoveredCables = new HashSet<AbstractCableWrapper>();
+		NewlyAddedCables = new HashSet<AbstractCableWrapper>();
+		RemovedCables = new HashSet<AbstractCableWrapper>();
 		Destinations = new HashSet<TileEntity>();
 
-		RemovedPipes.addAll(startingPipes);
+		RemovedCables.addAll(startingCables);
 	}
 
 	public void scanFromLocation(World world, BlockPos startingPos) {
@@ -39,16 +39,16 @@ public class NetworkMapper {
 		_updateNetworkWorker(world, visited, startingPos);
 	}
 
-	public Set<AbstractCableWrapper> getDiscoveredPipes() {
-		return DiscoveredPipes;
+	public Set<AbstractCableWrapper> getDiscoveredCables() {
+		return DiscoveredCables;
 	}
 
-	public Set<AbstractCableWrapper> getNewlyAddedPipes() {
-		return NewlyAddedPipes;
+	public Set<AbstractCableWrapper> getNewlyAddedCables() {
+		return NewlyAddedCables;
 	}
 
 	public Set<AbstractCableWrapper> getRemovedPipes() {
-		return RemovedPipes;
+		return RemovedCables;
 	}
 
 	public Set<TileEntity> getDestinations() {
@@ -92,12 +92,12 @@ public class NetworkMapper {
 		// Check the starting position.
 		AbstractCableWrapper cable = CableNetworkManager.get(world).getCable(location);
 		if (cable != null) {
-			DiscoveredPipes.add(cable);
-			if (!InitialPipes.contains(cable)) {
-				NewlyAddedPipes.add(cable);
+			DiscoveredCables.add(cable);
+			if (!InitialCables.contains(cable)) {
+				NewlyAddedCables.add(cable);
 			}
 
-			RemovedPipes.remove(cable);
+			RemovedCables.remove(cable);
 			return true;
 		} else {
 			// Get the tileentiy at the block position and check if it is in our set of

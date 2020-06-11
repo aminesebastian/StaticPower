@@ -19,14 +19,17 @@ public class CableNetworkGraph {
 		Network = network;
 	}
 
-	public void scan(World world, BlockPos scanStartPosition) {
+	public NetworkMapper scan(World world, BlockPos scanStartPosition) {
 		Destinations.clear();
 		NetworkMapper mapper = new NetworkMapper(Cables);
 		mapper.scanFromLocation(world, scanStartPosition);
 
-		Cables = mapper.getDiscoveredPipes();
-		mapper.getNewlyAddedPipes().forEach(cable -> cable.onNetworkJoined(Network));
+		Cables = mapper.getDiscoveredCables();
+		mapper.getNewlyAddedCables().forEach(cable -> cable.onNetworkJoined(Network));
 		mapper.getRemovedPipes().forEach(cable -> cable.onNetworkLeft());
+		Destinations.addAll(mapper.getDestinations());
+		
+		return mapper;
 	}
 
 	public Set<AbstractCableWrapper> getCables() {

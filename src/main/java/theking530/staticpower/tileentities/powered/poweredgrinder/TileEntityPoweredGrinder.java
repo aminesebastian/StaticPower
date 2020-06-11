@@ -49,7 +49,7 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory, this::inputServoFilter, 0));
 		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory, 0, 1, 2));
-		registerComponent(new BatteryComponent("BatteryComponent", internalInventory.getInventory(), 0, energyStorage));
+		registerComponent(new BatteryComponent("BatteryComponent", internalInventory.getInventory(), 0, energyStorage.getStorage()));
 	}
 
 	/**
@@ -76,9 +76,9 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 		if (canStartProcess() && redstoneControlComponent.passesRedstoneCheck()) {
 			moveComponent.startProcessing();
 		} else if (processingComponent.isProcessing()) {
-			if (energyStorage.getEnergyStored() >= (DEFAULT_PROCESSING_COST / DEFAULT_PROCESSING_TIME)) {
+			if (energyStorage.getStorage().getEnergyStored() >= (DEFAULT_PROCESSING_COST / DEFAULT_PROCESSING_TIME)) {
 				processingComponent.continueProcessing();
-				energyStorage.extractEnergy(DEFAULT_PROCESSING_COST / DEFAULT_PROCESSING_TIME, false);
+				energyStorage.getStorage().extractEnergy(DEFAULT_PROCESSING_COST / DEFAULT_PROCESSING_TIME, false);
 			} else {
 				processingComponent.pauseProcessing();
 			}
@@ -153,7 +153,7 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 				return false;
 			}
 			// If the machine does not have enough energy, return false.
-			if (energyStorage.getEnergyStored() < recipe.get().getPowerCost()) {
+			if (energyStorage.getStorage().getEnergyStored() < recipe.get().getPowerCost()) {
 				return false;
 			}
 

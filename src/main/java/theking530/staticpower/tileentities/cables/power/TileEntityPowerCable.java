@@ -1,31 +1,20 @@
 package theking530.staticpower.tileentities.cables.power;
 
 import theking530.staticpower.initialization.ModTileEntityTypes;
-import theking530.staticpower.tileentities.cables.AbstractCableTileEntity;
-import theking530.staticpower.tileentities.components.EnergyStorageComponent;
+import theking530.staticpower.tileentities.TileEntityBase;
+import theking530.staticpower.tileentities.components.CableWrapperProviderComponent;
+import theking530.staticpower.tileentities.network.factories.cables.CableTypes;
 
-public class TileEntityPowerCable extends AbstractCableTileEntity<PowerCableWrapper> {
-
-	/**
-	 * The energy buffer for the cable.
-	 */
-	public final EnergyStorageComponent energyStorage;
+public class TileEntityPowerCable extends TileEntityBase {
 
 	public TileEntityPowerCable() {
 		super(ModTileEntityTypes.POWER_CABLE);
-		registerComponent(energyStorage = new EnergyStorageComponent("PowerBuffer", 5));
+		registerComponent(new CableWrapperProviderComponent("EnergyCableComponent", CableTypes.BASIC_POWER));
+		registerComponent(new PowerCableComponent("PowerCableComponent"));
 	}
 
 	@Override
 	public void process() {
-		if (!world.isRemote) {
-			validateTrackedByNetwork();
-			//getWrapper().getNetwork().updateGraph(world, getPos());
-		}
-	}
 
-	@Override
-	public PowerCableWrapper createWrapper() {
-		return new PowerCableWrapper(world, getPos());
 	}
 }

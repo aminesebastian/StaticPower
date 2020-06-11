@@ -18,7 +18,7 @@ public abstract class AbstractTileEntityComponent {
 	private String name;
 	private boolean isEnabled;
 	private TileEntityBase tileEntity;
-	
+
 	public AbstractTileEntityComponent(String name) {
 		this.name = name;
 	}
@@ -28,6 +28,13 @@ public abstract class AbstractTileEntityComponent {
 	}
 
 	public void onRemovedFromOwner(TileEntityBase owner) {
+	}
+
+	public void onOwningTileEntityValidate() {
+
+	}
+	public void onOwningTileEntityRemoved() {
+		
 	}
 
 	public void preProcessUpdate() {

@@ -39,7 +39,7 @@ public abstract class TileEntityMachine extends TileEntityBase {
 	/* Side Control */
 	protected void onSidesConfigUpdate(Direction worldSpaceSide, MachineSideMode newMode) {
 		Direction relativeSpaceSide = SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, getFacingDirection());
-		if (disableFaceInteraction && ioSideConfiguration.getWorldSpaceDirectionConfiguration(relativeSpaceSide) != MachineSideMode.Never) {
+		if (DisableFaceInteraction && ioSideConfiguration.getWorldSpaceDirectionConfiguration(relativeSpaceSide) != MachineSideMode.Never) {
 			ioSideConfiguration.setWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, getFacingDirection()), MachineSideMode.Never);
 		}
 	}
@@ -54,13 +54,13 @@ public abstract class TileEntityMachine extends TileEntityBase {
 
 	/* ENERGY */
 	public float getEnergyPercent() {
-		float amount = energyStorage.getEnergyStored();
-		float capacity = energyStorage.getMaxEnergyStored();
+		float amount = energyStorage.getStorage().getEnergyStored();
+		float capacity = energyStorage.getStorage().getMaxEnergyStored();
 		return (amount / capacity);
 	}
 
 	public boolean hasPower() {
-		return energyStorage.getEnergyStored() > 0 ? true : false;
+		return energyStorage.getStorage().getEnergyStored() > 0 ? true : false;
 	}
 
 	public int useEnergy(int energyCost) {

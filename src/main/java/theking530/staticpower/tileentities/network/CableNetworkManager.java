@@ -17,24 +17,23 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.common.util.Constants;
-import theking530.staticpower.tileentities.cables.AbstractCableTileEntity;
 import theking530.staticpower.tileentities.cables.AbstractCableWrapper;
-import theking530.staticpower.tileentities.cables.CableType;
-import theking530.staticpower.tileentities.network.factories.CableFactories;
+import theking530.staticpower.tileentities.network.factories.cables.CableWrapperRegistry;
 import theking530.staticpower.utilities.Reference;
 
 public class CableNetworkManager extends WorldSavedData {
-	private static long CurrentNetworkId = 0;
 	private static final Logger LOGGER = LogManager.getLogger(CableNetworkManager.class);
-	private static final String PREFIX = Reference.MOD_ID + "_tile_entity_network";
+	private static final String PREFIX = Reference.MOD_ID + "_cable_network";
 	private final World World;
 	private final HashMap<BlockPos, AbstractCableWrapper> WorldCables;
 	private final HashMap<Long, CableNetwork> Networks;
+	private long CurrentNetworkId = 0;
 
 	public CableNetworkManager(String name, World world) {
 		super(name);
@@ -49,7 +48,10 @@ public class CableNetworkManager extends WorldSavedData {
 		}
 		WorldCables.put(cable.getPos(), cable);
 		LOGGER.debug(String.format("Cable added at position: %1$s.", cable.getPos()));
-		List<AbstractCableWrapper> adjacents = getAdjacents(cable);
+
+		markDirty();
+
+		List<AbstractCableWrapper> adjacents = getAdjacents(cable.getPos());
 		if (adjacents.isEmpty()) {
 			formNetworkAt(cable.getWorld(), cable.getPos());
 		} else {
@@ -57,12 +59,26 @@ public class CableNetworkManager extends WorldSavedData {
 		}
 	}
 
-	public void removeCable(AbstractCableWrapper cable) {
-		if (!WorldCables.containsKey(cable.getPos())) {
-			throw new RuntimeException(String.format("Attempted to remove a cable where one did not already exist: %1$s.", cable.getPos()));
+	public void removeCable(BlockPos pos) {
+		if (!WorldCables.containsKey(pos)) {
+			throw new RuntimeException(String.format("Attempted to remove a cable where one did not already exist: %1$s.", pos));
 		}
-		WorldCables.remove(cable.getPos());
-		LOGGER.debug(String.format("Cable removed at position: %1$s.", cable.getPos()));
+		// Get the cable.
+		AbstractCableWrapper cable = getCable(pos);
+
+		// Remove it from the manager.
+		WorldCables.remove(pos);
+
+		// Mark the manager as dirty.
+		markDirty();
+
+		// Debug log the removal.
+		LOGGER.debug(String.format("Cable removed at position: %1$s.", pos));
+
+		// If the cable was part of a network, perform the split algorithm.
+		if (cable.getNetwork() != null) {
+			splitNetworks(cable);
+		}
 	}
 
 	public @Nullable AbstractCableWrapper getCable(BlockPos currentPosition) {
@@ -143,17 +159,68 @@ public class CableNetworkManager extends WorldSavedData {
 		mergedNetworks.forEach(n -> n.onJoinedWithOtherNetwork(mainNetwork));
 	}
 
-	@SuppressWarnings("rawtypes")
-	public List<AbstractCableWrapper> getAdjacents(AbstractCableWrapper cable) {
+	private void splitNetworks(AbstractCableWrapper originCable) {
+		// Get all adjacent cables.
+		List<AbstractCableWrapper> adjacents = getAdjacents(originCable.getPos());
+
+		// Sanity checks
+		for (AbstractCableWrapper adjacent : adjacents) {
+			if (adjacent.getNetwork() == null) {
+				throw new RuntimeException("Adjacent cable has no network");
+			}
+
+			if (originCable.getNetwork() != adjacent.getNetwork()) {
+				throw new RuntimeException("The origin pipe network is different than the adjacent pipe network");
+			}
+		}
+
+		if (adjacents.size() > 0) {
+			// We can assume all adjacent pipes (with the same network type) share the same
+			// network with the removed pipe.
+			// That means it doesn't matter which pipe network we use for splitting, we'll
+			// take the first found one.
+			AbstractCableWrapper otherPipeInNetwork = adjacents.get(0);
+
+			otherPipeInNetwork.getNetwork().setOrigin(otherPipeInNetwork.getPos());
+			markDirty();
+
+			NetworkMapper result = otherPipeInNetwork.getNetwork().updateGraph(otherPipeInNetwork.getWorld(), otherPipeInNetwork.getPos());
+
+			// For sanity checking
+			boolean foundRemovedPipe = false;
+
+			for (AbstractCableWrapper removed : result.getRemovedPipes()) {
+				// It's obvious that our removed pipe is removed.
+				// We don't want to create a new splitted network for this one.
+				if (removed.getPos().equals(originCable.getPos())) {
+					foundRemovedPipe = true;
+					continue;
+				}
+
+				// The formNetworkAt call below can let these removed pipes join a network
+				// again.
+				// We only have to form a new network when necessary, hence the null check.
+				if (removed.getNetwork() == null) {
+					formNetworkAt(removed.getWorld(), removed.getPos());
+				}
+			}
+
+			if (!foundRemovedPipe) {
+				throw new RuntimeException("Didn't find removed cable when splitting network");
+			}
+		} else {
+			LOGGER.debug("Removing empty network {}", originCable.getNetwork().getId());
+
+			removeNetwork(originCable.getNetwork().getId());
+		}
+	}
+
+	public List<AbstractCableWrapper> getAdjacents(BlockPos pos) {
 		List<AbstractCableWrapper> wrappers = new ArrayList<AbstractCableWrapper>();
 		for (Direction dir : Direction.values()) {
-			if (World.getTileEntity(cable.getPos().offset(dir)) instanceof AbstractCableTileEntity) {
-				AbstractCableTileEntity adjacent = (AbstractCableTileEntity) World.getTileEntity(cable.getPos().offset(dir));
-				if (adjacent.getWrapper() == null) {
-					throw new RuntimeException(String.format("Encountered NULL wrapper for cable at location: %1$s.", cable.getPos().offset(dir)));
-				} else {
-					wrappers.add(adjacent.getWrapper());
-				}
+			AbstractCableWrapper wrapper = getCable(pos.offset(dir));
+			if (wrapper != null) {
+				wrappers.add(wrapper);
 			}
 		}
 		return wrappers;
@@ -165,28 +232,26 @@ public class CableNetworkManager extends WorldSavedData {
 
 	@Override
 	public void read(CompoundNBT tag) {
-		ListNBT pipes = tag.getList("cables", Constants.NBT.TAG_COMPOUND);
-		for (INBT pipeTag : pipes) {
-			CompoundNBT cableTagCompound = (CompoundNBT) pipeTag;
-			CableType type = CableType.values()[cableTagCompound.getInt("type")];
-			AbstractCableWrapper cable = CableFactories.get().create(type, World, cableTagCompound);
+		ListNBT cables = tag.getList("cables", Constants.NBT.TAG_COMPOUND);
+		for (INBT cableTag : cables) {
+			CompoundNBT cableTagCompound = (CompoundNBT) cableTag;
+			ResourceLocation type = new ResourceLocation(cableTagCompound.getString("type"));
+			AbstractCableWrapper cable = CableWrapperRegistry.get().create(type, World, cableTagCompound);
 			WorldCables.put(cable.getPos(), cable);
 		}
 
 		ListNBT nets = tag.getList("networks", Constants.NBT.TAG_COMPOUND);
 		for (INBT netTag : nets) {
 			CompoundNBT netTagCompound = (CompoundNBT) netTag;
-			if (!netTagCompound.contains("type")) {
-				LOGGER.warn("Skipping network without type");
-				continue;
-			}
-
 			CableNetwork network = CableNetwork.create(netTagCompound);
 
 			Networks.put(network.getId(), network);
 		}
 
-		LOGGER.debug("Read {} pipes", pipes.size());
+		// Get the current network Id.
+		CurrentNetworkId = tag.getLong("current_network_id");
+
+		LOGGER.debug("Read {} pipes", WorldCables.size());
 		LOGGER.debug("Read {} networks", Networks.size());
 	}
 
@@ -195,6 +260,7 @@ public class CableNetworkManager extends WorldSavedData {
 		ListNBT cables = new ListNBT();
 		WorldCables.values().forEach(cable -> {
 			CompoundNBT cableTag = new CompoundNBT();
+			cableTag.putString("type", cable.getType().toString());
 			cable.writeToNbt(cableTag);
 			cables.add(cableTag);
 		});
@@ -207,6 +273,9 @@ public class CableNetworkManager extends WorldSavedData {
 			networks.add(networkTag);
 		});
 		tag.put("networks", networks);
+
+		// Serialize the current network id.
+		tag.putLong("current_network_id", CurrentNetworkId);
 
 		return tag;
 	}

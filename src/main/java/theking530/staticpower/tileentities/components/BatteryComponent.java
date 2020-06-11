@@ -2,31 +2,32 @@ package theking530.staticpower.tileentities.components;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
+import theking530.staticpower.energy.StaticPowerFEStorage;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 public class BatteryComponent extends AbstractTileEntityComponent {
 
-	private ItemStackHandler BATTERY_SLOT_HANDLER;
-	private int BATTERY_SLOT;
-	private EnergyStorageComponent ENERGY_STORAGE;
+	private ItemStackHandler BatterySlotHandler;
+	private int BatterySlot;
+	private StaticPowerFEStorage EnergyStorage;
 
-	public BatteryComponent(String name, ItemStackHandler batterySlotHandler, int batterySlot, EnergyStorageComponent energyHandler) {
+	public BatteryComponent(String name, ItemStackHandler batterySlotHandler, int batterySlot, StaticPowerFEStorage energyStorage) {
 		super(name);
-		BATTERY_SLOT_HANDLER = batterySlotHandler;
-		BATTERY_SLOT = batterySlot;
-		ENERGY_STORAGE = energyHandler;
+		BatterySlotHandler = batterySlotHandler;
+		BatterySlot = batterySlot;
+		EnergyStorage = energyStorage;
 	}
 
 	@Override
 	public void preProcessUpdate() {
-		if (BATTERY_SLOT < BATTERY_SLOT_HANDLER.getSlots()) {
-			if (ENERGY_STORAGE.getEnergyStored() < ENERGY_STORAGE.getMaxEnergyStored()) {
-				ItemStack candidate = BATTERY_SLOT_HANDLER.getStackInSlot(BATTERY_SLOT);
+		if (BatterySlot < BatterySlotHandler.getSlots()) {
+			if (EnergyStorage.getEnergyStored() < EnergyStorage.getMaxEnergyStored()) {
+				ItemStack candidate = BatterySlotHandler.getStackInSlot(BatterySlot);
 				if (candidate != null) {
 					if (EnergyHandlerItemStackUtilities.isEnergyContainer(candidate)) {
-						int maxInput = ENERGY_STORAGE.getCurrentMaximumPowerInput();
+						int maxInput = EnergyStorage.getCurrentMaximumPowerInput();
 						int recieved = EnergyHandlerItemStackUtilities.useEnergyFromItemstack(candidate, maxInput, false);
-						ENERGY_STORAGE.receiveEnergy(recieved, false);
+						EnergyStorage.receiveEnergy(recieved, false);
 					}
 				}
 			}

@@ -5,13 +5,13 @@ import java.util.List;
 import net.minecraft.util.text.ITextComponent;
 import theking530.api.gui.widgets.AbstractGuiWidget;
 import theking530.api.utilities.Vector2D;
-import theking530.staticpower.tileentities.components.EnergyStorageComponent;
+import theking530.staticpower.energy.StaticPowerFEStorage;
 
 public class GuiPowerBarFromEnergyStorage extends AbstractGuiWidget {
 
-	private EnergyStorageComponent energyStorage;
+	private StaticPowerFEStorage energyStorage;
 
-	public GuiPowerBarFromEnergyStorage(EnergyStorageComponent energyStorage, int xPosition, int yPosition, int xSize, int ySize) {
+	public GuiPowerBarFromEnergyStorage(StaticPowerFEStorage energyStorage, int xPosition, int yPosition, int xSize, int ySize) {
 		super(xPosition, yPosition, xSize, ySize);
 		this.energyStorage = energyStorage;
 	}

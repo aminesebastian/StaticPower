@@ -25,7 +25,7 @@ public class GuiPoweredFurnace extends StaticPowerTileEntityGui<ContainerPowered
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage, 8, 8, 16, 54));
+		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 54));
 		registerWidget(new ArrowProgressBar(73, 32, 32, 16).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
 		getTabManager().registerTab(new GuiRedstoneTab(100, 85, getTileEntity()));

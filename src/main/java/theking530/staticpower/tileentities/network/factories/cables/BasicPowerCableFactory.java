@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.network.factories;
+package theking530.staticpower.tileentities.network.factories.cables;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;

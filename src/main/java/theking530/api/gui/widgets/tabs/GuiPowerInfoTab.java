@@ -46,7 +46,7 @@ public class GuiPowerInfoTab extends BaseGuiTab {
 
 	protected void setPowerInfoText() {
 		int energyPerTick = energyStorage.getEnergyIO();
-		String text = (TextFormatting.GREEN + "Current I/O: =" + energyPerTick + " RF/t=" + TextFormatting.AQUA + "Max Recieve:=" + energyStorage.getMaxReceive() + " RF/t");
+		String text = (TextFormatting.GREEN + "Current I/O: =" + energyPerTick + " RF/t=" + TextFormatting.AQUA + "Max Recieve:=" + energyStorage.getStorage().getMaxReceive() + " RF/t");
 		setText("Power I/O", text);
 	}
 

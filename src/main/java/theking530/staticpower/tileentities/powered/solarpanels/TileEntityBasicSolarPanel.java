@@ -22,9 +22,9 @@ public class TileEntityBasicSolarPanel extends TileEntityBase implements ITickab
 	public TileEntityBasicSolarPanel() {
 		super(ModTileEntityTypes.SOLAR_PANEL_BASIC);
 		registerComponent(energyStorage = new EnergyStorageComponent("PowerBuffer", 64, 10, 10));
-		energyStorage.setCanRecieve(false);
+		energyStorage.getStorage().setCanRecieve(false);
 
-		registerComponent(new PowerDistributionComponent("PowerDistribution", energyStorage));
+		registerComponent(new PowerDistributionComponent("PowerDistribution", energyStorage.getStorage()));
 	}
 
 	@Override
@@ -37,10 +37,10 @@ public class TileEntityBasicSolarPanel extends TileEntityBase implements ITickab
 	// Functionality
 	public void generateRF() {
 		if (getWorld().canBlockSeeSky(pos)) {
-			if (energyStorage.getEnergyStored() < energyStorage.getMaxEnergyStored()) {
-				energyStorage.setCanRecieve(true);
-				energyStorage.receiveEnergy(energyStorage.getMaxReceive(), false);
-				energyStorage.setCanRecieve(false);
+			if (energyStorage.getStorage().getEnergyStored() < energyStorage.getStorage().getMaxEnergyStored()) {
+				energyStorage.getStorage().setCanRecieve(true);
+				energyStorage.getStorage().receiveEnergy(energyStorage.getStorage().getMaxReceive(), false);
+				energyStorage.getStorage().setCanRecieve(false);
 			}
 		}
 	}
@@ -48,7 +48,7 @@ public class TileEntityBasicSolarPanel extends TileEntityBase implements ITickab
 	public boolean isGenerating() {
 		if (!getWorld().canBlockSeeSky(pos)) {
 			return false;
-		} else if (energyStorage.getEnergyStored() < energyStorage.getMaxEnergyStored()) {
+		} else if (energyStorage.getStorage().getEnergyStored() < energyStorage.getStorage().getMaxEnergyStored()) {
 			return true;
 		}
 		return false;
