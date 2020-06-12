@@ -16,7 +16,7 @@ import theking530.staticpower.network.TileEntityBasicSyncPacket;
 import theking530.staticpower.tileentities.TileEntityBase;
 
 public abstract class StaticPowerTileEntityContainer<T extends TileEntityBase> extends StaticPowerContainer {
-	public static final int DEFAULT_SYNC_TIME = 4;
+	public static final int DEFAULT_SYNC_TIME = 2;
 	private final T owningTileEntity;
 	private int syncTime;
 	private int syncTimer;

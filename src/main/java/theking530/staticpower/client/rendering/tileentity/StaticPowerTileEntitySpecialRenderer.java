@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.Quaternion;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
@@ -92,12 +92,12 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 	 *                        {@link TileEntity} is rendering at.
 	 * @param combinedOverlay The combined overlay.
 	 */
-	protected void drawItemInWorld(T tileEntity, ItemStack item, Vector3f offset, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+	protected void drawItemInWorld(T tileEntity, ItemStack item, TransformType transformType, Vector3f offset, Vector3f scale, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
 		matrixStack.push();
 		matrixStack.translate(offset.getX(), offset.getY(), offset.getZ());
-		matrixStack.scale(0.4f, 0.4f, 0.01f);
+		matrixStack.scale(scale.getX(), scale.getY(), scale.getZ());
 		IBakedModel itemModel = Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(item, tileEntity.getWorld(), null);
-		ItemRenderer.renderItem(item, ItemCameraTransforms.TransformType.GUI, false, matrixStack, buffer, 15728880, combinedOverlay, itemModel);
+		ItemRenderer.renderItem(item, transformType, false, matrixStack, buffer, 15728880, combinedOverlay, itemModel);
 		matrixStack.pop();
 	}
 

@@ -12,6 +12,7 @@ import theking530.staticpower.initialization.ModContainerTypes;
 import theking530.staticpower.initialization.ModFluids;
 import theking530.staticpower.initialization.ModItems;
 import theking530.staticpower.initialization.ModNetworkMessages;
+import theking530.staticpower.initialization.ModRecipeSerializers;
 import theking530.staticpower.initialization.ModTileEntityTypes;
 import theking530.staticpower.initialization.ModUpgrades;
 import theking530.staticpower.utilities.Reference;
@@ -24,6 +25,7 @@ public class StaticPower {
 
 	public StaticPower() {
 		MinecraftForge.EVENT_BUS.register(StaticPowerRegistry.class);
+		ModRecipeSerializers.init();
 		ModBlocks.init();
 		ModItems.init();
 		ModUpgrades.init();

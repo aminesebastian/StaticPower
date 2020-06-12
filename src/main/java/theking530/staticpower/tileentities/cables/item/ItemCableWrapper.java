@@ -13,7 +13,7 @@ public class ItemCableWrapper extends AbstractCableWrapper {
 	}
 
 	@Override
-	public CableAttachmentType getSideAttachmentType(Direction direction) {
-		return CableAttachmentType.NONE;
+	public CableAttachmentState getSideAttachmentType(Direction direction) {
+		return CableAttachmentState.NONE;
 	}
 }

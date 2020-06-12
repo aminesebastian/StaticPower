@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.math.BlockPos;
 import theking530.api.utilities.Color;
@@ -11,6 +12,7 @@ import theking530.api.utilities.Vector3D;
 import theking530.staticpower.client.rendering.StaticPowerRendererTextures;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.TileEntityDigistore;
 
+@SuppressWarnings("deprecation")
 public class TileEntityRenderDigistore extends StaticPowerTileEntitySpecialRenderer<TileEntityDigistore> {
 	private static final float ICON_SIZE = 0.1f;
 
@@ -21,7 +23,8 @@ public class TileEntityRenderDigistore extends StaticPowerTileEntitySpecialRende
 	@Override
 	public void renderTileEntityBase(TileEntityDigistore tileEntity, BlockPos pos, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
 		if (!tileEntity.getStoredItem().isEmpty()) {
-			drawItemInWorld(tileEntity, tileEntity.getStoredItem(), new Vector3f(0.5f, 0.57f, 1.01f), partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+			drawItemInWorld(tileEntity, tileEntity.getStoredItem(), TransformType.GUI, new Vector3f(0.5f, 0.57f, 1.01f), new Vector3f(0.4f, 0.4f, 0.01f), partialTicks,
+					matrixStack, buffer, combinedLight, combinedOverlay);
 			drawFillBar(tileEntity, pos, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 			drawTextInWorld(Integer.toString(tileEntity.getStoredAmount()), tileEntity, new Color(255.0f, 255.0f, 255.0f, 255.0f), new Vector3f(0.5f, 0.315f, 1.0f), 0.01f, partialTicks, matrixStack,
 					buffer, combinedLight, combinedOverlay);

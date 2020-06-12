@@ -6,27 +6,14 @@ import java.util.LinkedList;
 import java.util.Optional;
 
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.crafting.wrappers.grinder.GrinderRecipeSerializer;
-import theking530.staticpower.utilities.Reference;
 
-@Mod.EventBusSubscriber(modid = Reference.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class StaticPowerRecipeRegistry {
 
 	@SuppressWarnings("rawtypes")
-	public static final HashMap<IRecipeType, LinkedList<AbstractRecipe>> RECIPES = new HashMap<IRecipeType, LinkedList<AbstractRecipe>>();
-
-	@SubscribeEvent
-	public static void registerRecipeSerializers(RegistryEvent.Register<IRecipeSerializer<?>> event) {
-		event.getRegistry().register(GrinderRecipeSerializer.INSTANCE);
-	}
+	public static final HashMap<IRecipeType, LinkedList<AbstractStaticPowerRecipe>> RECIPES = new HashMap<IRecipeType, LinkedList<AbstractStaticPowerRecipe>>();
 
 	/**
 	 * Attempts to find a recipe of the given type that matches the provided
@@ -38,7 +25,7 @@ public class StaticPowerRecipeRegistry {
 	 * @return Optional of the recipe if it exists, otherwise empty.
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T extends AbstractRecipe> Optional<T> getRecipe(IRecipeType<T> recipeType, RecipeMatchParameters matchParameters) {
+	public static <T extends AbstractStaticPowerRecipe> Optional<T> getRecipe(IRecipeType<T> recipeType, RecipeMatchParameters matchParameters) {
 		// If no recipes of this type exist, return empty.
 		if (!RECIPES.containsKey(recipeType)) {
 			return Optional.empty();
@@ -46,7 +33,7 @@ public class StaticPowerRecipeRegistry {
 
 		// Iterate through the recipe linked list and return the first instance that
 		// matches.
-		for (AbstractRecipe recipe : RECIPES.get(recipeType)) {
+		for (AbstractStaticPowerRecipe recipe : RECIPES.get(recipeType)) {
 			if (recipe.isValid(matchParameters)) {
 				return Optional.of((T) recipe);
 			}
@@ -61,9 +48,9 @@ public class StaticPowerRecipeRegistry {
 	 * 
 	 * @param recipe
 	 */
-	private static void addRecipe(AbstractRecipe recipe) {
+	private static void addRecipe(AbstractStaticPowerRecipe recipe) {
 		if (!RECIPES.containsKey(recipe.getType())) {
-			RECIPES.put(recipe.getType(), new LinkedList<AbstractRecipe>());
+			RECIPES.put(recipe.getType(), new LinkedList<AbstractStaticPowerRecipe>());
 		}
 		RECIPES.get(recipe.getType()).add(recipe);
 	}
@@ -71,7 +58,6 @@ public class StaticPowerRecipeRegistry {
 	/**
 	 * This event is raised when the resources are loaded/reloaded.
 	 */
-	@SubscribeEvent
 	public static void onResourcesReloaded(RecipesUpdatedEvent event) {
 		// Capture if this is the first time we are caching.
 		boolean firstTime = RECIPES.size() == 0;
@@ -88,8 +74,8 @@ public class StaticPowerRecipeRegistry {
 		// Iterate through all the recipes and cache the Static Power ones.
 		Collection<IRecipe<?>> recipes = event.getRecipeManager().getRecipes();
 		for (IRecipe<?> recipe : recipes) {
-			if (recipe instanceof AbstractRecipe) {
-				addRecipe((AbstractRecipe) recipe);
+			if (recipe instanceof AbstractStaticPowerRecipe) {
+				addRecipe((AbstractStaticPowerRecipe) recipe);
 				recipeCount++;
 			}
 		}

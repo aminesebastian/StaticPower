@@ -11,11 +11,11 @@ import net.minecraft.world.World;
 import theking530.staticpower.tileentities.network.CableNetwork;
 
 public abstract class AbstractCableWrapper {
-	public enum CableAttachmentType {
+	public enum CableAttachmentState {
 		NONE, CABLE, TILE_ENTITY
 	}
 
-	protected CableAttachmentType[] Attachments;
+	protected CableAttachmentState[] Attachments;
 	protected CableNetwork Network;
 	protected final World World;
 	protected final ResourceLocation Type;
@@ -24,7 +24,7 @@ public abstract class AbstractCableWrapper {
 	public AbstractCableWrapper(World world, BlockPos position, ResourceLocation type) {
 		Position = position;
 		World = world;
-		Attachments = new CableAttachmentType[6];
+		Attachments = new CableAttachmentState[6];
 		Type = type;
 	}
 
@@ -65,7 +65,7 @@ public abstract class AbstractCableWrapper {
 		World.notifyBlockUpdate(Position, state, state, 1 | 2);
 	}
 
-	public abstract CableAttachmentType getSideAttachmentType(Direction direction);
+	public abstract CableAttachmentState getSideAttachmentType(Direction direction);
 
 	public CompoundNBT writeToNbt(CompoundNBT tag) {
 		tag.putLong("position", Position.toLong());

@@ -12,12 +12,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.CapabilityItemHandler;
 import theking530.staticpower.tileentities.cables.AbstractCableBlock;
 import theking530.staticpower.tileentities.components.CableWrapperProviderComponent;
+import theking530.staticpower.tileentities.network.CableBoundsCache;
 import theking530.staticpower.tileentities.network.factories.cables.CableTypes;
 
 public class BlockItemCable extends AbstractCableBlock {
 
 	public BlockItemCable(String name) {
-		super(name, "item");
+		super(name, "item", new CableBoundsCache(2.0D, 3.0D, 2.0D));
 	}
 
 	@Override
@@ -43,7 +44,7 @@ public class BlockItemCable extends AbstractCableBlock {
 	@Override
 	protected boolean isConnectedToAttachableInDirection(IWorld world, BlockPos pos, Direction direction) {
 		if (world.getTileEntity(pos.offset(direction)) != null) {
-			return world.getTileEntity(pos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction.getOpposite()).isPresent();
+			return world.getTileEntity(pos.offset(direction)).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction.getOpposite()).isPresent();
 		}
 		return false;
 	}

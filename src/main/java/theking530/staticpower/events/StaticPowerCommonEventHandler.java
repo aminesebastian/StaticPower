@@ -18,6 +18,7 @@ public class StaticPowerCommonEventHandler {
 	 */
 	public static void onCommonSetupEvent(FMLCommonSetupEvent event) {
 		CableWrapperRegistry.get().registerCableWrapperFactory(CableTypes.BASIC_POWER, new BasicPowerCableFactory());
+		CableWrapperRegistry.get().registerCableWrapperFactory(CableTypes.BASIC_ITEM, new BasicPowerCableFactory());
 		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.POWER_NETWORK_ATTACHMENT, new PowerNetworkModuleFactory());
 
 		StaticPower.LOGGER.info("Static Power Common Setup Completed!");

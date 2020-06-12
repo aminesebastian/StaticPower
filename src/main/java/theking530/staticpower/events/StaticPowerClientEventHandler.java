@@ -25,6 +25,7 @@ import theking530.staticpower.blocks.ICustomModelSupplier;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.client.rendering.StaticPowerRendererTextures;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderDigistore;
+import theking530.staticpower.client.rendering.tileentity.TileEntityRenderItemCable;
 import theking530.staticpower.initialization.ModTileEntityTypes;
 
 @SuppressWarnings("deprecation")
@@ -62,10 +63,12 @@ public class StaticPowerClientEventHandler {
 
 		// Temp TESR
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.DIGISTORE, TileEntityRenderDigistore::new);
+		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.ITEM_CABLE, TileEntityRenderItemCable::new);
 
 		// Log the completion.
 		StaticPower.LOGGER.info("Static Power Client Setup Completed!");
 	}
+
 	public static void onModelBakeEvent(ModelBakeEvent event) {
 		// Loop through all the blocks, and check to see if they are a model supplier.
 		for (Block block : StaticPowerRegistry.BLOCKS) {
@@ -92,6 +95,7 @@ public class StaticPowerClientEventHandler {
 			}
 		}
 	}
+
 	public static void onTextureStitchEvent(TextureStitchEvent.Pre event) {
 		int spriteCount = 0;
 		if (event.getMap().getTextureLocation() == AtlasTexture.LOCATION_BLOCKS_TEXTURE) {

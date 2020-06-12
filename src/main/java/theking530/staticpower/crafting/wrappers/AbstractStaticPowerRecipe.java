@@ -7,10 +7,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import theking530.staticpower.StaticPower;
 
-public abstract class AbstractRecipe implements IRecipe<IInventory> {
+public abstract class AbstractStaticPowerRecipe implements IRecipe<IInventory> {
 	private ResourceLocation name;
 
-	public AbstractRecipe(ResourceLocation name) {
+	public AbstractStaticPowerRecipe(ResourceLocation name) {
 		this.name = name;
 	}
 

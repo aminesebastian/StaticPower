@@ -1,7 +1,7 @@
 {
   "parent": "staticpower:block/cables/cable_straight",
   "textures": {
-    "0": "staticpower:blocks/cables/cable_item",
+    "cable_texture": "staticpower:blocks/cables/cable_item",
     "particle": "staticpower:blocks/cables/cable_item"
   }
 }

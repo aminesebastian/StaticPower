@@ -126,9 +126,7 @@ public class CableNetworkManager extends WorldSavedData {
 
 		for (AbstractCableWrapper candidate : candidates) {
 			if (candidate.getNetwork() == null) {
-				// throw new RuntimeException("Pipe network is null!");
-				System.out.println("FF");
-				return;
+				throw new RuntimeException("Pipe network is null!");
 			}
 
 			networkCandidates.add(candidate.getNetwork());

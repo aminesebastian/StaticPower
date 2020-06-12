@@ -15,22 +15,23 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 
 	public PowerNetworkModule() {
 		super(CableNetworkModuleTypes.POWER_NETWORK_ATTACHMENT);
-		EnergyStorage = new StaticPowerFEStorage(0, 5, 0);
+		EnergyStorage = new StaticPowerFEStorage(0, 5, 5);
 		EnergyStorage.setCanExtract(false);
 	}
 
 	@Override
 	public void tick(ServerWorld world) {
 		if (EnergyStorage.getEnergyStored() > 0) {
-			Network.updateGraph(world, Network.getOrigin());
 			for (TileEntity te : Network.getGraph().getDestinations()) {
-				IEnergyStorage energyStorage = te.getCapability(CapabilityEnergy.ENERGY).orElseGet(null);
+				IEnergyStorage energyStorage = te.getCapability(CapabilityEnergy.ENERGY).orElse(null);
 				if (energyStorage != null) {
 					if (energyStorage.canReceive()) {
 						int supplied = energyStorage.receiveEnergy(EnergyStorage.getCurrentMaximumPowerOutput(), false);
-						EnergyStorage.setCanExtract(true);
-						EnergyStorage.extractEnergy(supplied, false);
-						EnergyStorage.setCanExtract(false);
+						if (supplied > 0) {
+							EnergyStorage.setCanExtract(true);
+							EnergyStorage.extractEnergy(supplied, false);
+							EnergyStorage.setCanExtract(false);
+						}
 					}
 				}
 			}

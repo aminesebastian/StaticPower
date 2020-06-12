@@ -9,12 +9,13 @@ import net.minecraft.world.IWorld;
 import net.minecraftforge.energy.CapabilityEnergy;
 import theking530.staticpower.tileentities.cables.AbstractCableBlock;
 import theking530.staticpower.tileentities.components.CableWrapperProviderComponent;
+import theking530.staticpower.tileentities.network.CableBoundsCache;
 import theking530.staticpower.tileentities.network.factories.cables.CableTypes;
 
 public class BlockPowerCable extends AbstractCableBlock {
 
 	public BlockPowerCable(String name) {
-		super(name, "power");
+		super(name, "power", new CableBoundsCache(2.0D, 3.0D, 2.0D));
 	}
 
 	@Override

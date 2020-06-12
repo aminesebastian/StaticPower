@@ -13,6 +13,7 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.common.extensions.IForgeContainerType;
@@ -34,7 +35,8 @@ public class StaticPowerRegistry {
 	public static final HashSet<TileEntityType<?>> TILE_ENTITY_TYPES = new HashSet<>();
 	public static final HashSet<ContainerType<? extends Container>> CONTAINER_TYPES = new HashSet<>();
 	public static final HashSet<FlowingFluid> FLUIDS = new HashSet<FlowingFluid>();
-	public static HashMap<ContainerType, IScreenFactory> SCREEN_FACTORIES = new HashMap<>();
+	public static final HashSet<IRecipeSerializer> RECIPE_SERIALIZERS = new HashSet<IRecipeSerializer>();
+	public static final HashMap<ContainerType, IScreenFactory> SCREEN_FACTORIES = new HashMap<>();
 
 	/**
 	 * Pre-registers an item for registration through the registry event.
@@ -72,6 +74,11 @@ public class StaticPowerRegistry {
 	public static FlowingFluid preRegisterFluid(FlowingFluid fluid) {
 		FLUIDS.add(fluid);
 		return fluid;
+	}
+
+	public static IRecipeSerializer preRegisterRecipeSerializer(IRecipeSerializer recipeSerializer) {
+		RECIPE_SERIALIZERS.add(recipeSerializer);
+		return recipeSerializer;
 	}
 
 	/**
@@ -141,6 +148,12 @@ public class StaticPowerRegistry {
 	public static void onRegisterContainerTypes(RegistryEvent.Register<ContainerType<?>> event) {
 		for (ContainerType<?> container : CONTAINER_TYPES) {
 			event.getRegistry().register(container);
+		}
+	}
+
+	public static void onRegisterRecipeSerializers(RegistryEvent.Register<IRecipeSerializer<?>> event) {
+		for (IRecipeSerializer serializer : RECIPE_SERIALIZERS) {
+			event.getRegistry().register(serializer);
 		}
 	}
 }

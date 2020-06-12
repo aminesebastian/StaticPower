@@ -21,7 +21,7 @@
             16,
             10
           ],
-          "texture": "#0"
+          "texture": "#cable_texture"
         },
         "west": {
           "uv": [
@@ -30,7 +30,7 @@
             6,
             10
           ],
-          "texture": "#0"
+          "texture": "#cable_texture"
         },
         "up": {
           "uv": [
@@ -39,7 +39,7 @@
             10,
             16
           ],
-          "texture": "#0"
+          "texture": "#cable_texture"
         },
         "down": {
           "uv": [
@@ -48,7 +48,7 @@
             10,
             16
           ],
-          "texture": "#0"
+          "texture": "#cable_texture"
         }
       }
     },
@@ -72,7 +72,7 @@
             16,
             10
           ],
-          "texture": "#0"
+          "texture": "#cable_texture"
         },
         "west": {
           "uv": [
@@ -81,7 +81,7 @@
             6,
             10
           ],
-          "texture": "#0"
+          "texture": "#cable_texture"
         },
         "up": {
           "uv": [
@@ -90,7 +90,7 @@
             10,
             16
           ],
-          "texture": "#0"
+          "texture": "#cable_texture"
         },
         "down": {
           "uv": [
@@ -99,7 +99,7 @@
             10,
             16
           ],
-          "texture": "#0"
+          "texture": "#cable_texture"
         }
       }
     },
@@ -123,7 +123,7 @@
             16,
             10
           ],
-          "texture": "#0"
+          "texture": "#cable_texture"
         },
         "west": {
           "uv": [
@@ -132,7 +132,7 @@
             6,
             10
           ],
-          "texture": "#0"
+          "texture": "#cable_texture"
         },
         "up": {
           "uv": [
@@ -141,7 +141,7 @@
             10,
             16
           ],
-          "texture": "#0"
+          "texture": "#cable_texture"
         },
         "down": {
           "uv": [
@@ -150,7 +150,7 @@
             10,
             16
           ],
-          "texture": "#0"
+          "texture": "#cable_texture"
         }
       }
     },
@@ -174,7 +174,7 @@
             16,
             10
           ],
-          "texture": "#0"
+          "texture": "#cable_texture"
         },
         "west": {
           "uv": [
@@ -183,7 +183,7 @@
             6,
             10
           ],
-          "texture": "#0"
+          "texture": "#cable_texture"
         },
         "up": {
           "uv": [
@@ -192,7 +192,7 @@
             10,
             16
           ],
-          "texture": "#0"
+          "texture": "#cable_texture"
         },
         "down": {
           "uv": [
@@ -201,7 +201,7 @@
             10,
             16
           ],
-          "texture": "#0"
+          "texture": "#cable_texture"
         }
       }
     }

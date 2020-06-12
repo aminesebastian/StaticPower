@@ -9,10 +9,10 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
-import theking530.staticpower.crafting.wrappers.AbstractRecipe;
+import theking530.staticpower.crafting.wrappers.AbstractStaticPowerRecipe;
 import theking530.staticpower.crafting.wrappers.RecipeMatchParameters;
 
-public class GrinderRecipe extends AbstractRecipe {
+public class GrinderRecipe extends AbstractStaticPowerRecipe {
 	public static final IRecipeType<GrinderRecipe> RECIPE_TYPE = IRecipeType.register("grinder");
 
 	private final GrinderOutput[] outputs;

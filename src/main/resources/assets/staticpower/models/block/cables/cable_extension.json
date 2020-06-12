@@ -1,56 +1,77 @@
 {
-  "parent": "block/block",
-  "elements": [
-    {
-      "name": "North",
-      "from": [
-        6,
-        6,
-        0
-      ],
-      "to": [
-        10,
-        10,
-        6
-      ],
-      "faces": {
-        "east": {
-          "uv": [
-            10,
-            6,
-            16,
-            10
-          ],
-          "texture": "#0"
-        },
-        "west": {
-          "uv": [
-            0,
-            6,
-            6,
-            10
-          ],
-          "texture": "#0"
-        },
-        "up": {
-          "uv": [
-            6,
-            10,
-            10,
-            16
-          ],
-          "texture": "#0"
-        },
-        "down": {
-          "uv": [
-            6,
-            0,
-            10,
-            6
-          ],
-          "texture": "#0"
-        }
-      }
-    }
-  ]
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"cable_texture": "cable_power"
+	},
+	"elements": [
+		{
+			"name": "North",
+			"from": [
+				6,
+				6,
+				0
+			],
+			"to": [
+				10,
+				10,
+				6
+			],
+			"faces": {
+				"east": {
+					"uv": [
+						10,
+						6,
+						16,
+						10
+					],
+					"rotation": 180,
+					"texture": "#cable_texture"
+				},
+				"west": {
+					"uv": [
+						0,
+						6,
+						6,
+						10
+					],
+					"rotation": 180,
+					"texture": "#cable_texture"
+				},
+				"up": {
+					"uv": [
+						6,
+						10,
+						10,
+						16
+					],
+					"texture": "#cable_texture"
+				},
+				"down": {
+					"uv": [
+						6,
+						0,
+						10,
+						6
+					],
+					"texture": "#cable_texture"
+				}
+			}
+		}
+	],
+	"display": {
+	},
+	"groups": [
+		{
+			"name": "cable_extension",
+			"origin": [
+				8,
+				8,
+				8
+			],
+			"children": [
+				0
+			]
+		}
+	]
 }
