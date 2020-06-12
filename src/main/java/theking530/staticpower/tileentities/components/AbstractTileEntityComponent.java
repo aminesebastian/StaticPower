@@ -1,7 +1,11 @@
 package theking530.staticpower.tileentities.components;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.staticpower.tileentities.TileEntityBase;
@@ -33,14 +37,33 @@ public abstract class AbstractTileEntityComponent {
 	public void onOwningTileEntityValidate() {
 
 	}
+
 	public void onOwningTileEntityRemoved() {
-		
+
 	}
 
 	public void preProcessUpdate() {
 	}
 
 	public void postProcessUpdate() {
+	}
+
+	public void onNeighborChanged(BlockState currentState, BlockPos neighborPos) {
+
+	}
+
+	public void updatePostPlacement(BlockState state, Direction direction, BlockState facingState, BlockPos FacingPos) {
+
+	}
+
+	/**
+	 * Adds any model data. Keep in mind, this runs on the render thread, not the
+	 * game thread.
+	 * 
+	 * @param builder
+	 */
+	public void getModelData(ModelDataMap.Builder builder) {
+
 	}
 
 	public CompoundNBT serializeSaveNbt(CompoundNBT nbt) {
@@ -75,5 +98,12 @@ public abstract class AbstractTileEntityComponent {
 
 	public TileEntityBase getTileEntity() {
 		return tileEntity;
+	}
+
+	public World getWorld() {
+		if (tileEntity.isRemoved()) {
+			throw new RuntimeException("We cannot access the world if the tile entity has been removed!");
+		}
+		return tileEntity.getWorld();
 	}
 }

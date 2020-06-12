@@ -1,20 +1,33 @@
 package theking530.staticpower.tileentities.components;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelProperty;
 import theking530.staticpower.tileentities.cables.AbstractCableWrapper;
+import theking530.staticpower.tileentities.cables.AbstractCableWrapper.CableConnectionState;
 import theking530.staticpower.tileentities.network.CableNetworkManager;
 import theking530.staticpower.tileentities.network.factories.cables.CableWrapperRegistry;
 
-public class CableWrapperProviderComponent extends AbstractTileEntityComponent {
+public abstract class AbstractCableProviderComponent extends AbstractTileEntityComponent {
+	/** KEEP IN MIND: This is purely cosmetic and on the client side. */
+	public static final ModelProperty<Boolean[]> DISABLED_CABLE_SIDES = new ModelProperty<>();
+	/** KEEP IN MIND: This is purely cosmetic and on the client side. */
+	public static final ModelProperty<CableConnectionState[]> CABLE_CONNECTION_STATES = new ModelProperty<>();
+
 	private ResourceLocation Type;
 	private Boolean[] DisabledSides;
+	protected CableConnectionState[] ConnectionStates;
 
-	public CableWrapperProviderComponent(String name, ResourceLocation type) {
+	public AbstractCableProviderComponent(String name, ResourceLocation type) {
 		super(name);
 		Type = type;
 		DisabledSides = new Boolean[] { false, false, false, false, false, false };
+		ConnectionStates = new CableConnectionState[] { CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE,
+				CableConnectionState.NONE };
 	}
 
 	public ResourceLocation getCableType() {
@@ -28,6 +41,10 @@ public class CableWrapperProviderComponent extends AbstractTileEntityComponent {
 
 	public boolean isSideDisabled(Direction side) {
 		return DisabledSides[side.ordinal()];
+	}
+
+	public CableConnectionState getConnectionState(Direction side) {
+		return ConnectionStates[side.ordinal()];
 	}
 
 	@Override
@@ -50,6 +67,12 @@ public class CableWrapperProviderComponent extends AbstractTileEntityComponent {
 	}
 
 	@Override
+	public void getModelData(ModelDataMap.Builder builder) {
+		updateConnectionStates();
+		builder.withInitial(DISABLED_CABLE_SIDES, DisabledSides).withInitial(CABLE_CONNECTION_STATES, ConnectionStates);
+	}
+
+	@Override
 	public void onOwningTileEntityRemoved() {
 		super.onOwningTileEntityRemoved();
 		// If we're on the server, get the cable manager and remove the cable at the
@@ -68,6 +91,7 @@ public class CableWrapperProviderComponent extends AbstractTileEntityComponent {
 		for (int i = 0; i < DisabledSides.length; i++) {
 			nbt.putBoolean("disabledState" + i, DisabledSides[i]);
 		}
+
 		return nbt;
 	}
 
@@ -79,5 +103,26 @@ public class CableWrapperProviderComponent extends AbstractTileEntityComponent {
 		for (int i = 0; i < DisabledSides.length; i++) {
 			DisabledSides[i] = nbt.getBoolean("disabledState" + i);
 		}
+
 	}
+
+	@Override
+	public void onNeighborChanged(BlockState currentState, BlockPos neighborPos) {
+		//updateConnectionStates();
+	}
+
+	@Override
+	public void updatePostPlacement(BlockState state, Direction direction, BlockState facingState, BlockPos FacingPos) {
+		updateConnectionStates();
+	}
+
+	protected CableConnectionState getConnectionStateForSide(Direction side, BlockPos sidePosition) {
+		return CableConnectionState.NONE;
+	}
+
+	/**
+	 * This is called on the server before the connection state is serialized to be
+	 * sent to the client.
+	 */
+	protected abstract void updateConnectionStates();
 }

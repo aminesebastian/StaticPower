@@ -23,6 +23,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -177,6 +178,10 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IBloc
 
 	}
 
+	public void onStaticPowerPostPlacement(BlockState state, Direction dir, BlockState facingState, IWorld world, BlockPos pos, BlockPos facingPos) {
+
+	}
+
 	// ***********//
 	// Overrides //
 	// ***********//
@@ -321,5 +326,16 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IBloc
 			((TileEntityBase) world.getTileEntity(pos)).onNeighborChanged(state, neighbor);
 		}
 		onStaticPowerNeighborChanged(state, world, pos, neighbor);
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public BlockState updatePostPlacement(BlockState state, Direction dir, BlockState facingState, IWorld world, BlockPos pos, BlockPos facingPos) {
+		super.updatePostPlacement(state, dir, facingState, world, pos, facingPos);
+		if (world.getTileEntity(pos) != null && world.getTileEntity(pos) instanceof TileEntityBase) {
+			((TileEntityBase) world.getTileEntity(pos)).updatePostPlacement(state, dir, facingState, facingPos);
+		}
+		onStaticPowerPostPlacement(state, dir, facingState, world, pos, facingPos);
+		return state;
 	}
 }

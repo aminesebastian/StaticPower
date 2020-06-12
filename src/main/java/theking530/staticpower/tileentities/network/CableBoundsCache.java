@@ -22,7 +22,7 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import theking530.api.utilities.RaytracingUtilities;
 import theking530.api.utilities.RaytracingUtilities.AdvancedRayTraceResult;
-import theking530.staticpower.tileentities.cables.AbstractCableWrapper.CableAttachmentState;
+import theking530.staticpower.tileentities.cables.AbstractCableWrapper.CableConnectionState;
 import theking530.staticpower.tileentities.cables.CableUtilities;
 
 public class CableBoundsCache {
@@ -74,7 +74,7 @@ public class CableBoundsCache {
 
 		// Add the shapes for each side.
 		for (Direction dir : Direction.values()) {
-			if (CableUtilities.getConnectionState(state, dir) == CableAttachmentState.CABLE || CableUtilities.getConnectionState(state, dir) == CableAttachmentState.TILE_ENTITY) {
+			if (CableUtilities.getConnectionState(world, pos, dir) == CableConnectionState.CABLE || CableUtilities.getConnectionState(world, pos, dir) == CableConnectionState.TILE_ENTITY) {
 				output = VoxelShapes.or(output, CableAttachmentShapes.get(dir));
 			}
 		}

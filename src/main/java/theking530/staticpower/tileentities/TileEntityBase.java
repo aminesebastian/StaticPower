@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.block.BlockState;
@@ -33,6 +34,8 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.staticpower.StaticPower;
@@ -165,11 +168,19 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	}
 
 	public void onNeighborChanged(BlockState currentState, BlockPos neighborPos) {
-
+		for (AbstractTileEntityComponent comp : Components.values()) {
+			comp.onNeighborChanged(currentState, neighborPos);
+		}
 	}
 
 	public void onInitializedInWorld(World world, BlockPos pos) {
 
+	}
+
+	public void updatePostPlacement(BlockState state, Direction direction, BlockState facingState, BlockPos FacingPos) {
+		for (AbstractTileEntityComponent comp : Components.values()) {
+			comp.updatePostPlacement(state, direction, facingState, FacingPos);
+		}
 	}
 
 	/**
@@ -552,6 +563,16 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		super.read(parentNBTTagCompound);
 		deserializeUpdateNbt(parentNBTTagCompound);
 		deserializeSaveNbt(parentNBTTagCompound);
+	}
+
+	@Nonnull
+	@Override
+	public IModelData getModelData() {
+		ModelDataMap.Builder builder = new ModelDataMap.Builder();
+		for (AbstractTileEntityComponent component : Components.values()) {
+			component.getModelData(builder);
+		}
+		return builder.build();
 	}
 
 	/**

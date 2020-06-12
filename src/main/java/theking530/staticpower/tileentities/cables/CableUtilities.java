@@ -1,63 +1,47 @@
 package theking530.staticpower.tileentities.cables;
 
-import net.minecraft.block.BlockState;
+import javax.annotation.Nullable;
+
 import net.minecraft.util.Direction;
-import theking530.staticpower.tileentities.cables.AbstractCableWrapper.CableAttachmentState;
-import theking530.staticpower.tileentities.cables.power.BlockPowerCable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
+import theking530.staticpower.tileentities.TileEntityBase;
+import theking530.staticpower.tileentities.cables.AbstractCableWrapper.CableConnectionState;
+import theking530.staticpower.tileentities.components.AbstractCableProviderComponent;
 
 public class CableUtilities {
 
-	public static CableAttachmentState getConnectionState(BlockState state, Direction side) {
-		switch (side) {
-		case NORTH:
-			if (state.get(BlockPowerCable.CABLE_NORTH)) {
-				return CableAttachmentState.CABLE;
-			} else if (state.get(BlockPowerCable.TILE_ENTITY_NORTH)) {
-				return CableAttachmentState.TILE_ENTITY;
-			} else {
-				return CableAttachmentState.NONE;
-			}
-		case SOUTH:
-			if (state.get(BlockPowerCable.CABLE_SOUTH)) {
-				return CableAttachmentState.CABLE;
-			} else if (state.get(BlockPowerCable.TILE_ENTITY_SOUTH)) {
-				return CableAttachmentState.TILE_ENTITY;
-			} else {
-				return CableAttachmentState.NONE;
-			}
-		case EAST:
-			if (state.get(BlockPowerCable.CABLE_EAST)) {
-				return CableAttachmentState.CABLE;
-			} else if (state.get(BlockPowerCable.TILE_ENTITY_EAST)) {
-				return CableAttachmentState.TILE_ENTITY;
-			} else {
-				return CableAttachmentState.NONE;
-			}
-		case WEST:
-			if (state.get(BlockPowerCable.CABLE_WEST)) {
-				return CableAttachmentState.CABLE;
-			} else if (state.get(BlockPowerCable.TILE_ENTITY_WEST)) {
-				return CableAttachmentState.TILE_ENTITY;
-			} else {
-				return CableAttachmentState.NONE;
-			}
-		case UP:
-			if (state.get(BlockPowerCable.CABLE_UP)) {
-				return CableAttachmentState.CABLE;
-			} else if (state.get(BlockPowerCable.TILE_ENTITY_UP)) {
-				return CableAttachmentState.TILE_ENTITY;
-			} else {
-				return CableAttachmentState.NONE;
-			}
-		case DOWN:
-			if (state.get(BlockPowerCable.CABLE_DOWN)) {
-				return CableAttachmentState.CABLE;
-			} else if (state.get(BlockPowerCable.TILE_ENTITY_DOWN)) {
-				return CableAttachmentState.TILE_ENTITY;
-			} else {
-				return CableAttachmentState.NONE;
+	public static CableConnectionState getConnectionState(IBlockReader world, BlockPos pos, Direction side) {
+		AbstractCableProviderComponent cableComponent = getCableWrapperComponent(world, pos);
+		if (cableComponent != null) {
+			return cableComponent.getConnectionState(side);
+		}
+		return CableConnectionState.NONE;
+	}
+
+	public static boolean isSideConnectionDisabled(IBlockReader world, BlockPos pos, Direction side) {
+		AbstractCableProviderComponent cableComponent = getCableWrapperComponent(world, pos);
+		if (cableComponent != null) {
+			return cableComponent.isSideDisabled(side);
+		}
+		return true;
+	}
+
+	/**
+	 * Get the cable wrapper at the provided location if one exists, otherwise
+	 * returns null.
+	 * 
+	 * @param world The world to check for the cable wrapper component.
+	 * @param pos   The location to check.
+	 * @return The cable wrapper component if one is found, null otherwise.
+	 */
+	public static @Nullable AbstractCableProviderComponent getCableWrapperComponent(IBlockReader world, BlockPos pos) {
+		if (world.getTileEntity(pos) instanceof TileEntityBase) {
+			TileEntityBase tileEntityBase = (TileEntityBase) world.getTileEntity(pos);
+			if (tileEntityBase.hasComponentOfType(AbstractCableProviderComponent.class)) {
+				return tileEntityBase.getComponent(AbstractCableProviderComponent.class);
 			}
 		}
-		return CableAttachmentState.NONE;
+		return null;
 	}
 }

@@ -1,21 +1,26 @@
 package theking530.staticpower.tileentities.cables.power;
 
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import theking530.staticpower.tileentities.cables.AbstractCableWrapper;
-import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.tileentities.cables.CableUtilities;
+import theking530.staticpower.tileentities.cables.AbstractCableWrapper.CableConnectionState;
+import theking530.staticpower.tileentities.components.AbstractCableProviderComponent;
 import theking530.staticpower.tileentities.network.CableNetworkManager;
+import theking530.staticpower.tileentities.network.factories.cables.CableTypes;
 import theking530.staticpower.tileentities.network.factories.modules.CableNetworkModuleTypes;
 import theking530.staticpower.tileentities.network.modules.PowerNetworkModule;
 
-public class PowerCableComponent extends AbstractTileEntityComponent implements IEnergyStorage {
+public class PowerCableComponent extends AbstractCableProviderComponent implements IEnergyStorage {
 	private PowerNetworkModule networkModule;
 
 	public PowerCableComponent(String name) {
-		super(name);
+		super(name, CableTypes.BASIC_POWER);
 	}
 
 	@Override
@@ -76,10 +81,28 @@ public class PowerCableComponent extends AbstractTileEntityComponent implements 
 
 			}
 		}
-		
+
 		if (cap == CapabilityEnergy.ENERGY) {
 			return LazyOptional.of(() -> this).cast();
 		}
 		return LazyOptional.empty();
+	}
+
+	@Override
+	protected void updateConnectionStates() {
+		for (Direction dir : Direction.values()) {
+			BlockPos position = getTileEntity().getPos().offset(dir);
+			AbstractCableProviderComponent overProvider = CableUtilities.getCableWrapperComponent(getWorld(), position);
+			if (overProvider != null && overProvider.getCableType() == getCableType()) {
+				ConnectionStates[dir.ordinal()] = CableConnectionState.CABLE;
+			} else if (getWorld().getTileEntity(position) != null) {
+				TileEntity te = getWorld().getTileEntity(position);
+				if (te.getCapability(CapabilityEnergy.ENERGY, dir.getOpposite()).isPresent()) {
+					ConnectionStates[dir.ordinal()] = CableConnectionState.TILE_ENTITY;
+				}
+			} else {
+				ConnectionStates[dir.ordinal()] = CableConnectionState.NONE;
+			}
+		}
 	}
 }

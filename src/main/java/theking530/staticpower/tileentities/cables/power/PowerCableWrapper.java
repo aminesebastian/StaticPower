@@ -26,15 +26,15 @@ public class PowerCableWrapper extends AbstractCableWrapper {
 	}
 
 	@Override
-	public CableAttachmentState getSideAttachmentType(Direction direction) {
+	public CableConnectionState getSideAttachmentType(Direction direction) {
 		if (World.getTileEntity(getPos().offset(direction)) instanceof TileEntityPowerCable) {
-			return CableAttachmentState.CABLE;
+			return CableConnectionState.CABLE;
 		} else {
 			TileEntity te = World.getTileEntity(getPos());
 			if (te != null && !te.isRemoved() && te.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
-				return CableAttachmentState.TILE_ENTITY;
+				return CableConnectionState.TILE_ENTITY;
 			}
 		}
-		return CableAttachmentState.NONE;
+		return CableConnectionState.NONE;
 	}
 }
