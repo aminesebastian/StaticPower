@@ -134,12 +134,7 @@ public abstract class StaticPowerTileEntityBlock extends StaticPowerBlock {
 	public abstract TileEntity createTileEntity(final BlockState state, final IBlockReader world);
 
 	@Override
-	public boolean canBeWrenched(PlayerEntity player, World world, BlockPos pos, Direction facing, boolean sneaking) {
-		return true;
-	}
-
-	@Override
-	public void wrenchBlock(PlayerEntity player, RegularWrenchMode mode, ItemStack wrench, World world, BlockPos pos, Direction facing, boolean returnDrops) {
+	public ActionResultType wrenchBlock(PlayerEntity player, RegularWrenchMode mode, ItemStack wrench, World world, BlockPos pos, Direction facing, boolean returnDrops) {
 		if (mode == RegularWrenchMode.ROTATE) {
 			if (facing != Direction.UP && facing != Direction.DOWN) {
 				if (facing != world.getBlockState(pos).get(FACING)) {
@@ -148,16 +143,19 @@ public abstract class StaticPowerTileEntityBlock extends StaticPowerBlock {
 					world.setBlockState(pos, world.getBlockState(pos).with(FACING, facing.getOpposite()), 1 | 2);
 				}
 			}
+			return ActionResultType.SUCCESS;
 		} else {
 			TileEntityBase TE = (TileEntityBase) world.getTileEntity(pos);
 			if (TE.hasComponentOfType(SideConfigurationComponent.class)) {
 				TE.getComponent(SideConfigurationComponent.class).modulateWorldSpaceSideMode(facing, SideIncrementDirection.FORWARD);
+				return ActionResultType.SUCCESS;
 			}
+			return super.wrenchBlock(player, mode, wrench, world, pos, facing, returnDrops);
 		}
 	}
 
 	@Override
-	public void sneakWrenchBlock(PlayerEntity player, SneakWrenchMode mode, ItemStack wrench, World world, BlockPos pos, Direction facing, boolean returnDrops) {
+	public ActionResultType sneakWrenchBlock(PlayerEntity player, SneakWrenchMode mode, ItemStack wrench, World world, BlockPos pos, Direction facing, boolean returnDrops) {
 		// If we're on the server.
 		if (!world.isRemote && world.getTileEntity(pos) instanceof IBreakSerializeable) {
 			// Get a handle to the serializeable tile entity.
@@ -181,7 +179,10 @@ public abstract class StaticPowerTileEntityBlock extends StaticPowerBlock {
 				ItemEntity droppedItem = new ItemEntity(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, machineStack);
 				world.addEntity(droppedItem);
 				world.setBlockState(pos, Blocks.AIR.getDefaultState());
+
+				return ActionResultType.SUCCESS;
 			}
 		}
+		return super.sneakWrenchBlock(player, mode, wrench, world, pos, facing, returnDrops);
 	}
 }

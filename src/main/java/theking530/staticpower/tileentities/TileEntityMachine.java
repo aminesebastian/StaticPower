@@ -18,7 +18,7 @@ import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities.
  *
  */
 public abstract class TileEntityMachine extends TileEntityBase {
-	public static final int DEFAULT_RF_CAPACITY = 1000;
+	public static final int DEFAULT_RF_CAPACITY = 1000000000;
 	public static final int DEFAULT_POWER_TRANSFER = 50;
 
 	public final EnergyStorageComponent energyStorage;

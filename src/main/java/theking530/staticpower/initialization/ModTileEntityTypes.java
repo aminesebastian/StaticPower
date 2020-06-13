@@ -2,8 +2,8 @@ package theking530.staticpower.initialization;
 
 import net.minecraft.tileentity.TileEntityType;
 import theking530.staticpower.StaticPowerRegistry;
-import theking530.staticpower.tileentities.cables.item.TileEntityItemCable;
-import theking530.staticpower.tileentities.cables.power.TileEntityPowerCable;
+import theking530.staticpower.cables.item.TileEntityItemCable;
+import theking530.staticpower.cables.power.TileEntityPowerCable;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.TileEntityDigistore;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.ioport.TileEntityDigistoreIOPort;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.TileEntityDigistoreManager;

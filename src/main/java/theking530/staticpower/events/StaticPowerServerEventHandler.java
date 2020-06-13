@@ -2,7 +2,7 @@ package theking530.staticpower.events;
 
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.TickEvent;
-import theking530.staticpower.tileentities.network.CableNetworkManager;
+import theking530.staticpower.cables.network.CableNetworkManager;
 
 public class StaticPowerServerEventHandler {
 	public static void onWorldTickEvent(TickEvent.WorldTickEvent event) {

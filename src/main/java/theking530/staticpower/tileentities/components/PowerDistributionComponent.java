@@ -25,6 +25,9 @@ public class PowerDistributionComponent extends AbstractTileEntityComponent {
 
 	@Override
 	public void preProcessUpdate() {
+		if (getWorld().isRemote) {
+			return;
+		}
 		if (energyStorage != null && getTileEntity() != null) {
 			if (energyStorage.getEnergyStored() > 0) {
 				for (Direction facing : Direction.values()) {

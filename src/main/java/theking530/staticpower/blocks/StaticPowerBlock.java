@@ -224,23 +224,16 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IBloc
 	 * wrench.
 	 */
 	@Override
-	public void wrenchBlock(PlayerEntity player, RegularWrenchMode mode, ItemStack wrench, World world, BlockPos pos, Direction facing, boolean returnDrops) {
-
+	public ActionResultType wrenchBlock(PlayerEntity player, RegularWrenchMode mode, ItemStack wrench, World world, BlockPos pos, Direction facing, boolean returnDrops) {
+		return ActionResultType.PASS;
 	}
 
 	/**
 	 * Defines the behavior for when this block is sneak right clicked by a wrench.
 	 */
 	@Override
-	public void sneakWrenchBlock(PlayerEntity player, SneakWrenchMode mode, ItemStack wrench, World world, BlockPos pos, Direction facing, boolean returnDrops) {
-	}
-
-	/**
-	 * Indicates if this block can be wrenched.
-	 */
-	@Override
-	public boolean canBeWrenched(PlayerEntity player, World world, BlockPos pos, Direction facing, boolean sneaking) {
-		return false;
+	public ActionResultType sneakWrenchBlock(PlayerEntity player, SneakWrenchMode mode, ItemStack wrench, World world, BlockPos pos, Direction facing, boolean returnDrops) {
+		return ActionResultType.PASS;
 	}
 
 	@Override

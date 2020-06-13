@@ -51,6 +51,7 @@ public class CustomRenderer {
 		CubeRenderRequests.remove(key);
 	}
 
+	@SuppressWarnings("unused")
 	private void drawLine(Vector3f start, Vector3f end, Matrix4f matrix) {
 		IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
 		IVertexBuilder builder = buffer.getBuffer(RenderType.LINES);

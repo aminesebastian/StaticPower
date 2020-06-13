@@ -13,8 +13,8 @@ import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.util.Direction;
 import net.minecraftforge.client.model.data.IModelData;
-import theking530.staticpower.tileentities.cables.AbstractCableWrapper.CableConnectionState;
-import theking530.staticpower.tileentities.components.AbstractCableProviderComponent;
+import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.cables.AbstractCableWrapper.CableConnectionState;
 
 public class CableBakedModel extends AbstractBakedModel {
 	private final IBakedModel Extension;
@@ -34,7 +34,7 @@ public class CableBakedModel extends AbstractBakedModel {
 		// Build the proper quad array.
 		ImmutableList.Builder<BakedQuad> newQuads = new ImmutableList.Builder<BakedQuad>();
 
-		Boolean[] disabledSides = data.getData(AbstractCableProviderComponent.DISABLED_CABLE_SIDES);
+		boolean[] disabledSides = data.getData(AbstractCableProviderComponent.DISABLED_CABLE_SIDES);
 		CableConnectionState[] cableConnectionStates = data.getData(AbstractCableProviderComponent.CABLE_CONNECTION_STATES);
 
 		newQuads.addAll(BaseModel.getQuads(state, side, rand, data));

@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.math.BlockPos;
-import theking530.staticpower.tileentities.cables.item.TileEntityItemCable;
+import theking530.staticpower.cables.item.TileEntityItemCable;
 
 @SuppressWarnings("deprecation")
 public class TileEntityRenderItemCable extends StaticPowerTileEntitySpecialRenderer<TileEntityItemCable> {
