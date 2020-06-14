@@ -10,6 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import theking530.staticpower.cables.network.CableNetwork;
+import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.tileentities.TileEntityBase;
 
 public abstract class AbstractCableWrapper {
@@ -46,9 +47,18 @@ public abstract class AbstractCableWrapper {
 		return World;
 	}
 
-	public void onNetworkJoined(CableNetwork network) {
+	/**
+	 * Lets this cable wrapper know it joined a network. The ONLY time to call it
+	 * with updateBlock == false is when first loading the world.
+	 * 
+	 * @param network
+	 * @param updateBlock
+	 */
+	public void onNetworkJoined(CableNetwork network, boolean updateBlock) {
 		Network = network;
-		updateCableBlock();
+		if (updateBlock) {
+			updateCableBlock();
+		}
 	}
 
 	public ResourceLocation getType() {
@@ -58,9 +68,6 @@ public abstract class AbstractCableWrapper {
 	public void onNetworkLeft() {
 		Network = null;
 		updateCableBlock();
-		if (World.getTileEntity(Position) != null && !World.getTileEntity(Position).isRemoved()) {
-			System.out.println("Cable left network but still exists in world - this indicates it was disabled. Remove this sysout later.");
-		}
 	}
 
 	/**
@@ -76,7 +83,18 @@ public abstract class AbstractCableWrapper {
 	}
 
 	public void setDisabledStateOnSide(Direction side, boolean disabledState) {
+		CableNetworkManager.get(World).removeCable(Position);
+
 		DisabledSides[side.ordinal()] = disabledState;
+
+		AbstractCableWrapper opposite = CableNetworkManager.get(World).getCable(Position.offset(side));
+		if (opposite != null) {
+			CableNetworkManager.get(World).removeCable(Position.offset(side));
+			DisabledSides[side.getOpposite().ordinal()] = disabledState;
+			CableNetworkManager.get(World).addCable(opposite);
+		}
+
+		CableNetworkManager.get(World).addCable(this);
 	}
 
 	public CompoundNBT writeToNbt(CompoundNBT tag) {

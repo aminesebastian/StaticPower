@@ -3,16 +3,14 @@ package theking530.staticpower.energy;
 public class StaticVoltHandler implements IStaticVoltHandler {
 	int storedPower;
 	int capacity;
-	int maxRecieve;
-	int maxDrain;
+	int maximumVoltage;
 
 	boolean canRecieve;
 	boolean canDrain;
 
-	public StaticVoltHandler(int capacity, int maxRecieve, int maxDrain) {
+	public StaticVoltHandler(int capacity, int maximumVoltage) {
 		this.capacity = capacity;
-		this.maxRecieve = maxRecieve;
-		this.maxDrain = maxDrain;
+		this.maximumVoltage = maximumVoltage;
 	}
 
 	@Override
@@ -39,24 +37,16 @@ public class StaticVoltHandler implements IStaticVoltHandler {
 
 	@Override
 	public boolean canRecievePower() {
-		// TODO Auto-generated method stub
-		return false;
+		return canRecieve;
 	}
 
 	@Override
 	public boolean canDrainPower() {
-		// TODO Auto-generated method stub
-		return false;
+		return canDrain;
 	}
 
 	@Override
-	public int getMaxRecieve() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getMaxDrain() {
+	public int getMaximumVoltage() {
 		// TODO Auto-generated method stub
 		return 0;
 	}

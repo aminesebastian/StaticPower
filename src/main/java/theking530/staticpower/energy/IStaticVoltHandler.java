@@ -32,8 +32,5 @@ public interface IStaticVoltHandler {
 
 	public boolean canDrainPower();
 
-	public int getMaxRecieve();
-
-	public int getMaxDrain();
-
+	public int getMaximumVoltage();
 }

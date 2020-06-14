@@ -10,7 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -18,7 +17,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
-import theking530.staticpower.client.utilities.GuiFormattingUtilities;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 /**
@@ -74,6 +73,6 @@ public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
 		int remainingCharge = EnergyHandlerItemStackUtilities.getEnergyStored(stack);
 		int capacity = EnergyHandlerItemStackUtilities.getEnergyStorageCapacity(stack);
-		tooltip.add(new StringTextComponent(GuiFormattingUtilities.formatEnergyToString(remainingCharge, capacity)));
+		tooltip.add(GuiTextUtilities.formatEnergyToString(remainingCharge, capacity));
 	}
 }

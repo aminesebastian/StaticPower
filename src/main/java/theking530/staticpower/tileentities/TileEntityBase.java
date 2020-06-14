@@ -141,8 +141,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	public void onPlaced(BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
 		if (hasComponentOfType(SideConfigurationComponent.class)) {
 			if (DisableFaceInteraction) {
-				getComponent(SideConfigurationComponent.class).setWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, getFacingDirection()),
-						MachineSideMode.Never);
+				getComponent(SideConfigurationComponent.class).setWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, getFacingDirection()), MachineSideMode.Never);
 			}
 		}
 	}
@@ -209,8 +208,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	public Direction getFacingDirection() {
 		// If the world is null, return UP and log the error.
 		if (getWorld() == null) {
-			StaticPower.LOGGER.error("There was an attempt to get the facing direction before the block has been fully placed in the world! TileEntity: %1$s at position: %2$s.",
-					getDisplayName().getFormattedText(), pos);
+			StaticPower.LOGGER.error("There was an attempt to get the facing direction before the block has been fully placed in the world! TileEntity: %1$s at position: %2$s.", getDisplayName().getFormattedText(), pos);
 			return Direction.UP;
 		}
 
@@ -362,13 +360,8 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 * Calls the pre-process methods on all the components.
 	 */
 	private void preProcessUpdateComponents() {
-		try {
-			for (AbstractTileEntityComponent component : Components.values()) {
-				component.preProcessUpdate();
-			}
-		} catch (Exception e) {
-			StaticPower.LOGGER.warn(String.format("An error occured while attempting to perform the TileEntityComponent's preprocess update for Tile Entity: $1%s at position: %2$s.",
-					getDisplayName().getString(), getPos()), e);
+		for (AbstractTileEntityComponent component : Components.values()) {
+			component.preProcessUpdate();
 		}
 	}
 
@@ -376,13 +369,8 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 * Calls the post-process methods on all the components.
 	 */
 	private void postProcessUpdateComponents() {
-		try {
-			for (AbstractTileEntityComponent component : Components.values()) {
-				component.postProcessUpdate();
-			}
-		} catch (Exception e) {
-			StaticPower.LOGGER.warn(String.format("An error occured while attempting to perform the TileEntityComponent's postprocess update for Tile Entity: $1%s at position: %2$s.",
-					getDisplayName().getString(), getPos()), e);
+		for (AbstractTileEntityComponent component : Components.values()) {
+			component.postProcessUpdate();
 		}
 	}
 
@@ -410,14 +398,9 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		// tag. Catch errors on a per component basis to prevent one component from
 		// breaking all the rest.
 		for (AbstractTileEntityComponent component : Components.values()) {
-			try {
-				CompoundNBT componentTag = new CompoundNBT();
-				component.serializeUpdateNbt(componentTag);
-				nbt.put(component.getComponentName(), componentTag);
-			} catch (Exception e) {
-				StaticPower.LOGGER.error(String.format("An error occured when attempting to serialize update NBT for Component: %1$s for TileEntity: %2$s at Location: %3$s.",
-						component.getComponentName(), getDisplayName().getFormattedText(), pos), e);
-			}
+			CompoundNBT componentTag = new CompoundNBT();
+			component.serializeUpdateNbt(componentTag);
+			nbt.put(component.getComponentName(), componentTag);
 		}
 		nbt.putBoolean("DISABLE_FACE", DisableFaceInteraction);
 		return nbt;
@@ -433,13 +416,8 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		// Iterate through all the components and deserialize each one. Catch errors on
 		// a per component basis to prevent one component from breaking all the rest.
 		for (AbstractTileEntityComponent component : Components.values()) {
-			try {
-				if (nbt.contains(component.getComponentName())) {
-					component.deserializeUpdateNbt(nbt.getCompound(component.getComponentName()));
-				}
-			} catch (Exception e) {
-				StaticPower.LOGGER.error(String.format("An error occured when attempting to deserialize update NBT for Component: %1$s for TileEntity: %2$s at Location: %3$s.",
-						component.getComponentName(), getDisplayName().getFormattedText(), pos), e);
+			if (nbt.contains(component.getComponentName())) {
+				component.deserializeUpdateNbt(nbt.getCompound(component.getComponentName()));
 			}
 		}
 		DisableFaceInteraction = nbt.getBoolean("DISABLE_FACE");
@@ -462,14 +440,9 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		// tag. Catch errors on a per component basis to prevent one component from
 		// breaking all the rest.
 		for (AbstractTileEntityComponent component : Components.values()) {
-			try {
-				CompoundNBT componentTag = new CompoundNBT();
-				component.serializeSaveNbt(componentTag);
-				nbt.put(component.getComponentName(), componentTag);
-			} catch (Exception e) {
-				StaticPower.LOGGER.error(String.format("An error occured when attempting to serialize save NBT for Component: %1$s for TileEntity: %2$s at Location: %3$s.",
-						component.getComponentName(), getDisplayName().getFormattedText(), pos), e);
-			}
+			CompoundNBT componentTag = new CompoundNBT();
+			component.serializeSaveNbt(componentTag);
+			nbt.put(component.getComponentName(), componentTag);
 		}
 
 		return nbt;
@@ -485,13 +458,8 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		// Iterate through all the components and deserialize each one. Catch errors on
 		// a per component basis to prevent one component from breaking all the rest.
 		for (AbstractTileEntityComponent component : Components.values()) {
-			try {
-				if (nbt.contains(component.getComponentName())) {
-					component.deserializeSaveNbt(nbt.getCompound(component.getComponentName()));
-				}
-			} catch (Exception e) {
-				StaticPower.LOGGER.error(String.format("An error occured when attempting to deserialize save NBT for Component: %1$s for TileEntity: %2$s at Location: %3$s.",
-						component.getComponentName(), getDisplayName().getFormattedText(), pos), e);
+			if (nbt.contains(component.getComponentName())) {
+				component.deserializeSaveNbt(nbt.getCompound(component.getComponentName()));
 			}
 		}
 	}
@@ -516,6 +484,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
 		super.onDataPacket(net, pkt);
 		deserializeUpdateNbt(pkt.getNbtCompound());
+		this.markTileEntityForSynchronization();
 	}
 
 	/**

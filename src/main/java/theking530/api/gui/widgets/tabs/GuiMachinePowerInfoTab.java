@@ -8,14 +8,14 @@ public class GuiMachinePowerInfoTab extends GuiPowerInfoTab {
 	private IEnergyUser energyUser;
 
 	public GuiMachinePowerInfoTab(int width, int height, IEnergyUser machine) {
-		super(80, 80, machine.getEnergyStorage());
+		super(machine.getEnergyStorage());
 		energyUser = machine;
 	}
 
 	@Override
 	protected void setPowerInfoText() {
-		String text = (TextFormatting.GREEN + "Current I/O: =" + energyUser.getEnergyStorage().getEnergyIO() + " RF/t=" + TextFormatting.AQUA + "Max Recieve:="
-				+ energyUser.getEnergyStorage().getStorage().getMaxReceive() + " RF/t=" + TextFormatting.RED + "Max Usage:=" + energyUser.maxEnergyUsagePerTick()) + " RF/t";
+		String text = (TextFormatting.GREEN + "Current I/O: =" + energyUser.getEnergyStorage().getEnergyIO() + " RF/t=" + TextFormatting.AQUA + "Max Recieve:=" + energyUser.getEnergyStorage().getStorage().getMaxReceive() + " RF/t="
+				+ TextFormatting.RED + "Max Usage:=" + energyUser.maxEnergyUsagePerTick()) + " RF/t";
 		setText("Power Usage", text);
 	}
 }

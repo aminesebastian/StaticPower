@@ -7,7 +7,7 @@ import theking530.api.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 
 public class GuiDigistoreManager extends StaticPowerTileEntityGui<ContainerDigistoreManager, TileEntityDigistoreManager> {
-	//private GuiInfoTab infoTab;
+	// private GuiInfoTab infoTab;
 
 	public GuiDigistoreManager(ContainerDigistoreManager container, PlayerInventory invPlayer, ITextComponent name) {
 		super(container, invPlayer, name, 176, 150);
@@ -15,9 +15,9 @@ public class GuiDigistoreManager extends StaticPowerTileEntityGui<ContainerDigis
 
 	@Override
 	public void initializeGui() {
-		//getTabManager().registerTab(infoTab = new GuiInfoTab(100, 65));
-		getTabManager().registerTab(new GuiRedstoneTab(100, 85, getTileEntity()));
-		getTabManager().registerTab(new GuiSideConfigTab(80, 80, false, getTileEntity()));
+		// getTabManager().registerTab(infoTab = new GuiInfoTab(100, 65));
+		getTabManager().registerTab(new GuiRedstoneTab(getTileEntity()));
+		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
 	}
 
 	@Override

@@ -21,14 +21,14 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 		FORWARD, BACKWARDS;
 	}
 
-	private final MachineSideMode[] configuration;
+	private MachineSideMode[] configuration;
 	private final MachineSideMode[] defaultConfiguration;
 	private final BiConsumer<Direction, MachineSideMode> callback;
 	private final BiPredicate<Direction, MachineSideMode> sideModeFilter;
 
 	public SideConfigurationComponent(String name, BiConsumer<Direction, MachineSideMode> onConfigurationChangedCallback, BiPredicate<Direction, MachineSideMode> sideModeFilter) {
 		this(name, onConfigurationChangedCallback, sideModeFilter,
-				new MachineSideMode[] { MachineSideMode.Regular, MachineSideMode.Regular, MachineSideMode.Regular, MachineSideMode.Regular, MachineSideMode.Regular, MachineSideMode.Regular });
+				new MachineSideMode[] { MachineSideMode.Input, MachineSideMode.Input, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output });
 	}
 
 	public SideConfigurationComponent(String name, BiConsumer<Direction, MachineSideMode> onConfigurationChangedCallback, BiPredicate<Direction, MachineSideMode> sideModeFilter,
@@ -73,8 +73,14 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	 */
 	public void setWorldSpaceDirectionConfiguration(@Nonnull Direction facing, @Nonnull MachineSideMode newMode) {
 		configuration[facing.ordinal()] = newMode;
-		callback.accept(facing, newMode);
 		getTileEntity().markTileEntityForSynchronization();
+		callback.accept(facing, newMode);
+	}
+
+	public void setWorldSpaceConfiguration(@Nonnull MachineSideMode[] modes) {
+		configuration = modes;
+		getTileEntity().markTileEntityForSynchronization();
+		callback.accept(null, null);
 	}
 
 	/**
@@ -100,9 +106,11 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 			configuration[side.ordinal()] = newMode;
 		} while (!sideModeFilter.test(side, newMode) && newMode != originalMode);
 
+		getTileEntity().markTileEntityForSynchronization();
+		
 		// Finally, raise the changed callback.
 		callback.accept(side, newMode);
-		getTileEntity().markTileEntityForSynchronization();
+
 		return newMode;
 	}
 
@@ -125,7 +133,7 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	}
 
 	/**
-	 * Captures the number of sides set to the provided mode. Useful to check if
+	 * Captures the number of sides set to the provided mode. Useful to check if	
 	 * there are any sides of the provided type by checking if the return value is >
 	 * 0.
 	 * 

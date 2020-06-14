@@ -43,4 +43,51 @@ public class CableUtilities {
 		}
 		return null;
 	}
+
+	public static boolean isCableStraightConnection(CableConnectionState[] connections) {
+		int cableConnections = 0;
+
+		// Get the number of sides that are connected to a cable. If a side is connected
+		// to a tile entity, instantly return false;.
+		for (Direction dir : Direction.values()) {
+			if (connections[dir.ordinal()] == CableConnectionState.CABLE) {
+				cableConnections++;
+			} else if (connections[dir.ordinal()] == CableConnectionState.TILE_ENTITY) {
+				return false;
+			}
+		}
+
+		// If only two sides are connected, check to see which sides. If they are
+		// opposites, we can use a straight cable model.
+		if (cableConnections == 2) {
+			for (int i = 0; i < 6; i += 2) {
+				Direction dir = Direction.values()[i];
+				if (connections[i] == CableConnectionState.CABLE && connections[dir.getOpposite().ordinal()] == CableConnectionState.CABLE) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	public static @Nullable Direction getStraightConnectionSide(CableConnectionState[] connections) {
+		if (isCableStraightConnection(connections)) {
+			for (int i = 0; i < 6; i += 2) {
+				Direction dir = Direction.values()[i];
+				if (connections[dir.ordinal()] == CableConnectionState.CABLE) {
+					return dir;
+				}
+			}
+		}
+		return null;
+	}
+
+	public static boolean isCableStraightConnection(IBlockReader world, BlockPos pos) {
+		AbstractCableProviderComponent connectionComponent = getCableWrapperComponent(world, pos);
+		if (connectionComponent != null) {
+			return isCableStraightConnection(connectionComponent.getConnectionStates());
+		}
+		return false;
+	}
 }

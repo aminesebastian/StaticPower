@@ -74,6 +74,15 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	}
 
 	/**
+	 * Gets the connection states on all sides.
+	 * 
+	 * @return
+	 */
+	public CableConnectionState[] getConnectionStates() {
+		return ConnectionStates;
+	}
+
+	/**
 	 * Allows us to provide additional data about state of the cable for rendering
 	 * purposes.
 	 */

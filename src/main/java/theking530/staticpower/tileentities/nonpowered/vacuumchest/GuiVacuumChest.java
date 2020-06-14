@@ -29,7 +29,7 @@ public class GuiVacuumChest extends StaticPowerTileEntityGui<ContainerVacuumChes
 			xSize = 200;
 		}
 
-		getTabManager().registerTab(new GuiRedstoneTab(100, 85, getTileEntity()));
+		getTabManager().registerTab(new GuiRedstoneTab(getTileEntity()));
 		setOutputSlotSize(16);
 	}
 

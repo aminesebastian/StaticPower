@@ -1,32 +1,27 @@
 package theking530.api.gui.widgets.valuebars;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import theking530.api.gui.GuiDrawUtilities;
 import theking530.api.gui.GuiTextures;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
 
 public class GuiPowerBarUtilities {
-
 	public static List<ITextComponent> getTooltip(int currentEnergy, int maxEnergy, int energyPerTick) {
 		List<ITextComponent> tooltip = new ArrayList<ITextComponent>();
 
 		// Add the input rate to the tooltip.
-		tooltip.add(new TranslationTextComponent("gui.staticpower.input").appendText(": " + energyPerTick).appendText(" ")
-				.appendSibling(new TranslationTextComponent("gui.staticpower.energy_unit_per_tick")));
+		tooltip.add(new TranslationTextComponent("gui.staticpower.input").appendText(": ").appendSibling(GuiTextUtilities.formatEnergyRateToString(energyPerTick)));
 
 		// Show the total amount of energy remaining / total energy capacity.
-		tooltip.add(new StringTextComponent(NumberFormat.getNumberInstance(Locale.US).format(currentEnergy) + "/" + NumberFormat.getNumberInstance(Locale.US).format(maxEnergy)).appendText(" ")
-				.appendSibling(new TranslationTextComponent("gui.staticpower.energy_unit")));
+		tooltip.add(GuiTextUtilities.formatEnergyToString(currentEnergy, maxEnergy));
 
 		return tooltip;
 	}

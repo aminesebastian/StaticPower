@@ -57,7 +57,7 @@ public abstract class StaticPowerTileEntityBlock extends StaticPowerBlock {
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+	public ActionResultType onStaticPowerBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
 		TileEntity tileEntity = world.getTileEntity(pos);
 
 		// Check to ensure this is a tile entity base and the gui type indicates the
@@ -82,7 +82,7 @@ public abstract class StaticPowerTileEntityBlock extends StaticPowerBlock {
 			}
 		}
 		// IF we didn't return earlier, continue the execution.
-		return super.onBlockActivated(state, world, pos, player, hand, hit);
+		return ActionResultType.PASS;
 	}
 
 	@Override

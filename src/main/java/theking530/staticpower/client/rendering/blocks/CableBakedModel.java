@@ -15,10 +15,10 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.client.model.data.IModelData;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.AbstractCableWrapper.CableConnectionState;
+import theking530.staticpower.cables.CableUtilities;
 
 public class CableBakedModel extends AbstractBakedModel {
 	private final IBakedModel Extension;
-	@SuppressWarnings("unused")
 	private final IBakedModel Straight;
 	private final IBakedModel Attachment;
 
@@ -37,25 +37,30 @@ public class CableBakedModel extends AbstractBakedModel {
 		boolean[] disabledSides = data.getData(AbstractCableProviderComponent.DISABLED_CABLE_SIDES);
 		CableConnectionState[] cableConnectionStates = data.getData(AbstractCableProviderComponent.CABLE_CONNECTION_STATES);
 
-		newQuads.addAll(BaseModel.getQuads(state, side, rand, data));
+		if (CableUtilities.isCableStraightConnection(cableConnectionStates)) {
+			newQuads.addAll(getTransformedQuads(Straight, CableUtilities.getStraightConnectionSide(cableConnectionStates), side, state, rand));
+		} else {
+			newQuads.addAll(BaseModel.getQuads(state, side, rand, data));
+			
+			for (Direction dir : Direction.values()) {
+				// If a side is disabled, skip it.
+				if (disabledSides[dir.ordinal()]) {
+					continue;
+				}
 
-		for (Direction dir : Direction.values()) {
-			// If a side is disabled, skip it.
-			if (disabledSides[dir.ordinal()]) {
-				continue;
-			}
+				// Get the connection state.
+				CableConnectionState connectionState = cableConnectionStates[dir.ordinal()];
 
-			// Get the connection state.
-			CableConnectionState connectionState = cableConnectionStates[dir.ordinal()];
-
-			// Decide what to render based on the connection state.
-			if (connectionState == CableConnectionState.CABLE) {
-				newQuads.addAll(getTransformedQuads(Extension, dir, side, state, rand));
-			} else if (connectionState == CableConnectionState.TILE_ENTITY) {
-				newQuads.addAll(getTransformedQuads(Extension, dir, side, state, rand));
-				newQuads.addAll(getTransformedQuads(Attachment, dir, side, state, rand));
+				// Decide what to render based on the connection state.
+				if (connectionState == CableConnectionState.CABLE) {
+					newQuads.addAll(getTransformedQuads(Extension, dir, side, state, rand));
+				} else if (connectionState == CableConnectionState.TILE_ENTITY) {
+					newQuads.addAll(getTransformedQuads(Extension, dir, side, state, rand));
+					newQuads.addAll(getTransformedQuads(Attachment, dir, side, state, rand));
+				}
 			}
 		}
+
 		return newQuads.build();
 	}
 }

@@ -53,14 +53,14 @@ public class StaticWrench extends StaticPowerItem implements IWrenchTool {
 				player.swingArm(Hand.MAIN_HAND);
 				if (!player.isSneaking()) {
 					ActionResultType result = block.wrenchBlock(player, getWrenchMode(item), item, world, pos, face, true);
-					if (result != ActionResultType.PASS) {
+					if (result == ActionResultType.SUCCESS) {
 						playWrenchSound(world, pos);
 						return result;
 					}
 				} else {
 					if (world.getBlockState(pos).getBlock() instanceof IWrenchable) {
 						ActionResultType result = block.sneakWrenchBlock(player, getSneakWrenchMode(item), item, world, pos, face, true);
-						if (result != ActionResultType.PASS) {
+						if (result == ActionResultType.SUCCESS) {
 							playWrenchSound(world, pos);
 							return result;
 						}

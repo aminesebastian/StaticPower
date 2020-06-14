@@ -15,8 +15,8 @@ public class PowerCableWrapper extends AbstractCableWrapper {
 	}
 
 	@Override
-	public void onNetworkJoined(CableNetwork network) {
-		super.onNetworkJoined(network);
+	public void onNetworkJoined(CableNetwork network, boolean updateBlock) {
+		super.onNetworkJoined(network, updateBlock);
 		if (!network.hasModule(CableNetworkModuleTypes.POWER_NETWORK_ATTACHMENT)) {
 			network.addModule(CableNetworkModuleRegistry.get().create(CableNetworkModuleTypes.POWER_NETWORK_ATTACHMENT));
 		}

@@ -11,11 +11,13 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.Constants;
+import theking530.staticpower.cables.AbstractCableWrapper;
 import theking530.staticpower.cables.network.factories.modules.CableNetworkModuleRegistry;
 import theking530.staticpower.cables.network.modules.AbstractCableNetworkModule;
 
@@ -26,6 +28,7 @@ import theking530.staticpower.cables.network.modules.AbstractCableNetworkModule;
 public class CableNetwork {
 	private static final Logger LOGGER = LogManager.getLogger(CableNetwork.class);
 	private final CableNetworkGraph Graph;
+	private final PathCache PathCache;
 	private final long NetworkId;
 	private BlockPos Origin;
 	private boolean InitialScanComplete;
@@ -34,6 +37,7 @@ public class CableNetwork {
 	public CableNetwork(BlockPos origin, long id) {
 		NetworkId = id;
 		Origin = origin;
+		PathCache = new PathCache(this);
 		Graph = new CableNetworkGraph(this);
 		Modules = new HashMap<ResourceLocation, AbstractCableNetworkModule>();
 	}
@@ -50,9 +54,21 @@ public class CableNetwork {
 			module.tick(world);
 		}
 
+
+		for (AbstractCableWrapper cable : Graph.getCables()) {
+			for (TileEntity destination : Graph.getDestinations()) {
+				if (!PathCache.hasPath(cable.getPos(), destination.getPos())) {
+					if (PathCache.calculatePath(cable.getPos(), destination.getPos())) {
+						System.out.println("Succefully calculate path between: " + cable.getPos() + " and: " + destination.getPos() + "  and it is: " + PathCache.getPath(cable.getPos(), destination.getPos()).getLength() + " blocks long.");
+					}
+				}
+			}
+		}
+
 		if (Graph.getCables().size() > 0) {
-			Graph.getCables().forEach(cable->cable.tick());
-			//System.out.println("Network with ID: " + NetworkId + " of Size: " + Graph.getCables().size());
+			Graph.getCables().forEach(cable -> cable.tick());
+			// System.out.println("Network with ID: " + NetworkId + " of Size: " +
+			// Graph.getCables().size());
 		}
 	}
 
@@ -81,6 +97,9 @@ public class CableNetwork {
 	}
 
 	public NetworkMapper updateGraph(World world, BlockPos startingPosition) {
+		// Invalidate the path cache.
+		PathCache.invalidateCache();
+
 		// Map the graph.
 		NetworkMapper output = Graph.scan(world, startingPosition);
 
@@ -103,6 +122,10 @@ public class CableNetwork {
 
 	public CableNetworkGraph getGraph() {
 		return Graph;
+	}
+
+	public PathCache getPathCache() {
+		return PathCache;
 	}
 
 	public void onJoinedWithOtherNetwork(CableNetwork mainNetwork) {

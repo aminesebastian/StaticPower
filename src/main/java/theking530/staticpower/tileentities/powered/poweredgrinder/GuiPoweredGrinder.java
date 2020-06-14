@@ -4,6 +4,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import theking530.api.gui.widgets.progressbars.GrinderProgressBar;
+import theking530.api.gui.widgets.tabs.BaseGuiTab;
 import theking530.api.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.api.gui.widgets.tabs.GuiInfoTab;
 import theking530.api.gui.widgets.tabs.GuiPowerInfoTab;
@@ -27,11 +28,13 @@ public class GuiPoweredGrinder extends StaticPowerTileEntityGui<ContainerPowered
 		registerWidget(new GrinderProgressBar(79, 38, 18, 17).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
 		getTabManager().registerTab(infoTab = new GuiInfoTab(100, 60));
-		getTabManager().registerTab(new GuiRedstoneTab(100, 85, getTileEntity()));
-		getTabManager().registerTab(new GuiSideConfigTab(80, 80, false, getTileEntity()));
-
-		getTabManager().registerTab(new GuiPowerInfoTab(80, 60, ComponentUtilities.getComponent(EnergyStorageComponent.class, "MainEnergyStorage", getTileEntity()).get()).setTabSide(TabSide.LEFT));
-
+		getTabManager().registerTab(new GuiRedstoneTab(getTileEntity()));
+		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
+		
+		BaseGuiTab powerTab;
+		getTabManager().registerTab(powerTab = new GuiPowerInfoTab(ComponentUtilities.getComponent(EnergyStorageComponent.class, "MainEnergyStorage", getTileEntity()).get()).setTabSide(TabSide.LEFT));
+		getTabManager().setInitiallyOpenTab(powerTab);
+		
 		setOutputSlotSize(20);
 	}
 

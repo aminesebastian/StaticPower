@@ -25,7 +25,7 @@ public class CableNetworkGraph {
 		mapper.scanFromLocation(world, scanStartPosition);
 
 		Cables = mapper.getDiscoveredCables();
-		mapper.getNewlyAddedCables().forEach(cable -> cable.onNetworkJoined(Network));
+		mapper.getNewlyAddedCables().forEach(cable -> cable.onNetworkJoined(Network, true));
 		mapper.getRemovedPipes().forEach(cable -> cable.onNetworkLeft());
 		Destinations.addAll(mapper.getDestinations());
 		return mapper;

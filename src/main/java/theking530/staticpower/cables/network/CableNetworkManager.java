@@ -210,8 +210,18 @@ public class CableNetworkManager extends WorldSavedData {
 				continue;
 			}
 
-			// Check if a cable exists on the provided side and it is enabled on that side.
+			// Check if a cable exists on the provided side and it is enabled on that side
+			// and of the same type.
 			AbstractCableWrapper wrapper = getCable(cable.getPos().offset(dir));
+
+			if (wrapper == null) {
+				continue;
+			}
+
+			if (wrapper.getType() != cable.getType()) {
+				continue;
+			}
+
 			if (wrapper != null && !wrapper.isDisabledOnSide(dir.getOpposite())) {
 				wrappers.add(wrapper);
 			}
@@ -225,20 +235,21 @@ public class CableNetworkManager extends WorldSavedData {
 
 	@Override
 	public void read(CompoundNBT tag) {
-		ListNBT cables = tag.getList("cables", Constants.NBT.TAG_COMPOUND);
-		for (INBT cableTag : cables) {
-			CompoundNBT cableTagCompound = (CompoundNBT) cableTag;
-			ResourceLocation type = new ResourceLocation(cableTagCompound.getString("type"));
-			AbstractCableWrapper cable = CableWrapperRegistry.get().create(type, World, cableTagCompound);
-			WorldCables.put(cable.getPos(), cable);
-		}
-
 		ListNBT nets = tag.getList("networks", Constants.NBT.TAG_COMPOUND);
 		for (INBT netTag : nets) {
 			CompoundNBT netTagCompound = (CompoundNBT) netTag;
 			CableNetwork network = CableNetwork.create(netTagCompound);
 
 			Networks.put(network.getId(), network);
+		}
+
+		ListNBT cables = tag.getList("cables", Constants.NBT.TAG_COMPOUND);
+		for (INBT cableTag : cables) {
+			CompoundNBT cableTagCompound = (CompoundNBT) cableTag;
+			ResourceLocation type = new ResourceLocation(cableTagCompound.getString("type"));
+			AbstractCableWrapper cable = CableWrapperRegistry.get().create(type, World, cableTagCompound);
+			WorldCables.put(cable.getPos(), cable);
+			cable.onNetworkJoined(Networks.get(cableTagCompound.getLong("networkId")), false);
 		}
 
 		// Get the current network Id.
@@ -254,6 +265,7 @@ public class CableNetworkManager extends WorldSavedData {
 		WorldCables.values().forEach(cable -> {
 			CompoundNBT cableTag = new CompoundNBT();
 			cableTag.putString("type", cable.getType().toString());
+			cableTag.putLong("networkId", cable.getNetwork().getId());
 			cable.writeToNbt(cableTag);
 			cables.add(cableTag);
 		});

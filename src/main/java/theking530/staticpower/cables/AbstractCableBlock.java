@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,9 +23,9 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import theking530.api.wrench.RegularWrenchMode;
+import theking530.api.wrench.SneakWrenchMode;
 import theking530.staticpower.blocks.ICustomModelSupplier;
 import theking530.staticpower.blocks.StaticPowerBlock;
-import theking530.staticpower.cables.AbstractCableWrapper.CableConnectionState;
 import theking530.staticpower.cables.network.CableBoundsCache;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
@@ -93,41 +94,49 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 	}
 
 	@Override
+	public ActionResultType sneakWrenchBlock(PlayerEntity player, SneakWrenchMode mode, ItemStack wrench, World world, BlockPos pos, Direction facing, boolean returnDrops) {
+		if (!world.isRemote) {
+			Block.spawnDrops(world.getBlockState(pos), world, pos, world.getTileEntity(pos), player, wrench);
+			world.setBlockState(pos, Blocks.AIR.getDefaultState());
+		}
+		return ActionResultType.SUCCESS;
+	}
+
+	@Override
 	public ActionResultType wrenchBlock(PlayerEntity player, RegularWrenchMode mode, ItemStack wrench, World world, BlockPos pos, Direction facing, boolean returnDrops) {
 		super.wrenchBlock(player, mode, wrench, world, pos, facing, returnDrops);
 
-		AbstractCableProviderComponent component = CableUtilities.getCableWrapperComponent(world, pos);
-		if (component == null) {
-			return ActionResultType.FAIL;
-		}
+//		AbstractCableProviderComponent component = CableUtilities.getCableWrapperComponent(world, pos);
+//		if (component == null) {
+//			return ActionResultType.FAIL;
+//		}
+//
+//		Direction hoveredDirection = CableBounds.getHoveredAttachmentDirection(pos, player);
+//		Direction actualDirection = hoveredDirection == null ? facing : hoveredDirection;
+//
+//		// Return early if the cable is not connected on the other side.
+//		if (component.getConnectionState(actualDirection) == CableConnectionState.NONE) {
+//			return ActionResultType.FAIL;
+//		}
+//
+//		component.setSideDisabledState(actualDirection, !component.isSideDisabled(actualDirection));
+//
+//		AbstractCableProviderComponent oppositeComponent = CableUtilities.getCableWrapperComponent(world, pos.offset(actualDirection));
+//		if (oppositeComponent != null) {
+//			oppositeComponent.setSideDisabledState(actualDirection.getOpposite(), component.isSideDisabled(actualDirection));
+//		}
+//
+//		world.setBlockState(pos, world.getBlockState(pos), 1 | 2 | 8);
+//
+//		if (!world.isRemote) {
+//			AbstractCableWrapper cable = CableNetworkManager.get(world).getCable(pos);
+//			if (cable != null) {
+//				cable.setDisabledStateOnSide(actualDirection, !cable.isDisabledOnSide(actualDirection));
+//			}
+//			world.markAndNotifyBlock(pos, null, world.getBlockState(pos), world.getBlockState(pos), 1 | 2 | 8);
+//		}
 
-		Direction hoveredDirection = CableBounds.getHoveredAttachmentDirection(pos, player);
-		Direction actualDirection = hoveredDirection == null ? facing : hoveredDirection;
-
-		// Return early if the cable is not connected on the other side.
-		if (CableUtilities.getConnectionState(world, pos, actualDirection) != CableConnectionState.NONE) {
-			return ActionResultType.FAIL;
-		}
-
-		component.setSideDisabledState(actualDirection, !component.isSideDisabled(actualDirection));
-
-		AbstractCableProviderComponent oppositeComponent = CableUtilities.getCableWrapperComponent(world, pos.offset(actualDirection));
-		if (oppositeComponent != null) {
-			oppositeComponent.setSideDisabledState(actualDirection.getOpposite(), component.isSideDisabled(actualDirection));
-		}
-
-		if (!world.isRemote) {
-			AbstractCableWrapper cable = CableNetworkManager.get(world).getCable(pos);
-			if (cable != null) {
-				cable.setDisabledStateOnSide(actualDirection, !cable.isDisabledOnSide(actualDirection));
-
-				AbstractCableWrapper oppositeCable = CableNetworkManager.get(world).getCable(pos.offset(actualDirection));
-				if (oppositeCable != null) {
-					oppositeCable.setDisabledStateOnSide(actualDirection.getOpposite(), cable.isDisabledOnSide(actualDirection));
-				}
-			}
-		}
-		return ActionResultType.PASS;
+		return ActionResultType.SUCCESS;
 	}
 
 	protected boolean isDisabledOnSide(IWorld world, BlockPos pos, Direction direction) {

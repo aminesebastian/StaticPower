@@ -26,8 +26,8 @@ public class GuiPowerInfoTab extends BaseGuiTab {
 	private String tabTitle;
 	private EnergyStorageComponent energyStorage;
 
-	public GuiPowerInfoTab(int width, int height, EnergyStorageComponent storage) {
-		super(width, height, GuiTextures.PURPLE_TAB, ModUpgrades.BasicPowerUpgrade);
+	public GuiPowerInfoTab(EnergyStorageComponent storage) {
+		super(80, 60, GuiTextures.PURPLE_TAB, ModUpgrades.BasicPowerUpgrade);
 		fontRenderer = Minecraft.getInstance().fontRenderer;
 		energyStorage = storage;
 	}

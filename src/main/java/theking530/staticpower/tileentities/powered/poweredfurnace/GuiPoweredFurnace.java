@@ -8,6 +8,7 @@ import net.minecraft.util.text.ITextComponent;
 import theking530.api.gui.GuiTextures;
 import theking530.api.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.api.gui.widgets.tabs.BaseGuiTab.TabSide;
+import theking530.api.gui.widgets.tabs.BaseGuiTab;
 import theking530.api.gui.widgets.tabs.GuiPowerInfoTab;
 import theking530.api.gui.widgets.tabs.GuiRedstoneTab;
 import theking530.api.gui.widgets.tabs.GuiSideConfigTab;
@@ -28,9 +29,13 @@ public class GuiPoweredFurnace extends StaticPowerTileEntityGui<ContainerPowered
 		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 54));
 		registerWidget(new ArrowProgressBar(73, 32, 32, 16).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
-		getTabManager().registerTab(new GuiRedstoneTab(100, 85, getTileEntity()));
-		getTabManager().registerTab(new GuiSideConfigTab(80, 80, false, getTileEntity()));
-		getTabManager().registerTab(new GuiPowerInfoTab(80, 60, ComponentUtilities.getComponent(EnergyStorageComponent.class, "MainEnergyStorage", getTileEntity()).get()).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiRedstoneTab(getTileEntity()));
+		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
+
+		BaseGuiTab powerTab;
+		getTabManager().registerTab(powerTab = new GuiPowerInfoTab(ComponentUtilities.getComponent(EnergyStorageComponent.class, "MainEnergyStorage", getTileEntity()).get()).setTabSide(TabSide.LEFT));
+		getTabManager().setInitiallyOpenTab(powerTab);
+
 		setOutputSlotSize(20);
 	}
 

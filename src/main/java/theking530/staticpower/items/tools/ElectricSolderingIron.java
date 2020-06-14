@@ -10,7 +10,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.staticpower.client.utilities.GuiFormattingUtilities;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
@@ -44,6 +44,6 @@ public class ElectricSolderingIron extends StaticPowerEnergyStoringItem implemen
 	protected void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
 		int energyStored = EnergyHandlerItemStackUtilities.getEnergyStored(stack);
 		int capacity = EnergyHandlerItemStackUtilities.getEnergyStorageCapacity(stack);
-		tooltip.add(new StringTextComponent("Power Stored: " + GuiFormattingUtilities.formatEnergyToString(energyStored, capacity)));
+		tooltip.add(new StringTextComponent("Power Stored: " + GuiTextUtilities.formatEnergyToString(energyStored, capacity)));
 	}
 }

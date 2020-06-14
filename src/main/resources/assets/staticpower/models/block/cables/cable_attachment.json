@@ -1,9 +1,5 @@
 {
 	"parent": "block/block",
-	"textures": {
-		"0": "staticpower:blocks/cables/cable_attachment",
-		"particle": "staticpower:blocks/cables/cable_attachment"
-	},
 	"elements": [
 		{
 			"name": "AttachmentFront",

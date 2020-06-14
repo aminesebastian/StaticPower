@@ -31,7 +31,7 @@ public class GuiRedstoneTab extends BaseGuiTab {
 	public ItemButton lowRedstoneButton;
 	public ItemButton highRedstoneButton;
 
-	public GuiRedstoneTab(int width, int height, TileEntityBase te) {
+	public GuiRedstoneTab(TileEntityBase te) {
 		super(100, 85, GuiTextures.RED_TAB, Items.REDSTONE);
 		fontRenderer = Minecraft.getInstance().fontRenderer;
 		tileEntity = te;

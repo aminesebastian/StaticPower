@@ -1,123 +1,70 @@
 package theking530.staticpower.cables.network.pathfinding;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-public class NetworkPathFinder<T> {
-	private final List<Edge<T>> edges;
-	private Set<Node<T>> settledNodes;
-	private Set<Node<T>> unSettledNodes;
-	private Map<Node<T>, Node<T>> predecessors;
-	private Map<Node<T>, Float> distance;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
+import theking530.staticpower.cables.network.CableNetworkGraph;
+import theking530.staticpower.cables.network.Path;
 
-	public NetworkPathFinder(Graph<T> graph) {
-		this.edges = new ArrayList<>(graph.getEdges());
+public class NetworkPathFinder {
+	private final HashSet<BlockPos> CablePositions;
+	private final HashMap<BlockPos, Path> Paths;
+	private final HashSet<BlockPos> ScannedPositions;
+	private final BlockPos StartingCablePosition;
+
+	public NetworkPathFinder(CableNetworkGraph graph, BlockPos startingCablePosition) {
+		// Capture all the cable positions in the network graph.
+		CablePositions = new HashSet<BlockPos>();
+		graph.getCables().forEach(cable -> CablePositions.add(cable.getPos()));
+		graph.getDestinations().forEach(destination -> CablePositions.add(destination.getPos()));
+		
+		// Capture the starting cable position.
+		StartingCablePosition = startingCablePosition;
+
+		ScannedPositions = new HashSet<BlockPos>();
+		Paths = new HashMap<BlockPos, Path>();
 	}
 
-	public void execute(Node<T> source) {
-		this.settledNodes = new HashSet<>();
-		this.unSettledNodes = new HashSet<>();
-		this.distance = new HashMap<>();
-		this.predecessors = new HashMap<>();
-		this.distance.put(source, 0.0f);
-		this.unSettledNodes.add(source);
-
-		while (unSettledNodes.size() > 0) {
-			Node<T> node = getMinimum(unSettledNodes);
-			settledNodes.add(node);
-			unSettledNodes.remove(node);
-			findMinimalDistances(node);
-		}
+	public HashMap<BlockPos, Path> executeAlgorithm() {
+		algorithmWorker(StartingCablePosition);
+		return Paths;
 	}
 
-	private void findMinimalDistances(Node<T> node) {
-		List<Node<T>> adjacentNodes = getNeighbors(node);
+	private void algorithmWorker(BlockPos cable) {
+		ScannedPositions.add(cable);
 
-		for (Node<T> target : adjacentNodes) {
-			if (getShortestDistance(target) > getShortestDistance(node) + getDistance(node, target)) {
-				distance.put(target, getShortestDistance(node) + getDistance(node, target));
-				predecessors.put(target, node);
-				unSettledNodes.add(target);
+		// Iterate through all the adjacents.
+		for (BlockPos adjacent : getAdjacents(cable)) {
+			// Skip already scanned positions.
+			if (ScannedPositions.contains(adjacent)) {
+				continue;
 			}
-		}
-	}
 
-	private float getDistance(Node<T> node, Node<T> target) {
-		for (Edge<T> edge : edges) {
-			if (edge.getFrom().equals(node) && edge.getTo().equals(target)) {
-				return edge.getEdgeWeight();
-			}
-		}
-
-		throw new RuntimeException("Should not happen");
-	}
-
-	private List<Node<T>> getNeighbors(Node<T> node) {
-		List<Node<T>> neighbors = new ArrayList<>();
-
-		for (Edge<T> edge : edges) {
-			if (edge.getFrom().equals(node) && !isSettled(edge.getTo())) {
-				neighbors.add(edge.getTo());
-			}
-		}
-
-		return neighbors;
-	}
-
-	private Node<T> getMinimum(Set<Node<T>> nodes) {
-		Node<T> minimum = null;
-
-		for (Node<T> node : nodes) {
-			if (minimum == null) {
-				minimum = node;
+			// IF we have a path to this adjacent already, create a new path for it using
+			// the previous. Otherwise, create a new path.
+			if (Paths.containsKey(cable)) {
+				Path prevPath = Paths.get(cable);
+				Paths.put(adjacent, Path.fromPreviousPath(prevPath, adjacent));
 			} else {
-				if (getShortestDistance(node) < getShortestDistance(minimum)) {
-					minimum = node;
-				}
+				Paths.put(adjacent, new Path(cable, adjacent, cable, adjacent));
+			}
+
+			// RECURSE.
+			algorithmWorker(adjacent);
+		}
+	}
+
+	public List<BlockPos> getAdjacents(BlockPos pos) {
+		List<BlockPos> output = new ArrayList<BlockPos>();
+		for (Direction dir : Direction.values()) {
+			if (CablePositions.contains(pos.offset(dir))) {
+				output.add(pos.offset(dir));
 			}
 		}
-
-		return minimum;
-	}
-
-	private boolean isSettled(Node<T> node) {
-		return settledNodes.contains(node);
-	}
-
-	private float getShortestDistance(Node<T> destination) {
-		Float d = distance.get(destination);
-
-		if (d == null) {
-			return Integer.MAX_VALUE;
-		} else {
-			return d;
-		}
-	}
-
-	public LinkedList<Node<T>> getPath(Node<T> target) {
-		LinkedList<Node<T>> path = new LinkedList<>();
-
-		Node<T> step = target;
-
-		if (predecessors.get(step) == null) {
-			return null;
-		}
-
-		path.add(step);
-
-		while (predecessors.get(step) != null) {
-			step = predecessors.get(step);
-			path.add(step);
-		}
-
-		Collections.reverse(path);
-
-		return path;
+		return output;
 	}
 }

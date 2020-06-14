@@ -118,13 +118,13 @@ public class MachineBakedModel extends AbstractBakedModel {
 		}
 
 		TileEntity rawTileEntity = world.getTileEntity(blockPos);
+
 		if (rawTileEntity != null && rawTileEntity instanceof TileEntityBase) {
 			TileEntityBase configurable = (TileEntityBase) rawTileEntity;
 			if (configurable.hasComponentOfType(SideConfigurationComponent.class)) {
 				return Optional.of(configurable.getComponent(SideConfigurationComponent.class).getWorldSpaceConfiguration());
 			}
 		}
-
 		return Optional.empty();
 	}
 }
