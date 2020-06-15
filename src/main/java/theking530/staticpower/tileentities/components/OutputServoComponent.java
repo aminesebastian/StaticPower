@@ -81,7 +81,7 @@ public class OutputServoComponent extends AbstractTileEntityComponent {
 				TileEntity te = getTileEntity().getWorld().getTileEntity(getTileEntity().getPos().offset(SideConfigurationUtilities.getDirectionFromSide(blockSide, facing)));
 				if (te != null) {
 					te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, SideConfigurationUtilities.getDirectionFromSide(blockSide, facing).getOpposite()).ifPresent((IItemHandler instance) -> {
-						inventory.getInventory().setStackInSlot(fromSlot, InventoryUtilities.insertItemIntoInventory(instance, stack));
+						inventory.getInventory().setStackInSlot(fromSlot, InventoryUtilities.insertItemIntoInventory(instance, stack, false));
 					});
 				}
 			}

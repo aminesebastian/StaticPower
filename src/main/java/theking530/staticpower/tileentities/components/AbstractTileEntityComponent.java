@@ -100,6 +100,10 @@ public abstract class AbstractTileEntityComponent {
 		return tileEntity;
 	}
 
+	public BlockPos getPos() {
+		return tileEntity.getPos();
+	}
+
 	public World getWorld() {
 		if (tileEntity.isRemoved()) {
 			throw new RuntimeException("We cannot access the world if the tile entity has been removed!");

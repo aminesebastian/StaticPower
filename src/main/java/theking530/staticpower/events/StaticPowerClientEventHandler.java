@@ -22,8 +22,9 @@ import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.blocks.IBlockRenderLayerProvider;
 import theking530.staticpower.blocks.ICustomModelSupplier;
+import theking530.staticpower.client.StaticPowerAdditionalModels;
+import theking530.staticpower.client.StaticPowerAdditionalSprites;
 import theking530.staticpower.client.rendering.CustomRenderer;
-import theking530.staticpower.client.rendering.StaticPowerRendererTextures;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderDigistore;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderItemCable;
 import theking530.staticpower.initialization.ModTileEntityTypes;
@@ -49,14 +50,10 @@ public class StaticPowerClientEventHandler {
 					RenderTypeLookup.setRenderLayer(block, renderLayerProvider.getRenderType());
 				}
 			}
-
-			// Check to see if we should register any additional models.
-			if (block instanceof ICustomModelSupplier) {
-				// Get the supplier.
-				ICustomModelSupplier supplier = ((ICustomModelSupplier) block);
-				supplier.registerAdditionalModels();
-			}
 		}
+
+		// Register any additional models we want.
+		StaticPowerAdditionalModels.regsiterModels();
 
 		// Initialize the guis.
 		initializeGui();
@@ -99,7 +96,7 @@ public class StaticPowerClientEventHandler {
 	public static void onTextureStitchEvent(TextureStitchEvent.Pre event) {
 		int spriteCount = 0;
 		if (event.getMap().getTextureLocation() == AtlasTexture.LOCATION_BLOCKS_TEXTURE) {
-			for (ResourceLocation sprite : StaticPowerRendererTextures.SPRITES) {
+			for (ResourceLocation sprite : StaticPowerAdditionalSprites.SPRITES) {
 				event.addSprite(sprite);
 				spriteCount++;
 			}

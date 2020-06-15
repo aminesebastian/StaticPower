@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.math.BlockPos;
 import theking530.api.utilities.Color;
 import theking530.api.utilities.Vector3D;
-import theking530.staticpower.client.rendering.StaticPowerRendererTextures;
+import theking530.staticpower.client.StaticPowerAdditionalSprites;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.TileEntityDigistore;
 
 @SuppressWarnings("deprecation")
@@ -47,12 +47,12 @@ public class TileEntityRenderDigistore extends StaticPowerTileEntitySpecialRende
 
 		// Draw each icon and offset by the icon size each time.
 		if (tileEntity.isLocked()) {
-			drawTexturedQuadLit(StaticPowerRendererTextures.DIGISTORE_LOCKED_INDICATOR, matrixStack, buffer, new Vector3D(0.5f + offset, 0.82f, 0.0001f), new Vector3D(ICON_SIZE, ICON_SIZE, 1.0f),
+			drawTexturedQuadLit(StaticPowerAdditionalSprites.DIGISTORE_LOCKED_INDICATOR, matrixStack, buffer, new Vector3D(0.5f + offset, 0.82f, 0.0001f), new Vector3D(ICON_SIZE, ICON_SIZE, 1.0f),
 					Color.WHITE, combinedLight);
 			offset += ICON_SIZE;
 		}
 		if (tileEntity.isVoidUpgradeInstalled()) {
-			drawTexturedQuadLit(StaticPowerRendererTextures.DIGISTORE_VOID_INDICATOR, matrixStack, buffer, new Vector3D(0.5f + offset, 0.82f, 0.0001f), new Vector3D(ICON_SIZE, ICON_SIZE, 1.0f),
+			drawTexturedQuadLit(StaticPowerAdditionalSprites.DIGISTORE_VOID_INDICATOR, matrixStack, buffer, new Vector3D(0.5f + offset, 0.82f, 0.0001f), new Vector3D(ICON_SIZE, ICON_SIZE, 1.0f),
 					Color.WHITE, combinedLight);
 			offset += ICON_SIZE;
 		}
@@ -60,6 +60,6 @@ public class TileEntityRenderDigistore extends StaticPowerTileEntitySpecialRende
 
 	public void drawFillBar(TileEntityDigistore tileEntity, BlockPos pos, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
 		float filledRatio = tileEntity.getFilledRatio();
-		drawTexturedQuad(StaticPowerRendererTextures.DIGISTORE_FILL_BAR, matrixStack, buffer, new Vector3D(0.25f, 0.12f, 0.001f), new Vector3D(0.5f * filledRatio, 0.08f, 1.0f));
+		drawTexturedQuad(StaticPowerAdditionalSprites.DIGISTORE_FILL_BAR, matrixStack, buffer, new Vector3D(0.25f, 0.12f, 0.001f), new Vector3D(0.5f * filledRatio, 0.08f, 1.0f));
 	}
 }

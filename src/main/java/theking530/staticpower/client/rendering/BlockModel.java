@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Direction;
 import theking530.api.utilities.Color;
+import theking530.staticpower.client.StaticPowerAdditionalSprites;
 
 public class BlockModel {
 	@SuppressWarnings("unused")
@@ -32,7 +33,7 @@ public class BlockModel {
 
 		// Bind a blank texture.
 		@SuppressWarnings("deprecation")
-		TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(StaticPowerRendererTextures.BLANK_TEXTURE);
+		TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(StaticPowerAdditionalSprites.BLANK_TEXTURE);
 
 		// Draw each block side.
 		for (Direction dir : Direction.values()) {

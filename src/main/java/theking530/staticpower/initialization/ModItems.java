@@ -4,6 +4,7 @@ import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.items.book.StaticPowerBook;
+import theking530.staticpower.items.cableattachments.BasicExtractorAttachment;
 import theking530.staticpower.items.crops.DepletedCrop;
 import theking530.staticpower.items.crops.StaticPlantCrop;
 import theking530.staticpower.items.crops.StaticPlantSeeds;
@@ -195,6 +196,8 @@ public class ModItems {
 	public static StaticWrench StaticWrench;
 
 	public static ItemFilter BasicFilter;
+
+	public static BasicExtractorAttachment BasicExtractorAttachment;
 
 	public static void init() {
 		// Book
@@ -389,5 +392,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(NuggetRedstoneAlloy = new StaticPowerItem("nugget_redstone_alloy"));
 		StaticPowerRegistry.preRegisterItem(NuggetBrass = new StaticPowerItem("nugget_brass"));
 		StaticPowerRegistry.preRegisterItem(NuggetBronze = new StaticPowerItem("nugget_bronze"));
+
+		StaticPowerRegistry.preRegisterItem(BasicExtractorAttachment = new BasicExtractorAttachment("cable_attachment_basic_extractor"));
 	}
 }

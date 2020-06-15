@@ -121,7 +121,7 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 				// return true.
 				for (GrinderOutput output : recipe.getOutputItems()) {
 					if (SDMath.diceRoll(output.getPercentage() + bonusOutputChance)) {
-						InventoryUtilities.fullyInsertItemIntoInventory(outputInventory.getInventory(), output.getItem().copy());
+						InventoryUtilities.fullyInsertItemIntoInventory(outputInventory.getInventory(), output.getItem().copy(), false);
 					}
 				}
 				internalInventory.setStackInSlot(0, ItemStack.EMPTY);

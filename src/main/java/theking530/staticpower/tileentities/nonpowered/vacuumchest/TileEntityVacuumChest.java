@@ -88,7 +88,7 @@ public class TileEntityVacuumChest extends TileEntityBase implements INamedConta
 				if (distance < 1.1 || (shouldTeleport && distance < getRadius() - 0.1f)) {
 					if (InventoryUtilities.canFullyInsertItemIntoInventory(inventory.getInventory(), stack)) {
 						if (!getWorld().isRemote) {
-							InventoryUtilities.insertItemIntoInventory(inventory.getInventory(), stack);
+							InventoryUtilities.insertItemIntoInventory(inventory.getInventory(), stack, false);
 						}
 						entity.remove();
 						getWorld().addParticle(ParticleTypes.PORTAL, (double) pos.getX() + 0.5, (double) pos.getY() + 1.0, (double) pos.getZ() + 0.5, 0.0D, 0.0D, 0.0D);

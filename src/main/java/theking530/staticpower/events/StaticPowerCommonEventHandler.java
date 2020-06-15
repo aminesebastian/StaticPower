@@ -2,12 +2,12 @@ package theking530.staticpower.events;
 
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.cables.network.factories.cables.BasicPowerCableFactory;
-import theking530.staticpower.cables.network.factories.cables.CableTypes;
-import theking530.staticpower.cables.network.factories.cables.CableWrapperRegistry;
-import theking530.staticpower.cables.network.factories.modules.CableNetworkModuleRegistry;
-import theking530.staticpower.cables.network.factories.modules.CableNetworkModuleTypes;
-import theking530.staticpower.cables.network.factories.modules.PowerNetworkModuleFactory;
+import theking530.staticpower.tileentities.cables.network.factories.cables.BasicPowerCableFactory;
+import theking530.staticpower.tileentities.cables.network.factories.cables.CableTypes;
+import theking530.staticpower.tileentities.cables.network.factories.cables.CableWrapperRegistry;
+import theking530.staticpower.tileentities.cables.network.factories.modules.CableNetworkModuleRegistry;
+import theking530.staticpower.tileentities.cables.network.factories.modules.CableNetworkModuleTypes;
+import theking530.staticpower.tileentities.cables.network.factories.modules.PowerNetworkModuleFactory;
 
 public class StaticPowerCommonEventHandler {
 

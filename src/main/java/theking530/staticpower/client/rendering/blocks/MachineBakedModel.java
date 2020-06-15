@@ -28,7 +28,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
-import theking530.staticpower.client.rendering.StaticPowerRendererTextures;
+import theking530.staticpower.client.StaticPowerAdditionalSprites;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.SideConfigurationComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
@@ -80,16 +80,16 @@ public class MachineBakedModel extends AbstractBakedModel {
 		for (BakedQuad quad : baseQuads) {
 			switch (sideConfigurations.get()[side.ordinal()]) {
 			case Input:
-				sideSprite = blocksStitchedTextures.getSprite(StaticPowerRendererTextures.MACHINE_SIDE_INPUT);
+				sideSprite = blocksStitchedTextures.getSprite(StaticPowerAdditionalSprites.MACHINE_SIDE_INPUT);
 				break;
 			case Output:
-				sideSprite = blocksStitchedTextures.getSprite(StaticPowerRendererTextures.MACHINE_SIDE_OUTPUT);
+				sideSprite = blocksStitchedTextures.getSprite(StaticPowerAdditionalSprites.MACHINE_SIDE_OUTPUT);
 				break;
 			case Disabled:
-				sideSprite = blocksStitchedTextures.getSprite(StaticPowerRendererTextures.MACHINE_SIDE_DISABLED);
+				sideSprite = blocksStitchedTextures.getSprite(StaticPowerAdditionalSprites.MACHINE_SIDE_DISABLED);
 				break;
 			default:
-				sideSprite = blocksStitchedTextures.getSprite(StaticPowerRendererTextures.MACHINE_SIDE_NORMAL);
+				sideSprite = blocksStitchedTextures.getSprite(StaticPowerAdditionalSprites.MACHINE_SIDE_NORMAL);
 				break;
 			}
 			if (sideConfigurations.get()[side.ordinal()] != MachineSideMode.Never) {
