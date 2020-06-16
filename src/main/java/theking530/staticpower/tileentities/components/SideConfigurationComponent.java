@@ -151,7 +151,8 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	}
 
 	@Override
-	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt) {
+	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+		super.serializeUpdateNbt(nbt, fromUpdate);
 		for (int i = 0; i < 6; i++) {
 			nbt.putInt("SIDEMODE" + i, configuration[i].ordinal());
 		}
@@ -159,7 +160,8 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	}
 
 	@Override
-	public void deserializeUpdateNbt(CompoundNBT nbt) {
+	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+		super.deserializeUpdateNbt(nbt, fromUpdate);
 		for (int i = 0; i < 6; i++) {
 			configuration[i] = MachineSideMode.values()[nbt.getInt("SIDEMODE" + i)];
 		}

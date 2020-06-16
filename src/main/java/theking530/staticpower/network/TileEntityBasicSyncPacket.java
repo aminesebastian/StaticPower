@@ -30,7 +30,7 @@ public class TileEntityBasicSyncPacket extends NetworkMessage {
 	public TileEntityBasicSyncPacket(TileEntityBase tileEntity) {
 		tileEntityPosition = tileEntity.getPos();
 		machineUpdateTag = new CompoundNBT();
-		tileEntity.serializeUpdateNbt(machineUpdateTag);
+		tileEntity.serializeUpdateNbt(machineUpdateTag, true);
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class TileEntityBasicSyncPacket extends NetworkMessage {
 		TileEntity rawTileEntity = Minecraft.getInstance().player.world.getTileEntity(tileEntityPosition);
 		if (rawTileEntity != null && rawTileEntity instanceof TileEntityBase) {
 			TileEntityBase tileEntity = (TileEntityBase) rawTileEntity;
-			tileEntity.deserializeUpdateNbt(machineUpdateTag);
+			tileEntity.deserializeUpdateNbt(machineUpdateTag, true);
 		}
 	}
 

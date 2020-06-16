@@ -260,8 +260,8 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 		}
 	}
 
-	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt) {
-		super.serializeUpdateNbt(nbt);
+	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+		super.serializeUpdateNbt(nbt, fromUpdate);
 		CompoundNBT itemNbt = new CompoundNBT();
 		storedItem.write(itemNbt);
 		nbt.put("StoredItem", itemNbt);
@@ -270,8 +270,8 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 		return nbt;
 	}
 
-	public void deserializeUpdateNbt(CompoundNBT nbt) {
-		super.deserializeUpdateNbt(nbt);
+	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+		super.deserializeUpdateNbt(nbt, fromUpdate);
 		storedItem = ItemStack.read(nbt.getCompound("StoredItem"));
 		storedAmount = nbt.getInt("StoredAmount");
 		locked = nbt.getBoolean("Locked");

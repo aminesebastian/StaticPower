@@ -52,9 +52,5 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 
 	}
 
-	public void updateAttachmentNBT(ItemStack attachment, CompoundNBT tag) {
-
-	}
-
 	public abstract ResourceLocation getModel(ItemStack attachment, AbstractCableProviderComponent cableComponent);
 }

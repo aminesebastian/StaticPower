@@ -82,7 +82,8 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 	}
 
 	@Override
-	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt) {
+	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+		super.serializeUpdateNbt(nbt, fromUpdate);
 		nbt.putBoolean("processing", processing);
 		nbt.putBoolean("processingPaused", processingPaused);
 		nbt.putInt("currentTime", currentProcessingTime);
@@ -90,7 +91,8 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 	}
 
 	@Override
-	public void deserializeUpdateNbt(CompoundNBT nbt) {
+	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+		super.deserializeUpdateNbt(nbt, fromUpdate);
 		processing = nbt.getBoolean("processing");
 		processingPaused = nbt.getBoolean("processingPaused");
 		currentProcessingTime = nbt.getInt("currentTime");

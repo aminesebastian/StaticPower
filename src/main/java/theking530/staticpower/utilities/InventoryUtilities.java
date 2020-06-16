@@ -55,7 +55,7 @@ public class InventoryUtilities {
 	}
 
 	public static boolean canFullyInsertItemIntoInventory(IItemHandler inv, ItemStack stack) {
-		ItemStack output = stack;
+		ItemStack output = stack.copy();
 		for (int i = 0; i < inv.getSlots(); i++) {
 			output = inv.insertItem(i, output, true);
 			if (output.getCount() <= 0) {
@@ -75,7 +75,7 @@ public class InventoryUtilities {
 	}
 
 	public static ItemStack insertItemIntoInventory(IItemHandler inv, ItemStack stack, boolean simulate) {
-		ItemStack output = stack;
+		ItemStack output = stack.copy();
 		for (int i = 0; i < inv.getSlots(); i++) {
 			output = inv.insertItem(i, output, simulate);
 			if (output.getCount() <= 0) {

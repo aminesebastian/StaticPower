@@ -141,7 +141,8 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	public void onPlaced(BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
 		if (hasComponentOfType(SideConfigurationComponent.class)) {
 			if (DisableFaceInteraction) {
-				getComponent(SideConfigurationComponent.class).setWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, getFacingDirection()), MachineSideMode.Never);
+				getComponent(SideConfigurationComponent.class).setWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, getFacingDirection()),
+						MachineSideMode.Never);
 			}
 		}
 	}
@@ -208,7 +209,8 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	public Direction getFacingDirection() {
 		// If the world is null, return UP and log the error.
 		if (getWorld() == null) {
-			StaticPower.LOGGER.error("There was an attempt to get the facing direction before the block has been fully placed in the world! TileEntity: %1$s at position: %2$s.", getDisplayName().getFormattedText(), pos);
+			StaticPower.LOGGER.error("There was an attempt to get the facing direction before the block has been fully placed in the world! TileEntity: %1$s at position: %2$s.",
+					getDisplayName().getFormattedText(), pos);
 			return Direction.UP;
 		}
 
@@ -393,13 +395,13 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 * @param nbt The {@link CompoundNBT} to serialize to.
 	 * @return The same {@link CompoundNBT} that was provided.
 	 */
-	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt) {
+	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		// Serialize each component to its own NBT tag and then add that to the master
 		// tag. Catch errors on a per component basis to prevent one component from
 		// breaking all the rest.
 		for (AbstractTileEntityComponent component : Components.values()) {
 			CompoundNBT componentTag = new CompoundNBT();
-			component.serializeUpdateNbt(componentTag);
+			component.serializeUpdateNbt(componentTag, fromUpdate);
 			nbt.put(component.getComponentName(), componentTag);
 		}
 		nbt.putBoolean("DISABLE_FACE", DisableFaceInteraction);
@@ -412,12 +414,12 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 * 
 	 * @param nbt The NBT data to deserialize from from.
 	 */
-	public void deserializeUpdateNbt(CompoundNBT nbt) {
+	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		// Iterate through all the components and deserialize each one. Catch errors on
 		// a per component basis to prevent one component from breaking all the rest.
 		for (AbstractTileEntityComponent component : Components.values()) {
 			if (nbt.contains(component.getComponentName())) {
-				component.deserializeUpdateNbt(nbt.getCompound(component.getComponentName()));
+				component.deserializeUpdateNbt(nbt.getCompound(component.getComponentName()), fromUpdate);
 			}
 		}
 		DisableFaceInteraction = nbt.getBoolean("DISABLE_FACE");
@@ -472,7 +474,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	@Nullable
 	public SUpdateTileEntityPacket getUpdatePacket() {
 		CompoundNBT nbtTagCompound = new CompoundNBT();
-		serializeUpdateNbt(nbtTagCompound);
+		serializeUpdateNbt(nbtTagCompound, true);
 		return new SUpdateTileEntityPacket(this.pos, 0, nbtTagCompound);
 	}
 
@@ -483,7 +485,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	@Override
 	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
 		super.onDataPacket(net, pkt);
-		deserializeUpdateNbt(pkt.getNbtCompound());
+		deserializeUpdateNbt(pkt.getNbtCompound(), true);
 		this.markTileEntityForSynchronization();
 	}
 
@@ -521,7 +523,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	public CompoundNBT write(CompoundNBT parentNBTTagCompound) {
 		super.write(parentNBTTagCompound);
 		CompoundNBT tag = serializeSaveNbt(parentNBTTagCompound);
-		return serializeUpdateNbt(tag);
+		return serializeUpdateNbt(tag, false);
 	}
 
 	/**
@@ -530,7 +532,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	@Override
 	public void read(CompoundNBT parentNBTTagCompound) {
 		super.read(parentNBTTagCompound);
-		deserializeUpdateNbt(parentNBTTagCompound);
+		deserializeUpdateNbt(parentNBTTagCompound, false);
 		deserializeSaveNbt(parentNBTTagCompound);
 	}
 

@@ -239,8 +239,8 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	}
 
 	@Override
-	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt) {
-		super.serializeUpdateNbt(nbt);
+	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+		super.serializeUpdateNbt(nbt, fromUpdate);
 
 		// Serialize the disabled states.
 		for (int i = 0; i < DisabledSides.length; i++) {
@@ -257,8 +257,8 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	}
 
 	@Override
-	public void deserializeUpdateNbt(CompoundNBT nbt) {
-		super.deserializeUpdateNbt(nbt);
+	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+		super.deserializeUpdateNbt(nbt, fromUpdate);
 
 		// Deserialize the disabled states.
 		for (int i = 0; i < DisabledSides.length; i++) {

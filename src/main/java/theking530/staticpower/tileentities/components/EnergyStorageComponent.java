@@ -37,13 +37,15 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	}
 
 	@Override
-	public void deserializeUpdateNbt(CompoundNBT nbt) {
+	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+		super.deserializeUpdateNbt(nbt, fromUpdate);
 		EnergyStorage.readFromNbt(nbt);
 		energyPerTick = nbt.getInt("PerTick");
 	}
 
 	@Override
-	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt) {
+	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+		super.serializeUpdateNbt(nbt, fromUpdate);
 		EnergyStorage.writeToNbt(nbt);
 
 		long ticksSinceLastUpdate = Math.max(getTileEntity().getWorld().getGameTime() - lastUpdateTime, 1);

@@ -73,11 +73,11 @@ public abstract class AbstractTileEntityComponent {
 	public void deserializeSaveNbt(CompoundNBT nbt) {
 	}
 
-	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt) {
+	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		return nbt;
 	}
 
-	public void deserializeUpdateNbt(CompoundNBT nbt) {
+	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 	}
 
 	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
