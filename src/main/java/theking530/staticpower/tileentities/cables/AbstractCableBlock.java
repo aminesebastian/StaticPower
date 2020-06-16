@@ -56,7 +56,7 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 			AbstractCableWrapper cable = CableNetworkManager.get((ServerWorld) world).getCable(pos);
 
 			if (cable != null && cable.getNetwork() != null) {
-				//cable.getNetwork().updateGraph((ServerWorld) world, pos);
+				cable.getNetwork().updateGraph((ServerWorld) world, pos);
 			}
 		}
 	}

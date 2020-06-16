@@ -1,6 +1,8 @@
 package theking530.staticpower.tileentities.cables.network.pathfinding;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -9,11 +11,11 @@ import theking530.staticpower.tileentities.cables.network.CableNetwork;
 
 public class PathCache {
 	/** Map of destinations to map of source blocks and paths. */
-	private HashMap<BlockPos, HashMap<BlockPos, Path>> Cache;
+	private HashMap<BlockPos, HashMap<BlockPos, List<Path>>> Cache;
 	private CableNetwork OwningNetwork;
 
 	public PathCache(CableNetwork owningNetwork) {
-		Cache = new HashMap<BlockPos, HashMap<BlockPos, Path>>();
+		Cache = new HashMap<BlockPos, HashMap<BlockPos, List<Path>>>();
 		OwningNetwork = owningNetwork;
 	}
 
@@ -25,51 +27,48 @@ public class PathCache {
 	 * @return
 	 */
 	public boolean hasPath(BlockPos source, BlockPos destination) {
-		return getPath(source, destination) != null;
+		return Cache.get(destination).get(source) != null;
 	}
 
 	/**
-	 * Gets the path between the provided source and destination if one exists.
+	 * Gets the paths between the provided source and destination if one exists.
 	 * 
 	 * @param source
 	 * @param destination
 	 * @return
 	 */
-	public @Nullable Path getPath(BlockPos source, BlockPos destination) {
+	public @Nullable List<Path> getPaths(BlockPos source, BlockPos destination) {
 		if (Cache.containsKey(destination) && Cache.get(destination).containsKey(source)) {
 			return Cache.get(destination).get(source);
+		} else {
+			return cacheNewPath(source, destination);
 		}
-		return null;
 	}
 
 	/**
-	 * Attempts to calculate a path between the provided source and destination, and
-	 * returns true if successful.
+	 * Attempts to calculate the paths between the provided source and destination, and
+	 * returns the calculated paths if successful.
 	 * 
 	 * @param source
 	 * @param destination
 	 * @return
 	 */
-	public boolean calculatePath(BlockPos source, BlockPos destination) {
-		// C'mon, should've checked first.
-		if (hasPath(source, destination)) {
-			return true;
-		}
-
+	public List<Path> cacheNewPath(BlockPos source, BlockPos destination) {
 		// Perform the path finding.
 		NetworkPathFinder pathFinder = new NetworkPathFinder(OwningNetwork.getGraph(), source);
-		HashMap<BlockPos, Path> paths = pathFinder.executeAlgorithm();
+		List<Path> paths = pathFinder.executeAlgorithm();
 
 		// Cache each provided path.
-		paths.forEach((dest, path) -> {
-			if (!Cache.containsKey(dest)) {
-				Cache.put(dest, new HashMap<BlockPos, Path>());
+		paths.forEach((path) -> {
+			if (!Cache.containsKey(path.getDestinationLocation())) {
+				Cache.put(path.getDestinationLocation(), new HashMap<BlockPos, List<Path>>());
+				Cache.get(path.getDestinationLocation()).put(source, new LinkedList<Path>());
 			}
-			Cache.get(dest).put(source, path);
+			Cache.get(path.getDestinationLocation()).get(source).add(path);
 		});
 
 		// Check if we now have the path.
-		return hasPath(source, destination);
+		return getPaths(source, destination);
 	}
 
 	/**

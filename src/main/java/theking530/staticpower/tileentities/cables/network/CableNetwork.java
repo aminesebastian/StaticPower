@@ -4,6 +4,7 @@
 package theking530.staticpower.tileentities.cables.network;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.BiPredicate;
 
 import javax.annotation.Nullable;
@@ -20,7 +21,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
-import theking530.staticpower.tileentities.cables.AbstractCableWrapper;
 import theking530.staticpower.tileentities.cables.network.factories.modules.CableNetworkModuleRegistry;
 import theking530.staticpower.tileentities.cables.network.modules.AbstractCableNetworkModule;
 import theking530.staticpower.tileentities.cables.network.pathfinding.Path;
@@ -60,17 +60,6 @@ public class CableNetwork {
 			module.tick(World);
 		}
 
-		for (AbstractCableWrapper cable : Graph.getCables()) {
-			for (TileEntity destination : Graph.getDestinations()) {
-				if (!PathCache.hasPath(cable.getPos(), destination.getPos())) {
-					if (PathCache.calculatePath(cable.getPos(), destination.getPos())) {
-						System.out.println("Succefully calculate path between: " + cable.getPos() + " and: " + destination.getPos() + "  and it is: "
-								+ PathCache.getPath(cable.getPos(), destination.getPos()).getLength() + " blocks long.");
-					}
-				}
-			}
-		}
-
 		if (Graph.getCables().size() > 0) {
 			Graph.getCables().forEach(cable -> cable.tick());
 			// System.out.println("Network with ID: " + NetworkId + " of Size: " +
@@ -97,7 +86,7 @@ public class CableNetwork {
 	public <T extends AbstractCableNetworkModule> T getModule(ResourceLocation type) {
 		// If we have already registered an module of this type, throw an error.
 		if (!hasModule(type)) {
-			throw new RuntimeException(String.format("Attempted to get a module of a type: %1$s that was already added.", type));
+			throw new RuntimeException(String.format("Attempted to get a module of a type: %1$s that does not exist on this network.", type));
 		}
 		return (T) Modules.get(type);
 	}
@@ -134,39 +123,44 @@ public class CableNetwork {
 		return PathCache;
 	}
 
+	public World getWorld() {
+		return World;
+	}
+
 	/**
-	 * Gets the closest tile entity to the provided starting position that passes
-	 * the provided test.
+	 * Gets the shortest path to a tile entity that matches the passed predicate
+	 * test.
 	 * 
 	 * @param startingPos  The cable position to start at.
 	 * @param validityTest The predicate to use to see if a tile entity is valid.
-	 * @return The tile entity closet to the provided starting pos, or null if none
-	 *         were found.
+	 * @return The path to the closest tile entity of the provided type.
 	 */
-	public @Nullable TileEntity getClosestTileEntity(BlockPos startingPos, BiPredicate<TileEntity, Direction> validityTest) {
-		TileEntity closestTileEntity = null;
-		int shortestPath = Integer.MAX_VALUE;
+	public @Nullable Path getPathToCloestsTileEntityPassingTest(BlockPos startingPos, BiPredicate<TileEntity, Direction> validityTest) {
+		int shortestPathLength = Integer.MAX_VALUE;
+		Path shortestPath = null;
 		for (TileEntity te : Graph.getDestinations()) {
 			// Get the path.
-			Path path = PathCache.getPath(startingPos, te.getPos());
+			List<Path> paths = PathCache.getPaths(startingPos, te.getPos());
 
-			// If there is no path (HOW??), continue.
-			if (path == null) {
+			// If there are no paths (HOW??), continue.
+			if (paths == null) {
 				continue;
 			}
 
-			// Check if the tile entity is valid.
-			if (!validityTest.test(te, path.getDestinationDirection())) {
-				continue;
-			}
+			for (Path path : paths) {
+				// Check if the tile entity is valid.
+				if (!validityTest.test(te, path.getDestinationDirection())) {
+					continue;
+				}
 
-			// Check if this is the shortest path.
-			if (path.getLength() < shortestPath) {
-				shortestPath = path.getLength();
-				closestTileEntity = World.getTileEntity(path.getDestinationLocation());
+				// Check if this is the shortest path.
+				if (path.getLength() < shortestPathLength) {
+					shortestPathLength = path.getLength();
+					shortestPath = path;
+				}
 			}
 		}
-		return closestTileEntity;
+		return shortestPath;
 	}
 
 	public void onJoinedWithOtherNetwork(CableNetwork mainNetwork) {

@@ -171,6 +171,11 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		// If there is no attachment on the provided side, add it.
 		if (Attachments[side.ordinal()].isEmpty()) {
 			Attachments[side.ordinal()] = attachment.copy();
+
+			// Raise the on added method on the attachment.
+			AbstractCableAttachment attachmentItem = (AbstractCableAttachment) attachment.getItem();
+			attachmentItem.onRemovedFromCable(attachment, this);
+
 			getTileEntity().markTileEntityForSynchronization();
 			return true;
 		}

@@ -3,6 +3,7 @@ package theking530.staticpower.items.cableattachments;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
@@ -41,7 +42,17 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 		return ActionResultType.PASS;
 	}
 
+	public void onAddedToCable(ItemStack attachment, AbstractCableProviderComponent cableComponent) {
+		if (!attachment.hasTag()) {
+			attachment.setTag(new CompoundNBT());
+		}
+	}
+
 	public void onRemovedFromCable(ItemStack attachment, AbstractCableProviderComponent cableComponent) {
+
+	}
+
+	public void updateAttachmentNBT(ItemStack attachment, CompoundNBT tag) {
 
 	}
 

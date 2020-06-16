@@ -17,6 +17,8 @@ import theking530.staticpower.tileentities.cables.AbstractCableWrapper.CableConn
 import theking530.staticpower.tileentities.cables.CableUtilities;
 import theking530.staticpower.tileentities.cables.network.CableNetwork;
 import theking530.staticpower.tileentities.cables.network.CableNetworkManager;
+import theking530.staticpower.tileentities.cables.network.factories.modules.CableNetworkModuleTypes;
+import theking530.staticpower.tileentities.cables.network.modules.ItemNetworkModule;
 import theking530.staticpower.tileentities.cables.network.pathfinding.Path;
 import theking530.staticpower.utilities.InventoryUtilities;
 
@@ -85,7 +87,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 	protected void processAttachment(Direction side, ItemStack attachment) {
 		// Do nothing if we are currently transferring an item or the attachment is not
 		// an extractor attachment.
-		if (currentPacket != null) {
+		if (currentPacket != null || getWorld().isRemote) {
 			return;
 		}
 
@@ -96,64 +98,41 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 	}
 
 	protected void processExtractorAttachment(Direction side, ItemStack attachment) {
-
-		// Do nothing if we're on the client.
-		if (getWorld().isRemote) {
-			return;
-		}
-
 		// Get the network.
 		CableNetwork network = CableNetworkManager.get(getWorld()).getCable(getPos()).getNetwork();
-		if (network == null) {
-			LOGGER.error(String.format("Encountered a null network for an ItemCableComponent at position: %1$s.", getPos()));
+		ItemNetworkModule itemNetworkModule = (ItemNetworkModule) network.getModule(CableNetworkModuleTypes.ITEM_NETWORK_ATTACHMENT);
+		if (network == null || itemNetworkModule == null) {
+			throw new RuntimeException(String.format("Encountered a null network for an ItemCableComponent at position: %1$s.", getPos()));
+		}
+
+		// Get the tile entity on the pulling side, return if it is null.
+		TileEntity te = getWorld().getTileEntity(getPos().offset(side));
+		if (te == null || te.isRemoved()) {
 			return;
 		}
 
-		// Preallocate the extracted item, the source, and the destination.
-		int extractedSlot = -1;
-		IItemHandler sourceInventory = null;
-		Path path = null;
+		// Attempt to extract an item.
+		te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).ifPresent(inv -> {
+			for (int i = 0; i < inv.getSlots(); i++) {
+				// Simulate an extract.
+				ItemStack extractedItem = inv.extractItem(i, 1, true);
 
-		// Attempt to pull and find a path for an item.
-		if (!attachment.isEmpty() && attachment.getItem() instanceof BasicExtractorAttachment) {
-			TileEntity te = getWorld().getTileEntity(getPos().offset(side));
-			if (te != null) {
-				sourceInventory = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).orElse(null);
-				if (sourceInventory != null) {
-					for (extractedSlot = 0; extractedSlot < sourceInventory.getSlots(); extractedSlot++) {
-						ItemStack extractedItem = sourceInventory.extractItem(extractedSlot, 64, true);
-						if (!extractedItem.isEmpty()) {
-							path = findPathForItem(te, side, extractedItem);
-							if (path != null) {
-								break;
-							}
-						}
-					}
+				// If the extracted item is empty, continue.
+				if (extractedItem.isEmpty()) {
+					continue;
+				}
+
+				// Calculate the path.
+				Path path = itemNetworkModule.getPathForItem(extractedItem, getPos(), getPos().offset(side));
+
+				// We found a valid path, lets now extract the item.
+				if (path != null) {
+					extractItem(inv, i, path);
+					inDirection = side.getOpposite();
+					break;
 				}
 			}
-		}
-
-		// If the destinationTileEntity is not null, it indicates we found a complete
-		// path for extraction.
-		if (path != null) {
-			extractItem(sourceInventory, extractedSlot, path);
-			inDirection = side.getOpposite();
-		}
-	}
-
-	protected Path findPathForItem(TileEntity sourceTileEntity, Direction sourceDir, ItemStack item) {
-		TileEntity destination = getNetwork().getClosestTileEntity(getPos(), (dest, dir) -> {
-			if (dest == sourceTileEntity && dir == sourceDir) {
-				return false;
-			}
-			IItemHandler destInv = dest.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.getOpposite()).orElse(null);
-			return InventoryUtilities.canInsertItemIntoInventory(destInv, item);
 		});
-
-		if (destination != null) {
-			return getNetwork().getPathCache().getPath(getPos(), destination.getPos());
-		}
-		return null;
 	}
 
 	protected void extractItem(IItemHandler sourceInventory, int extractedSlot, Path path) {
@@ -163,7 +142,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 
 		// Simulate the extract to see how many we can grab, and then simulate the
 		// insert to see how many we can insert.
-		ItemStack actualExtract = sourceInventory.extractItem(extractedSlot, 64, true);
+		ItemStack actualExtract = sourceInventory.extractItem(extractedSlot, 1, true);
 		ItemStack canInsert = InventoryUtilities.insertItemIntoInventory(destInventory, actualExtract.copy(), true);
 
 		// Then, perform the actual extraction and make the extraction packet. Sync the
@@ -198,7 +177,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 				}
 			}
 		} else {
-			//Path newPath = findPathForItem(null, null, currentPacket.getContainedItem());
+			// Path newPath = findPathForItem(null, null, currentPacket.getContainedItem());
 		}
 		return false;
 	}

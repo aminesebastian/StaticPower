@@ -11,6 +11,14 @@ public class BasicExtractorAttachment extends AbstractCableAttachment {
 		super(name);
 	}
 
+	public void onAddedToCable(ItemStack attachment, AbstractCableProviderComponent cableComponent) {
+		
+	}
+
+	public void onRemovedFromCable(ItemStack attachment, AbstractCableProviderComponent cableComponent) {
+
+	}
+
 	@Override
 	public ResourceLocation getModel(ItemStack attachment, AbstractCableProviderComponent cableComponent) {
 		return StaticPowerAdditionalModels.CABLE_ITEM_EXTRACTOR_ATTACHMENT;
