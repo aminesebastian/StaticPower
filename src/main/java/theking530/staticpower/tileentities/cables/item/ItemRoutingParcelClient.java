@@ -3,36 +3,29 @@ package theking530.staticpower.tileentities.cables.item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
-import theking530.staticpower.tileentities.cables.network.pathfinding.Path;
-import theking530.staticpower.tileentities.cables.network.pathfinding.Path.PathEntry;
 
-public class ItemRoutingPacket {
-	private ItemStack containedItem;
-	private Path path;
-	private int currentPathIndex;
-	private int moveTimer;
-	private int moveTime;
-	private Direction inDirection;
-	private Direction outDirection;
+public class ItemRoutingParcelClient {
+	private long id;
+	protected ItemStack containedItem;
+	protected int moveTimer;
+	protected int moveTime;
+	protected int currentPathIndex;
+	protected Direction inDirection;
+	protected Direction outDirection;
 
-	public ItemRoutingPacket(ItemStack containedItem, Path path) {
-		this.containedItem = containedItem;
-		this.path = path;
-		this.currentPathIndex = 0;
-		this.moveTimer = 0;
-		this.outDirection = getNextEntry().getDirectionOfApproach();
+	public ItemRoutingParcelClient(long id, ItemStack containedItem) {
+		this(id, containedItem, null);
 	}
 
-	public ItemRoutingPacket(ItemStack containedItem, Path path, Direction inDirection) {
+	public ItemRoutingParcelClient(long id, ItemStack containedItem, Direction inDirection) {
 		this.containedItem = containedItem;
-		this.path = path;
 		this.currentPathIndex = 0;
 		this.moveTimer = 0;
 		this.inDirection = inDirection;
-		this.outDirection = getNextEntry().getDirectionOfApproach();
+		this.id = id;
 	}
 
-	private ItemRoutingPacket() {
+	protected ItemRoutingParcelClient() {
 
 	}
 
@@ -40,14 +33,8 @@ public class ItemRoutingPacket {
 		return containedItem;
 	}
 
-	public Path getPath() {
-		return path;
-	}
-
-	public void incrementCurrentPathIndex() {
-		currentPathIndex++;
-		inDirection = getCurrentEntry().getDirectionOfApproach();
-		outDirection = getNextEntry().getDirectionOfApproach();
+	public long getId() {
+		return id;
 	}
 
 	public Direction getInDirection() {
@@ -58,16 +45,8 @@ public class ItemRoutingPacket {
 		return outDirection;
 	}
 
-	public boolean isAtFinalCable() {
-		return currentPathIndex == getPath().getLength() - 2;
-	}
-
-	public boolean isAtDestination() {
-		return currentPathIndex == getPath().getLength() - 1;
-	}
-
 	public Direction getItemAnimationDirection() {
-		return moveTimer > moveTime / 2 ? getOutDirection() : getInDirection();
+		return moveTimer > moveTime / 2 ? outDirection : inDirection;
 	}
 
 	/**
@@ -90,21 +69,8 @@ public class ItemRoutingPacket {
 		return moveTimer >= moveTime;
 	}
 
-	public void setMoveTimer(int moveTime) {
-		this.moveTime = moveTime;
-		moveTimer = 0;
-	}
-
-	public PathEntry getNextEntry() {
-		return path.getPath()[currentPathIndex + 1];
-	}
-
-	public PathEntry getCurrentEntry() {
-		return path.getPath()[currentPathIndex];
-	}
-
-	public static ItemRoutingPacket create(CompoundNBT nbt) {
-		ItemRoutingPacket output = new ItemRoutingPacket();
+	public static ItemRoutingParcelClient create(CompoundNBT nbt) {
+		ItemRoutingParcelClient output = new ItemRoutingParcelClient();
 		output.readFromNbt(nbt);
 		return output;
 	}
@@ -114,9 +80,7 @@ public class ItemRoutingPacket {
 		CompoundNBT containedItemTag = new CompoundNBT();
 		containedItem.write(containedItemTag);
 		nbt.put("contained_item", containedItemTag);
-
-		// Serialize the move times.
-		nbt.putInt("move_timer", moveTimer);
+		nbt.putLong("id", id);
 		nbt.putInt("move_time", moveTime);
 
 		if (inDirection != null) {
@@ -133,11 +97,8 @@ public class ItemRoutingPacket {
 		// Deserialize the contained item.
 		CompoundNBT containedItemTag = nbt.getCompound("contained_item");
 		containedItem = ItemStack.read(containedItemTag);
-
-		// Deserialize the move times.
-		moveTimer = nbt.getInt("move_timer");
+		id = nbt.getLong("id");
 		moveTime = nbt.getInt("move_time");
-
 		if (nbt.contains("in_direction")) {
 			inDirection = Direction.values()[nbt.getInt("in_direction")];
 		}

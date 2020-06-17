@@ -1,10 +1,7 @@
 package theking530.staticpower.tileentities.cables.item;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.util.Collection;
+import java.util.HashMap;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -15,32 +12,39 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import theking530.staticpower.items.cableattachments.BasicExtractorAttachment;
+import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.cables.AbstractCableProviderComponent;
 import theking530.staticpower.tileentities.cables.AbstractCableWrapper.CableConnectionState;
 import theking530.staticpower.tileentities.cables.CableUtilities;
 import theking530.staticpower.tileentities.cables.network.CableNetwork;
 import theking530.staticpower.tileentities.cables.network.CableNetworkManager;
 import theking530.staticpower.tileentities.cables.network.factories.modules.CableNetworkModuleTypes;
+import theking530.staticpower.tileentities.cables.network.modules.ItemCableAddedPacket;
+import theking530.staticpower.tileentities.cables.network.modules.ItemCableRemovedPacket;
 import theking530.staticpower.tileentities.cables.network.modules.ItemNetworkModule;
 
 public class ItemCableComponent extends AbstractCableProviderComponent {
 	private int itemTransferSpeed = 20;
 	private int extractionTimer = 0;
-	private int extractionTime = 20;
-	private List<ItemRoutingPacket> containedPackets;
+	private int extractionTime = 5;
+	private HashMap<Long, ItemRoutingParcelClient> containedPackets;
 
 	public ItemCableComponent(String name, ResourceLocation type) {
 		super(name, type);
-		containedPackets = new ArrayList<ItemRoutingPacket>();
+		containedPackets = new HashMap<Long, ItemRoutingParcelClient>();
 	}
 
 	@Override
 	public void preProcessUpdate() {
 		super.preProcessUpdate();
-		for (ItemRoutingPacket packet : containedPackets) {
-			packet.incrementMoveTimer();
+		// Only do this on the client.
+		if (getWorld().isRemote) {
+			for (ItemRoutingParcelClient packet : containedPackets.values()) {
+				packet.incrementMoveTimer();
+			}
 		}
 	}
 
@@ -48,18 +52,22 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 		return itemTransferSpeed;
 	}
 
-	public void addTransferingItem(ItemRoutingPacket routingPacket) {
-		containedPackets.add(routingPacket);
-		getTileEntity().markTileEntityForSynchronization();
+	public void addTransferingItem(ItemRoutingParcelClient routingPacket) {
+		containedPackets.put(routingPacket.getId(), routingPacket);
+		if (!getWorld().isRemote) {
+			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> getWorld().getChunkAt(getPos())), new ItemCableAddedPacket(this, routingPacket));
+		}
 	}
 
-	public void removeTransferingItem(ItemRoutingPacket routingPacket) {
-		containedPackets.remove(routingPacket);
-		getTileEntity().markTileEntityForSynchronization();
+	public void removeTransferingItem(long parcelId) {
+		containedPackets.remove(parcelId);
+		if (!getWorld().isRemote) {
+			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> getWorld().getChunkAt(getPos())), new ItemCableRemovedPacket(this, parcelId));
+		}
 	}
 
-	public List<ItemRoutingPacket> getContainedItems() {
-		return containedPackets;
+	public Collection<ItemRoutingParcelClient> getContainedItems() {
+		return containedPackets.values();
 	}
 
 	@Override
@@ -110,7 +118,8 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 
 				ItemStack remainingAmount = itemNetworkModule.transferItemStack(extractedItem, getPos(), side, false);
 				if (remainingAmount.getCount() < extractedItem.getCount()) {
-					inv.extractItem(i, extractedItem.getCount() - remainingAmount.getCount(), false);
+					// inv.extractItem(i, extractedItem.getCount() - remainingAmount.getCount(),
+					// false);
 					break;
 				}
 			}
@@ -143,9 +152,9 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 		if (fromUpdate) {
 			// Serialize the contained item packets.
 			ListNBT itemPackets = new ListNBT();
-			containedPackets.forEach(packet -> {
+			containedPackets.values().forEach(parcel -> {
 				CompoundNBT packetTag = new CompoundNBT();
-				packet.writeToNbt(packetTag);
+				parcel.writeToNbt(packetTag);
 				itemPackets.add(packetTag);
 			});
 			nbt.put("item_packets", itemPackets);
@@ -166,7 +175,10 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 			ListNBT packets = nbt.getList("item_packets", Constants.NBT.TAG_COMPOUND);
 			for (INBT packetTag : packets) {
 				CompoundNBT packetTagCompound = (CompoundNBT) packetTag;
-				containedPackets.add(ItemRoutingPacket.create(packetTagCompound));
+				ItemRoutingParcelClient newPacket = ItemRoutingParcelClient.create(packetTagCompound);
+				if (!containedPackets.containsKey(newPacket.getId())) {
+					containedPackets.put(newPacket.getId(), newPacket);
+				}
 			}
 		}
 	}

@@ -27,6 +27,8 @@ public abstract class AbstractCableWrapper {
 	public AbstractCableWrapper(World world, BlockPos position, ResourceLocation type) {
 		Position = position;
 		World = world;
+
+		// Capture the types.
 		Type = type;
 		DisabledSides = new boolean[] { false, false, false, false, false, false };
 	}
@@ -60,6 +62,10 @@ public abstract class AbstractCableWrapper {
 			updateCableBlock();
 		}
 	}
+//
+//	public boolean hasType(ResourceLocation type) {
+//		return Types.contains(type);
+//	}
 
 	public ResourceLocation getType() {
 		return Type;

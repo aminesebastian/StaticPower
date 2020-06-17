@@ -23,6 +23,7 @@ import net.minecraft.world.IBlockReader;
 import theking530.api.utilities.RaytracingUtilities;
 import theking530.api.utilities.RaytracingUtilities.AdvancedRayTraceResult;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
+import theking530.staticpower.items.tools.StaticWrench;
 import theking530.staticpower.tileentities.cables.AbstractCableWrapper.CableConnectionState;
 import theking530.staticpower.tileentities.cables.CableUtilities;
 
@@ -165,7 +166,9 @@ public class CableBoundsCache {
 		if (hoveredDirection != null) {
 			if (CableUtilities.getConnectionState(entity.getEntityWorld(), pos, hoveredDirection) == CableConnectionState.TILE_ENTITY) {
 				shape = VoxelShapes.or(shape, TileEntityAttachmentShapes.get(hoveredDirection));
-			} else if (entity.getHeldItemMainhand().isEmpty() && entity.getHeldItemMainhand().getItem() instanceof AbstractCableAttachment) {
+			} else if (!entity.getHeldItemMainhand().isEmpty() && entity.getHeldItemMainhand().getItem() instanceof AbstractCableAttachment) {
+				shape = VoxelShapes.or(shape, TileEntityAttachmentShapes.get(hoveredDirection));
+			}else if(!entity.getHeldItemMainhand().isEmpty() && entity.getHeldItemMainhand().getItem() instanceof StaticWrench) {
 				shape = VoxelShapes.or(shape, TileEntityAttachmentShapes.get(hoveredDirection));
 			}
 		}

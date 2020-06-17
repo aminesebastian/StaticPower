@@ -17,18 +17,20 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.cables.item.ItemCableComponent;
-import theking530.staticpower.tileentities.cables.item.ItemRoutingPacket;
+import theking530.staticpower.tileentities.cables.item.ItemRoutingParcel;
 import theking530.staticpower.tileentities.cables.network.factories.modules.CableNetworkModuleTypes;
 import theking530.staticpower.tileentities.cables.network.pathfinding.Path;
 import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class ItemNetworkModule extends AbstractCableNetworkModule {
-	private final List<ItemRoutingPacket> ActivePackets;
+	private static long CurrentPacketId;
+	private final List<ItemRoutingParcel> ActivePackets;
 
 	public ItemNetworkModule() {
 		super(CableNetworkModuleTypes.ITEM_NETWORK_ATTACHMENT);
-		ActivePackets = new ArrayList<ItemRoutingPacket>();
+		ActivePackets = new ArrayList<ItemRoutingParcel>();
+		CurrentPacketId = 0;
 	}
 
 	/**
@@ -37,7 +39,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 	@Override
 	public void tick(World world) {
 		for (int i = ActivePackets.size() - 1; i >= 0; i--) {
-			ItemRoutingPacket currentPacket = ActivePackets.get(i);
+			ItemRoutingParcel currentPacket = ActivePackets.get(i);
 			if (currentPacket.incrementMoveTimer()) {
 				if (transferItemPacket(currentPacket)) {
 					ActivePackets.remove(i);
@@ -88,11 +90,12 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 
 						// Create the new item routing packet and initialize it with the transfer speed
 						// of the cable it was pulled out of.
-						ItemRoutingPacket packet = new ItemRoutingPacket(stackToTransfer, path, pulledFromDirection.getOpposite());
+						ItemRoutingParcel packet = new ItemRoutingParcel(CurrentPacketId, stackToTransfer, path, pulledFromDirection.getOpposite());
 						packet.setMoveTimer(getItemCableComponentAtPosition(path.getSourceLocation()).getTransferSpeed());
 
-						// Add the packet to the list of active packets.
-						ActivePackets.add(packet);
+						// Add the packet to the list of active packets and increment the
+						// CurrentPacketId.
+						addRoutingParcel(packet);
 
 						// Tell the cable component at the cable's location that it is trafnering an
 						// item (for client rendering purposes only).
@@ -112,19 +115,24 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 	 * @param packet
 	 * @return
 	 */
-	protected boolean transferItemPacket(ItemRoutingPacket packet) {
-		BlockPos nextPosition = packet.getNextEntry().getPosition();
-
+	protected boolean transferItemPacket(ItemRoutingParcel packet) {
 		if (packet.isAtFinalCable()) {
+			BlockPos nextPosition = packet.getNextEntry().getPosition();
 			TileEntity te = Network.getWorld().getTileEntity(nextPosition);
 			if (te != null) {
-				IItemHandler outputInventory = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, packet.getNextEntry().getDirectionOfApproach()).orElse(null);
+				IItemHandler outputInventory = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, packet.getNextEntry().getDirectionOfEntry()).orElse(null);
 				if (outputInventory != null) {
 					ItemStack output = InventoryUtilities.insertItemIntoInventory(outputInventory, packet.getContainedItem(), false);
 					if (getItemCableComponentAtPosition(packet.getCurrentEntry().getPosition()) != null) {
-						getItemCableComponentAtPosition(packet.getCurrentEntry().getPosition()).removeTransferingItem(packet);
+						getItemCableComponentAtPosition(packet.getCurrentEntry().getPosition()).removeTransferingItem(packet.getId());
 					}
-					return output.isEmpty();
+					if (!output.isEmpty()) {
+						ItemStack transferedAmount = transferItemStack(output, packet.getCurrentEntry().getPosition(), packet.getCurrentEntry().getDirectionOfEntry(), false);
+						if(!transferedAmount.isEmpty()) {
+							WorldUtilities.dropItem(Network.getWorld(), packet.getCurrentEntry().getPosition(), transferedAmount, transferedAmount.getCount());
+						}
+					}
+					return true;
 				}
 			}
 		} else {
@@ -133,15 +141,15 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 			// position, that should be dropped if the block is broken. This is a temporrary
 			// fix.
 			if (getItemCableComponentAtPosition(packet.getCurrentEntry().getPosition()) != null && getItemCableComponentAtPosition(packet.getNextEntry().getPosition()) != null) {
-				getItemCableComponentAtPosition(packet.getCurrentEntry().getPosition()).removeTransferingItem(packet);
+				getItemCableComponentAtPosition(packet.getCurrentEntry().getPosition()).removeTransferingItem(packet.getId());
 				packet.incrementCurrentPathIndex();
-				packet.setMoveTimer(20);
+				packet.setMoveTimer(getItemCableComponentAtPosition(packet.getCurrentEntry().getPosition()).getTransferSpeed());
 				getItemCableComponentAtPosition(packet.getCurrentEntry().getPosition()).addTransferingItem(packet);
 				return false;
 			} else {
 				WorldUtilities.dropItem(Network.getWorld(), packet.getCurrentEntry().getPosition(), packet.getContainedItem(), packet.getContainedItem().getCount());
 				if (getItemCableComponentAtPosition(packet.getCurrentEntry().getPosition()) != null) {
-					getItemCableComponentAtPosition(packet.getCurrentEntry().getPosition()).removeTransferingItem(packet);
+					getItemCableComponentAtPosition(packet.getCurrentEntry().getPosition()).removeTransferingItem(packet.getId());
 				}
 				return true;
 			}
@@ -174,8 +182,6 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 	 * @return The closest path if one exists.
 	 */
 	protected Path getPathForItem(ItemStack item, BlockPos fromPosition, @Nullable BlockPos sourcePosition) {
-		List<Path> potentialPaths = new LinkedList<Path>();
-
 		// Iterate through all the destinations in the graph.
 		for (TileEntity dest : Network.getGraph().getDestinations()) {
 			// Skip trying to go to the same position the item came from or is at.
@@ -194,31 +200,30 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 				});
 				// If the atomic boolean is valid, then we have a valid path and we return it.
 				if (isValid.get()) {
-					potentialPaths.add(path);
+					return path;
 				}
 			}
 		}
+		return null;
+	}
 
-		Path shortestPath = null;
-		int shortestPathLength = Integer.MAX_VALUE;
-		for (Path path : potentialPaths) {
-			if (path.getLength() < shortestPathLength) {
-				shortestPathLength = path.getLength();
-				shortestPath = path;
-			}
-		}
-
-		return shortestPath;
+	protected void addRoutingParcel(ItemRoutingParcel parcel) {
+		ActivePackets.add(parcel);
+		parcel.incrementCurrentPathIndex();
+		CurrentPacketId++;
 	}
 
 	@Override
 	public void readFromNbt(CompoundNBT tag) {
-
+		if (tag.contains("current_packet_id")) {
+			CurrentPacketId = tag.getLong("current_packet_id");
+		}
 	}
 
 	@Override
 	public CompoundNBT writeToNbt(CompoundNBT tag) {
-		return null;
+		tag.putLong("current_packet_id", CurrentPacketId);
+		return tag;
 	}
 
 }

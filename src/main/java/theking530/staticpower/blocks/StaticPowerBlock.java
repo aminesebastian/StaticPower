@@ -312,15 +312,6 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IBloc
 		onStaticPowerBlockClicked(state, world, pos, player);
 	}
 
-	@Override
-	public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
-		super.onNeighborChange(state, world, pos, neighbor);
-		if (world.getTileEntity(pos) != null && world.getTileEntity(pos) instanceof TileEntityBase) {
-			((TileEntityBase) world.getTileEntity(pos)).onNeighborChanged(state, neighbor);
-		}
-		onStaticPowerNeighborChanged(state, world, pos, neighbor);
-	}
-
 	@SuppressWarnings("deprecation")
 	@Override
 	public BlockState updatePostPlacement(BlockState state, Direction dir, BlockState facingState, IWorld world, BlockPos pos, BlockPos facingPos) {
@@ -330,5 +321,16 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IBloc
 		}
 		onStaticPowerPostPlacement(state, dir, facingState, world, pos, facingPos);
 		return state;
+	}
+
+	@Override
+	@SuppressWarnings("deprecation")
+	public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+		super.neighborChanged(state, world, pos, block, fromPos, isMoving);
+		super.onNeighborChange(state, world, pos, fromPos);
+		if (world.getTileEntity(pos) != null && world.getTileEntity(pos) instanceof TileEntityBase) {
+			((TileEntityBase) world.getTileEntity(pos)).onNeighborChanged(state, fromPos);
+		}
+		onStaticPowerNeighborChanged(state, world, pos, fromPos);
 	}
 }

@@ -52,9 +52,8 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 	@Override
 	public void onStaticPowerNeighborChanged(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
 		super.onStaticPowerNeighborChanged(state, world, pos, neighbor);
-		if (!world.isRemote() && world instanceof ServerWorld) {
+		if (!world.isRemote()) {
 			AbstractCableWrapper cable = CableNetworkManager.get((ServerWorld) world).getCable(pos);
-
 			if (cable != null && cable.getNetwork() != null) {
 				cable.getNetwork().updateGraph((ServerWorld) world, pos);
 			}

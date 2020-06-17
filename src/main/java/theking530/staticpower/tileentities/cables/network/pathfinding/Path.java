@@ -33,7 +33,7 @@ public class Path {
 	 * @return
 	 */
 	public Direction getDestinationDirection() {
-		return Path[Path.length - 1].getDirectionOfApproach();
+		return Path[Path.length - 1].getDirectionOfEntry();
 	}
 
 	public int getLength() {
@@ -58,11 +58,11 @@ public class Path {
 
 	public static class PathEntry {
 		private final BlockPos Position;
-		private final Direction DirectionOfApproach;
+		private final Direction DirectionOfEntry;
 
 		public PathEntry(BlockPos position, Direction directionOfApproach) {
 			Position = position;
-			DirectionOfApproach = directionOfApproach;
+			DirectionOfEntry = directionOfApproach;
 		}
 
 		/**
@@ -75,12 +75,15 @@ public class Path {
 		}
 
 		/**
-		 * The direction to approach this entry to.
+		 * The direction to approach this entry to. Meaning, if you are traversing the
+		 * network, and you are at the cable before this entry, this is the direction
+		 * you must travel to arrive at this cable, NOT the direction from which a
+		 * traverser will approach this cable.
 		 * 
 		 * @return
 		 */
-		public Direction getDirectionOfApproach() {
-			return DirectionOfApproach;
+		public Direction getDirectionOfEntry() {
+			return DirectionOfEntry;
 		}
 	}
 

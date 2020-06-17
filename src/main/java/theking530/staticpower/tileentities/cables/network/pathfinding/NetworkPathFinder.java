@@ -1,82 +1,136 @@
 package theking530.staticpower.tileentities.cables.network.pathfinding;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import theking530.staticpower.tileentities.cables.network.CableNetworkGraph;
+import theking530.staticpower.tileentities.cables.network.CableNetworkManager;
 import theking530.staticpower.tileentities.cables.network.pathfinding.Path.PathEntry;
+import theking530.staticpower.utilities.WorldUtilities;
 
 public class NetworkPathFinder {
-	private final HashSet<BlockPos> AllPositions;
-	private final HashSet<BlockPos> DestinationPositions;
-	private final HashMap<BlockPos, Path> Paths;
-	private final List<Path> OutputPaths;
-	private final HashSet<BlockPos> ScannedPositions;
+	private final HashSet<BlockPos> GraphNodes;
+	private final HashSet<BlockPos> TerminusNodes;
 	private final BlockPos StartingCablePosition;
+	private final BlockPos EndingCablePosition;
+	private final HashSet<BlockPos> VisitedPositions;
+	private final HashMap<BlockPos, PathEntry> Predecessors;
+	private final Queue<BlockPos> BFSQueue;
 
-	public NetworkPathFinder(CableNetworkGraph graph, BlockPos startingCablePosition) {
+	public NetworkPathFinder(CableNetworkGraph graph, World world, BlockPos startingCablePosition, BlockPos targetPosition) {
 		// Capture all the positions in the network graph.
-		AllPositions = new HashSet<BlockPos>();
-		graph.getCables().forEach(cable -> AllPositions.add(cable.getPos()));
-		graph.getDestinations().forEach(destination -> AllPositions.add(destination.getPos()));
+		GraphNodes = new HashSet<BlockPos>();
+		graph.getCables().forEach(cable -> GraphNodes.add(cable.getPos()));
 
-		// Capture all destination positions in the network graph.
-		DestinationPositions = new HashSet<BlockPos>();
-		graph.getDestinations().forEach(destination -> DestinationPositions.add(destination.getPos()));
+		// Capture all the terminus nodes in the network graph (the final cables before
+		// the target).
+		TerminusNodes = new HashSet<BlockPos>();
+		for (Direction dir : Direction.values()) {
+			if (CableNetworkManager.get(world).isTrackingCable(targetPosition.offset(dir))) {
+				TerminusNodes.add(targetPosition.offset(dir));
+			}
+		}
 
-		// Capture the starting cable position.
+		// Capture the start position.
 		StartingCablePosition = startingCablePosition;
+		EndingCablePosition = targetPosition;
 
-		ScannedPositions = new HashSet<BlockPos>();
-		Paths = new HashMap<BlockPos, Path>();
-		OutputPaths = new LinkedList<Path>();
+		VisitedPositions = new HashSet<BlockPos>();
+		Predecessors = new HashMap<BlockPos, PathEntry>();
+		BFSQueue = new LinkedList<BlockPos>();
 	}
 
 	public List<Path> executeAlgorithm() {
-		// Add the path for the initial starting cable.
-		Paths.put(StartingCablePosition, new Path(StartingCablePosition, StartingCablePosition, new PathEntry(StartingCablePosition, Direction.DOWN)));
+		// If we have no terminus nodes, return an empty list.
+		if (TerminusNodes.size() == 0) {
+			return new ArrayList<Path>();
+		}
 
-		// Execute the algorithm starting at the starting cable.
-		algorithmWorker(StartingCablePosition);
+		// Pre-populate the predecessors list.
+		for (BlockPos node : GraphNodes) {
+			Predecessors.put(node, null);
+		}
 
-		return OutputPaths;
-	}
+		// Initialize the visited and BFS structures.
+		VisitedPositions.add(StartingCablePosition);
+		BFSQueue.add(StartingCablePosition);
 
-	private void algorithmWorker(BlockPos cable) {
-		ScannedPositions.add(cable);
+		// Keep iterating until the BFS queue is empty.
+		while (!BFSQueue.isEmpty()) {
+			// Get the current position off the queue.
+			BlockPos curr = BFSQueue.poll();
 
-		// Iterate through all the adjacents.
-		for (Direction dir : Direction.values()) {
-			// Check for any adjacent cables. If no, skip this direction.
-			if (!AllPositions.contains(cable.offset(dir))) {
-				continue;
-			}
+			// Scan all adjacent blocks.
+			for (Direction dir : Direction.values()) {
+				// Get the adjacent and check if we have visited it before. If we have, skip it.
+				BlockPos adjacent = curr.offset(dir);
+				if (!GraphNodes.contains(adjacent) || VisitedPositions.contains(adjacent)) {
+					continue;
+				}
 
-			// Get the adjacent cable or destination.
-			BlockPos adjacent = cable.offset(dir);
+				// Cache the predecessor to this location.
+				Predecessors.put(adjacent, new PathEntry(curr, dir));
 
-			// Skip already scanned positions.
-			if (ScannedPositions.contains(adjacent)) {
-				continue;
-			}
-
-			// Get the previous path to here.
-			Path prevPath = Paths.get(cable);
-
-			// RECURSE only if the adjacent position was a cable and not a destination. If
-			// it is a destination, stop now.
-			if (!DestinationPositions.contains(adjacent)) {
-				Paths.put(adjacent, Path.fromPreviousPath(prevPath, dir, adjacent));
-				algorithmWorker(adjacent);
-			} else {
-				// We have reached a destination. We should cache some info about this
-				// destination.
-				OutputPaths.add(Path.fromPreviousPath(prevPath, dir, adjacent));
+				// Mark the adjacent as visited and add it to the query queue.
+				VisitedPositions.add(adjacent);
+				BFSQueue.add(adjacent);
 			}
 		}
+		return generateOutputPaths();
+	}
+
+	protected List<Path> generateOutputPaths() {
+		List<Path> output = new LinkedList<Path>();
+		// Go through all predecessors.
+		for (BlockPos terminus : TerminusNodes) {
+			Path path = generatePathToOutput(terminus);
+			if (path != null) {
+				output.add(path);
+			}
+		}
+		return output;
+	}
+
+	protected Path generatePathToOutput(BlockPos lastCable) {
+		// If this potential last cable does not exist in the predecessors list, odds
+		// are its just air.
+		if (!Predecessors.containsKey(lastCable)) {
+			return null;
+		}
+
+		// Get the predecessor to the last cable (if there is one, this path could just
+		// be the single cable).
+		PathEntry curr = Predecessors.get(lastCable);
+
+		// Build the path entries.
+		List<PathEntry> pathEntries = new ArrayList<PathEntry>();
+
+		// Build the path.
+		while (curr != null) {
+			pathEntries.add(curr);
+			curr = Predecessors.get(curr.getPosition());
+		}
+		// Add the starting cable - direction doesn't matter here.
+		pathEntries.add(new PathEntry(StartingCablePosition, null));
+
+		// The whole path is currently reversed, so unreverse it.
+		Collections.reverse(pathEntries);
+
+		// Add the last cable and the end position.
+		pathEntries.add(new PathEntry(lastCable, WorldUtilities.getFacingFromPos(pathEntries.get(pathEntries.size() - 1).getPosition(), lastCable)));
+		pathEntries.add(new PathEntry(EndingCablePosition, WorldUtilities.getFacingFromPos(lastCable, EndingCablePosition)));
+
+		// Cover the list to an array and create the final path.
+		PathEntry[] entries = new PathEntry[pathEntries.size()];
+		pathEntries.toArray(entries);
+		return new Path(StartingCablePosition, EndingCablePosition, entries);
 	}
 }

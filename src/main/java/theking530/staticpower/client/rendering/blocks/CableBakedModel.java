@@ -85,7 +85,7 @@ public class CableBakedModel extends AbstractBakedModel {
 				// Decide what to render based on the connection state.
 				if (connectionState == CableConnectionState.CABLE) {
 					newQuads.addAll(getTransformedQuads(Extension, dir, side, state, rand));
-				} else if (connectionState == CableConnectionState.TILE_ENTITY) {
+				} else if (connectionState == CableConnectionState.TILE_ENTITY || attachmentModels[dir.ordinal()] != null) {
 					newQuads.addAll(getTransformedQuads(Extension, dir, side, state, rand));
 					if (attachmentModels[dir.ordinal()] != null) {
 						IBakedModel model = Minecraft.getInstance().getModelManager().getModel(attachmentModels[dir.ordinal()]);

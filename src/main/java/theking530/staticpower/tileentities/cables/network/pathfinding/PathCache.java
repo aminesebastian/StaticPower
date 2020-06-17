@@ -1,5 +1,6 @@
 package theking530.staticpower.tileentities.cables.network.pathfinding;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,8 +47,8 @@ public class PathCache {
 	}
 
 	/**
-	 * Attempts to calculate the paths between the provided source and destination, and
-	 * returns the calculated paths if successful.
+	 * Attempts to calculate the paths between the provided source and destination,
+	 * and returns the calculated paths if successful.
 	 * 
 	 * @param source
 	 * @param destination
@@ -55,7 +56,7 @@ public class PathCache {
 	 */
 	public List<Path> cacheNewPath(BlockPos source, BlockPos destination) {
 		// Perform the path finding.
-		NetworkPathFinder pathFinder = new NetworkPathFinder(OwningNetwork.getGraph(), source);
+		NetworkPathFinder pathFinder = new NetworkPathFinder(OwningNetwork.getGraph(), OwningNetwork.getWorld(), source, destination);
 		List<Path> paths = pathFinder.executeAlgorithm();
 
 		// Cache each provided path.
@@ -66,6 +67,11 @@ public class PathCache {
 			}
 			Cache.get(path.getDestinationLocation()).get(source).add(path);
 		});
+
+		// If we have a destination for this, sort it by length.
+		if (Cache.containsKey(destination)) {
+			Cache.get(destination).get(source).sort(Comparator.comparingInt(Path::getLength));
+		}
 
 		// Check if we now have the path.
 		return getPaths(source, destination);
