@@ -1,6 +1,7 @@
 package theking530.staticpower.utilities;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
@@ -9,41 +10,34 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public class InventoryUtilities {
 
-	public static boolean canInsertItemsIntoInventory(IItemHandler inv, ItemStack[] items) {
+	public static boolean canFullyInsertAllItemsIntoInventory(IItemHandler inv, List<ItemStack> items) {
+		// Create a new item handler.
 		IItemHandler dupInv = new ItemStackHandler(inv.getSlots());
-		List<ItemStack> dupItems = new ArrayList<ItemStack>();
 
+		// Populate the duplicate inventory with copies of the items from the provided
+		// inventory.
 		for (int i = 0; i < inv.getSlots(); i++) {
 			dupInv.insertItem(i, inv.getStackInSlot(i).copy(), false);
 		}
-		for (int i = 0; i < items.length; i++) {
-			dupItems.add(items[i].copy());
-		}
 
-		for (int i = 0; i < dupInv.getSlots(); i++) {
-			for (int j = dupItems.size() - 1; j >= 0; j--) {
-				if (dupItems.get(j).isEmpty()) {
-					continue;
-				}
-				if (dupInv.getStackInSlot(i).isEmpty()) {
-					dupItems.set(j, ItemStack.EMPTY);
-					continue;
-				}
-				dupItems.set(j, dupInv.insertItem(i, dupItems.get(j), false));
-			}
-		}
-		for (int i = 0; i < dupItems.size(); i++) {
-			if (!dupItems.get(i).isEmpty()) {
+		// Create duplicates of the provided items.
+		List<ItemStack> dupItems = new ArrayList<ItemStack>();
+		items.forEach(item -> dupItems.add(item.copy()));
+
+		// Attempt to insert the duplicates into the duplicate inventory. If they return
+		// is ever not empty, then we couldn't fully insert something. Return false.
+		for (ItemStack dupItem : dupItems) {
+			ItemStack postInsert = insertItemIntoInventory(dupInv, dupItem, false);
+			if (!postInsert.isEmpty()) {
 				return false;
 			}
 		}
+
 		return true;
 	}
 
-	public static boolean canInsertItemsIntoInventory(IItemHandler inv, List<ItemStack> items) {
-		ItemStack[] itemArray = new ItemStack[items.size()];
-		items.toArray(itemArray);
-		return canInsertItemsIntoInventory(inv, itemArray);
+	public static boolean canFullyInsertAllItemsIntoInventory(IItemHandler inv, ItemStack... items) {
+		return canFullyInsertAllItemsIntoInventory(inv, Arrays.asList(items));
 	}
 
 	public static boolean canFullyInsertStackIntoSlot(IItemHandler inv, int slot, ItemStack stack) {
@@ -55,17 +49,21 @@ public class InventoryUtilities {
 	}
 
 	public static boolean canFullyInsertItemIntoInventory(IItemHandler inv, ItemStack stack) {
+		// Preallocate the output.
 		ItemStack output = stack.copy();
+
+		// Go through every slot an attempt to insert the item. If we end up with an
+		// empty stack before the end, then we have fully inserted the item.
 		for (int i = 0; i < inv.getSlots(); i++) {
 			output = inv.insertItem(i, output, true);
-			if (output.getCount() <= 0) {
-				break;
+			if (output.isEmpty()) {
+				return true;
 			}
 		}
-		return output.getCount() <= 0;
+		return output.isEmpty();
 	}
 
-	public static boolean canInsertItemIntoInventory(IItemHandler inv, ItemStack stack) {
+	public static boolean canPartiallyInsertItemIntoInventory(IItemHandler inv, ItemStack stack) {
 		for (int i = 0; i < inv.getSlots(); i++) {
 			if (canPartiallyInsertItemIntoSlot(inv, i, stack)) {
 				return true;
@@ -75,31 +73,21 @@ public class InventoryUtilities {
 	}
 
 	public static ItemStack insertItemIntoInventory(IItemHandler inv, ItemStack stack, boolean simulate) {
-		ItemStack output = stack.copy();
-		for (int i = 0; i < inv.getSlots(); i++) {
-			output = inv.insertItem(i, output, simulate);
-			if (output.getCount() <= 0) {
-				break;
-			}
-		}
-		return output;
+		return insertItemIntoInventory(inv, stack, 0, inv.getSlots() - 1, simulate);
 	}
 
 	public static ItemStack insertItemIntoInventory(IItemHandler inv, ItemStack stack, int start, int stop, boolean simulate) {
-		for (int i = start; i < stop + 1; i++) {
-			if (canPartiallyInsertItemIntoSlot(inv, i, stack)) {
-				return inv.insertItem(i, stack.copy(), simulate);
-			}
-		}
-		return stack;
-	}
+		// Allocate a copy of the provided stack.
+		ItemStack output = stack.copy();
 
-	public static ItemStack fullyInsertItemIntoInventory(IItemHandler inv, ItemStack stack, boolean simulate) {
-		for (int i = 0; i < inv.getSlots(); i++) {
-			if (canFullyInsertStackIntoSlot(inv, i, stack)) {
-				return inv.insertItem(i, stack, simulate);
+		// Go through each slot and attempt to insert the item. If we ever end up with
+		// an empty item, we have fully inserted, we can return true.
+		for (int i = start; i < stop + 1; i++) {
+			output = inv.insertItem(i, output, simulate);
+			if (output.isEmpty()) {
+				return output;
 			}
 		}
-		return stack;
+		return output;
 	}
 }

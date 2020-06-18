@@ -28,7 +28,7 @@ public class NetworkPathFinder {
 	public NetworkPathFinder(CableNetworkGraph graph, World world, BlockPos startingCablePosition, BlockPos targetPosition) {
 		// Capture all the positions in the network graph.
 		GraphNodes = new HashSet<BlockPos>();
-		graph.getCables().forEach(cable -> GraphNodes.add(cable.getPos()));
+		graph.getCables().values().forEach(cable -> GraphNodes.add(cable.getPos()));
 
 		// Capture all the terminus nodes in the network graph (the final cables before
 		// the target).
@@ -125,7 +125,7 @@ public class NetworkPathFinder {
 		Collections.reverse(pathEntries);
 
 		// Add the last cable and the end position.
-		pathEntries.add(new PathEntry(lastCable, WorldUtilities.getFacingFromPos(pathEntries.get(pathEntries.size() - 1).getPosition(), lastCable)));
+		pathEntries.add(new PathEntry(lastCable, WorldUtilities.getFacingFromPos(lastCable, EndingCablePosition)));
 		pathEntries.add(new PathEntry(EndingCablePosition, WorldUtilities.getFacingFromPos(lastCable, EndingCablePosition)));
 
 		// Cover the list to an array and create the final path.

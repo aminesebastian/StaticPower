@@ -119,11 +119,14 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 				// For each recipe, insert the contents into the output based on the percentage
 				// chance. The clear the internal inventory, mark for synchronozation, and
 				// return true.
-				for (GrinderOutput output : recipe.getOutputItems()) {
-					if (SDMath.diceRoll(output.getPercentage() + bonusOutputChance)) {
-						InventoryUtilities.fullyInsertItemIntoInventory(outputInventory.getInventory(), output.getItem().copy(), false);
+				if (InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory.getInventory(), recipe.getRawOutputItems())) {
+					for (GrinderOutput output : recipe.getOutputItems()) {
+						if (SDMath.diceRoll(output.getPercentage() + bonusOutputChance)) {
+							InventoryUtilities.insertItemIntoInventory(outputInventory.getInventory(), output.getItem().copy(), false);
+						}
 					}
 				}
+
 				internalInventory.setStackInSlot(0, ItemStack.EMPTY);
 				markTileEntityForSynchronization();
 				return true;
@@ -181,7 +184,7 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 	 * @return
 	 */
 	public boolean canOutputsTakeRecipeResult(GrinderRecipe recipe) {
-		return InventoryUtilities.canInsertItemsIntoInventory(outputInventory.getInventory(), recipe.getRawOutputItems());
+		return InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory.getInventory(), recipe.getRawOutputItems());
 	}
 
 	@Override

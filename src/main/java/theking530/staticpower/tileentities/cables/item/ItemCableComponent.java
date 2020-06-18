@@ -27,7 +27,7 @@ import theking530.staticpower.tileentities.cables.network.modules.ItemCableRemov
 import theking530.staticpower.tileentities.cables.network.modules.ItemNetworkModule;
 
 public class ItemCableComponent extends AbstractCableProviderComponent {
-	private int itemTransferSpeed = 20;
+	private int itemTransferSpeed = 30;
 	private int extractionTimer = 0;
 	private int extractionTime = 5;
 	private HashMap<Long, ItemRoutingParcelClient> containedPackets;
@@ -48,6 +48,24 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 		}
 	}
 
+	@Override
+	public void onOwningTileEntityRemoved() {
+		// Only perform the following on the server.
+		if (!getWorld().isRemote) {
+			// Get the network.
+			CableNetwork network = CableNetworkManager.get(getWorld()).getCable(getPos()).getNetwork();
+			ItemNetworkModule itemNetworkModule = (ItemNetworkModule) network.getModule(CableNetworkModuleTypes.ITEM_NETWORK_ATTACHMENT);
+			if (network == null || itemNetworkModule == null) {
+				throw new RuntimeException(String.format("Encountered a null network for an ItemCableComponent at position: %1$s.", getPos()));
+			}
+
+			// Tell the network module this cable was broken.
+			itemNetworkModule.onItemCableBroken(getPos());
+		}
+
+		super.onOwningTileEntityRemoved();
+	}
+
 	public int getTransferSpeed() {
 		return itemTransferSpeed;
 	}
@@ -57,6 +75,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 		if (!getWorld().isRemote) {
 			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> getWorld().getChunkAt(getPos())), new ItemCableAddedPacket(this, routingPacket));
 		}
+		getTileEntity().markDirty();
 	}
 
 	public void removeTransferingItem(long parcelId) {
@@ -64,10 +83,15 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 		if (!getWorld().isRemote) {
 			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> getWorld().getChunkAt(getPos())), new ItemCableRemovedPacket(this, parcelId));
 		}
+		getTileEntity().markDirty();
 	}
 
 	public Collection<ItemRoutingParcelClient> getContainedItems() {
 		return containedPackets.values();
+	}
+
+	public boolean canInsertOnDirection(Direction dir) {
+		return false;
 	}
 
 	@Override
@@ -109,7 +133,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 		te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).ifPresent(inv -> {
 			for (int i = 0; i < inv.getSlots(); i++) {
 				// Simulate an extract.
-				ItemStack extractedItem = inv.extractItem(i, 1, true);
+				ItemStack extractedItem = inv.extractItem(i, 2, true);
 
 				// If the extracted item is empty, continue.
 				if (extractedItem.isEmpty()) {
@@ -118,8 +142,8 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 
 				ItemStack remainingAmount = itemNetworkModule.transferItemStack(extractedItem, getPos(), side, false);
 				if (remainingAmount.getCount() < extractedItem.getCount()) {
-					// inv.extractItem(i, extractedItem.getCount() - remainingAmount.getCount(),
-					// false);
+					inv.extractItem(i, extractedItem.getCount() - remainingAmount.getCount(), false);
+					getTileEntity().markDirty();
 					break;
 				}
 			}

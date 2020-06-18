@@ -1,5 +1,8 @@
 package theking530.staticpower.tileentities.cables.power;
 
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -10,8 +13,8 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import theking530.staticpower.tileentities.cables.AbstractCableProviderComponent;
 import theking530.staticpower.tileentities.cables.AbstractCableWrapper;
-import theking530.staticpower.tileentities.cables.CableUtilities;
 import theking530.staticpower.tileentities.cables.AbstractCableWrapper.CableConnectionState;
+import theking530.staticpower.tileentities.cables.CableUtilities;
 import theking530.staticpower.tileentities.cables.network.CableNetworkManager;
 import theking530.staticpower.tileentities.cables.network.factories.cables.CableTypes;
 import theking530.staticpower.tileentities.cables.network.factories.modules.CableNetworkModuleTypes;
@@ -25,7 +28,11 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	@Override
 	public int receiveEnergy(int maxReceive, boolean simulate) {
 		if (!getTileEntity().getWorld().isRemote) {
-			return getPowerNetworkModule().getEnergyStorage().receiveEnergy(maxReceive, simulate);
+			AtomicInteger recieve = new AtomicInteger(0);
+			getPowerNetworkModule().ifPresent(PowerNetworkModule -> {
+				recieve.set(PowerNetworkModule.getEnergyStorage().receiveEnergy(maxReceive, simulate));
+			});
+			return recieve.get();
 		} else {
 			return 0;
 		}
@@ -39,7 +46,11 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	@Override
 	public int getEnergyStored() {
 		if (!getTileEntity().getWorld().isRemote) {
-			return getPowerNetworkModule().getEnergyStorage().getEnergyStored();
+			AtomicInteger recieve = new AtomicInteger(0);
+			getPowerNetworkModule().ifPresent(PowerNetworkModule -> {
+				recieve.set(PowerNetworkModule.getEnergyStorage().getEnergyStored());
+			});
+			return recieve.get();
 		} else {
 			return 0;
 		}
@@ -48,7 +59,11 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	@Override
 	public int getMaxEnergyStored() {
 		if (!getTileEntity().getWorld().isRemote) {
-			return getPowerNetworkModule().getEnergyStorage().getMaxEnergyStored();
+			AtomicInteger recieve = new AtomicInteger(0);
+			getPowerNetworkModule().ifPresent(PowerNetworkModule -> {
+				recieve.set(PowerNetworkModule.getEnergyStorage().getMaxEnergyStored());
+			});
+			return recieve.get();
 		} else {
 			return 0;
 		}
@@ -64,14 +79,25 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 		return getPowerNetworkModule() != null;
 	}
 
-	protected PowerNetworkModule getPowerNetworkModule() {
+	/**
+	 * Gets the power network module for the network this cable belongs to. We have
+	 * to wrap it in an optional because while we can guarantee once this component
+	 * is validated that the network is valid, since this component exposes external
+	 * methods, other tile entity that are made valid before us may call some of our
+	 * methods.
+	 * 
+	 * @return
+	 */
+	protected Optional<PowerNetworkModule> getPowerNetworkModule() {
 		CableNetworkManager manager = CableNetworkManager.get(getTileEntity().getWorld());
 		AbstractCableWrapper cable = manager.getCable(getTileEntity().getPos());
 		if (cable instanceof PowerCableWrapper) {
 			PowerCableWrapper powerCable = (PowerCableWrapper) cable;
-			return powerCable.getNetwork().getModule(CableNetworkModuleTypes.POWER_NETWORK_ATTACHMENT);
+			if (powerCable.getNetwork() != null) {
+				return Optional.of(powerCable.getNetwork().getModule(CableNetworkModuleTypes.POWER_NETWORK_ATTACHMENT));
+			}
 		}
-		return null;
+		return Optional.empty();
 	}
 
 	@Override

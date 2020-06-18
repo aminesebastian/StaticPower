@@ -130,6 +130,10 @@ public class WorldUtilities {
 		return dropItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), stack, count);
 	}
 
+	public static ItemEntity dropItem(World worldIn, BlockPos pos, ItemStack stack) {
+		return dropItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), stack, stack.getCount());
+	}
+
 	public static ItemEntity dropItem(World worldIn, Direction facing, BlockPos pos, ItemStack stack, int count) {
 		return dropItem(worldIn, facing, pos.getX(), pos.getY(), pos.getZ(), stack, count);
 	}

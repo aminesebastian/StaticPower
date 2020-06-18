@@ -9,7 +9,6 @@ public class ItemRoutingParcelClient {
 	protected ItemStack containedItem;
 	protected int moveTimer;
 	protected int moveTime;
-	protected int currentPathIndex;
 	protected Direction inDirection;
 	protected Direction outDirection;
 
@@ -19,7 +18,6 @@ public class ItemRoutingParcelClient {
 
 	public ItemRoutingParcelClient(long id, ItemStack containedItem, Direction inDirection) {
 		this.containedItem = containedItem;
-		this.currentPathIndex = 0;
 		this.moveTimer = 0;
 		this.inDirection = inDirection;
 		this.id = id;

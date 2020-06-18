@@ -1,7 +1,6 @@
 package theking530.staticpower.tileentities.cables.network;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -10,32 +9,40 @@ import theking530.staticpower.tileentities.cables.AbstractCableWrapper;
 
 public class CableNetworkGraph {
 	private final CableNetwork Network;
-	private Set<AbstractCableWrapper> Cables;
-	private Set<TileEntity> Destinations;
+	private HashMap<BlockPos, AbstractCableWrapper> Cables;
+	private HashMap<BlockPos, TileEntity> Destinations;
 
 	public CableNetworkGraph(CableNetwork network) {
-		Cables = new HashSet<AbstractCableWrapper>();
-		Destinations = new HashSet<TileEntity>();
+		Cables = new HashMap<BlockPos, AbstractCableWrapper>();
+		Destinations = new HashMap<BlockPos, TileEntity>();
 		Network = network;
 	}
 
 	public NetworkMapper scan(World world, BlockPos scanStartPosition) {
-		Destinations.clear();
-		NetworkMapper mapper = new NetworkMapper(Cables);
+		// Map the network.
+		NetworkMapper mapper = new NetworkMapper(Cables.values());
 		mapper.scanFromLocation(world, scanStartPosition);
+		
+		// Clear the old values.
+		Cables.clear();
+		Destinations.clear();
 
-		Cables = mapper.getDiscoveredCables();
+		// Cache the new values.
+		mapper.getDiscoveredCables().forEach(cable -> Cables.put(cable.getPos(), cable));
+		mapper.getDestinations().forEach(destTe -> Destinations.put(destTe.getPos(), destTe));
+
+		// Raise the network joined and left events.
 		mapper.getNewlyAddedCables().forEach(cable -> cable.onNetworkJoined(Network, true));
-		mapper.getRemovedPipes().forEach(cable -> cable.onNetworkLeft());
-		Destinations.addAll(mapper.getDestinations());
+		mapper.getRemovedCables().forEach(cable -> cable.onNetworkLeft());
+
 		return mapper;
 	}
 
-	public Set<AbstractCableWrapper> getCables() {
+	public HashMap<BlockPos, AbstractCableWrapper> getCables() {
 		return Cables;
 	}
 
-	public Set<TileEntity> getDestinations() {
+	public HashMap<BlockPos, TileEntity> getDestinations() {
 		return Destinations;
 	}
 }

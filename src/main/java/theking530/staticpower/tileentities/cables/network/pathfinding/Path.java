@@ -1,7 +1,10 @@
 package theking530.staticpower.tileentities.cables.network.pathfinding;
 
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.util.Constants;
 
 public class Path {
 	private final BlockPos SourceLocation;
@@ -22,7 +25,7 @@ public class Path {
 		return DestinationLocation;
 	}
 
-	public PathEntry[] getPath() {
+	public PathEntry[] getEntries() {
 		return Path;
 	}
 
@@ -38,22 +41,6 @@ public class Path {
 
 	public int getLength() {
 		return Path.length;
-	}
-
-	public static Path fromPreviousPath(Path previous, Direction directionToNewDestination, BlockPos newDestination) {
-		// Create a new array equal to the size of the previous path PLUS 1.
-		PathEntry[] newPathBlocks = new PathEntry[previous.getLength() + 1];
-
-		// Add the previous path to the new path.
-		for (int i = 0; i < previous.getLength(); i++) {
-			newPathBlocks[i] = previous.getPath()[i];
-		}
-
-		// But include an additional position for the new destination.
-		newPathBlocks[previous.getLength()] = new PathEntry(newDestination, directionToNewDestination);
-
-		// Return the path.
-		return new Path(previous.SourceLocation, newDestination, newPathBlocks);
 	}
 
 	public static class PathEntry {
@@ -85,6 +72,56 @@ public class Path {
 		public Direction getDirectionOfEntry() {
 			return DirectionOfEntry;
 		}
+
+		public CompoundNBT writeToNbt(CompoundNBT nbt) {
+			nbt.putLong("position", Position.toLong());
+			if (DirectionOfEntry != null) {
+				nbt.putInt("direction", DirectionOfEntry.ordinal());
+			}
+
+			return nbt;
+		}
+
+		public static PathEntry createFromNbt(CompoundNBT nbt) {
+			return new PathEntry(BlockPos.fromLong(nbt.getLong("position")), nbt.contains("direction") ? Direction.values()[nbt.getInt("direction")] : null);
+		}
 	}
 
+	public CompoundNBT writeToNbt(CompoundNBT nbt) {
+		// Serialize the source and destination locations.
+		nbt.putLong("source", SourceLocation.toLong());
+		nbt.putLong("destination", DestinationLocation.toLong());
+
+		// Serialize the parcels to the list.
+		ListNBT pathNBTList = new ListNBT();
+		for (PathEntry entry : Path) {
+			CompoundNBT entryTag = new CompoundNBT();
+			entry.writeToNbt(entryTag);
+			pathNBTList.add(entryTag);
+		}
+		nbt.put("entries", pathNBTList);
+
+		return nbt;
+	}
+
+	public static Path createFromNbt(CompoundNBT nbt) {
+		// Get the serialized entries.
+		ListNBT entries = nbt.getList("entries", Constants.NBT.TAG_COMPOUND);
+
+		// Create the array to contain the entries.
+		PathEntry[] entryList = new PathEntry[entries.size()];
+
+		// Create the entries.
+		for (int i = 0; i < entries.size(); i++) {
+			CompoundNBT entryTag = (CompoundNBT) entries.get(i);
+			entryList[i] = PathEntry.createFromNbt(entryTag);
+		}
+
+		// Get the source and destination locations.
+		BlockPos sourceLocation = BlockPos.fromLong(nbt.getLong("source"));
+		BlockPos destinationLocation = BlockPos.fromLong(nbt.getLong("destination"));
+
+		// Return the path.
+		return new Path(sourceLocation, destinationLocation, entryList);
+	}
 }

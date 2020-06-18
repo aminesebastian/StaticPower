@@ -117,10 +117,12 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 
 	@Override
 	public void remove() {
-		super.remove();
 		for (AbstractTileEntityComponent component : Components.values()) {
 			component.onOwningTileEntityRemoved();
 		}
+
+		// Call the super AFTER everything has been cleaned up.
+		super.remove();
 	}
 
 	/**

@@ -159,6 +159,8 @@ public class CableNetworkManager extends WorldSavedData {
 		mainNetwork.updateGraph(world, pos);
 
 		mergedNetworks.forEach(n -> n.onJoinedWithOtherNetwork(mainNetwork));
+
+		markDirty();
 	}
 
 	private void splitNetworks(AbstractCableWrapper originCable) {
@@ -173,24 +175,20 @@ public class CableNetworkManager extends WorldSavedData {
 			AbstractCableWrapper otherPipeInNetwork = adjacents.get(0);
 
 			otherPipeInNetwork.getNetwork().setOrigin(otherPipeInNetwork.getPos());
-			markDirty();
 
 			NetworkMapper result = otherPipeInNetwork.getNetwork().updateGraph(otherPipeInNetwork.getWorld(), otherPipeInNetwork.getPos());
 
 			// For sanity checking
 			boolean foundRemovedPipe = false;
 
-			for (AbstractCableWrapper removed : result.getRemovedPipes()) {
-				// It's obvious that our removed pipe is removed.
-				// We don't want to create a new splitted network for this one.
+			for (AbstractCableWrapper removed : result.getRemovedCables()) {
+				// Skip the removed cables if it is the origin one of the remove.
 				if (removed.getPos().equals(originCable.getPos())) {
 					foundRemovedPipe = true;
 					continue;
 				}
 
-				// The formNetworkAt call below can let these removed pipes join a network
-				// again.
-				// We only have to form a new network when necessary, hence the null check.
+				// If the removed does not have a network, create a network.
 				if (removed.getNetwork() == null) {
 					formNetworkAt(removed.getWorld(), removed.getPos());
 				}
@@ -199,6 +197,8 @@ public class CableNetworkManager extends WorldSavedData {
 			if (!foundRemovedPipe) {
 				throw new RuntimeException("Didn't find removed cable when splitting network");
 			}
+
+			markDirty();
 		} else {
 			LOGGER.debug("Removing empty network {}", originCable.getNetwork().getId());
 
@@ -239,21 +239,20 @@ public class CableNetworkManager extends WorldSavedData {
 
 	@Override
 	public void read(CompoundNBT tag) {
-		ListNBT nets = tag.getList("networks", Constants.NBT.TAG_COMPOUND);
-		for (INBT netTag : nets) {
-			CompoundNBT netTagCompound = (CompoundNBT) netTag;
-			CableNetwork network = CableNetwork.create(netTagCompound);
-			network.setWorld(World);
-			Networks.put(network.getId(), network);
-		}
-
 		ListNBT cables = tag.getList("cables", Constants.NBT.TAG_COMPOUND);
 		for (INBT cableTag : cables) {
 			CompoundNBT cableTagCompound = (CompoundNBT) cableTag;
 			ResourceLocation type = new ResourceLocation(cableTagCompound.getString("type"));
 			AbstractCableWrapper cable = CableWrapperRegistry.get().create(type, World, cableTagCompound);
 			WorldCables.put(cable.getPos(), cable);
-			cable.onNetworkJoined(Networks.get(cableTagCompound.getLong("networkId")), false);
+		}
+
+		ListNBT nets = tag.getList("networks", Constants.NBT.TAG_COMPOUND);
+		for (INBT netTag : nets) {
+			CompoundNBT netTagCompound = (CompoundNBT) netTag;
+			CableNetwork network = CableNetwork.create(netTagCompound);
+			network.setWorld(World);
+			Networks.put(network.getId(), network);
 		}
 
 		// Get the current network Id.
@@ -269,7 +268,6 @@ public class CableNetworkManager extends WorldSavedData {
 		WorldCables.values().forEach(cable -> {
 			CompoundNBT cableTag = new CompoundNBT();
 			cableTag.putString("type", cable.getType().toString());
-			cableTag.putLong("networkId", cable.getNetwork().getId());
 			cable.writeToNbt(cableTag);
 			cables.add(cableTag);
 		});

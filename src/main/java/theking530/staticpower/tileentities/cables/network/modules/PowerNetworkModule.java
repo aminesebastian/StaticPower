@@ -23,7 +23,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 	@Override
 	public void tick(World world) {
 		if (EnergyStorage.getEnergyStored() > 0) {
-			for (TileEntity te : Network.getGraph().getDestinations()) {
+			for (TileEntity te : Network.getGraph().getDestinations().values()) {
 				IEnergyStorage energyStorage = te.getCapability(CapabilityEnergy.ENERGY).orElse(null);
 				if (energyStorage != null) {
 					if (energyStorage.canReceive()) {

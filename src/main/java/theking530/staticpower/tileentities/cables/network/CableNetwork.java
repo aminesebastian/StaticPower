@@ -4,10 +4,6 @@
 package theking530.staticpower.tileentities.cables.network;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.function.BiPredicate;
-
-import javax.annotation.Nullable;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,15 +11,12 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import theking530.staticpower.tileentities.cables.network.factories.modules.CableNetworkModuleRegistry;
 import theking530.staticpower.tileentities.cables.network.modules.AbstractCableNetworkModule;
-import theking530.staticpower.tileentities.cables.network.pathfinding.Path;
 import theking530.staticpower.tileentities.cables.network.pathfinding.PathCache;
 
 /**
@@ -61,9 +54,7 @@ public class CableNetwork {
 		}
 
 		if (Graph.getCables().size() > 0) {
-			Graph.getCables().forEach(cable -> cable.tick());
-			// System.out.println("Network with ID: " + NetworkId + " of Size: " +
-			// Graph.getCables().size());
+			Graph.getCables().values().forEach(cable -> cable.tick());
 		}
 	}
 
@@ -125,42 +116,6 @@ public class CableNetwork {
 
 	public World getWorld() {
 		return World;
-	}
-
-	/**
-	 * Gets the shortest path to a tile entity that matches the passed predicate
-	 * test.
-	 * 
-	 * @param startingPos  The cable position to start at.
-	 * @param validityTest The predicate to use to see if a tile entity is valid.
-	 * @return The path to the closest tile entity of the provided type.
-	 */
-	public @Nullable Path getPathToCloestsTileEntityPassingTest(BlockPos startingPos, BiPredicate<TileEntity, Direction> validityTest) {
-		int shortestPathLength = Integer.MAX_VALUE;
-		Path shortestPath = null;
-		for (TileEntity te : Graph.getDestinations()) {
-			// Get the path.
-			List<Path> paths = PathCache.getPaths(startingPos, te.getPos());
-
-			// If there are no paths (HOW??), continue.
-			if (paths == null) {
-				continue;
-			}
-
-			for (Path path : paths) {
-				// Check if the tile entity is valid.
-				if (!validityTest.test(te, path.getDestinationDirection())) {
-					continue;
-				}
-
-				// Check if this is the shortest path.
-				if (path.getLength() < shortestPathLength) {
-					shortestPathLength = path.getLength();
-					shortestPath = path;
-				}
-			}
-		}
-		return shortestPath;
 	}
 
 	public void onJoinedWithOtherNetwork(CableNetwork mainNetwork) {

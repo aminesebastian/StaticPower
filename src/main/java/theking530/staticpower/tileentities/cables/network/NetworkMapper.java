@@ -1,5 +1,6 @@
 package theking530.staticpower.tileentities.cables.network;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,13 +14,13 @@ import net.minecraft.world.World;
 import theking530.staticpower.tileentities.cables.AbstractCableWrapper;
 
 public class NetworkMapper {
+	private final Collection<AbstractCableWrapper> InitialCables;
 	private final Set<AbstractCableWrapper> DiscoveredCables;
 	private final Set<AbstractCableWrapper> NewlyAddedCables;
 	private final Set<AbstractCableWrapper> RemovedCables;
-	private final Set<AbstractCableWrapper> InitialCables;
 	private final Set<TileEntity> Destinations;
 
-	public NetworkMapper(Set<AbstractCableWrapper> startingCables) {
+	public NetworkMapper(Collection<AbstractCableWrapper> startingCables) {
 		InitialCables = startingCables;
 		DiscoveredCables = new HashSet<AbstractCableWrapper>();
 		NewlyAddedCables = new HashSet<AbstractCableWrapper>();
@@ -49,7 +50,7 @@ public class NetworkMapper {
 		return NewlyAddedCables;
 	}
 
-	public Set<AbstractCableWrapper> getRemovedPipes() {
+	public Set<AbstractCableWrapper> getRemovedCables() {
 		return RemovedCables;
 	}
 
