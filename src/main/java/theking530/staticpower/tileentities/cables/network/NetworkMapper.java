@@ -11,20 +11,20 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import theking530.staticpower.tileentities.cables.AbstractCableWrapper;
+import theking530.staticpower.tileentities.cables.ServerCable;
 
 public class NetworkMapper {
-	private final Collection<AbstractCableWrapper> InitialCables;
-	private final Set<AbstractCableWrapper> DiscoveredCables;
-	private final Set<AbstractCableWrapper> NewlyAddedCables;
-	private final Set<AbstractCableWrapper> RemovedCables;
+	private final Collection<ServerCable> InitialCables;
+	private final Set<ServerCable> DiscoveredCables;
+	private final Set<ServerCable> NewlyAddedCables;
+	private final Set<ServerCable> RemovedCables;
 	private final Set<TileEntity> Destinations;
 
-	public NetworkMapper(Collection<AbstractCableWrapper> startingCables) {
+	public NetworkMapper(Collection<ServerCable> startingCables) {
 		InitialCables = startingCables;
-		DiscoveredCables = new HashSet<AbstractCableWrapper>();
-		NewlyAddedCables = new HashSet<AbstractCableWrapper>();
-		RemovedCables = new HashSet<AbstractCableWrapper>();
+		DiscoveredCables = new HashSet<ServerCable>();
+		NewlyAddedCables = new HashSet<ServerCable>();
+		RemovedCables = new HashSet<ServerCable>();
 		Destinations = new HashSet<TileEntity>();
 
 		RemovedCables.addAll(startingCables);
@@ -42,15 +42,15 @@ public class NetworkMapper {
 		_updateNetworkWorker(world, visited, startingPos);
 	}
 
-	public Set<AbstractCableWrapper> getDiscoveredCables() {
+	public Set<ServerCable> getDiscoveredCables() {
 		return DiscoveredCables;
 	}
 
-	public Set<AbstractCableWrapper> getNewlyAddedCables() {
+	public Set<ServerCable> getNewlyAddedCables() {
 		return NewlyAddedCables;
 	}
 
-	public Set<AbstractCableWrapper> getRemovedCables() {
+	public Set<ServerCable> getRemovedCables() {
 		return RemovedCables;
 	}
 
@@ -63,7 +63,7 @@ public class NetworkMapper {
 			// If we're testing on a position that contains a cable and the cable is
 			// disabled on the side we're testing, skip it. Do NOT mark that side as visited
 			// though, as another cable may get to it that is enabled on that side.
-			AbstractCableWrapper cable = CableNetworkManager.get(world).getCable(currentPosition);
+			ServerCable cable = CableNetworkManager.get(world).getCable(currentPosition);
 			if (cable != null && cable.isDisabledOnSide(facing)) {
 				continue;
 			}
@@ -104,7 +104,7 @@ public class NetworkMapper {
 		}
 
 		// Check the starting position.
-		AbstractCableWrapper cable = CableNetworkManager.get(world).getCable(location);
+		ServerCable cable = CableNetworkManager.get(world).getCable(location);
 		if (cable != null) {
 			// If the cable is disabled on the side opposite from the one we approached
 			// from, do not discover it and do not continue searching in that direction.

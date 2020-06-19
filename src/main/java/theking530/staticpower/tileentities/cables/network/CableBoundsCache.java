@@ -24,7 +24,7 @@ import theking530.api.utilities.RaytracingUtilities;
 import theking530.api.utilities.RaytracingUtilities.AdvancedRayTraceResult;
 import theking530.api.wrench.IWrenchTool;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
-import theking530.staticpower.tileentities.cables.AbstractCableWrapper.CableConnectionState;
+import theking530.staticpower.tileentities.cables.ServerCable.CableConnectionState;
 import theking530.staticpower.tileentities.cables.CableUtilities;
 
 public class CableBoundsCache {

@@ -12,17 +12,16 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import theking530.staticpower.tileentities.cables.AbstractCableProviderComponent;
-import theking530.staticpower.tileentities.cables.AbstractCableWrapper;
-import theking530.staticpower.tileentities.cables.AbstractCableWrapper.CableConnectionState;
 import theking530.staticpower.tileentities.cables.CableUtilities;
+import theking530.staticpower.tileentities.cables.ServerCable;
+import theking530.staticpower.tileentities.cables.ServerCable.CableConnectionState;
 import theking530.staticpower.tileentities.cables.network.CableNetworkManager;
-import theking530.staticpower.tileentities.cables.network.factories.cables.CableTypes;
-import theking530.staticpower.tileentities.cables.network.factories.modules.CableNetworkModuleTypes;
 import theking530.staticpower.tileentities.cables.network.modules.PowerNetworkModule;
+import theking530.staticpower.tileentities.cables.network.modules.factories.CableNetworkModuleTypes;
 
 public class PowerCableComponent extends AbstractCableProviderComponent implements IEnergyStorage {
 	public PowerCableComponent(String name) {
-		super(name, CableTypes.BASIC_POWER);
+		super(name, CableNetworkModuleTypes.POWER_NETWORK_MODULE);
 	}
 
 	@Override
@@ -90,12 +89,9 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	 */
 	protected Optional<PowerNetworkModule> getPowerNetworkModule() {
 		CableNetworkManager manager = CableNetworkManager.get(getTileEntity().getWorld());
-		AbstractCableWrapper cable = manager.getCable(getTileEntity().getPos());
-		if (cable instanceof PowerCableWrapper) {
-			PowerCableWrapper powerCable = (PowerCableWrapper) cable;
-			if (powerCable.getNetwork() != null) {
-				return Optional.of(powerCable.getNetwork().getModule(CableNetworkModuleTypes.POWER_NETWORK_ATTACHMENT));
-			}
+		ServerCable cable = manager.getCable(getTileEntity().getPos());
+		if (cable.getNetwork() != null) {
+			return Optional.of(cable.getNetwork().getModule(CableNetworkModuleTypes.POWER_NETWORK_MODULE));
 		}
 		return Optional.empty();
 	}
@@ -110,8 +106,8 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	protected CableConnectionState cacheConnectionState(Direction side, BlockPos blockPosition) {
-		AbstractCableProviderComponent overProvider = CableUtilities.getCableWrapperComponent(getWorld(), blockPosition);
-		if (overProvider != null && overProvider.getCableType() == getCableType()) {
+		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(), blockPosition);
+		if (otherProvider != null && otherProvider.shouldConnectionToCable(this)) {
 			return CableConnectionState.CABLE;
 		} else if (getWorld().getTileEntity(blockPosition) != null) {
 			TileEntity te = getWorld().getTileEntity(blockPosition);

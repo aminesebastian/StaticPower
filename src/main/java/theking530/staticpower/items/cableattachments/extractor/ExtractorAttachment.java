@@ -1,8 +1,14 @@
-package theking530.staticpower.items.cableattachments;
+package theking530.staticpower.items.cableattachments.extractor;
 
+import javax.annotation.Nullable;
+
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
+import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
 import theking530.staticpower.tileentities.cables.AbstractCableProviderComponent;
 
 public class ExtractorAttachment extends AbstractCableAttachment {
@@ -31,6 +37,10 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 		}
 	}
 
+	public void openAttachmentGui(ItemStack attachment) {
+
+	}
+
 	public int getExtractionRate() {
 		return ExtractionRate;
 	}
@@ -40,7 +50,29 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 	}
 
 	@Override
+	public @Nullable AbstractCableAttachmentContainerProvider getContainerProvider(ItemStack attachment) {
+		return new ExtractorContainerProvider(attachment);
+	}
+
+	@Override
+	public boolean hasGui(ItemStack attachment) {
+		return true;
+	}
+
+	@Override
 	public ResourceLocation getModel(ItemStack attachment, AbstractCableProviderComponent cableComponent) {
 		return Model;
+	}
+
+	protected class ExtractorContainerProvider extends AbstractCableAttachmentContainerProvider {
+
+		public ExtractorContainerProvider(ItemStack stack) {
+			super(stack);
+		}
+
+		@Override
+		public Container createMenu(int windowId, PlayerInventory playerInv, PlayerEntity player) {
+			return new ContainerExtractor(windowId, playerInv, targetItemStack);
+		}
 	}
 }

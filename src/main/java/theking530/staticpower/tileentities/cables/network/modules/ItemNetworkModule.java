@@ -21,12 +21,12 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.cables.AbstractCableWrapper;
+import theking530.staticpower.tileentities.cables.ServerCable;
 import theking530.staticpower.tileentities.cables.item.ItemCableComponent;
 import theking530.staticpower.tileentities.cables.item.ItemRoutingParcel;
 import theking530.staticpower.tileentities.cables.network.CableNetwork;
 import theking530.staticpower.tileentities.cables.network.CableNetworkManager;
-import theking530.staticpower.tileentities.cables.network.factories.modules.CableNetworkModuleTypes;
+import theking530.staticpower.tileentities.cables.network.modules.factories.CableNetworkModuleTypes;
 import theking530.staticpower.tileentities.cables.network.pathfinding.Path;
 import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
@@ -36,7 +36,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 	private HashMap<BlockPos, LinkedList<ItemRoutingParcel>> ActiveParcels;
 
 	public ItemNetworkModule() {
-		super(CableNetworkModuleTypes.ITEM_NETWORK_ATTACHMENT);
+		super(CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
 		ActiveParcels = new HashMap<BlockPos, LinkedList<ItemRoutingParcel>>();
 		CurrentPacketId = 0;
 	}
@@ -91,7 +91,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 	public ItemStack transferItemStack(ItemStack stack, BlockPos cablePosition, @Nullable Direction pulledFromDirection, boolean simulate) {
 		// Mark the network manager as dirty.
 		CableNetworkManager.get(Network.getWorld()).markDirty();
-		
+
 		// Sanity check.
 		if (!Network.getGraph().getCables().containsKey(cablePosition)) {
 			// throw new RuntimeException(String.format("Attempted to transfer an item
@@ -300,19 +300,19 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 	 */
 	protected boolean transferParcelToAnotherNetwork(ItemRoutingParcel parcel) {
 		// Check to see if the parcel's current location is still a cable.
-		AbstractCableWrapper otherNetworkCable = CableNetworkManager.get(Network.getWorld()).getCable(parcel.getCurrentEntry().getPosition());
+		ServerCable otherNetworkCable = CableNetworkManager.get(Network.getWorld()).getCable(parcel.getCurrentEntry().getPosition());
 		if (otherNetworkCable == null) {
 			return false;
 		}
 
 		// Check to ensure that the other cable has a network.
 		CableNetwork otherNetwork = otherNetworkCable.getNetwork();
-		if (!otherNetwork.hasModule(CableNetworkModuleTypes.ITEM_NETWORK_ATTACHMENT)) {
+		if (!otherNetwork.hasModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE)) {
 			return false;
 		}
 
 		// Transfer this parcel to that network.
-		ItemNetworkModule otherItemModule = otherNetwork.getModule(CableNetworkModuleTypes.ITEM_NETWORK_ATTACHMENT);
+		ItemNetworkModule otherItemModule = otherNetwork.getModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
 
 		// Loop until we're able to fully transfer the parcel OR we run out of options.
 		ItemStack lastTransferedAmount = ItemStack.EMPTY;
@@ -371,7 +371,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 			AtomicBoolean isValid = new AtomicBoolean(false);
 
 			// Iterate through all the paths to the proposed tile entity.
-			for (Path path : Network.getPathCache().getPaths(cablePosition, dest.getPos())) {
+			for (Path path : Network.getPathCache().getPaths(cablePosition, dest.getPos(), CableNetworkModuleTypes.ITEM_NETWORK_MODULE)) {
 				// If we're able to insert into that inventory, set the atomic boolean.
 				dest.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, path.getDestinationDirection()).ifPresent(inv -> {
 					isValid.set(InventoryUtilities.canPartiallyInsertItemIntoInventory(inv, item));

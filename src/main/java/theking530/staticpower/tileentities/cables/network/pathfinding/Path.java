@@ -3,6 +3,7 @@ package theking530.staticpower.tileentities.cables.network.pathfinding;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants;
 
@@ -10,11 +11,32 @@ public class Path {
 	private final BlockPos SourceLocation;
 	private final BlockPos DestinationLocation;
 	private final PathEntry[] Path;
+	private final ResourceLocation SupportedNetworkType;
 
-	public Path(BlockPos source, BlockPos destination, PathEntry... path) {
+	public Path(BlockPos source, BlockPos destination, ResourceLocation supportedNetworkType, PathEntry... path) {
 		SourceLocation = source;
 		DestinationLocation = destination;
 		Path = path;
+		SupportedNetworkType = supportedNetworkType;
+	}
+
+	public Path(CompoundNBT nbt) {
+		// Get the serialized entries.
+		ListNBT entries = nbt.getList("entries", Constants.NBT.TAG_COMPOUND);
+
+		// Create the array to contain the entries.
+		Path = new PathEntry[entries.size()];
+
+		// Create the entries.
+		for (int i = 0; i < entries.size(); i++) {
+			CompoundNBT entryTag = (CompoundNBT) entries.get(i);
+			Path[i] = PathEntry.createFromNbt(entryTag);
+		}
+
+		// Get the source and destination locations.
+		SourceLocation = BlockPos.fromLong(nbt.getLong("source"));
+		DestinationLocation = BlockPos.fromLong(nbt.getLong("destination"));
+		SupportedNetworkType = new ResourceLocation(nbt.getString("supported_network_module"));
 	}
 
 	public BlockPos getSourceLocation() {
@@ -27,6 +49,10 @@ public class Path {
 
 	public PathEntry[] getEntries() {
 		return Path;
+	}
+
+	public ResourceLocation getSupportedNetworkType() {
+		return SupportedNetworkType;
 	}
 
 	/**
@@ -100,28 +126,7 @@ public class Path {
 			pathNBTList.add(entryTag);
 		}
 		nbt.put("entries", pathNBTList);
-
+		nbt.putString("supported_network_module", SupportedNetworkType.toString());
 		return nbt;
-	}
-
-	public static Path createFromNbt(CompoundNBT nbt) {
-		// Get the serialized entries.
-		ListNBT entries = nbt.getList("entries", Constants.NBT.TAG_COMPOUND);
-
-		// Create the array to contain the entries.
-		PathEntry[] entryList = new PathEntry[entries.size()];
-
-		// Create the entries.
-		for (int i = 0; i < entries.size(); i++) {
-			CompoundNBT entryTag = (CompoundNBT) entries.get(i);
-			entryList[i] = PathEntry.createFromNbt(entryTag);
-		}
-
-		// Get the source and destination locations.
-		BlockPos sourceLocation = BlockPos.fromLong(nbt.getLong("source"));
-		BlockPos destinationLocation = BlockPos.fromLong(nbt.getLong("destination"));
-
-		// Return the path.
-		return new Path(sourceLocation, destinationLocation, entryList);
 	}
 }

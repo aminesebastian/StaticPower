@@ -49,17 +49,11 @@ import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities.
 import theking530.staticpower.tileentities.utilities.interfaces.IBreakSerializeable;
 
 public abstract class TileEntityBase extends TileEntity implements ITickableTileEntity, IBreakSerializeable, INamedContainerProvider {
-	protected static final int DEFAULT_UPDATE_TIME = 2;
 	protected final static Random RANDOM = new Random();
 	private boolean isValid;
 
 	protected boolean DisableFaceInteraction;
 	private HashMap<String, AbstractTileEntityComponent> Components;
-
-	@SuppressWarnings("unused")
-	private int updateTimer = 0;
-	@SuppressWarnings("unused")
-	private int updateTime = DEFAULT_UPDATE_TIME;
 
 	/**
 	 * If true, on the next tick, the tile entity will be synced using the methods

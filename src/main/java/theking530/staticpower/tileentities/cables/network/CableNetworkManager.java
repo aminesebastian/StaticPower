@@ -17,28 +17,26 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.common.util.Constants;
-import theking530.staticpower.tileentities.cables.AbstractCableWrapper;
-import theking530.staticpower.tileentities.cables.network.factories.cables.CableWrapperRegistry;
+import theking530.staticpower.tileentities.cables.ServerCable;
 import theking530.staticpower.utilities.Reference;
 
 public class CableNetworkManager extends WorldSavedData {
 	private static final Logger LOGGER = LogManager.getLogger(CableNetworkManager.class);
 	private static final String PREFIX = Reference.MOD_ID + "_cable_network";
 	private final World World;
-	private final HashMap<BlockPos, AbstractCableWrapper> WorldCables;
+	private final HashMap<BlockPos, ServerCable> WorldCables;
 	private final HashMap<Long, CableNetwork> Networks;
 	private long CurrentNetworkId = 0;
 
 	public CableNetworkManager(String name, World world) {
 		super(name);
 		World = world;
-		WorldCables = new HashMap<BlockPos, AbstractCableWrapper>();
+		WorldCables = new HashMap<BlockPos, ServerCable>();
 		Networks = new HashMap<Long, CableNetwork>();
 	}
 
@@ -46,7 +44,7 @@ public class CableNetworkManager extends WorldSavedData {
 		getNetworks().forEach(n -> n.tick());
 	}
 
-	public void addCable(AbstractCableWrapper cable) {
+	public void addCable(ServerCable cable) {
 		if (WorldCables.containsKey(cable.getPos())) {
 			throw new RuntimeException(String.format("Attempted to add a cable where one already existed: %1$s.", cable.getPos()));
 		}
@@ -55,7 +53,7 @@ public class CableNetworkManager extends WorldSavedData {
 
 		markDirty();
 
-		List<AbstractCableWrapper> adjacents = getAdjacents(cable);
+		List<ServerCable> adjacents = getAdjacents(cable);
 		if (adjacents.isEmpty()) {
 			formNetworkAt(cable.getWorld(), cable.getPos());
 		} else {
@@ -68,7 +66,7 @@ public class CableNetworkManager extends WorldSavedData {
 			throw new RuntimeException(String.format("Attempted to remove a cable where one did not already exist: %1$s.", pos));
 		}
 		// Get the cable.
-		AbstractCableWrapper cable = getCable(pos);
+		ServerCable cable = getCable(pos);
 
 		// Remove it from the manager.
 		WorldCables.remove(pos);
@@ -85,7 +83,7 @@ public class CableNetworkManager extends WorldSavedData {
 		}
 	}
 
-	public @Nullable AbstractCableWrapper getCable(BlockPos currentPosition) {
+	public @Nullable ServerCable getCable(BlockPos currentPosition) {
 		return WorldCables.get(currentPosition);
 	}
 
@@ -121,14 +119,14 @@ public class CableNetworkManager extends WorldSavedData {
 		network.updateGraph(world, pos);
 	}
 
-	private void mergeNetworksIntoOne(List<AbstractCableWrapper> candidates, World world, BlockPos pos) {
+	private void mergeNetworksIntoOne(List<ServerCable> candidates, World world, BlockPos pos) {
 		if (candidates.isEmpty()) {
 			throw new RuntimeException("Cannot merge networks: no candidates");
 		}
 
 		Set<CableNetwork> networkCandidates = new HashSet<>();
 
-		for (AbstractCableWrapper candidate : candidates) {
+		for (ServerCable candidate : candidates) {
 			if (candidate.getNetwork() == null) {
 				throw new RuntimeException("Pipe network is null!");
 			}
@@ -163,16 +161,16 @@ public class CableNetworkManager extends WorldSavedData {
 		markDirty();
 	}
 
-	private void splitNetworks(AbstractCableWrapper originCable) {
+	private void splitNetworks(ServerCable originCable) {
 		// Get all adjacent cables.
-		List<AbstractCableWrapper> adjacents = getAdjacents(originCable);
+		List<ServerCable> adjacents = getAdjacents(originCable);
 
 		if (adjacents.size() > 0) {
 			// We can assume all adjacent pipes (with the same network type) share the same
 			// network with the removed pipe.
 			// That means it doesn't matter which pipe network we use for splitting, we'll
 			// take the first found one.
-			AbstractCableWrapper otherPipeInNetwork = adjacents.get(0);
+			ServerCable otherPipeInNetwork = adjacents.get(0);
 
 			otherPipeInNetwork.getNetwork().setOrigin(otherPipeInNetwork.getPos());
 
@@ -181,7 +179,7 @@ public class CableNetworkManager extends WorldSavedData {
 			// For sanity checking
 			boolean foundRemovedPipe = false;
 
-			for (AbstractCableWrapper removed : result.getRemovedCables()) {
+			for (ServerCable removed : result.getRemovedCables()) {
 				// Skip the removed cables if it is the origin one of the remove.
 				if (removed.getPos().equals(originCable.getPos())) {
 					foundRemovedPipe = true;
@@ -206,8 +204,8 @@ public class CableNetworkManager extends WorldSavedData {
 		}
 	}
 
-	public List<AbstractCableWrapper> getAdjacents(AbstractCableWrapper cable) {
-		List<AbstractCableWrapper> wrappers = new ArrayList<AbstractCableWrapper>();
+	public List<ServerCable> getAdjacents(ServerCable cable) {
+		List<ServerCable> wrappers = new ArrayList<ServerCable>();
 		for (Direction dir : Direction.values()) {
 			// Skip checking that side if that side is disabled.
 			if (cable.isDisabledOnSide(dir)) {
@@ -216,13 +214,9 @@ public class CableNetworkManager extends WorldSavedData {
 
 			// Check if a cable exists on the provided side and it is enabled on that side
 			// and of the same type.
-			AbstractCableWrapper adjacent = getCable(cable.getPos().offset(dir));
+			ServerCable adjacent = getCable(cable.getPos().offset(dir));
 
 			if (adjacent == null) {
-				continue;
-			}
-
-			if (cable.getType().equals(adjacent.getType())) {
 				continue;
 			}
 
@@ -242,8 +236,7 @@ public class CableNetworkManager extends WorldSavedData {
 		ListNBT cables = tag.getList("cables", Constants.NBT.TAG_COMPOUND);
 		for (INBT cableTag : cables) {
 			CompoundNBT cableTagCompound = (CompoundNBT) cableTag;
-			ResourceLocation type = new ResourceLocation(cableTagCompound.getString("type"));
-			AbstractCableWrapper cable = CableWrapperRegistry.get().create(type, World, cableTagCompound);
+			ServerCable cable = new ServerCable(World, cableTagCompound);
 			WorldCables.put(cable.getPos(), cable);
 		}
 
@@ -267,7 +260,6 @@ public class CableNetworkManager extends WorldSavedData {
 		ListNBT cables = new ListNBT();
 		WorldCables.values().forEach(cable -> {
 			CompoundNBT cableTag = new CompoundNBT();
-			cableTag.putString("type", cable.getType().toString());
 			cable.writeToNbt(cableTag);
 			cables.add(cableTag);
 		});

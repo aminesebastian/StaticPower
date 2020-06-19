@@ -1,14 +1,20 @@
 package theking530.staticpower.tileentities.cables;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -17,16 +23,18 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.fml.network.NetworkHooks;
 import theking530.api.wrench.RegularWrenchMode;
 import theking530.api.wrench.SneakWrenchMode;
 import theking530.staticpower.blocks.ICustomModelSupplier;
 import theking530.staticpower.blocks.StaticPowerBlock;
+import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
 import theking530.staticpower.tileentities.cables.network.CableBoundsCache;
 import theking530.staticpower.tileentities.cables.network.CableNetworkManager;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public abstract class AbstractCableBlock extends StaticPowerBlock implements ICustomModelSupplier {
-
+	public static final Logger LOGGER = LogManager.getLogger(AbstractCableBlock.class);
 	public final CableBoundsCache CableBounds;
 
 	public AbstractCableBlock(String name, String modelFolder, CableBoundsCache cableBoundsGenerator) {
@@ -51,10 +59,43 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 	}
 
 	@Override
+	public ActionResultType onStaticPowerBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+		if (!world.isRemote && player.getHeldItem(hand).isEmpty()) {
+			// Get the component at the location.
+			AbstractCableProviderComponent component = CableUtilities.getCableWrapperComponent(world, pos);
+			if (component == null) {
+				LOGGER.error(String.format("Encountered invalid cable provider component at position: %1$s when attempting to open the Attachment Gui.", pos));
+				return ActionResultType.FAIL;
+			}
+
+			// Get the attachment side that is hovered (if any).
+			Direction hoveredDirection = CableBounds.getHoveredAttachmentDirection(pos, player);
+
+			if (hoveredDirection != null) {
+				// Get the attachment on the hovered side.
+				ItemStack attachment = component.getAttachment(hoveredDirection);
+
+				// Get the attachment's item.
+				AbstractCableAttachment attachmentItem = (AbstractCableAttachment) attachment.getItem();
+
+				// If the item requests a GUI, open it.
+				if (attachmentItem.hasGui(attachment)) {
+					NetworkHooks.openGui((ServerPlayerEntity) player, attachmentItem.getContainerProvider(attachment), buff -> {
+						buff.writeInt(hoveredDirection.ordinal());
+						buff.writeBlockPos(pos);
+					});
+				}
+			}
+		}
+		// IF we didn't return earlier, continue the execution.
+		return ActionResultType.PASS;
+	}
+
+	@Override
 	public void onStaticPowerNeighborChanged(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
 		super.onStaticPowerNeighborChanged(state, world, pos, neighbor);
 		if (!world.isRemote()) {
-			AbstractCableWrapper cable = CableNetworkManager.get((ServerWorld) world).getCable(pos);
+			ServerCable cable = CableNetworkManager.get((ServerWorld) world).getCable(pos);
 			if (cable != null && cable.getNetwork() != null) {
 				cable.getNetwork().updateGraph((ServerWorld) world, pos);
 			}

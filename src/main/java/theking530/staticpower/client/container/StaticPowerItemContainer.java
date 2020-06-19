@@ -32,7 +32,7 @@ public abstract class StaticPowerItemContainer<T extends Item> extends StaticPow
 	 *             inventory.
 	 * @return The {@link ItemStack} that triggered the opening of this container.
 	 */
-	protected static ItemStack resolveItemStackFromDataPacket(PlayerInventory inv, PacketBuffer data) {
+	protected static ItemStack resolveHeldItemStackFromBuffer(PlayerInventory inv, PacketBuffer data) {
 		return inv.getStackInSlot(data.readInt());
 	}
 }

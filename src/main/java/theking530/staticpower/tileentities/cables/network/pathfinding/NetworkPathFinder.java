@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Queue;
 
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import theking530.staticpower.tileentities.cables.network.CableNetworkGraph;
@@ -23,18 +24,24 @@ public class NetworkPathFinder {
 	private final BlockPos EndingCablePosition;
 	private final HashSet<BlockPos> VisitedPositions;
 	private final HashMap<BlockPos, PathEntry> Predecessors;
+	private final ResourceLocation SupportedNetworkType;
 	private final Queue<BlockPos> BFSQueue;
 
-	public NetworkPathFinder(CableNetworkGraph graph, World world, BlockPos startingCablePosition, BlockPos targetPosition) {
+	public NetworkPathFinder(CableNetworkGraph graph, World world, BlockPos startingCablePosition, BlockPos targetPosition, ResourceLocation supportedNetworkType) {
 		// Capture all the positions in the network graph.
 		GraphNodes = new HashSet<BlockPos>();
-		graph.getCables().values().forEach(cable -> GraphNodes.add(cable.getPos()));
+		graph.getCables().values().forEach(cable -> {
+			if (cable.supportsNetworkModule(supportedNetworkType)) {
+				GraphNodes.add(cable.getPos());
+			}
+		});
 
 		// Capture all the terminus nodes in the network graph (the final cables before
-		// the target).
+		// the target), if they support the network type.
 		TerminusNodes = new HashSet<BlockPos>();
 		for (Direction dir : Direction.values()) {
-			if (CableNetworkManager.get(world).isTrackingCable(targetPosition.offset(dir))) {
+			if (CableNetworkManager.get(world).isTrackingCable(targetPosition.offset(dir))
+					&& CableNetworkManager.get(world).getCable(targetPosition.offset(dir)).supportsNetworkModule(supportedNetworkType)) {
 				TerminusNodes.add(targetPosition.offset(dir));
 			}
 		}
@@ -42,7 +49,7 @@ public class NetworkPathFinder {
 		// Capture the start position.
 		StartingCablePosition = startingCablePosition;
 		EndingCablePosition = targetPosition;
-
+		SupportedNetworkType = supportedNetworkType;
 		VisitedPositions = new HashSet<BlockPos>();
 		Predecessors = new HashMap<BlockPos, PathEntry>();
 		BFSQueue = new LinkedList<BlockPos>();
@@ -76,11 +83,13 @@ public class NetworkPathFinder {
 					continue;
 				}
 
+				// Mark the adjacent as visited
+				VisitedPositions.add(adjacent);
+
 				// Cache the predecessor to this location.
 				Predecessors.put(adjacent, new PathEntry(curr, dir));
 
-				// Mark the adjacent as visited and add it to the query queue.
-				VisitedPositions.add(adjacent);
+				// If we got this far, we should recurse on this node.
 				BFSQueue.add(adjacent);
 			}
 		}
@@ -131,6 +140,6 @@ public class NetworkPathFinder {
 		// Cover the list to an array and create the final path.
 		PathEntry[] entries = new PathEntry[pathEntries.size()];
 		pathEntries.toArray(entries);
-		return new Path(StartingCablePosition, EndingCablePosition, entries);
+		return new Path(StartingCablePosition, EndingCablePosition, SupportedNetworkType, entries);
 	}
 }

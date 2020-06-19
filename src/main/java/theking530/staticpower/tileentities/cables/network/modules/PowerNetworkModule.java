@@ -8,14 +8,13 @@ import net.minecraftforge.energy.IEnergyStorage;
 import theking530.staticpower.energy.StaticPowerFEStorage;
 import theking530.staticpower.tileentities.cables.network.CableNetwork;
 import theking530.staticpower.tileentities.cables.network.NetworkMapper;
-import theking530.staticpower.tileentities.cables.network.factories.modules.CableNetworkModuleTypes;
-import theking530.staticpower.tileentities.cables.power.PowerCableWrapper;
+import theking530.staticpower.tileentities.cables.network.modules.factories.CableNetworkModuleTypes;
 
 public class PowerNetworkModule extends AbstractCableNetworkModule {
 	private StaticPowerFEStorage EnergyStorage;
 
 	public PowerNetworkModule() {
-		super(CableNetworkModuleTypes.POWER_NETWORK_ATTACHMENT);
+		super(CableNetworkModuleTypes.POWER_NETWORK_MODULE);
 		EnergyStorage = new StaticPowerFEStorage(0, 50, 50);
 		EnergyStorage.setCanExtract(false);
 	}
@@ -40,15 +39,15 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 	}
 
 	public void onNetworksJoined(CableNetwork other) {
-		if (other.hasModule(CableNetworkModuleTypes.POWER_NETWORK_ATTACHMENT)) {
-			PowerNetworkModule module = (PowerNetworkModule) other.getModule(CableNetworkModuleTypes.POWER_NETWORK_ATTACHMENT);
+		if (other.hasModule(CableNetworkModuleTypes.POWER_NETWORK_MODULE)) {
+			PowerNetworkModule module = (PowerNetworkModule) other.getModule(CableNetworkModuleTypes.POWER_NETWORK_MODULE);
 			module.getEnergyStorage().receiveEnergy(EnergyStorage.getEnergyStored(), false);
 		}
 	}
 
 	@Override
 	public void onNetworkGraphUpdated(NetworkMapper mapper) {
-		EnergyStorage.setCapacity(mapper.getDiscoveredCables().stream().filter(p -> p instanceof PowerCableWrapper).mapToInt(p -> 10).sum());
+		EnergyStorage.setCapacity(mapper.getDiscoveredCables().stream().filter(p -> p.supportsNetworkModule(CableNetworkModuleTypes.POWER_NETWORK_MODULE)).mapToInt(p -> 10).sum());
 	}
 
 	@Override

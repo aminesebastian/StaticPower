@@ -1,5 +1,7 @@
 package theking530.staticpower.tileentities.cables;
 
+import java.util.HashSet;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -9,10 +11,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
-import theking530.staticpower.tileentities.cables.AbstractCableWrapper.CableConnectionState;
+import theking530.staticpower.tileentities.cables.ServerCable.CableConnectionState;
 import theking530.staticpower.tileentities.cables.network.CableNetwork;
 import theking530.staticpower.tileentities.cables.network.CableNetworkManager;
-import theking530.staticpower.tileentities.cables.network.factories.cables.CableWrapperRegistry;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.utilities.WorldUtilities;
 
@@ -24,7 +25,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	/** KEEP IN MIND: This is purely cosmetic and on the client side. */
 	public static final ModelProperty<ResourceLocation[]> CABLE_ATTACHMENT_MODELS = new ModelProperty<>();
 	/** The type of this cable. */
-	private final ResourceLocation Type;
+	private final HashSet<ResourceLocation> SupportedNetworkModules;
 	/**
 	 * Keeps track of which sides of the cable are disabled. This value is a client
 	 * copy of the master value which exists on the server.
@@ -38,9 +39,16 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	/** Container for all the attachments on this cable. */
 	protected final ItemStack[] Attachments;
 
-	public AbstractCableProviderComponent(String name, ResourceLocation type) {
+	public AbstractCableProviderComponent(String name, ResourceLocation... supportedModules) {
 		super(name);
-		Type = type;
+
+		// Capture the types.
+		SupportedNetworkModules = new HashSet<ResourceLocation>();
+		for (ResourceLocation module : supportedModules) {
+			SupportedNetworkModules.add(module);
+		}
+
+		// Initialize the disabled sides, connection states, and attachments arrays.
 		DisabledSides = new boolean[] { false, false, false, false, false, false };
 		ConnectionStates = new CableConnectionState[] { CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE,
 				CableConnectionState.NONE };
@@ -48,26 +56,18 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	}
 
 	public void preProcessUpdate() {
-		for (Direction dir : Direction.values()) {
-			if (!Attachments[dir.ordinal()].isEmpty()) {
-				processAttachment(dir, Attachments[dir.ordinal()]);
+		if (getWorld().isRemote || (!getWorld().isRemote && getNetwork() != null)) {
+			for (Direction dir : Direction.values()) {
+				if (!Attachments[dir.ordinal()].isEmpty()) {
+					processAttachment(dir, Attachments[dir.ordinal()]);
+				}
 			}
 		}
 	}
 
 	/**
-	 * Gets the type of cable this provider should create.
-	 * 
-	 * @return
-	 */
-	public ResourceLocation getCableType() {
-		return Type;
-	}
-
-	/**
 	 * Checks to see if the provided side is disabled. This should only be called on
-	 * the client. The server should query the {@link AbstractCableWrapper}
-	 * directly.
+	 * the client. The server should query the {@link ServerCable} directly.
 	 * 
 	 * @param side
 	 * @return
@@ -109,6 +109,10 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		builder.withInitial(DISABLED_CABLE_SIDES, DisabledSides).withInitial(CABLE_CONNECTION_STATES, ConnectionStates).withInitial(CABLE_ATTACHMENT_MODELS, getAttachmentModels());
 	}
 
+	public HashSet<ResourceLocation> getSupportedNetworkModuleTypes() {
+		return this.SupportedNetworkModules;
+	}
+
 	/**
 	 * When the owning tile entity is validated, we check to see if there is a cable
 	 * wrapper in the network for this cable. If not, we provide one.
@@ -120,14 +124,10 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		// world is tracking a cable at this position. If it is not, add this cable for
 		// tracking.
 		if (!getTileEntity().getWorld().isRemote) {
-			CableNetworkManager manager = CableNetworkManager.get(getTileEntity().getWorld());
+			CableNetworkManager manager = CableNetworkManager.get(getWorld());
 			if (!manager.isTrackingCable(getTileEntity().getPos())) {
-				AbstractCableWrapper wrapper = CableWrapperRegistry.get().create(Type, getTileEntity().getWorld(), getTileEntity().getPos());
-				if (wrapper != null) {
-					manager.addCable(wrapper);
-				} else {
-					throw new RuntimeException(String.format("Cable supplier for TileEntity at Position: %1$s supplied a null CableWrapper.", getTileEntity().getPos()));
-				}
+				ServerCable wrapper = new ServerCable(getWorld(), getPos(), SupportedNetworkModules);
+				manager.addCable(wrapper);
 			}
 		}
 	}
@@ -245,6 +245,15 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 */
 	public CableNetwork getNetwork() {
 		return CableNetworkManager.get(getWorld()).getCable(getPos()).getNetwork();
+	}
+
+	public boolean shouldConnectionToCable(AbstractCableProviderComponent otherProvider) {
+		for (ResourceLocation moduleType : otherProvider.getSupportedNetworkModuleTypes()) {
+			if (SupportedNetworkModules.contains(moduleType)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override

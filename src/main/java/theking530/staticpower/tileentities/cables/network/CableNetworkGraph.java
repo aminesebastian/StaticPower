@@ -5,15 +5,15 @@ import java.util.HashMap;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import theking530.staticpower.tileentities.cables.AbstractCableWrapper;
+import theking530.staticpower.tileentities.cables.ServerCable;
 
 public class CableNetworkGraph {
 	private final CableNetwork Network;
-	private HashMap<BlockPos, AbstractCableWrapper> Cables;
+	private HashMap<BlockPos, ServerCable> Cables;
 	private HashMap<BlockPos, TileEntity> Destinations;
 
 	public CableNetworkGraph(CableNetwork network) {
-		Cables = new HashMap<BlockPos, AbstractCableWrapper>();
+		Cables = new HashMap<BlockPos, ServerCable>();
 		Destinations = new HashMap<BlockPos, TileEntity>();
 		Network = network;
 	}
@@ -38,7 +38,7 @@ public class CableNetworkGraph {
 		return mapper;
 	}
 
-	public HashMap<BlockPos, AbstractCableWrapper> getCables() {
+	public HashMap<BlockPos, ServerCable> getCables() {
 		return Cables;
 	}
 

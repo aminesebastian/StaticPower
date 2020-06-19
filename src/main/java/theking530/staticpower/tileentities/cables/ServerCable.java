@@ -16,40 +16,38 @@ import net.minecraftforge.common.util.Constants;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.cables.network.CableNetwork;
 import theking530.staticpower.tileentities.cables.network.CableNetworkManager;
+import theking530.staticpower.tileentities.cables.network.modules.factories.CableNetworkModuleRegistry;
 
-public abstract class AbstractCableWrapper {
+public class ServerCable {
 	public enum CableConnectionState {
 		NONE, CABLE, TILE_ENTITY
 	}
 
 	protected CableNetwork Network;
 	protected final World World;
-	protected final ResourceLocation Type;
 	protected final HashSet<ResourceLocation> SupportedNetworkModules;
 	private final BlockPos Position;
-	private boolean[] DisabledSides;
+	private final boolean[] DisabledSides;
 
-	public AbstractCableWrapper(World world, BlockPos position, ResourceLocation type, ResourceLocation... supportedModules) {
+	public ServerCable(World world, BlockPos position, HashSet<ResourceLocation> supportedModules) {
 		Position = position;
 		World = world;
 
 		// Capture the types.
-		SupportedNetworkModules = new HashSet<ResourceLocation>();
-		for (ResourceLocation module : supportedModules) {
-			SupportedNetworkModules.add(module);
-		}
+		SupportedNetworkModules = supportedModules;
 
-		Type = type;
 		DisabledSides = new boolean[] { false, false, false, false, false, false };
 	}
 
-	public AbstractCableWrapper(World world, CompoundNBT tag) {
+	public ServerCable(World world, CompoundNBT tag) {
 		// Set the world.
 		World = world;
 
-		// Get the type and the position.
-		Type = new ResourceLocation(tag.getString("type"));
+		// Get the position.
 		Position = BlockPos.fromLong(tag.getLong("position"));
+
+		// Create the disabled sides.
+		DisabledSides = new boolean[] { false, false, false, false, false, false };
 
 		// Get the supported network types.
 		SupportedNetworkModules = new HashSet<ResourceLocation>();
@@ -84,23 +82,42 @@ public abstract class AbstractCableWrapper {
 	 * @param updateBlock
 	 */
 	public void onNetworkJoined(CableNetwork network, boolean updateBlock) {
+		// Save the network.
 		Network = network;
+
+		// Add all the supported modules if they're not present.
+		for (ResourceLocation moduleType : SupportedNetworkModules) {
+			if (!network.hasModule(moduleType)) {
+				network.addModule(CableNetworkModuleRegistry.get().create(moduleType));
+			}
+		}
+
+		// Update the owning block.
 		if (updateBlock) {
 			updateCableBlock();
 		}
-	}
-//
-//	public boolean hasType(ResourceLocation type) {
-//		return Types.contains(type);
-//	}
-
-	public ResourceLocation getType() {
-		return Type;
 	}
 
 	public void onNetworkLeft() {
 		Network = null;
 		updateCableBlock();
+	}
+
+	public HashSet<ResourceLocation> getSupportedNetworkModules() {
+		return SupportedNetworkModules;
+	}
+
+	public boolean supportsNetworkModule(ResourceLocation moduleType) {
+		return SupportedNetworkModules.contains(moduleType);
+	}
+
+	public boolean shouldConnectionToCable(ServerCable otherCable) {
+		for (ResourceLocation moduleType : otherCable.getSupportedNetworkModules()) {
+			if (supportsNetworkModule(moduleType)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -120,7 +137,7 @@ public abstract class AbstractCableWrapper {
 
 		DisabledSides[side.ordinal()] = disabledState;
 
-		AbstractCableWrapper opposite = CableNetworkManager.get(World).getCable(Position.offset(side));
+		ServerCable opposite = CableNetworkManager.get(World).getCable(Position.offset(side));
 		if (opposite != null) {
 			CableNetworkManager.get(World).removeCable(Position.offset(side));
 			DisabledSides[side.getOpposite().ordinal()] = disabledState;
@@ -169,7 +186,7 @@ public abstract class AbstractCableWrapper {
 		if (other == null || getClass() != other.getClass()) {
 			return false;
 		}
-		AbstractCableWrapper cable = (AbstractCableWrapper) other;
+		ServerCable cable = (ServerCable) other;
 		return World.equals(cable.World) && Position.equals(cable.Position);
 	}
 

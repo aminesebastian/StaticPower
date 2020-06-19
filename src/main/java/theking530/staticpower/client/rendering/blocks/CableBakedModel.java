@@ -23,7 +23,7 @@ import net.minecraft.world.ILightReader;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import theking530.staticpower.tileentities.cables.AbstractCableProviderComponent;
-import theking530.staticpower.tileentities.cables.AbstractCableWrapper.CableConnectionState;
+import theking530.staticpower.tileentities.cables.ServerCable.CableConnectionState;
 import theking530.staticpower.tileentities.cables.CableUtilities;
 
 public class CableBakedModel extends AbstractBakedModel {

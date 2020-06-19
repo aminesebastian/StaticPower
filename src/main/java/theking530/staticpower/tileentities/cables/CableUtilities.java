@@ -6,7 +6,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.cables.AbstractCableWrapper.CableConnectionState;
+import theking530.staticpower.tileentities.cables.ServerCable.CableConnectionState;
 
 public class CableUtilities {
 

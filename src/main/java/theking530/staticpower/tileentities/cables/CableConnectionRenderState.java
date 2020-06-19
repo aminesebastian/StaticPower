@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.cables;
 
 import net.minecraft.util.Direction;
-import theking530.staticpower.tileentities.cables.AbstractCableWrapper.CableConnectionState;
+import theking530.staticpower.tileentities.cables.ServerCable.CableConnectionState;
 
 public class CableConnectionRenderState {
 	public final CableConnectionState[] ConnectionStates;

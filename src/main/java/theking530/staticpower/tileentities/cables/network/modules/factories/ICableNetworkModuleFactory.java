@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.cables.network.factories.modules;
+package theking530.staticpower.tileentities.cables.network.modules.factories;
 
 import theking530.staticpower.tileentities.cables.network.modules.AbstractCableNetworkModule;
 

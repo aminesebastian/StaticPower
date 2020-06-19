@@ -15,8 +15,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
-import theking530.staticpower.tileentities.cables.network.factories.modules.CableNetworkModuleRegistry;
 import theking530.staticpower.tileentities.cables.network.modules.AbstractCableNetworkModule;
+import theking530.staticpower.tileentities.cables.network.modules.factories.CableNetworkModuleRegistry;
 import theking530.staticpower.tileentities.cables.network.pathfinding.PathCache;
 
 /**

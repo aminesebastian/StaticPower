@@ -5,7 +5,7 @@ import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.items.book.StaticPowerBook;
-import theking530.staticpower.items.cableattachments.ExtractorAttachment;
+import theking530.staticpower.items.cableattachments.extractor.ExtractorAttachment;
 import theking530.staticpower.items.crops.DepletedCrop;
 import theking530.staticpower.items.crops.StaticPlantCrop;
 import theking530.staticpower.items.crops.StaticPlantSeeds;

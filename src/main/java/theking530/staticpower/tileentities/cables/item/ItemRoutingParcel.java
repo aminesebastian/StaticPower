@@ -127,7 +127,7 @@ public class ItemRoutingParcel extends ItemRoutingParcelClient {
 		super.readFromNbt(nbt);
 
 		// Create the path.
-		path = Path.createFromNbt(nbt.getCompound("path"));
+		path = new Path(nbt.getCompound("path"));
 		moveTimer = nbt.getInt("move_timer");
 		currentPathIndex = nbt.getInt("current_path_index");
 	}

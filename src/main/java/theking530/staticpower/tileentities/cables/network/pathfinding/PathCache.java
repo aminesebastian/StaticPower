@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import theking530.staticpower.tileentities.cables.network.CableNetwork;
 
@@ -31,8 +33,9 @@ public class PathCache {
 	 * @param destination
 	 * @return
 	 */
-	public boolean hasPath(BlockPos source, BlockPos destination) {
-		return Cache.get(destination) != null && Cache.get(destination).get(source) != null;
+	public boolean hasPath(BlockPos source, BlockPos destination, ResourceLocation moduleType) {
+		return Cache.get(destination) != null && Cache.get(destination).get(source) != null
+				&& Cache.get(destination).get(source).stream().anyMatch(path -> path.getSupportedNetworkType().equals(moduleType));
 	}
 
 	/**
@@ -42,7 +45,7 @@ public class PathCache {
 	 * @param destination
 	 * @return
 	 */
-	public @Nullable List<Path> getPaths(BlockPos cablePosition, BlockPos destination) {
+	public @Nullable List<Path> getPaths(BlockPos cablePosition, BlockPos destination, ResourceLocation moduleType) {
 		if (cablePosition == null) {
 			LOGGER.error("Attemtping to find a path with a null source position.");
 			return null;
@@ -53,10 +56,10 @@ public class PathCache {
 			return null;
 		}
 
-		if (hasPath(cablePosition, destination)) {
-			return Cache.get(destination).get(cablePosition);
+		if (hasPath(cablePosition, destination, moduleType)) {
+			return Cache.get(destination).get(cablePosition).stream().filter(path -> path.getSupportedNetworkType().equals(moduleType)).collect(Collectors.toList());
 		} else {
-			return cacheNewPath(cablePosition, destination);
+			return cacheNewPath(cablePosition, destination, moduleType);
 		}
 	}
 
@@ -68,9 +71,9 @@ public class PathCache {
 	 * @param destination
 	 * @return
 	 */
-	private List<Path> cacheNewPath(BlockPos source, BlockPos destination) {
+	private List<Path> cacheNewPath(BlockPos source, BlockPos destination, ResourceLocation moduleType) {
 		// Perform the path finding.
-		NetworkPathFinder pathFinder = new NetworkPathFinder(OwningNetwork.getGraph(), OwningNetwork.getWorld(), source, destination);
+		NetworkPathFinder pathFinder = new NetworkPathFinder(OwningNetwork.getGraph(), OwningNetwork.getWorld(), source, destination, moduleType);
 		List<Path> paths = pathFinder.executeAlgorithm();
 
 		// If we found no paths, return early.

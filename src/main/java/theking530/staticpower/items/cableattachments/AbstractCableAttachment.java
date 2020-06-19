@@ -1,6 +1,9 @@
 package theking530.staticpower.items.cableattachments;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
@@ -10,6 +13,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.tileentities.cables.AbstractCableBlock;
@@ -52,5 +56,26 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 
 	}
 
+	public @Nullable AbstractCableAttachmentContainerProvider getContainerProvider(ItemStack attachment) {
+		return null;
+	}
+
+	public boolean hasGui(ItemStack attachment) {
+		return false;
+	}
+
 	public abstract ResourceLocation getModel(ItemStack attachment, AbstractCableProviderComponent cableComponent);
+
+	protected abstract class AbstractCableAttachmentContainerProvider implements INamedContainerProvider {
+		public final ItemStack targetItemStack;
+
+		public AbstractCableAttachmentContainerProvider(ItemStack stack) {
+			targetItemStack = stack;
+		}
+
+		@Override
+		public ITextComponent getDisplayName() {
+			return targetItemStack.getDisplayName();
+		}
+	}
 }

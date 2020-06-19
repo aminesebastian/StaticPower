@@ -9,29 +9,28 @@ import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.items.CapabilityItemHandler;
-import theking530.staticpower.items.cableattachments.ExtractorAttachment;
+import theking530.staticpower.items.cableattachments.extractor.ExtractorAttachment;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.cables.AbstractCableProviderComponent;
-import theking530.staticpower.tileentities.cables.AbstractCableWrapper.CableConnectionState;
 import theking530.staticpower.tileentities.cables.CableUtilities;
+import theking530.staticpower.tileentities.cables.ServerCable.CableConnectionState;
 import theking530.staticpower.tileentities.cables.network.CableNetwork;
 import theking530.staticpower.tileentities.cables.network.CableNetworkManager;
-import theking530.staticpower.tileentities.cables.network.factories.modules.CableNetworkModuleTypes;
 import theking530.staticpower.tileentities.cables.network.modules.ItemCableAddedPacket;
 import theking530.staticpower.tileentities.cables.network.modules.ItemCableRemovedPacket;
 import theking530.staticpower.tileentities.cables.network.modules.ItemNetworkModule;
+import theking530.staticpower.tileentities.cables.network.modules.factories.CableNetworkModuleTypes;
 
 public class ItemCableComponent extends AbstractCableProviderComponent {
 	private int itemTransferSpeed = 40;
 	private HashMap<Long, ItemRoutingParcelClient> containedPackets;
 
-	public ItemCableComponent(String name, ResourceLocation type) {
-		super(name, type);
+	public ItemCableComponent(String name) {
+		super(name, CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
 		containedPackets = new HashMap<Long, ItemRoutingParcelClient>();
 	}
 
@@ -52,7 +51,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 		if (!getWorld().isRemote) {
 			// Get the network.
 			CableNetwork network = CableNetworkManager.get(getWorld()).getCable(getPos()).getNetwork();
-			ItemNetworkModule itemNetworkModule = (ItemNetworkModule) network.getModule(CableNetworkModuleTypes.ITEM_NETWORK_ATTACHMENT);
+			ItemNetworkModule itemNetworkModule = (ItemNetworkModule) network.getModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
 			if (network == null || itemNetworkModule == null) {
 				throw new RuntimeException(String.format("Encountered a null network for an ItemCableComponent at position: %1$s.", getPos()));
 			}
@@ -108,10 +107,11 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 
 		// Get the network.
 		CableNetwork network = CableNetworkManager.get(getWorld()).getCable(getPos()).getNetwork();
-		ItemNetworkModule itemNetworkModule = (ItemNetworkModule) network.getModule(CableNetworkModuleTypes.ITEM_NETWORK_ATTACHMENT);
-		if (network == null || itemNetworkModule == null) {
+		if (network == null) {
 			throw new RuntimeException(String.format("Encountered a null network for an ItemCableComponent at position: %1$s.", getPos()));
 		}
+
+		ItemNetworkModule itemNetworkModule = (ItemNetworkModule) network.getModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
 
 		// Get the tile entity on the pulling side, return if it is null.
 		TileEntity te = getWorld().getTileEntity(getPos().offset(side));
@@ -142,8 +142,8 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 
 	@Override
 	protected CableConnectionState cacheConnectionState(Direction side, BlockPos blockPosition) {
-		AbstractCableProviderComponent overProvider = CableUtilities.getCableWrapperComponent(getWorld(), blockPosition);
-		if (overProvider != null && overProvider.getCableType() == getCableType()) {
+		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(), blockPosition);
+		if (otherProvider != null && otherProvider.shouldConnectionToCable(this)) {
 			return CableConnectionState.CABLE;
 		} else if (getWorld().getTileEntity(blockPosition) != null) {
 			TileEntity te = getWorld().getTileEntity(blockPosition);
