@@ -14,6 +14,7 @@ import theking530.staticpower.tileentities.cables.network.CableNetwork;
 import theking530.staticpower.tileentities.cables.network.CableNetworkManager;
 import theking530.staticpower.tileentities.cables.network.factories.cables.CableWrapperRegistry;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.utilities.WorldUtilities;
 
 public abstract class AbstractCableProviderComponent extends AbstractTileEntityComponent {
 	/** KEEP IN MIND: This is purely cosmetic and on the client side. */
@@ -148,9 +149,17 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		super.onOwningTileEntityRemoved();
 		// If we're on the server, get the cable manager and remove the cable at the
 		// current position.
-		if (!getTileEntity().getWorld().isRemote) {
+		if (!getWorld().isRemote) {
 			CableNetworkManager manager = CableNetworkManager.get(getTileEntity().getWorld());
 			manager.removeCable(getTileEntity().getPos());
+
+			for (Direction dir : Direction.values()) {
+				if (this.hasAttachment(dir)) {
+					ItemStack attachment = Attachments[dir.ordinal()];
+					removeAttachment(dir);
+					WorldUtilities.dropItem(getWorld(), getPos(), attachment);
+				}
+			}
 		}
 	}
 
@@ -173,8 +182,8 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			Attachments[side.ordinal()] = attachment.copy();
 
 			// Raise the on added method on the attachment.
-			AbstractCableAttachment attachmentItem = (AbstractCableAttachment) attachment.getItem();
-			attachmentItem.onRemovedFromCable(attachment, this);
+			AbstractCableAttachment attachmentItem = (AbstractCableAttachment) Attachments[side.ordinal()].getItem();
+			attachmentItem.onAddedToCable(Attachments[side.ordinal()], this);
 
 			getTileEntity().markTileEntityForSynchronization();
 			return true;

@@ -27,7 +27,7 @@ public class TileEntityRenderItemCable extends StaticPowerTileEntitySpecialRende
 			if(dir == null) {
 				return;
 			}
-			float lerpValue = packet.getItemMoveLerp();
+			float lerpValue = packet.getItemMoveLerp() + (partialTicks/20.0f);
 			matrixStack.push();
 			drawItemInWorld(tileEntity, packet.getContainedItem(), TransformType.FIXED, getAnimationOffset(lerpValue, dir), ITEM_RENDER_SCALE, partialTicks, matrixStack, buffer, combinedLight,
 					combinedOverlay);

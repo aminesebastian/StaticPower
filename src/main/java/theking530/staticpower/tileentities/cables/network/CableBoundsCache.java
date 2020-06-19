@@ -22,8 +22,8 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import theking530.api.utilities.RaytracingUtilities;
 import theking530.api.utilities.RaytracingUtilities.AdvancedRayTraceResult;
+import theking530.api.wrench.IWrenchTool;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
-import theking530.staticpower.items.tools.StaticWrench;
 import theking530.staticpower.tileentities.cables.AbstractCableWrapper.CableConnectionState;
 import theking530.staticpower.tileentities.cables.CableUtilities;
 
@@ -164,11 +164,23 @@ public class CableBoundsCache {
 
 		// If the hovered direction is not null, add the attachment shape.
 		if (hoveredDirection != null) {
-			if (CableUtilities.getConnectionState(entity.getEntityWorld(), pos, hoveredDirection) == CableConnectionState.TILE_ENTITY) {
+			// Get some attributes to use in the check.
+			boolean hasAttachmentOnSide = CableUtilities.getCableWrapperComponent(entity.getEntityWorld(), pos).hasAttachment(hoveredDirection);
+			CableConnectionState connectionState = CableUtilities.getConnectionState(entity.getEntityWorld(), pos, hoveredDirection);
+
+			// If connected to a tile entity, or if we're holding an attachment and looking
+			// at a side that can take one, or we're holding a wrench on a side that has an
+			// attachment, or the side straight up has an attachment, add the attachment
+			// bounds on that side.
+			if (connectionState == CableConnectionState.TILE_ENTITY) {
 				shape = VoxelShapes.or(shape, TileEntityAttachmentShapes.get(hoveredDirection));
-			} else if (!entity.getHeldItemMainhand().isEmpty() && entity.getHeldItemMainhand().getItem() instanceof AbstractCableAttachment) {
+			} else if (!entity.getHeldItemMainhand().isEmpty() && entity.getHeldItemMainhand().getItem() instanceof AbstractCableAttachment && connectionState != CableConnectionState.CABLE
+					&& !hasAttachmentOnSide) {
 				shape = VoxelShapes.or(shape, TileEntityAttachmentShapes.get(hoveredDirection));
-			}else if(!entity.getHeldItemMainhand().isEmpty() && entity.getHeldItemMainhand().getItem() instanceof StaticWrench) {
+			} else if (!entity.getHeldItemMainhand().isEmpty() && entity.getHeldItemMainhand().getItem() instanceof IWrenchTool && connectionState != CableConnectionState.CABLE
+					&& hasAttachmentOnSide) {
+				shape = VoxelShapes.or(shape, TileEntityAttachmentShapes.get(hoveredDirection));
+			} else if (hasAttachmentOnSide) {
 				shape = VoxelShapes.or(shape, TileEntityAttachmentShapes.get(hoveredDirection));
 			}
 		}

@@ -14,7 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.items.CapabilityItemHandler;
-import theking530.staticpower.items.cableattachments.BasicExtractorAttachment;
+import theking530.staticpower.items.cableattachments.ExtractorAttachment;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.cables.AbstractCableProviderComponent;
 import theking530.staticpower.tileentities.cables.AbstractCableWrapper.CableConnectionState;
@@ -27,9 +27,7 @@ import theking530.staticpower.tileentities.cables.network.modules.ItemCableRemov
 import theking530.staticpower.tileentities.cables.network.modules.ItemNetworkModule;
 
 public class ItemCableComponent extends AbstractCableProviderComponent {
-	private int itemTransferSpeed = 30;
-	private int extractionTimer = 0;
-	private int extractionTime = 5;
+	private int itemTransferSpeed = 40;
 	private HashMap<Long, ItemRoutingParcelClient> containedPackets;
 
 	public ItemCableComponent(String name, ResourceLocation type) {
@@ -97,24 +95,16 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 	@Override
 	protected void processAttachment(Direction side, ItemStack attachment) {
 		// Process the extractor attachment.
-		if (!getWorld().isRemote && attachment.getItem() instanceof BasicExtractorAttachment) {
+		if (!getWorld().isRemote && attachment.getItem() instanceof ExtractorAttachment) {
 			processExtractorAttachment(side, attachment);
 		}
 	}
 
 	protected void processExtractorAttachment(Direction side, ItemStack attachment) {
-		// Increment the extraction timer.
-		if (extractionTimer < extractionTime) {
-			extractionTimer++;
-		}
-
-		// If we have passed the extraction time, extract. Otherwise, return early.
-		if (extractionTimer < extractionTime) {
+		// Increment the extraction timer. If it returns true, continue. If not, stop.
+		if (!incrementExtractionTimer(attachment)) {
 			return;
 		}
-
-		// Reset the extraction timer.
-		extractionTimer = 0;
 
 		// Get the network.
 		CableNetwork network = CableNetworkManager.get(getWorld()).getCable(getPos()).getNetwork();
@@ -133,7 +123,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 		te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).ifPresent(inv -> {
 			for (int i = 0; i < inv.getSlots(); i++) {
 				// Simulate an extract.
-				ItemStack extractedItem = inv.extractItem(i, 2, true);
+				ItemStack extractedItem = inv.extractItem(i, getExtractionStackSize(attachment), true);
 
 				// If the extracted item is empty, continue.
 				if (extractedItem.isEmpty()) {
@@ -167,6 +157,38 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 	@Override
 	protected boolean canAttachAttachment(ItemStack attachment) {
 		return true;
+	}
+
+	protected boolean incrementExtractionTimer(ItemStack extractorAttachment) {
+		if (!extractorAttachment.hasTag()) {
+			extractorAttachment.setTag(new CompoundNBT());
+		}
+		if (!extractorAttachment.getTag().contains(ExtractorAttachment.EXTRACTION_TIMER_TAG)) {
+			extractorAttachment.getTag().putInt(ExtractorAttachment.EXTRACTION_TIMER_TAG, 0);
+		}
+
+		// Get the current timer and the extraction rate.
+		int currentTimer = extractorAttachment.getTag().getInt(ExtractorAttachment.EXTRACTION_TIMER_TAG);
+		int extractionRate = getExtractorExtractionRate(extractorAttachment);
+
+		// Increment the current timer.
+		currentTimer += 1;
+		if (currentTimer >= extractionRate) {
+			extractorAttachment.getTag().putInt(ExtractorAttachment.EXTRACTION_TIMER_TAG, 0);
+			return true;
+		} else {
+			extractorAttachment.getTag().putInt(ExtractorAttachment.EXTRACTION_TIMER_TAG, currentTimer);
+
+			return false;
+		}
+	}
+
+	protected int getExtractorExtractionRate(ItemStack extractorAttachment) {
+		return ((ExtractorAttachment) extractorAttachment.getItem()).getExtractionRate();
+	}
+
+	protected int getExtractionStackSize(ItemStack extractorAttachment) {
+		return ((ExtractorAttachment) extractorAttachment.getItem()).getExtractionStackSize();
 	}
 
 	@Override

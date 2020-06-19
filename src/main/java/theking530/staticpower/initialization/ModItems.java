@@ -1,10 +1,11 @@
 package theking530.staticpower.initialization;
 
 import theking530.staticpower.StaticPowerRegistry;
+import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.items.book.StaticPowerBook;
-import theking530.staticpower.items.cableattachments.BasicExtractorAttachment;
+import theking530.staticpower.items.cableattachments.ExtractorAttachment;
 import theking530.staticpower.items.crops.DepletedCrop;
 import theking530.staticpower.items.crops.StaticPlantCrop;
 import theking530.staticpower.items.crops.StaticPlantSeeds;
@@ -197,7 +198,11 @@ public class ModItems {
 
 	public static ItemFilter BasicFilter;
 
-	public static BasicExtractorAttachment BasicExtractorAttachment;
+	public static ExtractorAttachment BasicExtractorAttachment;
+	public static ExtractorAttachment AdvancedExtractorAttachment;
+	public static ExtractorAttachment StaticExtractorAttachment;
+	public static ExtractorAttachment EnergizedExtractorAttachment;
+	public static ExtractorAttachment LumumExtractorAttachment;
 
 	public static void init() {
 		// Book
@@ -393,6 +398,15 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(NuggetBrass = new StaticPowerItem("nugget_brass"));
 		StaticPowerRegistry.preRegisterItem(NuggetBronze = new StaticPowerItem("nugget_bronze"));
 
-		StaticPowerRegistry.preRegisterItem(BasicExtractorAttachment = new BasicExtractorAttachment("cable_attachment_basic_extractor"));
+		StaticPowerRegistry
+				.preRegisterItem(BasicExtractorAttachment = new ExtractorAttachment("cable_attachment_basic_extractor", 40, 1, StaticPowerAdditionalModels.CABLE_BASIC_EXTRACTOR_ATTACHMENT));
+		StaticPowerRegistry
+				.preRegisterItem(AdvancedExtractorAttachment = new ExtractorAttachment("cable_attachment_advanced_extractor", 40, 8, StaticPowerAdditionalModels.CABLE_ADVANCED_EXTRACTOR_ATTACHMENT));
+		StaticPowerRegistry
+				.preRegisterItem(StaticExtractorAttachment = new ExtractorAttachment("cable_attachment_static_extractor", 20, 16, StaticPowerAdditionalModels.CABLE_STATIC_EXTRACTOR_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(
+				EnergizedExtractorAttachment = new ExtractorAttachment("cable_attachment_energized_extractor", 20, 32, StaticPowerAdditionalModels.CABLE_ENERGIZED_EXTRACTOR_ATTACHMENT));
+		StaticPowerRegistry
+				.preRegisterItem(LumumExtractorAttachment = new ExtractorAttachment("cable_attachment_lumum_extractor", 20, 64, StaticPowerAdditionalModels.CABLE_LUMUM_EXTRACTOR_ATTACHMENT));
 	}
 }

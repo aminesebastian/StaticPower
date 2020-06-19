@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
@@ -90,6 +91,24 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 		}
 
 		return ActionResultType.SUCCESS;
+	}
+
+	@Override
+	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
+		// Get the attachment side we're hovering.
+		Direction hoveredDirection = CableBounds.getHoveredAttachmentDirection(pos, player);
+
+		// If the direction is not null, that means we're hovered an attachment area.
+		if (hoveredDirection != null) {
+			// Get the component from this cable.
+			AbstractCableProviderComponent component = CableUtilities.getCableWrapperComponent(world, pos);
+			// Get the attachment on that side. If there is one, return a copy of that.
+			ItemStack attachment = component.getAttachment(hoveredDirection);
+			if (!attachment.isEmpty()) {
+				return attachment.copy();
+			}
+		}
+		return super.getPickBlock(state, target, world, pos, player);
 	}
 
 	protected boolean isDisabledOnSide(IWorld world, BlockPos pos, Direction direction) {

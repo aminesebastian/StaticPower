@@ -216,18 +216,18 @@ public class CableNetworkManager extends WorldSavedData {
 
 			// Check if a cable exists on the provided side and it is enabled on that side
 			// and of the same type.
-			AbstractCableWrapper wrapper = getCable(cable.getPos().offset(dir));
+			AbstractCableWrapper adjacent = getCable(cable.getPos().offset(dir));
 
-			if (wrapper == null) {
+			if (adjacent == null) {
 				continue;
 			}
 
-			if (wrapper.getType() != cable.getType()) {
+			if (cable.getType().equals(adjacent.getType())) {
 				continue;
 			}
 
-			if (wrapper != null && !wrapper.isDisabledOnSide(dir.getOpposite())) {
-				wrappers.add(wrapper);
+			if (adjacent != null && !adjacent.isDisabledOnSide(dir.getOpposite())) {
+				wrappers.add(adjacent);
 			}
 		}
 		return wrappers;

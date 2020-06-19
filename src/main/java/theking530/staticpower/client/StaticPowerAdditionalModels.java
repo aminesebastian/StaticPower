@@ -16,8 +16,14 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation CABLE_ITEM_STRAIGHT = registerModel("block/cables/item/straight");
 	public static final ResourceLocation CABLE_ITEM_EXTENSION = registerModel("block/cables/item/extension");
 	public static final ResourceLocation CABLE_ITEM_ATTACHMENT = registerModel("block/cables/item/attachment");
-	public static final ResourceLocation CABLE_ITEM_EXTRACTOR_ATTACHMENT = registerModel("block/cables/item/extractor_attachment");
+	
+	public static final ResourceLocation CABLE_BASIC_EXTRACTOR_ATTACHMENT = registerModel("block/cables/attachments/basic_extractor");
+	public static final ResourceLocation CABLE_ADVANCED_EXTRACTOR_ATTACHMENT = registerModel("block/cables/attachments/advanced_extractor");
+	public static final ResourceLocation CABLE_STATIC_EXTRACTOR_ATTACHMENT = registerModel("block/cables/attachments/static_extractor");
+	public static final ResourceLocation CABLE_ENERGIZED_EXTRACTOR_ATTACHMENT = registerModel("block/cables/attachments/energized_extractor");
+	public static final ResourceLocation CABLE_LUMUM_EXTRACTOR_ATTACHMENT = registerModel("block/cables/attachments/lumum_extractor");
 
+	
 	public static void regsiterModels() {
 		for (ResourceLocation model : MODELS) {
 			ModelLoader.addSpecialModel(model);

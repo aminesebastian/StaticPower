@@ -1,14 +1,18 @@
 package theking530.staticpower.tileentities.cables;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.cables.network.CableNetwork;
 import theking530.staticpower.tileentities.cables.network.CableNetworkManager;
@@ -21,16 +25,39 @@ public abstract class AbstractCableWrapper {
 	protected CableNetwork Network;
 	protected final World World;
 	protected final ResourceLocation Type;
+	protected final HashSet<ResourceLocation> SupportedNetworkModules;
 	private final BlockPos Position;
 	private boolean[] DisabledSides;
 
-	public AbstractCableWrapper(World world, BlockPos position, ResourceLocation type) {
+	public AbstractCableWrapper(World world, BlockPos position, ResourceLocation type, ResourceLocation... supportedModules) {
 		Position = position;
 		World = world;
 
 		// Capture the types.
+		SupportedNetworkModules = new HashSet<ResourceLocation>();
+		for (ResourceLocation module : supportedModules) {
+			SupportedNetworkModules.add(module);
+		}
+
 		Type = type;
 		DisabledSides = new boolean[] { false, false, false, false, false, false };
+	}
+
+	public AbstractCableWrapper(World world, CompoundNBT tag) {
+		// Set the world.
+		World = world;
+
+		// Get the type and the position.
+		Type = new ResourceLocation(tag.getString("type"));
+		Position = BlockPos.fromLong(tag.getLong("position"));
+
+		// Get the supported network types.
+		SupportedNetworkModules = new HashSet<ResourceLocation>();
+		ListNBT modules = tag.getList("supported_modules", Constants.NBT.TAG_COMPOUND);
+		for (INBT moduleTag : modules) {
+			CompoundNBT moduleTagCompound = (CompoundNBT) moduleTag;
+			SupportedNetworkModules.add(new ResourceLocation(moduleTagCompound.getString("module_type")));
+		}
 	}
 
 	public void tick() {
@@ -104,7 +131,17 @@ public abstract class AbstractCableWrapper {
 	}
 
 	public CompoundNBT writeToNbt(CompoundNBT tag) {
+		// Serialize the position.
 		tag.putLong("position", Position.toLong());
+
+		// Serialize the supported module types.
+		ListNBT supportedModules = new ListNBT();
+		SupportedNetworkModules.forEach(moduleType -> {
+			CompoundNBT moduleTag = new CompoundNBT();
+			moduleTag.putString("module_type", moduleType.toString());
+			supportedModules.add(moduleTag);
+		});
+		tag.put("supported_modules", supportedModules);
 		return tag;
 	}
 

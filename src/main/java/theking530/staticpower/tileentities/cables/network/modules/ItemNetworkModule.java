@@ -89,6 +89,9 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 	 * @return
 	 */
 	public ItemStack transferItemStack(ItemStack stack, BlockPos cablePosition, @Nullable Direction pulledFromDirection, boolean simulate) {
+		// Mark the network manager as dirty.
+		CableNetworkManager.get(Network.getWorld()).markDirty();
+		
 		// Sanity check.
 		if (!Network.getGraph().getCables().containsKey(cablePosition)) {
 			// throw new RuntimeException(String.format("Attempted to transfer an item
