@@ -15,6 +15,7 @@ import theking530.staticpower.tileentities.cables.ServerCable.CableConnectionSta
 import theking530.staticpower.tileentities.cables.network.CableNetwork;
 import theking530.staticpower.tileentities.cables.network.CableNetworkManager;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.tileentities.utilities.RedstoneMode;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public abstract class AbstractCableProviderComponent extends AbstractTileEntityComponent {
@@ -180,7 +181,8 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		// If there is no attachment on the provided side, add it.
 		if (Attachments[side.ordinal()].isEmpty()) {
 			Attachments[side.ordinal()] = attachment.copy();
-
+			Attachments[side.ordinal()].setCount(1);
+			
 			// Raise the on added method on the attachment.
 			AbstractCableAttachment attachmentItem = (AbstractCableAttachment) Attachments[side.ordinal()].getItem();
 			attachmentItem.onAddedToCable(Attachments[side.ordinal()], this);
@@ -235,6 +237,17 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 */
 	public ItemStack getAttachment(Direction side) {
 		return Attachments[side.ordinal()];
+	}
+
+	/**
+	 * Checks to see if the provided attachment passes the redstone test.
+	 * 
+	 * @param attachment
+	 * @return
+	 */
+	public boolean doesAttachmentPassRedstoneTest(ItemStack attachment) {
+		AbstractCableAttachment attachmentItem = (AbstractCableAttachment) attachment.getItem();
+		return RedstoneMode.evaluateRedstoneMode(attachmentItem.getRedstoneMode(attachment), getWorld(), getPos());
 	}
 
 	/**

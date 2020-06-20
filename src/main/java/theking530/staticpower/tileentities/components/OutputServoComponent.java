@@ -38,10 +38,10 @@ public class OutputServoComponent extends AbstractTileEntityComponent {
 	@Override
 	public void preProcessUpdate() {
 		if (!getTileEntity().getWorld().isRemote) {
-			if (inventory != null && inventory.getInventory().getSlots() > 0 && getTileEntity() != null) {
+			if (inventory != null && inventory.getSlots() > 0 && getTileEntity() != null) {
 				int randomIndex = randomGenerator.nextInt(slots.length);
 				int slot = slots[randomIndex];
-				if (inventory.getInventory().getStackInSlot(slot) != ItemStack.EMPTY) {
+				if (inventory.getStackInSlot(slot) != ItemStack.EMPTY) {
 					outputTimer++;
 					if (outputTimer > 0) {
 						int rand = randomGenerator.nextInt(5);
@@ -75,13 +75,13 @@ public class OutputServoComponent extends AbstractTileEntityComponent {
 
 	public void outputItem(int fromSlot, BlockSide blockSide, int startSlot, boolean backwards) {
 		if (canOutputFromSide(blockSide)) {
-			ItemStack stack = inventory.getInventory().getStackInSlot(fromSlot);
+			ItemStack stack = inventory.getStackInSlot(fromSlot);
 			if (!stack.isEmpty()) {
 				Direction facing = getTileEntity().getWorld().getBlockState(getTileEntity().getPos()).get(StaticPowerTileEntityBlock.FACING);
 				TileEntity te = getTileEntity().getWorld().getTileEntity(getTileEntity().getPos().offset(SideConfigurationUtilities.getDirectionFromSide(blockSide, facing)));
 				if (te != null) {
 					te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, SideConfigurationUtilities.getDirectionFromSide(blockSide, facing).getOpposite()).ifPresent((IItemHandler instance) -> {
-						inventory.getInventory().setStackInSlot(fromSlot, InventoryUtilities.insertItemIntoInventory(instance, stack, false));
+						inventory.setStackInSlot(fromSlot, InventoryUtilities.insertItemIntoInventory(instance, stack, false));
 					});
 				}
 			}

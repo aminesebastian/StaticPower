@@ -1,14 +1,16 @@
 package theking530.staticpower.tileentities.utilities;
 
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import theking530.api.utilities.Color;
 
 public enum MachineSideMode {
-	Regular("Regular", TextFormatting.WHITE, new Color(139, 139, 139).fromEightBitToFloat()), Input("Input", TextFormatting.BLUE, new Color(80, 130, 179).fromEightBitToFloat()),
-	Input2("Input2", TextFormatting.DARK_PURPLE, new Color(100, 0, 200).fromEightBitToFloat()), Output("Output", TextFormatting.GOLD, new Color(200, 140, 50).fromEightBitToFloat()),
-	Output2("Output1", TextFormatting.GREEN, new Color(0, 200, 50).fromEightBitToFloat()), Output3("Output2", TextFormatting.YELLOW, new Color(220, 220, 0).fromEightBitToFloat()),
-	Disabled("Disabled", TextFormatting.RED, new Color(200, 20, 20).fromEightBitToFloat()), Never("Never", TextFormatting.WHITE, new Color(139, 139, 139).fromEightBitToFloat());
+	Regular("regular", TextFormatting.WHITE, new Color(139, 139, 139).fromEightBitToFloat()), Input("input", TextFormatting.BLUE, new Color(80, 130, 179).fromEightBitToFloat()),
+	Input2("input2", TextFormatting.DARK_PURPLE, new Color(100, 0, 200).fromEightBitToFloat()), Output("output", TextFormatting.GOLD, new Color(200, 140, 50).fromEightBitToFloat()),
+	Output2("output1", TextFormatting.GREEN, new Color(0, 200, 50).fromEightBitToFloat()), Output3("output2", TextFormatting.YELLOW, new Color(220, 220, 0).fromEightBitToFloat()),
+	Disabled("disabled", TextFormatting.RED, new Color(200, 20, 20).fromEightBitToFloat()), Never("never", TextFormatting.WHITE, new Color(139, 139, 139).fromEightBitToFloat());
 
 	/** The unlocalized name of the mode. */
 	private String name;
@@ -18,7 +20,7 @@ public enum MachineSideMode {
 	private Color color;
 
 	private MachineSideMode(String name, TextFormatting fontColor, Color color) {
-		this.name = "mode." + name;
+		this.name = "gui.staticpower.mode." + name;
 		this.fontColor = fontColor;
 		this.color = color;
 	}
@@ -27,8 +29,8 @@ public enum MachineSideMode {
 		return fontColor;
 	}
 
-	public TranslationTextComponent getName() {
-		return new TranslationTextComponent(name);
+	public ITextComponent getName() {
+		return new StringTextComponent(fontColor.toString()).appendSibling(new TranslationTextComponent(name));
 	}
 
 	public Color getColor() {

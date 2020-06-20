@@ -61,6 +61,7 @@ public class GuiPowerInfoTab extends BaseGuiTab {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private void drawText() {
 		fontRenderer.drawStringWithShadow(tabTitle, xPosition + 11, yPosition + 8, new Color(242, 0, 255).encodeInInteger());
 		float fontScale = 1.0f;

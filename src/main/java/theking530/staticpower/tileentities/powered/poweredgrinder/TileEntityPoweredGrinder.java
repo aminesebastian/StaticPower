@@ -45,11 +45,11 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
 		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", DEFAULT_MOVING_TIME, this::movingCompleted));
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 10, this::processingCompleted));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::processingCompleted));
 
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory, this::inputServoFilter, 0));
 		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory, 0, 1, 2));
-		registerComponent(new BatteryComponent("BatteryComponent", internalInventory.getInventory(), 0, energyStorage.getStorage()));
+		registerComponent(new BatteryComponent("BatteryComponent", internalInventory, 0, energyStorage.getStorage()));
 	}
 
 	/**
@@ -119,10 +119,10 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 				// For each recipe, insert the contents into the output based on the percentage
 				// chance. The clear the internal inventory, mark for synchronozation, and
 				// return true.
-				if (InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory.getInventory(), recipe.getRawOutputItems())) {
+				if (InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRawOutputItems())) {
 					for (GrinderOutput output : recipe.getOutputItems()) {
 						if (SDMath.diceRoll(output.getPercentage() + bonusOutputChance)) {
-							InventoryUtilities.insertItemIntoInventory(outputInventory.getInventory(), output.getItem().copy(), false);
+							InventoryUtilities.insertItemIntoInventory(outputInventory, output.getItem().copy(), false);
 						}
 					}
 				}
@@ -184,7 +184,7 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 	 * @return
 	 */
 	public boolean canOutputsTakeRecipeResult(GrinderRecipe recipe) {
-		return InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory.getInventory(), recipe.getRawOutputItems());
+		return InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRawOutputItems());
 	}
 
 	@Override

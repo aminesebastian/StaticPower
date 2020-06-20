@@ -1,4 +1,4 @@
-package theking530.api.gui.button;
+package theking530.api.gui.widgets.button;
 
 import java.util.Arrays;
 import java.util.List;

@@ -9,7 +9,7 @@ import theking530.staticpower.tileentities.components.EnergyStorageComponent;
 import theking530.staticpower.tileentities.components.RedstoneControlComponent;
 import theking530.staticpower.tileentities.components.SideConfigurationComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
-import theking530.staticpower.tileentities.utilities.RedstoneModeList.RedstoneMode;
+import theking530.staticpower.tileentities.utilities.RedstoneMode;
 import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities;
 import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities.BlockSide;
 

@@ -8,11 +8,13 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.Direction;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import theking530.api.gui.GuiTextures;
-import theking530.api.gui.button.BaseButton;
-import theking530.api.gui.button.BaseButton.ClickedButton;
-import theking530.api.gui.button.TextButton;
+import theking530.api.gui.widgets.button.BaseButton;
+import theking530.api.gui.widgets.button.BaseButton.ClickedButton;
+import theking530.api.gui.widgets.button.TextButton;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.TileEntityBase;
@@ -151,10 +153,10 @@ public class GuiSideConfigTab extends BaseGuiTab {
 			
 			// Get the translation components.
 			TranslationTextComponent translatedSideName = side.getName();
-			TranslationTextComponent translatedModeName = currentMode.getName();
+			ITextComponent translatedModeName = currentMode.getName();
 
 			button.setText(currentMode.getFontColor() + translatedSideName.getFormattedText().substring(0, 1));
-			button.setTooltip(translatedSideName.appendText("=").appendSibling(translatedModeName));
+			button.setTooltip(translatedSideName.appendText("(").appendSibling(translatedModeName).appendText(TextFormatting.WHITE + ")"));
 		}
 	}
 

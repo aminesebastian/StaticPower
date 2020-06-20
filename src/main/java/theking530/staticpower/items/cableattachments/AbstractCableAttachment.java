@@ -19,6 +19,7 @@ import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.tileentities.cables.AbstractCableBlock;
 import theking530.staticpower.tileentities.cables.AbstractCableProviderComponent;
 import theking530.staticpower.tileentities.cables.CableUtilities;
+import theking530.staticpower.tileentities.utilities.RedstoneMode;
 
 public abstract class AbstractCableAttachment extends StaticPowerItem {
 
@@ -50,10 +51,23 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 		if (!attachment.hasTag()) {
 			attachment.setTag(new CompoundNBT());
 		}
+		attachment.getTag().putInt("redstone_mode", RedstoneMode.High.ordinal());
 	}
 
 	public void onRemovedFromCable(ItemStack attachment, AbstractCableProviderComponent cableComponent) {
+		attachment.setTag(null);
+	}
 
+	public void setRedstoneMode(ItemStack attachment, RedstoneMode mode, AbstractCableProviderComponent cableComponent) {
+		attachment.getTag().putInt("redstone_mode", mode.ordinal());
+		cableComponent.getTileEntity().markDirty();
+	}
+
+	public RedstoneMode getRedstoneMode(ItemStack attachment) {
+		if (attachment.getTag().contains("redstone_mode")) {
+			return RedstoneMode.values()[attachment.getTag().getInt("redstone_mode")];
+		}
+		return RedstoneMode.Ignore;
 	}
 
 	public @Nullable AbstractCableAttachmentContainerProvider getContainerProvider(ItemStack attachment) {

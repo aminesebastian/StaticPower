@@ -19,7 +19,7 @@ public class ContainerItemFilter extends StaticPowerItemContainer<ItemFilter> {
 	private InventoryItemFilter filterInventory;
 
 	public ContainerItemFilter(int windowId, PlayerInventory inv, PacketBuffer data) {
-		this(windowId, inv, resolveHeldItemStackFromBuffer(inv, data));
+		this(windowId, inv, getHeldItemstack(inv, data));
 	}
 
 	public ContainerItemFilter(int windowId, PlayerInventory playerInventory, ItemStack owner) {

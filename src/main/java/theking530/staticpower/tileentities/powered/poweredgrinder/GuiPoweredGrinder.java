@@ -8,12 +8,13 @@ import theking530.api.gui.widgets.tabs.BaseGuiTab;
 import theking530.api.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.api.gui.widgets.tabs.GuiInfoTab;
 import theking530.api.gui.widgets.tabs.GuiPowerInfoTab;
-import theking530.api.gui.widgets.tabs.GuiRedstoneTab;
 import theking530.api.gui.widgets.tabs.GuiSideConfigTab;
+import theking530.api.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
 import theking530.api.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
 import theking530.staticpower.tileentities.components.EnergyStorageComponent;
+import theking530.staticpower.tileentities.components.RedstoneControlComponent;
 
 public class GuiPoweredGrinder extends StaticPowerTileEntityGui<ContainerPoweredGrinder, TileEntityPoweredGrinder> {
 	private GuiInfoTab infoTab;
@@ -28,13 +29,13 @@ public class GuiPoweredGrinder extends StaticPowerTileEntityGui<ContainerPowered
 		registerWidget(new GrinderProgressBar(79, 38, 18, 17).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
 		getTabManager().registerTab(infoTab = new GuiInfoTab(100, 60));
-		getTabManager().registerTab(new GuiRedstoneTab(getTileEntity()));
+		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
-		
+
 		BaseGuiTab powerTab;
 		getTabManager().registerTab(powerTab = new GuiPowerInfoTab(ComponentUtilities.getComponent(EnergyStorageComponent.class, "MainEnergyStorage", getTileEntity()).get()).setTabSide(TabSide.LEFT));
 		getTabManager().setInitiallyOpenTab(powerTab);
-		
+
 		setOutputSlotSize(20);
 	}
 

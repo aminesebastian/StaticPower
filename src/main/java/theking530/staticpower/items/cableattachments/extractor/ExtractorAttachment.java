@@ -6,7 +6,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
 import theking530.staticpower.tileentities.cables.AbstractCableProviderComponent;
@@ -25,9 +25,7 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 	}
 
 	public void onAddedToCable(ItemStack attachment, AbstractCableProviderComponent cableComponent) {
-		if (!attachment.hasTag()) {
-			attachment.setTag(new CompoundNBT());
-		}
+		super.onAddedToCable(attachment, cableComponent);
 		attachment.getTag().putInt(EXTRACTION_TIMER_TAG, 0);
 	}
 
@@ -65,6 +63,8 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 	}
 
 	protected class ExtractorContainerProvider extends AbstractCableAttachmentContainerProvider {
+		private Direction attachmentSide;
+		private AbstractCableProviderComponent cableComponent;
 
 		public ExtractorContainerProvider(ItemStack stack) {
 			super(stack);
@@ -72,7 +72,7 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 
 		@Override
 		public Container createMenu(int windowId, PlayerInventory playerInv, PlayerEntity player) {
-			return new ContainerExtractor(windowId, playerInv, targetItemStack);
+			return new ContainerExtractor(windowId, playerInv, targetItemStack, attachmentSide, cableComponent);
 		}
 	}
 }

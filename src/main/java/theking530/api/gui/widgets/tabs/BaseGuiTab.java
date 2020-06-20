@@ -6,6 +6,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -64,7 +65,8 @@ public abstract class BaseGuiTab {
 	protected int xPosition;
 	protected int yPosition;
 	protected final WidgetContainer widgetContainer;
-
+	protected final FontRenderer fontRenderer;
+	
 	private float currentWidth;
 	private float currentHeight;
 
@@ -93,6 +95,7 @@ public abstract class BaseGuiTab {
 		tabState = TabState.CLOSED;
 		tabSide = TabSide.RIGHT;
 		widgetContainer = new WidgetContainer();
+		fontRenderer = Minecraft.getInstance().fontRenderer;
 	}
 
 	/**

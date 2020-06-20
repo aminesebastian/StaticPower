@@ -1,5 +1,6 @@
 {
 	"parent": "staticpower:block/cables/attachments/static_extractor",
+	"gui_light": "front",
 	"display": {
 		"thirdperson_righthand": {
 			"rotation": [-148, 0, 0],

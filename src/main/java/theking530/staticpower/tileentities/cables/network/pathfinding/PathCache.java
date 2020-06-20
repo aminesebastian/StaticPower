@@ -78,7 +78,6 @@ public class PathCache {
 
 		// If we found no paths, return early.
 		if (paths.size() == 0) {
-			LOGGER.warn(String.format("Unabled to find any paths between source: %1$s and destination: %2$s.", source, destination));
 			return null;
 		}
 

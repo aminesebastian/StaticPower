@@ -56,7 +56,7 @@ public class TileEntityVacuumChest extends TileEntityBase implements INamedConta
 		registerComponent(inventory = new InventoryComponent("Inventory", 30, MachineSideMode.Regular));
 		registerComponent(filterSlotInventory = new InventoryComponent("FilterSlot", 1, MachineSideMode.Never));
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Regular));
-		registerComponent(upgradeHandlingComponent = new UpgradeProcessingComponent("UpgradeProcessor", upgradesInventory.getInventory(), this::upgradeTick, this::canAcceptUpgrade));
+		registerComponent(upgradeHandlingComponent = new UpgradeProcessingComponent("UpgradeProcessor", upgradesInventory, this::upgradeTick, this::canAcceptUpgrade));
 	}
 
 	@Override
@@ -83,12 +83,12 @@ public class TileEntityVacuumChest extends TileEntityBase implements INamedConta
 			double y = (pos.getY() + 0.5D - entity.getPosY());
 			double z = (pos.getZ() + 0.5D - entity.getPosZ());
 			ItemStack stack = entity.getItem().copy();
-			if (InventoryUtilities.canFullyInsertItemIntoInventory(inventory.getInventory(), stack) && doesItemPassFilter(stack)) {
+			if (InventoryUtilities.canFullyInsertItemIntoInventory(inventory, stack) && doesItemPassFilter(stack)) {
 				double distance = Math.sqrt(x * x + y * y + z * z);
 				if (distance < 1.1 || (shouldTeleport && distance < getRadius() - 0.1f)) {
-					if (InventoryUtilities.canFullyInsertItemIntoInventory(inventory.getInventory(), stack)) {
+					if (InventoryUtilities.canFullyInsertItemIntoInventory(inventory, stack)) {
 						if (!getWorld().isRemote) {
-							InventoryUtilities.insertItemIntoInventory(inventory.getInventory(), stack, false);
+							InventoryUtilities.insertItemIntoInventory(inventory, stack, false);
 						}
 						entity.remove();
 						getWorld().addParticle(ParticleTypes.PORTAL, (double) pos.getX() + 0.5, (double) pos.getY() + 1.0, (double) pos.getZ() + 0.5, 0.0D, 0.0D, 0.0D);

@@ -30,7 +30,7 @@ public class ContainerPoweredGrinder extends StaticPowerTileEntityContainer<Tile
 	@Override
 	public void initializeContainer() {
 		// Input
-		this.addSlot(new StaticPowerContainerSlot(getTileEntity().inputInventory.getInventory(), 0, 80, 18) {
+		this.addSlot(new StaticPowerContainerSlot(getTileEntity().inputInventory, 0, 80, 18) {
 			@Override
 			public boolean isItemValid(ItemStack itemStack) {
 				return StaticPowerRecipeRegistry.getRecipe(GrinderRecipe.RECIPE_TYPE, new RecipeMatchParameters(itemStack)).isPresent();
@@ -38,17 +38,17 @@ public class ContainerPoweredGrinder extends StaticPowerTileEntityContainer<Tile
 		});
 
 		// Battery
-		this.addSlot(new BatterySlot(getTileEntity().batteryInventory.getInventory(), 0, 8, 65));
+		this.addSlot(new BatterySlot(getTileEntity().batteryInventory, 0, 8, 65));
 
 		// Output
-		this.addSlot(new OutputSlot(getTileEntity().outputInventory.getInventory(), 0, 80, 60));
-		this.addSlot(new OutputSlot(getTileEntity().outputInventory.getInventory(), 1, 106, 46));
-		this.addSlot(new OutputSlot(getTileEntity().outputInventory.getInventory(), 2, 54, 46));
+		this.addSlot(new OutputSlot(getTileEntity().outputInventory, 0, 80, 60));
+		this.addSlot(new OutputSlot(getTileEntity().outputInventory, 1, 106, 46));
+		this.addSlot(new OutputSlot(getTileEntity().outputInventory, 2, 54, 46));
 
 		// Upgrades
-		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory.getInventory(), 0, 152, 12));
-		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory.getInventory(), 1, 152, 32));
-		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory.getInventory(), 2, 152, 52));
+		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory, 0, 152, 12));
+		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory, 1, 152, 32));
+		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory, 2, 152, 52));
 
 		this.addPlayerInventory(getPlayerInventory(), 8, 84);
 		this.addPlayerHotbar(getPlayerInventory(), 8, 142);

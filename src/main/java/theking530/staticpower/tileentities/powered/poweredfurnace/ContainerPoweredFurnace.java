@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.client.container.slots.BatterySlot;
+import theking530.staticpower.client.container.slots.OutputSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.client.container.slots.UpgradeSlot;
 import theking530.staticpower.initialization.ModContainerTypes;
@@ -26,23 +27,18 @@ public class ContainerPoweredFurnace extends StaticPowerTileEntityContainer<Tile
 	@Override
 	public void initializeContainer() {
 		// Input
-		this.addSlot(new StaticPowerContainerSlot(getTileEntity().inputInventory.getInventory(), 0, 50, 28) {
-			@Override
-			public boolean isItemValid(ItemStack itemStack) {
-				return getTileEntity().getRecipe(itemStack).isPresent();
-			}
-		});
+		this.addSlot(new StaticPowerContainerSlot(getTileEntity().inputInventory, 0, 50, 28));
 
 		// Battery
-		this.addSlot(new BatterySlot(getTileEntity().batteryInventory.getInventory(), 0, 8, 65));
+		this.addSlot(new BatterySlot(getTileEntity().batteryInventory, 0, 8, 65));
 
 		// Output
-		this.addSlot(new StaticPowerContainerSlot(getTileEntity().outputInventory.getInventory(), 0, 109, 32));
+		this.addSlot(new OutputSlot(getTileEntity().outputInventory, 0, 109, 32));
 
 		// Upgrades
-		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory.getInventory(), 0, 152, 12));
-		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory.getInventory(), 1, 152, 32));
-		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory.getInventory(), 2, 152, 52));
+		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory, 0, 152, 12));
+		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory, 1, 152, 32));
+		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory, 2, 152, 52));
 
 		this.addPlayerInventory(getPlayerInventory(), 8, 84);
 		this.addPlayerHotbar(getPlayerInventory(), 8, 142);

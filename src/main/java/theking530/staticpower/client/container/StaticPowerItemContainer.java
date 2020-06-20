@@ -7,11 +7,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 
 public abstract class StaticPowerItemContainer<T extends Item> extends StaticPowerContainer {
-	private final ItemStack heldItemstack;
+	private final ItemStack itemstack;
 
 	protected StaticPowerItemContainer(ContainerType<?> type, int id, PlayerInventory inv, ItemStack itemStack) {
 		super(type, id, inv);
-		heldItemstack = itemStack;
+		itemstack = itemStack;
 		initializeContainer(); // This has to be called here and not in the super.
 	}
 
@@ -21,7 +21,7 @@ public abstract class StaticPowerItemContainer<T extends Item> extends StaticPow
 	 * @return The {@link ItemStack} that opened this container.
 	 */
 	public ItemStack getItemStack() {
-		return heldItemstack;
+		return itemstack;
 	}
 
 	/**
@@ -32,7 +32,7 @@ public abstract class StaticPowerItemContainer<T extends Item> extends StaticPow
 	 *             inventory.
 	 * @return The {@link ItemStack} that triggered the opening of this container.
 	 */
-	protected static ItemStack resolveHeldItemStackFromBuffer(PlayerInventory inv, PacketBuffer data) {
+	protected static ItemStack getHeldItemstack(PlayerInventory inv, PacketBuffer data) {
 		return inv.getStackInSlot(data.readInt());
 	}
 }

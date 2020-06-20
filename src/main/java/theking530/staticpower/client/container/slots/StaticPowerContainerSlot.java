@@ -1,14 +1,16 @@
 package theking530.staticpower.client.container.slots;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
+import theking530.staticpower.tileentities.components.InventoryComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
 public class StaticPowerContainerSlot extends SlotItemHandler {
-
+	private @Nullable InventoryComponent inventoryComponent;
 	private ItemStack previewItem;
 	private float previewAlpha;
 	private MachineSideMode mode;
@@ -18,6 +20,11 @@ public class StaticPowerContainerSlot extends SlotItemHandler {
 		this.previewItem = previewItem;
 		this.previewAlpha = previewAlpha;
 		this.mode = mode;
+
+		// If this item handler is an inventory component, cache that too.
+		if (itemHandler instanceof InventoryComponent) {
+			this.inventoryComponent = (InventoryComponent) itemHandler;
+		}
 	}
 
 	public StaticPowerContainerSlot(@Nonnull ItemStack previewItem, float previewAlpha, @Nonnull IItemHandler itemHandler, int index, int xPosition, int yPosition) {
@@ -49,6 +56,6 @@ public class StaticPowerContainerSlot extends SlotItemHandler {
 	}
 
 	public MachineSideMode getMode() {
-		return mode;
+		return inventoryComponent != null ? inventoryComponent.getMode() : mode;
 	}
 }

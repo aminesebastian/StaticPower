@@ -20,6 +20,7 @@ import theking530.staticpower.tileentities.components.InventoryComponent;
 import theking530.staticpower.tileentities.components.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.OutputServoComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
+import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 /**
@@ -44,18 +45,24 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 	public TileEntityPoweredFurnace() {
 		super(ModTileEntityTypes.POWERED_FURNACE);
 
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input));
-		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1, MachineSideMode.Never));
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
+			public boolean canInsertItem(int slot, ItemStack stack) {
+				return getRecipe(stack).isPresent();
+
+			}
+		}));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
+
+		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1, MachineSideMode.Never));
 		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
 
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
-		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", DEFAULT_MOVING_TIME, this::movingCompleted));
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::processingCompleted));
+		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", 2, this::movingCompleted));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 10, this::processingCompleted));
 
-		registerComponent(new InputServoComponent("InputServo", 2, inputInventory, 0));
-		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory, 0));
-		registerComponent(new BatteryComponent("BatteryComponent", internalInventory.getInventory(), 0, energyStorage.getStorage()));
+		registerComponent(new InputServoComponent("InputServo", 4, inputInventory, 0));
+		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory, 0));
+		registerComponent(new BatteryComponent("BatteryComponent", internalInventory, 0, energyStorage.getStorage()));
 	}
 
 	/**
@@ -103,7 +110,7 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 		if (hasValidRecipe() && !moveComponent.isProcessing() && !processingComponent.isProcessing() && internalInventory.getStackInSlot(0).isEmpty()
 				&& energyStorage.getStorage().getEnergyStored() >= DEFAULT_PROCESSING_COST) {
 			ItemStack output = getRecipe(inputInventory.getStackInSlot(0)).get().getRecipeOutput();
-			return InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory.getInventory(), 0, output);
+			return InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, output);
 		}
 		return false;
 	}
@@ -133,9 +140,9 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 	 * @return
 	 */
 	protected boolean processingCompleted() {
-		if (!getWorld().isRemote) {
+		if (!getWorld().isRemote && !internalInventory.getStackInSlot(0).isEmpty()) {
 			ItemStack output = getRecipe(internalInventory.getStackInSlot(0)).get().getRecipeOutput();
-			if (!output.isEmpty() && InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory.getInventory(), 0, output)) {
+			if (!output.isEmpty() && InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, output)) {
 				outputInventory.insertItem(0, output.copy(), false);
 				internalInventory.setStackInSlot(0, ItemStack.EMPTY);
 				markTileEntityForSynchronization();

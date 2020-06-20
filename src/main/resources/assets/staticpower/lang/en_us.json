@@ -51,6 +51,7 @@
 	"item.staticpower.portable_battery_energized": "Energized Portable Battery",
 	"item.staticpower.portable_battery_lumum": "Lumum Portable Battery",
 	"item.staticpower.filter_item_basic": "Basic Item Filter",
+	"item.staticpower.cable_attachment_basic_extractor": "Basic Extractor",
 	"block.staticpower.machine_charging_station": "Charging Station",
 	"block.staticpower.chest_vacuum": "Vacuum Chest",
 	"block.staticpower.machine_powered_furnace": "Powered Furnace",
@@ -69,5 +70,12 @@
 	"gui.staticpower.side.right": "Right",
 	"gui.staticpower.redstone_mode.low": "Low",
 	"gui.staticpower.redstone_mode.high": "High",
-	"gui.staticpower.redstone_mode.ignore": " Ignore"
+	"gui.staticpower.redstone_mode.ignore": "Ignore",
+	"gui.staticpower.mode.regular": "Regular",
+	"gui.staticpower.mode.input": "Input",
+	"gui.staticpower.mode.input2": "Input2",
+	"gui.staticpower.mode.output": "Output",
+	"gui.staticpower.mode.output2": "Output2",
+	"gui.staticpower.mode.output3": "Output3",
+	"gui.staticpower.mode.disabled": "Disabled"
 }

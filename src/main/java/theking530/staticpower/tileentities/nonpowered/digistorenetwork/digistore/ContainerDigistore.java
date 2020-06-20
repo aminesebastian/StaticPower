@@ -22,9 +22,9 @@ public class ContainerDigistore extends StaticPowerTileEntityContainer<TileEntit
 
 	@Override
 	public void initializeContainer() {
-		addSlot(new UpgradeSlot(getTileEntity().upgradesInventory.getInventory(), 0, 152, 9));
-		addSlot(new UpgradeSlot(getTileEntity().upgradesInventory.getInventory(), 1, 152, 27));
-		addSlot(new UpgradeSlot(getTileEntity().upgradesInventory.getInventory(), 2, 152, 45));
+		addSlot(new UpgradeSlot(getTileEntity().upgradesInventory, 0, 152, 9));
+		addSlot(new UpgradeSlot(getTileEntity().upgradesInventory, 1, 152, 27));
+		addSlot(new UpgradeSlot(getTileEntity().upgradesInventory, 2, 152, 45));
 
 		addPlayerHotbar(getPlayerInventory(), 8, 126);
 		addPlayerInventory(getPlayerInventory(), 8, 68);

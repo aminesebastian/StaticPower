@@ -6,7 +6,7 @@ import theking530.api.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticpower.client.gui.StaticPowerItemStackGui;
 
 public class AbstractCableAttachmentGui<T extends AbstractCableAttachmentContainer<K>, K extends AbstractCableAttachment> extends StaticPowerItemStackGui<T, K> {
-
+	
 	public GuiInfoTab infoTab;
 
 	public AbstractCableAttachmentGui(T container, PlayerInventory invPlayer, ITextComponent name) {

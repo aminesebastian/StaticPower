@@ -193,7 +193,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 				// Get the inventory, if it is not valid, re-route the parcel. Otherwise, insert
 				// as much as we can, and if there are any left overs, reroute them. Tell the
 				// item cable at the current location that it should stop rendering the parcel.
-				IItemHandler outputInventory = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, packet.getNextEntry().getDirectionOfEntry()).orElse(null);
+				IItemHandler outputInventory = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, packet.getNextEntry().getDirectionOfEntry().getOpposite()).orElse(null);
 				if (outputInventory != null) {
 					ItemStack output = InventoryUtilities.insertItemIntoInventory(outputInventory, packet.getContainedItem(), false);
 					getItemCableComponentAtPosition(packet.getCurrentEntry().getPosition()).removeTransferingItem(packet.getId());
@@ -370,10 +370,18 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 			// Allocate an atomic bool to capture if a path is valid.
 			AtomicBoolean isValid = new AtomicBoolean(false);
 
+			// Get all the potential paths.
+			List<Path> paths = Network.getPathCache().getPaths(cablePosition, dest.getPos(), CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
+
+			// Retun null if no path is found.
+			if (paths == null) {
+				continue;
+			}
+
 			// Iterate through all the paths to the proposed tile entity.
-			for (Path path : Network.getPathCache().getPaths(cablePosition, dest.getPos(), CableNetworkModuleTypes.ITEM_NETWORK_MODULE)) {
+			for (Path path : paths) {
 				// If we're able to insert into that inventory, set the atomic boolean.
-				dest.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, path.getDestinationDirection()).ifPresent(inv -> {
+				dest.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, path.getDestinationDirection().getOpposite()).ifPresent(inv -> {
 					isValid.set(InventoryUtilities.canPartiallyInsertItemIntoInventory(inv, item));
 				});
 				// If the atomic boolean is valid, then we have a valid path and we return it.

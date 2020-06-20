@@ -31,7 +31,7 @@ public class TileEntityChargingStation extends TileEntityMachine {
 		registerComponent(batterySlot = new InventoryComponent("batterySlot", 1, MachineSideMode.Never));
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
 
-		registerComponent(new BatteryComponent("BatteryComponent", batterySlot.getInventory(), 0, energyStorage.getStorage()));
+		registerComponent(new BatteryComponent("BatteryComponent", batterySlot, 0, energyStorage.getStorage()));
 		registerComponent(new OutputServoComponent("OutputServo", 1, chargedInventory, 0, 1, 2, 3));
 		registerComponent(new InputServoComponent("InputServo", 2, unchargedInventory, 0, 1, 2, 3));
 	}
@@ -39,7 +39,7 @@ public class TileEntityChargingStation extends TileEntityMachine {
 	@Override
 	public void process() {
 		if (energyStorage.getStorage().getEnergyStored() > 0) {
-			for (int i = 0; i < unchargedInventory.getSlotCount(); i++) {
+			for (int i = 0; i < unchargedInventory.getSlots(); i++) {
 				ItemStack stack = unchargedInventory.getStackInSlot(i);
 				if (stack != ItemStack.EMPTY && EnergyHandlerItemStackUtilities.isEnergyContainer(stack)) {
 					if (EnergyHandlerItemStackUtilities.getEnergyStored(stack) < EnergyHandlerItemStackUtilities.getEnergyStorageCapacity(stack)) {
@@ -66,7 +66,7 @@ public class TileEntityChargingStation extends TileEntityMachine {
 			// If we can place the charged item into an output slot, do so. There's no need
 			// to check the result of the call to insertItem as we already know the result
 			// is going to be empty.
-			if (InventoryUtilities.canFullyInsertStackIntoSlot(chargedInventory.getInventory(), i, unchargedInventory.getStackInSlot(fromSlot))) {
+			if (InventoryUtilities.canFullyInsertStackIntoSlot(chargedInventory, i, unchargedInventory.getStackInSlot(fromSlot))) {
 				System.out.println(unchargedInventory.getStackInSlot(fromSlot));
 				ItemStack stack = unchargedInventory.extractItem(fromSlot, 1, false);
 				chargedInventory.insertItem(i, stack, false);

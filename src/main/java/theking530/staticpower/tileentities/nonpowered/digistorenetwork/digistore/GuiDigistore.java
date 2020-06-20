@@ -8,13 +8,16 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.network.PacketDistributor;
 import theking530.api.gui.GuiDrawUtilities;
-import theking530.api.gui.button.BaseButton;
-import theking530.api.gui.button.TextButton;
 import theking530.api.gui.widgets.GuiDrawItem;
+import theking530.api.gui.widgets.button.BaseButton;
+import theking530.api.gui.widgets.button.TextButton;
 import theking530.api.gui.widgets.tabs.GuiInfoTab;
 import theking530.api.utilities.Color;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
+import theking530.staticpower.network.NetworkMessage;
+import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, TileEntityDigistore> {
 
@@ -44,8 +47,8 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 			button.setToggled(getTileEntity().isLocked());
 			lockedButton.setText(getTileEntity().isLocked() ? "Locked" : "Unlocked");
 
-			// IMessage msg = new PacketLockDigistore(barrel.isLocked(), barrel.getPos());
-			// PacketHandler.net.sendToServer(msg);
+			NetworkMessage msg = new PacketLockDigistore(getTileEntity().isLocked(), getTileEntity().getPos());
+			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
 		}
 	}
 

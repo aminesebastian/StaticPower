@@ -27,14 +27,14 @@ public class ContainerVacuumChest extends StaticPowerTileEntityContainer<TileEnt
 	public void initializeContainer() {
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 9; x++) {
-				this.addSlot(new StaticPowerContainerSlot(getTileEntity().inventory.getInventory(), x + y * 9, 8 + x * 18, 20 + y * 18));
+				this.addSlot(new StaticPowerContainerSlot(getTileEntity().inventory, x + y * 9, 8 + x * 18, 20 + y * 18));
 			}
 		}
-		this.addSlot(new FilterSlot(getTileEntity().filterSlotInventory.getInventory(), 0, 8, 78));
+		this.addSlot(new FilterSlot(getTileEntity().filterSlotInventory, 0, 8, 78));
 
-		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory.getInventory(), 0, 116, 78));
-		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory.getInventory(), 1, 134, 78));
-		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory.getInventory(), 2, 152, 78));
+		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory, 0, 116, 78));
+		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory, 1, 134, 78));
+		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory, 2, 152, 78));
 
 		this.addPlayerInventory(getPlayerInventory(), 8, 103);
 		this.addPlayerHotbar(getPlayerInventory(), 8, 161);

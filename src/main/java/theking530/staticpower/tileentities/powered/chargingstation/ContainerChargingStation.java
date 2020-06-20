@@ -29,25 +29,25 @@ public class ContainerChargingStation extends StaticPowerTileEntityContainer<Til
 	@Override
 	public void initializeContainer() {
 		// Input
-		this.addSlot(new StaticPowerContainerSlot(getTileEntity().unchargedInventory.getInventory(), 0, 51, 24) {
+		this.addSlot(new StaticPowerContainerSlot(getTileEntity().unchargedInventory, 0, 51, 24) {
 			@Override
 			public boolean isItemValid(ItemStack itemStack) {
 				return EnergyHandlerItemStackUtilities.isEnergyContainer(itemStack);
 			}
 		});
-		this.addSlot(new StaticPowerContainerSlot(getTileEntity().unchargedInventory.getInventory(), 1, 70, 24) {
+		this.addSlot(new StaticPowerContainerSlot(getTileEntity().unchargedInventory, 1, 70, 24) {
 			@Override
 			public boolean isItemValid(ItemStack itemStack) {
 				return EnergyHandlerItemStackUtilities.isEnergyContainer(itemStack);
 			}
 		});
-		this.addSlot(new StaticPowerContainerSlot(getTileEntity().unchargedInventory.getInventory(), 2, 89, 24) {
+		this.addSlot(new StaticPowerContainerSlot(getTileEntity().unchargedInventory, 2, 89, 24) {
 			@Override
 			public boolean isItemValid(ItemStack itemStack) {
 				return EnergyHandlerItemStackUtilities.isEnergyContainer(itemStack);
 			}
 		});
-		this.addSlot(new StaticPowerContainerSlot(getTileEntity().unchargedInventory.getInventory(), 3, 108, 24) {
+		this.addSlot(new StaticPowerContainerSlot(getTileEntity().unchargedInventory, 3, 108, 24) {
 			@Override
 			public boolean isItemValid(ItemStack itemStack) {
 				return EnergyHandlerItemStackUtilities.isEnergyContainer(itemStack);
@@ -55,18 +55,18 @@ public class ContainerChargingStation extends StaticPowerTileEntityContainer<Til
 		});
 
 		// Output
-		this.addSlot(new OutputSlot(getTileEntity().chargedInventory.getInventory(), 0, 46, 52));
-		this.addSlot(new OutputSlot(getTileEntity().chargedInventory.getInventory(), 1, 69, 52));
-		this.addSlot(new OutputSlot(getTileEntity().chargedInventory.getInventory(), 2, 92, 52));
-		this.addSlot(new OutputSlot(getTileEntity().chargedInventory.getInventory(), 3, 115, 52));
+		this.addSlot(new OutputSlot(getTileEntity().chargedInventory, 0, 46, 52));
+		this.addSlot(new OutputSlot(getTileEntity().chargedInventory, 1, 69, 52));
+		this.addSlot(new OutputSlot(getTileEntity().chargedInventory, 2, 92, 52));
+		this.addSlot(new OutputSlot(getTileEntity().chargedInventory, 3, 115, 52));
 
 		// Upgrades
-		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory.getInventory(), 0, 152, 8));
-		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory.getInventory(), 1, 152, 30));
-		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory.getInventory(), 2, 152, 52));
+		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory, 0, 152, 8));
+		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory, 1, 152, 30));
+		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory, 2, 152, 52));
 
 		// Battery
-		this.addSlot(new BatterySlot(getTileEntity().batterySlot.getInventory(), 0, 8, 54));
+		this.addSlot(new BatterySlot(getTileEntity().batterySlot, 0, 8, 54));
 
 		// Armor
 		this.addSlot(new PlayerArmorSlot(getPlayerInventory(), 39, -24, 14, EquipmentSlotType.HEAD));

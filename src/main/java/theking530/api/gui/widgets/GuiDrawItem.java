@@ -42,6 +42,7 @@ public class GuiDrawItem {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	protected void renderItemModelIntoGUI(ItemStack stack, int x, int y, float alpha) {
 		ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
 

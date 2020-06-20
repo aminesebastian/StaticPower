@@ -10,9 +10,12 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.items.cableattachments.extractor.ExtractorAttachment;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.cables.AbstractCableProviderComponent;
@@ -25,13 +28,15 @@ import theking530.staticpower.tileentities.cables.network.modules.ItemCableRemov
 import theking530.staticpower.tileentities.cables.network.modules.ItemNetworkModule;
 import theking530.staticpower.tileentities.cables.network.modules.factories.CableNetworkModuleTypes;
 
-public class ItemCableComponent extends AbstractCableProviderComponent {
-	private int itemTransferSpeed = 40;
+public class ItemCableComponent extends AbstractCableProviderComponent implements IItemHandler {
+	private int itemTransferSpeed = 10;
 	private HashMap<Long, ItemRoutingParcelClient> containedPackets;
+	private Direction lastCapabilityRequestedDirection;
 
 	public ItemCableComponent(String name) {
 		super(name, CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
 		containedPackets = new HashMap<Long, ItemRoutingParcelClient>();
+		lastCapabilityRequestedDirection = Direction.UP;
 	}
 
 	@Override
@@ -94,7 +99,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 	@Override
 	protected void processAttachment(Direction side, ItemStack attachment) {
 		// Process the extractor attachment.
-		if (!getWorld().isRemote && attachment.getItem() instanceof ExtractorAttachment) {
+		if (!getWorld().isRemote && attachment.getItem() instanceof ExtractorAttachment && doesAttachmentPassRedstoneTest(attachment)) {
 			processExtractorAttachment(side, attachment);
 		}
 	}
@@ -192,6 +197,15 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 	}
 
 	@Override
+	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
+		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && side != null) {
+			lastCapabilityRequestedDirection = side;
+			return LazyOptional.of(() -> this).cast();
+		}
+		return LazyOptional.empty();
+	}
+
+	@Override
 	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
 
@@ -227,5 +241,50 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 				}
 			}
 		}
+	}
+
+	@Override
+	public int getSlots() {
+		return 1;
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int slot) {
+		return ItemStack.EMPTY;
+	}
+
+	@Override
+	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+		if (!stack.isEmpty()) {
+			// Get the network.
+			ItemStack insertStack = stack.copy();
+			insertStack.setCount(Math.min(stack.getCount(), getSlotLimit(slot)));
+			
+			CableNetwork network = CableNetworkManager.get(getWorld()).getCable(getPos()).getNetwork();
+			ItemNetworkModule itemNetworkModule = (ItemNetworkModule) network.getModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
+
+			ItemStack remainingAmount = itemNetworkModule.transferItemStack(insertStack, getPos(), lastCapabilityRequestedDirection, false);
+			if (remainingAmount.getCount() < insertStack.getCount()) {
+				getTileEntity().markDirty();
+				stack.setCount(stack.getCount() - insertStack.getCount() + remainingAmount.getCount());
+				return stack;
+			}
+		}
+		return stack;
+	}
+
+	@Override
+	public ItemStack extractItem(int slot, int amount, boolean simulate) {
+		return ItemStack.EMPTY;
+	}
+
+	@Override
+	public int getSlotLimit(int slot) {
+		return 64;
+	}
+
+	@Override
+	public boolean isItemValid(int slot, ItemStack stack) {
+		return true;
 	}
 }

@@ -4,7 +4,12 @@ import net.minecraft.item.ItemStack;
 
 public interface ItemStackHandlerFilter {
 
-    public boolean canInsertItem(int slot, ItemStack stack);
-    public boolean canExtractItem(int slot, int amount);
-    
+	public default boolean canInsertItem(int slot, ItemStack stack) {
+		return true;
+	}
+
+	public default boolean canExtractItem(int slot, int amount) {
+		return true;
+	}
+
 }

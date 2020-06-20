@@ -56,7 +56,7 @@ public class InputServoComponent extends AbstractTileEntityComponent {
 	@Override
 	public void preProcessUpdate() {
 		if (!getTileEntity().getWorld().isRemote) {
-			if (inventory != null && inventory.getInventory().getSlots() > 0 && getTileEntity() != null) {
+			if (inventory != null && inventory.getSlots() > 0 && getTileEntity() != null) {
 				int randomIndex = randomGenerator.nextInt(slots.length);
 				int slot = slots[randomIndex];
 				int rand = randomGenerator.nextInt(5);
