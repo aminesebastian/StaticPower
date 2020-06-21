@@ -7,10 +7,10 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import theking530.api.utilities.SDMath;
+import theking530.staticpower.crafting.wrappers.ProbabilityItemStackOutput;
 import theking530.staticpower.crafting.wrappers.RecipeMatchParameters;
 import theking530.staticpower.crafting.wrappers.StaticPowerRecipeRegistry;
 import theking530.staticpower.crafting.wrappers.grinder.GrinderRecipe;
-import theking530.staticpower.crafting.wrappers.grinder.GrinderRecipe.GrinderOutput;
 import theking530.staticpower.initialization.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.BatteryComponent;
@@ -68,7 +68,7 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 	 * @return
 	 */
 	public Optional<GrinderRecipe> getRecipe(ItemStack itemStackInput) {
-		return StaticPowerRecipeRegistry.getRecipe(GrinderRecipe.RECIPE_TYPE, new RecipeMatchParameters(itemStackInput));
+		return StaticPowerRecipeRegistry.getRecipe(GrinderRecipe.RECIPE_TYPE, new RecipeMatchParameters(itemStackInput).setStoredEnergy(energyStorage.getStorage().getEnergyStored()));
 	}
 
 	@Override
@@ -76,11 +76,11 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 		if (canStartProcess() && redstoneControlComponent.passesRedstoneCheck()) {
 			moveComponent.startProcessing();
 		} else if (processingComponent.isProcessing()) {
-			if (energyStorage.getStorage().getEnergyStored() >= (DEFAULT_PROCESSING_COST / DEFAULT_PROCESSING_TIME)) {
+			if (!getRecipe(internalInventory.getStackInSlot(0)).isPresent()) {
+				processingComponent.pauseProcessing();
+			} else {
 				processingComponent.continueProcessing();
 				energyStorage.getStorage().extractEnergy(DEFAULT_PROCESSING_COST / DEFAULT_PROCESSING_TIME, false);
-			} else {
-				processingComponent.pauseProcessing();
 			}
 		}
 	}
@@ -116,17 +116,14 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 			GrinderRecipe recipe = getRecipe(internalInventory.getStackInSlot(0)).get();
 			// Ensure the output slots can take the recipe.
 			if (canOutputsTakeRecipeResult(recipe)) {
-				// For each recipe, insert the contents into the output based on the percentage
+				// For each output, insert the contents into the output based on the percentage
 				// chance. The clear the internal inventory, mark for synchronozation, and
 				// return true.
-				if (InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRawOutputItems())) {
-					for (GrinderOutput output : recipe.getOutputItems()) {
-						if (SDMath.diceRoll(output.getPercentage() + bonusOutputChance)) {
-							InventoryUtilities.insertItemIntoInventory(outputInventory, output.getItem().copy(), false);
-						}
+				for (ProbabilityItemStackOutput output : recipe.getOutputItems()) {
+					if (SDMath.diceRoll(output.getPercentage() + bonusOutputChance)) {
+						InventoryUtilities.insertItemIntoInventory(outputInventory, output.getItem().copy(), false);
 					}
 				}
-
 				internalInventory.setStackInSlot(0, ItemStack.EMPTY);
 				markTileEntityForSynchronization();
 				return true;
@@ -146,17 +143,8 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 			// Gets the recipe and its outputs.
 			Optional<GrinderRecipe> recipe = getRecipe(inputInventory.getStackInSlot(0));
 
-			// If there are no outputs, this is a weird edge case and return false.
-			if (recipe.get().getOutputItems().length < 0) {
-				return false;
-			}
-
 			// If the items cannot be insert into the output, return false.
 			if (!canOutputsTakeRecipeResult(recipe.get())) {
-				return false;
-			}
-			// If the machine does not have enough energy, return false.
-			if (energyStorage.getStorage().getEnergyStored() < recipe.get().getPowerCost()) {
 				return false;
 			}
 

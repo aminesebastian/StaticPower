@@ -31,7 +31,7 @@ public class ModFluids {
 
 	public static void registerFluidBundle(StaticPowerFluidBundle bundle) {
 		StaticPowerRegistry.preRegisterBlock(bundle.FluidBlock);
-		StaticPowerRegistry.preRegisterFluid(bundle.FlowingFluid);
+		//StaticPowerRegistry.preRegisterFluid(bundle.FlowingFluid);
 		StaticPowerRegistry.preRegisterFluid(bundle.Fluid);
 		StaticPowerRegistry.preRegisterItem(bundle.Bucket);
 	}

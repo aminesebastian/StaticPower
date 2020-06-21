@@ -118,7 +118,7 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid {
 
 		public Source(String name, Supplier<StaticPowerFluidBucket> bucket, Supplier<StaticPowerFluidBlock> fluidBlock, Supplier<Source> stillFluid, Supplier<Flowing> flowingFluid,
 				String stillTexture, String flowingTexture, net.minecraft.tags.Tag<Fluid> tag) {
-			super(name + "_still", bucket, fluidBlock, stillFluid, flowingFluid, stillTexture, flowingTexture, tag);
+			super(name, bucket, fluidBlock, stillFluid, flowingFluid, stillTexture, flowingTexture, tag);
 		}
 
 		@Override

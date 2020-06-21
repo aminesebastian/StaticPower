@@ -4,11 +4,16 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Direction;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
+import theking530.api.gui.widgets.SlotPhantom;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.initialization.ModContainerTypes;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachmentContainer;
 import theking530.staticpower.tileentities.cables.AbstractCableProviderComponent;
 
 public class ContainerExtractor extends AbstractCableAttachmentContainer<ExtractorAttachment> {
+	private ItemStackHandler filterInventory;
 
 	public ContainerExtractor(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, getAttachmentItemStack(inv, data), getAttachmentSide(data), getCableComponent(inv, data));
@@ -16,5 +21,31 @@ public class ContainerExtractor extends AbstractCableAttachmentContainer<Extract
 
 	public ContainerExtractor(int windowId, PlayerInventory playerInventory, ItemStack attachment, Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
 		super(ModContainerTypes.EXTRACTOR_CONTAINER, windowId, playerInventory, attachment, attachmentSide, cableComponent);
+	}
+
+	@Override
+	public void initializeContainer() {
+		// Attempt to get the item filter inventory.
+		getItemStack().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((handler) -> {
+			filterInventory = (ItemStackHandler) handler;
+		});
+
+		// If the item filter is null, then return early and log the error.
+		if (filterInventory == null) {
+			StaticPower.LOGGER.error(String.format("Received capability for ItemFilter: %1$s that did not inherit from InventoryItemFilter.", getItemStack().getDisplayName()));
+			return;
+		}
+
+
+		for (int i = 0; i < filterInventory.getSlots(); i++) {
+			this.addSlot(new SlotPhantom(filterInventory, i, 26 + (i * 18), 19));
+		}
+
+		this.addPlayerInventory(getPlayerInventory(), 8, 69);
+		this.addPlayerHotbar(getPlayerInventory(), 8, 127);
+	}
+
+	public ItemStackHandler getExtractorInventory() {
+		return filterInventory;
 	}
 }

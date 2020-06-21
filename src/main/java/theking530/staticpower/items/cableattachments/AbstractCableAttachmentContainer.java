@@ -60,9 +60,6 @@ public class AbstractCableAttachmentContainer<T extends AbstractCableAttachment>
 
 	@Override
 	public ItemStack slotClick(int slot, int dragType, ClickType clickTypeIn, PlayerEntity player) {
-		if (slot >= 0 && getSlot(slot) != null && getSlot(slot).getStack() == player.getHeldItemMainhand()) {
-			return ItemStack.EMPTY;
-		}
 		return super.slotClick(slot, dragType, clickTypeIn, player);
 	}
 

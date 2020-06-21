@@ -10,6 +10,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import theking530.staticpower.crafting.wrappers.ProbabilityItemStackOutput;
 import theking530.staticpower.tileentities.powered.poweredgrinder.TileEntityPoweredGrinder;
 import theking530.staticpower.utilities.Reference;
 
@@ -42,13 +43,13 @@ public class GrinderRecipeSerializer extends ForgeRegistryEntry<IRecipeSerialize
 		JsonElement outputElement = JSONUtils.isJsonArray(json, "output") ? JSONUtils.getJsonArray(json, "output") : JSONUtils.getJsonObject(json, "output");
 		if (outputElement.isJsonArray()) {
 			JsonArray outputArray = outputElement.getAsJsonArray();
-			GrinderRecipe.GrinderOutput[] outputs = new GrinderRecipe.GrinderOutput[outputArray.size()];
+			ProbabilityItemStackOutput[] outputs = new ProbabilityItemStackOutput[outputArray.size()];
 			for (int i = 0; i < outputArray.size(); i++) {
-				outputs[i] = GrinderRecipe.GrinderOutput.parseFromJSON(outputArray.get(i).getAsJsonObject());
+				outputs[i] = ProbabilityItemStackOutput.parseFromJSON(outputArray.get(i).getAsJsonObject());
 			}
 			return new GrinderRecipe(recipeId, processingTime, powerCost, input, outputs);
 		} else {
-			GrinderRecipe.GrinderOutput output = GrinderRecipe.GrinderOutput.parseFromJSON(outputElement.getAsJsonObject());
+			ProbabilityItemStackOutput output = ProbabilityItemStackOutput.parseFromJSON(outputElement.getAsJsonObject());
 			return new GrinderRecipe(recipeId, processingTime, powerCost, input, output);
 		}
 

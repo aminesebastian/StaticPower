@@ -28,18 +28,36 @@ public class GuiTextUtilities {
 	static {
 		NUMBER_FORMATTER = NumberFormat.getInstance();
 		NUMBER_FORMATTER.setGroupingUsed(true);
+		NUMBER_FORMATTER.setMaximumFractionDigits(2);
 	}
 
 	/**
 	 * Formats the provided energy into a string for display in the UI. Example,
-	 * energy 50000 turns into 50,000 FE. Uses localization.
+	 * energy 50000 turns into 50kFE. Uses localization.
 	 * 
 	 * @param energy The amount of energy to format.
 	 * @return The formatted string.
 	 */
-	public static ITextComponent formatEnergyToString(int energy) {
+	public static ITextComponent formatEnergyToString(int energy, boolean includeUnits, boolean includeMetricUnit) {
 		MetricConverter metricEnergy = new MetricConverter(energy);
-		return new StringTextComponent(NUMBER_FORMATTER.format(metricEnergy.getValue())).appendText(metricEnergy.getSuffix()).appendSibling(ENERGY_UNIT_TRANSLATION);
+		ITextComponent output = new StringTextComponent(NUMBER_FORMATTER.format(metricEnergy.getValue()));
+		
+		if (includeMetricUnit) {
+			output.appendText(metricEnergy.getSuffix());
+		}
+		
+		if (includeUnits) {
+			output.appendSibling(ENERGY_UNIT_TRANSLATION);
+		}
+		return output;
+	}
+
+	public static ITextComponent formatEnergyToString(int energy, boolean includeUnits) {
+		return formatEnergyToString(energy, includeUnits, true);
+	}
+
+	public static ITextComponent formatEnergyToString(int energy) {
+		return formatEnergyToString(energy, true, true);
 	}
 
 	/**
@@ -52,16 +70,7 @@ public class GuiTextUtilities {
 	 * @return The formatted string.
 	 */
 	public static ITextComponent formatEnergyToString(int energy, int capacity) {
-		MetricConverter metricCapacity = new MetricConverter(capacity);
-		MetricConverter metricEnergy = new MetricConverter(energy);
-
-		// If the suffixes are different, put them both in the string, otherwise, just
-		// use the capacity suffix.
-		if (!metricCapacity.getSuffix().equals(metricEnergy.getSuffix())) {
-			return formatEnergyToString(energy).appendText("/").appendSibling(formatEnergyToString(capacity));
-		} else {
-			return formatEnergyToString(energy).appendText("/").appendSibling(formatEnergyToString(capacity));
-		}
+		return formatEnergyToString(energy, false, true).appendText("/").appendSibling(formatEnergyToString(capacity));
 
 	}
 

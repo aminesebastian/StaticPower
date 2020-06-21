@@ -22,6 +22,7 @@ import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.B
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.networkwire.BlockDigistoreNetworkWire;
 import theking530.staticpower.tileentities.nonpowered.vacuumchest.BlockVacuumChest;
 import theking530.staticpower.tileentities.powered.chargingstation.BlockChargingStation;
+import theking530.staticpower.tileentities.powered.lumbermill.BlockLumberMill;
 import theking530.staticpower.tileentities.powered.poweredfurnace.BlockPoweredFurnace;
 import theking530.staticpower.tileentities.powered.poweredgrinder.BlockPoweredGrinder;
 import theking530.staticpower.tileentities.powered.solarpanels.BlockSolarPanel;
@@ -72,11 +73,14 @@ public class ModBlocks {
 	public static BlockSolarPanel SolarPanelBasic;
 	public static BlockPoweredFurnace PoweredFurnace;
 	public static BlockPoweredGrinder PoweredGrinder;
+	public static BlockLumberMill LumberMill;
+	
 	public static BlockDigistoreNetworkWire DigistoreWire;
 	public static BlockDigistoreManager DigistoreManager;
 	public static BlockDigistoreIOPort DigistoreIOPort;
 	public static BlockDigistore Digistore;
 
+	
 	// Cables
 	public static BlockItemCable ItemCable;
 	public static BlockPowerCable PowerCable;
@@ -126,7 +130,8 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(SolarPanelBasic = new BlockSolarPanel("solar_panel_basic", Tier.BASIC));
 		StaticPowerRegistry.preRegisterBlock(PoweredFurnace = new BlockPoweredFurnace("machine_powered_furnace"));
 		StaticPowerRegistry.preRegisterBlock(PoweredGrinder = new BlockPoweredGrinder("machine_powered_grinder"));
-
+		StaticPowerRegistry.preRegisterBlock(LumberMill = new BlockLumberMill("machine_lumber_mill"));
+		
 		StaticPowerRegistry.preRegisterBlock(DigistoreWire = new BlockDigistoreNetworkWire("digistore_wire"));
 		StaticPowerRegistry.preRegisterBlock(DigistoreManager = new BlockDigistoreManager("digistore_manager"));
 		StaticPowerRegistry.preRegisterBlock(DigistoreIOPort = new BlockDigistoreIOPort("digistore_io_port"));

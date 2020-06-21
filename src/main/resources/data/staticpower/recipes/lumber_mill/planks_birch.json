@@ -1,0 +1,16 @@
+{
+	"type": "staticpower:lumber_mill_recipe",
+	"input": {
+		"item": "minecraft:birch_planks"
+	},
+	"outputs": {
+		"primary": {
+			"item": "staticpower:dust_wood",
+			"count": 10
+		},
+		"fluid": {
+			"fluid": "staticpower:tree_sap",
+			"volume": 2
+		}
+	}
+}

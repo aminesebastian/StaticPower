@@ -40,7 +40,7 @@ public class ItemFilter extends StaticPowerItem {
 	}
 
 	/**
-	 * Add the energy storage capability.
+	 * Add the inventory capability.
 	 */
 	@Nullable
 	@Override

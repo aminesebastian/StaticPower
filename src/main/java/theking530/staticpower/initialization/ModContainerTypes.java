@@ -12,6 +12,8 @@ import theking530.staticpower.tileentities.nonpowered.vacuumchest.ContainerVacuu
 import theking530.staticpower.tileentities.nonpowered.vacuumchest.GuiVacuumChest;
 import theking530.staticpower.tileentities.powered.chargingstation.ContainerChargingStation;
 import theking530.staticpower.tileentities.powered.chargingstation.GuiChargingStation;
+import theking530.staticpower.tileentities.powered.lumbermill.ContainerLumberMill;
+import theking530.staticpower.tileentities.powered.lumbermill.GuiLumberMill;
 import theking530.staticpower.tileentities.powered.poweredfurnace.ContainerPoweredFurnace;
 import theking530.staticpower.tileentities.powered.poweredfurnace.GuiPoweredFurnace;
 import theking530.staticpower.tileentities.powered.poweredgrinder.ContainerPoweredGrinder;
@@ -23,15 +25,19 @@ public class ModContainerTypes {
 	public static ContainerType<ContainerItemFilter> ITEM_FILTER_CONTAINER;
 	public static ContainerType<ContainerPoweredFurnace> POWERED_FURNACE_CONTAINER;
 	public static ContainerType<ContainerPoweredGrinder> POWERED_GRINDER_CONTAINER;
+	public static ContainerType<ContainerLumberMill> LUMBER_MILL_CONTAINER;
+	
 	public static ContainerType<ContainerDigistore> DIGISTORE_CONTAINER;
 	public static ContainerType<ContainerExtractor> EXTRACTOR_CONTAINER;
-
+	
 	public static void init() {
 		VACUUM_CHEST_CONTAINER = StaticPowerRegistry.preRegisterContainer("chest_vacuum", ContainerVacuumChest::new, GuiVacuumChest::new);
 		CHARGING_STATION_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_charging_station", ContainerChargingStation::new, GuiChargingStation::new);
 		ITEM_FILTER_CONTAINER = StaticPowerRegistry.preRegisterContainer("filter_item", ContainerItemFilter::new, GuiItemFilter::new);
 		POWERED_FURNACE_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_powered_furnace", ContainerPoweredFurnace::new, GuiPoweredFurnace::new);
 		POWERED_GRINDER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_powered_grinder", ContainerPoweredGrinder::new, GuiPoweredGrinder::new);
+		LUMBER_MILL_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_lumber_mill", ContainerLumberMill::new, GuiLumberMill::new);
+		
 		DIGISTORE_CONTAINER = StaticPowerRegistry.preRegisterContainer("digistore", ContainerDigistore::new, GuiDigistore::new);
 		EXTRACTOR_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_extractor", ContainerExtractor::new, GuiExtractor::new);
 	}

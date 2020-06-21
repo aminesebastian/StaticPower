@@ -40,16 +40,15 @@ public class GuiFluidBarFromTank extends AbstractGuiWidget {
 				if (sideComp.getCountOfSidesWithMode(mode) > 0) {
 					GuiFluidBarUtilities.drawFluidBar(tank.getFluid(), tank.getCapacity(), tank.getFluidAmount(), ownerRelativePosition.getX(), ownerRelativePosition.getY() + getSize().getY(), 0.0f,
 							getSize().getX(), getSize().getY(), mode, true);
-					return;
+				}else {
+					GuiFluidBarUtilities.drawFluidBar(tank.getFluid(), tank.getCapacity(), tank.getFluidAmount(), ownerRelativePosition.getX(), ownerRelativePosition.getY() + getSize().getY(), 0.0f,
+							getSize().getX(), getSize().getY(), true);
 				}
 			}
-			GuiFluidBarUtilities.drawFluidBar(tank.getFluid(), tank.getCapacity(), tank.getFluidAmount(), ownerRelativePosition.getX(), ownerRelativePosition.getY() + getSize().getY(), 0.0f,
-					getSize().getX(), getSize().getY(), true);
 		} else {
 			GuiFluidBarUtilities.drawFluidBar(tank.getFluid(), tank.getCapacity(), tank.getFluidAmount(), ownerRelativePosition.getX(), ownerRelativePosition.getY() + getSize().getY(), 0.0f,
 					getSize().getX(), getSize().getY(), true);
 		}
-
 	}
 
 	@Override

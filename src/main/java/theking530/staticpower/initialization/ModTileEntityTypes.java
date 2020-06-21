@@ -10,6 +10,7 @@ import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.T
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.networkwire.TileEntityDigistoreWire;
 import theking530.staticpower.tileentities.nonpowered.vacuumchest.TileEntityVacuumChest;
 import theking530.staticpower.tileentities.powered.chargingstation.TileEntityChargingStation;
+import theking530.staticpower.tileentities.powered.lumbermill.TileEntityLumberMill;
 import theking530.staticpower.tileentities.powered.poweredfurnace.TileEntityPoweredFurnace;
 import theking530.staticpower.tileentities.powered.poweredgrinder.TileEntityPoweredGrinder;
 import theking530.staticpower.tileentities.powered.solarpanels.TileEntityBasicSolarPanel;
@@ -28,14 +29,16 @@ public class ModTileEntityTypes {
 	public static TileEntityType<TileEntityDigistoreManager> DIGISTORE_MANAGER;
 	public static TileEntityType<TileEntityDigistoreIOPort> DIGISTORE_IO_PORT;
 	public static TileEntityType<TileEntityDigistoreWire> DIGISTORE_WIRE;
-
+	public static TileEntityType<TileEntityLumberMill> LUMBER_MILL;
+	
 	public static void init() {
 		VACCUM_CHEST = StaticPowerRegistry.preRegisterTileEntity(TileEntityVacuumChest::new, ModBlocks.VacuumChest);
 		CHARGING_STATION = StaticPowerRegistry.preRegisterTileEntity(TileEntityChargingStation::new, ModBlocks.ChargingStation);
 		SOLAR_PANEL_BASIC = StaticPowerRegistry.preRegisterTileEntity(TileEntityBasicSolarPanel::new, ModBlocks.SolarPanelBasic);
 		POWERED_FURNACE = StaticPowerRegistry.preRegisterTileEntity(TileEntityPoweredFurnace::new, ModBlocks.PoweredFurnace);
 		POWERED_GRINDER = StaticPowerRegistry.preRegisterTileEntity(TileEntityPoweredGrinder::new, ModBlocks.PoweredGrinder);
-
+		LUMBER_MILL = StaticPowerRegistry.preRegisterTileEntity(TileEntityLumberMill::new, ModBlocks.LumberMill);
+		
 		POWER_CABLE = StaticPowerRegistry.preRegisterTileEntity(TileEntityPowerCable::new, ModBlocks.PowerCable);
 		ITEM_CABLE = StaticPowerRegistry.preRegisterTileEntity(TileEntityItemCable::new, ModBlocks.ItemCable);
 

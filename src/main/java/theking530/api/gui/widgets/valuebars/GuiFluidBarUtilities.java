@@ -47,13 +47,7 @@ public class GuiFluidBarUtilities {
 				float segmentCapacity = capacity / ((float) height / 16);
 				int segmentsUsed = (int) ((renderAmount + 16) / 16);
 
-				float minU = icon.getMinU();
-				float maxU = icon.getMaxU();
-				float minV = icon.getMinV();
-				float maxV = icon.getMaxV();
-				float diffV = maxV - minV;
-
-				GL11.glColor3f(1.0f, 1.0f, 1.0f);
+				float diffV = icon.getMaxV() - icon.getMinV();
 
 				for (int i = 0; i < segmentsUsed; i++) {
 					float currentSegmentCapacity = segmentCapacity * (i + 1);
@@ -63,13 +57,12 @@ public class GuiFluidBarUtilities {
 					float yMax = ((i + 1) * 16) * fillRatio;
 					Tessellator tessellator = Tessellator.getInstance();
 					BufferBuilder tes = tessellator.getBuffer();
-					tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-					tes.pos(x + width, y - yMin, zLevel).tex(maxU, minV).endVertex();
-					tes.pos(x + width, y - yMax, zLevel).tex(maxU, minV + (fillRatio * diffV)).endVertex();
-					tes.pos(x, y - yMax, zLevel).tex(minU, minV + (fillRatio * diffV)).endVertex();
-					tes.pos(x, y - yMin, zLevel).tex(minU, minV).endVertex();
+					tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
+					tes.pos(x + width, y - yMin, zLevel).color(1.0f, 1.0f, 1.0f, 1.0f).tex(icon.getMaxU(), icon.getMinV()).endVertex();
+					tes.pos(x + width, y - yMax, zLevel).color(1.0f, 1.0f, 1.0f, 1.0f).tex(icon.getMaxU(), icon.getMinV() + (fillRatio * diffV)).endVertex();
+					tes.pos(x, y - yMax, zLevel).color(1.0f, 1.0f, 1.0f, 1.0f).tex(icon.getMinU(), icon.getMinV() + (fillRatio * diffV)).endVertex();
+					tes.pos(x, y - yMin, zLevel).color(1.0f, 1.0f, 1.0f, 1.0f).tex(icon.getMinU(), icon.getMinV()).endVertex();
 					tessellator.draw();
-
 				}
 			}
 		}

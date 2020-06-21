@@ -9,6 +9,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.Nullable;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -32,6 +35,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class ItemNetworkModule extends AbstractCableNetworkModule {
+	private static final Logger LOGGER = LogManager.getLogger(ItemNetworkModule.class);
 	private static long CurrentPacketId;
 	private HashMap<BlockPos, LinkedList<ItemRoutingParcel>> ActiveParcels;
 
@@ -244,7 +248,12 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 	 */
 	protected void rerouteOrTransferParcel(ItemRoutingParcel parcel) {
 		// First, remove this parcel from the current cable.
-		getItemCableComponentAtPosition(parcel.getCurrentEntry().getPosition()).removeTransferingItem(parcel.getId());
+		if(getItemCableComponentAtPosition(parcel.getCurrentEntry().getPosition()) != null) {
+			getItemCableComponentAtPosition(parcel.getCurrentEntry().getPosition()).removeTransferingItem(parcel.getId());
+		}else {
+			LOGGER.error(String.format("Encountered an invalid item cable at current parcel entry location: %1$s.", parcel.getCurrentEntry().getPosition()));
+		}
+
 
 		// Check if the parcel is still in this network. If it is, just reroute it or
 		// drop it. If not, transfer it to another network if possible. If not, drop it.

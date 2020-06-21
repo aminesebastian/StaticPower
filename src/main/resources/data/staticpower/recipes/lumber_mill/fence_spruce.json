@@ -1,0 +1,20 @@
+{
+	"type": "staticpower:lumber_mill_recipe",
+	"input": {
+		"item": "minecraft:spruce_fence"
+	},
+	"outputs": {
+		"primary": {
+			"item": "minecraft:spruce_planks",
+			"count": 3
+		},
+		"secondary": {
+			"item": "staticpower:dust_wood",
+			"count": 2
+		},
+		"fluid": {
+			"fluid": "staticpower:tree_sap",
+			"volume": 2
+		}
+	}
+}

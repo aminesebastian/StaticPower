@@ -10,9 +10,6 @@ import theking530.staticpower.client.container.slots.BatterySlot;
 import theking530.staticpower.client.container.slots.OutputSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.client.container.slots.UpgradeSlot;
-import theking530.staticpower.crafting.wrappers.RecipeMatchParameters;
-import theking530.staticpower.crafting.wrappers.StaticPowerRecipeRegistry;
-import theking530.staticpower.crafting.wrappers.grinder.GrinderRecipe;
 import theking530.staticpower.initialization.ModContainerTypes;
 import theking530.staticpower.items.upgrades.BaseUpgrade;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
@@ -30,12 +27,7 @@ public class ContainerPoweredGrinder extends StaticPowerTileEntityContainer<Tile
 	@Override
 	public void initializeContainer() {
 		// Input
-		this.addSlot(new StaticPowerContainerSlot(getTileEntity().inputInventory, 0, 80, 18) {
-			@Override
-			public boolean isItemValid(ItemStack itemStack) {
-				return StaticPowerRecipeRegistry.getRecipe(GrinderRecipe.RECIPE_TYPE, new RecipeMatchParameters(itemStack)).isPresent();
-			}
-		});
+		this.addSlot(new StaticPowerContainerSlot(getTileEntity().inputInventory, 0, 80, 18));
 
 		// Battery
 		this.addSlot(new BatterySlot(getTileEntity().batteryInventory, 0, 8, 65));

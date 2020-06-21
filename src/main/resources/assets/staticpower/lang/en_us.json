@@ -56,6 +56,8 @@
 	"block.staticpower.chest_vacuum": "Vacuum Chest",
 	"block.staticpower.machine_powered_furnace": "Powered Furnace",
 	"block.staticpower.machine_powered_grinder": "Powered Grinder",
+	"block.staticpower.machine_lumber_mill": "Lumber Mill",
+	"fluid.staticpower.tree_sap": "Tree Sap",
 	"gui.staticpower.empty": "Empty",
 	"gui.staticpower.input": "Input",
 	"gui.staticpower.usage": "Usage",

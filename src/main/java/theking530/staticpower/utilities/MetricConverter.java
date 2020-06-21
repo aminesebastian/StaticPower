@@ -2,7 +2,7 @@ package theking530.staticpower.utilities;
 
 public class MetricConverter {
 	private static final String[] SUFFIXES = { "", "k", "M", "G", "T", "P", "E", "Z", "Y" };
-	private int Value;
+	private float Value;
 	private String Suffix;
 
 	public MetricConverter(int value) {
@@ -10,7 +10,7 @@ public class MetricConverter {
 		// For each iteration of the loop, increment the suffix index.
 		int suffixIndex = 0;
 		this.Value = value;
-		while (Value / 1000 > 0) {
+		while (Value / 1000 > 1) {
 			Value /= 1000;
 			suffixIndex++;
 		}
@@ -21,7 +21,7 @@ public class MetricConverter {
 		}
 	}
 
-	public int getValue() {
+	public float getValue() {
 		return Value;
 	}
 
