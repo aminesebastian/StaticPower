@@ -1,7 +1,9 @@
 package theking530.staticpower.tileentities.cables.network;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Nullable;
@@ -18,14 +20,14 @@ public class NetworkMapper {
 	private final Set<ServerCable> DiscoveredCables;
 	private final Set<ServerCable> NewlyAddedCables;
 	private final Set<ServerCable> RemovedCables;
-	private final Set<TileEntity> Destinations;
+	private final List<DestinationWrapper> Destinations;
 
 	public NetworkMapper(Collection<ServerCable> startingCables) {
 		InitialCables = startingCables;
 		DiscoveredCables = new HashSet<ServerCable>();
 		NewlyAddedCables = new HashSet<ServerCable>();
 		RemovedCables = new HashSet<ServerCable>();
-		Destinations = new HashSet<TileEntity>();
+		Destinations = new ArrayList<DestinationWrapper>();
 
 		RemovedCables.addAll(startingCables);
 	}
@@ -36,7 +38,7 @@ public class NetworkMapper {
 		visited.add(startingPos);
 
 		// Check the starting position.
-		scanLocation(world, null, startingPos);
+		scanLocation(world, CableNetworkManager.get(world).getCable(startingPos), null, startingPos);
 
 		// Kick off the recursion.
 		_updateNetworkWorker(world, visited, startingPos);
@@ -54,7 +56,7 @@ public class NetworkMapper {
 		return RemovedCables;
 	}
 
-	public Set<TileEntity> getDestinations() {
+	public List<DestinationWrapper> getDestinations() {
 		return Destinations;
 	}
 
@@ -79,7 +81,7 @@ public class NetworkMapper {
 
 			// Attempt to cache this location if needed. If true, we found a cable and we
 			// continue mapping, otherwise, we stop here.
-			if (scanLocation(world, facing, testPos)) {
+			if (scanLocation(world, cable, facing, testPos)) {
 				_updateNetworkWorker(world, visited, testPos);
 			}
 		}
@@ -89,13 +91,14 @@ public class NetworkMapper {
 	 * Checks if the provided location should be cached into this mapper.
 	 * 
 	 * @param world
-	 * @param facing   The direction we are going out TO the block. This needs to be
-	 *                 reversed when checking properties from that block. If this is
-	 *                 the first scan, this parameter will be null.
+	 * @param scanningCable The cable that initiated this scan.
+	 * @param facing        The direction we are going out TO the block. This needs
+	 *                      to be reversed when checking properties from that block.
+	 *                      If this is the first scan, this parameter will be null.
 	 * @param location
 	 * @return True if we should continue recursing, false otherwise.
 	 */
-	protected boolean scanLocation(World world, @Nullable Direction facing, BlockPos location) {
+	protected boolean scanLocation(World world, ServerCable scanningCable, @Nullable Direction facing, BlockPos location) {
 		// Skip air blocks. This also ensures we skip any blocks that may have been
 		// removed but whose tile entity may linger for a moment. (A check for isRemoved
 		// on the tile entity does not catch this edge case...).
@@ -124,13 +127,16 @@ public class NetworkMapper {
 			RemovedCables.remove(cable);
 			return true;
 		} else {
-			// Get the tileentiy at the block position and check if it is in our set of
-			// valid tile entities. If it is, add it to the list.
+			// Get the tileentiy at the block position.
 			TileEntity te = world.getTileEntity(location);
+
+			// Make sure it is valid.
 			if (te != null && !te.isRemoved()) {
-				Destinations.add(te);
+				// Cache a destination wrapper for it.
+				DestinationWrapper wrapper = new DestinationWrapper(te, cable, facing.getOpposite());
+				Destinations.add(wrapper);
 			}
+			return false;
 		}
-		return false;
 	}
 }

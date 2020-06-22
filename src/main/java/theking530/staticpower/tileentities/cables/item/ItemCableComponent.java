@@ -2,6 +2,7 @@ package theking530.staticpower.tileentities.cables.item;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Optional;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -17,9 +18,11 @@ import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.items.cableattachments.extractor.ExtractorAttachment;
+import theking530.staticpower.items.cableattachments.filter.FilterAttachment;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.cables.AbstractCableProviderComponent;
 import theking530.staticpower.tileentities.cables.CableUtilities;
+import theking530.staticpower.tileentities.cables.ServerCable;
 import theking530.staticpower.tileentities.cables.ServerCable.CableConnectionState;
 import theking530.staticpower.tileentities.cables.network.CableNetwork;
 import theking530.staticpower.tileentities.cables.network.CableNetworkManager;
@@ -92,7 +95,19 @@ public class ItemCableComponent extends AbstractCableProviderComponent implement
 		return containedPackets.values();
 	}
 
-	public boolean canInsertOnDirection(Direction dir) {
+	public boolean canInsertThroughSide(ItemStack stack, Direction destinationSide) {
+		// If there is no attachment on that side, we can insert.
+		if (!hasAttachment(destinationSide)) {
+			return true;
+		}
+
+		// If there is a filter attachment, evaluate against it.
+		if (getAttachment(destinationSide).getItem() instanceof FilterAttachment) {
+			FilterAttachment filterAttachmentItem = (FilterAttachment) getAttachment(destinationSide).getItem();
+			return filterAttachmentItem.doesItemPassFilter(getAttachment(destinationSide), stack, this);
+		}
+
+		// If there is an attachment, but its not a filter attachment, return false.
 		return false;
 	}
 
@@ -116,40 +131,34 @@ public class ItemCableComponent extends AbstractCableProviderComponent implement
 			return;
 		}
 
-		// Get the network.
-		CableNetwork network = CableNetworkManager.get(getWorld()).getCable(getPos()).getNetwork();
-		if (network == null) {
-			throw new RuntimeException(String.format("Encountered a null network for an ItemCableComponent at position: %1$s.", getPos()));
-		}
+		// Attempt to transfer the item.
+		getItemNetworkModule().ifPresent(network -> {
+			// Attempt to extract an item.
+			te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).ifPresent(inv -> {
+				for (int i = 0; i < inv.getSlots(); i++) {
+					// Simulate an extract.
+					ItemStack extractedItem = inv.extractItem(i, getExtractionStackSize(attachment), true);
 
-		// Get the item network module.
-		ItemNetworkModule itemNetworkModule = (ItemNetworkModule) network.getModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
+					// If the extracted item is empty, continue.
+					if (extractedItem.isEmpty()) {
+						continue;
+					}
 
-		// Attempt to extract an item.
-		te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).ifPresent(inv -> {
-			for (int i = 0; i < inv.getSlots(); i++) {
-				// Simulate an extract.
-				ItemStack extractedItem = inv.extractItem(i, getExtractionStackSize(attachment), true);
+					// Skip any items that are not supported by the extraction filter.
+					ExtractorAttachment extractorItem = (ExtractorAttachment) attachment.getItem();
+					if (!extractorItem.doesItemPassExtractionFilter(attachment, extractedItem, this)) {
+						continue;
+					}
 
-				// If the extracted item is empty, continue.
-				if (extractedItem.isEmpty()) {
-					continue;
+					// Attempt to transfer the itemstack through the cable network.
+					ItemStack remainingAmount = network.transferItemStack(extractedItem, getPos(), side, false);
+					if (remainingAmount.getCount() < extractedItem.getCount()) {
+						inv.extractItem(i, extractedItem.getCount() - remainingAmount.getCount(), false);
+						getTileEntity().markDirty();
+						break;
+					}
 				}
-
-				// Skip any items that are not supported by the extraction filter.
-				ExtractorAttachment extractorItem = (ExtractorAttachment) attachment.getItem();
-				if (!extractorItem.doesItemPassExtractionFilter(attachment, extractedItem, this)) {
-					continue;
-				}
-
-				// Attempt to transfer the itemstack through the cable network.
-				ItemStack remainingAmount = itemNetworkModule.transferItemStack(extractedItem, getPos(), side, false);
-				if (remainingAmount.getCount() < extractedItem.getCount()) {
-					inv.extractItem(i, extractedItem.getCount() - remainingAmount.getCount(), false);
-					getTileEntity().markDirty();
-					break;
-				}
-			}
+			});
 		});
 	}
 
@@ -162,9 +171,9 @@ public class ItemCableComponent extends AbstractCableProviderComponent implement
 		// If true, connect. If not, check if there is a TE that we can connect to. If
 		// not, return non.
 		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(), blockPosition);
-		if (otherProvider != null && otherProvider.shouldConnectionToCable(this)) {
+		if (otherProvider != null && otherProvider.shouldConnectionToCable(this, side)) {
 			return CableConnectionState.CABLE;
-		} else if (getWorld().getTileEntity(blockPosition) != null) {
+		} else if (getWorld().getTileEntity(blockPosition) != null && otherProvider == null) {
 			TileEntity te = getWorld().getTileEntity(blockPosition);
 			if (te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).isPresent()) {
 				return CableConnectionState.TILE_ENTITY;
@@ -175,7 +184,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent implement
 
 	@Override
 	protected boolean canAttachAttachment(ItemStack attachment) {
-		return true;
+		return !attachment.isEmpty() && (attachment.getItem() instanceof ExtractorAttachment || attachment.getItem() instanceof FilterAttachment);
 	}
 
 	protected boolean incrementExtractionTimer(ItemStack extractorAttachment) {
@@ -274,17 +283,14 @@ public class ItemCableComponent extends AbstractCableProviderComponent implement
 			ItemStack insertStack = stack.copy();
 			insertStack.setCount(Math.min(stack.getCount(), getSlotLimit(slot)));
 
-			// Get the item network module.
-			CableNetwork network = CableNetworkManager.get(getWorld()).getCable(getPos()).getNetwork();
-			ItemNetworkModule itemNetworkModule = (ItemNetworkModule) network.getModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
-
-			// Attempt to insert the stack into the cable.
-			ItemStack remainingAmount = itemNetworkModule.transferItemStack(insertStack, getPos(), lastCapabilityRequestedDirection, false);
-			if (remainingAmount.getCount() < insertStack.getCount()) {
-				getTileEntity().markDirty();
-				stack.setCount(stack.getCount() - insertStack.getCount() + remainingAmount.getCount());
-				return stack;
-			}
+			getItemNetworkModule().ifPresent(network -> {
+				// Attempt to insert the stack into the cable.
+				ItemStack remainingAmount = network.transferItemStack(insertStack, getPos(), lastCapabilityRequestedDirection, false);
+				if (remainingAmount.getCount() < insertStack.getCount()) {
+					getTileEntity().markDirty();
+					stack.setCount(stack.getCount() - insertStack.getCount() + remainingAmount.getCount());
+				}
+			});
 		}
 		return stack;
 	}
@@ -302,5 +308,23 @@ public class ItemCableComponent extends AbstractCableProviderComponent implement
 	@Override
 	public boolean isItemValid(int slot, ItemStack stack) {
 		return true;
+	}
+
+	/**
+	 * Gets the item network module for the network this cable belongs to. We have
+	 * to wrap it in an optional because while we can guarantee once this component
+	 * is validated that the network is valid, since this component exposes external
+	 * methods, other tile entity that are made valid before us may call some of our
+	 * methods.
+	 * 
+	 * @return
+	 */
+	protected Optional<ItemNetworkModule> getItemNetworkModule() {
+		CableNetworkManager manager = CableNetworkManager.get(getTileEntity().getWorld());
+		ServerCable cable = manager.getCable(getTileEntity().getPos());
+		if (cable.getNetwork() != null) {
+			return Optional.of(cable.getNetwork().getModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE));
+		}
+		return Optional.empty();
 	}
 }

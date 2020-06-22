@@ -55,8 +55,9 @@ public class TileEntityLumberMill extends TileEntityMachine {
 
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory, this::inputServoFilter, 0));
 		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory, 0, 1, 2));
-		registerComponent(new BatteryComponent("BatteryComponent", internalInventory, 0, energyStorage.getStorage()));
-		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000));
+		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, MachineSideMode.Output));
+		fluidTankComponent.setCanFill(false);
 	}
 
 	@Override
@@ -111,7 +112,7 @@ public class TileEntityLumberMill extends TileEntityMachine {
 				if (SDMath.diceRoll(recipe.getSecondaryOutput().getPercentage())) {
 					outputInventory.insertItem(1, recipe.getSecondaryOutput().getItem().copy(), false);
 				}
-				fluidTankComponent.getTank().fill(recipe.getOutputFluid(), FluidAction.EXECUTE);
+				fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.EXECUTE);
 
 				internalInventory.setStackInSlot(0, ItemStack.EMPTY);
 				markTileEntityForSynchronization();
@@ -153,7 +154,7 @@ public class TileEntityLumberMill extends TileEntityMachine {
 			return false;
 		} else if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 1, recipe.getSecondaryOutput().getItem())) {
 			return false;
-		} else if (fluidTankComponent.getTank().fill(recipe.getOutputFluid(), FluidAction.SIMULATE) != recipe.getOutputFluid().getAmount()) {
+		} else if (fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.SIMULATE) != recipe.getOutputFluid().getAmount()) {
 			return false;
 		}
 		return true;

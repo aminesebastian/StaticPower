@@ -15,8 +15,8 @@ public class ArrowProgressBar extends AbstractProgressBar {
 	@Override
 	public void renderBackground(int mouseX, int mouseY, float partialTicks) {
 		if (machineProcessingComponent != null) {
-			if (lastValue != machineProcessingComponent.getProcessingTimeRemaining()) {
-				lastValue = machineProcessingComponent.getProcessingTimeRemaining();
+			if (lastValue != machineProcessingComponent.getCurrentProcessingTime()) {
+				lastValue = machineProcessingComponent.getCurrentProcessingTime();
 				interp = lastValue;
 			}
 			if (machineProcessingComponent.isProcessing() && interp < lastValue) {
@@ -24,14 +24,25 @@ public class ArrowProgressBar extends AbstractProgressBar {
 				double perSecond = (partialTicks) / seconds;
 				interp += perSecond;
 			}
-			Vector2D screenSpacePosition = this.getScreenSpacePosition();
-			float adjustedProgress = 0.6875f * interp / (float) machineProcessingComponent.getProcessingTime();
-
-			Minecraft.getInstance().getTextureManager().bindTexture(GuiTextures.ARROW_PROGRESS_BAR);
-			GlStateManager.enableBlend();
-			GuiDrawUtilities.drawTexturedModalRect(screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY(), 0, 0.5f, 1.0f, 1.0f);
-			GuiDrawUtilities.drawTexturedModalRect(screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX() * adjustedProgress, getSize().getY(), 0, 0, adjustedProgress, 0.5f);
-			GlStateManager.disableBlend();
+		} else {
+			if (lastValue != currentProgress) {
+				lastValue = currentProgress;
+				interp = lastValue;
+			}
+			if (interp < lastValue) {
+				double seconds = maxProgress / 20.0;
+				double perSecond = (partialTicks) / seconds;
+				interp += perSecond;
+			}
 		}
+
+		Vector2D screenSpacePosition = this.getScreenSpacePosition();
+		float adjustedProgress = 0.6875f * interp / (float) maxProgress;
+
+		Minecraft.getInstance().getTextureManager().bindTexture(GuiTextures.ARROW_PROGRESS_BAR);
+		GlStateManager.enableBlend();
+		GuiDrawUtilities.drawTexturedModalRect(screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY(), 0, 0.5f, 1.0f, 1.0f);
+		GuiDrawUtilities.drawTexturedModalRect(screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX() * adjustedProgress, getSize().getY(), 0, 0, adjustedProgress, 0.5f);
+		GlStateManager.disableBlend();
 	}
 }

@@ -47,6 +47,14 @@ public class Path {
 		return DestinationLocation;
 	}
 
+	public BlockPos getFinalCablePosition() {
+		return Path[Path.length - 2].getPosition();
+	}
+
+	public Direction getFinalCableExitDirection() {
+		return Path[Path.length - 2].getDirectionOfEntry();
+	}
+
 	public PathEntry[] getEntries() {
 		return Path;
 	}
@@ -91,7 +99,7 @@ public class Path {
 		 * The direction to approach this entry to. Meaning, if you are traversing the
 		 * network, and you are at the cable before this entry, this is the direction
 		 * you must travel to arrive at this cable, NOT the direction from which a
-		 * traverser will approach this cable.
+		 * traverser will approach this cable/destination.
 		 * 
 		 * @return
 		 */

@@ -42,13 +42,15 @@ public class PacketCableAttachmentRedstoneSync extends NetworkMessage {
 
 	@Override
 	public void handle(Supplier<Context> context) {
-		AbstractCableProviderComponent cableComponent = CableUtilities.getCableWrapperComponent(context.get().getSender().world, position);
-
-		if (cableComponent != null) {
-			if (!cableComponent.getAttachment(attachmentSide).isEmpty()) {
-				AbstractCableAttachment attachmentItem = (AbstractCableAttachment) cableComponent.getAttachment(attachmentSide).getItem();
-				attachmentItem.setRedstoneMode(cableComponent.getAttachment(attachmentSide), redstoneMode, cableComponent);
+		context.get().enqueueWork(() -> {
+			AbstractCableProviderComponent cableComponent = CableUtilities.getCableWrapperComponent(context.get().getSender().world, position);
+	
+			if (cableComponent != null) {
+				if (!cableComponent.getAttachment(attachmentSide).isEmpty()) {
+					AbstractCableAttachment attachmentItem = (AbstractCableAttachment) cableComponent.getAttachment(attachmentSide).getItem();
+					attachmentItem.setRedstoneMode(cableComponent.getAttachment(attachmentSide), redstoneMode, cableComponent);
+				}
 			}
-		}
+		});
 	}
 }

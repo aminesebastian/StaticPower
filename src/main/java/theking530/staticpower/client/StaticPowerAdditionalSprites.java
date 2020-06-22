@@ -9,7 +9,7 @@ public class StaticPowerAdditionalSprites {
 	public static final HashSet<ResourceLocation> SPRITES = new HashSet<ResourceLocation>();
 
 	public static final ResourceLocation BLANK_TEXTURE = registerSprite("blank_texture");
-	
+
 	public static final ResourceLocation DIGISTORE_VOID_INDICATOR = registerSprite("blocks/digistore/void_indicator");
 	public static final ResourceLocation DIGISTORE_LOCKED_INDICATOR = registerSprite("blocks/digistore/locked_indicator");
 	public static final ResourceLocation DIGISTORE_FILL_BAR = registerSprite("blocks/digistore/digistore_fill_bar");
@@ -25,6 +25,11 @@ public class StaticPowerAdditionalSprites {
 	public static final ResourceLocation MACHINE_SIDE_INPUT = registerSprite("blocks/machines/machine_side_input");
 	public static final ResourceLocation MACHINE_SIDE_OUTPUT = registerSprite("blocks/machines/machine_side_output");
 	public static final ResourceLocation MACHINE_SIDE_DISABLED = registerSprite("blocks/machines/machine_side_disabled");
+
+	public static final ResourceLocation GREEN_MACHINE_SIDE_NORMAL = registerSprite("blocks/machines/farmer_side");
+	public static final ResourceLocation GREEN_MACHINE_SIDE_INPUT = registerSprite("blocks/machines/farmer_side_input");
+	public static final ResourceLocation GREEN_MACHINE_SIDE_OUTPUT = registerSprite("blocks/machines/farmer_side_output");
+	public static final ResourceLocation GREEN_MACHINE_SIDE_DISABLED = registerSprite("blocks/machines/farmer_side_disabled");
 
 	private static ResourceLocation registerSprite(String path) {
 		ResourceLocation sprite = new ResourceLocation(Reference.MOD_ID, path);

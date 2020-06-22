@@ -14,13 +14,16 @@ import theking530.staticpower.blocks.StaticPowerRotatePillarBlock;
 import theking530.staticpower.blocks.crops.BaseSimplePlant;
 import theking530.staticpower.blocks.decorative.Lamp;
 import theking530.staticpower.blocks.decorative.StaticPowerGlassBlock;
+import theking530.staticpower.tileentities.cables.fluid.BlockFluidCable;
 import theking530.staticpower.tileentities.cables.item.BlockItemCable;
 import theking530.staticpower.tileentities.cables.power.BlockPowerCable;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.BlockDigistore;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.ioport.BlockDigistoreIOPort;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.BlockDigistoreManager;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.networkwire.BlockDigistoreNetworkWire;
+import theking530.staticpower.tileentities.nonpowered.tank.BlockTank;
 import theking530.staticpower.tileentities.nonpowered.vacuumchest.BlockVacuumChest;
+import theking530.staticpower.tileentities.powered.basicfarmer.BlockBasicFarmer;
 import theking530.staticpower.tileentities.powered.chargingstation.BlockChargingStation;
 import theking530.staticpower.tileentities.powered.lumbermill.BlockLumberMill;
 import theking530.staticpower.tileentities.powered.poweredfurnace.BlockPoweredFurnace;
@@ -74,16 +77,18 @@ public class ModBlocks {
 	public static BlockPoweredFurnace PoweredFurnace;
 	public static BlockPoweredGrinder PoweredGrinder;
 	public static BlockLumberMill LumberMill;
-	
+	public static BlockBasicFarmer BasicFarmer;
+	public static BlockTank Tank;
+
 	public static BlockDigistoreNetworkWire DigistoreWire;
 	public static BlockDigistoreManager DigistoreManager;
 	public static BlockDigistoreIOPort DigistoreIOPort;
 	public static BlockDigistore Digistore;
 
-	
 	// Cables
 	public static BlockItemCable ItemCable;
 	public static BlockPowerCable PowerCable;
+	public static BlockFluidCable FluidCable;
 
 	public static void init() {
 		// Decorative
@@ -131,7 +136,9 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(PoweredFurnace = new BlockPoweredFurnace("machine_powered_furnace"));
 		StaticPowerRegistry.preRegisterBlock(PoweredGrinder = new BlockPoweredGrinder("machine_powered_grinder"));
 		StaticPowerRegistry.preRegisterBlock(LumberMill = new BlockLumberMill("machine_lumber_mill"));
-		
+		StaticPowerRegistry.preRegisterBlock(BasicFarmer = new BlockBasicFarmer("machine_basic_farmer"));
+		StaticPowerRegistry.preRegisterBlock(Tank = new BlockTank("tank"));
+
 		StaticPowerRegistry.preRegisterBlock(DigistoreWire = new BlockDigistoreNetworkWire("digistore_wire"));
 		StaticPowerRegistry.preRegisterBlock(DigistoreManager = new BlockDigistoreManager("digistore_manager"));
 		StaticPowerRegistry.preRegisterBlock(DigistoreIOPort = new BlockDigistoreIOPort("digistore_io_port"));
@@ -140,5 +147,6 @@ public class ModBlocks {
 		// Cables
 		StaticPowerRegistry.preRegisterBlock(PowerCable = new BlockPowerCable("cable_power"));
 		StaticPowerRegistry.preRegisterBlock(ItemCable = new BlockItemCable("cable_item"));
+		StaticPowerRegistry.preRegisterBlock(FluidCable = new BlockFluidCable("cable_fluid"));
 	}
 }

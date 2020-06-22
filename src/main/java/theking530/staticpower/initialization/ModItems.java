@@ -6,6 +6,7 @@ import theking530.staticpower.items.StaticPowerEnergyStoringItem;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.items.book.StaticPowerBook;
 import theking530.staticpower.items.cableattachments.extractor.ExtractorAttachment;
+import theking530.staticpower.items.cableattachments.filter.FilterAttachment;
 import theking530.staticpower.items.crops.DepletedCrop;
 import theking530.staticpower.items.crops.StaticPlantCrop;
 import theking530.staticpower.items.crops.StaticPlantSeeds;
@@ -204,6 +205,12 @@ public class ModItems {
 	public static ExtractorAttachment EnergizedExtractorAttachment;
 	public static ExtractorAttachment LumumExtractorAttachment;
 
+	public static FilterAttachment BasicFilterAttachment;
+	public static FilterAttachment AdvancedFilterAttachment;
+	public static FilterAttachment StaticFilterAttachment;
+	public static FilterAttachment EnergizedFilterAttachment;
+	public static FilterAttachment LumumFilterAttachment;
+
 	public static void init() {
 		// Book
 		StaticPowerRegistry.preRegisterItem(StaticPowerBook = new StaticPowerBook("tutorial_book"));
@@ -399,7 +406,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(NuggetBronze = new StaticPowerItem("nugget_bronze"));
 
 		StaticPowerRegistry
-				.preRegisterItem(BasicExtractorAttachment = new ExtractorAttachment("cable_attachment_basic_extractor", 40, 1, StaticPowerAdditionalModels.CABLE_BASIC_EXTRACTOR_ATTACHMENT));
+				.preRegisterItem(BasicExtractorAttachment = new ExtractorAttachment("cable_attachment_basic_extractor", 40, 4, StaticPowerAdditionalModels.CABLE_BASIC_EXTRACTOR_ATTACHMENT));
 		StaticPowerRegistry
 				.preRegisterItem(AdvancedExtractorAttachment = new ExtractorAttachment("cable_attachment_advanced_extractor", 40, 8, StaticPowerAdditionalModels.CABLE_ADVANCED_EXTRACTOR_ATTACHMENT));
 		StaticPowerRegistry
@@ -408,5 +415,11 @@ public class ModItems {
 				EnergizedExtractorAttachment = new ExtractorAttachment("cable_attachment_energized_extractor", 20, 32, StaticPowerAdditionalModels.CABLE_ENERGIZED_EXTRACTOR_ATTACHMENT));
 		StaticPowerRegistry
 				.preRegisterItem(LumumExtractorAttachment = new ExtractorAttachment("cable_attachment_lumum_extractor", 20, 64, StaticPowerAdditionalModels.CABLE_LUMUM_EXTRACTOR_ATTACHMENT));
+
+		StaticPowerRegistry.preRegisterItem(BasicFilterAttachment = new FilterAttachment("cable_attachment_basic_filter", 3, StaticPowerAdditionalModels.CABLE_BASIC_FILTER_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(AdvancedFilterAttachment = new FilterAttachment("cable_attachment_advanced_filter", 5, StaticPowerAdditionalModels.CABLE_ADVANCED_FILTER_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(StaticFilterAttachment = new FilterAttachment("cable_attachment_static_filter", 7, StaticPowerAdditionalModels.CABLE_STATIC_FILTER_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(EnergizedFilterAttachment = new FilterAttachment("cable_attachment_energized_filter", 9, StaticPowerAdditionalModels.CABLE_ENERGIZED_FILTER_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(LumumFilterAttachment = new FilterAttachment("cable_attachment_lumum_filter", 12, StaticPowerAdditionalModels.CABLE_LUMUM_FILTER_ATTACHMENT));
 	}
 }

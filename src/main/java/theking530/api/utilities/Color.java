@@ -43,6 +43,10 @@ public class Color extends Vector4D {
 
 	}
 
+	public static Color fromEncodedInteger(int input) {
+		return new Color((input >> 16 & 0xFF), (input >> 8 & 0xFF), (input & 0xFF), (input >> 24 & 0xFF));
+	}
+
 	/**
 	 * Encodes the 4 8 bit values for color (RGBA) into a single 32bit integer. This
 	 * requires that all values are less than or equal to 255. Float values are cast

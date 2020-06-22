@@ -182,7 +182,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		if (Attachments[side.ordinal()].isEmpty()) {
 			Attachments[side.ordinal()] = attachment.copy();
 			Attachments[side.ordinal()].setCount(1);
-			
+
 			// Raise the on added method on the attachment.
 			AbstractCableAttachment attachmentItem = (AbstractCableAttachment) Attachments[side.ordinal()].getItem();
 			attachmentItem.onAddedToCable(Attachments[side.ordinal()], this);
@@ -260,7 +260,10 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		return CableNetworkManager.get(getWorld()).getCable(getPos()).getNetwork();
 	}
 
-	public boolean shouldConnectionToCable(AbstractCableProviderComponent otherProvider) {
+	public boolean shouldConnectionToCable(AbstractCableProviderComponent otherProvider, Direction side) {
+		if (otherProvider.hasAttachment(side) || this.hasAttachment(side.getOpposite())) {
+			return false;
+		}
 		for (ResourceLocation moduleType : otherProvider.getSupportedNetworkModuleTypes()) {
 			if (SupportedNetworkModules.contains(moduleType)) {
 				return true;

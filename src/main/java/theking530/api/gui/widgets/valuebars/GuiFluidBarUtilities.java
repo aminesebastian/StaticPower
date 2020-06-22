@@ -31,13 +31,20 @@ public class GuiFluidBarUtilities {
 	}
 
 	public static void drawFluidBar(FluidStack fluid, int capacity, int amount, float x, float y, float zLevel, float width, float height, MachineSideMode mode, boolean drawOverlay) {
-		if (mode != null) {
+		if (mode != null && mode != MachineSideMode.Regular && mode != MachineSideMode.Never) {
 			GuiDrawUtilities.drawSlot((int) x, (int) (y - height), (int) width, (int) height, mode.getColor());
 		} else {
 			GuiDrawUtilities.drawSlot((int) x, (int) (y - height), (int) width, (int) height);
 		}
 
 		if (fluid != null && fluid.getFluid() != null) {
+
+			FluidAttributes attributes = fluid.getFluid().getAttributes();
+			int fluidColor = attributes.getColor(fluid);
+			float r = (fluidColor >> 16 & 0xFF) / 255.0f;
+			float g = (fluidColor >> 8 & 0xFF) / 255.0f;
+			float b = (fluidColor & 0xFF) / 255.0f;
+			float a = (fluidColor >> 24 & 0xFF) / 255.0f;
 
 			TextureAtlasSprite icon = getStillFluidSprite(fluid);
 			if (icon != null) {
@@ -58,10 +65,10 @@ public class GuiFluidBarUtilities {
 					Tessellator tessellator = Tessellator.getInstance();
 					BufferBuilder tes = tessellator.getBuffer();
 					tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
-					tes.pos(x + width, y - yMin, zLevel).color(1.0f, 1.0f, 1.0f, 1.0f).tex(icon.getMaxU(), icon.getMinV()).endVertex();
-					tes.pos(x + width, y - yMax, zLevel).color(1.0f, 1.0f, 1.0f, 1.0f).tex(icon.getMaxU(), icon.getMinV() + (fillRatio * diffV)).endVertex();
-					tes.pos(x, y - yMax, zLevel).color(1.0f, 1.0f, 1.0f, 1.0f).tex(icon.getMinU(), icon.getMinV() + (fillRatio * diffV)).endVertex();
-					tes.pos(x, y - yMin, zLevel).color(1.0f, 1.0f, 1.0f, 1.0f).tex(icon.getMinU(), icon.getMinV()).endVertex();
+					tes.pos(x + width, y - yMin, zLevel).color(r, g, b, a).tex(icon.getMaxU(), icon.getMinV()).endVertex();
+					tes.pos(x + width, y - yMax, zLevel).color(r, g, b, a).tex(icon.getMaxU(), icon.getMinV() + (fillRatio * diffV)).endVertex();
+					tes.pos(x, y - yMax, zLevel).color(r, g, b, a).tex(icon.getMinU(), icon.getMinV() + (fillRatio * diffV)).endVertex();
+					tes.pos(x, y - yMin, zLevel).color(r, g, b, a).tex(icon.getMinU(), icon.getMinV()).endVertex();
 					tessellator.draw();
 				}
 			}
@@ -92,7 +99,8 @@ public class GuiFluidBarUtilities {
 		if (fluid != null && !fluid.isEmpty()) {
 			ITextComponent name = fluid.getDisplayName();
 			tooltip.add(name);
-			tooltip.add(new StringTextComponent(NumberFormat.getNumberInstance(Locale.US).format(fluidAmount) + "/" + NumberFormat.getNumberInstance(Locale.US).format(maxCapacity)).appendSibling(new TranslationTextComponent("gui.staticpower.millbuckets")));
+			tooltip.add(new StringTextComponent(NumberFormat.getNumberInstance(Locale.US).format(fluidAmount) + "/" + NumberFormat.getNumberInstance(Locale.US).format(maxCapacity))
+					.appendSibling(new TranslationTextComponent("gui.staticpower.millbuckets")));
 			return tooltip;
 		} else {
 			tooltip.add(new TranslationTextComponent("gui.staticpower.empty"));

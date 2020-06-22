@@ -47,11 +47,14 @@ public class TileEntityBasicSyncPacket extends NetworkMessage {
 
 	@Override
 	public void handle(Supplier<Context> ctx) {
-		TileEntity rawTileEntity = Minecraft.getInstance().player.world.getTileEntity(tileEntityPosition);
-		if (rawTileEntity != null && rawTileEntity instanceof TileEntityBase) {
-			TileEntityBase tileEntity = (TileEntityBase) rawTileEntity;
-			tileEntity.deserializeUpdateNbt(machineUpdateTag, true);
-		}
+		ctx.get().enqueueWork(() -> {
+			if (Minecraft.getInstance().player.world.isAreaLoaded(tileEntityPosition, 1)) {
+				TileEntity rawTileEntity = Minecraft.getInstance().player.world.getTileEntity(tileEntityPosition);
+				if (rawTileEntity != null && rawTileEntity instanceof TileEntityBase) {
+					TileEntityBase tileEntity = (TileEntityBase) rawTileEntity;
+					tileEntity.deserializeUpdateNbt(machineUpdateTag, true);
+				}
+			}
+		});
 	}
-
 }

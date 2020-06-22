@@ -25,7 +25,6 @@ public class GuiPowerBarUtilities {
 
 		return tooltip;
 	}
-
 	public static void drawPowerBar(float xpos, float ypos, float width, float height, float zLevel, int currentEnergy, int maxEnergy) {
 		float u1 = (float) currentEnergy / (float) maxEnergy;
 		float k1 = u1 * height;

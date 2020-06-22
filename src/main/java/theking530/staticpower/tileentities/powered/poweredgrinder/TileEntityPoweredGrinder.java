@@ -49,7 +49,7 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory, this::inputServoFilter, 0));
 		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory, 0, 1, 2));
-		registerComponent(new BatteryComponent("BatteryComponent", internalInventory, 0, energyStorage.getStorage()));
+		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
 	}
 
 	/**

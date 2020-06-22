@@ -1,12 +1,12 @@
 package theking530.staticpower.tileentities.cables.network.modules;
 
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import theking530.staticpower.energy.StaticPowerFEStorage;
 import theking530.staticpower.tileentities.cables.network.CableNetwork;
+import theking530.staticpower.tileentities.cables.network.DestinationWrapper;
 import theking530.staticpower.tileentities.cables.network.NetworkMapper;
 import theking530.staticpower.tileentities.cables.network.modules.factories.CableNetworkModuleTypes;
 
@@ -22,8 +22,8 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 	@Override
 	public void tick(World world) {
 		if (EnergyStorage.getEnergyStored() > 0) {
-			for (TileEntity te : Network.getGraph().getDestinations().values()) {
-				IEnergyStorage energyStorage = te.getCapability(CapabilityEnergy.ENERGY).orElse(null);
+			for (DestinationWrapper wrapper : Network.getGraph().getDestinations().values()) {
+				IEnergyStorage energyStorage = wrapper.getTileEntity().getCapability(CapabilityEnergy.ENERGY).orElse(null);
 				if (energyStorage != null) {
 					if (energyStorage.canReceive()) {
 						int supplied = energyStorage.receiveEnergy(EnergyStorage.getCurrentMaximumPowerOutput(), false);

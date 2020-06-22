@@ -8,18 +8,18 @@ import javax.annotation.Nonnull;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.FluidStack;
 import theking530.api.gui.GuiDrawUtilities;
 import theking530.api.gui.widgets.valuebars.GuiFluidBarUtilities;
+import theking530.api.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticpower.crafting.wrappers.lumbermill.LumberMillRecipe;
 import theking530.staticpower.initialization.ModBlocks;
-import theking530.staticpower.initialization.ModFluids;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.utilities.Reference;
@@ -69,10 +69,20 @@ public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRe
 
 	@Override
 	public void draw(LumberMillRecipe recipe, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(31, 19, 16, 16);
+		GuiDrawUtilities.drawSlot(41, 19, 16, 16);
 		GuiDrawUtilities.drawSlot(91, 19, 16, 16);
 		GuiDrawUtilities.drawSlot(121, 19, 16, 16);
-		GuiFluidBarUtilities.drawFluidBar(recipe.getOutputFluid(), 1000, recipe.getOutputFluid().getAmount(), 155, 54, 1.0f, 16, 48, MachineSideMode.Never, true);
+		GuiFluidBarUtilities.drawFluidBar(recipe.getOutputFluid(), 0, 0, 153, 54, 1.0f, 16, 48, MachineSideMode.Never, true);
+		GuiPowerBarUtilities.drawPowerBar(8, 54, 16, 48, 1.0f, 500, 1000);
+	}
+
+	@Override
+	public List<String> getTooltipStrings(LumberMillRecipe recipe, double mouseX, double mouseY) {
+		List<String> output = new ArrayList<String>();
+		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
+			output.add("Usage: " + recipe.getPowerCost() + "FE");
+		}
+		return output;
 	}
 
 	@Override
@@ -99,10 +109,13 @@ public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRe
 	@Override
 	public void setRecipe(IRecipeLayout recipeLayout, LumberMillRecipe recipe, IIngredients ingredients) {
 		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
-		guiItemStacks.init(INTPUT_SLOT, true, 30, 18);
+		guiItemStacks.init(INTPUT_SLOT, true, 40, 18);
 		guiItemStacks.init(PRIMARY_OUTPUT_SLOT, false, 90, 18);
 		guiItemStacks.init(SECONDARY_OUTPUT_SLOT, false, 120, 18);
 
+		IGuiFluidStackGroup fluids = recipeLayout.getFluidStacks();
+		fluids.init(3, false, 153, 6, 16, 48, 100, false, null);
 		guiItemStacks.set(ingredients);
+		fluids.set(ingredients);
 	}
 }

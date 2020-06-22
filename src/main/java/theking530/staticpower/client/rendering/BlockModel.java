@@ -19,6 +19,13 @@ public class BlockModel {
 	private static final Color DEFAULT_COLOR = new Color(1.0f, 1.0f, 1.0f);
 
 	public void drawPreviewCube(Vector3f position, Vector3f scale, Color tint, MatrixStack matrixStack) {
+		// Bind a blank texture.
+		@SuppressWarnings("deprecation")
+		TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(StaticPowerAdditionalSprites.BLANK_TEXTURE);
+		drawPreviewCube(position, scale, tint, matrixStack, sprite);
+	}
+
+	public void drawPreviewCube(Vector3f position, Vector3f scale, Color tint, MatrixStack matrixStack, TextureAtlasSprite sprite) {
 		// Get the buffer.
 		IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
 
@@ -27,13 +34,10 @@ public class BlockModel {
 		matrixStack.translate(position.getX(), position.getY(), position.getZ());
 		matrixStack.scale(scale.getX(), scale.getY(), scale.getZ());
 
+
 		// Get the vertex builder and set the color.
 		IVertexBuilder builder = buffer.getBuffer(RenderType.getTranslucent());
 		builder.color(tint.getRed(), tint.getBlue(), tint.getGreen(), tint.getAlpha());
-
-		// Bind a blank texture.
-		@SuppressWarnings("deprecation")
-		TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(StaticPowerAdditionalSprites.BLANK_TEXTURE);
 
 		// Draw each block side.
 		for (Direction dir : Direction.values()) {

@@ -46,6 +46,6 @@ public enum MachineSideMode {
 	}
 
 	public boolean isDisabledMode() {
-		return this == Disabled || this == Never;
+		return this == Disabled;
 	}
 }

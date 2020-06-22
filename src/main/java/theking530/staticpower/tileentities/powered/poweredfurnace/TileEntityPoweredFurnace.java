@@ -62,7 +62,7 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 
 		registerComponent(new InputServoComponent("InputServo", 4, inputInventory, 0));
 		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory, 0));
-		registerComponent(new BatteryComponent("BatteryComponent", internalInventory, 0, energyStorage.getStorage()));
+		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
 	}
 
 	/**

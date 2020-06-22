@@ -45,15 +45,17 @@ public class PacketItemFilter extends NetworkMessage {
 
 	@Override
 	public void handle(Supplier<Context> context) {
-		ItemStack heldItem = Minecraft.getInstance().player.getHeldItem(Hand.MAIN_HAND);
-		if (!heldItem.isEmpty() && heldItem.getItem() instanceof ItemFilter) {
-			heldItem.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((IItemHandler handler) -> {
-				InventoryItemFilter filterInv = (InventoryItemFilter) handler;
-				filterInv.setWhiteListMode(WHITE_LIST_MODE);
-				filterInv.setMatchMetadata(MATCH_METADATA);
-				filterInv.setMatchNBT(MATCH_NBT);
-				filterInv.setMatchMetadata(MATCH_ORE_DICT);
-			});
-		}
+		context.get().enqueueWork(() -> {
+			ItemStack heldItem = Minecraft.getInstance().player.getHeldItem(Hand.MAIN_HAND);
+			if (!heldItem.isEmpty() && heldItem.getItem() instanceof ItemFilter) {
+				heldItem.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((IItemHandler handler) -> {
+					InventoryItemFilter filterInv = (InventoryItemFilter) handler;
+					filterInv.setWhiteListMode(WHITE_LIST_MODE);
+					filterInv.setMatchMetadata(MATCH_METADATA);
+					filterInv.setMatchNBT(MATCH_NBT);
+					filterInv.setMatchMetadata(MATCH_ORE_DICT);
+				});
+			}
+		});
 	}
 }

@@ -4,12 +4,16 @@ import net.minecraft.inventory.container.ContainerType;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.items.cableattachments.extractor.ContainerExtractor;
 import theking530.staticpower.items.cableattachments.extractor.GuiExtractor;
+import theking530.staticpower.items.cableattachments.filter.ContainerFilter;
+import theking530.staticpower.items.cableattachments.filter.GuiFilter;
 import theking530.staticpower.items.itemfilter.ContainerItemFilter;
 import theking530.staticpower.items.itemfilter.GuiItemFilter;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.ContainerDigistore;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.GuiDigistore;
 import theking530.staticpower.tileentities.nonpowered.vacuumchest.ContainerVacuumChest;
 import theking530.staticpower.tileentities.nonpowered.vacuumchest.GuiVacuumChest;
+import theking530.staticpower.tileentities.powered.basicfarmer.ContainerBasicFarmer;
+import theking530.staticpower.tileentities.powered.basicfarmer.GuiBasicFarmer;
 import theking530.staticpower.tileentities.powered.chargingstation.ContainerChargingStation;
 import theking530.staticpower.tileentities.powered.chargingstation.GuiChargingStation;
 import theking530.staticpower.tileentities.powered.lumbermill.ContainerLumberMill;
@@ -26,9 +30,11 @@ public class ModContainerTypes {
 	public static ContainerType<ContainerPoweredFurnace> POWERED_FURNACE_CONTAINER;
 	public static ContainerType<ContainerPoweredGrinder> POWERED_GRINDER_CONTAINER;
 	public static ContainerType<ContainerLumberMill> LUMBER_MILL_CONTAINER;
+	public static ContainerType<ContainerBasicFarmer> BASIC_FARMER_CONTAINER;
 	
 	public static ContainerType<ContainerDigistore> DIGISTORE_CONTAINER;
 	public static ContainerType<ContainerExtractor> EXTRACTOR_CONTAINER;
+	public static ContainerType<ContainerFilter> FILTER_CONTAINER;
 	
 	public static void init() {
 		VACUUM_CHEST_CONTAINER = StaticPowerRegistry.preRegisterContainer("chest_vacuum", ContainerVacuumChest::new, GuiVacuumChest::new);
@@ -37,8 +43,10 @@ public class ModContainerTypes {
 		POWERED_FURNACE_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_powered_furnace", ContainerPoweredFurnace::new, GuiPoweredFurnace::new);
 		POWERED_GRINDER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_powered_grinder", ContainerPoweredGrinder::new, GuiPoweredGrinder::new);
 		LUMBER_MILL_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_lumber_mill", ContainerLumberMill::new, GuiLumberMill::new);
+		BASIC_FARMER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_basic_farmer", ContainerBasicFarmer::new, GuiBasicFarmer::new);
 		
 		DIGISTORE_CONTAINER = StaticPowerRegistry.preRegisterContainer("digistore", ContainerDigistore::new, GuiDigistore::new);
 		EXTRACTOR_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_extractor", ContainerExtractor::new, GuiExtractor::new);
+		FILTER_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_filter", ContainerFilter::new, GuiFilter::new);
 	}
 }

@@ -16,6 +16,7 @@ import net.minecraft.util.ResourceLocation;
 import theking530.staticpower.client.gui.StaticPowerContainerGui;
 import theking530.staticpower.integration.JEI.lumbermill.JEILumberMillRecipeHandler;
 import theking530.staticpower.integration.JEI.lumbermill.LumberMillRecipeCategory;
+import theking530.staticpower.tileentities.powered.lumbermill.GuiLumberMill;
 import theking530.staticpower.utilities.Reference;
 
 @JeiPlugin
@@ -27,6 +28,7 @@ public class PluginJEI implements IModPlugin {
 	@Override
 	public void registerGuiHandlers(IGuiHandlerRegistration registration) {
 		registration.addGuiContainerHandler(StaticPowerContainerGui.class, new JEITabSlotAdjuster());
+		registration.addRecipeClickArea(GuiLumberMill.class, 59, 32, 32, 16, LumberMillRecipeCategory.LUMBER_MILL_UID);
 	}
 
 	@SuppressWarnings("unused")

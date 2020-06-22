@@ -24,7 +24,7 @@ public class GuiLumberMill extends StaticPowerTileEntityGui<ContainerLumberMill,
 	@Override
 	public void initializeGui() {
 		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 48));
-		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent.getTank(), 150, 8, 16, 60, MachineSideMode.Output, getTileEntity()));
+		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 150, 8, 16, 60, MachineSideMode.Output, getTileEntity()));
 		registerWidget(new ArrowProgressBar(59, 32, 32, 16).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));

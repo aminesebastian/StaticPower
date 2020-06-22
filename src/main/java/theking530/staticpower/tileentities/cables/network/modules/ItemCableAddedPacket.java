@@ -41,12 +41,13 @@ public class ItemCableAddedPacket extends NetworkMessage {
 
 	@Override
 	public void handle(Supplier<Context> ctx) {
-		TileEntity rawTileEntity = Minecraft.getInstance().player.world.getTileEntity(tileEntityPosition);
-		if (rawTileEntity != null && rawTileEntity instanceof TileEntityBase) {
-			TileEntityBase tileEntity = (TileEntityBase) rawTileEntity;
-			ItemCableComponent cableComponent = tileEntity.getComponent(ItemCableComponent.class);
-			cableComponent.addTransferingItem(ItemRoutingParcelClient.create(parcelNbt));
-		}
+		ctx.get().enqueueWork(() -> {
+			TileEntity rawTileEntity = Minecraft.getInstance().player.world.getTileEntity(tileEntityPosition);
+			if (rawTileEntity != null && rawTileEntity instanceof TileEntityBase) {
+				TileEntityBase tileEntity = (TileEntityBase) rawTileEntity;
+				ItemCableComponent cableComponent = tileEntity.getComponent(ItemCableComponent.class);
+				cableComponent.addTransferingItem(ItemRoutingParcelClient.create(parcelNbt));
+			}
+		});
 	}
-
 }

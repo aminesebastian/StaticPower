@@ -73,10 +73,6 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		return processingTime;
 	}
 
-	public int getProcessingTimeRemaining() {
-		return currentProcessingTime;
-	}
-
 	public int getProgressScaled(int scaleValue) {
 		return (int) (((float) (currentProcessingTime) / processingTime) * scaleValue);
 	}

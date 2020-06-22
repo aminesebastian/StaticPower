@@ -4,7 +4,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import theking530.staticpower.blocks.ICustomModelSupplier;
-import theking530.staticpower.client.rendering.blocks.MachineBakedModel;
+import theking530.staticpower.client.rendering.blocks.DefaultMachineBakedModel;
 
 public abstract class StaticPowerDefaultMachineBlock extends StaticPowerTileEntityBlock implements ICustomModelSupplier {
 
@@ -19,6 +19,6 @@ public abstract class StaticPowerDefaultMachineBlock extends StaticPowerTileEnti
 
 	@Override
 	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
-		return new MachineBakedModel(existingModel);
+		return new DefaultMachineBakedModel(existingModel);
 	}
 }

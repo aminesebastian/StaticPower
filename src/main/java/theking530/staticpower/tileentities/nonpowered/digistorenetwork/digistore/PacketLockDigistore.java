@@ -34,11 +34,13 @@ public class PacketLockDigistore extends NetworkMessage {
 
 	@Override
 	public void handle(Supplier<Context> context) {
-		TileEntity rawTileEntity = context.get().getSender().world.getTileEntity(tePosition);
+		context.get().enqueueWork(() -> {
+			TileEntity rawTileEntity = context.get().getSender().world.getTileEntity(tePosition);
 
-		if (rawTileEntity != null && rawTileEntity instanceof TileEntityDigistore) {
-			TileEntityDigistore digistore = (TileEntityDigistore) rawTileEntity;
-			digistore.setLocked(isLocked);
-		}
+			if (rawTileEntity != null && rawTileEntity instanceof TileEntityDigistore) {
+				TileEntityDigistore digistore = (TileEntityDigistore) rawTileEntity;
+				digistore.setLocked(isLocked);
+			}
+		});
 	}
 }

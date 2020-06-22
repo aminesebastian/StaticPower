@@ -107,9 +107,9 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	@Override
 	protected CableConnectionState cacheConnectionState(Direction side, BlockPos blockPosition) {
 		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(), blockPosition);
-		if (otherProvider != null && otherProvider.shouldConnectionToCable(this)) {
+		if (otherProvider != null && otherProvider.shouldConnectionToCable(this, side)) {
 			return CableConnectionState.CABLE;
-		} else if (getWorld().getTileEntity(blockPosition) != null) {
+		} else if (getWorld().getTileEntity(blockPosition) != null && otherProvider == null) {
 			TileEntity te = getWorld().getTileEntity(blockPosition);
 			if (te.getCapability(CapabilityEnergy.ENERGY, side.getOpposite()).isPresent()) {
 				return CableConnectionState.TILE_ENTITY;

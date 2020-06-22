@@ -54,15 +54,17 @@ public class PacketSideConfigTab extends NetworkMessage {
 
 	@Override
 	public void handle(Supplier<Context> context) {
-		TileEntity te = context.get().getSender().world.getTileEntity(position);
+		context.get().enqueueWork(() -> {
+			TileEntity te = context.get().getSender().world.getTileEntity(position);
 
-		if (te instanceof TileEntityBase) {
-			TileEntityBase tileEntity = (TileEntityBase) te;
-			if (!tileEntity.hasComponentOfType(SideConfigurationComponent.class)) {
-				return;
+			if (te instanceof TileEntityBase) {
+				TileEntityBase tileEntity = (TileEntityBase) te;
+				if (!tileEntity.hasComponentOfType(SideConfigurationComponent.class)) {
+					return;
+				}
+				SideConfigurationComponent sideComp = tileEntity.getComponent(SideConfigurationComponent.class);
+				sideComp.setWorldSpaceConfiguration(configuration);
 			}
-			SideConfigurationComponent sideComp = tileEntity.getComponent(SideConfigurationComponent.class);
-			sideComp.setWorldSpaceConfiguration(configuration);
-		}
+		});
 	}
 }

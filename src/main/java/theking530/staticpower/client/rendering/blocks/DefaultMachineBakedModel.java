@@ -33,11 +33,11 @@ import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.SideConfigurationComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
-public class MachineBakedModel extends AbstractBakedModel {
+public class DefaultMachineBakedModel extends AbstractBakedModel {
 
 	private static final ModelProperty<Optional<MachineSideMode[]>> SIDE_CONFIG = new ModelProperty<>();
 
-	public MachineBakedModel(IBakedModel baseModel) {
+	public DefaultMachineBakedModel(IBakedModel baseModel) {
 		super(baseModel);
 	}
 
@@ -75,23 +75,9 @@ public class MachineBakedModel extends AbstractBakedModel {
 		ImmutableList.Builder<BakedQuad> newQuads = new ImmutableList.Builder<BakedQuad>();
 
 		AtlasTexture blocksStitchedTextures = ModelLoader.instance().getSpriteMap().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-		TextureAtlasSprite sideSprite = null;
 
 		for (BakedQuad quad : baseQuads) {
-			switch (sideConfigurations.get()[side.ordinal()]) {
-			case Input:
-				sideSprite = blocksStitchedTextures.getSprite(StaticPowerAdditionalSprites.MACHINE_SIDE_INPUT);
-				break;
-			case Output:
-				sideSprite = blocksStitchedTextures.getSprite(StaticPowerAdditionalSprites.MACHINE_SIDE_OUTPUT);
-				break;
-			case Disabled:
-				sideSprite = blocksStitchedTextures.getSprite(StaticPowerAdditionalSprites.MACHINE_SIDE_DISABLED);
-				break;
-			default:
-				sideSprite = blocksStitchedTextures.getSprite(StaticPowerAdditionalSprites.MACHINE_SIDE_NORMAL);
-				break;
-			}
+			TextureAtlasSprite sideSprite = getSpriteForMachineSide(sideConfigurations.get()[side.ordinal()], blocksStitchedTextures);
 			if (sideConfigurations.get()[side.ordinal()] != MachineSideMode.Never) {
 				BlockFaceUV blockFaceUV = new BlockFaceUV(new float[] { 0.0f, 0.0f, 16.0f, 16.0f }, 0);
 				BlockPartFace blockPartFace = new BlockPartFace(null, -1, sideSprite.getName().toString(), blockFaceUV);
@@ -103,6 +89,19 @@ public class MachineBakedModel extends AbstractBakedModel {
 			}
 		}
 		return newQuads.build();
+	}
+
+	protected TextureAtlasSprite getSpriteForMachineSide(MachineSideMode mode, AtlasTexture blocksStitchedTextures) {
+		switch (mode) {
+		case Input:
+			return blocksStitchedTextures.getSprite(StaticPowerAdditionalSprites.MACHINE_SIDE_INPUT);
+		case Output:
+			return blocksStitchedTextures.getSprite(StaticPowerAdditionalSprites.MACHINE_SIDE_OUTPUT);
+		case Disabled:
+			return blocksStitchedTextures.getSprite(StaticPowerAdditionalSprites.MACHINE_SIDE_DISABLED);
+		default:
+			return blocksStitchedTextures.getSprite(StaticPowerAdditionalSprites.MACHINE_SIDE_NORMAL);
+		}
 	}
 
 	protected ModelDataMap getEmptyIModelData() {

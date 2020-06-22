@@ -29,6 +29,8 @@ import theking530.staticpower.tileentities.cables.item.ItemCableComponent;
 import theking530.staticpower.tileentities.cables.item.ItemRoutingParcel;
 import theking530.staticpower.tileentities.cables.network.CableNetwork;
 import theking530.staticpower.tileentities.cables.network.CableNetworkManager;
+import theking530.staticpower.tileentities.cables.network.DestinationWrapper;
+import theking530.staticpower.tileentities.cables.network.DestinationWrapper.DestinationType;
 import theking530.staticpower.tileentities.cables.network.modules.factories.CableNetworkModuleTypes;
 import theking530.staticpower.tileentities.cables.network.pathfinding.Path;
 import theking530.staticpower.utilities.InventoryUtilities;
@@ -248,12 +250,11 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 	 */
 	protected void rerouteOrTransferParcel(ItemRoutingParcel parcel) {
 		// First, remove this parcel from the current cable.
-		if(getItemCableComponentAtPosition(parcel.getCurrentEntry().getPosition()) != null) {
+		if (getItemCableComponentAtPosition(parcel.getCurrentEntry().getPosition()) != null) {
 			getItemCableComponentAtPosition(parcel.getCurrentEntry().getPosition()).removeTransferingItem(parcel.getId());
-		}else {
+		} else {
 			LOGGER.error(String.format("Encountered an invalid item cable at current parcel entry location: %1$s.", parcel.getCurrentEntry().getPosition()));
 		}
-
 
 		// Check if the parcel is still in this network. If it is, just reroute it or
 		// drop it. If not, transfer it to another network if possible. If not, drop it.
@@ -342,6 +343,25 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 	}
 
 	/**
+	 * Checks to see if we can insert into a destination through a cable. If false,
+	 * this means there is a filter on that cable, or the cable is actively
+	 * extracting as well.
+	 * 
+	 * @param stackToInsert
+	 * @param cablePosition
+	 * @param destinationSide
+	 * @return
+	 */
+	protected boolean canInsertThroughCable(ItemStack stackToInsert, BlockPos cablePosition, Direction destinationSide) {
+		ItemCableComponent cable = getItemCableComponentAtPosition(cablePosition);
+		if (cable == null) {
+			return false;
+		}
+
+		return cable.canInsertThroughSide(stackToInsert, destinationSide);
+	}
+
+	/**
 	 * Gets the item cable component at the provided position.
 	 * 
 	 * @param position
@@ -370,7 +390,11 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 		int shortestPathLength = Integer.MAX_VALUE;
 
 		// Iterate through all the destinations in the graph.
-		for (TileEntity dest : Network.getGraph().getDestinations().values()) {
+		for (DestinationWrapper dest : Network.getGraph().getDestinations().values()) {
+			// Skip any destinations that don't support item transfer.
+			if (!dest.supportsType(DestinationType.ITEM)) {
+				continue;
+			}
 			// Skip trying to go to the same position the item came from or is at.
 			if (dest.getPos().equals(sourcePosition)) {
 				continue;
@@ -389,10 +413,16 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 
 			// Iterate through all the paths to the proposed tile entity.
 			for (Path path : paths) {
+				// If we can't insert through that cable, skip this path.
+				if (!canInsertThroughCable(item, path.getFinalCablePosition(), path.getFinalCableExitDirection())) {
+					continue;
+				}
+
 				// If we're able to insert into that inventory, set the atomic boolean.
-				dest.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, path.getDestinationDirection().getOpposite()).ifPresent(inv -> {
+				dest.getTileEntity().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, path.getDestinationDirection().getOpposite()).ifPresent(inv -> {
 					isValid.set(InventoryUtilities.canPartiallyInsertItemIntoInventory(inv, item));
 				});
+
 				// If the atomic boolean is valid, then we have a valid path and we return it.
 				if (isValid.get()) {
 					if (path.getLength() < shortestPathLength) {

@@ -41,19 +41,21 @@ public class PacketRedstoneComponentSync extends NetworkMessage {
 
 	@Override
 	public void handle(Supplier<Context> context) {
-		TileEntity rawTileEntity = context.get().getSender().world.getTileEntity(position);
+		context.get().enqueueWork(() -> {
+			TileEntity rawTileEntity = context.get().getSender().world.getTileEntity(position);
 
-		if (rawTileEntity != null && rawTileEntity instanceof TileEntityBase) {
-			TileEntityBase tileEntity = (TileEntityBase) rawTileEntity;
+			if (rawTileEntity != null && rawTileEntity instanceof TileEntityBase) {
+				TileEntityBase tileEntity = (TileEntityBase) rawTileEntity;
 
-			// Ensure this tile entity is valid and has the requested component.
-			if (tileEntity.hasComponentOfType(RedstoneControlComponent.class)) {
-				// Get a reference to the redstone control component.
-				RedstoneControlComponent component = tileEntity.getComponent(RedstoneControlComponent.class, componentName);
+				// Ensure this tile entity is valid and has the requested component.
+				if (tileEntity.hasComponentOfType(RedstoneControlComponent.class)) {
+					// Get a reference to the redstone control component.
+					RedstoneControlComponent component = tileEntity.getComponent(RedstoneControlComponent.class, componentName);
 
-				// Set the mode.
-				component.setRedstoneMode(redstoneMode);
+					// Set the mode.
+					component.setRedstoneMode(redstoneMode);
+				}
 			}
-		}
+		});
 	}
 }

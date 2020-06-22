@@ -8,6 +8,9 @@ public abstract class AbstractProgressBar extends AbstractGuiWidget {
 	protected float interp;
 	protected MachineProcessingComponent machineProcessingComponent;
 
+	protected int currentProgress;
+	protected int maxProgress;
+
 	public AbstractProgressBar(float xPosition, float yPosition, float width, float height) {
 		super(xPosition, yPosition, width, height);
 		lastValue = 0;
@@ -16,6 +19,8 @@ public abstract class AbstractProgressBar extends AbstractGuiWidget {
 
 	public AbstractProgressBar bindToMachineProcessingComponent(MachineProcessingComponent component) {
 		machineProcessingComponent = component;
+		currentProgress = 0;
+		maxProgress = machineProcessingComponent.getProcessingTime();
 		return this;
 	}
 }

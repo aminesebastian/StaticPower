@@ -26,6 +26,7 @@ import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.StaticPowerAdditionalSprites;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderDigistore;
+import theking530.staticpower.client.rendering.tileentity.TileEntityRenderFluidCable;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderItemCable;
 import theking530.staticpower.initialization.ModTileEntityTypes;
 
@@ -61,6 +62,7 @@ public class StaticPowerClientEventHandler {
 		// Temp TESR
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.DIGISTORE, TileEntityRenderDigistore::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.ITEM_CABLE, TileEntityRenderItemCable::new);
+		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.FLUID_CABLE, TileEntityRenderFluidCable::new);
 
 		// Log the completion.
 		StaticPower.LOGGER.info("Static Power Client Setup Completed!");

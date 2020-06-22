@@ -2,7 +2,6 @@ package theking530.staticpower.tileentities.cables.network;
 
 import java.util.HashMap;
 
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import theking530.staticpower.tileentities.cables.ServerCable;
@@ -10,11 +9,11 @@ import theking530.staticpower.tileentities.cables.ServerCable;
 public class CableNetworkGraph {
 	private final CableNetwork Network;
 	private HashMap<BlockPos, ServerCable> Cables;
-	private HashMap<BlockPos, TileEntity> Destinations;
+	private HashMap<BlockPos, DestinationWrapper> Destinations;
 
 	public CableNetworkGraph(CableNetwork network) {
 		Cables = new HashMap<BlockPos, ServerCable>();
-		Destinations = new HashMap<BlockPos, TileEntity>();
+		Destinations = new HashMap<BlockPos, DestinationWrapper>();
 		Network = network;
 	}
 
@@ -22,7 +21,7 @@ public class CableNetworkGraph {
 		// Map the network.
 		NetworkMapper mapper = new NetworkMapper(Cables.values());
 		mapper.scanFromLocation(world, scanStartPosition);
-		
+
 		// Clear the old values.
 		Cables.clear();
 		Destinations.clear();
@@ -42,7 +41,7 @@ public class CableNetworkGraph {
 		return Cables;
 	}
 
-	public HashMap<BlockPos, TileEntity> getDestinations() {
+	public HashMap<BlockPos, DestinationWrapper> getDestinations() {
 		return Destinations;
 	}
 }
