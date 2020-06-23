@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.fluid.Fluid;
@@ -30,6 +31,7 @@ public class GuiFluidBarUtilities {
 		drawFluidBar(fluid, capacity, amount, x, y, zLevel, width, height, null, drawOverlay);
 	}
 
+	@SuppressWarnings("deprecation")
 	public static void drawFluidBar(FluidStack fluid, int capacity, int amount, float x, float y, float zLevel, float width, float height, MachineSideMode mode, boolean drawOverlay) {
 		if (mode != null && mode != MachineSideMode.Regular && mode != MachineSideMode.Never) {
 			GuiDrawUtilities.drawSlot((int) x, (int) (y - height), (int) width, (int) height, mode.getColor());
@@ -48,6 +50,8 @@ public class GuiFluidBarUtilities {
 
 			TextureAtlasSprite icon = getStillFluidSprite(fluid);
 			if (icon != null) {
+				Minecraft.getInstance().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+
 				float ratio = ((float) amount / (float) capacity);
 				float renderAmount = ratio * (float) height;
 

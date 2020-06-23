@@ -19,11 +19,12 @@ import theking530.staticpower.tileentities.components.InventoryComponent;
 import theking530.staticpower.tileentities.components.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.OutputServoComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
+import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityPoweredGrinder extends TileEntityMachine {
 	public static final int DEFAULT_PROCESSING_TIME = 100;
-	public static final int DEFAULT_PROCESSING_COST = 500;
+	public static final int DEFAULT_PROCESSING_COST = 1000;
 	public static final int DEFAULT_MOVING_TIME = 4;
 
 	public final InventoryComponent inputInventory;
@@ -38,7 +39,14 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 	public TileEntityPoweredGrinder() {
 		super(ModTileEntityTypes.POWERED_GRINDER);
 		this.disableFaceInteraction();
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input));
+
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
+			public boolean canInsertItem(int slot, ItemStack stack) {
+				return getRecipe(stack).isPresent();
+
+			}
+		}));
+
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1, MachineSideMode.Never));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 3, MachineSideMode.Output));
 		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
@@ -47,40 +55,27 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", DEFAULT_MOVING_TIME, this::movingCompleted));
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::processingCompleted));
 
-		registerComponent(new InputServoComponent("InputServo", 2, inputInventory, this::inputServoFilter, 0));
+		registerComponent(new InputServoComponent("InputServo", 2, inputInventory, 0));
 		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory, 0, 1, 2));
 		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
-	}
 
-	/**
-	 * Checks to see if the input item forms a valid recipe.
-	 * 
-	 * @return
-	 */
-	public boolean hasValidRecipe() {
-		return getRecipe(inputInventory.getStackInSlot(0)).isPresent();
-	}
-
-	/**
-	 * Checks if the provided itemstack forms a valid recipe.
-	 * 
-	 * @param itemStackInput The itemstack to check for.
-	 * @return
-	 */
-	public Optional<GrinderRecipe> getRecipe(ItemStack itemStackInput) {
-		return StaticPowerRecipeRegistry.getRecipe(GrinderRecipe.RECIPE_TYPE, new RecipeMatchParameters(itemStackInput).setStoredEnergy(energyStorage.getStorage().getEnergyStored()));
+		bonusOutputChance = 0.0f;
 	}
 
 	@Override
 	public void process() {
-		if (canStartProcess() && redstoneControlComponent.passesRedstoneCheck()) {
+		// If we're currently idle, start the move component.
+		if (!processingComponent.isProcessing() && !moveComponent.isProcessing() && canStartProcess() && redstoneControlComponent.passesRedstoneCheck()) {
 			moveComponent.startProcessing();
 		} else if (processingComponent.isProcessing()) {
-			if (!getRecipe(internalInventory.getStackInSlot(0)).isPresent()) {
+			// If we're processing, get the current recipe. If we have enough energy, keep
+			// going, otheriwse, pause processing.
+			GrinderRecipe recipe = getRecipe(internalInventory.getStackInSlot(0)).get();
+			if (energyStorage.getStorage().getEnergyStored() < recipe.getPowerCostPerTick()) {
 				processingComponent.pauseProcessing();
 			} else {
 				processingComponent.continueProcessing();
-				energyStorage.getStorage().extractEnergy(DEFAULT_PROCESSING_COST / DEFAULT_PROCESSING_TIME, false);
+				energyStorage.getStorage().extractEnergy(recipe.getPowerCostPerTick(), false);
 			}
 		}
 	}
@@ -88,7 +83,8 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 	/**
 	 * Once again, check to make sure the input item has not been removed or changed
 	 * since we started the move process. If still valid, move a single input item
-	 * to the internal inventory and being processing.
+	 * to the internal inventory and being processing. Return true regardless so the
+	 * movement component resets.
 	 * 
 	 * @return
 	 */
@@ -115,9 +111,9 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 			// Get the recipe.
 			GrinderRecipe recipe = getRecipe(internalInventory.getStackInSlot(0)).get();
 			// Ensure the output slots can take the recipe.
-			if (canOutputsTakeRecipeResult(recipe)) {
+			if (InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRawOutputItems())) {
 				// For each output, insert the contents into the output based on the percentage
-				// chance. The clear the internal inventory, mark for synchronozation, and
+				// chance. The clear the internal inventory, mark for synchronization, and
 				// return true.
 				for (ProbabilityItemStackOutput output : recipe.getOutputItems()) {
 					if (SDMath.diceRoll(output.getPercentage() + bonusOutputChance)) {
@@ -144,7 +140,7 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 			Optional<GrinderRecipe> recipe = getRecipe(inputInventory.getStackInSlot(0));
 
 			// If the items cannot be insert into the output, return false.
-			if (!canOutputsTakeRecipeResult(recipe.get())) {
+			if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.get().getRawOutputItems())) {
 				return false;
 			}
 
@@ -155,24 +151,22 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 	}
 
 	/**
-	 * Simple filter to check if the itemstack should be pulled in by the servo (if
-	 * enabled).
+	 * Checks to see if the input item forms a valid recipe.
 	 * 
-	 * @param stack
 	 * @return
 	 */
-	private boolean inputServoFilter(ItemStack stack) {
-		return getRecipe(stack).isPresent();
+	public boolean hasValidRecipe() {
+		return getRecipe(inputInventory.getStackInSlot(0)).isPresent();
 	}
 
 	/**
-	 * Ensure the output slots can take the results of the crafting.
+	 * Checks if the provided itemstack forms a valid recipe.
 	 * 
-	 * @param recipe
+	 * @param itemStackInput The itemstack to check for.
 	 * @return
 	 */
-	public boolean canOutputsTakeRecipeResult(GrinderRecipe recipe) {
-		return InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRawOutputItems());
+	public Optional<GrinderRecipe> getRecipe(ItemStack itemStackInput) {
+		return StaticPowerRecipeRegistry.getRecipe(GrinderRecipe.RECIPE_TYPE, new RecipeMatchParameters(itemStackInput));
 	}
 
 	@Override

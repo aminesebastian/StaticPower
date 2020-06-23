@@ -1,0 +1,17 @@
+{
+	"tierId": {
+		"namespace": "staticpower",
+		"path": "tier_lumum"
+	},
+	"unlocalizedTierName": "tier.staticpower.lumum",
+	"portableBatteryCapacity": 1000000,
+	"solarPanelPowerGeneration": 128,
+	"solarPanelPowerStorage": 512,
+	"cableExtractorRate": 20,
+	"cableExtractionStackSize": 64,
+	"cableExtractionFluidRate": 1024,
+	"cableExtractionFilterSize": 12,
+	"cableRetrievalRate": 20,
+	"cableRetrievalStackSize": 64,
+	"cableRetrievalFilterSize": 5
+}

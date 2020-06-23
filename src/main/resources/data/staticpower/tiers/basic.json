@@ -1,0 +1,17 @@
+{
+	"tierId": {
+		"namespace": "staticpower",
+		"path": "tier_basic"
+	},
+	"unlocalizedTierName": "tier.staticpower.basic",
+	"portableBatteryCapacity": 10000,
+	"solarPanelPowerGeneration": 8,
+	"solarPanelPowerStorage": 64,
+	"cableExtractorRate": 40,
+	"cableExtractionStackSize": 4,
+	"cableExtractionFluidRate": 32,
+	"cableExtractionFilterSize": 3,
+	"cableRetrievalRate": 40,
+	"cableRetrievalStackSize": 4,
+	"cableRetrievalFilterSize": 1
+}

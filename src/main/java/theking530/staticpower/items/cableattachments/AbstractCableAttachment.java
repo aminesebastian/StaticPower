@@ -47,20 +47,24 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 		return ActionResultType.PASS;
 	}
 
-	public void onAddedToCable(ItemStack attachment, AbstractCableProviderComponent cableComponent) {
+	public void onAddedToCable(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
 		if (!attachment.hasTag()) {
 			attachment.setTag(new CompoundNBT());
 		}
 		attachment.getTag().putInt("redstone_mode", RedstoneMode.High.ordinal());
 	}
 
-	public void onRemovedFromCable(ItemStack attachment, AbstractCableProviderComponent cableComponent) {
+	public void onRemovedFromCable(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
 		attachment.setTag(null);
 	}
 
-	public void setRedstoneMode(ItemStack attachment, RedstoneMode mode, AbstractCableProviderComponent cableComponent) {
+	public void attachmentTick(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
+
+	}
+
+	public void setRedstoneMode(ItemStack attachment, RedstoneMode mode, AbstractCableProviderComponent cable) {
 		attachment.getTag().putInt("redstone_mode", mode.ordinal());
-		cableComponent.getTileEntity().markDirty();
+		cable.getTileEntity().markDirty();
 	}
 
 	public RedstoneMode getRedstoneMode(ItemStack attachment) {

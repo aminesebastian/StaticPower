@@ -133,7 +133,7 @@ public class NetworkMapper {
 			// Make sure it is valid.
 			if (te != null && !te.isRemoved()) {
 				// Cache a destination wrapper for it.
-				DestinationWrapper wrapper = new DestinationWrapper(te, cable, facing.getOpposite());
+				DestinationWrapper wrapper = new DestinationWrapper(te, scanningCable.getPos(), facing.getOpposite());
 				Destinations.add(wrapper);
 			}
 			return false;

@@ -92,12 +92,6 @@ public class GuiItemFilter extends StaticPowerItemStackGui<ContainerItemFilter, 
 	@Override
 	protected void drawBackgroundExtras(float f, int i, int j) {
 		drawGenericBackground();
-		drawPlayerInventorySlots();
-
-		// Draw the filter slots.
-		int slotOffset = inventoryItemFilter.getFilterTier() == FilterTier.BASIC ? 3 : inventoryItemFilter.getFilterTier() == FilterTier.UPGRADED ? 1 : 0;
-		for (int k = 0; k < inventoryItemFilter.getFilterTier().getSlotCount(); k++) {
-			drawSlot(guiLeft + 8 + (k + slotOffset) * 18, guiTop + 19, 16, 16);
-		}
+		drawContainerSlots(container.inventorySlots);
 	}
 }

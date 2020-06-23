@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.annotation.Nullable;
 
@@ -27,6 +28,7 @@ import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.cables.ServerCable;
 import theking530.staticpower.tileentities.cables.item.ItemCableComponent;
 import theking530.staticpower.tileentities.cables.item.ItemRoutingParcel;
+import theking530.staticpower.tileentities.cables.item.RetrivalSourceWrapper;
 import theking530.staticpower.tileentities.cables.network.CableNetwork;
 import theking530.staticpower.tileentities.cables.network.CableNetworkManager;
 import theking530.staticpower.tileentities.cables.network.DestinationWrapper;
@@ -98,14 +100,6 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 		// Mark the network manager as dirty.
 		CableNetworkManager.get(Network.getWorld()).markDirty();
 
-		// Sanity check.
-		if (!Network.getGraph().getCables().containsKey(cablePosition)) {
-			// throw new RuntimeException(String.format("Attempted to transfer an item
-			// starting from a cable at location: %1$s that is not part of this network.",
-			// cablePosition));
-			System.out.println("HOW THIS HAPPEN: " + cablePosition);
-		}
-
 		// The source position can be null. This value is only used to not bounce items
 		// back to the inventory it came from IF it comes from one.
 		BlockPos sourcePosition = pulledFromDirection != null ? cablePosition.offset(pulledFromDirection) : null;
@@ -113,44 +107,70 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 		// Calculate the path and see if its not null.
 		Path path = getPathForItem(stack, cablePosition, sourcePosition);
 		if (path != null) {
-			// Get the destination inventory.
-			TileEntity destinationTe = Network.getWorld().getTileEntity(path.getDestinationLocation());
-			IItemHandler destInventory = destinationTe.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, path.getDestinationDirection().getOpposite()).orElse(null);
+			return routeItem(stack, path, pulledFromDirection, cablePosition, simulate);
+		}
+		return stack;
+	}
 
-			// Ensure the destination inventory is valid.
-			if (destInventory != null) {
-				// Simulate an insert.
-				ItemStack simulatedStack = simulateInsertWithPrediction(stack, destInventory, destinationTe.getPos());
+	/**
+	 * Retrieves an {@link ItemStack} from any inventory in the network. The
+	 * criteria for a matching {@link ItemStack} are Item, NBT, Damage, and
+	 * capabilities.
+	 * 
+	 * @param stack               The stack of item to retrieve. Count doesn't
+	 *                            matter.
+	 * @param maxExtract          The maximum amount to retrieve.
+	 * @param destinationPosition The destination to insert into.
+	 * @return True if we were able to retrieve, false otherwise.
+	 */
+	public boolean retrieveItemStack(ItemStack stack, int maxExtract, BlockPos destinationPosition) {
+		// Get all the destination wrappers that contain this item.
+		List<RetrivalSourceWrapper> sources = getSourcesForItemRetrieval(stack, destinationPosition);
+		if (sources.size() == 0) {
+			return false;
+		}
 
-				// If simulating, just return the simulated insert result.
-				if (simulate) {
-					return simulatedStack;
-				} else {
-					// If the count of the simulate stack is lower than the count of the actual
-					// stack, that means we were able to insert the in the amount of the difference
-					// between the two.
-					if (simulatedStack.getCount() < stack.getCount()) {
-						// Create the stack to be transfered and set its size to the difference.
-						ItemStack stackToTransfer = stack.copy();
-						stackToTransfer.setCount(stack.getCount() - simulatedStack.getCount());
+		// Preallocate the shortest values.
+		Path shortestPath = null;
+		int shortestPathLength = Integer.MAX_VALUE;
+		RetrivalSourceWrapper targetSource = null;
+		// Calculate the shortest path.
+		for (RetrivalSourceWrapper source : sources) {
+			// Get all the potential paths.
+			List<Path> paths = Network.getPathCache().getPaths(source.getDestinationWrapper().getConnectedCable(), destinationPosition, CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
 
-						// Create the new item routing packet and initialize it with the transfer speed
-						// of the cable it was pulled out of.
-						ItemRoutingParcel packet = new ItemRoutingParcel(CurrentPacketId, stackToTransfer, path, pulledFromDirection.getOpposite());
-						packet.setMovementSpeed(getItemCableComponentAtPosition(cablePosition).getTransferSpeed());
-
-						// Add the packet to the list of active packets.
-						addRoutingParcel(packet);
-
-						// Tell the cable component at the cable's location that it is transferring an
-						// item (for client rendering purposes only).
-						getItemCableComponentAtPosition(cablePosition).addTransferingItem(packet);
-						return simulatedStack;
-					}
+			// Iterate through all the paths to the proposed tile entity.
+			for (Path path : paths) {
+				if (path.getLength() < shortestPathLength) {
+					shortestPath = path;
+					shortestPathLength = path.getLength();
+					targetSource = source;
 				}
 			}
 		}
-		return stack;
+
+		// If we have a path, get the source inventory.
+		if (shortestPath != null) {
+			IItemHandler sourceInv = targetSource.getDestinationWrapper().getTileEntity()
+					.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, targetSource.getDestinationWrapper().getDestinationSide()).orElse(null);
+
+			// If the source inventory is valid.
+			if (sourceInv != null) {
+				// Simulate pulling the maximum amount we can extract.
+				ItemStack pulledAmount = sourceInv.extractItem(targetSource.getInventorySlot(), maxExtract, true);
+
+				// Attempt to route that amount, and return the actual amount routed.
+				ItemStack actuallyTransfered = routeItem(pulledAmount, shortestPath, targetSource.getDestinationWrapper().getDestinationSide().getOpposite(),
+						targetSource.getDestinationWrapper().getConnectedCable(), false);
+
+				// Then, extract the actual amount routed.
+				sourceInv.extractItem(targetSource.getInventorySlot(), pulledAmount.getCount() - actuallyTransfered.getCount(), false);
+
+				// If the actuallyTransfered amount is greater than 0, return success.
+				return pulledAmount.getCount() > 0 && pulledAmount.getCount() != actuallyTransfered.getCount();
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -172,6 +192,46 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 				}
 			}
 		}
+	}
+
+	protected ItemStack routeItem(ItemStack stack, Path path, Direction pulledFromDirection, BlockPos sourceCablePosition, boolean simulate) {
+		// Get the destination inventory.
+		TileEntity destinationTe = Network.getWorld().getTileEntity(path.getDestinationLocation());
+		IItemHandler destInventory = destinationTe.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, path.getDestinationDirection().getOpposite()).orElse(null);
+
+		// Ensure the destination inventory is valid.
+		if (destInventory != null) {
+			// Simulate an insert.
+			ItemStack simulatedStack = simulateInsertWithPrediction(stack, destInventory, destinationTe.getPos());
+
+			// If simulating, just return the simulated insert result.
+			if (simulate) {
+				return simulatedStack;
+			} else {
+				// If the count of the simulate stack is lower than the count of the actual
+				// stack, that means we were able to insert the in the amount of the difference
+				// between the two.
+				if (simulatedStack.getCount() < stack.getCount()) {
+					// Create the stack to be transfered and set its size to the difference.
+					ItemStack stackToTransfer = stack.copy();
+					stackToTransfer.setCount(stack.getCount() - simulatedStack.getCount());
+
+					// Create the new item routing packet and initialize it with the transfer speed
+					// of the cable it was pulled out of.
+					ItemRoutingParcel packet = new ItemRoutingParcel(CurrentPacketId, stackToTransfer, path, pulledFromDirection.getOpposite());
+					packet.setMovementSpeed(getItemCableComponentAtPosition(sourceCablePosition).getTransferSpeed());
+
+					// Add the packet to the list of active packets.
+					addRoutingParcel(packet);
+
+					// Tell the cable component at the cable's location that it is transferring an
+					// item (for client rendering purposes only).
+					getItemCableComponentAtPosition(sourceCablePosition).addTransferingItem(packet);
+					return simulatedStack;
+				}
+			}
+		}
+		return stack;
 	}
 
 	/**
@@ -400,19 +460,19 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 				continue;
 			}
 
-			// Allocate an atomic bool to capture if a path is valid.
-			AtomicBoolean isValid = new AtomicBoolean(false);
-
 			// Get all the potential paths.
 			List<Path> paths = Network.getPathCache().getPaths(cablePosition, dest.getPos(), CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
 
-			// Retun null if no path is found.
+			// Continue if no path is found.
 			if (paths == null) {
 				continue;
 			}
 
 			// Iterate through all the paths to the proposed tile entity.
 			for (Path path : paths) {
+				// Allocate an atomic bool to capture if a path is valid.
+				AtomicBoolean isValid = new AtomicBoolean(false);
+
 				// If we can't insert through that cable, skip this path.
 				if (!canInsertThroughCable(item, path.getFinalCablePosition(), path.getFinalCableExitDirection())) {
 					continue;
@@ -433,6 +493,45 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 			}
 		}
 		return shortestPath;
+	}
+
+	/**
+	 * Gets a list of all destinations that contain the provided item (not counting
+	 * the source position if provided).
+	 * 
+	 * @param item           The {@link ItemStack} to search for.
+	 * @param sourcePosition The optional source position to ignore when performing
+	 *                       the search.
+	 * @return
+	 */
+	protected List<RetrivalSourceWrapper> getSourcesForItemRetrieval(ItemStack item, @Nullable BlockPos sourcePosition) {
+		List<RetrivalSourceWrapper> validDestinations = new LinkedList<RetrivalSourceWrapper>();
+
+		// Iterate through all the destinations in the graph.
+		for (DestinationWrapper dest : Network.getGraph().getDestinations().values()) {
+			// Skip any destinations that don't support item transfer.
+			if (!dest.supportsType(DestinationType.ITEM)) {
+				continue;
+			}
+			// Skip trying to go to the same position the item came from or is at.
+			if (dest.getPos().equals(sourcePosition)) {
+				continue;
+			}
+
+			// Allocate an atomic bool to capture if a path is valid.
+			AtomicReference<List<RetrivalSourceWrapper>> wrappers = new AtomicReference<List<RetrivalSourceWrapper>>(validDestinations);
+
+			// If we're able to insert into that inventory, set the atomic boolean.
+			dest.getTileEntity().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dest.getDestinationSide()).ifPresent(inv -> {
+				// If this inventory contains the provided item, add the destination to the
+				// list.
+				int slot = InventoryUtilities.getFirstSlotContainingItem(item, inv);
+				if (slot >= 0) {
+					wrappers.get().add(new RetrivalSourceWrapper(dest, slot));
+				}
+			});
+		}
+		return validDestinations;
 	}
 
 	protected void addRoutingParcel(ItemRoutingParcel parcel) {

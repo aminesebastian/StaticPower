@@ -6,7 +6,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Direction;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-import theking530.api.gui.widgets.SlotPhantom;
+import theking530.api.utilities.SDMath;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.initialization.ModContainerTypes;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachmentContainer;
@@ -36,10 +36,7 @@ public class ContainerFilter extends AbstractCableAttachmentContainer<FilterAtta
 			return;
 		}
 
-		for (int i = 0; i < filterInventory.getSlots(); i++) {
-			this.addSlot(new SlotPhantom(filterInventory, i, 26 + (i * 18), 19));
-		}
-
+		this.addSlotsInGrid(filterInventory, 0, 88, 24, SDMath.getSmallestFactor(filterInventory.getSlots(), 6), 16);
 		this.addPlayerInventory(getPlayerInventory(), 8, 69);
 		this.addPlayerHotbar(getPlayerInventory(), 8, 127);
 	}

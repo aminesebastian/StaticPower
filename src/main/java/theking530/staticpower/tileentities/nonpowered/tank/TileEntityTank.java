@@ -21,6 +21,6 @@ public class TileEntityTank extends TileEntityBase implements INamedContainerPro
 
 	@Override
 	public void process() {
-		fluidTankComponent.fill(new FluidStack(ModFluids.TreeSap.Fluid, 1), FluidAction.EXECUTE);
+		fluidTankComponent.fill(new FluidStack(ModFluids.TreeSap.Fluid, 100), FluidAction.EXECUTE);
 	}
 }

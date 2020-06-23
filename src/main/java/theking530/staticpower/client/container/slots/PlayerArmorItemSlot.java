@@ -9,9 +9,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
-public class PlayerArmorSlot extends Slot {
+public class PlayerArmorItemSlot extends Slot {
 
-	public PlayerArmorSlot(IInventory inventory, int index, int xPosition, int yPosition, EquipmentSlotType slot) {
+	public PlayerArmorItemSlot(IInventory inventory, int index, int xPosition, int yPosition, EquipmentSlotType slot) {
 		super(inventory, index, xPosition, yPosition);
 	}
 

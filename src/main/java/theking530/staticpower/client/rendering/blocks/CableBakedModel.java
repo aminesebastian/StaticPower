@@ -70,6 +70,13 @@ public class CableBakedModel extends AbstractBakedModel {
 		// the core and then apply any additional models.
 		if (CableUtilities.isCableStraightConnection(cableConnectionStates)) {
 			newQuads.addAll(getTransformedQuads(Straight, CableUtilities.getStraightConnectionSide(cableConnectionStates), side, state, rand));
+			for (Direction dir : Direction.values()) {
+				if (attachmentModels[dir.ordinal()] != null) {
+					IBakedModel model = Minecraft.getInstance().getModelManager().getModel(attachmentModels[dir.ordinal()]);
+					newQuads.addAll(getTransformedQuads(model, dir, side, state, rand));
+					newQuads.addAll(getTransformedQuads(Extension, dir, side, state, rand));
+				}
+			}
 		} else {
 			newQuads.addAll(BaseModel.getQuads(state, side, rand, data));
 

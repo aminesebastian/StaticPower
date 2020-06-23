@@ -92,7 +92,8 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 	 *                        {@link TileEntity} is rendering at.
 	 * @param combinedOverlay The combined overlay.
 	 */
-	protected void drawItemInWorld(T tileEntity, ItemStack item, TransformType transformType, Vector3f offset, Vector3f scale, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+	protected void drawItemInWorld(T tileEntity, ItemStack item, TransformType transformType, Vector3f offset, Vector3f scale, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer,
+			int combinedLight, int combinedOverlay) {
 		matrixStack.push();
 		matrixStack.translate(offset.getX(), offset.getY(), offset.getZ());
 		matrixStack.scale(scale.getX(), scale.getY(), scale.getZ());

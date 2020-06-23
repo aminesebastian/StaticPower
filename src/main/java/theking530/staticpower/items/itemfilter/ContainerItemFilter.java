@@ -9,9 +9,9 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import theking530.api.gui.widgets.SlotPhantom;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.container.StaticPowerItemContainer;
+import theking530.staticpower.client.container.slots.PhantomSlot;
 import theking530.staticpower.initialization.ModContainerTypes;
 
 public class ContainerItemFilter extends StaticPowerItemContainer<ItemFilter> {
@@ -41,7 +41,7 @@ public class ContainerItemFilter extends StaticPowerItemContainer<ItemFilter> {
 
 		int slotOffset = filterInventory.getFilterTier() == FilterTier.BASIC ? 3 : filterInventory.getFilterTier() == FilterTier.UPGRADED ? 1 : 0;
 		for (int i = 0; i < filterInventory.getFilterTier().getSlotCount(); i++) {
-			this.addSlot(new SlotPhantom(filterInventory, i, 8 + (i + slotOffset) * 18, 19));
+			this.addSlot(new PhantomSlot(filterInventory, i, 8 + (i + slotOffset) * 18, 19).renderFluidContainerAsFluid());
 		}
 
 		this.addPlayerInventory(getPlayerInventory(), 8, 69);

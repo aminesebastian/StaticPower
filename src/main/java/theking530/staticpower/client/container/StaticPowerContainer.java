@@ -11,7 +11,9 @@ import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.client.container.slots.PhantomSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 
 public abstract class StaticPowerContainer extends Container {
@@ -78,6 +80,20 @@ public abstract class StaticPowerContainer extends Container {
 			return true;
 		}
 		return false;
+	}
+
+	protected void addSlotsInGrid(ItemStackHandler inventory, int startingIndex, int xPos, int yPos, int maxPerRow) {
+		addSlotsInGrid(inventory, startingIndex, xPos, yPos, maxPerRow);
+	}
+
+	protected void addSlotsInGrid(ItemStackHandler inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize) {
+		maxPerRow = Math.min(inventory.getSlots(), maxPerRow);
+		int adjustedSlotSize = slotSize + 2;
+		int offset = (maxPerRow * adjustedSlotSize) / 2;
+		for (int i = 0; i < inventory.getSlots(); i++) {
+			int row = i / maxPerRow;
+			this.addSlot(new PhantomSlot(inventory, startingIndex + i, xPos + ((i % maxPerRow) * adjustedSlotSize) - offset, yPos + (row * adjustedSlotSize)).renderFluidContainerAsFluid());
+		}
 	}
 
 	protected boolean isInventorySlot(int slot) {

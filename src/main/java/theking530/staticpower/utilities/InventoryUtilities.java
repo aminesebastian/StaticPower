@@ -2,13 +2,70 @@ package theking530.staticpower.utilities;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import theking530.api.utilities.SDMath;
 
 public class InventoryUtilities {
+	public static boolean isInventoryEmpty(IItemHandler inv) {
+		for (int i = 0; i < inv.getSlots(); i++) {
+			if (!inv.getStackInSlot(i).isEmpty()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public static boolean inventoryContainsItem(ItemStack stack, IItemHandler inv) {
+		for (int i = 0; i < inv.getSlots(); i++) {
+			ItemStack stackInSlot = inv.getStackInSlot(i);
+			if (ItemUtilities.areItemStacksStackable(stack, stackInSlot)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Gets the index of the first slot containing an item. Return -1 if no slots
+	 * are found containing that item.
+	 * 
+	 * @param stack
+	 * @param inv
+	 * @return
+	 */
+	public static int getFirstSlotContainingItem(ItemStack stack, IItemHandler inv) {
+		for (int i = 0; i < inv.getSlots(); i++) {
+			ItemStack stackInSlot = inv.getStackInSlot(i);
+			if (ItemUtilities.areItemStacksStackable(stack, stackInSlot)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	public static ItemStack getRandomItemStackFromInventory(IItemHandler inv) {
+		// Capture all the slots that have items in them.
+		List<Integer> valueSlots = new LinkedList<Integer>();
+		for (int i = 0; i < inv.getSlots(); i++) {
+			if (!inv.getStackInSlot(i).isEmpty()) {
+				valueSlots.add(i);
+			}
+		}
+
+		// If the inventory is empty, return an empty itemstack.
+		if (valueSlots.size() == 0) {
+			return ItemStack.EMPTY;
+		}
+
+		// Return the stack in the slot.
+		int targetSlot = valueSlots.get(SDMath.getRandomIntInRange(0, valueSlots.size() - 1));
+		return inv.getStackInSlot(targetSlot);
+	}
 
 	public static boolean canFullyInsertAllItemsIntoInventory(IItemHandler inv, List<ItemStack> items) {
 		// Create a new item handler.

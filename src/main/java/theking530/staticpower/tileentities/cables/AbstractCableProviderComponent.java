@@ -1,6 +1,7 @@
 package theking530.staticpower.tileentities.cables;
 
 import java.util.HashSet;
+import java.util.Optional;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
@@ -14,6 +15,7 @@ import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
 import theking530.staticpower.tileentities.cables.ServerCable.CableConnectionState;
 import theking530.staticpower.tileentities.cables.network.CableNetwork;
 import theking530.staticpower.tileentities.cables.network.CableNetworkManager;
+import theking530.staticpower.tileentities.cables.network.modules.AbstractCableNetworkModule;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.utilities.RedstoneMode;
 import theking530.staticpower.utilities.WorldUtilities;
@@ -60,7 +62,8 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		if (getWorld().isRemote || (!getWorld().isRemote && getNetwork() != null)) {
 			for (Direction dir : Direction.values()) {
 				if (!Attachments[dir.ordinal()].isEmpty()) {
-					processAttachment(dir, Attachments[dir.ordinal()]);
+					ItemStack attachment = Attachments[dir.ordinal()];
+					((AbstractCableAttachment) attachment.getItem()).attachmentTick(attachment, dir, this);
 				}
 			}
 		}
@@ -185,7 +188,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 
 			// Raise the on added method on the attachment.
 			AbstractCableAttachment attachmentItem = (AbstractCableAttachment) Attachments[side.ordinal()].getItem();
-			attachmentItem.onAddedToCable(Attachments[side.ordinal()], this);
+			attachmentItem.onAddedToCable(Attachments[side.ordinal()], side, this);
 
 			getTileEntity().markTileEntityForSynchronization();
 			return true;
@@ -208,7 +211,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 
 			// Raise the on removed method on the attachment.
 			AbstractCableAttachment attachmentItem = (AbstractCableAttachment) output.getItem();
-			attachmentItem.onRemovedFromCable(output, this);
+			attachmentItem.onRemovedFromCable(output, side, this);
 
 			// Remove the attachment and return it.
 			Attachments[side.ordinal()] = ItemStack.EMPTY;
@@ -258,6 +261,27 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 */
 	public CableNetwork getNetwork() {
 		return CableNetworkManager.get(getWorld()).getCable(getPos()).getNetwork();
+	}
+
+	/**
+	 * Gets the module from this network if present. We have to wrap it in an
+	 * optional because while we can guarantee once this component is validated that
+	 * the network is valid, since this component exposes external methods, other
+	 * tile entity that are made valid before us may call some of our methods.
+	 * 
+	 * @param <T>        The type of the module.
+	 * @param moduleType The resource location model type.
+	 * @return
+	 */
+	public <T extends AbstractCableNetworkModule> Optional<T> getNetworkModule(ResourceLocation moduleType) {
+		CableNetworkManager manager = CableNetworkManager.get(getTileEntity().getWorld());
+		ServerCable cable = manager.getCable(getTileEntity().getPos());
+		if (cable.getNetwork() != null) {
+			if (cable.getNetwork().hasModule(moduleType)) {
+				return Optional.of(cable.getNetwork().getModule(moduleType));
+			}
+		}
+		return Optional.empty();
 	}
 
 	public boolean shouldConnectionToCable(AbstractCableProviderComponent otherProvider, Direction side) {
@@ -327,10 +351,6 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			return attachmentItem.getModel(attachmentItemStack, this);
 		}
 		return null;
-	}
-
-	protected void processAttachment(Direction side, ItemStack attachment) {
-
 	}
 
 	protected abstract boolean canAttachAttachment(ItemStack attachment);

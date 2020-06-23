@@ -20,6 +20,7 @@ public class GrinderRecipe extends AbstractStaticPowerRecipe {
 	private final ItemStack[] outputItems;
 	private final int processingTime;
 	private final int powerCost;
+	private final int powerCostPerTick;
 	private final Ingredient inputItem;
 
 	public GrinderRecipe(ResourceLocation name, int processingTime, int powerCost, Ingredient input, ProbabilityItemStackOutput... outputs) {
@@ -28,7 +29,7 @@ public class GrinderRecipe extends AbstractStaticPowerRecipe {
 		this.powerCost = powerCost;
 		this.inputItem = input;
 		this.outputs = outputs;
-
+		this.powerCostPerTick = powerCost / processingTime;
 		// Cache the output items.
 		this.outputItems = new ItemStack[outputs.length];
 		for (int i = 0; i < outputs.length; i++) {
@@ -54,6 +55,10 @@ public class GrinderRecipe extends AbstractStaticPowerRecipe {
 
 	public int getPowerCost() {
 		return powerCost;
+	}
+
+	public int getPowerCostPerTick() {
+		return powerCostPerTick;
 	}
 
 	@Override

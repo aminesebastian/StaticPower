@@ -1,6 +1,7 @@
 package theking530.staticpower.tileentities.cables.network.pathfinding;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -48,12 +49,12 @@ public class PathCache {
 	public @Nullable List<Path> getPaths(BlockPos cablePosition, BlockPos destination, ResourceLocation moduleType) {
 		if (cablePosition == null) {
 			LOGGER.error("Attemtping to find a path with a null source position.");
-			return null;
+			return Collections.emptyList();
 		}
 
 		if (destination == null) {
 			LOGGER.error("Attemtping to find a path with a null destination position.");
-			return null;
+			return Collections.emptyList();
 		}
 
 		if (hasPath(cablePosition, destination, moduleType)) {
@@ -78,7 +79,7 @@ public class PathCache {
 
 		// If we found no paths, return early.
 		if (paths.size() == 0) {
-			return null;
+			return Collections.emptyList();
 		}
 
 		// Cache each provided path.

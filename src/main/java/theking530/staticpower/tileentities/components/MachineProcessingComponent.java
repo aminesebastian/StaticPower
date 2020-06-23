@@ -35,9 +35,11 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 	}
 
 	public void startProcessing() {
-		processing = true;
-		processingPaused = false;
-		currentProcessingTime = 0;
+		if (!processing) {
+			processing = true;
+			processingPaused = false;
+			currentProcessingTime = 0;
+		}
 	}
 
 	public void pauseProcessing() {

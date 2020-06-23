@@ -43,7 +43,7 @@ public class GuiPoweredFurnace extends StaticPowerTileEntityGui<ContainerPowered
 	@Override
 	protected void drawBackgroundExtras(float partialTicks, int mouseX, int mouseY) {
 		drawGenericBackground();
-		drawContainerSlots(getTileEntity(), container.inventorySlots);
+		drawContainerSlots(container.inventorySlots, getTileEntity().ioSideConfiguration);
 		drawPlayerInventorySlots();
 
 		// Flames

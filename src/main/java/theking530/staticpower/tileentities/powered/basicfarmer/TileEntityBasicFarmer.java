@@ -2,6 +2,7 @@ package theking530.staticpower.tileentities.powered.basicfarmer;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
@@ -16,6 +17,7 @@ import net.minecraft.block.PumpkinBlock;
 import net.minecraft.block.SugarCaneBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.HoeItem;
@@ -38,18 +40,16 @@ import theking530.staticpower.tileentities.components.InventoryComponent;
 import theking530.staticpower.tileentities.components.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.OutputServoComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
+import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityBasicFarmer extends TileEntityMachine {
+	public static final int DEFAULT_WATER_USAGE = 1;
+	public static final int DEFAULT_IDLE_ENERGY_USAGE = 20;
+	public static final int DEFAULT_HARVEST_ENERGY_COST = 1000;
 	public static final int DEFAULT_RANGE = 2;
-
-	private int range;
-	private int blocksFarmedPerTick;
-	private int growthBonusChance;
-	private BlockPos currentCoordinate;
-	private Random rand;
-	private ArrayList<ItemStack> farmedStacks;
-	private boolean shouldDrawRadiusPreview;
+	public static final int DEFAULT_TOOL_USAGE = 1;
+	public static final Random RANDOM = new Random();
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
@@ -58,12 +58,24 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	public final InventoryComponent upgradesInventory;
 	public final MachineProcessingComponent processingComponent;
 	public final FluidTankComponent fluidTankComponent;
-	private final int processingCost;
+
+	private final ArrayList<ItemStack> farmedStacks;
+	private final HashSet<Class<? extends Block>> validHarvestacbleClasses;
+
+	private int range;
+	private int blocksFarmedPerTick;
+	private int growthBonusChance;
+	private BlockPos currentCoordinate;
+	private boolean shouldDrawRadiusPreview;
 
 	public TileEntityBasicFarmer() {
 		super(ModTileEntityTypes.BASIC_FARMER);
 		this.disableFaceInteraction();
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 2, MachineSideMode.Input));
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 2, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
+			public boolean canInsertItem(int slot, ItemStack stack) {
+				return !stack.isEmpty() && (stack.getItem() instanceof AxeItem || stack.getItem() instanceof HoeItem);
+			}
+		}));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1, MachineSideMode.Never));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 9, MachineSideMode.Output));
 		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
@@ -71,55 +83,77 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 5, this::processingCompleted));
 
-		registerComponent(new InputServoComponent("InputServo", 2, inputInventory, this::inputServoFilter, 0));
+		registerComponent(new InputServoComponent("InputServo", 2, inputInventory, 0));
 		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory, 0, 1, 2, 3, 4, 5, 6, 7, 8));
 		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, MachineSideMode.Input));
+
+		// Capture all the harvestable blocks.
+		validHarvestacbleClasses = new HashSet<Class<? extends Block>>();
+		validHarvestacbleClasses.add(CropsBlock.class);
+		validHarvestacbleClasses.add(SugarCaneBlock.class);
+		validHarvestacbleClasses.add(CactusBlock.class);
+		validHarvestacbleClasses.add(NetherWartBlock.class);
+		validHarvestacbleClasses.add(MelonBlock.class);
+		validHarvestacbleClasses.add(PumpkinBlock.class);
+
 		range = DEFAULT_RANGE;
 		shouldDrawRadiusPreview = false;
 		blocksFarmedPerTick = 1;
 		growthBonusChance = 0;
-		processingCost = 10;
 		currentCoordinate = getStartingCoord();
-		rand = new Random();
 		farmedStacks = new ArrayList<ItemStack>();
 	}
 
 	@Override
 	public void process() {
+		// If we can't farm, pause the processing component.
 		if (!canFarm()) {
 			processingComponent.pauseProcessing();
 		} else {
-			if (processingComponent.isProcessing()) {
-				processingComponent.continueProcessing();
-			} else {
-				processingComponent.startProcessing();
+			// Otherwise, continue thr pcoessing.
+			processingComponent.continueProcessing();
+
+			// Draw the idle usage of water and energy per tick.
+			if (!world.isRemote) {
+				energyStorage.getStorage().extractEnergy(DEFAULT_IDLE_ENERGY_USAGE, false);
+				fluidTankComponent.drain(DEFAULT_WATER_USAGE * blocksFarmedPerTick, FluidAction.EXECUTE);
 			}
-			energyStorage.getStorage().extractEnergy(processingCost, false);
 		}
 	}
 
 	protected boolean processingCompleted() {
-		if (farmedStacks.size() <= 1 && canFarm()) {
-			for (int i = 0; i < blocksFarmedPerTick; i++) {
-				incrementPosition();
-				checkFarmingPlot(currentCoordinate);
+		// Harvest the plots we're supposed to harvest.
+		for (int i = 0; i < blocksFarmedPerTick; i++) {
+			// Increment first to ensure we're always harvesting the next block.
+			incrementPosition();
+			harvestPlot(currentCoordinate);
+
+			// If on the server, use the amount of energy required to harvest a plant.
+			if (!world.isRemote) {
+				energyStorage.getStorage().extractEnergy(DEFAULT_HARVEST_ENERGY_COST, false);
 			}
-			fluidTankComponent.drain(1 * blocksFarmedPerTick, FluidAction.EXECUTE);
-		} else {
-			if (!getWorld().isRemote) {
-				for (int i = farmedStacks.size() - 1; i >= 0; i--) {
-					ItemStack insertedStack = InventoryUtilities.insertItemIntoInventory(outputInventory, farmedStacks.get(i), 0, 8, false);
-					if (insertedStack == ItemStack.EMPTY) {
-						farmedStacks.remove(i);
-					} else {
-						farmedStacks.set(i, insertedStack);
-					}
+		}
+
+		// For each of the farmed stacks, place the harvested stacks into the output
+		// inventory. Remove the entry from the farmed stacks if it was fully inserted.
+		// Otherwise, update the farmed stack.
+		if (!getWorld().isRemote) {
+			for (int i = farmedStacks.size() - 1; i >= 0; i--) {
+				ItemStack insertedStack = InventoryUtilities.insertItemIntoInventory(outputInventory, farmedStacks.get(i), 0, 8, false);
+				if (insertedStack == ItemStack.EMPTY) {
+					farmedStacks.remove(i);
+				} else {
+					farmedStacks.set(i, insertedStack);
 				}
 			}
 		}
+
+		// Sync the tile entity.
 		markTileEntityForSynchronization();
-		return true;
+
+		// Return true if we finished clearning the farmed stacks.
+		return farmedStacks.size() == 0;
 	}
 
 	@Override
@@ -214,20 +248,19 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	}
 
 	public boolean canFarm() {
-		if (energyStorage.getStorage().getEnergyStored() >= processingCost * blocksFarmedPerTick && !inputInventory.getStackInSlot(0).isEmpty()
+		// Check to see if we have enough power and if we have the axe and hoe
+		// populated.
+		if (energyStorage.getStorage().getEnergyStored() >= DEFAULT_HARVEST_ENERGY_COST * blocksFarmedPerTick && !inputInventory.getStackInSlot(0).isEmpty()
 				&& inputInventory.getStackInSlot(0).getItem() instanceof HoeItem && !inputInventory.getStackInSlot(1).isEmpty() && inputInventory.getStackInSlot(1).getItem() instanceof AxeItem) {
-			if (fluidTankComponent.getFluid() != null) {
-				if (fluidTankComponent.getFluid().getAmount() > 0) {
-					return true;
-				}
-			}
+			// If we have enough fluid, return true.
+			return fluidTankComponent.getFluid().getAmount() > DEFAULT_WATER_USAGE && fluidTankComponent.getFluid().getFluid() == Fluids.WATER;
 		}
 		return false;
 	}
 
 	public void useHoe() {
 		if (inputInventory.getStackInSlot(0) != ItemStack.EMPTY && inputInventory.getStackInSlot(0).getItem() instanceof HoeItem) {
-			if (inputInventory.getStackInSlot(0).attemptDamageItem(1, rand, null)) {
+			if (inputInventory.getStackInSlot(0).attemptDamageItem(DEFAULT_TOOL_USAGE, RANDOM, null)) {
 				inputInventory.setStackInSlot(0, ItemStack.EMPTY);
 				getWorld().playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
 			}
@@ -236,22 +269,25 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 
 	public void useAxe() {
 		if (inputInventory.getStackInSlot(1) != ItemStack.EMPTY && inputInventory.getStackInSlot(1).getItem() instanceof AxeItem) {
-			if (inputInventory.getStackInSlot(1).attemptDamageItem(1, rand, null)) {
+			if (inputInventory.getStackInSlot(1).attemptDamageItem(DEFAULT_TOOL_USAGE, RANDOM, null)) {
 				inputInventory.setStackInSlot(1, ItemStack.EMPTY);
 				getWorld().playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
 			}
 		}
 	}
 
-	public boolean checkFarmingPlot(BlockPos pos) {
+	public boolean harvestPlot(BlockPos pos) {
 		boolean grown = false;
 		if (!getWorld().isRemote) {
 			grown = growCrop(pos);
 		}
+		// This needs to be synced with a packet.
 		if (grown) {
 			getWorld().addParticle(ParticleTypes.HAPPY_VILLAGER, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D);
 		}
 		getWorld().addParticle(ParticleTypes.TOTEM_OF_UNDYING, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D);
+
+		// Check to see if we're at a farmable block. If we are, harvest it.
 		if (isFarmableBlock(pos)) {
 			harvestGenericCrop(pos);
 			harvestSugarCane(pos);
@@ -266,23 +302,10 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		if (getWorld().getBlockState(pos) == null) {
 			return false;
 		}
-		if (getWorld().getBlockState(pos).getBlock() instanceof CropsBlock) {
-			return true;
-		}
-		if (getWorld().getBlockState(pos).getBlock() instanceof SugarCaneBlock) {
-			return true;
-		}
-		if (getWorld().getBlockState(pos).getBlock() instanceof CactusBlock) {
-			return true;
-		}
-		if (getWorld().getBlockState(pos).getBlock() instanceof NetherWartBlock) {
-			return true;
-		}
-		if (getWorld().getBlockState(pos).getBlock() instanceof MelonBlock) {
-			return true;
-		}
-		if (getWorld().getBlockState(pos).getBlock() instanceof PumpkinBlock) {
-			return true;
+		for (Class<? extends Block> harvestableClass : validHarvestacbleClasses) {
+			if (harvestableClass.isInstance(getWorld().getBlockState(pos).getBlock())) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -403,12 +426,12 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	}
 
 	public boolean growCrop(BlockPos pos) {
-		if (rand.nextInt(100) <= growthBonusChance) {
+		if (RANDOM.nextInt(100) <= growthBonusChance) {
 			if (getWorld().getBlockState(pos) != null && getWorld().getBlockState(pos).getBlock() instanceof IGrowable) {
 				IGrowable tempCrop = (IGrowable) getWorld().getBlockState(pos).getBlock();
 				if (tempCrop.canGrow(getWorld(), pos, getWorld().getBlockState(pos), true)) {
 					if (!world.isRemote) {
-						tempCrop.grow((ServerWorld) getWorld(), rand, pos, getWorld().getBlockState(pos));
+						tempCrop.grow((ServerWorld) getWorld(), RANDOM, pos, getWorld().getBlockState(pos));
 						getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 1 | 2);
 					}
 					return true;
@@ -425,10 +448,6 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 			return output;
 		}
 		return Collections.emptyList();
-	}
-
-	private boolean inputServoFilter(ItemStack stack) {
-		return true;
 	}
 
 	@Override

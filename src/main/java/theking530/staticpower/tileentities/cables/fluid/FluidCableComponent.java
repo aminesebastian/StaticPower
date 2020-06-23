@@ -83,39 +83,6 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
-	protected void processAttachment(Direction side, ItemStack attachment) {
-		// Process the extractor attachment.
-		if (!getWorld().isRemote && attachment.getItem() instanceof ExtractorAttachment && doesAttachmentPassRedstoneTest(attachment)) {
-			if (getFluidInTank(0).getAmount() < getTankCapacity(0)) {
-				processExtractorAttachment(side, attachment);
-			}
-		}
-	}
-
-	protected void processExtractorAttachment(Direction side, ItemStack attachment) {
-		// Get the tile entity on the pulling side, return if it is null.
-		TileEntity te = getWorld().getTileEntity(getPos().offset(side));
-		if (te == null || te.isRemoved()) {
-			return;
-		}
-
-		// Get the item network module.
-		getFluidNetworkModule().ifPresent(network -> {
-			// Attempt to extract an item.
-			te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite()).ifPresent(tank -> {
-				if (tank.getTanks() <= 0) {
-					return;
-				}
-				if (isFluidValid(0, tank.getFluidInTank(0))) {
-					FluidStack drained = tank.drain(EXTRACTION_RATE, FluidAction.SIMULATE);
-					int filled = fill(drained, FluidAction.EXECUTE);
-					tank.drain(filled, FluidAction.EXECUTE);
-				}		
-			});
-		});
-	}
-
-	@Override
 	public int getTanks() {
 		if (!getTileEntity().getWorld().isRemote) {
 			AtomicInteger recieve = new AtomicInteger(0);

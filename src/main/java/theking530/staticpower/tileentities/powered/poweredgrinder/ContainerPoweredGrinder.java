@@ -6,10 +6,10 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
-import theking530.staticpower.client.container.slots.BatterySlot;
+import theking530.staticpower.client.container.slots.BatteryItemSlot;
 import theking530.staticpower.client.container.slots.OutputSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
-import theking530.staticpower.client.container.slots.UpgradeSlot;
+import theking530.staticpower.client.container.slots.UpgradeItemSlot;
 import theking530.staticpower.initialization.ModContainerTypes;
 import theking530.staticpower.items.upgrades.BaseUpgrade;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
@@ -30,7 +30,7 @@ public class ContainerPoweredGrinder extends StaticPowerTileEntityContainer<Tile
 		this.addSlot(new StaticPowerContainerSlot(getTileEntity().inputInventory, 0, 80, 18));
 
 		// Battery
-		this.addSlot(new BatterySlot(getTileEntity().batteryInventory, 0, 8, 65));
+		this.addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 65));
 
 		// Output
 		this.addSlot(new OutputSlot(getTileEntity().outputInventory, 0, 80, 60));
@@ -38,9 +38,9 @@ public class ContainerPoweredGrinder extends StaticPowerTileEntityContainer<Tile
 		this.addSlot(new OutputSlot(getTileEntity().outputInventory, 2, 54, 46));
 
 		// Upgrades
-		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory, 0, 152, 12));
-		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory, 1, 152, 32));
-		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory, 2, 152, 52));
+		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 0, 152, 12));
+		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 1, 152, 32));
+		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 2, 152, 52));
 
 		this.addPlayerInventory(getPlayerInventory(), 8, 84);
 		this.addPlayerHotbar(getPlayerInventory(), 8, 142);

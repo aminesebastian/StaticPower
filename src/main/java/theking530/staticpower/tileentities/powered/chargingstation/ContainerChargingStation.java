@@ -7,11 +7,11 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
-import theking530.staticpower.client.container.slots.BatterySlot;
+import theking530.staticpower.client.container.slots.BatteryItemSlot;
 import theking530.staticpower.client.container.slots.OutputSlot;
-import theking530.staticpower.client.container.slots.PlayerArmorSlot;
+import theking530.staticpower.client.container.slots.PlayerArmorItemSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
-import theking530.staticpower.client.container.slots.UpgradeSlot;
+import theking530.staticpower.client.container.slots.UpgradeItemSlot;
 import theking530.staticpower.initialization.ModContainerTypes;
 import theking530.staticpower.items.upgrades.BaseUpgrade;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
@@ -61,18 +61,18 @@ public class ContainerChargingStation extends StaticPowerTileEntityContainer<Til
 		this.addSlot(new OutputSlot(getTileEntity().chargedInventory, 3, 115, 52));
 
 		// Upgrades
-		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory, 0, 152, 8));
-		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory, 1, 152, 30));
-		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory, 2, 152, 52));
+		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 0, 152, 8));
+		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 1, 152, 30));
+		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 2, 152, 52));
 
 		// Battery
-		this.addSlot(new BatterySlot(getTileEntity().batterySlot, 0, 8, 54));
+		this.addSlot(new BatteryItemSlot(getTileEntity().batterySlot, 0, 8, 54));
 
 		// Armor
-		this.addSlot(new PlayerArmorSlot(getPlayerInventory(), 39, -24, 14, EquipmentSlotType.HEAD));
-		this.addSlot(new PlayerArmorSlot(getPlayerInventory(), 38, -24, 33, EquipmentSlotType.CHEST));
-		this.addSlot(new PlayerArmorSlot(getPlayerInventory(), 37, -24, 52, EquipmentSlotType.LEGS));
-		this.addSlot(new PlayerArmorSlot(getPlayerInventory(), 36, -24, 71, EquipmentSlotType.FEET));
+		this.addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 39, -24, 14, EquipmentSlotType.HEAD));
+		this.addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 38, -24, 33, EquipmentSlotType.CHEST));
+		this.addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 37, -24, 52, EquipmentSlotType.LEGS));
+		this.addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 36, -24, 71, EquipmentSlotType.FEET));
 
 		this.addPlayerInventory(getPlayerInventory(), 8, 84);
 		this.addPlayerHotbar(getPlayerInventory(), 8, 142);

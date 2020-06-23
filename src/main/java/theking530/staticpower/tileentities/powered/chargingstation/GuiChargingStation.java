@@ -37,7 +37,7 @@ public class GuiChargingStation extends StaticPowerTileEntityGui<ContainerChargi
 	protected void drawBackgroundExtras(float partialTicks, int mouseX, int mouseY) {
 		drawGenericBackground();
 		drawPlayerInventorySlots();
-		drawContainerSlots(getTileEntity(), container.inventorySlots);
+		drawContainerSlots(container.inventorySlots, getTileEntity().ioSideConfiguration);
 
 		drawGenericBackground(-30, 8, 28, 85);
 		drawSlot(guiLeft - 24, guiTop + 14, 16, 16);

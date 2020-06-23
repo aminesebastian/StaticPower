@@ -1,7 +1,8 @@
 package theking530.staticpower.client.gui;
 
 import java.util.List;
-import java.util.Optional;
+
+import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
@@ -15,11 +16,8 @@ import theking530.api.gui.widgets.GuiDrawItem;
 import theking530.api.gui.widgets.tabs.GuiTabManager;
 import theking530.api.utilities.Color;
 import theking530.api.utilities.Vector2D;
-import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
-import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.SideConfigurationComponent;
-import theking530.staticpower.tileentities.components.ComponentUtilities;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
 /**
@@ -69,7 +67,9 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	 * This method is raised after all the constructors and should be used by the
 	 * implementer to initialize the GUI (register widgets, etc).
 	 */
-	public abstract void initializeGui();
+	public void initializeGui() {
+
+	}
 
 	/**
 	 * This method's only responsibility is to make a super call and then draw the
@@ -92,7 +92,9 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 		// Renders the dark background.
 		renderBackground();
 
+		drawGenericBackground();
 		drawBackgroundExtras(partialTicks, mouseX, mouseY);
+		drawContainerSlots(container.inventorySlots);
 		widgetContainer.update(new Vector2D(getGuiLeft(), getGuiTop()), new Vector2D(getXSize(), getYSize()));
 		widgetContainer.renderBackground(mouseX, mouseY, partialTicks);
 
@@ -118,6 +120,8 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 
 		// Render the widget tooltips as needed.
 		widgetContainer.renderTooltips(mouseX, mouseY);
+
+		drawSlotOverlays(container.inventorySlots);
 
 		// Draw any additional foreground elements.
 		drawForegroundExtras(partialTicks, mouseX, mouseY);
@@ -206,6 +210,7 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	 * @param mouseY       The mouse's y position.
 	 */
 	protected void drawBackgroundExtras(float partialTicks, int mouseX, int mouseY) {
+
 	}
 
 	/**
@@ -325,15 +330,25 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 		GuiDrawUtilities.drawStringWithSize(text, xPos, yPos, scale, color, withShadow);
 	}
 
-	public void drawContainerSlots(TileEntityBase tileEntity, List<Slot> slots) {
-		if (tileEntity == null) {
-			StaticPower.LOGGER.error("Encountered null tile entity when attempting to draw container slots.");
-			return;
+	public void drawSlotOverlays(List<Slot> slots) {
+		for (Slot slot : slots) {
+			if (slot instanceof StaticPowerContainerSlot) {
+				StaticPowerContainerSlot handlerSlot = (StaticPowerContainerSlot) slot;
+				int slotSize = handlerSlot.getMode().isOutputMode() ? outputSlotSize : inputSlotSize;
+				int sizePosOffset = (slotSize - 16) / 2;
+				handlerSlot.drawSlotOverlay(itemDrawer, guiLeft, guiTop, slotSize, sizePosOffset);
+			}
 		}
+	}
+
+	public void drawContainerSlots(List<Slot> slots) {
+		drawContainerSlots(slots, null);
+	}
+
+	public void drawContainerSlots(List<Slot> slots, @Nullable SideConfigurationComponent sideConfiguration) {
 		for (Slot slot : slots) {
 			// Skip null slots
 			if (slot == null) {
-				StaticPower.LOGGER.error(String.format("Encountered an invalid slot in tile entity: %1$s at location: %2$s.", tileEntity.getDisplayName().getString(), tileEntity.getPos()));
 				continue;
 			}
 
@@ -342,8 +357,6 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 			if (slot instanceof StaticPowerContainerSlot) {
 				StaticPowerContainerSlot handlerSlot = (StaticPowerContainerSlot) slot;
 				if (handlerSlot.getItemHandler() == null) {
-					StaticPower.LOGGER.error(
-							String.format("Encountered an invalid item handler for a slot in tile entity: %1$s at location: %2$s.", tileEntity.getDisplayName().getString(), tileEntity.getPos()));
 					continue;
 				}
 
@@ -353,26 +366,22 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 
 				// If the slot is an output slot, increase the size of the slot.
 				int slotSize = intendedMode.isOutputMode() ? outputSlotSize : inputSlotSize;
-				int positionAdjustment = (slotSize - 16) / 2;
-
-				// Attempt to get the side configuration.
-				Optional<SideConfigurationComponent> sideComp = ComponentUtilities.getComponent(SideConfigurationComponent.class, tileEntity);
+				int sizePosOffset = (slotSize - 16) / 2;
 
 				// If side configuration is present, draw the slow with a border.
-				if (sideComp.isPresent()) {
+				if (sideConfiguration != null) {
 					if (intendedMode != MachineSideMode.Regular && intendedMode != MachineSideMode.Never) {
-						drawSlot(slot.xPos + guiLeft - positionAdjustment, slot.yPos + guiTop - positionAdjustment, slotSize, slotSize,
-								sideComp.get().getCountOfSidesWithMode(intendedMode) > 0 ? intendedMode : MachineSideMode.Regular);
+						drawSlot(slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset, slotSize, slotSize,
+								sideConfiguration.getCountOfSidesWithMode(intendedMode) > 0 ? intendedMode : MachineSideMode.Regular);
 					} else {
 						drawSlot(slot.xPos + guiLeft, slot.yPos + guiTop, 16, 16);
 					}
 				} else {
 					drawSlot(slot.xPos + guiLeft, slot.yPos + guiTop, 16, 16);
 				}
-				// Draw the preview item.
-				if (!handlerSlot.getPreviewItem().isEmpty()) {
-					itemDrawer.drawItem(handlerSlot.getPreviewItem(), guiLeft, guiTop, slot.xPos, slot.yPos, handlerSlot.getPreviewAlpha());
-				}
+
+				// Draw the item.
+				handlerSlot.drawExtras(itemDrawer, guiLeft, guiTop, slotSize, sizePosOffset);
 			} else {
 				drawSlot(slot.xPos + guiLeft, slot.yPos + guiTop, 16, 16);
 			}

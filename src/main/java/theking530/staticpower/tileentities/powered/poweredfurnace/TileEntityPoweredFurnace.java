@@ -9,9 +9,6 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipe;
 import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import theking530.staticpower.initialization.ModBlocks;
 import theking530.staticpower.initialization.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.BatteryComponent;
@@ -63,25 +60,6 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 		registerComponent(new InputServoComponent("InputServo", 4, inputInventory, 0));
 		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory, 0));
 		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
-	}
-
-	/**
-	 * Checks to see if the input item forms a valid recipe.
-	 * 
-	 * @return
-	 */
-	public boolean hasValidRecipe() {
-		return getRecipe(inputInventory.getStackInSlot(0)).isPresent();
-	}
-
-	/**
-	 * Checks if the provided itemstack forms a valid recipe.
-	 * 
-	 * @param itemStackInput The itemstack to check for.
-	 * @return
-	 */
-	public Optional<FurnaceRecipe> getRecipe(ItemStack itemStackInput) {
-		return world.getRecipeManager().getRecipe(IRecipeType.SMELTING, new Inventory(itemStackInput), world);
 	}
 
 	@Override
@@ -152,13 +130,28 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 		return false;
 	}
 
+	/**
+	 * Checks to see if the input item forms a valid recipe.
+	 * 
+	 * @return
+	 */
+	public boolean hasValidRecipe() {
+		return getRecipe(inputInventory.getStackInSlot(0)).isPresent();
+	}
+
+	/**
+	 * Checks if the provided itemstack forms a valid recipe.
+	 * 
+	 * @param itemStackInput The itemstack to check for.
+	 * @return
+	 */
+	public Optional<FurnaceRecipe> getRecipe(ItemStack itemStackInput) {
+		return world.getRecipeManager().getRecipe(IRecipeType.SMELTING, new Inventory(itemStackInput), world);
+	}
+
 	@Override
 	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
 		return new ContainerPoweredFurnace(windowId, inventory, this);
 	}
 
-	@Override
-	public ITextComponent getDisplayName() {
-		return new TranslationTextComponent(ModBlocks.PoweredFurnace.getTranslationKey());
-	}
 }

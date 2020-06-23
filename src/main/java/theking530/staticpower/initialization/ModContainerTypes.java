@@ -6,6 +6,8 @@ import theking530.staticpower.items.cableattachments.extractor.ContainerExtracto
 import theking530.staticpower.items.cableattachments.extractor.GuiExtractor;
 import theking530.staticpower.items.cableattachments.filter.ContainerFilter;
 import theking530.staticpower.items.cableattachments.filter.GuiFilter;
+import theking530.staticpower.items.cableattachments.retirever.ContainerRetriever;
+import theking530.staticpower.items.cableattachments.retirever.GuiRetriever;
 import theking530.staticpower.items.itemfilter.ContainerItemFilter;
 import theking530.staticpower.items.itemfilter.GuiItemFilter;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.ContainerDigistore;
@@ -35,6 +37,7 @@ public class ModContainerTypes {
 	public static ContainerType<ContainerDigistore> DIGISTORE_CONTAINER;
 	public static ContainerType<ContainerExtractor> EXTRACTOR_CONTAINER;
 	public static ContainerType<ContainerFilter> FILTER_CONTAINER;
+	public static ContainerType<ContainerRetriever> RETRIEVER_CONTAINER;
 	
 	public static void init() {
 		VACUUM_CHEST_CONTAINER = StaticPowerRegistry.preRegisterContainer("chest_vacuum", ContainerVacuumChest::new, GuiVacuumChest::new);
@@ -48,5 +51,6 @@ public class ModContainerTypes {
 		DIGISTORE_CONTAINER = StaticPowerRegistry.preRegisterContainer("digistore", ContainerDigistore::new, GuiDigistore::new);
 		EXTRACTOR_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_extractor", ContainerExtractor::new, GuiExtractor::new);
 		FILTER_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_filter", ContainerFilter::new, GuiFilter::new);
+		RETRIEVER_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_retriever", ContainerRetriever::new, GuiRetriever::new);
 	}
 }

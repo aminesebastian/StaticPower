@@ -6,9 +6,9 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
-import theking530.staticpower.client.container.slots.FilterSlot;
+import theking530.staticpower.client.container.slots.FilterItemSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
-import theking530.staticpower.client.container.slots.UpgradeSlot;
+import theking530.staticpower.client.container.slots.UpgradeItemSlot;
 import theking530.staticpower.initialization.ModContainerTypes;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.items.upgrades.BaseUpgrade;
@@ -30,11 +30,11 @@ public class ContainerVacuumChest extends StaticPowerTileEntityContainer<TileEnt
 				this.addSlot(new StaticPowerContainerSlot(getTileEntity().inventory, x + y * 9, 8 + x * 18, 20 + y * 18));
 			}
 		}
-		this.addSlot(new FilterSlot(getTileEntity().filterSlotInventory, 0, 8, 78));
+		this.addSlot(new FilterItemSlot(getTileEntity().filterSlotInventory, 0, 8, 78));
 
-		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory, 0, 116, 78));
-		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory, 1, 134, 78));
-		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory, 2, 152, 78));
+		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 0, 116, 78));
+		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 1, 134, 78));
+		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 2, 152, 78));
 
 		this.addPlayerInventory(getPlayerInventory(), 8, 103);
 		this.addPlayerHotbar(getPlayerInventory(), 8, 161);

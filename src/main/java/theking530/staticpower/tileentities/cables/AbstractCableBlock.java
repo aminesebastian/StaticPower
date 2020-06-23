@@ -71,7 +71,7 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 			// Get the attachment side that is hovered (if any).
 			Direction hoveredDirection = CableBounds.getHoveredAttachmentDirection(pos, player);
 
-			if (hoveredDirection != null) {
+			if (hoveredDirection != null && component.hasAttachment(hoveredDirection)) {
 				// Get the attachment on the hovered side.
 				ItemStack attachment = component.getAttachment(hoveredDirection);
 

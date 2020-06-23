@@ -10,27 +10,34 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.items.ItemStackInventoryCapabilityProvider;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
 import theking530.staticpower.tileentities.cables.AbstractCableProviderComponent;
+import theking530.staticpower.tileentities.cables.fluid.FluidCableComponent;
+import theking530.staticpower.tileentities.cables.network.modules.FluidNetworkModule;
+import theking530.staticpower.tileentities.cables.network.modules.ItemNetworkModule;
+import theking530.staticpower.tileentities.cables.network.modules.factories.CableNetworkModuleTypes;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class ExtractorAttachment extends AbstractCableAttachment {
 	public static final String EXTRACTION_TIMER_TAG = "extraction_timer";
-	private final int ExtractionRate;
-	private final int ExtractionStackSize;
-	private final ResourceLocation Model;
+	private final ResourceLocation tierType;
+	private final ResourceLocation model;
 
-	public ExtractorAttachment(String name, int extractionRate, int extractionStackSize, ResourceLocation model) {
+	public ExtractorAttachment(String name, ResourceLocation tierType, ResourceLocation model) {
 		super(name);
-		ExtractionRate = extractionRate;
-		ExtractionStackSize = extractionStackSize;
-		Model = model;
+		this.tierType = tierType;
+		this.model = model;
 	}
 
 	/**
@@ -39,19 +46,81 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-		return new ItemStackInventoryCapabilityProvider(stack, 7, nbt);
+		return new ItemStackInventoryCapabilityProvider(stack, StaticPowerDataRegistry.getTier(tierType).getCableExtractionFilterSize(), nbt);
 	}
 
-	public void onAddedToCable(ItemStack attachment, AbstractCableProviderComponent cableComponent) {
-		super.onAddedToCable(attachment, cableComponent);
+	@Override
+	public void onAddedToCable(ItemStack attachment, Direction side, AbstractCableProviderComponent cableComponent) {
+		super.onAddedToCable(attachment, side, cableComponent);
 		attachment.getTag().putInt(EXTRACTION_TIMER_TAG, 0);
 	}
 
-	public boolean doesItemPassExtractionFilter(ItemStack attachment, ItemStack itemToTest, AbstractCableProviderComponent cableComponent) {
+	@Override
+	public void attachmentTick(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
+		if (cable.getWorld().isRemote || !cable.doesAttachmentPassRedstoneTest(attachment)) {
+			return;
+		}
+
+		// Get the tile entity on the pulling side, return if it is null.
+		TileEntity te = cable.getWorld().getTileEntity(cable.getPos().offset(side));
+		if (te == null || te.isRemoved()) {
+			return;
+		}
+
+		// Increment the extraction timer. If it returns true, attempt an item extract.
+		if (incrementExtractionTimer(attachment)) {
+			// Attempt to transfer the item.
+			cable.<ItemNetworkModule>getNetworkModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE).ifPresent(network -> {
+				// Attempt to extract an item.
+				te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).ifPresent(inv -> {
+					for (int i = 0; i < inv.getSlots(); i++) {
+						// Simulate an extract.
+						ItemStack extractedItem = inv.extractItem(i, StaticPowerDataRegistry.getTier(tierType).getCableExtractionStackSize(), true);
+
+						// If the extracted item is empty, continue.
+						if (extractedItem.isEmpty()) {
+							continue;
+						}
+
+						// Skip any items that are not supported by the extraction filter.
+						if (!doesItemPassExtractionFilter(attachment, extractedItem)) {
+							continue;
+						}
+
+						// Attempt to transfer the itemstack through the cable network.
+						ItemStack remainingAmount = network.transferItemStack(extractedItem, cable.getPos(), side, false);
+						if (remainingAmount.getCount() < extractedItem.getCount()) {
+							inv.extractItem(i, extractedItem.getCount() - remainingAmount.getCount(), false);
+							cable.getTileEntity().markDirty();
+							break;
+						}
+					}
+				});
+			});
+
+		}
+
+		// Attempt to transfer the fluid regardless of the item extract timer.
+		cable.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
+			FluidCableComponent fluidCable = (FluidCableComponent) cable;
+			// Attempt to extract an item.
+			te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite()).ifPresent(tank -> {
+				if (tank.getTanks() <= 0) {
+					return;
+				}
+				if (fluidCable.isFluidValid(0, tank.getFluidInTank(0))) {
+					FluidStack drained = tank.drain(StaticPowerDataRegistry.getTier(tierType).getCableExtractionFluidRate(), FluidAction.SIMULATE);
+					int filled = fluidCable.fill(drained, FluidAction.EXECUTE);
+					tank.drain(filled, FluidAction.EXECUTE);
+				}
+			});
+		});
+	}
+
+	public boolean doesItemPassExtractionFilter(ItemStack attachment, ItemStack itemToTest) {
 		// Get the filter inventory (if there is a null value, do not handle it, throw
 		// an exception).
-		IItemHandler filterItems = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-				.orElseThrow(() -> new RuntimeException("Encounetered an extractor attachment without a valid filter inventory."));
+		IItemHandler filterItems = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(() -> new RuntimeException("Encounetered an extractor attachment without a valid filter inventory."));
 
 		// Get the list of filter items.
 		List<ItemStack> filterItemList = new LinkedList<ItemStack>();
@@ -71,16 +140,29 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 		return ItemUtilities.filterItems(filterItemList, itemToTest, true, false, false, false, false);
 	}
 
-	public void openAttachmentGui(ItemStack attachment) {
+	public boolean incrementExtractionTimer(ItemStack attachment) {
 
-	}
+		if (!attachment.hasTag()) {
+			attachment.setTag(new CompoundNBT());
+		}
+		if (!attachment.getTag().contains(EXTRACTION_TIMER_TAG)) {
+			attachment.getTag().putInt(EXTRACTION_TIMER_TAG, 0);
+		}
 
-	public int getExtractionRate() {
-		return ExtractionRate;
-	}
+		// Get the current timer and the extraction rate.
+		int currentTimer = attachment.getTag().getInt(EXTRACTION_TIMER_TAG);
 
-	public int getExtractionStackSize() {
-		return ExtractionStackSize;
+		// Increment the current timer.
+		currentTimer += 1;
+		if (currentTimer >= StaticPowerDataRegistry.getTier(tierType).getCableExtractorRate()) {
+			attachment.getTag().putInt(EXTRACTION_TIMER_TAG, 0);
+			return true;
+		} else {
+			attachment.getTag().putInt(EXTRACTION_TIMER_TAG, currentTimer);
+
+			return false;
+		}
+
 	}
 
 	@Override
@@ -95,7 +177,7 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 
 	@Override
 	public ResourceLocation getModel(ItemStack attachment, AbstractCableProviderComponent cableComponent) {
-		return Model;
+		return model;
 	}
 
 	protected class ExtractorContainerProvider extends AbstractCableAttachmentContainerProvider {

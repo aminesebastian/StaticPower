@@ -19,7 +19,6 @@ public class PhantomSlot extends StaticPowerContainerSlot {
 		return false;
 	}
 
-	@Override
 	public boolean isItemValid(ItemStack itemStack) {
 		ItemStack tempItemStack = itemStack.copy();
 		tempItemStack.setCount(1);

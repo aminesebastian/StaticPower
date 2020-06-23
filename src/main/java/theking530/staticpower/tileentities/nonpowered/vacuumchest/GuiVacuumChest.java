@@ -38,7 +38,7 @@ public class GuiVacuumChest extends StaticPowerTileEntityGui<ContainerVacuumChes
 	protected void drawBackgroundExtras(float f, int i, int j) {
 		drawGenericBackground();
 		drawPlayerInventorySlots(guiLeft + 8, guiTop + ySize - 83);
-		drawContainerSlots(getTileEntity(), container.inventorySlots);
+		drawContainerSlots(container.inventorySlots);
 
 		DecimalFormat format = new DecimalFormat("##.###");
 		String text = ("Vacuums items in a  =nearby radius. ==" + TextFormatting.RED + "Radius: " + TextFormatting.AQUA + format.format(getTileEntity().getRadius()) + " Blocks");

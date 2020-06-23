@@ -17,10 +17,16 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerRegistry;
+import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.utilities.Reference;
 
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class StaticPowerModEventRegistry {
+	@SubscribeEvent
+	public static void registriesCreated(RegistryEvent.NewRegistry event) {
+		StaticPowerDataRegistry.onResourcesReloaded();
+	}
+
 	@SubscribeEvent
 	public static void commonSetupEvent(FMLCommonSetupEvent event) {
 		StaticPowerCommonEventHandler.onCommonSetupEvent(event);

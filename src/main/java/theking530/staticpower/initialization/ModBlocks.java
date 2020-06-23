@@ -14,6 +14,7 @@ import theking530.staticpower.blocks.StaticPowerRotatePillarBlock;
 import theking530.staticpower.blocks.crops.BaseSimplePlant;
 import theking530.staticpower.blocks.decorative.Lamp;
 import theking530.staticpower.blocks.decorative.StaticPowerGlassBlock;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.tileentities.cables.fluid.BlockFluidCable;
 import theking530.staticpower.tileentities.cables.item.BlockItemCable;
 import theking530.staticpower.tileentities.cables.power.BlockPowerCable;
@@ -30,7 +31,6 @@ import theking530.staticpower.tileentities.powered.poweredfurnace.BlockPoweredFu
 import theking530.staticpower.tileentities.powered.poweredgrinder.BlockPoweredGrinder;
 import theking530.staticpower.tileentities.powered.solarpanels.BlockSolarPanel;
 import theking530.staticpower.utilities.EHarvestLevel;
-import theking530.staticpower.utilities.Tier;
 
 public class ModBlocks {
 	// Decorative
@@ -107,8 +107,7 @@ public class ModBlocks {
 
 		// Wood
 		StaticPowerRegistry.preRegisterBlock(StaticWood = new StaticPowerRotatePillarBlock("wood_static", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
-		StaticPowerRegistry
-				.preRegisterBlock(EnergizedWood = new StaticPowerRotatePillarBlock("wood_energized", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
+		StaticPowerRegistry.preRegisterBlock(EnergizedWood = new StaticPowerRotatePillarBlock("wood_energized", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
 		StaticPowerRegistry.preRegisterBlock(LumumWood = new StaticPowerRotatePillarBlock("wood_lumum", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
 
 		// Planks
@@ -132,7 +131,7 @@ public class ModBlocks {
 		// Machines
 		StaticPowerRegistry.preRegisterBlock(VacuumChest = new BlockVacuumChest("chest_vacuum"));
 		StaticPowerRegistry.preRegisterBlock(ChargingStation = new BlockChargingStation("machine_charging_station"));
-		StaticPowerRegistry.preRegisterBlock(SolarPanelBasic = new BlockSolarPanel("solar_panel_basic", Tier.BASIC));
+		StaticPowerRegistry.preRegisterBlock(SolarPanelBasic = new BlockSolarPanel("solar_panel_basic", StaticPowerTiers.BASIC));
 		StaticPowerRegistry.preRegisterBlock(PoweredFurnace = new BlockPoweredFurnace("machine_powered_furnace"));
 		StaticPowerRegistry.preRegisterBlock(PoweredGrinder = new BlockPoweredGrinder("machine_powered_grinder"));
 		StaticPowerRegistry.preRegisterBlock(LumberMill = new BlockLumberMill("machine_lumber_mill"));

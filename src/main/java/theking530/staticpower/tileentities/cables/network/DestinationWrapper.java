@@ -10,7 +10,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
-import theking530.staticpower.tileentities.cables.ServerCable;
 
 public class DestinationWrapper {
 	public enum DestinationType {
@@ -20,10 +19,10 @@ public class DestinationWrapper {
 	private final TileEntity tileEntity;
 	private final BlockPos pos;
 	private final Map<Direction, HashSet<DestinationType>> supportedTypes;
-	private final ServerCable connectedCable;
+	private final BlockPos connectedCable;
 	private final Direction destinationSide;
 
-	public DestinationWrapper(TileEntity tileEntity, ServerCable connectedCable, Direction destinationSide) {
+	public DestinationWrapper(TileEntity tileEntity, BlockPos connectedCable, Direction destinationSide) {
 		super();
 		this.tileEntity = tileEntity;
 		this.pos = tileEntity.getPos();
@@ -51,7 +50,7 @@ public class DestinationWrapper {
 		return destinationSide;
 	}
 
-	public ServerCable getConnectedCable() {
+	public BlockPos getConnectedCable() {
 		return connectedCable;
 	}
 

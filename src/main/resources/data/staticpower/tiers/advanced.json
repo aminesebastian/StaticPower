@@ -1,0 +1,14 @@
+{
+	"tierId": {
+		"namespace": "staticpower",
+		"path": "tier_advanced"
+	},
+	"unlocalizedTierName": "tier.staticpower.advanced",
+	"cableExtractorRate": 40,
+	"cableExtractionStackSize": 8,
+	"cableExtractionFluidRate": 64,
+	"cableExtractionFilterSize": 5,
+	"cableRetrievalRate": 40,
+	"cableRetrievalStackSize": 8,
+	"cableRetrievalFilterSize": 2
+}

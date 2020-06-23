@@ -42,7 +42,7 @@ public class GuiPoweredGrinder extends StaticPowerTileEntityGui<ContainerPowered
 	@Override
 	protected void drawBackgroundExtras(float partialTicks, int mouseX, int mouseY) {
 		drawGenericBackground();
-		drawContainerSlots(getTileEntity(), container.inventorySlots);
+		drawContainerSlots(container.inventorySlots, getTileEntity().ioSideConfiguration);
 		drawPlayerInventorySlots();
 
 		String text = ("Grinds items into=their base components. ==" + "Bonus Chance: " + TextFormatting.GREEN + 100.0f + "%");

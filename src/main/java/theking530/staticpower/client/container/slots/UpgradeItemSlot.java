@@ -6,9 +6,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.items.upgrades.IUpgradeItem;
 
-public class UpgradeSlot extends StaticPowerContainerSlot {
+public class UpgradeItemSlot extends StaticPowerContainerSlot {
 
-	public UpgradeSlot(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
+	public UpgradeItemSlot(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
 		super(itemHandler, index, xPosition, yPosition);
 	}
 

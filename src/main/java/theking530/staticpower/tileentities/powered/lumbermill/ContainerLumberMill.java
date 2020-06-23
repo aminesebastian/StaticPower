@@ -6,10 +6,10 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
-import theking530.staticpower.client.container.slots.BatterySlot;
+import theking530.staticpower.client.container.slots.BatteryItemSlot;
 import theking530.staticpower.client.container.slots.OutputSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
-import theking530.staticpower.client.container.slots.UpgradeSlot;
+import theking530.staticpower.client.container.slots.UpgradeItemSlot;
 import theking530.staticpower.initialization.ModContainerTypes;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
@@ -29,7 +29,7 @@ public class ContainerLumberMill extends StaticPowerTileEntityContainer<TileEnti
 		this.addSlot(new StaticPowerContainerSlot(getTileEntity().inputInventory, 0, 36, 32));
 
 		// Battery
-		this.addSlot(new BatterySlot(getTileEntity().batteryInventory, 0, 8, 60));
+		this.addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 60));
 
 		// FluidContainerSlots
 //		this.addSlot(new FluidContainerSlot(teLumberMill.slotsInternal, 2, -24, 11));
@@ -40,9 +40,9 @@ public class ContainerLumberMill extends StaticPowerTileEntityContainer<TileEnti
 		this.addSlot(new OutputSlot(getTileEntity().outputInventory, 1, 120, 32));
 
 		// Upgrades
-		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory, 0, -24, 76));
-		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory, 1, -24, 94));
-		this.addSlot(new UpgradeSlot(getTileEntity().upgradesInventory, 2, -24, 112));
+		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 0, -24, 76));
+		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 1, -24, 94));
+		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 2, -24, 112));
 
 		this.addPlayerInventory(getPlayerInventory(), 8, 84);
 		this.addPlayerHotbar(getPlayerInventory(), 8, 142);

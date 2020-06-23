@@ -33,6 +33,12 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation CABLE_ENERGIZED_FILTER_ATTACHMENT = registerModel("block/cables/attachments/energized_filter");
 	public static final ResourceLocation CABLE_LUMUM_FILTER_ATTACHMENT = registerModel("block/cables/attachments/lumum_filter");
 	
+	public static final ResourceLocation CABLE_BASIC_RETRIEVER_ATTACHMENT = registerModel("block/cables/attachments/basic_retriever");
+	public static final ResourceLocation CABLE_ADVANCED_RETRIEVER_ATTACHMENT = registerModel("block/cables/attachments/advanced_retriever");
+	public static final ResourceLocation CABLE_STATIC_RETRIEVER_ATTACHMENT = registerModel("block/cables/attachments/static_retriever");
+	public static final ResourceLocation CABLE_ENERGIZED_RETRIEVER_ATTACHMENT = registerModel("block/cables/attachments/energized_retriever");
+	public static final ResourceLocation CABLE_LUMUM_RETRIEVER_ATTACHMENT = registerModel("block/cables/attachments/lumum_retriever");
+	
 	public static void regsiterModels() {
 		for (ResourceLocation model : MODELS) {
 			ModelLoader.addSpecialModel(model);

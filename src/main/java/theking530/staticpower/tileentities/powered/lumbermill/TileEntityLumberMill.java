@@ -25,7 +25,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityLumberMill extends TileEntityMachine {
 	public static final int DEFAULT_PROCESSING_TIME = 100;
-	public static final int DEFAULT_PROCESSING_COST = 500;
+	public static final int DEFAULT_PROCESSING_COST = 1000;
 	public static final int DEFAULT_MOVING_TIME = 4;
 
 	public final InventoryComponent inputInventory;
@@ -53,7 +53,7 @@ public class TileEntityLumberMill extends TileEntityMachine {
 		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", 2, this::movingCompleted));
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 5, this::processingCompleted));
 
-		registerComponent(new InputServoComponent("InputServo", 2, inputInventory, this::inputServoFilter, 0));
+		registerComponent(new InputServoComponent("InputServo", 2, inputInventory, 0));
 		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory, 0, 1, 2));
 		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, MachineSideMode.Output));
@@ -167,17 +167,6 @@ public class TileEntityLumberMill extends TileEntityMachine {
 
 	public Optional<LumberMillRecipe> getRecipe(ItemStack itemStackInput) {
 		return StaticPowerRecipeRegistry.getRecipe(LumberMillRecipe.RECIPE_TYPE, new RecipeMatchParameters(itemStackInput).setStoredEnergy(energyStorage.getStorage().getEnergyStored()));
-	}
-
-	/**
-	 * Simple filter to check if the itemstack should be pulled in by the servo (if
-	 * enabled).
-	 * 
-	 * @param stack
-	 * @return
-	 */
-	private boolean inputServoFilter(ItemStack stack) {
-		return getRecipe(stack).isPresent();
 	}
 
 	@Override

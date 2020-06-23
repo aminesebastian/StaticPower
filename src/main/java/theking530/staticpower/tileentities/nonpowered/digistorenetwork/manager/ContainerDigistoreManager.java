@@ -6,7 +6,7 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
-import theking530.staticpower.client.container.slots.UpgradeSlot;
+import theking530.staticpower.client.container.slots.UpgradeItemSlot;
 import theking530.staticpower.initialization.ModContainerTypes;
 
 public class ContainerDigistoreManager extends StaticPowerTileEntityContainer<TileEntityDigistoreManager> {
@@ -21,9 +21,9 @@ public class ContainerDigistoreManager extends StaticPowerTileEntityContainer<Ti
 
 	@Override
 	public void initializeContainer() {
-		addSlot(new UpgradeSlot(getTileEntity().upgradesInventory, 0, 152, 9));
-		addSlot(new UpgradeSlot(getTileEntity().upgradesInventory, 1, 152, 27));
-		addSlot(new UpgradeSlot(getTileEntity().upgradesInventory, 2, 152, 45));
+		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 0, 152, 9));
+		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 1, 152, 27));
+		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 2, 152, 45));
 
 		addPlayerHotbar(getPlayerInventory(), 8, 126);
 		addPlayerInventory(getPlayerInventory(), 8, 68);

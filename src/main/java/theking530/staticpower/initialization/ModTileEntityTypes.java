@@ -16,12 +16,12 @@ import theking530.staticpower.tileentities.powered.chargingstation.TileEntityCha
 import theking530.staticpower.tileentities.powered.lumbermill.TileEntityLumberMill;
 import theking530.staticpower.tileentities.powered.poweredfurnace.TileEntityPoweredFurnace;
 import theking530.staticpower.tileentities.powered.poweredgrinder.TileEntityPoweredGrinder;
-import theking530.staticpower.tileentities.powered.solarpanels.TileEntityBasicSolarPanel;
+import theking530.staticpower.tileentities.powered.solarpanels.TileEntitySolarPanel;
 
 public class ModTileEntityTypes {
 	public static TileEntityType<TileEntityVacuumChest> VACCUM_CHEST;
 	public static TileEntityType<TileEntityChargingStation> CHARGING_STATION;
-	public static TileEntityType<TileEntityBasicSolarPanel> SOLAR_PANEL_BASIC;
+	public static TileEntityType<TileEntitySolarPanel> SOLAR_PANEL_BASIC;
 	public static TileEntityType<TileEntityPoweredFurnace> POWERED_FURNACE;
 	public static TileEntityType<TileEntityPoweredGrinder> POWERED_GRINDER;
 	public static TileEntityType<TileEntityTank> TANK;
@@ -40,7 +40,7 @@ public class ModTileEntityTypes {
 	public static void init() {
 		VACCUM_CHEST = StaticPowerRegistry.preRegisterTileEntity(TileEntityVacuumChest::new, ModBlocks.VacuumChest);
 		CHARGING_STATION = StaticPowerRegistry.preRegisterTileEntity(TileEntityChargingStation::new, ModBlocks.ChargingStation);
-		SOLAR_PANEL_BASIC = StaticPowerRegistry.preRegisterTileEntity(TileEntityBasicSolarPanel::new, ModBlocks.SolarPanelBasic);
+		SOLAR_PANEL_BASIC = StaticPowerRegistry.preRegisterTileEntity(TileEntitySolarPanel::new, ModBlocks.SolarPanelBasic);
 		POWERED_FURNACE = StaticPowerRegistry.preRegisterTileEntity(TileEntityPoweredFurnace::new, ModBlocks.PoweredFurnace);
 		POWERED_GRINDER = StaticPowerRegistry.preRegisterTileEntity(TileEntityPoweredGrinder::new, ModBlocks.PoweredGrinder);
 		LUMBER_MILL = StaticPowerRegistry.preRegisterTileEntity(TileEntityLumberMill::new, ModBlocks.LumberMill);

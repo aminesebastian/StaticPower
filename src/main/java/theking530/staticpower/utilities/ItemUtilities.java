@@ -71,4 +71,22 @@ public class ItemUtilities {
 		}
 		return whitelist ? false : true;
 	}
+
+	/**
+	 * Compares the provided {@link ItemStack}s and returns true if they are equal
+	 * in all things except count.
+	 * 
+	 * @param item1
+	 * @param item2
+	 * @return
+	 */
+	public static boolean areItemStacksStackable(ItemStack item1, ItemStack item2) {
+		if (item1.getItem() != item2.getItem()) {
+			return false;
+		} else if (item1.getTag() == null && item2.getTag() != null) {
+			return false;
+		} else {
+			return item1.getTag() == null || item1.getTag().equals(item2.getTag()) && item1.areCapsCompatible(item2);
+		}
+	}
 }
