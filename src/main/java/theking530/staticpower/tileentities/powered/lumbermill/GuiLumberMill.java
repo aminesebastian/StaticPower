@@ -43,6 +43,6 @@ public class GuiLumberMill extends StaticPowerTileEntityGui<ContainerLumberMill,
 		drawGenericBackground(-30, 70, 28, 64);
 
 		drawContainerSlots(container.inventorySlots, getTileEntity().ioSideConfiguration);
-		drawPlayerInventorySlots();
+
 	}
 }

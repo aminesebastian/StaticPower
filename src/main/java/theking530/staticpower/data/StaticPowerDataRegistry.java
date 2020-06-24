@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import theking530.api.utilities.CustomJsonLoader;
 import theking530.staticpower.StaticPower;
 

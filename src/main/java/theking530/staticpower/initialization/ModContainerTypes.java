@@ -12,6 +12,8 @@ import theking530.staticpower.items.itemfilter.ContainerItemFilter;
 import theking530.staticpower.items.itemfilter.GuiItemFilter;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.ContainerDigistore;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.GuiDigistore;
+import theking530.staticpower.tileentities.nonpowered.tank.ContainerTank;
+import theking530.staticpower.tileentities.nonpowered.tank.GuiTank;
 import theking530.staticpower.tileentities.nonpowered.vacuumchest.ContainerVacuumChest;
 import theking530.staticpower.tileentities.nonpowered.vacuumchest.GuiVacuumChest;
 import theking530.staticpower.tileentities.powered.basicfarmer.ContainerBasicFarmer;
@@ -33,6 +35,7 @@ public class ModContainerTypes {
 	public static ContainerType<ContainerPoweredGrinder> POWERED_GRINDER_CONTAINER;
 	public static ContainerType<ContainerLumberMill> LUMBER_MILL_CONTAINER;
 	public static ContainerType<ContainerBasicFarmer> BASIC_FARMER_CONTAINER;
+	public static ContainerType<ContainerTank> TANK_CONTAINER;
 	
 	public static ContainerType<ContainerDigistore> DIGISTORE_CONTAINER;
 	public static ContainerType<ContainerExtractor> EXTRACTOR_CONTAINER;
@@ -47,6 +50,7 @@ public class ModContainerTypes {
 		POWERED_GRINDER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_powered_grinder", ContainerPoweredGrinder::new, GuiPoweredGrinder::new);
 		LUMBER_MILL_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_lumber_mill", ContainerLumberMill::new, GuiLumberMill::new);
 		BASIC_FARMER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_basic_farmer", ContainerBasicFarmer::new, GuiBasicFarmer::new);
+		TANK_CONTAINER = StaticPowerRegistry.preRegisterContainer("tank", ContainerTank::new, GuiTank::new);
 		
 		DIGISTORE_CONTAINER = StaticPowerRegistry.preRegisterContainer("digistore", ContainerDigistore::new, GuiDigistore::new);
 		EXTRACTOR_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_extractor", ContainerExtractor::new, GuiExtractor::new);

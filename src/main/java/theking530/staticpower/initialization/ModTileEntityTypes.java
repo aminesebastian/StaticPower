@@ -45,7 +45,7 @@ public class ModTileEntityTypes {
 		POWERED_GRINDER = StaticPowerRegistry.preRegisterTileEntity(TileEntityPoweredGrinder::new, ModBlocks.PoweredGrinder);
 		LUMBER_MILL = StaticPowerRegistry.preRegisterTileEntity(TileEntityLumberMill::new, ModBlocks.LumberMill);
 		BASIC_FARMER = StaticPowerRegistry.preRegisterTileEntity(TileEntityBasicFarmer::new, ModBlocks.BasicFarmer);
-		TANK = StaticPowerRegistry.preRegisterTileEntity(TileEntityTank::new, ModBlocks.Tank);
+		TANK = StaticPowerRegistry.preRegisterTileEntity(TileEntityTank::new, ModBlocks.BasicTank);
 
 		POWER_CABLE = StaticPowerRegistry.preRegisterTileEntity(TileEntityPowerCable::new, ModBlocks.PowerCable);
 		ITEM_CABLE = StaticPowerRegistry.preRegisterTileEntity(TileEntityItemCable::new, ModBlocks.ItemCable);

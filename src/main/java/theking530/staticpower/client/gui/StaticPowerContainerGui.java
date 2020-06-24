@@ -16,6 +16,7 @@ import theking530.api.gui.widgets.GuiDrawItem;
 import theking530.api.gui.widgets.tabs.GuiTabManager;
 import theking530.api.utilities.Color;
 import theking530.api.utilities.Vector2D;
+import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.tileentities.components.SideConfigurationComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
@@ -94,7 +95,12 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 
 		drawGenericBackground();
 		drawBackgroundExtras(partialTicks, mouseX, mouseY);
-		drawContainerSlots(container.inventorySlots);
+		if(container instanceof StaticPowerTileEntityContainer) {
+			drawContainerSlots(container.inventorySlots, ((StaticPowerTileEntityContainer<?>)container).getTileEntity().getComponent(SideConfigurationComponent.class));
+		}else {
+			drawContainerSlots(container.inventorySlots);
+		}
+
 		widgetContainer.update(new Vector2D(getGuiLeft(), getGuiTop()), new Vector2D(getXSize(), getYSize()));
 		widgetContainer.renderBackground(mouseX, mouseY, partialTicks);
 

@@ -5,7 +5,13 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.fluids.FluidStack;
 import theking530.api.utilities.Color;
 
 public class GuiDrawUtilities {
@@ -138,5 +144,18 @@ public class GuiDrawUtilities {
 
 	public static void drawTexturedModalRect(float x, float y, float width, float height, float minU, float minV, float maxU, float maxV, float texetSize) {
 		drawTexturedModalRect(x, y, width, height, minU * texetSize, minV * texetSize, maxU * texetSize, maxV * texetSize);
+	}
+
+	public static TextureAtlasSprite getStillFluidSprite(FluidStack fluidStack) {
+		Fluid fluid = fluidStack.getFluid();
+		FluidAttributes attributes = fluid.getAttributes();
+		ResourceLocation fluidStill = attributes.getStillTexture(fluidStack);
+		return Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(fluidStill);
+	}
+
+	public static Color getFluidColor(FluidStack fluid) {
+		FluidAttributes attributes = fluid.getFluid().getAttributes();
+		int encodedFluidColor = attributes.getColor(fluid);
+		return Color.fromEncodedInteger(encodedFluidColor).fromEightBitToFloat();
 	}
 }

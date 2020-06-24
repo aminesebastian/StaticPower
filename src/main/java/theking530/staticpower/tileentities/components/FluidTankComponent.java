@@ -1,5 +1,6 @@
 package theking530.staticpower.tileentities.components;
 
+import java.util.HashSet;
 import java.util.Optional;
 
 import net.minecraft.nbt.CompoundNBT;
@@ -22,22 +23,51 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 	protected boolean canFill;
 	protected boolean canDrain;
 	protected long lastUpdateTime;
-	protected MachineSideMode operationMode;
+	protected final HashSet<MachineSideMode> capabilityExposeModes;
 	private final FluidComponentCapabilityInterface capabilityInterface;
 
-	public FluidTankComponent(String name, int capacity, MachineSideMode operationMode) {
+	public FluidTankComponent(String name, int capacity) {
 		super(name);
-		this.operationMode = operationMode;
 		FluidStorage = new FluidTank(capacity);
 		canFill = true;
 		canDrain = true;
 		capabilityInterface = new FluidComponentCapabilityInterface();
+		capabilityExposeModes = new HashSet<MachineSideMode>();
+
+		// By default, ALWAYS expose this side, except on disabled or never.
+		for (MachineSideMode mode : MachineSideMode.values()) {
+			if (mode != MachineSideMode.Disabled && mode != MachineSideMode.Never) {
+				capabilityExposeModes.add(mode);
+			}
+		}
+	}
+
+	/**
+	 * Sets modes that will expose this tank as a capability. This is useful in the
+	 * case of the TankTileEntity, where it can be connected to in Regular, Input,
+	 * or Output modes.
+	 * 
+	 * @param mode
+	 * @return
+	 */
+	public FluidTankComponent setCapabilityExposedModes(MachineSideMode... modes) {
+		capabilityExposeModes.clear();
+		for (MachineSideMode mode : modes) {
+			capabilityExposeModes.add(mode);
+		}
+		return this;
 	}
 
 	public boolean getCanFill() {
 		return canFill;
 	}
 
+	/**
+	 * Sets this tank's ability to fill. Only affects the tank interface exposed
+	 * through the capability. You can still insert through direct reference.
+	 * 
+	 * @param canFill
+	 */
 	public void setCanFill(boolean canFill) {
 		this.canFill = canFill;
 	}
@@ -46,6 +76,12 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 		return canDrain;
 	}
 
+	/**
+	 * Sets this tank's ability to drain. Only affects the tank interface exposed
+	 * through the capability. You can drain insert through direct reference.
+	 * 
+	 * @param canDrain
+	 */
 	public void setCanDrain(boolean canDrain) {
 		this.canDrain = canDrain;
 	}
@@ -80,7 +116,7 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 			// Check if the owner is side configurable. If it is, check to make sure it's
 			// not disabled, if not, return the inventory.
 			Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getTileEntity());
-			if (side == null || !sideConfig.isPresent() || sideConfig.get().getWorldSpaceDirectionConfiguration(side) == operationMode) {
+			if (side == null || !sideConfig.isPresent() || capabilityExposeModes.contains(sideConfig.get().getWorldSpaceDirectionConfiguration(side))) {
 				return LazyOptional.of(() -> capabilityInterface).cast();
 			}
 		}

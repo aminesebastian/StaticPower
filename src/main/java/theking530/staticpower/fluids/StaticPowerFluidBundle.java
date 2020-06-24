@@ -20,9 +20,9 @@ public class StaticPowerFluidBundle {
 		String stillTexture = "blocks/fluids/" + name + "_still";
 		String flowingTexture = "blocks/fluids/" + name + "_flowing";
 		Tag = new FluidTags.Wrapper(new ResourceLocation(Reference.MOD_ID, name));
-		Bucket = new StaticPowerFluidBucket("bucket_" + name, () -> Fluid);
 		FluidBlock = new StaticPowerFluidBlock(name, () -> Fluid, Block.Properties.create(Material.WATER));
 		Fluid = new AbstractStaticPowerFluid.Source(name, () -> Bucket, () -> FluidBlock, () -> Fluid, () -> FlowingFluid, stillTexture, flowingTexture, Tag);
 		FlowingFluid = new AbstractStaticPowerFluid.Flowing(name, () -> Bucket, () -> FluidBlock, () -> Fluid, () -> FlowingFluid, stillTexture, flowingTexture, Tag);
+		Bucket = new StaticPowerFluidBucket("bucket_" + name, () -> Fluid);
 	}
 }

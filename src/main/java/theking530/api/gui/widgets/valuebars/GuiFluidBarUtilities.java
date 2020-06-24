@@ -13,13 +13,9 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.inventory.container.PlayerContainer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.api.gui.GuiDrawUtilities;
 import theking530.api.utilities.Color;
@@ -40,15 +36,8 @@ public class GuiFluidBarUtilities {
 		}
 
 		if (fluid != null && fluid.getFluid() != null) {
-
-			FluidAttributes attributes = fluid.getFluid().getAttributes();
-			int fluidColor = attributes.getColor(fluid);
-			float r = (fluidColor >> 16 & 0xFF) / 255.0f;
-			float g = (fluidColor >> 8 & 0xFF) / 255.0f;
-			float b = (fluidColor & 0xFF) / 255.0f;
-			float a = (fluidColor >> 24 & 0xFF) / 255.0f;
-
-			TextureAtlasSprite icon = getStillFluidSprite(fluid);
+			Color fluidColor = GuiDrawUtilities.getFluidColor(fluid);
+			TextureAtlasSprite icon = GuiDrawUtilities.getStillFluidSprite(fluid);
 			if (icon != null) {
 				Minecraft.getInstance().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 
@@ -69,10 +58,10 @@ public class GuiFluidBarUtilities {
 					Tessellator tessellator = Tessellator.getInstance();
 					BufferBuilder tes = tessellator.getBuffer();
 					tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
-					tes.pos(x + width, y - yMin, zLevel).color(r, g, b, a).tex(icon.getMaxU(), icon.getMinV()).endVertex();
-					tes.pos(x + width, y - yMax, zLevel).color(r, g, b, a).tex(icon.getMaxU(), icon.getMinV() + (fillRatio * diffV)).endVertex();
-					tes.pos(x, y - yMax, zLevel).color(r, g, b, a).tex(icon.getMinU(), icon.getMinV() + (fillRatio * diffV)).endVertex();
-					tes.pos(x, y - yMin, zLevel).color(r, g, b, a).tex(icon.getMinU(), icon.getMinV()).endVertex();
+					tes.pos(x + width, y - yMin, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha()).tex(icon.getMaxU(), icon.getMinV()).endVertex();
+					tes.pos(x + width, y - yMax, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha()).tex(icon.getMaxU(), icon.getMinV() + (fillRatio * diffV)).endVertex();
+					tes.pos(x, y - yMax, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha()).tex(icon.getMinU(), icon.getMinV() + (fillRatio * diffV)).endVertex();
+					tes.pos(x, y - yMin, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha()).tex(icon.getMinU(), icon.getMinV()).endVertex();
 					tessellator.draw();
 				}
 			}
@@ -88,13 +77,6 @@ public class GuiFluidBarUtilities {
 				}
 			}
 		}
-	}
-
-	public static TextureAtlasSprite getStillFluidSprite(FluidStack fluidStack) {
-		Fluid fluid = fluidStack.getFluid();
-		FluidAttributes attributes = fluid.getAttributes();
-		ResourceLocation fluidStill = attributes.getStillTexture(fluidStack);
-		return Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(fluidStill);
 	}
 
 	public static List<ITextComponent> getTooltip(int fluidAmount, int maxCapacity, FluidStack fluid) {

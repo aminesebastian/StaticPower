@@ -78,7 +78,7 @@ public class ModBlocks {
 	public static BlockPoweredGrinder PoweredGrinder;
 	public static BlockLumberMill LumberMill;
 	public static BlockBasicFarmer BasicFarmer;
-	public static BlockTank Tank;
+	public static BlockTank BasicTank;
 
 	public static BlockDigistoreNetworkWire DigistoreWire;
 	public static BlockDigistoreManager DigistoreManager;
@@ -136,7 +136,7 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(PoweredGrinder = new BlockPoweredGrinder("machine_powered_grinder"));
 		StaticPowerRegistry.preRegisterBlock(LumberMill = new BlockLumberMill("machine_lumber_mill"));
 		StaticPowerRegistry.preRegisterBlock(BasicFarmer = new BlockBasicFarmer("machine_basic_farmer"));
-		StaticPowerRegistry.preRegisterBlock(Tank = new BlockTank("tank"));
+		StaticPowerRegistry.preRegisterBlock(BasicTank = new BlockTank("tank_basic"));
 
 		StaticPowerRegistry.preRegisterBlock(DigistoreWire = new BlockDigistoreNetworkWire("digistore_wire"));
 		StaticPowerRegistry.preRegisterBlock(DigistoreManager = new BlockDigistoreManager("digistore_manager"));

@@ -31,6 +31,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -137,8 +138,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	public void onPlaced(BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
 		if (hasComponentOfType(SideConfigurationComponent.class)) {
 			if (DisableFaceInteraction) {
-				getComponent(SideConfigurationComponent.class).setWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, getFacingDirection()),
-						MachineSideMode.Never);
+				getComponent(SideConfigurationComponent.class).setWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, getFacingDirection()), MachineSideMode.Never);
 			}
 		}
 	}
@@ -205,8 +205,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	public Direction getFacingDirection() {
 		// If the world is null, return UP and log the error.
 		if (getWorld() == null) {
-			StaticPower.LOGGER.error("There was an attempt to get the facing direction before the block has been fully placed in the world! TileEntity: %1$s at position: %2$s.",
-					getDisplayName().getFormattedText(), pos);
+			StaticPower.LOGGER.error("There was an attempt to get the facing direction before the block has been fully placed in the world! TileEntity: %1$s at position: %2$s.", getDisplayName().getFormattedText(), pos);
 			return Direction.UP;
 		}
 
@@ -555,6 +554,9 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 */
 	@Override
 	public ITextComponent getDisplayName() {
+		if (getBlockState() != null && getBlockState().getBlock() != null) {
+			return new TranslationTextComponent(getBlockState().getBlock().getTranslationKey());
+		}
 		return new StringTextComponent("**ERROR**");
 	}
 }

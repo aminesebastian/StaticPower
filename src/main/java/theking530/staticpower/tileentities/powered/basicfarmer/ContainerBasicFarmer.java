@@ -14,6 +14,7 @@ import theking530.staticpower.client.container.slots.OutputSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.client.container.slots.UpgradeItemSlot;
 import theking530.staticpower.initialization.ModContainerTypes;
+import theking530.staticpower.machines.tileentitycomponents.slots.FluidContainerSlot;
 
 public class ContainerBasicFarmer extends StaticPowerTileEntityContainer<TileEntityBasicFarmer> {
 	public ContainerBasicFarmer(int windowId, PlayerInventory inv, PacketBuffer data) {
@@ -28,17 +29,16 @@ public class ContainerBasicFarmer extends StaticPowerTileEntityContainer<TileEnt
 	public void initializeContainer() {
 		for (int l = 0; l < 3; ++l) {
 			for (int i1 = 0; i1 < 3; ++i1) {
-				this.addSlot(new OutputSlot(getTileEntity().outputInventory, i1 + l * 3, 76 + i1 * 18, 20 + l * 18));
+				addSlot(new OutputSlot(getTileEntity().outputInventory, i1 + l * 3, 76 + i1 * 18, 20 + l * 18));
 			}
 		}
 
 		// FluidContainerSlots
-		// this.addSlot(new FluidContainerSlot(getTileEntity().slotsInternal, 1, -24,
-		// 11));
-		// this.addSlot(new OutputSlot(getTileEntity().slotsInternal, 2, -24, 43));
+		addSlot(new FluidContainerSlot(getTileEntity().fluidContainerInventory, Items.WATER_BUCKET, 0, -24, 11));
+		addSlot(new OutputSlot(getTileEntity().fluidContainerInventory, Items.BUCKET, 1, -24, 43));
 
 		// Hoe
-		this.addSlot(new StaticPowerContainerSlot(new ItemStack(Items.IRON_HOE), 0.3f, getTileEntity().inputInventory, 0, 48, 20) {
+		addSlot(new StaticPowerContainerSlot(new ItemStack(Items.IRON_HOE), 0.3f, getTileEntity().inputInventory, 0, 48, 20) {
 			@Override
 			public boolean isItemValid(ItemStack itemStack) {
 				return itemStack.getItem() instanceof HoeItem;
@@ -46,7 +46,7 @@ public class ContainerBasicFarmer extends StaticPowerTileEntityContainer<TileEnt
 		});
 
 		// Axe
-		this.addSlot(new StaticPowerContainerSlot(new ItemStack(Items.IRON_AXE), 0.3f, getTileEntity().inputInventory, 1, 48, 56) {
+		addSlot(new StaticPowerContainerSlot(new ItemStack(Items.IRON_AXE), 0.3f, getTileEntity().inputInventory, 1, 48, 56) {
 			@Override
 			public boolean isItemValid(ItemStack itemStack) {
 				return itemStack.getItem() instanceof AxeItem;
@@ -54,15 +54,15 @@ public class ContainerBasicFarmer extends StaticPowerTileEntityContainer<TileEnt
 		});
 
 		// Battery
-		this.addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 60));
+		addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 60));
 
 		// Upgrades
-		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 0, -24, 76));
-		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 1, -24, 94));
-		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 2, -24, 112));
+		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 0, -24, 76));
+		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 1, -24, 94));
+		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 2, -24, 112));
 
-		this.addPlayerInventory(getPlayerInventory(), 8, 84);
-		this.addPlayerHotbar(getPlayerInventory(), 8, 142);
+		addPlayerInventory(getPlayerInventory(), 8, 84);
+		addPlayerHotbar(getPlayerInventory(), 8, 142);
 	}
 
 	@Override

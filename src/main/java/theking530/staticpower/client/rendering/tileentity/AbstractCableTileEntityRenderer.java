@@ -10,9 +10,8 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.item.BlockItem;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.api.gui.widgets.valuebars.GuiFluidBarUtilities;
+import theking530.api.gui.GuiDrawUtilities;
 import theking530.api.utilities.Color;
 import theking530.staticpower.client.rendering.BlockModel;
 import theking530.staticpower.tileentities.TileEntityBase;
@@ -30,8 +29,7 @@ public abstract class AbstractCableTileEntityRenderer<T extends TileEntityBase> 
 		super(rendererDispatcherIn);
 	}
 
-	protected void renderItemRoutingParcel(ItemRoutingParcelClient packet, T te, BlockPos pos, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight,
-			int combinedOverlay) {
+	protected void renderItemRoutingParcel(ItemRoutingParcelClient packet, T te, BlockPos pos, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
 
 		Direction dir = packet.getItemAnimationDirection();
 		if (dir == null) {
@@ -42,11 +40,9 @@ public abstract class AbstractCableTileEntityRenderer<T extends TileEntityBase> 
 
 		// Determine which scale to use when drawing.
 		if (packet.getContainedItem().getItem() instanceof BlockItem) {
-			drawItemInWorld(te, packet.getContainedItem(), TransformType.FIXED, getItemParcelAnimationOffset(lerpValue, dir), BLOCK_RENDER_SCALE, partialTicks, matrixStack, buffer, combinedLight,
-					combinedOverlay);
+			drawItemInWorld(te, packet.getContainedItem(), TransformType.FIXED, getItemParcelAnimationOffset(lerpValue, dir), BLOCK_RENDER_SCALE, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 		} else {
-			drawItemInWorld(te, packet.getContainedItem(), TransformType.FIXED, getItemParcelAnimationOffset(lerpValue, dir), ITEM_RENDER_SCALE, partialTicks, matrixStack, buffer, combinedLight,
-					combinedOverlay);
+			drawItemInWorld(te, packet.getContainedItem(), TransformType.FIXED, getItemParcelAnimationOffset(lerpValue, dir), ITEM_RENDER_SCALE, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 		}
 
 		matrixStack.pop();
@@ -62,10 +58,8 @@ public abstract class AbstractCableTileEntityRenderer<T extends TileEntityBase> 
 	}
 
 	protected void drawFluidCable(FluidStack fluid, float filledPercentage, MatrixStack matrixStack, AbstractCableProviderComponent cableComponent) {
-		FluidAttributes attributes = fluid.getFluid().getAttributes();
-		int encodedFluidColor = attributes.getColor(fluid);
-		TextureAtlasSprite sprite = GuiFluidBarUtilities.getStillFluidSprite(fluid);
-		Color fluidColor = Color.fromEncodedInteger(encodedFluidColor).fromEightBitToFloat();
+		TextureAtlasSprite sprite = GuiDrawUtilities.getStillFluidSprite(fluid);
+		Color fluidColor = GuiDrawUtilities.getFluidColor(fluid);
 
 		boolean wasExtensionDrawn = false;
 		for (Direction dir : Direction.values()) {

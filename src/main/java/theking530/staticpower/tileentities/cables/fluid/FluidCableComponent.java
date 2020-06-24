@@ -44,6 +44,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 			getFluidNetworkModule().ifPresent(network -> {
 				boolean shouldUpdate = !network.getFluidStorage().getFluid().isFluidEqual(lastUpdateFluidStack);
 				shouldUpdate |= Math.abs(lastUpdateFilledPercentage - getFilledPercentage()) > UPDATE_THRESHOLD;
+				shouldUpdate |= lastUpdateFilledPercentage > 0 && this.getFluidInTank(0).isEmpty();
 				if (shouldUpdate) {
 					updateClientRenderValues();
 				}

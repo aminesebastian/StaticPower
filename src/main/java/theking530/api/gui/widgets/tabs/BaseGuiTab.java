@@ -35,6 +35,7 @@ public abstract class BaseGuiTab {
 	 */
 	public enum TabState {
 		CLOSED, OPENING, OPEN, CLOSING; // The order that these are defined in is very important, do not reorder.
+
 		/**
 		 * Helper method for incrementing the current animation state of the tab.
 		 * Returns a new {@link TabState} that is one state further along than the
@@ -66,7 +67,7 @@ public abstract class BaseGuiTab {
 	protected int yPosition;
 	protected final WidgetContainer widgetContainer;
 	protected final FontRenderer fontRenderer;
-	
+
 	private float currentWidth;
 	private float currentHeight;
 
@@ -302,7 +303,7 @@ public abstract class BaseGuiTab {
 	 */
 	private void updateAnimation(float partialTicks) {
 		if (tabState == TabState.OPENING && animationTimer < animationTime) {
-			animationTimer = Math.min(animationTime, animationTimer + partialTicks * 2);
+			animationTimer = Math.min(animationTime, animationTimer + partialTicks * 1.75f);
 			if (animationTimer == animationTime) {
 				tabState = TabState.OPEN;
 			}

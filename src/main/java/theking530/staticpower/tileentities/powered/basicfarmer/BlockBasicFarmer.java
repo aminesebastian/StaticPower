@@ -10,7 +10,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import theking530.staticpower.client.rendering.blocks.GreenMachineBaskedModel;
+import theking530.staticpower.client.rendering.blocks.GreenMachineBakedModel;
 import theking530.staticpower.initialization.ModTileEntityTypes;
 import theking530.staticpower.tileentities.StaticPowerDefaultMachineBlock;
 
@@ -22,7 +22,7 @@ public class BlockBasicFarmer extends StaticPowerDefaultMachineBlock {
 
 	@Override
 	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
-		return new GreenMachineBaskedModel(existingModel);
+		return new GreenMachineBakedModel(existingModel);
 	}
 
 	@Override

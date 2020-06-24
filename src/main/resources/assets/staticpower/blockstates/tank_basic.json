@@ -1,0 +1,5 @@
+{
+    "variants": {
+        "": { "model": "staticpower:block/machines/tank_basic" }
+    }
+}

@@ -34,6 +34,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticpower.initialization.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.BatteryComponent;
+import theking530.staticpower.tileentities.components.FluidContainerComponent;
 import theking530.staticpower.tileentities.components.FluidTankComponent;
 import theking530.staticpower.tileentities.components.InputServoComponent;
 import theking530.staticpower.tileentities.components.InventoryComponent;
@@ -53,7 +54,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
-	public final InventoryComponent internalInventory;
+	public final InventoryComponent fluidContainerInventory;
 	public final InventoryComponent batteryInventory;
 	public final InventoryComponent upgradesInventory;
 	public final MachineProcessingComponent processingComponent;
@@ -76,17 +77,18 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 				return !stack.isEmpty() && (stack.getItem() instanceof AxeItem || stack.getItem() instanceof HoeItem);
 			}
 		}));
-		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1, MachineSideMode.Never));
+		registerComponent(fluidContainerInventory = new InventoryComponent("FluidContainerInventory", 2, MachineSideMode.Never));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 9, MachineSideMode.Output));
 		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
 
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 5, this::processingCompleted));
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000).setCapabilityExposedModes(MachineSideMode.Input));
 
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory, 0));
 		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory, 0, 1, 2, 3, 4, 5, 6, 7, 8));
+		registerComponent(new FluidContainerComponent("FluidContainerServo", fluidContainerInventory, fluidTankComponent, 0, 1));
 		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
-		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, MachineSideMode.Input));
 
 		// Capture all the harvestable blocks.
 		validHarvestacbleClasses = new HashSet<Class<? extends Block>>();
@@ -250,8 +252,8 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	public boolean canFarm() {
 		// Check to see if we have enough power and if we have the axe and hoe
 		// populated.
-		if (energyStorage.getStorage().getEnergyStored() >= DEFAULT_HARVEST_ENERGY_COST * blocksFarmedPerTick && !inputInventory.getStackInSlot(0).isEmpty()
-				&& inputInventory.getStackInSlot(0).getItem() instanceof HoeItem && !inputInventory.getStackInSlot(1).isEmpty() && inputInventory.getStackInSlot(1).getItem() instanceof AxeItem) {
+		if (energyStorage.getStorage().getEnergyStored() >= DEFAULT_HARVEST_ENERGY_COST * blocksFarmedPerTick && !inputInventory.getStackInSlot(0).isEmpty() && inputInventory.getStackInSlot(0).getItem() instanceof HoeItem
+				&& !inputInventory.getStackInSlot(1).isEmpty() && inputInventory.getStackInSlot(1).getItem() instanceof AxeItem) {
 			// If we have enough fluid, return true.
 			return fluidTankComponent.getFluid().getAmount() > DEFAULT_WATER_USAGE && fluidTankComponent.getFluid().getFluid() == Fluids.WATER;
 		}
@@ -314,8 +316,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		if (getWorld().getBlockState(pos).getBlock() instanceof CropsBlock) {
 			CropsBlock tempCrop = (CropsBlock) getWorld().getBlockState(pos).getBlock();
 			if (tempCrop.isMaxAge(getWorld().getBlockState(pos))) {
-				getWorld().playSound(null, pos, getWorld().getBlockState(pos).getBlock().getSoundType(getWorld().getBlockState(pos), world, pos, null).getBreakSound(), SoundCategory.BLOCKS, 1.0F,
-						1.0F);
+				getWorld().playSound(null, pos, getWorld().getBlockState(pos).getBlock().getSoundType(getWorld().getBlockState(pos), world, pos, null).getBreakSound(), SoundCategory.BLOCKS, 1.0F, 1.0F);
 				getWorld().addParticle(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D);
 				if (!getWorld().isRemote) {
 					farmedStacks.addAll(getBlockDrops(pos));
@@ -349,9 +350,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 					getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 2);
 					useAxe();
 				}
-				getWorld().playSound(null, pos,
-						getWorld().getBlockState(pos.add(0, 1, 0)).getBlock().getSoundType(getWorld().getBlockState(pos.add(0, 1, 0)), world, pos.add(0, 1, 0), null).getBreakSound(),
-						SoundCategory.BLOCKS, 1.0F, 1.0F);
+				getWorld().playSound(null, pos, getWorld().getBlockState(pos.add(0, 1, 0)).getBlock().getSoundType(getWorld().getBlockState(pos.add(0, 1, 0)), world, pos.add(0, 1, 0), null).getBreakSound(), SoundCategory.BLOCKS, 1.0F, 1.0F);
 				getWorld().addParticle(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5D, pos.add(0, 1, 0).getY() + 1.0D, pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D);
 				return true;
 			}
@@ -373,9 +372,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 					getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 3);
 					useAxe();
 				}
-				getWorld().playSound(null, pos,
-						getWorld().getBlockState(pos.add(0, 1, 0)).getBlock().getSoundType(getWorld().getBlockState(pos.add(0, 1, 0)), world, pos.add(0, 1, 0), null).getBreakSound(),
-						SoundCategory.BLOCKS, 1.0F, 1.0F);
+				getWorld().playSound(null, pos, getWorld().getBlockState(pos.add(0, 1, 0)).getBlock().getSoundType(getWorld().getBlockState(pos.add(0, 1, 0)), world, pos.add(0, 1, 0), null).getBreakSound(), SoundCategory.BLOCKS, 1.0F, 1.0F);
 				getWorld().addParticle(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5D, pos.add(0, 1, 0).getY() + 1.0D, pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D);
 				return true;
 			}
@@ -402,8 +399,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		if (getWorld().getBlockState(pos).getBlock() instanceof NetherWartBlock) {
 			NetherWartBlock tempNetherwart = (NetherWartBlock) getWorld().getBlockState(pos).getBlock();
 			if (tempNetherwart.getPlant(getWorld(), pos).get(NetherWartBlock.AGE) >= 3) {
-				getWorld().playSound(null, pos, getWorld().getBlockState(pos).getBlock().getSoundType(getWorld().getBlockState(pos), world, pos, null).getBreakSound(), SoundCategory.BLOCKS, 1.0F,
-						1.0F);
+				getWorld().playSound(null, pos, getWorld().getBlockState(pos).getBlock().getSoundType(getWorld().getBlockState(pos), world, pos, null).getBreakSound(), SoundCategory.BLOCKS, 1.0F, 1.0F);
 				getWorld().addParticle(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D);
 				if (!getWorld().isRemote) {
 					farmedStacks.addAll(getBlockDrops(pos));

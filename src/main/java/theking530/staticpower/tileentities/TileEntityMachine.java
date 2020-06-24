@@ -2,9 +2,6 @@ package theking530.staticpower.tileentities;
 
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import theking530.staticpower.tileentities.components.EnergyStorageComponent;
 import theking530.staticpower.tileentities.components.RedstoneControlComponent;
 import theking530.staticpower.tileentities.components.SideConfigurationComponent;
@@ -65,13 +62,5 @@ public abstract class TileEntityMachine extends TileEntityBase {
 
 	public int useEnergy(int energyCost) {
 		return 0; // extractEnergy(null, energyCost, false);
-	}
-
-	@Override
-	public ITextComponent getDisplayName() {
-		if (getBlockState() != null && getBlockState().getBlock() != null) {
-			return new TranslationTextComponent(getBlockState().getBlock().getTranslationKey());
-		}
-		return new StringTextComponent("**ERROR**");
 	}
 }

@@ -153,5 +153,4 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
 		return new ContainerPoweredFurnace(windowId, inventory, this);
 	}
-
 }
