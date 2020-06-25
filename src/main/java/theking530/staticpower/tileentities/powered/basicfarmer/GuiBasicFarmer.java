@@ -32,7 +32,8 @@ public class GuiBasicFarmer extends StaticPowerTileEntityGui<ContainerBasicFarme
 	public void initializeGui() {
 		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 48));
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 150, 8, 16, 60, MachineSideMode.Input, getTileEntity()));
-
+		
+		getTabManager().registerTab(infoTab = new GuiInfoTab(100, 100));
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
 
@@ -40,7 +41,7 @@ public class GuiBasicFarmer extends StaticPowerTileEntityGui<ContainerBasicFarme
 		getTabManager().registerTab(powerTab = new GuiPowerInfoTab(ComponentUtilities.getComponent(EnergyStorageComponent.class, "MainEnergyStorage", getTileEntity()).get()));
 		getTabManager().setInitiallyOpenTab(powerTab);
 
-		getTabManager().registerTab(infoTab = new GuiInfoTab(100, 100));
+
 
 //		registerWidget(drawPreviewButton = new TextButton(118, 40, 20, 20, "D", this::buttonPressed));
 //		drawPreviewButton.setTooltip(new TranslationTextComponent("Draw Preview"));
@@ -57,12 +58,9 @@ public class GuiBasicFarmer extends StaticPowerTileEntityGui<ContainerBasicFarme
 
 	@Override
 	protected void drawBackgroundExtras(float partialTicks, int mouseX, int mouseY) {
+		super.drawBackgroundExtras(partialTicks, mouseX, mouseY);
 		drawGenericBackground(-30, 5, 28, 60);
 		drawGenericBackground(-30, 70, 28, 64);
-		drawGenericBackground();
-		// drawPlayerInventorySlots();
-
-		drawContainerSlots(container.inventorySlots, getTileEntity().ioSideConfiguration);
 
 		infoTab.setText("Farmer", "Farms plants in a " + TextFormatting.YELLOW + getTileEntity().getRadius() + " block=radius.==Requires " + TextFormatting.DARK_AQUA + "water" + TextFormatting.RESET
 				+ " to operate=but other fluids may yield=better growth results...==Current Growth Factor: " + TextFormatting.GOLD + getTileEntity().getGrowthBonus() + "%");

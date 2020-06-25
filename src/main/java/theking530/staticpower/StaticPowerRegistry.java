@@ -84,19 +84,20 @@ public class StaticPowerRegistry {
 	/**
 	 * Pre-registers a {@link TileEntity} for initialization through the registry
 	 * event. Returns an instance of the {@link TileEntityType} for this
-	 * {@link TileEntity} and {@link Block} combination.
+	 * {@link TileEntity} and {@link Block} list combination. The registry name fo
+	 * the tile entity type will be the registry name of the first provided block.
 	 * 
-	 * @param <T>             The type of the {@link TileEntity}.
-	 * @param factory         The tile entity create factory.
-	 * @param tileEntityBlock The {@link Block} that is responsible for this tile
-	 *                        entity.
+	 * @param <T>              The type of the {@link TileEntity}.
+	 * @param factory          The tile entity create factory.
+	 * @param tileEntityBlocks The {@link Block} that is responsible for this tile
+	 *                         entity.
 	 * @return An instance of the {@link TileEntityType} for the provided
 	 *         {@link TileEntity} & {@link Block}.
 	 */
 	@SuppressWarnings({ "unchecked" })
-	public static <T extends TileEntity> TileEntityType<T> preRegisterTileEntity(Supplier<? extends T> factory, Block tileEntityBlock) {
-		TileEntityType teType = TileEntityType.Builder.create(factory, tileEntityBlock).build(null);
-		teType.setRegistryName(tileEntityBlock.getRegistryName());
+	public static <T extends TileEntity> TileEntityType<T> preRegisterTileEntity(Supplier<? extends T> factory, Block... tileEntityBlocks) {
+		TileEntityType teType = TileEntityType.Builder.create(factory, tileEntityBlocks).build(null);
+		teType.setRegistryName(tileEntityBlocks[0].getRegistryName());
 		TILE_ENTITY_TYPES.add(teType);
 		return teType;
 	}

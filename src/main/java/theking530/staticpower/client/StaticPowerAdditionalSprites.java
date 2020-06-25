@@ -32,9 +32,6 @@ public class StaticPowerAdditionalSprites {
 	public static final ResourceLocation GREEN_MACHINE_SIDE_DISABLED = registerSprite("blocks/machines/farmer_side_disabled");
 
 	public static final ResourceLocation TANK_SIDE = registerSprite("blocks/machines/tank_basic");
-	public static final ResourceLocation TANK_SIDE_INPUT = registerSprite("blocks/machines/tank_basic_input");
-	public static final ResourceLocation TANK_SIDE_OUTPUT = registerSprite("blocks/machines/tank_basic_output");
-	public static final ResourceLocation TANK_SIDE_DISABLED = registerSprite("blocks/machines/tank_basic_disabled");
 
 	
 	private static ResourceLocation registerSprite(String path) {

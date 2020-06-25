@@ -73,12 +73,17 @@ public class ModBlocks {
 	// Machines
 	public static BlockVacuumChest VacuumChest;
 	public static BlockChargingStation ChargingStation;
-	public static BlockSolarPanel SolarPanelBasic;
 	public static BlockPoweredFurnace PoweredFurnace;
 	public static BlockPoweredGrinder PoweredGrinder;
 	public static BlockLumberMill LumberMill;
 	public static BlockBasicFarmer BasicFarmer;
 	public static BlockTank BasicTank;
+
+	public static BlockSolarPanel SolarPanelBasic;
+	public static BlockSolarPanel SolarPanelStatic;
+	public static BlockSolarPanel SolarPanelEnergized;
+	public static BlockSolarPanel SolarPanelLumum;
+	public static BlockSolarPanel SolarPanelCreative;
 
 	public static BlockDigistoreNetworkWire DigistoreWire;
 	public static BlockDigistoreManager DigistoreManager;
@@ -132,6 +137,11 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(VacuumChest = new BlockVacuumChest("chest_vacuum"));
 		StaticPowerRegistry.preRegisterBlock(ChargingStation = new BlockChargingStation("machine_charging_station"));
 		StaticPowerRegistry.preRegisterBlock(SolarPanelBasic = new BlockSolarPanel("solar_panel_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterBlock(SolarPanelStatic = new BlockSolarPanel("solar_panel_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterBlock(SolarPanelEnergized = new BlockSolarPanel("solar_panel_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterBlock(SolarPanelLumum = new BlockSolarPanel("solar_panel_lumum", StaticPowerTiers.LUMUM));
+		StaticPowerRegistry.preRegisterBlock(SolarPanelCreative = new BlockSolarPanel("solar_panel_creative", StaticPowerTiers.CREATIVE));
+
 		StaticPowerRegistry.preRegisterBlock(PoweredFurnace = new BlockPoweredFurnace("machine_powered_furnace"));
 		StaticPowerRegistry.preRegisterBlock(PoweredGrinder = new BlockPoweredGrinder("machine_powered_grinder"));
 		StaticPowerRegistry.preRegisterBlock(LumberMill = new BlockLumberMill("machine_lumber_mill"));

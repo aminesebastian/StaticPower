@@ -146,17 +146,17 @@ public class GuiSideConfigTab extends BaseGuiTab {
 				button = topButton;
 				break;
 			}
-			
+
 			// Get the world space direction and current side mode.
 			Direction worldSpaceSide = SideConfigurationUtilities.getDirectionFromSide(side, tileEntity.getFacingDirection());
 			MachineSideMode currentMode = sideComp.getWorldSpaceDirectionConfiguration(worldSpaceSide);
-			
+
 			// Get the translation components.
 			TranslationTextComponent translatedSideName = side.getName();
 			ITextComponent translatedModeName = currentMode.getName();
 
 			button.setText(currentMode.getFontColor() + translatedSideName.getFormattedText().substring(0, 1));
-			button.setTooltip(translatedSideName.appendText("(").appendSibling(translatedModeName).appendText(TextFormatting.WHITE + ")"));
+			button.setTooltip(translatedSideName.appendText(" (").appendSibling(new TranslationTextComponent("gui.staticpower.direction." + worldSpaceSide.toString())).appendText(TextFormatting.WHITE + ")"), translatedModeName);
 		}
 	}
 

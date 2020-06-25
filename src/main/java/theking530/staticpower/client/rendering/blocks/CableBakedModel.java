@@ -23,8 +23,8 @@ import net.minecraft.world.ILightReader;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import theking530.staticpower.tileentities.cables.AbstractCableProviderComponent;
-import theking530.staticpower.tileentities.cables.ServerCable.CableConnectionState;
 import theking530.staticpower.tileentities.cables.CableUtilities;
+import theking530.staticpower.tileentities.cables.ServerCable.CableConnectionState;
 
 public class CableBakedModel extends AbstractBakedModel {
 	public static final Logger LOGGER = LogManager.getLogger(AbstractBakedModel.class);
@@ -61,11 +61,14 @@ public class CableBakedModel extends AbstractBakedModel {
 		// Build the proper quad array.
 		ImmutableList.Builder<BakedQuad> newQuads = new ImmutableList.Builder<BakedQuad>();
 
+		
 		// Get the model properties.
 		boolean[] disabledSides = data.getData(AbstractCableProviderComponent.DISABLED_CABLE_SIDES);
 		CableConnectionState[] cableConnectionStates = data.getData(AbstractCableProviderComponent.CABLE_CONNECTION_STATES);
 		ResourceLocation[] attachmentModels = data.getData(AbstractCableProviderComponent.CABLE_ATTACHMENT_MODELS);
 
+
+		
 		// If we have a simple straight connection, just add that mode. Otherwise, add
 		// the core and then apply any additional models.
 		if (CableUtilities.isCableStraightConnection(cableConnectionStates)) {

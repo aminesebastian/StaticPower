@@ -1,12 +1,18 @@
 package theking530.staticpower.utilities;
 
+import java.util.Collections;
+import java.util.List;
+
+import net.minecraft.block.Block;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 public class WorldUtilities {
 
@@ -136,5 +142,22 @@ public class WorldUtilities {
 
 	public static ItemEntity dropItem(World worldIn, Direction facing, BlockPos pos, ItemStack stack, int count) {
 		return dropItem(worldIn, facing, pos.getX(), pos.getY(), pos.getZ(), stack, count);
+	}
+
+	/**
+	 * Gets all the drops for the provided block. Returns an empty list if called on
+	 * the client.
+	 * 
+	 * @param world
+	 * @param pos
+	 * @return
+	 */
+	public static List<ItemStack> getBlockDrops(World world, BlockPos pos) {
+		if (!world.isRemote) {
+			NonNullList<ItemStack> output = NonNullList.create();
+			output.addAll(Block.getDrops(world.getBlockState(pos), (ServerWorld) world, pos, null));
+			return output;
+		}
+		return Collections.emptyList();
 	}
 }

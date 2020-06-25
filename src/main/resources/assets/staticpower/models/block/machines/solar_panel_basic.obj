@@ -1,6 +1,6 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
-mtllib basic_solar_panel.mtl
+mtllib solar_panel_basic.mtl
 g default
 v 0.363636 0.000778 1.000000
 v 1.000000 0.000778 1.000000

@@ -12,10 +12,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.initialization.ModBlocks;
 import theking530.staticpower.initialization.ModTileEntityTypes;
 import theking530.staticpower.tileentities.components.InventoryComponent;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.BaseDigistoreTileEntity;
@@ -79,11 +76,10 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 				}
 			}
 
-			// IF an item was inserted and the world is remote, play a sound.
-			if (world.isRemote && itemInserted) {
-				world.playSound(player, pos, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, SoundCategory.PLAYERS, 1.0f, 1.0f);
+			if (itemInserted) {
+				world.playSound(null, pos, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, SoundCategory.PLAYERS, 1.0f, 1.0f);
+				return ActionResultType.SUCCESS;
 			}
-			return ActionResultType.SUCCESS;
 		}
 		return super.onBlockActivated(state, player, hand, hit);
 	}
@@ -280,10 +276,5 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 	@Override
 	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
 		return new ContainerDigistore(windowId, inventory, this);
-	}
-
-	@Override
-	public ITextComponent getDisplayName() {
-		return new TranslationTextComponent(ModBlocks.Digistore.getTranslationKey());
 	}
 }

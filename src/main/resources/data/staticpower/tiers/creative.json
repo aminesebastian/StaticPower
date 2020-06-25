@@ -1,0 +1,10 @@
+{
+	"tierId": {
+		"namespace": "staticpower",
+		"path": "tier_creative"
+	},
+	"unlocalizedTierName": "tier.staticpower.creative",
+	"portableBatteryCapacity": 2147483647,
+	"solarPanelPowerGeneration": 2147483647,
+	"solarPanelPowerStorage": 2147483647
+}

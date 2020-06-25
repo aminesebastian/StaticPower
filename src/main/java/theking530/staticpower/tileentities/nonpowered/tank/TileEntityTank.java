@@ -25,7 +25,7 @@ public class TileEntityTank extends TileEntityBase implements INamedContainerPro
 		// Add the tank component.
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 16000).setCapabilityExposedModes(MachineSideMode.Regular, MachineSideMode.Input, MachineSideMode.Output));
 		fluidTankComponent.setCanFill(true);
-
+		DisableFaceInteraction = false;
 		// Add the side configuration component.
 		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", (side, mode) -> {
 		}, (side, mode) -> {
@@ -39,8 +39,8 @@ public class TileEntityTank extends TileEntityBase implements INamedContainerPro
 		registerComponent(new FluidContainerComponent("FluidDrainContainerServo", fluidContainerInventory, fluidTankComponent, 2, 3).setMode(FluidContainerInteractionMode.FILL));
 
 		// Add the two components to auto input and output fluids.
-		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 10, fluidTankComponent, MachineSideMode.Input));
-		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 10, fluidTankComponent, MachineSideMode.Output));
+		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, fluidTankComponent, MachineSideMode.Input));
+		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
 	}
 
 	@Override

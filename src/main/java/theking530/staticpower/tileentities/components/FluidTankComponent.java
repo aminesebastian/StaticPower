@@ -2,6 +2,7 @@ package theking530.staticpower.tileentities.components;
 
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
@@ -25,14 +26,20 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 	protected long lastUpdateTime;
 	protected final HashSet<MachineSideMode> capabilityExposeModes;
 	private final FluidComponentCapabilityInterface capabilityInterface;
+	private final Predicate<FluidStack> fluidStackFilter;
 
 	public FluidTankComponent(String name, int capacity) {
+		this(name, capacity, (fluid) -> true);
+	}
+
+	public FluidTankComponent(String name, int capacity, Predicate<FluidStack> fluidStackFilter) {
 		super(name);
 		FluidStorage = new FluidTank(capacity);
 		canFill = true;
 		canDrain = true;
 		capabilityInterface = new FluidComponentCapabilityInterface();
 		capabilityExposeModes = new HashSet<MachineSideMode>();
+		this.fluidStackFilter = fluidStackFilter;
 
 		// By default, ALWAYS expose this side, except on disabled or never.
 		for (MachineSideMode mode : MachineSideMode.values()) {
@@ -160,11 +167,14 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 
 	@Override
 	public boolean isFluidValid(int tank, FluidStack stack) {
-		return FluidStorage.isFluidValid(tank, stack);
+		return fluidStackFilter.test(stack) && FluidStorage.isFluidValid(tank, stack);
 	}
 
 	@Override
 	public int fill(FluidStack resource, FluidAction action) {
+		if (!fluidStackFilter.test(resource)) {
+			return 0;
+		}
 		return FluidStorage.fill(resource, action);
 	}
 

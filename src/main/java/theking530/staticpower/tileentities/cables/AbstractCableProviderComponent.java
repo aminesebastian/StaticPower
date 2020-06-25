@@ -131,7 +131,10 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			CableNetworkManager manager = CableNetworkManager.get(getWorld());
 			if (!manager.isTrackingCable(getTileEntity().getPos())) {
 				ServerCable wrapper = new ServerCable(getWorld(), getPos(), SupportedNetworkModules);
-				manager.addCable(wrapper);
+				//if(!SupportedNetworkModules.contains(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE)) {
+					manager.addCable(wrapper);
+				//}
+
 			}
 		}
 	}
@@ -260,7 +263,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 * @return
 	 */
 	public CableNetwork getNetwork() {
-		return CableNetworkManager.get(getWorld()).getCable(getPos()).getNetwork();
+		return CableNetworkManager.get(getWorld()).isTrackingCable(getPos()) ? CableNetworkManager.get(getWorld()).getCable(getPos()).getNetwork() : null;
 	}
 
 	/**

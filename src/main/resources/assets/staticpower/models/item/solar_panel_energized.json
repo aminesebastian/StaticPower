@@ -1,5 +1,5 @@
 {
-	"parent": "staticpower:block/machines/solar_panel_basic",
+	"parent": "staticpower:block/machines/solar_panel_energized",
 	"gui_light": "front",
 	"flip-v": true,
 	"transform": {

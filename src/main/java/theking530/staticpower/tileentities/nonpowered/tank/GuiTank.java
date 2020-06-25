@@ -19,7 +19,7 @@ public class GuiTank extends StaticPowerTileEntityGui<ContainerTank, TileEntityT
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 72, 20, 32, 74));
 		tabManager.registerTab(infoTab = new GuiInfoTab(100, 65));
 
-		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
+		getTabManager().registerTab(new GuiSideConfigTab(true, getTileEntity()));
 	}
 
 	@Override

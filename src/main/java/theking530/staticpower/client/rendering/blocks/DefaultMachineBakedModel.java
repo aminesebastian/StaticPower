@@ -10,6 +10,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.Vector3f;
@@ -76,19 +77,34 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 
 		AtlasTexture blocksStitchedTextures = ModelLoader.instance().getSpriteMap().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 
+		// Iterate through all the quads.
 		for (BakedQuad quad : baseQuads) {
-			TextureAtlasSprite sideSprite = getSpriteForMachineSide(sideConfigurations.get()[side.ordinal()], blocksStitchedTextures);
-			if (sideConfigurations.get()[side.ordinal()] != MachineSideMode.Never) {
-				BlockFaceUV blockFaceUV = new BlockFaceUV(new float[] { 0.0f, 0.0f, 16.0f, 16.0f }, 0);
-				BlockPartFace blockPartFace = new BlockPartFace(null, -1, sideSprite.getName().toString(), blockFaceUV);
-				BakedQuad newQuad = FaceBaker.bakeQuad(new Vector3f(0, 0, 0), new Vector3f(16.0f, 16.0f, 16.0f), blockPartFace, sideSprite, side, IDENTITY, null, true,
-						new ResourceLocation("dummy_name"));
-				newQuads.add(newQuad);
-			} else {
-				newQuads.add(quad);
+			Direction renderingSide = side == null ? quad.getFace() : side;
+
+			MachineSideMode sideMode = sideConfigurations.get()[renderingSide.ordinal()];
+			try {
+				// Get the texture sprite for the side.
+				TextureAtlasSprite sideSprite = getSpriteForMachineSide(sideMode, blocksStitchedTextures);
+
+				// Attempt to render the quad for the side.
+				renderQuadsForSide(newQuads, renderingSide, sideSprite, quad, sideMode);
+			} catch (Exception e) {
+				System.out.println(e);
 			}
+
 		}
 		return newQuads.build();
+	}
+
+	protected void renderQuadsForSide(Builder<BakedQuad> newQuads, Direction side, TextureAtlasSprite sideSprite, BakedQuad originalQuad, MachineSideMode sideConfiguration) {
+		if (sideConfiguration != MachineSideMode.Never) {
+			BlockFaceUV blockFaceUV = new BlockFaceUV(new float[] { 0.0f, 0.0f, 16.0f, 16.0f }, 0);
+			BlockPartFace blockPartFace = new BlockPartFace(null, -1, sideSprite.getName().toString(), blockFaceUV);
+			BakedQuad newQuad = FaceBaker.bakeQuad(new Vector3f(0, 0, 0), new Vector3f(16.0f, 16.0f, 16.0f), blockPartFace, sideSprite, side, IDENTITY, null, true, new ResourceLocation("dummy_name"));
+			newQuads.add(newQuad);
+		} else {
+			newQuads.add(originalQuad);
+		}
 	}
 
 	protected TextureAtlasSprite getSpriteForMachineSide(MachineSideMode mode, AtlasTexture blocksStitchedTextures) {

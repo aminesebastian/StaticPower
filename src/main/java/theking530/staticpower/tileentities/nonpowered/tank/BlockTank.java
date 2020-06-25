@@ -31,7 +31,7 @@ public class BlockTank extends StaticPowerTileEntityBlock implements ICustomMode
 
 	@Override
 	public boolean hasModelOverride(BlockState state) {
-		return false; // Revisit this
+		return true;
 	}
 
 	@Override

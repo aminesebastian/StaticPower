@@ -1,7 +1,9 @@
 package theking530.staticpower.tileentities.nonpowered.digistorenetwork.ioport;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
@@ -9,9 +11,11 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import theking530.staticpower.StaticPower;
+import theking530.staticpower.tileentities.cables.ServerCable;
+import theking530.staticpower.tileentities.cables.network.CableNetworkManager;
+import theking530.staticpower.tileentities.cables.network.modules.DigistoreNetworkModule;
+import theking530.staticpower.tileentities.cables.network.modules.factories.CableNetworkModuleTypes;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.TileEntityDigistore;
 
 public class DigitstoreIOPortInventoryComponent extends AbstractTileEntityComponent implements IItemHandler {
 
@@ -21,47 +25,72 @@ public class DigitstoreIOPortInventoryComponent extends AbstractTileEntityCompon
 
 	@Override
 	public int getSlots() {
-		return getDigistoreList().size();
+		AtomicInteger output = new AtomicInteger(0);
+		getDigistoreNetworkModule().ifPresent(network -> {
+			output.set(network.getSlots());
+		});
+		return output.get();
 	}
 
 	@Override
 	public ItemStack getStackInSlot(int slot) {
-		return getDigistoreList().get(slot).getStoredItem();
+		AtomicReference<ItemStack> output = new AtomicReference<ItemStack>(ItemStack.EMPTY);
+		getDigistoreNetworkModule().ifPresent(network -> {
+			output.set(network.getStackInSlot(slot));
+		});
+		return output.get();
 	}
 
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-		return getDigistoreList().get(slot).insertItem(stack, simulate);
+		AtomicReference<ItemStack> output = new AtomicReference<ItemStack>(ItemStack.EMPTY);
+		getDigistoreNetworkModule().ifPresent(network -> {
+			output.set(network.insertItem(slot, stack, simulate));
+		});
+		return output.get();
 	}
 
 	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
-		return getDigistoreList().get(slot).extractItem(amount, simulate);
+		AtomicReference<ItemStack> output = new AtomicReference<ItemStack>(ItemStack.EMPTY);
+		getDigistoreNetworkModule().ifPresent(network -> {
+			output.set(network.extractItem(slot, amount, simulate));
+		});
+		return output.get();
 	}
 
 	@Override
 	public int getSlotLimit(int slot) {
-		return getDigistoreList().get(slot).getMaxStoredAmount();
+		AtomicInteger output = new AtomicInteger(0);
+		getDigistoreNetworkModule().ifPresent(network -> {
+			output.set(network.getSlotLimit(slot));
+		});
+		return output.get();
 	}
 
 	@Override
 	public boolean isItemValid(int slot, ItemStack stack) {
-		for (TileEntityDigistore teStore : getDigistoreList()) {
-			if (teStore.canAcceptItem(stack)) {
-				return true;
-			}
-		}
-		return false;
+		AtomicBoolean output = new AtomicBoolean(false);
+		getDigistoreNetworkModule().ifPresent(network -> {
+			output.set(network.isItemValid(slot, stack));
+		});
+		return output.get();
 	}
 
-	private List<TileEntityDigistore> getDigistoreList() {
-		if (getTileEntity() instanceof TileEntityDigistoreIOPort) {
-			TileEntityDigistoreIOPort port = (TileEntityDigistoreIOPort) getTileEntity();
-			return port.getManager().getNetwork().getAllNetworkTiles(TileEntityDigistore.class);
+	public Optional<DigistoreNetworkModule> getDigistoreNetworkModule() {
+		// If on the client, always return empty.
+		if (getWorld().isRemote) {
+			return Optional.empty();
 		}
-		StaticPower.LOGGER.error(String.format("TileEntity at location: %1$s did not inherit from TileEntityDigistoreIOPort but is using a component of type DigitstoreIOPortInventoryComponent.",
-				getTileEntity().getPos()));
-		return new ArrayList<TileEntityDigistore>();
+
+		// Get the module if it exists.
+		ServerCable cable = CableNetworkManager.get(getWorld()).getCable(getPos());
+		if (cable.getNetwork().hasModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE)) {
+			return Optional.of(cable.getNetwork().getModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE));
+		}
+
+		// Otherwise, return empty.
+		return Optional.empty();
 	}
 
 	@Override
