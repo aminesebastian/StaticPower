@@ -9,7 +9,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.ToolType;
-import theking530.staticpower.utilities.EHarvestLevel;
+import theking530.staticpower.utilities.HarvestLevel;
 
 /**
  * Base class for any static power ores.
@@ -31,7 +31,7 @@ public class StaticPowerOre extends StaticPowerBlock {
 	 * @param harvestLevel The harvest level of this ore.
 	 * @param hardness     The hardness of this ore.
 	 */
-	public StaticPowerOre(String name, ToolType tool, EHarvestLevel harvestLevel, float hardness) {
+	public StaticPowerOre(String name, ToolType tool, HarvestLevel harvestLevel, float hardness) {
 		this(name, tool, harvestLevel, hardness, 0, 0);
 	}
 
@@ -45,7 +45,7 @@ public class StaticPowerOre extends StaticPowerBlock {
 	 * @param minimumXP    The minimum amount of XP to spawn when this ore is mined.
 	 * @param maximumXP    The maximum amount of XP to spawn when this ore is mined.
 	 */
-	public StaticPowerOre(String name, ToolType tool, EHarvestLevel harvestLevel, float hardness, int minimumXP, int maximumXP) {
+	public StaticPowerOre(String name, ToolType tool, HarvestLevel harvestLevel, float hardness, int minimumXP, int maximumXP) {
 		super(name, Block.Properties.create(Material.ROCK).harvestTool(tool).harvestLevel(harvestLevel.ordinal()).hardnessAndResistance(hardness).sound(SoundType.STONE));
 		this.minimumXP = minimumXP;
 		this.maximumXP = maximumXP;

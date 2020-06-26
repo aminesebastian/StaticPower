@@ -8,15 +8,16 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockRayTraceResult;
+import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
+import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.initialization.ModTileEntityTypes;
-import theking530.staticpower.tileentities.cables.network.modules.DigistoreNetworkModule;
-import theking530.staticpower.tileentities.cables.network.modules.factories.CableNetworkModuleTypes;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.BaseDigistoreTileEntity;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.TileEntityDigistore;
 
 public class TileEntityDigistoreIOPort extends BaseDigistoreTileEntity {
 	public TileEntityDigistoreIOPort() {
 		super(ModTileEntityTypes.DIGISTORE_IO_PORT);
+		registerComponent(new DigitstoreIOPortInventoryComponent("InventoryComponent"));
 	}
 
 	@Override

@@ -8,9 +8,9 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.api.utilities.SDMath;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.initialization.ModContainerTypes;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachmentContainer;
-import theking530.staticpower.tileentities.cables.AbstractCableProviderComponent;
 
 public class ContainerExtractor extends AbstractCableAttachmentContainer<ExtractorAttachment> {
 	private ItemStackHandler filterInventory;

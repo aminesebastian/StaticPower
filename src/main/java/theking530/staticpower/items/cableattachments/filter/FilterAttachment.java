@@ -15,10 +15,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.items.ItemStackInventoryCapabilityProvider;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
-import theking530.staticpower.tileentities.cables.AbstractCableProviderComponent;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class FilterAttachment extends AbstractCableAttachment {
@@ -60,7 +60,7 @@ public class FilterAttachment extends AbstractCableAttachment {
 		}
 
 		// Check to see if the provided item matches.
-		return ItemUtilities.filterItems(filterItemList, itemToTest, true, false, false, false, false);
+		return ItemUtilities.filterItems(filterItemList, itemToTest, true, false, false, false);
 	}
 
 	@Override

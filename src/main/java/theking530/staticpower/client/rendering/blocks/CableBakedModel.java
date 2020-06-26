@@ -22,9 +22,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ILightReader;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
-import theking530.staticpower.tileentities.cables.AbstractCableProviderComponent;
-import theking530.staticpower.tileentities.cables.CableUtilities;
-import theking530.staticpower.tileentities.cables.ServerCable.CableConnectionState;
+import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.cables.CableUtilities;
+import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 
 public class CableBakedModel extends AbstractBakedModel {
 	public static final Logger LOGGER = LogManager.getLogger(AbstractBakedModel.class);

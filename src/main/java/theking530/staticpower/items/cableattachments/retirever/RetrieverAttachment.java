@@ -13,12 +13,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.cables.item.ItemNetworkModule;
+import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.items.ItemStackInventoryCapabilityProvider;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
-import theking530.staticpower.tileentities.cables.AbstractCableProviderComponent;
-import theking530.staticpower.tileentities.cables.network.modules.ItemNetworkModule;
-import theking530.staticpower.tileentities.cables.network.modules.factories.CableNetworkModuleTypes;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class RetrieverAttachment extends AbstractCableAttachment {

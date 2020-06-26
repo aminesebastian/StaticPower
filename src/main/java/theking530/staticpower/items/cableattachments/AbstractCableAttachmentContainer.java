@@ -9,9 +9,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.client.container.StaticPowerItemContainer;
-import theking530.staticpower.tileentities.cables.AbstractCableProviderComponent;
-import theking530.staticpower.tileentities.cables.CableUtilities;
 
 public class AbstractCableAttachmentContainer<T extends AbstractCableAttachment> extends StaticPowerItemContainer<T> {
 	private final Direction attachmentSide;

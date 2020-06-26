@@ -19,14 +19,14 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.cables.fluid.FluidCableComponent;
+import theking530.staticpower.cables.fluid.FluidNetworkModule;
+import theking530.staticpower.cables.item.ItemNetworkModule;
+import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.items.ItemStackInventoryCapabilityProvider;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
-import theking530.staticpower.tileentities.cables.AbstractCableProviderComponent;
-import theking530.staticpower.tileentities.cables.fluid.FluidCableComponent;
-import theking530.staticpower.tileentities.cables.network.modules.FluidNetworkModule;
-import theking530.staticpower.tileentities.cables.network.modules.ItemNetworkModule;
-import theking530.staticpower.tileentities.cables.network.modules.factories.CableNetworkModuleTypes;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class ExtractorAttachment extends AbstractCableAttachment {
@@ -137,7 +137,7 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 		}
 
 		// Check to see if the provided item matches.
-		return ItemUtilities.filterItems(filterItemList, itemToTest, true, false, false, false, false);
+		return ItemUtilities.filterItems(filterItemList, itemToTest, true, false, false, false);
 	}
 
 	public boolean incrementExtractionTimer(ItemStack attachment) {

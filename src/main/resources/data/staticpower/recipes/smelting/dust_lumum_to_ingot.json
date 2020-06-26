@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "staticpower:dust_lumum"
+  },
+  "result": "staticpower:ingot_lumum",
+  "experience": 0.5,
+  "cookingtime": 200
+}

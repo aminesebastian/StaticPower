@@ -358,6 +358,7 @@ public abstract class BaseGuiTab {
 	 * @param partialTicks
 	 */
 	protected void drawTabBackground(float partialTicks) {
+
 		int tabLeft = xPosition - (getTabSide() == TabSide.RIGHT ? 0 : tabWidth + 24);
 		int tabTop = yPosition;
 		Tessellator tessellator = Tessellator.getInstance();
@@ -371,6 +372,7 @@ public abstract class BaseGuiTab {
 
 		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_CULL_FACE);
+		GL11.glEnable(GL11.GL_BLEND);
 		if (getTabSide() == TabSide.LEFT) {
 			GL11.glTranslatef(xPosition, yPosition, 0.0f);
 			GL11.glScalef(-1.0f, 1.0f, 1.0f);
@@ -415,6 +417,7 @@ public abstract class BaseGuiTab {
 
 		tessellator.draw();
 		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glPopMatrix();
 	}
 

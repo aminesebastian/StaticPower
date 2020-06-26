@@ -15,10 +15,10 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import theking530.staticpower.cables.AbstractCableBlock;
+import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.items.StaticPowerItem;
-import theking530.staticpower.tileentities.cables.AbstractCableBlock;
-import theking530.staticpower.tileentities.cables.AbstractCableProviderComponent;
-import theking530.staticpower.tileentities.cables.CableUtilities;
 import theking530.staticpower.tileentities.utilities.RedstoneMode;
 
 public abstract class AbstractCableAttachment extends StaticPowerItem {

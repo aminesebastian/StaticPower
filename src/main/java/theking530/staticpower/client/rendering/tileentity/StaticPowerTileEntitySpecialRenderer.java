@@ -98,7 +98,7 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 		matrixStack.translate(offset.getX(), offset.getY(), offset.getZ());
 		matrixStack.scale(scale.getX(), scale.getY(), scale.getZ());
 		IBakedModel itemModel = Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(item, tileEntity.getWorld(), null);
-		ItemRenderer.renderItem(item, transformType, false, matrixStack, buffer, 15728880, combinedOverlay, itemModel);
+		ItemRenderer.renderItem(item, transformType, false, matrixStack, buffer, combinedLight, combinedOverlay, itemModel);
 		matrixStack.pop();
 	}
 

@@ -10,7 +10,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import theking530.api.gui.GuiDrawUtilities;
 import theking530.api.gui.widgets.GuiDrawItem;
-import theking530.api.gui.widgets.button.BaseButton;
+import theking530.api.gui.widgets.button.StandardButton;
 import theking530.api.gui.widgets.button.TextButton;
 import theking530.api.gui.widgets.tabs.GuiInfoTab;
 import theking530.api.utilities.Color;
@@ -40,7 +40,7 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 		getTabManager().registerTab(infoTab = new GuiInfoTab(100, 65));
 	}
 
-	public void buttonPressed(BaseButton button) {
+	public void buttonPressed(StandardButton button) {
 		if (getTileEntity() != null) {
 			getTileEntity().setLocked(!getTileEntity().isLocked());
 			button.setToggled(getTileEntity().isLocked());

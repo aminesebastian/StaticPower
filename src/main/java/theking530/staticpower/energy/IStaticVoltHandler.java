@@ -6,7 +6,7 @@ public interface IStaticVoltHandler {
 	 * 
 	 * @return
 	 */
-	public int getStoredPower();
+	public int getStoredCharge();
 
 	/**
 	 * Returns the maximum amount of power that can be stored in this
@@ -14,23 +14,17 @@ public interface IStaticVoltHandler {
 	 * 
 	 * @return
 	 */
-	public int getPowerCapacity();
+	public int getMaximumCharge();
 
-	/**
-	 * Tries to receive the amount of power passed in and returns the total amount
-	 * of power accepted.
-	 * 
-	 * @param amount   = Amount of power to receive
-	 * @param simulate = If true, power receive is simulated
-	 * @return t= The amount of power accepted by the handler.
-	 */
-	public int recievePower(int amount, boolean simulate);
+	public int recievePower(int voltage, float current, boolean simulate);
 
-	public int drainPower(int amount, boolean simulate);
+	public int drainPower(int charge, boolean simulate);
 
 	public boolean canRecievePower();
 
 	public boolean canDrainPower();
 
-	public int getMaximumVoltage();
+	public int getMaximumInputVoltage();
+
+	public float getMaximumInputCurrent();
 }

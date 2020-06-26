@@ -13,11 +13,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.api.gui.GuiDrawUtilities;
 import theking530.api.utilities.Color;
+import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.cables.item.ItemRoutingParcelClient;
+import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.client.rendering.BlockModel;
 import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.cables.AbstractCableProviderComponent;
-import theking530.staticpower.tileentities.cables.ServerCable.CableConnectionState;
-import theking530.staticpower.tileentities.cables.item.ItemRoutingParcelClient;
 
 @SuppressWarnings("deprecation")
 public abstract class AbstractCableTileEntityRenderer<T extends TileEntityBase> extends StaticPowerTileEntitySpecialRenderer<T> {

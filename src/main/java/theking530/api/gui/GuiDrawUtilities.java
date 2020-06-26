@@ -1,5 +1,7 @@
 package theking530.api.gui;
 
+import org.lwjgl.opengl.GL11;
+
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.Minecraft;
@@ -157,5 +159,53 @@ public class GuiDrawUtilities {
 		FluidAttributes attributes = fluid.getFluid().getAttributes();
 		int encodedFluidColor = attributes.getColor(fluid);
 		return Color.fromEncodedInteger(encodedFluidColor).fromEightBitToFloat();
+	}
+
+	public static void drawDefaultButton(boolean hovered, float x, float y, float width, float height, float zLevel) {
+		float uPixel = 1.0f / 200.0f;
+		float vPixel = 1.0f / 20.0f;
+
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder tes = tessellator.getBuffer();
+		BufferBuilder vertexbuffer = tessellator.getBuffer();
+		tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+
+		if (hovered) {
+			Minecraft.getInstance().getTextureManager().bindTexture(GuiTextures.BUTTON_HOVER);
+		} else {
+			Minecraft.getInstance().getTextureManager().bindTexture(GuiTextures.BUTTON);
+		}
+
+		// Top
+		vertexbuffer.pos(x + width, y + 2, 0).tex(0, vPixel * 2).endVertex();
+		vertexbuffer.pos(x + width, y, 0).tex(0, 0).endVertex();
+		vertexbuffer.pos(x, y, 0).tex(1, 0).endVertex();
+		vertexbuffer.pos(x, y + 2, 0).tex(1, vPixel * 2).endVertex();
+
+		// Bottom
+		vertexbuffer.pos(x + width, y + (height), 0).tex(0, vPixel * 20).endVertex();
+		vertexbuffer.pos(x + width, y + (height - 3), 0).tex(0, vPixel * 17).endVertex();
+		vertexbuffer.pos(x, y + (height - 3), 0).tex(1, vPixel * 17).endVertex();
+		vertexbuffer.pos(x, y + (height), 0).tex(1, vPixel * 20).endVertex();
+
+		// Right
+		vertexbuffer.pos(x + width, y + (height), 0).tex(0, vPixel * 20).endVertex();
+		vertexbuffer.pos(x + width, y, 0).tex(0, 0).endVertex();
+		vertexbuffer.pos(x - 2 + width, y, 0).tex(uPixel * 2, 0).endVertex();
+		vertexbuffer.pos(x - 2 + width, y + (height), 0).tex(uPixel * 2, vPixel * 20).endVertex();
+
+		// Left
+		vertexbuffer.pos(x + 2, y + (height), 0).tex(uPixel * 198, 1).endVertex();
+		vertexbuffer.pos(x + 2, y, 0).tex(uPixel * 198, 0).endVertex();
+		vertexbuffer.pos(x, y, 0).tex(1, 0).endVertex();
+		vertexbuffer.pos(x, y + (height), 0).tex(1, 1).endVertex();
+
+		// Body
+		vertexbuffer.pos(x + width - 2, y - 3 + (height), 0).tex(uPixel * 2, vPixel * 17).endVertex();
+		vertexbuffer.pos(x + width - 2, y + 2, 0).tex(uPixel * 2, vPixel * 2).endVertex();
+		vertexbuffer.pos(x + 2, y + 2, 0).tex(uPixel * 198, vPixel * 2).endVertex();
+		vertexbuffer.pos(x + 2, y - 3 + (height), 0).tex(uPixel * 198, vPixel * 17).endVertex();
+
+		tessellator.draw();
 	}
 }

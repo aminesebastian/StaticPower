@@ -8,9 +8,9 @@ import com.google.gson.JsonObject;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import theking530.staticpower.StaticPowerStatics;
 
 public class StaticPowerJsonParsingUtilities {
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerJsonParsingUtilities.class);
@@ -24,7 +24,7 @@ public class StaticPowerJsonParsingUtilities {
 		}
 
 		// Get the amount (if provided).
-		int amount = StaticPowerStatics.BUCKET_VOLUME;
+		int amount = FluidAttributes.BUCKET_VOLUME;
 		if (object.has("volume")) {
 			amount = object.get("volume").getAsInt();
 		}

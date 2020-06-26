@@ -17,6 +17,10 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation CABLE_ITEM_EXTENSION = registerModel("block/cables/item/extension");
 	public static final ResourceLocation CABLE_ITEM_ATTACHMENT = registerModel("block/cables/item/attachment");
 	
+	public static final ResourceLocation CABLE_DIGISTORE_STRAIGHT = registerModel("block/cables/digistore/straight");
+	public static final ResourceLocation CABLE_DIGISTORE_EXTENSION = registerModel("block/cables/digistore/extension");
+	public static final ResourceLocation CABLE_DIGISTORE_ATTACHMENT = registerModel("block/cables/digistore/attachment");
+	
 	public static final ResourceLocation CABLE_FLUID_STRAIGHT = registerModel("block/cables/fluid/straight");
 	public static final ResourceLocation CABLE_FLUID_EXTENSION = registerModel("block/cables/fluid/extension");
 	public static final ResourceLocation CABLE_FLUID_ATTACHMENT = registerModel("block/cables/fluid/attachment");

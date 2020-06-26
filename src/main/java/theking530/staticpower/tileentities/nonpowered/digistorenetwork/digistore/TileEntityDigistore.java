@@ -17,6 +17,7 @@ import theking530.staticpower.initialization.ModTileEntityTypes;
 import theking530.staticpower.tileentities.components.InventoryComponent;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.BaseDigistoreTileEntity;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
+import theking530.staticpower.utilities.ItemUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class TileEntityDigistore extends BaseDigistoreTileEntity {
@@ -169,15 +170,14 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 		int remainingStorage = maximumStorage - getStoredAmount();
 		int insertableAmount = Math.min(remainingStorage, stack.getCount());
 
-		// If we aren't storing anything, set the stored item. Check the remaining
-		// storage (Even though it isn't necessary, its a good edge case check).
-		if (storedItem.isEmpty() && remainingStorage > 0) {
-			setStoredItem(stack);
-		}
-
 		// Then, attempt to insert the item.
-		if (canAcceptItem(stack)) {
+		if (storedItem.isEmpty() || ItemUtilities.areItemStacksStackable(storedItem, stack)) {
 			if (!simulate) {
+				// If we aren't storing anything, set the stored item. Check the remaining
+				// storage (Even though it isn't necessary, its a good edge case check).
+				if (storedItem.isEmpty() && remainingStorage > 0) {
+					setStoredItem(stack);
+				}
 				storedAmount += insertableAmount;
 			}
 			ItemStack output = stack.copy();

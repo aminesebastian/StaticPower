@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "staticpower:dust_magnesium"
+  },
+  "result": "staticpower:ingot_magnesium",
+  "experience": 0.5,
+  "cookingtime": 200
+}

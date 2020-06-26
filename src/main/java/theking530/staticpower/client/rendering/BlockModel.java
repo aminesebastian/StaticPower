@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Direction;
 import theking530.api.utilities.Color;
 import theking530.api.utilities.Vector2D;
-import theking530.staticpower.client.StaticPowerAdditionalSprites;
+import theking530.staticpower.client.StaticPowerSprites;
 
 public class BlockModel {
 	@SuppressWarnings("unused")
@@ -23,7 +23,7 @@ public class BlockModel {
 	public void drawPreviewCube(Vector3f position, Vector3f scale, Color tint, MatrixStack matrixStack) {
 		// Bind a blank texture.
 		@SuppressWarnings("deprecation")
-		TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(StaticPowerAdditionalSprites.BLANK_TEXTURE);
+		TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(StaticPowerSprites.BLANK_TEXTURE);
 		drawPreviewCube(position, scale, tint, matrixStack, sprite, IDENTITY_VECTOR);
 	}
 
@@ -56,7 +56,7 @@ public class BlockModel {
 
 	@SuppressWarnings("deprecation")
 	protected void drawPreviewSide(Direction side, Color tint, Matrix4f matrix, IVertexBuilder builder) {
-		TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(StaticPowerAdditionalSprites.BLANK_TEXTURE);
+		TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(StaticPowerSprites.BLANK_TEXTURE);
 		drawPreviewSide(side, sprite, tint, matrix, builder, IDENTITY_VECTOR);
 	}
 

@@ -21,7 +21,7 @@ public class ItemButton extends StandardButton {
 	 * @param xPos   The xPosition of the button.
 	 * @param yPos   The yPosition of the button.
 	 */
-	public ItemButton(ItemStack icon, int xPos, int yPos, int width, int height, Consumer<BaseButton> onClicked) {
+	public ItemButton(ItemStack icon, int xPos, int yPos, int width, int height, Consumer<StandardButton> onClicked) {
 		super(xPos, yPos, width, height, onClicked);
 
 		itemIcon = icon;
@@ -37,7 +37,7 @@ public class ItemButton extends StandardButton {
 	 * @param xPos   The xPosition of the button.
 	 * @param yPos   The yPosition of the button.
 	 */
-	public ItemButton(Item icon, int xPos, int yPos, int width, int height, Consumer<BaseButton> onClicked) {
+	public ItemButton(Item icon, int xPos, int yPos, int width, int height, Consumer<StandardButton> onClicked) {
 		this(new ItemStack(icon), xPos, yPos, width, height, onClicked);
 	}
 
@@ -45,11 +45,9 @@ public class ItemButton extends StandardButton {
 	 * Draws the button at the location defined at construction time.
 	 */
 	@Override
-	protected void drawButtonOverlay() {
+	protected void drawButtonOverlay(int buttonLeft, int buttonTop) {
 		if (!itemIcon.isEmpty()) {
-			float buttonLeft = getScreenSpacePosition().getX() + 1;
-			float buttonTop = getScreenSpacePosition().getY() + 1;
-			customRenderer.renderItemIntoGUI(itemIcon, (int) buttonLeft + 1, (int) buttonTop);
+			customRenderer.renderItemIntoGUI(itemIcon, (int) buttonLeft + 2, (int) buttonTop + 1);
 		}
 	}
 }

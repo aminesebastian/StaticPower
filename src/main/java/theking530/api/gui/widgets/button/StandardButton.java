@@ -1,72 +1,171 @@
 package theking530.api.gui.widgets.button;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import theking530.api.gui.GuiTextures;
-import theking530.api.utilities.StaticVertexBuffer;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.util.text.ITextComponent;
+import theking530.api.gui.GuiDrawUtilities;
+import theking530.api.gui.widgets.AbstractGuiWidget;
+import theking530.api.utilities.Vector2D;
 
-public class StandardButton extends BaseButton {
+public class StandardButton extends AbstractGuiWidget {
 
-	public StandardButton(int xPos, int yPos, int width, int height, Consumer<BaseButton> onClicked) {
-		super(xPos, yPos, width, height, onClicked);
+	public enum ClickedButton {
+		NONE, LEFT, RIGHT, MIDDLE;
+	}
+
+	protected int mouseX;
+	protected int mouseY;
+
+	private boolean hovered = false;
+	private ClickedButton clicked = ClickedButton.NONE;
+
+	private boolean toggleable = false;
+	private boolean toggled = false;
+
+	private float clickSoundPitch;
+	protected Consumer<StandardButton> onClicked;
+
+	private List<ITextComponent> tooltip;
+
+	public StandardButton(int xPos, int yPos, int width, int height, Consumer<StandardButton> onClickedEvent) {
+		super(xPos, yPos, width, height);
+		clickSoundPitch = 1.0f;
+		onClicked = onClickedEvent;
 	}
 
 	@Override
-	protected void drawButton() {
-		int buttonLeft = (int) (getOwnerPosition().getX() + getPosition().getX());
-		int buttonTop = (int) (getOwnerPosition().getY() + getPosition().getY());
-
-		float uPixel = 1.0f / 200.0f;
-		float vPixel = 1.0f / 20.0f;
-
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder tes = tessellator.getBuffer();
-		tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-
-		if (isClicked() || isHovered() || isToggled()) {
-			Minecraft.getInstance().getTextureManager().bindTexture(GuiTextures.BUTTON_HOVER);
-		} else {
-			Minecraft.getInstance().getTextureManager().bindTexture(GuiTextures.BUTTON);
+	public void renderBackground(int mouseX, int mouseY, float partialTicks) {
+		if (!isVisible()) {
+			return;
 		}
 
-		GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-		// Top
-		StaticVertexBuffer.pos(buttonLeft + getSize().getX(), buttonTop + 2, 0, 0, vPixel * 2);
-		StaticVertexBuffer.pos(buttonLeft + getSize().getX(), buttonTop, 0, 0, 0);
-		StaticVertexBuffer.pos(buttonLeft, buttonTop, 0, 1, 0);
-		StaticVertexBuffer.pos(buttonLeft, buttonTop + 2, 0, 1, vPixel * 2);
+		// Calculate the button's left and top.
+		Vector2D position = getScreenSpacePosition();
+		int buttonLeft = (int) position.getX();
+		int buttonTop = (int) position.getY();
 
-		// Bottom
-		StaticVertexBuffer.pos(buttonLeft + getSize().getX(), buttonTop + (getSize().getY()), 0, 0, vPixel * 20);
-		StaticVertexBuffer.pos(buttonLeft + getSize().getX(), buttonTop + (getSize().getY() - 3), 0, 0, vPixel * 17);
-		StaticVertexBuffer.pos(buttonLeft, buttonTop + (getSize().getY() - 3), 0, 1, vPixel * 17);
-		StaticVertexBuffer.pos(buttonLeft, buttonTop + (getSize().getY()), 0, 1, vPixel * 20);
-
-		// Right
-		StaticVertexBuffer.pos(buttonLeft + getSize().getX(), buttonTop + (getSize().getY()), 0, 0, vPixel * 20);
-		StaticVertexBuffer.pos(buttonLeft + getSize().getX(), buttonTop, 0, 0, 0);
-		StaticVertexBuffer.pos(buttonLeft - 2 + getSize().getX(), buttonTop, 0, uPixel * 2, 0);
-		StaticVertexBuffer.pos(buttonLeft - 2 + getSize().getX(), buttonTop + (getSize().getY()), 0, uPixel * 2, vPixel * 20);
-
-		// Left
-		StaticVertexBuffer.pos(buttonLeft + 2, buttonTop + (getSize().getY()), 0, uPixel * 198, 1);
-		StaticVertexBuffer.pos(buttonLeft + 2, buttonTop, 0, uPixel * 198, 0);
-		StaticVertexBuffer.pos(buttonLeft, buttonTop, 0, 1, 0);
-		StaticVertexBuffer.pos(buttonLeft, buttonTop + (getSize().getY()), 0, 1, 1);
-
-		// Body
-		StaticVertexBuffer.pos(buttonLeft + getSize().getX() - 2, buttonTop - 3 + (getSize().getY()), 0, uPixel * 2, vPixel * 17);
-		StaticVertexBuffer.pos(buttonLeft + getSize().getX() - 2, buttonTop + 2, 0, uPixel * 2, vPixel * 2);
-		StaticVertexBuffer.pos(buttonLeft + 2, buttonTop + 2, 0, uPixel * 198, vPixel * 2);
-		StaticVertexBuffer.pos(buttonLeft + 2, buttonTop - 3 + (getSize().getY()), 0, uPixel * 198, vPixel * 17);
-
-		tessellator.draw();
+		// Draw the button and then the overlay.
+		drawButton(buttonLeft, buttonTop);
+		drawButtonOverlay(buttonLeft, buttonTop);
 	}
 
+	public void renderForeground(int mouseX, int mouseY, float partialTicks) {
+	}
+
+	@Override
+	public EInputResult mouseClick(int mouseX, int mouseY, int button) {
+		if (!isVisible()) {
+			return EInputResult.UNHANDLED;
+		}
+		if (this.isPointInsideBounds(new Vector2D(mouseX, mouseY))) {
+			// Set the clicked state.
+			clicked = button == 0 ? ClickedButton.LEFT : ClickedButton.RIGHT;
+
+			// Play the clicked sound.
+			playSound(clicked);
+
+			// If toggleable, update the toggled state.
+			if (toggleable) {
+				toggled = !toggled;
+			}
+
+			// Raise the on clicked event.
+			onClicked.accept(this);
+			return EInputResult.HANDLED;
+		}
+		return EInputResult.UNHANDLED;
+	}
+
+	@Override
+	public void mouseHover(int mouseX, int mouseY) {
+		// Always just update the clicked state to NONE here.
+		clicked = ClickedButton.NONE;
+
+		if (!isVisible()) {
+			return;
+		}
+
+		this.mouseX = mouseX;
+		this.mouseY = mouseY;
+		if (isPointInsideBounds(new Vector2D(mouseX, mouseY))) {
+			hovered = true;
+			return;
+		}
+		hovered = false;
+	}
+
+	protected void drawButton(int buttonLeft, int buttonTop) {
+		GuiDrawUtilities.drawDefaultButton(isClicked() || isHovered() || isToggled(), buttonLeft, buttonTop, getSize().getX(), getSize().getY(), 0.0f);
+	}
+
+	protected void drawButtonOverlay(int buttonLeft, int buttonTop) {
+	}
+
+	protected void playSound(ClickedButton state) {
+		float pitch = state == ClickedButton.LEFT ? clickSoundPitch : clickSoundPitch * 1.1f;
+		ClientPlayerEntity player = Minecraft.getInstance().player;
+		player.world.playSound(player, player.getPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.MASTER, 1.0f, pitch);
+	}
+
+	public StandardButton setToggleable(boolean toggleable) {
+		this.toggleable = toggleable;
+		return this;
+	}
+
+	public StandardButton setToggled(boolean toggled) {
+		this.toggled = toggled;
+		return this;
+	}
+
+	public boolean isToggleable() {
+		return toggled;
+	}
+
+	public boolean isToggled() {
+		return toggled;
+	}
+
+	public boolean isHovered() {
+		return hovered;
+	}
+
+	public boolean isClicked() {
+		return clicked != ClickedButton.NONE;
+	}
+
+	public ClickedButton getClickedState() {
+		return clicked;
+	}
+
+	public StandardButton setClicked(ClickedButton newClickedState) {
+		this.clicked = newClickedState;
+		return this;
+	}
+
+	public StandardButton setTooltip(ITextComponent... tooltip) {
+		this.tooltip = Arrays.asList(tooltip);
+		return this;
+	}
+
+	public StandardButton setClickSoundPitch(float newSoundPitch) {
+		this.clickSoundPitch = newSoundPitch;
+		return this;
+	}
+
+	public float getClickSoundPitch() {
+		return clickSoundPitch;
+	}
+
+	@Override
+	public void getTooltips(Vector2D mousePosition, List<ITextComponent> tooltips, boolean showAdvanced) {
+		if (tooltip != null) {
+			tooltips.addAll(tooltip);
+		}
+	}
 }

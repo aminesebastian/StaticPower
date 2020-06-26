@@ -23,7 +23,7 @@ import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.blocks.IBlockRenderLayerProvider;
 import theking530.staticpower.blocks.ICustomModelSupplier;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
-import theking530.staticpower.client.StaticPowerAdditionalSprites;
+import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderDigistore;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderFluidCable;
@@ -100,7 +100,7 @@ public class StaticPowerClientEventHandler {
 	public static void onTextureStitchEvent(TextureStitchEvent.Pre event) {
 		int spriteCount = 0;
 		if (event.getMap().getTextureLocation() == AtlasTexture.LOCATION_BLOCKS_TEXTURE) {
-			for (ResourceLocation sprite : StaticPowerAdditionalSprites.SPRITES) {
+			for (ResourceLocation sprite : StaticPowerSprites.SPRITES) {
 				event.addSprite(sprite);
 				spriteCount++;
 			}

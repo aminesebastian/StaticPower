@@ -2,10 +2,10 @@ package theking530.api.gui.widgets.tabs.redstonecontrol;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
+import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
-import theking530.staticpower.tileentities.cables.AbstractCableProviderComponent;
 import theking530.staticpower.tileentities.utilities.RedstoneMode;
 
 public class GuiCableAttachmentRedstoneTab extends AbstractGuiRedstoneTab {

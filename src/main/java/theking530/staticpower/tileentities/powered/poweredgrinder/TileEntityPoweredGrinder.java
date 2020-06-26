@@ -67,16 +67,17 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 		// If we're currently idle, start the move component.
 		if (!processingComponent.isProcessing() && !moveComponent.isProcessing() && canStartProcess() && redstoneControlComponent.passesRedstoneCheck()) {
 			moveComponent.startProcessing();
-		} else if (processingComponent.isProcessing()) {
+		} else {
 			// If we're processing, get the current recipe. If we have enough energy, keep
 			// going, otheriwse, pause processing.
-			GrinderRecipe recipe = getRecipe(internalInventory.getStackInSlot(0)).get();
-			if (energyStorage.getStorage().getEnergyStored() < recipe.getPowerCostPerTick()) {
-				processingComponent.pauseProcessing();
-			} else {
-				processingComponent.continueProcessing();
-				energyStorage.getStorage().extractEnergy(recipe.getPowerCostPerTick(), false);
-			}
+			getRecipe(internalInventory.getStackInSlot(0)).ifPresent(recipe -> {
+				if (energyStorage.getStorage().getEnergyStored() < recipe.getPowerCostPerTick()) {
+					processingComponent.pauseProcessing();
+				} else {
+					processingComponent.continueProcessing();
+					energyStorage.getStorage().extractEnergy(recipe.getPowerCostPerTick(), false);
+				}
+			});
 		}
 	}
 
@@ -90,10 +91,9 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 	 */
 	protected boolean movingCompleted() {
 		if (hasValidRecipe()) {
-			if (!getWorld().isRemote) {
-				transferItemInternally(inputInventory, 0, internalInventory, 0);
-			}
+			transferItemInternally(inputInventory, 0, internalInventory, 0);
 			processingComponent.startProcessing();
+			markTileEntityForSynchronization();
 		}
 		return true;
 	}
@@ -166,7 +166,7 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 	 * @return
 	 */
 	public Optional<GrinderRecipe> getRecipe(ItemStack itemStackInput) {
-		return StaticPowerRecipeRegistry.getRecipe(GrinderRecipe.RECIPE_TYPE, new RecipeMatchParameters(itemStackInput));
+		return StaticPowerRecipeRegistry.getRecipe(GrinderRecipe.RECIPE_TYPE, new RecipeMatchParameters(itemStackInput).setStoredEnergy(energyStorage.getStorage().getEnergyStored()));
 	}
 
 	@Override

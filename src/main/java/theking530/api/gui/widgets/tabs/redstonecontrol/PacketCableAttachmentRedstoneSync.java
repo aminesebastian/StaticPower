@@ -6,10 +6,10 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
+import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
 import theking530.staticpower.network.NetworkMessage;
-import theking530.staticpower.tileentities.cables.AbstractCableProviderComponent;
-import theking530.staticpower.tileentities.cables.CableUtilities;
 import theking530.staticpower.tileentities.utilities.RedstoneMode;
 
 public class PacketCableAttachmentRedstoneSync extends NetworkMessage {

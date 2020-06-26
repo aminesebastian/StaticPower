@@ -12,8 +12,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import theking530.api.gui.GuiTextures;
-import theking530.api.gui.widgets.button.BaseButton;
-import theking530.api.gui.widgets.button.BaseButton.ClickedButton;
+import theking530.api.gui.widgets.button.StandardButton;
+import theking530.api.gui.widgets.button.StandardButton.ClickedButton;
 import theking530.api.gui.widgets.button.TextButton;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
@@ -88,7 +88,7 @@ public class GuiSideConfigTab extends BaseGuiTab {
 		GL11.glDisable(GL11.GL_BLEND);
 	}
 
-	public void buttonPressed(BaseButton button) {
+	public void buttonPressed(StandardButton button) {
 		if (!tileEntity.hasComponentOfType(SideConfigurationComponent.class)) {
 			return;
 		}

@@ -29,7 +29,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
-import theking530.staticpower.client.StaticPowerAdditionalSprites;
+import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.SideConfigurationComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
@@ -110,13 +110,13 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 	protected TextureAtlasSprite getSpriteForMachineSide(MachineSideMode mode, AtlasTexture blocksStitchedTextures) {
 		switch (mode) {
 		case Input:
-			return blocksStitchedTextures.getSprite(StaticPowerAdditionalSprites.MACHINE_SIDE_INPUT);
+			return blocksStitchedTextures.getSprite(StaticPowerSprites.MACHINE_SIDE_INPUT);
 		case Output:
-			return blocksStitchedTextures.getSprite(StaticPowerAdditionalSprites.MACHINE_SIDE_OUTPUT);
+			return blocksStitchedTextures.getSprite(StaticPowerSprites.MACHINE_SIDE_OUTPUT);
 		case Disabled:
-			return blocksStitchedTextures.getSprite(StaticPowerAdditionalSprites.MACHINE_SIDE_DISABLED);
+			return blocksStitchedTextures.getSprite(StaticPowerSprites.MACHINE_SIDE_DISABLED);
 		default:
-			return blocksStitchedTextures.getSprite(StaticPowerAdditionalSprites.MACHINE_SIDE_NORMAL);
+			return blocksStitchedTextures.getSprite(StaticPowerSprites.MACHINE_SIDE_NORMAL);
 		}
 	}
 

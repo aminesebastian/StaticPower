@@ -3,7 +3,7 @@ package theking530.staticpower.tileentities.powered.basicfarmer;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
-import theking530.api.gui.widgets.button.BaseButton;
+import theking530.api.gui.widgets.button.StandardButton;
 import theking530.api.gui.widgets.button.TextButton;
 import theking530.api.gui.widgets.tabs.BaseGuiTab;
 import theking530.api.gui.widgets.tabs.GuiInfoTab;
@@ -52,7 +52,7 @@ public class GuiBasicFarmer extends StaticPowerTileEntityGui<ContainerBasicFarme
 		setOutputSlotSize(16);
 	}
 
-	public void buttonPressed(BaseButton button) {
+	public void buttonPressed(StandardButton button) {
 		getTileEntity().setShouldDrawRadiusPreview(button.isToggled());
 	}
 

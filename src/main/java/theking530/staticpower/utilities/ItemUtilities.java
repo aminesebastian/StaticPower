@@ -1,12 +1,22 @@
 package theking530.staticpower.utilities;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.items.IItemHandler;
 
 public class ItemUtilities {
-	public static boolean filterItems(List<ItemStack> filterItems, ItemStack itemToCheck, boolean whitelist, boolean matchMetadata, boolean matchNBT, boolean matchOreDict, boolean matchMod) {
+	public static boolean filterItems(IItemHandler inventoryOfFilterItems, ItemStack itemToCheck, boolean whitelist, boolean matchNBT, boolean matchOreDict, boolean matchMod) {
+		List<ItemStack> invItems = new LinkedList<ItemStack>();
+		for (int i = 0; i < inventoryOfFilterItems.getSlots(); i++) {
+			invItems.add(inventoryOfFilterItems.getStackInSlot(i));
+		}
+		return filterItems(invItems, itemToCheck, whitelist, matchNBT, matchOreDict, matchMod);
+	}
+
+	public static boolean filterItems(List<ItemStack> filterItems, ItemStack itemToCheck, boolean whitelist, boolean matchNBT, boolean matchOreDict, boolean matchMod) {
 		if (itemToCheck.isEmpty()) {
 			return false;
 		}
@@ -42,18 +52,6 @@ public class ItemUtilities {
 			}
 		}
 
-		// Check metadata only if one of the previous three matches passed.
-		if (match && matchMetadata) {
-			match = false;
-			for (int i = 0; i < filterItems.size(); i++) {
-				if (!filterItems.get(i).isEmpty()) {
-					if (ItemStack.areItemsEqual(filterItems.get(i), itemToCheck)) {
-						match = true;
-						break;
-					}
-				}
-			}
-		}
 		// Check metadata only if one of the first three matches passed.
 		if (match && matchNBT) {
 			match = false;

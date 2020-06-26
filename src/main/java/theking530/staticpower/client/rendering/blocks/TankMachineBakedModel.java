@@ -16,7 +16,7 @@ import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import theking530.staticpower.client.StaticPowerAdditionalSprites;
+import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
 public class TankMachineBakedModel extends DefaultMachineBakedModel {
@@ -39,7 +39,7 @@ public class TankMachineBakedModel extends DefaultMachineBakedModel {
 
 	@Override
 	protected TextureAtlasSprite getSpriteForMachineSide(MachineSideMode mode, AtlasTexture blocksStitchedTextures) {
-		return blocksStitchedTextures.getSprite(StaticPowerAdditionalSprites.TANK_SIDE);
+		return blocksStitchedTextures.getSprite(StaticPowerSprites.TANK_SIDE);
 	}
 
 	@Override

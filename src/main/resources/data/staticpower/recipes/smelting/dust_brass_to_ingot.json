@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "staticpower:dust_brass"
+  },
+  "result": "staticpower:ingot_brass",
+  "experience": 0.5,
+  "cookingtime": 200
+}

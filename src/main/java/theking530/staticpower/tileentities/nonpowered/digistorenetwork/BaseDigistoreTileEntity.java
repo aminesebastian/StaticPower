@@ -1,6 +1,7 @@
 package theking530.staticpower.tileentities.nonpowered.digistorenetwork;
 
 import net.minecraft.tileentity.TileEntityType;
+import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.tileentities.TileEntityBase;
 
 public abstract class BaseDigistoreTileEntity extends TileEntityBase {

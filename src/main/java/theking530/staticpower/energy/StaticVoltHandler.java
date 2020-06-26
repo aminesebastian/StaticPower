@@ -14,19 +14,13 @@ public class StaticVoltHandler implements IStaticVoltHandler {
 	}
 
 	@Override
-	public int getStoredPower() {
+	public int getStoredCharge() {
 		return storedPower;
 	}
 
 	@Override
-	public int getPowerCapacity() {
+	public int getMaximumCharge() {
 		return capacity;
-	}
-
-	@Override
-	public int recievePower(int amount, boolean simulate) {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 	@Override
@@ -46,7 +40,19 @@ public class StaticVoltHandler implements IStaticVoltHandler {
 	}
 
 	@Override
-	public int getMaximumVoltage() {
+	public int getMaximumInputVoltage() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int recievePower(int voltage, float current, boolean simulate) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public float getMaximumInputCurrent() {
 		// TODO Auto-generated method stub
 		return 0;
 	}

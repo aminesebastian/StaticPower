@@ -11,8 +11,8 @@ import net.minecraft.item.Items;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import theking530.api.gui.GuiTextures;
-import theking530.api.gui.widgets.button.BaseButton;
 import theking530.api.gui.widgets.button.ItemButton;
+import theking530.api.gui.widgets.button.StandardButton;
 import theking530.api.gui.widgets.tabs.BaseGuiTab;
 import theking530.staticpower.tileentities.utilities.RedstoneMode;
 
@@ -25,15 +25,15 @@ public abstract class AbstractGuiRedstoneTab extends BaseGuiTab {
 	public AbstractGuiRedstoneTab(RedstoneMode currentMode) {
 		super(100, 85, GuiTextures.RED_TAB, Items.REDSTONE);
 
-		widgetContainer.registerWidget(ignoreRedstoneButton = new ItemButton(Items.GUNPOWDER, 23, 30, 20, 20, (BaseButton button) -> {
+		widgetContainer.registerWidget(ignoreRedstoneButton = new ItemButton(Items.GUNPOWDER, 23, 30, 20, 20, (StandardButton button) -> {
 			synchronizeRedstoneMode(RedstoneMode.Ignore);
 			updateToggledButton(ignoreRedstoneButton);
 		}));
-		widgetContainer.registerWidget(lowRedstoneButton = new ItemButton(Items.REDSTONE, 53, 30, 20, 20, (BaseButton button) -> {
+		widgetContainer.registerWidget(lowRedstoneButton = new ItemButton(Items.REDSTONE, 53, 30, 20, 20, (StandardButton button) -> {
 			synchronizeRedstoneMode(RedstoneMode.Low);
 			updateToggledButton(lowRedstoneButton);
 		}));
-		widgetContainer.registerWidget(highRedstoneButton = new ItemButton(Blocks.REDSTONE_TORCH.asItem(), 83, 30, 20, 20, (BaseButton button) -> {
+		widgetContainer.registerWidget(highRedstoneButton = new ItemButton(Blocks.REDSTONE_TORCH.asItem(), 83, 30, 20, 20, (StandardButton button) -> {
 			synchronizeRedstoneMode(RedstoneMode.High);
 			updateToggledButton(highRedstoneButton);
 		}));
@@ -102,7 +102,7 @@ public abstract class AbstractGuiRedstoneTab extends BaseGuiTab {
 
 	}
 
-	protected void updateToggledButton(BaseButton selectedButton) {
+	protected void updateToggledButton(StandardButton selectedButton) {
 		ignoreRedstoneButton.setToggled(false);
 		lowRedstoneButton.setToggled(false);
 		highRedstoneButton.setToggled(false);

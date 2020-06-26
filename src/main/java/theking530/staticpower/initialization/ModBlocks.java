@@ -14,14 +14,14 @@ import theking530.staticpower.blocks.StaticPowerRotatePillarBlock;
 import theking530.staticpower.blocks.crops.BaseSimplePlant;
 import theking530.staticpower.blocks.decorative.Lamp;
 import theking530.staticpower.blocks.decorative.StaticPowerGlassBlock;
+import theking530.staticpower.cables.digistore.BlockDigistoreNetworkWire;
+import theking530.staticpower.cables.fluid.BlockFluidCable;
+import theking530.staticpower.cables.item.BlockItemCable;
+import theking530.staticpower.cables.power.BlockPowerCable;
 import theking530.staticpower.data.StaticPowerTiers;
-import theking530.staticpower.tileentities.cables.fluid.BlockFluidCable;
-import theking530.staticpower.tileentities.cables.item.BlockItemCable;
-import theking530.staticpower.tileentities.cables.power.BlockPowerCable;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.BlockDigistore;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.ioport.BlockDigistoreIOPort;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.BlockDigistoreManager;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.networkwire.BlockDigistoreNetworkWire;
 import theking530.staticpower.tileentities.nonpowered.tank.BlockTank;
 import theking530.staticpower.tileentities.nonpowered.vacuumchest.BlockVacuumChest;
 import theking530.staticpower.tileentities.powered.basicfarmer.BlockBasicFarmer;
@@ -30,7 +30,7 @@ import theking530.staticpower.tileentities.powered.lumbermill.BlockLumberMill;
 import theking530.staticpower.tileentities.powered.poweredfurnace.BlockPoweredFurnace;
 import theking530.staticpower.tileentities.powered.poweredgrinder.BlockPoweredGrinder;
 import theking530.staticpower.tileentities.powered.solarpanels.BlockSolarPanel;
-import theking530.staticpower.utilities.EHarvestLevel;
+import theking530.staticpower.utilities.HarvestLevel;
 
 public class ModBlocks {
 	// Decorative
@@ -121,17 +121,17 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(LumumPlanks = new StaticPowerBlock("planks_lumum", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
 
 		// Ore
-		StaticPowerRegistry.preRegisterBlock(OreCopper = new StaticPowerOre("ore_copper", ToolType.PICKAXE, EHarvestLevel.STONE_TOOL, 1.9f));
-		StaticPowerRegistry.preRegisterBlock(OreTin = new StaticPowerOre("ore_tin", ToolType.PICKAXE, EHarvestLevel.STONE_TOOL, 1.7f));
-		StaticPowerRegistry.preRegisterBlock(OreZinc = new StaticPowerOre("ore_zinc", ToolType.PICKAXE, EHarvestLevel.STONE_TOOL, 1.0f));
-		StaticPowerRegistry.preRegisterBlock(OreAluminium = new StaticPowerOre("ore_aluminium", ToolType.PICKAXE, EHarvestLevel.STONE_TOOL, 1.0f));
-		StaticPowerRegistry.preRegisterBlock(OreMagnesium = new StaticPowerOre("ore_magnesium", ToolType.PICKAXE, EHarvestLevel.STONE_TOOL, 2.0f));
-		StaticPowerRegistry.preRegisterBlock(OreSilver = new StaticPowerOre("ore_silver", ToolType.PICKAXE, EHarvestLevel.IRON_TOOL, 1.5f));
-		StaticPowerRegistry.preRegisterBlock(OreLead = new StaticPowerOre("ore_lead", ToolType.PICKAXE, EHarvestLevel.IRON_TOOL, 1.5f));
-		StaticPowerRegistry.preRegisterBlock(OrePlatinum = new StaticPowerOre("ore_platinum", ToolType.PICKAXE, EHarvestLevel.IRON_TOOL, 2.0f));
-		StaticPowerRegistry.preRegisterBlock(OreRuby = new StaticPowerOre("ore_ruby", ToolType.PICKAXE, EHarvestLevel.IRON_TOOL, 3.0f));
-		StaticPowerRegistry.preRegisterBlock(OreSapphire = new StaticPowerOre("ore_sapphire", ToolType.PICKAXE, EHarvestLevel.IRON_TOOL, 3.0f));
-		StaticPowerRegistry.preRegisterBlock(OreTungsten = new StaticPowerOre("ore_tungsten", ToolType.PICKAXE, EHarvestLevel.DIAMOND_TOOL, 4.0f));
+		StaticPowerRegistry.preRegisterBlock(OreCopper = new StaticPowerOre("ore_copper", ToolType.PICKAXE, HarvestLevel.STONE_TOOL, 1.9f));
+		StaticPowerRegistry.preRegisterBlock(OreTin = new StaticPowerOre("ore_tin", ToolType.PICKAXE, HarvestLevel.STONE_TOOL, 1.7f));
+		StaticPowerRegistry.preRegisterBlock(OreZinc = new StaticPowerOre("ore_zinc", ToolType.PICKAXE, HarvestLevel.STONE_TOOL, 1.0f));
+		StaticPowerRegistry.preRegisterBlock(OreAluminium = new StaticPowerOre("ore_aluminium", ToolType.PICKAXE, HarvestLevel.STONE_TOOL, 1.0f));
+		StaticPowerRegistry.preRegisterBlock(OreMagnesium = new StaticPowerOre("ore_magnesium", ToolType.PICKAXE, HarvestLevel.STONE_TOOL, 2.0f));
+		StaticPowerRegistry.preRegisterBlock(OreSilver = new StaticPowerOre("ore_silver", ToolType.PICKAXE, HarvestLevel.IRON_TOOL, 1.5f));
+		StaticPowerRegistry.preRegisterBlock(OreLead = new StaticPowerOre("ore_lead", ToolType.PICKAXE, HarvestLevel.IRON_TOOL, 1.5f));
+		StaticPowerRegistry.preRegisterBlock(OrePlatinum = new StaticPowerOre("ore_platinum", ToolType.PICKAXE, HarvestLevel.IRON_TOOL, 2.0f));
+		StaticPowerRegistry.preRegisterBlock(OreRuby = new StaticPowerOre("ore_ruby", ToolType.PICKAXE, HarvestLevel.IRON_TOOL, 3.0f));
+		StaticPowerRegistry.preRegisterBlock(OreSapphire = new StaticPowerOre("ore_sapphire", ToolType.PICKAXE, HarvestLevel.IRON_TOOL, 3.0f));
+		StaticPowerRegistry.preRegisterBlock(OreTungsten = new StaticPowerOre("ore_tungsten", ToolType.PICKAXE, HarvestLevel.DIAMOND_TOOL, 4.0f));
 
 		// Machines
 		StaticPowerRegistry.preRegisterBlock(VacuumChest = new BlockVacuumChest("chest_vacuum"));
@@ -148,12 +148,12 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(BasicFarmer = new BlockBasicFarmer("machine_basic_farmer"));
 		StaticPowerRegistry.preRegisterBlock(BasicTank = new BlockTank("tank_basic"));
 
-		StaticPowerRegistry.preRegisterBlock(DigistoreWire = new BlockDigistoreNetworkWire("digistore_wire"));
 		StaticPowerRegistry.preRegisterBlock(DigistoreManager = new BlockDigistoreManager("digistore_manager"));
 		StaticPowerRegistry.preRegisterBlock(DigistoreIOPort = new BlockDigistoreIOPort("digistore_io_port"));
 		StaticPowerRegistry.preRegisterBlock(Digistore = new BlockDigistore("digistore"));
 
 		// Cables
+		StaticPowerRegistry.preRegisterBlock(DigistoreWire = new BlockDigistoreNetworkWire("cable_digistore"));
 		StaticPowerRegistry.preRegisterBlock(PowerCable = new BlockPowerCable("cable_power"));
 		StaticPowerRegistry.preRegisterBlock(ItemCable = new BlockItemCable("cable_item"));
 		StaticPowerRegistry.preRegisterBlock(FluidCable = new BlockFluidCable("cable_fluid"));

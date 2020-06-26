@@ -7,16 +7,15 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.container.StaticPowerItemContainer;
 import theking530.staticpower.client.container.slots.PhantomSlot;
 import theking530.staticpower.initialization.ModContainerTypes;
 
 public class ContainerItemFilter extends StaticPowerItemContainer<ItemFilter> {
-
-	private InventoryItemFilter filterInventory;
+	private ItemStackHandler filterInventory;
 
 	public ContainerItemFilter(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, getHeldItemstack(inv, data));
@@ -29,8 +28,8 @@ public class ContainerItemFilter extends StaticPowerItemContainer<ItemFilter> {
 	@Override
 	public void initializeContainer() {
 		// Attempt to get the item filter inventory.
-		getItemStack().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((IItemHandler handler) -> {
-			filterInventory = (InventoryItemFilter) handler;
+		getItemStack().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((handler) -> {
+			filterInventory = (ItemStackHandler) handler;
 		});
 
 		// If the item filter is null, then return early and log the error.
@@ -39,8 +38,10 @@ public class ContainerItemFilter extends StaticPowerItemContainer<ItemFilter> {
 			return;
 		}
 
-		int slotOffset = filterInventory.getFilterTier() == FilterTier.BASIC ? 3 : filterInventory.getFilterTier() == FilterTier.UPGRADED ? 1 : 0;
-		for (int i = 0; i < filterInventory.getFilterTier().getSlotCount(); i++) {
+		FilterTier tier = ((ItemFilter) getItemStack().getItem()).filterTier;
+
+		int slotOffset = tier == FilterTier.BASIC ? 3 : tier == FilterTier.UPGRADED ? 1 : 0;
+		for (int i = 0; i < tier.getSlotCount(); i++) {
 			this.addSlot(new PhantomSlot(filterInventory, i, 8 + (i + slotOffset) * 18, 19).renderFluidContainerAsFluid());
 		}
 
