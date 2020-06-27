@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 public class ItemUtilities {
 	public static boolean filterItems(IItemHandler inventoryOfFilterItems, ItemStack itemToCheck, boolean whitelist, boolean matchNBT, boolean matchOreDict, boolean matchMod) {
@@ -79,12 +80,6 @@ public class ItemUtilities {
 	 * @return
 	 */
 	public static boolean areItemStacksStackable(ItemStack item1, ItemStack item2) {
-		if (item1.getItem() != item2.getItem()) {
-			return false;
-		} else if (item1.getTag() == null && item2.getTag() != null) {
-			return false;
-		} else {
-			return item1.getTag() == null || item1.getTag().equals(item2.getTag()) && item1.areCapsCompatible(item2);
-		}
+		return ItemHandlerHelper.canItemStacksStackRelaxed(item1, item2);
 	}
 }

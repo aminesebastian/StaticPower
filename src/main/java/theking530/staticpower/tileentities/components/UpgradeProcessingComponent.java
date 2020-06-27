@@ -6,14 +6,13 @@ import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
 
 public class UpgradeProcessingComponent extends AbstractTileEntityComponent {
 	private BiConsumer<UpgradeProcessingComponent, ItemStack> upgradeCallback;
 	private Predicate<ItemStack> upgradePredicate;
-	private IItemHandler upgradeInventory;
+	private InventoryComponent upgradeInventory;
 
-	public UpgradeProcessingComponent(String name, @Nonnull IItemHandler upgradeInventory, @Nonnull BiConsumer<UpgradeProcessingComponent, ItemStack> upgradeCallback,
+	public UpgradeProcessingComponent(String name, @Nonnull InventoryComponent upgradeInventory, @Nonnull BiConsumer<UpgradeProcessingComponent, ItemStack> upgradeCallback,
 			Predicate<ItemStack> upgradePredicate) {
 		super(name);
 		this.upgradeCallback = upgradeCallback;

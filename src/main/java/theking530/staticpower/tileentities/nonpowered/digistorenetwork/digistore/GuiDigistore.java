@@ -55,11 +55,14 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 	protected void drawForegroundExtras(float partialTicks, int mouseX, int mouseY) {
 		super.drawForegroundExtras(partialTicks, mouseX, mouseY);
 		if (!getTileEntity().getStoredItem().isEmpty()) {
-			if (mouseX >= guiLeft + 80 && mouseX <= guiLeft + 96 && mouseY >= guiTop + 25 && mouseY <= guiTop + 41) {
-				GuiDrawUtilities.drawColoredRectangle(guiLeft + 76, guiTop + 21, 24, 44, 1.0f, new Color(255, 255, 255, 150).fromEightBitToFloat());
+			if (mouseX >= guiLeft + 76 && mouseX <= guiLeft + 100 && mouseY >= guiTop + 21 && mouseY <= guiTop + 45) {
+				GuiDrawUtilities.drawColoredRectangle(guiLeft + 76, guiTop + 21, 24, 24, 1.0f, new Color(200, 200, 200).fromEightBitToFloat());
 				renderTooltip(getTileEntity().getStoredItem(), mouseX, mouseY);
 			}
 		}
+
+		String amountString = String.valueOf(getTileEntity().getStoredAmount());
+		this.font.drawString(amountString, guiLeft + 89 - (font.getStringWidth(amountString) / 2), guiTop + 50, new Color(50, 50, 50).encodeInInteger());
 	}
 
 	@Override

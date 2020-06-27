@@ -17,6 +17,7 @@ import theking530.staticpower.tileentities.powered.lumbermill.TileEntityLumberMi
 import theking530.staticpower.tileentities.powered.poweredfurnace.TileEntityPoweredFurnace;
 import theking530.staticpower.tileentities.powered.poweredgrinder.TileEntityPoweredGrinder;
 import theking530.staticpower.tileentities.powered.solarpanels.TileEntitySolarPanel;
+import theking530.staticpower.tileentities.powered.treefarmer.TileEntityTreeFarm;
 
 public class ModTileEntityTypes {
 	public static TileEntityType<TileEntityVacuumChest> VACCUM_CHEST;
@@ -36,6 +37,7 @@ public class ModTileEntityTypes {
 	public static TileEntityType<TileEntityDigistoreWire> DIGISTORE_WIRE;
 	public static TileEntityType<TileEntityLumberMill> LUMBER_MILL;
 	public static TileEntityType<TileEntityBasicFarmer> BASIC_FARMER;
+	public static TileEntityType<TileEntityTreeFarm> TREE_FARM;
 
 	public static void init() {
 		VACCUM_CHEST = StaticPowerRegistry.preRegisterTileEntity(TileEntityVacuumChest::new, ModBlocks.VacuumChest);
@@ -45,6 +47,7 @@ public class ModTileEntityTypes {
 		POWERED_GRINDER = StaticPowerRegistry.preRegisterTileEntity(TileEntityPoweredGrinder::new, ModBlocks.PoweredGrinder);
 		LUMBER_MILL = StaticPowerRegistry.preRegisterTileEntity(TileEntityLumberMill::new, ModBlocks.LumberMill);
 		BASIC_FARMER = StaticPowerRegistry.preRegisterTileEntity(TileEntityBasicFarmer::new, ModBlocks.BasicFarmer);
+		TREE_FARM = StaticPowerRegistry.preRegisterTileEntity(TileEntityTreeFarm::new, ModBlocks.TreeFarmer);
 		TANK = StaticPowerRegistry.preRegisterTileEntity(TileEntityTank::new, ModBlocks.BasicTank);
 
 		POWER_CABLE = StaticPowerRegistry.preRegisterTileEntity(TileEntityPowerCable::new, ModBlocks.PowerCable);

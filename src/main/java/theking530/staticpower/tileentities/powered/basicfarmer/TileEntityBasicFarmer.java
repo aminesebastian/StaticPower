@@ -111,7 +111,6 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		} else {
 			// Otherwise, continue the processing.
 			processingComponent.startProcessing();
-			processingComponent.continueProcessing();
 
 			// Draw the idle usage of water and energy per tick.
 			if (!world.isRemote) {
@@ -139,7 +138,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		// Otherwise, update the farmed stack.
 		if (!getWorld().isRemote) {
 			for (int i = 0; i < internalInventory.getSlots(); i++) {
-				ItemStack extractedStack = internalInventory.extractItem(1, Integer.MAX_VALUE, false);
+				ItemStack extractedStack = internalInventory.extractItem(i, Integer.MAX_VALUE, false);
 				ItemStack insertedStack = InventoryUtilities.insertItemIntoInventory(outputInventory, extractedStack, false);
 				if (!insertedStack.isEmpty()) {
 					internalInventory.setStackInSlot(i, insertedStack);

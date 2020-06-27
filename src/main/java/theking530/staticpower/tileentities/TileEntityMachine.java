@@ -57,10 +57,6 @@ public abstract class TileEntityMachine extends TileEntityBase {
 	}
 
 	public boolean hasPower() {
-		return energyStorage.getStorage().getEnergyStored() > 0 ? true : false;
-	}
-
-	public int useEnergy(int energyCost) {
-		return 0; // extractEnergy(null, energyCost, false);
+		return energyStorage.getStorage().getEnergyStored() > 0;
 	}
 }

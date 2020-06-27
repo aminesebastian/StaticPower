@@ -26,6 +26,8 @@ import theking530.staticpower.tileentities.powered.poweredfurnace.ContainerPower
 import theking530.staticpower.tileentities.powered.poweredfurnace.GuiPoweredFurnace;
 import theking530.staticpower.tileentities.powered.poweredgrinder.ContainerPoweredGrinder;
 import theking530.staticpower.tileentities.powered.poweredgrinder.GuiPoweredGrinder;
+import theking530.staticpower.tileentities.powered.treefarmer.ContainerTreeFarmer;
+import theking530.staticpower.tileentities.powered.treefarmer.GuiTreeFarmer;
 
 public class ModContainerTypes {
 	public static ContainerType<ContainerVacuumChest> VACUUM_CHEST_CONTAINER;
@@ -35,6 +37,7 @@ public class ModContainerTypes {
 	public static ContainerType<ContainerPoweredGrinder> POWERED_GRINDER_CONTAINER;
 	public static ContainerType<ContainerLumberMill> LUMBER_MILL_CONTAINER;
 	public static ContainerType<ContainerBasicFarmer> BASIC_FARMER_CONTAINER;
+	public static ContainerType<ContainerTreeFarmer> TREE_FARMER_CONTAINER;
 	public static ContainerType<ContainerTank> TANK_CONTAINER;
 	
 	public static ContainerType<ContainerDigistore> DIGISTORE_CONTAINER;
@@ -50,6 +53,7 @@ public class ModContainerTypes {
 		POWERED_GRINDER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_powered_grinder", ContainerPoweredGrinder::new, GuiPoweredGrinder::new);
 		LUMBER_MILL_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_lumber_mill", ContainerLumberMill::new, GuiLumberMill::new);
 		BASIC_FARMER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_basic_farmer", ContainerBasicFarmer::new, GuiBasicFarmer::new);
+		TREE_FARMER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_tree_farmer", ContainerTreeFarmer::new, GuiTreeFarmer::new);
 		TANK_CONTAINER = StaticPowerRegistry.preRegisterContainer("tank", ContainerTank::new, GuiTank::new);
 		
 		DIGISTORE_CONTAINER = StaticPowerRegistry.preRegisterContainer("digistore", ContainerDigistore::new, GuiDigistore::new);

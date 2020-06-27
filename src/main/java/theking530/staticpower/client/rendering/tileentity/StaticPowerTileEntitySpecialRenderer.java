@@ -1,5 +1,7 @@
 package theking530.staticpower.client.rendering.tileentity;
 
+import javax.annotation.Nonnull;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
@@ -7,10 +9,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.Matrix3f;
 import net.minecraft.client.renderer.Quaternion;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -22,9 +27,11 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import theking530.api.utilities.Color;
+import theking530.api.utilities.Vector2D;
 import theking530.api.utilities.Vector3D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.tileentities.TileEntityBase;
+import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.TileEntityDigistore;
 
 @SuppressWarnings("deprecation")
 public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityBase> extends TileEntityRenderer<T> {
@@ -65,6 +72,9 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 		}
 
 		matrixStack.pop();
+		matrixStack.pop();
+		RenderHelper.setupLevelDiffuseLighting(matrixStack.getLast().getMatrix());
+		matrixStack.push();
 	}
 
 	/**
@@ -93,12 +103,35 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 	 *                        {@link TileEntity} is rendering at.
 	 * @param combinedOverlay The combined overlay.
 	 */
-	protected void drawItemInWorld(T tileEntity, ItemStack item, TransformType transformType, Vector3f offset, Vector3f scale, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+	protected void drawItemInWorld(T tileEntity, ItemStack item, TransformType transformType, Vector3D offset, Vector3D scale, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
 		matrixStack.push();
 		matrixStack.translate(offset.getX(), offset.getY(), offset.getZ());
 		matrixStack.scale(scale.getX(), scale.getY(), scale.getZ());
 		IBakedModel itemModel = Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(item, tileEntity.getWorld(), null);
 		ItemRenderer.renderItem(item, transformType, false, matrixStack, buffer, combinedLight, combinedOverlay, itemModel);
+		matrixStack.pop();
+	}
+
+	protected void drawFlatItemInWorld(TileEntityDigistore tile, @Nonnull ItemStack itemStack, Vector3D offset, Vector2D scale, float partialTickTime, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+		matrixStack.push();
+		matrixStack.translate(offset.getX(), offset.getY(), offset.getZ());
+		matrixStack.scale(scale.getX(), scale.getY(), 0.00005f);
+
+		IBakedModel itemModel = Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(itemStack, null, null);
+		boolean render3D = itemModel.isGui3d();
+
+		if (render3D) {
+			RenderHelper.setupGui3DDiffuseLighting();
+		} else {
+			RenderHelper.setupGuiFlatDiffuseLighting();
+		}
+
+		matrixStack.getLast().getNormal().set(Matrix3f.makeScaleMatrix(1, -1, 1));
+		Minecraft.getInstance().getItemRenderer().renderItem(itemStack, ItemCameraTransforms.TransformType.GUI, false, matrixStack, buffer, combinedLight, combinedOverlay, itemModel);
+		if (buffer instanceof IRenderTypeBuffer.Impl) {
+			((IRenderTypeBuffer.Impl) buffer).finish();
+		}
+
 		matrixStack.pop();
 	}
 
@@ -116,7 +149,7 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 	 * @param combinedLight
 	 * @param combinedOverlay
 	 */
-	protected void drawTextInWorld(String text, T tileEntity, Color color, Vector3f offset, float scale, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+	protected void drawTextInWorld(String text, T tileEntity, Color color, Vector3D offset, float scale, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
 		if (text == null || text.isEmpty())
 			return;
 

@@ -7,6 +7,7 @@ import java.util.List;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.api.utilities.SDMath;
 
@@ -136,6 +137,18 @@ public class InventoryUtilities {
 	public static ItemStack insertItemIntoInventory(IItemHandler inv, ItemStack stack, int start, int stop, boolean simulate) {
 		// Allocate a copy of the provided stack.
 		ItemStack output = stack.copy();
+
+		// Go through each slot and attempt to insert the item if an item that this can
+		// stack with already exists in that slot. If we ever end up with
+		// an empty item, we have fully inserted, we can return true.
+		for (int i = start; i < stop + 1; i++) {
+			if (ItemHandlerHelper.canItemStacksStackRelaxed(inv.getStackInSlot(i), output)) {
+				output = inv.insertItem(i, output, simulate);
+				if (output.isEmpty()) {
+					return output;
+				}
+			}
+		}
 
 		// Go through each slot and attempt to insert the item. If we ever end up with
 		// an empty item, we have fully inserted, we can return true.

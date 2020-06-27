@@ -153,6 +153,9 @@ public class WorldUtilities {
 	 * @return
 	 */
 	public static List<ItemStack> getBlockDrops(World world, BlockPos pos) {
+		if (world.isRemote) {
+			throw new RuntimeException("The #getBlockDrops method was excuted on the client. This should only be excuted on the server.");
+		}
 		if (!world.isRemote) {
 			NonNullList<ItemStack> output = NonNullList.create();
 			output.addAll(Block.getDrops(world.getBlockState(pos), (ServerWorld) world, pos, null));

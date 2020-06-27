@@ -27,12 +27,20 @@ public class OutputServoComponent extends AbstractTileEntityComponent {
 		super(name);
 		this.outputTime = outputTime;
 		this.inventory = inventory;
-		this.slots = slots;
+		if (slots.length == 0) {
+			this.slots = new int[inventory.getSlots()];
+			for (int i = 0; i < inventory.getSlots(); i++) {
+				this.slots[i] = i;
+			}
+		} else {
+			this.slots = slots;
+		}
+
 		this.outputMode = mode;
 	}
 
 	public OutputServoComponent(String name, int outputTime, InventoryComponent inventory, int... slots) {
-		this(name,  outputTime, inventory, MachineSideMode.Output, slots);
+		this(name, outputTime, inventory, MachineSideMode.Output, slots);
 	}
 
 	@Override
@@ -90,8 +98,7 @@ public class OutputServoComponent extends AbstractTileEntityComponent {
 
 	public boolean canOutputFromSide(BlockSide blockSide) {
 		if (getTileEntity().hasComponentOfType(SideConfigurationComponent.class)) {
-			return getTileEntity().getComponent(SideConfigurationComponent.class)
-					.getWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(blockSide, getTileEntity().getFacingDirection())) == outputMode;
+			return getTileEntity().getComponent(SideConfigurationComponent.class).getWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(blockSide, getTileEntity().getFacingDirection())) == outputMode;
 		}
 		return true;
 	}

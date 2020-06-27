@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import javax.annotation.Nonnull;
 
+import org.apache.logging.log4j.util.TriConsumer;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -21,12 +23,17 @@ import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 
 public class InventoryComponent extends AbstractTileEntityComponent implements Iterable<ItemStack>, IItemHandler, IItemHandlerModifiable {
+	public enum InventoryChangeType {
+		ADDED, REMOVED, MODIFIED
+	}
+
 	protected NonNullList<ItemStack> stacks;
 	private ItemStackHandlerFilter filter;
 	private MachineSideMode inventoryMode;
 	private boolean capabilityInsertEnabled;
 	private boolean capabilityExtractEnabled;
 	private final InventoryComponentCapabilityInterface capabilityInterface;
+	private TriConsumer<InventoryChangeType, ItemStack, InventoryComponent> changeCallback;
 
 	public InventoryComponent(String name, int size, MachineSideMode mode) {
 		super(name);
@@ -144,7 +151,7 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 	public void setStackInSlot(int slot, @Nonnull ItemStack stack) {
 		validateSlotIndex(slot);
 		this.stacks.set(slot, stack);
-		onContentsChanged(slot);
+		this.onItemStackAdded(getStackInSlot(slot));
 	}
 
 	@Override
@@ -215,10 +222,11 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 		if (!simulate) {
 			if (existing.isEmpty()) {
 				this.stacks.set(slot, reachedLimit ? ItemHandlerHelper.copyStackWithSize(stack, limit) : stack);
+				onItemStackAdded(getStackInSlot(slot));
 			} else {
 				existing.grow(reachedLimit ? limit : stack.getCount());
+				onItemStackModified(getStackInSlot(slot));
 			}
-			onContentsChanged(slot);
 		}
 
 		return reachedLimit ? ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - limit) : ItemStack.EMPTY;
@@ -249,8 +257,8 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 
 		if (existing.getCount() <= toExtract) {
 			if (!simulate) {
+				onItemStackRemoved(getStackInSlot(slot));
 				this.stacks.set(slot, ItemStack.EMPTY);
-				onContentsChanged(slot);
 				return existing;
 			} else {
 				return existing.copy();
@@ -258,7 +266,7 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 		} else {
 			if (!simulate) {
 				this.stacks.set(slot, ItemHandlerHelper.copyStackWithSize(existing, existing.getCount() - toExtract));
-				onContentsChanged(slot);
+				onItemStackModified(getStackInSlot(slot));
 			}
 
 			return ItemHandlerHelper.copyStackWithSize(existing, toExtract);
@@ -279,6 +287,11 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 		return true;
 	}
 
+	public InventoryComponent setModifiedCallback(TriConsumer<InventoryChangeType, ItemStack, InventoryComponent> callback) {
+		changeCallback = callback;
+		return this;
+	}
+
 	protected void validateSlotIndex(int slot) {
 		if (slot < 0 || slot >= stacks.size())
 			throw new RuntimeException("Slot " + slot + " not in valid range - [0," + stacks.size() + ")");
@@ -288,8 +301,22 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 
 	}
 
-	protected void onContentsChanged(int slot) {
+	protected void onItemStackAdded(ItemStack stack) {
+		if (changeCallback != null) {
+			changeCallback.accept(InventoryChangeType.ADDED, stack, this);
+		}
+	}
 
+	protected void onItemStackRemoved(ItemStack stack) {
+		if (changeCallback != null) {
+			changeCallback.accept(InventoryChangeType.REMOVED, stack, this);
+		}
+	}
+
+	protected void onItemStackModified(ItemStack stack) {
+		if (changeCallback != null) {
+			changeCallback.accept(InventoryChangeType.MODIFIED, stack, this);
+		}
 	}
 
 	public class InventoryComponentCapabilityInterface implements IItemHandler {

@@ -345,7 +345,6 @@ public abstract class BaseGuiTab {
 	 */
 	protected void drawButtonIcon(float partialTicks) {
 		if (itemIcon != null) {
-			GlStateManager.disableDepthTest();
 			Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(new ItemStack(itemIcon), getTabSide() == TabSide.RIGHT ? xPosition + 3 : xPosition + tabWidth + 5, yPosition + 4);
 		}
 	}
@@ -371,12 +370,11 @@ public abstract class BaseGuiTab {
 		currentHeight = ((tabHeight * animationTimer / animationTime));
 
 		GL11.glPushMatrix();
-		GL11.glDisable(GL11.GL_CULL_FACE);
+
 		GL11.glEnable(GL11.GL_BLEND);
 		if (getTabSide() == TabSide.LEFT) {
 			GL11.glTranslatef(xPosition, yPosition, 0.0f);
 			GL11.glScalef(-1.0f, 1.0f, 1.0f);
-			;
 			GL11.glTranslatef(-xPosition, -yPosition, 0.0f);
 		}
 		// Top
@@ -416,7 +414,6 @@ public abstract class BaseGuiTab {
 		StaticVertexBuffer.pos(tabLeft + 20 + (tabWidth * animationTimer / animationTime), tabTop + 4, 0, .9767, .03);
 
 		tessellator.draw();
-		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glPopMatrix();
 	}

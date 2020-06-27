@@ -36,6 +36,14 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 		return energyPerTick;
 	}
 
+	public boolean hasEnoughPower(int power) {
+		return EnergyStorage.getEnergyStored() >= power;
+	}
+
+	public boolean hasPower() {
+		return EnergyStorage.getEnergyStored() > 0;
+	}
+
 	@Override
 	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);

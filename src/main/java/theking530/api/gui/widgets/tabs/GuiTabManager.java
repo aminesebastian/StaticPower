@@ -3,6 +3,8 @@ package theking530.api.gui.widgets.tabs;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+
 import theking530.api.gui.widgets.AbstractGuiWidget;
 import theking530.api.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.api.gui.widgets.tabs.BaseGuiTab.TabState;
@@ -17,10 +19,17 @@ public class GuiTabManager extends AbstractGuiWidget {
 		registeredTabs = new ArrayList<BaseGuiTab>();
 	}
 
-	public GuiTabManager registerTab(BaseGuiTab tab) {
+	public GuiTabManager registerTab(BaseGuiTab tab, boolean initiallyOpen) {
 		registeredTabs.add(tab);
 		tab.setManager(this);
+		if(initiallyOpen) {
+			setInitiallyOpenTab(tab);
+		}
 		return this;
+	}
+
+	public GuiTabManager registerTab(BaseGuiTab tab) {
+		return registerTab(tab, false);
 	}
 
 	public GuiTabManager removeTab(BaseGuiTab tab) {
@@ -82,7 +91,7 @@ public class GuiTabManager extends AbstractGuiWidget {
 			int adjustedOffset = Math.min(tabPositionY + (i * 25) + offset, maxOffset);
 			rightTabs.get(i).updateTabPosition(tabPositionX, adjustedOffset, partialTicks);
 			rightTabs.get(i).drawTabPanel(partialTicks);
-			if(rightTabs.get(i).isOpen()) {
+			if (rightTabs.get(i).isOpen()) {
 				rightTabs.get(i).renderBackground(mouseX, mouseY, partialTicks);
 			}
 		}
@@ -97,7 +106,7 @@ public class GuiTabManager extends AbstractGuiWidget {
 			int adjustedOffset = Math.min(tabPositionY + (i * 25) + offset, maxOffset);
 			leftTabs.get(i).updateTabPosition((int) (tabPositionX - getOwnerSize().getX() - 21), adjustedOffset, partialTicks);
 			leftTabs.get(i).drawTabPanel(partialTicks);
-			if(leftTabs.get(i).isOpen()) {
+			if (leftTabs.get(i).isOpen()) {
 				leftTabs.get(i).renderBackground(mouseX, mouseY, partialTicks);
 			}
 		}

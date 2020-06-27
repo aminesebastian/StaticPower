@@ -11,16 +11,27 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 	private int currentProcessingTime;
 	private boolean processing;
 	private boolean processingPaused;
+	private boolean serverOnly;
 	private Supplier<Boolean> processingEndedCallback;
 
-	public MachineProcessingComponent(String name, int processingTime, @Nonnull Supplier<Boolean> onProcessingEnded) {
+	public MachineProcessingComponent(String name, int processingTime, @Nonnull Supplier<Boolean> onProcessingCompleted, boolean serverOnly) {
 		super(name);
-		this.processingEndedCallback = onProcessingEnded;
+		this.processingEndedCallback = onProcessingCompleted;
 		this.processingTime = processingTime;
 		this.processing = false;
+		serverOnly = true;
+	}
+
+	public MachineProcessingComponent(String name, int processingTime, @Nonnull Supplier<Boolean> onProcessingCompleted) {
+		this(name, processingTime, onProcessingCompleted, false);
 	}
 
 	public void preProcessUpdate() {
+		// If we should only run on the server, do nothing.
+		if (serverOnly && getWorld().isRemote) {
+			return;
+		}
+
 		if (processing && !processingPaused) {
 			if (currentProcessingTime < processingTime) {
 				currentProcessingTime++;
@@ -34,28 +45,54 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		}
 	}
 
+	/**
+	 * Starts processing if this component was not already processing. If we were
+	 * already processing, checks to see if we are paused, and unpauses.
+	 */
 	public void startProcessing() {
+		// If we should only run on the server, do nothing.
+		if (serverOnly && getWorld().isRemote) {
+			return;
+		}
+		
 		if (!processing) {
 			processing = true;
 			processingPaused = false;
 			currentProcessingTime = 0;
+		} else if (processingPaused) {
+			continueProcessing();
 		}
 	}
 
 	public void pauseProcessing() {
+		// If we should only run on the server, do nothing.
+		if (serverOnly && getWorld().isRemote) {
+			return;
+		}
+		
 		processingPaused = true;
 	}
 
 	public void continueProcessing() {
+		// If we should only run on the server, do nothing.
+		if (serverOnly && getWorld().isRemote) {
+			return;
+		}
+		
 		processingPaused = false;
 	}
 
 	public void cancelProcessing() {
+		// If we should only run on the server, do nothing.
+		if (serverOnly && getWorld().isRemote) {
+			return;
+		}
+		
 		processing = false;
 		currentProcessingTime = 0;
 	}
 
-	private boolean processingCompleted() {
+	private boolean processingCompleted() {	
 		return processingEndedCallback.get();
 	}
 

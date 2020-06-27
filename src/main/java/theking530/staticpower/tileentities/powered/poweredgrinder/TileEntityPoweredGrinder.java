@@ -55,8 +55,8 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", DEFAULT_MOVING_TIME, this::movingCompleted));
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::processingCompleted));
 
-		registerComponent(new InputServoComponent("InputServo", 2, inputInventory, 0));
-		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory, 0, 1, 2));
+		registerComponent(new InputServoComponent("InputServo", 4, inputInventory));
+		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory));
 		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
 
 		bonusOutputChance = 0.0f;
@@ -109,20 +109,22 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 		// If on the server.
 		if (!getWorld().isRemote) {
 			// Get the recipe.
-			GrinderRecipe recipe = getRecipe(internalInventory.getStackInSlot(0)).get();
-			// Ensure the output slots can take the recipe.
-			if (InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRawOutputItems())) {
-				// For each output, insert the contents into the output based on the percentage
-				// chance. The clear the internal inventory, mark for synchronization, and
-				// return true.
-				for (ProbabilityItemStackOutput output : recipe.getOutputItems()) {
-					if (SDMath.diceRoll(output.getPercentage() + bonusOutputChance)) {
-						InventoryUtilities.insertItemIntoInventory(outputInventory, output.getItem().copy(), false);
+			GrinderRecipe recipe = getRecipe(internalInventory.getStackInSlot(0)).orElse(null);
+			if (recipe != null) {
+				// Ensure the output slots can take the recipe.
+				if (InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRawOutputItems())) {
+					// For each output, insert the contents into the output based on the percentage
+					// chance. The clear the internal inventory, mark for synchronization, and
+					// return true.
+					for (ProbabilityItemStackOutput output : recipe.getOutputItems()) {
+						if (SDMath.diceRoll(output.getPercentage() + bonusOutputChance)) {
+							InventoryUtilities.insertItemIntoInventory(outputInventory, output.getItem().copy(), false);
+						}
 					}
+					internalInventory.setStackInSlot(0, ItemStack.EMPTY);
+					markTileEntityForSynchronization();
+					return true;
 				}
-				internalInventory.setStackInSlot(0, ItemStack.EMPTY);
-				markTileEntityForSynchronization();
-				return true;
 			}
 		}
 		return false;

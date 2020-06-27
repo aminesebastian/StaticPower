@@ -241,6 +241,12 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 	}
 
 	protected void updateEmptyState() {
+		// If we're locked, we should keep the stored item set, even if the digistore is
+		// empty.
+		if (locked) {
+			return;
+		}
+		// If not locked, clear the digistore icon if there are no items.
 		if (storedAmount <= 0) {
 			storedItem = ItemStack.EMPTY.copy();
 		}

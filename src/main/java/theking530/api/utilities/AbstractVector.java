@@ -13,7 +13,23 @@ public abstract class AbstractVector {
 		}
 	}
 
+	public float getScalar(int index) {
+		return values.get(index);
+	}
+
 	public int getDimensions() {
 		return values.size();
+	}
+
+	public void multiply(float multiplier) {
+		for (int i = 0; i < values.size(); i++) {
+			values.set(i, values.get(i) * multiplier);
+		}
+	}
+
+	public void add(AbstractVector other) {
+		for (int i = 0; i < Math.min(other.getDimensions(), getDimensions()); i++) {
+			values.set(i, other.getScalar(i) + values.get(i));
+		}
 	}
 }

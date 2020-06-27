@@ -39,7 +39,7 @@ public class Color extends Vector4D {
 	 * @return A new instance of the color normalized.
 	 */
 	public Color fromEightBitToFloat() {
-		return new Color(getRed() / 255.0f, getGreen() / 255.0f, getBlue() / 255.0f);
+		return new Color(getRed() / 255.0f, getGreen() / 255.0f, getBlue() / 255.0f, getAlpha() / 255.0f);
 
 	}
 

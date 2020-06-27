@@ -30,6 +30,7 @@ import theking530.staticpower.tileentities.powered.lumbermill.BlockLumberMill;
 import theking530.staticpower.tileentities.powered.poweredfurnace.BlockPoweredFurnace;
 import theking530.staticpower.tileentities.powered.poweredgrinder.BlockPoweredGrinder;
 import theking530.staticpower.tileentities.powered.solarpanels.BlockSolarPanel;
+import theking530.staticpower.tileentities.powered.treefarmer.BlockTreeFarmer;
 import theking530.staticpower.utilities.HarvestLevel;
 
 public class ModBlocks {
@@ -78,6 +79,7 @@ public class ModBlocks {
 	public static BlockLumberMill LumberMill;
 	public static BlockBasicFarmer BasicFarmer;
 	public static BlockTank BasicTank;
+	public static BlockTreeFarmer TreeFarmer;
 
 	public static BlockSolarPanel SolarPanelBasic;
 	public static BlockSolarPanel SolarPanelStatic;
@@ -146,6 +148,7 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(PoweredGrinder = new BlockPoweredGrinder("machine_powered_grinder"));
 		StaticPowerRegistry.preRegisterBlock(LumberMill = new BlockLumberMill("machine_lumber_mill"));
 		StaticPowerRegistry.preRegisterBlock(BasicFarmer = new BlockBasicFarmer("machine_basic_farmer"));
+		StaticPowerRegistry.preRegisterBlock(TreeFarmer = new BlockTreeFarmer("machine_tree_farmer"));
 		StaticPowerRegistry.preRegisterBlock(BasicTank = new BlockTank("tank_basic"));
 
 		StaticPowerRegistry.preRegisterBlock(DigistoreManager = new BlockDigistoreManager("digistore_manager"));

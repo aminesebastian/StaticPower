@@ -13,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.api.gui.GuiDrawUtilities;
 import theking530.api.utilities.Color;
+import theking530.api.utilities.Vector3D;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.item.ItemRoutingParcelClient;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
@@ -22,8 +23,8 @@ import theking530.staticpower.tileentities.TileEntityBase;
 @SuppressWarnings("deprecation")
 public abstract class AbstractCableTileEntityRenderer<T extends TileEntityBase> extends StaticPowerTileEntitySpecialRenderer<T> {
 	protected static final BlockModel CUBE_MODEL = new BlockModel();
-	protected static final Vector3f BLOCK_RENDER_SCALE = new Vector3f(0.3f, 0.3f, 0.3f);
-	protected static final Vector3f ITEM_RENDER_SCALE = new Vector3f(0.25f, 0.25f, 0.25f);
+	protected static final Vector3D BLOCK_RENDER_SCALE = new Vector3D(0.3f, 0.3f, 0.3f);
+	protected static final Vector3D ITEM_RENDER_SCALE = new Vector3D(0.25f, 0.25f, 0.25f);
 
 	public AbstractCableTileEntityRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
 		super(rendererDispatcherIn);
@@ -40,19 +41,19 @@ public abstract class AbstractCableTileEntityRenderer<T extends TileEntityBase> 
 
 		// Determine which scale to use when drawing.
 		if (packet.getContainedItem().getItem() instanceof BlockItem) {
-			drawItemInWorld(te, packet.getContainedItem(), TransformType.FIXED, getItemParcelAnimationOffset(lerpValue, dir), BLOCK_RENDER_SCALE, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+			drawItemInWorld(te, packet.getContainedItem(), TransformType.FIXED, getItemParcelAnimationOffset(lerpValue, dir), BLOCK_RENDER_SCALE, partialTicks, matrixStack, buffer, 15728880, combinedOverlay);
 		} else {
-			drawItemInWorld(te, packet.getContainedItem(), TransformType.FIXED, getItemParcelAnimationOffset(lerpValue, dir), ITEM_RENDER_SCALE, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+			drawItemInWorld(te, packet.getContainedItem(), TransformType.FIXED, getItemParcelAnimationOffset(lerpValue, dir), ITEM_RENDER_SCALE, partialTicks, matrixStack, buffer, 15728880, combinedOverlay);
 		}
 
 		matrixStack.pop();
 	}
 
-	protected Vector3f getItemParcelAnimationOffset(float lerpValue, Direction dir) {
-		Vector3f baseOffset = new Vector3f(0.5f, 0.5f, 0.5f);
-		Vector3f directionVector = new Vector3f(dir.getXOffset(), dir.getYOffset(), dir.getZOffset());
-		directionVector.mul(0.5f);
-		directionVector.mul(lerpValue);
+	protected Vector3D getItemParcelAnimationOffset(float lerpValue, Direction dir) {
+		Vector3D baseOffset = new Vector3D(0.5f, 0.5f, 0.5f);
+		Vector3D directionVector = new Vector3D(dir);
+		directionVector.multiply(0.5f);
+		directionVector.multiply(lerpValue);
 		baseOffset.add(directionVector);
 		return baseOffset;
 	}

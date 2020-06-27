@@ -28,7 +28,15 @@ public class InputServoComponent extends AbstractTileEntityComponent {
 		super(name);
 		this.inputTime = inputTime;
 		this.inventory = inventory;
-		this.slots = slots;
+		if (slots.length == 0) {
+			this.slots = new int[inventory.getSlots()];
+			for (int i = 0; i < inventory.getSlots(); i++) {
+				this.slots[i] = i;
+			}
+		} else {
+			this.slots = slots;
+		}
+
 		this.inputMode = mode;
 	}
 
@@ -122,8 +130,7 @@ public class InputServoComponent extends AbstractTileEntityComponent {
 
 	public boolean canInputFromSide(BlockSide blockSide) {
 		if (getTileEntity().hasComponentOfType(SideConfigurationComponent.class)) {
-			return getTileEntity().getComponent(SideConfigurationComponent.class)
-					.getWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(blockSide, getTileEntity().getFacingDirection())) == inputMode;
+			return getTileEntity().getComponent(SideConfigurationComponent.class).getWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(blockSide, getTileEntity().getFacingDirection())) == inputMode;
 		}
 		return true;
 	}
