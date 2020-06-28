@@ -20,6 +20,8 @@ import theking530.staticpower.tileentities.powered.basicfarmer.ContainerBasicFar
 import theking530.staticpower.tileentities.powered.basicfarmer.GuiBasicFarmer;
 import theking530.staticpower.tileentities.powered.chargingstation.ContainerChargingStation;
 import theking530.staticpower.tileentities.powered.chargingstation.GuiChargingStation;
+import theking530.staticpower.tileentities.powered.fermenter.ContainerFermenter;
+import theking530.staticpower.tileentities.powered.fermenter.GuiFermenter;
 import theking530.staticpower.tileentities.powered.lumbermill.ContainerLumberMill;
 import theking530.staticpower.tileentities.powered.lumbermill.GuiLumberMill;
 import theking530.staticpower.tileentities.powered.poweredfurnace.ContainerPoweredFurnace;
@@ -35,16 +37,17 @@ public class ModContainerTypes {
 	public static ContainerType<ContainerItemFilter> ITEM_FILTER_CONTAINER;
 	public static ContainerType<ContainerPoweredFurnace> POWERED_FURNACE_CONTAINER;
 	public static ContainerType<ContainerPoweredGrinder> POWERED_GRINDER_CONTAINER;
+	public static ContainerType<ContainerFermenter> FERMENTER_CONTAINER;
 	public static ContainerType<ContainerLumberMill> LUMBER_MILL_CONTAINER;
 	public static ContainerType<ContainerBasicFarmer> BASIC_FARMER_CONTAINER;
 	public static ContainerType<ContainerTreeFarmer> TREE_FARMER_CONTAINER;
 	public static ContainerType<ContainerTank> TANK_CONTAINER;
-	
+
 	public static ContainerType<ContainerDigistore> DIGISTORE_CONTAINER;
 	public static ContainerType<ContainerExtractor> EXTRACTOR_CONTAINER;
 	public static ContainerType<ContainerFilter> FILTER_CONTAINER;
 	public static ContainerType<ContainerRetriever> RETRIEVER_CONTAINER;
-	
+
 	public static void init() {
 		VACUUM_CHEST_CONTAINER = StaticPowerRegistry.preRegisterContainer("chest_vacuum", ContainerVacuumChest::new, GuiVacuumChest::new);
 		CHARGING_STATION_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_charging_station", ContainerChargingStation::new, GuiChargingStation::new);
@@ -54,8 +57,10 @@ public class ModContainerTypes {
 		LUMBER_MILL_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_lumber_mill", ContainerLumberMill::new, GuiLumberMill::new);
 		BASIC_FARMER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_basic_farmer", ContainerBasicFarmer::new, GuiBasicFarmer::new);
 		TREE_FARMER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_tree_farmer", ContainerTreeFarmer::new, GuiTreeFarmer::new);
+		FERMENTER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_fermenter", ContainerFermenter::new, GuiFermenter::new);
+
 		TANK_CONTAINER = StaticPowerRegistry.preRegisterContainer("tank", ContainerTank::new, GuiTank::new);
-		
+
 		DIGISTORE_CONTAINER = StaticPowerRegistry.preRegisterContainer("digistore", ContainerDigistore::new, GuiDigistore::new);
 		EXTRACTOR_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_extractor", ContainerExtractor::new, GuiExtractor::new);
 		FILTER_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_filter", ContainerFilter::new, GuiFilter::new);

@@ -26,6 +26,7 @@ import theking530.staticpower.tileentities.nonpowered.tank.BlockTank;
 import theking530.staticpower.tileentities.nonpowered.vacuumchest.BlockVacuumChest;
 import theking530.staticpower.tileentities.powered.basicfarmer.BlockBasicFarmer;
 import theking530.staticpower.tileentities.powered.chargingstation.BlockChargingStation;
+import theking530.staticpower.tileentities.powered.fermenter.BlockFermenter;
 import theking530.staticpower.tileentities.powered.lumbermill.BlockLumberMill;
 import theking530.staticpower.tileentities.powered.poweredfurnace.BlockPoweredFurnace;
 import theking530.staticpower.tileentities.powered.poweredgrinder.BlockPoweredGrinder;
@@ -80,6 +81,7 @@ public class ModBlocks {
 	public static BlockBasicFarmer BasicFarmer;
 	public static BlockTank BasicTank;
 	public static BlockTreeFarmer TreeFarmer;
+	public static BlockFermenter Fermenter;
 
 	public static BlockSolarPanel SolarPanelBasic;
 	public static BlockSolarPanel SolarPanelStatic;
@@ -149,6 +151,8 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(LumberMill = new BlockLumberMill("machine_lumber_mill"));
 		StaticPowerRegistry.preRegisterBlock(BasicFarmer = new BlockBasicFarmer("machine_basic_farmer"));
 		StaticPowerRegistry.preRegisterBlock(TreeFarmer = new BlockTreeFarmer("machine_tree_farmer"));
+		StaticPowerRegistry.preRegisterBlock(Fermenter = new BlockFermenter("machine_fermenter"));
+
 		StaticPowerRegistry.preRegisterBlock(BasicTank = new BlockTank("tank_basic"));
 
 		StaticPowerRegistry.preRegisterBlock(DigistoreManager = new BlockDigistoreManager("digistore_manager"));

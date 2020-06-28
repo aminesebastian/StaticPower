@@ -26,9 +26,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import theking530.api.utilities.Color;
-import theking530.api.utilities.Vector2D;
-import theking530.api.utilities.Vector3D;
+import theking530.common.utilities.Color;
+import theking530.common.utilities.Vector2D;
+import theking530.common.utilities.Vector3D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.TileEntityDigistore;
@@ -193,30 +193,6 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 	}
 
 	protected void drawTexturedQuadUnlit(ResourceLocation texture, MatrixStack matrixStack, IRenderTypeBuffer buffer, Vector3D offset, Vector3D scale, Color tint) {
-		matrixStack.push();
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getCutout());
-		TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(texture);
-
-		matrixStack.translate(offset.getX(), offset.getY(), offset.getZ());
-		matrixStack.scale(scale.getX(), scale.getY(), scale.getZ());
-		builder.pos(matrixStack.getLast().getMatrix(), 0.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMaxU(), sprite.getMinV()).lightmap(15728880).normal(-1, 0, 0).endVertex();
-		builder.pos(matrixStack.getLast().getMatrix(), 0.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMaxU(), sprite.getMaxV()).lightmap(15728880).normal(-1, 0, 0).endVertex();
-		builder.pos(matrixStack.getLast().getMatrix(), 1.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), sprite.getMaxV()).lightmap(15728880).normal(-1, 0, 0).endVertex();
-		builder.pos(matrixStack.getLast().getMatrix(), 1.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), sprite.getMinV()).lightmap(15728880).normal(-1, 0, 0).endVertex();
-		matrixStack.pop();
-	}
-
-	protected void drawTexturedQuad(ResourceLocation texture, MatrixStack matrixStack, IRenderTypeBuffer buffer, Vector3D offset, Vector3D scale) {
-		matrixStack.push();
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getCutout());
-		TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(texture);
-
-		matrixStack.translate(offset.getX(), offset.getY(), offset.getZ());
-		matrixStack.scale(scale.getX(), scale.getY(), scale.getZ());
-		builder.pos(matrixStack.getLast().getMatrix(), 0.0f, 1.0f, 1.0f).color(1.0f, 1.0f, 1.0f, 1.0f).tex(sprite.getMaxU(), sprite.getMinV()).lightmap(15728880).normal(-1, 0, 0).endVertex();
-		builder.pos(matrixStack.getLast().getMatrix(), 0.0f, 0.0f, 1.0f).color(1.0f, 1.0f, 1.0f, 1.0f).tex(sprite.getMaxU(), sprite.getMaxV()).lightmap(15728880).normal(-1, 0, 0).endVertex();
-		builder.pos(matrixStack.getLast().getMatrix(), 1.0f, 0.0f, 1.0f).color(1.0f, 1.0f, 1.0f, 1.0f).tex(sprite.getMinU(), sprite.getMaxV()).lightmap(15728880).normal(-1, 0, 0).endVertex();
-		builder.pos(matrixStack.getLast().getMatrix(), 1.0f, 1.0f, 1.0f).color(1.0f, 1.0f, 1.0f, 1.0f).tex(sprite.getMinU(), sprite.getMinV()).lightmap(15728880).normal(-1, 0, 0).endVertex();
-		matrixStack.pop();
+		drawTexturedQuadLit(texture, matrixStack, buffer, offset, scale, tint, 15728880);
 	}
 }

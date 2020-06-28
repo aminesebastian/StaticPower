@@ -129,7 +129,7 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 		}
 
 		public boolean hasNext() {
-			return currentIndex < getSlots() - 1;
+			return currentIndex <= getSlots() - 1;
 		}
 
 		public ItemStack next() {
@@ -150,8 +150,12 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 	@Override
 	public void setStackInSlot(int slot, @Nonnull ItemStack stack) {
 		validateSlotIndex(slot);
+		ItemStack oldStack = getStackInSlot(slot);
 		this.stacks.set(slot, stack);
-		this.onItemStackAdded(getStackInSlot(slot));
+		
+		if(!oldStack.equals(stack, false)) {
+			onItemStackAdded(stack);
+		}
 	}
 
 	@Override
@@ -257,8 +261,9 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 
 		if (existing.getCount() <= toExtract) {
 			if (!simulate) {
-				onItemStackRemoved(getStackInSlot(slot));
+				ItemStack removedItem = getStackInSlot(slot);
 				this.stacks.set(slot, ItemStack.EMPTY);
+				onItemStackRemoved(removedItem);
 				return existing;
 			} else {
 				return existing.copy();

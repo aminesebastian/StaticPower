@@ -5,14 +5,14 @@ import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
-import theking530.api.gui.GuiTextures;
-import theking530.api.gui.widgets.progressbars.ArrowProgressBar;
-import theking530.api.gui.widgets.tabs.BaseGuiTab;
-import theking530.api.gui.widgets.tabs.BaseGuiTab.TabSide;
-import theking530.api.gui.widgets.tabs.GuiPowerInfoTab;
-import theking530.api.gui.widgets.tabs.GuiSideConfigTab;
-import theking530.api.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
-import theking530.api.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
+import theking530.common.gui.GuiTextures;
+import theking530.common.gui.widgets.progressbars.ArrowProgressBar;
+import theking530.common.gui.widgets.tabs.BaseGuiTab;
+import theking530.common.gui.widgets.tabs.GuiPowerInfoTab;
+import theking530.common.gui.widgets.tabs.GuiSideConfigTab;
+import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
+import theking530.common.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
+import theking530.common.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
 import theking530.staticpower.tileentities.components.EnergyStorageComponent;
@@ -42,9 +42,7 @@ public class GuiPoweredFurnace extends StaticPowerTileEntityGui<ContainerPowered
 
 	@Override
 	protected void drawBackgroundExtras(float partialTicks, int mouseX, int mouseY) {
-		drawGenericBackground();
-		drawContainerSlots(container.inventorySlots, getTileEntity().ioSideConfiguration);
-		drawPlayerInventorySlots();
+		super.drawBackgroundExtras(partialTicks, mouseX, mouseY);
 
 		// Flames
 		Optional<MachineProcessingComponent> processingComp = ComponentUtilities.getComponent(MachineProcessingComponent.class, getTileEntity());

@@ -6,9 +6,9 @@ import java.util.Arrays;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
-import theking530.api.gui.widgets.tabs.GuiInfoTab;
-import theking530.api.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
-import theking530.api.gui.widgets.valuebars.GuiFluidBarFromTank;
+import theking530.common.gui.widgets.tabs.GuiInfoTab;
+import theking530.common.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
+import theking530.common.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.tileentities.components.RedstoneControlComponent;
 

@@ -2,8 +2,8 @@ package theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
-import theking530.api.gui.widgets.tabs.GuiSideConfigTab;
-import theking530.api.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
+import theking530.common.gui.widgets.tabs.GuiSideConfigTab;
+import theking530.common.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.tileentities.components.RedstoneControlComponent;
 

@@ -11,8 +11,8 @@ import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Direction;
-import theking530.api.utilities.Color;
-import theking530.api.utilities.Vector2D;
+import theking530.common.utilities.Color;
+import theking530.common.utilities.Vector2D;
 import theking530.staticpower.client.StaticPowerSprites;
 
 public class BlockModel {

@@ -1,6 +1,5 @@
 package theking530.staticpower.tileentities.powered.treefarmer;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,6 +9,7 @@ import java.util.stream.Stream;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.IGrowable;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.Fluids;
@@ -28,11 +28,14 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import theking530.api.utilities.SDMath;
+import theking530.common.utilities.Color;
+import theking530.common.utilities.SDMath;
+import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.initialization.ModTags;
 import theking530.staticpower.initialization.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
@@ -47,6 +50,7 @@ import theking530.staticpower.tileentities.components.OutputServoComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities;
 import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities.BlockSide;
+import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
@@ -54,8 +58,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 	public static final int DEFAULT_WATER_USAGE = 1;
 	public static final int DEFAULT_IDLE_ENERGY_USAGE = 20;
 	public static final int DEFAULT_HARVEST_ENERGY_COST = 1000;
-	public static final int MAX_WOOD_RECURSIVE_DEPTH = 40;
-	public static final int MAX_LEAVES_RECURSIVE_DEPTH = 40;
+	public static final int MAX_WOOD_RECURSIVE_DEPTH = 100;
 	public static final int DEFAULT_RANGE = 2;
 	public static final int DEFAULT_SAPLING_SPACING = 2;
 	public static final Random RANDOM = new Random();
@@ -82,19 +85,25 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 
 	public TileEntityTreeFarm() {
 		super(ModTileEntityTypes.TREE_FARM);
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 10, MachineSideMode.Input));
+
+		woodIngredient = Ingredient.fromTag(ModTags.LOG);
+		leafIngredient = Ingredient.fromTag(ModTags.LEAVES);
+		saplingIngredient = Ingredient.fromTag(ModTags.SAPLING);
+
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 10, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
+			public boolean canInsertItem(int slot, ItemStack stack) {
+				return saplingIngredient.test(stack);
+			}
+		}));
 		registerComponent(fluidContainerInventoy = new InventoryComponent("FluidContainerInventoy", 2, MachineSideMode.Never));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 9, MachineSideMode.Output));
 		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 100, MachineSideMode.Never));
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 5, this::processingCompleted, true));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 5, this::canProcess, this::canProcess, this::processingCompleted, true));
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluid) -> fluid.getFluid() == Fluids.WATER).setCapabilityExposedModes(MachineSideMode.Input));
 
 		currentBlockIndex = 0;
-		woodIngredient = Ingredient.fromTag(ModTags.LOG);
-		leafIngredient = Ingredient.fromTag(ModTags.LEAVES);
-		saplingIngredient = Ingredient.fromTag(ModTags.SAPLING);
 		shouldDrawRadiusPreview = false;
 		range = DEFAULT_RANGE;
 		blocks = new LinkedList<BlockPos>();
@@ -113,23 +122,10 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 
 	@Override
 	public void process() {
-		// Draw the idle usage of water and energy per tick.
-		if (!world.isRemote) {
-			// If the blocks to farm list is empty, refresh it.
-			if (blocks.isEmpty()) {
-				refreshBlocksInRange(range);
-			}
-
-			if (!canProcess()) {
-				processingComponent.pauseProcessing();
-			} else {
-				// Otherwise, continue the processing.
-				processingComponent.startProcessing();
-				energyStorage.getStorage().extractEnergy(DEFAULT_IDLE_ENERGY_USAGE, false);
-				fluidTankComponent.drain(DEFAULT_WATER_USAGE, FluidAction.EXECUTE);
-			}
+		if (processingComponent.isProcessing()) {
+			energyStorage.getStorage().extractEnergy(DEFAULT_IDLE_ENERGY_USAGE, false);
+			fluidTankComponent.drain(DEFAULT_WATER_USAGE, FluidAction.EXECUTE);
 		}
-		markTileEntityForSynchronization();
 	}
 
 	protected boolean canProcess() {
@@ -164,10 +160,10 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 					internalInventory.setStackInSlot(i, insertedStack);
 				}
 			}
-
-			// Sync the tile entity.
-			markTileEntityForSynchronization();
 		}
+
+		// Sync the tile entity.
+		markTileEntityForSynchronization();
 
 		// Return true if we finished clearing the internal inventory.
 		return InventoryUtilities.isInventoryEmpty(internalInventory);
@@ -216,19 +212,19 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		if (hasAxe()) {
 			if (inputInventory.getStackInSlot(0).attemptDamageItem(1, RANDOM, null)) {
 				inputInventory.setStackInSlot(0, ItemStack.EMPTY);
-				getWorld().playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+				getWorld().playSound(null, pos, SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F);
 			}
 		}
 	}
 
 	public boolean farmTree(BlockPos pos) {
 		if (!getWorld().isRemote) {
-			for (int i = 0; i < getRadius() * 2; i++) {
-				if (isFarmableBlock(pos.add(0, i, 0))) {
-					List<ItemStack> treeBlocks = harvestTree(pos.add(0, i, 0), 0);
-					for (ItemStack drop : treeBlocks) {
-						InventoryUtilities.insertItemIntoInventory(internalInventory, drop, false);
-					}
+			if (isFarmableBlock(pos)) {
+				getWorld().playSound(null, pos, getWorld().getBlockState(pos).getBlock().getSoundType(getWorld().getBlockState(pos), world, pos, null).getBreakSound(), SoundCategory.BLOCKS, 0.5F, 1.0F);
+				List<ItemStack> harvestResults = new LinkedList<ItemStack>();
+				harvestBlock(pos, harvestResults, 0);
+				for (ItemStack drop : harvestResults) {
+					InventoryUtilities.insertItemIntoInventory(internalInventory, drop, false);
 				}
 			}
 			plantSapling(pos);
@@ -241,58 +237,34 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 
 	@SuppressWarnings("deprecation")
 	public boolean isFarmableBlock(BlockPos pos) {
+		// Get the block at the position.
 		Block block = getWorld().getBlockState(pos).getBlock();
+
+		// Perform these sanity checks as a quick optimization (the ingredient test is
+		// O(n)).
 		if (block != Blocks.AIR && !block.hasTileEntity(getWorld().getBlockState(pos)) && block.getBlockHardness(getWorld().getBlockState(pos), getWorld(), pos) != -1) {
-			return woodIngredient.test(new ItemStack(Item.getItemFromBlock(block)));
+			return woodIngredient.test(new ItemStack(Item.getItemFromBlock(block))) || this.leafIngredient.test(new ItemStack(Item.getItemFromBlock(block)));
 		}
 		return false;
 	}
 
-	@SuppressWarnings("deprecation")
-	private List<ItemStack> harvestTree(BlockPos pos, int index) {
-		List<ItemStack> wood = new ArrayList<ItemStack>();
+	private void harvestBlock(BlockPos pos, List<ItemStack> items, int index) {
+		// If we've hit our max recursion, stop.
 		if (index >= MAX_WOOD_RECURSIVE_DEPTH) {
-			return wood;
+			return;
 		}
-		wood.addAll(WorldUtilities.getBlockDrops(getWorld(), pos));
-		getWorld().playSound(null, pos, getWorld().getBlockState(pos).getBlock().getSoundType(getWorld().getBlockState(pos), world, pos, null).getBreakSound(), SoundCategory.BLOCKS, 0.5F, 1.0F);
+
+		// Add the drops for the current block and break it.
+		items.addAll(WorldUtilities.getBlockDrops(getWorld(), pos));
 		getWorld().setBlockState(pos, Blocks.AIR.getDefaultState(), 1 | 2);
+
+		// Recurse to any adjacent blocks if they are farm-able.
 		for (Direction facing : Direction.values()) {
 			BlockPos testPos = pos.offset(facing);
 			if (isFarmableBlock(testPos)) {
-				wood.addAll(harvestTree(testPos, index + 1));
+				harvestBlock(testPos, items, index + 1);
 			}
 		}
-		for (Direction facing : Direction.values()) {
-			Block block = getWorld().getBlockState(pos.offset(facing)).getBlock();
-			if (block != Blocks.AIR && !block.hasTileEntity(getWorld().getBlockState(pos)) && block.getBlockHardness(getWorld().getBlockState(pos), getWorld(), pos) != -1) {
-				if (leafIngredient.test(new ItemStack(Item.getItemFromBlock(block)))) {
-					wood.addAll(recurseLeaves(pos.offset(facing), 0));
-				}
-			}
-		}
-		return wood;
-	}
-
-	@SuppressWarnings("deprecation")
-	private List<ItemStack> recurseLeaves(BlockPos pos, int index) {
-		List<ItemStack> leaves = new ArrayList<ItemStack>();
-		if (index >= MAX_LEAVES_RECURSIVE_DEPTH) {
-			return leaves;
-		}
-		leaves.addAll(WorldUtilities.getBlockDrops(getWorld(), pos));
-		getWorld().playSound(null, pos, getWorld().getBlockState(pos).getBlock().getSoundType(getWorld().getBlockState(pos), world, pos, null).getBreakSound(), SoundCategory.BLOCKS, 0.5F, 1.0F);
-		getWorld().setBlockState(pos, Blocks.AIR.getDefaultState(), 1 | 2);
-		for (Direction facing : Direction.values()) {
-			BlockPos testPos = pos.offset(facing);
-			Block block = getWorld().getBlockState(testPos).getBlock();
-			if (block != Blocks.AIR && !block.hasTileEntity(getWorld().getBlockState(testPos)) && block.getBlockHardness(getWorld().getBlockState(testPos), getWorld(), testPos) != -1) {
-				if (leafIngredient.test(new ItemStack(Item.getItemFromBlock(block)))) {
-					leaves.addAll(recurseLeaves(testPos, index + 1));
-				}
-			}
-		}
-		return leaves;
 	}
 
 	public boolean bonemealSapling(BlockPos pos) {
@@ -354,6 +326,20 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 
 	public void setShouldDrawRadiusPreview(boolean shouldDraw) {
 		shouldDrawRadiusPreview = shouldDraw;
+		if (shouldDraw) {
+			// Set the scale equal to the range * 2 plus 1.
+			Vector3f scale = new Vector3f((range * 2) + 1, 1.0f, (range * 2) + 1);
+			// Shift over so we center the range around the farmer.
+			Vector3f position = new Vector3f(getTileEntity().getPos().getX(), getTileEntity().getPos().getY(), getTileEntity().getPos().getZ());
+			Vec3i offsetDirection = this.getFacingDirection().getOpposite().getDirectionVec();
+			position.add(new Vector3f(offsetDirection.getX() * 3 - range, 0.0f, offsetDirection.getZ() * 3 - range));
+
+			// Add the entry.
+			CustomRenderer.addCubeRenderer(getTileEntity(), "range", position, scale, new Color(0.1f, 1.0f, 0.2f, 0.25f));
+		} else {
+			// Remove the entry.
+			CustomRenderer.removeCubeRenderer(getTileEntity(), "range");
+		}
 	}
 
 	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {

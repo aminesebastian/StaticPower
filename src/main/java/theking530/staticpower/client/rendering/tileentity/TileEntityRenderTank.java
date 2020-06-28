@@ -7,9 +7,9 @@ import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.math.BlockPos;
-import theking530.api.gui.GuiDrawUtilities;
-import theking530.api.utilities.Color;
-import theking530.api.utilities.Vector2D;
+import theking530.common.gui.GuiDrawUtilities;
+import theking530.common.utilities.Color;
+import theking530.common.utilities.Vector2D;
 import theking530.staticpower.client.rendering.BlockModel;
 import theking530.staticpower.tileentities.nonpowered.tank.TileEntityTank;
 

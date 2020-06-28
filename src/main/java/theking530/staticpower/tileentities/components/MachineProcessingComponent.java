@@ -7,23 +7,25 @@ import javax.annotation.Nonnull;
 import net.minecraft.nbt.CompoundNBT;
 
 public class MachineProcessingComponent extends AbstractTileEntityComponent {
+	private final boolean serverOnly;
+	private final Supplier<Boolean> canStartProcessingCallback;
+	private final Supplier<Boolean> canContinueProcessingCallback;
+	private final Supplier<Boolean> processingEndedCallback;
+
 	private int processingTime;
 	private int currentProcessingTime;
 	private boolean processing;
 	private boolean processingPaused;
-	private boolean serverOnly;
-	private Supplier<Boolean> processingEndedCallback;
 
-	public MachineProcessingComponent(String name, int processingTime, @Nonnull Supplier<Boolean> onProcessingCompleted, boolean serverOnly) {
+	public MachineProcessingComponent(String name, int processingTime, @Nonnull Supplier<Boolean> canStartProcessingCallback, @Nonnull Supplier<Boolean> canContinueProcessingCallback, @Nonnull Supplier<Boolean> processingEndedCallback,
+			boolean serverOnly) {
 		super(name);
-		this.processingEndedCallback = onProcessingCompleted;
+		this.canStartProcessingCallback = canStartProcessingCallback;
+		this.canContinueProcessingCallback = canContinueProcessingCallback;
+		this.processingEndedCallback = processingEndedCallback;
 		this.processingTime = processingTime;
 		this.processing = false;
-		serverOnly = true;
-	}
-
-	public MachineProcessingComponent(String name, int processingTime, @Nonnull Supplier<Boolean> onProcessingCompleted) {
-		this(name, processingTime, onProcessingCompleted, false);
+		this.serverOnly = serverOnly;
 	}
 
 	public void preProcessUpdate() {
@@ -32,15 +34,26 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 			return;
 		}
 
-		if (processing && !processingPaused) {
-			if (currentProcessingTime < processingTime) {
-				currentProcessingTime++;
+		if (!processing && !processingPaused && canStartProcessingCallback.get()) {
+			startProcessing();
+		}
+
+		if (processing) {
+			if (processingPaused) {
+				return;
 			}
-			if (currentProcessingTime >= processingTime) {
-				if (processingCompleted()) {
-					currentProcessingTime = 0;
-					processing = false;
+			if (canContinueProcessingCallback.get()) {
+				if (currentProcessingTime < processingTime) {
+					currentProcessingTime++;
 				}
+				if (currentProcessingTime >= processingTime) {
+					if (processingCompleted()) {
+						currentProcessingTime = 0;
+						processing = false;
+					}
+				}
+			} else {
+				processing = false;
 			}
 		}
 	}
@@ -54,11 +67,11 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		if (serverOnly && getWorld().isRemote) {
 			return;
 		}
-		
+
+		// DO NOT CHANGE THIS LOGIC, VERY IMPORTANT IT REMAINS THE SAME.
 		if (!processing) {
 			processing = true;
 			processingPaused = false;
-			currentProcessingTime = 0;
 		} else if (processingPaused) {
 			continueProcessing();
 		}
@@ -69,7 +82,7 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		if (serverOnly && getWorld().isRemote) {
 			return;
 		}
-		
+
 		processingPaused = true;
 	}
 
@@ -78,7 +91,7 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		if (serverOnly && getWorld().isRemote) {
 			return;
 		}
-		
+
 		processingPaused = false;
 	}
 
@@ -87,12 +100,12 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		if (serverOnly && getWorld().isRemote) {
 			return;
 		}
-		
+
 		processing = false;
 		currentProcessingTime = 0;
 	}
 
-	private boolean processingCompleted() {	
+	private boolean processingCompleted() {
 		return processingEndedCallback.get();
 	}
 
@@ -110,6 +123,10 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 
 	public int getProcessingTime() {
 		return processingTime;
+	}
+
+	public void setProcessingTime(int newTime) {
+		processingTime = newTime;
 	}
 
 	public int getProgressScaled(int scaleValue) {

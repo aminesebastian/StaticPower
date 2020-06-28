@@ -1,0 +1,8 @@
+{
+    "variants": {
+		"facing=north": { "model": "staticpower:block/machines/machine_fermenter" },
+        "facing=south": { "model": "staticpower:block/machines/machine_fermenter", "y": 180 },
+        "facing=west":  { "model": "staticpower:block/machines/machine_fermenter", "y": 270 },
+        "facing=east":  { "model": "staticpower:block/machines/machine_fermenter", "y": 90 }
+    }
+}

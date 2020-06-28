@@ -7,7 +7,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -49,11 +48,6 @@ public class StaticPowerModEventRegistry {
 	public static void textureStitchEvent(TextureStitchEvent.Pre event) {
 		StaticPowerClientEventHandler.onTextureStitchEvent(event);
 		StaticPower.LOGGER.info("Static Power Model Texture Stitch Event Completed!");
-	}
-
-	@SubscribeEvent
-	public static void render(RenderWorldLastEvent event) {
-		StaticPowerClientEventHandler.render(event);
 	}
 
 	@SubscribeEvent

@@ -4,8 +4,8 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Items;
 import net.minecraft.network.PacketBuffer;
 import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
+import theking530.staticpower.client.container.slots.FluidContainerSlot;
 import theking530.staticpower.initialization.ModContainerTypes;
-import theking530.staticpower.machines.tileentitycomponents.slots.FluidContainerSlot;
 
 public class ContainerTank extends StaticPowerTileEntityContainer<TileEntityTank> {
 

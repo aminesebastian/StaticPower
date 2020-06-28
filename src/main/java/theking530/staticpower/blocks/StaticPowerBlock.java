@@ -29,9 +29,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
-import theking530.api.wrench.IWrenchable;
-import theking530.api.wrench.RegularWrenchMode;
-import theking530.api.wrench.SneakWrenchMode;
+import theking530.common.wrench.IWrenchable;
+import theking530.common.wrench.RegularWrenchMode;
+import theking530.common.wrench.SneakWrenchMode;
 import theking530.staticpower.items.tools.StaticWrench;
 import theking530.staticpower.tileentities.TileEntityBase;
 

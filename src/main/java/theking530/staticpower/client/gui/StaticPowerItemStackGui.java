@@ -12,7 +12,6 @@ public abstract class StaticPowerItemStackGui<T extends StaticPowerItemContainer
 	public StaticPowerItemStackGui(T container, PlayerInventory playerInventory, ITextComponent title, int guiXSize, int guiYSize) {
 		super(container, playerInventory, title, guiXSize, guiYSize);
 		owningItemStack = container.getItemStack();
-		initializeGui();
 	}
 
 	/**

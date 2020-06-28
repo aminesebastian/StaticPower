@@ -20,9 +20,9 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
-import theking530.api.utilities.RaytracingUtilities;
-import theking530.api.utilities.RaytracingUtilities.AdvancedRayTraceResult;
-import theking530.api.wrench.IWrenchTool;
+import theking530.common.utilities.RaytracingUtilities;
+import theking530.common.utilities.RaytracingUtilities.AdvancedRayTraceResult;
+import theking530.common.wrench.IWrenchTool;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
 

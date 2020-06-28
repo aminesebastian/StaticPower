@@ -5,11 +5,11 @@ import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
-import theking530.staticpower.crafting.wrappers.AbstractStaticPowerRecipe;
+import theking530.staticpower.crafting.wrappers.AbstractMachineRecipe;
 import theking530.staticpower.crafting.wrappers.ProbabilityItemStackOutput;
 import theking530.staticpower.crafting.wrappers.RecipeMatchParameters;
 
-public class GrinderRecipe extends AbstractStaticPowerRecipe {
+public class GrinderRecipe extends AbstractMachineRecipe {
 	public static final IRecipeType<GrinderRecipe> RECIPE_TYPE = IRecipeType.register("grinder");
 
 	private final ProbabilityItemStackOutput[] outputs;
@@ -18,18 +18,12 @@ public class GrinderRecipe extends AbstractStaticPowerRecipe {
 	 * (for example, to see if an inventory can take the items).
 	 */
 	private final ItemStack[] outputItems;
-	private final int processingTime;
-	private final int powerCost;
-	private final int powerCostPerTick;
 	private final Ingredient inputItem;
 
 	public GrinderRecipe(ResourceLocation name, int processingTime, int powerCost, Ingredient input, ProbabilityItemStackOutput... outputs) {
-		super(name);
-		this.processingTime = processingTime;
-		this.powerCost = powerCost;
+		super(name, processingTime, powerCost);
 		this.inputItem = input;
 		this.outputs = outputs;
-		this.powerCostPerTick = powerCost / processingTime;
 		// Cache the output items.
 		this.outputItems = new ItemStack[outputs.length];
 		for (int i = 0; i < outputs.length; i++) {
@@ -47,18 +41,6 @@ public class GrinderRecipe extends AbstractStaticPowerRecipe {
 
 	public Ingredient getInputIngredient() {
 		return inputItem;
-	}
-
-	public int getProcessingTime() {
-		return processingTime;
-	}
-
-	public int getPowerCost() {
-		return powerCost;
-	}
-
-	public int getPowerCostPerTick() {
-		return powerCostPerTick;
 	}
 
 	@Override

@@ -12,6 +12,7 @@ import net.minecraft.block.MelonBlock;
 import net.minecraft.block.NetherWartBlock;
 import net.minecraft.block.PumpkinBlock;
 import net.minecraft.block.SugarCaneBlock;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.Fluids;
@@ -26,6 +27,8 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import theking530.common.utilities.Color;
+import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.initialization.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.BatteryComponent;
@@ -67,7 +70,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 
 	public TileEntityBasicFarmer() {
 		super(ModTileEntityTypes.BASIC_FARMER);
-		this.disableFaceInteraction();
+		disableFaceInteraction();
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 2, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
 				return !stack.isEmpty() && (stack.getItem() instanceof AxeItem || stack.getItem() instanceof HoeItem);
@@ -79,7 +82,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
 
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 5, this::processingCompleted));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 5, this::canFarm, this::canFarm, this::processingCompleted, true));
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluid) -> fluid.getFluid() == Fluids.WATER).setCapabilityExposedModes(MachineSideMode.Input));
 
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory, 0));
@@ -105,18 +108,9 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 
 	@Override
 	public void process() {
-		// If we can't farm, pause the processing component.
-		if (!canFarm()) {
-			processingComponent.pauseProcessing();
-		} else {
-			// Otherwise, continue the processing.
-			processingComponent.startProcessing();
-
-			// Draw the idle usage of water and energy per tick.
-			if (!world.isRemote) {
-				energyStorage.getStorage().extractEnergy(DEFAULT_IDLE_ENERGY_USAGE, false);
-				fluidTankComponent.drain(DEFAULT_WATER_USAGE * blocksFarmedPerTick, FluidAction.EXECUTE);
-			}
+		if (processingComponent.isProcessing()) {
+			energyStorage.getStorage().extractEnergy(DEFAULT_IDLE_ENERGY_USAGE, false);
+			fluidTankComponent.drain(DEFAULT_WATER_USAGE * blocksFarmedPerTick, FluidAction.EXECUTE);
 		}
 	}
 
@@ -180,6 +174,19 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 
 	public void setShouldDrawRadiusPreview(boolean shouldDraw) {
 		shouldDrawRadiusPreview = shouldDraw;
+		if (shouldDraw) {
+			// Set the scale equal to the range * 2 plus 1.
+			Vector3f scale = new Vector3f((range * 2) + 1, 1.0f, (range * 2) + 1);
+			// Shift over so we center the range around the farmer.
+			Vector3f position = new Vector3f(getTileEntity().getPos().getX(), getTileEntity().getPos().getY(), getTileEntity().getPos().getZ());
+			position.add(new Vector3f(-range, 0.0f, -range));
+
+			// Add the entry.
+			CustomRenderer.addCubeRenderer(getTileEntity(), "range", position, scale, new Color(0.1f, 1.0f, 0.2f, 0.25f));
+		} else {
+			// Remove the entry.
+			CustomRenderer.removeCubeRenderer(getTileEntity(), "range");
+		}
 	}
 
 	private void incrementPosition() {

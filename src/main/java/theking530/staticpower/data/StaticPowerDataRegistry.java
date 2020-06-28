@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.util.ResourceLocation;
-import theking530.api.utilities.CustomJsonLoader;
+import theking530.common.utilities.CustomJsonLoader;
 import theking530.staticpower.StaticPower;
 
 public class StaticPowerDataRegistry {

@@ -1,21 +1,24 @@
 package theking530.staticpower.client.gui;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.renderer.Rectangle2d;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.text.ITextComponent;
-import theking530.api.gui.GuiDrawUtilities;
-import theking530.api.gui.WidgetContainer;
-import theking530.api.gui.widgets.AbstractGuiWidget;
-import theking530.api.gui.widgets.GuiDrawItem;
-import theking530.api.gui.widgets.tabs.GuiTabManager;
-import theking530.api.utilities.Color;
-import theking530.api.utilities.Vector2D;
+import theking530.common.gui.GuiDrawUtilities;
+import theking530.common.gui.WidgetContainer;
+import theking530.common.gui.widgets.AbstractGuiWidget;
+import theking530.common.gui.widgets.GuiDrawItem;
+import theking530.common.gui.widgets.tabs.BaseGuiTab;
+import theking530.common.gui.widgets.tabs.GuiTabManager;
+import theking530.common.utilities.Color;
+import theking530.common.utilities.Vector2D;
 import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.tileentities.components.SideConfigurationComponent;
@@ -41,6 +44,7 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	protected int ySizeTarget;
 	protected int outputSlotSize;
 	protected int inputSlotSize;
+	protected boolean isInitialized;
 
 	/**
 	 * Creates a new Gui.
@@ -64,11 +68,35 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 		registerWidget(tabManager = new GuiTabManager());
 	}
 
+	@Override()
+	public void init() {
+		super.init();
+		if (!isInitialized) {
+			initializeGui();
+			isInitialized = true;
+		}
+	}
+
+	@Override
+	public void tick() {
+		super.tick();
+		updateData();
+	}
+
 	/**
 	 * This method is raised after all the constructors and should be used by the
 	 * implementer to initialize the GUI (register widgets, etc).
 	 */
 	public void initializeGui() {
+
+	}
+
+	/**
+	 * This method is called every TICK (20 times a second), and can be used to
+	 * update any data in the UI that does not need to be updated per frame (for
+	 * example, the text in an info tab.)
+	 */
+	public void updateData() {
 
 	}
 
@@ -93,16 +121,25 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 		// Renders the dark background.
 		renderBackground();
 
+		// Update the widgets and then draw the background.
+		widgetContainer.update(new Vector2D(getGuiLeft(), getGuiTop()), new Vector2D(getXSize(), getYSize()), partialTicks, mouseX, mouseY);
+		widgetContainer.renderBackground(mouseX, mouseY, partialTicks);
+
+		// Draw the container background.
 		drawGenericBackground();
+
+		// Draw any extras.
 		drawBackgroundExtras(partialTicks, mouseX, mouseY);
-		if(container instanceof StaticPowerTileEntityContainer) {
-			drawContainerSlots(container.inventorySlots, ((StaticPowerTileEntityContainer<?>)container).getTileEntity().getComponent(SideConfigurationComponent.class));
-		}else {
+
+		// Draw the slots.
+		if (container instanceof StaticPowerTileEntityContainer) {
+			drawContainerSlots(container.inventorySlots, ((StaticPowerTileEntityContainer<?>) container).getTileEntity().getComponent(SideConfigurationComponent.class));
+		} else {
 			drawContainerSlots(container.inventorySlots);
 		}
 
-		widgetContainer.update(new Vector2D(getGuiLeft(), getGuiTop()), new Vector2D(getXSize(), getYSize()));
-		widgetContainer.renderBackground(mouseX, mouseY, partialTicks);
+		// Draw any widgets that need to appear above slots/items.
+		widgetContainer.renderBehindItems(mouseX, mouseY, partialTicks);
 
 		// Animations the screensize if the target sizes have changed.
 		animateScreenSize();
@@ -139,6 +176,20 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 
 		widgetContainer.handleMouseClick(mouseX, mouseY, button);
 		return superCallResult;
+	}
+
+	public List<Rectangle2d> getGuiBounds() {
+		List<Rectangle2d> tabBoxes = new ArrayList<>();
+
+		for (BaseGuiTab tab : getTabManager().getRegisteredTabs()) {
+			tabBoxes.add(tab.getBounds().toRectange2d());
+		}
+
+		for (AbstractGuiWidget widget : this.widgetContainer.getWidgets()) {
+			tabBoxes.add(widget.getBounds().toRectange2d());
+		}
+
+		return tabBoxes;
 	}
 
 	/**
@@ -377,8 +428,7 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 				// If side configuration is present, draw the slow with a border.
 				if (sideConfiguration != null) {
 					if (intendedMode != MachineSideMode.Regular && intendedMode != MachineSideMode.Never) {
-						drawSlot(slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset, slotSize, slotSize,
-								sideConfiguration.getCountOfSidesWithMode(intendedMode) > 0 ? intendedMode : MachineSideMode.Regular);
+						drawSlot(slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset, slotSize, slotSize, sideConfiguration.getCountOfSidesWithMode(intendedMode) > 0 ? intendedMode : MachineSideMode.Regular);
 					} else {
 						drawSlot(slot.xPos + guiLeft, slot.yPos + guiTop, 16, 16);
 					}

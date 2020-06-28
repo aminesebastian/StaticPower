@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
-import theking530.api.utilities.SDMath;
+import theking530.common.utilities.SDMath;
 
 public class InventoryUtilities {
 	public static boolean isInventoryEmpty(IItemHandler inv) {

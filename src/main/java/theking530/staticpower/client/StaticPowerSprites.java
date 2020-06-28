@@ -42,7 +42,8 @@ public class StaticPowerSprites {
 	public static final ResourceLocation CANCEL = registerSprite("gui/cancel");
 	public static final ResourceLocation GREEN_CHECK = registerSprite("gui/check");
 	public static final ResourceLocation DISABLED = registerSprite("gui/disabled");
-
+	public static final ResourceLocation RANGE_ICON = registerSprite("gui/show_range_icon");
+	
 	private static ResourceLocation registerSprite(String path) {
 		ResourceLocation sprite = new ResourceLocation(Reference.MOD_ID, path);
 		SPRITES.add(sprite);

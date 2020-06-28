@@ -2,12 +2,12 @@ package theking530.staticpower.tileentities.powered.chargingstation;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
-import theking530.api.gui.widgets.tabs.BaseGuiTab;
-import theking530.api.gui.widgets.tabs.BaseGuiTab.TabSide;
-import theking530.api.gui.widgets.tabs.GuiPowerInfoTab;
-import theking530.api.gui.widgets.tabs.GuiSideConfigTab;
-import theking530.api.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
-import theking530.api.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
+import theking530.common.gui.widgets.tabs.BaseGuiTab;
+import theking530.common.gui.widgets.tabs.GuiPowerInfoTab;
+import theking530.common.gui.widgets.tabs.GuiSideConfigTab;
+import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
+import theking530.common.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
+import theking530.common.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
 import theking530.staticpower.tileentities.components.EnergyStorageComponent;

@@ -8,12 +8,12 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
-import theking530.api.gui.GuiDrawUtilities;
-import theking530.api.gui.widgets.GuiDrawItem;
-import theking530.api.gui.widgets.button.StandardButton;
-import theking530.api.gui.widgets.button.TextButton;
-import theking530.api.gui.widgets.tabs.GuiInfoTab;
-import theking530.api.utilities.Color;
+import theking530.common.gui.GuiDrawUtilities;
+import theking530.common.gui.widgets.GuiDrawItem;
+import theking530.common.gui.widgets.button.StandardButton;
+import theking530.common.gui.widgets.button.TextButton;
+import theking530.common.gui.widgets.tabs.GuiInfoTab;
+import theking530.common.utilities.Color;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
@@ -61,7 +61,7 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 			}
 		}
 
-		String amountString = String.valueOf(getTileEntity().getStoredAmount());
+		String amountString = String.valueOf(getTileEntity().getStoredAmount()) + "/" + String.valueOf(getTileEntity().getMaxStoredAmount());
 		this.font.drawString(amountString, guiLeft + 89 - (font.getStringWidth(amountString) / 2), guiTop + 50, new Color(50, 50, 50).encodeInInteger());
 	}
 

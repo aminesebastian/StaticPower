@@ -8,6 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import theking530.staticpower.initialization.ModTileEntityTypes;
 import theking530.staticpower.tileentities.StaticPowerDefaultMachineBlock;
 
 public class BlockPoweredGrinder extends StaticPowerDefaultMachineBlock {
@@ -23,6 +24,6 @@ public class BlockPoweredGrinder extends StaticPowerDefaultMachineBlock {
 
 	@Override
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
-		return new TileEntityPoweredGrinder();
+		return ModTileEntityTypes.POWERED_GRINDER.create();
 	}
 }

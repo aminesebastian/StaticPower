@@ -14,7 +14,9 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockRayTraceResult;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.initialization.ModTileEntityTypes;
+import theking530.staticpower.items.upgrades.BaseDigistoreCapacityUpgrade;
 import theking530.staticpower.tileentities.components.InventoryComponent;
+import theking530.staticpower.tileentities.components.InventoryComponent.InventoryChangeType;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.BaseDigistoreTileEntity;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.utilities.ItemUtilities;
@@ -35,7 +37,7 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 
 	public TileEntityDigistore() {
 		super(ModTileEntityTypes.DIGISTORE);
-		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
+		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never).setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
 		registerComponent(outputInventory = new DigistoreInventoryComponent("OutputInventory"));
 		storedItem = ItemStack.EMPTY.copy();
 		maximumStorage = DEFAULT_CAPACITY;
@@ -107,6 +109,17 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 			WorldUtilities.dropItem(getWorld(), getFacingDirection(), getPos(), storedItem, countToDrop);
 			storedAmount -= countToDrop;
 		}
+	}
+
+	public void onUpgradesInventoryModifiedCallback(InventoryChangeType changeType, ItemStack item, InventoryComponent inventory) {
+		maximumStorage = DEFAULT_CAPACITY;
+		for (ItemStack stack : inventory) {
+			if (stack.getItem() instanceof BaseDigistoreCapacityUpgrade) {
+				BaseDigistoreCapacityUpgrade upgrade = (BaseDigistoreCapacityUpgrade) stack.getItem();
+				maximumStorage += (upgrade.getTier().getDigistoreItemCapacityAmount() * stack.getCount());
+			}
+		}
+		markTileEntityForSynchronization();
 	}
 
 	public ItemStack getStoredItem() {
@@ -268,6 +281,7 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 		storedItem.write(itemNbt);
 		nbt.put("StoredItem", itemNbt);
 		nbt.putInt("StoredAmount", storedAmount);
+		nbt.putInt("MaximumStorage", maximumStorage);
 		nbt.putBoolean("Locked", locked);
 		return nbt;
 	}
@@ -276,6 +290,7 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 		storedItem = ItemStack.read(nbt.getCompound("StoredItem"));
 		storedAmount = nbt.getInt("StoredAmount");
+		maximumStorage = nbt.getInt("MaximumStorage");
 		locked = nbt.getBoolean("Locked");
 	}
 

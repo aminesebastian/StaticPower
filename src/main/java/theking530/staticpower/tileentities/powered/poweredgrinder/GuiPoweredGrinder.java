@@ -3,14 +3,14 @@ package theking530.staticpower.tileentities.powered.poweredgrinder;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
-import theking530.api.gui.widgets.progressbars.GrinderProgressBar;
-import theking530.api.gui.widgets.tabs.BaseGuiTab;
-import theking530.api.gui.widgets.tabs.BaseGuiTab.TabSide;
-import theking530.api.gui.widgets.tabs.GuiInfoTab;
-import theking530.api.gui.widgets.tabs.GuiPowerInfoTab;
-import theking530.api.gui.widgets.tabs.GuiSideConfigTab;
-import theking530.api.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
-import theking530.api.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
+import theking530.common.gui.widgets.progressbars.GrinderProgressBar;
+import theking530.common.gui.widgets.tabs.BaseGuiTab;
+import theking530.common.gui.widgets.tabs.GuiInfoTab;
+import theking530.common.gui.widgets.tabs.GuiPowerInfoTab;
+import theking530.common.gui.widgets.tabs.GuiSideConfigTab;
+import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
+import theking530.common.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
+import theking530.common.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
 import theking530.staticpower.tileentities.components.EnergyStorageComponent;
@@ -40,11 +40,7 @@ public class GuiPoweredGrinder extends StaticPowerTileEntityGui<ContainerPowered
 	}
 
 	@Override
-	protected void drawBackgroundExtras(float partialTicks, int mouseX, int mouseY) {
-		drawGenericBackground();
-		drawContainerSlots(container.inventorySlots, getTileEntity().ioSideConfiguration);
-		drawPlayerInventorySlots();
-
+	public void updateData() {
 		String text = ("Grinds items into=their base components. ==" + "Bonus Chance: " + TextFormatting.GREEN + 100.0f + "%");
 		infoTab.setText(getTileEntity().getDisplayName().getFormattedText(), text);
 	}

@@ -11,12 +11,12 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.client.container.slots.BatteryItemSlot;
+import theking530.staticpower.client.container.slots.FluidContainerSlot;
 import theking530.staticpower.client.container.slots.OutputSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.client.container.slots.UpgradeItemSlot;
 import theking530.staticpower.initialization.ModContainerTypes;
 import theking530.staticpower.initialization.ModTags;
-import theking530.staticpower.machines.tileentitycomponents.slots.FluidContainerSlot;
 
 public class ContainerTreeFarmer extends StaticPowerTileEntityContainer<TileEntityTreeFarm> {
 

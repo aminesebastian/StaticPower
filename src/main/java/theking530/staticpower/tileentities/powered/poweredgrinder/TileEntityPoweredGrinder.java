@@ -6,7 +6,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import theking530.api.utilities.SDMath;
+import theking530.common.utilities.SDMath;
 import theking530.staticpower.crafting.wrappers.ProbabilityItemStackOutput;
 import theking530.staticpower.crafting.wrappers.RecipeMatchParameters;
 import theking530.staticpower.crafting.wrappers.StaticPowerRecipeRegistry;
@@ -24,7 +24,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityPoweredGrinder extends TileEntityMachine {
 	public static final int DEFAULT_PROCESSING_TIME = 100;
-	public static final int DEFAULT_PROCESSING_COST = 1000;
+	public static final int DEFAULT_PROCESSING_COST = 10;
 	public static final int DEFAULT_MOVING_TIME = 4;
 
 	public final InventoryComponent inputInventory;
@@ -52,8 +52,8 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
 
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
-		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", DEFAULT_MOVING_TIME, this::movingCompleted));
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::processingCompleted));
+		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", DEFAULT_MOVING_TIME, this::canMoveFromInputToProcessing, () -> true, this::movingCompleted, true));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true));
 
 		registerComponent(new InputServoComponent("InputServo", 4, inputInventory));
 		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory));
@@ -62,23 +62,29 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 		bonusOutputChance = 0.0f;
 	}
 
-	@Override
-	public void process() {
-		// If we're currently idle, start the move component.
-		if (!processingComponent.isProcessing() && !moveComponent.isProcessing() && canStartProcess() && redstoneControlComponent.passesRedstoneCheck()) {
-			moveComponent.startProcessing();
-		} else {
-			// If we're processing, get the current recipe. If we have enough energy, keep
-			// going, otheriwse, pause processing.
-			getRecipe(internalInventory.getStackInSlot(0)).ifPresent(recipe -> {
-				if (energyStorage.getStorage().getEnergyStored() < recipe.getPowerCostPerTick()) {
-					processingComponent.pauseProcessing();
-				} else {
-					processingComponent.continueProcessing();
-					energyStorage.getStorage().extractEnergy(recipe.getPowerCostPerTick(), false);
-				}
-			});
+	/**
+	 * Checks to make sure we can start the processing process.
+	 * 
+	 * @return
+	 */
+	public boolean canMoveFromInputToProcessing() {
+		if (!redstoneControlComponent.passesRedstoneCheck()) {
+			return false;
 		}
+		// Check if there is a valid recipe.
+		if (hasValidRecipe() && !moveComponent.isProcessing() && !processingComponent.isProcessing() && internalInventory.getStackInSlot(0).isEmpty()) {
+			// Gets the recipe and its outputs.
+			Optional<GrinderRecipe> recipe = getRecipe(inputInventory.getStackInSlot(0));
+
+			// If the items cannot be insert into the output, return false.
+			if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.get().getRawOutputItems())) {
+				return false;
+			}
+
+			// If we passed all the previous checks, return true.
+			return energyStorage.hasEnoughPower(recipe.get().getPowerCost());
+		}
+		return false;
 	}
 
 	/**
@@ -98,6 +104,18 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 		return true;
 	}
 
+	/**
+	 * Indicates if we can start or continue processing. If this returns false and
+	 * we are processing, processing pauses. If we are not processing and this
+	 * returns true, we will start processing.
+	 * 
+	 * @return
+	 */
+	public boolean canProcess() {
+		GrinderRecipe recipe = getRecipe(internalInventory.getStackInSlot(0)).orElse(null);
+		return recipe != null && redstoneControlComponent.passesRedstoneCheck() && energyStorage.hasEnoughPower(recipe.getPowerCost()) && InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRawOutputItems());
+	}
+	
 	/**
 	 * Once the processing is completed, place the output in the output slot (if
 	 * possible). If not, return false. This method will continue to be called until
@@ -130,26 +148,13 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 		return false;
 	}
 
-	/**
-	 * Checks to make sure we can start the processing process.
-	 * 
-	 * @return
-	 */
-	public boolean canStartProcess() {
-		// Check if there is a valid recipe.
-		if (hasValidRecipe() && !moveComponent.isProcessing() && !processingComponent.isProcessing() && internalInventory.getStackInSlot(0).isEmpty()) {
-			// Gets the recipe and its outputs.
-			Optional<GrinderRecipe> recipe = getRecipe(inputInventory.getStackInSlot(0));
-
-			// If the items cannot be insert into the output, return false.
-			if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.get().getRawOutputItems())) {
-				return false;
-			}
-
-			// If we passed all the previous checks, return true.
-			return true;
+	@Override
+	public void process() {
+		if (processingComponent.isProcessing()) {
+			getRecipe(internalInventory.getStackInSlot(0)).ifPresent(recipe -> {
+				energyStorage.getStorage().extractEnergy(recipe.getPowerCost(), false);
+			});
 		}
-		return false;
 	}
 
 	/**

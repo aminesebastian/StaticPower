@@ -7,9 +7,9 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-import theking530.api.gui.widgets.button.SpriteButton;
-import theking530.api.gui.widgets.button.StandardButton;
-import theking530.api.gui.widgets.tabs.GuiInfoTab;
+import theking530.common.gui.widgets.button.SpriteButton;
+import theking530.common.gui.widgets.button.StandardButton;
+import theking530.common.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.gui.StaticPowerItemStackGui;
@@ -51,10 +51,10 @@ public class GuiItemFilter extends StaticPowerItemStackGui<ContainerItemFilter, 
 		String[] splitMsg = text.split("=");
 		infoTab.setText(getItemStack().getDisplayName().getFormattedText(), Arrays.asList(splitMsg));
 
-		registerWidget(whitelistButton = new SpriteButton(41, 40, 20, 20, StaticPowerSprites.FILTER_WHITELIST, null, this::buttonPressed));
-		registerWidget(nbtButton = new SpriteButton(63, 40, 20, 20, StaticPowerSprites.FILTER_NBT, null, this::buttonPressed));
-		registerWidget(tagButton = new SpriteButton(85, 40, 20, 20, StaticPowerSprites.FILTER_TAG, null, this::buttonPressed));
-		registerWidget(modButton = new SpriteButton(107, 40, 20, 20, StaticPowerSprites.FILTER_MOD, null, this::buttonPressed));
+		registerWidget(whitelistButton = new SpriteButton(45, 40, 20, 20, StaticPowerSprites.FILTER_WHITELIST, null, this::buttonPressed));
+		registerWidget(nbtButton = new SpriteButton(67, 40, 20, 20, StaticPowerSprites.FILTER_NBT, null, this::buttonPressed));
+		registerWidget(tagButton = new SpriteButton(89, 40, 20, 20, StaticPowerSprites.FILTER_TAG, null, this::buttonPressed));
+		registerWidget(modButton = new SpriteButton(111, 40, 20, 20, StaticPowerSprites.FILTER_MOD, null, this::buttonPressed));
 
 		whitelistButton.setRegularTexture(getItemFilter().isWhiteListMode(getItemStack()) ? StaticPowerSprites.FILTER_WHITELIST : StaticPowerSprites.FILTER_BLACKLIST);
 		whitelistButton.setTooltip(new TranslationTextComponent(getItemFilter().isWhiteListMode(getItemStack()) ? "Whitelist" : "Blacklist"));

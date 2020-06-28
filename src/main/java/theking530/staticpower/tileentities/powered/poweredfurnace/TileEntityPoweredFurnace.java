@@ -28,7 +28,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
  */
 public class TileEntityPoweredFurnace extends TileEntityMachine {
 	public static final int DEFAULT_PROCESSING_TIME = 100;
-	public static final int DEFAULT_PROCESSING_COST = 1000;
+	public static final int DEFAULT_PROCESSING_COST = 10;
 	public static final int DEFAULT_MOVING_TIME = 4;
 
 	public final InventoryComponent inputInventory;
@@ -39,8 +39,12 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 	public final MachineProcessingComponent moveComponent;
 	public final MachineProcessingComponent processingComponent;
 
+	private int processingPowerCost;
+
 	public TileEntityPoweredFurnace() {
 		super(ModTileEntityTypes.POWERED_FURNACE);
+
+		processingPowerCost = DEFAULT_PROCESSING_COST;
 
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
@@ -54,26 +58,13 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
 
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
-		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", 2, this::movingCompleted));
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 10, this::processingCompleted));
+		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", 2, this::canMoveFromInputToProcessing, () -> true, this::movingCompleted, true));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 10, this::canProcess, this::canProcess, this::processingCompleted, true));
+		processingComponent.setProcessingTime(DEFAULT_PROCESSING_TIME);
 
 		registerComponent(new InputServoComponent("InputServo", 4, inputInventory, 0));
 		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory, 0));
 		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
-	}
-
-	@Override
-	public void process() {
-		if (processingComponent.isProcessing()) {
-			if (energyStorage.getStorage().getEnergyStored() >= (DEFAULT_PROCESSING_COST / DEFAULT_PROCESSING_TIME)) {
-				processingComponent.continueProcessing();
-				energyStorage.getStorage().extractEnergy(DEFAULT_PROCESSING_COST / DEFAULT_PROCESSING_TIME, false);
-			} else {
-				processingComponent.pauseProcessing();
-			}
-		} else if (canStartProcess()) {
-			moveComponent.startProcessing();
-		}
 	}
 
 	/**
@@ -84,9 +75,8 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 	 * 
 	 * @return
 	 */
-	public boolean canStartProcess() {
-		if (hasValidRecipe() && !moveComponent.isProcessing() && !processingComponent.isProcessing() && internalInventory.getStackInSlot(0).isEmpty()
-				&& energyStorage.getStorage().getEnergyStored() >= DEFAULT_PROCESSING_COST) {
+	protected boolean canMoveFromInputToProcessing() {
+		if (hasValidRecipe() && !moveComponent.isProcessing() && internalInventory.getStackInSlot(0).isEmpty() && energyStorage.getStorage().getEnergyStored() >= DEFAULT_PROCESSING_COST) {
 			ItemStack output = getRecipe(inputInventory.getStackInSlot(0)).get().getRecipeOutput();
 			return InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, output);
 		}
@@ -110,6 +100,11 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 		return true;
 	}
 
+	protected boolean canProcess() {
+		FurnaceRecipe recipe = getRecipe(internalInventory.getStackInSlot(0)).orElse(null);
+		return recipe != null && redstoneControlComponent.passesRedstoneCheck() && energyStorage.hasEnoughPower(processingPowerCost) && InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getRecipeOutput());
+	}
+
 	/**
 	 * Once the processing is completed, place the output in the output slot (if
 	 * possible). If not, return false. This method will continue to be called until
@@ -128,6 +123,13 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public void process() {
+		if (processingComponent.isProcessing()) {
+			energyStorage.getStorage().extractEnergy(processingPowerCost, false);
+		}
 	}
 
 	/**

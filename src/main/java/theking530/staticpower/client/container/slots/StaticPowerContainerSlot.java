@@ -11,8 +11,8 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
-import theking530.api.gui.widgets.GuiDrawItem;
-import theking530.api.gui.widgets.valuebars.GuiFluidBarUtilities;
+import theking530.common.gui.widgets.GuiDrawItem;
+import theking530.common.gui.widgets.valuebars.GuiFluidBarUtilities;
 import theking530.staticpower.tileentities.components.InventoryComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 

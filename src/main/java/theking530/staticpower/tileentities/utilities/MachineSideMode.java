@@ -4,13 +4,13 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
-import theking530.api.utilities.Color;
+import theking530.common.utilities.Color;
 
 public enum MachineSideMode {
-	Regular("regular", TextFormatting.WHITE, new Color(139, 139, 139).fromEightBitToFloat()), Input("input", TextFormatting.BLUE, new Color(80, 130, 179).fromEightBitToFloat()),
-	Input2("input2", TextFormatting.DARK_PURPLE, new Color(100, 0, 200).fromEightBitToFloat()), Output("output", TextFormatting.GOLD, new Color(200, 140, 50).fromEightBitToFloat()),
-	Output2("output1", TextFormatting.GREEN, new Color(0, 200, 50).fromEightBitToFloat()), Output3("output2", TextFormatting.YELLOW, new Color(220, 220, 0).fromEightBitToFloat()),
-	Disabled("disabled", TextFormatting.RED, new Color(200, 20, 20).fromEightBitToFloat()), Never("never", TextFormatting.WHITE, new Color(0, 0, 0, 0).fromEightBitToFloat());
+	Regular("regular", TextFormatting.WHITE, new Color(139, 139, 139, 255).fromEightBitToFloat()), Input("input", TextFormatting.BLUE, new Color(80, 130, 179, 255).fromEightBitToFloat()),
+	Input2("input2", TextFormatting.DARK_PURPLE, new Color(100, 0, 200, 255).fromEightBitToFloat()), Output("output", TextFormatting.GOLD, new Color(200, 140, 50, 255).fromEightBitToFloat()),
+	Output2("output1", TextFormatting.GREEN, new Color(0, 200, 50, 255).fromEightBitToFloat()), Output3("output2", TextFormatting.YELLOW, new Color(220, 220, 0, 255).fromEightBitToFloat()),
+	Disabled("disabled", TextFormatting.RED, new Color(200, 20, 20, 255).fromEightBitToFloat()), Never("never", TextFormatting.WHITE, new Color(0, 0, 0, 0).fromEightBitToFloat());
 
 	/** The unlocalized name of the mode. */
 	private String name;

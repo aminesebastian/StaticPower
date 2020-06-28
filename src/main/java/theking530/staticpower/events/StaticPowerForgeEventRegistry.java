@@ -1,6 +1,7 @@
 package theking530.staticpower.events;
 
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -16,6 +17,11 @@ public class StaticPowerForgeEventRegistry {
 		if (!event.world.isRemote) {
 			StaticPowerServerEventHandler.onWorldTickEvent(event);
 		}
+	}
+
+	@SubscribeEvent
+	public static void render(RenderWorldLastEvent event) {
+		StaticPowerClientEventHandler.render(event);
 	}
 
 	/**

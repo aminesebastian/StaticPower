@@ -7,7 +7,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import theking530.api.utilities.SDMath;
+import theking530.common.utilities.SDMath;
 import theking530.staticpower.crafting.wrappers.RecipeMatchParameters;
 import theking530.staticpower.crafting.wrappers.StaticPowerRecipeRegistry;
 import theking530.staticpower.crafting.wrappers.lumbermill.LumberMillRecipe;
@@ -25,7 +25,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityLumberMill extends TileEntityMachine {
 	public static final int DEFAULT_PROCESSING_TIME = 100;
-	public static final int DEFAULT_PROCESSING_COST = 1000;
+	public static final int DEFAULT_PROCESSING_COST = 10;
 	public static final int DEFAULT_MOVING_TIME = 4;
 
 	public final InventoryComponent inputInventory;
@@ -50,8 +50,8 @@ public class TileEntityLumberMill extends TileEntityMachine {
 		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
 
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
-		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", 2, this::movingCompleted));
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 5, this::processingCompleted));
+		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", 2, this::canMoveFromInputToProcessing, () -> true, this::movingCompleted, true));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 5, this::canProcess, this::canProcess, this::processingCompleted, true));
 
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory, 0));
 		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory, 0, 1, 2));
@@ -60,17 +60,48 @@ public class TileEntityLumberMill extends TileEntityMachine {
 		fluidTankComponent.setCanFill(false);
 	}
 
+	/**
+	 * Checks to make sure we can start the processing process.
+	 * 
+	 * @return
+	 */
+	public boolean canMoveFromInputToProcessing() {
+		if (!redstoneControlComponent.passesRedstoneCheck()) {
+			return false;
+		}
+		// Check if there is a valid recipe.
+		if (hasValidRecipe() && !moveComponent.isProcessing() && !processingComponent.isProcessing() && internalInventory.getStackInSlot(0).isEmpty()) {
+			// Gets the recipe and its outputs.
+			Optional<LumberMillRecipe> recipe = getRecipe(inputInventory.getStackInSlot(0));
+
+			// If the items cannot be insert into the output, return false.
+			if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.get().getPrimaryOutput().getItem(), recipe.get().getSecondaryOutput().getItem())) {
+				return false;
+			}
+
+			// If the output tank can't take the input, we can't proceed.
+			if (fluidTankComponent.fill(recipe.get().getOutputFluid(), FluidAction.SIMULATE) != recipe.get().getOutputFluid().getAmount()) {
+				return false;
+			}
+
+			// If we passed all the previous checks, return true.
+			return energyStorage.hasEnoughPower(recipe.get().getPowerCost());
+		}
+		return false;
+	}
+
+	public boolean canProcess() {
+		LumberMillRecipe recipe = getRecipe(internalInventory.getStackInSlot(0)).orElse(null);
+		return recipe != null && redstoneControlComponent.passesRedstoneCheck() && energyStorage.hasEnoughPower(recipe.getPowerCost()) && InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRawOutputItems())
+				&& fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.SIMULATE) == recipe.getOutputFluid().getAmount();
+	}
+
 	@Override
 	public void process() {
-		if (canStartProcess() && redstoneControlComponent.passesRedstoneCheck()) {
-			moveComponent.startProcessing();
-		} else if (processingComponent.isProcessing()) {
-			if (!getRecipe(internalInventory.getStackInSlot(0)).isPresent()) {
-				processingComponent.pauseProcessing();
-			} else {
-				processingComponent.continueProcessing();
-				energyStorage.getStorage().extractEnergy(DEFAULT_PROCESSING_COST / DEFAULT_PROCESSING_TIME, false);
-			}
+		if (processingComponent.isProcessing()) {
+			getRecipe(internalInventory.getStackInSlot(0)).ifPresent(recipe -> {
+				energyStorage.getStorage().extractEnergy(recipe.getPowerCost(), false);
+			});
 		}
 	}
 
@@ -82,7 +113,7 @@ public class TileEntityLumberMill extends TileEntityMachine {
 	 * @return
 	 */
 	protected boolean movingCompleted() {
-		if (hasValidInputRecipe()) {
+		if (hasValidRecipe()) {
 			if (!getWorld().isRemote) {
 				transferItemInternally(inputInventory, 0, internalInventory, 0);
 			}
@@ -129,7 +160,7 @@ public class TileEntityLumberMill extends TileEntityMachine {
 	 */
 	public boolean canStartProcess() {
 		// Check if there is a valid recipe.
-		if (hasValidInputRecipe() && !moveComponent.isProcessing() && !processingComponent.isProcessing() && internalInventory.getStackInSlot(0).isEmpty()) {
+		if (hasValidRecipe() && !moveComponent.isProcessing() && !processingComponent.isProcessing() && internalInventory.getStackInSlot(0).isEmpty()) {
 			// Gets the recipe and its outputs.
 			Optional<LumberMillRecipe> recipe = getRecipe(inputInventory.getStackInSlot(0));
 
@@ -161,7 +192,7 @@ public class TileEntityLumberMill extends TileEntityMachine {
 	}
 
 	// Functionality
-	public boolean hasValidInputRecipe() {
+	public boolean hasValidRecipe() {
 		return getRecipe(inputInventory.getStackInSlot(0)).isPresent();
 	}
 
