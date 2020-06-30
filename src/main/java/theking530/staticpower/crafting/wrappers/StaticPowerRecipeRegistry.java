@@ -5,10 +5,12 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Optional;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.crafting.wrappers.former.FormerRecipe;
 
 public class StaticPowerRecipeRegistry {
 
@@ -41,6 +43,23 @@ public class StaticPowerRecipeRegistry {
 
 		// If we find no match, return empty.
 		return Optional.empty();
+	}
+
+	/**
+	 * Checks to see if the provided itemstack is a valid former mold used in any
+	 * recipe.
+	 * 
+	 * @param stack
+	 * @return
+	 */
+	public static boolean isValidFormerMold(ItemStack stack) {
+		for (AbstractStaticPowerRecipe recipe : RECIPES.get(FormerRecipe.RECIPE_TYPE)) {
+			FormerRecipe formerRecipe = (FormerRecipe) recipe;
+			if (formerRecipe.getRequiredMold().test(stack)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:former_recipe",
+	"input": {
+		"item": "staticpower:ingot_inert_infusion"
+	},
+	"mold": {
+		"item": "staticpower:mold_plate"
+	},
+	"output": {
+		"item": "staticpower:plate_inert_infusion"
+	}
+}

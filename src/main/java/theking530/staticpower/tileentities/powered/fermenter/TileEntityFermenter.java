@@ -77,18 +77,7 @@ public class TileEntityFermenter extends TileEntityMachine {
 		if (!redstoneControlComponent.passesRedstoneCheck() || processingComponent.isProcessing()) {
 			return false;
 		}
-		for (int i = 0; i < 9; i++) {
-			FermenterRecipe recipe = getRecipe(inputInventory.getStackInSlot(i)).orElse(null);
-			if (recipe != null) {
-				FluidStack fermentingResult = recipe.getOutputFluidStack();
-				if (fluidTankComponent.fill(fermentingResult, FluidAction.SIMULATE) == fermentingResult.getAmount()) {
-					if (energyStorage.hasEnoughPower(powerCost)) {
-						return InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, new ItemStack(ModItems.DistilleryGrain));
-					}
-				}
-			}
-		}
-		return false;
+		return getSlotToProccess() >= 0;
 	}
 
 	/**
@@ -101,7 +90,7 @@ public class TileEntityFermenter extends TileEntityMachine {
 	 */
 	protected boolean movingCompleted() {
 		if (hasValidRecipe()) {
-			transferItemInternally(inputInventory, 0, internalInventory, 0);
+			transferItemInternally(inputInventory, getSlotToProccess(), internalInventory, 0);
 			markTileEntityForSynchronization();
 		}
 		return true;
@@ -139,8 +128,10 @@ public class TileEntityFermenter extends TileEntityMachine {
 	}
 
 	public void process() {
-		if (this.processingComponent.isProcessing()) {
-			energyStorage.getStorage().extractEnergy(powerCost, false);
+		if (processingComponent.isProcessing()) {
+			if (!getWorld().isRemote) {
+				energyStorage.getStorage().extractEnergy(powerCost, false);
+			}
 		}
 	}
 
@@ -151,6 +142,21 @@ public class TileEntityFermenter extends TileEntityMachine {
 			}
 		}
 		return false;
+	}
+
+	protected int getSlotToProccess() {
+		for (int i = 0; i < 9; i++) {
+			FermenterRecipe recipe = getRecipe(inputInventory.getStackInSlot(i)).orElse(null);
+			if (recipe != null) {
+				FluidStack fermentingResult = recipe.getOutputFluidStack();
+				if (fluidTankComponent.fill(fermentingResult, FluidAction.SIMULATE) == fermentingResult.getAmount()) {
+					if (energyStorage.hasEnoughPower(powerCost) && InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, new ItemStack(ModItems.DistilleryGrain))) {
+						return i;
+					}
+				}
+			}
+		}
+		return -1;
 	}
 
 	/**

@@ -92,10 +92,8 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 	 */
 	protected boolean movingCompleted() {
 		if (hasValidRecipe()) {
-			if (!getWorld().isRemote) {
-				transferItemInternally(inputInventory, 0, internalInventory, 0);
-			}
-			processingComponent.startProcessing();
+			transferItemInternally(inputInventory, 0, internalInventory, 0);
+			markTileEntityForSynchronization();
 		}
 		return true;
 	}
@@ -128,7 +126,9 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 	@Override
 	public void process() {
 		if (processingComponent.isProcessing()) {
-			energyStorage.getStorage().extractEnergy(processingPowerCost, false);
+			if (!getWorld().isRemote) {
+				energyStorage.getStorage().extractEnergy(processingPowerCost, false);
+			}
 		}
 	}
 

@@ -14,9 +14,11 @@ import theking530.staticpower.tileentities.nonpowered.vacuumchest.TileEntityVacu
 import theking530.staticpower.tileentities.powered.basicfarmer.TileEntityBasicFarmer;
 import theking530.staticpower.tileentities.powered.chargingstation.TileEntityChargingStation;
 import theking530.staticpower.tileentities.powered.fermenter.TileEntityFermenter;
+import theking530.staticpower.tileentities.powered.former.TileEntityFormer;
 import theking530.staticpower.tileentities.powered.lumbermill.TileEntityLumberMill;
 import theking530.staticpower.tileentities.powered.poweredfurnace.TileEntityPoweredFurnace;
 import theking530.staticpower.tileentities.powered.poweredgrinder.TileEntityPoweredGrinder;
+import theking530.staticpower.tileentities.powered.pump.TileEntityPump;
 import theking530.staticpower.tileentities.powered.solarpanels.TileEntitySolarPanel;
 import theking530.staticpower.tileentities.powered.treefarmer.TileEntityTreeFarm;
 
@@ -27,7 +29,8 @@ public class ModTileEntityTypes {
 	public static TileEntityType<TileEntityPoweredFurnace> POWERED_FURNACE;
 	public static TileEntityType<TileEntityPoweredGrinder> POWERED_GRINDER;
 	public static TileEntityType<TileEntityTank> TANK;
-
+	public static TileEntityType<TileEntityPump> PUMP;
+	
 	public static TileEntityType<TileEntityPowerCable> POWER_CABLE;
 	public static TileEntityType<TileEntityItemCable> ITEM_CABLE;
 	public static TileEntityType<TileEntityFluidCable> FLUID_CABLE;
@@ -40,6 +43,8 @@ public class ModTileEntityTypes {
 	public static TileEntityType<TileEntityBasicFarmer> BASIC_FARMER;
 	public static TileEntityType<TileEntityTreeFarm> TREE_FARM;
 	public static TileEntityType<TileEntityFermenter> FERMENTER;
+	public static TileEntityType<TileEntityFormer> FORMER;
+
 	
 	public static void init() {
 		VACCUM_CHEST = StaticPowerRegistry.preRegisterTileEntity(TileEntityVacuumChest::new, ModBlocks.VacuumChest);
@@ -51,8 +56,11 @@ public class ModTileEntityTypes {
 		BASIC_FARMER = StaticPowerRegistry.preRegisterTileEntity(TileEntityBasicFarmer::new, ModBlocks.BasicFarmer);
 		TREE_FARM = StaticPowerRegistry.preRegisterTileEntity(TileEntityTreeFarm::new, ModBlocks.TreeFarmer);
 		FERMENTER = StaticPowerRegistry.preRegisterTileEntity(TileEntityFermenter::new, ModBlocks.Fermenter);
+		FORMER = StaticPowerRegistry.preRegisterTileEntity(TileEntityFormer::new, ModBlocks.Former);
+		
 		TANK = StaticPowerRegistry.preRegisterTileEntity(TileEntityTank::new, ModBlocks.BasicTank);
-
+		PUMP = StaticPowerRegistry.preRegisterTileEntity(TileEntityPump::new, ModBlocks.Pump);
+		
 		POWER_CABLE = StaticPowerRegistry.preRegisterTileEntity(TileEntityPowerCable::new, ModBlocks.PowerCable);
 		ITEM_CABLE = StaticPowerRegistry.preRegisterTileEntity(TileEntityItemCable::new, ModBlocks.ItemCable);
 		FLUID_CABLE = StaticPowerRegistry.preRegisterTileEntity(TileEntityFluidCable::new, ModBlocks.FluidCable);

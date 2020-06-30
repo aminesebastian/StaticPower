@@ -45,7 +45,7 @@ public class GrinderRecipe extends AbstractMachineRecipe {
 
 	@Override
 	public boolean isValid(RecipeMatchParameters matchParams) {
-		return inputItem.test(matchParams.getItems()[0]) && matchParams.getStoredEnergy() >= powerCost;
+		return inputItem.test(matchParams.getItems()[0]);
 	}
 
 	@Override

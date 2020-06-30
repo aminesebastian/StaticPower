@@ -1,0 +1,10 @@
+{
+	"type": "staticpower:fermenter_recipe",
+	"input": {
+		"item": "minecraft:carrot"
+	},
+	"output": {
+		"fluid": "staticpower:mash",
+		"volume": 65
+	}
+}

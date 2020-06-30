@@ -98,7 +98,6 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 	protected boolean movingCompleted() {
 		if (hasValidRecipe()) {
 			transferItemInternally(inputInventory, 0, internalInventory, 0);
-			processingComponent.startProcessing();
 			markTileEntityForSynchronization();
 		}
 		return true;
@@ -115,7 +114,7 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 		GrinderRecipe recipe = getRecipe(internalInventory.getStackInSlot(0)).orElse(null);
 		return recipe != null && redstoneControlComponent.passesRedstoneCheck() && energyStorage.hasEnoughPower(recipe.getPowerCost()) && InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRawOutputItems());
 	}
-	
+
 	/**
 	 * Once the processing is completed, place the output in the output slot (if
 	 * possible). If not, return false. This method will continue to be called until
@@ -151,9 +150,11 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 	@Override
 	public void process() {
 		if (processingComponent.isProcessing()) {
-			getRecipe(internalInventory.getStackInSlot(0)).ifPresent(recipe -> {
-				energyStorage.getStorage().extractEnergy(recipe.getPowerCost(), false);
-			});
+			if (!getWorld().isRemote) {
+				getRecipe(internalInventory.getStackInSlot(0)).ifPresent(recipe -> {
+					energyStorage.getStorage().extractEnergy(recipe.getPowerCost(), false);
+				});
+			}
 		}
 	}
 

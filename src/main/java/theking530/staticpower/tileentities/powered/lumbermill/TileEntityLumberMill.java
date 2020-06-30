@@ -53,8 +53,8 @@ public class TileEntityLumberMill extends TileEntityMachine {
 		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", 2, this::canMoveFromInputToProcessing, () -> true, this::movingCompleted, true));
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 5, this::canProcess, this::canProcess, this::processingCompleted, true));
 
-		registerComponent(new InputServoComponent("InputServo", 2, inputInventory, 0));
-		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory, 0, 1, 2));
+		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));
+		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory));
 		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000).setCapabilityExposedModes(MachineSideMode.Output));
 		fluidTankComponent.setCanFill(false);
@@ -99,9 +99,11 @@ public class TileEntityLumberMill extends TileEntityMachine {
 	@Override
 	public void process() {
 		if (processingComponent.isProcessing()) {
-			getRecipe(internalInventory.getStackInSlot(0)).ifPresent(recipe -> {
-				energyStorage.getStorage().extractEnergy(recipe.getPowerCost(), false);
-			});
+			if (!getWorld().isRemote) {
+				getRecipe(internalInventory.getStackInSlot(0)).ifPresent(recipe -> {
+					energyStorage.getStorage().extractEnergy(recipe.getPowerCost(), false);
+				});
+			}
 		}
 	}
 
@@ -114,10 +116,8 @@ public class TileEntityLumberMill extends TileEntityMachine {
 	 */
 	protected boolean movingCompleted() {
 		if (hasValidRecipe()) {
-			if (!getWorld().isRemote) {
-				transferItemInternally(inputInventory, 0, internalInventory, 0);
-			}
-			processingComponent.startProcessing();
+			transferItemInternally(inputInventory, 0, internalInventory, 0);
+			markTileEntityForSynchronization();
 		}
 		return true;
 	}

@@ -1,12 +1,16 @@
 package theking530.staticpower.tileentities.powered.basicfarmer;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
+import net.minecraft.block.AttachedStemBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.CactusBlock;
 import net.minecraft.block.CropsBlock;
+import net.minecraft.block.FarmlandBlock;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.MelonBlock;
 import net.minecraft.block.NetherWartBlock;
@@ -22,6 +26,7 @@ import net.minecraft.item.HoeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -62,10 +67,10 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 
 	private final HashSet<Class<? extends Block>> validHarvestacbleClasses;
 
+	private final List<BlockPos> blocks;
+	private int currentBlockIndex;
 	private int range;
-	private int blocksFarmedPerTick;
 	private int growthBonusChance;
-	private BlockPos currentCoordinate;
 	private boolean shouldDrawRadiusPreview;
 
 	public TileEntityBasicFarmer() {
@@ -98,33 +103,42 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		validHarvestacbleClasses.add(NetherWartBlock.class);
 		validHarvestacbleClasses.add(MelonBlock.class);
 		validHarvestacbleClasses.add(PumpkinBlock.class);
+		validHarvestacbleClasses.add(AttachedStemBlock.class);
 
 		range = DEFAULT_RANGE;
+		blocks = new LinkedList<BlockPos>();
 		shouldDrawRadiusPreview = false;
-		blocksFarmedPerTick = 1;
 		growthBonusChance = 0;
-		currentCoordinate = getStartingCoord();
 	}
 
 	@Override
 	public void process() {
 		if (processingComponent.isProcessing()) {
-			energyStorage.getStorage().extractEnergy(DEFAULT_IDLE_ENERGY_USAGE, false);
-			fluidTankComponent.drain(DEFAULT_WATER_USAGE * blocksFarmedPerTick, FluidAction.EXECUTE);
+			if (!getWorld().isRemote) {
+				energyStorage.getStorage().extractEnergy(DEFAULT_IDLE_ENERGY_USAGE, false);
+				fluidTankComponent.drain(DEFAULT_WATER_USAGE, FluidAction.EXECUTE);
+
+				for (BlockPos blockpos : BlockPos.getAllInBoxMutable(getPos().add(-range, -1, -range), getPos().add(range, -1, range))) {
+					if (getWorld().getBlockState(blockpos).getBlock() == Blocks.FARMLAND) {
+						getWorld().setBlockState(blockpos, getWorld().getBlockState(blockpos).with(FarmlandBlock.MOISTURE, Integer.valueOf(7)), 2);
+					}
+				}
+			}
 		}
 	}
 
 	protected boolean processingCompleted() {
-		// Harvest the plots we're supposed to harvest.
-		for (int i = 0; i < blocksFarmedPerTick; i++) {
-			// Increment first to ensure we're always harvesting the next block.
-			incrementPosition();
-			attemptHarvestPosition(currentCoordinate);
+		// Edge case where we somehow need to refresh blocks.
+		if (blocks.size() == 0) {
+			refreshBlocksInRange(range);
+		}
 
-			// If on the server, use the amount of energy required to harvest a plant.
-			if (!world.isRemote) {
-				energyStorage.getStorage().extractEnergy(DEFAULT_HARVEST_ENERGY_COST, false);
-			}
+		// Harvest the current block.
+		attemptHarvestPosition(getCurrentPosition());
+
+		// If on the server, use the amount of energy required to harvest a plant.
+		if (!world.isRemote) {
+			energyStorage.getStorage().extractEnergy(DEFAULT_HARVEST_ENERGY_COST, false);
 		}
 
 		// For each of the farmed stacks, place the harvested stacks into the output
@@ -140,6 +154,9 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 			}
 		}
 
+		// Increment first to ensure we're always harvesting the next block.
+		incrementPosition();
+
 		// Sync the tile entity.
 		markTileEntityForSynchronization();
 
@@ -150,13 +167,13 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	@Override
 	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
-		currentCoordinate = BlockPos.fromLong(nbt.getLong("current_position"));
+		currentBlockIndex = nbt.getInt("current_index");
 	}
 
 	@Override
 	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
-		nbt.putLong("current_position", currentCoordinate.toLong());
+		nbt.putInt("current_index", currentBlockIndex);
 		return nbt;
 	}
 
@@ -189,62 +206,34 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		}
 	}
 
+	private void refreshBlocksInRange(int range) {
+		blocks.clear();
+		for (BlockPos pos : BlockPos.getAllInBoxMutable(getPos().add(-range, 0, -range), getPos().add(range, 0, range))) {
+			if (pos != getPos()) {
+				blocks.add(pos.toImmutable());
+			}
+		}
+		blocks.add(getPos().add(range, 0, range));
+
+		if (currentBlockIndex > blocks.size() - 1) {
+			currentBlockIndex = 0;
+		}
+	}
+
 	private void incrementPosition() {
-		if (currentCoordinate == getEndingCoord()) {
-			currentCoordinate = getStartingCoord();
-		} else {
-			if (getAdjustedCurrentPos().getX() >= getAdjustedEndingPos().getX() - 1) {
-				currentCoordinate = new BlockPos(getStartingCoord().getX(), currentCoordinate.getY(), currentCoordinate.getZ() + getZDirection());
-			}
-			if (getAdjustedCurrentPos().getZ() >= getAdjustedEndingPos().getZ() + 1) {
-				currentCoordinate = getStartingCoord();
-			}
-			if (getAdjustedCurrentPos().getX() <= getAdjustedEndingPos().getX()) {
-				currentCoordinate = currentCoordinate.add(getXDirection(), 0, 0);
-			}
+		if (!getWorld().isRemote) {
+			currentBlockIndex = Math.floorMod(currentBlockIndex + 1, blocks.size() - 1);
 		}
 	}
 
-	private BlockPos getAdjustedCurrentPos() {
-		BlockPos temp1 = currentCoordinate.subtract(getStartingCoord());
-		BlockPos absPos = new BlockPos(Math.abs(temp1.getX()), Math.abs(temp1.getY()), Math.abs(temp1.getZ()));
-		return absPos;
-	}
-
-	private BlockPos getAdjustedEndingPos() {
-		BlockPos temp1 = getEndingCoord().subtract(getStartingCoord());
-		BlockPos absPos = new BlockPos(Math.abs(temp1.getX()), Math.abs(temp1.getY()), Math.abs(temp1.getZ()));
-		return absPos;
-	}
-
-	private BlockPos getEndingCoord() {
-		return new BlockPos(pos.getX() + range + 1, pos.getY(), pos.getZ() + range);
-	}
-
-	private BlockPos getStartingCoord() {
-		return new BlockPos(pos.getX() - range - 1, pos.getY(), pos.getZ() - range);
-	}
-
-	private int getXDirection() {
-		if (getStartingCoord().getX() > getEndingCoord().getX()) {
-			return -1;
-		} else {
-			return 1;
-		}
-	}
-
-	private int getZDirection() {
-		if (getStartingCoord().getZ() > getEndingCoord().getZ()) {
-			return -1;
-		} else {
-			return 1;
-		}
+	public BlockPos getCurrentPosition() {
+		return blocks.get(currentBlockIndex);
 	}
 
 	public boolean canFarm() {
 		// Check to see if we have enough power and if we have the axe and hoe
 		// populated.
-		if (energyStorage.getStorage().getEnergyStored() >= DEFAULT_HARVEST_ENERGY_COST * blocksFarmedPerTick && hasHoe() && hasAxe()) {
+		if (energyStorage.hasEnoughPower(DEFAULT_HARVEST_ENERGY_COST) && hasHoe() && hasAxe()) {
 			// If we have enough fluid, return true.
 			return fluidTankComponent.getFluid().getAmount() > DEFAULT_WATER_USAGE && fluidTankComponent.getFluid().getFluid() == Fluids.WATER;
 		}
@@ -281,21 +270,22 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		if (getWorld().isRemote) {
 			return;
 		}
-		boolean grown = false;
-		if (!getWorld().isRemote) {
-			grown = growCrop(pos);
+		if (growCrop(pos)) {
+			((ServerWorld) getWorld()).spawnParticle(ParticleTypes.HAPPY_VILLAGER, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 1, 0.0D, 0.0D, 0.0D, 0.0D);
 		}
-		// This needs to be synced with a packet.
-		if (grown) {
-			getWorld().addParticle(ParticleTypes.HAPPY_VILLAGER, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D);
+
+		if (getWorld().getBlockState(pos.offset(Direction.DOWN)).getBlock() == Blocks.DIRT || getWorld().getBlockState(pos.offset(Direction.DOWN)).getBlock() == Blocks.GRASS_BLOCK) {
+			getWorld().setBlockState(pos.offset(Direction.DOWN), Blocks.FARMLAND.getDefaultState(), 1 | 2);
+			getWorld().playSound(null, pos, SoundEvents.ITEM_HOE_TILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+
 		}
-		getWorld().addParticle(ParticleTypes.TOTEM_OF_UNDYING, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D);
 
 		// Check to see if we're at a farmable block. If we are, harvest it.
 		if (isFarmableBlock(pos)) {
 			harvestGenericCrop(pos);
 			harvestSugarCane(pos);
 			harvestCactus(pos);
+			harvestStem(pos);
 			harvestNetherWart(pos);
 			harvestMelonOrPumpkin(pos);
 		}
@@ -313,12 +303,12 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		return false;
 	}
 
-	protected void harvestBlockDrops(BlockPos pos) {
+	protected void captureHarvestItems(BlockPos pos) {
 		for (ItemStack drop : WorldUtilities.getBlockDrops(getWorld(), pos)) {
 			InventoryUtilities.insertItemIntoInventory(internalInventory, drop, false);
 		}
 		getWorld().playSound(null, pos, getWorld().getBlockState(pos).getBlock().getSoundType(getWorld().getBlockState(pos), world, pos, null).getBreakSound(), SoundCategory.BLOCKS, 1.0F, 1.0F);
-		getWorld().addParticle(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D);
+		((ServerWorld) getWorld()).spawnParticle(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 1, 0.0D, 0.0D, 0.0D, 0.0D);
 	}
 
 	public boolean harvestGenericCrop(BlockPos pos) {
@@ -330,7 +320,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 			if (tempCrop.isMaxAge(getWorld().getBlockState(pos))) {
 				// Harvest the provided position, set the age of the crop back to 0, and use the
 				// hoe.
-				harvestBlockDrops(pos);
+				captureHarvestItems(pos);
 				getWorld().setBlockState(pos, tempCrop.withAge(0), 1 | 2);
 				useHoe();
 				return true;
@@ -341,12 +331,12 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 
 	public boolean harvestSugarCane(BlockPos pos) {
 		if (getWorld().getBlockState(pos.add(0, 1, 0)).getBlock() instanceof SugarCaneBlock) {
-			harvestBlockDrops(pos.add(0, 1, 0));
+			captureHarvestItems(pos.add(0, 1, 0));
 			getWorld().setBlockState(pos.add(0, 1, 0), Blocks.AIR.getDefaultState(), 1 | 2);
 			useAxe();
 
 			if (getWorld().getBlockState(pos.add(0, 2, 0)).getBlock() instanceof SugarCaneBlock) {
-				harvestBlockDrops(pos.add(0, 2, 0));
+				captureHarvestItems(pos.add(0, 2, 0));
 				getWorld().setBlockState(pos.add(0, 2, 0), Blocks.AIR.getDefaultState(), 1 | 2);
 				useAxe();
 			}
@@ -357,12 +347,12 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 
 	public boolean harvestCactus(BlockPos pos) {
 		if (getWorld().getBlockState(pos.add(0, 1, 0)).getBlock() instanceof CactusBlock) {
-			harvestBlockDrops(pos.add(0, 1, 0));
+			captureHarvestItems(pos.add(0, 1, 0));
 			getWorld().setBlockState(pos.add(0, 1, 0), Blocks.AIR.getDefaultState(), 1 | 2);
 			useAxe();
 
 			if (getWorld().getBlockState(pos.add(0, 2, 0)).getBlock() instanceof CactusBlock) {
-				harvestBlockDrops(pos.add(0, 2, 0));
+				captureHarvestItems(pos.add(0, 2, 0));
 				getWorld().setBlockState(pos.add(0, 2, 0), Blocks.AIR.getDefaultState(), 1 | 2);
 				useAxe();
 			}
@@ -371,9 +361,27 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		return false;
 	}
 
+	public boolean harvestStem(BlockPos pos) {
+		Block block = getWorld().getBlockState(pos).getBlock();
+		if (block instanceof AttachedStemBlock) {
+			// Check for the melon or pumpkin around the stem.
+			for (Direction dir : Direction.values()) {
+				if (dir.getAxis() == Direction.Axis.Y) {
+					continue;
+				}
+				if (harvestMelonOrPumpkin(pos.offset(dir))) {
+					return true;
+				}
+
+			}
+		}
+		return false;
+	}
+
 	public boolean harvestMelonOrPumpkin(BlockPos pos) {
-		if (getWorld().getBlockState(pos).getBlock() instanceof MelonBlock || getWorld().getBlockState(pos).getBlock() instanceof PumpkinBlock) {
-			harvestBlockDrops(pos);
+		Block block = getWorld().getBlockState(pos).getBlock();
+		if (block instanceof MelonBlock || block instanceof PumpkinBlock) {
+			captureHarvestItems(pos);
 			getWorld().setBlockState(pos, Blocks.AIR.getDefaultState(), 1 | 2);
 			useAxe();
 			return true;
@@ -385,7 +393,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		if (getWorld().getBlockState(pos).getBlock() instanceof NetherWartBlock) {
 			NetherWartBlock tempNetherwart = (NetherWartBlock) getWorld().getBlockState(pos).getBlock();
 			if (tempNetherwart.getPlant(getWorld(), pos).get(NetherWartBlock.AGE) >= 3) {
-				harvestBlockDrops(pos);
+				captureHarvestItems(pos);
 				getWorld().setBlockState(pos, Blocks.NETHER_WART.getDefaultState(), 1 | 2);
 				useHoe();
 			}

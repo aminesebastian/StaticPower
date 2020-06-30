@@ -13,6 +13,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.blocks.ICustomModelSupplier;
 import theking530.staticpower.client.rendering.blocks.TankMachineBakedModel;
 import theking530.staticpower.initialization.ModTileEntityTypes;
@@ -32,6 +34,17 @@ public class BlockTank extends StaticPowerTileEntityBlock implements ICustomMode
 	@Override
 	public boolean hasModelOverride(BlockState state) {
 		return true;
+	}
+
+	@Override
+	public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
+		TileEntity te = world.getTileEntity(pos);
+		if (te instanceof TileEntityTank) {
+			FluidStack fluid = ((TileEntityTank) te).fluidTankComponent.getFluid();
+			FluidAttributes attributes = fluid.getFluid().getAttributes();
+			return attributes.getLuminosity(fluid);
+		}
+		return state.getLightValue();
 	}
 
 	@Override

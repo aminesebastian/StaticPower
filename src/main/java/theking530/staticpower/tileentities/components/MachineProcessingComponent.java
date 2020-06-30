@@ -28,6 +28,10 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		this.serverOnly = serverOnly;
 	}
 
+	public MachineProcessingComponent(String name, int processingTime, @Nonnull Supplier<Boolean> processingEndedCallback, boolean serverOnly) {
+		this(name, processingTime, () -> false, () -> true, processingEndedCallback, serverOnly);
+	}
+
 	public void preProcessUpdate() {
 		// If we should only run on the server, do nothing.
 		if (serverOnly && getWorld().isRemote) {

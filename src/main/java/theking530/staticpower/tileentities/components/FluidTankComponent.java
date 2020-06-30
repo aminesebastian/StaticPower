@@ -75,8 +75,9 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 	 * 
 	 * @param canFill
 	 */
-	public void setCanFill(boolean canFill) {
+	public FluidTankComponent setCanFill(boolean canFill) {
 		this.canFill = canFill;
+		return this;
 	}
 
 	public boolean getCanDrain() {
@@ -89,12 +90,21 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 	 * 
 	 * @param canDrain
 	 */
-	public void setCanDrain(boolean canDrain) {
+	public FluidTankComponent setCanDrain(boolean canDrain) {
 		this.canDrain = canDrain;
+		return this;
 	}
 
 	public int getFluidRate() {
 		return fluidPerTick;
+	}
+
+	public boolean isEmpty() {
+		return getFluidAmount() == 0;
+	}
+
+	public boolean isFull() {
+		return getFluidAmount() == getCapacity();
 	}
 
 	@Override

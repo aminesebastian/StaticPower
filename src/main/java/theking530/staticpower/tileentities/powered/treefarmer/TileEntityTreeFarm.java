@@ -61,6 +61,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 	public static final int MAX_WOOD_RECURSIVE_DEPTH = 100;
 	public static final int DEFAULT_RANGE = 2;
 	public static final int DEFAULT_SAPLING_SPACING = 2;
+	public static final int DEFAULT_TOOL_USAGE = 1;
 	public static final Random RANDOM = new Random();
 
 	public final InventoryComponent inputInventory;
@@ -75,7 +76,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 	private FluidContainerComponent fluidInteractionComponent;
 	private boolean shouldDrawRadiusPreview;
 
-	private List<BlockPos> blocks;
+	private final List<BlockPos> blocks;
 	private int currentBlockIndex;
 	private int range;
 
@@ -92,7 +93,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 10, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
-				return saplingIngredient.test(stack);
+				return slot == 0 ? stack.getItem() instanceof AxeItem : saplingIngredient.test(stack);
 			}
 		}));
 		registerComponent(fluidContainerInventoy = new InventoryComponent("FluidContainerInventoy", 2, MachineSideMode.Never));
@@ -123,8 +124,10 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 	@Override
 	public void process() {
 		if (processingComponent.isProcessing()) {
-			energyStorage.getStorage().extractEnergy(DEFAULT_IDLE_ENERGY_USAGE, false);
-			fluidTankComponent.drain(DEFAULT_WATER_USAGE, FluidAction.EXECUTE);
+			if (!getWorld().isRemote) {
+				energyStorage.getStorage().extractEnergy(DEFAULT_IDLE_ENERGY_USAGE, false);
+				fluidTankComponent.drain(DEFAULT_WATER_USAGE, FluidAction.EXECUTE);
+			}
 		}
 	}
 
@@ -170,38 +173,43 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 	}
 
 	private void refreshBlocksInRange(int range) {
+		// Get the forward and right directions.
 		Direction forwardDirection = getFacingDirection();
 		Direction rightDirection = SideConfigurationUtilities.getDirectionFromSide(BlockSide.RIGHT, forwardDirection);
 
+		// Create the from Position.
 		BlockPos fromPosition = getPos().offset(forwardDirection.getOpposite());
 		fromPosition = fromPosition.offset(forwardDirection.getOpposite(), range * 2);
 		fromPosition = fromPosition.offset(rightDirection.getOpposite(), range);
 
+		// Create the to Position.
 		BlockPos toPosition = getPos();
 		toPosition = toPosition.offset(rightDirection, range);
 		toPosition = toPosition.offset(forwardDirection.getOpposite(), 1);
 
+		// Get all the blocks in the range from the from position to the to position.
 		Stream<BlockPos> blockPos = BlockPos.getAllInBox(fromPosition, toPosition);
 		Iterator<BlockPos> it = blockPos.iterator();
 
+		// Clear the current blocks array and re-populate it.
 		blocks.clear();
 		do {
 			BlockPos pos = it.next();
-			blocks.add(new BlockPos(pos));
+			blocks.add(pos.toImmutable());
 		} while (it.hasNext());
 
+		blocks.add(toPosition);
+
+		// If the range has shrunk, correct for that.
 		if (currentBlockIndex > blocks.size() - 1) {
 			currentBlockIndex = 0;
 		}
 	}
 
 	private void incrementPosition() {
-		currentBlockIndex++;
-		if (currentBlockIndex > blocks.size() - 1) {
-			currentBlockIndex = 0;
+		if (!getWorld().isRemote) {
+			currentBlockIndex = Math.floorMod(currentBlockIndex + 1, blocks.size() - 1);
 		}
-		BlockPos pos = getCurrentPosition();
-		getWorld().addParticle(ParticleTypes.TOTEM_OF_UNDYING, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D);
 	}
 
 	public boolean hasAxe() {
@@ -210,7 +218,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 
 	public void useAxe() {
 		if (hasAxe()) {
-			if (inputInventory.getStackInSlot(0).attemptDamageItem(1, RANDOM, null)) {
+			if (inputInventory.getStackInSlot(0).attemptDamageItem(DEFAULT_TOOL_USAGE, RANDOM, null)) {
 				inputInventory.setStackInSlot(0, ItemStack.EMPTY);
 				getWorld().playSound(null, pos, SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F);
 			}

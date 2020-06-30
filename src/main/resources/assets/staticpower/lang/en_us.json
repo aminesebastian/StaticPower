@@ -84,6 +84,7 @@
 	"block.staticpower.machine_basic_farmer": "Basic Farmer",
 	"block.staticpower.machine_tree_farmer": "Powered Lumberjack",
 	"block.staticpower.machine_fermenter": "Fermenter",
+	"block.staticpower.machine_former": "Former",
 	"block.staticpower.cable_power": "Power Cable",
 	"block.staticpower.cable_fluid": "Fluid Pipe",
 	"block.staticpower.cable_item": "Item Tube",

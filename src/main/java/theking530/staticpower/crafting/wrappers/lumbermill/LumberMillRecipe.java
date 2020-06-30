@@ -64,7 +64,7 @@ public class LumberMillRecipe extends AbstractMachineRecipe {
 
 	@Override
 	public boolean isValid(RecipeMatchParameters matchParams) {
-		return input.test(matchParams.getItems()[0]) && matchParams.getStoredEnergy() >= powerCost;
+		return input.test(matchParams.getItems()[0]);
 	}
 
 	@Override

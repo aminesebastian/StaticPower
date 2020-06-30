@@ -30,7 +30,7 @@ public class RecipeMatchParameters {
 		return items;
 	}
 
-	public RecipeMatchParameters setItems(ItemStack[] items) {
+	public RecipeMatchParameters setItems(ItemStack... items) {
 		this.items = items;
 		return this;
 	}
@@ -39,7 +39,7 @@ public class RecipeMatchParameters {
 		return fluids;
 	}
 
-	public RecipeMatchParameters setFluids(FluidStack[] fluids) {
+	public RecipeMatchParameters setFluids(FluidStack... fluids) {
 		this.fluids = fluids;
 		return this;
 	}

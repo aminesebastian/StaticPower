@@ -27,21 +27,15 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	private final BiPredicate<Direction, MachineSideMode> sideModeFilter;
 
 	public SideConfigurationComponent(String name, BiConsumer<Direction, MachineSideMode> onConfigurationChangedCallback, BiPredicate<Direction, MachineSideMode> sideModeFilter) {
-		this(name, onConfigurationChangedCallback, sideModeFilter,
-				new MachineSideMode[] { MachineSideMode.Input, MachineSideMode.Input, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output });
+		this(name, onConfigurationChangedCallback, sideModeFilter, new MachineSideMode[] { MachineSideMode.Input, MachineSideMode.Input, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output });
 	}
 
-	public SideConfigurationComponent(String name, BiConsumer<Direction, MachineSideMode> onConfigurationChangedCallback, BiPredicate<Direction, MachineSideMode> sideModeFilter,
-			MachineSideMode[] defaultConfiguration) {
+	public SideConfigurationComponent(String name, BiConsumer<Direction, MachineSideMode> onConfigurationChangedCallback, BiPredicate<Direction, MachineSideMode> sideModeFilter, MachineSideMode[] defaultConfiguration) {
 		super(name);
 		this.callback = onConfigurationChangedCallback;
 		this.sideModeFilter = sideModeFilter;
 		this.defaultConfiguration = defaultConfiguration;
 		configuration = new MachineSideMode[6];
-
-		// Initialize to the defaults but supress the event as we are still in the
-		// constructor and don't know if the creator is in a good state to receive the
-		// event.
 		setToDefault(true);
 	}
 
@@ -77,10 +71,23 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 		callback.accept(facing, newMode);
 	}
 
-	public void setWorldSpaceConfiguration(@Nonnull MachineSideMode[] modes) {
+	public void setWorldSpaceConfiguration(@Nonnull MachineSideMode... modes) {
+		if (modes.length != 6) {
+			throw new RuntimeException("Attempted to update the world space side configuration with an array that was not of length 6.");
+		}
 		configuration = modes;
 		getTileEntity().markTileEntityForSynchronization();
 		callback.accept(null, null);
+	}
+
+	public void setDefaultConfiguration(@Nonnull MachineSideMode... modes) {
+		if (modes.length != 6) {
+			throw new RuntimeException("Attempted to update the default side configuration with an array that was not of length 6.");
+		}
+		for (int i = 0; i < modes.length; i++) {
+			defaultConfiguration[i] = modes[i];
+		}
+		setToDefault(true);
 	}
 
 	/**
@@ -107,7 +114,7 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 		} while (!sideModeFilter.test(side, newMode) && newMode != originalMode);
 
 		getTileEntity().markTileEntityForSynchronization();
-		
+
 		// Finally, raise the changed callback.
 		callback.accept(side, newMode);
 
@@ -133,7 +140,7 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	}
 
 	/**
-	 * Captures the number of sides set to the provided mode. Useful to check if	
+	 * Captures the number of sides set to the provided mode. Useful to check if
 	 * there are any sides of the provided type by checking if the return value is >
 	 * 0.
 	 * 

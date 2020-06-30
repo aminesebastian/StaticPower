@@ -71,7 +71,7 @@ public class CableBakedModel extends AbstractBakedModel {
 		
 		// If we have a simple straight connection, just add that mode. Otherwise, add
 		// the core and then apply any additional models.
-		if (CableUtilities.isCableStraightConnection(cableConnectionStates)) {
+		if (Straight != null && CableUtilities.isCableStraightConnection(cableConnectionStates)) {
 			newQuads.addAll(getTransformedQuads(Straight, CableUtilities.getStraightConnectionSide(cableConnectionStates), side, state, rand));
 			for (Direction dir : Direction.values()) {
 				if (attachmentModels[dir.ordinal()] != null) {

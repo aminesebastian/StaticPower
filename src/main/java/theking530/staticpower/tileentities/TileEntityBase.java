@@ -9,6 +9,9 @@ import java.util.Random;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.client.Minecraft;
@@ -50,9 +53,9 @@ import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities.
 import theking530.staticpower.tileentities.utilities.interfaces.IBreakSerializeable;
 
 public abstract class TileEntityBase extends TileEntity implements ITickableTileEntity, IBreakSerializeable, INamedContainerProvider {
+	public static final Logger LOGGER = LogManager.getLogger(TileEntityBase.class);
 	protected final static Random RANDOM = new Random();
 	private boolean isValid;
-
 	protected boolean DisableFaceInteraction;
 	private HashMap<String, AbstractTileEntityComponent> Components;
 
@@ -546,6 +549,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 */
 	@Override
 	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+		LOGGER.error(String.format("TileEntity: %1$s did not override the method #createMenu. The container for this TE is broken.", getDisplayName().getFormattedText()));
 		return null;
 	}
 

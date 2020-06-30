@@ -105,6 +105,9 @@ public class FluidContainerComponent extends AbstractTileEntityComponent {
 					}
 				}
 			}
+
+			// Sync the tile entity.
+			getTileEntity().markTileEntityForSynchronization();
 		}
 	}
 
@@ -143,6 +146,8 @@ public class FluidContainerComponent extends AbstractTileEntityComponent {
 					}
 				}
 			}
+			// Sync the tile entity.
+			getTileEntity().markTileEntityForSynchronization();
 		}
 	}
 
