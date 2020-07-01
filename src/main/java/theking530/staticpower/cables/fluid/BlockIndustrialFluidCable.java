@@ -21,19 +21,19 @@ import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
 import theking530.staticpower.initialization.ModTileEntityTypes;
 
-public class BlockFluidCable extends AbstractCableBlock {
+public class BlockIndustrialFluidCable extends AbstractCableBlock {
 
-	public BlockFluidCable(String name) {
-		super(name, new CableBoundsCache(2.0D, 3.0D, 2.0D));
+	public BlockIndustrialFluidCable(String name) {
+		super(name, new CableBoundsCache(3.5D, 4.25D, 2.0D));
 	}
 
 	@Override
 	public IBakedModel getModelOverride(BlockState state, @Nullable IBakedModel existingModel, ModelBakeEvent event) {
-		IBakedModel extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_EXTENSION);
-		IBakedModel attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_ATTACHMENT);
+		IBakedModel extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_EXTENSION);
+		IBakedModel attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_ATTACHMENT);
+		IBakedModel straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_STRAIGHT);
 
-		// Don't use the straight model (it just looks better without it! :D ).
-		return new CableBakedModel(existingModel, extensionModel, null, attachmentModel);
+		return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
 	}
 
 	@Override
@@ -52,11 +52,11 @@ public class BlockFluidCable extends AbstractCableBlock {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public RenderType getRenderType() {
-		return RenderType.getCutout();
+		return RenderType.getTranslucent();
 	}
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return ModTileEntityTypes.FLUID_CABLE.create();
+		return ModTileEntityTypes.INDUSTRIAL_FLUID_CABLE.create();
 	}
 }

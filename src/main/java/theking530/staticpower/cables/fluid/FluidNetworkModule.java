@@ -12,12 +12,15 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
+import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetwork;
+import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.DestinationWrapper;
-import theking530.staticpower.cables.network.NetworkMapper;
 import theking530.staticpower.cables.network.DestinationWrapper.DestinationType;
+import theking530.staticpower.cables.network.NetworkMapper;
+import theking530.staticpower.cables.network.ServerCable;
 
 public class FluidNetworkModule extends AbstractCableNetworkModule {
 	private final FluidTank FluidTank;
@@ -53,9 +56,18 @@ public class FluidNetworkModule extends AbstractCableNetworkModule {
 				continue;
 			}
 
+			// Get the transfer rate.
+			int transferRate = 0;
+			for (AbstractCableProviderComponent cableComp : CableNetworkManager.get(Network.getWorld()).getCable(destination.getConnectedCable()).getCableProviderComponents()) {
+				if (cableComp instanceof FluidCableComponent) {
+					// Add the capacity to the total.
+					transferRate = ((FluidCableComponent) cableComp).getCapacity();
+				}
+			}
+
 			// Calculate how much fluid we can offer. If it is less than or equal to 0, do
 			// nothing.
-			int toOfferAmount = Math.min(10, FluidTank.getFluidAmount());
+			int toOfferAmount = Math.min(transferRate, FluidTank.getFluidAmount());
 			if (toOfferAmount <= 0) {
 				break;
 			}
@@ -89,7 +101,22 @@ public class FluidNetworkModule extends AbstractCableNetworkModule {
 
 	@Override
 	public void onNetworkGraphUpdated(NetworkMapper mapper) {
-		FluidTank.setCapacity(mapper.getDiscoveredCables().stream().filter(p -> p.supportsNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE)).mapToInt(p -> 100).sum());
+		// Allocate the total capacity.
+		int total = 0;
+
+		// Get all the cables in the network and get their cable components.
+		for (ServerCable cable : mapper.getDiscoveredCables()) {
+			// If they have a fluid cable component, get the capacity.
+			for (AbstractCableProviderComponent cableComp : cable.getCableProviderComponents()) {
+				if (cableComp instanceof FluidCableComponent) {
+					// Add the capacity to the total.
+					total += ((FluidCableComponent) cableComp).getCapacity();
+				}
+			}
+		}
+
+		// Set the capacity of the tank to the provided capacity.
+		FluidTank.setCapacity(total);
 	}
 
 	@Override

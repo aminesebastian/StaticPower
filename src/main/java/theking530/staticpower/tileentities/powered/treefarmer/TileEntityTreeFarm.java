@@ -304,6 +304,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 						player.setHeldItem(Hand.MAIN_HAND, inputStack.copy());
 						inputStack.onItemUse(new ItemUseContext(player, Hand.MAIN_HAND, new BlockRayTraceResult(new Vec3d(0.0f, 1.0f, 0.0f), Direction.UP, pos, false)));
 						inputInventory.extractItem(i, 1, false);
+						break;
 					}
 				}
 				return true;

@@ -1,0 +1,20 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"elements": [
+		{
+			"name": "Attachment",
+			"from": [3.75, 3.75, 0],
+			"to": [12.25, 12.25, 2],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 3]},
+			"faces": {
+				"north": {"uv": [4, 4, 12, 12], "texture": "#cable_texture"},
+				"east": {"uv": [14, 3.75, 16, 12.25], "texture": "#cable_texture"},
+				"south": {"uv": [4, 4, 12, 12], "texture": "#cable_texture"},
+				"west": {"uv": [0, 3.75, 2, 12.25], "texture": "#cable_texture"},
+				"up": {"uv": [3.75, 0, 12.25, 2], "texture": "#cable_texture"},
+				"down": {"uv": [3.75, 14, 12.25, 16], "texture": "#cable_texture"}
+			}
+		}
+	]
+}

@@ -12,6 +12,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.util.Constants;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.tileentities.TileEntityBase;
@@ -168,8 +169,8 @@ public class ServerCable {
 	 * 
 	 * @return
 	 */
-	protected List<AbstractCableProviderComponent> getCableProviderComponents() {
-		TileEntityBase baseTe = (TileEntityBase) World.getTileEntity(Position);
+	public List<AbstractCableProviderComponent> getCableProviderComponents() {
+		TileEntityBase baseTe = (TileEntityBase) World.getChunkAt(getPos()).getTileEntity(getPos(), Chunk.CreateEntityType.QUEUED);
 		if (baseTe == null) {
 			throw new RuntimeException(String.format("A cable wrapper exists without a cooresponding AbstractCableProviderComponent at BlockPos: %1$s.", Position));
 		}

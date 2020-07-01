@@ -1,11 +1,11 @@
 package theking530.staticpower.cables.fluid;
 
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -16,9 +16,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
-import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
-import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.items.cableattachments.extractor.ExtractorAttachment;
 import theking530.staticpower.network.StaticPowerMessageHandler;
@@ -26,11 +24,13 @@ import theking530.staticpower.network.StaticPowerMessageHandler;
 public class FluidCableComponent extends AbstractCableProviderComponent implements IFluidHandler {
 	public static final int EXTRACTION_RATE = 10;
 	public static final float UPDATE_THRESHOLD = 0.1f;
+	private final int capacity;
 	private FluidStack lastUpdateFluidStack;
 	private float lastUpdateFilledPercentage;
 
-	public FluidCableComponent(String name) {
+	public FluidCableComponent(String name, int capacity) {
 		super(name, CableNetworkModuleTypes.FLUID_NETWORK_MODULE);
+		this.capacity = capacity;
 		lastUpdateFluidStack = FluidStack.EMPTY;
 		lastUpdateFilledPercentage = 0.0f;
 	}
@@ -39,7 +39,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	public void preProcessUpdate() {
 		super.preProcessUpdate();
 		if (!getWorld().isRemote) {
-			getFluidNetworkModule().ifPresent(network -> {
+			this.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
 				boolean shouldUpdate = !network.getFluidStorage().getFluid().isFluidEqual(lastUpdateFluidStack);
 				shouldUpdate |= Math.abs(lastUpdateFilledPercentage - getFilledPercentage()) > UPDATE_THRESHOLD;
 				shouldUpdate |= lastUpdateFilledPercentage > 0 && this.getFluidInTank(0).isEmpty();
@@ -52,7 +52,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 
 	public void updateClientRenderValues() {
 		if (!getWorld().isRemote) {
-			getFluidNetworkModule().ifPresent(network -> {
+			this.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
 				lastUpdateFluidStack = network.getFluidStorage().getFluid();
 				lastUpdateFilledPercentage = getFilledPercentage();
 
@@ -74,18 +74,22 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 			return lastUpdateFilledPercentage;
 		} else {
 			AtomicReference<Float> output = new AtomicReference<Float>(0.0f);
-			getFluidNetworkModule().ifPresent(network -> {
+			this.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
 				output.set((float) network.getFluidStorage().getFluidAmount() / network.getFluidStorage().getCapacity());
 			});
 			return output.get();
 		}
 	}
 
+	public int getCapacity() {
+		return capacity;
+	}
+
 	@Override
 	public int getTanks() {
 		if (!getTileEntity().getWorld().isRemote) {
 			AtomicInteger recieve = new AtomicInteger(0);
-			getFluidNetworkModule().ifPresent(network -> {
+			this.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
 				recieve.set(network.getFluidStorage().getTanks());
 			});
 			return recieve.get();
@@ -98,7 +102,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	public FluidStack getFluidInTank(int tank) {
 		if (!getTileEntity().getWorld().isRemote) {
 			AtomicReference<FluidStack> fluid = new AtomicReference<FluidStack>(FluidStack.EMPTY);
-			getFluidNetworkModule().ifPresent(network -> {
+			this.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
 				fluid.set(network.getFluidStorage().getFluidInTank(tank));
 			});
 			return fluid.get();
@@ -111,7 +115,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	public int getTankCapacity(int tank) {
 		if (!getTileEntity().getWorld().isRemote) {
 			AtomicInteger recieve = new AtomicInteger(0);
-			getFluidNetworkModule().ifPresent(network -> {
+			this.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
 				recieve.set(network.getFluidStorage().getTankCapacity(tank));
 			});
 			return recieve.get();
@@ -124,7 +128,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	public boolean isFluidValid(int tank, FluidStack stack) {
 		if (!getTileEntity().getWorld().isRemote) {
 			AtomicBoolean recieve = new AtomicBoolean(false);
-			getFluidNetworkModule().ifPresent(network -> {
+			this.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
 				recieve.set(network.getFluidStorage().isFluidValid(tank, stack));
 			});
 			return recieve.get();
@@ -137,7 +141,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	public int fill(FluidStack resource, FluidAction action) {
 		if (!getTileEntity().getWorld().isRemote) {
 			AtomicInteger recieve = new AtomicInteger(0);
-			getFluidNetworkModule().ifPresent(network -> {
+			this.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
 				recieve.set(network.getFluidStorage().fill(resource, action));
 			});
 			return recieve.get();
@@ -164,24 +168,6 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 		return LazyOptional.empty();
 	}
 
-	/**
-	 * Gets the fluid network module for the network this cable belongs to. We have
-	 * to wrap it in an optional because while we can guarantee once this component
-	 * is validated that the network is valid, since this component exposes external
-	 * methods, other tile entity that are made valid before us may call some of our
-	 * methods.
-	 * 
-	 * @return
-	 */
-	protected Optional<FluidNetworkModule> getFluidNetworkModule() {
-		CableNetworkManager manager = CableNetworkManager.get(getTileEntity().getWorld());
-		ServerCable cable = manager.getCable(getTileEntity().getPos());
-		if (cable.getNetwork() != null) {
-			return Optional.of(cable.getNetwork().getModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE));
-		}
-		return Optional.empty();
-	}
-
 	@Override
 	protected CableConnectionState cacheConnectionState(Direction side, BlockPos blockPosition) {
 		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(), blockPosition);
@@ -199,5 +185,26 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	@Override
 	protected boolean canAttachAttachment(ItemStack attachment) {
 		return !attachment.isEmpty() && attachment.getItem() instanceof ExtractorAttachment;
+	}
+
+	public CompoundNBT serializeSaveNbt(CompoundNBT nbt) {
+		super.serializeSaveNbt(nbt);
+		// Save the filled percent.
+		nbt.putFloat("filled_percentage", lastUpdateFilledPercentage);
+
+		// Put the fluid stack.
+		CompoundNBT fluidNbt = new CompoundNBT();
+		lastUpdateFluidStack.writeToNBT(fluidNbt);
+		nbt.put("fluid", fluidNbt);
+		return nbt;
+	}
+
+	public void deserializeSaveNbt(CompoundNBT nbt) {
+		super.deserializeSaveNbt(nbt);
+		// Load the filled percent.
+		lastUpdateFilledPercentage = nbt.getFloat("filled_percentage");
+
+		// Load the last update fluidstack.
+		lastUpdateFluidStack = FluidStack.loadFluidStackFromNBT((CompoundNBT) nbt.get("fluid"));
 	}
 }

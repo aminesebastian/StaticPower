@@ -4,6 +4,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
@@ -12,7 +14,6 @@ import net.minecraft.world.World;
 import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.initialization.ModBlocks;
-import theking530.staticpower.initialization.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.EnergyStorageComponent;
 import theking530.staticpower.tileentities.components.PowerDistributionComponent;
@@ -21,12 +22,18 @@ public class TileEntitySolarPanel extends TileEntityBase implements ITickableTil
 
 	public EnergyStorageComponent energyStorage;
 
-	public TileEntitySolarPanel() {
-		super(ModTileEntityTypes.SOLAR_PANEL_BASIC);
-		registerComponent(energyStorage = new EnergyStorageComponent("PowerBuffer", 0, 10, 10));
+	public TileEntitySolarPanel(ResourceLocation tierType, TileEntityType<? extends TileEntitySolarPanel> type) {
+		super(type);
+		// Set the values based on the tier.
+		StaticPowerTier tier = StaticPowerDataRegistry.getTier(tierType);
+		registerComponent(energyStorage = new EnergyStorageComponent("PowerBuffer", tier.getSolarPanelPowerStorage(), tier.getSolarPanelPowerGeneration(), tier.getSolarPanelPowerGeneration()));
 		energyStorage.getStorage().setCanRecieve(false);
 
 		registerComponent(new PowerDistributionComponent("PowerDistribution", energyStorage.getStorage()));
+
+		energyStorage.getStorage().setCapacity(tier.getSolarPanelPowerStorage());
+		energyStorage.getStorage().setMaxExtract(tier.getSolarPanelPowerGeneration());
+		energyStorage.getStorage().setMaxReceive(tier.getSolarPanelPowerGeneration());
 	}
 
 	@Override
@@ -34,18 +41,6 @@ public class TileEntitySolarPanel extends TileEntityBase implements ITickableTil
 		// Perform the generation on both the client and the server. The client
 		// generation is only for immediate visual response.
 		generateRF();
-	}
-
-	@Override
-	public void onInitializedInWorld(World world, BlockPos pos) {
-		super.onInitializedInWorld(world, pos);
-		if (energyStorage.getStorage().getMaxEnergyStored() == 0) {
-			BlockSolarPanel solarPanelBlock = (BlockSolarPanel) world.getBlockState(pos).getBlock();
-			StaticPowerTier tier = StaticPowerDataRegistry.getTier(solarPanelBlock.tierType);
-			energyStorage.getStorage().setCapacity(tier.getSolarPanelPowerStorage());
-			energyStorage.getStorage().setMaxExtract(tier.getSolarPanelPowerGeneration());
-			energyStorage.getStorage().setMaxReceive(tier.getSolarPanelPowerGeneration());
-		}
 	}
 
 	// Functionality

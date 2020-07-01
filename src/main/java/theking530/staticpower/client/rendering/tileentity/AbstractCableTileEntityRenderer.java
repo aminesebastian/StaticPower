@@ -58,7 +58,7 @@ public abstract class AbstractCableTileEntityRenderer<T extends TileEntityBase> 
 		return baseOffset;
 	}
 
-	protected void drawFluidCable(FluidStack fluid, float filledPercentage, MatrixStack matrixStack, AbstractCableProviderComponent cableComponent) {
+	protected void drawFluidCable(FluidStack fluid, float filledPercentage, float radius, MatrixStack matrixStack, AbstractCableProviderComponent cableComponent) {
 		TextureAtlasSprite sprite = GuiDrawUtilities.getStillFluidSprite(fluid);
 		Color fluidColor = GuiDrawUtilities.getFluidColor(fluid);
 
@@ -66,38 +66,40 @@ public abstract class AbstractCableTileEntityRenderer<T extends TileEntityBase> 
 		for (Direction dir : Direction.values()) {
 			if (cableComponent.getConnectionState(dir) != CableConnectionState.NONE) {
 				wasExtensionDrawn = true;
-				drawExtensions(dir, sprite, filledPercentage, fluidColor, matrixStack);
+				drawExtensions(dir, sprite, filledPercentage, radius, fluidColor, matrixStack);
 			}
 		}
 		if (!wasExtensionDrawn) {
-			drawFluidCore(sprite, filledPercentage, fluidColor, matrixStack);
+			drawFluidCore(sprite, filledPercentage, radius, fluidColor, matrixStack);
 		}
 	}
 
-	protected void drawFluidCore(TextureAtlasSprite sprite, float filledAmount, Color fluidColor, MatrixStack matrixStack) {
+	protected void drawFluidCore(TextureAtlasSprite sprite, float filledAmount, float radius, Color fluidColor, MatrixStack matrixStack) {
+		float diameter = radius * 2.0f - 0.01f;
+		radius -= 0.005f;
 		float minWidth = 0.22f * filledAmount;
 		float minWidthOffset = (-0.1f * filledAmount) + 0.5f;
 		float floorOffset = 0.06f - (filledAmount * 0.06f);
-		CUBE_MODEL.drawPreviewCube(new Vector3f(0.4f, minWidthOffset - floorOffset, 0.4f), new Vector3f(0.2f, minWidth, 0.2f), fluidColor, matrixStack, sprite);
+		CUBE_MODEL.drawPreviewCube(new Vector3f(0.5f - radius, minWidthOffset - floorOffset, 0.5f - radius), new Vector3f(diameter, minWidth, diameter), fluidColor, matrixStack, sprite);
 	}
 
-	protected void drawExtensions(Direction side, TextureAtlasSprite sprite, float filledAmount, Color fluidColor, MatrixStack matrixStack) {
-		float minWidth = 0.22f * filledAmount;
-		float minWidthOffset = (-0.1f * filledAmount) + 0.5f;
-		float floorOffset = 0.06f - (filledAmount * 0.06f);
+	protected void drawExtensions(Direction side, TextureAtlasSprite sprite, float filledAmount, float radius, Color fluidColor, MatrixStack matrixStack) {
+		float diameter = (radius * 2.0f) - 0.01f;
+		radius -= 0.005f;
+		float yAxisOffset = radius * (1.0f - filledAmount);
 
 		if (side == Direction.SOUTH) {
-			CUBE_MODEL.drawPreviewCube(new Vector3f(0.4f, minWidthOffset - floorOffset, 0.4f), new Vector3f(0.2f, minWidth, 0.6f), fluidColor, matrixStack, sprite);
+			CUBE_MODEL.drawPreviewCube(new Vector3f(0.5f - radius, 0.5f - radius, 0.39f), new Vector3f(diameter, diameter * filledAmount, 0.6f), fluidColor, matrixStack, sprite);
 		} else if (side == Direction.NORTH) {
-			CUBE_MODEL.drawPreviewCube(new Vector3f(0.4f, minWidthOffset - floorOffset, 0.0f), new Vector3f(0.2f, minWidth, 0.6f), fluidColor, matrixStack, sprite);
+			CUBE_MODEL.drawPreviewCube(new Vector3f(0.5f - radius, 0.5f - radius, 0.01f), new Vector3f(diameter, diameter * filledAmount, 0.6f), fluidColor, matrixStack, sprite);
 		} else if (side == Direction.DOWN) {
-			CUBE_MODEL.drawPreviewCube(new Vector3f(minWidthOffset, 0.0f, minWidthOffset), new Vector3f(minWidth, 0.6f, minWidth), fluidColor, matrixStack, sprite);
+			CUBE_MODEL.drawPreviewCube(new Vector3f(0.5f - radius + yAxisOffset, 0.0f, 0.5f - radius + yAxisOffset), new Vector3f(diameter * filledAmount, 0.6f, diameter * filledAmount), fluidColor, matrixStack, sprite);
 		} else if (side == Direction.UP) {
-			CUBE_MODEL.drawPreviewCube(new Vector3f(minWidthOffset, 0.4f, minWidthOffset), new Vector3f(minWidth, 0.6f, minWidth), fluidColor, matrixStack, sprite);
+			CUBE_MODEL.drawPreviewCube(new Vector3f(0.5f - radius + yAxisOffset, 0.39f, 0.5f - radius + yAxisOffset), new Vector3f(diameter * filledAmount, 0.6f, diameter * filledAmount), fluidColor, matrixStack, sprite);
 		} else if (side == Direction.WEST) {
-			CUBE_MODEL.drawPreviewCube(new Vector3f(0.0f, minWidthOffset - floorOffset, 0.4f), new Vector3f(0.6f, minWidth, 0.2f), fluidColor, matrixStack, sprite);
+			CUBE_MODEL.drawPreviewCube(new Vector3f(0.01f, 0.5f - radius, 0.5f - radius), new Vector3f(0.6f, diameter * filledAmount, diameter), fluidColor, matrixStack, sprite);
 		} else if (side == Direction.EAST) {
-			CUBE_MODEL.drawPreviewCube(new Vector3f(0.4f, minWidthOffset - floorOffset, 0.4f), new Vector3f(0.6f, minWidth, 0.2f), fluidColor, matrixStack, sprite);
+			CUBE_MODEL.drawPreviewCube(new Vector3f(0.39f, 0.5f - radius, 0.5f - radius), new Vector3f(0.6f, diameter * filledAmount, diameter), fluidColor, matrixStack, sprite);
 		}
 	}
 }

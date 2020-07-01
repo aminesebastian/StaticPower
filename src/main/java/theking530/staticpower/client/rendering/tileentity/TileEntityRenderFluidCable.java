@@ -16,7 +16,7 @@ public class TileEntityRenderFluidCable extends AbstractCableTileEntityRenderer<
 	@Override
 	protected void renderTileEntityBase(TileEntityFluidCable tileEntity, BlockPos pos, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
 		if (tileEntity.fluidCableComponent.getFilledPercentage() > 0 && !tileEntity.fluidCableComponent.getFluidInTank(0).isEmpty()) {
-			drawFluidCable(tileEntity.fluidCableComponent.getFluidInTank(0), tileEntity.fluidCableComponent.getFilledPercentage(), matrixStack, tileEntity.fluidCableComponent);
+			drawFluidCable(tileEntity.fluidCableComponent.getFluidInTank(0), tileEntity.fluidCableComponent.getFilledPercentage(), tileEntity.fluidRenderRadius, matrixStack, tileEntity.fluidCableComponent);
 		}
 	}
 

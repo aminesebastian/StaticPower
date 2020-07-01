@@ -66,6 +66,7 @@ public class StaticPowerClientEventHandler {
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.DIGISTORE, TileEntityRenderDigistore::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.ITEM_CABLE, TileEntityRenderItemCable::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.FLUID_CABLE, TileEntityRenderFluidCable::new);
+		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.INDUSTRIAL_FLUID_CABLE, TileEntityRenderFluidCable::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.TANK, TileEntityRenderTank::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.PUMP, TileEntityRenderPump::new);
 		

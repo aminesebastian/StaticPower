@@ -2,7 +2,9 @@ package theking530.staticpower;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.function.Supplier;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.function.Function;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager.IScreenFactory;
@@ -20,6 +22,7 @@ import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.network.IContainerFactory;
 import theking530.staticpower.blocks.IItemBlockProvider;
+import theking530.staticpower.initialization.TileEntityInitializer;
 
 /**
  * Main registry class responsible for preparing entities for registration and
@@ -32,7 +35,7 @@ import theking530.staticpower.blocks.IItemBlockProvider;
 public class StaticPowerRegistry {
 	public static final HashSet<Item> ITEMS = new HashSet<>();
 	public static final HashSet<Block> BLOCKS = new HashSet<>();
-	public static final HashSet<TileEntityType<?>> TILE_ENTITY_TYPES = new HashSet<>();
+	public static final List<TileEntityType<?>> TILE_ENTITY_TYPES = new LinkedList<>();
 	public static final HashSet<ContainerType<? extends Container>> CONTAINER_TYPES = new HashSet<>();
 	public static final HashSet<FlowingFluid> FLUIDS = new HashSet<FlowingFluid>();
 	public static final HashSet<IRecipeSerializer> RECIPE_SERIALIZERS = new HashSet<IRecipeSerializer>();
@@ -95,8 +98,10 @@ public class StaticPowerRegistry {
 	 *         {@link TileEntity} & {@link Block}.
 	 */
 	@SuppressWarnings({ "unchecked" })
-	public static <T extends TileEntity> TileEntityType<T> preRegisterTileEntity(Supplier<? extends T> factory, Block... tileEntityBlocks) {
-		TileEntityType teType = TileEntityType.Builder.create(factory, tileEntityBlocks).build(null);
+	public static <T extends TileEntity> TileEntityType<T> preRegisterTileEntity(Function<TileEntityType<T>, T> factory, Block... tileEntityBlocks) {
+		TileEntityInitializer initializer = new TileEntityInitializer(factory);
+		TileEntityType teType = TileEntityType.Builder.create(initializer, tileEntityBlocks).build(null);
+		initializer.setType(teType);
 		teType.setRegistryName(tileEntityBlocks[0].getRegistryName());
 		TILE_ENTITY_TYPES.add(teType);
 		return teType;

@@ -398,7 +398,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		// tag. Catch errors on a per component basis to prevent one component from
 		// breaking all the rest.
 		for (AbstractTileEntityComponent component : Components.values()) {
-			CompoundNBT componentTag = new CompoundNBT();
+			CompoundNBT componentTag = nbt.contains(component.getComponentName()) ? nbt.getCompound(component.getComponentName()) : new CompoundNBT();
 			component.serializeUpdateNbt(componentTag, fromUpdate);
 			nbt.put(component.getComponentName(), componentTag);
 		}
@@ -440,7 +440,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		// tag. Catch errors on a per component basis to prevent one component from
 		// breaking all the rest.
 		for (AbstractTileEntityComponent component : Components.values()) {
-			CompoundNBT componentTag = new CompoundNBT();
+			CompoundNBT componentTag = nbt.contains(component.getComponentName()) ? nbt.getCompound(component.getComponentName()) : new CompoundNBT();
 			component.serializeSaveNbt(componentTag);
 			nbt.put(component.getComponentName(), componentTag);
 		}
@@ -520,8 +520,8 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	@Override
 	public CompoundNBT write(CompoundNBT parentNBTTagCompound) {
 		super.write(parentNBTTagCompound);
-		CompoundNBT tag = serializeSaveNbt(parentNBTTagCompound);
-		return serializeUpdateNbt(tag, false);
+		serializeSaveNbt(parentNBTTagCompound);
+		return serializeUpdateNbt(parentNBTTagCompound, false);
 	}
 
 	/**

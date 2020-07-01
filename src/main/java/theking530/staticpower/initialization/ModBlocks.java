@@ -16,6 +16,7 @@ import theking530.staticpower.blocks.decorative.Lamp;
 import theking530.staticpower.blocks.decorative.StaticPowerGlassBlock;
 import theking530.staticpower.cables.digistore.BlockDigistoreNetworkWire;
 import theking530.staticpower.cables.fluid.BlockFluidCable;
+import theking530.staticpower.cables.fluid.BlockIndustrialFluidCable;
 import theking530.staticpower.cables.item.BlockItemCable;
 import theking530.staticpower.cables.power.BlockPowerCable;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -102,7 +103,8 @@ public class ModBlocks {
 	public static BlockItemCable ItemCable;
 	public static BlockPowerCable PowerCable;
 	public static BlockFluidCable FluidCable;
-
+	public static BlockIndustrialFluidCable IndustrialFluidCable;
+	
 	public static void init() {
 		// Decorative
 		StaticPowerRegistry.preRegisterBlock(StaticLamp = new Lamp("lamp_static"));
@@ -170,5 +172,6 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(PowerCable = new BlockPowerCable("cable_power"));
 		StaticPowerRegistry.preRegisterBlock(ItemCable = new BlockItemCable("cable_item"));
 		StaticPowerRegistry.preRegisterBlock(FluidCable = new BlockFluidCable("cable_fluid"));
+		StaticPowerRegistry.preRegisterBlock(IndustrialFluidCable = new BlockIndustrialFluidCable("cable_industrial_fluid"));
 	}
 }

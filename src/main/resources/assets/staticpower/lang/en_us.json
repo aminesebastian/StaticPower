@@ -87,6 +87,7 @@
 	"block.staticpower.machine_former": "Former",
 	"block.staticpower.cable_power": "Power Cable",
 	"block.staticpower.cable_fluid": "Fluid Pipe",
+	"block.staticpower.cable_industrial_fluid": "Industrial Fluid Pipe",
 	"block.staticpower.cable_item": "Item Tube",
 	"block.staticpower.cable_digistore": "Digistore Cable",
 	"block.staticpower.tank_basic": "Tank",

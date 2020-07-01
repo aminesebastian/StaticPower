@@ -1,13 +1,15 @@
 package theking530.staticpower.cables.fluid;
 
-import theking530.staticpower.initialization.ModTileEntityTypes;
+import net.minecraft.tileentity.TileEntityType;
 import theking530.staticpower.tileentities.TileEntityBase;
 
 public class TileEntityFluidCable extends TileEntityBase {
 	public FluidCableComponent fluidCableComponent;
+	public float fluidRenderRadius;
 
-	public TileEntityFluidCable() {
-		super(ModTileEntityTypes.FLUID_CABLE);
-		registerComponent(fluidCableComponent = new FluidCableComponent("FluidCableComponent"));
+	public TileEntityFluidCable(TileEntityType<TileEntityFluidCable> type, float radius, int capacity) {
+		super(type);
+		registerComponent(fluidCableComponent = new FluidCableComponent("FluidCableComponent", capacity));
+		fluidRenderRadius = radius;
 	}
 }

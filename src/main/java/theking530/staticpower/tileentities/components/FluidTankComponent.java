@@ -185,17 +185,33 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 		if (!fluidStackFilter.test(resource)) {
 			return 0;
 		}
-		return FluidStorage.fill(resource, action);
+
+		// Perform the fill, and then sync the tile entity if this was a real fill.
+		int result = FluidStorage.fill(resource, action);
+		if (action == FluidAction.EXECUTE) {
+			getTileEntity().markTileEntityForSynchronization();
+		}
+		return result;
 	}
 
 	@Override
 	public FluidStack drain(FluidStack resource, FluidAction action) {
-		return FluidStorage.drain(resource, action);
+		// Perform the drain, and then sync the tile entity if this was a real drain.
+		FluidStack result = FluidStorage.drain(resource, action);
+		if (action == FluidAction.EXECUTE) {
+			getTileEntity().markTileEntityForSynchronization();
+		}
+		return result;
 	}
 
 	@Override
 	public FluidStack drain(int maxDrain, FluidAction action) {
-		return FluidStorage.drain(maxDrain, action);
+		// Perform the drain, and then sync the tile entity if this was a real drain.
+		FluidStack result = FluidStorage.drain(maxDrain, action);
+		if (action == FluidAction.EXECUTE) {
+			getTileEntity().markTileEntityForSynchronization();
+		}
+		return result;
 	}
 
 	public class FluidComponentCapabilityInterface implements IFluidHandler {

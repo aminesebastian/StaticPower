@@ -54,8 +54,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 
 		// Initialize the disabled sides, connection states, and attachments arrays.
 		DisabledSides = new boolean[] { false, false, false, false, false, false };
-		ConnectionStates = new CableConnectionState[] { CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE,
-				CableConnectionState.NONE };
+		ConnectionStates = new CableConnectionState[] { CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE };
 		Attachments = new ItemStack[] { ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY };
 	}
 
@@ -132,10 +131,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			CableNetworkManager manager = CableNetworkManager.get(getWorld());
 			if (!manager.isTrackingCable(getTileEntity().getPos())) {
 				ServerCable wrapper = new ServerCable(getWorld(), getPos(), SupportedNetworkModules);
-				//if(!SupportedNetworkModules.contains(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE)) {
-					manager.addCable(wrapper);
-				//}
-
+				manager.addCable(wrapper);
 			}
 		}
 	}
@@ -280,7 +276,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	public <T extends AbstractCableNetworkModule> Optional<T> getNetworkModule(ResourceLocation moduleType) {
 		CableNetworkManager manager = CableNetworkManager.get(getTileEntity().getWorld());
 		ServerCable cable = manager.getCable(getTileEntity().getPos());
-		if (cable.getNetwork() != null) {
+		if (cable != null && cable.getNetwork() != null) {
 			if (cable.getNetwork().hasModule(moduleType)) {
 				return Optional.of(cable.getNetwork().getModule(moduleType));
 			}

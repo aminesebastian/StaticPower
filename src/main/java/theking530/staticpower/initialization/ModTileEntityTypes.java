@@ -6,6 +6,7 @@ import theking530.staticpower.cables.digistore.TileEntityDigistoreWire;
 import theking530.staticpower.cables.fluid.TileEntityFluidCable;
 import theking530.staticpower.cables.item.TileEntityItemCable;
 import theking530.staticpower.cables.power.TileEntityPowerCable;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.TileEntityDigistore;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.ioport.TileEntityDigistoreIOPort;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.TileEntityDigistoreManager;
@@ -26,14 +27,20 @@ public class ModTileEntityTypes {
 	public static TileEntityType<TileEntityVacuumChest> VACCUM_CHEST;
 	public static TileEntityType<TileEntityChargingStation> CHARGING_STATION;
 	public static TileEntityType<TileEntitySolarPanel> SOLAR_PANEL_BASIC;
+	public static TileEntityType<TileEntitySolarPanel> SOLAR_PANEL_STATIC;
+	public static TileEntityType<TileEntitySolarPanel> SOLAR_PANEL_ENERGIZED;
+	public static TileEntityType<TileEntitySolarPanel> SOLAR_PANEL_LUMUM;
+	public static TileEntityType<TileEntitySolarPanel> SOLAR_PANEL_CREATIVE;
+
 	public static TileEntityType<TileEntityPoweredFurnace> POWERED_FURNACE;
 	public static TileEntityType<TileEntityPoweredGrinder> POWERED_GRINDER;
 	public static TileEntityType<TileEntityTank> TANK;
 	public static TileEntityType<TileEntityPump> PUMP;
-	
+
 	public static TileEntityType<TileEntityPowerCable> POWER_CABLE;
 	public static TileEntityType<TileEntityItemCable> ITEM_CABLE;
 	public static TileEntityType<TileEntityFluidCable> FLUID_CABLE;
+	public static TileEntityType<TileEntityFluidCable> INDUSTRIAL_FLUID_CABLE;
 
 	public static TileEntityType<TileEntityDigistore> DIGISTORE;
 	public static TileEntityType<TileEntityDigistoreManager> DIGISTORE_MANAGER;
@@ -45,29 +52,35 @@ public class ModTileEntityTypes {
 	public static TileEntityType<TileEntityFermenter> FERMENTER;
 	public static TileEntityType<TileEntityFormer> FORMER;
 
-	
 	public static void init() {
-		VACCUM_CHEST = StaticPowerRegistry.preRegisterTileEntity(TileEntityVacuumChest::new, ModBlocks.VacuumChest);
-		CHARGING_STATION = StaticPowerRegistry.preRegisterTileEntity(TileEntityChargingStation::new, ModBlocks.ChargingStation);
-		SOLAR_PANEL_BASIC = StaticPowerRegistry.preRegisterTileEntity(TileEntitySolarPanel::new, ModBlocks.SolarPanelBasic, ModBlocks.SolarPanelStatic, ModBlocks.SolarPanelEnergized, ModBlocks.SolarPanelLumum, ModBlocks.SolarPanelCreative);
-		POWERED_FURNACE = StaticPowerRegistry.preRegisterTileEntity(TileEntityPoweredFurnace::new, ModBlocks.PoweredFurnace);
-		POWERED_GRINDER = StaticPowerRegistry.preRegisterTileEntity(TileEntityPoweredGrinder::new, ModBlocks.PoweredGrinder);
-		LUMBER_MILL = StaticPowerRegistry.preRegisterTileEntity(TileEntityLumberMill::new, ModBlocks.LumberMill);
-		BASIC_FARMER = StaticPowerRegistry.preRegisterTileEntity(TileEntityBasicFarmer::new, ModBlocks.BasicFarmer);
-		TREE_FARM = StaticPowerRegistry.preRegisterTileEntity(TileEntityTreeFarm::new, ModBlocks.TreeFarmer);
-		FERMENTER = StaticPowerRegistry.preRegisterTileEntity(TileEntityFermenter::new, ModBlocks.Fermenter);
-		FORMER = StaticPowerRegistry.preRegisterTileEntity(TileEntityFormer::new, ModBlocks.Former);
-		
-		TANK = StaticPowerRegistry.preRegisterTileEntity(TileEntityTank::new, ModBlocks.BasicTank);
-		PUMP = StaticPowerRegistry.preRegisterTileEntity(TileEntityPump::new, ModBlocks.Pump);
-		
-		POWER_CABLE = StaticPowerRegistry.preRegisterTileEntity(TileEntityPowerCable::new, ModBlocks.PowerCable);
-		ITEM_CABLE = StaticPowerRegistry.preRegisterTileEntity(TileEntityItemCable::new, ModBlocks.ItemCable);
-		FLUID_CABLE = StaticPowerRegistry.preRegisterTileEntity(TileEntityFluidCable::new, ModBlocks.FluidCable);
+		VACCUM_CHEST = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityVacuumChest(), ModBlocks.VacuumChest);
+		CHARGING_STATION = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityChargingStation(), ModBlocks.ChargingStation);
 
-		DIGISTORE = StaticPowerRegistry.preRegisterTileEntity(TileEntityDigistore::new, ModBlocks.Digistore);
-		DIGISTORE_MANAGER = StaticPowerRegistry.preRegisterTileEntity(TileEntityDigistoreManager::new, ModBlocks.DigistoreManager);
-		DIGISTORE_IO_PORT = StaticPowerRegistry.preRegisterTileEntity(TileEntityDigistoreIOPort::new, ModBlocks.DigistoreIOPort);
-		DIGISTORE_WIRE = StaticPowerRegistry.preRegisterTileEntity(TileEntityDigistoreWire::new, ModBlocks.DigistoreWire);
+		SOLAR_PANEL_BASIC = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntitySolarPanel(StaticPowerTiers.BASIC, type), ModBlocks.SolarPanelBasic);
+		SOLAR_PANEL_STATIC = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntitySolarPanel(StaticPowerTiers.STATIC, type), ModBlocks.SolarPanelStatic);
+		SOLAR_PANEL_ENERGIZED = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntitySolarPanel(StaticPowerTiers.ENERGIZED, type), ModBlocks.SolarPanelEnergized);
+		SOLAR_PANEL_LUMUM = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntitySolarPanel(StaticPowerTiers.LUMUM, type), ModBlocks.SolarPanelLumum);
+		SOLAR_PANEL_CREATIVE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntitySolarPanel(StaticPowerTiers.CREATIVE, type), ModBlocks.SolarPanelCreative);
+
+		POWERED_FURNACE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityPoweredFurnace(), ModBlocks.PoweredFurnace);
+		POWERED_GRINDER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityPoweredGrinder(), ModBlocks.PoweredGrinder);
+		LUMBER_MILL = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityLumberMill(), ModBlocks.LumberMill);
+		BASIC_FARMER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBasicFarmer(), ModBlocks.BasicFarmer);
+		TREE_FARM = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityTreeFarm(), ModBlocks.TreeFarmer);
+		FERMENTER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityFermenter(), ModBlocks.Fermenter);
+		FORMER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityFormer(), ModBlocks.Former);
+
+		TANK = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityTank(), ModBlocks.BasicTank);
+		PUMP = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityPump(), ModBlocks.Pump);
+
+		POWER_CABLE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityPowerCable(), ModBlocks.PowerCable);
+		ITEM_CABLE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityItemCable(), ModBlocks.ItemCable);
+		FLUID_CABLE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityFluidCable(type, 2.0f / 16.0f, 100), ModBlocks.FluidCable);
+		INDUSTRIAL_FLUID_CABLE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityFluidCable(type, 3.5f / 16.0f, 1000), ModBlocks.IndustrialFluidCable);
+
+		DIGISTORE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityDigistore(), ModBlocks.Digistore);
+		DIGISTORE_MANAGER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityDigistoreManager(), ModBlocks.DigistoreManager);
+		DIGISTORE_IO_PORT = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityDigistoreIOPort(), ModBlocks.DigistoreIOPort);
+		DIGISTORE_WIRE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityDigistoreWire(), ModBlocks.DigistoreWire);
 	}
 }

@@ -222,8 +222,8 @@ public class CableNetworkManager extends WorldSavedData {
 			if (adjacent.isDisabledOnSide(dir.getOpposite())) {
 				continue;
 			}
-			
-			if(adjacent.shouldConnectTo(cable)) {
+
+			if (adjacent.shouldConnectTo(cable)) {
 				wrappers.add(adjacent);
 			}
 		}
