@@ -9,6 +9,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import theking530.common.utilities.SDMath;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.client.container.slots.PhantomSlot;
 import theking530.staticpower.initialization.ModContainerTypes;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachmentContainer;
 
@@ -36,7 +37,7 @@ public class ContainerExtractor extends AbstractCableAttachmentContainer<Extract
 			return;
 		}
 
-		this.addSlotsInGrid(filterInventory, 0, 88, 24, SDMath.getSmallestFactor(filterInventory.getSlots(), 6), 16);
+		this.addSlotsInGrid(filterInventory, 0, 88, 24, SDMath.getSmallestFactor(filterInventory.getSlots(), 6), 16, (index, x, y) -> new PhantomSlot(filterInventory, index, x, y).renderFluidContainerAsFluid());
 		this.addPlayerInventory(getPlayerInventory(), 8, 69);
 		this.addPlayerHotbar(getPlayerInventory(), 8, 127);
 	}

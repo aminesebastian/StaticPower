@@ -348,10 +348,19 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	}
 
 	/**
-	 * Draws a slot using the provided values. NOTE: The actual position of the slot
-	 * will be appear to be one pixel to the left and one pixel down due to the
-	 * border of the slot being rendered OUTSIDE the slot. Meaning at 16x16 slot
-	 * will use 17x17 pixels.
+	 * Draws an item from the provided slot. This does NOT render the actual slot
+	 * background (unfortunate name overlap with vanilla code).
+	 */
+	@Override
+	public void drawSlot(Slot slotIn) {
+		super.drawSlot(slotIn);
+	}
+
+	/**
+	 * Draws a slot BACKGROUND using the provided values. NOTE: The actual position
+	 * of the slot will be appear to be one pixel to the left and one pixel down due
+	 * to the border of the slot being rendered OUTSIDE the slot. Meaning at 16x16
+	 * slot will use 17x17 pixels.
 	 * 
 	 * @param xPos     The x position of the slot.
 	 * @param yPos     The y position of the slot.
@@ -369,10 +378,10 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	}
 
 	/**
-	 * Draws a slot using the provided values. NOTE: The actual position of the slot
-	 * will be appear to be one pixel to the left and one pixel down due to the
-	 * border of the slot being rendered OUTSIDE the slot. Meaning at 16x16 slot
-	 * will use 17x17 pixels.
+	 * Draws a slot BACKGROUND using the provided values. NOTE: The actual position
+	 * of the slot will be appear to be one pixel to the left and one pixel down due
+	 * to the border of the slot being rendered OUTSIDE the slot. Meaning at 16x16
+	 * slot will use 17x17 pixels.
 	 * 
 	 * @param xPos   The x position of the slot.
 	 * @param yPos   The y position of the slot.
@@ -383,7 +392,17 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 		GuiDrawUtilities.drawSlot(xPos, yPos, width, height);
 	}
 
-	public void drawStringWithSize(String text, int xPos, int yPos, float scale, int color, boolean withShadow) {
+	/**
+	 * Renders a string with the provided scale.
+	 * 
+	 * @param text
+	 * @param xPos
+	 * @param yPos
+	 * @param scale
+	 * @param color
+	 * @param withShadow
+	 */
+	public void drawStringWithSize(String text, int xPos, int yPos, float scale, Color color, boolean withShadow) {
 		GuiDrawUtilities.drawStringWithSize(text, xPos, yPos, scale, color, withShadow);
 	}
 
@@ -406,6 +425,11 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 		for (Slot slot : slots) {
 			// Skip null slots
 			if (slot == null) {
+				continue;
+			}
+
+			// Skip disabled slots.
+			if (!slot.isEnabled()) {
 				continue;
 			}
 

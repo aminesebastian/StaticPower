@@ -6,6 +6,8 @@ import javax.annotation.Nullable;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
@@ -22,12 +24,14 @@ public class StaticPowerContainerSlot extends SlotItemHandler {
 	private float previewAlpha;
 	private MachineSideMode mode;
 	private boolean drawFluidContainerAsFluid;
+	private boolean isEnabled;
 
 	public StaticPowerContainerSlot(@Nonnull ItemStack previewItem, float previewAlpha, @Nonnull IItemHandler itemHandler, int index, int xPosition, int yPosition, @Nonnull MachineSideMode mode) {
 		super(itemHandler, index, xPosition, yPosition);
 		this.previewItem = previewItem;
 		this.previewAlpha = previewAlpha;
 		this.mode = mode;
+		this.isEnabled = true;
 
 		// If this item handler is an inventory component, cache that too.
 		if (itemHandler instanceof InventoryComponent) {
@@ -76,6 +80,16 @@ public class StaticPowerContainerSlot extends SlotItemHandler {
 
 	public void drawSlotOverlay(GuiDrawItem itemRenderer, int guiLeft, int guiTop, int slotSize, int slotPosOffset) {
 
+	}
+
+	public StaticPowerContainerSlot setEnabledState(boolean enabled) {
+		this.isEnabled = enabled;
+		return this;
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public boolean isEnabled() {
+		return isEnabled;
 	}
 
 	public void drawExtras(GuiDrawItem itemRenderer, int guiLeft, int guiTop, int slotSize, int slotPosOffset) {

@@ -9,6 +9,7 @@ import java.util.function.Function;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager.IScreenFactory;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.fluid.FlowingFluid;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.Container;
@@ -18,6 +19,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.network.IContainerFactory;
@@ -130,6 +132,14 @@ public class StaticPowerRegistry {
 	public static void onRegisterItems(RegistryEvent.Register<Item> event) {
 		for (Item item : ITEMS) {
 			event.getRegistry().register(item);
+		}
+	}
+
+	public static void onRegisterItemColors(ColorHandlerEvent.Item event) {
+		for (Item item : ITEMS) {
+			if (item instanceof IItemColor) {
+				event.getItemColors().register((IItemColor) item, item);
+			}
 		}
 	}
 

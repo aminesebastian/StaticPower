@@ -265,7 +265,8 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		// Add the drops for the current block and break it.
 		items.addAll(WorldUtilities.getBlockDrops(getWorld(), pos));
 		getWorld().setBlockState(pos, Blocks.AIR.getDefaultState(), 1 | 2);
-
+		useAxe();
+		
 		// Recurse to any adjacent blocks if they are farm-able.
 		for (Direction facing : Direction.values()) {
 			BlockPos testPos = pos.offset(facing);

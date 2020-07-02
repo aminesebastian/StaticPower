@@ -3,7 +3,6 @@ package theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -19,8 +18,8 @@ public class BlockDigistoreManager extends BaseDigistoreBlock {
 	}
 
 	@Override
-	public ActionResultType onStaticPowerBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-		return ActionResultType.CONSUME;
+	public HasGuiType hasGuiScreen(TileEntity tileEntity, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+		return HasGuiType.ALWAYS;
 	}
 
 	@Override

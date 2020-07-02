@@ -3,10 +3,14 @@ package theking530.common.gui;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.TransformationMatrix;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.fluid.Fluid;
@@ -114,23 +118,20 @@ public class GuiDrawUtilities {
 		GlStateManager.enableTexture();
 	}
 
-	public static void drawStringWithSize(String text, int xPos, int yPos, float scale, int color, boolean withShadow) {
-//		int textX = (int) ((xPos - Minecraft.getInstance().fontRenderer.getStringWidth(text) * scale) / scale) - 1;
-//		int textY = (int) ((yPos - 7 * scale) / scale) - 1;
-//
-//		GlStateManager.disableLighting();
-//		GlStateManager.disableDepthTest();
-//		GlStateManager.disableBlend();
-//		GlStateManager.pushMatrix();
-//		GlStateManager.scalef(scale, scale, scale);
-//
-//		if (withShadow) {
-//			Minecraft.getInstance().fontRenderer.drawStringWithShadow(text, textX, textY, color);
-//		} else {
-//			Minecraft.getInstance().fontRenderer.drawString(text, textX, textY, color);
-//		}
-//
-//		GlStateManager.popMatrix();
+	public static void drawStringWithSize(String text, int xPos, int yPos, float scale, Color color, boolean withShadow) {
+		final float scaleFactor = scale;
+		final float inverseScaleFactor = 1.0f / scaleFactor;
+		final int offset = 0;
+
+		TransformationMatrix tm = new TransformationMatrix(new Vector3f(0, 0, 300), null, new Vector3f(scaleFactor, scaleFactor, scaleFactor), null);
+
+		RenderSystem.disableBlend();
+		final int X = (int) ((xPos + offset - Minecraft.getInstance().fontRenderer.getStringWidth(text) * scaleFactor) * inverseScaleFactor);
+		final int Y = (int) ((yPos + offset - 7.0f * scaleFactor) * inverseScaleFactor);
+		IRenderTypeBuffer.Impl buffer = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
+		Minecraft.getInstance().fontRenderer.renderString(text, X, Y, 16777215, withShadow, tm.getMatrix(), buffer, true, 0, 15728880);
+		buffer.finish();
+		RenderSystem.enableBlend();
 	}
 
 	public static void drawTexturedModalRect(float x, float y, float width, float height, float minU, float minV, float maxU, float maxV) {

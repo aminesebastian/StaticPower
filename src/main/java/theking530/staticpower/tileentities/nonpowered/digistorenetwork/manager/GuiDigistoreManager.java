@@ -1,14 +1,13 @@
 package theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager;
 
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.text.ITextComponent;
-import theking530.common.gui.widgets.tabs.GuiSideConfigTab;
-import theking530.common.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
+import theking530.common.utilities.Color;
+import theking530.staticpower.client.container.slots.NoCountRenderSlot;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
-import theking530.staticpower.tileentities.components.RedstoneControlComponent;
 
 public class GuiDigistoreManager extends StaticPowerTileEntityGui<ContainerDigistoreManager, TileEntityDigistoreManager> {
-	// private GuiInfoTab infoTab;
 
 	public GuiDigistoreManager(ContainerDigistoreManager container, PlayerInventory invPlayer, ITextComponent name) {
 		super(container, invPlayer, name, 176, 150);
@@ -16,9 +15,17 @@ public class GuiDigistoreManager extends StaticPowerTileEntityGui<ContainerDigis
 
 	@Override
 	public void initializeGui() {
-		// getTabManager().registerTab(infoTab = new GuiInfoTab(100, 65));
-		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
-		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
+
+	}
+
+	@Override
+	public void drawSlot(Slot slotIn) {
+		if (slotIn.getHasStack()) {
+			super.drawSlot(new NoCountRenderSlot(slotIn));
+			this.drawStringWithSize(String.valueOf(slotIn.getStack().getCount()), slotIn.xPos + 16, slotIn.yPos + 16, 0.6f, Color.WHITE, true);
+		} else {
+			super.drawSlot(slotIn);
+		}
 	}
 
 	@Override

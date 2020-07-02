@@ -8,7 +8,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.NetworkMapper;
@@ -17,7 +17,7 @@ import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.TileEntityDigistoreManager;
 import theking530.staticpower.utilities.ItemUtilities;
 
-public class DigistoreNetworkModule extends AbstractCableNetworkModule implements IItemHandler {
+public class DigistoreNetworkModule extends AbstractCableNetworkModule implements IItemHandlerModifiable {
 	private final List<TileEntityDigistore> digistores;
 	private boolean managerPresent;
 
@@ -49,7 +49,7 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule implement
 	}
 
 	public boolean isManagerPresent() {
-		if(!managerPresent) {
+		if (!managerPresent) {
 			Network.updateGraph(Network.getWorld(), Network.getOrigin());
 		}
 		return managerPresent;
@@ -67,7 +67,10 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule implement
 	@Override
 	public ItemStack getStackInSlot(int slot) {
 		if (managerPresent) {
-			return digistores.get(slot).getStoredItem();
+			// Return an itemstack with the proper amount of the stored item.
+			ItemStack output = digistores.get(slot).getStoredItem().copy();
+			output.setCount(digistores.get(slot).getStoredAmount());
+			return output;
 		}
 		throw new RuntimeException("Attempted to get the stack in the digistore slot with a network with no present manager.");
 	}
@@ -102,6 +105,11 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule implement
 			return ItemUtilities.areItemStacksStackable(getStackInSlot(slot), stack);
 		}
 		throw new RuntimeException("Attempted to check if an item is valid for a network with no present manager.");
+	}
+
+	@Override
+	public void setStackInSlot(int slot, ItemStack stack) {
+
 	}
 
 	@Override

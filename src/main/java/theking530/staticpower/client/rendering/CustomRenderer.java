@@ -79,7 +79,7 @@ public class CustomRenderer {
 	}
 
 	public static void removeCubeRenderer(TileEntity tileEntity, String key) {
-		if (CubeRenderRequests.containsKey(tileEntity)) {
+		while (CubeRenderRequests.containsKey(tileEntity)) {
 			CubeRenderRequests.get(tileEntity).remove(key);
 			if (CubeRenderRequests.get(tileEntity).isEmpty()) {
 				CubeRenderRequests.remove(tileEntity);

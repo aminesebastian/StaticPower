@@ -14,23 +14,26 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticpower.utilities.Tier;
 
 public class BaseRangeUpgrade extends BaseUpgrade implements IUpgradeItem {
+	public final float rangeUpgrade;
+
 	public BaseRangeUpgrade(String name, Tier tier) {
 		super(name, tier, new Properties().maxStackSize(1));
-	}
-
-	@Override
-	public float getUpgradeValueAtIndex(ItemStack stack, int upgradeNumber) {
 		switch (getTier()) {
 		case BASIC:
-			return 0.75f;
+			rangeUpgrade = 2.0f;
+			break;
 		case STATIC:
-			return 1.5f;
+			rangeUpgrade = 3.0f;
+			break;
 		case ENERGIZED:
-			return 2.5f;
+			rangeUpgrade = 4.0f;
+			break;
 		case LUMUM:
-			return 3.0f;
+			rangeUpgrade = 5.0f;
+			break;
 		default:
-			return 0.0f;
+			rangeUpgrade = 0.0f;
+			break;
 		}
 	}
 
@@ -40,8 +43,7 @@ public class BaseRangeUpgrade extends BaseUpgrade implements IUpgradeItem {
 		if (getUpgradeValueAtIndex(stack, 0) < 1) {
 			tooltip.add(new StringTextComponent(TextFormatting.RED + "-" + new java.text.DecimalFormat("#").format((getUpgradeValueAtIndex(stack, 0)) * 100) + "% " + TextFormatting.WHITE + "Range"));
 		} else {
-			tooltip.add(
-					new StringTextComponent(TextFormatting.GREEN + "+" + new java.text.DecimalFormat("#").format((getUpgradeValueAtIndex(stack, 0)) * 100) + "% " + TextFormatting.WHITE + "Range"));
+			tooltip.add(new StringTextComponent(TextFormatting.GREEN + "+" + new java.text.DecimalFormat("#").format((getUpgradeValueAtIndex(stack, 0)) * 100) + "% " + TextFormatting.WHITE + "Range"));
 		}
 	}
 }

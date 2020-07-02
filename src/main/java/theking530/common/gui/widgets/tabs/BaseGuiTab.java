@@ -11,10 +11,11 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import theking530.common.gui.GuiTextures;
 import theking530.common.gui.WidgetContainer;
+import theking530.common.gui.drawables.IDrawable;
+import theking530.common.gui.drawables.ItemDrawable;
 import theking530.common.gui.widgets.AbstractGuiWidget.EInputResult;
 import theking530.common.utilities.RectangleBounds;
 import theking530.common.utilities.StaticVertexBuffer;
@@ -73,7 +74,7 @@ public abstract class BaseGuiTab {
 
 	private float animationTimer = 0;
 	private float animationTime = 4.0f;
-	private Item itemIcon;
+	private IDrawable icon;
 	private ResourceLocation tabTexture;
 	private TabState tabState;
 	private TabSide tabSide;
@@ -88,10 +89,10 @@ public abstract class BaseGuiTab {
 	 * @param texture   The background texture of the tab.
 	 * @param item      The item that should render as the icon for the tab.
 	 */
-	public BaseGuiTab(int tabWidth, int tabHeight, ResourceLocation texture, Item item) {
+	public BaseGuiTab(int tabWidth, int tabHeight, ResourceLocation texture, IDrawable icon) {
 		this.tabWidth = tabWidth;
 		this.tabHeight = tabHeight;
-		itemIcon = item;
+		this.icon = icon;
 		tabTexture = texture;
 		tabState = TabState.CLOSED;
 		tabSide = TabSide.RIGHT;
@@ -105,10 +106,22 @@ public abstract class BaseGuiTab {
 	 * @param tabWidth  The width of the tab.
 	 * @param tabHeight The height of the tab.
 	 * @param texture   The background texture of the tab.
+	 * @param item      The item that should render as the icon for the tab.
+	 */
+	public BaseGuiTab(int tabWidth, int tabHeight, ResourceLocation texture, Item item) {
+		this(tabWidth, tabHeight, texture, new ItemDrawable(item));
+	}
+
+	/**
+	 * Creates a {@link BaseGuiTab}.
+	 * 
+	 * @param tabWidth  The width of the tab.
+	 * @param tabHeight The height of the tab.
+	 * @param texture   The background texture of the tab.
 	 * @param block     The block that should render as the icon for the tab.
 	 */
 	public BaseGuiTab(int tabWidth, int tabHeight, ResourceLocation texture, Block block) {
-		this(tabWidth, tabHeight, texture, block.asItem());
+		this(tabWidth, tabHeight, texture, new ItemDrawable(block));
 	}
 
 	/**
@@ -344,8 +357,8 @@ public abstract class BaseGuiTab {
 	 * @param partialTicks
 	 */
 	protected void drawButtonIcon(float partialTicks) {
-		if (itemIcon != null) {
-			Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(new ItemStack(itemIcon), getTabSide() == TabSide.RIGHT ? xPosition + 3 : xPosition + tabWidth + 5, yPosition + 4);
+		if (icon != null) {
+			icon.draw(getTabSide() == TabSide.RIGHT ? xPosition + 3 : xPosition + tabWidth + 5, yPosition + 4);
 		}
 	}
 

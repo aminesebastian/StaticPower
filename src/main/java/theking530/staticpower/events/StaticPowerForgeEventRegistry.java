@@ -1,11 +1,13 @@
 package theking530.staticpower.events;
 
+import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.crafting.wrappers.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.utilities.Reference;
@@ -23,7 +25,10 @@ public class StaticPowerForgeEventRegistry {
 	public static void render(RenderWorldLastEvent event) {
 		StaticPowerClientEventHandler.render(event);
 	}
-
+	@SubscribeEvent
+	public static void registerItemColors(ColorHandlerEvent.Item event) {
+		StaticPowerRegistry.onRegisterItemColors(event);
+	}
 	/**
 	 * This event is raised when the resources are loaded/reloaded.
 	 */

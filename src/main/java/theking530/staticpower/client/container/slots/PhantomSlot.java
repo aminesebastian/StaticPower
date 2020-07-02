@@ -2,12 +2,12 @@ package theking530.staticpower.client.container.slots;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 
 public class PhantomSlot extends StaticPowerContainerSlot {
-	private ItemStackHandler itemHandler;
+	private IItemHandlerModifiable itemHandler;
 
-	public PhantomSlot(ItemStackHandler inv, int index, int x, int y) {
+	public PhantomSlot(IItemHandlerModifiable inv, int index, int x, int y) {
 		super(inv, index, x, y);
 		itemHandler = inv;
 	}

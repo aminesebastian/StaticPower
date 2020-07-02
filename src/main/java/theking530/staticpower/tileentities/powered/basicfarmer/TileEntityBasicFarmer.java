@@ -35,12 +35,14 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.common.utilities.Color;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.initialization.ModTileEntityTypes;
+import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.BatteryComponent;
 import theking530.staticpower.tileentities.components.FluidContainerComponent;
 import theking530.staticpower.tileentities.components.FluidTankComponent;
 import theking530.staticpower.tileentities.components.InputServoComponent;
 import theking530.staticpower.tileentities.components.InventoryComponent;
+import theking530.staticpower.tileentities.components.InventoryComponent.InventoryChangeType;
 import theking530.staticpower.tileentities.components.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.OutputServoComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
@@ -85,7 +87,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 9, MachineSideMode.Output));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 128, MachineSideMode.Never));
 		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
-		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
+		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never).setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
 
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 5, this::canFarm, this::canFarm, this::processingCompleted, true));
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluid) -> fluid.getFluid() == Fluids.WATER).setCapabilityExposedModes(MachineSideMode.Input));
@@ -190,8 +192,11 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	}
 
 	public void setShouldDrawRadiusPreview(boolean shouldDraw) {
-		shouldDrawRadiusPreview = shouldDraw;
 		if (shouldDraw) {
+			// If we were already drawing, remove and re-do it.
+			if (shouldDrawRadiusPreview) {
+				CustomRenderer.removeCubeRenderer(getTileEntity(), "range");
+			}
 			// Set the scale equal to the range * 2 plus 1.
 			Vector3f scale = new Vector3f((range * 2) + 1, 1.0f, (range * 2) + 1);
 			// Shift over so we center the range around the farmer.
@@ -204,6 +209,9 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 			// Remove the entry.
 			CustomRenderer.removeCubeRenderer(getTileEntity(), "range");
 		}
+
+		// Update the drawing value.
+		shouldDrawRadiusPreview = shouldDraw;
 	}
 
 	private void refreshBlocksInRange(int range) {
@@ -330,35 +338,35 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	}
 
 	public boolean harvestSugarCane(BlockPos pos) {
-		if (getWorld().getBlockState(pos.add(0, 1, 0)).getBlock() instanceof SugarCaneBlock) {
-			captureHarvestItems(pos.add(0, 1, 0));
-			getWorld().setBlockState(pos.add(0, 1, 0), Blocks.AIR.getDefaultState(), 1 | 2);
-			useAxe();
-
-			if (getWorld().getBlockState(pos.add(0, 2, 0)).getBlock() instanceof SugarCaneBlock) {
-				captureHarvestItems(pos.add(0, 2, 0));
-				getWorld().setBlockState(pos.add(0, 2, 0), Blocks.AIR.getDefaultState(), 1 | 2);
+		boolean harvested = false;
+		for (int i = 1; i < 255; i++) {
+			if (getWorld().getBlockState(pos.add(0, i, 0)).getBlock() instanceof SugarCaneBlock) {
+				captureHarvestItems(pos.add(0, i, 0));
+				getWorld().setBlockState(pos.add(0, i, 0), Blocks.AIR.getDefaultState(), 1 | 2);
 				useAxe();
+				harvested = true;
+			} else {
+				break;
 			}
-			return true;
 		}
-		return false;
+
+		return harvested;
 	}
 
 	public boolean harvestCactus(BlockPos pos) {
-		if (getWorld().getBlockState(pos.add(0, 1, 0)).getBlock() instanceof CactusBlock) {
-			captureHarvestItems(pos.add(0, 1, 0));
-			getWorld().setBlockState(pos.add(0, 1, 0), Blocks.AIR.getDefaultState(), 1 | 2);
-			useAxe();
-
-			if (getWorld().getBlockState(pos.add(0, 2, 0)).getBlock() instanceof CactusBlock) {
-				captureHarvestItems(pos.add(0, 2, 0));
-				getWorld().setBlockState(pos.add(0, 2, 0), Blocks.AIR.getDefaultState(), 1 | 2);
+		boolean harvested = false;
+		for (int i = 1; i < 255; i++) {
+			if (getWorld().getBlockState(pos.add(0, i, 0)).getBlock() instanceof CactusBlock) {
+				captureHarvestItems(pos.add(0, i, 0));
+				getWorld().setBlockState(pos.add(0, i, 0), Blocks.AIR.getDefaultState(), 1 | 2);
 				useAxe();
+				harvested = true;
+			} else {
+				break;
 			}
-			return true;
 		}
-		return false;
+
+		return harvested;
 	}
 
 	public boolean harvestStem(BlockPos pos) {
@@ -416,6 +424,22 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 			}
 		}
 		return false;
+	}
+
+	public void onUpgradesInventoryModifiedCallback(InventoryChangeType changeType, ItemStack item, InventoryComponent inventory) {
+		range = DEFAULT_RANGE;
+		for (ItemStack stack : inventory) {
+			if (stack.getItem() instanceof BaseRangeUpgrade) {
+				range = (int) Math.max(range, DEFAULT_RANGE * (((BaseRangeUpgrade) stack.getItem()).rangeUpgrade));
+			}
+		}
+		refreshBlocksInRange(range);
+		markTileEntityForSynchronization();
+		
+		// Refresh the preview if it is currently begin drawn.
+		if(getShouldDrawRadiusPreview()) {
+			setShouldDrawRadiusPreview(true);
+		}
 	}
 
 	@Override

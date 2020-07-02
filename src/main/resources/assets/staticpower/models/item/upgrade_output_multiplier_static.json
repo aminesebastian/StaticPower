@@ -1,6 +1,7 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "staticpower:items/upgrades/upgrade_output_multiplier_static"
+		"layer0": "staticpower:items/upgrades/upgrade_output_multiplier",
+		"layer1": "staticpower:items/upgrades/overlay_upgrade_static"
 	}
 }
