@@ -1,9 +1,10 @@
 package theking530.staticpower.tileentities.nonpowered.digistorenetwork.ioport;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
+
+import javax.annotation.Nonnull;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
@@ -18,63 +19,62 @@ import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 
 public class DigitstoreIOPortInventoryComponent extends AbstractTileEntityComponent implements IItemHandler {
+	private final int bufferSlots;
+	private final List<ItemStack> buffer;
 
-	public DigitstoreIOPortInventoryComponent(String name) {
+	public DigitstoreIOPortInventoryComponent(String name, int bufferSize) {
 		super(name);
+		bufferSlots = bufferSize;
+
+		// Initialize the buffer.
+		buffer = new LinkedList<ItemStack>();
+		for (int i = 0; i < bufferSlots; i++) {
+			buffer.add(ItemStack.EMPTY);
+		}
 	}
 
 	@Override
 	public int getSlots() {
-		AtomicInteger output = new AtomicInteger(0);
-		getDigistoreNetworkModule().ifPresent(network -> {
-			output.set(network.getSlots());
-		});
-		return output.get();
+		return bufferSlots;
 	}
 
 	@Override
 	public ItemStack getStackInSlot(int slot) {
-		AtomicReference<ItemStack> output = new AtomicReference<ItemStack>(ItemStack.EMPTY);
-		getDigistoreNetworkModule().ifPresent(network -> {
-			output.set(network.getStackInSlot(slot));
-		});
-		return output.get();
+		return buffer.get(slot);
 	}
 
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-		AtomicReference<ItemStack> output = new AtomicReference<ItemStack>(ItemStack.EMPTY);
-		getDigistoreNetworkModule().ifPresent(network -> {
-			output.set(network.insertItem(slot, stack, simulate));
-		});
-		return output.get();
+		// Do nothing on the client.
+		if (getWorld().isRemote) {
+			return stack;
+		}
+
+		DigistoreNetworkModule module = getDigistoreNetworkModule().orElse(null);
+		if (module != null) {
+			return module.insertItem(stack, simulate);
+		}
+
+		return stack;
 	}
 
 	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
-		AtomicReference<ItemStack> output = new AtomicReference<ItemStack>(ItemStack.EMPTY);
-		getDigistoreNetworkModule().ifPresent(network -> {
-			output.set(network.extractItem(slot, amount, simulate));
-		});
-		return output.get();
+		return ItemStack.EMPTY;
 	}
 
 	@Override
 	public int getSlotLimit(int slot) {
-		AtomicInteger output = new AtomicInteger(0);
-		getDigistoreNetworkModule().ifPresent(network -> {
-			output.set(network.getSlotLimit(slot));
-		});
-		return output.get();
+		return 64;
 	}
 
 	@Override
 	public boolean isItemValid(int slot, ItemStack stack) {
-		AtomicBoolean output = new AtomicBoolean(false);
-		getDigistoreNetworkModule().ifPresent(network -> {
-			output.set(network.isItemValid(slot, stack));
-		});
-		return output.get();
+		return true;
+	}
+
+	protected int getStackLimit(int slot, @Nonnull ItemStack stack) {
+		return Math.min(getSlotLimit(slot), stack.getMaxStackSize());
 	}
 
 	public Optional<DigistoreNetworkModule> getDigistoreNetworkModule() {

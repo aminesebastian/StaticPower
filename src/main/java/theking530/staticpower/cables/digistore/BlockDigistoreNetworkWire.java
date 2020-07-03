@@ -17,7 +17,7 @@ import theking530.staticpower.initialization.ModTileEntityTypes;
 public class BlockDigistoreNetworkWire extends AbstractCableBlock {
 
 	public BlockDigistoreNetworkWire(String name) {
-		super(name, new CableBoundsCache(2.0D, 3.0D, 2.0D));
+		super(name, new CableBoundsCache(1.0D, 4.0D, 0.5D));
 
 	}
 
@@ -32,7 +32,7 @@ public class BlockDigistoreNetworkWire extends AbstractCableBlock {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public RenderType getRenderType() {
-		return RenderType.getCutout();
+		return RenderType.getCutoutMipped();
 	}
 
 	@Override

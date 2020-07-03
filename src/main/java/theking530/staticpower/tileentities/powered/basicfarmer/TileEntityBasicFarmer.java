@@ -278,9 +278,6 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		if (getWorld().isRemote) {
 			return;
 		}
-		if (growCrop(pos)) {
-			((ServerWorld) getWorld()).spawnParticle(ParticleTypes.HAPPY_VILLAGER, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 1, 0.0D, 0.0D, 0.0D, 0.0D);
-		}
 
 		if (getWorld().getBlockState(pos.offset(Direction.DOWN)).getBlock() == Blocks.DIRT || getWorld().getBlockState(pos.offset(Direction.DOWN)).getBlock() == Blocks.GRASS_BLOCK) {
 			getWorld().setBlockState(pos.offset(Direction.DOWN), Blocks.FARMLAND.getDefaultState(), 1 | 2);
@@ -288,14 +285,18 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 
 		}
 
+		boolean farmed = false;
 		// Check to see if we're at a farmable block. If we are, harvest it.
 		if (isFarmableBlock(pos)) {
-			harvestGenericCrop(pos);
-			harvestSugarCane(pos);
-			harvestCactus(pos);
-			harvestStem(pos);
-			harvestNetherWart(pos);
-			harvestMelonOrPumpkin(pos);
+			farmed |= harvestGenericCrop(pos);
+			farmed |= harvestSugarCane(pos);
+			farmed |= harvestCactus(pos);
+			farmed |= harvestStem(pos);
+			farmed |= harvestNetherWart(pos);
+			farmed |= harvestMelonOrPumpkin(pos);
+			if (!farmed) {
+				growCrop(pos);
+			}
 		}
 	}
 
@@ -411,19 +412,20 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	}
 
 	public boolean growCrop(BlockPos pos) {
-		if (RANDOM.nextInt(100) <= growthBonusChance) {
-			if (getWorld().getBlockState(pos) != null && getWorld().getBlockState(pos).getBlock() instanceof IGrowable) {
-				IGrowable tempCrop = (IGrowable) getWorld().getBlockState(pos).getBlock();
-				if (tempCrop.canGrow(getWorld(), pos, getWorld().getBlockState(pos), true)) {
-					if (!world.isRemote) {
+		for (int i = 0; i < getGrowthBonus() / 100; i++) {
+			if (RANDOM.nextInt(100) < getGrowthBonus()) {
+				if (getWorld().getBlockState(pos) != null && getWorld().getBlockState(pos).getBlock() instanceof IGrowable) {
+					IGrowable tempCrop = (IGrowable) getWorld().getBlockState(pos).getBlock();
+					if (tempCrop.canGrow(getWorld(), pos, getWorld().getBlockState(pos), false)) {
 						tempCrop.grow((ServerWorld) getWorld(), RANDOM, pos, getWorld().getBlockState(pos));
 						getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 1 | 2);
+						((ServerWorld) getWorld()).spawnParticle(ParticleTypes.HAPPY_VILLAGER, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 1, 0.0D, 0.0D, 0.0D, 0.0D);
 					}
-					return true;
 				}
 			}
 		}
-		return false;
+
+		return true;
 	}
 
 	public void onUpgradesInventoryModifiedCallback(InventoryChangeType changeType, ItemStack item, InventoryComponent inventory) {
@@ -435,9 +437,9 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		}
 		refreshBlocksInRange(range);
 		markTileEntityForSynchronization();
-		
+
 		// Refresh the preview if it is currently begin drawn.
-		if(getShouldDrawRadiusPreview()) {
+		if (getShouldDrawRadiusPreview()) {
 			setShouldDrawRadiusPreview(true);
 		}
 	}

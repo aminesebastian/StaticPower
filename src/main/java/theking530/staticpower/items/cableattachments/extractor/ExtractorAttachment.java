@@ -2,6 +2,7 @@ package theking530.staticpower.items.cableattachments.extractor;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.Nullable;
 
@@ -20,6 +21,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.fluid.FluidCableComponent;
 import theking530.staticpower.cables.fluid.FluidNetworkModule;
 import theking530.staticpower.cables.item.ItemNetworkModule;
@@ -27,6 +29,7 @@ import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.items.ItemStackInventoryCapabilityProvider;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
+import theking530.staticpower.tileentities.nonpowered.digistorenetwork.ioport.TileEntityDigistoreIOPort;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class ExtractorAttachment extends AbstractCableAttachment {
@@ -69,52 +72,15 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 
 		// Increment the extraction timer. If it returns true, attempt an item extract.
 		if (incrementExtractionTimer(attachment)) {
-			// Attempt to transfer the item.
-			cable.<ItemNetworkModule>getNetworkModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE).ifPresent(network -> {
-				// Attempt to extract an item.
-				te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).ifPresent(inv -> {
-					for (int i = 0; i < inv.getSlots(); i++) {
-						// Simulate an extract.
-						ItemStack extractedItem = inv.extractItem(i, StaticPowerDataRegistry.getTier(tierType).getCableExtractionStackSize(), true);
-
-						// If the extracted item is empty, continue.
-						if (extractedItem.isEmpty()) {
-							continue;
-						}
-
-						// Skip any items that are not supported by the extraction filter.
-						if (!doesItemPassExtractionFilter(attachment, extractedItem)) {
-							continue;
-						}
-
-						// Attempt to transfer the itemstack through the cable network.
-						ItemStack remainingAmount = network.transferItemStack(extractedItem, cable.getPos(), side, false);
-						if (remainingAmount.getCount() < extractedItem.getCount()) {
-							inv.extractItem(i, extractedItem.getCount() - remainingAmount.getCount(), false);
-							cable.getTileEntity().markDirty();
-							break;
-						}
-					}
-				});
-			});
-
+			// See if we should perform a digistore extract.
+			if (!performDigistoreExtract(attachment, side, cable, te)) {
+				// If not, attempt to transfer the item from a regular inventory.
+				performItemHandlerExtract(attachment, side, cable, te);
+			}
 		}
 
-		// Attempt to transfer the fluid regardless of the item extract timer.
-		cable.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
-			FluidCableComponent fluidCable = (FluidCableComponent) cable;
-			// Attempt to extract an item.
-			te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite()).ifPresent(tank -> {
-				if (tank.getTanks() <= 0) {
-					return;
-				}
-				if (fluidCable.isFluidValid(0, tank.getFluidInTank(0))) {
-					FluidStack drained = tank.drain(StaticPowerDataRegistry.getTier(tierType).getCableExtractionFluidRate(), FluidAction.SIMULATE);
-					int filled = fluidCable.fill(drained, FluidAction.EXECUTE);
-					tank.drain(filled, FluidAction.EXECUTE);
-				}
-			});
-		});
+		// Attempt to transfer fluid regardless of the item extract timer.
+		performFluidExtract(attachment, side, cable, te);
 	}
 
 	public boolean doesItemPassExtractionFilter(ItemStack attachment, ItemStack itemToTest) {
@@ -178,6 +144,90 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 	@Override
 	public ResourceLocation getModel(ItemStack attachment, AbstractCableProviderComponent cableComponent) {
 		return model;
+	}
+
+	protected boolean performDigistoreExtract(ItemStack attachment, Direction side, AbstractCableProviderComponent cable, TileEntity targetTe) {
+		if (targetTe instanceof TileEntityDigistoreIOPort) {
+			AtomicBoolean output = new AtomicBoolean(false);
+			((TileEntityDigistoreIOPort) targetTe).digistoreCableProvider.<DigistoreNetworkModule>getNetworkModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE).ifPresent(module -> {
+				cable.<ItemNetworkModule>getNetworkModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE).ifPresent(network -> {
+					// Get the filter inventory (if there is a null value, do not handle it, throw
+					// an exception).
+					IItemHandler filterItems = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(() -> new RuntimeException("Encounetered an extractor attachment without a valid filter inventory."));
+
+					// Get the list of filter items.
+					for (int i = 0; i < filterItems.getSlots(); i++) {
+						if (!filterItems.getStackInSlot(i).isEmpty()) {
+							// Simulate an extract.
+							ItemStack extractedItem = module.extractItem(filterItems.getStackInSlot(i), StaticPowerDataRegistry.getTier(tierType).getCableExtractionStackSize(), true);
+
+							// If the extracted item is empty, continue.
+							if (extractedItem.isEmpty()) {
+								continue;
+							}
+
+							// Attempt to transfer the itemstack through the cable network.
+							ItemStack remainingAmount = network.transferItemStack(extractedItem, cable.getPos(), side, false);
+							if (remainingAmount.getCount() < extractedItem.getCount()) {
+								module.extractItem(extractedItem, extractedItem.getCount() - remainingAmount.getCount(), false);
+								cable.getTileEntity().markDirty();
+								output.set(true);
+								break;
+							}
+						}
+					}
+				});
+			});
+			return output.get();
+		}
+		return false;
+	}
+
+	protected void performItemHandlerExtract(ItemStack attachment, Direction side, AbstractCableProviderComponent cable, TileEntity targetTe) {
+		cable.<ItemNetworkModule>getNetworkModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE).ifPresent(network -> {
+			// Attempt to extract an item.
+			targetTe.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).ifPresent(inv -> {
+				for (int i = 0; i < inv.getSlots(); i++) {
+					// Simulate an extract.
+					ItemStack extractedItem = inv.extractItem(i, StaticPowerDataRegistry.getTier(tierType).getCableExtractionStackSize(), true);
+
+					// If the extracted item is empty, continue.
+					if (extractedItem.isEmpty()) {
+						continue;
+					}
+
+					// Skip any items that are not supported by the extraction filter.
+					if (!doesItemPassExtractionFilter(attachment, extractedItem)) {
+						continue;
+					}
+
+					// Attempt to transfer the itemstack through the cable network.
+					ItemStack remainingAmount = network.transferItemStack(extractedItem, cable.getPos(), side, false);
+					if (remainingAmount.getCount() < extractedItem.getCount()) {
+						inv.extractItem(i, extractedItem.getCount() - remainingAmount.getCount(), false);
+						cable.getTileEntity().markDirty();
+						break;
+					}
+				}
+			});
+		});
+	}
+
+	protected void performFluidExtract(ItemStack attachment, Direction side, AbstractCableProviderComponent cable, TileEntity targetTe) {
+		cable.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
+			FluidCableComponent fluidCable = (FluidCableComponent) cable;
+			// Attempt to extract an item.
+			targetTe.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite()).ifPresent(tank -> {
+				if (tank.getTanks() <= 0) {
+					return;
+				}
+				if (fluidCable.isFluidValid(0, tank.getFluidInTank(0))) {
+					FluidStack drained = tank.drain(StaticPowerDataRegistry.getTier(tierType).getCableExtractionFluidRate(), FluidAction.SIMULATE);
+					int filled = fluidCable.fill(drained, FluidAction.EXECUTE);
+					tank.drain(filled, FluidAction.EXECUTE);
+				}
+			});
+		});
 	}
 
 	protected class ExtractorContainerProvider extends AbstractCableAttachmentContainerProvider {

@@ -1,5 +1,8 @@
 package theking530.staticpower.cables.digistore;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,7 +11,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.items.IItemHandlerModifiable;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.NetworkMapper;
@@ -17,7 +19,7 @@ import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.TileEntityDigistoreManager;
 import theking530.staticpower.utilities.ItemUtilities;
 
-public class DigistoreNetworkModule extends AbstractCableNetworkModule implements IItemHandlerModifiable {
+public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 	private final List<TileEntityDigistore> digistores;
 	private boolean managerPresent;
 
@@ -59,57 +61,94 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule implement
 		return digistores;
 	}
 
-	@Override
-	public int getSlots() {
-		return managerPresent ? digistores.size() : 0;
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int slot) {
+	public ItemStack insertItem(ItemStack stack, boolean simulate) {
 		if (managerPresent) {
-			// Return an itemstack with the proper amount of the stored item.
-			ItemStack output = digistores.get(slot).getStoredItem().copy();
-			output.setCount(digistores.get(slot).getStoredAmount());
-			return output;
-		}
-		throw new RuntimeException("Attempted to get the stack in the digistore slot with a network with no present manager.");
-	}
+			// Create a copy for the output stack.
+			ItemStack stackToUse = stack.copy();
 
-	@Override
-	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-		if (managerPresent) {
-			return digistores.get(slot).insertItem(stack, simulate);
+			// Allocate a list of all potential digistores to insert into.
+			List<TileEntityDigistore> potentials = new ArrayList<TileEntityDigistore>();
+
+			// Go through each digistore and add them to the potentials list if it can
+			// accept the item.
+			for (TileEntityDigistore digistore : digistores) {
+				if (digistore.insertItem(stackToUse, true).getCount() != stackToUse.getCount()) {
+					potentials.add(digistore);
+				}
+			}
+
+			// Sort the digistores so that we start by filling the most full first.
+			Collections.sort(potentials, new Comparator<TileEntityDigistore>() {
+				public int compare(TileEntityDigistore a, TileEntityDigistore b) {
+					return b.getRemainingStorage(false) - a.getRemainingStorage(false);
+				}
+			});
+
+			// Start filling, break if we finish the fill.
+			for (TileEntityDigistore digistore : potentials) {
+				stackToUse = digistore.insertItem(stack, simulate);
+				if (stackToUse.isEmpty()) {
+					break;
+				}
+			}
+
+			// Return what remains.
+			return stackToUse;
 		}
 		throw new RuntimeException("Attempted to insert an item into a network with no present manager.");
 	}
 
-	@Override
-	public ItemStack extractItem(int slot, int amount, boolean simulate) {
+	public ItemStack extractItem(ItemStack stack, int count, boolean simulate) {
 		if (managerPresent) {
-			return digistores.get(slot).extractItem(amount, simulate);
+			// Allocate a list of all potential digistores to insert into.
+			List<TileEntityDigistore> potentials = new ArrayList<TileEntityDigistore>();
+
+			// Go through each digistore and add them to the potentials list if it can
+			// accept the item.
+			for (TileEntityDigistore digistore : digistores) {
+				if (!digistore.getStoredItem().isEmpty() && ItemUtilities.areItemStacksStackable(stack, digistore.getStoredItem())) {
+					potentials.add(digistore);
+				}
+			}
+
+			// If we found no matches, return early.
+			if (potentials.size() == 0) {
+				return ItemStack.EMPTY;
+			}
+
+			// Sort the digistores so that we start by extracting from the emptiest first.
+			Collections.sort(potentials, new Comparator<TileEntityDigistore>() {
+				public int compare(TileEntityDigistore a, TileEntityDigistore b) {
+					return a.getRemainingStorage(false) - b.getRemainingStorage(false);
+				}
+			});
+
+			// Create a handle to the output.
+			ItemStack output = ItemStack.EMPTY;
+
+			// Start extracting, break if we finish the extract.
+			for (TileEntityDigistore digistore : potentials) {
+				// Extract up to the amount we need.
+				ItemStack extracted = digistore.extractItem(count - output.getCount(), false);
+
+				// If this is our first iteration, set the output stack. Otherwise, just grow
+				// it.
+				if (output.isEmpty()) {
+					output = extracted;
+				} else {
+					output.grow(extracted.getCount());
+				}
+
+				// If we have gathered enough, break;
+				if (output.getCount() >= count) {
+					break;
+				}
+			}
+
+			// Return what remains.
+			return output;
 		}
 		throw new RuntimeException("Attempted to extract an item from a network with no present manager.");
-	}
-
-	@Override
-	public int getSlotLimit(int slot) {
-		if (managerPresent) {
-			return digistores.get(slot).getMaxStoredAmount();
-		}
-		throw new RuntimeException("Attempted to get the slot size limit for a network with no present manager.");
-	}
-
-	@Override
-	public boolean isItemValid(int slot, ItemStack stack) {
-		if (managerPresent) {
-			return ItemUtilities.areItemStacksStackable(getStackInSlot(slot), stack);
-		}
-		throw new RuntimeException("Attempted to check if an item is valid for a network with no present manager.");
-	}
-
-	@Override
-	public void setStackInSlot(int slot, ItemStack stack) {
-
 	}
 
 	@Override

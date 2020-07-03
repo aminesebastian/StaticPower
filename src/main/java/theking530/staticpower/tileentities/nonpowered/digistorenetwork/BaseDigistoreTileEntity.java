@@ -5,7 +5,7 @@ import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.tileentities.TileEntityBase;
 
 public abstract class BaseDigistoreTileEntity extends TileEntityBase {
-	protected final DigistoreCableProviderComponent digistoreCableProvider;
+	public final DigistoreCableProviderComponent digistoreCableProvider;
 
 	public BaseDigistoreTileEntity(TileEntityType<?> teType) {
 		super(teType);
