@@ -157,6 +157,15 @@ public abstract class AbstractGuiWidget {
 		return point.getX() >= ownerRelativePosition.getX() && point.getX() < ownerRelativePosition.getX() + size.getX() && point.getY() >= ownerRelativePosition.getY() && point.getY() < ownerRelativePosition.getY() + size.getY();
 	}
 
+	/**
+	 * This tick method runs every 1/20th of a second (once per game tick). This is
+	 * a good place to perform any calculations that don't have to happen per frame
+	 * but still have to occur rapidly.
+	 */
+	public void tick() {
+
+	}
+
 	/* Render Events */
 	/**
 	 * Updates this widget with the position and size of it's owner.
@@ -212,5 +221,13 @@ public abstract class AbstractGuiWidget {
 
 	public void mouseHover(int mouseX, int mouseY) {
 
+	}
+
+	public EInputResult characterTyped(char character, int p_charTyped_2_) {
+		return EInputResult.UNHANDLED;
+	}
+
+	public EInputResult keyPressed(int key, int scanCode, int modifiers) {
+		return EInputResult.UNHANDLED;
 	}
 }

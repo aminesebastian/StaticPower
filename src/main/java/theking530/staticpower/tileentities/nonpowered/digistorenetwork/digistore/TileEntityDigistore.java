@@ -14,11 +14,14 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockRayTraceResult;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.initialization.ModTileEntityTypes;
+import theking530.staticpower.initialization.ModUpgrades;
 import theking530.staticpower.items.upgrades.BaseDigistoreCapacityUpgrade;
+import theking530.staticpower.items.upgrades.BaseUpgrade;
 import theking530.staticpower.tileentities.components.InventoryComponent;
 import theking530.staticpower.tileentities.components.InventoryComponent.InventoryChangeType;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.BaseDigistoreTileEntity;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
+import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.ItemUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
@@ -29,7 +32,7 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 	public final DigistoreInventoryComponent outputInventory;
 
 	private ItemStack storedItem;
-	private ItemStack storedAmount;
+	private int storedAmount;
 	private int maximumStorage;
 
 	private boolean shouldVoid;
@@ -40,7 +43,7 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never).setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
 		registerComponent(outputInventory = new DigistoreInventoryComponent("OutputInventory"));
 		storedItem = ItemStack.EMPTY.copy();
-		storedAmount = ItemStack.EMPTY.copy();
+		storedAmount = 0;
 		maximumStorage = DEFAULT_CAPACITY;
 		shouldVoid = false;
 	}
@@ -51,10 +54,25 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 		// this digistore, attempt to insert it.
 		if (!player.getHeldItem(hand).isEmpty()) {
 			ItemStack heldItem = player.getHeldItem(hand);
+
+			// If the player is holding an upgrade, attempt to insert the upgrade.
+			if (heldItem.getItem() instanceof BaseUpgrade) {
+				ItemStack remaining = InventoryUtilities.insertItemIntoInventory(upgradesInventory, heldItem, false);
+				if (remaining.getCount() != heldItem.getCount()) {
+					if (!player.isCreative()) {
+						heldItem.setCount(remaining.getCount());
+					}
+
+					world.playSound(null, pos, SoundEvents.BLOCK_ANVIL_PLACE, SoundCategory.PLAYERS, 0.2f, 1.5f);
+					return ActionResultType.SUCCESS;
+				}
+			}
+
+			// If not, attempt to insert the item.
 			if (canAcceptItem(heldItem)) {
 				ItemStack remaining = insertItem(player.getHeldItem(hand), false);
 				player.setItemStackToSlot(EquipmentSlotType.MAINHAND, remaining);
-				world.playSound(player, pos, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, SoundCategory.PLAYERS, 1.0f, 1.0f);
+				world.playSound(null, pos, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, SoundCategory.PLAYERS, 0.8f, 1.0f);
 				return ActionResultType.SUCCESS;
 			}
 		} else {
@@ -104,10 +122,10 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 	@Override
 	public void onBlockBroken(BlockState state, BlockState newState, boolean isMoving) {
 		super.onBlockBroken(state, newState, isMoving);
-		while (storedAmount.getCount() > 0) {
+		while (storedAmount > 0) {
 			int countToDrop = Math.min(storedItem.getMaxStackSize(), getStoredAmount());
 			WorldUtilities.dropItem(getWorld(), getFacingDirection(), getPos(), storedItem, countToDrop);
-			storedAmount.shrink(countToDrop);
+			storedAmount -= countToDrop;
 		}
 	}
 
@@ -130,20 +148,8 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 		return storedItem.isEmpty();
 	}
 
-	/**
-	 * This itemstack is used to keep track of the amount of items kept in this
-	 * inventory. This is the handle that is used when interacting through a
-	 * container. WARNING: DO NOT CALL AND USE THIS UNLESS YOU KNOW EXACTLY WHAT
-	 * YOU'RE DOING.
-	 * 
-	 * @return
-	 */
-	public ItemStack getStoredAmountHandle() {
-		return storedAmount;
-	}
-
 	public int getStoredAmount() {
-		return storedAmount.getCount();
+		return storedAmount;
 	}
 
 	public int getMaxStoredAmount() {
@@ -159,7 +165,12 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 	}
 
 	public boolean isVoidUpgradeInstalled() {
-		return shouldVoid;
+		for (ItemStack upgrade : this.upgradesInventory) {
+			if (upgrade.getItem() == ModUpgrades.DigistoreVoidUpgrade) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -220,17 +231,18 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 				if (storedItem.isEmpty() && remainingStorage > 0) {
 					setStoredItem(stack);
 				}
-				if (storedAmount.isEmpty()) {
-					storedAmount = stack.copy();
-					storedAmount.setCount(insertableAmount);
-				} else {
-					storedAmount.grow(insertableAmount);
-				}
+				storedAmount += insertableAmount;
 			}
 			ItemStack output = stack.copy();
 			output.setCount(stack.getCount() - insertableAmount);
 			markTileEntityForSynchronization();
-			return output;
+
+			// If we are voiding, ALWAYS consume the input.
+			if (isVoidUpgradeInstalled()) {
+				return ItemStack.EMPTY;
+			} else {
+				return output;
+			}
 		} else {
 			return stack;
 		}
@@ -251,7 +263,7 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 
 		// If not simulating, actually update the amount.
 		if (!simulate) {
-			storedAmount.shrink(outputCount);
+			storedAmount -= outputCount;
 			updateEmptyState();
 		}
 
@@ -294,7 +306,7 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 			return;
 		}
 		// If not locked, clear the digistore icon if there are no items.
-		if (storedAmount.getCount() <= 0) {
+		if (storedAmount <= 0) {
 			storedItem = ItemStack.EMPTY.copy();
 		}
 	}
@@ -314,11 +326,7 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 		CompoundNBT itemNbt = new CompoundNBT();
 		storedItem.write(itemNbt);
 		nbt.put("StoredItem", itemNbt);
-
-		CompoundNBT amoutNbt = new CompoundNBT();
-		storedAmount.write(amoutNbt);
-		nbt.put("StoredAmount", amoutNbt);
-
+		nbt.putInt("StoredAmount", storedAmount);
 		nbt.putInt("MaximumStorage", maximumStorage);
 		nbt.putBoolean("Locked", locked);
 		return nbt;
@@ -327,7 +335,7 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 		storedItem = ItemStack.read(nbt.getCompound("StoredItem"));
-		storedAmount = ItemStack.read(nbt.getCompound("StoredAmount"));
+		storedAmount = nbt.getInt("StoredAmount");
 		maximumStorage = nbt.getInt("MaximumStorage");
 		locked = nbt.getBoolean("Locked");
 	}

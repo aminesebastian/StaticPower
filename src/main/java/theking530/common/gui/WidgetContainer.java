@@ -26,6 +26,13 @@ public class WidgetContainer {
 		widgets = new HashSet<AbstractGuiWidget>();
 	}
 
+	public void tick() {
+		// Tick all the widgets.
+		for (AbstractGuiWidget widget : widgets) {
+			widget.tick();
+		}
+	}
+
 	public void update(Vector2D ownerPosition, Vector2D ownerSize, float partialTicks, int mouseX, int mouseY) {
 		// Render the foreground of all the widgets.
 		for (AbstractGuiWidget widget : widgets) {
@@ -99,6 +106,30 @@ public class WidgetContainer {
 				widget.mouseHover((int) mouseX, (int) mouseY);
 			}
 		}
+	}
+
+	public EInputResult handleKeyPressed(int key, int scanCode, int modifiers) {
+		// Raise the key presed event for all the widgets,
+		for (AbstractGuiWidget widget : widgets) {
+			if (widget.isVisible()) {
+				if (widget.keyPressed(key, scanCode, modifiers) == EInputResult.HANDLED) {
+					return EInputResult.HANDLED;
+				}
+			}
+		}
+		return EInputResult.UNHANDLED;
+	}
+
+	public EInputResult characterTyped(char character, int p_charTyped_2_) {
+		// Raise the character typed event for all the widgets,
+		for (AbstractGuiWidget widget : widgets) {
+			if (widget.isVisible()) {
+				if (widget.characterTyped(character, p_charTyped_2_) == EInputResult.HANDLED) {
+					return EInputResult.HANDLED;
+				}
+			}
+		}
+		return EInputResult.UNHANDLED;
 	}
 
 	public WidgetContainer registerWidget(AbstractGuiWidget widget) {

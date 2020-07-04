@@ -146,22 +146,22 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 				useAxe();
 			}
 			incrementPosition();
-		} else {
-			// For each of the farmed stacks, place the harvested stacks into the output
-			// inventory. Remove the entry from the farmed stacks if it was fully inserted.
-			// Otherwise, update the farmed stack.
-			for (int i = 0; i < internalInventory.getSlots(); i++) {
-				ItemStack extractedStack = internalInventory.extractItem(i, Integer.MAX_VALUE, false);
-				InventoryComponent targetInventory = outputInventory;
-				if (saplingIngredient.test(extractedStack)) {
-					if (InventoryUtilities.canPartiallyInsertItemIntoInventory(inputInventory, extractedStack)) {
-						targetInventory = inputInventory;
-					}
+		}
+		
+		// For each of the farmed stacks, place the harvested stacks into the output
+		// inventory. Remove the entry from the farmed stacks if it was fully inserted.
+		// Otherwise, update the farmed stack.
+		for (int i = 0; i < internalInventory.getSlots(); i++) {
+			ItemStack extractedStack = internalInventory.extractItem(i, Integer.MAX_VALUE, false);
+			InventoryComponent targetInventory = outputInventory;
+			if (saplingIngredient.test(extractedStack)) {
+				if (InventoryUtilities.canPartiallyInsertItemIntoInventory(inputInventory, extractedStack)) {
+					targetInventory = inputInventory;
 				}
-				ItemStack insertedStack = InventoryUtilities.insertItemIntoInventory(targetInventory, extractedStack, false);
-				if (!insertedStack.isEmpty()) {
-					internalInventory.setStackInSlot(i, insertedStack);
-				}
+			}
+			ItemStack insertedStack = InventoryUtilities.insertItemIntoInventory(targetInventory, extractedStack, false);
+			if (!insertedStack.isEmpty()) {
+				internalInventory.setStackInSlot(i, insertedStack);
 			}
 		}
 
@@ -266,7 +266,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		items.addAll(WorldUtilities.getBlockDrops(getWorld(), pos));
 		getWorld().setBlockState(pos, Blocks.AIR.getDefaultState(), 1 | 2);
 		useAxe();
-		
+
 		// Recurse to any adjacent blocks if they are farm-able.
 		for (Direction facing : Direction.values()) {
 			BlockPos testPos = pos.offset(facing);

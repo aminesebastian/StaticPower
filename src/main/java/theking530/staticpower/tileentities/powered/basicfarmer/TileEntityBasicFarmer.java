@@ -135,13 +135,20 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 			refreshBlocksInRange(range);
 		}
 
-		// Harvest the current block.
-		attemptHarvestPosition(getCurrentPosition());
+		if(InventoryUtilities.isInventoryEmpty(internalInventory)) {
+			// Harvest the current block.
+			attemptHarvestPosition(getCurrentPosition());
 
-		// If on the server, use the amount of energy required to harvest a plant.
-		if (!world.isRemote) {
-			energyStorage.getStorage().extractEnergy(DEFAULT_HARVEST_ENERGY_COST, false);
+			// If on the server, use the amount of energy required to harvest a plant.
+			if (!world.isRemote) {
+				energyStorage.getStorage().extractEnergy(DEFAULT_HARVEST_ENERGY_COST, false);
+			}
+			
+			// Increment first to ensure we're always harvesting the next block.
+			incrementPosition();
+
 		}
+
 
 		// For each of the farmed stacks, place the harvested stacks into the output
 		// inventory. Remove the entry from the farmed stacks if it was fully inserted.
@@ -155,9 +162,6 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 				}
 			}
 		}
-
-		// Increment first to ensure we're always harvesting the next block.
-		incrementPosition();
 
 		// Sync the tile entity.
 		markTileEntityForSynchronization();
@@ -184,7 +188,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	}
 
 	public int getGrowthBonus() {
-		return growthBonusChance;
+		return 1000; //growthBonusChance;
 	}
 
 	public boolean getShouldDrawRadiusPreview() {

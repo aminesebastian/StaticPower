@@ -57,6 +57,10 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 		return managerPresent;
 	}
 
+	public DigistoreInventoryWrapper getNetworkInventory() {
+		return new DigistoreInventoryWrapper(this);
+	}
+
 	public List<TileEntityDigistore> getAllDigistores() {
 		return digistores;
 	}
@@ -72,9 +76,15 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 			// Go through each digistore and add them to the potentials list if it can
 			// accept the item.
 			for (TileEntityDigistore digistore : digistores) {
-				if (digistore.insertItem(stackToUse, true).getCount() != stackToUse.getCount()) {
+				ItemStack insertSimulation = digistore.insertItem(stackToUse, true);
+				if (insertSimulation.getCount() != stackToUse.getCount() || digistore.isVoidUpgradeInstalled()) {
 					potentials.add(digistore);
 				}
+			}
+			
+			// If we found no matches, return early.
+			if (potentials.size() == 0) {
+				return stack;
 			}
 
 			// Sort the digistores so that we start by filling the most full first.

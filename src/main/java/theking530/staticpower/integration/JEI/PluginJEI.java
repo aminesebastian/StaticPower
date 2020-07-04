@@ -11,6 +11,7 @@ import mezz.jei.api.helpers.IModIdHelper;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import mezz.jei.api.runtime.IJeiRuntime;
 import mezz.jei.gui.textures.Textures;
 import net.minecraft.util.ResourceLocation;
 import theking530.staticpower.client.gui.StaticPowerContainerGui;
@@ -21,6 +22,7 @@ import theking530.staticpower.utilities.Reference;
 
 @JeiPlugin
 public class PluginJEI implements IModPlugin {
+	public static IJeiRuntime RUNTIME;
 	@Nullable
 	private LumberMillRecipeCategory lumberMillCategory;
 
@@ -40,6 +42,11 @@ public class PluginJEI implements IModPlugin {
 		IModIdHelper modIdHelper = jeiHelpers.getModIdHelper();
 		lumberMillCategory = new LumberMillRecipeCategory(guiHelper);
 		registration.addRecipeCategories(lumberMillCategory);
+	}
+
+	@Override
+	public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
+		RUNTIME = jeiRuntime;
 	}
 
 	@Override

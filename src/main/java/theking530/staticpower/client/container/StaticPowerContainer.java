@@ -11,10 +11,11 @@ import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.common.utilities.TriFunction;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.client.container.slots.DummySlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 
 public abstract class StaticPowerContainer extends Container {
@@ -87,7 +88,7 @@ public abstract class StaticPowerContainer extends Container {
 		addSlotsInGrid(inventory, startingIndex, xPos, yPos, maxPerRow, slotFactory);
 	}
 
-	protected void addSlotsInGrid(IItemHandlerModifiable inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
+	protected void addSlotsInGrid(IItemHandler inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
 		maxPerRow = Math.min(inventory.getSlots(), maxPerRow);
 		int adjustedSlotSize = slotSize + 2;
 		int offset = (maxPerRow * adjustedSlotSize) / 2;
@@ -95,6 +96,25 @@ public abstract class StaticPowerContainer extends Container {
 			int row = i / maxPerRow;
 			Slot output = slotFactory.apply(startingIndex + i, xPos + ((i % maxPerRow) * adjustedSlotSize) - offset, yPos + (row * adjustedSlotSize));
 			addSlot(output);
+		}
+	}
+
+	protected void addSlotsInPerfectSquare(IItemHandler inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
+		addSlotsInGrid(inventory, startingIndex, xPos, yPos, maxPerRow, slotSize, slotFactory);
+		maxPerRow = Math.min(inventory.getSlots(), maxPerRow);
+		int adjustedSlotSize = slotSize + 2;
+		int offset = (maxPerRow * adjustedSlotSize) / 2;
+		int lastValidSlotIndex = inventory.getSlots() - 1;
+		int row = lastValidSlotIndex / maxPerRow;
+
+		int missingSlots = maxPerRow - Math.floorMod(inventory.getSlots(), maxPerRow);
+
+		if (missingSlots %  maxPerRow != 0) {
+			for (int i = 0; i < missingSlots; i++) {
+				int index = inventory.getSlots() - 1 + i;
+				Slot output = new DummySlot(index, xPos + (((i + missingSlots) % maxPerRow) * adjustedSlotSize) - offset, yPos + (row * adjustedSlotSize));
+				addSlot(output);
+			}
 		}
 	}
 

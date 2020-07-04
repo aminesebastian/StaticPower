@@ -14,6 +14,7 @@ import net.minecraft.util.text.ITextComponent;
 import theking530.common.gui.GuiDrawUtilities;
 import theking530.common.gui.WidgetContainer;
 import theking530.common.gui.widgets.AbstractGuiWidget;
+import theking530.common.gui.widgets.AbstractGuiWidget.EInputResult;
 import theking530.common.gui.widgets.GuiDrawItem;
 import theking530.common.gui.widgets.tabs.BaseGuiTab;
 import theking530.common.gui.widgets.tabs.GuiTabManager;
@@ -81,6 +82,7 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	public void tick() {
 		super.tick();
 		updateData();
+		widgetContainer.tick();
 	}
 
 	/**
@@ -176,6 +178,24 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 
 		widgetContainer.handleMouseClick(mouseX, mouseY, button);
 		return superCallResult;
+	}
+
+	@Override
+	public boolean charTyped(char character, int p_charTyped_2_) {
+		EInputResult result = widgetContainer.characterTyped(character, p_charTyped_2_);
+		if(result == EInputResult.UNHANDLED) {
+			return super.charTyped(character, p_charTyped_2_);
+		}
+		return true;
+	}
+
+	@Override
+	public boolean keyPressed(int key, int scanCode, int modifiers) {
+		EInputResult result = widgetContainer.handleKeyPressed(key, scanCode, modifiers);
+		if(result == EInputResult.UNHANDLED) {
+			return super.keyPressed(key, scanCode, modifiers);
+		}
+		return true;
 	}
 
 	public List<Rectangle2d> getGuiBounds() {

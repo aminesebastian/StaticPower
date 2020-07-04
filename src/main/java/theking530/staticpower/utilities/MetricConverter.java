@@ -1,6 +1,9 @@
 package theking530.staticpower.utilities;
 
+import java.text.DecimalFormat;
+
 public class MetricConverter {
+	private static final DecimalFormat FORMATTER = new DecimalFormat("#.##");
 	private static final String[] SUFFIXES = { "", "k", "M", "G", "T", "P", "E", "Z", "Y" };
 	private float Value;
 	private String Suffix;
@@ -14,6 +17,8 @@ public class MetricConverter {
 			Value /= 1000;
 			suffixIndex++;
 		}
+
+		// Cache the suffix.
 		if (suffixIndex < SUFFIXES.length - 1) {
 			Suffix = SUFFIXES[suffixIndex];
 		} else {
@@ -27,5 +32,13 @@ public class MetricConverter {
 
 	public String getSuffix() {
 		return Suffix;
+	}
+
+	public String getValueAsString(boolean includeSuffix) {
+		if (includeSuffix) {
+			return FORMATTER.format(Value) + Suffix;
+		} else {
+			return FORMATTER.format(Value);
+		}
 	}
 }
