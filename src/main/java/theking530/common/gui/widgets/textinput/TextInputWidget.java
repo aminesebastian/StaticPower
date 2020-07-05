@@ -1,18 +1,23 @@
-package theking530.common.gui.widgets;
+package theking530.common.gui.widgets.textinput;
 
 import java.util.function.BiConsumer;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import theking530.common.gui.GuiDrawUtilities;
+import theking530.common.gui.widgets.AbstractGuiWidget;
 import theking530.common.utilities.Vector2D;
 
 public class TextInputWidget extends AbstractGuiWidget {
 	private final TextFieldWidget textField;
 	private BiConsumer<TextInputWidget, String> textChangedConsumer;
+	private final FontRenderer fontRenderer;
 
 	public TextInputWidget(String initialString, float xPosition, float yPosition, float width, float height) {
 		super(xPosition, yPosition, width, height);
-		textField = new TextFieldWidget(Minecraft.getInstance().fontRenderer, (int) xPosition, (int) yPosition, (int) width, (int) height, "");
+		fontRenderer = Minecraft.getInstance().fontRenderer;
+		textField = new StaticPowerTextFieldWidget(fontRenderer, (int) xPosition, (int) yPosition, (int) width, (int) height, "");
 		textField.setText(initialString);
 	}
 
@@ -20,9 +25,12 @@ public class TextInputWidget extends AbstractGuiWidget {
 	 * Sets the text of the textbox, and moves the cursor to the end.
 	 */
 	public void setText(String textIn) {
-		textField.setText(textIn);
-		if (textChangedConsumer != null) {
-			textChangedConsumer.accept(this, getText());
+		// Only do something if the text has actually changed.
+		if (!textIn.equals(getText())) {
+			textField.setText(textIn);
+			if (textChangedConsumer != null) {
+				textChangedConsumer.accept(this, getText());
+			}
 		}
 	}
 
@@ -51,8 +59,10 @@ public class TextInputWidget extends AbstractGuiWidget {
 	@Override
 	public void renderBehindItems(int mouseX, int mouseY, float partialTicks) {
 		Vector2D position = this.getScreenSpacePosition();
-		textField.x = (int) position.getX();
-		textField.y = (int) position.getY();
+		GuiDrawUtilities.drawSlot(position.getX(), position.getY(), getSize().getX(), getSize().getY());
+
+		textField.x = (int) (position.getX() + 2);
+		textField.y = (int) (position.getY() + 2);
 		textField.setWidth((int) getSize().getX());
 		textField.setHeight((int) getSize().getY());
 		textField.render(mouseX, mouseY, partialTicks);
@@ -64,7 +74,7 @@ public class TextInputWidget extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void mouseHover(int mouseX, int mouseY) {
+	public void mouseMove(int mouseX, int mouseY) {
 		textField.mouseMoved(mouseX, mouseY);
 	}
 
@@ -84,5 +94,17 @@ public class TextInputWidget extends AbstractGuiWidget {
 			textChangedConsumer.accept(this, getText());
 		}
 		return textField.isFocused() ? EInputResult.HANDLED : EInputResult.UNHANDLED;
+	}
+
+	private class StaticPowerTextFieldWidget extends TextFieldWidget {
+
+		public StaticPowerTextFieldWidget(FontRenderer fontIn, int xIn, int yIn, int widthIn, int heightIn, String msg) {
+			super(fontIn, xIn, yIn, widthIn, heightIn, msg);
+			setEnableBackgroundDrawing(false);
+		}
+
+		public void renderButton(int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_) {
+			super.renderButton(p_renderButton_1_, p_renderButton_2_, p_renderButton_3_);
+		}
 	}
 }

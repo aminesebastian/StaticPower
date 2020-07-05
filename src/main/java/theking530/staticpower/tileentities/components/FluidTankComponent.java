@@ -188,9 +188,7 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 
 		// Perform the fill, and then sync the tile entity if this was a real fill.
 		int result = FluidStorage.fill(resource, action);
-		if (action == FluidAction.EXECUTE) {
-			getTileEntity().markTileEntityForSynchronization();
-		}
+
 		return result;
 	}
 
@@ -198,9 +196,7 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 	public FluidStack drain(FluidStack resource, FluidAction action) {
 		// Perform the drain, and then sync the tile entity if this was a real drain.
 		FluidStack result = FluidStorage.drain(resource, action);
-		if (action == FluidAction.EXECUTE) {
-			getTileEntity().markTileEntityForSynchronization();
-		}
+
 		return result;
 	}
 
@@ -208,9 +204,7 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 	public FluidStack drain(int maxDrain, FluidAction action) {
 		// Perform the drain, and then sync the tile entity if this was a real drain.
 		FluidStack result = FluidStorage.drain(maxDrain, action);
-		if (action == FluidAction.EXECUTE) {
-			getTileEntity().markTileEntityForSynchronization();
-		}
+
 		return result;
 	}
 

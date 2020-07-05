@@ -54,14 +54,14 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 	@Override
 	protected void drawForegroundExtras(float partialTicks, int mouseX, int mouseY) {
 		super.drawForegroundExtras(partialTicks, mouseX, mouseY);
-		if (!getTileEntity().getStoredItem().isEmpty()) {
+		if (!getTileEntity().inventory.getStackInSlot(0).isEmpty()) {
 			if (mouseX >= guiLeft + 76 && mouseX <= guiLeft + 100 && mouseY >= guiTop + 21 && mouseY <= guiTop + 45) {
 				GuiDrawUtilities.drawColoredRectangle(guiLeft + 76, guiTop + 21, 24, 24, 1.0f, new Color(200, 200, 200).fromEightBitToFloat());
-				renderTooltip(getTileEntity().getStoredItem(), mouseX, mouseY);
+				renderTooltip(getTileEntity().inventory.getStackInSlot(0), mouseX, mouseY);
 			}
 		}
 
-		String amountString = String.valueOf(getTileEntity().getStoredAmount()) + "/" + String.valueOf(getTileEntity().getMaxStoredAmount());
+		String amountString = String.valueOf(getTileEntity().inventory.getTotalContainedCount()) + "/" + String.valueOf(getTileEntity().inventory.getMaxStoredAmount());
 		this.font.drawString(amountString, guiLeft + 89 - (font.getStringWidth(amountString) / 2), guiTop + 50, new Color(50, 50, 50).encodeInInteger());
 	}
 
@@ -77,7 +77,7 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 		drawSlot(guiLeft + 152, guiTop + 45, 16, 16);
 
 		RenderHelper.enableStandardItemLighting();
-		itemRenderer.drawItem(getTileEntity().getStoredItem(), guiLeft, guiTop, 80, 25, 1.0f);
+		itemRenderer.drawItem(getTileEntity().inventory.getStackInSlot(0), guiLeft, guiTop, 80, 25, 1.0f);
 		RenderHelper.disableStandardItemLighting();
 
 		// String storedAmountString = "" + getTileEntity().getStoredAmount();
@@ -85,7 +85,7 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 		// Color(255, 255, 255).fromEightBitToFloat(), true);
 
 		DecimalFormat format = new DecimalFormat("##.###");
-		String text = ("Stores a large=amount of a single=item. ==" + TextFormatting.RED + "Max: " + TextFormatting.AQUA + format.format(getTileEntity().getMaxStoredAmount()) + " Items");
+		String text = ("Stores a large=amount of a single=item. ==" + TextFormatting.RED + "Max: " + TextFormatting.AQUA + format.format(getTileEntity().inventory.getMaxStoredAmount()) + " Items");
 		String[] splitMsg = text.split("=");
 		infoTab.setText(I18n.format(getTileEntity().getDisplayName().getFormattedText()), Arrays.asList(splitMsg));
 	}

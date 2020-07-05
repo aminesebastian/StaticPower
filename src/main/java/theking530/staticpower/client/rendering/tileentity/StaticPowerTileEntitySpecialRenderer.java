@@ -115,7 +115,7 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 	protected void drawFlatItemInWorld(TileEntityDigistore tile, @Nonnull ItemStack itemStack, Vector3D offset, Vector2D scale, float partialTickTime, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
 		matrixStack.push();
 		matrixStack.translate(offset.getX(), offset.getY(), offset.getZ());
-		matrixStack.scale(scale.getX(), scale.getY(), 0.00005f);
+		matrixStack.scale(scale.getX(), scale.getY(), 0.01f);
 
 		IBakedModel itemModel = Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(itemStack, null, null);
 		boolean render3D = itemModel.isGui3d();

@@ -181,9 +181,27 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	}
 
 	@Override
+	public boolean mouseScrolled(double mouseX, double mouseY, double scrollDelta) {
+		EInputResult result = widgetContainer.handleMouseScrolled(mouseX, mouseY, scrollDelta);
+		if (result != EInputResult.HANDLED) {
+			return super.mouseScrolled(mouseX, mouseY, scrollDelta);
+		}
+		return true;
+	}
+
+	@Override
+	public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+		EInputResult result = widgetContainer.handleMouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+		if (result != EInputResult.HANDLED) {
+			return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+		}
+		return true;
+	}
+
+	@Override
 	public boolean charTyped(char character, int p_charTyped_2_) {
 		EInputResult result = widgetContainer.characterTyped(character, p_charTyped_2_);
-		if(result == EInputResult.UNHANDLED) {
+		if (result == EInputResult.UNHANDLED) {
 			return super.charTyped(character, p_charTyped_2_);
 		}
 		return true;
@@ -192,7 +210,7 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	@Override
 	public boolean keyPressed(int key, int scanCode, int modifiers) {
 		EInputResult result = widgetContainer.handleKeyPressed(key, scanCode, modifiers);
-		if(result == EInputResult.UNHANDLED) {
+		if (result == EInputResult.UNHANDLED) {
 			return super.keyPressed(key, scanCode, modifiers);
 		}
 		return true;

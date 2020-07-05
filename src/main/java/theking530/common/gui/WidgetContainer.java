@@ -103,9 +103,33 @@ public class WidgetContainer {
 		// Raise the mouse hovered event for all the widgets,
 		for (AbstractGuiWidget widget : widgets) {
 			if (widget.isVisible()) {
-				widget.mouseHover((int) mouseX, (int) mouseY);
+				widget.mouseMove((int) mouseX, (int) mouseY);
 			}
 		}
+	}
+
+	public EInputResult handleMouseScrolled(double mouseX, double mouseY, double scrollDelta) {
+		// Raise the mouse scrolled event for all the widgets,
+		for (AbstractGuiWidget widget : widgets) {
+			if (widget.isVisible()) {
+				if (widget.mouseScrolled(mouseX, mouseY, scrollDelta) == EInputResult.HANDLED) {
+					return EInputResult.HANDLED;
+				}
+			}
+		}
+		return EInputResult.UNHANDLED;
+	}
+
+	public EInputResult handleMouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+		// Raise the mouse scrolled event for all the widgets,
+		for (AbstractGuiWidget widget : widgets) {
+			if (widget.isVisible()) {
+				if (widget.mouseDragged(mouseX, mouseY, button, deltaX, deltaY) == EInputResult.HANDLED) {
+					return EInputResult.HANDLED;
+				}
+			}
+		}
+		return EInputResult.UNHANDLED;
 	}
 
 	public EInputResult handleKeyPressed(int key, int scanCode, int modifiers) {

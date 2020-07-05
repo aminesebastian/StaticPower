@@ -66,6 +66,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 					((AbstractCableAttachment) attachment.getItem()).attachmentTick(attachment, dir, this);
 				}
 			}
+			scanForAttachments();
 		}
 	}
 
@@ -109,7 +110,6 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 */
 	@Override
 	public void getModelData(ModelDataMap.Builder builder) {
-		scanForAttachments();
 		builder.withInitial(DISABLED_CABLE_SIDES, DisabledSides).withInitial(CABLE_CONNECTION_STATES, ConnectionStates).withInitial(CABLE_ATTACHMENT_MODELS, getAttachmentModels());
 	}
 

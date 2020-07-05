@@ -56,4 +56,16 @@ public class SDMath {
 		// If nothing was found, return the absolute of the initial value;
 		return target;
 	}
+
+	public static int clamp(int value, int min, int max) {
+		return Math.max(Math.min(value, max), min);
+	}
+
+	public static float clamp(float value, float min, float max) {
+		return Math.max(Math.min(value, max), min);
+	}
+
+	public static double clamp(double value, double min, double max) {
+		return Math.max(Math.min(value, max), min);
+	}
 }

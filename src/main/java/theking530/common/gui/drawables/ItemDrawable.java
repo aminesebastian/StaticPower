@@ -8,17 +8,19 @@ import net.minecraft.util.IItemProvider;
 
 public class ItemDrawable implements IDrawable {
 	private final ItemStack itemStack;
-	
+
 	public ItemDrawable(@Nonnull IItemProvider item) {
 		itemStack = new ItemStack(item);
 	}
+
 	public ItemDrawable(@Nonnull ItemStack stack) {
 		itemStack = stack.copy();
 	}
+
 	@Override
-	public void draw(int x, int y) {
+	public void draw(float x, float y) {
 		if (itemStack != null) {
-			Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(itemStack, x, y);
+			Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(itemStack, (int) x, (int) y);
 		}
 	}
 }

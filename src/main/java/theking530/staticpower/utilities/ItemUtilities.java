@@ -6,7 +6,6 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 public class ItemUtilities {
 	public static boolean filterItems(IItemHandler inventoryOfFilterItems, ItemStack itemToCheck, boolean whitelist, boolean matchNBT, boolean matchOreDict, boolean matchMod) {
@@ -73,13 +72,28 @@ public class ItemUtilities {
 
 	/**
 	 * Compares the provided {@link ItemStack}s and returns true if they are equal
-	 * in all things except count.
+	 * in all things except count. NOTE: This does not actually mean that the items
+	 * can stack (ie. Passing two iron helmets in here will still return true.).
+	 * This just means that they are equal in all criteria required to form a stack.
 	 * 
 	 * @param item1
 	 * @param item2
 	 * @return
 	 */
 	public static boolean areItemStacksStackable(ItemStack item1, ItemStack item2) {
-		return ItemHandlerHelper.canItemStacksStackRelaxed(item1, item2);
+		if (item1.isEmpty() || item2.isEmpty() || item1.getItem() != item2.getItem())
+			return false;
+
+		// Metadata value only matters when the item has subtypes
+		// Vanilla stacks non-subtype items with different metadata together
+		// TODO Item subtypes, is this still necessary?
+		/*
+		 * e.g. a stick with metadata 0 and a stick with metadata 1 stack if
+		 * (a.getHasSubtypes() && a.getMetadata() != b.getMetadata()) return false;
+		 */
+		if (item1.hasTag() != item1.hasTag())
+			return false;
+
+		return (!item1.hasTag() || item1.getTag().equals(item2.getTag())) && item1.areCapsCompatible(item2);
 	}
 }

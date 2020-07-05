@@ -120,9 +120,10 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 				energyStorage.getStorage().extractEnergy(DEFAULT_IDLE_ENERGY_USAGE, false);
 				fluidTankComponent.drain(DEFAULT_WATER_USAGE, FluidAction.EXECUTE);
 
-				for (BlockPos blockpos : BlockPos.getAllInBoxMutable(getPos().add(-range, -1, -range), getPos().add(range, -1, range))) {
-					if (getWorld().getBlockState(blockpos).getBlock() == Blocks.FARMLAND) {
-						getWorld().setBlockState(blockpos, getWorld().getBlockState(blockpos).with(FarmlandBlock.MOISTURE, Integer.valueOf(7)), 2);
+				for (BlockPos blockpos : blocks) {
+					BlockPos farmlandPos = blockpos.offset(Direction.DOWN);
+					if (getWorld().getBlockState(farmlandPos).getBlock() == Blocks.FARMLAND) {
+						getWorld().setBlockState(farmlandPos, getWorld().getBlockState(farmlandPos).with(FarmlandBlock.MOISTURE, Integer.valueOf(7)), 2);
 					}
 				}
 			}
@@ -135,7 +136,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 			refreshBlocksInRange(range);
 		}
 
-		if(InventoryUtilities.isInventoryEmpty(internalInventory)) {
+		if (InventoryUtilities.isInventoryEmpty(internalInventory)) {
 			// Harvest the current block.
 			attemptHarvestPosition(getCurrentPosition());
 
@@ -143,12 +144,11 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 			if (!world.isRemote) {
 				energyStorage.getStorage().extractEnergy(DEFAULT_HARVEST_ENERGY_COST, false);
 			}
-			
+
 			// Increment first to ensure we're always harvesting the next block.
 			incrementPosition();
 
 		}
-
 
 		// For each of the farmed stacks, place the harvested stacks into the output
 		// inventory. Remove the entry from the farmed stacks if it was fully inserted.
@@ -188,7 +188,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	}
 
 	public int getGrowthBonus() {
-		return 1000; //growthBonusChance;
+		return 1000; // growthBonusChance;
 	}
 
 	public boolean getShouldDrawRadiusPreview() {

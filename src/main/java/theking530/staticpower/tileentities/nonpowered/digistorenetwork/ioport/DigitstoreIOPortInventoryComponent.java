@@ -51,7 +51,7 @@ public class DigitstoreIOPortInventoryComponent extends AbstractTileEntityCompon
 		}
 
 		DigistoreNetworkModule module = getDigistoreNetworkModule().orElse(null);
-		if (module != null) {
+		if (module != null && module.isManagerPresent()) {
 			return module.insertItem(stack, simulate);
 		}
 
@@ -85,7 +85,7 @@ public class DigitstoreIOPortInventoryComponent extends AbstractTileEntityCompon
 
 		// Get the module if it exists.
 		ServerCable cable = CableNetworkManager.get(getWorld()).getCable(getPos());
-		if (cable.getNetwork().hasModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE)) {
+		if (cable.getNetwork() != null && cable.getNetwork().hasModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE)) {
 			return Optional.of(cable.getNetwork().getModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE));
 		}
 

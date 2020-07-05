@@ -38,12 +38,19 @@ public class StaticPowerSprites {
 	public static final ResourceLocation FILTER_NBT = registerSprite("gui/filter_nbt");
 	public static final ResourceLocation FILTER_TAG = registerSprite("gui/filter_tag");
 	public static final ResourceLocation FILTER_MOD = registerSprite("gui/filter_mod");
+	public static final ResourceLocation SCROLL_HANDLE = registerSprite("gui/scroll_handle");
+	public static final ResourceLocation SCROLL_HANDLE_DISABLED = registerSprite("gui/scroll_handle_disabled");
 
+	public static final ResourceLocation SORT_ALPHA_ASC = registerSprite("gui/sort_alphabetical_asc");
+	public static final ResourceLocation SORT_ALPHA_DESC = registerSprite("gui/sort_alphabetical_desc");
+	public static final ResourceLocation SORT_NUMERICAN_ASC = registerSprite("gui/sort_numerical_asc");
+	public static final ResourceLocation SORT_NUMERICAL_DESC = registerSprite("gui/sort_numerical_desc");
+	
 	public static final ResourceLocation CANCEL = registerSprite("gui/cancel");
 	public static final ResourceLocation GREEN_CHECK = registerSprite("gui/check");
 	public static final ResourceLocation DISABLED = registerSprite("gui/disabled");
 	public static final ResourceLocation RANGE_ICON = registerSprite("gui/show_range_icon");
-	
+
 	private static ResourceLocation registerSprite(String path) {
 		ResourceLocation sprite = new ResourceLocation(Reference.MOD_ID, path);
 		SPRITES.add(sprite);

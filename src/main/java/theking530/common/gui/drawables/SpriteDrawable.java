@@ -2,6 +2,8 @@ package theking530.common.gui.drawables;
 
 import org.lwjgl.opengl.GL11;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -13,7 +15,7 @@ import theking530.common.utilities.Color;
 import theking530.common.utilities.Vector2D;
 
 public class SpriteDrawable implements IDrawable {
-	private final ResourceLocation sprite;
+	private ResourceLocation sprite;
 	private Vector2D size;
 	private Color tint;
 
@@ -27,17 +29,29 @@ public class SpriteDrawable implements IDrawable {
 		this.tint = tint;
 	}
 
+	public Color getTint() {
+		return tint;
+	}
+
+	public Vector2D getSize() {
+		return size;
+	}
+
 	@SuppressWarnings("deprecation")
 	public TextureAtlasSprite getSpriteTexture() {
 		return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(sprite);
 	}
 
+	public void setSprite(ResourceLocation sprite) {
+		this.sprite = sprite;
+	}
+
 	@SuppressWarnings("deprecation")
 	@Override
-	public void draw(int x, int y) {
+	public void draw(float x, float y) {
 		if (sprite != null) {
-			// Turn on the blending.
-			GL11.glEnable(GL11.GL_BLEND);
+			// Turn on the blending just in case its not on.
+			GlStateManager.enableBlend();
 
 			// Allocate the rendering utilities/buffers.
 			Tessellator tessellator = Tessellator.getInstance();
@@ -67,9 +81,6 @@ public class SpriteDrawable implements IDrawable {
 				vertexbuffer.pos(x + size.getX(), y + size.getY(), 0.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(spriteTexture.getMaxU(), spriteTexture.getMaxV()).endVertex();
 				tessellator.draw();
 			}
-
-			// Turn off blending.
-			GL11.glDisable(GL11.GL_BLEND);
 		}
 	}
 }

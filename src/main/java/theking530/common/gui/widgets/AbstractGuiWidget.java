@@ -219,8 +219,16 @@ public abstract class AbstractGuiWidget {
 		return EInputResult.UNHANDLED;
 	}
 
-	public void mouseHover(int mouseX, int mouseY) {
+	public void mouseMove(int mouseX, int mouseY) {
 
+	}
+
+	public EInputResult mouseScrolled(double mouseX, double mouseY, double scrollDelta) {
+		return EInputResult.UNHANDLED;
+	}
+
+	public EInputResult mouseDragged(double mouseX, double mouseY, int p_mouseDragged_5_, double p_mouseDragged_6_, double p_mouseDragged_8_) {
+		return EInputResult.UNHANDLED;
 	}
 
 	public EInputResult characterTyped(char character, int p_charTyped_2_) {

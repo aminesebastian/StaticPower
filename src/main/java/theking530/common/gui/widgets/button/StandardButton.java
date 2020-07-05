@@ -80,7 +80,7 @@ public class StandardButton extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void mouseHover(int mouseX, int mouseY) {
+	public void mouseMove(int mouseX, int mouseY) {
 		// Always just update the clicked state to NONE here.
 		clicked = ClickedButton.NONE;
 

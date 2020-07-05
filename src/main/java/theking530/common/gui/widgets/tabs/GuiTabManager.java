@@ -129,7 +129,7 @@ public class GuiTabManager extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void mouseHover(int mouseX, int mouseY) {
+	public void mouseMove(int mouseX, int mouseY) {
 		for (BaseGuiTab tab : registeredTabs) {
 			if (tab.isOpen()) {
 				tab.mouseHover(mouseX, mouseY);

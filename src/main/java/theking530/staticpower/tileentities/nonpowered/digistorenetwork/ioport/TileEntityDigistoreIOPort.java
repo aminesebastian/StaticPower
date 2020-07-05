@@ -12,7 +12,6 @@ import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.initialization.ModTileEntityTypes;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.BaseDigistoreTileEntity;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.TileEntityDigistore;
 
 public class TileEntityDigistoreIOPort extends BaseDigistoreTileEntity {
 	public TileEntityDigistoreIOPort() {
@@ -44,34 +43,13 @@ public class TileEntityDigistoreIOPort extends BaseDigistoreTileEntity {
 				// Get the item in the slot.
 				ItemStack currentItem = player.inventory.getStackInSlot(i).copy();
 
-				// Iterate through all the digistores and see if any of them already exist to
-				// take the supplied item. If they do, try to insert and keep going until the
-				// held stack is empty.
-				for (TileEntityDigistore digistore : module.getAllDigistores()) {
-					if (digistore.doesItemMatchStoredItem(currentItem)) {
-						currentItem = digistore.insertItem(currentItem, false);
-					}
-					// If we inserted all of the held item, break the loop and complete the process.
-					if (currentItem.isEmpty()) {
-						break;
-					}
-				}
-
-				// If there are still more items in the held stack, now we can use empty
-				// digistores.
-				if (!currentItem.isEmpty() && currentItem.isItemEqual(player.getHeldItem(hand))) {
-					for (TileEntityDigistore digistore : module.getAllDigistores()) {
-						currentItem = digistore.insertItem(currentItem, false);
-						if (currentItem.isEmpty()) {
-							break;
-						}
-					}
-				}
+				// Insert it into the network.
+				ItemStack remaining = module.insertItem(currentItem, false);
 
 				// Update the held item.
-				if (currentItem.getCount() != player.inventory.getStackInSlot(i).getCount()) {
+				if (currentItem.getCount() != remaining.getCount()) {
 					itemInserted = true;
-					player.inventory.setInventorySlotContents(i, currentItem);
+					player.inventory.setInventorySlotContents(i, remaining);
 				}
 			}
 
