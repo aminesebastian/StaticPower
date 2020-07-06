@@ -1,6 +1,6 @@
 package theking530.common.gui.widgets.button;
 
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -11,7 +11,7 @@ public class TextButton extends StandardButton {
 	private String text;
 	private FontRenderer fontRenderer;
 
-	public TextButton(int xPos, int yPos, int width, int height, String text, Consumer<StandardButton> onClicked) {
+	public TextButton(int xPos, int yPos, int width, int height, String text, BiConsumer<StandardButton, MouseButton> onClicked) {
 		super(xPos, yPos, width, height, onClicked);
 		this.text = text;
 		fontRenderer = Minecraft.getInstance().fontRenderer;

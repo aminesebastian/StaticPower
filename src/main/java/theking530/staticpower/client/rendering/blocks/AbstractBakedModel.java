@@ -9,6 +9,9 @@ import java.util.Random;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.block.BlockState;
@@ -29,6 +32,7 @@ import net.minecraftforge.common.model.TransformationHelper;
 import theking530.staticpower.StaticPower;
 
 public abstract class AbstractBakedModel implements IBakedModel {
+	protected static final Logger LOGGER = LogManager.getLogger(AbstractBakedModel.class);
 	protected static final Map<Direction, TransformationMatrix> SIDE_TRANSFORMS = new EnumMap<>(Direction.class);
 	protected final HashSet<String> LoggedErrors = new HashSet<String>();
 	protected final FaceBakery FaceBaker = new FaceBakery();
@@ -74,13 +78,20 @@ public abstract class AbstractBakedModel implements IBakedModel {
 			drawingSide = Direction.byHorizontalIndex((drawingSide.getHorizontalIndex() + faceOffset) % 4);
 		}
 
-		for (BakedQuad quad : model.getQuads(state, drawingSide, rand, EmptyModelData.INSTANCE)) {
-			BakedQuadBuilder builder = new BakedQuadBuilder(quad.func_187508_a());
-			TRSRTransformer transformer = new TRSRTransformer(builder, transformation);
+		// Build the output.
+		if (model != null) {
+			try {
+				for (BakedQuad quad : model.getQuads(state, drawingSide, rand, EmptyModelData.INSTANCE)) {
+					BakedQuadBuilder builder = new BakedQuadBuilder(quad.func_187508_a());
+					TRSRTransformer transformer = new TRSRTransformer(builder, transformation);
 
-			quad.pipe(transformer);
+					quad.pipe(transformer);
 
-			quads.add(builder.build());
+					quads.add(builder.build());
+				}
+			} catch (Exception e) {
+				LOGGER.error(String.format("An error occured when attempting to rotate a model to face the desired rotation. Model: %1$s.", model), e);
+			}
 		}
 
 		return quads.build();

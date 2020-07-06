@@ -11,6 +11,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -22,6 +23,7 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import theking530.common.utilities.RaytracingUtilities;
 import theking530.common.utilities.RaytracingUtilities.AdvancedRayTraceResult;
+import theking530.common.utilities.Vector3D;
 import theking530.common.wrench.IWrenchTool;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
@@ -29,22 +31,16 @@ import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
 public class CableBoundsCache {
 
 	private VoxelShape CoreShape;
-	private HashMap<Direction, VoxelShape> CableAttachmentShapes;
-	private HashMap<Direction, VoxelShape> TileEntityAttachmentShapes;
-	private final List<AxisAlignedBB> TileEntityAttachmentBounds;
-	private double CableRadius;
-	private double AttachmentRadius;
-	private double AttachmentDepth;
+	private final HashMap<Direction, VoxelShape> CableAttachmentShapes;
+	private final double CableRadius;
+	private final Vector3D defaultAttachmentBounds;
 	private boolean IsCached;
 
-	public CableBoundsCache(double cableRadius, double attachmentRadius, double attachmentDepth) {
+	public CableBoundsCache(double cableRadius, Vector3D defaultAttachmentBounds) {
+		this.defaultAttachmentBounds = defaultAttachmentBounds;
 		CableRadius = cableRadius;
-		AttachmentRadius = attachmentRadius;
-		AttachmentDepth = attachmentDepth;
 		IsCached = false;
 		CableAttachmentShapes = new HashMap<Direction, VoxelShape>();
-		TileEntityAttachmentShapes = new HashMap<Direction, VoxelShape>();
-		TileEntityAttachmentBounds = new ArrayList<AxisAlignedBB>();
 	}
 
 	/**
@@ -62,9 +58,6 @@ public class CableBoundsCache {
 		if (!IsCached) {
 			// Cache the shapes
 			cacheShapes(state);
-
-			// Cache the bounds as well.
-			TileEntityAttachmentShapes.values().forEach(teShape -> TileEntityAttachmentBounds.add(teShape.getBoundingBox()));
 
 			// Mark the shapes as cached.
 			IsCached = true;
@@ -103,13 +96,38 @@ public class CableBoundsCache {
 		// Get the start and end vectors for the raytracing.
 		Pair<Vec3d, Vec3d> vec = RaytracingUtilities.getVectors(entity);
 
+		// Get the cable attachment.
+		AbstractCableProviderComponent cable = CableUtilities.getCableWrapperComponent(entity.getEntityWorld(), pos);
+
+		// If we are holding an attachment that is NOT valid for this cable, return null
+		// early.
+		if (!entity.getHeldItemMainhand().isEmpty() && entity.getHeldItemMainhand().getItem() instanceof AbstractCableAttachment && !cable.canAttachAttachment(entity.getHeldItemMainhand())) {
+			return null;
+		}
+
+		// Get the bounding boxes for this attachment.
+		List<AxisAlignedBB> aabbs = new ArrayList<AxisAlignedBB>();
+		for (Direction dir : Direction.values()) {
+			// Set our bounds source to the attachment on the provided side.
+			ItemStack attachment = cable.getAttachment(dir);
+
+			// If we are holding a valid attachment however, then use that instead.
+			if (!entity.getHeldItemMainhand().isEmpty() && entity.getHeldItemMainhand().getItem() instanceof AbstractCableAttachment) {
+				attachment = entity.getHeldItemMainhand();
+			}
+
+			// Get the bounds. In NO case should we not add an entry here. It can be empty
+			// if needed. IF we are missing an entry here (ie. < 6 entries), we will crash.
+			aabbs.add(getShapeForAttachment(entity.getEntityWorld(), pos, attachment, dir).getBoundingBox());
+		}
+
 		// Raytrace against all 6 attachment bounds.
-		AdvancedRayTraceResult<BlockRayTraceResult> result = RaytracingUtilities.collisionRayTrace(pos, vec.getLeft(), vec.getRight(), TileEntityAttachmentBounds);
+		AdvancedRayTraceResult<BlockRayTraceResult> result = RaytracingUtilities.collisionRayTrace(pos, vec.getLeft(), vec.getRight(), aabbs);
 
 		// Check to see which direction's bounds we hit and return it.
 		if (result != null) {
 			for (Direction dir : Direction.values()) {
-				if (TileEntityAttachmentShapes.get(dir).getBoundingBox().equals(result.bounds)) {
+				if (aabbs.get(dir.ordinal()).equals(result.bounds)) {
 					return dir;
 				}
 			}
@@ -119,10 +137,7 @@ public class CableBoundsCache {
 	}
 
 	/**
-	 * Caches all the shapes, including the {@link #CoreShape}, the
-	 * {@link #CableAttachmentShapes} and the {@link #TileEntityAttachmentShapes}.
-	 * The {@link #TileEntityAttachmentBounds} are populated automatically
-	 * afterwards.
+	 * Cache the cable shapes.
 	 * 
 	 * @param state
 	 */
@@ -137,15 +152,37 @@ public class CableBoundsCache {
 		CableAttachmentShapes.put(Direction.WEST, Block.makeCuboidShape(0.0D, coreMin, coreMin, coreMin, coreMax, coreMax));
 		CableAttachmentShapes.put(Direction.UP, Block.makeCuboidShape(coreMin, coreMax, coreMin, coreMax, 16.0D, coreMax));
 		CableAttachmentShapes.put(Direction.DOWN, Block.makeCuboidShape(coreMin, 0.0D, coreMin, coreMax, coreMin, coreMax));
+	}
 
-		double attachmentMin = 8.0D - AttachmentRadius;
-		double attachmentMax = 8.0D + AttachmentRadius;
-		TileEntityAttachmentShapes.put(Direction.NORTH, Block.makeCuboidShape(attachmentMin, attachmentMin, 0.0D, attachmentMax, attachmentMax, attachmentMin - AttachmentDepth));
-		TileEntityAttachmentShapes.put(Direction.SOUTH, Block.makeCuboidShape(attachmentMin, attachmentMin, attachmentMax + AttachmentDepth, attachmentMax, attachmentMax, 16.0D));
-		TileEntityAttachmentShapes.put(Direction.EAST, Block.makeCuboidShape(attachmentMax + AttachmentDepth, attachmentMin, attachmentMin, 16.0D, attachmentMax, attachmentMax));
-		TileEntityAttachmentShapes.put(Direction.WEST, Block.makeCuboidShape(0.0D, attachmentMin, attachmentMin, attachmentMin - AttachmentDepth, attachmentMax, attachmentMax));
-		TileEntityAttachmentShapes.put(Direction.UP, Block.makeCuboidShape(attachmentMin, attachmentMax + AttachmentDepth, attachmentMin, attachmentMax, 16.0D, attachmentMax));
-		TileEntityAttachmentShapes.put(Direction.DOWN, Block.makeCuboidShape(attachmentMin, 0.0D, attachmentMin, attachmentMax, attachmentMin - AttachmentDepth, attachmentMax));
+	protected VoxelShape getShapeForAttachment(IBlockReader world, BlockPos pos, ItemStack attachment, Direction side) {
+		if (attachment.getItem() instanceof AbstractCableAttachment || CableUtilities.getConnectionState(world, pos, side) == CableConnectionState.TILE_ENTITY) {
+			double attachmentMin = 8.0D - defaultAttachmentBounds.getX();
+			double attachmentMax = 8.0D + defaultAttachmentBounds.getX();
+			double attachmentDepth = defaultAttachmentBounds.getZ();
+
+			if (attachment.getItem() instanceof AbstractCableAttachment) {
+				AbstractCableAttachment attachmentItem = (AbstractCableAttachment) attachment.getItem();
+				attachmentMin = 8.0D - attachmentItem.getBounds().getX();
+				attachmentMax = 8.0D + attachmentItem.getBounds().getX();
+				attachmentDepth = attachmentItem.getBounds().getZ();
+			}
+
+			switch (side) {
+			case NORTH:
+				return Block.makeCuboidShape(attachmentMin, attachmentMin, 0.0D, attachmentMax, attachmentMax, attachmentMin - attachmentDepth);
+			case SOUTH:
+				return Block.makeCuboidShape(attachmentMin, attachmentMin, attachmentMax + attachmentDepth, attachmentMax, attachmentMax, 16.0D);
+			case EAST:
+				return Block.makeCuboidShape(attachmentMax + attachmentDepth, attachmentMin, attachmentMin, 16.0D, attachmentMax, attachmentMax);
+			case WEST:
+				return Block.makeCuboidShape(0.0D, attachmentMin, attachmentMin, attachmentMin - attachmentDepth, attachmentMax, attachmentMax);
+			case UP:
+				return Block.makeCuboidShape(attachmentMin, attachmentMax + attachmentDepth, attachmentMin, attachmentMax, 16.0D, attachmentMax);
+			case DOWN:
+				return Block.makeCuboidShape(attachmentMin, 0.0D, attachmentMin, attachmentMax, attachmentMin - attachmentDepth, attachmentMax);
+			}
+		}
+		return CoreShape;
 	}
 
 	/**
@@ -164,7 +201,8 @@ public class CableBoundsCache {
 		// If the hovered direction is not null, add the attachment shape.
 		if (hoveredDirection != null) {
 			// Get some attributes to use in the check.
-			boolean hasAttachmentOnSide = CableUtilities.getCableWrapperComponent(entity.getEntityWorld(), pos).hasAttachment(hoveredDirection);
+			AbstractCableProviderComponent cable = CableUtilities.getCableWrapperComponent(entity.getEntityWorld(), pos);
+			boolean hasAttachmentOnSide = cable.hasAttachment(hoveredDirection);
 			CableConnectionState connectionState = CableUtilities.getConnectionState(entity.getEntityWorld(), pos, hoveredDirection);
 
 			// If connected to a tile entity, or if we're holding an attachment and looking
@@ -172,15 +210,13 @@ public class CableBoundsCache {
 			// attachment, or the side straight up has an attachment, add the attachment
 			// bounds on that side.
 			if (connectionState == CableConnectionState.TILE_ENTITY) {
-				shape = VoxelShapes.or(shape, TileEntityAttachmentShapes.get(hoveredDirection));
-			} else if (!entity.getHeldItemMainhand().isEmpty() && entity.getHeldItemMainhand().getItem() instanceof AbstractCableAttachment && connectionState != CableConnectionState.CABLE
-					&& !hasAttachmentOnSide) {
-				shape = VoxelShapes.or(shape, TileEntityAttachmentShapes.get(hoveredDirection));
-			} else if (!entity.getHeldItemMainhand().isEmpty() && entity.getHeldItemMainhand().getItem() instanceof IWrenchTool && connectionState != CableConnectionState.CABLE
-					&& hasAttachmentOnSide) {
-				shape = VoxelShapes.or(shape, TileEntityAttachmentShapes.get(hoveredDirection));
+				shape = VoxelShapes.or(shape, getShapeForAttachment(entity.getEntityWorld(), pos, cable.getAttachment(hoveredDirection), hoveredDirection));
+			} else if (!entity.getHeldItemMainhand().isEmpty() && entity.getHeldItemMainhand().getItem() instanceof AbstractCableAttachment && connectionState != CableConnectionState.CABLE && !hasAttachmentOnSide) {
+				shape = VoxelShapes.or(shape, getShapeForAttachment(entity.getEntityWorld(), pos, entity.getHeldItemMainhand(), hoveredDirection));
+			} else if (!entity.getHeldItemMainhand().isEmpty() && entity.getHeldItemMainhand().getItem() instanceof IWrenchTool && connectionState != CableConnectionState.CABLE && hasAttachmentOnSide) {
+				shape = VoxelShapes.or(shape, getShapeForAttachment(entity.getEntityWorld(), pos, cable.getAttachment(hoveredDirection), hoveredDirection));
 			} else if (hasAttachmentOnSide) {
-				shape = VoxelShapes.or(shape, TileEntityAttachmentShapes.get(hoveredDirection));
+				shape = VoxelShapes.or(shape, getShapeForAttachment(entity.getEntityWorld(), pos, cable.getAttachment(hoveredDirection), hoveredDirection));
 			}
 		}
 

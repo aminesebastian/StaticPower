@@ -13,6 +13,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
+import theking530.common.utilities.Vector3D;
 import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableBoundsCache;
@@ -24,7 +25,7 @@ import theking530.staticpower.initialization.ModTileEntityTypes;
 public class BlockFluidCable extends AbstractCableBlock {
 
 	public BlockFluidCable(String name) {
-		super(name, new CableBoundsCache(2.0D, 3.0D, 2.0D));
+		super(name, new CableBoundsCache(2.0D, new Vector3D(3.0f, 3.0f, 2.0f)));
 	}
 
 	@Override

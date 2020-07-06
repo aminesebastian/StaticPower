@@ -2,7 +2,6 @@ package theking530.staticpower.items.cableattachments;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ClickType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
@@ -11,16 +10,19 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
-import theking530.staticpower.client.container.StaticPowerItemContainer;
+import theking530.staticpower.client.container.StaticPowerContainer;
 
-public class AbstractCableAttachmentContainer<T extends AbstractCableAttachment> extends StaticPowerItemContainer<T> {
+public class AbstractCableAttachmentContainer<T extends AbstractCableAttachment> extends StaticPowerContainer {
 	private final Direction attachmentSide;
 	private final AbstractCableProviderComponent cableComponent;
+	private final ItemStack attachment;
 
 	protected AbstractCableAttachmentContainer(ContainerType<?> type, int id, PlayerInventory inv, ItemStack attachment, Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
-		super(type, id, inv, attachment);
+		super(type, id, inv);
+		this.attachment = attachment;
 		this.attachmentSide = attachmentSide;
 		this.cableComponent = cableComponent;
+		initializeContainer(); // This has to be called here and not in the super.
 	}
 
 	@Override
@@ -58,9 +60,13 @@ public class AbstractCableAttachmentContainer<T extends AbstractCableAttachment>
 		return true;
 	}
 
-	@Override
-	public ItemStack slotClick(int slot, int dragType, ClickType clickTypeIn, PlayerEntity player) {
-		return super.slotClick(slot, dragType, clickTypeIn, player);
+	/**
+	 * Gets the {@link ItemStack} that triggered the opening of this container.
+	 * 
+	 * @return The {@link ItemStack} that opened this container.
+	 */
+	public ItemStack getAttachment() {
+		return attachment;
 	}
 
 	protected static ItemStack getAttachmentItemStack(PlayerInventory inv, PacketBuffer data) {

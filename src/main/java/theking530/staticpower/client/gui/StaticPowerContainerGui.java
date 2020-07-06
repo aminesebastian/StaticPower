@@ -34,6 +34,9 @@ import theking530.staticpower.tileentities.utilities.MachineSideMode;
  * @param <T> The container type.
  */
 public abstract class StaticPowerContainerGui<T extends Container> extends ContainerScreen<T> {
+	/** The default location to render the inventory label. */
+	public static final Vector2D DEFAULT_INVENTORY_LABEL_LOCATION = new Vector2D(8, 97);
+
 	/** The container responsible for managing all the widget. */
 	protected final WidgetContainer widgetContainer;
 	/** The tab manager widget. */
@@ -239,10 +242,10 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	protected void drawContainerTitle(int mouseX, int mouseY) {
 		// Draw the container title if requested at the designated location.
 		if (shouldDrawContainerLabel()) {
-			Vector2D inventoryLabelLocation = getContainerLabelDrawLocation();
+			Vector2D containerLabelLocation = getContainerLabelDrawLocation();
 			ITextComponent containerName = getTitle();
 			String containerString = containerName.getString();
-			font.drawString(containerString, inventoryLabelLocation.getX(), inventoryLabelLocation.getY(), 4210752);
+			font.drawString(containerString, containerLabelLocation.getX(), containerLabelLocation.getY(), 4210752);
 		}
 
 		// Draw the inventory label if requested at the designated location.
@@ -261,7 +264,7 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	 *         render.
 	 */
 	protected Vector2D getInventoryLabelDrawLocation() {
-		return new Vector2D(8, 97);
+		return DEFAULT_INVENTORY_LABEL_LOCATION;
 	}
 
 	/**
@@ -365,7 +368,7 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	 *                        corner border).
 	 */
 	public void drawGenericBackground(int xPos, int yPos, int width, int height, Color backgroundColor, Color borderTint) {
-		GuiDrawUtilities.drawGenericBackground(width, height, xPos + guiLeft, yPos + guiTop, backgroundColor, borderTint);
+		GuiDrawUtilities.drawGenericBackground(width, height, xPos + guiLeft, yPos + guiTop, backgroundColor, borderTint, true, true, true, true);
 	}
 
 	/**

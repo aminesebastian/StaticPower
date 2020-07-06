@@ -7,6 +7,7 @@ import net.minecraft.util.text.TextFormatting;
 import theking530.common.gui.widgets.GuiIslandWidget;
 import theking530.common.gui.widgets.button.SpriteButton;
 import theking530.common.gui.widgets.button.StandardButton;
+import theking530.common.gui.widgets.button.StandardButton.MouseButton;
 import theking530.common.gui.widgets.tabs.GuiInfoTab;
 import theking530.common.gui.widgets.tabs.GuiPowerInfoTab;
 import theking530.common.gui.widgets.tabs.GuiSideConfigTab;
@@ -50,7 +51,7 @@ public class GuiTreeFarmer extends StaticPowerTileEntityGui<ContainerTreeFarmer,
 		setOutputSlotSize(16);
 	}
 
-	public void buttonPressed(StandardButton button) {
+	public void buttonPressed(StandardButton button, MouseButton mouseButton) {
 		if (button == drawPreviewButton) {
 			getTileEntity().setShouldDrawRadiusPreview(drawPreviewButton.isToggled());
 		}

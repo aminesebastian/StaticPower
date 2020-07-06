@@ -6,11 +6,11 @@ import theking530.common.gui.widgets.tabs.redstonecontrol.PacketRedstoneComponen
 import theking530.staticpower.cables.fluid.FluidCableUpdatePacket;
 import theking530.staticpower.cables.item.ItemCableAddedPacket;
 import theking530.staticpower.cables.item.ItemCableRemovedPacket;
+import theking530.staticpower.items.cableattachments.digistoreterminal.PacketDigistoreTerminalFilters;
 import theking530.staticpower.items.itemfilter.PacketItemFilter;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.network.TileEntityBasicSyncPacket;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.PacketLockDigistore;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.PacketDigistoreManagerFilters;
 
 public class ModNetworkMessages {
 	public static void init() {
@@ -23,6 +23,6 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(ItemCableAddedPacket.class);
 		StaticPowerMessageHandler.registerMessage(ItemCableRemovedPacket.class);
 		StaticPowerMessageHandler.registerMessage(FluidCableUpdatePacket.class);
-		StaticPowerMessageHandler.registerMessage(PacketDigistoreManagerFilters.class);
+		StaticPowerMessageHandler.registerMessage(PacketDigistoreTerminalFilters.class);
 	}
 }

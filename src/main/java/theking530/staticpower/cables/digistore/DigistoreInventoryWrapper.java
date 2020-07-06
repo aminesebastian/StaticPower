@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import theking530.staticpower.items.cableattachments.digistoreterminal.DigistoreInventorySortType;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.DigistoreInventoryComponent;
 import theking530.staticpower.utilities.ItemUtilities;
 
@@ -41,6 +42,11 @@ public class DigistoreInventoryWrapper implements IItemHandler {
 			for (int i = 0; i < digistore.getSlots(); i++) {
 				// Stack in slot.
 				ItemStack stackInSlot = digistore.getStackInSlot(i);
+
+				// Skip empty slots.
+				if (stackInSlot.isEmpty()) {
+					continue;
+				}
 
 				// Skip items that don't match the filter.
 				if (filterString.length() > 0) {

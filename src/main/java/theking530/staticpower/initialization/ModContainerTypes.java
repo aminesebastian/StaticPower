@@ -2,6 +2,8 @@ package theking530.staticpower.initialization;
 
 import net.minecraft.inventory.container.ContainerType;
 import theking530.staticpower.StaticPowerRegistry;
+import theking530.staticpower.items.cableattachments.digistoreterminal.ContainerDigistoreTerminal;
+import theking530.staticpower.items.cableattachments.digistoreterminal.GuiDigistoreTerminal;
 import theking530.staticpower.items.cableattachments.extractor.ContainerExtractor;
 import theking530.staticpower.items.cableattachments.extractor.GuiExtractor;
 import theking530.staticpower.items.cableattachments.filter.ContainerFilter;
@@ -12,8 +14,6 @@ import theking530.staticpower.items.itemfilter.ContainerItemFilter;
 import theking530.staticpower.items.itemfilter.GuiItemFilter;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.ContainerDigistore;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.GuiDigistore;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.ContainerDigistoreManager;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.GuiDigistoreManager;
 import theking530.staticpower.tileentities.nonpowered.tank.ContainerTank;
 import theking530.staticpower.tileentities.nonpowered.tank.GuiTank;
 import theking530.staticpower.tileentities.nonpowered.vacuumchest.ContainerVacuumChest;
@@ -50,7 +50,7 @@ public class ModContainerTypes {
 	public static ContainerType<ContainerTank> TANK_CONTAINER;
 
 	public static ContainerType<ContainerDigistore> DIGISTORE_CONTAINER;
-	public static ContainerType<ContainerDigistoreManager> DIGISTORE_MANAGER;
+	public static ContainerType<ContainerDigistoreTerminal> DIGISTORE_TERMINAL;
 	public static ContainerType<ContainerExtractor> EXTRACTOR_CONTAINER;
 	public static ContainerType<ContainerFilter> FILTER_CONTAINER;
 	public static ContainerType<ContainerRetriever> RETRIEVER_CONTAINER;
@@ -70,7 +70,7 @@ public class ModContainerTypes {
 		TANK_CONTAINER = StaticPowerRegistry.preRegisterContainer("tank", ContainerTank::new, GuiTank::new);
 
 		DIGISTORE_CONTAINER = StaticPowerRegistry.preRegisterContainer("digistore", ContainerDigistore::new, GuiDigistore::new);
-		DIGISTORE_MANAGER = StaticPowerRegistry.preRegisterContainer("digistore_manager", ContainerDigistoreManager::new, GuiDigistoreManager::new);
+		DIGISTORE_TERMINAL = StaticPowerRegistry.preRegisterContainer("digistore_terminal", ContainerDigistoreTerminal::new, GuiDigistoreTerminal::new);
 		EXTRACTOR_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_extractor", ContainerExtractor::new, GuiExtractor::new);
 		FILTER_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_filter", ContainerFilter::new, GuiFilter::new);
 		RETRIEVER_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_retriever", ContainerRetriever::new, GuiRetriever::new);

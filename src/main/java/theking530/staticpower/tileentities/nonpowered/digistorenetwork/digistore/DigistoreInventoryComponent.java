@@ -206,7 +206,7 @@ public class DigistoreInventoryComponent extends AbstractTileEntityComponent imp
 	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
 		nbt.putInt("MaximumStorage", maximumStorage);
-
+		nbt.putBoolean("void_excess", voidExcess);
 		ListNBT digistoreSlots = new ListNBT();
 		slots.forEach(network -> {
 			CompoundNBT networkTag = new CompoundNBT();
@@ -222,6 +222,7 @@ public class DigistoreInventoryComponent extends AbstractTileEntityComponent imp
 	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 		maximumStorage = nbt.getInt("MaximumStorage");
+		voidExcess = nbt.getBoolean("void_excess");
 
 		ListNBT digistoreSlots = nbt.getList("slots", Constants.NBT.TAG_COMPOUND);
 		slots = NonNullList.withSize(digistoreSlots.size(), new DigistoreItemTracker());

@@ -9,6 +9,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.common.gui.widgets.button.SpriteButton;
 import theking530.common.gui.widgets.button.StandardButton;
+import theking530.common.gui.widgets.button.StandardButton.MouseButton;
 import theking530.common.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.StaticPowerSprites;
@@ -64,7 +65,7 @@ public class GuiItemFilter extends StaticPowerItemStackGui<ContainerItemFilter, 
 		modButton.setToggleable(true).setToggled(getItemFilter().filterForMod(getItemStack())).setTooltip(new TranslationTextComponent("Enable Mod Match"));
 	}
 
-	public void buttonPressed(StandardButton button) {
+	public void buttonPressed(StandardButton button, MouseButton mouseButton) {
 		if (button == whitelistButton) {
 			getItemFilter().setWhitelistMode(getItemStack(), !getItemFilter().isWhiteListMode(getItemStack()));
 			whitelistButton.setRegularTexture(getItemFilter().isWhiteListMode(getItemStack()) ? StaticPowerSprites.FILTER_WHITELIST : StaticPowerSprites.FILTER_BLACKLIST);

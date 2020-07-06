@@ -64,8 +64,8 @@ public class FilterAttachment extends AbstractCableAttachment {
 	}
 
 	@Override
-	public @Nullable AbstractCableAttachmentContainerProvider getContainerProvider(ItemStack attachment) {
-		return new FilterContainerProvider(attachment);
+	public @Nullable AbstractCableAttachmentContainerProvider getContainerProvider(ItemStack attachment, AbstractCableProviderComponent cable, Direction attachmentSide) {
+		return new FilterContainerProvider(attachment, cable, attachmentSide);
 	}
 
 	@Override
@@ -79,16 +79,13 @@ public class FilterAttachment extends AbstractCableAttachment {
 	}
 
 	protected class FilterContainerProvider extends AbstractCableAttachmentContainerProvider {
-		private Direction attachmentSide;
-		private AbstractCableProviderComponent cableComponent;
-
-		public FilterContainerProvider(ItemStack stack) {
-			super(stack);
+		public FilterContainerProvider(ItemStack stack, AbstractCableProviderComponent cable, Direction attachmentSide) {
+			super(stack, cable, attachmentSide);
 		}
 
 		@Override
 		public Container createMenu(int windowId, PlayerInventory playerInv, PlayerEntity player) {
-			return new ContainerFilter(windowId, playerInv, targetItemStack, attachmentSide, cableComponent);
+			return new ContainerFilter(windowId, playerInv, targetItemStack, attachmentSide, cable);
 		}
 	}
 }

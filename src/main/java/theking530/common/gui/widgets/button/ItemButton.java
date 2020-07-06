@@ -1,6 +1,6 @@
 package theking530.common.gui.widgets.button;
 
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -21,7 +21,7 @@ public class ItemButton extends StandardButton {
 	 * @param xPos   The xPosition of the button.
 	 * @param yPos   The yPosition of the button.
 	 */
-	public ItemButton(ItemStack icon, int xPos, int yPos, int width, int height, Consumer<StandardButton> onClicked) {
+	public ItemButton(ItemStack icon, int xPos, int yPos, int width, int height, BiConsumer<StandardButton, MouseButton> onClicked) {
 		super(xPos, yPos, width, height, onClicked);
 
 		itemIcon = icon;
@@ -37,7 +37,7 @@ public class ItemButton extends StandardButton {
 	 * @param xPos   The xPosition of the button.
 	 * @param yPos   The yPosition of the button.
 	 */
-	public ItemButton(Item icon, int xPos, int yPos, int width, int height, Consumer<StandardButton> onClicked) {
+	public ItemButton(Item icon, int xPos, int yPos, int width, int height, BiConsumer<StandardButton, MouseButton>  onClicked) {
 		this(new ItemStack(icon), xPos, yPos, width, height, onClicked);
 	}
 

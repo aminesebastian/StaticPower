@@ -2,7 +2,7 @@ package theking530.common.gui.widgets.button;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -15,28 +15,29 @@ import theking530.common.utilities.Vector2D;
 
 public class StandardButton extends AbstractGuiWidget {
 
-	public enum ClickedButton {
+	public enum MouseButton {
 		NONE, LEFT, RIGHT, MIDDLE;
 	}
 
+	protected BiConsumer<StandardButton, MouseButton> onClicked;
 	protected int mouseX;
 	protected int mouseY;
 
-	private boolean hovered = false;
-	private ClickedButton clicked = ClickedButton.NONE;
-
-	private boolean toggleable = false;
-	private boolean toggled = false;
-
+	private boolean hovered;
+	private MouseButton currentlyPressedMouseButton;
+	private boolean toggleable;
+	private boolean toggled;
 	private float clickSoundPitch;
-	protected Consumer<StandardButton> onClicked;
-
 	private List<ITextComponent> tooltip;
 
-	public StandardButton(int xPos, int yPos, int width, int height, Consumer<StandardButton> onClickedEvent) {
+	public StandardButton(int xPos, int yPos, int width, int height, BiConsumer<StandardButton, MouseButton> onClickedEvent) {
 		super(xPos, yPos, width, height);
 		clickSoundPitch = 1.0f;
 		onClicked = onClickedEvent;
+		hovered = false;
+		currentlyPressedMouseButton = MouseButton.NONE;
+		toggleable = false;
+		toggled = false;
 	}
 
 	@Override
@@ -62,10 +63,10 @@ public class StandardButton extends AbstractGuiWidget {
 		}
 		if (this.isPointInsideBounds(new Vector2D(mouseX, mouseY))) {
 			// Set the clicked state.
-			clicked = button == 0 ? ClickedButton.LEFT : ClickedButton.RIGHT;
+			currentlyPressedMouseButton = button == 0 ? MouseButton.LEFT : MouseButton.RIGHT;
 
 			// Play the clicked sound.
-			playSound(clicked);
+			playSound(currentlyPressedMouseButton);
 
 			// If toggleable, update the toggled state.
 			if (toggleable) {
@@ -73,7 +74,7 @@ public class StandardButton extends AbstractGuiWidget {
 			}
 
 			// Raise the on clicked event.
-			onClicked.accept(this);
+			onClicked.accept(this, currentlyPressedMouseButton);
 			return EInputResult.HANDLED;
 		}
 		return EInputResult.UNHANDLED;
@@ -82,7 +83,7 @@ public class StandardButton extends AbstractGuiWidget {
 	@Override
 	public void mouseMove(int mouseX, int mouseY) {
 		// Always just update the clicked state to NONE here.
-		clicked = ClickedButton.NONE;
+		currentlyPressedMouseButton = MouseButton.NONE;
 
 		if (!isVisible()) {
 			return;
@@ -104,8 +105,8 @@ public class StandardButton extends AbstractGuiWidget {
 	protected void drawButtonOverlay(int buttonLeft, int buttonTop) {
 	}
 
-	protected void playSound(ClickedButton state) {
-		float pitch = state == ClickedButton.LEFT ? clickSoundPitch : clickSoundPitch * 1.1f;
+	protected void playSound(MouseButton state) {
+		float pitch = state == MouseButton.LEFT ? clickSoundPitch : clickSoundPitch * 1.1f;
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 		player.world.playSound(player, player.getPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.MASTER, 1.0f, pitch);
 	}
@@ -133,15 +134,15 @@ public class StandardButton extends AbstractGuiWidget {
 	}
 
 	public boolean isClicked() {
-		return clicked != ClickedButton.NONE;
+		return currentlyPressedMouseButton != MouseButton.NONE;
 	}
 
-	public ClickedButton getClickedState() {
-		return clicked;
+	public MouseButton getClickedState() {
+		return currentlyPressedMouseButton;
 	}
 
-	public StandardButton setClicked(ClickedButton newClickedState) {
-		this.clicked = newClickedState;
+	public StandardButton setClicked(MouseButton newClickedState) {
+		this.currentlyPressedMouseButton = newClickedState;
 		return this;
 	}
 

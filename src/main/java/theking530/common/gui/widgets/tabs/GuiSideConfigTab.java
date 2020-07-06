@@ -14,7 +14,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import theking530.common.gui.GuiTextures;
 import theking530.common.gui.widgets.button.StandardButton;
 import theking530.common.gui.widgets.button.TextButton;
-import theking530.common.gui.widgets.button.StandardButton.ClickedButton;
+import theking530.common.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.TileEntityBase;
@@ -88,13 +88,13 @@ public class GuiSideConfigTab extends BaseGuiTab {
 		GL11.glDisable(GL11.GL_BLEND);
 	}
 
-	public void buttonPressed(StandardButton button) {
+	public void buttonPressed(StandardButton button, MouseButton mouseButton) {
 		if (!tileEntity.hasComponentOfType(SideConfigurationComponent.class)) {
 			return;
 		}
 		SideConfigurationComponent sideComp = tileEntity.getComponent(SideConfigurationComponent.class);
 
-		SideIncrementDirection direction = button.getClickedState() == ClickedButton.LEFT ? SideIncrementDirection.FORWARD : SideIncrementDirection.BACKWARDS;
+		SideIncrementDirection direction = button.getClickedState() == MouseButton.LEFT ? SideIncrementDirection.FORWARD : SideIncrementDirection.BACKWARDS;
 		if (button == topButton) {
 			sideComp.modulateWorldSpaceSideMode(SideConfigurationUtilities.getDirectionFromSide(BlockSide.TOP, tileEntity.getFacingDirection()), direction);
 		} else if (button == bottomButton) {

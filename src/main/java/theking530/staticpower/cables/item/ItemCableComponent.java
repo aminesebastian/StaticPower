@@ -3,6 +3,8 @@ package theking530.staticpower.cables.item;
 import java.util.Collection;
 import java.util.HashMap;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -111,15 +113,14 @@ public class ItemCableComponent extends AbstractCableProviderComponent implement
 	 * USED ONLY to render client blocks.
 	 */
 	@Override
-	protected CableConnectionState cacheConnectionState(Direction side, BlockPos blockPosition) {
+	protected CableConnectionState cacheConnectionState(Direction side, @Nullable TileEntity te, BlockPos blockPosition) {
 		// Check to see if there is a cable on this side that can connect to this one.
 		// If true, connect. If not, check if there is a TE that we can connect to. If
 		// not, return non.
 		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(), blockPosition);
 		if (otherProvider != null && otherProvider.shouldConnectionToCable(this, side)) {
 			return CableConnectionState.CABLE;
-		} else if (getWorld().getTileEntity(blockPosition) != null) {
-			TileEntity te = getWorld().getTileEntity(blockPosition);
+		} else if (te != null) {
 			if (te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).isPresent()) {
 				return CableConnectionState.TILE_ENTITY;
 			}
@@ -129,8 +130,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent implement
 
 	@Override
 	protected boolean canAttachAttachment(ItemStack attachment) {
-		return !attachment.isEmpty()
-				&& (attachment.getItem() instanceof ExtractorAttachment || attachment.getItem() instanceof FilterAttachment || attachment.getItem() instanceof RetrieverAttachment);
+		return !attachment.isEmpty() && (attachment.getItem() instanceof ExtractorAttachment || attachment.getItem() instanceof FilterAttachment || attachment.getItem() instanceof RetrieverAttachment);
 	}
 
 	@Override

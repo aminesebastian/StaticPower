@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -16,6 +15,7 @@ import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.NetworkMapper;
 import theking530.staticpower.cables.network.ServerCable;
+import theking530.staticpower.items.cableattachments.digistoreterminal.DigistoreInventorySortType;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.DigistoreInventoryComponent;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.TileEntityDigistore;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.TileEntityDigistoreManager;
@@ -76,10 +76,11 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 			List<DigistoreInventoryComponent> potentials = new ArrayList<DigistoreInventoryComponent>();
 
 			// Go through each digistore and add them to the potentials list if it can
-			// accept the item.
+			// accept the item. Only discard full digistores that do NOT have a void
+			// upgrade.
 			for (DigistoreInventoryComponent digistore : digistores) {
 				ItemStack insertSimulation = digistore.insertItem(stackToUse, true);
-				if (insertSimulation.getCount() != stackToUse.getCount()) {
+				if (insertSimulation.getCount() != stackToUse.getCount() && (!digistore.isFull() || (digistore.isFull() && digistore.shouldVoidExcess()))) {
 					potentials.add(digistore);
 				}
 			}
@@ -92,15 +93,36 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 			// Sort the digistores so that we start by filling the most full first.
 			Collections.sort(potentials, new Comparator<DigistoreInventoryComponent>() {
 				public int compare(DigistoreInventoryComponent a, DigistoreInventoryComponent b) {
-					return a.shouldVoidExcess() ? -1 : b.getRemainingStorage(false) -  a.getRemainingStorage(false);
+					return a.getTotalContainedCount() == 0 ? 1 : a.getRemainingStorage(true) - b.getRemainingStorage(true);
 				}
 			});
 
 			// Start filling, break if we finish the fill.
 			for (DigistoreInventoryComponent digistore : potentials) {
+				// Skip empty digistores first time around.
+				if (digistore.getTotalContainedCount() == 0) {
+					continue;
+				}
+
+				// Update the remaining stack.
 				stackToUse = digistore.insertItem(stack, simulate);
 				if (stackToUse.isEmpty()) {
 					break;
+				}
+			}
+
+			if (!stackToUse.isEmpty()) {
+				// Start filling, this time with empty digistores allowed. Break if we finish
+				// the fill.
+				for (DigistoreInventoryComponent digistore : potentials) {
+					// Skip non empty digistores, we hit those already.d
+					if (digistore.getTotalContainedCount() > 0) {
+						continue;
+					}
+					stackToUse = digistore.insertItem(stack, simulate);
+					if (stackToUse.isEmpty()) {
+						break;
+					}
 				}
 			}
 

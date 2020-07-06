@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager;
+package theking530.staticpower.items.cableattachments.digistoreterminal;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,41 +12,42 @@ import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import theking530.staticpower.cables.digistore.DigistoreInventorySortType;
+import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.digistore.DigistoreInventoryWrapper;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
-import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.client.container.slots.DigistoreSlot;
 import theking530.staticpower.client.container.slots.DummySlot;
 import theking530.staticpower.initialization.ModContainerTypes;
+import theking530.staticpower.items.cableattachments.AbstractCableAttachmentContainer;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
-public class ContainerDigistoreManager extends StaticPowerTileEntityContainer<TileEntityDigistoreManager> {
+public class ContainerDigistoreTerminal extends AbstractCableAttachmentContainer<DigistoreTerminal> {
 	public static final int ITEMS_PER_ROW = 9;
 	public static final int MAX_ROWS_ON_SCREEN = 8;
 	public static final int INVENTORY_START_X = 8;
-	public static final int INVENTORY_START_Y = 20;
+	public static final int INVENTORY_START_Y = 22;
 
 	private DigistoreSimulatedItemStackHandler clientSimulatedInventory;
 	private String filter;
 	private DigistoreInventorySortType sortType;
 	private boolean sortDescending;
 	private int scrollOffset;
-	private GuiDigistoreManager clientGui;
+	private GuiDigistoreTerminal clientGui;
 
-	public ContainerDigistoreManager(int windowId, PlayerInventory inv, PacketBuffer data) {
-		this(windowId, inv, (TileEntityDigistoreManager) resolveTileEntityFromDataPacket(inv, data));
+	public ContainerDigistoreTerminal(int windowId, PlayerInventory inv, PacketBuffer data) {
+		this(windowId, inv, getAttachmentItemStack(inv, data), getAttachmentSide(data), getCableComponent(inv, data));
 	}
 
-	public ContainerDigistoreManager(int windowId, PlayerInventory playerInventory, TileEntityDigistoreManager owner) {
-		super(ModContainerTypes.DIGISTORE_MANAGER, windowId, playerInventory, owner);
+	public ContainerDigistoreTerminal(int windowId, PlayerInventory playerInventory, ItemStack attachment, Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
+		super(ModContainerTypes.DIGISTORE_TERMINAL, windowId, playerInventory, attachment, attachmentSide, cableComponent);
 	}
 
 	@Override
@@ -60,7 +61,7 @@ public class ContainerDigistoreManager extends StaticPowerTileEntityContainer<Ti
 		addPlayerInventory(getPlayerInventory(), 8, 188);
 
 		// If on the server, populate the digistore container slots.
-		if (!getTileEntity().getWorld().isRemote) {
+		if (!getCableComponent().getWorld().isRemote) {
 			getDigistoreNetwork().ifPresent(digistoreModule -> {
 				DigistoreInventoryWrapper digistoreInv = digistoreModule.getNetworkInventory(filter, sortType, sortDescending);
 				addDigistoreSlots(digistoreInv, ITEMS_PER_ROW, INVENTORY_START_X, INVENTORY_START_Y);
@@ -80,7 +81,7 @@ public class ContainerDigistoreManager extends StaticPowerTileEntityContainer<Ti
 				ItemStack playerMouseHeldItem = getPlayerInventory().getItemStack();
 
 				// Only perform on the server.
-				if (!getTileEntity().getWorld().isRemote) {
+				if (!getCableComponent().getWorld().isRemote) {
 					getDigistoreNetwork().ifPresent(digistoreModule -> {
 						// If on the server, attempt to either insert into the network if the held stack
 						// is empty, otherwise, attempt to extract. Extract up to a full stack if left
@@ -154,7 +155,7 @@ public class ContainerDigistoreManager extends StaticPowerTileEntityContainer<Ti
 
 	@Override
 	public ItemStack transferStackInSlot(PlayerEntity player, int slotIndex) {
-		if (!getTileEntity().getWorld().isRemote) {
+		if (!getCableComponent().getWorld().isRemote) {
 			AtomicReference<ItemStack> output = new AtomicReference<ItemStack>(ItemStack.EMPTY);
 			getDigistoreNetwork().ifPresent(digistoreModule -> {
 				// Get the targeted item.
@@ -209,22 +210,14 @@ public class ContainerDigistoreManager extends StaticPowerTileEntityContainer<Ti
 		return ItemStack.EMPTY;
 	}
 
-	/**
-	 * Sets the string to filter the items by. If on the client, a packet is sent to
-	 * the server to do the same.
-	 */
-	public void setFilterString(String filter) {
+	public void updateSortAndFilter(String filter, DigistoreSearchMode mode, DigistoreInventorySortType sortType, boolean sortDescending) {
 		this.filter = filter;
-		if (getTileEntity().getWorld().isRemote) {
-			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(new PacketDigistoreManagerFilters(windowId, filter, sortType, sortDescending));
-		}
-	}
-
-	public void setSortType(DigistoreInventorySortType sortType, boolean sortDescending) {
 		this.sortType = sortType;
 		this.sortDescending = sortDescending;
-		if (getTileEntity().getWorld().isRemote) {
-			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(new PacketDigistoreManagerFilters(windowId, filter, sortType, sortDescending));
+		DigistoreTerminal.setSortType(getAttachment(), sortType);
+		DigistoreTerminal.setSortDescending(getAttachment(), sortDescending);
+		if (getCableComponent().getWorld().isRemote) {
+			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(new PacketDigistoreTerminalFilters(windowId, filter, mode, sortType, sortDescending));
 		}
 	}
 
@@ -234,7 +227,7 @@ public class ContainerDigistoreManager extends StaticPowerTileEntityContainer<Ti
 	 * 
 	 * @param clientGui
 	 */
-	public void setClientGui(GuiDigistoreManager clientGui) {
+	public void setClientGui(GuiDigistoreTerminal clientGui) {
 		this.clientGui = clientGui;
 	}
 
@@ -287,7 +280,7 @@ public class ContainerDigistoreManager extends StaticPowerTileEntityContainer<Ti
 	 */
 	protected void syncContainerSlots(PlayerEntity player) {
 		// If being called on the client, throw an exception.
-		if (getTileEntity().getWorld().isRemote) {
+		if (getCableComponent().getWorld().isRemote) {
 			throw new RuntimeException("Containers should only be synced from the server!");
 		}
 
@@ -368,7 +361,7 @@ public class ContainerDigistoreManager extends StaticPowerTileEntityContainer<Ti
 	 */
 	protected Optional<DigistoreNetworkModule> getDigistoreNetwork() {
 		// Get the server cable for this manager.
-		ServerCable cable = CableNetworkManager.get(getTileEntity().getWorld()).getCable(getTileEntity().getPos());
+		ServerCable cable = CableNetworkManager.get(getCableComponent().getWorld()).getCable(getCableComponent().getPos());
 
 		// If it or it's network are null, return null.
 		if (cable == null || cable.getNetwork() == null) {

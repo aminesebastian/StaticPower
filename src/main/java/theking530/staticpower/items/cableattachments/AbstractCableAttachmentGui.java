@@ -3,9 +3,9 @@ package theking530.staticpower.items.cableattachments;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import theking530.common.gui.widgets.tabs.GuiInfoTab;
-import theking530.staticpower.client.gui.StaticPowerItemStackGui;
+import theking530.staticpower.client.gui.StaticPowerContainerGui;
 
-public abstract class AbstractCableAttachmentGui<T extends AbstractCableAttachmentContainer<K>, K extends AbstractCableAttachment> extends StaticPowerItemStackGui<T, K> {
+public abstract class AbstractCableAttachmentGui<T extends AbstractCableAttachmentContainer<K>, K extends AbstractCableAttachment> extends StaticPowerContainerGui<T> {
 
 	public GuiInfoTab infoTab;
 

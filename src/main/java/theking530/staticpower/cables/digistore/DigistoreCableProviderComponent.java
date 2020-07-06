@@ -1,11 +1,15 @@
 package theking530.staticpower.cables.digistore;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
+import theking530.staticpower.initialization.ModItems;
 import theking530.staticpower.tileentities.TileEntityBase;
 
 public class DigistoreCableProviderComponent extends AbstractCableProviderComponent {
@@ -16,16 +20,16 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 
 	@Override
 	protected boolean canAttachAttachment(ItemStack attachment) {
-		return false;
+		return attachment.getItem() == ModItems.DigistoreTerminalAttachment;
 	}
 
 	@Override
-	protected CableConnectionState cacheConnectionState(Direction side, BlockPos blockPosition) {
-		if (getWorld().getTileEntity(blockPosition) instanceof TileEntityDigistoreWire) {
+	protected CableConnectionState cacheConnectionState(Direction side, @Nullable TileEntity te, BlockPos blockPosition) {
+		if (te instanceof TileEntityDigistoreWire) {
 			return CableConnectionState.CABLE;
-		} else if (getWorld().getTileEntity(blockPosition) instanceof TileEntityBase) {
-			TileEntityBase te = (TileEntityBase) getWorld().getTileEntity(blockPosition);
-			if (te.hasComponentOfType(DigistoreCableProviderComponent.class)) {
+		} else if (te instanceof TileEntityBase) {
+			TileEntityBase baseTe = (TileEntityBase) te;
+			if (baseTe.hasComponentOfType(DigistoreCableProviderComponent.class)) {
 				return CableConnectionState.TILE_ENTITY;
 			}
 		}

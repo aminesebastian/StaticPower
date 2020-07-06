@@ -7,6 +7,7 @@ import net.minecraft.util.text.TextFormatting;
 import theking530.common.gui.widgets.GuiIslandWidget;
 import theking530.common.gui.widgets.button.SpriteButton;
 import theking530.common.gui.widgets.button.StandardButton;
+import theking530.common.gui.widgets.button.StandardButton.MouseButton;
 import theking530.common.gui.widgets.tabs.GuiInfoTab;
 import theking530.common.gui.widgets.tabs.GuiPowerInfoTab;
 import theking530.common.gui.widgets.tabs.GuiSideConfigTab;
@@ -41,7 +42,7 @@ public class GuiBasicFarmer extends StaticPowerTileEntityGui<ContainerBasicFarme
 		drawPreviewButton.setTooltip(new StringTextComponent("Preview Range"));
 		drawPreviewButton.setToggleable(true);
 		drawPreviewButton.setToggled(getTileEntity().getShouldDrawRadiusPreview());
-		
+
 		getTabManager().registerTab(infoTab = new GuiInfoTab(100, 100));
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
@@ -50,7 +51,7 @@ public class GuiBasicFarmer extends StaticPowerTileEntityGui<ContainerBasicFarme
 		setOutputSlotSize(16);
 	}
 
-	public void buttonPressed(StandardButton button) {
+	public void buttonPressed(StandardButton button, MouseButton mouseButton) {
 		if (button == drawPreviewButton) {
 			getTileEntity().setShouldDrawRadiusPreview(drawPreviewButton.isToggled());
 		}

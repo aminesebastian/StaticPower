@@ -76,6 +76,7 @@
 	"item.staticpower.cable_attachment_static_retriever": "Static Retriever",
 	"item.staticpower.cable_attachment_energized_retriever": "Energized Retriever",
 	"item.staticpower.cable_attachment_lumum_retriever": "Lumum Retriever",
+	"item.staticpower.cable_attachment_digistore_terminal": "Terminal",
 	"block.staticpower.machine_charging_station": "Charging Station",
 	"block.staticpower.chest_vacuum": "Vacuum Chest",
 	"block.staticpower.machine_powered_furnace": "Powered Furnace",

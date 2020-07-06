@@ -27,13 +27,13 @@ public class ContainerRetriever extends AbstractCableAttachmentContainer<Retriev
 	@Override
 	public void initializeContainer() {
 		// Attempt to get the item filter inventory.
-		getItemStack().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((handler) -> {
+		getAttachment().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((handler) -> {
 			filterInventory = (ItemStackHandler) handler;
 		});
 
 		// If the item filter is null, then return early and log the error.
 		if (filterInventory == null) {
-			StaticPower.LOGGER.error(String.format("Received capability for ItemFilter: %1$s that did not inherit from InventoryItemFilter.", getItemStack().getDisplayName()));
+			StaticPower.LOGGER.error(String.format("Received capability for ItemFilter: %1$s that did not inherit from InventoryItemFilter.", getAttachment().getDisplayName()));
 			return;
 		}
 

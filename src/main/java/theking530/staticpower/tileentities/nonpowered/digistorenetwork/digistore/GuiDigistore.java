@@ -12,6 +12,7 @@ import theking530.common.gui.GuiDrawUtilities;
 import theking530.common.gui.widgets.GuiDrawItem;
 import theking530.common.gui.widgets.button.StandardButton;
 import theking530.common.gui.widgets.button.TextButton;
+import theking530.common.gui.widgets.button.StandardButton.MouseButton;
 import theking530.common.gui.widgets.tabs.GuiInfoTab;
 import theking530.common.utilities.Color;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
@@ -40,7 +41,7 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 		getTabManager().registerTab(infoTab = new GuiInfoTab(100, 65));
 	}
 
-	public void buttonPressed(StandardButton button) {
+	public void buttonPressed(StandardButton button, MouseButton mouseButton) {
 		if (getTileEntity() != null) {
 			getTileEntity().setLocked(!getTileEntity().isLocked());
 			button.setToggled(getTileEntity().isLocked());

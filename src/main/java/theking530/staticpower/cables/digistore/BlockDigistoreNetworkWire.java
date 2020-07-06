@@ -8,6 +8,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import theking530.common.utilities.Vector3D;
 import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.CableBoundsCache;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
@@ -17,7 +18,7 @@ import theking530.staticpower.initialization.ModTileEntityTypes;
 public class BlockDigistoreNetworkWire extends AbstractCableBlock {
 
 	public BlockDigistoreNetworkWire(String name) {
-		super(name, new CableBoundsCache(1.0D, 4.0D, 0.5D));
+		super(name, new CableBoundsCache(1.0D, new Vector3D(4.0f, 4.0f, 0.5f)));
 
 	}
 

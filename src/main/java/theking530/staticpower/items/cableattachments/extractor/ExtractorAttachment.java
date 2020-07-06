@@ -129,8 +129,8 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 	}
 
 	@Override
-	public @Nullable AbstractCableAttachmentContainerProvider getContainerProvider(ItemStack attachment) {
-		return new ExtractorContainerProvider(attachment);
+	public @Nullable AbstractCableAttachmentContainerProvider getContainerProvider(ItemStack attachment, AbstractCableProviderComponent cable, Direction attachmentSide) {
+		return new ExtractorContainerProvider(attachment, cable, attachmentSide);
 	}
 
 	@Override
@@ -228,16 +228,13 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 	}
 
 	protected class ExtractorContainerProvider extends AbstractCableAttachmentContainerProvider {
-		private Direction attachmentSide;
-		private AbstractCableProviderComponent cableComponent;
-
-		public ExtractorContainerProvider(ItemStack stack) {
-			super(stack);
+		public ExtractorContainerProvider(ItemStack stack, AbstractCableProviderComponent cable, Direction attachmentSide) {
+			super(stack, cable, attachmentSide);
 		}
 
 		@Override
 		public Container createMenu(int windowId, PlayerInventory playerInv, PlayerEntity player) {
-			return new ContainerExtractor(windowId, playerInv, targetItemStack, attachmentSide, cableComponent);
+			return new ContainerExtractor(windowId, playerInv, targetItemStack, attachmentSide, cable);
 		}
 	}
 }

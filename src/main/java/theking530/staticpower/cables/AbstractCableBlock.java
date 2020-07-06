@@ -80,7 +80,7 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 
 				// If the item requests a GUI, open it.
 				if (attachmentItem.hasGui(attachment)) {
-					NetworkHooks.openGui((ServerPlayerEntity) player, attachmentItem.getContainerProvider(attachment), buff -> {
+					NetworkHooks.openGui((ServerPlayerEntity) player, attachmentItem.getContainerProvider(attachment, component, hoveredDirection), buff -> {
 						buff.writeInt(hoveredDirection.ordinal());
 						buff.writeBlockPos(pos);
 					});

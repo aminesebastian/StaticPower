@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager;
+package theking530.staticpower.items.cableattachments.digistoreterminal;
 
 import java.util.ArrayList;
 import java.util.List;

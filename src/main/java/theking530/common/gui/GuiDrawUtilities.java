@@ -21,14 +21,15 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.common.utilities.Color;
 
 public class GuiDrawUtilities {
-	private static final float genericBackgroundPixel = 1.0f / 9.0f;
-	private static final Color defaultBackgroundColor = new Color(198, 198, 198, 255).fromEightBitToFloat();
-	private static final Color defaultBackgroundRimTint = new Color(255, 255, 255, 255).fromEightBitToFloat();
-	private static final Color defaultSlotDarkEdgeColor = new Color(55, 55, 55, 255).fromEightBitToFloat();
-	private static final Color defaultSlotLightEdgeColor = new Color(255, 255, 255, 255).fromEightBitToFloat();
-	private static final Color defaultSlotCornerColor = new Color(139, 139, 139, 255).fromEightBitToFloat();
+	public static final Color DEFAULT_BACKGROUND_COLOR = new Color(198, 198, 198, 255).fromEightBitToFloat();
+	public static final Color DEFAULT_BACKGROUND_EDGE_TINT = new Color(255, 255, 255, 255).fromEightBitToFloat();
+	public static final Color DEFAULT_SLOT_DARK_EDGE_COLOR = new Color(55, 55, 55, 255).fromEightBitToFloat();
+	public static final Color DEFAULT_SLOT_LIGHT_EDGE_COLOR = new Color(255, 255, 255, 255).fromEightBitToFloat();
+	public static final Color DEFAULT_SLOT_CORNER_COLOR = new Color(139, 139, 139, 255).fromEightBitToFloat();
 
-	public static void drawGenericBackground(int width, int height, int guiLeft, int guiTop, Color mainBackgroundColor, Color rimTint) {
+	private static final float BACKGROUND_PIXEL_SIZE = 1.0f / 9.0f;
+
+	public static void drawGenericBackground(int width, int height, int guiLeft, int guiTop, Color mainBackgroundColor, Color rimTint, boolean drawLeft, boolean drawRight, boolean drawTop, boolean drawBottom) {
 		float zLevel = 0.0f;
 
 		// MainBG
@@ -37,20 +38,28 @@ public class GuiDrawUtilities {
 		Minecraft.getInstance().getTextureManager().bindTexture(GuiTextures.GENERIC_GUI);
 
 		// Corners
-		drawTexturedGenericRect(guiLeft, guiTop, 4, 4, 0.0f, 0.0f, zLevel, 4 * genericBackgroundPixel, 4 * genericBackgroundPixel);
-		drawTexturedGenericRect(guiLeft + width - 5, guiTop, 5, 4, zLevel, 4 * genericBackgroundPixel, 0.0f, 9 * genericBackgroundPixel, 4 * genericBackgroundPixel);
-		drawTexturedGenericRect(guiLeft, guiTop + height - 5, 4, 5, 0.0f, zLevel, 4 * genericBackgroundPixel, 4 * genericBackgroundPixel, 9 * genericBackgroundPixel);
-		drawTexturedGenericRect(guiLeft + width - 4, guiTop + height - 4, 4, 4, zLevel, 5 * genericBackgroundPixel, 5 * genericBackgroundPixel, 9 * genericBackgroundPixel, 9 * genericBackgroundPixel);
+		drawTexturedGenericRect(guiLeft, guiTop, 4, 4, 0.0f, 0.0f, zLevel, 4 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
+		drawTexturedGenericRect(guiLeft + width - 5, guiTop, 5, 4, zLevel, 4 * BACKGROUND_PIXEL_SIZE, 0.0f, 9 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
+		drawTexturedGenericRect(guiLeft, guiTop + height - 5, 4, 5, 0.0f, zLevel, 4 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE);
+		drawTexturedGenericRect(guiLeft + width - 4, guiTop + height - 4, 4, 4, zLevel, 5 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE);
 
 		// Sides
-		drawTexturedGenericRect(guiLeft + 4, guiTop, width - 7, 3, zLevel, 3 * genericBackgroundPixel, 0.0f, 4 * genericBackgroundPixel, 3 * genericBackgroundPixel);
-		drawTexturedGenericRect(guiLeft, guiTop + 4, 3, height - 8, 0.0f, zLevel, 3 * genericBackgroundPixel, 3 * genericBackgroundPixel, 4 * genericBackgroundPixel);
-		drawTexturedGenericRect(guiLeft + 4, guiTop + height - 3, width - 8, 3, zLevel, 4 * genericBackgroundPixel, 6 * genericBackgroundPixel, 5 * genericBackgroundPixel, 9 * genericBackgroundPixel);
-		drawTexturedGenericRect(guiLeft + width - 3, guiTop + 4, 3, height - 8, zLevel, 6 * genericBackgroundPixel, 3 * genericBackgroundPixel, 9 * genericBackgroundPixel, 4 * genericBackgroundPixel);
+		if (drawTop) {
+			drawTexturedGenericRect(guiLeft + 4, guiTop, width - 7, 3, zLevel, 3 * BACKGROUND_PIXEL_SIZE, 0.0f, 4 * BACKGROUND_PIXEL_SIZE, 3 * BACKGROUND_PIXEL_SIZE);
+		}
+		if (drawLeft) {
+			drawTexturedGenericRect(guiLeft, guiTop + 4, 3, height - 8, 0.0f, zLevel, 3 * BACKGROUND_PIXEL_SIZE, 3 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
+		}
+		if (drawRight) {
+			drawTexturedGenericRect(guiLeft + width - 3, guiTop + 4, 3, height - 8, zLevel, 6 * BACKGROUND_PIXEL_SIZE, 3 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
+		}
+		if (drawBottom) {
+			drawTexturedGenericRect(guiLeft + 4, guiTop + height - 3, width - 8, 3, zLevel, 4 * BACKGROUND_PIXEL_SIZE, 6 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE);
+		}
 	}
 
 	public static void drawGenericBackground(int width, int height, int guiLeft, int guiTop) {
-		drawGenericBackground(width, height, guiLeft, guiTop, defaultBackgroundColor, defaultBackgroundRimTint);
+		drawGenericBackground(width, height, guiLeft, guiTop, DEFAULT_BACKGROUND_COLOR, DEFAULT_BACKGROUND_EDGE_TINT, true, true, true, true);
 	}
 
 	public static void drawPlayerInventorySlots(int xPos, int yPos) {
@@ -71,14 +80,14 @@ public class GuiDrawUtilities {
 			drawColoredRectangle(xPos - 2, yPos - 2, width + 4, height + 4, zLevel, color);
 		}
 
-		drawColoredRectangle(xPos - 1, yPos - 1, 1, 1 + height, zLevel, defaultSlotDarkEdgeColor);
-		drawColoredRectangle(xPos, yPos - 1, width, 1, zLevel, defaultSlotDarkEdgeColor);
-		drawColoredRectangle(xPos + width, yPos - 1, 1, 1, zLevel, defaultSlotCornerColor);
+		drawColoredRectangle(xPos - 1, yPos - 1, 1, 1 + height, zLevel, DEFAULT_SLOT_DARK_EDGE_COLOR);
+		drawColoredRectangle(xPos, yPos - 1, width, 1, zLevel, DEFAULT_SLOT_DARK_EDGE_COLOR);
+		drawColoredRectangle(xPos + width, yPos - 1, 1, 1, zLevel, DEFAULT_SLOT_CORNER_COLOR);
 
-		drawColoredRectangle(xPos - 1, yPos + height, 1, 1, zLevel, defaultSlotCornerColor);
-		drawColoredRectangle(xPos, yPos + height, width + 1, 1, zLevel, defaultSlotLightEdgeColor);
-		drawColoredRectangle(xPos + width, yPos, 1, height, zLevel, defaultSlotLightEdgeColor);
-		drawColoredRectangle(xPos, yPos, width, height, zLevel, defaultSlotCornerColor);
+		drawColoredRectangle(xPos - 1, yPos + height, 1, 1, zLevel, DEFAULT_SLOT_CORNER_COLOR);
+		drawColoredRectangle(xPos, yPos + height, width + 1, 1, zLevel, DEFAULT_SLOT_LIGHT_EDGE_COLOR);
+		drawColoredRectangle(xPos + width, yPos, 1, height, zLevel, DEFAULT_SLOT_LIGHT_EDGE_COLOR);
+		drawColoredRectangle(xPos, yPos, width, height, zLevel, DEFAULT_SLOT_CORNER_COLOR);
 	}
 
 	public static void drawSlot(float xPos, float yPos, float width, float height) {

@@ -19,7 +19,7 @@ public class BlockDigistoreManager extends BaseDigistoreBlock {
 
 	@Override
 	public HasGuiType hasGuiScreen(TileEntity tileEntity, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-		return HasGuiType.ALWAYS;
+		return HasGuiType.NEVER;
 	}
 
 	@Override

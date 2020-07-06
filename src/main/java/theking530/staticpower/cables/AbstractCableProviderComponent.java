@@ -3,9 +3,12 @@ package theking530.staticpower.cables;
 import java.util.HashSet;
 import java.util.Optional;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -40,6 +43,8 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 * is requested AND also, on first placement.
 	 */
 	protected final CableConnectionState[] ConnectionStates;
+	/** If false, the connection states will be reinitialized. */
+	protected boolean connectionStatesInitialized;
 	/** Container for all the attachments on this cable. */
 	protected final ItemStack[] Attachments;
 
@@ -56,6 +61,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		DisabledSides = new boolean[] { false, false, false, false, false, false };
 		ConnectionStates = new CableConnectionState[] { CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE };
 		Attachments = new ItemStack[] { ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY };
+		connectionStatesInitialized = false;
 	}
 
 	public void preProcessUpdate() {
@@ -66,8 +72,16 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 					((AbstractCableAttachment) attachment.getItem()).attachmentTick(attachment, dir, this);
 				}
 			}
+		}
+		if (!connectionStatesInitialized) {
 			scanForAttachments();
 		}
+	}
+
+	@Override
+	public void onNeighborChanged(BlockState currentState, BlockPos neighborPos) {
+		super.onNeighborChanged(currentState, neighborPos);
+		scanForAttachments();
 	}
 
 	/**
@@ -141,6 +155,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 */
 	@Override
 	public void updatePostPlacement(BlockState state, Direction direction, BlockState facingState, BlockPos FacingPos) {
+		super.updatePostPlacement(state, direction, facingState, FacingPos);
 		scanForAttachments();
 	}
 
@@ -311,6 +326,11 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			Attachments[i].write(itemNbt);
 			nbt.put("attachment" + i, itemNbt);
 		}
+
+		// Serialize the connection states.
+		for (int i = 0; i < ConnectionStates.length; i++) {
+			nbt.putInt("connection_state" + i, ConnectionStates[i].ordinal());
+		}
 		return nbt;
 	}
 
@@ -328,11 +348,21 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			CompoundNBT itemNbt = nbt.getCompound("attachment" + i);
 			Attachments[i] = ItemStack.read(itemNbt);
 		}
+
+		// Deserialize the connection states.
+		for (int i = 0; i < ConnectionStates.length; i++) {
+			ConnectionStates[i] = CableConnectionState.values()[nbt.getInt("connection_state" + i)];
+		}
 	}
 
 	protected void scanForAttachments() {
-		for (Direction dir : Direction.values()) {
-			ConnectionStates[dir.ordinal()] = cacheConnectionState(dir, getTileEntity().getPos().offset(dir));
+		// Do this synchronized (may cause a hicup, will have to watch and see. May need
+		// to rethink this if that ends up being the case).
+		synchronized (ConnectionStates) {
+			for (Direction dir : Direction.values()) {
+				BlockPos offsetPos = getPos().offset(dir);
+				ConnectionStates[dir.ordinal()] = cacheConnectionState(dir, getWorld().getTileEntity(offsetPos), offsetPos);
+			}
 		}
 	}
 
@@ -355,5 +385,5 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 
 	protected abstract boolean canAttachAttachment(ItemStack attachment);
 
-	protected abstract CableConnectionState cacheConnectionState(Direction side, BlockPos blockPosition);
+	protected abstract CableConnectionState cacheConnectionState(Direction side, @Nullable TileEntity te, BlockPos blockPosition);
 }

@@ -1,6 +1,6 @@
 package theking530.common.gui.widgets.button;
 
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 import javax.annotation.Nullable;
 
@@ -19,7 +19,7 @@ public class SpriteButton extends StandardButton {
 	private ResourceLocation regularTexture;
 	private ResourceLocation hoveredTexture;
 
-	public SpriteButton(int xPos, int yPos, int width, int height, ResourceLocation sprite, @Nullable ResourceLocation hoveredSprite, Consumer<StandardButton> onClicked) {
+	public SpriteButton(int xPos, int yPos, int width, int height, ResourceLocation sprite, @Nullable ResourceLocation hoveredSprite, BiConsumer<StandardButton, MouseButton> onClicked) {
 		super(xPos, yPos, width, height, onClicked);
 		this.regularTexture = sprite;
 		this.hoveredTexture = hoveredSprite;

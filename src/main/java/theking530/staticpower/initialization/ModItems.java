@@ -6,6 +6,7 @@ import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.items.book.StaticPowerBook;
+import theking530.staticpower.items.cableattachments.digistoreterminal.DigistoreTerminal;
 import theking530.staticpower.items.cableattachments.extractor.ExtractorAttachment;
 import theking530.staticpower.items.cableattachments.filter.FilterAttachment;
 import theking530.staticpower.items.cableattachments.retirever.RetrieverAttachment;
@@ -219,6 +220,8 @@ public class ModItems {
 	public static RetrieverAttachment EnergizedRetrieverAttachment;
 	public static RetrieverAttachment LumumRetrieverAttachment;
 
+	public static DigistoreTerminal DigistoreTerminalAttachment;
+
 	public static void init() {
 		// Book
 		StaticPowerRegistry.preRegisterItem(StaticPowerBook = new StaticPowerBook("tutorial_book"));
@@ -430,5 +433,8 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(StaticRetrieverAttachment = new RetrieverAttachment("cable_attachment_static_retriever", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.CABLE_STATIC_RETRIEVER_ATTACHMENT));
 		StaticPowerRegistry.preRegisterItem(EnergizedRetrieverAttachment = new RetrieverAttachment("cable_attachment_energized_retriever", StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.CABLE_ENERGIZED_RETRIEVER_ATTACHMENT));
 		StaticPowerRegistry.preRegisterItem(LumumRetrieverAttachment = new RetrieverAttachment("cable_attachment_lumum_retriever", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.CABLE_LUMUM_RETRIEVER_ATTACHMENT));
+
+		StaticPowerRegistry.preRegisterItem(DigistoreTerminalAttachment = new DigistoreTerminal("cable_attachment_digistore_terminal", StaticPowerAdditionalModels.CABLE_DIGISTORE_TERMINAL_ATTACHMENT));
+
 	}
 }

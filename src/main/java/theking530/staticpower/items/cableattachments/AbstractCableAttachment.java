@@ -15,6 +15,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import theking530.common.utilities.Vector3D;
 import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
@@ -22,6 +23,7 @@ import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.tileentities.utilities.RedstoneMode;
 
 public abstract class AbstractCableAttachment extends StaticPowerItem {
+	private static final Vector3D DEFAULT_BOUNDS = new Vector3D(3.0f, 3.0f, 2.0f);
 
 	public AbstractCableAttachment(String name) {
 		super(name);
@@ -74,7 +76,7 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 		return RedstoneMode.Ignore;
 	}
 
-	public @Nullable AbstractCableAttachmentContainerProvider getContainerProvider(ItemStack attachment) {
+	public @Nullable AbstractCableAttachmentContainerProvider getContainerProvider(ItemStack attachment, AbstractCableProviderComponent cable, Direction attachmentSide) {
 		return null;
 	}
 
@@ -82,13 +84,21 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 		return false;
 	}
 
+	public Vector3D getBounds() {
+		return DEFAULT_BOUNDS;
+	}
+
 	public abstract ResourceLocation getModel(ItemStack attachment, AbstractCableProviderComponent cableComponent);
 
 	protected abstract class AbstractCableAttachmentContainerProvider implements INamedContainerProvider {
 		public final ItemStack targetItemStack;
+		public final Direction attachmentSide;
+		public final AbstractCableProviderComponent cable;
 
-		public AbstractCableAttachmentContainerProvider(ItemStack stack) {
+		public AbstractCableAttachmentContainerProvider(ItemStack stack, AbstractCableProviderComponent cable, Direction attachmentSide) {
 			targetItemStack = stack;
+			this.cable = cable;
+			this.attachmentSide = attachmentSide;
 		}
 
 		@Override

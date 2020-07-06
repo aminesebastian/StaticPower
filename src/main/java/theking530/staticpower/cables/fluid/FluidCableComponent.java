@@ -4,6 +4,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -54,7 +56,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 		if (!getWorld().isRemote) {
 			this.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
 				lastUpdateFluidStack = network.getFluidStorage().getFluid();
-				lastUpdateFilledPercentage = getFilledPercentage();
+				lastUpdateFilledPercentage = Math.min(1.0f, getFilledPercentage());
 
 				FluidCableUpdatePacket packet = new FluidCableUpdatePacket(getPos(), lastUpdateFluidStack, lastUpdateFilledPercentage);
 				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), getPos(), 32, packet);
@@ -169,12 +171,11 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
-	protected CableConnectionState cacheConnectionState(Direction side, BlockPos blockPosition) {
+	protected CableConnectionState cacheConnectionState(Direction side, @Nullable TileEntity te, BlockPos blockPosition) {
 		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(), blockPosition);
 		if (otherProvider != null && otherProvider.shouldConnectionToCable(this, side)) {
 			return CableConnectionState.CABLE;
-		} else if (getWorld().getTileEntity(blockPosition) != null && otherProvider == null) {
-			TileEntity te = getWorld().getTileEntity(blockPosition);
+		} else if (te != null && otherProvider == null) {
 			if (te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite()).isPresent()) {
 				return CableConnectionState.TILE_ENTITY;
 			}
