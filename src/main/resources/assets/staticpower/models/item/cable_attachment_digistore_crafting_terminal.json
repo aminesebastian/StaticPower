@@ -1,0 +1,4 @@
+{
+	"parent": "staticpower:block/cables/attachments/digistore_crafting_terminal_attachment",
+	"gui_light": "front"
+}

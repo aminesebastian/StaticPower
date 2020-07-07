@@ -6,6 +6,7 @@ import theking530.common.gui.widgets.tabs.redstonecontrol.PacketRedstoneComponen
 import theking530.staticpower.cables.fluid.FluidCableUpdatePacket;
 import theking530.staticpower.cables.item.ItemCableAddedPacket;
 import theking530.staticpower.cables.item.ItemCableRemovedPacket;
+import theking530.staticpower.integration.JEI.JEIRecipeTransferPacket;
 import theking530.staticpower.items.cableattachments.digistoreterminal.PacketDigistoreTerminalFilters;
 import theking530.staticpower.items.itemfilter.PacketItemFilter;
 import theking530.staticpower.network.StaticPowerMessageHandler;
@@ -24,5 +25,6 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(ItemCableRemovedPacket.class);
 		StaticPowerMessageHandler.registerMessage(FluidCableUpdatePacket.class);
 		StaticPowerMessageHandler.registerMessage(PacketDigistoreTerminalFilters.class);
+		StaticPowerMessageHandler.registerMessage(JEIRecipeTransferPacket.class);
 	}
 }

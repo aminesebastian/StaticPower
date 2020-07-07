@@ -13,5 +13,6 @@
 	"cableExtractionFilterSize": 9,
 	"cableRetrievalRate": 20,
 	"cableRetrievalStackSize": 32,
-	"cableRetrievalFilterSize": 4
+	"cableRetrievalFilterSize": 4,
+	"digistoreCapacity": 131072
 }

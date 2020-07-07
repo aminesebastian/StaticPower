@@ -2,6 +2,8 @@ package theking530.staticpower.initialization;
 
 import net.minecraft.inventory.container.ContainerType;
 import theking530.staticpower.StaticPowerRegistry;
+import theking530.staticpower.items.cableattachments.digistorecraftingterminal.ContainerDigistoreCraftingTerminal;
+import theking530.staticpower.items.cableattachments.digistorecraftingterminal.GuiDigistoreCraftingTerminal;
 import theking530.staticpower.items.cableattachments.digistoreterminal.ContainerDigistoreTerminal;
 import theking530.staticpower.items.cableattachments.digistoreterminal.GuiDigistoreTerminal;
 import theking530.staticpower.items.cableattachments.extractor.ContainerExtractor;
@@ -46,11 +48,12 @@ public class ModContainerTypes {
 	public static ContainerType<ContainerBasicFarmer> BASIC_FARMER_CONTAINER;
 	public static ContainerType<ContainerTreeFarmer> TREE_FARMER_CONTAINER;
 	public static ContainerType<ContainerFormer> FORMER_CONTAINER;
-	
+
 	public static ContainerType<ContainerTank> TANK_CONTAINER;
 
 	public static ContainerType<ContainerDigistore> DIGISTORE_CONTAINER;
 	public static ContainerType<ContainerDigistoreTerminal> DIGISTORE_TERMINAL;
+	public static ContainerType<ContainerDigistoreCraftingTerminal> DIGISTORE_CRAFTING_TERMINAL;
 	public static ContainerType<ContainerExtractor> EXTRACTOR_CONTAINER;
 	public static ContainerType<ContainerFilter> FILTER_CONTAINER;
 	public static ContainerType<ContainerRetriever> RETRIEVER_CONTAINER;
@@ -66,11 +69,12 @@ public class ModContainerTypes {
 		TREE_FARMER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_tree_farmer", ContainerTreeFarmer::new, GuiTreeFarmer::new);
 		FERMENTER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_fermenter", ContainerFermenter::new, GuiFermenter::new);
 		FORMER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_former", ContainerFormer::new, GuiFormer::new);
-		
+
 		TANK_CONTAINER = StaticPowerRegistry.preRegisterContainer("tank", ContainerTank::new, GuiTank::new);
 
 		DIGISTORE_CONTAINER = StaticPowerRegistry.preRegisterContainer("digistore", ContainerDigistore::new, GuiDigistore::new);
 		DIGISTORE_TERMINAL = StaticPowerRegistry.preRegisterContainer("digistore_terminal", ContainerDigistoreTerminal::new, GuiDigistoreTerminal::new);
+		DIGISTORE_CRAFTING_TERMINAL  = StaticPowerRegistry.preRegisterContainer("digistore_crafting_terminal", ContainerDigistoreCraftingTerminal::new, GuiDigistoreCraftingTerminal::new);
 		EXTRACTOR_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_extractor", ContainerExtractor::new, GuiExtractor::new);
 		FILTER_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_filter", ContainerFilter::new, GuiFilter::new);
 		RETRIEVER_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_retriever", ContainerRetriever::new, GuiRetriever::new);

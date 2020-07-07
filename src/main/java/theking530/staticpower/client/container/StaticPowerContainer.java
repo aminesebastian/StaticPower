@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.IContainerListener;
@@ -12,7 +13,6 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
 import theking530.common.utilities.TriFunction;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.container.slots.DummySlot;
@@ -30,6 +30,7 @@ public abstract class StaticPowerContainer extends Container {
 		super(type, id);
 		playerInventory = inv;
 		listenersField = getListnersField();
+		preInitializeContainer();
 	}
 
 	/**
@@ -60,6 +61,15 @@ public abstract class StaticPowerContainer extends Container {
 	}
 
 	/**
+	 * This method is called BEFORE all the constructor calls have been made. This
+	 * is where code that should be called before any container methods are called
+	 * should be placed. Should only be used to initialize values.
+	 */
+	public void preInitializeContainer() {
+
+	}
+
+	/**
 	 * This method is raised AFTER all the constructor calls have been made. This is
 	 * where the implementer can initialize the container (set up slots, etc). Any
 	 * inheritors from this class specifically (and not from any of the provided
@@ -84,8 +94,8 @@ public abstract class StaticPowerContainer extends Container {
 		return false;
 	}
 
-	protected void addSlotsInGrid(ItemStackHandler inventory, int startingIndex, int xPos, int yPos, int maxPerRow, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
-		addSlotsInGrid(inventory, startingIndex, xPos, yPos, maxPerRow, slotFactory);
+	protected void addSlotsInGrid(IInventory inventory, int startingIndex, int xPos, int yPos, int maxPerRow, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
+		addSlotsInGrid(inventory, startingIndex, xPos, yPos, maxPerRow, 16, slotFactory);
 	}
 
 	protected void addSlotsInGrid(IItemHandler inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
@@ -93,6 +103,17 @@ public abstract class StaticPowerContainer extends Container {
 		int adjustedSlotSize = slotSize + 2;
 		int offset = (maxPerRow * adjustedSlotSize) / 2;
 		for (int i = 0; i < inventory.getSlots(); i++) {
+			int row = i / maxPerRow;
+			Slot output = slotFactory.apply(startingIndex + i, xPos + ((i % maxPerRow) * adjustedSlotSize) - offset, yPos + (row * adjustedSlotSize));
+			addSlot(output);
+		}
+	}
+
+	protected void addSlotsInGrid(IInventory inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
+		maxPerRow = Math.min(inventory.getSizeInventory(), maxPerRow);
+		int adjustedSlotSize = slotSize + 2;
+		int offset = (maxPerRow * adjustedSlotSize) / 2;
+		for (int i = 0; i < inventory.getSizeInventory(); i++) {
 			int row = i / maxPerRow;
 			Slot output = slotFactory.apply(startingIndex + i, xPos + ((i % maxPerRow) * adjustedSlotSize) - offset, yPos + (row * adjustedSlotSize));
 			addSlot(output);
@@ -109,7 +130,7 @@ public abstract class StaticPowerContainer extends Container {
 
 		int missingSlots = maxPerRow - Math.floorMod(inventory.getSlots(), maxPerRow);
 
-		if (missingSlots %  maxPerRow != 0) {
+		if (missingSlots % maxPerRow != 0) {
 			for (int i = 0; i < missingSlots; i++) {
 				int index = inventory.getSlots() - 1 + i;
 				Slot output = new DummySlot(index, xPos + (((i + missingSlots) % maxPerRow) * adjustedSlotSize) - offset, yPos + (row * adjustedSlotSize));

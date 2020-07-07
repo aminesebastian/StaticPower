@@ -6,5 +6,6 @@
 	"unlocalizedTierName": "tier.staticpower.creative",
 	"portableBatteryCapacity": 2147483647,
 	"solarPanelPowerGeneration": 2147483647,
-	"solarPanelPowerStorage": 2147483647
+	"solarPanelPowerStorage": 2147483647,
+	"digistoreCapacity": 2147483647
 }

@@ -49,7 +49,7 @@ public class PacketDigistoreTerminalFilters extends NetworkMessage {
 		ctx.get().enqueueWork(() -> {
 			ServerPlayerEntity player = ctx.get().getSender();
 			if (player.openContainer.windowId == windowId) {
-				ContainerDigistoreTerminal digistoreContainer = (ContainerDigistoreTerminal) player.openContainer;
+				AbstractContainerDigistoreTerminal<?> digistoreContainer = (AbstractContainerDigistoreTerminal<?>) player.openContainer;
 				digistoreContainer.updateSortAndFilter(searchString, searchMode, sortType, sortDescending);
 			}
 		});

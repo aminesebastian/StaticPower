@@ -9,7 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
-import theking530.staticpower.initialization.ModItems;
+import theking530.staticpower.items.cableattachments.digistoreterminal.AbstractDigistoreTerminalAttachment;
 import theking530.staticpower.tileentities.TileEntityBase;
 
 public class DigistoreCableProviderComponent extends AbstractCableProviderComponent {
@@ -20,7 +20,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 
 	@Override
 	protected boolean canAttachAttachment(ItemStack attachment) {
-		return attachment.getItem() == ModItems.DigistoreTerminalAttachment;
+		return attachment.getItem() instanceof AbstractDigistoreTerminalAttachment;
 	}
 
 	@Override

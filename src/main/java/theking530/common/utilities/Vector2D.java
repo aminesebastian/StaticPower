@@ -7,11 +7,17 @@ public class Vector2D extends AbstractVector {
 		setX(x);
 		setY(y);
 	}
+
 	public Vector2D() {
 		this(0.0f, 0.0f);
 	}
+
 	public float getX() {
 		return values.get(0);
+	}
+
+	public int getXi() {
+		return Math.round(values.get(0));
 	}
 
 	public void setX(float x) {
@@ -20,6 +26,10 @@ public class Vector2D extends AbstractVector {
 
 	public float getY() {
 		return values.get(1);
+	}
+
+	public int getYi() {
+		return Math.round(values.get(1));
 	}
 
 	public void setY(float y) {

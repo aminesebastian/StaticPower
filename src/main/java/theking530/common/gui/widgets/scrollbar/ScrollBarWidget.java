@@ -16,8 +16,8 @@ public class ScrollBarWidget extends AbstractGuiWidget {
 	public ScrollBarWidget(float xPosition, float yPosition, float height) {
 		super(xPosition, yPosition, 12.0f, height);
 		scrollAmount = 0;
-		maxScroll = 0;
 		scrollHandleDrawable = new SpriteDrawable(StaticPowerSprites.SCROLL_HANDLE, 12, 15);
+		setMaxScroll(0);
 	}
 
 	public int getScrollAmount() {
@@ -33,11 +33,18 @@ public class ScrollBarWidget extends AbstractGuiWidget {
 	}
 
 	public void setMaxScroll(int maxScroll) {
-		this.maxScroll = maxScroll;
+		this.maxScroll = Math.max(0, maxScroll);
+
+		// If the scroll amount is equal to zero, disable the scroll bar.
 		if (maxScroll == 0) {
 			scrollHandleDrawable.setSprite(StaticPowerSprites.SCROLL_HANDLE_DISABLED);
 		} else {
 			scrollHandleDrawable.setSprite(StaticPowerSprites.SCROLL_HANDLE);
+		}
+
+		// Bring back the scroll amount if we are over scrolled.
+		if (scrollAmount > maxScroll) {
+			scrollAmount = maxScroll;
 		}
 	}
 

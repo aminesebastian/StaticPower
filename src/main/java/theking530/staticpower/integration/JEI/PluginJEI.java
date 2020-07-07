@@ -5,18 +5,21 @@ import javax.annotation.Nullable;
 import mezz.jei.Internal;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.constants.VanillaRecipeCategoryUid;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.helpers.IJeiHelpers;
 import mezz.jei.api.helpers.IModIdHelper;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
 import mezz.jei.gui.textures.Textures;
 import net.minecraft.util.ResourceLocation;
 import theking530.staticpower.client.gui.StaticPowerContainerGui;
 import theking530.staticpower.integration.JEI.lumbermill.JEILumberMillRecipeHandler;
 import theking530.staticpower.integration.JEI.lumbermill.LumberMillRecipeCategory;
+import theking530.staticpower.items.cableattachments.digistorecraftingterminal.ContainerDigistoreCraftingTerminal;
 import theking530.staticpower.tileentities.powered.lumbermill.GuiLumberMill;
 import theking530.staticpower.utilities.Reference;
 
@@ -52,6 +55,11 @@ public class PluginJEI implements IModPlugin {
 	@Override
 	public void registerRecipes(IRecipeRegistration registration) {
 		registration.addRecipes(JEILumberMillRecipeHandler.getRecipes(), LumberMillRecipeCategory.LUMBER_MILL_UID);
+	}
+
+	@Override
+	public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
+		registration.addRecipeTransferHandler(new CraftingRecipeTransferHandler<>(ContainerDigistoreCraftingTerminal.class), VanillaRecipeCategoryUid.CRAFTING);
 	}
 
 	@Override

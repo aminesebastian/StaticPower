@@ -6,6 +6,8 @@ import javax.annotation.Nullable;
 
 import org.lwjgl.opengl.GL11;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -46,7 +48,7 @@ public class SpriteButton extends StandardButton {
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void drawButtonOverlay(int buttonLeft, int buttonTop) {
-		GL11.glEnable(GL11.GL_BLEND);
+		GlStateManager.enableBlend();
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder tes = tessellator.getBuffer();
 		BufferBuilder vertexbuffer = tessellator.getBuffer();
@@ -65,6 +67,5 @@ public class SpriteButton extends StandardButton {
 		vertexbuffer.pos(buttonLeft + getSize().getX(), buttonTop + getSize().getY(), 0.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMaxU(), sprite.getMaxV()).endVertex();
 
 		tessellator.draw();
-		GL11.glDisable(GL11.GL_BLEND);
 	}
 }

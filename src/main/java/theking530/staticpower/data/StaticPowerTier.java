@@ -6,7 +6,7 @@ public class StaticPowerTier {
 	private ResourceLocation tierId;
 	private String unlocalizedTierName;
 	private int portableBatteryCapacity;
-	private int digistoreItemCapacityUpgrade;
+	private int digistoreCapacity;
 	private int solarPanelPowerGeneration;
 	private int solarPanelPowerStorage;
 	private int cableExtractorRate;
@@ -34,8 +34,8 @@ public class StaticPowerTier {
 		return portableBatteryCapacity;
 	}
 
-	public int getDigistoreItemCapacityUpgrade() {
-		return digistoreItemCapacityUpgrade;
+	public int getDigistoreCapacity() {
+		return digistoreCapacity;
 	}
 
 	public int getSolarPanelPowerGeneration() {

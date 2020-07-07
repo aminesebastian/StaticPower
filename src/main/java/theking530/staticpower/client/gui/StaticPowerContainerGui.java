@@ -21,6 +21,7 @@ import theking530.common.gui.widgets.tabs.GuiTabManager;
 import theking530.common.utilities.Color;
 import theking530.common.utilities.Vector2D;
 import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
+import theking530.staticpower.client.container.slots.DigistoreCraftingOutputSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.tileentities.components.SideConfigurationComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
@@ -503,6 +504,8 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 
 				// Draw the item.
 				handlerSlot.drawExtras(itemDrawer, guiLeft, guiTop, slotSize, sizePosOffset);
+			} else if (slot instanceof DigistoreCraftingOutputSlot) {
+				drawSlot(slot.xPos + guiLeft - 4, slot.yPos - 4 + guiTop, 24, 24);
 			} else {
 				drawSlot(slot.xPos + guiLeft, slot.yPos + guiTop, 16, 16);
 			}
