@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -17,7 +18,7 @@ public class DigistoreCard extends StaticPowerItem {
 	public final ResourceLocation tierType;
 
 	public DigistoreCard(String name, ResourceLocation tierType) {
-		super(name);
+		super(name, new Item.Properties().maxStackSize(1));
 		this.tierType = tierType;
 	}
 

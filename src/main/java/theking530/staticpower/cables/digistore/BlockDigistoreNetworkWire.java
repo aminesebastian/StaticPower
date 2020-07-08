@@ -27,6 +27,7 @@ public class BlockDigistoreNetworkWire extends AbstractCableBlock {
 		IBakedModel extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_DIGISTORE_EXTENSION);
 		IBakedModel straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_DIGISTORE_STRAIGHT);
 		IBakedModel attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_DIGISTORE_ATTACHMENT);
+
 		return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
 	}
 

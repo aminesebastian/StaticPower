@@ -32,7 +32,7 @@ public class BlockFluidCable extends AbstractCableBlock {
 	public IBakedModel getModelOverride(BlockState state, @Nullable IBakedModel existingModel, ModelBakeEvent event) {
 		IBakedModel extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_EXTENSION);
 		IBakedModel attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_ATTACHMENT);
-
+		
 		// Don't use the straight model (it just looks better without it! :D ).
 		return new CableBakedModel(existingModel, extensionModel, null, attachmentModel);
 	}

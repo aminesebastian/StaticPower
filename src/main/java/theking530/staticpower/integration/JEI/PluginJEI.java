@@ -13,10 +13,12 @@ import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
+import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
 import mezz.jei.gui.textures.Textures;
 import net.minecraft.util.ResourceLocation;
 import theking530.staticpower.client.gui.StaticPowerContainerGui;
+import theking530.staticpower.initialization.ModItems;
 import theking530.staticpower.integration.JEI.lumbermill.JEILumberMillRecipeHandler;
 import theking530.staticpower.integration.JEI.lumbermill.LumberMillRecipeCategory;
 import theking530.staticpower.items.cableattachments.digistorecraftingterminal.ContainerDigistoreCraftingTerminal;
@@ -50,6 +52,11 @@ public class PluginJEI implements IModPlugin {
 	@Override
 	public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
 		RUNTIME = jeiRuntime;
+	}
+
+	@Override
+	public void registerItemSubtypes(ISubtypeRegistration subtypeRegistry) {
+		subtypeRegistry.useNbtForSubtypes(ModItems.CableCover);
 	}
 
 	@Override

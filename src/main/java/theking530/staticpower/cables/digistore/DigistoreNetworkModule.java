@@ -16,8 +16,8 @@ import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.NetworkMapper;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.items.cableattachments.digistoreterminal.DigistoreInventorySortType;
+import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.DigistoreInventoryComponent;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.TileEntityDigistore;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.TileEntityDigistoreManager;
 import theking530.staticpower.utilities.ItemUtilities;
 
@@ -44,10 +44,14 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 		// Cache all the digistores in the network.
 		for (ServerCable cable : mapper.getDiscoveredCables()) {
 			TileEntity te = Network.getWorld().getChunkAt(cable.getPos()).getTileEntity(cable.getPos(), Chunk.CreateEntityType.QUEUED);
-			if (te instanceof TileEntityDigistore) {
-				digistores.add(((TileEntityDigistore) te).inventory);
-			} else if (te instanceof TileEntityDigistoreManager) {
-				managerPresent = true;
+			if (te instanceof TileEntityBase) {
+				TileEntityBase baseTe = (TileEntityBase) te;
+				if (baseTe.hasComponentOfType(DigistoreInventoryComponent.class)) {
+					digistores.add(baseTe.getComponent(DigistoreInventoryComponent.class));
+				}
+				if (te instanceof TileEntityDigistoreManager) {
+					managerPresent = true;
+				}
 			}
 		}
 	}

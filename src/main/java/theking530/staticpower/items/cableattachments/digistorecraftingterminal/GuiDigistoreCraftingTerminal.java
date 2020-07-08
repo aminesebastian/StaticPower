@@ -3,6 +3,8 @@ package theking530.staticpower.items.cableattachments.digistorecraftingterminal;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import theking530.common.gui.widgets.progressbars.ArrowProgressBar;
+import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
+import theking530.common.gui.widgets.tabs.GuiInfoTab;
 import theking530.common.utilities.Vector2D;
 import theking530.staticpower.items.cableattachments.digistoreterminal.AbstractGuiDigistoreTerminal;
 
@@ -13,6 +15,11 @@ public class GuiDigistoreCraftingTerminal extends AbstractGuiDigistoreTerminal<C
 		registerWidget(new ArrowProgressBar(118, 138, 32, 16));
 		searchBar.setSize(70, 12);
 		searchBar.setPosition(98, 6);
+
+		GuiInfoTab tab = new GuiInfoTab(100, 100);
+		tab.setTabSide(TabSide.RIGHT);
+		getTabManager().setPosition(0, -5);
+		getTabManager().registerTab(tab);
 	}
 
 	@Override

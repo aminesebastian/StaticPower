@@ -33,7 +33,7 @@ public class BlockIndustrialFluidCable extends AbstractCableBlock {
 		IBakedModel extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_EXTENSION);
 		IBakedModel attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_ATTACHMENT);
 		IBakedModel straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_STRAIGHT);
-
+		
 		return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
 	}
 

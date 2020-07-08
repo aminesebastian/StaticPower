@@ -1,5 +1,6 @@
 package theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
@@ -26,7 +27,10 @@ public class DigistoreInventoryComponent extends AbstractTileEntityComponent imp
 	public DigistoreInventoryComponent(String name, int slotCount, int maximumStorage) {
 		super(name);
 		this.maximumStorage = maximumStorage;
-		slots = NonNullList.withSize(slotCount, new DigistoreItemTracker());
+		slots = new LinkedList<DigistoreItemTracker>();
+		for (int i = 0; i < maximumStorage; i++) {
+			slots.add(new DigistoreItemTracker());
+		}
 	}
 
 	public void setLockedStateForAllSlots(boolean locked) {
@@ -37,6 +41,16 @@ public class DigistoreInventoryComponent extends AbstractTileEntityComponent imp
 
 	public int getCountInSlot(int slot) {
 		return slots.get(slot).getCount();
+	}
+
+	public void setSupportedItemTypeCount(int itemCount) {
+		for (int i = getSupportedItemTypeCount(); i < itemCount; i++) {
+			slots.add(new DigistoreItemTracker());
+		}
+	}
+
+	public int getSupportedItemTypeCount() {
+		return slots.size();
 	}
 
 	@Override
@@ -225,10 +239,12 @@ public class DigistoreInventoryComponent extends AbstractTileEntityComponent imp
 		voidExcess = nbt.getBoolean("void_excess");
 
 		ListNBT digistoreSlots = nbt.getList("slots", Constants.NBT.TAG_COMPOUND);
-		slots = NonNullList.withSize(digistoreSlots.size(), new DigistoreItemTracker());
+		slots.clear();
 		for (int i = 0; i < digistoreSlots.size(); i++) {
 			CompoundNBT slotTagComponent = (CompoundNBT) digistoreSlots.get(i);
-			slots.get(i).readFromNbt(slotTagComponent);
+			DigistoreItemTracker newTracker = new DigistoreItemTracker();
+			newTracker.readFromNbt(slotTagComponent);
+			slots.add(newTracker);
 		}
 	}
 

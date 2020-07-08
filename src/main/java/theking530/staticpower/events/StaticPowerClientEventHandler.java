@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -61,15 +62,14 @@ public class StaticPowerClientEventHandler {
 		// Initialize the guis.
 		initializeGui();
 
-		// Temp TESR
-		
+		// Register the tile entity renderers.
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.DIGISTORE, TileEntityRenderDigistore::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.ITEM_CABLE, TileEntityRenderItemCable::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.FLUID_CABLE, TileEntityRenderFluidCable::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.INDUSTRIAL_FLUID_CABLE, TileEntityRenderFluidCable::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.TANK, TileEntityRenderTank::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.PUMP, TileEntityRenderPump::new);
-		
+
 		// Log the completion.
 		StaticPower.LOGGER.info("Static Power Client Setup Completed!");
 	}
@@ -95,6 +95,24 @@ public class StaticPowerClientEventHandler {
 						} else {
 							StaticPower.LOGGER.error(String.format("Encountered null model override for block: %1$s.", block.getNameTextComponent().getFormattedText()));
 						}
+					}
+				}
+			}
+		}
+		for (Item item : StaticPowerRegistry.ITEMS) {
+			if (item instanceof ICustomModelSupplier) {
+
+				// Get the supplier.
+				ICustomModelSupplier supplier = ((ICustomModelSupplier) item);
+
+				if (supplier.hasModelOverride(null)) {
+					// Get the existing model.
+					ModelResourceLocation modelLocation = new ModelResourceLocation(item.getRegistryName(), "inventory");
+					IBakedModel existingModel = event.getModelManager().getModel(modelLocation);
+
+					if (existingModel != null) {
+						IBakedModel override = supplier.getModelOverride(null, existingModel, event);
+						event.getModelRegistry().put(modelLocation, override);
 					}
 				}
 			}

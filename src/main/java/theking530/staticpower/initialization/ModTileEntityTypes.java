@@ -10,6 +10,7 @@ import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.TileEntityDigistore;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.ioport.TileEntityDigistoreIOPort;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.TileEntityDigistoreManager;
+import theking530.staticpower.tileentities.nonpowered.digistorenetwork.severrack.TileEntityDigistoreServerRack;
 import theking530.staticpower.tileentities.nonpowered.tank.TileEntityTank;
 import theking530.staticpower.tileentities.nonpowered.vacuumchest.TileEntityVacuumChest;
 import theking530.staticpower.tileentities.powered.basicfarmer.TileEntityBasicFarmer;
@@ -44,6 +45,7 @@ public class ModTileEntityTypes {
 
 	public static TileEntityType<TileEntityDigistore> DIGISTORE;
 	public static TileEntityType<TileEntityDigistoreManager> DIGISTORE_MANAGER;
+	public static TileEntityType<TileEntityDigistoreServerRack> DIGISTORE_SERVER_RACK;
 	public static TileEntityType<TileEntityDigistoreIOPort> DIGISTORE_IO_PORT;
 	public static TileEntityType<TileEntityDigistoreWire> DIGISTORE_WIRE;
 	public static TileEntityType<TileEntityLumberMill> LUMBER_MILL;
@@ -82,5 +84,6 @@ public class ModTileEntityTypes {
 		DIGISTORE_MANAGER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityDigistoreManager(), ModBlocks.DigistoreManager);
 		DIGISTORE_IO_PORT = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityDigistoreIOPort(), ModBlocks.DigistoreIOPort);
 		DIGISTORE_WIRE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityDigistoreWire(), ModBlocks.DigistoreWire);
+		DIGISTORE_SERVER_RACK = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityDigistoreServerRack(), ModBlocks.DigistoreServerRack);
 	}
 }

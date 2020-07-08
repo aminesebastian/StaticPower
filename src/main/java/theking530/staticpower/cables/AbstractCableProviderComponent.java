@@ -26,11 +26,7 @@ import theking530.staticpower.utilities.WorldUtilities;
 
 public abstract class AbstractCableProviderComponent extends AbstractTileEntityComponent {
 	/** KEEP IN MIND: This is purely cosmetic and on the client side. */
-	public static final ModelProperty<boolean[]> DISABLED_CABLE_SIDES = new ModelProperty<>();
-	/** KEEP IN MIND: This is purely cosmetic and on the client side. */
-	public static final ModelProperty<CableConnectionState[]> CABLE_CONNECTION_STATES = new ModelProperty<>();
-	/** KEEP IN MIND: This is purely cosmetic and on the client side. */
-	public static final ModelProperty<ResourceLocation[]> CABLE_ATTACHMENT_MODELS = new ModelProperty<>();
+	public static final ModelProperty<CableRenderingState> CABLE_RENDERING_STATE = new ModelProperty<>();
 	/** The type of this cable. */
 	private final HashSet<ResourceLocation> SupportedNetworkModules;
 	/**
@@ -47,6 +43,8 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	protected boolean connectionStatesInitialized;
 	/** Container for all the attachments on this cable. */
 	protected final ItemStack[] Attachments;
+	/** Container for all the covers on this cable. */
+	protected final ItemStack[] Covers;
 
 	public AbstractCableProviderComponent(String name, ResourceLocation... supportedModules) {
 		super(name);
@@ -61,6 +59,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		DisabledSides = new boolean[] { false, false, false, false, false, false };
 		ConnectionStates = new CableConnectionState[] { CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE };
 		Attachments = new ItemStack[] { ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY };
+		Covers = new ItemStack[] { ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY };
 		connectionStatesInitialized = false;
 	}
 
@@ -124,7 +123,11 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 */
 	@Override
 	public void getModelData(ModelDataMap.Builder builder) {
-		builder.withInitial(DISABLED_CABLE_SIDES, DisabledSides).withInitial(CABLE_CONNECTION_STATES, ConnectionStates).withInitial(CABLE_ATTACHMENT_MODELS, getAttachmentModels());
+		builder.withInitial(CABLE_RENDERING_STATE, getRenderingState());
+	}
+
+	public CableRenderingState getRenderingState() {
+		return new CableRenderingState(ConnectionStates, getAttachmentModels(), Attachments, Covers, DisabledSides, getPos(), getWorld());
 	}
 
 	public HashSet<ResourceLocation> getSupportedNetworkModuleTypes() {
@@ -173,10 +176,15 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			manager.removeCable(getTileEntity().getPos());
 
 			for (Direction dir : Direction.values()) {
-				if (this.hasAttachment(dir)) {
+				if (hasAttachment(dir)) {
 					ItemStack attachment = Attachments[dir.ordinal()];
 					removeAttachment(dir);
 					WorldUtilities.dropItem(getWorld(), getPos(), attachment);
+				}
+				if (hasCover(dir)) {
+					ItemStack cover = Covers[dir.ordinal()];
+					hasCover(dir);
+					WorldUtilities.dropItem(getWorld(), getPos(), cover);
 				}
 			}
 		}
@@ -237,6 +245,47 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	}
 
 	/**
+	 * Attaches a cover to the provided side. Returns true if the cover was added.
+	 * Returns false otherwise.
+	 * 
+	 * @param attachment The cover itemstack to add.
+	 * @param side       The side to attach it to.
+	 * @return True if the cover was applied, false otherwise.
+	 */
+	public boolean attachCover(ItemStack attachment, Direction side) {
+		// If there is no cover on the provided side, add it.
+		if (Covers[side.ordinal()].isEmpty()) {
+			Covers[side.ordinal()] = attachment.copy();
+			Covers[side.ordinal()].setCount(1);
+
+			getTileEntity().markTileEntityForSynchronization();
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Removes a cover from the provided side and returns the itemstack for the
+	 * cover. If there is no cover, returns an empty Itemstack.
+	 * 
+	 * @param side The side to remove from.
+	 * @return
+	 */
+	public ItemStack removeCover(Direction side) {
+		// Ensure we have an attachment on the provided side.
+		if (hasCover(side)) {
+			// Get the attachment for the side.
+			ItemStack output = Covers[side.ordinal()];
+
+			// Remove the attachment and return it.
+			Covers[side.ordinal()] = ItemStack.EMPTY;
+			getTileEntity().markTileEntityForSynchronization();
+			return output;
+		}
+		return ItemStack.EMPTY;
+	}
+
+	/**
 	 * Checks to see if an attachment is attached on that side.
 	 * 
 	 * @param side The side to check for.
@@ -244,6 +293,27 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 */
 	public boolean hasAttachment(Direction side) {
 		return !Attachments[side.ordinal()].isEmpty();
+	}
+
+	/**
+	 * Checks to see if a cover is attached on that side.
+	 * 
+	 * @param side The side to check for.
+	 * @return Returns true if a cover is applied on the provided side.
+	 */
+	public boolean hasCover(Direction side) {
+		return !Covers[side.ordinal()].isEmpty();
+	}
+
+	/**
+	 * Gets the cover on the provided side. If no cover is present, returns an empty
+	 * itemstack.
+	 * 
+	 * @param side The side to check for.
+	 * @return
+	 */
+	public ItemStack getCover(Direction side) {
+		return Covers[side.ordinal()];
 	}
 
 	/**
@@ -327,6 +397,13 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			nbt.put("attachment" + i, itemNbt);
 		}
 
+		// Serialize the covers.
+		for (int i = 0; i < Covers.length; i++) {
+			CompoundNBT itemNbt = new CompoundNBT();
+			Covers[i].write(itemNbt);
+			nbt.put("cover" + i, itemNbt);
+		}
+
 		// Serialize the connection states.
 		for (int i = 0; i < ConnectionStates.length; i++) {
 			nbt.putInt("connection_state" + i, ConnectionStates[i].ordinal());
@@ -347,6 +424,12 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		for (int i = 0; i < Attachments.length; i++) {
 			CompoundNBT itemNbt = nbt.getCompound("attachment" + i);
 			Attachments[i] = ItemStack.read(itemNbt);
+		}
+
+		// Deserialize the covers.
+		for (int i = 0; i < Covers.length; i++) {
+			CompoundNBT itemNbt = nbt.getCompound("cover" + i);
+			Covers[i] = ItemStack.read(itemNbt);
 		}
 
 		// Deserialize the connection states.

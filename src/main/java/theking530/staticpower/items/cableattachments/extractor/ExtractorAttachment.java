@@ -72,8 +72,11 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 
 		// Increment the extraction timer. If it returns true, attempt an item extract.
 		if (incrementExtractionTimer(attachment)) {
-			// If not, attempt to transfer the item from a regular inventory.
-			performItemHandlerExtract(attachment, side, cable, te);
+			// See if we can perform a digistore extract.
+			if(!performDigistoreExtract(attachment, side, cable, te)) {
+				// If not, attempt to transfer the item from a regular inventory.
+				performItemHandlerExtract(attachment, side, cable, te);
+			}
 		}
 
 		// Attempt to transfer fluid regardless of the item extract timer.

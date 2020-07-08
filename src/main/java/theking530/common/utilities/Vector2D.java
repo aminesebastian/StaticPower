@@ -35,4 +35,9 @@ public class Vector2D extends AbstractVector {
 	public void setY(float y) {
 		values.set(1, y);
 	}
+
+	@Override
+	public Vector2D clone() {
+		return new Vector2D(values.get(0), values.get(1));
+	}
 }

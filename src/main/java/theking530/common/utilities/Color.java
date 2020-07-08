@@ -34,6 +34,11 @@ public class Color extends Vector4D {
 		return getW();
 	}
 
+	@Override
+	public String toString() {
+		return toStringInternal(true);
+	}
+
 	/**
 	 * Converts color from range 0 - 255 to the normalized range 0.0f - 1.0f.
 	 * 
@@ -57,5 +62,10 @@ public class Color extends Vector4D {
 	 */
 	public int encodeInInteger() {
 		return (int) getAlpha() << 24 | (int) getRed() << 16 | (int) getGreen() << 8 | (int) getBlue();
+	}
+
+	@Override
+	public Color clone() {
+		return new Color(values.get(0), values.get(1), values.get(2), values.get(3));
 	}
 }

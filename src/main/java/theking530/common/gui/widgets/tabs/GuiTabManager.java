@@ -6,6 +6,7 @@ import java.util.List;
 import theking530.common.gui.widgets.AbstractGuiWidget;
 import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.common.gui.widgets.tabs.BaseGuiTab.TabState;
+import theking530.common.utilities.Vector2D;
 
 public class GuiTabManager extends AbstractGuiWidget {
 
@@ -63,8 +64,9 @@ public class GuiTabManager extends AbstractGuiWidget {
 
 	@Override
 	public void renderBehindItems(int mouseX, int mouseY, float partialTicks) {
-		int tabPositionX = (int) (getOwnerPosition().getX() + getOwnerSize().getX() - 1);
-		int tabPositionY = (int) (getOwnerPosition().getY() + 10);
+		Vector2D positionOffset = this.getPosition();
+		int tabPositionX = (int) (getOwnerPosition().getX() + getOwnerSize().getX() - 1 + positionOffset.getX());
+		int tabPositionY = (int) (getOwnerPosition().getY() + 10 + positionOffset.getY());
 
 		List<BaseGuiTab> leftTabs = new ArrayList<BaseGuiTab>();
 		List<BaseGuiTab> rightTabs = new ArrayList<BaseGuiTab>();

@@ -26,4 +26,9 @@ public class Vector3D extends Vector2D {
 	public void setZ(float z) {
 		values.set(2, z);
 	}
+
+	@Override
+	public Vector3D clone() {
+		return new Vector3D(values.get(0), values.get(1), values.get(2));
+	}
 }

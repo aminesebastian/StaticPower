@@ -11,7 +11,7 @@ public abstract class AbstractDigistoreTerminalAttachment extends AbstractCableA
 	public static final String TERMINAL_SEARCH_MODE = "search_mode";
 	public static final String TERMINAL_SORT_TYPE = "sort_type";
 	public static final String TERMINAL_SORT_DESC = "sort_desc";
-	private static final Vector3D BOUNDS = new Vector3D(6.0f, 6.0f, 0.0f);
+	private static final Vector3D BOUNDS = new Vector3D(6.0f, 6.0f, 2.0f);
 	private final ResourceLocation model;
 
 	public AbstractDigistoreTerminalAttachment(String name, ResourceLocation model) {

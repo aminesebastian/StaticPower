@@ -25,10 +25,12 @@ public class StaticPowerForgeEventRegistry {
 	public static void render(RenderWorldLastEvent event) {
 		StaticPowerClientEventHandler.render(event);
 	}
+
 	@SubscribeEvent
 	public static void registerItemColors(ColorHandlerEvent.Item event) {
 		StaticPowerRegistry.onRegisterItemColors(event);
 	}
+
 	/**
 	 * This event is raised when the resources are loaded/reloaded.
 	 */

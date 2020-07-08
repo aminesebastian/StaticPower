@@ -18,12 +18,14 @@ import net.minecraft.world.World;
 import theking530.common.utilities.Vector3D;
 import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.cables.CableBoundsHoverResult;
+import theking530.staticpower.cables.CableBoundsHoverResult.CableBoundsHoverType;
 import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.tileentities.utilities.RedstoneMode;
 
 public abstract class AbstractCableAttachment extends StaticPowerItem {
-	private static final Vector3D DEFAULT_BOUNDS = new Vector3D(3.0f, 3.0f, 2.0f);
+	private static final Vector3D DEFAULT_BOUNDS = new Vector3D(3.0f, 3.0f, 3.0f);
 
 	public AbstractCableAttachment(String name) {
 		super(name);
@@ -35,8 +37,8 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 			AbstractCableProviderComponent cableComponent = CableUtilities.getCableWrapperComponent(world, pos);
 			if (cableComponent != null) {
 				AbstractCableBlock block = (AbstractCableBlock) world.getBlockState(pos).getBlock();
-				Direction hoveredDirection = block.CableBounds.getHoveredAttachmentDirection(pos, player);
-				if (hoveredDirection != null && cableComponent.attachAttachment(item, hoveredDirection)) {
+				CableBoundsHoverResult hoverResult = block.CableBounds.getHoveredAttachmentOrCover(pos, player);
+				if (hoverResult != null && hoverResult.type == CableBoundsHoverType.HELD_ATTACHMENT && cableComponent.attachAttachment(item, hoverResult.direction)) {
 					if (!world.isRemote) {
 						item.setCount(item.getCount() - 1);
 					} else {
@@ -53,7 +55,15 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 		if (!attachment.hasTag()) {
 			attachment.setTag(new CompoundNBT());
 		}
+
+		// Allocate the redstone mode if neeed.
 		attachment.getTag().putInt("redstone_mode", RedstoneMode.High.ordinal());
+
+		// Allocate the covers.
+		for (int i = 0; i < 6; i++) {
+			attachment.getTag().putString("cover_" + i, "");
+		}
+
 	}
 
 	public void onRemovedFromCable(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {

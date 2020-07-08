@@ -23,6 +23,7 @@ import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.BlockDigistore;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.ioport.BlockDigistoreIOPort;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.BlockDigistoreManager;
+import theking530.staticpower.tileentities.nonpowered.digistorenetwork.severrack.BlockDigistoreServerRack;
 import theking530.staticpower.tileentities.nonpowered.tank.BlockTank;
 import theking530.staticpower.tileentities.nonpowered.vacuumchest.BlockVacuumChest;
 import theking530.staticpower.tileentities.powered.basicfarmer.BlockBasicFarmer;
@@ -98,6 +99,7 @@ public class ModBlocks {
 	public static BlockDigistoreManager DigistoreManager;
 	public static BlockDigistoreIOPort DigistoreIOPort;
 	public static BlockDigistore Digistore;
+	public static BlockDigistoreServerRack DigistoreServerRack;
 
 	// Cables
 	public static BlockItemCable ItemCable;
@@ -166,7 +168,8 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(DigistoreManager = new BlockDigistoreManager("digistore_manager"));
 		StaticPowerRegistry.preRegisterBlock(DigistoreIOPort = new BlockDigistoreIOPort("digistore_io_port"));
 		StaticPowerRegistry.preRegisterBlock(Digistore = new BlockDigistore("digistore"));
-
+		StaticPowerRegistry.preRegisterBlock(DigistoreServerRack = new BlockDigistoreServerRack("digistore_server_rack"));
+		
 		// Cables
 		StaticPowerRegistry.preRegisterBlock(DigistoreWire = new BlockDigistoreNetworkWire("cable_digistore"));
 		StaticPowerRegistry.preRegisterBlock(PowerCable = new BlockPowerCable("cable_power"));

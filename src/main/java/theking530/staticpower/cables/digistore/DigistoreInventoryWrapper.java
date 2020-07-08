@@ -6,6 +6,7 @@ import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import theking530.staticpower.items.cableattachments.digistoreterminal.DigistoreInventorySortType;
@@ -52,6 +53,22 @@ public class DigistoreInventoryWrapper implements IItemHandler {
 				if (filterString.length() > 0) {
 					if (filterString.startsWith("@") && filterString.length() > 1) {
 						if (!stackInSlot.getItem().getRegistryName().getNamespace().toLowerCase().contains(filterString.substring(1))) {
+							continue;
+						}
+					} else if (filterString.startsWith("$") && filterString.length() > 1) {
+						// Set up a flag to indicate if it was found by tag.
+						boolean found = false;
+
+						// Loop through the tags and indicate if we find a match.
+						for (ResourceLocation tag : stackInSlot.getItem().getTags()) {
+							if (tag.getPath().toLowerCase().contains(filterString.substring(1))) {
+								found = true;
+								break;
+							}
+						}
+
+						// If no match is found, skip this item.
+						if (!found) {
 							continue;
 						}
 					} else if (!stackInSlot.getDisplayName().getFormattedText().toLowerCase().contains(this.filterString)) {

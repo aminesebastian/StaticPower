@@ -24,6 +24,7 @@ public class BlockPowerCable extends AbstractCableBlock {
 		IBakedModel extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_POWER_EXTENSION);
 		IBakedModel straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_POWER_STRAIGHT);
 		IBakedModel attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_POWER_ATTACHMENT);
+		
 		return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
 	}
 

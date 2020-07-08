@@ -28,6 +28,7 @@ import theking530.common.wrench.RegularWrenchMode;
 import theking530.common.wrench.SneakWrenchMode;
 import theking530.staticpower.blocks.ICustomModelSupplier;
 import theking530.staticpower.blocks.StaticPowerBlock;
+import theking530.staticpower.cables.CableBoundsHoverResult.CableBoundsHoverType;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
@@ -60,16 +61,18 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 
 	@Override
 	public ActionResultType onStaticPowerBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-		if (!world.isRemote && player.getHeldItem(hand).isEmpty()) {
-			// Get the component at the location.
-			AbstractCableProviderComponent component = CableUtilities.getCableWrapperComponent(world, pos);
-			if (component == null) {
-				LOGGER.error(String.format("Encountered invalid cable provider component at position: %1$s when attempting to open the Attachment Gui.", pos));
-				return ActionResultType.FAIL;
-			}
+		// Get the component at the location.
+		AbstractCableProviderComponent component = CableUtilities.getCableWrapperComponent(world, pos);
+		if (component == null) {
+			LOGGER.error(String.format("Encountered invalid cable provider component at position: %1$s when attempting to open the Attachment Gui.", pos));
+			return ActionResultType.FAIL;
+		}
 
-			// Get the attachment side that is hovered (if any).
-			Direction hoveredDirection = CableBounds.getHoveredAttachmentDirection(pos, player);
+		// Get the attachment side that is hovered (if any).
+		CableBoundsHoverResult hoverResult = CableBounds.getHoveredAttachmentOrCover(pos, player);
+
+		if (hoverResult != null && hoverResult.type == CableBoundsHoverType.ATTACHED_ATTACHMENT) {
+			Direction hoveredDirection = CableBounds.getHoveredAttachmentOrCover(pos, player).direction;
 
 			if (hoveredDirection != null && component.hasAttachment(hoveredDirection)) {
 				// Get the attachment on the hovered side.
@@ -80,10 +83,13 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 
 				// If the item requests a GUI, open it.
 				if (attachmentItem.hasGui(attachment)) {
-					NetworkHooks.openGui((ServerPlayerEntity) player, attachmentItem.getContainerProvider(attachment, component, hoveredDirection), buff -> {
-						buff.writeInt(hoveredDirection.ordinal());
-						buff.writeBlockPos(pos);
-					});
+					if (!world.isRemote) {
+						NetworkHooks.openGui((ServerPlayerEntity) player, attachmentItem.getContainerProvider(attachment, component, hoveredDirection), buff -> {
+							buff.writeInt(hoveredDirection.ordinal());
+							buff.writeBlockPos(pos);
+						});
+					}
+					return ActionResultType.CONSUME;
 				}
 			}
 		}
@@ -106,8 +112,11 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 	public ActionResultType sneakWrenchBlock(PlayerEntity player, SneakWrenchMode mode, ItemStack wrench, World world, BlockPos pos, Direction facing, boolean returnDrops) {
 		if (!world.isRemote) {
 			Block.spawnDrops(world.getBlockState(pos), world, pos, world.getTileEntity(pos), player, wrench);
-			world.setBlockState(pos, Blocks.AIR.getDefaultState());
 		}
+
+		// Perform this on both the client and the server so the client updates any
+		// render changes (any conected cables).
+		world.setBlockState(pos, Blocks.AIR.getDefaultState(), 1 | 2);
 		return ActionResultType.SUCCESS;
 	}
 
@@ -120,35 +129,55 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 			if (component == null) {
 				return ActionResultType.FAIL;
 			}
+			CableBoundsHoverResult hoverResult = CableBounds.getHoveredAttachmentOrCover(pos, player);
 
-			Direction hoveredDirection = CableBounds.getHoveredAttachmentDirection(pos, player);
+			if (hoverResult != null) {
+				Direction hoveredDirection = CableBounds.getHoveredAttachmentOrCover(pos, player).direction;
 
-			if (hoveredDirection != null) {
-				ItemStack output = component.removeAttachment(hoveredDirection);
-				if (!output.isEmpty()) {
-					WorldUtilities.dropItem(world, pos, output, 1);
+				// Remove the attachment on that side if there is one.
+				if (hoverResult.type == CableBoundsHoverType.ATTACHED_ATTACHMENT) {
+					ItemStack output = component.removeAttachment(hoveredDirection);
+					if (!output.isEmpty()) {
+						WorldUtilities.dropItem(world, pos, output, 1);
+						return ActionResultType.SUCCESS;
+					}
+				} else if (hoverResult.type == CableBoundsHoverType.ATTACHED_COVER) {
+					// Now also remove the cover if there is one.
+					ItemStack output = component.removeCover(hoveredDirection);
+					if (!output.isEmpty()) {
+						WorldUtilities.dropItem(world, pos, output, 1);
+						return ActionResultType.SUCCESS;
+					}
 				}
 			}
 		}
-
-		return ActionResultType.SUCCESS;
+		return ActionResultType.FAIL;
 	}
 
 	@Override
 	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
 		// Get the attachment side we're hovering.
-		Direction hoveredDirection = CableBounds.getHoveredAttachmentDirection(pos, player);
+		CableBoundsHoverResult hoverResult = CableBounds.getHoveredAttachmentOrCover(pos, player);
 
-		// If the direction is not null, that means we're hovered an attachment area.
-		if (hoveredDirection != null) {
-			// Get the component from this cable.
+		if (hoverResult != null) {
 			AbstractCableProviderComponent component = CableUtilities.getCableWrapperComponent(world, pos);
-			// Get the attachment on that side. If there is one, return a copy of that.
-			ItemStack attachment = component.getAttachment(hoveredDirection);
-			if (!attachment.isEmpty()) {
-				return attachment.copy();
+			if (hoverResult.type == CableBoundsHoverType.ATTACHED_ATTACHMENT) {
+				if (component.hasAttachment(hoverResult.direction)) {
+					ItemStack attachment = component.getAttachment(hoverResult.direction);
+					if (!attachment.isEmpty()) {
+						return attachment.copy();
+					}
+				}
+			} else if (hoverResult.type == CableBoundsHoverType.ATTACHED_COVER) {
+				if (component.hasCover(hoverResult.direction)) {
+					ItemStack cover = component.getCover(hoverResult.direction);
+					if (!cover.isEmpty()) {
+						return cover.copy();
+					}
+				}
 			}
 		}
+
 		return super.getPickBlock(state, target, world, pos, player);
 	}
 

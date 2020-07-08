@@ -7,6 +7,7 @@ import theking530.staticpower.items.DigistoreCard;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.items.book.StaticPowerBook;
+import theking530.staticpower.items.cableattachments.CableCover;
 import theking530.staticpower.items.cableattachments.digistorecraftingterminal.DigistoreCraftingTerminal;
 import theking530.staticpower.items.cableattachments.digistoreterminal.DigistoreTerminal;
 import theking530.staticpower.items.cableattachments.extractor.ExtractorAttachment;
@@ -230,6 +231,7 @@ public class ModItems {
 	public static DigistoreCard StaticDigistoreCard;
 	public static DigistoreCard EnergizedDigistoreCard;
 	public static DigistoreCard LumumDigistoreCard;
+	public static CableCover CableCover;
 
 	public static void init() {
 		// Book
@@ -453,5 +455,6 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(EnergizedDigistoreCard = new DigistoreCard("digistore_card_energized", StaticPowerTiers.ENERGIZED));
 		StaticPowerRegistry.preRegisterItem(LumumDigistoreCard = new DigistoreCard("digistore_card_lumum", StaticPowerTiers.LUMUM));
 
+		StaticPowerRegistry.preRegisterItem(CableCover = new CableCover("cable_cover"));
 	}
 }

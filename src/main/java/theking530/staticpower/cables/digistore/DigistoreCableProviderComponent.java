@@ -7,6 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.items.cableattachments.digistoreterminal.AbstractDigistoreTerminalAttachment;
@@ -25,7 +26,8 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 
 	@Override
 	protected CableConnectionState cacheConnectionState(Direction side, @Nullable TileEntity te, BlockPos blockPosition) {
-		if (te instanceof TileEntityDigistoreWire) {
+		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(), blockPosition);
+		if (te instanceof TileEntityDigistoreWire && otherProvider != null && otherProvider.shouldConnectionToCable(this, side)) {
 			return CableConnectionState.CABLE;
 		} else if (te instanceof TileEntityBase) {
 			TileEntityBase baseTe = (TileEntityBase) te;
