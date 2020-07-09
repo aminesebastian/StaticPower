@@ -90,7 +90,7 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 			// upgrade.
 			for (IDigistoreInventory digistore : digistores) {
 				ItemStack insertSimulation = digistore.insertItem(stackToUse, true);
-				boolean isFull = digistore.getTotalContainedCount() == digistore.getMaxStoredAmount();
+				boolean isFull = digistore.getTotalContainedCount() >= digistore.getMaxStoredAmount();
 				if (insertSimulation.getCount() != stackToUse.getCount() && (!isFull || (isFull && digistore.shouldVoidExcess()))) {
 					potentials.add(digistore);
 				}
@@ -151,7 +151,7 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 			// Go through each digistore and add them to the potentials list if it can
 			// accept the item.
 			for (IDigistoreInventory digistore : digistores) {
-				for (int i = 0; i < digistore.getCurrentUniqueItemTypeCount(); i++) {
+				for (int i = 0; i < digistore.getMaximumUniqueItemTypeCount(); i++) {
 					if (!digistore.getItemTracker(i).isEmpty() && ItemUtilities.areItemStacksStackable(stack, digistore.getItemTracker(i).getStoredItem())) {
 						potentials.add(digistore);
 					}
@@ -177,7 +177,7 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 			// Start extracting, break if we finish the extract.
 			for (IDigistoreInventory digistore : potentials) {
 				// Extract up to the amount we need.
-				ItemStack extracted = digistore.extractItem(stack, count - output.getCount(), false);
+				ItemStack extracted = digistore.extractItem(stack, count - output.getCount(), simulate);
 
 				// If this is our first iteration, set the output stack. Otherwise, just grow
 				// it.

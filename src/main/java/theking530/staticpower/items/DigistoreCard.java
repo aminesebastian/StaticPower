@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -46,22 +47,47 @@ public class DigistoreCard extends StaticPowerItem {
 	}
 
 	public static IDigistoreInventory getInventory(ItemStack stack) {
-		return stack.getCapability(CapabilityDigistoreInventory.DIGISTORE_INVENTORY_CAPABILITY).orElseThrow(() -> new RuntimeException("Encounetered an extractor attachment without a valid filter inventory."));
+		return stack.getCapability(CapabilityDigistoreInventory.DIGISTORE_INVENTORY_CAPABILITY).orElseThrow(() -> new RuntimeException("Encounetered a digistore card without an attached digistore inventory."));
+	}
+
+	@Nullable
+	@Override
+	public CompoundNBT getShareTag(ItemStack stack) {
+		CompoundNBT nbt = stack.getOrCreateTag();
+		stack.getCapability(CapabilityDigistoreInventory.DIGISTORE_INVENTORY_CAPABILITY).ifPresent(inventory -> {
+			nbt.put("digistore_inventory", inventory.serializeNBT());
+		});
+		return nbt;
+	}
+
+	@Override
+	public void readShareTag(ItemStack stack, @Nullable CompoundNBT nbt) {
+		super.readShareTag(stack, nbt);
+
+		if (nbt != null && nbt.contains("digistore_inventory")) {
+			stack.getCapability(CapabilityDigistoreInventory.DIGISTORE_INVENTORY_CAPABILITY).ifPresent(inventory -> {
+				inventory.deserializeNBT((CompoundNBT) nbt.get("digistore_inventory"));
+			});
+		}
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
-		tooltip.add(new StringTextComponent("Stores: ").appendText(String.valueOf(StaticPowerDataRegistry.getTier(tierType).getDigistoreCapacity() / 64)).appendText(" Stacks"));
-		tooltip.add(new StringTextComponent("Max Types: ").appendText(String.valueOf(MAX_UNIQUE_ITEM_TYPES_PER_CARD)));
+		if (!Screen.hasShiftDown()) {
+			tooltip.add(new StringTextComponent("Stores: ").appendText(String.valueOf(getInventory(stack).getMaxStoredAmount() / 64)).appendText(" Stacks"));
+			tooltip.add(new StringTextComponent("Max Types: ").appendText(String.valueOf(getInventory(stack).getMaximumUniqueItemTypeCount())));
+		}
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	protected void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
-		MetricConverter converter = new MetricConverter(getInventory(stack).getTotalContainedCount());
-		tooltip.add(new StringTextComponent("Currently Stored: ").appendText(converter.getValueAsString(true)).appendText(" Items"));
-		tooltip.add(new StringTextComponent("Currently Types: ").appendText(String.valueOf(getInventory(stack).getCurrentUniqueItemTypeCount())));
+		int storedAmount = getInventory(stack).getTotalContainedCount();
+		float filledPercentage = (float) storedAmount / getInventory(stack).getMaxStoredAmount();
+		MetricConverter converter = new MetricConverter(storedAmount);
+		tooltip.add(new StringTextComponent("Stored: ").appendText(converter.getValueAsString(true)).appendText(" Items (").appendText(String.valueOf((int) (100 * filledPercentage))).appendText("%)"));
+		tooltip.add(new StringTextComponent("Types: ").appendText(String.valueOf(getInventory(stack).getCurrentUniqueItemTypeCount())));
 	}
 
 	@Override

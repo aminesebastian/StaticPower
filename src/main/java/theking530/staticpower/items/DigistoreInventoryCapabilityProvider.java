@@ -7,11 +7,12 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.CapabilityDigistoreInventory;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.DigistoreInventory;
 
-public class DigistoreInventoryCapabilityProvider implements ICapabilityProvider {
+public class DigistoreInventoryCapabilityProvider implements ICapabilityProvider, ICapabilitySerializable<CompoundNBT> {
 	protected final ItemStack owningItemStack;
 	protected final CompoundNBT initialNbt;
 	protected final DigistoreInventory inventory;
@@ -31,5 +32,15 @@ public class DigistoreInventoryCapabilityProvider implements ICapabilityProvider
 			return net.minecraftforge.common.util.LazyOptional.of(() -> inventory).cast();
 		}
 		return LazyOptional.empty();
+	}
+
+	@Override
+	public CompoundNBT serializeNBT() {
+		return inventory.serializeNBT();
+	}
+
+	@Override
+	public void deserializeNBT(CompoundNBT nbt) {
+		inventory.deserializeNBT(nbt);
 	}
 }

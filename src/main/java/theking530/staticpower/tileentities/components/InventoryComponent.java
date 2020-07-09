@@ -35,6 +35,10 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 	private final InventoryComponentCapabilityInterface capabilityInterface;
 	private TriConsumer<InventoryChangeType, ItemStack, InventoryComponent> changeCallback;
 
+	public InventoryComponent(String name, int size) {
+		this(name, size, MachineSideMode.Regular);
+	}
+
 	public InventoryComponent(String name, int size, MachineSideMode mode) {
 		super(name);
 		this.inventoryMode = mode;

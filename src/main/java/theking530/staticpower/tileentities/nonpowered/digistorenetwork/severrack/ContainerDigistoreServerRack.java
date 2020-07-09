@@ -22,16 +22,16 @@ public class ContainerDigistoreServerRack extends StaticPowerTileEntityContainer
 
 	@Override
 	public void initializeContainer() {
-		this.addSlot(new StaticPowerContainerSlot(getTileEntity().cardInventory, 0, 65, 20));
-		this.addSlot(new StaticPowerContainerSlot(getTileEntity().cardInventory, 1, 65, 40));
-		this.addSlot(new StaticPowerContainerSlot(getTileEntity().cardInventory, 2, 65, 60));
-		this.addSlot(new StaticPowerContainerSlot(getTileEntity().cardInventory, 3, 65, 80));
-		
-		this.addSlot(new StaticPowerContainerSlot(getTileEntity().cardInventory, 4, 93, 20));
-		this.addSlot(new StaticPowerContainerSlot(getTileEntity().cardInventory, 5, 93, 40));
-		this.addSlot(new StaticPowerContainerSlot(getTileEntity().cardInventory, 6, 93, 60));
-		this.addSlot(new StaticPowerContainerSlot(getTileEntity().cardInventory, 7, 93, 80));
-		
+		this.addSlot(new StaticPowerContainerSlot(getTileEntity().inventory, 0, 65, 20));
+		this.addSlot(new StaticPowerContainerSlot(getTileEntity().inventory, 1, 65, 40));
+		this.addSlot(new StaticPowerContainerSlot(getTileEntity().inventory, 2, 65, 60));
+		this.addSlot(new StaticPowerContainerSlot(getTileEntity().inventory, 3, 65, 80));
+
+		this.addSlot(new StaticPowerContainerSlot(getTileEntity().inventory, 4, 93, 20));
+		this.addSlot(new StaticPowerContainerSlot(getTileEntity().inventory, 5, 93, 40));
+		this.addSlot(new StaticPowerContainerSlot(getTileEntity().inventory, 6, 93, 60));
+		this.addSlot(new StaticPowerContainerSlot(getTileEntity().inventory, 7, 93, 80));
+
 		addPlayerHotbar(getPlayerInventory(), 8, 161);
 		addPlayerInventory(getPlayerInventory(), 8, 103);
 	}

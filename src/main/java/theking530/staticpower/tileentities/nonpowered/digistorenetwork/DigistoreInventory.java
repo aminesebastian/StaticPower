@@ -84,6 +84,13 @@ public class DigistoreInventory implements Iterable<DigistoreItemTracker>, IDigi
 
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+		if (isFull()) {
+			if (shouldVoidExcess()) {
+				return ItemStack.EMPTY;
+			} else {
+				return stack;
+			}
+		}
 		// Get the tracker.
 		DigistoreItemTracker tracker = slots.get(slot);
 
@@ -93,7 +100,7 @@ public class DigistoreInventory implements Iterable<DigistoreItemTracker>, IDigi
 		}
 
 		// Calculate the remaining storage space and the insertable amount.
-		int remainingStorage = maximumStorage - tracker.getCount();
+		int remainingStorage = getRemainingStorage(true);
 		int insertableAmount = Math.min(remainingStorage, stack.getCount());
 
 		// Then, attempt to insert the item.
@@ -248,16 +255,22 @@ public class DigistoreInventory implements Iterable<DigistoreItemTracker>, IDigi
 
 	@Override
 	public void deserializeNBT(CompoundNBT nbt) {
-		maximumStorage = nbt.getInt("MaximumStorage");
-		voidExcess = nbt.getBoolean("void_excess");
+		if (nbt.contains("maximum_storage")) {
+			maximumStorage = nbt.getInt("maximum_storage");
+		}
+		if (nbt.contains("void_excess")) {
+			voidExcess = nbt.getBoolean("void_excess");
+		}
 
-		ListNBT digistoreSlots = nbt.getList("slots", Constants.NBT.TAG_COMPOUND);
-		slots.clear();
-		for (int i = 0; i < digistoreSlots.size(); i++) {
-			CompoundNBT slotTagComponent = (CompoundNBT) digistoreSlots.get(i);
-			DigistoreItemTracker newTracker = new DigistoreItemTracker();
-			newTracker.readFromNbt(slotTagComponent);
-			slots.add(newTracker);
+		if (nbt.contains("slots")) {
+			ListNBT digistoreSlots = nbt.getList("slots", Constants.NBT.TAG_COMPOUND);
+			slots.clear();
+			for (int i = 0; i < digistoreSlots.size(); i++) {
+				CompoundNBT slotTagComponent = (CompoundNBT) digistoreSlots.get(i);
+				DigistoreItemTracker newTracker = new DigistoreItemTracker();
+				newTracker.readFromNbt(slotTagComponent);
+				slots.add(newTracker);
+			}
 		}
 	}
 

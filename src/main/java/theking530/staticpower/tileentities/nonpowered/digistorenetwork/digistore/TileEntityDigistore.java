@@ -12,12 +12,11 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockRayTraceResult;
+import theking530.staticpower.initialization.ModItems;
 import theking530.staticpower.initialization.ModTileEntityTypes;
 import theking530.staticpower.initialization.ModUpgrades;
-import theking530.staticpower.items.upgrades.BaseDigistoreCapacityUpgrade;
 import theking530.staticpower.items.upgrades.BaseUpgrade;
 import theking530.staticpower.tileentities.components.InventoryComponent;
-import theking530.staticpower.tileentities.components.InventoryComponent.InventoryChangeType;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.BaseDigistoreTileEntity;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.utilities.InventoryUtilities;
@@ -32,8 +31,9 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 
 	public TileEntityDigistore() {
 		super(ModTileEntityTypes.DIGISTORE);
-		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never).setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
-		registerComponent(inventory = new DigistoreInventoryComponent("Inventory", 1, DEFAULT_CAPACITY));
+		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
+		registerComponent(inventory = new DigistoreInventoryComponent("Inventory", 1));
+		inventory.insertItem(0, new ItemStack(ModItems.BasicDigistoreCard), false);
 	}
 
 	@Override
@@ -57,8 +57,8 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 			}
 
 			// If not, attempt to insert the item.
-			if (inventory.getInventory().canAcceptItem(heldItem)) {
-				ItemStack remaining = inventory.getInventory().insertItem(player.getHeldItem(hand), false);
+			if (inventory.canAcceptItem(heldItem)) {
+				ItemStack remaining = inventory.insertItem(player.getHeldItem(hand), false);
 				player.setItemStackToSlot(EquipmentSlotType.MAINHAND, remaining);
 				world.playSound(null, pos, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, SoundCategory.PLAYERS, 0.8f, 1.0f);
 				return ActionResultType.SUCCESS;
@@ -76,8 +76,8 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 				if (player.inventory.getStackInSlot(i).isEmpty()) {
 					continue;
 				}
-				if (inventory.getInventory().canAcceptItem(currentItem)) {
-					currentItem = inventory.getInventory().insertItem(currentItem, false);
+				if (inventory.canAcceptItem(currentItem)) {
+					currentItem = inventory.insertItem(currentItem, false);
 					if (currentItem.getCount() != player.inventory.getStackInSlot(i).getCount()) {
 						itemInserted = true;
 						player.inventory.setInventorySlotContents(i, currentItem);
@@ -107,27 +107,6 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 		}
 	}
 
-	@Override
-	public void onBlockBroken(BlockState state, BlockState newState, boolean isMoving) {
-		super.onBlockBroken(state, newState, isMoving);
-		inventory.dropAllContentsInWorld();
-	}
-
-	public void onUpgradesInventoryModifiedCallback(InventoryChangeType changeType, ItemStack item, InventoryComponent upgradeInv) {
-		inventory.getInventory().setMaximumStorage(DEFAULT_CAPACITY);
-		inventory.getInventory().setVoidExcess(false);
-		for (ItemStack stack : upgradeInv) {
-			if (stack.getItem() instanceof BaseDigistoreCapacityUpgrade) {
-				BaseDigistoreCapacityUpgrade upgrade = (BaseDigistoreCapacityUpgrade) stack.getItem();
-				int upgradeAmount = (upgrade.getTier().getDigistoreItemCapacityAmount() * stack.getCount());
-				inventory.getInventory().setMaximumStorage(inventory.getInventory().getMaxStoredAmount() + upgradeAmount);
-			} else if (stack.getItem() == ModUpgrades.DigistoreVoidUpgrade) {
-				inventory.getInventory().setVoidExcess(true);
-			}
-		}
-		markTileEntityForSynchronization();
-	}
-
 	public boolean isVoidUpgradeInstalled() {
 		for (ItemStack upgrade : this.upgradesInventory) {
 			if (upgrade.getItem() == ModUpgrades.DigistoreVoidUpgrade) {
@@ -143,7 +122,7 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 
 	public void setLocked(boolean locked) {
 		this.locked = locked;
-		inventory.getInventory().setLockState(locked);
+		inventory.setLockState(locked);
 	}
 
 	public void extractItemInWorld(int slot, boolean singleItem) {
@@ -153,7 +132,7 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 		}
 
 		// Do nothing if we store nothing.
-		if (inventory.getInventory().getStackInSlot(slot).isEmpty()) {
+		if (inventory.getStackInSlot(slot).isEmpty()) {
 			return;
 		}
 
@@ -162,11 +141,11 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 		// to a whole stack.
 		int countToDrop = 1;
 		if (!singleItem) {
-			countToDrop = Math.min(inventory.getInventory().getStackInSlot(slot).getMaxStackSize(), inventory.getInventory().getCountForItem(inventory.getInventory().getStackInSlot(slot)));
+			countToDrop = Math.min(inventory.getStackInSlot(slot).getMaxStackSize(), inventory.getCountForItem(inventory.getStackInSlot(slot)));
 		}
 
 		// Extract the item.
-		ItemStack output = inventory.getInventory().extractItem(slot, countToDrop, false);
+		ItemStack output = inventory.extractItem(slot, countToDrop, false);
 
 		// Drop the item. Check the count just in case again (edge case coverage).
 		if (countToDrop > 0) {

@@ -6,40 +6,25 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.items.IItemHandlerModifiable;
 
-public class CapabilityDigistoreInventory implements Capability.IStorage<IDigistoreInventory> {
+public class CapabilityDigistoreInventory {
 	@CapabilityInject(IDigistoreInventory.class)
 	public static Capability<IDigistoreInventory> DIGISTORE_INVENTORY_CAPABILITY = null;
 
 	public static void register() {
-		CapabilityManager.INSTANCE.register(IDigistoreInventory.class, new DefaultDigistoreInventoryStorage<>(), () -> new DigistoreInventory(0, 0));
-	}
-
-	@Override
-	public INBT writeNBT(Capability<IDigistoreInventory> capability, IDigistoreInventory instance, Direction side) {
-		return instance.serializeNBT();
-	}
-
-	@Override
-	public void readNBT(Capability<IDigistoreInventory> capability, IDigistoreInventory instance, Direction side, INBT nbt) {
-		instance.deserializeNBT((CompoundNBT) nbt);
-	}
-
-	private static class DefaultDigistoreInventoryStorage<T extends IDigistoreInventory> implements Capability.IStorage<T> {
-		@Override
-		public INBT writeNBT(Capability<T> capability, T instance, Direction side) {
-			if (!(instance instanceof DigistoreInventory)) {
-				throw new RuntimeException("Cannot serialize to an instance that isn't the default implementation");
+		CapabilityManager.INSTANCE.register(IDigistoreInventory.class, new Capability.IStorage<IDigistoreInventory>() {
+			@Override
+			public INBT writeNBT(Capability<IDigistoreInventory> capability, IDigistoreInventory instance, Direction side) {
+				return instance.serializeNBT();
 			}
-			return instance.serializeNBT();
-		}
 
-		@Override
-		public void readNBT(Capability<T> capability, T instance, Direction side, INBT nbt) {
-			if (!(instance instanceof DigistoreInventory)) {
-				throw new RuntimeException("Cannot deserialize to an instance that isn't the default implementation");
+			@Override
+			public void readNBT(Capability<IDigistoreInventory> capability, IDigistoreInventory instance, Direction side, INBT base) {
+				if (!(instance instanceof IItemHandlerModifiable))
+					throw new RuntimeException("IItemHandler instance does not implement IItemHandlerModifiable");
+				instance.deserializeNBT((CompoundNBT) base);
 			}
-			instance.deserializeNBT((CompoundNBT) nbt);
-		}
+		}, () -> new DigistoreInventory(0, 0));
 	}
 }

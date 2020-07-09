@@ -290,6 +290,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		}
 
 		boolean farmed = false;
+
 		// Check to see if we're at a farmable block. If we are, harvest it.
 		if (isFarmableBlock(pos)) {
 			farmed |= harvestGenericCrop(pos);
@@ -298,10 +299,8 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 			farmed |= harvestStem(pos);
 			farmed |= harvestNetherWart(pos);
 			farmed |= harvestMelonOrPumpkin(pos);
-			if (!farmed) {
-				growCrop(pos);
-			}
 		}
+		growCrop(pos);
 	}
 
 	public boolean isFarmableBlock(BlockPos pos) {
