@@ -16,18 +16,18 @@ import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.NetworkMapper;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.items.cableattachments.digistoreterminal.DigistoreInventorySortType;
-import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.DigistoreInventoryComponent;
+import theking530.staticpower.tileentities.nonpowered.digistorenetwork.CapabilityDigistoreInventory;
+import theking530.staticpower.tileentities.nonpowered.digistorenetwork.IDigistoreInventory;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.TileEntityDigistoreManager;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class DigistoreNetworkModule extends AbstractCableNetworkModule {
-	private final List<DigistoreInventoryComponent> digistores;
+	private final List<IDigistoreInventory> digistores;
 	private boolean managerPresent;
 
 	public DigistoreNetworkModule() {
 		super(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE);
-		digistores = new LinkedList<DigistoreInventoryComponent>();
+		digistores = new LinkedList<IDigistoreInventory>();
 	}
 
 	@Override
@@ -38,17 +38,23 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 	@Override
 	public void onNetworkGraphUpdated(NetworkMapper mapper) {
 		super.onNetworkGraphUpdated(mapper);
+
+		// Clear the initial values back to their defaults.
 		digistores.clear();
 		managerPresent = false;
 
 		// Cache all the digistores in the network.
 		for (ServerCable cable : mapper.getDiscoveredCables()) {
+			// Get the cable's tile entity.
 			TileEntity te = Network.getWorld().getChunkAt(cable.getPos()).getTileEntity(cable.getPos(), Chunk.CreateEntityType.QUEUED);
-			if (te instanceof TileEntityBase) {
-				TileEntityBase baseTe = (TileEntityBase) te;
-				if (baseTe.hasComponentOfType(DigistoreInventoryComponent.class)) {
-					digistores.add(baseTe.getComponent(DigistoreInventoryComponent.class));
-				}
+			// If it's not null.
+			if (te != null) {
+				// Check if it has an inventory. Store it if it does.
+				te.getCapability(CapabilityDigistoreInventory.DIGISTORE_INVENTORY_CAPABILITY, null).ifPresent(digiInv -> {
+					digistores.add(digiInv);
+				});
+
+				// If this is also a manager, set the manager present to true.
 				if (te instanceof TileEntityDigistoreManager) {
 					managerPresent = true;
 				}
@@ -67,7 +73,7 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 		return new DigistoreInventoryWrapper(this, filter, sortType, sortDescending);
 	}
 
-	public List<DigistoreInventoryComponent> getAllDigistores() {
+	public List<IDigistoreInventory> getAllDigistores() {
 		return digistores;
 	}
 
@@ -77,14 +83,15 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 			ItemStack stackToUse = stack.copy();
 
 			// Allocate a list of all potential digistores to insert into.
-			List<DigistoreInventoryComponent> potentials = new ArrayList<DigistoreInventoryComponent>();
+			List<IDigistoreInventory> potentials = new ArrayList<IDigistoreInventory>();
 
 			// Go through each digistore and add them to the potentials list if it can
 			// accept the item. Only discard full digistores that do NOT have a void
 			// upgrade.
-			for (DigistoreInventoryComponent digistore : digistores) {
+			for (IDigistoreInventory digistore : digistores) {
 				ItemStack insertSimulation = digistore.insertItem(stackToUse, true);
-				if (insertSimulation.getCount() != stackToUse.getCount() && (!digistore.isFull() || (digistore.isFull() && digistore.shouldVoidExcess()))) {
+				boolean isFull = digistore.getTotalContainedCount() == digistore.getMaxStoredAmount();
+				if (insertSimulation.getCount() != stackToUse.getCount() && (!isFull || (isFull && digistore.shouldVoidExcess()))) {
 					potentials.add(digistore);
 				}
 			}
@@ -95,14 +102,14 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 			}
 
 			// Sort the digistores so that we start by filling the most full first.
-			Collections.sort(potentials, new Comparator<DigistoreInventoryComponent>() {
-				public int compare(DigistoreInventoryComponent a, DigistoreInventoryComponent b) {
+			Collections.sort(potentials, new Comparator<IDigistoreInventory>() {
+				public int compare(IDigistoreInventory a, IDigistoreInventory b) {
 					return a.getTotalContainedCount() == 0 ? 1 : a.getRemainingStorage(true) - b.getRemainingStorage(true);
 				}
 			});
 
 			// Start filling, break if we finish the fill.
-			for (DigistoreInventoryComponent digistore : potentials) {
+			for (IDigistoreInventory digistore : potentials) {
 				// Skip empty digistores first time around.
 				if (digistore.getTotalContainedCount() == 0) {
 					continue;
@@ -118,7 +125,7 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 			if (!stackToUse.isEmpty()) {
 				// Start filling, this time with empty digistores allowed. Break if we finish
 				// the fill.
-				for (DigistoreInventoryComponent digistore : potentials) {
+				for (IDigistoreInventory digistore : potentials) {
 					// Skip non empty digistores, we hit those already.d
 					if (digistore.getTotalContainedCount() > 0) {
 						continue;
@@ -139,13 +146,13 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 	public ItemStack extractItem(ItemStack stack, int count, boolean simulate) {
 		if (managerPresent) {
 			// Allocate a list of all potential digistores to insert into.
-			List<DigistoreInventoryComponent> potentials = new ArrayList<DigistoreInventoryComponent>();
+			List<IDigistoreInventory> potentials = new ArrayList<IDigistoreInventory>();
 
 			// Go through each digistore and add them to the potentials list if it can
 			// accept the item.
-			for (DigistoreInventoryComponent digistore : digistores) {
-				for (int i = 0; i < digistore.getSlots(); i++) {
-					if (!digistore.getStackInSlot(i).isEmpty() && ItemUtilities.areItemStacksStackable(stack, digistore.getStackInSlot(i))) {
+			for (IDigistoreInventory digistore : digistores) {
+				for (int i = 0; i < digistore.getCurrentUniqueItemTypeCount(); i++) {
+					if (!digistore.getItemTracker(i).isEmpty() && ItemUtilities.areItemStacksStackable(stack, digistore.getItemTracker(i).getStoredItem())) {
 						potentials.add(digistore);
 					}
 				}
@@ -158,8 +165,8 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 			}
 
 			// Sort the digistores so that we start by extracting from the emptiest first.
-			Collections.sort(potentials, new Comparator<DigistoreInventoryComponent>() {
-				public int compare(DigistoreInventoryComponent a, DigistoreInventoryComponent b) {
+			Collections.sort(potentials, new Comparator<IDigistoreInventory>() {
+				public int compare(IDigistoreInventory a, IDigistoreInventory b) {
 					return a.getRemainingStorage(false) - b.getRemainingStorage(false);
 				}
 			});
@@ -168,7 +175,7 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 			ItemStack output = ItemStack.EMPTY;
 
 			// Start extracting, break if we finish the extract.
-			for (DigistoreInventoryComponent digistore : potentials) {
+			for (IDigistoreInventory digistore : potentials) {
 				// Extract up to the amount we need.
 				ItemStack extracted = digistore.extractItem(stack, count - output.getCount(), false);
 

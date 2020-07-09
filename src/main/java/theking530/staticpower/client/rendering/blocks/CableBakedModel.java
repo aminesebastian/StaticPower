@@ -15,13 +15,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ILightReader;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableRenderingState;
 import theking530.staticpower.cables.CableUtilities;
@@ -46,11 +44,7 @@ public class CableBakedModel extends AbstractBakedModel {
 	@Override
 	@Nonnull
 	public IModelData getModelData(@Nonnull ILightReader world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull IModelData tileData) {
-		TileEntity te = world.getTileEntity(pos);
-		if (te != null) {
-			return te.getModelData();
-		}
-		return new ModelDataMap.Builder().build();
+		return tileData;
 	}
 
 	@Override
@@ -82,12 +76,12 @@ public class CableBakedModel extends AbstractBakedModel {
 		// If we have a simple straight connection, just add that mode. Otherwise, add
 		// the core and then apply any additional models.
 		if (Straight != null && CableUtilities.isCableStraightConnection(renderingState.connectionStates)) {
-			newQuads.addAll(getTransformedQuads(Straight, CableUtilities.getStraightConnectionSide(renderingState.connectionStates), side, state, rand));
+			newQuads.addAll(rotateQuadsToFaceDirection(Straight, CableUtilities.getStraightConnectionSide(renderingState.connectionStates), side, state, rand));
 			for (Direction dir : Direction.values()) {
 				if (renderingState.attachments[dir.ordinal()] != null) {
 					IBakedModel model = Minecraft.getInstance().getModelManager().getModel(renderingState.attachments[dir.ordinal()]);
-					newQuads.addAll(getTransformedQuads(model, dir, side, state, rand));
-					newQuads.addAll(getTransformedQuads(Extension, dir, side, state, rand));
+					newQuads.addAll(rotateQuadsToFaceDirection(model, dir, side, state, rand));
+					newQuads.addAll(rotateQuadsToFaceDirection(Extension, dir, side, state, rand));
 				}
 			}
 		} else {
@@ -104,14 +98,14 @@ public class CableBakedModel extends AbstractBakedModel {
 
 				// Decide what to render based on the connection state.
 				if (connectionState == CableConnectionState.CABLE) {
-					newQuads.addAll(getTransformedQuads(Extension, dir, side, state, rand));
+					newQuads.addAll(rotateQuadsToFaceDirection(Extension, dir, side, state, rand));
 				} else if (connectionState == CableConnectionState.TILE_ENTITY || renderingState.attachments[dir.ordinal()] != null) {
-					newQuads.addAll(getTransformedQuads(Extension, dir, side, state, rand));
+					newQuads.addAll(rotateQuadsToFaceDirection(Extension, dir, side, state, rand));
 					if (renderingState.attachments[dir.ordinal()] != null) {
 						IBakedModel model = Minecraft.getInstance().getModelManager().getModel(renderingState.attachments[dir.ordinal()]);
-						newQuads.addAll(getTransformedQuads(model, dir, side, state, rand));
+						newQuads.addAll(rotateQuadsToFaceDirection(model, dir, side, state, rand));
 					} else {
-						newQuads.addAll(getTransformedQuads(Attachment, dir, side, state, rand));
+						newQuads.addAll(rotateQuadsToFaceDirection(Attachment, dir, side, state, rand));
 					}
 				}
 			}

@@ -9,6 +9,9 @@ import java.util.Random;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
@@ -35,7 +38,9 @@ import theking530.staticpower.tileentities.components.SideConfigurationComponent
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
 public class DefaultMachineBakedModel extends AbstractBakedModel {
-
+	@SuppressWarnings("deprecation")
+	protected static final AtlasTexture BLOCKS_TEXTURE = ModelLoader.instance().getSpriteMap().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+	private static final Logger LOGGER = LogManager.getLogger(DefaultMachineBakedModel.class);
 	private static final ModelProperty<Optional<MachineSideMode[]>> SIDE_CONFIG = new ModelProperty<>();
 
 	public DefaultMachineBakedModel(IBakedModel baseModel) {
@@ -75,21 +80,21 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 		List<BakedQuad> baseQuads = BaseModel.getQuads(state, side, rand, data);
 		ImmutableList.Builder<BakedQuad> newQuads = new ImmutableList.Builder<BakedQuad>();
 
-		AtlasTexture blocksStitchedTextures = ModelLoader.instance().getSpriteMap().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-
 		// Iterate through all the quads.
 		for (BakedQuad quad : baseQuads) {
 			Direction renderingSide = side == null ? quad.getFace() : side;
 
 			MachineSideMode sideMode = sideConfigurations.get()[renderingSide.ordinal()];
 			try {
+				AtlasTexture blocksTexture = ModelLoader.instance().getSpriteMap().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+
 				// Get the texture sprite for the side.
-				TextureAtlasSprite sideSprite = getSpriteForMachineSide(sideMode, blocksStitchedTextures);
+				TextureAtlasSprite sideSprite = getSpriteForMachineSide(sideMode, blocksTexture);
 
 				// Attempt to render the quad for the side.
 				renderQuadsForSide(newQuads, renderingSide, sideSprite, quad, sideMode);
 			} catch (Exception e) {
-				System.out.println(e);
+				LOGGER.warn("An error occured when attempting to render the model.", e);
 			}
 
 		}

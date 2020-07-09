@@ -3,6 +3,9 @@ package theking530.common.utilities;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
+import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.util.Direction;
+
 public class SDMath {
 	private static final Random RANDOM = new Random();
 
@@ -67,5 +70,30 @@ public class SDMath {
 
 	public static double clamp(double value, double min, double max) {
 		return Math.max(Math.min(value, max), min);
+	}
+
+	public static Vector3f transformVectorByDirection(Direction dir, Vector3f vector) {
+		Vector3f offset = null;
+		switch (dir) {
+		case DOWN:
+			offset = new Vector3f(vector.getX(), vector.getY(), vector.getZ());
+			break;
+		case UP:
+			offset = new Vector3f(vector.getX(), vector.getY(), vector.getZ());
+			break;
+		case EAST:
+			offset = new Vector3f(-vector.getZ(), vector.getY(), vector.getX());
+			break;
+		case WEST:
+			offset = new Vector3f(vector.getZ(), vector.getY(), vector.getX());
+			break;
+		case NORTH:
+			offset = new Vector3f(vector.getX(), vector.getY(), vector.getZ());
+			break;
+		case SOUTH:
+			offset = new Vector3f(vector.getX(), vector.getY(), -vector.getZ());
+			break;
+		}
+		return offset;
 	}
 }

@@ -10,7 +10,7 @@ public class StaticPowerAdditionalModels {
 	public static final HashSet<ResourceLocation> MODELS = new HashSet<ResourceLocation>();
 
 	public static final ResourceLocation CABLE_FULL_COVER = registerModel("block/cables/cable_cover_full");
-	
+
 	public static final ResourceLocation CABLE_POWER_STRAIGHT = registerModel("block/cables/power/straight");
 	public static final ResourceLocation CABLE_POWER_EXTENSION = registerModel("block/cables/power/extension");
 	public static final ResourceLocation CABLE_POWER_ATTACHMENT = registerModel("block/cables/power/attachment");
@@ -51,6 +51,13 @@ public class StaticPowerAdditionalModels {
 
 	public static final ResourceLocation CABLE_DIGISTORE_TERMINAL_ATTACHMENT = registerModel("block/cables/attachments/digistore_terminal_attachment");
 	public static final ResourceLocation CABLE_DIGISTORE_CRAFTING_TERMINAL_ATTACHMENT = registerModel("block/cables/attachments/digistore_crafting_terminal_attachment");
+
+	public static final ResourceLocation BASIC_DIGISTORE_CARD = registerModel("block/machines/digistore_card_basic");
+	public static final ResourceLocation ADVANCVED_DIGISTORE_CARD = registerModel("block/machines/digistore_card_advanced");
+	public static final ResourceLocation STATIC_DIGISTORE_CARD = registerModel("block/machines/digistore_card_static");
+	public static final ResourceLocation ENERGIZED_DIGISTORE_CARD = registerModel("block/machines/digistore_card_energized");
+	public static final ResourceLocation LUMUM_DIGISTORE_CARD = registerModel("block/machines/digistore_card_lumum");
+	public static final ResourceLocation CREATIVE_DIGISTORE_CARD = registerModel("block/machines/digistore_card_creative");
 
 	public static void regsiterModels() {
 		for (ResourceLocation model : MODELS) {

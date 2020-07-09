@@ -93,7 +93,18 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 			}
 			return ItemStack.EMPTY;
 		}
-		return super.transferStackInSlot(player, slotIndex);
+
+		// Go to the super and cache the result.
+		ItemStack output = super.transferStackInSlot(player, slotIndex);
+
+		// If the modified slot was in the crafting matrix, notify that the matrix may
+		// have changed.
+		if (inventorySlots.get(slotIndex) instanceof CraftingRecipeInputSlot) {
+			this.onCraftMatrixChanged(inventorySlots.get(slotIndex).inventory);
+		}
+
+		// Return the cached output.
+		return output;
 	}
 
 	@Override
@@ -186,7 +197,16 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 		return slotIn.inventory != this.craftResult && super.canMergeSlot(stack, slotIn);
 	}
 
-	protected static void updateOutputSlot(int slotIndex, World world, PlayerEntity player, CraftingInventory craftingInv, CraftResultInventory outputInv) {
+	/**
+	 * Update the crafting output slot's contents.
+	 * 
+	 * @param slotIndex
+	 * @param world
+	 * @param player
+	 * @param craftingInv
+	 * @param outputInv
+	 */
+	protected void updateOutputSlot(int slotIndex, World world, PlayerEntity player, CraftingInventory craftingInv, CraftResultInventory outputInv) {
 		if (!world.isRemote) {
 			ServerPlayerEntity serverplayerentity = (ServerPlayerEntity) player;
 			ItemStack itemstack = ItemStack.EMPTY;
@@ -199,7 +219,7 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 			}
 
 			outputInv.setInventorySlotContents(0, itemstack);
-			serverplayerentity.connection.sendPacket(new SSetSlotPacket(slotIndex, 0, itemstack));
+			serverplayerentity.connection.sendPacket(new SSetSlotPacket(this.windowId, slotIndex, itemstack));
 		}
 	}
 }

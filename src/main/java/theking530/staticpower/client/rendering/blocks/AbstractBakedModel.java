@@ -32,11 +32,29 @@ import net.minecraftforge.common.model.TransformationHelper;
 import theking530.staticpower.StaticPower;
 
 public abstract class AbstractBakedModel implements IBakedModel {
+	protected static final float UNIT = 1.0f / 16.0f;
 	protected static final Logger LOGGER = LogManager.getLogger(AbstractBakedModel.class);
+	protected static final Map<Direction, Quaternion> FACING_ROTATIONS = new EnumMap<Direction, Quaternion>(Direction.class);
 	protected static final Map<Direction, TransformationMatrix> SIDE_TRANSFORMS = new EnumMap<>(Direction.class);
 	protected final HashSet<String> LoggedErrors = new HashSet<String>();
 	protected final FaceBakery FaceBaker = new FaceBakery();
 	protected final IBakedModel BaseModel;
+
+	static {
+		for (Direction dir : Direction.values()) {
+			Quaternion quaternion;
+			if (dir == Direction.UP) {
+				quaternion = TransformationHelper.quatFromXYZ(new Vector3f(90, 0, 0), true);
+			} else if (dir == Direction.DOWN) {
+				quaternion = TransformationHelper.quatFromXYZ(new Vector3f(270, 0, 0), true);
+			} else {
+				double r = Math.PI * (360 - dir.getOpposite().getHorizontalIndex() * 90) / 180d;
+				quaternion = TransformationHelper.quatFromXYZ(new Vector3f(0, (float) r, 0), false);
+			}
+			FACING_ROTATIONS.put(dir, quaternion);
+			SIDE_TRANSFORMS.put(dir, new TransformationMatrix(null, quaternion, null, null).blockCenterToCorner());
+		}
+	}
 
 	public AbstractBakedModel(IBakedModel baseModel) {
 		BaseModel = baseModel;
@@ -55,22 +73,8 @@ public abstract class AbstractBakedModel implements IBakedModel {
 		throw new AssertionError("IBakedModel::getQuads should never be called, only IForgeBakedModel::getQuads");
 	}
 
-	protected List<BakedQuad> getTransformedQuads(IBakedModel model, Direction desiredRotation, Direction drawingSide, BlockState state, Random rand) {
-		TransformationMatrix transformation = SIDE_TRANSFORMS.computeIfAbsent(desiredRotation, face -> {
-			Quaternion quaternion;
-			if (face == Direction.UP) {
-				quaternion = TransformationHelper.quatFromXYZ(new Vector3f(90, 0, 0), true);
-			} else if (face == Direction.DOWN) {
-				quaternion = TransformationHelper.quatFromXYZ(new Vector3f(270, 0, 0), true);
-			} else {
-				double r = Math.PI * (360 - face.getOpposite().getHorizontalIndex() * 90) / 180d;
-
-				quaternion = TransformationHelper.quatFromXYZ(new Vector3f(0, (float) r, 0), false);
-			}
-
-			return new TransformationMatrix(null, quaternion, null, null).blockCenterToCorner();
-		});
-
+	protected List<BakedQuad> rotateQuadsToFaceDirection(IBakedModel model, Direction desiredRotation, Direction drawingSide, BlockState state, Random rand) {
+		TransformationMatrix transformation = SIDE_TRANSFORMS.get(desiredRotation);
 		ImmutableList.Builder<BakedQuad> quads = ImmutableList.builder();
 
 		if (drawingSide != null && drawingSide.getHorizontalIndex() > -1) {
@@ -84,13 +88,33 @@ public abstract class AbstractBakedModel implements IBakedModel {
 				for (BakedQuad quad : model.getQuads(state, drawingSide, rand, EmptyModelData.INSTANCE)) {
 					BakedQuadBuilder builder = new BakedQuadBuilder(quad.func_187508_a());
 					TRSRTransformer transformer = new TRSRTransformer(builder, transformation);
-
 					quad.pipe(transformer);
-
 					quads.add(builder.build());
 				}
 			} catch (Exception e) {
 				LOGGER.error(String.format("An error occured when attempting to rotate a model to face the desired rotation. Model: %1$s.", model), e);
+			}
+		}
+
+		return quads.build();
+	}
+
+	protected List<BakedQuad> transformQuads(IBakedModel model, Vector3f translation, Quaternion rotation, Direction drawingSide, BlockState state, Random rand) {
+		ImmutableList.Builder<BakedQuad> quads = ImmutableList.builder();
+
+		TransformationMatrix transformation = new TransformationMatrix(translation, rotation, null, null).blockCenterToCorner();
+		
+		// Build the output.
+		if (model != null) {
+			try {
+				for (BakedQuad quad : model.getQuads(state, drawingSide, rand, EmptyModelData.INSTANCE)) {
+					BakedQuadBuilder builder = new BakedQuadBuilder(quad.func_187508_a());
+					TRSRTransformer transformer = new TRSRTransformer(builder, transformation);
+					quad.pipe(transformer);
+					quads.add(builder.build());
+				}
+			} catch (Exception e) {
+				LOGGER.error(String.format("An error occured when attempting to translate the quads of a model. Model: %1$s.", model), e);
 			}
 		}
 

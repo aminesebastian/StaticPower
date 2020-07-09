@@ -152,8 +152,8 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 		validateSlotIndex(slot);
 		ItemStack oldStack = getStackInSlot(slot);
 		this.stacks.set(slot, stack);
-		
-		if(!oldStack.equals(stack, false)) {
+
+		if (!oldStack.equals(stack, false)) {
 			onItemStackAdded(stack);
 		}
 	}
@@ -310,18 +310,21 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 		if (changeCallback != null) {
 			changeCallback.accept(InventoryChangeType.ADDED, stack, this);
 		}
+		getTileEntity().markDirty();
 	}
 
 	protected void onItemStackRemoved(ItemStack stack) {
 		if (changeCallback != null) {
 			changeCallback.accept(InventoryChangeType.REMOVED, stack, this);
 		}
+		getTileEntity().markDirty();
 	}
 
 	protected void onItemStackModified(ItemStack stack) {
 		if (changeCallback != null) {
 			changeCallback.accept(InventoryChangeType.MODIFIED, stack, this);
 		}
+		getTileEntity().markDirty();
 	}
 
 	public class InventoryComponentCapabilityInterface implements IItemHandler {

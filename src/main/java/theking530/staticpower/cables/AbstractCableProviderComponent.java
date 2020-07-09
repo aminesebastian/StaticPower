@@ -22,7 +22,6 @@ import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.utilities.RedstoneMode;
-import theking530.staticpower.utilities.WorldUtilities;
 
 public abstract class AbstractCableProviderComponent extends AbstractTileEntityComponent {
 	/** KEEP IN MIND: This is purely cosmetic and on the client side. */
@@ -174,19 +173,6 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		if (!getWorld().isRemote) {
 			CableNetworkManager manager = CableNetworkManager.get(getTileEntity().getWorld());
 			manager.removeCable(getTileEntity().getPos());
-
-			for (Direction dir : Direction.values()) {
-				if (hasAttachment(dir)) {
-					ItemStack attachment = Attachments[dir.ordinal()];
-					removeAttachment(dir);
-					WorldUtilities.dropItem(getWorld(), getPos(), attachment);
-				}
-				if (hasCover(dir)) {
-					ItemStack cover = Covers[dir.ordinal()];
-					hasCover(dir);
-					WorldUtilities.dropItem(getWorld(), getPos(), cover);
-				}
-			}
 		}
 	}
 

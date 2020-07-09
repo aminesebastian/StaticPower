@@ -18,16 +18,19 @@ import theking530.common.utilities.Color;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
+import theking530.staticpower.tileentities.nonpowered.digistorenetwork.IDigistoreInventory;
 
 public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, TileEntityDigistore> {
 
 	private GuiInfoTab infoTab;
 	private TextButton lockedButton;
-	private GuiDrawItem itemRenderer;
+	private final GuiDrawItem itemRenderer;
+	private final IDigistoreInventory inventory;
 
 	public GuiDigistore(ContainerDigistore container, PlayerInventory invPlayer, ITextComponent name) {
 		super(container, invPlayer, name, 176, 150);
 		itemRenderer = new GuiDrawItem(true);
+		inventory = getTileEntity().inventory.getInventory();
 	}
 
 	@Override
@@ -55,14 +58,14 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 	@Override
 	protected void drawForegroundExtras(float partialTicks, int mouseX, int mouseY) {
 		super.drawForegroundExtras(partialTicks, mouseX, mouseY);
-		if (!getTileEntity().inventory.getStackInSlot(0).isEmpty()) {
+		if (!inventory.getItemTracker(0).isEmpty()) {
 			if (mouseX >= guiLeft + 76 && mouseX <= guiLeft + 100 && mouseY >= guiTop + 21 && mouseY <= guiTop + 45) {
 				GuiDrawUtilities.drawColoredRectangle(guiLeft + 76, guiTop + 21, 24, 24, 1.0f, new Color(200, 200, 200).fromEightBitToFloat());
-				renderTooltip(getTileEntity().inventory.getStackInSlot(0), mouseX, mouseY);
+				renderTooltip(inventory.getItemTracker(0).getStoredItem(), mouseX, mouseY);
 			}
 		}
 
-		String amountString = String.valueOf(getTileEntity().inventory.getTotalContainedCount()) + "/" + String.valueOf(getTileEntity().inventory.getMaxStoredAmount());
+		String amountString = String.valueOf(inventory.getTotalContainedCount()) + "/" + String.valueOf(inventory.getMaxStoredAmount());
 		this.font.drawString(amountString, guiLeft + 89 - (font.getStringWidth(amountString) / 2), guiTop + 50, new Color(50, 50, 50).encodeInInteger());
 	}
 
@@ -78,15 +81,11 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 		drawSlot(guiLeft + 152, guiTop + 45, 16, 16);
 
 		RenderHelper.enableStandardItemLighting();
-		itemRenderer.drawItem(getTileEntity().inventory.getStackInSlot(0), guiLeft, guiTop, 80, 25, 1.0f);
+		itemRenderer.drawItem(inventory.getItemTracker(0).getStoredItem(), guiLeft, guiTop, 80, 25, 1.0f);
 		RenderHelper.disableStandardItemLighting();
 
-		// String storedAmountString = "" + getTileEntity().getStoredAmount();
-		// drawStringWithSize(storedAmountString, guiLeft + 100, guiTop + 45, 0.6f, new
-		// Color(255, 255, 255).fromEightBitToFloat(), true);
-
 		DecimalFormat format = new DecimalFormat("##.###");
-		String text = ("Stores a large=amount of a single=item. ==" + TextFormatting.RED + "Max: " + TextFormatting.AQUA + format.format(getTileEntity().inventory.getMaxStoredAmount()) + " Items");
+		String text = ("Stores a large=amount of a single=item. ==" + TextFormatting.RED + "Max: " + TextFormatting.AQUA + format.format(inventory.getMaxStoredAmount()) + " Items");
 		String[] splitMsg = text.split("=");
 		infoTab.setText(I18n.format(getTileEntity().getDisplayName().getFormattedText()), Arrays.asList(splitMsg));
 	}

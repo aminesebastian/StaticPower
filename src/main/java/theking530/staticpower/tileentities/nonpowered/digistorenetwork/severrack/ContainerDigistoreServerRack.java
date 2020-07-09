@@ -8,7 +8,7 @@ import net.minecraft.network.PacketBuffer;
 import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.initialization.ModContainerTypes;
-import theking530.staticpower.items.upgrades.BaseUpgrade;
+import theking530.staticpower.items.DigistoreCard;
 
 public class ContainerDigistoreServerRack extends StaticPowerTileEntityContainer<TileEntityDigistoreServerRack> {
 
@@ -38,7 +38,7 @@ public class ContainerDigistoreServerRack extends StaticPowerTileEntityContainer
 
 	@Override
 	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, PlayerInventory invPlayer, Slot slot, int slotIndex) {
-		if (stack.getItem() instanceof BaseUpgrade && !mergeItemStack(stack, 0, 3, false)) {
+		if (stack.getItem() instanceof DigistoreCard && !mergeItemStack(stack, 0, 9, false)) {
 			return true;
 		}
 		return false;

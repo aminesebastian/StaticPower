@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import theking530.staticpower.items.cableattachments.digistoreterminal.DigistoreInventorySortType;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.DigistoreInventoryComponent;
+import theking530.staticpower.tileentities.nonpowered.digistorenetwork.IDigistoreInventory;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class DigistoreInventoryWrapper implements IItemHandler {
@@ -39,10 +39,10 @@ public class DigistoreInventoryWrapper implements IItemHandler {
 		stacks.clear();
 
 		// Populate the stacks.
-		for (DigistoreInventoryComponent digistore : module.getAllDigistores()) {
-			for (int i = 0; i < digistore.getSlots(); i++) {
+		for (IDigistoreInventory digistore : module.getAllDigistores()) {
+			for (int i = 0; i < digistore.getMaximumUniqueItemTypeCount(); i++) {
 				// Stack in slot.
-				ItemStack stackInSlot = digistore.getStackInSlot(i);
+				ItemStack stackInSlot = digistore.getItemTracker(i).getStoredItem();
 
 				// Skip empty slots.
 				if (stackInSlot.isEmpty()) {
@@ -81,9 +81,9 @@ public class DigistoreInventoryWrapper implements IItemHandler {
 
 				// Increment the count if we have, otherwise create a new entry.
 				if (indexOfItem >= 0) {
-					stacks.get(indexOfItem).grow(digistore.getCountInSlot(i));
+					stacks.get(indexOfItem).grow(digistore.getItemTracker(i).getCount());
 				} else {
-					stacks.add(ItemHandlerHelper.copyStackWithSize(stackInSlot, digistore.getCountInSlot(i)));
+					stacks.add(ItemHandlerHelper.copyStackWithSize(stackInSlot, digistore.getItemTracker(i).getCount()));
 				}
 			}
 		}

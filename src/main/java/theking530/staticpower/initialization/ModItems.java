@@ -231,6 +231,8 @@ public class ModItems {
 	public static DigistoreCard StaticDigistoreCard;
 	public static DigistoreCard EnergizedDigistoreCard;
 	public static DigistoreCard LumumDigistoreCard;
+	public static DigistoreCard CreativeDigistoreCard;
+
 	public static CableCover CableCover;
 
 	public static void init() {
@@ -449,11 +451,12 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(DigistoreCraftingTerminalAttachment = new DigistoreCraftingTerminal("cable_attachment_digistore_crafting_terminal", StaticPowerAdditionalModels.CABLE_DIGISTORE_CRAFTING_TERMINAL_ATTACHMENT));
 
 		// Digistore Cards
-		StaticPowerRegistry.preRegisterItem(BasicDigistoreCard = new DigistoreCard("digistore_card_basic", StaticPowerTiers.BASIC));
-		StaticPowerRegistry.preRegisterItem(AdvancedDigistoreCard = new DigistoreCard("digistore_card_advanced", StaticPowerTiers.ADVANCED));
-		StaticPowerRegistry.preRegisterItem(StaticDigistoreCard = new DigistoreCard("digistore_card_static", StaticPowerTiers.STATIC));
-		StaticPowerRegistry.preRegisterItem(EnergizedDigistoreCard = new DigistoreCard("digistore_card_energized", StaticPowerTiers.ENERGIZED));
-		StaticPowerRegistry.preRegisterItem(LumumDigistoreCard = new DigistoreCard("digistore_card_lumum", StaticPowerTiers.LUMUM));
+		StaticPowerRegistry.preRegisterItem(BasicDigistoreCard = new DigistoreCard("digistore_card_basic", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.BASIC_DIGISTORE_CARD));
+		StaticPowerRegistry.preRegisterItem(AdvancedDigistoreCard = new DigistoreCard("digistore_card_advanced", StaticPowerTiers.ADVANCED, StaticPowerAdditionalModels.ADVANCVED_DIGISTORE_CARD));
+		StaticPowerRegistry.preRegisterItem(StaticDigistoreCard = new DigistoreCard("digistore_card_static", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.STATIC_DIGISTORE_CARD));
+		StaticPowerRegistry.preRegisterItem(EnergizedDigistoreCard = new DigistoreCard("digistore_card_energized", StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.ENERGIZED_DIGISTORE_CARD));
+		StaticPowerRegistry.preRegisterItem(LumumDigistoreCard = new DigistoreCard("digistore_card_lumum", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.LUMUM_DIGISTORE_CARD));
+		StaticPowerRegistry.preRegisterItem(CreativeDigistoreCard = new DigistoreCard("digistore_card_creative", StaticPowerTiers.CREATIVE, StaticPowerAdditionalModels.CREATIVE_DIGISTORE_CARD, true));
 
 		StaticPowerRegistry.preRegisterItem(CableCover = new CableCover("cable_cover"));
 	}

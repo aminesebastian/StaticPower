@@ -26,6 +26,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.world.storage.loot.LootParameters;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
@@ -34,6 +36,7 @@ import theking530.common.wrench.RegularWrenchMode;
 import theking530.common.wrench.SneakWrenchMode;
 import theking530.staticpower.items.tools.StaticWrench;
 import theking530.staticpower.tileentities.TileEntityBase;
+import theking530.staticpower.tileentities.components.InventoryComponent;
 
 /**
  * Basic implmentation of a static power block.
@@ -250,6 +253,8 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IBloc
 		// Raise the inheritor's method.
 		onStaticPowerBlockReplaced(state, world, pos, newState, isMoving, state.getBlock() != newState.getBlock());
 
+		spawnDrops(state, world, pos);
+
 		if (state.getBlock() != newState.getBlock()) {
 			// Raise the tile entity's broken method.
 			if (world.getTileEntity(pos) != null && world.getTileEntity(pos) instanceof TileEntityBase) {
@@ -332,5 +337,30 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IBloc
 			((TileEntityBase) world.getTileEntity(pos)).onNeighborChanged(state, fromPos);
 		}
 		onStaticPowerNeighborChanged(state, world, pos, fromPos);
+	}
+
+	@Deprecated
+	@Override
+	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+		// Call the super.
+		List<ItemStack> superDrops = super.getDrops(state, builder);
+
+		// Add all the items that are currently in an inventory.
+		BlockPos pos = builder.get(LootParameters.POSITION);
+		if (pos != null) {
+			TileEntityBase baseTe = builder.getWorld().getTileEntity(pos) instanceof TileEntityBase ? (TileEntityBase) builder.getWorld().getTileEntity(pos) : null;
+			if (baseTe != null) {
+				for (InventoryComponent comp : baseTe.getComponents(InventoryComponent.class)) {
+					for (int i = 0; i < comp.getSlots(); i++) {
+						ItemStack extracted = comp.extractItem(i, Integer.MAX_VALUE, false);
+						if (!extracted.isEmpty()) {
+							superDrops.add(extracted);
+						}
+					}
+				}
+			}
+		}
+
+		return superDrops;
 	}
 }

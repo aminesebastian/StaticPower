@@ -1,5 +1,7 @@
 package theking530.staticpower.cables;
 
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,6 +25,8 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.world.storage.loot.LootParameters;
 import net.minecraftforge.fml.network.NetworkHooks;
 import theking530.common.wrench.RegularWrenchMode;
 import theking530.common.wrench.SneakWrenchMode;
@@ -49,6 +53,12 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 		return CableBounds.getShape(state, worldIn, pos, context);
 	}
 
+	@Deprecated
+	@Override
+	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+		return CableBounds.getShape(state, worldIn, pos, context);
+	}
+
 	@Override
 	public boolean hasModelOverride(BlockState state) {
 		return true;
@@ -57,6 +67,29 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 	@Override
 	public boolean hasTileEntity(BlockState state) {
 		return true;
+	}
+
+	@Deprecated
+	@Override
+	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+		// Call the super.
+		List<ItemStack> superDrops = super.getDrops(state, builder);
+
+		// Drop the covers and attachments.
+		BlockPos pos = builder.get(LootParameters.POSITION);
+		if (pos != null) {
+			AbstractCableProviderComponent cable = CableUtilities.getCableWrapperComponent(builder.getWorld(), builder.get(LootParameters.POSITION));
+			for (Direction dir : Direction.values()) {
+				if (cable.hasAttachment(dir)) {
+					superDrops.add(cable.removeAttachment(dir));
+				}
+				if (cable.hasCover(dir)) {
+					superDrops.add(cable.removeCover(dir));
+				}
+			}
+		}
+
+		return superDrops;
 	}
 
 	@Override

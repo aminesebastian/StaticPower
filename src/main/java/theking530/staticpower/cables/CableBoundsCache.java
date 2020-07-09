@@ -77,7 +77,8 @@ public class CableBoundsCache {
 			}
 		}
 
-		// Add the attachment outline.
+		// Add the attachment outline. Don't perform an OR here, let it take in the
+		// original and modify that internally.
 		if (ctx.getEntity() != null && ctx.getEntity() instanceof PlayerEntity) {
 			output = addAttachmentOutline(pos, (PlayerEntity) ctx.getEntity(), output);
 		}
@@ -100,6 +101,12 @@ public class CableBoundsCache {
 		// Get the cable attachment.
 		AbstractCableProviderComponent cable = CableUtilities.getCableWrapperComponent(entity.getEntityWorld(), pos);
 
+		// Leave early if we dont find a cable there (this is in case the block starts
+		// rendering before the TE is validated).
+		if (cable == null) {
+			return CableBoundsHoverResult.EMPTY;
+		}
+
 		// If we are holding an attachment that is NOT valid for this cable, return null
 		// early.
 		if (!entity.getHeldItemMainhand().isEmpty() && entity.getHeldItemMainhand().getItem() instanceof AbstractCableAttachment && !cable.canAttachAttachment(entity.getHeldItemMainhand())) {
@@ -112,6 +119,15 @@ public class CableBoundsCache {
 
 		// Generate the bounds.
 		for (Direction dir : Direction.values()) {
+			// Then check for a held cable cover or held cable attachment.
+			if (!entity.getHeldItemMainhand().isEmpty()) {
+				if (entity.getHeldItemMainhand().getItem() instanceof CableCover) {
+					bounds.add(new CableHoverCheckRequest(getAttachmentShapeForSide(entity.getEntityWorld(), pos, entity.getHeldItemMainhand(), dir), dir, CableBoundsHoverType.HELD_COVER));
+				}  if (entity.getHeldItemMainhand().getItem() instanceof AbstractCableAttachment) {
+					bounds.add(new CableHoverCheckRequest(getAttachmentShapeForSide(entity.getEntityWorld(), pos, entity.getHeldItemMainhand(), dir), dir, CableBoundsHoverType.HELD_ATTACHMENT));
+				}
+			}
+			
 			// Then put in the bounds for an attached attachment.
 			if (!cable.getAttachment(dir).isEmpty()) {
 				bounds.add(new CableHoverCheckRequest(getAttachmentShapeForSide(entity.getEntityWorld(), pos, cable.getAttachment(dir), dir), dir, CableBoundsHoverType.ATTACHED_ATTACHMENT));
@@ -120,15 +136,6 @@ public class CableBoundsCache {
 			// Then put in the bounds for an attached cover.
 			if (!cable.getCover(dir).isEmpty()) {
 				bounds.add(new CableHoverCheckRequest(getAttachmentShapeForSide(entity.getEntityWorld(), pos, cable.getCover(dir), dir), dir, CableBoundsHoverType.ATTACHED_COVER));
-			}
-
-			// Then check for a held cable cover or held cable attachment.
-			if (!entity.getHeldItemMainhand().isEmpty()) {
-				if (entity.getHeldItemMainhand().getItem() instanceof CableCover) {
-					bounds.add(new CableHoverCheckRequest(getAttachmentShapeForSide(entity.getEntityWorld(), pos, entity.getHeldItemMainhand(), dir), dir, CableBoundsHoverType.HELD_COVER));
-				} else if (entity.getHeldItemMainhand().getItem() instanceof AbstractCableAttachment) {
-					bounds.add(new CableHoverCheckRequest(getAttachmentShapeForSide(entity.getEntityWorld(), pos, entity.getHeldItemMainhand(), dir), dir, CableBoundsHoverType.HELD_ATTACHMENT));
-				}
 			}
 		}
 
@@ -219,13 +226,18 @@ public class CableBoundsCache {
 		// Gets the hovered result.
 		CableBoundsHoverResult hoverResult = getHoveredAttachmentOrCover(pos, entity);
 
+		// Get some attributes to use in the check.
+		AbstractCableProviderComponent cable = CableUtilities.getCableWrapperComponent(entity.getEntityWorld(), pos);
+
+		// Cover us just in case the cable renders before the te is ready.
+		if (cable == null) {
+			return shape;
+		}
+
 		// If the hovered result is not null, add the attachment shape.
 		if (hoverResult != null) {
 			// Get the hovered direction.
 			Direction hoveredDirection = hoverResult.direction;
-
-			// Get some attributes to use in the check.
-			AbstractCableProviderComponent cable = CableUtilities.getCableWrapperComponent(entity.getEntityWorld(), pos);
 
 			switch (hoverResult.type) {
 			case ATTACHED_COVER:
@@ -248,6 +260,14 @@ public class CableBoundsCache {
 
 			if (cable.getConnectionState(hoveredDirection) == CableConnectionState.TILE_ENTITY || cable.hasAttachment(hoveredDirection)) {
 				shape = VoxelShapes.or(shape, CableAttachmentShapes.get(hoveredDirection));
+			}
+		} else {
+			for (Direction dir : Direction.values()) {
+				if (cable.hasCover(dir)) {
+					shape = VoxelShapes.or(shape, getAttachmentShapeForSide(entity.getEntityWorld(), pos, cable.getCover(dir), dir));
+				} else if (cable.hasAttachment(dir)) {
+					shape = VoxelShapes.or(shape, getAttachmentShapeForSide(entity.getEntityWorld(), pos, cable.getAttachment(dir), dir));
+				}
 			}
 		}
 

@@ -38,6 +38,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.common.capabilities.Capability;
@@ -92,6 +93,9 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		// If an update is queued, perform the update.
 		if (updateQueued) {
 			world.markAndNotifyBlock(pos, world.getChunkAt(pos), world.getBlockState(pos), world.getBlockState(pos), 1 | 2);
+			if(world.isRemote) {
+				ModelDataManager.requestModelDataRefresh(this);
+			}
 			updateQueued = false;
 		}
 

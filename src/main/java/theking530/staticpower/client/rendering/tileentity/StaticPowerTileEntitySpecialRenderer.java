@@ -68,7 +68,7 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 		try {
 			renderTileEntityBase(tileEntity, tileEntityPos, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 		} catch (Exception e) {
-			StaticPower.LOGGER.error(String.format("An error occured when attempting to draw tile entity base: %1$s."), tileEntity, e);
+			StaticPower.LOGGER.error(String.format("An error occured when attempting to draw tile entity base: %1$s.", tileEntity), e);
 		}
 
 		matrixStack.pop();
