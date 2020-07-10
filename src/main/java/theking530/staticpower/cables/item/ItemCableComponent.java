@@ -57,10 +57,13 @@ public class ItemCableComponent extends AbstractCableProviderComponent implement
 		if (!getWorld().isRemote) {
 			// Get the network.
 			CableNetwork network = CableNetworkManager.get(getWorld()).getCable(getPos()).getNetwork();
-			ItemNetworkModule itemNetworkModule = (ItemNetworkModule) network.getModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
-			if (network == null || itemNetworkModule == null) {
+			if (network == null) {
+				CableNetworkManager.get(getWorld()).removeCable(getPos());
 				throw new RuntimeException(String.format("Encountered a null network for an ItemCableComponent at position: %1$s.", getPos()));
 			}
+
+			// Get the module.
+			ItemNetworkModule itemNetworkModule = (ItemNetworkModule) network.getModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
 
 			// Tell the network module this cable was broken.
 			itemNetworkModule.onItemCableBroken(getPos());
@@ -118,8 +121,10 @@ public class ItemCableComponent extends AbstractCableProviderComponent implement
 		// If true, connect. If not, check if there is a TE that we can connect to. If
 		// not, return non.
 		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(), blockPosition);
-		if (otherProvider != null && otherProvider.shouldConnectionToCable(this, side)) {
-			return CableConnectionState.CABLE;
+		if (otherProvider != null && otherProvider.areCableCompatible(this, side)) {
+			if (!otherProvider.isSideDisabled(side.getOpposite())) {
+				return CableConnectionState.CABLE;
+			}
 		} else if (te != null) {
 			if (te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).isPresent()) {
 				return CableConnectionState.TILE_ENTITY;

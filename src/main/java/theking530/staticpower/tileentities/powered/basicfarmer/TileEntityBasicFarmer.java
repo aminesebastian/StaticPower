@@ -163,9 +163,6 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 			}
 		}
 
-		// Sync the tile entity.
-		markTileEntityForSynchronization();
-
 		// Return true if we finished clearing the internal inventory.
 		return InventoryUtilities.isInventoryEmpty(internalInventory);
 	}

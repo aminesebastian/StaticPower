@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -31,6 +32,7 @@ public class CableNetworkManager extends WorldSavedData {
 	private final HashMap<BlockPos, ServerCable> WorldCables;
 	private final HashMap<Long, CableNetwork> Networks;
 	private long CurrentNetworkId = 0;
+	private boolean firstTick = false;
 
 	public CableNetworkManager(String name, World world) {
 		super(name);
@@ -40,10 +42,31 @@ public class CableNetworkManager extends WorldSavedData {
 	}
 
 	public void tick() {
+		if (!firstTick) {
+			firstTick = true;
+		}
 		getNetworks().forEach(n -> n.tick());
+		// getNetworks().forEach(n -> System.out.println("ID:" + n.getId() + " Cables: "
+		// + n.getGraph().getCables().size()));
+
+		List<Long> toRemove = new ArrayList<Long>();
+		for (long id : Networks.keySet()) {
+			if (Networks.get(id).getGraph().getCables().size() == 0) {
+				toRemove.add(id);
+			}
+		}
+
+		for (long id : toRemove) {
+			Networks.remove(id);
+		}
 	}
 
 	public void addCable(ServerCable cable) {
+		if (!firstTick) {
+			LOGGER.error(String.format("Attempted to add a cable before the world is fully loaded: %1$s.", cable.getPos()));
+			return;
+		}
+
 		if (WorldCables.containsKey(cable.getPos())) {
 			throw new RuntimeException(String.format("Attempted to add a cable where one already existed: %1$s.", cable.getPos()));
 		}
@@ -57,6 +80,52 @@ public class CableNetworkManager extends WorldSavedData {
 			formNetworkAt(cable.getWorld(), cable.getPos());
 		} else {
 			mergeNetworksIntoOne(adjacents, cable.getWorld(), cable.getPos());
+		}
+	}
+
+	public void refreshCable(ServerCable cable) {
+		if (cable.Network == null) {
+			throw new RuntimeException(String.format("Attempted to refresh a cable with a null network at position: %1$s.", cable.getPos()));
+		}
+
+		// Get the original network's cables.
+		List<ServerCable> originalNetworkCables = new LinkedList<ServerCable>();
+		originalNetworkCables.addAll(cable.Network.getGraph().getCables().values());
+
+		// Get all the adjacents.
+		List<ServerCable> adjacents = getAdjacents(cable);
+		if (!adjacents.isEmpty()) {
+			for (ServerCable adjacent : adjacents) {
+				if (adjacent.Network == cable.Network) {
+					adjacent.Network.updateGraph(World, adjacent.getPos());
+					break;
+				}
+			}
+		} else {
+			cable.onNetworkLeft();
+		}
+
+		markDirty();
+
+		// After the new graph has been updated, loop through the original network
+		// cables and repair their network states as needed.
+		for (ServerCable originalCable : originalNetworkCables) {
+			// If the original cable does not have a network, attempt to give it one.
+			if (originalCable.Network == null) {
+				// Get it's adjacent.
+				List<ServerCable> newAdjacents = getAdjacents(originalCable);
+				// If there are no adjacents, create a new network. Otherwise, attempt to join
+				// it.
+				if (newAdjacents.isEmpty()) {
+					formNetworkAt(cable.getWorld(), originalCable.getPos());
+				} else {
+					mergeNetworksIntoOne(newAdjacents, originalCable.getWorld(), originalCable.getPos());
+				}
+
+				if (originalCable.Network == null) {
+					System.out.println("STILL NULL NETWORK");
+				}
+			}
 		}
 	}
 
@@ -124,12 +193,7 @@ public class CableNetworkManager extends WorldSavedData {
 		}
 
 		Set<CableNetwork> networkCandidates = new HashSet<>();
-
 		for (ServerCable candidate : candidates) {
-			if (candidate.getNetwork() == null) {
-				throw new RuntimeException("Pipe network is null!");
-			}
-
 			networkCandidates.add(candidate.getNetwork());
 		}
 
@@ -223,10 +287,15 @@ public class CableNetworkManager extends WorldSavedData {
 				continue;
 			}
 
+			if (adjacent.getNetwork() == null) {
+				continue;
+			}
+
 			if (adjacent.shouldConnectTo(cable)) {
 				wrappers.add(adjacent);
 			}
 		}
+
 		return wrappers;
 	}
 

@@ -32,12 +32,30 @@ public class FluidNetworkModule extends AbstractCableNetworkModule {
 
 	@Override
 	public void tick(World world) {
-		HashMap<BlockPos, DestinationWrapper> destinations = Network.getGraph().getDestinations();
-
-		if (FluidTank.getFluid().isEmpty() || destinations.isEmpty()) {
+		// If we have no fluid, do nothing.
+		if (FluidTank.getFluid().isEmpty()) {
 			return;
 		}
 
+		// Get a map of all the applicable destination that support the fluid we have in
+		// our tank and are not full.
+		HashMap<BlockPos, DestinationWrapper> destinations = new HashMap<BlockPos, DestinationWrapper>();
+		Network.getGraph().getDestinations().forEach((pos, wrapper) -> {
+			if (wrapper.supportsType(DestinationType.FLUID)) {
+				IFluidHandler handler = wrapper.getTileEntity().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, wrapper.getDestinationSide()).orElse(null);
+				if (handler != null && handler.fill(FluidTank.getFluid(), FluidAction.SIMULATE) > 0) {
+					destinations.put(pos, wrapper);
+				}
+			}
+		});
+
+		// If the list of destinations is empty, do nothing.
+		if (destinations.isEmpty()) {
+			return;
+		}
+
+		// Calculate how we should split the output amount.
+		int outputPerDestination = Math.max(1, FluidTank.getFluidAmount() / destinations.size());
 		for (DestinationWrapper destination : destinations.values()) {
 			// Skip destinations that don't support fluid interaction.
 			if (!destination.supportsType(DestinationType.FLUID)) {
@@ -68,6 +86,7 @@ public class FluidNetworkModule extends AbstractCableNetworkModule {
 			// Calculate how much fluid we can offer. If it is less than or equal to 0, do
 			// nothing.
 			int toOfferAmount = Math.min(transferRate, FluidTank.getFluidAmount());
+			toOfferAmount = Math.min(outputPerDestination, toOfferAmount);
 			if (toOfferAmount <= 0) {
 				break;
 			}

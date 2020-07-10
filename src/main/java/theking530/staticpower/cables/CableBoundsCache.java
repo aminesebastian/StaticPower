@@ -69,9 +69,6 @@ public class CableBoundsCache {
 
 		// Add the shapes for each side.
 		for (Direction dir : Direction.values()) {
-			if (CableUtilities.isSideConnectionDisabled(world, pos, dir)) {
-				continue;
-			}
 			if (CableUtilities.getConnectionState(world, pos, dir) == CableConnectionState.CABLE || CableUtilities.getConnectionState(world, pos, dir) == CableConnectionState.TILE_ENTITY) {
 				output = VoxelShapes.or(output, CableAttachmentShapes.get(dir));
 			}
@@ -123,11 +120,12 @@ public class CableBoundsCache {
 			if (!entity.getHeldItemMainhand().isEmpty()) {
 				if (entity.getHeldItemMainhand().getItem() instanceof CableCover) {
 					bounds.add(new CableHoverCheckRequest(getAttachmentShapeForSide(entity.getEntityWorld(), pos, entity.getHeldItemMainhand(), dir), dir, CableBoundsHoverType.HELD_COVER));
-				}  if (entity.getHeldItemMainhand().getItem() instanceof AbstractCableAttachment) {
+				}
+				if (entity.getHeldItemMainhand().getItem() instanceof AbstractCableAttachment) {
 					bounds.add(new CableHoverCheckRequest(getAttachmentShapeForSide(entity.getEntityWorld(), pos, entity.getHeldItemMainhand(), dir), dir, CableBoundsHoverType.HELD_ATTACHMENT));
 				}
 			}
-			
+
 			// Then put in the bounds for an attached attachment.
 			if (!cable.getAttachment(dir).isEmpty()) {
 				bounds.add(new CableHoverCheckRequest(getAttachmentShapeForSide(entity.getEntityWorld(), pos, cable.getAttachment(dir), dir), dir, CableBoundsHoverType.ATTACHED_ATTACHMENT));
@@ -137,6 +135,12 @@ public class CableBoundsCache {
 			if (!cable.getCover(dir).isEmpty()) {
 				bounds.add(new CableHoverCheckRequest(getAttachmentShapeForSide(entity.getEntityWorld(), pos, cable.getCover(dir), dir), dir, CableBoundsHoverType.ATTACHED_COVER));
 			}
+
+			// Finally, put the bounds for the cable.
+			if (CableUtilities.getConnectionState(entity.world, pos, dir) == CableConnectionState.CABLE || CableUtilities.getConnectionState(entity.world, pos, dir) == CableConnectionState.TILE_ENTITY) {
+				bounds.add(new CableHoverCheckRequest(CableAttachmentShapes.get(dir), dir, CableBoundsHoverType.CABLE));
+			}
+
 		}
 
 		// Create a list of just the raw bounds.
@@ -154,7 +158,7 @@ public class CableBoundsCache {
 			}
 		}
 
-		return null;
+		return CableBoundsHoverResult.EMPTY;
 	}
 
 	/**
@@ -235,7 +239,7 @@ public class CableBoundsCache {
 		}
 
 		// If the hovered result is not null, add the attachment shape.
-		if (hoverResult != null) {
+		if (!hoverResult.isEmpty()) {
 			// Get the hovered direction.
 			Direction hoveredDirection = hoverResult.direction;
 

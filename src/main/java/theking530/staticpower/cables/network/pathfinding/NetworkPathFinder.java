@@ -14,6 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import theking530.staticpower.cables.network.CableNetworkGraph;
 import theking530.staticpower.cables.network.CableNetworkManager;
+import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.pathfinding.Path.PathEntry;
 import theking530.staticpower.utilities.WorldUtilities;
 
@@ -26,6 +27,7 @@ public class NetworkPathFinder {
 	private final HashMap<BlockPos, PathEntry> Predecessors;
 	private final ResourceLocation SupportedNetworkType;
 	private final Queue<BlockPos> BFSQueue;
+	private final World world;
 
 	public NetworkPathFinder(CableNetworkGraph graph, World world, BlockPos startingCablePosition, BlockPos targetPosition, ResourceLocation supportedNetworkType) {
 		// Capture all the positions in the network graph.
@@ -40,8 +42,8 @@ public class NetworkPathFinder {
 		// the target), if they support the network type.
 		TerminusNodes = new HashSet<BlockPos>();
 		for (Direction dir : Direction.values()) {
-			if (CableNetworkManager.get(world).isTrackingCable(targetPosition.offset(dir))
-					&& CableNetworkManager.get(world).getCable(targetPosition.offset(dir)).supportsNetworkModule(supportedNetworkType)) {
+			ServerCable cable = CableNetworkManager.get(world).getCable(targetPosition.offset(dir));
+			if (cable != null && cable.supportsNetworkModule(supportedNetworkType) && !cable.isDisabledOnSide(dir.getOpposite())) {
 				TerminusNodes.add(targetPosition.offset(dir));
 			}
 		}
@@ -53,6 +55,7 @@ public class NetworkPathFinder {
 		VisitedPositions = new HashSet<BlockPos>();
 		Predecessors = new HashMap<BlockPos, PathEntry>();
 		BFSQueue = new LinkedList<BlockPos>();
+		this.world = world;
 	}
 
 	public List<Path> executeAlgorithm() {
@@ -75,8 +78,21 @@ public class NetworkPathFinder {
 			// Get the current position off the queue.
 			BlockPos curr = BFSQueue.poll();
 
+			// Get the cable. Skip the position if it is null
+			ServerCable cable = CableNetworkManager.get(world).getCable(curr);
+			if (cable == null) {
+				throw new RuntimeException(String.format("Attempted to use a null cable in a network path find. Error occured at location: %1$s.", curr));
+			}
+
 			// Scan all adjacent blocks.
 			for (Direction dir : Direction.values()) {
+				// Skip checking that block at this point in time because the cable is disabled
+				// on that side. We may hit the block on this side again, but it will be later
+				// when the path is longer.
+				if (cable.isDisabledOnSide(dir)) {
+					continue;
+				}
+
 				// Get the adjacent and check if we have visited it before. If we have, skip it.
 				BlockPos adjacent = curr.offset(dir);
 				if (!GraphNodes.contains(adjacent) || VisitedPositions.contains(adjacent)) {

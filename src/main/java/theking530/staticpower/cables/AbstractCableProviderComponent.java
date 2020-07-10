@@ -95,6 +95,11 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 
 	public void setSideDisabledState(Direction side, boolean disabledState) {
 		DisabledSides[side.ordinal()] = disabledState;
+		scanForAttachments();
+		getTileEntity().markTileEntityForSynchronization();
+		if (!getWorld().isRemote) {
+			CableNetworkManager.get(getWorld()).getCable(getPos()).setDisabledStateOnSide(side, disabledState);
+		}
 	}
 
 	/**
@@ -355,7 +360,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		return Optional.empty();
 	}
 
-	public boolean shouldConnectionToCable(AbstractCableProviderComponent otherProvider, Direction side) {
+	public boolean areCableCompatible(AbstractCableProviderComponent otherProvider, Direction side) {
 		if (otherProvider.hasAttachment(side) || this.hasAttachment(side.getOpposite())) {
 			return false;
 		}
@@ -429,8 +434,12 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		// to rethink this if that ends up being the case).
 		synchronized (ConnectionStates) {
 			for (Direction dir : Direction.values()) {
-				BlockPos offsetPos = getPos().offset(dir);
-				ConnectionStates[dir.ordinal()] = cacheConnectionState(dir, getWorld().getTileEntity(offsetPos), offsetPos);
+				if (!isSideDisabled(dir)) {
+					BlockPos offsetPos = getPos().offset(dir);
+					ConnectionStates[dir.ordinal()] = cacheConnectionState(dir, getWorld().getTileEntity(offsetPos), offsetPos);
+				} else {
+					ConnectionStates[dir.ordinal()] = CableConnectionState.NONE;
+				}
 			}
 		}
 	}

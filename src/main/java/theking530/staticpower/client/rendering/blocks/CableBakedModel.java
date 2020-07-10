@@ -60,15 +60,9 @@ public class CableBakedModel extends AbstractBakedModel {
 
 		// Get the model properties.
 		CableRenderingState renderingState = data.getData(AbstractCableProviderComponent.CABLE_RENDERING_STATE);
-
-		for (Direction dir : Direction.values()) {
-			if (renderingState.covers[dir.ordinal()] != null) {
-				// newQuads.addAll(getTransformedQuads(FullCover, dir, side, state, rand));
-			}
-		}
-
+		
+		// Render the cover.
 		RenderType layer = MinecraftForgeClient.getRenderLayer();
-
 		if (side != null && renderingState.covers[side.ordinal()] != null) {
 			coverBuilder.buildFacadeQuads(renderingState, layer, rand, newQuads, side);
 		}

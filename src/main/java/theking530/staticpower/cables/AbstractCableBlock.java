@@ -20,6 +20,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
@@ -94,6 +95,11 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 
 	@Override
 	public ActionResultType onStaticPowerBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+		if (!world.isRemote) {
+			ServerCable cable = CableNetworkManager.get(world).getCable(pos);
+			player.sendMessage(new StringTextComponent("NetworkID: " + cable.getNetwork().getId() + "  " + " with: " + cable.getNetwork().getGraph().getCables().size() + " cables."));
+		}
+
 		// Get the component at the location.
 		AbstractCableProviderComponent component = CableUtilities.getCableWrapperComponent(world, pos);
 		if (component == null) {
@@ -104,7 +110,7 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 		// Get the attachment side that is hovered (if any).
 		CableBoundsHoverResult hoverResult = CableBounds.getHoveredAttachmentOrCover(pos, player);
 
-		if (hoverResult != null && hoverResult.type == CableBoundsHoverType.ATTACHED_ATTACHMENT) {
+		if (!hoverResult.isEmpty() && hoverResult.type == CableBoundsHoverType.ATTACHED_ATTACHMENT) {
 			Direction hoveredDirection = CableBounds.getHoveredAttachmentOrCover(pos, player).direction;
 
 			if (hoveredDirection != null && component.hasAttachment(hoveredDirection)) {
@@ -143,10 +149,6 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 
 	@Override
 	public ActionResultType sneakWrenchBlock(PlayerEntity player, SneakWrenchMode mode, ItemStack wrench, World world, BlockPos pos, Direction facing, boolean returnDrops) {
-		if (!world.isRemote) {
-			Block.spawnDrops(world.getBlockState(pos), world, pos, world.getTileEntity(pos), player, wrench);
-		}
-
 		// Perform this on both the client and the server so the client updates any
 		// render changes (any conected cables).
 		world.setBlockState(pos, Blocks.AIR.getDefaultState(), 1 | 2);
@@ -156,15 +158,19 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 	@Override
 	public ActionResultType wrenchBlock(PlayerEntity player, RegularWrenchMode mode, ItemStack wrench, World world, BlockPos pos, Direction facing, boolean returnDrops) {
 		super.wrenchBlock(player, mode, wrench, world, pos, facing, returnDrops);
-
+		// Only perform on the server.
 		if (!world.isRemote) {
+			// Get the cable component and make sure its valid.
 			AbstractCableProviderComponent component = CableUtilities.getCableWrapperComponent(world, pos);
 			if (component == null) {
 				return ActionResultType.FAIL;
 			}
+
+			// Check for the hover result.
 			CableBoundsHoverResult hoverResult = CableBounds.getHoveredAttachmentOrCover(pos, player);
 
-			if (hoverResult != null) {
+			// If non null, check for any attached cover or attachment.
+			if (!hoverResult.isEmpty()) {
 				Direction hoveredDirection = CableBounds.getHoveredAttachmentOrCover(pos, player).direction;
 
 				// Remove the attachment on that side if there is one.
@@ -183,6 +189,23 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 					}
 				}
 			}
+
+			// If we didnt return earlier, we probably hit the cable itseelf, lets see if we
+			// can disable or enabled part of it.
+			Direction hitSide = !hoverResult.isEmpty() ? hoverResult.direction : facing;
+			component.setSideDisabledState(hitSide, !component.isSideDisabled(hitSide));
+
+			// Update the cable opposite from the side we just toggled if a cable exists
+			// there.
+			AbstractCableProviderComponent oppositeComponent = CableUtilities.getCableWrapperComponent(world, pos.offset(hitSide));
+			if (oppositeComponent != null) {
+				oppositeComponent.setSideDisabledState(hitSide.getOpposite(), component.isSideDisabled(hitSide));
+			}
+
+			// Refresh the cable.
+			CableNetworkManager.get(world).refreshCable(CableNetworkManager.get(world).getCable(pos));
+
+			return ActionResultType.SUCCESS;
 		}
 		return ActionResultType.FAIL;
 	}
@@ -192,7 +215,7 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 		// Get the attachment side we're hovering.
 		CableBoundsHoverResult hoverResult = CableBounds.getHoveredAttachmentOrCover(pos, player);
 
-		if (hoverResult != null) {
+		if (!hoverResult.isEmpty()) {
 			AbstractCableProviderComponent component = CableUtilities.getCableWrapperComponent(world, pos);
 			if (hoverResult.type == CableBoundsHoverType.ATTACHED_ATTACHMENT) {
 				if (component.hasAttachment(hoverResult.direction)) {

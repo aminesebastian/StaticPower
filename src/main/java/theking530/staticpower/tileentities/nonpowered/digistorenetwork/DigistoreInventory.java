@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.nonpowered.digistorenetwork;
 
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
@@ -20,7 +20,7 @@ public class DigistoreInventory implements Iterable<DigistoreItemTracker>, IDigi
 
 	public DigistoreInventory(int maxUniqueItems, int maximumStorage) {
 		this.maximumStorage = maximumStorage;
-		slots = new LinkedList<DigistoreItemTracker>();
+		slots = new ArrayList<DigistoreItemTracker>();
 		for (int i = 0; i < maxUniqueItems; i++) {
 			slots.add(new DigistoreItemTracker());
 		}
@@ -77,7 +77,15 @@ public class DigistoreInventory implements Iterable<DigistoreItemTracker>, IDigi
 	public ItemStack insertItem(ItemStack stack, boolean simulate) {
 		int slot = getSlotForItemStack(stack);
 		if (slot == -1) {
-			return stack;
+			for (int i = 0; i < slots.size(); i++) {
+				if (slots.get(i).isEmpty()) {
+					slot = i;
+					break;
+				}
+			}
+			if (slot == -1) {
+				return stack;
+			}
 		}
 		return insertItem(slot, stack, simulate);
 	}
@@ -230,7 +238,7 @@ public class DigistoreInventory implements Iterable<DigistoreItemTracker>, IDigi
 
 	protected int getSlotForItemStack(ItemStack item) {
 		for (int i = 0; i < slots.size(); i++) {
-			if (slots.get(i).canAcceptItem(item)) {
+			if (ItemUtilities.areItemStacksStackable(item, slots.get(i).getStoredItem())) {
 				return i;
 			}
 		}

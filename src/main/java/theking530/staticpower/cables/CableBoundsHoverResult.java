@@ -16,4 +16,8 @@ public class CableBoundsHoverResult {
 		this.type = type;
 		this.direction = direction;
 	}
+
+	public boolean isEmpty() {
+		return this == EMPTY || direction == null || type == null;
+	}
 }

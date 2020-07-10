@@ -149,8 +149,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 
 		// If we have a path, get the source inventory.
 		if (shortestPath != null) {
-			IItemHandler sourceInv = targetSource.getDestinationWrapper().getTileEntity()
-					.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, targetSource.getDestinationWrapper().getDestinationSide()).orElse(null);
+			IItemHandler sourceInv = targetSource.getDestinationWrapper().getTileEntity().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, targetSource.getDestinationWrapper().getDestinationSide()).orElse(null);
 
 			// If the source inventory is valid.
 			if (sourceInv != null) {
@@ -158,8 +157,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 				ItemStack pulledAmount = sourceInv.extractItem(targetSource.getInventorySlot(), maxExtract, true);
 
 				// Attempt to route that amount, and return the actual amount routed.
-				ItemStack actuallyTransfered = routeItem(pulledAmount, shortestPath, targetSource.getDestinationWrapper().getDestinationSide().getOpposite(),
-						targetSource.getDestinationWrapper().getConnectedCable(), false);
+				ItemStack actuallyTransfered = routeItem(pulledAmount, shortestPath, targetSource.getDestinationWrapper().getDestinationSide().getOpposite(), targetSource.getDestinationWrapper().getConnectedCable(), false);
 
 				// Then, extract the actual amount routed.
 				sourceInv.extractItem(targetSource.getInventorySlot(), pulledAmount.getCount() - actuallyTransfered.getCount(), false);
@@ -373,23 +371,26 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 			return false;
 		}
 
+		// Get the item we have to transfer.
+		ItemStack transferedAmount = parcel.getContainedItem();
+
 		// Check to ensure that the other cable has a network.
 		CableNetwork otherNetwork = otherNetworkCable.getNetwork();
-		if (!otherNetwork.hasModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE)) {
-			return false;
-		}
+		if (otherNetwork != null) {
+			if (!otherNetwork.hasModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE)) {
+				return false;
+			}
+			// Transfer this parcel to that network.
+			ItemNetworkModule otherItemModule = otherNetwork.getModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
 
-		// Transfer this parcel to that network.
-		ItemNetworkModule otherItemModule = otherNetwork.getModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
-
-		// Loop until we're able to fully transfer the parcel OR we run out of options.
-		ItemStack lastTransferedAmount = ItemStack.EMPTY;
-		ItemStack transferedAmount = parcel.getContainedItem();
-		while (lastTransferedAmount.getCount() != transferedAmount.getCount()) {
-			lastTransferedAmount = transferedAmount;
-			transferedAmount = otherItemModule.transferItemStack(parcel.getContainedItem(), parcel.getCurrentEntry().getPosition(), parcel.getCurrentEntry().getDirectionOfEntry(), false);
-			if (transferedAmount.isEmpty()) {
-				break;
+			// Loop until we're able to fully transfer the parcel OR we run out of options.
+			ItemStack lastTransferedAmount = ItemStack.EMPTY;
+			while (lastTransferedAmount.getCount() != transferedAmount.getCount()) {
+				lastTransferedAmount = transferedAmount;
+				transferedAmount = otherItemModule.transferItemStack(parcel.getContainedItem(), parcel.getCurrentEntry().getPosition(), parcel.getCurrentEntry().getDirectionOfEntry(), false);
+				if (transferedAmount.isEmpty()) {
+					break;
+				}
 			}
 		}
 
@@ -397,6 +398,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 		if (!transferedAmount.isEmpty()) {
 			WorldUtilities.dropItem(Network.getWorld(), parcel.getCurrentEntry().getPosition(), transferedAmount);
 		}
+		
 		return true;
 	}
 

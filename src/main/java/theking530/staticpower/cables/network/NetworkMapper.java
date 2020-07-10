@@ -60,11 +60,12 @@ public class NetworkMapper {
 	}
 
 	protected void _updateNetworkWorker(World world, HashSet<BlockPos> visited, BlockPos currentPosition) {
-		for (Direction facing : Direction.values()) {
-			// If we're testing on a position that contains a cable and the cable is
-			// disabled on the side we're testing, skip it. Do NOT mark that side as visited
-			// though, as another cable may get to it that is enabled on that side.
-			ServerCable cable = CableNetworkManager.get(world).getCable(currentPosition);
+		// If we're testing on a position that contains a cable and the cable is
+		// disabled on the side we're testing, skip it. Do NOT mark that side as visited
+		// though, as another cable may get to it that is enabled on that side.
+		ServerCable cable = CableNetworkManager.get(world).getCable(currentPosition);
+		
+		for (Direction facing : Direction.values()) {			
 			if (cable != null && cable.isDisabledOnSide(facing)) {
 				continue;
 			}
@@ -131,6 +132,7 @@ public class NetworkMapper {
 
 			// Make sure it is valid.
 			if (te != null && !te.isRemoved()) {
+
 				// Cache a destination wrapper for it.
 				DestinationWrapper wrapper = new DestinationWrapper(te, scanningCable.getPos(), facing.getOpposite());
 				Destinations.add(wrapper);

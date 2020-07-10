@@ -55,6 +55,11 @@ public class ServerCable {
 			CompoundNBT moduleTagCompound = (CompoundNBT) moduleTag;
 			SupportedNetworkModules.add(new ResourceLocation(moduleTagCompound.getString("module_type")));
 		}
+
+		// Serialize the disabled sides.
+		for (int i = 0; i < 6; i++) {
+			DisabledSides[i] = tag.getBoolean("disabled" + i);
+		}
 	}
 
 	public void tick() {
@@ -132,18 +137,7 @@ public class ServerCable {
 	}
 
 	public void setDisabledStateOnSide(Direction side, boolean disabledState) {
-		CableNetworkManager.get(World).removeCable(Position);
-
 		DisabledSides[side.ordinal()] = disabledState;
-
-		ServerCable opposite = CableNetworkManager.get(World).getCable(Position.offset(side));
-		if (opposite != null) {
-			CableNetworkManager.get(World).removeCable(Position.offset(side));
-			DisabledSides[side.getOpposite().ordinal()] = disabledState;
-			CableNetworkManager.get(World).addCable(opposite);
-		}
-
-		CableNetworkManager.get(World).addCable(this);
 	}
 
 	public CompoundNBT writeToNbt(CompoundNBT tag) {
@@ -158,6 +152,11 @@ public class ServerCable {
 			supportedModules.add(moduleTag);
 		});
 		tag.put("supported_modules", supportedModules);
+
+		// Serialize the disabled sides.
+		for (int i = 0; i < 6; i++) {
+			tag.putBoolean("disabled" + i, DisabledSides[i]);
+		}
 		return tag;
 	}
 

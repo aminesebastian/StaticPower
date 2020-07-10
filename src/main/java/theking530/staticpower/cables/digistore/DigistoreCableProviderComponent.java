@@ -27,8 +27,11 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	@Override
 	protected CableConnectionState cacheConnectionState(Direction side, @Nullable TileEntity te, BlockPos blockPosition) {
 		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(), blockPosition);
-		if (te instanceof TileEntityDigistoreWire && otherProvider != null && otherProvider.shouldConnectionToCable(this, side)) {
-			return CableConnectionState.CABLE;
+
+		if (te instanceof TileEntityDigistoreWire && otherProvider != null && otherProvider.areCableCompatible(this, side)) {
+			if (!otherProvider.isSideDisabled(side.getOpposite())) {
+				return CableConnectionState.CABLE;
+			}
 		} else if (te instanceof TileEntityBase) {
 			TileEntityBase baseTe = (TileEntityBase) te;
 			if (baseTe.hasComponentOfType(DigistoreCableProviderComponent.class)) {
