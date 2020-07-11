@@ -14,6 +14,7 @@ import theking530.staticpower.tileentities.nonpowered.digistorenetwork.severrack
 import theking530.staticpower.tileentities.nonpowered.tank.TileEntityTank;
 import theking530.staticpower.tileentities.nonpowered.vacuumchest.TileEntityVacuumChest;
 import theking530.staticpower.tileentities.powered.basicfarmer.TileEntityBasicFarmer;
+import theking530.staticpower.tileentities.powered.battery.TileEntityBattery;
 import theking530.staticpower.tileentities.powered.chargingstation.TileEntityChargingStation;
 import theking530.staticpower.tileentities.powered.fermenter.TileEntityFermenter;
 import theking530.staticpower.tileentities.powered.former.TileEntityFormer;
@@ -53,7 +54,8 @@ public class ModTileEntityTypes {
 	public static TileEntityType<TileEntityTreeFarm> TREE_FARM;
 	public static TileEntityType<TileEntityFermenter> FERMENTER;
 	public static TileEntityType<TileEntityFormer> FORMER;
-
+	public static TileEntityType<TileEntityBattery> BATTERY;
+	
 	public static void init() {
 		VACCUM_CHEST = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityVacuumChest(), ModBlocks.VacuumChest);
 		CHARGING_STATION = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityChargingStation(), ModBlocks.ChargingStation);
@@ -71,7 +73,8 @@ public class ModTileEntityTypes {
 		TREE_FARM = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityTreeFarm(), ModBlocks.TreeFarmer);
 		FERMENTER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityFermenter(), ModBlocks.Fermenter);
 		FORMER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityFormer(), ModBlocks.Former);
-
+		BATTERY = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(), ModBlocks.BasicBattery);
+		
 		TANK = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityTank(), ModBlocks.BasicTank);
 		PUMP = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityPump(), ModBlocks.Pump);
 

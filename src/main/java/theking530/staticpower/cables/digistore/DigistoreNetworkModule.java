@@ -9,6 +9,8 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
@@ -20,6 +22,7 @@ import theking530.staticpower.tileentities.nonpowered.digistorenetwork.Capabilit
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.IDigistoreInventory;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.TileEntityDigistoreManager;
 import theking530.staticpower.utilities.ItemUtilities;
+import theking530.staticpower.utilities.MetricConverter;
 
 public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 	private final List<IDigistoreInventory> digistores;
@@ -197,6 +200,23 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 			return output;
 		}
 		throw new RuntimeException("Attempted to extract an item from a network with no present manager.");
+	}
+
+	@Override
+	public void getReaderOutput(List<ITextComponent> output) {
+		// Get the total amount of items.
+		int items = 0;
+		for (IDigistoreInventory inv : digistores) {
+			items += inv.getTotalContainedCount();
+		}
+
+		// Inventories.
+		String digistoreInventories = new MetricConverter(digistores.size()).getValueAsString(true);
+		output.add(new StringTextComponent(String.format("Contains: %1$s digistore inventories.", digistoreInventories)));
+
+		// ItemCount
+		String itemCount = new MetricConverter(items).getValueAsString(true);
+		output.add(new StringTextComponent(String.format("Contains: %1$s items.", itemCount)));
 	}
 
 	@Override

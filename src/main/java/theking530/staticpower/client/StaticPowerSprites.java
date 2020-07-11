@@ -31,6 +31,9 @@ public class StaticPowerSprites {
 	public static final ResourceLocation GREEN_MACHINE_SIDE_OUTPUT = registerSprite("blocks/machines/farmer_side_output");
 	public static final ResourceLocation GREEN_MACHINE_SIDE_DISABLED = registerSprite("blocks/machines/farmer_side_disabled");
 
+	public static final ResourceLocation BASIC_BATTERY_TOP = registerSprite("blocks/machines/batteries/battery_basic_top");
+	public static final ResourceLocation BASIC_BATTERY_SIDE = registerSprite("blocks/machines/batteries/battery_basic_side");
+
 	public static final ResourceLocation TANK_SIDE = registerSprite("blocks/machines/tank_basic");
 
 	public static final ResourceLocation FILTER_WHITELIST = registerSprite("gui/filter_whitelist");
@@ -45,11 +48,11 @@ public class StaticPowerSprites {
 	public static final ResourceLocation SORT_ALPHA_DESC = registerSprite("gui/sort_alphabetical_desc");
 	public static final ResourceLocation SORT_NUMERICAN_ASC = registerSprite("gui/sort_numerical_asc");
 	public static final ResourceLocation SORT_NUMERICAL_DESC = registerSprite("gui/sort_numerical_desc");
-	
+
 	public static final ResourceLocation SEARCH_MODE_DEFAULT = registerSprite("gui/search_mode_default");
 	public static final ResourceLocation SEARCH_MODE_ONE_WAY = registerSprite("gui/search_mode_one_way");
 	public static final ResourceLocation SEARCH_MODE_TWO_WAY = registerSprite("gui/search_mode_two_way");
-	
+
 	public static final ResourceLocation CANCEL = registerSprite("gui/cancel");
 	public static final ResourceLocation GREEN_CHECK = registerSprite("gui/check");
 	public static final ResourceLocation DISABLED = registerSprite("gui/disabled");

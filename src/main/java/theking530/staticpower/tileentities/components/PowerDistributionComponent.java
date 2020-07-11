@@ -33,8 +33,7 @@ public class PowerDistributionComponent extends AbstractTileEntityComponent {
 				for (Direction facing : Direction.values()) {
 					if (canOutputFromSide(facing)) {
 						int maxExtract = energyStorage.extractEnergy(Integer.MAX_VALUE, true);
-						int providedRF = provideRF(facing, Math.min(maxExtract, energyStorage.getEnergyStored()));
-						energyStorage.extractEnergy(providedRF, false);
+						provideRF(facing, Math.min(maxExtract, energyStorage.getEnergyStored()));
 					}
 				}
 			}

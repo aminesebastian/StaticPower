@@ -93,7 +93,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		// If an update is queued, perform the update.
 		if (updateQueued) {
 			world.markAndNotifyBlock(pos, world.getChunkAt(pos), world.getBlockState(pos), world.getBlockState(pos), 1 | 2);
-			if(world.isRemote) {
+			if (world.isRemote) {
 				ModelDataManager.requestModelDataRefresh(this);
 			}
 			updateQueued = false;
@@ -138,8 +138,10 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	}
 
 	public void markTileEntityForSynchronization() {
-		updateQueued = true;
-		markDirty();
+		if (!getWorld().isRemote) {
+			updateQueued = true;
+			markDirty();
+		}
 	}
 
 	public void onPlaced(BlockState state, @Nullable LivingEntity placer, ItemStack stack) {

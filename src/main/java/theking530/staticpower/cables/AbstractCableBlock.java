@@ -20,7 +20,6 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
@@ -44,7 +43,7 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 	public final CableBoundsCache CableBounds;
 
 	public AbstractCableBlock(String name, CableBoundsCache cableBoundsGenerator) {
-		super(name, Block.Properties.create(Material.IRON).notSolid());
+		super(name, Block.Properties.create(Material.IRON).hardnessAndResistance(1.5f).notSolid());
 		CableBounds = cableBoundsGenerator;
 	}
 
@@ -95,11 +94,6 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 
 	@Override
 	public ActionResultType onStaticPowerBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-		if (!world.isRemote) {
-			ServerCable cable = CableNetworkManager.get(world).getCable(pos);
-			player.sendMessage(new StringTextComponent("NetworkID: " + cable.getNetwork().getId() + "  " + " with: " + cable.getNetwork().getGraph().getCables().size() + " cables."));
-		}
-
 		// Get the component at the location.
 		AbstractCableProviderComponent component = CableUtilities.getCableWrapperComponent(world, pos);
 		if (component == null) {

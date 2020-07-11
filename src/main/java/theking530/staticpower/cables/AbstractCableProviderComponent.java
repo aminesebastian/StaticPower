@@ -151,7 +151,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		if (!getTileEntity().getWorld().isRemote) {
 			CableNetworkManager manager = CableNetworkManager.get(getWorld());
 			if (!manager.isTrackingCable(getTileEntity().getPos())) {
-				ServerCable wrapper = new ServerCable(getWorld(), getPos(), SupportedNetworkModules);
+				ServerCable wrapper = createCable();
 				manager.addCable(wrapper);
 			}
 		}
@@ -442,6 +442,10 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 				}
 			}
 		}
+	}
+
+	protected ServerCable createCable() {
+		return new ServerCable(getWorld(), getPos(), SupportedNetworkModules);
 	}
 
 	protected ResourceLocation[] getAttachmentModels() {

@@ -19,11 +19,13 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
+import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.items.cableattachments.extractor.ExtractorAttachment;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class FluidCableComponent extends AbstractCableProviderComponent implements IFluidHandler {
+	public static final String FLUID_CAPACITY_DATA_TAG_KEY = "fluid_capacity";
 	public static final int EXTRACTION_RATE = 10;
 	public static final float UPDATE_THRESHOLD = 0.1f;
 	private final int capacity;
@@ -168,6 +170,13 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 			return LazyOptional.of(() -> this).cast();
 		}
 		return LazyOptional.empty();
+	}
+
+	@Override
+	protected ServerCable createCable() {
+		return new ServerCable(getWorld(), getPos(), getSupportedNetworkModuleTypes(), (cable) -> {
+			cable.setProperty(FLUID_CAPACITY_DATA_TAG_KEY, capacity);
+		});
 	}
 
 	@Override

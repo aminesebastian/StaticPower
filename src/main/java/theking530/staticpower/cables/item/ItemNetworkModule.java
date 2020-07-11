@@ -19,6 +19,8 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -34,6 +36,7 @@ import theking530.staticpower.cables.network.DestinationWrapper.DestinationType;
 import theking530.staticpower.cables.network.pathfinding.Path;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.utilities.InventoryUtilities;
+import theking530.staticpower.utilities.MetricConverter;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class ItemNetworkModule extends AbstractCableNetworkModule {
@@ -398,7 +401,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 		if (!transferedAmount.isEmpty()) {
 			WorldUtilities.dropItem(Network.getWorld(), parcel.getCurrentEntry().getPosition(), transferedAmount);
 		}
-		
+
 		return true;
 	}
 
@@ -579,6 +582,18 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 
 		// Attempt to insert the provided item into the new handler.
 		return InventoryUtilities.insertItemIntoInventory(dupInv, itemToInsert, false);
+	}
+
+	@Override
+	public void getReaderOutput(List<ITextComponent> output) {
+		// Calculate the number of active parcels.
+		int activeParcels = 0;
+		for (LinkedList<ItemRoutingParcel> parcels : ActiveParcels.values()) {
+			activeParcels += parcels.size();
+		}
+
+		String itemsInTransit = new MetricConverter(activeParcels).getValueAsString(true);
+		output.add(new StringTextComponent(String.format("Contains: %1$s items in transit.", itemsInTransit)));
 	}
 
 	@Override

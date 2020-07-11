@@ -27,6 +27,7 @@ import theking530.staticpower.tileentities.nonpowered.digistorenetwork.severrack
 import theking530.staticpower.tileentities.nonpowered.tank.BlockTank;
 import theking530.staticpower.tileentities.nonpowered.vacuumchest.BlockVacuumChest;
 import theking530.staticpower.tileentities.powered.basicfarmer.BlockBasicFarmer;
+import theking530.staticpower.tileentities.powered.battery.BlockBattery;
 import theking530.staticpower.tileentities.powered.chargingstation.BlockChargingStation;
 import theking530.staticpower.tileentities.powered.fermenter.BlockFermenter;
 import theking530.staticpower.tileentities.powered.former.BlockFormer;
@@ -106,7 +107,10 @@ public class ModBlocks {
 	public static BlockPowerCable PowerCable;
 	public static BlockFluidCable FluidCable;
 	public static BlockIndustrialFluidCable IndustrialFluidCable;
-	
+
+	// Batteries
+	public static BlockBattery BasicBattery;
+
 	public static void init() {
 		// Decorative
 		StaticPowerRegistry.preRegisterBlock(StaticLamp = new Lamp("lamp_static"));
@@ -169,12 +173,14 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(DigistoreIOPort = new BlockDigistoreIOPort("digistore_io_port"));
 		StaticPowerRegistry.preRegisterBlock(Digistore = new BlockDigistore("digistore"));
 		StaticPowerRegistry.preRegisterBlock(DigistoreServerRack = new BlockDigistoreServerRack("digistore_server_rack"));
-		
+
 		// Cables
 		StaticPowerRegistry.preRegisterBlock(DigistoreWire = new BlockDigistoreNetworkWire("cable_digistore"));
 		StaticPowerRegistry.preRegisterBlock(PowerCable = new BlockPowerCable("cable_power"));
 		StaticPowerRegistry.preRegisterBlock(ItemCable = new BlockItemCable("cable_item"));
 		StaticPowerRegistry.preRegisterBlock(FluidCable = new BlockFluidCable("cable_fluid"));
 		StaticPowerRegistry.preRegisterBlock(IndustrialFluidCable = new BlockIndustrialFluidCable("cable_industrial_fluid"));
+
+		StaticPowerRegistry.preRegisterBlock(BasicBattery = new BlockBattery("battery_block_basic", StaticPowerTiers.BASIC));
 	}
 }

@@ -4,6 +4,7 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.CropsBlock;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -11,7 +12,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.RavagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -28,7 +28,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.IPlantable;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.blocks.StaticPowerBlock;
+import theking530.staticpower.blocks.IBlockRenderLayerProvider;
 
 /**
  * Base class for a simple single block plant.
@@ -36,7 +36,7 @@ import theking530.staticpower.blocks.StaticPowerBlock;
  * @author Amine Sebastian
  *
  */
-public class BaseSimplePlant extends StaticPowerBlock implements IPlantable, IGrowable {
+public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable, IBlockRenderLayerProvider {
 	/**
 	 * The different bounding boxes for the crop at different ages.
 	 */
@@ -48,20 +48,15 @@ public class BaseSimplePlant extends StaticPowerBlock implements IPlantable, IGr
 	 * @param name The registry name for this block sans namespace.
 	 */
 	public BaseSimplePlant(String name) {
-		super(name, Block.Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().hardnessAndResistance(0.0f).sound(SoundType.CROP));
+		super(Block.Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().hardnessAndResistance(0.0f).sound(SoundType.CROP));
+		setRegistryName(name);
 		SHAPES = getShapesByAge();
-	}
-
-	/** Disable itemblock registration for this block. */
-	@Override
-	public BlockItem getItemBlock() {
-		return null;
 	}
 
 	/**
 	 * On random block tick, attempt to grow the plant.
 	 */
-	@SuppressWarnings("deprecation")
+	@Override
 	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
 		super.tick(state, worldIn, pos, rand);
 		if (!worldIn.isAreaLoaded(pos, 1)) {
@@ -83,6 +78,7 @@ public class BaseSimplePlant extends StaticPowerBlock implements IPlantable, IGr
 	/**
 	 * Gets the bounding boxes for this crop at the provided age.
 	 */
+	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		if (state.get(getAgeProperty()) > getMaxAge()) {
 			StaticPower.LOGGER.error(String.format("Plant at position: %1$s was found with an invalid value for Age.", pos.toString()));
@@ -96,6 +92,7 @@ public class BaseSimplePlant extends StaticPowerBlock implements IPlantable, IGr
 	 * harvest by right clicking. Sets the age back down to the default once
 	 * harvested.
 	 */
+	@Override
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 		if (isMaxAge(state)) {
 			Block.spawnDrops(state, worldIn, pos);
@@ -109,6 +106,7 @@ public class BaseSimplePlant extends StaticPowerBlock implements IPlantable, IGr
 	 * Gets the maximum age of the plant. There should be this amount + 1 of models
 	 * and states in the blockstates file.
 	 */
+	@Override
 	public int getMaxAge() {
 		Object[] values = getAgeProperty().getAllowedValues().toArray();
 		return (int) values[values.length - 1];
@@ -120,6 +118,7 @@ public class BaseSimplePlant extends StaticPowerBlock implements IPlantable, IGr
 	 * 
 	 * @return
 	 */
+	@Override
 	public IntegerProperty getAgeProperty() {
 		return BlockStateProperties.AGE_0_7;
 	}
@@ -130,6 +129,7 @@ public class BaseSimplePlant extends StaticPowerBlock implements IPlantable, IGr
 	 * @param state The block state to check.
 	 * @return Returns the current age.
 	 */
+	@Override
 	protected int getAge(BlockState state) {
 		return state.get(getAgeProperty());
 	}
@@ -140,6 +140,7 @@ public class BaseSimplePlant extends StaticPowerBlock implements IPlantable, IGr
 	 * @param age The age of the plant.
 	 * @return The blockstate at the given age.
 	 */
+	@Override
 	public BlockState withAge(int age) {
 		return this.getDefaultState().with(getAgeProperty(), Integer.valueOf(age));
 	}
@@ -150,6 +151,7 @@ public class BaseSimplePlant extends StaticPowerBlock implements IPlantable, IGr
 	 * @param state The blockstate to check.
 	 * @return
 	 */
+	@Override
 	public boolean isMaxAge(BlockState state) {
 		return state.get(getAgeProperty()) >= this.getMaxAge();
 	}
@@ -162,6 +164,7 @@ public class BaseSimplePlant extends StaticPowerBlock implements IPlantable, IGr
 	 * @param pos     The position of the ground.
 	 * @return True if the plant should continue to grow, false otherwise.
 	 */
+	@Override
 	protected boolean isValidGround(BlockState state, IBlockReader worldIn, BlockPos pos) {
 		return true;
 	}
@@ -189,6 +192,7 @@ public class BaseSimplePlant extends StaticPowerBlock implements IPlantable, IGr
 	 * @param worldIn The world the plant is in.
 	 * @return The amount of stages to advance when bonemeal is used on this plant.
 	 */
+	@Override
 	protected int getBonemealAgeIncrease(World worldIn) {
 		return MathHelper.nextInt(worldIn.rand, 2, 5);
 	}
@@ -233,8 +237,8 @@ public class BaseSimplePlant extends StaticPowerBlock implements IPlantable, IGr
 		if (flag && flag1) {
 			f /= 2.0F;
 		} else {
-			boolean flag2 = blockIn == worldIn.getBlockState(blockpos3.north()).getBlock() || blockIn == worldIn.getBlockState(blockpos4.north()).getBlock()
-					|| blockIn == worldIn.getBlockState(blockpos4.south()).getBlock() || blockIn == worldIn.getBlockState(blockpos3.south()).getBlock();
+			boolean flag2 = blockIn == worldIn.getBlockState(blockpos3.north()).getBlock() || blockIn == worldIn.getBlockState(blockpos4.north()).getBlock() || blockIn == worldIn.getBlockState(blockpos4.south()).getBlock()
+					|| blockIn == worldIn.getBlockState(blockpos3.south()).getBlock();
 			if (flag2) {
 				f /= 2.0F;
 			}
@@ -246,6 +250,7 @@ public class BaseSimplePlant extends StaticPowerBlock implements IPlantable, IGr
 	/**
 	 * Indicates if this plant is growing on a valid position.
 	 */
+	@Override
 	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
 		return true;
 	}
@@ -253,7 +258,7 @@ public class BaseSimplePlant extends StaticPowerBlock implements IPlantable, IGr
 	/**
 	 * When colided with a ravager, break the block.
 	 */
-	@SuppressWarnings("deprecation")
+	@Override
 	public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
 		if (entityIn instanceof RavagerEntity && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(worldIn, entityIn)) {
 			worldIn.destroyBlock(pos, true, entityIn);
@@ -265,6 +270,7 @@ public class BaseSimplePlant extends StaticPowerBlock implements IPlantable, IGr
 	/**
 	 * Whether this IGrowable can grow.
 	 */
+	@Override
 	public boolean canGrow(IBlockReader worldIn, BlockPos pos, BlockState state, boolean isClient) {
 		return !this.isMaxAge(state);
 	}
@@ -272,6 +278,7 @@ public class BaseSimplePlant extends StaticPowerBlock implements IPlantable, IGr
 	/**
 	 * Indicates that this plant can be bonemealed.
 	 */
+	@Override
 	public boolean canUseBonemeal(World worldIn, Random rand, BlockPos pos, BlockState state) {
 		return true;
 	}
@@ -279,10 +286,12 @@ public class BaseSimplePlant extends StaticPowerBlock implements IPlantable, IGr
 	/**
 	 * This method is called when an external item/block wants to grow this item.
 	 */
+	@Override
 	public void grow(ServerWorld worldIn, Random rand, BlockPos pos, BlockState state) {
 		this.growUsingBonemeal(worldIn, pos, state);
 	}
 
+	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
 		builder.add(getAgeProperty());
 	}
@@ -295,10 +304,9 @@ public class BaseSimplePlant extends StaticPowerBlock implements IPlantable, IGr
 	 *         of the plant.
 	 */
 	public VoxelShape[] getShapesByAge() {
-		return new VoxelShape[] { Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D), Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D),
-				Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D), Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D), Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D),
-				Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 10.0D, 16.0D), Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 10.0D, 16.0D),
-				Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D) };
+		return new VoxelShape[] { Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D), Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D), Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D),
+				Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D), Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D), Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 10.0D, 16.0D),
+				Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 10.0D, 16.0D), Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D) };
 	}
 
 	@Override

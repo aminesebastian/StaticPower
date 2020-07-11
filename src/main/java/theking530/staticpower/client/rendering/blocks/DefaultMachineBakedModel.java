@@ -89,7 +89,7 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 				AtlasTexture blocksTexture = ModelLoader.instance().getSpriteMap().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 
 				// Get the texture sprite for the side.
-				TextureAtlasSprite sideSprite = getSpriteForMachineSide(sideMode, blocksTexture);
+				TextureAtlasSprite sideSprite = getSpriteForMachineSide(sideMode, blocksTexture, renderingSide);
 
 				// Attempt to render the quad for the side.
 				renderQuadsForSide(newQuads, renderingSide, sideSprite, quad, sideMode);
@@ -112,7 +112,8 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 		}
 	}
 
-	protected TextureAtlasSprite getSpriteForMachineSide(MachineSideMode mode, AtlasTexture blocksStitchedTextures) {
+	
+	protected TextureAtlasSprite getSpriteForMachineSide(MachineSideMode mode, AtlasTexture blocksStitchedTextures, Direction side) {
 		switch (mode) {
 		case Input:
 			return blocksStitchedTextures.getSprite(StaticPowerSprites.MACHINE_SIDE_INPUT);

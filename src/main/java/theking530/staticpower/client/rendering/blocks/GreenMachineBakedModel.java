@@ -3,6 +3,7 @@ package theking530.staticpower.client.rendering.blocks;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.util.Direction;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
@@ -12,7 +13,7 @@ public class GreenMachineBakedModel extends DefaultMachineBakedModel {
 	}
 
 	@Override
-	protected TextureAtlasSprite getSpriteForMachineSide(MachineSideMode mode, AtlasTexture blocksStitchedTextures) {
+	protected TextureAtlasSprite getSpriteForMachineSide(MachineSideMode mode, AtlasTexture blocksStitchedTextures, Direction side) {
 		switch (mode) {
 		case Input:
 			return blocksStitchedTextures.getSprite(StaticPowerSprites.GREEN_MACHINE_SIDE_INPUT);

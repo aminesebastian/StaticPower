@@ -49,10 +49,22 @@ public class InventoryUtilities {
 		return -1;
 	}
 
-	public static ItemStack getRandomItemStackFromInventory(IItemHandler inv) {
+	/**
+	 * Gets a random itemstack between in the provided inventory that is in the
+	 * range of slots provided inclusive. Will always return an itemstack if one
+	 * exists in the range no matter what.
+	 * 
+	 * @param inv
+	 * @param startingSlot
+	 * @param endingSlot
+	 * @param amount
+	 * @param simulate
+	 * @return
+	 */
+	public static ItemStack getRandomItemStackFromInventory(IItemHandler inv, int startingSlot, int endingSlot, int amount, boolean simulate) {
 		// Capture all the slots that have items in them.
 		List<Integer> valueSlots = new LinkedList<Integer>();
-		for (int i = 0; i < inv.getSlots(); i++) {
+		for (int i = startingSlot; i <= endingSlot; i++) {
 			if (!inv.getStackInSlot(i).isEmpty()) {
 				valueSlots.add(i);
 			}
@@ -65,7 +77,33 @@ public class InventoryUtilities {
 
 		// Return the stack in the slot.
 		int targetSlot = valueSlots.get(SDMath.getRandomIntInRange(0, valueSlots.size() - 1));
-		return inv.getStackInSlot(targetSlot);
+		return inv.extractItem(targetSlot, amount, simulate);
+	}
+
+	public static int getRandomSlotWithItemFromInventory(IItemHandler inv, int startingSlot, int endingSlot, int amount, boolean simulate) {
+		// Capture all the slots that have items in them.
+		List<Integer> valueSlots = new LinkedList<Integer>();
+		for (int i = startingSlot; i <= endingSlot; i++) {
+			if (!inv.getStackInSlot(i).isEmpty()) {
+				valueSlots.add(i);
+			}
+		}
+
+		// If the inventory is empty, return an empty itemstack.
+		if (valueSlots.size() == 0) {
+			return -1;
+		}
+
+		// Return random slot.
+		return valueSlots.get(SDMath.getRandomIntInRange(0, valueSlots.size() - 1));
+	}
+
+	public static ItemStack getRandomItemStackFromInventory(IItemHandler inv, int amount, boolean simulate) {
+		return getRandomItemStackFromInventory(inv, 0, inv.getSlots() - 1, amount, simulate);
+	}
+
+	public static int getRandomSlotWithItemFromInventory(IItemHandler inv, int amount, boolean simulate) {
+		return getRandomSlotWithItemFromInventory(inv, 0, inv.getSlots() - 1, amount, simulate);
 	}
 
 	public static boolean canFullyInsertAllItemsIntoInventory(IItemHandler inv, List<ItemStack> items) {

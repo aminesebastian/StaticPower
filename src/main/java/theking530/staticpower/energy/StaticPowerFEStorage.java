@@ -13,7 +13,6 @@ public class StaticPowerFEStorage implements IEnergyStorage {
 	protected boolean canExtract;
 	protected boolean canRecieve;
 
-
 	public StaticPowerFEStorage(int capacity) {
 		this(capacity, Integer.MAX_VALUE, Integer.MAX_VALUE);
 	}
@@ -131,7 +130,7 @@ public class StaticPowerFEStorage implements IEnergyStorage {
 		return maxReceive;
 	}
 
-	public float getEnergyRatio() {
+	public float getStoredEnergyPercentScaled(float scale) {
 		return (float) currentEnergy / (float) capacity;
 	}
 

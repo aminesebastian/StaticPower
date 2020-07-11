@@ -38,6 +38,7 @@ import theking530.common.utilities.SDMath;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.initialization.ModTags;
 import theking530.staticpower.initialization.ModTileEntityTypes;
+import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.BatteryComponent;
 import theking530.staticpower.tileentities.components.FluidContainerComponent;
@@ -45,6 +46,7 @@ import theking530.staticpower.tileentities.components.FluidContainerComponent.Fl
 import theking530.staticpower.tileentities.components.FluidTankComponent;
 import theking530.staticpower.tileentities.components.InputServoComponent;
 import theking530.staticpower.tileentities.components.InventoryComponent;
+import theking530.staticpower.tileentities.components.InventoryComponent.InventoryChangeType;
 import theking530.staticpower.tileentities.components.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.OutputServoComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
@@ -99,7 +101,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		registerComponent(fluidContainerInventoy = new InventoryComponent("FluidContainerInventoy", 2, MachineSideMode.Never));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 9, MachineSideMode.Output));
 		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
-		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
+		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never).setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 100, MachineSideMode.Never));
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 5, this::canProcess, this::canProcess, this::processingCompleted, true));
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluid) -> fluid.getFluid() == Fluids.WATER).setCapabilityExposedModes(MachineSideMode.Input));
@@ -147,7 +149,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 			}
 			incrementPosition();
 		}
-		
+
 		// For each of the farmed stacks, place the harvested stacks into the output
 		// inventory. Remove the entry from the farmed stacks if it was fully inserted.
 		// Otherwise, update the farmed stack.
@@ -296,19 +298,34 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 			throw new RuntimeException("This method should only be called on the server!");
 		}
 		if (currentBlockIndex % DEFAULT_SAPLING_SPACING == 0) {
+			// Get the block space we're trying to plant IN.
 			Block block = getWorld().getBlockState(pos).getBlock();
+			// Make sure the block is empty.
 			if (block == Blocks.AIR) {
-				for (int i = 1; i < 10; i++) {
-					ItemStack inputStack = inputInventory.getStackInSlot(i);
-					if (!inputStack.isEmpty() && saplingIngredient.test(inputStack)) {
-						FakePlayer player = FakePlayerFactory.getMinecraft((ServerWorld) getWorld());
-						player.setHeldItem(Hand.MAIN_HAND, inputStack.copy());
-						inputStack.onItemUse(new ItemUseContext(player, Hand.MAIN_HAND, new BlockRayTraceResult(new Vec3d(0.0f, 1.0f, 0.0f), Direction.UP, pos, false)));
-						inputInventory.extractItem(i, 1, false);
-						break;
-					}
+				// Pick a random sapling from the input inventory.
+				int saplingSlot = InventoryUtilities.getRandomSlotWithItemFromInventory(inputInventory, 1, 8, 1, true);
+				// If no sapling was found, return early.
+				if (saplingSlot == -1) {
+					return false;
 				}
-				return true;
+
+				// Get the pending sapling.
+				ItemStack sapling = inputInventory.getStackInSlot(saplingSlot);
+
+				// If it is a valid sapling, attempt to plant it.
+				if (!sapling.isEmpty() && saplingIngredient.test(sapling)) {
+					// Create a fake player to plant the sapling. This handles all the checks for
+					// that particular sapling. Meaning if some mod has saplings that only go on
+					// stone, this will support that by deffering the plantable logic to the sapling
+					// itsself.
+					FakePlayer player = FakePlayerFactory.getMinecraft((ServerWorld) getWorld());
+					player.setHeldItem(Hand.MAIN_HAND, sapling.copy());
+					sapling.onItemUse(new ItemUseContext(player, Hand.MAIN_HAND, new BlockRayTraceResult(new Vec3d(0.0f, 1.0f, 0.0f), Direction.UP, pos, false)));
+
+					// Once planted, extract the sapling from the slot.
+					inputInventory.extractItem(saplingSlot, 1, false);
+					return true;
+				}
 			}
 		}
 		return false;
@@ -342,8 +359,8 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 			// Shift over so we center the range around the farmer.
 			Vector3f position = new Vector3f(getTileEntity().getPos().getX(), getTileEntity().getPos().getY(), getTileEntity().getPos().getZ());
 			Vec3i offsetDirection = this.getFacingDirection().getOpposite().getDirectionVec();
-			position.add(new Vector3f(offsetDirection.getX() * 3 - range, 0.0f, offsetDirection.getZ() * 3 - range));
-
+			position.add(new Vector3f((offsetDirection.getX() * range) - range, 0.0f, (offsetDirection.getZ() * range) - range));
+			position.add(new Vector3f(offsetDirection.getX(), 0.0f, offsetDirection.getZ()));
 			// Add the entry.
 			CustomRenderer.addCubeRenderer(getTileEntity(), "range", position, scale, new Color(0.1f, 1.0f, 0.2f, 0.25f));
 		} else {
@@ -352,15 +369,33 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		}
 	}
 
+	public void onUpgradesInventoryModifiedCallback(InventoryChangeType changeType, ItemStack item, InventoryComponent inventory) {
+		range = DEFAULT_RANGE;
+		for (ItemStack stack : inventory) {
+			if (stack.getItem() instanceof BaseRangeUpgrade) {
+				range = (int) Math.max(range, DEFAULT_RANGE * (((BaseRangeUpgrade) stack.getItem()).rangeUpgrade));
+			}
+		}
+		refreshBlocksInRange(range);
+		markTileEntityForSynchronization();
+
+		// Refresh the preview if it is currently begin drawn.
+		if (getShouldDrawRadiusPreview()) {
+			setShouldDrawRadiusPreview(true);
+		}
+	}
+
 	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
 		nbt.putInt("current_index", currentBlockIndex);
+		nbt.putInt("range", range);
 		return nbt;
 	}
 
 	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 		currentBlockIndex = nbt.getInt("current_index");
+		range = nbt.getInt("range");
 	}
 
 	@Override

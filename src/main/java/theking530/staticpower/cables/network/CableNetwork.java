@@ -4,6 +4,8 @@
 package theking530.staticpower.cables.network;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,6 +15,8 @@ import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import theking530.staticpower.cables.network.pathfinding.PathCache;
@@ -93,6 +97,19 @@ public class CableNetwork {
 		}
 
 		// Return the mapping result.
+		return output;
+	}
+
+	public List<ITextComponent> getReaderOutput() {
+		// Allocate the output list.
+		List<ITextComponent> output = new LinkedList<ITextComponent>();
+		output.add(new StringTextComponent(String.format("NetworkID: %1$d with %2$d cables", NetworkId, this.Graph.getCables().size())));
+
+		// Capture the output contents of the modules.
+		for (AbstractCableNetworkModule module : Modules.values()) {
+			module.getReaderOutput(output);
+		}
+
 		return output;
 	}
 

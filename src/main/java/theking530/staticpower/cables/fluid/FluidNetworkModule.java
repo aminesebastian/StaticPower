@@ -1,10 +1,13 @@
 package theking530.staticpower.cables.fluid;
 
 import java.util.HashMap;
+import java.util.List;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
@@ -19,6 +22,7 @@ import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.DestinationWrapper;
 import theking530.staticpower.cables.network.DestinationWrapper.DestinationType;
+import theking530.staticpower.utilities.MetricConverter;
 import theking530.staticpower.cables.network.NetworkMapper;
 import theking530.staticpower.cables.network.ServerCable;
 
@@ -126,16 +130,20 @@ public class FluidNetworkModule extends AbstractCableNetworkModule {
 		// Get all the cables in the network and get their cable components.
 		for (ServerCable cable : mapper.getDiscoveredCables()) {
 			// If they have a fluid cable component, get the capacity.
-			for (AbstractCableProviderComponent cableComp : cable.getCableProviderComponents()) {
-				if (cableComp instanceof FluidCableComponent) {
-					// Add the capacity to the total.
-					total += ((FluidCableComponent) cableComp).getCapacity();
-				}
+			if (cable.containsProperty(FluidCableComponent.FLUID_CAPACITY_DATA_TAG_KEY)) {
+				total += cable.getProperty(FluidCableComponent.FLUID_CAPACITY_DATA_TAG_KEY);
 			}
 		}
 
 		// Set the capacity of the tank to the provided capacity.
 		FluidTank.setCapacity(total);
+	}
+
+	@Override
+	public void getReaderOutput(List<ITextComponent> output) {
+		String storedFluid = new MetricConverter(FluidTank.getFluidAmount()).getValueAsString(true);
+		String maximumFluid = new MetricConverter(FluidTank.getCapacity()).getValueAsString(true);
+		output.add(new StringTextComponent(String.format("Contains: %1$smB of %2$s out of a maximum of %3$smB.", storedFluid, FluidTank.getFluid().getDisplayName().getFormattedText(), maximumFluid)));
 	}
 
 	@Override

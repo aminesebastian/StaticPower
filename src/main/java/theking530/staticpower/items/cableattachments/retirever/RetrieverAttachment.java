@@ -70,7 +70,7 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 		// Attempt to retrieve the item.
 		cable.<ItemNetworkModule>getNetworkModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE).ifPresent(network -> {
 			for (int i = 0; i < filterInventory.getSlots(); i++) {
-				ItemStack filterItem = InventoryUtilities.getRandomItemStackFromInventory(filterInventory);
+				ItemStack filterItem = InventoryUtilities.getRandomItemStackFromInventory(filterInventory, 1, true);
 				if (filterItem.isEmpty()) {
 					continue;
 				}

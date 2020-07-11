@@ -38,7 +38,7 @@ public class TankMachineBakedModel extends DefaultMachineBakedModel {
 	}
 
 	@Override
-	protected TextureAtlasSprite getSpriteForMachineSide(MachineSideMode mode, AtlasTexture blocksStitchedTextures) {
+	protected TextureAtlasSprite getSpriteForMachineSide(MachineSideMode mode, AtlasTexture blocksStitchedTextures, Direction side) {
 		return blocksStitchedTextures.getSprite(StaticPowerSprites.TANK_SIDE);
 	}
 

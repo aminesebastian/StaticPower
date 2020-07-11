@@ -3,6 +3,7 @@ package theking530.staticpower.cables.network;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -22,20 +23,28 @@ public class ServerCable {
 		NONE, CABLE, TILE_ENTITY
 	}
 
+	public static final String DATA_TAG_KEY = "data";
 	protected CableNetwork Network;
 	protected final World World;
 	protected final HashSet<ResourceLocation> SupportedNetworkModules;
 	private final BlockPos Position;
 	private final boolean[] DisabledSides;
+	/** This tag should be used to store any data about this server cable. */
+	private final CompoundNBT dataTag;
 
 	public ServerCable(World world, BlockPos position, HashSet<ResourceLocation> supportedModules) {
 		Position = position;
 		World = world;
-
+		this.dataTag = new CompoundNBT();
 		// Capture the types.
 		SupportedNetworkModules = supportedModules;
 
 		DisabledSides = new boolean[] { false, false, false, false, false, false };
+	}
+
+	public ServerCable(World world, BlockPos position, HashSet<ResourceLocation> supportedModules, Consumer<ServerCable> propertiesHandle) {
+		this(world, position, supportedModules);
+		propertiesHandle.accept(this);
 	}
 
 	public ServerCable(World world, CompoundNBT tag) {
@@ -60,10 +69,24 @@ public class ServerCable {
 		for (int i = 0; i < 6; i++) {
 			DisabledSides[i] = tag.getBoolean("disabled" + i);
 		}
+
+		dataTag = tag.getCompound(DATA_TAG_KEY);
 	}
 
 	public void tick() {
 
+	}
+
+	public boolean containsProperty(String key) {
+		return dataTag.contains(key);
+	}
+
+	public int getProperty(String key) {
+		return dataTag.getInt(key);
+	}
+
+	public void setProperty(String key, int value) {
+		dataTag.putInt(key, value);
 	}
 
 	public BlockPos getPos() {
@@ -157,6 +180,9 @@ public class ServerCable {
 		for (int i = 0; i < 6; i++) {
 			tag.putBoolean("disabled" + i, DisabledSides[i]);
 		}
+
+		tag.put(DATA_TAG_KEY, dataTag);
+
 		return tag;
 	}
 

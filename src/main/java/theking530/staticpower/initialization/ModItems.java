@@ -18,6 +18,7 @@ import theking530.staticpower.items.crops.StaticPlantCrop;
 import theking530.staticpower.items.crops.StaticPlantSeeds;
 import theking530.staticpower.items.itemfilter.FilterTier;
 import theking530.staticpower.items.itemfilter.ItemFilter;
+import theking530.staticpower.items.tools.CableNetworkAnalyzer;
 import theking530.staticpower.items.tools.ElectricSolderingIron;
 import theking530.staticpower.items.tools.MetalHammer;
 import theking530.staticpower.items.tools.SolderingIron;
@@ -202,6 +203,7 @@ public class ModItems {
 	public static SolderingIron SolderingIron;
 	public static ElectricSolderingIron ElectringSolderingIron;
 	public static StaticWrench StaticWrench;
+	public static CableNetworkAnalyzer CableNetworkAnalyzer;
 
 	public static ItemFilter BasicFilter;
 
@@ -285,6 +287,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(SolderingIron = new SolderingIron("soldering_iron", 100));
 		StaticPowerRegistry.preRegisterItem(ElectringSolderingIron = new ElectricSolderingIron("soldering_iron_electric", 10000));
 		StaticPowerRegistry.preRegisterItem(StaticWrench = new StaticWrench("static_wrench"));
+		StaticPowerRegistry.preRegisterItem(CableNetworkAnalyzer = new CableNetworkAnalyzer("cable_network_analyzer"));
 
 		// Filters
 		StaticPowerRegistry.preRegisterItem(BasicFilter = new ItemFilter("filter_item_basic", FilterTier.BASIC));

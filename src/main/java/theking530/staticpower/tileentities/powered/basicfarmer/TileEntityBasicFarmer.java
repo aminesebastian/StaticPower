@@ -30,6 +30,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.common.utilities.Color;
@@ -171,12 +172,14 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 		currentBlockIndex = nbt.getInt("current_index");
+		range = nbt.getInt("range");
 	}
 
 	@Override
 	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
 		nbt.putInt("current_index", currentBlockIndex);
+		nbt.putInt("range", range);
 		return nbt;
 	}
 
@@ -275,9 +278,9 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		}
 	}
 
-	public void attemptHarvestPosition(BlockPos pos) {
+	public boolean attemptHarvestPosition(BlockPos pos) {
 		if (getWorld().isRemote) {
-			return;
+			return false;
 		}
 
 		if (getWorld().getBlockState(pos.offset(Direction.DOWN)).getBlock() == Blocks.DIRT || getWorld().getBlockState(pos.offset(Direction.DOWN)).getBlock() == Blocks.GRASS_BLOCK) {
@@ -298,6 +301,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 			farmed |= harvestMelonOrPumpkin(pos);
 		}
 		growCrop(pos);
+		return farmed;
 	}
 
 	public boolean isFarmableBlock(BlockPos pos) {

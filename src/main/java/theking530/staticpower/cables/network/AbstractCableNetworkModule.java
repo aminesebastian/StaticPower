@@ -1,7 +1,10 @@
 package theking530.staticpower.cables.network;
 
+import java.util.List;
+
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 
 public abstract class AbstractCableNetworkModule {
@@ -27,6 +30,8 @@ public abstract class AbstractCableNetworkModule {
 	public ResourceLocation getType() {
 		return Type;
 	}
+
+	public abstract void getReaderOutput(List<ITextComponent> components);
 
 	public abstract void tick(World world);
 
