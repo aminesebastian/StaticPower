@@ -21,8 +21,15 @@ import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 
 public class PowerCableComponent extends AbstractCableProviderComponent implements IEnergyStorage {
-	public PowerCableComponent(String name) {
+	public static final String POWER_CAPACITY_DATA_TAG_KEY = "power_capacity";
+	public static final String POWER_RATE_DATA_TAG_KEY = "power_transfer_rate";
+	private final int capacity;
+	private final int transferRate;
+
+	public PowerCableComponent(String name, int capacity, int transferRate) {
 		super(name, CableNetworkModuleTypes.POWER_NETWORK_MODULE);
+		this.capacity = capacity;
+		this.transferRate = transferRate;
 	}
 
 	@Override
@@ -30,7 +37,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 		if (!getTileEntity().getWorld().isRemote) {
 			AtomicInteger recieve = new AtomicInteger(0);
 			getPowerNetworkModule().ifPresent(PowerNetworkModule -> {
-				recieve.set(PowerNetworkModule.getEnergyStorage().receiveEnergy(maxReceive, simulate));
+				recieve.set(PowerNetworkModule.getEnergyStorage().receiveEnergy(Math.min(transferRate, maxReceive), simulate));
 			});
 			return recieve.get();
 		} else {
@@ -103,6 +110,14 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 			return LazyOptional.of(() -> this).cast();
 		}
 		return LazyOptional.empty();
+	}
+
+	@Override
+	protected ServerCable createCable() {
+		return new ServerCable(getWorld(), getPos(), getSupportedNetworkModuleTypes(), (cable) -> {
+			cable.setProperty(POWER_CAPACITY_DATA_TAG_KEY, capacity);
+			cable.setProperty(POWER_RATE_DATA_TAG_KEY, transferRate);
+		});
 	}
 
 	@Override

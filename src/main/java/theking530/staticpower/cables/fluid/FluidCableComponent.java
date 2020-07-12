@@ -26,7 +26,7 @@ import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class FluidCableComponent extends AbstractCableProviderComponent implements IFluidHandler {
 	public static final String FLUID_CAPACITY_DATA_TAG_KEY = "fluid_capacity";
-	public static final int EXTRACTION_RATE = 10;
+	public static final String FLUID_RATE_DATA_TAG_KEY = "fluid_transfer_rate";
 	public static final float UPDATE_THRESHOLD = 0.1f;
 	private final int capacity;
 	private FluidStack lastUpdateFluidStack;
@@ -176,6 +176,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	protected ServerCable createCable() {
 		return new ServerCable(getWorld(), getPos(), getSupportedNetworkModuleTypes(), (cable) -> {
 			cable.setProperty(FLUID_CAPACITY_DATA_TAG_KEY, capacity);
+			cable.setProperty(FLUID_RATE_DATA_TAG_KEY, capacity);
 		});
 	}
 

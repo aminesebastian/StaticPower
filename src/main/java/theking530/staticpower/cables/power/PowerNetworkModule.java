@@ -12,6 +12,7 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetwork;
+import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.DestinationWrapper;
 import theking530.staticpower.cables.network.DestinationWrapper.DestinationType;
@@ -24,13 +25,15 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 
 	public PowerNetworkModule() {
 		super(CableNetworkModuleTypes.POWER_NETWORK_MODULE);
-		EnergyStorage = new StaticPowerFEStorage(0, 50, 50);
+		// The actual input and output rates are controlled by the individual cables.
+		EnergyStorage = new StaticPowerFEStorage(0, Integer.MAX_VALUE, Integer.MAX_VALUE);
+		// No one should extract power from the network, we only provide it.
 		EnergyStorage.setCanExtract(false);
 	}
 
 	@Override
 	public void tick(World world) {
-		if (EnergyStorage.getEnergyStored() > 0) {
+		if (EnergyStorage.getEnergyStored() > 0 && Network.getGraph().getDestinations().size() > 0) {
 			// Get a map of all the applicable destination that support recieving power.
 			HashMap<BlockPos, DestinationWrapper> destinations = new HashMap<BlockPos, DestinationWrapper>();
 			Network.getGraph().getDestinations().forEach((pos, wrapper) -> {
@@ -42,6 +45,11 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 				}
 			});
 
+			// If there are no valid destinations, return early.
+			if (destinations.size() == 0) {
+				return;
+			}
+
 			// Calculate how we should split the output amount.
 			int outputPerDestination = Math.max(1, EnergyStorage.getEnergyStored() / destinations.size());
 
@@ -50,7 +58,8 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 				IEnergyStorage energyStorage = wrapper.getTileEntity().getCapability(CapabilityEnergy.ENERGY, wrapper.getDestinationSide()).orElse(null);
 				if (energyStorage != null) {
 					if (energyStorage.canReceive()) {
-						int supplied = energyStorage.receiveEnergy(Math.min(outputPerDestination, EnergyStorage.getCurrentMaximumPowerOutput()), false);
+						int toSupply = Math.min(CableNetworkManager.get(world).getCable(wrapper.getConnectedCable()).getProperty(PowerCableComponent.POWER_RATE_DATA_TAG_KEY), outputPerDestination);
+						int supplied = energyStorage.receiveEnergy(Math.min(toSupply, EnergyStorage.getCurrentMaximumPowerOutput()), false);
 						if (supplied > 0) {
 							EnergyStorage.setCanExtract(true);
 							EnergyStorage.extractEnergy(supplied, false);
@@ -71,7 +80,12 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 
 	@Override
 	public void onNetworkGraphUpdated(NetworkMapper mapper) {
-		EnergyStorage.setCapacity(mapper.getDiscoveredCables().stream().filter(p -> p.supportsNetworkModule(CableNetworkModuleTypes.POWER_NETWORK_MODULE)).mapToInt(p -> 10).sum());
+		// Calculate the total capacity.
+		int capacity = mapper.getDiscoveredCables().stream().filter(p -> p.supportsNetworkModule(CableNetworkModuleTypes.POWER_NETWORK_MODULE)).mapToInt(p -> p.getProperty(PowerCableComponent.POWER_CAPACITY_DATA_TAG_KEY)).sum();
+
+		// If the capacity is less than 0, that means we overflowed. Set the capcaity to
+		// the maximum integer value.
+		EnergyStorage.setCapacity(capacity < 0 ? Integer.MAX_VALUE : (int) capacity);
 	}
 
 	@Override

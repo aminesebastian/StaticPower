@@ -15,16 +15,15 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
-import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.DestinationWrapper;
 import theking530.staticpower.cables.network.DestinationWrapper.DestinationType;
-import theking530.staticpower.utilities.MetricConverter;
 import theking530.staticpower.cables.network.NetworkMapper;
 import theking530.staticpower.cables.network.ServerCable;
+import theking530.staticpower.utilities.MetricConverter;
 
 public class FluidNetworkModule extends AbstractCableNetworkModule {
 	private final FluidTank FluidTank;
@@ -79,13 +78,8 @@ public class FluidNetworkModule extends AbstractCableNetworkModule {
 			}
 
 			// Get the transfer rate.
-			int transferRate = 0;
-			for (AbstractCableProviderComponent cableComp : CableNetworkManager.get(Network.getWorld()).getCable(destination.getConnectedCable()).getCableProviderComponents()) {
-				if (cableComp instanceof FluidCableComponent) {
-					// Add the capacity to the total.
-					transferRate = ((FluidCableComponent) cableComp).getCapacity();
-				}
-			}
+			ServerCable cable = CableNetworkManager.get(world).getCable(destination.getConnectedCable());
+			int transferRate = cable.getProperty(FluidCableComponent.FLUID_RATE_DATA_TAG_KEY);
 
 			// Calculate how much fluid we can offer. If it is less than or equal to 0, do
 			// nothing.

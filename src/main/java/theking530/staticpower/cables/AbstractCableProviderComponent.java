@@ -427,6 +427,11 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		for (int i = 0; i < ConnectionStates.length; i++) {
 			ConnectionStates[i] = CableConnectionState.values()[nbt.getInt("connection_state" + i)];
 		}
+
+		// If on the client, update the blocks.
+		if (getWorld().isRemote) {
+			getTileEntity().markTileEntityForSynchronization();
+		}
 	}
 
 	protected void scanForAttachments() {

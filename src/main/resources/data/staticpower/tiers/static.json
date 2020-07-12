@@ -14,5 +14,7 @@
 	"cableRetrievalRate": 20,
 	"cableRetrievalStackSize": 16,
 	"cableRetrievalFilterSize": 3,
+	"cablePowerCapacity": 128,
+	"cablePowerDelivery": 64,
 	"digistoreCapacity": 65536
 }

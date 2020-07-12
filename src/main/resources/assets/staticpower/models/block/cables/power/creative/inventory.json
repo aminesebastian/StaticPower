@@ -1,0 +1,7 @@
+{
+  "parent": "staticpower:block/cables/cable_inventory",
+  "textures": {
+    "cable_texture": "staticpower:blocks/cables/cable_power_creative",
+    "particle": "staticpower:blocks/cables/cable_power_creative"
+  }
+}

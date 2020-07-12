@@ -50,9 +50,6 @@ public class SpriteDrawable implements IDrawable {
 	@Override
 	public void draw(float x, float y) {
 		if (sprite != null) {
-			// Turn on the blending just in case its not on.
-			GlStateManager.enableBlend();
-
 			// Allocate the rendering utilities/buffers.
 			Tessellator tessellator = Tessellator.getInstance();
 			BufferBuilder tes = tessellator.getBuffer();
@@ -62,6 +59,9 @@ public class SpriteDrawable implements IDrawable {
 			// Get the actual texture.
 			TextureAtlasSprite spriteTexture = getSpriteTexture();
 
+			// Turn on the blending just in case its not on.
+			GlStateManager.enableBlend();
+			
 			if (spriteTexture.getName().toString().equals("minecraft:missingno")) {
 				// Bind the texture atlas.
 				Minecraft.getInstance().getTextureManager().bindTexture(sprite);

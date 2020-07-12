@@ -11,9 +11,29 @@ public class StaticPowerAdditionalModels {
 
 	public static final ResourceLocation CABLE_FULL_COVER = registerModel("block/cables/cable_cover_full");
 
-	public static final ResourceLocation CABLE_POWER_STRAIGHT = registerModel("block/cables/power/straight");
-	public static final ResourceLocation CABLE_POWER_EXTENSION = registerModel("block/cables/power/extension");
-	public static final ResourceLocation CABLE_POWER_ATTACHMENT = registerModel("block/cables/power/attachment");
+	public static final ResourceLocation CABLE_POWER_BASIC_STRAIGHT = registerModel("block/cables/power/basic/straight");
+	public static final ResourceLocation CABLE_POWER_BASIC_EXTENSION = registerModel("block/cables/power/basic/extension");
+	public static final ResourceLocation CABLE_POWER_BASIC_ATTACHMENT = registerModel("block/cables/power/basic/attachment");
+
+	public static final ResourceLocation CABLE_POWER_ADVANCED_STRAIGHT = registerModel("block/cables/power/advanced/straight");
+	public static final ResourceLocation CABLE_POWER_ADVANCED_EXTENSION = registerModel("block/cables/power/advanced/extension");
+	public static final ResourceLocation CABLE_POWER_ADVANCED_ATTACHMENT = registerModel("block/cables/power/advanced/attachment");
+
+	public static final ResourceLocation CABLE_POWER_STATIC_STRAIGHT = registerModel("block/cables/power/static/straight");
+	public static final ResourceLocation CABLE_POWER_STATIC_EXTENSION = registerModel("block/cables/power/static/extension");
+	public static final ResourceLocation CABLE_POWER_STATIC_ATTACHMENT = registerModel("block/cables/power/static/attachment");
+
+	public static final ResourceLocation CABLE_POWER_ENERGIZED_STRAIGHT = registerModel("block/cables/power/energized/straight");
+	public static final ResourceLocation CABLE_POWER_ENERGIZED_EXTENSION = registerModel("block/cables/power/energized/extension");
+	public static final ResourceLocation CABLE_POWER_ENERGIZED_ATTACHMENT = registerModel("block/cables/power/energized/attachment");
+
+	public static final ResourceLocation CABLE_POWER_LUMUM_STRAIGHT = registerModel("block/cables/power/lumum/straight");
+	public static final ResourceLocation CABLE_POWER_LUMUM_EXTENSION = registerModel("block/cables/power/lumum/extension");
+	public static final ResourceLocation CABLE_POWER_LUMUM_ATTACHMENT = registerModel("block/cables/power/lumum/attachment");
+
+	public static final ResourceLocation CABLE_POWER_CREATIVE_STRAIGHT = registerModel("block/cables/power/creative/straight");
+	public static final ResourceLocation CABLE_POWER_CREATIVE_EXTENSION = registerModel("block/cables/power/creative/extension");
+	public static final ResourceLocation CABLE_POWER_CREATIVE_ATTACHMENT = registerModel("block/cables/power/creative/attachment");
 
 	public static final ResourceLocation CABLE_ITEM_STRAIGHT = registerModel("block/cables/item/straight");
 	public static final ResourceLocation CABLE_ITEM_EXTENSION = registerModel("block/cables/item/extension");

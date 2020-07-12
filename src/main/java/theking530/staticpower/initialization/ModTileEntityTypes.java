@@ -39,7 +39,13 @@ public class ModTileEntityTypes {
 	public static TileEntityType<TileEntityTank> TANK;
 	public static TileEntityType<TileEntityPump> PUMP;
 
-	public static TileEntityType<TileEntityPowerCable> POWER_CABLE;
+	public static TileEntityType<TileEntityPowerCable> POWER_CABLE_BASIC;
+	public static TileEntityType<TileEntityPowerCable> POWER_CABLE_ADVANCED;
+	public static TileEntityType<TileEntityPowerCable> POWER_CABLE_STATIC;
+	public static TileEntityType<TileEntityPowerCable> POWER_CABLE_ENERGIZED;
+	public static TileEntityType<TileEntityPowerCable> POWER_CABLE_LUMUM;
+	public static TileEntityType<TileEntityPowerCable> POWER_CABLE_CREATIVE;
+
 	public static TileEntityType<TileEntityItemCable> ITEM_CABLE;
 	public static TileEntityType<TileEntityFluidCable> FLUID_CABLE;
 	public static TileEntityType<TileEntityFluidCable> INDUSTRIAL_FLUID_CABLE;
@@ -55,7 +61,7 @@ public class ModTileEntityTypes {
 	public static TileEntityType<TileEntityFermenter> FERMENTER;
 	public static TileEntityType<TileEntityFormer> FORMER;
 	public static TileEntityType<TileEntityBattery> BATTERY;
-	
+
 	public static void init() {
 		VACCUM_CHEST = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityVacuumChest(), ModBlocks.VacuumChest);
 		CHARGING_STATION = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityChargingStation(), ModBlocks.ChargingStation);
@@ -74,11 +80,17 @@ public class ModTileEntityTypes {
 		FERMENTER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityFermenter(), ModBlocks.Fermenter);
 		FORMER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityFormer(), ModBlocks.Former);
 		BATTERY = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(), ModBlocks.BasicBattery);
-		
+
 		TANK = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityTank(), ModBlocks.BasicTank);
 		PUMP = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityPump(), ModBlocks.Pump);
 
-		POWER_CABLE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityPowerCable(), ModBlocks.PowerCable);
+		POWER_CABLE_BASIC = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityPowerCable(type, StaticPowerTiers.BASIC), ModBlocks.PowerCableBasic);
+		POWER_CABLE_ADVANCED = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityPowerCable(type, StaticPowerTiers.ADVANCED), ModBlocks.PowerCableAdvanced);
+		POWER_CABLE_STATIC = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityPowerCable(type, StaticPowerTiers.STATIC), ModBlocks.PowerCableStatic);
+		POWER_CABLE_ENERGIZED = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityPowerCable(type, StaticPowerTiers.ENERGIZED), ModBlocks.PowerCableEnergized);
+		POWER_CABLE_LUMUM = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityPowerCable(type, StaticPowerTiers.LUMUM), ModBlocks.PowerCableLumum);
+		POWER_CABLE_CREATIVE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityPowerCable(type, StaticPowerTiers.CREATIVE), ModBlocks.PowerCableCreative);
+
 		ITEM_CABLE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityItemCable(), ModBlocks.ItemCable);
 		FLUID_CABLE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityFluidCable(type, 2.0f / 16.0f, 100), ModBlocks.FluidCable);
 		INDUSTRIAL_FLUID_CABLE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityFluidCable(type, 3.5f / 16.0f, 1000), ModBlocks.IndustrialFluidCable);

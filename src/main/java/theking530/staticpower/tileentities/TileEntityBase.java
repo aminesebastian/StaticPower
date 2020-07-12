@@ -138,10 +138,8 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	}
 
 	public void markTileEntityForSynchronization() {
-		if (!getWorld().isRemote) {
-			updateQueued = true;
-			markDirty();
-		}
+		updateQueued = true;
+		markDirty();
 	}
 
 	public void onPlaced(BlockState state, @Nullable LivingEntity placer, ItemStack stack) {

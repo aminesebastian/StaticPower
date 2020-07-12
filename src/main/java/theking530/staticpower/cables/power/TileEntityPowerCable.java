@@ -1,13 +1,15 @@
 package theking530.staticpower.cables.power;
 
-import theking530.staticpower.initialization.ModTileEntityTypes;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ResourceLocation;
+import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.tileentities.TileEntityBase;
 
 public class TileEntityPowerCable extends TileEntityBase {
 
-	public TileEntityPowerCable() {
-		super(ModTileEntityTypes.POWER_CABLE);
-		registerComponent(new PowerCableComponent("PowerCableComponent"));
+	public TileEntityPowerCable(TileEntityType<TileEntityPowerCable> type, ResourceLocation tier) {
+		super(type);
+		registerComponent(new PowerCableComponent("PowerCableComponent", StaticPowerDataRegistry.getTier(tier).getCablePowerCapacity(), StaticPowerDataRegistry.getTier(tier).getCablePowerDelivery()));
 	}
 
 	@Override
