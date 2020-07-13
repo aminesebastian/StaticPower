@@ -12,7 +12,8 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import theking530.staticpower.client.rendering.blocks.BatteryBlockBakedModel;
+import theking530.staticpower.client.rendering.blocks.BatteryBlockedBakedModel;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.initialization.ModTileEntityTypes;
 import theking530.staticpower.tileentities.StaticPowerDefaultMachineBlock;
 
@@ -55,11 +56,24 @@ public class BlockBattery extends StaticPowerDefaultMachineBlock {
 
 	@Override
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
-		return ModTileEntityTypes.BATTERY.create();
+		if (tier == StaticPowerTiers.BASIC) {
+			return ModTileEntityTypes.BATTERY_BASIC.create();
+		} else if (tier == StaticPowerTiers.ADVANCED) {
+			return ModTileEntityTypes.BATTERY_ADVANCED.create();
+		} else if (tier == StaticPowerTiers.STATIC) {
+			return ModTileEntityTypes.BATTERY_STATIC.create();
+		} else if (tier == StaticPowerTiers.ENERGIZED) {
+			return ModTileEntityTypes.BATTERY_ENERGIZED.create();
+		} else if (tier == StaticPowerTiers.LUMUM) {
+			return ModTileEntityTypes.BATTERY_LUMUM.create();
+		} else if (tier == StaticPowerTiers.CREATIVE) {
+			return ModTileEntityTypes.BATTERY_CREATIVE.create();
+		}
+		return null;
 	}
 	
 	@Override
 	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
-		return new BatteryBlockBakedModel(existingModel);
+		return new BatteryBlockedBakedModel(existingModel);
 	}
 }

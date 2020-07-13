@@ -19,7 +19,7 @@ import theking530.staticpower.client.rendering.blocks.CableBakedModel;
 public class BlockItemCable extends AbstractCableBlock {
 
 	public BlockItemCable(String name) {
-		super(name, new CableBoundsCache(2.0D, new Vector3D(3.0f, 3.0f, 2.0f)));
+		super(name, new CableBoundsCache(2.0D, new Vector3D(3.0f, 3.0f, 3.0f)));
 	}
 
 	@Override

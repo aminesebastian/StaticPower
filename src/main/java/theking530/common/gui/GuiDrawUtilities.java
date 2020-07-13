@@ -116,6 +116,7 @@ public class GuiDrawUtilities {
 
 	public static void drawColoredRectangle(float xCoord, float yCoord, float width, float height, float zLevel, Color color) {
 		GlStateManager.disableTexture();
+		GlStateManager.enableBlend();
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
 		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_COLOR);

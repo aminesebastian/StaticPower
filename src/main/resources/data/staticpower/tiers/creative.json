@@ -9,5 +9,6 @@
 	"solarPanelPowerStorage": 2147483647,
 	"cablePowerCapacity": 2147483647,
 	"cablePowerDelivery": 2147483647,
-	"digistoreCapacity": 2147483647
+	"digistoreCapacity": 2147483647,
+	"batteryCapacity": 2147483647
 }

@@ -75,8 +75,8 @@ public class DigistoreCard extends StaticPowerItem {
 	@OnlyIn(Dist.CLIENT)
 	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
 		if (!Screen.hasShiftDown()) {
-			tooltip.add(new StringTextComponent("Stores: ").appendText(String.valueOf(getInventory(stack).getMaxStoredAmount() / 64)).appendText(" Stacks"));
-			tooltip.add(new StringTextComponent("Max Types: ").appendText(String.valueOf(getInventory(stack).getMaximumUniqueItemTypeCount())));
+			tooltip.add(new StringTextComponent("Stores: ").appendText(String.valueOf(getInventory(stack).getItemCapacity() / 64)).appendText(" Stacks"));
+			tooltip.add(new StringTextComponent("Max Types: ").appendText(String.valueOf(getInventory(stack).getUniqueItemCapacity())));
 		}
 	}
 
@@ -84,7 +84,7 @@ public class DigistoreCard extends StaticPowerItem {
 	@OnlyIn(Dist.CLIENT)
 	protected void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
 		int storedAmount = getInventory(stack).getTotalContainedCount();
-		float filledPercentage = (float) storedAmount / getInventory(stack).getMaxStoredAmount();
+		float filledPercentage = (float) storedAmount / getInventory(stack).getItemCapacity();
 		MetricConverter converter = new MetricConverter(storedAmount);
 		tooltip.add(new StringTextComponent("Stored: ").appendText(converter.getValueAsString(true)).appendText(" Items (").appendText(String.valueOf((int) (100 * filledPercentage))).appendText("%)"));
 		tooltip.add(new StringTextComponent("Types: ").appendText(String.valueOf(getInventory(stack).getCurrentUniqueItemTypeCount())));

@@ -16,5 +16,6 @@
 	"cableRetrievalFilterSize": 3,
 	"cablePowerCapacity": 128,
 	"cablePowerDelivery": 64,
-	"digistoreCapacity": 65536
+	"digistoreCapacity": 65536,
+	"batteryCapacity": 16384
 }

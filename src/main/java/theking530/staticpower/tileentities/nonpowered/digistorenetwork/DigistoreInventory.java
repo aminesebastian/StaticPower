@@ -10,25 +10,25 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.DigistoreItemTracker;
+import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.DigistoreStack;
 import theking530.staticpower.utilities.ItemUtilities;
 
-public class DigistoreInventory implements Iterable<DigistoreItemTracker>, IDigistoreInventory, IItemHandler {
-	private List<DigistoreItemTracker> slots;
-	private boolean voidExcess;
-	private int maximumStorage;
+public class DigistoreInventory implements Iterable<DigistoreStack>, IDigistoreInventory, IItemHandler {
+	protected List<DigistoreStack> slots;
+	protected boolean voidExcess;
+	protected int maximumStorage;
 
 	public DigistoreInventory(int maxUniqueItems, int maximumStorage) {
 		this.maximumStorage = maximumStorage;
-		slots = new ArrayList<DigistoreItemTracker>();
+		slots = new ArrayList<DigistoreStack>();
 		for (int i = 0; i < maxUniqueItems; i++) {
-			slots.add(new DigistoreItemTracker());
+			slots.add(new DigistoreStack());
 		}
 	}
 
 	@Override
 	public void setLockState(boolean locked) {
-		for (DigistoreItemTracker slot : slots) {
+		for (DigistoreStack slot : slots) {
 			slot.setLocked(locked);
 		}
 	}
@@ -43,14 +43,14 @@ public class DigistoreInventory implements Iterable<DigistoreItemTracker>, IDigi
 	}
 
 	@Override
-	public DigistoreItemTracker getItemTracker(int index) {
+	public DigistoreStack getDigistoreStack(int index) {
 		return slots.get(index);
 	}
 
 	@Override
 	public int getCurrentUniqueItemTypeCount() {
 		int emptySlots = 0;
-		for (DigistoreItemTracker slot : slots) {
+		for (DigistoreStack slot : slots) {
 			if (slot.isEmpty()) {
 				emptySlots++;
 			}
@@ -59,7 +59,7 @@ public class DigistoreInventory implements Iterable<DigistoreItemTracker>, IDigi
 	}
 
 	@Override
-	public int getMaximumUniqueItemTypeCount() {
+	public int getUniqueItemCapacity() {
 		return slots.size();
 	}
 
@@ -78,7 +78,7 @@ public class DigistoreInventory implements Iterable<DigistoreItemTracker>, IDigi
 		int slot = getSlotForItemStack(stack);
 		if (slot == -1) {
 			for (int i = 0; i < slots.size(); i++) {
-				if (slots.get(i).isEmpty()) {
+				if (slots.get(i).isEmpty() && !slots.get(i).isLocked()) {
 					slot = i;
 					break;
 				}
@@ -100,7 +100,7 @@ public class DigistoreInventory implements Iterable<DigistoreItemTracker>, IDigi
 			}
 		}
 		// Get the tracker.
-		DigistoreItemTracker tracker = slots.get(slot);
+		DigistoreStack tracker = slots.get(slot);
 
 		// Do nothing if empty.
 		if (stack.isEmpty()) {
@@ -120,7 +120,7 @@ public class DigistoreInventory implements Iterable<DigistoreItemTracker>, IDigi
 					tracker.setStoredItem(ItemHandlerHelper.copyStackWithSize(stack, 1));
 				}
 				tracker.grow(insertableAmount);
-				onContentsChanged();
+				onChanged();
 			}
 			ItemStack output = stack.copy();
 			output.setCount(stack.getCount() - insertableAmount);
@@ -148,7 +148,7 @@ public class DigistoreInventory implements Iterable<DigistoreItemTracker>, IDigi
 	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
 		// Get the tracker.
-		DigistoreItemTracker tracker = slots.get(slot);
+		DigistoreStack tracker = slots.get(slot);
 
 		// If empty, do nothing.
 		if (tracker.isEmpty()) {
@@ -165,14 +165,14 @@ public class DigistoreInventory implements Iterable<DigistoreItemTracker>, IDigi
 		// If not simulating, actually update the amount.
 		if (!simulate) {
 			tracker.shrink(outputCount);
-			onContentsChanged();
+			onChanged();
 		}
 
 		return output;
 	}
 
 	@Override
-	public int getMaxStoredAmount() {
+	public int getItemCapacity() {
 		return maximumStorage;
 	}
 
@@ -184,7 +184,7 @@ public class DigistoreInventory implements Iterable<DigistoreItemTracker>, IDigi
 	@Override
 	public int getTotalContainedCount() {
 		int amount = 0;
-		for (DigistoreItemTracker tracker : slots) {
+		for (DigistoreStack tracker : slots) {
 			amount += tracker.getCount();
 		}
 		return amount;
@@ -192,7 +192,7 @@ public class DigistoreInventory implements Iterable<DigistoreItemTracker>, IDigi
 
 	@Override
 	public int getRemainingStorage(boolean ignoreVoidUpgrade) {
-		return ignoreVoidUpgrade ? getMaxStoredAmount() - getTotalContainedCount() : voidExcess ? Integer.MAX_VALUE : getMaxStoredAmount() - getTotalContainedCount();
+		return ignoreVoidUpgrade ? getItemCapacity() - getTotalContainedCount() : voidExcess ? Integer.MAX_VALUE : getItemCapacity() - getTotalContainedCount();
 	}
 
 	@Override
@@ -211,15 +211,11 @@ public class DigistoreInventory implements Iterable<DigistoreItemTracker>, IDigi
 	}
 
 	public boolean isFull() {
-		return getTotalContainedCount() >= getMaxStoredAmount();
+		return getTotalContainedCount() >= getItemCapacity();
 	}
 
 	public void setVoidExcess(boolean voidExcess) {
 		this.voidExcess = voidExcess;
-	}
-
-	protected void onContentsChanged() {
-
 	}
 
 	public void setMaximumStorage(int maxStorage) {
@@ -227,12 +223,12 @@ public class DigistoreInventory implements Iterable<DigistoreItemTracker>, IDigi
 	}
 
 	public float getFilledRatio() {
-		return (float) getTotalContainedCount() / (float) getMaxStoredAmount();
+		return (float) getTotalContainedCount() / (float) getItemCapacity();
 	}
 
 	public void setSupportedItemTypeCount(int itemCount) {
-		for (int i = getMaximumUniqueItemTypeCount(); i < itemCount; i++) {
-			slots.add(new DigistoreItemTracker());
+		for (int i = getUniqueItemCapacity(); i < itemCount; i++) {
+			slots.add(new DigistoreStack());
 		}
 	}
 
@@ -275,7 +271,7 @@ public class DigistoreInventory implements Iterable<DigistoreItemTracker>, IDigi
 			slots.clear();
 			for (int i = 0; i < digistoreSlots.size(); i++) {
 				CompoundNBT slotTagComponent = (CompoundNBT) digistoreSlots.get(i);
-				DigistoreItemTracker newTracker = new DigistoreItemTracker();
+				DigistoreStack newTracker = new DigistoreStack();
 				newTracker.readFromNbt(slotTagComponent);
 				slots.add(newTracker);
 			}
@@ -283,14 +279,14 @@ public class DigistoreInventory implements Iterable<DigistoreItemTracker>, IDigi
 	}
 
 	@Override
-	public Iterator<DigistoreItemTracker> iterator() {
+	public Iterator<DigistoreStack> iterator() {
 		return new DigistoreInventoryIterator();
 	}
 
 	/**
 	 * Iterator to help iterate through the items in this digistore inventory.
 	 */
-	protected class DigistoreInventoryIterator implements Iterator<DigistoreItemTracker> {
+	protected class DigistoreInventoryIterator implements Iterator<DigistoreStack> {
 		private int currentIndex;
 
 		DigistoreInventoryIterator() {
@@ -301,8 +297,8 @@ public class DigistoreInventory implements Iterable<DigistoreItemTracker>, IDigi
 			return currentIndex <= slots.size() - 1;
 		}
 
-		public DigistoreItemTracker next() {
-			DigistoreItemTracker stackInSlot = slots.get(currentIndex);
+		public DigistoreStack next() {
+			DigistoreStack stackInSlot = slots.get(currentIndex);
 			currentIndex++;
 			return stackInSlot;
 		}
@@ -310,5 +306,9 @@ public class DigistoreInventory implements Iterable<DigistoreItemTracker>, IDigi
 		public void remove() {
 			throw new UnsupportedOperationException();
 		}
+	}
+
+	public void onChanged() {
+
 	}
 }

@@ -58,34 +58,28 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 	@Override
 	protected void drawForegroundExtras(float partialTicks, int mouseX, int mouseY) {
 		super.drawForegroundExtras(partialTicks, mouseX, mouseY);
-		if (!inventory.getItemTracker(0).isEmpty()) {
+		if (inventory.getItemCapacity() > 0) {
 			if (mouseX >= guiLeft + 76 && mouseX <= guiLeft + 100 && mouseY >= guiTop + 21 && mouseY <= guiTop + 45) {
-				GuiDrawUtilities.drawColoredRectangle(guiLeft + 76, guiTop + 21, 24, 24, 1.0f, new Color(200, 200, 200).fromEightBitToFloat());
-				renderTooltip(inventory.getItemTracker(0).getStoredItem(), mouseX, mouseY);
+				GuiDrawUtilities.drawColoredRectangle(guiLeft + 79, guiTop + 19, 18, 18, 1.0f, new Color(200, 200, 200, 200).fromEightBitToFloat());
+				renderTooltip(inventory.getDigistoreStack(0).getStoredItem(), mouseX, mouseY);
 			}
 		}
-
-		String amountString = String.valueOf(inventory.getTotalContainedCount()) + "/" + String.valueOf(inventory.getMaxStoredAmount());
-		this.font.drawString(amountString, guiLeft + 89 - (font.getStringWidth(amountString) / 2), guiTop + 50, new Color(50, 50, 50).encodeInInteger());
 	}
 
 	@Override
 	protected void drawBackgroundExtras(float partialTicks, int mouseX, int mouseY) {
-		drawGenericBackground();
-		drawPlayerInventorySlots(guiLeft + 8, guiTop + ySize - 83);
+		super.drawBackgroundExtras(partialTicks, mouseX, mouseY);
 
-		drawSlot(guiLeft + 76, guiTop + 21, 24, 24);
+		drawSlot(guiLeft + 78, guiTop + 18, 20, 20);
 
-		drawSlot(guiLeft + 152, guiTop + 9, 16, 16);
-		drawSlot(guiLeft + 152, guiTop + 27, 16, 16);
-		drawSlot(guiLeft + 152, guiTop + 45, 16, 16);
-
-		RenderHelper.enableStandardItemLighting();
-		itemRenderer.drawItem(inventory.getItemTracker(0).getStoredItem(), guiLeft, guiTop, 80, 25, 1.0f);
-		RenderHelper.disableStandardItemLighting();
+		if (inventory.getItemCapacity() > 0) {
+			RenderHelper.enableStandardItemLighting();
+			itemRenderer.drawItem(inventory.getDigistoreStack(0).getStoredItem(), guiLeft, guiTop, 80, 21, 1.0f);
+			RenderHelper.disableStandardItemLighting();
+		}
 
 		DecimalFormat format = new DecimalFormat("##.###");
-		String text = ("Stores a large=amount of a single=item. ==" + TextFormatting.RED + "Max: " + TextFormatting.AQUA + format.format(inventory.getMaxStoredAmount()) + " Items");
+		String text = ("Stores a large=amount of a single=item. ==" + TextFormatting.RED + "Max: " + TextFormatting.AQUA + format.format(inventory.getItemCapacity()) + " Items");
 		String[] splitMsg = text.split("=");
 		infoTab.setText(I18n.format(getTileEntity().getDisplayName().getFormattedText()), Arrays.asList(splitMsg));
 	}

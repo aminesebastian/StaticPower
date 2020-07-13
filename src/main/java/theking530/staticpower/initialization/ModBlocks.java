@@ -115,7 +115,12 @@ public class ModBlocks {
 	public static BlockIndustrialFluidCable IndustrialFluidCable;
 
 	// Batteries
-	public static BlockBattery BasicBattery;
+	public static BlockBattery BatteryBasic;
+	public static BlockBattery BatteryAdvanced;
+	public static BlockBattery BatteryStatic;
+	public static BlockBattery BatteryEnergized;
+	public static BlockBattery BatteryLumum;
+	public static BlockBattery BatteryCreative;
 
 	public static void init() {
 		// Decorative
@@ -193,6 +198,11 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(FluidCable = new BlockFluidCable("cable_fluid"));
 		StaticPowerRegistry.preRegisterBlock(IndustrialFluidCable = new BlockIndustrialFluidCable("cable_industrial_fluid"));
 
-		StaticPowerRegistry.preRegisterBlock(BasicBattery = new BlockBattery("battery_block_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterBlock(BatteryBasic = new BlockBattery("battery_block_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterBlock(BatteryAdvanced = new BlockBattery("battery_block_advanced", StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterBlock(BatteryStatic = new BlockBattery("battery_block_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterBlock(BatteryEnergized = new BlockBattery("battery_block_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterBlock(BatteryLumum = new BlockBattery("battery_block_lumum", StaticPowerTiers.LUMUM));
+		StaticPowerRegistry.preRegisterBlock(BatteryCreative = new BlockBattery("battery_block_creative", StaticPowerTiers.CREATIVE));
 	}
 }

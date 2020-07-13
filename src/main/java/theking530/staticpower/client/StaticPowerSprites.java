@@ -35,6 +35,8 @@ public class StaticPowerSprites {
 	public static final ResourceLocation BASIC_BATTERY_SIDE = registerSprite("blocks/machines/batteries/battery_basic_side");
 
 	public static final ResourceLocation TANK_SIDE = registerSprite("blocks/machines/tank_basic");
+	
+	public static final ResourceLocation BATTERY_BLOCK_BASIC = registerSprite("blocks/machines/batteries/battery_block_basic");
 
 	public static final ResourceLocation FILTER_WHITELIST = registerSprite("gui/filter_whitelist");
 	public static final ResourceLocation FILTER_BLACKLIST = registerSprite("gui/filter_blacklist");

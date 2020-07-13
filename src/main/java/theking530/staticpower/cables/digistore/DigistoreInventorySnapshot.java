@@ -13,14 +13,14 @@ import theking530.staticpower.items.cableattachments.digistoreterminal.Digistore
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.IDigistoreInventory;
 import theking530.staticpower.utilities.ItemUtilities;
 
-public class DigistoreInventoryWrapper implements IItemHandler {
+public class DigistoreInventorySnapshot implements IItemHandler {
 	private final List<ItemStack> stacks;
 	private final DigistoreNetworkModule module;
 	private final String filterString;
 	private final DigistoreInventorySortType sortType;
 	private final boolean sortDescending;
 
-	public DigistoreInventoryWrapper(DigistoreNetworkModule module, String filter, DigistoreInventorySortType sortType, boolean sortDescending) {
+	public DigistoreInventorySnapshot(DigistoreNetworkModule module, String filter, DigistoreInventorySortType sortType, boolean sortDescending) {
 		this.module = module;
 		this.sortType = sortType;
 		this.sortDescending = sortDescending;
@@ -40,9 +40,9 @@ public class DigistoreInventoryWrapper implements IItemHandler {
 
 		// Populate the stacks.
 		for (IDigistoreInventory digistore : module.getAllDigistores()) {
-			for (int i = 0; i < digistore.getMaximumUniqueItemTypeCount(); i++) {
+			for (int i = 0; i < digistore.getUniqueItemCapacity(); i++) {
 				// Stack in slot.
-				ItemStack stackInSlot = digistore.getItemTracker(i).getStoredItem();
+				ItemStack stackInSlot = digistore.getDigistoreStack(i).getStoredItem();
 
 				// Skip empty slots.
 				if (stackInSlot.isEmpty()) {
@@ -81,9 +81,9 @@ public class DigistoreInventoryWrapper implements IItemHandler {
 
 				// Increment the count if we have, otherwise create a new entry.
 				if (indexOfItem >= 0) {
-					stacks.get(indexOfItem).grow(digistore.getItemTracker(i).getCount());
+					stacks.get(indexOfItem).grow(digistore.getDigistoreStack(i).getCount());
 				} else {
-					stacks.add(ItemHandlerHelper.copyStackWithSize(stackInSlot, digistore.getItemTracker(i).getCount()));
+					stacks.add(ItemHandlerHelper.copyStackWithSize(stackInSlot, digistore.getDigistoreStack(i).getCount()));
 				}
 			}
 		}

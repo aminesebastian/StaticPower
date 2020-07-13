@@ -16,7 +16,7 @@ import theking530.staticpower.tileentities.nonpowered.digistorenetwork.BaseDigis
 public class TileEntityDigistoreIOPort extends BaseDigistoreTileEntity {
 	public TileEntityDigistoreIOPort() {
 		super(ModTileEntityTypes.DIGISTORE_IO_PORT);
-		registerComponent(new DigitstoreIOPortInventoryComponent("Buffer", 5));
+		registerComponent(new DigitstoreIOPortInventoryComponent("IONetwork"));
 	}
 
 	@Override

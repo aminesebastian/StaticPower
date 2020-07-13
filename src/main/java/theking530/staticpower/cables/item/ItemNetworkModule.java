@@ -31,10 +31,11 @@ import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.DestinationWrapper;
-import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.DestinationWrapper.DestinationType;
+import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.pathfinding.Path;
 import theking530.staticpower.tileentities.TileEntityBase;
+import theking530.staticpower.tileentities.nonpowered.digistorenetwork.ioport.DigitstoreIOPortInventoryComponent;
 import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.MetricConverter;
 import theking530.staticpower.utilities.WorldUtilities;
@@ -565,23 +566,42 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 	}
 
 	protected ItemStack simulateInsertWithPrediction(ItemStack itemToInsert, IItemHandler targetInventory, BlockPos targetLocation) {
+		// Calculate the list of items already headed to the network.
 		List<ItemStack> alreadyTravelingItems = getItemsTravlingToDestination(targetLocation);
 
-		// Create a new item handler.
-		IItemHandler dupInv = new ItemStackHandler(targetInventory.getSlots());
-		for (int i = 0; i < targetInventory.getSlots(); i++) {
-			dupInv.insertItem(i, targetInventory.getStackInSlot(i).copy(), false);
-		}
+		// If inserting into a digistore network, we leverage the prediction algorithm
+		// from the transaction manager.
+		if (targetInventory instanceof DigitstoreIOPortInventoryComponent) {
+			// Get a reference to the digistore io port component.
+			DigitstoreIOPortInventoryComponent digistoreComp = (DigitstoreIOPortInventoryComponent) targetInventory;
+			// Create a reference to the provided itemstack.
+			AtomicReference<ItemStack> output = new AtomicReference<ItemStack>(itemToInsert);
 
-		// Add the already traveling items to the new handler.
-		for (ItemStack alreadyTravelingItem : alreadyTravelingItems) {
-			if (!InventoryUtilities.insertItemIntoInventory(dupInv, alreadyTravelingItem, false).isEmpty()) {
-				return itemToInsert;
+			// If the component has a valid network module, we use the transaction manager
+			// from that module to simulate a predicted insert.
+			digistoreComp.getDigistoreNetworkModule().ifPresent(module -> {
+				output.set(module.getTransactionManager().simulatePredictedInsert(alreadyTravelingItems, itemToInsert));
+			});
+
+			// return the result.
+			return output.get();
+		} else {
+			// Create a new item handler.
+			IItemHandler dupInv = new ItemStackHandler(targetInventory.getSlots());
+			for (int i = 0; i < targetInventory.getSlots(); i++) {
+				dupInv.insertItem(i, targetInventory.getStackInSlot(i).copy(), false);
 			}
-		}
 
-		// Attempt to insert the provided item into the new handler.
-		return InventoryUtilities.insertItemIntoInventory(dupInv, itemToInsert, false);
+			// Add the already traveling items to the new handler.
+			for (ItemStack alreadyTravelingItem : alreadyTravelingItems) {
+				if (!InventoryUtilities.insertItemIntoInventory(dupInv, alreadyTravelingItem, false).isEmpty()) {
+					return itemToInsert;
+				}
+			}
+
+			// Attempt to insert the provided item into the new handler.
+			return InventoryUtilities.insertItemIntoInventory(dupInv, itemToInsert, false);
+		}
 	}
 
 	@Override

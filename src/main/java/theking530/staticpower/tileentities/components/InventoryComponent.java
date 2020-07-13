@@ -34,9 +34,10 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 	private boolean capabilityExtractEnabled;
 	private final InventoryComponentCapabilityInterface capabilityInterface;
 	private TriConsumer<InventoryChangeType, ItemStack, InventoryComponent> changeCallback;
+	private boolean shouldDropContentsOnBreak;
 
 	public InventoryComponent(String name, int size) {
-		this(name, size, MachineSideMode.Regular);
+		this(name, size, MachineSideMode.Never);
 	}
 
 	public InventoryComponent(String name, int size, MachineSideMode mode) {
@@ -44,6 +45,7 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 		this.inventoryMode = mode;
 		this.capabilityInsertEnabled = true;
 		this.capabilityExtractEnabled = true;
+		this.shouldDropContentsOnBreak = true;
 		this.stacks = NonNullList.withSize(size, ItemStack.EMPTY);
 		this.capabilityInterface = new InventoryComponentCapabilityInterface();
 		if (mode.isOutputMode()) {
@@ -51,6 +53,25 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 		} else if (mode.isInputMode()) {
 			setCapabilityExtractEnabled(false);
 		}
+	}
+
+	/**
+	 * If true, when the block representing this tile entity is broken, the contents
+	 * of this inventory are dropped as items.
+	 * 
+	 * @return
+	 */
+	public boolean shouldDropContentsOnBreak() {
+		return shouldDropContentsOnBreak;
+	}
+
+	/**
+	 * Indicates whether or not this inventory should drop its contents when broken.
+	 * 
+	 * @param shouldDropContentsOnBreak
+	 */
+	public void setShouldDropContentsOnBreak(boolean shouldDropContentsOnBreak) {
+		this.shouldDropContentsOnBreak = shouldDropContentsOnBreak;
 	}
 
 	/**
@@ -111,7 +132,7 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 
 	@Override
 	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
-		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && inventoryMode != MachineSideMode.Never) {
 			// Check if the owner is side configurable. If it is, check to make sure it's
 			// not disabled, if not, return the inventory.
 			Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getTileEntity());

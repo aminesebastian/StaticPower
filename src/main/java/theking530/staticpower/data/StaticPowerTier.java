@@ -19,6 +19,11 @@ public class StaticPowerTier {
 	private int cableFilterSize;
 	private int cablePowerCapacity;
 	private int cablePowerDelivery;
+	private int batteryCapacity;
+
+	public int getBatteryCapacity() {
+		return batteryCapacity;
+	}
 
 	public int getCablePowerCapacity() {
 		return cablePowerCapacity;

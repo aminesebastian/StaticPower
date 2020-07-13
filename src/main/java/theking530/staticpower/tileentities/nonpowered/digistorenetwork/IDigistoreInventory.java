@@ -3,7 +3,7 @@ package theking530.staticpower.tileentities.nonpowered.digistorenetwork;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.INBTSerializable;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.DigistoreItemTracker;
+import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.DigistoreStack;
 
 /**
  * Interface used by any digistore accessible containers.
@@ -29,15 +29,18 @@ public interface IDigistoreInventory extends INBTSerializable<CompoundNBT> {
 	public int getCountForItem(ItemStack stack);
 
 	/**
-	 * Gets the item tracker at the provided index.
+	 * Gets the digistore stack at the provided index. Make a call to
+	 * {@link #getUniqueItemCapacity()} to ensure the returned value is > 0 before
+	 * making a call to this method. The returned value should NEVER be modified.
+	 * This should be treated as a pure const getter. Modifying the result will
+	 * break everything.
 	 * 
-	 * @param index The index of the tracker to get. These values range from 0 to
-	 *              the values returned by {@link #getMaximumUniqueItemTypeCount()}
-	 *              exclusive.
+	 * @param index The index of the stack to get. These values range from 0 to the
+	 *              values returned by {@link #getUniqueItemCapacity()} exclusive.
 	 * 
 	 * @return
 	 */
-	public DigistoreItemTracker getItemTracker(int index);
+	public DigistoreStack getDigistoreStack(int index);
 
 	/**
 	 * Gets the number of unique items stored in this inventory.
@@ -52,14 +55,15 @@ public interface IDigistoreInventory extends INBTSerializable<CompoundNBT> {
 	 * 
 	 * @return
 	 */
-	public int getMaximumUniqueItemTypeCount();
+	public int getUniqueItemCapacity();
 
 	/**
-	 * Get the maximum amount of items that can be contained in this inventory.
+	 * Get the maximum amount of items that can be contained in this inventory. If
+	 * this number is zero, then this inventory can never accept items.
 	 * 
 	 * @return
 	 */
-	public int getMaxStoredAmount();
+	public int getItemCapacity();
 
 	/**
 	 * Gets the total amount of items contained in this inventory.

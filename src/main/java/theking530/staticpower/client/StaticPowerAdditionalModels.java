@@ -79,6 +79,13 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation LUMUM_DIGISTORE_CARD = registerModel("block/machines/digistore_card_lumum");
 	public static final ResourceLocation CREATIVE_DIGISTORE_CARD = registerModel("block/machines/digistore_card_creative");
 
+	public static final ResourceLocation BASIC_DIGISTORE_SINGULAR_CARD = registerModel("block/machines/digistore_card_singular_basic");
+	public static final ResourceLocation ADVANCVED_DIGISTORE_SINGULAR_CARD = registerModel("block/machines/digistore_card_singular_advanced");
+	public static final ResourceLocation STATIC_DIGISTORE_SINGULAR_CARD = registerModel("block/machines/digistore_card_singular_static");
+	public static final ResourceLocation ENERGIZED_DIGISTORE_SINGULAR_CARD = registerModel("block/machines/digistore_card_singular_energized");
+	public static final ResourceLocation LUMUM_DIGISTORE_SINGULAR_CARD = registerModel("block/machines/digistore_card_singular_lumum");
+	public static final ResourceLocation CREATIVE_DIGISTORE_SINGULAR_CARD = registerModel("block/machines/digistore_card_singular_creative");
+	
 	public static void regsiterModels() {
 		for (ResourceLocation model : MODELS) {
 			ModelLoader.addSpecialModel(model);

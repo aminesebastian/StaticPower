@@ -429,7 +429,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		}
 
 		// If on the client, update the blocks.
-		if (getWorld().isRemote) {
+		if (getWorld() != null && getWorld().isRemote) {
 			getTileEntity().markTileEntityForSynchronization();
 		}
 	}

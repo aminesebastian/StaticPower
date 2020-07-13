@@ -12,19 +12,19 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockRayTraceResult;
-import theking530.staticpower.initialization.ModItems;
 import theking530.staticpower.initialization.ModTileEntityTypes;
 import theking530.staticpower.initialization.ModUpgrades;
 import theking530.staticpower.items.upgrades.BaseUpgrade;
 import theking530.staticpower.tileentities.components.InventoryComponent;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.BaseDigistoreTileEntity;
+import theking530.staticpower.tileentities.nonpowered.digistorenetwork.CapabilityDigistoreInventory;
+import theking530.staticpower.tileentities.nonpowered.digistorenetwork.IDigistoreInventory;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
+import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class TileEntityDigistore extends BaseDigistoreTileEntity {
-	public static final int DEFAULT_CAPACITY = 1024;
-
 	public final InventoryComponent upgradesInventory;
 	public final DigistoreInventoryComponent inventory;
 	private boolean locked;
@@ -33,11 +33,26 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 		super(ModTileEntityTypes.DIGISTORE);
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
 		registerComponent(inventory = new DigistoreInventoryComponent("Inventory", 1));
-		inventory.insertItem(0, new ItemStack(ModItems.BasicDigistoreCard), false);
+		inventory.setFilter(new ItemStackHandlerFilter() {
+			@Override
+			public boolean canInsertItem(int slot, ItemStack stack) {
+				IDigistoreInventory inventory = stack.getCapability(CapabilityDigistoreInventory.DIGISTORE_INVENTORY_CAPABILITY).orElse(null);
+				if (inventory == null) {
+					return false;
+				}
+
+				return inventory.getUniqueItemCapacity() == 1;
+			}
+		});
 	}
 
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+		// If there is no card present, pass the activation.
+		if (inventory.getUniqueItemCapacity() == 0) {
+			return ActionResultType.PASS;
+		}
+
 		// If the hand is not empty and the held itemstack matches the item stored in
 		// this digistore, attempt to insert it.
 		if (!player.getHeldItem(hand).isEmpty()) {
@@ -57,12 +72,10 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 			}
 
 			// If not, attempt to insert the item.
-			if (inventory.canAcceptItem(heldItem)) {
-				ItemStack remaining = inventory.insertItem(player.getHeldItem(hand), false);
-				player.setItemStackToSlot(EquipmentSlotType.MAINHAND, remaining);
-				world.playSound(null, pos, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, SoundCategory.PLAYERS, 0.8f, 1.0f);
-				return ActionResultType.SUCCESS;
-			}
+			ItemStack remaining = inventory.insertItem(player.getHeldItem(hand), false);
+			player.setItemStackToSlot(EquipmentSlotType.MAINHAND, remaining);
+			world.playSound(null, pos, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, SoundCategory.PLAYERS, 0.8f, 1.0f);
+			return ActionResultType.SUCCESS;
 		} else {
 			// Keep track of if any items changed.
 			boolean itemInserted = false;

@@ -19,7 +19,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import theking530.common.utilities.Vector2D;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
-import theking530.staticpower.cables.digistore.DigistoreInventoryWrapper;
+import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
@@ -71,7 +71,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 		// If on the server, populate the digistore container slots.
 		if (!getCableComponent().getWorld().isRemote) {
 			getDigistoreNetwork().ifPresent(digistoreModule -> {
-				DigistoreInventoryWrapper digistoreInv = digistoreModule.getNetworkInventory(filter, sortType, sortDescending);
+				DigistoreInventorySnapshot digistoreInv = digistoreModule.getNetworkInventorySnapshot(filter, sortType, sortDescending);
 				addDigistoreSlots(digistoreInv, itemsPerRow, digistoreInventoryPosition.getXi(), digistoreInventoryPosition.getYi());
 			});
 		}
@@ -337,9 +337,9 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 		getDigistoreNetwork().ifPresent(digistoreModule -> {
 			// Get the old inventory if we have initialized this container and there is a
 			// atleast one digistore slot.
-			DigistoreInventoryWrapper oldInv = null;
+			DigistoreInventorySnapshot oldInv = null;
 			if (hasDigistoreSlots() && inventorySlots.get(getFirstDigistoreSlotIndex()) instanceof DigistoreSlot) {
-				oldInv = (DigistoreInventoryWrapper) ((DigistoreSlot) inventorySlots.get(getFirstDigistoreSlotIndex())).getItemHandler();
+				oldInv = (DigistoreInventorySnapshot) ((DigistoreSlot) inventorySlots.get(getFirstDigistoreSlotIndex())).getItemHandler();
 			}
 
 			// Clear the digistore slots.
@@ -348,7 +348,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 			}
 
 			// Get the network inventory.
-			DigistoreInventoryWrapper digistoreInv = digistoreModule.getNetworkInventory(filter, sortType, sortDescending);
+			DigistoreInventorySnapshot digistoreInv = digistoreModule.getNetworkInventorySnapshot(filter, sortType, sortDescending);
 			addDigistoreSlots(digistoreInv, itemsPerRow, digistoreInventoryPosition.getXi(), digistoreInventoryPosition.getYi());
 
 			if (oldInv != null && !resyncInv) {

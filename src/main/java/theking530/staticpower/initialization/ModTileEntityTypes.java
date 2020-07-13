@@ -60,8 +60,14 @@ public class ModTileEntityTypes {
 	public static TileEntityType<TileEntityTreeFarm> TREE_FARM;
 	public static TileEntityType<TileEntityFermenter> FERMENTER;
 	public static TileEntityType<TileEntityFormer> FORMER;
-	public static TileEntityType<TileEntityBattery> BATTERY;
-
+	
+	public static TileEntityType<TileEntityBattery> BATTERY_BASIC;
+	public static TileEntityType<TileEntityBattery> BATTERY_ADVANCED;
+	public static TileEntityType<TileEntityBattery> BATTERY_STATIC;
+	public static TileEntityType<TileEntityBattery> BATTERY_ENERGIZED;
+	public static TileEntityType<TileEntityBattery> BATTERY_LUMUM;
+	public static TileEntityType<TileEntityBattery> BATTERY_CREATIVE;
+	
 	public static void init() {
 		VACCUM_CHEST = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityVacuumChest(), ModBlocks.VacuumChest);
 		CHARGING_STATION = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityChargingStation(), ModBlocks.ChargingStation);
@@ -79,8 +85,14 @@ public class ModTileEntityTypes {
 		TREE_FARM = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityTreeFarm(), ModBlocks.TreeFarmer);
 		FERMENTER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityFermenter(), ModBlocks.Fermenter);
 		FORMER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityFormer(), ModBlocks.Former);
-		BATTERY = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(), ModBlocks.BasicBattery);
-
+		
+		BATTERY_BASIC = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(type, StaticPowerTiers.BASIC), ModBlocks.BatteryBasic);
+		BATTERY_ADVANCED = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(type, StaticPowerTiers.ADVANCED), ModBlocks.BatteryAdvanced);
+		BATTERY_STATIC = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(type, StaticPowerTiers.STATIC), ModBlocks.BatteryStatic);
+		BATTERY_ENERGIZED = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(type, StaticPowerTiers.ENERGIZED), ModBlocks.BatteryEnergized);
+		BATTERY_LUMUM = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(type, StaticPowerTiers.LUMUM), ModBlocks.BatteryLumum);
+		BATTERY_CREATIVE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(type, StaticPowerTiers.CREATIVE), ModBlocks.BatteryCreative);
+		
 		TANK = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityTank(), ModBlocks.BasicTank);
 		PUMP = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityPump(), ModBlocks.Pump);
 

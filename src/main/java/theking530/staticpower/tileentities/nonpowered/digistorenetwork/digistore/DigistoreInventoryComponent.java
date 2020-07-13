@@ -9,11 +9,12 @@ import theking530.staticpower.items.DigistoreCard;
 import theking530.staticpower.tileentities.components.InventoryComponent;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.CapabilityDigistoreInventory;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.IDigistoreInventory;
+import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 
 public class DigistoreInventoryComponent extends InventoryComponent implements IDigistoreInventory {
 	public DigistoreInventoryComponent(String name, int slotCount) {
-		super(name, slotCount);
+		super(name, slotCount, MachineSideMode.Regular);
 		setFilter(new ItemStackHandlerFilter() {
 			@Override
 			public boolean canInsertItem(int slot, ItemStack stack) {
@@ -55,17 +56,17 @@ public class DigistoreInventoryComponent extends InventoryComponent implements I
 	}
 
 	@Override
-	public DigistoreItemTracker getItemTracker(int index) {
+	public DigistoreStack getDigistoreStack(int index) {
 		int curr = index;
 		for (ItemStack card : this) {
 			if (card.isEmpty()) {
 				continue;
 			}
 			IDigistoreInventory cardInv = DigistoreCard.getInventory(card);
-			if (curr > cardInv.getMaximumUniqueItemTypeCount() - 1) {
-				curr -= cardInv.getMaximumUniqueItemTypeCount();
+			if (curr > cardInv.getUniqueItemCapacity() - 1) {
+				curr -= cardInv.getUniqueItemCapacity();
 			} else {
-				return cardInv.getItemTracker(curr);
+				return cardInv.getDigistoreStack(curr);
 			}
 		}
 		return null;
@@ -84,25 +85,25 @@ public class DigistoreInventoryComponent extends InventoryComponent implements I
 	}
 
 	@Override
-	public int getMaximumUniqueItemTypeCount() {
+	public int getUniqueItemCapacity() {
 		int outputCount = 0;
 		for (ItemStack card : this) {
 			if (card.isEmpty()) {
 				continue;
 			}
-			outputCount += DigistoreCard.getInventory(card).getMaximumUniqueItemTypeCount();
+			outputCount += DigistoreCard.getInventory(card).getUniqueItemCapacity();
 		}
 		return outputCount;
 	}
 
 	@Override
-	public int getMaxStoredAmount() {
+	public int getItemCapacity() {
 		int outputCount = 0;
 		for (ItemStack card : this) {
 			if (card.isEmpty()) {
 				continue;
 			}
-			outputCount += DigistoreCard.getInventory(card).getMaxStoredAmount();
+			outputCount += DigistoreCard.getInventory(card).getItemCapacity();
 		}
 		return outputCount;
 	}
@@ -133,15 +134,23 @@ public class DigistoreInventoryComponent extends InventoryComponent implements I
 
 	@Override
 	public ItemStack insertItem(ItemStack stack, boolean simulate) {
+		int initialCount = stack.getCount();
+
 		for (ItemStack card : this) {
 			if (card.isEmpty()) {
 				continue;
 			}
 			stack = DigistoreCard.getInventory(card).insertItem(stack, simulate);
 			if (stack.isEmpty()) {
-				return stack;
+				break;
 			}
 		}
+
+		// Raise the onChanged method if the contents changed.
+		if (stack.getCount() != initialCount) {
+			onChanged();
+		}
+
 		return stack;
 	}
 
@@ -163,6 +172,10 @@ public class DigistoreInventoryComponent extends InventoryComponent implements I
 			if (output.getCount() >= count) {
 				return output;
 			}
+		}
+		// Raise the onChanged method if we were able to extract contents.
+		if (output.getCount() > 0) {
+			onChanged();
 		}
 		return output;
 	}
@@ -196,7 +209,10 @@ public class DigistoreInventoryComponent extends InventoryComponent implements I
 	}
 
 	public float getFilledRatio() {
-		return (float) getTotalContainedCount() / (float) getMaxStoredAmount();
+		return (float) getTotalContainedCount() / (float) getItemCapacity();
 	}
 
+	public void onChanged() {
+		getTileEntity().markTileEntityForSynchronization();
+	}
 }

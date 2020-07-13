@@ -4,6 +4,7 @@ import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.items.DigistoreCard;
+import theking530.staticpower.items.DigistoreSingularCard;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.items.book.StaticPowerBook;
@@ -235,6 +236,13 @@ public class ModItems {
 	public static DigistoreCard LumumDigistoreCard;
 	public static DigistoreCard CreativeDigistoreCard;
 
+	public static DigistoreSingularCard BasicSingularDigistoreCard;
+	public static DigistoreSingularCard AdvancedSingularDigistoreCard;
+	public static DigistoreSingularCard StaticSingularDigistoreCard;
+	public static DigistoreSingularCard EnergizedSingularDigistoreCard;
+	public static DigistoreSingularCard LumumSingularDigistoreCard;
+	public static DigistoreSingularCard CreativeSingularDigistoreCard;
+	
 	public static CableCover CableCover;
 
 	public static void init() {
@@ -461,6 +469,13 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(LumumDigistoreCard = new DigistoreCard("digistore_card_lumum", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.LUMUM_DIGISTORE_CARD));
 		StaticPowerRegistry.preRegisterItem(CreativeDigistoreCard = new DigistoreCard("digistore_card_creative", StaticPowerTiers.CREATIVE, StaticPowerAdditionalModels.CREATIVE_DIGISTORE_CARD, true));
 
+		StaticPowerRegistry.preRegisterItem(BasicSingularDigistoreCard = new DigistoreSingularCard("digistore_card_singular_basic", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.BASIC_DIGISTORE_SINGULAR_CARD));
+		StaticPowerRegistry.preRegisterItem(AdvancedSingularDigistoreCard = new DigistoreSingularCard("digistore_card_singular_advanced", StaticPowerTiers.ADVANCED, StaticPowerAdditionalModels.ADVANCVED_DIGISTORE_SINGULAR_CARD));
+		StaticPowerRegistry.preRegisterItem(StaticSingularDigistoreCard = new DigistoreSingularCard("digistore_card_singular_static", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.STATIC_DIGISTORE_SINGULAR_CARD));
+		StaticPowerRegistry.preRegisterItem(EnergizedSingularDigistoreCard = new DigistoreSingularCard("digistore_card_singular_energized", StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.ENERGIZED_DIGISTORE_SINGULAR_CARD));
+		StaticPowerRegistry.preRegisterItem(LumumSingularDigistoreCard = new DigistoreSingularCard("digistore_card_singular_lumum", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.LUMUM_DIGISTORE_SINGULAR_CARD));
+		StaticPowerRegistry.preRegisterItem(CreativeSingularDigistoreCard = new DigistoreSingularCard("digistore_card_singular_creative", StaticPowerTiers.CREATIVE, StaticPowerAdditionalModels.CREATIVE_DIGISTORE_SINGULAR_CARD, true));
+		
 		StaticPowerRegistry.preRegisterItem(CableCover = new CableCover("cable_cover"));
 	}
 }

@@ -4,7 +4,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.nbt.CompoundNBT;
-import theking530.staticpower.initialization.ModTileEntityTypes;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ResourceLocation;
+import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.EnergyStorageComponent.EnergyManipulationAction;
 import theking530.staticpower.tileentities.components.PowerDistributionComponent;
@@ -23,9 +25,11 @@ public class TileEntityBattery extends TileEntityMachine {
 
 	protected PowerDistributionComponent powerDistributor;
 
-	public TileEntityBattery() {
-		super(ModTileEntityTypes.BATTERY);
-		this.registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor", energyStorage.getStorage()));
+	public TileEntityBattery(TileEntityType<?> type, ResourceLocation tier) {
+		super(type);
+		DisableFaceInteraction = false;
+		
+		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor", energyStorage.getStorage()));
 		energyStorage.setCapabiltiyFilter((amount, direction, action) -> {
 			if (direction == null) {
 				return false;
@@ -42,6 +46,8 @@ public class TileEntityBattery extends TileEntityMachine {
 			return true;
 		});
 		maxPowerIO = Integer.MAX_VALUE;
+
+		energyStorage.getStorage().setCapacity(StaticPowerDataRegistry.getTier(tier).getBatteryCapacity());
 	}
 
 	public void process() {

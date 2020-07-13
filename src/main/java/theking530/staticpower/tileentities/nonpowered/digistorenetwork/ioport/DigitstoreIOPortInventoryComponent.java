@@ -1,7 +1,5 @@
 package theking530.staticpower.tileentities.nonpowered.digistorenetwork.ioport;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Nonnull;
@@ -19,28 +17,19 @@ import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 
 public class DigitstoreIOPortInventoryComponent extends AbstractTileEntityComponent implements IItemHandler {
-	private final int bufferSlots;
-	private final List<ItemStack> buffer;
 
-	public DigitstoreIOPortInventoryComponent(String name, int bufferSize) {
+	public DigitstoreIOPortInventoryComponent(String name) {
 		super(name);
-		bufferSlots = bufferSize;
-
-		// Initialize the buffer.
-		buffer = new LinkedList<ItemStack>();
-		for (int i = 0; i < bufferSlots; i++) {
-			buffer.add(ItemStack.EMPTY);
-		}
 	}
 
 	@Override
 	public int getSlots() {
-		return bufferSlots;
+		return 1;
 	}
 
 	@Override
 	public ItemStack getStackInSlot(int slot) {
-		return buffer.get(slot);
+		return ItemStack.EMPTY	;
 	}
 
 	@Override

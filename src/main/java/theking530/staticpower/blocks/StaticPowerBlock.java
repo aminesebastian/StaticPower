@@ -351,6 +351,11 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IBloc
 			TileEntityBase baseTe = builder.getWorld().getTileEntity(pos) instanceof TileEntityBase ? (TileEntityBase) builder.getWorld().getTileEntity(pos) : null;
 			if (baseTe != null) {
 				for (InventoryComponent comp : baseTe.getComponents(InventoryComponent.class)) {
+					// Skip components that should not drop their contents.
+					if (!comp.shouldDropContentsOnBreak()) {
+						continue;
+					}
+					// Capture all the items in the component.
 					for (int i = 0; i < comp.getSlots(); i++) {
 						ItemStack extracted = comp.extractItem(i, Integer.MAX_VALUE, false);
 						if (!extracted.isEmpty()) {
