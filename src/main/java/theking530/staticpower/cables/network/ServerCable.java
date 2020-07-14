@@ -81,12 +81,20 @@ public class ServerCable {
 		return dataTag.contains(key);
 	}
 
-	public int getProperty(String key) {
+	public int getIntProperty(String key) {
 		return dataTag.getInt(key);
+	}
+
+	public float getFloatProperty(String key) {
+		return dataTag.getFloat(key);
 	}
 
 	public void setProperty(String key, int value) {
 		dataTag.putInt(key, value);
+	}
+
+	public void setProperty(String key, float value) {
+		dataTag.putFloat(key, value);
 	}
 
 	public BlockPos getPos() {

@@ -8,30 +8,29 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.initialization.ModTileEntityTypes;
-import theking530.staticpower.initialization.ModUpgrades;
-import theking530.staticpower.items.upgrades.BaseUpgrade;
-import theking530.staticpower.tileentities.components.InventoryComponent;
+import theking530.staticpower.items.DigistoreMonoCard;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.BaseDigistoreTileEntity;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.CapabilityDigistoreInventory;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.IDigistoreInventory;
-import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
-import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
-public class TileEntityDigistore extends BaseDigistoreTileEntity {
-	public final InventoryComponent upgradesInventory;
+public class TileEntityDigistore extends BaseDigistoreTileEntity implements IItemHandler {
 	public final DigistoreInventoryComponent inventory;
 	private boolean locked;
 
 	public TileEntityDigistore() {
 		super(ModTileEntityTypes.DIGISTORE);
-		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
 		registerComponent(inventory = new DigistoreInventoryComponent("Inventory", 1));
 		inventory.setFilter(new ItemStackHandlerFilter() {
 			@Override
@@ -59,8 +58,8 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 			ItemStack heldItem = player.getHeldItem(hand);
 
 			// If the player is holding an upgrade, attempt to insert the upgrade.
-			if (heldItem.getItem() instanceof BaseUpgrade) {
-				ItemStack remaining = InventoryUtilities.insertItemIntoInventory(upgradesInventory, heldItem, false);
+			if (heldItem.getItem() instanceof DigistoreMonoCard && inventory.getStackInSlot(0).isEmpty()) {
+				ItemStack remaining = inventory.insertItem(0, heldItem, false);
 				if (remaining.getCount() != heldItem.getCount()) {
 					if (!player.isCreative()) {
 						heldItem.setCount(remaining.getCount());
@@ -121,12 +120,7 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 	}
 
 	public boolean isVoidUpgradeInstalled() {
-		for (ItemStack upgrade : this.upgradesInventory) {
-			if (upgrade.getItem() == ModUpgrades.DigistoreVoidUpgrade) {
-				return true;
-			}
-		}
-		return false;
+		return inventory.shouldVoidExcess();
 	}
 
 	public boolean isLocked() {
@@ -178,7 +172,51 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity {
 	}
 
 	@Override
+	public int getSlots() {
+		return 1;
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int slot) {
+		if (inventory.getUniqueItemCapacity() > 0) {
+			return inventory.getDigistoreStack(0).getStoredItem();
+		}
+		return ItemStack.EMPTY;
+	}
+
+	@Override
+	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+		return inventory.insertItem(stack, simulate);
+	}
+
+	@Override
+	public ItemStack extractItem(int slot, int amount, boolean simulate) {
+		return inventory.extractItem(getStackInSlot(slot), amount, simulate);
+	}
+
+	@Override
+	public int getSlotLimit(int slot) {
+		return inventory.getItemCapacity();
+	}
+
+	@Override
+	public boolean isItemValid(int slot, ItemStack stack) {
+		return inventory.canAcceptItem(stack);
+	}
+
+	@Override
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+			return LazyOptional.of(() -> {
+				return this;
+			}).cast();
+		}
+		return super.getCapability(cap, side);
+	}
+
+	@Override
 	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
 		return new ContainerDigistore(windowId, inventory, this);
 	}
+
 }

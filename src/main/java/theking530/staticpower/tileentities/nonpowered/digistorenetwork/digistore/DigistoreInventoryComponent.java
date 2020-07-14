@@ -205,6 +205,7 @@ public class DigistoreInventoryComponent extends InventoryComponent implements I
 				return this;
 			}).cast();
 		}
+
 		return super.provideCapability(cap, side);
 	}
 

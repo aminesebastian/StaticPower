@@ -23,6 +23,7 @@ import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
+import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.items.cableattachments.extractor.ExtractorAttachment;
 import theking530.staticpower.items.cableattachments.filter.FilterAttachment;
@@ -30,14 +31,24 @@ import theking530.staticpower.items.cableattachments.retirever.RetrieverAttachme
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class ItemCableComponent extends AbstractCableProviderComponent implements IItemHandler {
-	private int itemTransferSpeed = 40;
+	public static final int BASE_MOVE_TIME = 60;
+	public static final String ITEM_CABLE_MINIMUM_MOVE_TIME = "min_transfer_time";
+	public static final String ITEM_CABLE_FRICTION_FACTOR = "friction_factor";
+	public static final String ITEM_CABLE_ACCELERATION_FACTOR = "acceleration_factor";
+
+	private int maxTrasnferSpeed;
+	private float frictionFactor;
+	private float accelerationFactor;
 	private HashMap<Long, ItemRoutingParcelClient> containedPackets;
 	private Direction lastCapabilityRequestedDirection;
 
-	public ItemCableComponent(String name) {
+	public ItemCableComponent(String name, int maxTransferSpeed, float frictionFactor, float accelerationFactor) {
 		super(name, CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
 		containedPackets = new HashMap<Long, ItemRoutingParcelClient>();
 		lastCapabilityRequestedDirection = Direction.UP;
+		this.maxTrasnferSpeed = maxTransferSpeed;
+		this.frictionFactor = frictionFactor;
+		this.accelerationFactor = accelerationFactor;
 	}
 
 	@Override
@@ -72,8 +83,8 @@ public class ItemCableComponent extends AbstractCableProviderComponent implement
 		super.onOwningTileEntityRemoved();
 	}
 
-	public int getTransferSpeed() {
-		return itemTransferSpeed;
+	public int getMaxTransferSpeed() {
+		return maxTrasnferSpeed;
 	}
 
 	public void addTransferingItem(ItemRoutingParcelClient routingPacket) {
@@ -110,6 +121,15 @@ public class ItemCableComponent extends AbstractCableProviderComponent implement
 
 		// If there is an attachment, but its not a filter attachment, return false.
 		return false;
+	}
+
+	@Override
+	protected ServerCable createCable() {
+		return new ServerCable(getWorld(), getPos(), getSupportedNetworkModuleTypes(), (cable) -> {
+			cable.setProperty(ITEM_CABLE_MINIMUM_MOVE_TIME, maxTrasnferSpeed);
+			cable.setProperty(ITEM_CABLE_FRICTION_FACTOR, frictionFactor);
+			cable.setProperty(ITEM_CABLE_ACCELERATION_FACTOR, accelerationFactor);
+		});
 	}
 
 	/**

@@ -17,5 +17,8 @@
 	"cablePowerCapacity": 512,
 	"cablePowerDelivery": 256,
 	"digistoreCapacity": 262144,
-	"batteryCapacity": 131072
+	"batteryCapacity": 131072,
+	"itemCableMaxSpeed": 5,
+	"itemCableAcceleration": 2.0,
+	"itemCableFriction": 1.5
 }

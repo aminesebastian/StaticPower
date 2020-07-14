@@ -10,13 +10,13 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.IDigistoreInventory;
 
-public class DigistoreSingularCard extends DigistoreCard {
+public class DigistoreMonoCard extends DigistoreCard {
 
-	public DigistoreSingularCard(String name, ResourceLocation tierType, ResourceLocation model) {
+	public DigistoreMonoCard(String name, ResourceLocation tierType, ResourceLocation model) {
 		this(name, tierType, model, false);
 	}
 
-	public DigistoreSingularCard(String name, ResourceLocation tierType, ResourceLocation model, boolean shouldGlow) {
+	public DigistoreMonoCard(String name, ResourceLocation tierType, ResourceLocation model, boolean shouldGlow) {
 		super(name, tierType, model, shouldGlow);
 	}
 

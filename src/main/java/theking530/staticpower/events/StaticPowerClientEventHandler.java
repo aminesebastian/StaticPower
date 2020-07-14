@@ -64,7 +64,13 @@ public class StaticPowerClientEventHandler {
 
 		// Register the tile entity renderers.
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.DIGISTORE, TileEntityRenderDigistore::new);
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.ITEM_CABLE, TileEntityRenderItemCable::new);
+		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.ITEM_CABLE_BASIC, TileEntityRenderItemCable::new);
+		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.ITEM_CABLE_ADVANCED, TileEntityRenderItemCable::new);
+		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.ITEM_CABLE_STATIC, TileEntityRenderItemCable::new);
+		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.ITEM_CABLE_ENERGIZED, TileEntityRenderItemCable::new);
+		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.ITEM_CABLE_LUMUM, TileEntityRenderItemCable::new);
+		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.ITEM_CABLE_CREATIVE, TileEntityRenderItemCable::new);
+		
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.FLUID_CABLE, TileEntityRenderFluidCable::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.INDUSTRIAL_FLUID_CABLE, TileEntityRenderFluidCable::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.TANK, TileEntityRenderTank::new);

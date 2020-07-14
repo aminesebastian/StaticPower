@@ -36,7 +36,7 @@ public abstract class AbstractCableTileEntityRenderer<T extends TileEntityBase> 
 		if (dir == null) {
 			return;
 		}
-		float lerpValue = packet.getItemMoveLerp() + (partialTicks / 20.0f);
+		float lerpValue = packet.getItemMoveLerp() + (partialTicks / (packet.getCurrentMoveTime() / 2));
 		matrixStack.push();
 
 		// Determine which scale to use when drawing.

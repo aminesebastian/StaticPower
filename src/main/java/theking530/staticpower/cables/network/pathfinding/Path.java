@@ -43,6 +43,10 @@ public class Path {
 		return SourceLocation;
 	}
 
+	public BlockPos getSourceCableLocation() {
+		return Path[1].getPosition();
+	}
+
 	public BlockPos getDestinationLocation() {
 		return DestinationLocation;
 	}

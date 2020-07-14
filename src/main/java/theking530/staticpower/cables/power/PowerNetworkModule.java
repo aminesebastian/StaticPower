@@ -58,7 +58,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 				IEnergyStorage energyStorage = wrapper.getTileEntity().getCapability(CapabilityEnergy.ENERGY, wrapper.getDestinationSide()).orElse(null);
 				if (energyStorage != null) {
 					if (energyStorage.canReceive()) {
-						int toSupply = Math.min(CableNetworkManager.get(world).getCable(wrapper.getConnectedCable()).getProperty(PowerCableComponent.POWER_RATE_DATA_TAG_KEY), outputPerDestination);
+						int toSupply = Math.min(CableNetworkManager.get(world).getCable(wrapper.getConnectedCable()).getIntProperty(PowerCableComponent.POWER_RATE_DATA_TAG_KEY), outputPerDestination);
 						int supplied = energyStorage.receiveEnergy(Math.min(toSupply, EnergyStorage.getCurrentMaximumPowerOutput()), false);
 						if (supplied > 0) {
 							EnergyStorage.setCanExtract(true);
@@ -81,7 +81,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 	@Override
 	public void onNetworkGraphUpdated(NetworkMapper mapper) {
 		// Calculate the total capacity.
-		int capacity = mapper.getDiscoveredCables().stream().filter(p -> p.supportsNetworkModule(CableNetworkModuleTypes.POWER_NETWORK_MODULE)).mapToInt(p -> p.getProperty(PowerCableComponent.POWER_CAPACITY_DATA_TAG_KEY)).sum();
+		int capacity = mapper.getDiscoveredCables().stream().filter(p -> p.supportsNetworkModule(CableNetworkModuleTypes.POWER_NETWORK_MODULE)).mapToInt(p -> p.getIntProperty(PowerCableComponent.POWER_CAPACITY_DATA_TAG_KEY)).sum();
 
 		// If the capacity is less than 0, that means we overflowed. Set the capcaity to
 		// the maximum integer value.

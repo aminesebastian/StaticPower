@@ -20,6 +20,21 @@ public class StaticPowerTier {
 	private int cablePowerCapacity;
 	private int cablePowerDelivery;
 	private int batteryCapacity;
+	private int itemCableMaxSpeed;
+	private float itemCableAcceleration;
+	private float itemCableFriction;
+
+	public int getItemCableMaxSpeed() {
+		return itemCableMaxSpeed;
+	}
+
+	public float getItemCableAcceleration() {
+		return itemCableAcceleration;
+	}
+
+	public float getItemCableFriction() {
+		return itemCableFriction;
+	}
 
 	public int getBatteryCapacity() {
 		return batteryCapacity;

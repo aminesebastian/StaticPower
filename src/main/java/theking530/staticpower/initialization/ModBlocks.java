@@ -103,7 +103,13 @@ public class ModBlocks {
 	public static BlockDigistoreServerRack DigistoreServerRack;
 
 	// Cables
-	public static BlockItemCable ItemCable;
+	public static BlockItemCable ItemCableBasic;
+	public static BlockItemCable ItemCableAdvanced;
+	public static BlockItemCable ItemCableStatic;
+	public static BlockItemCable ItemCableEnergized;
+	public static BlockItemCable ItemCableLumum;
+	public static BlockItemCable ItemCableCreative;
+
 	public static BlockPowerCable PowerCableBasic;
 	public static BlockPowerCable PowerCableAdvanced;
 	public static BlockPowerCable PowerCableStatic;
@@ -194,7 +200,13 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(PowerCableLumum = new BlockPowerCable("cable_power_lumum", StaticPowerTiers.LUMUM));
 		StaticPowerRegistry.preRegisterBlock(PowerCableCreative = new BlockPowerCable("cable_power_creative", StaticPowerTiers.CREATIVE));
 
-		StaticPowerRegistry.preRegisterBlock(ItemCable = new BlockItemCable("cable_item"));
+		StaticPowerRegistry.preRegisterBlock(ItemCableBasic = new BlockItemCable("cable_item_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterBlock(ItemCableAdvanced = new BlockItemCable("cable_item_advanced", StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterBlock(ItemCableStatic = new BlockItemCable("cable_item_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterBlock(ItemCableEnergized = new BlockItemCable("cable_item_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterBlock(ItemCableLumum = new BlockItemCable("cable_item_lumum", StaticPowerTiers.LUMUM));
+		StaticPowerRegistry.preRegisterBlock(ItemCableCreative = new BlockItemCable("cable_item_creative", StaticPowerTiers.CREATIVE));
+
 		StaticPowerRegistry.preRegisterBlock(FluidCable = new BlockFluidCable("cable_fluid"));
 		StaticPowerRegistry.preRegisterBlock(IndustrialFluidCable = new BlockIndustrialFluidCable("cable_industrial_fluid"));
 

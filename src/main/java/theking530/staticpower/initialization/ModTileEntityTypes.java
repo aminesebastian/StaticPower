@@ -46,7 +46,13 @@ public class ModTileEntityTypes {
 	public static TileEntityType<TileEntityPowerCable> POWER_CABLE_LUMUM;
 	public static TileEntityType<TileEntityPowerCable> POWER_CABLE_CREATIVE;
 
-	public static TileEntityType<TileEntityItemCable> ITEM_CABLE;
+	public static TileEntityType<TileEntityItemCable> ITEM_CABLE_BASIC;
+	public static TileEntityType<TileEntityItemCable> ITEM_CABLE_ADVANCED;
+	public static TileEntityType<TileEntityItemCable> ITEM_CABLE_STATIC;
+	public static TileEntityType<TileEntityItemCable> ITEM_CABLE_ENERGIZED;
+	public static TileEntityType<TileEntityItemCable> ITEM_CABLE_LUMUM;
+	public static TileEntityType<TileEntityItemCable> ITEM_CABLE_CREATIVE;
+
 	public static TileEntityType<TileEntityFluidCable> FLUID_CABLE;
 	public static TileEntityType<TileEntityFluidCable> INDUSTRIAL_FLUID_CABLE;
 
@@ -60,14 +66,14 @@ public class ModTileEntityTypes {
 	public static TileEntityType<TileEntityTreeFarm> TREE_FARM;
 	public static TileEntityType<TileEntityFermenter> FERMENTER;
 	public static TileEntityType<TileEntityFormer> FORMER;
-	
+
 	public static TileEntityType<TileEntityBattery> BATTERY_BASIC;
 	public static TileEntityType<TileEntityBattery> BATTERY_ADVANCED;
 	public static TileEntityType<TileEntityBattery> BATTERY_STATIC;
 	public static TileEntityType<TileEntityBattery> BATTERY_ENERGIZED;
 	public static TileEntityType<TileEntityBattery> BATTERY_LUMUM;
 	public static TileEntityType<TileEntityBattery> BATTERY_CREATIVE;
-	
+
 	public static void init() {
 		VACCUM_CHEST = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityVacuumChest(), ModBlocks.VacuumChest);
 		CHARGING_STATION = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityChargingStation(), ModBlocks.ChargingStation);
@@ -85,14 +91,14 @@ public class ModTileEntityTypes {
 		TREE_FARM = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityTreeFarm(), ModBlocks.TreeFarmer);
 		FERMENTER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityFermenter(), ModBlocks.Fermenter);
 		FORMER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityFormer(), ModBlocks.Former);
-		
+
 		BATTERY_BASIC = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(type, StaticPowerTiers.BASIC), ModBlocks.BatteryBasic);
 		BATTERY_ADVANCED = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(type, StaticPowerTiers.ADVANCED), ModBlocks.BatteryAdvanced);
 		BATTERY_STATIC = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(type, StaticPowerTiers.STATIC), ModBlocks.BatteryStatic);
 		BATTERY_ENERGIZED = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(type, StaticPowerTiers.ENERGIZED), ModBlocks.BatteryEnergized);
 		BATTERY_LUMUM = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(type, StaticPowerTiers.LUMUM), ModBlocks.BatteryLumum);
 		BATTERY_CREATIVE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(type, StaticPowerTiers.CREATIVE), ModBlocks.BatteryCreative);
-		
+
 		TANK = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityTank(), ModBlocks.BasicTank);
 		PUMP = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityPump(), ModBlocks.Pump);
 
@@ -103,7 +109,13 @@ public class ModTileEntityTypes {
 		POWER_CABLE_LUMUM = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityPowerCable(type, StaticPowerTiers.LUMUM), ModBlocks.PowerCableLumum);
 		POWER_CABLE_CREATIVE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityPowerCable(type, StaticPowerTiers.CREATIVE), ModBlocks.PowerCableCreative);
 
-		ITEM_CABLE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityItemCable(), ModBlocks.ItemCable);
+		ITEM_CABLE_BASIC = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityItemCable(type, StaticPowerTiers.BASIC), ModBlocks.ItemCableBasic);
+		ITEM_CABLE_ADVANCED = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityItemCable(type, StaticPowerTiers.ADVANCED), ModBlocks.ItemCableAdvanced);
+		ITEM_CABLE_STATIC = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityItemCable(type, StaticPowerTiers.STATIC), ModBlocks.ItemCableStatic);
+		ITEM_CABLE_ENERGIZED = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityItemCable(type, StaticPowerTiers.ENERGIZED), ModBlocks.ItemCableEnergized);
+		ITEM_CABLE_LUMUM = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityItemCable(type, StaticPowerTiers.LUMUM), ModBlocks.ItemCableLumum);
+		ITEM_CABLE_CREATIVE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityItemCable(type, StaticPowerTiers.CREATIVE), ModBlocks.ItemCableCreative);
+
 		FLUID_CABLE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityFluidCable(type, 2.0f / 16.0f, 100), ModBlocks.FluidCable);
 		INDUSTRIAL_FLUID_CABLE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityFluidCable(type, 3.5f / 16.0f, 1000), ModBlocks.IndustrialFluidCable);
 

@@ -146,6 +146,7 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 		// Perform this on both the client and the server so the client updates any
 		// render changes (any conected cables).
 		world.setBlockState(pos, Blocks.AIR.getDefaultState(), 1 | 2);
+		world.markAndNotifyBlock(pos, world.getChunkAt(pos), world.getBlockState(pos), world.getBlockState(pos), 1 | 2);
 		return ActionResultType.SUCCESS;
 	}
 

@@ -60,11 +60,19 @@ public class ItemRoutingParcelClient {
 		return (float) moveTimer / moveTime;
 	}
 
+	public int getCurrentMoveTime() {
+		return moveTime;
+	}
+
 	public boolean incrementMoveTimer() {
 		if (moveTimer < moveTime) {
 			moveTimer++;
 		}
 		return moveTimer >= moveTime;
+	}
+
+	public boolean isHalfWayThroughPath() {
+		return moveTimer == moveTime / 2;
 	}
 
 	public static ItemRoutingParcelClient create(CompoundNBT nbt) {
@@ -79,6 +87,7 @@ public class ItemRoutingParcelClient {
 		containedItem.write(containedItemTag);
 		nbt.put("contained_item", containedItemTag);
 		nbt.putLong("id", id);
+		nbt.putInt("moveTimer", moveTimer);
 		nbt.putInt("move_time", moveTime);
 
 		if (inDirection != null) {
@@ -96,6 +105,7 @@ public class ItemRoutingParcelClient {
 		CompoundNBT containedItemTag = nbt.getCompound("contained_item");
 		containedItem = ItemStack.read(containedItemTag);
 		id = nbt.getLong("id");
+		moveTimer = nbt.getInt("moveTimer");
 		moveTime = nbt.getInt("move_time");
 		if (nbt.contains("in_direction")) {
 			inDirection = Direction.values()[nbt.getInt("in_direction")];

@@ -26,6 +26,7 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import theking530.common.utilities.SDMath;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
@@ -43,7 +44,7 @@ import theking530.staticpower.utilities.WorldUtilities;
 public class ItemNetworkModule extends AbstractCableNetworkModule {
 	private static final Logger LOGGER = LogManager.getLogger(ItemNetworkModule.class);
 	private static long CurrentPacketId;
-	private HashMap<BlockPos, LinkedList<ItemRoutingParcel>> ActiveParcels;
+	protected HashMap<BlockPos, LinkedList<ItemRoutingParcel>> ActiveParcels;
 
 	public ItemNetworkModule() {
 		super(CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
@@ -65,9 +66,17 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 				// Get the parcel.
 				ItemRoutingParcel currentPacket = entry.getValue().get(i);
 				// Increment the move time and stop tracking if the transfer returns true (in
-				// the case of a final insert, network transfer, or re-routing).
+				// the case of a final insert, network transfer, or re-routing). If we are half
+				// way through traversal (meaning, at a point where the item may visual exist
+				// the cable even if there isn't a cable there), check to see if the next
+				// position is still valid. If it is not, attempt to re-route.
 				if (currentPacket.incrementMoveTimer()) {
 					if (transferItemPacket(currentPacket)) {
+						entry.getValue().remove(i);
+					}
+				} else if (currentPacket.isHalfWayThroughPath()) {
+					if (!isParcelPathValid(currentPacket)) {
+						rerouteOrTransferParcel(currentPacket);
 						entry.getValue().remove(i);
 					}
 				}
@@ -86,6 +95,27 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 	}
 
 	/**
+	 * When networks join, add all the parcels in transit from this network to the
+	 * other one.
+	 */
+	@Override
+	public void onNetworksJoined(CableNetwork other) {
+		if (other.hasModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE)) {
+			ItemNetworkModule module = (ItemNetworkModule) other.getModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
+
+			for (Entry<BlockPos, LinkedList<ItemRoutingParcel>> entry : ActiveParcels.entrySet()) {
+				if (!module.ActiveParcels.containsKey(entry.getKey())) {
+					module.ActiveParcels.put(entry.getKey(), new LinkedList<ItemRoutingParcel>());
+				}
+				module.ActiveParcels.get(entry.getKey()).addAll(entry.getValue());
+			}
+
+			// Clear this module's parcels.
+			ActiveParcels.clear();
+		}
+	}
+
+	/**
 	 * Creates a new transfer request for the provided {@link ItemStack} and returns
 	 * the remains of what cannot be inserted. If an empty stack is return, that
 	 * indicates the whole of the provided stack will be transfered.
@@ -99,6 +129,26 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 	 * @return
 	 */
 	public ItemStack transferItemStack(ItemStack stack, BlockPos cablePosition, @Nullable Direction pulledFromDirection, boolean simulate) {
+		return transferItemStack(stack, cablePosition, pulledFromDirection, simulate, false);
+	}
+
+	/**
+	 * INTERNAL USE ONLY: Creates a new transfer request for the provided
+	 * {@link ItemStack} and returns the remains of what cannot be inserted. If an
+	 * empty stack is return, that indicates the whole of the provided stack will be
+	 * transfered.
+	 * 
+	 * @param stack               The stack to transfer.
+	 * @param cablePosition       The position of the cable.
+	 * @param pulledFromDirection The direction relative to the cable position that
+	 *                            the stack was pulled from.
+	 * @param simulate            If true, the process will stop once it is
+	 *                            determined what amount of items can be transfered.
+	 * @param startHalfWay        If true, the traversal beings half way through the
+	 *                            transfer process.
+	 * @return
+	 */
+	protected ItemStack transferItemStack(ItemStack stack, BlockPos cablePosition, @Nullable Direction pulledFromDirection, boolean simulate, boolean startHalfWay) {
 		// Mark the network manager as dirty.
 		CableNetworkManager.get(Network.getWorld()).markDirty();
 
@@ -107,11 +157,32 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 		BlockPos sourcePosition = pulledFromDirection != null ? cablePosition.offset(pulledFromDirection) : null;
 
 		// Calculate the path and see if its not null.
-		Path path = getPathForItem(stack, cablePosition, sourcePosition);
+		Path path = getPathForItem(stack, cablePosition, sourcePosition, false);
 		if (path != null) {
-			return routeItem(stack, path, pulledFromDirection, cablePosition, simulate);
+			return transferItemStack(stack, path, pulledFromDirection, simulate, startHalfWay);
 		}
 		return stack;
+	}
+
+	/**
+	 * INTERNAL USE ONLY: Creates a new transfer request with a provided path.
+	 * 
+	 * @param stack               The stack to transfer.
+	 * @param path                The path to send the item on.
+	 * @param pulledFromDirection The direction relative to the cable position that
+	 *                            the stack was pulled from.
+	 * @param simulate            If true, the process will stop once it is
+	 *                            determined what amount of items can be transfered.
+	 * @param startHalfWay        If true, the traversal beings half way through the
+	 *                            transfer process.
+	 * @return
+	 */
+	protected ItemStack transferItemStack(ItemStack stack, Path path, @Nullable Direction pulledFromDirection, boolean simulate, boolean startHalfWay) {
+		// Mark the network manager as dirty.
+		CableNetworkManager.get(Network.getWorld()).markDirty();
+
+		// Route the item.
+		return routeItem(stack, path, pulledFromDirection, path.getSourceCableLocation(), simulate, startHalfWay);
 	}
 
 	/**
@@ -161,7 +232,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 				ItemStack pulledAmount = sourceInv.extractItem(targetSource.getInventorySlot(), maxExtract, true);
 
 				// Attempt to route that amount, and return the actual amount routed.
-				ItemStack actuallyTransfered = routeItem(pulledAmount, shortestPath, targetSource.getDestinationWrapper().getDestinationSide().getOpposite(), targetSource.getDestinationWrapper().getConnectedCable(), false);
+				ItemStack actuallyTransfered = routeItem(pulledAmount, shortestPath, targetSource.getDestinationWrapper().getDestinationSide().getOpposite(), targetSource.getDestinationWrapper().getConnectedCable(), false, false);
 
 				// Then, extract the actual amount routed.
 				sourceInv.extractItem(targetSource.getInventorySlot(), pulledAmount.getCount() - actuallyTransfered.getCount(), false);
@@ -194,7 +265,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 		}
 	}
 
-	protected ItemStack routeItem(ItemStack stack, Path path, Direction pulledFromDirection, BlockPos sourceCablePosition, boolean simulate) {
+	protected ItemStack routeItem(ItemStack stack, Path path, Direction pulledFromDirection, BlockPos sourceCablePosition, boolean simulate, boolean startHalfWay) {
 		// Get the destination inventory.
 		TileEntity destinationTe = Network.getWorld().getTileEntity(path.getDestinationLocation());
 		IItemHandler destInventory = destinationTe.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, path.getDestinationDirection().getOpposite()).orElse(null);
@@ -219,19 +290,39 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 					// Create the new item routing packet and initialize it with the transfer speed
 					// of the cable it was pulled out of.
 					ItemRoutingParcel packet = new ItemRoutingParcel(CurrentPacketId, stackToTransfer, path, pulledFromDirection.getOpposite());
-					packet.setMovementSpeed(getItemCableComponentAtPosition(sourceCablePosition).getTransferSpeed());
+					packet.setMovementTime(ItemCableComponent.BASE_MOVE_TIME);
 
 					// Add the packet to the list of active packets.
-					addRoutingParcel(packet);
+					addRoutingParcel(packet, startHalfWay);
 
 					// Tell the cable component at the cable's location that it is transferring an
 					// item (for client rendering purposes only).
-					getItemCableComponentAtPosition(sourceCablePosition).addTransferingItem(packet);
+					sendTransferingPacketToCable(sourceCablePosition, packet);
 					return simulatedStack;
 				}
 			}
 		}
 		return stack;
+	}
+
+	protected boolean sendTransferingPacketToCable(BlockPos position, ItemRoutingParcel parcel) {
+		ItemCableComponent cable = getItemCableComponentAtPosition(position);
+		if (cable != null) {
+			cable.addTransferingItem(parcel);
+			return true;
+		}
+		LOGGER.warn(String.format("Attempted to send add item packet to item cable at position: %1$s that does not exist."), position);
+		return false;
+	}
+
+	protected boolean sendRemoveTransferingPacketToCable(BlockPos position, long parcelId) {
+		ItemCableComponent cable = getItemCableComponentAtPosition(position);
+		if (cable != null) {
+			cable.removeTransferingItem(parcelId);
+			return true;
+		}
+		LOGGER.warn(String.format("Attempted to send update item removal update packet to item cable at position: %1$s that does not exist."), position);
+		return false;
 	}
 
 	/**
@@ -247,7 +338,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 
 		// If the next position is neither a cable in this network nor a destination,
 		// re-route it.
-		if (!Network.getGraph().getCables().containsKey(nextPosition) && !Network.getGraph().getDestinations().containsKey(nextPosition)) {
+		if (!isParcelPathValid(packet)) {
 			rerouteOrTransferParcel(packet);
 			return true;
 		} else if (packet.isAtFinalCable()) {
@@ -262,7 +353,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 				IItemHandler outputInventory = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, packet.getNextEntry().getDirectionOfEntry().getOpposite()).orElse(null);
 				if (outputInventory != null) {
 					ItemStack output = InventoryUtilities.insertItemIntoInventory(outputInventory, packet.getContainedItem(), false);
-					getItemCableComponentAtPosition(packet.getCurrentEntry().getPosition()).removeTransferingItem(packet.getId());
+					sendRemoveTransferingPacketToCable(packet.getCurrentEntry().getPosition(), packet.getId());
 					if (!output.isEmpty()) {
 						handlePartialInsert(output, packet);
 					}
@@ -273,13 +364,72 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 			return true;
 		} else {
 			// Move the parcel one cable forward.
-			getItemCableComponentAtPosition(packet.getCurrentEntry().getPosition()).removeTransferingItem(packet.getId());
+			sendRemoveTransferingPacketToCable(packet.getCurrentEntry().getPosition(), packet.getId());
 			packet.incrementCurrentPathIndex();
-			packet.setMovementSpeed(getItemCableComponentAtPosition(packet.getCurrentEntry().getPosition()).getTransferSpeed());
-			getItemCableComponentAtPosition(packet.getCurrentEntry().getPosition()).addTransferingItem(packet);
+
+			// Get the current and next max move times (how many ticks it takes to travelt
+			// through a single pipe).
+			int currentMoveTime = packet.getCurrentMoveTime();
+			int nextPipeMinMoveTime = CableNetworkManager.get(Network.getWorld()).getCable(packet.getCurrentEntry().getPosition()).getIntProperty(ItemCableComponent.ITEM_CABLE_MINIMUM_MOVE_TIME);
+
+			// If our current move time is lower than the move time allowed by the next
+			// pipe, we have to slow down (apply friction). If we are taking longer than the
+			// next pipe allows, that means we can speed up (accelerate). We clamp because
+			// we cannot go faster than the next
+			// pipe's min move time, and we cannot go slower than the maximum default move
+			// time.
+			if (currentMoveTime < nextPipeMinMoveTime) {
+				currentMoveTime *= CableNetworkManager.get(Network.getWorld()).getCable(packet.getCurrentEntry().getPosition()).getFloatProperty(ItemCableComponent.ITEM_CABLE_FRICTION_FACTOR);
+				currentMoveTime = SDMath.clamp(currentMoveTime, 2, nextPipeMinMoveTime);
+			} else if (currentMoveTime > nextPipeMinMoveTime) {
+				currentMoveTime *= CableNetworkManager.get(Network.getWorld()).getCable(packet.getCurrentEntry().getPosition()).getFloatProperty(ItemCableComponent.ITEM_CABLE_ACCELERATION_FACTOR);
+				currentMoveTime = SDMath.clamp(currentMoveTime, nextPipeMinMoveTime, ItemCableComponent.BASE_MOVE_TIME);
+			}
+
+			packet.setMovementTime(currentMoveTime);
+			sendTransferingPacketToCable(packet.getCurrentEntry().getPosition(), packet);
 		}
 
 		return false;
+	}
+
+	/**
+	 * Checks to see if the provided parcel's path is valid. Only call this if you
+	 * know the parcel is still has another cable to go to. If its in the last cable
+	 * before the destination, calling this will cause an error.
+	 * 
+	 * @param parcel The parcel to check for.
+	 * @return Returns true if the parcel path is valid, false otherwise.
+	 */
+	protected boolean isParcelPathValid(ItemRoutingParcel parcel) {
+		// If the current position's tile entity is null, return false.
+		if (Network.getWorld().getTileEntity(parcel.getCurrentEntry().getPosition()) == null) {
+			return false;
+		}
+
+		// Get the next position.
+		BlockPos nextPosition = parcel.getNextEntry().getPosition();
+
+		// If the next position's tile entity is null, return false.
+		if (Network.getWorld().getTileEntity(nextPosition) == null) {
+			return false;
+		}
+
+		// If the next position is neither a
+		// cable in this network nor a destination,
+		// return false.
+		if (!Network.getGraph().getCables().containsKey(nextPosition) && !Network.getGraph().getDestinations().containsKey(nextPosition)) {
+			return false;
+		}
+
+		// If the next position is a cable, make sure its not disabled on the side we
+		// need to enter it from.
+		if (CableNetworkManager.get(Network.getWorld()).isTrackingCable(parcel.getNextEntry().getPosition())) {
+			return !CableNetworkManager.get(Network.getWorld()).getCable(parcel.getNextEntry().getPosition()).isDisabledOnSide(parcel.getOutDirection().getOpposite());
+		}
+
+		// If we pass all the previous checks, return true.
+		return true;
 	}
 
 	/**
@@ -311,18 +461,34 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 	protected void rerouteOrTransferParcel(ItemRoutingParcel parcel) {
 		// First, remove this parcel from the current cable.
 		if (getItemCableComponentAtPosition(parcel.getCurrentEntry().getPosition()) != null) {
-			getItemCableComponentAtPosition(parcel.getCurrentEntry().getPosition()).removeTransferingItem(parcel.getId());
+			sendRemoveTransferingPacketToCable(parcel.getCurrentEntry().getPosition(), parcel.getId());
 		} else {
 			LOGGER.error(String.format("Encountered an invalid item cable at current parcel entry location: %1$s.", parcel.getCurrentEntry().getPosition()));
 		}
 
-		// Check if the parcel is still in this network. If it is, just reroute it or
+		// Check if the parcel's current position is still in this network. If it is,
+		// just reroute it or
 		// drop it. If not, transfer it to another network if possible. If not, drop it.
 		if (isParcelStillInNetwork(parcel)) {
-			ItemStack transferedAmount = transferItemStack(parcel.getContainedItem(), parcel.getCurrentEntry().getPosition(), parcel.getCurrentEntry().getDirectionOfEntry(), false);
-			// If no items were able to be transfered, just drop the parcel in to the world.
-			if (transferedAmount.getCount() == parcel.getContainedItem().getCount()) {
-				WorldUtilities.dropItem(Network.getWorld(), parcel.getCurrentEntry().getPosition(), transferedAmount);
+			// First try to reroute it to the closest valid location.
+			ItemStack remainingAmount = transferItemStack(parcel.getContainedItem(), parcel.getCurrentEntry().getPosition(), parcel.getCurrentEntry().getDirectionOfEntry(), false, true);
+
+			// If no items were able to be transfered,to the original location, attempt to
+			// route it back to the source location.
+			if (remainingAmount.getCount() == parcel.getContainedItem().getCount()) {
+				// Get a path back to the source location. If there is a path, start moving in
+				// the opposite direction we came in from. This will be the direction back to
+				// the source.
+				Path pathToSource = getPathForItem(parcel.getContainedItem(), parcel.getCurrentEntry().getPosition(), parcel.getPath().getSourceCableLocation(), true);
+				if (pathToSource != null) {
+					remainingAmount = transferItemStack(parcel.getContainedItem(), pathToSource, parcel.getInDirection(), false, parcel.isHalfWayThroughPath());
+				}
+
+				// If we were unable to handle any items, drop the remaining amount into the
+				// world.
+				if (remainingAmount.getCount() == parcel.getContainedItem().getCount()) {
+					WorldUtilities.dropItem(Network.getWorld(), parcel.getCurrentEntry().getPosition(), remainingAmount);
+				}
 			}
 		} else {
 			if (!transferParcelToAnotherNetwork(parcel)) {
@@ -342,7 +508,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 	 */
 	protected void handlePartialInsert(ItemStack remainingItems, ItemRoutingParcel parcel) {
 		// First, remove this parcel from the current cable.
-		getItemCableComponentAtPosition(parcel.getCurrentEntry().getPosition()).removeTransferingItem(parcel.getId());
+		sendRemoveTransferingPacketToCable(parcel.getCurrentEntry().getPosition(), parcel.getId());
 
 		// Loop until we're able to fully transfer the parcel OR we run out of options.
 		ItemStack lastTransferedAmount = ItemStack.EMPTY;
@@ -376,7 +542,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 		}
 
 		// Get the item we have to transfer.
-		ItemStack transferedAmount = parcel.getContainedItem();
+		ItemStack remainingAmount = parcel.getContainedItem();
 
 		// Check to ensure that the other cable has a network.
 		CableNetwork otherNetwork = otherNetworkCable.getNetwork();
@@ -389,18 +555,32 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 
 			// Loop until we're able to fully transfer the parcel OR we run out of options.
 			ItemStack lastTransferedAmount = ItemStack.EMPTY;
-			while (lastTransferedAmount.getCount() != transferedAmount.getCount()) {
-				lastTransferedAmount = transferedAmount;
-				transferedAmount = otherItemModule.transferItemStack(parcel.getContainedItem(), parcel.getCurrentEntry().getPosition(), parcel.getCurrentEntry().getDirectionOfEntry(), false);
-				if (transferedAmount.isEmpty()) {
+			while (lastTransferedAmount.getCount() != remainingAmount.getCount()) {
+				lastTransferedAmount = remainingAmount;
+
+				// Try to send the parcel to the nearest location.
+				remainingAmount = otherItemModule.transferItemStack(parcel.getContainedItem(), parcel.getCurrentEntry().getPosition(), parcel.getCurrentEntry().getDirectionOfEntry(), false, false);
+
+				// If there are still remaining items, try to use the other network to return
+				// the parcel to it's sender.
+				if (!remainingAmount.isEmpty()) {
+					Path pathToSource = otherItemModule.getPathForItem(parcel.getContainedItem(), parcel.getCurrentEntry().getPosition(), parcel.getPath().getSourceCableLocation(), true);
+					if (pathToSource != null) {
+						remainingAmount = otherItemModule.transferItemStack(parcel.getContainedItem(), pathToSource, parcel.getInDirection(), false, parcel.isHalfWayThroughPath());
+					}
+
+				}
+
+				// If we transfered all the items, then return.
+				if (remainingAmount.isEmpty()) {
 					break;
 				}
 			}
 		}
 
 		// If there are still items remaining, drop them on the ground.
-		if (!transferedAmount.isEmpty()) {
-			WorldUtilities.dropItem(Network.getWorld(), parcel.getCurrentEntry().getPosition(), transferedAmount);
+		if (!remainingAmount.isEmpty()) {
+			WorldUtilities.dropItem(Network.getWorld(), parcel.getCurrentEntry().getPosition(), remainingAmount);
 		}
 
 		return true;
@@ -443,12 +623,16 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 	 * 
 	 * @param item The itemstack to transfer.
 	 * @paramcablePosition The position the itemstack is coming from.
-	 * @param sourcePosition The position the itemstack was actually pulled from.
-	 *                       Used to ensure we don't get a path back to the pulled
-	 *                       from position. Can be null.
+	 * @param sourcePosition          The position the itemstack was actually pulled
+	 *                                from. Used to ensure we don't get a path back
+	 *                                to the pulled from position. Can be null.
+	 * @param ignoreCableRestrictions If true, this will not check if the cable can
+	 *                                receive insert. This is only used when finding
+	 *                                paths for items that need to be returned to an
+	 *                                inventory they were extracted from.
 	 * @return The closest path if one exists.
 	 */
-	protected @Nullable Path getPathForItem(ItemStack item, BlockPos cablePosition, @Nullable BlockPos sourcePosition) {
+	protected @Nullable Path getPathForItem(ItemStack item, BlockPos cablePosition, @Nullable BlockPos sourcePosition, boolean ignoreCableRestrictions) {
 		// Preallocate the shortest values.
 		Path shortestPath = null;
 		int shortestPathLength = Integer.MAX_VALUE;
@@ -464,38 +648,68 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 				continue;
 			}
 
-			// Get all the potential paths.
-			List<Path> paths = Network.getPathCache().getPaths(cablePosition, dest.getPos(), CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
+			// Get the shortest path to the destination.
+			Path path = getShortestPathToDestination(item, cablePosition, dest.getPos(), ignoreCableRestrictions);
 
-			// Continue if no path is found.
-			if (paths == null) {
-				continue;
+			// If this path is shorter, take this path.
+			if (path != null && path.getLength() < shortestPathLength) {
+				shortestPath = path;
+				shortestPathLength = path.getLength();
 			}
+		}
+		return shortestPath;
+	}
 
-			// Iterate through all the paths to the proposed tile entity.
-			for (Path path : paths) {
-				// Allocate an atomic bool to capture if a path is valid.
-				AtomicBoolean isValid = new AtomicBoolean(false);
+	/**
+	 * Gets the shortest item network path between the source and destination
+	 * position for the provided item.
+	 * 
+	 * @param stack                   The item to find a path for.
+	 * @param sourcePosition          The source position to start from.
+	 * @param destination             The position to travel to.
+	 * @param ignoreCableRestrictions If true, this will not check if the cable can
+	 *                                receive insert. This is only used when finding
+	 *                                paths for items that need to be returned to an
+	 *                                inventory they were extracted from.
+	 * @return The path if one exists, null otherwise.
+	 */
+	public @Nullable Path getShortestPathToDestination(ItemStack stack, BlockPos sourcePosition, BlockPos destination, boolean ignoreCableRestrictions) {
+		// Get all the potential paths.
+		List<Path> paths = Network.getPathCache().getPaths(sourcePosition, destination, CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
+		Path shortestPath = null;
+		int shortestPathLength = Integer.MAX_VALUE;
 
-				// If we can't insert through that cable, skip this path.
-				if (!canInsertThroughCable(item, path.getFinalCablePosition(), path.getFinalCableExitDirection())) {
+		// Continue if no path is found.
+		if (paths == null) {
+			return null;
+		}
+
+		// Iterate through all the paths to the proposed tile entity.
+		for (Path path : paths) {
+			// Allocate an atomic bool to capture if a path is valid.
+			AtomicBoolean isValid = new AtomicBoolean(false);
+
+			// If we can't insert through that cable, skip this path.
+			if (!ignoreCableRestrictions) {
+				if (!canInsertThroughCable(stack, path.getFinalCablePosition(), path.getFinalCableExitDirection())) {
 					continue;
 				}
+			}
 
-				// If we're able to insert into that inventory, set the atomic boolean.
-				dest.getTileEntity().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, path.getDestinationDirection().getOpposite()).ifPresent(inv -> {
-					isValid.set(InventoryUtilities.canPartiallyInsertItemIntoInventory(inv, item));
-				});
+			// If we're able to insert into that inventory, set the atomic boolean.
+			Network.getWorld().getTileEntity(destination).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, path.getDestinationDirection().getOpposite()).ifPresent(inv -> {
+				isValid.set(InventoryUtilities.canPartiallyInsertItemIntoInventory(inv, stack));
+			});
 
-				// If the atomic boolean is valid, then we have a valid path and we return it.
-				if (isValid.get()) {
-					if (path.getLength() < shortestPathLength) {
-						shortestPath = path;
-						shortestPathLength = path.getLength();
-					}
+			// If the atomic boolean is valid, then we have a valid path and we return it.
+			if (isValid.get()) {
+				if (path.getLength() < shortestPathLength) {
+					shortestPath = path;
+					shortestPathLength = path.getLength();
 				}
 			}
 		}
+
 		return shortestPath;
 	}
 
@@ -538,7 +752,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 		return validDestinations;
 	}
 
-	protected void addRoutingParcel(ItemRoutingParcel parcel) {
+	protected void addRoutingParcel(ItemRoutingParcel parcel, boolean startHalfWay) {
 		// If we aren't tracking and parcels for the destination, create an empty linked
 		// list.
 		if (!ActiveParcels.containsKey(parcel.getPath().getDestinationLocation())) {
@@ -548,9 +762,10 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 		// Add the parcel.
 		ActiveParcels.get(parcel.getPath().getDestinationLocation()).add(parcel);
 
-		// Increment the parcel's current path inde, set its speedx and increment th
+		// Increment the parcel's current path index, set its speed and increment the
 		// static parcel id.
-		parcel.incrementCurrentPathIndex();
+		parcel.incrementCurrentPathIndex(startHalfWay);
+
 		CurrentPacketId++;
 	}
 

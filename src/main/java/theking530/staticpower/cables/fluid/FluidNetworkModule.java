@@ -79,7 +79,7 @@ public class FluidNetworkModule extends AbstractCableNetworkModule {
 
 			// Get the transfer rate.
 			ServerCable cable = CableNetworkManager.get(world).getCable(destination.getConnectedCable());
-			int transferRate = cable.getProperty(FluidCableComponent.FLUID_RATE_DATA_TAG_KEY);
+			int transferRate = cable.getIntProperty(FluidCableComponent.FLUID_RATE_DATA_TAG_KEY);
 
 			// Calculate how much fluid we can offer. If it is less than or equal to 0, do
 			// nothing.
@@ -125,7 +125,7 @@ public class FluidNetworkModule extends AbstractCableNetworkModule {
 		for (ServerCable cable : mapper.getDiscoveredCables()) {
 			// If they have a fluid cable component, get the capacity.
 			if (cable.containsProperty(FluidCableComponent.FLUID_CAPACITY_DATA_TAG_KEY)) {
-				total += cable.getProperty(FluidCableComponent.FLUID_CAPACITY_DATA_TAG_KEY);
+				total += cable.getIntProperty(FluidCableComponent.FLUID_CAPACITY_DATA_TAG_KEY);
 			}
 		}
 

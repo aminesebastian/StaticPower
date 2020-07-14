@@ -20,6 +20,7 @@ public class ItemRoutingParcel extends ItemRoutingParcelClient {
 		this.path = path;
 		this.outDirection = getCurrentEntry().getDirectionOfEntry();
 		this.currentPathIndex = 0;
+
 	}
 
 	public ItemRoutingParcel(CompoundNBT nbt) {
@@ -35,6 +36,10 @@ public class ItemRoutingParcel extends ItemRoutingParcelClient {
 	}
 
 	public void incrementCurrentPathIndex() {
+		incrementCurrentPathIndex(false);
+	}
+
+	public void incrementCurrentPathIndex(boolean startHalfWay) {
 		if (currentPathIndex < path.getLength() - 1) {
 			if (getCurrentEntry().getDirectionOfEntry() != null) { // The direction of entry will be null for the first cable in. We use the one
 																	// provided in the constructor instead.
@@ -42,6 +47,10 @@ public class ItemRoutingParcel extends ItemRoutingParcelClient {
 			}
 			outDirection = getNextEntry().getDirectionOfEntry();
 			currentPathIndex++;
+
+			if (startHalfWay) {
+				moveTimer = moveTime / 2;
+			}
 		}
 	}
 
@@ -78,7 +87,7 @@ public class ItemRoutingParcel extends ItemRoutingParcelClient {
 	 * 
 	 * @param moveTime
 	 */
-	public void setMovementSpeed(int moveTime) {
+	public void setMovementTime(int moveTime) {
 		this.moveTime = moveTime;
 		moveTimer = 0;
 	}
