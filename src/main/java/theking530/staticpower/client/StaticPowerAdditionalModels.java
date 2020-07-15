@@ -37,27 +37,23 @@ public class StaticPowerAdditionalModels {
 
 	public static final ResourceLocation CABLE_ITEM_BASIC_STRAIGHT = registerModel("block/cables/item/basic/straight");
 	public static final ResourceLocation CABLE_ITEM_BASIC_EXTENSION = registerModel("block/cables/item/basic/extension");
-	public static final ResourceLocation CABLE_ITEM_BASIC_ATTACHMENT = registerModel("block/cables/item/basic/attachment");
 
 	public static final ResourceLocation CABLE_ITEM_ADVANCED_STRAIGHT = registerModel("block/cables/item/advanced/straight");
 	public static final ResourceLocation CABLE_ITEM_ADVANCED_EXTENSION = registerModel("block/cables/item/advanced/extension");
-	public static final ResourceLocation CABLE_ITEM_ADVANCED_ATTACHMENT = registerModel("block/cables/item/advanced/attachment");
 
 	public static final ResourceLocation CABLE_ITEM_STATIC_STRAIGHT = registerModel("block/cables/item/static/straight");
 	public static final ResourceLocation CABLE_ITEM_STATIC_EXTENSION = registerModel("block/cables/item/static/extension");
-	public static final ResourceLocation CABLE_ITEM_STATIC_ATTACHMENT = registerModel("block/cables/item/static/attachment");
 
 	public static final ResourceLocation CABLE_ITEM_ENERGIZED_STRAIGHT = registerModel("block/cables/item/energized/straight");
 	public static final ResourceLocation CABLE_ITEM_ENERGIZED_EXTENSION = registerModel("block/cables/item/energized/extension");
-	public static final ResourceLocation CABLE_ITEM_ENERGIZED_ATTACHMENT = registerModel("block/cables/item/energized/attachment");
 
 	public static final ResourceLocation CABLE_ITEM_LUMUM_STRAIGHT = registerModel("block/cables/item/lumum/straight");
 	public static final ResourceLocation CABLE_ITEM_LUMUM_EXTENSION = registerModel("block/cables/item/lumum/extension");
-	public static final ResourceLocation CABLE_ITEM_LUMUM_ATTACHMENT = registerModel("block/cables/item/lumum/attachment");
 
 	public static final ResourceLocation CABLE_ITEM_CREATIVE_STRAIGHT = registerModel("block/cables/item/creative/straight");
 	public static final ResourceLocation CABLE_ITEM_CREATIVE_EXTENSION = registerModel("block/cables/item/creative/extension");
-	public static final ResourceLocation CABLE_ITEM_CREATIVE_ATTACHMENT = registerModel("block/cables/item/creative/attachment");
+
+	public static final ResourceLocation CABLE_ITEM_DEFAULT_ATTACHMENT = registerModel("block/cables/item/attachment");
 
 	public static final ResourceLocation CABLE_DIGISTORE_STRAIGHT = registerModel("block/cables/digistore/straight");
 	public static final ResourceLocation CABLE_DIGISTORE_EXTENSION = registerModel("block/cables/digistore/extension");
@@ -105,7 +101,7 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation ENERGIZED_DIGISTORE_SINGULAR_CARD = registerModel("block/machines/digistore_card_singular_energized");
 	public static final ResourceLocation LUMUM_DIGISTORE_SINGULAR_CARD = registerModel("block/machines/digistore_card_singular_lumum");
 	public static final ResourceLocation CREATIVE_DIGISTORE_SINGULAR_CARD = registerModel("block/machines/digistore_card_singular_creative");
-	
+
 	public static void regsiterModels() {
 		for (ResourceLocation model : MODELS) {
 			ModelLoader.addSpecialModel(model);

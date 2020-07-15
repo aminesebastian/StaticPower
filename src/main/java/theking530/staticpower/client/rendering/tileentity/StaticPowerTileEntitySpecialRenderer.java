@@ -51,6 +51,7 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 		Direction facing = tileEntity.getFacingDirection();
 		BlockPos tileEntityPos = tileEntity.getPos();
 		ItemRenderer = Minecraft.getInstance().getItemRenderer();
+
 		matrixStack.push();
 
 		if (facing == Direction.WEST) {
@@ -113,25 +114,46 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 	}
 
 	protected void drawFlatItemInWorld(TileEntityDigistore tile, @Nonnull ItemStack itemStack, Vector3D offset, Vector2D scale, float partialTickTime, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+		// Skip empty items.
+		if (itemStack.isEmpty()) {
+			return;
+		}
+
+		// Move and scale the item given the provided values.
 		matrixStack.push();
 		matrixStack.translate(offset.getX(), offset.getY(), offset.getZ());
 		matrixStack.scale(scale.getX(), scale.getY(), 0.01f);
 
+		// Get the baked model and check if it wants to render the item in 3d or 2d.
 		IBakedModel itemModel = Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(itemStack, null, null);
 		boolean render3D = itemModel.isGui3d();
 
+		// Thank the lord for Storage Drawers
+		// (https://github.com/jaquadro/StorageDrawers/blob/1.15/src/main/java/com/jaquadro/minecraft/storagedrawers/client/renderer/TileEntityDrawersRenderer.java).
+		// Spent hours on the bug that's caused when you dont have this called twice.
+		if (buffer instanceof IRenderTypeBuffer.Impl) {
+			((IRenderTypeBuffer.Impl) buffer).finish();
+		}
+
+		// Set the correct lighting values.
 		if (render3D) {
 			RenderHelper.setupGui3DDiffuseLighting();
 		} else {
 			RenderHelper.setupGuiFlatDiffuseLighting();
 		}
 
+		// Invert the normals of the model on the Y-Axis.
 		matrixStack.getLast().getNormal().set(Matrix3f.makeScaleMatrix(1, -1, 1));
+
+		// Render the item.
 		Minecraft.getInstance().getItemRenderer().renderItem(itemStack, ItemCameraTransforms.TransformType.GUI, false, matrixStack, buffer, combinedLight, combinedOverlay, itemModel);
+
+		// Finish the buffer again (thanks again to Storage Drawers).
 		if (buffer instanceof IRenderTypeBuffer.Impl) {
 			((IRenderTypeBuffer.Impl) buffer).finish();
 		}
 
+		// Pop the matrix we pushed.
 		matrixStack.pop();
 	}
 
