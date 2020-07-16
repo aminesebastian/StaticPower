@@ -1,5 +1,5 @@
 {
-	"parent":"staticpower:block/machines/base_digistore_card",
+	"parent":"staticpower:block/machines/base_digistore_singular_card",
 	"textures": {
 		"0": "staticpower:blocks/digistore/digistore_card_singular_static"
 	}

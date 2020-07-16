@@ -15,7 +15,7 @@ import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore
 
 public class TileEntityDigistoreServerRack extends BaseDigistoreTileEntity {
 	/** KEEP IN MIND: This is purely cosmetic and on the client side. */
-	public static final ModelProperty<ItemStack[]> CARD_RENDERING_STATE = new ModelProperty<ItemStack[]>();
+	public static final ModelProperty<ServerRackRenderingState> CARD_RENDERING_STATE = new ModelProperty<ServerRackRenderingState>();
 	public final DigistoreInventoryComponent inventory;
 
 	public TileEntityDigistoreServerRack() {
@@ -30,7 +30,7 @@ public class TileEntityDigistoreServerRack extends BaseDigistoreTileEntity {
 	@Override
 	public IModelData getModelData() {
 		ModelDataMap.Builder builder = new ModelDataMap.Builder();
-		return builder.withInitial(CARD_RENDERING_STATE, getCards()).build();
+		return builder.withInitial(CARD_RENDERING_STATE, new ServerRackRenderingState(getCards(), inventory.getFilledRatio())).build();
 	}
 
 	protected ItemStack[] getCards() {

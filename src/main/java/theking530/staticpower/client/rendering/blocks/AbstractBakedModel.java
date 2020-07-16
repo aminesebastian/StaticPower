@@ -1,5 +1,6 @@
 package theking530.staticpower.client.rendering.blocks;
 
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
@@ -100,21 +101,30 @@ public abstract class AbstractBakedModel implements IBakedModel {
 	}
 
 	protected List<BakedQuad> transformQuads(IBakedModel model, Vector3f translation, Quaternion rotation, Direction drawingSide, BlockState state, Random rand) {
+		// Build the output.
+		if (model != null) {
+			return transformQuads(model.getQuads(state, drawingSide, rand, EmptyModelData.INSTANCE), translation, rotation);
+		}
+
+		return Collections.emptyList();
+	}
+
+	protected List<BakedQuad> transformQuads(List<BakedQuad> inQuads, Vector3f translation, Quaternion rotation) {
 		ImmutableList.Builder<BakedQuad> quads = ImmutableList.builder();
 
 		TransformationMatrix transformation = new TransformationMatrix(translation, rotation, null, null).blockCenterToCorner();
-		
+
 		// Build the output.
-		if (model != null) {
+		if (inQuads != null && inQuads.size() > 0) {
 			try {
-				for (BakedQuad quad : model.getQuads(state, drawingSide, rand, EmptyModelData.INSTANCE)) {
+				for (BakedQuad quad : inQuads) {
 					BakedQuadBuilder builder = new BakedQuadBuilder(quad.func_187508_a());
 					TRSRTransformer transformer = new TRSRTransformer(builder, transformation);
 					quad.pipe(transformer);
 					quads.add(builder.build());
 				}
 			} catch (Exception e) {
-				LOGGER.error(String.format("An error occured when attempting to translate the quads of a model. Model: %1$s.", model), e);
+				LOGGER.error("An error occured when attempting to translate the quads of a model.", e);
 			}
 		}
 

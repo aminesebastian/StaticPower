@@ -41,7 +41,7 @@ public class DigistoreMonoCard extends DigistoreCard {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-		int capacity = StaticPowerDataRegistry.getTier(tierType).getDigistoreCapacity() * MAX_UNIQUE_ITEM_TYPES_PER_CARD;
+		int capacity = StaticPowerDataRegistry.getTier(tierType).getDigistoreCapacity() * (MAX_UNIQUE_ITEM_TYPES_PER_CARD / 8);
 
 		// Cover in case of integer overflow, we max at int.max.
 		return new DigistoreInventoryCapabilityProvider(stack, 1, capacity < 0 ? Integer.MAX_VALUE : capacity, nbt);
