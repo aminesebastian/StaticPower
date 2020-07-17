@@ -8,9 +8,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.base.Stopwatch;
 
-import theking530.staticpower.crafting.wrappers.AbstractStaticPowerRecipe;
-import theking530.staticpower.crafting.wrappers.StaticPowerRecipeRegistry;
-import theking530.staticpower.crafting.wrappers.lumbermill.LumberMillRecipe;
+import theking530.staticpower.data.crafting.wrappers.AbstractStaticPowerRecipe;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeRegistry;
+import theking530.staticpower.data.crafting.wrappers.lumbermill.LumberMillRecipe;
 
 public class JEILumberMillRecipeHandler {
 	private static final Logger LOGGER = LogManager.getLogger(JEILumberMillRecipeHandler.class);

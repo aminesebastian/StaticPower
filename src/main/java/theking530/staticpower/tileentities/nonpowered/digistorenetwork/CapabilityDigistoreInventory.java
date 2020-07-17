@@ -6,7 +6,6 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.items.IItemHandlerModifiable;
 
 public class CapabilityDigistoreInventory {
 	@CapabilityInject(IDigistoreInventory.class)
@@ -21,8 +20,6 @@ public class CapabilityDigistoreInventory {
 
 			@Override
 			public void readNBT(Capability<IDigistoreInventory> capability, IDigistoreInventory instance, Direction side, INBT base) {
-				if (!(instance instanceof IItemHandlerModifiable))
-					throw new RuntimeException("IItemHandler instance does not implement IItemHandlerModifiable");
 				instance.deserializeNBT((CompoundNBT) base);
 			}
 		}, () -> new DigistoreInventory(0, 0));

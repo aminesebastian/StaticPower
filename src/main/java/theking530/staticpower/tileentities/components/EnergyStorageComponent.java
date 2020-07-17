@@ -7,18 +7,22 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import theking530.common.utilities.TriFunction;
+import theking530.staticpower.energy.CapabilityStaticVolt;
 import theking530.staticpower.energy.StaticPowerFEStorage;
+import theking530.staticpower.energy.StaticVoltHandler;
 
 public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	public enum EnergyManipulationAction {
 		PROVIDE, RECIEVE
 	}
 
-	protected StaticPowerFEStorage EnergyStorage;
+	protected final StaticVoltHandler VoltHandler;
+	protected final StaticPowerFEStorage EnergyStorage;
 	protected TriFunction<Integer, Direction, EnergyManipulationAction, Boolean> filter;
 	protected int lastEnergyStored;
 	protected int energyPerTick;
 	protected long lastUpdateTime;
+
 	private EnergyComponentCapabilityAccess capabilityAccessor;
 
 	public EnergyStorageComponent(String name, int capacity) {
@@ -32,7 +36,12 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	public EnergyStorageComponent(String name, int capacity, int maxInput, int maxExtract) {
 		super(name);
 		EnergyStorage = new StaticPowerFEStorage(capacity, maxInput, maxExtract);
+		VoltHandler = new StaticVoltHandler(1000, 5000);
 		capabilityAccessor = new EnergyComponentCapabilityAccess();
+	}
+
+	public StaticVoltHandler getStaticVoltHandler() {
+		return VoltHandler;
 	}
 
 	public StaticPowerFEStorage getStorage() {
@@ -59,6 +68,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 		EnergyStorage.readFromNbt(nbt);
+		VoltHandler.deserializeNBT(nbt.getCompound("volt_handler"));
 		energyPerTick = nbt.getInt("PerTick");
 	}
 
@@ -66,6 +76,8 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
 		EnergyStorage.writeToNbt(nbt);
+
+		nbt.put("volt_handler", VoltHandler.serializeNBT());
 
 		long ticksSinceLastUpdate = Math.max(getTileEntity().getWorld().getGameTime() - lastUpdateTime, 1);
 		int energyUsedPerTickSinceLastPacket = (int) ((EnergyStorage.getEnergyStored() - lastEnergyStored) / ticksSinceLastUpdate);
@@ -80,6 +92,8 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 		if (cap == CapabilityEnergy.ENERGY) {
 			capabilityAccessor.currentSide = side;
 			return LazyOptional.of(() -> capabilityAccessor).cast();
+		} else if (cap == CapabilityStaticVolt.STATIC_VOLT_CAPABILITY) {
+			return LazyOptional.of(() -> VoltHandler).cast();
 		}
 		return LazyOptional.empty();
 	}

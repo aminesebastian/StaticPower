@@ -38,6 +38,8 @@ import theking530.staticpower.tileentities.powered.poweredfurnace.ContainerPower
 import theking530.staticpower.tileentities.powered.poweredfurnace.GuiPoweredFurnace;
 import theking530.staticpower.tileentities.powered.poweredgrinder.ContainerPoweredGrinder;
 import theking530.staticpower.tileentities.powered.poweredgrinder.GuiPoweredGrinder;
+import theking530.staticpower.tileentities.powered.solidgenerator.ContainerSolidGenerator;
+import theking530.staticpower.tileentities.powered.solidgenerator.GuiSolidGenerator;
 import theking530.staticpower.tileentities.powered.treefarmer.ContainerTreeFarmer;
 import theking530.staticpower.tileentities.powered.treefarmer.GuiTreeFarmer;
 
@@ -53,6 +55,7 @@ public class ModContainerTypes {
 	public static ContainerType<ContainerTreeFarmer> TREE_FARMER_CONTAINER;
 	public static ContainerType<ContainerFormer> FORMER_CONTAINER;
 	public static ContainerType<ContainerBattery> BATTERY_CONTAINER;
+	public static ContainerType<ContainerSolidGenerator> SOLID_GENERATOR;
 
 	public static ContainerType<ContainerTank> TANK_CONTAINER;
 
@@ -77,6 +80,7 @@ public class ModContainerTypes {
 		FERMENTER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_fermenter", ContainerFermenter::new, GuiFermenter::new);
 		FORMER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_former", ContainerFormer::new, GuiFormer::new);
 		BATTERY_CONTAINER = StaticPowerRegistry.preRegisterContainer("battery", ContainerBattery::new, GuiBattery::new);
+		SOLID_GENERATOR = StaticPowerRegistry.preRegisterContainer("solid_generator", ContainerSolidGenerator::new, GuiSolidGenerator::new);
 
 		TANK_CONTAINER = StaticPowerRegistry.preRegisterContainer("tank", ContainerTank::new, GuiTank::new);
 

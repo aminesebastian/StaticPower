@@ -2,15 +2,20 @@ package theking530.staticpower.items;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import theking530.staticpower.blocks.ICustomModelSupplier;
+import theking530.staticpower.client.rendering.items.DigistoreMonoCardItemModel;
 import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.IDigistoreInventory;
 
-public class DigistoreMonoCard extends DigistoreCard {
+public class DigistoreMonoCard extends DigistoreCard implements ICustomModelSupplier {
 
 	public DigistoreMonoCard(String name, ResourceLocation tierType, ResourceLocation model) {
 		this(name, tierType, model, false);
@@ -45,5 +50,15 @@ public class DigistoreMonoCard extends DigistoreCard {
 
 		// Cover in case of integer overflow, we max at int.max.
 		return new DigistoreInventoryCapabilityProvider(stack, 1, capacity < 0 ? Integer.MAX_VALUE : capacity, nbt);
+	}
+
+	@Override
+	public boolean hasModelOverride(BlockState state) {
+		return true;
+	}
+
+	@Override
+	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
+		return new DigistoreMonoCardItemModel(existingModel);
 	}
 }

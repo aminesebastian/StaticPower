@@ -23,6 +23,7 @@ import theking530.staticpower.tileentities.powered.poweredfurnace.TileEntityPowe
 import theking530.staticpower.tileentities.powered.poweredgrinder.TileEntityPoweredGrinder;
 import theking530.staticpower.tileentities.powered.pump.TileEntityPump;
 import theking530.staticpower.tileentities.powered.solarpanels.TileEntitySolarPanel;
+import theking530.staticpower.tileentities.powered.solidgenerator.TileEntitySolidGenerator;
 import theking530.staticpower.tileentities.powered.treefarmer.TileEntityTreeFarm;
 
 public class ModTileEntityTypes {
@@ -66,6 +67,7 @@ public class ModTileEntityTypes {
 	public static TileEntityType<TileEntityTreeFarm> TREE_FARM;
 	public static TileEntityType<TileEntityFermenter> FERMENTER;
 	public static TileEntityType<TileEntityFormer> FORMER;
+	public static TileEntityType<TileEntitySolidGenerator> SOLID_GENERATOR;
 
 	public static TileEntityType<TileEntityBattery> BATTERY_BASIC;
 	public static TileEntityType<TileEntityBattery> BATTERY_ADVANCED;
@@ -91,6 +93,7 @@ public class ModTileEntityTypes {
 		TREE_FARM = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityTreeFarm(), ModBlocks.TreeFarmer);
 		FERMENTER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityFermenter(), ModBlocks.Fermenter);
 		FORMER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityFormer(), ModBlocks.Former);
+		SOLID_GENERATOR = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntitySolidGenerator(), ModBlocks.SolidGenerator);
 
 		BATTERY_BASIC = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(type, StaticPowerTiers.BASIC), ModBlocks.BatteryBasic);
 		BATTERY_ADVANCED = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(type, StaticPowerTiers.ADVANCED), ModBlocks.BatteryAdvanced);

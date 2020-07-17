@@ -99,18 +99,25 @@ public class ServerRackModel extends AbstractBakedModel {
 
 			// If we are rendering a mono card, render the filled bar.
 			if (side == null && cards[i].getItem() instanceof DigistoreMonoCard) {
+				// Get the digistore inventory.
+				IDigistoreInventory inv = DigistoreCard.getInventory(cards[i]);
+
+				// Get the filled percentage for the current card.
+				float filledPercentage = (float) inv.getTotalContainedCount() / inv.getItemCapacity();
+
 				// Get the model of the card bar.
-				IBakedModel barModel = Minecraft.getInstance().getModelManager().getModel(StaticPowerAdditionalModels.DIGISTORE_SINGULAR_CARD_BAR);
+				IBakedModel barModel;
+				if (filledPercentage < 1.0f) {
+					barModel = Minecraft.getInstance().getModelManager().getModel(StaticPowerAdditionalModels.DIGISTORE_SINGULAR_CARD_BAR);
+				} else {
+					barModel = Minecraft.getInstance().getModelManager().getModel(StaticPowerAdditionalModels.DIGISTORE_SINGULAR_CARD_BAR_FULL);
+				}
+				
+				// Adjust the filled percentage to work with the fill bar.
+				filledPercentage *= (4.75f / 16.0f);
 
 				// If there are quads for the bar model, render them.
 				if (barModel.getQuads(state, side, rand, EmptyModelData.INSTANCE).size() > 0) {
-					// Get the digistore inventory.
-					IDigistoreInventory inv = DigistoreCard.getInventory(cards[i]);
-
-					// Get the filled percentage for the current card.
-					float filledPercentage = (float) inv.getTotalContainedCount() / inv.getItemCapacity();
-					filledPercentage *= (4.75f / 16.0f);
-
 					// Create an array that we will populate with the bar's quad.
 					List<BakedQuad> barQuadList = new ArrayList<BakedQuad>();
 
