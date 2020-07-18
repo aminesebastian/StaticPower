@@ -14,6 +14,7 @@ public class ArrowProgressBar extends AbstractProgressBar {
 
 	@Override
 	public void renderBehindItems(int mouseX, int mouseY, float partialTicks) {
+		super.renderBehindItems(mouseX, mouseY, partialTicks);
 		if (machineProcessingComponent != null) {
 			if (lastValue != machineProcessingComponent.getCurrentProcessingTime()) {
 				lastValue = machineProcessingComponent.getCurrentProcessingTime();
@@ -35,6 +36,7 @@ public class ArrowProgressBar extends AbstractProgressBar {
 				interp += perSecond;
 			}
 		}
+
 
 		Vector2D screenSpacePosition = this.getScreenSpacePosition();
 		float adjustedProgress = 0.6875f * interp / (float) maxProgress;

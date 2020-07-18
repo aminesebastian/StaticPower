@@ -128,9 +128,9 @@ public class TileEntityFermenter extends TileEntityMachine {
 	}
 
 	public void process() {
-		if (processingComponent.isProcessing()) {
+		if (processingComponent.isProcessing() && !processingComponent.isDone()) {
 			if (!getWorld().isRemote) {
-				energyStorage.getStorage().extractEnergy(powerCost, false);
+				energyStorage.usePower(powerCost);
 			}
 		}
 	}

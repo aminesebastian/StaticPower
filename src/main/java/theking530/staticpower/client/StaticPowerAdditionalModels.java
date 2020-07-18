@@ -9,7 +9,7 @@ import theking530.staticpower.utilities.Reference;
 public class StaticPowerAdditionalModels {
 	public static final HashSet<ResourceLocation> MODELS = new HashSet<ResourceLocation>();
 
-	public static final ResourceLocation CABLE_FULL_COVER = registerModel("block/cables/cable_cover_full");
+	public static final ResourceLocation DEFAULT_MACHINE_MODEL = registerModel("block/machines/base_machine_model");
 
 	public static final ResourceLocation CABLE_POWER_BASIC_STRAIGHT = registerModel("block/cables/power/basic/straight");
 	public static final ResourceLocation CABLE_POWER_BASIC_EXTENSION = registerModel("block/cables/power/basic/extension");

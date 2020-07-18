@@ -15,6 +15,7 @@ public class GrinderProgressBar extends AbstractProgressBar {
 
 	@Override
 	public void renderBehindItems(int mouseX, int mouseY, float partialTicks) {
+		super.renderBehindItems(mouseX, mouseY, partialTicks);
 		if (machineProcessingComponent != null) {
 			if (lastValue != machineProcessingComponent.getCurrentProcessingTime()) {
 				lastValue = machineProcessingComponent.getCurrentProcessingTime();

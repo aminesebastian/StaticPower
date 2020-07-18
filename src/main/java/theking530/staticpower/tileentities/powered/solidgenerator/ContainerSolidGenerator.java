@@ -23,12 +23,12 @@ public class ContainerSolidGenerator extends StaticPowerTileEntityContainer<Tile
 	@Override
 	public void initializeContainer() {
 		// Input
-		this.addSlot(new StaticPowerContainerSlot(getTileEntity().inputInventory, 0, 36, 32));
+		this.addSlot(new StaticPowerContainerSlot(getTileEntity().inputInventory, 0, 80, 32));
 
 		// Upgrades
-		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 0, -24, 76));
-		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 1, -24, 94));
-		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 2, -24, 112));
+		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 0, 152, 16));
+		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 1, 152, 36));
+		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 2, 152, 56));
 
 		this.addPlayerInventory(getPlayerInventory(), 8, 84);
 		this.addPlayerHotbar(getPlayerInventory(), 8, 142);

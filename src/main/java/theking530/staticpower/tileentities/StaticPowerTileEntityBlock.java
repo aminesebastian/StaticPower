@@ -5,6 +5,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,6 +21,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.network.NetworkHooks;
 import theking530.common.wrench.RegularWrenchMode;
@@ -54,6 +57,12 @@ public abstract class StaticPowerTileEntityBlock extends StaticPowerBlock {
 	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 		world.setBlockState(pos, state.with(FACING, placer.getHorizontalFacing().getOpposite()), 2);
 		super.onBlockPlacedBy(world, pos, state, placer, stack);
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public RenderType getRenderType() {
+		return RenderType.getCutout();
 	}
 
 	@Override

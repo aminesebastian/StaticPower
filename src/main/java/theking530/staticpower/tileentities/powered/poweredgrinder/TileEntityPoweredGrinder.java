@@ -149,10 +149,10 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 
 	@Override
 	public void process() {
-		if (processingComponent.isProcessing()) {
+		if (processingComponent.isProcessing() && !processingComponent.isDone()) {
 			if (!getWorld().isRemote) {
 				getRecipe(internalInventory.getStackInSlot(0)).ifPresent(recipe -> {
-					energyStorage.getStorage().extractEnergy(recipe.getPowerCost(), false);
+					energyStorage.usePower(recipe.getPowerCost());
 				});
 			}
 		}

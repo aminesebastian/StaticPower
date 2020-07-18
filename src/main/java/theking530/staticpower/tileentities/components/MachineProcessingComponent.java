@@ -49,8 +49,7 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 			if (canContinueProcessingCallback.get()) {
 				if (currentProcessingTime < processingTime) {
 					currentProcessingTime++;
-				}
-				if (currentProcessingTime >= processingTime) {
+				} else {
 					if (processingCompleted()) {
 						currentProcessingTime = 0;
 						processing = false;
@@ -113,6 +112,23 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		return processingEndedCallback.get();
 	}
 
+	/**
+	 * Returns true if the current processing time is equal to the maximum
+	 * processing time for this component. This is useful to check in combination
+	 * with {@link #isProcessing()} to consider whether or not to consumer power.
+	 * For example, {@link #isProcessing()} may return true even when
+	 * {@link #isDone()} is true because {@link #isProcessing()} waits until
+	 * {@link #processingEndedCallback} returns true. So if a user has a process
+	 * that only completes when it is able to put an item into an inventory and that
+	 * inventory is full, it will continually be processing. But it will have
+	 * completed the work and thereform shouldn't take any more power.
+	 * 
+	 * @return
+	 */
+	public boolean isDone() {
+		return currentProcessingTime >= processingTime;
+	}
+
 	public boolean isProcessing() {
 		return processing;
 	}
@@ -142,6 +158,7 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		super.serializeUpdateNbt(nbt, fromUpdate);
 		nbt.putBoolean("processing", processing);
 		nbt.putBoolean("processingPaused", processingPaused);
+		nbt.putInt("processing_time", processingTime);
 		nbt.putInt("currentTime", currentProcessingTime);
 		return nbt;
 	}
@@ -151,6 +168,7 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 		processing = nbt.getBoolean("processing");
 		processingPaused = nbt.getBoolean("processingPaused");
+		processingTime = nbt.getInt("processing_time");
 		currentProcessingTime = nbt.getInt("currentTime");
 	}
 }

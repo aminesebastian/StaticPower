@@ -45,7 +45,7 @@ public class TileEntityChargingStation extends TileEntityMachine {
 					if (EnergyHandlerItemStackUtilities.getEnergyStored(stack) < EnergyHandlerItemStackUtilities.getEnergyStorageCapacity(stack)) {
 						int maxOutput = energyStorage.getStorage().getCurrentMaximumPowerOutput();
 						int charged = EnergyHandlerItemStackUtilities.addEnergyToItemstack(stack, maxOutput, false);
-						energyStorage.getStorage().extractEnergy(charged, false);
+						energyStorage.usePower(charged);
 					} else {
 						moveChargedItemToOutputs(i);
 					}

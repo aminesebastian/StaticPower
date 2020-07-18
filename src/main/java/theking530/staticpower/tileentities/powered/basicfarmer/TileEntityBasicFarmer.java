@@ -118,7 +118,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	public void process() {
 		if (processingComponent.isProcessing()) {
 			if (!getWorld().isRemote) {
-				energyStorage.getStorage().extractEnergy(DEFAULT_IDLE_ENERGY_USAGE, false);
+				energyStorage.usePower(DEFAULT_IDLE_ENERGY_USAGE);
 				fluidTankComponent.drain(DEFAULT_WATER_USAGE, FluidAction.EXECUTE);
 
 				for (BlockPos blockpos : blocks) {
@@ -143,7 +143,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 
 			// If on the server, use the amount of energy required to harvest a plant.
 			if (!world.isRemote) {
-				energyStorage.getStorage().extractEnergy(DEFAULT_HARVEST_ENERGY_COST, false);
+				energyStorage.usePower(DEFAULT_HARVEST_ENERGY_COST);
 			}
 
 			// Increment first to ensure we're always harvesting the next block.

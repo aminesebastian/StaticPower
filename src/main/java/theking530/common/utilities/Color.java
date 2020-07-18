@@ -61,7 +61,7 @@ public class Color extends Vector4D {
 	 * @return
 	 */
 	public int encodeInInteger() {
-		return (int) getAlpha() << 24 | (int) getRed() << 16 | (int) getGreen() << 8 | (int) getBlue();
+		return (int) getAlpha() << 24 | (int) getBlue() << 16 | (int) getGreen() << 8 | (int) getRed();
 	}
 
 	@Override

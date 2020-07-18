@@ -7,16 +7,13 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import theking530.common.utilities.TriFunction;
-import theking530.staticpower.energy.CapabilityStaticVolt;
 import theking530.staticpower.energy.StaticPowerFEStorage;
-import theking530.staticpower.energy.StaticVoltHandler;
 
 public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	public enum EnergyManipulationAction {
 		PROVIDE, RECIEVE
 	}
 
-	protected final StaticVoltHandler VoltHandler;
 	protected final StaticPowerFEStorage EnergyStorage;
 	protected TriFunction<Integer, Direction, EnergyManipulationAction, Boolean> filter;
 	protected int lastEnergyStored;
@@ -36,30 +33,95 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	public EnergyStorageComponent(String name, int capacity, int maxInput, int maxExtract) {
 		super(name);
 		EnergyStorage = new StaticPowerFEStorage(capacity, maxInput, maxExtract);
-		VoltHandler = new StaticVoltHandler(1000, 5000);
 		capabilityAccessor = new EnergyComponentCapabilityAccess();
 	}
 
-	public StaticVoltHandler getStaticVoltHandler() {
-		return VoltHandler;
-	}
-
+	/**
+	 * Gets the raw energy storage object.
+	 * 
+	 * @return
+	 */
 	public StaticPowerFEStorage getStorage() {
 		return EnergyStorage;
 	}
 
+	/**
+	 * Gets the overall EnergyIO per Tick of this component.
+	 * 
+	 * @return
+	 */
 	public int getEnergyIO() {
 		return energyPerTick;
 	}
 
+	/**
+	 * Returns true if this energy component has >= the amount of power that was
+	 * passed.
+	 * 
+	 * @param power
+	 * @return
+	 */
 	public boolean hasEnoughPower(int power) {
 		return EnergyStorage.getEnergyStored() >= power;
 	}
 
+	/**
+	 * If this storage component contains at least the provided amount of power, it
+	 * will drain that amount and return true. Otherwise, it will do nothing and
+	 * return false.
+	 * 
+	 * @param power The amount of power to drain.
+	 * @return True if the provided amount of power was drained, false otherwise.
+	 */
+	public boolean usePower(int power) {
+		if (hasEnoughPower(power)) {
+			getStorage().extractEnergy(power, false);
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Returns true if this energy component can fully accept the amount passed.
+	 * 
+	 * @param power The amount of power test this component for.
+	 * @return
+	 */
+	public boolean canAcceptPower(int power) {
+		return EnergyStorage.getEnergyStored() + power <= EnergyStorage.getMaxEnergyStored();
+	}
+
+	/**
+	 * If this storage can fully receive the amount of power passed, it will receive
+	 * that amount and return true. Otherwise, it will do nothing and return false.
+	 * 
+	 * @param power The amount of power to receive.
+	 * @return True if the provided amount of power was received, false otherwise.
+	 */
+	public boolean addPower(int power) {
+		if (canAcceptPower(power)) {
+			getStorage().receiveEnergy(power, false);
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Returns true if this component has >0 FE.
+	 * 
+	 * @return
+	 */
 	public boolean hasPower() {
 		return EnergyStorage.getEnergyStored() > 0;
 	}
 
+	/**
+	 * Sets the filter used to restrict access to this component through
+	 * capabilities. Use this to prevent certain actions from the capability access
+	 * (ie. make it so external accessor cannot extract power).
+	 * 
+	 * @param filter
+	 */
 	public void setCapabiltiyFilter(TriFunction<Integer, Direction, EnergyManipulationAction, Boolean> filter) {
 		this.filter = filter;
 	}
@@ -68,7 +130,6 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 		EnergyStorage.readFromNbt(nbt);
-		VoltHandler.deserializeNBT(nbt.getCompound("volt_handler"));
 		energyPerTick = nbt.getInt("PerTick");
 	}
 
@@ -76,8 +137,6 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
 		EnergyStorage.writeToNbt(nbt);
-
-		nbt.put("volt_handler", VoltHandler.serializeNBT());
 
 		long ticksSinceLastUpdate = Math.max(getTileEntity().getWorld().getGameTime() - lastUpdateTime, 1);
 		int energyUsedPerTickSinceLastPacket = (int) ((EnergyStorage.getEnergyStored() - lastEnergyStored) / ticksSinceLastUpdate);
@@ -92,8 +151,6 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 		if (cap == CapabilityEnergy.ENERGY) {
 			capabilityAccessor.currentSide = side;
 			return LazyOptional.of(() -> capabilityAccessor).cast();
-		} else if (cap == CapabilityStaticVolt.STATIC_VOLT_CAPABILITY) {
-			return LazyOptional.of(() -> VoltHandler).cast();
 		}
 		return LazyOptional.empty();
 	}

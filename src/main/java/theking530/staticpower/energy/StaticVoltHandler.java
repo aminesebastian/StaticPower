@@ -72,16 +72,16 @@ public class StaticVoltHandler implements IStaticVoltHandler {
 			return 0;
 		}
 
-		// Calculate the recieved amount.
+		// Calculate the received amount.
 		int recievedAmount = StaticVoltUtilities.getMilliWatts(voltage, current);
 		recievedAmount = Math.min(recievedAmount, capacity - storedPower);
 
-		// If greater than 0 and not simulating, recieve the power
+		// If greater than 0 and not simulating, received the power
 		if (recievedAmount > 0 && !simulate) {
 			storedPower += recievedAmount;
 		}
 
-		// Return the recieved amount.
+		// Return the received amount.
 		return recievedAmount;
 	}
 

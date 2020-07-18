@@ -70,7 +70,7 @@ public class StaticPowerClientEventHandler {
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.ITEM_CABLE_ENERGIZED, TileEntityRenderItemCable::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.ITEM_CABLE_LUMUM, TileEntityRenderItemCable::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.ITEM_CABLE_CREATIVE, TileEntityRenderItemCable::new);
-		
+
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.FLUID_CABLE, TileEntityRenderFluidCable::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.INDUSTRIAL_FLUID_CABLE, TileEntityRenderFluidCable::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.TANK, TileEntityRenderTank::new);
@@ -126,14 +126,18 @@ public class StaticPowerClientEventHandler {
 	}
 
 	public static void onTextureStitchEvent(TextureStitchEvent.Pre event) {
-		int spriteCount = 0;
 		if (event.getMap().getTextureLocation() == AtlasTexture.LOCATION_BLOCKS_TEXTURE) {
+			int spriteCount = 0;
 			for (ResourceLocation sprite : StaticPowerSprites.SPRITES) {
-				event.addSprite(sprite);
-				spriteCount++;
+				try {
+					event.addSprite(sprite);
+					spriteCount++;
+				} catch (Exception e) {
+					StaticPower.LOGGER.error(String.format("Failed to register texture: %1$s to the texture atlas.", sprite));
+				}
 			}
+			StaticPower.LOGGER.info(String.format("Registered %1$s Static Power sprites.", spriteCount));
 		}
-		StaticPower.LOGGER.info(String.format("Registered %1$s Static Power sprites.", spriteCount));
 	}
 
 	public static void render(RenderWorldLastEvent event) {

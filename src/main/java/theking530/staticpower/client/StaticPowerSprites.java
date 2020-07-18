@@ -22,16 +22,14 @@ public class StaticPowerSprites {
 	public static final ResourceLocation LOGIC_GATE_BASE_ON = registerSprite("blocks/logicgates/logic_gate_base_on");
 	public static final ResourceLocation LOGIC_GATE_BASE_OFF = registerSprite("blocks/logicgates/logic_gate_base_off");
 
-	public static final ResourceLocation MACHINE_SIDE_NORMAL = registerSprite("blocks/machines/machine_side");
-	public static final ResourceLocation MACHINE_SIDE_INPUT = registerSprite("blocks/machines/machine_side_input");
-	public static final ResourceLocation MACHINE_SIDE_OUTPUT = registerSprite("blocks/machines/machine_side_output");
-	public static final ResourceLocation MACHINE_SIDE_DISABLED = registerSprite("blocks/machines/machine_side_disabled");
-
-	public static final ResourceLocation GREEN_MACHINE_SIDE_NORMAL = registerSprite("blocks/machines/farmer_side");
-	public static final ResourceLocation GREEN_MACHINE_SIDE_INPUT = registerSprite("blocks/machines/farmer_side_input");
-	public static final ResourceLocation GREEN_MACHINE_SIDE_OUTPUT = registerSprite("blocks/machines/farmer_side_output");
-	public static final ResourceLocation GREEN_MACHINE_SIDE_DISABLED = registerSprite("blocks/machines/farmer_side_disabled");
-
+	public static final ResourceLocation MACHINE_SIDE_NORMAL = registerSprite("blocks/machines/sides_modes/machine_side_regular");
+	public static final ResourceLocation MACHINE_SIDE_INPUT = registerSprite("blocks/machines/sides_modes/machine_side_input");
+	public static final ResourceLocation MACHINE_SIDE_OUTPUT = registerSprite("blocks/machines/sides_modes/machine_side_output");
+	public static final ResourceLocation MACHINE_SIDE_DISABLED = registerSprite("blocks/machines/sides_modes/machine_side_disabled");
+	public static final ResourceLocation MACHINE_SIDE_GREEN = registerSprite("blocks/machines/sides_modes/machine_side_green");
+	public static final ResourceLocation MACHINE_SIDE_YELLOW = registerSprite("blocks/machines/sides_modes/machine_side_yellow");
+	public static final ResourceLocation MACHINE_SIDE_PURPLE = registerSprite("blocks/machines/sides_modes/machine_side_purple");
+	
 	public static final ResourceLocation BASIC_BATTERY_TOP = registerSprite("blocks/machines/batteries/battery_basic_top");
 	public static final ResourceLocation BASIC_BATTERY_SIDE = registerSprite("blocks/machines/batteries/battery_basic_side");
 

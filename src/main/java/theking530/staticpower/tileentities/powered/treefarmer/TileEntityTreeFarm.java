@@ -59,7 +59,7 @@ import theking530.staticpower.utilities.WorldUtilities;
 public class TileEntityTreeFarm extends TileEntityMachine {
 	public static final int DEFAULT_WATER_USAGE = 1;
 	public static final int DEFAULT_IDLE_ENERGY_USAGE = 20;
-	public static final int DEFAULT_HARVEST_ENERGY_COST = 1000;
+	public static final int DEFAULT_HARVEST_ENERGY_COST = 10;
 	public static final int MAX_WOOD_RECURSIVE_DEPTH = 100;
 	public static final int DEFAULT_RANGE = 2;
 	public static final int DEFAULT_SAPLING_SPACING = 2;
@@ -127,7 +127,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 	public void process() {
 		if (processingComponent.isProcessing()) {
 			if (!getWorld().isRemote) {
-				energyStorage.getStorage().extractEnergy(DEFAULT_IDLE_ENERGY_USAGE, false);
+				energyStorage.usePower(DEFAULT_IDLE_ENERGY_USAGE);
 				fluidTankComponent.drain(DEFAULT_WATER_USAGE, FluidAction.EXECUTE);
 			}
 		}
@@ -233,6 +233,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 				getWorld().playSound(null, pos, getWorld().getBlockState(pos).getBlock().getSoundType(getWorld().getBlockState(pos), world, pos, null).getBreakSound(), SoundCategory.BLOCKS, 0.5F, 1.0F);
 				List<ItemStack> harvestResults = new LinkedList<ItemStack>();
 				harvestBlock(pos, harvestResults, 0);
+				useAxe();
 				for (ItemStack drop : harvestResults) {
 					InventoryUtilities.insertItemIntoInventory(internalInventory, drop, false);
 				}
@@ -267,7 +268,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		// Add the drops for the current block and break it.
 		items.addAll(WorldUtilities.getBlockDrops(getWorld(), pos));
 		getWorld().setBlockState(pos, Blocks.AIR.getDefaultState(), 1 | 2);
-		useAxe();
+		energyStorage.usePower(DEFAULT_HARVEST_ENERGY_COST);
 
 		// Recurse to any adjacent blocks if they are farm-able.
 		for (Direction facing : Direction.values()) {

@@ -10,12 +10,12 @@ import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.InputServoComponent;
 import theking530.staticpower.tileentities.components.InventoryComponent;
 import theking530.staticpower.tileentities.components.MachineProcessingComponent;
+import theking530.staticpower.tileentities.components.PowerDistributionComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 
 public class TileEntitySolidGenerator extends TileEntityMachine {
-	public static final int DEFAULT_VOLTAGE = 5000;
-	public static final int DEFAULT_CURRENT_GENERATION = 10;
+	public static final int DEFAULT_POWER_GENERATION = 20;
 	public static final int DEFAULT_MOVING_TIME = 4;
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent internalInventory;
@@ -23,6 +23,8 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 
 	public final MachineProcessingComponent moveComponent;
 	public final MachineProcessingComponent processingComponent;
+
+	public int powerGenerationPerTick;
 
 	public TileEntitySolidGenerator() {
 		super(ModTileEntityTypes.SOLID_GENERATOR);
@@ -37,8 +39,10 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
 		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", 2, this::canMoveFromInputToProcessing, () -> true, this::movingCompleted, true));
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 5, this::canProcess, this::canProcess, this::processingCompleted, true));
-
+		registerComponent(new PowerDistributionComponent("PowerDistributor", energyStorage.getStorage()));
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));
+
+		powerGenerationPerTick = DEFAULT_POWER_GENERATION;
 	}
 
 	/**
@@ -53,7 +57,7 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 		// Check if there is a valid recipe.
 		if (hasValidRecipe() && !moveComponent.isProcessing() && !processingComponent.isProcessing() && internalInventory.getStackInSlot(0).isEmpty()) {
 			// If we passed all the previous checks, return true.
-			return energyStorage.getStaticVoltHandler().canFullyAcceptPower(DEFAULT_VOLTAGE, DEFAULT_CURRENT_GENERATION);
+			return energyStorage.canAcceptPower(powerGenerationPerTick);
 		}
 		return false;
 	}
@@ -66,11 +70,10 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 	public void process() {
 		if (processingComponent.isProcessing()) {
 			if (!getWorld().isRemote) {
-				if (!energyStorage.getStaticVoltHandler().canFullyAcceptPower(DEFAULT_VOLTAGE, DEFAULT_CURRENT_GENERATION)) {
-					processingComponent.pauseProcessing();
-				} else {
+				if (energyStorage.addPower(powerGenerationPerTick)) {
 					processingComponent.continueProcessing();
-					energyStorage.getStaticVoltHandler().recievePower(DEFAULT_VOLTAGE, DEFAULT_CURRENT_GENERATION, false);
+				} else {
+					processingComponent.pauseProcessing();
 				}
 			}
 		}

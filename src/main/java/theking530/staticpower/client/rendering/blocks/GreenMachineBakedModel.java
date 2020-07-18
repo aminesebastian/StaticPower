@@ -16,13 +16,13 @@ public class GreenMachineBakedModel extends DefaultMachineBakedModel {
 	protected TextureAtlasSprite getSpriteForMachineSide(MachineSideMode mode, AtlasTexture blocksStitchedTextures, Direction side) {
 		switch (mode) {
 		case Input:
-			return blocksStitchedTextures.getSprite(StaticPowerSprites.GREEN_MACHINE_SIDE_INPUT);
+			return blocksStitchedTextures.getSprite(StaticPowerSprites.MACHINE_SIDE_INPUT);
 		case Output:
-			return blocksStitchedTextures.getSprite(StaticPowerSprites.GREEN_MACHINE_SIDE_OUTPUT);
+			return blocksStitchedTextures.getSprite(StaticPowerSprites.MACHINE_SIDE_OUTPUT);
 		case Disabled:
-			return blocksStitchedTextures.getSprite(StaticPowerSprites.GREEN_MACHINE_SIDE_DISABLED);
+			return blocksStitchedTextures.getSprite(StaticPowerSprites.MACHINE_SIDE_DISABLED);
 		default:
-			return blocksStitchedTextures.getSprite(StaticPowerSprites.GREEN_MACHINE_SIDE_NORMAL);
+			return blocksStitchedTextures.getSprite(StaticPowerSprites.MACHINE_SIDE_NORMAL);
 		}
 	}
 }

@@ -102,17 +102,15 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 	}
 
 	protected void renderQuadsForSide(Builder<BakedQuad> newQuads, Direction side, TextureAtlasSprite sideSprite, BakedQuad originalQuad, MachineSideMode sideConfiguration) {
+		newQuads.add(originalQuad);
 		if (sideConfiguration != MachineSideMode.Never) {
 			BlockFaceUV blockFaceUV = new BlockFaceUV(new float[] { 0.0f, 0.0f, 16.0f, 16.0f }, 0);
 			BlockPartFace blockPartFace = new BlockPartFace(null, -1, sideSprite.getName().toString(), blockFaceUV);
 			BakedQuad newQuad = FaceBaker.bakeQuad(new Vector3f(0, 0, 0), new Vector3f(16.0f, 16.0f, 16.0f), blockPartFace, sideSprite, side, IDENTITY, null, true, new ResourceLocation("dummy_name"));
 			newQuads.add(newQuad);
-		} else {
-			newQuads.add(originalQuad);
 		}
 	}
 
-	
 	protected TextureAtlasSprite getSpriteForMachineSide(MachineSideMode mode, AtlasTexture blocksStitchedTextures, Direction side) {
 		switch (mode) {
 		case Input:

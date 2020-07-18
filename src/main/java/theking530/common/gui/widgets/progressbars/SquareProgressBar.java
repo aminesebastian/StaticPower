@@ -21,6 +21,7 @@ public class SquareProgressBar extends AbstractProgressBar {
 
 	@Override
 	public void renderBehindItems(int mouseX, int mouseY, float partialTicks) {
+		super.renderBehindItems(mouseX, mouseY, partialTicks);
 		if (lastValue != processingEntity.getCurrentProgress()) {
 			lastValue = processingEntity.getCurrentProgress();
 			interp = lastValue;

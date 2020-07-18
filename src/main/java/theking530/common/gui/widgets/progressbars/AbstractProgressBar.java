@@ -15,12 +15,18 @@ public abstract class AbstractProgressBar extends AbstractGuiWidget {
 		super(xPosition, yPosition, width, height);
 		lastValue = 0;
 		interp = 0.0f;
+		currentProgress = 0;
+	}
+
+	@Override
+	public void renderBehindItems(int mouseX, int mouseY, float partialTicks) {
+		if (machineProcessingComponent != null) {
+			maxProgress = machineProcessingComponent.getProcessingTime();
+		}
 	}
 
 	public AbstractProgressBar bindToMachineProcessingComponent(MachineProcessingComponent component) {
 		machineProcessingComponent = component;
-		currentProgress = 0;
-		maxProgress = machineProcessingComponent.getProcessingTime();
 		return this;
 	}
 }
