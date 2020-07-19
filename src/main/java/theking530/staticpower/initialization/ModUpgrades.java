@@ -1,7 +1,6 @@
 package theking530.staticpower.initialization;
 
 import theking530.staticpower.StaticPowerRegistry;
-import theking530.staticpower.items.upgrades.BaseDigistoreCapacityUpgrade;
 import theking530.staticpower.items.upgrades.BaseOutputMultiplierUpgrade;
 import theking530.staticpower.items.upgrades.BasePowerUpgrade;
 import theking530.staticpower.items.upgrades.BaseQuarryingUpgrade;
@@ -18,15 +17,6 @@ public class ModUpgrades {
 	public static TeleportUpgrade TeleportUpgrade;
 	public static ExperienceVacuumUpgrade ExperienceVacuumUpgrade;
 	public static DigistoreVoidUpgrade DigistoreVoidUpgrade;
-
-	public static BaseDigistoreCapacityUpgrade BasicDigistoreCapacityUpgrade;
-	public static BaseDigistoreCapacityUpgrade IronDigistoreCapacityUpgrade;
-	public static BaseDigistoreCapacityUpgrade GoldDigistoreCapacityUpgrade;
-	public static BaseDigistoreCapacityUpgrade LeadDigistoreCapacityUpgrade;
-	public static BaseDigistoreCapacityUpgrade ObsidianDigistoreCapacityUpgrade;
-	public static BaseDigistoreCapacityUpgrade StaticDigistoreCapacityUpgrade;
-	public static BaseDigistoreCapacityUpgrade EnergizedDigistoreCapacityUpgrade;
-	public static BaseDigistoreCapacityUpgrade LumumDigistoreCapacityUpgrade;
 
 	public static BasePowerUpgrade BasicPowerUpgrade;
 	public static BasePowerUpgrade StaticPowerUpgrade;
@@ -61,15 +51,6 @@ public class ModUpgrades {
 		StaticPowerRegistry.preRegisterItem(TeleportUpgrade = new TeleportUpgrade("upgrade_teleport"));
 		StaticPowerRegistry.preRegisterItem(ExperienceVacuumUpgrade = new ExperienceVacuumUpgrade("upgrade_experience_vacuum"));
 		StaticPowerRegistry.preRegisterItem(DigistoreVoidUpgrade = new DigistoreVoidUpgrade("upgrade_digistore_void"));
-
-		StaticPowerRegistry.preRegisterItem(BasicDigistoreCapacityUpgrade = new BaseDigistoreCapacityUpgrade("upgrade_digistore_capacity_basic", Tier.BASIC));
-		StaticPowerRegistry.preRegisterItem(IronDigistoreCapacityUpgrade = new BaseDigistoreCapacityUpgrade("upgrade_digistore_capacity_iron", Tier.IRON));
-		StaticPowerRegistry.preRegisterItem(GoldDigistoreCapacityUpgrade = new BaseDigistoreCapacityUpgrade("upgrade_digistore_capacity_gold", Tier.GOLD));
-		StaticPowerRegistry.preRegisterItem(LeadDigistoreCapacityUpgrade = new BaseDigistoreCapacityUpgrade("upgrade_digistore_capacity_lead", Tier.LEAD));
-		StaticPowerRegistry.preRegisterItem(ObsidianDigistoreCapacityUpgrade = new BaseDigistoreCapacityUpgrade("upgrade_digistore_capacity_obsidian", Tier.OBSIDIAN));
-		StaticPowerRegistry.preRegisterItem(StaticDigistoreCapacityUpgrade = new BaseDigistoreCapacityUpgrade("upgrade_digistore_capacity_static", Tier.STATIC));
-		StaticPowerRegistry.preRegisterItem(EnergizedDigistoreCapacityUpgrade = new BaseDigistoreCapacityUpgrade("upgrade_digistore_capacity_energized", Tier.ENERGIZED));
-		StaticPowerRegistry.preRegisterItem(LumumDigistoreCapacityUpgrade = new BaseDigistoreCapacityUpgrade("upgrade_digistore_capacity_lumum", Tier.LUMUM));
 
 		StaticPowerRegistry.preRegisterItem(BasicPowerUpgrade = new BasePowerUpgrade("upgrade_power_basic", Tier.BASIC));
 		StaticPowerRegistry.preRegisterItem(StaticPowerUpgrade = new BasePowerUpgrade("upgrade_power_static", Tier.STATIC));

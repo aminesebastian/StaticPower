@@ -26,6 +26,7 @@ import theking530.staticpower.blocks.ICustomModelSupplier;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.CustomRenderer;
+import theking530.staticpower.client.rendering.tileentity.TileEntityRenderBatteryBlock;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderDigistore;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderFluidCable;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderItemCable;
@@ -70,6 +71,13 @@ public class StaticPowerClientEventHandler {
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.ITEM_CABLE_ENERGIZED, TileEntityRenderItemCable::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.ITEM_CABLE_LUMUM, TileEntityRenderItemCable::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.ITEM_CABLE_CREATIVE, TileEntityRenderItemCable::new);
+
+		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.BATTERY_BASIC, TileEntityRenderBatteryBlock::new);
+		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.BATTERY_ADVANCED, TileEntityRenderBatteryBlock::new);
+		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.BATTERY_STATIC, TileEntityRenderBatteryBlock::new);
+		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.BATTERY_ENERGIZED, TileEntityRenderBatteryBlock::new);
+		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.BATTERY_LUMUM, TileEntityRenderBatteryBlock::new);
+		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.BATTERY_CREATIVE, TileEntityRenderBatteryBlock::new);
 
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.FLUID_CABLE, TileEntityRenderFluidCable::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.INDUSTRIAL_FLUID_CABLE, TileEntityRenderFluidCable::new);

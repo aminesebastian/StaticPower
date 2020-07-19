@@ -38,6 +38,8 @@ import theking530.staticpower.tileentities.powered.poweredfurnace.ContainerPower
 import theking530.staticpower.tileentities.powered.poweredfurnace.GuiPoweredFurnace;
 import theking530.staticpower.tileentities.powered.poweredgrinder.ContainerPoweredGrinder;
 import theking530.staticpower.tileentities.powered.poweredgrinder.GuiPoweredGrinder;
+import theking530.staticpower.tileentities.powered.pump.ContainerPump;
+import theking530.staticpower.tileentities.powered.pump.GuiPump;
 import theking530.staticpower.tileentities.powered.solidgenerator.ContainerSolidGenerator;
 import theking530.staticpower.tileentities.powered.solidgenerator.GuiSolidGenerator;
 import theking530.staticpower.tileentities.powered.treefarmer.ContainerTreeFarmer;
@@ -58,7 +60,8 @@ public class ModContainerTypes {
 	public static ContainerType<ContainerSolidGenerator> SOLID_GENERATOR;
 
 	public static ContainerType<ContainerTank> TANK_CONTAINER;
-
+	public static ContainerType<ContainerPump> PUMP_CONTAINER;
+	
 	public static ContainerType<ContainerDigistore> DIGISTORE_CONTAINER;
 	public static ContainerType<ContainerDigistoreTerminal> DIGISTORE_TERMINAL;
 	public static ContainerType<ContainerDigistoreCraftingTerminal> DIGISTORE_CRAFTING_TERMINAL;
@@ -83,6 +86,7 @@ public class ModContainerTypes {
 		SOLID_GENERATOR = StaticPowerRegistry.preRegisterContainer("solid_generator", ContainerSolidGenerator::new, GuiSolidGenerator::new);
 
 		TANK_CONTAINER = StaticPowerRegistry.preRegisterContainer("tank", ContainerTank::new, GuiTank::new);
+		PUMP_CONTAINER = StaticPowerRegistry.preRegisterContainer("pump", ContainerPump::new, GuiPump::new);
 
 		DIGISTORE_CONTAINER = StaticPowerRegistry.preRegisterContainer("digistore", ContainerDigistore::new, GuiDigistore::new);
 		DIGISTORE_TERMINAL = StaticPowerRegistry.preRegisterContainer("digistore_terminal", ContainerDigistoreTerminal::new, GuiDigistoreTerminal::new);

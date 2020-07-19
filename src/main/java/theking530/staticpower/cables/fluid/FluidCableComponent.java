@@ -18,6 +18,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
+import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
@@ -60,8 +61,10 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 				lastUpdateFluidStack = network.getFluidStorage().getFluid();
 				lastUpdateFilledPercentage = Math.min(1.0f, getFilledPercentage());
 
+				// Only send the packet to nearby players since these packets get sent
+				// frequently.
 				FluidCableUpdatePacket packet = new FluidCableUpdatePacket(getPos(), lastUpdateFluidStack, lastUpdateFilledPercentage);
-				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), getPos(), 32, packet);
+				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), getPos(), 128, packet);
 			});
 		}
 	}
@@ -166,10 +169,24 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
+		// Only provide the fluid capability if we are not disabled on that side.
 		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return LazyOptional.of(() -> this).cast();
+			boolean disabled = false;
+			if (side != null) {
+				if (getWorld().isRemote) {
+					disabled = isSideDisabled(side);
+				} else {
+					ServerCable cable = CableNetworkManager.get(getWorld()).getCable(getPos());
+					disabled = cable.isDisabledOnSide(side);
+				}
+			}
+
+			if (!disabled) {
+				return LazyOptional.of(() -> this).cast();
+			}
 		}
 		return LazyOptional.empty();
+
 	}
 
 	@Override

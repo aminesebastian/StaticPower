@@ -160,9 +160,22 @@ public class ItemCableComponent extends AbstractCableProviderComponent implement
 
 	@Override
 	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
+		// Only provide the item capability if we are not disabled on the provided side.
 		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && side != null) {
-			lastCapabilityRequestedDirection = side;
-			return LazyOptional.of(() -> this).cast();
+			boolean disabled = false;
+			if (side != null) {
+				if (getWorld().isRemote) {
+					disabled = isSideDisabled(side);
+				} else {
+					ServerCable cable = CableNetworkManager.get(getWorld()).getCable(getPos());
+					disabled = cable.isDisabledOnSide(side);
+				}
+			}
+
+			if (!disabled) {
+				lastCapabilityRequestedDirection = side;
+				return LazyOptional.of(() -> this).cast();
+			}
 		}
 		return LazyOptional.empty();
 	}

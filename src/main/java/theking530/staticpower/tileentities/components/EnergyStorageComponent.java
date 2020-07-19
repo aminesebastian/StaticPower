@@ -8,17 +8,18 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import theking530.common.utilities.TriFunction;
 import theking530.staticpower.energy.StaticPowerFEStorage;
+import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	public enum EnergyManipulationAction {
 		PROVIDE, RECIEVE
 	}
 
+	public static final int ENERGY_SYNC_MAX_DELTA = 100;
 	protected final StaticPowerFEStorage EnergyStorage;
 	protected TriFunction<Integer, Direction, EnergyManipulationAction, Boolean> filter;
-	protected int lastEnergyStored;
-	protected int energyPerTick;
-	protected long lastUpdateTime;
+	private int energyIO;
+	private int lastSyncEnergy;
 
 	private EnergyComponentCapabilityAccess capabilityAccessor;
 
@@ -36,6 +37,32 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 		capabilityAccessor = new EnergyComponentCapabilityAccess();
 	}
 
+	@Override
+	public void preProcessUpdate() {
+
+	}
+
+	@Override
+	public void postProcessUpdate() {
+		if (!getWorld().isRemote) {
+			// Get the current delta between the amount of power we have and the power we
+			// had last tick.
+			int delta = Math.abs(EnergyStorage.getEnergyStored() - lastSyncEnergy);
+
+			// Determine if we should sync.
+			boolean shouldSync = delta > ENERGY_SYNC_MAX_DELTA;
+			shouldSync |= EnergyStorage.getEnergyStored() == 0 && lastSyncEnergy != 0;
+			shouldSync |= EnergyStorage.getEnergyStored() == EnergyStorage.getMaxEnergyStored() && lastSyncEnergy != EnergyStorage.getMaxEnergyStored();
+
+			// If we should sync, perform the sync.
+			if (shouldSync) {
+				lastSyncEnergy = EnergyStorage.getEnergyStored();
+				syncToClient();
+			}
+		}
+		EnergyStorage.captureEnergyMetric();
+	}
+
 	/**
 	 * Gets the raw energy storage object.
 	 * 
@@ -51,7 +78,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	 * @return
 	 */
 	public int getEnergyIO() {
-		return energyPerTick;
+		return energyIO;
 	}
 
 	/**
@@ -116,6 +143,20 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	}
 
 	/**
+	 * This method syncs the current state of this energy storage component to all
+	 * clients within a 64 block radius.
+	 */
+	public void syncToClient() {
+		if (!getWorld().isRemote) {
+			PacketEnergyStorageComponent syncPacket = new PacketEnergyStorageComponent(this, getPos(), this.getComponentName());
+			StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), getPos(), 64, syncPacket);
+		} else {
+			throw new RuntimeException("This method should only be called on the server!");
+		}
+
+	}
+
+	/**
 	 * Sets the filter used to restrict access to this component through
 	 * capabilities. Use this to prevent certain actions from the capability access
 	 * (ie. make it so external accessor cannot extract power).
@@ -130,19 +171,14 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 		EnergyStorage.readFromNbt(nbt);
-		energyPerTick = nbt.getInt("PerTick");
+		energyIO = nbt.getInt("io");
 	}
 
 	@Override
 	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
 		EnergyStorage.writeToNbt(nbt);
-
-		long ticksSinceLastUpdate = Math.max(getTileEntity().getWorld().getGameTime() - lastUpdateTime, 1);
-		int energyUsedPerTickSinceLastPacket = (int) ((EnergyStorage.getEnergyStored() - lastEnergyStored) / ticksSinceLastUpdate);
-		nbt.putInt("PerTick", energyUsedPerTickSinceLastPacket);
-		lastUpdateTime = getTileEntity().getWorld().getGameTime();
-		lastEnergyStored = EnergyStorage.getEnergyStored();
+		nbt.putInt("io", EnergyStorage.getEnergyIO());
 		return nbt;
 	}
 

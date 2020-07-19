@@ -106,8 +106,21 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
+		// Only provide the energy capability if we are not disabled on that side.
 		if (cap == CapabilityEnergy.ENERGY) {
-			return LazyOptional.of(() -> this).cast();
+			boolean disabled = false;
+			if (side != null) {
+				if (getWorld().isRemote) {
+					disabled = isSideDisabled(side);
+				} else {
+					ServerCable cable = CableNetworkManager.get(getWorld()).getCable(getPos());
+					disabled = cable.isDisabledOnSide(side);
+				}
+			}
+
+			if (!disabled) {
+				return LazyOptional.of(() -> this).cast();
+			}
 		}
 		return LazyOptional.empty();
 	}

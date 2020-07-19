@@ -4,6 +4,6 @@
 		"side": "staticpower:blocks/machines/sides/default_machine_side",
 		"front": "staticpower:blocks/machines/sides/default_machine_side_front",
 		"face": "staticpower:blocks/machines/powered_furnace_face_off",
-		"particle": "staticpower:blocks/machines/default_machine_side"
+		"particle": "staticpower:blocks/machines/sides/default_machine_side"
     }
 }

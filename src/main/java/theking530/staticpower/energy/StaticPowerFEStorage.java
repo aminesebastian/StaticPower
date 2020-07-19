@@ -1,9 +1,13 @@
 package theking530.staticpower.energy;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public class StaticPowerFEStorage implements IEnergyStorage {
+	public static final int MAXIMUM_IO_CAPTURE_FRAMES = 5;
 	protected int capacity;
 	protected int currentEnergy;
 
@@ -12,6 +16,9 @@ public class StaticPowerFEStorage implements IEnergyStorage {
 
 	protected boolean canExtract;
 	protected boolean canRecieve;
+
+	protected Queue<Integer> ioCaptureFrames;
+	protected int currentFrameEnergyTransfered;
 
 	public StaticPowerFEStorage(int capacity) {
 		this(capacity, Integer.MAX_VALUE, Integer.MAX_VALUE);
@@ -28,6 +35,33 @@ public class StaticPowerFEStorage implements IEnergyStorage {
 
 		canRecieve = true;
 		canExtract = true;
+		ioCaptureFrames = new LinkedList<Integer>();
+	}
+
+	/**
+	 * Caches the current energy IO metric and starts capturing a new one. This
+	 * should be called once per tick.
+	 */
+	public void captureEnergyMetric() {
+		ioCaptureFrames.add(currentFrameEnergyTransfered);
+		if (ioCaptureFrames.size() > MAXIMUM_IO_CAPTURE_FRAMES) {
+			ioCaptureFrames.poll();
+		}
+		currentFrameEnergyTransfered = 0;
+	}
+
+	/**
+	 * Gets the average IO for this storage over the last
+	 * {@link #MAXIMUM_IO_CAPTURE_FRAMES} calls to {@link #captureEnergyMetric()}.
+	 * 
+	 * @return
+	 */
+	public int getEnergyIO() {
+		int output = 0;
+		for (int value : ioCaptureFrames) {
+			output += value;
+		}
+		return output / Math.max(1, ioCaptureFrames.size());
 	}
 
 	@Override
@@ -40,6 +74,7 @@ public class StaticPowerFEStorage implements IEnergyStorage {
 
 		if (!simulate) {
 			currentEnergy += maxActualRecieve;
+			currentFrameEnergyTransfered += maxActualRecieve;
 		}
 		return maxActualRecieve;
 	}
@@ -54,6 +89,7 @@ public class StaticPowerFEStorage implements IEnergyStorage {
 
 		if (!simulate) {
 			currentEnergy -= maxActualExtract;
+			currentFrameEnergyTransfered -= maxActualExtract;
 		}
 
 		return maxActualExtract;
@@ -148,6 +184,7 @@ public class StaticPowerFEStorage implements IEnergyStorage {
 		capacity = nbt.getInt("Capacity");
 		maxReceive = nbt.getInt("MaxRecv");
 		maxExtract = nbt.getInt("MaxExtract");
+		currentFrameEnergyTransfered = nbt.getInt("Transfered");
 	}
 
 	public CompoundNBT writeToNbt(CompoundNBT nbt) {
@@ -159,6 +196,7 @@ public class StaticPowerFEStorage implements IEnergyStorage {
 		nbt.putInt("Capacity", capacity);
 		nbt.putInt("MaxRecv", maxReceive);
 		nbt.putInt("MaxExtract", maxExtract);
+		nbt.putInt("Transfered", currentFrameEnergyTransfered);
 		return nbt;
 	}
 }

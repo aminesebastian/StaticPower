@@ -8,6 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import theking530.common.utilities.Color;
 import theking530.common.utilities.Vector2D;
 import theking530.common.utilities.Vector3D;
+import theking530.common.utilities.Vector4D;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.TileEntityDigistore;
 
@@ -44,17 +45,17 @@ public class TileEntityRenderDigistore extends StaticPowerTileEntitySpecialRende
 
 		// Draw each icon and offset by the icon size each time.
 		if (tileEntity.isLocked()) {
-			drawTexturedQuadUnlit(StaticPowerSprites.DIGISTORE_LOCKED_INDICATOR, matrixStack, buffer, new Vector3D(0.5f + offset, 0.82f, 0.0001f), new Vector3D(ICON_SIZE, ICON_SIZE, 1.0f), Color.WHITE);
+			drawTexturedQuadUnlit(StaticPowerSprites.DIGISTORE_LOCKED_INDICATOR, matrixStack, buffer, new Vector3D(0.5f + offset, 0.82f, 0.0001f), new Vector3D(ICON_SIZE, ICON_SIZE, 1.0f), Vector4D.DEFAULT_UV, Color.WHITE);
 			offset += ICON_SIZE;
 		}
 		if (tileEntity.isVoidUpgradeInstalled()) {
-			drawTexturedQuadUnlit(StaticPowerSprites.DIGISTORE_VOID_INDICATOR, matrixStack, buffer, new Vector3D(0.5f + offset, 0.82f, 0.0001f), new Vector3D(ICON_SIZE, ICON_SIZE, 1.0f), Color.WHITE);
+			drawTexturedQuadUnlit(StaticPowerSprites.DIGISTORE_VOID_INDICATOR, matrixStack, buffer, new Vector3D(0.5f + offset, 0.82f, 0.0001f), new Vector3D(ICON_SIZE, ICON_SIZE, 1.0f), Vector4D.DEFAULT_UV, Color.WHITE);
 			offset += ICON_SIZE;
 		}
 	}
 
 	public void drawFillBar(TileEntityDigistore tileEntity, BlockPos pos, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
 		float filledRatio = tileEntity.inventory.getFilledRatio();
-		drawTexturedQuadUnlit(StaticPowerSprites.DIGISTORE_FILL_BAR, matrixStack, buffer, new Vector3D(0.25f, 0.12f, 0.001f), new Vector3D(0.5f * filledRatio, 0.08f, 1.0f), Color.WHITE);
+		drawTexturedQuadUnlit(StaticPowerSprites.DIGISTORE_FILL_BAR, matrixStack, buffer, new Vector3D(0.25f, 0.12f, 0.001f), new Vector3D(0.5f * filledRatio, 0.08f, 1.0f), Vector4D.DEFAULT_UV, Color.WHITE);
 	}
 }

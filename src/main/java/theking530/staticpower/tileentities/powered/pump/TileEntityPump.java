@@ -10,8 +10,11 @@ import org.apache.logging.log4j.Logger;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FlowingFluidBlock;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.fluid.IFluidState;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
@@ -25,8 +28,11 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticpower.initialization.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
+import theking530.staticpower.tileentities.components.FluidContainerComponent;
+import theking530.staticpower.tileentities.components.FluidContainerComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.components.FluidOutputServoComponent;
 import theking530.staticpower.tileentities.components.FluidTankComponent;
+import theking530.staticpower.tileentities.components.InventoryComponent;
 import theking530.staticpower.tileentities.components.MachineProcessingComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities.BlockSide;
@@ -35,17 +41,34 @@ public class TileEntityPump extends TileEntityMachine {
 	public static final Logger LOGGER = LogManager.getLogger(TileEntityPump.class);
 	public static final int DEFAULT_PUMP_RATE = 40;
 
+	public final InventoryComponent fluidContainerInventory;
 	public final FluidTankComponent fluidTankComponent;
 	public final MachineProcessingComponent processingComponent;
 	private final Queue<BlockPos> positionsToPump;
 
 	public TileEntityPump() {
 		super(ModTileEntityTypes.PUMP);
+
+		// Add the tank component.
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 8000).setCapabilityExposedModes(MachineSideMode.Output).setCanFill(false));
+
+		// Add the fluid output servo to deliver fluid to adjacent blocks.
 		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
+
+		// Register components to allow the pump to fill buckets in the GUI.
+		registerComponent(fluidContainerInventory = new InventoryComponent("FluidContainerInventory", 2, MachineSideMode.Never));
+		registerComponent(new FluidContainerComponent("FluidFillContainerServo", fluidContainerInventory, fluidTankComponent, 0, 1).setMode(FluidContainerInteractionMode.FILL));
+
+		// Regsiter the processing component to handle the pumping.
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PUMP_RATE, this::canProcess, this::canProcess, this::pump, true));
+
+		// Set the default side configuration.
 		ioSideConfiguration.setDefaultConfiguration(MachineSideMode.Never, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output);
+
+		// Disable face interaction.
 		DisableFaceInteraction = false;
+
+		// Initialize the positions to pump container.
 		positionsToPump = new LinkedList<BlockPos>();
 	}
 
@@ -192,4 +215,8 @@ public class TileEntityPump extends TileEntityMachine {
 		LOGGER.info(String.format("Deserialized Pump at position: %1$s with: %2$d queued positions.", getPos(), positionsToPump.size()));
 	}
 
+	@Override
+	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+		return new ContainerPump(windowId, inventory, this);
+	}
 }

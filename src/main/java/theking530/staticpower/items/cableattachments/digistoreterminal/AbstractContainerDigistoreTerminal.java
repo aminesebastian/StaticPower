@@ -96,7 +96,8 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 						// left
 						// clicking, or a half stack if not.
 						if (playerMouseHeldItem.isEmpty()) {
-							int takeAmount = dragType == 0 ? actualSlotContents.getMaxStackSize() : (actualSlotContents.getMaxStackSize() + 1) / 2;
+							int halfStackSize = actualSlotContents.getCount() >= actualSlotContents.getMaxStackSize() ? (actualSlotContents.getMaxStackSize() + 1) / 2 : (actualSlotContents.getCount() + 1) / 2;
+							int takeAmount = dragType == 0 ? actualSlotContents.getMaxStackSize() : halfStackSize;
 							ItemStack actuallyExtracted = digistoreModule.extractItem(actualSlotContents, takeAmount, false);
 							getPlayerInventory().setItemStack(actuallyExtracted);
 						} else {

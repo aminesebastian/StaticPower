@@ -1,3 +1,6 @@
 {
-	"parent": "staticpower:block/machines/machine_powered_furnace"
+    "parent": "staticpower:block/machines/machine_powered_furnace",
+    "textures": {
+		"side": "staticpower:blocks/machines/sides/default_machine_side_item"
+    }
 }

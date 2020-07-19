@@ -29,6 +29,7 @@ import net.minecraft.util.math.BlockPos;
 import theking530.common.utilities.Color;
 import theking530.common.utilities.Vector2D;
 import theking530.common.utilities.Vector3D;
+import theking530.common.utilities.Vector4D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.TileEntityDigistore;
@@ -54,16 +55,8 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 
 		matrixStack.push();
 
-		if (facing == Direction.WEST) {
-			matrixStack.rotate(new Quaternion(new Vector3f(0, 1, 0), -90, true));
-			matrixStack.translate(0, 0, -1);
-		} else if (facing == Direction.NORTH) {
-			matrixStack.rotate(new Quaternion(new Vector3f(0, 1, 0), 180, true));
-			matrixStack.translate(-1, 0, -1);
-		} else if (facing == Direction.EAST) {
-			matrixStack.rotate(new Quaternion(new Vector3f(0, 1, 0), 90, true));
-			matrixStack.translate(-1, 0, 0);
-		}
+		// Rotate to face the side this tile is facing.
+		renderToFaceSide(facing, matrixStack);
 
 		// Draw the tile entity.
 		try {
@@ -200,21 +193,47 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 	 * @param tint          The tint to apply.
 	 * @param combinedLight The combined light level at the block.
 	 */
-	protected void drawTexturedQuadLit(ResourceLocation texture, MatrixStack matrixStack, IRenderTypeBuffer buffer, Vector3D offset, Vector3D scale, Color tint, int combinedLight) {
+	protected void drawTexturedQuadLit(ResourceLocation texture, MatrixStack matrixStack, IRenderTypeBuffer buffer, Vector3D offset, Vector3D scale, Vector4D uv, Color tint, int combinedLight) {
 		matrixStack.push();
 		IVertexBuilder builder = buffer.getBuffer(RenderType.getCutout());
 		TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(texture);
 
+		float uDelta = sprite.getMaxU() - sprite.getMinU();
+		float vDelta = sprite.getMaxV() - sprite.getMinV();
+
 		matrixStack.translate(offset.getX(), offset.getY(), offset.getZ());
 		matrixStack.scale(scale.getX(), scale.getY(), scale.getZ());
-		builder.pos(matrixStack.getLast().getMatrix(), 0.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMaxU(), sprite.getMinV()).lightmap(combinedLight).normal(-1, 0, 0).endVertex();
-		builder.pos(matrixStack.getLast().getMatrix(), 0.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMaxU(), sprite.getMaxV()).lightmap(combinedLight).normal(-1, 0, 0).endVertex();
-		builder.pos(matrixStack.getLast().getMatrix(), 1.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), sprite.getMaxV()).lightmap(combinedLight).normal(-1, 0, 0).endVertex();
-		builder.pos(matrixStack.getLast().getMatrix(), 1.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), sprite.getMinV()).lightmap(combinedLight).normal(-1, 0, 0).endVertex();
+		builder.pos(matrixStack.getLast().getMatrix(), 0.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU() + (uDelta) * uv.getZ(), sprite.getMinV() + (vDelta) * uv.getY())
+				.lightmap(combinedLight).normal(1, 0, 0).endVertex();
+		builder.pos(matrixStack.getLast().getMatrix(), 0.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU() + (uDelta) * uv.getZ(), sprite.getMinV() + (vDelta) * uv.getW())
+				.lightmap(combinedLight).normal(1, 0, 0).endVertex();
+		builder.pos(matrixStack.getLast().getMatrix(), 1.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU() + (uDelta) * uv.getX(), sprite.getMinV() + (vDelta) * uv.getW())
+				.lightmap(combinedLight).normal(1, 0, 0).endVertex();
+		builder.pos(matrixStack.getLast().getMatrix(), 1.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU() + (uDelta) * uv.getX(), sprite.getMinV() + (vDelta) * uv.getY())
+				.lightmap(combinedLight).normal(1, 0, 0).endVertex();
 		matrixStack.pop();
 	}
 
-	protected void drawTexturedQuadUnlit(ResourceLocation texture, MatrixStack matrixStack, IRenderTypeBuffer buffer, Vector3D offset, Vector3D scale, Color tint) {
-		drawTexturedQuadLit(texture, matrixStack, buffer, offset, scale, tint, 15728880);
+	protected void drawTexturedQuadUnlit(ResourceLocation texture, MatrixStack matrixStack, IRenderTypeBuffer buffer, Vector3D offset, Vector3D scale, Vector4D uv, Color tint) {
+		drawTexturedQuadLit(texture, matrixStack, buffer, offset, scale, uv, tint, 15728880);
+	}
+
+	/**
+	 * Rotates the last matrix on the provided stack to face the provided direction.
+	 * 
+	 * @param side
+	 * @param matrixStack
+	 */
+	protected void renderToFaceSide(Direction side, MatrixStack matrixStack) {
+		if (side == Direction.WEST) {
+			matrixStack.rotate(new Quaternion(new Vector3f(0, 1, 0), -90, true));
+			matrixStack.translate(0, 0, -1);
+		} else if (side == Direction.NORTH) {
+			matrixStack.rotate(new Quaternion(new Vector3f(0, 1, 0), 180, true));
+			matrixStack.translate(-1, 0, -1);
+		} else if (side == Direction.EAST) {
+			matrixStack.rotate(new Quaternion(new Vector3f(0, 1, 0), 90, true));
+			matrixStack.translate(-1, 0, 0);
+		}
 	}
 }

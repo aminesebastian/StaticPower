@@ -122,4 +122,5 @@ public interface IDigistoreInventory extends INBTSerializable<CompoundNBT> {
 	 * @return
 	 */
 	public boolean canAcceptItem(ItemStack item);
+
 }

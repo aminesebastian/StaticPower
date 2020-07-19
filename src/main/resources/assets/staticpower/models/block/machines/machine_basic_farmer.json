@@ -1,8 +1,9 @@
 {
-    "parent": "block/orientable",
+    "parent": "staticpower:block/machines/base_machine_model",
     "textures": {
-        "top": "staticpower:blocks/machines/farmer_side",
-        "front": "staticpower:blocks/machines/machine_basic_farmer_front",
-        "side": "staticpower:blocks/machines/farmer_side"
+		"side": "staticpower:blocks/machines/sides/green_machine_side",
+		"front": "staticpower:blocks/machines/sides/green_machine_side_front",
+		"face": "staticpower:blocks/machines/basic_farmer_face_off",
+		"particle": "staticpower:blocks/machines/sides/green_machine_side"
     }
 }

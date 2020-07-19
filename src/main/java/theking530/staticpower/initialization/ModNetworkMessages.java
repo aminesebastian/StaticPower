@@ -11,6 +11,7 @@ import theking530.staticpower.items.cableattachments.digistoreterminal.PacketDig
 import theking530.staticpower.items.itemfilter.PacketItemFilter;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.network.TileEntityBasicSyncPacket;
+import theking530.staticpower.tileentities.components.PacketEnergyStorageComponent;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.PacketLockDigistore;
 import theking530.staticpower.tileentities.powered.battery.BatteryControlSyncPacket;
 
@@ -28,5 +29,6 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(BatteryControlSyncPacket.class);
 		StaticPowerMessageHandler.registerMessage(PacketDigistoreTerminalFilters.class);
 		StaticPowerMessageHandler.registerMessage(JEIRecipeTransferPacket.class);
+		StaticPowerMessageHandler.registerMessage(PacketEnergyStorageComponent.class);
 	}
 }

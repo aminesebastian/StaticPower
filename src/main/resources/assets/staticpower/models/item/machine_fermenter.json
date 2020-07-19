@@ -1,3 +1,6 @@
 {
-	"parent": "staticpower:block/machines/machine_fermenter"
+    "parent": "staticpower:block/machines/machine_fermenter",
+    "textures": {
+		"side": "staticpower:blocks/machines/sides/default_machine_side_item"
+    }
 }

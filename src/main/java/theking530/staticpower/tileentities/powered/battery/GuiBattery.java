@@ -15,6 +15,7 @@ import theking530.common.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
+import theking530.staticpower.utilities.MetricConverter;
 
 public class GuiBattery extends StaticPowerTileEntityGui<ContainerBattery, TileEntityBattery> {
 	private TextButton inputUp;
@@ -29,18 +30,35 @@ public class GuiBattery extends StaticPowerTileEntityGui<ContainerBattery, TileE
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 72, 20, 32, 51));
+		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 75, 20, 26, 51));
 		getTabManager().registerTab(infoTab = new GuiInfoTab(80, 60));
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
 		// getTabManager().registerTab(new GuiPowerControlTab(100, 70, teSBattery));
 		getTabManager().registerTab(new GuiSideConfigTab(true, getTileEntity()));
 		getTabManager().registerTab(new GuiPowerInfoTab(getTileEntity().energyStorage).setTabSide(TabSide.LEFT));
 
+		registerWidget(inputUp = new TextButton(52, 23, 20, 20, "+", this::buttonPressed));
+		registerWidget(inputDown = new TextButton(52, 48, 20, 20, "-", this::buttonPressed));
+		registerWidget(outputUp = new TextButton(104, 23, 20, 20, "+", this::buttonPressed));
+		registerWidget(outputDown = new TextButton(104, 48, 20, 20, "-", this::buttonPressed));
+	}
 
-		registerWidget(inputUp = new TextButton(45, 23, 20, 20, "+", this::buttonPressed));
-		registerWidget(inputDown = new TextButton(45, 48, 20, 20, "-", this::buttonPressed));
-		registerWidget(outputUp = new TextButton(111, 23, 20, 20, "+", this::buttonPressed));
-		registerWidget(outputDown = new TextButton(111, 48, 20, 20, "-", this::buttonPressed));
+	@Override
+	protected void drawForegroundExtras(float partialTicks, int mouseX, int mouseY) {
+		super.drawForegroundExtras(partialTicks, mouseX, mouseY);
+		
+		font.drawString("Input", this.guiLeft + 10, this.guiTop + 32, 4210752);
+		MetricConverter input = new MetricConverter(this.getTileEntity().getInputLimit());
+		font.drawString(input.getValueAsString(true) + "FE/t", this.guiLeft + 4, this.guiTop + 42, 4210752);
+		
+		font.drawString("Output", this.guiLeft + 129, this.guiTop + 32, 4210752);
+		MetricConverter output = new MetricConverter(this.getTileEntity().getOutputLimit());
+		font.drawString(output.getValueAsString(true) + "FE/t", this.guiLeft + 126, this.guiTop + 42, 4210752);
+	}
+
+	@Override
+	public void updateData() {
+
 	}
 
 	public void buttonPressed(StandardButton button, MouseButton mouseButton) {

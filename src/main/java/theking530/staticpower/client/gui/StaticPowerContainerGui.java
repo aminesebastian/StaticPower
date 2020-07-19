@@ -158,22 +158,22 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	public void render(int mouseX, int mouseY, float partialTicks) {
 		super.render(mouseX, mouseY, partialTicks);
 
-		// Renders any hovered tooltips.
-		renderHoveredToolTip(mouseX, mouseY);
-
 		// Raise the mouse hovered event for all the widgets,
 		widgetContainer.handleMouseMove(mouseX, mouseY);
 
 		// Render the foreground of all the widgets.
 		widgetContainer.renderForegound(mouseX, mouseY, partialTicks);
 
-		// Render the widget tooltips as needed.
-		widgetContainer.renderTooltips(mouseX, mouseY);
-
 		drawSlotOverlays(container.inventorySlots);
 
 		// Draw any additional foreground elements.
 		drawForegroundExtras(partialTicks, mouseX, mouseY);
+		
+		// Renders any hovered tooltips.
+		renderHoveredToolTip(mouseX, mouseY);
+		
+		// Render the widget tooltips as needed.
+		widgetContainer.renderTooltips(mouseX, mouseY);
 	}
 
 	@Override

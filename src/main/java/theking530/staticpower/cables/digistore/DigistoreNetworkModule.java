@@ -85,6 +85,14 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 		return digistores;
 	}
 
+	public int getItemCount(ItemStack stack) {
+		return transactionManager.getItemCount(stack);
+	}
+
+	public boolean containsItem(ItemStack stack) {
+		return transactionManager.containsItem(stack);
+	}
+
 	public ItemStack insertItem(ItemStack stack, boolean simulate) {
 		if (managerPresent) {
 			return transactionManager.insertItem(stack, simulate);

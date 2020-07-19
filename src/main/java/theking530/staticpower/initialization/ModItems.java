@@ -142,12 +142,6 @@ public class ModItems {
 	public static StaticPowerItem DustSulfur;
 	public static StaticPowerItem DustSaltpeter;
 	public static StaticPowerItem DustCharcoal;
-	public static StaticPowerItem DustStaticInfusion;
-	public static StaticPowerItem DustEnergizedInfusion;
-	public static StaticPowerItem DustLumumInfusion;
-
-	public static StaticPowerItem DustCobalt;
-	public static StaticPowerItem DustArdite;
 
 	public static StaticPowerItem GemRuby;
 	public static StaticPowerItem GemSapphire;
@@ -181,6 +175,7 @@ public class ModItems {
 	public static StaticPowerItem InternalClock;
 
 	public static StaticPowerItem BasicUpgradePlate;
+	public static StaticPowerItem AdvancedUpgradePlate;
 	public static StaticPowerItem StaticUpgradePlate;
 	public static StaticPowerItem EnergizedUpgradePlate;
 	public static StaticPowerItem LumumUpgradePlate;
@@ -390,16 +385,12 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(DustSulfur = new StaticPowerItem("dust_sulfur"));
 		StaticPowerRegistry.preRegisterItem(DustSaltpeter = new StaticPowerItem("dust_saltpeter"));
 		StaticPowerRegistry.preRegisterItem(DustCharcoal = new StaticPowerItem("dust_charcoal"));
-		StaticPowerRegistry.preRegisterItem(DustStaticInfusion = new StaticPowerItem("dust_static_infusion"));
-		StaticPowerRegistry.preRegisterItem(DustEnergizedInfusion = new StaticPowerItem("dust_energized_infusion"));
-		StaticPowerRegistry.preRegisterItem(DustLumumInfusion = new StaticPowerItem("dust_lumum_infusion"));
 		StaticPowerRegistry.preRegisterItem(DustBrass = new StaticPowerItem("dust_brass"));
 		StaticPowerRegistry.preRegisterItem(DustBronze = new StaticPowerItem("dust_bronze"));
-		StaticPowerRegistry.preRegisterItem(DustCobalt = new StaticPowerItem("dust_cobolt"));
-		StaticPowerRegistry.preRegisterItem(DustArdite = new StaticPowerItem("dust_ardite"));
 
 		// Upgrade Plates
 		StaticPowerRegistry.preRegisterItem(BasicUpgradePlate = new StaticPowerItem("upgrade_plate_basic"));
+		StaticPowerRegistry.preRegisterItem(AdvancedUpgradePlate = new StaticPowerItem("upgrade_plate_advanced"));
 		StaticPowerRegistry.preRegisterItem(StaticUpgradePlate = new StaticPowerItem("upgrade_plate_static"));
 		StaticPowerRegistry.preRegisterItem(EnergizedUpgradePlate = new StaticPowerItem("upgrade_plate_energized"));
 		StaticPowerRegistry.preRegisterItem(LumumUpgradePlate = new StaticPowerItem("upgrade_plate_lumum"));

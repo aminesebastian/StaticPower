@@ -43,10 +43,15 @@ public class TileEntityDigistoreIOPort extends BaseDigistoreTileEntity {
 				// Get the item in the slot.
 				ItemStack currentItem = player.inventory.getStackInSlot(i).copy();
 
+				// Skip any items that are not currently in the digistore system.
+				if (!module.containsItem(currentItem)) {
+					continue;
+				}
+
 				// Insert it into the network.
 				ItemStack remaining = module.insertItem(currentItem, false);
 
-				// Update the held item.
+				// Update the slot contents.
 				if (currentItem.getCount() != remaining.getCount()) {
 					itemInserted = true;
 					player.inventory.setInventorySlotContents(i, remaining);

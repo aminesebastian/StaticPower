@@ -161,7 +161,7 @@ public class DigistoreInventoryComponent extends InventoryComponent implements I
 			if (card.isEmpty()) {
 				continue;
 			}
-			ItemStack extracted = DigistoreCard.getInventory(card).extractItem(stack, count, simulate);
+			ItemStack extracted = DigistoreCard.getInventory(card).extractItem(stack, count - output.getCount(), simulate);
 			if (!extracted.isEmpty()) {
 				if (!output.isEmpty()) {
 					output.grow(extracted.getCount());

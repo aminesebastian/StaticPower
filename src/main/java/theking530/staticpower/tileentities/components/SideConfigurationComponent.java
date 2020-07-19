@@ -108,7 +108,17 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 		MachineSideMode newMode;
 		// Loop until we hit an acceptable side mode.
 		do {
-			currentModeIndex = (currentModeIndex + 1) % (MachineSideMode.values().length);
+			int incrementAmount = direction == SideIncrementDirection.FORWARD ? 1 : -1;
+			currentModeIndex = currentModeIndex + incrementAmount;
+
+			// Handle the cases where we go out of range.
+			if (currentModeIndex < 0) {
+				currentModeIndex = MachineSideMode.values().length - 1;
+			} else if (currentModeIndex > MachineSideMode.values().length - 1) {
+				currentModeIndex = 0;
+			}
+
+			// Set the new mode.
 			newMode = MachineSideMode.values()[currentModeIndex];
 			configuration[side.ordinal()] = newMode;
 		} while (!sideModeFilter.test(side, newMode) && newMode != originalMode);

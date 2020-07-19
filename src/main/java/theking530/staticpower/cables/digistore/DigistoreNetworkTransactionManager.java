@@ -25,6 +25,31 @@ public class DigistoreNetworkTransactionManager {
 		this.digistores.addAll(digistores);
 	}
 
+	public boolean containsItem(ItemStack stack) {
+		for (IDigistoreInventory digistore : digistores) {
+			for (int i = 0; i < digistore.getUniqueItemCapacity(); i++) {
+				DigistoreStack digiStack = digistore.getDigistoreStack(i);
+				if (ItemUtilities.areItemStacksStackable(stack, digiStack.getStoredItem())) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public int getItemCount(ItemStack stack) {
+		int count = 0;
+		for (IDigistoreInventory digistore : digistores) {
+			for (int i = 0; i < digistore.getUniqueItemCapacity(); i++) {
+				DigistoreStack digiStack = digistore.getDigistoreStack(i);
+				if (ItemUtilities.areItemStacksStackable(stack, digiStack.getStoredItem())) {
+					count += digiStack.getCount();
+				}
+			}
+		}
+		return count;
+	}
+
 	public ItemStack insertItem(ItemStack stack, boolean simulate) {
 		// Create a copy for the output stack.
 		ItemStack stackToUse = stack.copy();
