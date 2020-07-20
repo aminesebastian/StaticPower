@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:former_recipe",
+	"input": {
+		"tag": "forge:ingots/copper"
+	},
+	"mold": {
+		"item": "staticpower:mold_gear"
+	},
+	"output": {
+		"item": "staticpower:gear_copper"
+	}
+}

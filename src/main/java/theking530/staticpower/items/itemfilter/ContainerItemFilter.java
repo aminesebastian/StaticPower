@@ -38,10 +38,8 @@ public class ContainerItemFilter extends StaticPowerItemContainer<ItemFilter> {
 			return;
 		}
 
-		FilterTier tier = ((ItemFilter) getItemStack().getItem()).filterTier;
-
-		int slotOffset = tier == FilterTier.BASIC ? 3 : tier == FilterTier.UPGRADED ? 1 : 0;
-		for (int i = 0; i < tier.getSlotCount(); i++) {
+		int slotOffset = 0;
+		for (int i = 0; i < filterInventory.getSlots(); i++) {
 			this.addSlot(new PhantomSlot(filterInventory, i, 8 + (i + slotOffset) * 18, 19).renderFluidContainerAsFluid());
 		}
 

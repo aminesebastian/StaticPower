@@ -1,5 +1,6 @@
 package theking530.staticpower.data.crafting.wrappers.former;
 
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
@@ -34,7 +35,13 @@ public class FormerRecipe extends AbstractMachineRecipe {
 		return inputIngredient;
 	}
 
-	public ItemStack getOutputItemStack() {
+	@Override
+	public ItemStack getCraftingResult(IInventory inv) {
+		return outputItemStack;
+	}
+
+	@Override
+	public ItemStack getRecipeOutput() {
 		return outputItemStack;
 	}
 

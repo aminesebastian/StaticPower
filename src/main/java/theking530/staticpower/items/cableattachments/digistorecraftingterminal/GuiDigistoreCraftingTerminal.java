@@ -12,7 +12,7 @@ public class GuiDigistoreCraftingTerminal extends AbstractGuiDigistoreTerminal<C
 
 	public GuiDigistoreCraftingTerminal(ContainerDigistoreCraftingTerminal container, PlayerInventory invPlayer, ITextComponent name) {
 		super(container, invPlayer, name, 176, 270);
-		registerWidget(new ArrowProgressBar(118, 138, 32, 16));
+		registerWidget(new ArrowProgressBar(118, 138));
 		searchBar.setSize(70, 12);
 		searchBar.setPosition(98, 6);
 

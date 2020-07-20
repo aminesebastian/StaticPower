@@ -4,7 +4,7 @@
 		"path": "tier_energized"
 	},
 	"unlocalizedTierName": "tier.staticpower.energized",
-	"portableBatteryCapacity": 100000,
+	"portableBatteryCapacity": 1000000,
 	"solarPanelPowerGeneration": 64,
 	"solarPanelPowerStorage": 256,
 	"cableExtractorRate": 20,
@@ -19,6 +19,7 @@
 	"digistoreCapacity": 131072,
 	"batteryCapacity": 65536,
 	"itemCableMaxSpeed": 10,
+	"itemFilterSlots": 9,
 	"itemCableAcceleration": 1.75,
 	"itemCableFriction": 1.75
 }

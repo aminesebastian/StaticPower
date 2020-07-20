@@ -1,15 +1,20 @@
 package theking530.common.gui.widgets.progressbars;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-
-import net.minecraft.client.Minecraft;
 import theking530.common.gui.GuiDrawUtilities;
 import theking530.common.gui.GuiTextures;
 import theking530.common.utilities.Vector2D;
 
 public class ArrowProgressBar extends AbstractProgressBar {
-	public ArrowProgressBar(int xPosition, int yPosition, int xSize, int ySize) {
-		super(xPosition, yPosition, xSize, ySize);
+	private boolean flipped;
+
+	public ArrowProgressBar(int xPosition, int yPosition) {
+		super(xPosition, yPosition, 22, 16);
+	}
+
+	public ArrowProgressBar setFlipped(boolean flipped) {
+		this.flipped = flipped;
+		this.setPosition(this.getPosition().getX() - this.getSize().getX(), this.getPosition().getY());
+		return this;
 	}
 
 	@Override
@@ -37,14 +42,16 @@ public class ArrowProgressBar extends AbstractProgressBar {
 			}
 		}
 
-
 		Vector2D screenSpacePosition = this.getScreenSpacePosition();
-		float adjustedProgress = 0.6875f * interp / (float) maxProgress;
+		float adjustedProgress = interp / (float) maxProgress;
 
-		Minecraft.getInstance().getTextureManager().bindTexture(GuiTextures.ARROW_PROGRESS_BAR);
-		GlStateManager.enableBlend();
-		GuiDrawUtilities.drawTexturedModalRect(screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY(), 0, 0.5f, 1.0f, 1.0f);
-		GuiDrawUtilities.drawTexturedModalRect(screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX() * adjustedProgress, getSize().getY(), 0, 0, adjustedProgress, 0.5f);
-		GlStateManager.disableBlend();
+		if (flipped) {
+			GuiDrawUtilities.drawTexturedModalRect(GuiTextures.ARROW_PROGRESS_BAR, screenSpacePosition.getX() + getSize().getX(), screenSpacePosition.getY(), -getSize().getX(), getSize().getY(), 0, 0.5f, 0.6875f, 1.0f);
+			GuiDrawUtilities.drawTexturedModalRect(GuiTextures.ARROW_PROGRESS_BAR, screenSpacePosition.getX() + getSize().getX(), screenSpacePosition.getY(), -getSize().getX() * adjustedProgress, getSize().getY(), 0.0f, 0.0f,
+					adjustedProgress * 0.6875f, 0.5f);
+		} else {
+			GuiDrawUtilities.drawTexturedModalRect(GuiTextures.ARROW_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY(), 0, 0.5f, 0.6875f, 1.0f);
+			GuiDrawUtilities.drawTexturedModalRect(GuiTextures.ARROW_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX() * adjustedProgress, getSize().getY(), 0.0f, 0.0f, adjustedProgress * 0.6875f, 0.5f);
+		}
 	}
 }

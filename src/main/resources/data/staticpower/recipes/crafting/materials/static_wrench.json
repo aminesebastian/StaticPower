@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		" i ",
+		"ic ",
+		"  t"
+	],
+	"key": {
+		"i": {
+			"tag": "forge:ingots/iron"
+		},
+		"t": {
+			"tag": "forge:ingots/tin"
+		},
+		"c": {
+			"item": "staticpower:crop_static"
+		}
+	},
+	"result": {
+		"item": "staticpower:static_wrench"
+	}
+}

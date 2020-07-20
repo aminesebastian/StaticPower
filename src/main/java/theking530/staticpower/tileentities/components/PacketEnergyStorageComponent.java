@@ -42,7 +42,7 @@ public class PacketEnergyStorageComponent extends NetworkMessage {
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
-			if (Minecraft.getInstance().player.openContainer != Minecraft.getInstance().player.container) {
+			if (Minecraft.getInstance().player.openContainer == Minecraft.getInstance().player.container) {
 				if (Minecraft.getInstance().player.world.isAreaLoaded(position, 1)) {
 					TileEntity rawTileEntity = Minecraft.getInstance().player.world.getTileEntity(position);
 

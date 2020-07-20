@@ -2,7 +2,7 @@
 	"type": "minecraft:crafting_shapeless",
 	"ingredients": [
 		{
-			"item": "staticpower:ingot_aluminium"
+			"tag": "forge:ingots/aluminium"
 		}
 	],
 	"result": {

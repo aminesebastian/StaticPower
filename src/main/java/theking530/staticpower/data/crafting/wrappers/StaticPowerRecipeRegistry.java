@@ -1,11 +1,14 @@
 package theking530.staticpower.data.crafting.wrappers;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipe;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
@@ -16,6 +19,7 @@ public class StaticPowerRecipeRegistry {
 
 	@SuppressWarnings("rawtypes")
 	public static final HashMap<IRecipeType, LinkedList<AbstractStaticPowerRecipe>> RECIPES = new HashMap<IRecipeType, LinkedList<AbstractStaticPowerRecipe>>();
+	public static final LinkedList<FurnaceRecipe> FURNACE_RECIPES = new LinkedList<FurnaceRecipe>();
 
 	/**
 	 * Attempts to find a recipe of the given type that matches the provided
@@ -43,6 +47,23 @@ public class StaticPowerRecipeRegistry {
 
 		// If we find no match, return empty.
 		return Optional.empty();
+	}
+
+	/**
+	 * Gets all the recipes of the provided type.
+	 * 
+	 * @param <T>        The class of the recipe.
+	 * @param recipeType The type of the recipe.
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T extends AbstractStaticPowerRecipe> List<T> getRecipesOfType(IRecipeType<T> recipeType) {
+		List<T> recipes = new ArrayList<>();
+		for (AbstractStaticPowerRecipe abstractRecipe : StaticPowerRecipeRegistry.RECIPES.get(recipeType)) {
+			T formerRecipe = (T) abstractRecipe;
+			recipes.add(formerRecipe);
+		}
+		return recipes;
 	}
 
 	/**
@@ -96,6 +117,8 @@ public class StaticPowerRecipeRegistry {
 			if (recipe instanceof AbstractStaticPowerRecipe) {
 				addRecipe((AbstractStaticPowerRecipe) recipe);
 				recipeCount++;
+			} else if (recipe.getType() == IRecipeType.SMELTING) {
+				FURNACE_RECIPES.add((FurnaceRecipe) recipe);
 			}
 		}
 

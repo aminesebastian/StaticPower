@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:former_recipe",
 	"input": {
-		"item": "staticpower:ingot_tungsten"
+		"tag": "forge:ingots/tungsten"
 	},
 	"mold": {
 		"item": "staticpower:mold_plate"

@@ -18,7 +18,7 @@ public class GuiPump extends StaticPowerTileEntityGui<ContainerPump, TileEntityP
 	@Override
 	public void initializeGui() {
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 44, 20, 32, 74));
-		registerWidget(new ArrowProgressBar(84, 31, 32, 16));
+		registerWidget(new ArrowProgressBar(84, 31));
 		tabManager.registerTab(infoTab = new GuiInfoTab(100, 65));
 
 		getTabManager().registerTab(new GuiSideConfigTab(true, getTileEntity()));

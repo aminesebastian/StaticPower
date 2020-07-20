@@ -22,6 +22,7 @@ import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.utilities.RedstoneMode;
+import theking530.staticpower.utilities.WorldUtilities;
 
 public abstract class AbstractCableProviderComponent extends AbstractTileEntityComponent {
 	/** KEEP IN MIND: This is purely cosmetic and on the client side. */
@@ -80,6 +81,19 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	public void onNeighborChanged(BlockState currentState, BlockPos neighborPos) {
 		super.onNeighborChanged(currentState, neighborPos);
 		scanForAttachments();
+	}
+
+	@Override
+	public void onOwningBlockBroken(BlockState state, BlockState newState, boolean isMoving) {
+		// Drop the covers and attachments.
+		for (Direction dir : Direction.values()) {
+			if (hasAttachment(dir)) {
+				WorldUtilities.dropItem(getWorld(), getPos(), removeAttachment(dir));
+			}
+			if (hasCover(dir)) {
+				WorldUtilities.dropItem(getWorld(), getPos(), removeCover(dir));
+			}
+		}
 	}
 
 	/**

@@ -37,19 +37,19 @@ public abstract class AbstractStaticPowerRecipe implements IRecipe<IInventory> {
 
 	@Override
 	public ItemStack getCraftingResult(IInventory inv) {
-		StaticPower.LOGGER.error("This method should not be called on any Static Power Recipes.");
+		StaticPower.LOGGER.error("This method is not applicable for this recipe.");
 		return null;
 	}
 
 	@Override
 	public boolean canFit(int width, int height) {
-		StaticPower.LOGGER.error("This method should not be called on any Static Power Recipes.");
+		StaticPower.LOGGER.error("This method is not applicable for this recipe.");
 		return false;
 	}
 
 	@Override
 	public ItemStack getRecipeOutput() {
-		StaticPower.LOGGER.error("This method should not be called on any Static Power Recipes.");
+		StaticPower.LOGGER.error("This method is not applicable for this recipe.");
 		return ItemStack.EMPTY;
 	}
 

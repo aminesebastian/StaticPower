@@ -7,7 +7,7 @@
 	],
 	"key": {
 		"n": {
-			"item": "staticpower:nugget_tin"
+			"tag": "forge:nuggets/tin"
 		}
 	},
 	"result": {

@@ -2,9 +2,6 @@ package theking530.common.gui.widgets.progressbars;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-
-import net.minecraft.client.Minecraft;
 import theking530.common.gui.GuiDrawUtilities;
 import theking530.common.gui.GuiTextures;
 import theking530.common.utilities.Vector2D;
@@ -34,18 +31,13 @@ public class CentrifugeProgressBar  extends AbstractProgressBar {
 		Vector2D screenSpacePosition = this.getScreenSpacePosition();
 		float adjustedProgress = interp / processingEntity.getProcessingTime();
 
-		GlStateManager.enableBlend();
-		Minecraft.getInstance().getTextureManager().bindTexture(GuiTextures.CENTRIFUGE_PROGRESS_BAR);
-
 		GL11.glPushMatrix();
 		float offset = 0.5f;
 		GL11.glTranslatef(screenSpacePosition.getX() + offset + getSize().getX() / 2, screenSpacePosition.getY() + offset + getSize().getY() / 2, screenSpacePosition.getY() + offset + getSize().getY() / 2);
 		GL11.glRotatef(adjustedProgress * 720, 0.0f, 0.0f, 1.0f);
 		GL11.glTranslatef(-(screenSpacePosition.getX() + offset + getSize().getX() / 2), -(screenSpacePosition.getY() + offset + getSize().getY() / 2), -(screenSpacePosition.getY() + offset + getSize().getY() / 2));
-		GuiDrawUtilities.drawTexturedModalRect(screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY(), 0.0f, 0.5f, 1.0f, 1.0f);
-		GuiDrawUtilities.drawTexturedModalRect(screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY() * adjustedProgress, 0.0f, 0.0f, 1.0f, (0.5f * adjustedProgress));
+		GuiDrawUtilities.drawTexturedModalRect(GuiTextures.CENTRIFUGE_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY(), 0.0f, 0.5f, 1.0f, 1.0f);
+		GuiDrawUtilities.drawTexturedModalRect(GuiTextures.CENTRIFUGE_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY() * adjustedProgress, 0.0f, 0.0f, 1.0f, (0.5f * adjustedProgress));
 		GL11.glPopMatrix();
-
-		GlStateManager.disableBlend();
 	}
 }

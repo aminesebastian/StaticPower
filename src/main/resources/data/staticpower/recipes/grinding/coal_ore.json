@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:grinder_recipe",
 	"input": {
-		"item": "minecraft:coal_ore"
+		"tag": "forge:ores/coal"
 	},
 	"output": [
 		{
@@ -11,12 +11,7 @@
 		{
 			"item": "minecraft:coal",
 			"count": 1,
-			"chance": 0.4
-		},
-				{
-			"item": "minecraft:coal",
-			"count": 1,
-			"chance": 0.1
+			"chance": 0.25
 		}
 	]
 }

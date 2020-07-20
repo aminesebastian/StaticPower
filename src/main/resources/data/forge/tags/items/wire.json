@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+	"staticpower:wire_copper",
+	"staticpower:wire_silver",  
+	"staticpower:wire_gold"
+  ]
+}

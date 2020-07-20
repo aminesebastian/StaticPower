@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:grinder_recipe",
 	"input": {
-		"item": "staticpower:ore_ruby"
+		"tag": "forge:ores/ruby"
 	},
 	"output": [
 		{
@@ -11,12 +11,7 @@
 		{
 			"item": "staticpower:gem_ruby",
 			"count": 1,
-			"chance": 0.5
-		},
-		{
-			"item": "staticpower:gem_ruby",
-			"count": 1,
-			"chance": 0.1
+			"chance": 0.25
 		}
 	]
 }

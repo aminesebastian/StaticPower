@@ -4,7 +4,7 @@
 		"path": "tier_lumum"
 	},
 	"unlocalizedTierName": "tier.staticpower.lumum",
-	"portableBatteryCapacity": 1000000,
+	"portableBatteryCapacity": 10000000,
 	"solarPanelPowerGeneration": 128,
 	"solarPanelPowerStorage": 512,
 	"cableExtractorRate": 20,
@@ -19,6 +19,7 @@
 	"digistoreCapacity": 262144,
 	"batteryCapacity": 131072,
 	"itemCableMaxSpeed": 5,
+	"itemFilterSlots": 12,
 	"itemCableAcceleration": 2.0,
 	"itemCableFriction": 1.5
 }

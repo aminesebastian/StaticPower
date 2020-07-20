@@ -1,0 +1,6 @@
+{
+    "parent": "staticpower:block/machines/machine_generator_solid",
+    "textures": {
+		"side": "staticpower:blocks/machines/sides/grey_machine_side_item"
+    }
+}

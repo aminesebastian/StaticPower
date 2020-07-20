@@ -1,0 +1,7 @@
+{
+    "parent": "block/cube_column",
+    "textures": {
+        "end": "staticpower:blocks/decorative/log_static_top",
+        "side": "staticpower:blocks/decorative/log_static"
+    }
+}

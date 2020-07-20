@@ -19,6 +19,7 @@
 	"digistoreCapacity": 4096,
 	"batteryCapacity": 4096,
 	"itemCableMaxSpeed": 60,
+	"itemFilterSlots": 3,
 	"itemCableAcceleration": 1.1,
 	"itemCableFriction": 2.5
 }

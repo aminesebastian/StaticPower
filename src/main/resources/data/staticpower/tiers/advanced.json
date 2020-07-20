@@ -4,6 +4,9 @@
 		"path": "tier_advanced"
 	},
 	"unlocalizedTierName": "tier.staticpower.advanced",
+	"portableBatteryCapacity": 50000,
+	"solarPanelPowerGeneration": 16,
+	"solarPanelPowerStorage": 64,
 	"cableExtractorRate": 40,
 	"cableExtractionStackSize": 8,
 	"cableExtractionFluidRate": 64,
@@ -16,6 +19,7 @@
 	"digistoreCapacity": 16384,
 	"batteryCapacity": 8192,
 	"itemCableMaxSpeed": 40,
+	"itemFilterSlots": 5,
 	"itemCableAcceleration": 1.25,
 	"itemCableFriction": 2.25
 }

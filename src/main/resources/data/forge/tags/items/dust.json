@@ -1,0 +1,23 @@
+{
+  "replace": false,
+  "values": [
+	"staticpower:dust_copper",
+	"staticpower:dust_tin",
+	"staticpower:dust_zinc",
+	"staticpower:dust_silver",
+	"staticpower:dust_lead",
+	"staticpower:dust_tungsten",
+	"staticpower:dust_magnesium",
+	"staticpower:dust_platinum",
+	"staticpower:dust_aluminium",
+	"staticpower:dust_static",
+	"staticpower:dust_energized",
+	"staticpower:dust_lumum",
+	"staticpower:dust_inert_infusion",
+	"staticpower:dust_redstone_alloy",    
+	"staticpower:dust_dust",    
+	"staticpower:dust_gold",    
+	"staticpower:dust_brass",
+	"staticpower:dust_bronze"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{
+			"tag": "forge:ingots/aluminium"
+		},
+		{
+			"item": "staticpower:metal_hammer"
+		}
+	],
+	"result": {
+		"item": "staticpower:plate_aluminium",
+		"count": 1
+	}
+}

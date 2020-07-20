@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:grinder_recipe",
 	"input": {
-		"item": "staticpower:ore_platinum"
+		"tag": "forge:ores/platinum"
 	},
 	"output": [
 		{

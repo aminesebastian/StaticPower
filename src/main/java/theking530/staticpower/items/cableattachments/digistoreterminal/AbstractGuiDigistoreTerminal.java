@@ -66,7 +66,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 			MetricConverter count = new MetricConverter(slotIn.getStack().getCount());
 
 			// Draw the item count string.
-			this.drawStringWithSize(count.getValueAsString(true), slotIn.xPos + 16, slotIn.yPos + 15, 0.5f, Color.WHITE, true);
+			this.drawStringWithSize(count.getValueAsString(true), slotIn.xPos + 16, slotIn.yPos + 15, 0.5f, Color.EIGHT_BIT_WHITE, true);
 		} else {
 			super.drawSlot(slotIn);
 		}

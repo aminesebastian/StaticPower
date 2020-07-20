@@ -124,12 +124,13 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IBloc
 
 	/**
 	 * This is a helper event that is raised when a block is harvested by the
-	 * player. Once this call is completed, the vanilla code is still executed. This
-	 * is useful in the event that the block would like to serialize its owned
-	 * {@link TileEntity}'s inventory to NBT or drop the contents on the floor. The
-	 * vanilla code then handles dropping this actual block or any other drops as
-	 * defined in the datapack. If you would like to completely override vanilla
-	 * Behavior, override
+	 * player. It is only raised when the owning block is removed by a player that
+	 * is not in creative mode. Once this call is completed, the vanilla code is
+	 * still executed. This is useful in the event that the block would like to
+	 * serialize its owned {@link TileEntity}'s inventory to NBT or drop the
+	 * contents on the floor. The vanilla code then handles dropping this actual
+	 * block or any other drops as defined in the datapack. If you would like to
+	 * completely override vanilla Behavior, override
 	 * {@link #harvestBlock(World, PlayerEntity, BlockPos, BlockState, TileEntity, ItemStack)}
 	 * instead.
 	 * 
@@ -252,8 +253,6 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IBloc
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 		// Raise the inheritor's method.
 		onStaticPowerBlockReplaced(state, world, pos, newState, isMoving, state.getBlock() != newState.getBlock());
-
-		spawnDrops(state, world, pos);
 
 		if (state.getBlock() != newState.getBlock()) {
 			// Raise the tile entity's broken method.

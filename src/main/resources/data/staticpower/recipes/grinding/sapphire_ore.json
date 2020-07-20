@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:grinder_recipe",
 	"input": {
-		"item": "staticpower:ore_sapphire"
+		"tag": "forge:ores/sapphire"
 	},
 	"output": [
 		{
@@ -11,12 +11,7 @@
 		{
 			"item": "staticpower:gem_sapphire",
 			"count": 1,
-			"chance": 0.5
-		},
-		{
-			"item": "staticpower:gem_sapphire",
-			"count": 1,
-			"chance": 0.1
+			"chance": 0.25
 		}
 	]
 }

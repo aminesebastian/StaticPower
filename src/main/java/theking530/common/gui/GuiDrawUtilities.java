@@ -139,12 +139,14 @@ public class GuiDrawUtilities {
 		final int X = (int) ((xPos + offset - Minecraft.getInstance().fontRenderer.getStringWidth(text) * scaleFactor) * inverseScaleFactor);
 		final int Y = (int) ((yPos + offset - 7.0f * scaleFactor) * inverseScaleFactor);
 		IRenderTypeBuffer.Impl buffer = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
-		Minecraft.getInstance().fontRenderer.renderString(text, X, Y, 16777215, withShadow, tm.getMatrix(), buffer, true, 0, 15728880);
+		Minecraft.getInstance().fontRenderer.renderString(text, X, Y, color.encodeInInteger(), withShadow, tm.getMatrix(), buffer, true, 0, 15728880);
 		buffer.finish();
 		RenderSystem.enableBlend();
 	}
 
-	public static void drawTexturedModalRect(float x, float y, float width, float height, float minU, float minV, float maxU, float maxV) {
+	public static void drawTexturedModalRect(ResourceLocation texture, float x, float y, float width, float height, float minU, float minV, float maxU, float maxV) {
+		Minecraft.getInstance().getTextureManager().bindTexture(texture);
+		GlStateManager.enableBlend();
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
 		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
@@ -153,10 +155,6 @@ public class GuiDrawUtilities {
 		bufferbuilder.pos((double) (x + width), (double) (y + 0), 0.0).tex(maxU, minV).endVertex();
 		bufferbuilder.pos((double) (x + 0), (double) (y + 0), 0.0).tex(minU, minV).endVertex();
 		tessellator.draw();
-	}
-
-	public static void drawTexturedModalRect(float x, float y, float width, float height, float minU, float minV, float maxU, float maxV, float texetSize) {
-		drawTexturedModalRect(x, y, width, height, minU * texetSize, minV * texetSize, maxU * texetSize, maxV * texetSize);
 	}
 
 	public static TextureAtlasSprite getStillFluidSprite(FluidStack fluidStack) {

@@ -1,0 +1,15 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{
+			"item": "staticpower:ingot_lumum"
+		},
+		{
+			"item": "staticpower:metal_hammer"
+		}
+	],
+	"result": {
+		"item": "staticpower:plate_lumum",
+		"count": 1
+	}
+}

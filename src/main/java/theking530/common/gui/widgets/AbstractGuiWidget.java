@@ -22,6 +22,7 @@ public abstract class AbstractGuiWidget {
 	private Vector2D ownerPosition;
 	private Vector2D ownerSize;
 	private boolean isVisible;
+	private boolean tooltipsDisabled;
 
 	public AbstractGuiWidget(float xPosition, float yPosition, float width, float height) {
 		position = new Vector2D(xPosition, yPosition);
@@ -212,6 +213,15 @@ public abstract class AbstractGuiWidget {
 	/* Tooltip */
 	public void getTooltips(Vector2D mousePosition, List<ITextComponent> tooltips, boolean showAdvanced) {
 
+	}
+
+	public boolean getTooltipsDisabled() {
+		return tooltipsDisabled;
+	}
+
+	public AbstractGuiWidget setTooltipsDisabled(boolean disabled) {
+		tooltipsDisabled = disabled;
+		return this;
 	}
 
 	/* Input Events */

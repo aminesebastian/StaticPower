@@ -1,0 +1,15 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{
+			"tag": "forge:ingots/lead"
+		},
+		{
+			"item": "staticpower:metal_hammer"
+		}
+	],
+	"result": {
+		"item": "staticpower:plate_lead",
+		"count": 1
+	}
+}

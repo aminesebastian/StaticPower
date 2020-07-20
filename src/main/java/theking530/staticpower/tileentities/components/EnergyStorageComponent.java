@@ -159,7 +159,9 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	/**
 	 * Sets the filter used to restrict access to this component through
 	 * capabilities. Use this to prevent certain actions from the capability access
-	 * (ie. make it so external accessor cannot extract power).
+	 * (ie. make it so external accessor cannot extract power). No need to check
+	 * side configurations (ex. if a side is disabled) here as the energy component
+	 * automatically picks those up.
 	 * 
 	 * @param filter
 	 */

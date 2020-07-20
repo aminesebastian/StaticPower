@@ -1,0 +1,23 @@
+{
+  "replace": false,
+  "values": [
+	"staticpower:iron_copper",
+	"staticpower:iron_tin",
+	"staticpower:iron_zinc",
+	"staticpower:iron_silver",
+	"staticpower:iron_lead",
+	"staticpower:iron_tungsten",
+	"staticpower:iron_magnesium",
+	"staticpower:iron_platinum",
+	"staticpower:iron_aluminium",
+	"staticpower:iron_static",
+	"staticpower:iron_energized",
+	"staticpower:iron_lumum",
+	"staticpower:iron_inert_infusion",
+	"staticpower:iron_redstone_alloy",    
+	"staticpower:iron_iron",    
+	"staticpower:iron_gold",    
+	"staticpower:iron_brass",
+	"staticpower:iron_bronze"
+  ]
+}

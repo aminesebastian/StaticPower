@@ -13,7 +13,7 @@ public class MetricConverter {
 		// For each iteration of the loop, increment the suffix index.
 		int suffixIndex = 0;
 		this.Value = value;
-		while (Value / 1000 > 1) {
+		while (Value / 1000 >= 1) {
 			Value /= 1000;
 			suffixIndex++;
 		}

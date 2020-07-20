@@ -138,7 +138,8 @@ public class DigistoreMonoCardItemModel implements IBakedModel {
 
 				BlockFaceUV blockFaceUV = new BlockFaceUV(new float[] { 0.0f, 0.0f, 16.0f, 16.0f }, 0);
 				BlockPartFace blockPartFace = new BlockPartFace(null, -1, sideSprite.getName().toString(), blockFaceUV);
-				BakedQuad newQuad = FaceBaker.bakeQuad(new Vector3f(3.5f, 4.0f, 0.0f), new Vector3f(3.75f + (filledRatio * 6.0f), 5.4f, 16.0f), blockPartFace, sideSprite, Direction.SOUTH, SimpleModelTransform.IDENTITY, null, false,
+
+				BakedQuad newQuad = FaceBaker.bakeQuad(new Vector3f(3.5f, 4.0f, 0.0f), new Vector3f(3.5f + (filledRatio * 9.0f), 5.4f, 16.0f), blockPartFace, sideSprite, Direction.SOUTH, SimpleModelTransform.IDENTITY, null, false,
 						new ResourceLocation("dummy_name"));
 				quads.add(newQuad);
 			}

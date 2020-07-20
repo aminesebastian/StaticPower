@@ -7,7 +7,7 @@
 	],
 	"key": {
 		"n": {
-			"item": "staticpower:nugget_aluminium"
+			"tag": "forge:nuggets/aluminium"
 		}
 	},
 	"result": {

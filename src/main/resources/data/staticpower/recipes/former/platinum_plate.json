@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:former_recipe",
 	"input": {
-		"item": "staticpower:ingot_platinum"
+		"tag": "forge:ingots/platinum"
 	},
 	"mold": {
 		"item": "staticpower:mold_plate"

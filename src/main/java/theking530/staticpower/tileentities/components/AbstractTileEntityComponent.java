@@ -42,6 +42,10 @@ public abstract class AbstractTileEntityComponent {
 
 	}
 
+	public void onOwningBlockBroken(BlockState state, BlockState newState, boolean isMoving) {
+		
+	}
+
 	public void preProcessUpdate() {
 	}
 

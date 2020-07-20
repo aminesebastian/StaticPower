@@ -17,7 +17,6 @@ import theking530.staticpower.items.cableattachments.retirever.RetrieverAttachme
 import theking530.staticpower.items.crops.DepletedCrop;
 import theking530.staticpower.items.crops.StaticPlantCrop;
 import theking530.staticpower.items.crops.StaticPlantSeeds;
-import theking530.staticpower.items.itemfilter.FilterTier;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.items.tools.CableNetworkAnalyzer;
 import theking530.staticpower.items.tools.ElectricSolderingIron;
@@ -146,6 +145,7 @@ public class ModItems {
 	public static StaticPowerItem GemRuby;
 	public static StaticPowerItem GemSapphire;
 
+	public static StaticPowerItem RawSilicon;
 	public static StaticPowerItem Silicon;
 	public static StaticPowerItem CrystalStatic;
 	public static StaticPowerItem CrystalEnergized;
@@ -153,6 +153,7 @@ public class ModItems {
 	public static StaticPowerItem DustWood;
 
 	public static StaticPowerItem BasicProcessor;
+	public static StaticPowerItem AdvancedProcessor;
 	public static StaticPowerItem StaticProcessor;
 	public static StaticPowerItem EnergizedProcessor;
 	public static StaticPowerItem LumumProcessor;
@@ -169,7 +170,7 @@ public class ModItems {
 	public static StaticPowerItem MemoryChip;
 	public static StaticPowerItem LogicGatePowerSync;
 	public static StaticPowerItem InvertedLogicGatePowerSync;
-	public static StaticPowerItem LogicGateServo;
+	public static StaticPowerItem Servo;
 	public static StaticPowerItem Diode;
 	public static StaticPowerItem Transistor;
 	public static StaticPowerItem InternalClock;
@@ -202,7 +203,11 @@ public class ModItems {
 	public static CableNetworkAnalyzer CableNetworkAnalyzer;
 
 	public static ItemFilter BasicFilter;
-
+	public static ItemFilter AdvancedFilter;
+	public static ItemFilter StaticFilter;
+	public static ItemFilter EnergizedFilter;
+	public static ItemFilter LumumFilter;
+	
 	public static ExtractorAttachment BasicExtractorAttachment;
 	public static ExtractorAttachment AdvancedExtractorAttachment;
 	public static ExtractorAttachment StaticExtractorAttachment;
@@ -237,7 +242,7 @@ public class ModItems {
 	public static DigistoreMonoCard EnergizedSingularDigistoreCard;
 	public static DigistoreMonoCard LumumSingularDigistoreCard;
 	public static DigistoreMonoCard CreativeSingularDigistoreCard;
-	
+
 	public static CableCover CableCover;
 
 	public static void init() {
@@ -274,6 +279,7 @@ public class ModItems {
 
 		// Processors
 		StaticPowerRegistry.preRegisterItem(BasicProcessor = new StaticPowerItem("processor_basic"));
+		StaticPowerRegistry.preRegisterItem(AdvancedProcessor = new StaticPowerItem("processor_advanced"));
 		StaticPowerRegistry.preRegisterItem(StaticProcessor = new StaticPowerItem("processor_static"));
 		StaticPowerRegistry.preRegisterItem(EnergizedProcessor = new StaticPowerItem("processor_energized"));
 		StaticPowerRegistry.preRegisterItem(LumumProcessor = new StaticPowerItem("processor_lumum"));
@@ -293,13 +299,17 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(CableNetworkAnalyzer = new CableNetworkAnalyzer("cable_network_analyzer"));
 
 		// Filters
-		StaticPowerRegistry.preRegisterItem(BasicFilter = new ItemFilter("filter_item_basic", FilterTier.BASIC));
-
+		StaticPowerRegistry.preRegisterItem(BasicFilter = new ItemFilter("filter_item_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterItem(AdvancedFilter = new ItemFilter("filter_item_advanced", StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterItem(StaticFilter = new ItemFilter("filter_item_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterItem(EnergizedFilter = new ItemFilter("filter_item_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterItem(LumumFilter = new ItemFilter("filter_item_lumum", StaticPowerTiers.LUMUM));
+		
 		// Components
 		StaticPowerRegistry.preRegisterItem(MemoryChip = new StaticPowerItem("memory_chip"));
 		StaticPowerRegistry.preRegisterItem(LogicGatePowerSync = new StaticPowerItem("logic_gate_power_sync"));
 		StaticPowerRegistry.preRegisterItem(InvertedLogicGatePowerSync = new StaticPowerItem("inverted_logic_gate_power_sync"));
-		StaticPowerRegistry.preRegisterItem(LogicGateServo = new StaticPowerItem("logic_gate_servo"));
+		StaticPowerRegistry.preRegisterItem(Servo = new StaticPowerItem("servo"));
 		StaticPowerRegistry.preRegisterItem(Diode = new StaticPowerItem("diode"));
 		StaticPowerRegistry.preRegisterItem(Transistor = new StaticPowerItem("transistor"));
 		StaticPowerRegistry.preRegisterItem(InternalClock = new StaticPowerItem("internal_clock"));
@@ -315,6 +325,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(GemRuby = new StaticPowerItem("gem_ruby"));
 		StaticPowerRegistry.preRegisterItem(GemSapphire = new StaticPowerItem("gem_sapphire"));
 		StaticPowerRegistry.preRegisterItem(Rubber = new StaticPowerItem("rubber"));
+		StaticPowerRegistry.preRegisterItem(RawSilicon = new StaticPowerItem("raw_silicon"));
 		StaticPowerRegistry.preRegisterItem(Silicon = new StaticPowerItem("silicon"));
 		StaticPowerRegistry.preRegisterItem(CrystalStatic = new StaticPowerItem("crystal_static"));
 		StaticPowerRegistry.preRegisterItem(CrystalEnergized = new StaticPowerItem("crystal_energized"));
@@ -466,7 +477,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(EnergizedSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_energized", StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.ENERGIZED_DIGISTORE_SINGULAR_CARD));
 		StaticPowerRegistry.preRegisterItem(LumumSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_lumum", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.LUMUM_DIGISTORE_SINGULAR_CARD));
 		StaticPowerRegistry.preRegisterItem(CreativeSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_creative", StaticPowerTiers.CREATIVE, StaticPowerAdditionalModels.CREATIVE_DIGISTORE_SINGULAR_CARD, true));
-		
+
 		StaticPowerRegistry.preRegisterItem(CableCover = new CableCover("cable_cover"));
 	}
 }

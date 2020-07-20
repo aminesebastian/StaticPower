@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:former_recipe",
+	"input": {
+		"item": "staticpower:ingot_static"
+	},
+	"mold": {
+		"item": "staticpower:mold_gear"
+	},
+	"output": {
+		"item": "staticpower:gear_static"
+	}
+}

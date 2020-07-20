@@ -11,6 +11,7 @@ import theking530.staticpower.tileentities.components.InputServoComponent;
 import theking530.staticpower.tileentities.components.InventoryComponent;
 import theking530.staticpower.tileentities.components.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.PowerDistributionComponent;
+import theking530.staticpower.tileentities.components.EnergyStorageComponent.EnergyManipulationAction;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 
@@ -28,7 +29,10 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 
 	public TileEntitySolidGenerator() {
 		super(ModTileEntityTypes.SOLID_GENERATOR);
-		this.disableFaceInteraction();
+		disableFaceInteraction();
+
+		// Register the input inventory and only let it receive items if they are
+		// burnable.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
 				return ForgeHooks.getBurnTime(stack) > 0;
@@ -39,10 +43,24 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
 		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", 2, this::canMoveFromInputToProcessing, () -> true, this::movingCompleted, true));
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 5, this::canProcess, this::canProcess, this::processingCompleted, true));
+
 		registerComponent(new PowerDistributionComponent("PowerDistributor", energyStorage.getStorage()));
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));
 
+		// Don't drop the contents of the internal inventory when this block is broken.
+		internalInventory.setShouldDropContentsOnBreak(false);
 		powerGenerationPerTick = DEFAULT_POWER_GENERATION;
+
+		// Set the default processing time to 0.
+		processingComponent.setProcessingTime(0);
+
+		// Don't allow this to receive power from external sources.
+		this.energyStorage.setCapabiltiyFilter((amount, side, action) -> {
+			if (action == EnergyManipulationAction.RECIEVE) {
+				return false;
+			}
+			return true;
+		});
 	}
 
 	/**

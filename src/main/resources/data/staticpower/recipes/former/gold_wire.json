@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:former_recipe",
+	"input": {
+		"tag": "forge:ingots/gold"
+	},
+	"mold": {
+		"item": "staticpower:mold_wire"
+	},
+	"output": {
+		"item": "staticpower:wire_gold"
+	}
+}

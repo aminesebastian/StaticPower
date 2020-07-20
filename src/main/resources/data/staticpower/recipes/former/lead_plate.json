@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:former_recipe",
 	"input": {
-		"item": "staticpower:ingot_lead"
+		"tag": "forge:ingots/lead"
 	},
 	"mold": {
 		"item": "staticpower:mold_plate"

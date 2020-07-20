@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:grinder_recipe",
 	"input": {
-		"item": "minecraft:emerald_ore"
+		"tag": "forge:ores/emerald"
 	},
 	"output": [
 		{
@@ -11,12 +11,7 @@
 		{
 			"item": "minecraft:emerald",
 			"count": 1,
-			"chance": 0.2
-		},
-				{
-			"item": "minecraft:emerald",
-			"count": 1,
-			"chance": 0.02
+			"chance": 0.1
 		}
 	]
 }

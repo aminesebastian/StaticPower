@@ -159,6 +159,9 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	}
 
 	public void onBlockBroken(BlockState state, BlockState newState, boolean isMoving) {
+		for (AbstractTileEntityComponent comp : Components.values()) {
+			comp.onOwningBlockBroken(state, newState, isMoving);
+		}
 		isValid = false;
 	}
 

@@ -67,7 +67,7 @@ public class TileEntityFormer extends TileEntityMachine {
 	 */
 	protected boolean canMoveFromInputToProcessing() {
 		if (hasValidRecipe() && !moveComponent.isProcessing() && internalInventory.getStackInSlot(0).isEmpty() && energyStorage.getStorage().getEnergyStored() >= DEFAULT_PROCESSING_COST) {
-			ItemStack output = getRecipe(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1)).get().getOutputItemStack();
+			ItemStack output = getRecipe(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1)).get().getRecipeOutput();
 			return InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, output);
 		}
 		return false;
@@ -96,7 +96,7 @@ public class TileEntityFormer extends TileEntityMachine {
 
 	protected boolean canProcess() {
 		FormerRecipe recipe = getRecipe(internalInventory.getStackInSlot(0), internalInventory.getStackInSlot(1)).orElse(null);
-		return recipe != null && redstoneControlComponent.passesRedstoneCheck() && energyStorage.hasEnoughPower(recipe.getPowerCost()) && InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getOutputItemStack());
+		return recipe != null && redstoneControlComponent.passesRedstoneCheck() && energyStorage.hasEnoughPower(recipe.getPowerCost()) && InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getRecipeOutput());
 	}
 
 	/**
@@ -108,7 +108,7 @@ public class TileEntityFormer extends TileEntityMachine {
 	 */
 	protected boolean processingCompleted() {
 		if (!getWorld().isRemote && !internalInventory.getStackInSlot(0).isEmpty()) {
-			ItemStack output = getRecipe(internalInventory.getStackInSlot(0), internalInventory.getStackInSlot(1)).get().getOutputItemStack();
+			ItemStack output = getRecipe(internalInventory.getStackInSlot(0), internalInventory.getStackInSlot(1)).get().getRecipeOutput();
 			if (!output.isEmpty() && InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, output)) {
 				outputInventory.insertItem(0, output.copy(), false);
 				internalInventory.setStackInSlot(0, ItemStack.EMPTY);

@@ -7,7 +7,7 @@
 	],
 	"key": {
 		"n": {
-			"item": "staticpower:nugget_platinum"
+			"tag": "forge:nuggets/platinum"
 		}
 	},
 	"result": {

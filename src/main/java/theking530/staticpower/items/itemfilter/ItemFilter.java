@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -24,6 +25,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.items.ItemStackInventoryCapabilityProvider;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.utilities.ItemUtilities;
@@ -38,9 +40,9 @@ public class ItemFilter extends StaticPowerItem {
 	/** Indicates if this filter should match namespaces. */
 	public static final String MATCH_MOD_KEY = "MatchMod";
 
-	public FilterTier filterTier;
+	public ResourceLocation filterTier;
 
-	public ItemFilter(String name, FilterTier tier) {
+	public ItemFilter(String name, ResourceLocation tier) {
 		super(name, new Properties().maxStackSize(1));
 		filterTier = tier;
 	}
@@ -66,7 +68,7 @@ public class ItemFilter extends StaticPowerItem {
 		stack.getTag().putBoolean(MATCH_MOD_KEY, false);
 
 		// Add the inventory.
-		return new ItemStackInventoryCapabilityProvider(stack, filterTier.getSlotCount(), nbt);
+		return new ItemStackInventoryCapabilityProvider(stack, StaticPowerDataRegistry.getTier(filterTier).getItemFilterSlots(), nbt);
 	}
 
 	/**

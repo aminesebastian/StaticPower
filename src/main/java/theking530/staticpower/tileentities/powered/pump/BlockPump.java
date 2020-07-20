@@ -28,7 +28,7 @@ public class BlockPump extends StaticPowerTileEntityBlock {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public RenderType getRenderType() {
-		return RenderType.getTranslucent();
+		return RenderType.getCutout();
 	}
 
 	@Override

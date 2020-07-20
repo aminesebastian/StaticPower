@@ -1,0 +1,16 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"nnn",
+		"nnn",
+		"nnn"
+	],
+	"key": {
+		"n": {
+			"tag": "forge:nuggets/magnesium"
+		}
+	},
+	"result": {
+		"item": "staticpower:ingot_magnesium"
+	}
+}

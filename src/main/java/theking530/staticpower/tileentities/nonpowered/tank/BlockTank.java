@@ -55,7 +55,7 @@ public class BlockTank extends StaticPowerTileEntityBlock implements ICustomMode
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public RenderType getRenderType() {
-		return RenderType.getTranslucent();
+		return RenderType.getCutout();
 	}
 
 	@Override
