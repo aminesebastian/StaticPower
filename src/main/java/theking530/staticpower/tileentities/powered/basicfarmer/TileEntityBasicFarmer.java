@@ -30,7 +30,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.common.utilities.Color;
@@ -188,7 +187,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	}
 
 	public int getGrowthBonus() {
-		return 1000; // growthBonusChance;
+		return growthBonusChance;
 	}
 
 	public boolean getShouldDrawRadiusPreview() {

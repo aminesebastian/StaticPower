@@ -1,0 +1,16 @@
+{
+	"type": "staticpower:squeezer_recipe",
+	"input": {
+		"item": "staticpower:crop_energized"
+	},
+	"outputs": {
+		"item": {
+			"item": "staticpower:crop_depleted",
+			"count": 1
+		},
+		"fluid": {
+			"fluid": "staticpower:fluid_energized",
+			"volume": 100
+		}
+	}
+}

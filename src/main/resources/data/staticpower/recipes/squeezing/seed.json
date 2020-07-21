@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:squeezer_recipe",
+	"input": {
+		"tag": "forge:seeds"
+	},
+	"outputs": {
+		"fluid": {
+			"fluid": "staticpower:seed_oil",
+			"volume": 10
+		}
+	}
+}

@@ -7,7 +7,6 @@ import theking530.common.gui.widgets.button.StandardButton;
 import theking530.common.gui.widgets.button.StandardButton.MouseButton;
 import theking530.common.gui.widgets.button.TextButton;
 import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
-import theking530.common.gui.widgets.tabs.GuiInfoTab;
 import theking530.common.gui.widgets.tabs.GuiPowerInfoTab;
 import theking530.common.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.common.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
@@ -22,7 +21,6 @@ public class GuiBattery extends StaticPowerTileEntityGui<ContainerBattery, TileE
 	private TextButton inputDown;
 	private TextButton outputUp;
 	private TextButton outputDown;
-	private GuiInfoTab infoTab;
 
 	public GuiBattery(ContainerBattery container, PlayerInventory invPlayer, ITextComponent name) {
 		super(container, invPlayer, name, 176, 166);
@@ -31,7 +29,6 @@ public class GuiBattery extends StaticPowerTileEntityGui<ContainerBattery, TileE
 	@Override
 	public void initializeGui() {
 		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 75, 20, 26, 51));
-		getTabManager().registerTab(infoTab = new GuiInfoTab(80, 60));
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
 		// getTabManager().registerTab(new GuiPowerControlTab(100, 70, teSBattery));
 		getTabManager().registerTab(new GuiSideConfigTab(true, getTileEntity()));

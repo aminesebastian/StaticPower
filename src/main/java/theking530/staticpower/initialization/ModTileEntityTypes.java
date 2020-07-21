@@ -16,6 +16,7 @@ import theking530.staticpower.tileentities.nonpowered.vacuumchest.TileEntityVacu
 import theking530.staticpower.tileentities.powered.basicfarmer.TileEntityBasicFarmer;
 import theking530.staticpower.tileentities.powered.battery.TileEntityBattery;
 import theking530.staticpower.tileentities.powered.chargingstation.TileEntityChargingStation;
+import theking530.staticpower.tileentities.powered.crucible.TileEntityCrucible;
 import theking530.staticpower.tileentities.powered.fermenter.TileEntityFermenter;
 import theking530.staticpower.tileentities.powered.former.TileEntityFormer;
 import theking530.staticpower.tileentities.powered.lumbermill.TileEntityLumberMill;
@@ -24,6 +25,7 @@ import theking530.staticpower.tileentities.powered.poweredgrinder.TileEntityPowe
 import theking530.staticpower.tileentities.powered.pump.TileEntityPump;
 import theking530.staticpower.tileentities.powered.solarpanels.TileEntitySolarPanel;
 import theking530.staticpower.tileentities.powered.solidgenerator.TileEntitySolidGenerator;
+import theking530.staticpower.tileentities.powered.squeezer.TileEntitySqueezer;
 import theking530.staticpower.tileentities.powered.treefarmer.TileEntityTreeFarm;
 
 public class ModTileEntityTypes {
@@ -68,7 +70,9 @@ public class ModTileEntityTypes {
 	public static TileEntityType<TileEntityFermenter> FERMENTER;
 	public static TileEntityType<TileEntityFormer> FORMER;
 	public static TileEntityType<TileEntitySolidGenerator> SOLID_GENERATOR;
-
+	public static TileEntityType<TileEntityCrucible> CRUCIBLE;
+	public static TileEntityType<TileEntitySqueezer> SQUEEZER;
+	
 	public static TileEntityType<TileEntityBattery> BATTERY_BASIC;
 	public static TileEntityType<TileEntityBattery> BATTERY_ADVANCED;
 	public static TileEntityType<TileEntityBattery> BATTERY_STATIC;
@@ -94,7 +98,9 @@ public class ModTileEntityTypes {
 		FERMENTER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityFermenter(), ModBlocks.Fermenter);
 		FORMER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityFormer(), ModBlocks.Former);
 		SOLID_GENERATOR = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntitySolidGenerator(), ModBlocks.SolidGenerator);
-
+		CRUCIBLE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityCrucible(), ModBlocks.Crucible);
+		SQUEEZER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntitySqueezer(), ModBlocks.Squeezer);
+		
 		BATTERY_BASIC = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(type, StaticPowerTiers.BASIC), ModBlocks.BatteryBasic);
 		BATTERY_ADVANCED = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(type, StaticPowerTiers.ADVANCED), ModBlocks.BatteryAdvanced);
 		BATTERY_STATIC = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(type, StaticPowerTiers.STATIC), ModBlocks.BatteryStatic);

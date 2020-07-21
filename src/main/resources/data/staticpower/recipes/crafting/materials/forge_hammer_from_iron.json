@@ -10,7 +10,7 @@
 			"tag": "forge:ingots/iron"
 		},
 		"s": {
-			"tag": "rods/wooden"
+			"tag": "forge:rods/wooden"
 		}
 	},
 	"result": {

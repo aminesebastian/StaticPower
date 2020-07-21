@@ -17,7 +17,7 @@ public class ContainerSolidGenerator extends StaticPowerTileEntityContainer<Tile
 	}
 
 	public ContainerSolidGenerator(int windowId, PlayerInventory playerInventory, TileEntitySolidGenerator owner) {
-		super(ModContainerTypes.SOLID_GENERATOR, windowId, playerInventory, owner);
+		super(ModContainerTypes.SOLID_GENERATOR_CONTAINER, windowId, playerInventory, owner);
 	}
 
 	@Override

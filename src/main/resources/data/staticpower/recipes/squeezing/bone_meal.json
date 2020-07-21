@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:squeezer_recipe",
+	"input": {
+		"item": "minecraft:bone_meal"
+	},
+	"outputs": {
+		"fluid": {
+			"fluid": "staticpower:liquid_fertilizer",
+			"volume": 50
+		}
+	}
+}

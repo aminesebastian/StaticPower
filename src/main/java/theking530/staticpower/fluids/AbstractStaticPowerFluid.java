@@ -32,8 +32,8 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid {
 	public String FlowingTexture;
 	public Tag<Fluid> Tag;
 
-	public AbstractStaticPowerFluid(String name, Supplier<StaticPowerFluidBucket> bucket, Supplier<StaticPowerFluidBlock> fluidBlock, Supplier<Source> stillFluid, Supplier<Flowing> flowingFluid,
-			String stillTexture, String flowingTexture, net.minecraft.tags.Tag<Fluid> tag) {
+	public AbstractStaticPowerFluid(String name, Supplier<StaticPowerFluidBucket> bucket, Supplier<StaticPowerFluidBlock> fluidBlock, Supplier<Source> stillFluid, Supplier<Flowing> flowingFluid, String stillTexture, String flowingTexture,
+			net.minecraft.tags.Tag<Fluid> tag, Consumer<FluidAttributes.Builder> attributes) {
 		setRegistryName(name);
 		Bucket = bucket;
 		FluidBlock = fluidBlock;
@@ -42,6 +42,7 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid {
 		StillTexture = stillTexture;
 		FlowingTexture = flowingTexture;
 		Tag = tag;
+		AdditionalAtrributesDelegate = attributes;
 	}
 
 	@Override
@@ -116,9 +117,9 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid {
 
 	public static class Source extends AbstractStaticPowerFluid {
 
-		public Source(String name, Supplier<StaticPowerFluidBucket> bucket, Supplier<StaticPowerFluidBlock> fluidBlock, Supplier<Source> stillFluid, Supplier<Flowing> flowingFluid,
-				String stillTexture, String flowingTexture, net.minecraft.tags.Tag<Fluid> tag) {
-			super(name, bucket, fluidBlock, stillFluid, flowingFluid, stillTexture, flowingTexture, tag);
+		public Source(String name, Supplier<StaticPowerFluidBucket> bucket, Supplier<StaticPowerFluidBlock> fluidBlock, Supplier<Source> stillFluid, Supplier<Flowing> flowingFluid, String stillTexture, String flowingTexture,
+				net.minecraft.tags.Tag<Fluid> tag, Consumer<FluidAttributes.Builder> attributes) {
+			super(name, bucket, fluidBlock, stillFluid, flowingFluid, stillTexture, flowingTexture, tag, attributes);
 		}
 
 		@Override
@@ -134,9 +135,9 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid {
 
 	public static class Flowing extends AbstractStaticPowerFluid {
 
-		public Flowing(String name, Supplier<StaticPowerFluidBucket> bucket, Supplier<StaticPowerFluidBlock> fluidBlock, Supplier<Source> stillFluid, Supplier<Flowing> flowingFluid,
-				String stillTexture, String flowingTexture, net.minecraft.tags.Tag<Fluid> tag) {
-			super(name + "_flowing", bucket, fluidBlock, stillFluid, flowingFluid, stillTexture, flowingTexture, tag);
+		public Flowing(String name, Supplier<StaticPowerFluidBucket> bucket, Supplier<StaticPowerFluidBlock> fluidBlock, Supplier<Source> stillFluid, Supplier<Flowing> flowingFluid, String stillTexture, String flowingTexture,
+				net.minecraft.tags.Tag<Fluid> tag, Consumer<FluidAttributes.Builder> attributes) {
+			super(name + "_flowing", bucket, fluidBlock, stillFluid, flowingFluid, stillTexture, flowingTexture, tag, attributes);
 		}
 
 		@Override

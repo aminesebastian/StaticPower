@@ -28,6 +28,8 @@ import theking530.staticpower.tileentities.powered.battery.ContainerBattery;
 import theking530.staticpower.tileentities.powered.battery.GuiBattery;
 import theking530.staticpower.tileentities.powered.chargingstation.ContainerChargingStation;
 import theking530.staticpower.tileentities.powered.chargingstation.GuiChargingStation;
+import theking530.staticpower.tileentities.powered.crucible.ContainerCrucible;
+import theking530.staticpower.tileentities.powered.crucible.GuiCrucible;
 import theking530.staticpower.tileentities.powered.fermenter.ContainerFermenter;
 import theking530.staticpower.tileentities.powered.fermenter.GuiFermenter;
 import theking530.staticpower.tileentities.powered.former.ContainerFormer;
@@ -42,6 +44,8 @@ import theking530.staticpower.tileentities.powered.pump.ContainerPump;
 import theking530.staticpower.tileentities.powered.pump.GuiPump;
 import theking530.staticpower.tileentities.powered.solidgenerator.ContainerSolidGenerator;
 import theking530.staticpower.tileentities.powered.solidgenerator.GuiSolidGenerator;
+import theking530.staticpower.tileentities.powered.squeezer.ContainerSqueezer;
+import theking530.staticpower.tileentities.powered.squeezer.GuiSqueezer;
 import theking530.staticpower.tileentities.powered.treefarmer.ContainerTreeFarmer;
 import theking530.staticpower.tileentities.powered.treefarmer.GuiTreeFarmer;
 
@@ -57,11 +61,13 @@ public class ModContainerTypes {
 	public static ContainerType<ContainerTreeFarmer> TREE_FARMER_CONTAINER;
 	public static ContainerType<ContainerFormer> FORMER_CONTAINER;
 	public static ContainerType<ContainerBattery> BATTERY_CONTAINER;
-	public static ContainerType<ContainerSolidGenerator> SOLID_GENERATOR;
-
+	public static ContainerType<ContainerSolidGenerator> SOLID_GENERATOR_CONTAINER;
+	public static ContainerType<ContainerCrucible> CRUCIBLE_CONTAINER;
+	public static ContainerType<ContainerSqueezer> SQUEEZER_CONTAINER;
+	
 	public static ContainerType<ContainerTank> TANK_CONTAINER;
 	public static ContainerType<ContainerPump> PUMP_CONTAINER;
-	
+
 	public static ContainerType<ContainerDigistore> DIGISTORE_CONTAINER;
 	public static ContainerType<ContainerDigistoreTerminal> DIGISTORE_TERMINAL;
 	public static ContainerType<ContainerDigistoreCraftingTerminal> DIGISTORE_CRAFTING_TERMINAL;
@@ -83,8 +89,10 @@ public class ModContainerTypes {
 		FERMENTER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_fermenter", ContainerFermenter::new, GuiFermenter::new);
 		FORMER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_former", ContainerFormer::new, GuiFormer::new);
 		BATTERY_CONTAINER = StaticPowerRegistry.preRegisterContainer("battery", ContainerBattery::new, GuiBattery::new);
-		SOLID_GENERATOR = StaticPowerRegistry.preRegisterContainer("solid_generator", ContainerSolidGenerator::new, GuiSolidGenerator::new);
-
+		SOLID_GENERATOR_CONTAINER = StaticPowerRegistry.preRegisterContainer("solid_generator", ContainerSolidGenerator::new, GuiSolidGenerator::new);
+		CRUCIBLE_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_crucible", ContainerCrucible::new, GuiCrucible::new);
+		SQUEEZER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_squeezer", ContainerSqueezer::new, GuiSqueezer::new);
+		
 		TANK_CONTAINER = StaticPowerRegistry.preRegisterContainer("tank", ContainerTank::new, GuiTank::new);
 		PUMP_CONTAINER = StaticPowerRegistry.preRegisterContainer("pump", ContainerPump::new, GuiPump::new);
 

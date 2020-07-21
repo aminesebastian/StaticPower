@@ -7,6 +7,7 @@
 		"item": "staticpower:mold_gear"
 	},
 	"output": {
-		"item": "staticpower:gear_gold"
+		"item": "staticpower:gear_gold",
+		"count": 2
 	}
 }

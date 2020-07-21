@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:squeezer_recipe",
+	"input": {
+		"tag": "forge:crops/beetroot"
+	},
+	"outputs": {
+		"fluid": {
+			"fluid": "staticpower:juice_beet",
+			"volume": 30
+		}
+	}
+}

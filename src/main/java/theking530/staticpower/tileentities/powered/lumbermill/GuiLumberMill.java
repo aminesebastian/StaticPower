@@ -30,6 +30,7 @@ public class GuiLumberMill extends StaticPowerTileEntityGui<ContainerLumberMill,
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
+		
 		BaseGuiTab powerTab;
 		getTabManager().registerTab(powerTab = new GuiPowerInfoTab(ComponentUtilities.getComponent(EnergyStorageComponent.class, "MainEnergyStorage", getTileEntity()).get()));
 		getTabManager().setInitiallyOpenTab(powerTab);

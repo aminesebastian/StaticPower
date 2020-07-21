@@ -7,6 +7,7 @@
 		"item": "staticpower:mold_plate"
 	},
 	"output": {
-		"item": "staticpower:plate_static"
+		"item": "staticpower:plate_static",
+		"count": 2
 	}
 }

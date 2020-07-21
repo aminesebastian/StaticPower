@@ -30,7 +30,7 @@ public class ContainerPoweredFurnace extends StaticPowerTileEntityContainer<Tile
 		this.addSlot(new StaticPowerContainerSlot(getTileEntity().inputInventory, 0, 50, 28));
 
 		// Battery
-		this.addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 65));
+		this.addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 64));
 
 		// Output
 		this.addSlot(new OutputSlot(getTileEntity().outputInventory, 0, 109, 32));

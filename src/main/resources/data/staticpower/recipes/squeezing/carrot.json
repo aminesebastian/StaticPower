@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:squeezer_recipe",
+	"input": {
+		"tag": "forge:crops/carrot"
+	},
+	"outputs": {
+		"fluid": {
+			"fluid": "staticpower:juice_carrot",
+			"volume": 15
+		}
+	}
+}

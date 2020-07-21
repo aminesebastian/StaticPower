@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:squeezer_recipe",
+	"input": {
+		"item": "minecraft:apple"
+	},
+	"outputs": {
+		"fluid": {
+			"fluid": "staticpower:juice_apple",
+			"volume": 100
+		}
+	}
+}

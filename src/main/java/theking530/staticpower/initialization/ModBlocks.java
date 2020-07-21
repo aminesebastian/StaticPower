@@ -29,6 +29,7 @@ import theking530.staticpower.tileentities.nonpowered.vacuumchest.BlockVacuumChe
 import theking530.staticpower.tileentities.powered.basicfarmer.BlockBasicFarmer;
 import theking530.staticpower.tileentities.powered.battery.BlockBattery;
 import theking530.staticpower.tileentities.powered.chargingstation.BlockChargingStation;
+import theking530.staticpower.tileentities.powered.crucible.BlockCrucible;
 import theking530.staticpower.tileentities.powered.fermenter.BlockFermenter;
 import theking530.staticpower.tileentities.powered.former.BlockFormer;
 import theking530.staticpower.tileentities.powered.lumbermill.BlockLumberMill;
@@ -37,6 +38,7 @@ import theking530.staticpower.tileentities.powered.poweredgrinder.BlockPoweredGr
 import theking530.staticpower.tileentities.powered.pump.BlockPump;
 import theking530.staticpower.tileentities.powered.solarpanels.BlockSolarPanel;
 import theking530.staticpower.tileentities.powered.solidgenerator.BlockSolidGenerator;
+import theking530.staticpower.tileentities.powered.squeezer.BlockSqueezer;
 import theking530.staticpower.tileentities.powered.treefarmer.BlockTreeFarmer;
 import theking530.staticpower.utilities.HarvestLevel;
 
@@ -91,6 +93,8 @@ public class ModBlocks {
 	public static BlockFermenter Fermenter;
 	public static BlockFormer Former;
 	public static BlockSolidGenerator SolidGenerator;
+	public static BlockCrucible Crucible;
+	public static BlockSqueezer Squeezer;
 	
 	public static BlockSolarPanel SolarPanelBasic;
 	public static BlockSolarPanel SolarPanelAdvanced;
@@ -186,8 +190,9 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(TreeFarmer = new BlockTreeFarmer("machine_tree_farmer"));
 		StaticPowerRegistry.preRegisterBlock(Fermenter = new BlockFermenter("machine_fermenter"));
 		StaticPowerRegistry.preRegisterBlock(Former = new BlockFormer("machine_former"));
-		
 		StaticPowerRegistry.preRegisterBlock(SolidGenerator = new BlockSolidGenerator("machine_generator_solid"));
+		StaticPowerRegistry.preRegisterBlock(Crucible = new BlockCrucible("machine_crucible"));
+		StaticPowerRegistry.preRegisterBlock(Squeezer = new BlockSqueezer("machine_squeezer"));
 		
 		StaticPowerRegistry.preRegisterBlock(BasicTank = new BlockTank("tank_basic"));
 		StaticPowerRegistry.preRegisterBlock(Pump = new BlockPump("pump"));

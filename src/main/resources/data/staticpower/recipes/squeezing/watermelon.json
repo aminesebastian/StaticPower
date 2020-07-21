@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:squeezer_recipe",
+	"input": {
+		"item": "minecraft:melon_slice"
+	},
+	"outputs": {
+		"fluid": {
+			"fluid": "staticpower:juice_watermelon",
+			"volume": 25
+		}
+	}
+}

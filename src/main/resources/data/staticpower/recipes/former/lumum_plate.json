@@ -7,6 +7,7 @@
 		"item": "staticpower:mold_plate"
 	},
 	"output": {
-		"item": "staticpower:plate_lumum"
+		"item": "staticpower:plate_lumum",
+		"count": 2
 	}
 }

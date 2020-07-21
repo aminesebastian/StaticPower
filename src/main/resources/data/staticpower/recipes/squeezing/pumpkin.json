@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:squeezer_recipe",
+	"input": {
+		"item": "minecraft:pumpkin"
+	},
+	"outputs": {
+		"fluid": {
+			"fluid": "staticpower:juice_pumpkin",
+			"volume": 500
+		}
+	}
+}

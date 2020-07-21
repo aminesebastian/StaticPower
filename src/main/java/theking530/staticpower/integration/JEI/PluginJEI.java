@@ -23,18 +23,21 @@ import theking530.staticpower.data.crafting.wrappers.fermenter.FermenterRecipe;
 import theking530.staticpower.data.crafting.wrappers.former.FormerRecipe;
 import theking530.staticpower.data.crafting.wrappers.grinder.GrinderRecipe;
 import theking530.staticpower.data.crafting.wrappers.lumbermill.LumberMillRecipe;
+import theking530.staticpower.data.crafting.wrappers.squeezer.SqueezerRecipe;
 import theking530.staticpower.initialization.ModItems;
 import theking530.staticpower.integration.JEI.fermenter.FermenterRecipeCategory;
 import theking530.staticpower.integration.JEI.former.FormerRecipeCategory;
 import theking530.staticpower.integration.JEI.lumbermill.LumberMillRecipeCategory;
 import theking530.staticpower.integration.JEI.poweredfurnace.PoweredFurnaceRecipeCategory;
 import theking530.staticpower.integration.JEI.poweredgrinder.PoweredGrinderRecipeCategory;
+import theking530.staticpower.integration.JEI.squeezer.SqueezerRecipeCategory;
 import theking530.staticpower.items.cableattachments.digistorecraftingterminal.ContainerDigistoreCraftingTerminal;
 import theking530.staticpower.tileentities.powered.fermenter.GuiFermenter;
 import theking530.staticpower.tileentities.powered.former.GuiFormer;
 import theking530.staticpower.tileentities.powered.lumbermill.GuiLumberMill;
 import theking530.staticpower.tileentities.powered.poweredfurnace.GuiPoweredFurnace;
 import theking530.staticpower.tileentities.powered.poweredgrinder.GuiPoweredGrinder;
+import theking530.staticpower.tileentities.powered.squeezer.GuiSqueezer;
 import theking530.staticpower.utilities.Reference;
 
 @JeiPlugin
@@ -45,11 +48,13 @@ public class PluginJEI implements IModPlugin {
 	@Nullable
 	private FormerRecipeCategory formerCategory;
 	@Nullable
-	private PoweredGrinderRecipeCategory poweredGrinderRecipe;
+	private PoweredGrinderRecipeCategory poweredGrinderCategory;
 	@Nullable
-	private PoweredFurnaceRecipeCategory poweredFurnaceRecipe;
+	private PoweredFurnaceRecipeCategory poweredFurnaceCategory;
 	@Nullable
-	private FermenterRecipeCategory fermenterRecipe;
+	private FermenterRecipeCategory fermenterCategory;
+	@Nullable
+	private SqueezerRecipeCategory squeezerCategory;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
@@ -61,6 +66,7 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipeClickArea(GuiPoweredFurnace.class, 59, 32, 24, 16, PoweredFurnaceRecipeCategory.POWERED_FURNACE_UID);
 		registration.addRecipeClickArea(GuiPoweredGrinder.class, 82, 34, 24, 16, PoweredGrinderRecipeCategory.GRINDER_UID);
 		registration.addRecipeClickArea(GuiFermenter.class, 82, 34, 24, 16, FermenterRecipeCategory.FERMENTER_UID);
+		registration.addRecipeClickArea(GuiSqueezer.class, 82, 34, 24, 16, SqueezerRecipeCategory.SQUEEZER_UID);
 	}
 
 	@SuppressWarnings("unused")
@@ -80,16 +86,20 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipeCategories(formerCategory);
 
 		// Powered Furnace
-		poweredFurnaceRecipe = new PoweredFurnaceRecipeCategory(guiHelper);
-		registration.addRecipeCategories(poweredFurnaceRecipe);
+		poweredFurnaceCategory = new PoweredFurnaceRecipeCategory(guiHelper);
+		registration.addRecipeCategories(poweredFurnaceCategory);
 
 		// Powered Grinder
-		poweredGrinderRecipe = new PoweredGrinderRecipeCategory(guiHelper);
-		registration.addRecipeCategories(poweredGrinderRecipe);
+		poweredGrinderCategory = new PoweredGrinderRecipeCategory(guiHelper);
+		registration.addRecipeCategories(poweredGrinderCategory);
 
 		// Fermenter
-		fermenterRecipe = new FermenterRecipeCategory(guiHelper);
-		registration.addRecipeCategories(fermenterRecipe);
+		fermenterCategory = new FermenterRecipeCategory(guiHelper);
+		registration.addRecipeCategories(fermenterCategory);
+		
+		// Squeezer
+		squeezerCategory = new SqueezerRecipeCategory(guiHelper);
+		registration.addRecipeCategories(squeezerCategory);
 	}
 
 	@Override
@@ -109,6 +119,7 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipes(StaticPowerRecipeRegistry.FURNACE_RECIPES, PoweredFurnaceRecipeCategory.POWERED_FURNACE_UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(GrinderRecipe.RECIPE_TYPE), PoweredGrinderRecipeCategory.GRINDER_UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FermenterRecipe.RECIPE_TYPE), FermenterRecipeCategory.FERMENTER_UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(SqueezerRecipe.RECIPE_TYPE), SqueezerRecipeCategory.SQUEEZER_UID);
 	}
 
 	@Override

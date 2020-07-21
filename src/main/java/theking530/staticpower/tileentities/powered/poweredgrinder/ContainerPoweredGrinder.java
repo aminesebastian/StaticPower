@@ -30,7 +30,7 @@ public class ContainerPoweredGrinder extends StaticPowerTileEntityContainer<Tile
 		this.addSlot(new StaticPowerContainerSlot(getTileEntity().inputInventory, 0, 80, 18));
 
 		// Battery
-		this.addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 65));
+		this.addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 64));
 
 		// Output
 		this.addSlot(new OutputSlot(getTileEntity().outputInventory, 0, 80, 60));

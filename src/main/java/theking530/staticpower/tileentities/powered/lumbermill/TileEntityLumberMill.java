@@ -27,7 +27,8 @@ public class TileEntityLumberMill extends TileEntityMachine {
 	public static final int DEFAULT_PROCESSING_TIME = 100;
 	public static final int DEFAULT_PROCESSING_COST = 10;
 	public static final int DEFAULT_MOVING_TIME = 4;
-
+	public static final int DEFAULT_TANK_SIZE = 5000;
+	
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
 	public final InventoryComponent internalInventory;
@@ -56,7 +57,7 @@ public class TileEntityLumberMill extends TileEntityMachine {
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));
 		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory));
 		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
-		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000).setCapabilityExposedModes(MachineSideMode.Output));
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Output));
 		fluidTankComponent.setCanFill(false);
 	}
 

@@ -5,6 +5,7 @@ import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.items.DigistoreCard;
 import theking530.staticpower.items.DigistoreMonoCard;
+import theking530.staticpower.items.JuiceBottleItem;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.items.book.StaticPowerBook;
@@ -207,7 +208,7 @@ public class ModItems {
 	public static ItemFilter StaticFilter;
 	public static ItemFilter EnergizedFilter;
 	public static ItemFilter LumumFilter;
-	
+
 	public static ExtractorAttachment BasicExtractorAttachment;
 	public static ExtractorAttachment AdvancedExtractorAttachment;
 	public static ExtractorAttachment StaticExtractorAttachment;
@@ -244,6 +245,13 @@ public class ModItems {
 	public static DigistoreMonoCard CreativeSingularDigistoreCard;
 
 	public static CableCover CableCover;
+
+	public static JuiceBottleItem AppleJuiceBottle;
+	public static JuiceBottleItem CarrotJuiceBottle;
+	public static JuiceBottleItem PumpkinJuiceBottle;
+	public static JuiceBottleItem WatermelonJuiceBottle;
+	public static JuiceBottleItem BeetJuiceBottle;
+	public static JuiceBottleItem BerryJuiceBottle;
 
 	public static void init() {
 		// Book
@@ -304,7 +312,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(StaticFilter = new ItemFilter("filter_item_static", StaticPowerTiers.STATIC));
 		StaticPowerRegistry.preRegisterItem(EnergizedFilter = new ItemFilter("filter_item_energized", StaticPowerTiers.ENERGIZED));
 		StaticPowerRegistry.preRegisterItem(LumumFilter = new ItemFilter("filter_item_lumum", StaticPowerTiers.LUMUM));
-		
+
 		// Components
 		StaticPowerRegistry.preRegisterItem(MemoryChip = new StaticPowerItem("memory_chip"));
 		StaticPowerRegistry.preRegisterItem(LogicGatePowerSync = new StaticPowerItem("logic_gate_power_sync"));
@@ -479,5 +487,12 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(CreativeSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_creative", StaticPowerTiers.CREATIVE, StaticPowerAdditionalModels.CREATIVE_DIGISTORE_SINGULAR_CARD, true));
 
 		StaticPowerRegistry.preRegisterItem(CableCover = new CableCover("cable_cover"));
+
+		StaticPowerRegistry.preRegisterItem(AppleJuiceBottle = new JuiceBottleItem("bottle_juice_apple", 40));
+		StaticPowerRegistry.preRegisterItem(CarrotJuiceBottle = new JuiceBottleItem("bottle_juice_carrot", 40));
+		StaticPowerRegistry.preRegisterItem(PumpkinJuiceBottle = new JuiceBottleItem("bottle_juice_pumpkin", 40));
+		StaticPowerRegistry.preRegisterItem(WatermelonJuiceBottle = new JuiceBottleItem("bottle_juice_watermelon", 40));
+		StaticPowerRegistry.preRegisterItem(BeetJuiceBottle = new JuiceBottleItem("bottle_juice_beet", 40));
+		StaticPowerRegistry.preRegisterItem(BerryJuiceBottle = new JuiceBottleItem("bottle_juice_berry", 40));
 	}
 }
