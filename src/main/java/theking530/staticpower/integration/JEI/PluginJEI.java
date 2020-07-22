@@ -19,24 +19,30 @@ import mezz.jei.gui.textures.Textures;
 import net.minecraft.util.ResourceLocation;
 import theking530.staticpower.client.gui.StaticPowerContainerGui;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeRegistry;
+import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
 import theking530.staticpower.data.crafting.wrappers.fermenter.FermenterRecipe;
 import theking530.staticpower.data.crafting.wrappers.former.FormerRecipe;
 import theking530.staticpower.data.crafting.wrappers.grinder.GrinderRecipe;
 import theking530.staticpower.data.crafting.wrappers.lumbermill.LumberMillRecipe;
+import theking530.staticpower.data.crafting.wrappers.solidfuel.SolidFuelRecipe;
 import theking530.staticpower.data.crafting.wrappers.squeezer.SqueezerRecipe;
 import theking530.staticpower.initialization.ModItems;
+import theking530.staticpower.integration.JEI.bottler.BottleRecipeCategory;
 import theking530.staticpower.integration.JEI.fermenter.FermenterRecipeCategory;
 import theking530.staticpower.integration.JEI.former.FormerRecipeCategory;
 import theking530.staticpower.integration.JEI.lumbermill.LumberMillRecipeCategory;
 import theking530.staticpower.integration.JEI.poweredfurnace.PoweredFurnaceRecipeCategory;
 import theking530.staticpower.integration.JEI.poweredgrinder.PoweredGrinderRecipeCategory;
+import theking530.staticpower.integration.JEI.solidgenerator.SolidGeneratorRecipeCategory;
 import theking530.staticpower.integration.JEI.squeezer.SqueezerRecipeCategory;
 import theking530.staticpower.items.cableattachments.digistorecraftingterminal.ContainerDigistoreCraftingTerminal;
+import theking530.staticpower.tileentities.powered.bottler.GuiBottler;
 import theking530.staticpower.tileentities.powered.fermenter.GuiFermenter;
 import theking530.staticpower.tileentities.powered.former.GuiFormer;
 import theking530.staticpower.tileentities.powered.lumbermill.GuiLumberMill;
 import theking530.staticpower.tileentities.powered.poweredfurnace.GuiPoweredFurnace;
 import theking530.staticpower.tileentities.powered.poweredgrinder.GuiPoweredGrinder;
+import theking530.staticpower.tileentities.powered.solidgenerator.GuiSolidGenerator;
 import theking530.staticpower.tileentities.powered.squeezer.GuiSqueezer;
 import theking530.staticpower.utilities.Reference;
 
@@ -55,18 +61,24 @@ public class PluginJEI implements IModPlugin {
 	private FermenterRecipeCategory fermenterCategory;
 	@Nullable
 	private SqueezerRecipeCategory squeezerCategory;
+	@Nullable
+	private BottleRecipeCategory bottlerCategory;
+	@Nullable
+	private SolidGeneratorRecipeCategory solidGeneratorCategory;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void registerGuiHandlers(IGuiHandlerRegistration registration) {
 		registration.addGuiContainerHandler(StaticPowerContainerGui.class, new JEITabSlotAdjuster());
 
-		registration.addRecipeClickArea(GuiLumberMill.class, 59, 32, 24, 16, LumberMillRecipeCategory.LUMBER_MILL_UID);
-		registration.addRecipeClickArea(GuiFormer.class, 82, 34, 24, 16, FormerRecipeCategory.FORMER_UID);
-		registration.addRecipeClickArea(GuiPoweredFurnace.class, 59, 32, 24, 16, PoweredFurnaceRecipeCategory.POWERED_FURNACE_UID);
-		registration.addRecipeClickArea(GuiPoweredGrinder.class, 82, 34, 24, 16, PoweredGrinderRecipeCategory.GRINDER_UID);
-		registration.addRecipeClickArea(GuiFermenter.class, 82, 34, 24, 16, FermenterRecipeCategory.FERMENTER_UID);
-		registration.addRecipeClickArea(GuiSqueezer.class, 82, 34, 24, 16, SqueezerRecipeCategory.SQUEEZER_UID);
+		registration.addRecipeClickArea(GuiLumberMill.class, 59, 32, 22, 16, LumberMillRecipeCategory.LUMBER_MILL_UID);
+		registration.addRecipeClickArea(GuiFormer.class, 82, 34, 22, 16, FormerRecipeCategory.FORMER_UID);
+		registration.addRecipeClickArea(GuiPoweredFurnace.class, 75, 30, 22, 16, PoweredFurnaceRecipeCategory.POWERED_FURNACE_UID);
+		registration.addRecipeClickArea(GuiPoweredGrinder.class, 79, 39, 18, 17, PoweredGrinderRecipeCategory.GRINDER_UID);
+		registration.addRecipeClickArea(GuiFermenter.class, 97, 40, 48, 5, FermenterRecipeCategory.FERMENTER_UID);
+		registration.addRecipeClickArea(GuiSqueezer.class, 74, 34, 28, 5, SqueezerRecipeCategory.SQUEEZER_UID);
+		registration.addRecipeClickArea(GuiBottler.class, 74, 34, 28, 5, BottleRecipeCategory.BOTTLER_UID);
+		registration.addRecipeClickArea(GuiSolidGenerator.class, 37, 32, 22, 16, SolidGeneratorRecipeCategory.SOLID_GENERATOR_UID);
 	}
 
 	@SuppressWarnings("unused")
@@ -96,10 +108,18 @@ public class PluginJEI implements IModPlugin {
 		// Fermenter
 		fermenterCategory = new FermenterRecipeCategory(guiHelper);
 		registration.addRecipeCategories(fermenterCategory);
-		
+
 		// Squeezer
 		squeezerCategory = new SqueezerRecipeCategory(guiHelper);
 		registration.addRecipeCategories(squeezerCategory);
+
+		// Bottler
+		bottlerCategory = new BottleRecipeCategory(guiHelper);
+		registration.addRecipeCategories(bottlerCategory);
+
+		// Solid Generator
+		solidGeneratorCategory = new SolidGeneratorRecipeCategory(guiHelper);
+		registration.addRecipeCategories(solidGeneratorCategory);
 	}
 
 	@Override
@@ -120,6 +140,8 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(GrinderRecipe.RECIPE_TYPE), PoweredGrinderRecipeCategory.GRINDER_UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FermenterRecipe.RECIPE_TYPE), FermenterRecipeCategory.FERMENTER_UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(SqueezerRecipe.RECIPE_TYPE), SqueezerRecipeCategory.SQUEEZER_UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(BottleRecipe.RECIPE_TYPE), BottleRecipeCategory.BOTTLER_UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(SolidFuelRecipe.RECIPE_TYPE), SolidGeneratorRecipeCategory.SOLID_GENERATOR_UID);
 	}
 
 	@Override

@@ -1,16 +1,14 @@
 package theking530.staticpower.tileentities.powered.poweredfurnace;
 
-import java.util.Optional;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import theking530.common.gui.GuiTextures;
 import theking530.common.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.common.gui.widgets.tabs.BaseGuiTab;
+import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.common.gui.widgets.tabs.GuiPowerInfoTab;
 import theking530.common.gui.widgets.tabs.GuiSideConfigTab;
-import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.common.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
 import theking530.common.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
@@ -45,13 +43,10 @@ public class GuiPoweredFurnace extends StaticPowerTileEntityGui<ContainerPowered
 		super.drawBackgroundExtras(partialTicks, mouseX, mouseY);
 
 		// Flames
-		Optional<MachineProcessingComponent> processingComp = ComponentUtilities.getComponent(MachineProcessingComponent.class, getTileEntity());
-
-		if (processingComp.isPresent()) {
-			Minecraft.getInstance().getTextureManager().bindTexture(GuiTextures.VANILLA_FURNACE_GUI);
-			int k = processingComp.get().getProgressScaled(13);
-			blit(guiLeft + 50, guiTop + 48, 55, 37, 20, 14);
-			blit(guiLeft + 51, guiTop + 62 - k, 176, 14 - k, 14, k + 2);
-		}
+		MachineProcessingComponent processingComp = getTileEntity().processingComponent;
+		Minecraft.getInstance().getTextureManager().bindTexture(GuiTextures.VANILLA_FURNACE_GUI);
+		int k = processingComp.getProgressScaled(13);
+		blit(guiLeft + 50, guiTop + 48, 55, 37, 20, 14);
+		blit(guiLeft + 51, guiTop + 62 - k, 176, 14 - k, 14, k + 2);
 	}
 }

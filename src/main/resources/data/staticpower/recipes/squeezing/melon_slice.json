@@ -4,8 +4,12 @@
 		"item": "minecraft:melon_slice"
 	},
 	"outputs": {
+		"item": {
+			"item": "minecraft:melon_seeds",
+			"count": 1
+		},
 		"fluid": {
-			"fluid": "staticpower:juice_watermelon",
+			"fluid": "staticpower:juice_melon",
 			"volume": 25
 		}
 	}

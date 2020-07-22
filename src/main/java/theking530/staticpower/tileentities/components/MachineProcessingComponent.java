@@ -129,6 +129,17 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		return currentProcessingTime >= processingTime;
 	}
 
+	/**
+	 * Helper method to determine the processing component is actually performing
+	 * work. This is useful to check for triggering power draw. If this returns
+	 * true, it indicates that this component is doing work that should cost power.
+	 * 
+	 * @return
+	 */
+	public boolean isPerformingWork() {
+		return isProcessing() && !isDone() && !isProcessingPaused();
+	}
+
 	public boolean isProcessing() {
 		return processing;
 	}

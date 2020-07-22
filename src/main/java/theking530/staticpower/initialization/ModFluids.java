@@ -53,8 +53,8 @@ public class ModFluids {
 		registerFluidBundle(BerryJuice = new StaticPowerFluidBundle("juice_berry"));
 		registerFluidBundle(PumpkinJuice = new StaticPowerFluidBundle("juice_pumpkin"));
 		registerFluidBundle(CarrotJuice = new StaticPowerFluidBundle("juice_carrot"));
-		registerFluidBundle(WatermelonJuice = new StaticPowerFluidBundle("juice_watermelon"));
-		registerFluidBundle(BeetJuice = new StaticPowerFluidBundle("juice_beet"));
+		registerFluidBundle(WatermelonJuice = new StaticPowerFluidBundle("juice_melon"));
+		registerFluidBundle(BeetJuice = new StaticPowerFluidBundle("juice_beetroot"));
 
 		registerFluidBundle(Fertilizer = new StaticPowerFluidBundle("liquid_fertilizer"));
 		registerFluidBundle(Honey = new StaticPowerFluidBundle("honey", builder -> {

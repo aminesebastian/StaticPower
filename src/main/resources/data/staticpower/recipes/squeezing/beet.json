@@ -4,6 +4,10 @@
 		"tag": "forge:crops/beetroot"
 	},
 	"outputs": {
+		"item": {
+			"item": "minecraft:beetroot_seeds",
+			"count": 1
+		},
 		"fluid": {
 			"fluid": "staticpower:juice_beet",
 			"volume": 30

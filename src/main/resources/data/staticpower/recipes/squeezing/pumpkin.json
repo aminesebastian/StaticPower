@@ -4,6 +4,10 @@
 		"item": "minecraft:pumpkin"
 	},
 	"outputs": {
+		"item": {
+			"item": "minecraft:pumpkin_seeds",
+			"count": 1
+		},
 		"fluid": {
 			"fluid": "staticpower:juice_pumpkin",
 			"volume": 500

@@ -1,0 +1,16 @@
+{
+	"type": "staticpower:squeezer_recipe",
+	"input": {
+		"item": "minecraft:melon"
+	},
+	"outputs": {
+		"item": {
+			"item": "minecraft:melon_seeds",
+			"count": 5
+		},
+		"fluid": {
+			"fluid": "staticpower:juice_melon",
+			"volume": 140
+		}
+	}
+}

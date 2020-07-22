@@ -72,14 +72,22 @@ public class SDMath {
 		return Math.max(Math.min(value, max), min);
 	}
 
+	/**
+	 * Transforms the provided vector to point in the direction of the provided
+	 * vector.
+	 * 
+	 * @param dir
+	 * @param vector
+	 * @return
+	 */
 	public static Vector3f transformVectorByDirection(Direction dir, Vector3f vector) {
 		Vector3f offset = null;
 		switch (dir) {
 		case DOWN:
-			offset = new Vector3f(vector.getX(), vector.getY(), vector.getZ());
+			offset = new Vector3f(vector.getY(), -vector.getZ(), vector.getY());
 			break;
 		case UP:
-			offset = new Vector3f(vector.getX(), vector.getY(), vector.getZ());
+			offset = new Vector3f(vector.getY(), vector.getZ(), vector.getY());
 			break;
 		case EAST:
 			offset = new Vector3f(-vector.getZ(), vector.getY(), vector.getX());

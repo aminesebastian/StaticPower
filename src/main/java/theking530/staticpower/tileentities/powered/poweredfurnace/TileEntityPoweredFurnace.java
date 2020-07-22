@@ -125,7 +125,7 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 
 	@Override
 	public void process() {
-		if (processingComponent.isProcessing() && !processingComponent.isDone()) {
+		if (processingComponent.isPerformingWork()) {
 			if (!getWorld().isRemote) {
 				energyStorage.usePower(processingPowerCost);
 			}

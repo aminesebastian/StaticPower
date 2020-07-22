@@ -94,7 +94,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory, 0));
 		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory, 0, 1, 2, 3, 4, 5, 6, 7, 8));
-		registerComponent(new FluidContainerComponent("FluidContainerServo", fluidContainerInventory, fluidTankComponent, 0, 1));
+		registerComponent(new FluidContainerComponent("FluidContainerServo", fluidTankComponent, fluidContainerInventory, 0, 1));
 		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
 
 		// Capture all the harvestable blocks.
@@ -115,7 +115,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 
 	@Override
 	public void process() {
-		if (processingComponent.isProcessing()) {
+		if (processingComponent.isPerformingWork()) {
 			if (!getWorld().isRemote) {
 				energyStorage.usePower(DEFAULT_IDLE_ENERGY_USAGE);
 				fluidTankComponent.drain(DEFAULT_WATER_USAGE, FluidAction.EXECUTE);

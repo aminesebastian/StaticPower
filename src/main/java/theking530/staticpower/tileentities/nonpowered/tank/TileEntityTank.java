@@ -35,8 +35,8 @@ public class TileEntityTank extends TileEntityBase implements INamedContainerPro
 		// Add the inventory for the fluid containers, alongside the two components for
 		// filling and draining.
 		registerComponent(fluidContainerInventory = new InventoryComponent("FluidContainerInventory", 4, MachineSideMode.Never));
-		registerComponent(new FluidContainerComponent("FluidFillContainerServo", fluidContainerInventory, fluidTankComponent, 0, 1));
-		registerComponent(new FluidContainerComponent("FluidDrainContainerServo", fluidContainerInventory, fluidTankComponent, 2, 3).setMode(FluidContainerInteractionMode.FILL));
+		registerComponent(new FluidContainerComponent("FluidFillContainerServo", fluidTankComponent, fluidContainerInventory, 0, 1));
+		registerComponent(new FluidContainerComponent("FluidDrainContainerServo", fluidTankComponent, fluidContainerInventory, 2, 3).setMode(FluidContainerInteractionMode.FILL));
 
 		// Add the two components to auto input and output fluids.
 		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, fluidTankComponent, MachineSideMode.Input));

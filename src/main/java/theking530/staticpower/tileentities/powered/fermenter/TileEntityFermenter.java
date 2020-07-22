@@ -62,7 +62,7 @@ public class TileEntityFermenter extends TileEntityMachine {
 
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));
 		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory));
-		registerComponent(new FluidContainerComponent("FluidContainerServo", fluidContainerInventory, fluidTankComponent, 0, 1));
+		registerComponent(new FluidContainerComponent("FluidContainerServo", fluidTankComponent, fluidContainerInventory, 0, 1));
 		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
 
 		powerCost = DEFAULT_POWER_USAGE;
@@ -128,7 +128,7 @@ public class TileEntityFermenter extends TileEntityMachine {
 	}
 
 	public void process() {
-		if (processingComponent.isProcessing() && !processingComponent.isDone()) {
+		if (processingComponent.isPerformingWork()) {
 			if (!getWorld().isRemote) {
 				energyStorage.usePower(powerCost);
 			}

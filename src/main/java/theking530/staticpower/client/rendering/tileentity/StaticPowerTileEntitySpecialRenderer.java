@@ -26,6 +26,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fluids.FluidStack;
+import theking530.common.gui.GuiDrawUtilities;
 import theking530.common.utilities.Color;
 import theking530.common.utilities.Vector2D;
 import theking530.common.utilities.Vector3D;
@@ -216,6 +218,12 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 
 	protected void drawTexturedQuadUnlit(ResourceLocation texture, MatrixStack matrixStack, IRenderTypeBuffer buffer, Vector3D offset, Vector3D scale, Vector4D uv, Color tint) {
 		drawTexturedQuadLit(texture, matrixStack, buffer, offset, scale, uv, tint, 15728880);
+	}
+
+	protected void drawFluidQuad(FluidStack fluid, MatrixStack matrixStack, IRenderTypeBuffer buffer, Vector3D offset, Vector3D scale, Vector4D uv) {
+		Color fluidColor = GuiDrawUtilities.getFluidColor(fluid);
+		TextureAtlasSprite icon = GuiDrawUtilities.getStillFluidSprite(fluid);
+		drawTexturedQuadLit(icon.getName(), matrixStack, buffer, offset, scale, uv, fluidColor, 15728880);
 	}
 
 	/**

@@ -15,7 +15,15 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class FluidContainerComponent extends AbstractTileEntityComponent {
 	public enum FluidContainerInteractionMode {
-		FILL, DRAIN;
+		/**
+		 * Fills the provided container with the fluid in the fluid handler.
+		 */
+		FILL,
+		/**
+		 * Drains the provided container and fills the fluid handler with the drained
+		 * fluid.
+		 */
+		DRAIN;
 
 		public FluidContainerInteractionMode getInverseMode() {
 			if (this == DRAIN) {
@@ -28,7 +36,8 @@ public class FluidContainerComponent extends AbstractTileEntityComponent {
 
 	public static final int DEFAULT_FLUID_TO_CONTAINER_RATE = 1000;
 
-	private final IItemHandler fluidContainerInventory;
+	private final IItemHandler primaryInventory;
+	private final IItemHandler secondaryInventory;
 	private final IFluidHandler fluidHandler;
 	private final int fluidToContainerRate;
 
@@ -36,14 +45,19 @@ public class FluidContainerComponent extends AbstractTileEntityComponent {
 	private int primarySlot;
 	private int secondarySlot;
 
-	public FluidContainerComponent(String name, IItemHandler fluidContainerInventory, IFluidHandler fluidHandler, int primarySlot, int secondarySlot) {
+	public FluidContainerComponent(String name, IFluidHandler fluidHandler, IItemHandler primaryInventory, int primarySlot, IItemHandler secondaryInventory, int secondarySlot) {
 		super(name);
-		this.fluidContainerInventory = fluidContainerInventory;
+		this.primaryInventory = primaryInventory;
+		this.secondaryInventory = secondaryInventory;
 		this.primarySlot = primarySlot;
 		this.secondarySlot = secondarySlot;
 		this.fluidHandler = fluidHandler;
 		interactionMode = FluidContainerInteractionMode.DRAIN;
 		fluidToContainerRate = DEFAULT_FLUID_TO_CONTAINER_RATE;
+	}
+
+	public FluidContainerComponent(String name, IFluidHandler fluidHandler, IItemHandler fluidContainerInventory, int primarySlot, int secondarySlot) {
+		this(name, fluidHandler, fluidContainerInventory, primarySlot, fluidContainerInventory, secondarySlot);
 	}
 
 	@Override
@@ -54,7 +68,7 @@ public class FluidContainerComponent extends AbstractTileEntityComponent {
 		}
 
 		// Get the impetus for the transaction.
-		ItemStack primaryStack = fluidContainerInventory.getStackInSlot(primarySlot);
+		ItemStack primaryStack = primaryInventory.getStackInSlot(primarySlot);
 
 		// If it is empty, do nothing.
 		if (primaryStack.isEmpty()) {
@@ -95,12 +109,12 @@ public class FluidContainerComponent extends AbstractTileEntityComponent {
 			if (containerHandler != null) {
 				if (containerHandler.getFluidInTank(0).isEmpty()) {
 					// If it is, attempt to insert it into the secondary slot.
-					if (InventoryUtilities.canFullyInsertStackIntoSlot(fluidContainerInventory, secondarySlot, result.getResult())) {
+					if (InventoryUtilities.canFullyInsertStackIntoSlot(secondaryInventory, secondarySlot, result.getResult())) {
 						// Perform the insert.
-						ItemStack insertedItem = fluidContainerInventory.insertItem(secondarySlot, result.getResult(), false);
+						ItemStack insertedItem = secondaryInventory.insertItem(secondarySlot, result.getResult(), false);
 						// If successfully, extract the item from the primary alot.
 						if (insertedItem.isEmpty()) {
-							fluidContainerInventory.extractItem(primarySlot, 1, false);
+							primaryInventory.extractItem(primarySlot, 1, false);
 						}
 					}
 				}
@@ -136,12 +150,12 @@ public class FluidContainerComponent extends AbstractTileEntityComponent {
 			if (containerHandler != null) {
 				if (containerHandler.getFluidInTank(0).isEmpty()) {
 					// If it is, attempt to insert it into the secondary slot.
-					if (InventoryUtilities.canFullyInsertStackIntoSlot(fluidContainerInventory, secondarySlot, result.getResult())) {
+					if (InventoryUtilities.canFullyInsertStackIntoSlot(secondaryInventory, secondarySlot, result.getResult())) {
 						// Perform the insert.
-						ItemStack insertedItem = fluidContainerInventory.insertItem(secondarySlot, result.getResult(), false);
+						ItemStack insertedItem = secondaryInventory.insertItem(secondarySlot, result.getResult(), false);
 						// If successfully, extract the item from the primary alot.
 						if (insertedItem.isEmpty()) {
-							fluidContainerInventory.extractItem(primarySlot, 1, false);
+							primaryInventory.extractItem(primarySlot, 1, false);
 						}
 					}
 				}
@@ -171,9 +185,9 @@ public class FluidContainerComponent extends AbstractTileEntityComponent {
 			// If it's not null, check to see if its empty.
 			if (containerHandler != null && containerHandler.getTanks() > 0 && FluidUtil.getFluidContained(result.getResult()).orElse(null).getAmount() == containerHandler.getTankCapacity(0)) {
 				// If it is, return if we can insert into the secondary slot.
-				return InventoryUtilities.canFullyInsertStackIntoSlot(fluidContainerInventory, secondarySlot, result.getResult());
+				return InventoryUtilities.canFullyInsertStackIntoSlot(secondaryInventory, secondarySlot, result.getResult());
 			}
-			return InventoryUtilities.canFullyInsertStackIntoSlot(fluidContainerInventory, secondarySlot, result.getResult());
+			return InventoryUtilities.canFullyInsertStackIntoSlot(secondaryInventory, secondarySlot, result.getResult());
 		}
 		return false;
 	}
@@ -200,7 +214,7 @@ public class FluidContainerComponent extends AbstractTileEntityComponent {
 			if (containerHandler != null && containerHandler.getTanks() > 0) {
 				// If it is, return if we can insert into the secondary slot.
 				if (containerHandler.getFluidInTank(0).isEmpty()) {
-					return InventoryUtilities.canFullyInsertStackIntoSlot(fluidContainerInventory, secondarySlot, result.getResult());
+					return InventoryUtilities.canFullyInsertStackIntoSlot(secondaryInventory, secondarySlot, result.getResult());
 				}
 				return true;
 			}
@@ -237,7 +251,11 @@ public class FluidContainerComponent extends AbstractTileEntityComponent {
 
 	@Override
 	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
-		primarySlot = nbt.getInt("primary_slot");
-		secondarySlot = nbt.getInt("secondary_slot");
+		if (nbt.getInt("primary_slot") < primaryInventory.getSlots()) {
+			primarySlot = nbt.getInt("primary_slot");
+		}
+		if (nbt.getInt("secondary_slot") < secondaryInventory.getSlots()) {
+			secondarySlot = nbt.getInt("secondary_slot");
+		}
 	}
 }

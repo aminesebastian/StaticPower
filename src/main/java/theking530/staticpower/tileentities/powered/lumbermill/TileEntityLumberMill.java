@@ -99,7 +99,7 @@ public class TileEntityLumberMill extends TileEntityMachine {
 
 	@Override
 	public void process() {
-		if (processingComponent.isProcessing() && !processingComponent.isDone()) {
+		if (processingComponent.isPerformingWork()) {
 			if (!getWorld().isRemote) {
 				getRecipe(internalInventory.getStackInSlot(0)).ifPresent(recipe -> {
 					energyStorage.usePower(recipe.getPowerCost());

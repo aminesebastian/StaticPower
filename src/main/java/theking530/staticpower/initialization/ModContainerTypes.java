@@ -26,6 +26,8 @@ import theking530.staticpower.tileentities.powered.basicfarmer.ContainerBasicFar
 import theking530.staticpower.tileentities.powered.basicfarmer.GuiBasicFarmer;
 import theking530.staticpower.tileentities.powered.battery.ContainerBattery;
 import theking530.staticpower.tileentities.powered.battery.GuiBattery;
+import theking530.staticpower.tileentities.powered.bottler.ContainerBottler;
+import theking530.staticpower.tileentities.powered.bottler.GuiBottler;
 import theking530.staticpower.tileentities.powered.chargingstation.ContainerChargingStation;
 import theking530.staticpower.tileentities.powered.chargingstation.GuiChargingStation;
 import theking530.staticpower.tileentities.powered.crucible.ContainerCrucible;
@@ -64,6 +66,7 @@ public class ModContainerTypes {
 	public static ContainerType<ContainerSolidGenerator> SOLID_GENERATOR_CONTAINER;
 	public static ContainerType<ContainerCrucible> CRUCIBLE_CONTAINER;
 	public static ContainerType<ContainerSqueezer> SQUEEZER_CONTAINER;
+	public static ContainerType<ContainerBottler> BOTTLER_CONTAINER;
 	
 	public static ContainerType<ContainerTank> TANK_CONTAINER;
 	public static ContainerType<ContainerPump> PUMP_CONTAINER;
@@ -92,6 +95,7 @@ public class ModContainerTypes {
 		SOLID_GENERATOR_CONTAINER = StaticPowerRegistry.preRegisterContainer("solid_generator", ContainerSolidGenerator::new, GuiSolidGenerator::new);
 		CRUCIBLE_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_crucible", ContainerCrucible::new, GuiCrucible::new);
 		SQUEEZER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_squeezer", ContainerSqueezer::new, GuiSqueezer::new);
+		BOTTLER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_bottler", ContainerBottler::new, GuiBottler::new);
 		
 		TANK_CONTAINER = StaticPowerRegistry.preRegisterContainer("tank", ContainerTank::new, GuiTank::new);
 		PUMP_CONTAINER = StaticPowerRegistry.preRegisterContainer("pump", ContainerPump::new, GuiPump::new);

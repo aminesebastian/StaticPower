@@ -24,7 +24,7 @@ public class TileEntityRenderBatteryBlock extends StaticPowerTileEntitySpecialRe
 		float height = tileEntity.getEnergyPercent();
 
 		// Calculate the UV to use when rendering.
-		Vector4D uv = new Vector4D(0.0f, 0.0f, 1.0f, height);
+		Vector4D uv = new Vector4D(0.0f, 1.0f - height, 1.0f, 1.0f);
 
 		// Move the height into world space.
 		height *= 0.55f;

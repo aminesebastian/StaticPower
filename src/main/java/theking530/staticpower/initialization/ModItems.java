@@ -249,7 +249,7 @@ public class ModItems {
 	public static JuiceBottleItem AppleJuiceBottle;
 	public static JuiceBottleItem CarrotJuiceBottle;
 	public static JuiceBottleItem PumpkinJuiceBottle;
-	public static JuiceBottleItem WatermelonJuiceBottle;
+	public static JuiceBottleItem MelonJuiceBottle;
 	public static JuiceBottleItem BeetJuiceBottle;
 	public static JuiceBottleItem BerryJuiceBottle;
 
@@ -491,8 +491,8 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(AppleJuiceBottle = new JuiceBottleItem("bottle_juice_apple", 40));
 		StaticPowerRegistry.preRegisterItem(CarrotJuiceBottle = new JuiceBottleItem("bottle_juice_carrot", 40));
 		StaticPowerRegistry.preRegisterItem(PumpkinJuiceBottle = new JuiceBottleItem("bottle_juice_pumpkin", 40));
-		StaticPowerRegistry.preRegisterItem(WatermelonJuiceBottle = new JuiceBottleItem("bottle_juice_watermelon", 40));
-		StaticPowerRegistry.preRegisterItem(BeetJuiceBottle = new JuiceBottleItem("bottle_juice_beet", 40));
+		StaticPowerRegistry.preRegisterItem(MelonJuiceBottle = new JuiceBottleItem("bottle_juice_melon", 40));
+		StaticPowerRegistry.preRegisterItem(BeetJuiceBottle = new JuiceBottleItem("bottle_juice_beetroot", 40));
 		StaticPowerRegistry.preRegisterItem(BerryJuiceBottle = new JuiceBottleItem("bottle_juice_berry", 40));
 	}
 }

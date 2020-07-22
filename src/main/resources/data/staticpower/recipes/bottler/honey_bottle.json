@@ -1,0 +1,13 @@
+{
+	"type": "staticpower:bottler_recipe",
+	"empty_bottle": {
+		"item": "minecraft:glass_bottle"
+	},
+	"filled_bottle": {
+		"item": "minecraft:honey_bottle"
+	},
+	"fluid": {
+		"fluid": "staticpower:honey",
+		"volume": 1000
+	}
+}

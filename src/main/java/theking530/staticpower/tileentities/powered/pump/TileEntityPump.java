@@ -57,7 +57,7 @@ public class TileEntityPump extends TileEntityMachine {
 
 		// Register components to allow the pump to fill buckets in the GUI.
 		registerComponent(fluidContainerInventory = new InventoryComponent("FluidContainerInventory", 2, MachineSideMode.Never));
-		registerComponent(new FluidContainerComponent("FluidFillContainerServo", fluidContainerInventory, fluidTankComponent, 0, 1).setMode(FluidContainerInteractionMode.FILL));
+		registerComponent(new FluidContainerComponent("FluidFillContainerServo", fluidTankComponent, fluidContainerInventory, 0, 1).setMode(FluidContainerInteractionMode.FILL));
 
 		// Regsiter the processing component to handle the pumping.
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PUMP_RATE, this::canProcess, this::canProcess, this::pump, true));

@@ -110,7 +110,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		shouldDrawRadiusPreview = false;
 		range = DEFAULT_RANGE;
 		blocks = new LinkedList<BlockPos>();
-		registerComponent(fluidInteractionComponent = new FluidContainerComponent("BucketDrain", fluidContainerInventoy, fluidTankComponent, 0, 1));
+		registerComponent(fluidInteractionComponent = new FluidContainerComponent("BucketDrain", fluidTankComponent, fluidContainerInventoy, 0, 1));
 		registerComponent(new InputServoComponent("InputServo", 4, inputInventory));
 		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory));
 		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
@@ -125,7 +125,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 
 	@Override
 	public void process() {
-		if (processingComponent.isProcessing()) {
+		if (processingComponent.isPerformingWork()) {
 			if (!getWorld().isRemote) {
 				energyStorage.usePower(DEFAULT_IDLE_ENERGY_USAGE);
 				fluidTankComponent.drain(DEFAULT_WATER_USAGE, FluidAction.EXECUTE);

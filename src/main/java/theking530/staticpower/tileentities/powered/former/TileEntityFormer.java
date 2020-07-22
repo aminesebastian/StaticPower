@@ -121,7 +121,7 @@ public class TileEntityFormer extends TileEntityMachine {
 	}
 
 	public void process() {
-		if (processingComponent.isProcessing() && !processingComponent.isDone()) {
+		if (processingComponent.isPerformingWork()) {
 			if (!getWorld().isRemote) {
 				getRecipe(internalInventory.getStackInSlot(0), internalInventory.getStackInSlot(1)).ifPresent(recipe -> {
 					energyStorage.usePower(recipe.getPowerCost());

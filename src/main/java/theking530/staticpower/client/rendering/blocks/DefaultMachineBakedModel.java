@@ -32,6 +32,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
+import theking530.common.utilities.SDMath;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.SideConfigurationComponent;
@@ -104,9 +105,24 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 	protected void renderQuadsForSide(Builder<BakedQuad> newQuads, Direction side, TextureAtlasSprite sideSprite, BakedQuad originalQuad, MachineSideMode sideConfiguration) {
 		newQuads.add(originalQuad);
 		if (sideConfiguration != MachineSideMode.Never) {
+			// Vectors for quads are relative to the face direction, so we need to only work
+			// in the positive direction vectors.
+			Direction offsetSide = side;
+			if (side == Direction.EAST) {
+				offsetSide = Direction.WEST;
+			} else if (side == Direction.SOUTH) {
+				offsetSide = Direction.NORTH;
+			} else if (side == Direction.DOWN) {
+				offsetSide = Direction.UP;
+			}
+
 			BlockFaceUV blockFaceUV = new BlockFaceUV(new float[] { 0.0f, 0.0f, 16.0f, 16.0f }, 0);
 			BlockPartFace blockPartFace = new BlockPartFace(null, -1, sideSprite.getName().toString(), blockFaceUV);
-			BakedQuad newQuad = FaceBaker.bakeQuad(new Vector3f(0, 0, 0), new Vector3f(16.0f, 16.0f, 16.0f), blockPartFace, sideSprite, side, IDENTITY, null, true, new ResourceLocation("dummy_name"));
+			Vector3f posOffset = SDMath.transformVectorByDirection(offsetSide, new Vector3f(0.0f, 0.0f, 0.001f));
+			posOffset.add(16.0f, 16.0f, 16.0f);
+			Vector3f negOffset = SDMath.transformVectorByDirection(offsetSide, new Vector3f(0.0f, 0.0f, -0.001f));
+
+			BakedQuad newQuad = FaceBaker.bakeQuad(negOffset, posOffset, blockPartFace, sideSprite, side, IDENTITY, null, true, new ResourceLocation("dummy_name"));
 			newQuads.add(newQuad);
 		}
 	}
