@@ -6,7 +6,7 @@
 	"outputs": {
 		"fluid": {
 			"fluid": "staticpower:liquid_fertilizer",
-			"volume": 10
+			"volume": 50
 		}
 	}
 }

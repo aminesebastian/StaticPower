@@ -6,7 +6,7 @@
 	"outputs": {
 		"fluid": {
 			"fluid": "staticpower:juice_carrot",
-			"volume": 15
+			"volume": 100
 		}
 	}
 }

@@ -4,7 +4,10 @@
 		"item": "minecraft:glass_bottle"
 	},
 	"filled_bottle": {
-		"item": "minecraft:potion"
+		"item": "minecraft:potion",
+		"nbt": {
+			"Potion": "minecraft:water"
+		}
 	},
 	"fluid": {
 		"fluid": "minecraft:water",

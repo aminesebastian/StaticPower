@@ -1,13 +1,13 @@
 package theking530.staticpower.data.crafting.wrappers.bottler;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.data.crafting.wrappers.AbstractStaticPowerRecipe;
+import theking530.staticpower.data.crafting.wrappers.RecipeMatchParameters;
+import theking530.staticpower.utilities.ItemUtilities;
 
 public class BottleRecipe extends AbstractStaticPowerRecipe {
 	public static final IRecipeType<BottleRecipe> RECIPE_TYPE = IRecipeType.register("bottler");
@@ -19,16 +19,7 @@ public class BottleRecipe extends AbstractStaticPowerRecipe {
 	public BottleRecipe(ResourceLocation name, ItemStack filledBottle, ItemStack emptyBottle, FluidStack fluid) {
 		super(name);
 		this.emptyBottle = emptyBottle;
-
-		// EDGD CASE HANDLE, REMOVE THIS LATER.
-		if (name.getPath().equals("bottler/water_bottle")) {
-			this.filledBottle = new ItemStack(Items.POTION);
-			this.filledBottle.setTag(new CompoundNBT());
-			this.filledBottle.getTag().putString("Potion", "minecraft:water");
-		} else {
-			this.filledBottle = filledBottle;
-		}
-
+		this.filledBottle = filledBottle;
 		this.fluid = fluid;
 	}
 
@@ -52,6 +43,10 @@ public class BottleRecipe extends AbstractStaticPowerRecipe {
 	@Override
 	public IRecipeType<?> getType() {
 		return RECIPE_TYPE;
+	}
+
+	public boolean isValid(RecipeMatchParameters matchParams) {
+		return ItemUtilities.areItemStacksStackable(matchParams.getItems()[0], emptyBottle) && fluid.isFluidEqual(matchParams.getFluids()[0]);
 	}
 
 	@Override

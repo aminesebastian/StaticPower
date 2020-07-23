@@ -1,0 +1,19 @@
+{
+	"type": "staticpower:soldering_recipe",
+	"pattern": [
+		" i ",
+		"ir ",
+		"   "
+	],
+	"key": {
+		"r": {
+			"tag": "forge:dusts/redstone"
+		},
+		"i": {
+			"tag": "forge:ingots/iron"
+		}
+	},
+	"result": {
+		"item": "staticpower:processor_basic"
+	}
+}

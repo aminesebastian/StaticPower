@@ -47,7 +47,7 @@ public class ContainerPoweredGrinder extends StaticPowerTileEntityContainer<Tile
 	}
 
 	@Override
-	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, PlayerInventory invPlayer, Slot slot, int slotIndex) {
+	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
 		if (getTileEntity().getRecipe(stack).isPresent() && !mergeItemStack(stack, 0)) {
 			return true;
 		}

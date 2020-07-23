@@ -66,7 +66,7 @@ public class ContainerBasicFarmer extends StaticPowerTileEntityContainer<TileEnt
 	}
 
 	@Override
-	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, PlayerInventory invPlayer, Slot slot, int slotIndex) {
+	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
 		if (stack.getItem() instanceof HoeItem && !mergeItemStack(stack, 11)) {
 			return true;
 		}

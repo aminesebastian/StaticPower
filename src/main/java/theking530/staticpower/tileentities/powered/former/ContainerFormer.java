@@ -50,7 +50,7 @@ public class ContainerFormer extends StaticPowerTileEntityContainer<TileEntityFo
 	}
 
 	@Override
-	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, PlayerInventory invPlayer, Slot slot, int slotIndex) {
+	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
 		if (getTileEntity().getRecipe(stack, getTileEntity().inputInventory.getStackInSlot(1)).isPresent() && !mergeItemStack(stack, 0)) {
 			return true;
 		}

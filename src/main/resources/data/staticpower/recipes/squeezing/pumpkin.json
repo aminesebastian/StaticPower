@@ -10,7 +10,7 @@
 		},
 		"fluid": {
 			"fluid": "staticpower:juice_pumpkin",
-			"volume": 500
+			"volume": 1000
 		}
 	}
 }

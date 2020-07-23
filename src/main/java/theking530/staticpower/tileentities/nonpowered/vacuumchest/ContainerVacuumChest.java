@@ -41,7 +41,7 @@ public class ContainerVacuumChest extends StaticPowerTileEntityContainer<TileEnt
 	}
 
 	@Override
-	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, PlayerInventory invPlayer, Slot slot, int slotIndex) {
+	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
 		if (stack.getItem() instanceof ItemFilter && !mergeItemStack(stack, 27)) {
 			return true;
 		}

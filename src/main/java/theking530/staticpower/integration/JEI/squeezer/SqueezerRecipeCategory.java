@@ -141,7 +141,7 @@ public class SqueezerRecipeCategory extends BaseJEIRecipeCategory<SqueezerRecipe
 		// Add the fluid.
 		if (recipe.hasOutputFluid()) {
 			IGuiFluidStackGroup fluids = recipeLayout.getFluidStacks();
-			fluids.init(3, false, 106, 4, 16, 52, recipe.getOutputFluid().getAmount() > 100 ? 1000 : 100, false, null);
+			fluids.init(3, false, 106, 4, 16, 52, getFluidTankDisplaySize(recipe.getOutputFluid()), false, null);
 			fluids.set(ingredients);
 		}
 

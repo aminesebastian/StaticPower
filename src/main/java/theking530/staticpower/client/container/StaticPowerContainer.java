@@ -81,7 +81,7 @@ public abstract class StaticPowerContainer extends Container {
 	 * Returns false if no conditions were met, otherwise returns true. If false,
 	 * container handles moving the item between the inventory and the hotbar.
 	 */
-	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, PlayerInventory invPlayer, Slot slot, int slotIndex) {
+	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
 		return false;
 	}
 
@@ -162,11 +162,10 @@ public abstract class StaticPowerContainer extends Container {
 				containerSlotShiftClicked(itemstack1, player, (StaticPowerContainerSlot) this.inventorySlots.get(invSlot), invSlot);
 				slot.onSlotChange(itemstack1, itemstack);
 			} else {
-				if (!playerItemShiftClicked(itemstack1, player, (PlayerInventory) slot.inventory, slot, invSlot)) {
+				if (!playerItemShiftClicked(itemstack1, player, slot, invSlot)) {
 					if (isInventorySlot(invSlot) && !mergeItemStack(itemstack1, playerHotbarStart, playerHotbarEnd + 1, false)) {
 						return ItemStack.EMPTY;
-					}
-					if (isHotbarSlot(invSlot) && !mergeItemStack(itemstack1, playerInventoryStart, playerInventoryEnd + 1, false)) {
+					} else if (isHotbarSlot(invSlot) && !mergeItemStack(itemstack1, playerInventoryStart, playerInventoryEnd + 1, false)) {
 						return ItemStack.EMPTY;
 					}
 				}

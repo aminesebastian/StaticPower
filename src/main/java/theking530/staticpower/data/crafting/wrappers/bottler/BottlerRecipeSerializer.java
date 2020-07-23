@@ -4,7 +4,6 @@ import com.google.gson.JsonObject;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
@@ -24,11 +23,11 @@ public class BottlerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerialize
 	public BottleRecipe read(ResourceLocation recipeId, JsonObject json) {
 		// Capture the empty bottle.
 		JsonObject emptyBottleObject = JSONUtils.getJsonObject(json, "empty_bottle");
-		ItemStack emptyBottle = ShapedRecipe.deserializeItem(emptyBottleObject);
+		ItemStack emptyBottle = StaticPowerJsonParsingUtilities.parseItemWithNbt(emptyBottleObject);
 
 		// Capture the empty bottle.
 		JsonObject filledBottleObject = JSONUtils.getJsonObject(json, "filled_bottle");
-		ItemStack filledBottle = ShapedRecipe.deserializeItem(filledBottleObject);
+		ItemStack filledBottle = StaticPowerJsonParsingUtilities.parseItemWithNbt(filledBottleObject);
 
 		// Capture the contained fluid.
 		JsonObject fluidObject = JSONUtils.getJsonObject(json, "fluid");

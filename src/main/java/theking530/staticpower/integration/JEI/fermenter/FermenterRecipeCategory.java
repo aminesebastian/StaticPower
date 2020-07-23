@@ -137,7 +137,7 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 
 		// Add the fluid.
 		IGuiFluidStackGroup fluids = recipeLayout.getFluidStacks();
-		fluids.init(3, false, 153, 6, 16, 48, recipe.getOutputFluidStack().getAmount() > 100 ? 1000 : 100, false, null);
+		fluids.init(3, false, 153, 6, 16, 48, getFluidTankDisplaySize(recipe.getOutputFluidStack()), false, null);
 		fluids.set(ingredients);
 
 		powerTimer = guiHelper.createTickTimer(TileEntityFermenter.DEFAULT_POWER_USAGE, TileEntityFermenter.DEFAULT_POWER_USAGE * TileEntityFermenter.DEFAULT_PROCESSING_TIME, true);

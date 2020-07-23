@@ -13,7 +13,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.server.SSetSlotPacket;
 import net.minecraft.util.Direction;
 import net.minecraft.world.World;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
@@ -146,7 +145,7 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 	 */
 	public void onCraftMatrixChanged(IInventory inventoryIn) {
 		// Update the output slot.
-		updateOutputSlot(this.windowId, getPlayerInventory().player.world, getPlayerInventory().player, this.craftMatrix, this.craftResult);
+		updateOutputSlot(getPlayerInventory().player.world, getPlayerInventory().player, this.craftMatrix, this.craftResult);
 		resyncInv = true;
 	}
 
@@ -206,7 +205,7 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 	 * @param craftingInv
 	 * @param outputInv
 	 */
-	protected void updateOutputSlot(int slotIndex, World world, PlayerEntity player, CraftingInventory craftingInv, CraftResultInventory outputInv) {
+	protected void updateOutputSlot(World world, PlayerEntity player, CraftingInventory craftingInv, CraftResultInventory outputInv) {
 		if (!world.isRemote) {
 			ServerPlayerEntity serverplayerentity = (ServerPlayerEntity) player;
 			ItemStack itemstack = ItemStack.EMPTY;
@@ -219,7 +218,6 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 			}
 
 			outputInv.setInventorySlotContents(0, itemstack);
-			serverplayerentity.connection.sendPacket(new SSetSlotPacket(this.windowId, slotIndex, itemstack));
 		}
 	}
 }

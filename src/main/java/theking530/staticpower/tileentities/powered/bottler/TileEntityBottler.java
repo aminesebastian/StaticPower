@@ -8,6 +8,7 @@ import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
+import theking530.staticpower.data.crafting.wrappers.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
 import theking530.staticpower.initialization.ModTileEntityTypes;
@@ -23,11 +24,10 @@ import theking530.staticpower.tileentities.components.OutputServoComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 import theking530.staticpower.utilities.InventoryUtilities;
-import theking530.staticpower.utilities.ItemUtilities;
 
 public class TileEntityBottler extends TileEntityMachine {
-	public static final int DEFAULT_PROCESSING_TIME = 10;
-	public static final int DEFAULT_PROCESSING_COST = 10;
+	public static final int DEFAULT_PROCESSING_TIME = 40;
+	public static final int DEFAULT_PROCESSING_COST = 15;
 	public static final int DEFAULT_MOVING_TIME = 4;
 	public static final int DEFAULT_TANK_SIZE = 5000;
 
@@ -76,7 +76,8 @@ public class TileEntityBottler extends TileEntityMachine {
 	 * @return
 	 */
 	protected boolean canMoveFromInputToProcessing() {
-		if (hasValidInput() && !moveComponent.isProcessing() && internalInventory.getStackInSlot(0).isEmpty() && energyStorage.getStorage().getEnergyStored() >= DEFAULT_PROCESSING_COST && fluidTankComponent.getFluidAmount() > 0) {
+		if (hasValidInput() && hasFluidForInput(inputInventory.getStackInSlot(0)) && !moveComponent.isProcessing() && internalInventory.getStackInSlot(0).isEmpty() && energyStorage.getStorage().getEnergyStored() >= DEFAULT_PROCESSING_COST
+				&& fluidTankComponent.getFluidAmount() > 0) {
 			return InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, getSimulatedFilledContainer(inputInventory.getStackInSlot(0)));
 		}
 		return false;
@@ -90,7 +91,7 @@ public class TileEntityBottler extends TileEntityMachine {
 	 * @return
 	 */
 	protected boolean movingCompleted() {
-		if (hasValidInput()) {
+		if (hasValidInput() && hasFluidForInput(inputInventory.getStackInSlot(0))) {
 			// Transfer the items to the internal inventory.
 			transferItemInternally(inputInventory, 0, internalInventory, 0);
 
@@ -102,7 +103,8 @@ public class TileEntityBottler extends TileEntityMachine {
 
 	protected boolean canProcess() {
 		ItemStack output = getSimulatedFilledContainer(inputInventory.getStackInSlot(0));
-		return isValidInput(internalInventory.getStackInSlot(0)) && redstoneControlComponent.passesRedstoneCheck() && energyStorage.hasEnoughPower(DEFAULT_PROCESSING_COST) && InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, output);
+		return isValidInput(internalInventory.getStackInSlot(0)) && hasFluidForInput(inputInventory.getStackInSlot(0)) && redstoneControlComponent.passesRedstoneCheck() && energyStorage.hasEnoughPower(DEFAULT_PROCESSING_COST)
+				&& InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, output);
 	}
 
 	/**
@@ -131,6 +133,7 @@ public class TileEntityBottler extends TileEntityMachine {
 				outputInventory.insertItem(0, result.getResult().copy(), false);
 			} else {
 				outputInventory.insertItem(0, output.copy(), false);
+				fluidTankComponent.drain(getRecipe(internalInventory.getStackInSlot(0)).getFluid().getAmount(), FluidAction.EXECUTE);
 			}
 
 			// Clear the internal inventory.
@@ -160,11 +163,22 @@ public class TileEntityBottler extends TileEntityMachine {
 		if (FluidUtil.getFluidHandler(stack).isPresent()) {
 			return true;
 		} else {
-			for (BottleRecipe recipe : StaticPowerRecipeRegistry.getRecipesOfType(BottleRecipe.RECIPE_TYPE)) {
-				if (ItemUtilities.areItemStacksStackable(stack, recipe.getEmptyBottle()) && this.fluidTankComponent.getFluid().isFluidEqual(recipe.getFluid()) && fluidTankComponent.getFluidAmount() >= recipe.getFluid().getAmount()) {
-					return true;
-				}
+			return getRecipe(stack) != null;
+		}
+	}
+
+	public boolean hasFluidForInput(ItemStack stack) {
+		if (!isValidInput(stack)) {
+			return false;
+		}
+
+		BottleRecipe recipe = getRecipe(inputInventory.getStackInSlot(0));
+		if (recipe != null) {
+			if (fluidTankComponent.getFluid().isFluidEqual(recipe.getFluid()) && fluidTankComponent.getFluidAmount() >= recipe.getFluid().getAmount()) {
+				return true;
 			}
+		} else {
+			return fluidTankComponent.getFluidAmount() > 0;
 		}
 		return false;
 	}
@@ -181,13 +195,20 @@ public class TileEntityBottler extends TileEntityMachine {
 
 			return result.result;
 		} else {
-			for (BottleRecipe recipe : StaticPowerRecipeRegistry.getRecipesOfType(BottleRecipe.RECIPE_TYPE)) {
-				if (ItemUtilities.areItemStacksStackable(stack, recipe.getEmptyBottle()) && fluidTankComponent.getFluid().isFluidEqual(recipe.getFluid()) && fluidTankComponent.getFluidAmount() >= recipe.getFluid().getAmount()) {
-					return recipe.getFilledBottle().copy();
-				}
+			BottleRecipe recipe = getRecipe(stack);
+			if (recipe != null) {
+				return recipe.getFilledBottle();
 			}
 		}
 		return ItemStack.EMPTY;
+	}
+
+	protected BottleRecipe getRecipe(ItemStack stack) {
+		BottleRecipe recipe = StaticPowerRecipeRegistry.getRecipe(BottleRecipe.RECIPE_TYPE, new RecipeMatchParameters(fluidTankComponent.getFluid()).setItems(stack)).orElse(null);
+		if (recipe != null) {
+			return recipe;
+		}
+		return null;
 	}
 
 	@Override

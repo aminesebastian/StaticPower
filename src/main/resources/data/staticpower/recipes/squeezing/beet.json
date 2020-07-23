@@ -9,8 +9,8 @@
 			"count": 1
 		},
 		"fluid": {
-			"fluid": "staticpower:juice_beet",
-			"volume": 30
+			"fluid": "staticpower:juice_beetroot",
+			"volume": 120
 		}
 	}
 }

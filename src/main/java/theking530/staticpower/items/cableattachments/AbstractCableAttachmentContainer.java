@@ -45,7 +45,7 @@ public class AbstractCableAttachmentContainer<T extends AbstractCableAttachment>
 	}
 
 	@Override
-	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, PlayerInventory invPlayer, Slot slot, int slotIndex) {
+	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
 		boolean alreadyExists = false;
 		int firstEmptySlot = -1;
 

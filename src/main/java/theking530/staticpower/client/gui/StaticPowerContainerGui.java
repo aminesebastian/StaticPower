@@ -22,6 +22,7 @@ import theking530.common.utilities.Color;
 import theking530.common.utilities.Vector2D;
 import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.client.container.slots.DigistoreCraftingOutputSlot;
+import theking530.staticpower.client.container.slots.OutputSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.tileentities.components.SideConfigurationComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
@@ -168,10 +169,10 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 
 		// Draw any additional foreground elements.
 		drawForegroundExtras(partialTicks, mouseX, mouseY);
-		
+
 		// Renders any hovered tooltips.
 		renderHoveredToolTip(mouseX, mouseY);
-		
+
 		// Render the widget tooltips as needed.
 		widgetContainer.renderTooltips(mouseX, mouseY);
 	}
@@ -488,7 +489,7 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 				MachineSideMode intendedMode = handlerSlot.getMode();
 
 				// If the slot is an output slot, increase the size of the slot.
-				int slotSize = intendedMode.isOutputMode() ? outputSlotSize : inputSlotSize;
+				int slotSize = intendedMode.isOutputMode() || slot instanceof OutputSlot ? outputSlotSize : inputSlotSize;
 				int sizePosOffset = (slotSize - 16) / 2;
 
 				// If side configuration is present, draw the slow with a border.
@@ -496,10 +497,10 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 					if (intendedMode != MachineSideMode.Regular && intendedMode != MachineSideMode.Never) {
 						drawSlot(slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset, slotSize, slotSize, sideConfiguration.getCountOfSidesWithMode(intendedMode) > 0 ? intendedMode : MachineSideMode.Regular);
 					} else {
-						drawSlot(slot.xPos + guiLeft, slot.yPos + guiTop, 16, 16);
+						drawSlot(slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset, slotSize, slotSize);
 					}
 				} else {
-					drawSlot(slot.xPos + guiLeft, slot.yPos + guiTop, 16, 16);
+					drawSlot(slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset, slotSize, slotSize);
 				}
 
 				// Draw the item.

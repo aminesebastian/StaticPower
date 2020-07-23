@@ -49,7 +49,7 @@ public class ContainerLumberMill extends StaticPowerTileEntityContainer<TileEnti
 	}
 
 	@Override
-	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, PlayerInventory invPlayer, Slot slot, int slotIndex) {
+	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
 		if (!mergeItemStack(stack, 0, 1, false)) {
 			return true;
 		}

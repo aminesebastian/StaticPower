@@ -72,7 +72,7 @@ public class ContainerTreeFarmer extends StaticPowerTileEntityContainer<TileEnti
 	}
 
 	@Override
-	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, PlayerInventory invPlayer, Slot slot, int slotIndex) {
+	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
 		if (saplingIngredient.test(stack) && !mergeItemStack(stack, 1, 10, false)) {
 			return true;
 		}

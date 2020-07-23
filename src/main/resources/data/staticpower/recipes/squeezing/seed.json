@@ -6,7 +6,7 @@
 	"outputs": {
 		"fluid": {
 			"fluid": "staticpower:seed_oil",
-			"volume": 10
+			"volume": 20
 		}
 	}
 }

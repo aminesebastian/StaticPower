@@ -10,7 +10,7 @@
 		},
 		"fluid": {
 			"fluid": "staticpower:juice_melon",
-			"volume": 140
+			"volume": 2000
 		}
 	}
 }

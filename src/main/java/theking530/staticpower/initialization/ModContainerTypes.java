@@ -18,6 +18,8 @@ import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.GuiDigistore;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.severrack.ContainerDigistoreServerRack;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.severrack.GuiDigistoreServerRack;
+import theking530.staticpower.tileentities.nonpowered.solderingtable.ContainerSolderingTable;
+import theking530.staticpower.tileentities.nonpowered.solderingtable.GuiSolderingTable;
 import theking530.staticpower.tileentities.nonpowered.tank.ContainerTank;
 import theking530.staticpower.tileentities.nonpowered.tank.GuiTank;
 import theking530.staticpower.tileentities.nonpowered.vacuumchest.ContainerVacuumChest;
@@ -67,7 +69,8 @@ public class ModContainerTypes {
 	public static ContainerType<ContainerCrucible> CRUCIBLE_CONTAINER;
 	public static ContainerType<ContainerSqueezer> SQUEEZER_CONTAINER;
 	public static ContainerType<ContainerBottler> BOTTLER_CONTAINER;
-	
+	public static ContainerType<ContainerSolderingTable> SOLDERING_TABLE_CONTAINER;
+
 	public static ContainerType<ContainerTank> TANK_CONTAINER;
 	public static ContainerType<ContainerPump> PUMP_CONTAINER;
 
@@ -96,7 +99,8 @@ public class ModContainerTypes {
 		CRUCIBLE_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_crucible", ContainerCrucible::new, GuiCrucible::new);
 		SQUEEZER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_squeezer", ContainerSqueezer::new, GuiSqueezer::new);
 		BOTTLER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_bottler", ContainerBottler::new, GuiBottler::new);
-		
+		SOLDERING_TABLE_CONTAINER = StaticPowerRegistry.preRegisterContainer("soldering_table", ContainerSolderingTable::new, GuiSolderingTable::new);
+
 		TANK_CONTAINER = StaticPowerRegistry.preRegisterContainer("tank", ContainerTank::new, GuiTank::new);
 		PUMP_CONTAINER = StaticPowerRegistry.preRegisterContainer("pump", ContainerPump::new, GuiPump::new);
 

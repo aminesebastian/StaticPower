@@ -148,7 +148,7 @@ public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRe
 		// Add the fluid.
 		if (recipe.hasOutputFluid()) {
 			IGuiFluidStackGroup fluids = recipeLayout.getFluidStacks();
-			fluids.init(3, false, 153, 6, 16, 48, recipe.getOutputFluid().getAmount() > 100 ? 1000 : 100, false, null);
+			fluids.init(3, false, 153, 6, 16, 48, getFluidTankDisplaySize(recipe.getOutputFluid()), false, null);
 			fluids.set(ingredients);
 		}
 

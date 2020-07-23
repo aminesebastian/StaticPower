@@ -11,6 +11,7 @@ import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.ioport.TileEntityDigistoreIOPort;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.TileEntityDigistoreManager;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.severrack.TileEntityDigistoreServerRack;
+import theking530.staticpower.tileentities.nonpowered.solderingtable.TileEntitySolderingTable;
 import theking530.staticpower.tileentities.nonpowered.tank.TileEntityTank;
 import theking530.staticpower.tileentities.nonpowered.vacuumchest.TileEntityVacuumChest;
 import theking530.staticpower.tileentities.powered.basicfarmer.TileEntityBasicFarmer;
@@ -74,7 +75,8 @@ public class ModTileEntityTypes {
 	public static TileEntityType<TileEntityCrucible> CRUCIBLE;
 	public static TileEntityType<TileEntitySqueezer> SQUEEZER;
 	public static TileEntityType<TileEntityBottler> BOTTLER;
-	
+	public static TileEntityType<TileEntitySolderingTable> SOLDERING_TABLE;
+
 	public static TileEntityType<TileEntityBattery> BATTERY_BASIC;
 	public static TileEntityType<TileEntityBattery> BATTERY_ADVANCED;
 	public static TileEntityType<TileEntityBattery> BATTERY_STATIC;
@@ -103,7 +105,8 @@ public class ModTileEntityTypes {
 		CRUCIBLE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityCrucible(), ModBlocks.Crucible);
 		SQUEEZER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntitySqueezer(), ModBlocks.Squeezer);
 		BOTTLER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBottler(), ModBlocks.Bottler);
-		
+		SOLDERING_TABLE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntitySolderingTable(), ModBlocks.SolderingTable);
+
 		BATTERY_BASIC = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(type, StaticPowerTiers.BASIC), ModBlocks.BatteryBasic);
 		BATTERY_ADVANCED = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(type, StaticPowerTiers.ADVANCED), ModBlocks.BatteryAdvanced);
 		BATTERY_STATIC = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(type, StaticPowerTiers.STATIC), ModBlocks.BatteryStatic);

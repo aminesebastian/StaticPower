@@ -37,7 +37,7 @@ public class ContainerDigistoreServerRack extends StaticPowerTileEntityContainer
 	}
 
 	@Override
-	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, PlayerInventory invPlayer, Slot slot, int slotIndex) {
+	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
 		if (stack.getItem() instanceof DigistoreCard && !mergeItemStack(stack, 0, 9, false)) {
 			return true;
 		}

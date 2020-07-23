@@ -126,7 +126,7 @@ public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 
 		// Add the fluid.
 		IGuiFluidStackGroup fluids = recipeLayout.getFluidStacks();
-		fluids.init(3, true, 50, 4, 16, 52, recipe.getFluid().getAmount() > 100 ? 1000 : 100, false, null);
+		fluids.init(3, true, 50, 4, 16, 52, getFluidTankDisplaySize(recipe.getFluid()), false, null);
 		fluids.set(ingredients);
 
 		powerTimer = guiHelper.createTickTimer(TileEntityBottler.DEFAULT_PROCESSING_COST, TileEntityBottler.DEFAULT_PROCESSING_COST * TileEntityBottler.DEFAULT_PROCESSING_TIME, true);
