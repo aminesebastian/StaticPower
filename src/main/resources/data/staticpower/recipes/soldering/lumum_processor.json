@@ -10,16 +10,16 @@
 			"tag": "forge:dusts/redstone"
 		},
 		"i": {
-			"tag": "forge:plates/iron"
+			"tag": "staticpower:plates/energized"
 		},
 		"p": {
-			"tag": "forge:plates/tin"
+			"tag": "staticpower:plates/lumum"
 		},
 		"w": {
-			"tag": "forge:wire/copper"
+			"tag": "forge:wire/gold"
 		}
 	},
 	"result": {
-		"item": "staticpower:processor_basic"
+		"item": "staticpower:processor_lumum"
 	}
 }

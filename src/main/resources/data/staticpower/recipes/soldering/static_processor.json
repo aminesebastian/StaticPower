@@ -10,16 +10,16 @@
 			"tag": "forge:dusts/redstone"
 		},
 		"i": {
-			"tag": "forge:plates/iron"
+			"tag": "forge:plates/gold"
 		},
 		"p": {
-			"tag": "forge:plates/tin"
+			"tag": "staticpower:plates/static"
 		},
 		"w": {
-			"tag": "forge:wire/copper"
+			"tag": "forge:wire/gold"
 		}
 	},
 	"result": {
-		"item": "staticpower:processor_basic"
+		"item": "staticpower:processor_static"
 	}
 }

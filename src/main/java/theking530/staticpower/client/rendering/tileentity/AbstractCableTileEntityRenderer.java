@@ -2,12 +2,13 @@ package theking530.staticpower.client.rendering.tileentity;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.BlockItem;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.FluidStack;
@@ -39,8 +40,12 @@ public abstract class AbstractCableTileEntityRenderer<T extends TileEntityBase> 
 		float lerpValue = packet.getItemMoveLerp() + (partialTicks / (packet.getCurrentMoveTime() / 2));
 		matrixStack.push();
 
+		// Get the baked model and check if it wants to render the item in 3d or 2d.
+		IBakedModel itemModel = Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(packet.getContainedItem(), null, null);
+		boolean render3D = itemModel.isGui3d();
+		
 		// Determine which scale to use when drawing.
-		if (packet.getContainedItem().getItem() instanceof BlockItem) {
+		if (render3D) {
 			drawItemInWorld(te, packet.getContainedItem(), TransformType.FIXED, getItemParcelAnimationOffset(lerpValue, dir), BLOCK_RENDER_SCALE, partialTicks, matrixStack, buffer, 15728880, combinedOverlay);
 		} else {
 			drawItemInWorld(te, packet.getContainedItem(), TransformType.FIXED, getItemParcelAnimationOffset(lerpValue, dir), ITEM_RENDER_SCALE, partialTicks, matrixStack, buffer, 15728880, combinedOverlay);

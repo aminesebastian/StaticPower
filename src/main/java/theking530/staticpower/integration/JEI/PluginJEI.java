@@ -26,6 +26,7 @@ import theking530.staticpower.data.crafting.wrappers.fermenter.FermenterRecipe;
 import theking530.staticpower.data.crafting.wrappers.former.FormerRecipe;
 import theking530.staticpower.data.crafting.wrappers.grinder.GrinderRecipe;
 import theking530.staticpower.data.crafting.wrappers.lumbermill.LumberMillRecipe;
+import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
 import theking530.staticpower.data.crafting.wrappers.solidfuel.SolidFuelRecipe;
 import theking530.staticpower.data.crafting.wrappers.squeezer.SqueezerRecipe;
 import theking530.staticpower.initialization.ModBlocks;
@@ -36,9 +37,11 @@ import theking530.staticpower.integration.JEI.former.FormerRecipeCategory;
 import theking530.staticpower.integration.JEI.lumbermill.LumberMillRecipeCategory;
 import theking530.staticpower.integration.JEI.poweredfurnace.PoweredFurnaceRecipeCategory;
 import theking530.staticpower.integration.JEI.poweredgrinder.PoweredGrinderRecipeCategory;
+import theking530.staticpower.integration.JEI.solderingtable.SolderingTableRecipeCategory;
 import theking530.staticpower.integration.JEI.solidgenerator.SolidGeneratorRecipeCategory;
 import theking530.staticpower.integration.JEI.squeezer.SqueezerRecipeCategory;
 import theking530.staticpower.items.cableattachments.digistorecraftingterminal.ContainerDigistoreCraftingTerminal;
+import theking530.staticpower.tileentities.nonpowered.solderingtable.GuiSolderingTable;
 import theking530.staticpower.tileentities.powered.bottler.GuiBottler;
 import theking530.staticpower.tileentities.powered.fermenter.GuiFermenter;
 import theking530.staticpower.tileentities.powered.former.GuiFormer;
@@ -68,6 +71,8 @@ public class PluginJEI implements IModPlugin {
 	private BottleRecipeCategory bottlerCategory;
 	@Nullable
 	private SolidGeneratorRecipeCategory solidGeneratorCategory;
+	@Nullable
+	private SolderingTableRecipeCategory solderingTableCategory;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
@@ -82,6 +87,7 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipeClickArea(GuiSqueezer.class, 74, 34, 28, 5, SqueezerRecipeCategory.SQUEEZER_UID);
 		registration.addRecipeClickArea(GuiBottler.class, 74, 34, 28, 5, BottleRecipeCategory.BOTTLER_UID);
 		registration.addRecipeClickArea(GuiSolidGenerator.class, 37, 32, 22, 16, SolidGeneratorRecipeCategory.SOLID_GENERATOR_UID);
+		registration.addRecipeClickArea(GuiSolderingTable.class, 37, 32, 22, 16, SolderingTableRecipeCategory.SOLDERING_TABLE_UID);
 	}
 
 	@SuppressWarnings("unused")
@@ -123,6 +129,10 @@ public class PluginJEI implements IModPlugin {
 		// Solid Generator
 		solidGeneratorCategory = new SolidGeneratorRecipeCategory(guiHelper);
 		registration.addRecipeCategories(solidGeneratorCategory);
+
+		// Soldering Iron
+		solderingTableCategory = new SolderingTableRecipeCategory(guiHelper);
+		registration.addRecipeCategories(solderingTableCategory);
 	}
 
 	@Override
@@ -145,6 +155,7 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(SqueezerRecipe.RECIPE_TYPE), SqueezerRecipeCategory.SQUEEZER_UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(BottleRecipe.RECIPE_TYPE), BottleRecipeCategory.BOTTLER_UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(SolidFuelRecipe.RECIPE_TYPE), SolidGeneratorRecipeCategory.SOLID_GENERATOR_UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(SolderingRecipe.RECIPE_TYPE), SolderingTableRecipeCategory.SOLDERING_TABLE_UID);
 	}
 
 	@Override
@@ -157,6 +168,7 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Squeezer), SqueezerRecipeCategory.SQUEEZER_UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Bottler), BottleRecipeCategory.BOTTLER_UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SolidGenerator), SolidGeneratorRecipeCategory.SOLID_GENERATOR_UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SolderingTable), SolderingTableRecipeCategory.SOLDERING_TABLE_UID);
 	}
 
 	@Override

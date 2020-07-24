@@ -25,7 +25,6 @@ import theking530.staticpower.tileentities.nonpowered.digistorenetwork.ioport.Bl
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.BlockDigistoreManager;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.severrack.BlockDigistoreServerRack;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.BlockSolderingTable;
-import theking530.staticpower.tileentities.nonpowered.solderingtable.BlockSolderingTable;
 import theking530.staticpower.tileentities.nonpowered.tank.BlockTank;
 import theking530.staticpower.tileentities.nonpowered.vacuumchest.BlockVacuumChest;
 import theking530.staticpower.tileentities.powered.basicfarmer.BlockBasicFarmer;

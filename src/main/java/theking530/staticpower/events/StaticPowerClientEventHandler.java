@@ -32,6 +32,7 @@ import theking530.staticpower.client.rendering.tileentity.TileEntityRenderFarmer
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderFluidCable;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderItemCable;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderPump;
+import theking530.staticpower.client.rendering.tileentity.TileEntityRenderSolderingTable;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderSqueezer;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderTank;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderTreeFarmer;
@@ -91,6 +92,8 @@ public class StaticPowerClientEventHandler {
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.TANK, TileEntityRenderTank::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.PUMP, TileEntityRenderPump::new);
 
+		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.SOLDERING_TABLE, TileEntityRenderSolderingTable::new);
+		
 		// Log the completion.
 		StaticPower.LOGGER.info("Static Power Client Setup Completed!");
 	}

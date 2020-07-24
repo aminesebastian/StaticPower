@@ -18,6 +18,7 @@ import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.InventoryComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
+import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntitySolderingTable extends TileEntityBase implements INamedContainerProvider {
 	public final InventoryComponent patternInventory;
@@ -87,6 +88,81 @@ public class TileEntitySolderingTable extends TileEntityBase implements INamedCo
 
 		// If all the above are met, return true.
 		return true;
+	}
+
+	public int getPossibleAmountToCraft() {
+		// Get the recipe. If we dont have a valid recipe, return 0.
+		SolderingRecipe recipe = getCurrentRecipe().orElse(null);
+		if (recipe == null || recipe.getIngredients().size() == 0) {
+			return 0;
+		}
+
+		// Create a duplicate inventory.
+		ItemStackHandler duplicateInventory = new ItemStackHandler(inventory.getSlots());
+		for (int i = 0; i < inventory.getSlots(); i++) {
+			duplicateInventory.setStackInSlot(i, inventory.getStackInSlot(i).copy());
+		}
+
+		// Loop through and see how many we can craft (k=10000 is arbitrary, it should
+		// always return early. while(true) would also work too, but the 10000 covers us
+		// in case someone makes a really weird recipe).
+		int craftable = 0;
+		for (int k = 0; k < 10000; k++) {
+			for (Ingredient ing : recipe.getIngredients()) {
+				// Set the flag to false.
+				boolean flag = false;
+
+				// Look for an item that matches the ingredient inside the inventory. If we find
+				// one, extract the item from the duplicate and continue. If one is not found,
+				// we cannot craft this item, return false.
+				for (int j = 0; j < duplicateInventory.getSlots(); j++) {
+					if (ing.test(duplicateInventory.getStackInSlot(j))) {
+						duplicateInventory.extractItem(j, 1, false);
+						flag = true;
+						break;
+					}
+				}
+
+				if (!flag) {
+					return craftable;
+				}
+			}
+			craftable++;
+		}
+		return craftable;
+	}
+
+	public ItemStack craftItem() {
+		// Get the recipe. If we dont have a valid recipe, return 0.
+		SolderingRecipe recipe = getCurrentRecipe().orElse(null);
+		if (recipe == null || recipe.getIngredients().size() == 0) {
+			return ItemStack.EMPTY;
+		}
+
+		// Check the pattern.
+		for (int i = 0; i < patternInventory.getSlots(); i++) {
+			// Get the used item.
+			ItemStack item = patternInventory.getStackInSlot(i);
+
+			// Skip holes in the recipe.
+			if (item.isEmpty()) {
+				continue;
+			}
+
+			// Remove the item.
+			int index = InventoryUtilities.getFirstSlotContainingItem(item, inventory);
+			if (index >= 0) {
+				inventory.extractItem(index, 1, false);
+			}
+		}
+
+		// Use the soldering iron.
+		if (solderingIronInventory.getStackInSlot(0).attemptDamageItem(1, getTileEntity().getWorld().rand, null)) {
+			solderingIronInventory.setStackInSlot(0, ItemStack.EMPTY);
+		}
+
+		// Return the output.
+		return recipe.getRecipeOutput().copy();
 	}
 
 	public Optional<SolderingRecipe> getCurrentRecipe() {

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -12,6 +13,27 @@ import net.minecraftforge.items.ItemStackHandler;
 import theking530.common.utilities.SDMath;
 
 public class InventoryUtilities {
+
+	public static boolean canFullyInsertItemIntoPlayerInventory(ItemStack stack, PlayerInventory inventory) {
+		// Create and populate an inventory identical to the player's.
+		ItemStackHandler testHandler = new ItemStackHandler(inventory.mainInventory.size());
+		for (int i = 0; i < inventory.mainInventory.size(); i++) {
+			testHandler.setStackInSlot(i, inventory.mainInventory.get(i).copy());
+		}
+
+		return canFullyInsertItemIntoInventory(testHandler, stack);
+	}
+
+	public static boolean canPartiallyInsertItemIntoPlayerInventory(ItemStack stack, PlayerInventory inventory) {
+		// Create and populate an inventory identical to the player's.
+		ItemStackHandler testHandler = new ItemStackHandler(inventory.mainInventory.size());
+		for (int i = 0; i < inventory.mainInventory.size(); i++) {
+			testHandler.setStackInSlot(i, inventory.mainInventory.get(i).copy());
+		}
+
+		return canPartiallyInsertItemIntoInventory(testHandler, stack);
+	}
+
 	public static boolean isInventoryEmpty(IItemHandler inv) {
 		for (int i = 0; i < inv.getSlots(); i++) {
 			if (!inv.getStackInSlot(i).isEmpty()) {
