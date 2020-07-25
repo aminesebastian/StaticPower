@@ -1,31 +1,24 @@
 package theking530.staticpower.tileentities.nonpowered.solderingtable;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.annotation.Nullable;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.CraftResultInventory;
 import net.minecraft.inventory.container.ClickType;
-import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SSetSlotPacket;
-import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
-import theking530.staticpower.client.container.slots.PhantomSlot;
 import theking530.staticpower.client.container.slots.SolderingTableOutputSlot;
-import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
 import theking530.staticpower.initialization.ModContainerTypes;
-import theking530.staticpower.initialization.ModItems;
-import theking530.staticpower.items.tools.ISolderingIron;
 import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.ItemUtilities;
 
-public class ContainerSolderingTable extends StaticPowerTileEntityContainer<TileEntitySolderingTable> {
+public class ContainerSolderingTable extends AbstractContainerSolderingTable<TileEntitySolderingTable> {
+	private @Nullable SolderingTableOutputSlot outputSlot;
 	private CraftResultInventory craftResult;
-	private List<ItemStack> lastCraftingPattern;
 
 	public ContainerSolderingTable(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, (TileEntitySolderingTable) resolveTileEntityFromDataPacket(inv, data));
@@ -33,66 +26,26 @@ public class ContainerSolderingTable extends StaticPowerTileEntityContainer<Tile
 
 	public ContainerSolderingTable(int windowId, PlayerInventory playerInventory, TileEntitySolderingTable owner) {
 		super(ModContainerTypes.SOLDERING_TABLE_CONTAINER, windowId, playerInventory, owner);
+		enableSolderingIronSlot = true;
 
 	}
 
 	@Override
 	public void initializeContainer() {
-		lastCraftingPattern = new ArrayList<ItemStack>();
-		// Craft result inventory.
-		craftResult = new CraftResultInventory();
-		// Add the pattern slots.
-		for (int y = 0; y < 3; y++) {
-			for (int x = 0; x < 3; x++) {
-				addSlot(new PhantomSlot(getTileEntity().patternInventory, x + (y * 3), 62 + x * 18, 20 + y * 18));
-				lastCraftingPattern.add(getTileEntity().patternInventory.getStackInSlot(x + (y * 3)));
-			}
-		}
-
-		// Add the inventory slots.
-		for (int i = 0; i < 9; i++) {
-			addSlot(new StaticPowerContainerSlot(getTileEntity().inventory, i, 8 + i * 18, 78) {
-				public void onSlotChanged() {
-					super.onSlotChanged();
-					updateOutputSlot();
-				}
-			});
-		}
-
-		// Add the soldering iron slot.
-		addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.SolderingIron), 0.3f, getTileEntity().solderingIronInventory, 0, 8, 20) {
-
-			public void onSlotChanged() {
-				super.onSlotChanged();
-				updateOutputSlot();
-			}
-		});
-
-		// Output slot.
-		addSlot(new SolderingTableOutputSlot(this, getPlayerInventory().player, craftResult, 0, 129, 38) {
-			public void onSlotChanged() {
-				super.onSlotChanged();
-				updateOutputSlot();
-			}
-		});
-
-		// Player slots.
-		addPlayerInventory(getPlayerInventory(), 8, 103);
-		addPlayerHotbar(getPlayerInventory(), 8, 161);
+		enableSolderingIronSlot = true;
+		
+		super.initializeContainer();
 
 		// Initial update of the output slot.
 		updateOutputSlot();
 	}
 
-	/**
-	 * Callback for when the crafting matrix is changed.
-	 */
-	public void onCraftingPatternChanged() {
-		updateOutputSlot();
-	}
-
-	public void onItemCrafted(ItemStack output) {
-		updateOutputSlot();
+	@Override
+	protected void addOutputSlot() {
+		// Craft result inventory.
+		craftResult = new CraftResultInventory();
+		// Output slot.
+		addSlot(outputSlot = new SolderingTableOutputSlot(getPlayerInventory().player, craftResult, 0, 129, 38));
 	}
 
 	/**
@@ -100,20 +53,7 @@ public class ContainerSolderingTable extends StaticPowerTileEntityContainer<Tile
 	 */
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
-
-		for (int i = 0; i < 9; ++i) {
-			ItemStack itemstack = this.inventorySlots.get(i).getStack();
-			ItemStack itemstack1 = this.lastCraftingPattern.get(i);
-			if (!ItemStack.areItemStacksEqual(itemstack1, itemstack)) {
-				boolean clientStackChanged = !itemstack1.equals(itemstack, true);
-				itemstack1 = itemstack.copy();
-				this.lastCraftingPattern.set(i, itemstack1);
-
-				if (clientStackChanged) {
-					onCraftingPatternChanged();
-				}
-			}
-		}
+		updateOutputSlot();
 	}
 
 	@Override
@@ -156,7 +96,11 @@ public class ContainerSolderingTable extends StaticPowerTileEntityContainer<Tile
 					((ServerPlayerEntity) player).updateHeldItem();
 				}
 
-				// Update the output slot.
+				// Tell the slot we crafted.
+				outputSlot.onCrafted(player, craftedResult);
+
+				// Update the output slot (do this even though we do it on tick to ensure we
+				// dont display an item when its no longer craftable).
 				updateOutputSlot();
 				return craftedResult;
 			} else if (clickTypeIn == ClickType.QUICK_MOVE) {
@@ -165,6 +109,8 @@ public class ContainerSolderingTable extends StaticPowerTileEntityContainer<Tile
 					if (!getTileEntity().getWorld().isRemote) {
 						ItemStack craftedResult = getTileEntity().craftItem();
 						player.addItemStackToInventory(craftedResult);
+						// Tell the slot we crafted.
+						outputSlot.onCrafted(player, craftedResult);
 						((ServerPlayerEntity) player).sendAllContents(this, this.getInventory());
 					}
 				}
@@ -187,7 +133,8 @@ public class ContainerSolderingTable extends StaticPowerTileEntityContainer<Tile
 	 * @param outputInv
 	 */
 	protected void updateOutputSlot() {
-		if (!getPlayerInventory().player.world.isRemote) {
+		// Update the output slot if this is NOT the auto variant.
+		if (!getPlayerInventory().player.world.isRemote && getType() == ModContainerTypes.SOLDERING_TABLE_CONTAINER) {
 			ItemStack output = ItemStack.EMPTY;
 			// Set the slot contents on the server.
 			if (getTileEntity().hasRequiredItems()) {
@@ -202,30 +149,4 @@ public class ContainerSolderingTable extends StaticPowerTileEntityContainer<Tile
 		}
 	}
 
-	@Override
-	public ItemStack transferStackInSlot(PlayerEntity player, int slotIndex) {
-		// Get the slot and the slot's contents.
-		Slot slot = inventorySlots.get(slotIndex);
-		ItemStack stack = slot.getStack();
-
-		// If this is a soldering iron, place it in the soldering iron slot.
-		if (stack.getItem() instanceof ISolderingIron && !mergeItemStack(stack, 18)) {
-			return stack;
-		}
-
-		// If we shift clicked an item in the soldering table inventory, move it to the
-		// player inventory. If we shift clicked in the player inventory, attempt to
-		// move the item to the soldering iron inventory.
-		if (slotIndex <= 17) {
-			if (!mergeItemStack(stack, 18, 48, false)) {
-				return stack;
-			}
-		} else {
-			if (!mergeItemStack(stack, 9, 18, false)) {
-				return stack;
-			}
-		}
-
-		return stack;
-	}
 }

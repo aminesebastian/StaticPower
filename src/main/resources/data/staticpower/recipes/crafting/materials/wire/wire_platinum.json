@@ -1,0 +1,15 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{
+			"tag": "forge:ingots/platinum"
+		},
+		{
+			"item": "staticpower:wire_cutters"
+		}
+	],
+	"result": {
+		"item": "staticpower:wire_platinum",
+		"count": 4
+	}
+}

@@ -1,22 +1,19 @@
 {
 	"type": "staticpower:soldering_recipe",
 	"pattern": [
-		" i ",
+		"   ",
 		"prp",
 		"www"
 	],
 	"key": {
 		"r": {
-			"tag": "forge:dusts/redstone"
-		},
-		"i": {
-			"tag": "staticpower:plates/energized"
+			"tag": "forge:silicon"
 		},
 		"p": {
 			"tag": "staticpower:plates/lumum"
 		},
 		"w": {
-			"tag": "forge:wire/gold"
+			"tag": "forge:wire/platinum"
 		}
 	},
 	"result": {

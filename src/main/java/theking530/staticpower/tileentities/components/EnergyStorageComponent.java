@@ -186,10 +186,13 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 
 	@Override
 	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
-		if (cap == CapabilityEnergy.ENERGY) {
-			capabilityAccessor.currentSide = side;
-			return LazyOptional.of(() -> capabilityAccessor).cast();
+		if (isEnabled()) {
+			if (cap == CapabilityEnergy.ENERGY) {
+				capabilityAccessor.currentSide = side;
+				return LazyOptional.of(() -> capabilityAccessor).cast();
+			}
 		}
+
 		return LazyOptional.empty();
 	}
 

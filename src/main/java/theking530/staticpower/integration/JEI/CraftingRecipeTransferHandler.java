@@ -16,15 +16,16 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
-import theking530.staticpower.client.container.slots.CraftingRecipeInputSlot;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class CraftingRecipeTransferHandler<T extends Container> implements IRecipeTransferHandler<T> {
 
 	private final Class<T> containerClass;
+	private final int inputItems;
 
-	CraftingRecipeTransferHandler(Class<T> containerClass) {
+	CraftingRecipeTransferHandler(Class<T> containerClass, int inputItems) {
 		this.containerClass = containerClass;
+		this.inputItems = inputItems;
 	}
 
 	@Override
@@ -51,31 +52,29 @@ public class CraftingRecipeTransferHandler<T extends Container> implements IReci
 			}
 
 			for (final Slot slot : container.inventorySlots) {
-				if (slot instanceof CraftingRecipeInputSlot) {
-					if (slot.getSlotIndex() == slotIndex) {
-						final ListNBT tags = new ListNBT();
-						final List<ItemStack> list = new ArrayList<>();
-						final ItemStack displayed = ingredient.getDisplayedIngredient();
+				if (slot.getSlotIndex() == slotIndex) {
+					final ListNBT tags = new ListNBT();
+					final List<ItemStack> list = new ArrayList<>();
+					final ItemStack displayed = ingredient.getDisplayedIngredient();
 
-						// prefer currently displayed item
-						if (displayed != null && !displayed.isEmpty()) {
-							list.add(displayed);
-						}
-
-						// Add the additional items.
-						for (ItemStack stack : ingredient.getAllIngredients()) {
-							list.add(stack);
-						}
-
-						for (final ItemStack is : list) {
-							final CompoundNBT tag = new CompoundNBT();
-							is.write(tag);
-							tags.add(tag);
-						}
-
-						recipe.put("#" + slot.getSlotIndex(), tags);
-						break;
+					// prefer currently displayed item
+					if (displayed != null && !displayed.isEmpty()) {
+						list.add(displayed);
 					}
+
+					// Add the additional items.
+					for (ItemStack stack : ingredient.getAllIngredients()) {
+						list.add(stack);
+					}
+
+					for (final ItemStack is : list) {
+						final CompoundNBT tag = new CompoundNBT();
+						is.write(tag);
+						tags.add(tag);
+					}
+
+					recipe.put("#" + slot.getSlotIndex(), tags);
+					break;
 				}
 			}
 
@@ -83,7 +82,7 @@ public class CraftingRecipeTransferHandler<T extends Container> implements IReci
 		}
 
 		// Send the packet to the server to update the crafting grid.
-		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(new JEIRecipeTransferPacket(container.windowId, recipe));
+		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(new JEIRecipeTransferPacket(container.windowId, inputItems, recipe));
 
 		return null;
 	}

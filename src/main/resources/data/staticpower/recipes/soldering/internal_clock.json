@@ -1,0 +1,22 @@
+{
+	"type": "staticpower:soldering_recipe",
+	"pattern": [
+		"ppp",
+		"pcp",
+		"w w"
+	],
+	"key": {
+		"p": {
+			"tag": "forge:plates/tin"
+		},
+		"w": {
+			"tag": "forge:wire/silver"
+		},
+		"c": {
+			"item": "minecraft:clock"
+		}
+	},
+	"result": {
+		"item": "staticpower:internal_clock"
+	}
+}

@@ -14,30 +14,34 @@ public class JEIRecipeTransferPacket extends NetworkMessage {
 	protected int windowId;
 	private ItemStack[][] recipe;
 	private CompoundNBT serializedRecipe;
+	private int itemCount;
 
 	public JEIRecipeTransferPacket() {
 
 	}
 
-	public JEIRecipeTransferPacket(int windowId, CompoundNBT serializedRecipe) {
+	public JEIRecipeTransferPacket(int windowId, int itemCount, CompoundNBT serializedRecipe) {
 		this.windowId = windowId;
+		this.itemCount = itemCount;
 		this.serializedRecipe = serializedRecipe;
 	}
 
 	@Override
 	public void encode(PacketBuffer buffer) {
 		buffer.writeInt(windowId);
+		buffer.writeInt(itemCount);
 		buffer.writeCompoundTag(serializedRecipe);
 	}
 
 	@Override
 	public void decode(PacketBuffer buffer) {
 		windowId = buffer.readInt();
+		itemCount = buffer.readInt();
 
 		// Deserialize the serialized recipe grid.
 		final CompoundNBT comp = buffer.readCompoundTag();
 		if (comp != null) {
-			recipe = new ItemStack[9][];
+			recipe = new ItemStack[itemCount][];
 			for (int x = 0; x < this.recipe.length; x++) {
 				final ListNBT list = comp.getList("#" + x, 10);
 				if (list.size() > 0) {

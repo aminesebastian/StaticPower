@@ -51,7 +51,7 @@ public class StringButton extends AbstractGui implements MouseListener {
 		this.BUTTON_XPOS = xPos;
 		this.BUTTON_YPOS = yPos;
 		this.BLOCK = block;
-		this.itemDrawer = new GuiDrawItem(true);
+		this.itemDrawer = new GuiDrawItem();
 	}
 
 	public void playSound() {

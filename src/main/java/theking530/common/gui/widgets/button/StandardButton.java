@@ -75,6 +75,7 @@ public class StandardButton extends AbstractGuiWidget {
 
 			// Raise the on clicked event.
 			onClicked.accept(this, currentlyPressedMouseButton);
+
 			return EInputResult.HANDLED;
 		}
 		return EInputResult.UNHANDLED;

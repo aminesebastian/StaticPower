@@ -132,12 +132,14 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 
 	@Override
 	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
-		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && inventoryMode != MachineSideMode.Never) {
-			// Check if the owner is side configurable. If it is, check to make sure it's
-			// not disabled, if not, return the inventory.
-			Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getTileEntity());
-			if (side == null || !sideConfig.isPresent() || sideConfig.get().getWorldSpaceDirectionConfiguration(side) == inventoryMode) {
-				return LazyOptional.of(() -> capabilityInterface).cast();
+		if (isEnabled()) {
+			if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && inventoryMode != MachineSideMode.Never) {
+				// Check if the owner is side configurable. If it is, check to make sure it's
+				// not disabled, if not, return the inventory.
+				Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getTileEntity());
+				if (side == null || !sideConfig.isPresent() || sideConfig.get().getWorldSpaceDirectionConfiguration(side) == inventoryMode) {
+					return LazyOptional.of(() -> capabilityInterface).cast();
+				}
 			}
 		}
 		return LazyOptional.empty();

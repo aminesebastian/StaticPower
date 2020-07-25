@@ -1,0 +1,15 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{
+			"tag": "forge:ingots/platinum"
+		},
+		{
+			"item": "staticpower:metal_hammer"
+		}
+	],
+	"result": {
+		"item": "staticpower:plate_silver",
+		"count": 1
+	}
+}

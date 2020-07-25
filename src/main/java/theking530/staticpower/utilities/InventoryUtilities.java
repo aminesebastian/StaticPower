@@ -220,4 +220,14 @@ public class InventoryUtilities {
 		}
 		return output;
 	}
+
+	public static void clearInventory(IItemHandler inv) {
+		for (int i = 0; i < inv.getSlots(); i++) {
+			inv.extractItem(i, Integer.MAX_VALUE, false);
+		}
+
+		if (!isInventoryEmpty(inv)) {
+			throw new RuntimeException("Failed to clear inventory of contents.");
+		}
+	}
 }

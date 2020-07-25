@@ -1,16 +1,13 @@
 {
 	"type": "staticpower:soldering_recipe",
 	"pattern": [
-		" i ",
+		"   ",
 		"prp",
 		"www"
 	],
 	"key": {
 		"r": {
-			"tag": "forge:dusts/redstone"
-		},
-		"i": {
-			"tag": "forge:plates/copper"
+			"tag": "forge:silicon"
 		},
 		"p": {
 			"tag": "forge:plates/gold"

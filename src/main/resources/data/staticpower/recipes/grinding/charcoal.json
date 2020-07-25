@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:grinder_recipe",
+	"input": {
+		"item": "minecraft:charcoal"
+	},
+	"output": [
+		{
+			"item": "staticpower:dust_charcoal",
+			"count": 1
+		}
+	]
+}

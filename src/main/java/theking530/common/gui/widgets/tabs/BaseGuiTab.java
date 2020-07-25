@@ -164,7 +164,7 @@ public abstract class BaseGuiTab {
 				}
 			}
 		} else {
-			if (widgetContainer.handleMouseClick(mouseX, mouseY, button) == EInputResult.HANDLED) {
+			if (tabState == TabState.OPEN && widgetContainer.handleMouseClick(mouseX, mouseY, button) == EInputResult.HANDLED) {
 				return EInputResult.HANDLED;
 			}
 		}
@@ -178,7 +178,9 @@ public abstract class BaseGuiTab {
 	 * @param y The y position of the mouse.
 	 */
 	public void mouseHover(int x, int y) {
-		widgetContainer.handleMouseMove(x, y);
+		if(tabState == TabState.OPEN) {
+			widgetContainer.handleMouseMove(x, y);
+		}
 	}
 
 	/**
@@ -427,7 +429,6 @@ public abstract class BaseGuiTab {
 		StaticVertexBuffer.pos(tabLeft + 20 + (tabWidth * animationTimer / animationTime), tabTop + 4, 0, .9767, .03);
 
 		tessellator.draw();
-		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glPopMatrix();
 	}
 
@@ -437,6 +438,10 @@ public abstract class BaseGuiTab {
 	 * @return
 	 */
 	public RectangleBounds getBounds() {
-		return new RectangleBounds(xPosition, yPosition, (int) currentWidth + 24, (int) currentHeight + 24);
+		if (this.tabSide == TabSide.LEFT) {
+			return new RectangleBounds(xPosition + tabWidth - currentWidth, yPosition, (int) currentWidth + 24, (int) currentHeight + 24);
+		} else {
+			return new RectangleBounds(xPosition, yPosition, (int) currentWidth + 24, (int) currentHeight + 24);
+		}
 	}
 }

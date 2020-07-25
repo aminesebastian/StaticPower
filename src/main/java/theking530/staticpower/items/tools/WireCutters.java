@@ -30,7 +30,12 @@ public class WireCutters extends StaticPowerItem {
 
 	@Override
 	public ItemStack getContainerItem(ItemStack stack) {
-		return stack.getDamage() < stack.getMaxDamage() ? new ItemStack(stack.getItem(), 1) : ItemStack.EMPTY;
+		ItemStack stackCopy = stack.copy();
+		if (stackCopy.attemptDamageItem(1, random, null)) {
+			stackCopy.shrink(1);
+			stackCopy.setDamage(0);
+		}
+		return stackCopy;
 	}
 
 	@Override

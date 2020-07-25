@@ -1,0 +1,13 @@
+{
+	"type": "staticpower:former_recipe",
+	"input": {
+		"tag": "forge:plates/iron"
+	},
+	"mold": {
+		"tag": "forge:plates/tungsten"
+	},
+	"output": {
+		"item": "staticpower:mold_blank",
+		"count": 2
+	}
+}

@@ -29,7 +29,7 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 
 	public GuiDigistore(ContainerDigistore container, PlayerInventory invPlayer, ITextComponent name) {
 		super(container, invPlayer, name, 176, 150);
-		itemRenderer = new GuiDrawItem(true);
+		itemRenderer = new GuiDrawItem();
 		inventory = getTileEntity().inventory;
 	}
 

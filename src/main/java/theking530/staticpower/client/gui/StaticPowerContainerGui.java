@@ -70,7 +70,7 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 		ySizeTarget = guiYSize;
 		outputSlotSize = 24;
 		inputSlotSize = 16;
-		itemDrawer = new GuiDrawItem(true);
+		itemDrawer = new GuiDrawItem();
 		registerWidget(tabManager = new GuiTabManager());
 	}
 

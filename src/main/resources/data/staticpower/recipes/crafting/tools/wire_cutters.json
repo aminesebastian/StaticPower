@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"i i",
+		" l ",
+		"l l"
+	],
+	"key": {
+		"i": {
+			"tag": "forge:ingots/iron"
+		},
+		"l": {
+			"tag": "forge:gems/lapis"
+		}
+	},
+	"result": {
+		"item": "staticpower:wire_cutters"
+	}
+}

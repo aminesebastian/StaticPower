@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:grinder_recipe",
+	"input": {
+		"tag": "forge:obsidian"
+	},
+	"output": [
+		{
+			"item": "staticpower:dust_obsidian",
+			"count": 8
+		}
+	]
+}

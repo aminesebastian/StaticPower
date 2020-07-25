@@ -15,25 +15,25 @@ import theking530.common.utilities.Color;
 import theking530.staticpower.StaticPower;
 
 public class GuiDrawItem {
-	protected Color COLOR;
-	protected boolean SHOULD_DRAW;
+	protected Color tint;
+	protected boolean shouldDraw;
 
-	public GuiDrawItem(boolean ShouldDraw) {
-		SHOULD_DRAW = ShouldDraw;
+	public GuiDrawItem() {
+		shouldDraw = true;
 	}
 
 	public void setShouldDraw(boolean ShouldDraw) {
-		SHOULD_DRAW = ShouldDraw;
+		shouldDraw = ShouldDraw;
 	}
 
 	public void drawItem(Item item, int guiLeft, int guiTop, int x, int y, float alpha) {
-		if (SHOULD_DRAW) {
+		if (shouldDraw) {
 			drawItem(new ItemStack(item), guiLeft, guiTop, x, y, alpha);
 		}
 	}
 
 	public void drawItem(ItemStack item, int guiLeft, int guiTop, int x, int y, float alpha) {
-		if (SHOULD_DRAW) {
+		if (shouldDraw) {
 			if (item != null) {
 				renderItemModelIntoGUI(item, guiLeft + x, guiTop + y, alpha);
 			} else {

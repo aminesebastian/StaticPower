@@ -164,6 +164,7 @@ public class ModItems {
 	public static StaticPowerItem WireCopper;
 	public static StaticPowerItem WireSilver;
 	public static StaticPowerItem WireGold;
+	public static StaticPowerItem WirePlatinum;
 	public static StaticPowerItem CoilCopper;
 	public static StaticPowerItem CoilSilver;
 	public static StaticPowerItem CoilGold;
@@ -325,6 +326,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(WireCopper = new StaticPowerItem("wire_copper"));
 		StaticPowerRegistry.preRegisterItem(WireSilver = new StaticPowerItem("wire_silver"));
 		StaticPowerRegistry.preRegisterItem(WireGold = new StaticPowerItem("wire_gold"));
+		StaticPowerRegistry.preRegisterItem(WirePlatinum = new StaticPowerItem("wire_platinum"));
 		StaticPowerRegistry.preRegisterItem(CoilCopper = new StaticPowerItem("coil_copper"));
 		StaticPowerRegistry.preRegisterItem(CoilSilver = new StaticPowerItem("coil_silver"));
 		StaticPowerRegistry.preRegisterItem(CoilGold = new StaticPowerItem("coil_gold"));

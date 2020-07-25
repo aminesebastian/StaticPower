@@ -1,0 +1,19 @@
+{
+	"type": "staticpower:soldering_recipe",
+	"pattern": [
+		"   ",
+		"wsw",
+		"   "
+	],
+	"key": {
+		"s": {
+			"tag": "forge:silicon"
+		},
+		"w": {
+			"tag": "forge:wire/silver"
+		}
+	},
+	"result": {
+		"item": "staticpower:diode"
+	}
+}

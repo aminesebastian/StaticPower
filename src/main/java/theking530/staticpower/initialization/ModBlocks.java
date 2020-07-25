@@ -27,6 +27,7 @@ import theking530.staticpower.tileentities.nonpowered.digistorenetwork.severrack
 import theking530.staticpower.tileentities.nonpowered.solderingtable.BlockSolderingTable;
 import theking530.staticpower.tileentities.nonpowered.tank.BlockTank;
 import theking530.staticpower.tileentities.nonpowered.vacuumchest.BlockVacuumChest;
+import theking530.staticpower.tileentities.powered.autosolderingtable.BlockAutoSolderingTable;
 import theking530.staticpower.tileentities.powered.basicfarmer.BlockBasicFarmer;
 import theking530.staticpower.tileentities.powered.battery.BlockBattery;
 import theking530.staticpower.tileentities.powered.bottler.BlockBottler;
@@ -99,6 +100,7 @@ public class ModBlocks {
 	public static BlockSqueezer Squeezer;
 	public static BlockBottler Bottler;
 	public static BlockSolderingTable SolderingTable;
+	public static BlockAutoSolderingTable AutoSolderingTable;
 
 	public static BlockSolarPanel SolarPanelBasic;
 	public static BlockSolarPanel SolarPanelAdvanced;
@@ -199,6 +201,7 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(Squeezer = new BlockSqueezer("machine_squeezer"));
 		StaticPowerRegistry.preRegisterBlock(Bottler = new BlockBottler("machine_bottler"));
 		StaticPowerRegistry.preRegisterBlock(SolderingTable = new BlockSolderingTable("soldering_table"));
+		StaticPowerRegistry.preRegisterBlock(AutoSolderingTable = new BlockAutoSolderingTable("industrial_soldering_table"));
 
 		StaticPowerRegistry.preRegisterBlock(BasicTank = new BlockTank("tank_basic"));
 		StaticPowerRegistry.preRegisterBlock(Pump = new BlockPump("pump"));

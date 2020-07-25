@@ -1,0 +1,17 @@
+{
+	"type": "staticpower:grinder_recipe",
+	"input": {
+		"tag": "minecraft:wool"
+	},
+	"output": [
+		{
+			"item": "minecraft:string",
+			"count": 3
+		},
+		{
+			"item": "minecraft:string",
+			"count": 1,
+			"chance": 0.5
+		}
+	]
+}
