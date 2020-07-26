@@ -14,7 +14,7 @@ import theking530.staticpower.client.container.slots.FluidContainerSlot;
 import theking530.staticpower.client.container.slots.OutputSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.client.container.slots.UpgradeItemSlot;
-import theking530.staticpower.initialization.ModContainerTypes;
+import theking530.staticpower.init.ModContainerTypes;
 
 public class ContainerBasicFarmer extends StaticPowerTileEntityContainer<TileEntityBasicFarmer> {
 	public ContainerBasicFarmer(int windowId, PlayerInventory inv, PacketBuffer data) {

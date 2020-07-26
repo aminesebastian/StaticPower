@@ -1,6 +1,7 @@
 package theking530.staticpower.items.tools;
 
 import java.util.List;
+import java.util.Random;
 
 import javax.annotation.Nullable;
 
@@ -21,10 +22,12 @@ public class SolderingIron extends StaticPowerItem implements ISolderingIron {
 
 	@Override
 	public boolean useSolderingItem(ItemStack stack) {
-		stack.setDamage(stack.getDamage() + 1);
-		if (stack.getDamage() >= stack.getMaxDamage()) {
+		Random rand = new Random();
+		if (stack.attemptDamageItem(1, rand, null)) {
+			stack.setCount(0);
 			return true;
 		}
+
 		return false;
 	}
 

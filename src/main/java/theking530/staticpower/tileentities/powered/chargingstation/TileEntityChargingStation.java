@@ -6,8 +6,8 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import theking530.staticpower.initialization.ModBlocks;
-import theking530.staticpower.initialization.ModTileEntityTypes;
+import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.BatteryComponent;
@@ -38,16 +38,30 @@ public class TileEntityChargingStation extends TileEntityMachine {
 
 	@Override
 	public void process() {
-		if (energyStorage.getStorage().getEnergyStored() > 0) {
+		if (!getWorld().isRemote) {
+			// Capture the count of chargeable items.
+			int count = 0;
 			for (int i = 0; i < unchargedInventory.getSlots(); i++) {
 				ItemStack stack = unchargedInventory.getStackInSlot(i);
 				if (stack != ItemStack.EMPTY && EnergyHandlerItemStackUtilities.isEnergyContainer(stack)) {
 					if (EnergyHandlerItemStackUtilities.getEnergyStored(stack) < EnergyHandlerItemStackUtilities.getEnergyStorageCapacity(stack)) {
-						int maxOutput = energyStorage.getStorage().getCurrentMaximumPowerOutput();
-						int charged = EnergyHandlerItemStackUtilities.addEnergyToItemstack(stack, maxOutput, false);
-						energyStorage.usePower(charged);
-					} else {
-						moveChargedItemToOutputs(i);
+						count++;
+					}
+				}
+			}
+
+			// Charge up to four items simultanously.
+			if (energyStorage.getStorage().getEnergyStored() > 0) {
+				for (int i = 0; i < unchargedInventory.getSlots(); i++) {
+					ItemStack stack = unchargedInventory.getStackInSlot(i);
+					if (stack != ItemStack.EMPTY && EnergyHandlerItemStackUtilities.isEnergyContainer(stack)) {
+						if (EnergyHandlerItemStackUtilities.getEnergyStored(stack) < EnergyHandlerItemStackUtilities.getEnergyStorageCapacity(stack)) {
+							int maxOutput = energyStorage.getStorage().getCurrentMaximumPowerOutput() / count;
+							int charged = EnergyHandlerItemStackUtilities.addEnergyToItemstack(stack, maxOutput, false);
+							energyStorage.usePower(charged);
+						} else {
+							moveChargedItemToOutputs(i);
+						}
 					}
 				}
 			}

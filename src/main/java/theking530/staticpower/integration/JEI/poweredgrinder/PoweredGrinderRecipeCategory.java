@@ -24,7 +24,7 @@ import theking530.common.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.common.utilities.Vector2D;
 import theking530.staticpower.data.crafting.wrappers.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.wrappers.grinder.GrinderRecipe;
-import theking530.staticpower.initialization.ModBlocks;
+import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.utilities.MetricConverter;
 import theking530.staticpower.utilities.Reference;

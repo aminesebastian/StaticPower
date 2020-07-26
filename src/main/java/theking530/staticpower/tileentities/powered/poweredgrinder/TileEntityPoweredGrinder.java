@@ -11,7 +11,7 @@ import theking530.staticpower.data.crafting.wrappers.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.wrappers.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.grinder.GrinderRecipe;
-import theking530.staticpower.initialization.ModTileEntityTypes;
+import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.BatteryComponent;
 import theking530.staticpower.tileentities.components.InputServoComponent;

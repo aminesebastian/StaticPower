@@ -1,4 +1,4 @@
-package theking530.staticpower.initialization;
+package theking530.staticpower.init;
 
 import net.minecraft.item.Item;
 import net.minecraft.tags.ItemTags;

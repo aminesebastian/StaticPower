@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:grinder_recipe",
+	"input": {
+		"tag": "forge:stone"
+	},
+	"output": [
+		{
+			"item": "minecraft:cobblestone",
+			"count": 1
+		}
+	]
+}

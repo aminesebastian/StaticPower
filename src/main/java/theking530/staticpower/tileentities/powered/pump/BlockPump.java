@@ -11,7 +11,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.staticpower.initialization.ModTileEntityTypes;
+import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.StaticPowerTileEntityBlock;
 
 public class BlockPump extends StaticPowerTileEntityBlock {

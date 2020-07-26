@@ -8,7 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import theking530.staticpower.initialization.ModTileEntityTypes;
+import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.StaticPowerDefaultMachineBlock;
 
 public class BlockFormer extends StaticPowerDefaultMachineBlock {

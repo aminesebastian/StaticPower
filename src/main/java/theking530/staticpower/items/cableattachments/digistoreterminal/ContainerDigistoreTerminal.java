@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Direction;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
-import theking530.staticpower.initialization.ModContainerTypes;
+import theking530.staticpower.init.ModContainerTypes;
 
 public class ContainerDigistoreTerminal extends AbstractContainerDigistoreTerminal<DigistoreTerminal> {
 

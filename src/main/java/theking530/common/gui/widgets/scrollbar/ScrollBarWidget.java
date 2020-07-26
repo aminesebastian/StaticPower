@@ -1,6 +1,5 @@
 package theking530.common.gui.widgets.scrollbar;
 
-import net.minecraft.client.Minecraft;
 import theking530.common.gui.GuiDrawUtilities;
 import theking530.common.gui.drawables.SpriteDrawable;
 import theking530.common.gui.widgets.AbstractGuiWidget;
@@ -55,8 +54,8 @@ public class ScrollBarWidget extends AbstractGuiWidget {
 	public EInputResult mouseClick(int mouseX, int mouseY, int button) {
 		if (isPointInsideBounds(new Vector2D((float) mouseX, (float) mouseY))) {
 			int offset = (int) mouseY - (int) getScrollHandleLocation().getY();
-			offset /= Math.max((Minecraft.getInstance().gameSettings.guiScale - 1), 1);
-			scrollAmount = (int) SDMath.clamp(scrollAmount + offset, 0, maxScroll);
+			int scrollSpaceOffset = Math.round(((offset * maxScroll) / getSize().getY()));
+			scrollAmount = (int) SDMath.clamp(scrollAmount + scrollSpaceOffset, 0, maxScroll);
 			return EInputResult.HANDLED;
 		}
 		return EInputResult.UNHANDLED;
@@ -65,8 +64,8 @@ public class ScrollBarWidget extends AbstractGuiWidget {
 	public EInputResult mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
 		if (isPointInsideBounds(new Vector2D((float) mouseX, (float) mouseY))) {
 			int offset = (int) mouseY - (int) getScrollHandleLocation().getY();
-			offset /= Math.max((Minecraft.getInstance().gameSettings.guiScale - 1), 1);
-			scrollAmount = (int) SDMath.clamp(scrollAmount + offset, 0, maxScroll);
+			int scrollSpaceOffset = Math.round(((offset * maxScroll) / getSize().getY()));
+			scrollAmount = (int) SDMath.clamp(scrollAmount + scrollSpaceOffset, 0, maxScroll);
 			return EInputResult.HANDLED;
 		}
 		return EInputResult.UNHANDLED;

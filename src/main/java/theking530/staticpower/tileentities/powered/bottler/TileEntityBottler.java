@@ -11,11 +11,10 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 import theking530.staticpower.data.crafting.wrappers.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
-import theking530.staticpower.initialization.ModTileEntityTypes;
+import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.BatteryComponent;
-import theking530.staticpower.tileentities.components.FluidContainerComponent;
-import theking530.staticpower.tileentities.components.FluidContainerComponent.FluidContainerInteractionMode;
+import theking530.staticpower.tileentities.components.FluidInputServoComponent;
 import theking530.staticpower.tileentities.components.FluidTankComponent;
 import theking530.staticpower.tileentities.components.InputServoComponent;
 import theking530.staticpower.tileentities.components.InventoryComponent;
@@ -64,7 +63,7 @@ public class TileEntityBottler extends TileEntityMachine {
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Input));
 		fluidTankComponent.setCanDrain(false);
 
-		registerComponent(new FluidContainerComponent("FluidFillContainerServo", fluidTankComponent, internalInventory, 0, outputInventory, 0).setMode(FluidContainerInteractionMode.FILL));
+		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, fluidTankComponent, MachineSideMode.Input));
 	}
 
 	/**

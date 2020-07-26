@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:grinder_recipe",
 	"input": {
-		"tag": "forge:stone"
+		"item": "minecraft:cobblestone"
 	},
 	"output": [
 		{

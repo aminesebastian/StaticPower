@@ -15,8 +15,8 @@ import theking530.staticpower.client.container.slots.FluidContainerSlot;
 import theking530.staticpower.client.container.slots.OutputSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.client.container.slots.UpgradeItemSlot;
-import theking530.staticpower.initialization.ModContainerTypes;
-import theking530.staticpower.initialization.ModTags;
+import theking530.staticpower.init.ModContainerTypes;
+import theking530.staticpower.init.ModTags;
 
 public class ContainerTreeFarmer extends StaticPowerTileEntityContainer<TileEntityTreeFarm> {
 

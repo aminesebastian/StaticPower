@@ -1,0 +1,9 @@
+{
+    "parent": "staticpower:block/machines/base_machine_model",
+    "textures": {
+		"side": "staticpower:blocks/machines/sides/default_machine_side",
+		"front": "staticpower:blocks/machines/sides/default_machine_side_front",
+		"face": "staticpower:blocks/machines/industrial_soldering_table_face_off",
+		"particle": "staticpower:blocks/machines/sides/default_machine_side"
+    }
+}

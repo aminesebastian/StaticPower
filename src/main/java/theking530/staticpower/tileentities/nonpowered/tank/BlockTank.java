@@ -17,7 +17,7 @@ import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.blocks.ICustomModelSupplier;
 import theking530.staticpower.client.rendering.blocks.TankMachineBakedModel;
-import theking530.staticpower.initialization.ModTileEntityTypes;
+import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.StaticPowerTileEntityBlock;
 
 public class BlockTank extends StaticPowerTileEntityBlock implements ICustomModelSupplier {

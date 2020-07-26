@@ -20,6 +20,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import theking530.common.utilities.SDMath;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.fluid.FluidCableComponent;
@@ -73,7 +74,7 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 		// Increment the extraction timer. If it returns true, attempt an item extract.
 		if (incrementExtractionTimer(attachment)) {
 			// See if we can perform a digistore extract.
-			if(!performDigistoreExtract(attachment, side, cable, te)) {
+			if (!performDigistoreExtract(attachment, side, cable, te)) {
 				// If not, attempt to transfer the item from a regular inventory.
 				performItemHandlerExtract(attachment, side, cable, te);
 			}
@@ -155,11 +156,21 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 					// an exception).
 					IItemHandler filterItems = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(() -> new RuntimeException("Encounetered an extractor attachment without a valid filter inventory."));
 
+					// We do this to ensure we randomly extract.
+					int startingSlot = SDMath.getRandomIntInRange(0, filterItems.getSlots() - 1);
+					int currentSlot = startingSlot;
+
 					// Get the list of filter items.
 					for (int i = 0; i < filterItems.getSlots(); i++) {
-						if (!filterItems.getStackInSlot(i).isEmpty()) {
+						if (!filterItems.getStackInSlot(currentSlot).isEmpty()) {
 							// Simulate an extract.
-							ItemStack extractedItem = module.extractItem(filterItems.getStackInSlot(i), StaticPowerDataRegistry.getTier(tierType).getCableExtractionStackSize(), true);
+							ItemStack extractedItem = module.extractItem(filterItems.getStackInSlot(currentSlot), StaticPowerDataRegistry.getTier(tierType).getCableExtractionStackSize(), true);
+
+							// Increment the current slot and make sure we wrap around.
+							currentSlot++;
+							if (currentSlot > filterItems.getSlots() - 1) {
+								currentSlot = 0;
+							}
 
 							// If the extracted item is empty, continue.
 							if (extractedItem.isEmpty()) {

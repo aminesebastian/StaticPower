@@ -9,7 +9,7 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import theking530.staticpower.data.StaticPowerTiers;
-import theking530.staticpower.initialization.ModTileEntityTypes;
+import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.StaticPowerTileEntityBlock;
 
 public class BlockSolarPanel extends StaticPowerTileEntityBlock {

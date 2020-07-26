@@ -6,14 +6,14 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.item.ItemGroup;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import theking530.staticpower.initialization.ModBlocks;
-import theking530.staticpower.initialization.ModContainerTypes;
-import theking530.staticpower.initialization.ModFluids;
-import theking530.staticpower.initialization.ModItems;
-import theking530.staticpower.initialization.ModNetworkMessages;
-import theking530.staticpower.initialization.ModRecipeSerializers;
-import theking530.staticpower.initialization.ModTileEntityTypes;
-import theking530.staticpower.initialization.ModUpgrades;
+import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModContainerTypes;
+import theking530.staticpower.init.ModFluids;
+import theking530.staticpower.init.ModItems;
+import theking530.staticpower.init.ModNetworkMessages;
+import theking530.staticpower.init.ModRecipeSerializers;
+import theking530.staticpower.init.ModTileEntityTypes;
+import theking530.staticpower.init.ModUpgrades;
 import theking530.staticpower.utilities.Reference;
 
 @Mod(Reference.MOD_ID)

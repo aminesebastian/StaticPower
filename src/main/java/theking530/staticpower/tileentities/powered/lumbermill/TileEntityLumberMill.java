@@ -11,9 +11,10 @@ import theking530.common.utilities.SDMath;
 import theking530.staticpower.data.crafting.wrappers.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.lumbermill.LumberMillRecipe;
-import theking530.staticpower.initialization.ModTileEntityTypes;
+import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.BatteryComponent;
+import theking530.staticpower.tileentities.components.FluidOutputServoComponent;
 import theking530.staticpower.tileentities.components.FluidTankComponent;
 import theking530.staticpower.tileentities.components.InputServoComponent;
 import theking530.staticpower.tileentities.components.InventoryComponent;
@@ -59,6 +60,7 @@ public class TileEntityLumberMill extends TileEntityMachine {
 		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Output));
 		fluidTankComponent.setCanFill(false);
+		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
 	}
 
 	/**

@@ -12,7 +12,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.container.StaticPowerItemContainer;
 import theking530.staticpower.client.container.slots.PhantomSlot;
-import theking530.staticpower.initialization.ModContainerTypes;
+import theking530.staticpower.init.ModContainerTypes;
 
 public class ContainerItemFilter extends StaticPowerItemContainer<ItemFilter> {
 	private ItemStackHandler filterInventory;

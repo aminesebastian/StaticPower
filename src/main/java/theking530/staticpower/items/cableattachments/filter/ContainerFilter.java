@@ -10,7 +10,7 @@ import theking530.common.utilities.SDMath;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.client.container.slots.PhantomSlot;
-import theking530.staticpower.initialization.ModContainerTypes;
+import theking530.staticpower.init.ModContainerTypes;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachmentContainer;
 
 public class ContainerFilter extends AbstractCableAttachmentContainer<FilterAttachment> {

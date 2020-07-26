@@ -9,7 +9,7 @@ import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.client.container.slots.FilterItemSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.client.container.slots.UpgradeItemSlot;
-import theking530.staticpower.initialization.ModContainerTypes;
+import theking530.staticpower.init.ModContainerTypes;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.items.upgrades.BaseUpgrade;
 

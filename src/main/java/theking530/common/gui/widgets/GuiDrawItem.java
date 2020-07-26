@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import theking530.common.utilities.Color;
-import theking530.staticpower.StaticPower;
 
 public class GuiDrawItem {
 	protected Color tint;
@@ -33,12 +32,8 @@ public class GuiDrawItem {
 	}
 
 	public void drawItem(ItemStack item, int guiLeft, int guiTop, int x, int y, float alpha) {
-		if (shouldDraw) {
-			if (item != null) {
-				renderItemModelIntoGUI(item, guiLeft + x, guiTop + y, alpha);
-			} else {
-				StaticPower.LOGGER.error("Attempting to draw a null itemstack into a UI.");
-			}
+		if (shouldDraw && !item.isEmpty()) {
+			renderItemModelIntoGUI(item, guiLeft + x, guiTop + y, alpha);
 		}
 	}
 

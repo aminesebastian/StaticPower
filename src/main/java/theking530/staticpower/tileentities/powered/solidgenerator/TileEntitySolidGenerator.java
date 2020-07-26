@@ -1,17 +1,20 @@
 package theking530.staticpower.tileentities.powered.solidgenerator;
 
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraftforge.common.ForgeHooks;
-import theking530.staticpower.initialization.ModTileEntityTypes;
+import theking530.common.utilities.SDMath;
+import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
+import theking530.staticpower.tileentities.components.EnergyStorageComponent.EnergyManipulationAction;
 import theking530.staticpower.tileentities.components.InputServoComponent;
 import theking530.staticpower.tileentities.components.InventoryComponent;
 import theking530.staticpower.tileentities.components.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.PowerDistributionComponent;
-import theking530.staticpower.tileentities.components.EnergyStorageComponent.EnergyManipulationAction;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 
@@ -87,6 +90,16 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 	@Override
 	public void process() {
 		if (processingComponent.isProcessing()) {
+			// Randomly generate smoke and flame particles.
+			float randomOffset = (2 * RANDOM.nextFloat()) - 1.0f;
+			if (SDMath.diceRoll(0.25f)) {
+
+				randomOffset /= 3.5f;
+				Vector3f forwardVector = SDMath.transformVectorByDirection(getFacingDirection(), new Vector3f(randomOffset + 0.5f, 0.32f, -1.05f));
+				getWorld().addParticle(ParticleTypes.SMOKE, getPos().getX() + forwardVector.getX(), getPos().getY() + forwardVector.getY(), getPos().getZ() + forwardVector.getZ(), 0.0f, 0.01f, 0.0f);
+				getWorld().addParticle(ParticleTypes.FLAME, getPos().getX() + forwardVector.getX(), getPos().getY() + forwardVector.getY(), getPos().getZ() + forwardVector.getZ(), 0.0f, 0.01f, 0.0f);
+			}
+
 			if (!getWorld().isRemote) {
 				if (energyStorage.addPower(powerGenerationPerTick)) {
 					processingComponent.continueProcessing();

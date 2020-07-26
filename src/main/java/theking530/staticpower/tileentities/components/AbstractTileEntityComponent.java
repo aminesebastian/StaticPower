@@ -25,6 +25,7 @@ public abstract class AbstractTileEntityComponent {
 
 	public AbstractTileEntityComponent(String name) {
 		this.name = name;
+		this.isEnabled = true;
 	}
 
 	public void onRegistered(TileEntityBase owner) {
@@ -43,7 +44,7 @@ public abstract class AbstractTileEntityComponent {
 	}
 
 	public void onOwningBlockBroken(BlockState state, BlockState newState, boolean isMoving) {
-		
+
 	}
 
 	public void preProcessUpdate() {

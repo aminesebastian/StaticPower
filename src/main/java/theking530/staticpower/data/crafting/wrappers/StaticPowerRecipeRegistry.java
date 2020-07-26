@@ -141,6 +141,7 @@ public class StaticPowerRecipeRegistry {
 				addRecipe((AbstractStaticPowerRecipe) recipe);
 				recipeCount++;
 			} else if (recipe.getType() == IRecipeType.SMELTING) {
+				// Cache smelting recipes.
 				FURNACE_RECIPES.add((FurnaceRecipe) recipe);
 			}
 		}
@@ -196,5 +197,4 @@ public class StaticPowerRecipeRegistry {
 		// Log the completion.
 		StaticPower.LOGGER.info(String.format("Succesfully %1$s %2$d Static Power recipes.", (firstTime ? "cached" : "re-cached"), recipeCount));
 	}
-
 }

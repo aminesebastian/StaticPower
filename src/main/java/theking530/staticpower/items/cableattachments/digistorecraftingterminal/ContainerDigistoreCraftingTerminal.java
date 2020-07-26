@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.client.container.slots.CraftingRecipeInputSlot;
 import theking530.staticpower.client.container.slots.DigistoreCraftingOutputSlot;
-import theking530.staticpower.initialization.ModContainerTypes;
+import theking530.staticpower.init.ModContainerTypes;
 import theking530.staticpower.integration.JEI.IJEIReipceTransferHandler;
 import theking530.staticpower.items.cableattachments.digistoreterminal.AbstractContainerDigistoreTerminal;
 import theking530.staticpower.utilities.WorldUtilities;

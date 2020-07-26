@@ -24,7 +24,7 @@ import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.network.IContainerFactory;
 import theking530.staticpower.blocks.IItemBlockProvider;
-import theking530.staticpower.initialization.TileEntityInitializer;
+import theking530.staticpower.init.TileEntityInitializer;
 
 /**
  * Main registry class responsible for preparing entities for registration and

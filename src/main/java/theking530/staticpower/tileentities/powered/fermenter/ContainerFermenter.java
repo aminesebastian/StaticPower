@@ -13,8 +13,8 @@ import theking530.staticpower.client.container.slots.FluidContainerSlot;
 import theking530.staticpower.client.container.slots.OutputSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.client.container.slots.UpgradeItemSlot;
-import theking530.staticpower.initialization.ModContainerTypes;
-import theking530.staticpower.initialization.ModFluids;
+import theking530.staticpower.init.ModContainerTypes;
+import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.items.upgrades.BaseUpgrade;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 

@@ -7,7 +7,6 @@
 		"tag": "forge:gear"
 	},
 	"output": {
-		"item": "staticpower:mold_gear",
-		"count": 2
+		"item": "staticpower:mold_gear"
 	}
 }

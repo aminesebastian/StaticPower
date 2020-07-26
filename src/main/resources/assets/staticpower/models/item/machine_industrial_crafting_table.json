@@ -1,0 +1,6 @@
+{
+    "parent": "staticpower:block/machines/machine_industrial_crafting_table",
+    "textures": {
+		"side": "staticpower:blocks/machines/sides/default_machine_side_item"
+    }
+}

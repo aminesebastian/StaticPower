@@ -3,9 +3,11 @@ package theking530.staticpower.client.container;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.container.ClickType;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.IContainerListener;
@@ -17,8 +19,13 @@ import theking530.common.utilities.TriFunction;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.container.slots.DummySlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
+import theking530.staticpower.network.NetworkMessage;
+import theking530.staticpower.network.StaticPowerMessageHandler;
+import theking530.staticpower.tileentities.components.InventoryComponent;
+import theking530.staticpower.tileentities.powered.autocrafter.PacketLockInventorySlot;
 
 public abstract class StaticPowerContainer extends Container {
+	public static final int INVENTORY_COMPONENT_FILTER_MOUSE_BUTTON = 69;
 	protected int playerInventoryStart;
 	protected int playerHotbarStart;
 	protected int playerInventoryEnd;
@@ -182,6 +189,40 @@ public abstract class StaticPowerContainer extends Container {
 			slot.onTake(player, itemstack1);
 		}
 		return itemstack;
+	}
+
+	@Override
+	public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, PlayerEntity player) {
+		// If the mouse button was INVENTORY_COMPONENT_FILTER_MOUSE_BUTTON, then this is
+		// an attempt to lock a slot.
+		if (dragType == INVENTORY_COMPONENT_FILTER_MOUSE_BUTTON) {
+			Slot slot = inventorySlots.get(slotId);
+			if (slot instanceof StaticPowerContainerSlot && ((StaticPowerContainerSlot) slot).getItemHandler() instanceof InventoryComponent) {
+				if (player.getEntityWorld().isRemote) {
+					// Get the inventory component.
+					InventoryComponent invComponent = ((InventoryComponent) ((StaticPowerContainerSlot) slot).getItemHandler());
+
+					// Get the relative slot index for the input inventory.
+					int inputInventorySlot = slotId - 9;
+					// If they held control, toggle the locked state of the slot.
+					if (Screen.hasControlDown()) {
+						if (invComponent.isSlotLocked(inputInventorySlot)) {
+							invComponent.unlockSlot(inputInventorySlot);
+						} else {
+							invComponent.lockSlot(inputInventorySlot, invComponent.getStackInSlot(inputInventorySlot));
+						}
+
+						// Send a packet to the server with the updated values.
+						NetworkMessage msg = new PacketLockInventorySlot(invComponent, inputInventorySlot, invComponent.isSlotLocked(inputInventorySlot), invComponent.getStackInSlot(inputInventorySlot));
+						StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
+
+					}
+				}
+			}
+			// Return as we don't want them to modify the container in this case.
+			return inventorySlots.get(slotId).getStack();
+		}
+		return super.slotClick(slotId, dragType, clickTypeIn, player);
 	}
 
 	@Override

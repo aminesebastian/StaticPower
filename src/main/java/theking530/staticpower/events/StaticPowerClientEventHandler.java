@@ -26,7 +26,10 @@ import theking530.staticpower.blocks.ICustomModelSupplier;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.CustomRenderer;
+import theking530.staticpower.client.rendering.tileentity.TileEntityRenderAutoCraftingTable;
+import theking530.staticpower.client.rendering.tileentity.TileEntityRenderAutoSolderingTable;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderBatteryBlock;
+import theking530.staticpower.client.rendering.tileentity.TileEntityRenderChargingStation;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderDigistore;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderFarmer;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderFluidCable;
@@ -36,7 +39,7 @@ import theking530.staticpower.client.rendering.tileentity.TileEntityRenderSolder
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderSqueezer;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderTank;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderTreeFarmer;
-import theking530.staticpower.initialization.ModTileEntityTypes;
+import theking530.staticpower.init.ModTileEntityTypes;
 
 @SuppressWarnings("deprecation")
 public class StaticPowerClientEventHandler {
@@ -86,12 +89,15 @@ public class StaticPowerClientEventHandler {
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.SQUEEZER, TileEntityRenderSqueezer::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.BASIC_FARMER, TileEntityRenderFarmer::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.TREE_FARM, TileEntityRenderTreeFarmer::new);
+		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.CHARGING_STATION, TileEntityRenderChargingStation::new);
 		
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.FLUID_CABLE, TileEntityRenderFluidCable::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.INDUSTRIAL_FLUID_CABLE, TileEntityRenderFluidCable::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.TANK, TileEntityRenderTank::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.PUMP, TileEntityRenderPump::new);
 
+		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.AUTO_CRAFTING_TABLE, TileEntityRenderAutoCraftingTable::new);
+		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.AUTO_SOLDERING_TABLE, TileEntityRenderAutoSolderingTable::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.SOLDERING_TABLE, TileEntityRenderSolderingTable::new);
 		
 		// Log the completion.

@@ -18,7 +18,6 @@ import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.InventoryComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
-import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntitySolderingTable extends TileEntityMachine implements INamedContainerProvider {
 	public final InventoryComponent patternInventory;
@@ -28,7 +27,7 @@ public class TileEntitySolderingTable extends TileEntityMachine implements IName
 	public TileEntitySolderingTable(TileEntityType<?> type) {
 		super(type);
 		registerComponent(patternInventory = new InventoryComponent("PatternInventory", 9, MachineSideMode.Never));
-		registerComponent(inventory = new InventoryComponent("Inventory", 9, MachineSideMode.Input));
+		registerComponent(inventory = new InventoryComponent("Inventory", 9, MachineSideMode.Never));
 		registerComponent(solderingIronInventory = new InventoryComponent("SolderingIronInventory", 1, MachineSideMode.Never).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
 				return stack.getItem() instanceof ISolderingIron;
@@ -44,9 +43,17 @@ public class TileEntitySolderingTable extends TileEntityMachine implements IName
 	}
 
 	public boolean hasRequiredItems() {
-		// If there is no soldering iron, return false.
-		if (requiresSolderingIron() && !(solderingIronInventory.getStackInSlot(0).getItem() instanceof ISolderingIron)) {
-			return false;
+		// If there is no soldering iron, return false. If there is, but it cannot be
+		// used to solder, return false.
+		if (requiresSolderingIron()) {
+			if ((solderingIronInventory.getStackInSlot(0).getItem() instanceof ISolderingIron)) {
+				ISolderingIron iron = (ISolderingIron) solderingIronInventory.getStackInSlot(0).getItem();
+				if (!iron.canSolder(solderingIronInventory.getStackInSlot(0))) {
+					return false;
+				}
+			} else {
+				return false;
+			}
 		}
 
 		// Check if we have a recipe.
@@ -99,48 +106,6 @@ public class TileEntitySolderingTable extends TileEntityMachine implements IName
 		return true;
 	}
 
-	public int getPossibleAmountToCraft() {
-		// Get the recipe. If we dont have a valid recipe, return 0.
-		SolderingRecipe recipe = getCurrentRecipe().orElse(null);
-		if (recipe == null || recipe.getIngredients().size() == 0) {
-			return 0;
-		}
-
-		// Create a duplicate inventory.
-		ItemStackHandler duplicateInventory = new ItemStackHandler(inventory.getSlots());
-		for (int i = 0; i < inventory.getSlots(); i++) {
-			duplicateInventory.setStackInSlot(i, inventory.getStackInSlot(i).copy());
-		}
-
-		// Loop through and see how many we can craft (k=10000 is arbitrary, it should
-		// always return early. while(true) would also work too, but the 10000 covers us
-		// in case someone makes a really weird recipe).
-		int craftable = 0;
-		for (int k = 0; k < 10000; k++) {
-			for (Ingredient ing : recipe.getIngredients()) {
-				// Set the flag to false.
-				boolean flag = false;
-
-				// Look for an item that matches the ingredient inside the inventory. If we find
-				// one, extract the item from the duplicate and continue. If one is not found,
-				// we cannot craft this item, return false.
-				for (int j = 0; j < duplicateInventory.getSlots(); j++) {
-					if (ing.test(duplicateInventory.getStackInSlot(j))) {
-						duplicateInventory.extractItem(j, 1, false);
-						flag = true;
-						break;
-					}
-				}
-
-				if (!flag) {
-					return craftable;
-				}
-			}
-			craftable++;
-		}
-		return craftable;
-	}
-
 	public ItemStack craftItem() {
 		// Get the recipe. If we dont have a valid recipe, return 0.
 		SolderingRecipe recipe = getCurrentRecipe().orElse(null);
@@ -150,25 +115,26 @@ public class TileEntitySolderingTable extends TileEntityMachine implements IName
 
 		// Check the pattern.
 		for (int i = 0; i < patternInventory.getSlots(); i++) {
-			// Get the used item.
-			ItemStack item = patternInventory.getStackInSlot(i);
+			// Get the used ingredient.
+			Ingredient ing = recipe.getIngredients().get(i);
 
 			// Skip holes in the recipe.
-			if (item.isEmpty()) {
+			if (ing.equals(Ingredient.EMPTY)) {
 				continue;
 			}
 
 			// Remove the item.
-			int index = InventoryUtilities.getFirstSlotContainingItem(item, inventory);
-			if (index >= 0) {
-				inventory.extractItem(index, 1, false);
+			for (int j = 0; j < inventory.getSlots(); j++) {
+				if (ing.test(inventory.getStackInSlot(j))) {
+					inventory.extractItem(j, 1, false);
+					break;
+				}
 			}
 		}
 
 		// Use the soldering iron.
-		if (solderingIronInventory.getStackInSlot(0).attemptDamageItem(1, getTileEntity().getWorld().rand, null)) {
-			solderingIronInventory.setStackInSlot(0, ItemStack.EMPTY);
-		}
+		ISolderingIron iron = (ISolderingIron) solderingIronInventory.getStackInSlot(0).getItem();
+		iron.useSolderingItem(solderingIronInventory.getStackInSlot(0));
 
 		// Return the output.
 		return recipe.getRecipeOutput().copy();

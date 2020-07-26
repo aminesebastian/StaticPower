@@ -5,14 +5,20 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.Rectangle2d;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.ClickType;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.items.SlotItemHandler;
 import theking530.common.gui.GuiDrawUtilities;
 import theking530.common.gui.WidgetContainer;
+import theking530.common.gui.drawables.SpriteDrawable;
 import theking530.common.gui.widgets.AbstractGuiWidget;
 import theking530.common.gui.widgets.AbstractGuiWidget.EInputResult;
 import theking530.common.gui.widgets.GuiDrawItem;
@@ -20,10 +26,13 @@ import theking530.common.gui.widgets.tabs.BaseGuiTab;
 import theking530.common.gui.widgets.tabs.GuiTabManager;
 import theking530.common.utilities.Color;
 import theking530.common.utilities.Vector2D;
+import theking530.staticpower.client.StaticPowerSprites;
+import theking530.staticpower.client.container.StaticPowerContainer;
 import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.client.container.slots.DigistoreCraftingOutputSlot;
 import theking530.staticpower.client.container.slots.OutputSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
+import theking530.staticpower.tileentities.components.InventoryComponent;
 import theking530.staticpower.tileentities.components.SideConfigurationComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
@@ -44,13 +53,15 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	/** The tab manager widget. */
 	protected final GuiTabManager tabManager;
 	/** The item renderer. */
-	protected final GuiDrawItem itemDrawer;
+	protected final GuiDrawItem itemRenderer;
 
 	protected int xSizeTarget;
 	protected int ySizeTarget;
 	protected int outputSlotSize;
 	protected int inputSlotSize;
 	protected boolean isInitialized;
+	private final SpriteDrawable lockedSprite;
+	private float partialTicks;
 
 	/**
 	 * Creates a new Gui.
@@ -70,7 +81,10 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 		ySizeTarget = guiYSize;
 		outputSlotSize = 24;
 		inputSlotSize = 16;
-		itemDrawer = new GuiDrawItem();
+		itemRenderer = new GuiDrawItem();
+		partialTicks = 0.0f;
+		lockedSprite = new SpriteDrawable(StaticPowerSprites.DIGISTORE_LOCKED_INDICATOR, 8, 8);
+		lockedSprite.setTint(new Color(1.0f, 1.0f, 1.0f, 0.95f));
 		registerWidget(tabManager = new GuiTabManager());
 	}
 
@@ -115,8 +129,28 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+
+		// Draw the tite.
 		drawContainerTitle(mouseX, mouseY);
-		// widgetContainer.renderForegound(mouseX, mouseY);
+
+		// Render the widget foreground.
+		widgetContainer.renderForegound(mouseX, mouseY, partialTicks);
+
+		// Draw the locks for lock slots. We do this in a single pass to avoid having
+		// the flip the GL states a lot.
+		GlStateManager.disableDepthTest();
+		for (Slot slot : getContainer().inventorySlots) {
+			if (slot instanceof SlotItemHandler) {
+				SlotItemHandler itemHandlerSlot = (SlotItemHandler) slot;
+				if (itemHandlerSlot.getItemHandler() instanceof InventoryComponent) {
+					InventoryComponent component = (InventoryComponent) itemHandlerSlot.getItemHandler();
+					if (component.isSlotLocked(slot.getSlotIndex())) {
+						lockedSprite.draw(slot.xPos + 4, slot.yPos + 4);
+					}
+				}
+			}
+		}
+		GlStateManager.enableDepthTest();
 	}
 
 	/**
@@ -159,6 +193,9 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	public void render(int mouseX, int mouseY, float partialTicks) {
 		super.render(mouseX, mouseY, partialTicks);
 
+		// Cache the partial ticks.
+		this.partialTicks = partialTicks;
+
 		// Raise the mouse hovered event for all the widgets,
 		widgetContainer.handleMouseMove(mouseX, mouseY);
 
@@ -179,8 +216,17 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
-		boolean superCallResult = super.mouseClicked(mouseX, mouseY, button);
+		// If we clicked on an input container slot and we held control, don't raise the
+		// regular clicked chain. Use the SWAP just as a placeholder.
+		if (hoveredSlot instanceof StaticPowerContainerSlot && ((StaticPowerContainerSlot) hoveredSlot).getItemHandler() instanceof InventoryComponent && Screen.hasControlDown()) {
+			StaticPowerContainerSlot spSlot = (StaticPowerContainerSlot) hoveredSlot;
+			if (((InventoryComponent) spSlot.getItemHandler()).areSlotsLockable()) {
+				handleMouseClick(hoveredSlot, hoveredSlot.slotNumber, StaticPowerContainer.INVENTORY_COMPONENT_FILTER_MOUSE_BUTTON, ClickType.SWAP);
+				return true;
+			}
+		}
 
+		boolean superCallResult = super.mouseClicked(mouseX, mouseY, button);
 		widgetContainer.handleMouseClick(mouseX, mouseY, button);
 		return superCallResult;
 	}
@@ -453,9 +499,9 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 		for (Slot slot : slots) {
 			if (slot instanceof StaticPowerContainerSlot) {
 				StaticPowerContainerSlot handlerSlot = (StaticPowerContainerSlot) slot;
-				int slotSize = handlerSlot.getMode().isOutputMode() ? outputSlotSize : inputSlotSize;
+				int slotSize = handlerSlot.getMode().isOutputMode() ? outputSlotSize : handlerSlot.getMode().isInputMode() ? inputSlotSize : 16;
 				int sizePosOffset = (slotSize - 16) / 2;
-				handlerSlot.drawSlotOverlay(itemDrawer, guiLeft, guiTop, slotSize, sizePosOffset);
+				handlerSlot.drawSlotOverlay(itemRenderer, guiLeft, guiTop, slotSize, sizePosOffset);
 			}
 		}
 	}
@@ -489,7 +535,7 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 				MachineSideMode intendedMode = handlerSlot.getMode();
 
 				// If the slot is an output slot, increase the size of the slot.
-				int slotSize = intendedMode.isOutputMode() || slot instanceof OutputSlot ? outputSlotSize : inputSlotSize;
+				int slotSize = intendedMode.isOutputMode() || slot instanceof OutputSlot ? outputSlotSize : handlerSlot.getMode().isInputMode() ? inputSlotSize : 16;
 				int sizePosOffset = (slotSize - 16) / 2;
 
 				// If side configuration is present, draw the slow with a border.
@@ -503,8 +549,16 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 					drawSlot(slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset, slotSize, slotSize);
 				}
 
+				// If the slot is locked, render the phantom item.
+				if (handlerSlot.getItemHandler() instanceof InventoryComponent) {
+					InventoryComponent component = (InventoryComponent) handlerSlot.getItemHandler();
+					if (component.isSlotLocked(slot.getSlotIndex())) {
+						itemRenderer.drawItem(component.getLockedSlotFilter(slot.getSlotIndex()), guiLeft, guiTop, slot.xPos, slot.yPos, 0.5f);
+					}
+				}
+				
 				// Draw the item.
-				handlerSlot.drawExtras(itemDrawer, guiLeft, guiTop, slotSize, sizePosOffset);
+				handlerSlot.drawExtras(itemRenderer, guiLeft, guiTop, slotSize, sizePosOffset);
 			} else if (slot instanceof DigistoreCraftingOutputSlot) {
 				drawSlot(slot.xPos + guiLeft - 4, slot.yPos - 4 + guiTop, 24, 24);
 			} else {

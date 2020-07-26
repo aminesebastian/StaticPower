@@ -1,6 +1,6 @@
 package theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager;
 
-import theking530.staticpower.initialization.ModTileEntityTypes;
+import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.BaseDigistoreTileEntity;
 
 public class TileEntityDigistoreManager extends BaseDigistoreTileEntity {

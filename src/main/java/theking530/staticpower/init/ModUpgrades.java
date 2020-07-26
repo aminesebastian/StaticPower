@@ -1,4 +1,4 @@
-package theking530.staticpower.initialization;
+package theking530.staticpower.init;
 
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.items.upgrades.BaseOutputMultiplierUpgrade;

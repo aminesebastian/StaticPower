@@ -9,20 +9,20 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
+import theking530.staticpower.items.utilities.ItemInventoryHandler;
 
 public class ItemStackInventoryCapabilityProvider implements ICapabilityProvider {
 	protected final ItemStack owningItemStack;
 	protected final int inventorySize;
 	protected final CompoundNBT initialNbt;
-	protected final ItemStackHandler inventory;
+	protected final ItemInventoryHandler inventory;
 
 	public ItemStackInventoryCapabilityProvider(ItemStack owner, int size, @Nullable CompoundNBT nbt) {
 		inventorySize = size;
 		owningItemStack = owner;
 		initialNbt = nbt;
-		inventory = new ItemStackHandler(inventorySize);
-		if (nbt != null) {
+		inventory = new ItemInventoryHandler(owner, inventorySize);
+		if (nbt != null && !nbt.isEmpty()) {
 			inventory.deserializeNBT(nbt);
 		}
 	}

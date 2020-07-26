@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import theking530.staticpower.blocks.ICustomModelSupplier;
 import theking530.staticpower.client.rendering.blocks.ServerRackModel;
-import theking530.staticpower.initialization.ModTileEntityTypes;
+import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.StaticPowerTileEntityBlock;
 
 public class BlockDigistoreServerRack extends StaticPowerTileEntityBlock implements ICustomModelSupplier {

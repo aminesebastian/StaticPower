@@ -7,8 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
-import theking530.staticpower.initialization.ModContainerTypes;
-import theking530.staticpower.initialization.ModItems;
+import theking530.staticpower.init.ModContainerTypes;
+import theking530.staticpower.init.ModItems;
 import theking530.staticpower.items.upgrades.BaseUpgrade;
 
 public class ContainerDigistore extends StaticPowerTileEntityContainer<TileEntityDigistore> {

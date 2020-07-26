@@ -21,7 +21,7 @@ import theking530.common.gui.GuiDrawUtilities;
 import theking530.common.gui.widgets.valuebars.GuiFluidBarUtilities;
 import theking530.common.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
-import theking530.staticpower.initialization.ModBlocks;
+import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.tileentities.powered.bottler.TileEntityBottler;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;

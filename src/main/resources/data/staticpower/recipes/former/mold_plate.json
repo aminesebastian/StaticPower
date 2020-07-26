@@ -7,7 +7,6 @@
 		"tag": "forge:plate"
 	},
 	"output": {
-		"item": "staticpower:mold_plate",
-		"count": 2
+		"item": "staticpower:mold_plate"
 	}
 }

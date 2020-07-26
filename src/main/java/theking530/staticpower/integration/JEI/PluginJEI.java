@@ -29,8 +29,8 @@ import theking530.staticpower.data.crafting.wrappers.lumbermill.LumberMillRecipe
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
 import theking530.staticpower.data.crafting.wrappers.solidfuel.SolidFuelRecipe;
 import theking530.staticpower.data.crafting.wrappers.squeezer.SqueezerRecipe;
-import theking530.staticpower.initialization.ModBlocks;
-import theking530.staticpower.initialization.ModItems;
+import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModItems;
 import theking530.staticpower.integration.JEI.bottler.BottleRecipeCategory;
 import theking530.staticpower.integration.JEI.fermenter.FermenterRecipeCategory;
 import theking530.staticpower.integration.JEI.former.FormerRecipeCategory;
@@ -42,14 +42,11 @@ import theking530.staticpower.integration.JEI.solidgenerator.SolidGeneratorRecip
 import theking530.staticpower.integration.JEI.squeezer.SqueezerRecipeCategory;
 import theking530.staticpower.items.cableattachments.digistorecraftingterminal.ContainerDigistoreCraftingTerminal;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.ContainerSolderingTable;
+import theking530.staticpower.tileentities.powered.autocrafter.ContainerAutoCraftingTable;
 import theking530.staticpower.tileentities.powered.autosolderingtable.ContainerAutoSolderingTable;
 import theking530.staticpower.tileentities.powered.bottler.GuiBottler;
 import theking530.staticpower.tileentities.powered.fermenter.GuiFermenter;
-import theking530.staticpower.tileentities.powered.former.GuiFormer;
-import theking530.staticpower.tileentities.powered.lumbermill.GuiLumberMill;
-import theking530.staticpower.tileentities.powered.poweredfurnace.GuiPoweredFurnace;
 import theking530.staticpower.tileentities.powered.poweredgrinder.GuiPoweredGrinder;
-import theking530.staticpower.tileentities.powered.solidgenerator.GuiSolidGenerator;
 import theking530.staticpower.tileentities.powered.squeezer.GuiSqueezer;
 import theking530.staticpower.utilities.Reference;
 
@@ -80,14 +77,17 @@ public class PluginJEI implements IModPlugin {
 	public void registerGuiHandlers(IGuiHandlerRegistration registration) {
 		registration.addGuiContainerHandler(StaticPowerContainerGui.class, new JEITabSlotAdjuster());
 
-		registration.addRecipeClickArea(GuiLumberMill.class, 59, 32, 22, 16, LumberMillRecipeCategory.LUMBER_MILL_UID);
-		registration.addRecipeClickArea(GuiFormer.class, 82, 34, 22, 16, FormerRecipeCategory.FORMER_UID);
-		registration.addRecipeClickArea(GuiPoweredFurnace.class, 75, 30, 22, 16, PoweredFurnaceRecipeCategory.POWERED_FURNACE_UID);
 		registration.addRecipeClickArea(GuiPoweredGrinder.class, 79, 39, 18, 17, PoweredGrinderRecipeCategory.GRINDER_UID);
 		registration.addRecipeClickArea(GuiFermenter.class, 97, 40, 48, 5, FermenterRecipeCategory.FERMENTER_UID);
 		registration.addRecipeClickArea(GuiSqueezer.class, 74, 34, 28, 5, SqueezerRecipeCategory.SQUEEZER_UID);
 		registration.addRecipeClickArea(GuiBottler.class, 74, 34, 28, 5, BottleRecipeCategory.BOTTLER_UID);
-		registration.addRecipeClickArea(GuiSolidGenerator.class, 37, 32, 22, 16, SolidGeneratorRecipeCategory.SOLID_GENERATOR_UID);
+		
+//		registration.addRecipeClickArea(GuiSolidGenerator.class, 37, 32, 22, 16, SolidGeneratorRecipeCategory.SOLID_GENERATOR_UID);
+//		registration.addRecipeClickArea(GuiPoweredFurnace.class, 75, 30, 22, 16, PoweredFurnaceRecipeCategory.POWERED_FURNACE_UID);
+//		registration.addRecipeClickArea(GuiLumberMill.class, 59, 32, 22, 16, LumberMillRecipeCategory.LUMBER_MILL_UID);
+//		registration.addRecipeClickArea(GuiFormer.class, 82, 34, 22, 16, FormerRecipeCategory.FORMER_UID);
+//		registration.addRecipeClickArea(GuiAutoSolderingTable.class, 99, 38, 22, 16, SolderingTableRecipeCategory.SOLDERING_TABLE_UID);
+//		registration.addRecipeClickArea(GuiAutoCraftingTable.class, 99, 38, 22, 16, VanillaRecipeCategoryUid.CRAFTING);
 	}
 
 	@SuppressWarnings("unused")
@@ -170,11 +170,13 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SolidGenerator), SolidGeneratorRecipeCategory.SOLID_GENERATOR_UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SolderingTable), SolderingTableRecipeCategory.SOLDERING_TABLE_UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AutoSolderingTable), SolderingTableRecipeCategory.SOLDERING_TABLE_UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AutoCraftingTable), VanillaRecipeCategoryUid.CRAFTING);
 	}
 
 	@Override
 	public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
 		registration.addRecipeTransferHandler(new CraftingRecipeTransferHandler<>(ContainerDigistoreCraftingTerminal.class, 9), VanillaRecipeCategoryUid.CRAFTING);
+		registration.addRecipeTransferHandler(new CraftingRecipeTransferHandler<>(ContainerAutoCraftingTable.class, 9), VanillaRecipeCategoryUid.CRAFTING);
 		registration.addRecipeTransferHandler(new CraftingRecipeTransferHandler<>(ContainerSolderingTable.class, 9), SolderingTableRecipeCategory.SOLDERING_TABLE_UID);
 		registration.addRecipeTransferHandler(new CraftingRecipeTransferHandler<>(ContainerAutoSolderingTable.class, 9), SolderingTableRecipeCategory.SOLDERING_TABLE_UID);
 	}

@@ -1,4 +1,4 @@
-package theking530.staticpower.initialization;
+package theking530.staticpower.init;
 
 import theking530.common.gui.widgets.tabs.PacketSideConfigTab;
 import theking530.common.gui.widgets.tabs.redstonecontrol.PacketCableAttachmentRedstoneSync;
@@ -13,6 +13,7 @@ import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.network.TileEntityBasicSyncPacket;
 import theking530.staticpower.tileentities.components.PacketEnergyStorageComponent;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.PacketLockDigistore;
+import theking530.staticpower.tileentities.powered.autocrafter.PacketLockInventorySlot;
 import theking530.staticpower.tileentities.powered.battery.BatteryControlSyncPacket;
 
 public class ModNetworkMessages {
@@ -30,5 +31,6 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(PacketDigistoreTerminalFilters.class);
 		StaticPowerMessageHandler.registerMessage(JEIRecipeTransferPacket.class);
 		StaticPowerMessageHandler.registerMessage(PacketEnergyStorageComponent.class);
+		StaticPowerMessageHandler.registerMessage(PacketLockInventorySlot.class);
 	}
 }

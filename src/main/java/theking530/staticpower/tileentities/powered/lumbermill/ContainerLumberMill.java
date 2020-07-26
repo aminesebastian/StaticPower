@@ -10,7 +10,7 @@ import theking530.staticpower.client.container.slots.BatteryItemSlot;
 import theking530.staticpower.client.container.slots.OutputSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.client.container.slots.UpgradeItemSlot;
-import theking530.staticpower.initialization.ModContainerTypes;
+import theking530.staticpower.init.ModContainerTypes;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 public class ContainerLumberMill extends StaticPowerTileEntityContainer<TileEntityLumberMill> {

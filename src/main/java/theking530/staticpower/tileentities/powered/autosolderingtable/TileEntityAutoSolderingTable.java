@@ -6,10 +6,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
-import theking530.staticpower.initialization.ModTileEntityTypes;
+import theking530.staticpower.init.ModTileEntityTypes;
+import theking530.staticpower.tileentities.components.InputServoComponent;
 import theking530.staticpower.tileentities.components.InventoryComponent;
 import theking530.staticpower.tileentities.components.MachineProcessingComponent;
+import theking530.staticpower.tileentities.components.OutputServoComponent;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.TileEntitySolderingTable;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.utilities.InventoryUtilities;
@@ -28,6 +31,13 @@ public class TileEntityAutoSolderingTable extends TileEntitySolderingTable {
 	public TileEntityAutoSolderingTable() {
 		super(ModTileEntityTypes.AUTO_SOLDERING_TABLE);
 
+		// Enable the power storage on this tile entity as this is the powered
+		// version.
+		energyStorage.setEnabled(true);
+
+		// Set the inventory component to the input mode.
+		inventory.setMode(MachineSideMode.Input).setSlotsLockable(true);
+
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 9, MachineSideMode.Never));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
 		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
@@ -35,9 +45,8 @@ public class TileEntityAutoSolderingTable extends TileEntitySolderingTable {
 		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", DEFAULT_MOVING_TIME, this::canMoveFromInputToProcessing, () -> true, this::movingCompleted, true));
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true));
 
-		// Enable the power storage on this tile entity as this is the powered
-		// version.
-		energyStorage.setEnabled(true);
+		registerComponent(new OutputServoComponent("OutputServo", 2, outputInventory));
+		registerComponent(new InputServoComponent("InputServo", 2, inventory));
 	}
 
 	public boolean canMoveFromInputToProcessing() {
@@ -56,21 +65,27 @@ public class TileEntityAutoSolderingTable extends TileEntitySolderingTable {
 		// If we still have the recipe, and the required items, move the input items
 		// into the internal inventory.
 		if (getCurrentRecipe().isPresent() && hasRequiredItems()) {
+			// Get the recipe.
+			SolderingRecipe recipe = getCurrentRecipe().orElse(null);
 
 			// Transfer the materials into the internal inventory.
 			for (int i = 0; i < patternInventory.getSlots(); i++) {
-				// Get the used item.
-				ItemStack item = patternInventory.getStackInSlot(i);
+				// Get the used ingredient.
+				Ingredient ing = recipe.getIngredients().get(i);
 
 				// Skip holes in the recipe.
-				if (item.isEmpty()) {
+				if (ing.equals(Ingredient.EMPTY)) {
 					continue;
 				}
 
 				// Remove the item.
-				int index = InventoryUtilities.getFirstSlotContainingItem(item, inventory);
-				ItemStack transfered = inventory.extractItem(index, 1, false);
-				internalInventory.setStackInSlot(i, transfered.copy());
+				for (int j = 0; j < inventory.getSlots(); j++) {
+					if (ing.test(inventory.getStackInSlot(j))) {
+						ItemStack extracted = inventory.extractItem(j, 1, false);
+						internalInventory.setStackInSlot(i, extracted.copy());
+						break;
+					}
+				}
 			}
 
 			markTileEntityForSynchronization();

@@ -6,7 +6,7 @@
 	"outputs": {
 		"item": {
 			"item": "minecraft:pumpkin_seeds",
-			"count": 1
+			"count": 5
 		},
 		"fluid": {
 			"fluid": "staticpower:juice_pumpkin",

@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import theking530.staticpower.client.container.slots.BatteryItemSlot;
 import theking530.staticpower.client.container.slots.OutputSlot;
-import theking530.staticpower.initialization.ModContainerTypes;
+import theking530.staticpower.init.ModContainerTypes;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.AbstractContainerSolderingTable;
 
 public class ContainerAutoSolderingTable extends AbstractContainerSolderingTable<TileEntityAutoSolderingTable> {

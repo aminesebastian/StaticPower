@@ -1,4 +1,4 @@
-package theking530.staticpower.initialization;
+package theking530.staticpower.init;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -27,6 +27,7 @@ import theking530.staticpower.tileentities.nonpowered.digistorenetwork.severrack
 import theking530.staticpower.tileentities.nonpowered.solderingtable.BlockSolderingTable;
 import theking530.staticpower.tileentities.nonpowered.tank.BlockTank;
 import theking530.staticpower.tileentities.nonpowered.vacuumchest.BlockVacuumChest;
+import theking530.staticpower.tileentities.powered.autocrafter.BlockAutoCraftingTable;
 import theking530.staticpower.tileentities.powered.autosolderingtable.BlockAutoSolderingTable;
 import theking530.staticpower.tileentities.powered.basicfarmer.BlockBasicFarmer;
 import theking530.staticpower.tileentities.powered.battery.BlockBattery;
@@ -101,7 +102,8 @@ public class ModBlocks {
 	public static BlockBottler Bottler;
 	public static BlockSolderingTable SolderingTable;
 	public static BlockAutoSolderingTable AutoSolderingTable;
-
+	public static BlockAutoCraftingTable AutoCraftingTable;
+	
 	public static BlockSolarPanel SolarPanelBasic;
 	public static BlockSolarPanel SolarPanelAdvanced;
 	public static BlockSolarPanel SolarPanelStatic;
@@ -201,7 +203,9 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(Squeezer = new BlockSqueezer("machine_squeezer"));
 		StaticPowerRegistry.preRegisterBlock(Bottler = new BlockBottler("machine_bottler"));
 		StaticPowerRegistry.preRegisterBlock(SolderingTable = new BlockSolderingTable("soldering_table"));
-		StaticPowerRegistry.preRegisterBlock(AutoSolderingTable = new BlockAutoSolderingTable("industrial_soldering_table"));
+		StaticPowerRegistry.preRegisterBlock(AutoSolderingTable = new BlockAutoSolderingTable("machine_industrial_soldering_table"));
+		StaticPowerRegistry.preRegisterBlock(AutoCraftingTable = new BlockAutoCraftingTable("machine_industrial_crafting_table"));
+
 
 		StaticPowerRegistry.preRegisterBlock(BasicTank = new BlockTank("tank_basic"));
 		StaticPowerRegistry.preRegisterBlock(Pump = new BlockPump("pump"));

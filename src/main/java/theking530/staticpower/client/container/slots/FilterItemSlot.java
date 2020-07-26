@@ -4,7 +4,7 @@ import javax.annotation.Nonnull;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
-import theking530.staticpower.initialization.ModItems;
+import theking530.staticpower.init.ModItems;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 
 public class FilterItemSlot extends StaticPowerContainerSlot {

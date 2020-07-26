@@ -1,4 +1,4 @@
-package theking530.staticpower.initialization;
+package theking530.staticpower.init;
 
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
@@ -15,6 +15,7 @@ import theking530.staticpower.items.cableattachments.digistoreterminal.Digistore
 import theking530.staticpower.items.cableattachments.extractor.ExtractorAttachment;
 import theking530.staticpower.items.cableattachments.filter.FilterAttachment;
 import theking530.staticpower.items.cableattachments.retirever.RetrieverAttachment;
+import theking530.staticpower.items.cableattachments.supplier.SupplierAttachment;
 import theking530.staticpower.items.crops.DepletedCrop;
 import theking530.staticpower.items.crops.StaticPlantCrop;
 import theking530.staticpower.items.crops.StaticPlantSeeds;
@@ -228,6 +229,7 @@ public class ModItems {
 	public static RetrieverAttachment EnergizedRetrieverAttachment;
 	public static RetrieverAttachment LumumRetrieverAttachment;
 
+	public static SupplierAttachment SupplierAttachment;
 	public static DigistoreTerminal DigistoreTerminalAttachment;
 	public static DigistoreCraftingTerminal DigistoreCraftingTerminalAttachment;
 
@@ -470,6 +472,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(EnergizedRetrieverAttachment = new RetrieverAttachment("cable_attachment_energized_retriever", StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.CABLE_ENERGIZED_RETRIEVER_ATTACHMENT));
 		StaticPowerRegistry.preRegisterItem(LumumRetrieverAttachment = new RetrieverAttachment("cable_attachment_lumum_retriever", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.CABLE_LUMUM_RETRIEVER_ATTACHMENT));
 
+		StaticPowerRegistry.preRegisterItem(SupplierAttachment = new SupplierAttachment("cable_attachment_digistore_supplier", StaticPowerAdditionalModels.CABLE_LUMUM_RETRIEVER_ATTACHMENT));
 		StaticPowerRegistry.preRegisterItem(DigistoreTerminalAttachment = new DigistoreTerminal("cable_attachment_digistore_terminal", StaticPowerAdditionalModels.CABLE_DIGISTORE_TERMINAL_ATTACHMENT));
 		StaticPowerRegistry.preRegisterItem(DigistoreCraftingTerminalAttachment = new DigistoreCraftingTerminal("cable_attachment_digistore_crafting_terminal", StaticPowerAdditionalModels.CABLE_DIGISTORE_CRAFTING_TERMINAL_ATTACHMENT));
 

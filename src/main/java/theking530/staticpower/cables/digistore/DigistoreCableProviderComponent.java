@@ -11,6 +11,7 @@ import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.items.cableattachments.digistoreterminal.AbstractDigistoreTerminalAttachment;
+import theking530.staticpower.items.cableattachments.supplier.SupplierAttachment;
 import theking530.staticpower.tileentities.TileEntityBase;
 
 public class DigistoreCableProviderComponent extends AbstractCableProviderComponent {
@@ -21,7 +22,13 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 
 	@Override
 	protected boolean canAttachAttachment(ItemStack attachment) {
-		return attachment.getItem() instanceof AbstractDigistoreTerminalAttachment;
+		if (attachment.getItem() instanceof AbstractDigistoreTerminalAttachment) {
+			return true;
+		}
+		if (attachment.getItem() instanceof SupplierAttachment) {
+			return true;
+		}
+		return false;
 	}
 
 	@Override

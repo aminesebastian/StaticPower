@@ -8,6 +8,7 @@
 	"solarPanelPowerGeneration": 128,
 	"solarPanelPowerStorage": 512,
 	"cableExtractorRate": 20,
+	"cableFilterSize": 12,
 	"cableExtractionStackSize": 64,
 	"cableExtractionFluidRate": 1024,
 	"cableExtractionFilterSize": 12,

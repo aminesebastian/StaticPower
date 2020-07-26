@@ -1,4 +1,4 @@
-package theking530.staticpower.initialization;
+package theking530.staticpower.init;
 
 import java.util.function.Function;
 import java.util.function.Supplier;

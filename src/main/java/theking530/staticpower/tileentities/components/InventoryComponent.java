@@ -1,6 +1,8 @@
 package theking530.staticpower.tileentities.components;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Nonnull;
@@ -21,6 +23,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
+import theking530.staticpower.utilities.ItemUtilities;
 
 public class InventoryComponent extends AbstractTileEntityComponent implements Iterable<ItemStack>, IItemHandler, IItemHandlerModifiable {
 	public enum InventoryChangeType {
@@ -28,6 +31,7 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 	}
 
 	protected NonNullList<ItemStack> stacks;
+	protected List<ItemStack> lockedSlots;
 	private ItemStackHandlerFilter filter;
 	private MachineSideMode inventoryMode;
 	private boolean capabilityInsertEnabled;
@@ -35,6 +39,7 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 	private final InventoryComponentCapabilityInterface capabilityInterface;
 	private TriConsumer<InventoryChangeType, ItemStack, InventoryComponent> changeCallback;
 	private boolean shouldDropContentsOnBreak;
+	private boolean areSlotsLockable;
 
 	public InventoryComponent(String name, int size) {
 		this(name, size, MachineSideMode.Never);
@@ -47,6 +52,12 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 		this.capabilityExtractEnabled = true;
 		this.shouldDropContentsOnBreak = true;
 		this.stacks = NonNullList.withSize(size, ItemStack.EMPTY);
+		this.areSlotsLockable = false;
+		this.lockedSlots = new ArrayList<ItemStack>();
+		for (int i = 0; i < size; i++) {
+			lockedSlots.add(null);
+		}
+
 		this.capabilityInterface = new InventoryComponentCapabilityInterface();
 		if (mode.isOutputMode()) {
 			setCapabilityInsertEnabled(false);
@@ -94,19 +105,39 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 		return inventoryMode;
 	}
 
+	/**
+	 * Sets the input/output mode for this inventory.
+	 * 
+	 * @param mode
+	 * @return
+	 */
+	public InventoryComponent setMode(MachineSideMode mode) {
+		this.inventoryMode = mode;
+		return this;
+	}
+
 	@Override
 	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
-		ListNBT nbtTagList = new ListNBT();
+		ListNBT itemTagList = new ListNBT();
 		for (int i = 0; i < stacks.size(); i++) {
 			if (!stacks.get(i).isEmpty()) {
 				CompoundNBT itemTag = new CompoundNBT();
 				itemTag.putInt("Slot", i);
 				stacks.get(i).write(itemTag);
-				nbtTagList.add(itemTag);
+				itemTagList.add(itemTag);
 			}
 		}
-		nbt.put("Items", nbtTagList);
+		nbt.put("Items", itemTagList);
 		nbt.putInt("Size", stacks.size());
+
+		// Put the locked slot filters. Skip null slots.
+		for (int i = 0; i < lockedSlots.size(); i++) {
+			if (lockedSlots.get(i) != null) {
+				CompoundNBT filterItemTag = new CompoundNBT();
+				lockedSlots.get(i).write(filterItemTag);
+				nbt.put("filter_slot#" + i, filterItemTag);
+			}
+		}
 		return nbt;
 	}
 
@@ -120,6 +151,15 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 
 			if (slot >= 0 && slot < stacks.size()) {
 				stacks.set(slot, ItemStack.read(itemTags));
+			}
+		}
+
+		// Deserialize the slot filters.
+		for (int i = 0; i < lockedSlots.size(); i++) {
+			if (nbt.contains("filter_slot#" + i)) {
+				lockedSlots.set(i, ItemStack.read(nbt.getCompound("filter_slot#" + i)));
+			} else {
+				lockedSlots.set(i, null);
 			}
 		}
 		onLoad();
@@ -228,6 +268,13 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 			}
 		}
 
+		// Check if this slot is locked.
+		if (lockedSlots.get(slot) != null) {
+			if (lockedSlots.get(slot).isEmpty() || !ItemUtilities.areItemStacksStackable(stack, lockedSlots.get(slot))) {
+				return stack;
+			}
+		}
+
 		if (!isItemValid(slot, stack)) {
 			return stack;
 		}
@@ -308,6 +355,45 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 	@Override
 	public int getSlotLimit(int slot) {
 		return 64;
+	}
+
+	public InventoryComponent setSlotsLockable(boolean lockable) {
+		this.areSlotsLockable = lockable;
+		return this;
+	}
+
+	public boolean areSlotsLockable() {
+		return areSlotsLockable;
+	}
+
+	public boolean isSlotLocked(int slot) {
+		return lockedSlots.get(slot) != null;
+	}
+
+	/**
+	 * Prevents items that don't match the provided ItemStack from entering the
+	 * slot. If the filteredItem is empty, no items are allowed to enter the slot.
+	 * 
+	 * @param slot
+	 * @param filteredItem
+	 * @return
+	 */
+	public InventoryComponent lockSlot(int slot, @Nonnull ItemStack filteredItem) {
+		if (areSlotsLockable) {
+			lockedSlots.set(slot, filteredItem);
+		}
+		return this;
+	}
+
+	public ItemStack getLockedSlotFilter(int slot) {
+		return lockedSlots.get(slot);
+	}
+
+	public InventoryComponent unlockSlot(int slot) {
+		if (areSlotsLockable) {
+			lockedSlots.set(slot, null);
+		}
+		return this;
 	}
 
 	protected int getStackLimit(int slot, @Nonnull ItemStack stack) {
