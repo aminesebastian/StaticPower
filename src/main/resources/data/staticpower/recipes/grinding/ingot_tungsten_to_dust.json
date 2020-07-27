@@ -1,0 +1,11 @@
+{
+	"type": "staticpower:grinder_recipe",
+	"input": {
+		"tag": "forge:ingots/tungsten"
+	},
+	"output": [
+		{
+			"item": "staticpower:dust_tungsten"
+		}
+	]
+}

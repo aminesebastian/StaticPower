@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ppp",
+		"iii",
+		"ppp"
+	],
+	"key": {
+		"i": {
+			"tag": "forge:glass_panes"
+		},
+		"p": {
+			"item": "staticpower:plate_energized"
+		}
+	},
+	"result": {
+		"item": "staticpower:cable_item_energized",
+		"count": 8
+	}
+}

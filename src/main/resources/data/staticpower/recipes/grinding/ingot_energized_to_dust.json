@@ -1,0 +1,11 @@
+{
+	"type": "staticpower:grinder_recipe",
+	"input": {
+		"item": "staticpower:ingot_energized"
+	},
+	"output": [
+		{
+			"item": "staticpower:dust_energized"
+		}
+	]
+}

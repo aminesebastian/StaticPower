@@ -140,10 +140,10 @@ public class TileEntityLumberMill extends TileEntityMachine {
 
 			// Ensure the output slots can take the recipe.
 			if (canOutputsTakeRecipeResult(recipe)) {
-				if (SDMath.diceRoll(recipe.getPrimaryOutput().getPercentage())) {
+				if (SDMath.diceRoll(recipe.getPrimaryOutput().getOutputChance())) {
 					outputInventory.insertItem(0, recipe.getPrimaryOutput().getItem().copy(), false);
 				}
-				if (SDMath.diceRoll(recipe.getSecondaryOutput().getPercentage())) {
+				if (SDMath.diceRoll(recipe.getSecondaryOutput().getOutputChance())) {
 					outputInventory.insertItem(1, recipe.getSecondaryOutput().getItem().copy(), false);
 				}
 				fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.EXECUTE);

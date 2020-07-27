@@ -12,10 +12,11 @@ import theking530.staticpower.items.book.StaticPowerBook;
 import theking530.staticpower.items.cableattachments.CableCover;
 import theking530.staticpower.items.cableattachments.digistorecraftingterminal.DigistoreCraftingTerminal;
 import theking530.staticpower.items.cableattachments.digistoreterminal.DigistoreTerminal;
+import theking530.staticpower.items.cableattachments.exporter.DigistoreExporterAttachment;
 import theking530.staticpower.items.cableattachments.extractor.ExtractorAttachment;
 import theking530.staticpower.items.cableattachments.filter.FilterAttachment;
+import theking530.staticpower.items.cableattachments.importer.DigistoreImporterAttachment;
 import theking530.staticpower.items.cableattachments.retirever.RetrieverAttachment;
-import theking530.staticpower.items.cableattachments.supplier.SupplierAttachment;
 import theking530.staticpower.items.crops.DepletedCrop;
 import theking530.staticpower.items.crops.StaticPlantCrop;
 import theking530.staticpower.items.crops.StaticPlantSeeds;
@@ -163,6 +164,7 @@ public class ModItems {
 	public static StaticPowerItem Rubber;
 	public static StaticPowerItem IOPort;
 	public static StaticPowerItem WireCopper;
+	public static StaticPowerItem WireTin;
 	public static StaticPowerItem WireSilver;
 	public static StaticPowerItem WireGold;
 	public static StaticPowerItem WirePlatinum;
@@ -229,7 +231,8 @@ public class ModItems {
 	public static RetrieverAttachment EnergizedRetrieverAttachment;
 	public static RetrieverAttachment LumumRetrieverAttachment;
 
-	public static SupplierAttachment SupplierAttachment;
+	public static DigistoreExporterAttachment ExporterAttachment;
+	public static DigistoreImporterAttachment ImporterAttachment;
 	public static DigistoreTerminal DigistoreTerminalAttachment;
 	public static DigistoreCraftingTerminal DigistoreCraftingTerminalAttachment;
 
@@ -326,6 +329,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(InternalClock = new StaticPowerItem("internal_clock"));
 		StaticPowerRegistry.preRegisterItem(IOPort = new StaticPowerItem("io_port"));
 		StaticPowerRegistry.preRegisterItem(WireCopper = new StaticPowerItem("wire_copper"));
+		StaticPowerRegistry.preRegisterItem(WireTin = new StaticPowerItem("wire_tin"));
 		StaticPowerRegistry.preRegisterItem(WireSilver = new StaticPowerItem("wire_silver"));
 		StaticPowerRegistry.preRegisterItem(WireGold = new StaticPowerItem("wire_gold"));
 		StaticPowerRegistry.preRegisterItem(WirePlatinum = new StaticPowerItem("wire_platinum"));
@@ -472,7 +476,8 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(EnergizedRetrieverAttachment = new RetrieverAttachment("cable_attachment_energized_retriever", StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.CABLE_ENERGIZED_RETRIEVER_ATTACHMENT));
 		StaticPowerRegistry.preRegisterItem(LumumRetrieverAttachment = new RetrieverAttachment("cable_attachment_lumum_retriever", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.CABLE_LUMUM_RETRIEVER_ATTACHMENT));
 
-		StaticPowerRegistry.preRegisterItem(SupplierAttachment = new SupplierAttachment("cable_attachment_digistore_supplier", StaticPowerAdditionalModels.CABLE_LUMUM_RETRIEVER_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(ExporterAttachment = new DigistoreExporterAttachment("cable_attachment_digistore_exporter", StaticPowerAdditionalModels.CABLE_DIGISTORE_EXPORTER_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(ImporterAttachment = new DigistoreImporterAttachment("cable_attachment_digistore_importer", StaticPowerAdditionalModels.CABLE_DIGISTORE_IMPORTER_ATTACHMENT));
 		StaticPowerRegistry.preRegisterItem(DigistoreTerminalAttachment = new DigistoreTerminal("cable_attachment_digistore_terminal", StaticPowerAdditionalModels.CABLE_DIGISTORE_TERMINAL_ATTACHMENT));
 		StaticPowerRegistry.preRegisterItem(DigistoreCraftingTerminalAttachment = new DigistoreCraftingTerminal("cable_attachment_digistore_crafting_terminal", StaticPowerAdditionalModels.CABLE_DIGISTORE_CRAFTING_TERMINAL_ATTACHMENT));
 

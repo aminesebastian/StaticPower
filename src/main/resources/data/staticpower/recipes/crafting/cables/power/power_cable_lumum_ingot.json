@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ppp",
+		"iii",
+		"ppp"
+	],
+	"key": {
+		"i": {
+			"item": "staticpower:ingot_redstone_alloy"
+		},
+		"p": {
+			"item": "staticpower:ingot_lumum"
+		}
+	},
+	"result": {
+		"item": "staticpower:cable_power_lumum",
+		"count": 8
+	}
+}

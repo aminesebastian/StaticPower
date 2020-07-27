@@ -1,0 +1,13 @@
+{
+	"type": "staticpower:grinder_recipe",
+	"input": {
+		"tag": "forge:sand"
+	},
+	"output": [
+		{
+			"item": "staticpower:raw_silicon",
+			"count": 1,
+			"chance": 0.5
+		}
+	]
+}

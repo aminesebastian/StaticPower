@@ -1,5 +1,7 @@
-package theking530.staticpower.items.cableattachments.supplier;
+package theking530.staticpower.items.cableattachments.importer;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.Nullable;
@@ -15,7 +17,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import theking530.common.utilities.SDMath;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
@@ -23,16 +24,16 @@ import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.items.ItemStackInventoryCapabilityProvider;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
-import theking530.staticpower.utilities.InventoryUtilities;
+import theking530.staticpower.utilities.ItemUtilities;
 
-public class SupplierAttachment extends AbstractCableAttachment {
-	public static final String SUPPLIER_TIMER_TAG = "extraction_timer";
+public class DigistoreImporterAttachment extends AbstractCableAttachment {
+	public static final String IMPORT_TIMER_TAG = "import_timer";
 	private final ResourceLocation tierType;
 	private final ResourceLocation model;
 
-	public SupplierAttachment(String name, ResourceLocation model) {
+	public DigistoreImporterAttachment(String name, ResourceLocation model) {
 		super(name);
-		this.tierType = StaticPowerTiers.ADVANCED;
+		this.tierType = StaticPowerTiers.STATIC;
 		this.model = model;
 	}
 
@@ -48,7 +49,7 @@ public class SupplierAttachment extends AbstractCableAttachment {
 	@Override
 	public void onAddedToCable(ItemStack attachment, Direction side, AbstractCableProviderComponent cableComponent) {
 		super.onAddedToCable(attachment, side, cableComponent);
-		attachment.getTag().putInt(SUPPLIER_TIMER_TAG, 0);
+		attachment.getTag().putInt(IMPORT_TIMER_TAG, 0);
 	}
 
 	@Override
@@ -63,10 +64,10 @@ public class SupplierAttachment extends AbstractCableAttachment {
 			return;
 		}
 
-		// Increment the extraction timer. If it returns true, attempt an item extract.
+		// Increment the import timer. If it returns true, attempt an item extract.
 		if (increaseSupplierTimer(attachment)) {
 			// See if we can perform a digistore extract and supply.
-			supplyFromNetwork(attachment, side, cable, te);
+			importFromAttached(attachment, side, cable, te);
 		}
 	}
 
@@ -75,20 +76,20 @@ public class SupplierAttachment extends AbstractCableAttachment {
 		if (!attachment.hasTag()) {
 			attachment.setTag(new CompoundNBT());
 		}
-		if (!attachment.getTag().contains(SUPPLIER_TIMER_TAG)) {
-			attachment.getTag().putInt(SUPPLIER_TIMER_TAG, 0);
+		if (!attachment.getTag().contains(IMPORT_TIMER_TAG)) {
+			attachment.getTag().putInt(IMPORT_TIMER_TAG, 0);
 		}
 
 		// Get the current timer and the extraction rate.
-		int currentTimer = attachment.getTag().getInt(SUPPLIER_TIMER_TAG);
+		int currentTimer = attachment.getTag().getInt(IMPORT_TIMER_TAG);
 
 		// Increment the current timer.
 		currentTimer += 1;
 		if (currentTimer >= StaticPowerDataRegistry.getTier(tierType).getCableExtractorRate()) {
-			attachment.getTag().putInt(SUPPLIER_TIMER_TAG, 0);
+			attachment.getTag().putInt(IMPORT_TIMER_TAG, 0);
 			return true;
 		} else {
-			attachment.getTag().putInt(SUPPLIER_TIMER_TAG, currentTimer);
+			attachment.getTag().putInt(IMPORT_TIMER_TAG, currentTimer);
 
 			return false;
 		}
@@ -97,7 +98,7 @@ public class SupplierAttachment extends AbstractCableAttachment {
 
 	@Override
 	public @Nullable AbstractCableAttachmentContainerProvider getContainerProvider(ItemStack attachment, AbstractCableProviderComponent cable, Direction attachmentSide) {
-		return new SupplierContainerProvider(attachment, cable, attachmentSide);
+		return new ImporterContainerProvider(attachment, cable, attachmentSide);
 	}
 
 	@Override
@@ -110,42 +111,53 @@ public class SupplierAttachment extends AbstractCableAttachment {
 		return model;
 	}
 
-	protected boolean supplyFromNetwork(ItemStack attachment, Direction side, AbstractCableProviderComponent cable, TileEntity targetTe) {
+	public boolean doesItemPassImportFilter(ItemStack attachment, ItemStack itemToTest) {
+		// Get the filter inventory (if there is a null value, do not handle it, throw
+		// an exception).
+		IItemHandler filterItems = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(() -> new RuntimeException("Encounetered an importer attachment without a valid filter inventory."));
+
+		// Get the list of filter items.
+		List<ItemStack> filterItemList = new LinkedList<ItemStack>();
+		for (int i = 0; i < filterItems.getSlots(); i++) {
+			if (!filterItems.getStackInSlot(i).isEmpty()) {
+				filterItemList.add(filterItems.getStackInSlot(i).copy());
+			}
+		}
+
+		// If there are no items in the filter list, then this attachment is NOT
+		// filtering. Allow any items to be extracted.
+		if (filterItemList.size() == 0) {
+			return true;
+		}
+
+		// Check to see if the provided item matches.
+		return ItemUtilities.filterItems(filterItemList, itemToTest, true, false, false, false);
+	}
+
+	protected boolean importFromAttached(ItemStack attachment, Direction side, AbstractCableProviderComponent cable, TileEntity targetTe) {
 		AtomicBoolean output = new AtomicBoolean(false);
-		targetTe.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side).ifPresent(target -> {
+		targetTe.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).ifPresent(target -> {
 			cable.<DigistoreNetworkModule>getNetworkModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE).ifPresent(module -> {
-				// Get the filter inventory (if there is a null value, do not handle it, throw
-				// an exception).
-				IItemHandler filterItems = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(() -> new RuntimeException("Encounetered a supplier attachment without a valid filter inventory."));
+				for (int i = 0; i < target.getSlots(); i++) {
+					// Simulate an extract.
+					ItemStack extractedItem = target.extractItem(i, StaticPowerDataRegistry.getTier(tierType).getCableExtractionStackSize(), true);
 
-				// We do this to ensure we randomly extract.
-				int startingSlot = SDMath.getRandomIntInRange(0, filterItems.getSlots() - 1);
-				int currentSlot = startingSlot;
-
-				// Get the list of filter items.
-				for (int i = 0; i < filterItems.getSlots(); i++) {
-					if (!filterItems.getStackInSlot(currentSlot).isEmpty()) {
-						// Simulate an extract.
-						ItemStack extractedItem = module.extractItem(filterItems.getStackInSlot(currentSlot), StaticPowerDataRegistry.getTier(tierType).getCableExtractionStackSize(), true);
-
-						// If the extracted item not empty, continue.
-						if (!extractedItem.isEmpty()) {
-							// Attempt to transfer the itemstack through the cable network.
-							ItemStack remainingAmount = InventoryUtilities.insertItemIntoInventory(target, extractedItem.copy(), false);
-
-							// If we actually extracted something, now we perform the real extract.
-							if (remainingAmount.getCount() < extractedItem.getCount()) {
-								module.extractItem(extractedItem, extractedItem.getCount() - remainingAmount.getCount(), false);
-								cable.getTileEntity().markDirty();
-								output.set(true);
-								break;
-							}
-						}
+					// If the extracted item is empty, continue.
+					if (extractedItem.isEmpty()) {
+						continue;
 					}
-					// Increment the current slot and make sure we wrap around.
-					currentSlot++;
-					if (currentSlot > filterItems.getSlots() - 1) {
-						currentSlot = 0;
+
+					// Skip any items that are not supported by the extraction filter.
+					if (!doesItemPassImportFilter(attachment, extractedItem)) {
+						continue;
+					}
+
+					// Attempt to transfer the itemstack through the cable network.
+					ItemStack remainingAmount = module.insertItem(extractedItem.copy(), false);
+					if (remainingAmount.getCount() < extractedItem.getCount()) {
+						target.extractItem(i, extractedItem.getCount() - remainingAmount.getCount(), false);
+						cable.getTileEntity().markDirty();
+						break;
 					}
 				}
 			});
@@ -153,14 +165,14 @@ public class SupplierAttachment extends AbstractCableAttachment {
 		return output.get();
 	}
 
-	protected class SupplierContainerProvider extends AbstractCableAttachmentContainerProvider {
-		public SupplierContainerProvider(ItemStack stack, AbstractCableProviderComponent cable, Direction attachmentSide) {
+	protected class ImporterContainerProvider extends AbstractCableAttachmentContainerProvider {
+		public ImporterContainerProvider(ItemStack stack, AbstractCableProviderComponent cable, Direction attachmentSide) {
 			super(stack, cable, attachmentSide);
 		}
 
 		@Override
 		public Container createMenu(int windowId, PlayerInventory playerInv, PlayerEntity player) {
-			return new ContainerSupplier(windowId, playerInv, targetItemStack, attachmentSide, cable);
+			return new ContainerDigistoreImporter(windowId, playerInv, targetItemStack, attachmentSide, cable);
 		}
 	}
 }

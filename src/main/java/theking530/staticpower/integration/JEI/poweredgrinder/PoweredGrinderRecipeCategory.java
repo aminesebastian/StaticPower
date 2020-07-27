@@ -152,7 +152,7 @@ public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderR
 					int outputIndex = slotIndex - 1;
 
 					// Formulate the output percentage tooltip and then add it.
-					String outputPercentage = new TranslationTextComponent("gui.staticpower.output_chance").appendText(": ").appendText(String.valueOf((int) (recipe.getOutputItems()[outputIndex].getPercentage() * 100)) + "%").getFormattedText();
+					String outputPercentage = new TranslationTextComponent("gui.staticpower.output_chance").appendText(": ").appendText(String.valueOf((int) (recipe.getOutputItems()[outputIndex].getOutputChance() * 100)) + "%").getFormattedText();
 					tooltip.add(outputPercentage);
 				}
 			}

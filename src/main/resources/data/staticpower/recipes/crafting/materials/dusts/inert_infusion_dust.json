@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{
+			"tag": "forge:dusts/iron"
+		},
+		{
+			"tag": "forge:dusts/gold"
+		},
+		{
+			"tag": "forge:dusts/platinum"
+		}
+	],
+	"result": {
+		"item": "staticpower:dust_inert_infusion",
+		"count": 3
+	}
+}

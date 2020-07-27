@@ -6,14 +6,16 @@ import theking530.staticpower.items.cableattachments.digistorecraftingterminal.C
 import theking530.staticpower.items.cableattachments.digistorecraftingterminal.GuiDigistoreCraftingTerminal;
 import theking530.staticpower.items.cableattachments.digistoreterminal.ContainerDigistoreTerminal;
 import theking530.staticpower.items.cableattachments.digistoreterminal.GuiDigistoreTerminal;
+import theking530.staticpower.items.cableattachments.exporter.ContainerDigistoreExporter;
+import theking530.staticpower.items.cableattachments.exporter.GuiDigistoreExporter;
 import theking530.staticpower.items.cableattachments.extractor.ContainerExtractor;
 import theking530.staticpower.items.cableattachments.extractor.GuiExtractor;
 import theking530.staticpower.items.cableattachments.filter.ContainerFilter;
 import theking530.staticpower.items.cableattachments.filter.GuiFilter;
+import theking530.staticpower.items.cableattachments.importer.ContainerDigistoreImporter;
+import theking530.staticpower.items.cableattachments.importer.GuiDigistoreImporter;
 import theking530.staticpower.items.cableattachments.retirever.ContainerRetriever;
 import theking530.staticpower.items.cableattachments.retirever.GuiRetriever;
-import theking530.staticpower.items.cableattachments.supplier.ContainerSupplier;
-import theking530.staticpower.items.cableattachments.supplier.GuiSupplier;
 import theking530.staticpower.items.itemfilter.ContainerItemFilter;
 import theking530.staticpower.items.itemfilter.GuiItemFilter;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.ContainerDigistore;
@@ -42,6 +44,8 @@ import theking530.staticpower.tileentities.powered.crucible.ContainerCrucible;
 import theking530.staticpower.tileentities.powered.crucible.GuiCrucible;
 import theking530.staticpower.tileentities.powered.fermenter.ContainerFermenter;
 import theking530.staticpower.tileentities.powered.fermenter.GuiFermenter;
+import theking530.staticpower.tileentities.powered.fluidinfuser.ContainerFluidInfuser;
+import theking530.staticpower.tileentities.powered.fluidinfuser.GuiFluidInfuser;
 import theking530.staticpower.tileentities.powered.former.ContainerFormer;
 import theking530.staticpower.tileentities.powered.former.GuiFormer;
 import theking530.staticpower.tileentities.powered.lumbermill.ContainerLumberMill;
@@ -78,6 +82,7 @@ public class ModContainerTypes {
 	public static ContainerType<ContainerSolderingTable> SOLDERING_TABLE_CONTAINER;
 	public static ContainerType<ContainerAutoSolderingTable> AUTO_SOLDERING_TABLE_CONTAINER;
 	public static ContainerType<ContainerAutoCraftingTable> AUTO_CRAFTING_TABLE_CONTAINER;
+	public static ContainerType<ContainerFluidInfuser> FLUID_INFUSER_CONTAINER;
 
 	public static ContainerType<ContainerTank> TANK_CONTAINER;
 	public static ContainerType<ContainerPump> PUMP_CONTAINER;
@@ -90,7 +95,8 @@ public class ModContainerTypes {
 	public static ContainerType<ContainerExtractor> EXTRACTOR_CONTAINER;
 	public static ContainerType<ContainerFilter> FILTER_CONTAINER;
 	public static ContainerType<ContainerRetriever> RETRIEVER_CONTAINER;
-	public static ContainerType<ContainerSupplier> SUPPLIER_CONTAINER;
+	public static ContainerType<ContainerDigistoreExporter> EXPORTER_CONTAINER;
+	public static ContainerType<ContainerDigistoreImporter> IMPORTER_CONTAINER;
 
 	public static void init() {
 		VACUUM_CHEST_CONTAINER = StaticPowerRegistry.preRegisterContainer("chest_vacuum", ContainerVacuumChest::new, GuiVacuumChest::new);
@@ -110,6 +116,7 @@ public class ModContainerTypes {
 		BOTTLER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_bottler", ContainerBottler::new, GuiBottler::new);
 		AUTO_SOLDERING_TABLE_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_industrial_soldering_table", ContainerAutoSolderingTable::new, GuiAutoSolderingTable::new);
 		AUTO_CRAFTING_TABLE_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_industrial_crafting_table", ContainerAutoCraftingTable::new, GuiAutoCraftingTable::new);
+		FLUID_INFUSER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_fluid_infuser", ContainerFluidInfuser::new, GuiFluidInfuser::new);
 
 		SOLDERING_TABLE_CONTAINER = StaticPowerRegistry.preRegisterContainer("soldering_table", ContainerSolderingTable::new, GuiSolderingTable::new);
 		TANK_CONTAINER = StaticPowerRegistry.preRegisterContainer("tank", ContainerTank::new, GuiTank::new);
@@ -122,6 +129,7 @@ public class ModContainerTypes {
 		EXTRACTOR_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_extractor", ContainerExtractor::new, GuiExtractor::new);
 		FILTER_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_filter", ContainerFilter::new, GuiFilter::new);
 		RETRIEVER_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_retriever", ContainerRetriever::new, GuiRetriever::new);
-		SUPPLIER_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_digistore_supplier", ContainerSupplier::new, GuiSupplier::new);
+		EXPORTER_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_digistore_exporter", ContainerDigistoreExporter::new, GuiDigistoreExporter::new);
+		IMPORTER_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_digistore_importer", ContainerDigistoreImporter::new, GuiDigistoreImporter::new);
 	}
 }

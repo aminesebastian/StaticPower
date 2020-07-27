@@ -22,6 +22,7 @@ import theking530.staticpower.tileentities.powered.bottler.TileEntityBottler;
 import theking530.staticpower.tileentities.powered.chargingstation.TileEntityChargingStation;
 import theking530.staticpower.tileentities.powered.crucible.TileEntityCrucible;
 import theking530.staticpower.tileentities.powered.fermenter.TileEntityFermenter;
+import theking530.staticpower.tileentities.powered.fluidinfuser.TileEntityFluidInfuser;
 import theking530.staticpower.tileentities.powered.former.TileEntityFormer;
 import theking530.staticpower.tileentities.powered.lumbermill.TileEntityLumberMill;
 import theking530.staticpower.tileentities.powered.poweredfurnace.TileEntityPoweredFurnace;
@@ -80,6 +81,7 @@ public class ModTileEntityTypes {
 	public static TileEntityType<TileEntitySolderingTable> SOLDERING_TABLE;
 	public static TileEntityType<TileEntityAutoSolderingTable> AUTO_SOLDERING_TABLE;
 	public static TileEntityType<TileEntityAutoCraftingTable> AUTO_CRAFTING_TABLE;
+	public static TileEntityType<TileEntityFluidInfuser> FLUID_INFUSER;
 	
 	public static TileEntityType<TileEntityBattery> BATTERY_BASIC;
 	public static TileEntityType<TileEntityBattery> BATTERY_ADVANCED;
@@ -112,6 +114,7 @@ public class ModTileEntityTypes {
 		SOLDERING_TABLE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntitySolderingTable(type), ModBlocks.SolderingTable);
 		AUTO_SOLDERING_TABLE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityAutoSolderingTable(), ModBlocks.AutoSolderingTable);
 		AUTO_CRAFTING_TABLE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityAutoCraftingTable(), ModBlocks.AutoCraftingTable);
+		FLUID_INFUSER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityFluidInfuser(), ModBlocks.FluidInfuser);
 
 		BATTERY_BASIC = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(type, StaticPowerTiers.BASIC), ModBlocks.BatteryBasic);
 		BATTERY_ADVANCED = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(type, StaticPowerTiers.ADVANCED), ModBlocks.BatteryAdvanced);

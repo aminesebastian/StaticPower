@@ -203,11 +203,7 @@ public class TileEntityBottler extends TileEntityMachine {
 	}
 
 	protected BottleRecipe getRecipe(ItemStack stack) {
-		BottleRecipe recipe = StaticPowerRecipeRegistry.getRecipe(BottleRecipe.RECIPE_TYPE, new RecipeMatchParameters(fluidTankComponent.getFluid()).setItems(stack)).orElse(null);
-		if (recipe != null) {
-			return recipe;
-		}
-		return null;
+		return StaticPowerRecipeRegistry.getRecipe(BottleRecipe.RECIPE_TYPE, new RecipeMatchParameters(fluidTankComponent.getFluid()).setItems(stack)).orElse(null);
 	}
 
 	@Override

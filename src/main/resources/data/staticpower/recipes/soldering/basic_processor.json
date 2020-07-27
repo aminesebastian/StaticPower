@@ -13,7 +13,7 @@
 			"tag": "forge:plates/tin"
 		},
 		"w": {
-			"tag": "forge:wire/copper"
+			"tag": "forge:wires/copper"
 		}
 	},
 	"result": {

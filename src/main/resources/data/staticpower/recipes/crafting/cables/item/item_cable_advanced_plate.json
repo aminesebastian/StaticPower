@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ppp",
+		"iii",
+		"ppp"
+	],
+	"key": {
+		"i": {
+			"tag": "forge:glass_panes"
+		},
+		"p": {
+			"tag": "forge:plates/gold"
+		}
+	},
+	"result": {
+		"item": "staticpower:cable_item_advanced",
+		"count": 8
+	}
+}

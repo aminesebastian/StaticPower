@@ -1,0 +1,13 @@
+{
+	"type": "staticpower:fluid_infusion_recipe",
+	"input": {
+		"item": "staticpower:crystal_static"
+	},
+	"fluid": {
+		"fluid": "staticpower:fluid_energized",
+		"volume": 500
+	},
+	"result": {
+		"item": "staticpower:crystal_energized"
+	}
+}

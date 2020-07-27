@@ -11,7 +11,8 @@ import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.items.cableattachments.digistoreterminal.AbstractDigistoreTerminalAttachment;
-import theking530.staticpower.items.cableattachments.supplier.SupplierAttachment;
+import theking530.staticpower.items.cableattachments.exporter.DigistoreExporterAttachment;
+import theking530.staticpower.items.cableattachments.importer.DigistoreImporterAttachment;
 import theking530.staticpower.tileentities.TileEntityBase;
 
 public class DigistoreCableProviderComponent extends AbstractCableProviderComponent {
@@ -25,7 +26,10 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 		if (attachment.getItem() instanceof AbstractDigistoreTerminalAttachment) {
 			return true;
 		}
-		if (attachment.getItem() instanceof SupplierAttachment) {
+		if (attachment.getItem() instanceof DigistoreExporterAttachment) {
+			return true;
+		}
+		if (attachment.getItem() instanceof DigistoreImporterAttachment) {
 			return true;
 		}
 		return false;

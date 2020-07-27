@@ -1,0 +1,11 @@
+{
+	"type": "staticpower:grinder_recipe",
+	"input": {
+		"tag": "forge:ingots/platinum"
+	},
+	"output": [
+		{
+			"item": "staticpower:dust_platinum"
+		}
+	]
+}

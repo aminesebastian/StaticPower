@@ -1,4 +1,4 @@
-package theking530.staticpower.items.cableattachments.supplier;
+package theking530.staticpower.items.cableattachments.exporter;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -13,15 +13,15 @@ import theking530.staticpower.client.container.slots.PhantomSlot;
 import theking530.staticpower.init.ModContainerTypes;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachmentContainer;
 
-public class ContainerSupplier extends AbstractCableAttachmentContainer<SupplierAttachment> {
+public class ContainerDigistoreExporter extends AbstractCableAttachmentContainer<DigistoreExporterAttachment> {
 	private ItemStackHandler filterInventory;
 
-	public ContainerSupplier(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerDigistoreExporter(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, getAttachmentItemStack(inv, data), getAttachmentSide(data), getCableComponent(inv, data));
 	}
 
-	public ContainerSupplier(int windowId, PlayerInventory playerInventory, ItemStack attachment, Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
-		super(ModContainerTypes.SUPPLIER_CONTAINER, windowId, playerInventory, attachment, attachmentSide, cableComponent);
+	public ContainerDigistoreExporter(int windowId, PlayerInventory playerInventory, ItemStack attachment, Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
+		super(ModContainerTypes.EXPORTER_CONTAINER, windowId, playerInventory, attachment, attachmentSide, cableComponent);
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class ContainerSupplier extends AbstractCableAttachmentContainer<Supplier
 
 		// If the item filter is null, then return early and log the error.
 		if (filterInventory == null) {
-			StaticPower.LOGGER.error(String.format("Received capability for Supplier: %1$s that did not inherit from InventoryItemFilter.", getAttachment().getDisplayName()));
+			StaticPower.LOGGER.error(String.format("Received capability for Exporter: %1$s that did not inherit from InventoryItemFilter.", getAttachment().getDisplayName()));
 			return;
 		}
 

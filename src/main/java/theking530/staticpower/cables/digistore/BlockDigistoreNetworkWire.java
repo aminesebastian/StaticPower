@@ -18,7 +18,7 @@ import theking530.staticpower.init.ModTileEntityTypes;
 public class BlockDigistoreNetworkWire extends AbstractCableBlock {
 
 	public BlockDigistoreNetworkWire(String name) {
-		super(name, new CableBoundsCache(1.0D, new Vector3D(4.0f, 4.0f, 0.5f)));
+		super(name, new CableBoundsCache(1.5D, new Vector3D(4.0f, 4.0f, 1.0f)));
 
 	}
 

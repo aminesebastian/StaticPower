@@ -13,7 +13,7 @@
 			"tag": "staticpower:plates/static"
 		},
 		"w": {
-			"tag": "forge:wire/gold"
+			"tag": "forge:wires/silver"
 		}
 	},
 	"result": {

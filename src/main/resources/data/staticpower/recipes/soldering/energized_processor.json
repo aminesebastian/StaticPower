@@ -13,7 +13,7 @@
 			"tag": "staticpower:plates/energized"
 		},
 		"w": {
-			"tag": "forge:wire/gold"
+			"tag": "forge:wires/gold"
 		}
 	},
 	"result": {

@@ -118,9 +118,9 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 
 			BlockFaceUV blockFaceUV = new BlockFaceUV(new float[] { 0.0f, 0.0f, 16.0f, 16.0f }, 0);
 			BlockPartFace blockPartFace = new BlockPartFace(null, -1, sideSprite.getName().toString(), blockFaceUV);
-			Vector3f posOffset = SDMath.transformVectorByDirection(offsetSide, new Vector3f(0.0f, 0.0f, 0.001f));
+			Vector3f posOffset = SDMath.transformVectorByDirection(offsetSide, new Vector3f(0.0f, 0.0f, 0.005f));
 			posOffset.add(16.0f, 16.0f, 16.0f);
-			Vector3f negOffset = SDMath.transformVectorByDirection(offsetSide, new Vector3f(0.0f, 0.0f, -0.001f));
+			Vector3f negOffset = SDMath.transformVectorByDirection(offsetSide, new Vector3f(0.0f, 0.0f, -0.005f));
 
 			BakedQuad newQuad = FaceBaker.bakeQuad(negOffset, posOffset, blockPartFace, sideSprite, side, IDENTITY, null, true, new ResourceLocation("dummy_name"));
 			newQuads.add(newQuad);

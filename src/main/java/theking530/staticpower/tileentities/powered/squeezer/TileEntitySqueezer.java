@@ -158,7 +158,7 @@ public class TileEntitySqueezer extends TileEntityMachine {
 
 			// Insert the outputs
 			// Check the dice roll for the output.
-			if (SDMath.diceRoll(recipe.getOutput().getPercentage())) {
+			if (SDMath.diceRoll(recipe.getOutput().getOutputChance())) {
 				outputInventory.insertItem(0, recipe.getOutput().getItem().copy(), false);
 			}
 

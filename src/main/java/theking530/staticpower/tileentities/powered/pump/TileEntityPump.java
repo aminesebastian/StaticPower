@@ -62,13 +62,13 @@ public class TileEntityPump extends TileEntityMachine {
 		// Regsiter the processing component to handle the pumping.
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PUMP_RATE, this::canProcess, this::canProcess, this::pump, true));
 		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
-		
+
 		// Set the default side configuration.
 		ioSideConfiguration.setDefaultConfiguration(MachineSideMode.Never, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output);
 
 		// Disable face interaction.
 		DisableFaceInteraction = false;
-
+		this.energyStorage.getStorage().setMaxExtract(1000);
 		// Initialize the positions to pump container.
 		positionsToPump = new LinkedList<BlockPos>();
 	}
@@ -98,7 +98,7 @@ public class TileEntityPump extends TileEntityMachine {
 	 */
 	public boolean pump() {
 		// If we have capacity to pump.
-		if ((fluidTankComponent.getFluidAmount() + FluidAttributes.BUCKET_VOLUME) <= fluidTankComponent.getCapacity()) {
+		if ((fluidTankComponent.getFluidAmount() + FluidAttributes.BUCKET_VOLUME) <= fluidTankComponent.getCapacity() && energyStorage.hasEnoughPower(1000)) {
 			// If the positions to pump is empty, try to start again.
 			if (positionsToPump.size() == 0) {
 				BlockPos newPos = getInitialPumpBlock();
@@ -124,6 +124,9 @@ public class TileEntityPump extends TileEntityMachine {
 					if (fluidState.getFluid().isSource(fluidState)) {
 						// Play the sound.
 						getWorld().playSound(null, getPos(), fluidState.getFluid() == Fluids.LAVA ? SoundEvents.ITEM_BUCKET_FILL_LAVA : SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1.0f, 1.0f);
+
+						// Use the power.
+						energyStorage.usePower(1000);
 
 						// Pump the fluid.
 						FluidStack pumpedStack = new FluidStack(fluidState.getFluid(), FluidAttributes.BUCKET_VOLUME);

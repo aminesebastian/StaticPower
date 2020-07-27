@@ -1,0 +1,15 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{
+			"item": "minecraft:paper"
+		},
+		{
+			"item": "staticpower:processor_lumum"
+		}
+	],
+	"result": {
+		"item": "staticpower:filter_item_lumum",
+		"count": 1
+	}
+}

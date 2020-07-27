@@ -10,7 +10,7 @@
 			"tag": "forge:plates/tin"
 		},
 		"w": {
-			"tag": "forge:wire/silver"
+			"tag": "forge:wires/tin"
 		},
 		"c": {
 			"item": "minecraft:clock"

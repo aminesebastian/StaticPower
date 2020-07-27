@@ -32,7 +32,12 @@ public class ProbabilityItemStackOutput {
 		return item;
 	}
 
-	public float getPercentage() {
+	/**
+	 * Gets the output chance between (0.0, 1.0).
+	 * 
+	 * @return
+	 */
+	public float getOutputChance() {
 		return percentChance;
 	}
 

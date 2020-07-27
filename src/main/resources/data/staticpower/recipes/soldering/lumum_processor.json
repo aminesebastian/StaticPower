@@ -13,7 +13,7 @@
 			"tag": "staticpower:plates/lumum"
 		},
 		"w": {
-			"tag": "forge:wire/platinum"
+			"tag": "forge:wires/platinum"
 		}
 	},
 	"result": {

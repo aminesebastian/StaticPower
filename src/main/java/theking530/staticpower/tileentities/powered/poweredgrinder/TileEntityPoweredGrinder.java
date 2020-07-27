@@ -134,7 +134,7 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 					// chance. The clear the internal inventory, mark for synchronization, and
 					// return true.
 					for (ProbabilityItemStackOutput output : recipe.getOutputItems()) {
-						if (SDMath.diceRoll(output.getPercentage() + bonusOutputChance)) {
+						if (SDMath.diceRoll(output.getOutputChance() + bonusOutputChance)) {
 							InventoryUtilities.insertItemIntoInventory(outputInventory, output.getItem().copy(), false);
 						}
 					}

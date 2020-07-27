@@ -1,0 +1,22 @@
+{
+	"type": "staticpower:soldering_recipe",
+	"pattern": [
+		" p ",
+		"psp",
+		"www"
+	],
+	"key": {
+		"p": {
+			"tag": "forge:plates/tin"
+		},
+		"s": {
+			"tag": "forge:silicon"
+		},
+		"w": {
+			"tag": "forge:wires/tin"
+		}
+	},
+	"result": {
+		"item": "staticpower:transistor"
+	}
+}
