@@ -40,20 +40,23 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 		super(ModTileEntityTypes.POWERED_GRINDER);
 		this.disableFaceInteraction();
 
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
-			public boolean canInsertItem(int slot, ItemStack stack) {
-				return getRecipe(stack).isPresent();
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input)
+				.setFilter(new ItemStackHandlerFilter() {
+					public boolean canInsertItem(int slot, ItemStack stack) {
+						return getRecipe(stack).isPresent();
 
-			}
-		}));
+					}
+				}));
 
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1, MachineSideMode.Never));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 3, MachineSideMode.Output));
 		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
 
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
-		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", DEFAULT_MOVING_TIME, this::canMoveFromInputToProcessing, this::canMoveFromInputToProcessing, this::movingCompleted, true));
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true));
+		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", DEFAULT_MOVING_TIME,
+				this::canMoveFromInputToProcessing, () -> true, this::movingCompleted, true));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent",
+				DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true));
 
 		registerComponent(new InputServoComponent("InputServo", 4, inputInventory));
 		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory));
@@ -72,12 +75,14 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 			return false;
 		}
 		// Check if there is a valid recipe.
-		if (hasValidRecipe() && !moveComponent.isProcessing() && !processingComponent.isProcessing() && internalInventory.getStackInSlot(0).isEmpty()) {
+		if (hasValidRecipe() && !moveComponent.isProcessing() && !processingComponent.isProcessing()
+				&& internalInventory.getStackInSlot(0).isEmpty()) {
 			// Gets the recipe and its outputs.
 			Optional<GrinderRecipe> recipe = getRecipe(inputInventory.getStackInSlot(0));
 
 			// If the items cannot be insert into the output, return false.
-			if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.get().getRawOutputItems())) {
+			if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory,
+					recipe.get().getRawOutputItems())) {
 				return false;
 			}
 
@@ -112,7 +117,9 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 	 */
 	public boolean canProcess() {
 		GrinderRecipe recipe = getRecipe(internalInventory.getStackInSlot(0)).orElse(null);
-		return recipe != null && redstoneControlComponent.passesRedstoneCheck() && energyStorage.hasEnoughPower(recipe.getPowerCost()) && InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRawOutputItems());
+		return recipe != null && redstoneControlComponent.passesRedstoneCheck()
+				&& energyStorage.hasEnoughPower(recipe.getPowerCost())
+				&& InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRawOutputItems());
 	}
 
 	/**
@@ -129,7 +136,8 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 			GrinderRecipe recipe = getRecipe(internalInventory.getStackInSlot(0)).orElse(null);
 			if (recipe != null) {
 				// Ensure the output slots can take the recipe.
-				if (InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRawOutputItems())) {
+				if (InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory,
+						recipe.getRawOutputItems())) {
 					// For each output, insert the contents into the output based on the percentage
 					// chance. The clear the internal inventory, mark for synchronization, and
 					// return true.
@@ -174,7 +182,8 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 	 * @return
 	 */
 	public Optional<GrinderRecipe> getRecipe(ItemStack itemStackInput) {
-		return StaticPowerRecipeRegistry.getRecipe(GrinderRecipe.RECIPE_TYPE, new RecipeMatchParameters(itemStackInput).setStoredEnergy(energyStorage.getStorage().getEnergyStored()));
+		return StaticPowerRecipeRegistry.getRecipe(GrinderRecipe.RECIPE_TYPE, new RecipeMatchParameters(itemStackInput)
+				.setStoredEnergy(energyStorage.getStorage().getEnergyStored()));
 	}
 
 	@Override

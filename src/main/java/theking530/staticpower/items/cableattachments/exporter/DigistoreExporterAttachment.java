@@ -114,9 +114,14 @@ public class DigistoreExporterAttachment extends AbstractCableAttachment {
 		AtomicBoolean output = new AtomicBoolean(false);
 		targetTe.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).ifPresent(target -> {
 			cable.<DigistoreNetworkModule>getNetworkModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE).ifPresent(module -> {
+				// Return early if there is no manager.
+				if (!module.isManagerPresent()) {
+					return;
+				}
 				// Get the filter inventory (if there is a null value, do not handle it, throw
 				// an exception).
-				IItemHandler filterItems = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(() -> new RuntimeException("Encounetered a supplier attachment without a valid filter inventory."));
+				IItemHandler filterItems = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+						.orElseThrow(() -> new RuntimeException("Encounetered a supplier attachment without a valid filter inventory."));
 
 				// We do this to ensure we randomly extract.
 				int startingSlot = SDMath.getRandomIntInRange(0, filterItems.getSlots() - 1);

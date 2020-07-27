@@ -87,7 +87,8 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 	public boolean doesItemPassExtractionFilter(ItemStack attachment, ItemStack itemToTest) {
 		// Get the filter inventory (if there is a null value, do not handle it, throw
 		// an exception).
-		IItemHandler filterItems = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(() -> new RuntimeException("Encounetered an extractor attachment without a valid filter inventory."));
+		IItemHandler filterItems = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+				.orElseThrow(() -> new RuntimeException("Encounetered an extractor attachment without a valid filter inventory."));
 
 		// Get the list of filter items.
 		List<ItemStack> filterItemList = new LinkedList<ItemStack>();
@@ -152,9 +153,15 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 			AtomicBoolean output = new AtomicBoolean(false);
 			((TileEntityDigistoreIOPort) targetTe).digistoreCableProvider.<DigistoreNetworkModule>getNetworkModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE).ifPresent(module -> {
 				cable.<ItemNetworkModule>getNetworkModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE).ifPresent(network -> {
+					// Return early if there is no manager.
+					if (!module.isManagerPresent()) {
+						return;
+					}
+
 					// Get the filter inventory (if there is a null value, do not handle it, throw
 					// an exception).
-					IItemHandler filterItems = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(() -> new RuntimeException("Encounetered an extractor attachment without a valid filter inventory."));
+					IItemHandler filterItems = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+							.orElseThrow(() -> new RuntimeException("Encounetered an extractor attachment without a valid filter inventory."));
 
 					// We do this to ensure we randomly extract.
 					int startingSlot = SDMath.getRandomIntInRange(0, filterItems.getSlots() - 1);

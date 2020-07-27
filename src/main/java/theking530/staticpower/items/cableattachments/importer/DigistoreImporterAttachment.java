@@ -114,7 +114,8 @@ public class DigistoreImporterAttachment extends AbstractCableAttachment {
 	public boolean doesItemPassImportFilter(ItemStack attachment, ItemStack itemToTest) {
 		// Get the filter inventory (if there is a null value, do not handle it, throw
 		// an exception).
-		IItemHandler filterItems = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(() -> new RuntimeException("Encounetered an importer attachment without a valid filter inventory."));
+		IItemHandler filterItems = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+				.orElseThrow(() -> new RuntimeException("Encounetered an importer attachment without a valid filter inventory."));
 
 		// Get the list of filter items.
 		List<ItemStack> filterItemList = new LinkedList<ItemStack>();
@@ -138,6 +139,11 @@ public class DigistoreImporterAttachment extends AbstractCableAttachment {
 		AtomicBoolean output = new AtomicBoolean(false);
 		targetTe.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).ifPresent(target -> {
 			cable.<DigistoreNetworkModule>getNetworkModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE).ifPresent(module -> {
+				// Return early if there is no manager.
+				if (!module.isManagerPresent()) {
+					return;
+				}
+
 				for (int i = 0; i < target.getSlots(); i++) {
 					// Simulate an extract.
 					ItemStack extractedItem = target.extractItem(i, StaticPowerDataRegistry.getTier(tierType).getCableExtractionStackSize(), true);

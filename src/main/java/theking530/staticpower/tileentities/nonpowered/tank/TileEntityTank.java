@@ -45,7 +45,7 @@ public class TileEntityTank extends TileEntityBase implements INamedContainerPro
 
 	@Override
 	public void process() {
-		markTileEntityForSynchronization(); // Need to improve this.
+		//markTileEntityForSynchronization(); // Need to improve this.
 	}
 
 	@Override
