@@ -193,7 +193,7 @@ public class StaticPowerRecipeRegistry {
 				}
 			}
 		}
-
+		
 		// Log the completion.
 		StaticPower.LOGGER.info(String.format("Succesfully %1$s %2$d Static Power recipes.", (firstTime ? "cached" : "re-cached"), recipeCount));
 	}

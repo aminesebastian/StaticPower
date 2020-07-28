@@ -133,8 +133,6 @@ public class TileEntityPump extends TileEntityMachine {
 						fluidTankComponent.fill(pumpedStack, FluidAction.EXECUTE);
 						getWorld().setBlockState(position, Blocks.AIR.getDefaultState());
 
-						markTileEntityForSynchronization();
-
 						// If this is water, we just stop. No recursion as water is infinite anyway.
 						if (pumpedStack.getFluid() == Fluids.WATER) {
 							positionsToPump.clear();

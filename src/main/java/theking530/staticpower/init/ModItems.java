@@ -22,6 +22,7 @@ import theking530.staticpower.items.crops.StaticPlantCrop;
 import theking530.staticpower.items.crops.StaticPlantSeeds;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.items.tools.CableNetworkAnalyzer;
+import theking530.staticpower.items.tools.CoverSaw;
 import theking530.staticpower.items.tools.ElectricSolderingIron;
 import theking530.staticpower.items.tools.MetalHammer;
 import theking530.staticpower.items.tools.SolderingIron;
@@ -206,6 +207,11 @@ public class ModItems {
 	public static ElectricSolderingIron ElectringSolderingIron;
 	public static StaticWrench StaticWrench;
 	public static CableNetworkAnalyzer CableNetworkAnalyzer;
+	public static CoverSaw IronCoverSaw;
+	public static CoverSaw TungstenCoverSaw;
+	public static CoverSaw DiamondCoverSaw;
+	public static CoverSaw RubyCoverSaw;
+	public static CoverSaw SapphireCoverSaw;
 
 	public static ItemFilter BasicFilter;
 	public static ItemFilter AdvancedFilter;
@@ -310,6 +316,13 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(SolderingIron = new SolderingIron("soldering_iron", 100));
 		StaticPowerRegistry.preRegisterItem(ElectringSolderingIron = new ElectricSolderingIron("soldering_iron_electric", 10000));
 		StaticPowerRegistry.preRegisterItem(StaticWrench = new StaticWrench("static_wrench"));
+
+		StaticPowerRegistry.preRegisterItem(IronCoverSaw = new CoverSaw("saw_iron", 100));
+		StaticPowerRegistry.preRegisterItem(TungstenCoverSaw = new CoverSaw("saw_tungsten", 2500));
+		StaticPowerRegistry.preRegisterItem(DiamondCoverSaw = new CoverSaw("saw_diamond", 250));
+		StaticPowerRegistry.preRegisterItem(RubyCoverSaw = new CoverSaw("saw_ruby", 500));
+		StaticPowerRegistry.preRegisterItem(SapphireCoverSaw = new CoverSaw("saw_sapphire", 1000));
+
 		StaticPowerRegistry.preRegisterItem(CableNetworkAnalyzer = new CableNetworkAnalyzer("cable_network_analyzer"));
 
 		// Filters
@@ -458,28 +471,47 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(NuggetBrass = new StaticPowerItem("nugget_brass"));
 		StaticPowerRegistry.preRegisterItem(NuggetBronze = new StaticPowerItem("nugget_bronze"));
 
-		StaticPowerRegistry.preRegisterItem(BasicExtractorAttachment = new ExtractorAttachment("cable_attachment_basic_extractor", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.CABLE_BASIC_EXTRACTOR_ATTACHMENT));
-		StaticPowerRegistry.preRegisterItem(AdvancedExtractorAttachment = new ExtractorAttachment("cable_attachment_advanced_extractor", StaticPowerTiers.ADVANCED, StaticPowerAdditionalModels.CABLE_ADVANCED_EXTRACTOR_ATTACHMENT));
-		StaticPowerRegistry.preRegisterItem(StaticExtractorAttachment = new ExtractorAttachment("cable_attachment_static_extractor", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.CABLE_STATIC_EXTRACTOR_ATTACHMENT));
-		StaticPowerRegistry.preRegisterItem(EnergizedExtractorAttachment = new ExtractorAttachment("cable_attachment_energized_extractor", StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.CABLE_ENERGIZED_EXTRACTOR_ATTACHMENT));
-		StaticPowerRegistry.preRegisterItem(LumumExtractorAttachment = new ExtractorAttachment("cable_attachment_lumum_extractor", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.CABLE_LUMUM_EXTRACTOR_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(
+				BasicExtractorAttachment = new ExtractorAttachment("cable_attachment_basic_extractor", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.CABLE_BASIC_EXTRACTOR_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(AdvancedExtractorAttachment = new ExtractorAttachment("cable_attachment_advanced_extractor", StaticPowerTiers.ADVANCED,
+				StaticPowerAdditionalModels.CABLE_ADVANCED_EXTRACTOR_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(
+				StaticExtractorAttachment = new ExtractorAttachment("cable_attachment_static_extractor", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.CABLE_STATIC_EXTRACTOR_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(EnergizedExtractorAttachment = new ExtractorAttachment("cable_attachment_energized_extractor", StaticPowerTiers.ENERGIZED,
+				StaticPowerAdditionalModels.CABLE_ENERGIZED_EXTRACTOR_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(
+				LumumExtractorAttachment = new ExtractorAttachment("cable_attachment_lumum_extractor", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.CABLE_LUMUM_EXTRACTOR_ATTACHMENT));
 
-		StaticPowerRegistry.preRegisterItem(BasicFilterAttachment = new FilterAttachment("cable_attachment_basic_filter", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.CABLE_BASIC_FILTER_ATTACHMENT));
-		StaticPowerRegistry.preRegisterItem(AdvancedFilterAttachment = new FilterAttachment("cable_attachment_advanced_filter", StaticPowerTiers.ADVANCED, StaticPowerAdditionalModels.CABLE_ADVANCED_FILTER_ATTACHMENT));
-		StaticPowerRegistry.preRegisterItem(StaticFilterAttachment = new FilterAttachment("cable_attachment_static_filter", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.CABLE_STATIC_FILTER_ATTACHMENT));
-		StaticPowerRegistry.preRegisterItem(EnergizedFilterAttachment = new FilterAttachment("cable_attachment_energized_filter", StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.CABLE_ENERGIZED_FILTER_ATTACHMENT));
-		StaticPowerRegistry.preRegisterItem(LumumFilterAttachment = new FilterAttachment("cable_attachment_lumum_filter", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.CABLE_LUMUM_FILTER_ATTACHMENT));
+		StaticPowerRegistry
+				.preRegisterItem(BasicFilterAttachment = new FilterAttachment("cable_attachment_basic_filter", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.CABLE_BASIC_FILTER_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(
+				AdvancedFilterAttachment = new FilterAttachment("cable_attachment_advanced_filter", StaticPowerTiers.ADVANCED, StaticPowerAdditionalModels.CABLE_ADVANCED_FILTER_ATTACHMENT));
+		StaticPowerRegistry
+				.preRegisterItem(StaticFilterAttachment = new FilterAttachment("cable_attachment_static_filter", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.CABLE_STATIC_FILTER_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(
+				EnergizedFilterAttachment = new FilterAttachment("cable_attachment_energized_filter", StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.CABLE_ENERGIZED_FILTER_ATTACHMENT));
+		StaticPowerRegistry
+				.preRegisterItem(LumumFilterAttachment = new FilterAttachment("cable_attachment_lumum_filter", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.CABLE_LUMUM_FILTER_ATTACHMENT));
 
-		StaticPowerRegistry.preRegisterItem(BasicRetrieverAttachment = new RetrieverAttachment("cable_attachment_basic_retriever", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.CABLE_BASIC_RETRIEVER_ATTACHMENT));
-		StaticPowerRegistry.preRegisterItem(AdvancedRetrieverAttachment = new RetrieverAttachment("cable_attachment_advanced_retriever", StaticPowerTiers.ADVANCED, StaticPowerAdditionalModels.CABLE_ADVANCED_RETRIEVER_ATTACHMENT));
-		StaticPowerRegistry.preRegisterItem(StaticRetrieverAttachment = new RetrieverAttachment("cable_attachment_static_retriever", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.CABLE_STATIC_RETRIEVER_ATTACHMENT));
-		StaticPowerRegistry.preRegisterItem(EnergizedRetrieverAttachment = new RetrieverAttachment("cable_attachment_energized_retriever", StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.CABLE_ENERGIZED_RETRIEVER_ATTACHMENT));
-		StaticPowerRegistry.preRegisterItem(LumumRetrieverAttachment = new RetrieverAttachment("cable_attachment_lumum_retriever", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.CABLE_LUMUM_RETRIEVER_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(
+				BasicRetrieverAttachment = new RetrieverAttachment("cable_attachment_basic_retriever", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.CABLE_BASIC_RETRIEVER_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(AdvancedRetrieverAttachment = new RetrieverAttachment("cable_attachment_advanced_retriever", StaticPowerTiers.ADVANCED,
+				StaticPowerAdditionalModels.CABLE_ADVANCED_RETRIEVER_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(
+				StaticRetrieverAttachment = new RetrieverAttachment("cable_attachment_static_retriever", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.CABLE_STATIC_RETRIEVER_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(EnergizedRetrieverAttachment = new RetrieverAttachment("cable_attachment_energized_retriever", StaticPowerTiers.ENERGIZED,
+				StaticPowerAdditionalModels.CABLE_ENERGIZED_RETRIEVER_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(
+				LumumRetrieverAttachment = new RetrieverAttachment("cable_attachment_lumum_retriever", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.CABLE_LUMUM_RETRIEVER_ATTACHMENT));
 
-		StaticPowerRegistry.preRegisterItem(ExporterAttachment = new DigistoreExporterAttachment("cable_attachment_digistore_exporter", StaticPowerAdditionalModels.CABLE_DIGISTORE_EXPORTER_ATTACHMENT));
-		StaticPowerRegistry.preRegisterItem(ImporterAttachment = new DigistoreImporterAttachment("cable_attachment_digistore_importer", StaticPowerAdditionalModels.CABLE_DIGISTORE_IMPORTER_ATTACHMENT));
-		StaticPowerRegistry.preRegisterItem(DigistoreTerminalAttachment = new DigistoreTerminal("cable_attachment_digistore_terminal", StaticPowerAdditionalModels.CABLE_DIGISTORE_TERMINAL_ATTACHMENT));
-		StaticPowerRegistry.preRegisterItem(DigistoreCraftingTerminalAttachment = new DigistoreCraftingTerminal("cable_attachment_digistore_crafting_terminal", StaticPowerAdditionalModels.CABLE_DIGISTORE_CRAFTING_TERMINAL_ATTACHMENT));
+		StaticPowerRegistry
+				.preRegisterItem(ExporterAttachment = new DigistoreExporterAttachment("cable_attachment_digistore_exporter", StaticPowerAdditionalModels.CABLE_DIGISTORE_EXPORTER_ATTACHMENT));
+		StaticPowerRegistry
+				.preRegisterItem(ImporterAttachment = new DigistoreImporterAttachment("cable_attachment_digistore_importer", StaticPowerAdditionalModels.CABLE_DIGISTORE_IMPORTER_ATTACHMENT));
+		StaticPowerRegistry
+				.preRegisterItem(DigistoreTerminalAttachment = new DigistoreTerminal("cable_attachment_digistore_terminal", StaticPowerAdditionalModels.CABLE_DIGISTORE_TERMINAL_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(DigistoreCraftingTerminalAttachment = new DigistoreCraftingTerminal("cable_attachment_digistore_crafting_terminal",
+				StaticPowerAdditionalModels.CABLE_DIGISTORE_CRAFTING_TERMINAL_ATTACHMENT));
 
 		// Digistore Cards
 		StaticPowerRegistry.preRegisterItem(BasicDigistoreCard = new DigistoreCard("digistore_card_basic", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.BASIC_DIGISTORE_CARD));
@@ -489,12 +521,18 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(LumumDigistoreCard = new DigistoreCard("digistore_card_lumum", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.LUMUM_DIGISTORE_CARD));
 		StaticPowerRegistry.preRegisterItem(CreativeDigistoreCard = new DigistoreCard("digistore_card_creative", StaticPowerTiers.CREATIVE, StaticPowerAdditionalModels.CREATIVE_DIGISTORE_CARD, true));
 
-		StaticPowerRegistry.preRegisterItem(BasicSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_basic", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.BASIC_DIGISTORE_SINGULAR_CARD));
-		StaticPowerRegistry.preRegisterItem(AdvancedSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_advanced", StaticPowerTiers.ADVANCED, StaticPowerAdditionalModels.ADVANCVED_DIGISTORE_SINGULAR_CARD));
-		StaticPowerRegistry.preRegisterItem(StaticSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_static", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.STATIC_DIGISTORE_SINGULAR_CARD));
-		StaticPowerRegistry.preRegisterItem(EnergizedSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_energized", StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.ENERGIZED_DIGISTORE_SINGULAR_CARD));
-		StaticPowerRegistry.preRegisterItem(LumumSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_lumum", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.LUMUM_DIGISTORE_SINGULAR_CARD));
-		StaticPowerRegistry.preRegisterItem(CreativeSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_creative", StaticPowerTiers.CREATIVE, StaticPowerAdditionalModels.CREATIVE_DIGISTORE_SINGULAR_CARD, true));
+		StaticPowerRegistry.preRegisterItem(
+				BasicSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_basic", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.BASIC_DIGISTORE_SINGULAR_CARD));
+		StaticPowerRegistry.preRegisterItem(
+				AdvancedSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_advanced", StaticPowerTiers.ADVANCED, StaticPowerAdditionalModels.ADVANCVED_DIGISTORE_SINGULAR_CARD));
+		StaticPowerRegistry.preRegisterItem(
+				StaticSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_static", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.STATIC_DIGISTORE_SINGULAR_CARD));
+		StaticPowerRegistry.preRegisterItem(
+				EnergizedSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_energized", StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.ENERGIZED_DIGISTORE_SINGULAR_CARD));
+		StaticPowerRegistry.preRegisterItem(
+				LumumSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_lumum", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.LUMUM_DIGISTORE_SINGULAR_CARD));
+		StaticPowerRegistry.preRegisterItem(CreativeSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_creative", StaticPowerTiers.CREATIVE,
+				StaticPowerAdditionalModels.CREATIVE_DIGISTORE_SINGULAR_CARD, true));
 
 		StaticPowerRegistry.preRegisterItem(CableCover = new CableCover("cable_cover"));
 

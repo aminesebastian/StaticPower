@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"sii",
+		"sii",
+		"s  "
+	],
+	"key": {
+		"i": {
+			"tag": "forge:ingots/iron"
+		},
+		"s": {
+			"tag": "forge:rods/wooden"
+		}
+	},
+	"result": {
+		"item": "staticpower:saw_iron"
+	}
+}

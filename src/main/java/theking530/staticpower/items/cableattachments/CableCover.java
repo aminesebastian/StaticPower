@@ -72,6 +72,14 @@ public class CableCover extends Item implements ICustomModelSupplier {
 		return true;
 	}
 
+	public static Item getCoverItemBlock(ItemStack coverStack) {
+		BlockState state = getBlockStateForCover(coverStack);
+		if (state == null) {
+			return null;
+		}
+		return state.getBlock().asItem();
+	}
+
 	public static BlockState getBlockStateForCover(ItemStack coverStack) {
 		if (coverStack.getItem() instanceof CableCover && coverStack.hasTag()) {
 			return NBTUtil.readBlockState(coverStack.getTag().getCompound(COVER_BLOCK_STATE_TAG));

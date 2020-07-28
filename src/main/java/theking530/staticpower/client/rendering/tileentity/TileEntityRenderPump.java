@@ -25,19 +25,23 @@ public class TileEntityRenderPump extends StaticPowerTileEntitySpecialRenderer<T
 
 	@Override
 	protected void renderTileEntityBase(TileEntityPump tileEntity, BlockPos pos, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+		tileEntity.fluidTankComponent.updateVisualFillLevel(partialTicks);
 		if (tileEntity.fluidTankComponent.getFluidAmount() > 0) {
 			TextureAtlasSprite sprite = GuiDrawUtilities.getStillFluidSprite(tileEntity.fluidTankComponent.getFluid());
 			Color fluidColor = GuiDrawUtilities.getFluidColor(tileEntity.fluidTankComponent.getFluid());
-			float height = (float) tileEntity.fluidTankComponent.getFluidAmount() / tileEntity.fluidTankComponent.getCapacity();
-			CUBE_MODEL.drawPreviewCube(new Vector3f(2.01f * TEXEL, 1.99f * TEXEL, 2.01f * TEXEL), new Vector3f(11.95f * TEXEL, 11.98f * TEXEL * height, 11.95f * TEXEL), fluidColor, matrixStack, sprite, new Vector2D(1.0f, height));
+			float height = tileEntity.fluidTankComponent.getVisualFillLevel();
+			CUBE_MODEL.drawPreviewCube(new Vector3f(2.01f * TEXEL, 1.99f * TEXEL, 2.01f * TEXEL), new Vector3f(11.95f * TEXEL, 11.98f * TEXEL * height, 11.95f * TEXEL), fluidColor, matrixStack,
+					sprite, new Vector2D(1.0f, height));
 		}
 
-		// Draw the glass. We have to do it like this because of how mineraft orders transparency.
-		if(ModelLoader.instance().getSpriteMap() != null) {
+		// Draw the glass. We have to do it like this because of how mineraft orders
+		// transparency.
+		if (ModelLoader.instance().getSpriteMap() != null) {
 			@SuppressWarnings("deprecation")
 			AtlasTexture blocksTexture = ModelLoader.instance().getSpriteMap().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 			TextureAtlasSprite sprite = blocksTexture.getSprite(StaticPowerSprites.BLANK_TEXTURE);
-			CUBE_MODEL.drawPreviewCube(new Vector3f(1.95f * TEXEL, 2f * TEXEL, 1.95f * TEXEL), new Vector3f(12.1f * TEXEL, 12.1f * TEXEL, 12.1f * TEXEL), new Color(0.4f, 0.45f, 0.55f, 0.35f), matrixStack, sprite);
+			CUBE_MODEL.drawPreviewCube(new Vector3f(1.95f * TEXEL, 2f * TEXEL, 1.95f * TEXEL), new Vector3f(12.1f * TEXEL, 12.1f * TEXEL, 12.1f * TEXEL), new Color(0.4f, 0.45f, 0.55f, 0.35f),
+					matrixStack, sprite);
 		}
 	}
 }

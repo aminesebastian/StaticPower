@@ -9,6 +9,7 @@ import mezz.jei.api.constants.VanillaRecipeCategoryUid;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.helpers.IJeiHelpers;
 import mezz.jei.api.helpers.IModIdHelper;
+import mezz.jei.api.registration.IAdvancedRegistration;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
@@ -33,6 +34,7 @@ import theking530.staticpower.data.crafting.wrappers.squeezer.SqueezerRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.integration.JEI.bottler.BottleRecipeCategory;
+import theking530.staticpower.integration.JEI.covers.CoverRecipeCategory;
 import theking530.staticpower.integration.JEI.fermenter.FermenterRecipeCategory;
 import theking530.staticpower.integration.JEI.fluidinfuser.FluidInfuserRecipeCategory;
 import theking530.staticpower.integration.JEI.former.FormerRecipeCategory;
@@ -183,6 +185,11 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AutoSolderingTable), SolderingTableRecipeCategory.SOLDERING_TABLE_UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AutoCraftingTable), VanillaRecipeCategoryUid.CRAFTING);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.FluidInfuser), FluidInfuserRecipeCategory.FLUID_INFUSER_UID);
+	}
+
+	@Override
+	public void registerAdvanced(IAdvancedRegistration registration) {
+		registration.addRecipeManagerPlugin(new CoverRecipeCategory(ModItems.CableCover));
 	}
 
 	@Override

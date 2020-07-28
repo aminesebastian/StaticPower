@@ -13,10 +13,11 @@ import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
+import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
 public class FluidTankComponent extends AbstractTileEntityComponent implements IFluidHandler, IFluidTank {
-
+	public static final int FLUID_SYNC_MAX_DELTA = 1;
 	protected FluidTank FluidStorage;
 
 	protected int lastFluidStored;
@@ -27,6 +28,8 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 	protected final HashSet<MachineSideMode> capabilityExposeModes;
 	private final FluidComponentCapabilityInterface capabilityInterface;
 	private final Predicate<FluidStack> fluidStackFilter;
+	private FluidStack lastSyncFluidStack;
+	private float visualFillLevel;
 
 	public FluidTankComponent(String name, int capacity) {
 		this(name, capacity, (fluid) -> true);
@@ -40,6 +43,7 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 		capabilityInterface = new FluidComponentCapabilityInterface();
 		capabilityExposeModes = new HashSet<MachineSideMode>();
 		this.fluidStackFilter = fluidStackFilter;
+		this.lastSyncFluidStack = FluidStack.EMPTY;
 
 		// By default, ALWAYS expose this side, except on disabled or never.
 		for (MachineSideMode mode : MachineSideMode.values()) {
@@ -47,6 +51,53 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 				capabilityExposeModes.add(mode);
 			}
 		}
+	}
+
+	@Override
+	public void postProcessUpdate() {
+		if (!getWorld().isRemote) {
+			// Get the current delta between the amount of power we have and the power we
+			// had last tick.
+			int delta = Math.abs(getFluidAmount() - lastSyncFluidStack.getAmount());
+
+			// Determine if we should sync.
+			boolean shouldSync = delta > FLUID_SYNC_MAX_DELTA;
+			shouldSync |= !lastSyncFluidStack.isFluidEqual(this.getFluid());
+			shouldSync |= getFluidAmount() == 0 && lastSyncFluidStack.getAmount() != 0;
+			shouldSync |= getFluidAmount() == getCapacity() && lastSyncFluidStack.getAmount() != getCapacity();
+
+			// If we should sync, perform the sync.
+			if (shouldSync) {
+				lastSyncFluidStack = getFluid().copy();
+				syncToClient();
+			}
+		}
+	}
+
+	public void updateVisualFillLevel(float partialTicks) {
+		if (visualFillLevel != getFluidAmount()) {
+			float difference = visualFillLevel - getFluidAmount();
+			visualFillLevel -= difference * (partialTicks /20.0f);
+
+		}
+	}
+
+	public float getVisualFillLevel() {
+		return visualFillLevel / this.getCapacity();
+	}
+
+	/**
+	 * This method syncs the current state of this fluid tank component to all
+	 * clients within a 64 block radius.
+	 */
+	public void syncToClient() {
+		if (!getWorld().isRemote) {
+			PacketFluidTankComponent syncPacket = new PacketFluidTankComponent(this, getPos(), this.getComponentName());
+			StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), getPos(), 64, syncPacket);
+		} else {
+			throw new RuntimeException("This method should only be called on the server!");
+		}
+
 	}
 
 	/**
