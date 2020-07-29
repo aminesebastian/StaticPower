@@ -1,9 +1,11 @@
 package theking530.staticpower.events;
 
+import net.minecraft.item.Items;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -38,5 +40,12 @@ public class StaticPowerForgeEventRegistry {
 	public static void resourcesReloadedEvent(RecipesUpdatedEvent event) {
 		StaticPowerRecipeRegistry.onResourcesReloaded(event);
 		StaticPowerDataRegistry.onResourcesReloaded();
+	}
+
+	@SubscribeEvent
+	public static void onPlayerInteract(RightClickBlock event) {
+		if (event.getPlayer().getHeldItemMainhand().getItem() == Items.MILK_BUCKET) {
+			StaticPowerCommonEventHandler.onMilkBucketUsed(event);
+		}
 	}
 }

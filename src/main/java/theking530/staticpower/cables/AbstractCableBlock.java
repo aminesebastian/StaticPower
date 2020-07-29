@@ -64,7 +64,7 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 	public boolean hasTileEntity(BlockState state) {
 		return true;
 	}
-	
+
 	@Override
 	public ActionResultType onStaticPowerBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
 		// Get the component at the location.
@@ -76,7 +76,6 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 
 		// Get the attachment side that is hovered (if any).
 		CableBoundsHoverResult hoverResult = CableBounds.getHoveredAttachmentOrCover(pos, player);
-
 		if (!hoverResult.isEmpty() && hoverResult.type == CableBoundsHoverType.ATTACHED_ATTACHMENT) {
 			Direction hoveredDirection = CableBounds.getHoveredAttachmentOrCover(pos, player).direction;
 

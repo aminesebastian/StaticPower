@@ -1,0 +1,13 @@
+{
+	"type": "staticpower:fluid_infusion_recipe",
+	"input": {
+		"item": "minecraft:light_gray_concrete_powder"
+	},
+	"fluid": {
+		"fluid": "minecraft:water",
+		"volume": 1000
+	},
+	"result": {
+		"item": "minecraft:light_gray_concrete"
+	}
+}

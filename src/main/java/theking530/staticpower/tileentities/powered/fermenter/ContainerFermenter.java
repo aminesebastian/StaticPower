@@ -44,7 +44,7 @@ public class ContainerFermenter extends StaticPowerTileEntityContainer<TileEntit
 
 		// Container Input and Output
 		addSlot(new FluidContainerSlot(getTileEntity().fluidContainerInventory, Items.BUCKET, 0, -24, 11));
-		addSlot(new OutputSlot(getTileEntity().fluidContainerInventory, ModFluids.Mash.Bucket, 1, -24, 43));
+		addSlot(new OutputSlot(getTileEntity().fluidContainerInventory, ModFluids.Mash.getBucket(), 1, -24, 43));
 
 		// Upgrades
 		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 0, -24, 76));

@@ -28,7 +28,7 @@ public class TileEntityBattery extends TileEntityMachine {
 	public TileEntityBattery(TileEntityType<?> type, ResourceLocation tier) {
 		super(type);
 		DisableFaceInteraction = false;
-		
+
 		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor", energyStorage.getStorage()));
 		energyStorage.setCapabiltiyFilter((amount, direction, action) -> {
 			if (direction == null) {
@@ -48,6 +48,8 @@ public class TileEntityBattery extends TileEntityMachine {
 		maxPowerIO = Integer.MAX_VALUE;
 
 		energyStorage.getStorage().setCapacity(StaticPowerDataRegistry.getTier(tier).getBatteryCapacity());
+		energyStorage.getStorage().setMaxReceive(100);
+		energyStorage.getStorage().setMaxExtract(100);
 	}
 
 	public void process() {

@@ -8,20 +8,24 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.UseAction;
-import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
+import theking530.common.utilities.SDMath;
 
 public class JuiceBottleItem extends StaticPowerItem {
 	public final int drinkDuration;
+	public final int foodAmount;
+	public final float saturation;
 
-	public JuiceBottleItem(String name, int drinkDuration) {
+	public JuiceBottleItem(String name, int drinkDuration, int foodAmount, float saturation) {
 		super(name, new Item.Properties().maxStackSize(16));
 		this.drinkDuration = drinkDuration;
+		this.foodAmount = foodAmount;
+		this.saturation = saturation;
 	}
 
 	/**
@@ -30,14 +34,17 @@ public class JuiceBottleItem extends StaticPowerItem {
 	 */
 	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving) {
 		super.onItemUseFinish(stack, worldIn, entityLiving);
+
 		if (entityLiving instanceof ServerPlayerEntity) {
 			ServerPlayerEntity serverplayerentity = (ServerPlayerEntity) entityLiving;
 			CriteriaTriggers.CONSUME_ITEM.trigger(serverplayerentity, stack);
 			serverplayerentity.addStat(Stats.ITEM_USED.get(this));
-		}
 
-		if (!worldIn.isRemote) {
-			entityLiving.removePotionEffect(Effects.POISON);
+			int newFoodAmount = SDMath.clamp(0, serverplayerentity.getFoodStats().getFoodLevel() + foodAmount, 20);
+			serverplayerentity.getFoodStats().setFoodLevel(newFoodAmount);
+
+			float newSaturationAmount = SDMath.clamp(0.0f, serverplayerentity.getFoodStats().getSaturationLevel() + saturation, 20.0f);
+			serverplayerentity.getFoodStats().setFoodSaturationLevel(newSaturationAmount);
 		}
 
 		if (stack.isEmpty()) {

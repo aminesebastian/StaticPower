@@ -6,6 +6,7 @@ import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.items.DigistoreCard;
 import theking530.staticpower.items.DigistoreMonoCard;
 import theking530.staticpower.items.JuiceBottleItem;
+import theking530.staticpower.items.MilkBottleItem;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.items.book.StaticPowerBook;
@@ -258,6 +259,7 @@ public class ModItems {
 
 	public static CableCover CableCover;
 
+	public static MilkBottleItem MilkBottle;
 	public static JuiceBottleItem AppleJuiceBottle;
 	public static JuiceBottleItem CarrotJuiceBottle;
 	public static JuiceBottleItem PumpkinJuiceBottle;
@@ -536,11 +538,12 @@ public class ModItems {
 
 		StaticPowerRegistry.preRegisterItem(CableCover = new CableCover("cable_cover"));
 
-		StaticPowerRegistry.preRegisterItem(AppleJuiceBottle = new JuiceBottleItem("bottle_juice_apple", 40));
-		StaticPowerRegistry.preRegisterItem(CarrotJuiceBottle = new JuiceBottleItem("bottle_juice_carrot", 40));
-		StaticPowerRegistry.preRegisterItem(PumpkinJuiceBottle = new JuiceBottleItem("bottle_juice_pumpkin", 40));
-		StaticPowerRegistry.preRegisterItem(MelonJuiceBottle = new JuiceBottleItem("bottle_juice_melon", 40));
-		StaticPowerRegistry.preRegisterItem(BeetJuiceBottle = new JuiceBottleItem("bottle_juice_beetroot", 40));
-		StaticPowerRegistry.preRegisterItem(BerryJuiceBottle = new JuiceBottleItem("bottle_juice_berry", 40));
+		StaticPowerRegistry.preRegisterItem(MilkBottle = new MilkBottleItem("bottle_milk", 40));
+		StaticPowerRegistry.preRegisterItem(AppleJuiceBottle = new JuiceBottleItem("bottle_juice_apple", 40, 6, 8.0f));
+		StaticPowerRegistry.preRegisterItem(CarrotJuiceBottle = new JuiceBottleItem("bottle_juice_carrot", 40, 4, 6.0f));
+		StaticPowerRegistry.preRegisterItem(PumpkinJuiceBottle = new JuiceBottleItem("bottle_juice_pumpkin", 40, 6, 8.0f));
+		StaticPowerRegistry.preRegisterItem(MelonJuiceBottle = new JuiceBottleItem("bottle_juice_melon", 40, 6, 8.0f));
+		StaticPowerRegistry.preRegisterItem(BeetJuiceBottle = new JuiceBottleItem("bottle_juice_beetroot", 40, 4, 6.0f));
+		StaticPowerRegistry.preRegisterItem(BerryJuiceBottle = new JuiceBottleItem("bottle_juice_berry", 40, 8, 10.0f));
 	}
 }

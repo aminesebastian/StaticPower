@@ -1,0 +1,13 @@
+{
+	"type": "staticpower:fluid_infusion_recipe",
+	"input": {
+		"tag": "forge:sand"
+	},
+	"fluid": {
+		"fluid": "minecraft:water",
+		"volume": 1000
+	},
+	"result": {
+		"item": "minecraft:clay"
+	}
+}

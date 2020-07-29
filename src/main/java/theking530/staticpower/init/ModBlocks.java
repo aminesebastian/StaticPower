@@ -85,7 +85,28 @@ public class ModBlocks {
 	public static StaticPowerOre OreRuby;
 	public static StaticPowerOre OreSapphire;
 
+	// Metal Blocks
+	public static StaticPowerBlock BlockCopper;
+	public static StaticPowerBlock BlockTin;
+	public static StaticPowerBlock BlockZinc;
+	public static StaticPowerBlock BlockAluminium;
+	public static StaticPowerBlock BlockMagnesium;
+	public static StaticPowerBlock BlockSilver;
+	public static StaticPowerBlock BlockLead;
+	public static StaticPowerBlock BlockPlatinum;
+	public static StaticPowerBlock BlockRuby;
+	public static StaticPowerBlock BlockSapphire;
+	public static StaticPowerBlock BlockTungsten;
+	public static StaticPowerBlock BlockBrass;
+	public static StaticPowerBlock BlockBronze;
+	public static StaticPowerBlock BlockRedstoneAlloy;
+	public static StaticPowerBlock BlockInertInfusion;
+	public static StaticPowerBlock BlockStaticMetal;
+	public static StaticPowerBlock BlockEnergizedMetal;
+	public static StaticPowerBlock BlockLumumMetal;
+
 	// Machines
+	public static StaticPowerBlock MachineBlock;
 	public static BlockVacuumChest VacuumChest;
 	public static BlockChargingStation ChargingStation;
 	public static BlockPoweredFurnace PoweredFurnace;
@@ -105,7 +126,7 @@ public class ModBlocks {
 	public static BlockAutoSolderingTable AutoSolderingTable;
 	public static BlockAutoCraftingTable AutoCraftingTable;
 	public static BlockFluidInfuser FluidInfuser;
-	
+
 	public static BlockSolarPanel SolarPanelBasic;
 	public static BlockSolarPanel SolarPanelAdvanced;
 	public static BlockSolarPanel SolarPanelStatic;
@@ -183,7 +204,49 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(OreSapphire = new StaticPowerOre("ore_sapphire", ToolType.PICKAXE, HarvestLevel.IRON_TOOL, 3.0f));
 		StaticPowerRegistry.preRegisterBlock(OreTungsten = new StaticPowerOre("ore_tungsten", ToolType.PICKAXE, HarvestLevel.DIAMOND_TOOL, 4.0f));
 
+		// Metal Blocks
+		StaticPowerRegistry.preRegisterBlock(BlockCopper = new StaticPowerBlock("block_copper",
+				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.STONE_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(1.9f)));
+		StaticPowerRegistry.preRegisterBlock(BlockTin = new StaticPowerBlock("block_tin",
+				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.STONE_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(1.7f)));
+		StaticPowerRegistry.preRegisterBlock(BlockZinc = new StaticPowerBlock("block_zinc",
+				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.STONE_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(1.0f)));
+		StaticPowerRegistry.preRegisterBlock(BlockAluminium = new StaticPowerBlock("block_aluminium",
+				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.STONE_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(1.0f)));
+		StaticPowerRegistry.preRegisterBlock(BlockMagnesium = new StaticPowerBlock("block_magnesium",
+				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.STONE_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(2.0f)));
+		StaticPowerRegistry.preRegisterBlock(BlockSilver = new StaticPowerBlock("block_silver",
+				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.IRON_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(1.5f)));
+		StaticPowerRegistry.preRegisterBlock(BlockLead = new StaticPowerBlock("block_lead",
+				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.IRON_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(1.5f)));
+		StaticPowerRegistry.preRegisterBlock(BlockPlatinum = new StaticPowerBlock("block_platinum",
+				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.IRON_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(2.0f)));
+		StaticPowerRegistry.preRegisterBlock(BlockRuby = new StaticPowerBlock("block_ruby",
+				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.IRON_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(3.0f)));
+		StaticPowerRegistry.preRegisterBlock(BlockSapphire = new StaticPowerBlock("block_sapphire",
+				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.IRON_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(3.0f)));
+		StaticPowerRegistry.preRegisterBlock(BlockTungsten = new StaticPowerBlock("block_tungsten",
+				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.DIAMOND_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(4.0f)));
+
+		StaticPowerRegistry.preRegisterBlock(BlockBrass = new StaticPowerBlock("block_brass",
+				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.STONE_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(1.7f)));
+		StaticPowerRegistry.preRegisterBlock(BlockBronze = new StaticPowerBlock("block_bronze",
+				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.STONE_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(1.7f)));
+
+		StaticPowerRegistry.preRegisterBlock(BlockRedstoneAlloy = new StaticPowerBlock("block_redstone_alloy",
+				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.STONE_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(1.7f)));
+		StaticPowerRegistry.preRegisterBlock(BlockInertInfusion = new StaticPowerBlock("block_inert_infusion",
+				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.STONE_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(1.7f)));
+
+		StaticPowerRegistry.preRegisterBlock(BlockStaticMetal = new StaticPowerBlock("block_static_metal",
+				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.IRON_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(2.5f)));
+		StaticPowerRegistry.preRegisterBlock(BlockEnergizedMetal = new StaticPowerBlock("block_energized_metal",
+				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.IRON_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(3.0f)));
+		StaticPowerRegistry.preRegisterBlock(BlockLumumMetal = new StaticPowerBlock("block_lumum_metal",
+				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.DIAMOND_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(4.0f)));
+
 		// Machines
+		StaticPowerRegistry.preRegisterBlock(MachineBlock = new StaticPowerBlock("machine_block", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
 		StaticPowerRegistry.preRegisterBlock(VacuumChest = new BlockVacuumChest("chest_vacuum"));
 		StaticPowerRegistry.preRegisterBlock(SolarPanelBasic = new BlockSolarPanel("solar_panel_basic", StaticPowerTiers.BASIC));
 		StaticPowerRegistry.preRegisterBlock(SolarPanelAdvanced = new BlockSolarPanel("solar_panel_advanced", StaticPowerTiers.ADVANCED));
@@ -208,7 +271,6 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(AutoSolderingTable = new BlockAutoSolderingTable("machine_industrial_soldering_table"));
 		StaticPowerRegistry.preRegisterBlock(AutoCraftingTable = new BlockAutoCraftingTable("machine_industrial_crafting_table"));
 		StaticPowerRegistry.preRegisterBlock(FluidInfuser = new BlockFluidInfuser("machine_fluid_infuser"));
-
 
 		StaticPowerRegistry.preRegisterBlock(BasicTank = new BlockTank("tank_basic"));
 		StaticPowerRegistry.preRegisterBlock(Pump = new BlockPump("pump"));

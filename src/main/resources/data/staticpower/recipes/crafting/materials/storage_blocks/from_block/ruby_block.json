@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{
+			"item": "staticpower:block_ruby"
+		}
+	],
+	"result": {
+		"item": "staticpower:gem_ruby",
+		"count": 9
+	}
+}

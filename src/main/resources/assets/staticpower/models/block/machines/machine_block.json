@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "staticpower:blocks/machines/sides/default_machine_side_item"
+    }
+}
