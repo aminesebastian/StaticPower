@@ -17,6 +17,7 @@
 		}
 	},
 	"result": {
-		"item": "staticpower:transistor"
+		"item": "staticpower:transistor",
+		"count": 2
 	}
 }

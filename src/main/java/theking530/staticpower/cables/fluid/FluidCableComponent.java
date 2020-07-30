@@ -32,12 +32,14 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	private final int capacity;
 	private FluidStack lastUpdateFluidStack;
 	private float lastUpdateFilledPercentage;
+	private float visualFilledPercentage;
 
 	public FluidCableComponent(String name, int capacity) {
 		super(name, CableNetworkModuleTypes.FLUID_NETWORK_MODULE);
 		this.capacity = capacity;
 		lastUpdateFluidStack = FluidStack.EMPTY;
 		lastUpdateFilledPercentage = 0.0f;
+		visualFilledPercentage = 0.0f;
 	}
 
 	@Override
@@ -52,6 +54,15 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 					updateClientRenderValues();
 				}
 			});
+		}
+	}
+
+	@Override
+	public void updateBeforeRendering(float partialTicks) {
+		if (visualFilledPercentage != lastUpdateFilledPercentage) {
+			float difference = visualFilledPercentage - lastUpdateFilledPercentage;
+			visualFilledPercentage -= difference * (partialTicks / 20.0f);
+
 		}
 	}
 
@@ -86,6 +97,10 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 			});
 			return output.get();
 		}
+	}
+
+	public float getVisualFilledPercentage() {
+		return visualFilledPercentage;
 	}
 
 	public int getCapacity() {

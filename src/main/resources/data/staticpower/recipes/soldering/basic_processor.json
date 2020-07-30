@@ -1,9 +1,9 @@
 {
 	"type": "staticpower:soldering_recipe",
 	"pattern": [
-		"   ",
-		"prp",
-		"www"
+		"pwp",
+		"wrw",
+		"pwp"
 	],
 	"key": {
 		"r": {

@@ -59,7 +59,7 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
 		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", 2, this::canMoveFromInputToProcessing, () -> true, this::movingCompleted, true));
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 10, this::canProcess, this::canProcess, this::processingCompleted, true));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 10, this::canProcess, this::canProcess, this::processingCompleted, true).setShouldControlBlockState(true));
 		processingComponent.setProcessingTime(DEFAULT_PROCESSING_TIME);
 
 		registerComponent(new InputServoComponent("InputServo", 4, inputInventory, 0));

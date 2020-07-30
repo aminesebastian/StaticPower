@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+	"staticpower:plate_energized",
+	"staticpower:ingot_energized"
+  ]
+}

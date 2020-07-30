@@ -1,6 +1,6 @@
 {
     "parent": "staticpower:block/machines/machine_tree_farmer",
-    "textures": {
-		"side": "staticpower:blocks/machines/sides/green_machine_side_item"
-    }
+	"textures": {
+		"io_frame": "staticpower:blocks/empty_texture"
+	}
 }

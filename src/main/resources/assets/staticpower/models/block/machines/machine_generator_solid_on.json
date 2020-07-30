@@ -1,0 +1,6 @@
+{
+	"parent": "staticpower:block/machines/machine_generator_solid",
+	"textures": {
+		"front_overlay": "staticpower:blocks/machines/generator_solid_face_on"
+	}
+}

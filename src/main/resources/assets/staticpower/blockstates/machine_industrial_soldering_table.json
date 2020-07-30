@@ -1,8 +1,12 @@
 {
     "variants": {
-		"facing=north": { "model": "staticpower:block/machines/machine_industrial_soldering_table" },
-        "facing=south": { "model": "staticpower:block/machines/machine_industrial_soldering_table", "y": 180 },
-        "facing=west":  { "model": "staticpower:block/machines/machine_industrial_soldering_table", "y": 270 },
-        "facing=east":  { "model": "staticpower:block/machines/machine_industrial_soldering_table", "y": 90 }
+		"facing=north,is_on=false": { "model": "staticpower:block/machines/machine_industrial_soldering_table" },
+        "facing=south,is_on=false": { "model": "staticpower:block/machines/machine_industrial_soldering_table", "y": 180 },
+        "facing=west,is_on=false":  { "model": "staticpower:block/machines/machine_industrial_soldering_table", "y": 270 },
+        "facing=east,is_on=false":  { "model": "staticpower:block/machines/machine_industrial_soldering_table", "y": 90 },
+		"facing=north,is_on=true": { "model": "staticpower:block/machines/machine_industrial_soldering_table_on" },
+        "facing=south,is_on=true": { "model": "staticpower:block/machines/machine_industrial_soldering_table_on", "y": 180 },
+        "facing=west,is_on=true":  { "model": "staticpower:block/machines/machine_industrial_soldering_table_on", "y": 270 },
+        "facing=east,is_on=true":  { "model": "staticpower:block/machines/machine_industrial_soldering_table_on", "y": 90 }
     }
 }

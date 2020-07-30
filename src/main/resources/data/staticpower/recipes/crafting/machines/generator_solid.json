@@ -1,0 +1,25 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ttt",
+		"tmt",
+		"pfp"
+	],
+	"key": {
+		"t": {
+			"tag": "forge:ingots/iron"
+		},
+		"p": {
+			"tag": "forge:plates/iron"
+		},
+		"f": {
+			"item": "minecraft:flint_and_steel"
+		},
+		"m": {
+			"item": "staticpower:machine_block_iron"
+		}
+	},
+	"result": {
+		"item": "staticpower:machine_generator_solid"
+	}
+}

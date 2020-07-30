@@ -53,6 +53,16 @@ public abstract class AbstractTileEntityComponent {
 	public void postProcessUpdate() {
 	}
 
+	/**
+	 * WARNING: This method is raised on the render thread, this should only update
+	 * visual values and not gameplay properties. Only called on the client.
+	 * 
+	 * @param partialTicks
+	 */
+	public void updateBeforeRendering(float partialTicks) {
+
+	}
+
 	public void onNeighborChanged(BlockState currentState, BlockPos neighborPos) {
 
 	}

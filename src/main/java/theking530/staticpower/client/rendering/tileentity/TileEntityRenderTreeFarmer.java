@@ -18,7 +18,7 @@ public class TileEntityRenderTreeFarmer extends StaticPowerTileEntitySpecialRend
 	@Override
 	public void renderTileEntityBase(TileEntityTreeFarm tileEntity, BlockPos pos, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
 		if (!tileEntity.fluidTankComponent.isEmpty()) {
-			float filledPercentage = (float) tileEntity.fluidTankComponent.getFluidAmount() / tileEntity.fluidTankComponent.getCapacity();
+			float filledPercentage = tileEntity.fluidTankComponent.getVisualFillLevel();
 
 			drawFluidQuad(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.28f, 0.3125f, 0.001f), new Vector3D(0.44f * 0.5f, filledPercentage * 0.03f, 1.0f), new Vector4D(0.0f, 1.0f - filledPercentage, 0.6f, 0.1f));
 			drawFluidQuad(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.5f, 0.3125f, 0.001f), new Vector3D(0.44f * 0.5f, filledPercentage * 0.03f, 1.0f), new Vector4D(1.0f, 1.0f - filledPercentage, 0.4f, 0.1f));

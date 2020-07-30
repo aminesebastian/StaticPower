@@ -1,9 +1,6 @@
 {
-    "parent": "staticpower:block/machines/base_machine_model",
+    "parent": "staticpower:block/machines/base_blocks/machine_block_basic",
     "textures": {
-		"side": "staticpower:blocks/machines/sides/default_machine_side",
-		"front": "staticpower:blocks/machines/sides/default_machine_side_front",
-		"face": "staticpower:blocks/machines/fluid_infuser_face_off",
-		"particle": "staticpower:blocks/machines/sides/default_machine_side"
+		"front_overlay": "staticpower:blocks/machines/fluid_infuser_face_off"
     }
 }

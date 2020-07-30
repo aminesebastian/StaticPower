@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+	"staticpower:plate_static",
+	"staticpower:ingot_static"
+  ]
+}

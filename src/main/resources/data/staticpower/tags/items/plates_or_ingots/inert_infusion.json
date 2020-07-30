@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+	"staticpower:plate_inert_infusion",
+	"staticpower:ingot_inert_infusion"
+  ]
+}

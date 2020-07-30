@@ -17,6 +17,7 @@
 		}
 	},
 	"result": {
-		"item": "staticpower:servo"
+		"item": "staticpower:servo",
+		"count": 3
 	}
 }

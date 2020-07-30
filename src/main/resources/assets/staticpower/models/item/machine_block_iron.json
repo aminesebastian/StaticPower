@@ -1,0 +1,6 @@
+{
+	"parent": "staticpower:block/machines/base_blocks/machine_block_iron",
+	"textures": {
+		"io_frame": "staticpower:blocks/empty_texture"
+	}
+}

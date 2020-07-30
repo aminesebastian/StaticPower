@@ -25,10 +25,10 @@ public class TileEntityRenderTank extends StaticPowerTileEntitySpecialRenderer<T
 
 	@Override
 	protected void renderTileEntityBase(TileEntityTank tileEntity, BlockPos pos, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
-		if (tileEntity.fluidTankComponent.getFluidAmount() > 0) {
+		if (tileEntity.fluidTankComponent.getVisualFillLevel() > 0) {
 			TextureAtlasSprite sprite = GuiDrawUtilities.getStillFluidSprite(tileEntity.fluidTankComponent.getFluid());
 			Color fluidColor = GuiDrawUtilities.getFluidColor(tileEntity.fluidTankComponent.getFluid());
-			float height = (float) tileEntity.fluidTankComponent.getFluidAmount() / tileEntity.fluidTankComponent.getCapacity();
+			float height = tileEntity.fluidTankComponent.getVisualFillLevel();
 			CUBE_MODEL.drawPreviewCube(new Vector3f(2.01f * TEXEL, 1.99f * TEXEL, 2.01f * TEXEL), new Vector3f(11.95f * TEXEL, 11.98f * TEXEL * height, 11.95f * TEXEL), fluidColor, matrixStack, sprite, new Vector2D(1.0f, height));
 		}
 		

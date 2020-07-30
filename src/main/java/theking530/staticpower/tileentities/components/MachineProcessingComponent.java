@@ -4,7 +4,9 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
+import theking530.staticpower.tileentities.StaticPowerMachineBlock;
 
 public class MachineProcessingComponent extends AbstractTileEntityComponent {
 	private final boolean serverOnly;
@@ -14,11 +16,13 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 
 	private int processingTime;
 	private int currentProcessingTime;
+	private int blockStateOffTimer;
 	private boolean processing;
 	private boolean processingPaused;
+	private boolean shouldControlOnBlockState;
 
-	public MachineProcessingComponent(String name, int processingTime, @Nonnull Supplier<Boolean> canStartProcessingCallback, @Nonnull Supplier<Boolean> canContinueProcessingCallback, @Nonnull Supplier<Boolean> processingEndedCallback,
-			boolean serverOnly) {
+	public MachineProcessingComponent(String name, int processingTime, @Nonnull Supplier<Boolean> canStartProcessingCallback, @Nonnull Supplier<Boolean> canContinueProcessingCallback,
+			@Nonnull Supplier<Boolean> processingEndedCallback, boolean serverOnly) {
 		super(name);
 		this.canStartProcessingCallback = canStartProcessingCallback;
 		this.canContinueProcessingCallback = canContinueProcessingCallback;
@@ -46,6 +50,7 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 			if (processingPaused) {
 				return;
 			}
+			setIsOnBlockState(true);
 			if (canContinueProcessingCallback.get()) {
 				if (currentProcessingTime < processingTime) {
 					currentProcessingTime++;
@@ -57,6 +62,15 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 				}
 			} else {
 				processing = false;
+			}
+		} else {
+			if (shouldControlOnBlockState && getIsOnBlockState()) {
+				if (blockStateOffTimer > 20) {
+					setIsOnBlockState(false);
+					blockStateOffTimer = 0;
+				} else {
+					blockStateOffTimer++;
+				}
 			}
 		}
 	}
@@ -75,6 +89,8 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		if (!processing) {
 			processing = true;
 			processingPaused = false;
+
+			setIsOnBlockState(true);
 		} else if (processingPaused) {
 			continueProcessing();
 		}
@@ -85,7 +101,7 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		if (serverOnly && getWorld().isRemote) {
 			return;
 		}
-
+		setIsOnBlockState(false);
 		processingPaused = true;
 	}
 
@@ -94,7 +110,7 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		if (serverOnly && getWorld().isRemote) {
 			return;
 		}
-
+		setIsOnBlockState(true);
 		processingPaused = false;
 	}
 
@@ -103,13 +119,15 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		if (serverOnly && getWorld().isRemote) {
 			return;
 		}
-
 		processing = false;
 		currentProcessingTime = 0;
 	}
 
 	private boolean processingCompleted() {
-		return processingEndedCallback.get();
+		if (processingEndedCallback.get()) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -162,6 +180,40 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 
 	public int getProgressScaled(int scaleValue) {
 		return (int) (((float) (currentProcessingTime) / processingTime) * scaleValue);
+	}
+
+	/**
+	 * Sets this machine processing component responsible for maintaining the IS_ON
+	 * blockstate of the owning tile entity's block.
+	 * 
+	 * @param shouldControl
+	 * @return
+	 */
+	public MachineProcessingComponent setShouldControlBlockState(boolean shouldControl) {
+		this.shouldControlOnBlockState = shouldControl;
+		return this;
+	}
+
+	protected void setIsOnBlockState(boolean on) {
+		if (!getWorld().isRemote && shouldControlOnBlockState) {
+			BlockState currentState = getWorld().getBlockState(getPos());
+			if (currentState.has(StaticPowerMachineBlock.IS_ON)) {
+				if (currentState.get(StaticPowerMachineBlock.IS_ON) != on) {
+					getWorld().setBlockState(getPos(), currentState.with(StaticPowerMachineBlock.IS_ON, on), 2);
+				}
+			}
+		}
+	}
+
+	protected boolean getIsOnBlockState() {
+		if (!shouldControlOnBlockState) {
+			return false;
+		}
+		BlockState currentState = getWorld().getBlockState(getPos());
+		if (currentState.has(StaticPowerMachineBlock.IS_ON)) {
+			return currentState.get(StaticPowerMachineBlock.IS_ON);
+		}
+		return false;
 	}
 
 	@Override

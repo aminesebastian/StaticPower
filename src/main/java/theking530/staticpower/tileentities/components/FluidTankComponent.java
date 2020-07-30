@@ -74,10 +74,11 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 		}
 	}
 
-	public void updateVisualFillLevel(float partialTicks) {
+	@Override
+	public void updateBeforeRendering(float partialTicks) {
 		if (visualFillLevel != getFluidAmount()) {
 			float difference = visualFillLevel - getFluidAmount();
-			visualFillLevel -= difference * (partialTicks /20.0f);
+			visualFillLevel -= difference * (partialTicks / 20.0f);
 
 		}
 	}

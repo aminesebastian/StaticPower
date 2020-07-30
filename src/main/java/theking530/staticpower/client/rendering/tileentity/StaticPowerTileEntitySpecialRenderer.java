@@ -34,6 +34,7 @@ import theking530.common.utilities.Vector3D;
 import theking530.common.utilities.Vector4D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.tileentities.TileEntityBase;
+import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.TileEntityDigistore;
 
 @SuppressWarnings("deprecation")
@@ -62,6 +63,12 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 
 		// Draw the tile entity.
 		try {
+			// Update the rendering values for the components.
+			for (AbstractTileEntityComponent comp : tileEntity.getComponents()) {
+				comp.updateBeforeRendering(partialTicks);
+			}
+
+			// Render the tile entity.
 			renderTileEntityBase(tileEntity, tileEntityPos, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 		} catch (Exception e) {
 			StaticPower.LOGGER.error(String.format("An error occured when attempting to draw tile entity base: %1$s.", tileEntity), e);
@@ -99,7 +106,8 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 	 *                        {@link TileEntity} is rendering at.
 	 * @param combinedOverlay The combined overlay.
 	 */
-	protected void drawItemInWorld(T tileEntity, ItemStack item, TransformType transformType, Vector3D offset, Vector3D scale, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+	protected void drawItemInWorld(T tileEntity, ItemStack item, TransformType transformType, Vector3D offset, Vector3D scale, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer,
+			int combinedLight, int combinedOverlay) {
 		matrixStack.push();
 		matrixStack.translate(offset.getX(), offset.getY(), offset.getZ());
 		matrixStack.scale(scale.getX(), scale.getY(), scale.getZ());
@@ -108,7 +116,8 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 		matrixStack.pop();
 	}
 
-	protected void drawFlatItemInWorld(TileEntityDigistore tile, @Nonnull ItemStack itemStack, Vector3D offset, Vector2D scale, float partialTickTime, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+	protected void drawFlatItemInWorld(TileEntityDigistore tile, @Nonnull ItemStack itemStack, Vector3D offset, Vector2D scale, float partialTickTime, MatrixStack matrixStack,
+			IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
 		// Skip empty items.
 		if (itemStack.isEmpty()) {
 			return;
@@ -166,7 +175,8 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 	 * @param combinedLight
 	 * @param combinedOverlay
 	 */
-	protected void drawTextInWorld(String text, T tileEntity, Color color, Vector3D offset, float scale, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+	protected void drawTextInWorld(String text, T tileEntity, Color color, Vector3D offset, float scale, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight,
+			int combinedOverlay) {
 		if (text == null || text.isEmpty())
 			return;
 
@@ -205,14 +215,14 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 
 		matrixStack.translate(offset.getX(), offset.getY(), offset.getZ());
 		matrixStack.scale(scale.getX(), scale.getY(), scale.getZ());
-		builder.pos(matrixStack.getLast().getMatrix(), 0.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU() + (uDelta) * uv.getZ(), sprite.getMinV() + (vDelta) * uv.getY())
-				.lightmap(combinedLight).normal(1, 0, 0).endVertex();
-		builder.pos(matrixStack.getLast().getMatrix(), 0.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU() + (uDelta) * uv.getZ(), sprite.getMinV() + (vDelta) * uv.getW())
-				.lightmap(combinedLight).normal(1, 0, 0).endVertex();
-		builder.pos(matrixStack.getLast().getMatrix(), 1.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU() + (uDelta) * uv.getX(), sprite.getMinV() + (vDelta) * uv.getW())
-				.lightmap(combinedLight).normal(1, 0, 0).endVertex();
-		builder.pos(matrixStack.getLast().getMatrix(), 1.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU() + (uDelta) * uv.getX(), sprite.getMinV() + (vDelta) * uv.getY())
-				.lightmap(combinedLight).normal(1, 0, 0).endVertex();
+		builder.pos(matrixStack.getLast().getMatrix(), 0.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha())
+				.tex(sprite.getMinU() + (uDelta) * uv.getZ(), sprite.getMinV() + (vDelta) * uv.getY()).lightmap(combinedLight).normal(1, 0, 0).endVertex();
+		builder.pos(matrixStack.getLast().getMatrix(), 0.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha())
+				.tex(sprite.getMinU() + (uDelta) * uv.getZ(), sprite.getMinV() + (vDelta) * uv.getW()).lightmap(combinedLight).normal(1, 0, 0).endVertex();
+		builder.pos(matrixStack.getLast().getMatrix(), 1.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha())
+				.tex(sprite.getMinU() + (uDelta) * uv.getX(), sprite.getMinV() + (vDelta) * uv.getW()).lightmap(combinedLight).normal(1, 0, 0).endVertex();
+		builder.pos(matrixStack.getLast().getMatrix(), 1.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha())
+				.tex(sprite.getMinU() + (uDelta) * uv.getX(), sprite.getMinV() + (vDelta) * uv.getY()).lightmap(combinedLight).normal(1, 0, 0).endVertex();
 		matrixStack.pop();
 	}
 

@@ -17,6 +17,7 @@
 		}
 	},
 	"result": {
-		"item": "staticpower:internal_clock"
+		"item": "staticpower:internal_clock",
+		"count": 2
 	}
 }

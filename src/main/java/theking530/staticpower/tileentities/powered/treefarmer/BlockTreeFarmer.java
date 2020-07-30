@@ -1,7 +1,6 @@
 package theking530.staticpower.tileentities.powered.treefarmer;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
@@ -9,20 +8,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.ModelBakeEvent;
-import theking530.staticpower.client.rendering.blocks.GreenMachineBakedModel;
 import theking530.staticpower.init.ModTileEntityTypes;
-import theking530.staticpower.tileentities.StaticPowerDefaultMachineBlock;
+import theking530.staticpower.tileentities.StaticPowerMachineBlock;
 
-public class BlockTreeFarmer extends StaticPowerDefaultMachineBlock {
+public class BlockTreeFarmer extends StaticPowerMachineBlock {
 
 	public BlockTreeFarmer(String name) {
 		super(name);
-	}
-
-	@Override
-	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
-		return new GreenMachineBakedModel(existingModel);
 	}
 
 	@Override

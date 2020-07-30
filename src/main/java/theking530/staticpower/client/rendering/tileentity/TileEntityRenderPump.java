@@ -25,7 +25,6 @@ public class TileEntityRenderPump extends StaticPowerTileEntitySpecialRenderer<T
 
 	@Override
 	protected void renderTileEntityBase(TileEntityPump tileEntity, BlockPos pos, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
-		tileEntity.fluidTankComponent.updateVisualFillLevel(partialTicks);
 		if (tileEntity.fluidTankComponent.getFluidAmount() > 0) {
 			TextureAtlasSprite sprite = GuiDrawUtilities.getStillFluidSprite(tileEntity.fluidTankComponent.getFluid());
 			Color fluidColor = GuiDrawUtilities.getFluidColor(tileEntity.fluidTankComponent.getFluid());

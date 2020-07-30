@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ttt",
+		"tmt",
+		"tpt"
+	],
+	"key": {
+		"t": {
+			"tag": "forge:ingots/tin"
+		},
+		"m": {
+			"item": "staticpower:machine_block_iron"
+		},
+		"p": {
+			"item": "staticpower:processor_basic"
+		}
+	},
+	"result": {
+		"item": "staticpower:machine_block_basic"
+	}
+}

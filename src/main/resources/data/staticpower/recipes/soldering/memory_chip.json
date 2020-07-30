@@ -17,6 +17,7 @@
 		}
 	},
 	"result": {
-		"item": "staticpower:memory_chip"
+		"item": "staticpower:memory_chip",
+		"count": 2
 	}
 }

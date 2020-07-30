@@ -15,9 +15,9 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import theking530.staticpower.client.rendering.blocks.BatteryBlockedBakedModel;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModTileEntityTypes;
-import theking530.staticpower.tileentities.StaticPowerDefaultMachineBlock;
+import theking530.staticpower.tileentities.StaticPowerMachineBlock;
 
-public class BlockBattery extends StaticPowerDefaultMachineBlock {
+public class BlockBattery extends StaticPowerMachineBlock {
 
 	public ResourceLocation tier;
 

@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+	"staticpower:plate_redstone_alloy",
+	"staticpower:ingot_redstone_alloy"
+  ]
+}

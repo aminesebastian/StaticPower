@@ -25,8 +25,7 @@ public class TileEntityRenderFluidInfuser extends StaticPowerTileEntitySpecialRe
 	public void renderTileEntityBase(TileEntityFluidInfuser tileEntity, BlockPos pos, float partialTicks,
 			MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
 		if (!tileEntity.fluidTankComponent.isEmpty()) {
-			float filledPercentage = (float) tileEntity.fluidTankComponent.getFluidAmount()
-					/ tileEntity.fluidTankComponent.getCapacity();
+			float filledPercentage = tileEntity.fluidTankComponent.getVisualFillLevel();
 
 			float firstSectionHeight = SDMath.clamp(filledPercentage, 0.0f, 0.2f) * 5 * 0.095f;
 			float secondSectionHeight = SDMath.clamp(filledPercentage - 0.2f, 0.0f, 0.6f) * 5 * 0.095f;

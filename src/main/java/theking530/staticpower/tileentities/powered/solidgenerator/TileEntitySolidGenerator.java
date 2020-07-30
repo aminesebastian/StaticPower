@@ -6,6 +6,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.Direction.AxisDirection;
 import net.minecraftforge.common.ForgeHooks;
 import theking530.common.utilities.SDMath;
 import theking530.staticpower.init.ModTileEntityTypes;
@@ -45,7 +46,8 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1, MachineSideMode.Never));
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
 		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", 2, this::canMoveFromInputToProcessing, () -> true, this::movingCompleted, true));
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 5, this::canProcess, this::canProcess, this::processingCompleted, true));
+		registerComponent(
+				processingComponent = new MachineProcessingComponent("ProcessingComponent", 5, this::canProcess, this::canProcess, this::processingCompleted, true).setShouldControlBlockState(true));
 
 		registerComponent(new PowerDistributionComponent("PowerDistributor", energyStorage.getStorage()));
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));
@@ -91,13 +93,18 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 	public void process() {
 		if (processingComponent.isProcessing()) {
 			// Randomly generate smoke and flame particles.
-			float randomOffset = (2 * RANDOM.nextFloat()) - 1.0f;
-			if (SDMath.diceRoll(0.25f)) {
+			if (processingComponent.isPerformingWork()) {
+				float randomOffset = (2 * RANDOM.nextFloat()) - 1.0f;
+				if (SDMath.diceRoll(0.25f)) {
 
-				randomOffset /= 3.5f;
-				Vector3f forwardVector = SDMath.transformVectorByDirection(getFacingDirection(), new Vector3f(randomOffset + 0.5f, 0.32f, -1.05f));
-				getWorld().addParticle(ParticleTypes.SMOKE, getPos().getX() + forwardVector.getX(), getPos().getY() + forwardVector.getY(), getPos().getZ() + forwardVector.getZ(), 0.0f, 0.01f, 0.0f);
-				getWorld().addParticle(ParticleTypes.FLAME, getPos().getX() + forwardVector.getX(), getPos().getY() + forwardVector.getY(), getPos().getZ() + forwardVector.getZ(), 0.0f, 0.01f, 0.0f);
+					randomOffset /= 3.5f;
+					float forwardOffset = getFacingDirection().getAxisDirection() == AxisDirection.POSITIVE ? -1.05f : -0.05f;
+					Vector3f forwardVector = SDMath.transformVectorByDirection(getFacingDirection(), new Vector3f(randomOffset + 0.5f, 0.32f, forwardOffset));
+					getWorld().addParticle(ParticleTypes.SMOKE, getPos().getX() + forwardVector.getX(), getPos().getY() + forwardVector.getY(), getPos().getZ() + forwardVector.getZ(), 0.0f, 0.01f,
+							0.0f);
+					getWorld().addParticle(ParticleTypes.FLAME, getPos().getX() + forwardVector.getX(), getPos().getY() + forwardVector.getY(), getPos().getZ() + forwardVector.getZ(), 0.0f, 0.01f,
+							0.0f);
+				}
 			}
 
 			if (!getWorld().isRemote) {

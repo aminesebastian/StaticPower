@@ -9,6 +9,7 @@ import theking530.staticpower.blocks.AdvancedEarth;
 import theking530.staticpower.blocks.EnergizedGrass;
 import theking530.staticpower.blocks.StaticGrass;
 import theking530.staticpower.blocks.StaticPowerBlock;
+import theking530.staticpower.blocks.StaticPowerCutoutBlock;
 import theking530.staticpower.blocks.StaticPowerOre;
 import theking530.staticpower.blocks.StaticPowerRotatePillarBlock;
 import theking530.staticpower.blocks.crops.BaseSimplePlant;
@@ -106,7 +107,10 @@ public class ModBlocks {
 	public static StaticPowerBlock BlockLumumMetal;
 
 	// Machines
-	public static StaticPowerBlock MachineBlock;
+	public static StaticPowerCutoutBlock MachineBlockIron;
+	public static StaticPowerCutoutBlock MachineBlockBasic;
+	public static StaticPowerCutoutBlock MachineBlockStatic;	
+	
 	public static BlockVacuumChest VacuumChest;
 	public static BlockChargingStation ChargingStation;
 	public static BlockPoweredFurnace PoweredFurnace;
@@ -245,8 +249,12 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(BlockLumumMetal = new StaticPowerBlock("block_lumum_metal",
 				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.DIAMOND_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(4.0f)));
 
+		// Machine Blocks
+		StaticPowerRegistry.preRegisterBlock(MachineBlockIron = new StaticPowerCutoutBlock("machine_block_iron", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
+		StaticPowerRegistry.preRegisterBlock(MachineBlockBasic = new StaticPowerCutoutBlock("machine_block_basic", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
+		StaticPowerRegistry.preRegisterBlock(MachineBlockStatic = new StaticPowerCutoutBlock("machine_block_static", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
+		
 		// Machines
-		StaticPowerRegistry.preRegisterBlock(MachineBlock = new StaticPowerBlock("machine_block", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
 		StaticPowerRegistry.preRegisterBlock(VacuumChest = new BlockVacuumChest("chest_vacuum"));
 		StaticPowerRegistry.preRegisterBlock(SolarPanelBasic = new BlockSolarPanel("solar_panel_basic", StaticPowerTiers.BASIC));
 		StaticPowerRegistry.preRegisterBlock(SolarPanelAdvanced = new BlockSolarPanel("solar_panel_advanced", StaticPowerTiers.ADVANCED));
