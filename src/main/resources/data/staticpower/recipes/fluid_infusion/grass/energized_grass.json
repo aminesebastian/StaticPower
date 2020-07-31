@@ -1,0 +1,13 @@
+{
+	"type": "staticpower:fluid_infusion_recipe",
+	"input": {
+		"tag": "forge:dirt"
+	},
+	"fluid": {
+		"fluid": "staticpower:fluid_energized",
+		"volume": 1000
+	},
+	"result": {
+		"item": "staticpower:grass_energized"
+	}
+}

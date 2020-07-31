@@ -109,7 +109,10 @@ public class ModBlocks {
 	// Machines
 	public static StaticPowerCutoutBlock MachineBlockIron;
 	public static StaticPowerCutoutBlock MachineBlockBasic;
+	public static StaticPowerCutoutBlock MachineBlockAdvanced;
 	public static StaticPowerCutoutBlock MachineBlockStatic;	
+	public static StaticPowerCutoutBlock MachineBlockEnergized;
+	public static StaticPowerCutoutBlock MachineBlockLumum;
 	
 	public static BlockVacuumChest VacuumChest;
 	public static BlockChargingStation ChargingStation;
@@ -252,7 +255,10 @@ public class ModBlocks {
 		// Machine Blocks
 		StaticPowerRegistry.preRegisterBlock(MachineBlockIron = new StaticPowerCutoutBlock("machine_block_iron", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
 		StaticPowerRegistry.preRegisterBlock(MachineBlockBasic = new StaticPowerCutoutBlock("machine_block_basic", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
+		StaticPowerRegistry.preRegisterBlock(MachineBlockAdvanced = new StaticPowerCutoutBlock("machine_block_advanced", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
 		StaticPowerRegistry.preRegisterBlock(MachineBlockStatic = new StaticPowerCutoutBlock("machine_block_static", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
+		StaticPowerRegistry.preRegisterBlock(MachineBlockEnergized = new StaticPowerCutoutBlock("machine_block_energized", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
+		StaticPowerRegistry.preRegisterBlock(MachineBlockLumum = new StaticPowerCutoutBlock("machine_block_lumum", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
 		
 		// Machines
 		StaticPowerRegistry.preRegisterBlock(VacuumChest = new BlockVacuumChest("chest_vacuum"));

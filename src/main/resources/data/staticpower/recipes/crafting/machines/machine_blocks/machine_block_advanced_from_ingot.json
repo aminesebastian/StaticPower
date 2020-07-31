@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ttt",
+		"tmt",
+		"tpt"
+	],
+	"key": {
+		"t": {
+			"tag": "forge:ingots/gold"
+		},
+		"m": {
+			"item": "staticpower:machine_block_basic"
+		},
+		"p": {
+			"item": "staticpower:processor_advanced"
+		}
+	},
+	"result": {
+		"item": "staticpower:machine_block_advanced"
+	}
+}
+

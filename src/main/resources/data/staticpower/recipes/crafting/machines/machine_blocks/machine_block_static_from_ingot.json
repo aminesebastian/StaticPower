@@ -10,7 +10,7 @@
 			"item": "staticpower:ingot_static"
 		},
 		"m": {
-			"item": "staticpower:machine_block_basic"
+			"item": "staticpower:machine_block_advanced"
 		},
 		"p": {
 			"item": "staticpower:processor_static"

@@ -1,0 +1,13 @@
+{
+	"type": "staticpower:fluid_infusion_recipe",
+	"input": {
+		"tag": "minecraft:logs"
+	},
+	"fluid": {
+		"fluid": "staticpower:fluid_energized",
+		"volume": 600
+	},
+	"result": {
+		"item": "staticpower:log_energized"
+	}
+}

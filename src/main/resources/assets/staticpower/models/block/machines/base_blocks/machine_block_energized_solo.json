@@ -1,0 +1,7 @@
+{
+	"parent": "staticpower:block/machines/base_blocks/machine_block_energized",
+	"textures": {
+		"front": "staticpower:blocks/machines/sides/energized_machine_side",
+		"io_frame": "staticpower:blocks/empty_texture"
+	}
+}

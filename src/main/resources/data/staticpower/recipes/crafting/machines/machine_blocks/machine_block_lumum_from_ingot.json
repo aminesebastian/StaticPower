@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ttt",
+		"tmt",
+		"tpt"
+	],
+	"key": {
+		"t": {
+			"item": "staticpower:ingot_lumum"
+		},
+		"m": {
+			"item": "staticpower:machine_block_energized"
+		},
+		"p": {
+			"item": "staticpower:processor_lumum"
+		}
+	},
+	"result": {
+		"item": "staticpower:machine_block_lumum"
+	}
+}
