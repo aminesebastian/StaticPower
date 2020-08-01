@@ -1,8 +1,0 @@
-{
-    "parent": "block/template_farmland",
-    "textures": {
-        "particle": "staticpower:blocks/decorative/advanced_earth",
-        "dirt": "staticpower:blocks/decorative/advanced_earth",
-        "top": "staticpower:blocks/decorative/advanced_earth_top"
-    }
-}

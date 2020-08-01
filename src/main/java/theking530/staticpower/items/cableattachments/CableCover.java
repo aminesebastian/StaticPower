@@ -1,8 +1,10 @@
 package theking530.staticpower.items.cableattachments;
 
+import net.minecraft.block.AbstractGlassBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -65,9 +67,9 @@ public class CableCover extends Item implements ICustomModelSupplier {
 	public static boolean isValidForCover(Block block) {
 		BlockState defaultState = block.getDefaultState();
 
-		// block.hasTileEntity(defaultState) will skip tile entites as needed.
+		// block.hasTileEntity(defaultState) will skip tile entites as needed. We only non normal cube blocks that are made of glass.
 		if (defaultState.getRenderType() != BlockRenderType.MODEL || !defaultState.isNormalCube(EmptyBlockReader.INSTANCE, BlockPos.ZERO)) {
-			return false;
+			return block instanceof AbstractGlassBlock;
 		}
 		return true;
 	}

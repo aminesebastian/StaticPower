@@ -198,7 +198,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 					// If the extracted amount is different than the amount remaining after the
 					// attempt to insert into the player's inventory, that means at least one item
 					// was inserted.
-					if (simulatedExtract.getCount() != actualSizeTargetItem.getCount()) {
+					if (simulatedExtract.getCount() != insertAttempt.getCount()) {
 						// Perform the extract for real now with the amount we were able to insert into
 						// the player's inventory.
 						ItemStack extracted = digistoreModule.extractItem(simulatedExtract, simulatedExtract.getCount() - insertAttempt.getCount(), false);

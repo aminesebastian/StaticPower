@@ -61,6 +61,6 @@ public class GuiBasicFarmer extends StaticPowerTileEntityGui<ContainerBasicFarme
 	public void updateData() {
 		super.updateData();
 		infoTab.setText("Farmer", "Farms plants in a " + TextFormatting.YELLOW + getTileEntity().getRadius() + " block=radius.==Requires " + TextFormatting.DARK_AQUA + "water" + TextFormatting.RESET
-				+ " to operate=but other fluids may yield=better growth results...==Current Growth Factor: " + TextFormatting.GOLD + getTileEntity().getGrowthBonus() + "%");
+				+ " to operate=but other fluids may yield=better growth results...==Current Growth Factor: " + TextFormatting.GOLD + getTileEntity().getGrowthBonus() * 100.0f + "%");
 	}
 }

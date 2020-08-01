@@ -170,7 +170,7 @@ public class DigistoreInventoryComponent extends InventoryComponent implements I
 				}
 			}
 			if (output.getCount() >= count) {
-				return output;
+				break;
 			}
 		}
 		// Raise the onChanged method if we were able to extract contents.

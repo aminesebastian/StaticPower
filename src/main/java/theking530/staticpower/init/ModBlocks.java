@@ -5,7 +5,7 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraftforge.common.ToolType;
 import theking530.staticpower.StaticPowerRegistry;
-import theking530.staticpower.blocks.AdvancedEarth;
+import theking530.staticpower.blocks.StaticPowerFarmland;
 import theking530.staticpower.blocks.EnergizedGrass;
 import theking530.staticpower.blocks.StaticGrass;
 import theking530.staticpower.blocks.StaticPowerBlock;
@@ -54,7 +54,11 @@ public class ModBlocks {
 	public static Lamp EnergizedLamp;
 	public static Lamp LumumLamp;
 	public static StaticPowerGlassBlock ObsidianGlass;
-	public static AdvancedEarth AdvancedEarth;
+	
+	public static StaticPowerFarmland StaticFarmland;
+	public static StaticPowerFarmland EnergizedFarmland;
+	public static StaticPowerFarmland LumumFarmland;
+	
 	public static StaticGrass StaticGrass;
 	public static EnergizedGrass EnergizedGrass;
 
@@ -179,7 +183,11 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(EnergizedLamp = new Lamp("lamp_energized"));
 		StaticPowerRegistry.preRegisterBlock(LumumLamp = new Lamp("lamp_lumum"));
 		StaticPowerRegistry.preRegisterBlock(ObsidianGlass = new StaticPowerGlassBlock("glass_obsidian"));
-		StaticPowerRegistry.preRegisterBlock(AdvancedEarth = new AdvancedEarth("advanced_earth"));
+		
+		StaticPowerRegistry.preRegisterBlock(StaticFarmland = new StaticPowerFarmland("farmland_static"));
+		StaticPowerRegistry.preRegisterBlock(EnergizedFarmland = new StaticPowerFarmland("farmland_energized"));
+		StaticPowerRegistry.preRegisterBlock(LumumFarmland = new StaticPowerFarmland("farmland_lumum"));
+		
 		StaticPowerRegistry.preRegisterBlock(StaticGrass = new StaticGrass("grass_static"));
 		StaticPowerRegistry.preRegisterBlock(EnergizedGrass = new EnergizedGrass("grass_energized"));
 

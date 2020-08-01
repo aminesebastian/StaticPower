@@ -60,6 +60,6 @@ public class GuiTreeFarmer extends StaticPowerTileEntityGui<ContainerTreeFarmer,
 	@Override
 	public void updateData() {
 		infoTab.setText("Farmer", "Farms trees in a " + TextFormatting.YELLOW + ((getTileEntity().getRadius() * 2) + 1) + "x" + ((getTileEntity().getRadius() * 2) + 1) + "=radius.==Requires " + TextFormatting.DARK_AQUA + "water"
-				+ TextFormatting.RESET + " to operate=but other fluids may yield=better growth results...==Current Growth Factor: " + TextFormatting.GOLD + getTileEntity().getGrowthBonusChance() * 100 + "%");
+				+ TextFormatting.RESET + " to operate=but other fluids may yield=better growth results...==Current Growth Factor: " + TextFormatting.GOLD + getTileEntity().getGrowthBonus() * 100 + "%");
 	}
 }

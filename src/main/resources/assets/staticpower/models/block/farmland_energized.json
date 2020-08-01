@@ -1,0 +1,8 @@
+{
+    "parent": "block/template_farmland",
+    "textures": {
+        "particle": "staticpower:blocks/decorative/farmland_energized_top",
+        "dirt": "staticpower:blocks/decorative/farmland_energized_side",
+        "top": "staticpower:blocks/decorative/farmland_energized_top"
+    }
+}

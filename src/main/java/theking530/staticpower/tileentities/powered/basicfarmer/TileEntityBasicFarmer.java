@@ -33,7 +33,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.common.utilities.Color;
+import theking530.common.utilities.SDMath;
 import theking530.staticpower.client.rendering.CustomRenderer;
+import theking530.staticpower.data.crafting.wrappers.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeRegistry;
+import theking530.staticpower.data.crafting.wrappers.farmer.FarmingFertalizerRecipe;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.tileentities.TileEntityMachine;
@@ -72,25 +76,32 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	private final List<BlockPos> blocks;
 	private int currentBlockIndex;
 	private int range;
-	private int growthBonusChance;
 	private boolean shouldDrawRadiusPreview;
 
 	public TileEntityBasicFarmer() {
 		super(ModTileEntityTypes.BASIC_FARMER);
 		disableFaceInteraction();
+		
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 2, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
-				return !stack.isEmpty() && (stack.getItem() instanceof AxeItem || stack.getItem() instanceof HoeItem);
+				if (slot == 0) {
+					return !stack.isEmpty() && stack.getItem() instanceof HoeItem;
+				} else {
+					return !stack.isEmpty() && stack.getItem() instanceof AxeItem;
+				}
 			}
 		}));
+		
 		registerComponent(fluidContainerInventory = new InventoryComponent("FluidContainerInventory", 2, MachineSideMode.Never));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 9, MachineSideMode.Output));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 128, MachineSideMode.Never));
 		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never).setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
 
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 5, this::canFarm, this::canFarm, this::processingCompleted, true));
-		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluid) -> fluid.getFluid() == Fluids.WATER).setCapabilityExposedModes(MachineSideMode.Input));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 20, this::canFarm, this::canFarm, this::processingCompleted, true));
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluid) -> {
+			return StaticPowerRecipeRegistry.getRecipe(FarmingFertalizerRecipe.RECIPE_TYPE, new RecipeMatchParameters(fluid)).isPresent();
+		}).setCapabilityExposedModes(MachineSideMode.Input));
 
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory, 0));
 		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory, 0, 1, 2, 3, 4, 5, 6, 7, 8));
@@ -110,7 +121,6 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		range = DEFAULT_RANGE;
 		blocks = new LinkedList<BlockPos>();
 		shouldDrawRadiusPreview = false;
-		growthBonusChance = 0;
 	}
 
 	@Override
@@ -123,7 +133,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 				for (BlockPos blockpos : blocks) {
 					BlockPos farmlandPos = blockpos.offset(Direction.DOWN);
 					if (getWorld().getBlockState(farmlandPos).getBlock() == Blocks.FARMLAND) {
-						getWorld().setBlockState(farmlandPos, getWorld().getBlockState(farmlandPos).with(FarmlandBlock.MOISTURE, Integer.valueOf(7)), 2);
+						getWorld().setBlockState(farmlandPos, getWorld().getBlockState(farmlandPos).with(FarmlandBlock.MOISTURE, Integer.valueOf(7)), 2 | 16);
 					}
 				}
 			}
@@ -186,8 +196,12 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		return range;
 	}
 
-	public int getGrowthBonus() {
-		return growthBonusChance;
+	public float getGrowthBonus() {
+		FarmingFertalizerRecipe recipe = StaticPowerRecipeRegistry.getRecipe(FarmingFertalizerRecipe.RECIPE_TYPE, new RecipeMatchParameters(this.fluidTankComponent.getFluid())).orElse(null);
+		if (recipe != null) {
+			return recipe.getFertalizationAmount();
+		}
+		return 0.0f;
 	}
 
 	public boolean getShouldDrawRadiusPreview() {
@@ -299,7 +313,12 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 			farmed |= harvestNetherWart(pos);
 			farmed |= harvestMelonOrPumpkin(pos);
 		}
-		growCrop(pos);
+
+		// Grow the crop if we can.
+		if (SDMath.diceRoll(getGrowthBonus())) {
+			growCrop(pos);
+		}
+
 		return farmed;
 	}
 
@@ -421,7 +440,6 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 					IGrowable tempCrop = (IGrowable) getWorld().getBlockState(pos).getBlock();
 					if (tempCrop.canGrow(getWorld(), pos, getWorld().getBlockState(pos), false)) {
 						tempCrop.grow((ServerWorld) getWorld(), RANDOM, pos, getWorld().getBlockState(pos));
-						getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 1 | 2);
 						((ServerWorld) getWorld()).spawnParticle(ParticleTypes.HAPPY_VILLAGER, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 1, 0.0D, 0.0D, 0.0D, 0.0D);
 					}
 				}

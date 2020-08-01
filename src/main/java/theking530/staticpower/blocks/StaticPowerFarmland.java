@@ -25,10 +25,10 @@ import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.PlantType;
 import net.minecraftforge.common.ToolType;
 
-public class AdvancedEarth extends StaticPowerBlock {
+public class StaticPowerFarmland extends StaticPowerBlock {
 	protected static final VoxelShape SHAPE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 15.0D, 16.0D);
 
-	public AdvancedEarth(String name) {
+	public StaticPowerFarmland(String name) {
 		super(name, Block.Properties.create(Material.EARTH).harvestTool(ToolType.SHOVEL).variableOpacity().tickRandomly());
 	}
 
@@ -36,7 +36,7 @@ public class AdvancedEarth extends StaticPowerBlock {
 	@OnlyIn(Dist.CLIENT)
 	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
 		tooltip.add(new StringTextComponent("This isn't just regular dirt."));
-		tooltip.add(new StringTextComponent("This is " + TextFormatting.ITALIC + " Advanced " + TextFormatting.RESET + " dirt."));
+		tooltip.add(new StringTextComponent("This is " + TextFormatting.ITALIC + "Advanced " + TextFormatting.RESET + TextFormatting.GRAY + "dirt."));
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class AdvancedEarth extends StaticPowerBlock {
 			return true;
 
 		if (plantable instanceof BushBlock) {
-			return false;
+			return true;
 		}
 
 		return type == PlantType.Desert || type == PlantType.Nether || type == PlantType.Crop || type == PlantType.Cave;

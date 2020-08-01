@@ -60,22 +60,20 @@
 		},
 		"firstperson_righthand": {
 			"rotation": [56, 0, 0],
-			"translation": [-0.5, -0.5, 4.25],
-			"scale": [0.75, 0.75, 0.75]
+			"translation": [1.5, -3.25, 4.25]
 		},
 		"firstperson_lefthand": {
 			"rotation": [56, 0, 0],
-			"translation": [-0.5, -0.5, 4.25],
-			"scale": [0.75, 0.75, 0.75]
+			"translation": [1.5, -3.25, 4.25]
 		},
 		"ground": {
-			"translation": [0, -0.5, 4.5],
+			"translation": [0, 1, 4.5],
 			"scale": [0.75, 0.75, 0.75]
 		},
 		"gui": {
-			"rotation": [95, 0, -135],
-			"translation": [0, -11, -1],
-			"scale": [1.75, 1.75, 1.75]
+			"rotation": [90, 0, 0],
+			"translation": [0, -16.25, -1],
+			"scale": [2.5, 2.5, 2.5]
 		},
 		"fixed": {
 			"rotation": [90, 0, 0],

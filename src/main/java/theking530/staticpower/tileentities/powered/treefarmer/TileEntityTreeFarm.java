@@ -12,7 +12,6 @@ import net.minecraft.block.IGrowable;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.Item;
@@ -36,6 +35,9 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.common.utilities.Color;
 import theking530.common.utilities.SDMath;
 import theking530.staticpower.client.rendering.CustomRenderer;
+import theking530.staticpower.data.crafting.wrappers.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeRegistry;
+import theking530.staticpower.data.crafting.wrappers.farmer.FarmingFertalizerRecipe;
 import theking530.staticpower.init.ModTags;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
@@ -104,7 +106,9 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never).setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 100, MachineSideMode.Never));
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 5, this::canProcess, this::canProcess, this::processingCompleted, true));
-		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluid) -> fluid.getFluid() == Fluids.WATER).setCapabilityExposedModes(MachineSideMode.Input));
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluid) -> {
+			return StaticPowerRecipeRegistry.getRecipe(FarmingFertalizerRecipe.RECIPE_TYPE, new RecipeMatchParameters(fluid)).isPresent();
+		}).setCapabilityExposedModes(MachineSideMode.Input));
 
 		currentBlockIndex = 0;
 		shouldDrawRadiusPreview = false;
@@ -227,7 +231,8 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 	public boolean farmTree(BlockPos pos) {
 		if (!getWorld().isRemote) {
 			if (isFarmableBlock(pos)) {
-				getWorld().playSound(null, pos, getWorld().getBlockState(pos).getBlock().getSoundType(getWorld().getBlockState(pos), world, pos, null).getBreakSound(), SoundCategory.BLOCKS, 0.5F, 1.0F);
+				getWorld().playSound(null, pos, getWorld().getBlockState(pos).getBlock().getSoundType(getWorld().getBlockState(pos), world, pos, null).getBreakSound(), SoundCategory.BLOCKS, 0.5F,
+						1.0F);
 				List<ItemStack> harvestResults = new LinkedList<ItemStack>();
 				harvestBlock(pos, harvestResults, 0);
 				useAxe();
@@ -281,7 +286,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 			throw new RuntimeException("This method should only be called on the server!");
 		}
 		Block block = getWorld().getBlockState(pos).getBlock();
-		if (block instanceof IGrowable && SDMath.diceRoll(getGrowthBonusChance())) {
+		if (block instanceof IGrowable && SDMath.diceRoll(getGrowthBonus())) {
 			IGrowable growable = (IGrowable) block;
 			if (growable.canUseBonemeal(getWorld(), RANDOM, pos, getWorld().getBlockState(pos)) && growable.canGrow(getWorld(), pos, getWorld().getBlockState(pos), false)) {
 				growable.grow((ServerWorld) getWorld(), RANDOM, pos, getWorld().getBlockState(pos));
@@ -337,8 +342,12 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		return range;
 	}
 
-	public float getGrowthBonusChance() {
-		return 0;
+	public float getGrowthBonus() {
+		FarmingFertalizerRecipe recipe = StaticPowerRecipeRegistry.getRecipe(FarmingFertalizerRecipe.RECIPE_TYPE, new RecipeMatchParameters(this.fluidTankComponent.getFluid())).orElse(null);
+		if (recipe != null) {
+			return recipe.getFertalizationAmount();
+		}
+		return 0.0f;
 	}
 
 	public BlockPos getCurrentPosition() {
