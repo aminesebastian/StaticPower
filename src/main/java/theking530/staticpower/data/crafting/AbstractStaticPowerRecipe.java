@@ -1,4 +1,4 @@
-package theking530.staticpower.data.crafting.wrappers;
+package theking530.staticpower.data.crafting;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;

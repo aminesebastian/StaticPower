@@ -1,0 +1,15 @@
+{
+	"type": "staticpower:centrifuge_recipe",
+	"input": {
+		"item": "minecraft:black_wool"
+	},
+	"minimum_speed": 400,
+	"outputs": [
+		{
+			"item": "minecraft:white_wool"
+		},
+		{
+			"item": "minecraft:black_dye"
+		}
+	]
+}

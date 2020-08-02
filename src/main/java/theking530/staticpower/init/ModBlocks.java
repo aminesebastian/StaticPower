@@ -5,11 +5,11 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraftforge.common.ToolType;
 import theking530.staticpower.StaticPowerRegistry;
-import theking530.staticpower.blocks.StaticPowerFarmland;
 import theking530.staticpower.blocks.EnergizedGrass;
 import theking530.staticpower.blocks.StaticGrass;
 import theking530.staticpower.blocks.StaticPowerBlock;
 import theking530.staticpower.blocks.StaticPowerCutoutBlock;
+import theking530.staticpower.blocks.StaticPowerFarmland;
 import theking530.staticpower.blocks.StaticPowerOre;
 import theking530.staticpower.blocks.StaticPowerRotatePillarBlock;
 import theking530.staticpower.blocks.crops.BaseSimplePlant;
@@ -33,6 +33,7 @@ import theking530.staticpower.tileentities.powered.autosolderingtable.BlockAutoS
 import theking530.staticpower.tileentities.powered.basicfarmer.BlockBasicFarmer;
 import theking530.staticpower.tileentities.powered.battery.BlockBattery;
 import theking530.staticpower.tileentities.powered.bottler.BlockBottler;
+import theking530.staticpower.tileentities.powered.centrifuge.BlockCentrifuge;
 import theking530.staticpower.tileentities.powered.chargingstation.BlockChargingStation;
 import theking530.staticpower.tileentities.powered.crucible.BlockCrucible;
 import theking530.staticpower.tileentities.powered.fermenter.BlockFermenter;
@@ -54,11 +55,11 @@ public class ModBlocks {
 	public static Lamp EnergizedLamp;
 	public static Lamp LumumLamp;
 	public static StaticPowerGlassBlock ObsidianGlass;
-	
+
 	public static StaticPowerFarmland StaticFarmland;
 	public static StaticPowerFarmland EnergizedFarmland;
 	public static StaticPowerFarmland LumumFarmland;
-	
+
 	public static StaticGrass StaticGrass;
 	public static EnergizedGrass EnergizedGrass;
 
@@ -114,10 +115,10 @@ public class ModBlocks {
 	public static StaticPowerCutoutBlock MachineBlockIron;
 	public static StaticPowerCutoutBlock MachineBlockBasic;
 	public static StaticPowerCutoutBlock MachineBlockAdvanced;
-	public static StaticPowerCutoutBlock MachineBlockStatic;	
+	public static StaticPowerCutoutBlock MachineBlockStatic;
 	public static StaticPowerCutoutBlock MachineBlockEnergized;
 	public static StaticPowerCutoutBlock MachineBlockLumum;
-	
+
 	public static BlockVacuumChest VacuumChest;
 	public static BlockChargingStation ChargingStation;
 	public static BlockPoweredFurnace PoweredFurnace;
@@ -137,6 +138,7 @@ public class ModBlocks {
 	public static BlockAutoSolderingTable AutoSolderingTable;
 	public static BlockAutoCraftingTable AutoCraftingTable;
 	public static BlockFluidInfuser FluidInfuser;
+	public static BlockCentrifuge Centrifuge;
 
 	public static BlockSolarPanel SolarPanelBasic;
 	public static BlockSolarPanel SolarPanelAdvanced;
@@ -183,11 +185,11 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(EnergizedLamp = new Lamp("lamp_energized"));
 		StaticPowerRegistry.preRegisterBlock(LumumLamp = new Lamp("lamp_lumum"));
 		StaticPowerRegistry.preRegisterBlock(ObsidianGlass = new StaticPowerGlassBlock("glass_obsidian"));
-		
+
 		StaticPowerRegistry.preRegisterBlock(StaticFarmland = new StaticPowerFarmland("farmland_static"));
 		StaticPowerRegistry.preRegisterBlock(EnergizedFarmland = new StaticPowerFarmland("farmland_energized"));
 		StaticPowerRegistry.preRegisterBlock(LumumFarmland = new StaticPowerFarmland("farmland_lumum"));
-		
+
 		StaticPowerRegistry.preRegisterBlock(StaticGrass = new StaticGrass("grass_static"));
 		StaticPowerRegistry.preRegisterBlock(EnergizedGrass = new EnergizedGrass("grass_energized"));
 
@@ -261,13 +263,19 @@ public class ModBlocks {
 				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.DIAMOND_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(4.0f)));
 
 		// Machine Blocks
-		StaticPowerRegistry.preRegisterBlock(MachineBlockIron = new StaticPowerCutoutBlock("machine_block_iron", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
-		StaticPowerRegistry.preRegisterBlock(MachineBlockBasic = new StaticPowerCutoutBlock("machine_block_basic", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
-		StaticPowerRegistry.preRegisterBlock(MachineBlockAdvanced = new StaticPowerCutoutBlock("machine_block_advanced", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
-		StaticPowerRegistry.preRegisterBlock(MachineBlockStatic = new StaticPowerCutoutBlock("machine_block_static", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
-		StaticPowerRegistry.preRegisterBlock(MachineBlockEnergized = new StaticPowerCutoutBlock("machine_block_energized", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
-		StaticPowerRegistry.preRegisterBlock(MachineBlockLumum = new StaticPowerCutoutBlock("machine_block_lumum", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
-		
+		StaticPowerRegistry
+				.preRegisterBlock(MachineBlockIron = new StaticPowerCutoutBlock("machine_block_iron", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
+		StaticPowerRegistry
+				.preRegisterBlock(MachineBlockBasic = new StaticPowerCutoutBlock("machine_block_basic", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
+		StaticPowerRegistry.preRegisterBlock(
+				MachineBlockAdvanced = new StaticPowerCutoutBlock("machine_block_advanced", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
+		StaticPowerRegistry
+				.preRegisterBlock(MachineBlockStatic = new StaticPowerCutoutBlock("machine_block_static", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
+		StaticPowerRegistry.preRegisterBlock(
+				MachineBlockEnergized = new StaticPowerCutoutBlock("machine_block_energized", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
+		StaticPowerRegistry
+				.preRegisterBlock(MachineBlockLumum = new StaticPowerCutoutBlock("machine_block_lumum", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
+
 		// Machines
 		StaticPowerRegistry.preRegisterBlock(VacuumChest = new BlockVacuumChest("chest_vacuum"));
 		StaticPowerRegistry.preRegisterBlock(SolarPanelBasic = new BlockSolarPanel("solar_panel_basic", StaticPowerTiers.BASIC));
@@ -293,6 +301,7 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(AutoSolderingTable = new BlockAutoSolderingTable("machine_industrial_soldering_table"));
 		StaticPowerRegistry.preRegisterBlock(AutoCraftingTable = new BlockAutoCraftingTable("machine_industrial_crafting_table"));
 		StaticPowerRegistry.preRegisterBlock(FluidInfuser = new BlockFluidInfuser("machine_fluid_infuser"));
+		StaticPowerRegistry.preRegisterBlock(Centrifuge = new BlockCentrifuge("machine_centrifuge"));
 
 		StaticPowerRegistry.preRegisterBlock(BasicTank = new BlockTank("tank_basic"));
 		StaticPowerRegistry.preRegisterBlock(Pump = new BlockPump("pump"));

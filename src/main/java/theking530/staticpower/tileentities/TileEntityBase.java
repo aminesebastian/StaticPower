@@ -145,7 +145,8 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	public void onPlaced(BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
 		if (hasComponentOfType(SideConfigurationComponent.class)) {
 			if (DisableFaceInteraction) {
-				getComponent(SideConfigurationComponent.class).setWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, getFacingDirection()), MachineSideMode.Never);
+				getComponent(SideConfigurationComponent.class).setWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, getFacingDirection()),
+						MachineSideMode.Never);
 			}
 		}
 	}
@@ -209,13 +210,18 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	}
 
 	public void transferItemInternally(InventoryComponent fromInv, int fromSlot, InventoryComponent toInv, int toSlot) {
-		toInv.insertItem(toSlot, fromInv.extractItem(fromSlot, 1, false), false);
+		transferItemInternally(1, fromInv, fromSlot, toInv, toSlot);
+	}
+
+	public void transferItemInternally(int count, InventoryComponent fromInv, int fromSlot, InventoryComponent toInv, int toSlot) {
+		toInv.insertItem(toSlot, fromInv.extractItem(fromSlot, count, false), false);
 	}
 
 	public Direction getFacingDirection() {
 		// If the world is null, return UP and log the error.
 		if (getWorld() == null) {
-			StaticPower.LOGGER.error("There was an attempt to get the facing direction before the block has been fully placed in the world! TileEntity: %1$s at position: %2$s.", getDisplayName().getFormattedText(), pos);
+			StaticPower.LOGGER.error("There was an attempt to get the facing direction before the block has been fully placed in the world! TileEntity: %1$s at position: %2$s.",
+					getDisplayName().getFormattedText(), pos);
 			return Direction.UP;
 		}
 

@@ -1,0 +1,19 @@
+{
+	"type": "staticpower:centrifuge_recipe",
+	"input": {
+		"item": "staticpower:dust_inert_infusion",
+		"count": 3
+	},
+	"minimum_speed": 500,
+	"outputs": [
+		{
+			"item": "staticpower:dust_iron"
+		},
+		{
+			"item": "staticpower:dust_gold"
+		},
+		{
+			"item": "staticpower:dust_platinum"
+		}
+	]
+}

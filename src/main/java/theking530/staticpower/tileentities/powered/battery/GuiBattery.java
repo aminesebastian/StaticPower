@@ -1,5 +1,9 @@
 package theking530.staticpower.tileentities.powered.battery;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
@@ -43,14 +47,34 @@ public class GuiBattery extends StaticPowerTileEntityGui<ContainerBattery, TileE
 	@Override
 	protected void drawForegroundExtras(float partialTicks, int mouseX, int mouseY) {
 		super.drawForegroundExtras(partialTicks, mouseX, mouseY);
-		
-		font.drawString("Input", this.guiLeft + 10, this.guiTop + 32, 4210752);
+
+		// Render the input rate string.
+		font.drawString("Input", this.guiLeft + 15, this.guiTop + 32, 4210752);
 		MetricConverter input = new MetricConverter(this.getTileEntity().getInputLimit());
-		font.drawString(input.getValueAsString(true) + "FE/t", this.guiLeft + 4, this.guiTop + 42, 4210752);
-		
-		font.drawString("Output", this.guiLeft + 129, this.guiTop + 32, 4210752);
+		String inputRateString = input.getValueAsString(true) + "FE/t";
+		font.drawString(inputRateString, guiLeft + 28 - (font.getStringWidth(inputRateString) / 2), guiTop + 42, 4210752);
+
+		// Render the output rate string.
+		font.drawString("Output", this.guiLeft + 132, this.guiTop + 32, 4210752);
 		MetricConverter output = new MetricConverter(this.getTileEntity().getOutputLimit());
-		font.drawString(output.getValueAsString(true) + "FE/t", this.guiLeft + 126, this.guiTop + 42, 4210752);
+		String outputRateString = output.getValueAsString(true) + "FE/t";
+		font.drawString(outputRateString, guiLeft + 149 - (font.getStringWidth(outputRateString) / 2), guiTop + 42, 4210752);
+
+		// Add tooltip for the actual value of the input.
+		List<String> tooltips = new ArrayList<String>();
+		if (mouseX > guiLeft + 28 - (font.getStringWidth(inputRateString) / 2) && mouseX < guiLeft + 28 + (font.getStringWidth(inputRateString) / 2) && mouseY > this.guiTop + 41
+				&& mouseY < this.guiTop + 50) {
+			tooltips.add(getTileEntity().getInputLimit() + " FE/t");
+		}
+
+		// Add tooltip for the actual value of the output.
+		if (mouseX > guiLeft + 149 - (font.getStringWidth(inputRateString) / 2) && mouseX < guiLeft + 149 + (font.getStringWidth(inputRateString) / 2) && mouseY > this.guiTop + 41
+				&& mouseY < this.guiTop + 50) {
+			tooltips.add(getTileEntity().getOutputLimit() + " FE/t");
+		}
+
+		// Render the tooltips.
+		Minecraft.getInstance().currentScreen.renderTooltip(tooltips, mouseX, mouseY, Minecraft.getInstance().fontRenderer);
 	}
 
 	@Override

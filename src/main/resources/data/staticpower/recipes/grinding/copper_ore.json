@@ -11,7 +11,7 @@
 		{
 			"item": "staticpower:dust_gold",
 			"count": 1,
-			"chance": 0.1
+			"chance": 0.05
 		}
 	]
 }

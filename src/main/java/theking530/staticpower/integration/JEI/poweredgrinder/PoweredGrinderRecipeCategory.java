@@ -22,7 +22,7 @@ import theking530.common.gui.GuiDrawUtilities;
 import theking530.common.gui.widgets.progressbars.GrinderProgressBar;
 import theking530.common.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.common.utilities.Vector2D;
-import theking530.staticpower.data.crafting.wrappers.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.wrappers.grinder.GrinderRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
@@ -47,7 +47,7 @@ public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderR
 	public PoweredGrinderRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
 		locTitle = new TranslationTextComponent(ModBlocks.PoweredGrinder.getTranslationKey());
-		background = guiHelper.createBlankDrawable(176, 70);
+		background = guiHelper.createBlankDrawable(150, 70);
 		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.PoweredGrinder));
 		pBar = new GrinderProgressBar(79, 26);
 	}

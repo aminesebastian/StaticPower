@@ -1,4 +1,4 @@
-package theking530.staticpower.data.crafting.wrappers;
+package theking530.staticpower.data.crafting;
 
 import com.google.gson.JsonObject;
 

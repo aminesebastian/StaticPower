@@ -1,0 +1,19 @@
+{
+	"type": "staticpower:centrifuge_recipe",
+	"input": {
+		"item": "minecraft:fire_charge",
+		"count": 3
+	},
+	"minimum_speed": 500,
+	"outputs": [
+		{
+			"item": "minecraft:gunpowder"
+		},
+		{
+			"item": "minecraft:blaze_powder"
+		},
+		{
+			"item": "minecraft:coal"
+		}
+	]
+}

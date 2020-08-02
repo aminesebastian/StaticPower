@@ -1,0 +1,15 @@
+{
+	"type": "staticpower:centrifuge_recipe",
+	"input": {
+		"item": "minecraft:ender_eye"
+	},
+	"minimum_speed": 500,
+	"outputs": [
+		{
+			"item": "minecraft:ender_pearl"
+		},
+		{
+			"item": "minecraft:blaze_powder"
+		}
+	]
+}

@@ -1,0 +1,8 @@
+{
+	"type": "staticpower:farming_fertalizer_recipe",
+	"fertilizer": {
+		"fluid": "minecraft:water",
+		"volume": 1
+	},
+	"fertilization_chance": 0.0
+}

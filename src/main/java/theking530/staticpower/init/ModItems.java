@@ -143,6 +143,7 @@ public class ModItems {
 	public static StaticPowerItem DustIron;
 	public static StaticPowerItem DustRuby;
 	public static StaticPowerItem DustSapphire;
+	public static StaticPowerItem DustEmerald;
 	public static StaticPowerItem DustSulfur;
 	public static StaticPowerItem DustSaltpeter;
 	public static StaticPowerItem DustCharcoal;
@@ -424,6 +425,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(DustIron = new StaticPowerItem("dust_iron"));
 		StaticPowerRegistry.preRegisterItem(DustRuby = new StaticPowerItem("dust_ruby"));
 		StaticPowerRegistry.preRegisterItem(DustSapphire = new StaticPowerItem("dust_sapphire"));
+		StaticPowerRegistry.preRegisterItem(DustEmerald = new StaticPowerItem("dust_emerald"));
 		StaticPowerRegistry.preRegisterItem(DustSulfur = new StaticPowerItem("dust_sulfur"));
 		StaticPowerRegistry.preRegisterItem(DustSaltpeter = new StaticPowerItem("dust_saltpeter"));
 		StaticPowerRegistry.preRegisterItem(DustCharcoal = new StaticPowerItem("dust_charcoal"));

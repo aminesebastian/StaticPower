@@ -2,6 +2,7 @@ package theking530.staticpower.init;
 
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottlerRecipeSerializer;
+import theking530.staticpower.data.crafting.wrappers.centrifuge.CentrifugeRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.covers.CoverRecipe;
 import theking530.staticpower.data.crafting.wrappers.farmer.FarmingFertalizerRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.fermenter.FermenterRecipeSerializer;
@@ -25,5 +26,6 @@ public class ModRecipeSerializers {
 		StaticPowerRegistry.preRegisterRecipeSerializer(FluidInfusionRecipeSerializer.INSTANCE);
 		StaticPowerRegistry.preRegisterRecipeSerializer(CoverRecipe.SERIALIZER_INSTANCE);
 		StaticPowerRegistry.preRegisterRecipeSerializer(FarmingFertalizerRecipeSerializer.INSTANCE);
+		StaticPowerRegistry.preRegisterRecipeSerializer(CentrifugeRecipeSerializer.INSTANCE);
 	}
 }

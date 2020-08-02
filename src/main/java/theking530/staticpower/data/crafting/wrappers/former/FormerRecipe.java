@@ -6,8 +6,8 @@ import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
-import theking530.staticpower.data.crafting.wrappers.AbstractMachineRecipe;
-import theking530.staticpower.data.crafting.wrappers.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.AbstractMachineRecipe;
+import theking530.staticpower.data.crafting.RecipeMatchParameters;
 
 public class FormerRecipe extends AbstractMachineRecipe {
 	public static final IRecipeType<FormerRecipe> RECIPE_TYPE = IRecipeType.register("former");

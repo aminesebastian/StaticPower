@@ -22,8 +22,8 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
-import theking530.staticpower.data.crafting.wrappers.AbstractStaticPowerRecipe;
-import theking530.staticpower.data.crafting.wrappers.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
+import theking530.staticpower.data.crafting.RecipeMatchParameters;
 
 public class SolderingRecipe extends AbstractStaticPowerRecipe {
 	public static final IRecipeType<SolderingRecipe> RECIPE_TYPE = IRecipeType.register("soldering");

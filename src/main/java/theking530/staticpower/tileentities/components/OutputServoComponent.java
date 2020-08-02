@@ -40,7 +40,7 @@ public class OutputServoComponent extends AbstractTileEntityComponent {
 	}
 
 	public OutputServoComponent(String name, int outputTime, InventoryComponent inventory, int... slots) {
-		this(name, outputTime, inventory, MachineSideMode.Output, slots);
+		this(name, outputTime, inventory, inventory.getMode(), slots);
 	}
 
 	@Override
@@ -88,9 +88,10 @@ public class OutputServoComponent extends AbstractTileEntityComponent {
 				Direction facing = getTileEntity().getWorld().getBlockState(getTileEntity().getPos()).get(StaticPowerTileEntityBlock.FACING);
 				TileEntity te = getTileEntity().getWorld().getTileEntity(getTileEntity().getPos().offset(SideConfigurationUtilities.getDirectionFromSide(blockSide, facing)));
 				if (te != null) {
-					te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, SideConfigurationUtilities.getDirectionFromSide(blockSide, facing).getOpposite()).ifPresent((IItemHandler instance) -> {
-						inventory.setStackInSlot(fromSlot, InventoryUtilities.insertItemIntoInventory(instance, stack, false));
-					});
+					te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, SideConfigurationUtilities.getDirectionFromSide(blockSide, facing).getOpposite())
+							.ifPresent((IItemHandler instance) -> {
+								inventory.setStackInSlot(fromSlot, InventoryUtilities.insertItemIntoInventory(instance, stack, false));
+							});
 				}
 			}
 		}
@@ -98,7 +99,18 @@ public class OutputServoComponent extends AbstractTileEntityComponent {
 
 	public boolean canOutputFromSide(BlockSide blockSide) {
 		if (getTileEntity().hasComponentOfType(SideConfigurationComponent.class)) {
-			return getTileEntity().getComponent(SideConfigurationComponent.class).getWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(blockSide, getTileEntity().getFacingDirection())) == outputMode;
+			// Get the side's machine side mode.
+			SideConfigurationComponent sideModeConfiguration = getTileEntity().getComponent(SideConfigurationComponent.class);
+			MachineSideMode sideMode = sideModeConfiguration.getWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(blockSide, getTileEntity().getFacingDirection()));
+
+			// If the mode matches this servo's output mode OR the side is the generic
+			// output side and this output mode is an output mode and there are no output
+			// modes that match the specific mode.
+			if (sideMode == outputMode || (sideMode == MachineSideMode.Output && outputMode.isOutputMode() && sideModeConfiguration.getCountOfSidesWithMode(outputMode) == 0)) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 		return true;
 	}

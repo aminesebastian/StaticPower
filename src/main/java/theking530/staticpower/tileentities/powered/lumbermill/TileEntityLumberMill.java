@@ -8,19 +8,22 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.common.utilities.SDMath;
-import theking530.staticpower.data.crafting.wrappers.RecipeMatchParameters;
-import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeRegistry;
+import theking530.staticpower.data.crafting.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.lumbermill.LumberMillRecipe;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.BatteryComponent;
+import theking530.staticpower.tileentities.components.FluidContainerComponent;
 import theking530.staticpower.tileentities.components.FluidOutputServoComponent;
 import theking530.staticpower.tileentities.components.FluidTankComponent;
 import theking530.staticpower.tileentities.components.InputServoComponent;
 import theking530.staticpower.tileentities.components.InventoryComponent;
 import theking530.staticpower.tileentities.components.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.OutputServoComponent;
+import theking530.staticpower.tileentities.components.FluidContainerComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
+import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 import theking530.staticpower.utilities.InventoryUtilities;
 
@@ -29,9 +32,12 @@ public class TileEntityLumberMill extends TileEntityMachine {
 	public static final int DEFAULT_PROCESSING_COST = 10;
 	public static final int DEFAULT_MOVING_TIME = 4;
 	public static final int DEFAULT_TANK_SIZE = 5000;
-	
+
 	public final InventoryComponent inputInventory;
-	public final InventoryComponent outputInventory;
+	public final InventoryComponent mainOutputInventory;
+	public final InventoryComponent secondaryOutputInventory;
+	public final InventoryComponent fluidContainerInventory;
+
 	public final InventoryComponent internalInventory;
 	public final InventoryComponent batteryInventory;
 	public final InventoryComponent upgradesInventory;
@@ -48,19 +54,26 @@ public class TileEntityLumberMill extends TileEntityMachine {
 			}
 		}));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1, MachineSideMode.Never));
-		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 2, MachineSideMode.Output));
+		registerComponent(mainOutputInventory = new InventoryComponent("MainOutputInventory", 1, MachineSideMode.Output2));
+		registerComponent(secondaryOutputInventory = new InventoryComponent("SecondaryOutputInventory", 1, MachineSideMode.Output3));
 		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
 
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
-		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", 2, this::canMoveFromInputToProcessing, () -> true, this::movingCompleted, true));
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 5, this::canProcess, this::canProcess, this::processingCompleted, true).setShouldControlBlockState(true));
+		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", DEFAULT_MOVING_TIME, this::canMoveFromInputToProcessing, () -> true, this::movingCompleted, true));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true)
+				.setShouldControlBlockState(true));
 
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));
-		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory));
+		registerComponent(new OutputServoComponent("OutputServo", 1, mainOutputInventory));
+		registerComponent(new OutputServoComponent("SecondaryOutputServo", 1, secondaryOutputInventory));
 		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Output));
 		fluidTankComponent.setCanFill(false);
 		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
+
+		// Register components to allow the lumbermill to fill buckets in the GUI.
+		registerComponent(fluidContainerInventory = new InventoryComponent("FluidContainerInventory", 2, MachineSideMode.Never));
+		registerComponent(new FluidContainerComponent("FluidFillContainerServo", fluidTankComponent, fluidContainerInventory, 0, 1).setMode(FluidContainerInteractionMode.FILL));
 	}
 
 	/**
@@ -77,13 +90,8 @@ public class TileEntityLumberMill extends TileEntityMachine {
 			// Gets the recipe and its outputs.
 			Optional<LumberMillRecipe> recipe = getRecipe(inputInventory.getStackInSlot(0));
 
-			// If the items cannot be insert into the output, return false.
-			if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.get().getPrimaryOutput().getItem(), recipe.get().getSecondaryOutput().getItem())) {
-				return false;
-			}
-
-			// If the output tank can't take the input, we can't proceed.
-			if (fluidTankComponent.fill(recipe.get().getOutputFluid(), FluidAction.SIMULATE) != recipe.get().getOutputFluid().getAmount()) {
+			// If the recipe cannot be insert into the output, return false.
+			if (!canOutputsTakeRecipeResult(recipe.get())) {
 				return false;
 			}
 
@@ -95,7 +103,7 @@ public class TileEntityLumberMill extends TileEntityMachine {
 
 	public boolean canProcess() {
 		LumberMillRecipe recipe = getRecipe(internalInventory.getStackInSlot(0)).orElse(null);
-		return recipe != null && redstoneControlComponent.passesRedstoneCheck() && energyStorage.hasEnoughPower(recipe.getPowerCost()) && InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRawOutputItems())
+		return recipe != null && redstoneControlComponent.passesRedstoneCheck() && energyStorage.hasEnoughPower(recipe.getPowerCost()) && canOutputsTakeRecipeResult(recipe)
 				&& fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.SIMULATE) == recipe.getOutputFluid().getAmount();
 	}
 
@@ -141,10 +149,10 @@ public class TileEntityLumberMill extends TileEntityMachine {
 			// Ensure the output slots can take the recipe.
 			if (canOutputsTakeRecipeResult(recipe)) {
 				if (SDMath.diceRoll(recipe.getPrimaryOutput().getOutputChance())) {
-					outputInventory.insertItem(0, recipe.getPrimaryOutput().getItem().copy(), false);
+					mainOutputInventory.insertItem(0, recipe.getPrimaryOutput().getItem().copy(), false);
 				}
 				if (SDMath.diceRoll(recipe.getSecondaryOutput().getOutputChance())) {
-					outputInventory.insertItem(1, recipe.getSecondaryOutput().getItem().copy(), false);
+					secondaryOutputInventory.insertItem(0, recipe.getSecondaryOutput().getItem().copy(), false);
 				}
 				fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.EXECUTE);
 
@@ -183,15 +191,21 @@ public class TileEntityLumberMill extends TileEntityMachine {
 	 * @param recipe
 	 * @return
 	 */
-	public boolean canOutputsTakeRecipeResult(LumberMillRecipe recipe) {
-		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getPrimaryOutput().getItem())) {
+	protected boolean canOutputsTakeRecipeResult(LumberMillRecipe recipe) {
+		if (!InventoryUtilities.canFullyInsertStackIntoSlot(mainOutputInventory, 0, recipe.getPrimaryOutput().getItem())) {
 			return false;
-		} else if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 1, recipe.getSecondaryOutput().getItem())) {
+		} else if (!InventoryUtilities.canFullyInsertStackIntoSlot(secondaryOutputInventory, 0, recipe.getSecondaryOutput().getItem())) {
 			return false;
 		} else if (fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.SIMULATE) != recipe.getOutputFluid().getAmount()) {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
+		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Regular || mode == MachineSideMode.Output || mode == MachineSideMode.Input || mode == MachineSideMode.Output2
+				|| mode == MachineSideMode.Output3;
 	}
 
 	// Functionality

@@ -1,0 +1,18 @@
+{
+	"type": "staticpower:centrifuge_recipe",
+	"input": {
+		"item": "minecraft:writable_book"
+	},
+	"minimum_speed": 50,
+	"outputs": [
+		{
+			"item": "minecraft:book"
+		},
+		{
+			"item": "minecraft:ink_sac"
+		},
+		{
+			"item": "minecraft:feather"
+		}
+	]
+}

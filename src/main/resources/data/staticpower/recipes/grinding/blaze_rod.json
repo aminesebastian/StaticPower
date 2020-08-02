@@ -1,0 +1,17 @@
+{
+	"type": "staticpower:grinder_recipe",
+	"input": {
+		"tag": "forge:rods/blaze"
+	},
+	"output": [
+		{
+			"item": "minecraft:blaze_powder",
+			"count": 4
+		},
+		{
+			"item": "minecraft:blaze_powder",
+			"count": 1,
+			"chance": 0.5
+		}
+	]
+}

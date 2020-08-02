@@ -1,0 +1,16 @@
+{
+	"type": "staticpower:centrifuge_recipe",
+	"input": {
+		"tag": "forge:dyes/light_blue",
+		"count": 2
+	},
+	"minimum_speed": 800,
+	"outputs": [
+		{
+			"item": "minecraft:white_dye"
+		},
+		{
+			"item": "minecraft:blue_dye"
+		}
+	]
+}

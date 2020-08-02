@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.data.StaticPowerDataRegistry;
-import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeRegistry;
+import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.utilities.Reference;
 
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID, bus = EventBusSubscriber.Bus.FORGE)

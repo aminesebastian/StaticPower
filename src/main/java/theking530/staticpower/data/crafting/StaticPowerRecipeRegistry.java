@@ -1,4 +1,4 @@
-package theking530.staticpower.data.crafting.wrappers;
+package theking530.staticpower.data.crafting;
 
 import java.util.ArrayList;
 import java.util.Collection;

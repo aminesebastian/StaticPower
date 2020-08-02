@@ -10,7 +10,7 @@ import theking530.staticpower.client.container.slots.BatteryItemSlot;
 import theking530.staticpower.client.container.slots.OutputSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.client.container.slots.UpgradeItemSlot;
-import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeRegistry;
+import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.init.ModContainerTypes;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.items.upgrades.BaseUpgrade;

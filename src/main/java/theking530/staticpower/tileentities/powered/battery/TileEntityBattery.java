@@ -45,11 +45,31 @@ public class TileEntityBattery extends TileEntityMachine {
 			}
 			return true;
 		});
-		maxPowerIO = Integer.MAX_VALUE;
 
 		energyStorage.getStorage().setCapacity(StaticPowerDataRegistry.getTier(tier).getBatteryCapacity());
-		energyStorage.getStorage().setMaxReceive(100);
-		energyStorage.getStorage().setMaxExtract(100);
+		inputRFTick = StaticPowerDataRegistry.getTier(tier).getBatteryCapacity();
+		outputRFTick = StaticPowerDataRegistry.getTier(tier).getBatteryCapacity();
+
+		if (inputRFTick > 100) {
+			inputRFTick /= 100;
+			if (inputRFTick > 100) {
+				inputRFTick = inputRFTick - (inputRFTick % 100);
+			} else {
+				inputRFTick = inputRFTick - (inputRFTick % 50);
+			}
+		}
+		if (outputRFTick > 100) {
+			outputRFTick /= 100;
+			if (outputRFTick > 100) {
+				outputRFTick = outputRFTick - (outputRFTick % 100);
+			} else {
+				outputRFTick = outputRFTick - (outputRFTick % 50);
+			}
+		}
+		maxPowerIO = StaticPowerDataRegistry.getTier(tier).getBatteryCapacity() / 10;
+
+		energyStorage.getStorage().setMaxReceive(inputRFTick);
+		energyStorage.getStorage().setMaxExtract(outputRFTick);
 	}
 
 	public void process() {

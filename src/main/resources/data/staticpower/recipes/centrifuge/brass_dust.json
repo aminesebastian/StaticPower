@@ -1,0 +1,16 @@
+{
+	"type": "staticpower:centrifuge_recipe",
+	"input": {
+		"tag": "forge:dusts/brass",
+		"count": 2
+	},
+	"minimum_speed": 220,
+	"outputs": [
+		{
+			"item": "staticpower:dust_copper"
+		},
+		{
+			"item": "staticpower:dust_zinc"
+		}
+	]
+}

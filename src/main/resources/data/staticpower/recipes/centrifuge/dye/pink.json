@@ -1,0 +1,16 @@
+{
+	"type": "staticpower:centrifuge_recipe",
+	"input": {
+		"tag": "forge:dyes/pink",
+		"count": 2
+	},
+	"minimum_speed": 800,
+	"outputs": [
+		{
+			"item": "minecraft:red_dye"
+		},
+		{
+			"item": "minecraft:white_dye"
+		}
+	]
+}

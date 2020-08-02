@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.ResourceLocation;
-import theking530.staticpower.data.crafting.wrappers.AbstractStaticPowerRecipe;
+import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.wrappers.former.FormerRecipe;
 
 public class SolidFuelRecipe extends AbstractStaticPowerRecipe {

@@ -21,8 +21,9 @@ import mezz.jei.gui.textures.Textures;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import theking530.staticpower.client.gui.StaticPowerContainerGui;
-import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeRegistry;
+import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
+import theking530.staticpower.data.crafting.wrappers.centrifuge.CentrifugeRecipe;
 import theking530.staticpower.data.crafting.wrappers.fermenter.FermenterRecipe;
 import theking530.staticpower.data.crafting.wrappers.fluidinfusion.FluidInfusionRecipe;
 import theking530.staticpower.data.crafting.wrappers.former.FormerRecipe;
@@ -34,6 +35,7 @@ import theking530.staticpower.data.crafting.wrappers.squeezer.SqueezerRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.integration.JEI.bottler.BottleRecipeCategory;
+import theking530.staticpower.integration.JEI.centrifuge.CentrifugeRecipeCategory;
 import theking530.staticpower.integration.JEI.covers.CoverRecipeCategory;
 import theking530.staticpower.integration.JEI.fermenter.FermenterRecipeCategory;
 import theking530.staticpower.integration.JEI.fluidinfuser.FluidInfuserRecipeCategory;
@@ -78,6 +80,8 @@ public class PluginJEI implements IModPlugin {
 	private SolderingTableRecipeCategory solderingTableCategory;
 	@Nullable
 	private FluidInfuserRecipeCategory fluidInfuserCategory;
+	@Nullable
+	private CentrifugeRecipeCategory centrifugeCategory;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
@@ -89,6 +93,7 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipeClickArea(GuiSqueezer.class, 74, 34, 28, 5, SqueezerRecipeCategory.SQUEEZER_UID);
 		registration.addRecipeClickArea(GuiBottler.class, 74, 34, 28, 5, BottleRecipeCategory.BOTTLER_UID);
 		registration.addRecipeClickArea(GuiFluidInfuser.class, 102, 36, 17, 5, FluidInfuserRecipeCategory.FLUID_INFUSER_UID);
+		registration.addRecipeClickArea(GuiPoweredGrinder.class, 79, 39, 18, 17, CentrifugeRecipeCategory.CENTRIFUGE_UID);
 
 //		registration.addRecipeClickArea(GuiSolidGenerator.class, 37, 32, 22, 16, SolidGeneratorRecipeCategory.SOLID_GENERATOR_UID);
 //		registration.addRecipeClickArea(GuiPoweredFurnace.class, 75, 30, 22, 16, PoweredFurnaceRecipeCategory.POWERED_FURNACE_UID);
@@ -145,6 +150,10 @@ public class PluginJEI implements IModPlugin {
 		// Fluid Infuser
 		fluidInfuserCategory = new FluidInfuserRecipeCategory(guiHelper);
 		registration.addRecipeCategories(fluidInfuserCategory);
+		
+		// Centrifuge
+		centrifugeCategory = new CentrifugeRecipeCategory(guiHelper);
+		registration.addRecipeCategories(centrifugeCategory);
 	}
 
 	@Override
@@ -169,6 +178,7 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(SolidFuelRecipe.RECIPE_TYPE), SolidGeneratorRecipeCategory.SOLID_GENERATOR_UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(SolderingRecipe.RECIPE_TYPE), SolderingTableRecipeCategory.SOLDERING_TABLE_UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FluidInfusionRecipe.RECIPE_TYPE), FluidInfuserRecipeCategory.FLUID_INFUSER_UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(CentrifugeRecipe.RECIPE_TYPE), CentrifugeRecipeCategory.CENTRIFUGE_UID);
 	}
 
 	@Override
@@ -185,6 +195,7 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AutoSolderingTable), SolderingTableRecipeCategory.SOLDERING_TABLE_UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AutoCraftingTable), VanillaRecipeCategoryUid.CRAFTING);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.FluidInfuser), FluidInfuserRecipeCategory.FLUID_INFUSER_UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Centrifuge), CentrifugeRecipeCategory.CENTRIFUGE_UID);
 	}
 
 	@Override

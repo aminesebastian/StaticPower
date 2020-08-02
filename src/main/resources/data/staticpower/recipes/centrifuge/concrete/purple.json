@@ -1,0 +1,20 @@
+{
+	"type": "staticpower:centrifuge_recipe",
+	"input": {
+		"item": "minecraft:purple_concrete_powder"
+	},
+	"minimum_speed": 220,
+	"outputs": [
+		{
+			"item": "minecraft:sand",
+			"count": 4
+		},
+		{
+			"item": "minecraft:gravel",
+			"count": 4
+		},
+		{
+			"item": "minecraft:purple_dye"
+		}
+	]
+}

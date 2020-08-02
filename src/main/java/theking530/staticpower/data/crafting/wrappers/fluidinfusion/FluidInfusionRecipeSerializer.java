@@ -12,8 +12,8 @@ import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
-import theking530.staticpower.data.crafting.wrappers.ProbabilityItemStackOutput;
-import theking530.staticpower.data.crafting.wrappers.StaticPowerJsonParsingUtilities;
+import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 import theking530.staticpower.tileentities.powered.fluidinfuser.TileEntityFluidInfuser;
 import theking530.staticpower.utilities.Reference;
 

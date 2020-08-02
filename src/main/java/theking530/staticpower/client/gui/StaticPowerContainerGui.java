@@ -541,7 +541,20 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 				// If side configuration is present, draw the slow with a border.
 				if (sideConfiguration != null) {
 					if (intendedMode != MachineSideMode.Regular && intendedMode != MachineSideMode.Never) {
-						drawSlot(slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset, slotSize, slotSize, sideConfiguration.getCountOfSidesWithMode(intendedMode) > 0 ? intendedMode : MachineSideMode.Regular);
+						// Get the side mode to draw with.
+						MachineSideMode drawnSideMode = sideConfiguration.getCountOfSidesWithMode(intendedMode) > 0 ? intendedMode : MachineSideMode.Regular;
+
+						// If the drawn side is regular, check to see if we can render one of the two
+						// general output or input modes.
+						if (drawnSideMode == MachineSideMode.Regular) {
+							if (intendedMode.isOutputMode() && sideConfiguration.getCountOfSidesWithMode(MachineSideMode.Output) > 0) {
+								drawnSideMode = MachineSideMode.Output;
+							} else if (intendedMode.isInputMode() && sideConfiguration.getCountOfSidesWithMode(MachineSideMode.Input) > 0) {
+								drawnSideMode = MachineSideMode.Input;
+							}
+						}
+
+						drawSlot(slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset, slotSize, slotSize, drawnSideMode);
 					} else {
 						drawSlot(slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset, slotSize, slotSize);
 					}
@@ -556,7 +569,7 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 						itemRenderer.drawItem(component.getLockedSlotFilter(slot.getSlotIndex()), guiLeft, guiTop, slot.xPos, slot.yPos, 0.5f);
 					}
 				}
-				
+
 				// Draw the item.
 				handlerSlot.drawExtras(itemRenderer, guiLeft, guiTop, slotSize, sizePosOffset);
 			} else if (slot instanceof DigistoreCraftingOutputSlot) {

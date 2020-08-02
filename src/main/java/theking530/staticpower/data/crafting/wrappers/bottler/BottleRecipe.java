@@ -5,8 +5,8 @@ import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.staticpower.data.crafting.wrappers.AbstractStaticPowerRecipe;
-import theking530.staticpower.data.crafting.wrappers.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
+import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class BottleRecipe extends AbstractStaticPowerRecipe {
