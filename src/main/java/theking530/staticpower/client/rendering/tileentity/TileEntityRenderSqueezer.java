@@ -19,8 +19,14 @@ public class TileEntityRenderSqueezer extends StaticPowerTileEntitySpecialRender
 	public void renderTileEntityBase(TileEntitySqueezer tileEntity, BlockPos pos, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
 		if (!tileEntity.fluidTankComponent.isEmpty()) {
 			float filledPercentage = tileEntity.fluidTankComponent.getVisualFillLevel();
-			drawFluidQuad(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.25f, 0.219f, 0.001f), new Vector3D(0.25f, filledPercentage * 0.22f, 1.0f), new Vector4D(0.0f, 1.0f - filledPercentage, 1.0f, 1.0f));
-			drawFluidQuad(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.5f, 0.219f, 0.001f), new Vector3D(0.25f, filledPercentage * 0.22f, 1.0f), new Vector4D(1.0f, 1.0f - filledPercentage, 0.0f, 1.0f));
+			drawFluidQuad(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.25f, 0.219f, 0.001f), new Vector3D(0.25f, filledPercentage * 0.22f, 1.0f),
+					new Vector4D(0.0f, 1.0f - filledPercentage, 1.0f, 1.0f));
+			drawFluidQuad(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.5f, 0.219f, 0.001f), new Vector3D(0.25f, filledPercentage * 0.22f, 1.0f),
+					new Vector4D(1.0f, 1.0f - filledPercentage, 0.0f, 1.0f));
+
+			float processingPercentage = ((float) tileEntity.processingComponent.getCurrentProcessingTime() + (partialTicks / 20.0f)) / (float) tileEntity.processingComponent.getProcessingTime();
+			drawFluidQuad(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.44f, 0.75f - processingPercentage * 0.5f, 0.001f),
+					new Vector3D(0.12f, processingPercentage * 0.5f, 1.0f), new Vector4D(0.0f, 1.0f - processingPercentage, 0.12f, 1.0f));
 		}
 	}
 }

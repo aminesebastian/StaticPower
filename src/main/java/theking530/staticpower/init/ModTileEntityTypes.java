@@ -25,6 +25,7 @@ import theking530.staticpower.tileentities.powered.crucible.TileEntityCrucible;
 import theking530.staticpower.tileentities.powered.fermenter.TileEntityFermenter;
 import theking530.staticpower.tileentities.powered.fluidinfuser.TileEntityFluidInfuser;
 import theking530.staticpower.tileentities.powered.former.TileEntityFormer;
+import theking530.staticpower.tileentities.powered.fusionfurnace.TileEntityFusionFurnace;
 import theking530.staticpower.tileentities.powered.lumbermill.TileEntityLumberMill;
 import theking530.staticpower.tileentities.powered.poweredfurnace.TileEntityPoweredFurnace;
 import theking530.staticpower.tileentities.powered.poweredgrinder.TileEntityPoweredGrinder;
@@ -84,7 +85,8 @@ public class ModTileEntityTypes {
 	public static TileEntityType<TileEntityAutoCraftingTable> AUTO_CRAFTING_TABLE;
 	public static TileEntityType<TileEntityFluidInfuser> FLUID_INFUSER;
 	public static TileEntityType<TileEntityCentrifuge> CENTRIFUGE;
-	
+	public static TileEntityType<TileEntityFusionFurnace> FUSION_FURNACE;
+
 	public static TileEntityType<TileEntityBattery> BATTERY_BASIC;
 	public static TileEntityType<TileEntityBattery> BATTERY_ADVANCED;
 	public static TileEntityType<TileEntityBattery> BATTERY_STATIC;
@@ -118,6 +120,7 @@ public class ModTileEntityTypes {
 		AUTO_CRAFTING_TABLE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityAutoCraftingTable(), ModBlocks.AutoCraftingTable);
 		FLUID_INFUSER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityFluidInfuser(), ModBlocks.FluidInfuser);
 		CENTRIFUGE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityCentrifuge(), ModBlocks.Centrifuge);
+		FUSION_FURNACE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityFusionFurnace(), ModBlocks.FusionFurnace);
 
 		BATTERY_BASIC = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(type, StaticPowerTiers.BASIC), ModBlocks.BatteryBasic);
 		BATTERY_ADVANCED = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(type, StaticPowerTiers.ADVANCED), ModBlocks.BatteryAdvanced);

@@ -119,7 +119,7 @@ public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderR
 	@Override
 	public void setIngredients(GrinderRecipe recipe, IIngredients ingredients) {
 		List<Ingredient> input = new ArrayList<Ingredient>();
-		input.add(recipe.getInputIngredient());
+		input.add(recipe.getInputIngredient().getIngredient());
 		ingredients.setInputIngredients(input);
 
 		List<ItemStack> outputs = new ArrayList<ItemStack>();

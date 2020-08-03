@@ -49,6 +49,11 @@ public abstract class StaticPowerContainer extends Container {
 		return playerInventory;
 	}
 
+	@Override
+	public Slot addSlot(Slot slotIn) {
+		return super.addSlot(slotIn);
+	}
+
 	protected void addPlayerInventory(PlayerInventory invPlayer, int xPosition, int yPosition) {
 		playerInventoryStart = this.inventorySlots.size();
 		for (int i = 0; i < 3; i++) {
@@ -213,7 +218,8 @@ public abstract class StaticPowerContainer extends Container {
 						}
 
 						// Send a packet to the server with the updated values.
-						NetworkMessage msg = new PacketLockInventorySlot(invComponent, inputInventorySlot, invComponent.isSlotLocked(inputInventorySlot), invComponent.getStackInSlot(inputInventorySlot));
+						NetworkMessage msg = new PacketLockInventorySlot(invComponent, inputInventorySlot, invComponent.isSlotLocked(inputInventorySlot),
+								invComponent.getStackInSlot(inputInventorySlot));
 						StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
 
 					}

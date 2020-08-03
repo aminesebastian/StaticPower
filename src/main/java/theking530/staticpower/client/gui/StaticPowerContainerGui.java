@@ -85,7 +85,7 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 		partialTicks = 0.0f;
 		lockedSprite = new SpriteDrawable(StaticPowerSprites.DIGISTORE_LOCKED_INDICATOR, 8, 8);
 		lockedSprite.setTint(new Color(1.0f, 1.0f, 1.0f, 0.95f));
-		registerWidget(tabManager = new GuiTabManager());
+		registerWidget(tabManager = new GuiTabManager(this));
 	}
 
 	@Override()
@@ -181,6 +181,9 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 
 		// Draw any widgets that need to appear above slots/items.
 		widgetContainer.renderBehindItems(mouseX, mouseY, partialTicks);
+
+		// Draw anything infront of the background but behind the items.
+		drawBehindItems(partialTicks, mouseX, mouseY);
 
 		// Animations the screensize if the target sizes have changed.
 		animateScreenSize();
@@ -356,6 +359,18 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	 * @param mouseY       The mouse's y position.
 	 */
 	protected void drawBackgroundExtras(float partialTicks, int mouseX, int mouseY) {
+
+	}
+
+	/**
+	 * Override this method to draw any additional background features (features
+	 * that should appear infront of the background, but behind items.).
+	 * 
+	 * @param partialTicks The delta time.
+	 * @param mouseX       The mouse's x position.
+	 * @param mouseY       The mouse's y position.
+	 */
+	protected void drawBehindItems(float partialTicks, int mouseX, int mouseY) {
 
 	}
 

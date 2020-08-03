@@ -39,6 +39,7 @@ import theking530.staticpower.tileentities.powered.crucible.BlockCrucible;
 import theking530.staticpower.tileentities.powered.fermenter.BlockFermenter;
 import theking530.staticpower.tileentities.powered.fluidinfuser.BlockFluidInfuser;
 import theking530.staticpower.tileentities.powered.former.BlockFormer;
+import theking530.staticpower.tileentities.powered.fusionfurnace.BlockFusionFurnace;
 import theking530.staticpower.tileentities.powered.lumbermill.BlockLumberMill;
 import theking530.staticpower.tileentities.powered.poweredfurnace.BlockPoweredFurnace;
 import theking530.staticpower.tileentities.powered.poweredgrinder.BlockPoweredGrinder;
@@ -139,7 +140,8 @@ public class ModBlocks {
 	public static BlockAutoCraftingTable AutoCraftingTable;
 	public static BlockFluidInfuser FluidInfuser;
 	public static BlockCentrifuge Centrifuge;
-
+	public static BlockFusionFurnace FusionFurnace;
+	
 	public static BlockSolarPanel SolarPanelBasic;
 	public static BlockSolarPanel SolarPanelAdvanced;
 	public static BlockSolarPanel SolarPanelStatic;
@@ -302,7 +304,8 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(AutoCraftingTable = new BlockAutoCraftingTable("machine_industrial_crafting_table"));
 		StaticPowerRegistry.preRegisterBlock(FluidInfuser = new BlockFluidInfuser("machine_fluid_infuser"));
 		StaticPowerRegistry.preRegisterBlock(Centrifuge = new BlockCentrifuge("machine_centrifuge"));
-
+		StaticPowerRegistry.preRegisterBlock(FusionFurnace = new BlockFusionFurnace("machine_fusion_furnace"));
+		
 		StaticPowerRegistry.preRegisterBlock(BasicTank = new BlockTank("tank_basic"));
 		StaticPowerRegistry.preRegisterBlock(Pump = new BlockPump("pump"));
 

@@ -59,8 +59,8 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 				lastSyncEnergy = EnergyStorage.getEnergyStored();
 				syncToClient();
 			}
+			EnergyStorage.captureEnergyMetric();
 		}
-		EnergyStorage.captureEnergyMetric();
 	}
 
 	/**

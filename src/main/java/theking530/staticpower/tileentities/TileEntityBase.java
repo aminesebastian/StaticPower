@@ -326,7 +326,6 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends AbstractTileEntityComponent> T getComponent(Class<T> type, String componentName) {
-		;
 		if (Components.containsKey(componentName)) {
 			return (T) Components.get(componentName);
 		}

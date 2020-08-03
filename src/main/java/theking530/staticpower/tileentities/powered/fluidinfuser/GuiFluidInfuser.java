@@ -4,10 +4,9 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.common.gui.widgets.progressbars.ArrowProgressBar;
-import theking530.common.gui.widgets.tabs.BaseGuiTab;
-import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
-import theking530.common.gui.widgets.tabs.GuiPowerInfoTab;
+import theking530.common.gui.widgets.tabs.GuiMachinePowerInfoTab;
 import theking530.common.gui.widgets.tabs.GuiSideConfigTab;
+import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.common.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
 import theking530.common.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.common.gui.widgets.valuebars.GuiFluidBarUtilities;
@@ -32,11 +31,8 @@ public class GuiFluidInfuser extends StaticPowerTileEntityGui<ContainerFluidInfu
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
-
-		BaseGuiTab powerTab;
-		getTabManager().registerTab(powerTab = new GuiPowerInfoTab(ComponentUtilities.getComponent(EnergyStorageComponent.class, "MainEnergyStorage", getTileEntity()).get()).setTabSide(TabSide.LEFT));
-		getTabManager().setInitiallyOpenTab(powerTab);
-
+		getTabManager().registerTab(new GuiMachinePowerInfoTab(ComponentUtilities.getComponent(EnergyStorageComponent.class, "MainEnergyStorage", getTileEntity()).get()).setTabSide(TabSide.LEFT), true);
+		
 		setOutputSlotSize(20);
 	}
 

@@ -3,11 +3,13 @@ package theking530.staticpower.tileentities.powered.fermenter;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.common.gui.widgets.GuiIslandWidget;
+import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.common.gui.widgets.tabs.GuiInfoTab;
-import theking530.common.gui.widgets.tabs.GuiPowerInfoTab;
+import theking530.common.gui.widgets.tabs.GuiMachinePowerInfoTab;
 import theking530.common.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.common.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
+import theking530.common.gui.widgets.tabs.slottabs.GuiFluidContainerTab;
+import theking530.common.gui.widgets.tabs.slottabs.GuiUpgradeTab;
 import theking530.common.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.common.gui.widgets.valuebars.GuiFluidBarUtilities;
 import theking530.common.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
@@ -31,13 +33,13 @@ public class GuiFermenter extends StaticPowerTileEntityGui<ContainerFermenter, T
 		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 48));
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 150, 8, 16, 60, MachineSideMode.Output, getTileEntity()));
 
-		registerWidget(new GuiIslandWidget(-30, 5, 28, 60));
-		registerWidget(new GuiIslandWidget(-30, 70, 28, 64));
-
-		getTabManager().registerTab(infoTab = new GuiInfoTab(100, 100));
+		getTabManager().registerTab(infoTab = new GuiInfoTab(70, 70));
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
-		getTabManager().registerTab(new GuiPowerInfoTab(ComponentUtilities.getComponent(EnergyStorageComponent.class, "MainEnergyStorage", getTileEntity()).get()), true);
+
+		getTabManager().registerTab(new GuiMachinePowerInfoTab(ComponentUtilities.getComponent(EnergyStorageComponent.class, "MainEnergyStorage", getTileEntity()).get()).setTabSide(TabSide.LEFT), true);
+		getTabManager().registerTab(new GuiFluidContainerTab(this.container, getTileEntity().fluidContainerInventory).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiUpgradeTab(this.container, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
 
 		this.setOutputSlotSize(20);
 	}

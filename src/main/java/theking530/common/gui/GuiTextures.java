@@ -12,7 +12,9 @@ public class GuiTextures {
 	public static final ResourceLocation RED_TAB = new ResourceLocation(Reference.MOD_ID, "textures/gui/red_tab.png");
 	public static final ResourceLocation BLUE_TAB = new ResourceLocation(Reference.MOD_ID, "textures/gui/blue_tab.png");
 	public static final ResourceLocation YELLOW_TAB = new ResourceLocation(Reference.MOD_ID, "textures/gui/yellow_tab.png");
-
+	public static final ResourceLocation AQUA_TAB = new ResourceLocation(Reference.MOD_ID, "textures/gui/aqua_tab.png");
+	public static final ResourceLocation ORANGE_TAB = new ResourceLocation(Reference.MOD_ID, "textures/gui/orange_tab.png");
+	
 	public static final ResourceLocation POWER_BAR_FG = new ResourceLocation(Reference.MOD_ID, "textures/gui/power_bar_power.png");
 	public static final ResourceLocation POWER_BAR_BG = new ResourceLocation(Reference.MOD_ID, "textures/gui/power_bar_bg.png");
 

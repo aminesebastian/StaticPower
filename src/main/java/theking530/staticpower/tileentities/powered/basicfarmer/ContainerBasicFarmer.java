@@ -10,10 +10,8 @@ import net.minecraft.item.Items;
 import net.minecraft.network.PacketBuffer;
 import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.client.container.slots.BatteryItemSlot;
-import theking530.staticpower.client.container.slots.FluidContainerSlot;
 import theking530.staticpower.client.container.slots.OutputSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
-import theking530.staticpower.client.container.slots.UpgradeItemSlot;
 import theking530.staticpower.init.ModContainerTypes;
 
 public class ContainerBasicFarmer extends StaticPowerTileEntityContainer<TileEntityBasicFarmer> {
@@ -33,33 +31,14 @@ public class ContainerBasicFarmer extends StaticPowerTileEntityContainer<TileEnt
 			}
 		}
 
-		// FluidContainerSlots
-		addSlot(new FluidContainerSlot(getTileEntity().fluidContainerInventory, Items.WATER_BUCKET, 0, -24, 11));
-		addSlot(new OutputSlot(getTileEntity().fluidContainerInventory, Items.BUCKET, 1, -24, 43));
-
 		// Hoe
-		addSlot(new StaticPowerContainerSlot(new ItemStack(Items.IRON_HOE), 0.3f, getTileEntity().inputInventory, 0, 48, 20) {
-			@Override
-			public boolean isItemValid(ItemStack itemStack) {
-				return itemStack.getItem() instanceof HoeItem;
-			}
-		});
+		addSlot(new StaticPowerContainerSlot(new ItemStack(Items.IRON_HOE), 0.3f, getTileEntity().inputInventory, 0, 48, 20));
 
 		// Axe
-		addSlot(new StaticPowerContainerSlot(new ItemStack(Items.IRON_AXE), 0.3f, getTileEntity().inputInventory, 1, 48, 56) {
-			@Override
-			public boolean isItemValid(ItemStack itemStack) {
-				return itemStack.getItem() instanceof AxeItem;
-			}
-		});
+		addSlot(new StaticPowerContainerSlot(new ItemStack(Items.IRON_AXE), 0.3f, getTileEntity().inputInventory, 1, 48, 56));
 
 		// Battery
 		addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 60));
-
-		// Upgrades
-		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 0, -24, 76));
-		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 1, -24, 94));
-		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 2, -24, 112));
 
 		addPlayerInventory(getPlayerInventory(), 8, 84);
 		addPlayerHotbar(getPlayerInventory(), 8, 142);

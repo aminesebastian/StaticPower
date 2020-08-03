@@ -2,28 +2,28 @@ package theking530.staticpower.data.crafting.wrappers.squeezer;
 
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
 public class SqueezerRecipe extends AbstractMachineRecipe {
 	public static final IRecipeType<SqueezerRecipe> RECIPE_TYPE = IRecipeType.register("squeezer");
 
-	private final Ingredient input;
+	private final StaticPowerIngredient input;
 	private final ProbabilityItemStackOutput output;
 	private final FluidStack outputFluid;
 
-	public SqueezerRecipe(ResourceLocation name, Ingredient input, ProbabilityItemStackOutput output, FluidStack outputFluid, int processingTime, int powerCost) {
+	public SqueezerRecipe(ResourceLocation name, StaticPowerIngredient input, ProbabilityItemStackOutput output, FluidStack outputFluid, int processingTime, int powerCost) {
 		super(name, processingTime, powerCost);
 		this.input = input;
 		this.output = output;
 		this.outputFluid = outputFluid;
 	}
 
-	public Ingredient getInput() {
+	public StaticPowerIngredient getInput() {
 		return input;
 	}
 

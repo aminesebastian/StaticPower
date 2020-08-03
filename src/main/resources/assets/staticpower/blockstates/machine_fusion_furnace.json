@@ -1,0 +1,12 @@
+{
+    "variants": {
+		"facing=north,is_on=false": { "model": "staticpower:block/machines/machine_fusion_furnace" },
+        "facing=south,is_on=false": { "model": "staticpower:block/machines/machine_fusion_furnace", "y": 180 },
+        "facing=west,is_on=false":  { "model": "staticpower:block/machines/machine_fusion_furnace", "y": 270 },
+        "facing=east,is_on=false":  { "model": "staticpower:block/machines/machine_fusion_furnace", "y": 90 },
+		"facing=north,is_on=true": { "model": "staticpower:block/machines/machine_fusion_furance_on" },
+        "facing=south,is_on=true": { "model": "staticpower:block/machines/machine_fusion_furance_on", "y": 180 },
+        "facing=west,is_on=true":  { "model": "staticpower:block/machines/machine_fusion_furance_on", "y": 270 },
+        "facing=east,is_on=true":  { "model": "staticpower:block/machines/machine_fusion_furance_on", "y": 90 }
+    }
+}

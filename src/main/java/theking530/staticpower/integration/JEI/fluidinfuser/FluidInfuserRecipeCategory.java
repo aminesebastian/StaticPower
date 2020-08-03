@@ -126,7 +126,7 @@ public class FluidInfuserRecipeCategory extends BaseJEIRecipeCategory<FluidInfus
 	public void setIngredients(FluidInfusionRecipe recipe, IIngredients ingredients) {
 		// Add the input item.
 		List<Ingredient> input = new ArrayList<Ingredient>();
-		input.add(recipe.getInput());
+		input.add(recipe.getInput().getIngredient());
 		ingredients.setInputIngredients(input);
 
 		// Set the filled bottle output itemstack.

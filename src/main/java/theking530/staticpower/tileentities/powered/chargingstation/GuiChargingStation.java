@@ -1,11 +1,11 @@
 package theking530.staticpower.tileentities.powered.chargingstation;
 
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.Items;
 import net.minecraft.util.text.ITextComponent;
-import theking530.common.gui.widgets.tabs.BaseGuiTab;
-import theking530.common.gui.widgets.tabs.GuiPowerInfoTab;
+import theking530.common.gui.widgets.GuiIslandWidget;
+import theking530.common.gui.widgets.tabs.GuiMachinePowerInfoTab;
 import theking530.common.gui.widgets.tabs.GuiSideConfigTab;
-import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.common.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
 import theking530.common.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
@@ -23,26 +23,21 @@ public class GuiChargingStation extends StaticPowerTileEntityGui<ContainerChargi
 	public void initializeGui() {
 		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 42));
 
+		getTabManager().registerTab(new GuiMachinePowerInfoTab(ComponentUtilities.getComponent(EnergyStorageComponent.class, "MainEnergyStorage", getTileEntity()).get()), true);
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
 
-		BaseGuiTab powerTab;
-		getTabManager().registerTab(powerTab = new GuiPowerInfoTab(ComponentUtilities.getComponent(EnergyStorageComponent.class, "MainEnergyStorage", getTileEntity()).get()).setTabSide(TabSide.LEFT));
-		getTabManager().setInitiallyOpenTab(powerTab);
+		registerWidget(new GuiIslandWidget(-25, 8, 30, 85));
 
 		setOutputSlotSize(20);
 	}
 
 	@Override
-	protected void drawBackgroundExtras(float partialTicks, int mouseX, int mouseY) {
-		drawGenericBackground();
-		drawPlayerInventorySlots();
-		drawContainerSlots(container.inventorySlots, getTileEntity().ioSideConfiguration);
-
-		drawGenericBackground(-30, 8, 28, 85);
-		drawSlot(guiLeft - 24, guiTop + 14, 16, 16);
-		drawSlot(guiLeft - 24, guiTop + 33, 16, 16);
-		drawSlot(guiLeft - 24, guiTop + 52, 16, 16);
-		drawSlot(guiLeft - 24, guiTop + 71, 16, 16);
+	protected void drawBehindItems(float partialTicks, int mouseX, int mouseY) {
+		super.drawBehindItems(partialTicks, mouseX, mouseY);
+		this.itemRenderer.drawItem(Items.IRON_HELMET, guiLeft, guiTop, -19, 14, 0.3f);
+		this.itemRenderer.drawItem(Items.IRON_CHESTPLATE, guiLeft, guiTop, -19, 33, 0.3f);
+		this.itemRenderer.drawItem(Items.IRON_LEGGINGS, guiLeft, guiTop, -19, 52, 0.3f);
+		this.itemRenderer.drawItem(Items.IRON_BOOTS, guiLeft, guiTop, -19, 71, 0.3f);
 	}
 }

@@ -4,14 +4,16 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
-import theking530.common.gui.widgets.GuiIslandWidget;
 import theking530.common.gui.widgets.button.SpriteButton;
 import theking530.common.gui.widgets.button.StandardButton;
 import theking530.common.gui.widgets.button.StandardButton.MouseButton;
+import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.common.gui.widgets.tabs.GuiInfoTab;
-import theking530.common.gui.widgets.tabs.GuiPowerInfoTab;
+import theking530.common.gui.widgets.tabs.GuiMachinePowerInfoTab;
 import theking530.common.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.common.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
+import theking530.common.gui.widgets.tabs.slottabs.GuiFluidContainerTab;
+import theking530.common.gui.widgets.tabs.slottabs.GuiUpgradeTab;
 import theking530.common.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.common.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.StaticPowerSprites;
@@ -35,9 +37,6 @@ public class GuiBasicFarmer extends StaticPowerTileEntityGui<ContainerBasicFarme
 		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 48));
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 150, 8, 16, 60, MachineSideMode.Input, getTileEntity()));
 
-		registerWidget(new GuiIslandWidget(-30, 5, 28, 60));
-		registerWidget(new GuiIslandWidget(-30, 70, 28, 64));
-
 		registerWidget(drawPreviewButton = new SpriteButton(132, 61, 12, 12, StaticPowerSprites.RANGE_ICON, null, this::buttonPressed));
 		drawPreviewButton.setTooltip(new StringTextComponent("Preview Range"));
 		drawPreviewButton.setToggleable(true);
@@ -46,8 +45,12 @@ public class GuiBasicFarmer extends StaticPowerTileEntityGui<ContainerBasicFarme
 		getTabManager().registerTab(infoTab = new GuiInfoTab(100, 100));
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
-		getTabManager().registerTab(new GuiPowerInfoTab(ComponentUtilities.getComponent(EnergyStorageComponent.class, "MainEnergyStorage", getTileEntity()).get()), true);
 
+
+		getTabManager().registerTab(new GuiMachinePowerInfoTab(ComponentUtilities.getComponent(EnergyStorageComponent.class, "MainEnergyStorage", getTileEntity()).get()).setTabSide(TabSide.LEFT), true);
+		getTabManager().registerTab(new GuiFluidContainerTab(this.container, getTileEntity().fluidContainerInventory).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiUpgradeTab(this.container, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
+		
 		setOutputSlotSize(16);
 	}
 

@@ -21,6 +21,7 @@ import theking530.staticpower.tileentities.components.InputServoComponent;
 import theking530.staticpower.tileentities.components.InventoryComponent;
 import theking530.staticpower.tileentities.components.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.OutputServoComponent;
+import theking530.staticpower.tileentities.components.FluidContainerComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 import theking530.staticpower.utilities.InventoryUtilities;
@@ -62,7 +63,7 @@ public class TileEntityFermenter extends TileEntityMachine {
 
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));
 		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory));
-		registerComponent(new FluidContainerComponent("FluidContainerServo", fluidTankComponent, fluidContainerInventory, 0, 1));
+		registerComponent(new FluidContainerComponent("FluidContainerServo", fluidTankComponent, fluidContainerInventory, 0, 1).setMode(FluidContainerInteractionMode.FILL));
 		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
 
 		powerCost = DEFAULT_POWER_USAGE;

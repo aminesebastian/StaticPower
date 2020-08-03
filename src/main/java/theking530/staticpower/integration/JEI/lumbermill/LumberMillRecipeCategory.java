@@ -119,7 +119,7 @@ public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRe
 	@Override
 	public void setIngredients(LumberMillRecipe recipe, IIngredients ingredients) {
 		List<Ingredient> input = new ArrayList<Ingredient>();
-		input.add(recipe.getInput());
+		input.add(recipe.getInput().getIngredient());
 		ingredients.setInputIngredients(input);
 
 		List<ItemStack> outputs = new ArrayList<ItemStack>();

@@ -18,7 +18,12 @@ public class StaticPowerFEStorage implements IEnergyStorage {
 	protected boolean canRecieve;
 
 	protected Queue<Integer> ioCaptureFrames;
-	protected int currentFrameEnergyTransfered;
+	protected Queue<Integer> receiveCaptureFrames;
+	protected Queue<Integer> extractCaptureFrames;
+	protected int currentFrameEnergyReceived;
+	protected int currentFrameEnergyExtracted;
+	protected int averageRecieved;
+	protected int averageExtracted;
 
 	public StaticPowerFEStorage(int capacity) {
 		this(capacity, Integer.MAX_VALUE, Integer.MAX_VALUE);
@@ -36,6 +41,8 @@ public class StaticPowerFEStorage implements IEnergyStorage {
 		canRecieve = true;
 		canExtract = true;
 		ioCaptureFrames = new LinkedList<Integer>();
+		receiveCaptureFrames = new LinkedList<Integer>();
+		extractCaptureFrames = new LinkedList<Integer>();
 	}
 
 	/**
@@ -43,11 +50,42 @@ public class StaticPowerFEStorage implements IEnergyStorage {
 	 * should be called once per tick.
 	 */
 	public void captureEnergyMetric() {
-		ioCaptureFrames.add(currentFrameEnergyTransfered);
+		// IO Capture
+		int tranfered = currentFrameEnergyReceived + currentFrameEnergyExtracted;
+		ioCaptureFrames.add(tranfered);
 		if (ioCaptureFrames.size() > MAXIMUM_IO_CAPTURE_FRAMES) {
 			ioCaptureFrames.poll();
 		}
-		currentFrameEnergyTransfered = 0;
+
+		// Capture Received Amounts
+		receiveCaptureFrames.add(currentFrameEnergyReceived);
+		if (receiveCaptureFrames.size() > MAXIMUM_IO_CAPTURE_FRAMES) {
+			receiveCaptureFrames.poll();
+		}
+
+		// Capture Extracted Amounts
+		extractCaptureFrames.add(currentFrameEnergyExtracted);
+		if (extractCaptureFrames.size() > MAXIMUM_IO_CAPTURE_FRAMES) {
+			extractCaptureFrames.poll();
+		}
+
+		// Cache the average extracted rate.
+		averageExtracted = 0;
+		for (int value : extractCaptureFrames) {
+			averageExtracted += value;
+		}
+		averageExtracted /= Math.max(1, extractCaptureFrames.size());
+
+		// Cache the average recieved rate.
+		averageRecieved = 0;
+		for (int value : receiveCaptureFrames) {
+			averageRecieved += value;
+		}
+		averageRecieved /= Math.max(1, receiveCaptureFrames.size());
+		
+		// Reset the values.
+		currentFrameEnergyReceived = 0;
+		currentFrameEnergyExtracted = 0;
 	}
 
 	/**
@@ -57,11 +95,27 @@ public class StaticPowerFEStorage implements IEnergyStorage {
 	 * @return
 	 */
 	public int getEnergyIO() {
-		int output = 0;
-		for (int value : ioCaptureFrames) {
-			output += value;
-		}
-		return output / Math.max(1, ioCaptureFrames.size());
+		return averageExtracted + averageRecieved;
+	}
+
+	/**
+	 * Gets the average extracted energy per tick for this storage over the last
+	 * {@link #MAXIMUM_IO_CAPTURE_FRAMES} calls to {@link #captureEnergyMetric()}.
+	 * 
+	 * @return
+	 */
+	public int getExtractedPerTick() {
+		return averageExtracted;
+	}
+
+	/**
+	 * Gets the average received energy per tick for this storage over the last
+	 * {@link #MAXIMUM_IO_CAPTURE_FRAMES} calls to {@link #captureEnergyMetric()}.
+	 * 
+	 * @return
+	 */
+	public int getRecievedPerTick() {
+		return averageRecieved;
 	}
 
 	@Override
@@ -74,7 +128,7 @@ public class StaticPowerFEStorage implements IEnergyStorage {
 
 		if (!simulate) {
 			currentEnergy += maxActualRecieve;
-			currentFrameEnergyTransfered += maxActualRecieve;
+			currentFrameEnergyReceived += maxActualRecieve;
 		}
 		return maxActualRecieve;
 	}
@@ -89,7 +143,7 @@ public class StaticPowerFEStorage implements IEnergyStorage {
 
 		if (!simulate) {
 			currentEnergy -= maxActualExtract;
-			currentFrameEnergyTransfered -= maxActualExtract;
+			currentFrameEnergyExtracted -= maxActualExtract;
 		}
 
 		return maxActualExtract;
@@ -184,7 +238,8 @@ public class StaticPowerFEStorage implements IEnergyStorage {
 		capacity = nbt.getInt("Capacity");
 		maxReceive = nbt.getInt("MaxRecv");
 		maxExtract = nbt.getInt("MaxExtract");
-		currentFrameEnergyTransfered = nbt.getInt("Transfered");
+		averageRecieved = nbt.getInt("Received");
+		averageExtracted = nbt.getInt("Extracted");
 	}
 
 	public CompoundNBT writeToNbt(CompoundNBT nbt) {
@@ -196,7 +251,8 @@ public class StaticPowerFEStorage implements IEnergyStorage {
 		nbt.putInt("Capacity", capacity);
 		nbt.putInt("MaxRecv", maxReceive);
 		nbt.putInt("MaxExtract", maxExtract);
-		nbt.putInt("Transfered", currentFrameEnergyTransfered);
+		nbt.putInt("Received", averageRecieved);
+		nbt.putInt("Extracted", averageExtracted);
 		return nbt;
 	}
 }

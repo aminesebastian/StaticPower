@@ -6,22 +6,22 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
 public class LumberMillRecipe extends AbstractMachineRecipe {
 	public static final IRecipeType<LumberMillRecipe> RECIPE_TYPE = IRecipeType.register("lumber_mill");
 
-	private final Ingredient input;
+	private final StaticPowerIngredient input;
 	private final ProbabilityItemStackOutput primaryOutput;
 	private final ProbabilityItemStackOutput secondaryOutput;
 	private final FluidStack outputFluid;
 
-	public LumberMillRecipe(ResourceLocation name, Ingredient input, ProbabilityItemStackOutput primaryOutput, ProbabilityItemStackOutput secondaryOutput, FluidStack outputFluid, int processingTime, int powerCost) {
+	public LumberMillRecipe(ResourceLocation name, StaticPowerIngredient input, ProbabilityItemStackOutput primaryOutput, ProbabilityItemStackOutput secondaryOutput, FluidStack outputFluid, int processingTime, int powerCost) {
 		super(name, processingTime, powerCost);
 		this.input = input;
 		this.primaryOutput = primaryOutput;
@@ -29,7 +29,7 @@ public class LumberMillRecipe extends AbstractMachineRecipe {
 		this.outputFluid = outputFluid;
 	}
 
-	public Ingredient getInput() {
+	public StaticPowerIngredient getInput() {
 		return input;
 	}
 

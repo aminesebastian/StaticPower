@@ -106,7 +106,7 @@ public class SqueezerRecipeCategory extends BaseJEIRecipeCategory<SqueezerRecipe
 	public void setIngredients(SqueezerRecipe recipe, IIngredients ingredients) {
 		// Add the inputs.
 		List<Ingredient> input = new ArrayList<Ingredient>();
-		input.add(recipe.getInput());
+		input.add(recipe.getInput().getIngredient());
 		ingredients.setInputIngredients(input);
 
 		List<ItemStack> outputs = new ArrayList<ItemStack>();

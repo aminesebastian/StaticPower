@@ -7,15 +7,18 @@ import theking530.common.gui.widgets.AbstractGuiWidget;
 import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.common.gui.widgets.tabs.BaseGuiTab.TabState;
 import theking530.common.utilities.Vector2D;
+import theking530.staticpower.client.gui.StaticPowerContainerGui;
 
 public class GuiTabManager extends AbstractGuiWidget {
 
 	private List<BaseGuiTab> registeredTabs;
 	private BaseGuiTab initiallyOpenTab;
+	protected final StaticPowerContainerGui<?> owningGui;
 
-	public GuiTabManager() {
+	public GuiTabManager(StaticPowerContainerGui<?> owningGui) {
 		super(0, 0, 0, 0);
 		registeredTabs = new ArrayList<BaseGuiTab>();
+		this.owningGui = owningGui;
 	}
 
 	public GuiTabManager registerTab(BaseGuiTab tab, boolean initiallyOpen) {
@@ -45,6 +48,10 @@ public class GuiTabManager extends AbstractGuiWidget {
 		initiallyOpenTab.setTabState(TabState.OPEN);
 	}
 
+	public StaticPowerContainerGui<?> getOwningGui() {
+		return owningGui;
+	}
+
 	public void tabClosed(BaseGuiTab tab) {
 	}
 
@@ -63,7 +70,7 @@ public class GuiTabManager extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderBehindItems(int mouseX, int mouseY, float partialTicks) {
+	public void renderBackground(int mouseX, int mouseY, float partialTicks) {
 		Vector2D positionOffset = this.getPosition();
 		int tabPositionX = (int) (getOwnerPosition().getX() + getOwnerSize().getX() - 1 + positionOffset.getX());
 		int tabPositionY = (int) (getOwnerPosition().getY() + 10 + positionOffset.getY());
@@ -77,8 +84,8 @@ public class GuiTabManager extends AbstractGuiWidget {
 			} else {
 				leftTabs.add(tab);
 			}
-
 		}
+
 		int maxOffset = (int) (getOwnerPosition().getY() + getOwnerSize().getY() - 25);
 
 		for (int i = rightTabs.size() - 1; i >= 0; i--) {
@@ -108,6 +115,15 @@ public class GuiTabManager extends AbstractGuiWidget {
 			leftTabs.get(i).drawTabPanel(partialTicks);
 			if (leftTabs.get(i).isOpen()) {
 				leftTabs.get(i).renderBackground(mouseX, mouseY, partialTicks);
+			}
+		}
+	}
+
+	@Override
+	public void renderBehindItems(int mouseX, int mouseY, float partialTicks) {
+		for (BaseGuiTab tab : registeredTabs) {
+			if (tab.isOpen()) {
+				tab.renderBehindItems(mouseX, mouseY, partialTicks);
 			}
 		}
 	}

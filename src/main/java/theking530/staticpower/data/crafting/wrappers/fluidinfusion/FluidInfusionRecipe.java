@@ -2,28 +2,28 @@ package theking530.staticpower.data.crafting.wrappers.fluidinfusion;
 
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
 public class FluidInfusionRecipe extends AbstractMachineRecipe {
 	public static final IRecipeType<FluidInfusionRecipe> RECIPE_TYPE = IRecipeType.register("fluid_infusion");
 
-	private final Ingredient input;
+	private final StaticPowerIngredient input;
 	private final ProbabilityItemStackOutput output;
 	private final FluidStack inputFluid;
 
-	public FluidInfusionRecipe(ResourceLocation name, Ingredient input, ProbabilityItemStackOutput output, FluidStack inputFluid, int processingTime, int powerCost) {
+	public FluidInfusionRecipe(ResourceLocation name, StaticPowerIngredient input, ProbabilityItemStackOutput output, FluidStack inputFluid, int processingTime, int powerCost) {
 		super(name, processingTime, powerCost);
 		this.input = input;
 		this.output = output;
 		this.inputFluid = inputFluid;
 	}
 
-	public Ingredient getInput() {
+	public StaticPowerIngredient getInput() {
 		return input;
 	}
 

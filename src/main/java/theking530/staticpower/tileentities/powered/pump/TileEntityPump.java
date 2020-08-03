@@ -28,6 +28,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
+import theking530.staticpower.tileentities.components.BatteryComponent;
 import theking530.staticpower.tileentities.components.FluidContainerComponent;
 import theking530.staticpower.tileentities.components.FluidContainerComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.components.FluidOutputServoComponent;
@@ -44,6 +45,7 @@ public class TileEntityPump extends TileEntityMachine {
 	public final InventoryComponent fluidContainerInventory;
 	public final FluidTankComponent fluidTankComponent;
 	public final MachineProcessingComponent processingComponent;
+	public final InventoryComponent batteryInventory;
 	private final Queue<BlockPos> positionsToPump;
 
 	public TileEntityPump() {
@@ -63,8 +65,12 @@ public class TileEntityPump extends TileEntityMachine {
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PUMP_RATE, this::canProcess, this::canProcess, this::pump, true));
 		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
 
+		// Battery
+		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
+		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
+		
 		// Set the default side configuration.
-		ioSideConfiguration.setDefaultConfiguration(MachineSideMode.Never, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output);
+		ioSideConfiguration.setDefaultConfiguration(MachineSideMode.Disabled, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output);
 
 		// Disable face interaction.
 		DisableFaceInteraction = false;
@@ -75,7 +81,7 @@ public class TileEntityPump extends TileEntityMachine {
 
 	@Override()
 	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		if (side != BlockSide.TOP && mode != MachineSideMode.Never) {
+		if (side != BlockSide.TOP && mode != MachineSideMode.Disabled) {
 			return false;
 		}
 		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Output;

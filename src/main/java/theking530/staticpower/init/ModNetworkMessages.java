@@ -1,5 +1,6 @@
 package theking530.staticpower.init;
 
+import theking530.common.gui.widgets.tabs.PacketGuiTabAddSlots;
 import theking530.common.gui.widgets.tabs.PacketSideConfigTab;
 import theking530.common.gui.widgets.tabs.redstonecontrol.PacketCableAttachmentRedstoneSync;
 import theking530.common.gui.widgets.tabs.redstonecontrol.PacketRedstoneComponentSync;
@@ -34,5 +35,6 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(PacketEnergyStorageComponent.class);
 		StaticPowerMessageHandler.registerMessage(PacketFluidTankComponent.class);
 		StaticPowerMessageHandler.registerMessage(PacketLockInventorySlot.class);
+		StaticPowerMessageHandler.registerMessage(PacketGuiTabAddSlots.class);
 	}
 }

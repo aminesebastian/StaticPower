@@ -1,0 +1,19 @@
+{
+	"type": "staticpower:fusion_furnace_recipe",
+	"inputs": [
+		{
+			"tag": "forge:dusts/obsidian",
+			"count": 8
+		},
+		{
+			"tag": "forge:glass"
+		},
+		{
+			"tag": "forge:ingots/lead"
+		}
+	],
+	"output": {
+		"item": "staticpower:glass_obsidian",
+		"count": 4
+	}
+}

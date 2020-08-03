@@ -2,12 +2,13 @@ package theking530.staticpower.tileentities.powered.lumbermill;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
-import theking530.common.gui.widgets.GuiIslandWidget;
 import theking530.common.gui.widgets.progressbars.ArrowProgressBar;
-import theking530.common.gui.widgets.tabs.BaseGuiTab;
-import theking530.common.gui.widgets.tabs.GuiPowerInfoTab;
+import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
+import theking530.common.gui.widgets.tabs.GuiMachinePowerInfoTab;
 import theking530.common.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.common.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
+import theking530.common.gui.widgets.tabs.slottabs.GuiFluidContainerTab;
+import theking530.common.gui.widgets.tabs.slottabs.GuiUpgradeTab;
 import theking530.common.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.common.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
@@ -31,12 +32,9 @@ public class GuiLumberMill extends StaticPowerTileEntityGui<ContainerLumberMill,
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
 		
-		BaseGuiTab powerTab;
-		getTabManager().registerTab(powerTab = new GuiPowerInfoTab(ComponentUtilities.getComponent(EnergyStorageComponent.class, "MainEnergyStorage", getTileEntity()).get()));
-		getTabManager().setInitiallyOpenTab(powerTab);
-
-		registerWidget(new GuiIslandWidget(-30, 5, 28, 60));
-		registerWidget(new GuiIslandWidget(-30, 70, 28, 64));
+		getTabManager().registerTab(new GuiMachinePowerInfoTab(ComponentUtilities.getComponent(EnergyStorageComponent.class, "MainEnergyStorage", getTileEntity()).get()).setTabSide(TabSide.LEFT), true);
+		getTabManager().registerTab(new GuiFluidContainerTab(this.container, getTileEntity().fluidContainerInventory).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiUpgradeTab(this.container, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
 
 		setOutputSlotSize(20);
 	}

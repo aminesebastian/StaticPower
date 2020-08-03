@@ -5,16 +5,13 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.client.container.slots.BatteryItemSlot;
-import theking530.staticpower.client.container.slots.FluidContainerSlot;
 import theking530.staticpower.client.container.slots.OutputSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
-import theking530.staticpower.client.container.slots.UpgradeItemSlot;
 import theking530.staticpower.init.ModContainerTypes;
 import theking530.staticpower.init.ModTags;
 
@@ -47,25 +44,9 @@ public class ContainerTreeFarmer extends StaticPowerTileEntityContainer<TileEnti
 			}
 		}
 
-		// FluidContainerSlots
-		addSlot(new FluidContainerSlot(getTileEntity().fluidContainerInventoy, Items.WATER_BUCKET, 0, -24, 11));
-		addSlot(new OutputSlot(getTileEntity().fluidContainerInventoy, Items.BUCKET, 1, -24, 43));
-
-		// Axe
-		addSlot(new StaticPowerContainerSlot(new ItemStack(Items.IRON_AXE), 0.3f, getTileEntity().inputInventory, 0, -24, 75) {
-			@Override
-			public boolean isItemValid(ItemStack itemStack) {
-				return itemStack.getItem() instanceof AxeItem;
-			}
-		});
-
 		// Battery
 		addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 60));
 
-		// Upgrades
-		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 0, -24, 106));
-		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 1, -24, 124));
-		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 2, -24, 142));
 
 		addPlayerInventory(getPlayerInventory(), 8, 84);
 		addPlayerHotbar(getPlayerInventory(), 8, 142);

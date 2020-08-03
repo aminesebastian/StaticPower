@@ -50,6 +50,8 @@ import theking530.staticpower.tileentities.powered.fluidinfuser.ContainerFluidIn
 import theking530.staticpower.tileentities.powered.fluidinfuser.GuiFluidInfuser;
 import theking530.staticpower.tileentities.powered.former.ContainerFormer;
 import theking530.staticpower.tileentities.powered.former.GuiFormer;
+import theking530.staticpower.tileentities.powered.fusionfurnace.ContainerFusionFurnace;
+import theking530.staticpower.tileentities.powered.fusionfurnace.GuiFusionFurnace;
 import theking530.staticpower.tileentities.powered.lumbermill.ContainerLumberMill;
 import theking530.staticpower.tileentities.powered.lumbermill.GuiLumberMill;
 import theking530.staticpower.tileentities.powered.poweredfurnace.ContainerPoweredFurnace;
@@ -86,6 +88,7 @@ public class ModContainerTypes {
 	public static ContainerType<ContainerAutoCraftingTable> AUTO_CRAFTING_TABLE_CONTAINER;
 	public static ContainerType<ContainerFluidInfuser> FLUID_INFUSER_CONTAINER;
 	public static ContainerType<ContainerCentrifuge> CENTRIFUGE_CONTAINER;
+	public static ContainerType<ContainerFusionFurnace> FUSION_FURNACE_CONTAINER;
 	
 	public static ContainerType<ContainerTank> TANK_CONTAINER;
 	public static ContainerType<ContainerPump> PUMP_CONTAINER;
@@ -121,7 +124,8 @@ public class ModContainerTypes {
 		AUTO_CRAFTING_TABLE_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_industrial_crafting_table", ContainerAutoCraftingTable::new, GuiAutoCraftingTable::new);
 		FLUID_INFUSER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_fluid_infuser", ContainerFluidInfuser::new, GuiFluidInfuser::new);
 		CENTRIFUGE_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_centrifuge", ContainerCentrifuge::new, GuiCentrifuge::new);
-		
+		FUSION_FURNACE_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_fusion_furnace", ContainerFusionFurnace::new, GuiFusionFurnace::new);
+
 		SOLDERING_TABLE_CONTAINER = StaticPowerRegistry.preRegisterContainer("soldering_table", ContainerSolderingTable::new, GuiSolderingTable::new);
 		TANK_CONTAINER = StaticPowerRegistry.preRegisterContainer("tank", ContainerTank::new, GuiTank::new);
 		PUMP_CONTAINER = StaticPowerRegistry.preRegisterContainer("pump", ContainerPump::new, GuiPump::new);

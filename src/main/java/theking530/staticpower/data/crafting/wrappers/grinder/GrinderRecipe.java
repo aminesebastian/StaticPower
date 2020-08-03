@@ -3,11 +3,11 @@ package theking530.staticpower.data.crafting.wrappers.grinder;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
 public class GrinderRecipe extends AbstractMachineRecipe {
 	public static final IRecipeType<GrinderRecipe> RECIPE_TYPE = IRecipeType.register("grinder");
@@ -18,9 +18,9 @@ public class GrinderRecipe extends AbstractMachineRecipe {
 	 * (for example, to see if an inventory can take the items).
 	 */
 	private final ItemStack[] outputItems;
-	private final Ingredient inputItem;
+	private final StaticPowerIngredient inputItem;
 
-	public GrinderRecipe(ResourceLocation name, int processingTime, int powerCost, Ingredient input, ProbabilityItemStackOutput... outputs) {
+	public GrinderRecipe(ResourceLocation name, int processingTime, int powerCost, StaticPowerIngredient input, ProbabilityItemStackOutput... outputs) {
 		super(name, processingTime, powerCost);
 		this.inputItem = input;
 		this.outputs = outputs;
@@ -39,7 +39,7 @@ public class GrinderRecipe extends AbstractMachineRecipe {
 		return outputItems;
 	}
 
-	public Ingredient getInputIngredient() {
+	public StaticPowerIngredient getInputIngredient() {
 		return inputItem;
 	}
 

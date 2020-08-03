@@ -1,0 +1,18 @@
+{
+	"type": "staticpower:fusion_furnace_recipe",
+	"inputs": [
+		{
+			"tag": "forge:ingots/iron"
+		},
+		{
+			"tag": "forge:ingots/gold"
+		},
+		{
+			"tag": "forge:ingots/platinum"
+		}
+	],
+	"output": {
+		"item": "staticpower:ingot_inert_infusion",
+		"count": 3
+	}
+}

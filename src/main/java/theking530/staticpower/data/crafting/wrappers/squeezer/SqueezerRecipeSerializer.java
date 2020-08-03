@@ -6,13 +6,13 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.JsonObject;
 
 import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 import theking530.staticpower.tileentities.powered.squeezer.TileEntitySqueezer;
 import theking530.staticpower.utilities.Reference;
@@ -29,10 +29,10 @@ public class SqueezerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
 	public SqueezerRecipe read(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input ingredient.
 		JsonObject inputElement = JSONUtils.getJsonObject(json, "input");
-		Ingredient input = Ingredient.deserialize(inputElement);
+		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
 
 		// Return null if the input is empty.
-		if (input == Ingredient.EMPTY) {
+		if (input.isEmpty()) {
 			LOGGER.error(String.format("Encounetered a squeezer recipe with no input defined...skipping. %1$s", recipeId));
 			return null;
 		}

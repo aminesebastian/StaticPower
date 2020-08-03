@@ -1,0 +1,15 @@
+{
+	"type": "staticpower:fusion_furnace_recipe",
+	"inputs": [
+		{
+			"tag": "forge:ingots/copper"
+		},
+		{
+			"tag": "forge:ingots/zinc"
+		}
+	],
+	"output": {
+		"item": "staticpower:ingot_brass",
+		"count": 2
+	}
+}

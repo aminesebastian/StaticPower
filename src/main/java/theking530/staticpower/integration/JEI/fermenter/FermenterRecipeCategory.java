@@ -118,7 +118,7 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 	public void setIngredients(FermenterRecipe recipe, IIngredients ingredients) {
 		// Set the input items.
 		List<Ingredient> input = new ArrayList<Ingredient>();
-		input.add(recipe.getInputIngredient());
+		input.add(recipe.getInputIngredient().getIngredient());
 		ingredients.setInputIngredients(input);
 
 		// Set the output ingredients.

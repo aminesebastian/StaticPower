@@ -4,6 +4,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Items;
 import net.minecraft.network.PacketBuffer;
 import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
+import theking530.staticpower.client.container.slots.BatteryItemSlot;
 import theking530.staticpower.client.container.slots.FluidContainerSlot;
 import theking530.staticpower.init.ModContainerTypes;
 
@@ -20,10 +21,13 @@ public class ContainerPump extends StaticPowerTileEntityContainer<TileEntityPump
 	@Override
 	public void initializeContainer() {
 		// FluidContainerDrainSlots
-		addSlot(new FluidContainerSlot(getTileEntity().fluidContainerInventory, Items.BUCKET, 0, 115, 31));
-		addSlot(new FluidContainerSlot(getTileEntity().fluidContainerInventory, Items.WATER_BUCKET, 1, 115, 63));
+		addSlot(new FluidContainerSlot(getTileEntity().fluidContainerInventory, Items.BUCKET, 0, 133, 20));
+		addSlot(new FluidContainerSlot(getTileEntity().fluidContainerInventory, Items.WATER_BUCKET, 1, 133, 56));
 
-		addPlayerInventory(getPlayerInventory(), 8, 103);
-		addPlayerHotbar(getPlayerInventory(), 8, 161);
+		// Battery
+		this.addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 58));
+
+		addPlayerInventory(getPlayerInventory(), 8, 78);
+		addPlayerHotbar(getPlayerInventory(), 8, 136);
 	}
 }

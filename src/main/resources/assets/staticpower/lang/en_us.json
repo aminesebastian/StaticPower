@@ -290,6 +290,7 @@
 	"block.staticpower.machine_bottler": "Bottler",
 	"block.staticpower.machine_fluid_infuser": "Fluid Infuser",
 	"block.staticpower.machine_centrifuge": "Centrifuge",
+	"block.staticpower.machine_fusion_furnace": "Fusion Furnace",
 	"block.staticpower.soldering_table": "Soldering Table",
 	"block.staticpower.machine_industrial_soldering_table": "Industrial Solderer",
 	"block.staticpower.machine_industrial_crafting_table": "Industrial Crafter",
