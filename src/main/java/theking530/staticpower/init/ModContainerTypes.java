@@ -54,6 +54,8 @@ import theking530.staticpower.tileentities.powered.fusionfurnace.ContainerFusion
 import theking530.staticpower.tileentities.powered.fusionfurnace.GuiFusionFurnace;
 import theking530.staticpower.tileentities.powered.lumbermill.ContainerLumberMill;
 import theking530.staticpower.tileentities.powered.lumbermill.GuiLumberMill;
+import theking530.staticpower.tileentities.powered.miner.ContainerMiner;
+import theking530.staticpower.tileentities.powered.miner.GuiMiner;
 import theking530.staticpower.tileentities.powered.poweredfurnace.ContainerPoweredFurnace;
 import theking530.staticpower.tileentities.powered.poweredfurnace.GuiPoweredFurnace;
 import theking530.staticpower.tileentities.powered.poweredgrinder.ContainerPoweredGrinder;
@@ -89,6 +91,7 @@ public class ModContainerTypes {
 	public static ContainerType<ContainerFluidInfuser> FLUID_INFUSER_CONTAINER;
 	public static ContainerType<ContainerCentrifuge> CENTRIFUGE_CONTAINER;
 	public static ContainerType<ContainerFusionFurnace> FUSION_FURNACE_CONTAINER;
+	public static ContainerType<ContainerMiner> MINER_CONTAINER;
 	
 	public static ContainerType<ContainerTank> TANK_CONTAINER;
 	public static ContainerType<ContainerPump> PUMP_CONTAINER;
@@ -125,6 +128,7 @@ public class ModContainerTypes {
 		FLUID_INFUSER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_fluid_infuser", ContainerFluidInfuser::new, GuiFluidInfuser::new);
 		CENTRIFUGE_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_centrifuge", ContainerCentrifuge::new, GuiCentrifuge::new);
 		FUSION_FURNACE_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_fusion_furnace", ContainerFusionFurnace::new, GuiFusionFurnace::new);
+		MINER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_machine", ContainerMiner::new, GuiMiner::new);
 
 		SOLDERING_TABLE_CONTAINER = StaticPowerRegistry.preRegisterContainer("soldering_table", ContainerSolderingTable::new, GuiSolderingTable::new);
 		TANK_CONTAINER = StaticPowerRegistry.preRegisterContainer("tank", ContainerTank::new, GuiTank::new);
