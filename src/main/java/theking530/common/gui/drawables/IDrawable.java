@@ -1,5 +1,9 @@
 package theking530.common.gui.drawables;
 
 public interface IDrawable {
-	public void draw(float x, float y);
+	default void draw(float x, float y) {
+		draw(x, y, 0.0f);
+	}
+
+	public void draw(float x, float y, float z);
 }

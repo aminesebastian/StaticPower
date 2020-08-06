@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.item.AxeItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
@@ -76,8 +75,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 	public final InventoryComponent internalInventory;
 	public final MachineProcessingComponent processingComponent;
 	public final FluidTankComponent fluidTankComponent;
-
-	private FluidContainerComponent fluidInteractionComponent;
+	public final FluidContainerComponent fluidContainerComponent;
 	private boolean shouldDrawRadiusPreview;
 
 	private final List<BlockPos> blocks;
@@ -97,9 +95,10 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 10, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
-				return slot == 0 ? stack.getItem() instanceof AxeItem : saplingIngredient.test(stack);
+				return slot == 0 ? ModTags.FARMING_AXE.contains(stack.getItem()) : saplingIngredient.test(stack);
 			}
 		}));
+
 		registerComponent(fluidContainerInventoy = new InventoryComponent("FluidContainerInventoy", 2, MachineSideMode.Never));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 9, MachineSideMode.Output));
 		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
@@ -114,12 +113,12 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		shouldDrawRadiusPreview = false;
 		range = DEFAULT_RANGE;
 		blocks = new LinkedList<BlockPos>();
-		registerComponent(fluidInteractionComponent = new FluidContainerComponent("BucketDrain", fluidTankComponent, fluidContainerInventoy, 0, 1));
+		registerComponent(fluidContainerComponent = new FluidContainerComponent("BucketDrain", fluidTankComponent, fluidContainerInventoy, 0, 1));
 		registerComponent(new InputServoComponent("InputServo", 4, inputInventory));
 		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory));
 		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
 
-		fluidInteractionComponent.setMode(FluidContainerInteractionMode.DRAIN);
+		fluidContainerComponent.setMode(FluidContainerInteractionMode.DRAIN);
 	}
 
 	@Override
@@ -216,7 +215,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 	}
 
 	public boolean hasAxe() {
-		return inputInventory.getStackInSlot(0).getItem() instanceof AxeItem;
+		return ModTags.FARMING_AXE.contains(inputInventory.getStackInSlot(0).getItem());
 	}
 
 	public void useAxe() {
@@ -332,10 +331,6 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 			}
 		}
 		return false;
-	}
-
-	public FluidContainerComponent getFluidInteractionComponent() {
-		return fluidInteractionComponent;
 	}
 
 	public int getRadius() {

@@ -21,8 +21,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.item.AxeItem;
-import net.minecraft.item.HoeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
@@ -38,6 +36,7 @@ import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.farmer.FarmingFertalizerRecipe;
+import theking530.staticpower.init.ModTags;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.tileentities.TileEntityMachine;
@@ -70,6 +69,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	public final InventoryComponent upgradesInventory;
 	public final MachineProcessingComponent processingComponent;
 	public final FluidTankComponent fluidTankComponent;
+	public final FluidContainerComponent fluidContainerComponent;
 
 	private final HashSet<Class<? extends Block>> validHarvestacbleClasses;
 
@@ -81,17 +81,17 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	public TileEntityBasicFarmer() {
 		super(ModTileEntityTypes.BASIC_FARMER);
 		disableFaceInteraction();
-		
+
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 2, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
 				if (slot == 0) {
-					return !stack.isEmpty() && stack.getItem() instanceof HoeItem;
+					return ModTags.FARMING_HOE.contains(stack.getItem());
 				} else {
-					return !stack.isEmpty() && stack.getItem() instanceof AxeItem;
+					return ModTags.FARMING_AXE.contains(stack.getItem());
 				}
 			}
 		}));
-		
+
 		registerComponent(fluidContainerInventory = new InventoryComponent("FluidContainerInventory", 2, MachineSideMode.Never));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 9, MachineSideMode.Output));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 128, MachineSideMode.Never));
@@ -105,7 +105,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory, 0));
 		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory, 0, 1, 2, 3, 4, 5, 6, 7, 8));
-		registerComponent(new FluidContainerComponent("FluidContainerServo", fluidTankComponent, fluidContainerInventory, 0, 1));
+		registerComponent(fluidContainerComponent = new FluidContainerComponent("FluidContainerServo", fluidTankComponent, fluidContainerInventory, 0, 1));
 		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
 
 		// Capture all the harvestable blocks.
@@ -266,27 +266,29 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	}
 
 	public boolean hasHoe() {
-		return inputInventory.getStackInSlot(0).getItem() instanceof HoeItem;
+		return ModTags.FARMING_HOE.contains(inputInventory.getStackInSlot(0).getItem());
 	}
 
 	public boolean hasAxe() {
-		return inputInventory.getStackInSlot(1).getItem() instanceof AxeItem;
+		return ModTags.FARMING_AXE.contains(inputInventory.getStackInSlot(1).getItem());
 	}
 
 	public void useHoe() {
-		if (inputInventory.getStackInSlot(0) != ItemStack.EMPTY && inputInventory.getStackInSlot(0).getItem() instanceof HoeItem) {
+		// If we have an hoe, and we're on the server, use it.
+		if (hasHoe() && !getWorld().isRemote) {
 			if (inputInventory.getStackInSlot(0).attemptDamageItem(DEFAULT_TOOL_USAGE, RANDOM, null)) {
-				inputInventory.setStackInSlot(0, ItemStack.EMPTY);
-				getWorld().playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+				inputInventory.getStackInSlot(1).shrink(1);
+				getWorld().playSound(null, pos, SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F);
 			}
 		}
 	}
 
 	public void useAxe() {
-		if (inputInventory.getStackInSlot(1) != ItemStack.EMPTY && inputInventory.getStackInSlot(1).getItem() instanceof AxeItem) {
+		// If we have an axe, and we're on the server, use it.
+		if (hasAxe() && !getWorld().isRemote) {
 			if (inputInventory.getStackInSlot(1).attemptDamageItem(DEFAULT_TOOL_USAGE, RANDOM, null)) {
-				inputInventory.setStackInSlot(1, ItemStack.EMPTY);
-				getWorld().playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+				inputInventory.getStackInSlot(1).shrink(1);
+				getWorld().playSound(null, pos, SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F);
 			}
 		}
 	}

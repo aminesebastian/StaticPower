@@ -1,6 +1,7 @@
 package theking530.staticpower.tileentities.powered.fermenter;
 
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.Items;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
@@ -14,6 +15,7 @@ import theking530.common.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.common.gui.widgets.valuebars.GuiFluidBarUtilities;
 import theking530.common.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
+import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
 import theking530.staticpower.tileentities.components.EnergyStorageComponent;
 import theking530.staticpower.tileentities.components.RedstoneControlComponent;
@@ -37,8 +39,9 @@ public class GuiFermenter extends StaticPowerTileEntityGui<ContainerFermenter, T
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
 
-		getTabManager().registerTab(new GuiMachinePowerInfoTab(ComponentUtilities.getComponent(EnergyStorageComponent.class, "MainEnergyStorage", getTileEntity()).get()).setTabSide(TabSide.LEFT), true);
-		getTabManager().registerTab(new GuiFluidContainerTab(this.container, getTileEntity().fluidContainerInventory).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiMachinePowerInfoTab(ComponentUtilities.getComponent(EnergyStorageComponent.class, "MainEnergyStorage", getTileEntity()).get()).setTabSide(TabSide.LEFT),
+				true);
+		getTabManager().registerTab(new GuiFluidContainerTab(this.container, getTileEntity().fluidContainerComponent, Items.BUCKET, ModFluids.Mash.getBucket()).setTabSide(TabSide.LEFT));
 		getTabManager().registerTab(new GuiUpgradeTab(this.container, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
 
 		this.setOutputSlotSize(20);

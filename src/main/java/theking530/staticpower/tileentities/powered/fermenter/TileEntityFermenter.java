@@ -40,6 +40,7 @@ public class TileEntityFermenter extends TileEntityMachine {
 	public final MachineProcessingComponent moveComponent;
 	public final MachineProcessingComponent processingComponent;
 	public final FluidTankComponent fluidTankComponent;
+	public final FluidContainerComponent fluidContainerComponent;
 
 	private int powerCost;
 
@@ -57,13 +58,14 @@ public class TileEntityFermenter extends TileEntityMachine {
 		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
 		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", DEFAULT_MOVING_TIME, this::canMoveFromInputToProcessing, () -> true, this::movingCompleted, true));
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true).setShouldControlBlockState(true));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true)
+				.setShouldControlBlockState(true));
 
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000).setCapabilityExposedModes(MachineSideMode.Output));
 
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));
 		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory));
-		registerComponent(new FluidContainerComponent("FluidContainerServo", fluidTankComponent, fluidContainerInventory, 0, 1).setMode(FluidContainerInteractionMode.FILL));
+		registerComponent(fluidContainerComponent = new FluidContainerComponent("FluidContainerServo", fluidTankComponent, fluidContainerInventory, 0, 1).setMode(FluidContainerInteractionMode.FILL));
 		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
 
 		powerCost = DEFAULT_POWER_USAGE;
@@ -106,7 +108,8 @@ public class TileEntityFermenter extends TileEntityMachine {
 	 */
 	public boolean canProcess() {
 		FermenterRecipe recipe = getRecipe(internalInventory.getStackInSlot(0)).orElse(null);
-		return recipe != null && redstoneControlComponent.passesRedstoneCheck() && energyStorage.hasEnoughPower(powerCost) && InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, new ItemStack(ModItems.DistilleryGrain));
+		return recipe != null && redstoneControlComponent.passesRedstoneCheck() && energyStorage.hasEnoughPower(powerCost)
+				&& InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, new ItemStack(ModItems.DistilleryGrain));
 	}
 
 	/**

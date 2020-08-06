@@ -48,7 +48,7 @@ public class GuiBasicFarmer extends StaticPowerTileEntityGui<ContainerBasicFarme
 
 
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(ComponentUtilities.getComponent(EnergyStorageComponent.class, "MainEnergyStorage", getTileEntity()).get()).setTabSide(TabSide.LEFT), true);
-		getTabManager().registerTab(new GuiFluidContainerTab(this.container, getTileEntity().fluidContainerInventory).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiFluidContainerTab(this.container, getTileEntity().fluidContainerComponent).setTabSide(TabSide.LEFT));
 		getTabManager().registerTab(new GuiUpgradeTab(this.container, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
 		
 		setOutputSlotSize(16);

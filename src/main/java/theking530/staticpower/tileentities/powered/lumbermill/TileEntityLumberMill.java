@@ -44,7 +44,8 @@ public class TileEntityLumberMill extends TileEntityMachine {
 	public final MachineProcessingComponent moveComponent;
 	public final MachineProcessingComponent processingComponent;
 	public final FluidTankComponent fluidTankComponent;
-
+	public final FluidContainerComponent fluidContainerComponent;
+	
 	public TileEntityLumberMill() {
 		super(ModTileEntityTypes.LUMBER_MILL);
 		this.disableFaceInteraction();
@@ -73,7 +74,7 @@ public class TileEntityLumberMill extends TileEntityMachine {
 
 		// Register components to allow the lumbermill to fill buckets in the GUI.
 		registerComponent(fluidContainerInventory = new InventoryComponent("FluidContainerInventory", 2, MachineSideMode.Never));
-		registerComponent(new FluidContainerComponent("FluidFillContainerServo", fluidTankComponent, fluidContainerInventory, 0, 1).setMode(FluidContainerInteractionMode.FILL));
+		registerComponent(fluidContainerComponent = new FluidContainerComponent("FluidFillContainerServo", fluidTankComponent, fluidContainerInventory, 0, 1).setMode(FluidContainerInteractionMode.FILL));
 	}
 
 	/**

@@ -75,7 +75,7 @@ public class WidgetContainer {
 		Vector2D mousePosition = new Vector2D(mouseX, mouseY);
 		List<ITextComponent> tooltips = new ArrayList<ITextComponent>();
 		for (AbstractGuiWidget widget : widgets) {
-			if (widget.isVisible() && !widget.getTooltipsDisabled() && widget.isPointInsideBounds(mousePosition)) {
+			if (widget.isVisible() && !widget.getTooltipsDisabled() && (!widget.getShouldAutoCalculateTooltipBounds() || (widget.getShouldAutoCalculateTooltipBounds() && widget.isPointInsideBounds(mousePosition)))) {
 				widget.getTooltips(mousePosition, tooltips, false);
 			}
 		}

@@ -51,6 +51,11 @@ public class StaticPowerSprites {
 	public static final ResourceLocation SORT_NUMERICAN_ASC = registerSprite("gui/sort_numerical_asc");
 	public static final ResourceLocation SORT_NUMERICAL_DESC = registerSprite("gui/sort_numerical_desc");
 
+	public static final ResourceLocation EMPTY_BUCKET = registerSprite("gui/empty_bucket_indicator");
+	public static final ResourceLocation EMPTY_BUCKET_HOVERED = registerSprite("gui/empty_bucket_indicator_hover");
+	public static final ResourceLocation FILL_BUCKET = registerSprite("gui/fill_bucket_indicator");
+	public static final ResourceLocation FILL_BUCKET_HOVERED = registerSprite("gui/fill_bucket_indicator_hover");
+
 	public static final ResourceLocation SEARCH_MODE_DEFAULT = registerSprite("gui/search_mode_default");
 	public static final ResourceLocation SEARCH_MODE_ONE_WAY = registerSprite("gui/search_mode_one_way");
 	public static final ResourceLocation SEARCH_MODE_TWO_WAY = registerSprite("gui/search_mode_two_way");

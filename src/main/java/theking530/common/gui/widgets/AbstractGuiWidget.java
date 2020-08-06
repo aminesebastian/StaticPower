@@ -23,13 +23,17 @@ public abstract class AbstractGuiWidget {
 	private Vector2D ownerSize;
 	private boolean isVisible;
 	private boolean tooltipsDisabled;
+	private boolean autoHandleTooltipBounds;
+	private RectangleBounds cachedBounds;
 
 	public AbstractGuiWidget(float xPosition, float yPosition, float width, float height) {
+		cachedBounds = new RectangleBounds(0.0f, 0.0f, 0.0f, 0.0f); // Must be initially set to 0.
 		position = new Vector2D(xPosition, yPosition);
 		size = new Vector2D(width, height);
 		ownerPosition = new Vector2D(0.0f, 0.0f);
 		ownerSize = new Vector2D(0.0f, 0.0f);
 		isVisible = true;
+		autoHandleTooltipBounds = true;
 	}
 
 	/**
@@ -103,8 +107,7 @@ public abstract class AbstractGuiWidget {
 	 * @return
 	 */
 	public RectangleBounds getBounds() {
-		Vector2D screenSpacePosition = getScreenSpacePosition();
-		return new RectangleBounds(screenSpacePosition.getX(), screenSpacePosition.getY(), size.getX(), size.getY());
+		return cachedBounds;
 	}
 
 	/**
@@ -154,8 +157,7 @@ public abstract class AbstractGuiWidget {
 	 * @return True if the point is in size this widget, false otherwise.
 	 */
 	public boolean isPointInsideBounds(Vector2D point) {
-		Vector2D ownerRelativePosition = getScreenSpacePosition();
-		return point.getX() >= ownerRelativePosition.getX() && point.getX() < ownerRelativePosition.getX() + size.getX() && point.getY() >= ownerRelativePosition.getY() && point.getY() < ownerRelativePosition.getY() + size.getY();
+		return getBounds().isPointInBounds(point);
 	}
 
 	/**
@@ -171,15 +173,18 @@ public abstract class AbstractGuiWidget {
 	/**
 	 * Updates this widget with the position and size of it's owner.
 	 * 
-	 * @param position
-	 * @param size
-	 * @param partialTicks TODO
-	 * @param mouseX       TODO
-	 * @param mouseY       TODO
+	 * @param ownerPosition
+	 * @param ownerSize
+	 * @param partialTicks  TODO
+	 * @param mouseX        TODO
+	 * @param mouseY        TODO
 	 */
-	public void updateBeforeRender(Vector2D position, Vector2D size, float partialTicks, int mouseX, int mouseY) {
-		this.ownerPosition = position;
-		this.ownerSize = size;
+	public void updateBeforeRender(Vector2D ownerPosition, Vector2D ownerSize, float partialTicks, int mouseX, int mouseY) {
+		this.ownerPosition = ownerPosition;
+		this.ownerSize = ownerSize;
+
+		Vector2D screenSpacePosition = getScreenSpacePosition();
+		cachedBounds.update(screenSpacePosition.getX(), screenSpacePosition.getY(), this.size.getX(), this.size.getY());
 	}
 
 	/**
@@ -221,6 +226,28 @@ public abstract class AbstractGuiWidget {
 
 	public AbstractGuiWidget setTooltipsDisabled(boolean disabled) {
 		tooltipsDisabled = disabled;
+		return this;
+	}
+
+	/**
+	 * Indicates whether or not the container will check the bounds of this widget
+	 * against the mouse to see if tooltips should be rendered. If false, the
+	 * implementer must perform a similar caluclation.
+	 * 
+	 * @return
+	 */
+	public boolean getShouldAutoCalculateTooltipBounds() {
+		return autoHandleTooltipBounds;
+	}
+
+	/**
+	 * Sets whether or not the owning container should check the widget's bounds
+	 * before calling the {@link #getTooltips(Vector2D, List, boolean)} method.
+	 * 
+	 * @return
+	 */
+	public AbstractGuiWidget setShouldAutoCalculateTooltipBounds(boolean value) {
+		this.autoHandleTooltipBounds = value;
 		return this;
 	}
 

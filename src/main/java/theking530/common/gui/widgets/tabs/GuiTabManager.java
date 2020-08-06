@@ -3,6 +3,8 @@ package theking530.common.gui.widgets.tabs;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import theking530.common.gui.widgets.AbstractGuiWidget;
 import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.common.gui.widgets.tabs.BaseGuiTab.TabState;
@@ -16,9 +18,10 @@ public class GuiTabManager extends AbstractGuiWidget {
 	protected final StaticPowerContainerGui<?> owningGui;
 
 	public GuiTabManager(StaticPowerContainerGui<?> owningGui) {
-		super(0, 0, 0, 0);
+		super(0.0f, 0.0f, 0.0f, 0.0f);
 		registeredTabs = new ArrayList<BaseGuiTab>();
 		this.owningGui = owningGui;
+		this.setShouldAutoCalculateTooltipBounds(false);
 	}
 
 	public GuiTabManager registerTab(BaseGuiTab tab, boolean initiallyOpen) {
@@ -96,7 +99,7 @@ public class GuiTabManager extends AbstractGuiWidget {
 				}
 			}
 			int adjustedOffset = Math.min(tabPositionY + (i * 25) + offset, maxOffset);
-			rightTabs.get(i).updateTabPosition(tabPositionX, adjustedOffset, partialTicks, mouseX, mouseY);
+			rightTabs.get(i).updateTabPosition(tabPositionX, adjustedOffset, partialTicks, mouseX, mouseY, Math.max(0, rightTabs.size() - i - 1));
 			rightTabs.get(i).drawTabPanel(partialTicks);
 			if (rightTabs.get(i).isOpen()) {
 				rightTabs.get(i).renderBackground(mouseX, mouseY, partialTicks);
@@ -111,7 +114,7 @@ public class GuiTabManager extends AbstractGuiWidget {
 				}
 			}
 			int adjustedOffset = Math.min(tabPositionY + (i * 25) + offset, maxOffset);
-			leftTabs.get(i).updateTabPosition((int) (tabPositionX - getOwnerSize().getX() - 21), adjustedOffset, partialTicks, mouseX, mouseY);
+			leftTabs.get(i).updateTabPosition((int) (tabPositionX - getOwnerSize().getX() - 21), adjustedOffset, partialTicks, mouseX, mouseY, Math.max(0, leftTabs.size() - i - 1));
 			leftTabs.get(i).drawTabPanel(partialTicks);
 			if (leftTabs.get(i).isOpen()) {
 				leftTabs.get(i).renderBackground(mouseX, mouseY, partialTicks);
@@ -144,6 +147,23 @@ public class GuiTabManager extends AbstractGuiWidget {
 			}
 		}
 		return EInputResult.UNHANDLED;
+	}
+
+	public void getTooltips(Vector2D mousePosition, List<ITextComponent> tooltips, boolean showAdvanced) {
+		// Iterate through all the tabs.
+		for (BaseGuiTab tab : registeredTabs) {
+			// If this tab is hovered is any way, we only consider this one for tooltips.
+			if (tab.getBounds().isPointInBounds(mousePosition)) {
+				// If we are hovering the tab icon, add the title tooltip.
+				if (tab.getIconBounds().isPointInBounds(mousePosition)) {
+					tooltips.add(new StringTextComponent(tab.getTitle()));
+				}
+
+				// Add any other tooltips.
+				tab.getTooltips(mousePosition, tooltips, showAdvanced);
+				break;
+			}
+		}
 	}
 
 	@Override

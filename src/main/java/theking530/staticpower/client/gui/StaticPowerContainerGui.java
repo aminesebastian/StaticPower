@@ -60,8 +60,9 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	protected int outputSlotSize;
 	protected int inputSlotSize;
 	protected boolean isInitialized;
+	protected float partialTicks;
+	
 	private final SpriteDrawable lockedSprite;
-	private float partialTicks;
 
 	/**
 	 * Creates a new Gui.
@@ -130,11 +131,8 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-		// Draw the tite.
+		// Draw the title.
 		drawContainerTitle(mouseX, mouseY);
-
-		// Render the widget foreground.
-		widgetContainer.renderForegound(mouseX, mouseY, partialTicks);
 
 		// Draw the locks for lock slots. We do this in a single pass to avoid having
 		// the flip the GL states a lot.

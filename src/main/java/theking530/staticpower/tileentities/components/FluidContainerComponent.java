@@ -101,7 +101,8 @@ public class FluidContainerComponent extends AbstractTileEntityComponent {
 		// container.
 		if (result.isSuccess()) {
 			// Play the sound.
-			getWorld().playSound(null, getPos(), fluidHandler.getFluidInTank(0).getFluid() == Fluids.LAVA ? SoundEvents.ITEM_BUCKET_FILL_LAVA : SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1.0f, 1.0f);
+			getWorld().playSound(null, getPos(), fluidHandler.getFluidInTank(0).getFluid() == Fluids.LAVA ? SoundEvents.ITEM_BUCKET_FILL_LAVA : SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS,
+					1.0f, 1.0f);
 
 			// Get the fluid container handler.
 			IFluidHandler containerHandler = FluidUtil.getFluidHandler(container).orElse(null);
@@ -143,7 +144,8 @@ public class FluidContainerComponent extends AbstractTileEntityComponent {
 		// container.
 		if (result.isSuccess()) {
 			// Play the sound.
-			getWorld().playSound(null, getPos(), fluidHandler.getFluidInTank(0).getFluid() == Fluids.LAVA ? SoundEvents.ITEM_BUCKET_EMPTY_LAVA : SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0f, 1.0f);
+			getWorld().playSound(null, getPos(), fluidHandler.getFluidInTank(0).getFluid() == Fluids.LAVA ? SoundEvents.ITEM_BUCKET_EMPTY_LAVA : SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS,
+					1.0f, 1.0f);
 			// Get the fluid container handler.
 			IFluidHandler containerHandler = FluidUtil.getFluidHandler(result.getResult()).orElse(null);
 			// If it's not null, check to see if its empty.
@@ -242,10 +244,27 @@ public class FluidContainerComponent extends AbstractTileEntityComponent {
 		return interactionMode;
 	}
 
+	public IItemHandler getPrimaryInventory() {
+		return primaryInventory;
+	}
+
+	public IItemHandler getSecondaryInventory() {
+		return secondaryInventory;
+	}
+
+	public int getPrimarySlot() {
+		return primarySlot;
+	}
+
+	public int getSecondarySlot() {
+		return secondarySlot;
+	}
+
 	@Override
 	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		nbt.putInt("primary_slot", primarySlot);
 		nbt.putInt("secondary_slot", secondarySlot);
+		nbt.putInt("current_mode", interactionMode.ordinal());
 		return nbt;
 	}
 
@@ -257,5 +276,6 @@ public class FluidContainerComponent extends AbstractTileEntityComponent {
 		if (nbt.getInt("secondary_slot") < secondaryInventory.getSlots()) {
 			secondarySlot = nbt.getInt("secondary_slot");
 		}
+		interactionMode = FluidContainerInteractionMode.values()[nbt.getInt("current_mode")];
 	}
 }

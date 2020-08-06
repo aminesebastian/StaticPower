@@ -49,9 +49,9 @@ public abstract class StaticPowerContainer extends Container {
 		return playerInventory;
 	}
 
-	@Override
-	public Slot addSlot(Slot slotIn) {
-		return super.addSlot(slotIn);
+	@SuppressWarnings("unchecked")
+	public <T extends Slot> T addSlotGeneric(T slotIn) {
+		return (T) super.addSlot(slotIn);
 	}
 
 	protected void addPlayerInventory(PlayerInventory invPlayer, int xPosition, int yPosition) {

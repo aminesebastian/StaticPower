@@ -3,6 +3,7 @@ package theking530.staticpower.tileentities.powered.treefarmer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import theking530.common.gui.GuiTextures;
+import theking530.common.gui.drawables.ItemDrawable;
 import theking530.common.gui.widgets.tabs.BaseGuiTab;
 import theking530.common.gui.widgets.tabs.PacketGuiTabAddSlots;
 import theking530.staticpower.client.container.StaticPowerContainer;
@@ -15,7 +16,7 @@ public class GuiAxeTab extends BaseGuiTab {
 	private int slotIndex;
 
 	public GuiAxeTab(StaticPowerContainer container, TileEntityTreeFarm treeFarmer) {
-		super(2, 2, GuiTextures.ORANGE_TAB, Items.IRON_AXE);
+		super("Lumber Axe", 0, 0, GuiTextures.ORANGE_TAB, Items.IRON_AXE);
 		this.container = container;
 		this.treeFarmer = treeFarmer;
 	}
@@ -23,11 +24,11 @@ public class GuiAxeTab extends BaseGuiTab {
 	@Override
 	protected void initialized(int tabXPosition, int tabYPosition) {
 		// Add the slots.
-		container.addSlot(new StaticPowerContainerSlot(new ItemStack(Items.IRON_AXE), 0.3f, treeFarmer.inputInventory, 0, -18, 5 + guiYOffset));
+		container.addSlotGeneric(new StaticPowerContainerSlot(new ItemStack(Items.IRON_AXE), 0.3f, treeFarmer.inputInventory, 0, -18, 4 + guiYOffset));
 		slotIndex = container.inventorySlots.size() - 1;
 
-		PacketGuiTabAddSlots msg = new PacketGuiTabAddSlots(treeFarmer.inputInventory, container.windowId);
-		msg.addSlot(0, -17, 59);
+		PacketGuiTabAddSlots msg = new PacketGuiTabAddSlots(container.windowId);
+		msg.addSlot(treeFarmer.inputInventory, 0, -17, 59);
 
 		// Send a packet to the server with the updated values.
 		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
@@ -36,8 +37,10 @@ public class GuiAxeTab extends BaseGuiTab {
 		StaticPowerContainerSlot slot = (StaticPowerContainerSlot) container.inventorySlots.get(slotIndex);
 		slot.setEnabledState(false);
 
-		// Initialize as closed.
-		onTabClosing();
+		// Update the icon if it should be updated.
+		if (slot.getHasStack()) {
+			this.icon = new ItemDrawable(slot.getStack());
+		}
 	}
 
 	@Override
@@ -50,5 +53,13 @@ public class GuiAxeTab extends BaseGuiTab {
 	protected void onTabClosing() {
 		StaticPowerContainerSlot slot = (StaticPowerContainerSlot) container.inventorySlots.get(slotIndex);
 		slot.setEnabledState(false);
+
+		// Update the icon to either the default if the slot is empty, or the slot's
+		// containted item.
+		if (slot.getHasStack()) {
+			this.icon = new ItemDrawable(slot.getStack());
+		} else {
+			this.icon = new ItemDrawable(new ItemStack(Items.IRON_AXE));
+		}
 	}
 }

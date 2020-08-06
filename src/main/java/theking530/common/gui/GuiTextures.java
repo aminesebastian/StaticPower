@@ -22,7 +22,7 @@ public class GuiTextures {
 	public static final ResourceLocation ARROW_TEXTURES = new ResourceLocation(Reference.MOD_ID, "textures/gui/arrow_buttons.png");
 	public static final ResourceLocation BUTTON = new ResourceLocation(Reference.MOD_ID, "textures/gui/button.png");
 	public static final ResourceLocation BUTTON_HOVER = new ResourceLocation(Reference.MOD_ID, "textures/gui/button_hover.png");
-
+	
 	public static final ResourceLocation POWER_TAB_ICON = new ResourceLocation(Reference.MOD_ID, "textures/items/upgrades/upgrade_power.png");
 
 	public static final ResourceLocation GUI_ICONS = new ResourceLocation(Reference.MOD_ID, "textures/gui/gui_icons.png");

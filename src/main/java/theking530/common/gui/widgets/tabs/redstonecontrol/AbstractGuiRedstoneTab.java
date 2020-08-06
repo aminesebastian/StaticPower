@@ -23,7 +23,7 @@ public abstract class AbstractGuiRedstoneTab extends BaseGuiTab {
 	public ItemButton highRedstoneButton;
 
 	public AbstractGuiRedstoneTab(RedstoneMode currentMode) {
-		super(100, 85, GuiTextures.RED_TAB, Items.REDSTONE);
+		super("Redstone Control", 100, 85, GuiTextures.RED_TAB, Items.REDSTONE);
 
 		widgetContainer.registerWidget(ignoreRedstoneButton = new ItemButton(Items.GUNPOWDER, 23, 30, 20, 20, (button, mouseButton) -> {
 			synchronizeRedstoneMode(RedstoneMode.Ignore);

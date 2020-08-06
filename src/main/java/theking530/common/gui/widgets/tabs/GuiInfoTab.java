@@ -24,7 +24,7 @@ public class GuiInfoTab extends BaseGuiTab {
 	private String tabTitle;
 
 	public GuiInfoTab(int width, int height) {
-		super(width, height, GuiTextures.GREEN_TAB, Items.PAPER);
+		super("Info", width, height, GuiTextures.GREEN_TAB, Items.PAPER);
 		fontRenderer = Minecraft.getInstance().fontRenderer;
 	}
 

@@ -27,6 +27,7 @@ public class StandardButton extends AbstractGuiWidget {
 	private MouseButton currentlyPressedMouseButton;
 	private boolean toggleable;
 	private boolean toggled;
+	private boolean drawBackground;
 	private float clickSoundPitch;
 	private List<ITextComponent> tooltip;
 
@@ -38,6 +39,16 @@ public class StandardButton extends AbstractGuiWidget {
 		currentlyPressedMouseButton = MouseButton.NONE;
 		toggleable = false;
 		toggled = false;
+		drawBackground = true;
+	}
+
+	public boolean shouldDrawButtonBackground() {
+		return drawBackground;
+	}
+
+	public StandardButton setShouldDrawButtonBackground(boolean shouldDraw) {
+		drawBackground = shouldDraw;
+		return this;
 	}
 
 	@Override
@@ -52,7 +63,9 @@ public class StandardButton extends AbstractGuiWidget {
 		int buttonTop = (int) position.getY();
 
 		// Draw the button and then the overlay.
-		drawButton(buttonLeft, buttonTop);
+		if (shouldDrawButtonBackground()) {
+			drawButton(buttonLeft, buttonTop);
+		}
 		drawButtonOverlay(buttonLeft, buttonTop);
 	}
 

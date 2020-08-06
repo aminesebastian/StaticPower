@@ -39,7 +39,7 @@ public class GuiSideConfigTab extends BaseGuiTab {
 	private boolean allowFaceInteraction;
 
 	public GuiSideConfigTab(boolean faceInteraction, TileEntityBase te) {
-		super(80, 80, GuiTextures.BLUE_TAB, te.getBlockState().getBlock());
+		super("Side Configuration", 80, 80, GuiTextures.BLUE_TAB, te.getBlockState().getBlock());
 		tileEntity = te;
 		fontRenderer = Minecraft.getInstance().fontRenderer;
 		allowFaceInteraction = faceInteraction;
@@ -156,7 +156,9 @@ public class GuiSideConfigTab extends BaseGuiTab {
 			ITextComponent translatedModeName = currentMode.getName();
 
 			button.setText(currentMode.getFontColor() + translatedSideName.getFormattedText().substring(0, 1));
-			button.setTooltip(translatedSideName.appendText(" (").appendSibling(new TranslationTextComponent("gui.staticpower.direction." + worldSpaceSide.toString())).appendText(TextFormatting.WHITE + ")"), translatedModeName);
+			button.setTooltip(
+					translatedSideName.appendText(" (").appendSibling(new TranslationTextComponent("gui.staticpower.direction." + worldSpaceSide.toString())).appendText(TextFormatting.WHITE + ")"),
+					translatedModeName);
 		}
 	}
 

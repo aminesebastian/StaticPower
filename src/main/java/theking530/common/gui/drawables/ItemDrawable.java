@@ -18,9 +18,14 @@ public class ItemDrawable implements IDrawable {
 	}
 
 	@Override
-	public void draw(float x, float y) {
+	public void draw(float x, float y, float z) {
 		if (itemStack != null) {
+			float initialValue = Minecraft.getInstance().getItemRenderer().zLevel;
+			Minecraft.getInstance().getItemRenderer().zLevel = z - 50.0f;
+
 			Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(itemStack, (int) x, (int) y);
+
+			Minecraft.getInstance().getItemRenderer().zLevel = initialValue;
 		}
 	}
 }

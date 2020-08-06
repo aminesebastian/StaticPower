@@ -27,7 +27,7 @@ public class GuiMachinePowerInfoTab extends BaseGuiTab {
 	private EnergyStorageComponent energyStorage;
 
 	public GuiMachinePowerInfoTab(EnergyStorageComponent storage) {
-		super(80, 72, GuiTextures.PURPLE_TAB, new SpriteDrawable(GuiTextures.POWER_TAB_ICON, 16, 16));
+		super("Power I/O", 80, 72, GuiTextures.PURPLE_TAB, new SpriteDrawable(GuiTextures.POWER_TAB_ICON, 16, 16));
 		fontRenderer = Minecraft.getInstance().fontRenderer;
 		energyStorage = storage;
 	}
