@@ -13,4 +13,5 @@ public class ModTags {
 	public static final Tag<Item> COVER_SAW = ItemTags.getCollection().getOrCreate(new ResourceLocation(Reference.MOD_ID, "saw"));
 	public static final Tag<Item> FARMING_AXE = ItemTags.getCollection().getOrCreate(new ResourceLocation(Reference.MOD_ID, "farming_axe"));
 	public static final Tag<Item> FARMING_HOE = ItemTags.getCollection().getOrCreate(new ResourceLocation(Reference.MOD_ID, "farming_hoe"));
+	public static final Tag<Item> MINER_ORE = ItemTags.getCollection().getOrCreate(new ResourceLocation(Reference.MOD_ID, "miner_ores"));
 }

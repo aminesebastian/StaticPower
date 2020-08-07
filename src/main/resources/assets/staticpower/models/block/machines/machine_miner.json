@@ -1,0 +1,6 @@
+{
+	"parent": "staticpower:block/machines/base_blocks/machine_block_iron",
+	"textures": {
+		"front_overlay": "staticpower:blocks/machines/miner_face_off"
+	}
+}

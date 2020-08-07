@@ -14,10 +14,13 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 	private final Supplier<Boolean> canContinueProcessingCallback;
 	private final Supplier<Boolean> processingEndedCallback;
 
+	private Runnable processingStartedCallback;
+
 	private int processingTime;
 	private int currentProcessingTime;
 	private int blockStateOffTimer;
 	private boolean processing;
+	private boolean hasStarted;
 	private boolean processingPaused;
 	private boolean shouldControlOnBlockState;
 
@@ -29,7 +32,9 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		this.processingEndedCallback = processingEndedCallback;
 		this.processingTime = processingTime;
 		this.processing = false;
+		this.hasStarted = false;
 		this.serverOnly = serverOnly;
+		this.shouldControlOnBlockState = false;
 	}
 
 	public MachineProcessingComponent(String name, int processingTime, @Nonnull Supplier<Boolean> processingEndedCallback, boolean serverOnly) {
@@ -42,29 +47,50 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 			return;
 		}
 
-		if (!processing && !processingPaused && canStartProcessingCallback.get()) {
+		// If this is when we first start processing, raise the start processing event.
+		if (!hasStarted && canStartProcessingCallback.get()) {
 			startProcessing();
 		}
 
+		// Set the can continue processing state if we have already started. This is to
+		// allow for responsive stopping of processing if needed.
+		if (hasStarted) {
+			processing = canContinueProcessingCallback.get();
+		}
+
+		// If we're currently processing.
 		if (processing) {
+			// Reset the off timer.
+			blockStateOffTimer = 0;
+
+			// If the processing is paused, do nothing.
 			if (processingPaused) {
 				return;
 			}
+
+			// Update the block's on state.
 			setIsOnBlockState(true);
-			if (canContinueProcessingCallback.get()) {
-				if (currentProcessingTime < processingTime) {
-					currentProcessingTime++;
-				} else {
-					if (processingCompleted()) {
-						currentProcessingTime = 0;
-						processing = false;
-					}
+
+			// If we can can continue processing, do so, otherwise, stop.
+			if (currentProcessingTime < processingTime) {
+				currentProcessingTime++;
+			}
+
+			// If we have completed the processing, try to complete it using the callback.
+			// If the callback is true, we reset the state of the component back to initial.
+			if (currentProcessingTime >= processingTime) {
+				if (processingCompleted()) {
+					currentProcessingTime = 0;
+					blockStateOffTimer = 0;
+					processing = false;
+					hasStarted = false;
 				}
-			} else {
-				processing = false;
 			}
 		} else {
-			if (shouldControlOnBlockState && getIsOnBlockState()) {
+			// If the block state is on, and processing is false, start the blockStateOff
+			// timer. If it elapses, set the block state to off. Otherwise, start
+			// incrementing it.
+			if (getIsOnBlockState()) {
 				if (blockStateOffTimer > 20) {
 					setIsOnBlockState(false);
 					blockStateOffTimer = 0;
@@ -73,6 +99,7 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 				}
 			}
 		}
+
 	}
 
 	/**
@@ -91,9 +118,19 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 			processingPaused = false;
 
 			setIsOnBlockState(true);
+			hasStarted = true;
+			if (processingStartedCallback != null) {
+				processingStartedCallback.run();
+			}
+
 		} else if (processingPaused) {
 			continueProcessing();
 		}
+	}
+
+	public MachineProcessingComponent setProcessingStartedCallback(Runnable callback) {
+		processingStartedCallback = callback;
+		return this;
 	}
 
 	public void pauseProcessing() {
@@ -155,11 +192,11 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 	 * @return
 	 */
 	public boolean isPerformingWork() {
-		return isProcessing() && !isDone() && !isProcessingPaused();
+		return processing && !isDone() && !isProcessingPaused();
 	}
 
 	public boolean isProcessing() {
-		return processing;
+		return hasStarted;
 	}
 
 	public boolean isProcessingPaused() {

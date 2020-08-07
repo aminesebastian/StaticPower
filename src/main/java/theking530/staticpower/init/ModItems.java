@@ -24,6 +24,7 @@ import theking530.staticpower.items.crops.StaticPlantSeeds;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.items.tools.CableNetworkAnalyzer;
 import theking530.staticpower.items.tools.CoverSaw;
+import theking530.staticpower.items.tools.DrillBit;
 import theking530.staticpower.items.tools.ElectricSolderingIron;
 import theking530.staticpower.items.tools.MetalHammer;
 import theking530.staticpower.items.tools.SolderingIron;
@@ -144,6 +145,7 @@ public class ModItems {
 	public static StaticPowerItem DustRuby;
 	public static StaticPowerItem DustSapphire;
 	public static StaticPowerItem DustEmerald;
+	public static StaticPowerItem DustDiamond;
 	public static StaticPowerItem DustSulfur;
 	public static StaticPowerItem DustSaltpeter;
 	public static StaticPowerItem DustCharcoal;
@@ -174,6 +176,17 @@ public class ModItems {
 	public static StaticPowerItem CoilCopper;
 	public static StaticPowerItem CoilSilver;
 	public static StaticPowerItem CoilGold;
+
+	public static DrillBit IronDrillBit;
+	public static DrillBit BronzeDrillBit;
+	public static DrillBit AdvancedDrillBit;
+	public static DrillBit TungstenDrillBit;
+	public static DrillBit DiamondDrillBit;
+	public static DrillBit RubyDrillBit;
+	public static DrillBit SapphireDrillBit;
+	public static DrillBit StaticDrillBit;
+	public static DrillBit EnergizedDrillBit;
+	public static DrillBit LumumDrillBit;
 
 	public static StaticPowerItem MemoryChip;
 	public static StaticPowerItem LogicGatePowerSync;
@@ -426,6 +439,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(DustRuby = new StaticPowerItem("dust_ruby"));
 		StaticPowerRegistry.preRegisterItem(DustSapphire = new StaticPowerItem("dust_sapphire"));
 		StaticPowerRegistry.preRegisterItem(DustEmerald = new StaticPowerItem("dust_emerald"));
+		StaticPowerRegistry.preRegisterItem(DustDiamond = new StaticPowerItem("dust_diamond"));
 		StaticPowerRegistry.preRegisterItem(DustSulfur = new StaticPowerItem("dust_sulfur"));
 		StaticPowerRegistry.preRegisterItem(DustSaltpeter = new StaticPowerItem("dust_saltpeter"));
 		StaticPowerRegistry.preRegisterItem(DustCharcoal = new StaticPowerItem("dust_charcoal"));
@@ -438,6 +452,18 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(StaticUpgradePlate = new StaticPowerItem("upgrade_plate_static"));
 		StaticPowerRegistry.preRegisterItem(EnergizedUpgradePlate = new StaticPowerItem("upgrade_plate_energized"));
 		StaticPowerRegistry.preRegisterItem(LumumUpgradePlate = new StaticPowerItem("upgrade_plate_lumum"));
+
+		// Dril Bits
+		StaticPowerRegistry.preRegisterItem(IronDrillBit = new DrillBit("drill_bit_iron"));
+		StaticPowerRegistry.preRegisterItem(BronzeDrillBit = new DrillBit("drill_bit_bronze"));
+		StaticPowerRegistry.preRegisterItem(AdvancedDrillBit = new DrillBit("drill_bit_advanced"));
+		StaticPowerRegistry.preRegisterItem(TungstenDrillBit = new DrillBit("drill_bit_tungsten"));
+		StaticPowerRegistry.preRegisterItem(DiamondDrillBit = new DrillBit("drill_bit_diamond"));
+		StaticPowerRegistry.preRegisterItem(RubyDrillBit = new DrillBit("drill_bit_ruby"));
+		StaticPowerRegistry.preRegisterItem(SapphireDrillBit = new DrillBit("drill_bit_sapphire"));
+		StaticPowerRegistry.preRegisterItem(StaticDrillBit = new DrillBit("drill_bit_static"));
+		StaticPowerRegistry.preRegisterItem(EnergizedDrillBit = new DrillBit("drill_bit_energized"));
+		StaticPowerRegistry.preRegisterItem(LumumDrillBit = new DrillBit("drill_bit_lumum"));
 
 		// Ingots
 		StaticPowerRegistry.preRegisterItem(IngotCopper = new StaticPowerItem("ingot_copper"));

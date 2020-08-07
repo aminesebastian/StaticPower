@@ -1,0 +1,6 @@
+{
+	"parent": "staticpower:block/machines/machine_miner",
+	"textures": {
+		"front_overlay": "staticpower:blocks/machines/miner_face_on"
+	}
+}

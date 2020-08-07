@@ -11,6 +11,7 @@ import theking530.staticpower.init.ModContainerTypes;
 import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModNetworkMessages;
+import theking530.staticpower.init.ModOres;
 import theking530.staticpower.init.ModRecipeSerializers;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.init.ModUpgrades;
@@ -31,5 +32,6 @@ public class StaticPower {
 		ModNetworkMessages.init();
 		ModTileEntityTypes.init();
 		ModContainerTypes.init();
+		ModOres.init();
 	}
 }

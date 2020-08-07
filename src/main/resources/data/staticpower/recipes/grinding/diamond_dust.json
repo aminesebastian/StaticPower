@@ -1,0 +1,11 @@
+{
+	"type": "staticpower:grinder_recipe",
+	"input": {
+		"tag": "forge:gems/diamond"
+	},
+	"output": [
+		{
+			"item": "staticpower:dust_diamond"
+		}
+	]
+}

@@ -12,6 +12,11 @@
 			"item": "minecraft:diamond",
 			"count": 1,
 			"chance": 0.1
+		},
+		{
+			"item": "staticpower:dust_diamond",
+			"count": 1,
+			"chance": 0.1
 		}
 	]
 }

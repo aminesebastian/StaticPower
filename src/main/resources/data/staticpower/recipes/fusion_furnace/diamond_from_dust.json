@@ -1,0 +1,14 @@
+{
+	"type": "staticpower:fusion_furnace_recipe",
+	"inputs": [
+		{
+			"tag": "forge:dusts/diamond"
+		},
+		{
+			"tag": "staticpower:coal_or_charcoal"
+		}
+	],
+	"output": {
+		"item": "minecraft:diamond"
+	}
+}

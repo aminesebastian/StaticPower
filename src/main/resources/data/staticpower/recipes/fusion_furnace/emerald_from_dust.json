@@ -1,0 +1,14 @@
+{
+	"type": "staticpower:fusion_furnace_recipe",
+	"inputs": [
+		{
+			"tag": "forge:dusts/emerald"
+		},
+		{
+			"tag": "staticpower:coal_or_charcoal"
+		}
+	],
+	"output": {
+		"item": "minecraft:emerald"
+	}
+}

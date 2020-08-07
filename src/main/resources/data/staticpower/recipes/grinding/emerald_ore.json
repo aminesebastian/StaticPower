@@ -12,6 +12,10 @@
 			"item": "minecraft:emerald",
 			"count": 1,
 			"chance": 0.1
-		}
-	]
+		},
+		{
+			"item": "staticpower:dust_emerald",
+			"count": 1,
+			"chance": 0.1
+		}	]
 }

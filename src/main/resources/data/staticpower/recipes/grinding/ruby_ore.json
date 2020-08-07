@@ -12,6 +12,11 @@
 			"item": "staticpower:gem_ruby",
 			"count": 1,
 			"chance": 0.25
+		},
+		{
+			"item": "staticpower:dust_ruby",
+			"count": 1,
+			"chance": 0.1
 		}
 	]
 }

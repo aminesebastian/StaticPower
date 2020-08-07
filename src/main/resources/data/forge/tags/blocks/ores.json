@@ -1,0 +1,16 @@
+{
+	"replace": false,
+	"values": [
+		"staticpower:ore_aluminium",
+		"staticpower:ore_copper",
+		"staticpower:ore_lead",
+		"staticpower:ore_magnesium",
+		"staticpower:ore_platinum",
+		"staticpower:ore_ruby",
+		"staticpower:ore_sapphire",
+		"staticpower:ore_silver",
+		"staticpower:ore_tin",
+		"staticpower:ore_tungsten",
+		"staticpower:ore_zinc"
+	]
+}
