@@ -36,7 +36,7 @@ import theking530.common.wrench.RegularWrenchMode;
 import theking530.common.wrench.SneakWrenchMode;
 import theking530.staticpower.items.tools.StaticWrench;
 import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.components.InventoryComponent;
+import theking530.staticpower.tileentities.components.items.InventoryComponent;
 
 /**
  * Basic implmentation of a static power block.

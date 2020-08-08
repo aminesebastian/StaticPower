@@ -6,13 +6,13 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.components.FluidContainerComponent;
-import theking530.staticpower.tileentities.components.FluidContainerComponent.FluidContainerInteractionMode;
-import theking530.staticpower.tileentities.components.FluidInputServoComponent;
-import theking530.staticpower.tileentities.components.FluidOutputServoComponent;
-import theking530.staticpower.tileentities.components.FluidTankComponent;
-import theking530.staticpower.tileentities.components.InventoryComponent;
-import theking530.staticpower.tileentities.components.SideConfigurationComponent;
+import theking530.staticpower.tileentities.components.control.SideConfigurationComponent;
+import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent;
+import theking530.staticpower.tileentities.components.fluids.FluidInputServoComponent;
+import theking530.staticpower.tileentities.components.fluids.FluidOutputServoComponent;
+import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
+import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent.FluidContainerInteractionMode;
+import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
 public class TileEntityTank extends TileEntityBase implements INamedContainerProvider {

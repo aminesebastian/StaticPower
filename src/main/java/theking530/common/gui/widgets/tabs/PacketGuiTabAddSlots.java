@@ -14,7 +14,7 @@ import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
-import theking530.staticpower.tileentities.components.InventoryComponent;
+import theking530.staticpower.tileentities.components.items.InventoryComponent;
 
 public class PacketGuiTabAddSlots extends NetworkMessage {
 	public static final Logger LOGGER = LogManager.getLogger(PacketGuiTabAddSlots.class);

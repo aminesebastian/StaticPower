@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"pip",
+		"pip",
+		" p "
+	],
+	"key": {
+		"i": {
+			"tag": "forge:ingots/bronze"
+		},
+		"p": {
+			"tag": "forge:plates/bronze"
+		}
+	},
+	"result": {
+		"item": "staticpower:drill_bit_bronze"
+	}
+}

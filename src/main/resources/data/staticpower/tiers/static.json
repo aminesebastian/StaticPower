@@ -22,5 +22,6 @@
 	"itemCableMaxSpeed": 20,
 	"itemFilterSlots": 7,
 	"itemCableAcceleration": 1.4,
-	"itemCableFriction": 2.0
+	"itemCableFriction": 2.0,
+	"drillBitUses": 8000
 }

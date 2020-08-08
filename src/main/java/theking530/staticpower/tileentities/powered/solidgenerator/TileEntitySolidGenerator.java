@@ -11,11 +11,11 @@ import net.minecraftforge.common.ForgeHooks;
 import theking530.common.utilities.SDMath;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
-import theking530.staticpower.tileentities.components.EnergyStorageComponent.EnergyManipulationAction;
-import theking530.staticpower.tileentities.components.InputServoComponent;
-import theking530.staticpower.tileentities.components.InventoryComponent;
-import theking530.staticpower.tileentities.components.MachineProcessingComponent;
-import theking530.staticpower.tileentities.components.PowerDistributionComponent;
+import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
+import theking530.staticpower.tileentities.components.items.InputServoComponent;
+import theking530.staticpower.tileentities.components.items.InventoryComponent;
+import theking530.staticpower.tileentities.components.power.PowerDistributionComponent;
+import theking530.staticpower.tileentities.components.power.EnergyStorageComponent.EnergyManipulationAction;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 

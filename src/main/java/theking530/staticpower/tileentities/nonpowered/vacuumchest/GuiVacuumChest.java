@@ -10,7 +10,7 @@ import theking530.common.gui.widgets.tabs.GuiInfoTab;
 import theking530.common.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
 import theking530.common.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
-import theking530.staticpower.tileentities.components.RedstoneControlComponent;
+import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
 
 public class GuiVacuumChest extends StaticPowerTileEntityGui<ContainerVacuumChest, TileEntityVacuumChest> {
 

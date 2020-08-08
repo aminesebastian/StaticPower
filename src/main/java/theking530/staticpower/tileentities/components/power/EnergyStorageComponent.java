@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.components;
+package theking530.staticpower.tileentities.components.power;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
@@ -9,6 +9,7 @@ import net.minecraftforge.energy.IEnergyStorage;
 import theking530.common.utilities.TriFunction;
 import theking530.staticpower.energy.StaticPowerFEStorage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
+import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 
 public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	public enum EnergyManipulationAction {

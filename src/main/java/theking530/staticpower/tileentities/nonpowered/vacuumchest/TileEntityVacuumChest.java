@@ -30,8 +30,7 @@ import theking530.staticpower.items.upgrades.BaseTankUpgrade;
 import theking530.staticpower.items.upgrades.ExperienceVacuumUpgrade;
 import theking530.staticpower.items.upgrades.TeleportUpgrade;
 import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.components.InventoryComponent;
-import theking530.staticpower.tileentities.components.UpgradeProcessingComponent;
+import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.utilities.InventoryUtilities;
 
@@ -39,7 +38,6 @@ public class TileEntityVacuumChest extends TileEntityBase implements INamedConta
 	public final InventoryComponent inventory;
 	public final InventoryComponent filterSlotInventory;
 	public final InventoryComponent upgradesInventory;
-	public final UpgradeProcessingComponent upgradeHandlingComponent;
 
 	protected float vacuumDiamater;
 	protected float initialVacuumDiamater;
@@ -56,7 +54,6 @@ public class TileEntityVacuumChest extends TileEntityBase implements INamedConta
 		registerComponent(inventory = new InventoryComponent("Inventory", 30, MachineSideMode.Regular));
 		registerComponent(filterSlotInventory = new InventoryComponent("FilterSlot", 1, MachineSideMode.Never));
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Regular));
-		registerComponent(upgradeHandlingComponent = new UpgradeProcessingComponent("UpgradeProcessor", upgradesInventory, this::upgradeTick, this::canAcceptUpgrade));
 	}
 
 	@Override
@@ -163,7 +160,7 @@ public class TileEntityVacuumChest extends TileEntityBase implements INamedConta
 	}
 
 	/* Update Handling */
-	public void upgradeTick(UpgradeProcessingComponent processor, ItemStack upgrade) {
+	public void upgradeTick(ItemStack upgrade) {
 		if (upgrade.getItem() instanceof BaseRangeUpgrade) {
 			BaseRangeUpgrade tempUpgrade = (BaseRangeUpgrade) upgrade.getItem();
 			vacuumDiamater = tempUpgrade.getValueMultiplied(initialVacuumDiamater, tempUpgrade.getUpgradeValueAtIndex(upgrade, 0));

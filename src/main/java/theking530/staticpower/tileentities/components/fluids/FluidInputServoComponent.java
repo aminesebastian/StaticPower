@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.components;
+package theking530.staticpower.tileentities.components.fluids;
 
 import java.util.function.Predicate;
 
@@ -8,6 +8,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.tileentities.components.control.SideConfigurationComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
 public class FluidInputServoComponent extends AbstractTileEntityComponent {

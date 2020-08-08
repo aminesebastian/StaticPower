@@ -8,7 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.components.SideConfigurationComponent;
+import theking530.staticpower.tileentities.components.control.SideConfigurationComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
 public class PacketSideConfigTab extends NetworkMessage {

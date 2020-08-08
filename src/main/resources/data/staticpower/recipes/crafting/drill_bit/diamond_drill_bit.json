@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"   ",
+		"dbd",
+		" d "
+	],
+	"key": {
+		"b": {
+			"item": "staticpower:drill_bit_iron"
+		},
+		"d": {
+			"tag": "forge:dusts/diamond"
+		}
+	},
+	"result": {
+		"item": "staticpower:drill_bit_diamond"
+	}
+}

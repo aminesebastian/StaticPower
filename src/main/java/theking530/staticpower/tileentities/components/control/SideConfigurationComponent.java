@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.components;
+package theking530.staticpower.tileentities.components.control;
 
 import java.util.Arrays;
 import java.util.function.BiConsumer;
@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
+import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
 /**

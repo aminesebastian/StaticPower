@@ -1,9 +1,10 @@
-package theking530.staticpower.tileentities.components;
+package theking530.staticpower.tileentities.components.control;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.energy.StaticPowerFEStorage;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
+import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 
 public class BatteryComponent extends AbstractTileEntityComponent {
 

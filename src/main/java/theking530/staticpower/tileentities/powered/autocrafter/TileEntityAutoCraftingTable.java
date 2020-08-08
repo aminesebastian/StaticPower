@@ -15,10 +15,10 @@ import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.client.container.FakeCraftingInventory;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
-import theking530.staticpower.tileentities.components.InputServoComponent;
-import theking530.staticpower.tileentities.components.InventoryComponent;
-import theking530.staticpower.tileentities.components.MachineProcessingComponent;
-import theking530.staticpower.tileentities.components.OutputServoComponent;
+import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
+import theking530.staticpower.tileentities.components.items.InputServoComponent;
+import theking530.staticpower.tileentities.components.items.InventoryComponent;
+import theking530.staticpower.tileentities.components.items.OutputServoComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.utilities.InventoryUtilities;
 

@@ -15,8 +15,8 @@ import theking530.common.utilities.Color;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
-import theking530.staticpower.tileentities.components.EnergyStorageComponent;
-import theking530.staticpower.tileentities.components.RedstoneControlComponent;
+import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
+import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
 
 public class GuiAutoCraftingTable extends StaticPowerTileEntityGui<ContainerAutoCraftingTable, TileEntityAutoCraftingTable> {
 	private final GuiDrawItem itemRenderer;

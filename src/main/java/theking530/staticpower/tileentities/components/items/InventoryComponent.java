@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.components;
+package theking530.staticpower.tileentities.components.items;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -21,6 +21,9 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
+import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.tileentities.components.ComponentUtilities;
+import theking530.staticpower.tileentities.components.control.SideConfigurationComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 import theking530.staticpower.utilities.ItemUtilities;

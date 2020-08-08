@@ -9,7 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.components.InventoryComponent;
+import theking530.staticpower.tileentities.components.items.InventoryComponent;
 
 public class PacketLockInventorySlot extends NetworkMessage {
 	private BlockPos position;

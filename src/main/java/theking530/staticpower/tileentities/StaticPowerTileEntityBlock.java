@@ -28,8 +28,8 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import theking530.common.wrench.RegularWrenchMode;
 import theking530.common.wrench.SneakWrenchMode;
 import theking530.staticpower.blocks.StaticPowerBlock;
-import theking530.staticpower.tileentities.components.SideConfigurationComponent;
-import theking530.staticpower.tileentities.components.SideConfigurationComponent.SideIncrementDirection;
+import theking530.staticpower.tileentities.components.control.SideConfigurationComponent;
+import theking530.staticpower.tileentities.components.control.SideConfigurationComponent.SideIncrementDirection;
 import theking530.staticpower.tileentities.utilities.interfaces.IBreakSerializeable;
 
 public abstract class StaticPowerTileEntityBlock extends StaticPowerBlock {

@@ -15,8 +15,8 @@ import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.components.EnergyStorageComponent;
-import theking530.staticpower.tileentities.components.PowerDistributionComponent;
+import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
+import theking530.staticpower.tileentities.components.power.PowerDistributionComponent;
 
 public class TileEntitySolarPanel extends TileEntityBase implements ITickableTileEntity {
 

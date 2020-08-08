@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"pip",
+		"pip",
+		" p "
+	],
+	"key": {
+		"i": {
+			"item": "staticpower:ingot_energized"
+		},
+		"p": {
+			"item": "staticpower:plate_energized"
+		}
+	},
+	"result": {
+		"item": "staticpower:drill_bit_energized"
+	}
+}

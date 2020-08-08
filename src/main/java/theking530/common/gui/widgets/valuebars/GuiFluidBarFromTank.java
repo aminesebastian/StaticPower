@@ -7,7 +7,7 @@ import net.minecraftforge.fluids.IFluidTank;
 import theking530.common.gui.widgets.AbstractGuiWidget;
 import theking530.common.utilities.Vector2D;
 import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.components.SideConfigurationComponent;
+import theking530.staticpower.tileentities.components.control.SideConfigurationComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
 public class GuiFluidBarFromTank extends AbstractGuiWidget {

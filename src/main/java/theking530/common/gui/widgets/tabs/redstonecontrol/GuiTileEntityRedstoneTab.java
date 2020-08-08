@@ -2,7 +2,7 @@ package theking530.common.gui.widgets.tabs.redstonecontrol;
 
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
-import theking530.staticpower.tileentities.components.RedstoneControlComponent;
+import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.tileentities.utilities.RedstoneMode;
 
 public class GuiTileEntityRedstoneTab extends AbstractGuiRedstoneTab {

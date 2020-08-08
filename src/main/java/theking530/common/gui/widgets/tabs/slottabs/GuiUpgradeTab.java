@@ -11,7 +11,7 @@ import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.client.container.slots.UpgradeItemSlot;
 import theking530.staticpower.init.ModUpgrades;
 import theking530.staticpower.network.StaticPowerMessageHandler;
-import theking530.staticpower.tileentities.components.InventoryComponent;
+import theking530.staticpower.tileentities.components.items.InventoryComponent;
 
 public class GuiUpgradeTab extends BaseGuiTab {
 	private final InventoryComponent upgradesInventory;

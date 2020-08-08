@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"pip",
+		"pip",
+		" p "
+	],
+	"key": {
+		"i": {
+			"tag": "forge:ingots/gold"
+		},
+		"p": {
+			"tag": "forge:plates/gold"
+		}
+	},
+	"result": {
+		"item": "staticpower:drill_bit_advanced"
+	}
+}

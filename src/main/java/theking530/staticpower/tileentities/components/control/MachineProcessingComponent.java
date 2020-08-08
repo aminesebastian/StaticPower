@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.components;
+package theking530.staticpower.tileentities.components.control;
 
 import java.util.function.Supplier;
 
@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import theking530.staticpower.tileentities.StaticPowerMachineBlock;
+import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 
 public class MachineProcessingComponent extends AbstractTileEntityComponent {
 	private final boolean serverOnly;

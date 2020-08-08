@@ -15,30 +15,8 @@ public class CentrifugeProgressBar extends AbstractProgressBar {
 	public void renderBehindItems(int mouseX, int mouseY, float partialTicks) {
 		super.renderBehindItems(mouseX, mouseY, partialTicks);
 
-		if (machineProcessingComponent != null) {
-			if (lastValue != machineProcessingComponent.getCurrentProcessingTime()) {
-				lastValue = machineProcessingComponent.getCurrentProcessingTime();
-				interp = lastValue;
-			}
-			if (machineProcessingComponent.isProcessing() && interp < lastValue) {
-				double seconds = machineProcessingComponent.getProcessingTime() / 20.0;
-				double perSecond = (partialTicks) / seconds;
-				interp += perSecond;
-			}
-		} else {
-			if (lastValue != currentProgress) {
-				lastValue = currentProgress;
-				interp = lastValue;
-			}
-			if (interp < lastValue) {
-				double seconds = maxProgress / 20.0;
-				double perSecond = (partialTicks) / seconds;
-				interp += perSecond;
-			}
-		}
-
 		Vector2D screenSpacePosition = this.getScreenSpacePosition();
-		float adjustedProgress = interp / (float) maxProgress;
+		float adjustedProgress = visualCurrentProgress / maxProgress;
 
 		GL11.glPushMatrix();
 		GL11.glTranslatef(screenSpacePosition.getX() + 1.5f + getSize().getX() / 2, screenSpacePosition.getY() + getSize().getY() / 2, screenSpacePosition.getY() + getSize().getY() / 2);

@@ -2,9 +2,9 @@ package theking530.staticpower.tileentities;
 
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import theking530.staticpower.tileentities.components.EnergyStorageComponent;
-import theking530.staticpower.tileentities.components.RedstoneControlComponent;
-import theking530.staticpower.tileentities.components.SideConfigurationComponent;
+import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
+import theking530.staticpower.tileentities.components.control.SideConfigurationComponent;
+import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.RedstoneMode;
 import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities;

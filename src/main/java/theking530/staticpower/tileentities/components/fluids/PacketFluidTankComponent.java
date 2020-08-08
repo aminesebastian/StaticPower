@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.components;
+package theking530.staticpower.tileentities.components.fluids;
 
 import java.util.function.Supplier;
 
@@ -9,32 +9,33 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import theking530.staticpower.network.NetworkMessage;
+import theking530.staticpower.tileentities.components.ComponentUtilities;
 
-public class PacketEnergyStorageComponent extends NetworkMessage {
-	private CompoundNBT energyComponentNBT;
+public class PacketFluidTankComponent extends NetworkMessage {
+	private CompoundNBT fluidComponentNBT;
 	private BlockPos position;
 	private String componentName;
 
-	public PacketEnergyStorageComponent() {
+	public PacketFluidTankComponent() {
 	}
 
-	public PacketEnergyStorageComponent(EnergyStorageComponent energyComponent, BlockPos pos, String componentName) {
-		energyComponentNBT = new CompoundNBT();
-		energyComponent.serializeUpdateNbt(energyComponentNBT, true);
+	public PacketFluidTankComponent(FluidTankComponent fluidTankComponent, BlockPos pos, String componentName) {
+		fluidComponentNBT = new CompoundNBT();
+		fluidTankComponent.serializeUpdateNbt(fluidComponentNBT, true);
 		position = pos;
 		this.componentName = componentName;
 	}
 
 	@Override
 	public void decode(PacketBuffer buf) {
-		energyComponentNBT = buf.readCompoundTag();
+		fluidComponentNBT = buf.readCompoundTag();
 		position = buf.readBlockPos();
 		componentName = buf.readString();
 	}
 
 	@Override
 	public void encode(PacketBuffer buf) {
-		buf.writeCompoundTag(energyComponentNBT);
+		buf.writeCompoundTag(fluidComponentNBT);
 		buf.writeBlockPos(position);
 		buf.writeString(componentName);
 	}
@@ -46,9 +47,9 @@ public class PacketEnergyStorageComponent extends NetworkMessage {
 				if (Minecraft.getInstance().player.world.isAreaLoaded(position, 1)) {
 					TileEntity rawTileEntity = Minecraft.getInstance().player.world.getTileEntity(position);
 
-					ComponentUtilities.getComponent(EnergyStorageComponent.class, componentName, rawTileEntity).ifPresent(comp -> {
+					ComponentUtilities.getComponent(FluidTankComponent.class, componentName, rawTileEntity).ifPresent(comp -> {
 						// Set the mode.
-						comp.deserializeUpdateNbt(energyComponentNBT, true);
+						comp.deserializeUpdateNbt(fluidComponentNBT, true);
 					});
 				}
 			}

@@ -18,10 +18,10 @@ import theking530.staticpower.client.container.StaticPowerContainer;
 import theking530.staticpower.client.container.slots.FluidContainerSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.network.StaticPowerMessageHandler;
-import theking530.staticpower.tileentities.components.FluidContainerComponent;
-import theking530.staticpower.tileentities.components.FluidContainerComponent.FluidContainerInteractionMode;
-import theking530.staticpower.tileentities.components.InventoryComponent;
-import theking530.staticpower.tileentities.components.PacketFluidContainerComponent;
+import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent;
+import theking530.staticpower.tileentities.components.fluids.PacketFluidContainerComponent;
+import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent.FluidContainerInteractionMode;
+import theking530.staticpower.tileentities.components.items.InventoryComponent;
 
 public class GuiFluidContainerTab extends BaseGuiTab {
 	private final FluidContainerComponent fluidContainerComponent;

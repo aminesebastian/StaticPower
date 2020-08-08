@@ -7,10 +7,10 @@
 	],
 	"key": {
 		"i": {
-			"tag": "forge:glass_panes"
+			"tag": "forge:glass"
 		},
 		"p": {
-			"tag": "forge:ingots/tin"
+			"tag": "forge:ingots/aluminium"
 		}
 	},
 	"result": {

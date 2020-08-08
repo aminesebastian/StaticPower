@@ -13,5 +13,6 @@
 	"batteryCapacity": 2147483647,
 	"itemCableMaxSpeed": 1,
 	"itemCableAcceleration": 1,
-	"itemCableFriction": 0
+	"itemCableFriction": 0,
+	"drillBitUses": 2147483647
 }

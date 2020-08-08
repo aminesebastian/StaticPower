@@ -1,0 +1,7 @@
+{
+	"tierId": {
+		"namespace": "staticpower",
+		"path": "tier_bronze"
+	},
+	"drillBitUses": 2000
+}

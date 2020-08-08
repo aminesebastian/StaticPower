@@ -25,6 +25,16 @@ import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.common.util.Constants;
 import theking530.staticpower.utilities.Reference;
 
+/**
+ * Much thanks to raoulvdberge and RefinedPipes for offering a ton of wisdom on
+ * how to start this cable network manager! Learned so much from reading his
+ * code, this would not be possible without him.
+ * 
+ * https://github.com/refinedmods/refinedpipes
+ * 
+ * @author amine
+ *
+ */
 public class CableNetworkManager extends WorldSavedData {
 	private static final Logger LOGGER = LogManager.getLogger(CableNetworkManager.class);
 	private static final String PREFIX = Reference.MOD_ID + "_cable_network";
@@ -229,23 +239,19 @@ public class CableNetworkManager extends WorldSavedData {
 		List<ServerCable> adjacents = getAdjacents(originCable);
 
 		if (adjacents.size() > 0) {
-			// We can assume all adjacent pipes (with the same network type) share the same
-			// network with the removed pipe.
-			// That means it doesn't matter which pipe network we use for splitting, we'll
-			// take the first found one.
-			ServerCable otherPipeInNetwork = adjacents.get(0);
+			ServerCable firstAdjacentCable = adjacents.get(0);
 
-			otherPipeInNetwork.getNetwork().setOrigin(otherPipeInNetwork.getPos());
+			firstAdjacentCable.getNetwork().setOrigin(firstAdjacentCable.getPos());
 
-			NetworkMapper result = otherPipeInNetwork.getNetwork().updateGraph(otherPipeInNetwork.getWorld(), otherPipeInNetwork.getPos());
+			NetworkMapper result = firstAdjacentCable.getNetwork().updateGraph(firstAdjacentCable.getWorld(), firstAdjacentCable.getPos());
 
 			// For sanity checking
-			boolean foundRemovedPipe = false;
+			boolean removedCableFound = false;
 
 			for (ServerCable removed : result.getRemovedCables()) {
 				// Skip the removed cables if it is the origin one of the remove.
 				if (removed.getPos().equals(originCable.getPos())) {
-					foundRemovedPipe = true;
+					removedCableFound = true;
 					continue;
 				}
 
@@ -255,7 +261,7 @@ public class CableNetworkManager extends WorldSavedData {
 				}
 			}
 
-			if (!foundRemovedPipe) {
+			if (!removedCableFound) {
 				throw new RuntimeException("Didn't find removed cable when splitting network");
 			}
 
@@ -323,8 +329,8 @@ public class CableNetworkManager extends WorldSavedData {
 		// Get the current network Id.
 		CurrentNetworkId = tag.getLong("current_network_id");
 
-		LOGGER.debug("Read {} pipes", WorldCables.size());
-		LOGGER.debug("Read {} networks", Networks.size());
+		LOGGER.debug(String.format("Deserialized: %1$d cables.", WorldCables.size()));
+		LOGGER.debug(String.format("Deserialized: %1$d networks.", Networks.size()));
 	}
 
 	@Override

@@ -19,7 +19,7 @@ import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
-import theking530.staticpower.tileentities.components.EnergyStorageComponent;
+import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
 import theking530.staticpower.utilities.MetricConverter;
 
 public class GuiBattery extends StaticPowerTileEntityGui<ContainerBattery, TileEntityBattery> {

@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.components;
+package theking530.staticpower.tileentities.components.items;
 
 import java.util.Random;
 import java.util.function.Predicate;
@@ -9,6 +9,8 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.tileentities.StaticPowerTileEntityBlock;
+import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.tileentities.components.control.SideConfigurationComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities;
 import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities.BlockSide;
@@ -52,17 +54,16 @@ public class InputServoComponent extends AbstractTileEntityComponent {
 		this(name, inputTime, inventory, MachineSideMode.Input, slots);
 	}
 
-	@Override
-	public String getComponentName() {
-		return "Input Servo";
-	}
-
 	public MachineSideMode getMode() {
 		return inputMode;
 	}
 
 	@Override
 	public void preProcessUpdate() {
+		// Do nothing if this component is not enabled.
+		if (!isEnabled()) {
+			return;
+		}
 		if (!getTileEntity().getWorld().isRemote) {
 			if (inventory != null && inventory.getSlots() > 0 && getTileEntity() != null) {
 				int randomIndex = randomGenerator.nextInt(slots.length);
@@ -130,7 +131,8 @@ public class InputServoComponent extends AbstractTileEntityComponent {
 
 	public boolean canInputFromSide(BlockSide blockSide) {
 		if (getTileEntity().hasComponentOfType(SideConfigurationComponent.class)) {
-			return getTileEntity().getComponent(SideConfigurationComponent.class).getWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(blockSide, getTileEntity().getFacingDirection())) == inputMode;
+			return getTileEntity().getComponent(SideConfigurationComponent.class)
+					.getWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(blockSide, getTileEntity().getFacingDirection())) == inputMode;
 		}
 		return true;
 	}

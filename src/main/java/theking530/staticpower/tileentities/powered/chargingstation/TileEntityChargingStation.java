@@ -10,10 +10,10 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 import theking530.staticpower.tileentities.TileEntityMachine;
-import theking530.staticpower.tileentities.components.BatteryComponent;
-import theking530.staticpower.tileentities.components.InputServoComponent;
-import theking530.staticpower.tileentities.components.InventoryComponent;
-import theking530.staticpower.tileentities.components.OutputServoComponent;
+import theking530.staticpower.tileentities.components.control.BatteryComponent;
+import theking530.staticpower.tileentities.components.items.InputServoComponent;
+import theking530.staticpower.tileentities.components.items.InventoryComponent;
+import theking530.staticpower.tileentities.components.items.OutputServoComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.utilities.InventoryUtilities;
 

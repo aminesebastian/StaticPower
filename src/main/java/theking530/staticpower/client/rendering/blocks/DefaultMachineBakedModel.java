@@ -35,7 +35,7 @@ import net.minecraftforge.client.model.data.ModelProperty;
 import theking530.common.utilities.SDMath;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.components.SideConfigurationComponent;
+import theking530.staticpower.tileentities.components.control.SideConfigurationComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
 public class DefaultMachineBakedModel extends AbstractBakedModel {

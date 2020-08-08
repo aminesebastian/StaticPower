@@ -11,8 +11,8 @@ import theking530.common.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneT
 import theking530.common.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
-import theking530.staticpower.tileentities.components.EnergyStorageComponent;
-import theking530.staticpower.tileentities.components.RedstoneControlComponent;
+import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
+import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
 
 public class GuiFormer extends StaticPowerTileEntityGui<ContainerFormer, TileEntityFormer> {
 	private GuiInfoTab infoTab;

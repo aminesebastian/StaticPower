@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.components;
+package theking530.staticpower.tileentities.components.fluids;
 
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
@@ -11,6 +11,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.IItemHandler;
+import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class FluidContainerComponent extends AbstractTileEntityComponent {

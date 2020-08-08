@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"pip",
+		"pip",
+		" p "
+	],
+	"key": {
+		"i": {
+			"item": "staticpower:ingot_lumum"
+		},
+		"p": {
+			"item": "staticpower:plate_lumum"
+		}
+	},
+	"result": {
+		"item": "staticpower:drill_bit_lumum"
+	}
+}

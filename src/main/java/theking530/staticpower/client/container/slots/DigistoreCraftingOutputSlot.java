@@ -12,7 +12,8 @@ public class DigistoreCraftingOutputSlot extends CraftingResultSlot {
 	private final ContainerDigistoreCraftingTerminal container;
 	private final CraftingInventory craftMatrix;
 
-	public DigistoreCraftingOutputSlot(ContainerDigistoreCraftingTerminal container, PlayerEntity player, CraftingInventory craftingInventory, IInventory inventoryIn, int slotIndex, int xPosition, int yPosition) {
+	public DigistoreCraftingOutputSlot(ContainerDigistoreCraftingTerminal container, PlayerEntity player, CraftingInventory craftingInventory, IInventory inventoryIn, int slotIndex, int xPosition,
+			int yPosition) {
 		super(player, craftingInventory, inventoryIn, slotIndex, xPosition, yPosition);
 		this.container = container;
 		this.craftMatrix = craftingInventory;
@@ -53,7 +54,7 @@ public class DigistoreCraftingOutputSlot extends CraftingResultSlot {
 				}
 			});
 		}
-
+		stack.getItem().onCreated(stack, thePlayer.world, thePlayer);
 		container.onItemCrafted(stack);
 		return stack;
 	}

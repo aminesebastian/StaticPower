@@ -30,6 +30,10 @@ public class StaticPowerMessageHandler {
 		channel.send(PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(position.getX(), position.getY(), position.getZ(), radius, world.getDimension().getType())), message);
 	}
 
+	public static void sendToAllPlayersInDimension(SimpleChannel channel, World world, NetworkMessage message) {
+		channel.send(PacketDistributor.DIMENSION.with(() -> world.getDimension().getType()), message);
+	}
+
 	/**
 	 * Registers the provided message class as a valid packet.
 	 * 

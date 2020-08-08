@@ -10,4 +10,10 @@ public class StaticPowerTiers {
 	public static final ResourceLocation ENERGIZED = new ResourceLocation(Reference.MOD_ID, "tier_energized");
 	public static final ResourceLocation LUMUM = new ResourceLocation(Reference.MOD_ID, "tier_lumum");
 	public static final ResourceLocation CREATIVE = new ResourceLocation(Reference.MOD_ID, "tier_creative");
+	
+	public static final ResourceLocation DIAMOND = new ResourceLocation(Reference.MOD_ID, "tier_diamond");
+	public static final ResourceLocation RUBY = new ResourceLocation(Reference.MOD_ID, "tier_ruby");
+	public static final ResourceLocation SAPPHIRE = new ResourceLocation(Reference.MOD_ID, "tier_sapphire");
+	public static final ResourceLocation TUNGSTEN = new ResourceLocation(Reference.MOD_ID, "tier_tungsten");
+	public static final ResourceLocation BRONZE = new ResourceLocation(Reference.MOD_ID, "tier_bronze");
 }

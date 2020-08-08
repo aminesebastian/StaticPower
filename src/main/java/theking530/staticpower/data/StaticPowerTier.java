@@ -24,6 +24,11 @@ public class StaticPowerTier {
 	private int itemFilterSlots;
 	private float itemCableAcceleration;
 	private float itemCableFriction;
+	private int drillBitUses;
+
+	public int getDrillBitUses() {
+		return drillBitUses;
+	}
 
 	public int getItemFilterSlots() {
 		return itemFilterSlots;

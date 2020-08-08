@@ -8,33 +8,22 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import theking530.common.gui.GuiDrawUtilities;
 import theking530.common.utilities.Color;
 import theking530.common.utilities.Vector2D;
-import theking530.staticpower.tileentities.utilities.interfaces.IProcessing;
 
 public class SquareProgressBar extends AbstractProgressBar {
 
-	private IProcessing processingEntity;
-
-	public SquareProgressBar(IProcessing processingEntity, int xPosition, int yPosition, int xSize, int ySize) {
+	public SquareProgressBar(int xPosition, int yPosition, int xSize, int ySize) {
 		super(xPosition, yPosition, xSize, ySize);
-		this.processingEntity = processingEntity;
 	}
 
 	@Override
 	public void renderBehindItems(int mouseX, int mouseY, float partialTicks) {
 		super.renderBehindItems(mouseX, mouseY, partialTicks);
-		if (lastValue != processingEntity.getCurrentProgress()) {
-			lastValue = processingEntity.getCurrentProgress();
-			interp = lastValue;
-		}
-		if (processingEntity.isProcessing()) {
-			float seconds = processingEntity.getProcessingTime() / 20.0f;
-			float perSecond = partialTicks / seconds;
-			interp += perSecond;
-		}
 		Vector2D screenSpacePosition = this.getScreenSpacePosition();
+		float adjustedProgress = visualCurrentProgress / maxProgress;
+
 		GuiDrawUtilities.drawSlot(screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY());
-		drawRect(screenSpacePosition.getX(), screenSpacePosition.getY(), (screenSpacePosition.getX() + (getSize().getX() * (interp / ((float) processingEntity.getProcessingTime())))),
-				screenSpacePosition.getY() + getSize().getY(), new Color(1.0f, 1.0f, 1.0f).encodeInInteger());
+		drawRect(screenSpacePosition.getX(), screenSpacePosition.getY(), (screenSpacePosition.getX() + (getSize().getX() * adjustedProgress)), screenSpacePosition.getY() + getSize().getY(),
+				new Color(1.0f, 1.0f, 1.0f).encodeInInteger());
 	}
 
 	public static void drawRect(float left, float top, float right, float bottom, int color) {
@@ -50,10 +39,6 @@ public class SquareProgressBar extends AbstractProgressBar {
 			bottom = j;
 		}
 
-//		float f3 = (float) (color >> 24 & 255) / 255.0F;
-//		float f = (float) (color >> 16 & 255) / 255.0F;
-//		float f1 = (float) (color >> 8 & 255) / 255.0F;
-//		float f2 = (float) (color & 255) / 255.0F;
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
 		GlStateManager.enableBlend();

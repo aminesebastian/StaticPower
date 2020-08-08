@@ -16,7 +16,7 @@ import net.minecraft.util.text.TextFormatting;
 import theking530.common.gui.GuiTextures;
 import theking530.common.gui.drawables.SpriteDrawable;
 import theking530.common.utilities.Color;
-import theking530.staticpower.tileentities.components.EnergyStorageComponent;
+import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
 
 public class GuiPowerInfoTab extends BaseGuiTab {
 

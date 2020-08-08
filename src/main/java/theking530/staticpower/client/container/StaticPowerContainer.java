@@ -21,7 +21,7 @@ import theking530.staticpower.client.container.slots.DummySlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
-import theking530.staticpower.tileentities.components.InventoryComponent;
+import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.powered.autocrafter.PacketLockInventorySlot;
 
 public abstract class StaticPowerContainer extends Container {
