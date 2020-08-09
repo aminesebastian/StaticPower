@@ -79,7 +79,7 @@ public class TileEntityCrucible extends TileEntityMachine {
 			internalInventory.setStackInSlot(1, inputInventory.getStackInSlot(1).copy());
 			// Update the processing time.
 			FormerRecipe recipe = getRecipe(internalInventory.getStackInSlot(0), internalInventory.getStackInSlot(1)).orElse(null);
-			processingComponent.setProcessingTime(recipe.getProcessingTime());
+			processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
 			// Trigger a block update.
 			markTileEntityForSynchronization();
 		}

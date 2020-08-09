@@ -307,6 +307,7 @@
 	"block.staticpower.machine_industrial_soldering_table": "Industrial Solderer",
 	"block.staticpower.machine_industrial_crafting_table": "Industrial Crafter",
 	"block.staticpower.machine_miner": "Solid Fueled Miner",
+	"block.staticpower.machine_electric_miner": "Electric Miner",
 	"block.staticpower.battery_block_basic": "Basic Battery",
 	"block.staticpower.battery_block_advanced": "Advanced Battery",
 	"block.staticpower.battery_block_static": "Static Battery",

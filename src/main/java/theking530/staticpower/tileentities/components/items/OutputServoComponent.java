@@ -1,6 +1,10 @@
 package theking530.staticpower.tileentities.components.items;
 
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -16,9 +20,6 @@ import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities.
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class OutputServoComponent extends AbstractTileEntityComponent {
-
-	private Random randomGenerator = new Random();
-
 	private int outputTimer;
 	private int outputTime;
 	private InventoryComponent inventory;
@@ -47,58 +48,81 @@ public class OutputServoComponent extends AbstractTileEntityComponent {
 
 	@Override
 	public void preProcessUpdate() {
+		// If we have an empty inventory, do nothing.
+		if (inventory.getSlots() == 0) {
+			return;
+		}
+
 		// Do nothing if this component is not enabled.
 		if (!isEnabled()) {
 			return;
 		}
 
+		// If on the server, get the sides we can output to.
 		if (!getTileEntity().getWorld().isRemote) {
-			if (inventory != null && inventory.getSlots() > 0 && getTileEntity() != null) {
-				int randomIndex = randomGenerator.nextInt(slots.length);
-				int slot = slots[randomIndex];
-				if (inventory.getStackInSlot(slot) != ItemStack.EMPTY) {
-					outputTimer++;
-					if (outputTimer > 0) {
-						int rand = randomGenerator.nextInt(5);
-						if (outputTimer >= outputTime) {
-							switch (rand) {
-							case 0:
-								outputItem(slot, BlockSide.TOP, 0, false);
-								break;
-							case 1:
-								outputItem(slot, BlockSide.BOTTOM, 0, false);
-								break;
-							case 2:
-								outputItem(slot, BlockSide.RIGHT, 0, false);
-								break;
-							case 3:
-								outputItem(slot, BlockSide.LEFT, 0, false);
-								break;
-							case 4:
-								outputItem(slot, BlockSide.BACK, 0, false);
-								break;
-							default:
-								break;
+			// First, increment the output timer.
+			outputTimer++;
+
+			// If the timer has not elapsed, return early.
+			if (outputTimer < outputTime) {
+				return;
+			}
+
+			// Allocate a list of handlers.
+			List<IItemHandler> validHandlers = new LinkedList<IItemHandler>();
+
+			// Get a random array of block sides.
+			List<BlockSide> randomBlockSideList = new ArrayList<BlockSide>(Arrays.asList(BlockSide.values()));
+			Collections.shuffle(randomBlockSideList);
+
+			// Check every side.
+			for (BlockSide side : randomBlockSideList) {
+				// If we can output from that side.
+				if (canOutputFromSide(side)) {
+					// Get the facing direction of that side.
+					Direction facing = getWorld().getBlockState(getPos()).get(StaticPowerTileEntityBlock.FACING);
+					Direction direction = SideConfigurationUtilities.getDirectionFromSide(side, facing);
+
+					// Get the tile entity in that direction.
+					TileEntity te = getWorld().getTileEntity(getPos().offset(direction));
+
+					// If the tile entity exists.
+					if (te != null) {
+						// Get the item handler on that side.
+						IItemHandler handler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction.getOpposite()).orElse(null);
+
+						// If that exists.
+						if (handler != null) {
+							// Check to see if we can insert any of the source inventory items into that
+							// handler. If we can, add it as a candidate.
+							for (ItemStack stack : inventory) {
+								if (InventoryUtilities.canPartiallyInsertItemIntoInventory(handler, stack)) {
+									validHandlers.add(handler);
+									break;
+								}
 							}
-							outputTimer = 0;
+
 						}
 					}
 				}
 			}
-		}
-	}
 
-	public void outputItem(int fromSlot, BlockSide blockSide, int startSlot, boolean backwards) {
-		if (canOutputFromSide(blockSide)) {
-			ItemStack stack = inventory.getStackInSlot(fromSlot);
-			if (!stack.isEmpty()) {
-				Direction facing = getTileEntity().getWorld().getBlockState(getTileEntity().getPos()).get(StaticPowerTileEntityBlock.FACING);
-				TileEntity te = getTileEntity().getWorld().getTileEntity(getTileEntity().getPos().offset(SideConfigurationUtilities.getDirectionFromSide(blockSide, facing)));
-				if (te != null) {
-					te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, SideConfigurationUtilities.getDirectionFromSide(blockSide, facing).getOpposite())
-							.ifPresent((IItemHandler instance) -> {
-								inventory.setStackInSlot(fromSlot, InventoryUtilities.insertItemIntoInventory(instance, stack, false));
-							});
+			// Iterate through all the valid sides.
+			for (IItemHandler validSide : validHandlers) {
+				// Try to insert an item into it.
+				for (int i = 0; i < inventory.getSlots(); i++) {
+					// Get the candidate to transfer.
+					ItemStack candidate = inventory.getStackInSlot(i);
+					// Attempt the insert using a copy and capture the remaining.
+					ItemStack remaining = InventoryUtilities.insertItemIntoInventory(validSide, candidate.copy(), false);
+
+					// If any items were transfered, extract the transfered amount from our
+					// inventory and then stop.
+					if (candidate.getCount() != remaining.getCount()) {
+						int transfered = candidate.getCount() - remaining.getCount();
+						inventory.extractItem(i, transfered, false);
+						break;
+					}
 				}
 			}
 		}

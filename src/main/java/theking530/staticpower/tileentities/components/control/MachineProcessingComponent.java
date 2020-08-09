@@ -17,8 +17,9 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 
 	private Runnable processingStartedCallback;
 
-	private int processingTime;
-	private int currentProcessingTime;
+	private int tickDownRate;
+	private int maxProcessingTime;
+	private int currentTime;
 	private int blockStateOffTimer;
 	private boolean processing;
 	private boolean hasStarted;
@@ -31,11 +32,12 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		this.canStartProcessingCallback = canStartProcessingCallback;
 		this.canContinueProcessingCallback = canContinueProcessingCallback;
 		this.processingEndedCallback = processingEndedCallback;
-		this.processingTime = processingTime;
+		this.maxProcessingTime = processingTime;
 		this.processing = false;
 		this.hasStarted = false;
 		this.serverOnly = serverOnly;
 		this.shouldControlOnBlockState = false;
+		this.tickDownRate = 1;
 	}
 
 	public MachineProcessingComponent(String name, int processingTime, @Nonnull Supplier<Boolean> processingEndedCallback, boolean serverOnly) {
@@ -73,15 +75,15 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 			setIsOnBlockState(true);
 
 			// If we can can continue processing, do so, otherwise, stop.
-			if (currentProcessingTime < processingTime) {
-				currentProcessingTime++;
+			if (currentTime < maxProcessingTime) {
+				currentTime += tickDownRate;
 			}
 
 			// If we have completed the processing, try to complete it using the callback.
 			// If the callback is true, we reset the state of the component back to initial.
-			if (currentProcessingTime >= processingTime) {
+			if (currentTime >= maxProcessingTime) {
 				if (processingCompleted()) {
-					currentProcessingTime = 0;
+					currentTime = 0;
 					blockStateOffTimer = 0;
 					processing = false;
 					hasStarted = false;
@@ -158,7 +160,7 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 			return;
 		}
 		processing = false;
-		currentProcessingTime = 0;
+		currentTime = 0;
 	}
 
 	private boolean processingCompleted() {
@@ -182,7 +184,7 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 	 * @return
 	 */
 	public boolean isDone() {
-		return currentProcessingTime >= processingTime;
+		return currentTime >= maxProcessingTime;
 	}
 
 	/**
@@ -205,19 +207,38 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 	}
 
 	public int getCurrentProcessingTime() {
-		return currentProcessingTime;
+		return currentTime;
 	}
 
-	public int getProcessingTime() {
-		return processingTime;
+	public int getMaxProcessingTime() {
+		return maxProcessingTime;
 	}
 
-	public void setProcessingTime(int newTime) {
-		processingTime = newTime;
+	public void setMaxProcessingTime(int newTime) {
+		maxProcessingTime = newTime;
+	}
+
+	/**
+	 * Gets how many time units are processed per tick.
+	 * 
+	 * @return
+	 */
+	public int getTimeUnitsPerTick() {
+		return tickDownRate;
+	}
+
+	/**
+	 * Sets how many units of time should be processed per tick. The default value
+	 * is usually desired (1).
+	 * 
+	 * @param tickDownRate
+	 */
+	public void setTimeUnitsPerTick(int tickDownRate) {
+		this.tickDownRate = tickDownRate;
 	}
 
 	public int getProgressScaled(int scaleValue) {
-		return (int) (((float) (currentProcessingTime) / processingTime) * scaleValue);
+		return (int) (((float) (currentTime) / maxProcessingTime) * scaleValue);
 	}
 
 	/**
@@ -258,9 +279,10 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
 		nbt.putBoolean("processing", processing);
-		nbt.putBoolean("processingPaused", processingPaused);
-		nbt.putInt("processing_time", processingTime);
-		nbt.putInt("currentTime", currentProcessingTime);
+		nbt.putBoolean("processing_paused", processingPaused);
+		nbt.putInt("processing_time", maxProcessingTime);
+		nbt.putInt("current_time", currentTime);
+		nbt.putInt("tick_down_rate", tickDownRate);
 		return nbt;
 	}
 
@@ -268,8 +290,9 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 		processing = nbt.getBoolean("processing");
-		processingPaused = nbt.getBoolean("processingPaused");
-		processingTime = nbt.getInt("processing_time");
-		currentProcessingTime = nbt.getInt("currentTime");
+		processingPaused = nbt.getBoolean("processing_paused");
+		maxProcessingTime = nbt.getInt("processing_time");
+		currentTime = nbt.getInt("current_time");
+		tickDownRate = nbt.getInt("tick_down_rate");
 	}
 }

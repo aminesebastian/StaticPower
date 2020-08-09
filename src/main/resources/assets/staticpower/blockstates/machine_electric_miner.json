@@ -1,0 +1,13 @@
+{
+  "forge_marker": 1,
+    "variants": {
+		"facing=north,is_on=false": { "model": "staticpower:block/machines/machine_electric_miner" },
+        "facing=south,is_on=false": { "model": "staticpower:block/machines/machine_electric_miner", "y": 180 },
+        "facing=west,is_on=false":  { "model": "staticpower:block/machines/machine_electric_miner", "y": 270 },
+        "facing=east,is_on=false":  { "model": "staticpower:block/machines/machine_electric_miner", "y": 90 },
+		"facing=north,is_on=true": { "model": "staticpower:block/machines/machine_electric_miner_on" },
+        "facing=south,is_on=true": { "model": "staticpower:block/machines/machine_electric_miner_on", "y": 180 },
+        "facing=west,is_on=true":  { "model": "staticpower:block/machines/machine_electric_miner_on", "y": 270 },
+        "facing=east,is_on=true":  { "model": "staticpower:block/machines/machine_electric_miner_on", "y": 90 }
+    }
+}

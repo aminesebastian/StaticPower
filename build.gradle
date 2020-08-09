@@ -98,6 +98,9 @@ dependencies {
 
 	compileOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-${mc_major_version}:${mc_major_version}-${one_probe_version}:api")
     runtimeOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-${mc_major_version}:${mc_major_version}-${one_probe_version}")
+	
+	compileOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}:api")
+    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}")
 }
 
 repositories {
@@ -118,6 +121,10 @@ repositories {
 	maven {
 		name = "tterrag maven"
 		url = "http://maven.tterrag.com/"
+	}
+	maven { 
+		name = "Patchouli Maven"
+		url 'https://maven.blamejared.com' 
 	}
 }
 

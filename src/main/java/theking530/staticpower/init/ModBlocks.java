@@ -25,6 +25,7 @@ import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.ioport.BlockDigistoreIOPort;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.BlockDigistoreManager;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.severrack.BlockDigistoreServerRack;
+import theking530.staticpower.tileentities.nonpowered.miner.BlockMiner;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.BlockSolderingTable;
 import theking530.staticpower.tileentities.nonpowered.tank.BlockTank;
 import theking530.staticpower.tileentities.nonpowered.vacuumchest.BlockVacuumChest;
@@ -36,12 +37,12 @@ import theking530.staticpower.tileentities.powered.bottler.BlockBottler;
 import theking530.staticpower.tileentities.powered.centrifuge.BlockCentrifuge;
 import theking530.staticpower.tileentities.powered.chargingstation.BlockChargingStation;
 import theking530.staticpower.tileentities.powered.crucible.BlockCrucible;
+import theking530.staticpower.tileentities.powered.electricminer.BlockElectricMiner;
 import theking530.staticpower.tileentities.powered.fermenter.BlockFermenter;
 import theking530.staticpower.tileentities.powered.fluidinfuser.BlockFluidInfuser;
 import theking530.staticpower.tileentities.powered.former.BlockFormer;
 import theking530.staticpower.tileentities.powered.fusionfurnace.BlockFusionFurnace;
 import theking530.staticpower.tileentities.powered.lumbermill.BlockLumberMill;
-import theking530.staticpower.tileentities.powered.miner.BlockMiner;
 import theking530.staticpower.tileentities.powered.poweredfurnace.BlockPoweredFurnace;
 import theking530.staticpower.tileentities.powered.poweredgrinder.BlockPoweredGrinder;
 import theking530.staticpower.tileentities.powered.pump.BlockPump;
@@ -143,6 +144,7 @@ public class ModBlocks {
 	public static BlockCentrifuge Centrifuge;
 	public static BlockFusionFurnace FusionFurnace;
 	public static BlockMiner Miner;
+	public static BlockElectricMiner ElectricMiner;
 
 	public static BlockSolarPanel SolarPanelBasic;
 	public static BlockSolarPanel SolarPanelAdvanced;
@@ -308,6 +310,7 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(Centrifuge = new BlockCentrifuge("machine_centrifuge"));
 		StaticPowerRegistry.preRegisterBlock(FusionFurnace = new BlockFusionFurnace("machine_fusion_furnace"));
 		StaticPowerRegistry.preRegisterBlock(Miner = new BlockMiner("machine_miner"));
+		StaticPowerRegistry.preRegisterBlock(ElectricMiner = new BlockElectricMiner("machine_electric_miner"));
 
 		StaticPowerRegistry.preRegisterBlock(BasicTank = new BlockTank("tank_basic"));
 		StaticPowerRegistry.preRegisterBlock(Pump = new BlockPump("pump"));

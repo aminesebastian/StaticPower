@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.powered.miner;
+package theking530.staticpower.tileentities.nonpowered.miner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,30 +6,22 @@ import java.util.List;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.renderer.Vector3f;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.ParticleTypes;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.ForgeHooks;
 import theking530.common.utilities.Color;
-import theking530.common.utilities.SDMath;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.init.ModTags;
-import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.items.tools.DrillBit;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.tileentities.components.control.SideConfigurationComponent;
-import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
 import theking530.staticpower.tileentities.components.loopingsound.LoopingSoundComponent;
@@ -41,24 +33,18 @@ import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandler
 import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
-public class TileEntityMiner extends TileEntityBase {
-	public static final int DEFAULT_MINING_TIME = 100;
+public abstract class AbstractTileEntityMiner extends TileEntityBase {
+	public static final int DEFAULT_MINING_TIME = 2;
 	public static final int DEFAULT_MINING_COST = 10;
 	public static final int DEFAULT_IDLE_COST = 1;
 	public static final int DEFAULT_FUEL_MOVE_TIME = 4;
 	public static final int MINING_RADIUS = 5;
 
-	public final InventoryComponent fuelInputInventory;
 	public final InventoryComponent drillBitInventory;
 	public final InventoryComponent outputInventory;
 	public final InventoryComponent internalInventory;
-	public final InventoryComponent fuelInventory;
-	public final InventoryComponent upgradesInventory;
 
 	public final MachineProcessingComponent processingComponent;
-	public final MachineProcessingComponent fuelComponent;
-	public final MachineProcessingComponent fuelMoveComponent;
-
 	public final LoopingSoundComponent miningSoundComponent;
 
 	public final SideConfigurationComponent ioSideConfiguration;
@@ -67,11 +53,20 @@ public class TileEntityMiner extends TileEntityBase {
 	private boolean shouldDrawRadiusPreview;
 	private final List<BlockPos> blocks;
 	private int currentBlockIndex;
+	private int ticksPerOperation;
+	private int miningRadius;
+	private int blockMiningFuelCost;
+	private int idleFuelCost;
 
-	public TileEntityMiner() {
-		super(ModTileEntityTypes.MINER);
+	public AbstractTileEntityMiner(TileEntityType<?> type) {
+		super(type);
 		disableFaceInteraction();
-		registerComponent(fuelInputInventory = new InventoryComponent("FuelInputInventory", 1, MachineSideMode.Input));
+		blocks = new ArrayList<BlockPos>();
+		ticksPerOperation = DEFAULT_MINING_TIME;
+		miningRadius = MINING_RADIUS;
+		blockMiningFuelCost = DEFAULT_MINING_COST;
+		idleFuelCost = DEFAULT_IDLE_COST;
+
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
 		registerComponent(drillBitInventory = new InventoryComponent("DrillBitInventory", 1, MachineSideMode.Never).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
@@ -79,30 +74,22 @@ public class TileEntityMiner extends TileEntityBase {
 			}
 		}));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 64, MachineSideMode.Never));
-		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
 
 		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", this::onSidesConfigUpdate, this::checkSideConfiguration));
 		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent", RedstoneMode.Ignore));
 
-		registerComponent(fuelInventory = new InventoryComponent("FuelInventory", 1, MachineSideMode.Never));
-		registerComponent(fuelMoveComponent = new MachineProcessingComponent("FuelMoveComponent", DEFAULT_FUEL_MOVE_TIME, this::canMoveFuel, this::canMoveFuel, this::fuelMoved, true));
-		registerComponent(fuelComponent = new MachineProcessingComponent("FuelComponent", 0, this::canStartProcessingFuel, this::canProcesFuel, this::fuelProcessingCompleted, true));
-
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_MINING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true)
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", ticksPerOperation, this::canProcess, this::canProcess, this::processingCompleted, true)
 				.setShouldControlBlockState(true));
 
 		registerComponent(miningSoundComponent = new LoopingSoundComponent("MiningSoundComponent", 20));
-		registerComponent(new InputServoComponent("FuelInputServo", 20, fuelInputInventory));
 		registerComponent(new OutputServoComponent("OutputServo", 20, outputInventory));
-
-		blocks = new ArrayList<BlockPos>();
 	}
 
 	@Override
 	public void process() {
 		// If there are no blocks, refresh them.
 		if (this.blocks.size() == 0) {
-			refreshBlocksInRange(MINING_RADIUS);
+			refreshBlocksInRange(miningRadius);
 		}
 
 		if (!world.isRemote) {
@@ -124,44 +111,6 @@ public class TileEntityMiner extends TileEntityBase {
 				miningSoundComponent.stopPlayingSound();
 			}
 		}
-
-		// Randomly generate smoke and flame particles.
-		if (processingComponent.isPerformingWork()) {
-			float randomOffset = (2 * RANDOM.nextFloat()) - 1.0f;
-			if (SDMath.diceRoll(0.25f)) {
-
-				randomOffset /= 3.5f;
-				float forwardOffset = getFacingDirection().getAxisDirection() == AxisDirection.POSITIVE ? -1.05f : -0.05f;
-				Vector3f forwardVector = SDMath.transformVectorByDirection(getFacingDirection(), new Vector3f(randomOffset + 0.5f, 0.32f, forwardOffset));
-				getWorld().addParticle(ParticleTypes.SMOKE, getPos().getX() + forwardVector.getX(), getPos().getY() + forwardVector.getY(), getPos().getZ() + forwardVector.getZ(), 0.0f, 0.01f, 0.0f);
-				getWorld().addParticle(ParticleTypes.FLAME, getPos().getX() + forwardVector.getX(), getPos().getY() + forwardVector.getY(), getPos().getZ() + forwardVector.getZ(), 0.0f, 0.01f, 0.0f);
-			}
-		}
-	}
-
-	public boolean canStartProcessingFuel() {
-		return !isDoneMining() && isValidFuel(fuelInventory.getStackInSlot(0)) && hasDrillBit() && redstoneControlComponent.passesRedstoneCheck();
-	}
-
-	public boolean canMoveFuel() {
-		return isValidFuel(fuelInputInventory.getStackInSlot(0)) && fuelInventory.getStackInSlot(0).isEmpty() && hasDrillBit() && redstoneControlComponent.passesRedstoneCheck();
-	}
-
-	public boolean fuelMoved() {
-		int burnTime = getFuelBurnTime(fuelInputInventory.getStackInSlot(0));
-		fuelComponent.setProcessingTime(burnTime);
-		transferItemInternally(fuelInputInventory, 0, fuelInventory, 0);
-		return true;
-	}
-
-	public boolean canProcesFuel() {
-		return !isDoneMining() && redstoneControlComponent.passesRedstoneCheck();
-	}
-
-	public boolean fuelProcessingCompleted() {
-		fuelComponent.setProcessingTime(0);
-		fuelInventory.getStackInSlot(0).shrink(1);
-		return true;
 	}
 
 	public boolean isDoneMining() {
@@ -173,7 +122,7 @@ public class TileEntityMiner extends TileEntityBase {
 	}
 
 	public int getTicksRemainingUntilCompletion() {
-		return getBlocksRemaining() * processingComponent.getProcessingTime() - processingComponent.getCurrentProcessingTime();
+		return getBlocksRemaining() * processingComponent.getMaxProcessingTime() - processingComponent.getCurrentProcessingTime();
 	}
 
 	/**
@@ -186,7 +135,7 @@ public class TileEntityMiner extends TileEntityBase {
 		if (isDoneMining()) {
 			return false;
 		}
-		return InventoryUtilities.isInventoryEmpty(internalInventory) && getRemainingFuel() > 0 && hasDrillBit() && redstoneControlComponent.passesRedstoneCheck();
+		return InventoryUtilities.isInventoryEmpty(internalInventory) && hasDrillBit() && redstoneControlComponent.passesRedstoneCheck();
 	}
 
 	/**
@@ -226,7 +175,8 @@ public class TileEntityMiner extends TileEntityBase {
 
 			// Damage the drill bit.
 			if (getDrillBit().attemptDamageItem(1, world.rand, null)) {
-				this.drillBitInventory.getStackInSlot(0).shrink(1);
+				drillBitInventory.getStackInSlot(0).shrink(1);
+				world.playSound(null, getPos(), SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0f, 1.0f);
 			}
 
 			// If we hit dirt, make it coarse dirt.
@@ -249,13 +199,12 @@ public class TileEntityMiner extends TileEntityBase {
 			// Set the mined block to cobblestone.
 			world.setBlockState(minedPos, Blocks.COBBLESTONE.getDefaultState(), 1 | 2);
 
-			// Use extra fuel when actually mining.
-			this.fuelComponent.setProcessingTime(Math.min(fuelComponent.getCurrentProcessingTime() + DEFAULT_MINING_COST, fuelComponent.getProcessingTime()));
+			// Raise the on mined event.
+			onBlockMined(minedPos, minedBlockState);
 
 			// IF we have reached the final block, set the current block index to -1.
 			if (currentBlockIndex >= blocks.size()) {
 				processingComponent.cancelProcessing();
-				fuelComponent.cancelProcessing();
 				currentBlockIndex = -1;
 			}
 
@@ -266,8 +215,44 @@ public class TileEntityMiner extends TileEntityBase {
 		return false;
 	}
 
+	public void onBlockMined(BlockPos pos, BlockState minedBlock) {
+
+	}
+
 	public boolean getShouldDrawRadiusPreview() {
 		return shouldDrawRadiusPreview;
+	}
+
+	public int getTicksPerOperation() {
+		return ticksPerOperation;
+	}
+
+	public void setTicksPerOperation(int ticksPerOperation) {
+		this.ticksPerOperation = ticksPerOperation;
+	}
+
+	public int getMiningRadius() {
+		return miningRadius;
+	}
+
+	public void setMiningRadius(int miningRadius) {
+		this.miningRadius = miningRadius;
+	}
+
+	public int getBlockMiningFuelCost() {
+		return blockMiningFuelCost;
+	}
+
+	public void setBlockMiningFuelCost(int blockMiningFuelCost) {
+		this.blockMiningFuelCost = blockMiningFuelCost;
+	}
+
+	public int getIdleFuelCost() {
+		return idleFuelCost;
+	}
+
+	public void setIdleFuelCost(int idleFuelCost) {
+		this.idleFuelCost = idleFuelCost;
 	}
 
 	public void setShouldDrawRadiusPreview(boolean shouldDraw) {
@@ -277,10 +262,10 @@ public class TileEntityMiner extends TileEntityBase {
 				CustomRenderer.removeCubeRenderer(getTileEntity(), "range");
 			}
 			// Set the scale equal to the range * 2 plus 1.
-			Vector3f scale = new Vector3f((MINING_RADIUS * 2) + 1, getPos().getY() - 0.98f, (MINING_RADIUS * 2) + 1);
+			Vector3f scale = new Vector3f((miningRadius * 2) + 1, getPos().getY() - 0.98f, (miningRadius * 2) + 1);
 			// Shift over so we center the range around the farmer.
 			Vector3f position = new Vector3f(getTileEntity().getPos().getX(), 1.0f, getTileEntity().getPos().getZ());
-			position.add(new Vector3f(-MINING_RADIUS, 0.0f, -MINING_RADIUS));
+			position.add(new Vector3f(-miningRadius, 0.0f, -miningRadius));
 
 			// Add the entry.
 			CustomRenderer.addCubeRenderer(getTileEntity(), "range", position, scale, new Color(1.0f, 0.1f, 0.2f, 0.25f));
@@ -319,18 +304,6 @@ public class TileEntityMiner extends TileEntityBase {
 		}
 	}
 
-	public int getFuelBurnTime(ItemStack input) {
-		return ForgeHooks.getBurnTime(input);
-	}
-
-	public boolean isValidFuel(ItemStack input) {
-		return ForgeHooks.getBurnTime(input) > 0;
-	}
-
-	public int getRemainingFuel() {
-		return fuelComponent.getProcessingTime() - fuelComponent.getCurrentProcessingTime();
-	}
-
 	public boolean hasDrillBit() {
 		return !drillBitInventory.getStackInSlot(0).isEmpty();
 	}
@@ -359,17 +332,21 @@ public class TileEntityMiner extends TileEntityBase {
 	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 		currentBlockIndex = nbt.getInt("current_index");
+		ticksPerOperation = nbt.getInt("ticks_per_operation");
+		miningRadius = nbt.getInt("radius");
+		blockMiningFuelCost = nbt.getInt("mining_cost");
+		idleFuelCost = nbt.getInt("idle_cost");
 	}
 
 	@Override
 	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
 		nbt.putInt("current_index", currentBlockIndex);
-		return nbt;
-	}
+		nbt.putInt("ticks_per_operation", ticksPerOperation);
+		nbt.putInt("radius", miningRadius);
+		nbt.putInt("mining_cost", blockMiningFuelCost);
+		nbt.putInt("idle_cost", idleFuelCost);
 
-	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
-		return new ContainerMiner(windowId, inventory, this);
+		return nbt;
 	}
 }

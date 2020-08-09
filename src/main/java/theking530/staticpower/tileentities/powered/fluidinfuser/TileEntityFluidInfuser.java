@@ -100,7 +100,7 @@ public class TileEntityFluidInfuser extends TileEntityMachine {
 			// Update the power cost and processing time.
 			FluidInfusionRecipe recipe = getRecipe(inputInventory.getStackInSlot(0)).get();
 			powerCost = recipe.getPowerCost();
-			processingComponent.setProcessingTime(recipe.getProcessingTime());
+			processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
 
 			// Transfer the items to the internal inventory.
 			transferItemInternally(inputInventory, 0, internalInventory, 0);

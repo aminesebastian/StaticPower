@@ -9,7 +9,6 @@ import theking530.staticpower.items.JuiceBottleItem;
 import theking530.staticpower.items.MilkBottleItem;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
 import theking530.staticpower.items.StaticPowerItem;
-import theking530.staticpower.items.book.StaticPowerBook;
 import theking530.staticpower.items.cableattachments.CableCover;
 import theking530.staticpower.items.cableattachments.digistorecraftingterminal.DigistoreCraftingTerminal;
 import theking530.staticpower.items.cableattachments.digistoreterminal.DigistoreTerminal;
@@ -32,8 +31,6 @@ import theking530.staticpower.items.tools.StaticWrench;
 import theking530.staticpower.items.tools.WireCutters;
 
 public class ModItems {
-	public static StaticPowerItem StaticPowerBook;
-
 	public static StaticPowerItem DistilleryGrain;
 
 	public static StaticPowerItem WheatFlour;
@@ -283,9 +280,6 @@ public class ModItems {
 	public static JuiceBottleItem BerryJuiceBottle;
 
 	public static void init() {
-		// Book
-		StaticPowerRegistry.preRegisterItem(StaticPowerBook = new StaticPowerBook("tutorial_book"));
-
 		// Misc.
 		StaticPowerRegistry.preRegisterItem(DistilleryGrain = new StaticPowerItem("distillery_grain"));
 

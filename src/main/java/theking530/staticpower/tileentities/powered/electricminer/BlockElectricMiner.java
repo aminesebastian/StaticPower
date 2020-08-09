@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.powered.miner;
+package theking530.staticpower.tileentities.powered.electricminer;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -11,9 +11,9 @@ import net.minecraft.world.World;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.StaticPowerMachineBlock;
 
-public class BlockMiner extends StaticPowerMachineBlock {
+public class BlockElectricMiner extends StaticPowerMachineBlock {
 
-	public BlockMiner(String name) {
+	public BlockElectricMiner(String name) {
 		super(name);
 	}
 
@@ -24,6 +24,6 @@ public class BlockMiner extends StaticPowerMachineBlock {
 
 	@Override
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
-		return ModTileEntityTypes.MINER.create();
+		return ModTileEntityTypes.ELECTRIC_MINER.create();
 	}
 }

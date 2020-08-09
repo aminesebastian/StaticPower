@@ -11,6 +11,7 @@ import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.ioport.TileEntityDigistoreIOPort;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.TileEntityDigistoreManager;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.severrack.TileEntityDigistoreServerRack;
+import theking530.staticpower.tileentities.nonpowered.miner.TileEntityMiner;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.TileEntitySolderingTable;
 import theking530.staticpower.tileentities.nonpowered.tank.TileEntityTank;
 import theking530.staticpower.tileentities.nonpowered.vacuumchest.TileEntityVacuumChest;
@@ -22,12 +23,12 @@ import theking530.staticpower.tileentities.powered.bottler.TileEntityBottler;
 import theking530.staticpower.tileentities.powered.centrifuge.TileEntityCentrifuge;
 import theking530.staticpower.tileentities.powered.chargingstation.TileEntityChargingStation;
 import theking530.staticpower.tileentities.powered.crucible.TileEntityCrucible;
+import theking530.staticpower.tileentities.powered.electricminer.TileEntityElectricMiner;
 import theking530.staticpower.tileentities.powered.fermenter.TileEntityFermenter;
 import theking530.staticpower.tileentities.powered.fluidinfuser.TileEntityFluidInfuser;
 import theking530.staticpower.tileentities.powered.former.TileEntityFormer;
 import theking530.staticpower.tileentities.powered.fusionfurnace.TileEntityFusionFurnace;
 import theking530.staticpower.tileentities.powered.lumbermill.TileEntityLumberMill;
-import theking530.staticpower.tileentities.powered.miner.TileEntityMiner;
 import theking530.staticpower.tileentities.powered.poweredfurnace.TileEntityPoweredFurnace;
 import theking530.staticpower.tileentities.powered.poweredgrinder.TileEntityPoweredGrinder;
 import theking530.staticpower.tileentities.powered.pump.TileEntityPump;
@@ -88,6 +89,7 @@ public class ModTileEntityTypes {
 	public static TileEntityType<TileEntityCentrifuge> CENTRIFUGE;
 	public static TileEntityType<TileEntityFusionFurnace> FUSION_FURNACE;
 	public static TileEntityType<TileEntityMiner> MINER;
+	public static TileEntityType<TileEntityElectricMiner> ELECTRIC_MINER;
 	
 	public static TileEntityType<TileEntityBattery> BATTERY_BASIC;
 	public static TileEntityType<TileEntityBattery> BATTERY_ADVANCED;
@@ -124,6 +126,7 @@ public class ModTileEntityTypes {
 		CENTRIFUGE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityCentrifuge(), ModBlocks.Centrifuge);
 		FUSION_FURNACE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityFusionFurnace(), ModBlocks.FusionFurnace);
 		MINER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityMiner(), ModBlocks.Miner);
+		ELECTRIC_MINER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityElectricMiner(), ModBlocks.ElectricMiner);
 
 		BATTERY_BASIC = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(type, StaticPowerTiers.BASIC), ModBlocks.BatteryBasic);
 		BATTERY_ADVANCED = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(type, StaticPowerTiers.ADVANCED), ModBlocks.BatteryAdvanced);

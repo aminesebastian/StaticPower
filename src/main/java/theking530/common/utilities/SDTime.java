@@ -8,6 +8,16 @@ public class SDTime {
 	public static final int TICKS_PER_DAY = 24 * TICKS_PER_HOUR;
 	public static final int TICKS_PER_WEEK = 7 * TICKS_PER_DAY;
 
+	/**
+	 * Converts the provided ticks into a human readable time string. Format: D
+	 * HH:MM:SS
+	 * 
+	 * Starts with the first relevant field. For example, when 1220 ticks are
+	 * provided, the result will be: 01:01 for 1 minute and one second.
+	 * 
+	 * @param ticks
+	 * @return
+	 */
 	public static String ticksToTimeString(long ticks) {
 		long days = ticks / TICKS_PER_DAY;
 		long hours = (ticks - (days * TICKS_PER_DAY)) / TICKS_PER_HOUR;
@@ -19,7 +29,7 @@ public class SDTime {
 
 		StringBuilder output = new StringBuilder();
 		if (days > 0) {
-			output.append(days + ":");
+			output.append(days + " ");
 			prevPresent = true;
 		}
 		if (hours > 0 || prevPresent) {

@@ -57,7 +57,7 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 		powerGenerationPerTick = DEFAULT_POWER_GENERATION;
 
 		// Set the default processing time to 0.
-		processingComponent.setProcessingTime(0);
+		processingComponent.setMaxProcessingTime(0);
 
 		// Don't allow this to receive power from external sources.
 		this.energyStorage.setCapabiltiyFilter((amount, side, action) -> {
@@ -127,7 +127,7 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 	protected boolean movingCompleted() {
 		if (hasValidRecipe()) {
 			transferItemInternally(inputInventory, 0, internalInventory, 0);
-			processingComponent.setProcessingTime(ForgeHooks.getBurnTime(internalInventory.getStackInSlot(0)));
+			processingComponent.setMaxProcessingTime(ForgeHooks.getBurnTime(internalInventory.getStackInSlot(0)));
 			return true;
 		}
 		return false;

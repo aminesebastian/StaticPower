@@ -110,7 +110,7 @@ public class TileEntitySqueezer extends TileEntityMachine {
 			transferItemInternally(inputInventory, 0, internalInventory, 0);
 			// Update the processing time.
 			SqueezerRecipe recipe = getRecipe(internalInventory.getStackInSlot(0)).orElse(null);
-			processingComponent.setProcessingTime(recipe.getProcessingTime());
+			processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
 			// Trigger a block update.
 			markTileEntityForSynchronization();
 		}

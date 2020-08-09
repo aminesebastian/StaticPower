@@ -41,18 +41,25 @@ public abstract class AbstractProgressBar extends AbstractGuiWidget {
 	 * The maximum amount of progress this progress bar should be able to display.
 	 */
 	protected int maxProgress;
+	/**
+	 * The amount of time units that coorelates to a tick. Usually this value should
+	 * remain at 1.
+	 */
+	protected int tickDownRate;
 
 	public AbstractProgressBar(float xPosition, float yPosition, float width, float height) {
 		super(xPosition, yPosition, width, height);
 		currentProgress = 0;
+		tickDownRate = 1;
 	}
 
 	@Override
 	public void renderBehindItems(int mouseX, int mouseY, float partialTicks) {
 		// Capture the max progress.
 		if (machineProcessingComponent != null) {
-			maxProgress = machineProcessingComponent.getProcessingTime();
+			maxProgress = machineProcessingComponent.getMaxProcessingTime();
 			currentProgress = machineProcessingComponent.getCurrentProcessingTime();
+			tickDownRate = machineProcessingComponent.getTimeUnitsPerTick();
 		}
 
 		// Calculate the visual current progress.
@@ -64,11 +71,11 @@ public abstract class AbstractProgressBar extends AbstractGuiWidget {
 		DecimalFormat decimalFormat = new DecimalFormat("#.#");
 
 		if (currentProgress > 0) {
-			String remainingTime = decimalFormat.format((maxProgress - currentProgress) / 20.0f);
+			String remainingTime = decimalFormat.format((maxProgress - currentProgress) / (tickDownRate * 20.0f));
 			tooltips.add(
 					new TranslationTextComponent("gui.staticpower.remaining").appendText(": ").appendText(remainingTime).appendSibling(new TranslationTextComponent("gui.staticpower.seconds.short")));
 		} else {
-			String maxTime = decimalFormat.format(maxProgress / 20.0f);
+			String maxTime = decimalFormat.format(maxProgress / (tickDownRate * 20.0f));
 			tooltips.add(new TranslationTextComponent("gui.staticpower.max").appendText(": ").appendText(maxTime).appendSibling(new TranslationTextComponent("gui.staticpower.seconds.short")));
 		}
 	}
@@ -83,8 +90,9 @@ public abstract class AbstractProgressBar extends AbstractGuiWidget {
 		machineProcessingComponent = component;
 
 		// Set the initial values.
-		maxProgress = machineProcessingComponent.getProcessingTime();
+		maxProgress = machineProcessingComponent.getMaxProcessingTime();
 		currentProgress = machineProcessingComponent.getCurrentProcessingTime();
+		tickDownRate = machineProcessingComponent.getTimeUnitsPerTick();
 		visualCurrentProgress = currentProgress;
 		return this;
 	}
