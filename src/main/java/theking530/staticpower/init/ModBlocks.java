@@ -39,6 +39,7 @@ import theking530.staticpower.tileentities.powered.chargingstation.BlockCharging
 import theking530.staticpower.tileentities.powered.crucible.BlockCrucible;
 import theking530.staticpower.tileentities.powered.electricminer.BlockElectricMiner;
 import theking530.staticpower.tileentities.powered.fermenter.BlockFermenter;
+import theking530.staticpower.tileentities.powered.fluidgenerator.BlockFluidGenerator;
 import theking530.staticpower.tileentities.powered.fluidinfuser.BlockFluidInfuser;
 import theking530.staticpower.tileentities.powered.former.BlockFormer;
 import theking530.staticpower.tileentities.powered.fusionfurnace.BlockFusionFurnace;
@@ -134,6 +135,7 @@ public class ModBlocks {
 	public static BlockFermenter Fermenter;
 	public static BlockFormer Former;
 	public static BlockSolidGenerator SolidGenerator;
+	public static BlockFluidGenerator FluidGenerator;
 	public static BlockCrucible Crucible;
 	public static BlockSqueezer Squeezer;
 	public static BlockBottler Bottler;
@@ -300,6 +302,7 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(Fermenter = new BlockFermenter("machine_fermenter"));
 		StaticPowerRegistry.preRegisterBlock(Former = new BlockFormer("machine_former"));
 		StaticPowerRegistry.preRegisterBlock(SolidGenerator = new BlockSolidGenerator("machine_generator_solid"));
+		StaticPowerRegistry.preRegisterBlock(FluidGenerator = new BlockFluidGenerator("machine_generator_fluid"));
 		StaticPowerRegistry.preRegisterBlock(Crucible = new BlockCrucible("machine_crucible"));
 		StaticPowerRegistry.preRegisterBlock(Squeezer = new BlockSqueezer("machine_squeezer"));
 		StaticPowerRegistry.preRegisterBlock(Bottler = new BlockBottler("machine_bottler"));

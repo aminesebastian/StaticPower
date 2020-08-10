@@ -50,6 +50,8 @@ import theking530.staticpower.tileentities.powered.electricminer.ContainerElectr
 import theking530.staticpower.tileentities.powered.electricminer.GuiElectricMiner;
 import theking530.staticpower.tileentities.powered.fermenter.ContainerFermenter;
 import theking530.staticpower.tileentities.powered.fermenter.GuiFermenter;
+import theking530.staticpower.tileentities.powered.fluidgenerator.ContainerFluidGenerator;
+import theking530.staticpower.tileentities.powered.fluidgenerator.GuiFluidGenerator;
 import theking530.staticpower.tileentities.powered.fluidinfuser.ContainerFluidInfuser;
 import theking530.staticpower.tileentities.powered.fluidinfuser.GuiFluidInfuser;
 import theking530.staticpower.tileentities.powered.former.ContainerFormer;
@@ -84,6 +86,7 @@ public class ModContainerTypes {
 	public static ContainerType<ContainerFormer> FORMER_CONTAINER;
 	public static ContainerType<ContainerBattery> BATTERY_CONTAINER;
 	public static ContainerType<ContainerSolidGenerator> SOLID_GENERATOR_CONTAINER;
+	public static ContainerType<ContainerFluidGenerator> FLUID_GENERATOR_CONTAINER;
 	public static ContainerType<ContainerCrucible> CRUCIBLE_CONTAINER;
 	public static ContainerType<ContainerSqueezer> SQUEEZER_CONTAINER;
 	public static ContainerType<ContainerBottler> BOTTLER_CONTAINER;
@@ -122,7 +125,8 @@ public class ModContainerTypes {
 		FERMENTER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_fermenter", ContainerFermenter::new, GuiFermenter::new);
 		FORMER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_former", ContainerFormer::new, GuiFormer::new);
 		BATTERY_CONTAINER = StaticPowerRegistry.preRegisterContainer("battery", ContainerBattery::new, GuiBattery::new);
-		SOLID_GENERATOR_CONTAINER = StaticPowerRegistry.preRegisterContainer("solid_generator", ContainerSolidGenerator::new, GuiSolidGenerator::new);
+		SOLID_GENERATOR_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_solid_generator", ContainerSolidGenerator::new, GuiSolidGenerator::new);
+		FLUID_GENERATOR_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_fluid_generator", ContainerFluidGenerator::new, GuiFluidGenerator::new);
 		CRUCIBLE_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_crucible", ContainerCrucible::new, GuiCrucible::new);
 		SQUEEZER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_squeezer", ContainerSqueezer::new, GuiSqueezer::new);
 		BOTTLER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_bottler", ContainerBottler::new, GuiBottler::new);

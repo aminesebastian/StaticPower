@@ -1,0 +1,25 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ggg",
+		"isi",
+		"ppp"
+	],
+	"key": {
+		"i": {
+			"item": "staticpower:processor_static"
+		},
+		"p": {
+			"tag": "forge:plates/iron"
+		},
+		"g": {
+			"tag": "forge:glass/lime"
+		},
+		"s": {
+			"item": "staticpower:solar_panel_advanced"
+		}
+	},
+	"result": {
+		"item": "staticpower:solar_panel_static"
+	}
+}

@@ -1,5 +1,5 @@
 {
-	"parent": "staticpower:block/machines/machine_miner",
+	"parent": "staticpower:block/machines/machine_electric_miner",
 	"textures": {
 		"front_overlay": "staticpower:blocks/machines/electric_miner_face_on"
 	}

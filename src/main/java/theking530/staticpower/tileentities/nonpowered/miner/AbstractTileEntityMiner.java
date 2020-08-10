@@ -34,7 +34,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public abstract class AbstractTileEntityMiner extends TileEntityBase {
-	public static final int DEFAULT_MINING_TIME = 2;
+	public static final int DEFAULT_MINING_TIME = 1;
 	public static final int DEFAULT_MINING_COST = 10;
 	public static final int DEFAULT_IDLE_COST = 1;
 	public static final int DEFAULT_FUEL_MOVE_TIME = 4;

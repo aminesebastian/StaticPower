@@ -295,6 +295,7 @@
 	"block.staticpower.machine_basic_farmer": "Basic Farmer",
 	"block.staticpower.machine_tree_farmer": "Powered Lumberjack",
 	"block.staticpower.machine_generator_solid": "Burner Generator",
+	"block.staticpower.machine_generator_fluid": "Liquid Generator",
 	"block.staticpower.machine_fermenter": "Fermenter",
 	"block.staticpower.machine_former": "Former",
 	"block.staticpower.machine_crucible": "Crucible",

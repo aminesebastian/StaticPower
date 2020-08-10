@@ -1,5 +1,5 @@
 {
-    "parent": "staticpower:block/machines/machine_electric_miner",
+    "parent": "staticpower:block/machines/machine_generator_fluid",
 	"textures": {
 		"io_frame": "staticpower:blocks/empty_texture"
 	}

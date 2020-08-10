@@ -74,13 +74,10 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 			// Update the block's on state.
 			setIsOnBlockState(true);
 
-			// If we can can continue processing, do so, otherwise, stop.
-			if (currentTime < maxProcessingTime) {
-				currentTime += tickDownRate;
-			}
-
-			// If we have completed the processing, try to complete it using the callback.
-			// If the callback is true, we reset the state of the component back to initial.
+			// If we can can continue processing, do so, otherwise, stop. If we have
+			// completed the processing, try to complete it using the callback.
+			// If the callback is true, we reset the state of the component back to initial
+			currentTime += tickDownRate;
 			if (currentTime >= maxProcessingTime) {
 				if (processingCompleted()) {
 					currentTime = 0;
@@ -184,7 +181,7 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 	 * @return
 	 */
 	public boolean isDone() {
-		return currentTime >= maxProcessingTime;
+		return currentTime > maxProcessingTime;
 	}
 
 	/**
@@ -264,7 +261,7 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		}
 	}
 
-	protected boolean getIsOnBlockState() {
+	public boolean getIsOnBlockState() {
 		if (!shouldControlOnBlockState) {
 			return false;
 		}

@@ -45,7 +45,7 @@ public class TileEntityElectricMiner extends AbstractTileEntityMiner {
 	public void process() {
 		super.process();
 		// Use the idle power.
-		if (processingComponent.isPerformingWork()) {
+		if (processingComponent.getIsOnBlockState()) {
 			energyStorage.usePower(getIdleFuelCost());
 		}
 	}

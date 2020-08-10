@@ -51,6 +51,7 @@ public abstract class AbstractProgressBar extends AbstractGuiWidget {
 		super(xPosition, yPosition, width, height);
 		currentProgress = 0;
 		tickDownRate = 1;
+		visualCurrentProgress = 0.0f;
 	}
 
 	@Override

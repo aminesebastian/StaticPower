@@ -25,6 +25,7 @@ import theking530.staticpower.tileentities.powered.chargingstation.TileEntityCha
 import theking530.staticpower.tileentities.powered.crucible.TileEntityCrucible;
 import theking530.staticpower.tileentities.powered.electricminer.TileEntityElectricMiner;
 import theking530.staticpower.tileentities.powered.fermenter.TileEntityFermenter;
+import theking530.staticpower.tileentities.powered.fluidgenerator.TileEntityFluidGenerator;
 import theking530.staticpower.tileentities.powered.fluidinfuser.TileEntityFluidInfuser;
 import theking530.staticpower.tileentities.powered.former.TileEntityFormer;
 import theking530.staticpower.tileentities.powered.fusionfurnace.TileEntityFusionFurnace;
@@ -79,6 +80,7 @@ public class ModTileEntityTypes {
 	public static TileEntityType<TileEntityFermenter> FERMENTER;
 	public static TileEntityType<TileEntityFormer> FORMER;
 	public static TileEntityType<TileEntitySolidGenerator> SOLID_GENERATOR;
+	public static TileEntityType<TileEntityFluidGenerator> FLUID_GENERATOR;
 	public static TileEntityType<TileEntityCrucible> CRUCIBLE;
 	public static TileEntityType<TileEntitySqueezer> SQUEEZER;
 	public static TileEntityType<TileEntityBottler> BOTTLER;
@@ -116,6 +118,7 @@ public class ModTileEntityTypes {
 		FERMENTER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityFermenter(), ModBlocks.Fermenter);
 		FORMER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityFormer(), ModBlocks.Former);
 		SOLID_GENERATOR = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntitySolidGenerator(), ModBlocks.SolidGenerator);
+		FLUID_GENERATOR = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityFluidGenerator(), ModBlocks.FluidGenerator);
 		CRUCIBLE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityCrucible(), ModBlocks.Crucible);
 		SQUEEZER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntitySqueezer(), ModBlocks.Squeezer);
 		BOTTLER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBottler(), ModBlocks.Bottler);
