@@ -14,6 +14,7 @@ import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.power.PowerNetworkModuleFactory;
 import theking530.staticpower.energy.CapabilityStaticVolt;
 import theking530.staticpower.init.ModFluids;
+import theking530.staticpower.tileentities.components.heat.CapabilityHeatable;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.CapabilityDigistoreInventory;
 
 public class StaticPowerCommonEventHandler {
@@ -24,12 +25,17 @@ public class StaticPowerCommonEventHandler {
 	 * @param event The common setup event.
 	 */
 	public static void onCommonSetupEvent(FMLCommonSetupEvent event) {
+		// Register network modules.
 		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.POWER_NETWORK_MODULE, new PowerNetworkModuleFactory());
 		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.ITEM_NETWORK_MODULE, new ItemNetworkModuleFactory());
 		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.FLUID_NETWORK_MODULE, new FluidNetworkModuleFactory());
 		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE, new DigistoreNetworkModuleFactory());
+
+		// Register capabilities.
 		CapabilityDigistoreInventory.register();
 		CapabilityStaticVolt.register();
+		CapabilityHeatable.register();
+
 		StaticPower.LOGGER.info("Static Power Common Setup Completed!");
 	}
 

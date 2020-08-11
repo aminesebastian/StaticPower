@@ -22,6 +22,7 @@ import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.tileentities.components.control.SideConfigurationComponent;
+import theking530.staticpower.tileentities.components.heat.HeatStorageComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
 import theking530.staticpower.tileentities.components.loopingsound.LoopingSoundComponent;
@@ -34,10 +35,11 @@ import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public abstract class AbstractTileEntityMiner extends TileEntityBase {
-	public static final int DEFAULT_MINING_TIME = 1;
+	public static final int DEFAULT_MINING_TIME = 60;
 	public static final int DEFAULT_MINING_COST = 10;
 	public static final int DEFAULT_IDLE_COST = 1;
 	public static final int DEFAULT_FUEL_MOVE_TIME = 4;
+	public static final float DEFAULT_HEAT_GENERATION = 10.0f;
 	public static final int MINING_RADIUS = 5;
 
 	public final InventoryComponent drillBitInventory;
@@ -45,6 +47,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityBase {
 	public final InventoryComponent internalInventory;
 
 	public final MachineProcessingComponent processingComponent;
+	public final HeatStorageComponent heatStorage;
 	public final LoopingSoundComponent miningSoundComponent;
 
 	public final SideConfigurationComponent ioSideConfiguration;
@@ -57,6 +60,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityBase {
 	private int miningRadius;
 	private int blockMiningFuelCost;
 	private int idleFuelCost;
+	private float heatGeneration;
 
 	public AbstractTileEntityMiner(TileEntityType<?> type) {
 		super(type);
@@ -66,6 +70,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityBase {
 		miningRadius = MINING_RADIUS;
 		blockMiningFuelCost = DEFAULT_MINING_COST;
 		idleFuelCost = DEFAULT_IDLE_COST;
+		heatGeneration = DEFAULT_HEAT_GENERATION;
 
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
 		registerComponent(drillBitInventory = new InventoryComponent("DrillBitInventory", 1, MachineSideMode.Never).setFilter(new ItemStackHandlerFilter() {
@@ -82,6 +87,8 @@ public abstract class AbstractTileEntityMiner extends TileEntityBase {
 				.setShouldControlBlockState(true));
 
 		registerComponent(miningSoundComponent = new LoopingSoundComponent("MiningSoundComponent", 20));
+
+		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 100.0f, 25.0f));
 		registerComponent(new OutputServoComponent("OutputServo", 20, outputInventory));
 	}
 
@@ -103,6 +110,10 @@ public abstract class AbstractTileEntityMiner extends TileEntityBase {
 						internalInventory.extractItem(i, stackInSlot.getCount() - remaining.getCount(), false);
 					}
 				}
+			}
+
+			if (processingComponent.isPerformingWork()) {
+				heatStorage.getStorage().heat(heatGeneration, false);
 			}
 
 			if (processingComponent.getIsOnBlockState()) {
@@ -135,7 +146,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityBase {
 		if (isDoneMining()) {
 			return false;
 		}
-		return InventoryUtilities.isInventoryEmpty(internalInventory) && hasDrillBit() && redstoneControlComponent.passesRedstoneCheck();
+		return InventoryUtilities.isInventoryEmpty(internalInventory) && hasDrillBit() && redstoneControlComponent.passesRedstoneCheck() && heatStorage.getStorage().canFullyAbsorbHeat(heatGeneration);
 	}
 
 	/**

@@ -25,6 +25,7 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 	private boolean hasStarted;
 	private boolean processingPaused;
 	private boolean shouldControlOnBlockState;
+	private boolean performedWorkLastTick;
 
 	public MachineProcessingComponent(String name, int processingTime, @Nonnull Supplier<Boolean> canStartProcessingCallback, @Nonnull Supplier<Boolean> canContinueProcessingCallback,
 			@Nonnull Supplier<Boolean> processingEndedCallback, boolean serverOnly) {
@@ -38,6 +39,7 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		this.serverOnly = serverOnly;
 		this.shouldControlOnBlockState = false;
 		this.tickDownRate = 1;
+		this.performedWorkLastTick = false;
 	}
 
 	public MachineProcessingComponent(String name, int processingTime, @Nonnull Supplier<Boolean> processingEndedCallback, boolean serverOnly) {
@@ -49,6 +51,9 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		if (serverOnly && getWorld().isRemote) {
 			return;
 		}
+
+		// Reset the performed work last tick.
+		performedWorkLastTick = false;
 
 		// If this is when we first start processing, raise the start processing event.
 		if (!hasStarted && canStartProcessingCallback.get()) {
@@ -78,6 +83,7 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 			// completed the processing, try to complete it using the callback.
 			// If the callback is true, we reset the state of the component back to initial
 			currentTime += tickDownRate;
+			performedWorkLastTick = true;
 			if (currentTime >= maxProcessingTime) {
 				if (processingCompleted()) {
 					currentTime = 0;
@@ -192,7 +198,7 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 	 * @return
 	 */
 	public boolean isPerformingWork() {
-		return processing && !isDone() && !isProcessingPaused();
+		return performedWorkLastTick;
 	}
 
 	public boolean isProcessing() {

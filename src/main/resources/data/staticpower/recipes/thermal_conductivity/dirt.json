@@ -1,0 +1,7 @@
+{
+	"type": "staticpower:thermal_conducitity",
+	"block": {
+		"tag": "forge:dirt"
+	},
+	"conductivity": "0.05"
+}

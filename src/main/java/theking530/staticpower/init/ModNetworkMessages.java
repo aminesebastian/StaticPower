@@ -14,6 +14,7 @@ import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.network.TileEntityBasicSyncPacket;
 import theking530.staticpower.tileentities.components.fluids.PacketFluidContainerComponent;
 import theking530.staticpower.tileentities.components.fluids.PacketFluidTankComponent;
+import theking530.staticpower.tileentities.components.heat.PacketHeatStorageComponent;
 import theking530.staticpower.tileentities.components.loopingsound.LoopingSoundPacketStart;
 import theking530.staticpower.tileentities.components.loopingsound.LoopingSoundPacketStop;
 import theking530.staticpower.tileentities.components.power.PacketEnergyStorageComponent;
@@ -36,6 +37,7 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(PacketDigistoreTerminalFilters.class);
 		StaticPowerMessageHandler.registerMessage(JEIRecipeTransferPacket.class);
 		StaticPowerMessageHandler.registerMessage(PacketEnergyStorageComponent.class);
+		StaticPowerMessageHandler.registerMessage(PacketHeatStorageComponent.class);
 		StaticPowerMessageHandler.registerMessage(PacketFluidTankComponent.class);
 		StaticPowerMessageHandler.registerMessage(PacketLockInventorySlot.class);
 		StaticPowerMessageHandler.registerMessage(PacketGuiTabAddSlots.class);

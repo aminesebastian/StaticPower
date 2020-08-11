@@ -18,6 +18,9 @@ public class GuiTextures {
 	public static final ResourceLocation POWER_BAR_FG = new ResourceLocation(Reference.MOD_ID, "textures/gui/power_bar_power.png");
 	public static final ResourceLocation POWER_BAR_BG = new ResourceLocation(Reference.MOD_ID, "textures/gui/power_bar_bg.png");
 
+	public static final ResourceLocation HEAT_BAR_FG = new ResourceLocation(Reference.MOD_ID, "textures/gui/heat_bar_fg.png");
+	public static final ResourceLocation HEAT_BAR_BG = new ResourceLocation(Reference.MOD_ID, "textures/gui/heat_bar_bg.png");
+	
 	public static final ResourceLocation BUTTON_BG = new ResourceLocation(Reference.MOD_ID, "textures/gui/button_bg.png");
 	public static final ResourceLocation ARROW_TEXTURES = new ResourceLocation(Reference.MOD_ID, "textures/gui/arrow_buttons.png");
 	public static final ResourceLocation BUTTON = new ResourceLocation(Reference.MOD_ID, "textures/gui/button.png");

@@ -8,7 +8,7 @@ public class MetricConverter {
 	private float Value;
 	private String Suffix;
 
-	public MetricConverter(int value) {
+	public MetricConverter(float value) {
 		// Keep dividing the Value by 1000 until we hit a current value of < 1000.
 		// For each iteration of the loop, increment the suffix index.
 		int suffixIndex = 0;

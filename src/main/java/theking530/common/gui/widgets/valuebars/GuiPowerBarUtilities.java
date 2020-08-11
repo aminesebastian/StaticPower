@@ -25,6 +25,7 @@ public class GuiPowerBarUtilities {
 
 		return tooltip;
 	}
+
 	public static void drawPowerBar(float xpos, float ypos, float width, float height, float zLevel, int currentEnergy, int maxEnergy) {
 		float u1 = (float) currentEnergy / (float) maxEnergy;
 		float k1 = u1 * height;
@@ -52,11 +53,11 @@ public class GuiPowerBarUtilities {
 	}
 
 	private static float getPowerBarGlow() {
-		float sin = (float) (Math.sin((float) 1.0f / 1000.0f));
-
+		float sin = (float) (Math.sin((float) Minecraft.getInstance().world.getGameTime() / 25.0f));
 		sin = Math.abs(sin);
-		sin += 3;
-		sin /= 6.0f;
-		return sin * 1.5f;
+		sin *= 2.0f;
+		sin += 8.0f;
+		sin /= 10.0f;
+		return sin;
 	}
 }

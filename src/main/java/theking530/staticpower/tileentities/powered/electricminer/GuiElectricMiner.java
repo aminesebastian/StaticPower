@@ -18,6 +18,7 @@ import theking530.common.gui.widgets.tabs.GuiMachinePowerInfoTab;
 import theking530.common.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.common.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
 import theking530.common.gui.widgets.tabs.slottabs.GuiUpgradeTab;
+import theking530.common.gui.widgets.valuebars.GuiHeatBarFromHeatStorage;
 import theking530.common.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.common.utilities.Color;
 import theking530.common.utilities.SDTime;
@@ -34,6 +35,7 @@ public class GuiElectricMiner extends StaticPowerTileEntityGui<ContainerElectric
 	@Override
 	public void initializeGui() {
 		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 52));
+		registerWidget(new GuiHeatBarFromHeatStorage(getTileEntity().heatStorage.getStorage(), 26, 8, 3, 52));
 		registerWidget(new SquareProgressBar(78, 54, 20, 2).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
 		// Add a button we can use to toggle the in world radius preview.

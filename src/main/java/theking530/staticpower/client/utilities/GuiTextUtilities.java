@@ -19,6 +19,12 @@ public class GuiTextUtilities {
 	public static final TranslationTextComponent ENERGY_UNIT_TRANSLATION = new TranslationTextComponent("gui.staticpower.energy_unit");
 	/** Translation text component for Forge Energy Per Tick (FE/t). */
 	public static final TranslationTextComponent ENERGY_RATE_TRANSLATION = new TranslationTextComponent("gui.staticpower.energy_unit_per_tick");
+
+	/** Translation text component for heat (H). */
+	public static final TranslationTextComponent HEAT_UNIT_TRANSLATION = new TranslationTextComponent("gui.staticpower.heat_unit");
+	/** Translation text component for Heat Per Tick (H/t). */
+	public static final TranslationTextComponent HEAT_RATE_TRANSLATION = new TranslationTextComponent("gui.staticpower.heat_unit_per_tick");
+
 	/** Single instance of number formatter. */
 	private static final NumberFormat NUMBER_FORMATTER;
 
@@ -41,11 +47,11 @@ public class GuiTextUtilities {
 	public static ITextComponent formatEnergyToString(int energy, boolean includeUnits, boolean includeMetricUnit) {
 		MetricConverter metricEnergy = new MetricConverter(energy);
 		ITextComponent output = new StringTextComponent(NUMBER_FORMATTER.format(metricEnergy.getValue()));
-		
+
 		if (includeMetricUnit) {
 			output.appendText(metricEnergy.getSuffix());
 		}
-		
+
 		if (includeUnits) {
 			output.appendSibling(ENERGY_UNIT_TRANSLATION);
 		}
@@ -85,4 +91,33 @@ public class GuiTextUtilities {
 		MetricConverter metricRate = new MetricConverter(energyRate);
 		return new StringTextComponent(NUMBER_FORMATTER.format(metricRate.getValue())).appendText(metricRate.getSuffix()).appendSibling(ENERGY_RATE_TRANSLATION);
 	}
+
+	public static ITextComponent formatHeatToString(float currentHeat, float capacity) {
+		return formatHeatToString(currentHeat, false, true).appendText("/").appendSibling(formatHeatToString(capacity));
+
+	}
+
+	public static ITextComponent formatHeatToString(float heat) {
+		return formatHeatToString(heat, true, true);
+	}
+
+	public static ITextComponent formatHeatToString(float heat, boolean includeUnits, boolean includeMetricUnit) {
+		MetricConverter metricEnergy = new MetricConverter(heat);
+		ITextComponent output = new StringTextComponent(NUMBER_FORMATTER.format(metricEnergy.getValue()));
+
+		if (includeMetricUnit) {
+			output.appendText(metricEnergy.getSuffix());
+		}
+
+		if (includeUnits) {
+			output.appendSibling(HEAT_UNIT_TRANSLATION);
+		}
+		return output;
+	}
+
+	public static ITextComponent formatHeatRateToString(float heatTransferRate) {
+		MetricConverter metricRate = new MetricConverter(heatTransferRate);
+		return new StringTextComponent(NUMBER_FORMATTER.format(metricRate.getValue())).appendText(metricRate.getSuffix()).appendSibling(HEAT_RATE_TRANSLATION);
+	}
+
 }
