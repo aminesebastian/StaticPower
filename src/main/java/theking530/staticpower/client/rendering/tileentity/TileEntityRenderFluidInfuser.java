@@ -34,13 +34,13 @@ public class TileEntityRenderFluidInfuser extends StaticPowerTileEntitySpecialRe
 			float secondSectionHeight = secondSectionFilledPercentage * 0.284f;
 			float lastSectionHeight = lastSectionFilledPercentage * 0.095f;
 
-			drawFluidQuad(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.3125f, 0.186f, 0.001f), new Vector3D(0.376f, firstSectionHeight, 1.0f),
+			drawFluidQuadUnlit(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.3125f, 0.186f, 0.001f), new Vector3D(0.376f, firstSectionHeight, 1.0f),
 					new Vector4D(0.0f, 0.0f, 1.0f, firstSectionFilledPercentage * 0.45f));
 
-			drawFluidQuad(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.218f, 0.28f, 0.001f), new Vector3D(0.564f, secondSectionHeight, 1.0f),
+			drawFluidQuadUnlit(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.218f, 0.28f, 0.001f), new Vector3D(0.564f, secondSectionHeight, 1.0f),
 					new Vector4D(0.0f, 0.0f, 1.0f, secondSectionFilledPercentage * 0.75f));
 
-			drawFluidQuad(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.3125f, 0.562f, 0.001f), new Vector3D(0.376f, lastSectionHeight, 1.0f),
+			drawFluidQuadUnlit(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.3125f, 0.562f, 0.001f), new Vector3D(0.376f, lastSectionHeight, 1.0f),
 					new Vector4D(0.0f, 0.0f, 1.0f, lastSectionFilledPercentage * 0.45f));
 
 			// Render the item inside the infuser.

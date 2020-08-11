@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.Quaternion;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
@@ -230,10 +231,18 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 		drawTexturedQuadLit(texture, matrixStack, buffer, offset, scale, uv, tint, 15728880);
 	}
 
-	protected void drawFluidQuad(FluidStack fluid, MatrixStack matrixStack, IRenderTypeBuffer buffer, Vector3D offset, Vector3D scale, Vector4D uv) {
+	protected int getForwardFacingLightLevel(T tileEntity) {
+		return WorldRenderer.getCombinedLight(tileEntity.getWorld(), tileEntity.getPos().offset(tileEntity.getFacingDirection()));
+	}
+
+	protected void drawFluidQuadLit(FluidStack fluid, MatrixStack matrixStack, IRenderTypeBuffer buffer, Vector3D offset, Vector3D scale, Vector4D uv, int lightlevel) {
 		Color fluidColor = GuiDrawUtilities.getFluidColor(fluid);
 		TextureAtlasSprite icon = GuiDrawUtilities.getStillFluidSprite(fluid);
-		drawTexturedQuadLit(icon.getName(), matrixStack, buffer, offset, scale, uv, fluidColor, 15728880);
+		drawTexturedQuadLit(icon.getName(), matrixStack, buffer, offset, scale, uv, fluidColor, lightlevel);
+	}
+
+	protected void drawFluidQuadUnlit(FluidStack fluid, MatrixStack matrixStack, IRenderTypeBuffer buffer, Vector3D offset, Vector3D scale, Vector4D uv) {
+		drawFluidQuadLit(fluid, matrixStack, buffer, offset, scale, uv, 15728880);
 	}
 
 	/**

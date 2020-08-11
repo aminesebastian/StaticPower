@@ -38,6 +38,9 @@ public class StaticPowerSprites {
 	public static final ResourceLocation BATTERY_BLOCK_BASIC = registerSprite("blocks/machines/batteries/battery_block_basic");
 	public static final ResourceLocation BATTERY_BLOCK_BAR = registerSprite("blocks/machines/batteries/battery_block_side_filled");
 
+	public static final ResourceLocation GUI_POWER_BAR_FG = registerSprite("gui/power_bar_power");
+	public static final ResourceLocation GUI_POWER_BAR_BG = registerSprite("gui/power_bar_bg");
+
 	public static final ResourceLocation FILTER_WHITELIST = registerSprite("gui/filter_whitelist");
 	public static final ResourceLocation FILTER_BLACKLIST = registerSprite("gui/filter_blacklist");
 	public static final ResourceLocation FILTER_NBT = registerSprite("gui/filter_nbt");

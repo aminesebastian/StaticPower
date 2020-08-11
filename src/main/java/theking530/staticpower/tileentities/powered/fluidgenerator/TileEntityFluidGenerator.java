@@ -65,7 +65,7 @@ public class TileEntityFluidGenerator extends TileEntityMachine {
 	public void process() {
 		if (!world.isRemote) {
 			if (processingComponent.getIsOnBlockState()) {
-				generatingSoundComponent.startPlayingSound(SoundEvents.ENTITY_MINECART_INSIDE.getRegistryName(), SoundCategory.BLOCKS, 0.1f, 0.5f, getPos(), 64);
+				generatingSoundComponent.startPlayingSound(SoundEvents.ENTITY_MINECART_RIDING.getRegistryName(), SoundCategory.BLOCKS, 0.1f, 0.75f, getPos(), 64);
 			} else {
 				generatingSoundComponent.stopPlayingSound();
 			}

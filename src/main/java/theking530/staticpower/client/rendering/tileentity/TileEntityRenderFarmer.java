@@ -23,15 +23,15 @@ public class TileEntityRenderFarmer extends StaticPowerTileEntitySpecialRenderer
 			float firstSectionFilledPercent = Math.min(filledPercentage * 2.0f, 1.0f);
 			float secondSectionFilledPercentage = SDMath.clamp((filledPercentage - 0.5f) * 2.0f, 0.0f, 1.0f);
 
-			drawFluidQuad(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.185f, 0.25f, 0.001f), new Vector3D(0.125f, firstSectionFilledPercent * 0.535f * 0.5f, 1.0f),
+			drawFluidQuadUnlit(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.185f, 0.25f, 0.001f), new Vector3D(0.125f, firstSectionFilledPercent * 0.535f * 0.5f, 1.0f),
 					new Vector4D(0.0f, 1.0f - firstSectionFilledPercent, 0.4f, 1.0f));
-			drawFluidQuad(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.69f, 0.25f, 0.001f), new Vector3D(0.125f, firstSectionFilledPercent * 0.535f * 0.5f, 1.0f),
+			drawFluidQuadUnlit(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.69f, 0.25f, 0.001f), new Vector3D(0.125f, firstSectionFilledPercent * 0.535f * 0.5f, 1.0f),
 					new Vector4D(0.0f, 1.0f - firstSectionFilledPercent, 0.4f, 1.0f));
 
 			if (filledPercentage >= 0.5f) {
-				drawFluidQuad(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.185f, 0.515f, 0.001f), new Vector3D(0.125f, secondSectionFilledPercentage * 0.535f * 0.5f, 1.0f),
+				drawFluidQuadUnlit(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.185f, 0.515f, 0.001f), new Vector3D(0.125f, secondSectionFilledPercentage * 0.535f * 0.5f, 1.0f),
 						new Vector4D(1.0f, 1.0f - secondSectionFilledPercentage, 0.6f, 1.0f));
-				drawFluidQuad(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.69f, 0.515f, 0.001f), new Vector3D(0.125f, secondSectionFilledPercentage * 0.535f * 0.5f, 1.0f),
+				drawFluidQuadUnlit(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.69f, 0.515f, 0.001f), new Vector3D(0.125f, secondSectionFilledPercentage * 0.535f * 0.5f, 1.0f),
 						new Vector4D(1.0f, 1.0f - secondSectionFilledPercentage, 0.6f, 1.0f));
 			}
 		}

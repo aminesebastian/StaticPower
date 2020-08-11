@@ -16,14 +16,14 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class ModOres {
 	private static List<OreConfigBuilder> ORE_GENERATORS = new ArrayList<OreConfigBuilder>();
 
-	public static final OreConfigBuilder Zinc = registerOreGeneration(new OreConfigBuilder(ModBlocks.OreZinc).setMaxLevel(70).setMinLevel(30).setMaxVeinSize(4).setRarity(7));
-	public static final OreConfigBuilder Magnesium = registerOreGeneration(new OreConfigBuilder(ModBlocks.OreMagnesium).setMaxLevel(70).setMinLevel(30).setMaxVeinSize(4).setRarity(7));
-	public static final OreConfigBuilder Copper = registerOreGeneration(new OreConfigBuilder(ModBlocks.OreCopper).setMaxLevel(100).setMinLevel(40).setMaxVeinSize(10).setRarity(18));
-	public static final OreConfigBuilder Tin = registerOreGeneration(new OreConfigBuilder(ModBlocks.OreTin).setMaxLevel(100).setMinLevel(40).setMaxVeinSize(7).setRarity(16));
+	public static final OreConfigBuilder Zinc = registerOreGeneration(new OreConfigBuilder(ModBlocks.OreZinc).setMaxLevel(70).setMinLevel(30).setMaxVeinSize(4).setRarity(8));
+	public static final OreConfigBuilder Magnesium = registerOreGeneration(new OreConfigBuilder(ModBlocks.OreMagnesium).setMaxLevel(70).setMinLevel(30).setMaxVeinSize(4).setRarity(8));
+	public static final OreConfigBuilder Copper = registerOreGeneration(new OreConfigBuilder(ModBlocks.OreCopper).setMaxLevel(100).setMinLevel(40).setMaxVeinSize(10).setRarity(20));
+	public static final OreConfigBuilder Tin = registerOreGeneration(new OreConfigBuilder(ModBlocks.OreTin).setMaxLevel(100).setMinLevel(40).setMaxVeinSize(7).setRarity(20));
 	public static final OreConfigBuilder Lead = registerOreGeneration(new OreConfigBuilder(ModBlocks.OreLead).setMaxLevel(35).setMinLevel(0).setMaxVeinSize(3).setRarity(10));
 	public static final OreConfigBuilder Silver = registerOreGeneration(new OreConfigBuilder(ModBlocks.OreSilver).setMaxLevel(40).setMinLevel(0).setMaxVeinSize(5).setRarity(8));
 	public static final OreConfigBuilder Tungsten = registerOreGeneration(new OreConfigBuilder(ModBlocks.OreTungsten).setMaxLevel(30).setMinLevel(0).setMaxVeinSize(2).setRarity(4));
-	public static final OreConfigBuilder Platinum = registerOreGeneration(new OreConfigBuilder(ModBlocks.OrePlatinum).setMaxLevel(30).setMinLevel(0).setMaxVeinSize(4).setRarity(12));
+	public static final OreConfigBuilder Platinum = registerOreGeneration(new OreConfigBuilder(ModBlocks.OrePlatinum).setMaxLevel(30).setMinLevel(0).setMaxVeinSize(4).setRarity(10));
 	public static final OreConfigBuilder Aluminium = registerOreGeneration(new OreConfigBuilder(ModBlocks.OreAluminium).setMaxLevel(80).setMinLevel(40).setMaxVeinSize(10).setRarity(20));
 	public static final OreConfigBuilder Sapphire = registerOreGeneration(new OreConfigBuilder(ModBlocks.OreSapphire).setMaxLevel(20).setMinLevel(0).setMaxVeinSize(4).setRarity(3));
 	public static final OreConfigBuilder Ruby = registerOreGeneration(new OreConfigBuilder(ModBlocks.OreRuby).setMaxLevel(25).setMinLevel(0).setMaxVeinSize(4).setRarity(3));

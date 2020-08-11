@@ -105,7 +105,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityBase {
 				}
 			}
 
-			if (processingComponent.isPerformingWork()) {
+			if (processingComponent.getIsOnBlockState()) {
 				miningSoundComponent.startPlayingSound(SoundEvents.ENTITY_MINECART_RIDING.getRegistryName(), SoundCategory.BLOCKS, 0.2f, 0.5f, getPos(), 64);
 			} else {
 				miningSoundComponent.stopPlayingSound();
