@@ -1,16 +1,10 @@
 package theking530.staticpower.tileentities.components.heat;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 import theking530.common.utilities.TriFunction;
-import theking530.staticpower.data.crafting.RecipeMatchParameters;
-import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
-import theking530.staticpower.data.crafting.wrappers.thermalconductivity.ThermalConductivityRecipe;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 
@@ -23,25 +17,32 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 	public static final float ENERGY_SYNC_MAX_DELTA = 1;
 	protected final HeatStorage heatStorage;
 	private float lastSyncHeat;
+	private float thermalConductivity;
 
 	private HeatComponentCapabilityAccess capabilityAccessor;
+
+	public HeatStorageComponent(String name, float maxHeat, float maxTransferRate, float thermalConductivity) {
+		this(name, maxHeat, maxTransferRate);
+		this.thermalConductivity = thermalConductivity;
+	}
 
 	public HeatStorageComponent(String name, float maxHeat, float maxTransferRate) {
 		super(name);
 		heatStorage = new HeatStorage(maxHeat, maxTransferRate);
 		capabilityAccessor = new HeatComponentCapabilityAccess();
 		lastSyncHeat = 0.0f;
+		thermalConductivity = 1.0f;
 	}
 
 	@Override
 	public void preProcessUpdate() {
-		// Cool the storage off using the surrounding blocks.
-		for (Direction dir : Direction.values()) {
-			BlockState blockstate = getWorld().getBlockState(getPos().offset(dir));
-			StaticPowerRecipeRegistry.getRecipe(ThermalConductivityRecipe.RECIPE_TYPE, new RecipeMatchParameters(new ItemStack(blockstate.getBlock()))).ifPresent((recipe) -> {
-				heatStorage.cool(recipe.getThermalConductivity(), false);
-			});
+		// Do nothing on the client.
+		if (getWorld().isRemote) {
+			return;
 		}
+
+		// Cool off the heat storage.
+		heatStorage.transferWithSurroundings(getWorld(), getPos(), thermalConductivity);
 	}
 
 	@Override
@@ -74,6 +75,14 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 		return heatStorage;
 	}
 
+	public float getThermalConductivity() {
+		return thermalConductivity;
+	}
+
+	public void setThermalConductivity(float thermalConductivity) {
+		this.thermalConductivity = thermalConductivity;
+	}
+
 	/**
 	 * This method syncs the current state of this energy storage component to all
 	 * clients within a 64 block radius.
@@ -96,28 +105,32 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 	 * automatically picks those up.
 	 * 
 	 * @param filter
+	 * @return
 	 */
-	public void setCapabiltiyFilter(TriFunction<Float, Direction, HeatManipulationAction, Boolean> filter) {
+	public HeatStorageComponent setCapabiltiyFilter(TriFunction<Float, Direction, HeatManipulationAction, Boolean> filter) {
 		this.filter = filter;
+		return this;
 	}
 
 	@Override
 	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 		heatStorage.deserializeNBT(nbt.getCompound("heat_storage"));
+		thermalConductivity = nbt.getFloat("thermal_conductivity");
 	}
 
 	@Override
 	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
 		nbt.put("heat_storage", heatStorage.serializeNBT());
+		nbt.putFloat("thermal_conductivity", thermalConductivity);
 		return nbt;
 	}
 
 	@Override
 	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
 		if (isEnabled()) {
-			if (cap == CapabilityEnergy.ENERGY) {
+			if (cap == CapabilityHeatable.HEAT_STORAGE_CAPABILITY) {
 				capabilityAccessor.currentSide = side;
 				return LazyOptional.of(() -> capabilityAccessor).cast();
 			}

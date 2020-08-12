@@ -1,0 +1,8 @@
+{
+	"parent": "staticpower:block/cables/cable_attachment",
+	"textures": {
+		"0": "staticpower:blocks/cables/attachments/cable_platinum_attachment",
+		"1": "staticpower:blocks/cables/attachments/cable_platinum_attachment",
+		"particle": "staticpower:blocks/cables/attachments/cable_platinum_attachment"
+	}
+}

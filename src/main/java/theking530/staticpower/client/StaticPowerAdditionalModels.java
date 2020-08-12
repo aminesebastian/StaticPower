@@ -67,6 +67,30 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_EXTENSION = registerModel("block/cables/industrial_fluid/extension");
 	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_ATTACHMENT = registerModel("block/cables/industrial_fluid/attachment");
 
+	public static final ResourceLocation CABLE_HEAT_COPPER_STRAIGHT = registerModel("block/cables/heat/copper/straight");
+	public static final ResourceLocation CABLE_HEAT_COPPER_EXTENSION = registerModel("block/cables/heat/copper/extension");
+	public static final ResourceLocation CABLE_HEAT_COPPER_ATTACHMENT = registerModel("block/cables/heat/copper/attachment");
+
+	public static final ResourceLocation CABLE_HEAT_TIN_STRAIGHT = registerModel("block/cables/heat/tin/straight");
+	public static final ResourceLocation CABLE_HEAT_TIN_EXTENSION = registerModel("block/cables/heat/tin/extension");
+	public static final ResourceLocation CABLE_HEAT_TIN_ATTACHMENT = registerModel("block/cables/heat/tin/attachment");
+
+	public static final ResourceLocation CABLE_HEAT_SILVER_STRAIGHT = registerModel("block/cables/heat/silver/straight");
+	public static final ResourceLocation CABLE_HEAT_SILVER_EXTENSION = registerModel("block/cables/heat/silver/extension");
+	public static final ResourceLocation CABLE_HEAT_SILVER_ATTACHMENT = registerModel("block/cables/heat/silver/attachment");
+
+	public static final ResourceLocation CABLE_HEAT_GOLD_STRAIGHT = registerModel("block/cables/heat/gold/straight");
+	public static final ResourceLocation CABLE_HEAT_GOLD_EXTENSION = registerModel("block/cables/heat/gold/extension");
+	public static final ResourceLocation CABLE_HEAT_GOLD_ATTACHMENT = registerModel("block/cables/heat/gold/attachment");
+
+	public static final ResourceLocation CABLE_HEAT_PLATINUM_STRAIGHT = registerModel("block/cables/heat/platinum/straight");
+	public static final ResourceLocation CABLE_HEAT_PLATINUM_EXTENSION = registerModel("block/cables/heat/platinum/extension");
+	public static final ResourceLocation CABLE_HEAT_PLATINUM_ATTACHMENT = registerModel("block/cables/heat/platinum/attachment");
+
+	public static final ResourceLocation CABLE_HEAT_ALUMINIUM_STRAIGHT = registerModel("block/cables/heat/aluminium/straight");
+	public static final ResourceLocation CABLE_HEAT_ALUMINIUM_EXTENSION = registerModel("block/cables/heat/aluminium/extension");
+	public static final ResourceLocation CABLE_HEAT_ALUMINIUM_ATTACHMENT = registerModel("block/cables/heat/aluminium/attachment");
+
 	public static final ResourceLocation CABLE_BASIC_EXTRACTOR_ATTACHMENT = registerModel("block/cables/attachments/basic_extractor");
 	public static final ResourceLocation CABLE_ADVANCED_EXTRACTOR_ATTACHMENT = registerModel("block/cables/attachments/advanced_extractor");
 	public static final ResourceLocation CABLE_STATIC_EXTRACTOR_ATTACHMENT = registerModel("block/cables/attachments/static_extractor");
@@ -89,7 +113,7 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation CABLE_DIGISTORE_CRAFTING_TERMINAL_ATTACHMENT = registerModel("block/cables/attachments/digistore_crafting_terminal_attachment");
 	public static final ResourceLocation CABLE_DIGISTORE_EXPORTER_ATTACHMENT = registerModel("block/cables/attachments/digistore_exporter");
 	public static final ResourceLocation CABLE_DIGISTORE_IMPORTER_ATTACHMENT = registerModel("block/cables/attachments/digistore_importer");
-	
+
 	public static final ResourceLocation BASIC_DIGISTORE_CARD = registerModel("block/machines/digistore_card_basic");
 	public static final ResourceLocation ADVANCVED_DIGISTORE_CARD = registerModel("block/machines/digistore_card_advanced");
 	public static final ResourceLocation STATIC_DIGISTORE_CARD = registerModel("block/machines/digistore_card_static");
@@ -105,7 +129,7 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation CREATIVE_DIGISTORE_SINGULAR_CARD = registerModel("block/machines/digistore_card_singular_creative");
 	public static final ResourceLocation DIGISTORE_SINGULAR_CARD_BAR = registerModel("block/machines/digistore_singular_card_bar");
 	public static final ResourceLocation DIGISTORE_SINGULAR_CARD_BAR_FULL = registerModel("block/machines/digistore_singular_card_bar_full");
-	
+
 	public static void regsiterModels() {
 		for (ResourceLocation model : MODELS) {
 			ModelLoader.addSpecialModel(model);

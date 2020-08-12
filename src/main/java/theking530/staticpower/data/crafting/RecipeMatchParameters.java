@@ -30,6 +30,10 @@ public class RecipeMatchParameters {
 		return items;
 	}
 
+	public boolean hasItems() {
+		return items != null && items.length > 0;
+	}
+
 	public RecipeMatchParameters setItems(ItemStack... items) {
 		this.items = items;
 		return this;
@@ -37,6 +41,10 @@ public class RecipeMatchParameters {
 
 	public FluidStack[] getFluids() {
 		return fluids;
+	}
+
+	public boolean hasFluids() {
+		return fluids != null && fluids.length > 0;
 	}
 
 	public RecipeMatchParameters setFluids(FluidStack... fluids) {

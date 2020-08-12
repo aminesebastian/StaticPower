@@ -3,6 +3,7 @@ package theking530.staticpower.events;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
@@ -16,6 +17,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -41,7 +45,11 @@ import theking530.staticpower.client.rendering.tileentity.TileEntityRenderSolder
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderSqueezer;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderTank;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderTreeFarmer;
+import theking530.staticpower.data.crafting.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
+import theking530.staticpower.data.crafting.wrappers.thermalconductivity.ThermalConductivityRecipe;
 import theking530.staticpower.init.ModTileEntityTypes;
+import theking530.staticpower.tileentities.components.heat.HeatUtilities;
 
 @SuppressWarnings("deprecation")
 public class StaticPowerClientEventHandler {
@@ -94,7 +102,7 @@ public class StaticPowerClientEventHandler {
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.CHARGING_STATION, TileEntityRenderChargingStation::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.FLUID_INFUSER, TileEntityRenderFluidInfuser::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.FLUID_GENERATOR, TileEntityRenderFluidGenerator::new);
-		
+
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.FLUID_CABLE, TileEntityRenderFluidCable::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.INDUSTRIAL_FLUID_CABLE, TileEntityRenderFluidCable::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.TANK, TileEntityRenderTank::new);
@@ -103,7 +111,7 @@ public class StaticPowerClientEventHandler {
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.AUTO_CRAFTING_TABLE, TileEntityRenderAutoCraftingTable::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.AUTO_SOLDERING_TABLE, TileEntityRenderAutoSolderingTable::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.SOLDERING_TABLE, TileEntityRenderSolderingTable::new);
-		
+
 		// Log the completion.
 		StaticPower.LOGGER.info("Static Power Client Setup Completed!");
 	}
@@ -170,6 +178,22 @@ public class StaticPowerClientEventHandler {
 
 	public static void render(RenderWorldLastEvent event) {
 		TEST_RENDERER.render(event);
+	}
+
+	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
+	public static void onAddItemTooltip(ItemTooltipEvent event) {
+		if (Screen.hasShiftDown()) {
+			RecipeMatchParameters matchParameters = new RecipeMatchParameters(event.getItemStack());
+
+			FluidUtil.getFluidContained(event.getItemStack()).ifPresent(fluid -> {
+				matchParameters.setFluids(fluid.copy());
+			});
+
+			StaticPowerRecipeRegistry.getRecipe(ThermalConductivityRecipe.RECIPE_TYPE, matchParameters).ifPresent(recipe -> {
+				event.getToolTip().add(HeatUtilities.getHeatTooltip(recipe.getThermalConductivity()));
+			});
+		}
 	}
 
 	@SuppressWarnings({ "unchecked" })

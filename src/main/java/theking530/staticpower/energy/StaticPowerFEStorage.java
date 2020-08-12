@@ -5,6 +5,7 @@ import java.util.Queue;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.energy.IEnergyStorage;
+import theking530.common.utilities.SDMath;
 
 public class StaticPowerFEStorage implements IEnergyStorage {
 	public static final int MAXIMUM_IO_CAPTURE_FRAMES = 5;
@@ -82,7 +83,7 @@ public class StaticPowerFEStorage implements IEnergyStorage {
 			averageRecieved += value;
 		}
 		averageRecieved /= Math.max(1, receiveCaptureFrames.size());
-		
+
 		// Reset the values.
 		currentFrameEnergyReceived = 0;
 		currentFrameEnergyExtracted = 0;
@@ -183,6 +184,14 @@ public class StaticPowerFEStorage implements IEnergyStorage {
 
 	public void setMaxExtract(int newMaxExtract) {
 		maxExtract = newMaxExtract;
+	}
+
+	public void addPowerIgnoreTransferRate(int energy) {
+		currentEnergy = SDMath.clamp(currentEnergy + energy, 0, capacity);
+	}
+
+	public void usePowerIgnoreTransferRate(int energy) {
+		currentEnergy = SDMath.clamp(currentEnergy - energy, 0, capacity);
 	}
 
 	/**

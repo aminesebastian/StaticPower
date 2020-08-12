@@ -4,6 +4,7 @@ import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 
@@ -11,16 +12,22 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 	public static final IRecipeType<ThermalConductivityRecipe> RECIPE_TYPE = IRecipeType.register("thermal_conducitity");
 
 	private final Ingredient blocks;
+	private final FluidStack fluid;
 	private final float thermalConductivity;
 
-	public ThermalConductivityRecipe(ResourceLocation name, Ingredient blocks, float thermalConductivity) {
+	public ThermalConductivityRecipe(ResourceLocation name, Ingredient blocks, FluidStack fluid, float thermalConductivity) {
 		super(name);
 		this.blocks = blocks;
+		this.fluid = fluid;
 		this.thermalConductivity = thermalConductivity;
 	}
 
 	public Ingredient getBlocks() {
 		return blocks;
+	}
+
+	public FluidStack getFluid() {
+		return fluid;
 	}
 
 	public float getThermalConductivity() {
@@ -29,7 +36,15 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 
 	@Override
 	public boolean isValid(RecipeMatchParameters matchParams) {
-		return blocks.test(matchParams.getItems()[0]);
+		// Check for block match first.
+		if (blocks != Ingredient.EMPTY && matchParams.hasItems() && blocks.test(matchParams.getItems()[0])) {
+			return true;
+		}
+		// Then check for a fluid match.
+		if (!fluid.isEmpty() && matchParams.hasFluids() && fluid.isFluidEqual(matchParams.getFluids()[0])) {
+			return true;
+		}
+		return false;
 	}
 
 	@Override

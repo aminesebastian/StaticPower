@@ -5,6 +5,7 @@ import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -31,6 +32,11 @@ public class StaticPowerForgeEventRegistry {
 	@SubscribeEvent
 	public static void registerItemColors(ColorHandlerEvent.Item event) {
 		StaticPowerRegistry.onRegisterItemColors(event);
+	}
+
+	@SubscribeEvent
+	public static void onAddItemTooltip(ItemTooltipEvent event) {
+		StaticPowerClientEventHandler.onAddItemTooltip(event);
 	}
 
 	/**

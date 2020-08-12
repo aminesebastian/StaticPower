@@ -25,6 +25,16 @@ public class StaticPowerTier {
 	private float itemCableAcceleration;
 	private float itemCableFriction;
 	private int drillBitUses;
+	private float heatCableCapacity;
+	private float heatCableConductivity;
+
+	public float getHeatCableCapacity() {
+		return heatCableCapacity;
+	}
+
+	public float getHeatCableConductivity() {
+		return heatCableConductivity;
+	}
 
 	public int getDrillBitUses() {
 		return drillBitUses;

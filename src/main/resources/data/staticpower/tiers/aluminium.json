@@ -1,0 +1,8 @@
+{
+	"tierId": {
+		"namespace": "staticpower",
+		"path": "tier_aluminium"
+	},
+	"heatCableCapacity": 10,
+	"heatCableConductivity": 205.0
+}

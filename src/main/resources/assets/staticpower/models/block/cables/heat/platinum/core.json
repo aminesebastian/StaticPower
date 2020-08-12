@@ -1,0 +1,7 @@
+{
+  "parent": "staticpower:block/cables/cable_core",
+  "textures": {
+    "cable_texture": "staticpower:blocks/cables/cable_platinum_heat",
+    "particle": "staticpower:blocks/cables/cable_platinum_heat"
+  }
+}

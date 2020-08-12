@@ -10,10 +10,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
+import theking530.staticpower.tileentities.components.heat.CapabilityHeatable;
 
 public class DestinationWrapper {
 	public enum DestinationType {
-		ITEM, POWER, FLUID
+		ITEM, POWER, FLUID, HEAT
 	}
 
 	private final TileEntity tileEntity;
@@ -87,6 +88,11 @@ public class DestinationWrapper {
 			if (tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir).isPresent()) {
 				types.add(DestinationType.ITEM);
 			}
+			// Check for heat capabilites.
+			if (tileEntity.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, dir).isPresent()) {
+				types.add(DestinationType.HEAT);
+			}
+
 			// Put the types into the supported types array.
 			supportedTypes.put(dir, types);
 		}

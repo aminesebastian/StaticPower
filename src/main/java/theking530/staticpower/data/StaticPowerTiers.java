@@ -16,4 +16,10 @@ public class StaticPowerTiers {
 	public static final ResourceLocation SAPPHIRE = new ResourceLocation(Reference.MOD_ID, "tier_sapphire");
 	public static final ResourceLocation TUNGSTEN = new ResourceLocation(Reference.MOD_ID, "tier_tungsten");
 	public static final ResourceLocation BRONZE = new ResourceLocation(Reference.MOD_ID, "tier_bronze");
+	
+	public static final ResourceLocation COPPER = new ResourceLocation(Reference.MOD_ID, "tier_copper");
+	public static final ResourceLocation TIN = new ResourceLocation(Reference.MOD_ID, "tier_tin");
+	public static final ResourceLocation SILVER = new ResourceLocation(Reference.MOD_ID, "tier_silver");
+	public static final ResourceLocation GOLD = new ResourceLocation(Reference.MOD_ID, "tier_gold");
+	public static final ResourceLocation ALUMINIUM = new ResourceLocation(Reference.MOD_ID, "tier_aluminium");
 }

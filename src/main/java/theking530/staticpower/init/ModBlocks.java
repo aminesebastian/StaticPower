@@ -18,6 +18,7 @@ import theking530.staticpower.blocks.decorative.StaticPowerGlassBlock;
 import theking530.staticpower.cables.digistore.BlockDigistoreNetworkWire;
 import theking530.staticpower.cables.fluid.BlockFluidCable;
 import theking530.staticpower.cables.fluid.BlockIndustrialFluidCable;
+import theking530.staticpower.cables.heat.BlockHeatCable;
 import theking530.staticpower.cables.item.BlockItemCable;
 import theking530.staticpower.cables.power.BlockPowerCable;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -25,6 +26,7 @@ import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.ioport.BlockDigistoreIOPort;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.BlockDigistoreManager;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.severrack.BlockDigistoreServerRack;
+import theking530.staticpower.tileentities.nonpowered.heatsink.BlockHeatSink;
 import theking530.staticpower.tileentities.nonpowered.miner.BlockMiner;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.BlockSolderingTable;
 import theking530.staticpower.tileentities.nonpowered.tank.BlockTank;
@@ -147,6 +149,7 @@ public class ModBlocks {
 	public static BlockFusionFurnace FusionFurnace;
 	public static BlockMiner Miner;
 	public static BlockElectricMiner ElectricMiner;
+	public static BlockHeatSink CopperHeatSink;
 
 	public static BlockSolarPanel SolarPanelBasic;
 	public static BlockSolarPanel SolarPanelAdvanced;
@@ -178,6 +181,12 @@ public class ModBlocks {
 
 	public static BlockFluidCable FluidCable;
 	public static BlockIndustrialFluidCable IndustrialFluidCable;
+
+	public static BlockHeatCable CopperHeatCable;
+	public static BlockHeatCable TinHeatCable;
+	public static BlockHeatCable SilverHeatCable;
+	public static BlockHeatCable GoldHeatCable;
+	public static BlockHeatCable AluminiumHeatCable;
 
 	// Batteries
 	public static BlockBattery BatteryBasic;
@@ -315,6 +324,8 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(Miner = new BlockMiner("machine_miner"));
 		StaticPowerRegistry.preRegisterBlock(ElectricMiner = new BlockElectricMiner("machine_electric_miner"));
 
+		StaticPowerRegistry.preRegisterBlock(CopperHeatSink = new BlockHeatSink("heat_sink_copper"));
+
 		StaticPowerRegistry.preRegisterBlock(BasicTank = new BlockTank("tank_basic"));
 		StaticPowerRegistry.preRegisterBlock(Pump = new BlockPump("pump"));
 
@@ -341,6 +352,12 @@ public class ModBlocks {
 
 		StaticPowerRegistry.preRegisterBlock(FluidCable = new BlockFluidCable("cable_fluid"));
 		StaticPowerRegistry.preRegisterBlock(IndustrialFluidCable = new BlockIndustrialFluidCable("cable_industrial_fluid"));
+
+		StaticPowerRegistry.preRegisterBlock(CopperHeatCable = new BlockHeatCable("cable_heat_copper", StaticPowerTiers.COPPER));
+		StaticPowerRegistry.preRegisterBlock(TinHeatCable = new BlockHeatCable("cable_heat_tin", StaticPowerTiers.TIN));
+		StaticPowerRegistry.preRegisterBlock(SilverHeatCable = new BlockHeatCable("cable_heat_silver", StaticPowerTiers.SILVER));
+		StaticPowerRegistry.preRegisterBlock(GoldHeatCable = new BlockHeatCable("cable_heat_gold", StaticPowerTiers.GOLD));
+		StaticPowerRegistry.preRegisterBlock(AluminiumHeatCable = new BlockHeatCable("cable_heat_aluminium", StaticPowerTiers.ALUMINIUM));
 
 		StaticPowerRegistry.preRegisterBlock(BatteryBasic = new BlockBattery("battery_block_basic", StaticPowerTiers.BASIC));
 		StaticPowerRegistry.preRegisterBlock(BatteryAdvanced = new BlockBattery("battery_block_advanced", StaticPowerTiers.ADVANCED));

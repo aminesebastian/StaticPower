@@ -4,6 +4,7 @@ import net.minecraft.tileentity.TileEntityType;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.cables.digistore.TileEntityDigistoreWire;
 import theking530.staticpower.cables.fluid.TileEntityFluidCable;
+import theking530.staticpower.cables.heat.TileEntityHeatCable;
 import theking530.staticpower.cables.item.TileEntityItemCable;
 import theking530.staticpower.cables.power.TileEntityPowerCable;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -11,6 +12,7 @@ import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.ioport.TileEntityDigistoreIOPort;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.TileEntityDigistoreManager;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.severrack.TileEntityDigistoreServerRack;
+import theking530.staticpower.tileentities.nonpowered.heatsink.TileEntityHeatSink;
 import theking530.staticpower.tileentities.nonpowered.miner.TileEntityMiner;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.TileEntitySolderingTable;
 import theking530.staticpower.tileentities.nonpowered.tank.TileEntityTank;
@@ -69,6 +71,12 @@ public class ModTileEntityTypes {
 	public static TileEntityType<TileEntityFluidCable> FLUID_CABLE;
 	public static TileEntityType<TileEntityFluidCable> INDUSTRIAL_FLUID_CABLE;
 
+	public static TileEntityType<TileEntityHeatCable> HEAT_CABLE_COPPER;
+	public static TileEntityType<TileEntityHeatCable> HEAT_CABLE_TIN;
+	public static TileEntityType<TileEntityHeatCable> HEAT_CABLE_SILVER;
+	public static TileEntityType<TileEntityHeatCable> HEAT_CABLE_GOLD;
+	public static TileEntityType<TileEntityHeatCable> HEAT_CABLE_ALUMINIUM;
+
 	public static TileEntityType<TileEntityDigistore> DIGISTORE;
 	public static TileEntityType<TileEntityDigistoreManager> DIGISTORE_MANAGER;
 	public static TileEntityType<TileEntityDigistoreServerRack> DIGISTORE_SERVER_RACK;
@@ -92,7 +100,9 @@ public class ModTileEntityTypes {
 	public static TileEntityType<TileEntityFusionFurnace> FUSION_FURNACE;
 	public static TileEntityType<TileEntityMiner> MINER;
 	public static TileEntityType<TileEntityElectricMiner> ELECTRIC_MINER;
-	
+
+	public static TileEntityType<TileEntityHeatSink> HEAT_SINK;
+
 	public static TileEntityType<TileEntityBattery> BATTERY_BASIC;
 	public static TileEntityType<TileEntityBattery> BATTERY_ADVANCED;
 	public static TileEntityType<TileEntityBattery> BATTERY_STATIC;
@@ -157,6 +167,14 @@ public class ModTileEntityTypes {
 
 		FLUID_CABLE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityFluidCable(type, 2.0f / 16.0f, 100), ModBlocks.FluidCable);
 		INDUSTRIAL_FLUID_CABLE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityFluidCable(type, 3.5f / 16.0f, 1000), ModBlocks.IndustrialFluidCable);
+
+		HEAT_CABLE_COPPER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityHeatCable(type, StaticPowerTiers.COPPER), ModBlocks.CopperHeatCable);
+		HEAT_CABLE_TIN = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityHeatCable(type, StaticPowerTiers.TIN), ModBlocks.TinHeatCable);
+		HEAT_CABLE_SILVER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityHeatCable(type, StaticPowerTiers.SILVER), ModBlocks.SilverHeatCable);
+		HEAT_CABLE_GOLD = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityHeatCable(type, StaticPowerTiers.GOLD), ModBlocks.GoldHeatCable);
+		HEAT_CABLE_ALUMINIUM = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityHeatCable(type, StaticPowerTiers.ALUMINIUM), ModBlocks.AluminiumHeatCable);
+
+		HEAT_SINK = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityHeatSink(), ModBlocks.CopperHeatSink);
 
 		DIGISTORE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityDigistore(), ModBlocks.Digistore);
 		DIGISTORE_MANAGER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityDigistoreManager(), ModBlocks.DigistoreManager);

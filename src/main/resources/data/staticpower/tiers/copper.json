@@ -1,0 +1,8 @@
+{
+	"tierId": {
+		"namespace": "staticpower",
+		"path": "tier_copper"
+	},
+	"heatCableCapacity": 40,
+	"heatCableConductivity": 385.0
+}

@@ -23,6 +23,7 @@ import theking530.staticpower.tileentities.components.control.MachineProcessingC
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.tileentities.components.control.SideConfigurationComponent;
 import theking530.staticpower.tileentities.components.heat.HeatStorageComponent;
+import theking530.staticpower.tileentities.components.heat.HeatStorageComponent.HeatManipulationAction;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
 import theking530.staticpower.tileentities.components.loopingsound.LoopingSoundComponent;
@@ -35,11 +36,11 @@ import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public abstract class AbstractTileEntityMiner extends TileEntityBase {
-	public static final int DEFAULT_MINING_TIME = 60;
+	public static final int DEFAULT_MINING_TIME = 5;
 	public static final int DEFAULT_MINING_COST = 10;
 	public static final int DEFAULT_IDLE_COST = 1;
 	public static final int DEFAULT_FUEL_MOVE_TIME = 4;
-	public static final float DEFAULT_HEAT_GENERATION = 10.0f;
+	public static final float DEFAULT_HEAT_GENERATION = 50.0f;
 	public static final int MINING_RADIUS = 5;
 
 	public final InventoryComponent drillBitInventory;
@@ -88,7 +89,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityBase {
 
 		registerComponent(miningSoundComponent = new LoopingSoundComponent("MiningSoundComponent", 20));
 
-		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 100.0f, 25.0f));
+		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 1000.0f, 100.0f).setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.COOL));
 		registerComponent(new OutputServoComponent("OutputServo", 20, outputInventory));
 	}
 
@@ -113,7 +114,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityBase {
 			}
 
 			if (processingComponent.isPerformingWork()) {
-				heatStorage.getStorage().heat(heatGeneration, false);
+				heatStorage.getStorage().addHeatIgnoreTransferRate(heatGeneration);
 			}
 
 			if (processingComponent.getIsOnBlockState()) {
@@ -175,6 +176,11 @@ public abstract class AbstractTileEntityMiner extends TileEntityBase {
 
 			// Increment the current block index.
 			currentBlockIndex++;
+			// IF we have reached the final block, set the current block index to -1.
+			if (currentBlockIndex >= blocks.size()) {
+				processingComponent.cancelProcessing();
+				currentBlockIndex = -1;
+			}
 
 			// Skip air blocks.
 			if (minedBlockState.getBlock() == Blocks.AIR) {
@@ -212,12 +218,6 @@ public abstract class AbstractTileEntityMiner extends TileEntityBase {
 
 			// Raise the on mined event.
 			onBlockMined(minedPos, minedBlockState);
-
-			// IF we have reached the final block, set the current block index to -1.
-			if (currentBlockIndex >= blocks.size()) {
-				processingComponent.cancelProcessing();
-				currentBlockIndex = -1;
-			}
 
 			// Mark the te as dirty.
 			markDirty();
