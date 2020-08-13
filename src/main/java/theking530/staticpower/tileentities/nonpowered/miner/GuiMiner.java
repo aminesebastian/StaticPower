@@ -14,8 +14,11 @@ import theking530.common.gui.widgets.button.StandardButton.MouseButton;
 import theking530.common.gui.widgets.progressbars.FireProgressBar;
 import theking530.common.gui.widgets.progressbars.SquareProgressBar;
 import theking530.common.gui.widgets.tabs.GuiInfoTab;
+import theking530.common.gui.widgets.tabs.GuiMachineHeatTab;
 import theking530.common.gui.widgets.tabs.GuiSideConfigTab;
+import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.common.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
+import theking530.common.gui.widgets.valuebars.GuiHeatBarFromHeatStorage;
 import theking530.common.utilities.Color;
 import theking530.common.utilities.SDTime;
 import theking530.staticpower.client.StaticPowerSprites;
@@ -30,6 +33,7 @@ public class GuiMiner extends StaticPowerTileEntityGui<ContainerMiner, TileEntit
 
 	@Override
 	public void initializeGui() {
+		registerWidget(new GuiHeatBarFromHeatStorage(getTileEntity().heatStorage.getStorage(), 8, 16, 2, 52));
 		registerWidget(new FireProgressBar(19, 52).bindToMachineProcessingComponent(getTileEntity().fuelComponent));
 		registerWidget(new SquareProgressBar(78, 54, 20, 2).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 		registerWidget(drawPreviewButton = new SpriteButton(156, 61, 12, 12, StaticPowerSprites.RANGE_ICON, null, this::buttonPressed));
@@ -40,6 +44,8 @@ public class GuiMiner extends StaticPowerTileEntityGui<ContainerMiner, TileEntit
 		getTabManager().registerTab(new GuiInfoTab(100, 80));
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
+
+		getTabManager().registerTab(new GuiMachineHeatTab(getTileEntity().heatStorage).setTabSide(TabSide.LEFT));
 
 		setOutputSlotSize(20);
 	}

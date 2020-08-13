@@ -3,25 +3,14 @@ package theking530.staticpower.tileentities.components.heat;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.fluid.IFluidState;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ILightReader;
 import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.fluids.FluidStack;
-import theking530.staticpower.data.crafting.RecipeMatchParameters;
-import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
-import theking530.staticpower.data.crafting.wrappers.thermalconductivity.ThermalConductivityRecipe;
 
-public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundNBT> {
-	public static final int MAXIMUM_IO_CAPTURE_FRAMES = 5;
+public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundNBT>, Cloneable {
+	public static final int MAXIMUM_IO_CAPTURE_FRAMES = 20;
 	protected float currentHeat;
 	protected float maximumHeat;
-	protected float maxTransferRate;
+	protected float conductivity;
 
 	protected boolean canHeat;
 	protected boolean canCool;
@@ -34,9 +23,9 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundNBT> 
 	protected float averageRecieved;
 	protected float averageExtracted;
 
-	public HeatStorage(float maximumHeat, float heatTransferRate) {
+	public HeatStorage(float maximumHeat, float conductivity) {
 		this.maximumHeat = maximumHeat;
-		this.maxTransferRate = heatTransferRate;
+		this.conductivity = conductivity;
 		canHeat = true;
 		canCool = true;
 		ioCaptureFrames = new LinkedList<Float>();
@@ -60,8 +49,12 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundNBT> 
 	}
 
 	@Override
-	public float getMaximumHeatTransferRate() {
-		return maxTransferRate;
+	public float getConductivity() {
+		return conductivity;
+	}
+
+	public void setConductivity(float conductivity) {
+		this.conductivity = conductivity;
 	}
 
 	@Override
@@ -69,9 +62,8 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundNBT> 
 		if (!canHeat) {
 			return 0.0f;
 		}
-		float clampedToTransferRate = Math.min(maxTransferRate, amountToHeat);
 		float remainingHeatCapacity = maximumHeat - currentHeat;
-		float actualHeatAmount = Math.min(remainingHeatCapacity, clampedToTransferRate);
+		float actualHeatAmount = Math.min(remainingHeatCapacity, amountToHeat);
 		if (!simulate) {
 			currentHeat += actualHeatAmount;
 			currentFrameEnergyReceived += actualHeatAmount;
@@ -85,29 +77,12 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundNBT> 
 		if (!canCool) {
 			return 0.0f;
 		}
-
-		float clampedToTransferRate = Math.min(maxTransferRate, amountToCool);
-		float actualCoolAmount = Math.min(currentHeat, clampedToTransferRate);
+		float actualCoolAmount = Math.min(currentHeat, amountToCool);
 		if (!simulate) {
 			currentHeat -= actualCoolAmount;
 			currentFrameEnergyExtracted -= actualCoolAmount;
 		}
 		return actualCoolAmount;
-	}
-
-	public void addHeatIgnoreTransferRate(float heat) {
-		float remainingHeatCapacity = maximumHeat - currentHeat;
-		float actualHeatAmount = Math.min(remainingHeatCapacity, heat);
-		
-		currentHeat += actualHeatAmount;
-		currentFrameEnergyReceived += actualHeatAmount;
-	}
-
-	public void coolIgnoreTransferRate(float cool) {
-		float actualCoolAmount = Math.min(currentHeat, cool);
-		
-		currentHeat -= actualCoolAmount;
-		currentFrameEnergyExtracted -= actualCoolAmount;
 	}
 
 	public boolean isAtMaxHeat() {
@@ -211,53 +186,6 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundNBT> 
 		return averageRecieved;
 	}
 
-	/**
-	 * This is a helper method that returns the min between the amount of heat
-	 * stored in this storage and the maximum amount that can be output per tick.
-	 * For example, if our max extract is 4H/t and we have 2H left in this storage,
-	 * this will return 2. Otherwise, if we have >4FE left in this storage, this
-	 * will return 4FE.
-	 * 
-	 * @return The amount of heat that can be output by this storage on this tick.
-	 */
-	public float getCurrentMaximumHeatOutput() {
-		return Math.min(currentHeat, maxTransferRate);
-	}
-
-	/**
-	 * Transfers the heat stored in this storage to adjacent blocks.
-	 * 
-	 * @param reader            The world access.
-	 * @param currentPos        The position of this heat storage.
-	 * @param thermalMultiplier The thermal multiplier. This value should be 1.0f by
-	 *                          default but can increase or decrease depending on if
-	 *                          the owner of this heat storage is more or less
-	 *                          conductive.
-	 */
-	public void transferWithSurroundings(ILightReader reader, BlockPos currentPos, float thermalMultiplier) {
-		// Cool the storage off using the surrounding blocks. If the surrounding is a
-		// regular block, just dissipate the heat. Otherwise, transfer it if there is a
-		// capable tile entity.
-		for (Direction dir : Direction.values()) {
-			TileEntity te = reader.getTileEntity(currentPos.offset(dir));
-			if (te != null && te.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, dir.getOpposite()).isPresent()) {
-				te.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, dir.getOpposite()).ifPresent(capability -> {
-					float coolable = getCurrentMaximumHeatOutput();
-					float cooled = capability.heat(coolable, false);
-					cool(cooled, false);
-				});
-			} else {
-				IFluidState fluidState = reader.getFluidState(currentPos.offset(dir));
-				BlockState blockstate = reader.getBlockState(currentPos.offset(dir));
-				StaticPowerRecipeRegistry
-						.getRecipe(ThermalConductivityRecipe.RECIPE_TYPE, new RecipeMatchParameters(new ItemStack(blockstate.getBlock())).setFluids(new FluidStack(fluidState.getFluid(), 1)))
-						.ifPresent((recipe) -> {
-							cool(recipe.getThermalConductivity() * thermalMultiplier, false);
-						});
-			}
-		}
-	}
-
 	@Override
 	public void deserializeNBT(CompoundNBT nbt) {
 		if (currentHeat > maximumHeat) {
@@ -266,7 +194,7 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundNBT> 
 
 		currentHeat = nbt.getFloat("current_heat");
 		maximumHeat = nbt.getFloat("maximum_heat");
-		maxTransferRate = nbt.getFloat("maximum_transfer_rate");
+		conductivity = nbt.getFloat("maximum_transfer_rate");
 		averageRecieved = nbt.getFloat("recieved");
 		averageExtracted = nbt.getFloat("extracted");
 	}
@@ -281,9 +209,16 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundNBT> 
 
 		output.putFloat("current_heat", currentHeat);
 		output.putFloat("maximum_heat", maximumHeat);
-		output.putFloat("maximum_transfer_rate", maxTransferRate);
+		output.putFloat("maximum_transfer_rate", conductivity);
 		output.putFloat("recieved", averageRecieved);
 		output.putFloat("extracted", averageExtracted);
+		return output;
+	}
+
+	@Override
+	public HeatStorage clone() {
+		HeatStorage output = new HeatStorage(this.getMaximumHeat(), this.getConductivity());
+		output.deserializeNBT(serializeNBT());
 		return output;
 	}
 }

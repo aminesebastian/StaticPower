@@ -4,5 +4,7 @@
 		"path": "tier_copper"
 	},
 	"heatCableCapacity": 40,
-	"heatCableConductivity": 385.0
+	"heatCableConductivity": 50,
+	"heatSinkCapacity": 5000,
+	"heatSinkConductivity": 100.0
 }

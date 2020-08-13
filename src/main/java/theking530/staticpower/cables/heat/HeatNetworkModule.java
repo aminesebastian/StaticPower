@@ -3,9 +3,16 @@ package theking530.staticpower.cables.heat;
 import java.util.HashMap;
 import java.util.List;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.fluid.IFluidState;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
@@ -14,6 +21,10 @@ import theking530.staticpower.cables.network.DestinationWrapper;
 import theking530.staticpower.cables.network.DestinationWrapper.DestinationType;
 import theking530.staticpower.cables.network.NetworkMapper;
 import theking530.staticpower.cables.network.ServerCable;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
+import theking530.staticpower.data.crafting.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
+import theking530.staticpower.data.crafting.wrappers.thermalconductivity.ThermalConductivityRecipe;
 import theking530.staticpower.tileentities.components.heat.CapabilityHeatable;
 import theking530.staticpower.tileentities.components.heat.HeatStorage;
 import theking530.staticpower.tileentities.components.heat.IHeatStorage;
@@ -24,7 +35,7 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 	public HeatNetworkModule() {
 		super(CableNetworkModuleTypes.HEAT_NETWORK_MODULE);
 		// The actual input and output rates are controlled by the individual cables.
-		heatStorage = new HeatStorage(0, Integer.MAX_VALUE);
+		heatStorage = new HeatStorage(0, Float.MAX_VALUE);
 	}
 
 	public HeatStorage getHeatStorage() {
@@ -33,27 +44,36 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 
 	@Override
 	public void getReaderOutput(List<ITextComponent> components) {
-		// TODO Auto-generated method stub
+		float averageThermalConductivity = 0.0f;
+		for (ServerCable cable : Network.getGraph().getCables().values()) {
+			averageThermalConductivity += cable.getFloatProperty(HeatCableComponent.HEAT_RATE_DATA_TAG_KEY);
+		}
+		;
+		averageThermalConductivity /= Network.getGraph().getCables().size();
 
+		ITextComponent currentHeat = GuiTextUtilities.formatHeatToString(heatStorage.getCurrentHeat(), heatStorage.getMaximumHeat());
+		ITextComponent cooling = GuiTextUtilities.formatHeatRateToString(heatStorage.getCooledPerTick());
+		ITextComponent heating = GuiTextUtilities.formatHeatRateToString(heatStorage.getHeatPerTick());
+		ITextComponent averageConductivity = GuiTextUtilities.formatHeatRateToString(averageThermalConductivity);
+
+		components.add(
+				new StringTextComponent(TextFormatting.WHITE.toString()).appendSibling(new StringTextComponent("Contains: ")).appendText(TextFormatting.GRAY.toString()).appendSibling(currentHeat));
+		components.add(new StringTextComponent(TextFormatting.RED.toString()).appendSibling(new StringTextComponent("Heating: ")).appendText(TextFormatting.GRAY.toString()).appendSibling(heating));
+		components.add(new StringTextComponent(TextFormatting.BLUE.toString()).appendSibling(new StringTextComponent("Cooling: ")).appendText(TextFormatting.GRAY.toString()).appendSibling(cooling));
+		components.add(new StringTextComponent(TextFormatting.AQUA.toString()).appendSibling(new StringTextComponent("Average Conductivity: ")).appendText(TextFormatting.GRAY.toString())
+				.appendSibling(averageConductivity));
 	}
 
 	@Override
 	public void tick(World world) {
+		// Capture the transfer metrics.
+		heatStorage.captureHeatTransferMetric();
+
 		if (heatStorage.getCurrentHeat() > 0) {
 			// Handle the active cooling.
 			if (Network.getGraph().getDestinations().size() > 0) {
-				// Get a map of all the applicable destination that support recieving power.
-				HashMap<IHeatStorage, DestinationWrapper> destinations = new HashMap<IHeatStorage, DestinationWrapper>();
-
-				// Check each destination and capture the ones that can recieve heat.
-				Network.getGraph().getDestinations().forEach((pos, wrapper) -> {
-					if (wrapper.supportsType(DestinationType.HEAT)) {
-						IHeatStorage otherHeatStorage = wrapper.getTileEntity().getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, wrapper.getDestinationSide()).orElse(null);
-						if (otherHeatStorage != null && otherHeatStorage.heat(heatStorage.getCurrentHeat(), true) > 0) {
-							destinations.put(otherHeatStorage, wrapper);
-						}
-					}
-				});
+				// Get a map of all the applicable destination that support receiving heat.
+				HashMap<IHeatStorage, DestinationWrapper> destinations = getValidDestinations();
 
 				// Continue if we found some valid destinations.
 				if (destinations.size() > 0) {
@@ -62,9 +82,13 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 
 					// Distribute the heat to the destinations.
 					for (IHeatStorage wrapper : destinations.keySet()) {
+						// Get the thermal conductivity of the attached cable.
 						float toSupply = Math.min(CableNetworkManager.get(world).getCable(destinations.get(wrapper).getConnectedCable()).getFloatProperty(HeatCableComponent.HEAT_RATE_DATA_TAG_KEY),
 								outputPerDestination);
-						float supplied = wrapper.heat(Math.min(toSupply, heatStorage.getCurrentMaximumHeatOutput()), false);
+						// Limit that to the max amount we currently have.
+						float supplied = wrapper.heat(Math.min(toSupply, heatStorage.getCurrentHeat()), false);
+
+						// If the supplied amount is > 0, supply it.
 						if (supplied > 0) {
 							heatStorage.cool(supplied, false);
 						}
@@ -73,9 +97,19 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 			}
 		}
 
-		// Handle the passive heating/cooling.
+		// Handle the passive heating/cooling. Each iteration we limit the thermal
+		// transfer rate to the current cable's. Do not put this in the IF heat > 0
+		// check.
 		for (ServerCable cable : Network.getGraph().getCables().values()) {
-			heatStorage.transferWithSurroundings(Network.getWorld(), cable.getPos(), 1.0f);
+			for (Direction dir : Direction.values()) {
+				IFluidState fluidState = Network.getWorld().getFluidState(cable.getPos().offset(dir));
+				BlockState blockstate = Network.getWorld().getBlockState(cable.getPos().offset(dir));
+				StaticPowerRecipeRegistry
+						.getRecipe(ThermalConductivityRecipe.RECIPE_TYPE, new RecipeMatchParameters(new ItemStack(blockstate.getBlock())).setFluids(new FluidStack(fluidState.getFluid(), 1)))
+						.ifPresent((recipe) -> {
+							heatStorage.cool(recipe.getThermalConductivity() * cable.getFloatProperty(HeatCableComponent.HEAT_RATE_DATA_TAG_KEY), false);
+						});
+			}
 		}
 	}
 
@@ -96,11 +130,33 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 		heatStorage.setMaximumHeat(total);
 	}
 
-	public void onNetworksJoined(CableNetwork other) {
+	@Override
+	public void onAddedToNetwork(CableNetwork other) {
+		super.onAddedToNetwork(other);
 		if (other.hasModule(CableNetworkModuleTypes.HEAT_NETWORK_MODULE)) {
 			HeatNetworkModule module = (HeatNetworkModule) other.getModule(CableNetworkModuleTypes.HEAT_NETWORK_MODULE);
-			module.getHeatStorage().addHeatIgnoreTransferRate(heatStorage.getCurrentHeat());
+			module.getHeatStorage().heat(heatStorage.getCurrentHeat(), false);
 		}
+	}
+
+	public float getHeatPerCable() {
+		return heatStorage.getCurrentHeat() / Network.getGraph().getCables().size();
+	}
+
+	protected HashMap<IHeatStorage, DestinationWrapper> getValidDestinations() {
+		// Get a map of all the applicable destination that support recieving power.
+		HashMap<IHeatStorage, DestinationWrapper> destinations = new HashMap<IHeatStorage, DestinationWrapper>();
+
+		// Check each destination and capture the ones that can recieve heat.
+		Network.getGraph().getDestinations().forEach((pos, wrapper) -> {
+			if (wrapper.supportsType(DestinationType.HEAT) && !Network.getGraph().getCables().containsKey(pos)) {
+				IHeatStorage otherHeatStorage = wrapper.getTileEntity().getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, wrapper.getDestinationSide()).orElse(null);
+				if (otherHeatStorage != null && otherHeatStorage.heat(heatStorage.getCurrentHeat(), true) > 0) {
+					destinations.put(otherHeatStorage, wrapper);
+				}
+			}
+		});
+		return destinations;
 	}
 
 	@Override

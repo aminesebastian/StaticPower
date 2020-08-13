@@ -19,10 +19,6 @@ public abstract class AbstractCableNetworkModule {
 
 	}
 
-	public void onNetworksJoined(CableNetwork other) {
-
-	}
-
 	public void onAddedToNetwork(CableNetwork network) {
 		Network = network;
 	}

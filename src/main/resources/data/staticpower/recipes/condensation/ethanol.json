@@ -1,0 +1,11 @@
+{
+	"type": "staticpower:condensation_recipe",
+	"input_fluid": {
+		"fluid": "staticpower:evaporated_mash",
+		"volume": 10
+	},
+	"output_fluid": {
+		"fluid": "staticpower:ethanol",
+		"volume": 1
+	}
+}

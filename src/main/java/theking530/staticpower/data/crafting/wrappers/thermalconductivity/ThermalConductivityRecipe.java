@@ -44,6 +44,12 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 		if (!fluid.isEmpty() && matchParams.hasFluids() && fluid.isFluidEqual(matchParams.getFluids()[0])) {
 			return true;
 		}
+
+		// Handle the edge case for AIR.
+		if (blocks == Ingredient.EMPTY && fluid.isEmpty() && matchParams.hasItems() && matchParams.getItems()[0].isEmpty()) {
+			return true;
+		}
+
 		return false;
 	}
 

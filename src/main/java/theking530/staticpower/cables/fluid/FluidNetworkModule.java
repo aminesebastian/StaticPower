@@ -109,7 +109,9 @@ public class FluidNetworkModule extends AbstractCableNetworkModule {
 		}
 	}
 
-	public void onNetworksJoined(CableNetwork other) {
+	@Override
+	public void onAddedToNetwork(CableNetwork other) {
+		super.onAddedToNetwork(other);
 		if (other.hasModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE)) {
 			FluidNetworkModule module = (FluidNetworkModule) other.getModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE);
 			module.getFluidStorage().fill(getFluidStorage().getFluid(), FluidAction.EXECUTE);

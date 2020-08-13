@@ -47,7 +47,7 @@ public class GuiMachineHeatTab extends BaseGuiTab {
 		info.clear();
 		addInfoLine("Generating", GuiTextUtilities.formatHeatRateToString(heatStorage.getStorage().getHeatPerTick()), TextFormatting.RED);
 		addInfoLine("Dissipating", GuiTextUtilities.formatHeatRateToString(heatStorage.getStorage().getCooledPerTick()), TextFormatting.AQUA);
-		addInfoLine("Max Cooling", GuiTextUtilities.formatHeatRateToString(heatStorage.getStorage().getMaximumHeatTransferRate()), TextFormatting.GREEN);
+		addInfoLine("Conductivity", GuiTextUtilities.formatHeatRateToString(heatStorage.getStorage().getConductivity()), TextFormatting.GREEN);
 	}
 
 	private void drawText() {

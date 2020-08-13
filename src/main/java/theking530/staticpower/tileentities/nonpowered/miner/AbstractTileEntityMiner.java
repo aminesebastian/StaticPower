@@ -10,7 +10,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -18,29 +17,24 @@ import theking530.common.utilities.Color;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.init.ModTags;
 import theking530.staticpower.items.tools.DrillBit;
-import theking530.staticpower.tileentities.TileEntityBase;
+import theking530.staticpower.tileentities.TileEntityConfigurable;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
-import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
-import theking530.staticpower.tileentities.components.control.SideConfigurationComponent;
 import theking530.staticpower.tileentities.components.heat.HeatStorageComponent;
 import theking530.staticpower.tileentities.components.heat.HeatStorageComponent.HeatManipulationAction;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
 import theking530.staticpower.tileentities.components.loopingsound.LoopingSoundComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
-import theking530.staticpower.tileentities.utilities.RedstoneMode;
-import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities;
-import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
-public abstract class AbstractTileEntityMiner extends TileEntityBase {
-	public static final int DEFAULT_MINING_TIME = 5;
+public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
+	public static final int DEFAULT_MINING_TIME = 60;
 	public static final int DEFAULT_MINING_COST = 10;
 	public static final int DEFAULT_IDLE_COST = 1;
 	public static final int DEFAULT_FUEL_MOVE_TIME = 4;
-	public static final float DEFAULT_HEAT_GENERATION = 50.0f;
+	public static final float DEFAULT_HEAT_GENERATION = 2500.0f;
 	public static final int MINING_RADIUS = 5;
 
 	public final InventoryComponent drillBitInventory;
@@ -50,9 +44,6 @@ public abstract class AbstractTileEntityMiner extends TileEntityBase {
 	public final MachineProcessingComponent processingComponent;
 	public final HeatStorageComponent heatStorage;
 	public final LoopingSoundComponent miningSoundComponent;
-
-	public final SideConfigurationComponent ioSideConfiguration;
-	public final RedstoneControlComponent redstoneControlComponent;
 
 	private boolean shouldDrawRadiusPreview;
 	private final List<BlockPos> blocks;
@@ -81,15 +72,12 @@ public abstract class AbstractTileEntityMiner extends TileEntityBase {
 		}));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 64, MachineSideMode.Never));
 
-		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", this::onSidesConfigUpdate, this::checkSideConfiguration));
-		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent", RedstoneMode.Ignore));
-
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", ticksPerOperation, this::canProcess, this::canProcess, this::processingCompleted, true)
 				.setShouldControlBlockState(true));
 
 		registerComponent(miningSoundComponent = new LoopingSoundComponent("MiningSoundComponent", 20));
 
-		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 1000.0f, 100.0f).setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.COOL));
+		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 10000.0f, 1.0f).setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.COOL));
 		registerComponent(new OutputServoComponent("OutputServo", 20, outputInventory));
 	}
 
@@ -114,7 +102,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityBase {
 			}
 
 			if (processingComponent.isPerformingWork()) {
-				heatStorage.getStorage().addHeatIgnoreTransferRate(heatGeneration);
+				heatStorage.getStorage().heat(heatGeneration, false);
 			}
 
 			if (processingComponent.getIsOnBlockState()) {
@@ -325,18 +313,6 @@ public abstract class AbstractTileEntityMiner extends TileEntityBase {
 
 	public BlockPos getCurrentlyTargetedBlockPos() {
 		return blocks.size() > 0 ? blocks.get(currentBlockIndex) : new BlockPos(0, 0, 0);
-	}
-
-	/* Side Control */
-	protected void onSidesConfigUpdate(Direction worldSpaceSide, MachineSideMode newMode) {
-		Direction relativeSpaceSide = SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, getFacingDirection());
-		if (DisableFaceInteraction && ioSideConfiguration.getWorldSpaceDirectionConfiguration(relativeSpaceSide) != MachineSideMode.Never) {
-			ioSideConfiguration.setWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, getFacingDirection()), MachineSideMode.Never);
-		}
-	}
-
-	protected boolean checkSideConfiguration(Direction worldSpaceSide, MachineSideMode mode) {
-		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Regular || mode == MachineSideMode.Output || mode == MachineSideMode.Input;
 	}
 
 	@Override

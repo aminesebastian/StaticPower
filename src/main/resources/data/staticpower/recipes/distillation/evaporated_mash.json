@@ -1,0 +1,11 @@
+{
+	"type": "staticpower:distillation_recipe",
+	"input_fluid": {
+		"fluid": "staticpower:mash",
+		"volume": 1
+	},
+	"output_fluid": {
+		"fluid": "staticpower:evaporated_mash",
+		"volume": 1
+	}
+}

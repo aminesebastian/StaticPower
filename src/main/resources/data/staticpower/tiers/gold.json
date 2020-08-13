@@ -4,5 +4,7 @@
 		"path": "tier_gold"
 	},
 	"heatCableCapacity": 100,
-	"heatCableConductivity": 310.0
+	"heatCableConductivity": 40.0,
+	"heatSinkCapacity": 10000,
+	"heatSinkConductivity": 50.0
 }

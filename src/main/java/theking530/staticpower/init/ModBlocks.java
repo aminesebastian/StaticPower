@@ -26,6 +26,7 @@ import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.ioport.BlockDigistoreIOPort;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.BlockDigistoreManager;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.severrack.BlockDigistoreServerRack;
+import theking530.staticpower.tileentities.nonpowered.distillery.BlockDistillery;
 import theking530.staticpower.tileentities.nonpowered.heatsink.BlockHeatSink;
 import theking530.staticpower.tileentities.nonpowered.miner.BlockMiner;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.BlockSolderingTable;
@@ -149,7 +150,13 @@ public class ModBlocks {
 	public static BlockFusionFurnace FusionFurnace;
 	public static BlockMiner Miner;
 	public static BlockElectricMiner ElectricMiner;
+	public static BlockDistillery Distillery;
+
+	public static BlockHeatSink AluminiumHeatSink;
 	public static BlockHeatSink CopperHeatSink;
+	public static BlockHeatSink TinHeatSink;
+	public static BlockHeatSink SilverHeatSink;
+	public static BlockHeatSink GoldHeatSink;
 
 	public static BlockSolarPanel SolarPanelBasic;
 	public static BlockSolarPanel SolarPanelAdvanced;
@@ -323,8 +330,13 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(FusionFurnace = new BlockFusionFurnace("machine_fusion_furnace"));
 		StaticPowerRegistry.preRegisterBlock(Miner = new BlockMiner("machine_miner"));
 		StaticPowerRegistry.preRegisterBlock(ElectricMiner = new BlockElectricMiner("machine_electric_miner"));
+		StaticPowerRegistry.preRegisterBlock(Distillery = new BlockDistillery("machine_distillery"));
 
-		StaticPowerRegistry.preRegisterBlock(CopperHeatSink = new BlockHeatSink("heat_sink_copper"));
+		StaticPowerRegistry.preRegisterBlock(AluminiumHeatSink = new BlockHeatSink("heat_sink_aluminium", StaticPowerTiers.ALUMINIUM));
+		StaticPowerRegistry.preRegisterBlock(CopperHeatSink = new BlockHeatSink("heat_sink_copper", StaticPowerTiers.COPPER));
+		StaticPowerRegistry.preRegisterBlock(TinHeatSink = new BlockHeatSink("heat_sink_tin", StaticPowerTiers.TIN));
+		StaticPowerRegistry.preRegisterBlock(SilverHeatSink = new BlockHeatSink("heat_sink_silver", StaticPowerTiers.SILVER));
+		StaticPowerRegistry.preRegisterBlock(GoldHeatSink = new BlockHeatSink("heat_sink_gold", StaticPowerTiers.GOLD));
 
 		StaticPowerRegistry.preRegisterBlock(BasicTank = new BlockTank("tank_basic"));
 		StaticPowerRegistry.preRegisterBlock(Pump = new BlockPump("pump"));

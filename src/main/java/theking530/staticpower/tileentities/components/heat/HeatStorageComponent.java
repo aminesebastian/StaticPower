@@ -17,13 +17,11 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 	public static final float ENERGY_SYNC_MAX_DELTA = 1;
 	protected final HeatStorage heatStorage;
 	private float lastSyncHeat;
-	private float thermalConductivity;
 
 	private HeatComponentCapabilityAccess capabilityAccessor;
 
 	public HeatStorageComponent(String name, float maxHeat, float maxTransferRate, float thermalConductivity) {
 		this(name, maxHeat, maxTransferRate);
-		this.thermalConductivity = thermalConductivity;
 	}
 
 	public HeatStorageComponent(String name, float maxHeat, float maxTransferRate) {
@@ -31,7 +29,6 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 		heatStorage = new HeatStorage(maxHeat, maxTransferRate);
 		capabilityAccessor = new HeatComponentCapabilityAccess();
 		lastSyncHeat = 0.0f;
-		thermalConductivity = 1.0f;
 	}
 
 	@Override
@@ -40,9 +37,6 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 		if (getWorld().isRemote) {
 			return;
 		}
-
-		// Cool off the heat storage.
-		heatStorage.transferWithSurroundings(getWorld(), getPos(), thermalConductivity);
 	}
 
 	@Override
@@ -63,6 +57,9 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 				syncToClient();
 			}
 			heatStorage.captureHeatTransferMetric();
+			
+			// Cool off the heat storage.
+			heatStorage.transferWithSurroundings(getWorld(), getPos());
 		}
 	}
 
@@ -73,14 +70,6 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 	 */
 	public HeatStorage getStorage() {
 		return heatStorage;
-	}
-
-	public float getThermalConductivity() {
-		return thermalConductivity;
-	}
-
-	public void setThermalConductivity(float thermalConductivity) {
-		this.thermalConductivity = thermalConductivity;
 	}
 
 	/**
@@ -116,14 +105,12 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 		heatStorage.deserializeNBT(nbt.getCompound("heat_storage"));
-		thermalConductivity = nbt.getFloat("thermal_conductivity");
 	}
 
 	@Override
 	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
 		nbt.put("heat_storage", heatStorage.serializeNBT());
-		nbt.putFloat("thermal_conductivity", thermalConductivity);
 		return nbt;
 	}
 
@@ -169,8 +156,8 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 		}
 
 		@Override
-		public float getMaximumHeatTransferRate() {
-			return HeatStorageComponent.this.getStorage().getMaximumHeatTransferRate();
+		public float getConductivity() {
+			return HeatStorageComponent.this.getStorage().getConductivity();
 		}
 	}
 }

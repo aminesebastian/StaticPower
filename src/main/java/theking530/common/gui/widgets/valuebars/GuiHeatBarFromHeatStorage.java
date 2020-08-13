@@ -25,6 +25,6 @@ public class GuiHeatBarFromHeatStorage extends AbstractGuiWidget {
 
 	@Override
 	public void getTooltips(Vector2D mousePosition, List<ITextComponent> tooltips, boolean showAdvanced) {
-		tooltips.addAll(GuiHeatBarUtilities.getTooltip(heatStorage.getCurrentHeat(), heatStorage.getMaximumHeat(), heatStorage.getMaximumHeatTransferRate()));
+		tooltips.addAll(GuiHeatBarUtilities.getTooltip(heatStorage.getCurrentHeat(), heatStorage.getMaximumHeat(), heatStorage.getConductivity()));
 	}
 }

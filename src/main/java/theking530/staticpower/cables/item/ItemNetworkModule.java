@@ -99,7 +99,8 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 	 * other one.
 	 */
 	@Override
-	public void onNetworksJoined(CableNetwork other) {
+	public void onAddedToNetwork(CableNetwork other) {
+		super.onAddedToNetwork(other);
 		if (other.hasModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE)) {
 			ItemNetworkModule module = (ItemNetworkModule) other.getModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
 

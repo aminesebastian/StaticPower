@@ -12,12 +12,17 @@ public class MetricConverter {
 		// Keep dividing the Value by 1000 until we hit a current value of < 1000.
 		// For each iteration of the loop, increment the suffix index.
 		int suffixIndex = 0;
-		this.Value = value;
+		this.Value = Math.abs(value);
 		while (Value / 1000 >= 1) {
 			Value /= 1000;
 			suffixIndex++;
 		}
 
+		// Correct for negatives.
+		if(value < 0) {
+			Value *= -1;
+		}
+		
 		// Cache the suffix.
 		if (suffixIndex < SUFFIXES.length - 1) {
 			Suffix = SUFFIXES[suffixIndex];

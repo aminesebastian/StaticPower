@@ -286,6 +286,7 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		nbt.putInt("processing_time", maxProcessingTime);
 		nbt.putInt("current_time", currentTime);
 		nbt.putInt("tick_down_rate", tickDownRate);
+		nbt.putBoolean("has_started", hasStarted);
 		return nbt;
 	}
 
@@ -297,5 +298,6 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		maxProcessingTime = nbt.getInt("processing_time");
 		currentTime = nbt.getInt("current_time");
 		tickDownRate = nbt.getInt("tick_down_rate");
+		hasStarted = nbt.getBoolean("has_started");
 	}
 }

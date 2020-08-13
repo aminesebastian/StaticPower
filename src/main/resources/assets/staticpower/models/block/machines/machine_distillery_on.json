@@ -1,0 +1,6 @@
+{
+	"parent": "staticpower:block/machines/machine_distillery",
+	"textures": {
+		"front_overlay": "staticpower:blocks/machines/distillery_face_on"
+	}
+}

@@ -191,7 +191,7 @@ public class StaticPowerClientEventHandler {
 			});
 
 			StaticPowerRecipeRegistry.getRecipe(ThermalConductivityRecipe.RECIPE_TYPE, matchParameters).ifPresent(recipe -> {
-				event.getToolTip().add(HeatUtilities.getHeatTooltip(recipe.getThermalConductivity()));
+				event.getToolTip().add(HeatUtilities.getHeatRateTooltip(recipe.getThermalConductivity()));
 			});
 		}
 	}

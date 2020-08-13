@@ -51,7 +51,7 @@ public class GuiElectricMiner extends StaticPowerTileEntityGui<ContainerElectric
 
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage).setTabSide(TabSide.LEFT), true);
 		getTabManager().registerTab(new GuiMachineHeatTab(getTileEntity().heatStorage).setTabSide(TabSide.LEFT));
-		getTabManager().registerTab(new GuiUpgradeTab(this.container, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiUpgradeTab(container, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
 
 		setOutputSlotSize(20);
 	}

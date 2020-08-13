@@ -65,11 +65,11 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	}
 
 	@Override
-	public float getMaximumHeatTransferRate() {
+	public float getConductivity() {
 		if (!getTileEntity().getWorld().isRemote) {
 			AtomicDouble recieve = new AtomicDouble(0);
 			getHeatNetworkModule().ifPresent(module -> {
-				recieve.set(module.getHeatStorage().getMaximumHeatTransferRate());
+				recieve.set(module.getHeatStorage().getConductivity());
 			});
 			return (float) recieve.get();
 		} else {
@@ -112,7 +112,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	 * 
 	 * @return
 	 */
-	protected Optional<HeatNetworkModule> getHeatNetworkModule() {
+	public Optional<HeatNetworkModule> getHeatNetworkModule() {
 		CableNetworkManager manager = CableNetworkManager.get(getTileEntity().getWorld());
 		ServerCable cable = manager.getCable(getTileEntity().getPos());
 		if (cable.getNetwork() != null) {

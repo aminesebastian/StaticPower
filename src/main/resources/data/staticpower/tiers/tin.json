@@ -4,5 +4,7 @@
 		"path": "tier_tin"
 	},
 	"heatCableCapacity": 35,
-	"heatCableConductivity": 65.0
+	"heatCableConductivity": 30.0,
+	"heatSinkCapacity": 5000,
+	"heatSinkConductivity": 50.0
 }

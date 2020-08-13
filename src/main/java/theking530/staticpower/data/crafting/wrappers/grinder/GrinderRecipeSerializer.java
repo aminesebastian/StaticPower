@@ -34,8 +34,8 @@ public class GrinderRecipeSerializer extends ForgeRegistryEntry<IRecipeSerialize
 		// Capture the processing and power costs.
 		if (JSONUtils.hasField(json, "processing")) {
 			JsonObject processingElement = JSONUtils.getJsonObject(json, "processing");
-			powerCost = processingElement.get("time").getAsInt();
-			processingTime = processingElement.get("power").getAsInt();
+			powerCost = processingElement.get("power").getAsInt();
+			processingTime = processingElement.get("time").getAsInt();
 		}
 
 		// Check the outputs. If it is an array, get all the outputs and make a new
