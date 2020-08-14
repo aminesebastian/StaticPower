@@ -1,4 +1,4 @@
-package theking530.staticpower.data.crafting.wrappers.distilation;
+package theking530.staticpower.data.crafting.wrappers.evaporation;
 
 import com.google.gson.JsonObject;
 
@@ -12,15 +12,15 @@ import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 import theking530.staticpower.tileentities.nonpowered.evaporator.TileEntityEvaporator;
 import theking530.staticpower.utilities.Reference;
 
-public class DistillationRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<DistillationRecipe> {
-	public static final DistillationRecipeSerializer INSTANCE = new DistillationRecipeSerializer();
+public class EvaporatorRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<EvaporatorRecipe> {
+	public static final EvaporatorRecipeSerializer INSTANCE = new EvaporatorRecipeSerializer();
 
-	private DistillationRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(Reference.MOD_ID, "distillation_recipe"));
+	private EvaporatorRecipeSerializer() {
+		this.setRegistryName(new ResourceLocation(Reference.MOD_ID, "evaporation_recipe"));
 	}
 
 	@Override
-	public DistillationRecipe read(ResourceLocation recipeId, JsonObject json) {
+	public EvaporatorRecipe read(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input fluid.
 		JsonObject inputFluidObject = JSONUtils.getJsonObject(json, "input_fluid");
 		FluidStack inputFluid = StaticPowerJsonParsingUtilities.parseFluidStack(inputFluidObject);
@@ -44,17 +44,17 @@ public class DistillationRecipeSerializer extends ForgeRegistryEntry<IRecipeSeri
 			heatCost = JSONUtils.getJsonObject(json, "heat").getAsFloat();
 		}
 		// Create the recipe.
-		return new DistillationRecipe(recipeId, inputFluid, outputFluid, heatCost, processingTime);
+		return new EvaporatorRecipe(recipeId, inputFluid, outputFluid, heatCost, processingTime);
 	}
 
 	@Override
-	public DistillationRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
+	public EvaporatorRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void write(PacketBuffer buffer, DistillationRecipe recipe) {
+	public void write(PacketBuffer buffer, EvaporatorRecipe recipe) {
 		// TODO Auto-generated method stub
 
 	}

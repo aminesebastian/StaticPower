@@ -5,7 +5,7 @@ import theking530.staticpower.data.crafting.wrappers.bottler.BottlerRecipeSerial
 import theking530.staticpower.data.crafting.wrappers.centrifuge.CentrifugeRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.condensation.CondensationRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.covers.CoverRecipe;
-import theking530.staticpower.data.crafting.wrappers.distilation.DistillationRecipeSerializer;
+import theking530.staticpower.data.crafting.wrappers.evaporation.EvaporatorRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.farmer.FarmingFertalizerRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.fermenter.FermenterRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.fluidgenerator.FluidGeneratorRecipeSerializer;
@@ -35,7 +35,7 @@ public class ModRecipeSerializers {
 		StaticPowerRegistry.preRegisterRecipeSerializer(FusionFurnaceRecipeSerializer.INSTANCE);
 		StaticPowerRegistry.preRegisterRecipeSerializer(FluidGeneratorRecipeSerializer.INSTANCE);
 		StaticPowerRegistry.preRegisterRecipeSerializer(ThermalConductivityRecipeSerializer.INSTANCE);
-		StaticPowerRegistry.preRegisterRecipeSerializer(DistillationRecipeSerializer.INSTANCE);
+		StaticPowerRegistry.preRegisterRecipeSerializer(EvaporatorRecipeSerializer.INSTANCE);
 		StaticPowerRegistry.preRegisterRecipeSerializer(CondensationRecipeSerializer.INSTANCE);		
 	}
 }

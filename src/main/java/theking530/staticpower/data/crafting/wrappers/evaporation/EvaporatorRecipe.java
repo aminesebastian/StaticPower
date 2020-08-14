@@ -1,4 +1,4 @@
-package theking530.staticpower.data.crafting.wrappers.distilation;
+package theking530.staticpower.data.crafting.wrappers.evaporation;
 
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
@@ -7,14 +7,14 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 
-public class DistillationRecipe extends AbstractMachineRecipe {
-	public static final IRecipeType<DistillationRecipe> RECIPE_TYPE = IRecipeType.register("distillation");
+public class EvaporatorRecipe extends AbstractMachineRecipe {
+	public static final IRecipeType<EvaporatorRecipe> RECIPE_TYPE = IRecipeType.register("evaporation");
 
 	private final FluidStack inputFluid;
 	private final FluidStack outputFluid;
 	private final float requiredHeat;
 
-	public DistillationRecipe(ResourceLocation name, FluidStack inputFluid, FluidStack outputFluid, float requiredHeat, int processingTime) {
+	public EvaporatorRecipe(ResourceLocation name, FluidStack inputFluid, FluidStack outputFluid, float requiredHeat, int processingTime) {
 		super(name, 0, processingTime);
 		this.inputFluid = inputFluid;
 		this.outputFluid = outputFluid;
@@ -35,7 +35,7 @@ public class DistillationRecipe extends AbstractMachineRecipe {
 
 	@Override
 	public IRecipeSerializer<?> getSerializer() {
-		return DistillationRecipeSerializer.INSTANCE;
+		return EvaporatorRecipeSerializer.INSTANCE;
 	}
 
 	@Override

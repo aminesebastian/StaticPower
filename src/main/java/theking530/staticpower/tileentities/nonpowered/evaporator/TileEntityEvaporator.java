@@ -9,7 +9,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
-import theking530.staticpower.data.crafting.wrappers.distilation.DistillationRecipe;
+import theking530.staticpower.data.crafting.wrappers.evaporation.EvaporatorRecipe;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityConfigurable;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
@@ -52,7 +52,7 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 
 	protected boolean canProcess() {
 		if (hasValidInput()) {
-			DistillationRecipe recipe = getRecipe(inputTankComponent.getFluid()).orElse(null);
+			EvaporatorRecipe recipe = getRecipe(inputTankComponent.getFluid()).orElse(null);
 			return redstoneControlComponent.passesRedstoneCheck() && (outputTankComponent.getFluid().isEmpty() || outputTankComponent.getFluid().isFluidEqual(recipe.getOutputFluid()))
 					&& outputTankComponent.getFluidAmount() + recipe.getOutputFluid().getAmount() <= outputTankComponent.getCapacity()
 					&& heatStorage.getStorage().getCurrentHeat() >= recipe.getRequiredHeat();
@@ -77,7 +77,7 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 			}
 
 			// Get recipe.
-			DistillationRecipe recipe = getRecipe(inputTankComponent.getFluid()).orElse(null);
+			EvaporatorRecipe recipe = getRecipe(inputTankComponent.getFluid()).orElse(null);
 
 			// If we don;t have enough heat, return early.
 			if (heatStorage.getStorage().getCurrentHeat() < recipe.getRequiredHeat()) {
@@ -108,7 +108,7 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 		// Use power if we are processing.
 		if (processingComponent.isPerformingWork()) {
 			// Get recipe.
-			DistillationRecipe recipe = getRecipe(inputTankComponent.getFluid()).orElse(null);
+			EvaporatorRecipe recipe = getRecipe(inputTankComponent.getFluid()).orElse(null);
 			// Cool the heat storage.
 			if (recipe != null) {
 				heatStorage.getStorage().cool(recipe.getRequiredHeat(), false);
@@ -124,8 +124,8 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 		return getRecipe(stack).isPresent();
 	}
 
-	protected Optional<DistillationRecipe> getRecipe(FluidStack stack) {
-		return StaticPowerRecipeRegistry.getRecipe(DistillationRecipe.RECIPE_TYPE, new RecipeMatchParameters(stack));
+	protected Optional<EvaporatorRecipe> getRecipe(FluidStack stack) {
+		return StaticPowerRecipeRegistry.getRecipe(EvaporatorRecipe.RECIPE_TYPE, new RecipeMatchParameters(stack));
 	}
 
 	@Override
