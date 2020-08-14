@@ -5,12 +5,12 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.item.Items;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -18,17 +18,17 @@ import theking530.common.gui.GuiTextures;
 import theking530.common.gui.drawables.ItemDrawable;
 import theking530.common.utilities.Color;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
-import theking530.staticpower.tileentities.components.heat.HeatStorageComponent;
+import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 
-public class GuiMachineHeatTab extends BaseGuiTab {
+public class GuiMachineFluidTab extends BaseGuiTab {
 	protected FontRenderer fontRenderer;
 	protected List<ITextComponent> info;
-	protected HeatStorageComponent heatStorage;
+	protected FluidTankComponent fluidTank;
 
-	public GuiMachineHeatTab(HeatStorageComponent storage) {
-		super("Heat I/O", 80, 72, GuiTextures.ORANGE_TAB, new ItemDrawable(Items.CAMPFIRE));
+	public GuiMachineFluidTab(FluidTankComponent tank) {
+		super("Fluid I/O", 80, 50, GuiTextures.AQUA_TAB, new ItemDrawable(Blocks.CAULDRON));
 		fontRenderer = Minecraft.getInstance().fontRenderer;
-		heatStorage = storage;
+		fluidTank = tank;
 		info = new ArrayList<ITextComponent>();
 	}
 
@@ -45,13 +45,12 @@ public class GuiMachineHeatTab extends BaseGuiTab {
 
 	protected void updateHeatText() {
 		info.clear();
-		addInfoLine("Generating", GuiTextUtilities.formatHeatRateToString(heatStorage.getStorage().getHeatPerTick()), TextFormatting.RED);
-		addInfoLine("Dissipating", GuiTextUtilities.formatHeatRateToString(heatStorage.getStorage().getCooledPerTick()), TextFormatting.AQUA);
-		addInfoLine("Conductivity", GuiTextUtilities.formatConductivityToString(heatStorage.getStorage().getConductivity()), TextFormatting.GREEN);
+		addInfoLine("Filled", GuiTextUtilities.formatFluidRateToString(fluidTank.getStorage().getFilledPerTick()), TextFormatting.AQUA);
+		addInfoLine("Drained", GuiTextUtilities.formatFluidRateToString(fluidTank.getStorage().getDrainedPerTick()), TextFormatting.GRAY);
 	}
 
 	private void drawText() {
-		fontRenderer.drawStringWithShadow(getTitle(), xPosition + (getTabSide() == TabSide.LEFT ? 11 : 24), yPosition + 8, new Color(100, 255, 255).encodeInInteger());
+		fontRenderer.drawStringWithShadow(getTitle(), xPosition + (getTabSide() == TabSide.LEFT ? 11 : 24), yPosition + 8, new Color(255, 255, 25).encodeInInteger());
 		int scaleBasedXOffset = 0;
 		int scaleBasedYOffset = 0;
 		for (int i = 0; i < info.size(); i++) {

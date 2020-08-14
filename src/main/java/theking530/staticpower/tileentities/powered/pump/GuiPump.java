@@ -4,6 +4,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import theking530.common.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.common.gui.widgets.tabs.GuiInfoTab;
+import theking530.common.gui.widgets.tabs.GuiMachineFluidTab;
 import theking530.common.gui.widgets.tabs.GuiMachinePowerInfoTab;
 import theking530.common.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
@@ -30,6 +31,7 @@ public class GuiPump extends StaticPowerTileEntityGui<ContainerPump, TileEntityP
 		getTabManager().registerTab(new GuiSideConfigTab(true, getTileEntity()));
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(ComponentUtilities.getComponent(EnergyStorageComponent.class, "MainEnergyStorage", getTileEntity()).get()).setTabSide(TabSide.LEFT),
 				true);
+		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT));
 	}
 
 	@Override

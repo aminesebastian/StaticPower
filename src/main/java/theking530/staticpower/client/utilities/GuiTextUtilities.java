@@ -20,10 +20,17 @@ public class GuiTextUtilities {
 	/** Translation text component for Forge Energy Per Tick (FE/t). */
 	public static final TranslationTextComponent ENERGY_RATE_TRANSLATION = new TranslationTextComponent("gui.staticpower.energy_unit_per_tick");
 
+	/** Translation text component for millibuckets (mB). */
+	public static final TranslationTextComponent FLUID_UNIT_TRANSLATION = new TranslationTextComponent("gui.staticpower.fluid_unit");
+	/** Translation text component for millibuckets Per Tick (mB/t). */
+	public static final TranslationTextComponent FLUID_RATE_TRANSLATION = new TranslationTextComponent("gui.staticpower.fluid_unit_per_tick");
+
 	/** Translation text component for heat (H). */
 	public static final TranslationTextComponent HEAT_UNIT_TRANSLATION = new TranslationTextComponent("gui.staticpower.heat_unit");
 	/** Translation text component for Heat Per Tick (H/t). */
 	public static final TranslationTextComponent HEAT_RATE_TRANSLATION = new TranslationTextComponent("gui.staticpower.heat_unit_per_tick");
+	/** Translation text component for Conductivity (σ). */
+	public static final TranslationTextComponent HEAT_CONDUCTIVITY_TRANSLATION = new TranslationTextComponent("gui.staticpower.heat_conductivity");
 
 	/** Single instance of number formatter. */
 	private static final NumberFormat NUMBER_FORMATTER;
@@ -110,14 +117,46 @@ public class GuiTextUtilities {
 		}
 
 		if (includeUnits) {
-			output.appendSibling(HEAT_UNIT_TRANSLATION);
+			output.appendText(" ").appendSibling(HEAT_UNIT_TRANSLATION);
 		}
 		return output;
 	}
 
 	public static ITextComponent formatHeatRateToString(float heatTransferRate) {
 		MetricConverter metricRate = new MetricConverter(heatTransferRate);
-		return new StringTextComponent(NUMBER_FORMATTER.format(metricRate.getValue())).appendText(metricRate.getSuffix()).appendSibling(HEAT_RATE_TRANSLATION);
+		return new StringTextComponent(NUMBER_FORMATTER.format(metricRate.getValue())).appendText(" ").appendText(metricRate.getSuffix()).appendSibling(HEAT_RATE_TRANSLATION);
 	}
 
+	public static ITextComponent formatConductivityToString(float conductivity) {
+		MetricConverter metricRate = new MetricConverter(conductivity);
+		return new StringTextComponent(NUMBER_FORMATTER.format(metricRate.getValue())).appendText(metricRate.getSuffix()).appendSibling(HEAT_CONDUCTIVITY_TRANSLATION);
+	}
+
+	public static ITextComponent formatFluidToString(float currentFluid, float capacity) {
+		return formatHeatToString(currentFluid, false, true).appendText("/").appendSibling(formatHeatToString(capacity));
+
+	}
+
+	public static ITextComponent formatFluidToString(float fluidAmount) {
+		return formatHeatToString(fluidAmount, true, true);
+	}
+
+	public static ITextComponent formatFluidToString(float fluid, boolean includeUnits, boolean includeMetricUnit) {
+		MetricConverter metricEnergy = new MetricConverter(fluid);
+		ITextComponent output = new StringTextComponent(NUMBER_FORMATTER.format(metricEnergy.getValue()));
+
+		if (includeMetricUnit) {
+			output.appendText(metricEnergy.getSuffix());
+		}
+
+		if (includeUnits) {
+			output.appendText(" ").appendSibling(FLUID_UNIT_TRANSLATION);
+		}
+		return output;
+	}
+
+	public static ITextComponent formatFluidRateToString(float fluidRate) {
+		MetricConverter metricRate = new MetricConverter(fluidRate);
+		return new StringTextComponent(NUMBER_FORMATTER.format(metricRate.getValue())).appendText(" ").appendText(metricRate.getSuffix()).appendSibling(FLUID_RATE_TRANSLATION);
+	}
 }

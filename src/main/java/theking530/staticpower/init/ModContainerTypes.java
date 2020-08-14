@@ -22,8 +22,8 @@ import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.GuiDigistore;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.severrack.ContainerDigistoreServerRack;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.severrack.GuiDigistoreServerRack;
-import theking530.staticpower.tileentities.nonpowered.distillery.ContainerDistillery;
-import theking530.staticpower.tileentities.nonpowered.distillery.GuiDistillery;
+import theking530.staticpower.tileentities.nonpowered.evaporator.ContainerEvaporator;
+import theking530.staticpower.tileentities.nonpowered.evaporator.GuiEvaporator;
 import theking530.staticpower.tileentities.nonpowered.miner.ContainerMiner;
 import theking530.staticpower.tileentities.nonpowered.miner.GuiMiner;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.ContainerSolderingTable;
@@ -100,7 +100,7 @@ public class ModContainerTypes {
 	public static ContainerType<ContainerFusionFurnace> FUSION_FURNACE_CONTAINER;
 	public static ContainerType<ContainerMiner> MINER_CONTAINER;
 	public static ContainerType<ContainerElectricMiner> ELECTRIC_MINER_CONTAINER;
-	public static ContainerType<ContainerDistillery> DISTILLERY_CONTAINER;
+	public static ContainerType<ContainerEvaporator> EVAPORATOR_CONTAINER;
 
 	public static ContainerType<ContainerTank> TANK_CONTAINER;
 	public static ContainerType<ContainerPump> PUMP_CONTAINER;
@@ -140,7 +140,7 @@ public class ModContainerTypes {
 		FUSION_FURNACE_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_fusion_furnace", ContainerFusionFurnace::new, GuiFusionFurnace::new);
 		MINER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_miner", ContainerMiner::new, GuiMiner::new);
 		ELECTRIC_MINER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_electric_miner", ContainerElectricMiner::new, GuiElectricMiner::new);
-		DISTILLERY_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_distillery", ContainerDistillery::new, GuiDistillery::new);
+		EVAPORATOR_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_evaporator", ContainerEvaporator::new, GuiEvaporator::new);
 
 		SOLDERING_TABLE_CONTAINER = StaticPowerRegistry.preRegisterContainer("soldering_table", ContainerSolderingTable::new, GuiSolderingTable::new);
 		TANK_CONTAINER = StaticPowerRegistry.preRegisterContainer("tank", ContainerTank::new, GuiTank::new);

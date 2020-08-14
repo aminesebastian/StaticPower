@@ -35,6 +35,7 @@ import theking530.staticpower.client.rendering.tileentity.TileEntityRenderAutoSo
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderBatteryBlock;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderChargingStation;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderDigistore;
+import theking530.staticpower.client.rendering.tileentity.TileEntityRenderEvaporator;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderFarmer;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderFluidCable;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderFluidGenerator;
@@ -102,6 +103,7 @@ public class StaticPowerClientEventHandler {
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.CHARGING_STATION, TileEntityRenderChargingStation::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.FLUID_INFUSER, TileEntityRenderFluidInfuser::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.FLUID_GENERATOR, TileEntityRenderFluidGenerator::new);
+		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.EVAPORATOR, TileEntityRenderEvaporator::new);
 
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.FLUID_CABLE, TileEntityRenderFluidCable::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.INDUSTRIAL_FLUID_CABLE, TileEntityRenderFluidCable::new);

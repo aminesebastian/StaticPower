@@ -1,0 +1,6 @@
+{
+	"parent": "staticpower:block/machines/machine_evaporator",
+	"textures": {
+		"front_overlay": "staticpower:blocks/machines/evaporator_face_on"
+	}
+}

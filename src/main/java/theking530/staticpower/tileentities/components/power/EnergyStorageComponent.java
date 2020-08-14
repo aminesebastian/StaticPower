@@ -19,7 +19,6 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	public static final int ENERGY_SYNC_MAX_DELTA = 100;
 	protected final StaticPowerFEStorage EnergyStorage;
 	protected TriFunction<Integer, Direction, EnergyManipulationAction, Boolean> filter;
-	private int energyIO;
 	private int lastSyncEnergy;
 
 	private EnergyComponentCapabilityAccess capabilityAccessor;
@@ -71,15 +70,6 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	 */
 	public StaticPowerFEStorage getStorage() {
 		return EnergyStorage;
-	}
-
-	/**
-	 * Gets the overall EnergyIO per Tick of this component.
-	 * 
-	 * @return
-	 */
-	public int getEnergyIO() {
-		return energyIO;
 	}
 
 	/**
@@ -174,14 +164,12 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 		EnergyStorage.readFromNbt(nbt);
-		energyIO = nbt.getInt("io");
 	}
 
 	@Override
 	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
 		EnergyStorage.writeToNbt(nbt);
-		nbt.putInt("io", EnergyStorage.getEnergyIO());
 		return nbt;
 	}
 

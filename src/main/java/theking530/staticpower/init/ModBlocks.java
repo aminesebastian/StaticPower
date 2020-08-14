@@ -26,7 +26,7 @@ import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.ioport.BlockDigistoreIOPort;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.BlockDigistoreManager;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.severrack.BlockDigistoreServerRack;
-import theking530.staticpower.tileentities.nonpowered.distillery.BlockDistillery;
+import theking530.staticpower.tileentities.nonpowered.evaporator.BlockEvaporator;
 import theking530.staticpower.tileentities.nonpowered.heatsink.BlockHeatSink;
 import theking530.staticpower.tileentities.nonpowered.miner.BlockMiner;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.BlockSolderingTable;
@@ -150,7 +150,7 @@ public class ModBlocks {
 	public static BlockFusionFurnace FusionFurnace;
 	public static BlockMiner Miner;
 	public static BlockElectricMiner ElectricMiner;
-	public static BlockDistillery Distillery;
+	public static BlockEvaporator Evaporator;
 
 	public static BlockHeatSink AluminiumHeatSink;
 	public static BlockHeatSink CopperHeatSink;
@@ -330,7 +330,7 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(FusionFurnace = new BlockFusionFurnace("machine_fusion_furnace"));
 		StaticPowerRegistry.preRegisterBlock(Miner = new BlockMiner("machine_miner"));
 		StaticPowerRegistry.preRegisterBlock(ElectricMiner = new BlockElectricMiner("machine_electric_miner"));
-		StaticPowerRegistry.preRegisterBlock(Distillery = new BlockDistillery("machine_distillery"));
+		StaticPowerRegistry.preRegisterBlock(Evaporator = new BlockEvaporator("machine_evaporator"));
 
 		StaticPowerRegistry.preRegisterBlock(AluminiumHeatSink = new BlockHeatSink("heat_sink_aluminium", StaticPowerTiers.ALUMINIUM));
 		StaticPowerRegistry.preRegisterBlock(CopperHeatSink = new BlockHeatSink("heat_sink_copper", StaticPowerTiers.COPPER));

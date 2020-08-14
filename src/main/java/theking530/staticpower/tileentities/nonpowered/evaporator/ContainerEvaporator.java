@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.nonpowered.distillery;
+package theking530.staticpower.tileentities.nonpowered.evaporator;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -11,14 +11,14 @@ import theking530.staticpower.init.ModContainerTypes;
 import theking530.staticpower.items.upgrades.BaseUpgrade;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
-public class ContainerDistillery extends StaticPowerTileEntityContainer<TileEntityDistillery> {
+public class ContainerEvaporator extends StaticPowerTileEntityContainer<TileEntityEvaporator> {
 
-	public ContainerDistillery(int windowId, PlayerInventory inv, PacketBuffer data) {
-		this(windowId, inv, (TileEntityDistillery) resolveTileEntityFromDataPacket(inv, data));
+	public ContainerEvaporator(int windowId, PlayerInventory inv, PacketBuffer data) {
+		this(windowId, inv, (TileEntityEvaporator) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerDistillery(int windowId, PlayerInventory playerInventory, TileEntityDistillery owner) {
-		super(ModContainerTypes.DISTILLERY_CONTAINER, windowId, playerInventory, owner);
+	public ContainerEvaporator(int windowId, PlayerInventory playerInventory, TileEntityEvaporator owner) {
+		super(ModContainerTypes.EVAPORATOR_CONTAINER, windowId, playerInventory, owner);
 	}
 
 	@Override

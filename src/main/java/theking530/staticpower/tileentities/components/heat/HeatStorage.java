@@ -158,7 +158,8 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundNBT>,
 
 	/**
 	 * Gets the average heat IO for this storage over the last
-	 * {@link #MAXIMUM_IO_CAPTURE_FRAMES} calls to {@link #captureEnergyMetric()}.
+	 * {@link #MAXIMUM_IO_CAPTURE_FRAMES} calls to
+	 * {@link #captureHeatTransferMetric()}.
 	 * 
 	 * @return
 	 */
@@ -168,7 +169,8 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundNBT>,
 
 	/**
 	 * Gets the average extracted heat per tick for this storage over the last
-	 * {@link #MAXIMUM_IO_CAPTURE_FRAMES} calls to {@link #captureEnergyMetric()}.
+	 * {@link #MAXIMUM_IO_CAPTURE_FRAMES} calls to
+	 * {@link #captureHeatTransferMetric()}.
 	 * 
 	 * @return
 	 */
@@ -178,7 +180,8 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundNBT>,
 
 	/**
 	 * Gets the average received heat per tick for this storage over the last
-	 * {@link #MAXIMUM_IO_CAPTURE_FRAMES} calls to {@link #captureEnergyMetric()}.
+	 * {@link #MAXIMUM_IO_CAPTURE_FRAMES} calls to
+	 * {@link #captureHeatTransferMetric()}.
 	 * 
 	 * @return
 	 */

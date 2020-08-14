@@ -9,7 +9,8 @@
 		"back": "staticpower:blocks/machines/sides/basic_machine_side",
 		"front": "staticpower:blocks/machines/sides/basic_machine_front",
 		"front_overlay": "staticpower:blocks/machines/sides/basic_machine_side",
-		"io_frame": "staticpower:blocks/machines/sides/basic_io_frame"
+		"io_frame": "staticpower:blocks/machines/sides/basic_io_frame",
+		"front_overlay_2": "staticpower:blocks/empty_texture"
 	},
 	"elements": [
 		{
@@ -43,6 +44,14 @@
 			"to": [16, 16, 16],
 			"faces": {
 				"north": {"uv": [0, 0, 16, 16], "texture": "#front_overlay"}
+			}
+		},
+		{
+			"name": "FaceOverlay",
+			"from": [-0.006, -0.006, -0.006],
+			"to": [16.006, 16.006, 16.006],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#front_overlay_2"}
 			}
 		}
 	],

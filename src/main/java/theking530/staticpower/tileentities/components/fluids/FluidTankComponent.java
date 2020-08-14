@@ -12,7 +12,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import theking530.staticpower.fluids.StaticPowerFluidTank;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
@@ -21,7 +21,7 @@ import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
 public class FluidTankComponent extends AbstractTileEntityComponent implements IFluidHandler, IFluidTank {
 	public static final int FLUID_SYNC_MAX_DELTA = 1;
-	protected FluidTank FluidStorage;
+	protected StaticPowerFluidTank FluidStorage;
 
 	protected int lastFluidStored;
 	protected int fluidPerTick;
@@ -30,7 +30,6 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 	protected long lastUpdateTime;
 	protected final HashSet<MachineSideMode> capabilityExposeModes;
 	private final FluidComponentCapabilityInterface capabilityInterface;
-	private final Predicate<FluidStack> fluidStackFilter;
 	private FluidStack lastSyncFluidStack;
 	private float visualFillLevel;
 
@@ -40,12 +39,11 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 
 	public FluidTankComponent(String name, int capacity, Predicate<FluidStack> fluidStackFilter) {
 		super(name);
-		FluidStorage = new FluidTank(capacity);
+		FluidStorage = new StaticPowerFluidTank(capacity, fluidStackFilter);
 		canFill = true;
 		canDrain = true;
 		capabilityInterface = new FluidComponentCapabilityInterface();
 		capabilityExposeModes = new HashSet<MachineSideMode>();
-		this.fluidStackFilter = fluidStackFilter;
 		this.lastSyncFluidStack = FluidStack.EMPTY;
 
 		// By default, ALWAYS expose this side, except on disabled or never.
@@ -74,6 +72,8 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 				lastSyncFluidStack = getFluid().copy();
 				syncToClient();
 			}
+
+			FluidStorage.captureFluidMetrics();
 		}
 	}
 
@@ -122,6 +122,10 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 
 	public boolean getCanFill() {
 		return canFill;
+	}
+
+	public StaticPowerFluidTank getStorage() {
+		return FluidStorage;
 	}
 
 	/**
@@ -189,6 +193,7 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 			// not disabled, if not, return the inventory.
 			Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getTileEntity());
 			if (side == null || !sideConfig.isPresent() || capabilityExposeModes.contains(sideConfig.get().getWorldSpaceDirectionConfiguration(side))) {
+				capabilityInterface.updateDirection(side);
 				return LazyOptional.of(() -> capabilityInterface).cast();
 			}
 		}
@@ -232,15 +237,11 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 
 	@Override
 	public boolean isFluidValid(int tank, FluidStack stack) {
-		return fluidStackFilter.test(stack) && FluidStorage.isFluidValid(tank, stack);
+		return FluidStorage.isFluidValid(tank, stack);
 	}
 
 	@Override
 	public int fill(FluidStack resource, FluidAction action) {
-		if (!fluidStackFilter.test(resource)) {
-			return 0;
-		}
-
 		// Perform the fill, and then sync the tile entity if this was a real fill.
 		int result = FluidStorage.fill(resource, action);
 
@@ -264,6 +265,11 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 	}
 
 	public class FluidComponentCapabilityInterface implements IFluidHandler {
+		private Direction direction;
+
+		public void updateDirection(Direction direction) {
+			this.direction = direction;
+		}
 
 		@Override
 		public int getTanks() {
@@ -290,6 +296,11 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 			if (!FluidTankComponent.this.getCanFill()) {
 				return 0;
 			}
+
+			Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getTileEntity());
+			if (sideConfig.isPresent() && sideConfig.get().getWorldSpaceDirectionConfiguration(direction).isOutputMode()) {
+				return 0;
+			}
 			return FluidTankComponent.this.fill(resource, action);
 		}
 
@@ -298,6 +309,12 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 			if (!FluidTankComponent.this.getCanDrain()) {
 				return FluidStack.EMPTY;
 			}
+
+			Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getTileEntity());
+			if (sideConfig.isPresent() && sideConfig.get().getWorldSpaceDirectionConfiguration(direction).isInputMode()) {
+				return FluidStack.EMPTY;
+			}
+
 			return FluidTankComponent.this.drain(resource, action);
 		}
 
@@ -306,6 +323,12 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 			if (!FluidTankComponent.this.getCanDrain()) {
 				return FluidStack.EMPTY;
 			}
+
+			Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getTileEntity());
+			if (sideConfig.isPresent() && sideConfig.get().getWorldSpaceDirectionConfiguration(direction).isInputMode()) {
+				return FluidStack.EMPTY;
+			}
+
 			return FluidTankComponent.this.drain(maxDrain, action);
 		}
 	}

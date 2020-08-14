@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.nonpowered.distillery;
+package theking530.staticpower.tileentities.nonpowered.evaporator;
 
 import java.util.Optional;
 
@@ -20,7 +20,7 @@ import theking530.staticpower.tileentities.components.heat.HeatStorageComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
-public class TileEntityDistillery extends TileEntityConfigurable {
+public class TileEntityEvaporator extends TileEntityConfigurable {
 	public static final int DEFAULT_PROCESSING_TIME = 5;
 	public static final int DEFAULT_TANK_SIZE = 5000;
 	public static final float DEFAULT_EVAPORATION_HEAT = 200.0f;
@@ -31,8 +31,8 @@ public class TileEntityDistillery extends TileEntityConfigurable {
 	public final FluidTankComponent outputTankComponent;
 	public final HeatStorageComponent heatStorage;
 
-	public TileEntityDistillery() {
-		super(ModTileEntityTypes.DISTILLERY);
+	public TileEntityEvaporator() {
+		super(ModTileEntityTypes.EVAPORATOR);
 
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true)
@@ -130,6 +130,6 @@ public class TileEntityDistillery extends TileEntityConfigurable {
 
 	@Override
 	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
-		return new ContainerDistillery(windowId, inventory, this);
+		return new ContainerEvaporator(windowId, inventory, this);
 	}
 }

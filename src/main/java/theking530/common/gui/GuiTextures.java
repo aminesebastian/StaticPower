@@ -14,6 +14,8 @@ public class GuiTextures {
 	public static final ResourceLocation YELLOW_TAB = new ResourceLocation(Reference.MOD_ID, "textures/gui/yellow_tab.png");
 	public static final ResourceLocation AQUA_TAB = new ResourceLocation(Reference.MOD_ID, "textures/gui/aqua_tab.png");
 	public static final ResourceLocation ORANGE_TAB = new ResourceLocation(Reference.MOD_ID, "textures/gui/orange_tab.png");
+	public static final ResourceLocation SEA_FOAM_TAB = new ResourceLocation(Reference.MOD_ID, "textures/gui/sea_foam_tab.png");
+	public static final ResourceLocation MAGENTA_TAB = new ResourceLocation(Reference.MOD_ID, "textures/gui/magenta_tab.png");
 	
 	public static final ResourceLocation POWER_BAR_FG = new ResourceLocation(Reference.MOD_ID, "textures/gui/power_bar_power.png");
 	public static final ResourceLocation POWER_BAR_BG = new ResourceLocation(Reference.MOD_ID, "textures/gui/power_bar_bg.png");

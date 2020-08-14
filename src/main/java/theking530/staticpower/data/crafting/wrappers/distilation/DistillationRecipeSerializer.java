@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
-import theking530.staticpower.tileentities.nonpowered.distillery.TileEntityDistillery;
+import theking530.staticpower.tileentities.nonpowered.evaporator.TileEntityEvaporator;
 import theking530.staticpower.utilities.Reference;
 
 public class DistillationRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<DistillationRecipe> {
@@ -30,8 +30,8 @@ public class DistillationRecipeSerializer extends ForgeRegistryEntry<IRecipeSeri
 		FluidStack outputFluid = StaticPowerJsonParsingUtilities.parseFluidStack(outputFluidObject);
 
 		// Start with the default processing values.
-		int processingTime = TileEntityDistillery.DEFAULT_PROCESSING_TIME;
-		float heatCost = TileEntityDistillery.DEFAULT_EVAPORATION_HEAT;
+		int processingTime = TileEntityEvaporator.DEFAULT_PROCESSING_TIME;
+		float heatCost = TileEntityEvaporator.DEFAULT_EVAPORATION_HEAT;
 
 		// Capture the processing and power costs.
 		if (JSONUtils.hasField(json, "processing")) {

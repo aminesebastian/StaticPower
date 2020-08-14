@@ -1,5 +1,5 @@
 {
-    "parent": "staticpower:block/machines/machine_distillery",
+    "parent": "staticpower:block/machines/machine_evaporator",
 	"textures": {
 		"io_frame": "staticpower:blocks/empty_texture"
 	}

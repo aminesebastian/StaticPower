@@ -1,9 +1,10 @@
-package theking530.staticpower.tileentities.nonpowered.distillery;
+package theking530.staticpower.tileentities.nonpowered.evaporator;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
+import theking530.common.gui.widgets.tabs.GuiMachineFluidTab;
 import theking530.common.gui.widgets.tabs.GuiPassiveHeatTab;
 import theking530.common.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.common.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
@@ -14,9 +15,9 @@ import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
-public class GuiDistillery extends StaticPowerTileEntityGui<ContainerDistillery, TileEntityDistillery> {
+public class GuiEvaporator extends StaticPowerTileEntityGui<ContainerEvaporator, TileEntityEvaporator> {
 
-	public GuiDistillery(ContainerDistillery container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiEvaporator(ContainerEvaporator container, PlayerInventory invPlayer, ITextComponent name) {
 		super(container, invPlayer, name, 176, 166);
 	}
 
@@ -28,7 +29,9 @@ public class GuiDistillery extends StaticPowerTileEntityGui<ContainerDistillery,
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
-		getTabManager().registerTab(new GuiPassiveHeatTab(getTileEntity().heatStorage).setTabSide(TabSide.LEFT));
+		
+		getTabManager().registerTab(new GuiPassiveHeatTab(getTileEntity().heatStorage).setTabSide(TabSide.LEFT), true);
+		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().inputTankComponent).setTabSide(TabSide.LEFT));
 
 		setOutputSlotSize(20);
 	}
