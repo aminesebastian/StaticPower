@@ -37,6 +37,8 @@ public class GuiFluidBarUtilities {
 
 		if (fluid != null && fluid.getFluid() != null) {
 			Color fluidColor = GuiDrawUtilities.getFluidColor(fluid);
+			boolean isGas = fluid.getFluid().getAttributes().isGaseous();
+
 			TextureAtlasSprite icon = GuiDrawUtilities.getStillFluidSprite(fluid);
 			if (icon != null) {
 				Minecraft.getInstance().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
@@ -55,12 +57,19 @@ public class GuiFluidBarUtilities {
 
 					float yMin = (i * 16);
 					float yMax = ((i + 1) * 16) * fillRatio;
+					if (isGas) {
+						yMin = height - yMin;
+						yMax = height - yMax;
+					}
+
 					Tessellator tessellator = Tessellator.getInstance();
 					BufferBuilder tes = tessellator.getBuffer();
 					tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
 					tes.pos(x + width, y - yMin, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha()).tex(icon.getMaxU(), icon.getMinV()).endVertex();
-					tes.pos(x + width, y - yMax, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha()).tex(icon.getMaxU(), icon.getMinV() + (fillRatio * diffV)).endVertex();
-					tes.pos(x, y - yMax, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha()).tex(icon.getMinU(), icon.getMinV() + (fillRatio * diffV)).endVertex();
+					tes.pos(x + width, y - yMax, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha())
+							.tex(icon.getMaxU(), icon.getMinV() + (fillRatio * diffV)).endVertex();
+					tes.pos(x, y - yMax, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha())
+							.tex(icon.getMinU(), icon.getMinV() + (fillRatio * diffV)).endVertex();
 					tes.pos(x, y - yMin, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha()).tex(icon.getMinU(), icon.getMinV()).endVertex();
 					tessellator.draw();
 				}

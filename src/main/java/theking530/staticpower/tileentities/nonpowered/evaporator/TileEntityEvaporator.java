@@ -36,7 +36,7 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true)
-				.setShouldControlBlockState(true));
+				.setShouldControlBlockState(true).setProcessingStartedCallback(this::processingStarted));
 
 		registerComponent(inputTankComponent = new FluidTankComponent("InputFluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Input));
 		inputTankComponent.setCanDrain(false);
@@ -58,6 +58,13 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 					&& heatStorage.getStorage().getCurrentHeat() >= recipe.getRequiredHeat();
 		}
 		return false;
+	}
+
+	protected void processingStarted() {
+		EvaporatorRecipe recipe = getRecipe(inputTankComponent.getFluid()).orElse(null);
+		if (recipe != null) {
+			this.processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
+		}
 	}
 
 	/**
@@ -105,15 +112,7 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 
 	@Override
 	public void process() {
-		// Use power if we are processing.
-		if (processingComponent.isPerformingWork()) {
-			// Get recipe.
-			EvaporatorRecipe recipe = getRecipe(inputTankComponent.getFluid()).orElse(null);
-			// Cool the heat storage.
-			if (recipe != null) {
-				heatStorage.getStorage().cool(recipe.getRequiredHeat(), false);
-			}
-		}
+
 	}
 
 	public boolean hasValidInput() {

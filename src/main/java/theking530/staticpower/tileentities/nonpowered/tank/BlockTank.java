@@ -1,6 +1,9 @@
 package theking530.staticpower.tileentities.nonpowered.tank;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,6 +16,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.blocks.ICustomModelSupplier;
@@ -23,7 +27,7 @@ import theking530.staticpower.tileentities.StaticPowerTileEntityBlock;
 public class BlockTank extends StaticPowerTileEntityBlock implements ICustomModelSupplier {
 
 	public BlockTank(String name) {
-		super(name);
+		super(name, Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).hardnessAndResistance(3.5f, 5.0f).sound(SoundType.METAL).notSolid());
 	}
 
 	@Override

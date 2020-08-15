@@ -22,11 +22,11 @@ public class EvaporatorRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 	@Override
 	public EvaporatorRecipe read(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input fluid.
-		JsonObject inputFluidObject = JSONUtils.getJsonObject(json, "input_fluid");
+		JsonObject inputFluidObject = json.getAsJsonObject("input_fluid");
 		FluidStack inputFluid = StaticPowerJsonParsingUtilities.parseFluidStack(inputFluidObject);
 
 		// Capture the output fluid.
-		JsonObject outputFluidObject = JSONUtils.getJsonObject(json, "output_fluid");
+		JsonObject outputFluidObject = json.getAsJsonObject("output_fluid");
 		FluidStack outputFluid = StaticPowerJsonParsingUtilities.parseFluidStack(outputFluidObject);
 
 		// Start with the default processing values.
@@ -35,14 +35,15 @@ public class EvaporatorRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 
 		// Capture the processing and power costs.
 		if (JSONUtils.hasField(json, "processing")) {
-			JsonObject processingElement = JSONUtils.getJsonObject(json, "processing");
+			JsonObject processingElement = json.getAsJsonObject("processing");
 			processingTime = processingElement.get("time").getAsInt();
 		}
 
 		// Capture the heat cost.
 		if (JSONUtils.hasField(json, "heat")) {
-			heatCost = JSONUtils.getJsonObject(json, "heat").getAsFloat();
+			heatCost = json.get("heat").getAsFloat();
 		}
+		
 		// Create the recipe.
 		return new EvaporatorRecipe(recipeId, inputFluid, outputFluid, heatCost, processingTime);
 	}

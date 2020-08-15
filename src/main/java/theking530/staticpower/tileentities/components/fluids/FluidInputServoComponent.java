@@ -56,7 +56,7 @@ public class FluidInputServoComponent extends AbstractTileEntityComponent {
 		}
 
 		// Attempt to get the fluid handler for that tile entity.
-		te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(tank -> {
+		te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side).ifPresent(tank -> {
 			// Simulate a transfer and capture the result.
 			FluidStack potentialSuck = FluidUtil.tryFluidTransfer(owningTank, tank, inputRate, false);
 

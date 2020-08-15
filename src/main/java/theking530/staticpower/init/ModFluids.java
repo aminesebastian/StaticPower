@@ -45,10 +45,12 @@ public class ModFluids {
 
 		registerFluidBundle(Ethanol = new StaticPowerFluidBuilder("ethanol").addAutoBucket().build());
 		registerFluidBundle(Mash = new StaticPowerFluidBuilder("mash").addAutoBucket().build());
-		registerFluidBundle(EvaporatedMash = new StaticPowerFluidBuilder("evaporated_mash").addAutoBucket().build());
+		registerFluidBundle(EvaporatedMash = new StaticPowerFluidBuilder("evaporated_mash").addAutoBucket().addAttributes(builder -> {
+			builder.gaseous().density(-100);
+		}).build());
 		registerFluidBundle(LiquidExperience = new StaticPowerFluidBuilder("liquid_experience").addAutoBucket().build());
 		registerFluidBundle(Steam = new StaticPowerFluidBuilder("steam").addAutoBucket().addAttributes(builder -> {
-			builder.gaseous().density(-64);
+			builder.gaseous().density(-100);
 		}).build());
 		registerFluidBundle(SeedOil = new StaticPowerFluidBuilder("seed_oil").addAutoBucket().build());
 		registerFluidBundle(TreeOil = new StaticPowerFluidBuilder("tree_oil").addAutoBucket().build());

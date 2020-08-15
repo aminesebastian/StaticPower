@@ -1,12 +1,12 @@
 {
 	"type": "staticpower:evaporation_recipe",
 	"input_fluid": {
-		"fluid": "staticpower:mash",
+		"fluid": "minecraft:water",
 		"volume": 1
 	},
 	"output_fluid": {
-		"fluid": "staticpower:evaporated_mash",
-		"volume": 1
+		"fluid": "staticpower:steam",
+		"volume": 10
 	},
-	"heat": 100
+	"heat": 200
 }

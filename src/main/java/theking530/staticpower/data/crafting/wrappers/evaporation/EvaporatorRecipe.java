@@ -15,7 +15,7 @@ public class EvaporatorRecipe extends AbstractMachineRecipe {
 	private final float requiredHeat;
 
 	public EvaporatorRecipe(ResourceLocation name, FluidStack inputFluid, FluidStack outputFluid, float requiredHeat, int processingTime) {
-		super(name, 0, processingTime);
+		super(name, processingTime, 0);
 		this.inputFluid = inputFluid;
 		this.outputFluid = outputFluid;
 		this.requiredHeat = requiredHeat;

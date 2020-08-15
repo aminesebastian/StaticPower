@@ -5,7 +5,7 @@
 	"pages": [
 		{
 			"type": "text",
-			"text": "The power of the $(t:...Patent Pending)$(5)$(italic)$(bold)Static Industries I/O Port $(reset)allows all machines the ability to configure their interfacing behaviour on each side! This means you can configure machines to auto $(6)$(bold)output $(reset)items on one side, $(9)$(bold)input $(reset)fluids on another, and $(4)$(bold)disable $(reset)any interaction on all other sides."
+			"text": "The power of the $(t:...Patent Pending)$(5)$(italic)$(bold)Static Industries I/O Port $(reset)provides all machines with the ability to configure their interfacing behaviour on each side! This means you can configure machines to auto $(6)$(bold)output $(reset)items on one side, $(9)$(bold)input $(reset)fluids on another, and $(4)$(bold)disable $(reset)any interaction on all other sides."
 		},
 		{
 			"type": "image",
@@ -19,6 +19,11 @@
 			"type": "text",
 			"title": "I/O Port Servo",
 			"text": "Most machines that offer side configuration have built in servos to handle the transaction of items/fluids/power. This means that placing a machine adjacent to a chest and configuring that side of the machine to $(9)$(bold)input $(reset)will cause the machine to start pulling items from the chest. Similarly, if the machine side was set to $(6)$(bold)output, $(reset)the machine would output its product into that chest."
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/misc/io_port",
+			"recipe2": "staticpower:crafting/machines/machine_blocks/machine_block_iron"
 		},
 		{
 			"type": "text",
