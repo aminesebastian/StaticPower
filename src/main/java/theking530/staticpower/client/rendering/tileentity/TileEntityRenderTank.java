@@ -28,14 +28,20 @@ public class TileEntityRenderTank extends StaticPowerTileEntitySpecialRenderer<T
 		if (tileEntity.fluidTankComponent.getVisualFillLevel() > 0) {
 			TextureAtlasSprite sprite = GuiDrawUtilities.getStillFluidSprite(tileEntity.fluidTankComponent.getFluid());
 			Color fluidColor = GuiDrawUtilities.getFluidColor(tileEntity.fluidTankComponent.getFluid());
+			boolean isGas = tileEntity.fluidTankComponent.getFluid().getFluid().getAttributes().isGaseous();
+
 			float height = tileEntity.fluidTankComponent.getVisualFillLevel();
-			CUBE_MODEL.drawPreviewCube(new Vector3f(2.01f * TEXEL, 1.99f * TEXEL, 2.01f * TEXEL), new Vector3f(11.95f * TEXEL, 11.98f * TEXEL * height, 11.95f * TEXEL), fluidColor, matrixStack, sprite, new Vector2D(1.0f, height));
+			float yPosition = isGas ? 14.0f * TEXEL - (12.01f * TEXEL * height) : 1.99f * TEXEL;
+			CUBE_MODEL.drawPreviewCube(new Vector3f(2.01f * TEXEL, yPosition, 2.01f * TEXEL), new Vector3f(11.95f * TEXEL, 11.98f * TEXEL * height, 11.95f * TEXEL), fluidColor, matrixStack, sprite,
+					new Vector2D(1.0f, height));
 		}
-		
-		// Draw the glass. We have to do it like this because of how mineraft orders transparency.
+
+		// Draw the glass. We have to do it like this because of how mineraft orders
+		// transparency.
 		@SuppressWarnings("deprecation")
 		AtlasTexture blocksTexture = ModelLoader.instance().getSpriteMap().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 		TextureAtlasSprite sprite = blocksTexture.getSprite(StaticPowerSprites.BLANK_TEXTURE);
-		CUBE_MODEL.drawPreviewCube(new Vector3f(1.95f * TEXEL, 2f * TEXEL, 1.95f * TEXEL), new Vector3f(12.1f * TEXEL, 12.1f * TEXEL, 12.1f * TEXEL), new Color(0.4f, 0.45f, 0.55f, 0.35f), matrixStack, sprite);
+		CUBE_MODEL.drawPreviewCube(new Vector3f(1.95f * TEXEL, 2f * TEXEL, 1.95f * TEXEL), new Vector3f(12.1f * TEXEL, 12.1f * TEXEL, 12.1f * TEXEL), new Color(0.4f, 0.45f, 0.55f, 0.35f), matrixStack,
+				sprite);
 	}
 }

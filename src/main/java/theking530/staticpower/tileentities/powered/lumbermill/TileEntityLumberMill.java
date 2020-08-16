@@ -16,12 +16,13 @@ import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.BatteryComponent;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent;
+import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.components.fluids.FluidOutputServoComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
-import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
+import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
@@ -40,12 +41,12 @@ public class TileEntityLumberMill extends TileEntityMachine {
 
 	public final InventoryComponent internalInventory;
 	public final InventoryComponent batteryInventory;
-	public final InventoryComponent upgradesInventory;
+	public final UpgradeInventoryComponent upgradesInventory;
 	public final MachineProcessingComponent moveComponent;
 	public final MachineProcessingComponent processingComponent;
 	public final FluidTankComponent fluidTankComponent;
 	public final FluidContainerComponent fluidContainerComponent;
-	
+
 	public TileEntityLumberMill() {
 		super(ModTileEntityTypes.LUMBER_MILL);
 		this.disableFaceInteraction();
@@ -59,22 +60,26 @@ public class TileEntityLumberMill extends TileEntityMachine {
 		registerComponent(secondaryOutputInventory = new InventoryComponent("SecondaryOutputInventory", 1, MachineSideMode.Output3));
 		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
 
-		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
+		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", DEFAULT_MOVING_TIME, this::canMoveFromInputToProcessing, () -> true, this::movingCompleted, true));
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true)
-				.setShouldControlBlockState(true));
+				.setShouldControlBlockState(true).setUpgradeInventory(upgradesInventory));
 
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));
 		registerComponent(new OutputServoComponent("OutputServo", 1, mainOutputInventory));
 		registerComponent(new OutputServoComponent("SecondaryOutputServo", 1, secondaryOutputInventory));
 		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
-		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Output));
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Output).setUpgradeInventory(upgradesInventory));
 		fluidTankComponent.setCanFill(false);
 		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
 
 		// Register components to allow the lumbermill to fill buckets in the GUI.
 		registerComponent(fluidContainerInventory = new InventoryComponent("FluidContainerInventory", 2, MachineSideMode.Never));
-		registerComponent(fluidContainerComponent = new FluidContainerComponent("FluidFillContainerServo", fluidTankComponent, fluidContainerInventory, 0, 1).setMode(FluidContainerInteractionMode.FILL));
+		registerComponent(
+				fluidContainerComponent = new FluidContainerComponent("FluidFillContainerServo", fluidTankComponent, fluidContainerInventory, 0, 1).setMode(FluidContainerInteractionMode.FILL));
+		
+		// Set the energy storage upgrade inventory.
+		energyStorage.setUpgradeInventory(upgradesInventory);
 	}
 
 	/**

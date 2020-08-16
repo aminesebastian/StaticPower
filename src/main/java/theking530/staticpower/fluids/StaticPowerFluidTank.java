@@ -69,6 +69,15 @@ public class StaticPowerFluidTank extends FluidTank {
 		return filled;
 	}
 
+	@Override
+	public FluidTank setCapacity(int capacity) {
+		this.capacity = capacity;
+		if (fluid.getAmount() > capacity) {
+			fluid.setAmount(capacity);
+		}
+		return this;
+	}
+
 	@Nonnull
 	@Override
 	public FluidStack drain(FluidStack resource, FluidAction action) {
@@ -171,6 +180,7 @@ public class StaticPowerFluidTank extends FluidTank {
 		super.readFromNBT(nbt);
 		averageFilled = nbt.getFloat("recieved");
 		averageDrained = nbt.getFloat("extracted");
+		capacity = nbt.getInt("capacity");
 		return this;
 	}
 
@@ -178,6 +188,7 @@ public class StaticPowerFluidTank extends FluidTank {
 		super.writeToNBT(nbt);
 		nbt.putFloat("recieved", averageFilled);
 		nbt.putFloat("extracted", averageDrained);
+		nbt.putInt("capacity", capacity);
 		return nbt;
 	}
 }

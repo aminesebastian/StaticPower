@@ -30,6 +30,72 @@ public class StaticPowerTier {
 	private float heatSinkCapacity;
 	private float heatSinkConductivity;
 
+	private int upgradeOrdinal;
+
+	/********************
+	 * Processing Upgrade
+	 ********************/
+	private float processingSpeedUpgrade;
+	private float processingSpeedPowerCost;
+
+	/**************
+	 * Tank Upgrade
+	 **************/
+	private float tankCapacityUpgrade;
+
+	/***************
+	 * Range Upgrade
+	 ***************/
+	private float rangeUpgrade;
+
+	/***************
+	 * Power Upgrade
+	 ***************/
+	private float powerUpgrade;
+	private float powerIoUpgrade;
+
+	/***************************
+	 * Output Multiplier Upgrade
+	 ***************************/
+	private float outputMultiplierUpgrade;
+	private float outputMultiplierPowerCostUpgrade;
+
+	public float getOutputMultiplierPowerCostUpgrade() {
+		return outputMultiplierPowerCostUpgrade;
+	}
+
+	public float getOutputMultiplierUpgrade() {
+		return outputMultiplierUpgrade;
+	}
+
+	public float getPowerUpgrade() {
+		return powerUpgrade;
+	}
+
+	public float getPowerIoUpgrade() {
+		return powerIoUpgrade;
+	}
+
+	public float getRangeUpgrade() {
+		return rangeUpgrade;
+	}
+
+	public float getTankCapacityUpgrade() {
+		return tankCapacityUpgrade;
+	}
+
+	public float getProcessingSpeedUpgrade() {
+		return processingSpeedUpgrade;
+	}
+
+	public float getProcessingSpeedPowerCost() {
+		return processingSpeedPowerCost;
+	}
+
+	public int getUpgradeOrdinal() {
+		return upgradeOrdinal;
+	}
+
 	public float getHeatSinkCapacity() {
 		return heatSinkCapacity;
 	}

@@ -14,6 +14,7 @@ import theking530.staticpower.tileentities.components.control.BatteryComponent;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
+import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.utilities.InventoryUtilities;
 
@@ -21,7 +22,7 @@ public class TileEntityChargingStation extends TileEntityMachine {
 	public final InventoryComponent unchargedInventory;
 	public final InventoryComponent chargedInventory;
 	public final InventoryComponent batterySlot;
-	public final InventoryComponent upgradesInventory;
+	public final UpgradeInventoryComponent upgradesInventory;
 
 	public TileEntityChargingStation() {
 		super(ModTileEntityTypes.CHARGING_STATION);
@@ -29,11 +30,14 @@ public class TileEntityChargingStation extends TileEntityMachine {
 		registerComponent(unchargedInventory = new InventoryComponent("unchargedInventory", 4, MachineSideMode.Input));
 		registerComponent(chargedInventory = new InventoryComponent("chargedInventory", 4, MachineSideMode.Output));
 		registerComponent(batterySlot = new InventoryComponent("batterySlot", 1, MachineSideMode.Never));
-		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
+		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		registerComponent(new BatteryComponent("BatteryComponent", batterySlot, 0, energyStorage.getStorage()));
 		registerComponent(new OutputServoComponent("OutputServo", 1, chargedInventory, 0, 1, 2, 3));
 		registerComponent(new InputServoComponent("InputServo", 2, unchargedInventory, 0, 1, 2, 3));
+		
+		// Set the energy storage upgrade inventory.
+		energyStorage.setUpgradeInventory(upgradesInventory);
 	}
 
 	@Override

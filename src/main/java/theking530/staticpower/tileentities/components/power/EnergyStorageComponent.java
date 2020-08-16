@@ -8,8 +8,11 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import theking530.common.utilities.TriFunction;
 import theking530.staticpower.energy.StaticPowerFEStorage;
+import theking530.staticpower.items.upgrades.IUpgradeItem.UpgradeType;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
+import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
 
 public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	public enum EnergyManipulationAction {
@@ -20,6 +23,13 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	protected final StaticPowerFEStorage EnergyStorage;
 	protected TriFunction<Integer, Direction, EnergyManipulationAction, Boolean> filter;
 	private int lastSyncEnergy;
+
+	private UpgradeInventoryComponent upgradeInventory;
+	private float powerCapacityUpgradeMultiplier;
+	private float powerIOUpgradeMultiplier;
+	private int defaultCapacity;
+	private int defaultMaxInput;
+	private int defaultMaxOutput;
 
 	private EnergyComponentCapabilityAccess capabilityAccessor;
 
@@ -35,11 +45,19 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 		super(name);
 		EnergyStorage = new StaticPowerFEStorage(capacity, maxInput, maxExtract);
 		capabilityAccessor = new EnergyComponentCapabilityAccess();
+		defaultCapacity = capacity;
+		powerCapacityUpgradeMultiplier = 1.0f;
+		powerIOUpgradeMultiplier = 1.0f;
+		defaultMaxInput = maxInput;
+		defaultMaxOutput = maxExtract;
 	}
 
 	@Override
 	public void preProcessUpdate() {
-
+		if (!getWorld().isRemote) {
+			// Check for upgrades.
+			checkUpgrades();
+		}
 	}
 
 	@Override
@@ -61,6 +79,35 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 			}
 			EnergyStorage.captureEnergyMetric();
 		}
+	}
+
+	public EnergyStorageComponent setUpgradeInventory(UpgradeInventoryComponent inventory) {
+		upgradeInventory = inventory;
+		return this;
+	}
+
+	protected void checkUpgrades() {
+		// Do nothing if there is no upgrade inventory.
+		if (upgradeInventory == null) {
+			return;
+		}
+		// Get the upgrade.
+		UpgradeItemWrapper upgrade = upgradeInventory.getMaxTierItemForUpgradeType(UpgradeType.POWER);
+
+		// If it is not valid, set the values back to the defaults. Otherwise, set the
+		// new processing speeds.
+		if (upgrade.isEmpty()) {
+			powerCapacityUpgradeMultiplier = 1.0f;
+			powerIOUpgradeMultiplier = 1.0f;
+		} else {
+			powerCapacityUpgradeMultiplier = upgrade.getTier().getPowerUpgrade() * upgrade.getUpgradeWeight();
+			powerCapacityUpgradeMultiplier = upgrade.getTier().getPowerIoUpgrade() * upgrade.getUpgradeWeight();
+		}
+
+		// Set the new values.
+		getStorage().setCapacity((int) (defaultCapacity * powerCapacityUpgradeMultiplier));
+		getStorage().setMaxExtract((int) (defaultMaxOutput * powerIOUpgradeMultiplier));
+		getStorage().setMaxReceive((int) (defaultMaxInput * powerIOUpgradeMultiplier));
 	}
 
 	/**
@@ -164,12 +211,24 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 		EnergyStorage.readFromNbt(nbt);
+
+		powerCapacityUpgradeMultiplier = nbt.getFloat("power_capacity_upgrade_multiplier");
+		powerIOUpgradeMultiplier = nbt.getFloat("power_IO_upgrade_multiplier");
+		defaultCapacity = nbt.getInt("default_capacity");
+		defaultMaxInput = nbt.getInt("default_max_input");
+		defaultMaxOutput = nbt.getInt("default_max_output");
 	}
 
 	@Override
 	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
 		EnergyStorage.writeToNbt(nbt);
+
+		nbt.putFloat("power_capacity_upgrade_multiplier", powerCapacityUpgradeMultiplier);
+		nbt.putFloat("power_IO_upgrade_multiplier", powerIOUpgradeMultiplier);
+		nbt.putInt("default_capacity", defaultCapacity);
+		nbt.putInt("default_max_input", defaultMaxInput);
+		nbt.putInt("default_max_output", defaultMaxOutput);
 		return nbt;
 	}
 

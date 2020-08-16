@@ -3,6 +3,7 @@
 		"namespace": "staticpower",
 		"path": "tier_creative"
 	},
+	"upgradeOrdinal": 6,
 	"unlocalizedTierName": "tier.staticpower.creative",
 	"portableBatteryCapacity": 2147483647,
 	"solarPanelPowerGeneration": 2147483647,

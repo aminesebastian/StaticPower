@@ -11,13 +11,14 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.staticpower.utilities.Tier;
+import theking530.staticpower.data.StaticPowerTiers;
 
 public class DigistoreVoidUpgrade extends BaseUpgrade {
-	
+
 	public DigistoreVoidUpgrade(String name) {
-		super(name, Tier.BASIC, new Properties().maxStackSize(1));
+		super(name, StaticPowerTiers.BASIC, new Properties().maxStackSize(1));
 	}
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {

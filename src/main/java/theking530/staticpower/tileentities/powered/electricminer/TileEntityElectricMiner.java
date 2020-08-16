@@ -13,13 +13,14 @@ import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.BatteryComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
+import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
 import theking530.staticpower.tileentities.nonpowered.miner.AbstractTileEntityMiner;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
 public class TileEntityElectricMiner extends AbstractTileEntityMiner {
 	public final EnergyStorageComponent energyStorage;
-	public final InventoryComponent upgradesInventory;
+	public final UpgradeInventoryComponent upgradesInventory;
 	public final InventoryComponent batteryInventory;
 
 	public TileEntityElectricMiner() {
@@ -28,11 +29,14 @@ public class TileEntityElectricMiner extends AbstractTileEntityMiner {
 				TileEntityMachine.DEFAULT_POWER_TRANSFER * 10));
 
 		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
-		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
+		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
-
+		processingComponent.setUpgradeInventory(upgradesInventory);
 		setBlockMiningFuelCost(getBlockMiningFuelCost() * 100);
 		setIdleFuelCost(getIdleFuelCost() * 100);
+		
+		// Set the energy storage upgrade inventory.
+		energyStorage.setUpgradeInventory(upgradesInventory);
 	}
 
 	/**

@@ -16,6 +16,7 @@ import theking530.staticpower.tileentities.components.control.MachineProcessingC
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
+import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 import theking530.staticpower.utilities.InventoryUtilities;
@@ -29,7 +30,7 @@ public class TileEntityFormer extends TileEntityMachine {
 	public final InventoryComponent outputInventory;
 	public final InventoryComponent internalInventory;
 	public final InventoryComponent batteryInventory;
-	public final InventoryComponent upgradesInventory;
+	public final UpgradeInventoryComponent upgradesInventory;
 	public final MachineProcessingComponent moveComponent;
 	public final MachineProcessingComponent processingComponent;
 
@@ -48,13 +49,17 @@ public class TileEntityFormer extends TileEntityMachine {
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
 		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
 
-		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
+		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", 2, this::canMoveFromInputToProcessing, () -> true, this::movingCompleted, true));
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true).setShouldControlBlockState(true));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true)
+				.setShouldControlBlockState(true).setUpgradeInventory(upgradesInventory));
 
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));
 		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory));
 		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
+		
+		// Set the energy storage upgrade inventory.
+		energyStorage.setUpgradeInventory(upgradesInventory);
 	}
 
 	/**
@@ -96,7 +101,8 @@ public class TileEntityFormer extends TileEntityMachine {
 
 	protected boolean canProcess() {
 		FormerRecipe recipe = getRecipe(internalInventory.getStackInSlot(0), internalInventory.getStackInSlot(1)).orElse(null);
-		return recipe != null && redstoneControlComponent.passesRedstoneCheck() && energyStorage.hasEnoughPower(recipe.getPowerCost()) && InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getRecipeOutput());
+		return recipe != null && redstoneControlComponent.passesRedstoneCheck() && energyStorage.hasEnoughPower(recipe.getPowerCost())
+				&& InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getRecipeOutput());
 	}
 
 	/**

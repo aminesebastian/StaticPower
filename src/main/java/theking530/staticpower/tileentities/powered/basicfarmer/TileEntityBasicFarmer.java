@@ -43,6 +43,7 @@ import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
+import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent.InventoryChangeType;
 import theking530.staticpower.tileentities.components.control.BatteryComponent;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
@@ -66,7 +67,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	public final InventoryComponent internalInventory;
 	public final InventoryComponent fluidContainerInventory;
 	public final InventoryComponent batteryInventory;
-	public final InventoryComponent upgradesInventory;
+	public final UpgradeInventoryComponent upgradesInventory;
 	public final MachineProcessingComponent processingComponent;
 	public final FluidTankComponent fluidTankComponent;
 	public final FluidContainerComponent fluidContainerComponent;
@@ -96,17 +97,21 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 9, MachineSideMode.Output));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 128, MachineSideMode.Never));
 		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
-		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never).setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
+		registerComponent(upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3).setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
 
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 20, this::canFarm, this::canFarm, this::processingCompleted, true));
+		registerComponent(
+				processingComponent = new MachineProcessingComponent("ProcessingComponent", 20, this::canFarm, this::canFarm, this::processingCompleted, true).setUpgradeInventory(upgradesInventory));
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluid) -> {
 			return StaticPowerRecipeRegistry.getRecipe(FarmingFertalizerRecipe.RECIPE_TYPE, new RecipeMatchParameters(fluid)).isPresent();
-		}).setCapabilityExposedModes(MachineSideMode.Input));
+		}).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
 
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory, 0));
 		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory, 0, 1, 2, 3, 4, 5, 6, 7, 8));
 		registerComponent(fluidContainerComponent = new FluidContainerComponent("FluidContainerServo", fluidTankComponent, fluidContainerInventory, 0, 1));
 		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
+
+		// Set the energy storage upgrade inventory.
+		energyStorage.setUpgradeInventory(upgradesInventory);
 
 		// Capture all the harvestable blocks.
 		validHarvestacbleClasses = new HashSet<Class<? extends Block>>();
@@ -451,11 +456,11 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		return true;
 	}
 
-	public void onUpgradesInventoryModifiedCallback(InventoryChangeType changeType, ItemStack item, InventoryComponent inventory) {
+	public void onUpgradesInventoryModifiedCallback(InventoryChangeType changeType, ItemStack item, int slot) {
 		range = DEFAULT_RANGE;
-		for (ItemStack stack : inventory) {
+		for (ItemStack stack : upgradesInventory) {
 			if (stack.getItem() instanceof BaseRangeUpgrade) {
-				range = (int) Math.max(range, DEFAULT_RANGE * (((BaseRangeUpgrade) stack.getItem()).rangeUpgrade));
+				range = (int) Math.max(range, DEFAULT_RANGE * (((BaseRangeUpgrade) stack.getItem()).getTier().getRangeUpgrade()));
 			}
 		}
 		refreshBlocksInRange(range);

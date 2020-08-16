@@ -13,14 +13,17 @@ import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import theking530.staticpower.fluids.StaticPowerFluidTank;
+import theking530.staticpower.items.upgrades.IUpgradeItem.UpgradeType;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
 import theking530.staticpower.tileentities.components.control.SideConfigurationComponent;
+import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
+import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
 public class FluidTankComponent extends AbstractTileEntityComponent implements IFluidHandler, IFluidTank {
-	public static final int FLUID_SYNC_MAX_DELTA = 1;
+	public static final int FLUID_SYNC_MAX_DELTA = 10;
 	protected StaticPowerFluidTank FluidStorage;
 
 	protected int lastFluidStored;
@@ -32,6 +35,10 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 	private final FluidComponentCapabilityInterface capabilityInterface;
 	private FluidStack lastSyncFluidStack;
 	private float visualFillLevel;
+
+	private UpgradeInventoryComponent upgradeInventory;
+	private float upgradeMultiplier;
+	private int defaultCapacity;
 
 	public FluidTankComponent(String name, int capacity) {
 		this(name, capacity, (fluid) -> true);
@@ -45,12 +52,21 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 		capabilityInterface = new FluidComponentCapabilityInterface();
 		capabilityExposeModes = new HashSet<MachineSideMode>();
 		this.lastSyncFluidStack = FluidStack.EMPTY;
-
+		upgradeMultiplier = 1.0f;
+		defaultCapacity = capacity;
 		// By default, ALWAYS expose this side, except on disabled or never.
 		for (MachineSideMode mode : MachineSideMode.values()) {
 			if (mode != MachineSideMode.Disabled && mode != MachineSideMode.Never) {
 				capabilityExposeModes.add(mode);
 			}
+		}
+	}
+
+	@Override
+	public void preProcessUpdate() {
+		if (!getWorld().isRemote) {
+			// Check for upgrades.
+			checkUpgrades();
 		}
 	}
 
@@ -84,6 +100,31 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 			visualFillLevel -= difference * (partialTicks / 20.0f);
 
 		}
+	}
+
+	public FluidTankComponent setUpgradeInventory(UpgradeInventoryComponent inventory) {
+		upgradeInventory = inventory;
+		return this;
+	}
+
+	protected void checkUpgrades() {
+		// Do nothing if there is no upgrade inventory.
+		if (upgradeInventory == null) {
+			return;
+		}
+		// Get the upgrade.
+		UpgradeItemWrapper upgrade = upgradeInventory.getMaxTierItemForUpgradeType(UpgradeType.TANK);
+
+		// If it is not valid, set the values back to the defaults. Otherwise, set the
+		// new processing speeds.
+		if (upgrade.isEmpty()) {
+			upgradeMultiplier = 1.0f;
+		} else {
+			upgradeMultiplier = upgrade.getTier().getTankCapacityUpgrade() * upgrade.getUpgradeWeight();
+		}
+
+		// Set the capacity.
+		getStorage().setCapacity((int) (defaultCapacity * upgradeMultiplier));
 	}
 
 	public float getVisualFillLevel() {

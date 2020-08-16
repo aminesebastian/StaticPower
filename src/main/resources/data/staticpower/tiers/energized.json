@@ -3,6 +3,7 @@
 		"namespace": "staticpower",
 		"path": "tier_energized"
 	},
+	"upgradeOrdinal": 4,
 	"unlocalizedTierName": "tier.staticpower.energized",
 	"portableBatteryCapacity": 1000000,
 	"solarPanelPowerGeneration": 64,
@@ -23,5 +24,13 @@
 	"itemFilterSlots": 9,
 	"itemCableAcceleration": 1.75,
 	"itemCableFriction": 1.75,
-	"drillBitUses": 16000
+	"drillBitUses": 16000,
+	"processingSpeedUpgrade": 2.0,
+	"processingSpeedPowerCost": 3.0,
+	"tankCapacityUpgrade": 4.0,
+	"rangeUpgrade": 5.0,
+	"powerUpgrade": 4.0,
+	"powerIoUpgrade": 2.5,
+	"outputMultiplierUpgrade": 3.0,
+	"outputMultiplierPowerCostUpgrade": 2.0
 }

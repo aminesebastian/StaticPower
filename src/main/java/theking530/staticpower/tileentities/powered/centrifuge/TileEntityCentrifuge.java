@@ -18,6 +18,7 @@ import theking530.staticpower.tileentities.components.control.MachineProcessingC
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
+import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 import theking530.staticpower.utilities.InventoryUtilities;
@@ -36,7 +37,7 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 
 	public final InventoryComponent internalInventory;
 	public final InventoryComponent batteryInventory;
-	public final InventoryComponent upgradesInventory;
+	public final UpgradeInventoryComponent upgradesInventory;
 	public final MachineProcessingComponent moveComponent;
 	public final MachineProcessingComponent processingComponent;
 
@@ -60,10 +61,10 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1, MachineSideMode.Never));
 		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
-		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
+		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", DEFAULT_MOVING_TIME, this::canMoveFromInputToProcessing, () -> true, this::movingCompleted, true));
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true)
-				.setShouldControlBlockState(true));
+				.setShouldControlBlockState(true).setUpgradeInventory(upgradesInventory));
 
 		registerComponent(new InputServoComponent("InputServo", 4, inputInventory));
 
@@ -72,6 +73,9 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 		registerComponent(new OutputServoComponent("OutputServo3", 4, thirdOutputInventory));
 
 		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
+		
+		// Set the energy storage upgrade inventory.
+		energyStorage.setUpgradeInventory(upgradesInventory);
 	}
 
 	/**

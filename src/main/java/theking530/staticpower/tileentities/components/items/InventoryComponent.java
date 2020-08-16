@@ -40,7 +40,7 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 	private boolean capabilityInsertEnabled;
 	private boolean capabilityExtractEnabled;
 	private final InventoryComponentCapabilityInterface capabilityInterface;
-	private TriConsumer<InventoryChangeType, ItemStack, InventoryComponent> changeCallback;
+	private TriConsumer<InventoryChangeType, ItemStack, Integer> changeCallback;
 	private boolean shouldDropContentsOnBreak;
 	private boolean areSlotsLockable;
 
@@ -224,7 +224,7 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 		this.stacks.set(slot, stack);
 
 		if (!oldStack.equals(stack, false)) {
-			onItemStackAdded(stack);
+			onItemStackAdded(stack, slot);
 		}
 	}
 
@@ -303,10 +303,10 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 		if (!simulate) {
 			if (existing.isEmpty()) {
 				this.stacks.set(slot, reachedLimit ? ItemHandlerHelper.copyStackWithSize(stack, limit) : stack);
-				onItemStackAdded(getStackInSlot(slot));
+				onItemStackAdded(getStackInSlot(slot), slot);
 			} else {
 				existing.grow(reachedLimit ? limit : stack.getCount());
-				onItemStackModified(getStackInSlot(slot));
+				onItemStackModified(getStackInSlot(slot), slot);
 			}
 		}
 
@@ -340,7 +340,7 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 			if (!simulate) {
 				ItemStack removedItem = getStackInSlot(slot);
 				this.stacks.set(slot, ItemStack.EMPTY);
-				onItemStackRemoved(removedItem);
+				onItemStackRemoved(removedItem, slot);
 				return existing;
 			} else {
 				return existing.copy();
@@ -348,7 +348,7 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 		} else {
 			if (!simulate) {
 				this.stacks.set(slot, ItemHandlerHelper.copyStackWithSize(existing, existing.getCount() - toExtract));
-				onItemStackModified(getStackInSlot(slot));
+				onItemStackModified(getStackInSlot(slot), slot);
 			}
 
 			return ItemHandlerHelper.copyStackWithSize(existing, toExtract);
@@ -408,7 +408,7 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 		return true;
 	}
 
-	public InventoryComponent setModifiedCallback(TriConsumer<InventoryChangeType, ItemStack, InventoryComponent> callback) {
+	public InventoryComponent setModifiedCallback(TriConsumer<InventoryChangeType, ItemStack, Integer> callback) {
 		changeCallback = callback;
 		return this;
 	}
@@ -422,23 +422,23 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 
 	}
 
-	protected void onItemStackAdded(ItemStack stack) {
+	protected void onItemStackAdded(ItemStack stack, int slot) {
 		if (changeCallback != null) {
-			changeCallback.accept(InventoryChangeType.ADDED, stack, this);
+			changeCallback.accept(InventoryChangeType.ADDED, stack, slot);
 		}
 		getTileEntity().markDirty();
 	}
 
-	protected void onItemStackRemoved(ItemStack stack) {
+	protected void onItemStackRemoved(ItemStack stack, int slot) {
 		if (changeCallback != null) {
-			changeCallback.accept(InventoryChangeType.REMOVED, stack, this);
+			changeCallback.accept(InventoryChangeType.REMOVED, stack, slot);
 		}
 		getTileEntity().markDirty();
 	}
 
-	protected void onItemStackModified(ItemStack stack) {
+	protected void onItemStackModified(ItemStack stack, int slot) {
 		if (changeCallback != null) {
-			changeCallback.accept(InventoryChangeType.MODIFIED, stack, this);
+			changeCallback.accept(InventoryChangeType.MODIFIED, stack, slot);
 		}
 		getTileEntity().markDirty();
 	}

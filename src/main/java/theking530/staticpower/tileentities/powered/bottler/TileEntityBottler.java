@@ -20,6 +20,7 @@ import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
+import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 import theking530.staticpower.utilities.InventoryUtilities;
@@ -34,7 +35,7 @@ public class TileEntityBottler extends TileEntityMachine {
 	public final InventoryComponent internalInventory;
 	public final InventoryComponent outputInventory;
 	public final InventoryComponent batterySlot;
-	public final InventoryComponent upgradesInventory;
+	public final UpgradeInventoryComponent upgradesInventory;
 	public final MachineProcessingComponent moveComponent;
 	public final MachineProcessingComponent processingComponent;
 	public final FluidTankComponent fluidTankComponent;
@@ -51,19 +52,23 @@ public class TileEntityBottler extends TileEntityMachine {
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1, MachineSideMode.Never));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
 		registerComponent(batterySlot = new InventoryComponent("BatterySlot", 1, MachineSideMode.Never));
-		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
+		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", 2, this::canMoveFromInputToProcessing, () -> true, this::movingCompleted, true));
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true).setShouldControlBlockState(true));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true)
+				.setShouldControlBlockState(true).setUpgradeInventory(upgradesInventory));
 
 		registerComponent(new BatteryComponent("BatteryComponent", batterySlot, 0, energyStorage.getStorage()));
 		registerComponent(new OutputServoComponent("OutputServo", 2, outputInventory));
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));
 
-		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Input));
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
 		fluidTankComponent.setCanDrain(false);
 
 		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, fluidTankComponent, MachineSideMode.Input));
+		
+		// Set the energy storage upgrade inventory.
+		energyStorage.setUpgradeInventory(upgradesInventory);
 	}
 
 	/**
@@ -75,8 +80,8 @@ public class TileEntityBottler extends TileEntityMachine {
 	 * @return
 	 */
 	protected boolean canMoveFromInputToProcessing() {
-		if (hasValidInput() && hasFluidForInput(inputInventory.getStackInSlot(0)) && !moveComponent.isProcessing() && internalInventory.getStackInSlot(0).isEmpty() && energyStorage.getStorage().getEnergyStored() >= DEFAULT_PROCESSING_COST
-				&& fluidTankComponent.getFluidAmount() > 0) {
+		if (hasValidInput() && hasFluidForInput(inputInventory.getStackInSlot(0)) && !moveComponent.isProcessing() && internalInventory.getStackInSlot(0).isEmpty()
+				&& energyStorage.getStorage().getEnergyStored() >= DEFAULT_PROCESSING_COST && fluidTankComponent.getFluidAmount() > 0) {
 			return InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, getSimulatedFilledContainer(inputInventory.getStackInSlot(0)));
 		}
 		return false;
@@ -102,8 +107,8 @@ public class TileEntityBottler extends TileEntityMachine {
 
 	protected boolean canProcess() {
 		ItemStack output = getSimulatedFilledContainer(inputInventory.getStackInSlot(0));
-		return isValidInput(internalInventory.getStackInSlot(0)) && hasFluidForInput(inputInventory.getStackInSlot(0)) && redstoneControlComponent.passesRedstoneCheck() && energyStorage.hasEnoughPower(DEFAULT_PROCESSING_COST)
-				&& InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, output);
+		return isValidInput(internalInventory.getStackInSlot(0)) && hasFluidForInput(inputInventory.getStackInSlot(0)) && redstoneControlComponent.passesRedstoneCheck()
+				&& energyStorage.hasEnoughPower(DEFAULT_PROCESSING_COST) && InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, output);
 	}
 
 	/**

@@ -17,7 +17,7 @@ import theking530.staticpower.tileentities.components.fluids.FluidInputServoComp
 import theking530.staticpower.tileentities.components.fluids.FluidOutputServoComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.heat.HeatStorageComponent;
-import theking530.staticpower.tileentities.components.items.InventoryComponent;
+import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
 public class TileEntityEvaporator extends TileEntityConfigurable {
@@ -25,7 +25,7 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 	public static final int DEFAULT_TANK_SIZE = 5000;
 	public static final float DEFAULT_EVAPORATION_HEAT = 200.0f;
 
-	public final InventoryComponent upgradesInventory;
+	public final UpgradeInventoryComponent upgradesInventory;
 	public final MachineProcessingComponent processingComponent;
 	public final FluidTankComponent inputTankComponent;
 	public final FluidTankComponent outputTankComponent;
@@ -34,14 +34,14 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 	public TileEntityEvaporator() {
 		super(ModTileEntityTypes.EVAPORATOR);
 
-		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
+		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true)
-				.setShouldControlBlockState(true).setProcessingStartedCallback(this::processingStarted));
+				.setShouldControlBlockState(true).setProcessingStartedCallback(this::processingStarted).setUpgradeInventory(upgradesInventory));
 
-		registerComponent(inputTankComponent = new FluidTankComponent("InputFluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Input));
+		registerComponent(inputTankComponent = new FluidTankComponent("InputFluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
 		inputTankComponent.setCanDrain(false);
 
-		registerComponent(outputTankComponent = new FluidTankComponent("OutputFluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Output));
+		registerComponent(outputTankComponent = new FluidTankComponent("OutputFluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Output).setUpgradeInventory(upgradesInventory));
 		outputTankComponent.setCanFill(false);
 
 		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, inputTankComponent, MachineSideMode.Input));

@@ -41,15 +41,16 @@ import theking530.staticpower.init.ModTags;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.tileentities.TileEntityMachine;
-import theking530.staticpower.tileentities.components.items.InputServoComponent;
-import theking530.staticpower.tileentities.components.items.InventoryComponent;
-import theking530.staticpower.tileentities.components.items.OutputServoComponent;
-import theking530.staticpower.tileentities.components.items.InventoryComponent.InventoryChangeType;
 import theking530.staticpower.tileentities.components.control.BatteryComponent;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent;
-import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent.FluidContainerInteractionMode;
+import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
+import theking530.staticpower.tileentities.components.items.InputServoComponent;
+import theking530.staticpower.tileentities.components.items.InventoryComponent;
+import theking530.staticpower.tileentities.components.items.InventoryComponent.InventoryChangeType;
+import theking530.staticpower.tileentities.components.items.OutputServoComponent;
+import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities;
 import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities.BlockSide;
@@ -71,7 +72,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 	public final InventoryComponent outputInventory;
 	public final InventoryComponent fluidContainerInventoy;
 	public final InventoryComponent batteryInventory;
-	public final InventoryComponent upgradesInventory;
+	public final UpgradeInventoryComponent upgradesInventory;
 	public final InventoryComponent internalInventory;
 	public final MachineProcessingComponent processingComponent;
 	public final FluidTankComponent fluidTankComponent;
@@ -102,12 +103,13 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		registerComponent(fluidContainerInventoy = new InventoryComponent("FluidContainerInventoy", 2, MachineSideMode.Never));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 9, MachineSideMode.Output));
 		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
-		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never).setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
+		registerComponent(upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3).setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 100, MachineSideMode.Never));
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 5, this::canProcess, this::canProcess, this::processingCompleted, true));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 5, this::canProcess, this::canProcess, this::processingCompleted, true)
+				.setUpgradeInventory(upgradesInventory));
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluid) -> {
 			return StaticPowerRecipeRegistry.getRecipe(FarmingFertalizerRecipe.RECIPE_TYPE, new RecipeMatchParameters(fluid)).isPresent();
-		}).setCapabilityExposedModes(MachineSideMode.Input));
+		}).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
 
 		currentBlockIndex = 0;
 		shouldDrawRadiusPreview = false;
@@ -119,6 +121,8 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
 
 		fluidContainerComponent.setMode(FluidContainerInteractionMode.DRAIN);
+		// Set the energy storage upgrade inventory.
+		energyStorage.setUpgradeInventory(upgradesInventory);
 	}
 
 	@Override
@@ -371,11 +375,11 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		}
 	}
 
-	public void onUpgradesInventoryModifiedCallback(InventoryChangeType changeType, ItemStack item, InventoryComponent inventory) {
+	public void onUpgradesInventoryModifiedCallback(InventoryChangeType changeType, ItemStack item, int slot) {
 		range = DEFAULT_RANGE;
-		for (ItemStack stack : inventory) {
+		for (ItemStack stack : upgradesInventory) {
 			if (stack.getItem() instanceof BaseRangeUpgrade) {
-				range = (int) Math.max(range, DEFAULT_RANGE * (((BaseRangeUpgrade) stack.getItem()).rangeUpgrade));
+				range = (int) Math.max(range, DEFAULT_RANGE * (((BaseRangeUpgrade) stack.getItem()).getTier().getRangeUpgrade()));
 			}
 		}
 		refreshBlocksInRange(range);

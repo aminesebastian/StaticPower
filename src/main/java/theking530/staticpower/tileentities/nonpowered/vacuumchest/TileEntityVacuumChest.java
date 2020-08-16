@@ -161,26 +161,26 @@ public class TileEntityVacuumChest extends TileEntityBase implements INamedConta
 
 	/* Update Handling */
 	public void upgradeTick(ItemStack upgrade) {
-		if (upgrade.getItem() instanceof BaseRangeUpgrade) {
-			BaseRangeUpgrade tempUpgrade = (BaseRangeUpgrade) upgrade.getItem();
-			vacuumDiamater = tempUpgrade.getValueMultiplied(initialVacuumDiamater, tempUpgrade.getUpgradeValueAtIndex(upgrade, 0));
-		} else {
-			vacuumDiamater = initialVacuumDiamater;
-		}
-		if (upgrade.getItem() instanceof TeleportUpgrade) {
-			shouldTeleport = true;
-		} else {
-			shouldTeleport = false;
-		}
-		if (upgrade.getItem() instanceof ExperienceVacuumUpgrade) {
-			shouldVacuumExperience = true;
-		}
-		if (upgrade.getItem() instanceof BaseTankUpgrade) {
-			BaseTankUpgrade tempUpgrade = (BaseTankUpgrade) upgrade.getItem();
-			experienceTank.setCapacity((int) tempUpgrade.getValueMultiplied(10000, tempUpgrade.getUpgradeValueAtIndex(upgrade, 0)));
-		} else {
-			experienceTank.setCapacity(10000);
-		}
+//		if (upgrade.getItem() instanceof BaseRangeUpgrade) {
+//			BaseRangeUpgrade tempUpgrade = (BaseRangeUpgrade) upgrade.getItem();
+//			vacuumDiamater = tempUpgrade.getValueMultiplied(initialVacuumDiamater, tempUpgrade.getUpgradeValueAtIndex(upgrade, 0));
+//		} else {
+//			vacuumDiamater = initialVacuumDiamater;
+//		}
+//		if (upgrade.getItem() instanceof TeleportUpgrade) {
+//			shouldTeleport = true;
+//		} else {
+//			shouldTeleport = false;
+//		}
+//		if (upgrade.getItem() instanceof ExperienceVacuumUpgrade) {
+//			shouldVacuumExperience = true;
+//		}
+//		if (upgrade.getItem() instanceof BaseTankUpgrade) {
+//			BaseTankUpgrade tempUpgrade = (BaseTankUpgrade) upgrade.getItem();
+//			experienceTank.setCapacity((int) tempUpgrade.getValueMultiplied(10000, tempUpgrade.getUpgradeValueAtIndex(upgrade, 0)));
+//		} else {
+//			experienceTank.setCapacity(10000);
+//		}
 	}
 
 	public boolean canAcceptUpgrade(@Nonnull ItemStack upgrade) {

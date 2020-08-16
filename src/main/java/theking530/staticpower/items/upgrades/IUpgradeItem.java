@@ -1,12 +1,13 @@
 package theking530.staticpower.items.upgrades;
 
-import net.minecraft.item.ItemStack;
+import theking530.staticpower.data.StaticPowerTier;
 
 public interface IUpgradeItem {
+	public enum UpgradeType {
+		SPEED, POWER, TANK, RANGE, OUTPUT_MULTIPLIER, SPECIAL
+	};
 
-	public float getUpgradeValueAtIndex(ItemStack stack, int upgradeNumber);
+	public StaticPowerTier getTier();
 
-	public int getValueMultiplied(int value, float multiplier);
-
-	public float getValueMultiplied(float value, float multiplier);
+	public boolean isOfType(UpgradeType type);
 }

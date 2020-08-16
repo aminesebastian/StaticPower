@@ -3,6 +3,7 @@
 		"namespace": "staticpower",
 		"path": "tier_advanced"
 	},
+	"upgradeOrdinal": 2,
 	"unlocalizedTierName": "tier.staticpower.advanced",
 	"portableBatteryCapacity": 50000,
 	"solarPanelPowerGeneration": 16,
@@ -23,5 +24,13 @@
 	"itemFilterSlots": 5,
 	"itemCableAcceleration": 1.25,
 	"itemCableFriction": 2.25,
-	"drillBitUses": 4000
+	"drillBitUses": 4000,
+	"processingSpeedUpgrade": 1.5,
+	"processingSpeedPowerCost": 2.0,
+	"tankCapacityUpgrade": 2.0,
+	"rangeUpgrade": 3.0,
+	"powerUpgrade": 2.0,
+	"powerIoUpgrade": 1.5,
+	"outputMultiplierUpgrade": 1.5,
+	"outputMultiplierPowerCostUpgrade": 1.5
 }

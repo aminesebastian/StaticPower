@@ -17,6 +17,7 @@ import theking530.staticpower.tileentities.components.control.MachineProcessingC
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
+import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.utilities.InventoryUtilities;
 
@@ -29,7 +30,7 @@ public class TileEntityFusionFurnace extends TileEntityMachine {
 	public final InventoryComponent outputInventory;
 	public final InventoryComponent internalInventory;
 	public final InventoryComponent batteryInventory;
-	public final InventoryComponent upgradesInventory;
+	public final UpgradeInventoryComponent upgradesInventory;
 	public final MachineProcessingComponent moveComponent;
 	public final MachineProcessingComponent processingComponent;
 
@@ -43,14 +44,17 @@ public class TileEntityFusionFurnace extends TileEntityMachine {
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 3, MachineSideMode.Output));
 		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
 
-		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
+		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", DEFAULT_MOVING_TIME, this::canMoveFromInputToProcessing, () -> true, this::movingCompleted, true));
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true)
-				.setShouldControlBlockState(true));
+				.setShouldControlBlockState(true).setUpgradeInventory(upgradesInventory));
 
 		registerComponent(new InputServoComponent("InputServo", 4, inputInventory));
 		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory));
 		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
+		
+		// Set the energy storage upgrade inventory.
+		energyStorage.setUpgradeInventory(upgradesInventory);
 	}
 
 	/**
@@ -91,7 +95,7 @@ public class TileEntityFusionFurnace extends TileEntityMachine {
 		if (hasValidRecipe()) {
 			FusionFurnaceRecipe recipe = getRecipe(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1), inputInventory.getStackInSlot(2), inputInventory.getStackInSlot(3),
 					inputInventory.getStackInSlot(4)).get();
-			
+
 			// Transfer items.
 			for (int i = 0; i < recipe.getInputs().size(); i++) {
 				transferItemInternally(recipe.getInputs().get(i).getCount(), inputInventory, i, internalInventory, i);
@@ -171,7 +175,8 @@ public class TileEntityFusionFurnace extends TileEntityMachine {
 	 * @return
 	 */
 	public boolean hasValidRecipe() {
-		return getRecipe(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1), inputInventory.getStackInSlot(2), inputInventory.getStackInSlot(3), inputInventory.getStackInSlot(4)).isPresent();
+		return getRecipe(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1), inputInventory.getStackInSlot(2), inputInventory.getStackInSlot(3), inputInventory.getStackInSlot(4))
+				.isPresent();
 	}
 
 	/**

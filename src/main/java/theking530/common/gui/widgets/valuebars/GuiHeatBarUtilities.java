@@ -32,18 +32,18 @@ public class GuiHeatBarUtilities {
 		BufferBuilder vertexbuffer = tessellator.getBuffer();
 		Minecraft.getInstance().getTextureManager().bindTexture(GuiTextures.HEAT_BAR_BG);
 		vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-		vertexbuffer.pos(xpos + width, ypos, zLevel).tex(1, 0).endVertex();
-		vertexbuffer.pos(xpos + width, ypos - height, zLevel).tex(1.0f, 1.0f).endVertex();
-		vertexbuffer.pos(xpos, ypos - height, zLevel).tex(0.0f, 1.0f).endVertex();
-		vertexbuffer.pos(xpos, ypos, zLevel).tex(0, 0).endVertex();
+		vertexbuffer.pos(xpos + width, ypos, zLevel).tex(1, 1).endVertex();
+		vertexbuffer.pos(xpos + width, ypos - height, zLevel).tex(1.0f, 0.0f).endVertex();
+		vertexbuffer.pos(xpos, ypos - height, zLevel).tex(0.0f, 0.0f).endVertex();
+		vertexbuffer.pos(xpos, ypos, zLevel).tex(0, 1).endVertex();
 		tessellator.draw();
 
 		Minecraft.getInstance().getTextureManager().bindTexture(GuiTextures.HEAT_BAR_FG);
 		vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-		vertexbuffer.pos(xpos + width, ypos, zLevel).tex(1, 0).endVertex();
-		vertexbuffer.pos(xpos + width, ypos - k1, zLevel).tex(1, u1).endVertex();
-		vertexbuffer.pos(xpos, ypos - k1, zLevel).tex(0, u1).endVertex();
-		vertexbuffer.pos(xpos, ypos, zLevel).tex(0, 0).endVertex();
+		vertexbuffer.pos(xpos + width, ypos, zLevel).tex(1, u1).endVertex();
+		vertexbuffer.pos(xpos + width, ypos - k1, zLevel).tex(1, 0).endVertex();
+		vertexbuffer.pos(xpos, ypos - k1, zLevel).tex(0, 0).endVertex();
+		vertexbuffer.pos(xpos, ypos, zLevel).tex(0, u1).endVertex();
 		tessellator.draw();
 	}
 }

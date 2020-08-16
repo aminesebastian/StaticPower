@@ -20,6 +20,7 @@ import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
+import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 import theking530.staticpower.utilities.InventoryUtilities;
@@ -34,7 +35,7 @@ public class TileEntityFluidInfuser extends TileEntityMachine {
 	public final InventoryComponent internalInventory;
 	public final InventoryComponent outputInventory;
 	public final InventoryComponent batterySlot;
-	public final InventoryComponent upgradesInventory;
+	public final UpgradeInventoryComponent upgradesInventory;
 	public final MachineProcessingComponent moveComponent;
 	public final MachineProcessingComponent processingComponent;
 	public final FluidTankComponent fluidTankComponent;
@@ -53,21 +54,24 @@ public class TileEntityFluidInfuser extends TileEntityMachine {
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1, MachineSideMode.Never));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
 		registerComponent(batterySlot = new InventoryComponent("BatterySlot", 1, MachineSideMode.Never));
-		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
+		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", 2, this::canMoveFromInputToProcessing, () -> true, this::movingCompleted, true));
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true).setShouldControlBlockState(true));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true)
+				.setShouldControlBlockState(true).setUpgradeInventory(upgradesInventory));
 
 		registerComponent(new BatteryComponent("BatteryComponent", batterySlot, 0, energyStorage.getStorage()));
 		registerComponent(new OutputServoComponent("OutputServo", 2, outputInventory));
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));
 
-		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Input));
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
 		fluidTankComponent.setCanDrain(false);
 
 		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, fluidTankComponent, MachineSideMode.Input));
 
 		powerCost = DEFAULT_PROCESSING_COST;
+		// Set the energy storage upgrade inventory.
+		energyStorage.setUpgradeInventory(upgradesInventory);
 	}
 
 	/**
@@ -114,7 +118,8 @@ public class TileEntityFluidInfuser extends TileEntityMachine {
 	protected boolean canProcess() {
 		if (isValidInput(internalInventory.getStackInSlot(0))) {
 			FluidInfusionRecipe recipe = getRecipe(internalInventory.getStackInSlot(0)).orElse(null);
-			return redstoneControlComponent.passesRedstoneCheck() && energyStorage.hasEnoughPower(powerCost) && InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getOutput().getItem());
+			return redstoneControlComponent.passesRedstoneCheck() && energyStorage.hasEnoughPower(powerCost)
+					&& InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getOutput().getItem());
 		}
 		return false;
 	}
