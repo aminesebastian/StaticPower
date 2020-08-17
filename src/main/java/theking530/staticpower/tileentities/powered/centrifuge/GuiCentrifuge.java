@@ -13,9 +13,7 @@ import theking530.common.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneT
 import theking530.common.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.common.utilities.Color;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
-import theking530.staticpower.tileentities.components.ComponentUtilities;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
-import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
 
 public class GuiCentrifuge extends StaticPowerTileEntityGui<ContainerCentrifuge, TileEntityCentrifuge> {
 	private GuiInfoTab infoTab;
@@ -32,7 +30,7 @@ public class GuiCentrifuge extends StaticPowerTileEntityGui<ContainerCentrifuge,
 		getTabManager().registerTab(infoTab = new GuiInfoTab(100, 60));
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
-		getTabManager().registerTab(new GuiMachinePowerInfoTab(ComponentUtilities.getComponent(EnergyStorageComponent.class, "MainEnergyStorage", getTileEntity()).get()).setTabSide(TabSide.LEFT), true);
+		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage, getTileEntity().processingComponent).setTabSide(TabSide.LEFT), true);
 
 		setOutputSlotSize(20);
 	}

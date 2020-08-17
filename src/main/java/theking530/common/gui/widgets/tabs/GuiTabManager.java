@@ -25,10 +25,12 @@ public class GuiTabManager extends AbstractGuiWidget {
 	}
 
 	public GuiTabManager registerTab(BaseGuiTab tab, boolean initiallyOpen) {
-		registeredTabs.add(tab);
-		tab.setManager(this);
-		if (initiallyOpen) {
-			setInitiallyOpenTab(tab);
+		if (!registeredTabs.contains(tab)) {
+			registeredTabs.add(tab);
+			tab.setManager(this);
+			if (initiallyOpen) {
+				setInitiallyOpenTab(tab);
+			}
 		}
 		return this;
 	}
@@ -38,7 +40,9 @@ public class GuiTabManager extends AbstractGuiWidget {
 	}
 
 	public GuiTabManager removeTab(BaseGuiTab tab) {
-		registeredTabs.remove(tab);
+		if (registeredTabs.contains(tab)) {
+			registeredTabs.remove(tab);
+		}
 		return this;
 	}
 

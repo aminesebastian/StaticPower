@@ -62,13 +62,13 @@ public class InputServoComponent extends AbstractTileEntityComponent {
 
 	@Override
 	public void preProcessUpdate() {
-		// If we have an empty inventory, do nothing.
-		if (inventory.getSlots() == 0) {
-			return;
-		}
-
 		// Do nothing if this component is not enabled.
 		if (!isEnabled()) {
+			return;
+		}
+		
+		// If we have an empty inventory, do nothing.
+		if (inventory.getSlots() == 0) {
 			return;
 		}
 

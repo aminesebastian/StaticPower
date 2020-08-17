@@ -10,6 +10,7 @@ import theking530.staticpower.client.container.slots.BatteryItemSlot;
 import theking530.staticpower.client.container.slots.OutputSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.client.container.slots.UpgradeItemSlot;
+import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.init.ModContainerTypes;
 import theking530.staticpower.init.ModItems;
@@ -51,7 +52,7 @@ public class ContainerFormer extends StaticPowerTileEntityContainer<TileEntityFo
 
 	@Override
 	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
-		if (getTileEntity().getRecipe(stack, getTileEntity().inputInventory.getStackInSlot(1)).isPresent() && !mergeItemStack(stack, 0)) {
+		if (getTileEntity().processingComponent.getRecipe(new RecipeMatchParameters(stack, getTileEntity().inputInventory.getStackInSlot(1))).isPresent() && !mergeItemStack(stack, 0)) {
 			return true;
 		}
 		if (StaticPowerRecipeRegistry.isValidFormerMold(stack) && !mergeItemStack(stack, 1)) {

@@ -37,6 +37,11 @@ public class FluidInputServoComponent extends AbstractTileEntityComponent {
 
 	@Override
 	public void preProcessUpdate() {
+		// Do nothing if this component is not enabled.
+		if (!isEnabled()) {
+			return;
+		}
+		
 		if (!getTileEntity().getWorld().isRemote) {
 			for (Direction dir : Direction.values()) {
 				// If we can't input from the provided side, skip it.

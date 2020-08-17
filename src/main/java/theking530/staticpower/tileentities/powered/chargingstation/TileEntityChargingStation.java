@@ -10,7 +10,7 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 import theking530.staticpower.tileentities.TileEntityMachine;
-import theking530.staticpower.tileentities.components.control.BatteryComponent;
+import theking530.staticpower.tileentities.components.control.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
@@ -21,7 +21,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 public class TileEntityChargingStation extends TileEntityMachine {
 	public final InventoryComponent unchargedInventory;
 	public final InventoryComponent chargedInventory;
-	public final InventoryComponent batterySlot;
+	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 
 	public TileEntityChargingStation() {
@@ -29,10 +29,9 @@ public class TileEntityChargingStation extends TileEntityMachine {
 
 		registerComponent(unchargedInventory = new InventoryComponent("unchargedInventory", 4, MachineSideMode.Input));
 		registerComponent(chargedInventory = new InventoryComponent("chargedInventory", 4, MachineSideMode.Output));
-		registerComponent(batterySlot = new InventoryComponent("batterySlot", 1, MachineSideMode.Never));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
-
-		registerComponent(new BatteryComponent("BatteryComponent", batterySlot, 0, energyStorage.getStorage()));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
+		
 		registerComponent(new OutputServoComponent("OutputServo", 1, chargedInventory, 0, 1, 2, 3));
 		registerComponent(new InputServoComponent("InputServo", 2, unchargedInventory, 0, 1, 2, 3));
 		

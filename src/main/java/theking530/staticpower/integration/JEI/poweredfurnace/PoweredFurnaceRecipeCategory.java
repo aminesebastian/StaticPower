@@ -94,7 +94,7 @@ public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<FurnaceR
 	public List<String> getTooltipStrings(FurnaceRecipe recipe, double mouseX, double mouseY) {
 		List<String> output = new ArrayList<String>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			String powerCost = new MetricConverter(TileEntityPoweredFurnace.DEFAULT_PROCESSING_COST * TileEntityPoweredFurnace.DEFAULT_PROCESSING_TIME).getValueAsString(true);
+			String powerCost = new MetricConverter(TileEntityPoweredFurnace.DEFAULT_PROCESSING_COST * TileEntityPoweredFurnace.getCookTime(recipe)).getValueAsString(true);
 			output.add("Usage: " + powerCost + "FE");
 		}
 
@@ -135,8 +135,8 @@ public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<FurnaceR
 		guiItemStacks.init(INTPUT_SLOT, true, 40, 18);
 		guiItemStacks.init(OUTPUT_SLOT, false, 90, 18);
 		guiItemStacks.set(ingredients);
-		
-		powerTimer = guiHelper.createTickTimer(TileEntityPoweredFurnace.DEFAULT_PROCESSING_TIME, TileEntityPoweredFurnace.DEFAULT_PROCESSING_TIME * TileEntityPoweredFurnace.DEFAULT_PROCESSING_COST, true);
-		processingTimer = guiHelper.createTickTimer(TileEntityPoweredFurnace.DEFAULT_PROCESSING_TIME, TileEntityPoweredFurnace.DEFAULT_PROCESSING_TIME, false);
+
+		powerTimer = guiHelper.createTickTimer(TileEntityPoweredFurnace.getCookTime(recipe), TileEntityPoweredFurnace.getCookTime(recipe) * TileEntityPoweredFurnace.DEFAULT_PROCESSING_COST, true);
+		processingTimer = guiHelper.createTickTimer(TileEntityPoweredFurnace.getCookTime(recipe), TileEntityPoweredFurnace.getCookTime(recipe), false);
 	}
 }

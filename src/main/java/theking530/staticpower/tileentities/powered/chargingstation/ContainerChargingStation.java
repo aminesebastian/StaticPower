@@ -66,7 +66,7 @@ public class ContainerChargingStation extends StaticPowerTileEntityContainer<Til
 		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 2, 152, 52));
 
 		// Battery
-		this.addSlot(new BatteryItemSlot(getTileEntity().batterySlot, 0, 8, 54));
+		this.addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 54));
 
 		// Armor
 		this.addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 39, -19, 14, EquipmentSlotType.HEAD));

@@ -88,7 +88,7 @@ public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFue
 		GuiPowerBarUtilities.drawPowerBar(8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		flamesBg.draw(67, 40);
-		flames.draw(67, 40, (int) (((float)processingTimer.getValue() / processingTimer.getMaxValue()) * 14.0f), 0, 0, 0);
+		flames.draw(67, 40, (int) (((float) processingTimer.getValue() / processingTimer.getMaxValue()) * 14.0f), 0, 0, 0);
 
 		pBar.setCurrentProgress(processingTimer.getValue());
 		pBar.setMaxProgress(processingTimer.getMaxValue());
@@ -128,7 +128,7 @@ public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFue
 		guiItemStacks.init(INTPUT_SLOT, true, 65, 18);
 		guiItemStacks.set(ingredients);
 
-		int burnTime = ForgeHooks.getBurnTime(recipe.getFuel());
+		int burnTime = recipe.getFuelAmount();
 		powerTimer = guiHelper.createTickTimer(Math.max(1, burnTime / 10), TileEntitySolidGenerator.DEFAULT_POWER_GENERATION * burnTime, false);
 		processingTimer = guiHelper.createTickTimer(burnTime, burnTime, false);
 	}

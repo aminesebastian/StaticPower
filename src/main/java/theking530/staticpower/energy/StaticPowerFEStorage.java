@@ -4,10 +4,11 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.energy.IEnergyStorage;
 import theking530.common.utilities.SDMath;
 
-public class StaticPowerFEStorage implements IEnergyStorage {
+public class StaticPowerFEStorage implements IEnergyStorage, INBTSerializable<CompoundNBT> {
 	public static final int MAXIMUM_IO_CAPTURE_FRAMES = 5;
 	protected int capacity;
 	protected int currentEnergy;
@@ -53,6 +54,7 @@ public class StaticPowerFEStorage implements IEnergyStorage {
 	public void captureEnergyMetric() {
 		// IO Capture
 		float tranfered = currentFrameEnergyReceived + currentFrameEnergyExtracted;
+		
 		ioCaptureFrames.add(tranfered);
 		if (ioCaptureFrames.size() > MAXIMUM_IO_CAPTURE_FRAMES) {
 			ioCaptureFrames.poll();
@@ -238,7 +240,23 @@ public class StaticPowerFEStorage implements IEnergyStorage {
 		currentEnergy = Math.min(currentEnergy, capacity);
 	}
 
-	public void readFromNbt(CompoundNBT nbt) {
+	@Override
+	public CompoundNBT serializeNBT() {
+		if (currentEnergy < 0) {
+			currentEnergy = 0;
+		}
+		CompoundNBT nbt = new CompoundNBT();
+		nbt.putInt("Energy", currentEnergy);
+		nbt.putInt("Capacity", capacity);
+		nbt.putInt("MaxRecv", maxReceive);
+		nbt.putInt("MaxExtract", maxExtract);
+		nbt.putFloat("Received", averageRecieved);
+		nbt.putFloat("Extracted", averageExtracted);
+		return nbt;
+	}
+
+	@Override
+	public void deserializeNBT(CompoundNBT nbt) {
 		if (currentEnergy > capacity) {
 			currentEnergy = capacity;
 		}
@@ -249,19 +267,5 @@ public class StaticPowerFEStorage implements IEnergyStorage {
 		maxExtract = nbt.getInt("MaxExtract");
 		averageRecieved = nbt.getFloat("Received");
 		averageExtracted = nbt.getFloat("Extracted");
-	}
-
-	public CompoundNBT writeToNbt(CompoundNBT nbt) {
-		if (currentEnergy < 0) {
-			currentEnergy = 0;
-		}
-
-		nbt.putInt("Energy", currentEnergy);
-		nbt.putInt("Capacity", capacity);
-		nbt.putInt("MaxRecv", maxReceive);
-		nbt.putInt("MaxExtract", maxExtract);
-		nbt.putFloat("Received", averageRecieved);
-		nbt.putFloat("Extracted", averageExtracted);
-		return nbt;
 	}
 }

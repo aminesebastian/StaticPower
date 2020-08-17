@@ -1,29 +1,28 @@
 package theking530.staticpower.tileentities.components.control;
 
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.energy.StaticPowerFEStorage;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
-import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.tileentities.components.items.InventoryComponent;
 
-public class BatteryComponent extends AbstractTileEntityComponent {
+public class BatteryInventoryComponent extends InventoryComponent {
 
-	private IItemHandler BatterySlotHandler;
-	private int BatterySlot;
 	private StaticPowerFEStorage EnergyStorage;
 
-	public BatteryComponent(String name, IItemHandler batterySlotHandler, int batterySlot, StaticPowerFEStorage energyStorage) {
-		super(name);
-		BatterySlotHandler = batterySlotHandler;
-		BatterySlot = batterySlot;
+	public BatteryInventoryComponent(String name, StaticPowerFEStorage energyStorage) {
+		super(name, 1);
 		EnergyStorage = energyStorage;
 	}
 
 	@Override
 	public void preProcessUpdate() {
-		if (BatterySlot < BatterySlotHandler.getSlots()) {
+		if (!isEnabled()) {
+			return;
+		}
+
+		if (!getWorld().isRemote) {
 			if (EnergyStorage.getEnergyStored() < EnergyStorage.getMaxEnergyStored()) {
-				ItemStack candidate = BatterySlotHandler.getStackInSlot(BatterySlot);
+				ItemStack candidate = getStackInSlot(0);
 				if (candidate != null) {
 					if (EnergyHandlerItemStackUtilities.isEnergyContainer(candidate)) {
 						int maxInput = EnergyStorage.getCurrentMaximumPowerInput();

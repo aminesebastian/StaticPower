@@ -1,5 +1,6 @@
 package theking530.staticpower.tileentities;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -48,6 +49,7 @@ import theking530.staticpower.tileentities.components.AbstractTileEntityComponen
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.tileentities.components.control.SideConfigurationComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
+import theking530.staticpower.tileentities.components.serialization.SerializationUtilities;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities;
 import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities.BlockSide;
@@ -59,6 +61,8 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	private boolean isValid;
 	protected boolean DisableFaceInteraction;
 	private HashMap<String, AbstractTileEntityComponent> Components;
+	private final List<Field> saveSerializeableFields;
+	private final List<Field> updateSerializeableFields;
 
 	/**
 	 * If true, on the next tick, the tile entity will be synced using the methods
@@ -72,6 +76,8 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		Components = new HashMap<String, AbstractTileEntityComponent>();
 		updateQueued = false;
 		isValid = true;
+		saveSerializeableFields = SerializationUtilities.getSaveSerializeableFields(this);
+		updateSerializeableFields = SerializationUtilities.getUpdateSerializeableFields(this);
 		disableFaceInteraction();
 	}
 
@@ -415,6 +421,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 			nbt.put(component.getComponentName(), componentTag);
 		}
 		nbt.putBoolean("DISABLE_FACE", DisableFaceInteraction);
+		SerializationUtilities.serializeFieldsToNbt(nbt, updateSerializeableFields, this);
 		return nbt;
 	}
 
@@ -433,6 +440,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 			}
 		}
 		DisableFaceInteraction = nbt.getBoolean("DISABLE_FACE");
+		SerializationUtilities.deserializeFieldsToNbt(nbt, updateSerializeableFields, this);
 	}
 
 	/**
@@ -456,7 +464,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 			component.serializeSaveNbt(componentTag);
 			nbt.put(component.getComponentName(), componentTag);
 		}
-
+		SerializationUtilities.serializeFieldsToNbt(nbt, saveSerializeableFields, this);
 		return nbt;
 	}
 
@@ -474,6 +482,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 				component.deserializeSaveNbt(nbt.getCompound(component.getComponentName()));
 			}
 		}
+		SerializationUtilities.deserializeFieldsToNbt(nbt, saveSerializeableFields, this);
 	}
 
 	/**

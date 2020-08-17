@@ -28,6 +28,10 @@ public class FluidOutputServoComponent extends AbstractTileEntityComponent {
 
 	@Override
 	public void preProcessUpdate() {
+		// Do nothing if not enabled.
+		if(!isEnabled()) {
+			return;
+		}
 		if (!getTileEntity().getWorld().isRemote) {
 			for (Direction dir : Direction.values()) {
 				// If we can't output from the provided side, skip it.

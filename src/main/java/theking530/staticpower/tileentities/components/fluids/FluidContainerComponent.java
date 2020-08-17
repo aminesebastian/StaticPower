@@ -63,6 +63,11 @@ public class FluidContainerComponent extends AbstractTileEntityComponent {
 
 	@Override
 	public void preProcessUpdate() {
+		// Do nothing if this component is not enabled.
+		if (!isEnabled()) {
+			return;
+		}
+
 		// Only do work on the server.
 		if (getWorld().isRemote) {
 			return;

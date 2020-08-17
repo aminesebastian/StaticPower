@@ -38,7 +38,7 @@ public class ContainerFluidInfuser extends StaticPowerTileEntityContainer<TileEn
 		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 2, 152, 52));
 
 		// Battery
-		addSlot(new BatteryItemSlot(getTileEntity().batterySlot, 0, 8, 64));
+		addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 64));
 
 		addPlayerInventory(getPlayerInventory(), 8, 84);
 		addPlayerHotbar(getPlayerInventory(), 8, 142);

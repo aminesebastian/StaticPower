@@ -46,7 +46,7 @@ public class UpgradeInventoryComponent extends InventoryComponent {
 	 * @param upgradeClass The class to check for.
 	 * @return True if an upgrade of the provided type was found, false otherwise.
 	 */
-	public boolean hasUpgradeOfClass(Class<IUpgradeItem> upgradeClass) {
+	public <T extends IUpgradeItem> boolean hasUpgradeOfClass(Class<T> upgradeClass) {
 		for (ItemStack stack : stacks) {
 			if (upgradeClass.isInstance(stack.getItem())) {
 				return true;

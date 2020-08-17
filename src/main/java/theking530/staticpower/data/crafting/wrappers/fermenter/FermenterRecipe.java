@@ -29,7 +29,10 @@ public class FermenterRecipe extends AbstractStaticPowerRecipe {
 	}
 
 	public boolean isValid(RecipeMatchParameters matchParams) {
-		return inputIngredient.test(matchParams.getItems()[0]);
+		if (matchParams.hasItems() && matchParams.getItems().length > 0) {
+			return inputIngredient.test(matchParams.getItems()[0]);
+		}
+		return false;
 	}
 
 	@Override

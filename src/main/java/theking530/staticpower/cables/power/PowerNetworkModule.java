@@ -91,12 +91,12 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 
 	@Override
 	public void readFromNbt(CompoundNBT tag) {
-		EnergyStorage.readFromNbt(tag);
+		EnergyStorage.deserializeNBT(tag.getCompound("energy_storage"));
 	}
 
 	@Override
 	public CompoundNBT writeToNbt(CompoundNBT tag) {
-		EnergyStorage.writeToNbt(tag);
+		tag.put("energy_storage", EnergyStorage.serializeNBT());
 		return tag;
 	}
 

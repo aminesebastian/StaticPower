@@ -11,15 +11,13 @@ import theking530.common.gui.widgets.button.StandardButton;
 import theking530.common.gui.widgets.button.StandardButton.MouseButton;
 import theking530.common.gui.widgets.button.TextButton;
 import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
-import theking530.common.gui.widgets.tabs.GuiMachinePowerInfoTab;
+import theking530.common.gui.widgets.tabs.GuiPowerInfoTab;
 import theking530.common.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.common.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
 import theking530.common.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
-import theking530.staticpower.tileentities.components.ComponentUtilities;
-import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
 import theking530.staticpower.utilities.MetricConverter;
 
 public class GuiBattery extends StaticPowerTileEntityGui<ContainerBattery, TileEntityBattery> {
@@ -36,9 +34,9 @@ public class GuiBattery extends StaticPowerTileEntityGui<ContainerBattery, TileE
 	public void initializeGui() {
 		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 75, 20, 26, 51));
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
-		// getTabManager().registerTab(new GuiPowerControlTab(100, 70, teSBattery));
+
 		getTabManager().registerTab(new GuiSideConfigTab(true, getTileEntity()));
-		getTabManager().registerTab(new GuiMachinePowerInfoTab(ComponentUtilities.getComponent(EnergyStorageComponent.class, "MainEnergyStorage", getTileEntity()).get()).setTabSide(TabSide.LEFT), true);
+		getTabManager().registerTab(new GuiPowerInfoTab(getTileEntity().energyStorage).setTabSide(TabSide.LEFT), true);
 
 		registerWidget(inputUp = new TextButton(52, 23, 20, 20, "+", this::buttonPressed));
 		registerWidget(inputDown = new TextButton(52, 48, 20, 20, "-", this::buttonPressed));

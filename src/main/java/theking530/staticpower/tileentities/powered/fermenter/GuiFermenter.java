@@ -16,9 +16,8 @@ import theking530.common.gui.widgets.valuebars.GuiFluidBarUtilities;
 import theking530.common.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.init.ModFluids;
-import theking530.staticpower.tileentities.components.ComponentUtilities;
+import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
-import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
 public class GuiFermenter extends StaticPowerTileEntityGui<ContainerFermenter, TileEntityFermenter> {
@@ -39,8 +38,7 @@ public class GuiFermenter extends StaticPowerTileEntityGui<ContainerFermenter, T
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
 
-		getTabManager().registerTab(new GuiMachinePowerInfoTab(ComponentUtilities.getComponent(EnergyStorageComponent.class, "MainEnergyStorage", getTileEntity()).get()).setTabSide(TabSide.LEFT),
-				true);
+		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage, getTileEntity().processingComponent).setTabSide(TabSide.LEFT), true);
 		getTabManager().registerTab(new GuiFluidContainerTab(this.container, getTileEntity().fluidContainerComponent, Items.BUCKET, ModFluids.Mash.getBucket()).setTabSide(TabSide.LEFT));
 		getTabManager().registerTab(new GuiUpgradeTab(this.container, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
 
@@ -57,7 +55,7 @@ public class GuiFermenter extends StaticPowerTileEntityGui<ContainerFermenter, T
 		this.drawSlot(guiLeft + 97, guiTop + 40, 48, 5);
 		if (!getTileEntity().internalInventory.getStackInSlot(0).isEmpty()) {
 			int progress = getTileEntity().processingComponent.getProgressScaled(48);
-			FluidStack fluid = getTileEntity().getRecipe(getTileEntity().internalInventory.getStackInSlot(0)).get().getOutputFluidStack();
+			FluidStack fluid = getTileEntity().processingComponent.getRecipe(getTileEntity().getMatchParameters(RecipeProcessingLocation.INTERNAL)).get().getOutputFluidStack();
 			GuiFluidBarUtilities.drawFluidBar(fluid, 1000, 1000, guiLeft + 97, guiTop + 45, 1, progress, 5, false);
 		}
 	}

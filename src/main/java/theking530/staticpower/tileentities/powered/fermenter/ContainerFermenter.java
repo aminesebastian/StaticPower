@@ -10,6 +10,7 @@ import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.client.container.slots.BatteryItemSlot;
 import theking530.staticpower.client.container.slots.OutputSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
+import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.init.ModContainerTypes;
 import theking530.staticpower.items.upgrades.BaseUpgrade;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
@@ -44,7 +45,7 @@ public class ContainerFermenter extends StaticPowerTileEntityContainer<TileEntit
 
 	@Override
 	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
-		if (getTileEntity().getRecipe(stack).isPresent() && !mergeItemStack(stack, 0, 10, false)) {
+		if (getTileEntity().processingComponent.getRecipe(new RecipeMatchParameters(stack)).isPresent() && !mergeItemStack(stack, 0, 10, false)) {
 			return true;
 		}
 		if (EnergyHandlerItemStackUtilities.isValidStaticPowerEnergyContainingItemstack(stack) && !mergeItemStack(stack, 11)) {

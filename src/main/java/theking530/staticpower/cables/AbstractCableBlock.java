@@ -20,9 +20,7 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkHooks;
 import theking530.common.wrench.RegularWrenchMode;
 import theking530.common.wrench.SneakWrenchMode;
@@ -30,7 +28,6 @@ import theking530.staticpower.blocks.ICustomModelSupplier;
 import theking530.staticpower.blocks.StaticPowerBlock;
 import theking530.staticpower.cables.CableBoundsHoverResult.CableBoundsHoverType;
 import theking530.staticpower.cables.network.CableNetworkManager;
-import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
 import theking530.staticpower.utilities.WorldUtilities;
 
@@ -100,17 +97,6 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 		}
 		// IF we didn't return earlier, continue the execution.
 		return ActionResultType.PASS;
-	}
-
-	@Override
-	public void onStaticPowerNeighborChanged(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
-		super.onStaticPowerNeighborChanged(state, world, pos, neighbor);
-		if (!world.isRemote()) {
-			ServerCable cable = CableNetworkManager.get((ServerWorld) world).getCable(pos);
-			if (cable != null && cable.getNetwork() != null) {
-				cable.getNetwork().updateGraph((ServerWorld) world, pos);
-			}
-		}
 	}
 
 	@Override

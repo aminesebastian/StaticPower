@@ -67,7 +67,7 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 	}
 
 	public boolean canContinueProcessingFuel() {
-		return !isDoneMining() && redstoneControlComponent.passesRedstoneCheck();
+		return !isDoneMining() && redstoneControlComponent.passesRedstoneCheck() && processingComponent.isPerformingWork();
 	}
 
 	public boolean fuelProcessingCompleted() {

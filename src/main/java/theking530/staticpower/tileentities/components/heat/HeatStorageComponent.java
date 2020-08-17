@@ -1,23 +1,25 @@
 package theking530.staticpower.tileentities.components.heat;
 
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.common.utilities.TriFunction;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 
 public class HeatStorageComponent extends AbstractTileEntityComponent {
 	public enum HeatManipulationAction {
 		COOL, HEAT
 	}
 
-	protected TriFunction<Float, Direction, HeatManipulationAction, Boolean> filter;
 	public static final float ENERGY_SYNC_MAX_DELTA = 1;
-	protected final HeatStorage heatStorage;
-	private float lastSyncHeat;
 
+	@UpdateSerialize
+	protected final HeatStorage heatStorage;
+
+	protected TriFunction<Float, Direction, HeatManipulationAction, Boolean> filter;
+	private float lastSyncHeat;
 	private HeatComponentCapabilityAccess capabilityAccessor;
 
 	public HeatStorageComponent(String name, float maxHeat, float maxTransferRate, float thermalConductivity) {
@@ -57,7 +59,7 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 				syncToClient();
 			}
 			heatStorage.captureHeatTransferMetric();
-			
+
 			// Cool off the heat storage.
 			heatStorage.transferWithSurroundings(getWorld(), getPos());
 		}
@@ -99,19 +101,6 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 	public HeatStorageComponent setCapabiltiyFilter(TriFunction<Float, Direction, HeatManipulationAction, Boolean> filter) {
 		this.filter = filter;
 		return this;
-	}
-
-	@Override
-	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
-		super.deserializeUpdateNbt(nbt, fromUpdate);
-		heatStorage.deserializeNBT(nbt.getCompound("heat_storage"));
-	}
-
-	@Override
-	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
-		super.serializeUpdateNbt(nbt, fromUpdate);
-		nbt.put("heat_storage", heatStorage.serializeNBT());
-		return nbt;
 	}
 
 	@Override

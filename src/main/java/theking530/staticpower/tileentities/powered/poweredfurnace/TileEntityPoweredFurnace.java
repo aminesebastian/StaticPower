@@ -1,18 +1,17 @@
 package theking530.staticpower.tileentities.powered.poweredfurnace;
 
-import java.util.Optional;
-
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipe;
 import net.minecraft.item.crafting.IRecipeType;
+import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
-import theking530.staticpower.tileentities.components.control.BatteryComponent;
-import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
+import theking530.staticpower.tileentities.components.control.BatteryInventoryComponent;
+import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
+import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
@@ -28,133 +27,95 @@ import theking530.staticpower.utilities.InventoryUtilities;
  *
  */
 public class TileEntityPoweredFurnace extends TileEntityMachine {
-	public static final int DEFAULT_PROCESSING_TIME = 100;
+	/**
+	 * Indicates how many times faster this block will perform compared to the
+	 * vanila furnace.
+	 */
+	public static final float DEFAULT_PROCESSING_TIME_MULT = 2.0f;
 	public static final int DEFAULT_PROCESSING_COST = 10;
 	public static final int DEFAULT_MOVING_TIME = 4;
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
 	public final InventoryComponent internalInventory;
-	public final InventoryComponent batteryInventory;
+	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
-	public final MachineProcessingComponent moveComponent;
-	public final MachineProcessingComponent processingComponent;
-
-	private int processingPowerCost;
+	public final RecipeProcessingComponent<FurnaceRecipe> processingComponent;
 
 	public TileEntityPoweredFurnace() {
 		super(ModTileEntityTypes.POWERED_FURNACE);
 
-		processingPowerCost = DEFAULT_PROCESSING_COST;
-
+		// Setup the input inventory to only accept items that have a valid recipe.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
-				return getRecipe(stack).isPresent();
-
+				return processingComponent.getRecipe(new RecipeMatchParameters(stack)).isPresent();
 			}
 		}));
+
+		// Setup all the other inventories.
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
-
-		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1, MachineSideMode.Never));
-		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
-
+		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
-		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", 2, this::canMoveFromInputToProcessing, () -> true, this::movingCompleted, true));
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 10, this::canProcess, this::canProcess, this::processingCompleted, true)
-				.setShouldControlBlockState(true).setUpgradeInventory(upgradesInventory));
-		processingComponent.setMaxProcessingTime(DEFAULT_PROCESSING_TIME);
 
+		// Setup the processing component.
+		registerComponent(processingComponent = new RecipeProcessingComponent<FurnaceRecipe>("ProcessingComponent", IRecipeType.SMELTING, 1, this::getMatchParameters, this::moveInputs,
+				this::canProcessRecipe, this::processingCompleted));
+
+		// Initialize the processing component to work with the redstone control
+		// component, upgrade component and energy component.
+		processingComponent.setShouldControlBlockState(true);
+		processingComponent.setUpgradeInventory(upgradesInventory);
+		processingComponent.setEnergyComponent(energyStorage);
+		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
+		processingComponent.setProcessingPowerUsage(DEFAULT_PROCESSING_COST);
+
+		// Setup the I/O servos.
 		registerComponent(new InputServoComponent("InputServo", 4, inputInventory, 0));
 		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory, 0));
-		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
 
 		// Set the energy storage upgrade inventory.
 		energyStorage.setUpgradeInventory(upgradesInventory);
 	}
 
-	/**
-	 * Checks to see if the furnace can being processing. It checks for a valid
-	 * input item, if there is enough power for one tick of processing (the
-	 * processing can get stuck half way through), and checks to see if the output
-	 * slot can contain the recipe output.
-	 * 
-	 * @return
-	 */
-	protected boolean canMoveFromInputToProcessing() {
-		if (hasValidRecipe() && !moveComponent.isProcessing() && internalInventory.getStackInSlot(0).isEmpty() && energyStorage.getStorage().getEnergyStored() >= DEFAULT_PROCESSING_COST) {
-			ItemStack output = getRecipe(inputInventory.getStackInSlot(0)).get().getRecipeOutput();
-			return InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, output);
+	protected RecipeMatchParameters getMatchParameters(RecipeProcessingLocation location) {
+		if (location == RecipeProcessingLocation.INTERNAL) {
+			return new RecipeMatchParameters(internalInventory.getStackInSlot(0));
+		} else {
+			return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
 		}
-		return false;
 	}
 
-	/**
-	 * Once again, check to make sure the input item has not been removed or changed
-	 * since we started the move process. If still valid, move a single input item
-	 * to the internal inventory and being processing.
-	 * 
-	 * @return
-	 */
-	protected boolean movingCompleted() {
-		if (hasValidRecipe()) {
+	protected boolean moveInputs(FurnaceRecipe recipe) {
+		if (internalInventory.getStackInSlot(0).isEmpty() && InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getRecipeOutput())) {
 			transferItemInternally(inputInventory, 0, internalInventory, 0);
+			processingComponent.setMaxProcessingTime(TileEntityPoweredFurnace.getCookTime(recipe));
 			markTileEntityForSynchronization();
-		}
-		return true;
-	}
-
-	protected boolean canProcess() {
-		FurnaceRecipe recipe = getRecipe(internalInventory.getStackInSlot(0)).orElse(null);
-		return recipe != null && redstoneControlComponent.passesRedstoneCheck() && energyStorage.hasEnoughPower(processingPowerCost)
-				&& InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getRecipeOutput());
-	}
-
-	/**
-	 * Once the processing is completed, place the output in the output slot (if
-	 * possible). If not, return false. This method will continue to be called until
-	 * true is returned.
-	 * 
-	 * @return
-	 */
-	protected boolean processingCompleted() {
-		if (!getWorld().isRemote && !internalInventory.getStackInSlot(0).isEmpty()) {
-			ItemStack output = getRecipe(internalInventory.getStackInSlot(0)).get().getRecipeOutput();
-			if (!output.isEmpty() && InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, output)) {
-				outputInventory.insertItem(0, output.copy(), false);
-				internalInventory.setStackInSlot(0, ItemStack.EMPTY);
-				markTileEntityForSynchronization();
-				return true;
-			}
+			return true;
 		}
 		return false;
 	}
 
-	@Override
-	public void process() {
-		if (processingComponent.isPerformingWork()) {
-			if (!getWorld().isRemote) {
-				energyStorage.usePower(processingPowerCost);
-			}
+	protected boolean canProcessRecipe(FurnaceRecipe recipe) {
+		return InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getRecipeOutput());
+	}
+
+	protected boolean processingCompleted(FurnaceRecipe recipe) {
+		// Put the output into the output inventory.
+		ItemStack output = recipe.getRecipeOutput();
+		if (InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, output)) {
+			outputInventory.insertItem(0, output.copy(), false);
+			internalInventory.setStackInSlot(0, ItemStack.EMPTY);
+			markTileEntityForSynchronization();
+			return true;
 		}
+
+		// If something failed, return false and try again.
+		return false;
 	}
 
-	/**
-	 * Checks to see if the input item forms a valid recipe.
-	 * 
-	 * @return
-	 */
-	public boolean hasValidRecipe() {
-		return getRecipe(inputInventory.getStackInSlot(0)).isPresent();
-	}
-
-	/**
-	 * Checks if the provided itemstack forms a valid recipe.
-	 * 
-	 * @param itemStackInput The itemstack to check for.
-	 * @return
-	 */
-	public Optional<FurnaceRecipe> getRecipe(ItemStack itemStackInput) {
-		return world.getRecipeManager().getRecipe(IRecipeType.SMELTING, new Inventory(itemStackInput), world);
+	public static int getCookTime(FurnaceRecipe recipe) {
+		return (int) (recipe.getCookTime() / DEFAULT_PROCESSING_TIME_MULT);
 	}
 
 	@Override

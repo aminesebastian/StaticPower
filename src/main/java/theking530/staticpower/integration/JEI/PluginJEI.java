@@ -47,6 +47,7 @@ import theking530.staticpower.integration.JEI.poweredgrinder.PoweredGrinderRecip
 import theking530.staticpower.integration.JEI.solderingtable.SolderingTableRecipeCategory;
 import theking530.staticpower.integration.JEI.solidgenerator.SolidGeneratorRecipeCategory;
 import theking530.staticpower.integration.JEI.squeezer.SqueezerRecipeCategory;
+import theking530.staticpower.items.StaticPowerEnergyStoringItem;
 import theking530.staticpower.items.cableattachments.digistorecraftingterminal.ContainerDigistoreCraftingTerminal;
 import theking530.staticpower.tileentities.nonpowered.evaporator.GuiEvaporator;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.ContainerSolderingTable;
@@ -171,6 +172,11 @@ public class PluginJEI implements IModPlugin {
 	@Override
 	public void registerItemSubtypes(ISubtypeRegistration subtypeRegistry) {
 		subtypeRegistry.useNbtForSubtypes(ModItems.CableCover);
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.BasicPortableBattery, new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.StaticPortableBattery, new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.EnergizedPortableBattery, new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.LumumPortableBattery, new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.ElectringSolderingIron, new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
 	}
 
 	@Override

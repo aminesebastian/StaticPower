@@ -447,6 +447,7 @@
 	"gui.staticpower.mode.output2": "Primary Output",
 	"gui.staticpower.mode.output3": "Secondary Output",
 	"gui.staticpower.mode.disabled": "Disabled",
+	"gui.staticpower.mode.max_input": "Max Input",
 	"gui.staticpower.ticks": "Ticks",
 	"gui.staticpower.seconds": "Seconds",
 	"gui.staticpower.seconds.short": "s",

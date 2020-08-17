@@ -1,7 +1,5 @@
 package theking530.staticpower.tileentities.powered.former;
 
-import java.util.Optional;
-
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -11,8 +9,9 @@ import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.former.FormerRecipe;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
-import theking530.staticpower.tileentities.components.control.BatteryComponent;
-import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
+import theking530.staticpower.tileentities.components.control.BatteryInventoryComponent;
+import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
+import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
@@ -29,92 +28,77 @@ public class TileEntityFormer extends TileEntityMachine {
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
 	public final InventoryComponent internalInventory;
-	public final InventoryComponent batteryInventory;
+	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
-	public final MachineProcessingComponent moveComponent;
-	public final MachineProcessingComponent processingComponent;
+	public final RecipeProcessingComponent<FormerRecipe> processingComponent;
 
 	public TileEntityFormer() {
 		super(ModTileEntityTypes.FORMER);
-		disableFaceInteraction();
+
+		// Setup the input inventory to only accept items that have a valid recipe.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 2, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
 				if (slot == 1 && StaticPowerRecipeRegistry.isValidFormerMold(stack)) {
 					return true;
 				}
-				return getRecipe(stack, inputInventory.getStackInSlot(1)).isPresent();
+				return processingComponent.getRecipe(new RecipeMatchParameters(stack, inputInventory.getStackInSlot(1))).isPresent();
 			}
 		}));
-		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 2, MachineSideMode.Never));
+
+		// Setup all the other inventories.
+		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 2));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
-		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
-
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
-		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", 2, this::canMoveFromInputToProcessing, () -> true, this::movingCompleted, true));
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true)
-				.setShouldControlBlockState(true).setUpgradeInventory(upgradesInventory));
 
-		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));
-		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory));
-		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
-		
+		// Setup the processing component to work with the redstone control component,
+		// upgrade component and energy component.
+		registerComponent(processingComponent = new RecipeProcessingComponent<FormerRecipe>("ProcessingComponent", FormerRecipe.RECIPE_TYPE, 1, this::getMatchParameters, this::moveInputs,
+				this::canProcessRecipe, this::processingCompleted));
+
+		// Initialize the processing component to work with the redstone control
+		// component, upgrade component and energy component.
+		processingComponent.setShouldControlBlockState(true);
+		processingComponent.setUpgradeInventory(upgradesInventory);
+		processingComponent.setEnergyComponent(energyStorage);
+		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
+		processingComponent.setProcessingPowerUsage(DEFAULT_PROCESSING_COST);
+
+		// Setup the I/O servos.
+		registerComponent(new InputServoComponent("InputServo", 4, inputInventory, 0));
+		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory, 0));
+
 		// Set the energy storage upgrade inventory.
 		energyStorage.setUpgradeInventory(upgradesInventory);
 	}
 
-	/**
-	 * Checks to see if the furnace can being processing. It checks for a valid
-	 * input item, if there is enough power for one tick of processing (the
-	 * processing can get stuck half way through), and checks to see if the output
-	 * slot can contain the recipe output.
-	 * 
-	 * @return
-	 */
-	protected boolean canMoveFromInputToProcessing() {
-		if (hasValidRecipe() && !moveComponent.isProcessing() && internalInventory.getStackInSlot(0).isEmpty() && energyStorage.getStorage().getEnergyStored() >= DEFAULT_PROCESSING_COST) {
-			ItemStack output = getRecipe(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1)).get().getRecipeOutput();
-			return InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, output);
+	protected RecipeMatchParameters getMatchParameters(RecipeProcessingLocation location) {
+		if (location == RecipeProcessingLocation.INTERNAL) {
+			return new RecipeMatchParameters(internalInventory.getStackInSlot(0), internalInventory.getStackInSlot(1));
+		} else {
+			return new RecipeMatchParameters(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1));
+		}
+	}
+
+	protected boolean moveInputs(FormerRecipe recipe) {
+		// If the items can be insert into the output, transfer the items and return
+		// true.
+		if (internalInventory.getStackInSlot(0).isEmpty() && InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.getRecipeOutput())) {
+			transferItemInternally(inputInventory, 0, internalInventory, 0);
+			markTileEntityForSynchronization();
+			return true;
 		}
 		return false;
 	}
 
-	/**
-	 * Once again, check to make sure the input item has not been removed or changed
-	 * since we started the move process. If still valid, move a single input item
-	 * to the internal inventory and being processing.
-	 * 
-	 * @return
-	 */
-	protected boolean movingCompleted() {
-		if (hasValidRecipe()) {
-			// Transfer the items to the internal inventory.
-			transferItemInternally(inputInventory, 0, internalInventory, 0);
-			internalInventory.setStackInSlot(1, inputInventory.getStackInSlot(1).copy());
-			// Update the processing time.
-			FormerRecipe recipe = getRecipe(internalInventory.getStackInSlot(0), internalInventory.getStackInSlot(1)).orElse(null);
-			processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
-			// Trigger a block update.
-			markTileEntityForSynchronization();
-		}
-		return true;
+	protected boolean canProcessRecipe(FormerRecipe recipe) {
+		return InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.getRecipeOutput());
 	}
 
-	protected boolean canProcess() {
-		FormerRecipe recipe = getRecipe(internalInventory.getStackInSlot(0), internalInventory.getStackInSlot(1)).orElse(null);
-		return recipe != null && redstoneControlComponent.passesRedstoneCheck() && energyStorage.hasEnoughPower(recipe.getPowerCost())
-				&& InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getRecipeOutput());
-	}
-
-	/**
-	 * Once the processing is completed, place the output in the output slot (if
-	 * possible). If not, return false. This method will continue to be called until
-	 * true is returned.
-	 * 
-	 * @return
-	 */
-	protected boolean processingCompleted() {
-		if (!getWorld().isRemote && !internalInventory.getStackInSlot(0).isEmpty()) {
-			ItemStack output = getRecipe(internalInventory.getStackInSlot(0), internalInventory.getStackInSlot(1)).get().getRecipeOutput();
+	protected boolean processingCompleted(FormerRecipe recipe) {
+		// Ensure the output slots can take the recipe.
+		if (InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.getRecipeOutput())) {
+			ItemStack output = recipe.getRecipeOutput();
 			if (!output.isEmpty() && InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, output)) {
 				outputInventory.insertItem(0, output.copy(), false);
 				internalInventory.setStackInSlot(0, ItemStack.EMPTY);
@@ -122,27 +106,14 @@ public class TileEntityFormer extends TileEntityMachine {
 				markTileEntityForSynchronization();
 				return true;
 			}
+
+			internalInventory.setStackInSlot(0, ItemStack.EMPTY);
+			markTileEntityForSynchronization();
+			return true;
 		}
+
+		// If something failed, return false and try again.
 		return false;
-	}
-
-	public void process() {
-		if (processingComponent.isPerformingWork()) {
-			if (!getWorld().isRemote) {
-				getRecipe(internalInventory.getStackInSlot(0), internalInventory.getStackInSlot(1)).ifPresent(recipe -> {
-					energyStorage.usePower(recipe.getPowerCost());
-				});
-			}
-		}
-	}
-
-	// Functionality
-	public boolean hasValidRecipe() {
-		return getRecipe(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1)).isPresent();
-	}
-
-	public Optional<FormerRecipe> getRecipe(ItemStack itemStackInput, ItemStack mold) {
-		return StaticPowerRecipeRegistry.getRecipe(FormerRecipe.RECIPE_TYPE, new RecipeMatchParameters().setItems(itemStackInput, mold).setStoredEnergy(energyStorage.getStorage().getEnergyStored()));
 	}
 
 	@Override

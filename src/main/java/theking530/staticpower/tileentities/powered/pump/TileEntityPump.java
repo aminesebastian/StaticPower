@@ -33,7 +33,7 @@ import theking530.staticpower.tileentities.components.fluids.FluidOutputServoCom
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
-import theking530.staticpower.tileentities.components.control.BatteryComponent;
+import theking530.staticpower.tileentities.components.control.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities.BlockSide;
@@ -45,7 +45,7 @@ public class TileEntityPump extends TileEntityMachine {
 	public final InventoryComponent fluidContainerInventory;
 	public final FluidTankComponent fluidTankComponent;
 	public final MachineProcessingComponent processingComponent;
-	public final InventoryComponent batteryInventory;
+	public final BatteryInventoryComponent batteryInventory;
 	private final Queue<BlockPos> positionsToPump;
 
 	public TileEntityPump() {
@@ -58,7 +58,7 @@ public class TileEntityPump extends TileEntityMachine {
 		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
 
 		// Register components to allow the pump to fill buckets in the GUI.
-		registerComponent(fluidContainerInventory = new InventoryComponent("FluidContainerInventory", 2, MachineSideMode.Never));
+		registerComponent(fluidContainerInventory = new InventoryComponent("FluidContainerInventory", 2));
 		registerComponent(new FluidContainerComponent("FluidFillContainerServo", fluidTankComponent, fluidContainerInventory, 0, 1).setMode(FluidContainerInteractionMode.FILL));
 
 		// Regsiter the processing component to handle the pumping.
@@ -66,9 +66,8 @@ public class TileEntityPump extends TileEntityMachine {
 		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
 
 		// Battery
-		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
-		registerComponent(new BatteryComponent("BatteryComponent", batteryInventory, 0, energyStorage.getStorage()));
-		
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
+
 		// Set the default side configuration.
 		ioSideConfiguration.setDefaultConfiguration(MachineSideMode.Disabled, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output);
 
@@ -149,7 +148,8 @@ public class TileEntityPump extends TileEntityMachine {
 					// No matter what, search around the pumped block.
 					searchAroundPumpedBlock(position);
 					// Log the pump queue creation.
-					LOGGER.info(String.format("Rebuilt Pump Queue to size: %1$d for Pump at position: %2$s in Dimension: %3$s.", positionsToPump.size(), getPos(), getWorld().getDimension().getType()));
+					LOGGER.info(
+							String.format("Rebuilt Pump Queue to size: %1$d for Pump at position: %2$s in Dimension: %3$s.", positionsToPump.size(), getPos(), getWorld().getDimension().getType()));
 				}
 			}
 		}

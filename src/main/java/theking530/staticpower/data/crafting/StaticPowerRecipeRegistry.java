@@ -189,11 +189,12 @@ public class StaticPowerRecipeRegistry {
 					recipeCount++;
 					addRecipe(bucketRecipe);
 				} else {
-					StaticPower.LOGGER.info(String.format("Attempted to register a dynamic bottler recipe for item: %1$s. The .json definition may not be required unless it is an override.", emptyContainer.getDisplayName().getFormattedText()));
+					StaticPower.LOGGER.info(String.format("Attempted to register a dynamic bottler recipe for item: %1$s. The .json definition may not be required unless it is an override.",
+							emptyContainer.getDisplayName().getFormattedText()));
 				}
 			}
 		}
-		
+
 		// Log the completion.
 		StaticPower.LOGGER.info(String.format("Succesfully %1$s %2$d Static Power recipes.", (firstTime ? "cached" : "re-cached"), recipeCount));
 	}

@@ -83,9 +83,11 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 	 * Indicates whether or not this inventory should drop its contents when broken.
 	 * 
 	 * @param shouldDropContentsOnBreak
+	 * @return 
 	 */
-	public void setShouldDropContentsOnBreak(boolean shouldDropContentsOnBreak) {
+	public InventoryComponent setShouldDropContentsOnBreak(boolean shouldDropContentsOnBreak) {
 		this.shouldDropContentsOnBreak = shouldDropContentsOnBreak;
+		return this;
 	}
 
 	/**

@@ -16,23 +16,20 @@ import net.minecraft.util.text.TextFormatting;
 import theking530.common.gui.GuiTextures;
 import theking530.common.gui.drawables.SpriteDrawable;
 import theking530.common.utilities.Color;
-import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
 
-public class GuiMachinePowerInfoTab extends BaseGuiTab {
+public class GuiPowerInfoTab extends BaseGuiTab {
 
 	private FontRenderer fontRenderer;
 
 	private List<String> info;
 	private String tabTitle;
-	private EnergyStorageComponent energyStorage;
-	private MachineProcessingComponent processingComponent;
+	private final EnergyStorageComponent energyStorage;
 
-	public GuiMachinePowerInfoTab(EnergyStorageComponent storage, MachineProcessingComponent processingComponent) {
+	public GuiPowerInfoTab(EnergyStorageComponent storage) {
 		super("Power I/O", 80, 72, GuiTextures.PURPLE_TAB, new SpriteDrawable(GuiTextures.POWER_TAB_ICON, 16, 16));
 		fontRenderer = Minecraft.getInstance().fontRenderer;
 		energyStorage = storage;
-		this.processingComponent = processingComponent;
 	}
 
 	protected void setText(String title, String text) {
@@ -48,10 +45,8 @@ public class GuiMachinePowerInfoTab extends BaseGuiTab {
 	}
 
 	protected void setPowerInfoText() {
-		int powerUsage = processingComponent.getPowerUsage() * (processingComponent.getMaxProcessingTime() - processingComponent.getCurrentProcessingTime());
-
 		String text = (TextFormatting.GREEN + "Current Input: =" + energyStorage.getStorage().getRecievedPerTick() + " RF/t=" + TextFormatting.RED + "Current Usage: ="
-				+ energyStorage.getStorage().getExtractedPerTick() + " RF/t=" + TextFormatting.AQUA + "Max Usage:=" + energyStorage.getStorage().getMaxExtract() + " RF/t");
+				+ energyStorage.getStorage().getExtractedPerTick() + " RF/t");
 		setText("Power I/O", text);
 	}
 

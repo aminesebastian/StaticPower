@@ -34,7 +34,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 	public static final int DEFAULT_MINING_COST = 10;
 	public static final int DEFAULT_IDLE_COST = 1;
 	public static final int DEFAULT_FUEL_MOVE_TIME = 4;
-	public static final float DEFAULT_HEAT_GENERATION = 2500.0f;
+	public static final float DEFAULT_HEAT_GENERATION = 500.0f;
 	public static final int MINING_RADIUS = 5;
 
 	public final InventoryComponent drillBitInventory;

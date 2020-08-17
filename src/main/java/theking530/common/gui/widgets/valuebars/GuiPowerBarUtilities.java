@@ -18,7 +18,7 @@ public class GuiPowerBarUtilities {
 		List<ITextComponent> tooltip = new ArrayList<ITextComponent>();
 
 		// Add the input rate to the tooltip.
-		tooltip.add(new TranslationTextComponent("gui.staticpower.input").appendText(": ").appendSibling(GuiTextUtilities.formatEnergyRateToString(energyPerTick)));
+		tooltip.add(new TranslationTextComponent("gui.staticpower.max_input").appendText(": ").appendSibling(GuiTextUtilities.formatEnergyRateToString(energyPerTick)));
 
 		// Show the total amount of energy remaining / total energy capacity.
 		tooltip.add(GuiTextUtilities.formatEnergyToString(currentEnergy, maxEnergy));

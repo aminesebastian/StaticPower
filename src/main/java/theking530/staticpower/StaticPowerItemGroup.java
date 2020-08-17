@@ -12,7 +12,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ForgeRegistries;
-import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.items.cableattachments.CableCover;
 
@@ -26,7 +25,7 @@ public class StaticPowerItemGroup extends ItemGroup {
 	@OnlyIn(Dist.CLIENT)
 	public ItemStack createIcon() {
 		calculateSubTypes();
-		return new ItemStack(ModBlocks.Digistore);
+		return new ItemStack(ModItems.StaticCrop);
 	}
 
 	@Override
@@ -36,11 +35,15 @@ public class StaticPowerItemGroup extends ItemGroup {
 	}
 
 	private void calculateSubTypes() {
+		// If we have calculated the subtypes, do nothing.
 		if (this.subTypes != null) {
 			return;
 		}
+
+		// Preallocate a large array.
 		this.subTypes = new ArrayList<>(1000);
 
+		// Add all the covers.
 		for (final Block block : ForgeRegistries.BLOCKS) {
 			try {
 				// Skip blocks with tile entities.
@@ -59,5 +62,12 @@ public class StaticPowerItemGroup extends ItemGroup {
 				System.out.println(t);
 			}
 		}
+
+		// Add the electric items.
+		subTypes.add(ModItems.BasicPortableBattery.getFilledVariant());
+		subTypes.add(ModItems.StaticPortableBattery.getFilledVariant());
+		subTypes.add(ModItems.EnergizedPortableBattery.getFilledVariant());
+		subTypes.add(ModItems.LumumPortableBattery.getFilledVariant());
+		subTypes.add(ModItems.ElectringSolderingIron.getFilledVariant());
 	}
 }

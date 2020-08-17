@@ -25,12 +25,12 @@
 	"itemCableAcceleration": 1.1,
 	"itemCableFriction": 2.5,
 	"drillBitUses": 1000,
-	"processingSpeedUpgrade": 1.25,
-	"processingSpeedPowerCost": 1.5,
+	"processingSpeedUpgrade": 2.0,
+	"processingSpeedPowerCost": 3.0,
 	"tankCapacityUpgrade": 1.5,
 	"rangeUpgrade": 2.0,
-	"powerUpgrade": 1.5,
-	"powerIoUpgrade": 1.25,
+	"powerUpgrade": 2.0,
+	"powerIoUpgrade": 1.5,
 	"outputMultiplierUpgrade": 1.25,
 	"outputMultiplierPowerCostUpgrade": 1.25
 }

@@ -12,6 +12,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
@@ -80,7 +81,16 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	@Override
 	public void onNeighborChanged(BlockState currentState, BlockPos neighborPos) {
 		super.onNeighborChanged(currentState, neighborPos);
-		scanForAttachments();
+		
+		// Update the network graph.
+		if (!getWorld().isRemote()) {
+			ServerCable cable = CableNetworkManager.get((ServerWorld) getWorld()).getCable(getPos());
+			if (cable != null && cable.getNetwork() != null) {
+				cable.getNetwork().updateGraph((ServerWorld) getWorld(), getPos());
+			}
+		}
+		
+		scanForAttachments();	
 	}
 
 	@Override

@@ -11,64 +11,84 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
-import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
-import theking530.staticpower.items.upgrades.BaseTankUpgrade;
 import theking530.staticpower.items.upgrades.ExperienceVacuumUpgrade;
+import theking530.staticpower.items.upgrades.IUpgradeItem.UpgradeType;
 import theking530.staticpower.items.upgrades.TeleportUpgrade;
-import theking530.staticpower.tileentities.TileEntityBase;
+import theking530.staticpower.tileentities.TileEntityConfigurable;
+import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent;
+import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent.FluidContainerInteractionMode;
+import theking530.staticpower.tileentities.components.fluids.FluidOutputServoComponent;
+import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
+import theking530.staticpower.tileentities.components.items.OutputServoComponent;
+import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
+import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.utilities.InventoryUtilities;
 
-public class TileEntityVacuumChest extends TileEntityBase implements INamedContainerProvider {
+public class TileEntityVacuumChest extends TileEntityConfigurable implements INamedContainerProvider {
+	public static final int DEFAULT_RANGE = 6;
+	public static final int DEFAULT_TANK_SIZE = 5000;
+
 	public final InventoryComponent inventory;
 	public final InventoryComponent filterSlotInventory;
-	public final InventoryComponent upgradesInventory;
+	public final InventoryComponent fluidContainerInventory;
+	public final UpgradeInventoryComponent upgradesInventory;
+	public final FluidTankComponent fluidTankComponent;
+	public final FluidContainerComponent fluidContainerComponent;
+	public final FluidOutputServoComponent fluidOutputServo;
 
 	protected float vacuumDiamater;
-	protected float initialVacuumDiamater;
 	protected boolean shouldTeleport;
 	protected boolean shouldVacuumExperience;
-	protected FluidTank experienceTank;
 
 	public TileEntityVacuumChest() {
 		super(ModTileEntityTypes.VACCUM_CHEST);
-		initialVacuumDiamater = 6;
-		vacuumDiamater = initialVacuumDiamater;
+		vacuumDiamater = DEFAULT_RANGE;
 		shouldTeleport = false;
-		experienceTank = new FluidTank(5000);
-		registerComponent(inventory = new InventoryComponent("Inventory", 30, MachineSideMode.Regular));
-		registerComponent(filterSlotInventory = new InventoryComponent("FilterSlot", 1, MachineSideMode.Never));
-		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Regular));
+
+		registerComponent(inventory = new InventoryComponent("Inventory", 30, MachineSideMode.Output));
+		registerComponent(filterSlotInventory = new InventoryComponent("FilterSlot", 1));
+		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
+
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Output).setUpgradeInventory(upgradesInventory));
+		registerComponent(fluidContainerInventory = new InventoryComponent("FluidContainerInventory", 2));
+		registerComponent(fluidContainerComponent = new FluidContainerComponent("FluidContainerServo", fluidTankComponent, fluidContainerInventory, 0, 1).setMode(FluidContainerInteractionMode.FILL));
+		registerComponent(fluidOutputServo = new FluidOutputServoComponent("FluidInputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
+
+		registerComponent(new OutputServoComponent("OutputServo", 2, inventory));
 	}
 
 	@Override
 	public void process() {
-		// Create the AABB to search within.
-		AxisAlignedBB aabb = new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1);
-		aabb = aabb.expand(vacuumDiamater, vacuumDiamater, vacuumDiamater);
-		aabb = aabb.offset(-vacuumDiamater / 2, -vacuumDiamater / 2, -vacuumDiamater / 2);
+		// Handle the upgrade tick on the server.
+		if (!world.isRemote) {
+			upgradeTick();
 
-		// Vacuum the items.
-		vacuumItems(aabb);
+			// Create the AABB to search within.
+			AxisAlignedBB aabb = new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1);
+			aabb = aabb.expand(vacuumDiamater, vacuumDiamater, vacuumDiamater);
+			aabb = aabb.offset(-vacuumDiamater / 2, -vacuumDiamater / 2, -vacuumDiamater / 2);
 
-		// Vacuum experience if requested.
-		if (shouldVacuumExperience) {
-			vacuumExperience(aabb);
+			// Vacuum the items.
+			vacuumItems(aabb);
+
+			// Vacuum experience if requested.
+			if (shouldVacuumExperience) {
+				vacuumExperience(aabb);
+			}
 		}
 	}
 
@@ -115,7 +135,7 @@ public class TileEntityVacuumChest extends TileEntityBase implements INamedConta
 			if (distance < 1.1 || (shouldTeleport && distance < getRadius() - 0.1f)) {
 				if (true) {// experienceTank.canFill() && experienceTank.fill(new
 							// FluidStack(ModFluids.LiquidExperience, orb.getXpValue()), false) > 0) {
-					experienceTank.fill(new FluidStack(ModFluids.LiquidExperience.Fluid, orb.xpValue), FluidAction.EXECUTE);
+					fluidTankComponent.fill(new FluidStack(ModFluids.LiquidExperience.Fluid, orb.xpValue), FluidAction.EXECUTE);
 					markTileEntityForSynchronization();
 					orb.remove();
 					getWorld().playSound((double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.BLOCKS, 0.5F,
@@ -151,8 +171,8 @@ public class TileEntityVacuumChest extends TileEntityBase implements INamedConta
 		return vacuumDiamater / 2.0f;
 	}
 
-	public FluidTank getTank() {
-		return experienceTank;
+	public FluidTankComponent getTank() {
+		return fluidTankComponent;
 	}
 
 	public boolean showTank() {
@@ -160,27 +180,23 @@ public class TileEntityVacuumChest extends TileEntityBase implements INamedConta
 	}
 
 	/* Update Handling */
-	public void upgradeTick(ItemStack upgrade) {
-//		if (upgrade.getItem() instanceof BaseRangeUpgrade) {
-//			BaseRangeUpgrade tempUpgrade = (BaseRangeUpgrade) upgrade.getItem();
-//			vacuumDiamater = tempUpgrade.getValueMultiplied(initialVacuumDiamater, tempUpgrade.getUpgradeValueAtIndex(upgrade, 0));
-//		} else {
-//			vacuumDiamater = initialVacuumDiamater;
-//		}
-//		if (upgrade.getItem() instanceof TeleportUpgrade) {
-//			shouldTeleport = true;
-//		} else {
-//			shouldTeleport = false;
-//		}
-//		if (upgrade.getItem() instanceof ExperienceVacuumUpgrade) {
-//			shouldVacuumExperience = true;
-//		}
-//		if (upgrade.getItem() instanceof BaseTankUpgrade) {
-//			BaseTankUpgrade tempUpgrade = (BaseTankUpgrade) upgrade.getItem();
-//			experienceTank.setCapacity((int) tempUpgrade.getValueMultiplied(10000, tempUpgrade.getUpgradeValueAtIndex(upgrade, 0)));
-//		} else {
-//			experienceTank.setCapacity(10000);
-//		}
+	public void upgradeTick() {
+		shouldTeleport = upgradesInventory.hasUpgradeOfClass(TeleportUpgrade.class);
+		shouldVacuumExperience = upgradesInventory.hasUpgradeOfClass(ExperienceVacuumUpgrade.class);
+
+		// Set the enabled state of the fluid components.
+		fluidTankComponent.setEnabled(shouldVacuumExperience);
+		fluidContainerInventory.setEnabled(shouldVacuumExperience);
+		fluidContainerComponent.setEnabled(shouldVacuumExperience);
+		fluidOutputServo.setEnabled(shouldVacuumExperience);
+
+		// Get the range upgrade.
+		UpgradeItemWrapper rangeUpgrade = upgradesInventory.getMaxTierItemForUpgradeType(UpgradeType.RANGE);
+		if (!rangeUpgrade.isEmpty()) {
+			vacuumDiamater = DEFAULT_RANGE * rangeUpgrade.getTier().getRangeUpgrade();
+		} else {
+			vacuumDiamater = DEFAULT_RANGE;
+		}
 	}
 
 	public boolean canAcceptUpgrade(@Nonnull ItemStack upgrade) {
@@ -192,14 +208,21 @@ public class TileEntityVacuumChest extends TileEntityBase implements INamedConta
 		return false;
 	}
 
+	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+		super.serializeUpdateNbt(nbt, fromUpdate);
+		nbt.putBoolean("should_vacuum_experience", shouldVacuumExperience);
+		nbt.putBoolean("should_teleport", shouldTeleport);
+		return nbt;
+	}
+
+	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+		super.deserializeUpdateNbt(nbt, fromUpdate);
+		shouldVacuumExperience = nbt.getBoolean("should_vacuum_experience");
+		shouldTeleport = nbt.getBoolean("should_teleport");
+	}
+
 	@Override
 	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
 		return new ContainerVacuumChest(windowId, inventory, this);
 	}
-
-	@Override
-	public ITextComponent getDisplayName() {
-		return new TranslationTextComponent(ModBlocks.VacuumChest.getTranslationKey());
-	}
-
 }

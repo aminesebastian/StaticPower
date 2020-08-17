@@ -107,7 +107,7 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 
 		// Add a tooltip for the energy bar.
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			String powerCost = new MetricConverter(TileEntityFermenter.DEFAULT_POWER_USAGE * TileEntityFermenter.DEFAULT_PROCESSING_TIME).getValueAsString(true);
+			String powerCost = new MetricConverter(TileEntityFermenter.DEFAULT_PROCESSING_COST * TileEntityFermenter.DEFAULT_PROCESSING_TIME).getValueAsString(true);
 			output.add("Usage: " + powerCost + "FE");
 		}
 
@@ -140,7 +140,7 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 		fluids.init(3, false, 153, 6, 16, 48, getFluidTankDisplaySize(recipe.getOutputFluidStack()), false, null);
 		fluids.set(ingredients);
 
-		powerTimer = guiHelper.createTickTimer(TileEntityFermenter.DEFAULT_POWER_USAGE, TileEntityFermenter.DEFAULT_POWER_USAGE * TileEntityFermenter.DEFAULT_PROCESSING_TIME, true);
-		processingTimer = guiHelper.createTickTimer(TileEntityFermenter.DEFAULT_POWER_USAGE, TileEntityFermenter.DEFAULT_POWER_USAGE, false);
+		powerTimer = guiHelper.createTickTimer(TileEntityFermenter.DEFAULT_PROCESSING_TIME, TileEntityFermenter.DEFAULT_PROCESSING_COST * TileEntityFermenter.DEFAULT_PROCESSING_TIME, true);
+		processingTimer = guiHelper.createTickTimer(TileEntityFermenter.DEFAULT_PROCESSING_TIME, TileEntityFermenter.DEFAULT_PROCESSING_COST, false);
 	}
 }

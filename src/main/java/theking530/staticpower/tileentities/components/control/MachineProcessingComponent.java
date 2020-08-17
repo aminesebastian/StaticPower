@@ -5,33 +5,68 @@ import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
 import theking530.staticpower.items.upgrades.IUpgradeItem.UpgradeType;
 import theking530.staticpower.tileentities.StaticPowerMachineBlock;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
+import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
+import theking530.staticpower.tileentities.components.serialization.SaveSerialize;
+import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 
 public class MachineProcessingComponent extends AbstractTileEntityComponent {
-	private final boolean serverOnly;
-	private final Supplier<Boolean> canStartProcessingCallback;
-	private final Supplier<Boolean> canContinueProcessingCallback;
-	private final Supplier<Boolean> processingEndedCallback;
+	protected Supplier<Boolean> canStartProcessingCallback;
+	protected Supplier<Boolean> canContinueProcessingCallback;
+	protected Supplier<Boolean> processingEndedCallback;
 
 	private Runnable processingStartedCallback;
-
-	private int tickDownRate;
-	private int procesingTimer;
-	private int defaultProcessingTime;
-	private int currentProcessingTime;
-	private int blockStateOffTimer;
-	private float upgradeMultiplier;
-	private boolean processing;
-	private boolean hasStarted;
-	private boolean processingPaused;
 	private boolean shouldControlOnBlockState;
-	private boolean performedWorkLastTick;
 	private UpgradeInventoryComponent upgradeInventory;
+	private EnergyStorageComponent powerComponent;
+	private RedstoneControlComponent redstoneControlComponent;
+
+	@UpdateSerialize
+	private int processingTime;
+	@UpdateSerialize
+	private int currentProcessingTime;
+	@SaveSerialize
+	private int tickDownRate;
+	@SaveSerialize
+	private int defaultProcessingTime;
+
+	@UpdateSerialize
+	private boolean processing;
+	@UpdateSerialize
+	private boolean hasStarted;
+	@UpdateSerialize
+	private boolean processingPaused;
+
+	@SaveSerialize
+	private float processingSpeedUpgradeMultiplier;
+
+	@UpdateSerialize
+	private int powerUsage;
+	@SaveSerialize
+	private int defaultPowerUsage;
+	@SaveSerialize
+	private boolean hasProcessingPowerCost;
+
+	@UpdateSerialize
+	private int completedPowerUsage;
+	@SaveSerialize
+	private int completedDefaultPowerUsage;
+	@SaveSerialize
+	private boolean hasCompletedPowerCost;
+
+	@SaveSerialize
+	private float powerUpgradeMultiplier;
+
+	@SaveSerialize
+	private final boolean serverOnly;
+	@SaveSerialize
+	private boolean performedWorkLastTick;
+	@SaveSerialize
+	private int blockStateOffTimer;
 
 	public MachineProcessingComponent(String name, int processingTime, @Nonnull Supplier<Boolean> canStartProcessingCallback, @Nonnull Supplier<Boolean> canContinueProcessingCallback,
 			@Nonnull Supplier<Boolean> processingEndedCallback, boolean serverOnly) {
@@ -39,7 +74,7 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		this.canStartProcessingCallback = canStartProcessingCallback;
 		this.canContinueProcessingCallback = canContinueProcessingCallback;
 		this.processingEndedCallback = processingEndedCallback;
-		this.procesingTimer = processingTime;
+		this.processingTime = processingTime;
 		this.defaultProcessingTime = processingTime;
 		this.processing = false;
 		this.hasStarted = false;
@@ -47,7 +82,10 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		this.shouldControlOnBlockState = false;
 		this.tickDownRate = 1;
 		this.performedWorkLastTick = false;
-		this.upgradeMultiplier = 1.0f;
+		this.processingSpeedUpgradeMultiplier = 1.0f;
+		this.hasProcessingPowerCost = false;
+		this.powerUpgradeMultiplier = 1.0f;
+		this.hasCompletedPowerCost = false;
 	}
 
 	public MachineProcessingComponent(String name, int processingTime, @Nonnull Supplier<Boolean> processingEndedCallback, boolean serverOnly) {
@@ -55,8 +93,10 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 	}
 
 	public void preProcessUpdate() {
-		// Check for upgrades.
-		checkUpgrades();
+		// Check for upgrades on the server.
+		if (!getWorld().isRemote) {
+			checkUpgrades();
+		}
 
 		// If we should only run on the server, do nothing.
 		if (serverOnly && getWorld().isRemote) {
@@ -67,14 +107,19 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		performedWorkLastTick = false;
 
 		// If this is when we first start processing, raise the start processing event.
-		if (!hasStarted && canStartProcessingCallback.get()) {
+		if (!hasStarted && passesAllProcessingStartChecks() && canStartProcessingCallback.get()) {
 			startProcessing();
 		}
 
 		// Set the can continue processing state if we have already started. This is to
 		// allow for responsive stopping of processing if needed.
 		if (hasStarted) {
-			processing = canContinueProcessingCallback.get();
+			// Check to see if we can continue processing.
+			if (passesAllProcessingChecks()) {
+				processing = canContinueProcessingCallback.get();
+			} else {
+				processing = false;
+			}
 		}
 
 		// If we're currently processing.
@@ -94,13 +139,24 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 			// completed the processing, try to complete it using the callback.
 			// If the callback is true, we reset the state of the component back to initial
 			currentProcessingTime += tickDownRate;
+
+			// Use power if requested to.
+			if (hasProcessingPowerCost && powerComponent != null) {
+				powerComponent.usePower(powerUsage);
+			}
+
 			performedWorkLastTick = true;
-			if (currentProcessingTime >= procesingTimer) {
+			if (currentProcessingTime >= processingTime) {
 				if (processingCompleted()) {
 					currentProcessingTime = 0;
 					blockStateOffTimer = 0;
 					processing = false;
 					hasStarted = false;
+
+					// Use the complete power if requested to.
+					if (hasCompletedPowerCost && powerComponent != null) {
+						powerComponent.usePower(completedPowerUsage);
+					}
 				}
 			}
 		} else {
@@ -198,7 +254,7 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 	 * @return
 	 */
 	public boolean isDone() {
-		return currentProcessingTime > procesingTimer;
+		return currentProcessingTime > processingTime;
 	}
 
 	/**
@@ -225,16 +281,61 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 	}
 
 	public int getMaxProcessingTime() {
-		return procesingTimer;
+		return processingTime;
 	}
 
 	public void setMaxProcessingTime(int newTime) {
 		defaultProcessingTime = newTime;
-		procesingTimer = (int) (defaultProcessingTime * upgradeMultiplier);
+		processingTime = (int) (defaultProcessingTime * processingSpeedUpgradeMultiplier);
+		if (processingTime == 0) {
+			processingTime = 1;
+		}
 	}
 
 	public MachineProcessingComponent setUpgradeInventory(UpgradeInventoryComponent inventory) {
 		upgradeInventory = inventory;
+		return this;
+	}
+
+	public MachineProcessingComponent setEnergyComponent(EnergyStorageComponent energyComponent) {
+		this.powerComponent = energyComponent;
+		return this;
+	}
+
+	public MachineProcessingComponent setProcessingPowerUsage(int power) {
+		hasProcessingPowerCost = true;
+		defaultPowerUsage = power;
+		powerUsage = (int) (defaultPowerUsage * powerUpgradeMultiplier);
+		return this;
+	}
+
+	public MachineProcessingComponent setCompletedPowerUsage(int power) {
+		hasCompletedPowerCost = true;
+		completedDefaultPowerUsage = power;
+		completedPowerUsage = (int) (completedDefaultPowerUsage * powerUpgradeMultiplier);
+		return this;
+	}
+
+	public int getPowerUsage() {
+		return powerUsage;
+	}
+
+	public int getCompletedPowerUsage() {
+		return completedPowerUsage;
+	}
+
+	public MachineProcessingComponent disableProcessingPowerUsage() {
+		hasProcessingPowerCost = false;
+		return this;
+	}
+
+	public MachineProcessingComponent disableCompletedPowerUsage() {
+		hasCompletedPowerCost = false;
+		return this;
+	}
+
+	public MachineProcessingComponent setRedstoneControlComponent(RedstoneControlComponent redstoneControlComponent) {
+		this.redstoneControlComponent = redstoneControlComponent;
 		return this;
 	}
 
@@ -243,19 +344,28 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		if (upgradeInventory == null) {
 			return;
 		}
-		// Get the upgrade.
-		UpgradeItemWrapper upgrade = upgradeInventory.getMaxTierItemForUpgradeType(UpgradeType.SPEED);
+		// Get the speed upgrade.
+		UpgradeItemWrapper speedUpgrade = upgradeInventory.getMaxTierItemForUpgradeType(UpgradeType.SPEED);
 
 		// If it is not valid, set the values back to the defaults. Otherwise, set the
 		// new processing speeds.
-		if (upgrade.isEmpty()) {
-			upgradeMultiplier = 1.0f;
+		if (speedUpgrade.isEmpty()) {
+			processingSpeedUpgradeMultiplier = 1.0f;
+			powerUpgradeMultiplier = 1.0f;
 		} else {
-			upgradeMultiplier = upgrade.getTier().getProcessingSpeedUpgrade() * upgrade.getUpgradeWeight();
+			processingSpeedUpgradeMultiplier = (1.0f + speedUpgrade.getTier().getProcessingSpeedUpgrade()) * speedUpgrade.getUpgradeWeight();
+			powerUpgradeMultiplier = (1.0f + speedUpgrade.getTier().getProcessingSpeedPowerCost()) * speedUpgrade.getUpgradeWeight();
 		}
 
 		// Set the processing time.
-		procesingTimer = (int) (defaultProcessingTime / upgradeMultiplier);
+		processingTime = (int) (defaultProcessingTime / processingSpeedUpgradeMultiplier);
+		if (processingTime == 0) {
+			processingTime = 1;
+		}
+
+		// Set the power usages.
+		powerUsage = (int) (defaultPowerUsage * powerUpgradeMultiplier);
+		completedPowerUsage = (int) (completedDefaultPowerUsage * powerUpgradeMultiplier);
 	}
 
 	/**
@@ -278,7 +388,7 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 	}
 
 	public int getProgressScaled(int scaleValue) {
-		return (int) (((float) (currentProcessingTime) / procesingTimer) * scaleValue);
+		return (int) (((float) (currentProcessingTime) / processingTime) * scaleValue);
 	}
 
 	/**
@@ -291,6 +401,37 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 	public MachineProcessingComponent setShouldControlBlockState(boolean shouldControl) {
 		this.shouldControlOnBlockState = shouldControl;
 		return this;
+	}
+
+	protected boolean passesAllProcessingStartChecks() {
+		if (!passesAllProcessingChecks()) {
+			return false;
+		}
+		// Check the processing power cost for the whole process.
+		if (hasProcessingPowerCost && !powerComponent.hasEnoughPower(powerUsage * this.processingTime)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	protected boolean passesAllProcessingChecks() {
+		// Check the processing power cost.
+		if (hasProcessingPowerCost && (!powerComponent.hasEnoughPower(powerUsage) || powerComponent.getStorage().getMaxExtract() < powerUsage)) {
+			return false;
+		}
+
+		// Check the completion power cost.
+		if (hasCompletedPowerCost && (!powerComponent.hasEnoughPower(completedPowerUsage) || powerComponent.getStorage().getMaxExtract() < completedPowerUsage)) {
+			return false;
+		}
+
+		// Check the redstone control component.
+		if (redstoneControlComponent != null && !redstoneControlComponent.passesRedstoneCheck()) {
+			return false;
+		}
+
+		return true;
 	}
 
 	protected void setIsOnBlockState(boolean on) {
@@ -313,32 +454,5 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 			return currentState.get(StaticPowerMachineBlock.IS_ON);
 		}
 		return false;
-	}
-
-	@Override
-	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
-		super.serializeUpdateNbt(nbt, fromUpdate);
-		nbt.putBoolean("processing", processing);
-		nbt.putBoolean("processing_paused", processingPaused);
-		nbt.putInt("processing_time", procesingTimer);
-		nbt.putInt("current_processing_time", currentProcessingTime);
-		nbt.putInt("tick_down_rate", tickDownRate);
-		nbt.putBoolean("has_started", hasStarted);
-		nbt.putFloat("upgrade_multiplier", upgradeMultiplier);
-		nbt.putInt("default_processing_time", defaultProcessingTime);
-		return nbt;
-	}
-
-	@Override
-	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
-		super.deserializeUpdateNbt(nbt, fromUpdate);
-		processing = nbt.getBoolean("processing");
-		processingPaused = nbt.getBoolean("processing_paused");
-		procesingTimer = nbt.getInt("processing_time");
-		currentProcessingTime = nbt.getInt("current_processing_time");
-		tickDownRate = nbt.getInt("tick_down_rate");
-		hasStarted = nbt.getBoolean("has_started");
-		upgradeMultiplier = nbt.getFloat("upgrade_multiplier");
-		defaultProcessingTime = nbt.getInt("default_processing_time");
 	}
 }

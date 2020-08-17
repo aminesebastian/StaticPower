@@ -77,8 +77,10 @@ public class EnergyHandlerItemStackUtilities {
 	 *                  to.
 	 */
 	public static void setEnergy(ItemStack container, int energy) {
-		int maxEnergy = container.getTag().getInt(MAX_ENERGY_NBT_KEY);
-		container.getTag().putInt(CURRENT_ENERGY_NBT_KEY, Math.min(maxEnergy, energy));
+		container.getCapability(CapabilityEnergy.ENERGY).ifPresent((IEnergyStorage instance) -> {
+			instance.receiveEnergy(instance.getMaxEnergyStored(), false);
+		});
+		
 		updateDamageUsingEnergyStorage(container);
 	}
 

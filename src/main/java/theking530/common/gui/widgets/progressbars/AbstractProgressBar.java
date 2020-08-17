@@ -65,6 +65,9 @@ public abstract class AbstractProgressBar extends AbstractGuiWidget {
 
 		// Calculate the visual current progress.
 		visualCurrentProgress = SDMath.clamp(visualCurrentProgress + partialTicks, currentProgress - 1, currentProgress);
+		if (visualCurrentProgress > maxProgress) {
+			visualCurrentProgress = maxProgress;
+		}
 	}
 
 	@Override

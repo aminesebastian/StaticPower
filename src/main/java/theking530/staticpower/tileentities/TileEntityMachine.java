@@ -27,8 +27,4 @@ public abstract class TileEntityMachine extends TileEntityConfigurable {
 		float capacity = energyStorage.getStorage().getMaxEnergyStored();
 		return (amount / capacity);
 	}
-
-	public boolean hasPower() {
-		return energyStorage.getStorage().getEnergyStored() > 0;
-	}
 }

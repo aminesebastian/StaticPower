@@ -1,6 +1,5 @@
 package theking530.staticpower.tileentities.components.power;
 
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -13,6 +12,7 @@ import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
+import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 
 public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	public enum EnergyManipulationAction {
@@ -20,17 +20,22 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	}
 
 	public static final int ENERGY_SYNC_MAX_DELTA = 100;
+	@UpdateSerialize
 	protected final StaticPowerFEStorage EnergyStorage;
-	protected TriFunction<Integer, Direction, EnergyManipulationAction, Boolean> filter;
-	private int lastSyncEnergy;
-
-	private UpgradeInventoryComponent upgradeInventory;
+	@UpdateSerialize
 	private float powerCapacityUpgradeMultiplier;
+	@UpdateSerialize
 	private float powerIOUpgradeMultiplier;
+	@UpdateSerialize
 	private int defaultCapacity;
+	@UpdateSerialize
 	private int defaultMaxInput;
+	@UpdateSerialize
 	private int defaultMaxOutput;
 
+	protected TriFunction<Integer, Direction, EnergyManipulationAction, Boolean> filter;
+	private int lastSyncEnergy;
+	private UpgradeInventoryComponent upgradeInventory;
 	private EnergyComponentCapabilityAccess capabilityAccessor;
 
 	public EnergyStorageComponent(String name, int capacity) {
@@ -100,8 +105,8 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 			powerCapacityUpgradeMultiplier = 1.0f;
 			powerIOUpgradeMultiplier = 1.0f;
 		} else {
-			powerCapacityUpgradeMultiplier = upgrade.getTier().getPowerUpgrade() * upgrade.getUpgradeWeight();
-			powerCapacityUpgradeMultiplier = upgrade.getTier().getPowerIoUpgrade() * upgrade.getUpgradeWeight();
+			powerCapacityUpgradeMultiplier = 1.0f + (upgrade.getTier().getPowerUpgrade() * upgrade.getUpgradeWeight());
+			powerIOUpgradeMultiplier = 1.0f + (upgrade.getTier().getPowerIoUpgrade() * upgrade.getUpgradeWeight());
 		}
 
 		// Set the new values.
@@ -208,31 +213,6 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	}
 
 	@Override
-	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
-		super.deserializeUpdateNbt(nbt, fromUpdate);
-		EnergyStorage.readFromNbt(nbt);
-
-		powerCapacityUpgradeMultiplier = nbt.getFloat("power_capacity_upgrade_multiplier");
-		powerIOUpgradeMultiplier = nbt.getFloat("power_IO_upgrade_multiplier");
-		defaultCapacity = nbt.getInt("default_capacity");
-		defaultMaxInput = nbt.getInt("default_max_input");
-		defaultMaxOutput = nbt.getInt("default_max_output");
-	}
-
-	@Override
-	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
-		super.serializeUpdateNbt(nbt, fromUpdate);
-		EnergyStorage.writeToNbt(nbt);
-
-		nbt.putFloat("power_capacity_upgrade_multiplier", powerCapacityUpgradeMultiplier);
-		nbt.putFloat("power_IO_upgrade_multiplier", powerIOUpgradeMultiplier);
-		nbt.putInt("default_capacity", defaultCapacity);
-		nbt.putInt("default_max_input", defaultMaxInput);
-		nbt.putInt("default_max_output", defaultMaxOutput);
-		return nbt;
-	}
-
-	@Override
 	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
 		if (isEnabled()) {
 			if (cap == CapabilityEnergy.ENERGY) {
@@ -249,6 +229,9 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 
 		@Override
 		public int receiveEnergy(int maxReceive, boolean simulate) {
+			if (!EnergyStorageComponent.this.isEnabled()) {
+				return 0;
+			}
 			if (EnergyStorageComponent.this.filter != null && !EnergyStorageComponent.this.filter.apply(maxReceive, currentSide, EnergyManipulationAction.RECIEVE)) {
 				return 0;
 			}
@@ -257,6 +240,9 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 
 		@Override
 		public int extractEnergy(int maxExtract, boolean simulate) {
+			if (!EnergyStorageComponent.this.isEnabled()) {
+				return 0;
+			}
 			if (EnergyStorageComponent.this.filter != null && !EnergyStorageComponent.this.filter.apply(maxExtract, currentSide, EnergyManipulationAction.PROVIDE)) {
 				return 0;
 			}
@@ -265,21 +251,33 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 
 		@Override
 		public int getEnergyStored() {
+			if (!EnergyStorageComponent.this.isEnabled()) {
+				return 0;
+			}
 			return EnergyStorageComponent.this.getStorage().getEnergyStored();
 		}
 
 		@Override
 		public int getMaxEnergyStored() {
+			if (!EnergyStorageComponent.this.isEnabled()) {
+				return 0;
+			}
 			return EnergyStorageComponent.this.getStorage().getMaxEnergyStored();
 		}
 
 		@Override
 		public boolean canExtract() {
+			if (!EnergyStorageComponent.this.isEnabled()) {
+				return false;
+			}
 			return EnergyStorageComponent.this.getStorage().canExtract();
 		}
 
 		@Override
 		public boolean canReceive() {
+			if (!EnergyStorageComponent.this.isEnabled()) {
+				return false;
+			}
 			return EnergyStorageComponent.this.getStorage().canReceive();
 		}
 

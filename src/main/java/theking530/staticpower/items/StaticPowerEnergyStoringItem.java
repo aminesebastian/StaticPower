@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -60,6 +61,12 @@ public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 		};
 	}
 
+	public ItemStack getFilledVariant() {
+		ItemStack output = new ItemStack(this, 1);
+		EnergyHandlerItemStackUtilities.setEnergy(output, Integer.MAX_VALUE);
+		return output;
+	}
+
 	/**
 	 * Always shows the durability bar.
 	 */
@@ -74,5 +81,12 @@ public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 		int remainingCharge = EnergyHandlerItemStackUtilities.getEnergyStored(stack);
 		int capacity = EnergyHandlerItemStackUtilities.getEnergyStorageCapacity(stack);
 		tooltip.add(GuiTextUtilities.formatEnergyToString(remainingCharge, capacity));
+	}
+
+	public static class EnergyItemJEIInterpreter implements ISubtypeInterpreter {
+		@Override
+		public String apply(ItemStack itemStack) {
+			return EnergyHandlerItemStackUtilities.getEnergyStorageCapacity(itemStack) + " " + EnergyHandlerItemStackUtilities.getEnergyStored(itemStack);
+		}
 	}
 }

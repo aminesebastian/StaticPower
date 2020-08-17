@@ -1,7 +1,5 @@
 package theking530.staticpower.tileentities.powered.squeezer;
 
-import java.util.Optional;
-
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -9,12 +7,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.common.utilities.SDMath;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
-import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.squeezer.SqueezerRecipe;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
-import theking530.staticpower.tileentities.components.control.BatteryComponent;
-import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
+import theking530.staticpower.tileentities.components.control.BatteryInventoryComponent;
+import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
+import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
+import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent;
+import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.components.fluids.FluidOutputServoComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
@@ -34,56 +34,67 @@ public class TileEntitySqueezer extends TileEntityMachine {
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent internalInventory;
 	public final InventoryComponent outputInventory;
-	public final InventoryComponent batterySlot;
+	public final InventoryComponent batteryInventory;
+	public final InventoryComponent fluidContainerInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
-	public final MachineProcessingComponent moveComponent;
-	public final MachineProcessingComponent processingComponent;
+	public final RecipeProcessingComponent<SqueezerRecipe> processingComponent;
 	public final FluidTankComponent fluidTankComponent;
+	public final FluidContainerComponent fluidContainerComponent;
 
 	public TileEntitySqueezer() {
 		super(ModTileEntityTypes.SQUEEZER);
 
+		// Setup the input inventory to only accept items that have a valid recipe.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
-				return getRecipe(stack).isPresent();
+				return processingComponent.getRecipe(new RecipeMatchParameters(stack)).isPresent();
 			}
 
 		}));
-		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1, MachineSideMode.Never));
+
+		// Setup all the other inventories.
+		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
-		registerComponent(batterySlot = new InventoryComponent("BatterySlot", 1, MachineSideMode.Never));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
+		registerComponent(fluidContainerInventory = new InventoryComponent("FluidContainerInventory", 2));
 
-		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", 2, this::canMoveFromInputToProcessing, () -> true, this::movingCompleted, true));
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true)
-				.setShouldControlBlockState(true).setUpgradeInventory(upgradesInventory));
+		// Setup the processing component.
+		registerComponent(processingComponent = new RecipeProcessingComponent<SqueezerRecipe>("ProcessingComponent", SqueezerRecipe.RECIPE_TYPE, 1, this::getMatchParameters, this::moveInputs,
+				this::canProcessRecipe, this::processingCompleted));
 
-		registerComponent(new BatteryComponent("BatteryComponent", batterySlot, 0, energyStorage.getStorage()));
+		// Initialize the processing component to work with the redstone control
+		// component, upgrade component and energy component.
+		processingComponent.setShouldControlBlockState(true);
+		processingComponent.setUpgradeInventory(upgradesInventory);
+		processingComponent.setEnergyComponent(energyStorage);
+		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
+		processingComponent.setProcessingPowerUsage(DEFAULT_PROCESSING_COST);
+
+		// Setup the I/O servos.
 		registerComponent(new OutputServoComponent("OutputServo", 2, outputInventory));
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));
 
+		// Setup the fluid tank and fluid output servo.
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Output).setUpgradeInventory(upgradesInventory));
 		fluidTankComponent.setCanFill(false);
-
 		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
+		registerComponent(fluidContainerComponent = new FluidContainerComponent("FluidContainerServo", fluidTankComponent, fluidContainerInventory, 0, 1).setMode(FluidContainerInteractionMode.FILL));
 
 		// Set the energy storage upgrade inventory.
 		energyStorage.setUpgradeInventory(upgradesInventory);
 	}
 
-	/**
-	 * Checks to see if the furnace can being processing. It checks for a valid
-	 * input item, if there is enough power for one tick of processing (the
-	 * processing can get stuck half way through), and checks to see if the output
-	 * slot can contain the recipe output.
-	 * 
-	 * @return
-	 */
-	protected boolean canMoveFromInputToProcessing() {
-		if (hasValidRecipe() && !moveComponent.isProcessing() && internalInventory.getStackInSlot(0).isEmpty() && energyStorage.getStorage().getEnergyStored() >= DEFAULT_PROCESSING_COST) {
-			// Get the recipe.
-			SqueezerRecipe recipe = getRecipe(inputInventory.getStackInSlot(0)).orElse(null);
+	protected RecipeMatchParameters getMatchParameters(RecipeProcessingLocation location) {
+		if (location == RecipeProcessingLocation.INTERNAL) {
+			return new RecipeMatchParameters(internalInventory.getStackInSlot(0));
+		} else {
+			return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
+		}
+	}
 
+	protected boolean moveInputs(SqueezerRecipe recipe) {
+		if (internalInventory.getStackInSlot(0).isEmpty()) {
 			// If the recipe has a fluid output but the output tank can't take the input, we
 			// can't proceed.
 			if (recipe.hasOutputFluid() && fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.SIMULATE) != recipe.getOutputFluid().getAmount()) {
@@ -92,111 +103,48 @@ public class TileEntitySqueezer extends TileEntityMachine {
 
 			// If this recipe has an item output, and if we can insert the output into the
 			// output stack, return true.
-			if (recipe.hasItemOutput()) {
-				ItemStack output = getRecipe(inputInventory.getStackInSlot(0)).get().getOutput().getItem();
-				return InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, output);
-			} else {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Once again, check to make sure the input item has not been removed or changed
-	 * since we started the move process. If still valid, move a single input item
-	 * to the internal inventory and being processing.
-	 * 
-	 * @return
-	 */
-	protected boolean movingCompleted() {
-		if (hasValidRecipe()) {
-			// Transfer the items to the internal inventory.
-			transferItemInternally(inputInventory, 0, internalInventory, 0);
-			// Update the processing time.
-			SqueezerRecipe recipe = getRecipe(internalInventory.getStackInSlot(0)).orElse(null);
-			processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
-			// Trigger a block update.
-			markTileEntityForSynchronization();
-		}
-		return true;
-	}
-
-	protected boolean canProcess() {
-		SqueezerRecipe recipe = getRecipe(internalInventory.getStackInSlot(0)).orElse(null);
-		return recipe != null && redstoneControlComponent.passesRedstoneCheck() && energyStorage.hasEnoughPower(recipe.getPowerCost())
-				&& InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getOutput().getItem());
-	}
-
-	/**
-	 * Once the processing is completed, place the output in the output slot (if
-	 * possible). If not, return false. This method will continue to be called until
-	 * true is returned.
-	 * 
-	 * @return
-	 */
-	protected boolean processingCompleted() {
-		if (!getWorld().isRemote && !internalInventory.getStackInSlot(0).isEmpty()) {
-			// Get the recipe.
-			SqueezerRecipe recipe = getRecipe(internalInventory.getStackInSlot(0)).orElse(null);
-
-			// If we somehow ended up with a null recipe (for example, they save the game,
-			// then change a recipe so the item that is currently being processed no longer
-			// has a recipe, and then reenter the game), just return true.
-			if (recipe == null) {
-				// Clear the internal inventory.
-				internalInventory.setStackInSlot(0, ItemStack.EMPTY);
+			if (recipe.hasItemOutput() && InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getOutput().getItem())) {
+				// Transfer the items to the internal inventory.
+				transferItemInternally(inputInventory, 0, internalInventory, 0);
 				markTileEntityForSynchronization();
 				return true;
 			}
-
-			// If this recipe has an item output that we cannot put into the output slot,
-			// continue waiting.
-			if (recipe.hasItemOutput() && !InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getOutput().getItem())) {
-				return false;
-			}
-
-			// If this recipe has a fluid output that we cannot put into the output tank,
-			// continue waiting.
-			if (recipe.hasOutputFluid() && fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.SIMULATE) != recipe.getOutputFluid().getAmount()) {
-				return false;
-			}
-
-			// Insert the outputs
-			// Check the dice roll for the output.
-			if (SDMath.diceRoll(recipe.getOutput().getOutputChance())) {
-				outputInventory.insertItem(0, recipe.getOutput().getItem().copy(), false);
-			}
-
-			// Fill the output tank.
-			fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.EXECUTE);
-
-			// Clear the internal inventory.
-			internalInventory.setStackInSlot(0, ItemStack.EMPTY);
-			markTileEntityForSynchronization();
-			return true;
-
 		}
 		return false;
 	}
 
-	public void process() {
-		if (processingComponent.isPerformingWork()) {
-			if (!getWorld().isRemote) {
-				getRecipe(internalInventory.getStackInSlot(0)).ifPresent(recipe -> {
-					energyStorage.usePower(recipe.getPowerCost());
-				});
-			}
+	protected boolean canProcessRecipe(SqueezerRecipe recipe) {
+		return InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getOutput().getItem());
+	}
+
+	protected boolean processingCompleted(SqueezerRecipe recipe) {
+		// If this recipe has an item output that we cannot put into the output slot,
+		// continue waiting.
+		if (recipe.hasItemOutput() && !InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getOutput().getItem())) {
+			return false;
 		}
-	}
 
-	// Functionality
-	public boolean hasValidRecipe() {
-		return getRecipe(inputInventory.getStackInSlot(0)).isPresent();
-	}
+		// If this recipe has a fluid output that we cannot put into the output tank,
+		// continue waiting.
+		if (recipe.hasOutputFluid() && fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.SIMULATE) != recipe.getOutputFluid().getAmount()) {
+			return false;
+		}
 
-	public Optional<SqueezerRecipe> getRecipe(ItemStack itemStackInput) {
-		return StaticPowerRecipeRegistry.getRecipe(SqueezerRecipe.RECIPE_TYPE, new RecipeMatchParameters().setItems(itemStackInput).setStoredEnergy(energyStorage.getStorage().getEnergyStored()));
+		// Insert the outputs
+		// Check the dice roll for the output.
+		if (recipe.hasItemOutput() && SDMath.diceRoll(recipe.getOutput().getOutputChance())) {
+			outputInventory.insertItem(0, recipe.getOutput().getItem().copy(), false);
+		}
+
+		// Fill the output tank.
+		if (recipe.hasOutputFluid()) {
+			fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.EXECUTE);
+		}
+
+		// Clear the internal inventory.
+		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
+		markTileEntityForSynchronization();
+		return true;
 	}
 
 	@Override

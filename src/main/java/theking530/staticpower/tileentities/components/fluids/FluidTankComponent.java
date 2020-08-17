@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -20,25 +19,32 @@ import theking530.staticpower.tileentities.components.ComponentUtilities;
 import theking530.staticpower.tileentities.components.control.SideConfigurationComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
+import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
 public class FluidTankComponent extends AbstractTileEntityComponent implements IFluidHandler, IFluidTank {
 	public static final int FLUID_SYNC_MAX_DELTA = 10;
-	protected StaticPowerFluidTank FluidStorage;
 
+	@UpdateSerialize
+	protected StaticPowerFluidTank FluidStorage;
+	@UpdateSerialize
 	protected int lastFluidStored;
-	protected int fluidPerTick;
-	protected boolean canFill;
-	protected boolean canDrain;
+	@UpdateSerialize
 	protected long lastUpdateTime;
+	@UpdateSerialize
+	protected boolean canFill;
+	@UpdateSerialize
+	protected boolean canDrain;
+	@UpdateSerialize
+	private float upgradeMultiplier;
+	@UpdateSerialize
+	private int defaultCapacity;
+	
 	protected final HashSet<MachineSideMode> capabilityExposeModes;
 	private final FluidComponentCapabilityInterface capabilityInterface;
 	private FluidStack lastSyncFluidStack;
 	private float visualFillLevel;
-
 	private UpgradeInventoryComponent upgradeInventory;
-	private float upgradeMultiplier;
-	private int defaultCapacity;
 
 	public FluidTankComponent(String name, int capacity) {
 		this(name, capacity, (fluid) -> true);
@@ -120,7 +126,7 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 		if (upgrade.isEmpty()) {
 			upgradeMultiplier = 1.0f;
 		} else {
-			upgradeMultiplier = upgrade.getTier().getTankCapacityUpgrade() * upgrade.getUpgradeWeight();
+			upgradeMultiplier = 1.0f + (upgrade.getTier().getTankCapacityUpgrade() * upgrade.getUpgradeWeight());
 		}
 
 		// Set the capacity.
@@ -195,10 +201,6 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 		return this;
 	}
 
-	public int getFluidRate() {
-		return fluidPerTick;
-	}
-
 	public boolean isEmpty() {
 		return getFluidAmount() == 0;
 	}
@@ -208,28 +210,8 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 	}
 
 	@Override
-	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
-		super.deserializeUpdateNbt(nbt, fromUpdate);
-		FluidStorage.readFromNBT(nbt);
-		fluidPerTick = nbt.getInt("PerTick");
-	}
-
-	@Override
-	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
-		super.serializeUpdateNbt(nbt, fromUpdate);
-		FluidStorage.writeToNBT(nbt);
-
-		long ticksSinceLastUpdate = Math.max(getTileEntity().getWorld().getGameTime() - lastUpdateTime, 1);
-		int energyUsedPerTickSinceLastPacket = ((int) ((FluidStorage.getFluidAmount() - lastFluidStored) / ticksSinceLastUpdate));
-		nbt.putInt("PerTick", energyUsedPerTickSinceLastPacket);
-		lastUpdateTime = getTileEntity().getWorld().getGameTime();
-		lastFluidStored = FluidStorage.getFluidAmount();
-		return nbt;
-	}
-
-	@Override
 	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
-		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+		if (isEnabled() && cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
 			// Check if the owner is side configurable. If it is, check to make sure it's
 			// not disabled, if not, return the inventory.
 			Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getTileEntity());
@@ -314,26 +296,42 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 
 		@Override
 		public int getTanks() {
+			if (!FluidTankComponent.this.isEnabled()) {
+				return 0;
+			}
 			return FluidTankComponent.this.getTanks();
 		}
 
 		@Override
 		public FluidStack getFluidInTank(int tank) {
+			if (!FluidTankComponent.this.isEnabled()) {
+				return FluidStack.EMPTY;
+			}
 			return FluidTankComponent.this.getFluidInTank(tank);
 		}
 
 		@Override
 		public int getTankCapacity(int tank) {
+			if (!FluidTankComponent.this.isEnabled()) {
+				return 0;
+			}
 			return FluidTankComponent.this.getTankCapacity(tank);
 		}
 
 		@Override
 		public boolean isFluidValid(int tank, FluidStack stack) {
+			if (!FluidTankComponent.this.isEnabled()) {
+				return false;
+			}
 			return FluidTankComponent.this.isFluidValid(stack);
 		}
 
 		@Override
 		public int fill(FluidStack resource, FluidAction action) {
+			if (!FluidTankComponent.this.isEnabled()) {
+				return 0;
+			}
+
 			if (!FluidTankComponent.this.getCanFill()) {
 				return 0;
 			}
@@ -347,6 +345,10 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 
 		@Override
 		public FluidStack drain(FluidStack resource, FluidAction action) {
+			if (!FluidTankComponent.this.isEnabled()) {
+				return FluidStack.EMPTY;
+			}
+
 			if (!FluidTankComponent.this.getCanDrain()) {
 				return FluidStack.EMPTY;
 			}
@@ -361,6 +363,10 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 
 		@Override
 		public FluidStack drain(int maxDrain, FluidAction action) {
+			if (!FluidTankComponent.this.isEnabled()) {
+				return FluidStack.EMPTY;
+			}
+
 			if (!FluidTankComponent.this.getCanDrain()) {
 				return FluidStack.EMPTY;
 			}
