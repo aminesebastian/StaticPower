@@ -51,7 +51,7 @@ public class GuiMachinePowerInfoTab extends BaseGuiTab {
 		int powerUsage = processingComponent.getPowerUsage() * (processingComponent.getMaxProcessingTime() - processingComponent.getCurrentProcessingTime());
 
 		String text = (TextFormatting.GREEN + "Current Input: =" + energyStorage.getStorage().getRecievedPerTick() + " RF/t=" + TextFormatting.RED + "Current Usage: ="
-				+ energyStorage.getStorage().getExtractedPerTick() + " RF/t=" + TextFormatting.AQUA + "Max Usage:=" + energyStorage.getStorage().getMaxExtract() + " RF/t");
+				+ energyStorage.getStorage().getExtractedPerTick() + " RF/t=" + TextFormatting.AQUA + "Max Draw:=" + energyStorage.getStorage().getMaxExtract() + " RF/t");
 		setText("Power I/O", text);
 	}
 

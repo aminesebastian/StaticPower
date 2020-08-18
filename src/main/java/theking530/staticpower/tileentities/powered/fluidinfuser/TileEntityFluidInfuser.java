@@ -12,6 +12,7 @@ import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
+import theking530.staticpower.tileentities.components.control.MachineProcessingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
 import theking530.staticpower.tileentities.components.fluids.FluidInputServoComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
@@ -79,27 +80,29 @@ public class TileEntityFluidInfuser extends TileEntityMachine {
 		}
 	}
 
-	protected boolean moveInputs(FluidInfusionRecipe recipe) {
+	protected ProcessingCheckState moveInputs(FluidInfusionRecipe recipe) {
 		// If the items can be insert into the output, transfer the items and return
 		// true.
-		if (internalInventory.getStackInSlot(0).isEmpty() && InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRecipeOutput())) {
-			transferItemInternally(inputInventory, 0, internalInventory, 0);
-			markTileEntityForSynchronization();
-			return true;
+		if (!internalInventory.getStackInSlot(0).isEmpty()) {
+			return ProcessingCheckState.internalInventoryNotEmpty();
 		}
-		return false;
-	}
-
-	protected boolean canProcessRecipe(FluidInfusionRecipe recipe) {
-		return InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.getRecipeOutput());
-	}
-
-	protected boolean processingCompleted(FluidInfusionRecipe recipe) {
-		// If we can't store the filled output in the output slot, return false.
-		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getOutput().getItem())) {
-			return false;
+		if (InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRecipeOutput())) {
+			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 
+		transferItemInternally(inputInventory, 0, internalInventory, 0);
+		markTileEntityForSynchronization();
+		return ProcessingCheckState.ok();
+	}
+
+	protected ProcessingCheckState canProcessRecipe(FluidInfusionRecipe recipe) {
+		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.getRecipeOutput())) {
+			return ProcessingCheckState.outputsCannotTakeRecipe();
+		}
+		return ProcessingCheckState.ok();
+	}
+
+	protected ProcessingCheckState processingCompleted(FluidInfusionRecipe recipe) {
 		// Output the item if the dice roll passes.
 		if (SDMath.diceRoll(recipe.getOutput().getOutputChance())) {
 			outputInventory.insertItem(0, recipe.getOutput().getItem().copy(), false);
@@ -111,7 +114,7 @@ public class TileEntityFluidInfuser extends TileEntityMachine {
 		// Clear the internal inventory.
 		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
 		markTileEntityForSynchronization();
-		return true;
+		return ProcessingCheckState.ok();
 	}
 
 	@Override

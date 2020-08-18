@@ -183,6 +183,10 @@ public class StaticPowerFluidTank extends FluidTank implements INBTSerializable<
 		nbt.putFloat("recieved", averageFilled);
 		nbt.putFloat("extracted", averageDrained);
 		nbt.putInt("capacity", capacity);
+
+		CompoundNBT tankNbt = new CompoundNBT();
+		this.writeToNBT(tankNbt);
+		nbt.put("tank", tankNbt);
 		return nbt;
 	}
 
@@ -191,5 +195,6 @@ public class StaticPowerFluidTank extends FluidTank implements INBTSerializable<
 		averageFilled = nbt.getFloat("recieved");
 		averageDrained = nbt.getFloat("extracted");
 		capacity = nbt.getInt("capacity");
+		readFromNBT(nbt.getCompound("tank"));
 	}
 }

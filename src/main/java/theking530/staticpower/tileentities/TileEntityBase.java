@@ -54,6 +54,7 @@ import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities;
 import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.utilities.interfaces.IBreakSerializeable;
+import theking530.staticpower.utilities.WorldUtilities;
 
 public abstract class TileEntityBase extends TileEntity implements ITickableTileEntity, IBreakSerializeable, INamedContainerProvider {
 	public static final Logger LOGGER = LogManager.getLogger(TileEntityBase.class);
@@ -170,6 +171,27 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 			comp.onOwningBlockBroken(state, newState, isMoving);
 		}
 		isValid = false;
+
+		// Add all the items that are currently in an inventory.
+		if (pos != null) {
+			TileEntityBase baseTe = world.getTileEntity(pos) instanceof TileEntityBase ? (TileEntityBase) world.getTileEntity(pos) : null;
+			if (baseTe != null) {
+				for (InventoryComponent comp : baseTe.getComponents(InventoryComponent.class)) {
+					// Skip components that should not drop their contents.
+					if (!comp.shouldDropContentsOnBreak()) {
+						continue;
+					}
+					// Capture all the items in the component.
+					for (int i = 0; i < comp.getSlots(); i++) {
+						ItemStack extracted = comp.extractItem(i, Integer.MAX_VALUE, false);
+						if (!extracted.isEmpty()) {
+							WorldUtilities.dropItem(world, pos, extracted);
+						}
+					}
+				}
+			}
+		}
+
 	}
 
 	public void onBlockReplaced(BlockState state, BlockState newState, boolean isMoving) {

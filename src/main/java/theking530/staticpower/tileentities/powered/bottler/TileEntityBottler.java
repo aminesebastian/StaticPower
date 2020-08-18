@@ -15,6 +15,7 @@ import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
+import theking530.staticpower.tileentities.components.control.MachineProcessingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.fluids.FluidInputServoComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
@@ -59,9 +60,11 @@ public class TileEntityBottler extends TileEntityMachine {
 
 		// Use the old processing system because we need to support NON recipe based
 		// processing as well as recipe based.
-		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", 2, this::canMoveFromInputToProcessing, () -> true, this::movingCompleted, true));
+		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", 2, this::canMoveFromInputToProcessing, () -> ProcessingCheckState.ok(), this::movingCompleted, true)
+				.setRedstoneControlComponent(redstoneControlComponent));
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true)
-				.setShouldControlBlockState(true).setUpgradeInventory(upgradesInventory));
+				.setShouldControlBlockState(true).setUpgradeInventory(upgradesInventory).setRedstoneControlComponent(redstoneControlComponent).setEnergyComponent(energyStorage)
+				.setProcessingPowerUsage(DEFAULT_PROCESSING_COST));
 
 		// Setup the I/O servos.
 		registerComponent(new OutputServoComponent("OutputServo", 2, outputInventory));
@@ -84,12 +87,13 @@ public class TileEntityBottler extends TileEntityMachine {
 	 * 
 	 * @return
 	 */
-	protected boolean canMoveFromInputToProcessing() {
-		if (hasValidInput() && hasFluidForInput(inputInventory.getStackInSlot(0)) && !moveComponent.isProcessing() && internalInventory.getStackInSlot(0).isEmpty()
-				&& energyStorage.getStorage().getEnergyStored() >= DEFAULT_PROCESSING_COST && fluidTankComponent.getFluidAmount() > 0) {
-			return InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, getSimulatedFilledContainer(inputInventory.getStackInSlot(0)));
+	protected ProcessingCheckState canMoveFromInputToProcessing() {
+		if (hasValidInput() && hasFluidForInput(inputInventory.getStackInSlot(0)) && internalInventory.getStackInSlot(0).isEmpty() && fluidTankComponent.getFluidAmount() > 0) {
+			if (InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, getSimulatedFilledContainer(inputInventory.getStackInSlot(0)))) {
+				return ProcessingCheckState.ok();
+			}
 		}
-		return false;
+		return ProcessingCheckState.error("ERROR");
 	}
 
 	/**
@@ -99,21 +103,35 @@ public class TileEntityBottler extends TileEntityMachine {
 	 * 
 	 * @return
 	 */
-	protected boolean movingCompleted() {
+	protected ProcessingCheckState movingCompleted() {
 		if (hasValidInput() && hasFluidForInput(inputInventory.getStackInSlot(0))) {
 			// Transfer the items to the internal inventory.
 			transferItemInternally(inputInventory, 0, internalInventory, 0);
 
 			// Trigger a block update.
 			markTileEntityForSynchronization();
+			return ProcessingCheckState.ok();
 		}
-		return true;
+		return ProcessingCheckState.skip();
 	}
 
-	protected boolean canProcess() {
+	protected ProcessingCheckState canProcess() {
 		ItemStack output = getSimulatedFilledContainer(inputInventory.getStackInSlot(0));
-		return isValidInput(internalInventory.getStackInSlot(0)) && hasFluidForInput(inputInventory.getStackInSlot(0)) && redstoneControlComponent.passesRedstoneCheck()
-				&& energyStorage.hasEnoughPower(DEFAULT_PROCESSING_COST) && InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, output);
+
+		// If the input is invalid, just keep going.
+		if (isValidInput(internalInventory.getStackInSlot(0))) {
+			return ProcessingCheckState.ok();
+		}
+
+		// Make sure we have the proper input fluid.
+		if (hasFluidForInput(inputInventory.getStackInSlot(0))) {
+			return ProcessingCheckState.notCorrectFluid();
+		}
+		if (InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, output)) {
+			return ProcessingCheckState.outputsCannotTakeRecipe();
+		}
+
+		return ProcessingCheckState.ok();
 	}
 
 	/**
@@ -123,14 +141,14 @@ public class TileEntityBottler extends TileEntityMachine {
 	 * 
 	 * @return
 	 */
-	protected boolean processingCompleted() {
-		if (!getWorld().isRemote && !internalInventory.getStackInSlot(0).isEmpty()) {
+	protected ProcessingCheckState processingCompleted() {
+		if (!internalInventory.getStackInSlot(0).isEmpty()) {
 			// Get simulated output.
 			ItemStack output = getSimulatedFilledContainer(internalInventory.getStackInSlot(0));
 
 			// If we can't store the filled output in the output slot, return false.
 			if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, output)) {
-				return false;
+				return ProcessingCheckState.outputsCannotTakeRecipe();
 			}
 
 			// Attempt to fill the container and capture the result if this is a fluid
@@ -148,10 +166,11 @@ public class TileEntityBottler extends TileEntityMachine {
 			// Clear the internal inventory.
 			internalInventory.setStackInSlot(0, ItemStack.EMPTY);
 			markTileEntityForSynchronization();
-			return true;
+			return ProcessingCheckState.ok();
 
+		} else {
+			return ProcessingCheckState.internalInventoryNotEmpty();
 		}
-		return false;
 	}
 
 	@Override
@@ -159,7 +178,7 @@ public class TileEntityBottler extends TileEntityMachine {
 		// Use power if we are processing.
 		if (processingComponent.isPerformingWork()) {
 			if (!getWorld().isRemote) {
-				energyStorage.usePower(DEFAULT_PROCESSING_COST);
+				energyStorage.useBulkPower(DEFAULT_PROCESSING_COST);
 			}
 		}
 	}

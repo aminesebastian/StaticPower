@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import theking530.common.gui.widgets.AbstractGuiWidget;
 import theking530.common.utilities.SDMath;
@@ -46,6 +47,15 @@ public abstract class AbstractProgressBar extends AbstractGuiWidget {
 	 * remain at 1.
 	 */
 	protected int tickDownRate;
+	/**
+	 * Indicates whether or not the processing is stopped due to an error.
+	 */
+	protected boolean isProcessingErrored;
+	/**
+	 * If the processing is stopped due to an error, this message will indicate what
+	 * that error is to the user.
+	 */
+	protected String processingErrorMessage;
 
 	public AbstractProgressBar(float xPosition, float yPosition, float width, float height) {
 		super(xPosition, yPosition, width, height);
@@ -61,6 +71,8 @@ public abstract class AbstractProgressBar extends AbstractGuiWidget {
 			maxProgress = machineProcessingComponent.getMaxProcessingTime();
 			currentProgress = machineProcessingComponent.getCurrentProcessingTime();
 			tickDownRate = machineProcessingComponent.getTimeUnitsPerTick();
+			isProcessingErrored = machineProcessingComponent.isProcessingStoppedDueToError();
+			processingErrorMessage = machineProcessingComponent.getProcessingErrorMessage();
 		}
 
 		// Calculate the visual current progress.
@@ -74,7 +86,12 @@ public abstract class AbstractProgressBar extends AbstractGuiWidget {
 	public void getTooltips(Vector2D mousePosition, List<ITextComponent> tooltips, boolean showAdvanced) {
 		DecimalFormat decimalFormat = new DecimalFormat("#.#");
 
-		if (currentProgress > 0) {
+		if (isProcessingErrored) {
+			String[] splitTooltips = processingErrorMessage.split("\\$");
+			for (String tip : splitTooltips) {
+				tooltips.add(new StringTextComponent(tip));
+			}
+		} else if (currentProgress > 0) {
 			String remainingTime = decimalFormat.format((maxProgress - currentProgress) / (tickDownRate * 20.0f));
 			tooltips.add(
 					new TranslationTextComponent("gui.staticpower.remaining").appendText(": ").appendText(remainingTime).appendSibling(new TranslationTextComponent("gui.staticpower.seconds.short")));
@@ -138,5 +155,4 @@ public abstract class AbstractProgressBar extends AbstractGuiWidget {
 	public void setMaxProgress(int maxProgress) {
 		this.maxProgress = maxProgress;
 	}
-
 }

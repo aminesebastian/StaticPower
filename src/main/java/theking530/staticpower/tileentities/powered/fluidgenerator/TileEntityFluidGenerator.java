@@ -15,6 +15,7 @@ import theking530.staticpower.data.crafting.wrappers.fluidgenerator.FluidGenerat
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
+import theking530.staticpower.tileentities.components.control.MachineProcessingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.components.fluids.FluidInputServoComponent;
@@ -40,8 +41,8 @@ public class TileEntityFluidGenerator extends TileEntityMachine {
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
 		registerComponent(fluidContainerInventory = new InventoryComponent("FluidContainerInventory", 2, MachineSideMode.Never));
 
-		registerComponent(
-				processingComponent = new MachineProcessingComponent("ProcessingComponent", 0, this::canProcess, this::canProcess, this::processingCompleted, true).setShouldControlBlockState(true));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 0, this::canProcess, this::canProcess, this::processingCompleted, true)
+				.setShouldControlBlockState(true).setRedstoneControlComponent(redstoneControlComponent));
 
 		registerComponent(new PowerDistributionComponent("PowerDistributor", energyStorage.getStorage()));
 		registerComponent(generatingSoundComponent = new LoopingSoundComponent("GeneratingSoundComponent", 20));
@@ -72,31 +73,30 @@ public class TileEntityFluidGenerator extends TileEntityMachine {
 		}
 	}
 
-	public boolean canProcess() {
-		// Do nothing if the redstone mode is false.
-		if (!redstoneControlComponent.passesRedstoneCheck()) {
-			return false;
-		}
-
+	public ProcessingCheckState canProcess() {
 		// Do nothing if the input tank is empty.
 		if (fluidTankComponent.getFluidAmount() == 0) {
-			return false;
+			return ProcessingCheckState.skip();
 		}
 
 		// If there is no valid recipe, return false.
 		if (!hasValidRecipe()) {
-			return false;
+			return ProcessingCheckState.ok();
 		}
 
 		// Check to make sure we can store power.
-		return energyStorage.canAcceptPower(1);
+		if (energyStorage.canAcceptPower(1)) {
+			return ProcessingCheckState.ok();
+		} else {
+			return ProcessingCheckState.error("Energy Storage Full!");
+		}
 	}
 
-	protected boolean processingCompleted() {
+	protected ProcessingCheckState processingCompleted() {
 		// If there is no valid recipe, return true. This covers the edge case where
-		// someone quits mid procesing and then removes the current recipe.
+		// someone quits mid processing and then removes the current recipe.
 		if (!hasValidRecipe()) {
-			return true;
+			return ProcessingCheckState.ok();
 		}
 
 		// Get the recipe.
@@ -105,7 +105,7 @@ public class TileEntityFluidGenerator extends TileEntityMachine {
 		energyStorage.getStorage().receiveEnergy(recipe.getPowerGeneration(), false);
 		// Drain the used fluid.
 		fluidTankComponent.drain(recipe.getFluid().getAmount(), FluidAction.EXECUTE);
-		return true;
+		return ProcessingCheckState.ok();
 	}
 
 	// Functionality

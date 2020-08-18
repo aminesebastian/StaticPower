@@ -6,6 +6,7 @@ import theking530.staticpower.items.upgrades.BaseUpgrade;
 import theking530.staticpower.items.upgrades.IUpgradeItem;
 import theking530.staticpower.items.upgrades.IUpgradeItem.UpgradeType;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
+import theking530.staticpower.utilities.ItemUtilities;
 
 public class UpgradeInventoryComponent extends InventoryComponent {
 	public UpgradeInventoryComponent(String name, int size) {
@@ -16,7 +17,8 @@ public class UpgradeInventoryComponent extends InventoryComponent {
 		// Allocate the max tier upgrade stack and tier.
 		StaticPowerTier maxTier = null;
 		ItemStack maxTierUpgradeStack = ItemStack.EMPTY;
-
+		int count = 0;
+		
 		// Check for all items in the stacks array.
 		for (ItemStack upgradeStack : stacks) {
 			// Skip empty stacks.
@@ -32,12 +34,17 @@ public class UpgradeInventoryComponent extends InventoryComponent {
 				if (maxTier == null || upgradeItem.getTier().getUpgradeOrdinal() > maxTier.getUpgradeOrdinal()) {
 					maxTier = upgradeItem.getTier();
 					maxTierUpgradeStack = upgradeStack;
+					count += upgradeStack.getCount();
+				}else if(ItemUtilities.areItemStacksStackable(maxTierUpgradeStack, upgradeStack)) {
+					count += upgradeStack.getCount();
 				}
 			}
 		}
 
 		// Return the max tiered item.
-		return new UpgradeItemWrapper(maxTierUpgradeStack, maxTier);
+		ItemStack maxStack = maxTierUpgradeStack.copy();
+		maxStack.setCount(Math.min(maxStack.getMaxStackSize(), count));
+		return new UpgradeItemWrapper(maxStack, maxTier);
 	}
 
 	/**

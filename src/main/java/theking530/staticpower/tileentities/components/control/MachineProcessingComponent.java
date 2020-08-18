@@ -5,6 +5,8 @@ import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.util.text.StringTextComponent;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.items.upgrades.IUpgradeItem.UpgradeType;
 import theking530.staticpower.tileentities.StaticPowerMachineBlock;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
@@ -15,15 +17,20 @@ import theking530.staticpower.tileentities.components.serialization.SaveSerializ
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 
 public class MachineProcessingComponent extends AbstractTileEntityComponent {
-	protected Supplier<Boolean> canStartProcessingCallback;
-	protected Supplier<Boolean> canContinueProcessingCallback;
-	protected Supplier<Boolean> processingEndedCallback;
+	protected Supplier<ProcessingCheckState> canStartProcessingCallback;
+	protected Supplier<ProcessingCheckState> canContinueProcessingCallback;
+	protected Supplier<ProcessingCheckState> processingEndedCallback;
 
 	private Runnable processingStartedCallback;
 	private boolean shouldControlOnBlockState;
 	private UpgradeInventoryComponent upgradeInventory;
 	private EnergyStorageComponent powerComponent;
 	private RedstoneControlComponent redstoneControlComponent;
+
+	@UpdateSerialize
+	private String processingErrorMessage;
+	@UpdateSerialize
+	private boolean processingStoppedDueToError;
 
 	@UpdateSerialize
 	private int processingTime;
@@ -68,8 +75,8 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 	@SaveSerialize
 	private int blockStateOffTimer;
 
-	public MachineProcessingComponent(String name, int processingTime, @Nonnull Supplier<Boolean> canStartProcessingCallback, @Nonnull Supplier<Boolean> canContinueProcessingCallback,
-			@Nonnull Supplier<Boolean> processingEndedCallback, boolean serverOnly) {
+	public MachineProcessingComponent(String name, int processingTime, @Nonnull Supplier<ProcessingCheckState> canStartProcessingCallback,
+			@Nonnull Supplier<ProcessingCheckState> canContinueProcessingCallback, @Nonnull Supplier<ProcessingCheckState> processingEndedCallback, boolean serverOnly) {
 		super(name);
 		this.canStartProcessingCallback = canStartProcessingCallback;
 		this.canContinueProcessingCallback = canContinueProcessingCallback;
@@ -86,10 +93,12 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		this.hasProcessingPowerCost = false;
 		this.powerUpgradeMultiplier = 1.0f;
 		this.hasCompletedPowerCost = false;
+		this.processingErrorMessage = "";
+		this.processingStoppedDueToError = false;
 	}
 
-	public MachineProcessingComponent(String name, int processingTime, @Nonnull Supplier<Boolean> processingEndedCallback, boolean serverOnly) {
-		this(name, processingTime, () -> false, () -> true, processingEndedCallback, serverOnly);
+	public MachineProcessingComponent(String name, int processingTime, @Nonnull Supplier<ProcessingCheckState> processingEndedCallback, boolean serverOnly) {
+		this(name, processingTime, () -> ProcessingCheckState.error(""), () -> ProcessingCheckState.ok(), processingEndedCallback, serverOnly);
 	}
 
 	public void preProcessUpdate() {
@@ -107,8 +116,18 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		performedWorkLastTick = false;
 
 		// If this is when we first start processing, raise the start processing event.
-		if (!hasStarted && passesAllProcessingStartChecks() && canStartProcessingCallback.get()) {
-			startProcessing();
+		if (!hasStarted && passesAllProcessingStartChecks()) {
+			// Get the start state.
+			ProcessingCheckState processingState = canStartProcessingCallback.get();
+
+			// If its okay, start processing. If its an error, raise the error. If its a
+			// skip or cancel, do nothing.
+			if (processingState.isOk()) {
+				startProcessing();
+			} else if (processingState.isError()) {
+				processingStoppedDueToError = true;
+				processingErrorMessage = processingState.getErrorMessage();
+			}
 		}
 
 		// Set the can continue processing state if we have already started. This is to
@@ -116,7 +135,25 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		if (hasStarted) {
 			// Check to see if we can continue processing.
 			if (passesAllProcessingChecks()) {
-				processing = canContinueProcessingCallback.get();
+				// Get the continue state.
+				ProcessingCheckState continueState = canContinueProcessingCallback.get();
+
+				// Clear the states.
+				processingErrorMessage = continueState.getErrorMessage();
+				processingStoppedDueToError = false;
+				processing = false;
+
+				// If its a cancel, cancel processing.
+				if (continueState.isCancel()) {
+					cancelProcessing();
+				} else if (continueState.isOk()) {
+					// Just keep going.
+					processing = true;
+				} else if (continueState.isError()) {
+					// Set the error info.
+					processingErrorMessage = continueState.getErrorMessage();
+					processingStoppedDueToError = true;
+				}
 			} else {
 				processing = false;
 			}
@@ -142,21 +179,23 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 
 			// Use power if requested to.
 			if (hasProcessingPowerCost && powerComponent != null) {
-				powerComponent.usePower(powerUsage);
+				powerComponent.getStorage().extractEnergy(powerUsage, false);
 			}
 
 			performedWorkLastTick = true;
 			if (currentProcessingTime >= processingTime) {
-				if (processingCompleted()) {
+				ProcessingCheckState completedState = processingCompleted();
+				if (completedState.isOk()) {
+					// Use the complete power if requested to.
+					if (hasCompletedPowerCost && powerComponent != null) {
+						powerComponent.useBulkPower(completedPowerUsage);
+					}
+				} else if (!completedState.isError()) {
 					currentProcessingTime = 0;
 					blockStateOffTimer = 0;
 					processing = false;
 					hasStarted = false;
-
-					// Use the complete power if requested to.
-					if (hasCompletedPowerCost && powerComponent != null) {
-						powerComponent.usePower(completedPowerUsage);
-					}
+					processingStoppedDueToError = false;
 				}
 			}
 		} else {
@@ -229,15 +268,14 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		if (serverOnly && getWorld().isRemote) {
 			return;
 		}
-		processing = false;
 		currentProcessingTime = 0;
+		processing = false;
+		hasStarted = false;
+		processingStoppedDueToError = false;
 	}
 
-	private boolean processingCompleted() {
-		if (processingEndedCallback.get()) {
-			return true;
-		}
-		return false;
+	private ProcessingCheckState processingCompleted() {
+		return processingEndedCallback.get();
 	}
 
 	/**
@@ -391,6 +429,18 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		return (int) (((float) (currentProcessingTime) / processingTime) * scaleValue);
 	}
 
+	public String getProcessingErrorMessage() {
+		return processingErrorMessage;
+	}
+
+	public void setProcessingErrorMessage(String errorMessage) {
+		processingErrorMessage = errorMessage;
+	}
+
+	public boolean isProcessingStoppedDueToError() {
+		return processingStoppedDueToError;
+	}
+
 	/**
 	 * Sets this machine processing component responsible for maintaining the IS_ON
 	 * blockstate of the owning tile entity's block.
@@ -408,7 +458,11 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 			return false;
 		}
 		// Check the processing power cost for the whole process.
-		if (hasProcessingPowerCost && !powerComponent.hasEnoughPower(powerUsage * this.processingTime)) {
+		int powerCost = powerUsage * processingTime;
+		if (hasProcessingPowerCost && !powerComponent.hasEnoughPower(powerCost)) {
+			int missingPower = powerCost - powerComponent.getStorage().getEnergyStored();
+			processingErrorMessage = new StringTextComponent("This recipe requires an additional ").appendSibling(GuiTextUtilities.formatEnergyToString(missingPower)).getFormattedText();
+			processingStoppedDueToError = true;
 			return false;
 		}
 
@@ -416,21 +470,38 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 	}
 
 	protected boolean passesAllProcessingChecks() {
+		// Initially set us in error state.
+		processingStoppedDueToError = true;
+
 		// Check the processing power cost.
-		if (hasProcessingPowerCost && (!powerComponent.hasEnoughPower(powerUsage) || powerComponent.getStorage().getMaxExtract() < powerUsage)) {
+		if (hasProcessingPowerCost && !powerComponent.hasEnoughPower(powerUsage)) {
+			processingErrorMessage = new StringTextComponent("Not Enough Power!").getFormattedText();
 			return false;
 		}
-
+		// Check the processing power rate.
+		if (hasProcessingPowerCost && powerComponent.getStorage().getMaxExtract() < powerUsage) {
+			processingErrorMessage = new StringTextComponent("Recipe's power per tick requirement (").appendSibling(GuiTextUtilities.formatEnergyRateToString(powerUsage))
+					.appendText(") is larger than the max for this machine!").getFormattedText();
+			return false;
+		}
 		// Check the completion power cost.
-		if (hasCompletedPowerCost && (!powerComponent.hasEnoughPower(completedPowerUsage) || powerComponent.getStorage().getMaxExtract() < completedPowerUsage)) {
+		if (hasCompletedPowerCost && !powerComponent.hasEnoughPower(completedPowerUsage)) {
+			processingErrorMessage = new StringTextComponent("Not Enough Power!").getFormattedText();
 			return false;
 		}
-
+		// Check the processing power rate.
+		if (hasProcessingPowerCost && powerComponent.getStorage().getEnergyStored() < completedPowerUsage) {
+			processingErrorMessage = new StringTextComponent("Max Power Draw Too Log!").getFormattedText();
+			return false;
+		}
 		// Check the redstone control component.
 		if (redstoneControlComponent != null && !redstoneControlComponent.passesRedstoneCheck()) {
+			processingErrorMessage = new StringTextComponent("Redstone Control Mode Not Satisfied.").getFormattedText();
 			return false;
 		}
 
+		// If we made it this far, we are not in an error state, so set it to false.
+		processingStoppedDueToError = false;
 		return true;
 	}
 
@@ -454,5 +525,87 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 			return currentState.get(StaticPowerMachineBlock.IS_ON);
 		}
 		return false;
+	}
+
+	public static class ProcessingCheckState {
+		public enum ProcessingState {
+			SKIP, ERROR, OK, CANCEL
+		}
+
+		private final ProcessingState state;
+		private final String errorMessage;
+
+		private ProcessingCheckState(ProcessingState state, String errorMessage) {
+			this.state = state;
+			this.errorMessage = errorMessage;
+		}
+
+		public ProcessingState getState() {
+			return state;
+		}
+
+		public String getErrorMessage() {
+			return errorMessage;
+		}
+
+		public boolean isOk() {
+			return state == ProcessingState.OK;
+		}
+
+		public boolean isError() {
+			return state == ProcessingState.ERROR;
+		}
+
+		public boolean isSkip() {
+			return state == ProcessingState.SKIP;
+		}
+
+		public boolean isCancel() {
+			return state == ProcessingState.CANCEL;
+		}
+
+		public static ProcessingCheckState skip() {
+			return new ProcessingCheckState(ProcessingState.SKIP, "");
+		}
+
+		public static ProcessingCheckState ok() {
+			return new ProcessingCheckState(ProcessingState.OK, "");
+		}
+
+		public static ProcessingCheckState cancel() {
+			return new ProcessingCheckState(ProcessingState.CANCEL, "");
+		}
+
+		public static ProcessingCheckState error(String errorMessage) {
+			return new ProcessingCheckState(ProcessingState.ERROR, errorMessage);
+		}
+
+		public static ProcessingCheckState notCorrectFluid() {
+			return new ProcessingCheckState(ProcessingState.ERROR, "Requires different input fluid.");
+		}
+
+		public static ProcessingCheckState notEnoughFluid() {
+			return new ProcessingCheckState(ProcessingState.ERROR, "Requires more fluid.");
+		}
+
+		public static ProcessingCheckState powerOutputFull() {
+			return new ProcessingCheckState(ProcessingState.ERROR, "Energy storage is full!");
+		}
+
+		public static ProcessingCheckState outputTankCannotTakeFluid() {
+			return new ProcessingCheckState(ProcessingState.ERROR, "Tank does not have enough space for recipe output.");
+		}
+
+		public static ProcessingCheckState outputFluidDoesNotMatch() {
+			return new ProcessingCheckState(ProcessingState.ERROR, "Recipe fluid does not match fluid in tank.");
+		}
+
+		public static ProcessingCheckState internalInventoryNotEmpty() {
+			return new ProcessingCheckState(ProcessingState.ERROR, "Machine's internal buffer not empty.");
+		}
+
+		public static ProcessingCheckState outputsCannotTakeRecipe() {
+			return new ProcessingCheckState(ProcessingState.ERROR, "Recipe output does not stack with current item in output slots.");
+		}
 	}
 }

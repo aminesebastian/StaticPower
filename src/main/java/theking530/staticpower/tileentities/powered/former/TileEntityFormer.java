@@ -10,6 +10,7 @@ import theking530.staticpower.data.crafting.wrappers.former.FormerRecipe;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.BatteryInventoryComponent;
+import theking530.staticpower.tileentities.components.control.MachineProcessingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
@@ -80,40 +81,37 @@ public class TileEntityFormer extends TileEntityMachine {
 		}
 	}
 
-	protected boolean moveInputs(FormerRecipe recipe) {
+	protected ProcessingCheckState moveInputs(FormerRecipe recipe) {
 		// If the items can be insert into the output, transfer the items and return
 		// true.
-		if (internalInventory.getStackInSlot(0).isEmpty() && InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.getRecipeOutput())) {
-			transferItemInternally(inputInventory, 0, internalInventory, 0);
-			markTileEntityForSynchronization();
-			return true;
+		if (!internalInventory.getStackInSlot(0).isEmpty()) {
+			return ProcessingCheckState.internalInventoryNotEmpty();
 		}
-		return false;
-	}
-
-	protected boolean canProcessRecipe(FormerRecipe recipe) {
-		return InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.getRecipeOutput());
-	}
-
-	protected boolean processingCompleted(FormerRecipe recipe) {
-		// Ensure the output slots can take the recipe.
-		if (InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.getRecipeOutput())) {
-			ItemStack output = recipe.getRecipeOutput();
-			if (!output.isEmpty() && InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, output)) {
-				outputInventory.insertItem(0, output.copy(), false);
-				internalInventory.setStackInSlot(0, ItemStack.EMPTY);
-				internalInventory.setStackInSlot(1, ItemStack.EMPTY);
-				markTileEntityForSynchronization();
-				return true;
-			}
-
-			internalInventory.setStackInSlot(0, ItemStack.EMPTY);
-			markTileEntityForSynchronization();
-			return true;
+		if (InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRecipeOutput())) {
+			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 
-		// If something failed, return false and try again.
-		return false;
+		transferItemInternally(inputInventory, 0, internalInventory, 0);
+		markTileEntityForSynchronization();
+		return ProcessingCheckState.ok();
+	}
+
+	protected ProcessingCheckState canProcessRecipe(FormerRecipe recipe) {
+		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.getRecipeOutput())) {
+			return ProcessingCheckState.outputsCannotTakeRecipe();
+		}
+		return ProcessingCheckState.ok();
+	}
+
+	protected ProcessingCheckState processingCompleted(FormerRecipe recipe) {
+		outputInventory.insertItem(0, recipe.getRecipeOutput().copy(), false);
+		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
+		internalInventory.setStackInSlot(1, ItemStack.EMPTY);
+		markTileEntityForSynchronization();
+
+		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
+		markTileEntityForSynchronization();
+		return ProcessingCheckState.ok();
 	}
 
 	@Override

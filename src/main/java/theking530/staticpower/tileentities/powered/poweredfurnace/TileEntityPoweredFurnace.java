@@ -10,6 +10,7 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.BatteryInventoryComponent;
+import theking530.staticpower.tileentities.components.control.MachineProcessingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
@@ -86,32 +87,31 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 		}
 	}
 
-	protected boolean moveInputs(FurnaceRecipe recipe) {
-		if (internalInventory.getStackInSlot(0).isEmpty() && InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getRecipeOutput())) {
-			transferItemInternally(inputInventory, 0, internalInventory, 0);
-			processingComponent.setMaxProcessingTime(TileEntityPoweredFurnace.getCookTime(recipe));
-			markTileEntityForSynchronization();
-			return true;
+	protected ProcessingCheckState moveInputs(FurnaceRecipe recipe) {
+		if (!internalInventory.getStackInSlot(0).isEmpty()) {
+			return ProcessingCheckState.internalInventoryNotEmpty();
 		}
-		return false;
+		if (InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getRecipeOutput())) {
+			return ProcessingCheckState.outputsCannotTakeRecipe();
+		}
+		transferItemInternally(inputInventory, 0, internalInventory, 0);
+		processingComponent.setMaxProcessingTime(TileEntityPoweredFurnace.getCookTime(recipe));
+		markTileEntityForSynchronization();
+		return ProcessingCheckState.ok();
 	}
 
-	protected boolean canProcessRecipe(FurnaceRecipe recipe) {
-		return InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getRecipeOutput());
+	protected ProcessingCheckState canProcessRecipe(FurnaceRecipe recipe) {
+		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getRecipeOutput())) {
+			return ProcessingCheckState.outputsCannotTakeRecipe();
+		}
+		return ProcessingCheckState.ok();
 	}
 
-	protected boolean processingCompleted(FurnaceRecipe recipe) {
-		// Put the output into the output inventory.
-		ItemStack output = recipe.getRecipeOutput();
-		if (InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, output)) {
-			outputInventory.insertItem(0, output.copy(), false);
-			internalInventory.setStackInSlot(0, ItemStack.EMPTY);
-			markTileEntityForSynchronization();
-			return true;
-		}
-
-		// If something failed, return false and try again.
-		return false;
+	protected ProcessingCheckState processingCompleted(FurnaceRecipe recipe) {
+		outputInventory.insertItem(0, recipe.getRecipeOutput().copy(), false);
+		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
+		markTileEntityForSynchronization();
+		return ProcessingCheckState.ok();
 	}
 
 	public static int getCookTime(FurnaceRecipe recipe) {

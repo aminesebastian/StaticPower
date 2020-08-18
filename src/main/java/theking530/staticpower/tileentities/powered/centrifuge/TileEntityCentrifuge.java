@@ -11,6 +11,7 @@ import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
+import theking530.staticpower.tileentities.components.control.MachineProcessingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
@@ -92,15 +93,15 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 		}
 	}
 
-	protected boolean moveInputs(CentrifugeRecipe recipe) {
+	protected ProcessingCheckState moveInputs(CentrifugeRecipe recipe) {
 		// Check the required speed.
 		if (currentSpeed < recipe.getMinimumSpeed()) {
-			return false;
+			return ProcessingCheckState.error("Centrifuge not up to required speed of: " + recipe.getMinimumSpeed());
 		}
 
 		// If we don't have enough inputs, return false.
 		if (inputInventory.getStackInSlot(0).getCount() < recipe.getInput().getCount()) {
-			return false;
+			return ProcessingCheckState.skip();
 		}
 
 		// If the items can be insert into the output, transfer the items and return
@@ -108,17 +109,24 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 		if (internalInventory.getStackInSlot(0).isEmpty() && canInsertRecipeIntoOutputs(recipe)) {
 			transferItemInternally(inputInventory, 0, internalInventory, 0);
 			markTileEntityForSynchronization();
-			return true;
+			return ProcessingCheckState.ok();
+		} else {
+			return ProcessingCheckState.outputsCannotTakeRecipe();
+		}
+	}
+
+	protected ProcessingCheckState canProcessRecipe(CentrifugeRecipe recipe) {
+		if (!canInsertRecipeIntoOutputs(recipe)) {
+			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 
-		return false;
+		if (currentSpeed < recipe.getMinimumSpeed()) {
+			return ProcessingCheckState.error("Centrifuge not up to required speed of: " + recipe.getMinimumSpeed());
+		}
+		return ProcessingCheckState.ok();
 	}
 
-	protected boolean canProcessRecipe(CentrifugeRecipe recipe) {
-		return canInsertRecipeIntoOutputs(recipe) && currentSpeed >= recipe.getMinimumSpeed();
-	}
-
-	protected boolean processingCompleted(CentrifugeRecipe recipe) {
+	protected ProcessingCheckState processingCompleted(CentrifugeRecipe recipe) {
 		// Ensure the output slots can take the recipe.
 		if (canInsertRecipeIntoOutputs(recipe)) {
 			// For each output, insert the contents into the output based on the percentage
@@ -136,9 +144,9 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 
 			internalInventory.setStackInSlot(0, ItemStack.EMPTY);
 			markTileEntityForSynchronization();
-			return true;
+			return ProcessingCheckState.ok();
 		}
-		return false;
+		return ProcessingCheckState.outputsCannotTakeRecipe();
 	}
 
 	@Override
@@ -146,7 +154,7 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 		// Maintain the spin.
 		if (!getWorld().isRemote) {
 			if (energyStorage.hasEnoughPower(1)) {
-				energyStorage.usePower(1);
+				energyStorage.useBulkPower(1);
 				currentSpeed = SDMath.clamp(currentSpeed + 1, 0, DEFAULT_MAX_SPEED);
 			} else {
 				currentSpeed = SDMath.clamp(currentSpeed - 1, 0, DEFAULT_MAX_SPEED);

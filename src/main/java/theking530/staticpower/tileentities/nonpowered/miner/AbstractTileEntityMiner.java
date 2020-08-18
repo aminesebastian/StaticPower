@@ -19,6 +19,7 @@ import theking530.staticpower.init.ModTags;
 import theking530.staticpower.items.tools.DrillBit;
 import theking530.staticpower.tileentities.TileEntityConfigurable;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
+import theking530.staticpower.tileentities.components.control.MachineProcessingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.heat.HeatStorageComponent;
 import theking530.staticpower.tileentities.components.heat.HeatStorageComponent.HeatManipulationAction;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
@@ -73,7 +74,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 64, MachineSideMode.Never));
 
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", ticksPerOperation, this::canProcess, this::canProcess, this::processingCompleted, true)
-				.setShouldControlBlockState(true));
+				.setShouldControlBlockState(true).setRedstoneControlComponent(redstoneControlComponent));
 
 		registerComponent(miningSoundComponent = new LoopingSoundComponent("MiningSoundComponent", 20));
 
@@ -130,12 +131,21 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 	 * 
 	 * @return
 	 */
-	public boolean canProcess() {
+	public ProcessingCheckState canProcess() {
 		// If we're done processing, stop.
 		if (isDoneMining()) {
-			return false;
+			return ProcessingCheckState.skip();
 		}
-		return InventoryUtilities.isInventoryEmpty(internalInventory) && hasDrillBit() && redstoneControlComponent.passesRedstoneCheck() && heatStorage.getStorage().canFullyAbsorbHeat(heatGeneration);
+		if (!InventoryUtilities.isInventoryEmpty(internalInventory)) {
+			return ProcessingCheckState.error("Items backed up in internal inventory.");
+		}
+		if (!hasDrillBit()) {
+			return ProcessingCheckState.error("Missing drill bit.");
+		}
+		if (!heatStorage.getStorage().canFullyAbsorbHeat(heatGeneration)) {
+			return ProcessingCheckState.error("Not enough heat capacity.");
+		}
+		return ProcessingCheckState.ok();
 	}
 
 	/**
@@ -146,7 +156,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 	 * @return
 	 */
 	@SuppressWarnings("deprecation")
-	protected boolean processingCompleted() {
+	protected ProcessingCheckState processingCompleted() {
 		if (InventoryUtilities.isInventoryEmpty(internalInventory) && hasDrillBit()) {
 			// Safety check. If we are out of range return true.
 			if (currentBlockIndex >= blocks.size()) {
@@ -155,7 +165,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 				if (blocks.size() > 0) {
 					currentBlockIndex = -1;
 				}
-				return true;
+				return ProcessingCheckState.ok();
 			}
 
 			// Get the block to mine.
@@ -172,7 +182,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 
 			// Skip air blocks.
 			if (minedBlockState.getBlock() == Blocks.AIR) {
-				return true;
+				return ProcessingCheckState.ok();
 			}
 
 			// Play the sound.
@@ -187,12 +197,12 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 			// If we hit dirt, make it coarse dirt.
 			if (minedBlockState.getBlock() == Blocks.DIRT || minedBlockState.getBlock() == Blocks.GRASS_BLOCK) {
 				world.setBlockState(minedPos, Blocks.COARSE_DIRT.getDefaultState(), 1 | 2);
-				return true;
+				return ProcessingCheckState.ok();
 			}
 
 			// Check if this is a mineable block. If not, just return true.
 			if (!ModTags.MINER_ORE.contains(Item.getItemFromBlock(minedBlockState.getBlock()))) {
-				return true;
+				return ProcessingCheckState.ok();
 			}
 
 			// Insert the mined items into the internal inventory.
@@ -209,9 +219,9 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 
 			// Mark the te as dirty.
 			markDirty();
-			return true;
+			return ProcessingCheckState.ok();
 		}
-		return false;
+		return ProcessingCheckState.error("Items backed up in internal inventory.");
 	}
 
 	public void onBlockMined(BlockPos pos, BlockState minedBlock) {

@@ -14,6 +14,7 @@ import theking530.staticpower.data.crafting.wrappers.solidfuel.SolidFuelRecipe;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
+import theking530.staticpower.tileentities.components.control.MachineProcessingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
@@ -61,7 +62,7 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
-		
+
 		// Setup the power distribution component.
 		registerComponent(new PowerDistributionComponent("PowerDistributor", energyStorage.getStorage()));
 
@@ -88,26 +89,32 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 		}
 	}
 
-	protected boolean moveInputs(SolidFuelRecipe recipe) {
+	protected ProcessingCheckState moveInputs(SolidFuelRecipe recipe) {
 		// If the items can be insert into the output, transfer the items and return
 		// true.
-		if (internalInventory.getStackInSlot(0).isEmpty() && energyStorage.canAcceptPower(powerGenerationPerTick)) {
-			transferItemInternally(inputInventory, 0, internalInventory, 0);
-			processingComponent.setMaxProcessingTime(recipe.getFuelAmount());
-			markTileEntityForSynchronization();
-			return true;
+		if (!internalInventory.getStackInSlot(0).isEmpty()) {
+			return ProcessingCheckState.internalInventoryNotEmpty();
 		}
-		return false;
+		if (!energyStorage.canAcceptPower(powerGenerationPerTick)) {
+			return ProcessingCheckState.powerOutputFull();
+		}
+		transferItemInternally(inputInventory, 0, internalInventory, 0);
+		processingComponent.setMaxProcessingTime(recipe.getFuelAmount());
+		markTileEntityForSynchronization();
+		return ProcessingCheckState.ok();
 	}
 
-	protected boolean canProcessRecipe(SolidFuelRecipe recipe) {
-		return energyStorage.canAcceptPower(powerGenerationPerTick);
+	protected ProcessingCheckState canProcessRecipe(SolidFuelRecipe recipe) {
+		if (energyStorage.canAcceptPower(powerGenerationPerTick)) {
+			return ProcessingCheckState.powerOutputFull();
+		}
+		return ProcessingCheckState.ok();
 	}
 
-	protected boolean processingCompleted(SolidFuelRecipe recipe) {
+	protected ProcessingCheckState processingCompleted(SolidFuelRecipe recipe) {
 		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
 		markTileEntityForSynchronization();
-		return true;
+		return ProcessingCheckState.ok();
 	}
 
 	@Override

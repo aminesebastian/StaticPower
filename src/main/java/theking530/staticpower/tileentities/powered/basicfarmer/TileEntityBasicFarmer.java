@@ -19,7 +19,6 @@ import net.minecraft.block.SugarCaneBlock;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -40,15 +39,16 @@ import theking530.staticpower.init.ModTags;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.tileentities.TileEntityMachine;
-import theking530.staticpower.tileentities.components.items.InputServoComponent;
-import theking530.staticpower.tileentities.components.items.InventoryComponent;
-import theking530.staticpower.tileentities.components.items.OutputServoComponent;
-import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
-import theking530.staticpower.tileentities.components.items.InventoryComponent.InventoryChangeType;
 import theking530.staticpower.tileentities.components.control.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
+import theking530.staticpower.tileentities.components.control.MachineProcessingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
+import theking530.staticpower.tileentities.components.items.InputServoComponent;
+import theking530.staticpower.tileentities.components.items.InventoryComponent;
+import theking530.staticpower.tileentities.components.items.InventoryComponent.InventoryChangeType;
+import theking530.staticpower.tileentities.components.items.OutputServoComponent;
+import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 import theking530.staticpower.utilities.InventoryUtilities;
@@ -60,6 +60,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	public static final int DEFAULT_HARVEST_ENERGY_COST = 1000;
 	public static final int DEFAULT_RANGE = 2;
 	public static final int DEFAULT_TOOL_USAGE = 1;
+	public static final int DEFAULT_TIME_PER_BLOCK = 20;
 	public static final Random RANDOM = new Random();
 
 	public final InventoryComponent inputInventory;
@@ -99,8 +100,9 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 		registerComponent(upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3).setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
 
-		registerComponent(
-				processingComponent = new MachineProcessingComponent("ProcessingComponent", 20, this::canFarm, this::canFarm, this::processingCompleted, true).setUpgradeInventory(upgradesInventory));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_TIME_PER_BLOCK, this::canFarm, this::canFarm, this::processingCompleted, true)
+				.setUpgradeInventory(upgradesInventory).setRedstoneControlComponent(redstoneControlComponent).setEnergyComponent(energyStorage).setProcessingPowerUsage(DEFAULT_IDLE_ENERGY_USAGE)
+				.setCompletedPowerUsage(DEFAULT_HARVEST_ENERGY_COST));
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluid) -> {
 			return StaticPowerRecipeRegistry.getRecipe(FarmingFertalizerRecipe.RECIPE_TYPE, new RecipeMatchParameters(fluid)).isPresent();
 		}).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
@@ -111,6 +113,8 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 
 		// Set the energy storage upgrade inventory.
 		energyStorage.setUpgradeInventory(upgradesInventory);
+		energyStorage.setMaxInput(DEFAULT_POWER_TRANSFER * 2);
+		energyStorage.setMaxOutput(DEFAULT_POWER_TRANSFER * 2);
 
 		// Capture all the harvestable blocks.
 		validHarvestacbleClasses = new HashSet<Class<? extends Block>>();
@@ -131,7 +135,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	public void process() {
 		if (processingComponent.isPerformingWork()) {
 			if (!getWorld().isRemote) {
-				energyStorage.usePower(DEFAULT_IDLE_ENERGY_USAGE);
+				energyStorage.useBulkPower(DEFAULT_IDLE_ENERGY_USAGE);
 				fluidTankComponent.drain(DEFAULT_WATER_USAGE, FluidAction.EXECUTE);
 
 				for (BlockPos blockpos : blocks) {
@@ -144,41 +148,42 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		}
 	}
 
-	protected boolean processingCompleted() {
+	protected ProcessingCheckState processingCompleted() {
 		// Edge case where we somehow need to refresh blocks.
 		if (blocks.size() == 0) {
 			refreshBlocksInRange(range);
 		}
 
+		boolean harvested = false;
 		if (InventoryUtilities.isInventoryEmpty(internalInventory)) {
 			// Harvest the current block.
-			attemptHarvestPosition(getCurrentPosition());
-
-			// If on the server, use the amount of energy required to harvest a plant.
-			if (!world.isRemote) {
-				energyStorage.usePower(DEFAULT_HARVEST_ENERGY_COST);
-			}
-
+			harvested = attemptHarvestPosition(getCurrentPosition());
 			// Increment first to ensure we're always harvesting the next block.
 			incrementPosition();
-
 		}
 
 		// For each of the farmed stacks, place the harvested stacks into the output
 		// inventory. Remove the entry from the farmed stacks if it was fully inserted.
 		// Otherwise, update the farmed stack.
-		if (!getWorld().isRemote) {
-			for (int i = 0; i < internalInventory.getSlots(); i++) {
-				ItemStack extractedStack = internalInventory.extractItem(i, Integer.MAX_VALUE, false);
-				ItemStack insertedStack = InventoryUtilities.insertItemIntoInventory(outputInventory, extractedStack, false);
-				if (!insertedStack.isEmpty()) {
-					internalInventory.setStackInSlot(i, insertedStack);
-				}
+
+		for (int i = 0; i < internalInventory.getSlots(); i++) {
+			ItemStack extractedStack = internalInventory.extractItem(i, Integer.MAX_VALUE, false);
+			ItemStack insertedStack = InventoryUtilities.insertItemIntoInventory(outputInventory, extractedStack, false);
+			if (!insertedStack.isEmpty()) {
+				internalInventory.setStackInSlot(i, insertedStack);
 			}
 		}
 
 		// Return true if we finished clearing the internal inventory.
-		return InventoryUtilities.isInventoryEmpty(internalInventory);
+		if (InventoryUtilities.isInventoryEmpty(internalInventory)) {
+			if (harvested) {
+				return ProcessingCheckState.ok();
+			} else {
+				return ProcessingCheckState.cancel();
+			}
+		} else {
+			return ProcessingCheckState.internalInventoryNotEmpty();
+		}
 	}
 
 	@Override
@@ -259,14 +264,17 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		return blocks.get(currentBlockIndex);
 	}
 
-	public boolean canFarm() {
-		// Check to see if we have enough power and if we have the axe and hoe
-		// populated.
-		if (energyStorage.hasEnoughPower(DEFAULT_HARVEST_ENERGY_COST) && hasHoe() && hasAxe()) {
-			// If we have enough fluid, return true.
-			return fluidTankComponent.getFluid().getAmount() > DEFAULT_WATER_USAGE && fluidTankComponent.getFluid().getFluid() == Fluids.WATER;
+	public ProcessingCheckState canFarm() {
+		if (!hasAxe()) {
+			return ProcessingCheckState.error("Missing Axe!");
 		}
-		return false;
+		if (!hasHoe()) {
+			return ProcessingCheckState.error("Missing Hoe!");
+		}
+		if (fluidTankComponent.getFluid().getAmount() < DEFAULT_WATER_USAGE) {
+			return ProcessingCheckState.notEnoughFluid();
+		}
+		return ProcessingCheckState.ok();
 	}
 
 	public boolean hasHoe() {

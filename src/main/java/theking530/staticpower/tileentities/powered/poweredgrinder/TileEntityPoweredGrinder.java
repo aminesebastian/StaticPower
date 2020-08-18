@@ -12,6 +12,7 @@ import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.items.upgrades.IUpgradeItem.UpgradeType;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.BatteryInventoryComponent;
+import theking530.staticpower.tileentities.components.control.MachineProcessingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
@@ -90,39 +91,40 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 		}
 	}
 
-	protected boolean moveInputs(GrinderRecipe recipe) {
+	protected ProcessingCheckState moveInputs(GrinderRecipe recipe) {
 		// If the items can be insert into the output, transfer the items and return
 		// true.
-		if (internalInventory.getStackInSlot(0).isEmpty() && InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRawOutputItems())) {
-			transferItemInternally(inputInventory, 0, internalInventory, 0);
-			markTileEntityForSynchronization();
-			return true;
+		if (!internalInventory.getStackInSlot(0).isEmpty()) {
+			return ProcessingCheckState.internalInventoryNotEmpty();
 		}
-		return false;
+		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRawOutputItems())) {
+			return ProcessingCheckState.outputsCannotTakeRecipe();
+		}
+
+		transferItemInternally(inputInventory, 0, internalInventory, 0);
+		markTileEntityForSynchronization();
+		return ProcessingCheckState.ok();
 	}
 
-	protected boolean canProcessRecipe(GrinderRecipe recipe) {
-		return InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRawOutputItems());
+	protected ProcessingCheckState canProcessRecipe(GrinderRecipe recipe) {
+		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRawOutputItems())) {
+			return ProcessingCheckState.outputsCannotTakeRecipe();
+		}
+		return ProcessingCheckState.ok();
 	}
 
-	protected boolean processingCompleted(GrinderRecipe recipe) {
-		// Ensure the output slots can take the recipe.
-		if (InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRawOutputItems())) {
-			// For each output, insert the contents into the output based on the percentage
-			// chance. The clear the internal inventory, mark for synchronization, and
-			// return true.
-			for (ProbabilityItemStackOutput output : recipe.getOutputItems()) {
-				if (SDMath.diceRoll(output.getOutputChance() * bonusOutputChance)) {
-					InventoryUtilities.insertItemIntoInventory(outputInventory, output.getItem().copy(), false);
-				}
+	protected ProcessingCheckState processingCompleted(GrinderRecipe recipe) {
+		// For each output, insert the contents into the output based on the percentage
+		// chance. The clear the internal inventory, mark for synchronization, and
+		// return true.
+		for (ProbabilityItemStackOutput output : recipe.getOutputItems()) {
+			if (SDMath.diceRoll(output.getOutputChance() * bonusOutputChance)) {
+				InventoryUtilities.insertItemIntoInventory(outputInventory, output.getItem().copy(), false);
 			}
-			internalInventory.setStackInSlot(0, ItemStack.EMPTY);
-			markTileEntityForSynchronization();
-			return true;
 		}
-
-		// If something failed, return false and try again.
-		return false;
+		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
+		markTileEntityForSynchronization();
+		return ProcessingCheckState.ok();
 	}
 
 	public void onUpgradesInventoryModifiedCallback(InventoryChangeType changeType, ItemStack item, int slot) {

@@ -35,6 +35,7 @@ import theking530.staticpower.tileentities.components.fluids.FluidContainerCompo
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.control.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
+import theking530.staticpower.tileentities.components.control.MachineProcessingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities.BlockSide;
 
@@ -62,7 +63,8 @@ public class TileEntityPump extends TileEntityMachine {
 		registerComponent(new FluidContainerComponent("FluidFillContainerServo", fluidTankComponent, fluidContainerInventory, 0, 1).setMode(FluidContainerInteractionMode.FILL));
 
 		// Regsiter the processing component to handle the pumping.
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PUMP_RATE, this::canProcess, this::canProcess, this::pump, true));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PUMP_RATE, this::canProcess, this::canProcess, this::pump, true)
+				.setRedstoneControlComponent(redstoneControlComponent));
 		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
 
 		// Battery
@@ -91,8 +93,12 @@ public class TileEntityPump extends TileEntityMachine {
 	 * 
 	 * @return
 	 */
-	public boolean canProcess() {
-		return (fluidTankComponent.getFluidAmount() + FluidAttributes.BUCKET_VOLUME) <= fluidTankComponent.getCapacity();
+	public ProcessingCheckState canProcess() {
+		if ((fluidTankComponent.getFluidAmount() + FluidAttributes.BUCKET_VOLUME) <= fluidTankComponent.getCapacity()) {
+			return ProcessingCheckState.ok();
+		} else {
+			return ProcessingCheckState.outputTankCannotTakeFluid();
+		}
 	}
 
 	/**
@@ -101,7 +107,7 @@ public class TileEntityPump extends TileEntityMachine {
 	 * 
 	 * @return
 	 */
-	public boolean pump() {
+	public ProcessingCheckState pump() {
 		// If we have capacity to pump.
 		if ((fluidTankComponent.getFluidAmount() + FluidAttributes.BUCKET_VOLUME) <= fluidTankComponent.getCapacity() && energyStorage.hasEnoughPower(1000)) {
 			// If the positions to pump is empty, try to start again.
@@ -131,7 +137,7 @@ public class TileEntityPump extends TileEntityMachine {
 						getWorld().playSound(null, getPos(), fluidState.getFluid() == Fluids.LAVA ? SoundEvents.ITEM_BUCKET_FILL_LAVA : SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1.0f, 1.0f);
 
 						// Use the power.
-						energyStorage.usePower(1000);
+						energyStorage.useBulkPower(1000);
 
 						// Pump the fluid.
 						FluidStack pumpedStack = new FluidStack(fluidState.getFluid(), FluidAttributes.BUCKET_VOLUME);
@@ -141,7 +147,7 @@ public class TileEntityPump extends TileEntityMachine {
 						// If this is water, we just stop. No recursion as water is infinite anyway.
 						if (pumpedStack.getFluid() == Fluids.WATER) {
 							positionsToPump.clear();
-							return true;
+							return ProcessingCheckState.ok();
 						}
 					}
 
@@ -155,7 +161,7 @@ public class TileEntityPump extends TileEntityMachine {
 		}
 
 		// Always return true so the machine processing component always proceeds.
-		return true;
+		return ProcessingCheckState.ok();
 	}
 
 	private void searchAroundPumpedBlock(BlockPos position) {

@@ -11,6 +11,7 @@ import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
+import theking530.staticpower.tileentities.components.control.MachineProcessingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
@@ -76,43 +77,44 @@ public class TileEntityFusionFurnace extends TileEntityMachine {
 		}
 	}
 
-	protected boolean moveInputs(FusionFurnaceRecipe recipe) {
+	protected ProcessingCheckState moveInputs(FusionFurnaceRecipe recipe) {
 		// If the items can be insert into the output, transfer the items and return
 		// true.
-		if (internalInventory.getStackInSlot(0).isEmpty() && InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getOutput().getItem())) {
-			transferItemInternally(inputInventory, 0, internalInventory, 0);
-			markTileEntityForSynchronization();
-			return true;
+		if (!internalInventory.getStackInSlot(0).isEmpty()) {
+			return ProcessingCheckState.internalInventoryNotEmpty();
 		}
-		return false;
-	}
-
-	protected boolean canProcessRecipe(FusionFurnaceRecipe recipe) {
-		return InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getOutput().getItem());
-	}
-
-	protected boolean processingCompleted(FusionFurnaceRecipe recipe) {
-		// Ensure the output slots can take the recipe.
-		if (InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getOutput().getItem())) {
-			// Insert the output into the output inventory.
-			if (SDMath.diceRoll(recipe.getOutput().getOutputChance())) {
-				InventoryUtilities.insertItemIntoInventory(outputInventory, recipe.getOutput().getItem().copy(), false);
-			}
-
-			// Clear the internal inventory.
-			internalInventory.setStackInSlot(0, ItemStack.EMPTY);
-			internalInventory.setStackInSlot(1, ItemStack.EMPTY);
-			internalInventory.setStackInSlot(2, ItemStack.EMPTY);
-			internalInventory.setStackInSlot(3, ItemStack.EMPTY);
-			internalInventory.setStackInSlot(4, ItemStack.EMPTY);
-			internalInventory.setStackInSlot(0, ItemStack.EMPTY);
-
-			markTileEntityForSynchronization();
-			return true;
+		if (InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRecipeOutput())) {
+			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 
-		// If something failed, return false and try again.
-		return false;
+		transferItemInternally(inputInventory, 0, internalInventory, 0);
+		markTileEntityForSynchronization();
+		return ProcessingCheckState.ok();
+	}
+
+	protected ProcessingCheckState canProcessRecipe(FusionFurnaceRecipe recipe) {
+		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.getRecipeOutput())) {
+			return ProcessingCheckState.outputsCannotTakeRecipe();
+		}
+		return ProcessingCheckState.ok();
+	}
+
+	protected ProcessingCheckState processingCompleted(FusionFurnaceRecipe recipe) {
+		// Insert the output into the output inventory.
+		if (SDMath.diceRoll(recipe.getOutput().getOutputChance())) {
+			InventoryUtilities.insertItemIntoInventory(outputInventory, recipe.getOutput().getItem().copy(), false);
+		}
+
+		// Clear the internal inventory.
+		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
+		internalInventory.setStackInSlot(1, ItemStack.EMPTY);
+		internalInventory.setStackInSlot(2, ItemStack.EMPTY);
+		internalInventory.setStackInSlot(3, ItemStack.EMPTY);
+		internalInventory.setStackInSlot(4, ItemStack.EMPTY);
+		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
+
+		markTileEntityForSynchronization();
+		return ProcessingCheckState.ok();
 	}
 
 	@Override

@@ -12,6 +12,7 @@ import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
+import theking530.staticpower.tileentities.components.control.MachineProcessingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
 import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent.FluidContainerInteractionMode;
@@ -73,7 +74,7 @@ public class TileEntityLumberMill extends TileEntityMachine {
 		processingComponent.setEnergyComponent(energyStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 		processingComponent.setProcessingPowerUsage(DEFAULT_PROCESSING_COST);
-		
+
 		// Setup the I/O servos.
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));
 		registerComponent(new OutputServoComponent("OutputServo", 1, mainOutputInventory));
@@ -101,38 +102,42 @@ public class TileEntityLumberMill extends TileEntityMachine {
 		}
 	}
 
-	protected boolean moveInputs(LumberMillRecipe recipe) {
+	protected ProcessingCheckState moveInputs(LumberMillRecipe recipe) {
 		// If the recipe cannot be insert into the output, return false.
 		if (!canOutputsTakeRecipeResult(recipe)) {
-			return false;
+			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 
 		// Move the item.
 		transferItemInternally(inputInventory, 0, internalInventory, 0);
 		markTileEntityForSynchronization();
-		return true;
+		return ProcessingCheckState.ok();
 	}
 
-	protected boolean canProcessRecipe(LumberMillRecipe recipe) {
-		return canOutputsTakeRecipeResult(recipe) && fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.SIMULATE) == recipe.getOutputFluid().getAmount();
-	}
-
-	protected boolean processingCompleted(LumberMillRecipe recipe) {
-		// Ensure the output slots can take the recipe.
-		if (canOutputsTakeRecipeResult(recipe)) {
-			if (SDMath.diceRoll(recipe.getPrimaryOutput().getOutputChance())) {
-				mainOutputInventory.insertItem(0, recipe.getPrimaryOutput().getItem().copy(), false);
-			}
-			if (SDMath.diceRoll(recipe.getSecondaryOutput().getOutputChance())) {
-				secondaryOutputInventory.insertItem(0, recipe.getSecondaryOutput().getItem().copy(), false);
-			}
-			fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.EXECUTE);
-
-			internalInventory.setStackInSlot(0, ItemStack.EMPTY);
-			markTileEntityForSynchronization();
-			return true;
+	protected ProcessingCheckState canProcessRecipe(LumberMillRecipe recipe) {
+		// If the recipe cannot be insert into the output, return false.
+		if (!canOutputsTakeRecipeResult(recipe)) {
+			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
-		return false;
+
+		if (fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.SIMULATE) != recipe.getOutputFluid().getAmount()) {
+			return ProcessingCheckState.outputTankCannotTakeFluid();
+		}
+		return ProcessingCheckState.ok();
+	}
+
+	protected ProcessingCheckState processingCompleted(LumberMillRecipe recipe) {
+		if (SDMath.diceRoll(recipe.getPrimaryOutput().getOutputChance())) {
+			mainOutputInventory.insertItem(0, recipe.getPrimaryOutput().getItem().copy(), false);
+		}
+		if (SDMath.diceRoll(recipe.getSecondaryOutput().getOutputChance())) {
+			secondaryOutputInventory.insertItem(0, recipe.getSecondaryOutput().getItem().copy(), false);
+		}
+		fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.EXECUTE);
+
+		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
+		markTileEntityForSynchronization();
+		return ProcessingCheckState.ok();
 	}
 
 	/**

@@ -43,6 +43,7 @@ import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
+import theking530.staticpower.tileentities.components.control.MachineProcessingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
@@ -105,8 +106,14 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 		registerComponent(upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3).setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 64));
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 5, this::canProcess, this::canProcess, this::processingCompleted, true)
-				.setUpgradeInventory(upgradesInventory));
+
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 5, this::canProcess, this::canProcess, this::processingCompleted, true));
+		processingComponent.setUpgradeInventory(upgradesInventory);
+		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
+		processingComponent.setEnergyComponent(energyStorage);
+		processingComponent.setCompletedPowerUsage(DEFAULT_HARVEST_ENERGY_COST);
+		processingComponent.setProcessingPowerUsage(DEFAULT_IDLE_ENERGY_USAGE);
+
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluid) -> {
 			return StaticPowerRecipeRegistry.getRecipe(FarmingFertalizerRecipe.RECIPE_TYPE, new RecipeMatchParameters(fluid)).isPresent();
 		}).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
@@ -133,17 +140,23 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 	public void process() {
 		if (processingComponent.isPerformingWork()) {
 			if (!getWorld().isRemote) {
-				energyStorage.usePower(DEFAULT_IDLE_ENERGY_USAGE);
+				energyStorage.useBulkPower(DEFAULT_IDLE_ENERGY_USAGE);
 				fluidTankComponent.drain(DEFAULT_WATER_USAGE, FluidAction.EXECUTE);
 			}
 		}
 	}
 
-	protected boolean canProcess() {
-		return energyStorage.hasEnoughPower(DEFAULT_IDLE_ENERGY_USAGE) && fluidTankComponent.getFluidAmount() >= DEFAULT_WATER_USAGE && hasAxe();
+	protected ProcessingCheckState canProcess() {
+		if (fluidTankComponent.getFluidAmount() < DEFAULT_WATER_USAGE) {
+			return ProcessingCheckState.notEnoughFluid();
+		}
+		if (!hasAxe()) {
+			return ProcessingCheckState.error("Missing Axe!");
+		}
+		return ProcessingCheckState.ok();
 	}
 
-	protected boolean processingCompleted() {
+	protected ProcessingCheckState processingCompleted() {
 		// Edge case where we somehow need to refresh blocks.
 		if (blocks.size() == 0) {
 			refreshBlocksInRange(range);
@@ -174,7 +187,11 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		}
 
 		// Return true if we finished clearing the internal inventory.
-		return InventoryUtilities.isInventoryEmpty(internalInventory);
+		if (InventoryUtilities.isInventoryEmpty(internalInventory)) {
+			return ProcessingCheckState.ok();
+		} else {
+			return ProcessingCheckState.internalInventoryNotEmpty();
+		}
 	}
 
 	private void refreshBlocksInRange(int range) {
@@ -272,7 +289,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		// Add the drops for the current block and break it.
 		items.addAll(WorldUtilities.getBlockDrops(getWorld(), pos));
 		getWorld().setBlockState(pos, Blocks.AIR.getDefaultState(), 1 | 2);
-		energyStorage.usePower(DEFAULT_HARVEST_ENERGY_COST);
+		energyStorage.useBulkPower(DEFAULT_HARVEST_ENERGY_COST);
 
 		// Recurse to any adjacent blocks if they are farm-able.
 		for (Direction facing : Direction.values()) {

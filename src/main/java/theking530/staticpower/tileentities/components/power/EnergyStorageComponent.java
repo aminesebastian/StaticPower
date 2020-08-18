@@ -86,6 +86,16 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 		}
 	}
 
+	public EnergyStorageComponent setMaxInput(int maxInput) {
+		defaultMaxInput = maxInput;
+		return this;
+	}
+
+	public EnergyStorageComponent setMaxOutput(int maxOutput) {
+		defaultMaxOutput = maxOutput;
+		return this;
+	}
+
 	public EnergyStorageComponent setUpgradeInventory(UpgradeInventoryComponent inventory) {
 		upgradeInventory = inventory;
 		return this;
@@ -138,14 +148,17 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	/**
 	 * If this storage component contains at least the provided amount of power, it
 	 * will drain that amount and return true. Otherwise, it will do nothing and
-	 * return false.
+	 * return false. This ignores the extract rate.
 	 * 
 	 * @param power The amount of power to drain.
 	 * @return True if the provided amount of power was drained, false otherwise.
 	 */
-	public boolean usePower(int power) {
+	public boolean useBulkPower(int power) {
 		if (hasEnoughPower(power)) {
+			int maxExtract = getStorage().getMaxExtract();
+			getStorage().setMaxExtract(Integer.MAX_VALUE);
 			getStorage().extractEnergy(power, false);
+			getStorage().setMaxExtract(maxExtract);
 			return true;
 		}
 		return false;

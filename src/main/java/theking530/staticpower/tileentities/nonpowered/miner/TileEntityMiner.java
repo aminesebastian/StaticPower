@@ -13,6 +13,7 @@ import net.minecraftforge.common.ForgeHooks;
 import theking530.common.utilities.SDMath;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
+import theking530.staticpower.tileentities.components.control.MachineProcessingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
@@ -28,8 +29,10 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 		super(ModTileEntityTypes.MINER);
 		registerComponent(fuelInventory = new InventoryComponent("FuelInventory", 1, MachineSideMode.Input));
 		registerComponent(fuelBurningInventory = new InventoryComponent("FuelBurningInventory", 1, MachineSideMode.Never));
-		registerComponent(fuelMoveComponent = new MachineProcessingComponent("FuelMoveComponent", DEFAULT_FUEL_MOVE_TIME, this::canMoveFuel, this::canMoveFuel, this::moveFuel, true));
-		registerComponent(fuelComponent = new MachineProcessingComponent("FuelComponent", 0, this::canStartProcessingFuel, this::canContinueProcessingFuel, this::fuelProcessingCompleted, true));
+		registerComponent(fuelMoveComponent = new MachineProcessingComponent("FuelMoveComponent", DEFAULT_FUEL_MOVE_TIME, this::canMoveFuel, this::canMoveFuel, this::moveFuel, true)
+				.setRedstoneControlComponent(redstoneControlComponent));
+		registerComponent(fuelComponent = new MachineProcessingComponent("FuelComponent", 0, this::canStartProcessingFuel, this::canContinueProcessingFuel, this::fuelProcessingCompleted, true)
+				.setRedstoneControlComponent(redstoneControlComponent));
 		registerComponent(new InputServoComponent("FuelInputServo", 20, fuelInventory));
 	}
 
@@ -51,29 +54,38 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 		}
 	}
 
-	public boolean canMoveFuel() {
-		return isValidFuel(fuelInventory.getStackInSlot(0)) && fuelBurningInventory.getStackInSlot(0).isEmpty() && hasDrillBit() && redstoneControlComponent.passesRedstoneCheck();
+	public ProcessingCheckState canMoveFuel() {
+		if (isValidFuel(fuelInventory.getStackInSlot(0)) && fuelBurningInventory.getStackInSlot(0).isEmpty() && hasDrillBit()) {
+			return ProcessingCheckState.ok();
+		}
+		return ProcessingCheckState.skip();
 	}
 
-	public boolean moveFuel() {
+	public ProcessingCheckState moveFuel() {
 		int burnTime = getFuelBurnTime(fuelInventory.getStackInSlot(0));
 		fuelComponent.setMaxProcessingTime(burnTime);
 		transferItemInternally(fuelInventory, 0, fuelBurningInventory, 0);
-		return true;
+		return ProcessingCheckState.ok();
 	}
 
-	public boolean canStartProcessingFuel() {
-		return !isDoneMining() && isValidFuel(fuelInventory.getStackInSlot(0)) && hasDrillBit() && redstoneControlComponent.passesRedstoneCheck();
+	public ProcessingCheckState canStartProcessingFuel() {
+		if (!isDoneMining() && isValidFuel(fuelInventory.getStackInSlot(0)) && hasDrillBit()) {
+			return ProcessingCheckState.ok();
+		}
+		return ProcessingCheckState.error("ERROR");
 	}
 
-	public boolean canContinueProcessingFuel() {
-		return !isDoneMining() && redstoneControlComponent.passesRedstoneCheck() && processingComponent.isPerformingWork();
+	public ProcessingCheckState canContinueProcessingFuel() {
+		if (!isDoneMining() && processingComponent.isPerformingWork()) {
+			return ProcessingCheckState.ok();
+		}
+		return ProcessingCheckState.error("ERROR");
 	}
 
-	public boolean fuelProcessingCompleted() {
+	public ProcessingCheckState fuelProcessingCompleted() {
 		fuelComponent.setMaxProcessingTime(0);
 		fuelBurningInventory.setStackInSlot(0, ItemStack.EMPTY);
-		return true;
+		return ProcessingCheckState.ok();
 	}
 
 	/**
@@ -81,9 +93,14 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 	 * 
 	 * @return
 	 */
-	public boolean canProcess() {
-		boolean superCall = super.canProcess();
-		return superCall && getRemainingFuel() > 0;
+	public ProcessingCheckState canProcess() {
+		ProcessingCheckState superCall = super.canProcess();
+		if (superCall.isOk()) {
+			if (getRemainingFuel() == 0) {
+				return ProcessingCheckState.error("Missing fuel!");
+			}
+		}
+		return superCall;
 	}
 
 	@Override

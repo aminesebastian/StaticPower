@@ -13,6 +13,7 @@ import theking530.staticpower.data.crafting.wrappers.evaporation.EvaporatorRecip
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityConfigurable;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
+import theking530.staticpower.tileentities.components.control.MachineProcessingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.fluids.FluidInputServoComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidOutputServoComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
@@ -50,14 +51,16 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 1000.0f, 1.0f));
 	}
 
-	protected boolean canProcess() {
+	protected ProcessingCheckState canProcess() {
 		if (hasValidInput()) {
 			EvaporatorRecipe recipe = getRecipe(inputTankComponent.getFluid()).orElse(null);
-			return redstoneControlComponent.passesRedstoneCheck() && (outputTankComponent.getFluid().isEmpty() || outputTankComponent.getFluid().isFluidEqual(recipe.getOutputFluid()))
+			if (redstoneControlComponent.passesRedstoneCheck() && (outputTankComponent.getFluid().isEmpty() || outputTankComponent.getFluid().isFluidEqual(recipe.getOutputFluid()))
 					&& outputTankComponent.getFluidAmount() + recipe.getOutputFluid().getAmount() <= outputTankComponent.getCapacity()
-					&& heatStorage.getStorage().getCurrentHeat() >= recipe.getRequiredHeat();
+					&& heatStorage.getStorage().getCurrentHeat() >= recipe.getRequiredHeat()) {
+				return ProcessingCheckState.ok();
+			}
 		}
-		return false;
+		return ProcessingCheckState.error("");
 	}
 
 	protected void processingStarted() {
@@ -74,40 +77,37 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 	 * 
 	 * @return
 	 */
-	protected boolean processingCompleted() {
-		if (!getWorld().isRemote) {
-			// If we have an item in the internal inventory, but not a valid output, just
-			// return true. It is possible that a recipe was modified and no longer is
-			// valid.
-			if (!hasValidInput()) {
-				return true;
-			}
+	protected ProcessingCheckState processingCompleted() {
 
-			// Get recipe.
-			EvaporatorRecipe recipe = getRecipe(inputTankComponent.getFluid()).orElse(null);
-
-			// If we don;t have enough heat, return early.
-			if (heatStorage.getStorage().getCurrentHeat() < recipe.getRequiredHeat()) {
-				return false;
-			}
-
-			// If we can't store the filled output in the output slot, return false.
-			if (!(outputTankComponent.getFluid().isEmpty() || outputTankComponent.getFluid().isFluidEqual(recipe.getOutputFluid()))
-					|| outputTankComponent.getFluidAmount() + recipe.getOutputFluid().getAmount() > outputTankComponent.getCapacity()) {
-				return false;
-			}
-
-			// Drain the input fluid.
-			inputTankComponent.drain(recipe.getInputFluid().getAmount(), FluidAction.EXECUTE);
-
-			// Fill the output fluid.
-			outputTankComponent.fill(recipe.getOutputFluid(), FluidAction.EXECUTE);
-
-			markTileEntityForSynchronization();
-			return true;
-
+		// If we have an item in the internal inventory, but not a valid output, just
+		// return true. It is possible that a recipe was modified and no longer is
+		// valid.
+		if (!hasValidInput()) {
+			return ProcessingCheckState.ok();
 		}
-		return false;
+
+		// Get recipe.
+		EvaporatorRecipe recipe = getRecipe(inputTankComponent.getFluid()).orElse(null);
+
+		// If we don;t have enough heat, return early.
+		if (heatStorage.getStorage().getCurrentHeat() < recipe.getRequiredHeat()) {
+			return ProcessingCheckState.error("Not enough Heat!");
+		}
+
+		// If we can't store the filled output in the output slot, return false.
+		if (!(outputTankComponent.getFluid().isEmpty() || outputTankComponent.getFluid().isFluidEqual(recipe.getOutputFluid()))
+				|| outputTankComponent.getFluidAmount() + recipe.getOutputFluid().getAmount() > outputTankComponent.getCapacity()) {
+			return ProcessingCheckState.error("Output tank full!");
+		}
+
+		// Drain the input fluid.
+		inputTankComponent.drain(recipe.getInputFluid().getAmount(), FluidAction.EXECUTE);
+
+		// Fill the output fluid.
+		outputTankComponent.fill(recipe.getOutputFluid(), FluidAction.EXECUTE);
+
+		markTileEntityForSynchronization();
+		return ProcessingCheckState.ok();
 	}
 
 	@Override

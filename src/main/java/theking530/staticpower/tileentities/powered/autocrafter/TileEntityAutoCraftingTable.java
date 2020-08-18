@@ -16,6 +16,7 @@ import theking530.staticpower.client.container.FakeCraftingInventory;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
+import theking530.staticpower.tileentities.components.control.MachineProcessingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
@@ -46,8 +47,11 @@ public class TileEntityAutoCraftingTable extends TileEntityMachine {
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
 		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
 
-		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", DEFAULT_MOVING_TIME, this::canMoveFromInputToProcessing, () -> true, this::movingCompleted, true));
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true).setShouldControlBlockState(true));
+		registerComponent(
+				moveComponent = new MachineProcessingComponent("MoveComponent", DEFAULT_MOVING_TIME, this::canMoveFromInputToProcessing, () -> ProcessingCheckState.ok(), this::movingCompleted, true)
+						.setRedstoneControlComponent(redstoneControlComponent));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true)
+				.setShouldControlBlockState(true).setRedstoneControlComponent(redstoneControlComponent).setEnergyComponent(energyStorage).setProcessingPowerUsage(DEFAULT_PROCESSING_COST));
 
 		registerComponent(new OutputServoComponent("OutputServo", 2, outputInventory));
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));
@@ -56,19 +60,19 @@ public class TileEntityAutoCraftingTable extends TileEntityMachine {
 		filterInventory = new ItemStack[9];
 	}
 
-	public boolean canMoveFromInputToProcessing() {
-		if (!redstoneControlComponent.passesRedstoneCheck()) {
-			return false;
+	public ProcessingCheckState canMoveFromInputToProcessing() {
+		if (!getCurrentRecipe().isPresent() || !hasRequiredItems()) {
+			return ProcessingCheckState.skip();
 		}
 		// Check if there is a valid recipe.
-		if (getCurrentRecipe().isPresent() && !moveComponent.isProcessing() && !processingComponent.isProcessing() && InventoryUtilities.isInventoryEmpty(internalInventory) && hasRequiredItems()) {
-			// If we passed all the previous checks, return true.
-			return InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, getCurrentRecipe().get().getRecipeOutput()) && energyStorage.hasEnoughPower(DEFAULT_PROCESSING_TIME * DEFAULT_PROCESSING_COST);
+		if (!processingComponent.isProcessing() && InventoryUtilities.isInventoryEmpty(internalInventory)
+				&& InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, getCurrentRecipe().get().getRecipeOutput())) {
+			return ProcessingCheckState.ok();
 		}
-		return false;
+		return ProcessingCheckState.skip();
 	}
 
-	protected boolean movingCompleted() {
+	protected ProcessingCheckState movingCompleted() {
 		// If we still have the recipe, and the required items, move the input items
 		// into the internal inventory.
 		if (getCurrentRecipe().isPresent() && hasRequiredItems()) {
@@ -126,47 +130,47 @@ public class TileEntityAutoCraftingTable extends TileEntityMachine {
 			}
 
 			markTileEntityForSynchronization();
-			return true;
+			return ProcessingCheckState.ok();
 		}
-		return false;
+		return ProcessingCheckState.skip();
 
 	}
 
-	public boolean canProcess() {
+	public ProcessingCheckState canProcess() {
 		// Get the current recipe.
 		ICraftingRecipe recipe = getCurrentProcessingRecipe().orElse(null);
 		if (recipe == null) {
 			InventoryUtilities.clearInventory(internalInventory);
 			processingComponent.cancelProcessing();
-			return false;
+			return ProcessingCheckState.cancel();
 		}
-		return redstoneControlComponent.passesRedstoneCheck() && energyStorage.hasEnoughPower(DEFAULT_PROCESSING_COST) && InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getRecipeOutput());
+		if (InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getRecipeOutput())) {
+			return ProcessingCheckState.ok();
+		}
+		return ProcessingCheckState.outputsCannotTakeRecipe();
 	}
 
-	protected boolean processingCompleted() {
-		// If on the server.
-		if (!getWorld().isRemote) {
-			// Get the recipe from the internal inventory. If this is null, then we reloaded
-			// in the middle of processing and removed the recipe. Return true and do
-			// nothing.
-			ICraftingRecipe recipe = getCurrentProcessingRecipe().orElse(null);
-			if (recipe == null) {
-				return true;
-			}
-
-			// If we can insert the soldered item into the output slot, do it. Otherwise,
-			// return false and keep spinning.
-			if (InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getRecipeOutput())) {
-				// Insert the soldered item into the output.
-				outputInventory.insertItem(0, recipe.getRecipeOutput().copy(), false);
-				// Clear the internal inventory.
-				for (int i = 0; i < internalInventory.getSlots(); i++) {
-					internalInventory.setStackInSlot(i, ItemStack.EMPTY);
-				}
-				return true;
-			}
+	protected ProcessingCheckState processingCompleted() {
+		// Get the recipe from the internal inventory. If this is null, then we reloaded
+		// in the middle of processing and removed the recipe. Return true and do
+		// nothing.
+		ICraftingRecipe recipe = getCurrentProcessingRecipe().orElse(null);
+		if (recipe == null) {
+			return ProcessingCheckState.ok();
 		}
-		return false;
+
+		// If we can insert the soldered item into the output slot, do it. Otherwise,
+		// return false and keep spinning.
+		if (InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getRecipeOutput())) {
+			// Insert the soldered item into the output.
+			outputInventory.insertItem(0, recipe.getRecipeOutput().copy(), false);
+			// Clear the internal inventory.
+			for (int i = 0; i < internalInventory.getSlots(); i++) {
+				internalInventory.setStackInSlot(i, ItemStack.EMPTY);
+			}
+			return ProcessingCheckState.ok();
+		}
+		return ProcessingCheckState.outputsCannotTakeRecipe();
 	}
 
 	@Override
@@ -174,7 +178,7 @@ public class TileEntityAutoCraftingTable extends TileEntityMachine {
 		if (processingComponent.isPerformingWork()) {
 			if (!getWorld().isRemote) {
 				getCurrentRecipe().ifPresent(recipe -> {
-					energyStorage.usePower(DEFAULT_PROCESSING_COST);
+					energyStorage.useBulkPower(DEFAULT_PROCESSING_COST);
 				});
 			}
 		}

@@ -20,19 +20,19 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 
 	public static final int MOVE_TIME = 5;
 
-	private final Function<T, Boolean> canStartProcessingRecipe;
-	private final Function<T, Boolean> recipeProcessingCompleted;
+	private final Function<T, ProcessingCheckState> canStartProcessingRecipe;
+	private final Function<T, ProcessingCheckState> recipeProcessingCompleted;
 	private final Function<RecipeProcessingLocation, RecipeMatchParameters> getMatchParameters;
-	private final Function<T, Boolean> performInputMove;
+	private final Function<T, ProcessingCheckState> performInputMove;
 	private final IRecipeType<T> recipeType;
 
-	private Function<T, Boolean> canContinueProcessingRecipe;
+	private Function<T, ProcessingCheckState> canContinueProcessingRecipe;
 
 	@UpdateSerialize
 	private int moveTimer;
 
 	public RecipeProcessingComponent(String name, IRecipeType<T> recipeType, int processingTime, Function<RecipeProcessingLocation, RecipeMatchParameters> getMatchParameters,
-			Function<T, Boolean> performInputMove, Function<T, Boolean> canProcessRecipe, Function<T, Boolean> recipeProcessingCompleted) {
+			Function<T, ProcessingCheckState> performInputMove, Function<T, ProcessingCheckState> canProcessRecipe, Function<T, ProcessingCheckState> recipeProcessingCompleted) {
 		super(name, processingTime, null, null, null, true);
 
 		// Capture the recipe type.
@@ -88,7 +88,7 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 
 	public boolean canMoveInputsToInternal() {
 		Optional<T> recipe = getRecipe(getMatchParameters.apply(RecipeProcessingLocation.INPUT));
-		return passesAllProcessingStartChecks() && recipe.isPresent() && canStartProcessingRecipe.apply(recipe.get());
+		return passesAllProcessingStartChecks() && recipe.isPresent() && canStartProcessingRecipe.apply(recipe.get()).isOk();
 	}
 
 	protected boolean passesAllProcessingStartChecks() {
@@ -99,7 +99,7 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 		return super.passesAllProcessingChecks();
 	}
 
-	protected boolean canStartProcessing() {
+	protected ProcessingCheckState canStartProcessing() {
 		// Get the recipe.
 		RecipeMatchParameters matchParameters = getMatchParameters.apply(RecipeProcessingLocation.INTERNAL);
 		Optional<T> recipe = getRecipe(matchParameters);
@@ -109,7 +109,7 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 		if (recipe.isPresent()) {
 			return canStartProcessingRecipe.apply(recipe.get());
 		} else {
-			return false;
+			return ProcessingCheckState.skip();
 		}
 	}
 
@@ -129,7 +129,7 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 		}
 	}
 
-	protected boolean canContinueProcessing() {
+	protected ProcessingCheckState canContinueProcessing() {
 		// Get the recipe.
 		RecipeMatchParameters matchParameters = getMatchParameters.apply(RecipeProcessingLocation.INTERNAL);
 		Optional<T> recipe = getRecipe(matchParameters);
@@ -140,10 +140,10 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 		if (recipe.isPresent()) {
 			return canContinueProcessingRecipe.apply(recipe.get());
 		}
-		return true;
+		return ProcessingCheckState.ok();
 	}
 
-	protected boolean processingCompleted() {
+	protected ProcessingCheckState processingCompleted() {
 		// Get the recipe.
 		RecipeMatchParameters matchParameters = getMatchParameters.apply(RecipeProcessingLocation.INTERNAL);
 		Optional<T> recipe = getRecipe(matchParameters);
@@ -154,11 +154,10 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 		if (recipe.isPresent()) {
 			return recipeProcessingCompleted.apply(recipe.get());
 		}
-
-		return true;
+		return ProcessingCheckState.ok();
 	}
 
-	public RecipeProcessingComponent<T> setCanContinueProcessingLambda(Function<T, Boolean> canContinueProcessingRecipe) {
+	public RecipeProcessingComponent<T> setCanContinueProcessingLambda(Function<T, ProcessingCheckState> canContinueProcessingRecipe) {
 		this.canContinueProcessingRecipe = canContinueProcessingRecipe;
 		return this;
 	}

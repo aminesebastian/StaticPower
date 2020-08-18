@@ -12,6 +12,7 @@ import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
+import theking530.staticpower.tileentities.components.control.MachineProcessingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
 import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent.FluidContainerInteractionMode;
@@ -93,42 +94,41 @@ public class TileEntitySqueezer extends TileEntityMachine {
 		}
 	}
 
-	protected boolean moveInputs(SqueezerRecipe recipe) {
-		if (internalInventory.getStackInSlot(0).isEmpty()) {
-			// If the recipe has a fluid output but the output tank can't take the input, we
-			// can't proceed.
-			if (recipe.hasOutputFluid() && fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.SIMULATE) != recipe.getOutputFluid().getAmount()) {
-				return false;
-			}
-
-			// If this recipe has an item output, and if we can insert the output into the
-			// output stack, return true.
-			if (recipe.hasItemOutput() && InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getOutput().getItem())) {
-				// Transfer the items to the internal inventory.
-				transferItemInternally(inputInventory, 0, internalInventory, 0);
-				markTileEntityForSynchronization();
-				return true;
-			}
-		}
-		return false;
-	}
-
-	protected boolean canProcessRecipe(SqueezerRecipe recipe) {
-		return InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getOutput().getItem());
-	}
-
-	protected boolean processingCompleted(SqueezerRecipe recipe) {
+	protected ProcessingCheckState moveInputs(SqueezerRecipe recipe) {
 		// If this recipe has an item output that we cannot put into the output slot,
 		// continue waiting.
 		if (recipe.hasItemOutput() && !InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getOutput().getItem())) {
-			return false;
+			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 
 		// If this recipe has a fluid output that we cannot put into the output tank,
 		// continue waiting.
 		if (recipe.hasOutputFluid() && fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.SIMULATE) != recipe.getOutputFluid().getAmount()) {
-			return false;
+			return ProcessingCheckState.outputTankCannotTakeFluid();
 		}
+
+		// Transfer the items to the internal inventory.
+		transferItemInternally(inputInventory, 0, internalInventory, 0);
+		markTileEntityForSynchronization();
+		return ProcessingCheckState.ok();
+	}
+
+	protected ProcessingCheckState canProcessRecipe(SqueezerRecipe recipe) {
+		// If this recipe has an item output that we cannot put into the output slot,
+		// continue waiting.
+		if (recipe.hasItemOutput() && !InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getOutput().getItem())) {
+			return ProcessingCheckState.outputsCannotTakeRecipe();
+		}
+
+		// If this recipe has a fluid output that we cannot put into the output tank,
+		// continue waiting.
+		if (recipe.hasOutputFluid() && fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.SIMULATE) != recipe.getOutputFluid().getAmount()) {
+			return ProcessingCheckState.outputTankCannotTakeFluid();
+		}
+		return ProcessingCheckState.ok();
+	}
+
+	protected ProcessingCheckState processingCompleted(SqueezerRecipe recipe) {
 
 		// Insert the outputs
 		// Check the dice roll for the output.
@@ -144,7 +144,7 @@ public class TileEntitySqueezer extends TileEntityMachine {
 		// Clear the internal inventory.
 		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
 		markTileEntityForSynchronization();
-		return true;
+		return ProcessingCheckState.ok();
 	}
 
 	@Override

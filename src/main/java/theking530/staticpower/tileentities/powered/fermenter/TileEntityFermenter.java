@@ -14,6 +14,7 @@ import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
+import theking530.staticpower.tileentities.components.control.MachineProcessingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
 import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent.FluidContainerInteractionMode;
@@ -96,33 +97,52 @@ public class TileEntityFermenter extends TileEntityMachine {
 		}
 	}
 
-	protected boolean moveInputs(FermenterRecipe recipe) {
+	protected ProcessingCheckState moveInputs(FermenterRecipe recipe) {
 		// Make sure we have a slot to process.
 		if (getSlotToProccess() == -1) {
-			return false;
+			return ProcessingCheckState.skip();
 		}
 
 		// If the items can be insert into the output, transfer the items and return
 		// true.
-		int slot = getSlotToProccess();
-		if (internalInventory.getStackInSlot(0).isEmpty() && InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRecipeOutput())) {
-			transferItemInternally(inputInventory, slot, internalInventory, 0);
-			markTileEntityForSynchronization();
-			return true;
+		if (internalInventory.getStackInSlot(0).isEmpty()) {
+			return ProcessingCheckState.internalInventoryNotEmpty();
 		}
-		return false;
+		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRecipeOutput())) {
+			return ProcessingCheckState.outputsCannotTakeRecipe();
+		}
+		if (!fluidTankComponent.getFluid().isEmpty() && !recipe.getOutputFluidStack().isFluidEqual(fluidTankComponent.getFluid())) {
+			return ProcessingCheckState.outputFluidDoesNotMatch();
+		}
+		if (fluidTankComponent.getFluid().getAmount() + recipe.getOutputFluidStack().getAmount() > fluidTankComponent.getCapacity()) {
+			return ProcessingCheckState.outputTankCannotTakeFluid();
+		}
+
+		int slot = getSlotToProccess();
+		transferItemInternally(inputInventory, slot, internalInventory, 0);
+		markTileEntityForSynchronization();
+		return ProcessingCheckState.ok();
 	}
 
-	protected boolean canProcessRecipe(FermenterRecipe recipe) {
-		return InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, new ItemStack(ModItems.DistilleryGrain));
+	protected ProcessingCheckState canProcessRecipe(FermenterRecipe recipe) {
+		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, new ItemStack(ModItems.DistilleryGrain))) {
+			return ProcessingCheckState.outputsCannotTakeRecipe();
+		}
+		if (!fluidTankComponent.getFluid().isEmpty() && !recipe.getOutputFluidStack().isFluidEqual(fluidTankComponent.getFluid())) {
+			return ProcessingCheckState.outputFluidDoesNotMatch();
+		}
+		if (fluidTankComponent.getFluid().getAmount() + recipe.getOutputFluidStack().getAmount() > fluidTankComponent.getCapacity()) {
+			return ProcessingCheckState.outputTankCannotTakeFluid();
+		}
+		return ProcessingCheckState.ok();
 	}
 
-	protected boolean processingCompleted(FermenterRecipe recipe) {
+	protected ProcessingCheckState processingCompleted(FermenterRecipe recipe) {
 		fluidTankComponent.fill(recipe.getOutputFluidStack(), FluidAction.EXECUTE);
 		outputInventory.insertItem(0, new ItemStack(ModItems.DistilleryGrain), false);
 		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
 		markTileEntityForSynchronization();
-		return true;
+		return ProcessingCheckState.ok();
 	}
 
 	protected int getSlotToProccess() {
