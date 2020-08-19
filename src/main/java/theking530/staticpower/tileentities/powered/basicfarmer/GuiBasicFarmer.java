@@ -10,6 +10,7 @@ import theking530.common.gui.widgets.button.StandardButton;
 import theking530.common.gui.widgets.button.StandardButton.MouseButton;
 import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.common.gui.widgets.tabs.GuiInfoTab;
+import theking530.common.gui.widgets.tabs.GuiMachineFluidTab;
 import theking530.common.gui.widgets.tabs.GuiMachinePowerInfoTab;
 import theking530.common.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.common.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
@@ -36,21 +37,21 @@ public class GuiBasicFarmer extends StaticPowerTileEntityGui<ContainerBasicFarme
 		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 48));
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 150, 8, 16, 60, MachineSideMode.Input, getTileEntity()));
 		registerWidget(new ProcessingComponentStateWidget(getTileEntity().processingComponent, 48, 38));
-		
+
 		registerWidget(drawPreviewButton = new SpriteButton(132, 61, 12, 12, StaticPowerSprites.RANGE_ICON, null, this::buttonPressed));
 		drawPreviewButton.setTooltip(new StringTextComponent("Preview Range"));
 		drawPreviewButton.setToggleable(true);
 		drawPreviewButton.setToggled(getTileEntity().getShouldDrawRadiusPreview());
 
-		getTabManager().registerTab(infoTab = new GuiInfoTab(100, 100));
+		getTabManager().registerTab(infoTab = new GuiInfoTab(getTitle(), 120));
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
 
-
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage, getTileEntity().processingComponent).setTabSide(TabSide.LEFT), true);
+		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT));
 		getTabManager().registerTab(new GuiFluidContainerTab(this.container, getTileEntity().fluidContainerComponent).setTabSide(TabSide.LEFT));
 		getTabManager().registerTab(new GuiUpgradeTab(this.container, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
-		
+
 		setOutputSlotSize(16);
 	}
 
@@ -63,7 +64,11 @@ public class GuiBasicFarmer extends StaticPowerTileEntityGui<ContainerBasicFarme
 	@Override
 	public void updateData() {
 		super.updateData();
-		infoTab.setText("Farmer", "Farms plants in a " + TextFormatting.YELLOW + getTileEntity().getRadius() + " block=radius.==Requires " + TextFormatting.DARK_AQUA + "water" + TextFormatting.RESET
-				+ " to operate=but other fluids may yield=better growth results...==Current Growth Factor: " + TextFormatting.GOLD + getTileEntity().getGrowthBonus() * 100.0f + "%");
+		infoTab.clear();
+		infoTab.addLine(new StringTextComponent("Harvests crops in a " + TextFormatting.YELLOW + getTileEntity().getRadius() + " block radius."));
+		infoTab.addLineBreak();
+		infoTab.addLine(new StringTextComponent("Requires " + TextFormatting.DARK_AQUA + "water" + TextFormatting.RESET + " to operate but other fluids may yield better growth results..."));
+		infoTab.addLineBreak();
+		infoTab.addLine(new StringTextComponent("Current Growth Factor: " + TextFormatting.GOLD + getTileEntity().getGrowthBonus() * 100.0f + "%"));
 	}
 }

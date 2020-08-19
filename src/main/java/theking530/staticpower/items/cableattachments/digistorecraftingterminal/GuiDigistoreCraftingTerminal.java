@@ -16,7 +16,7 @@ public class GuiDigistoreCraftingTerminal extends AbstractGuiDigistoreTerminal<C
 		searchBar.setSize(70, 12);
 		searchBar.setPosition(98, 6);
 
-		GuiInfoTab tab = new GuiInfoTab(100, 100);
+		GuiInfoTab tab = new GuiInfoTab(100);
 		tab.setTabSide(TabSide.RIGHT);
 		getTabManager().setPosition(0, -5);
 		getTabManager().registerTab(tab);

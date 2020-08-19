@@ -29,7 +29,7 @@ public class WidgetContainer {
 	public void tick() {
 		// Tick all the widgets.
 		for (AbstractGuiWidget widget : widgets) {
-			widget.tick();
+			widget.updateData();
 		}
 	}
 

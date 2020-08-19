@@ -1,18 +1,15 @@
 package theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore;
 
-import java.text.DecimalFormat;
-import java.util.Arrays;
-
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import theking530.common.gui.GuiDrawUtilities;
 import theking530.common.gui.widgets.GuiDrawItem;
 import theking530.common.gui.widgets.button.StandardButton;
-import theking530.common.gui.widgets.button.TextButton;
 import theking530.common.gui.widgets.button.StandardButton.MouseButton;
+import theking530.common.gui.widgets.button.TextButton;
 import theking530.common.gui.widgets.tabs.GuiInfoTab;
 import theking530.common.utilities.Color;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
@@ -35,13 +32,12 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 
 	@Override
 	public void initializeGui() {
-
 		registerWidget(lockedButton = new TextButton(10, 23, 50, 20, "Locked", this::buttonPressed));
 		lockedButton.setToggleable(true);
 		lockedButton.setText(getTileEntity().isLocked() ? "Locked" : "Unlocked");
 		lockedButton.setToggled(getTileEntity().isLocked());
 
-		getTabManager().registerTab(infoTab = new GuiInfoTab(100, 65));
+		getTabManager().registerTab(infoTab = new GuiInfoTab(getTileEntity().getDisplayName().getFormattedText(), 100));
 	}
 
 	public void buttonPressed(StandardButton button, MouseButton mouseButton) {
@@ -70,17 +66,19 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 	protected void drawBackgroundExtras(float partialTicks, int mouseX, int mouseY) {
 		super.drawBackgroundExtras(partialTicks, mouseX, mouseY);
 
+		// Draw the massive digistore slot.
 		drawSlot(guiLeft + 78, guiTop + 18, 20, 20);
 
-		if (inventory.getItemCapacity() > 0) {
+		// Draw the item.
+		if (inventory.getCurrentUniqueItemTypeCount() > 0) {
 			RenderHelper.enableStandardItemLighting();
 			itemRenderer.drawItem(inventory.getDigistoreStack(0).getStoredItem(), guiLeft, guiTop, 80, 21, 1.0f);
 			RenderHelper.disableStandardItemLighting();
 		}
 
-		DecimalFormat format = new DecimalFormat("##.###");
-		String text = ("Stores a large=amount of a single=item. ==" + TextFormatting.RED + "Max: " + TextFormatting.AQUA + format.format(inventory.getItemCapacity()) + " Items");
-		String[] splitMsg = text.split("=");
-		infoTab.setText(I18n.format(getTileEntity().getDisplayName().getFormattedText()), Arrays.asList(splitMsg));
+		// Update the info tab.
+		infoTab.clear();
+		infoTab.addLine(new StringTextComponent("Stores a large amount of a single item."));
+		infoTab.addKeyValueTwoLiner(new StringTextComponent("Max"), new StringTextComponent(String.valueOf(inventory.getItemCapacity())), TextFormatting.RED);
 	}
 }

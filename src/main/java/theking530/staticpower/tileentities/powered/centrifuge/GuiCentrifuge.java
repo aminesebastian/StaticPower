@@ -3,7 +3,9 @@ package theking530.staticpower.tileentities.powered.centrifuge;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import theking530.common.gui.widgets.progressbars.CentrifugeProgressBar;
 import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.common.gui.widgets.tabs.GuiInfoTab;
@@ -13,6 +15,7 @@ import theking530.common.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneT
 import theking530.common.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.common.utilities.Color;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
 
 public class GuiCentrifuge extends StaticPowerTileEntityGui<ContainerCentrifuge, TileEntityCentrifuge> {
@@ -27,7 +30,7 @@ public class GuiCentrifuge extends StaticPowerTileEntityGui<ContainerCentrifuge,
 		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 52));
 		registerWidget(new CentrifugeProgressBar(79, 38).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
-		getTabManager().registerTab(infoTab = new GuiInfoTab(100, 60));
+		getTabManager().registerTab(infoTab = new GuiInfoTab(100));
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage, getTileEntity().processingComponent).setTabSide(TabSide.LEFT), true);
@@ -37,8 +40,10 @@ public class GuiCentrifuge extends StaticPowerTileEntityGui<ContainerCentrifuge,
 
 	@Override
 	public void updateData() {
-		String text = ("Separates items into=their base components. ==" + "Current Speed: " + TextFormatting.GREEN + getTileEntity().getCurrentSpeed() + "RPM");
-		infoTab.setText(getTileEntity().getDisplayName().getFormattedText(), text);
+		infoTab.clear();
+		infoTab.addLine(new StringTextComponent("Separates items into=their base components."));
+		infoTab.addKeyValueTwoLiner(new StringTextComponent("Current Speed"),
+				GuiTextUtilities.formatNumberAsString(getTileEntity().getCurrentSpeed()).appendSibling(new TranslationTextComponent("gui.staticpower.rpm")), TextFormatting.YELLOW);
 	}
 
 	@Override

@@ -15,7 +15,7 @@ public class AbstractGuiSolderingTable<T extends TileEntitySolderingTable, K ext
 
 	@Override
 	public void initializeGui() {
-		tabManager.registerTab(infoTab = new GuiInfoTab(100, 65));
+		tabManager.registerTab(infoTab = new GuiInfoTab(100));
 		setOutputSlotSize(20);
 	}
 

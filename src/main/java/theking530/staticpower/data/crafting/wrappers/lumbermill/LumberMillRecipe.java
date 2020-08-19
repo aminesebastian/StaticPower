@@ -21,7 +21,8 @@ public class LumberMillRecipe extends AbstractMachineRecipe {
 	private final ProbabilityItemStackOutput secondaryOutput;
 	private final FluidStack outputFluid;
 
-	public LumberMillRecipe(ResourceLocation name, StaticPowerIngredient input, ProbabilityItemStackOutput primaryOutput, ProbabilityItemStackOutput secondaryOutput, FluidStack outputFluid, int processingTime, int powerCost) {
+	public LumberMillRecipe(ResourceLocation name, StaticPowerIngredient input, ProbabilityItemStackOutput primaryOutput, ProbabilityItemStackOutput secondaryOutput, FluidStack outputFluid,
+			int processingTime, int powerCost) {
 		super(name, processingTime, powerCost);
 		this.input = input;
 		this.primaryOutput = primaryOutput;
@@ -64,7 +65,18 @@ public class LumberMillRecipe extends AbstractMachineRecipe {
 
 	@Override
 	public boolean isValid(RecipeMatchParameters matchParams) {
-		return input.test(matchParams.getItems()[0]);
+		boolean matched = true;
+		
+		// Check items.
+		if (matchParams.shouldVerifyItems()) {
+			if (matchParams.shouldVerifyItemCounts()) {
+				matched &= matchParams.hasItems() && input.testWithCount(matchParams.getItems()[0]);
+			} else {
+				matched &= matchParams.hasItems() && input.test(matchParams.getItems()[0]);
+			}
+		}
+
+		return matched;
 	}
 
 	@Override

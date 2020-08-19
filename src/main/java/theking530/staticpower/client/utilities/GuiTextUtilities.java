@@ -94,7 +94,7 @@ public class GuiTextUtilities {
 	 * @param energyRate The energy rate to format.
 	 * @return The formatted string.
 	 */
-	public static ITextComponent formatEnergyRateToString(int energyRate) {
+	public static ITextComponent formatEnergyRateToString(float energyRate) {
 		MetricConverter metricRate = new MetricConverter(energyRate);
 		return new StringTextComponent(NUMBER_FORMATTER.format(metricRate.getValue())).appendText(metricRate.getSuffix()).appendSibling(ENERGY_RATE_TRANSLATION);
 	}
@@ -158,5 +158,13 @@ public class GuiTextUtilities {
 	public static ITextComponent formatFluidRateToString(float fluidRate) {
 		MetricConverter metricRate = new MetricConverter(fluidRate);
 		return new StringTextComponent(NUMBER_FORMATTER.format(metricRate.getValue())).appendText(" ").appendText(metricRate.getSuffix()).appendSibling(FLUID_RATE_TRANSLATION);
+	}
+
+	public static ITextComponent formatNumberAsString(float number) {
+		return new StringTextComponent(NUMBER_FORMATTER.format(number));
+	}
+
+	public static ITextComponent formatNumberAsString(int number) {
+		return new StringTextComponent(NUMBER_FORMATTER.format(number));
 	}
 }

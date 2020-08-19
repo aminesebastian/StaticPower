@@ -142,6 +142,10 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 		bonusOutputChance = upgradeAmount;
 	}
 
+	public float getBonusChance() {
+		return bonusOutputChance;
+	}
+
 	@Override
 	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
 		return new ContainerPoweredGrinder(windowId, inventory, this);

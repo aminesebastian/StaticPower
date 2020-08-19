@@ -18,6 +18,7 @@ import theking530.common.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.common.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
@@ -35,7 +36,7 @@ public class GuiTreeFarmer extends StaticPowerTileEntityGui<ContainerTreeFarmer,
 		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 46));
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 150, 8, 16, 60, MachineSideMode.Input, getTileEntity()));
 
-		getTabManager().registerTab(infoTab = new GuiInfoTab(100, 100));
+		getTabManager().registerTab(infoTab = new GuiInfoTab(100));
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
 
@@ -60,9 +61,10 @@ public class GuiTreeFarmer extends StaticPowerTileEntityGui<ContainerTreeFarmer,
 
 	@Override
 	public void updateData() {
-		infoTab.setText("Farmer",
-				"Farms trees in a " + TextFormatting.YELLOW + ((getTileEntity().getRadius() * 2) + 1) + "x" + ((getTileEntity().getRadius() * 2) + 1) + "=radius.==Requires " + TextFormatting.DARK_AQUA
-						+ "water" + TextFormatting.RESET + " to operate=but other fluids may yield=better growth results...==Current Growth Factor: " + TextFormatting.GOLD
-						+ getTileEntity().getGrowthBonus() * 100 + "%");
+		infoTab.clear();
+		infoTab.addLine(new StringTextComponent("Farms trees in a " + TextFormatting.YELLOW + ((getTileEntity().getRadius() * 2) + 1) + "x" + ((getTileEntity().getRadius() * 2) + 1) + " radius."));
+		infoTab.addLine(new StringTextComponent("Requires " + TextFormatting.DARK_AQUA + "water" + TextFormatting.RESET + " to operate but other fluids may yield better growth results..."));
+		infoTab.addKeyValueTwoLiner(new StringTextComponent("Current Growth Factor"), GuiTextUtilities.formatNumberAsString(getTileEntity().getGrowthBonus() * 100).appendText("%"),
+				TextFormatting.GOLD);
 	}
 }

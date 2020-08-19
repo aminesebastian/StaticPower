@@ -2,18 +2,13 @@ package theking530.common.gui.widgets.progressbars;
 
 import theking530.common.gui.GuiDrawUtilities;
 import theking530.common.gui.GuiTextures;
-import theking530.common.gui.drawables.IDrawable;
-import theking530.common.gui.drawables.SpriteDrawable;
 import theking530.common.utilities.Vector2D;
-import theking530.staticpower.client.StaticPowerSprites;
 
 public class ArrowProgressBar extends AbstractProgressBar {
 	private boolean flipped;
-	private final SpriteDrawable errorDrawable;
 
 	public ArrowProgressBar(int xPosition, int yPosition) {
 		super(xPosition, yPosition, 22, 16);
-		errorDrawable = new SpriteDrawable(StaticPowerSprites.ERROR, 16, 16);
 	}
 
 	public ArrowProgressBar setFlipped(boolean flipped) {
@@ -40,12 +35,8 @@ public class ArrowProgressBar extends AbstractProgressBar {
 					0.0f, adjustedProgress * 0.6875f, 0.5f);
 		}
 
-		if (this.isProcessingErrored) {
+		if (isProcessingErrored) {
 			getErrorDrawable().draw(screenSpacePosition.getX() + 2.5f, screenSpacePosition.getY() + 0.5f);
 		}
-	}
-
-	protected IDrawable getErrorDrawable() {
-		return errorDrawable;
 	}
 }

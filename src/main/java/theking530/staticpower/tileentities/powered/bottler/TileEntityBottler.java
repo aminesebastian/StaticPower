@@ -88,7 +88,8 @@ public class TileEntityBottler extends TileEntityMachine {
 	 * @return
 	 */
 	protected ProcessingCheckState canMoveFromInputToProcessing() {
-		if (hasValidInput() && hasFluidForInput(inputInventory.getStackInSlot(0)) && internalInventory.getStackInSlot(0).isEmpty() && fluidTankComponent.getFluidAmount() > 0) {
+		if (hasValidInput() && hasFluidForInput(inputInventory.getStackInSlot(0)) && internalInventory.getStackInSlot(0).isEmpty() && fluidTankComponent.getFluidAmount() > 0
+				&& energyStorage.hasEnoughPower(processingComponent.getPowerUsage())) {
 			if (InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, getSimulatedFilledContainer(inputInventory.getStackInSlot(0)))) {
 				return ProcessingCheckState.ok();
 			}
@@ -105,8 +106,14 @@ public class TileEntityBottler extends TileEntityMachine {
 	 */
 	protected ProcessingCheckState movingCompleted() {
 		if (hasValidInput() && hasFluidForInput(inputInventory.getStackInSlot(0))) {
-			// Transfer the items to the internal inventory.
-			transferItemInternally(inputInventory, 0, internalInventory, 0);
+			// Transfer the items to the internal inventory. If this process is the result
+			// of a recipe, make sure we respect the count in the recipe.
+			BottleRecipe recipe = getRecipe(inputInventory.getStackInSlot(0));
+			if (recipe != null) {
+				transferItemInternally(recipe.getEmptyBottle().getCount(), inputInventory, 0, internalInventory, 0);
+			} else {
+				transferItemInternally(inputInventory, 0, internalInventory, 0);
+			}
 
 			// Trigger a block update.
 			markTileEntityForSynchronization();

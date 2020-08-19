@@ -119,7 +119,7 @@ public class TileEntityFermenter extends TileEntityMachine {
 		}
 
 		int slot = getSlotToProccess();
-		transferItemInternally(inputInventory, slot, internalInventory, 0);
+		transferItemInternally(recipe.getInputIngredient().getCount(), inputInventory, slot, internalInventory, 0);
 		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}

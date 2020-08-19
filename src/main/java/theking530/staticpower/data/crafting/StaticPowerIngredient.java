@@ -36,7 +36,7 @@ public class StaticPowerIngredient {
 	}
 
 	public boolean testWithCount(ItemStack stackToTest) {
-		return ingredient.test(stackToTest) && stackToTest.getCount() <= count;
+		return ingredient.test(stackToTest) && stackToTest.getCount() >= count;
 	}
 
 	public static StaticPowerIngredient deserialize(JsonElement json) {

@@ -165,7 +165,7 @@ public abstract class AbstractGuiWidget {
 	 * a good place to perform any calculations that don't have to happen per frame
 	 * but still have to occur rapidly.
 	 */
-	public void tick() {
+	public void updateData() {
 
 	}
 

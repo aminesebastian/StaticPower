@@ -52,7 +52,7 @@ public class TextInputWidget extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void tick() {
+	public void updateData() {
 		textField.tick();
 	}
 

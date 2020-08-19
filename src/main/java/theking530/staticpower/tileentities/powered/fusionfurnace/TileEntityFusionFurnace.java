@@ -87,8 +87,14 @@ public class TileEntityFusionFurnace extends TileEntityMachine {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 
-		transferItemInternally(inputInventory, 0, internalInventory, 0);
-		markTileEntityForSynchronization();
+		// Transfer the items.
+		for (int i = 0; i < 5; i++) {
+			int count = recipe.getRequiredCountOfItem(inputInventory.getStackInSlot(i));
+			if (count > 0) {
+				transferItemInternally(count, inputInventory, i, internalInventory, i);
+			}
+		}
+
 		return ProcessingCheckState.ok();
 	}
 
@@ -111,7 +117,6 @@ public class TileEntityFusionFurnace extends TileEntityMachine {
 		internalInventory.setStackInSlot(2, ItemStack.EMPTY);
 		internalInventory.setStackInSlot(3, ItemStack.EMPTY);
 		internalInventory.setStackInSlot(4, ItemStack.EMPTY);
-		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
 
 		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();

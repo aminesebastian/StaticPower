@@ -364,9 +364,18 @@ public abstract class BaseGuiTab {
 	 * @param partialTicks The partial ticks (delta time).
 	 */
 	protected void renderForeground(int mouseX, int mouseY, float partialTicks) {
-		if(isOpen()) {
+		if (isOpen()) {
 			widgetContainer.renderTooltips(mouseX, mouseY);
 		}
+	}
+
+	/**
+	 * This method is called every TICK (20 times a second), and can be used to
+	 * update any data in the UI that does not need to be updated per frame (for
+	 * example, the text in an info tab.)
+	 */
+	protected void updateData() {
+
 	}
 
 	/**
@@ -419,7 +428,7 @@ public abstract class BaseGuiTab {
 	 */
 	protected void drawButtonIcon(float partialTicks) {
 		if (icon != null) {
-			icon.draw(getTabSide() == TabSide.RIGHT ? xPosition + 3 : xPosition + tabWidth + 4.5f, yPosition + 4, tabIndex);
+			icon.draw(getTabSide() == TabSide.RIGHT ? xPosition + 3 : xPosition + tabWidth + 4.0f, yPosition + 4, tabIndex);
 		}
 	}
 
@@ -434,7 +443,7 @@ public abstract class BaseGuiTab {
 		float xPixel = 1.0f / 130.0f;
 		float yPixel = 1.0f / 83.0f;
 		float zLevel = tabIndex + 100;
-		int tabLeft = xPosition - (getTabSide() == TabSide.RIGHT ? 0 : tabWidth + 24);
+		int tabLeft = xPosition - (getTabSide() == TabSide.RIGHT ? 0 : tabWidth + 23);
 		int tabTop = yPosition;
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder tes = tessellator.getBuffer();

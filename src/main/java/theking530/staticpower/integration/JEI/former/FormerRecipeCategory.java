@@ -32,7 +32,7 @@ public class FormerRecipeCategory extends BaseJEIRecipeCategory<FormerRecipe> {
 	private static final int MOLD_SLOT = 0;
 	private static final int INTPUT_SLOT = 1;
 	private static final int OUTPUT_SLOT = 2;
-	
+
 	private final TranslationTextComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
@@ -113,7 +113,7 @@ public class FormerRecipeCategory extends BaseJEIRecipeCategory<FormerRecipe> {
 	public void setIngredients(FormerRecipe recipe, IIngredients ingredients) {
 		List<Ingredient> input = new ArrayList<Ingredient>();
 		input.add(recipe.getRequiredMold());
-		input.add(recipe.getInputIngredient());
+		input.add(recipe.getInputIngredient().getIngredient());
 		ingredients.setInputIngredients(input);
 
 		List<ItemStack> outputs = new ArrayList<ItemStack>();

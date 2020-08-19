@@ -41,7 +41,26 @@ public class FluidInfusionRecipe extends AbstractMachineRecipe {
 
 	@Override
 	public boolean isValid(RecipeMatchParameters matchParams) {
-		return input.test(matchParams.getItems()[0]) && inputFluid.isFluidEqual(matchParams.getFluids()[0]) && matchParams.getFluids()[0].getAmount() >= inputFluid.getAmount();
+		boolean matched = true;
+
+		// Check fluids.
+		if (matchParams.shouldVerifyFluids()) {
+			matched &= matchParams.hasFluids() && matchParams.getFluids()[0].equals(inputFluid);
+			if (matched && matchParams.shouldVerifyFluidAmounts()) {
+				matched &= matchParams.hasFluids() && matchParams.getFluids()[0].getAmount() >= inputFluid.getAmount();
+			}
+		}
+
+		// Check items.
+		if (matchParams.shouldVerifyItems()) {
+			if (matchParams.shouldVerifyItemCounts()) {
+				matched &= matchParams.hasItems() && input.testWithCount(matchParams.getItems()[0]);
+			} else {
+				matched &= matchParams.hasItems() && input.test(matchParams.getItems()[0]);
+			}
+		}
+
+		return matched;
 	}
 
 	@Override

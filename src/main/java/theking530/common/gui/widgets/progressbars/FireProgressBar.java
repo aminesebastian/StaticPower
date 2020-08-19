@@ -23,5 +23,9 @@ public class FireProgressBar extends AbstractProgressBar {
 			GuiDrawUtilities.drawTexturedModalRect(GuiTextures.FIRE_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY() + topOffset, getSize().getX(),
 					getSize().getY() * (1.0f - adjustedProgress), 0.0f, 0.40625f * adjustedProgress, 0.4375f, 0.40625f);
 		}
+
+		if (isProcessingErrored) {
+			getErrorDrawable().draw(screenSpacePosition.getX() + 2.5f, screenSpacePosition.getY() + 0.5f);
+		}
 	}
 }

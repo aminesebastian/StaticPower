@@ -24,6 +24,10 @@ public class SquareProgressBar extends AbstractProgressBar {
 		GuiDrawUtilities.drawSlot(screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY());
 		drawRect(screenSpacePosition.getX(), screenSpacePosition.getY(), (screenSpacePosition.getX() + (getSize().getX() * adjustedProgress)), screenSpacePosition.getY() + getSize().getY(),
 				new Color(1.0f, 1.0f, 1.0f).encodeInInteger());
+
+		if (isProcessingErrored) {
+			getErrorDrawable().draw(screenSpacePosition.getX(), screenSpacePosition.getY());
+		}
 	}
 
 	public static void drawRect(float left, float top, float right, float bottom, int color) {

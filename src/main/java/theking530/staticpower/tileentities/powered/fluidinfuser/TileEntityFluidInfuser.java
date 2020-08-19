@@ -90,7 +90,7 @@ public class TileEntityFluidInfuser extends TileEntityMachine {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 
-		transferItemInternally(inputInventory, 0, internalInventory, 0);
+		transferItemInternally(recipe.getInput().getCount(), inputInventory, 0, internalInventory, 0);
 		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}

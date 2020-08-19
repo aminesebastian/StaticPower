@@ -34,7 +34,7 @@ public class GuiFermenter extends StaticPowerTileEntityGui<ContainerFermenter, T
 		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 48));
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 150, 8, 16, 60, MachineSideMode.Output, getTileEntity()));
 
-		getTabManager().registerTab(infoTab = new GuiInfoTab(70, 70));
+		getTabManager().registerTab(infoTab = new GuiInfoTab(70));
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
 

@@ -143,6 +143,13 @@ public class GuiTabManager extends AbstractGuiWidget {
 	}
 
 	@Override
+	public void updateData() {
+		for (BaseGuiTab tab : registeredTabs) {
+			tab.updateData();
+		}
+	}
+
+	@Override
 	public EInputResult mouseClick(int mouseX, int mouseY, int button) {
 		for (BaseGuiTab tab : registeredTabs) {
 			EInputResult inputUsed = tab.mouseClick(mouseX, mouseY, button);

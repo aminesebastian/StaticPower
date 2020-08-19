@@ -9,11 +9,20 @@ import net.minecraftforge.fluids.FluidStack;
 public class RecipeMatchParameters {
 	private ItemStack[] items;
 	private FluidStack[] fluids;
+	private boolean verifyItems;
+	private boolean verifyItemCounts;
+	private boolean verifyFluids;
+	private boolean verifyFluidAmounts;
+
 	private int storedEnergy;
 	private final HashMap<String, Object> extraProperties;
 
 	public RecipeMatchParameters() {
 		extraProperties = new HashMap<String, Object>();
+		verifyItemCounts = true;
+		verifyFluids = true;
+		verifyFluidAmounts = true;
+		verifyItems = true;
 	}
 
 	public RecipeMatchParameters(ItemStack... items) {
@@ -24,6 +33,42 @@ public class RecipeMatchParameters {
 	public RecipeMatchParameters(FluidStack... fluids) {
 		this();
 		this.fluids = fluids;
+	}
+
+	public boolean shouldVerifyItems() {
+		return verifyItems;
+	}
+
+	public RecipeMatchParameters ignoreItems() {
+		verifyItems = false;
+		return this;
+	}
+
+	public boolean shouldVerifyItemCounts() {
+		return verifyItemCounts;
+	}
+
+	public RecipeMatchParameters ignoreItemCounts() {
+		verifyItemCounts = false;
+		return this;
+	}
+
+	public boolean shouldVerifyFluids() {
+		return verifyFluids;
+	}
+
+	public RecipeMatchParameters ignoreFluids() {
+		this.verifyFluids = false;
+		return this;
+	}
+
+	public boolean shouldVerifyFluidAmounts() {
+		return verifyFluidAmounts;
+	}
+
+	public RecipeMatchParameters ignoreFluidAmounts() {
+		this.verifyFluidAmounts = false;
+		return this;
 	}
 
 	public ItemStack[] getItems() {

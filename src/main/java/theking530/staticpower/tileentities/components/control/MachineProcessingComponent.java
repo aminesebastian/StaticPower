@@ -28,9 +28,9 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 	private RedstoneControlComponent redstoneControlComponent;
 
 	@UpdateSerialize
-	private String processingErrorMessage;
+	protected String processingErrorMessage;
 	@UpdateSerialize
-	private boolean processingStoppedDueToError;
+	protected boolean processingStoppedDueToError;
 
 	@UpdateSerialize
 	private int processingTime;
@@ -116,25 +116,34 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		performedWorkLastTick = false;
 
 		// If this is when we first start processing, raise the start processing event.
-		if (!hasStarted && passesAllProcessingStartChecks()) {
-			// Get the start state.
-			ProcessingCheckState processingState = canStartProcessingCallback.get();
-
-			// If its okay, start processing. If its an error, raise the error. If its a
-			// skip or cancel, do nothing.
-			if (processingState.isOk()) {
-				startProcessing();
-			} else if (processingState.isError()) {
+		if (!hasStarted) {
+			// Get start check.
+			ProcessingCheckState machineComponentStartState = passesAllProcessingStartChecks();
+			if (!machineComponentStartState.isOk()) {
 				processingStoppedDueToError = true;
-				processingErrorMessage = processingState.getErrorMessage();
+				processingErrorMessage = machineComponentStartState.getErrorMessage();
+			} else {
+				// Get the start state.
+				ProcessingCheckState processingState = canStartProcessingCallback.get();
+
+				// If its okay, start processing. If its an error, raise the error. If its a
+				// skip or cancel, do nothing.
+				if (processingState.isOk()) {
+					startProcessing();
+				} else if (processingState.isError()) {
+					processingStoppedDueToError = true;
+					processingErrorMessage = processingState.getErrorMessage();
+				}
 			}
+
 		}
 
 		// Set the can continue processing state if we have already started. This is to
 		// allow for responsive stopping of processing if needed.
 		if (hasStarted) {
 			// Check to see if we can continue processing.
-			if (passesAllProcessingChecks()) {
+			ProcessingCheckState machineComponentProcessingCheck = passesAllProcessingChecks();
+			if (machineComponentProcessingCheck.isOk()) {
 				// Get the continue state.
 				ProcessingCheckState continueState = canContinueProcessingCallback.get();
 
@@ -172,17 +181,16 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 			// Update the block's on state.
 			setIsOnBlockState(true);
 
-			// If we can can continue processing, do so, otherwise, stop. If we have
-			// completed the processing, try to complete it using the callback.
-			// If the callback is true, we reset the state of the component back to initial
-			currentProcessingTime += tickDownRate;
-
 			// Use power if requested to.
 			if (hasProcessingPowerCost && powerComponent != null) {
 				powerComponent.getStorage().extractEnergy(powerUsage, false);
 			}
 
 			performedWorkLastTick = true;
+
+			// If we can can continue processing, do so, otherwise, stop. If we have
+			// completed the processing, try to complete it using the callback.
+			// If the callback is true, we reset the state of the component back to initial
 			if (currentProcessingTime >= processingTime) {
 				ProcessingCheckState completedState = processingCompleted();
 				if (completedState.isOk()) {
@@ -190,13 +198,16 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 					if (hasCompletedPowerCost && powerComponent != null) {
 						powerComponent.useBulkPower(completedPowerUsage);
 					}
-				} else if (!completedState.isError()) {
+				}
+				if (!completedState.isError()) {
 					currentProcessingTime = 0;
 					blockStateOffTimer = 0;
 					processing = false;
 					hasStarted = false;
 					processingStoppedDueToError = false;
 				}
+			} else {
+				currentProcessingTime += tickDownRate;
 			}
 		} else {
 			// If the block state is on, and processing is false, start the blockStateOff
@@ -453,56 +464,45 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		return this;
 	}
 
-	protected boolean passesAllProcessingStartChecks() {
-		if (!passesAllProcessingChecks()) {
-			return false;
+	protected ProcessingCheckState passesAllProcessingStartChecks() {
+		ProcessingCheckState processingCheck = this.passesAllProcessingChecks();
+		if (!processingCheck.isOk()) {
+			return processingCheck;
 		}
 		// Check the processing power cost for the whole process.
 		int powerCost = powerUsage * processingTime;
 		if (hasProcessingPowerCost && !powerComponent.hasEnoughPower(powerCost)) {
 			int missingPower = powerCost - powerComponent.getStorage().getEnergyStored();
-			processingErrorMessage = new StringTextComponent("This recipe requires an additional ").appendSibling(GuiTextUtilities.formatEnergyToString(missingPower)).getFormattedText();
-			processingStoppedDueToError = true;
-			return false;
+			return ProcessingCheckState.error(new StringTextComponent("This recipe requires an additional ").appendSibling(GuiTextUtilities.formatEnergyToString(missingPower)).getFormattedText());
 		}
 
-		return true;
+		return ProcessingCheckState.ok();
 	}
 
-	protected boolean passesAllProcessingChecks() {
-		// Initially set us in error state.
-		processingStoppedDueToError = true;
-
+	protected ProcessingCheckState passesAllProcessingChecks() {
 		// Check the processing power cost.
 		if (hasProcessingPowerCost && !powerComponent.hasEnoughPower(powerUsage)) {
-			processingErrorMessage = new StringTextComponent("Not Enough Power!").getFormattedText();
-			return false;
+			return ProcessingCheckState.error(new StringTextComponent("Not Enough Power!").getFormattedText());
 		}
 		// Check the processing power rate.
 		if (hasProcessingPowerCost && powerComponent.getStorage().getMaxExtract() < powerUsage) {
-			processingErrorMessage = new StringTextComponent("Recipe's power per tick requirement (").appendSibling(GuiTextUtilities.formatEnergyRateToString(powerUsage))
-					.appendText(") is larger than the max for this machine!").getFormattedText();
-			return false;
+			return ProcessingCheckState.error(new StringTextComponent("Recipe's power per tick requirement (").appendSibling(GuiTextUtilities.formatEnergyRateToString(powerUsage))
+					.appendText(") is larger than the max for this machine!").getFormattedText());
 		}
 		// Check the completion power cost.
 		if (hasCompletedPowerCost && !powerComponent.hasEnoughPower(completedPowerUsage)) {
-			processingErrorMessage = new StringTextComponent("Not Enough Power!").getFormattedText();
-			return false;
+			return ProcessingCheckState.error(new StringTextComponent("Not Enough Power!").getFormattedText());
 		}
 		// Check the processing power rate.
 		if (hasProcessingPowerCost && powerComponent.getStorage().getEnergyStored() < completedPowerUsage) {
-			processingErrorMessage = new StringTextComponent("Max Power Draw Too Log!").getFormattedText();
-			return false;
+			return ProcessingCheckState.error(new StringTextComponent("Max Power Draw Too Log!").getFormattedText());
 		}
 		// Check the redstone control component.
 		if (redstoneControlComponent != null && !redstoneControlComponent.passesRedstoneCheck()) {
-			processingErrorMessage = new StringTextComponent("Redstone Control Mode Not Satisfied.").getFormattedText();
-			return false;
+			return ProcessingCheckState.error(new StringTextComponent("Redstone Control Mode Not Satisfied.").getFormattedText());
 		}
 
-		// If we made it this far, we are not in an error state, so set it to false.
-		processingStoppedDueToError = false;
-		return true;
+		return ProcessingCheckState.ok();
 	}
 
 	protected void setIsOnBlockState(boolean on) {

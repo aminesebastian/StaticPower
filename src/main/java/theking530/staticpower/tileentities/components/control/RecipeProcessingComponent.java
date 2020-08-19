@@ -70,7 +70,9 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 		}
 
 		// If we can't move the inputs to the internal, nothing.
-		if (!canMoveInputsToInternal()) {
+		ProcessingCheckState internalMoveState = canMoveInputsToInternal();
+		if (!internalMoveState.isOk()) {
+			this.setProcessingErrorMessage(internalMoveState.getErrorMessage());
 			return;
 		}
 
@@ -86,17 +88,13 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 		}
 	}
 
-	public boolean canMoveInputsToInternal() {
+	public ProcessingCheckState canMoveInputsToInternal() {
 		Optional<T> recipe = getRecipe(getMatchParameters.apply(RecipeProcessingLocation.INPUT));
-		return passesAllProcessingStartChecks() && recipe.isPresent() && canStartProcessingRecipe.apply(recipe.get()).isOk();
-	}
-
-	protected boolean passesAllProcessingStartChecks() {
-		return super.passesAllProcessingStartChecks();
-	}
-
-	protected boolean passesAllProcessingChecks() {
-		return super.passesAllProcessingChecks();
+		ProcessingCheckState machineProcessingState = passesAllProcessingStartChecks();
+		if (machineProcessingState.isOk() && recipe.isPresent()) {
+			return canStartProcessingRecipe.apply(recipe.get());
+		}
+		return machineProcessingState;
 	}
 
 	protected ProcessingCheckState canStartProcessing() {

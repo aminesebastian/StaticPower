@@ -50,8 +50,7 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 		// Setup the input inventory to only accept items that have a valid recipe.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
-				return processingComponent.getRecipe(new RecipeMatchParameters(stack)).isPresent();
-
+				return processingComponent.getRecipe(new RecipeMatchParameters(stack).ignoreItemCounts()).isPresent();
 			}
 		}));
 
@@ -96,7 +95,7 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 	protected ProcessingCheckState moveInputs(CentrifugeRecipe recipe) {
 		// Check the required speed.
 		if (currentSpeed < recipe.getMinimumSpeed()) {
-			return ProcessingCheckState.error("Centrifuge not up to required speed of: " + recipe.getMinimumSpeed());
+			return ProcessingCheckState.error("Centrifuge not up to required speed of: " + recipe.getMinimumSpeed() + "RPM");
 		}
 
 		// If we don't have enough inputs, return false.
@@ -107,7 +106,7 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 		// If the items can be insert into the output, transfer the items and return
 		// true.
 		if (internalInventory.getStackInSlot(0).isEmpty() && canInsertRecipeIntoOutputs(recipe)) {
-			transferItemInternally(inputInventory, 0, internalInventory, 0);
+			transferItemInternally(recipe.getInput().getCount(), inputInventory, 0, internalInventory, 0);
 			markTileEntityForSynchronization();
 			return ProcessingCheckState.ok();
 		} else {
@@ -121,7 +120,7 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 		}
 
 		if (currentSpeed < recipe.getMinimumSpeed()) {
-			return ProcessingCheckState.error("Centrifuge not up to required speed of: " + recipe.getMinimumSpeed());
+			return ProcessingCheckState.error("Centrifuge not up to required speed of: " + recipe.getMinimumSpeed() + "RPM");
 		}
 		return ProcessingCheckState.ok();
 	}
@@ -152,7 +151,7 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 	@Override
 	public void process() {
 		// Maintain the spin.
-		if (!getWorld().isRemote) {
+		if (!getWorld().isRemote && redstoneControlComponent.passesRedstoneCheck()) {
 			if (energyStorage.hasEnoughPower(1)) {
 				energyStorage.useBulkPower(1);
 				currentSpeed = SDMath.clamp(currentSpeed + 1, 0, DEFAULT_MAX_SPEED);

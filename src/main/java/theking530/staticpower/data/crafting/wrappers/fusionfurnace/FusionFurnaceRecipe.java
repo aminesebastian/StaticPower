@@ -32,10 +32,19 @@ public class FusionFurnaceRecipe extends AbstractMachineRecipe {
 		return output;
 	}
 
+	public int getRequiredCountOfItem(ItemStack item) {
+		for (StaticPowerIngredient input : inputs) {
+			if (input.test(item)) {
+				return input.getCount();
+			}
+		}
+		return 0;
+	}
+
 	@Override
 	public boolean isValid(RecipeMatchParameters matchParams) {
 		// Check if the input counts catch.
-		if (matchParams.getItems().length < inputs.size()) {
+		if (matchParams.shouldVerifyItems() && matchParams.getItems().length < inputs.size()) {
 			return false;
 		}
 
@@ -44,13 +53,21 @@ public class FusionFurnaceRecipe extends AbstractMachineRecipe {
 		for (ItemStack input : matchParams.getItems()) {
 			inputCopies.add(input.copy());
 		}
-		
+
 		// Check each item, if any fails, return false.
 		int matches = 0;
 		for (StaticPowerIngredient ing : inputs) {
 			for (int i = 0; i < inputCopies.size(); i++) {
-				if (ing.test(inputCopies.get(i))) {
-					matches++;
+				// Check the match.
+				boolean itemMatched = false;
+				if (matchParams.shouldVerifyItemCounts()) {
+					itemMatched = ing.testWithCount(inputCopies.get(i));
+				} else {
+					itemMatched = ing.test(inputCopies.get(i));
+				}
+
+				// Check if there was a match.
+				if (itemMatched) {
 					inputCopies.set(i, ItemStack.EMPTY);
 					break;
 				}

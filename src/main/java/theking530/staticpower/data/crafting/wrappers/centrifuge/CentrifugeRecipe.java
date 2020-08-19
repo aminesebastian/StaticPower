@@ -12,6 +12,7 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
 public class CentrifugeRecipe extends AbstractMachineRecipe {
+	public static final String SPEED_PROPERTY = "Speed";
 	public static final IRecipeType<CentrifugeRecipe> RECIPE_TYPE = IRecipeType.register("centrifuge");
 
 	private final StaticPowerIngredient input;
@@ -75,6 +76,24 @@ public class CentrifugeRecipe extends AbstractMachineRecipe {
 	}
 
 	public boolean isValid(RecipeMatchParameters matchParams) {
-		return input.test(matchParams.getItems()[0]);
+		boolean matched = true;
+
+		// Check items.
+		if (matchParams.shouldVerifyItems()) {
+			if (matchParams.shouldVerifyItemCounts()) {
+				matched &= matchParams.hasItems() && input.testWithCount(matchParams.getItems()[0]);
+			} else {
+				matched &= matchParams.hasItems() && input.test(matchParams.getItems()[0]);
+			}
+		}
+
+		// Check the speed.
+		if (matched && matchParams.getExtraProperty(SPEED_PROPERTY).isPresent()) {
+			if ((int) (matchParams.getExtraProperty(SPEED_PROPERTY).get()) < minimumSpeed) {
+				return false;
+			}
+		}
+
+		return matched;
 	}
 }

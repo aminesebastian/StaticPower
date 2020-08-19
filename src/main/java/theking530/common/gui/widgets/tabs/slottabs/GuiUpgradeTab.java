@@ -19,7 +19,7 @@ public class GuiUpgradeTab extends BaseGuiTab {
 	private final StaticPowerContainer container;
 
 	public GuiUpgradeTab(StaticPowerContainer container, InventoryComponent upgradesInventory) {
-		super("Upgrades", 1, 57, GuiTextures.YELLOW_TAB, ModUpgrades.BasicSpeedUpgrade);
+		super("Upgrades", 0, 57, GuiTextures.YELLOW_TAB, ModUpgrades.BasicSpeedUpgrade);
 		this.container = container;
 		this.slotIndecies = new ArrayList<Integer>();
 		this.upgradesInventory = upgradesInventory;
@@ -38,9 +38,9 @@ public class GuiUpgradeTab extends BaseGuiTab {
 		slotIndecies.add(container.inventorySlots.size() - 1);
 
 		PacketGuiTabAddSlots msg = new PacketGuiTabAddSlots(container.windowId);
-		msg.addSlot(upgradesInventory, 0, -18, 59);
-		msg.addSlot(upgradesInventory, 1, -18, 77);
-		msg.addSlot(upgradesInventory, 2, -18, 95);
+		msg.addSlot(upgradesInventory, 0, -18, 24);
+		msg.addSlot(upgradesInventory, 1, -18, 45);
+		msg.addSlot(upgradesInventory, 2, -18, 60);
 
 		// Send a packet to the server with the updated values.
 		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);

@@ -13,6 +13,7 @@ import theking530.common.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 
 public class GuiPump extends StaticPowerTileEntityGui<ContainerPump, TileEntityPump> {
+	@SuppressWarnings("unused")
 	private GuiInfoTab infoTab;
 
 	public GuiPump(ContainerPump container, PlayerInventory invPlayer, ITextComponent name) {
@@ -24,16 +25,10 @@ public class GuiPump extends StaticPowerTileEntityGui<ContainerPump, TileEntityP
 		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 10, 16, 44));
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 71, 20, 32, 52));
 		registerWidget(new ArrowProgressBar(106, 20));
-		tabManager.registerTab(infoTab = new GuiInfoTab(100, 65));
+		tabManager.registerTab(infoTab = new GuiInfoTab(100));
 
 		getTabManager().registerTab(new GuiSideConfigTab(true, getTileEntity()));
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage, getTileEntity().processingComponent).setTabSide(TabSide.LEFT), true);
 		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT));
-	}
-
-	@Override
-	protected void drawBackgroundExtras(float partialTicks, int mouseX, int mouseY) {
-		super.drawBackgroundExtras(partialTicks, mouseX, mouseY);
-		infoTab.setText(getTitle().getFormattedText(), "test");
 	}
 }

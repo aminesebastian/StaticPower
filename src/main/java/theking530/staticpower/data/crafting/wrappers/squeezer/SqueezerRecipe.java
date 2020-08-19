@@ -45,7 +45,18 @@ public class SqueezerRecipe extends AbstractMachineRecipe {
 
 	@Override
 	public boolean isValid(RecipeMatchParameters matchParams) {
-		return input.test(matchParams.getItems()[0]);
+		boolean matched = true;
+
+		// Check items.
+		if (matchParams.shouldVerifyItems()) {
+			if (matchParams.shouldVerifyItemCounts()) {
+				matched &= matchParams.hasItems() && input.testWithCount(matchParams.getItems()[0]);
+			} else {
+				matched &= matchParams.hasItems() && input.test(matchParams.getItems()[0]);
+			}
+		}
+
+		return matched;
 	}
 
 	@Override

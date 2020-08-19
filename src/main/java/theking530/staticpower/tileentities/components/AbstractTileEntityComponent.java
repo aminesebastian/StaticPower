@@ -123,7 +123,11 @@ public abstract class AbstractTileEntityComponent {
 	}
 
 	public void setEnabled(boolean isEnabled) {
-		this.isEnabled = isEnabled;
+		if (this.isEnabled != isEnabled) {
+			this.isEnabled = isEnabled;
+			getTileEntity().markTileEntityForSynchronization();
+			getTileEntity().markDirty();
+		}
 	}
 
 	public TileEntityBase getTileEntity() {

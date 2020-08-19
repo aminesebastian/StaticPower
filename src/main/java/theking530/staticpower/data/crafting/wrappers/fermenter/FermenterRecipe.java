@@ -12,12 +12,12 @@ public class FermenterRecipe extends AbstractStaticPowerRecipe {
 	public static final IRecipeType<FermenterRecipe> RECIPE_TYPE = IRecipeType.register("fermenter");
 
 	private final FluidStack outputFluidStack;
-	private final StaticPowerIngredient inputIngredient;
+	private final StaticPowerIngredient input;
 
 	public FermenterRecipe(ResourceLocation name, StaticPowerIngredient input, FluidStack fluid) {
 		super(name);
 		outputFluidStack = fluid;
-		inputIngredient = input;
+		this.input = input;
 	}
 
 	public FluidStack getOutputFluidStack() {
@@ -25,14 +25,22 @@ public class FermenterRecipe extends AbstractStaticPowerRecipe {
 	}
 
 	public StaticPowerIngredient getInputIngredient() {
-		return inputIngredient;
+		return input;
 	}
 
 	public boolean isValid(RecipeMatchParameters matchParams) {
-		if (matchParams.hasItems() && matchParams.getItems().length > 0) {
-			return inputIngredient.test(matchParams.getItems()[0]);
+		boolean matched = true;
+
+		// Check items.
+		if (matchParams.shouldVerifyItems()) {
+			if (matchParams.shouldVerifyItemCounts()) {
+				matched &= matchParams.hasItems() && input.testWithCount(matchParams.getItems()[0]);
+			} else {
+				matched &= matchParams.hasItems() && input.test(matchParams.getItems()[0]);
+			}
 		}
-		return false;
+
+		return matched;
 	}
 
 	@Override

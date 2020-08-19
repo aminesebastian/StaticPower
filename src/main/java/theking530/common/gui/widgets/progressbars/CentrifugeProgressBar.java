@@ -26,5 +26,9 @@ public class CentrifugeProgressBar extends AbstractProgressBar {
 		GuiDrawUtilities.drawTexturedModalRect(GuiTextures.CENTRIFUGE_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY() * adjustedProgress, 0.0f,
 				0.0f, 1.0f, (0.5f * adjustedProgress));
 		GL11.glPopMatrix();
+
+		if (isProcessingErrored) {
+			getErrorDrawable().draw(screenSpacePosition.getX() + 1.5f, screenSpacePosition.getY() + 0.5f);
+		}
 	}
 }

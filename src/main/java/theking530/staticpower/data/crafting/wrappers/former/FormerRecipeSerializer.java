@@ -10,6 +10,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.tileentities.powered.former.TileEntityFormer;
 import theking530.staticpower.utilities.Reference;
 
@@ -24,7 +25,7 @@ public class FormerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer
 	public FormerRecipe read(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input ingredient.
 		JsonObject inputElement = JSONUtils.getJsonObject(json, "input");
-		Ingredient input = Ingredient.deserialize(inputElement);
+		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
 
 		// Capture the input mold.
 		JsonObject moldElement = JSONUtils.getJsonObject(json, "mold");

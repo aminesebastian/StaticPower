@@ -1,11 +1,9 @@
 package theking530.staticpower.tileentities.nonpowered.vacuumchest;
 
-import java.text.DecimalFormat;
-import java.util.Arrays;
-
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Items;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.common.gui.widgets.tabs.GuiInfoTab;
@@ -31,7 +29,7 @@ public class GuiVacuumChest extends StaticPowerTileEntityGui<ContainerVacuumChes
 
 	@Override
 	public void initializeGui() {
-		getTabManager().registerTab(infoTab = new GuiInfoTab(100, 65));
+		getTabManager().registerTab(infoTab = new GuiInfoTab(getTitle(), 100));
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
 
@@ -51,11 +49,12 @@ public class GuiVacuumChest extends StaticPowerTileEntityGui<ContainerVacuumChes
 
 	@Override
 	public void updateData() {
-		DecimalFormat format = new DecimalFormat("##.###");
-		String text = ("Vacuums items in a  =nearby radius. ==" + TextFormatting.RED + "Radius: " + TextFormatting.AQUA + format.format(getTileEntity().getRadius()) + " Blocks");
-		String[] splitMsg = text.split("=");
-		infoTab.setText(getTitle().getFormattedText(), Arrays.asList(splitMsg));
+		// Update the input tab.
+		infoTab.clear();
+		infoTab.addLine(new StringTextComponent("Vacuums items in a nearby radius"));
+		infoTab.addKeyValueTwoLiner(new StringTextComponent("Radius"), new StringTextComponent(String.valueOf(getTileEntity().getRadius())), TextFormatting.AQUA);
 
+		// Change the size of the GUI depending on if there is a XP upgrade present.
 		if (!getTileEntity().showTank()) {
 			setGuiSizeTarget(176, 185);
 			fluidBar.setVisible(false);

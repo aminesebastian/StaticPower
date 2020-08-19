@@ -46,7 +46,15 @@ public class BottleRecipe extends AbstractStaticPowerRecipe {
 	}
 
 	public boolean isValid(RecipeMatchParameters matchParams) {
-		return ItemUtilities.areItemStacksStackable(matchParams.getItems()[0], emptyBottle) && fluid.isFluidEqual(matchParams.getFluids()[0]);
+		// Check if the item and fluid match.
+		boolean itemMatched = ItemUtilities.areItemStacksStackable(matchParams.getItems()[0], emptyBottle) && fluid.isFluidEqual(matchParams.getFluids()[0]);
+
+		// If the items matched, check to see if we should match counts too.
+		if (itemMatched && matchParams.shouldVerifyItemCounts() && matchParams.getItems()[0].getCount() < emptyBottle.getCount()) {
+			return false;
+		} else {
+			return itemMatched;
+		}
 	}
 
 	@Override
@@ -63,7 +71,8 @@ public class BottleRecipe extends AbstractStaticPowerRecipe {
 				return false;
 			}
 			// Check the fluids.
-			if (fluid.getAmount() != otherBottleRecipe.getFluid().getAmount() || !fluid.equals(otherBottleRecipe.getFluid()) && !FluidStack.areFluidStackTagsEqual(fluid, otherBottleRecipe.getFluid())) {
+			if (fluid.getAmount() != otherBottleRecipe.getFluid().getAmount()
+					|| !fluid.equals(otherBottleRecipe.getFluid()) && !FluidStack.areFluidStackTagsEqual(fluid, otherBottleRecipe.getFluid())) {
 				return false;
 			}
 

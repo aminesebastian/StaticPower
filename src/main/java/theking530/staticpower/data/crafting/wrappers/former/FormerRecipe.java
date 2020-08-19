@@ -8,15 +8,16 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
 public class FormerRecipe extends AbstractMachineRecipe {
 	public static final IRecipeType<FormerRecipe> RECIPE_TYPE = IRecipeType.register("former");
 
-	private Ingredient inputIngredient;
+	private StaticPowerIngredient inputIngredient;
 	private Ingredient requiredMold;
 	private ItemStack outputItemStack;
 
-	public FormerRecipe(ResourceLocation name, int processingTime, int powerCost, ItemStack output, Ingredient input, Ingredient mold) {
+	public FormerRecipe(ResourceLocation name, int processingTime, int powerCost, ItemStack output, StaticPowerIngredient input, Ingredient mold) {
 		super(name, processingTime, powerCost);
 		inputIngredient = input;
 		requiredMold = mold;
@@ -25,13 +26,28 @@ public class FormerRecipe extends AbstractMachineRecipe {
 
 	@Override
 	public boolean isValid(RecipeMatchParameters matchParams) {
-		if (matchParams.getItems().length != 2) {
-			return false;
+		boolean matched = true;
+
+		// Check items.
+		if (matchParams.shouldVerifyItems()) {
+			// Check to make sure we got two items.
+			if (matchParams.getItems().length != 2) {
+				return false;
+			}
+
+			if (matchParams.shouldVerifyItemCounts()) {
+				matched &= matchParams.hasItems() && inputIngredient.testWithCount(matchParams.getItems()[0]);
+				matched &= matchParams.hasItems() && requiredMold.test(matchParams.getItems()[1]);
+			} else {
+				matched &= matchParams.hasItems() && inputIngredient.test(matchParams.getItems()[0]);
+				matched &= matchParams.hasItems() && requiredMold.test(matchParams.getItems()[1]);
+			}
 		}
-		return inputIngredient.test(matchParams.getItems()[0]) && requiredMold.test(matchParams.getItems()[1]);
+
+		return matched;
 	}
 
-	public Ingredient getInputIngredient() {
+	public StaticPowerIngredient getInputIngredient() {
 		return inputIngredient;
 	}
 

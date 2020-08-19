@@ -1,9 +1,8 @@
 package theking530.staticpower.items.itemfilter;
 
-import java.util.Arrays;
-
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -47,10 +46,8 @@ public class GuiItemFilter extends StaticPowerItemStackGui<ContainerItemFilter, 
 		guiTop = (this.height - this.ySize) / 2;
 
 		// Update the info tab label.
-		getTabManager().registerTab(infoTab = new GuiInfoTab(110, 40));
-		String text = ("Filter items going=into an inventory.");
-		String[] splitMsg = text.split("=");
-		infoTab.setText(getItemStack().getDisplayName().getFormattedText(), Arrays.asList(splitMsg));
+		getTabManager().registerTab(infoTab = new GuiInfoTab(110));
+		infoTab.addLine(new StringTextComponent("Filter items going into an inventory."));
 
 		registerWidget(whitelistButton = new SpriteButton(45, 40, 20, 20, StaticPowerSprites.FILTER_WHITELIST, null, this::buttonPressed));
 		registerWidget(nbtButton = new SpriteButton(67, 40, 20, 20, StaticPowerSprites.FILTER_NBT, null, this::buttonPressed));
@@ -82,7 +79,8 @@ public class GuiItemFilter extends StaticPowerItemStackGui<ContainerItemFilter, 
 		}
 
 		// Send a packet to the server with the updated values.
-		NetworkMessage msg = new PacketItemFilter(getItemFilter().isWhiteListMode(getItemStack()), getItemFilter().filterForNBT(getItemStack()), getItemFilter().filterForTag(getItemStack()), getItemFilter().filterForMod(getItemStack()));
+		NetworkMessage msg = new PacketItemFilter(getItemFilter().isWhiteListMode(getItemStack()), getItemFilter().filterForNBT(getItemStack()), getItemFilter().filterForTag(getItemStack()),
+				getItemFilter().filterForMod(getItemStack()));
 		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
 	}
 

@@ -8,9 +8,12 @@ import javax.annotation.Nullable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import theking530.common.gui.drawables.IDrawable;
+import theking530.common.gui.drawables.SpriteDrawable;
 import theking530.common.gui.widgets.AbstractGuiWidget;
 import theking530.common.utilities.SDMath;
 import theking530.common.utilities.Vector2D;
+import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 
 /**
@@ -56,12 +59,17 @@ public abstract class AbstractProgressBar extends AbstractGuiWidget {
 	 * that error is to the user.
 	 */
 	protected String processingErrorMessage;
+	/**
+	 * Instance of the error drawable.
+	 */
+	protected SpriteDrawable errorDrawable;
 
 	public AbstractProgressBar(float xPosition, float yPosition, float width, float height) {
 		super(xPosition, yPosition, width, height);
 		currentProgress = 0;
 		tickDownRate = 1;
 		visualCurrentProgress = 0.0f;
+		errorDrawable = new SpriteDrawable(StaticPowerSprites.ERROR, 16, 16);
 	}
 
 	@Override
@@ -154,5 +162,9 @@ public abstract class AbstractProgressBar extends AbstractGuiWidget {
 	 */
 	public void setMaxProgress(int maxProgress) {
 		this.maxProgress = maxProgress;
+	}
+
+	protected IDrawable getErrorDrawable() {
+		return errorDrawable;
 	}
 }

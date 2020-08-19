@@ -12,7 +12,7 @@ public class GuiDigistoreImporter extends AbstractCableAttachmentGui<ContainerDi
 		super(container, invPlayer, name, 176, 151);
 		GuiCableAttachmentRedstoneTab redstoneTab;
 		getTabManager().registerTab(redstoneTab = new GuiCableAttachmentRedstoneTab(container.getAttachment(), container.getAttachmentSide(), container.getCableComponent()));
-		getTabManager().registerTab(new GuiInfoTab(100, 60));
+		getTabManager().registerTab(new GuiInfoTab(100));
 		getTabManager().setInitiallyOpenTab(redstoneTab);
 	}
 }
