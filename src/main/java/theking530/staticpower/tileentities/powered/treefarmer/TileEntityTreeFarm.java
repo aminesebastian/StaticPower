@@ -41,12 +41,12 @@ import theking530.staticpower.init.ModTags;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.tileentities.TileEntityMachine;
-import theking530.staticpower.tileentities.components.control.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent.ProcessingCheckState;
-import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent;
-import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent.FluidContainerInteractionMode;
+import theking530.staticpower.tileentities.components.fluids.FluidContainerInventoryComponent;
+import theking530.staticpower.tileentities.components.fluids.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
+import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent.InventoryChangeType;
@@ -77,7 +77,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 	public final InventoryComponent internalInventory;
 	public final MachineProcessingComponent processingComponent;
 	public final FluidTankComponent fluidTankComponent;
-	public final FluidContainerComponent fluidContainerComponent;
+	public final FluidContainerInventoryComponent fluidContainerComponent;
 	private boolean shouldDrawRadiusPreview;
 
 	private final List<BlockPos> blocks;
@@ -122,7 +122,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		shouldDrawRadiusPreview = false;
 		range = DEFAULT_RANGE;
 		blocks = new LinkedList<BlockPos>();
-		registerComponent(fluidContainerComponent = new FluidContainerComponent("BucketDrain", fluidTankComponent, fluidContainerInventoy, 0, 1));
+		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("BucketDrain", fluidTankComponent, fluidContainerInventoy, 0, 1));
 		registerComponent(new InputServoComponent("InputServo", 4, inputInventory));
 		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory));
 

@@ -2,10 +2,13 @@ package theking530.staticpower.client.container;
 
 import java.util.List;
 
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.IContainerListener;
+import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -14,6 +17,8 @@ import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.network.TileEntityBasicSyncPacket;
 import theking530.staticpower.tileentities.TileEntityBase;
+import theking530.staticpower.tileentities.components.items.InventoryComponent;
+import theking530.staticpower.utilities.InventoryUtilities;
 
 public abstract class StaticPowerTileEntityContainer<T extends TileEntityBase> extends StaticPowerContainer {
 	public static final int DEFAULT_SYNC_TIME = 2;
@@ -104,5 +109,22 @@ public abstract class StaticPowerTileEntityContainer<T extends TileEntityBase> e
 			StaticPower.LOGGER.error(String.format("Encountered invalid tile entity: %1$s at position: %2$s.", tileAtPos, data.readBlockPos()));
 			return null;
 		}
+	}
+
+	@Override
+	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
+		// Get the priority ordered inventories.
+		List<InventoryComponent> inventories = getTileEntity().getPriorityOrderedInventories();
+
+		// Attempt to insert the items.
+		for (InventoryComponent inventory : inventories) {
+			ItemStack remaining = InventoryUtilities.insertItemIntoInventory(inventory, stack, false);
+			if (remaining.getCount() != stack.getCount()) {
+				stack.shrink(stack.getCount() - remaining.getCount());
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

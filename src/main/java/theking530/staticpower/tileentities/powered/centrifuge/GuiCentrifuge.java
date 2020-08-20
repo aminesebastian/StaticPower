@@ -41,9 +41,11 @@ public class GuiCentrifuge extends StaticPowerTileEntityGui<ContainerCentrifuge,
 	@Override
 	public void updateData() {
 		infoTab.clear();
-		infoTab.addLine(new StringTextComponent("Separates items into=their base components."));
+		infoTab.addLine(new StringTextComponent("Separates items into their base components."));
 		infoTab.addKeyValueTwoLiner(new StringTextComponent("Current Speed"),
 				GuiTextUtilities.formatNumberAsString(getTileEntity().getCurrentSpeed()).appendSibling(new TranslationTextComponent("gui.staticpower.rpm")), TextFormatting.YELLOW);
+		infoTab.addKeyValueTwoLiner(new StringTextComponent("Max Speed"),
+				GuiTextUtilities.formatNumberAsString(getTileEntity().getMaxSpeed()).appendSibling(new TranslationTextComponent("gui.staticpower.rpm")), TextFormatting.RED);
 	}
 
 	@Override

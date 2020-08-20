@@ -27,8 +27,8 @@ import theking530.staticpower.items.upgrades.ExperienceVacuumUpgrade;
 import theking530.staticpower.items.upgrades.IUpgradeItem.UpgradeType;
 import theking530.staticpower.items.upgrades.TeleportUpgrade;
 import theking530.staticpower.tileentities.TileEntityConfigurable;
-import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent;
-import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent.FluidContainerInteractionMode;
+import theking530.staticpower.tileentities.components.fluids.FluidContainerInventoryComponent;
+import theking530.staticpower.tileentities.components.fluids.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.components.fluids.FluidOutputServoComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
@@ -47,7 +47,7 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements INa
 	public final InventoryComponent fluidContainerInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final FluidTankComponent fluidTankComponent;
-	public final FluidContainerComponent fluidContainerComponent;
+	public final FluidContainerInventoryComponent fluidContainerComponent;
 	public final FluidOutputServoComponent fluidOutputServo;
 
 	protected float vacuumDiamater;
@@ -65,7 +65,7 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements INa
 
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Output).setUpgradeInventory(upgradesInventory));
 		registerComponent(fluidContainerInventory = new InventoryComponent("FluidContainerInventory", 2));
-		registerComponent(fluidContainerComponent = new FluidContainerComponent("FluidContainerServo", fluidTankComponent, fluidContainerInventory, 0, 1).setMode(FluidContainerInteractionMode.FILL));
+		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent, fluidContainerInventory, 0, 1).setMode(FluidContainerInteractionMode.FILL));
 		registerComponent(fluidOutputServo = new FluidOutputServoComponent("FluidInputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
 
 		registerComponent(new OutputServoComponent("OutputServo", 2, inventory));

@@ -18,13 +18,13 @@ import theking530.staticpower.client.container.StaticPowerContainer;
 import theking530.staticpower.client.container.slots.FluidContainerSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.network.StaticPowerMessageHandler;
-import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent;
+import theking530.staticpower.tileentities.components.fluids.FluidContainerInventoryComponent;
 import theking530.staticpower.tileentities.components.fluids.PacketFluidContainerComponent;
-import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent.FluidContainerInteractionMode;
+import theking530.staticpower.tileentities.components.fluids.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 
 public class GuiFluidContainerTab extends BaseGuiTab {
-	private final FluidContainerComponent fluidContainerComponent;
+	private final FluidContainerInventoryComponent fluidContainerComponent;
 	private final List<Integer> fluidConatinerInventoryIndecies;
 	private final StaticPowerContainer container;
 	private Item filledBucketPreview;
@@ -35,11 +35,11 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 	private StaticPowerContainerSlot topSlot;
 	private StaticPowerContainerSlot bottomSlot;
 
-	public GuiFluidContainerTab(StaticPowerContainer container, FluidContainerComponent fluidContainerComponent) {
+	public GuiFluidContainerTab(StaticPowerContainer container, FluidContainerInventoryComponent fluidContainerComponent) {
 		this(container, fluidContainerComponent, Items.BUCKET, Items.WATER_BUCKET);
 	}
 
-	public GuiFluidContainerTab(StaticPowerContainer container, FluidContainerComponent fluidContainerComponent, Item emptyBucketPreview, Item filledBucketPreview) {
+	public GuiFluidContainerTab(StaticPowerContainer container, FluidContainerInventoryComponent fluidContainerComponent, Item emptyBucketPreview, Item filledBucketPreview) {
 		super("Fluid Containers", 0, 57, GuiTextures.MAGENTA_TAB, Items.BUCKET);
 		this.container = container;
 		this.fluidConatinerInventoryIndecies = new ArrayList<Integer>();

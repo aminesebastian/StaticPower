@@ -2,6 +2,7 @@ package theking530.staticpower.init;
 
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.items.upgrades.BaseCentrifugeUpgrade;
 import theking530.staticpower.items.upgrades.BaseOutputMultiplierUpgrade;
 import theking530.staticpower.items.upgrades.BasePowerUpgrade;
 import theking530.staticpower.items.upgrades.BaseQuarryingUpgrade;
@@ -43,6 +44,11 @@ public class ModUpgrades {
 	public static BaseTankUpgrade EnergizedTankUpgrade;
 	public static BaseTankUpgrade LumumTankUpgrade;
 
+	public static BaseCentrifugeUpgrade BasicCentrifugeUpgrade;
+	public static BaseCentrifugeUpgrade StaticCentrifugeUpgrade;
+	public static BaseCentrifugeUpgrade EnergizedCentrifugeUpgrade;
+	public static BaseCentrifugeUpgrade LumumCentrifugeUpgrade;
+
 	public static BaseQuarryingUpgrade StaticQuarryingUpgrade;
 	public static BaseQuarryingUpgrade EnergizedQuarryingUpgrade;
 	public static BaseQuarryingUpgrade LumumQuarryingUpgrade;
@@ -76,6 +82,11 @@ public class ModUpgrades {
 		StaticPowerRegistry.preRegisterItem(StaticTankUpgrade = new BaseTankUpgrade("upgrade_tank_static", StaticPowerTiers.STATIC));
 		StaticPowerRegistry.preRegisterItem(EnergizedTankUpgrade = new BaseTankUpgrade("upgrade_tank_energized", StaticPowerTiers.ENERGIZED));
 		StaticPowerRegistry.preRegisterItem(LumumTankUpgrade = new BaseTankUpgrade("upgrade_tank_lumum", StaticPowerTiers.LUMUM));
+
+		StaticPowerRegistry.preRegisterItem(BasicCentrifugeUpgrade = new BaseCentrifugeUpgrade("upgrade_centrifuge_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterItem(StaticCentrifugeUpgrade = new BaseCentrifugeUpgrade("upgrade_centrifuge_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterItem(EnergizedCentrifugeUpgrade = new BaseCentrifugeUpgrade("upgrade_centrifuge_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterItem(LumumCentrifugeUpgrade = new BaseCentrifugeUpgrade("upgrade_centrifuge_lumum", StaticPowerTiers.LUMUM));
 
 		StaticPowerRegistry.preRegisterItem(StaticQuarryingUpgrade = new BaseQuarryingUpgrade("upgrade_quarrying_static", StaticPowerTiers.STATIC));
 		StaticPowerRegistry.preRegisterItem(EnergizedQuarryingUpgrade = new BaseQuarryingUpgrade("upgrade_quarrying_energized", StaticPowerTiers.ENERGIZED));

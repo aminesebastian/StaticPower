@@ -23,9 +23,9 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 
 	private Runnable processingStartedCallback;
 	private boolean shouldControlOnBlockState;
-	private UpgradeInventoryComponent upgradeInventory;
-	private EnergyStorageComponent powerComponent;
-	private RedstoneControlComponent redstoneControlComponent;
+	protected UpgradeInventoryComponent upgradeInventory;
+	protected EnergyStorageComponent powerComponent;
+	protected RedstoneControlComponent redstoneControlComponent;
 
 	@UpdateSerialize
 	protected String processingErrorMessage;
@@ -52,21 +52,30 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 	private float processingSpeedUpgradeMultiplier;
 
 	@UpdateSerialize
-	private int powerUsage;
+	protected int powerUsage;
 	@SaveSerialize
-	private int defaultPowerUsage;
+	protected int defaultPowerUsage;
 	@SaveSerialize
-	private boolean hasProcessingPowerCost;
+	protected boolean hasProcessingPowerCost;
 
 	@UpdateSerialize
-	private int completedPowerUsage;
+	protected int completedPowerUsage;
 	@SaveSerialize
-	private int completedDefaultPowerUsage;
+	protected int completedDefaultPowerUsage;
 	@SaveSerialize
-	private boolean hasCompletedPowerCost;
+	protected boolean hasCompletedPowerCost;
 
-	@SaveSerialize
-	private float powerUpgradeMultiplier;
+	/**
+	 * The power multiplier as calculated from the speed upgrade.
+	 */
+	@UpdateSerialize
+	private float powerUsageIncreaseMultiplier;
+	/**
+	 * External power usage multiplier that can be used by implementers to set a
+	 * power multiple. Defaults to 1.0f;
+	 */
+	@UpdateSerialize
+	private float powerMultiplier;
 
 	@SaveSerialize
 	private final boolean serverOnly;
@@ -91,10 +100,11 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		this.performedWorkLastTick = false;
 		this.processingSpeedUpgradeMultiplier = 1.0f;
 		this.hasProcessingPowerCost = false;
-		this.powerUpgradeMultiplier = 1.0f;
+		this.powerUsageIncreaseMultiplier = 1.0f;
 		this.hasCompletedPowerCost = false;
 		this.processingErrorMessage = "";
 		this.processingStoppedDueToError = false;
+		this.powerMultiplier = 1.0f;
 	}
 
 	public MachineProcessingComponent(String name, int processingTime, @Nonnull Supplier<ProcessingCheckState> processingEndedCallback, boolean serverOnly) {
@@ -115,14 +125,21 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		// Reset the performed work last tick.
 		performedWorkLastTick = false;
 
+		// Check the redstone state.
+		ProcessingCheckState redstoneState = checkRedstoneState();
+		if (!redstoneState.isOk()) {
+			processingStoppedDueToError = true;
+			processingErrorMessage = redstoneState.getErrorMessage();
+		}
+
 		// If this is when we first start processing, raise the start processing event.
-		if (!hasStarted) {
+		if (!hasStarted && !processingStoppedDueToError) {
 			// Get start check.
-			ProcessingCheckState machineComponentStartState = passesAllProcessingStartChecks();
-			if (!machineComponentStartState.isOk()) {
+			ProcessingCheckState machineComponentStartState = checkProcessingStartState();
+			if (machineComponentStartState.isError()) {
 				processingStoppedDueToError = true;
 				processingErrorMessage = machineComponentStartState.getErrorMessage();
-			} else {
+			} else if (machineComponentStartState.isOk()) {
 				// Get the start state.
 				ProcessingCheckState processingState = canStartProcessingCallback.get();
 
@@ -135,15 +152,14 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 					processingErrorMessage = processingState.getErrorMessage();
 				}
 			}
-
 		}
 
 		// Set the can continue processing state if we have already started. This is to
 		// allow for responsive stopping of processing if needed.
-		if (hasStarted) {
+		if (hasStarted && !processingStoppedDueToError) {
 			// Check to see if we can continue processing.
-			ProcessingCheckState machineComponentProcessingCheck = passesAllProcessingChecks();
-			if (machineComponentProcessingCheck.isOk()) {
+			ProcessingCheckState checkPowerRequirements = checkPowerRequirements();
+			if (checkPowerRequirements.isOk()) {
 				// Get the continue state.
 				ProcessingCheckState continueState = canContinueProcessingCallback.get();
 
@@ -164,12 +180,14 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 					processingStoppedDueToError = true;
 				}
 			} else {
-				processing = false;
+				processingErrorMessage = checkPowerRequirements.getErrorMessage();
+				processingStoppedDueToError = false;
+				processing = true;
 			}
 		}
 
 		// If we're currently processing.
-		if (processing) {
+		if (processing && !processingStoppedDueToError) {
 			// Reset the off timer.
 			blockStateOffTimer = 0;
 
@@ -183,7 +201,7 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 
 			// Use power if requested to.
 			if (hasProcessingPowerCost && powerComponent != null) {
-				powerComponent.getStorage().extractEnergy(powerUsage, false);
+				powerComponent.getStorage().extractEnergy(getPowerUsage(), false);
 			}
 
 			performedWorkLastTick = true;
@@ -196,7 +214,7 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 				if (completedState.isOk()) {
 					// Use the complete power if requested to.
 					if (hasCompletedPowerCost && powerComponent != null) {
-						powerComponent.useBulkPower(completedPowerUsage);
+						powerComponent.useBulkPower(getCompletedPowerUsage());
 					}
 				}
 				if (!completedState.isError()) {
@@ -354,23 +372,32 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 	public MachineProcessingComponent setProcessingPowerUsage(int power) {
 		hasProcessingPowerCost = true;
 		defaultPowerUsage = power;
-		powerUsage = (int) (defaultPowerUsage * powerUpgradeMultiplier);
+		powerUsage = (int) (defaultPowerUsage * powerUsageIncreaseMultiplier);
 		return this;
 	}
 
 	public MachineProcessingComponent setCompletedPowerUsage(int power) {
 		hasCompletedPowerCost = true;
 		completedDefaultPowerUsage = power;
-		completedPowerUsage = (int) (completedDefaultPowerUsage * powerUpgradeMultiplier);
+		completedPowerUsage = (int) (completedDefaultPowerUsage * powerUsageIncreaseMultiplier);
 		return this;
 	}
 
+	public MachineProcessingComponent setPowerUsageMuiltiplier(float multiplier) {
+		powerMultiplier = multiplier;
+		return this;
+	}
+
+	public float getPowerUsageMultiplier() {
+		return powerMultiplier;
+	}
+
 	public int getPowerUsage() {
-		return powerUsage;
+		return (int) (powerUsage * powerMultiplier);
 	}
 
 	public int getCompletedPowerUsage() {
-		return completedPowerUsage;
+		return (int) (completedPowerUsage * powerMultiplier);
 	}
 
 	public MachineProcessingComponent disableProcessingPowerUsage() {
@@ -400,10 +427,10 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		// new processing speeds.
 		if (speedUpgrade.isEmpty()) {
 			processingSpeedUpgradeMultiplier = 1.0f;
-			powerUpgradeMultiplier = 1.0f;
+			powerUsageIncreaseMultiplier = 1.0f;
 		} else {
 			processingSpeedUpgradeMultiplier = (1.0f + speedUpgrade.getTier().getProcessingSpeedUpgrade()) * speedUpgrade.getUpgradeWeight();
-			powerUpgradeMultiplier = (1.0f + speedUpgrade.getTier().getProcessingSpeedPowerCost()) * speedUpgrade.getUpgradeWeight();
+			powerUsageIncreaseMultiplier = (1.0f + speedUpgrade.getTier().getProcessingSpeedPowerCost()) * speedUpgrade.getUpgradeWeight();
 		}
 
 		// Set the processing time.
@@ -413,8 +440,8 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		}
 
 		// Set the power usages.
-		powerUsage = (int) (defaultPowerUsage * powerUpgradeMultiplier);
-		completedPowerUsage = (int) (completedDefaultPowerUsage * powerUpgradeMultiplier);
+		powerUsage = (int) (defaultPowerUsage * powerUsageIncreaseMultiplier);
+		completedPowerUsage = (int) (completedDefaultPowerUsage * powerUsageIncreaseMultiplier);
 	}
 
 	/**
@@ -444,7 +471,7 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		return processingErrorMessage;
 	}
 
-	public void setProcessingErrorMessage(String errorMessage) {
+	protected void setProcessingErrorMessage(String errorMessage) {
 		processingErrorMessage = errorMessage;
 	}
 
@@ -464,13 +491,15 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		return this;
 	}
 
-	protected ProcessingCheckState passesAllProcessingStartChecks() {
-		ProcessingCheckState processingCheck = this.passesAllProcessingChecks();
+	protected ProcessingCheckState checkProcessingStartState() {
+		// Check power states.
+		ProcessingCheckState processingCheck = checkPowerRequirements();
 		if (!processingCheck.isOk()) {
 			return processingCheck;
 		}
+
 		// Check the processing power cost for the whole process.
-		int powerCost = powerUsage * processingTime;
+		int powerCost = getPowerUsage() * processingTime;
 		if (hasProcessingPowerCost && !powerComponent.hasEnoughPower(powerCost)) {
 			int missingPower = powerCost - powerComponent.getStorage().getEnergyStored();
 			return ProcessingCheckState.error(new StringTextComponent("This recipe requires an additional ").appendSibling(GuiTextUtilities.formatEnergyToString(missingPower)).getFormattedText());
@@ -479,24 +508,27 @@ public class MachineProcessingComponent extends AbstractTileEntityComponent {
 		return ProcessingCheckState.ok();
 	}
 
-	protected ProcessingCheckState passesAllProcessingChecks() {
+	protected ProcessingCheckState checkPowerRequirements() {
 		// Check the processing power cost.
-		if (hasProcessingPowerCost && !powerComponent.hasEnoughPower(powerUsage)) {
+		if (hasProcessingPowerCost && !powerComponent.hasEnoughPower(getPowerUsage())) {
 			return ProcessingCheckState.error(new StringTextComponent("Not Enough Power!").getFormattedText());
 		}
 		// Check the processing power rate.
-		if (hasProcessingPowerCost && powerComponent.getStorage().getMaxExtract() < powerUsage) {
-			return ProcessingCheckState.error(new StringTextComponent("Recipe's power per tick requirement (").appendSibling(GuiTextUtilities.formatEnergyRateToString(powerUsage))
+		if (hasProcessingPowerCost && powerComponent.getStorage().getMaxExtract() < getPowerUsage()) {
+			return ProcessingCheckState.error(new StringTextComponent("Recipe's power per tick requirement (").appendSibling(GuiTextUtilities.formatEnergyRateToString(getPowerUsage()))
 					.appendText(") is larger than the max for this machine!").getFormattedText());
 		}
+
 		// Check the completion power cost.
-		if (hasCompletedPowerCost && !powerComponent.hasEnoughPower(completedPowerUsage)) {
+		if (hasCompletedPowerCost && !powerComponent.hasEnoughPower(getCompletedPowerUsage())) {
 			return ProcessingCheckState.error(new StringTextComponent("Not Enough Power!").getFormattedText());
 		}
-		// Check the processing power rate.
-		if (hasProcessingPowerCost && powerComponent.getStorage().getEnergyStored() < completedPowerUsage) {
-			return ProcessingCheckState.error(new StringTextComponent("Max Power Draw Too Log!").getFormattedText());
-		}
+
+		// If we made it this far, return true.
+		return ProcessingCheckState.ok();
+	}
+
+	protected ProcessingCheckState checkRedstoneState() {
 		// Check the redstone control component.
 		if (redstoneControlComponent != null && !redstoneControlComponent.passesRedstoneCheck()) {
 			return ProcessingCheckState.error(new StringTextComponent("Redstone Control Mode Not Satisfied.").getFormattedText());

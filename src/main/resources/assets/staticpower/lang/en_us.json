@@ -264,6 +264,11 @@
 	"item.staticpower.upgrade_tank_static": "Static Tank Upgrade",
 	"item.staticpower.upgrade_tank_energized": "Energized Tank Upgrade",
 	"item.staticpower.upgrade_tank_lumum": "Lumum Tank Upgrade",
+	"item.staticpower.upgrade_centrifuge_basic": "Basic Centrifuge Upgrade",
+	"item.staticpower.upgrade_centrifuge_advanced": "Advanced Centrifuge Upgrade",
+	"item.staticpower.upgrade_centrifuge_static": "Static Centrifuge Upgrade",
+	"item.staticpower.upgrade_centrifuge_energized": "Energized Centrifuge Upgrade",
+	"item.staticpower.upgrade_centrifuge_lumum": "Lumum Centrifuge Upgrade",
 	"item.staticpower.upgrade_experience_vacuum": "Experience Vacuum Upgrade",
 	"item.staticpower.upgrade_teleport": "Teleport Upgrade",
 	"item.staticpower.upgrade_digistore_void": "Digistore Void Upgrade",
@@ -452,6 +457,7 @@
 	"gui.staticpower.seconds": "Seconds",
 	"gui.staticpower.seconds.short": "s",
 	"gui.staticpower.max": "Max",
+	"gui.staticpower.rpm": "RPM",
 	"gui.staticpower.remaining": "Remaining",
 	"gui.staticpower.output_chance": "Output Chance"
 }

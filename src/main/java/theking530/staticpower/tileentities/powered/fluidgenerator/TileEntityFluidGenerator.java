@@ -16,8 +16,8 @@ import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent.ProcessingCheckState;
-import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent;
-import theking530.staticpower.tileentities.components.fluids.FluidContainerComponent.FluidContainerInteractionMode;
+import theking530.staticpower.tileentities.components.fluids.FluidContainerInventoryComponent;
+import theking530.staticpower.tileentities.components.fluids.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.components.fluids.FluidInputServoComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
@@ -31,7 +31,7 @@ public class TileEntityFluidGenerator extends TileEntityMachine {
 	public final MachineProcessingComponent processingComponent;
 	public final InventoryComponent fluidContainerInventory;
 	public final FluidTankComponent fluidTankComponent;
-	public final FluidContainerComponent fluidContainerComponent;
+	public final FluidContainerInventoryComponent fluidContainerComponent;
 	public final LoopingSoundComponent generatingSoundComponent;
 
 	public TileEntityFluidGenerator() {
@@ -51,7 +51,7 @@ public class TileEntityFluidGenerator extends TileEntityMachine {
 			return getRecipe(fluidStack).isPresent();
 		}).setCapabilityExposedModes(MachineSideMode.Input));
 		registerComponent(new FluidInputServoComponent("InputServo", 20, fluidTankComponent, MachineSideMode.Input));
-		registerComponent(fluidContainerComponent = new FluidContainerComponent("FluidContainerServo", fluidTankComponent, fluidContainerInventory, 0, 1).setMode(FluidContainerInteractionMode.DRAIN));
+		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent, fluidContainerInventory, 0, 1).setMode(FluidContainerInteractionMode.DRAIN));
 
 		// Don't allow this to receive power from external sources.
 		this.energyStorage.setCapabiltiyFilter((amount, side, action) -> {

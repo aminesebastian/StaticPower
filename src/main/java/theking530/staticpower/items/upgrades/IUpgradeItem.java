@@ -4,7 +4,7 @@ import theking530.staticpower.data.StaticPowerTier;
 
 public interface IUpgradeItem {
 	public enum UpgradeType {
-		SPEED, POWER, TANK, RANGE, OUTPUT_MULTIPLIER, SPECIAL
+		SPEED, POWER, TANK, RANGE, OUTPUT_MULTIPLIER, CENTRIFUGE, SPECIAL
 	};
 
 	public StaticPowerTier getTier();

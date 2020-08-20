@@ -17,6 +17,7 @@ import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent.ProcessingCheckState;
+import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
@@ -34,7 +35,7 @@ public class TileEntityAutoCraftingTable extends TileEntityMachine {
 	public final InventoryComponent patternInventory;
 
 	public final InventoryComponent inputInventory;
-	public final InventoryComponent batteryInventory;
+	public final BatteryInventoryComponent batteryInventory;
 	public final InventoryComponent outputInventory;
 	protected final ItemStack[] filterInventory;
 
@@ -42,10 +43,10 @@ public class TileEntityAutoCraftingTable extends TileEntityMachine {
 		super(ModTileEntityTypes.AUTO_CRAFTING_TABLE);
 		registerComponent(patternInventory = new InventoryComponent("PatternInventory", 9, MachineSideMode.Never));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 9, MachineSideMode.Never));
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 9, MachineSideMode.Input).setSlotsLockable(true));
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 9, MachineSideMode.Input).setSlotsLockable(true).setShiftClickEnabled(true));
 
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
-		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryInventory", energyStorage.getStorage()));
 
 		registerComponent(
 				moveComponent = new MachineProcessingComponent("MoveComponent", DEFAULT_MOVING_TIME, this::canMoveFromInputToProcessing, () -> ProcessingCheckState.ok(), this::movingCompleted, true)

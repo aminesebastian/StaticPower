@@ -10,12 +10,13 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 import theking530.staticpower.tileentities.TileEntityMachine;
-import theking530.staticpower.tileentities.components.control.BatteryInventoryComponent;
+import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
+import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityChargingStation extends TileEntityMachine {
@@ -27,14 +28,22 @@ public class TileEntityChargingStation extends TileEntityMachine {
 	public TileEntityChargingStation() {
 		super(ModTileEntityTypes.CHARGING_STATION);
 
-		registerComponent(unchargedInventory = new InventoryComponent("unchargedInventory", 4, MachineSideMode.Input));
+		// Add the input inventory that only takes energy storing items.
+		registerComponent(unchargedInventory = new InventoryComponent("unchargedInventory", 4, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
+			public boolean canInsertItem(int slot, ItemStack stack) {
+				return EnergyHandlerItemStackUtilities.isEnergyContainer(stack);
+			}
+		}));
+
+		// Add the rest of the inventories.
 		registerComponent(chargedInventory = new InventoryComponent("chargedInventory", 4, MachineSideMode.Output));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
-		
-		registerComponent(new OutputServoComponent("OutputServo", 1, chargedInventory, 0, 1, 2, 3));
-		registerComponent(new InputServoComponent("InputServo", 2, unchargedInventory, 0, 1, 2, 3));
-		
+
+		// Create the item i/o servos.
+		registerComponent(new OutputServoComponent("OutputServo", chargedInventory));
+		registerComponent(new InputServoComponent("InputServo", unchargedInventory));
+
 		// Set the energy storage upgrade inventory.
 		energyStorage.setUpgradeInventory(upgradesInventory);
 	}
@@ -42,24 +51,26 @@ public class TileEntityChargingStation extends TileEntityMachine {
 	@Override
 	public void process() {
 		if (!getWorld().isRemote) {
-			// Capture the count of chargeable items.
-			int count = 0;
-			for (int i = 0; i < unchargedInventory.getSlots(); i++) {
-				ItemStack stack = unchargedInventory.getStackInSlot(i);
-				if (stack != ItemStack.EMPTY && EnergyHandlerItemStackUtilities.isEnergyContainer(stack)) {
-					if (EnergyHandlerItemStackUtilities.getEnergyStored(stack) < EnergyHandlerItemStackUtilities.getEnergyStorageCapacity(stack)) {
-						count++;
-					}
-				}
-			}
-
-			// Charge up to four items simultanously.
+			// Charge up to four items simultaneously.
 			if (energyStorage.getStorage().getEnergyStored() > 0) {
+				// Capture the count of chargeable items.
+				int count = getCountOfChargeableItems();
+
+				// If there are no items, return early.
+				if (count == 0) {
+					return;
+				}
+
+				// Get the amount of power to apply to each item.
+				int maxOutput = energyStorage.getStorage().getCurrentMaximumPowerOutput() / count;
+
+				// Attempt to charge each item.
 				for (int i = 0; i < unchargedInventory.getSlots(); i++) {
+					// Get the item to charge.
 					ItemStack stack = unchargedInventory.getStackInSlot(i);
+					// If it's not empty and is an energy storing item.
 					if (stack != ItemStack.EMPTY && EnergyHandlerItemStackUtilities.isEnergyContainer(stack)) {
 						if (EnergyHandlerItemStackUtilities.getEnergyStored(stack) < EnergyHandlerItemStackUtilities.getEnergyStorageCapacity(stack)) {
-							int maxOutput = energyStorage.getStorage().getCurrentMaximumPowerOutput() / count;
 							int charged = EnergyHandlerItemStackUtilities.addEnergyToItemstack(stack, maxOutput, false);
 							energyStorage.useBulkPower(charged);
 						} else {
@@ -89,6 +100,20 @@ public class TileEntityChargingStation extends TileEntityMachine {
 				chargedInventory.insertItem(i, stack, false);
 			}
 		}
+	}
+
+	public int getCountOfChargeableItems() {
+		// Capture the count of chargeable items.
+		int count = 0;
+		for (int i = 0; i < unchargedInventory.getSlots(); i++) {
+			ItemStack stack = unchargedInventory.getStackInSlot(i);
+			if (stack != ItemStack.EMPTY && EnergyHandlerItemStackUtilities.isEnergyContainer(stack)) {
+				if (EnergyHandlerItemStackUtilities.getEnergyStored(stack) < EnergyHandlerItemStackUtilities.getEnergyStorageCapacity(stack)) {
+					count++;
+				}
+			}
+		}
+		return count;
 	}
 
 	@Override

@@ -24,6 +24,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
 import theking530.staticpower.tileentities.components.control.SideConfigurationComponent;
+import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 import theking530.staticpower.utilities.ItemUtilities;
@@ -44,6 +45,11 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 	private boolean shouldDropContentsOnBreak;
 	private boolean areSlotsLockable;
 
+	@UpdateSerialize
+	private boolean isShiftClickEnabled;
+	@UpdateSerialize
+	private int shiftClickPriority;
+
 	public InventoryComponent(String name, int size) {
 		this(name, size, MachineSideMode.Never);
 	}
@@ -56,6 +62,7 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 		this.shouldDropContentsOnBreak = true;
 		this.stacks = NonNullList.withSize(size, ItemStack.EMPTY);
 		this.areSlotsLockable = false;
+		this.shiftClickPriority = 0;
 		this.lockedSlots = new ArrayList<ItemStack>();
 		for (int i = 0; i < size; i++) {
 			lockedSlots.add(null);
@@ -67,6 +74,49 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 		} else if (mode.isInputMode()) {
 			setCapabilityExtractEnabled(false);
 		}
+	}
+
+	/**
+	 * Gets the priority when inserting into this inventory through a shift click.
+	 * The order is evaluated highest to lowest priority.
+	 * 
+	 * @return
+	 */
+	public int getShiftClickPriority() {
+		return shiftClickPriority;
+	}
+
+	/**
+	 * Sets the priority when inserting into this inventory through a shift click.
+	 * The order is evaluated highest to lowest priority.
+	 * 
+	 * @param priority
+	 * @return
+	 */
+	public InventoryComponent setShiftClickPriority(int priority) {
+		this.shiftClickPriority = priority;
+		return this;
+	}
+
+	/**
+	 * Indicates that this component should receive shift click items in the GUI.
+	 * 
+	 * @return
+	 */
+	public boolean isShiftClickEnabled() {
+		return isShiftClickEnabled;
+	}
+
+	/**
+	 * Indicates whether or not this component should receive shift click items in
+	 * the GUI.
+	 * 
+	 * @return
+	 */
+
+	public InventoryComponent setShiftClickEnabled(boolean isShiftClickEnabled) {
+		this.isShiftClickEnabled = isShiftClickEnabled;
+		return this;
 	}
 
 	/**
@@ -83,7 +133,7 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 	 * Indicates whether or not this inventory should drop its contents when broken.
 	 * 
 	 * @param shouldDropContentsOnBreak
-	 * @return 
+	 * @return
 	 */
 	public InventoryComponent setShouldDropContentsOnBreak(boolean shouldDropContentsOnBreak) {
 		this.shouldDropContentsOnBreak = shouldDropContentsOnBreak;
@@ -123,6 +173,7 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 
 	@Override
 	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+		super.serializeUpdateNbt(nbt, fromUpdate);
 		ListNBT itemTagList = new ListNBT();
 		for (int i = 0; i < stacks.size(); i++) {
 			if (!stacks.get(i).isEmpty()) {
@@ -148,6 +199,7 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 
 	@Override
 	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+		super.deserializeUpdateNbt(nbt, fromUpdate);
 		setSize(nbt.contains("Size", Constants.NBT.TAG_INT) ? nbt.getInt("Size") : stacks.size());
 		ListNBT tagList = nbt.getList("Items", Constants.NBT.TAG_COMPOUND);
 		for (int i = 0; i < tagList.size(); i++) {

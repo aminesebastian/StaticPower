@@ -20,6 +20,10 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 
 	public static final int MOVE_TIME = 5;
 
+	/**
+	 * This function is called both when checking to see if we can move the inputs
+	 * and also when starting the processing.
+	 */
 	private final Function<T, ProcessingCheckState> canStartProcessingRecipe;
 	private final Function<T, ProcessingCheckState> recipeProcessingCompleted;
 	private final Function<RecipeProcessingLocation, RecipeMatchParameters> getMatchParameters;
@@ -38,9 +42,6 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 		// Capture the recipe type.
 		this.recipeType = recipeType;
 
-		// Set the started callback.
-		this.setProcessingStartedCallback(this::processingStarted);
-
 		// Set the recipe callbacks.
 		this.canStartProcessingRecipe = canProcessRecipe;
 		this.canContinueProcessingRecipe = canProcessRecipe;
@@ -48,7 +49,7 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 		this.performInputMove = performInputMove;
 
 		// Use the default callbacks internally.
-		this.canStartProcessingCallback = this::canStartProcessing;
+		this.canStartProcessingCallback = () -> ProcessingCheckState.ok();// We can just return true here because we are overriding the parent's check.
 		this.canContinueProcessingCallback = this::canContinueProcessing;
 		this.processingEndedCallback = this::processingCompleted;
 		this.getMatchParameters = getMatchParameters;
@@ -72,8 +73,12 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 		// If we can't move the inputs to the internal, nothing.
 		ProcessingCheckState internalMoveState = canMoveInputsToInternal();
 		if (!internalMoveState.isOk()) {
-			this.setProcessingErrorMessage(internalMoveState.getErrorMessage());
+			setProcessingErrorMessage(internalMoveState.getErrorMessage());
+			moveTimer = 0;
+			processingStoppedDueToError = true;
 			return;
+		}else {
+			processingStoppedDueToError = false;
 		}
 
 		// Increment the move timer.
@@ -88,63 +93,78 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 		}
 	}
 
-	public ProcessingCheckState canMoveInputsToInternal() {
-		Optional<T> recipe = getRecipe(getMatchParameters.apply(RecipeProcessingLocation.INPUT));
-		ProcessingCheckState machineProcessingState = passesAllProcessingStartChecks();
-		if (machineProcessingState.isOk() && recipe.isPresent()) {
-			return canStartProcessingRecipe.apply(recipe.get());
-		}
-		return machineProcessingState;
-	}
-
-	protected ProcessingCheckState canStartProcessing() {
-		// Get the recipe.
-		RecipeMatchParameters matchParameters = getMatchParameters.apply(RecipeProcessingLocation.INTERNAL);
-		Optional<T> recipe = getRecipe(matchParameters);
-
-		// If its present, check to see if we can process that recipe, otherwise return
-		// false.
-		if (recipe.isPresent()) {
-			return canStartProcessingRecipe.apply(recipe.get());
-		} else {
+	/**
+	 * Checks to see if we can move the inputs to the internal inventory for
+	 * processing. This is a separate module in this component so it peforms many
+	 * duplicate checks. Users could let this do all the work OR manually move items
+	 * to the internal inventory. In that case, the processing needs to perform some
+	 * checks.
+	 * 
+	 * @return
+	 */
+	protected ProcessingCheckState canMoveInputsToInternal() {
+		// Attempt to get the recipe. If it does not exist, skip.
+		Optional<T> recipe = getRecipe(RecipeProcessingLocation.INPUT);
+		if (!recipe.isPresent()) {
 			return ProcessingCheckState.skip();
 		}
+
+		// If the recipe is valid, set the usage stats.
+		if (recipe.get() instanceof AbstractMachineRecipe) {
+			AbstractMachineRecipe machineRecipe = (AbstractMachineRecipe) recipe.get();
+			setMaxProcessingTime(machineRecipe.getProcessingTime());
+			setProcessingPowerUsage(machineRecipe.getPowerCost());
+		}
+
+		// Check power states.
+		ProcessingCheckState processingCheck = checkPowerRequirements();
+		if (!processingCheck.isOk()) {
+			return processingCheck;
+		}
+
+		// If we made it this far, check the start processing callback.
+		return canStartProcessingRecipe.apply(recipe.get());
 	}
 
-	protected void processingStarted() {
-		// Get the recipe.
-		RecipeMatchParameters matchParameters = getMatchParameters.apply(RecipeProcessingLocation.INTERNAL);
-		Optional<T> recipe = getRecipe(matchParameters);
-
-		// If this is a machine recipe, set the power usage and processing time. If
-		// there is no recipe, do nothing.
-		if (recipe.isPresent()) {
-			if (recipe.get() instanceof AbstractMachineRecipe) {
-				AbstractMachineRecipe machineRecipe = (AbstractMachineRecipe) recipe.get();
-				setMaxProcessingTime(machineRecipe.getProcessingTime());
-				setProcessingPowerUsage(machineRecipe.getPowerCost());
-			}
+	@Override
+	protected ProcessingCheckState checkProcessingStartState() {
+		// Attempt to get the recipe. If it does not exist, skip.
+		Optional<T> recipe = getRecipe(RecipeProcessingLocation.INTERNAL);
+		if (!recipe.isPresent()) {
+			return ProcessingCheckState.skip();
 		}
+
+		// If the recipe is valid, set the usage stats. We do this again here just in
+		// case someone manually moved to the internal inventory.
+		if (recipe.get() instanceof AbstractMachineRecipe) {
+			AbstractMachineRecipe machineRecipe = (AbstractMachineRecipe) recipe.get();
+			setMaxProcessingTime(machineRecipe.getProcessingTime());
+			setProcessingPowerUsage(machineRecipe.getPowerCost());
+		}
+
+		// Check the super call.
+		ProcessingCheckState superCall = super.checkProcessingStartState();
+		if (!superCall.isOk()) {
+			return superCall;
+		}
+
+		// If we made it this far, check the start processing callback.
+		return canStartProcessingRecipe.apply(recipe.get());
 	}
 
 	protected ProcessingCheckState canContinueProcessing() {
-		// Get the recipe.
-		RecipeMatchParameters matchParameters = getMatchParameters.apply(RecipeProcessingLocation.INTERNAL);
-		Optional<T> recipe = getRecipe(matchParameters);
-
-		// Make sure we can continue processing the recipe. If there is no recipe, just
-		// return true so we don't get stuck in a loop. This is an edge case where a
-		// user may save mid processing, remove the recipe, and then reload.
-		if (recipe.isPresent()) {
-			return canContinueProcessingRecipe.apply(recipe.get());
+		// Get the recipe. Skip if it does not exist.
+		Optional<T> recipe = getRecipe(RecipeProcessingLocation.INTERNAL);
+		if (!recipe.isPresent()) {
+			return ProcessingCheckState.ok();
 		}
-		return ProcessingCheckState.ok();
+		// Now check the callback.
+		return canContinueProcessingRecipe.apply(recipe.get());
 	}
 
 	protected ProcessingCheckState processingCompleted() {
 		// Get the recipe.
-		RecipeMatchParameters matchParameters = getMatchParameters.apply(RecipeProcessingLocation.INTERNAL);
-		Optional<T> recipe = getRecipe(matchParameters);
+		Optional<T> recipe = getRecipe(RecipeProcessingLocation.INTERNAL);
 
 		// If there is a recipe, see if we can complete it. If there is no recipe, just
 		// return true so we don't get stuck in a loop. This is an edge case where a
@@ -160,9 +180,9 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 		return this;
 	}
 
-	public Optional<T> getRecipe() {
+	private Optional<T> getRecipe(RecipeProcessingLocation location) {
 		// Get the recipe.
-		RecipeMatchParameters matchParameters = getMatchParameters.apply(RecipeProcessingLocation.INPUT);
+		RecipeMatchParameters matchParameters = getMatchParameters.apply(location);
 		return getRecipe(matchParameters);
 	}
 

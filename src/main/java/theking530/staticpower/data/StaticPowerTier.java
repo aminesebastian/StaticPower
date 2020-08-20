@@ -60,6 +60,20 @@ public class StaticPowerTier {
 	private float outputMultiplierUpgrade;
 	private float outputMultiplierPowerCostUpgrade;
 
+	/********************
+	 * Centrifuge Upgrade
+	 ********************/
+	private int maxCentrifugeSpeedUpgrade;
+	private float centrifugeUpgradedPowerIncrease;
+
+	public int getMaxCentrifugeSpeedUpgrade() {
+		return maxCentrifugeSpeedUpgrade;
+	}
+
+	public float getCentrifugeUpgradedPowerIncrease() {
+		return centrifugeUpgradedPowerIncrease;
+	}
+
 	public float getOutputMultiplierPowerCostUpgrade() {
 		return outputMultiplierPowerCostUpgrade;
 	}

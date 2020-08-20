@@ -21,6 +21,8 @@ import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities.
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class InputServoComponent extends AbstractTileEntityComponent {
+	public static final int DEFAULT_INPUT_TIME = 5;
+
 	private int inputTimer;
 	private int inputTime;
 	private InventoryComponent inventory;
@@ -56,6 +58,10 @@ public class InputServoComponent extends AbstractTileEntityComponent {
 		this(name, inputTime, inventory, MachineSideMode.Input, slots);
 	}
 
+	public InputServoComponent(String name, InventoryComponent inventory, int... slots) {
+		this(name, DEFAULT_INPUT_TIME, inventory, MachineSideMode.Input, slots);
+	}
+
 	public MachineSideMode getMode() {
 		return inputMode;
 	}
@@ -66,7 +72,7 @@ public class InputServoComponent extends AbstractTileEntityComponent {
 		if (!isEnabled()) {
 			return;
 		}
-		
+
 		// If we have an empty inventory, do nothing.
 		if (inventory.getSlots() == 0) {
 			return;

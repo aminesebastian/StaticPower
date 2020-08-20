@@ -14,7 +14,7 @@ import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.utilities.InventoryUtilities;
 
-public class FluidContainerComponent extends AbstractTileEntityComponent {
+public class FluidContainerInventoryComponent extends AbstractTileEntityComponent {
 	public enum FluidContainerInteractionMode {
 		/**
 		 * Fills the provided container with the fluid in the fluid handler.
@@ -46,7 +46,7 @@ public class FluidContainerComponent extends AbstractTileEntityComponent {
 	private int primarySlot;
 	private int secondarySlot;
 
-	public FluidContainerComponent(String name, IFluidHandler fluidHandler, IItemHandler primaryInventory, int primarySlot, IItemHandler secondaryInventory, int secondarySlot) {
+	public FluidContainerInventoryComponent(String name, IFluidHandler fluidHandler, IItemHandler primaryInventory, int primarySlot, IItemHandler secondaryInventory, int secondarySlot) {
 		super(name);
 		this.primaryInventory = primaryInventory;
 		this.secondaryInventory = secondaryInventory;
@@ -57,7 +57,7 @@ public class FluidContainerComponent extends AbstractTileEntityComponent {
 		fluidToContainerRate = DEFAULT_FLUID_TO_CONTAINER_RATE;
 	}
 
-	public FluidContainerComponent(String name, IFluidHandler fluidHandler, IItemHandler fluidContainerInventory, int primarySlot, int secondarySlot) {
+	public FluidContainerInventoryComponent(String name, IFluidHandler fluidHandler, IItemHandler fluidContainerInventory, int primarySlot, int secondarySlot) {
 		this(name, fluidHandler, fluidContainerInventory, primarySlot, fluidContainerInventory, secondarySlot);
 	}
 
@@ -236,7 +236,7 @@ public class FluidContainerComponent extends AbstractTileEntityComponent {
 	 * @param newMode
 	 * @return
 	 */
-	public FluidContainerComponent setMode(FluidContainerInteractionMode newMode) {
+	public FluidContainerInventoryComponent setMode(FluidContainerInteractionMode newMode) {
 		interactionMode = newMode;
 		return this;
 	}

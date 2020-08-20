@@ -32,5 +32,7 @@
 	"powerUpgrade": 5.0,
 	"powerIoUpgrade": 4.5,
 	"outputMultiplierUpgrade": 2.0,
-	"outputMultiplierPowerCostUpgrade": 1.75
+	"outputMultiplierPowerCostUpgrade": 1.75,
+	"maxCentrifugeSpeedUpgrade": 1000,
+	"centrifugeUpgradedPowerIncrease": 4.0
 }

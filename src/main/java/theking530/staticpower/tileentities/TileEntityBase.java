@@ -3,6 +3,7 @@ package theking530.staticpower.tileentities;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -265,37 +266,6 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		return oldState.getBlock() != newState.getBlock();
 	}
 
-	/* Serializeable */
-	public CompoundNBT serializeOnBroken(CompoundNBT nbt) {
-		write(nbt);
-		return nbt;
-	}
-
-	public void deserializeOnPlaced(CompoundNBT nbt, World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-		read(nbt);
-	}
-
-	@Override
-	public boolean shouldSerializeWhenBroken() {
-		return true;
-	}
-
-	@Override
-	public boolean shouldDeserializeWhenPlaced(CompoundNBT nbt, World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-		return true;
-	}
-
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		for (AbstractTileEntityComponent comp : Components.values()) {
-			LazyOptional<T> capability = comp.provideCapability(cap, side);
-			if (capability.isPresent()) {
-				return capability;
-			}
-		}
-		return super.getCapability(cap, side);
-	}
-
 	/* Components */
 	/**
 	 * Registers a {@link TileEntityComponent} to this {@link TileEntity}.
@@ -421,6 +391,56 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		modes.add(MachineSideMode.Regular);
 		modes.add(MachineSideMode.Disabled);
 		return modes;
+	}
+
+	public List<InventoryComponent> getPriorityOrderedInventories() {
+		// Get all the inventories.
+		List<InventoryComponent> inventories = getComponents(InventoryComponent.class);
+
+		// Remove any inventories that are not enabled for shift click.
+		for (int i = inventories.size() - 1; i >= 0; i--) {
+			if (!inventories.get(i).isShiftClickEnabled()) {
+				inventories.remove(i);
+			}
+		}
+
+		// Sort the inventories.
+		Comparator<InventoryComponent> inventoryComparator = Comparator.comparingInt(InventoryComponent::getShiftClickPriority).reversed();
+		inventories.sort(inventoryComparator);
+
+		// Return the sorted list.
+		return inventories;
+	}
+
+	/* Serializeable */
+	public CompoundNBT serializeOnBroken(CompoundNBT nbt) {
+		write(nbt);
+		return nbt;
+	}
+
+	public void deserializeOnPlaced(CompoundNBT nbt, World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+		read(nbt);
+	}
+
+	@Override
+	public boolean shouldSerializeWhenBroken() {
+		return true;
+	}
+
+	@Override
+	public boolean shouldDeserializeWhenPlaced(CompoundNBT nbt, World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+		return true;
+	}
+
+	@Override
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+		for (AbstractTileEntityComponent comp : Components.values()) {
+			LazyOptional<T> capability = comp.provideCapability(cap, side);
+			if (capability.isPresent()) {
+				return capability;
+			}
+		}
+		return super.getCapability(cap, side);
 	}
 
 	/**

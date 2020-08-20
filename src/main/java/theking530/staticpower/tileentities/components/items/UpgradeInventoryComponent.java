@@ -11,6 +11,8 @@ import theking530.staticpower.utilities.ItemUtilities;
 public class UpgradeInventoryComponent extends InventoryComponent {
 	public UpgradeInventoryComponent(String name, int size) {
 		super(name, size, MachineSideMode.Never);
+		setShiftClickEnabled(true);
+		setShiftClickPriority(-1);
 	}
 
 	public UpgradeItemWrapper getMaxTierItemForUpgradeType(UpgradeType type) {
@@ -18,7 +20,7 @@ public class UpgradeInventoryComponent extends InventoryComponent {
 		StaticPowerTier maxTier = null;
 		ItemStack maxTierUpgradeStack = ItemStack.EMPTY;
 		int count = 0;
-		
+
 		// Check for all items in the stacks array.
 		for (ItemStack upgradeStack : stacks) {
 			// Skip empty stacks.
@@ -35,7 +37,7 @@ public class UpgradeInventoryComponent extends InventoryComponent {
 					maxTier = upgradeItem.getTier();
 					maxTierUpgradeStack = upgradeStack;
 					count += upgradeStack.getCount();
-				}else if(ItemUtilities.areItemStacksStackable(maxTierUpgradeStack, upgradeStack)) {
+				} else if (ItemUtilities.areItemStacksStackable(maxTierUpgradeStack, upgradeStack)) {
 					count += upgradeStack.getCount();
 				}
 			}

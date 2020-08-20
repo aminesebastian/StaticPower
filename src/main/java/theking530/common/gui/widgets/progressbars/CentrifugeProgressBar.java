@@ -17,10 +17,11 @@ public class CentrifugeProgressBar extends AbstractProgressBar {
 
 		Vector2D screenSpacePosition = this.getScreenSpacePosition();
 		float adjustedProgress = visualCurrentProgress / maxProgress;
-
+		float smoothedProgress = adjustedProgress * adjustedProgress;
+		
 		GL11.glPushMatrix();
 		GL11.glTranslatef(screenSpacePosition.getX() + 1.5f + getSize().getX() / 2, screenSpacePosition.getY() + getSize().getY() / 2, screenSpacePosition.getY() + getSize().getY() / 2);
-		GL11.glRotatef(-adjustedProgress * 720.0f, 0.0f, 0.0f, 1.0f);
+		GL11.glRotatef(-smoothedProgress * 3600.0f, 0.0f, 0.0f, 1.0f);
 		GL11.glTranslatef(-(screenSpacePosition.getX() + getSize().getX() / 2), -(screenSpacePosition.getY() + getSize().getY() / 2), -(screenSpacePosition.getY() + getSize().getY() / 2));
 		GuiDrawUtilities.drawTexturedModalRect(GuiTextures.CENTRIFUGE_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY(), 0.0f, 0.5f, 1.0f, 1.0f);
 		GuiDrawUtilities.drawTexturedModalRect(GuiTextures.CENTRIFUGE_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY() * adjustedProgress, 0.0f,

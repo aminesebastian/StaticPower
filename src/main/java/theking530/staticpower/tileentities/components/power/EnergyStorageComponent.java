@@ -96,6 +96,23 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 		return this;
 	}
 
+	public int getDefaultMaxInput() {
+		return defaultMaxInput;
+	}
+
+	public int getDefaultMaxOutput() {
+		return defaultMaxOutput;
+	}
+
+	public int getDefaultCapacity() {
+		return defaultCapacity;
+	}
+
+	public EnergyStorageComponent setDefaultCapacity(int defaultCapacity) {
+		this.defaultCapacity = defaultCapacity;
+		return this;
+	}
+
 	public EnergyStorageComponent setUpgradeInventory(UpgradeInventoryComponent inventory) {
 		upgradeInventory = inventory;
 		return this;
