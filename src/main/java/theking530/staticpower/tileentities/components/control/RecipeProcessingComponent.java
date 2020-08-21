@@ -77,7 +77,7 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 			moveTimer = 0;
 			processingStoppedDueToError = true;
 			return;
-		}else {
+		} else {
 			processingStoppedDueToError = false;
 		}
 
@@ -127,7 +127,7 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 	}
 
 	@Override
-	protected ProcessingCheckState checkProcessingStartState() {
+	protected ProcessingCheckState canStartProcessing() {
 		// Attempt to get the recipe. If it does not exist, skip.
 		Optional<T> recipe = getRecipe(RecipeProcessingLocation.INTERNAL);
 		if (!recipe.isPresent()) {
@@ -143,7 +143,7 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 		}
 
 		// Check the super call.
-		ProcessingCheckState superCall = super.checkProcessingStartState();
+		ProcessingCheckState superCall = super.canStartProcessing();
 		if (!superCall.isOk()) {
 			return superCall;
 		}
@@ -153,16 +153,29 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 	}
 
 	protected ProcessingCheckState canContinueProcessing() {
+		// Check the super call.
+		ProcessingCheckState superCall = super.canContinueProcessing();
+		if (!superCall.isOk()) {
+			return superCall;
+		}
+
 		// Get the recipe. Skip if it does not exist.
 		Optional<T> recipe = getRecipe(RecipeProcessingLocation.INTERNAL);
 		if (!recipe.isPresent()) {
 			return ProcessingCheckState.ok();
 		}
+
 		// Now check the callback.
 		return canContinueProcessingRecipe.apply(recipe.get());
 	}
 
 	protected ProcessingCheckState processingCompleted() {
+		// Check the super call.
+		ProcessingCheckState superCall = super.canContinueProcessing();
+		if (!superCall.isOk()) {
+			return superCall;
+		}
+
 		// Get the recipe.
 		Optional<T> recipe = getRecipe(RecipeProcessingLocation.INTERNAL);
 
