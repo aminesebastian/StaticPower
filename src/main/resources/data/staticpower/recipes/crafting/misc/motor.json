@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		" ii",
+		"icr",
+		" ii"
+	],
+	"key": {
+		"c": {
+			"item": "staticpower:coil_copper"
+		},
+		"i": {
+			"tag": "forge:ingots/iron"
+		},
+		"r": {
+			"tag": "forge:dusts/redstone"
+		}
+	},
+	"result": {
+		"item": "staticpower:motor"
+	}
+}

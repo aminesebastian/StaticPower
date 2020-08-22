@@ -1,0 +1,25 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		" o ",
+		"gmg",
+		"ttt"
+	],
+	"key": {
+		"t": {
+			"item": "staticpower:transistor"
+		},
+		"g": {
+			"tag": "forge:gears/iron"
+		},
+		"o": {
+			"item": "staticpower:motor"
+		},
+		"m": {
+			"item": "staticpower:machine_block_advanced"
+		}
+	},
+	"result": {
+		"item": "staticpower:machine_centrifuge"
+	}
+}

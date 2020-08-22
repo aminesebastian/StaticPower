@@ -135,7 +135,7 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 		// Check if we have not started.
 		if (!hasStarted) {
 			// If we have not, check the starting state.
-			ProcessingCheckState startProcessingState = this.canStartProcessing();
+			ProcessingCheckState startProcessingState = canStartProcessing();
 			// If it is an error, set the error info, otherwise, determine if it was okay
 			// and we can start.
 			if (startProcessingState.isError()) {
@@ -410,18 +410,6 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 		return this;
 	}
 
-	public float getPowerUsageMultiplier() {
-		return powerMultiplier;
-	}
-
-	public int getPowerUsage() {
-		return (int) (powerUsage * powerMultiplier);
-	}
-
-	public int getCompletedPowerUsage() {
-		return (int) (completedPowerUsage * powerMultiplier);
-	}
-
 	public AbstractProcesingComponent disableProcessingPowerUsage() {
 		hasProcessingPowerCost = false;
 		return this;
@@ -435,6 +423,30 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 	public AbstractProcesingComponent setRedstoneControlComponent(RedstoneControlComponent redstoneControlComponent) {
 		this.redstoneControlComponent = redstoneControlComponent;
 		return this;
+	}
+
+	/**
+	 * Sets this machine processing component responsible for maintaining the IS_ON
+	 * blockstate of the owning tile entity's block.
+	 * 
+	 * @param shouldControl
+	 * @return
+	 */
+	public AbstractProcesingComponent setShouldControlBlockState(boolean shouldControl) {
+		this.shouldControlOnBlockState = shouldControl;
+		return this;
+	}
+
+	public float getPowerUsageMultiplier() {
+		return powerMultiplier;
+	}
+
+	public int getPowerUsage() {
+		return (int) (powerUsage * powerMultiplier);
+	}
+
+	public int getCompletedPowerUsage() {
+		return (int) (completedPowerUsage * powerMultiplier);
 	}
 
 	protected void checkUpgrades() {
@@ -499,18 +511,6 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 
 	public boolean isProcessingStoppedDueToError() {
 		return processingStoppedDueToError;
-	}
-
-	/**
-	 * Sets this machine processing component responsible for maintaining the IS_ON
-	 * blockstate of the owning tile entity's block.
-	 * 
-	 * @param shouldControl
-	 * @return
-	 */
-	public AbstractProcesingComponent setShouldControlBlockState(boolean shouldControl) {
-		this.shouldControlOnBlockState = shouldControl;
-		return this;
 	}
 
 	protected ProcessingCheckState checkPowerRequirements() {

@@ -4,6 +4,9 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
 
+import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
+import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
+
 public class MachineProcessingComponent extends AbstractProcesingComponent {
 	protected Supplier<ProcessingCheckState> canStartProcessingCallback;
 	protected Supplier<ProcessingCheckState> canContinueProcessingCallback;
@@ -67,5 +70,55 @@ public class MachineProcessingComponent extends AbstractProcesingComponent {
 		if (processingStartedCallback != null) {
 			processingStartedCallback.run();
 		}
+	}
+
+	@Override
+	public MachineProcessingComponent setUpgradeInventory(UpgradeInventoryComponent inventory) {
+		return (MachineProcessingComponent) super.setUpgradeInventory(inventory);
+	}
+
+	@Override
+	public MachineProcessingComponent setEnergyComponent(EnergyStorageComponent energyComponent) {
+		return (MachineProcessingComponent) super.setEnergyComponent(energyComponent);
+	}
+
+	@Override
+	public MachineProcessingComponent setProcessingPowerUsage(int power) {
+		return (MachineProcessingComponent) super.setProcessingPowerUsage(power);
+	}
+
+	@Override
+	public MachineProcessingComponent setCompletedPowerUsage(int power) {
+		return (MachineProcessingComponent) super.setCompletedPowerUsage(power);
+	}
+
+	@Override
+	public MachineProcessingComponent setPowerUsageMuiltiplier(float multiplier) {
+		return (MachineProcessingComponent) super.setPowerUsageMuiltiplier(multiplier);
+	}
+
+	@Override
+	public MachineProcessingComponent disableProcessingPowerUsage() {
+		return (MachineProcessingComponent) super.disableProcessingPowerUsage();
+	}
+
+	@Override
+	public MachineProcessingComponent disableCompletedPowerUsage() {
+		return (MachineProcessingComponent) super.disableCompletedPowerUsage();
+	}
+
+	@Override
+	public MachineProcessingComponent setRedstoneControlComponent(RedstoneControlComponent redstoneControlComponent) {
+		return (MachineProcessingComponent) super.setRedstoneControlComponent(redstoneControlComponent);
+	}
+
+	@Override
+	public MachineProcessingComponent setShouldControlBlockState(boolean shouldControl) {
+		return (MachineProcessingComponent) super.setShouldControlBlockState(shouldControl);
+	}
+
+	public MachineProcessingComponent setProcessingStartedCallback(Runnable processingStartedCallback) {
+		this.processingStartedCallback = processingStartedCallback;
+		return this;
 	}
 }

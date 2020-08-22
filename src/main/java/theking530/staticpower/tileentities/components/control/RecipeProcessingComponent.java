@@ -11,6 +11,8 @@ import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
+import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
+import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 
 public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends MachineProcessingComponent {
@@ -50,7 +52,7 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 
 		// Use the default callbacks internally.
 		this.canStartProcessingCallback = () -> ProcessingCheckState.ok();// We can just return true here because we are overriding the parent's check.
-		this.canContinueProcessingCallback = this::canContinueProcessing;
+		this.canContinueProcessingCallback = () -> ProcessingCheckState.ok();// We can just return true here because we are overriding the parent's check.
 		this.processingEndedCallback = this::processingCompleted;
 		this.getMatchParameters = getMatchParameters;
 
@@ -59,24 +61,31 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 	}
 
 	@Override
-	public void postProcessUpdate() {
-		// If on the client, do nothing.
-		if (getWorld().isRemote) {
-			return;
+	public void process() {
+		// If we are not processing, check to see if we can perform a move from input to
+		// processing inventory. If erorred, set the error state. If not error, but not
+		// okay (cancel/skip), return early. If okay, continue as usual.
+		if (!isProcessing()) {
+			ProcessingCheckState moveState = performMove();
+			if (moveState.isError()) {
+				this.processingErrorMessage = moveState.getErrorMessage();
+				this.processingStoppedDueToError = true;
+				return;
+			} else if (!moveState.isOk()) {
+				this.processingStoppedDueToError = false;
+				return;
+			}
 		}
 
-		// If we're still processing, do nothing.
-		if (isProcessing()) {
-			return;
-		}
+		super.process();
+	}
 
+	public ProcessingCheckState performMove() {
 		// If we can't move the inputs to the internal, nothing.
 		ProcessingCheckState internalMoveState = canMoveInputsToInternal();
 		if (!internalMoveState.isOk()) {
-			setProcessingErrorMessage(internalMoveState.getErrorMessage());
 			moveTimer = 0;
-			processingStoppedDueToError = true;
-			return;
+			return internalMoveState;
 		} else {
 			processingStoppedDueToError = false;
 		}
@@ -90,6 +99,9 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 			// already checks for a valid recipe.
 			performInputMove.apply(getRecipe(getMatchParameters.apply(RecipeProcessingLocation.INPUT)).get());
 			moveTimer = 0;
+			return ProcessingCheckState.ok();
+		} else {
+			return ProcessingCheckState.skip();
 		}
 	}
 
@@ -152,6 +164,7 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 		return canStartProcessingRecipe.apply(recipe.get());
 	}
 
+	@Override
 	protected ProcessingCheckState canContinueProcessing() {
 		// Check the super call.
 		ProcessingCheckState superCall = super.canContinueProcessing();
@@ -214,4 +227,59 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 		// If nothing was found, return an empty optional.
 		return Optional.empty();
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public RecipeProcessingComponent<T> setUpgradeInventory(UpgradeInventoryComponent inventory) {
+		return (RecipeProcessingComponent<T>) super.setUpgradeInventory(inventory);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public RecipeProcessingComponent<T> setEnergyComponent(EnergyStorageComponent energyComponent) {
+		return (RecipeProcessingComponent<T>) super.setEnergyComponent(energyComponent);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public RecipeProcessingComponent<T> setProcessingPowerUsage(int power) {
+		return (RecipeProcessingComponent<T>) super.setProcessingPowerUsage(power);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public RecipeProcessingComponent<T> setCompletedPowerUsage(int power) {
+		return (RecipeProcessingComponent<T>) super.setCompletedPowerUsage(power);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public RecipeProcessingComponent<T> setPowerUsageMuiltiplier(float multiplier) {
+		return (RecipeProcessingComponent<T>) super.setPowerUsageMuiltiplier(multiplier);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public RecipeProcessingComponent<T> disableProcessingPowerUsage() {
+		return (RecipeProcessingComponent<T>) super.disableProcessingPowerUsage();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public RecipeProcessingComponent<T> disableCompletedPowerUsage() {
+		return (RecipeProcessingComponent<T>) super.disableCompletedPowerUsage();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public RecipeProcessingComponent<T> setRedstoneControlComponent(RedstoneControlComponent redstoneControlComponent) {
+		return (RecipeProcessingComponent<T>) super.setRedstoneControlComponent(redstoneControlComponent);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public RecipeProcessingComponent<T> setShouldControlBlockState(boolean shouldControl) {
+		return (RecipeProcessingComponent<T>) super.setShouldControlBlockState(shouldControl);
+	}
+
 }

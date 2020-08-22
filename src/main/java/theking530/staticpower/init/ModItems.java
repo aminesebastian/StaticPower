@@ -193,6 +193,7 @@ public class ModItems {
 	public static StaticPowerItem Diode;
 	public static StaticPowerItem Transistor;
 	public static StaticPowerItem InternalClock;
+	public static StaticPowerItem Motor;
 
 	public static StaticPowerItem BasicUpgradePlate;
 	public static StaticPowerItem AdvancedUpgradePlate;
@@ -352,6 +353,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(Transistor = new StaticPowerItem("transistor"));
 		StaticPowerRegistry.preRegisterItem(InternalClock = new StaticPowerItem("internal_clock"));
 		StaticPowerRegistry.preRegisterItem(IOPort = new StaticPowerItem("io_port"));
+		StaticPowerRegistry.preRegisterItem(Motor = new StaticPowerItem("motor"));
 		StaticPowerRegistry.preRegisterItem(WireCopper = new StaticPowerItem("wire_copper"));
 		StaticPowerRegistry.preRegisterItem(WireTin = new StaticPowerItem("wire_tin"));
 		StaticPowerRegistry.preRegisterItem(WireSilver = new StaticPowerItem("wire_silver"));
