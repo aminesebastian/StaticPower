@@ -25,7 +25,7 @@ public class FireProgressBar extends AbstractProgressBar {
 		}
 
 		if (isProcessingErrored) {
-			getErrorDrawable().draw(screenSpacePosition.getX() + 2.5f, screenSpacePosition.getY() + 0.5f);
+			getErrorDrawable().draw(screenSpacePosition.getX(), screenSpacePosition.getY());
 		}
 	}
 }

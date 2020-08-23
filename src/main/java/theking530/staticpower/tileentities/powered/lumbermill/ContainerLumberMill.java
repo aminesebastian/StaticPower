@@ -1,16 +1,12 @@
 package theking530.staticpower.tileentities.powered.lumbermill;
 
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.client.container.slots.BatteryItemSlot;
 import theking530.staticpower.client.container.slots.OutputSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.init.ModContainerTypes;
-import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 public class ContainerLumberMill extends StaticPowerTileEntityContainer<TileEntityLumberMill> {
 
@@ -36,16 +32,5 @@ public class ContainerLumberMill extends StaticPowerTileEntityContainer<TileEnti
 
 		this.addPlayerInventory(getPlayerInventory(), 8, 84);
 		this.addPlayerHotbar(getPlayerInventory(), 8, 142);
-	}
-
-	@Override
-	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
-		if (!mergeItemStack(stack, 0, 1, false)) {
-			return true;
-		}
-		if (EnergyHandlerItemStackUtilities.isEnergyContainer(stack) && !mergeItemStack(stack, 1, 2, false)) {
-			return true;
-		}
-		return false;
 	}
 }

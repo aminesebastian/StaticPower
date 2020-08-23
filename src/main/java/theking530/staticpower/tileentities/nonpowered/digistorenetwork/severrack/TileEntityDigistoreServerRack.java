@@ -20,7 +20,7 @@ public class TileEntityDigistoreServerRack extends BaseDigistoreTileEntity {
 
 	public TileEntityDigistoreServerRack() {
 		super(ModTileEntityTypes.DIGISTORE_SERVER_RACK);
-		registerComponent(inventory = new DigistoreInventoryComponent("Inventory", 8));
+		registerComponent(inventory = (DigistoreInventoryComponent) new DigistoreInventoryComponent("Inventory", 8).setShiftClickEnabled(true));
 		inventory.setModifiedCallback((type, stack, comp) -> {
 			markTileEntityForSynchronization();
 		});

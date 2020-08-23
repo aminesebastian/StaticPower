@@ -27,12 +27,13 @@ public class TileEntitySolderingTable extends TileEntityMachine implements IName
 	public TileEntitySolderingTable(TileEntityType<?> type) {
 		super(type);
 		registerComponent(patternInventory = new InventoryComponent("PatternInventory", 9, MachineSideMode.Never));
-		registerComponent(inventory = new InventoryComponent("Inventory", 9, MachineSideMode.Never));
-		registerComponent(solderingIronInventory = new InventoryComponent("SolderingIronInventory", 1, MachineSideMode.Never).setFilter(new ItemStackHandlerFilter() {
-			public boolean canInsertItem(int slot, ItemStack stack) {
-				return stack.getItem() instanceof ISolderingIron;
-			}
-		}));
+		registerComponent(inventory = new InventoryComponent("Inventory", 9, MachineSideMode.Never).setShiftClickEnabled(true));
+		registerComponent(solderingIronInventory = new InventoryComponent("SolderingIronInventory", 1, MachineSideMode.Never).setShiftClickEnabled(true).setShiftClickPriority(100)
+				.setFilter(new ItemStackHandlerFilter() {
+					public boolean canInsertItem(int slot, ItemStack stack) {
+						return stack.getItem() instanceof ISolderingIron;
+					}
+				}));
 
 		// Don't drop the pattern or output slots.
 		patternInventory.setShouldDropContentsOnBreak(false);

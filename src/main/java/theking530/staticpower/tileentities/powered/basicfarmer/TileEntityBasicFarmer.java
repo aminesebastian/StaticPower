@@ -41,9 +41,9 @@ import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
-import theking530.staticpower.tileentities.components.fluids.FluidContainerInventoryComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
+import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent.InventoryChangeType;
@@ -66,12 +66,11 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
 	public final InventoryComponent internalInventory;
-	public final InventoryComponent fluidContainerInventory;
+	public final FluidContainerInventoryComponent fluidContainerComponent;
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final MachineProcessingComponent processingComponent;
 	public final FluidTankComponent fluidTankComponent;
-	public final FluidContainerInventoryComponent fluidContainerComponent;
 
 	private final HashSet<Class<? extends Block>> validHarvestacbleClasses;
 
@@ -94,7 +93,6 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 			}
 		}));
 
-		registerComponent(fluidContainerInventory = new InventoryComponent("FluidContainerInventory", 2));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 9, MachineSideMode.Output));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 128));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
@@ -109,7 +107,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory, 0));
 		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory, 0, 1, 2, 3, 4, 5, 6, 7, 8));
-		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent, fluidContainerInventory, 0, 1));
+		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent));
 
 		// Set the energy storage upgrade inventory.
 		energyStorage.setUpgradeInventory(upgradesInventory);

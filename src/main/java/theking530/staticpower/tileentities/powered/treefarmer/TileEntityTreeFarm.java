@@ -43,15 +43,15 @@ import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
-import theking530.staticpower.tileentities.components.fluids.FluidContainerInventoryComponent;
-import theking530.staticpower.tileentities.components.fluids.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
+import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent.InventoryChangeType;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
+import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities;
 import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities.BlockSide;
@@ -71,13 +71,14 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
-	public final InventoryComponent fluidContainerInventoy;
+	public final FluidContainerInventoryComponent fluidContainerComponent;
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
+
 	public final InventoryComponent internalInventory;
 	public final MachineProcessingComponent processingComponent;
 	public final FluidTankComponent fluidTankComponent;
-	public final FluidContainerInventoryComponent fluidContainerComponent;
+
 	private boolean shouldDrawRadiusPreview;
 
 	private final List<BlockPos> blocks;
@@ -95,13 +96,12 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		leafIngredient = Ingredient.fromTag(ModTags.LEAVES);
 		saplingIngredient = Ingredient.fromTag(ModTags.SAPLING);
 
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 10, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 10, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
 				return slot == 0 ? ModTags.FARMING_AXE.contains(stack.getItem()) : saplingIngredient.test(stack);
 			}
 		}));
 
-		registerComponent(fluidContainerInventoy = new InventoryComponent("FluidContainerInventoy", 2));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 9, MachineSideMode.Output));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 		registerComponent(upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3).setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
@@ -122,7 +122,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		shouldDrawRadiusPreview = false;
 		range = DEFAULT_RANGE;
 		blocks = new LinkedList<BlockPos>();
-		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("BucketDrain", fluidTankComponent, fluidContainerInventoy, 0, 1));
+		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("BucketDrain", fluidTankComponent));
 		registerComponent(new InputServoComponent("InputServo", 4, inputInventory));
 		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory));
 

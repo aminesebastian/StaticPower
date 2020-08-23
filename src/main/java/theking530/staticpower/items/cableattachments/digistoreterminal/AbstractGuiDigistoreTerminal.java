@@ -7,6 +7,7 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import theking530.common.gui.GuiDrawUtilities;
 import theking530.common.gui.widgets.GuiIslandWidget;
 import theking530.common.gui.widgets.button.SpriteButton;
 import theking530.common.gui.widgets.button.StandardButton;
@@ -60,13 +61,14 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 	@Override
 	public void drawSlot(Slot slotIn) {
 		if (slotIn instanceof DigistoreSlot && slotIn.getHasStack()) {
-			super.drawSlot(new NoCountRenderSlot(slotIn));
+			// Draw the slot with no count visible.
+			drawSlot(new NoCountRenderSlot(slotIn));
 
 			// Pass the itemstack count through the metric converter.
 			MetricConverter count = new MetricConverter(slotIn.getStack().getCount());
 
-			// Draw the item count string.
-			this.drawStringWithSize(count.getValueAsString(true), slotIn.xPos + 16, slotIn.yPos + 15, 0.5f, Color.EIGHT_BIT_WHITE, true);
+			// Draw the item count string manually.
+			GuiDrawUtilities.drawStringWithSize(count.getValueAsString(true), slotIn.xPos + 16, slotIn.yPos + 15, 0.5f, Color.EIGHT_BIT_WHITE, true);
 		} else {
 			super.drawSlot(slotIn);
 		}

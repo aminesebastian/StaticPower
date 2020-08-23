@@ -30,9 +30,9 @@ public class GuiCrucible extends StaticPowerTileEntityGui<ContainerCrucible, Til
 		drawContainerSlots(container.inventorySlots, getTileEntity().ioSideConfiguration);
 
 		drawGenericBackground(-30, 8, 28, 85);
-		drawSlot(guiLeft - 24, guiTop + 14, 16, 16);
-		drawSlot(guiLeft - 24, guiTop + 33, 16, 16);
-		drawSlot(guiLeft - 24, guiTop + 52, 16, 16);
-		drawSlot(guiLeft - 24, guiTop + 71, 16, 16);
+		drawEmptySlot(guiLeft - 24, guiTop + 14, 16, 16);
+		drawEmptySlot(guiLeft - 24, guiTop + 33, 16, 16);
+		drawEmptySlot(guiLeft - 24, guiTop + 52, 16, 16);
+		drawEmptySlot(guiLeft - 24, guiTop + 71, 16, 16);
 	}
 }

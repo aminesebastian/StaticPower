@@ -41,7 +41,7 @@ public class TileEntityFluidInfuser extends TileEntityMachine {
 		super(ModTileEntityTypes.FLUID_INFUSER);
 
 		// Setup the inventories.
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input));
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));

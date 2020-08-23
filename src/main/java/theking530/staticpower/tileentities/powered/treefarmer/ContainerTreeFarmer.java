@@ -1,18 +1,12 @@
 package theking530.staticpower.tileentities.powered.treefarmer;
 
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.AxeItem;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.client.container.slots.BatteryItemSlot;
 import theking530.staticpower.client.container.slots.OutputSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.init.ModContainerTypes;
-import theking530.staticpower.init.ModTags;
 
 public class ContainerTreeFarmer extends StaticPowerTileEntityContainer<TileEntityTreeFarm> {
 
@@ -46,19 +40,5 @@ public class ContainerTreeFarmer extends StaticPowerTileEntityContainer<TileEnti
 
 		addPlayerInventory(getPlayerInventory(), 8, 84);
 		addPlayerHotbar(getPlayerInventory(), 8, 142);
-	}
-
-	@Override
-	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
-		if (ModTags.SAPLING.contains(stack.getItem()) && !mergeItemStack(stack, 0, 10, false)) {
-			return true;
-		}
-		if (stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null).isPresent() && !mergeItemStack(stack, 18)) {
-			return true;
-		}
-		if (stack.getItem() instanceof AxeItem && !mergeItemStack(stack, 20)) {
-			return true;
-		}
-		return false;
 	}
 }

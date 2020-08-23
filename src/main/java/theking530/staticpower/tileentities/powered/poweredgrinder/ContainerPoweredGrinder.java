@@ -1,19 +1,13 @@
 package theking530.staticpower.tileentities.powered.poweredgrinder;
 
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.client.container.slots.BatteryItemSlot;
 import theking530.staticpower.client.container.slots.OutputSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.client.container.slots.UpgradeItemSlot;
-import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.init.ModContainerTypes;
-import theking530.staticpower.items.upgrades.BaseUpgrade;
-import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 public class ContainerPoweredGrinder extends StaticPowerTileEntityContainer<TileEntityPoweredGrinder> {
 
@@ -45,19 +39,5 @@ public class ContainerPoweredGrinder extends StaticPowerTileEntityContainer<Tile
 
 		this.addPlayerInventory(getPlayerInventory(), 8, 84);
 		this.addPlayerHotbar(getPlayerInventory(), 8, 142);
-	}
-
-	@Override
-	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
-		if (getTileEntity().processingComponent.getRecipe(new RecipeMatchParameters(stack)).isPresent() && !mergeItemStack(stack, 0)) {
-			return true;
-		}
-		if (EnergyHandlerItemStackUtilities.isValidStaticPowerEnergyContainingItemstack(stack) && !mergeItemStack(stack, 1)) {
-			return true;
-		}
-		if (stack.getItem() instanceof BaseUpgrade && !mergeItemStack(stack, 5, 8, false)) {
-			return true;
-		}
-		return false;
 	}
 }

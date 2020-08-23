@@ -9,7 +9,6 @@ import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.init.ModContainerTypes;
 import theking530.staticpower.init.ModItems;
-import theking530.staticpower.items.upgrades.BaseUpgrade;
 
 public class ContainerDigistore extends StaticPowerTileEntityContainer<TileEntityDigistore> {
 
@@ -31,9 +30,16 @@ public class ContainerDigistore extends StaticPowerTileEntityContainer<TileEntit
 
 	@Override
 	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
-		if (stack.getItem() instanceof BaseUpgrade && !mergeItemStack(stack, 0, 3, false)) {
+		// Try to insert into inventory.
+		ItemStack remaining = getTileEntity().insertItem(0, stack.copy(), false);
+
+		// If any amount was inserted, modify the stack and return true. Otherwise,
+		// resort to default behaviour.
+		if (remaining.getCount() != remaining.getCount()) {
+			stack.setCount(remaining.getCount());
 			return true;
+		} else {
+			return super.playerItemShiftClicked(stack, player, slot, slotIndex);
 		}
-		return false;
 	}
 }

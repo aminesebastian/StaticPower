@@ -7,23 +7,27 @@ import javax.annotation.Nullable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
-import theking530.staticpower.blocks.StaticPowerBlock;
 import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModTileEntityTypes;
+import theking530.staticpower.tileentities.StaticPowerTileEntityBlock;
 import theking530.staticpower.tileentities.components.heat.HeatUtilities;
 import theking530.staticpower.utilities.HarvestLevel;
 
-public class BlockHeatSink extends StaticPowerBlock {
+public class BlockHeatSink extends StaticPowerTileEntityBlock {
 	public final ResourceLocation tier;
 
 	public BlockHeatSink(String name, ResourceLocation tier) {
@@ -37,6 +41,11 @@ public class BlockHeatSink extends StaticPowerBlock {
 		super.getBasicTooltip(stack, worldIn, tooltip);
 		tooltip.add(HeatUtilities.getHeatRateTooltip(StaticPowerDataRegistry.getTier(tier).getHeatSinkConductivity()));
 		tooltip.add(HeatUtilities.getHeatCapacityTooltip(StaticPowerDataRegistry.getTier(tier).getHeatSinkCapacity()));
+	}
+
+	@Override
+	public HasGuiType hasGuiScreen(TileEntity tileEntity, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+		return HasGuiType.ALWAYS;
 	}
 
 	@Override

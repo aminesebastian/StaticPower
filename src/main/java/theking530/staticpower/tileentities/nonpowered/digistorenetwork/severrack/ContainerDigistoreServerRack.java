@@ -1,14 +1,10 @@
 package theking530.staticpower.tileentities.nonpowered.digistorenetwork.severrack;
 
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.init.ModContainerTypes;
-import theking530.staticpower.items.DigistoreCard;
 
 public class ContainerDigistoreServerRack extends StaticPowerTileEntityContainer<TileEntityDigistoreServerRack> {
 
@@ -34,13 +30,5 @@ public class ContainerDigistoreServerRack extends StaticPowerTileEntityContainer
 
 		addPlayerHotbar(getPlayerInventory(), 8, 161);
 		addPlayerInventory(getPlayerInventory(), 8, 103);
-	}
-
-	@Override
-	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
-		if (stack.getItem() instanceof DigistoreCard && !mergeItemStack(stack, 0, 9, false)) {
-			return true;
-		}
-		return false;
 	}
 }

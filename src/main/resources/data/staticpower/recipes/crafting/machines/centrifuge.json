@@ -1,22 +1,28 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
-		" o ",
 		"gmg",
-		"ttt"
+		"tbt",
+		"ipi"
 	],
 	"key": {
 		"t": {
 			"item": "staticpower:transistor"
 		},
 		"g": {
-			"tag": "forge:gears/iron"
-		},
-		"o": {
-			"item": "staticpower:motor"
+			"tag": "forge:gears/gold"
 		},
 		"m": {
+			"item": "staticpower:motor"
+		},
+		"b": {
 			"item": "staticpower:machine_block_advanced"
+		},
+		"p": {
+			"item": "staticpower:plug"
+		},
+		"i": {
+			"tag": "forge:ingots/iron"
 		}
 	},
 	"result": {

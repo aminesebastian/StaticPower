@@ -16,6 +16,7 @@ import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.IDigistoreInventory;
+import theking530.staticpower.utilities.MetricConverter;
 
 public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, TileEntityDigistore> {
 
@@ -52,6 +53,14 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 	}
 
 	@Override
+	public void updateData() {
+		// Update the info tab.
+		infoTab.clear();
+		infoTab.addLine(new StringTextComponent("Stores a large amount of a single item."));
+		infoTab.addKeyValueTwoLiner(new StringTextComponent("Max"), new StringTextComponent(String.valueOf(inventory.getItemCapacity())), TextFormatting.RED);
+	}
+
+	@Override
 	protected void drawForegroundExtras(float partialTicks, int mouseX, int mouseY) {
 		super.drawForegroundExtras(partialTicks, mouseX, mouseY);
 		if (inventory.getItemCapacity() > 0) {
@@ -67,18 +76,19 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 		super.drawBackgroundExtras(partialTicks, mouseX, mouseY);
 
 		// Draw the massive digistore slot.
-		drawSlot(guiLeft + 78, guiTop + 18, 20, 20);
+		drawEmptySlot(guiLeft + 78, guiTop + 18, 20, 20);
 
 		// Draw the item.
 		if (inventory.getCurrentUniqueItemTypeCount() > 0) {
 			RenderHelper.enableStandardItemLighting();
 			itemRenderer.drawItem(inventory.getDigistoreStack(0).getStoredItem(), guiLeft, guiTop, 80, 21, 1.0f);
 			RenderHelper.disableStandardItemLighting();
-		}
 
-		// Update the info tab.
-		infoTab.clear();
-		infoTab.addLine(new StringTextComponent("Stores a large amount of a single item."));
-		infoTab.addKeyValueTwoLiner(new StringTextComponent("Max"), new StringTextComponent(String.valueOf(inventory.getItemCapacity())), TextFormatting.RED);
+			// Pass the itemstack count through the metric converter.
+			MetricConverter count = new MetricConverter(inventory.getTotalContainedCount());
+
+			// Draw the item count string.
+			GuiDrawUtilities.drawStringWithSize(count.getValueAsString(true), guiLeft + 16, guiTop + 15, 0.5f, Color.EIGHT_BIT_WHITE, true);
+		}
 	}
 }

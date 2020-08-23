@@ -27,13 +27,13 @@ import theking530.staticpower.items.upgrades.ExperienceVacuumUpgrade;
 import theking530.staticpower.items.upgrades.IUpgradeItem.UpgradeType;
 import theking530.staticpower.items.upgrades.TeleportUpgrade;
 import theking530.staticpower.tileentities.TileEntityConfigurable;
-import theking530.staticpower.tileentities.components.fluids.FluidContainerInventoryComponent;
-import theking530.staticpower.tileentities.components.fluids.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.components.fluids.FluidOutputServoComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
+import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
+import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.utilities.InventoryUtilities;
@@ -44,10 +44,10 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements INa
 
 	public final InventoryComponent inventory;
 	public final InventoryComponent filterSlotInventory;
-	public final InventoryComponent fluidContainerInventory;
+	public final FluidContainerInventoryComponent fluidContainerComponent;
+
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final FluidTankComponent fluidTankComponent;
-	public final FluidContainerInventoryComponent fluidContainerComponent;
 	public final FluidOutputServoComponent fluidOutputServo;
 
 	protected float vacuumDiamater;
@@ -59,13 +59,12 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements INa
 		vacuumDiamater = DEFAULT_RANGE;
 		shouldTeleport = false;
 
-		registerComponent(inventory = new InventoryComponent("Inventory", 30, MachineSideMode.Output));
-		registerComponent(filterSlotInventory = new InventoryComponent("FilterSlot", 1));
+		registerComponent(inventory = new InventoryComponent("Inventory", 30, MachineSideMode.Output).setShiftClickEnabled(true));
+		registerComponent(filterSlotInventory = new InventoryComponent("FilterSlot", 1).setShiftClickEnabled(true).setShiftClickPriority(100));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Output).setUpgradeInventory(upgradesInventory));
-		registerComponent(fluidContainerInventory = new InventoryComponent("FluidContainerInventory", 2));
-		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent, fluidContainerInventory, 0, 1).setMode(FluidContainerInteractionMode.FILL));
+		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent).setMode(FluidContainerInteractionMode.FILL));
 		registerComponent(fluidOutputServo = new FluidOutputServoComponent("FluidInputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
 
 		registerComponent(new OutputServoComponent("OutputServo", 2, inventory));
@@ -186,7 +185,7 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements INa
 
 		// Set the enabled state of the fluid components.
 		fluidTankComponent.setEnabled(shouldVacuumExperience);
-		fluidContainerInventory.setEnabled(shouldVacuumExperience);
+		fluidContainerComponent.setEnabled(shouldVacuumExperience);
 		fluidContainerComponent.setEnabled(shouldVacuumExperience);
 		fluidOutputServo.setEnabled(shouldVacuumExperience);
 

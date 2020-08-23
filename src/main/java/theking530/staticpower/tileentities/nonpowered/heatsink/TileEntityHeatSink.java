@@ -4,6 +4,9 @@ import java.util.List;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntityType;
@@ -17,7 +20,7 @@ import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.tileentities.TileEntityBase;
 
 public class TileEntityHeatSink extends TileEntityBase implements INamedContainerProvider {
-	private final HeatCableComponent cableComponent;
+	public final HeatCableComponent cableComponent;
 
 	public TileEntityHeatSink(TileEntityType<TileEntityHeatSink> type, ResourceLocation tier) {
 		super(type);
@@ -46,5 +49,10 @@ public class TileEntityHeatSink extends TileEntityBase implements INamedContaine
 			getWorld().addParticle(ParticleTypes.BUBBLE, getPos().getX() + 0.5f + randomOffset, getPos().getY() + 1.1f, getPos().getZ() + 0.5f + randomOffset, 0.0f, 0.5f, 0.0f);
 			getWorld().addParticle(ParticleTypes.BUBBLE_POP, getPos().getX() + 0.5f + randomOffset, getPos().getY() + 1.8f, getPos().getZ() + 0.5f + randomOffset, 0.0f, 0.005f, 0.0f);
 		}
+	}
+
+	@Override
+	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+		return new ContainerHeatSink(windowId, inventory, this);
 	}
 }

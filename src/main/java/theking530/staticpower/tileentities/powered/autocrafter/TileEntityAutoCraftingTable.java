@@ -174,17 +174,6 @@ public class TileEntityAutoCraftingTable extends TileEntityMachine {
 		return ProcessingCheckState.outputsCannotTakeRecipe();
 	}
 
-	@Override
-	public void process() {
-		if (processingComponent.isPerformingWork()) {
-			if (!getWorld().isRemote) {
-				getCurrentRecipe().ifPresent(recipe -> {
-					energyStorage.useBulkPower(DEFAULT_PROCESSING_COST);
-				});
-			}
-		}
-	}
-
 	public Optional<ICraftingRecipe> getCurrentRecipe() {
 		// Get the inventory in the form of an itemstack array.
 		ItemStack[] pattern = new ItemStack[9];

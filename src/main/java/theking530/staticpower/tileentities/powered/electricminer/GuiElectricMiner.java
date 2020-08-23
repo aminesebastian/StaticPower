@@ -37,7 +37,7 @@ public class GuiElectricMiner extends StaticPowerTileEntityGui<ContainerElectric
 	public void initializeGui() {
 		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 52));
 		registerWidget(new GuiHeatBarFromHeatStorage(getTileEntity().heatStorage.getStorage(), 26, 8, 2, 52));
-		registerWidget(new SquareProgressBar(78, 54, 20, 2).bindToMachineProcessingComponent(getTileEntity().processingComponent));
+		registerWidget(new SquareProgressBar(78, 55, 20, 2).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
 		// Add a button we can use to toggle the in world radius preview.
 		registerWidget(drawPreviewButton = new SpriteButton(156, 61, 12, 12, StaticPowerSprites.RANGE_ICON, null, this::buttonPressed));

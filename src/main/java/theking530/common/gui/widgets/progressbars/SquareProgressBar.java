@@ -6,13 +6,16 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import theking530.common.gui.GuiDrawUtilities;
+import theking530.common.gui.drawables.SpriteDrawable;
 import theking530.common.utilities.Color;
 import theking530.common.utilities.Vector2D;
+import theking530.staticpower.client.StaticPowerSprites;
 
 public class SquareProgressBar extends AbstractProgressBar {
 
 	public SquareProgressBar(int xPosition, int yPosition, int xSize, int ySize) {
 		super(xPosition, yPosition, xSize, ySize);
+		errorDrawable = new SpriteDrawable(StaticPowerSprites.ERROR, 8, 8);
 	}
 
 	@Override
@@ -21,13 +24,19 @@ public class SquareProgressBar extends AbstractProgressBar {
 		Vector2D screenSpacePosition = this.getScreenSpacePosition();
 		float adjustedProgress = visualCurrentProgress / maxProgress;
 
-		GuiDrawUtilities.drawSlot(screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY());
+		// Draw a red border if erorred and too small. If large enough, draw the red X.
+		if (isProcessingErrored) {
+			if (getSize().getX() > 18 && getSize().getY() > 18) {
+				errorDrawable.draw(screenSpacePosition.getX(), screenSpacePosition.getY());
+			} else {
+				GuiDrawUtilities.drawSlot(screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY(), new Color(1.0f, 0.0f, 0.0f));
+			}
+		} else {
+			GuiDrawUtilities.drawSlot(screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY());
+		}
+
 		drawRect(screenSpacePosition.getX(), screenSpacePosition.getY(), (screenSpacePosition.getX() + (getSize().getX() * adjustedProgress)), screenSpacePosition.getY() + getSize().getY(),
 				new Color(1.0f, 1.0f, 1.0f).encodeInInteger());
-
-		if (isProcessingErrored) {
-			getErrorDrawable().draw(screenSpacePosition.getX(), screenSpacePosition.getY());
-		}
 	}
 
 	public static void drawRect(float left, float top, float right, float bottom, int color) {

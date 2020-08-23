@@ -16,11 +16,11 @@ import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
-import theking530.staticpower.tileentities.components.fluids.FluidContainerInventoryComponent;
-import theking530.staticpower.tileentities.components.fluids.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.components.fluids.FluidInputServoComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
+import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
+import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.components.loopingsound.LoopingSoundComponent;
 import theking530.staticpower.tileentities.components.power.EnergyStorageComponent.EnergyManipulationAction;
 import theking530.staticpower.tileentities.components.power.PowerDistributionComponent;
@@ -29,9 +29,8 @@ import theking530.staticpower.tileentities.utilities.MachineSideMode;
 public class TileEntityFluidGenerator extends TileEntityMachine {
 	public final InventoryComponent upgradesInventory;
 	public final MachineProcessingComponent processingComponent;
-	public final InventoryComponent fluidContainerInventory;
-	public final FluidTankComponent fluidTankComponent;
 	public final FluidContainerInventoryComponent fluidContainerComponent;
+	public final FluidTankComponent fluidTankComponent;
 	public final LoopingSoundComponent generatingSoundComponent;
 
 	public TileEntityFluidGenerator() {
@@ -39,7 +38,6 @@ public class TileEntityFluidGenerator extends TileEntityMachine {
 		disableFaceInteraction();
 
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
-		registerComponent(fluidContainerInventory = new InventoryComponent("FluidContainerInventory", 2, MachineSideMode.Never));
 
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 0, this::canProcess, this::canProcess, this::processingCompleted, true)
 				.setShouldControlBlockState(true).setRedstoneControlComponent(redstoneControlComponent));
@@ -51,7 +49,7 @@ public class TileEntityFluidGenerator extends TileEntityMachine {
 			return getRecipe(fluidStack).isPresent();
 		}).setCapabilityExposedModes(MachineSideMode.Input));
 		registerComponent(new FluidInputServoComponent("InputServo", 20, fluidTankComponent, MachineSideMode.Input));
-		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent, fluidContainerInventory, 0, 1).setMode(FluidContainerInteractionMode.DRAIN));
+		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent).setMode(FluidContainerInteractionMode.DRAIN));
 
 		// Don't allow this to receive power from external sources.
 		this.energyStorage.setCapabiltiyFilter((amount, side, action) -> {

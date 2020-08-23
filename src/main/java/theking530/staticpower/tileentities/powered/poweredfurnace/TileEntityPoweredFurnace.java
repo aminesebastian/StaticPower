@@ -47,7 +47,7 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 		super(ModTileEntityTypes.POWERED_FURNACE);
 
 		// Setup the input inventory to only accept items that have a valid recipe.
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
 				return processingComponent.getRecipe(new RecipeMatchParameters(stack)).isPresent();
 			}

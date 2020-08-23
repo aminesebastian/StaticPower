@@ -122,14 +122,12 @@ public class DigistoreInventory implements Iterable<DigistoreStack>, IDigistoreI
 				tracker.grow(insertableAmount);
 				onChanged();
 			}
-			ItemStack output = stack.copy();
-			output.setCount(stack.getCount() - insertableAmount);
 
 			// If we are voiding, ALWAYS consume the input.
 			if (voidExcess) {
 				return ItemStack.EMPTY;
 			} else {
-				return output;
+				return ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - insertableAmount);
 			}
 		} else {
 			return stack;

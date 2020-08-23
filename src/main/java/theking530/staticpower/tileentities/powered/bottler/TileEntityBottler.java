@@ -6,6 +6,7 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
@@ -18,6 +19,7 @@ import theking530.staticpower.tileentities.components.control.MachineProcessingC
 import theking530.staticpower.tileentities.components.fluids.FluidInputServoComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
+import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
@@ -37,22 +39,25 @@ public class TileEntityBottler extends TileEntityMachine {
 	public final InventoryComponent outputInventory;
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
+	public final FluidContainerInventoryComponent fluidContainerComponent;
+
 	public final MachineProcessingComponent moveComponent;
 	public final MachineProcessingComponent processingComponent;
+
 	public final FluidTankComponent fluidTankComponent;
 
 	public TileEntityBottler() {
 		super(ModTileEntityTypes.BOTTLER);
 
 		// Setup the input inventory to only accept items that have a valid recipe.
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
 				return isValidInput(stack);
 			}
 
 		}));
 
-		// Setup all the other inventories.
+		// Setup all the other inventories.;
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
@@ -74,6 +79,7 @@ public class TileEntityBottler extends TileEntityMachine {
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
 		fluidTankComponent.setCanDrain(false);
 		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, fluidTankComponent, MachineSideMode.Input));
+		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent));
 
 		// Set the energy storage upgrade inventory.
 		energyStorage.setUpgradeInventory(upgradesInventory);
@@ -196,7 +202,11 @@ public class TileEntityBottler extends TileEntityMachine {
 
 	public boolean isValidInput(ItemStack stack) {
 		if (FluidUtil.getFluidHandler(stack).isPresent()) {
-			return true;
+			IFluidHandler handler = FluidUtil.getFluidHandler(stack).orElse(null);
+			if (handler != null && handler.getFluidInTank(0).getAmount() < handler.getTankCapacity(0)) {
+				return true;
+			}
+			return false;
 		} else {
 			return getRecipe(stack) != null;
 		}

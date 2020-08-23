@@ -27,7 +27,7 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 
 	public TileEntityMiner() {
 		super(ModTileEntityTypes.MINER);
-		registerComponent(fuelInventory = new InventoryComponent("FuelInventory", 1, MachineSideMode.Input));
+		registerComponent(fuelInventory = new InventoryComponent("FuelInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true));
 		registerComponent(fuelBurningInventory = new InventoryComponent("FuelBurningInventory", 1, MachineSideMode.Never));
 		registerComponent(fuelMoveComponent = new MachineProcessingComponent("FuelMoveComponent", DEFAULT_FUEL_MOVE_TIME, this::canMoveFuel, this::canMoveFuel, this::moveFuel, true)
 				.setRedstoneControlComponent(redstoneControlComponent));
@@ -72,14 +72,14 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 		if (!isDoneMining() && isValidFuel(fuelInventory.getStackInSlot(0)) && hasDrillBit()) {
 			return ProcessingCheckState.ok();
 		}
-		return ProcessingCheckState.error("ERROR");
+		return ProcessingCheckState.error("Missing Fuel!");
 	}
 
 	public ProcessingCheckState canContinueProcessingFuel() {
 		if (!isDoneMining() && processingComponent.isPerformingWork()) {
 			return ProcessingCheckState.ok();
 		}
-		return ProcessingCheckState.error("ERROR");
+		return ProcessingCheckState.error(processingComponent.getProcessingErrorMessage());
 	}
 
 	public ProcessingCheckState fuelProcessingCompleted() {

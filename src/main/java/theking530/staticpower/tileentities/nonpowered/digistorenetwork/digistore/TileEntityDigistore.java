@@ -6,7 +6,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
@@ -19,6 +18,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.items.DigistoreMonoCard;
+import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.BaseDigistoreTileEntity;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.CapabilityDigistoreInventory;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.IDigistoreInventory;
@@ -27,11 +27,12 @@ import theking530.staticpower.utilities.WorldUtilities;
 
 public class TileEntityDigistore extends BaseDigistoreTileEntity implements IItemHandler {
 	public final DigistoreInventoryComponent inventory;
+	@UpdateSerialize
 	private boolean locked;
 
 	public TileEntityDigistore() {
 		super(ModTileEntityTypes.DIGISTORE);
-		registerComponent(inventory = new DigistoreInventoryComponent("Inventory", 1));
+		registerComponent(inventory = (DigistoreInventoryComponent) new DigistoreInventoryComponent("Inventory", 1).setShiftClickEnabled(true));
 		inventory.setFilter(new ItemStackHandlerFilter() {
 			@Override
 			public boolean canInsertItem(int slot, ItemStack stack) {
@@ -158,17 +159,6 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity implements IIte
 		if (countToDrop > 0) {
 			WorldUtilities.dropItem(getWorld(), getFacingDirection(), getPos(), output, output.getCount());
 		}
-	}
-
-	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
-		super.serializeUpdateNbt(nbt, fromUpdate);
-		nbt.putBoolean("Locked", locked);
-		return nbt;
-	}
-
-	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
-		super.deserializeUpdateNbt(nbt, fromUpdate);
-		locked = nbt.getBoolean("Locked");
 	}
 
 	@Override

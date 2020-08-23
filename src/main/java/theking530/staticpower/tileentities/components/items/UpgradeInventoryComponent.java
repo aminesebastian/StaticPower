@@ -6,13 +6,19 @@ import theking530.staticpower.items.upgrades.BaseUpgrade;
 import theking530.staticpower.items.upgrades.IUpgradeItem;
 import theking530.staticpower.items.upgrades.IUpgradeItem.UpgradeType;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
+import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class UpgradeInventoryComponent extends InventoryComponent {
 	public UpgradeInventoryComponent(String name, int size) {
 		super(name, size, MachineSideMode.Never);
 		setShiftClickEnabled(true);
-		setShiftClickPriority(-1);
+		setShiftClickPriority(-10);
+		setFilter(new ItemStackHandlerFilter() {
+			public boolean canInsertItem(int slot, ItemStack stack) {
+				return stack.getItem() instanceof IUpgradeItem;
+			}
+		});
 	}
 
 	public UpgradeItemWrapper getMaxTierItemForUpgradeType(UpgradeType type) {

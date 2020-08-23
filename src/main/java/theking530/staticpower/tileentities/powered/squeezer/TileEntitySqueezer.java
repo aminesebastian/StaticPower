@@ -13,15 +13,15 @@ import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
-import theking530.staticpower.tileentities.components.fluids.FluidContainerInventoryComponent;
-import theking530.staticpower.tileentities.components.fluids.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.components.fluids.FluidOutputServoComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
+import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
+import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 import theking530.staticpower.utilities.InventoryUtilities;
@@ -36,17 +36,17 @@ public class TileEntitySqueezer extends TileEntityMachine {
 	public final InventoryComponent internalInventory;
 	public final InventoryComponent outputInventory;
 	public final InventoryComponent batteryInventory;
-	public final InventoryComponent fluidContainerInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
+	public final FluidContainerInventoryComponent fluidContainerComponent;
+
 	public final RecipeProcessingComponent<SqueezerRecipe> processingComponent;
 	public final FluidTankComponent fluidTankComponent;
-	public final FluidContainerInventoryComponent fluidContainerComponent;
 
 	public TileEntitySqueezer() {
 		super(ModTileEntityTypes.SQUEEZER);
 
 		// Setup the input inventory to only accept items that have a valid recipe.
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
 				return processingComponent.getRecipe(new RecipeMatchParameters(stack)).isPresent();
 			}
@@ -58,7 +58,6 @@ public class TileEntitySqueezer extends TileEntityMachine {
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
-		registerComponent(fluidContainerInventory = new InventoryComponent("FluidContainerInventory", 2));
 
 		// Setup the processing component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<SqueezerRecipe>("ProcessingComponent", SqueezerRecipe.RECIPE_TYPE, 1, this::getMatchParameters, this::moveInputs,
@@ -80,7 +79,7 @@ public class TileEntitySqueezer extends TileEntityMachine {
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Output).setUpgradeInventory(upgradesInventory));
 		fluidTankComponent.setCanFill(false);
 		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
-		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent, fluidContainerInventory, 0, 1).setMode(FluidContainerInteractionMode.FILL));
+		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent).setMode(FluidContainerInteractionMode.FILL));
 
 		// Set the energy storage upgrade inventory.
 		energyStorage.setUpgradeInventory(upgradesInventory);
@@ -123,7 +122,11 @@ public class TileEntitySqueezer extends TileEntityMachine {
 		// If this recipe has a fluid output that we cannot put into the output tank,
 		// continue waiting.
 		if (recipe.hasOutputFluid() && fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.SIMULATE) != recipe.getOutputFluid().getAmount()) {
-			return ProcessingCheckState.outputTankCannotTakeFluid();
+			if (!fluidTankComponent.getFluid().isEmpty() && fluidTankComponent.getFluid().getFluid() != recipe.getOutputFluid().getFluid()) {
+				return ProcessingCheckState.outputFluidDoesNotMatch();
+			} else {
+				return ProcessingCheckState.outputTankCannotTakeFluid();
+			}
 		}
 		return ProcessingCheckState.ok();
 	}

@@ -1,9 +1,6 @@
 package theking530.staticpower.tileentities.powered.fusionfurnace;
 
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.client.container.slots.BatteryItemSlot;
@@ -11,8 +8,6 @@ import theking530.staticpower.client.container.slots.OutputSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.client.container.slots.UpgradeItemSlot;
 import theking530.staticpower.init.ModContainerTypes;
-import theking530.staticpower.items.upgrades.BaseUpgrade;
-import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 public class ContainerFusionFurnace extends StaticPowerTileEntityContainer<TileEntityFusionFurnace> {
 
@@ -46,19 +41,5 @@ public class ContainerFusionFurnace extends StaticPowerTileEntityContainer<TileE
 
 		addPlayerInventory(getPlayerInventory(), 8, 84);
 		addPlayerHotbar(getPlayerInventory(), 8, 142);
-	}
-
-	@Override
-	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
-		if (!mergeItemStack(stack, 0, 6, false)) {
-			return true;
-		}
-		if (EnergyHandlerItemStackUtilities.isValidStaticPowerEnergyContainingItemstack(stack) && !mergeItemStack(stack, 5)) {
-			return true;
-		}
-		if (stack.getItem() instanceof BaseUpgrade && !mergeItemStack(stack, 7, 10, false)) {
-			return true;
-		}
-		return false;
 	}
 }

@@ -1,8 +1,6 @@
 package theking530.staticpower.tileentities.nonpowered.miner;
 
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.PacketBuffer;
@@ -11,7 +9,6 @@ import theking530.staticpower.client.container.slots.OutputSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.init.ModContainerTypes;
 import theking530.staticpower.init.ModItems;
-import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 public class ContainerMiner extends StaticPowerTileEntityContainer<TileEntityMiner> {
 
@@ -36,16 +33,5 @@ public class ContainerMiner extends StaticPowerTileEntityContainer<TileEntityMin
 
 		this.addPlayerInventory(getPlayerInventory(), 8, 84);
 		this.addPlayerHotbar(getPlayerInventory(), 8, 142);
-	}
-
-	@Override
-	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
-		if (!mergeItemStack(stack, 0, 1, false)) {
-			return true;
-		}
-		if (EnergyHandlerItemStackUtilities.isEnergyContainer(stack) && !mergeItemStack(stack, 1, 2, false)) {
-			return true;
-		}
-		return false;
 	}
 }

@@ -24,6 +24,8 @@ import theking530.staticpower.tileentities.nonpowered.digistorenetwork.severrack
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.severrack.GuiDigistoreServerRack;
 import theking530.staticpower.tileentities.nonpowered.evaporator.ContainerEvaporator;
 import theking530.staticpower.tileentities.nonpowered.evaporator.GuiEvaporator;
+import theking530.staticpower.tileentities.nonpowered.heatsink.ContainerHeatSink;
+import theking530.staticpower.tileentities.nonpowered.heatsink.GuiHeatSink;
 import theking530.staticpower.tileentities.nonpowered.miner.ContainerMiner;
 import theking530.staticpower.tileentities.nonpowered.miner.GuiMiner;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.ContainerSolderingTable;
@@ -101,6 +103,7 @@ public class ModContainerTypes {
 	public static ContainerType<ContainerMiner> MINER_CONTAINER;
 	public static ContainerType<ContainerElectricMiner> ELECTRIC_MINER_CONTAINER;
 	public static ContainerType<ContainerEvaporator> EVAPORATOR_CONTAINER;
+	public static ContainerType<ContainerHeatSink> HEAT_SINK_CONTAINER;
 
 	public static ContainerType<ContainerTank> TANK_CONTAINER;
 	public static ContainerType<ContainerPump> PUMP_CONTAINER;
@@ -141,6 +144,7 @@ public class ModContainerTypes {
 		MINER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_miner", ContainerMiner::new, GuiMiner::new);
 		ELECTRIC_MINER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_electric_miner", ContainerElectricMiner::new, GuiElectricMiner::new);
 		EVAPORATOR_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_evaporator", ContainerEvaporator::new, GuiEvaporator::new);
+		HEAT_SINK_CONTAINER = StaticPowerRegistry.preRegisterContainer("heat_sink", ContainerHeatSink::new, GuiHeatSink::new);
 
 		SOLDERING_TABLE_CONTAINER = StaticPowerRegistry.preRegisterContainer("soldering_table", ContainerSolderingTable::new, GuiSolderingTable::new);
 		TANK_CONTAINER = StaticPowerRegistry.preRegisterContainer("tank", ContainerTank::new, GuiTank::new);

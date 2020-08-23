@@ -37,7 +37,7 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true)
-				.setShouldControlBlockState(true).setProcessingStartedCallback(this::processingStarted).setUpgradeInventory(upgradesInventory));
+				.setShouldControlBlockState(true).setProcessingStartedCallback(this::processingStarted).setUpgradeInventory(upgradesInventory).setRedstoneControlComponent(redstoneControlComponent));
 
 		registerComponent(inputTankComponent = new FluidTankComponent("InputFluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
 		inputTankComponent.setCanDrain(false);
@@ -52,15 +52,28 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 	}
 
 	protected ProcessingCheckState canProcess() {
-		if (hasValidInput()) {
+		// Check if we have a valid input. If not, just skip.
+		if (isValidInput(inputTankComponent.getFluid())) {
+			// Get the recipe.
 			EvaporatorRecipe recipe = getRecipe(inputTankComponent.getFluid()).orElse(null);
-			if (redstoneControlComponent.passesRedstoneCheck() && (outputTankComponent.getFluid().isEmpty() || outputTankComponent.getFluid().isFluidEqual(recipe.getOutputFluid()))
-					&& outputTankComponent.getFluidAmount() + recipe.getOutputFluid().getAmount() <= outputTankComponent.getCapacity()
-					&& heatStorage.getStorage().getCurrentHeat() >= recipe.getRequiredHeat()) {
-				return ProcessingCheckState.ok();
+			// Check if the output fluid matches the already exists fluid if one exists.
+			if (outputTankComponent.getFluid().isEmpty() && !outputTankComponent.getFluid().isFluidEqual(recipe.getOutputFluid())) {
+				return ProcessingCheckState.outputFluidDoesNotMatch();
 			}
+			// Check the fluid capacity.
+			if (outputTankComponent.getFluidAmount() + recipe.getOutputFluid().getAmount() > outputTankComponent.getCapacity()) {
+				return ProcessingCheckState.outputTankCannotTakeFluid();
+			}
+			// Check the heat level.
+			if (heatStorage.getStorage().getCurrentHeat() >= recipe.getRequiredHeat()) {
+				return ProcessingCheckState.error("Heat level is not high enough!");
+			}
+
+			// If all the checks pass, return ok.
+			return ProcessingCheckState.ok();
+		} else {
+			return ProcessingCheckState.skip();
 		}
-		return ProcessingCheckState.error("");
 	}
 
 	protected void processingStarted() {
@@ -82,7 +95,7 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 		// If we have an item in the internal inventory, but not a valid output, just
 		// return true. It is possible that a recipe was modified and no longer is
 		// valid.
-		if (!hasValidInput()) {
+		if (!isValidInput(inputTankComponent.getFluid())) {
 			return ProcessingCheckState.ok();
 		}
 
@@ -108,15 +121,6 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 
 		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
-	}
-
-	@Override
-	public void process() {
-
-	}
-
-	public boolean hasValidInput() {
-		return isValidInput(inputTankComponent.getFluid());
 	}
 
 	public boolean isValidInput(FluidStack stack) {

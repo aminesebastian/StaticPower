@@ -61,7 +61,7 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	protected int inputSlotSize;
 	protected boolean isInitialized;
 	protected float partialTicks;
-	
+
 	private final SpriteDrawable lockedSprite;
 
 	/**
@@ -449,10 +449,6 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 		GuiDrawUtilities.drawPlayerInventorySlots(xPos, yPos);
 	}
 
-	/**
-	 * Draws an item from the provided slot. This does NOT render the actual slot
-	 * background (unfortunate name overlap with vanilla code).
-	 */
 	@Override
 	public void drawSlot(Slot slotIn) {
 		super.drawSlot(slotIn);
@@ -471,7 +467,7 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	 * @param slotMode The mode of the slot (this dictates the potential color
 	 *                 border).
 	 */
-	public void drawSlot(int xPos, int yPos, int width, int height, MachineSideMode slotMode) {
+	public void drawEmptySlot(int xPos, int yPos, int width, int height, MachineSideMode slotMode) {
 		if (slotMode == MachineSideMode.Regular) {
 			GuiDrawUtilities.drawSlot(xPos, yPos, width, height);
 		} else {
@@ -490,22 +486,8 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	 * @param width  The width of the slot.
 	 * @param height The height of the slot.
 	 */
-	public void drawSlot(int xPos, int yPos, int width, int height) {
+	public void drawEmptySlot(int xPos, int yPos, int width, int height) {
 		GuiDrawUtilities.drawSlot(xPos, yPos, width, height);
-	}
-
-	/**
-	 * Renders a string with the provided scale.
-	 * 
-	 * @param text
-	 * @param xPos
-	 * @param yPos
-	 * @param scale
-	 * @param color
-	 * @param withShadow
-	 */
-	public void drawStringWithSize(String text, int xPos, int yPos, float scale, Color color, boolean withShadow) {
-		GuiDrawUtilities.drawStringWithSize(text, xPos, yPos, scale, color, withShadow);
 	}
 
 	public void drawSlotOverlays(List<Slot> slots) {
@@ -567,28 +549,34 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 							}
 						}
 
-						drawSlot(slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset, slotSize, slotSize, drawnSideMode);
+						drawEmptySlot(slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset, slotSize, slotSize, drawnSideMode);
 					} else {
-						drawSlot(slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset, slotSize, slotSize);
+						drawEmptySlot(slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset, slotSize, slotSize);
 					}
 				} else {
-					drawSlot(slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset, slotSize, slotSize);
+					drawEmptySlot(slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset, slotSize, slotSize);
 				}
 
-				// If the slot is locked, render the phantom item.
+				// Check if this slot's inventory is an InventoryComponent
 				if (handlerSlot.getItemHandler() instanceof InventoryComponent) {
 					InventoryComponent component = (InventoryComponent) handlerSlot.getItemHandler();
-					if (component.isSlotLocked(slot.getSlotIndex())) {
-						itemRenderer.drawItem(component.getLockedSlotFilter(slot.getSlotIndex()), guiLeft, guiTop, slot.xPos, slot.yPos, 0.5f);
+					// Check if the slot is lockable.
+					if (component.areSlotsLockable()) {
+						// If the slot is locked, render the phantom item & the lock indicator.
+						if (component.isSlotLocked(slot.getSlotIndex())) {
+							itemRenderer.drawItem(component.getLockedSlotFilter(slot.getSlotIndex()), guiLeft, guiTop, slot.xPos, slot.yPos, 0.5f);
+						}
+						// Draw the yellow line lockable indicator.
+						GuiDrawUtilities.drawColoredRectangle(slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset + slotSize, slotSize, 1.0f, 1.0f, new Color(0.9f, 0.8f, 0));
 					}
 				}
 
 				// Draw the item.
 				handlerSlot.drawExtras(itemRenderer, guiLeft, guiTop, slotSize, sizePosOffset);
 			} else if (slot instanceof DigistoreCraftingOutputSlot) {
-				drawSlot(slot.xPos + guiLeft - 4, slot.yPos - 4 + guiTop, 24, 24);
+				drawEmptySlot(slot.xPos + guiLeft - 4, slot.yPos - 4 + guiTop, 24, 24);
 			} else {
-				drawSlot(slot.xPos + guiLeft, slot.yPos + guiTop, 16, 16);
+				drawEmptySlot(slot.xPos + guiLeft, slot.yPos + guiTop, 16, 16);
 			}
 		}
 	}

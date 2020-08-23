@@ -14,6 +14,8 @@ public class BatteryInventoryComponent extends InventoryComponent {
 		EnergyStorage = energyStorage;
 		setShiftClickEnabled(true);
 		setShiftClickPriority(-1);
+		setCapabilityExtractEnabled(false);
+		setCapabilityInsertEnabled(false);
 		this.setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
 				return EnergyHandlerItemStackUtilities.isEnergyContainer(stack);

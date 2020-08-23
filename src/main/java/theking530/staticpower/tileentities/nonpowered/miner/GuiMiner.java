@@ -35,7 +35,7 @@ public class GuiMiner extends StaticPowerTileEntityGui<ContainerMiner, TileEntit
 	public void initializeGui() {
 		registerWidget(new GuiHeatBarFromHeatStorage(getTileEntity().heatStorage.getStorage(), 8, 16, 2, 52));
 		registerWidget(new FireProgressBar(19, 52).bindToMachineProcessingComponent(getTileEntity().fuelComponent));
-		registerWidget(new SquareProgressBar(78, 54, 20, 2).bindToMachineProcessingComponent(getTileEntity().processingComponent));
+		registerWidget(new SquareProgressBar(78, 55, 20, 2).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 		registerWidget(drawPreviewButton = new SpriteButton(156, 61, 12, 12, StaticPowerSprites.RANGE_ICON, null, this::buttonPressed));
 		drawPreviewButton.setTooltip(new StringTextComponent("Preview Range"));
 		drawPreviewButton.setToggleable(true);

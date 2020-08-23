@@ -19,9 +19,9 @@ public class GrinderProgressBar extends AbstractProgressBar {
 		GuiDrawUtilities.drawTexturedModalRect(GuiTextures.GRINDER_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY(), 0.25f, 0.0f, 0.75f, 0.5f);
 		GuiDrawUtilities.drawTexturedModalRect(GuiTextures.GRINDER_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY() * adjustedProgress, 0.25f,
 				0.5f, 0.75f, 0.5f + (0.5f * adjustedProgress));
-		
+
 		if (isProcessingErrored) {
-			getErrorDrawable().draw(screenSpacePosition.getX() + 2.5f, screenSpacePosition.getY() + 0.5f);
+			getErrorDrawable().draw(screenSpacePosition.getX() + 1.0f, screenSpacePosition.getY() + 0.5f);
 		}
 	}
 }

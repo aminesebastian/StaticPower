@@ -18,19 +18,56 @@ import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
+import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.components.heat.CapabilityHeatable;
 import theking530.staticpower.tileentities.components.heat.IHeatStorage;
+import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 
 public class HeatCableComponent extends AbstractCableProviderComponent implements IHeatStorage {
+	public static final float HEAT_SYNC_MIN_DELTA = 10.0f;
 	public static final String HEAT_CAPACITY_DATA_TAG_KEY = "heat_capacity";
 	public static final String HEAT_RATE_DATA_TAG_KEY = "heat_transfer_rate";
 	private final float capacity;
 	private final float transferRate;
+	@UpdateSerialize
+	private float clientSideHeat;
+	@UpdateSerialize
+	private float clientSideHeatCapacity;
 
 	public HeatCableComponent(String name, float capacity, float transferRate) {
 		super(name, CableNetworkModuleTypes.HEAT_NETWORK_MODULE);
 		this.capacity = capacity;
 		this.transferRate = transferRate;
+	}
+
+	@Override
+	public void preProcessUpdate() {
+		super.preProcessUpdate();
+		if (!getWorld().isRemote) {
+			this.<HeatNetworkModule>getNetworkModule(CableNetworkModuleTypes.HEAT_NETWORK_MODULE).ifPresent(network -> {
+				boolean shouldUpdate = Math.abs(network.getHeatStorage().getCurrentHeat() - clientSideHeat) >= HEAT_SYNC_MIN_DELTA;
+				shouldUpdate |= network.getHeatStorage().getMaximumHeat() != clientSideHeatCapacity;
+				shouldUpdate |= clientSideHeat == 0 && network.getHeatStorage().getCurrentHeat() > 0;
+				shouldUpdate |= clientSideHeat > 0 && network.getHeatStorage().getCurrentHeat() == 0;
+				if (shouldUpdate) {
+					updateClientValues();
+				}
+			});
+		}
+	}
+
+	public void updateClientValues() {
+		if (!getWorld().isRemote) {
+			this.<HeatNetworkModule>getNetworkModule(CableNetworkModuleTypes.HEAT_NETWORK_MODULE).ifPresent(network -> {
+				clientSideHeat = network.getHeatStorage().getCurrentHeat();
+				clientSideHeatCapacity = network.getHeatStorage().getMaximumHeat();
+
+				// Only send the packet to nearby players since these packets get sent
+				// frequently.
+				HeatCableUpdatePacket packet = new HeatCableUpdatePacket(getPos(), clientSideHeat, clientSideHeatCapacity);
+				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), getPos(), 128, packet);
+			});
+		}
 	}
 
 	@Override
@@ -47,7 +84,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 			});
 			return (float) recieve.get();
 		} else {
-			return 0;
+			return clientSideHeat;
 		}
 	}
 
@@ -60,21 +97,13 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 			});
 			return (float) recieve.get();
 		} else {
-			return 0;
+			return clientSideHeatCapacity;
 		}
 	}
 
 	@Override
 	public float getConductivity() {
-		if (!getTileEntity().getWorld().isRemote) {
-			AtomicDouble recieve = new AtomicDouble(0);
-			getHeatNetworkModule().ifPresent(module -> {
-				recieve.set(module.getHeatStorage().getConductivity());
-			});
-			return (float) recieve.get();
-		} else {
-			return 0;
-		}
+		return transferRate;
 	}
 
 	@Override
@@ -101,6 +130,11 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 		} else {
 			return 0;
 		}
+	}
+
+	public void updateFromNetworkUpdatePacket(float clientHeat, float clientCapacity) {
+		this.clientSideHeat = clientHeat;
+		this.clientSideHeatCapacity = clientCapacity;
 	}
 
 	/**

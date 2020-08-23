@@ -66,7 +66,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 		heatGeneration = DEFAULT_HEAT_GENERATION;
 
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
-		registerComponent(drillBitInventory = new InventoryComponent("DrillBitInventory", 1, MachineSideMode.Never).setFilter(new ItemStackHandlerFilter() {
+		registerComponent(drillBitInventory = new InventoryComponent("DrillBitInventory", 1, MachineSideMode.Never).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
 				return stack.getItem() instanceof DrillBit;
 			}

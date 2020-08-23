@@ -49,16 +49,9 @@ import theking530.staticpower.integration.JEI.solidgenerator.SolidGeneratorRecip
 import theking530.staticpower.integration.JEI.squeezer.SqueezerRecipeCategory;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
 import theking530.staticpower.items.cableattachments.digistorecraftingterminal.ContainerDigistoreCraftingTerminal;
-import theking530.staticpower.tileentities.nonpowered.evaporator.GuiEvaporator;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.ContainerSolderingTable;
 import theking530.staticpower.tileentities.powered.autocrafter.ContainerAutoCraftingTable;
 import theking530.staticpower.tileentities.powered.autosolderingtable.ContainerAutoSolderingTable;
-import theking530.staticpower.tileentities.powered.bottler.GuiBottler;
-import theking530.staticpower.tileentities.powered.fermenter.GuiFermenter;
-import theking530.staticpower.tileentities.powered.fluidinfuser.GuiFluidInfuser;
-import theking530.staticpower.tileentities.powered.fusionfurnace.GuiFusionFurnace;
-import theking530.staticpower.tileentities.powered.poweredgrinder.GuiPoweredGrinder;
-import theking530.staticpower.tileentities.powered.squeezer.GuiSqueezer;
 import theking530.staticpower.utilities.Reference;
 
 @JeiPlugin
@@ -95,15 +88,6 @@ public class PluginJEI implements IModPlugin {
 	@Override
 	public void registerGuiHandlers(IGuiHandlerRegistration registration) {
 		registration.addGuiContainerHandler(StaticPowerContainerGui.class, new JEITabSlotAdjuster());
-
-		registration.addRecipeClickArea(GuiPoweredGrinder.class, 79, 39, 18, 17, PoweredGrinderRecipeCategory.GRINDER_UID);
-		registration.addRecipeClickArea(GuiFermenter.class, 97, 40, 48, 5, FermenterRecipeCategory.FERMENTER_UID);
-		registration.addRecipeClickArea(GuiSqueezer.class, 74, 34, 28, 5, SqueezerRecipeCategory.SQUEEZER_UID);
-		registration.addRecipeClickArea(GuiBottler.class, 74, 34, 28, 5, BottleRecipeCategory.BOTTLER_UID);
-		registration.addRecipeClickArea(GuiFluidInfuser.class, 102, 36, 17, 5, FluidInfuserRecipeCategory.FLUID_INFUSER_UID);
-		registration.addRecipeClickArea(GuiPoweredGrinder.class, 79, 39, 18, 17, CentrifugeRecipeCategory.CENTRIFUGE_UID);
-		registration.addRecipeClickArea(GuiFusionFurnace.class, 79, 39, 18, 17, FusionFurnaceRecipeCategory.FUSION_FURNACE_UID);
-		registration.addRecipeClickArea(GuiEvaporator.class, 97, 40, 48, 5, EvaporatorRecipeCategory.EVAPORATOR_UID);
 	}
 
 	@Override

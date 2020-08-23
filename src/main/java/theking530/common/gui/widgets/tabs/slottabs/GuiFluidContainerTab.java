@@ -18,10 +18,10 @@ import theking530.staticpower.client.container.StaticPowerContainer;
 import theking530.staticpower.client.container.slots.FluidContainerSlot;
 import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.network.StaticPowerMessageHandler;
-import theking530.staticpower.tileentities.components.fluids.FluidContainerInventoryComponent;
 import theking530.staticpower.tileentities.components.fluids.PacketFluidContainerComponent;
-import theking530.staticpower.tileentities.components.fluids.FluidContainerInventoryComponent.FluidContainerInteractionMode;
+import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
+import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 
 public class GuiFluidContainerTab extends BaseGuiTab {
 	private final FluidContainerInventoryComponent fluidContainerComponent;
@@ -48,7 +48,7 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 		this.filledBucketPreview = filledBucketPreview;
 
 		// Initialize the button.
-		if (fluidContainerComponent.getMode() == FluidContainerInteractionMode.DRAIN) {
+		if (fluidContainerComponent.getFluidInteractionMode() == FluidContainerInteractionMode.DRAIN) {
 			this.widgetContainer.registerWidget(fillDirectionButton = new SpriteButton(3, 40, 20, 20, StaticPowerSprites.EMPTY_BUCKET, StaticPowerSprites.EMPTY_BUCKET_HOVERED, this::buttonPressed));
 			this.topSlotPreview = filledBucketPreview;
 			this.bottomSlotPreview = emptyBucketPreview;
@@ -67,16 +67,15 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 	@Override
 	protected void initialized(int tabXPosition, int tabYPosition) {
 		// Add the slots.
-		topSlot = container.addSlotGeneric(new FluidContainerSlot(fluidContainerComponent.getPrimaryInventory(), topSlotPreview, fluidContainerComponent.getPrimarySlot(), -18, 23 + this.guiYOffset));
+		topSlot = container.addSlotGeneric(new FluidContainerSlot(fluidContainerComponent, topSlotPreview, 0, -18, 23 + this.guiYOffset));
 		fluidConatinerInventoryIndecies.add(container.inventorySlots.size() - 1);
 
-		bottomSlot = container
-				.addSlotGeneric(new FluidContainerSlot(fluidContainerComponent.getSecondaryInventory(), bottomSlotPreview, fluidContainerComponent.getSecondarySlot(), -18, 60 + this.guiYOffset));
+		bottomSlot = container.addSlotGeneric(new FluidContainerSlot(fluidContainerComponent, bottomSlotPreview, 1, -18, 60 + this.guiYOffset));
 		fluidConatinerInventoryIndecies.add(container.inventorySlots.size() - 1);
 
 		PacketGuiTabAddSlots msg = new PacketGuiTabAddSlots(container.windowId);
-		msg.addSlot((InventoryComponent) fluidContainerComponent.getPrimaryInventory(), 0, -18, 23);
-		msg.addSlot((InventoryComponent) fluidContainerComponent.getSecondaryInventory(), 1, -18, 45);
+		msg.addSlot((InventoryComponent) fluidContainerComponent, 0, -18, 23);
+		msg.addSlot((InventoryComponent) fluidContainerComponent, 1, -18, 45);
 
 		// Send a packet to the server with the updated values.
 		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
@@ -103,14 +102,14 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 
 	public void buttonPressed(StandardButton button, MouseButton mouseButton) {
 		// Update the mode.
-		fluidContainerComponent.setMode(fluidContainerComponent.getMode().getInverseMode());
+		fluidContainerComponent.setMode(fluidContainerComponent.getFluidInteractionMode().getInverseMode());
 
 		// Create and send a packet to the server with the updated mode.
-		PacketFluidContainerComponent packet = new PacketFluidContainerComponent(fluidContainerComponent, fluidContainerComponent.getMode(), fluidContainerComponent.getPos());
+		PacketFluidContainerComponent packet = new PacketFluidContainerComponent(fluidContainerComponent, fluidContainerComponent.getFluidInteractionMode(), fluidContainerComponent.getPos());
 		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(packet);
 
 		// Update the button and the slot icons.
-		if (fluidContainerComponent.getMode() == FluidContainerInteractionMode.DRAIN) {
+		if (fluidContainerComponent.getFluidInteractionMode() == FluidContainerInteractionMode.DRAIN) {
 			fillDirectionButton.setRegularTexture(StaticPowerSprites.EMPTY_BUCKET);
 			fillDirectionButton.setHoveredTexture(StaticPowerSprites.EMPTY_BUCKET_HOVERED);
 			fillDirectionButton.setTooltip(new StringTextComponent("Fill Machine with Container Contents"));

@@ -106,6 +106,7 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 		}
 
 		// Process.
+		performedWorkLastTick = false;
 		process();
 
 		// Check for changing to the off state.

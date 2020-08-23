@@ -53,7 +53,7 @@ public class GuiCentrifuge extends StaticPowerTileEntityGui<ContainerCentrifuge,
 		super.drawBackgroundExtras(partialTicks, mouseX, mouseY);
 
 		String rpmText = getTileEntity().getCurrentSpeed() + " RPM";
-		drawSlot(guiLeft + 123 - (Minecraft.getInstance().fontRenderer.getStringWidth(rpmText) / 2), guiTop + 40, Minecraft.getInstance().fontRenderer.getStringWidth(rpmText) + 4, 11);
+		drawEmptySlot(guiLeft + 123 - (Minecraft.getInstance().fontRenderer.getStringWidth(rpmText) / 2), guiTop + 40, Minecraft.getInstance().fontRenderer.getStringWidth(rpmText) + 4, 11);
 		Minecraft.getInstance().fontRenderer.drawStringWithShadow(rpmText, guiLeft + 125 - (Minecraft.getInstance().fontRenderer.getStringWidth(rpmText) / 2), guiTop + 42,
 				Color.EIGHT_BIT_WHITE.encodeInInteger());
 	}

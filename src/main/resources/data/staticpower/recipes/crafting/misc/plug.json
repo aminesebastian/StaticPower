@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"t t",
+		" r ",
+		"   "
+	],
+	"key": {
+		"t": {
+			"tag": "forge:ingots/tin"
+		},
+		"r": {
+			"tag": "forge:dusts/redstone"
+		}
+	},
+	"result": {
+		"item": "staticpower:plug"
+	}
+}

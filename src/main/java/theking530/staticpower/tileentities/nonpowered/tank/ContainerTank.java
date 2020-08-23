@@ -20,12 +20,12 @@ public class ContainerTank extends StaticPowerTileEntityContainer<TileEntityTank
 	@Override
 	public void initializeContainer() {
 		// FluidContainerDrainSlots
-		addSlot(new FluidContainerSlot(getTileEntity().fluidContainerInventory, Items.WATER_BUCKET, 0, 30, 31));
-		addSlot(new FluidContainerSlot(getTileEntity().fluidContainerInventory, Items.BUCKET, 1, 30, 63));
+		addSlot(new FluidContainerSlot(getTileEntity().inputFluidContainerComponent, Items.WATER_BUCKET, 0, 30, 31));
+		addSlot(new FluidContainerSlot(getTileEntity().inputFluidContainerComponent, Items.BUCKET, 1, 30, 63));
 
 		// FluidContainerFillSlots
-		addSlot(new FluidContainerSlot(getTileEntity().fluidContainerInventory, Items.BUCKET, 2, 130, 31));
-		addSlot(new FluidContainerSlot(getTileEntity().fluidContainerInventory, Items.WATER_BUCKET, 3, 130, 63));
+		addSlot(new FluidContainerSlot(getTileEntity().outputFluidContainerComponent, Items.BUCKET, 0, 130, 31));
+		addSlot(new FluidContainerSlot(getTileEntity().outputFluidContainerComponent, Items.WATER_BUCKET, 1, 130, 63));
 
 		addPlayerInventory(getPlayerInventory(), 8, 103);
 		addPlayerHotbar(getPlayerInventory(), 8, 161);

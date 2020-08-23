@@ -29,7 +29,8 @@ public class GuiDrawUtilities {
 
 	private static final float BACKGROUND_PIXEL_SIZE = 1.0f / 9.0f;
 
-	public static void drawGenericBackground(int width, int height, int guiLeft, int guiTop, Color mainBackgroundColor, Color rimTint, boolean drawLeft, boolean drawRight, boolean drawTop, boolean drawBottom) {
+	public static void drawGenericBackground(int width, int height, int guiLeft, int guiTop, Color mainBackgroundColor, Color rimTint, boolean drawLeft, boolean drawRight, boolean drawTop,
+			boolean drawBottom) {
 		float zLevel = 0.0f;
 
 		// MainBG
@@ -128,6 +129,16 @@ public class GuiDrawUtilities {
 		GlStateManager.enableTexture();
 	}
 
+	/**
+	 * Renders a string with the provided scale.
+	 * 
+	 * @param text
+	 * @param xPos
+	 * @param yPos
+	 * @param scale
+	 * @param color
+	 * @param withShadow
+	 */
 	public static void drawStringWithSize(String text, int xPos, int yPos, float scale, Color color, boolean withShadow) {
 		final float scaleFactor = scale;
 		final float inverseScaleFactor = 1.0f / scaleFactor;
@@ -154,6 +165,19 @@ public class GuiDrawUtilities {
 		bufferbuilder.pos((double) (x + width), (double) (y + height), 0.0).tex(maxU, maxV).endVertex();
 		bufferbuilder.pos((double) (x + width), (double) (y + 0), 0.0).tex(maxU, minV).endVertex();
 		bufferbuilder.pos((double) (x + 0), (double) (y + 0), 0.0).tex(minU, minV).endVertex();
+		tessellator.draw();
+	}
+
+	public static void drawTexturedModalRect(ResourceLocation texture, float x, float y, float width, float height, float minU, float minV, float maxU, float maxV, Color color) {
+		Minecraft.getInstance().getTextureManager().bindTexture(texture);
+		GlStateManager.enableBlend();
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder bufferbuilder = tessellator.getBuffer();
+		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_COLOR_TEX);
+		bufferbuilder.pos((double) (x + 0), (double) (y + height), 0.0).color(color.getX(), color.getY(), color.getZ(), color.getW()).tex(minU, maxV).endVertex();
+		bufferbuilder.pos((double) (x + width), (double) (y + height), 0.0).color(color.getX(), color.getY(), color.getZ(), color.getW()).tex(maxU, maxV).endVertex();
+		bufferbuilder.pos((double) (x + width), (double) (y + 0), 0.0).color(color.getX(), color.getY(), color.getZ(), color.getW()).tex(maxU, minV).endVertex();
+		bufferbuilder.pos((double) (x + 0), (double) (y + 0), 0.0).color(color.getX(), color.getY(), color.getZ(), color.getW()).tex(minU, minV).endVertex();
 		tessellator.draw();
 	}
 

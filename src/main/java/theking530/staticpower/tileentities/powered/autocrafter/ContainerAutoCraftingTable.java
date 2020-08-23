@@ -3,9 +3,7 @@ package theking530.staticpower.tileentities.powered.autocrafter;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
@@ -53,28 +51,6 @@ public class ContainerAutoCraftingTable extends StaticPowerTileEntityContainer<T
 		// Player slots.
 		addPlayerInventory(getPlayerInventory(), 8, 103);
 		addPlayerHotbar(getPlayerInventory(), 8, 161);
-	}
-
-	@Override
-	public ItemStack transferStackInSlot(PlayerEntity player, int slotIndex) {
-		// Get the slot and the slot's contents.
-		Slot slot = inventorySlots.get(slotIndex);
-		ItemStack stack = slot.getStack();
-
-		// If we shift clicked an item in the crafting table inventory, move it to the
-		// player inventory. If we shift clicked in the player inventory, attempt to
-		// move the item to the crafting inventory.
-		if (slotIndex <= 19) {
-			if (!mergeItemStack(stack, 19, 48, false)) {
-				return stack;
-			}
-		} else {
-			if (!mergeItemStack(stack, 9, 18, false)) {
-				return stack;
-			}
-		}
-
-		return stack;
 	}
 
 	@Override

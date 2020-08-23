@@ -9,7 +9,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
-import theking530.staticpower.tileentities.components.fluids.FluidContainerInventoryComponent.FluidContainerInteractionMode;
+import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent;
+import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 
 public class PacketFluidContainerComponent extends NetworkMessage {
 	private CompoundNBT fluidComponentNBT;

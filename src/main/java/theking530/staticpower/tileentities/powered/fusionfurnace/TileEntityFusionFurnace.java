@@ -39,7 +39,7 @@ public class TileEntityFusionFurnace extends TileEntityMachine {
 
 		// Setup the input inventory with no filtering (no point since there are
 		// multiple inputs).
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 5, MachineSideMode.Input));
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 5, MachineSideMode.Input).setShiftClickEnabled(true));
 
 		// Setup all the other inventories.
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 5));

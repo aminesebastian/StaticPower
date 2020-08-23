@@ -15,15 +15,15 @@ import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
-import theking530.staticpower.tileentities.components.fluids.FluidContainerInventoryComponent;
-import theking530.staticpower.tileentities.components.fluids.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.components.fluids.FluidOutputServoComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
+import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
+import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 import theking530.staticpower.utilities.InventoryUtilities;
@@ -35,26 +35,25 @@ public class TileEntityFermenter extends TileEntityMachine {
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
-	public final InventoryComponent internalInventory;
-	public final InventoryComponent fluidContainerInventory;
+	public final InventoryComponent internalInventory;;
+	public final FluidContainerInventoryComponent fluidContainerComponent;
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
+
 	public final RecipeProcessingComponent<FermenterRecipe> processingComponent;
 	public final FluidTankComponent fluidTankComponent;
-	public final FluidContainerInventoryComponent fluidContainerComponent;
 
 	public TileEntityFermenter() {
 		super(ModTileEntityTypes.FERMENTER);
 
 		// Setup the input inventory to only accept items that have a valid recipe.
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 9, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 9, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
 				return processingComponent.getRecipe(new RecipeMatchParameters(stack)).isPresent();
 			}
 		}));
 
 		// Setup all the other inventories.
-		registerComponent(fluidContainerInventory = new InventoryComponent("FluidContainerInventory", 2));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 9));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
@@ -79,7 +78,7 @@ public class TileEntityFermenter extends TileEntityMachine {
 		// Setup the fluid tanks and servo.
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000).setCapabilityExposedModes(MachineSideMode.Output).setUpgradeInventory(upgradesInventory));
 		registerComponent(new FluidOutputServoComponent("FluidInputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
-		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent, fluidContainerInventory, 0, 1).setMode(FluidContainerInteractionMode.FILL));
+		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent).setMode(FluidContainerInteractionMode.FILL));
 
 		// Set the energy storage upgrade inventory.
 		energyStorage.setUpgradeInventory(upgradesInventory);

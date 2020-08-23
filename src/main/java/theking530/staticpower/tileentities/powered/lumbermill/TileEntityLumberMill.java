@@ -13,15 +13,15 @@ import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
-import theking530.staticpower.tileentities.components.fluids.FluidContainerInventoryComponent;
-import theking530.staticpower.tileentities.components.fluids.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.components.fluids.FluidOutputServoComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
+import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
+import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
@@ -36,20 +36,19 @@ public class TileEntityLumberMill extends TileEntityMachine {
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent mainOutputInventory;
 	public final InventoryComponent secondaryOutputInventory;
-	public final InventoryComponent fluidContainerInventory;
+	public final FluidContainerInventoryComponent fluidContainerComponent;
 	public final InventoryComponent internalInventory;
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 
 	public final RecipeProcessingComponent<LumberMillRecipe> processingComponent;
 	public final FluidTankComponent fluidTankComponent;
-	public final FluidContainerInventoryComponent fluidContainerComponent;
 
 	public TileEntityLumberMill() {
 		super(ModTileEntityTypes.LUMBER_MILL);
 		this.disableFaceInteraction();
 
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
 				return processingComponent.getRecipe(new RecipeMatchParameters(stack)).isPresent();
 			}
@@ -86,9 +85,7 @@ public class TileEntityLumberMill extends TileEntityMachine {
 		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
 
 		// Register components to allow the lumbermill to fill buckets in the GUI.
-		registerComponent(fluidContainerInventory = new InventoryComponent("FluidContainerInventory", 2, MachineSideMode.Never));
-		registerComponent(
-				fluidContainerComponent = new FluidContainerInventoryComponent("FluidFillContainerServo", fluidTankComponent, fluidContainerInventory, 0, 1).setMode(FluidContainerInteractionMode.FILL));
+		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidFillContainerServo", fluidTankComponent).setMode(FluidContainerInteractionMode.FILL));
 
 		// Set the energy storage upgrade inventory.
 		energyStorage.setUpgradeInventory(upgradesInventory);
