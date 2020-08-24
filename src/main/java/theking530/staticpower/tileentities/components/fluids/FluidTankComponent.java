@@ -23,7 +23,7 @@ import theking530.staticpower.tileentities.components.serialization.UpdateSerial
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
 public class FluidTankComponent extends AbstractTileEntityComponent implements IFluidHandler, IFluidTank {
-	public static final int FLUID_SYNC_MAX_DELTA = 10;
+	public static final int FLUID_SYNC_MAX_DELTA = 5;
 
 	@UpdateSerialize
 	protected StaticPowerFluidTank FluidStorage;

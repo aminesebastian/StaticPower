@@ -10,15 +10,15 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
-import theking530.staticpower.utilities.Reference;
 
 public class FarmingFertalizerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<FarmingFertalizerRecipe> {
 	public static final FarmingFertalizerRecipeSerializer INSTANCE = new FarmingFertalizerRecipeSerializer();
 	private static final Logger LOGGER = LogManager.getLogger(FarmingFertalizerRecipeSerializer.class);
 
 	private FarmingFertalizerRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(Reference.MOD_ID, "farming_fertalizer_recipe"));
+		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "farming_fertalizer_recipe"));
 	}
 
 	@Override

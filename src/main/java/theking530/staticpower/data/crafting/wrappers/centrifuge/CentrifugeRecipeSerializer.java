@@ -8,16 +8,16 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.tileentities.powered.centrifuge.TileEntityCentrifuge;
-import theking530.staticpower.utilities.Reference;
 
 public class CentrifugeRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CentrifugeRecipe> {
 	public static final CentrifugeRecipeSerializer INSTANCE = new CentrifugeRecipeSerializer();
 
 	private CentrifugeRecipeSerializer() {
-		setRegistryName(new ResourceLocation(Reference.MOD_ID, "centrifuge_recipe"));
+		setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "centrifuge_recipe"));
 	}
 
 	@Override

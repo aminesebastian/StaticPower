@@ -17,7 +17,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import theking530.common.gui.widgets.GuiDrawItem;
 import theking530.common.utilities.StaticVertexBuffer;
-import theking530.staticpower.utilities.Reference;
+import theking530.staticpower.StaticPower;
 
 public class StringButton extends AbstractGui implements MouseListener {
 
@@ -40,8 +40,8 @@ public class StringButton extends AbstractGui implements MouseListener {
 	public boolean CLICKED = false;
 	protected GuiDrawItem itemDrawer;
 	
-	private ResourceLocation base = new ResourceLocation(Reference.MOD_ID + ":" + "/textures/gui/Button.png");
-	private ResourceLocation hover = new ResourceLocation(Reference.MOD_ID + ":" + "/textures/gui/ButtonHover.png");
+	private ResourceLocation base = new ResourceLocation(StaticPower.MOD_ID + ":" + "/textures/gui/Button.png");
+	private ResourceLocation hover = new ResourceLocation(StaticPower.MOD_ID + ":" + "/textures/gui/ButtonHover.png");
 
 	public StringButton(int guiLeft, int guiTop, int width, int height, int xPos, int yPos, Block block) {
 		this.GUI_LEFT = guiLeft;

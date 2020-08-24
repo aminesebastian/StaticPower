@@ -12,7 +12,6 @@ import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.utilities.Reference;
 
 /**
  * Class responsible for containing all the registered packets.
@@ -22,7 +21,7 @@ import theking530.staticpower.utilities.Reference;
  */
 public class StaticPowerMessageHandler {
 	private static final String PROTOCOL_VERSION = "1";
-	public static final SimpleChannel MAIN_PACKET_CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(Reference.MOD_ID, "main"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals,
+	public static final SimpleChannel MAIN_PACKET_CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(StaticPower.MOD_ID, "main"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals,
 			PROTOCOL_VERSION::equals);
 	private static int currentMessageId = 0;
 

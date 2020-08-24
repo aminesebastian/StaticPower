@@ -8,12 +8,12 @@ import theking530.staticpower.cables.heat.TileEntityHeatCable;
 import theking530.staticpower.cables.item.TileEntityItemCable;
 import theking530.staticpower.cables.power.TileEntityPowerCable;
 import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.tileentities.nonpowered.condenser.TileEntityCondenser;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.TileEntityDigistore;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.ioport.TileEntityDigistoreIOPort;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.TileEntityDigistoreManager;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.severrack.TileEntityDigistoreServerRack;
 import theking530.staticpower.tileentities.nonpowered.evaporator.TileEntityEvaporator;
-import theking530.staticpower.tileentities.nonpowered.heatsink.TileEntityHeatSink;
 import theking530.staticpower.tileentities.nonpowered.miner.TileEntityMiner;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.TileEntitySolderingTable;
 import theking530.staticpower.tileentities.nonpowered.tank.TileEntityTank;
@@ -32,6 +32,7 @@ import theking530.staticpower.tileentities.powered.fluidgenerator.TileEntityFlui
 import theking530.staticpower.tileentities.powered.fluidinfuser.TileEntityFluidInfuser;
 import theking530.staticpower.tileentities.powered.former.TileEntityFormer;
 import theking530.staticpower.tileentities.powered.fusionfurnace.TileEntityFusionFurnace;
+import theking530.staticpower.tileentities.powered.heatsink.TileEntityHeatSink;
 import theking530.staticpower.tileentities.powered.lumbermill.TileEntityLumberMill;
 import theking530.staticpower.tileentities.powered.poweredfurnace.TileEntityPoweredFurnace;
 import theking530.staticpower.tileentities.powered.poweredgrinder.TileEntityPoweredGrinder;
@@ -102,6 +103,7 @@ public class ModTileEntityTypes {
 	public static TileEntityType<TileEntityMiner> MINER;
 	public static TileEntityType<TileEntityElectricMiner> ELECTRIC_MINER;
 	public static TileEntityType<TileEntityEvaporator> EVAPORATOR;
+	public static TileEntityType<TileEntityCondenser> CONDENSER;
 
 	public static TileEntityType<TileEntityHeatSink> HEAT_SINK_ALUMINIUM;
 	public static TileEntityType<TileEntityHeatSink> HEAT_SINK_COPPER;
@@ -147,6 +149,7 @@ public class ModTileEntityTypes {
 		MINER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityMiner(), ModBlocks.Miner);
 		ELECTRIC_MINER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityElectricMiner(), ModBlocks.ElectricMiner);
 		EVAPORATOR = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityEvaporator(), ModBlocks.Evaporator);
+		CONDENSER = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityCondenser(), ModBlocks.Condenser);
 
 		BATTERY_BASIC = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(type, StaticPowerTiers.BASIC), ModBlocks.BatteryBasic);
 		BATTERY_ADVANCED = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityBattery(type, StaticPowerTiers.ADVANCED), ModBlocks.BatteryAdvanced);

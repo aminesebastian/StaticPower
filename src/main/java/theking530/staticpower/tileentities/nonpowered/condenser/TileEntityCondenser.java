@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.nonpowered.evaporator;
+package theking530.staticpower.tileentities.nonpowered.condenser;
 
 import java.util.Optional;
 
@@ -9,7 +9,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
-import theking530.staticpower.data.crafting.wrappers.evaporation.EvaporatorRecipe;
+import theking530.staticpower.data.crafting.wrappers.condensation.CondensationRecipe;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityConfigurable;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
@@ -19,12 +19,12 @@ import theking530.staticpower.tileentities.components.fluids.FluidOutputServoCom
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.heat.HeatStorageComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
+import theking530.staticpower.tileentities.nonpowered.evaporator.TileEntityEvaporator;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
-public class TileEntityEvaporator extends TileEntityConfigurable {
+public class TileEntityCondenser extends TileEntityConfigurable {
 	public static final int DEFAULT_PROCESSING_TIME = 5;
 	public static final int DEFAULT_TANK_SIZE = 5000;
-	public static final float DEFAULT_EVAPORATION_HEAT = 10.0f;
 
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final MachineProcessingComponent processingComponent;
@@ -32,8 +32,8 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 	public final FluidTankComponent outputTankComponent;
 	public final HeatStorageComponent heatStorage;
 
-	public TileEntityEvaporator() {
-		super(ModTileEntityTypes.EVAPORATOR);
+	public TileEntityCondenser() {
+		super(ModTileEntityTypes.CONDENSER);
 
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true)
@@ -57,7 +57,8 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 		// Check if we have a valid input. If not, just skip.
 		if (isValidInput(inputTankComponent.getFluid())) {
 			// Get the recipe.
-			EvaporatorRecipe recipe = getRecipe(inputTankComponent.getFluid()).orElse(null);
+			CondensationRecipe recipe = getRecipe(inputTankComponent.getFluid()).orElse(null);
+
 			// Check if the output fluid matches the already exists fluid if one exists.
 			if (!outputTankComponent.getFluid().isEmpty() && !outputTankComponent.getFluid().isFluidEqual(recipe.getOutputFluid())) {
 				return ProcessingCheckState.outputFluidDoesNotMatch();
@@ -66,9 +67,10 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 			if (outputTankComponent.getFluidAmount() + recipe.getOutputFluid().getAmount() > outputTankComponent.getCapacity()) {
 				return ProcessingCheckState.outputTankCannotTakeFluid();
 			}
+
 			// Check the heat level.
-			if (heatStorage.getStorage().getCurrentHeat() < recipe.getRequiredHeat()) {
-				return ProcessingCheckState.error("Heat level is not high enough!");
+			if (heatStorage.getStorage().getCurrentHeat() + TileEntityEvaporator.DEFAULT_EVAPORATION_HEAT > heatStorage.getStorage().getMaximumHeat()) {
+				return ProcessingCheckState.error("Machine is too hot!");
 			}
 
 			// If all the checks pass, return ok.
@@ -79,7 +81,7 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 	}
 
 	protected void processingStarted() {
-		EvaporatorRecipe recipe = getRecipe(inputTankComponent.getFluid()).orElse(null);
+		CondensationRecipe recipe = getRecipe(inputTankComponent.getFluid()).orElse(null);
 		if (recipe != null) {
 			this.processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
 		}
@@ -102,17 +104,17 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 		}
 
 		// Get recipe.
-		EvaporatorRecipe recipe = getRecipe(inputTankComponent.getFluid()).orElse(null);
+		CondensationRecipe recipe = getRecipe(inputTankComponent.getFluid()).orElse(null);
 
-		// If we don;t have enough heat, return early.
-		if (heatStorage.getStorage().getCurrentHeat() < recipe.getRequiredHeat()) {
-			return ProcessingCheckState.error("Not enough Heat!");
+		// Check the heat level.
+		if (heatStorage.getStorage().getCurrentHeat() + TileEntityEvaporator.DEFAULT_EVAPORATION_HEAT > heatStorage.getStorage().getMaximumHeat()) {
+			return ProcessingCheckState.error("Machine is too hot!");
 		}
-
+		
 		// If we can't store the filled output in the output slot, return false.
 		if (!(outputTankComponent.getFluid().isEmpty() || outputTankComponent.getFluid().isFluidEqual(recipe.getOutputFluid()))
 				|| outputTankComponent.getFluidAmount() + recipe.getOutputFluid().getAmount() > outputTankComponent.getCapacity()) {
-			return ProcessingCheckState.error("Output tank full!");
+			return ProcessingCheckState.fluidOutputFull();
 		}
 
 		// Drain the input fluid.
@@ -122,7 +124,7 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 		outputTankComponent.fill(recipe.getOutputFluid(), FluidAction.EXECUTE);
 
 		// Use the heat.
-		heatStorage.getStorage().cool(DEFAULT_EVAPORATION_HEAT, false);
+		heatStorage.getStorage().heat(TileEntityEvaporator.DEFAULT_EVAPORATION_HEAT, false);
 
 		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
@@ -132,12 +134,12 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 		return getRecipe(stack).isPresent();
 	}
 
-	protected Optional<EvaporatorRecipe> getRecipe(FluidStack stack) {
-		return StaticPowerRecipeRegistry.getRecipe(EvaporatorRecipe.RECIPE_TYPE, new RecipeMatchParameters(stack));
+	protected Optional<CondensationRecipe> getRecipe(FluidStack stack) {
+		return StaticPowerRecipeRegistry.getRecipe(CondensationRecipe.RECIPE_TYPE, new RecipeMatchParameters(stack));
 	}
 
 	@Override
 	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
-		return new ContainerEvaporator(windowId, inventory, this);
+		return new ContainerCondenser(windowId, inventory, this);
 	}
 }

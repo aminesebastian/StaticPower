@@ -24,15 +24,15 @@ import theking530.common.gui.widgets.progressbars.CentrifugeProgressBar;
 import theking530.common.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.common.utilities.Color;
 import theking530.common.utilities.Vector2D;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.wrappers.centrifuge.CentrifugeRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.utilities.MetricConverter;
-import theking530.staticpower.utilities.Reference;
 
 public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRecipe> {
-	public static final ResourceLocation CENTRIFUGE_UID = new ResourceLocation(Reference.MOD_ID, "centrifuge");
+	public static final ResourceLocation CENTRIFUGE_UID = new ResourceLocation(StaticPower.MOD_ID, "centrifuge");
 	private static final int INTPUT_SLOT = 0;
 	private static final int PRIMARY_OUTPUT_SLOT = 1;
 	private static final int SECONDARY_OUTPUT_SLOT = 2;

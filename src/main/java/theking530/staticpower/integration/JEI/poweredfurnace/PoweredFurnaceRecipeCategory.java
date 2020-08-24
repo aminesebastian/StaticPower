@@ -22,14 +22,14 @@ import theking530.common.gui.GuiDrawUtilities;
 import theking530.common.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.common.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.common.utilities.Vector2D;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.tileentities.powered.poweredfurnace.TileEntityPoweredFurnace;
 import theking530.staticpower.utilities.MetricConverter;
-import theking530.staticpower.utilities.Reference;
 
 public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<FurnaceRecipe> {
-	public static final ResourceLocation POWERED_FURNACE_UID = new ResourceLocation(Reference.MOD_ID, "powered_furnace");
+	public static final ResourceLocation POWERED_FURNACE_UID = new ResourceLocation(StaticPower.MOD_ID, "powered_furnace");
 	private static final int INTPUT_SLOT = 0;
 	private static final int OUTPUT_SLOT = 1;
 

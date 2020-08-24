@@ -9,16 +9,16 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.tileentities.powered.poweredgrinder.TileEntityPoweredGrinder;
-import theking530.staticpower.utilities.Reference;
 
 public class GrinderRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<GrinderRecipe> {
 	public static final GrinderRecipeSerializer INSTANCE = new GrinderRecipeSerializer();
 
 	private GrinderRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(Reference.MOD_ID, "grinder_recipe"));
+		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "grinder_recipe"));
 	}
 
 	@Override

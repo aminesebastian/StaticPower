@@ -23,7 +23,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.common.util.Constants;
-import theking530.staticpower.utilities.Reference;
+import theking530.staticpower.StaticPower;
 
 /**
  * Much thanks to raoulvdberge and RefinedPipes for offering a ton of wisdom on
@@ -37,7 +37,7 @@ import theking530.staticpower.utilities.Reference;
  */
 public class CableNetworkManager extends WorldSavedData {
 	private static final Logger LOGGER = LogManager.getLogger(CableNetworkManager.class);
-	private static final String PREFIX = Reference.MOD_ID + "_cable_network";
+	private static final String PREFIX = StaticPower.MOD_ID + "_cable_network";
 	private final World World;
 	private final HashMap<BlockPos, ServerCable> WorldCables;
 	private final HashMap<Long, CableNetwork> Networks;

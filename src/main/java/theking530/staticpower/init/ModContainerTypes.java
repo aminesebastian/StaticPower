@@ -18,14 +18,14 @@ import theking530.staticpower.items.cableattachments.retirever.ContainerRetrieve
 import theking530.staticpower.items.cableattachments.retirever.GuiRetriever;
 import theking530.staticpower.items.itemfilter.ContainerItemFilter;
 import theking530.staticpower.items.itemfilter.GuiItemFilter;
+import theking530.staticpower.tileentities.nonpowered.condenser.ContainerCondenser;
+import theking530.staticpower.tileentities.nonpowered.condenser.GuiCondenser;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.ContainerDigistore;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.GuiDigistore;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.severrack.ContainerDigistoreServerRack;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.severrack.GuiDigistoreServerRack;
 import theking530.staticpower.tileentities.nonpowered.evaporator.ContainerEvaporator;
 import theking530.staticpower.tileentities.nonpowered.evaporator.GuiEvaporator;
-import theking530.staticpower.tileentities.nonpowered.heatsink.ContainerHeatSink;
-import theking530.staticpower.tileentities.nonpowered.heatsink.GuiHeatSink;
 import theking530.staticpower.tileentities.nonpowered.miner.ContainerMiner;
 import theking530.staticpower.tileentities.nonpowered.miner.GuiMiner;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.ContainerSolderingTable;
@@ -62,6 +62,8 @@ import theking530.staticpower.tileentities.powered.former.ContainerFormer;
 import theking530.staticpower.tileentities.powered.former.GuiFormer;
 import theking530.staticpower.tileentities.powered.fusionfurnace.ContainerFusionFurnace;
 import theking530.staticpower.tileentities.powered.fusionfurnace.GuiFusionFurnace;
+import theking530.staticpower.tileentities.powered.heatsink.ContainerHeatSink;
+import theking530.staticpower.tileentities.powered.heatsink.GuiHeatSink;
 import theking530.staticpower.tileentities.powered.lumbermill.ContainerLumberMill;
 import theking530.staticpower.tileentities.powered.lumbermill.GuiLumberMill;
 import theking530.staticpower.tileentities.powered.poweredfurnace.ContainerPoweredFurnace;
@@ -103,6 +105,7 @@ public class ModContainerTypes {
 	public static ContainerType<ContainerMiner> MINER_CONTAINER;
 	public static ContainerType<ContainerElectricMiner> ELECTRIC_MINER_CONTAINER;
 	public static ContainerType<ContainerEvaporator> EVAPORATOR_CONTAINER;
+	public static ContainerType<ContainerCondenser> CONDENSER_CONTAINER;
 	public static ContainerType<ContainerHeatSink> HEAT_SINK_CONTAINER;
 
 	public static ContainerType<ContainerTank> TANK_CONTAINER;
@@ -144,6 +147,7 @@ public class ModContainerTypes {
 		MINER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_miner", ContainerMiner::new, GuiMiner::new);
 		ELECTRIC_MINER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_electric_miner", ContainerElectricMiner::new, GuiElectricMiner::new);
 		EVAPORATOR_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_evaporator", ContainerEvaporator::new, GuiEvaporator::new);
+		CONDENSER_CONTAINER = StaticPowerRegistry.preRegisterContainer("machine_condenser", ContainerCondenser::new, GuiCondenser::new);
 		HEAT_SINK_CONTAINER = StaticPowerRegistry.preRegisterContainer("heat_sink", ContainerHeatSink::new, GuiHeatSink::new);
 
 		SOLDERING_TABLE_CONTAINER = StaticPowerRegistry.preRegisterContainer("soldering_table", ContainerSolderingTable::new, GuiSolderingTable::new);

@@ -13,24 +13,29 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 		COOL, HEAT
 	}
 
+	public enum HeatDissipationTiming {
+		PRE_PROCESS, POST_PROCESS
+	}
+
 	public static final float ENERGY_SYNC_MAX_DELTA = 1;
 
 	@UpdateSerialize
 	protected final HeatStorage heatStorage;
-
+	protected final HeatDissipationTiming dissipationTiming;
 	protected TriFunction<Float, Direction, HeatManipulationAction, Boolean> filter;
 	private float lastSyncHeat;
 	private HeatComponentCapabilityAccess capabilityAccessor;
 
-	public HeatStorageComponent(String name, float maxHeat, float maxTransferRate, float thermalConductivity) {
-		this(name, maxHeat, maxTransferRate);
+	public HeatStorageComponent(String name, float maxHeat, float maxTransferRate) {
+		this(name, maxHeat, maxTransferRate, HeatDissipationTiming.POST_PROCESS);
 	}
 
-	public HeatStorageComponent(String name, float maxHeat, float maxTransferRate) {
+	public HeatStorageComponent(String name, float maxHeat, float maxTransferRate, HeatDissipationTiming timing) {
 		super(name);
 		heatStorage = new HeatStorage(maxHeat, maxTransferRate);
 		capabilityAccessor = new HeatComponentCapabilityAccess();
 		lastSyncHeat = 0.0f;
+		dissipationTiming = timing;
 	}
 
 	@Override

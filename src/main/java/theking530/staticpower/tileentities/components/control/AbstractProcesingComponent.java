@@ -626,6 +626,10 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 			return new ProcessingCheckState(ProcessingState.ERROR, "Requires more fluid.");
 		}
 
+		public static ProcessingCheckState fluidOutputFull() {
+			return new ProcessingCheckState(ProcessingState.ERROR, "Output tank does not have enough space!");
+		}
+
 		public static ProcessingCheckState powerOutputFull() {
 			return new ProcessingCheckState(ProcessingState.ERROR, "Energy storage is full!");
 		}

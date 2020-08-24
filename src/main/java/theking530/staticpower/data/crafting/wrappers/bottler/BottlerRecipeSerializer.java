@@ -9,14 +9,14 @@ import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
-import theking530.staticpower.utilities.Reference;
 
 public class BottlerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<BottleRecipe> {
 	public static final BottlerRecipeSerializer INSTANCE = new BottlerRecipeSerializer();
 
 	private BottlerRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(Reference.MOD_ID, "bottler_recipe"));
+		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "bottler_recipe"));
 	}
 
 	@Override

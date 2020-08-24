@@ -21,23 +21,37 @@ import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.components.heat.CapabilityHeatable;
 import theking530.staticpower.tileentities.components.heat.IHeatStorage;
+import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 
 public class HeatCableComponent extends AbstractCableProviderComponent implements IHeatStorage {
 	public static final float HEAT_SYNC_MIN_DELTA = 10.0f;
 	public static final String HEAT_CAPACITY_DATA_TAG_KEY = "heat_capacity";
 	public static final String HEAT_RATE_DATA_TAG_KEY = "heat_transfer_rate";
+	public static final String HEAT_GENERATION_RATE = "heat_generation";
+	public static final String HEAT_GENERATION_POWER_USAGE = "heat_generation_power_cost";
 	private final float capacity;
 	private final float transferRate;
 	@UpdateSerialize
 	private float clientSideHeat;
 	@UpdateSerialize
 	private float clientSideHeatCapacity;
+	@UpdateSerialize
+	private float heatGeneration;
+	@UpdateSerialize
+	private int heatGenerationPowerUsage;
+	private EnergyStorageComponent energyStorageComponent;
 
 	public HeatCableComponent(String name, float capacity, float transferRate) {
+		this(name, capacity, transferRate, 0.0f, 0);
+	}
+
+	public HeatCableComponent(String name, float capacity, float transferRate, float heatGeneration, int heatGenerationPowerUsage) {
 		super(name, CableNetworkModuleTypes.HEAT_NETWORK_MODULE);
 		this.capacity = capacity;
 		this.transferRate = transferRate;
+		this.heatGeneration = heatGeneration;
+		this.heatGenerationPowerUsage = heatGenerationPowerUsage;
 	}
 
 	@Override
@@ -67,6 +81,27 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 				HeatCableUpdatePacket packet = new HeatCableUpdatePacket(getPos(), clientSideHeat, clientSideHeatCapacity);
 				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), getPos(), 128, packet);
 			});
+		}
+	}
+
+	public HeatCableComponent setEnergyStorageComponent(EnergyStorageComponent energyComponent) {
+		energyStorageComponent = energyComponent;
+		return this;
+	}
+
+	public void generateHeat(HeatNetworkModule networkModule) {
+		if (!getWorld().isRemote) {
+			if (energyStorageComponent != null && heatGeneration != 0.0f) {
+				float transferableHeat = networkModule.getHeatStorage().getMaximumHeat() - networkModule.getHeatStorage().getCurrentHeat();
+				transferableHeat = Math.min(transferableHeat, heatGeneration);
+
+				int maxPowerUsage = Math.min(heatGenerationPowerUsage, energyStorageComponent.getStorage().getEnergyStored());
+				int powerUsage = (int) Math.max(1, maxPowerUsage * (transferableHeat / heatGeneration));
+				if (energyStorageComponent.hasEnoughPower(powerUsage)) {
+					energyStorageComponent.useBulkPower(powerUsage);
+					networkModule.getHeatStorage().heat(transferableHeat, false);
+				}
+			}
 		}
 	}
 
@@ -160,6 +195,8 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 		return new ServerCable(getWorld(), getPos(), getSupportedNetworkModuleTypes(), (cable) -> {
 			cable.setProperty(HEAT_CAPACITY_DATA_TAG_KEY, capacity);
 			cable.setProperty(HEAT_RATE_DATA_TAG_KEY, transferRate);
+			cable.setProperty(HEAT_GENERATION_RATE, heatGeneration);
+			cable.setProperty(HEAT_GENERATION_POWER_USAGE, heatGenerationPowerUsage);
 		});
 	}
 

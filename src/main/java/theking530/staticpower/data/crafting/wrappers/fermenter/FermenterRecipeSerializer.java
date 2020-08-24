@@ -8,15 +8,15 @@ import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
-import theking530.staticpower.utilities.Reference;
 
 public class FermenterRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<FermenterRecipe> {
 	public static final FermenterRecipeSerializer INSTANCE = new FermenterRecipeSerializer();
 
 	private FermenterRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(Reference.MOD_ID, "fermenter_recipe"));
+		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "fermenter_recipe"));
 	}
 
 	@Override

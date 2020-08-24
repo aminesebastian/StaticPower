@@ -10,15 +10,15 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.tileentities.powered.former.TileEntityFormer;
-import theking530.staticpower.utilities.Reference;
 
 public class FormerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<FormerRecipe> {
 	public static final FormerRecipeSerializer INSTANCE = new FormerRecipeSerializer();
 
 	private FormerRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(Reference.MOD_ID, "former_recipe"));
+		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "former_recipe"));
 	}
 
 	@Override

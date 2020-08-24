@@ -22,15 +22,15 @@ import theking530.common.gui.GuiDrawUtilities;
 import theking530.common.gui.widgets.progressbars.GrinderProgressBar;
 import theking530.common.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.common.utilities.Vector2D;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.wrappers.grinder.GrinderRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.utilities.MetricConverter;
-import theking530.staticpower.utilities.Reference;
 
 public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderRecipe> {
-	public static final ResourceLocation GRINDER_UID = new ResourceLocation(Reference.MOD_ID, "grinder");
+	public static final ResourceLocation GRINDER_UID = new ResourceLocation(StaticPower.MOD_ID, "grinder");
 	private static final int INTPUT_SLOT = 0;
 	private static final int PRIMARY_OUTPUT_SLOT = 1;
 	private static final int SECONDARY_OUTPUT_SLOT = 2;

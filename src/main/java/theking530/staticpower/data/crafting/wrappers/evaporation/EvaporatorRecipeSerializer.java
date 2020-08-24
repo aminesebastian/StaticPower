@@ -8,15 +8,15 @@ import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 import theking530.staticpower.tileentities.nonpowered.evaporator.TileEntityEvaporator;
-import theking530.staticpower.utilities.Reference;
 
 public class EvaporatorRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<EvaporatorRecipe> {
 	public static final EvaporatorRecipeSerializer INSTANCE = new EvaporatorRecipeSerializer();
 
 	private EvaporatorRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(Reference.MOD_ID, "evaporation_recipe"));
+		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "evaporation_recipe"));
 	}
 
 	@Override

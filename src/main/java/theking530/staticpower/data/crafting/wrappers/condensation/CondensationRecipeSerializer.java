@@ -8,15 +8,15 @@ import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
-import theking530.staticpower.tileentities.powered.former.TileEntityFormer;
-import theking530.staticpower.utilities.Reference;
+import theking530.staticpower.tileentities.nonpowered.condenser.TileEntityCondenser;
 
 public class CondensationRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CondensationRecipe> {
 	public static final CondensationRecipeSerializer INSTANCE = new CondensationRecipeSerializer();
 
 	private CondensationRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(Reference.MOD_ID, "condensation_recipe"));
+		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "condensation_recipe"));
 	}
 
 	@Override
@@ -30,18 +30,16 @@ public class CondensationRecipeSerializer extends ForgeRegistryEntry<IRecipeSeri
 		FluidStack outputFluid = StaticPowerJsonParsingUtilities.parseFluidStack(outputFluidObject);
 
 		// Start with the default processing values.
-		int powerCost = TileEntityFormer.DEFAULT_PROCESSING_COST;
-		int processingTime = TileEntityFormer.DEFAULT_PROCESSING_TIME;
+		int processingTime = TileEntityCondenser.DEFAULT_PROCESSING_TIME;
 
 		// Capture the processing and power costs.
 		if (JSONUtils.hasField(json, "processing")) {
 			JsonObject processingElement = JSONUtils.getJsonObject(json, "processing");
-			powerCost = processingElement.get("time").getAsInt();
 			processingTime = processingElement.get("power").getAsInt();
 		}
 
 		// Create the recipe.
-		return new CondensationRecipe(recipeId, inputFluid, outputFluid, processingTime, powerCost);
+		return new CondensationRecipe(recipeId, inputFluid, outputFluid, processingTime);
 	}
 
 	@Override

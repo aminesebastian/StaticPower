@@ -2,16 +2,19 @@ package theking530.staticpower.cables.heat;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetwork;
@@ -25,6 +28,7 @@ import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.thermalconductivity.ThermalConductivityRecipe;
+import theking530.staticpower.tileentities.components.ComponentUtilities;
 import theking530.staticpower.tileentities.components.heat.CapabilityHeatable;
 import theking530.staticpower.tileentities.components.heat.HeatStorage;
 import theking530.staticpower.tileentities.components.heat.IHeatStorage;
@@ -69,6 +73,27 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 		// Capture the transfer metrics.
 		heatStorage.captureHeatTransferMetric();
 
+		// Handle the passive heating/cooling. Each iteration we limit the thermal
+		// transfer rate to the current cable's. Do not put this in the IF heat > 0
+		// check.
+		for (ServerCable cable : Network.getGraph().getCables().values()) {
+			// Execute any passive heating/cooling.
+			for (Direction dir : Direction.values()) {
+				IFluidState fluidState = Network.getWorld().getFluidState(cable.getPos().offset(dir));
+				BlockState blockstate = Network.getWorld().getBlockState(cable.getPos().offset(dir));
+				StaticPowerRecipeRegistry
+						.getRecipe(ThermalConductivityRecipe.RECIPE_TYPE, new RecipeMatchParameters(new ItemStack(blockstate.getBlock())).setFluids(new FluidStack(fluidState.getFluid(), 1)))
+						.ifPresent((recipe) -> {
+							if (recipe.getThermalConductivity() < 0) {
+								heatStorage.heat(recipe.getThermalConductivity() * cable.getFloatProperty(HeatCableComponent.HEAT_RATE_DATA_TAG_KEY), false);
+							} else {
+								heatStorage.cool(recipe.getThermalConductivity() * cable.getFloatProperty(HeatCableComponent.HEAT_RATE_DATA_TAG_KEY), false);
+							}
+						});
+			}
+		}
+
+		// If we still have heat after dissipation, send the heat through the network.
 		if (heatStorage.getCurrentHeat() > 0) {
 			// Handle the active cooling.
 			if (Network.getGraph().getDestinations().size() > 0) {
@@ -97,18 +122,12 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 			}
 		}
 
-		// Handle the passive heating/cooling. Each iteration we limit the thermal
-		// transfer rate to the current cable's. Do not put this in the IF heat > 0
-		// check.
 		for (ServerCable cable : Network.getGraph().getCables().values()) {
-			for (Direction dir : Direction.values()) {
-				IFluidState fluidState = Network.getWorld().getFluidState(cable.getPos().offset(dir));
-				BlockState blockstate = Network.getWorld().getBlockState(cable.getPos().offset(dir));
-				StaticPowerRecipeRegistry
-						.getRecipe(ThermalConductivityRecipe.RECIPE_TYPE, new RecipeMatchParameters(new ItemStack(blockstate.getBlock())).setFluids(new FluidStack(fluidState.getFluid(), 1)))
-						.ifPresent((recipe) -> {
-							heatStorage.cool(recipe.getThermalConductivity() * cable.getFloatProperty(HeatCableComponent.HEAT_RATE_DATA_TAG_KEY), false);
-						});
+			// Generate heat if required to.
+			TileEntity te = world.getChunkAt(cable.getPos()).getTileEntity(cable.getPos(), Chunk.CreateEntityType.QUEUED);
+			Optional<HeatCableComponent> heatComponent = ComponentUtilities.getComponent(HeatCableComponent.class, te);
+			if (heatComponent.isPresent()) {
+				heatComponent.get().generateHeat(this);
 			}
 		}
 	}

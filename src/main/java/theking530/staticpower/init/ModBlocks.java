@@ -22,12 +22,12 @@ import theking530.staticpower.cables.heat.BlockHeatCable;
 import theking530.staticpower.cables.item.BlockItemCable;
 import theking530.staticpower.cables.power.BlockPowerCable;
 import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.tileentities.nonpowered.condenser.BlockCondenser;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.BlockDigistore;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.ioport.BlockDigistoreIOPort;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.BlockDigistoreManager;
 import theking530.staticpower.tileentities.nonpowered.digistorenetwork.severrack.BlockDigistoreServerRack;
 import theking530.staticpower.tileentities.nonpowered.evaporator.BlockEvaporator;
-import theking530.staticpower.tileentities.nonpowered.heatsink.BlockHeatSink;
 import theking530.staticpower.tileentities.nonpowered.miner.BlockMiner;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.BlockSolderingTable;
 import theking530.staticpower.tileentities.nonpowered.tank.BlockTank;
@@ -46,6 +46,7 @@ import theking530.staticpower.tileentities.powered.fluidgenerator.BlockFluidGene
 import theking530.staticpower.tileentities.powered.fluidinfuser.BlockFluidInfuser;
 import theking530.staticpower.tileentities.powered.former.BlockFormer;
 import theking530.staticpower.tileentities.powered.fusionfurnace.BlockFusionFurnace;
+import theking530.staticpower.tileentities.powered.heatsink.BlockHeatSink;
 import theking530.staticpower.tileentities.powered.lumbermill.BlockLumberMill;
 import theking530.staticpower.tileentities.powered.poweredfurnace.BlockPoweredFurnace;
 import theking530.staticpower.tileentities.powered.poweredgrinder.BlockPoweredGrinder;
@@ -151,6 +152,7 @@ public class ModBlocks {
 	public static BlockMiner Miner;
 	public static BlockElectricMiner ElectricMiner;
 	public static BlockEvaporator Evaporator;
+	public static BlockCondenser Condenser;
 
 	public static BlockHeatSink AluminiumHeatSink;
 	public static BlockHeatSink CopperHeatSink;
@@ -331,6 +333,7 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(Miner = new BlockMiner("machine_miner"));
 		StaticPowerRegistry.preRegisterBlock(ElectricMiner = new BlockElectricMiner("machine_electric_miner"));
 		StaticPowerRegistry.preRegisterBlock(Evaporator = new BlockEvaporator("machine_evaporator"));
+		StaticPowerRegistry.preRegisterBlock(Condenser = new BlockCondenser("machine_condenser"));
 
 		StaticPowerRegistry.preRegisterBlock(AluminiumHeatSink = new BlockHeatSink("heat_sink_aluminium", StaticPowerTiers.ALUMINIUM));
 		StaticPowerRegistry.preRegisterBlock(CopperHeatSink = new BlockHeatSink("heat_sink_copper", StaticPowerTiers.COPPER));

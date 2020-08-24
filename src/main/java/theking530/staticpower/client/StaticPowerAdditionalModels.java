@@ -4,7 +4,7 @@ import java.util.HashSet;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
-import theking530.staticpower.utilities.Reference;
+import theking530.staticpower.StaticPower;
 
 public class StaticPowerAdditionalModels {
 	public static final HashSet<ResourceLocation> MODELS = new HashSet<ResourceLocation>();
@@ -137,7 +137,7 @@ public class StaticPowerAdditionalModels {
 	}
 
 	private static ResourceLocation registerModel(String path) {
-		ResourceLocation sprite = new ResourceLocation(Reference.MOD_ID, path);
+		ResourceLocation sprite = new ResourceLocation(StaticPower.MOD_ID, path);
 		MODELS.add(sprite);
 		return sprite;
 	}

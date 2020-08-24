@@ -57,7 +57,7 @@ public class FluidProgressBar extends AbstractProgressBar {
 
 		// Draw the error indicator if needed.
 		if (isProcessingErrored) {
-			getErrorDrawable().draw(screenSpacePosition.getX() + (getSize().getY() / 2.0f) + 4.0f, screenSpacePosition.getY() - (getSize().getY() / 2.0f) - 3.0f);
+			getErrorDrawable().draw(screenSpacePosition.getX() + (getSize().getX() / 2.0f) - 8.0f, screenSpacePosition.getY() - (getSize().getY() / 2.0f) - 3.25f);
 		}
 	}
 }

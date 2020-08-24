@@ -12,17 +12,17 @@ import net.minecraft.item.crafting.SpecialRecipe;
 import net.minecraft.item.crafting.SpecialRecipeSerializer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.items.cableattachments.CableCover;
 import theking530.staticpower.items.tools.CoverSaw;
-import theking530.staticpower.utilities.Reference;
 
 public class CoverRecipe extends SpecialRecipe {
 	public static final SpecialRecipeSerializer<CoverRecipe> SERIALIZER_INSTANCE;
 
 	static {
 		SERIALIZER_INSTANCE = new SpecialRecipeSerializer<>(id -> new CoverRecipe(id));
-		SERIALIZER_INSTANCE.setRegistryName(new ResourceLocation(Reference.MOD_ID, "cover_recipe"));
+		SERIALIZER_INSTANCE.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "cover_recipe"));
 	}
 
 	public CoverRecipe(ResourceLocation id) {

@@ -29,6 +29,8 @@ public class StaticPowerTier {
 	private float heatCableConductivity;
 	private float heatSinkCapacity;
 	private float heatSinkConductivity;
+	private float heatSinkElectricHeatGeneration;
+	private int heatSinkElectricHeatPowerUsage;
 
 	private int upgradeOrdinal;
 
@@ -65,6 +67,14 @@ public class StaticPowerTier {
 	 ********************/
 	private int maxCentrifugeSpeedUpgrade;
 	private float centrifugeUpgradedPowerIncrease;
+
+	public float getHeatSinkElectricHeatGeneration() {
+		return heatSinkElectricHeatGeneration;
+	}
+
+	public int getHeatSinkElectricHeatPowerUsage() {
+		return heatSinkElectricHeatPowerUsage;
+	}
 
 	public int getMaxCentrifugeSpeedUpgrade() {
 		return maxCentrifugeSpeedUpgrade;

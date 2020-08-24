@@ -18,7 +18,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraftforge.fluids.FluidAttributes;
-import theking530.staticpower.utilities.Reference;
+import theking530.staticpower.StaticPower;
 
 public abstract class AbstractStaticPowerFluid extends FlowingFluid {
 
@@ -106,7 +106,7 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid {
 
 	@Override
 	protected FluidAttributes createAttributes() {
-		FluidAttributes.Builder attributes = FluidAttributes.builder(new ResourceLocation(Reference.MOD_ID, StillTexture), new ResourceLocation(Reference.MOD_ID, FlowingTexture))
+		FluidAttributes.Builder attributes = FluidAttributes.builder(new ResourceLocation(StaticPower.MOD_ID, StillTexture), new ResourceLocation(StaticPower.MOD_ID, FlowingTexture))
 				.translationKey(FluidBlock.get().getTranslationKey().replace("block", "fluid"));
 		if (AdditionalAtrributesDelegate != null) {
 			AdditionalAtrributesDelegate.accept(attributes);

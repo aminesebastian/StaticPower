@@ -22,15 +22,15 @@ import theking530.common.gui.GuiDrawUtilities;
 import theking530.common.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.common.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.common.utilities.Vector2D;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.wrappers.solidfuel.SolidFuelRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.tileentities.powered.solidgenerator.TileEntitySolidGenerator;
 import theking530.staticpower.utilities.MetricConverter;
-import theking530.staticpower.utilities.Reference;
 
 public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFuelRecipe> {
-	public static final ResourceLocation SOLID_GENERATOR_UID = new ResourceLocation(Reference.MOD_ID, "solid_generator");
+	public static final ResourceLocation SOLID_GENERATOR_UID = new ResourceLocation(StaticPower.MOD_ID, "solid_generator");
 	private static final int INTPUT_SLOT = 0;
 
 	private final TranslationTextComponent locTitle;
@@ -48,8 +48,8 @@ public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFue
 		locTitle = new TranslationTextComponent(ModBlocks.SolidGenerator.getTranslationKey());
 		background = guiHelper.createBlankDrawable(90, 60);
 		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.SolidGenerator));
-		flamesBg = guiHelper.drawableBuilder(new ResourceLocation(Reference.MOD_ID, "textures/gui/flames.png"), 0, 14, 14, 14).setTextureSize(32, 32).build();
-		flames = guiHelper.drawableBuilder(new ResourceLocation(Reference.MOD_ID, "textures/gui/flames.png"), 0, 0, 14, 14).setTextureSize(32, 32).build();
+		flamesBg = guiHelper.drawableBuilder(new ResourceLocation(StaticPower.MOD_ID, "textures/gui/flames.png"), 0, 14, 14, 14).setTextureSize(32, 32).build();
+		flames = guiHelper.drawableBuilder(new ResourceLocation(StaticPower.MOD_ID, "textures/gui/flames.png"), 0, 0, 14, 14).setTextureSize(32, 32).build();
 		pBar = new ArrowProgressBar(55, 19).setFlipped(true);
 	}
 

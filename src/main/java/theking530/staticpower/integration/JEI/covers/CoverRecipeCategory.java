@@ -18,9 +18,9 @@ import net.minecraft.item.crafting.ShapelessRecipe;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.init.ModTags;
 import theking530.staticpower.items.cableattachments.CableCover;
-import theking530.staticpower.utilities.Reference;
 
 /**
  * Huge thanks to Applied Energistics 2 and the JEI Wiki!
@@ -118,7 +118,7 @@ public class CoverRecipeCategory implements IRecipeManagerPlugin {
 
 	private ShapelessRecipe make(ItemStack coverBlockItem, ItemStack result) {
 		// This id should only be used within JEI and not really matter
-		ResourceLocation id = new ResourceLocation(Reference.MOD_ID, "cover/" + coverBlockItem.getItem().getRegistryName().toString().replace(':', '/'));
+		ResourceLocation id = new ResourceLocation(StaticPower.MOD_ID, "cover/" + coverBlockItem.getItem().getRegistryName().toString().replace(':', '/'));
 
 		// Popualte the ingredients.
 		NonNullList<Ingredient> ingredients = NonNullList.withSize(2, Ingredient.EMPTY);

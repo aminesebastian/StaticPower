@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.nonpowered.heatsink;
+package theking530.staticpower.tileentities.powered.heatsink;
 
 import java.util.List;
 
@@ -15,11 +15,14 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModTileEntityTypes;
@@ -41,6 +44,8 @@ public class BlockHeatSink extends StaticPowerTileEntityBlock {
 		super.getBasicTooltip(stack, worldIn, tooltip);
 		tooltip.add(HeatUtilities.getHeatRateTooltip(StaticPowerDataRegistry.getTier(tier).getHeatSinkConductivity()));
 		tooltip.add(HeatUtilities.getHeatCapacityTooltip(StaticPowerDataRegistry.getTier(tier).getHeatSinkCapacity()));
+		tooltip.add(HeatUtilities.getHeatGenerationTooltip(StaticPowerDataRegistry.getTier(tier).getHeatSinkElectricHeatGeneration()));
+		tooltip.add(new StringTextComponent(TextFormatting.GRAY.toString()).appendSibling(new StringTextComponent("Generation Usage: ")).appendSibling(new StringTextComponent(TextFormatting.RED.toString())).appendSibling(GuiTextUtilities.formatEnergyRateToString(StaticPowerDataRegistry.getTier(tier).getHeatSinkElectricHeatPowerUsage())));
 	}
 
 	@Override

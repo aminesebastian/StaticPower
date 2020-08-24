@@ -27,7 +27,7 @@ public class TileEntityElectricMiner extends AbstractTileEntityMiner {
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 
-		// Set the fuel usages higher as they now coorelate to power usage.
+		// Set the fuel usages higher as they now correlate to power usage.
 		setBlockMiningFuelCost(getBlockMiningFuelCost() * 100);
 		setIdleFuelCost(getIdleFuelCost() * 100);
 

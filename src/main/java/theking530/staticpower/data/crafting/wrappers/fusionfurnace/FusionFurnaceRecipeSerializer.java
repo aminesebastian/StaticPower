@@ -12,16 +12,16 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.tileentities.powered.fusionfurnace.TileEntityFusionFurnace;
-import theking530.staticpower.utilities.Reference;
 
 public class FusionFurnaceRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<FusionFurnaceRecipe> {
 	public static final FusionFurnaceRecipeSerializer INSTANCE = new FusionFurnaceRecipeSerializer();
 
 	private FusionFurnaceRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(Reference.MOD_ID, "fusion_furnace_recipe"));
+		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "fusion_furnace_recipe"));
 	}
 
 	@Override

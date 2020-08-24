@@ -24,15 +24,15 @@ import theking530.common.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.common.gui.widgets.valuebars.GuiFluidBarUtilities;
 import theking530.common.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.common.utilities.Vector2D;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.wrappers.fluidinfusion.FluidInfusionRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.utilities.MetricConverter;
-import theking530.staticpower.utilities.Reference;
 
 public class FluidInfuserRecipeCategory extends BaseJEIRecipeCategory<FluidInfusionRecipe> {
-	public static final ResourceLocation FLUID_INFUSER_UID = new ResourceLocation(Reference.MOD_ID, "fluid_infuser");
+	public static final ResourceLocation FLUID_INFUSER_UID = new ResourceLocation(StaticPower.MOD_ID, "fluid_infuser");
 	private static final int INTPUT_SLOT = 0;
 	private static final int OUTPUT_SLOT = 1;
 

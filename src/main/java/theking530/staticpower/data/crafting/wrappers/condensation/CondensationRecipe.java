@@ -13,8 +13,8 @@ public class CondensationRecipe extends AbstractMachineRecipe {
 	private final FluidStack inputFluid;
 	private final FluidStack outputFluid;
 
-	public CondensationRecipe(ResourceLocation name, FluidStack inputFluid, FluidStack outputFluid, int processingCost, int processingTime) {
-		super(name, processingCost, processingTime);
+	public CondensationRecipe(ResourceLocation name, FluidStack inputFluid, FluidStack outputFluid, int processingCost) {
+		super(name, processingCost, 0);
 		this.inputFluid = inputFluid;
 		this.outputFluid = outputFluid;
 	}

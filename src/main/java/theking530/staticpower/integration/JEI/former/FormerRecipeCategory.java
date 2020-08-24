@@ -21,14 +21,14 @@ import theking530.common.gui.GuiDrawUtilities;
 import theking530.common.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.common.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.common.utilities.Vector2D;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.wrappers.former.FormerRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.utilities.MetricConverter;
-import theking530.staticpower.utilities.Reference;
 
 public class FormerRecipeCategory extends BaseJEIRecipeCategory<FormerRecipe> {
-	public static final ResourceLocation FORMER_UID = new ResourceLocation(Reference.MOD_ID, "former");
+	public static final ResourceLocation FORMER_UID = new ResourceLocation(StaticPower.MOD_ID, "former");
 	private static final int MOLD_SLOT = 0;
 	private static final int INTPUT_SLOT = 1;
 	private static final int OUTPUT_SLOT = 2;

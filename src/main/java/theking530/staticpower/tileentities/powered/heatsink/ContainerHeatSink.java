@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.nonpowered.heatsink;
+package theking530.staticpower.tileentities.powered.heatsink;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketBuffer;

@@ -7,9 +7,8 @@ import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.config.ModConfig;
-import theking530.staticpower.utilities.Reference;
 
-@EventBusSubscriber(modid = Reference.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = StaticPower.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class StaticPowerConfig {
 
 	public static final StaticPowerClientConfig CLIENT;
@@ -64,15 +63,15 @@ public class StaticPowerConfig {
 
 		public StaticPowerClientConfig(ForgeConfigSpec.Builder builder) {
 			builder.push("Ore Generation");
-			COPPER_ORE_GEN = builder.comment("Disable or Enable Copper Ore Generation").translation(Reference.MOD_ID + ".config." + "copperore").define("CopperOre", true);
-			TIN_ORE_GEN = builder.comment("Disable or Enable Tin Ore Generation").translation(Reference.MOD_ID + ".config." + "tinore").define("TinOre", true);
-			LEAD_ORE_GEN = builder.comment("Disable or Enable Lead Ore Generation").translation(Reference.MOD_ID + ".config." + "leadore").define("LeadOre", true);
-			SILVER_ORE_GEN = builder.comment("Disable or Enable Silver Ore Generation").translation(Reference.MOD_ID + ".config." + "silverore").define("SilverOre", true);
-			PLATINUM_ORE_GEN = builder.comment("Disable or Enable Platinum Ore Generation").translation(Reference.MOD_ID + ".config." + "platinumore").define("PlatinumOre", true);
-			NICKEL_ORE_GEN = builder.comment("Disable or Enable Nickel Ore Generation").translation(Reference.MOD_ID + ".config." + "nickelore").define("NickelOre", true);
-			ALUMINIUM_ORE_GEN = builder.comment("Disable or Enable Aluminium Ore Generation").translation(Reference.MOD_ID + ".config." + "aluminiumore").define("AluminiumOre", true);
-			SAPPHIRE_ORE_GEN = builder.comment("Disable or Enable Sapphire Ore Generation").translation(Reference.MOD_ID + ".config." + "sapphireore").define("SapphireOre", true);
-			RUBY_ORE_GEN = builder.comment("Disable or Enable Ruby Ore Generation").translation(Reference.MOD_ID + ".config." + "rubyore").define("RubyOre", true);
+			COPPER_ORE_GEN = builder.comment("Disable or Enable Copper Ore Generation").translation(StaticPower.MOD_ID + ".config." + "copperore").define("CopperOre", true);
+			TIN_ORE_GEN = builder.comment("Disable or Enable Tin Ore Generation").translation(StaticPower.MOD_ID + ".config." + "tinore").define("TinOre", true);
+			LEAD_ORE_GEN = builder.comment("Disable or Enable Lead Ore Generation").translation(StaticPower.MOD_ID + ".config." + "leadore").define("LeadOre", true);
+			SILVER_ORE_GEN = builder.comment("Disable or Enable Silver Ore Generation").translation(StaticPower.MOD_ID + ".config." + "silverore").define("SilverOre", true);
+			PLATINUM_ORE_GEN = builder.comment("Disable or Enable Platinum Ore Generation").translation(StaticPower.MOD_ID + ".config." + "platinumore").define("PlatinumOre", true);
+			NICKEL_ORE_GEN = builder.comment("Disable or Enable Nickel Ore Generation").translation(StaticPower.MOD_ID + ".config." + "nickelore").define("NickelOre", true);
+			ALUMINIUM_ORE_GEN = builder.comment("Disable or Enable Aluminium Ore Generation").translation(StaticPower.MOD_ID + ".config." + "aluminiumore").define("AluminiumOre", true);
+			SAPPHIRE_ORE_GEN = builder.comment("Disable or Enable Sapphire Ore Generation").translation(StaticPower.MOD_ID + ".config." + "sapphireore").define("SapphireOre", true);
+			RUBY_ORE_GEN = builder.comment("Disable or Enable Ruby Ore Generation").translation(StaticPower.MOD_ID + ".config." + "rubyore").define("RubyOre", true);
 			builder.pop();
 		}
 	}

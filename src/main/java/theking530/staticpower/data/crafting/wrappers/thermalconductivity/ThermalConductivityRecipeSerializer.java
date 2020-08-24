@@ -8,14 +8,14 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
-import theking530.staticpower.utilities.Reference;
 
 public class ThermalConductivityRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ThermalConductivityRecipe> {
 	public static final ThermalConductivityRecipeSerializer INSTANCE = new ThermalConductivityRecipeSerializer();
 
 	private ThermalConductivityRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(Reference.MOD_ID, "thermal_conducitity"));
+		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "thermal_conducitity"));
 	}
 
 	@Override

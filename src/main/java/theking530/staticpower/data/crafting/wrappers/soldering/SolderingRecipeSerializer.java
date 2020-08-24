@@ -12,13 +12,13 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import theking530.staticpower.utilities.Reference;
+import theking530.staticpower.StaticPower;
 
 public class SolderingRecipeSerializer extends net.minecraftforge.registries.ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<SolderingRecipe> {
 	public static final SolderingRecipeSerializer INSTANCE = new SolderingRecipeSerializer();
 
 	public SolderingRecipeSerializer() {
-		setRegistryName(new ResourceLocation(Reference.MOD_ID, "soldering_recipe"));
+		setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "soldering_recipe"));
 	}
 
 	public SolderingRecipe read(ResourceLocation recipeId, JsonObject json) {

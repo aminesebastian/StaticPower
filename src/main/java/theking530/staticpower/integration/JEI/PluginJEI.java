@@ -17,6 +17,7 @@ import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.gui.StaticPowerContainerGui;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
@@ -52,7 +53,6 @@ import theking530.staticpower.items.cableattachments.digistorecraftingterminal.C
 import theking530.staticpower.tileentities.nonpowered.solderingtable.ContainerSolderingTable;
 import theking530.staticpower.tileentities.powered.autocrafter.ContainerAutoCraftingTable;
 import theking530.staticpower.tileentities.powered.autosolderingtable.ContainerAutoSolderingTable;
-import theking530.staticpower.utilities.Reference;
 
 @JeiPlugin
 public class PluginJEI implements IModPlugin {
@@ -214,6 +214,6 @@ public class PluginJEI implements IModPlugin {
 
 	@Override
 	public ResourceLocation getPluginUid() {
-		return new ResourceLocation(Reference.MOD_ID, "plguin_jei");
+		return new ResourceLocation(StaticPower.MOD_ID, "plguin_jei");
 	}
 }

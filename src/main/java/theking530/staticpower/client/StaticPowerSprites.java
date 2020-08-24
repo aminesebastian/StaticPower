@@ -3,7 +3,7 @@ package theking530.staticpower.client;
 import java.util.HashSet;
 
 import net.minecraft.util.ResourceLocation;
-import theking530.staticpower.utilities.Reference;
+import theking530.staticpower.StaticPower;
 
 public class StaticPowerSprites {
 	public static final HashSet<ResourceLocation> SPRITES = new HashSet<ResourceLocation>();
@@ -72,7 +72,7 @@ public class StaticPowerSprites {
 	public static final ResourceLocation FLAMES = registerSprite("gui/flames");
 
 	private static ResourceLocation registerSprite(String path) {
-		ResourceLocation sprite = new ResourceLocation(Reference.MOD_ID, path);
+		ResourceLocation sprite = new ResourceLocation(StaticPower.MOD_ID, path);
 		SPRITES.add(sprite);
 		return sprite;
 	}

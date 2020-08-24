@@ -1,6 +1,7 @@
 package theking530.staticpower.tileentities.components.serialization;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,7 +86,11 @@ public class SerializationUtilities {
 				}
 				// Get the type of the field and then serialize it if possible.
 				Class<?> t = field.getType();
-				if (t == boolean.class) {
+				if (t.isEnum()) {
+					Method m = t.getMethod("ordinal");
+					int value = (int) m.invoke(field.get(object));
+					nbt.putByte(field.getName(), (byte) value);
+				} else if (t == boolean.class) {
 					nbt.putBoolean(field.getName(), field.getBoolean(object));
 				} else if (t == int.class) {
 					nbt.putInt(field.getName(), field.getInt(object));
@@ -145,7 +150,12 @@ public class SerializationUtilities {
 
 				// Get the type of the field and then serialize it if possible.
 				Class<?> t = field.getType();
-				if (t == boolean.class) {
+				if (t.isEnum()) {
+					Method m = t.getMethod("values");
+					Object[] values = (Object[]) m.invoke(field.get(object));
+					Object result = values[nbt.getByte(field.getName())];
+					field.set(object, result);
+				} else if (t == boolean.class) {
 					field.set(object, nbt.getBoolean(field.getName()));
 				} else if (t == int.class) {
 					field.set(object, nbt.getInt(field.getName()));

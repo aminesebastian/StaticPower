@@ -140,7 +140,8 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 			if (!otherProvider.isSideDisabled(side.getOpposite())) {
 				return CableConnectionState.CABLE;
 			}
-		} else if (te != null && otherProvider == null) {
+		}
+		if (te != null) {
 			if (te.getCapability(CapabilityEnergy.ENERGY, side.getOpposite()).isPresent()) {
 				return CableConnectionState.TILE_ENTITY;
 			}

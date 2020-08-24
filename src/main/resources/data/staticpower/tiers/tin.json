@@ -6,5 +6,7 @@
 	"heatCableCapacity": 35,
 	"heatCableConductivity": 30.0,
 	"heatSinkCapacity": 5000,
-	"heatSinkConductivity": 50.0
+	"heatSinkConductivity": 50.0,
+	"heatSinkElectricHeatGeneration": 32.0,
+	"heatSinkElectricHeatPowerUsage": 30
 }

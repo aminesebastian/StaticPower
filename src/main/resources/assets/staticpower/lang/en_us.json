@@ -317,6 +317,7 @@
 	"block.staticpower.machine_miner": "Solid Fueled Miner",
 	"block.staticpower.machine_electric_miner": "Electric Miner",
 	"block.staticpower.machine_evaporator": "Evaporator",
+	"block.staticpower.machine_condenser": "Condenser",
 	"block.staticpower.battery_block_basic": "Basic Battery",
 	"block.staticpower.battery_block_advanced": "Advanced Battery",
 	"block.staticpower.battery_block_static": "Static Battery",

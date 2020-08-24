@@ -20,13 +20,13 @@ import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import theking530.common.gui.GuiDrawUtilities;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
-import theking530.staticpower.utilities.Reference;
 
 public class SolderingTableRecipeCategory extends BaseJEIRecipeCategory<SolderingRecipe> {
-	public static final ResourceLocation SOLDERING_TABLE_UID = new ResourceLocation(Reference.MOD_ID, "soldering_table");
+	public static final ResourceLocation SOLDERING_TABLE_UID = new ResourceLocation(StaticPower.MOD_ID, "soldering_table");
 	private static final int OUTPUT_SLOT = 10;
 	private static final int SOLDERING_IRON_SLOT = 11;
 

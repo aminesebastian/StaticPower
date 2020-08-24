@@ -12,6 +12,11 @@ public class HeatUtilities {
 				.appendSibling(GuiTextUtilities.formatHeatRateToString(heatDissipation));
 	}
 
+	public static ITextComponent getHeatGenerationTooltip(float heatGeneration) {
+		return new StringTextComponent(TextFormatting.GRAY.toString()).appendSibling(new StringTextComponent("Heat Generation: ")).appendText(TextFormatting.GREEN.toString())
+				.appendSibling(GuiTextUtilities.formatHeatRateToString(heatGeneration));
+	}
+
 	public static ITextComponent getHeatCapacityTooltip(float capacity) {
 		return new StringTextComponent(TextFormatting.GRAY.toString()).appendSibling(new StringTextComponent("Heat Capacity: ")).appendText(TextFormatting.BLUE.toString())
 				.appendSibling(GuiTextUtilities.formatHeatToString(capacity));

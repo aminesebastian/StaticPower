@@ -12,10 +12,10 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidAttributes;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.fluids.AbstractStaticPowerFluid.Flowing;
 import theking530.staticpower.fluids.AbstractStaticPowerFluid.Source;
 import theking530.staticpower.items.StaticPowerFluidBucket;
-import theking530.staticpower.utilities.Reference;
 
 public class StaticPowerFluidBundle {
 	public final String name;
@@ -92,7 +92,7 @@ public class StaticPowerFluidBundle {
 		public StaticPowerFluidBundle build() {
 			String stillTexture = "blocks/fluids/" + name + "_still";
 			String flowingTexture = "blocks/fluids/" + name + "_flowing";
-			Tag<Fluid> tag = new FluidTags.Wrapper(new ResourceLocation(Reference.MOD_ID, name));
+			Tag<Fluid> tag = new FluidTags.Wrapper(new ResourceLocation(StaticPower.MOD_ID, name));
 			fluidBlock = new StaticPowerFluidBlock(name, () -> fluid, Block.Properties.create(Material.WATER));
 			fluid = new AbstractStaticPowerFluid.Source(name, bucketSupplier, () -> fluidBlock, () -> fluid, () -> flowingFluid, stillTexture, flowingTexture, tag, attributes);
 			flowingFluid = new AbstractStaticPowerFluid.Flowing(name, bucketSupplier, () -> fluidBlock, () -> fluid, () -> flowingFluid, stillTexture, flowingTexture, tag, attributes);
