@@ -22,11 +22,11 @@ import theking530.common.gui.GuiDrawUtilities;
 import theking530.common.gui.widgets.valuebars.GuiFluidBarUtilities;
 import theking530.common.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.crafting.wrappers.squeezer.SqueezerRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
-import theking530.staticpower.utilities.MetricConverter;
 
 public class SqueezerRecipeCategory extends BaseJEIRecipeCategory<SqueezerRecipe> {
 	public static final ResourceLocation SQUEEZER_UID = new ResourceLocation(StaticPower.MOD_ID, "squeezer");
@@ -95,8 +95,8 @@ public class SqueezerRecipeCategory extends BaseJEIRecipeCategory<SqueezerRecipe
 	public List<String> getTooltipStrings(SqueezerRecipe recipe, double mouseX, double mouseY) {
 		List<String> output = new ArrayList<String>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			String powerCost = new MetricConverter(recipe.getPowerCost() * recipe.getProcessingTime()).getValueAsString(true);
-			output.add("Usage: " + powerCost + "FE");
+			String powerCost = GuiTextUtilities.formatEnergyToString(recipe.getProcessingTime() * recipe.getPowerCost()).getFormattedText();
+			output.add("Usage: " + powerCost);
 		}
 
 		return output;

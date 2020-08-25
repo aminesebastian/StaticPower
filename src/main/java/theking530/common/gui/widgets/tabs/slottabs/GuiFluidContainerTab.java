@@ -67,15 +67,15 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 	@Override
 	protected void initialized(int tabXPosition, int tabYPosition) {
 		// Add the slots.
-		topSlot = container.addSlotGeneric(new FluidContainerSlot(fluidContainerComponent, topSlotPreview, 0, -18, 23 + this.guiYOffset));
+		topSlot = container.addSlotGeneric(new FluidContainerSlot(fluidContainerComponent, topSlotPreview, 0, 4 + guiXOffset, 23 + guiYOffset));
 		fluidConatinerInventoryIndecies.add(container.inventorySlots.size() - 1);
 
-		bottomSlot = container.addSlotGeneric(new FluidContainerSlot(fluidContainerComponent, bottomSlotPreview, 1, -18, 60 + this.guiYOffset));
+		bottomSlot = container.addSlotGeneric(new FluidContainerSlot(fluidContainerComponent, bottomSlotPreview, 1, 4 + guiXOffset, 60 + guiYOffset));
 		fluidConatinerInventoryIndecies.add(container.inventorySlots.size() - 1);
 
 		PacketGuiTabAddSlots msg = new PacketGuiTabAddSlots(container.windowId);
-		msg.addSlot((InventoryComponent) fluidContainerComponent, 0, -18, 23);
-		msg.addSlot((InventoryComponent) fluidContainerComponent, 1, -18, 45);
+		msg.addSlot((InventoryComponent) fluidContainerComponent, 0, 4 + guiXOffset, 23);
+		msg.addSlot((InventoryComponent) fluidContainerComponent, 1, 4 + guiXOffset, 45);
 
 		// Send a packet to the server with the updated values.
 		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);

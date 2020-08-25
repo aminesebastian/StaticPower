@@ -1,15 +1,14 @@
 package theking530.staticpower.energy;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraftforge.common.util.INBTSerializable;
+public interface IStaticVoltHandler {
+	public static final int FE_TO_SV_CONVERSION = 10;
 
-public interface IStaticVoltHandler extends INBTSerializable<CompoundNBT> {
 	/**
 	 * Returns the amount of power currently stored in this IStaticVoltHandler
 	 * 
 	 * @return
 	 */
-	public int getStoredCharge();
+	public int getStoredPower();
 
 	/**
 	 * Returns the maximum amount of power that can be stored in this
@@ -17,17 +16,13 @@ public interface IStaticVoltHandler extends INBTSerializable<CompoundNBT> {
 	 * 
 	 * @return
 	 */
-	public int getMaximumCharge();
+	public int getCapacity();
 
-	public int recievePower(int voltage, int current, boolean simulate);
+	public int receivePower(int power, boolean simulate);
 
-	public int drainPower(int charge, boolean simulate);
+	public int drainPower(int power, boolean simulate);
 
 	public boolean canRecievePower();
 
 	public boolean canDrainPower();
-
-	public int getMinimumInputVoltage();
-
-	public int getMaximumInputVoltage();
 }

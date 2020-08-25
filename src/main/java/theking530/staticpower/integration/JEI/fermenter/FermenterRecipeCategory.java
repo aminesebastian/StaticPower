@@ -22,13 +22,13 @@ import theking530.common.gui.GuiDrawUtilities;
 import theking530.common.gui.widgets.valuebars.GuiFluidBarUtilities;
 import theking530.common.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.crafting.wrappers.fermenter.FermenterRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.tileentities.powered.fermenter.TileEntityFermenter;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
-import theking530.staticpower.utilities.MetricConverter;
 
 public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterRecipe> {
 	public static final ResourceLocation FERMENTER_UID = new ResourceLocation(StaticPower.MOD_ID, "fermenter");
@@ -107,8 +107,8 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 
 		// Add a tooltip for the energy bar.
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			String powerCost = new MetricConverter(TileEntityFermenter.DEFAULT_PROCESSING_COST * TileEntityFermenter.DEFAULT_PROCESSING_TIME).getValueAsString(true);
-			output.add("Usage: " + powerCost + "FE");
+			String powerCost = GuiTextUtilities.formatEnergyToString(TileEntityFermenter.DEFAULT_PROCESSING_COST * TileEntityFermenter.DEFAULT_PROCESSING_TIME).getFormattedText();
+			output.add("Usage: " + powerCost);
 		}
 
 		return output;

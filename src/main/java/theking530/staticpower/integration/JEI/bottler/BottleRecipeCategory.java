@@ -21,12 +21,12 @@ import theking530.common.gui.GuiDrawUtilities;
 import theking530.common.gui.widgets.valuebars.GuiFluidBarUtilities;
 import theking530.common.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.tileentities.powered.bottler.TileEntityBottler;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
-import theking530.staticpower.utilities.MetricConverter;
 
 public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 	public static final ResourceLocation BOTTLER_UID = new ResourceLocation(StaticPower.MOD_ID, "bottler");
@@ -95,8 +95,8 @@ public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 	public List<String> getTooltipStrings(BottleRecipe recipe, double mouseX, double mouseY) {
 		List<String> output = new ArrayList<String>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			String powerCost = new MetricConverter(TileEntityBottler.DEFAULT_PROCESSING_COST * TileEntityBottler.DEFAULT_PROCESSING_TIME).getValueAsString(true);
-			output.add("Usage: " + powerCost + "FE");
+			String powerCost = GuiTextUtilities.formatEnergyToString(TileEntityBottler.DEFAULT_PROCESSING_COST * TileEntityBottler.DEFAULT_PROCESSING_TIME).getFormattedText();
+			output.add("Usage: " + powerCost);
 		}
 
 		return output;

@@ -19,11 +19,11 @@ import theking530.staticpower.tileentities.components.fluids.FluidOutputServoCom
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.heat.HeatStorageComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
-import theking530.staticpower.tileentities.nonpowered.evaporator.TileEntityEvaporator;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
 public class TileEntityCondenser extends TileEntityConfigurable {
 	public static final int DEFAULT_PROCESSING_TIME = 5;
+	public static final float DEFAULT_HEAT_GENERATION = 50.0f;
 	public static final int DEFAULT_TANK_SIZE = 5000;
 
 	public final UpgradeInventoryComponent upgradesInventory;
@@ -40,7 +40,7 @@ public class TileEntityCondenser extends TileEntityConfigurable {
 				.setShouldControlBlockState(true).setProcessingStartedCallback(this::processingStarted).setUpgradeInventory(upgradesInventory).setRedstoneControlComponent(redstoneControlComponent));
 
 		registerComponent(inputTankComponent = new FluidTankComponent("InputFluidTank", DEFAULT_TANK_SIZE, (fluidStack) -> {
-			return isValidInput(fluidStack);
+			return isValidInput(fluidStack, true);
 		}).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
 		inputTankComponent.setCanDrain(false);
 
@@ -55,9 +55,9 @@ public class TileEntityCondenser extends TileEntityConfigurable {
 
 	protected ProcessingCheckState canProcess() {
 		// Check if we have a valid input. If not, just skip.
-		if (isValidInput(inputTankComponent.getFluid())) {
+		if (isValidInput(inputTankComponent.getFluid(), false)) {
 			// Get the recipe.
-			CondensationRecipe recipe = getRecipe(inputTankComponent.getFluid()).orElse(null);
+			CondensationRecipe recipe = getRecipe(inputTankComponent.getFluid(), false).orElse(null);
 
 			// Check if the output fluid matches the already exists fluid if one exists.
 			if (!outputTankComponent.getFluid().isEmpty() && !outputTankComponent.getFluid().isFluidEqual(recipe.getOutputFluid())) {
@@ -69,7 +69,7 @@ public class TileEntityCondenser extends TileEntityConfigurable {
 			}
 
 			// Check the heat level.
-			if (heatStorage.getStorage().getCurrentHeat() + TileEntityEvaporator.DEFAULT_EVAPORATION_HEAT > heatStorage.getStorage().getMaximumHeat()) {
+			if (heatStorage.getStorage().getCurrentHeat() + recipe.getHeatGeneration() > heatStorage.getStorage().getMaximumHeat()) {
 				return ProcessingCheckState.error("Machine is too hot!");
 			}
 
@@ -81,7 +81,7 @@ public class TileEntityCondenser extends TileEntityConfigurable {
 	}
 
 	protected void processingStarted() {
-		CondensationRecipe recipe = getRecipe(inputTankComponent.getFluid()).orElse(null);
+		CondensationRecipe recipe = getRecipe(inputTankComponent.getFluid(), false).orElse(null);
 		if (recipe != null) {
 			this.processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
 		}
@@ -99,18 +99,18 @@ public class TileEntityCondenser extends TileEntityConfigurable {
 		// If we have an item in the internal inventory, but not a valid output, just
 		// return true. It is possible that a recipe was modified and no longer is
 		// valid.
-		if (!isValidInput(inputTankComponent.getFluid())) {
+		if (!isValidInput(inputTankComponent.getFluid(), false)) {
 			return ProcessingCheckState.ok();
 		}
 
 		// Get recipe.
-		CondensationRecipe recipe = getRecipe(inputTankComponent.getFluid()).orElse(null);
+		CondensationRecipe recipe = getRecipe(inputTankComponent.getFluid(), false).orElse(null);
 
 		// Check the heat level.
-		if (heatStorage.getStorage().getCurrentHeat() + TileEntityEvaporator.DEFAULT_EVAPORATION_HEAT > heatStorage.getStorage().getMaximumHeat()) {
+		if (heatStorage.getStorage().getCurrentHeat() + recipe.getHeatGeneration() > heatStorage.getStorage().getMaximumHeat()) {
 			return ProcessingCheckState.error("Machine is too hot!");
 		}
-		
+
 		// If we can't store the filled output in the output slot, return false.
 		if (!(outputTankComponent.getFluid().isEmpty() || outputTankComponent.getFluid().isFluidEqual(recipe.getOutputFluid()))
 				|| outputTankComponent.getFluidAmount() + recipe.getOutputFluid().getAmount() > outputTankComponent.getCapacity()) {
@@ -124,18 +124,22 @@ public class TileEntityCondenser extends TileEntityConfigurable {
 		outputTankComponent.fill(recipe.getOutputFluid(), FluidAction.EXECUTE);
 
 		// Use the heat.
-		heatStorage.getStorage().heat(TileEntityEvaporator.DEFAULT_EVAPORATION_HEAT, false);
+		heatStorage.getStorage().heat(recipe.getHeatGeneration(), false);
 
 		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 
-	public boolean isValidInput(FluidStack stack) {
-		return getRecipe(stack).isPresent();
+	public boolean isValidInput(FluidStack stack, boolean ignoreAmount) {
+		return getRecipe(stack, ignoreAmount).isPresent();
 	}
 
-	protected Optional<CondensationRecipe> getRecipe(FluidStack stack) {
-		return StaticPowerRecipeRegistry.getRecipe(CondensationRecipe.RECIPE_TYPE, new RecipeMatchParameters(stack));
+	protected Optional<CondensationRecipe> getRecipe(FluidStack stack, boolean ignoreAmount) {
+		RecipeMatchParameters matchParams = new RecipeMatchParameters(stack);
+		if (ignoreAmount) {
+			matchParams.ignoreFluidAmounts();
+		}
+		return StaticPowerRecipeRegistry.getRecipe(CondensationRecipe.RECIPE_TYPE, matchParams);
 	}
 
 	@Override

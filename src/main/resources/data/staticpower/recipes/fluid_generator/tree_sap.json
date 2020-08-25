@@ -1,0 +1,8 @@
+{
+	"type": "staticpower:fluid_generator_recipe",
+	"fluid": {
+		"fluid": "staticpower:tree_sap",
+		"volume": 1
+	},
+	"power": 8
+}

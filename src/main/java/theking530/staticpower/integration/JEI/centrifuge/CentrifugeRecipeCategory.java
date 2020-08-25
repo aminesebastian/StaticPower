@@ -25,11 +25,11 @@ import theking530.common.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.common.utilities.Color;
 import theking530.common.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.wrappers.centrifuge.CentrifugeRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
-import theking530.staticpower.utilities.MetricConverter;
 
 public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRecipe> {
 	public static final ResourceLocation CENTRIFUGE_UID = new ResourceLocation(StaticPower.MOD_ID, "centrifuge");
@@ -105,8 +105,8 @@ public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRe
 	public List<String> getTooltipStrings(CentrifugeRecipe recipe, double mouseX, double mouseY) {
 		List<String> output = new ArrayList<String>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			String powerCost = new MetricConverter(recipe.getPowerCost() * recipe.getProcessingTime()).getValueAsString(true);
-			output.add("Usage: " + powerCost + "FE");
+			String powerCost = GuiTextUtilities.formatEnergyToString(recipe.getPowerCost() * recipe.getProcessingTime()).getFormattedText();
+			output.add("Usage: " + powerCost);
 		}
 
 		// Render the progress bar tooltip.

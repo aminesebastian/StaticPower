@@ -23,11 +23,11 @@ import theking530.common.gui.widgets.progressbars.GrinderProgressBar;
 import theking530.common.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.common.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.wrappers.grinder.GrinderRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
-import theking530.staticpower.utilities.MetricConverter;
 
 public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderRecipe> {
 	public static final ResourceLocation GRINDER_UID = new ResourceLocation(StaticPower.MOD_ID, "grinder");
@@ -99,8 +99,8 @@ public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderR
 	public List<String> getTooltipStrings(GrinderRecipe recipe, double mouseX, double mouseY) {
 		List<String> output = new ArrayList<String>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			String powerCost = new MetricConverter(recipe.getPowerCost() * recipe.getProcessingTime()).getValueAsString(true);
-			output.add("Usage: " + powerCost + "FE");
+			String powerCost = GuiTextUtilities.formatEnergyToString(recipe.getProcessingTime() * recipe.getPowerCost()).getFormattedText();
+			output.add("Usage: " + powerCost);
 		}
 
 		// Render the progress bar tooltip.

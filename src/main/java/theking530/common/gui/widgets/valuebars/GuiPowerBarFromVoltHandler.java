@@ -20,13 +20,13 @@ public class GuiPowerBarFromVoltHandler extends AbstractGuiWidget {
 	@Override
 	public void renderBehindItems(int mouseX, int mouseY, float partialTicks) {
 		Vector2D ownerRelativePosition = getScreenSpacePosition();
-		GuiPowerBarUtilities.drawPowerBar(ownerRelativePosition.getX(), ownerRelativePosition.getY() + getSize().getY(), getSize().getX(), getSize().getY(), 0.0f, energyStorage.getStoredCharge(), energyStorage.getMaximumCharge());
+		GuiPowerBarUtilities.drawPowerBar(ownerRelativePosition.getX(), ownerRelativePosition.getY() + getSize().getY(), getSize().getX(), getSize().getY(), 0.0f, energyStorage.getStoredPower(), energyStorage.getCapacity());
 	}
 
 	@Override
 	public void getTooltips(Vector2D mousePosition, List<ITextComponent> tooltips, boolean showAdvanced) {
-		String currentCharge = energyStorage.getStoredCharge() + " sC";
-		String maxCharge = energyStorage.getMaximumCharge() + " sC";
+		String currentCharge = energyStorage.getStoredPower() + " sC";
+		String maxCharge = energyStorage.getCapacity() + " sC";
 		
 		tooltips.add(new StringTextComponent(currentCharge + "/" + maxCharge));
 	}

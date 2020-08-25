@@ -40,7 +40,7 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 				.setShouldControlBlockState(true).setProcessingStartedCallback(this::processingStarted).setUpgradeInventory(upgradesInventory).setRedstoneControlComponent(redstoneControlComponent));
 
 		registerComponent(inputTankComponent = new FluidTankComponent("InputFluidTank", DEFAULT_TANK_SIZE, (fluidStack) -> {
-			return isValidInput(fluidStack);
+			return isValidInput(fluidStack, true);
 		}).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
 		inputTankComponent.setCanDrain(false);
 
@@ -55,9 +55,9 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 
 	protected ProcessingCheckState canProcess() {
 		// Check if we have a valid input. If not, just skip.
-		if (isValidInput(inputTankComponent.getFluid())) {
+		if (isValidInput(inputTankComponent.getFluid(), false)) {
 			// Get the recipe.
-			EvaporatorRecipe recipe = getRecipe(inputTankComponent.getFluid()).orElse(null);
+			EvaporatorRecipe recipe = getRecipe(inputTankComponent.getFluid(), false).orElse(null);
 			// Check if the output fluid matches the already exists fluid if one exists.
 			if (!outputTankComponent.getFluid().isEmpty() && !outputTankComponent.getFluid().isFluidEqual(recipe.getOutputFluid())) {
 				return ProcessingCheckState.outputFluidDoesNotMatch();
@@ -79,7 +79,7 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 	}
 
 	protected void processingStarted() {
-		EvaporatorRecipe recipe = getRecipe(inputTankComponent.getFluid()).orElse(null);
+		EvaporatorRecipe recipe = getRecipe(inputTankComponent.getFluid(), false).orElse(null);
 		if (recipe != null) {
 			this.processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
 		}
@@ -97,12 +97,12 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 		// If we have an item in the internal inventory, but not a valid output, just
 		// return true. It is possible that a recipe was modified and no longer is
 		// valid.
-		if (!isValidInput(inputTankComponent.getFluid())) {
+		if (!isValidInput(inputTankComponent.getFluid(), false)) {
 			return ProcessingCheckState.ok();
 		}
 
 		// Get recipe.
-		EvaporatorRecipe recipe = getRecipe(inputTankComponent.getFluid()).orElse(null);
+		EvaporatorRecipe recipe = getRecipe(inputTankComponent.getFluid(), false).orElse(null);
 
 		// If we don;t have enough heat, return early.
 		if (heatStorage.getStorage().getCurrentHeat() < recipe.getRequiredHeat()) {
@@ -128,12 +128,16 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 		return ProcessingCheckState.ok();
 	}
 
-	public boolean isValidInput(FluidStack stack) {
-		return getRecipe(stack).isPresent();
+	public boolean isValidInput(FluidStack stack, boolean ignoreAmount) {
+		return getRecipe(stack, ignoreAmount).isPresent();
 	}
 
-	protected Optional<EvaporatorRecipe> getRecipe(FluidStack stack) {
-		return StaticPowerRecipeRegistry.getRecipe(EvaporatorRecipe.RECIPE_TYPE, new RecipeMatchParameters(stack));
+	protected Optional<EvaporatorRecipe> getRecipe(FluidStack stack, boolean ignoreAmount) {
+		RecipeMatchParameters matchParams = new RecipeMatchParameters(stack);
+		if (ignoreAmount) {
+			matchParams.ignoreFluidAmounts();
+		}
+		return StaticPowerRecipeRegistry.getRecipe(EvaporatorRecipe.RECIPE_TYPE, matchParams);
 	}
 
 	@Override

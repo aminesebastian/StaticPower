@@ -21,7 +21,7 @@ public class TileEntityRenderBatteryBlock extends StaticPowerTileEntitySpecialRe
 	@Override
 	public void renderTileEntityBase(TileEntityBattery tileEntity, BlockPos pos, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
 		// Get the energy percentage.
-		float height = tileEntity.getEnergyPercent();
+		float height = tileEntity.energyStorage.getStorage().getStoredEnergyPercentScaled(1.0f);
 
 		// Calculate the UV to use when rendering.
 		Vector4D uv = new Vector4D(0.0f, 1.0f - height, 1.0f, 1.0f);

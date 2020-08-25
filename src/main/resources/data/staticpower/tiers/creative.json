@@ -15,5 +15,8 @@
 	"itemCableMaxSpeed": 1,
 	"itemCableAcceleration": 1,
 	"itemCableFriction": 0,
-	"drillBitUses": 2147483647
+	"drillBitUses": 2147483647,
+	"defaultMachinePowerCapacity": 2147483647,
+	"defaultMachinePowerInput": 2147483647,
+	"defaultMachinePowerOutput": 2147483647
 }

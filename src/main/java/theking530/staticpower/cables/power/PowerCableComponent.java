@@ -1,7 +1,6 @@
 package theking530.staticpower.cables.power;
 
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.Nullable;
 
@@ -19,8 +18,10 @@ import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
+import theking530.staticpower.energy.CapabilityStaticVolt;
+import theking530.staticpower.energy.IStaticVoltHandler;
 
-public class PowerCableComponent extends AbstractCableProviderComponent implements IEnergyStorage {
+public class PowerCableComponent extends AbstractCableProviderComponent implements IEnergyStorage, IStaticVoltHandler {
 	public static final String POWER_CAPACITY_DATA_TAG_KEY = "power_capacity";
 	public static final String POWER_RATE_DATA_TAG_KEY = "power_transfer_rate";
 	private final int capacity;
@@ -34,15 +35,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	public int receiveEnergy(int maxReceive, boolean simulate) {
-		if (!getTileEntity().getWorld().isRemote) {
-			AtomicInteger recieve = new AtomicInteger(0);
-			getPowerNetworkModule().ifPresent(PowerNetworkModule -> {
-				recieve.set(PowerNetworkModule.getEnergyStorage().receiveEnergy(Math.min(transferRate, maxReceive), simulate));
-			});
-			return recieve.get();
-		} else {
-			return 0;
-		}
+		return recievePower(maxReceive, simulate, true);
 	}
 
 	@Override
@@ -53,37 +46,89 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	@Override
 	public int getEnergyStored() {
 		if (!getTileEntity().getWorld().isRemote) {
-			AtomicInteger recieve = new AtomicInteger(0);
-			getPowerNetworkModule().ifPresent(PowerNetworkModule -> {
-				recieve.set(PowerNetworkModule.getEnergyStorage().getEnergyStored());
-			});
-			return recieve.get();
-		} else {
-			return 0;
+			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
+			if (module != null) {
+				return module.getEnergyStorage().getEnergyStored();
+			}
 		}
+		return 0;
 	}
 
 	@Override
 	public int getMaxEnergyStored() {
 		if (!getTileEntity().getWorld().isRemote) {
-			AtomicInteger recieve = new AtomicInteger(0);
-			getPowerNetworkModule().ifPresent(PowerNetworkModule -> {
-				recieve.set(PowerNetworkModule.getEnergyStorage().getMaxEnergyStored());
-			});
-			return recieve.get();
-		} else {
-			return 0;
+			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
+			if (module != null) {
+				return module.getEnergyStorage().getMaxEnergyStored();
+			}
 		}
+		return 0;
 	}
 
 	@Override
 	public boolean canExtract() {
-		return false;
+		return canDrainPower();
 	}
 
 	@Override
 	public boolean canReceive() {
+		return canRecievePower();
+	}
+
+	@Override
+	public int getStoredPower() {
+		if (!getTileEntity().getWorld().isRemote) {
+			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
+			if (module != null) {
+				return module.getEnergyStorage().getStoredPower();
+			}
+		}
+		return 0;
+	}
+
+	@Override
+	public int getCapacity() {
+		if (!getTileEntity().getWorld().isRemote) {
+			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
+			if (module != null) {
+				return module.getEnergyStorage().getCapacity();
+			}
+		}
+		return 0;
+	}
+
+	@Override
+	public int receivePower(int power, boolean simulate) {
+		return recievePower(power, simulate, false);
+	}
+
+	private int recievePower(int power, boolean simulate, boolean forge) {
+		if (!getTileEntity().getWorld().isRemote) {
+			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
+			if (module != null) {
+				if (forge) {
+					return module.getEnergyStorage().receiveEnergy(Math.min(transferRate * IStaticVoltHandler.FE_TO_SV_CONVERSION, power), simulate);
+				} else {
+					return module.getEnergyStorage().receivePower(Math.min(transferRate, power), simulate);
+				}
+			}
+		}
+		return 0;
+	}
+
+	@Override
+	public int drainPower(int power, boolean simulate) {
+		return 0;
+	}
+
+	@Override
+	public boolean canRecievePower() {
 		return getPowerNetworkModule() != null;
+	}
+
+	@Override
+	public boolean canDrainPower() {
+		return false;
 	}
 
 	/**
@@ -107,7 +152,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	@Override
 	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
 		// Only provide the energy capability if we are not disabled on that side.
-		if (cap == CapabilityEnergy.ENERGY) {
+		if (cap == CapabilityEnergy.ENERGY || cap == CapabilityStaticVolt.STATIC_VOLT_CAPABILITY) {
 			boolean disabled = false;
 			if (side != null) {
 				if (getWorld().isRemote) {
@@ -153,4 +198,5 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	protected boolean canAttachAttachment(ItemStack attachment) {
 		return false;
 	}
+
 }

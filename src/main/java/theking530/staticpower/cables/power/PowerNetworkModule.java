@@ -3,8 +3,9 @@ package theking530.staticpower.cables.power;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
@@ -17,31 +18,37 @@ import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.DestinationWrapper;
 import theking530.staticpower.cables.network.DestinationWrapper.DestinationType;
 import theking530.staticpower.cables.network.NetworkMapper;
-import theking530.staticpower.energy.StaticPowerFEStorage;
+import theking530.staticpower.energy.CapabilityStaticVolt;
+import theking530.staticpower.energy.IStaticVoltHandler;
+import theking530.staticpower.energy.PowerEnergyInterface;
+import theking530.staticpower.energy.StaticVoltAutoConverter;
+import theking530.staticpower.energy.StaticVoltHandler;
 import theking530.staticpower.utilities.MetricConverter;
 
 public class PowerNetworkModule extends AbstractCableNetworkModule {
-	private StaticPowerFEStorage EnergyStorage;
+	private final StaticVoltAutoConverter energyInterface;
+	private final StaticVoltHandler EnergyStorage;
 
 	public PowerNetworkModule() {
 		super(CableNetworkModuleTypes.POWER_NETWORK_MODULE);
 		// The actual input and output rates are controlled by the individual cables.
-		EnergyStorage = new StaticPowerFEStorage(0, Integer.MAX_VALUE, Integer.MAX_VALUE);
+		EnergyStorage = new StaticVoltHandler(0, Integer.MAX_VALUE, Integer.MAX_VALUE);
 		// No one should extract power from the network, we only provide it.
-		EnergyStorage.setCanExtract(false);
+		EnergyStorage.setCanDrain(false);
+		// Create the interface.
+		energyInterface = new StaticVoltAutoConverter(EnergyStorage);
 	}
 
 	@Override
 	public void tick(World world) {
-		if (EnergyStorage.getEnergyStored() > 0 && Network.getGraph().getDestinations().size() > 0) {
-			// Get a map of all the applicable destination that support recieving power.
-			HashMap<BlockPos, DestinationWrapper> destinations = new HashMap<BlockPos, DestinationWrapper>();
+		// Check to make sure we have power and valid desinations.
+		if (EnergyStorage.getStoredPower() > 0 && Network.getGraph().getDestinations().size() > 0) {
+			// Get a map of all the applicable destination that support recieveing power.
+			HashMap<PowerEnergyInterface, DestinationWrapper> destinations = new HashMap<PowerEnergyInterface, DestinationWrapper>();
 			Network.getGraph().getDestinations().forEach((pos, wrapper) -> {
-				if (wrapper.supportsType(DestinationType.POWER)) {
-					IEnergyStorage energyStorage = wrapper.getTileEntity().getCapability(CapabilityEnergy.ENERGY, wrapper.getDestinationSide()).orElse(null);
-					if (energyStorage != null && energyStorage.receiveEnergy(EnergyStorage.getEnergyStored(), true) > 0) {
-						destinations.put(pos, wrapper);
-					}
+				PowerEnergyInterface powerInterface = getInterfaceForDesination(wrapper);
+				if (powerInterface != null) {
+					destinations.put(powerInterface, wrapper);
 				}
 			});
 
@@ -51,30 +58,37 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 			}
 
 			// Calculate how we should split the output amount.
-			int outputPerDestination = Math.max(1, EnergyStorage.getEnergyStored() / destinations.size());
+			int outputPerDestination = Math.max(1, EnergyStorage.getStoredPower() / destinations.size());
 
 			// Distribute the power to the destinations.
-			for (DestinationWrapper wrapper : destinations.values()) {
-				IEnergyStorage energyStorage = wrapper.getTileEntity().getCapability(CapabilityEnergy.ENERGY, wrapper.getDestinationSide()).orElse(null);
-				if (energyStorage != null) {
-					if (energyStorage.canReceive()) {
-						int toSupply = Math.min(CableNetworkManager.get(world).getCable(wrapper.getConnectedCable()).getIntProperty(PowerCableComponent.POWER_RATE_DATA_TAG_KEY), outputPerDestination);
-						int supplied = energyStorage.receiveEnergy(Math.min(toSupply, EnergyStorage.getCurrentMaximumPowerOutput()), false);
+			for (PowerEnergyInterface powerInterface : destinations.keySet()) {
+				if (powerInterface != null) {
+					if (powerInterface.canRecievePower()) {
+						// Get the amount of power we can supply.
+						int toSupply = Math.min(
+								CableNetworkManager.get(Network.getWorld()).getCable(destinations.get(powerInterface).getConnectedCable()).getIntProperty(PowerCableComponent.POWER_RATE_DATA_TAG_KEY),
+								outputPerDestination);
+
+						// Supply the power.
+						int supplied = powerInterface.receivePower(Math.min(toSupply, EnergyStorage.getCurrentMaximumPowerOutput()), false);
+
+						// If we supplied any power, extract the power.
 						if (supplied > 0) {
-							EnergyStorage.setCanExtract(true);
-							EnergyStorage.extractEnergy(supplied, false);
-							EnergyStorage.setCanExtract(false);
+							EnergyStorage.setCanDrain(true);
+							EnergyStorage.drainPower(supplied, false);
+							EnergyStorage.setCanDrain(false);
 						}
 					}
 				}
 			}
 		}
+
 	}
 
 	public void onNetworksJoined(CableNetwork other) {
 		if (other.hasModule(CableNetworkModuleTypes.POWER_NETWORK_MODULE)) {
 			PowerNetworkModule module = (PowerNetworkModule) other.getModule(CableNetworkModuleTypes.POWER_NETWORK_MODULE);
-			module.getEnergyStorage().addPowerIgnoreTransferRate(EnergyStorage.getEnergyStored());
+			module.EnergyStorage.addPowerIgnoreTransferRate(EnergyStorage.getStoredPower());
 		}
 	}
 
@@ -100,14 +114,30 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 		return tag;
 	}
 
-	public StaticPowerFEStorage getEnergyStorage() {
-		return EnergyStorage;
+	public StaticVoltAutoConverter getEnergyStorage() {
+		return energyInterface;
+	}
+
+	@Nullable
+	public PowerEnergyInterface getInterfaceForDesination(DestinationWrapper wrapper) {
+		if (wrapper.supportsType(DestinationType.POWER)) {
+			IStaticVoltHandler powerStorage = wrapper.getTileEntity().getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY, wrapper.getDestinationSide()).orElse(null);
+			if (powerStorage != null && powerStorage.receivePower(Integer.MAX_VALUE, true) > 0) {
+				return new PowerEnergyInterface(powerStorage);
+			}
+		} else if (wrapper.supportsType(DestinationType.FORGE_POWER)) {
+			IEnergyStorage energyStorage = wrapper.getTileEntity().getCapability(CapabilityEnergy.ENERGY, wrapper.getDestinationSide()).orElse(null);
+			if (energyStorage != null && energyStorage.receiveEnergy(Integer.MAX_VALUE, true) > 0) {
+				return new PowerEnergyInterface(energyStorage);
+			}
+		}
+		return null;
 	}
 
 	@Override
 	public void getReaderOutput(List<ITextComponent> output) {
-		String storedEnergy = new MetricConverter(this.getEnergyStorage().getEnergyStored()).getValueAsString(true);
-		String maximumEnergy = new MetricConverter(this.getEnergyStorage().getMaxEnergyStored()).getValueAsString(true);
+		String storedEnergy = new MetricConverter(getEnergyStorage().getStoredPower()).getValueAsString(true);
+		String maximumEnergy = new MetricConverter(getEnergyStorage().getCapacity()).getValueAsString(true);
 		output.add(new StringTextComponent(String.format("Contains: %1$sRF out of a maximum of %2$sRF.", storedEnergy, maximumEnergy)));
 	}
 }

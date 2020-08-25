@@ -1,7 +1,7 @@
 package theking530.staticpower.energy;
 
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.IntNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -15,13 +15,15 @@ public class CapabilityStaticVolt {
 		CapabilityManager.INSTANCE.register(IStaticVoltHandler.class, new Capability.IStorage<IStaticVoltHandler>() {
 			@Override
 			public INBT writeNBT(Capability<IStaticVoltHandler> capability, IStaticVoltHandler instance, Direction side) {
-				return instance.serializeNBT();
+				return IntNBT.valueOf(instance.getStoredPower());
 			}
 
 			@Override
 			public void readNBT(Capability<IStaticVoltHandler> capability, IStaticVoltHandler instance, Direction side, INBT base) {
-				instance.deserializeNBT((CompoundNBT) base);
+				if (!(instance instanceof StaticVoltHandler))
+					throw new IllegalArgumentException("Can not deserialize to an instance that isn't the default implementation");
+				((StaticVoltHandler) instance).storedPower = ((IntNBT) base).getInt();
 			}
-		}, () -> new StaticVoltHandler(0, 0));
+		}, () -> new StaticVoltHandler(0, 0, 0));
 	}
 }

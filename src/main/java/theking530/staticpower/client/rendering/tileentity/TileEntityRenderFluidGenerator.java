@@ -43,9 +43,9 @@ public class TileEntityRenderFluidGenerator extends StaticPowerTileEntitySpecial
 				Color.WHITE);
 
 		// Draw the filled power bar.
-		if (tileEntity.energyStorage.getStorage().getEnergyStored() > 0) {
+		if (tileEntity.energyStorage.getStorage().getStoredPower() > 0) {
 			// Render the power bar.
-			float height = tileEntity.getEnergyPercent();
+			float height = tileEntity.energyStorage.getStorage().getStoredEnergyPercentScaled(1.0f);
 			Vector4D uv = new Vector4D(0.0f, 1.0f - height, 1.0f, 1.0f);
 			drawTexturedQuadUnlit(StaticPowerSprites.GUI_POWER_BAR_FG, matrixStack, buffer, new Vector3D(0.657f, 0.18f, 0.0001f), new Vector3D(0.125f, height * 0.635f, 1.0f), uv, Color.WHITE);
 		}
