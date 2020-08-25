@@ -15,9 +15,9 @@ import theking530.staticpower.utilities.MetricConverter;
  *
  */
 public class GuiTextUtilities {
-	/** Translation text component for Forge Energy (FE). */
+	/** Translation text component for Static Volts (SV). */
 	public static final TranslationTextComponent ENERGY_UNIT_TRANSLATION = new TranslationTextComponent("gui.staticpower.energy_unit");
-	/** Translation text component for Forge Energy Per Tick (FE/t). */
+	/** Translation text component for Static Volts Per Tick (SV/t). */
 	public static final TranslationTextComponent ENERGY_RATE_TRANSLATION = new TranslationTextComponent("gui.staticpower.energy_unit_per_tick");
 
 	/** Translation text component for millibuckets (mB). */
@@ -46,7 +46,7 @@ public class GuiTextUtilities {
 
 	/**
 	 * Formats the provided energy into a string for display in the UI. Example,
-	 * energy 50000 turns into 50kFE. Uses localization.
+	 * energy 50000 turns into 50kSV. Uses localization.
 	 * 
 	 * @param energy The amount of energy to format.
 	 * @return The formatted string.
@@ -75,7 +75,7 @@ public class GuiTextUtilities {
 
 	/**
 	 * Formats the provided energy and capacity into a string for display in the UI.
-	 * Example, energy 50000 and storage 100000 turns into 50,000/100,000 FE. Uses
+	 * Example, energy 50000 and storage 100000 turns into 50,000/100,000 SV. Uses
 	 * localization.
 	 * 
 	 * @param energy   The amount of energy to format as the numerator.
@@ -89,7 +89,7 @@ public class GuiTextUtilities {
 
 	/**
 	 * Formats the provided energyRate into a string for display in the UI. Example,
-	 * energyRate 1000 turns into 1kFE/t. Uses localization.
+	 * energyRate 1000 turns into 1kSV/t. Uses localization.
 	 * 
 	 * @param energyRate The energy rate to format.
 	 * @return The formatted string.

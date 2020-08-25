@@ -52,7 +52,7 @@ public class TileEntityChargingStation extends TileEntityMachine {
 	public void process() {
 		if (!getWorld().isRemote) {
 			// Charge up to four items simultaneously.
-			if (energyStorage.getStorage().getEnergyStored() > 0) {
+			if (energyStorage.getStorage().getStoredPower() > 0) {
 				// Capture the count of chargeable items.
 				int count = getCountOfChargeableItems();
 

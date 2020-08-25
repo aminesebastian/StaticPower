@@ -22,8 +22,10 @@ import theking530.staticpower.client.gui.StaticPowerContainerGui;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
 import theking530.staticpower.data.crafting.wrappers.centrifuge.CentrifugeRecipe;
+import theking530.staticpower.data.crafting.wrappers.condensation.CondensationRecipe;
 import theking530.staticpower.data.crafting.wrappers.evaporation.EvaporatorRecipe;
 import theking530.staticpower.data.crafting.wrappers.fermenter.FermenterRecipe;
+import theking530.staticpower.data.crafting.wrappers.fluidgenerator.FluidGeneratorRecipe;
 import theking530.staticpower.data.crafting.wrappers.fluidinfusion.FluidInfusionRecipe;
 import theking530.staticpower.data.crafting.wrappers.former.FormerRecipe;
 import theking530.staticpower.data.crafting.wrappers.fusionfurnace.FusionFurnaceRecipe;
@@ -36,9 +38,11 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.integration.JEI.bottler.BottleRecipeCategory;
 import theking530.staticpower.integration.JEI.centrifuge.CentrifugeRecipeCategory;
+import theking530.staticpower.integration.JEI.condenser.CondenserRecipeCategory;
 import theking530.staticpower.integration.JEI.covers.CoverRecipeCategory;
 import theking530.staticpower.integration.JEI.evaporator.EvaporatorRecipeCategory;
 import theking530.staticpower.integration.JEI.fermenter.FermenterRecipeCategory;
+import theking530.staticpower.integration.JEI.fluidgenerator.FluidGeneratorRecipeCateogry;
 import theking530.staticpower.integration.JEI.fluidinfuser.FluidInfuserRecipeCategory;
 import theking530.staticpower.integration.JEI.former.FormerRecipeCategory;
 import theking530.staticpower.integration.JEI.fusionfurnace.FusionFurnaceRecipeCategory;
@@ -83,6 +87,10 @@ public class PluginJEI implements IModPlugin {
 	private FusionFurnaceRecipeCategory fusionFurnaceCateogry;
 	@Nullable
 	private EvaporatorRecipeCategory evaporationCategory;
+	@Nullable
+	private CondenserRecipeCategory condensationCategory;
+	@Nullable
+	private FluidGeneratorRecipeCateogry fuidGeneratorRecipeCateogry;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
@@ -146,6 +154,14 @@ public class PluginJEI implements IModPlugin {
 		// Evaporator
 		evaporationCategory = new EvaporatorRecipeCategory(guiHelper);
 		registration.addRecipeCategories(evaporationCategory);
+
+		// Condenser
+		condensationCategory = new CondenserRecipeCategory(guiHelper);
+		registration.addRecipeCategories(condensationCategory);
+
+		// Fluid Generator
+		fuidGeneratorRecipeCateogry = new FluidGeneratorRecipeCateogry(guiHelper);
+		registration.addRecipeCategories(fuidGeneratorRecipeCateogry);
 	}
 
 	@Override
@@ -178,6 +194,8 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(CentrifugeRecipe.RECIPE_TYPE), CentrifugeRecipeCategory.CENTRIFUGE_UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FusionFurnaceRecipe.RECIPE_TYPE), FusionFurnaceRecipeCategory.FUSION_FURNACE_UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(EvaporatorRecipe.RECIPE_TYPE), EvaporatorRecipeCategory.EVAPORATOR_UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FluidGeneratorRecipe.RECIPE_TYPE), FluidGeneratorRecipeCateogry.FLUID_GENERATOR_UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(CondensationRecipe.RECIPE_TYPE), CondenserRecipeCategory.CONDENSER_UID);
 	}
 
 	@Override
@@ -197,6 +215,8 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Centrifuge), CentrifugeRecipeCategory.CENTRIFUGE_UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.FusionFurnace), FusionFurnaceRecipeCategory.FUSION_FURNACE_UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Evaporator), EvaporatorRecipeCategory.EVAPORATOR_UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.FluidGenerator), FluidGeneratorRecipeCateogry.FLUID_GENERATOR_UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Condenser), CondenserRecipeCategory.CONDENSER_UID);
 	}
 
 	@Override

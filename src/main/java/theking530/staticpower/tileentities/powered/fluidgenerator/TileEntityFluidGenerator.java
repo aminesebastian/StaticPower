@@ -100,7 +100,7 @@ public class TileEntityFluidGenerator extends TileEntityMachine {
 		// Get the recipe.
 		FluidGeneratorRecipe recipe = getRecipe(fluidTankComponent.getFluid()).get();
 		// Add the power.
-		energyStorage.getStorage().receiveEnergy(recipe.getPowerGeneration(), false);
+		energyStorage.getStorage().receivePower(recipe.getPowerGeneration(), false);
 		// Drain the used fluid.
 		fluidTankComponent.drain(recipe.getFluid().getAmount(), FluidAction.EXECUTE);
 		return ProcessingCheckState.ok();

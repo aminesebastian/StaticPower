@@ -44,6 +44,13 @@ public class EvaporatorRecipe extends AbstractMachineRecipe {
 	}
 
 	public boolean isValid(RecipeMatchParameters matchParams) {
-		return matchParams.hasFluids() && inputFluid.isFluidEqual(matchParams.getFluids()[0]) && matchParams.getFluids()[0].getAmount() >= inputFluid.getAmount();
+		if (matchParams.hasFluids() && inputFluid.isFluidEqual(matchParams.getFluids()[0])) {
+			if (matchParams.shouldVerifyFluidAmounts()) {
+				return matchParams.getFluids()[0].getAmount() >= inputFluid.getAmount();
+			} else {
+				return true;
+			}
+		}
+		return false;
 	}
 }

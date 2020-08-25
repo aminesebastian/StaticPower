@@ -16,9 +16,9 @@ import theking530.common.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.common.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
 import theking530.common.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
-import theking530.staticpower.utilities.MetricConverter;
 
 public class GuiBattery extends StaticPowerTileEntityGui<ContainerBattery, TileEntityBattery> {
 	private TextButton inputUp;
@@ -50,27 +50,25 @@ public class GuiBattery extends StaticPowerTileEntityGui<ContainerBattery, TileE
 
 		// Render the input rate string.
 		font.drawString("Input", this.guiLeft + 15, this.guiTop + 32, 4210752);
-		MetricConverter input = new MetricConverter(this.getTileEntity().getInputLimit());
-		String inputRateString = input.getValueAsString(true) + "FE/t";
+		String inputRateString = GuiTextUtilities.formatEnergyRateToString(getTileEntity().getInputLimit()).getFormattedText();
 		font.drawString(inputRateString, guiLeft + 28 - (font.getStringWidth(inputRateString) / 2), guiTop + 42, 4210752);
 
 		// Render the output rate string.
 		font.drawString("Output", this.guiLeft + 132, this.guiTop + 32, 4210752);
-		MetricConverter output = new MetricConverter(this.getTileEntity().getOutputLimit());
-		String outputRateString = output.getValueAsString(true) + "FE/t";
+		String outputRateString = GuiTextUtilities.formatEnergyRateToString(getTileEntity().getOutputLimit()).getFormattedText();
 		font.drawString(outputRateString, guiLeft + 149 - (font.getStringWidth(outputRateString) / 2), guiTop + 42, 4210752);
 
 		// Add tooltip for the actual value of the input.
 		List<String> tooltips = new ArrayList<String>();
 		if (mouseX > guiLeft + 28 - (font.getStringWidth(inputRateString) / 2) && mouseX < guiLeft + 28 + (font.getStringWidth(inputRateString) / 2) && mouseY > this.guiTop + 41
 				&& mouseY < this.guiTop + 50) {
-			tooltips.add(getTileEntity().getInputLimit() + " FE/t");
+			tooltips.add(inputRateString);
 		}
 
 		// Add tooltip for the actual value of the output.
 		if (mouseX > guiLeft + 149 - (font.getStringWidth(inputRateString) / 2) && mouseX < guiLeft + 149 + (font.getStringWidth(inputRateString) / 2) && mouseY > this.guiTop + 41
 				&& mouseY < this.guiTop + 50) {
-			tooltips.add(getTileEntity().getOutputLimit() + " FE/t");
+			tooltips.add(outputRateString);
 		}
 
 		// Render the tooltips.

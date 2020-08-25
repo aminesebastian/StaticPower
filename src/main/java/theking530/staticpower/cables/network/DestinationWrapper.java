@@ -10,11 +10,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
+import theking530.staticpower.energy.CapabilityStaticVolt;
 import theking530.staticpower.tileentities.components.heat.CapabilityHeatable;
 
 public class DestinationWrapper {
 	public enum DestinationType {
-		ITEM, POWER, FLUID, HEAT
+		ITEM, POWER, FORGE_POWER, FLUID, HEAT
 	}
 
 	private final TileEntity tileEntity;
@@ -81,8 +82,12 @@ public class DestinationWrapper {
 				types.add(DestinationType.FLUID);
 			}
 			// Check for power capabilities.
-			if (tileEntity.getCapability(CapabilityEnergy.ENERGY, dir).isPresent()) {
+			if (tileEntity.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY, dir).isPresent()) {
 				types.add(DestinationType.POWER);
+			}
+			// Check for forge power capabilities.
+			if (tileEntity.getCapability(CapabilityEnergy.ENERGY, dir).isPresent()) {
+				types.add(DestinationType.FORGE_POWER);
 			}
 			// Check for item capabilites.
 			if (tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir).isPresent()) {

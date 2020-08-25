@@ -46,9 +46,9 @@ public class TileEntitySolarPanel extends TileEntityBase implements ITickableTil
 	// Functionality
 	public void generateRF() {
 		if (getWorld().canBlockSeeSky(pos)) {
-			if (energyStorage.getStorage().getEnergyStored() < energyStorage.getStorage().getMaxEnergyStored()) {
+			if (energyStorage.getStorage().getStoredPower() < energyStorage.getStorage().getCapacity()) {
 				energyStorage.getStorage().setCanRecieve(true);
-				energyStorage.getStorage().receiveEnergy(energyStorage.getStorage().getMaxReceive(), false);
+				energyStorage.getStorage().receivePower(energyStorage.getStorage().getMaxReceive(), false);
 				energyStorage.getStorage().setCanRecieve(false);
 			}
 		}
@@ -57,7 +57,7 @@ public class TileEntitySolarPanel extends TileEntityBase implements ITickableTil
 	public boolean isGenerating() {
 		if (!getWorld().canBlockSeeSky(pos)) {
 			return false;
-		} else if (energyStorage.getStorage().getEnergyStored() < energyStorage.getStorage().getMaxEnergyStored()) {
+		} else if (energyStorage.getStorage().getStoredPower() < energyStorage.getStorage().getCapacity()) {
 			return true;
 		}
 		return false;

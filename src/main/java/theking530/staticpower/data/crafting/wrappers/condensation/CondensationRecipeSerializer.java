@@ -32,6 +32,12 @@ public class CondensationRecipeSerializer extends ForgeRegistryEntry<IRecipeSeri
 		// Start with the default processing values.
 		int processingTime = TileEntityCondenser.DEFAULT_PROCESSING_TIME;
 
+		// Capture the heat cost.
+		float heatGeneration = TileEntityCondenser.DEFAULT_HEAT_GENERATION;
+		if (JSONUtils.hasField(json, "heat")) {
+			heatGeneration = json.get("heat").getAsFloat();
+		}
+
 		// Capture the processing and power costs.
 		if (JSONUtils.hasField(json, "processing")) {
 			JsonObject processingElement = JSONUtils.getJsonObject(json, "processing");
@@ -39,7 +45,7 @@ public class CondensationRecipeSerializer extends ForgeRegistryEntry<IRecipeSeri
 		}
 
 		// Create the recipe.
-		return new CondensationRecipe(recipeId, inputFluid, outputFluid, processingTime);
+		return new CondensationRecipe(recipeId, inputFluid, outputFluid, processingTime, heatGeneration);
 	}
 
 	@Override

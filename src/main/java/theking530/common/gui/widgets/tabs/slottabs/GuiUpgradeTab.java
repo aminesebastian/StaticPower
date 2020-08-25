@@ -28,19 +28,20 @@ public class GuiUpgradeTab extends BaseGuiTab {
 	@Override
 	protected void initialized(int tabXPosition, int tabYPosition) {
 		// Add the slots.
-		container.addSlotGeneric(new UpgradeItemSlot(upgradesInventory, 0, -18, 24 + this.guiYOffset));
+		System.out.println(this.guiXOffset);
+		container.addSlotGeneric(new UpgradeItemSlot(upgradesInventory, 0, 4 + guiXOffset, 24 + guiYOffset));
 		slotIndecies.add(container.inventorySlots.size() - 1);
 
-		container.addSlotGeneric(new UpgradeItemSlot(upgradesInventory, 1, -18, 42 + this.guiYOffset));
+		container.addSlotGeneric(new UpgradeItemSlot(upgradesInventory, 1, 4 + guiXOffset, 42 + guiYOffset));
 		slotIndecies.add(container.inventorySlots.size() - 1);
 
-		container.addSlotGeneric(new UpgradeItemSlot(upgradesInventory, 2, -18, 60 + this.guiYOffset));
+		container.addSlotGeneric(new UpgradeItemSlot(upgradesInventory, 2, 4 + guiXOffset, 60 + guiYOffset));
 		slotIndecies.add(container.inventorySlots.size() - 1);
 
 		PacketGuiTabAddSlots msg = new PacketGuiTabAddSlots(container.windowId);
-		msg.addSlot(upgradesInventory, 0, -18, 24);
-		msg.addSlot(upgradesInventory, 1, -18, 45);
-		msg.addSlot(upgradesInventory, 2, -18, 60);
+		msg.addSlot(upgradesInventory, 0, 4 + guiXOffset, 24);
+		msg.addSlot(upgradesInventory, 1, 4 + guiXOffset, 45);
+		msg.addSlot(upgradesInventory, 2, 4 + guiXOffset, 60);
 
 		// Send a packet to the server with the updated values.
 		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);

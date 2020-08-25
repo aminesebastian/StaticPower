@@ -20,11 +20,4 @@ public abstract class TileEntityMachine extends TileEntityConfigurable {
 		disableFaceInteraction();
 		registerComponent(energyStorage = new EnergyStorageComponent("MainEnergyStorage", DEFAULT_RF_CAPACITY, DEFAULT_POWER_TRANSFER, DEFAULT_POWER_TRANSFER));
 	}
-
-	/* ENERGY */
-	public float getEnergyPercent() {
-		float amount = energyStorage.getStorage().getEnergyStored();
-		float capacity = energyStorage.getStorage().getMaxEnergyStored();
-		return (amount / capacity);
-	}
 }

@@ -6,7 +6,10 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import theking530.common.utilities.TriFunction;
-import theking530.staticpower.energy.StaticPowerFEStorage;
+import theking530.staticpower.energy.StaticVoltAutoConverter;
+import theking530.staticpower.energy.CapabilityStaticVolt;
+import theking530.staticpower.energy.IStaticVoltHandler;
+import theking530.staticpower.energy.StaticVoltHandler;
 import theking530.staticpower.items.upgrades.IUpgradeItem.UpgradeType;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
@@ -21,7 +24,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 
 	public static final int ENERGY_SYNC_MAX_DELTA = 100;
 	@UpdateSerialize
-	protected final StaticPowerFEStorage EnergyStorage;
+	protected final StaticVoltHandler EnergyStorage;
 	@UpdateSerialize
 	private float powerCapacityUpgradeMultiplier;
 	@UpdateSerialize
@@ -33,10 +36,13 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	@UpdateSerialize
 	private int defaultMaxOutput;
 
+	private final FECapabilityAccess feCapabilityAccessor;
+	private final SVCapabilityAccess capabilityAccecssor;
+	private final StaticVoltAutoConverter energyInterface;
+
 	protected TriFunction<Integer, Direction, EnergyManipulationAction, Boolean> filter;
 	private int lastSyncEnergy;
 	private UpgradeInventoryComponent upgradeInventory;
-	private EnergyComponentCapabilityAccess capabilityAccessor;
 
 	public EnergyStorageComponent(String name, int capacity) {
 		this(name, capacity, Integer.MAX_VALUE, Integer.MAX_VALUE);
@@ -48,13 +54,16 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 
 	public EnergyStorageComponent(String name, int capacity, int maxInput, int maxExtract) {
 		super(name);
-		EnergyStorage = new StaticPowerFEStorage(capacity, maxInput, maxExtract);
-		capabilityAccessor = new EnergyComponentCapabilityAccess();
+		EnergyStorage = new StaticVoltHandler(capacity, maxInput, maxExtract);
+		capabilityAccecssor = new SVCapabilityAccess();
+		feCapabilityAccessor = new FECapabilityAccess();
 		defaultCapacity = capacity;
 		powerCapacityUpgradeMultiplier = 1.0f;
 		powerIOUpgradeMultiplier = 1.0f;
 		defaultMaxInput = maxInput;
 		defaultMaxOutput = maxExtract;
+		// Create the interface.
+		energyInterface = new StaticVoltAutoConverter(EnergyStorage);
 	}
 
 	@Override
@@ -70,16 +79,16 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 		if (!getWorld().isRemote) {
 			// Get the current delta between the amount of power we have and the power we
 			// had last tick.
-			int delta = Math.abs(EnergyStorage.getEnergyStored() - lastSyncEnergy);
+			int delta = Math.abs(EnergyStorage.getStoredPower() - lastSyncEnergy);
 
 			// Determine if we should sync.
 			boolean shouldSync = delta > ENERGY_SYNC_MAX_DELTA;
-			shouldSync |= EnergyStorage.getEnergyStored() == 0 && lastSyncEnergy != 0;
-			shouldSync |= EnergyStorage.getEnergyStored() == EnergyStorage.getMaxEnergyStored() && lastSyncEnergy != EnergyStorage.getMaxEnergyStored();
+			shouldSync |= EnergyStorage.getStoredPower() == 0 && lastSyncEnergy != 0;
+			shouldSync |= EnergyStorage.getStoredPower() == EnergyStorage.getCapacity() && lastSyncEnergy != EnergyStorage.getCapacity();
 
 			// If we should sync, perform the sync.
 			if (shouldSync) {
-				lastSyncEnergy = EnergyStorage.getEnergyStored();
+				lastSyncEnergy = EnergyStorage.getStoredPower();
 				syncToClient();
 			}
 			EnergyStorage.captureEnergyMetric();
@@ -118,6 +127,14 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 		return this;
 	}
 
+	public FECapabilityAccess getFECapabilityAccessor() {
+		return feCapabilityAccessor;
+	}
+
+	public SVCapabilityAccess getSVCapabilityAccessor() {
+		return capabilityAccecssor;
+	}
+
 	protected void checkUpgrades() {
 		// Do nothing if there is no upgrade inventory.
 		if (upgradeInventory == null) {
@@ -147,7 +164,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	 * 
 	 * @return
 	 */
-	public StaticPowerFEStorage getStorage() {
+	public StaticVoltHandler getStorage() {
 		return EnergyStorage;
 	}
 
@@ -159,7 +176,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	 * @return
 	 */
 	public boolean hasEnoughPower(int power) {
-		return EnergyStorage.getEnergyStored() >= power;
+		return EnergyStorage.getStoredPower() >= power;
 	}
 
 	/**
@@ -172,9 +189,9 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	 */
 	public boolean useBulkPower(int power) {
 		if (hasEnoughPower(power)) {
-			int maxExtract = getStorage().getMaxExtract();
+			int maxExtract = getStorage().getMaxDrain();
 			getStorage().setMaxExtract(Integer.MAX_VALUE);
-			getStorage().extractEnergy(power, false);
+			getStorage().drainPower(power, false);
 			getStorage().setMaxExtract(maxExtract);
 			return true;
 		}
@@ -188,7 +205,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	 * @return
 	 */
 	public boolean canAcceptPower(int power) {
-		return EnergyStorage.getEnergyStored() + power <= EnergyStorage.getMaxEnergyStored();
+		return EnergyStorage.getStoredPower() + power <= EnergyStorage.getCapacity();
 	}
 
 	/**
@@ -200,19 +217,19 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	 */
 	public boolean addPower(int power) {
 		if (canAcceptPower(power)) {
-			getStorage().receiveEnergy(power, false);
+			getStorage().receivePower(power, false);
 			return true;
 		}
 		return false;
 	}
 
 	/**
-	 * Returns true if this component has >0 FE.
+	 * Returns true if this component has >0 SV.
 	 * 
 	 * @return
 	 */
 	public boolean hasPower() {
-		return EnergyStorage.getEnergyStored() > 0;
+		return EnergyStorage.getStoredPower() > 0;
 	}
 
 	/**
@@ -245,16 +262,19 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	@Override
 	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
 		if (isEnabled()) {
-			if (cap == CapabilityEnergy.ENERGY) {
-				capabilityAccessor.currentSide = side;
-				return LazyOptional.of(() -> capabilityAccessor).cast();
+			if (cap == CapabilityStaticVolt.STATIC_VOLT_CAPABILITY) {
+				capabilityAccecssor.currentSide = side;
+				return LazyOptional.of(() -> capabilityAccecssor).cast();
+			} else if (cap == CapabilityEnergy.ENERGY) {
+				feCapabilityAccessor.currentSide = side;
+				return LazyOptional.of(() -> feCapabilityAccessor).cast();
 			}
 		}
 
 		return LazyOptional.empty();
 	}
 
-	private class EnergyComponentCapabilityAccess implements IEnergyStorage {
+	public class FECapabilityAccess implements IEnergyStorage {
 		protected Direction currentSide;
 
 		@Override
@@ -262,10 +282,11 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 			if (!EnergyStorageComponent.this.isEnabled()) {
 				return 0;
 			}
-			if (EnergyStorageComponent.this.filter != null && !EnergyStorageComponent.this.filter.apply(maxReceive, currentSide, EnergyManipulationAction.RECIEVE)) {
+			if (EnergyStorageComponent.this.filter != null
+					&& !EnergyStorageComponent.this.filter.apply(maxReceive / IStaticVoltHandler.FE_TO_SV_CONVERSION, currentSide, EnergyManipulationAction.RECIEVE)) {
 				return 0;
 			}
-			return EnergyStorageComponent.this.getStorage().receiveEnergy(maxReceive, simulate);
+			return energyInterface.receiveEnergy(maxReceive, simulate);
 		}
 
 		@Override
@@ -273,10 +294,11 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 			if (!EnergyStorageComponent.this.isEnabled()) {
 				return 0;
 			}
-			if (EnergyStorageComponent.this.filter != null && !EnergyStorageComponent.this.filter.apply(maxExtract, currentSide, EnergyManipulationAction.PROVIDE)) {
+			if (EnergyStorageComponent.this.filter != null
+					&& !EnergyStorageComponent.this.filter.apply(maxExtract / IStaticVoltHandler.FE_TO_SV_CONVERSION, currentSide, EnergyManipulationAction.PROVIDE)) {
 				return 0;
 			}
-			return EnergyStorageComponent.this.getStorage().extractEnergy(maxExtract, simulate);
+			return energyInterface.extractEnergy(maxExtract, simulate);
 		}
 
 		@Override
@@ -284,7 +306,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 			if (!EnergyStorageComponent.this.isEnabled()) {
 				return 0;
 			}
-			return EnergyStorageComponent.this.getStorage().getEnergyStored();
+			return energyInterface.getEnergyStored();
 		}
 
 		@Override
@@ -292,7 +314,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 			if (!EnergyStorageComponent.this.isEnabled()) {
 				return 0;
 			}
-			return EnergyStorageComponent.this.getStorage().getMaxEnergyStored();
+			return energyInterface.getMaxEnergyStored();
 		}
 
 		@Override
@@ -300,7 +322,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 			if (!EnergyStorageComponent.this.isEnabled()) {
 				return false;
 			}
-			return EnergyStorageComponent.this.getStorage().canExtract();
+			return energyInterface.canExtract();
 		}
 
 		@Override
@@ -308,8 +330,67 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 			if (!EnergyStorageComponent.this.isEnabled()) {
 				return false;
 			}
-			return EnergyStorageComponent.this.getStorage().canReceive();
+			return energyInterface.canReceive();
 		}
 
+	}
+
+	public class SVCapabilityAccess implements IStaticVoltHandler {
+		protected Direction currentSide;
+
+		@Override
+		public int getStoredPower() {
+			if (!EnergyStorageComponent.this.isEnabled()) {
+				return 0;
+			}
+			return energyInterface.getStoredPower();
+		}
+
+		@Override
+		public int getCapacity() {
+			if (!EnergyStorageComponent.this.isEnabled()) {
+				return 0;
+			}
+			return energyInterface.getCapacity();
+		}
+
+		@Override
+		public int receivePower(int power, boolean simulate) {
+			if (!EnergyStorageComponent.this.isEnabled()) {
+				return 0;
+			}
+			if (EnergyStorageComponent.this.filter != null && !EnergyStorageComponent.this.filter.apply(power, currentSide, EnergyManipulationAction.PROVIDE)) {
+				return 0;
+			}
+			return energyInterface.drainPower(power, simulate);
+		}
+
+		@Override
+		public int drainPower(int power, boolean simulate) {
+			if (!EnergyStorageComponent.this.isEnabled()) {
+				return 0;
+			}
+			if (EnergyStorageComponent.this.filter != null && !EnergyStorageComponent.this.filter.apply(power, currentSide, EnergyManipulationAction.PROVIDE)) {
+				return 0;
+			}
+			return energyInterface.drainPower(power, simulate);
+		}
+
+		@Override
+		public boolean canRecievePower() {
+			if (!EnergyStorageComponent.this.isEnabled()) {
+				return false;
+			}
+			return energyInterface.canRecievePower();
+		}
+
+		@Override
+		public boolean canDrainPower() {
+			if (!EnergyStorageComponent.this.isEnabled()) {
+				return false;
+			}
+
+			return energyInterface.canDrainPower();
+		}
 	}
 }

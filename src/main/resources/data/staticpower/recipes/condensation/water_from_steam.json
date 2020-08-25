@@ -1,12 +1,12 @@
 {
 	"type": "staticpower:condensation_recipe",
 	"input_fluid": {
-		"fluid": "staticpower:evaporated_mash",
+		"fluid": "staticpower:steam",
 		"volume": 10
 	},
 	"output_fluid": {
-		"fluid": "staticpower:ethanol",
+		"fluid": "minecraft:water",
 		"volume": 1
 	},
-	"heat": 20
+	"heat": 100
 }

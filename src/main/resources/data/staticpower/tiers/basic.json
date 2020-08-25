@@ -34,5 +34,8 @@
 	"outputMultiplierUpgrade": 1.25,
 	"outputMultiplierPowerCostUpgrade": 1.25,
 	"maxCentrifugeSpeedUpgrade": 750,
-	"centrifugeUpgradedPowerIncrease": 2.0
+	"centrifugeUpgradedPowerIncrease": 2.0,
+	"defaultMachinePowerCapacity": 2500,
+	"defaultMachinePowerInput": 25,
+	"defaultMachinePowerOutput": 25
 }

@@ -23,11 +23,11 @@ import theking530.common.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.common.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.common.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.crafting.wrappers.solidfuel.SolidFuelRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.tileentities.powered.solidgenerator.TileEntitySolidGenerator;
-import theking530.staticpower.utilities.MetricConverter;
 
 public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFuelRecipe> {
 	public static final ResourceLocation SOLID_GENERATOR_UID = new ResourceLocation(StaticPower.MOD_ID, "solid_generator");
@@ -100,8 +100,8 @@ public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFue
 		List<String> output = new ArrayList<String>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
 			int burnTime = ForgeHooks.getBurnTime(recipe.getFuel());
-			String generation = new MetricConverter(TileEntitySolidGenerator.DEFAULT_POWER_GENERATION * burnTime).getValueAsString(true);
-			output.add("Generates: " + generation + "FE");
+			String powerCost = GuiTextUtilities.formatEnergyToString(TileEntitySolidGenerator.DEFAULT_POWER_GENERATION * burnTime).getFormattedText();
+			output.add("Generates: " + powerCost);
 		}
 
 		// Render the progress bar tooltip.

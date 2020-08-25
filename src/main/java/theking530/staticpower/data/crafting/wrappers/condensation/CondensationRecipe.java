@@ -12,11 +12,13 @@ public class CondensationRecipe extends AbstractMachineRecipe {
 
 	private final FluidStack inputFluid;
 	private final FluidStack outputFluid;
+	private final float heatGeneration;
 
-	public CondensationRecipe(ResourceLocation name, FluidStack inputFluid, FluidStack outputFluid, int processingCost) {
-		super(name, processingCost, 0);
+	public CondensationRecipe(ResourceLocation name, FluidStack inputFluid, FluidStack outputFluid, int processingTime, float heatGeneration) {
+		super(name, processingTime, 0);
 		this.inputFluid = inputFluid;
 		this.outputFluid = outputFluid;
+		this.heatGeneration = heatGeneration;
 	}
 
 	public FluidStack getInputFluid() {
@@ -25,6 +27,10 @@ public class CondensationRecipe extends AbstractMachineRecipe {
 
 	public FluidStack getOutputFluid() {
 		return outputFluid;
+	}
+
+	public float getHeatGeneration() {
+		return heatGeneration;
 	}
 
 	@Override
@@ -38,6 +44,13 @@ public class CondensationRecipe extends AbstractMachineRecipe {
 	}
 
 	public boolean isValid(RecipeMatchParameters matchParams) {
-		return matchParams.hasFluids() && inputFluid.isFluidEqual(matchParams.getFluids()[0]) && matchParams.getFluids()[0].getAmount() >= inputFluid.getAmount();
+		if (matchParams.hasFluids() && inputFluid.isFluidEqual(matchParams.getFluids()[0])) {
+			if (matchParams.shouldVerifyFluidAmounts()) {
+				return matchParams.getFluids()[0].getAmount() >= inputFluid.getAmount();
+			} else {
+				return true;
+			}
+		}
+		return false;
 	}
 }
