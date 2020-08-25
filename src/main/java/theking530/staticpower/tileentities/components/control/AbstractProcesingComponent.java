@@ -184,7 +184,7 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 			}
 
 			// Use power if requested to.
-			if (hasProcessingPowerCost && powerComponent != null) {
+			if (hasProcessingPowerCost && powerComponent != null && currentProcessingTime < processingTime) {
 				powerComponent.getStorage().drainPower(getPowerUsage(), false);
 			}
 

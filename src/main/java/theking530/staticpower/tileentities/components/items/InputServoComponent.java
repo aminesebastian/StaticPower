@@ -21,7 +21,7 @@ import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities.
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class InputServoComponent extends AbstractTileEntityComponent {
-	public static final int DEFAULT_INPUT_TIME = 5;
+	public static final int DEFAULT_INPUT_TIME = 10;
 
 	private int inputTimer;
 	private int inputTime;
@@ -87,6 +87,7 @@ public class InputServoComponent extends AbstractTileEntityComponent {
 			if (inputTimer < inputTime) {
 				return;
 			}
+			inputTimer = 0;
 
 			// Allocate a list of handlers.
 			List<IItemHandler> validHandlers = new LinkedList<IItemHandler>();

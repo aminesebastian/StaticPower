@@ -20,7 +20,7 @@ import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities.
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class OutputServoComponent extends AbstractTileEntityComponent {
-	public static final int DEFAULT_OUTPUT_TIME = 5;
+	public static final int DEFAULT_OUTPUT_TIME = 10;
 
 	private int outputTimer;
 	private int outputTime;
@@ -73,6 +73,7 @@ public class OutputServoComponent extends AbstractTileEntityComponent {
 			if (outputTimer < outputTime) {
 				return;
 			}
+			outputTimer = 0;
 
 			// Allocate a list of handlers.
 			List<IItemHandler> validHandlers = new LinkedList<IItemHandler>();

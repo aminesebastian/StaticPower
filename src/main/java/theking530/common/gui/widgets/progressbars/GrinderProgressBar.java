@@ -17,8 +17,11 @@ public class GrinderProgressBar extends AbstractProgressBar {
 		float adjustedProgress = visualCurrentProgress / maxProgress;
 
 		GuiDrawUtilities.drawTexturedModalRect(GuiTextures.GRINDER_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY(), 0.25f, 0.0f, 0.75f, 0.5f);
-		GuiDrawUtilities.drawTexturedModalRect(GuiTextures.GRINDER_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY() * adjustedProgress, 0.25f,
-				0.5f, 0.75f, 0.5f + (0.5f * adjustedProgress));
+
+		if (visualCurrentProgress > 0) {
+			GuiDrawUtilities.drawTexturedModalRect(GuiTextures.GRINDER_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY() * (adjustedProgress),
+					0.25f, 0.5f, 0.75f, 0.5f + (0.5f * adjustedProgress));
+		}
 
 		if (isProcessingErrored) {
 			getErrorDrawable().draw(screenSpacePosition.getX() + 1.0f, screenSpacePosition.getY());
