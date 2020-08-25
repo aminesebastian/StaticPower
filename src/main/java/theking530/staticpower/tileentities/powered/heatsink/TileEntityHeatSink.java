@@ -29,6 +29,7 @@ public class TileEntityHeatSink extends TileEntityMachine implements INamedConta
 		StaticPowerTier tier = StaticPowerDataRegistry.getTier(tierName);
 		registerComponent(cableComponent = new HeatCableComponent("HeatCableComponent", tier.getHeatSinkCapacity(), tier.getHeatSinkConductivity(), tier.getHeatSinkElectricHeatGeneration(),
 				tier.getHeatSinkElectricHeatPowerUsage()).setEnergyStorageComponent(energyStorage));
+		energyStorage.setMaxInput(tier.getHeatSinkElectricHeatPowerUsage() * 2);
 	}
 
 	@Override

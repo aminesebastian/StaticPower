@@ -33,7 +33,7 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 	 * vanila furnace.
 	 */
 	public static final float DEFAULT_PROCESSING_TIME_MULT = 2.0f;
-	public static final int DEFAULT_PROCESSING_COST = 10;
+	public static final int DEFAULT_PROCESSING_COST = 5;
 	public static final int DEFAULT_MOVING_TIME = 4;
 
 	public final InventoryComponent inputInventory;
@@ -91,7 +91,7 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 		if (!internalInventory.getStackInSlot(0).isEmpty()) {
 			return ProcessingCheckState.internalInventoryNotEmpty();
 		}
-		if (InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getRecipeOutput())) {
+		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getRecipeOutput())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 		transferItemInternally(inputInventory, 0, internalInventory, 0);

@@ -1,6 +1,10 @@
 package theking530.staticpower.tileentities;
 
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ResourceLocation;
+import theking530.staticpower.data.StaticPowerDataRegistry;
+import theking530.staticpower.data.StaticPowerTier;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
 
 /**
@@ -8,16 +12,19 @@ import theking530.staticpower.tileentities.components.power.EnergyStorageCompone
  *
  */
 public abstract class TileEntityMachine extends TileEntityConfigurable {
-	public static final int DEFAULT_RF_CAPACITY = 2500;
-	public static final int DEFAULT_POWER_TRANSFER = 50;
-
 	public final EnergyStorageComponent energyStorage;
 
 	public boolean isUpdateQueued = true;
 
 	public TileEntityMachine(TileEntityType<?> tileEntityType) {
+		this(tileEntityType, StaticPowerTiers.BASIC);
+	}
+
+	public TileEntityMachine(TileEntityType<?> tileEntityType, ResourceLocation tier) {
 		super(tileEntityType);
 		disableFaceInteraction();
-		registerComponent(energyStorage = new EnergyStorageComponent("MainEnergyStorage", DEFAULT_RF_CAPACITY, DEFAULT_POWER_TRANSFER, DEFAULT_POWER_TRANSFER));
+		StaticPowerTier tierObject = StaticPowerDataRegistry.getTier(tier);
+		registerComponent(energyStorage = new EnergyStorageComponent("MainEnergyStorage", tierObject.getDefaultMachinePowerCapacity(), tierObject.getDefaultMachinePowerInput(),
+				tierObject.getDefaultMachinePowerOutput()));
 	}
 }

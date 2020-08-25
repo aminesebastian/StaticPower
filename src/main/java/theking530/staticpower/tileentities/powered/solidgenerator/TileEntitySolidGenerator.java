@@ -25,7 +25,7 @@ import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 
 public class TileEntitySolidGenerator extends TileEntityMachine {
-	public static final int DEFAULT_POWER_GENERATION = 20;
+	public static final int DEFAULT_POWER_GENERATION = 15;
 	public static final int DEFAULT_MOVING_TIME = 4;
 
 	public final InventoryComponent inputInventory;

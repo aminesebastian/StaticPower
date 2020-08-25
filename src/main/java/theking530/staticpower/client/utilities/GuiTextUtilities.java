@@ -54,7 +54,7 @@ public class GuiTextUtilities {
 	public static ITextComponent formatEnergyToString(int energy, boolean includeUnits, boolean includeMetricUnit) {
 		MetricConverter metricEnergy = new MetricConverter(energy);
 		ITextComponent output = new StringTextComponent(NUMBER_FORMATTER.format(metricEnergy.getValue()));
-
+			
 		if (includeMetricUnit) {
 			output.appendText(metricEnergy.getSuffix());
 		}

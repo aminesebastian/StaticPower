@@ -26,7 +26,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityAutoCraftingTable extends TileEntityMachine {
 	public static final int DEFAULT_PROCESSING_TIME = 100;
-	public static final int DEFAULT_PROCESSING_COST = 10;
+	public static final int DEFAULT_PROCESSING_COST = 5;
 	public static final int DEFAULT_MOVING_TIME = 4;
 
 	public final MachineProcessingComponent moveComponent;

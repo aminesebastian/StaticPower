@@ -7,10 +7,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import theking530.common.gui.widgets.button.StandardButton;
 import theking530.common.gui.widgets.button.StandardButton.MouseButton;
 import theking530.common.gui.widgets.button.TextButton;
 import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
+import theking530.common.gui.widgets.tabs.GuiInfoTab;
 import theking530.common.gui.widgets.tabs.GuiPowerInfoTab;
 import theking530.common.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.common.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
@@ -33,9 +35,16 @@ public class GuiBattery extends StaticPowerTileEntityGui<ContainerBattery, TileE
 	@Override
 	public void initializeGui() {
 		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 75, 20, 26, 51));
-		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
 
+		GuiInfoTab infoTab;
+		getTabManager().registerTab(infoTab = new GuiInfoTab("Battery", 120));
+		infoTab.addLine(new StringTextComponent("A Battery stores power for later usage."));
+		infoTab.addLineBreak();
+		infoTab.addLine(new StringTextComponent("Holding control and shift while left/right clicking on the buttons will change the rates the limits are altered."));
+
+		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
 		getTabManager().registerTab(new GuiSideConfigTab(true, getTileEntity()));
+
 		getTabManager().registerTab(new GuiPowerInfoTab(getTileEntity().energyStorage).setTabSide(TabSide.LEFT), true);
 
 		registerWidget(inputUp = new TextButton(52, 23, 20, 20, "+", this::buttonPressed));
@@ -94,11 +103,14 @@ public class GuiBattery extends StaticPowerTileEntityGui<ContainerBattery, TileE
 		} else if (button == outputDown) {
 			deltaValue = -1;
 		}
+
+		int maxIOAdjustment = getTileEntity().getMaximumPowerIO() > 100 ? 50 : 5;
+
 		deltaValue *= mouseButton == MouseButton.LEFT ? 1 : 10;
 		if (Screen.hasShiftDown()) {
-			deltaValue = (deltaValue * 100);
+			deltaValue = (deltaValue * maxIOAdjustment * 2);
 		} else if (!Screen.hasControlDown()) {
-			deltaValue = (deltaValue * 50);
+			deltaValue = (deltaValue * maxIOAdjustment);
 		}
 
 		if (input) {

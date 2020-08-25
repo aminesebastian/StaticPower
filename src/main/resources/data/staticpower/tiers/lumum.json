@@ -5,9 +5,9 @@
 	},
 	"upgradeOrdinal": 5,
 	"unlocalizedTierName": "tier.staticpower.lumum",
-	"portableBatteryCapacity": 10000000,
-	"solarPanelPowerGeneration": 128,
-	"solarPanelPowerStorage": 512,
+	"portableBatteryCapacity": 10000,
+	"solarPanelPowerGeneration": 64,
+	"solarPanelPowerStorage": 128,
 	"cableExtractorRate": 20,
 	"cableFilterSize": 12,
 	"cableExtractionStackSize": 64,
@@ -19,7 +19,7 @@
 	"cablePowerCapacity": 512,
 	"cablePowerDelivery": 256,
 	"digistoreCapacity": 262144,
-	"batteryCapacity": 131072,
+	"batteryCapacity": 100000,
 	"itemCableMaxSpeed": 5,
 	"itemFilterSlots": 12,
 	"itemCableAcceleration": 2.0,
@@ -35,7 +35,7 @@
 	"outputMultiplierPowerCostUpgrade": 2.5,
 	"maxCentrifugeSpeedUpgrade": 1500,
 	"centrifugeUpgradedPowerIncrease": 6.0,
-	"defaultMachinePowerCapacity": 50000,
-	"defaultMachinePowerInput": 500,
-	"defaultMachinePowerOutput": 500
+	"defaultMachinePowerCapacity": 10000,
+	"defaultMachinePowerInput": 100,
+	"defaultMachinePowerOutput": 100
 }

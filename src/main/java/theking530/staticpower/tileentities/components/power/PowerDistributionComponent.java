@@ -61,11 +61,10 @@ public class PowerDistributionComponent extends AbstractTileEntityComponent {
 		PowerEnergyInterface powerInterface = getInterfaceForDesination(pos, facing.getOpposite());
 
 		if (powerInterface != null) {
-			if (powerInterface.getStoredPower() < powerInterface.getCapacity() && powerInterface.canRecievePower()) {
-				int provided = powerInterface.receivePower(amount, false);
-				energyStorage.drainPower(provided, false);
-				return provided;
-			}
+			int provided = powerInterface.receivePower(amount, true);
+			int drained = energyStorage.drainPower(provided, false);
+			powerInterface.receivePower(drained, false);
+			return provided;
 		}
 		return 0;
 	}
@@ -86,14 +85,14 @@ public class PowerDistributionComponent extends AbstractTileEntityComponent {
 		// with energy storage instead.
 		if (powerStorageOptional.isPresent()) {
 			IStaticVoltHandler powerStorage = powerStorageOptional.orElse(null);
-			if (powerStorage != null && powerStorage.receivePower(1, true) > 0) {
+			if (powerStorage != null && powerStorage.receivePower(Integer.MAX_VALUE, true) > 0) {
 				return new PowerEnergyInterface(powerStorage);
 			}
 		} else {
 			LazyOptional<IEnergyStorage> energyStorageOptional = te.getCapability(CapabilityEnergy.ENERGY, facing);
 			if (energyStorageOptional.isPresent()) {
 				IEnergyStorage energyStorage = energyStorageOptional.orElse(null);
-				if (energyStorage != null && energyStorage.receiveEnergy(1, true) > 0) {
+				if (energyStorage != null && energyStorage.receiveEnergy(Integer.MAX_VALUE, true) > 0) {
 					return new PowerEnergyInterface(energyStorage);
 				}
 			}

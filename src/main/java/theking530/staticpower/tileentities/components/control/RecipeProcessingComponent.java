@@ -70,9 +70,10 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 			if (moveState.isError()) {
 				this.processingErrorMessage = moveState.getErrorMessage();
 				this.processingStoppedDueToError = true;
-				return;
-			} else if (!moveState.isOk()) {
-				this.processingStoppedDueToError = false;
+			}
+
+			// If the move was not successful, return early.
+			if (!moveState.isOk()) {
 				return;
 			}
 		}
@@ -81,28 +82,26 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 	}
 
 	public ProcessingCheckState performMove() {
-		// If we can't move the inputs to the internal, nothing.
-		ProcessingCheckState internalMoveState = canMoveInputsToInternal();
-		if (!internalMoveState.isOk()) {
-			moveTimer = 0;
-			return internalMoveState;
-		} else {
-			processingStoppedDueToError = false;
-		}
-
 		// Increment the move timer.
 		moveTimer++;
 
 		// Check if it elapsed..
 		if (moveTimer > MOVE_TIME) {
-			// We can just GET the recipe here because the call to #canMoveInputsToInternal
-			// already checks for a valid recipe.
-			performInputMove.apply(getRecipe(getMatchParameters.apply(RecipeProcessingLocation.INPUT)).get());
-			moveTimer = 0;
-			return ProcessingCheckState.ok();
-		} else {
-			return ProcessingCheckState.skip();
+			// If we can move the inputs to the internal, try doing so. If not, clear the
+			// error and skip.
+			ProcessingCheckState internalMoveState = canMoveInputsToInternal();
+			if (internalMoveState.isOk()) {
+				moveTimer = 0;
+				// We can just GET the recipe here because the call to #canMoveInputsToInternal
+				// already checks for a valid recipe.
+				ProcessingCheckState checkstate = performInputMove.apply(getRecipe(getMatchParameters.apply(RecipeProcessingLocation.INPUT)).get());
+				moveTimer = 0;
+				return checkstate;
+			} else {
+				return internalMoveState;
+			}
 		}
+		return ProcessingCheckState.skip();
 	}
 
 	/**

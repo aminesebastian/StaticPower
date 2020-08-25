@@ -32,6 +32,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.common.utilities.Color;
 import theking530.common.utilities.SDMath;
 import theking530.staticpower.client.rendering.CustomRenderer;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.farmer.FarmingFertalizerRecipe;
@@ -56,8 +57,8 @@ import theking530.staticpower.utilities.WorldUtilities;
 
 public class TileEntityBasicFarmer extends TileEntityMachine {
 	public static final int DEFAULT_WATER_USAGE = 1;
-	public static final int DEFAULT_IDLE_ENERGY_USAGE = 20;
-	public static final int DEFAULT_HARVEST_ENERGY_COST = 1000;
+	public static final int DEFAULT_IDLE_ENERGY_USAGE = 10;
+	public static final int DEFAULT_HARVEST_ENERGY_COST = 100;
 	public static final int DEFAULT_RANGE = 2;
 	public static final int DEFAULT_TOOL_USAGE = 1;
 	public static final int DEFAULT_TIME_PER_BLOCK = 20;
@@ -80,7 +81,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	private boolean shouldDrawRadiusPreview;
 
 	public TileEntityBasicFarmer() {
-		super(ModTileEntityTypes.BASIC_FARMER);
+		super(ModTileEntityTypes.BASIC_FARMER, StaticPowerTiers.STATIC);
 		disableFaceInteraction();
 
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 2, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
@@ -111,8 +112,6 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 
 		// Set the energy storage upgrade inventory.
 		energyStorage.setUpgradeInventory(upgradesInventory);
-		energyStorage.setMaxInput(DEFAULT_POWER_TRANSFER * 2);
-		energyStorage.setMaxOutput(DEFAULT_POWER_TRANSFER * 2);
 
 		// Capture all the harvestable blocks.
 		validHarvestacbleClasses = new HashSet<Class<? extends Block>>();

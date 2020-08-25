@@ -5,6 +5,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import theking530.common.utilities.SDMath;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.fusionfurnace.FusionFurnaceRecipe;
 import theking530.staticpower.init.ModTileEntityTypes;
@@ -22,8 +23,8 @@ import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityFusionFurnace extends TileEntityMachine {
-	public static final int DEFAULT_PROCESSING_TIME = 200;
-	public static final int DEFAULT_PROCESSING_COST = 20;
+	public static final int DEFAULT_PROCESSING_TIME = 250;
+	public static final int DEFAULT_PROCESSING_COST = 25;
 	public static final int DEFAULT_MOVING_TIME = 4;
 
 	public final InventoryComponent inputInventory;
@@ -34,7 +35,7 @@ public class TileEntityFusionFurnace extends TileEntityMachine {
 	public final MachineProcessingComponent processingComponent;
 
 	public TileEntityFusionFurnace() {
-		super(ModTileEntityTypes.FUSION_FURNACE);
+		super(ModTileEntityTypes.FUSION_FURNACE, StaticPowerTiers.ENERGIZED);
 		this.disableFaceInteraction();
 
 		// Setup the input inventory with no filtering (no point since there are

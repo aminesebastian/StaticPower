@@ -61,8 +61,8 @@ import theking530.staticpower.utilities.WorldUtilities;
 
 public class TileEntityTreeFarm extends TileEntityMachine {
 	public static final int DEFAULT_WATER_USAGE = 1;
-	public static final int DEFAULT_IDLE_ENERGY_USAGE = 20;
-	public static final int DEFAULT_HARVEST_ENERGY_COST = 10;
+	public static final int DEFAULT_IDLE_ENERGY_USAGE = 15;
+	public static final int DEFAULT_HARVEST_ENERGY_COST = 100;
 	public static final int MAX_WOOD_RECURSIVE_DEPTH = 100;
 	public static final int DEFAULT_RANGE = 2;
 	public static final int DEFAULT_SAPLING_SPACING = 2;

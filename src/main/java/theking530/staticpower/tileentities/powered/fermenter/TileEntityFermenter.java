@@ -29,7 +29,7 @@ import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandler
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityFermenter extends TileEntityMachine {
-	public static final int DEFAULT_PROCESSING_COST = 20;
+	public static final int DEFAULT_PROCESSING_COST = 5;
 	public static final int DEFAULT_PROCESSING_TIME = 100;
 	public static final int DEFAULT_MOVING_TIME = 4;
 

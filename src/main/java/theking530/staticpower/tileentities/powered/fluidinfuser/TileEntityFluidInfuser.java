@@ -25,7 +25,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityFluidInfuser extends TileEntityMachine {
 	public static final int DEFAULT_PROCESSING_TIME = 200;
-	public static final int DEFAULT_PROCESSING_COST = 10;
+	public static final int DEFAULT_PROCESSING_COST = 5;
 	public static final int DEFAULT_MOVING_TIME = 4;
 	public static final int DEFAULT_TANK_SIZE = 5000;
 

@@ -45,8 +45,6 @@ public class BatteryControlSyncPacket extends NetworkMessage {
 					TileEntityBattery battery = (TileEntityBattery) rawTileEntity;
 					battery.setInputLimit(inputPerTick);
 					battery.setOutputLimit(outputPerTick);
-					System.out.println("Input: " + inputPerTick);
-					System.out.println("Output: " + outputPerTick);
 				}
 			}
 		});

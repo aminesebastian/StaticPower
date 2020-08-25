@@ -22,7 +22,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 		PROVIDE, RECIEVE
 	}
 
-	public static final int ENERGY_SYNC_MAX_DELTA = 100;
+	public static final int ENERGY_SYNC_MAX_DELTA = 1;
 	@UpdateSerialize
 	protected final StaticVoltHandler EnergyStorage;
 	@UpdateSerialize
@@ -97,11 +97,17 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 
 	public EnergyStorageComponent setMaxInput(int maxInput) {
 		defaultMaxInput = maxInput;
+		if (upgradeInventory == null) {
+			EnergyStorage.setMaxReceive(defaultMaxInput);
+		}
 		return this;
 	}
 
 	public EnergyStorageComponent setMaxOutput(int maxOutput) {
 		defaultMaxOutput = maxOutput;
+		if (upgradeInventory == null) {
+			EnergyStorage.setMaxExtract(defaultMaxOutput);
+		}
 		return this;
 	}
 
@@ -359,10 +365,10 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 			if (!EnergyStorageComponent.this.isEnabled()) {
 				return 0;
 			}
-			if (EnergyStorageComponent.this.filter != null && !EnergyStorageComponent.this.filter.apply(power, currentSide, EnergyManipulationAction.PROVIDE)) {
+			if (EnergyStorageComponent.this.filter != null && !EnergyStorageComponent.this.filter.apply(power, currentSide, EnergyManipulationAction.RECIEVE)) {
 				return 0;
 			}
-			return energyInterface.drainPower(power, simulate);
+			return energyInterface.receivePower(power, simulate);
 		}
 
 		@Override

@@ -67,7 +67,7 @@ public abstract class AbstractInfoTab extends BaseGuiTab {
 	@Override
 	public void renderBackground(int mouseX, int mouseY, float partialTicks) {
 		if (isOpen()) {
-			if (info != null && info.size() > 0) {
+			if (info != null) {
 				drawTextBG();
 				drawTitle();
 				drawInfo(false);

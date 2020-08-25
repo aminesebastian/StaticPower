@@ -8,5 +8,5 @@
 	"heatSinkCapacity": 5000,
 	"heatSinkConductivity": 100.0,
 	"heatSinkElectricHeatGeneration": 40.0,
-	"heatSinkElectricHeatPowerUsage": 40
+	"heatSinkElectricHeatPowerUsage": 5
 }

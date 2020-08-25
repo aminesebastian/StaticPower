@@ -7,8 +7,10 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction.AxisDirection;
 import theking530.common.utilities.SDMath;
+import theking530.staticpower.data.StaticPowerDataRegistry;
+import theking530.staticpower.data.StaticPowerTier;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModTileEntityTypes;
-import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
@@ -21,15 +23,16 @@ public class TileEntityElectricMiner extends AbstractTileEntityMiner {
 
 	public TileEntityElectricMiner() {
 		super(ModTileEntityTypes.ELECTRIC_MINER);
-		registerComponent(energyStorage = new EnergyStorageComponent("MainEnergyStorage", TileEntityMachine.DEFAULT_RF_CAPACITY, TileEntityMachine.DEFAULT_POWER_TRANSFER * 5,
-				TileEntityMachine.DEFAULT_POWER_TRANSFER * 5));
+		StaticPowerTier tierObject = StaticPowerDataRegistry.getTier(StaticPowerTiers.ENERGIZED);
+		registerComponent(energyStorage = new EnergyStorageComponent("MainEnergyStorage", tierObject.getDefaultMachinePowerCapacity(), tierObject.getDefaultMachinePowerInput(),
+				tierObject.getDefaultMachinePowerOutput()));
 
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 
 		// Set the fuel usages higher as they now correlate to power usage.
-		setBlockMiningFuelCost(getBlockMiningFuelCost() * 100);
-		setIdleFuelCost(getIdleFuelCost() * 100);
+		setBlockMiningFuelCost(getBlockMiningFuelCost());
+		setIdleFuelCost(getIdleFuelCost());
 
 		// Set the processing parameters.
 		processingComponent.setUpgradeInventory(upgradesInventory);

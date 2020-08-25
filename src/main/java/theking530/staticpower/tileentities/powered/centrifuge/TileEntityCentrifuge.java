@@ -5,6 +5,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import theking530.common.utilities.SDMath;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.centrifuge.CentrifugeRecipe;
 import theking530.staticpower.init.ModTileEntityTypes;
@@ -27,8 +28,8 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityCentrifuge extends TileEntityMachine {
 	public static final int DEFAULT_PROCESSING_TIME = 100;
-	public static final int DEFAULT_PROCESSING_COST = 50;
-	public static final int DEFAULT_CENTRIFUGE_MOTOR_COST = 25;
+	public static final int DEFAULT_PROCESSING_COST = 20;
+	public static final int DEFAULT_CENTRIFUGE_MOTOR_COST = 5;
 	public static final int DEFAULT_MOVING_TIME = 4;
 	public static final int DEFAULT_MAX_SPEED = 500;
 
@@ -51,7 +52,7 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 	private int centrifugeMotorPowerCost;
 
 	public TileEntityCentrifuge() {
-		super(ModTileEntityTypes.CENTRIFUGE);
+		super(ModTileEntityTypes.CENTRIFUGE, StaticPowerTiers.ADVANCED);
 		// Initialize the current speed.
 		currentSpeed = 0;
 
@@ -91,9 +92,6 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 
 		// Set the energy storage upgrade inventory.
 		energyStorage.setUpgradeInventory(upgradesInventory);
-		energyStorage.setDefaultCapacity(DEFAULT_RF_CAPACITY * 3);
-		energyStorage.setMaxInput(DEFAULT_POWER_TRANSFER * 2);
-		energyStorage.setMaxOutput(DEFAULT_POWER_TRANSFER * 2);
 
 		// Set the max speed and power cost.
 		maxSpeed = DEFAULT_MAX_SPEED;

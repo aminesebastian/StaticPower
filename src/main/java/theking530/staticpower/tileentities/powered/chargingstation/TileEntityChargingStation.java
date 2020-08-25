@@ -6,6 +6,7 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
@@ -26,7 +27,7 @@ public class TileEntityChargingStation extends TileEntityMachine {
 	public final UpgradeInventoryComponent upgradesInventory;
 
 	public TileEntityChargingStation() {
-		super(ModTileEntityTypes.CHARGING_STATION);
+		super(ModTileEntityTypes.CHARGING_STATION, StaticPowerTiers.ENERGIZED);
 
 		// Add the input inventory that only takes energy storing items.
 		registerComponent(unchargedInventory = new InventoryComponent("unchargedInventory", 4, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {

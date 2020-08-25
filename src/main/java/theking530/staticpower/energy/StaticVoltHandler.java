@@ -65,6 +65,7 @@ public class StaticVoltHandler implements IStaticVoltHandler, INBTSerializable<C
 		// If not simulating, perform the drain.
 		if (!simulate) {
 			storedPower -= output;
+			currentFrameEnergyExtracted -= output;
 		}
 
 		// Return the output amount.
@@ -83,6 +84,7 @@ public class StaticVoltHandler implements IStaticVoltHandler, INBTSerializable<C
 		// If greater than 0 and not simulating, received the power
 		if (recievedAmount > 0 && !simulate) {
 			storedPower += recievedAmount;
+			currentFrameEnergyReceived += recievedAmount;
 		}
 
 		// Return the received amount.
@@ -258,6 +260,8 @@ public class StaticVoltHandler implements IStaticVoltHandler, INBTSerializable<C
 		CompoundNBT output = new CompoundNBT();
 		output.putInt("current_power", storedPower);
 		output.putInt("capacity", capacity);
+		output.putInt("max_receive", maxReceive);
+		output.putInt("max_drain", maxDrain);
 		output.putBoolean("can_recieve", canRecieve);
 		output.putBoolean("can_drain", canDrain);
 		output.putFloat("received", averageRecieved);
@@ -269,6 +273,8 @@ public class StaticVoltHandler implements IStaticVoltHandler, INBTSerializable<C
 	public void deserializeNBT(CompoundNBT nbt) {
 		storedPower = nbt.getInt("current_power");
 		capacity = nbt.getInt("capacity");
+		maxReceive = nbt.getInt("max_receive");
+		maxDrain = nbt.getInt("max_drain");
 		canRecieve = nbt.getBoolean("can_recieve");
 		canDrain = nbt.getBoolean("can_drain");
 		averageRecieved = nbt.getFloat("received");

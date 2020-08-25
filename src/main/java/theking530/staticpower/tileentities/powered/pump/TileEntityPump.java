@@ -26,6 +26,7 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
@@ -40,6 +41,7 @@ import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities.
 
 public class TileEntityPump extends TileEntityMachine {
 	public static final Logger LOGGER = LogManager.getLogger(TileEntityPump.class);
+	public static final int PUMP_POWER_COST = 120;
 	public static final int DEFAULT_PUMP_RATE = 40;
 
 	public final FluidContainerInventoryComponent fluidContainerInventory;
@@ -49,7 +51,7 @@ public class TileEntityPump extends TileEntityMachine {
 	private final Queue<BlockPos> positionsToPump;
 
 	public TileEntityPump() {
-		super(ModTileEntityTypes.PUMP);
+		super(ModTileEntityTypes.PUMP, StaticPowerTiers.ADVANCED);
 
 		// Add the tank component.
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 8000).setCapabilityExposedModes(MachineSideMode.Output).setCanFill(false));
@@ -73,7 +75,7 @@ public class TileEntityPump extends TileEntityMachine {
 
 		// Disable face interaction.
 		DisableFaceInteraction = false;
-		this.energyStorage.getStorage().setMaxExtract(1000);
+		this.energyStorage.getStorage().setMaxExtract(PUMP_POWER_COST);
 		// Initialize the positions to pump container.
 		positionsToPump = new LinkedList<BlockPos>();
 	}
@@ -135,7 +137,7 @@ public class TileEntityPump extends TileEntityMachine {
 						getWorld().playSound(null, getPos(), fluidState.getFluid() == Fluids.LAVA ? SoundEvents.ITEM_BUCKET_FILL_LAVA : SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1.0f, 1.0f);
 
 						// Use the power.
-						energyStorage.useBulkPower(1000);
+						energyStorage.useBulkPower(PUMP_POWER_COST);
 
 						// Pump the fluid.
 						FluidStack pumpedStack = new FluidStack(fluidState.getFluid(), FluidAttributes.BUCKET_VOLUME);

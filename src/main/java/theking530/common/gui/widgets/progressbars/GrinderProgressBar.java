@@ -21,7 +21,7 @@ public class GrinderProgressBar extends AbstractProgressBar {
 				0.5f, 0.75f, 0.5f + (0.5f * adjustedProgress));
 
 		if (isProcessingErrored) {
-			getErrorDrawable().draw(screenSpacePosition.getX() + 1.0f, screenSpacePosition.getY() + 0.5f);
+			getErrorDrawable().draw(screenSpacePosition.getX() + 1.0f, screenSpacePosition.getY());
 		}
 	}
 }
