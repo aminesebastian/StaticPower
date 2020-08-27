@@ -20,6 +20,7 @@ import theking530.staticpower.items.cableattachments.retirever.RetrieverAttachme
 import theking530.staticpower.items.crops.DepletedCrop;
 import theking530.staticpower.items.crops.StaticPlantCrop;
 import theking530.staticpower.items.crops.StaticPlantSeeds;
+import theking530.staticpower.items.fluidcapsule.FluidCapsule;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.items.tools.CableNetworkAnalyzer;
 import theking530.staticpower.items.tools.CoverSaw;
@@ -185,7 +186,7 @@ public class ModItems {
 	public static DrillBit EnergizedDrillBit;
 	public static DrillBit LumumDrillBit;
 	public static DrillBit CreativeDrillBit;
-	
+
 	public static StaticPowerItem MemoryChip;
 	public static StaticPowerItem LogicGatePowerSync;
 	public static StaticPowerItem InvertedLogicGatePowerSync;
@@ -195,6 +196,14 @@ public class ModItems {
 	public static StaticPowerItem InternalClock;
 	public static StaticPowerItem Motor;
 	public static StaticPowerItem Plug;
+
+	public static FluidCapsule IronCapsule;
+	public static FluidCapsule BasicCapsule;
+	public static FluidCapsule AdvancedCapsule;
+	public static FluidCapsule StaticCapsule;
+	public static FluidCapsule EnergizedCapsule;
+	public static FluidCapsule LumumCapsule;
+	public static FluidCapsule CreativeCapsule;
 
 	public static StaticPowerItem BasicUpgradePlate;
 	public static StaticPowerItem AdvancedUpgradePlate;
@@ -356,7 +365,15 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(IOPort = new StaticPowerItem("io_port"));
 		StaticPowerRegistry.preRegisterItem(Motor = new StaticPowerItem("motor"));
 		StaticPowerRegistry.preRegisterItem(Plug = new StaticPowerItem("plug"));
-		
+
+		StaticPowerRegistry.preRegisterItem(IronCapsule = new FluidCapsule("capsule_iron", StaticPowerTiers.IRON));
+		StaticPowerRegistry.preRegisterItem(BasicCapsule = new FluidCapsule("capsule_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterItem(AdvancedCapsule = new FluidCapsule("capsule_advanced", StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterItem(StaticCapsule = new FluidCapsule("capsule_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterItem(EnergizedCapsule = new FluidCapsule("capsule_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterItem(LumumCapsule = new FluidCapsule("capsule_lumum", StaticPowerTiers.LUMUM));
+		StaticPowerRegistry.preRegisterItem(CreativeCapsule = new FluidCapsule("capsule_creative", StaticPowerTiers.CREATIVE));
+
 		StaticPowerRegistry.preRegisterItem(WireCopper = new StaticPowerItem("wire_copper"));
 		StaticPowerRegistry.preRegisterItem(WireTin = new StaticPowerItem("wire_tin"));
 		StaticPowerRegistry.preRegisterItem(WireSilver = new StaticPowerItem("wire_silver"));

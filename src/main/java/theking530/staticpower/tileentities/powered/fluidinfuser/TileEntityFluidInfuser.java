@@ -83,9 +83,6 @@ public class TileEntityFluidInfuser extends TileEntityMachine {
 	protected ProcessingCheckState moveInputs(FluidInfusionRecipe recipe) {
 		// If the items can be insert into the output, transfer the items and return
 		// true.
-		if (!internalInventory.getStackInSlot(0).isEmpty()) {
-			return ProcessingCheckState.internalInventoryNotEmpty();
-		}
 		if (InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRecipeOutput())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}

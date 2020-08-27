@@ -20,7 +20,7 @@ import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities.
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class OutputServoComponent extends AbstractTileEntityComponent {
-	public static final int DEFAULT_OUTPUT_TIME = 10;
+	public static final int DEFAULT_OUTPUT_TIME = 20;
 
 	private int outputTimer;
 	private int outputTime;
@@ -28,9 +28,9 @@ public class OutputServoComponent extends AbstractTileEntityComponent {
 	private int[] slots;
 	private MachineSideMode outputMode;
 
-	public OutputServoComponent(String name, int outputTime, InventoryComponent inventory, MachineSideMode mode, int... slots) {
+	public OutputServoComponent(String name, InventoryComponent inventory, MachineSideMode mode, int... slots) {
 		super(name);
-		this.outputTime = outputTime;
+		this.outputTime = DEFAULT_OUTPUT_TIME;
 		this.inventory = inventory;
 		if (slots.length == 0) {
 			this.slots = new int[inventory.getSlots()];
@@ -45,11 +45,11 @@ public class OutputServoComponent extends AbstractTileEntityComponent {
 	}
 
 	public OutputServoComponent(String name, int outputTime, InventoryComponent inventory, int... slots) {
-		this(name, outputTime, inventory, inventory.getMode(), slots);
+		this(name, inventory, inventory.getMode(), slots);
 	}
 
 	public OutputServoComponent(String name, InventoryComponent inventory, int... slots) {
-		this(name, DEFAULT_OUTPUT_TIME, inventory, inventory.getMode(), slots);
+		this(name, inventory, inventory.getMode(), slots);
 	}
 
 	@Override

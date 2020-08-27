@@ -647,7 +647,7 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 		}
 
 		public static ProcessingCheckState outputsCannotTakeRecipe() {
-			return new ProcessingCheckState(ProcessingState.ERROR, "Recipe output does not stack with current item in output slots.");
+			return new ProcessingCheckState(ProcessingState.ERROR, "Recipe output cannot be placed in output slot(s).");
 		}
 	}
 }

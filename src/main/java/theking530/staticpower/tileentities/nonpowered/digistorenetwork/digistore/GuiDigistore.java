@@ -57,7 +57,12 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 		// Update the info tab.
 		infoTab.clear();
 		infoTab.addLine(new StringTextComponent("Stores a large amount of a single item."));
-		infoTab.addKeyValueTwoLiner(new StringTextComponent("Max"), new StringTextComponent(String.valueOf(inventory.getItemCapacity())), TextFormatting.RED);
+		infoTab.addLineBreak();
+
+		// Pass the itemstack count through the metric converter.
+		MetricConverter count = new MetricConverter(inventory.getItemCapacity());
+		infoTab.addKeyValueLine(new StringTextComponent("Max Items"), new StringTextComponent(TextFormatting.WHITE.toString()).appendSibling(new StringTextComponent(count.getValueAsString(true))),
+				TextFormatting.RED);
 	}
 
 	@Override
@@ -88,7 +93,7 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 			MetricConverter count = new MetricConverter(inventory.getTotalContainedCount());
 
 			// Draw the item count string.
-			GuiDrawUtilities.drawStringWithSize(count.getValueAsString(true), guiLeft + 16, guiTop + 15, 0.5f, Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawStringWithSize(count.getValueAsString(true), guiLeft + 98, guiTop + 37, 0.5f, Color.EIGHT_BIT_WHITE, true);
 		}
 	}
 }

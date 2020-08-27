@@ -4,11 +4,11 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
-import net.minecraftforge.fluids.FluidActionResult;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 import theking530.staticpower.utilities.InventoryUtilities;
@@ -35,9 +35,12 @@ public class FluidContainerInventoryComponent extends InventoryComponent {
 	}
 
 	public static final int DEFAULT_FLUID_TO_CONTAINER_RATE = 1000;
+	public static final int FLUID_DRAIN_CYCLE_TIME = 4;
 
 	private final IFluidHandler fluidHandler;
 	private final int fluidToContainerRate;
+	private int fluidDrainTimer;
+
 	@UpdateSerialize
 	private FluidContainerInteractionMode interactionMode;
 
@@ -69,6 +72,15 @@ public class FluidContainerInventoryComponent extends InventoryComponent {
 			return;
 		}
 
+		// Tick forward the drain cycle timer.
+		if (fluidDrainTimer < FLUID_DRAIN_CYCLE_TIME - 1) {
+			fluidDrainTimer++;
+			return;
+		}
+
+		// If we made it this far, the timer elapsed. Set it back to 0 and proceed.
+		fluidDrainTimer = 0;
+
 		// Get the impetus for the transaction.
 		ItemStack primaryStack = getStackInSlot(0);
 
@@ -81,7 +93,7 @@ public class FluidContainerInventoryComponent extends InventoryComponent {
 		if (interactionMode == FluidContainerInteractionMode.DRAIN) {
 			drainFromContainer(primaryStack);
 		} else if (interactionMode == FluidContainerInteractionMode.FILL) {
-			fillContainer(primaryStack);
+			fillToContainer(primaryStack);
 		}
 	}
 
@@ -90,31 +102,21 @@ public class FluidContainerInventoryComponent extends InventoryComponent {
 	 * 
 	 * @param container
 	 */
-	protected void fillContainer(ItemStack container) {
-		// If we can't fill this container, return early.
-		if (!canFillContainer(container)) {
-			return;
-		}
+	protected void fillToContainer(ItemStack container) {
+		IFluidHandlerItem containerHandler = FluidUtil.getFluidHandler(container).orElse(null);
+		if (containerHandler != null) {
+			FluidStack simulatedDrain = fluidHandler.drain(fluidToContainerRate, FluidAction.SIMULATE);
+			int filledAmount = containerHandler.fill(simulatedDrain, FluidAction.EXECUTE);
+			if (filledAmount > 0) {
+				fluidHandler.drain(filledAmount, FluidAction.EXECUTE);
+				// Play the sound.
+				getWorld().playSound(null, getPos(), simulatedDrain.getFluid() == Fluids.LAVA ? SoundEvents.ITEM_BUCKET_FILL_LAVA : SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1.0f, 1.0f);
 
-		// Attempt to fill the container and capture the result.
-		FluidActionResult result = FluidUtil.tryFillContainer(container, fluidHandler, fluidToContainerRate, null, true);
-
-		// If the fill is successful, check to see what we should do with the remaining
-		// container.
-		if (result.isSuccess()) {
-			// Play the sound.
-			getWorld().playSound(null, getPos(), fluidHandler.getFluidInTank(0).getFluid() == Fluids.LAVA ? SoundEvents.ITEM_BUCKET_FILL_LAVA : SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS,
-					1.0f, 1.0f);
-
-			// Get the fluid container handler.
-			IFluidHandler containerHandler = FluidUtil.getFluidHandler(container).orElse(null);
-			// If it's not null, check to see if its full.
-			if (containerHandler != null) {
-				if (containerHandler.getFluidInTank(0).isEmpty()) {
-					// If it is, attempt to insert it into the secondary slot.
-					if (InventoryUtilities.canFullyInsertStackIntoSlot(this, 1, result.getResult())) {
+				// If the container is empty, transfer it to the empty container slot.
+				if (containerHandler.getFluidInTank(0).getAmount() == containerHandler.getTankCapacity(0)) {
+					if (InventoryUtilities.canFullyInsertStackIntoSlot(this, 1, container.getContainerItem())) {
 						// Perform the insert.
-						ItemStack insertedItem = insertItem(1, result.getResult(), false);
+						ItemStack insertedItem = insertItem(1, container.getContainerItem(), false);
 						// If successfully, extract the item from the primary alot.
 						if (insertedItem.isEmpty()) {
 							extractItem(0, 1, false);
@@ -122,10 +124,9 @@ public class FluidContainerInventoryComponent extends InventoryComponent {
 					}
 				}
 			}
-
-			// Sync the tile entity.
-			getTileEntity().markTileEntityForSynchronization();
 		}
+		// Sync the tile entity.
+		getTileEntity().markTileEntityForSynchronization();
 	}
 
 	/**
@@ -134,29 +135,21 @@ public class FluidContainerInventoryComponent extends InventoryComponent {
 	 * @param container
 	 */
 	protected void drainFromContainer(ItemStack container) {
-		// If we can't drain from this container, return early.
-		if (!canDrainFromContainer(container)) {
-			return;
-		}
+		IFluidHandlerItem containerHandler = FluidUtil.getFluidHandler(container).orElse(null);
+		if (containerHandler != null) {
+			FluidStack simulatedDrain = containerHandler.drain(fluidToContainerRate, FluidAction.SIMULATE);
+			int filledAmount = fluidHandler.fill(simulatedDrain, FluidAction.EXECUTE);
 
-		// Attempt to drain the container and capture the result.
-		FluidActionResult result = FluidUtil.tryEmptyContainer(container, fluidHandler, fluidToContainerRate, null, true);
+			if (filledAmount > 0) {
+				containerHandler.drain(filledAmount, FluidAction.EXECUTE);
+				// Play the sound.
+				getWorld().playSound(null, getPos(), simulatedDrain.getFluid() == Fluids.LAVA ? SoundEvents.ITEM_BUCKET_EMPTY_LAVA : SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0f, 1.0f);
 
-		// If the drain is successful, check to see what we should do with the remaining
-		// container.
-		if (result.isSuccess()) {
-			// Play the sound.
-			getWorld().playSound(null, getPos(), fluidHandler.getFluidInTank(0).getFluid() == Fluids.LAVA ? SoundEvents.ITEM_BUCKET_EMPTY_LAVA : SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS,
-					1.0f, 1.0f);
-			// Get the fluid container handler.
-			IFluidHandler containerHandler = FluidUtil.getFluidHandler(result.getResult()).orElse(null);
-			// If it's not null, check to see if its empty.
-			if (containerHandler != null) {
-				if (containerHandler.getFluidInTank(0).isEmpty()) {
-					// If it is, attempt to insert it into the secondary slot.
-					if (InventoryUtilities.canFullyInsertStackIntoSlot(this, 1, result.getResult())) {
+				// If the container is empty, transfer it to the empty container slot.
+				if (containerHandler.getFluidInTank(0).getAmount() == 0) {
+					if (InventoryUtilities.canFullyInsertStackIntoSlot(this, 1, containerHandler.getContainer())) {
 						// Perform the insert.
-						ItemStack insertedItem = insertItem(1, result.getResult(), false);
+						ItemStack insertedItem = insertItem(1, containerHandler.getContainer(), false);
 						// If successfully, extract the item from the primary alot.
 						if (insertedItem.isEmpty()) {
 							extractItem(0, 1, false);
@@ -164,66 +157,9 @@ public class FluidContainerInventoryComponent extends InventoryComponent {
 					}
 				}
 			}
-			// Sync the tile entity.
-			getTileEntity().markTileEntityForSynchronization();
 		}
-	}
-
-	/**
-	 * Checks to see if we can fill the container from this fluid handler.
-	 * 
-	 * @param container
-	 * @return
-	 */
-	protected boolean canFillContainer(ItemStack container) {
-		// Simulate to drain the container and capture the result.
-		FluidTank simulatedTank = new FluidTank(fluidHandler.getTankCapacity(0));
-		simulatedTank.fill(fluidHandler.getFluidInTank(0), FluidAction.EXECUTE);
-		FluidActionResult result = FluidUtil.tryFillContainer(container, simulatedTank, fluidToContainerRate, null, false);
-
-		// If the drain is successful, check to see what we should do with the remaining
-		// container.
-		if (result.isSuccess()) {
-			// Get the fluid container handler.
-			IFluidHandler containerHandler = FluidUtil.getFluidHandler(result.getResult()).orElse(null);
-			// If it's not null, check to see if its empty.
-			if (containerHandler != null && containerHandler.getTanks() > 0 && FluidUtil.getFluidContained(result.getResult()).orElse(null).getAmount() == containerHandler.getTankCapacity(0)) {
-				// If it is, return if we can insert into the secondary slot.
-				return InventoryUtilities.canFullyInsertStackIntoSlot(this, 1, result.getResult());
-			}
-			return InventoryUtilities.canFullyInsertStackIntoSlot(this, 1, result.getResult());
-		}
-		return false;
-	}
-
-	/**
-	 * Checks to see if we can drain from the container into this fluid handler.
-	 * 
-	 * @param container
-	 * @return
-	 */
-	protected boolean canDrainFromContainer(ItemStack container) {
-		// Simulate to drain the container and capture the result.
-		FluidTank simulatedTank = new FluidTank(fluidHandler.getTankCapacity(0));
-		simulatedTank.fill(fluidHandler.getFluidInTank(0), FluidAction.EXECUTE);
-		FluidActionResult result = FluidUtil.tryEmptyContainer(container, simulatedTank, fluidToContainerRate, null, false);
-
-		// If the drain is successful, check to see what we should do with the remaining
-		// container.
-		if (result.isSuccess()) {
-			// Replace the fluid since this is just a simulation.
-			// Get the fluid container handler.
-			IFluidHandler containerHandler = FluidUtil.getFluidHandler(result.getResult()).orElse(null);
-			// If it's not null, check to see if its empty.
-			if (containerHandler != null && containerHandler.getTanks() > 0) {
-				// If it is, return if we can insert into the secondary slot.
-				if (containerHandler.getFluidInTank(0).isEmpty()) {
-					return InventoryUtilities.canFullyInsertStackIntoSlot(this, 1, result.getResult());
-				}
-				return true;
-			}
-		}
-		return false;
+		// Sync the tile entity.
+		getTileEntity().markTileEntityForSynchronization();
 	}
 
 	/**

@@ -87,11 +87,13 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 
 		// Check if it elapsed..
 		if (moveTimer > MOVE_TIME) {
+			// Reset the move timer.
+			moveTimer = 0;
+
 			// If we can move the inputs to the internal, try doing so. If not, clear the
 			// error and skip.
 			ProcessingCheckState internalMoveState = canMoveInputsToInternal();
 			if (internalMoveState.isOk()) {
-				moveTimer = 0;
 				// We can just GET the recipe here because the call to #canMoveInputsToInternal
 				// already checks for a valid recipe.
 				ProcessingCheckState checkstate = performInputMove.apply(getRecipe(getMatchParameters.apply(RecipeProcessingLocation.INPUT)).get());
@@ -127,10 +129,16 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 			setProcessingPowerUsage(machineRecipe.getPowerCost());
 		}
 
-		// Check power states.
-		ProcessingCheckState processingCheck = checkPowerRequirements();
-		if (!processingCheck.isOk()) {
-			return processingCheck;
+		// Check the redstone state.
+		ProcessingCheckState redstoneState;
+		if (!(redstoneState = checkRedstoneState()).isOk()) {
+			return redstoneState;
+		}
+
+		// Check the power state.
+		ProcessingCheckState powerState;
+		if (!(powerState = checkPowerRequirements()).isOk()) {
+			return powerState;
 		}
 
 		// If we made it this far, check the start processing callback.

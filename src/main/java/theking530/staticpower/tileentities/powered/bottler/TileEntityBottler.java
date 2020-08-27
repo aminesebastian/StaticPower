@@ -179,11 +179,8 @@ public class TileEntityBottler extends TileEntityMachine {
 			// Clear the internal inventory.
 			internalInventory.setStackInSlot(0, ItemStack.EMPTY);
 			markTileEntityForSynchronization();
-			return ProcessingCheckState.ok();
-
-		} else {
-			return ProcessingCheckState.internalInventoryNotEmpty();
 		}
+		return ProcessingCheckState.ok();
 	}
 
 	@Override

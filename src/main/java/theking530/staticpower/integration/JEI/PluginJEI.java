@@ -54,6 +54,7 @@ import theking530.staticpower.integration.JEI.solidgenerator.SolidGeneratorRecip
 import theking530.staticpower.integration.JEI.squeezer.SqueezerRecipeCategory;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
 import theking530.staticpower.items.cableattachments.digistorecraftingterminal.ContainerDigistoreCraftingTerminal;
+import theking530.staticpower.items.fluidcapsule.FluidCapsule;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.ContainerSolderingTable;
 import theking530.staticpower.tileentities.powered.autocrafter.ContainerAutoCraftingTable;
 import theking530.staticpower.tileentities.powered.autosolderingtable.ContainerAutoSolderingTable;
@@ -177,6 +178,14 @@ public class PluginJEI implements IModPlugin {
 		subtypeRegistry.registerSubtypeInterpreter(ModItems.EnergizedPortableBattery, new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
 		subtypeRegistry.registerSubtypeInterpreter(ModItems.LumumPortableBattery, new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
 		subtypeRegistry.registerSubtypeInterpreter(ModItems.ElectringSolderingIron, new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.IronCapsule, new FluidCapsule.FluidCapsuleItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.BasicCapsule, new FluidCapsule.FluidCapsuleItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.AdvancedCapsule, new FluidCapsule.FluidCapsuleItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.StaticCapsule, new FluidCapsule.FluidCapsuleItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.EnergizedCapsule, new FluidCapsule.FluidCapsuleItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.LumumCapsule, new FluidCapsule.FluidCapsuleItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.CreativeCapsule, new FluidCapsule.FluidCapsuleItemJEIInterpreter());
 	}
 
 	@Override

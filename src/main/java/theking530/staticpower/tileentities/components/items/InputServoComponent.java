@@ -21,7 +21,7 @@ import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities.
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class InputServoComponent extends AbstractTileEntityComponent {
-	public static final int DEFAULT_INPUT_TIME = 10;
+	public static final int DEFAULT_INPUT_TIME = 20;
 
 	private int inputTimer;
 	private int inputTime;
@@ -30,9 +30,9 @@ public class InputServoComponent extends AbstractTileEntityComponent {
 	private MachineSideMode inputMode;
 	private Predicate<ItemStack> filter;
 
-	public InputServoComponent(String name, int inputTime, InventoryComponent inventory, MachineSideMode mode, Predicate<ItemStack> filter, int... slots) {
+	public InputServoComponent(String name, InventoryComponent inventory, MachineSideMode mode, Predicate<ItemStack> filter, int... slots) {
 		super(name);
-		this.inputTime = inputTime;
+		this.inputTime = DEFAULT_INPUT_TIME;
 		this.inventory = inventory;
 		if (slots.length == 0) {
 			this.slots = new int[inventory.getSlots()];
@@ -47,11 +47,11 @@ public class InputServoComponent extends AbstractTileEntityComponent {
 	}
 
 	public InputServoComponent(String name, int inputTime, InventoryComponent inventory, MachineSideMode mode, int... slots) {
-		this(name, inputTime, inventory, mode, null, slots);
+		this(name, inventory, mode, null, slots);
 	}
 
 	public InputServoComponent(String name, int inputTime, InventoryComponent inventory, Predicate<ItemStack> filter, int... slots) {
-		this(name, inputTime, inventory, MachineSideMode.Input, filter, slots);
+		this(name, inventory, MachineSideMode.Input, filter, slots);
 	}
 
 	public InputServoComponent(String name, int inputTime, InventoryComponent inventory, int... slots) {

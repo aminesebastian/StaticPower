@@ -14,6 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -30,6 +31,7 @@ import theking530.staticpower.blocks.ICustomModelSupplier;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.CustomRenderer;
+import theking530.staticpower.client.rendering.items.FluidCapsuleItemModel.CapsuleColorProvider;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderAutoCraftingTable;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderAutoSolderingTable;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderBatteryBlock;
@@ -49,6 +51,7 @@ import theking530.staticpower.client.rendering.tileentity.TileEntityRenderTreeFa
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.thermalconductivity.ThermalConductivityRecipe;
+import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.components.heat.HeatUtilities;
 
@@ -161,6 +164,16 @@ public class StaticPowerClientEventHandler {
 				}
 			}
 		}
+	}
+
+	public static void onItemColorBakeEvent(ColorHandlerEvent.Item event) {
+		event.getItemColors().register(new CapsuleColorProvider(), ModItems.IronCapsule);
+		event.getItemColors().register(new CapsuleColorProvider(), ModItems.BasicCapsule);
+		event.getItemColors().register(new CapsuleColorProvider(), ModItems.AdvancedCapsule);
+		event.getItemColors().register(new CapsuleColorProvider(), ModItems.StaticCapsule);
+		event.getItemColors().register(new CapsuleColorProvider(), ModItems.EnergizedCapsule);
+		event.getItemColors().register(new CapsuleColorProvider(), ModItems.LumumCapsule);
+		event.getItemColors().register(new CapsuleColorProvider(), ModItems.CreativeCapsule);
 	}
 
 	public static void onTextureStitchEvent(TextureStitchEvent.Pre event) {

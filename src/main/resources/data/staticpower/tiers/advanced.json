@@ -37,5 +37,7 @@
 	"centrifugeUpgradedPowerIncrease": 3.0,
 	"defaultMachinePowerCapacity": 1000,
 	"defaultMachinePowerInput": 20,
-	"defaultMachinePowerOutput": 20
+	"defaultMachinePowerOutput": 20,
+	"defaultTankCapacity": 7500,
+	"capsuleCapacity": 8000
 }

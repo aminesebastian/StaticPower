@@ -92,9 +92,6 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 	protected ProcessingCheckState moveInputs(SolidFuelRecipe recipe) {
 		// If the items can be insert into the output, transfer the items and return
 		// true.
-		if (!internalInventory.getStackInSlot(0).isEmpty()) {
-			return ProcessingCheckState.internalInventoryNotEmpty();
-		}
 		if (!energyStorage.canAcceptPower(powerGenerationPerTick)) {
 			return ProcessingCheckState.powerOutputFull();
 		}

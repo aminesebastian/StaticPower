@@ -6,6 +6,7 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.RegistryEvent;
@@ -41,6 +42,12 @@ public class StaticPowerModEventRegistry {
 	public static void modelBakeEvent(ModelBakeEvent event) {
 		StaticPowerClientEventHandler.onModelBakeEvent(event);
 		StaticPower.LOGGER.info("Static Power Model Overrides Completed!");
+	}
+
+	@SubscribeEvent
+	public static void onItemColorBakeEvent(ColorHandlerEvent.Item event) {
+		StaticPowerClientEventHandler.onItemColorBakeEvent(event);
+		StaticPower.LOGGER.info("Static Power Item Color Overrides Completed!");
 	}
 
 	@SubscribeEvent

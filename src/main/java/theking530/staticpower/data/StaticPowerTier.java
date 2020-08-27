@@ -36,6 +36,9 @@ public class StaticPowerTier {
 	private int defaultMachinePowerInput;
 	private int defaultMachinePowerOutput;
 
+	private int defaultTankCapacity;
+	private int capsuleCapacity;
+
 	private int upgradeOrdinal;
 
 	/********************
@@ -71,6 +74,14 @@ public class StaticPowerTier {
 	 ********************/
 	private int maxCentrifugeSpeedUpgrade;
 	private float centrifugeUpgradedPowerIncrease;
+
+	public int getDefaultTankCapacity() {
+		return defaultTankCapacity;
+	}
+
+	public int getCapsuleCapacity() {
+		return capsuleCapacity;
+	}
 
 	public int getDefaultMachinePowerCapacity() {
 		return defaultMachinePowerCapacity;

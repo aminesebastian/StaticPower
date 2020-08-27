@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -11,6 +12,7 @@ import net.minecraft.item.Items;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.items.cableattachments.CableCover;
@@ -69,5 +71,16 @@ public class StaticPowerItemGroup extends ItemGroup {
 		subTypes.add(ModItems.EnergizedPortableBattery.getFilledVariant());
 		subTypes.add(ModItems.LumumPortableBattery.getFilledVariant());
 		subTypes.add(ModItems.ElectringSolderingIron.getFilledVariant());
+
+		// Add all the capsules for all fluids.
+		for (Fluid fluid : GameRegistry.findRegistry(Fluid.class)) {
+			subTypes.add(ModItems.IronCapsule.getFilledVariant(fluid));
+			subTypes.add(ModItems.BasicCapsule.getFilledVariant(fluid));
+			subTypes.add(ModItems.AdvancedCapsule.getFilledVariant(fluid));
+			subTypes.add(ModItems.StaticCapsule.getFilledVariant(fluid));
+			subTypes.add(ModItems.EnergizedCapsule.getFilledVariant(fluid));
+			subTypes.add(ModItems.LumumCapsule.getFilledVariant(fluid));
+			subTypes.add(ModItems.CreativeCapsule.getFilledVariant(fluid));
+		}
 	}
 }

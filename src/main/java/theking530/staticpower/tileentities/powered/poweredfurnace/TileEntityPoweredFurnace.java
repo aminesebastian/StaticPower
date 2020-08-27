@@ -88,9 +88,6 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 	}
 
 	protected ProcessingCheckState moveInputs(FurnaceRecipe recipe) {
-		if (!internalInventory.getStackInSlot(0).isEmpty()) {
-			return ProcessingCheckState.internalInventoryNotEmpty();
-		}
 		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getRecipeOutput())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
