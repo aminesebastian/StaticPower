@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
@@ -58,7 +59,8 @@ public class EnergyHandlerItemStackUtilities {
 	 * capability.
 	 * 
 	 * @param container The itemstack to check.
-	 * @return True if the itemstack contains the energy capability, false otherwise.
+	 * @return True if the itemstack contains the energy capability, false
+	 *         otherwise.
 	 */
 	public static boolean isEnergyContainer(ItemStack container) {
 		AtomicBoolean exists = new AtomicBoolean(false);
@@ -66,6 +68,16 @@ public class EnergyHandlerItemStackUtilities {
 			exists.set(true);
 		});
 		return exists.get();
+	}
+
+	/**
+	 * Gets the IEnergyStorage associated with the provided container.
+	 * 
+	 * @param container The itemstack to check.
+	 * @return The IEnergyStorage associated with the provided container.
+	 */
+	public static LazyOptional<IEnergyStorage> getEnergyContainer(ItemStack container) {
+		return container.getCapability(CapabilityEnergy.ENERGY);
 	}
 
 	/**
@@ -80,8 +92,6 @@ public class EnergyHandlerItemStackUtilities {
 		container.getCapability(CapabilityEnergy.ENERGY).ifPresent((IEnergyStorage instance) -> {
 			instance.receiveEnergy(instance.getMaxEnergyStored(), false);
 		});
-		
-		updateDamageUsingEnergyStorage(container);
 	}
 
 	/**
@@ -123,9 +133,6 @@ public class EnergyHandlerItemStackUtilities {
 		AtomicInteger received = new AtomicInteger(0);
 		container.getCapability(CapabilityEnergy.ENERGY).ifPresent((IEnergyStorage instance) -> {
 			received.set(instance.receiveEnergy(maxReceive, simulate));
-			if (!simulate) {
-				updateDamageUsingEnergyStorage(container);
-			}
 		});
 		return received.get();
 	}
@@ -142,27 +149,7 @@ public class EnergyHandlerItemStackUtilities {
 		AtomicInteger extracted = new AtomicInteger(0);
 		container.getCapability(CapabilityEnergy.ENERGY).ifPresent((IEnergyStorage instance) -> {
 			extracted.set(instance.extractEnergy(maxExtract, simulate));
-			if (!simulate) {
-				updateDamageUsingEnergyStorage(container);
-			}
 		});
 		return extracted.get();
-	}
-
-	/**
-	 * Updates the amount of damage on the itemstack based on the amount of energy
-	 * stored vs the maximum amount that can be stored on this itemstack.
-	 * 
-	 * @param container The itemstack to update.
-	 */
-	public static void updateDamageUsingEnergyStorage(ItemStack container) {
-		// Ensure the container has the appropriate energy tag.
-		CompoundNBT energyTag = getEnergyStorageNBTTag(container);
-		if (energyTag == null) {
-			return;
-		}
-		// Set the damage to the max amount of energy - the current amount (when fully
-		// charged, the damage will be 0, and vice versa).
-		container.setDamage(energyTag.getInt(MAX_ENERGY_NBT_KEY) - energyTag.getInt(CURRENT_ENERGY_NBT_KEY));
 	}
 }

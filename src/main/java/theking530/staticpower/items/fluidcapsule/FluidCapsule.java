@@ -37,12 +37,13 @@ import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.items.StaticPowerItem;
+import theking530.staticpower.utilities.WorldUtilities;
 
 public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplier {
 	public final ResourceLocation tier;
 
 	public FluidCapsule(String name, ResourceLocation tier) {
-		super(name, new Properties().maxStackSize(16).setNoRepair());
+		super(name, new Properties().maxStackSize(1).setNoRepair());
 		this.tier = tier;
 	}
 
@@ -56,10 +57,15 @@ public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplie
 	}
 
 	@Override
+	public boolean showDurabilityBar(ItemStack stack) {
+		return getDurabilityForDisplay(stack) < 1.0f;
+	}
+
+	@Override
 	public double getDurabilityForDisplay(ItemStack stack) {
 		IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack).orElse(null);
 		if (handler != null) {
-			return (double) handler.getFluidInTank(0).getAmount() / (double) handler.getTankCapacity(0);
+			return 1.0 - (double) handler.getFluidInTank(0).getAmount() / (double) handler.getTankCapacity(0);
 		}
 		return 0.0f;
 	}
@@ -93,13 +99,12 @@ public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplie
 	protected ActionResultType onStaticPowerItemUsedOnBlock(ItemUseContext context, World world, BlockPos pos, Direction face, PlayerEntity player, ItemStack item) {
 		IFluidHandler fluidHandler = FluidUtil.getFluidHandler(item).orElse(null);
 		if (fluidHandler != null) {
-			BlockPos fluidTargetPos = pos.offset(Direction.UP);
+			BlockPos fluidTargetPos = pos.offset(face);
 			IFluidState usedFluidState = world.getFluidState(fluidTargetPos);
 			if (usedFluidState.isEmpty()) {
-				FluidUtil.tryPlaceFluid(player, world, context.getHand(), fluidTargetPos, fluidHandler, fluidHandler.getFluidInTank(0));
+				WorldUtilities.tryPlaceFluid(player, world, context.getHand(), fluidTargetPos, fluidHandler, fluidHandler.getFluidInTank(0));
 			} else {
-				FluidUtil.tryPickUpFluid(item, player, world, fluidTargetPos, face);
-				System.out.println(usedFluidState.getFluid().getRegistryName().toString());
+				WorldUtilities.tryPickUpFluid(item, player, world, fluidTargetPos, face);
 			}
 		}
 		return ActionResultType.PASS;

@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		" w ",
+		"prp",
+		"prp"
+	],
+	"key": {
+		"p": {
+			"item": "staticpower:plate_static"
+		},
+		"w": {
+			"tag": "forge:wires/silver"
+		},
+		"r": {
+			"item": "staticpower:crystal_static"
+		}
+	},
+	"result": {
+		"item": "staticpower:portable_battery_static",
+		"count": 1
+	}
+}

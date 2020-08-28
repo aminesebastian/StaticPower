@@ -63,6 +63,9 @@ public class StaticPowerSprites {
 	public static final ResourceLocation SEARCH_MODE_ONE_WAY = registerSprite("gui/search_mode_one_way");
 	public static final ResourceLocation SEARCH_MODE_TWO_WAY = registerSprite("gui/search_mode_two_way");
 
+	public static final ResourceLocation PORTABLE_BATTERY_FILL_BAR = registerSprite("items/batteries/portable_battery_filled_bar");
+	public static final ResourceLocation PORTABLE_CREATIVE_BATTERY_FILL_BAR = registerSprite("items/batteries/portable_battery_creative_filled_bar");
+	
 	public static final ResourceLocation CANCEL = registerSprite("gui/cancel");
 	public static final ResourceLocation GREEN_CHECK = registerSprite("gui/check");
 	public static final ResourceLocation DISABLED = registerSprite("gui/disabled");

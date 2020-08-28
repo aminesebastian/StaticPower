@@ -1,0 +1,18 @@
+{
+	"type": "staticpower:fusion_furnace_recipe",
+	"inputs": [
+		{
+			"tag": "forge:storage_blocks/iron"
+		},
+		{
+			"tag": "forge:storage_blocks/gold"
+		},
+		{
+			"tag": "forge:storage_blocks/platinum"
+		}
+	],
+	"output": {
+		"item": "staticpower:block_inert_infusion",
+		"count": 3
+	}
+}

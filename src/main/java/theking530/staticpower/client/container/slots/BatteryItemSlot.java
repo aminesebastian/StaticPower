@@ -9,7 +9,11 @@ import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 public class BatteryItemSlot extends StaticPowerContainerSlot {
 	public BatteryItemSlot(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
-		super(new ItemStack(ModItems.BasicPortableBattery), 0.3f, itemHandler, index, xPosition, yPosition);
+		this(itemHandler, new ItemStack(ModItems.BasicPortableBattery), index, xPosition, yPosition);
+	}
+
+	public BatteryItemSlot(IItemHandler itemHandler, ItemStack preview, int index, int xPosition, int yPosition) {
+		super(preview, 0.3f, itemHandler, index, xPosition, yPosition);
 	}
 
 	@Override

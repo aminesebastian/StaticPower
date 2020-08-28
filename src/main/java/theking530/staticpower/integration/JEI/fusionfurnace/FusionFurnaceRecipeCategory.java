@@ -18,7 +18,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import theking530.common.gui.GuiDrawUtilities;
-import theking530.common.gui.widgets.progressbars.GrinderProgressBar;
+import theking530.common.gui.widgets.progressbars.FusionProgressBar;
 import theking530.common.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.common.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
@@ -40,7 +40,7 @@ public class FusionFurnaceRecipeCategory extends BaseJEIRecipeCategory<FusionFur
 	private final TranslationTextComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
-	private final GrinderProgressBar pBar;
+	private final FusionProgressBar pBar;
 
 	private ITickTimer powerTimer;
 	private ITickTimer processingTimer;
@@ -50,7 +50,7 @@ public class FusionFurnaceRecipeCategory extends BaseJEIRecipeCategory<FusionFur
 		locTitle = new TranslationTextComponent(ModBlocks.FusionFurnace.getTranslationKey());
 		background = guiHelper.createBlankDrawable(160, 60);
 		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.FusionFurnace));
-		pBar = new GrinderProgressBar(79, 20);
+		pBar = new FusionProgressBar(79, 19);
 	}
 
 	@Override

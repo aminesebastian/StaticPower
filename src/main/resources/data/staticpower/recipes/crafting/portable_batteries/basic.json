@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		" w ",
+		"prp",
+		"prp"
+	],
+	"key": {
+		"p": {
+			"tag": "forge:plates/tin"
+		},
+		"w": {
+			"tag": "forge:wires/tin"
+		},
+		"r": {
+			"tag": "forge:dusts/redstone"
+		}
+	},
+	"result": {
+		"item": "staticpower:portable_battery_basic",
+		"count": 1
+	}
+}

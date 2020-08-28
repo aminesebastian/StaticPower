@@ -59,7 +59,7 @@ public class FluidCapsuleItemModel implements IBakedModel {
 
 				// Get the fluid handler.
 				IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack).orElse(null);
-				if (handler == null || handler.getFluidInTank(0).isEmpty()) {
+				if (handler == null) {
 					return originalModel;
 				}
 

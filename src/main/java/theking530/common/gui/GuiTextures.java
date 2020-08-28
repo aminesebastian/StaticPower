@@ -34,5 +34,6 @@ public class GuiTextures {
 	public static final ResourceLocation FIRE_PROGRESS_BAR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/flames.png");
 	public static final ResourceLocation ARROW_PROGRESS_BAR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/arrow_progress_bar.png");
 	public static final ResourceLocation GRINDER_PROGRESS_BAR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/grinder_progress_bar.png");
+	public static final ResourceLocation FUSION_PROGRESS_BAR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/fusion_progress_bar.png");
 	public static final ResourceLocation CENTRIFUGE_PROGRESS_BAR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/centrifuge_progress_bar.png");
 }

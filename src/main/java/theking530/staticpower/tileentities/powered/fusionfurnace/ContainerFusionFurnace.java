@@ -35,9 +35,9 @@ public class ContainerFusionFurnace extends StaticPowerTileEntityContainer<TileE
 		addSlot(new OutputSlot(getTileEntity().outputInventory, 0, 80, 59));
 
 		// Upgrades
-		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 0, 152, 12));
-		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 1, 152, 32));
-		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 2, 152, 52));
+		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 0, 152, 14));
+		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 1, 152, 34));
+		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 2, 152, 54));
 
 		addPlayerInventory(getPlayerInventory(), 8, 84);
 		addPlayerHotbar(getPlayerInventory(), 8, 142);

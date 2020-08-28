@@ -18,6 +18,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
@@ -30,7 +31,7 @@ import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
  */
 public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	/** The INITIAL maximum amount of energy that can be stored by this item. */
-	protected final int capacity;
+	private int capacity;
 
 	/**
 	 * Creates a default energy storing item.
@@ -39,7 +40,7 @@ public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	 * @param capacity The amount of energy that can be stored by this item.
 	 */
 	public StaticPowerEnergyStoringItem(String name, int capacity) {
-		super(name, new Item.Properties().maxStackSize(1).setNoRepair().maxDamage(capacity));
+		super(name, new Item.Properties().maxStackSize(1).setNoRepair());
 		this.capacity = capacity;
 	}
 
@@ -54,7 +55,7 @@ public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 			@Override
 			public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
 				if (cap == CapabilityEnergy.ENERGY) {
-					return LazyOptional.of(() -> new EnergyHandlerItemStack(stack, capacity, capacity, capacity)).cast();
+					return LazyOptional.of(() -> new EnergyHandlerItemStack(stack, getCapacity(), getCapacity(), getCapacity())).cast();
 				}
 				return LazyOptional.empty();
 			}
@@ -67,12 +68,25 @@ public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 		return output;
 	}
 
-	/**
-	 * Always shows the durability bar.
-	 */
+	public int getCapacity() {
+		return capacity;
+	}
+
 	@Override
 	public boolean showDurabilityBar(ItemStack stack) {
-		return true;
+		return getDurabilityForDisplay(stack) > 0.0f && getDurabilityForDisplay(stack) < 1.0f;
+	}
+
+	@Override
+	public double getDurabilityForDisplay(ItemStack stack) {
+		// Get the energy handler.
+		IEnergyStorage handler = EnergyHandlerItemStackUtilities.getEnergyContainer(stack).orElse(null);
+		if (handler == null) {
+			return 0.0f;
+		}
+
+		// Get the power ratio.
+		return 1.0 - (double) handler.getEnergyStored() / (double) handler.getMaxEnergyStored();
 	}
 
 	@Override
@@ -86,7 +100,9 @@ public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	public static class EnergyItemJEIInterpreter implements ISubtypeInterpreter {
 		@Override
 		public String apply(ItemStack itemStack) {
-			return EnergyHandlerItemStackUtilities.getEnergyStorageCapacity(itemStack) + " " + EnergyHandlerItemStackUtilities.getEnergyStored(itemStack);
+			return itemStack.getItem().getRegistryName().toString() + EnergyHandlerItemStackUtilities.getEnergyStorageCapacity(itemStack) + " "
+					+ EnergyHandlerItemStackUtilities.getEnergyStored(itemStack);
 		}
 	}
+
 }

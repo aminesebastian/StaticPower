@@ -60,7 +60,6 @@ public class EnergyHandlerItemStack implements IEnergyStorage, ICapabilityProvid
 
 		if (!simulate) {
 			EnergyHandlerItemStackUtilities.getEnergyStorageNBTTag(container).putInt(EnergyHandlerItemStackUtilities.CURRENT_ENERGY_NBT_KEY, getEnergyStored() + received);
-			EnergyHandlerItemStackUtilities.updateDamageUsingEnergyStorage(container);
 		}
 		return received;
 	}
@@ -85,7 +84,6 @@ public class EnergyHandlerItemStack implements IEnergyStorage, ICapabilityProvid
 		int drained = Math.min(candidateDrain, getMaxDrainRate());
 		if (!simulate) {
 			EnergyHandlerItemStackUtilities.getEnergyStorageNBTTag(container).putInt(EnergyHandlerItemStackUtilities.CURRENT_ENERGY_NBT_KEY, getEnergyStored() - drained);
-			EnergyHandlerItemStackUtilities.updateDamageUsingEnergyStorage(container);
 		}
 		return drained;
 	}
@@ -191,7 +189,6 @@ public class EnergyHandlerItemStack implements IEnergyStorage, ICapabilityProvid
 		if (EnergyHandlerItemStackUtilities.getEnergyStorageNBTTag(container) == null) {
 			CompoundNBT nbt = createDefaultNBT(0, capacity, maxReceive, maxDrain);
 			container.getTag().put(EnergyHandlerItemStackUtilities.ENERGY_STORAGE_NBT_KEY, nbt);
-			EnergyHandlerItemStackUtilities.updateDamageUsingEnergyStorage(container);
 		}
 	}
 }

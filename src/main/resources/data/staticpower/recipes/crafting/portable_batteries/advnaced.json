@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		" w ",
+		"prp",
+		"prp"
+	],
+	"key": {
+		"p": {
+			"tag": "forge:plates/gold"
+		},
+		"w": {
+			"tag": "forge:wires/copper"
+		},
+		"r": {
+			"tag": "forge:dusts/redstone"
+		}
+	},
+	"result": {
+		"item": "staticpower:portable_battery_advanced",
+		"count": 1
+	}
+}

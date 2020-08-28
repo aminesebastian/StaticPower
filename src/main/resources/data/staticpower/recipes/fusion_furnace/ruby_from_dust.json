@@ -4,9 +4,14 @@
 		{
 			"tag": "forge:dusts/ruby"
 		},
-		{
-			"tag": "staticpower:coal_or_charcoal"
-		}
+		[
+			{
+				"tag": "forge:dusts/charcoal"
+			},
+			{
+				"tag": "forge:dusts/coal"
+			}
+		]
 	],
 	"output": {
 		"item": "staticpower:gem_ruby"

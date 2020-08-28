@@ -9,6 +9,7 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import theking530.common.utilities.SDMath;
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 import theking530.staticpower.utilities.InventoryUtilities;
@@ -109,15 +110,18 @@ public class FluidContainerInventoryComponent extends InventoryComponent {
 			int filledAmount = containerHandler.fill(simulatedDrain, FluidAction.EXECUTE);
 			if (filledAmount > 0) {
 				fluidHandler.drain(filledAmount, FluidAction.EXECUTE);
+				float minSound = Math.max(1.0f - (float) fluidHandler.getFluidInTank(0).getAmount() / fluidHandler.getTankCapacity(0), 0.55f) * 1.1f;
+				float maxSound = minSound + 0.1f;
 				// Play the sound.
-				getWorld().playSound(null, getPos(), simulatedDrain.getFluid() == Fluids.LAVA ? SoundEvents.ITEM_BUCKET_FILL_LAVA : SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1.0f, 1.0f);
+				getWorld().playSound(null, getPos(), simulatedDrain.getFluid() == Fluids.LAVA ? SoundEvents.ITEM_BUCKET_FILL_LAVA : SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 0.35f,
+						SDMath.clamp(getWorld().getRandom().nextFloat(), minSound, maxSound));
 
 				// If the container is empty, transfer it to the empty container slot.
 				if (containerHandler.getFluidInTank(0).getAmount() == containerHandler.getTankCapacity(0)) {
 					if (InventoryUtilities.canFullyInsertStackIntoSlot(this, 1, container.getContainerItem())) {
 						// Perform the insert.
-						ItemStack insertedItem = insertItem(1, container.getContainerItem(), false);
-						// If successfully, extract the item from the primary alot.
+						ItemStack insertedItem = insertItem(1, containerHandler.getContainer(), false);
+						// If successfully, extract the item from the primary slot.
 						if (insertedItem.isEmpty()) {
 							extractItem(0, 1, false);
 						}
@@ -142,8 +146,11 @@ public class FluidContainerInventoryComponent extends InventoryComponent {
 
 			if (filledAmount > 0) {
 				containerHandler.drain(filledAmount, FluidAction.EXECUTE);
+				float minSound = Math.max(1.0f - (float) fluidHandler.getFluidInTank(0).getAmount() / fluidHandler.getTankCapacity(0), 0.55f) * 1.1f;
+				float maxSound = minSound + 0.1f;
 				// Play the sound.
-				getWorld().playSound(null, getPos(), simulatedDrain.getFluid() == Fluids.LAVA ? SoundEvents.ITEM_BUCKET_EMPTY_LAVA : SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0f, 1.0f);
+				getWorld().playSound(null, getPos(), simulatedDrain.getFluid() == Fluids.LAVA ? SoundEvents.ITEM_BUCKET_EMPTY_LAVA : SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 0.35f,
+						SDMath.clamp(getWorld().getRandom().nextFloat(), minSound, maxSound));
 
 				// If the container is empty, transfer it to the empty container slot.
 				if (containerHandler.getFluidInTank(0).getAmount() == 0) {

@@ -3,27 +3,27 @@ package theking530.common.gui.widgets.valuebars;
 import java.util.List;
 
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.fluids.IFluidTank;
 import theking530.common.gui.widgets.AbstractGuiWidget;
 import theking530.common.utilities.Vector2D;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.control.SideConfigurationComponent;
+import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
 public class GuiFluidBarFromTank extends AbstractGuiWidget {
 
-	private IFluidTank tank;
+	private FluidTankComponent tank;
 	private MachineSideMode mode;
 	private TileEntityBase owningTileEntity;
 
-	public GuiFluidBarFromTank(IFluidTank tank, int xPosition, int yPosition, int xSize, int ySize, MachineSideMode mode, TileEntityBase owningTileEntity) {
+	public GuiFluidBarFromTank(FluidTankComponent tank, int xPosition, int yPosition, int xSize, int ySize, MachineSideMode mode, TileEntityBase owningTileEntity) {
 		super(xPosition, yPosition, xSize, ySize);
 		this.tank = tank;
 		this.mode = mode;
 		this.owningTileEntity = owningTileEntity;
 	}
 
-	public GuiFluidBarFromTank(IFluidTank tank, int xPosition, int yPosition, int xSize, int ySize) {
+	public GuiFluidBarFromTank(FluidTankComponent tank, int xPosition, int yPosition, int xSize, int ySize) {
 		this(tank, xPosition, yPosition, xSize, ySize, null, null);
 	}
 
@@ -38,13 +38,16 @@ public class GuiFluidBarFromTank extends AbstractGuiWidget {
 
 			if (sideComp != null && mode != null) {
 				if (sideComp.getCountOfSidesWithMode(mode) > 0) {
-					GuiFluidBarUtilities.drawFluidBar(tank.getFluid(), tank.getCapacity(), tank.getFluidAmount(), ownerRelativePosition.getX(), ownerRelativePosition.getY() + getSize().getY(), 0.0f, getSize().getX(), getSize().getY(), mode, true);
+					GuiFluidBarUtilities.drawFluidBar(tank.getFluid(), tank.getCapacity(), (int) (tank.getVisualFillLevel() * tank.getCapacity()), ownerRelativePosition.getX(),
+							ownerRelativePosition.getY() + getSize().getY(), 0.0f, getSize().getX(), getSize().getY(), mode, true);
 				} else {
-					GuiFluidBarUtilities.drawFluidBar(tank.getFluid(), tank.getCapacity(), tank.getFluidAmount(), ownerRelativePosition.getX(), ownerRelativePosition.getY() + getSize().getY(), 0.0f, getSize().getX(), getSize().getY(), true);
+					GuiFluidBarUtilities.drawFluidBar(tank.getFluid(), tank.getCapacity(), (int) (tank.getVisualFillLevel() * tank.getCapacity()), ownerRelativePosition.getX(),
+							ownerRelativePosition.getY() + getSize().getY(), 0.0f, getSize().getX(), getSize().getY(), true);
 				}
 			}
 		} else {
-			GuiFluidBarUtilities.drawFluidBar(tank.getFluid(), tank.getCapacity(), tank.getFluidAmount(), ownerRelativePosition.getX(), ownerRelativePosition.getY() + getSize().getY(), 0.0f, getSize().getX(), getSize().getY(), true);
+			GuiFluidBarUtilities.drawFluidBar(tank.getFluid(), tank.getCapacity(), (int) (tank.getVisualFillLevel() * tank.getCapacity()), ownerRelativePosition.getX(),
+					ownerRelativePosition.getY() + getSize().getY(), 0.0f, getSize().getX(), getSize().getY(), true);
 		}
 	}
 

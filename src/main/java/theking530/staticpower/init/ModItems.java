@@ -7,7 +7,7 @@ import theking530.staticpower.items.DigistoreCard;
 import theking530.staticpower.items.DigistoreMonoCard;
 import theking530.staticpower.items.JuiceBottleItem;
 import theking530.staticpower.items.MilkBottleItem;
-import theking530.staticpower.items.StaticPowerEnergyStoringItem;
+import theking530.staticpower.items.PortableBattery;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.items.cableattachments.CableCover;
 import theking530.staticpower.items.cableattachments.digistorecraftingterminal.DigistoreCraftingTerminal;
@@ -211,10 +211,12 @@ public class ModItems {
 	public static StaticPowerItem EnergizedUpgradePlate;
 	public static StaticPowerItem LumumUpgradePlate;
 
-	public static StaticPowerEnergyStoringItem BasicPortableBattery;
-	public static StaticPowerEnergyStoringItem EnergizedPortableBattery;
-	public static StaticPowerEnergyStoringItem LumumPortableBattery;
-	public static StaticPowerEnergyStoringItem StaticPortableBattery;
+	public static PortableBattery BasicPortableBattery;
+	public static PortableBattery AdvancedPortableBattery;
+	public static PortableBattery StaticPortableBattery;
+	public static PortableBattery EnergizedPortableBattery;
+	public static PortableBattery LumumPortableBattery;
+	public static PortableBattery CreativePortableBattery;
 
 	public static StaticPlantSeeds StaticSeeds;
 	public static StaticPlantSeeds EnergizedSeeds;
@@ -327,16 +329,18 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(LumumProcessor = new StaticPowerItem("processor_lumum"));
 
 		// Batteries
-		StaticPowerRegistry.preRegisterItem(BasicPortableBattery = new StaticPowerEnergyStoringItem("portable_battery_basic", 50000));
-		StaticPowerRegistry.preRegisterItem(EnergizedPortableBattery = new StaticPowerEnergyStoringItem("portable_battery_static", 500000));
-		StaticPowerRegistry.preRegisterItem(LumumPortableBattery = new StaticPowerEnergyStoringItem("portable_battery_energized", 5000000));
-		StaticPowerRegistry.preRegisterItem(StaticPortableBattery = new StaticPowerEnergyStoringItem("portable_battery_lumum", 50000000));
+		StaticPowerRegistry.preRegisterItem(BasicPortableBattery = new PortableBattery("portable_battery_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterItem(AdvancedPortableBattery = new PortableBattery("portable_battery_advanced", StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterItem(StaticPortableBattery = new PortableBattery("portable_battery_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterItem(EnergizedPortableBattery = new PortableBattery("portable_battery_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterItem(LumumPortableBattery = new PortableBattery("portable_battery_lumum", StaticPowerTiers.LUMUM));
+		StaticPowerRegistry.preRegisterItem(CreativePortableBattery = new PortableBattery("portable_battery_creative", StaticPowerTiers.CREATIVE));
 
 		// Tools
 		StaticPowerRegistry.preRegisterItem(MetalHammer = new MetalHammer("metal_hammer", 100));
 		StaticPowerRegistry.preRegisterItem(WireCutters = new WireCutters("wire_cutters", 100));
 		StaticPowerRegistry.preRegisterItem(SolderingIron = new SolderingIron("soldering_iron", 100));
-		StaticPowerRegistry.preRegisterItem(ElectringSolderingIron = new ElectricSolderingIron("soldering_iron_electric", 10000));
+		StaticPowerRegistry.preRegisterItem(ElectringSolderingIron = new ElectricSolderingIron("soldering_iron_electric", 1000));
 		StaticPowerRegistry.preRegisterItem(StaticWrench = new StaticWrench("static_wrench"));
 
 		StaticPowerRegistry.preRegisterItem(IronCoverSaw = new CoverSaw("saw_iron", 100));

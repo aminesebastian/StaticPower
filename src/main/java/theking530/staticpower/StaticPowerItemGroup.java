@@ -67,9 +67,11 @@ public class StaticPowerItemGroup extends ItemGroup {
 
 		// Add the electric items.
 		subTypes.add(ModItems.BasicPortableBattery.getFilledVariant());
+		subTypes.add(ModItems.AdvancedPortableBattery.getFilledVariant());
 		subTypes.add(ModItems.StaticPortableBattery.getFilledVariant());
 		subTypes.add(ModItems.EnergizedPortableBattery.getFilledVariant());
 		subTypes.add(ModItems.LumumPortableBattery.getFilledVariant());
+		subTypes.add(ModItems.CreativePortableBattery.getFilledVariant());
 		subTypes.add(ModItems.ElectringSolderingIron.getFilledVariant());
 
 		// Add all the capsules for all fluids.

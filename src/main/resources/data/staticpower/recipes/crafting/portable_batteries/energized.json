@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		" w ",
+		"prp",
+		"prp"
+	],
+	"key": {
+		"p": {
+			"item": "staticpower:plate_energized"
+		},
+		"w": {
+			"tag": "forge:wires/gold"
+		},
+		"r": {
+			"item": "staticpower:crystal_energized"
+		}
+	},
+	"result": {
+		"item": "staticpower:portable_battery_energized",
+		"count": 1
+	}
+}

@@ -22,21 +22,21 @@ public class ElectricSolderingIron extends StaticPowerEnergyStoringItem implemen
 
 	@Override
 	public boolean useSolderingItem(ItemStack itemstack) {
-		if (EnergyHandlerItemStackUtilities.getEnergyStored(itemstack) >= 100) {
-			EnergyHandlerItemStackUtilities.useEnergyFromItemstack(itemstack, 100, false);
+		if (EnergyHandlerItemStackUtilities.getEnergyStored(itemstack) >= 10) {
+			EnergyHandlerItemStackUtilities.useEnergyFromItemstack(itemstack, 10, false);
 		}
 		return false;
 	}
 
 	@Override
 	public boolean canSolder(ItemStack itemstack) {
-		return EnergyHandlerItemStackUtilities.getEnergyStored(itemstack) >= 100;
+		return EnergyHandlerItemStackUtilities.getEnergyStored(itemstack) >= 10;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
-		tooltip.add(new StringTextComponent("Power per Operation: 100RF"));
+		tooltip.add(new StringTextComponent("Power per Operation: 100V"));
 	}
 
 	@Override

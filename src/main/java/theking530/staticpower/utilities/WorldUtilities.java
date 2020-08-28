@@ -3,16 +3,42 @@ package theking530.staticpower.utilities;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.IFluidState;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.fluids.FluidActionResult;
+import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.fluids.capability.wrappers.BlockWrapper;
 
 public class WorldUtilities {
 
@@ -101,6 +127,132 @@ public class WorldUtilities {
 			return new BlockPos(ints[0], ints[1], ints[2]);
 		}
 		return null;
+	}
+
+	/**
+	 * Attempts to pick up a fluid in the world and put it in an empty container
+	 * item.
+	 *
+	 * @param emptyContainer The empty container to fill. Will not be modified
+	 *                       directly, if modifications are necessary a modified
+	 *                       copy is returned in the result.
+	 * @param playerIn       The player filling the container. Optional.
+	 * @param worldIn        The world the fluid is in.
+	 * @param pos            The position of the fluid in the world.
+	 * @param side           The side of the fluid that is being drained.
+	 * @return a {@link FluidActionResult} holding the result and the resulting
+	 *         container.
+	 */
+	@Nonnull
+	public static FluidActionResult tryPickUpFluid(@Nonnull ItemStack container, @Nullable PlayerEntity playerIn, World worldIn, BlockPos pos, Direction side) {
+		// If any required inputs are null or empty, return fail.
+		if (container.isEmpty() || worldIn == null || pos == null) {
+			return FluidActionResult.FAILURE;
+		}
+
+		// Get the fluid state. If it is not a source or is empty, return a failure.
+		IFluidState state = worldIn.getFluidState(pos);
+		if (state.isEmpty() || !state.isSource()) {
+			return FluidActionResult.FAILURE;
+		}
+
+		// Get the fluid handler for the item. Return fail if it does not exist.
+		IFluidHandlerItem handler = FluidUtil.getFluidHandler(container).orElse(null);
+		if (handler == null) {
+			return FluidActionResult.FAILURE;
+		}
+
+		// Get the stack we want to fill into the container.
+		FluidStack fillableStack = new FluidStack(state.getFluid(), FluidAttributes.BUCKET_VOLUME);
+
+		// Simulate a fill. If it is not the total fluid stack, return a fail.
+		int filledAmount = handler.fill(fillableStack, FluidAction.SIMULATE);
+		if (filledAmount != fillableStack.getAmount()) {
+			return FluidActionResult.FAILURE;
+		}
+
+		// Execute the fill. Remove the fluid from the world.
+		handler.fill(fillableStack, FluidAction.EXECUTE);
+		worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
+
+		// If the player is not null, play the pickup sound.
+		if (playerIn != null) {
+			SoundEvent soundevent = fillableStack.getFluid().getAttributes().getFillSound(fillableStack);
+			if (soundevent == null) {
+				soundevent = fillableStack.getFluid().isIn(FluidTags.LAVA) ? SoundEvents.ITEM_BUCKET_FILL_LAVA : SoundEvents.ITEM_BUCKET_FILL;
+			}
+			playerIn.world.playSound(null, playerIn.getPosX(), playerIn.getPosY() + 0.5, playerIn.getPosZ(), soundevent, SoundCategory.BLOCKS, 1.0F, 1.0F);
+		}
+
+		return new FluidActionResult(container);
+	}
+
+	/**
+	 * Tries to place a fluid resource into the world as a block and drains the
+	 * fluidSource. Makes a fluid emptying or vaporization sound when successful.
+	 * Honors the amount of fluid contained by the used container. Checks if
+	 * water-like fluids should vaporize like in the nether.
+	 *
+	 * Modeled after
+	 * {@link ItemBucket#tryPlaceContainedLiquid(PlayerEntity, World, BlockPos)}
+	 *
+	 * @param player      Player who places the fluid. May be null for blocks like
+	 *                    dispensers.
+	 * @param world       World to place the fluid in
+	 * @param hand
+	 * @param pos         The position in the world to place the fluid block
+	 * @param fluidSource The fluid source holding the fluidStack to place
+	 * @param resource    The fluidStack to place.
+	 * @return true if the placement was successful, false otherwise
+	 */
+	public static boolean tryPlaceFluid(@Nullable PlayerEntity player, World world, Hand hand, BlockPos pos, IFluidHandler fluidSource, FluidStack resource) {
+		if (world == null || pos == null) {
+			return false;
+		}
+
+		Fluid fluid = resource.getFluid();
+		if (fluid == null || !fluid.getAttributes().canBePlacedInWorld(world, pos, resource)) {
+			return false;
+		}
+
+		if (fluidSource.drain(resource, IFluidHandler.FluidAction.SIMULATE).isEmpty()) {
+			return false;
+		}
+
+		BlockItemUseContext context = new BlockItemUseContext(new ItemUseContext(player, hand, new BlockRayTraceResult(Vec3d.ZERO, Direction.UP, pos, false))); // TODO: This neds proper context...
+
+		// check that we can place the fluid at the destination
+		BlockState destBlockState = world.getBlockState(pos);
+		Material destMaterial = destBlockState.getMaterial();
+		boolean isDestNonSolid = !destMaterial.isSolid();
+		boolean isDestReplaceable = destBlockState.isReplaceable(context);
+		if (!world.isAirBlock(pos) && !isDestNonSolid && !isDestReplaceable) {
+			return false; // Non-air, solid, unreplacable block. We can't put fluid here.
+		}
+
+		if (world.dimension.doesWaterVaporize() && fluid.getAttributes().doesVaporize(world, pos, resource)) {
+			FluidStack result = fluidSource.drain(resource, IFluidHandler.FluidAction.EXECUTE);
+			if (!result.isEmpty()) {
+				result.getFluid().getAttributes().vaporize(player, world, pos, result);
+				return true;
+			}
+		} else {
+			// This fluid handler places the fluid block when filled
+			BlockState state = fluid.getAttributes().getBlock(world, pos, fluid.getDefaultState());
+			IFluidHandler handler = new BlockWrapper(state, world, pos);
+			FluidStack result = FluidUtil.tryFluidTransfer(handler, fluidSource, resource, true);
+			if (!result.isEmpty()) {
+				if (player != null) {
+					SoundEvent soundevent = result.getFluid().getAttributes().getEmptySound(result);
+					if (soundevent == null) {
+						soundevent = result.getFluid().isIn(FluidTags.LAVA) ? SoundEvents.ITEM_BUCKET_EMPTY_LAVA : SoundEvents.ITEM_BUCKET_EMPTY;
+					}
+					player.world.playSound(null, player.getPosX(), player.getPosY() + 0.5, player.getPosZ(), soundevent, SoundCategory.BLOCKS, 1.0F, 1.0F);
+				}
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public static ItemEntity dropItem(World worldIn, double x, double y, double z, ItemStack stack, int count) {

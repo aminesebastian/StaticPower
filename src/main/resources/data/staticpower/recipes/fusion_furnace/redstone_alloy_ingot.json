@@ -1,0 +1,18 @@
+{
+	"type": "staticpower:fusion_furnace_recipe",
+	"inputs": [
+		{
+			"tag": "forge:ingots/silver"
+		},
+		{
+			"tag": "forge:ingots/gold"
+		},
+		{
+			"tag": "forge:dusts/redstone"
+		}
+	],
+	"output": {
+		"item": "staticpower:ingot_redstone_alloy",
+		"count": 2
+	}
+}
