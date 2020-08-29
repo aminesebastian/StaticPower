@@ -69,6 +69,7 @@ public class FusionFurnaceRecipe extends AbstractMachineRecipe {
 				// Check if there was a match.
 				if (itemMatched) {
 					inputCopies.set(i, ItemStack.EMPTY);
+					matches++;
 					break;
 				}
 			}

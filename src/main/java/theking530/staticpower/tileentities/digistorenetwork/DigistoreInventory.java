@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.nonpowered.digistorenetwork;
+package theking530.staticpower.tileentities.digistorenetwork;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -10,7 +10,7 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.DigistoreStack;
+import theking530.staticpower.tileentities.digistorenetwork.digistore.DigistoreStack;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class DigistoreInventory implements Iterable<DigistoreStack>, IDigistoreInventory, IItemHandler {

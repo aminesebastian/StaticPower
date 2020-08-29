@@ -25,7 +25,7 @@ public class FusionProgressBar extends AbstractProgressBar {
 		}
 
 		if (isProcessingErrored) {
-			getErrorDrawable().draw(screenSpacePosition.getX() + 1.0f, screenSpacePosition.getY());
+			getErrorDrawable().draw(screenSpacePosition.getX() + 1.0f, screenSpacePosition.getY() + 1.0f);
 		}
 	}
 }

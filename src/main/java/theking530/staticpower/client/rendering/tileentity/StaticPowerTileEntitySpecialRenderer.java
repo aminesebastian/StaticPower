@@ -36,7 +36,7 @@ import theking530.common.utilities.Vector4D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.TileEntityDigistore;
+import theking530.staticpower.tileentities.digistorenetwork.digistore.TileEntityDigistore;
 
 @SuppressWarnings("deprecation")
 public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityBase> extends TileEntityRenderer<T> {

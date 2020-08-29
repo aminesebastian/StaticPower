@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.nonpowered.digistorenetwork;
+package theking530.staticpower.tileentities.digistorenetwork;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;

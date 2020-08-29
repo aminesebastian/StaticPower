@@ -19,6 +19,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import theking530.common.utilities.Vector2D;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkManager;
@@ -39,6 +40,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 	protected int maxRows;
 	protected Vector2D digistoreInventoryPosition;
 	protected boolean resyncInv;
+	protected boolean managerPresentLastState;
 
 	private int scrollOffset;
 	private boolean sortDescending;
@@ -46,7 +48,8 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 	private DigistoreInventorySortType sortType;
 	private DigistoreSimulatedItemStackHandler clientSimulatedInventory;
 
-	public AbstractContainerDigistoreTerminal(ContainerType<?> type, int windowId, PlayerInventory playerInventory, ItemStack attachment, Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
+	public AbstractContainerDigistoreTerminal(ContainerType<?> type, int windowId, PlayerInventory playerInventory, ItemStack attachment, Direction attachmentSide,
+			AbstractCableProviderComponent cableComponent) {
 		super(type, windowId, playerInventory, attachment, attachmentSide, cableComponent);
 	}
 
@@ -64,12 +67,14 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 
 	@Override
 	public void initializeContainer() {
+		managerPresentLastState = getCableComponent().isManagerPresent();
+		
 		// On both the client and the server, add the player slots.
 		addPlayerHotbar(getPlayerInventory(), 8, 246);
 		addPlayerInventory(getPlayerInventory(), 8, 188);
 
 		// If on the server, populate the digistore container slots.
-		if (!getCableComponent().getWorld().isRemote) {
+		if (!getCableComponent().getWorld().isRemote && getCableComponent().isManagerPresent()) {
 			getDigistoreNetwork().ifPresent(digistoreModule -> {
 				DigistoreInventorySnapshot digistoreInv = digistoreModule.getNetworkInventorySnapshot(filter, sortType, sortDescending);
 				addDigistoreSlots(digistoreInv, itemsPerRow, digistoreInventoryPosition.getXi(), digistoreInventoryPosition.getYi());
@@ -89,14 +94,15 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 				ItemStack playerMouseHeldItem = getPlayerInventory().getItemStack();
 
 				// Only perform on the server.
-				if (!getCableComponent().getWorld().isRemote) {
+				if (!getCableComponent().getWorld().isRemote && getCableComponent().isManagerPresent()) {
 					getDigistoreNetwork().ifPresent(digistoreModule -> {
 						// If on the server, attempt to either insert into the network if the held stack
 						// is not empty, otherwise, attempt to extract. Extract up to a full stack if
 						// left
 						// clicking, or a half stack if not.
 						if (playerMouseHeldItem.isEmpty()) {
-							int halfStackSize = actualSlotContents.getCount() >= actualSlotContents.getMaxStackSize() ? (actualSlotContents.getMaxStackSize() + 1) / 2 : (actualSlotContents.getCount() + 1) / 2;
+							int halfStackSize = actualSlotContents.getCount() >= actualSlotContents.getMaxStackSize() ? (actualSlotContents.getMaxStackSize() + 1) / 2
+									: (actualSlotContents.getCount() + 1) / 2;
 							int takeAmount = dragType == 0 ? actualSlotContents.getMaxStackSize() : halfStackSize;
 							ItemStack actuallyExtracted = digistoreModule.extractItem(actualSlotContents, takeAmount, false);
 							getPlayerInventory().setItemStack(actuallyExtracted);
@@ -131,11 +137,20 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 	@Override
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
+		if (managerPresentLastState != getCableComponent().isManagerPresent()) {
+			managerPresentLastState = getCableComponent().isManagerPresent();
+			onManagerStateChanged(managerPresentLastState);
+		}
+
 		for (IContainerListener listener : getListeners()) {
 			if (listener instanceof ServerPlayerEntity) {
 				syncContainerSlots((ServerPlayerEntity) listener);
 			}
 		}
+	}
+
+	protected void onManagerStateChanged(boolean isPresent) {
+
 	}
 
 	/**
@@ -155,8 +170,13 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 	}
 
 	@Override
+	public DigistoreCableProviderComponent getCableComponent() {
+		return (DigistoreCableProviderComponent) super.getCableComponent();
+	}
+
+	@Override
 	public ItemStack transferStackInSlot(PlayerEntity player, int slotIndex) {
-		if (!getCableComponent().getWorld().isRemote) {
+		if (!getCableComponent().getWorld().isRemote && getCableComponent().isManagerPresent()) {
 			AtomicReference<ItemStack> output = new AtomicReference<ItemStack>(ItemStack.EMPTY);
 			getDigistoreNetwork().ifPresent(digistoreModule -> {
 				resyncInv = true;
@@ -402,7 +422,8 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 
 			// Create the slot at the proper x and y positions in the grid (accounting for
 			// the scroll offset).
-			DigistoreSlot output = new DigistoreSlot(digistoreInv, i, xPos + ((i % rowSize) * adjustedSlotSize), yPos + ((row - scrollOffset) * adjustedSlotSize));
+			DigistoreSlot output = new DigistoreSlot(digistoreInv, i, xPos + ((i % rowSize) * adjustedSlotSize), yPos + ((row - scrollOffset) * adjustedSlotSize),
+					getCableComponent().isManagerPresent());
 
 			// We then update the enabled state if this slot should be enabled. A slot is
 			// enabled IF it's row is beyond the row that the scroll bar is set to AND it is

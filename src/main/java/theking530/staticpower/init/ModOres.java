@@ -12,6 +12,7 @@ import net.minecraft.world.gen.feature.OreFeatureConfig;
 import net.minecraft.world.gen.placement.CountRangeConfig;
 import net.minecraft.world.gen.placement.Placement;
 import net.minecraftforge.registries.ForgeRegistries;
+import theking530.staticpower.StaticPowerConfig;
 
 public class ModOres {
 	private static List<OreConfigBuilder> ORE_GENERATORS = new ArrayList<OreConfigBuilder>();
@@ -35,8 +36,38 @@ public class ModOres {
 
 	public static void init() {
 		for (Biome biome : ForgeRegistries.BIOMES) {
-			for (OreConfigBuilder config : ORE_GENERATORS) {
-				biome.addFeature(Decoration.UNDERGROUND_ORES, config.build());
+			if (StaticPowerConfig.generateZincOre) {
+				biome.addFeature(Decoration.UNDERGROUND_ORES, Zinc.build());
+			}
+			if (StaticPowerConfig.generateMagnesiumOre) {
+				biome.addFeature(Decoration.UNDERGROUND_ORES, Magnesium.build());
+			}
+			if (StaticPowerConfig.generateCopperOre) {
+				biome.addFeature(Decoration.UNDERGROUND_ORES, Copper.build());
+			}
+			if (StaticPowerConfig.generateTinOre) {
+				biome.addFeature(Decoration.UNDERGROUND_ORES, Tin.build());
+			}
+			if (StaticPowerConfig.generateLeadOre) {
+				biome.addFeature(Decoration.UNDERGROUND_ORES, Lead.build());
+			}
+			if (StaticPowerConfig.generateSilverOre) {
+				biome.addFeature(Decoration.UNDERGROUND_ORES, Silver.build());
+			}
+			if (StaticPowerConfig.generateTungstenOre) {
+				biome.addFeature(Decoration.UNDERGROUND_ORES, Tungsten.build());
+			}
+			if (StaticPowerConfig.generatePlatinumOre) {
+				biome.addFeature(Decoration.UNDERGROUND_ORES, Platinum.build());
+			}
+			if (StaticPowerConfig.generateAluminiumOre) {
+				biome.addFeature(Decoration.UNDERGROUND_ORES, Aluminium.build());
+			}
+			if (StaticPowerConfig.generateSapphireOre) {
+				biome.addFeature(Decoration.UNDERGROUND_ORES, Sapphire.build());
+			}
+			if (StaticPowerConfig.generateRubyOre) {
+				biome.addFeature(Decoration.UNDERGROUND_ORES, Ruby.build());
 			}
 		}
 	}

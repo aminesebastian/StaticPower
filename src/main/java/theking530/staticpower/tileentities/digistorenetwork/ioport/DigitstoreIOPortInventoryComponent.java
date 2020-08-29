@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.nonpowered.digistorenetwork.ioport;
+package theking530.staticpower.tileentities.digistorenetwork.ioport;
 
 import java.util.Optional;
 

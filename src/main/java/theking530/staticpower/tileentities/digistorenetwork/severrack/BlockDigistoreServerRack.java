@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.nonpowered.digistorenetwork.severrack;
+package theking530.staticpower.tileentities.digistorenetwork.severrack;
 
 import javax.annotation.Nullable;
 

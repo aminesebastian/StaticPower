@@ -92,7 +92,7 @@ public class StaticPowerContainerSlot extends SlotItemHandler {
 		return isEnabled;
 	}
 
-	public void drawExtras(GuiDrawItem itemRenderer, int guiLeft, int guiTop, int slotSize, int slotPosOffset) {
+	public void drawBeforeItem(GuiDrawItem itemRenderer, int guiLeft, int guiTop, int slotSize, int slotPosOffset) {
 		if (!getPreviewItem().isEmpty()) {
 			itemRenderer.drawItem(getPreviewItem(), guiLeft, guiTop, xPos, yPos, getPreviewAlpha());
 		}

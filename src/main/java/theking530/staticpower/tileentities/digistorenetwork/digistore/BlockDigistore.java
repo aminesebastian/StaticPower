@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore;
+package theking530.staticpower.tileentities.digistorenetwork.digistore;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -9,7 +9,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import theking530.staticpower.init.ModTileEntityTypes;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.BaseDigistoreBlock;
+import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreBlock;
 
 public class BlockDigistore extends BaseDigistoreBlock {
 

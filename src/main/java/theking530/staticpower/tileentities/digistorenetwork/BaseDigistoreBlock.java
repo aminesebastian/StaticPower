@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.nonpowered.digistorenetwork;
+package theking530.staticpower.tileentities.digistorenetwork;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;

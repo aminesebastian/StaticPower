@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.nonpowered.digistorenetwork.ioport;
+package theking530.staticpower.tileentities.digistorenetwork.ioport;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -11,7 +11,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.init.ModTileEntityTypes;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.BaseDigistoreTileEntity;
+import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreTileEntity;
 
 public class TileEntityDigistoreIOPort extends BaseDigistoreTileEntity {
 	public TileEntityDigistoreIOPort() {

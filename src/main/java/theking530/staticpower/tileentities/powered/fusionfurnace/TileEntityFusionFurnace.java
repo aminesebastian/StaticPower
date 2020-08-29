@@ -81,7 +81,7 @@ public class TileEntityFusionFurnace extends TileEntityMachine {
 	protected ProcessingCheckState moveInputs(FusionFurnaceRecipe recipe) {
 		// If the items can be insert into the output, transfer the items and return
 		// true.
-		if (InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRecipeOutput())) {
+		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRecipeOutput())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 

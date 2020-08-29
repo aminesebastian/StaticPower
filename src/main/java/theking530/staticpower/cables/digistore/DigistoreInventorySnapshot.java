@@ -10,17 +10,20 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import theking530.staticpower.items.cableattachments.digistoreterminal.DigistoreInventorySortType;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.IDigistoreInventory;
+import theking530.staticpower.tileentities.digistorenetwork.IDigistoreInventory;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class DigistoreInventorySnapshot implements IItemHandler {
+	public static final DigistoreInventorySnapshot EMPTY = new DigistoreInventorySnapshot();
 	private final List<ItemStack> stacks;
 	private final DigistoreNetworkModule module;
 	private final String filterString;
 	private final DigistoreInventorySortType sortType;
 	private final boolean sortDescending;
+	private final boolean isEmpty;
 
 	public DigistoreInventorySnapshot(DigistoreNetworkModule module, String filter, DigistoreInventorySortType sortType, boolean sortDescending) {
+		this.isEmpty = false;
 		this.module = module;
 		this.sortType = sortType;
 		this.sortDescending = sortDescending;
@@ -29,6 +32,20 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 
 		// Perform an initial update when first created.
 		update();
+	}
+
+	private DigistoreInventorySnapshot() {
+		this.isEmpty = true;
+		this.module = null;
+		this.sortType = DigistoreInventorySortType.COUNT;
+		this.sortDescending = true;
+		stacks = new ArrayList<ItemStack>();
+		filterString = "";
+
+	}
+
+	public boolean isEmpty() {
+		return isEmpty;
 	}
 
 	public void update() {

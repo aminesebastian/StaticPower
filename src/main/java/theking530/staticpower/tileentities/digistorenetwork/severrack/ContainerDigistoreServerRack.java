@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.nonpowered.digistorenetwork.severrack;
+package theking530.staticpower.tileentities.digistorenetwork.severrack;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketBuffer;

@@ -16,7 +16,7 @@ import theking530.staticpower.cables.power.PowerNetworkModuleFactory;
 import theking530.staticpower.energy.CapabilityStaticVolt;
 import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.tileentities.components.heat.CapabilityHeatable;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.CapabilityDigistoreInventory;
+import theking530.staticpower.tileentities.digistorenetwork.CapabilityDigistoreInventory;
 
 public class StaticPowerCommonEventHandler {
 

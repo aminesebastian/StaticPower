@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.nonpowered.digistorenetwork;
+package theking530.staticpower.tileentities.digistorenetwork;
 
 import java.util.concurrent.Callable;
 

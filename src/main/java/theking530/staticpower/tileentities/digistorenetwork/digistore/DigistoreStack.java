@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore;
+package theking530.staticpower.tileentities.digistorenetwork.digistore;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;

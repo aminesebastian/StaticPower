@@ -30,7 +30,7 @@ import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.items.ItemStackInventoryCapabilityProvider;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.ioport.TileEntityDigistoreIOPort;
+import theking530.staticpower.tileentities.digistorenetwork.ioport.TileEntityDigistoreIOPort;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class ExtractorAttachment extends AbstractCableAttachment {

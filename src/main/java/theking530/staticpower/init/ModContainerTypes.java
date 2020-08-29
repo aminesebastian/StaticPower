@@ -18,12 +18,14 @@ import theking530.staticpower.items.cableattachments.retirever.ContainerRetrieve
 import theking530.staticpower.items.cableattachments.retirever.GuiRetriever;
 import theking530.staticpower.items.itemfilter.ContainerItemFilter;
 import theking530.staticpower.items.itemfilter.GuiItemFilter;
+import theking530.staticpower.tileentities.digistorenetwork.digistore.ContainerDigistore;
+import theking530.staticpower.tileentities.digistorenetwork.digistore.GuiDigistore;
+import theking530.staticpower.tileentities.digistorenetwork.manager.ContainerDigistoreManager;
+import theking530.staticpower.tileentities.digistorenetwork.manager.GuiDigistoreManager;
+import theking530.staticpower.tileentities.digistorenetwork.severrack.ContainerDigistoreServerRack;
+import theking530.staticpower.tileentities.digistorenetwork.severrack.GuiDigistoreServerRack;
 import theking530.staticpower.tileentities.nonpowered.condenser.ContainerCondenser;
 import theking530.staticpower.tileentities.nonpowered.condenser.GuiCondenser;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.ContainerDigistore;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.GuiDigistore;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.severrack.ContainerDigistoreServerRack;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.severrack.GuiDigistoreServerRack;
 import theking530.staticpower.tileentities.nonpowered.evaporator.ContainerEvaporator;
 import theking530.staticpower.tileentities.nonpowered.evaporator.GuiEvaporator;
 import theking530.staticpower.tileentities.nonpowered.miner.ContainerMiner;
@@ -115,6 +117,7 @@ public class ModContainerTypes {
 	public static ContainerType<ContainerDigistoreTerminal> DIGISTORE_TERMINAL;
 	public static ContainerType<ContainerDigistoreCraftingTerminal> DIGISTORE_CRAFTING_TERMINAL;
 	public static ContainerType<ContainerDigistoreServerRack> DIGISTORE_SERVER_RACK;
+	public static ContainerType<ContainerDigistoreManager> DIGISTORE_MANAGER_CONTAINER;
 
 	public static ContainerType<ContainerExtractor> EXTRACTOR_CONTAINER;
 	public static ContainerType<ContainerFilter> FILTER_CONTAINER;
@@ -158,6 +161,8 @@ public class ModContainerTypes {
 		DIGISTORE_TERMINAL = StaticPowerRegistry.preRegisterContainer("digistore_terminal", ContainerDigistoreTerminal::new, GuiDigistoreTerminal::new);
 		DIGISTORE_CRAFTING_TERMINAL = StaticPowerRegistry.preRegisterContainer("digistore_crafting_terminal", ContainerDigistoreCraftingTerminal::new, GuiDigistoreCraftingTerminal::new);
 		DIGISTORE_SERVER_RACK = StaticPowerRegistry.preRegisterContainer("digistore_server_rack", ContainerDigistoreServerRack::new, GuiDigistoreServerRack::new);
+		DIGISTORE_MANAGER_CONTAINER = StaticPowerRegistry.preRegisterContainer("digistore_manager", ContainerDigistoreManager::new, GuiDigistoreManager::new);
+		
 		EXTRACTOR_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_extractor", ContainerExtractor::new, GuiExtractor::new);
 		FILTER_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_filter", ContainerFilter::new, GuiFilter::new);
 		RETRIEVER_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_retriever", ContainerRetriever::new, GuiRetriever::new);

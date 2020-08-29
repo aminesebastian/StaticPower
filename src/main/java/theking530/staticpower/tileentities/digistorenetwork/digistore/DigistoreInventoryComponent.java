@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore;
+package theking530.staticpower.tileentities.digistorenetwork.digistore;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -7,8 +7,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.staticpower.items.DigistoreCard;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.CapabilityDigistoreInventory;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.IDigistoreInventory;
+import theking530.staticpower.tileentities.digistorenetwork.CapabilityDigistoreInventory;
+import theking530.staticpower.tileentities.digistorenetwork.IDigistoreInventory;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 

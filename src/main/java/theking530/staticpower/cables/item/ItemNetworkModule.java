@@ -36,7 +36,7 @@ import theking530.staticpower.cables.network.DestinationWrapper.DestinationType;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.pathfinding.Path;
 import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.ioport.DigitstoreIOPortInventoryComponent;
+import theking530.staticpower.tileentities.digistorenetwork.ioport.DigitstoreIOPortInventoryComponent;
 import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.MetricConverter;
 import theking530.staticpower.utilities.WorldUtilities;

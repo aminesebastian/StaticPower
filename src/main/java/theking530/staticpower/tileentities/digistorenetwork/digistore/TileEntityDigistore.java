@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore;
+package theking530.staticpower.tileentities.digistorenetwork.digistore;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,9 +19,9 @@ import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.items.DigistoreMonoCard;
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.BaseDigistoreTileEntity;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.CapabilityDigistoreInventory;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.IDigistoreInventory;
+import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreTileEntity;
+import theking530.staticpower.tileentities.digistorenetwork.CapabilityDigistoreInventory;
+import theking530.staticpower.tileentities.digistorenetwork.IDigistoreInventory;
 import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
 import theking530.staticpower.utilities.WorldUtilities;
 

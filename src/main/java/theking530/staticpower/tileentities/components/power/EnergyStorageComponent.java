@@ -161,8 +161,8 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 
 		// Set the new values.
 		getStorage().setCapacity((int) (defaultCapacity * powerCapacityUpgradeMultiplier));
-		getStorage().setMaxExtract((int) (defaultMaxOutput * powerIOUpgradeMultiplier));
-		getStorage().setMaxReceive((int) (defaultMaxInput * powerIOUpgradeMultiplier));
+		getStorage().setMaxExtract(Math.min(getStorage().getCapacity(), (int) (defaultMaxOutput * powerIOUpgradeMultiplier)));
+		getStorage().setMaxReceive(Math.min(getStorage().getCapacity(), (int) (defaultMaxInput * powerIOUpgradeMultiplier)));
 	}
 
 	/**

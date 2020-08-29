@@ -572,7 +572,7 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 				}
 
 				// Draw the item.
-				handlerSlot.drawExtras(itemRenderer, guiLeft, guiTop, slotSize, sizePosOffset);
+				handlerSlot.drawBeforeItem(itemRenderer, guiLeft, guiTop, slotSize, sizePosOffset);
 			} else if (slot instanceof DigistoreCraftingOutputSlot) {
 				drawEmptySlot(slot.xPos + guiLeft - 4, slot.yPos - 4 + guiTop, 24, 24);
 			} else {

@@ -1,9 +1,9 @@
-package theking530.staticpower.tileentities.nonpowered.digistorenetwork;
+package theking530.staticpower.tileentities.digistorenetwork;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.INBTSerializable;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.DigistoreStack;
+import theking530.staticpower.tileentities.digistorenetwork.digistore.DigistoreStack;
 
 /**
  * Interface used by any digistore accessible containers.

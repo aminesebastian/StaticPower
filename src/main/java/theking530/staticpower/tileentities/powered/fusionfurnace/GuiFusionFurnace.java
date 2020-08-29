@@ -9,7 +9,6 @@ import theking530.common.gui.widgets.tabs.GuiInfoTab;
 import theking530.common.gui.widgets.tabs.GuiMachinePowerInfoTab;
 import theking530.common.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.common.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
-import theking530.common.gui.widgets.tabs.slottabs.GuiUpgradeTab;
 import theking530.common.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;

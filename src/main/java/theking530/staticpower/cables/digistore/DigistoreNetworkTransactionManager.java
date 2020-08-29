@@ -6,9 +6,9 @@ import java.util.Comparator;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.DigistoreInventory;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.IDigistoreInventory;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.DigistoreStack;
+import theking530.staticpower.tileentities.digistorenetwork.DigistoreInventory;
+import theking530.staticpower.tileentities.digistorenetwork.IDigistoreInventory;
+import theking530.staticpower.tileentities.digistorenetwork.digistore.DigistoreStack;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class DigistoreNetworkTransactionManager {

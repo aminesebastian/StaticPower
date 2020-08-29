@@ -10,7 +10,7 @@ import theking530.common.utilities.Vector2D;
 import theking530.common.utilities.Vector3D;
 import theking530.common.utilities.Vector4D;
 import theking530.staticpower.client.StaticPowerSprites;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.TileEntityDigistore;
+import theking530.staticpower.tileentities.digistorenetwork.digistore.TileEntityDigistore;
 
 public class TileEntityRenderDigistore extends StaticPowerTileEntitySpecialRenderer<TileEntityDigistore> {
 	private static final float ICON_SIZE = 0.09f;

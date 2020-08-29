@@ -14,11 +14,30 @@ import theking530.staticpower.items.cableattachments.digistoreterminal.AbstractD
 import theking530.staticpower.items.cableattachments.exporter.DigistoreExporterAttachment;
 import theking530.staticpower.items.cableattachments.importer.DigistoreImporterAttachment;
 import theking530.staticpower.tileentities.TileEntityBase;
+import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 
 public class DigistoreCableProviderComponent extends AbstractCableProviderComponent {
+	@UpdateSerialize
+	private boolean managerPresent;
 
 	public DigistoreCableProviderComponent(String name) {
 		super(name, CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE);
+	}
+
+	public void preProcessUpdate() {
+		// Check to see if the manager is present. If not, update the tile entity.
+		if (!getWorld().isRemote) {
+			this.<DigistoreNetworkModule>getNetworkModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE).ifPresent(network -> {
+				if (managerPresent != network.isManagerPresent()) {
+					managerPresent = network.isManagerPresent();
+					this.getTileEntity().markTileEntityForSynchronization();
+				}
+			});
+		}
+	}
+
+	public boolean isManagerPresent() {
+		return managerPresent;
 	}
 
 	@Override

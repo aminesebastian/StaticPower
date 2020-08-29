@@ -9,8 +9,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.CapabilityDigistoreInventory;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.DigistoreInventory;
+import theking530.staticpower.tileentities.digistorenetwork.CapabilityDigistoreInventory;
+import theking530.staticpower.tileentities.digistorenetwork.DigistoreInventory;
 
 public class DigistoreInventoryCapabilityProvider implements ICapabilityProvider, ICapabilitySerializable<CompoundNBT> {
 	protected final ItemStack owningItemStack;

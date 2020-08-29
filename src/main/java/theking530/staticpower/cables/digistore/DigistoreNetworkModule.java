@@ -15,15 +15,15 @@ import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.NetworkMapper;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.items.cableattachments.digistoreterminal.DigistoreInventorySortType;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.CapabilityDigistoreInventory;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.IDigistoreInventory;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.manager.TileEntityDigistoreManager;
+import theking530.staticpower.tileentities.digistorenetwork.CapabilityDigistoreInventory;
+import theking530.staticpower.tileentities.digistorenetwork.IDigistoreInventory;
+import theking530.staticpower.tileentities.digistorenetwork.manager.TileEntityDigistoreManager;
 import theking530.staticpower.utilities.MetricConverter;
 
 public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 	private final List<IDigistoreInventory> digistores;
 	private final DigistoreNetworkTransactionManager transactionManager;
-	private boolean managerPresent;
+	private TileEntityDigistoreManager manager;
 
 	public DigistoreNetworkModule() {
 		super(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE);
@@ -42,7 +42,7 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 
 		// Clear the initial values back to their defaults.
 		digistores.clear();
-		managerPresent = false;
+		manager = null;
 
 		// Cache all the digistores in the network.
 		for (ServerCable cable : mapper.getDiscoveredCables()) {
@@ -57,7 +57,7 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 
 				// If this is also a manager, set the manager present to true.
 				if (te instanceof TileEntityDigistoreManager) {
-					managerPresent = true;
+					manager = (TileEntityDigistoreManager) te;
 				}
 			}
 		}
@@ -67,13 +67,16 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 	}
 
 	public boolean isManagerPresent() {
-		if (!managerPresent) {
+		if (manager == null) {
 			Network.updateGraph(Network.getWorld(), Network.getOrigin());
 		}
-		return managerPresent;
+		return manager != null && manager.energyStorage.getStorage().getStoredPower() > 0;
 	}
 
 	public DigistoreInventorySnapshot getNetworkInventorySnapshot(String filter, DigistoreInventorySortType sortType, boolean sortDescending) {
+		if (!isManagerPresent()) {
+			return DigistoreInventorySnapshot.EMPTY;
+		}
 		return new DigistoreInventorySnapshot(this, filter, sortType, sortDescending);
 	}
 
@@ -94,14 +97,14 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 	}
 
 	public ItemStack insertItem(ItemStack stack, boolean simulate) {
-		if (managerPresent) {
+		if (isManagerPresent()) {
 			return transactionManager.insertItem(stack, simulate);
 		}
 		throw new RuntimeException("Attempted to insert an item into a network with no present manager.");
 	}
 
 	public ItemStack extractItem(ItemStack stack, int count, boolean simulate) {
-		if (managerPresent) {
+		if (isManagerPresent()) {
 			return transactionManager.extractItem(stack, count, simulate);
 		}
 		throw new RuntimeException("Attempted to extract an item from a network with no present manager.");

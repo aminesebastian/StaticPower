@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore;
+package theking530.staticpower.tileentities.digistorenetwork.digistore;
 
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.PlayerInventory;
@@ -15,7 +15,7 @@ import theking530.common.utilities.Color;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.IDigistoreInventory;
+import theking530.staticpower.tileentities.digistorenetwork.IDigistoreInventory;
 import theking530.staticpower.utilities.MetricConverter;
 
 public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, TileEntityDigistore> {

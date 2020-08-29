@@ -19,7 +19,7 @@ import theking530.staticpower.tileentities.components.heat.PacketHeatStorageComp
 import theking530.staticpower.tileentities.components.loopingsound.LoopingSoundPacketStart;
 import theking530.staticpower.tileentities.components.loopingsound.LoopingSoundPacketStop;
 import theking530.staticpower.tileentities.components.power.PacketEnergyStorageComponent;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.PacketLockDigistore;
+import theking530.staticpower.tileentities.digistorenetwork.digistore.PacketLockDigistore;
 import theking530.staticpower.tileentities.powered.autocrafter.PacketLockInventorySlot;
 import theking530.staticpower.tileentities.powered.battery.BatteryControlSyncPacket;
 

@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.nonpowered.digistorenetwork.severrack;
+package theking530.staticpower.tileentities.digistorenetwork.severrack;
 
 import javax.annotation.Nonnull;
 
@@ -10,8 +10,8 @@ import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
 import theking530.staticpower.init.ModTileEntityTypes;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.BaseDigistoreTileEntity;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.digistore.DigistoreInventoryComponent;
+import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreTileEntity;
+import theking530.staticpower.tileentities.digistorenetwork.digistore.DigistoreInventoryComponent;
 
 public class TileEntityDigistoreServerRack extends BaseDigistoreTileEntity {
 	/** KEEP IN MIND: This is purely cosmetic and on the client side. */

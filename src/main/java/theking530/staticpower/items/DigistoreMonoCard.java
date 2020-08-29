@@ -13,7 +13,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import theking530.staticpower.blocks.ICustomModelSupplier;
 import theking530.staticpower.client.rendering.items.DigistoreMonoCardItemModel;
 import theking530.staticpower.data.StaticPowerDataRegistry;
-import theking530.staticpower.tileentities.nonpowered.digistorenetwork.IDigistoreInventory;
+import theking530.staticpower.tileentities.digistorenetwork.IDigistoreInventory;
 
 public class DigistoreMonoCard extends DigistoreCard implements ICustomModelSupplier {
 

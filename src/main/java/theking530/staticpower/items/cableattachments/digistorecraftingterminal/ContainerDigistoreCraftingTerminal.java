@@ -57,7 +57,7 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 		// item
 		if (inventorySlots.get(slotIndex).inventory == craftResult && !inventorySlots.get(slotIndex).getStack().isEmpty()) {
 			// Then, make sure we're on the server.
-			if (!getCableComponent().getWorld().isRemote) {
+			if (!getCableComponent().getWorld().isRemote && getCableComponent().isManagerPresent()) {
 				// Get the digistore module.
 				getDigistoreNetwork().ifPresent(digistoreModule -> {
 					// Get what the output item is
@@ -109,44 +109,56 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 	@Override
 	public void consumeJEITransferRecipe(ItemStack[][] recipe) {
 		clearCraftingSlots();
-		getDigistoreNetwork().ifPresent(digistoreModule -> {
-			for (int i = 0; i < recipe.length; i++) {
-				ItemStack[] options = recipe[i];
+		if (!getCableComponent().getWorld().isRemote && getCableComponent().isManagerPresent()) {
+			getDigistoreNetwork().ifPresent(digistoreModule -> {
+				for (int i = 0; i < recipe.length; i++) {
+					ItemStack[] options = recipe[i];
 
-				// Skip holes in the recipe.
-				if (options == null) {
-					continue;
-				}
-				// Loop through all the options for the slot.
-				for (ItemStack item : options) {
-
-					// First see if the item exists in the player's inventory. If it does, use that.
-					int playerItemSlot = getPlayerInventory().getSlotFor(item);
-					if (playerItemSlot != -1) {
-						ItemStack playerExtracted = getPlayerInventory().decrStackSize(playerItemSlot, 1);
-						craftMatrix.setInventorySlotContents(i, playerExtracted);
-						break;
+					// Skip holes in the recipe.
+					if (options == null) {
+						continue;
 					}
+					// Loop through all the options for the slot.
+					for (ItemStack item : options) {
 
-					// If we didnt break from the player check, see if we can get the item from the
-					// digistore network.
-					ItemStack extracted = digistoreModule.extractItem(item, 1, false);
-					if (!extracted.isEmpty()) {
-						craftMatrix.setInventorySlotContents(i, extracted);
-						break;
+						// First see if the item exists in the player's inventory. If it does, use that.
+						int playerItemSlot = getPlayerInventory().getSlotFor(item);
+						if (playerItemSlot != -1) {
+							ItemStack playerExtracted = getPlayerInventory().decrStackSize(playerItemSlot, 1);
+							craftMatrix.setInventorySlotContents(i, playerExtracted);
+							break;
+						}
+
+						// If we didnt break from the player check, see if we can get the item from the
+						// digistore network.
+						ItemStack extracted = digistoreModule.extractItem(item, 1, false);
+						if (!extracted.isEmpty()) {
+							craftMatrix.setInventorySlotContents(i, extracted);
+							break;
+						}
 					}
 				}
-			}
-		});
+			});
+		}
 	}
 
 	/**
 	 * Callback for when the crafting matrix is changed.
 	 */
+	@Override
 	public void onCraftMatrixChanged(IInventory inventoryIn) {
-		// Update the output slot.
-		updateOutputSlot(getPlayerInventory().player.world, getPlayerInventory().player, this.craftMatrix, this.craftResult);
-		resyncInv = true;
+		if (!getCableComponent().getWorld().isRemote && getCableComponent().isManagerPresent()) {
+			// Update the output slot.
+			updateOutputSlot(getPlayerInventory().player.world, getPlayerInventory().player, this.craftMatrix, this.craftResult);
+			resyncInv = true;
+		}
+	}
+
+	@Override
+	protected void onManagerStateChanged(boolean isPresent) {
+		if (!isPresent) {
+			clearCraftingSlots();
+		}
 	}
 
 	public void clearCraftingSlots() {
@@ -159,13 +171,21 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 					if (craftMatrix.getStackInSlot(i).isEmpty()) {
 						continue;
 					}
-					// Attempt to insert the item.
-					ItemStack output = digistoreModule.insertItem(craftMatrix.getStackInSlot(i), false);
 
-					// If we were unable to insert the item back to the network, drop it on the
-					// floor.
-					if (!output.isEmpty()) {
-						WorldUtilities.dropItem(getCableComponent().getWorld(), getCableComponent().getPos(), output);
+					// If there is a manager, attempt to put the crafting grid contents back into
+					// the system. Otherwise, drop them on the floor.
+					if (digistoreModule.isManagerPresent()) {
+						// Attempt to insert the item.
+						ItemStack output = digistoreModule.insertItem(craftMatrix.getStackInSlot(i), false);
+
+						// If we were unable to insert the item back to the network, drop it on the
+						// floor.
+						if (!output.isEmpty()) {
+							WorldUtilities.dropItem(getCableComponent().getWorld(), getCableComponent().getPos(), output);
+						}
+					} else {
+						WorldUtilities.dropItem(getCableComponent().getWorld(), getCableComponent().getPos(), craftMatrix.getStackInSlot(i));
+
 					}
 				}
 			});
@@ -173,7 +193,6 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 
 		// Clear the matrix and the output slot.
 		craftMatrix.clear();
-		craftResult.clear();
 	}
 
 	/**
@@ -189,8 +208,8 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 	}
 
 	/**
-	 * Ensure we dont accidentally craft when someone double clicks the same kind of
-	 * item.
+	 * Ensure we don't accidentally craft when someone double clicks the same kind
+	 * of item.
 	 */
 	public boolean canMergeSlot(ItemStack stack, Slot slotIn) {
 		return slotIn.inventory != this.craftResult && super.canMergeSlot(stack, slotIn);
@@ -200,9 +219,13 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 	 * Update the crafting output slot's contents.
 	 * 
 	 * @param slotIndex
+	 * 
 	 * @param world
+	 * 
 	 * @param player
+	 * 
 	 * @param craftingInv
+	 * 
 	 * @param outputInv
 	 */
 	protected void updateOutputSlot(World world, PlayerEntity player, CraftingInventory craftingInv, CraftResultInventory outputInv) {

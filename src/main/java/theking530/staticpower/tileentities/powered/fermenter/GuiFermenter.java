@@ -17,7 +17,6 @@ import theking530.common.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
-import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
 public class GuiFermenter extends StaticPowerTileEntityGui<ContainerFermenter, TileEntityFermenter> {
@@ -36,7 +35,7 @@ public class GuiFermenter extends StaticPowerTileEntityGui<ContainerFermenter, T
 		registerWidget(progressBar = (FluidProgressBar) new FluidProgressBar(97, 45, 48, 5).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
 		getTabManager().registerTab(infoTab = new GuiInfoTab(70));
-		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
+		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
 
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage, getTileEntity().processingComponent).setTabSide(TabSide.LEFT), true);
