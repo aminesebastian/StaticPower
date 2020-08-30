@@ -5,17 +5,17 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
-import theking530.common.gui.GuiDrawUtilities;
-import theking530.common.gui.widgets.GuiDrawItem;
-import theking530.common.gui.widgets.button.StandardButton;
-import theking530.common.gui.widgets.button.StandardButton.MouseButton;
-import theking530.common.gui.widgets.button.TextButton;
-import theking530.common.gui.widgets.tabs.GuiInfoTab;
-import theking530.common.utilities.Color;
+import theking530.api.digistore.IDigistoreInventory;
+import theking530.staticcore.gui.GuiDrawUtilities;
+import theking530.staticcore.gui.widgets.GuiDrawItem;
+import theking530.staticcore.gui.widgets.button.StandardButton;
+import theking530.staticcore.gui.widgets.button.TextButton;
+import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
+import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
+import theking530.staticcore.utilities.Color;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
-import theking530.staticpower.tileentities.digistorenetwork.IDigistoreInventory;
 import theking530.staticpower.utilities.MetricConverter;
 
 public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, TileEntityDigistore> {

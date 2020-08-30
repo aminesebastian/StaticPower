@@ -71,6 +71,7 @@ public class StaticPowerSprites {
 	public static final ResourceLocation DISABLED = registerSprite("gui/disabled");
 	public static final ResourceLocation RANGE_ICON = registerSprite("gui/show_range_icon");
 	public static final ResourceLocation ERROR = registerSprite("gui/error");
+	public static final ResourceLocation NOTIFICATION = registerSprite("gui/notification");
 	
 	public static final ResourceLocation FLAMES = registerSprite("gui/flames");
 

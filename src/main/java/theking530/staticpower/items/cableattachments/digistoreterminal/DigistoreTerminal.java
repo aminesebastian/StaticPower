@@ -7,12 +7,12 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.client.StaticPowerAdditionalModels;
 
 public class DigistoreTerminal extends AbstractDigistoreTerminalAttachment {
-	public DigistoreTerminal(String name, ResourceLocation model) {
-		super(name, model);
+	public DigistoreTerminal(String name) {
+		super(name, StaticPowerAdditionalModels.CABLE_DIGISTORE_TERMINAL_ATTACHMENT_ON, StaticPowerAdditionalModels.CABLE_DIGISTORE_TERMINAL_ATTACHMENT);
 	}
 
 	@Override

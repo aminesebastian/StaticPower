@@ -10,13 +10,13 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import theking530.api.digistore.CapabilityDigistoreInventory;
+import theking530.api.digistore.IDigistoreInventory;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.NetworkMapper;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.items.cableattachments.digistoreterminal.DigistoreInventorySortType;
-import theking530.staticpower.tileentities.digistorenetwork.CapabilityDigistoreInventory;
-import theking530.staticpower.tileentities.digistorenetwork.IDigistoreInventory;
 import theking530.staticpower.tileentities.digistorenetwork.manager.TileEntityDigistoreManager;
 import theking530.staticpower.utilities.MetricConverter;
 

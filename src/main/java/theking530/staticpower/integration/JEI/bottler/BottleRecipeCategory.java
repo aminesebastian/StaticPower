@@ -17,16 +17,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.common.gui.GuiDrawUtilities;
-import theking530.common.gui.widgets.valuebars.GuiFluidBarUtilities;
-import theking530.common.gui.widgets.valuebars.GuiPowerBarUtilities;
+import theking530.staticcore.gui.GuiDrawUtilities;
+import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
+import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.powered.bottler.TileEntityBottler;
-import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
 public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 	public static final ResourceLocation BOTTLER_UID = new ResourceLocation(StaticPower.MOD_ID, "bottler");

@@ -2,9 +2,8 @@ package theking530.staticpower.tileentities.digistorenetwork.manager;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketBuffer;
-import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
-import theking530.staticpower.client.container.slots.BatteryItemSlot;
-import theking530.staticpower.client.container.slots.UpgradeItemSlot;
+import theking530.staticpower.container.StaticPowerTileEntityContainer;
+import theking530.staticpower.container.slots.BatteryItemSlot;
 import theking530.staticpower.init.ModContainerTypes;
 
 public class ContainerDigistoreManager extends StaticPowerTileEntityContainer<TileEntityDigistoreManager> {
@@ -18,11 +17,7 @@ public class ContainerDigistoreManager extends StaticPowerTileEntityContainer<Ti
 	}
 
 	@Override
-	public void initializeContainer() { // Upgrades
-		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 0, 152, 12));
-		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 1, 152, 32));
-		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 2, 152, 52));
-
+	public void initializeContainer() {
 		// Battery
 		addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 64));
 

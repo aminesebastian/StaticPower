@@ -2,12 +2,12 @@ package theking530.staticpower.tileentities.powered.treefarmer;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import theking530.common.gui.GuiTextures;
-import theking530.common.gui.drawables.ItemDrawable;
-import theking530.common.gui.widgets.tabs.BaseGuiTab;
-import theking530.common.gui.widgets.tabs.PacketGuiTabAddSlots;
-import theking530.staticpower.client.container.StaticPowerContainer;
-import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
+import theking530.staticcore.gui.drawables.ItemDrawable;
+import theking530.staticcore.gui.widgets.tabs.BaseGuiTab;
+import theking530.staticcore.gui.widgets.tabs.PacketGuiTabAddSlots;
+import theking530.staticpower.client.gui.GuiTextures;
+import theking530.staticpower.container.StaticPowerContainer;
+import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class GuiAxeTab extends BaseGuiTab {

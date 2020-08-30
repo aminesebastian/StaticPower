@@ -4,10 +4,8 @@ import net.minecraft.item.ItemStack;
 
 public class ServerRackRenderingState {
 	public final ItemStack[] cards;
-	public final float filledPercentage;
 
-	public ServerRackRenderingState(ItemStack[] cards, float filledPercentage) {
+	public ServerRackRenderingState(ItemStack[] cards) {
 		this.cards = cards;
-		this.filledPercentage = filledPercentage;
 	}
 }

@@ -18,15 +18,15 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.common.gui.GuiDrawUtilities;
-import theking530.common.gui.widgets.valuebars.GuiFluidBarUtilities;
-import theking530.common.gui.widgets.valuebars.GuiPowerBarUtilities;
+import theking530.staticcore.gui.GuiDrawUtilities;
+import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
+import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.crafting.wrappers.squeezer.SqueezerRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
-import theking530.staticpower.tileentities.utilities.MachineSideMode;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 
 public class SqueezerRecipeCategory extends BaseJEIRecipeCategory<SqueezerRecipe> {
 	public static final ResourceLocation SQUEEZER_UID = new ResourceLocation(StaticPower.MOD_ID, "squeezer");

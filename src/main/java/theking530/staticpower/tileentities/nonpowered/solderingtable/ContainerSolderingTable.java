@@ -10,7 +10,7 @@ import net.minecraft.inventory.container.ClickType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SSetSlotPacket;
-import theking530.staticpower.client.container.slots.SolderingTableOutputSlot;
+import theking530.staticpower.container.slots.SolderingTableOutputSlot;
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
 import theking530.staticpower.init.ModContainerTypes;
 import theking530.staticpower.utilities.InventoryUtilities;

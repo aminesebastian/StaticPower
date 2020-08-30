@@ -17,7 +17,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import theking530.common.utilities.Color;
+import theking530.staticcore.utilities.Color;
 
 public class CustomRenderer {
 	private BlockModel model = new BlockModel();

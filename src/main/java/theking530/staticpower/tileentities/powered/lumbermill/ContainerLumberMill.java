@@ -2,10 +2,10 @@ package theking530.staticpower.tileentities.powered.lumbermill;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketBuffer;
-import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
-import theking530.staticpower.client.container.slots.BatteryItemSlot;
-import theking530.staticpower.client.container.slots.OutputSlot;
-import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
+import theking530.staticpower.container.StaticPowerTileEntityContainer;
+import theking530.staticpower.container.slots.BatteryItemSlot;
+import theking530.staticpower.container.slots.OutputSlot;
+import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.init.ModContainerTypes;
 
 public class ContainerLumberMill extends StaticPowerTileEntityContainer<TileEntityLumberMill> {

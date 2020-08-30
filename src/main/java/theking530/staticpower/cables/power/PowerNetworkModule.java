@@ -11,19 +11,19 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import theking530.api.power.CapabilityStaticVolt;
+import theking530.api.power.IStaticVoltHandler;
+import theking530.api.power.PowerEnergyInterface;
+import theking530.api.power.StaticVoltAutoConverter;
+import theking530.api.power.StaticVoltHandler;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.DestinationWrapper;
 import theking530.staticpower.cables.network.DestinationWrapper.DestinationType;
-import theking530.staticpower.cables.network.NetworkMapper;
-import theking530.staticpower.energy.CapabilityStaticVolt;
-import theking530.staticpower.energy.IStaticVoltHandler;
-import theking530.staticpower.energy.PowerEnergyInterface;
-import theking530.staticpower.energy.StaticVoltAutoConverter;
-import theking530.staticpower.energy.StaticVoltHandler;
 import theking530.staticpower.utilities.MetricConverter;
+import theking530.staticpower.cables.network.NetworkMapper;
 
 public class PowerNetworkModule extends AbstractCableNetworkModule {
 	private final StaticVoltAutoConverter energyInterface;

@@ -48,13 +48,13 @@ import net.minecraftforge.common.util.LazyOptional;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
-import theking530.staticpower.tileentities.components.control.SideConfigurationComponent;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.serialization.SerializationUtilities;
-import theking530.staticpower.tileentities.utilities.MachineSideMode;
-import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities;
-import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities.BlockSide;
-import theking530.staticpower.tileentities.utilities.interfaces.IBreakSerializeable;
+import theking530.staticpower.tileentities.interfaces.IBreakSerializeable;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public abstract class TileEntityBase extends TileEntity implements ITickableTileEntity, IBreakSerializeable, INamedContainerProvider {

@@ -7,31 +7,37 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import theking530.common.gui.GuiDrawUtilities;
-import theking530.common.gui.widgets.GuiIslandWidget;
-import theking530.common.gui.widgets.button.SpriteButton;
-import theking530.common.gui.widgets.button.StandardButton;
-import theking530.common.gui.widgets.button.StandardButton.MouseButton;
-import theking530.common.gui.widgets.scrollbar.ScrollBarWidget;
-import theking530.common.gui.widgets.textinput.TextInputWidget;
-import theking530.common.utilities.Color;
+import theking530.staticcore.gui.GuiDrawUtilities;
+import theking530.staticcore.gui.widgets.GuiIslandWidget;
+import theking530.staticcore.gui.widgets.button.SpriteButton;
+import theking530.staticcore.gui.widgets.button.StandardButton;
+import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
+import theking530.staticcore.gui.widgets.scrollbar.ScrollBarWidget;
+import theking530.staticcore.gui.widgets.textinput.TextInputWidget;
+import theking530.staticcore.utilities.Color;
+import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.client.StaticPowerSprites;
-import theking530.staticpower.client.container.slots.DigistoreSlot;
-import theking530.staticpower.client.container.slots.NoCountRenderSlot;
+import theking530.staticpower.container.slots.DigistoreSlot;
+import theking530.staticpower.container.slots.NoCountRenderSlot;
 import theking530.staticpower.integration.JEI.PluginJEI;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachmentGui;
 import theking530.staticpower.utilities.MetricConverter;
 
 public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDigistoreTerminal<K>, K extends AbstractCableAttachment> extends AbstractCableAttachmentGui<T, K> {
-	public final TextInputWidget searchBar;
-	public final ScrollBarWidget scrollBar;
-	public final SpriteButton sortButton;
-	public final SpriteButton searchModeButton;
+	public TextInputWidget searchBar;
+	public ScrollBarWidget scrollBar;
+	public SpriteButton sortButton;
+	public SpriteButton searchModeButton;
 
 	public AbstractGuiDigistoreTerminal(T container, PlayerInventory invPlayer, ITextComponent name, int width, int height) {
 		super(container, invPlayer, name, width, height);
 
+	}
+
+	@Override
+	public void initializeGui() {
+		super.initializeGui();
 		// Add search bar and sync it with JEI if requested.
 		String initialSerachString = "";
 		if (DigistoreTerminal.getSearchMode(getContainer().getAttachment()) == DigistoreSearchMode.TWO_WAY) {
@@ -171,5 +177,10 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 
 		// Update the container who will in turn update the server side values.
 		getContainer().updateSortAndFilter(searchBar.getText(), searchMode, sortType, descending);
+	}
+
+	@Override
+	public DigistoreCableProviderComponent getCableComponent() {
+		return getContainer().getCableComponent();
 	}
 }

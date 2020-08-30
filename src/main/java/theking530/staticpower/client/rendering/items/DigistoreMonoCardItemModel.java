@@ -31,11 +31,11 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.SimpleModelTransform;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
+import theking530.api.digistore.IDigistoreInventory;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.blocks.AbstractBakedModel;
 import theking530.staticpower.items.DigistoreCard;
 import theking530.staticpower.items.DigistoreMonoCard;
-import theking530.staticpower.tileentities.digistorenetwork.IDigistoreInventory;
 
 @SuppressWarnings("deprecation")
 public class DigistoreMonoCardItemModel implements IBakedModel {

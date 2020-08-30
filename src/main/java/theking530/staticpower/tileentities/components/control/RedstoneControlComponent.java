@@ -2,7 +2,7 @@ package theking530.staticpower.tileentities.components.control;
 
 import net.minecraft.nbt.CompoundNBT;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
-import theking530.staticpower.tileentities.utilities.RedstoneMode;
+import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
 
 /**
  * Redstone control component.

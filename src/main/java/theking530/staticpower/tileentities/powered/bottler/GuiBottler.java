@@ -4,17 +4,17 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Items;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.common.gui.widgets.progressbars.FluidProgressBar;
-import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
-import theking530.common.gui.widgets.tabs.GuiMachinePowerInfoTab;
-import theking530.common.gui.widgets.tabs.GuiSideConfigTab;
-import theking530.common.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
-import theking530.common.gui.widgets.tabs.slottabs.GuiFluidContainerTab;
-import theking530.common.gui.widgets.valuebars.GuiFluidBarFromTank;
-import theking530.common.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
+import theking530.staticcore.gui.widgets.progressbars.FluidProgressBar;
+import theking530.staticcore.gui.widgets.tabs.GuiMachinePowerInfoTab;
+import theking530.staticcore.gui.widgets.tabs.GuiSideConfigTab;
+import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
+import theking530.staticcore.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
+import theking530.staticcore.gui.widgets.tabs.slottabs.GuiFluidContainerTab;
+import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarFromTank;
+import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
-import theking530.staticpower.tileentities.utilities.MachineSideMode;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 
 public class GuiBottler extends StaticPowerTileEntityGui<ContainerBottler, TileEntityBottler> {
 	private FluidProgressBar progressBar;

@@ -9,7 +9,7 @@ public abstract class BaseDigistoreTileEntity extends TileEntityBase {
 
 	public BaseDigistoreTileEntity(TileEntityType<?> teType) {
 		super(teType);
-		registerComponent(digistoreCableProvider = new DigistoreCableProviderComponent("DigistoreCableProviderComponent"));
+		registerComponent(digistoreCableProvider = new DigistoreCableProviderComponent("DigistoreCableProviderComponent").setShouldControlOnState());
 	}
 
 	public boolean isManagerPresent() {

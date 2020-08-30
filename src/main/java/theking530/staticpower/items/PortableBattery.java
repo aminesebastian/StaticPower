@@ -4,7 +4,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import theking530.staticpower.blocks.ICustomModelSupplier;
+import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
 import theking530.staticpower.client.rendering.items.PortableBatteryItemModel;
 import theking530.staticpower.data.StaticPowerDataRegistry;
 

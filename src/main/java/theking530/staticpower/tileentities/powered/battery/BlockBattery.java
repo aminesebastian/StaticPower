@@ -12,10 +12,10 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.client.rendering.blocks.BatteryBlockedBakedModel;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModTileEntityTypes;
-import theking530.staticpower.tileentities.StaticPowerMachineBlock;
 
 public class BlockBattery extends StaticPowerMachineBlock {
 

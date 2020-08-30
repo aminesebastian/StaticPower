@@ -2,7 +2,7 @@ package theking530.staticpower.tileentities.powered.fluidgenerator;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketBuffer;
-import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
+import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.init.ModContainerTypes;
 
 public class ContainerFluidGenerator extends StaticPowerTileEntityContainer<TileEntityFluidGenerator> {

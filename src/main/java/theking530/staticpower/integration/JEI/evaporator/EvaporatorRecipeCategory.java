@@ -16,15 +16,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.common.gui.GuiDrawUtilities;
-import theking530.common.gui.widgets.valuebars.GuiFluidBarUtilities;
-import theking530.common.gui.widgets.valuebars.GuiHeatBarUtilities;
+import theking530.staticcore.gui.GuiDrawUtilities;
+import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
+import theking530.staticcore.gui.widgets.valuebars.GuiHeatBarUtilities;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.crafting.wrappers.evaporation.EvaporatorRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
-import theking530.staticpower.tileentities.utilities.MachineSideMode;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 
 public class EvaporatorRecipeCategory extends BaseJEIRecipeCategory<EvaporatorRecipe> {
 	public static final ResourceLocation EVAPORATOR_UID = new ResourceLocation(StaticPower.MOD_ID, "evaporator");

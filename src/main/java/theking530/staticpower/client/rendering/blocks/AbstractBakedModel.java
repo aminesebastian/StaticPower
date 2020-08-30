@@ -100,19 +100,19 @@ public abstract class AbstractBakedModel implements IBakedModel {
 		return quads.build();
 	}
 
-	protected List<BakedQuad> transformQuads(IBakedModel model, Vector3f translation, Quaternion rotation, Direction drawingSide, BlockState state, Random rand) {
+	protected List<BakedQuad> transformQuads(IBakedModel model, Vector3f translation, Vector3f scale, Quaternion rotation, Direction drawingSide, BlockState state, Random rand) {
 		// Build the output.
 		if (model != null) {
-			return transformQuads(model.getQuads(state, drawingSide, rand, EmptyModelData.INSTANCE), translation, rotation);
+			return transformQuads(model.getQuads(state, drawingSide, rand, EmptyModelData.INSTANCE), translation, scale, rotation);
 		}
 
 		return Collections.emptyList();
 	}
 
-	protected List<BakedQuad> transformQuads(List<BakedQuad> inQuads, Vector3f translation, Quaternion rotation) {
+	protected List<BakedQuad> transformQuads(List<BakedQuad> inQuads, Vector3f translation, Vector3f scale, Quaternion rotation) {
 		ImmutableList.Builder<BakedQuad> quads = ImmutableList.builder();
 
-		TransformationMatrix transformation = new TransformationMatrix(translation, rotation, null, null).blockCenterToCorner();
+		TransformationMatrix transformation = new TransformationMatrix(translation, rotation, scale, null).blockCenterToCorner();
 
 		// Build the output.
 		if (inQuads != null && inQuads.size() > 0) {

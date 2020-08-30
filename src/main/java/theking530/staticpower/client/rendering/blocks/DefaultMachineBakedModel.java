@@ -32,11 +32,11 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
-import theking530.common.utilities.SDMath;
+import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.components.control.SideConfigurationComponent;
-import theking530.staticpower.tileentities.utilities.MachineSideMode;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
 
 public class DefaultMachineBakedModel extends AbstractBakedModel {
 	@SuppressWarnings("deprecation")

@@ -18,17 +18,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import theking530.common.gui.widgets.progressbars.ArrowProgressBar;
-import theking530.common.gui.widgets.progressbars.FireProgressBar;
-import theking530.common.gui.widgets.valuebars.GuiFluidBarUtilities;
-import theking530.common.gui.widgets.valuebars.GuiPowerBarUtilities;
-import theking530.common.utilities.Color;
+import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
+import theking530.staticcore.gui.widgets.progressbars.FireProgressBar;
+import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
+import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
+import theking530.staticcore.utilities.Color;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.crafting.wrappers.fluidgenerator.FluidGeneratorRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
-import theking530.staticpower.tileentities.utilities.MachineSideMode;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 
 public class FluidGeneratorRecipeCateogry extends BaseJEIRecipeCategory<FluidGeneratorRecipe> {
 	public static final ResourceLocation FLUID_GENERATOR_UID = new ResourceLocation(StaticPower.MOD_ID, "fluid_generator");

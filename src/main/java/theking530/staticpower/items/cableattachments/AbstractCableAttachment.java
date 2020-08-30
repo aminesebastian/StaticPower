@@ -15,14 +15,14 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
-import theking530.common.utilities.Vector3D;
+import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableBoundsHoverResult;
 import theking530.staticpower.cables.CableBoundsHoverResult.CableBoundsHoverType;
-import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.items.StaticPowerItem;
-import theking530.staticpower.tileentities.utilities.RedstoneMode;
+import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
+import theking530.staticpower.cables.CableUtilities;
 
 public abstract class AbstractCableAttachment extends StaticPowerItem {
 	private static final Vector3D DEFAULT_BOUNDS = new Vector3D(3.0f, 3.0f, 3.0f);

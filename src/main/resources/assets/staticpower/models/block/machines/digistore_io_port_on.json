@@ -1,0 +1,8 @@
+{
+	"parent": "block/orientable",
+	"textures": {
+		"top": "staticpower:blocks/digistore/digistore_io_port_top_on",
+		"front": "staticpower:blocks/digistore/digistore_io_port_side_on",
+		"side": "staticpower:blocks/digistore/digistore_io_port_side_on"
+	}
+}

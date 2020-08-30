@@ -3,8 +3,8 @@ package theking530.staticpower.init;
 import net.minecraft.item.Items;
 import net.minecraft.util.SoundEvents;
 import theking530.staticpower.StaticPowerRegistry;
-import theking530.staticpower.fluids.StaticPowerFluidBundle;
-import theking530.staticpower.fluids.StaticPowerFluidBundle.StaticPowerFluidBuilder;
+import theking530.staticpower.fluid.StaticPowerFluidBundle;
+import theking530.staticpower.fluid.StaticPowerFluidBundle.StaticPowerFluidBuilder;
 
 public class ModFluids {
 	public static StaticPowerFluidBundle StaticFluid;

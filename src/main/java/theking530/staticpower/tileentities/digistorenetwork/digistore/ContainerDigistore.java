@@ -5,8 +5,8 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
-import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
-import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
+import theking530.staticpower.container.StaticPowerTileEntityContainer;
+import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.init.ModContainerTypes;
 import theking530.staticpower.init.ModItems;
 

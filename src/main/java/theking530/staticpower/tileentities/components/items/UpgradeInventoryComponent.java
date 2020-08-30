@@ -1,12 +1,11 @@
 package theking530.staticpower.tileentities.components.items;
 
 import net.minecraft.item.ItemStack;
+import theking530.api.IUpgradeItem;
+import theking530.api.IUpgradeItem.UpgradeType;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.items.upgrades.BaseUpgrade;
-import theking530.staticpower.items.upgrades.IUpgradeItem;
-import theking530.staticpower.items.upgrades.IUpgradeItem.UpgradeType;
-import theking530.staticpower.tileentities.utilities.MachineSideMode;
-import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class UpgradeInventoryComponent extends InventoryComponent {

@@ -10,10 +10,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import theking530.staticpower.blocks.ICustomModelSupplier;
+import theking530.api.digistore.DigistoreInventoryCapabilityProvider;
+import theking530.api.digistore.IDigistoreInventory;
+import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
 import theking530.staticpower.client.rendering.items.DigistoreMonoCardItemModel;
 import theking530.staticpower.data.StaticPowerDataRegistry;
-import theking530.staticpower.tileentities.digistorenetwork.IDigistoreInventory;
 
 public class DigistoreMonoCard extends DigistoreCard implements ICustomModelSupplier {
 

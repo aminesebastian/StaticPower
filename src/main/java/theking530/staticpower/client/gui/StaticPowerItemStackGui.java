@@ -4,7 +4,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
-import theking530.staticpower.client.container.StaticPowerItemContainer;
+import theking530.staticpower.container.StaticPowerItemContainer;
 
 public abstract class StaticPowerItemStackGui<T extends StaticPowerItemContainer<K>, K extends Item> extends StaticPowerContainerGui<T> {
 	private final ItemStack owningItemStack;

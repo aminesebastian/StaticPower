@@ -21,7 +21,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
-import theking530.common.utilities.Vector3D;
+import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.cables.CableRenderingState;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
 import theking530.thirdparty.codechicken.lib.model.CachedFormat;

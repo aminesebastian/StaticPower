@@ -2,8 +2,8 @@ package theking530.staticpower.tileentities.powered.autosolderingtable;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketBuffer;
-import theking530.staticpower.client.container.slots.BatteryItemSlot;
-import theking530.staticpower.client.container.slots.OutputSlot;
+import theking530.staticpower.container.slots.BatteryItemSlot;
+import theking530.staticpower.container.slots.OutputSlot;
 import theking530.staticpower.init.ModContainerTypes;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.AbstractContainerSolderingTable;
 

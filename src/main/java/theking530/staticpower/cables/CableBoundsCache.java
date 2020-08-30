@@ -23,13 +23,13 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
-import theking530.common.utilities.RaytracingUtilities;
-import theking530.common.utilities.RaytracingUtilities.AdvancedRayTraceResult;
-import theking530.common.utilities.Vector3D;
+import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.cables.CableBoundsHoverResult.CableBoundsHoverType;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
 import theking530.staticpower.items.cableattachments.CableCover;
+import theking530.staticpower.utilities.RaytracingUtilities;
+import theking530.staticpower.utilities.RaytracingUtilities.AdvancedRayTraceResult;
 
 public class CableBoundsCache {
 	private static final Direction[] XAxisDirectionPriority = Direction.values();

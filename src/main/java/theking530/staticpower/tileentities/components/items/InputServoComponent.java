@@ -12,12 +12,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import theking530.staticpower.tileentities.StaticPowerTileEntityBlock;
+import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
-import theking530.staticpower.tileentities.components.control.SideConfigurationComponent;
-import theking530.staticpower.tileentities.utilities.MachineSideMode;
-import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities;
-import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities.BlockSide;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class InputServoComponent extends AbstractTileEntityComponent {

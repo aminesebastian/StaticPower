@@ -5,6 +5,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import theking530.api.digistore.CapabilityDigistoreInventory;
+import theking530.api.heat.CapabilityHeatable;
+import theking530.api.power.CapabilityStaticVolt;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModuleFactory;
 import theking530.staticpower.cables.fluid.FluidNetworkModuleFactory;
@@ -13,10 +16,7 @@ import theking530.staticpower.cables.item.ItemNetworkModuleFactory;
 import theking530.staticpower.cables.network.CableNetworkModuleRegistry;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.power.PowerNetworkModuleFactory;
-import theking530.staticpower.energy.CapabilityStaticVolt;
 import theking530.staticpower.init.ModFluids;
-import theking530.staticpower.tileentities.components.heat.CapabilityHeatable;
-import theking530.staticpower.tileentities.digistorenetwork.CapabilityDigistoreInventory;
 
 public class StaticPowerCommonEventHandler {
 

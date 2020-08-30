@@ -5,16 +5,16 @@ import net.minecraft.item.Items;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
-import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
-import theking530.common.gui.widgets.tabs.GuiInfoTab;
-import theking530.common.gui.widgets.tabs.GuiMachineFluidTab;
-import theking530.common.gui.widgets.tabs.GuiSideConfigTab;
-import theking530.common.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
-import theking530.common.gui.widgets.tabs.slottabs.GuiFluidContainerTab;
-import theking530.common.gui.widgets.valuebars.GuiFluidBarFromTank;
+import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
+import theking530.staticcore.gui.widgets.tabs.GuiMachineFluidTab;
+import theking530.staticcore.gui.widgets.tabs.GuiSideConfigTab;
+import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
+import theking530.staticcore.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
+import theking530.staticcore.gui.widgets.tabs.slottabs.GuiFluidContainerTab;
+import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.init.ModFluids;
-import theking530.staticpower.tileentities.utilities.MachineSideMode;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 
 public class GuiVacuumChest extends StaticPowerTileEntityGui<ContainerVacuumChest, TileEntityVacuumChest> {
 

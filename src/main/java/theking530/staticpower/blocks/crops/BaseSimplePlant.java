@@ -28,7 +28,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.IPlantable;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.blocks.IBlockRenderLayerProvider;
+import theking530.staticpower.blocks.interfaces.IBlockRenderLayerProvider;
 
 /**
  * Base class for a simple single block plant.

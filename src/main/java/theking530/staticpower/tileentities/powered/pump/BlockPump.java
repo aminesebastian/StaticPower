@@ -15,8 +15,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
+import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
 import theking530.staticpower.init.ModTileEntityTypes;
-import theking530.staticpower.tileentities.StaticPowerTileEntityBlock;
 
 public class BlockPump extends StaticPowerTileEntityBlock {
 

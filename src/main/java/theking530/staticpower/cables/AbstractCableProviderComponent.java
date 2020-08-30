@@ -22,7 +22,7 @@ import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
-import theking530.staticpower.tileentities.utilities.RedstoneMode;
+import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public abstract class AbstractCableProviderComponent extends AbstractTileEntityComponent {
@@ -58,7 +58,8 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 
 		// Initialize the disabled sides, connection states, and attachments arrays.
 		DisabledSides = new boolean[] { false, false, false, false, false, false };
-		ConnectionStates = new CableConnectionState[] { CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE };
+		ConnectionStates = new CableConnectionState[] { CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE,
+				CableConnectionState.NONE };
 		Attachments = new ItemStack[] { ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY };
 		Covers = new ItemStack[] { ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY };
 		connectionStatesInitialized = false;
@@ -73,6 +74,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 				}
 			}
 		}
+
 		if (!connectionStatesInitialized) {
 			scanForAttachments();
 		}
@@ -81,7 +83,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	@Override
 	public void onNeighborChanged(BlockState currentState, BlockPos neighborPos) {
 		super.onNeighborChanged(currentState, neighborPos);
-		
+
 		// Update the network graph.
 		if (!getWorld().isRemote()) {
 			ServerCable cable = CableNetworkManager.get((ServerWorld) getWorld()).getCable(getPos());
@@ -89,8 +91,8 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 				cable.getNetwork().updateGraph((ServerWorld) getWorld(), getPos());
 			}
 		}
-		
-		scanForAttachments();	
+
+		scanForAttachments();
 	}
 
 	@Override

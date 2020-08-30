@@ -3,11 +3,11 @@ package theking530.staticpower.tileentities;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
-import theking530.staticpower.tileentities.components.control.SideConfigurationComponent;
-import theking530.staticpower.tileentities.utilities.MachineSideMode;
-import theking530.staticpower.tileentities.utilities.RedstoneMode;
-import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities;
-import theking530.staticpower.tileentities.utilities.SideConfigurationUtilities.BlockSide;
+import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 
 public class TileEntityConfigurable extends TileEntityBase {
 	public final SideConfigurationComponent ioSideConfiguration;

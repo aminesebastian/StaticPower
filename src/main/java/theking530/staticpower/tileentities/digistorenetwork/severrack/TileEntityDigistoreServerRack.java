@@ -30,7 +30,7 @@ public class TileEntityDigistoreServerRack extends BaseDigistoreTileEntity {
 	@Override
 	public IModelData getModelData() {
 		ModelDataMap.Builder builder = new ModelDataMap.Builder();
-		return builder.withInitial(CARD_RENDERING_STATE, new ServerRackRenderingState(getCards(), inventory.getFilledRatio())).build();
+		return builder.withInitial(CARD_RENDERING_STATE, new ServerRackRenderingState(getCards())).build();
 	}
 
 	protected ItemStack[] getCards() {

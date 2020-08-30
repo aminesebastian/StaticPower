@@ -9,7 +9,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.ToolType;
-import theking530.staticpower.utilities.HarvestLevel;
+import theking530.staticcore.utilities.HarvestLevel;
 
 /**
  * Base class for any static power ores.

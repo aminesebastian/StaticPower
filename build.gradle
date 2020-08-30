@@ -19,6 +19,9 @@ archivesBaseName = "StaticPower"
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
+def apiVersion = "${mc_version}-${staticpower_api_version}"
+def coreVersion = "${mc_version}-${staticpower_core_version}"
+
 minecraft {
     // The mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   Snapshot are built nightly.
@@ -162,6 +165,22 @@ publishing {
     }
 }
 
+task buildApiJar(type: Jar) {
+    baseName = archivesBaseName+'-'+apiVersion+'-api'
+
+    from zipTree(jar.outputs.getFiles().getSingleFile()).matching {
+        include 'theking530/api/**'
+    }
+}
+
+task buildCoreJar(type: Jar) {
+    baseName = archivesBaseName+'-'+coreVersion+'-api'
+
+    from zipTree(jar.outputs.getFiles().getSingleFile()).matching {
+        include 'theking530/staticcore/**'
+    }
+}
+
 task deobfJar(type: Jar, dependsOn: 'jar') {
     from "build/source/main"
     classifier "dev"
@@ -174,7 +193,9 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 	classifier = 'sources'
 	from sourceSets.main.allSource
 }
+
 build.dependsOn sourcesJar
+buildApiJar.dependsOn sourcesJar
 
 artifacts {
 	archives sourcesJar

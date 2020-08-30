@@ -10,8 +10,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
-import theking530.staticpower.energy.CapabilityStaticVolt;
-import theking530.staticpower.tileentities.components.heat.CapabilityHeatable;
+import theking530.api.heat.CapabilityHeatable;
+import theking530.api.power.CapabilityStaticVolt;
 
 public class DestinationWrapper {
 	public enum DestinationType {

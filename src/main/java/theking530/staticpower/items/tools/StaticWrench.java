@@ -16,10 +16,10 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
-import theking530.common.wrench.IWrenchTool;
-import theking530.common.wrench.IWrenchable;
-import theking530.common.wrench.RegularWrenchMode;
-import theking530.common.wrench.SneakWrenchMode;
+import theking530.api.wrench.IWrenchTool;
+import theking530.api.wrench.IWrenchable;
+import theking530.api.wrench.RegularWrenchMode;
+import theking530.api.wrench.SneakWrenchMode;
 import theking530.staticpower.items.StaticPowerItem;
 
 public class StaticWrench extends StaticPowerItem implements IWrenchTool {

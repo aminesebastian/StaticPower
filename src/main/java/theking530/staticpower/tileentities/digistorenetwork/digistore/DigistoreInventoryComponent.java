@@ -5,12 +5,12 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import theking530.api.digistore.CapabilityDigistoreInventory;
+import theking530.api.digistore.IDigistoreInventory;
 import theking530.staticpower.items.DigistoreCard;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
-import theking530.staticpower.tileentities.digistorenetwork.CapabilityDigistoreInventory;
-import theking530.staticpower.tileentities.digistorenetwork.IDigistoreInventory;
-import theking530.staticpower.tileentities.utilities.MachineSideMode;
-import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
+import theking530.staticpower.tileentities.components.items.ItemStackHandlerFilter;
 
 public class DigistoreInventoryComponent extends InventoryComponent implements IDigistoreInventory {
 	public DigistoreInventoryComponent(String name, int slotCount) {

@@ -22,13 +22,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
+import theking530.api.heat.HeatTooltipUtilities;
+import theking530.staticcore.utilities.HarvestLevel;
+import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModTileEntityTypes;
-import theking530.staticpower.tileentities.StaticPowerTileEntityBlock;
-import theking530.staticpower.tileentities.components.heat.HeatUtilities;
-import theking530.staticpower.utilities.HarvestLevel;
 
 public class BlockHeatSink extends StaticPowerTileEntityBlock {
 	public final ResourceLocation tier;
@@ -42,9 +42,9 @@ public class BlockHeatSink extends StaticPowerTileEntityBlock {
 	@Override
 	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
 		super.getBasicTooltip(stack, worldIn, tooltip);
-		tooltip.add(HeatUtilities.getHeatRateTooltip(StaticPowerDataRegistry.getTier(tier).getHeatSinkConductivity()));
-		tooltip.add(HeatUtilities.getHeatCapacityTooltip(StaticPowerDataRegistry.getTier(tier).getHeatSinkCapacity()));
-		tooltip.add(HeatUtilities.getHeatGenerationTooltip(StaticPowerDataRegistry.getTier(tier).getHeatSinkElectricHeatGeneration()));
+		tooltip.add(HeatTooltipUtilities.getHeatRateTooltip(StaticPowerDataRegistry.getTier(tier).getHeatSinkConductivity()));
+		tooltip.add(HeatTooltipUtilities.getHeatCapacityTooltip(StaticPowerDataRegistry.getTier(tier).getHeatSinkCapacity()));
+		tooltip.add(HeatTooltipUtilities.getHeatGenerationTooltip(StaticPowerDataRegistry.getTier(tier).getHeatSinkElectricHeatGeneration()));
 		tooltip.add(new StringTextComponent(TextFormatting.GRAY.toString()).appendSibling(new StringTextComponent("Generation Usage: ")).appendSibling(new StringTextComponent(TextFormatting.RED.toString())).appendSibling(GuiTextUtilities.formatEnergyRateToString(StaticPowerDataRegistry.getTier(tier).getHeatSinkElectricHeatPowerUsage())));
 	}
 

@@ -25,12 +25,12 @@ import net.minecraft.world.ILightReader;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
-import theking530.common.utilities.SDMath;
+import theking530.api.digistore.IDigistoreInventory;
+import theking530.staticcore.utilities.SDMath;
+import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.items.DigistoreCard;
 import theking530.staticpower.items.DigistoreMonoCard;
-import theking530.staticpower.tileentities.StaticPowerTileEntityBlock;
-import theking530.staticpower.tileentities.digistorenetwork.IDigistoreInventory;
 import theking530.staticpower.tileentities.digistorenetwork.severrack.TileEntityDigistoreServerRack;
 import theking530.thirdparty.codechicken.lib.model.CachedFormat;
 import theking530.thirdparty.codechicken.lib.model.Quad;
@@ -94,7 +94,7 @@ public class ServerRackModel extends AbstractBakedModel {
 			Vector3f offset = SDMath.transformVectorByDirection(facing, new Vector3f(xOffset, yOffset, zOffset));
 
 			// Transform the card's quads.
-			List<BakedQuad> bakedCardQuads = transformQuads(model, offset, FACING_ROTATIONS.get(facing), side, state, rand);
+			List<BakedQuad> bakedCardQuads = transformQuads(model, offset, new Vector3f(1.0f, 1.0f, 1.0f), FACING_ROTATIONS.get(facing), side, state, rand);
 			newQuads.addAll(bakedCardQuads);
 
 			// If we are rendering a mono card, render the filled bar.
@@ -150,7 +150,7 @@ public class ServerRackModel extends AbstractBakedModel {
 
 					// Add all the bar's quads transformed with the same offset and rotation as the
 					// card.
-					newQuads.addAll(transformQuads(barQuadList, offset, FACING_ROTATIONS.get(facing)));
+					newQuads.addAll(transformQuads(barQuadList, offset, new Vector3f(1.0f, 1.0f, 1.0f), FACING_ROTATIONS.get(facing)));
 				}
 			}
 		}

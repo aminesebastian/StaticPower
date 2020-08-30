@@ -14,8 +14,8 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
+import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
 import theking530.staticpower.init.ModTileEntityTypes;
-import theking530.staticpower.tileentities.StaticPowerTileEntityBlock;
 
 public class BlockSolderingTable extends StaticPowerTileEntityBlock {
 	protected static final VoxelShape SHAPE;

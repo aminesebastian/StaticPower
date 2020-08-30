@@ -14,7 +14,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
-import theking530.common.utilities.SDMath;
+import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.cables.heat.HeatCableComponent;
 import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.StaticPowerTier;

@@ -34,7 +34,7 @@ import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import theking530.common.gui.GuiDrawUtilities;
+import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticpower.client.rendering.blocks.AbstractBakedModel;
 import theking530.staticpower.items.fluidcapsule.FluidCapsule;
 

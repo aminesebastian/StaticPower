@@ -2,8 +2,8 @@ package theking530.staticpower.items.cableattachments.importer;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
-import theking530.common.gui.widgets.tabs.GuiInfoTab;
-import theking530.common.gui.widgets.tabs.redstonecontrol.GuiCableAttachmentRedstoneTab;
+import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
+import theking530.staticcore.gui.widgets.tabs.redstonecontrol.GuiCableAttachmentRedstoneTab;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachmentGui;
 
 public class GuiDigistoreImporter extends AbstractCableAttachmentGui<ContainerDigistoreImporter, DigistoreImporterAttachment> {

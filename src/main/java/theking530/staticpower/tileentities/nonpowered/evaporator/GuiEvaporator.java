@@ -3,17 +3,17 @@ package theking530.staticpower.tileentities.nonpowered.evaporator;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.common.gui.widgets.progressbars.FluidProgressBar;
-import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
-import theking530.common.gui.widgets.tabs.GuiMachineFluidTab;
-import theking530.common.gui.widgets.tabs.GuiPassiveHeatTab;
-import theking530.common.gui.widgets.tabs.GuiSideConfigTab;
-import theking530.common.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
-import theking530.common.gui.widgets.valuebars.GuiFluidBarFromTank;
-import theking530.common.gui.widgets.valuebars.GuiHeatBarFromHeatStorage;
+import theking530.staticcore.gui.widgets.progressbars.FluidProgressBar;
+import theking530.staticcore.gui.widgets.tabs.GuiMachineFluidTab;
+import theking530.staticcore.gui.widgets.tabs.GuiPassiveHeatTab;
+import theking530.staticcore.gui.widgets.tabs.GuiSideConfigTab;
+import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
+import theking530.staticcore.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
+import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarFromTank;
+import theking530.staticcore.gui.widgets.valuebars.GuiHeatBarFromHeatStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
-import theking530.staticpower.tileentities.utilities.MachineSideMode;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 
 public class GuiEvaporator extends StaticPowerTileEntityGui<ContainerEvaporator, TileEntityEvaporator> {
 	private FluidProgressBar progressBar;

@@ -10,13 +10,13 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.ForgeHooks;
-import theking530.common.utilities.SDMath;
+import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.init.ModTileEntityTypes;
-import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
+import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
-import theking530.staticpower.tileentities.utilities.MachineSideMode;
 
 public class TileEntityMiner extends AbstractTileEntityMiner {
 

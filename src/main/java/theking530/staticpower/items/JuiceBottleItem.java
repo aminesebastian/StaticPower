@@ -14,7 +14,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
-import theking530.common.utilities.SDMath;
+import theking530.staticcore.utilities.SDMath;
 
 public class JuiceBottleItem extends StaticPowerItem {
 	public final int drinkDuration;

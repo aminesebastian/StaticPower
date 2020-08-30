@@ -10,7 +10,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
-import theking530.staticpower.client.container.StaticPowerContainer;
+import theking530.staticpower.container.StaticPowerContainer;
 
 public class AbstractCableAttachmentContainer<T extends AbstractCableAttachment> extends StaticPowerContainer {
 	private final Direction attachmentSide;

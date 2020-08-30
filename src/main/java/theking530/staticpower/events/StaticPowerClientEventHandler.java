@@ -24,10 +24,11 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import theking530.api.heat.HeatTooltipUtilities;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerRegistry;
-import theking530.staticpower.blocks.IBlockRenderLayerProvider;
-import theking530.staticpower.blocks.ICustomModelSupplier;
+import theking530.staticpower.blocks.interfaces.IBlockRenderLayerProvider;
+import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.CustomRenderer;
@@ -53,7 +54,6 @@ import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.thermalconductivity.ThermalConductivityRecipe;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModTileEntityTypes;
-import theking530.staticpower.tileentities.components.heat.HeatUtilities;
 
 @SuppressWarnings("deprecation")
 public class StaticPowerClientEventHandler {
@@ -206,7 +206,7 @@ public class StaticPowerClientEventHandler {
 			});
 
 			StaticPowerRecipeRegistry.getRecipe(ThermalConductivityRecipe.RECIPE_TYPE, matchParameters).ifPresent(recipe -> {
-				event.getToolTip().add(HeatUtilities.getHeatRateTooltip(recipe.getThermalConductivity()));
+				event.getToolTip().add(HeatTooltipUtilities.getHeatRateTooltip(recipe.getThermalConductivity()));
 			});
 		}
 	}

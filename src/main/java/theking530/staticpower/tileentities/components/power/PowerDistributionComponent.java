@@ -8,12 +8,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import theking530.staticpower.energy.CapabilityStaticVolt;
-import theking530.staticpower.energy.IStaticVoltHandler;
-import theking530.staticpower.energy.PowerEnergyInterface;
+import theking530.api.power.CapabilityStaticVolt;
+import theking530.api.power.IStaticVoltHandler;
+import theking530.api.power.PowerEnergyInterface;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
-import theking530.staticpower.tileentities.components.control.SideConfigurationComponent;
-import theking530.staticpower.tileentities.utilities.MachineSideMode;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
 
 public class PowerDistributionComponent extends AbstractTileEntityComponent {
 

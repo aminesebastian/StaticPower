@@ -2,18 +2,18 @@ package theking530.staticpower.tileentities.powered.lumbermill;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
-import theking530.common.gui.widgets.progressbars.ArrowProgressBar;
-import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
-import theking530.common.gui.widgets.tabs.GuiMachinePowerInfoTab;
-import theking530.common.gui.widgets.tabs.GuiSideConfigTab;
-import theking530.common.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
-import theking530.common.gui.widgets.tabs.slottabs.GuiFluidContainerTab;
-import theking530.common.gui.widgets.tabs.slottabs.GuiUpgradeTab;
-import theking530.common.gui.widgets.valuebars.GuiFluidBarFromTank;
-import theking530.common.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
+import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
+import theking530.staticcore.gui.widgets.tabs.GuiMachinePowerInfoTab;
+import theking530.staticcore.gui.widgets.tabs.GuiSideConfigTab;
+import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
+import theking530.staticcore.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
+import theking530.staticcore.gui.widgets.tabs.slottabs.GuiFluidContainerTab;
+import theking530.staticcore.gui.widgets.tabs.slottabs.GuiUpgradeTab;
+import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarFromTank;
+import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
-import theking530.staticpower.tileentities.utilities.MachineSideMode;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 
 public class GuiLumberMill extends StaticPowerTileEntityGui<ContainerLumberMill, TileEntityLumberMill> {
 

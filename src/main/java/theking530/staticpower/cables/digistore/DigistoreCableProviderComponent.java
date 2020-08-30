@@ -2,10 +2,12 @@ package theking530.staticpower.cables.digistore;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
@@ -19,12 +21,15 @@ import theking530.staticpower.tileentities.components.serialization.UpdateSerial
 public class DigistoreCableProviderComponent extends AbstractCableProviderComponent {
 	@UpdateSerialize
 	private boolean managerPresent;
+	private boolean shouldControlOnBlockState;
 
 	public DigistoreCableProviderComponent(String name) {
 		super(name, CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE);
+		shouldControlOnBlockState = false;
 	}
 
 	public void preProcessUpdate() {
+		super.preProcessUpdate();
 		// Check to see if the manager is present. If not, update the tile entity.
 		if (!getWorld().isRemote) {
 			this.<DigistoreNetworkModule>getNetworkModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE).ifPresent(network -> {
@@ -32,12 +37,26 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 					managerPresent = network.isManagerPresent();
 					this.getTileEntity().markTileEntityForSynchronization();
 				}
+
+				// Update the on/off state of the block.
+				if (shouldControlOnBlockState) {
+					if (managerPresent && !getIsOnBlockState()) {
+						setIsOnBlockState(true);
+					} else if (!managerPresent && getIsOnBlockState()) {
+						setIsOnBlockState(false);
+					}
+				}
 			});
 		}
 	}
 
 	public boolean isManagerPresent() {
 		return managerPresent;
+	}
+
+	public DigistoreCableProviderComponent setShouldControlOnState() {
+		shouldControlOnBlockState = true;
+		return this;
 	}
 
 	@Override
@@ -69,6 +88,28 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 			}
 		}
 		return CableConnectionState.NONE;
+	}
+
+	protected void setIsOnBlockState(boolean on) {
+		if (!getWorld().isRemote && shouldControlOnBlockState) {
+			BlockState currentState = getWorld().getBlockState(getPos());
+			if (currentState.has(StaticPowerMachineBlock.IS_ON)) {
+				if (currentState.get(StaticPowerMachineBlock.IS_ON) != on) {
+					getWorld().setBlockState(getPos(), currentState.with(StaticPowerMachineBlock.IS_ON, on), 2);
+				}
+			}
+		}
+	}
+
+	public boolean getIsOnBlockState() {
+		if (!shouldControlOnBlockState) {
+			return false;
+		}
+		BlockState currentState = getWorld().getBlockState(getPos());
+		if (currentState.has(StaticPowerMachineBlock.IS_ON)) {
+			return currentState.get(StaticPowerMachineBlock.IS_ON);
+		}
+		return false;
 	}
 
 }

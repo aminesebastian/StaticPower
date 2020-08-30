@@ -15,7 +15,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import theking530.common.utilities.Vector3D;
+import theking530.api.heat.HeatTooltipUtilities;
+import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.CableBoundsCache;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
@@ -23,7 +24,6 @@ import theking530.staticpower.client.rendering.blocks.CableBakedModel;
 import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModTileEntityTypes;
-import theking530.staticpower.tileentities.components.heat.HeatUtilities;
 
 public class BlockHeatCable extends AbstractCableBlock {
 	public final ResourceLocation tier;
@@ -37,8 +37,8 @@ public class BlockHeatCable extends AbstractCableBlock {
 	@Override
 	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
 		super.getBasicTooltip(stack, worldIn, tooltip);
-		tooltip.add(HeatUtilities.getHeatRateTooltip(StaticPowerDataRegistry.getTier(tier).getHeatCableConductivity()));
-		tooltip.add(HeatUtilities.getHeatCapacityTooltip(StaticPowerDataRegistry.getTier(tier).getHeatCableCapacity()));
+		tooltip.add(HeatTooltipUtilities.getHeatRateTooltip(StaticPowerDataRegistry.getTier(tier).getHeatCableConductivity()));
+		tooltip.add(HeatTooltipUtilities.getHeatCapacityTooltip(StaticPowerDataRegistry.getTier(tier).getHeatCableCapacity()));
 	}
 
 	@Override

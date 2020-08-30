@@ -12,6 +12,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.api.ISolderingIron;
 import theking530.staticpower.items.StaticPowerItem;
 
 public class SolderingIron extends StaticPowerItem implements ISolderingIron {

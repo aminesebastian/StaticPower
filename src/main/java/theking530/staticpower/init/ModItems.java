@@ -560,10 +560,8 @@ public class ModItems {
 				.preRegisterItem(ExporterAttachment = new DigistoreExporterAttachment("cable_attachment_digistore_exporter", StaticPowerAdditionalModels.CABLE_DIGISTORE_EXPORTER_ATTACHMENT));
 		StaticPowerRegistry
 				.preRegisterItem(ImporterAttachment = new DigistoreImporterAttachment("cable_attachment_digistore_importer", StaticPowerAdditionalModels.CABLE_DIGISTORE_IMPORTER_ATTACHMENT));
-		StaticPowerRegistry
-				.preRegisterItem(DigistoreTerminalAttachment = new DigistoreTerminal("cable_attachment_digistore_terminal", StaticPowerAdditionalModels.CABLE_DIGISTORE_TERMINAL_ATTACHMENT));
-		StaticPowerRegistry.preRegisterItem(DigistoreCraftingTerminalAttachment = new DigistoreCraftingTerminal("cable_attachment_digistore_crafting_terminal",
-				StaticPowerAdditionalModels.CABLE_DIGISTORE_CRAFTING_TERMINAL_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(DigistoreTerminalAttachment = new DigistoreTerminal("cable_attachment_digistore_terminal"));
+		StaticPowerRegistry.preRegisterItem(DigistoreCraftingTerminalAttachment = new DigistoreCraftingTerminal("cable_attachment_digistore_crafting_terminal"));
 
 		// Digistore Cards
 		StaticPowerRegistry.preRegisterItem(BasicDigistoreCard = new DigistoreCard("digistore_card_basic", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.BASIC_DIGISTORE_CARD));

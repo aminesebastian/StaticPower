@@ -1,9 +1,9 @@
 package theking530.staticpower.init;
 
-import theking530.common.gui.widgets.tabs.PacketGuiTabAddSlots;
-import theking530.common.gui.widgets.tabs.PacketSideConfigTab;
-import theking530.common.gui.widgets.tabs.redstonecontrol.PacketCableAttachmentRedstoneSync;
-import theking530.common.gui.widgets.tabs.redstonecontrol.PacketRedstoneComponentSync;
+import theking530.staticcore.gui.widgets.tabs.PacketGuiTabAddSlots;
+import theking530.staticcore.gui.widgets.tabs.PacketSideConfigTab;
+import theking530.staticcore.gui.widgets.tabs.redstonecontrol.PacketCableAttachmentRedstoneSync;
+import theking530.staticcore.gui.widgets.tabs.redstonecontrol.PacketRedstoneComponentSync;
 import theking530.staticpower.cables.fluid.FluidCableUpdatePacket;
 import theking530.staticpower.cables.heat.HeatCableUpdatePacket;
 import theking530.staticpower.cables.item.ItemCableAddedPacket;

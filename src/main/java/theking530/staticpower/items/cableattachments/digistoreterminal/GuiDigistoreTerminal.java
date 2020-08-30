@@ -2,7 +2,7 @@ package theking530.staticpower.items.cableattachments.digistoreterminal;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
-import theking530.common.utilities.Vector2D;
+import theking530.staticcore.utilities.Vector2D;
 
 public class GuiDigistoreTerminal extends AbstractGuiDigistoreTerminal<ContainerDigistoreTerminal, DigistoreTerminal> {
 

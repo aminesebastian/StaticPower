@@ -1,8 +1,12 @@
 {
     "variants": {
-		"facing=north": { "model": "staticpower:block/machines/digistore_io_port" },
-        "facing=south": { "model": "staticpower:block/machines/digistore_io_port", "y": 180 },
-        "facing=west":  { "model": "staticpower:block/machines/digistore_io_port", "y": 270 },
-        "facing=east":  { "model": "staticpower:block/machines/digistore_io_port", "y": 90 }
+        "facing=north,is_on=false": { "model": "staticpower:block/machines/digistore_io_port" },
+        "facing=south,is_on=false": { "model": "staticpower:block/machines/digistore_io_port", "y": 180 },
+        "facing=west,is_on=false":  { "model": "staticpower:block/machines/digistore_io_port", "y": 270 },
+        "facing=east,is_on=false":  { "model": "staticpower:block/machines/digistore_io_port", "y": 90 },
+		"facing=north,is_on=true": { "model": "staticpower:block/machines/digistore_io_port_on" },
+        "facing=south,is_on=true": { "model": "staticpower:block/machines/digistore_io_port_on", "y": 180 },
+        "facing=west,is_on=true":  { "model": "staticpower:block/machines/digistore_io_port_on", "y": 270 },
+        "facing=east,is_on=true":  { "model": "staticpower:block/machines/digistore_io_port_on", "y": 90 }
     }
 }

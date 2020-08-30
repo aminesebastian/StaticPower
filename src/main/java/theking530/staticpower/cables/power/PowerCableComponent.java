@@ -12,14 +12,14 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import theking530.api.power.CapabilityStaticVolt;
+import theking530.api.power.IStaticVoltHandler;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
-import theking530.staticpower.energy.CapabilityStaticVolt;
-import theking530.staticpower.energy.IStaticVoltHandler;
 
 public class PowerCableComponent extends AbstractCableProviderComponent implements IEnergyStorage, IStaticVoltHandler {
 	public static final String POWER_CAPACITY_DATA_TAG_KEY = "power_capacity";

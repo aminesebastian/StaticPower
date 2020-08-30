@@ -11,8 +11,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.init.ModTileEntityTypes;
-import theking530.staticpower.tileentities.StaticPowerMachineBlock;
 
 public class BlockCondenser extends StaticPowerMachineBlock {
 

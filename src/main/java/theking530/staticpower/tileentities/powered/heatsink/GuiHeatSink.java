@@ -2,11 +2,11 @@ package theking530.staticpower.tileentities.powered.heatsink;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
-import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
-import theking530.common.gui.widgets.tabs.GuiInfoTab;
-import theking530.common.gui.widgets.tabs.GuiPowerInfoTab;
-import theking530.common.gui.widgets.valuebars.GuiHeatBarFromHeatStorage;
-import theking530.common.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
+import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
+import theking530.staticcore.gui.widgets.tabs.GuiPowerInfoTab;
+import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
+import theking530.staticcore.gui.widgets.valuebars.GuiHeatBarFromHeatStorage;
+import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 
 public class GuiHeatSink extends StaticPowerTileEntityGui<ContainerHeatSink, TileEntityHeatSink> {

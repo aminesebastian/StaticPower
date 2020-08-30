@@ -2,17 +2,26 @@ package theking530.staticpower.items.cableattachments.digistorecraftingterminal;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
-import theking530.common.gui.widgets.progressbars.ArrowProgressBar;
-import theking530.common.gui.widgets.tabs.BaseGuiTab.TabSide;
-import theking530.common.gui.widgets.tabs.GuiInfoTab;
-import theking530.common.utilities.Vector2D;
+import theking530.staticcore.gui.widgets.EntityRenderWidget;
+import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
+import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
+import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
+import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.items.cableattachments.digistoreterminal.AbstractGuiDigistoreTerminal;
 
 public class GuiDigistoreCraftingTerminal extends AbstractGuiDigistoreTerminal<ContainerDigistoreCraftingTerminal, DigistoreCraftingTerminal> {
-
+	private ArrowProgressBar progressBar;
+	
 	public GuiDigistoreCraftingTerminal(ContainerDigistoreCraftingTerminal container, PlayerInventory invPlayer, ITextComponent name) {
 		super(container, invPlayer, name, 176, 270);
-		registerWidget(new ArrowProgressBar(118, 138));
+
+	}
+
+	@Override
+	public void initializeGui() {
+		super.initializeGui();
+		registerWidget(progressBar = (ArrowProgressBar) new ArrowProgressBar(118, 138).disableProgressTooltip());
+		registerWidget(new EntityRenderWidget(10, 115, 42, 58, this.minecraft.player));
 		searchBar.setSize(70, 12);
 		searchBar.setPosition(98, 6);
 
@@ -35,5 +44,21 @@ public class GuiDigistoreCraftingTerminal extends AbstractGuiDigistoreTerminal<C
 	@Override
 	protected Vector2D getInventoryLabelDrawLocation() {
 		return new Vector2D(8, 176);
+	}
+
+	@Override
+	public void updateData() {
+		if (getCableComponent().isManagerPresent()) {
+			progressBar.setErrorState(false);
+		} else {
+			progressBar.setErrorState(true).setErrorMessage("Digistore Manager not present or out of power!");
+		}
+	}
+
+	@Override
+	protected void drawBackgroundExtras(float partialTicks, int mouseX, int mouseY) {
+		super.drawBackgroundExtras(partialTicks, mouseX, mouseY);
+
+
 	}
 }

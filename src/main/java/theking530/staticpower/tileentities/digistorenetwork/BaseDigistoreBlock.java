@@ -4,11 +4,11 @@ import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.server.ServerWorld;
+import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.ServerCable;
-import theking530.staticpower.tileentities.StaticPowerTileEntityBlock;
 
-public abstract class BaseDigistoreBlock extends StaticPowerTileEntityBlock {
+public abstract class BaseDigistoreBlock extends StaticPowerMachineBlock {
 
 	public BaseDigistoreBlock(String name) {
 		super(name);
@@ -23,5 +23,10 @@ public abstract class BaseDigistoreBlock extends StaticPowerTileEntityBlock {
 				cable.getNetwork().updateGraph((ServerWorld) world, pos);
 			}
 		}
+	}
+
+	@Override
+	public boolean hasModelOverride(BlockState state) {
+		return false;
 	}
 }

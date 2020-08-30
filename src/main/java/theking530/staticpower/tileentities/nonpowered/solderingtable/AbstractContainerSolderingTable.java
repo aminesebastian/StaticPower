@@ -9,12 +9,12 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
-import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
-import theking530.staticpower.client.container.slots.PhantomSlot;
-import theking530.staticpower.client.container.slots.StaticPowerContainerSlot;
+import theking530.api.ISolderingIron;
+import theking530.staticpower.container.StaticPowerTileEntityContainer;
+import theking530.staticpower.container.slots.PhantomSlot;
+import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.integration.JEI.IJEIReipceTransferHandler;
-import theking530.staticpower.items.tools.ISolderingIron;
 
 public abstract class AbstractContainerSolderingTable<T extends TileEntitySolderingTable> extends StaticPowerTileEntityContainer<T> implements IJEIReipceTransferHandler {
 	private List<ItemStack> lastCraftingPattern;

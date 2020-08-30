@@ -3,8 +3,9 @@ package theking530.staticpower.items.cableattachments.digistoreterminal;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import theking530.common.utilities.Vector3D;
+import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
 
 public abstract class AbstractDigistoreTerminalAttachment extends AbstractCableAttachment {
@@ -13,10 +14,16 @@ public abstract class AbstractDigistoreTerminalAttachment extends AbstractCableA
 	public static final String TERMINAL_SORT_DESC = "sort_desc";
 	private static final Vector3D BOUNDS = new Vector3D(6.0f, 6.0f, 2.0f);
 	private final ResourceLocation model;
+	private final ResourceLocation noManagerModel;
 
-	public AbstractDigistoreTerminalAttachment(String name, ResourceLocation model) {
+	public AbstractDigistoreTerminalAttachment(String name, ResourceLocation model, ResourceLocation noManagerModel) {
 		super(name);
 		this.model = model;
+		this.noManagerModel = noManagerModel;
+	}
+
+	public AbstractDigistoreTerminalAttachment(String name, ResourceLocation model) {
+		this(name, model, model);
 	}
 
 	@Override
@@ -29,7 +36,8 @@ public abstract class AbstractDigistoreTerminalAttachment extends AbstractCableA
 
 	@Override
 	public ResourceLocation getModel(ItemStack attachment, AbstractCableProviderComponent cableComponent) {
-		return model;
+		DigistoreCableProviderComponent digistoreCable = (DigistoreCableProviderComponent) cableComponent;
+		return digistoreCable.isManagerPresent() ? model : noManagerModel;
 	}
 
 	@Override

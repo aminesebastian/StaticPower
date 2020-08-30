@@ -23,7 +23,7 @@ import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.network.IContainerFactory;
-import theking530.staticpower.blocks.IItemBlockProvider;
+import theking530.staticpower.blocks.interfaces.IItemBlockProvider;
 import theking530.staticpower.init.TileEntityInitializer;
 
 /**

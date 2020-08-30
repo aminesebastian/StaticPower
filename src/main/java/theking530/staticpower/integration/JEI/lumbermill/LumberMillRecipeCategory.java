@@ -18,17 +18,17 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import theking530.common.gui.GuiDrawUtilities;
-import theking530.common.gui.widgets.progressbars.ArrowProgressBar;
-import theking530.common.gui.widgets.valuebars.GuiFluidBarUtilities;
-import theking530.common.gui.widgets.valuebars.GuiPowerBarUtilities;
-import theking530.common.utilities.Vector2D;
+import theking530.staticcore.gui.GuiDrawUtilities;
+import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
+import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
+import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
+import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.crafting.wrappers.lumbermill.LumberMillRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
-import theking530.staticpower.tileentities.utilities.MachineSideMode;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 
 public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRecipe> {
 	public static final ResourceLocation LUMBER_MILL_UID = new ResourceLocation(StaticPower.MOD_ID, "lumber_mill");

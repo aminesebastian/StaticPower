@@ -6,9 +6,9 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import theking530.common.utilities.Color;
-import theking530.common.utilities.Vector3D;
-import theking530.common.utilities.Vector4D;
+import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.Vector3D;
+import theking530.staticcore.utilities.Vector4D;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.tileentities.powered.battery.TileEntityBattery;
 

@@ -2,9 +2,9 @@ package theking530.staticpower.tileentities.components.control;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.text.StringTextComponent;
+import theking530.api.IUpgradeItem.UpgradeType;
+import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
-import theking530.staticpower.items.upgrades.IUpgradeItem.UpgradeType;
-import theking530.staticpower.tileentities.StaticPowerMachineBlock;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;

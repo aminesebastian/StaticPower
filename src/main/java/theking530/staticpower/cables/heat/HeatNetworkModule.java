@@ -16,6 +16,9 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fluids.FluidStack;
+import theking530.api.heat.CapabilityHeatable;
+import theking530.api.heat.HeatStorage;
+import theking530.api.heat.IHeatStorage;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
@@ -29,9 +32,6 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.thermalconductivity.ThermalConductivityRecipe;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
-import theking530.staticpower.tileentities.components.heat.CapabilityHeatable;
-import theking530.staticpower.tileentities.components.heat.HeatStorage;
-import theking530.staticpower.tileentities.components.heat.IHeatStorage;
 
 public class HeatNetworkModule extends AbstractCableNetworkModule {
 	private HeatStorage heatStorage;

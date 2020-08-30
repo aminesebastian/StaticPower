@@ -2,7 +2,7 @@ package theking530.staticpower.client.gui;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
-import theking530.staticpower.client.container.StaticPowerTileEntityContainer;
+import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.tileentities.TileEntityBase;
 
 /**

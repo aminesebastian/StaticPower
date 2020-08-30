@@ -5,8 +5,8 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.math.BlockPos;
-import theking530.common.utilities.Vector3D;
-import theking530.common.utilities.Vector4D;
+import theking530.staticcore.utilities.Vector3D;
+import theking530.staticcore.utilities.Vector4D;
 import theking530.staticpower.tileentities.powered.squeezer.TileEntitySqueezer;
 
 public class TileEntityRenderSqueezer extends StaticPowerTileEntitySpecialRenderer<TileEntitySqueezer> {

@@ -10,14 +10,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.items.ItemStackHandler;
+import theking530.api.ISolderingIron;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
-import theking530.staticpower.items.tools.ISolderingIron;
 import theking530.staticpower.tileentities.TileEntityMachine;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
-import theking530.staticpower.tileentities.utilities.MachineSideMode;
-import theking530.staticpower.tileentities.utilities.interfaces.ItemStackHandlerFilter;
+import theking530.staticpower.tileentities.components.items.ItemStackHandlerFilter;
 
 public class TileEntitySolderingTable extends TileEntityMachine implements INamedContainerProvider {
 	public final InventoryComponent patternInventory;

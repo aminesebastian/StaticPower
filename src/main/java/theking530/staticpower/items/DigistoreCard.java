@@ -15,9 +15,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import theking530.api.digistore.CapabilityDigistoreInventory;
+import theking530.api.digistore.DigistoreInventoryCapabilityProvider;
+import theking530.api.digistore.IDigistoreInventory;
 import theking530.staticpower.data.StaticPowerDataRegistry;
-import theking530.staticpower.tileentities.digistorenetwork.CapabilityDigistoreInventory;
-import theking530.staticpower.tileentities.digistorenetwork.IDigistoreInventory;
 import theking530.staticpower.utilities.MetricConverter;
 
 public class DigistoreCard extends StaticPowerItem {
