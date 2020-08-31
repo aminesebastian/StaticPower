@@ -222,7 +222,7 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 		if (hoveredSlot instanceof StaticPowerContainerSlot && ((StaticPowerContainerSlot) hoveredSlot).getItemHandler() instanceof InventoryComponent && Screen.hasControlDown()) {
 			StaticPowerContainerSlot spSlot = (StaticPowerContainerSlot) hoveredSlot;
 			if (((InventoryComponent) spSlot.getItemHandler()).areSlotsLockable()) {
-				handleMouseClick(hoveredSlot, hoveredSlot.slotNumber, StaticPowerContainer.INVENTORY_COMPONENT_FILTER_MOUSE_BUTTON, ClickType.SWAP);
+				handleMouseClick(hoveredSlot, hoveredSlot.slotNumber, StaticPowerContainer.INVENTORY_COMPONENT_LOCK_MOUSE_BUTTON, ClickType.SWAP);
 				return true;
 			}
 		}

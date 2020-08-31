@@ -18,6 +18,7 @@ import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.cables.attachments.digistore.digistorecraftingterminal.ContainerDigistoreCraftingTerminal;
 import theking530.staticpower.client.gui.StaticPowerContainerGui;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
@@ -53,7 +54,6 @@ import theking530.staticpower.integration.JEI.solderingtable.SolderingTableRecip
 import theking530.staticpower.integration.JEI.solidgenerator.SolidGeneratorRecipeCategory;
 import theking530.staticpower.integration.JEI.squeezer.SqueezerRecipeCategory;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
-import theking530.staticpower.items.cableattachments.digistorecraftingterminal.ContainerDigistoreCraftingTerminal;
 import theking530.staticpower.items.fluidcapsule.FluidCapsule;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.ContainerSolderingTable;
 import theking530.staticpower.tileentities.powered.autocrafter.ContainerAutoCraftingTable;

@@ -27,8 +27,8 @@ import theking530.api.wrench.SneakWrenchMode;
 import theking530.staticpower.blocks.StaticPowerBlock;
 import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
 import theking530.staticpower.cables.CableBoundsHoverResult.CableBoundsHoverType;
+import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.network.CableNetworkManager;
-import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public abstract class AbstractCableBlock extends StaticPowerBlock implements ICustomModelSupplier {

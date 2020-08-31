@@ -18,6 +18,7 @@ import net.minecraftforge.items.IItemHandler;
 import theking530.staticcore.utilities.TriFunction;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.container.slots.DummySlot;
+import theking530.staticpower.container.slots.PhantomSlot;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
@@ -25,7 +26,7 @@ import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.powered.autocrafter.PacketLockInventorySlot;
 
 public abstract class StaticPowerContainer extends Container {
-	public static final int INVENTORY_COMPONENT_FILTER_MOUSE_BUTTON = 69;
+	public static final int INVENTORY_COMPONENT_LOCK_MOUSE_BUTTON = 69;
 	protected int playerInventoryStart;
 	protected int playerHotbarStart;
 	protected int playerInventoryEnd;
@@ -111,10 +112,14 @@ public abstract class StaticPowerContainer extends Container {
 	}
 
 	protected void addSlotsInGrid(IItemHandler inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
+		addSlotsInGrid(inventory, startingIndex, inventory.getSlots(), xPos, yPos, maxPerRow, slotSize, slotFactory);
+	}
+
+	protected void addSlotsInGrid(IItemHandler inventory, int startingIndex, int slotCount, int xPos, int yPos, int maxPerRow, int slotSize, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
 		maxPerRow = Math.min(inventory.getSlots(), maxPerRow);
 		int adjustedSlotSize = slotSize + 2;
 		int offset = (maxPerRow * adjustedSlotSize) / 2;
-		for (int i = 0; i < inventory.getSlots(); i++) {
+		for (int i = 0; i < slotCount; i++) {
 			int row = i / maxPerRow;
 			Slot output = slotFactory.apply(startingIndex + i, xPos + ((i % maxPerRow) * adjustedSlotSize) - offset, yPos + (row * adjustedSlotSize));
 			addSlot(output);
@@ -200,7 +205,7 @@ public abstract class StaticPowerContainer extends Container {
 	public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, PlayerEntity player) {
 		// If the mouse button was INVENTORY_COMPONENT_FILTER_MOUSE_BUTTON, then this is
 		// an attempt to lock a slot.
-		if (dragType == INVENTORY_COMPONENT_FILTER_MOUSE_BUTTON) {
+		if (dragType == INVENTORY_COMPONENT_LOCK_MOUSE_BUTTON) {
 			Slot slot = inventorySlots.get(slotId);
 			if (slot instanceof StaticPowerContainerSlot && ((StaticPowerContainerSlot) slot).getItemHandler() instanceof InventoryComponent) {
 				if (player.getEntityWorld().isRemote) {
@@ -227,8 +232,31 @@ public abstract class StaticPowerContainer extends Container {
 			}
 			// Return as we don't want them to modify the container in this case.
 			return inventorySlots.get(slotId).getStack();
+		} else if (slotId >= 0 && inventorySlots.get(slotId) instanceof PhantomSlot) {
+			// Get the phantom slot.
+			PhantomSlot phantSlot = (PhantomSlot) inventorySlots.get(slotId);
+
+			// If the mouse item is empty, if shift is held, clear the slot. If regular
+			// click, decrease the stack size. Otherwise, attempt to insert the
+			// phantom item.
+			if (player.inventory.getItemStack().isEmpty()) {
+				if (clickTypeIn == ClickType.QUICK_MOVE) {
+					phantSlot.clearPhantom();
+				} else {
+					phantSlot.decreasePhantomCount(1);
+				}
+			} else {
+				if (clickTypeIn == ClickType.QUICK_MOVE) {
+					phantSlot.insertPhantomItem(player.inventory.getItemStack(), 64);
+				} else {
+					phantSlot.insertPhantomItem(player.inventory.getItemStack(), 1);
+				}
+			}
+			// Return as we don't want them to modify the container in this case.
+			return inventorySlots.get(slotId).getStack();
+		} else {
+			return super.slotClick(slotId, dragType, clickTypeIn, player);
 		}
-		return super.slotClick(slotId, dragType, clickTypeIn, player);
 	}
 
 	@Override

@@ -8,7 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
-import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
+import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
 

@@ -13,8 +13,8 @@ import net.minecraft.item.crafting.SpecialRecipeSerializer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.cables.attachments.cover.CableCover;
 import theking530.staticpower.init.ModItems;
-import theking530.staticpower.items.cableattachments.CableCover;
 import theking530.staticpower.items.tools.CoverSaw;
 
 public class CoverRecipe extends SpecialRecipe {

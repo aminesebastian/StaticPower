@@ -6,8 +6,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ILightReader;
+import theking530.staticpower.cables.attachments.cover.CableCover;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
-import theking530.staticpower.items.cableattachments.CableCover;
 
 public class CableRenderingState {
 	/**

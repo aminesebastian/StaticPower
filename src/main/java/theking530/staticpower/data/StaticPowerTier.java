@@ -5,26 +5,54 @@ import net.minecraft.util.ResourceLocation;
 public class StaticPowerTier {
 	private ResourceLocation tierId;
 	private String unlocalizedTierName;
-	private int portableBatteryCapacity;
+
+	/***********
+	 * Digistore
+	 ***********/
 	private int digistoreCapacity;
+
+	/*************
+	 * Solar Panel
+	 *************/
 	private int solarPanelPowerGeneration;
 	private int solarPanelPowerStorage;
+
+	/***************************
+	 * Extraction Configuration
+	 ***************************/
 	private int cableExtractorRate;
 	private int cableExtractionStackSize;
 	private int cableExtractionFluidRate;
-	private int cableExtractionFilterSize;
+	private int cableExtractionFilterSlots;
+
+	/*************************
+	 * Retrieval Configuration
+	 *************************/
 	private int cableRetrievalRate;
 	private int cableRetrievalStackSize;
-	private int cableRetrievalFilterSize;
-	private int cableFilterSize;
+	private int cableRetrievalFilterSlots;
+
+	/**********************
+	 * Filter Configuration
+	 **********************/
+	private int cableFilterSlots;
+
+	/***************************
+	 * Power Cable Configuration
+	 ***************************/
 	private int cablePowerCapacity;
 	private int cablePowerDelivery;
-	private int batteryCapacity;
-	private int itemCableMaxSpeed;
-	private int itemFilterSlots;
+
+	/**************************
+	 * Item Cable Configuration
+	 **************************/
 	private float itemCableAcceleration;
 	private float itemCableFriction;
-	private int drillBitUses;
+	private int itemCableMaxSpeed;
+
+	/********************
+	 * Heat Configuration
+	 ********************/
 	private float heatCableCapacity;
 	private float heatCableConductivity;
 	private float heatSinkCapacity;
@@ -32,14 +60,18 @@ public class StaticPowerTier {
 	private float heatSinkElectricHeatGeneration;
 	private int heatSinkElectricHeatPowerUsage;
 
+	/*********************
+	 * Power Configuration
+	 *********************/
+	private int batteryCapacity;
+	private int portableBatteryCapacity;
+
+	/***********************
+	 * Machine Configuration
+	 ***********************/
 	private int defaultMachinePowerCapacity;
 	private int defaultMachinePowerInput;
 	private int defaultMachinePowerOutput;
-
-	private int defaultTankCapacity;
-	private int capsuleCapacity;
-
-	private int upgradeOrdinal;
 
 	/********************
 	 * Processing Upgrade
@@ -74,6 +106,16 @@ public class StaticPowerTier {
 	 ********************/
 	private int maxCentrifugeSpeedUpgrade;
 	private float centrifugeUpgradedPowerIncrease;
+
+	/*******
+	 * Misc
+	 *******/
+	private int defaultTankCapacity;
+	private int capsuleCapacity;
+	private int drillBitUses;
+	private int itemFilterSlots;
+
+	private int upgradeOrdinal;
 
 	public int getDefaultTankCapacity() {
 		return defaultTankCapacity;
@@ -195,8 +237,8 @@ public class StaticPowerTier {
 		return cablePowerDelivery;
 	}
 
-	public int getCableFilterSize() {
-		return cableFilterSize;
+	public int getCableFilterSlots() {
+		return cableFilterSlots;
 	}
 
 	public ResourceLocation getTierId() {
@@ -235,8 +277,8 @@ public class StaticPowerTier {
 		return cableExtractionFluidRate;
 	}
 
-	public int getCableExtractionFilterSize() {
-		return cableExtractionFilterSize;
+	public int getCableExtractionFilterSlots() {
+		return cableExtractionFilterSlots;
 	}
 
 	public int getCableRetrievalRate() {
@@ -247,8 +289,8 @@ public class StaticPowerTier {
 		return cableRetrievalStackSize;
 	}
 
-	public int getCableRetrievalFilterSize() {
-		return cableRetrievalFilterSize;
+	public int getCableRetrievalFilterSlots() {
+		return cableRetrievalFilterSlots;
 	}
 
 }

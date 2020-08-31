@@ -6,7 +6,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.CraftingResultSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
-import theking530.staticpower.items.cableattachments.digistorecraftingterminal.ContainerDigistoreCraftingTerminal;
+import theking530.staticpower.cables.attachments.digistore.digistorecraftingterminal.ContainerDigistoreCraftingTerminal;
 
 public class DigistoreCraftingOutputSlot extends CraftingResultSlot {
 	private final ContainerDigistoreCraftingTerminal container;

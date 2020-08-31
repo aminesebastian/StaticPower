@@ -25,9 +25,9 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.cables.CableBoundsHoverResult.CableBoundsHoverType;
+import theking530.staticpower.cables.attachments.AbstractCableAttachment;
+import theking530.staticpower.cables.attachments.cover.CableCover;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
-import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
-import theking530.staticpower.items.cableattachments.CableCover;
 import theking530.staticpower.utilities.RaytracingUtilities;
 import theking530.staticpower.utilities.RaytracingUtilities.AdvancedRayTraceResult;
 

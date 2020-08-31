@@ -20,14 +20,14 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
+import theking530.staticpower.cables.attachments.extractor.ExtractorAttachment;
+import theking530.staticpower.cables.attachments.filter.FilterAttachment;
+import theking530.staticpower.cables.attachments.retirever.RetrieverAttachment;
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
-import theking530.staticpower.items.cableattachments.extractor.ExtractorAttachment;
-import theking530.staticpower.items.cableattachments.filter.FilterAttachment;
-import theking530.staticpower.items.cableattachments.retirever.RetrieverAttachment;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class ItemCableComponent extends AbstractCableProviderComponent implements IItemHandler {
@@ -49,6 +49,9 @@ public class ItemCableComponent extends AbstractCableProviderComponent implement
 		this.maxTrasnferSpeed = maxTransferSpeed;
 		this.frictionFactor = frictionFactor;
 		this.accelerationFactor = accelerationFactor;
+		addValidAttachmentClass(ExtractorAttachment.class);
+		addValidAttachmentClass(FilterAttachment.class);
+		addValidAttachmentClass(RetrieverAttachment.class);
 	}
 
 	@Override
@@ -151,11 +154,6 @@ public class ItemCableComponent extends AbstractCableProviderComponent implement
 			}
 		}
 		return CableConnectionState.NONE;
-	}
-
-	@Override
-	protected boolean canAttachAttachment(ItemStack attachment) {
-		return !attachment.isEmpty() && (attachment.getItem() instanceof ExtractorAttachment || attachment.getItem() instanceof FilterAttachment || attachment.getItem() instanceof RetrieverAttachment);
 	}
 
 	@Override

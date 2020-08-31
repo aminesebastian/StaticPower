@@ -1,6 +1,16 @@
 package theking530.staticpower.init;
 
 import theking530.staticpower.StaticPowerRegistry;
+import theking530.staticpower.cables.attachments.cover.CableCover;
+import theking530.staticpower.cables.attachments.digistore.digistorecraftingterminal.DigistoreCraftingTerminal;
+import theking530.staticpower.cables.attachments.digistore.digistoreterminal.DigistoreTerminal;
+import theking530.staticpower.cables.attachments.digistore.exporter.DigistoreExporterAttachment;
+import theking530.staticpower.cables.attachments.digistore.importer.DigistoreImporterAttachment;
+import theking530.staticpower.cables.attachments.digistore.iobus.DigistoreIOBusAttachment;
+import theking530.staticpower.cables.attachments.digistore.regulator.DigistoreRegulatorAttachment;
+import theking530.staticpower.cables.attachments.extractor.ExtractorAttachment;
+import theking530.staticpower.cables.attachments.filter.FilterAttachment;
+import theking530.staticpower.cables.attachments.retirever.RetrieverAttachment;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.items.DigistoreCard;
@@ -9,14 +19,6 @@ import theking530.staticpower.items.JuiceBottleItem;
 import theking530.staticpower.items.MilkBottleItem;
 import theking530.staticpower.items.PortableBattery;
 import theking530.staticpower.items.StaticPowerItem;
-import theking530.staticpower.items.cableattachments.CableCover;
-import theking530.staticpower.items.cableattachments.digistorecraftingterminal.DigistoreCraftingTerminal;
-import theking530.staticpower.items.cableattachments.digistoreterminal.DigistoreTerminal;
-import theking530.staticpower.items.cableattachments.exporter.DigistoreExporterAttachment;
-import theking530.staticpower.items.cableattachments.extractor.ExtractorAttachment;
-import theking530.staticpower.items.cableattachments.filter.FilterAttachment;
-import theking530.staticpower.items.cableattachments.importer.DigistoreImporterAttachment;
-import theking530.staticpower.items.cableattachments.retirever.RetrieverAttachment;
 import theking530.staticpower.items.crops.DepletedCrop;
 import theking530.staticpower.items.crops.StaticPlantCrop;
 import theking530.staticpower.items.crops.StaticPlantSeeds;
@@ -265,6 +267,8 @@ public class ModItems {
 
 	public static DigistoreExporterAttachment ExporterAttachment;
 	public static DigistoreImporterAttachment ImporterAttachment;
+	public static DigistoreIOBusAttachment IOBusAttachment;
+	public static DigistoreRegulatorAttachment RegulatorAttachment;
 	public static DigistoreTerminal DigistoreTerminalAttachment;
 	public static DigistoreCraftingTerminal DigistoreCraftingTerminalAttachment;
 
@@ -556,10 +560,10 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(
 				LumumRetrieverAttachment = new RetrieverAttachment("cable_attachment_lumum_retriever", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.CABLE_LUMUM_RETRIEVER_ATTACHMENT));
 
-		StaticPowerRegistry
-				.preRegisterItem(ExporterAttachment = new DigistoreExporterAttachment("cable_attachment_digistore_exporter", StaticPowerAdditionalModels.CABLE_DIGISTORE_EXPORTER_ATTACHMENT));
-		StaticPowerRegistry
-				.preRegisterItem(ImporterAttachment = new DigistoreImporterAttachment("cable_attachment_digistore_importer", StaticPowerAdditionalModels.CABLE_DIGISTORE_IMPORTER_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(ExporterAttachment = new DigistoreExporterAttachment("cable_attachment_digistore_exporter"));
+		StaticPowerRegistry.preRegisterItem(ImporterAttachment = new DigistoreImporterAttachment("cable_attachment_digistore_importer"));
+		StaticPowerRegistry.preRegisterItem(IOBusAttachment = new DigistoreIOBusAttachment("cable_attachment_digistore_io_bus"));
+		StaticPowerRegistry.preRegisterItem(RegulatorAttachment = new DigistoreRegulatorAttachment("cable_attachment_digistore_regulator"));
 		StaticPowerRegistry.preRegisterItem(DigistoreTerminalAttachment = new DigistoreTerminal("cable_attachment_digistore_terminal"));
 		StaticPowerRegistry.preRegisterItem(DigistoreCraftingTerminalAttachment = new DigistoreCraftingTerminal("cable_attachment_digistore_crafting_terminal"));
 

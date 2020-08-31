@@ -3,18 +3,20 @@ package theking530.staticpower.cables.digistore;
 import javax.annotation.Nullable;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
+import theking530.staticpower.cables.attachments.digistore.digistorecraftingterminal.DigistoreCraftingTerminal;
+import theking530.staticpower.cables.attachments.digistore.digistoreterminal.DigistoreTerminal;
+import theking530.staticpower.cables.attachments.digistore.exporter.DigistoreExporterAttachment;
+import theking530.staticpower.cables.attachments.digistore.importer.DigistoreImporterAttachment;
+import theking530.staticpower.cables.attachments.digistore.iobus.DigistoreIOBusAttachment;
+import theking530.staticpower.cables.attachments.digistore.regulator.DigistoreRegulatorAttachment;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
-import theking530.staticpower.items.cableattachments.digistoreterminal.AbstractDigistoreTerminalAttachment;
-import theking530.staticpower.items.cableattachments.exporter.DigistoreExporterAttachment;
-import theking530.staticpower.items.cableattachments.importer.DigistoreImporterAttachment;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 
@@ -26,6 +28,12 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	public DigistoreCableProviderComponent(String name) {
 		super(name, CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE);
 		shouldControlOnBlockState = false;
+		addValidAttachmentClass(DigistoreTerminal.class);
+		addValidAttachmentClass(DigistoreCraftingTerminal.class);
+		addValidAttachmentClass(DigistoreExporterAttachment.class);
+		addValidAttachmentClass(DigistoreImporterAttachment.class);
+		addValidAttachmentClass(DigistoreIOBusAttachment.class);
+		addValidAttachmentClass(DigistoreRegulatorAttachment.class);
 	}
 
 	public void preProcessUpdate() {
@@ -57,20 +65,6 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	public DigistoreCableProviderComponent setShouldControlOnState() {
 		shouldControlOnBlockState = true;
 		return this;
-	}
-
-	@Override
-	protected boolean canAttachAttachment(ItemStack attachment) {
-		if (attachment.getItem() instanceof AbstractDigistoreTerminalAttachment) {
-			return true;
-		}
-		if (attachment.getItem() instanceof DigistoreExporterAttachment) {
-			return true;
-		}
-		if (attachment.getItem() instanceof DigistoreImporterAttachment) {
-			return true;
-		}
-		return false;
 	}
 
 	@Override

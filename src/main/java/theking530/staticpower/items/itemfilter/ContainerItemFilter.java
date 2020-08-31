@@ -40,7 +40,7 @@ public class ContainerItemFilter extends StaticPowerItemContainer<ItemFilter> {
 
 		int slotOffset = 0;
 		for (int i = 0; i < filterInventory.getSlots(); i++) {
-			this.addSlot(new PhantomSlot(filterInventory, i, 8 + (i + slotOffset) * 18, 19).renderFluidContainerAsFluid());
+			this.addSlot(new PhantomSlot(filterInventory, i, 8 + (i + slotOffset) * 18, 19, true).renderFluidContainerAsFluid());
 		}
 
 		this.addPlayerInventory(getPlayerInventory(), 8, 69);

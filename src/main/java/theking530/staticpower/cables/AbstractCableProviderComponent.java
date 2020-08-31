@@ -15,12 +15,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
+import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
-import theking530.staticpower.items.cableattachments.AbstractCableAttachment;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
 import theking530.staticpower.utilities.WorldUtilities;
@@ -46,6 +46,8 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	protected final ItemStack[] Attachments;
 	/** Container for all the covers on this cable. */
 	protected final ItemStack[] Covers;
+	/** List of valid attachment classes. */
+	private final HashSet<Class<? extends AbstractCableAttachment>> ValidAttachments;
 
 	public AbstractCableProviderComponent(String name, ResourceLocation... supportedModules) {
 		super(name);
@@ -55,6 +57,9 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		for (ResourceLocation module : supportedModules) {
 			SupportedNetworkModules.add(module);
 		}
+
+		// Initialize the valid attachments set.
+		ValidAttachments = new HashSet<Class<? extends AbstractCableAttachment>>();
 
 		// Initialize the disabled sides, connection states, and attachments arrays.
 		DisabledSides = new boolean[] { false, false, false, false, false, false };
@@ -205,6 +210,15 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			CableNetworkManager manager = CableNetworkManager.get(getTileEntity().getWorld());
 			manager.removeCable(getTileEntity().getPos());
 		}
+	}
+
+	/**
+	 * Adds a valid attachment class that can be attached to this cable.
+	 * 
+	 * @param attachmentClass
+	 */
+	protected void addValidAttachmentClass(Class<? extends AbstractCableAttachment> attachmentClass) {
+		ValidAttachments.add(attachmentClass);
 	}
 
 	/**
@@ -496,7 +510,15 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		return null;
 	}
 
-	protected abstract boolean canAttachAttachment(ItemStack attachment);
+	protected boolean canAttachAttachment(ItemStack attachment) {
+		if (attachment.isEmpty()) {
+			return false;
+		}
+		if (ValidAttachments.contains(attachment.getItem().getClass())) {
+			return true;
+		}
+		return false;
+	}
 
 	protected abstract CableConnectionState cacheConnectionState(Direction side, @Nullable TileEntity te, BlockPos blockPosition);
 }

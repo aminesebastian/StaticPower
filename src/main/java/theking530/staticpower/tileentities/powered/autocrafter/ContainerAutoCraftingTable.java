@@ -32,7 +32,7 @@ public class ContainerAutoCraftingTable extends StaticPowerTileEntityContainer<T
 		// Add the pattern slots.
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 3; x++) {
-				addSlot(new PhantomSlot(getTileEntity().patternInventory, x + (y * 3), 44 + x * 18, 20 + y * 18));
+				addSlot(new PhantomSlot(getTileEntity().patternInventory, x + (y * 3), 44 + x * 18, 20 + y * 18, true));
 				lastCraftingPattern.add(getTileEntity().patternInventory.getStackInSlot(x + (y * 3)));
 			}
 		}

@@ -14,8 +14,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.ForgeRegistries;
+import theking530.staticpower.cables.attachments.cover.CableCover;
 import theking530.staticpower.init.ModItems;
-import theking530.staticpower.items.cableattachments.CableCover;
 
 public class StaticPowerItemGroup extends ItemGroup {
 	private List<ItemStack> subTypes = null;

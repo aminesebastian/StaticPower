@@ -24,9 +24,9 @@ import net.minecraft.util.Direction;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
+import theking530.staticpower.cables.attachments.cover.CableCover;
 import theking530.staticpower.client.rendering.CoverBuilder;
 import theking530.staticpower.client.rendering.blocks.AbstractBakedModel;
-import theking530.staticpower.items.cableattachments.CableCover;
 
 @SuppressWarnings("deprecation")
 public class CoverItemModelProvider implements IBakedModel {

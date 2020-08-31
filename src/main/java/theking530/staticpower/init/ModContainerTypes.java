@@ -2,20 +2,24 @@ package theking530.staticpower.init;
 
 import net.minecraft.inventory.container.ContainerType;
 import theking530.staticpower.StaticPowerRegistry;
-import theking530.staticpower.items.cableattachments.digistorecraftingterminal.ContainerDigistoreCraftingTerminal;
-import theking530.staticpower.items.cableattachments.digistorecraftingterminal.GuiDigistoreCraftingTerminal;
-import theking530.staticpower.items.cableattachments.digistoreterminal.ContainerDigistoreTerminal;
-import theking530.staticpower.items.cableattachments.digistoreterminal.GuiDigistoreTerminal;
-import theking530.staticpower.items.cableattachments.exporter.ContainerDigistoreExporter;
-import theking530.staticpower.items.cableattachments.exporter.GuiDigistoreExporter;
-import theking530.staticpower.items.cableattachments.extractor.ContainerExtractor;
-import theking530.staticpower.items.cableattachments.extractor.GuiExtractor;
-import theking530.staticpower.items.cableattachments.filter.ContainerFilter;
-import theking530.staticpower.items.cableattachments.filter.GuiFilter;
-import theking530.staticpower.items.cableattachments.importer.ContainerDigistoreImporter;
-import theking530.staticpower.items.cableattachments.importer.GuiDigistoreImporter;
-import theking530.staticpower.items.cableattachments.retirever.ContainerRetriever;
-import theking530.staticpower.items.cableattachments.retirever.GuiRetriever;
+import theking530.staticpower.cables.attachments.digistore.digistorecraftingterminal.ContainerDigistoreCraftingTerminal;
+import theking530.staticpower.cables.attachments.digistore.digistorecraftingterminal.GuiDigistoreCraftingTerminal;
+import theking530.staticpower.cables.attachments.digistore.digistoreterminal.ContainerDigistoreTerminal;
+import theking530.staticpower.cables.attachments.digistore.digistoreterminal.GuiDigistoreTerminal;
+import theking530.staticpower.cables.attachments.digistore.exporter.ContainerDigistoreExporter;
+import theking530.staticpower.cables.attachments.digistore.exporter.GuiDigistoreExporter;
+import theking530.staticpower.cables.attachments.digistore.importer.ContainerDigistoreImporter;
+import theking530.staticpower.cables.attachments.digistore.importer.GuiDigistoreImporter;
+import theking530.staticpower.cables.attachments.digistore.iobus.ContainerDigistoreIOBus;
+import theking530.staticpower.cables.attachments.digistore.iobus.GuiDigistoreIOBus;
+import theking530.staticpower.cables.attachments.digistore.regulator.ContainerDigistoreRegulator;
+import theking530.staticpower.cables.attachments.digistore.regulator.GuiDigistoreRegulator;
+import theking530.staticpower.cables.attachments.extractor.ContainerExtractor;
+import theking530.staticpower.cables.attachments.extractor.GuiExtractor;
+import theking530.staticpower.cables.attachments.filter.ContainerFilter;
+import theking530.staticpower.cables.attachments.filter.GuiFilter;
+import theking530.staticpower.cables.attachments.retirever.ContainerRetriever;
+import theking530.staticpower.cables.attachments.retirever.GuiRetriever;
 import theking530.staticpower.items.itemfilter.ContainerItemFilter;
 import theking530.staticpower.items.itemfilter.GuiItemFilter;
 import theking530.staticpower.tileentities.digistorenetwork.digistore.ContainerDigistore;
@@ -124,6 +128,8 @@ public class ModContainerTypes {
 	public static ContainerType<ContainerRetriever> RETRIEVER_CONTAINER;
 	public static ContainerType<ContainerDigistoreExporter> EXPORTER_CONTAINER;
 	public static ContainerType<ContainerDigistoreImporter> IMPORTER_CONTAINER;
+	public static ContainerType<ContainerDigistoreIOBus> IO_CONTAINER;
+	public static ContainerType<ContainerDigistoreRegulator> REGULATOR_CONTAINER;
 
 	public static void init() {
 		VACUUM_CHEST_CONTAINER = StaticPowerRegistry.preRegisterContainer("chest_vacuum", ContainerVacuumChest::new, GuiVacuumChest::new);
@@ -162,11 +168,13 @@ public class ModContainerTypes {
 		DIGISTORE_CRAFTING_TERMINAL = StaticPowerRegistry.preRegisterContainer("digistore_crafting_terminal", ContainerDigistoreCraftingTerminal::new, GuiDigistoreCraftingTerminal::new);
 		DIGISTORE_SERVER_RACK = StaticPowerRegistry.preRegisterContainer("digistore_server_rack", ContainerDigistoreServerRack::new, GuiDigistoreServerRack::new);
 		DIGISTORE_MANAGER_CONTAINER = StaticPowerRegistry.preRegisterContainer("digistore_manager", ContainerDigistoreManager::new, GuiDigistoreManager::new);
-		
+
 		EXTRACTOR_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_extractor", ContainerExtractor::new, GuiExtractor::new);
 		FILTER_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_filter", ContainerFilter::new, GuiFilter::new);
 		RETRIEVER_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_retriever", ContainerRetriever::new, GuiRetriever::new);
 		EXPORTER_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_digistore_exporter", ContainerDigistoreExporter::new, GuiDigistoreExporter::new);
 		IMPORTER_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_digistore_importer", ContainerDigistoreImporter::new, GuiDigistoreImporter::new);
+		IO_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_digistore_io_bus", ContainerDigistoreIOBus::new, GuiDigistoreIOBus::new);
+		REGULATOR_CONTAINER = StaticPowerRegistry.preRegisterContainer("cable_attachment_digistore_regulator", ContainerDigistoreRegulator::new, GuiDigistoreRegulator::new);
 	}
 }

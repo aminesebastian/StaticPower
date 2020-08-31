@@ -19,8 +19,8 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.cables.attachments.cover.CableCover;
 import theking530.staticpower.init.ModTags;
-import theking530.staticpower.items.cableattachments.CableCover;
 
 /**
  * Huge thanks to Applied Energistics 2 and the JEI Wiki!

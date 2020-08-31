@@ -53,6 +53,17 @@ public class InventoryUtilities {
 		return false;
 	}
 
+	public static int getCountOfItem(ItemStack stack, IItemHandler inv) {
+		int count = 0;
+		for (int i = 0; i < inv.getSlots(); i++) {
+			ItemStack stackInSlot = inv.getStackInSlot(i);
+			if (ItemUtilities.areItemStacksStackable(stack, stackInSlot)) {
+				count += stackInSlot.getCount();
+			}
+		}
+		return count;
+	}
+
 	/**
 	 * Gets the index of the first slot containing an item. Return -1 if no slots
 	 * are found containing that item.
@@ -192,6 +203,26 @@ public class InventoryUtilities {
 
 	public static ItemStack insertItemIntoInventory(IItemHandler inv, ItemStack stack, boolean simulate) {
 		return insertItemIntoInventory(inv, stack, 0, inv.getSlots() - 1, simulate);
+	}
+
+	public static ItemStack extractItemFromInventory(IItemHandler inv, ItemStack stack, int amount, boolean simulate) {
+		ItemStack finalExtract = ItemStack.EMPTY;
+		for (int i = 0; i < inv.getSlots(); i++) {
+			if (ItemUtilities.areItemStacksStackable(inv.getStackInSlot(i), stack)) {
+				int amountToExtract = Math.min(amount - finalExtract.getCount(), inv.getStackInSlot(i).getCount());
+				if (finalExtract.isEmpty()) {
+					finalExtract = inv.extractItem(i, amountToExtract, simulate).copy();
+				} else {
+					finalExtract.grow(inv.extractItem(i, amountToExtract, simulate).getCount());
+				}
+
+				if (finalExtract.getCount() == amount) {
+					break;
+				}
+			}
+		}
+
+		return finalExtract;
 	}
 
 	public static ItemStack insertItemIntoInventory(IItemHandler inv, ItemStack stack, int start, int stop, boolean simulate) {

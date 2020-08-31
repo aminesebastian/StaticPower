@@ -6,7 +6,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -18,11 +17,11 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
+import theking530.staticpower.cables.attachments.extractor.ExtractorAttachment;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
-import theking530.staticpower.items.cableattachments.extractor.ExtractorAttachment;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class FluidCableComponent extends AbstractCableProviderComponent implements IFluidHandler {
@@ -40,6 +39,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 		lastUpdateFluidStack = FluidStack.EMPTY;
 		lastUpdateFilledPercentage = 0.0f;
 		visualFilledPercentage = 0.0f;
+		addValidAttachmentClass(ExtractorAttachment.class);
 	}
 
 	@Override
@@ -225,11 +225,6 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 			}
 		}
 		return CableConnectionState.NONE;
-	}
-
-	@Override
-	protected boolean canAttachAttachment(ItemStack attachment) {
-		return !attachment.isEmpty() && attachment.getItem() instanceof ExtractorAttachment;
 	}
 
 	public CompoundNBT serializeSaveNbt(CompoundNBT nbt) {
