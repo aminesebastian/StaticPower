@@ -5,6 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import theking530.api.digistore.CapabilityDigistoreInventory;
 import theking530.api.heat.CapabilityHeatable;
 import theking530.api.power.CapabilityStaticVolt;
@@ -17,6 +18,7 @@ import theking530.staticpower.cables.network.CableNetworkModuleRegistry;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.power.PowerNetworkModuleFactory;
 import theking530.staticpower.init.ModFluids;
+import theking530.staticpower.integration.TOP.PluginTOP;
 
 public class StaticPowerCommonEventHandler {
 
@@ -39,6 +41,10 @@ public class StaticPowerCommonEventHandler {
 		CapabilityHeatable.register();
 
 		StaticPower.LOGGER.info("Static Power Common Setup Completed!");
+	}
+
+	public static void enqueueIMC(InterModEnqueueEvent event) {
+		PluginTOP.register();
 	}
 
 	public static void onMilkBucketUsed(RightClickBlock event) {

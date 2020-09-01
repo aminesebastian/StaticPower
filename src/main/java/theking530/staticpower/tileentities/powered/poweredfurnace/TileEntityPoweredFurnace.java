@@ -9,11 +9,12 @@ import net.minecraft.item.crafting.IRecipeType;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.TileEntityMachine;
-import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
+import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
+import theking530.staticpower.tileentities.components.items.CompoundInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.ItemStackHandlerFilter;
@@ -58,6 +59,7 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
+		registerComponent(new CompoundInventoryComponent("CompoundInventory", inputInventory, outputInventory));
 
 		// Setup the processing component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<FurnaceRecipe>("ProcessingComponent", IRecipeType.SMELTING, 1, this::getMatchParameters, this::moveInputs,

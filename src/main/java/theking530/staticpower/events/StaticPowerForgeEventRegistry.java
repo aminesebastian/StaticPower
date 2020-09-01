@@ -4,6 +4,7 @@ import net.minecraft.item.Items;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
@@ -27,6 +28,11 @@ public class StaticPowerForgeEventRegistry {
 	@SubscribeEvent
 	public static void render(RenderWorldLastEvent event) {
 		StaticPowerClientEventHandler.render(event);
+	}
+
+	@SubscribeEvent
+	public static void onLootLoad(LootTableLoadEvent event) {
+		StaticPowerDataRegistry.onLootTableLoaded(event);
 	}
 
 	@SubscribeEvent

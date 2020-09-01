@@ -37,10 +37,10 @@ public class ContainerDigistoreIOBus extends AbstractCableAttachmentContainer<Di
 			return;
 		}
 
-		addSlotsInGrid(filterInventory, 0, filterInventory.getSlots() / 2, 88, 20, SDMath.getSmallestFactor(filterInventory.getSlots(), 6), 16,
+		addSlotsInGrid(filterInventory, 0, filterInventory.getSlots() / 2, 98, 20, SDMath.getSmallestFactor(filterInventory.getSlots(), 6), 16,
 				(index, x, y) -> new PhantomSlot(filterInventory, index, x, y, true).renderFluidContainerAsFluid());
 
-		addSlotsInGrid(filterInventory, (filterInventory.getSlots() / 2), filterInventory.getSlots() / 2, 88, 44, SDMath.getSmallestFactor(filterInventory.getSlots(), 6), 16,
+		addSlotsInGrid(filterInventory, (filterInventory.getSlots() / 2), filterInventory.getSlots() / 2, 98, 44, SDMath.getSmallestFactor(filterInventory.getSlots(), 6), 16,
 				(index, x, y) -> new PhantomSlot(filterInventory, index, x, y, true).renderFluidContainerAsFluid());
 
 		addPlayerInventory(getPlayerInventory(), 8, 69);

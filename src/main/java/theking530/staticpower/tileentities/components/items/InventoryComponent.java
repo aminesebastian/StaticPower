@@ -28,7 +28,7 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.utilities.ItemUtilities;
 
-public class InventoryComponent extends AbstractTileEntityComponent implements Iterable<ItemStack>, IItemHandler, IItemHandlerModifiable {
+public class InventoryComponent extends AbstractTileEntityComponent implements Iterable<ItemStack>, IItemHandlerModifiable {
 	public enum InventoryChangeType {
 		ADDED, REMOVED, MODIFIED
 	}

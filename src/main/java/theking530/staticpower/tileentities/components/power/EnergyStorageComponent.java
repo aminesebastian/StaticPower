@@ -271,7 +271,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 			if (cap == CapabilityStaticVolt.STATIC_VOLT_CAPABILITY) {
 				capabilityAccecssor.currentSide = side;
 				return LazyOptional.of(() -> capabilityAccecssor).cast();
-			} else if (cap == CapabilityEnergy.ENERGY) {
+			} else if (cap == CapabilityEnergy.ENERGY && side != null) {
 				feCapabilityAccessor.currentSide = side;
 				return LazyOptional.of(() -> feCapabilityAccessor).cast();
 			}

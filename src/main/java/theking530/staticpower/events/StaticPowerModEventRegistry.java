@@ -15,6 +15,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.data.StaticPowerDataRegistry;
@@ -30,6 +31,12 @@ public class StaticPowerModEventRegistry {
 	public static void commonSetupEvent(FMLCommonSetupEvent event) {
 		StaticPowerCommonEventHandler.onCommonSetupEvent(event);
 		StaticPower.LOGGER.info("Static Power Common Setup Completed!");
+	}
+
+	@SubscribeEvent
+	public static void enqueueIMC(InterModEnqueueEvent event) {
+		StaticPowerCommonEventHandler.enqueueIMC(event);
+		StaticPower.LOGGER.info("Static Power IMC Messages Enqueued!");
 	}
 
 	@SubscribeEvent

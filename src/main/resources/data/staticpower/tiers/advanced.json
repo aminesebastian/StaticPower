@@ -24,7 +24,7 @@
 	"itemFilterSlots": 5,
 	"itemCableAcceleration": 1.25,
 	"itemCableFriction": 2.25,
-	"drillBitUses": 4000,
+	"drillBitUses": 6500,
 	"processingSpeedUpgrade": 3.0,
 	"processingSpeedPowerCost": 4.0,
 	"tankCapacityUpgrade": 3.0,
