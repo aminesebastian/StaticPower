@@ -15,6 +15,7 @@ import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.items.DigistoreCard;
 import theking530.staticpower.items.DigistoreMonoCard;
+import theking530.staticpower.items.DigistorePatternCard;
 import theking530.staticpower.items.JuiceBottleItem;
 import theking530.staticpower.items.MilkBottleItem;
 import theking530.staticpower.items.PortableBattery;
@@ -271,6 +272,8 @@ public class ModItems {
 	public static DigistoreRegulatorAttachment RegulatorAttachment;
 	public static DigistoreTerminal DigistoreTerminalAttachment;
 	public static DigistoreCraftingTerminal DigistoreCraftingTerminalAttachment;
+
+	public static DigistorePatternCard PatternCard;
 
 	public static DigistoreCard BasicDigistoreCard;
 	public static DigistoreCard AdvancedDigistoreCard;
@@ -566,6 +569,9 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(RegulatorAttachment = new DigistoreRegulatorAttachment("cable_attachment_digistore_regulator"));
 		StaticPowerRegistry.preRegisterItem(DigistoreTerminalAttachment = new DigistoreTerminal("cable_attachment_digistore_terminal"));
 		StaticPowerRegistry.preRegisterItem(DigistoreCraftingTerminalAttachment = new DigistoreCraftingTerminal("cable_attachment_digistore_crafting_terminal"));
+
+		// Digistore Misc.
+		StaticPowerRegistry.preRegisterItem(PatternCard = new DigistorePatternCard("digistore_pattern_card"));
 
 		// Digistore Cards
 		StaticPowerRegistry.preRegisterItem(BasicDigistoreCard = new DigistoreCard("digistore_card_basic", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.BASIC_DIGISTORE_CARD));

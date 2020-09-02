@@ -32,7 +32,7 @@ public class DigistoreIOBusAttachment extends AbstractCableAttachment {
 	public static final String REGULATOR_TIMER_TAG = "regulator_timer";
 
 	public DigistoreIOBusAttachment(String name) {
-		super(name);
+		super(name, 3);
 	}
 
 	/**

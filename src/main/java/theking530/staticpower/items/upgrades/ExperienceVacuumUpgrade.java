@@ -12,12 +12,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.api.IUpgradeItem;
-import theking530.staticpower.data.StaticPowerTiers;
 
 public class ExperienceVacuumUpgrade extends BaseUpgrade implements IUpgradeItem {
 
 	public ExperienceVacuumUpgrade(String name) {
-		super(name, StaticPowerTiers.STATIC, new Properties().maxStackSize(1));
+		super(name, new Properties().maxStackSize(1));
 	}
 
 	@Override

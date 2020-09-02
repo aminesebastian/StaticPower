@@ -28,7 +28,7 @@ public class DigistoreRegulatorAttachment extends AbstractCableAttachment {
 	public static final String REGULATOR_TIMER_TAG = "regulator_timer";
 
 	public DigistoreRegulatorAttachment(String name) {
-		super(name);
+		super(name, 3);
 	}
 
 	/**

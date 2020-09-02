@@ -5,6 +5,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.gui.widgets.DrawableWidget;
+import theking530.staticcore.gui.widgets.GuiIslandWidget;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.GuiCableAttachmentRedstoneTab;
 import theking530.staticpower.cables.attachments.AbstractCableAttachmentGui;
@@ -24,10 +25,8 @@ public class GuiDigistoreIOBus extends AbstractCableAttachmentGui<ContainerDigis
 
 		registerWidget(new DrawableWidget(6, 20, 16, 16, importDrawable).setTooltip(new StringTextComponent("Imports")));
 		registerWidget(new DrawableWidget(6, 45, 16, 16, exportDrawable).setTooltip(new StringTextComponent("Exports")));
-	}
-
-	@Override
-	protected void drawBehindItems(float partialTicks, int mouseX, int mouseY) {
-		super.drawBehindItems(partialTicks, mouseX, mouseY);
+		
+		// Add island for the upgrades.
+		registerWidget(new GuiIslandWidget(-25, 8, 28, 64));
 	}
 }

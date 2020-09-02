@@ -7,6 +7,7 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
@@ -20,15 +21,22 @@ import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableBoundsHoverResult;
 import theking530.staticpower.cables.CableBoundsHoverResult.CableBoundsHoverType;
+import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
-import theking530.staticpower.cables.CableUtilities;
 
 public abstract class AbstractCableAttachment extends StaticPowerItem {
 	private static final Vector3D DEFAULT_BOUNDS = new Vector3D(3.0f, 3.0f, 3.0f);
+	public static final String UPGRADE_INVENTORY_TAG = "cable_attachment_upgrade_inventory";
+	public final int upgradeSlotCount;
 
 	public AbstractCableAttachment(String name) {
+		this(name, 0);
+	}
+
+	public AbstractCableAttachment(String name, int upgradeSlotCount) {
 		super(name);
+		this.upgradeSlotCount = upgradeSlotCount;
 	}
 
 	@Override
@@ -58,6 +66,15 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 
 		// Allocate the redstone mode if neeed.
 		attachment.getTag().putInt("redstone_mode", RedstoneMode.High.ordinal());
+
+		// Allocate the upgrade inventory.
+		ListNBT upgradeItems = new ListNBT();
+		for (int i = 0; i < upgradeSlotCount; i++) {
+			CompoundNBT itemNBT = new CompoundNBT();
+			ItemStack.EMPTY.write(itemNBT);
+			upgradeItems.add(itemNBT);
+		}
+		attachment.getTag().put(UPGRADE_INVENTORY_TAG, upgradeItems);
 
 		// Allocate the covers.
 		for (int i = 0; i < 6; i++) {
@@ -99,6 +116,10 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 	}
 
 	public abstract ResourceLocation getModel(ItemStack attachment, AbstractCableProviderComponent cableComponent);
+
+	protected AttachmentUpgradeInventory getUpgradeInventory(ItemStack attachment) {
+		return new AttachmentUpgradeInventory(attachment);
+	}
 
 	protected abstract class AbstractCableAttachmentContainerProvider implements INamedContainerProvider {
 		public final ItemStack targetItemStack;

@@ -2,6 +2,7 @@ package theking530.staticpower.init;
 
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.items.upgrades.AcceleratorUpgrade;
 import theking530.staticpower.items.upgrades.BaseCentrifugeUpgrade;
 import theking530.staticpower.items.upgrades.BaseOutputMultiplierUpgrade;
 import theking530.staticpower.items.upgrades.BasePowerUpgrade;
@@ -9,8 +10,10 @@ import theking530.staticpower.items.upgrades.BaseQuarryingUpgrade;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.items.upgrades.BaseSpeedUpgrade;
 import theking530.staticpower.items.upgrades.BaseTankUpgrade;
+import theking530.staticpower.items.upgrades.CraftingUpgrade;
 import theking530.staticpower.items.upgrades.DigistoreVoidUpgrade;
 import theking530.staticpower.items.upgrades.ExperienceVacuumUpgrade;
+import theking530.staticpower.items.upgrades.StackUpgrade;
 import theking530.staticpower.items.upgrades.TeleportUpgrade;
 
 public class ModUpgrades {
@@ -18,6 +21,9 @@ public class ModUpgrades {
 	public static TeleportUpgrade TeleportUpgrade;
 	public static ExperienceVacuumUpgrade ExperienceVacuumUpgrade;
 	public static DigistoreVoidUpgrade DigistoreVoidUpgrade;
+	public static StackUpgrade StackUpgrade;
+	public static AcceleratorUpgrade AcceleratorUpgrade;
+	public static CraftingUpgrade CraftingUpgrade;
 
 	public static BasePowerUpgrade BasicPowerUpgrade;
 	public static BasePowerUpgrade StaticPowerUpgrade;
@@ -57,6 +63,9 @@ public class ModUpgrades {
 		StaticPowerRegistry.preRegisterItem(TeleportUpgrade = new TeleportUpgrade("upgrade_teleport"));
 		StaticPowerRegistry.preRegisterItem(ExperienceVacuumUpgrade = new ExperienceVacuumUpgrade("upgrade_experience_vacuum"));
 		StaticPowerRegistry.preRegisterItem(DigistoreVoidUpgrade = new DigistoreVoidUpgrade("upgrade_digistore_void"));
+		StaticPowerRegistry.preRegisterItem(StackUpgrade = new StackUpgrade("upgrade_stack"));
+		StaticPowerRegistry.preRegisterItem(AcceleratorUpgrade = new AcceleratorUpgrade("upgrade_accelerator"));
+		StaticPowerRegistry.preRegisterItem(CraftingUpgrade = new CraftingUpgrade("upgrade_crafting"));
 
 		StaticPowerRegistry.preRegisterItem(BasicPowerUpgrade = new BasePowerUpgrade("upgrade_power_basic", StaticPowerTiers.BASIC));
 		StaticPowerRegistry.preRegisterItem(StaticPowerUpgrade = new BasePowerUpgrade("upgrade_power_static", StaticPowerTiers.STATIC));

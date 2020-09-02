@@ -85,7 +85,7 @@ public class ServerRackModel extends AbstractBakedModel {
 			IBakedModel model = Minecraft.getInstance().getModelManager().getModel(((DigistoreCard) cards[i].getItem()).model);
 
 			// Calculate the offset for the current card's model.
-			float xOffset = (UNIT * 3.25f) - ((i / 4) * UNIT * 6.5f);
+			float xOffset = ((i / 4) * UNIT * 6.5f) - (UNIT * 3.25f);
 			float yOffset = 2.125f * UNIT + (UNIT * 3.25f * (i % 4));
 			yOffset = 1.0f - yOffset - (2.0f * UNIT);
 			float zOffset = -1.0f * UNIT;

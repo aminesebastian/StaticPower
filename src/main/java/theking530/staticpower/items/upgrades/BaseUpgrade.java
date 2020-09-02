@@ -24,7 +24,15 @@ public class BaseUpgrade extends StaticPowerItem implements IUpgradeItem {
 	private final ResourceLocation tier;
 	private final Set<UpgradeType> upgradeTypes;
 
-	BaseUpgrade(String name, ResourceLocation tier, Properties properties, UpgradeType... upgradeTypes) {
+	public BaseUpgrade(String name, Properties properties, UpgradeType... upgradeTypes) {
+		this(name, null, properties, upgradeTypes);
+	}
+
+	public BaseUpgrade(String name, ResourceLocation tier, UpgradeType... upgradeTypes) {
+		this(name, tier, new Properties().maxStackSize(16), upgradeTypes);
+	}
+
+	public BaseUpgrade(String name, ResourceLocation tier, Properties properties, UpgradeType... upgradeTypes) {
 		super(name, properties);
 		this.tier = tier;
 		this.upgradeTypes = new HashSet<UpgradeType>();
@@ -40,13 +48,13 @@ public class BaseUpgrade extends StaticPowerItem implements IUpgradeItem {
 		}
 	}
 
-	BaseUpgrade(String name, ResourceLocation tier, UpgradeType... upgradeTypes) {
-		this(name, tier, new Properties().maxStackSize(16), upgradeTypes);
-	}
-
 	@Override
 	public StaticPowerTier getTier() {
-		return StaticPowerDataRegistry.getTier(tier);
+		if (isTiered()) {
+			return StaticPowerDataRegistry.getTier(tier);
+		} else {
+			throw new RuntimeException("Attempted to get the tier of a non-tiered ugprade!");
+		}
 	}
 
 	@Override
@@ -58,5 +66,10 @@ public class BaseUpgrade extends StaticPowerItem implements IUpgradeItem {
 	@OnlyIn(Dist.CLIENT)
 	protected void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
 		tooltip.add(new StringTextComponent(TextFormatting.WHITE + "Stacks Up To: " + stack.getMaxStackSize()));
+	}
+
+	@Override
+	public boolean isTiered() {
+		return tier != null;
 	}
 }

@@ -30,7 +30,7 @@ public class DigistoreImporterAttachment extends AbstractCableAttachment {
 	public static final String IMPORT_TIMER_TAG = "import_timer";
 
 	public DigistoreImporterAttachment(String name) {
-		super(name);
+		super(name, 3);
 	}
 
 	/**

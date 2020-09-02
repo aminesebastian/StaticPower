@@ -10,11 +10,14 @@ import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachmentContainer;
+import theking530.staticpower.cables.attachments.AttachmentUpgradeInventory;
 import theking530.staticpower.container.slots.PhantomSlot;
+import theking530.staticpower.container.slots.UpgradeItemSlot;
 import theking530.staticpower.init.ModContainerTypes;
 
 public class ContainerDigistoreRegulator extends AbstractCableAttachmentContainer<DigistoreRegulatorAttachment> {
 	private ItemStackHandler filterInventory;
+	private AttachmentUpgradeInventory upgradeInventory;
 
 	public ContainerDigistoreRegulator(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, getAttachmentItemStack(inv, data), getAttachmentSide(data), getCableComponent(inv, data));
@@ -31,6 +34,9 @@ public class ContainerDigistoreRegulator extends AbstractCableAttachmentContaine
 			filterInventory = (ItemStackHandler) handler;
 		});
 
+		// Create the upgrade inventory.
+		upgradeInventory = new AttachmentUpgradeInventory(getAttachment());
+
 		// If the item filter is null, then return early and log the error.
 		if (filterInventory == null) {
 			StaticPower.LOGGER.error(String.format("Received capability for Importer: %1$s that did not inherit from InventoryItemFilter.", getAttachment().getDisplayName()));
@@ -39,7 +45,11 @@ public class ContainerDigistoreRegulator extends AbstractCableAttachmentContaine
 
 		addSlotsInGrid(filterInventory, 0, 88, 24, SDMath.getSmallestFactor(filterInventory.getSlots(), 6), 16,
 				(index, x, y) -> new PhantomSlot(filterInventory, index, x, y, false).renderFluidContainerAsFluid());
-		
+
+		addSlot(new UpgradeItemSlot(upgradeInventory, 0, -19, 14));
+		addSlot(new UpgradeItemSlot(upgradeInventory, 1, -19, 32));
+		addSlot(new UpgradeItemSlot(upgradeInventory, 2, -19, 50));
+
 		addPlayerInventory(getPlayerInventory(), 8, 69);
 		addPlayerHotbar(getPlayerInventory(), 8, 127);
 	}

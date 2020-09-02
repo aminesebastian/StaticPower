@@ -29,7 +29,7 @@ public class DigistoreExporterAttachment extends AbstractCableAttachment {
 	public static final String EXPORT_TIMER_TAG = "extraction_timer";
 
 	public DigistoreExporterAttachment(String name) {
-		super(name);
+		super(name, 3);
 	}
 
 	/**

@@ -96,7 +96,7 @@ public class PluginJEI implements IModPlugin {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void registerGuiHandlers(IGuiHandlerRegistration registration) {
-		registration.addGuiContainerHandler(StaticPowerContainerGui.class, new JEITabSlotAdjuster());
+		registration.addGuiContainerHandler(StaticPowerContainerGui.class, new JEIContainerHandler());
 	}
 
 	@Override

@@ -11,12 +11,11 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.staticpower.data.StaticPowerTiers;
 
 public class TeleportUpgrade extends BaseUpgrade {
 
 	public TeleportUpgrade(String name) {
-		super(name, StaticPowerTiers.ENERGIZED, new Properties().maxStackSize(1));
+		super(name, new Properties().maxStackSize(1));
 	}
 
 	@Override

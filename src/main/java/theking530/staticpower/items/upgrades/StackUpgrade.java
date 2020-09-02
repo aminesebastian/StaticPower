@@ -12,16 +12,16 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class DigistoreVoidUpgrade extends BaseUpgrade {
+public class StackUpgrade extends BaseUpgrade {
 
-	public DigistoreVoidUpgrade(String name) {
-		super(name, new Properties().maxStackSize(1));
+	public StackUpgrade(String name) {
+		super(name, new Properties().maxStackSize(1), UpgradeType.DIGISTORE_ATTACHMENT);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
-		tooltip.add(new StringTextComponent(TextFormatting.WHITE + "Voids all excess items"));
-		tooltip.add(new StringTextComponent(TextFormatting.WHITE + "entering a Digistore."));
+		tooltip.add(new StringTextComponent(TextFormatting.GREEN + "Allows digistore attachments"));
+		tooltip.add(new StringTextComponent(TextFormatting.GREEN + "to move stacks at a time."));
 	}
 }
