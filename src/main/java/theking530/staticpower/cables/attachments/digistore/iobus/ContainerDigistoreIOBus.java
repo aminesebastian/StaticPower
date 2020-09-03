@@ -10,14 +10,13 @@ import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachmentContainer;
-import theking530.staticpower.cables.attachments.AttachmentUpgradeInventory;
 import theking530.staticpower.container.slots.PhantomSlot;
 import theking530.staticpower.container.slots.UpgradeItemSlot;
 import theking530.staticpower.init.ModContainerTypes;
 
 public class ContainerDigistoreIOBus extends AbstractCableAttachmentContainer<DigistoreIOBusAttachment> {
 	private ItemStackHandler filterInventory;
-	private AttachmentUpgradeInventory upgradeInventory;
+	private ItemStackHandler upgradeInventory;
 
 	public ContainerDigistoreIOBus(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, getAttachmentItemStack(inv, data), getAttachmentSide(data), getCableComponent(inv, data));
@@ -35,7 +34,9 @@ public class ContainerDigistoreIOBus extends AbstractCableAttachmentContainer<Di
 		});
 
 		// Create the upgrade inventory.
-		upgradeInventory = new AttachmentUpgradeInventory(getAttachment());
+		getAttachment().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.DOWN).ifPresent((handler) -> {
+			upgradeInventory = (ItemStackHandler) handler;
+		});
 		
 		// If the item filter is null, then return early and log the error.
 		if (filterInventory == null) {
@@ -53,7 +54,6 @@ public class ContainerDigistoreIOBus extends AbstractCableAttachmentContainer<Di
 		addSlot(new UpgradeItemSlot(upgradeInventory, 1, -19, 32));
 		addSlot(new UpgradeItemSlot(upgradeInventory, 2, -19, 50));
 
-		
 		addPlayerInventory(getPlayerInventory(), 8, 69);
 		addPlayerHotbar(getPlayerInventory(), 8, 127);
 	}

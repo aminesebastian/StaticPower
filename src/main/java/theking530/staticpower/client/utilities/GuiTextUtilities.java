@@ -54,7 +54,7 @@ public class GuiTextUtilities {
 	public static ITextComponent formatEnergyToString(int energy, boolean includeUnits, boolean includeMetricUnit) {
 		MetricConverter metricEnergy = new MetricConverter(energy);
 		ITextComponent output = new StringTextComponent(NUMBER_FORMATTER.format(metricEnergy.getValue()));
-			
+
 		if (includeMetricUnit) {
 			output.appendText(metricEnergy.getSuffix());
 		}
@@ -133,12 +133,12 @@ public class GuiTextUtilities {
 	}
 
 	public static ITextComponent formatFluidToString(float currentFluid, float capacity) {
-		return formatHeatToString(currentFluid, false, true).appendText("/").appendSibling(formatHeatToString(capacity));
+		return formatFluidToString(currentFluid, false, true).appendText("/").appendSibling(formatFluidToString(capacity));
 
 	}
 
 	public static ITextComponent formatFluidToString(float fluidAmount) {
-		return formatHeatToString(fluidAmount, true, true);
+		return formatFluidToString(fluidAmount, true, true);
 	}
 
 	public static ITextComponent formatFluidToString(float fluid, boolean includeUnits, boolean includeMetricUnit) {

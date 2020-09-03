@@ -156,6 +156,9 @@ public class ModItems {
 
 	public static StaticPowerItem RawSilicon;
 	public static StaticPowerItem Silicon;
+	public static StaticPowerItem StaticDopedSilicon;
+	public static StaticPowerItem EnergizedDopedSilicon;
+	public static StaticPowerItem LumumDopedSilicon;
 	public static StaticPowerItem CrystalStatic;
 	public static StaticPowerItem CrystalEnergized;
 	public static StaticPowerItem CrystalLumum;
@@ -400,6 +403,9 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(Rubber = new StaticPowerItem("rubber"));
 		StaticPowerRegistry.preRegisterItem(RawSilicon = new StaticPowerItem("raw_silicon"));
 		StaticPowerRegistry.preRegisterItem(Silicon = new StaticPowerItem("silicon"));
+		StaticPowerRegistry.preRegisterItem(StaticDopedSilicon = new StaticPowerItem("silicon_doped_static"));
+		StaticPowerRegistry.preRegisterItem(EnergizedDopedSilicon = new StaticPowerItem("silicon_doped_energized"));
+		StaticPowerRegistry.preRegisterItem(LumumDopedSilicon = new StaticPowerItem("silicon_doped_lumum"));		
 		StaticPowerRegistry.preRegisterItem(CrystalStatic = new StaticPowerItem("crystal_static"));
 		StaticPowerRegistry.preRegisterItem(CrystalEnergized = new StaticPowerItem("crystal_energized"));
 		StaticPowerRegistry.preRegisterItem(CrystalLumum = new StaticPowerItem("crystal_lumum"));

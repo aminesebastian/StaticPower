@@ -17,6 +17,6 @@ public class GuiDigistoreRegulator extends AbstractCableAttachmentGui<ContainerD
 		getTabManager().setInitiallyOpenTab(redstoneTab);
 
 		// Add island for the upgrades.
-		registerWidget(new GuiIslandWidget(-25, 8, 28, 64));
+		registerWidget(new GuiIslandWidget(-25, 8, 30, 64));
 	}
 }

@@ -73,8 +73,11 @@ public class CableBoundsCache {
 		VoxelShape output = CoreShape;
 
 		// Add the shapes for each side.
+		// Get some attributes to use in the check.
+		AbstractCableProviderComponent cable = CableUtilities.getCableWrapperComponent(world, pos);
 		for (Direction dir : Direction.values()) {
-			if (CableUtilities.getConnectionState(world, pos, dir) == CableConnectionState.CABLE || CableUtilities.getConnectionState(world, pos, dir) == CableConnectionState.TILE_ENTITY) {
+			if ((cable != null && cable.hasAttachment(dir)) || CableUtilities.getConnectionState(world, pos, dir) == CableConnectionState.CABLE
+					|| CableUtilities.getConnectionState(world, pos, dir) == CableConnectionState.TILE_ENTITY) {
 				output = VoxelShapes.or(output, CableAttachmentShapes.get(dir));
 			}
 		}

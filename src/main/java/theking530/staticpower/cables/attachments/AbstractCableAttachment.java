@@ -7,7 +7,6 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
@@ -16,6 +15,9 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import theking530.api.IUpgradeItem;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
@@ -24,19 +26,13 @@ import theking530.staticpower.cables.CableBoundsHoverResult.CableBoundsHoverType
 import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
+import theking530.staticpower.utilities.WorldUtilities;
 
 public abstract class AbstractCableAttachment extends StaticPowerItem {
 	private static final Vector3D DEFAULT_BOUNDS = new Vector3D(3.0f, 3.0f, 3.0f);
-	public static final String UPGRADE_INVENTORY_TAG = "cable_attachment_upgrade_inventory";
-	public final int upgradeSlotCount;
 
 	public AbstractCableAttachment(String name) {
-		this(name, 0);
-	}
-
-	public AbstractCableAttachment(String name, int upgradeSlotCount) {
 		super(name);
-		this.upgradeSlotCount = upgradeSlotCount;
 	}
 
 	@Override
@@ -67,15 +63,6 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 		// Allocate the redstone mode if neeed.
 		attachment.getTag().putInt("redstone_mode", RedstoneMode.High.ordinal());
 
-		// Allocate the upgrade inventory.
-		ListNBT upgradeItems = new ListNBT();
-		for (int i = 0; i < upgradeSlotCount; i++) {
-			CompoundNBT itemNBT = new CompoundNBT();
-			ItemStack.EMPTY.write(itemNBT);
-			upgradeItems.add(itemNBT);
-		}
-		attachment.getTag().put(UPGRADE_INVENTORY_TAG, upgradeItems);
-
 		// Allocate the covers.
 		for (int i = 0; i < 6; i++) {
 			attachment.getTag().putString("cover_" + i, "");
@@ -84,6 +71,13 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 	}
 
 	public void onRemovedFromCable(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
+		IItemHandler upgradeInv = getUpgradeInventory(attachment);
+		for (int i = 0; i < upgradeInv.getSlots(); i++) {
+			ItemStack upgrade = upgradeInv.getStackInSlot(i);
+			if (!upgrade.isEmpty()) {
+				WorldUtilities.dropItem(cable.getWorld(), cable.getPos(), upgrade);
+			}
+		}
 		attachment.setTag(null);
 	}
 
@@ -117,8 +111,46 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 
 	public abstract ResourceLocation getModel(ItemStack attachment, AbstractCableProviderComponent cableComponent);
 
-	protected AttachmentUpgradeInventory getUpgradeInventory(ItemStack attachment) {
-		return new AttachmentUpgradeInventory(attachment);
+	protected IItemHandler getUpgradeInventory(ItemStack attachment) {
+		return attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.DOWN).orElse(null);
+	}
+
+	/**
+	 * Determines if this upgrade inventory has an upgrade of the provided class.
+	 * 
+	 * @param upgradeClass The class to check for.
+	 * @return True if an upgrade of the provided type was found, false otherwise.
+	 */
+	public <T extends IUpgradeItem> boolean hasUpgradeOfClass(ItemStack attachment, Class<T> upgradeClass) {
+		IItemHandler upgradeInv = getUpgradeInventory(attachment);
+		for (int i = 0; i < upgradeInv.getSlots(); i++) {
+			ItemStack stack = upgradeInv.getStackInSlot(i);
+			if (upgradeClass.isInstance(stack.getItem())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public <T extends IUpgradeItem> int getUpgradeCount(ItemStack attachment, Class<T> upgradeClass) {
+		// Allocate the count.
+		int count = 0;
+
+		// Get the upgrade inventory.
+		IItemHandler upgradeInv = getUpgradeInventory(attachment);
+
+		// Check for the ugprade. If we find one, increment the count by the stack size.
+		// If the stack size surpasses the max stack size, return the max stack size.
+		for (int i = 0; i < upgradeInv.getSlots(); i++) {
+			ItemStack stack = upgradeInv.getStackInSlot(i);
+			if (upgradeClass.isInstance(stack.getItem())) {
+				count += stack.getCount();
+				if (count > stack.getMaxStackSize()) {
+					return stack.getMaxStackSize();
+				}
+			}
+		}
+		return count;
 	}
 
 	protected abstract class AbstractCableAttachmentContainerProvider implements INamedContainerProvider {

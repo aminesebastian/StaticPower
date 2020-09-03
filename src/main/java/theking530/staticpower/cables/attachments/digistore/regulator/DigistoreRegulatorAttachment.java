@@ -21,14 +21,17 @@ import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
-import theking530.staticpower.items.ItemStackInventoryCapabilityProvider;
+import theking530.staticpower.init.ModUpgrades;
+import theking530.staticpower.items.CableAttachmentInventoryCapabilityProvider;
+import theking530.staticpower.items.upgrades.AcceleratorUpgrade;
+import theking530.staticpower.items.upgrades.StackUpgrade;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class DigistoreRegulatorAttachment extends AbstractCableAttachment {
 	public static final String REGULATOR_TIMER_TAG = "regulator_timer";
 
 	public DigistoreRegulatorAttachment(String name) {
-		super(name, 3);
+		super(name);
 	}
 
 	/**
@@ -37,7 +40,7 @@ public class DigistoreRegulatorAttachment extends AbstractCableAttachment {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-		return new ItemStackInventoryCapabilityProvider(stack, StaticPowerConfig.digistoreRegulatorSlots, nbt);
+		return new CableAttachmentInventoryCapabilityProvider(stack, StaticPowerConfig.digistoreRegulatorSlots, 3, nbt);
 	}
 
 	@Override
@@ -66,7 +69,6 @@ public class DigistoreRegulatorAttachment extends AbstractCableAttachment {
 	}
 
 	public boolean increaseReuglationTimer(ItemStack attachment) {
-
 		if (!attachment.hasTag()) {
 			attachment.setTag(new CompoundNBT());
 		}
@@ -79,7 +81,7 @@ public class DigistoreRegulatorAttachment extends AbstractCableAttachment {
 
 		// Increment the current timer.
 		currentTimer += 1;
-		if (currentTimer >= StaticPowerConfig.digistoreRegulatorRate) {
+		if (currentTimer >= getRegulationRate(attachment)) {
 			attachment.getTag().putInt(REGULATOR_TIMER_TAG, 0);
 			return true;
 		} else {
@@ -131,6 +133,7 @@ public class DigistoreRegulatorAttachment extends AbstractCableAttachment {
 					// Get current count of the item.
 					int targetItemCount = InventoryUtilities.getCountOfItem(filterItem, target);
 					int countToTransfer = Math.min(StaticPowerConfig.digistoreRegulatorStackSize, Math.abs(targetItemCount - filterItem.getCount()));
+					countToTransfer = hasUpgradeOfClass(attachment, StackUpgrade.class) ? filterItem.getMaxStackSize() : countToTransfer;
 
 					// If we are at the correct count, skip it.
 					if (countToTransfer == 0) {
@@ -163,6 +166,17 @@ public class DigistoreRegulatorAttachment extends AbstractCableAttachment {
 			});
 		});
 		return output.get();
+	}
+
+	@SuppressWarnings("deprecation")
+	protected int getRegulationRate(ItemStack attachment) {
+		float acceleratorCardCount = getUpgradeCount(attachment, AcceleratorUpgrade.class);
+		if (acceleratorCardCount > 0) {
+			float accelerationAmount = StaticPowerConfig.acceleratorCardMaxImprovment * (acceleratorCardCount / ModUpgrades.AcceleratorUpgrade.getMaxStackSize());
+			return (int) (StaticPowerConfig.digistoreRegulatorRate / accelerationAmount);
+		} else {
+			return StaticPowerConfig.digistoreRegulatorRate;
+		}
 	}
 
 	protected class ImporterContainerProvider extends AbstractCableAttachmentContainerProvider {

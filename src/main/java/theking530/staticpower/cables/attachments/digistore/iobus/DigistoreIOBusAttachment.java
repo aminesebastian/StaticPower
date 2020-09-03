@@ -24,7 +24,10 @@ import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
-import theking530.staticpower.items.ItemStackInventoryCapabilityProvider;
+import theking530.staticpower.init.ModUpgrades;
+import theking530.staticpower.items.CableAttachmentInventoryCapabilityProvider;
+import theking530.staticpower.items.upgrades.AcceleratorUpgrade;
+import theking530.staticpower.items.upgrades.StackUpgrade;
 import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.ItemUtilities;
 
@@ -32,7 +35,7 @@ public class DigistoreIOBusAttachment extends AbstractCableAttachment {
 	public static final String REGULATOR_TIMER_TAG = "regulator_timer";
 
 	public DigistoreIOBusAttachment(String name) {
-		super(name, 3);
+		super(name);
 	}
 
 	/**
@@ -41,7 +44,7 @@ public class DigistoreIOBusAttachment extends AbstractCableAttachment {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-		return new ItemStackInventoryCapabilityProvider(stack, StaticPowerConfig.digistoreIOBusSlots * 2, nbt);
+		return new CableAttachmentInventoryCapabilityProvider(stack, StaticPowerConfig.digistoreIOBusSlots * 2, 3, nbt);
 	}
 
 	@Override
@@ -83,7 +86,7 @@ public class DigistoreIOBusAttachment extends AbstractCableAttachment {
 
 		// Increment the current timer.
 		currentTimer += 1;
-		if (currentTimer >= StaticPowerConfig.digistoreIOBusRate) {
+		if (currentTimer >= getIOBusRate(attachment)) {
 			attachment.getTag().putInt(REGULATOR_TIMER_TAG, 0);
 			return true;
 		} else {
@@ -143,7 +146,9 @@ public class DigistoreIOBusAttachment extends AbstractCableAttachment {
 
 				for (int i = 0; i < target.getSlots(); i++) {
 					// Simulate an extract.
-					ItemStack extractedItem = target.extractItem(i, StaticPowerConfig.digistoreIOBusStackSize, true);
+					int countToExtract = StaticPowerConfig.digistoreIOBusStackSize;
+					countToExtract = hasUpgradeOfClass(attachment, StackUpgrade.class) ? 64 : countToExtract;
+					ItemStack extractedItem = target.extractItem(i, countToExtract, true);
 
 					// If the extracted item is empty, continue.
 					if (extractedItem.isEmpty()) {
@@ -188,8 +193,13 @@ public class DigistoreIOBusAttachment extends AbstractCableAttachment {
 				// Get the list of filter items.
 				for (int i = exportSlotsStart(); i < exportSlotsLastIndex(); i++) {
 					if (!filterItems.getStackInSlot(currentSlot).isEmpty()) {
+						// Get the amount to extract.
+						ItemStack filterItem = filterItems.getStackInSlot(currentSlot);
+						int countToExtract = Math.min(StaticPowerConfig.digistoreIOBusStackSize, filterItem.getMaxStackSize());
+						countToExtract = hasUpgradeOfClass(attachment, StackUpgrade.class) ? filterItem.getMaxStackSize() : countToExtract;
+
 						// Simulate an extract.
-						ItemStack extractedItem = module.extractItem(filterItems.getStackInSlot(currentSlot), StaticPowerConfig.digistoreIOBusStackSize, true);
+						ItemStack extractedItem = module.extractItem(filterItem, countToExtract, true);
 
 						// If the extracted item not empty, continue.
 						if (!extractedItem.isEmpty()) {
@@ -230,6 +240,17 @@ public class DigistoreIOBusAttachment extends AbstractCableAttachment {
 
 	protected int exportSlotsLastIndex() {
 		return (StaticPowerConfig.digistoreIOBusSlots * 2) - 1;
+	}
+
+	@SuppressWarnings("deprecation")
+	protected int getIOBusRate(ItemStack attachment) {
+		float acceleratorCardCount = getUpgradeCount(attachment, AcceleratorUpgrade.class);
+		if (acceleratorCardCount > 0) {
+			float accelerationAmount = StaticPowerConfig.acceleratorCardMaxImprovment * (acceleratorCardCount / ModUpgrades.AcceleratorUpgrade.getMaxStackSize());
+			return (int) (StaticPowerConfig.digistoreIOBusRate / accelerationAmount);
+		} else {
+			return StaticPowerConfig.digistoreIOBusRate;
+		}
 	}
 
 	protected class RegulatorContainerProvider extends AbstractCableAttachmentContainerProvider {

@@ -20,7 +20,7 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 		INPUT, INTERNAL
 	}
 
-	public static final int MOVE_TIME = 5;
+	public static final int MOVE_TIME = 8;
 
 	/**
 	 * This function is called both when checking to see if we can move the inputs
@@ -203,7 +203,16 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 		// return true so we don't get stuck in a loop. This is an edge case where a
 		// user may save mid processing, remove the recipe, and then reload.
 		if (recipe.isPresent()) {
-			return recipeProcessingCompleted.apply(recipe.get());
+			ProcessingCheckState completedState = recipeProcessingCompleted.apply(recipe.get());
+
+			// If the processing completed, check to see if we have another recipe ready. If
+			// so, set the move timer to the max value to make it immediatley start. This is
+			// so that the move timer isn't vactored in with large operations.
+			if (completedState.isOk()) {
+				if (canMoveInputsToInternal().isOk()) {
+					moveTimer = MOVE_TIME;
+				}
+			}
 		}
 		return ProcessingCheckState.ok();
 	}

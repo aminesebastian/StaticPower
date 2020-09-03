@@ -21,7 +21,7 @@ public class ItemStackInventoryCapabilityProvider implements ICapabilityProvider
 		inventorySize = size;
 		owningItemStack = owner;
 		initialNbt = nbt;
-		inventory = new ItemInventoryHandler(owner, inventorySize);
+		inventory = new ItemInventoryHandler("default", owner, inventorySize);
 		if (nbt != null && !nbt.isEmpty()) {
 			inventory.deserializeNBT(nbt);
 		}

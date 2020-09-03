@@ -27,6 +27,6 @@ public class GuiDigistoreIOBus extends AbstractCableAttachmentGui<ContainerDigis
 		registerWidget(new DrawableWidget(6, 45, 16, 16, exportDrawable).setTooltip(new StringTextComponent("Exports")));
 		
 		// Add island for the upgrades.
-		registerWidget(new GuiIslandWidget(-25, 8, 28, 64));
+		registerWidget(new GuiIslandWidget(-25, 8, 30, 64));
 	}
 }

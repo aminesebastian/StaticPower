@@ -22,14 +22,17 @@ import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
-import theking530.staticpower.items.ItemStackInventoryCapabilityProvider;
+import theking530.staticpower.init.ModUpgrades;
+import theking530.staticpower.items.CableAttachmentInventoryCapabilityProvider;
+import theking530.staticpower.items.upgrades.AcceleratorUpgrade;
+import theking530.staticpower.items.upgrades.StackUpgrade;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class DigistoreExporterAttachment extends AbstractCableAttachment {
 	public static final String EXPORT_TIMER_TAG = "extraction_timer";
 
 	public DigistoreExporterAttachment(String name) {
-		super(name, 3);
+		super(name);
 	}
 
 	/**
@@ -38,7 +41,7 @@ public class DigistoreExporterAttachment extends AbstractCableAttachment {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-		return new ItemStackInventoryCapabilityProvider(stack, StaticPowerConfig.digistoreExporterSlots, nbt);
+		return new CableAttachmentInventoryCapabilityProvider(stack, StaticPowerConfig.digistoreExporterSlots, 3, nbt);
 	}
 
 	@Override
@@ -80,7 +83,7 @@ public class DigistoreExporterAttachment extends AbstractCableAttachment {
 
 		// Increment the current timer.
 		currentTimer += 1;
-		if (currentTimer >= StaticPowerConfig.digistoreExporterRate) {
+		if (currentTimer >= getExportRate(attachment)) {
 			attachment.getTag().putInt(EXPORT_TIMER_TAG, 0);
 			return true;
 		} else {
@@ -126,8 +129,13 @@ public class DigistoreExporterAttachment extends AbstractCableAttachment {
 				// Get the list of filter items.
 				for (int i = 0; i < filterItems.getSlots(); i++) {
 					if (!filterItems.getStackInSlot(currentSlot).isEmpty()) {
-						// Simulate an extract.
-						ItemStack extractedItem = module.extractItem(filterItems.getStackInSlot(currentSlot), StaticPowerConfig.digistoreExporterStackSize, true);
+						// Get the amount to extract.
+						ItemStack filterItem = filterItems.getStackInSlot(currentSlot);
+						int countToExtract = Math.min(StaticPowerConfig.digistoreExporterStackSize, filterItem.getMaxStackSize());
+						countToExtract = hasUpgradeOfClass(attachment, StackUpgrade.class) ? filterItem.getMaxStackSize() : countToExtract;
+
+						// Attempt an extract.
+						ItemStack extractedItem = module.extractItem(filterItem, countToExtract, true);
 
 						// If the extracted item not empty, continue.
 						if (!extractedItem.isEmpty()) {
@@ -152,6 +160,17 @@ public class DigistoreExporterAttachment extends AbstractCableAttachment {
 			});
 		});
 		return output.get();
+	}
+
+	@SuppressWarnings("deprecation")
+	protected int getExportRate(ItemStack attachment) {
+		float acceleratorCardCount = getUpgradeCount(attachment, AcceleratorUpgrade.class);
+		if (acceleratorCardCount > 0) {
+			float accelerationAmount = StaticPowerConfig.acceleratorCardMaxImprovment * (acceleratorCardCount / ModUpgrades.AcceleratorUpgrade.getMaxStackSize());
+			return (int) (StaticPowerConfig.digistoreExporterRate / accelerationAmount);
+		} else {
+			return StaticPowerConfig.digistoreExporterRate;
+		}
 	}
 
 	protected class ExporterContainerProvider extends AbstractCableAttachmentContainerProvider {

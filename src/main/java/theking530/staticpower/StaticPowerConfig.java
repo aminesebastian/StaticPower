@@ -125,7 +125,7 @@ public class StaticPowerConfig {
 			builder.push("Digistore");
 			builder.push("Regulator");
 			digistoreRegulatorRate = builder.comment("Controls how many ticks between each digistore regulator operation. The higher, the faster the operations, but the stronger hit to performance.")
-					.translation(StaticPower.MOD_ID + ".config." + "digistoreRegulatorRate").define("DigistoreRegulatorRate", 25);
+					.translation(StaticPower.MOD_ID + ".config." + "digistoreRegulatorRate").define("DigistoreRegulatorRate", 50);
 			digistoreRegulatorSlots = builder.comment("Controls how many slots the regulator has.").translation(StaticPower.MOD_ID + ".config." + "digistoreRegulatorSlots")
 					.define("DigistoreRegulatorSlots", 8);
 			digistoreRegulatorStackSize = builder.comment("Controls how many items can be transfered for each item type during a regulation.")
@@ -134,7 +134,7 @@ public class StaticPowerConfig {
 
 			builder.push("I/O Bus");
 			digistoreIOBusRate = builder.comment("Controls how many ticks between each digistore I/O bus operation. The higher, the faster the operations, but the stronger hit to performance.")
-					.translation(StaticPower.MOD_ID + ".config." + "digistoreIOBusRate").define("DigistoreIOBusRate", 20);
+					.translation(StaticPower.MOD_ID + ".config." + "digistoreIOBusRate").define("DigistoreIOBusRate", 40);
 			digistoreIOBusSlots = builder.comment("Controls how many slots each the import and output rows of the digistore I/O bus have.")
 					.translation(StaticPower.MOD_ID + ".config." + "digistoreIOBusSlots").define("DigistoreIOBusSlots", 8);
 			digistoreIOBusStackSize = builder.comment("Controls how many items the digistore I/O will try to import per operation. This count is separate for the import and the export.")
@@ -143,7 +143,7 @@ public class StaticPowerConfig {
 
 			builder.push("Importer");
 			digistoreImporterRate = builder.comment("Controls how many ticks between each digistore importer operation. The higher, the faster the operations, but the stronger hit to performance.")
-					.translation(StaticPower.MOD_ID + ".config." + "digistoreImporterRate").define("DigistoreImporterRate", 20);
+					.translation(StaticPower.MOD_ID + ".config." + "digistoreImporterRate").define("DigistoreImporterRate", 40);
 			digistoreImporterSlots = builder.comment("Controls how many slots the digistore importer has.").translation(StaticPower.MOD_ID + ".config." + "digistoreImporterSlots")
 					.define("DigistoreImporterSlots", 8);
 			digistoreImporterStackSize = builder.comment("Controls how many items the importer will try to import per operation.")
@@ -152,7 +152,7 @@ public class StaticPowerConfig {
 
 			builder.push("Exporter");
 			digistoreExporterRate = builder.comment("Controls how many ticks between each digistore exporter operation. The higher, the faster the operations, but the stronger hit to performance.")
-					.translation(StaticPower.MOD_ID + ".config." + "digistoreExporterRate").define("DigistoreExporterRate", 20);
+					.translation(StaticPower.MOD_ID + ".config." + "digistoreExporterRate").define("DigistoreExporterRate", 40);
 			digistoreExporterSlots = builder.comment("Controls how many slots the digistore exporter has.").translation(StaticPower.MOD_ID + ".config." + "digistoreExporterSlots")
 					.define("DigistoreExporterSlots", 8);
 			digistoreExporterStackSize = builder.comment("Controls how many items the exporter will try to export per operation.")
@@ -162,7 +162,7 @@ public class StaticPowerConfig {
 
 			builder.push("Upgrades");
 			acceleratorCardImprovment = builder.comment("Defines the effect a max sized stack of accelerator upgrades will have.")
-					.translation(StaticPower.MOD_ID + ".config." + "acceleratorCardImprovment").define("AcceleratorCardImprovment", 2.0f);
+					.translation(StaticPower.MOD_ID + ".config." + "acceleratorCardImprovment").define("AcceleratorCardImprovment", 4.0f);
 			builder.pop();
 
 			builder.push("Ore_Generation");
