@@ -25,6 +25,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.network.IContainerFactory;
 import theking530.staticpower.blocks.interfaces.IItemBlockProvider;
 import theking530.staticpower.init.TileEntityInitializer;
+import theking530.staticpower.init.TileEntityTypePopulator.TileEntityTypeAllocator;
 
 /**
  * Main registry class responsible for preparing entities for registration and
@@ -105,6 +106,16 @@ public class StaticPowerRegistry {
 		TileEntityType teType = TileEntityType.Builder.create(initializer, tileEntityBlocks).build(null);
 		initializer.setType(teType);
 		teType.setRegistryName(tileEntityBlocks[0].getRegistryName());
+		TILE_ENTITY_TYPES.add(teType);
+		return teType;
+	}
+
+	@SuppressWarnings({ "unchecked" })
+	public static <T extends TileEntity> TileEntityType<T> preRegisterTileEntity(TileEntityTypeAllocator allocator) {
+		TileEntityInitializer initializer = new TileEntityInitializer(allocator.factory);
+		TileEntityType teType = TileEntityType.Builder.create(initializer, allocator.blocks).build(null);
+		initializer.setType(teType);
+		teType.setRegistryName(allocator.blocks[0].getRegistryName());
 		TILE_ENTITY_TYPES.add(teType);
 		return teType;
 	}

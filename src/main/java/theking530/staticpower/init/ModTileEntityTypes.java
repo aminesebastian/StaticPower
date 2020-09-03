@@ -1,5 +1,10 @@
 package theking530.staticpower.init;
 
+import java.lang.reflect.Field;
+import java.util.Set;
+
+import org.reflections.Reflections;
+
 import net.minecraft.tileentity.TileEntityType;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.cables.digistore.TileEntityDigistoreWire;
@@ -8,6 +13,8 @@ import theking530.staticpower.cables.heat.TileEntityHeatCable;
 import theking530.staticpower.cables.item.TileEntityItemCable;
 import theking530.staticpower.cables.power.TileEntityPowerCable;
 import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.init.TileEntityTypePopulator.TileEntityTypeAllocator;
+import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.digistorenetwork.digistore.TileEntityDigistore;
 import theking530.staticpower.tileentities.digistorenetwork.ioport.TileEntityDigistoreIOPort;
 import theking530.staticpower.tileentities.digistorenetwork.manager.TileEntityDigistoreManager;
@@ -119,7 +126,7 @@ public class ModTileEntityTypes {
 	public static TileEntityType<TileEntityBattery> BATTERY_CREATIVE;
 
 	public static void init() {
-		VACCUM_CHEST = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityVacuumChest(), ModBlocks.VacuumChest);
+		//VACCUM_CHEST = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityVacuumChest(), ModBlocks.VacuumChest);
 		CHARGING_STATION = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityChargingStation(), ModBlocks.ChargingStation);
 
 		SOLAR_PANEL_BASIC = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntitySolarPanel(StaticPowerTiers.BASIC, type), ModBlocks.SolarPanelBasic);
@@ -195,5 +202,21 @@ public class ModTileEntityTypes {
 		DIGISTORE_IO_PORT = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityDigistoreIOPort(), ModBlocks.DigistoreIOPort);
 		DIGISTORE_WIRE = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityDigistoreWire(), ModBlocks.DigistoreWire);
 		DIGISTORE_SERVER_RACK = StaticPowerRegistry.preRegisterTileEntity((type) -> new TileEntityDigistoreServerRack(), ModBlocks.DigistoreServerRack);
+
+		// Process the allocators.
+		Reflections reflections = new Reflections("");
+		Set<Class<? extends TileEntityBase>> classes = reflections.getSubTypesOf(TileEntityBase.class);
+		for (Class<? extends TileEntityBase> baseClass : classes) {
+			for (Field field : baseClass.getDeclaredFields()) {
+				if (field.isAnnotationPresent(TileEntityTypePopulator.class)) {
+					try {
+						TileEntityTypeAllocator allocator = (TileEntityTypeAllocator) field.get(null);
+						allocator.type = StaticPowerRegistry.preRegisterTileEntity(allocator);
+					} catch (Exception e) {
+
+					}
+				}
+			}
+		}
 	}
 }

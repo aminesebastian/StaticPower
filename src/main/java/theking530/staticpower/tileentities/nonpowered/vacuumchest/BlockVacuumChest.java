@@ -9,7 +9,6 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
-import theking530.staticpower.init.ModTileEntityTypes;
 
 public class BlockVacuumChest extends StaticPowerTileEntityBlock {
 
@@ -24,6 +23,6 @@ public class BlockVacuumChest extends StaticPowerTileEntityBlock {
 
 	@Override
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
-		return ModTileEntityTypes.VACCUM_CHEST.create();
+		return TileEntityVacuumChest.TYPE.type.create();
 	}
 }

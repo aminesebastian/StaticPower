@@ -104,6 +104,8 @@ dependencies {
 	
 	compileOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}:api")
     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}")
+	
+	compile group: 'org.reflections', name: 'reflections', version: '0.9.10'
 }
 
 repositories {
@@ -128,6 +130,10 @@ repositories {
 	maven { 
 		name = "Patchouli Maven"
 		url 'https://maven.blamejared.com' 
+	}
+	maven { 
+		name = "Patchouli Maven"
+		url 'https://mvnrepository.com/artifact/org.reflections/reflections' 
 	}
 }
 

@@ -20,8 +20,10 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.api.IUpgradeItem.UpgradeType;
+import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModFluids;
-import theking530.staticpower.init.ModTileEntityTypes;
+import theking530.staticpower.init.TileEntityTypePopulator;
+import theking530.staticpower.init.TileEntityTypePopulator.TileEntityTypeAllocator;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.items.upgrades.ExperienceVacuumUpgrade;
@@ -31,14 +33,17 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 import theking530.staticpower.tileentities.components.fluids.FluidOutputServoComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent;
+import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
-import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityVacuumChest extends TileEntityConfigurable implements INamedContainerProvider {
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator TYPE = new TileEntityTypeAllocator((type) -> new TileEntityVacuumChest(), ModBlocks.VacuumChest);
+
 	public static final int DEFAULT_RANGE = 6;
 	public static final int DEFAULT_TANK_SIZE = 5000;
 
@@ -55,7 +60,7 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements INa
 	protected boolean shouldVacuumExperience;
 
 	public TileEntityVacuumChest() {
-		super(ModTileEntityTypes.VACCUM_CHEST);
+		super(TYPE.type);
 		vacuumDiamater = DEFAULT_RANGE;
 		shouldTeleport = false;
 
