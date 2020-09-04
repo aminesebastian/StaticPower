@@ -16,16 +16,21 @@ import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Direction;
 import net.minecraft.world.World;
+import theking530.staticcore.initialization.container.ContainerTypeAllocator;
+import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.digistore.digistoreterminal.AbstractContainerDigistoreTerminal;
 import theking530.staticpower.container.slots.CraftingRecipeInputSlot;
 import theking530.staticpower.container.slots.DigistoreCraftingOutputSlot;
 import theking530.staticpower.container.slots.PlayerArmorItemSlot;
-import theking530.staticpower.init.ModContainerTypes;
 import theking530.staticpower.integration.JEI.IJEIReipceTransferHandler;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigistoreTerminal<DigistoreCraftingTerminal> implements IJEIReipceTransferHandler {
+	@ContainerTypePopulator
+	public static final ContainerTypeAllocator<ContainerDigistoreCraftingTerminal, GuiDigistoreCraftingTerminal> TYPE = new ContainerTypeAllocator<>("digistore_crafting_terminal",
+			ContainerDigistoreCraftingTerminal::new, GuiDigistoreCraftingTerminal::new);
+
 	private CraftingInventory craftMatrix;
 	private CraftResultInventory craftResult;
 
@@ -34,7 +39,7 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 	}
 
 	public ContainerDigistoreCraftingTerminal(int windowId, PlayerInventory playerInventory, ItemStack attachment, Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
-		super(ModContainerTypes.DIGISTORE_CRAFTING_TERMINAL, windowId, playerInventory, attachment, attachmentSide, cableComponent);
+		super(TYPE, windowId, playerInventory, attachment, attachmentSide, cableComponent);
 	}
 
 	@Override
@@ -50,13 +55,13 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 
 		// Add crafting output slot.
 		addSlot(new DigistoreCraftingOutputSlot(this, getPlayerInventory().player, craftMatrix, craftResult, 0, 148, 138));
-		
+
 		// Armor
 		addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 39, -18, 109, EquipmentSlotType.HEAD));
 		addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 38, -18, 127, EquipmentSlotType.CHEST));
 		addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 37, -18, 145, EquipmentSlotType.LEGS));
 		addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 36, -18, 163, EquipmentSlotType.FEET));
-		
+
 		super.initializeContainer();
 	}
 

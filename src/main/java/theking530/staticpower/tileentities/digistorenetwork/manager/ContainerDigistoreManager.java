@@ -2,18 +2,22 @@ package theking530.staticpower.tileentities.digistorenetwork.manager;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketBuffer;
+import theking530.staticcore.initialization.container.ContainerTypeAllocator;
+import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.container.slots.BatteryItemSlot;
-import theking530.staticpower.init.ModContainerTypes;
 
 public class ContainerDigistoreManager extends StaticPowerTileEntityContainer<TileEntityDigistoreManager> {
+	@ContainerTypePopulator
+	public static final ContainerTypeAllocator<ContainerDigistoreManager, GuiDigistoreManager> TYPE = new ContainerTypeAllocator<>("digistore_manager", ContainerDigistoreManager::new,
+			GuiDigistoreManager::new);
 
 	public ContainerDigistoreManager(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, (TileEntityDigistoreManager) resolveTileEntityFromDataPacket(inv, data));
 	}
 
 	public ContainerDigistoreManager(int windowId, PlayerInventory playerInventory, TileEntityDigistoreManager owner) {
-		super(ModContainerTypes.DIGISTORE_MANAGER_CONTAINER, windowId, playerInventory, owner);
+		super(TYPE, windowId, playerInventory, owner);
 	}
 
 	@Override

@@ -26,11 +26,14 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.client.rendering.tileentity.TileEntityRenderPump;
 import theking530.staticpower.data.StaticPowerTiers;
-import theking530.staticpower.init.ModTileEntityTypes;
+import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
-import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
+import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.components.fluids.FluidOutputServoComponent;
@@ -40,6 +43,9 @@ import theking530.staticpower.tileentities.components.items.FluidContainerInvent
 import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 
 public class TileEntityPump extends TileEntityMachine {
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityPump> TYPE = new TileEntityTypeAllocator<TileEntityPump>((type) -> new TileEntityPump(), TileEntityRenderPump::new, ModBlocks.Pump);
+
 	public static final Logger LOGGER = LogManager.getLogger(TileEntityPump.class);
 	public static final int PUMP_POWER_COST = 120;
 	public static final int DEFAULT_PUMP_RATE = 40;
@@ -51,7 +57,7 @@ public class TileEntityPump extends TileEntityMachine {
 	private final Queue<BlockPos> positionsToPump;
 
 	public TileEntityPump() {
-		super(ModTileEntityTypes.PUMP, StaticPowerTiers.ADVANCED);
+		super(TYPE, StaticPowerTiers.ADVANCED);
 
 		// Add the tank component.
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 8000).setCapabilityExposedModes(MachineSideMode.Output).setCanFill(false));

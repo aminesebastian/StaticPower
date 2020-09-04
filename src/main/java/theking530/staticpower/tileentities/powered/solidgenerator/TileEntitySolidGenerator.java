@@ -8,23 +8,28 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraftforge.common.ForgeHooks;
+import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.solidfuel.SolidFuelRecipe;
-import theking530.staticpower.init.ModTileEntityTypes;
+import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
-import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
+import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.ItemStackHandlerFilter;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
-import theking530.staticpower.tileentities.components.power.PowerDistributionComponent;
 import theking530.staticpower.tileentities.components.power.EnergyStorageComponent.EnergyManipulationAction;
+import theking530.staticpower.tileentities.components.power.PowerDistributionComponent;
 
 public class TileEntitySolidGenerator extends TileEntityMachine {
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator TYPE = new TileEntityTypeAllocator((type) -> new TileEntitySolidGenerator(), ModBlocks.SolidGenerator);
+
 	public static final int DEFAULT_POWER_GENERATION = 15;
 	public static final int DEFAULT_MOVING_TIME = 4;
 
@@ -37,7 +42,7 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 	public int powerGenerationPerTick;
 
 	public TileEntitySolidGenerator() {
-		super(ModTileEntityTypes.SOLID_GENERATOR);
+		super(TYPE);
 		disableFaceInteraction();
 
 		// Register the input inventory and only let it receive items if they are

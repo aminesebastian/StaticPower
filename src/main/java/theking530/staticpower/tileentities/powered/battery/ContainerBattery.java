@@ -2,17 +2,20 @@ package theking530.staticpower.tileentities.powered.battery;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketBuffer;
+import theking530.staticcore.initialization.container.ContainerTypeAllocator;
+import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
-import theking530.staticpower.init.ModContainerTypes;
 
 public class ContainerBattery extends StaticPowerTileEntityContainer<TileEntityBattery> {
+		@ContainerTypePopulator
+	public static final ContainerTypeAllocator<ContainerBattery, GuiBattery> TYPE = new ContainerTypeAllocator<>("battery", ContainerBattery::new, GuiBattery::new);
 
 	public ContainerBattery(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, (TileEntityBattery) resolveTileEntityFromDataPacket(inv, data));
 	}
 
 	public ContainerBattery(int windowId, PlayerInventory playerInventory, TileEntityBattery owner) {
-		super(ModContainerTypes.BATTERY_CONTAINER, windowId, playerInventory, owner);
+		super(TYPE, windowId, playerInventory, owner);
 	}
 
 	@Override

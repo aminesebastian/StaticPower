@@ -13,7 +13,6 @@ import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.CableBoundsCache;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
-import theking530.staticpower.init.ModTileEntityTypes;
 
 public class BlockDigistoreNetworkWire extends AbstractCableBlock {
 
@@ -39,6 +38,6 @@ public class BlockDigistoreNetworkWire extends AbstractCableBlock {
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return ModTileEntityTypes.DIGISTORE_WIRE.create();
+		return TileEntityDigistoreWire.TYPE.create();
 	}
 }

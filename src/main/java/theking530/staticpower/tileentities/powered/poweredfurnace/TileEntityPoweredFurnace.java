@@ -6,8 +6,10 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipe;
 import net.minecraft.item.crafting.IRecipeType;
+import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
-import theking530.staticpower.init.ModTileEntityTypes;
+import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
@@ -29,6 +31,9 @@ import theking530.staticpower.utilities.InventoryUtilities;
  *
  */
 public class TileEntityPoweredFurnace extends TileEntityMachine {
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator TYPE = new TileEntityTypeAllocator((type) -> new TileEntityPoweredFurnace(), ModBlocks.PoweredFurnace);
+
 	/**
 	 * Indicates how many times faster this block will perform compared to the
 	 * vanila furnace.
@@ -45,7 +50,7 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 	public final RecipeProcessingComponent<FurnaceRecipe> processingComponent;
 
 	public TileEntityPoweredFurnace() {
-		super(ModTileEntityTypes.POWERED_FURNACE);
+		super(TYPE);
 
 		// Setup the input inventory to only accept items that have a valid recipe.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {

@@ -14,7 +14,6 @@ import theking530.staticpower.cables.CableBoundsCache;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
 import theking530.staticpower.data.StaticPowerTiers;
-import theking530.staticpower.init.ModTileEntityTypes;
 
 public class BlockPowerCable extends AbstractCableBlock {
 	public final ResourceLocation tier;
@@ -62,17 +61,17 @@ public class BlockPowerCable extends AbstractCableBlock {
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		if (tier == StaticPowerTiers.BASIC) {
-			return ModTileEntityTypes.POWER_CABLE_BASIC.create();
+			return TileEntityPowerCable.TYPE_BASIC.create();
 		} else if (tier == StaticPowerTiers.ADVANCED) {
-			return ModTileEntityTypes.POWER_CABLE_ADVANCED.create();
+			return TileEntityPowerCable.TYPE_ADVANCED.create();
 		} else if (tier == StaticPowerTiers.STATIC) {
-			return ModTileEntityTypes.POWER_CABLE_STATIC.create();
+			return TileEntityPowerCable.TYPE_STATIC.create();
 		} else if (tier == StaticPowerTiers.ENERGIZED) {
-			return ModTileEntityTypes.POWER_CABLE_ENERGIZED.create();
+			return TileEntityPowerCable.TYPE_ENERGIZED.create();
 		} else if (tier == StaticPowerTiers.LUMUM) {
-			return ModTileEntityTypes.POWER_CABLE_LUMUM.create();
+			return TileEntityPowerCable.TYPE_LUMUM.create();
 		} else if (tier == StaticPowerTiers.CREATIVE) {
-			return ModTileEntityTypes.POWER_CABLE_CREATIVE.create();
+			return TileEntityPowerCable.TYPE_CREATIVE.create();
 		}
 		return null;
 	}

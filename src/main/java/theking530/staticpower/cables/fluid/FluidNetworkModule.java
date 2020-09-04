@@ -21,9 +21,9 @@ import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.DestinationWrapper;
 import theking530.staticpower.cables.network.DestinationWrapper.DestinationType;
-import theking530.staticpower.utilities.MetricConverter;
 import theking530.staticpower.cables.network.NetworkMapper;
 import theking530.staticpower.cables.network.ServerCable;
+import theking530.staticpower.utilities.MetricConverter;
 
 public class FluidNetworkModule extends AbstractCableNetworkModule {
 	private final FluidTank FluidTank;

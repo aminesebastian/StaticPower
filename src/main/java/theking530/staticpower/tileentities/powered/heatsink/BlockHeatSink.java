@@ -28,7 +28,6 @@ import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.StaticPowerTiers;
-import theking530.staticpower.init.ModTileEntityTypes;
 
 public class BlockHeatSink extends StaticPowerTileEntityBlock {
 	public final ResourceLocation tier;
@@ -45,7 +44,9 @@ public class BlockHeatSink extends StaticPowerTileEntityBlock {
 		tooltip.add(HeatTooltipUtilities.getHeatRateTooltip(StaticPowerDataRegistry.getTier(tier).getHeatSinkConductivity()));
 		tooltip.add(HeatTooltipUtilities.getHeatCapacityTooltip(StaticPowerDataRegistry.getTier(tier).getHeatSinkCapacity()));
 		tooltip.add(HeatTooltipUtilities.getHeatGenerationTooltip(StaticPowerDataRegistry.getTier(tier).getHeatSinkElectricHeatGeneration()));
-		tooltip.add(new StringTextComponent(TextFormatting.GRAY.toString()).appendSibling(new StringTextComponent("Generation Usage: ")).appendSibling(new StringTextComponent(TextFormatting.RED.toString())).appendSibling(GuiTextUtilities.formatEnergyRateToString(StaticPowerDataRegistry.getTier(tier).getHeatSinkElectricHeatPowerUsage())));
+		tooltip.add(new StringTextComponent(TextFormatting.GRAY.toString()).appendSibling(new StringTextComponent("Generation Usage: "))
+				.appendSibling(new StringTextComponent(TextFormatting.RED.toString()))
+				.appendSibling(GuiTextUtilities.formatEnergyRateToString(StaticPowerDataRegistry.getTier(tier).getHeatSinkElectricHeatPowerUsage())));
 	}
 
 	@Override
@@ -61,15 +62,15 @@ public class BlockHeatSink extends StaticPowerTileEntityBlock {
 	@Override
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
 		if (tier == StaticPowerTiers.COPPER) {
-			return ModTileEntityTypes.HEAT_SINK_COPPER.create();
+			return TileEntityHeatSink.TYPE_COPPER.create();
 		} else if (tier == StaticPowerTiers.TIN) {
-			return ModTileEntityTypes.HEAT_SINK_TIN.create();
+			return TileEntityHeatSink.TYPE_TIN.create();
 		} else if (tier == StaticPowerTiers.SILVER) {
-			return ModTileEntityTypes.HEAT_SINK_SILVER.create();
+			return TileEntityHeatSink.TYPE_SILVER.create();
 		} else if (tier == StaticPowerTiers.GOLD) {
-			return ModTileEntityTypes.HEAT_SINK_GOLD.create();
+			return TileEntityHeatSink.TYPE_GOLD.create();
 		} else if (tier == StaticPowerTiers.ALUMINIUM) {
-			return ModTileEntityTypes.HEAT_SINK_ALUMINIUM.create();
+			return TileEntityHeatSink.TYPE_ALUMINIUM.create();
 		}
 		return null;
 	}

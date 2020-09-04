@@ -6,15 +6,19 @@ import java.util.List;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+import theking530.staticcore.initialization.container.ContainerTypeAllocator;
+import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.container.slots.BatteryItemSlot;
 import theking530.staticpower.container.slots.OutputSlot;
 import theking530.staticpower.container.slots.PhantomSlot;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
-import theking530.staticpower.init.ModContainerTypes;
 import theking530.staticpower.integration.JEI.IJEIReipceTransferHandler;
 
 public class ContainerAutoCraftingTable extends StaticPowerTileEntityContainer<TileEntityAutoCraftingTable> implements IJEIReipceTransferHandler {
+	@ContainerTypePopulator
+	public static final ContainerTypeAllocator<ContainerAutoCraftingTable, GuiAutoCraftingTable> TYPE = new ContainerTypeAllocator<>("machine_industrial_crafting_table",
+			ContainerAutoCraftingTable::new, GuiAutoCraftingTable::new);
 	private List<ItemStack> lastCraftingPattern;
 
 	public ContainerAutoCraftingTable(int windowId, PlayerInventory inv, PacketBuffer data) {
@@ -22,7 +26,7 @@ public class ContainerAutoCraftingTable extends StaticPowerTileEntityContainer<T
 	}
 
 	public ContainerAutoCraftingTable(int windowId, PlayerInventory playerInventory, TileEntityAutoCraftingTable owner) {
-		super(ModContainerTypes.AUTO_CRAFTING_TABLE_CONTAINER, windowId, playerInventory, owner);
+		super(TYPE, windowId, playerInventory, owner);
 	}
 
 	@Override

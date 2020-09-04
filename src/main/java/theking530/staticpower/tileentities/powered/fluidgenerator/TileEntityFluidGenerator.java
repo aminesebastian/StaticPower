@@ -9,24 +9,31 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.client.rendering.tileentity.TileEntityRenderFluidGenerator;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.fluidgenerator.FluidGeneratorRecipe;
-import theking530.staticpower.init.ModTileEntityTypes;
+import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
-import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
+import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.fluids.FluidInputServoComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent;
-import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
+import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.loopingsound.LoopingSoundComponent;
-import theking530.staticpower.tileentities.components.power.PowerDistributionComponent;
 import theking530.staticpower.tileentities.components.power.EnergyStorageComponent.EnergyManipulationAction;
+import theking530.staticpower.tileentities.components.power.PowerDistributionComponent;
 
 public class TileEntityFluidGenerator extends TileEntityMachine {
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityFluidGenerator> TYPE = new TileEntityTypeAllocator<TileEntityFluidGenerator>((type) -> new TileEntityFluidGenerator(),
+			TileEntityRenderFluidGenerator::new, ModBlocks.FluidGenerator);
+
 	public final InventoryComponent upgradesInventory;
 	public final MachineProcessingComponent processingComponent;
 	public final FluidContainerInventoryComponent fluidContainerComponent;
@@ -34,7 +41,7 @@ public class TileEntityFluidGenerator extends TileEntityMachine {
 	public final LoopingSoundComponent generatingSoundComponent;
 
 	public TileEntityFluidGenerator() {
-		super(ModTileEntityTypes.FLUID_GENERATOR);
+		super(TYPE);
 		disableFaceInteraction();
 
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));

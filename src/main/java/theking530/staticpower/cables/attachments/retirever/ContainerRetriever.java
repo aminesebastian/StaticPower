@@ -6,14 +6,18 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Direction;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import theking530.staticcore.initialization.container.ContainerTypeAllocator;
+import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachmentContainer;
 import theking530.staticpower.container.slots.PhantomSlot;
-import theking530.staticpower.init.ModContainerTypes;
 
 public class ContainerRetriever extends AbstractCableAttachmentContainer<RetrieverAttachment> {
+	@ContainerTypePopulator
+	public static final ContainerTypeAllocator<ContainerRetriever, GuiRetriever> TYPE = new ContainerTypeAllocator<>("cable_attachment_retriever", ContainerRetriever::new, GuiRetriever::new);
+
 	private ItemStackHandler filterInventory;
 
 	public ContainerRetriever(int windowId, PlayerInventory inv, PacketBuffer data) {
@@ -21,7 +25,7 @@ public class ContainerRetriever extends AbstractCableAttachmentContainer<Retriev
 	}
 
 	public ContainerRetriever(int windowId, PlayerInventory playerInventory, ItemStack attachment, Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
-		super(ModContainerTypes.RETRIEVER_CONTAINER, windowId, playerInventory, attachment, attachmentSide, cableComponent);
+		super(TYPE, windowId, playerInventory, attachment, attachmentSide, cableComponent);
 	}
 
 	@Override
@@ -37,7 +41,8 @@ public class ContainerRetriever extends AbstractCableAttachmentContainer<Retriev
 			return;
 		}
 
-		this.addSlotsInGrid(filterInventory, 0, 88, 24, SDMath.getSmallestFactor(filterInventory.getSlots(), 6), 16, (index, x, y) -> new PhantomSlot(filterInventory, index, x, y, true).renderFluidContainerAsFluid());
+		this.addSlotsInGrid(filterInventory, 0, 88, 24, SDMath.getSmallestFactor(filterInventory.getSlots(), 6), 16,
+				(index, x, y) -> new PhantomSlot(filterInventory, index, x, y, true).renderFluidContainerAsFluid());
 		this.addPlayerInventory(getPlayerInventory(), 8, 69);
 		this.addPlayerHotbar(getPlayerInventory(), 8, 127);
 	}

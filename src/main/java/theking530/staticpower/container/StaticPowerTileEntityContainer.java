@@ -5,13 +5,13 @@ import java.util.List;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.network.PacketDistributor;
+import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
@@ -26,8 +26,8 @@ public abstract class StaticPowerTileEntityContainer<T extends TileEntityBase> e
 	private int syncTime;
 	private int syncTimer;
 
-	public StaticPowerTileEntityContainer(ContainerType<?> containerType, int windowId, PlayerInventory inv, T owner) {
-		super(containerType, windowId, inv);
+	public StaticPowerTileEntityContainer(ContainerTypeAllocator<?, ?> allocator, int windowId, PlayerInventory inv, T owner) {
+		super(allocator, windowId, inv);
 		owningTileEntity = owner;
 		// This has to be called here and not in the super as the super initializes
 		// values that may be needed during the initialization.

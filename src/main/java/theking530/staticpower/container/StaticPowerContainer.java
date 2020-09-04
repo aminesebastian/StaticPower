@@ -9,12 +9,12 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.ClickType;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.items.IItemHandler;
+import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.utilities.TriFunction;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.container.slots.DummySlot;
@@ -34,8 +34,8 @@ public abstract class StaticPowerContainer extends Container {
 	private final PlayerInventory playerInventory;
 	private final Field listenersField;
 
-	protected StaticPowerContainer(ContainerType<?> type, int id, PlayerInventory inv) {
-		super(type, id);
+	protected StaticPowerContainer(ContainerTypeAllocator<?, ?> allocator, int id, PlayerInventory inv) {
+		super(allocator.getType(), id);
 		playerInventory = inv;
 		listenersField = getListnersField();
 		preInitializeContainer();
@@ -252,6 +252,8 @@ public abstract class StaticPowerContainer extends Container {
 					phantSlot.insertPhantomItem(player.inventory.getItemStack(), 1);
 				}
 			}
+			inventorySlots.get(slotId).onSlotChanged();
+
 			// Return as we don't want them to modify the container in this case.
 			return inventorySlots.get(slotId).getStack();
 		} else {

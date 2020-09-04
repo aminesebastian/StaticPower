@@ -23,7 +23,6 @@ import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
 import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.StaticPowerTiers;
-import theking530.staticpower.init.ModTileEntityTypes;
 
 public class BlockHeatCable extends AbstractCableBlock {
 	public final ResourceLocation tier;
@@ -74,15 +73,15 @@ public class BlockHeatCable extends AbstractCableBlock {
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		if (tier == StaticPowerTiers.COPPER) {
-			return ModTileEntityTypes.HEAT_CABLE_COPPER.create();
+			return TileEntityHeatCable.TYPE_COPPER.create();
 		} else if (tier == StaticPowerTiers.TIN) {
-			return ModTileEntityTypes.HEAT_CABLE_TIN.create();
+			return TileEntityHeatCable.TYPE_TIN.create();
 		} else if (tier == StaticPowerTiers.SILVER) {
-			return ModTileEntityTypes.HEAT_CABLE_SILVER.create();
+			return TileEntityHeatCable.TYPE_SILVER.create();
 		} else if (tier == StaticPowerTiers.GOLD) {
-			return ModTileEntityTypes.HEAT_CABLE_GOLD.create();
+			return TileEntityHeatCable.TYPE_GOLD.create();
 		} else if (tier == StaticPowerTiers.ALUMINIUM) {
-			return ModTileEntityTypes.HEAT_CABLE_ALUMINIUM.create();
+			return TileEntityHeatCable.TYPE_ALUMINIUM.create();
 		}
 		return null;
 	}

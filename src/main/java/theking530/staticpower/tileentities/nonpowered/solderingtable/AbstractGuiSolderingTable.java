@@ -5,7 +5,7 @@ import net.minecraft.util.text.ITextComponent;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 
-public class AbstractGuiSolderingTable<T extends TileEntitySolderingTable, K extends AbstractContainerSolderingTable<T>> extends StaticPowerTileEntityGui<K, T> {
+public class AbstractGuiSolderingTable<T extends AbstractSolderingTable, K extends AbstractContainerSolderingTable<T>> extends StaticPowerTileEntityGui<K, T> {
 
 	protected GuiInfoTab infoTab;
 

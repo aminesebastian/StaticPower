@@ -20,10 +20,10 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.api.IUpgradeItem.UpgradeType;
+import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModFluids;
-import theking530.staticpower.init.TileEntityTypePopulator;
-import theking530.staticpower.init.TileEntityTypePopulator.TileEntityTypeAllocator;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.items.upgrades.ExperienceVacuumUpgrade;
@@ -60,7 +60,7 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements INa
 	protected boolean shouldVacuumExperience;
 
 	public TileEntityVacuumChest() {
-		super(TYPE.type);
+		super(TYPE);
 		vacuumDiamater = DEFAULT_RANGE;
 		shouldTeleport = false;
 

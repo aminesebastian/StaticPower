@@ -9,7 +9,6 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
-import theking530.staticpower.init.ModTileEntityTypes;
 
 public class BlockSqueezer extends StaticPowerMachineBlock {
 
@@ -24,6 +23,6 @@ public class BlockSqueezer extends StaticPowerMachineBlock {
 
 	@Override
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
-		return ModTileEntityTypes.SQUEEZER.create();
+		return TileEntitySqueezer.TYPE.create();
 	}
 }

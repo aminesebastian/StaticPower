@@ -8,7 +8,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreBlock;
 
 public class BlockDigistoreManager extends BaseDigistoreBlock {
@@ -24,6 +23,6 @@ public class BlockDigistoreManager extends BaseDigistoreBlock {
 
 	@Override
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
-		return ModTileEntityTypes.DIGISTORE_MANAGER.create();
+		return TileEntityDigistoreManager.TYPE.create();
 	}
 }

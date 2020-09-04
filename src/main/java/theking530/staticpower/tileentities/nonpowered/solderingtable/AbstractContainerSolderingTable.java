@@ -5,29 +5,29 @@ import java.util.List;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import theking530.api.ISolderingIron;
+import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.container.slots.PhantomSlot;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.integration.JEI.IJEIReipceTransferHandler;
 
-public abstract class AbstractContainerSolderingTable<T extends TileEntitySolderingTable> extends StaticPowerTileEntityContainer<T> implements IJEIReipceTransferHandler {
+public abstract class AbstractContainerSolderingTable<T extends AbstractSolderingTable> extends StaticPowerTileEntityContainer<T> implements IJEIReipceTransferHandler {
 	private List<ItemStack> lastCraftingPattern;
 	protected boolean enableSolderingIronSlot;
 	protected int craftingGridXOffset;
 
 	@SuppressWarnings("unchecked")
-	public AbstractContainerSolderingTable(ContainerType<?> containerType, int windowId, PlayerInventory inv, PacketBuffer data) {
-		this(containerType, windowId, inv, (T) resolveTileEntityFromDataPacket(inv, data));
+	public AbstractContainerSolderingTable(ContainerTypeAllocator<?, ?> allocator, int windowId, PlayerInventory inv, PacketBuffer data) {
+		this(allocator, windowId, inv, (T) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public AbstractContainerSolderingTable(ContainerType<?> containerType, int windowId, PlayerInventory playerInventory, T owner) {
-		super(containerType, windowId, playerInventory, owner);
+	public AbstractContainerSolderingTable(ContainerTypeAllocator<?, ?> allocator, int windowId, PlayerInventory playerInventory, T owner) {
+		super(allocator, windowId, playerInventory, owner);
 	}
 
 	@Override

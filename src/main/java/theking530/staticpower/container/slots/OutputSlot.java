@@ -16,6 +16,10 @@ public class OutputSlot extends StaticPowerContainerSlot {
 		super(new ItemStack(item), 0.3f, itemHandler, index, xPosition, yPosition);
 	}
 
+	public OutputSlot(IItemHandler itemHandler, ItemStack item, int index, int xPosition, int yPosition) {
+		super(item, 0.3f, itemHandler, index, xPosition, yPosition);
+	}
+
 	@Override
 	public boolean isItemValid(@Nonnull ItemStack stack) {
 		return false;

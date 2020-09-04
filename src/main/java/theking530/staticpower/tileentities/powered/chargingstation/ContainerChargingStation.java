@@ -4,22 +4,26 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+import theking530.staticcore.initialization.container.ContainerTypeAllocator;
+import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.container.slots.BatteryItemSlot;
 import theking530.staticpower.container.slots.OutputSlot;
 import theking530.staticpower.container.slots.PlayerArmorItemSlot;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
-import theking530.staticpower.init.ModContainerTypes;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 public class ContainerChargingStation extends StaticPowerTileEntityContainer<TileEntityChargingStation> {
+	@ContainerTypePopulator
+	public static final ContainerTypeAllocator<ContainerChargingStation, GuiChargingStation> TYPE = new ContainerTypeAllocator<>("machine_charging_station",
+			ContainerChargingStation::new, GuiChargingStation::new);
 
 	public ContainerChargingStation(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, (TileEntityChargingStation) resolveTileEntityFromDataPacket(inv, data));
 	}
 
 	public ContainerChargingStation(int windowId, PlayerInventory playerInventory, TileEntityChargingStation owner) {
-		super(ModContainerTypes.CHARGING_STATION_CONTAINER, windowId, playerInventory, owner);
+		super(TYPE, windowId, playerInventory, owner);
 	}
 
 	@Override

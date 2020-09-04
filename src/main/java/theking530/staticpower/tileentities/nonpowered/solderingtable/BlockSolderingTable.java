@@ -15,7 +15,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
-import theking530.staticpower.init.ModTileEntityTypes;
 
 public class BlockSolderingTable extends StaticPowerTileEntityBlock {
 	protected static final VoxelShape SHAPE;
@@ -45,6 +44,6 @@ public class BlockSolderingTable extends StaticPowerTileEntityBlock {
 
 	@Override
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
-		return ModTileEntityTypes.SOLDERING_TABLE.create();
+		return TileEntitySolderingTable.TYPE.create();
 	}
 }

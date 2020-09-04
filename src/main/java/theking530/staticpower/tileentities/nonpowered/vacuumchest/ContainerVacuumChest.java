@@ -5,22 +5,25 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+import theking530.staticcore.initialization.container.ContainerTypeAllocator;
+import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.container.slots.FilterItemSlot;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.container.slots.UpgradeItemSlot;
-import theking530.staticpower.init.ModContainerTypes;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.items.upgrades.BaseUpgrade;
 
 public class ContainerVacuumChest extends StaticPowerTileEntityContainer<TileEntityVacuumChest> {
+	@ContainerTypePopulator
+	public static final ContainerTypeAllocator<ContainerVacuumChest, GuiVacuumChest> TYPE = new ContainerTypeAllocator<>("chest_vacuum", ContainerVacuumChest::new, GuiVacuumChest::new);
 
 	public ContainerVacuumChest(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, (TileEntityVacuumChest) resolveTileEntityFromDataPacket(inv, data));
 	}
 
 	public ContainerVacuumChest(int windowId, PlayerInventory playerInventory, TileEntityVacuumChest owner) {
-		super(ModContainerTypes.VACUUM_CHEST_CONTAINER, windowId, playerInventory, owner);
+		super(TYPE, windowId, playerInventory, owner);
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities;
 
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
@@ -13,8 +13,8 @@ public class TileEntityConfigurable extends TileEntityBase {
 	public final SideConfigurationComponent ioSideConfiguration;
 	public final RedstoneControlComponent redstoneControlComponent;
 
-	public TileEntityConfigurable(TileEntityType<?> teType) {
-		super(teType);
+	public TileEntityConfigurable(TileEntityTypeAllocator allocator) {
+		super(allocator);
 		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", this::onSidesConfigUpdate, this::checkSideConfiguration));
 		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent", RedstoneMode.Ignore));
 	}

@@ -238,6 +238,7 @@
 	"item.staticpower.cable_attachment_lumum_retriever": "Lumum Retriever",
 	"item.staticpower.cable_attachment_digistore_terminal": "Terminal",
 	"item.staticpower.cable_attachment_digistore_crafting_terminal": "Crafting Terminal",
+	"item.staticpower.cable_attachment_digistore_pattern_encoder": "Pattern Encoder",
 	"item.staticpower.cable_attachment_digistore_exporter": "Exporter",
 	"item.staticpower.cable_attachment_digistore_importer": "Importer",
 	"item.staticpower.cable_attachment_digistore_io_bus": "I/O Bus",

@@ -3,18 +3,21 @@ package theking530.staticpower.tileentities.nonpowered.tank;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Items;
 import net.minecraft.network.PacketBuffer;
+import theking530.staticcore.initialization.container.ContainerTypeAllocator;
+import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.container.slots.FluidContainerSlot;
-import theking530.staticpower.init.ModContainerTypes;
 
 public class ContainerTank extends StaticPowerTileEntityContainer<TileEntityTank> {
+	@ContainerTypePopulator
+	public static final ContainerTypeAllocator<ContainerTank, GuiTank> TYPE = new ContainerTypeAllocator<>("tank", ContainerTank::new, GuiTank::new);
 
 	public ContainerTank(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, (TileEntityTank) resolveTileEntityFromDataPacket(inv, data));
 	}
 
 	public ContainerTank(int windowId, PlayerInventory playerInventory, TileEntityTank owner) {
-		super(ModContainerTypes.TANK_CONTAINER, windowId, playerInventory, owner);
+		super(TYPE, windowId, playerInventory, owner);
 	}
 
 	@Override

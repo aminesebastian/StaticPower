@@ -9,7 +9,6 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
-import theking530.staticpower.init.ModTileEntityTypes;
 
 public class BlockMiner extends StaticPowerMachineBlock {
 
@@ -24,6 +23,6 @@ public class BlockMiner extends StaticPowerMachineBlock {
 
 	@Override
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
-		return ModTileEntityTypes.MINER.create();
+		return TileEntityMiner.TYPE.create();
 	}
 }

@@ -23,6 +23,6 @@ public class BlockVacuumChest extends StaticPowerTileEntityBlock {
 
 	@Override
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
-		return TileEntityVacuumChest.TYPE.type.create();
+		return TileEntityVacuumChest.TYPE.create();
 	}
 }

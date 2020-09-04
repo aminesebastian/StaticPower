@@ -7,18 +7,25 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.client.rendering.tileentity.TileEntityRenderAutoSolderingTable;
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
-import theking530.staticpower.init.ModTileEntityTypes;
-import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
+import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
+import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
-import theking530.staticpower.tileentities.nonpowered.solderingtable.TileEntitySolderingTable;
+import theking530.staticpower.tileentities.nonpowered.solderingtable.AbstractSolderingTable;
 import theking530.staticpower.utilities.InventoryUtilities;
 
-public class TileEntityAutoSolderingTable extends TileEntitySolderingTable {
+public class TileEntityAutoSolderingTable extends AbstractSolderingTable {
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityAutoSolderingTable> TYPE = new TileEntityTypeAllocator<TileEntityAutoSolderingTable>((type) -> new TileEntityAutoSolderingTable(),
+			TileEntityRenderAutoSolderingTable::new, ModBlocks.AutoSolderingTable);
+
 	public static final int DEFAULT_PROCESSING_TIME = 100;
 	public static final int DEFAULT_PROCESSING_COST = 5;
 	public static final int DEFAULT_MOVING_TIME = 4;
@@ -30,7 +37,7 @@ public class TileEntityAutoSolderingTable extends TileEntitySolderingTable {
 	public final InventoryComponent outputInventory;
 
 	public TileEntityAutoSolderingTable() {
-		super(ModTileEntityTypes.AUTO_SOLDERING_TABLE);
+		super(TYPE);
 
 		// Enable the power storage on this tile entity as this is the powered
 		// version.

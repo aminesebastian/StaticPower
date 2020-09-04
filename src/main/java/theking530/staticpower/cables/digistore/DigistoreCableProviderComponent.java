@@ -10,6 +10,7 @@ import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.attachments.digistore.digistorecraftingterminal.DigistoreCraftingTerminal;
+import theking530.staticpower.cables.attachments.digistore.digistorepatternencoder.DigistorePatternEncoder;
 import theking530.staticpower.cables.attachments.digistore.digistoreterminal.DigistoreTerminal;
 import theking530.staticpower.cables.attachments.digistore.exporter.DigistoreExporterAttachment;
 import theking530.staticpower.cables.attachments.digistore.importer.DigistoreImporterAttachment;
@@ -34,6 +35,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 		addValidAttachmentClass(DigistoreImporterAttachment.class);
 		addValidAttachmentClass(DigistoreIOBusAttachment.class);
 		addValidAttachmentClass(DigistoreRegulatorAttachment.class);
+		addValidAttachmentClass(DigistorePatternEncoder.class);
 	}
 
 	public void preProcessUpdate() {

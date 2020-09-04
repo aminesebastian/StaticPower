@@ -23,7 +23,10 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.api.digistore.CapabilityDigistoreInventory;
 import theking530.api.digistore.IDigistoreInventory;
-import theking530.staticpower.init.ModTileEntityTypes;
+import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.client.rendering.tileentity.TileEntityRenderDigistore;
+import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.items.DigistoreCard;
 import theking530.staticpower.items.DigistoreMonoCard;
 import theking530.staticpower.tileentities.components.items.ItemStackHandlerFilter;
@@ -32,6 +35,10 @@ import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreTileEnt
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class TileEntityDigistore extends BaseDigistoreTileEntity implements IItemHandler {
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityDigistore> TYPE = new TileEntityTypeAllocator<TileEntityDigistore>((type) -> new TileEntityDigistore(), TileEntityRenderDigistore::new,
+			ModBlocks.Digistore);
+
 	public final DigistoreInventoryComponent inventory;
 	/** KEEP IN MIND: This is purely cosmetic and on the client side. */
 	public static final ModelProperty<DigistoreRenderingState> RENDERING_STATE = new ModelProperty<DigistoreRenderingState>();
@@ -40,7 +47,7 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity implements IIte
 	private boolean locked;
 
 	public TileEntityDigistore() {
-		super(ModTileEntityTypes.DIGISTORE);
+		super(TYPE);
 		registerComponent(inventory = (DigistoreInventoryComponent) new DigistoreInventoryComponent("Inventory", 1).setShiftClickEnabled(true));
 		inventory.setFilter(new ItemStackHandlerFilter() {
 			@Override

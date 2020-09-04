@@ -6,15 +6,20 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Direction;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import theking530.staticcore.initialization.container.ContainerTypeAllocator;
+import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachmentContainer;
 import theking530.staticpower.container.slots.PhantomSlot;
 import theking530.staticpower.container.slots.UpgradeItemSlot;
-import theking530.staticpower.init.ModContainerTypes;
 
 public class ContainerDigistoreImporter extends AbstractCableAttachmentContainer<DigistoreImporterAttachment> {
+	@ContainerTypePopulator
+	public static final ContainerTypeAllocator<ContainerDigistoreImporter, GuiDigistoreImporter> TYPE = new ContainerTypeAllocator<>("cable_attachment_digistore_importer",
+			ContainerDigistoreImporter::new, GuiDigistoreImporter::new);
+
 	private ItemStackHandler filterInventory;
 	private ItemStackHandler upgradeInventory;
 
@@ -23,7 +28,7 @@ public class ContainerDigistoreImporter extends AbstractCableAttachmentContainer
 	}
 
 	public ContainerDigistoreImporter(int windowId, PlayerInventory playerInventory, ItemStack attachment, Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
-		super(ModContainerTypes.IMPORTER_CONTAINER, windowId, playerInventory, attachment, attachmentSide, cableComponent);
+		super(TYPE, windowId, playerInventory, attachment, attachmentSide, cableComponent);
 	}
 
 	@Override

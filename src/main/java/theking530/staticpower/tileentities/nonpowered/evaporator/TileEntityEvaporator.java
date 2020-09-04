@@ -7,13 +7,16 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.client.rendering.tileentity.TileEntityRenderEvaporator;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.evaporation.EvaporatorRecipe;
-import theking530.staticpower.init.ModTileEntityTypes;
+import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityConfigurable;
-import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
+import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.fluids.FluidInputServoComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidOutputServoComponent;
@@ -22,6 +25,10 @@ import theking530.staticpower.tileentities.components.heat.HeatStorageComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 
 public class TileEntityEvaporator extends TileEntityConfigurable {
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityEvaporator> TYPE = new TileEntityTypeAllocator<TileEntityEvaporator>((type) -> new TileEntityEvaporator(), TileEntityRenderEvaporator::new,
+			ModBlocks.Evaporator);
+
 	public static final int DEFAULT_PROCESSING_TIME = 5;
 	public static final int DEFAULT_TANK_SIZE = 5000;
 	public static final float DEFAULT_EVAPORATION_HEAT = 10.0f;
@@ -33,7 +40,7 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 	public final HeatStorageComponent heatStorage;
 
 	public TileEntityEvaporator() {
-		super(ModTileEntityTypes.EVAPORATOR);
+		super(TYPE);
 
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true)

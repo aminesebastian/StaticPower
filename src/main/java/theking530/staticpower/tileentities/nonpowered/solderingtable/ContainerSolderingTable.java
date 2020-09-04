@@ -10,13 +10,17 @@ import net.minecraft.inventory.container.ClickType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SSetSlotPacket;
+import theking530.staticcore.initialization.container.ContainerTypeAllocator;
+import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.slots.SolderingTableOutputSlot;
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
-import theking530.staticpower.init.ModContainerTypes;
 import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class ContainerSolderingTable extends AbstractContainerSolderingTable<TileEntitySolderingTable> {
+	@ContainerTypePopulator
+	public static final ContainerTypeAllocator<ContainerSolderingTable, GuiSolderingTable> TYPE = new ContainerTypeAllocator<>("soldering_table", ContainerSolderingTable::new, GuiSolderingTable::new);
+
 	private @Nullable SolderingTableOutputSlot outputSlot;
 	private CraftResultInventory craftResult;
 
@@ -25,7 +29,7 @@ public class ContainerSolderingTable extends AbstractContainerSolderingTable<Til
 	}
 
 	public ContainerSolderingTable(int windowId, PlayerInventory playerInventory, TileEntitySolderingTable owner) {
-		super(ModContainerTypes.SOLDERING_TABLE_CONTAINER, windowId, playerInventory, owner);
+		super(TYPE, windowId, playerInventory, owner);
 		enableSolderingIronSlot = true;
 
 	}
@@ -33,7 +37,7 @@ public class ContainerSolderingTable extends AbstractContainerSolderingTable<Til
 	@Override
 	public void initializeContainer() {
 		enableSolderingIronSlot = true;
-		
+
 		super.initializeContainer();
 
 		// Initial update of the output slot.
@@ -134,7 +138,7 @@ public class ContainerSolderingTable extends AbstractContainerSolderingTable<Til
 	 */
 	protected void updateOutputSlot() {
 		// Update the output slot if this is NOT the auto variant.
-		if (!getPlayerInventory().player.world.isRemote && getType() == ModContainerTypes.SOLDERING_TABLE_CONTAINER) {
+		if (!getPlayerInventory().player.world.isRemote && getType() == TYPE.getType()) {
 			ItemStack output = ItemStack.EMPTY;
 			// Set the slot contents on the server.
 			if (getTileEntity().hasRequiredItems()) {

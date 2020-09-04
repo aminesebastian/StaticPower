@@ -50,7 +50,6 @@ public class PluginTOP {
 							provider.addProbeInfo(mode, probeInfo, player, world, blockState, data);
 						}
 					}
-
 				}
 			});
 			return null;

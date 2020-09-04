@@ -9,13 +9,15 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
+import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
-import theking530.staticpower.init.ModTileEntityTypes;
+import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
-import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
+import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.fluids.FluidInputServoComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
@@ -29,6 +31,9 @@ import theking530.staticpower.tileentities.components.items.UpgradeInventoryComp
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityBottler extends TileEntityMachine {
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator TYPE = new TileEntityTypeAllocator((type) -> new TileEntityBottler(), ModBlocks.Bottler);
+
 	public static final int DEFAULT_PROCESSING_TIME = 40;
 	public static final int DEFAULT_PROCESSING_COST = 5;
 	public static final int DEFAULT_MOVING_TIME = 4;
@@ -47,7 +52,7 @@ public class TileEntityBottler extends TileEntityMachine {
 	public final FluidTankComponent fluidTankComponent;
 
 	public TileEntityBottler() {
-		super(ModTileEntityTypes.BOTTLER);
+		super(TYPE);
 
 		// Setup the input inventory to only accept items that have a valid recipe.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {

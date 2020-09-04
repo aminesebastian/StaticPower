@@ -3,7 +3,9 @@ package theking530.staticpower.tileentities.powered.crucible;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
-import theking530.staticpower.init.ModTileEntityTypes;
+import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
@@ -12,6 +14,9 @@ import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
 
 public class TileEntityCrucible extends TileEntityMachine {
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator TYPE = new TileEntityTypeAllocator((type) -> new TileEntityCrucible(), ModBlocks.Crucible);
+
 	public static final int DEFAULT_PROCESSING_TIME = 100;
 	public static final int DEFAULT_PROCESSING_COST = 10;
 	public static final int DEFAULT_MOVING_TIME = 4;
@@ -23,7 +28,7 @@ public class TileEntityCrucible extends TileEntityMachine {
 	public final InventoryComponent upgradesInventory;
 
 	public TileEntityCrucible() {
-		super(ModTileEntityTypes.CRUCIBLE);
+		super(TYPE);
 
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));

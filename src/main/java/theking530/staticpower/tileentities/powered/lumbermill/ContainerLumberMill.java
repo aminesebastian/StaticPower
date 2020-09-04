@@ -2,20 +2,23 @@ package theking530.staticpower.tileentities.powered.lumbermill;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketBuffer;
+import theking530.staticcore.initialization.container.ContainerTypeAllocator;
+import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.container.slots.BatteryItemSlot;
 import theking530.staticpower.container.slots.OutputSlot;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
-import theking530.staticpower.init.ModContainerTypes;
 
 public class ContainerLumberMill extends StaticPowerTileEntityContainer<TileEntityLumberMill> {
+	@ContainerTypePopulator
+	public static final ContainerTypeAllocator<ContainerLumberMill, GuiLumberMill> TYPE = new ContainerTypeAllocator<>("machine_lumber_mill", ContainerLumberMill::new, GuiLumberMill::new);
 
 	public ContainerLumberMill(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, (TileEntityLumberMill) resolveTileEntityFromDataPacket(inv, data));
 	}
 
 	public ContainerLumberMill(int windowId, PlayerInventory playerInventory, TileEntityLumberMill owner) {
-		super(ModContainerTypes.LUMBER_MILL_CONTAINER, windowId, playerInventory, owner);
+		super(TYPE, windowId, playerInventory, owner);
 	}
 
 	@Override

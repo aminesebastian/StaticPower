@@ -11,7 +11,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import theking530.staticpower.client.rendering.blocks.DigistoreModel;
-import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreBlock;
 
 public class BlockDigistore extends BaseDigistoreBlock {
@@ -27,7 +26,7 @@ public class BlockDigistore extends BaseDigistoreBlock {
 
 	@Override
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
-		return ModTileEntityTypes.DIGISTORE.create();
+		return TileEntityDigistore.TYPE.create();
 	}
 	@Override
 	public boolean hasModelOverride(BlockState state) {

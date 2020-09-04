@@ -9,23 +9,42 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
+import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.cables.heat.HeatCableComponent;
 import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.StaticPowerTier;
+import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
 
 public class TileEntityHeatSink extends TileEntityMachine implements INamedContainerProvider {
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityHeatSink> TYPE_ALUMINIUM = new TileEntityTypeAllocator<TileEntityHeatSink>(
+			(allocator) -> new TileEntityHeatSink(allocator, StaticPowerTiers.ALUMINIUM), ModBlocks.AluminiumHeatSink);
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityHeatSink> TYPE_COPPER = new TileEntityTypeAllocator<TileEntityHeatSink>(
+			(allocator) -> new TileEntityHeatSink(allocator, StaticPowerTiers.COPPER), ModBlocks.CopperHeatSink);
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityHeatSink> TYPE_TIN = new TileEntityTypeAllocator<TileEntityHeatSink>((allocator) -> new TileEntityHeatSink(allocator, StaticPowerTiers.TIN),
+			ModBlocks.TinHeatSink);
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityHeatSink> TYPE_SILVER = new TileEntityTypeAllocator<TileEntityHeatSink>(
+			(allocator) -> new TileEntityHeatSink(allocator, StaticPowerTiers.SILVER), ModBlocks.SilverHeatSink);
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityHeatSink> TYPE_GOLD = new TileEntityTypeAllocator<TileEntityHeatSink>((allocator) -> new TileEntityHeatSink(allocator, StaticPowerTiers.GOLD),
+			ModBlocks.GoldHeatSink);
+
 	public static final float HEAT_DAMAGE_THRESHOLD = 100.0f;
 	public final HeatCableComponent cableComponent;
 
-	public TileEntityHeatSink(TileEntityType<TileEntityHeatSink> type, ResourceLocation tierName) {
-		super(type);
+	public TileEntityHeatSink(TileEntityTypeAllocator<TileEntityHeatSink> allocator, ResourceLocation tierName) {
+		super(allocator);
 		StaticPowerTier tier = StaticPowerDataRegistry.getTier(tierName);
 		registerComponent(cableComponent = new HeatCableComponent("HeatCableComponent", tier.getHeatSinkCapacity(), tier.getHeatSinkConductivity(), tier.getHeatSinkElectricHeatGeneration(),
 				tier.getHeatSinkElectricHeatPowerUsage()).setEnergyStorageComponent(energyStorage));

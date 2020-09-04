@@ -1,16 +1,16 @@
 package theking530.staticpower.container;
 
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 
 public abstract class StaticPowerItemContainer<T extends Item> extends StaticPowerContainer {
 	private final ItemStack itemstack;
 
-	protected StaticPowerItemContainer(ContainerType<?> type, int id, PlayerInventory inv, ItemStack itemStack) {
-		super(type, id, inv);
+	protected StaticPowerItemContainer(ContainerTypeAllocator<?, ?> allocator, int id, PlayerInventory inv, ItemStack itemStack) {
+		super(allocator, id, inv);
 		itemstack = itemStack;
 		initializeContainer(); // This has to be called here and not in the super.
 	}

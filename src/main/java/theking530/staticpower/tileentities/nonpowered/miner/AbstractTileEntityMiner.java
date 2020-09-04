@@ -9,17 +9,17 @@ import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.init.ModTags;
 import theking530.staticpower.items.tools.DrillBit;
 import theking530.staticpower.tileentities.TileEntityConfigurable;
-import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
+import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.heat.HeatStorageComponent;
 import theking530.staticpower.tileentities.components.heat.HeatStorageComponent.HeatManipulationAction;
@@ -55,8 +55,8 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 	private int idleFuelCost;
 	private float heatGeneration;
 
-	public AbstractTileEntityMiner(TileEntityType<?> type) {
-		super(type);
+	public AbstractTileEntityMiner(TileEntityTypeAllocator allocator) {
+		super(allocator);
 		disableFaceInteraction();
 		blocks = new ArrayList<BlockPos>();
 		ticksPerOperation = DEFAULT_MINING_TIME;

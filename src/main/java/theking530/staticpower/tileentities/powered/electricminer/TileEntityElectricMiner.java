@@ -6,23 +6,28 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction.AxisDirection;
+import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
-import theking530.staticpower.init.ModTileEntityTypes;
+import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
 import theking530.staticpower.tileentities.nonpowered.miner.AbstractTileEntityMiner;
 
 public class TileEntityElectricMiner extends AbstractTileEntityMiner {
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator TYPE = new TileEntityTypeAllocator((type) -> new TileEntityElectricMiner(), ModBlocks.ElectricMiner);
+
 	public final EnergyStorageComponent energyStorage;
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final BatteryInventoryComponent batteryInventory;
 
 	public TileEntityElectricMiner() {
-		super(ModTileEntityTypes.ELECTRIC_MINER);
+		super(TYPE);
 		StaticPowerTier tierObject = StaticPowerDataRegistry.getTier(StaticPowerTiers.ENERGIZED);
 		registerComponent(energyStorage = new EnergyStorageComponent("MainEnergyStorage", tierObject.getDefaultMachinePowerCapacity(), tierObject.getDefaultMachinePowerInput(),
 				tierObject.getDefaultMachinePowerOutput()));

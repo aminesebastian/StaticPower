@@ -2,12 +2,12 @@ package theking530.staticpower.cables.attachments;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.container.StaticPowerContainer;
@@ -17,8 +17,9 @@ public class AbstractCableAttachmentContainer<T extends AbstractCableAttachment>
 	private final AbstractCableProviderComponent cableComponent;
 	private final ItemStack attachment;
 
-	protected AbstractCableAttachmentContainer(ContainerType<?> type, int id, PlayerInventory inv, ItemStack attachment, Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
-		super(type, id, inv);
+	protected AbstractCableAttachmentContainer(ContainerTypeAllocator<?, ?> allocator, int id, PlayerInventory inv, ItemStack attachment, Direction attachmentSide,
+			AbstractCableProviderComponent cableComponent) {
+		super(allocator, id, inv);
 		this.attachment = attachment;
 		this.attachmentSide = attachmentSide;
 		this.cableComponent = cableComponent;

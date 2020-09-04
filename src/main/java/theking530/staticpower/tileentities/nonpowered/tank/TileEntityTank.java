@@ -4,7 +4,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
-import theking530.staticpower.init.ModTileEntityTypes;
+import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.client.rendering.tileentity.TileEntityRenderTank;
+import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
@@ -15,13 +18,16 @@ import theking530.staticpower.tileentities.components.items.FluidContainerInvent
 import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 
 public class TileEntityTank extends TileEntityBase implements INamedContainerProvider {
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityTank> TYPE = new TileEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(), TileEntityRenderTank::new, ModBlocks.BasicTank);
+
 	public final FluidContainerInventoryComponent inputFluidContainerComponent;
 	public final FluidContainerInventoryComponent outputFluidContainerComponent;
 	public final FluidTankComponent fluidTankComponent;
 	public final SideConfigurationComponent ioSideConfiguration;
 
 	public TileEntityTank() {
-		super(ModTileEntityTypes.TANK);
+		super(TYPE);
 		// Add the tank component.
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 16000).setCapabilityExposedModes(MachineSideMode.Regular, MachineSideMode.Input, MachineSideMode.Output));
 		fluidTankComponent.setCanFill(true);

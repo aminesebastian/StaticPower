@@ -9,12 +9,17 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
+import theking530.staticcore.initialization.container.ContainerTypeAllocator;
+import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.container.StaticPowerItemContainer;
 import theking530.staticpower.container.slots.PhantomSlot;
-import theking530.staticpower.init.ModContainerTypes;
 
 public class ContainerItemFilter extends StaticPowerItemContainer<ItemFilter> {
+	@ContainerTypePopulator
+	public static final ContainerTypeAllocator<ContainerItemFilter, GuiItemFilter> TYPE = new ContainerTypeAllocator<>("filter_item", ContainerItemFilter::new,
+			GuiItemFilter::new);
+
 	private ItemStackHandler filterInventory;
 
 	public ContainerItemFilter(int windowId, PlayerInventory inv, PacketBuffer data) {
@@ -22,7 +27,7 @@ public class ContainerItemFilter extends StaticPowerItemContainer<ItemFilter> {
 	}
 
 	public ContainerItemFilter(int windowId, PlayerInventory playerInventory, ItemStack owner) {
-		super(ModContainerTypes.ITEM_FILTER_CONTAINER, windowId, playerInventory, owner);
+		super(TYPE, windowId, playerInventory, owner);
 	}
 
 	@Override

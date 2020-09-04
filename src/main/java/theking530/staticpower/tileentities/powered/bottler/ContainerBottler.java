@@ -2,21 +2,24 @@ package theking530.staticpower.tileentities.powered.bottler;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketBuffer;
+import theking530.staticcore.initialization.container.ContainerTypeAllocator;
+import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.container.slots.BatteryItemSlot;
 import theking530.staticpower.container.slots.OutputSlot;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.container.slots.UpgradeItemSlot;
-import theking530.staticpower.init.ModContainerTypes;
 
 public class ContainerBottler extends StaticPowerTileEntityContainer<TileEntityBottler> {
+		@ContainerTypePopulator
+	public static final ContainerTypeAllocator<ContainerBottler, GuiBottler> TYPE = new ContainerTypeAllocator<>("machine_bottler", ContainerBottler::new, GuiBottler::new);
 
 	public ContainerBottler(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, (TileEntityBottler) resolveTileEntityFromDataPacket(inv, data));
 	}
 
 	public ContainerBottler(int windowId, PlayerInventory playerInventory, TileEntityBottler owner) {
-		super(ModContainerTypes.BOTTLER_CONTAINER, windowId, playerInventory, owner);
+		super(TYPE, windowId, playerInventory, owner);
 	}
 
 	@Override

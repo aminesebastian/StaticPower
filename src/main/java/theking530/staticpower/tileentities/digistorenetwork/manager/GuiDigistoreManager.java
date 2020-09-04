@@ -2,8 +2,8 @@ package theking530.staticpower.tileentities.digistorenetwork.manager;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
-import theking530.staticcore.gui.widgets.tabs.GuiPowerInfoTab;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
+import theking530.staticcore.gui.widgets.tabs.GuiPowerInfoTab;
 import theking530.staticcore.gui.widgets.tabs.slottabs.GuiUpgradeTab;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;

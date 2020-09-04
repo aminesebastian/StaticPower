@@ -3,22 +3,25 @@ package theking530.staticpower.tileentities.powered.former;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+import theking530.staticcore.initialization.container.ContainerTypeAllocator;
+import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.container.slots.BatteryItemSlot;
 import theking530.staticpower.container.slots.OutputSlot;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.container.slots.UpgradeItemSlot;
-import theking530.staticpower.init.ModContainerTypes;
 import theking530.staticpower.init.ModItems;
 
 public class ContainerFormer extends StaticPowerTileEntityContainer<TileEntityFormer> {
+		@ContainerTypePopulator
+	public static final ContainerTypeAllocator<ContainerFormer, GuiFormer> TYPE = new ContainerTypeAllocator<>("machine_former", ContainerFormer::new, GuiFormer::new);
 
 	public ContainerFormer(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, (TileEntityFormer) resolveTileEntityFromDataPacket(inv, data));
 	}
 
 	public ContainerFormer(int windowId, PlayerInventory playerInventory, TileEntityFormer owner) {
-		super(ModContainerTypes.FORMER_CONTAINER, windowId, playerInventory, owner);
+		super(TYPE, windowId, playerInventory, owner);
 	}
 
 	@Override

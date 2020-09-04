@@ -22,7 +22,6 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
 import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
 import theking530.staticpower.client.rendering.blocks.TankMachineBakedModel;
-import theking530.staticpower.init.ModTileEntityTypes;
 
 public class BlockTank extends StaticPowerTileEntityBlock implements ICustomModelSupplier {
 
@@ -64,6 +63,6 @@ public class BlockTank extends StaticPowerTileEntityBlock implements ICustomMode
 
 	@Override
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
-		return ModTileEntityTypes.TANK.create();
+		return TileEntityTank.TYPE.create();
 	}
 }

@@ -6,9 +6,11 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.client.rendering.tileentity.TileEntityRenderChargingStation;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
-import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
@@ -21,13 +23,17 @@ import theking530.staticpower.tileentities.components.items.UpgradeInventoryComp
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityChargingStation extends TileEntityMachine {
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityChargingStation> TYPE = new TileEntityTypeAllocator<TileEntityChargingStation>((type) -> new TileEntityChargingStation(),
+			TileEntityRenderChargingStation::new, ModBlocks.ChargingStation);
+
 	public final InventoryComponent unchargedInventory;
 	public final InventoryComponent chargedInventory;
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 
 	public TileEntityChargingStation() {
-		super(ModTileEntityTypes.CHARGING_STATION, StaticPowerTiers.ENERGIZED);
+		super(TYPE, StaticPowerTiers.ENERGIZED);
 
 		// Add the input inventory that only takes energy storing items.
 		registerComponent(unchargedInventory = new InventoryComponent("unchargedInventory", 4, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {

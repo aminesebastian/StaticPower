@@ -8,19 +8,23 @@ import net.minecraft.item.HoeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.PacketBuffer;
+import theking530.staticcore.initialization.container.ContainerTypeAllocator;
+import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.container.slots.BatteryItemSlot;
 import theking530.staticpower.container.slots.OutputSlot;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
-import theking530.staticpower.init.ModContainerTypes;
 
 public class ContainerBasicFarmer extends StaticPowerTileEntityContainer<TileEntityBasicFarmer> {
+@ContainerTypePopulator
+	public static final ContainerTypeAllocator<ContainerBasicFarmer, GuiBasicFarmer> TYPE = new ContainerTypeAllocator<>("machine_basic_farmer", ContainerBasicFarmer::new, GuiBasicFarmer::new);
+
 	public ContainerBasicFarmer(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, (TileEntityBasicFarmer) resolveTileEntityFromDataPacket(inv, data));
 	}
 
 	public ContainerBasicFarmer(int windowId, PlayerInventory playerInventory, TileEntityBasicFarmer owner) {
-		super(ModContainerTypes.BASIC_FARMER_CONTAINER, windowId, playerInventory, owner);
+		super(TYPE, windowId, playerInventory, owner);
 	}
 
 	@Override

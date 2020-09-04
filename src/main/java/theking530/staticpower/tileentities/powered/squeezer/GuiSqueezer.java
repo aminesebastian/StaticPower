@@ -5,9 +5,9 @@ import net.minecraft.item.Items;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.widgets.progressbars.FluidProgressBar;
+import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.GuiMachinePowerInfoTab;
 import theking530.staticcore.gui.widgets.tabs.GuiSideConfigTab;
-import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
 import theking530.staticcore.gui.widgets.tabs.slottabs.GuiFluidContainerTab;
 import theking530.staticcore.gui.widgets.tabs.slottabs.GuiUpgradeTab;
@@ -16,8 +16,8 @@ import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.data.crafting.wrappers.squeezer.SqueezerRecipe;
 import theking530.staticpower.init.ModFluids;
-import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
+import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 
 public class GuiSqueezer extends StaticPowerTileEntityGui<ContainerSqueezer, TileEntitySqueezer> {

@@ -19,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.attachments.digistore.digistorecraftingterminal.ContainerDigistoreCraftingTerminal;
+import theking530.staticpower.cables.attachments.digistore.digistorepatternencoder.ContainerDigistorePatternEncoder;
 import theking530.staticpower.client.gui.StaticPowerContainerGui;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
@@ -239,6 +240,7 @@ public class PluginJEI implements IModPlugin {
 	public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
 		registration.addRecipeTransferHandler(new CraftingRecipeTransferHandler<>(ContainerDigistoreCraftingTerminal.class, 9), VanillaRecipeCategoryUid.CRAFTING);
 		registration.addRecipeTransferHandler(new CraftingRecipeTransferHandler<>(ContainerAutoCraftingTable.class, 9), VanillaRecipeCategoryUid.CRAFTING);
+		registration.addRecipeTransferHandler(new CraftingRecipeTransferHandler<>(ContainerDigistorePatternEncoder.class, 9), VanillaRecipeCategoryUid.CRAFTING);
 		registration.addRecipeTransferHandler(new CraftingRecipeTransferHandler<>(ContainerSolderingTable.class, 9), SolderingTableRecipeCategory.SOLDERING_TABLE_UID);
 		registration.addRecipeTransferHandler(new CraftingRecipeTransferHandler<>(ContainerAutoSolderingTable.class, 9), SolderingTableRecipeCategory.SOLDERING_TABLE_UID);
 	}

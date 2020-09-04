@@ -2,20 +2,23 @@ package theking530.staticpower.tileentities.powered.treefarmer;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketBuffer;
+import theking530.staticcore.initialization.container.ContainerTypeAllocator;
+import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.container.slots.BatteryItemSlot;
 import theking530.staticpower.container.slots.OutputSlot;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
-import theking530.staticpower.init.ModContainerTypes;
 
 public class ContainerTreeFarmer extends StaticPowerTileEntityContainer<TileEntityTreeFarm> {
+@ContainerTypePopulator
+	public static final ContainerTypeAllocator<ContainerTreeFarmer, GuiTreeFarmer> TYPE = new ContainerTypeAllocator<>("machine_tree_farmer", ContainerTreeFarmer::new, GuiTreeFarmer::new);
 
 	public ContainerTreeFarmer(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, (TileEntityTreeFarm) resolveTileEntityFromDataPacket(inv, data));
 	}
 
 	public ContainerTreeFarmer(int windowId, PlayerInventory playerInventory, TileEntityTreeFarm owner) {
-		super(ModContainerTypes.TREE_FARMER_CONTAINER, windowId, playerInventory, owner);
+		super(TYPE, windowId, playerInventory, owner);
 	}
 
 	@Override
@@ -36,7 +39,6 @@ public class ContainerTreeFarmer extends StaticPowerTileEntityContainer<TileEnti
 
 		// Battery
 		addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 60));
-
 
 		addPlayerInventory(getPlayerInventory(), 8, 84);
 		addPlayerHotbar(getPlayerInventory(), 8, 142);

@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities;
 
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
+import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -16,12 +16,12 @@ public abstract class TileEntityMachine extends TileEntityConfigurable {
 
 	public boolean isUpdateQueued = true;
 
-	public TileEntityMachine(TileEntityType<?> tileEntityType) {
-		this(tileEntityType, StaticPowerTiers.BASIC);
+	public TileEntityMachine(TileEntityTypeAllocator allocator) {
+		this(allocator, StaticPowerTiers.BASIC);
 	}
 
-	public TileEntityMachine(TileEntityType<?> tileEntityType, ResourceLocation tier) {
-		super(tileEntityType);
+	public TileEntityMachine(TileEntityTypeAllocator allocator, ResourceLocation tier) {
+		super(allocator);
 		disableFaceInteraction();
 		StaticPowerTier tierObject = StaticPowerDataRegistry.getTier(tier);
 		registerComponent(energyStorage = new EnergyStorageComponent("MainEnergyStorage", tierObject.getDefaultMachinePowerCapacity(), tierObject.getDefaultMachinePowerInput(),

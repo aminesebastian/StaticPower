@@ -5,13 +5,16 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
+import theking530.staticpower.client.rendering.tileentity.TileEntityRenderFluidInfuser;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.fluidinfusion.FluidInfusionRecipe;
-import theking530.staticpower.init.ModTileEntityTypes;
+import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
-import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
+import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.fluids.FluidInputServoComponent;
@@ -24,6 +27,10 @@ import theking530.staticpower.tileentities.components.items.UpgradeInventoryComp
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityFluidInfuser extends TileEntityMachine {
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityFluidInfuser> TYPE = new TileEntityTypeAllocator<TileEntityFluidInfuser>((type) -> new TileEntityFluidInfuser(),
+			TileEntityRenderFluidInfuser::new, ModBlocks.FluidInfuser);
+
 	public static final int DEFAULT_PROCESSING_TIME = 200;
 	public static final int DEFAULT_PROCESSING_COST = 5;
 	public static final int DEFAULT_MOVING_TIME = 4;
@@ -38,7 +45,7 @@ public class TileEntityFluidInfuser extends TileEntityMachine {
 	public final FluidTankComponent fluidTankComponent;
 
 	public TileEntityFluidInfuser() {
-		super(ModTileEntityTypes.FLUID_INFUSER);
+		super(TYPE);
 
 		// Setup the inventories.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true));

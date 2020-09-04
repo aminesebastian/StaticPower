@@ -2,21 +2,25 @@ package theking530.staticpower.tileentities.powered.poweredgrinder;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketBuffer;
+import theking530.staticcore.initialization.container.ContainerTypeAllocator;
+import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.container.slots.BatteryItemSlot;
 import theking530.staticpower.container.slots.OutputSlot;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.container.slots.UpgradeItemSlot;
-import theking530.staticpower.init.ModContainerTypes;
 
 public class ContainerPoweredGrinder extends StaticPowerTileEntityContainer<TileEntityPoweredGrinder> {
+	@ContainerTypePopulator
+	public static final ContainerTypeAllocator<ContainerPoweredGrinder, GuiPoweredGrinder> TYPE = new ContainerTypeAllocator<>("machine_powered_grinder", ContainerPoweredGrinder::new,
+			GuiPoweredGrinder::new);
 
 	public ContainerPoweredGrinder(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, (TileEntityPoweredGrinder) resolveTileEntityFromDataPacket(inv, data));
 	}
 
 	public ContainerPoweredGrinder(int windowId, PlayerInventory playerInventory, TileEntityPoweredGrinder owner) {
-		super(ModContainerTypes.POWERED_GRINDER_CONTAINER, windowId, playerInventory, owner);
+		super(TYPE, windowId, playerInventory, owner);
 	}
 
 	@Override

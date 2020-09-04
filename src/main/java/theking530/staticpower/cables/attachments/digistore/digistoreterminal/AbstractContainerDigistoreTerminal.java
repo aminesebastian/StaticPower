@@ -8,7 +8,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.ClickType;
-import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
@@ -17,10 +16,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.attachments.AbstractCableAttachmentContainer;
+import theking530.staticpower.cables.attachments.digistore.iobus.ContainerDigistoreIOBus;
+import theking530.staticpower.cables.attachments.digistore.iobus.GuiDigistoreIOBus;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
@@ -32,6 +34,9 @@ import theking530.staticpower.container.slots.DummySlot;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCableAttachment> extends AbstractCableAttachmentContainer<T> {
+	public static final ContainerTypeAllocator<ContainerDigistoreIOBus, GuiDigistoreIOBus> TYPE = new ContainerTypeAllocator<>("cable_attachment_digistore_io_bus", ContainerDigistoreIOBus::new,
+			GuiDigistoreIOBus::new);
+
 	public static final int DEFAULT_ITEMS_PER_ROW = 9;
 	public static final int DEFAULT_MAX_ROWS_ON_SCREEN = 8;
 	public static final Vector2D DEFAULT_INVENTORY_START = new Vector2D(8, 22);
@@ -48,9 +53,9 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 	private DigistoreInventorySortType sortType;
 	private DigistoreSimulatedItemStackHandler clientSimulatedInventory;
 
-	public AbstractContainerDigistoreTerminal(ContainerType<?> type, int windowId, PlayerInventory playerInventory, ItemStack attachment, Direction attachmentSide,
+	public AbstractContainerDigistoreTerminal(ContainerTypeAllocator<?, ?> allocator, int windowId, PlayerInventory playerInventory, ItemStack attachment, Direction attachmentSide,
 			AbstractCableProviderComponent cableComponent) {
-		super(type, windowId, playerInventory, attachment, attachmentSide, cableComponent);
+		super(allocator, windowId, playerInventory, attachment, attachmentSide, cableComponent);
 	}
 
 	@Override
@@ -68,7 +73,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 	@Override
 	public void initializeContainer() {
 		managerPresentLastState = getCableComponent().isManagerPresent();
-		
+
 		// On both the client and the server, add the player slots.
 		addPlayerHotbar(getPlayerInventory(), 8, 246);
 		addPlayerInventory(getPlayerInventory(), 8, 188);

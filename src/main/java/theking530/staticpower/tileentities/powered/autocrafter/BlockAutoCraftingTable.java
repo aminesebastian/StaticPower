@@ -9,7 +9,6 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
-import theking530.staticpower.init.ModTileEntityTypes;
 
 public class BlockAutoCraftingTable extends StaticPowerMachineBlock {
 	public BlockAutoCraftingTable(String name) {
@@ -23,6 +22,6 @@ public class BlockAutoCraftingTable extends StaticPowerMachineBlock {
 
 	@Override
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
-		return ModTileEntityTypes.AUTO_CRAFTING_TABLE.create();
+		return TileEntityAutoCraftingTable.TYPE.create();
 	}
 }

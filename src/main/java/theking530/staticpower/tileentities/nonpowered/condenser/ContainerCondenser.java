@@ -5,20 +5,23 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+import theking530.staticcore.initialization.container.ContainerTypeAllocator;
+import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.container.slots.UpgradeItemSlot;
-import theking530.staticpower.init.ModContainerTypes;
 import theking530.staticpower.items.upgrades.BaseUpgrade;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 public class ContainerCondenser extends StaticPowerTileEntityContainer<TileEntityCondenser> {
+		@ContainerTypePopulator
+	public static final ContainerTypeAllocator<ContainerCondenser, GuiCondenser> TYPE = new ContainerTypeAllocator<>("machine_condenser", ContainerCondenser::new, GuiCondenser::new);
 
 	public ContainerCondenser(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, (TileEntityCondenser) resolveTileEntityFromDataPacket(inv, data));
 	}
 
 	public ContainerCondenser(int windowId, PlayerInventory playerInventory, TileEntityCondenser owner) {
-		super(ModContainerTypes.CONDENSER_CONTAINER, windowId, playerInventory, owner);
+		super(TYPE, windowId, playerInventory, owner);
 	}
 
 	@Override

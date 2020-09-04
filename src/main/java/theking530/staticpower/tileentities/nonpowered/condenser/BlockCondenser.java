@@ -12,7 +12,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
-import theking530.staticpower.init.ModTileEntityTypes;
 
 public class BlockCondenser extends StaticPowerMachineBlock {
 
@@ -33,6 +32,6 @@ public class BlockCondenser extends StaticPowerMachineBlock {
 
 	@Override
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
-		return ModTileEntityTypes.CONDENSER.create();
+		return TileEntityCondenser.TYPE.create();
 	}
 }

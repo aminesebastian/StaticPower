@@ -9,17 +9,23 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
-import theking530.staticpower.init.ModTileEntityTypes;
+import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreTileEntity;
 import theking530.staticpower.tileentities.digistorenetwork.digistore.DigistoreInventoryComponent;
 
 public class TileEntityDigistoreServerRack extends BaseDigistoreTileEntity {
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityDigistoreServerRack> TYPE = new TileEntityTypeAllocator<TileEntityDigistoreServerRack>((type) -> new TileEntityDigistoreServerRack(),
+			ModBlocks.DigistoreServerRack);
+
 	/** KEEP IN MIND: This is purely cosmetic and on the client side. */
 	public static final ModelProperty<ServerRackRenderingState> CARD_RENDERING_STATE = new ModelProperty<ServerRackRenderingState>();
 	public final DigistoreInventoryComponent inventory;
 
 	public TileEntityDigistoreServerRack() {
-		super(ModTileEntityTypes.DIGISTORE_SERVER_RACK);
+		super(TYPE);
 		registerComponent(inventory = (DigistoreInventoryComponent) new DigistoreInventoryComponent("Inventory", 8).setShiftClickEnabled(true));
 		inventory.setModifiedCallback((type, stack, comp) -> {
 			markTileEntityForSynchronization();

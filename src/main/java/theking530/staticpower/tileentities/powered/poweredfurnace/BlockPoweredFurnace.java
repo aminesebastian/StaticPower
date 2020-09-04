@@ -23,6 +23,6 @@ public class BlockPoweredFurnace extends StaticPowerMachineBlock {
 
 	@Override
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
-		return new TileEntityPoweredFurnace();
+		return TileEntityPoweredFurnace.TYPE.create();
 	}
 }

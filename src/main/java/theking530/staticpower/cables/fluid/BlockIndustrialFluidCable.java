@@ -20,7 +20,6 @@ import theking530.staticpower.cables.CableBoundsCache;
 import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
-import theking530.staticpower.init.ModTileEntityTypes;
 
 public class BlockIndustrialFluidCable extends AbstractCableBlock {
 
@@ -33,7 +32,7 @@ public class BlockIndustrialFluidCable extends AbstractCableBlock {
 		IBakedModel extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_EXTENSION);
 		IBakedModel attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_ATTACHMENT);
 		IBakedModel straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_STRAIGHT);
-		
+
 		return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
 	}
 
@@ -58,6 +57,6 @@ public class BlockIndustrialFluidCable extends AbstractCableBlock {
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return ModTileEntityTypes.INDUSTRIAL_FLUID_CABLE.create();
+		return TileEntityFluidCable.TYPE_INDUSTRIAL.create();
 	}
 }

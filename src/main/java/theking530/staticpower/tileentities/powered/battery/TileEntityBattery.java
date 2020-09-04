@@ -4,16 +4,43 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
+import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.client.rendering.tileentity.TileEntityRenderBatteryBlock;
 import theking530.staticpower.data.StaticPowerDataRegistry;
+import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
-import theking530.staticpower.tileentities.components.power.PowerDistributionComponent;
 import theking530.staticpower.tileentities.components.power.EnergyStorageComponent.EnergyManipulationAction;
+import theking530.staticpower.tileentities.components.power.PowerDistributionComponent;
 
 public class TileEntityBattery extends TileEntityMachine {
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityBattery> TYPE_BASIC = new TileEntityTypeAllocator<TileEntityBattery>((allocator) -> new TileEntityBattery(allocator, StaticPowerTiers.BASIC),
+			TileEntityRenderBatteryBlock::new, ModBlocks.BatteryBasic);
+
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityBattery> TYPE_ADVANCED = new TileEntityTypeAllocator<TileEntityBattery>(
+			(allocator) -> new TileEntityBattery(allocator, StaticPowerTiers.ADVANCED), TileEntityRenderBatteryBlock::new, ModBlocks.BatteryAdvanced);
+
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityBattery> TYPE_STATIC = new TileEntityTypeAllocator<TileEntityBattery>(
+			(allocator) -> new TileEntityBattery(allocator, StaticPowerTiers.STATIC), TileEntityRenderBatteryBlock::new, ModBlocks.BatteryStatic);
+
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityBattery> TYPE_ENERGIZED = new TileEntityTypeAllocator<TileEntityBattery>(
+			(allocator) -> new TileEntityBattery(allocator, StaticPowerTiers.ENERGIZED), TileEntityRenderBatteryBlock::new, ModBlocks.BatteryEnergized);
+
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityBattery> TYPE_LUMUM = new TileEntityTypeAllocator<TileEntityBattery>((allocator) -> new TileEntityBattery(allocator, StaticPowerTiers.LUMUM),
+			TileEntityRenderBatteryBlock::new, ModBlocks.BatteryLumum);
+
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityBattery> TYPE_CREATIVE = new TileEntityTypeAllocator<TileEntityBattery>(
+			(allocator) -> new TileEntityBattery(allocator, StaticPowerTiers.CREATIVE), TileEntityRenderBatteryBlock::new, ModBlocks.BatteryCreative);
 
 	private int minPowerThreshold;
 	private int maxPowerThreshold;
@@ -25,8 +52,8 @@ public class TileEntityBattery extends TileEntityMachine {
 
 	protected PowerDistributionComponent powerDistributor;
 
-	public TileEntityBattery(TileEntityType<?> type, ResourceLocation tier) {
-		super(type);
+	public TileEntityBattery(TileEntityTypeAllocator<TileEntityBattery> allocator, ResourceLocation tier) {
+		super(allocator);
 		DisableFaceInteraction = false;
 
 		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor", energyStorage.getStorage()));

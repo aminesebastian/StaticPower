@@ -12,9 +12,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
-import theking530.staticpower.init.ModTileEntityTypes;
 
 public class BlockEvaporator extends StaticPowerMachineBlock {
+
 
 	public BlockEvaporator(String name) {
 		super(name);
@@ -33,6 +33,6 @@ public class BlockEvaporator extends StaticPowerMachineBlock {
 
 	@Override
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
-		return ModTileEntityTypes.EVAPORATOR.create();
+		return TileEntityEvaporator.TYPE.create();
 	}
 }

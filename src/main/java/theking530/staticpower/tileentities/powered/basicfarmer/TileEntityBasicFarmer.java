@@ -29,33 +29,40 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.client.rendering.CustomRenderer;
+import theking530.staticpower.client.rendering.tileentity.TileEntityRenderFarmer;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.farmer.FarmingFertalizerRecipe;
+import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModTags;
-import theking530.staticpower.init.ModTileEntityTypes;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.tileentities.TileEntityMachine;
-import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
+import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
+import theking530.staticpower.tileentities.components.items.InventoryComponent.InventoryChangeType;
 import theking530.staticpower.tileentities.components.items.ItemStackHandlerFilter;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
-import theking530.staticpower.tileentities.components.items.InventoryComponent.InventoryChangeType;
 import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class TileEntityBasicFarmer extends TileEntityMachine {
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityBasicFarmer> TYPE = new TileEntityTypeAllocator<TileEntityBasicFarmer>((allocator) -> new TileEntityBasicFarmer(),
+			TileEntityRenderFarmer::new, ModBlocks.BasicFarmer);
+
 	public static final int DEFAULT_WATER_USAGE = 1;
 	public static final int DEFAULT_IDLE_ENERGY_USAGE = 10;
 	public static final int DEFAULT_HARVEST_ENERGY_COST = 100;
@@ -81,7 +88,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	private boolean shouldDrawRadiusPreview;
 
 	public TileEntityBasicFarmer() {
-		super(ModTileEntityTypes.BASIC_FARMER, StaticPowerTiers.STATIC);
+		super(TYPE, StaticPowerTiers.STATIC);
 		disableFaceInteraction();
 
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 2, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {

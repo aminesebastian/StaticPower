@@ -4,6 +4,8 @@ import theking530.staticcore.gui.widgets.tabs.PacketGuiTabAddSlots;
 import theking530.staticcore.gui.widgets.tabs.PacketSideConfigTab;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.PacketCableAttachmentRedstoneSync;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.PacketRedstoneComponentSync;
+import theking530.staticpower.cables.attachments.digistore.digistorepatternencoder.PacketPatternEncoderEncode;
+import theking530.staticpower.cables.attachments.digistore.digistorepatternencoder.PacketPatternEncoderRecipeTypeChange;
 import theking530.staticpower.cables.attachments.digistore.digistoreterminal.PacketDigistoreTerminalFilters;
 import theking530.staticpower.cables.fluid.FluidCableUpdatePacket;
 import theking530.staticpower.cables.heat.HeatCableUpdatePacket;
@@ -46,5 +48,7 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(PacketFluidContainerComponent.class);
 		StaticPowerMessageHandler.registerMessage(LoopingSoundPacketStart.class);		
 		StaticPowerMessageHandler.registerMessage(LoopingSoundPacketStop.class);	
+		StaticPowerMessageHandler.registerMessage(PacketPatternEncoderRecipeTypeChange.class);	
+		StaticPowerMessageHandler.registerMessage(PacketPatternEncoderEncode.class);	
 	}
 }

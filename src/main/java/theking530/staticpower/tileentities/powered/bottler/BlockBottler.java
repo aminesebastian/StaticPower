@@ -9,7 +9,6 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
-import theking530.staticpower.init.ModTileEntityTypes;
 
 public class BlockBottler extends StaticPowerMachineBlock {
 
@@ -24,6 +23,6 @@ public class BlockBottler extends StaticPowerMachineBlock {
 
 	@Override
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
-		return ModTileEntityTypes.BOTTLER.create();
+		return TileEntityBottler.TYPE.create();
 	}
 }

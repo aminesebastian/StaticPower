@@ -10,15 +10,19 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.ForgeHooks;
+import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
-import theking530.staticpower.init.ModTileEntityTypes;
-import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
+import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
+import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 
 public class TileEntityMiner extends AbstractTileEntityMiner {
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator TYPE = new TileEntityTypeAllocator((type) -> new TileEntityMiner(), ModBlocks.Miner);
 
 	public final InventoryComponent fuelInventory;
 	public final InventoryComponent fuelBurningInventory;
@@ -26,7 +30,7 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 	public final MachineProcessingComponent fuelMoveComponent;
 
 	public TileEntityMiner() {
-		super(ModTileEntityTypes.MINER);
+		super(TYPE);
 		registerComponent(fuelInventory = new InventoryComponent("FuelInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true));
 		registerComponent(fuelBurningInventory = new InventoryComponent("FuelBurningInventory", 1, MachineSideMode.Never));
 		registerComponent(fuelMoveComponent = new MachineProcessingComponent("FuelMoveComponent", DEFAULT_FUEL_MOVE_TIME, this::canMoveFuel, this::canMoveFuel, this::moveFuel, true)

@@ -3,6 +3,7 @@ package theking530.staticpower.init;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.cables.attachments.cover.CableCover;
 import theking530.staticpower.cables.attachments.digistore.digistorecraftingterminal.DigistoreCraftingTerminal;
+import theking530.staticpower.cables.attachments.digistore.digistorepatternencoder.DigistorePatternEncoder;
 import theking530.staticpower.cables.attachments.digistore.digistoreterminal.DigistoreTerminal;
 import theking530.staticpower.cables.attachments.digistore.exporter.DigistoreExporterAttachment;
 import theking530.staticpower.cables.attachments.digistore.importer.DigistoreImporterAttachment;
@@ -275,6 +276,7 @@ public class ModItems {
 	public static DigistoreRegulatorAttachment RegulatorAttachment;
 	public static DigistoreTerminal DigistoreTerminalAttachment;
 	public static DigistoreCraftingTerminal DigistoreCraftingTerminalAttachment;
+	public static DigistorePatternEncoder DigistorePatternEncoderAttachment;
 
 	public static DigistorePatternCard PatternCard;
 
@@ -405,7 +407,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(Silicon = new StaticPowerItem("silicon"));
 		StaticPowerRegistry.preRegisterItem(StaticDopedSilicon = new StaticPowerItem("silicon_doped_static"));
 		StaticPowerRegistry.preRegisterItem(EnergizedDopedSilicon = new StaticPowerItem("silicon_doped_energized"));
-		StaticPowerRegistry.preRegisterItem(LumumDopedSilicon = new StaticPowerItem("silicon_doped_lumum"));		
+		StaticPowerRegistry.preRegisterItem(LumumDopedSilicon = new StaticPowerItem("silicon_doped_lumum"));
 		StaticPowerRegistry.preRegisterItem(CrystalStatic = new StaticPowerItem("crystal_static"));
 		StaticPowerRegistry.preRegisterItem(CrystalEnergized = new StaticPowerItem("crystal_energized"));
 		StaticPowerRegistry.preRegisterItem(CrystalLumum = new StaticPowerItem("crystal_lumum"));
@@ -575,6 +577,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(RegulatorAttachment = new DigistoreRegulatorAttachment("cable_attachment_digistore_regulator"));
 		StaticPowerRegistry.preRegisterItem(DigistoreTerminalAttachment = new DigistoreTerminal("cable_attachment_digistore_terminal"));
 		StaticPowerRegistry.preRegisterItem(DigistoreCraftingTerminalAttachment = new DigistoreCraftingTerminal("cable_attachment_digistore_crafting_terminal"));
+		StaticPowerRegistry.preRegisterItem(DigistorePatternEncoderAttachment = new DigistorePatternEncoder("cable_attachment_digistore_pattern_encoder"));
 
 		// Digistore Misc.
 		StaticPowerRegistry.preRegisterItem(PatternCard = new DigistorePatternCard("digistore_pattern_card"));

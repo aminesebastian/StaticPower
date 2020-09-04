@@ -16,7 +16,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
 import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
-import theking530.staticpower.init.ModTileEntityTypes;
 
 public class BlockPump extends StaticPowerTileEntityBlock {
 
@@ -37,6 +36,6 @@ public class BlockPump extends StaticPowerTileEntityBlock {
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return ModTileEntityTypes.PUMP.create();
+		return TileEntityPump.TYPE.create();
 	}
 }

@@ -28,7 +28,6 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
@@ -45,6 +44,7 @@ import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
@@ -73,8 +73,8 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 */
 	private boolean updateQueued;
 
-	public TileEntityBase(TileEntityType<?> teType) {
-		super(teType);
+	public TileEntityBase(TileEntityTypeAllocator<? extends TileEntity> allocator) {
+		super(allocator.getType());
 		Components = new HashMap<String, AbstractTileEntityComponent>();
 		updateQueued = false;
 		isValid = true;

@@ -2,7 +2,6 @@ package theking530.staticpower.events;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.RenderType;
@@ -21,10 +20,9 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fml.DeferredWorkQueue;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import theking530.api.heat.HeatTooltipUtilities;
+import theking530.staticcore.initialization.StaticCoreRegistry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.blocks.interfaces.IBlockRenderLayerProvider;
@@ -33,31 +31,14 @@ import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.client.rendering.items.FluidCapsuleItemModel.CapsuleColorProvider;
-import theking530.staticpower.client.rendering.tileentity.TileEntityRenderAutoCraftingTable;
-import theking530.staticpower.client.rendering.tileentity.TileEntityRenderAutoSolderingTable;
-import theking530.staticpower.client.rendering.tileentity.TileEntityRenderBatteryBlock;
-import theking530.staticpower.client.rendering.tileentity.TileEntityRenderChargingStation;
-import theking530.staticpower.client.rendering.tileentity.TileEntityRenderDigistore;
-import theking530.staticpower.client.rendering.tileentity.TileEntityRenderEvaporator;
-import theking530.staticpower.client.rendering.tileentity.TileEntityRenderFarmer;
-import theking530.staticpower.client.rendering.tileentity.TileEntityRenderFluidCable;
-import theking530.staticpower.client.rendering.tileentity.TileEntityRenderFluidGenerator;
-import theking530.staticpower.client.rendering.tileentity.TileEntityRenderFluidInfuser;
-import theking530.staticpower.client.rendering.tileentity.TileEntityRenderItemCable;
-import theking530.staticpower.client.rendering.tileentity.TileEntityRenderPump;
-import theking530.staticpower.client.rendering.tileentity.TileEntityRenderSolderingTable;
-import theking530.staticpower.client.rendering.tileentity.TileEntityRenderSqueezer;
-import theking530.staticpower.client.rendering.tileentity.TileEntityRenderTank;
-import theking530.staticpower.client.rendering.tileentity.TileEntityRenderTreeFarmer;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.thermalconductivity.ThermalConductivityRecipe;
 import theking530.staticpower.init.ModItems;
-import theking530.staticpower.init.ModTileEntityTypes;
 
 @SuppressWarnings("deprecation")
 public class StaticPowerClientEventHandler {
-	private static final CustomRenderer TEST_RENDERER = new CustomRenderer();
+	private static final CustomRenderer CUSTOM_RENDERER = new CustomRenderer();
 
 	/**
 	 * This event is raised by the client setup event.
@@ -84,38 +65,8 @@ public class StaticPowerClientEventHandler {
 		// Initialize the guis.
 		initializeGui();
 
-		// Register the tile entity renderers.
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.DIGISTORE, TileEntityRenderDigistore::new);
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.ITEM_CABLE_BASIC, TileEntityRenderItemCable::new);
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.ITEM_CABLE_ADVANCED, TileEntityRenderItemCable::new);
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.ITEM_CABLE_STATIC, TileEntityRenderItemCable::new);
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.ITEM_CABLE_ENERGIZED, TileEntityRenderItemCable::new);
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.ITEM_CABLE_LUMUM, TileEntityRenderItemCable::new);
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.ITEM_CABLE_CREATIVE, TileEntityRenderItemCable::new);
-
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.BATTERY_BASIC, TileEntityRenderBatteryBlock::new);
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.BATTERY_ADVANCED, TileEntityRenderBatteryBlock::new);
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.BATTERY_STATIC, TileEntityRenderBatteryBlock::new);
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.BATTERY_ENERGIZED, TileEntityRenderBatteryBlock::new);
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.BATTERY_LUMUM, TileEntityRenderBatteryBlock::new);
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.BATTERY_CREATIVE, TileEntityRenderBatteryBlock::new);
-
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.SQUEEZER, TileEntityRenderSqueezer::new);
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.BASIC_FARMER, TileEntityRenderFarmer::new);
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.TREE_FARM, TileEntityRenderTreeFarmer::new);
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.CHARGING_STATION, TileEntityRenderChargingStation::new);
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.FLUID_INFUSER, TileEntityRenderFluidInfuser::new);
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.FLUID_GENERATOR, TileEntityRenderFluidGenerator::new);
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.EVAPORATOR, TileEntityRenderEvaporator::new);
-
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.FLUID_CABLE, TileEntityRenderFluidCable::new);
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.INDUSTRIAL_FLUID_CABLE, TileEntityRenderFluidCable::new);
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.TANK, TileEntityRenderTank::new);
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.PUMP, TileEntityRenderPump::new);
-
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.AUTO_CRAFTING_TABLE, TileEntityRenderAutoCraftingTable::new);
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.AUTO_SOLDERING_TABLE, TileEntityRenderAutoSolderingTable::new);
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.SOLDERING_TABLE, TileEntityRenderSolderingTable::new);
+		// Initialize the tile entity special renderers.
+		StaticCoreRegistry.registerTileEntitySpecialRenderers();
 
 		// Log the completion.
 		StaticPower.LOGGER.info("Static Power Client Setup Completed!");
@@ -192,7 +143,7 @@ public class StaticPowerClientEventHandler {
 	}
 
 	public static void render(RenderWorldLastEvent event) {
-		TEST_RENDERER.render(event);
+		CUSTOM_RENDERER.render(event);
 	}
 
 	@SubscribeEvent
@@ -211,14 +162,8 @@ public class StaticPowerClientEventHandler {
 		}
 	}
 
-	@SuppressWarnings({ "unchecked" })
 	@OnlyIn(Dist.CLIENT)
 	private static void initializeGui() {
-		DeferredWorkQueue.runLater(() -> {
-			StaticPowerRegistry.SCREEN_FACTORIES.forEach((containerType, screenFactory) -> {
-				ScreenManager.registerFactory(containerType, screenFactory);
-			});
-			StaticPower.LOGGER.info("Registered all Static Power container types.");
-		});
+		StaticCoreRegistry.registerScreenFactories();
 	}
 }

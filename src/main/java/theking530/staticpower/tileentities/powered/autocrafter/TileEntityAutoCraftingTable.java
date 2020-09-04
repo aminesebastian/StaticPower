@@ -12,11 +12,14 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.items.ItemStackHandler;
+import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.client.rendering.tileentity.TileEntityRenderAutoCraftingTable;
 import theking530.staticpower.container.FakeCraftingInventory;
-import theking530.staticpower.init.ModTileEntityTypes;
+import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
-import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
+import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
@@ -25,6 +28,10 @@ import theking530.staticpower.tileentities.components.items.OutputServoComponent
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityAutoCraftingTable extends TileEntityMachine {
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityAutoCraftingTable> TYPE = new TileEntityTypeAllocator<TileEntityAutoCraftingTable>((type) -> new TileEntityAutoCraftingTable(),
+			TileEntityRenderAutoCraftingTable::new, ModBlocks.AutoCraftingTable);
+
 	public static final int DEFAULT_PROCESSING_TIME = 100;
 	public static final int DEFAULT_PROCESSING_COST = 5;
 	public static final int DEFAULT_MOVING_TIME = 4;
@@ -40,7 +47,7 @@ public class TileEntityAutoCraftingTable extends TileEntityMachine {
 	protected final ItemStack[] filterInventory;
 
 	public TileEntityAutoCraftingTable() {
-		super(ModTileEntityTypes.AUTO_CRAFTING_TABLE);
+		super(TYPE);
 		registerComponent(patternInventory = new InventoryComponent("PatternInventory", 9, MachineSideMode.Never));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 9, MachineSideMode.Never));
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 9, MachineSideMode.Input).setSlotsLockable(true).setShiftClickEnabled(true));

@@ -77,6 +77,11 @@ public class StaticPowerSprites {
 	
 	public static final ResourceLocation FLAMES = registerSprite("gui/flames");
 
+	public static final ResourceLocation CRAFTING_TABLE_ICON = registerSprite("gui/crafting_table_icon");
+	public static final ResourceLocation FURNACE_ICON = registerSprite("gui/furnace_icon");
+	public static final ResourceLocation CLOSE = registerSprite("gui/close");
+	public static final ResourceLocation ARROW_DOWN = registerSprite("gui/arrow_down");
+
 	private static ResourceLocation registerSprite(String path) {
 		ResourceLocation sprite = new ResourceLocation(StaticPower.MOD_ID, path);
 		SPRITES.add(sprite);

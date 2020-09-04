@@ -17,7 +17,6 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
 import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
 import theking530.staticpower.client.rendering.blocks.ServerRackModel;
-import theking530.staticpower.init.ModTileEntityTypes;
 
 public class BlockDigistoreServerRack extends StaticPowerTileEntityBlock implements ICustomModelSupplier {
 
@@ -42,6 +41,6 @@ public class BlockDigistoreServerRack extends StaticPowerTileEntityBlock impleme
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return ModTileEntityTypes.DIGISTORE_SERVER_RACK.create();
+		return TileEntityDigistoreServerRack.TYPE.create();
 	}
 }

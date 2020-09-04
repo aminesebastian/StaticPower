@@ -8,10 +8,10 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.utilities.InventoryUtilities;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 public class FluidContainerInventoryComponent extends InventoryComponent {
 	public enum FluidContainerInteractionMode {

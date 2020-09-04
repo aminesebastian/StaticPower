@@ -4,26 +4,51 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.StaticPowerTier;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
 import theking530.staticpower.tileentities.components.power.PowerDistributionComponent;
 
 public class TileEntitySolarPanel extends TileEntityBase implements ITickableTileEntity {
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntitySolarPanel> TYPE_BASIC = new TileEntityTypeAllocator<TileEntitySolarPanel>(
+			(allocator) -> new TileEntitySolarPanel(allocator, StaticPowerTiers.BASIC), ModBlocks.SolarPanelBasic);
+
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntitySolarPanel> TYPE_ADVANCED = new TileEntityTypeAllocator<TileEntitySolarPanel>(
+			(allocator) -> new TileEntitySolarPanel(allocator, StaticPowerTiers.ADVANCED), ModBlocks.SolarPanelAdvanced);
+
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntitySolarPanel> TYPE_STATIC = new TileEntityTypeAllocator<TileEntitySolarPanel>(
+			(allocator) -> new TileEntitySolarPanel(allocator, StaticPowerTiers.STATIC), ModBlocks.SolarPanelStatic);
+
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntitySolarPanel> TYPE_ENERGIZED = new TileEntityTypeAllocator<TileEntitySolarPanel>(
+			(allocator) -> new TileEntitySolarPanel(allocator, StaticPowerTiers.ENERGIZED), ModBlocks.SolarPanelEnergized);
+
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntitySolarPanel> TYPE_LUMUM = new TileEntityTypeAllocator<TileEntitySolarPanel>(
+			(allocator) -> new TileEntitySolarPanel(allocator, StaticPowerTiers.LUMUM), ModBlocks.SolarPanelLumum);
+
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntitySolarPanel> TYPE_CREATIVE = new TileEntityTypeAllocator<TileEntitySolarPanel>(
+			(allocator) -> new TileEntitySolarPanel(allocator, StaticPowerTiers.CREATIVE), ModBlocks.SolarPanelCreative);
 
 	public EnergyStorageComponent energyStorage;
 
-	public TileEntitySolarPanel(ResourceLocation tierType, TileEntityType<? extends TileEntitySolarPanel> type) {
-		super(type);
+	public TileEntitySolarPanel(TileEntityTypeAllocator<TileEntitySolarPanel> allocator, ResourceLocation tierType) {
+		super(allocator);
 		// Set the values based on the tier.
 		StaticPowerTier tier = StaticPowerDataRegistry.getTier(tierType);
 		registerComponent(energyStorage = new EnergyStorageComponent("PowerBuffer", tier.getSolarPanelPowerStorage(), tier.getSolarPanelPowerGeneration(), tier.getSolarPanelPowerGeneration()));

@@ -6,15 +6,20 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Direction;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import theking530.staticcore.initialization.container.ContainerTypeAllocator;
+import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachmentContainer;
 import theking530.staticpower.container.slots.PhantomSlot;
 import theking530.staticpower.container.slots.UpgradeItemSlot;
-import theking530.staticpower.init.ModContainerTypes;
 
 public class ContainerDigistoreIOBus extends AbstractCableAttachmentContainer<DigistoreIOBusAttachment> {
+	@ContainerTypePopulator
+	public static final ContainerTypeAllocator<ContainerDigistoreIOBus, GuiDigistoreIOBus> TYPE = new ContainerTypeAllocator<>("cable_attachment_digistore_io_bus", ContainerDigistoreIOBus::new,
+			GuiDigistoreIOBus::new);
+
 	private ItemStackHandler filterInventory;
 	private ItemStackHandler upgradeInventory;
 
@@ -23,7 +28,7 @@ public class ContainerDigistoreIOBus extends AbstractCableAttachmentContainer<Di
 	}
 
 	public ContainerDigistoreIOBus(int windowId, PlayerInventory playerInventory, ItemStack attachment, Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
-		super(ModContainerTypes.IO_CONTAINER, windowId, playerInventory, attachment, attachmentSide, cableComponent);
+		super(TYPE, windowId, playerInventory, attachment, attachmentSide, cableComponent);
 	}
 
 	@Override
@@ -37,7 +42,7 @@ public class ContainerDigistoreIOBus extends AbstractCableAttachmentContainer<Di
 		getAttachment().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.DOWN).ifPresent((handler) -> {
 			upgradeInventory = (ItemStackHandler) handler;
 		});
-		
+
 		// If the item filter is null, then return early and log the error.
 		if (filterInventory == null) {
 			StaticPower.LOGGER.error(String.format("Received capability for Importer: %1$s that did not inherit from InventoryItemFilter.", getAttachment().getDisplayName()));
