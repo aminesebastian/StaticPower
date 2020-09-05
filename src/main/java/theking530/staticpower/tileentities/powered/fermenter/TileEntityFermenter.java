@@ -32,7 +32,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityFermenter extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator TYPE = new TileEntityTypeAllocator((type) -> new TileEntityFermenter(), ModBlocks.Fermenter);
+	public static final TileEntityTypeAllocator<TileEntityFermenter> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityFermenter(), ModBlocks.Fermenter);
 	
 	public static final int DEFAULT_PROCESSING_COST = 5;
 	public static final int DEFAULT_PROCESSING_TIME = 100;

@@ -17,18 +17,26 @@ import theking530.staticpower.cables.attachments.digistore.importer.DigistoreImp
 import theking530.staticpower.cables.attachments.digistore.iobus.DigistoreIOBusAttachment;
 import theking530.staticpower.cables.attachments.digistore.regulator.DigistoreRegulatorAttachment;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
+import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 
 public class DigistoreCableProviderComponent extends AbstractCableProviderComponent {
+	public static final String POWER_USAGE_TAG = "power_usage";
 	@UpdateSerialize
 	private boolean managerPresent;
 	private boolean shouldControlOnBlockState;
+	private int powerUsage;
 
 	public DigistoreCableProviderComponent(String name) {
+		this(name, 0);
+	}
+
+	public DigistoreCableProviderComponent(String name, int powerUsage) {
 		super(name, CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE);
 		shouldControlOnBlockState = false;
+		this.powerUsage = powerUsage;
 		addValidAttachmentClass(DigistoreTerminal.class);
 		addValidAttachmentClass(DigistoreCraftingTerminal.class);
 		addValidAttachmentClass(DigistoreExporterAttachment.class);
@@ -67,6 +75,15 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	public DigistoreCableProviderComponent setShouldControlOnState() {
 		shouldControlOnBlockState = true;
 		return this;
+	}
+
+	@Override
+	protected ServerCable createCable() {
+		return new ServerCable(getWorld(), getPos(), getSupportedNetworkModuleTypes(), (cable) -> {
+			if (powerUsage > 0) {
+				cable.setProperty(POWER_USAGE_TAG, powerUsage);
+			}
+		});
 	}
 
 	@Override

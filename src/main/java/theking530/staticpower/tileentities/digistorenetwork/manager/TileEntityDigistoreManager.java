@@ -13,7 +13,7 @@ import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreTileEnt
 
 public class TileEntityDigistoreManager extends BaseDigistoreTileEntity {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator TYPE = new TileEntityTypeAllocator((type) -> new TileEntityDigistoreManager(), ModBlocks.DigistoreManager);
+	public static final TileEntityTypeAllocator<TileEntityDigistoreManager> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityDigistoreManager(), ModBlocks.DigistoreManager);
 
 	public static final int ENERGY_STORAGE = 1000;
 
@@ -22,25 +22,14 @@ public class TileEntityDigistoreManager extends BaseDigistoreTileEntity {
 	public final BatteryInventoryComponent batteryInventory;
 
 	public TileEntityDigistoreManager() {
-		super(TYPE);
+		super(TYPE, 10);
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 		registerComponent(energyStorage = new EnergyStorageComponent("MainEnergyStorage", ENERGY_STORAGE, ENERGY_STORAGE, ENERGY_STORAGE).setUpgradeInventory(upgradesInventory));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 	}
 
 	@Override
-	public void process() {
-		if (energyStorage.hasEnoughPower(getPowerUsagePerTick())) {
-			energyStorage.useBulkPower(getPowerUsagePerTick());
-		}
-	}
-
-	@Override
 	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
 		return new ContainerDigistoreManager(windowId, inventory, this);
-	}
-
-	public int getPowerUsagePerTick() {
-		return 10;
 	}
 }

@@ -22,7 +22,7 @@ import theking530.staticpower.tileentities.components.items.InventoryComponent;
 
 public class TileEntityMiner extends AbstractTileEntityMiner {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator TYPE = new TileEntityTypeAllocator((type) -> new TileEntityMiner(), ModBlocks.Miner);
+	public static final TileEntityTypeAllocator<TileEntityMiner> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityMiner(), ModBlocks.Miner);
 
 	public final InventoryComponent fuelInventory;
 	public final InventoryComponent fuelBurningInventory;

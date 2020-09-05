@@ -42,7 +42,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityVacuumChest extends TileEntityConfigurable implements INamedContainerProvider {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator TYPE = new TileEntityTypeAllocator((type) -> new TileEntityVacuumChest(), ModBlocks.VacuumChest);
+	public static final TileEntityTypeAllocator<TileEntityVacuumChest> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityVacuumChest(), ModBlocks.VacuumChest);
 
 	public static final int DEFAULT_RANGE = 6;
 	public static final int DEFAULT_TANK_SIZE = 5000;

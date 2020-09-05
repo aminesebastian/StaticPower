@@ -103,6 +103,9 @@ public class OutputServoComponent extends AbstractTileEntityComponent {
 							// Check to see if we can insert any of the source inventory items into that
 							// handler. If we can, add it as a candidate.
 							for (ItemStack stack : inventory) {
+								if(stack.isEmpty()) {
+									continue;
+								}
 								if (InventoryUtilities.canPartiallyInsertItemIntoInventory(handler, stack)) {
 									validHandlers.add(handler);
 									break;

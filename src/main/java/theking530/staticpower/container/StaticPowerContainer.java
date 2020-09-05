@@ -115,6 +115,10 @@ public abstract class StaticPowerContainer extends Container {
 		addSlotsInGrid(inventory, startingIndex, inventory.getSlots(), xPos, yPos, maxPerRow, slotSize, slotFactory);
 	}
 
+	protected void addSlotsInGrid(IItemHandler inventory, int startingIndex, int xPos, int yPos, int maxPerRow, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
+		addSlotsInGrid(inventory, startingIndex, inventory.getSlots(), xPos, yPos, maxPerRow, 16, slotFactory);
+	}
+
 	protected void addSlotsInGrid(IItemHandler inventory, int startingIndex, int slotCount, int xPos, int yPos, int maxPerRow, int slotSize, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
 		maxPerRow = Math.min(inventory.getSlots(), maxPerRow);
 		int adjustedSlotSize = slotSize + 2;

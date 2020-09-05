@@ -32,7 +32,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityBottler extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator TYPE = new TileEntityTypeAllocator((type) -> new TileEntityBottler(), ModBlocks.Bottler);
+	public static final TileEntityTypeAllocator<TileEntityBottler> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityBottler(), ModBlocks.Bottler);
 
 	public static final int DEFAULT_PROCESSING_TIME = 40;
 	public static final int DEFAULT_PROCESSING_COST = 5;

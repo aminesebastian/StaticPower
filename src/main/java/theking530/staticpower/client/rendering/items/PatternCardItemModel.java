@@ -38,7 +38,7 @@ public class PatternCardItemModel implements IBakedModel {
 				}
 
 				if (DigistorePatternCard.hasPattern(stack)) {
-					if (Screen.hasShiftDown()) {
+					if (Screen.hasControlDown()) {
 						// Try to get the pattern and make sure it has an output.
 						EncodedDigistorePattern pattern = EncodedDigistorePattern.readFromPatternCard(stack);
 						if (pattern != null && pattern.outputs.length > 0) {

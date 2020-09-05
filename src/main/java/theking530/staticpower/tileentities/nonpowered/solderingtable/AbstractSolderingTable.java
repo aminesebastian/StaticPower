@@ -21,7 +21,7 @@ public abstract class AbstractSolderingTable extends TileEntityMachine implement
 	public final InventoryComponent solderingIronInventory;
 	public final InventoryComponent inventory;
 
-	public AbstractSolderingTable(TileEntityTypeAllocator allocator) {
+	public AbstractSolderingTable(TileEntityTypeAllocator<? extends AbstractSolderingTable> allocator) {
 		super(allocator);
 		registerComponent(patternInventory = new InventoryComponent("PatternInventory", 9, MachineSideMode.Never));
 		registerComponent(inventory = new InventoryComponent("Inventory", 9, MachineSideMode.Never).setShiftClickEnabled(true));

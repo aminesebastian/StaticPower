@@ -43,13 +43,11 @@ import theking530.staticpower.utilities.WorldUtilities;
 
 public class ItemNetworkModule extends AbstractCableNetworkModule {
 	private static final Logger LOGGER = LogManager.getLogger(ItemNetworkModule.class);
-	private static long CurrentPacketId;
 	protected HashMap<BlockPos, LinkedList<ItemRoutingParcel>> ActiveParcels;
 
 	public ItemNetworkModule() {
 		super(CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
 		ActiveParcels = new HashMap<BlockPos, LinkedList<ItemRoutingParcel>>();
-		CurrentPacketId = 0;
 	}
 
 	/**
@@ -225,7 +223,8 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 
 		// If we have a path, get the source inventory.
 		if (shortestPath != null) {
-			IItemHandler sourceInv = targetSource.getDestinationWrapper().getTileEntity().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, targetSource.getDestinationWrapper().getDestinationSide()).orElse(null);
+			IItemHandler sourceInv = targetSource.getDestinationWrapper().getTileEntity()
+					.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, targetSource.getDestinationWrapper().getDestinationSide()).orElse(null);
 
 			// If the source inventory is valid.
 			if (sourceInv != null) {
@@ -233,7 +232,8 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 				ItemStack pulledAmount = sourceInv.extractItem(targetSource.getInventorySlot(), maxExtract, true);
 
 				// Attempt to route that amount, and return the actual amount routed.
-				ItemStack actuallyTransfered = routeItem(pulledAmount, shortestPath, targetSource.getDestinationWrapper().getDestinationSide().getOpposite(), targetSource.getDestinationWrapper().getConnectedCable(), false, false);
+				ItemStack actuallyTransfered = routeItem(pulledAmount, shortestPath, targetSource.getDestinationWrapper().getDestinationSide().getOpposite(),
+						targetSource.getDestinationWrapper().getConnectedCable(), false, false);
 
 				// Then, extract the actual amount routed.
 				sourceInv.extractItem(targetSource.getInventorySlot(), pulledAmount.getCount() - actuallyTransfered.getCount(), false);
@@ -290,7 +290,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 
 					// Create the new item routing packet and initialize it with the transfer speed
 					// of the cable it was pulled out of.
-					ItemRoutingParcel packet = new ItemRoutingParcel(CurrentPacketId, stackToTransfer, path, pulledFromDirection.getOpposite());
+					ItemRoutingParcel packet = new ItemRoutingParcel(CableNetworkManager.get(Network.getWorld()).getCurrentCraftingId(), stackToTransfer, path, pulledFromDirection.getOpposite());
 					packet.setMovementTime(ItemCableComponent.BASE_MOVE_TIME);
 
 					// Add the packet to the list of active packets.
@@ -767,7 +767,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 		// static parcel id.
 		parcel.incrementCurrentPathIndex(startHalfWay);
 
-		CurrentPacketId++;
+		CableNetworkManager.get(Network.getWorld()).incrementCurrentCraftingId();
 	}
 
 	protected LinkedList<ItemStack> getItemsTravlingToDestination(BlockPos destination) {
@@ -834,11 +834,6 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 
 	@Override
 	public void readFromNbt(CompoundNBT tag) {
-		// Save the current parcel id.
-		if (tag.contains("current_parcel_id")) {
-			CurrentPacketId = tag.getLong("current_parcel_id");
-		}
-
 		ActiveParcels = new HashMap<BlockPos, LinkedList<ItemRoutingParcel>>();
 		// Get the parcel NBT list and add the parcels.
 		ListNBT parcelNBTList = tag.getList("parcels", Constants.NBT.TAG_COMPOUND);
@@ -857,8 +852,6 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 
 	@Override
 	public CompoundNBT writeToNbt(CompoundNBT tag) {
-		tag.putLong("current_parcel_id", CurrentPacketId);
-
 		// Get all the active parcels.
 		List<ItemRoutingParcel> activeParcels = new ArrayList<ItemRoutingParcel>();
 		for (Entry<BlockPos, LinkedList<ItemRoutingParcel>> entry : ActiveParcels.entrySet()) {

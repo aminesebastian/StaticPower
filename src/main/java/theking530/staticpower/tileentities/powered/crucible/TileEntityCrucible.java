@@ -15,7 +15,7 @@ import theking530.staticpower.tileentities.components.items.OutputServoComponent
 
 public class TileEntityCrucible extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator TYPE = new TileEntityTypeAllocator((type) -> new TileEntityCrucible(), ModBlocks.Crucible);
+	public static final TileEntityTypeAllocator<TileEntityCrucible> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityCrucible(), ModBlocks.Crucible);
 
 	public static final int DEFAULT_PROCESSING_TIME = 100;
 	public static final int DEFAULT_PROCESSING_COST = 10;

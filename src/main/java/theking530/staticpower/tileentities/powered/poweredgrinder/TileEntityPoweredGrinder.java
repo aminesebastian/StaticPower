@@ -30,7 +30,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityPoweredGrinder extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator TYPE = new TileEntityTypeAllocator((type) -> new TileEntityPoweredGrinder(), ModBlocks.PoweredGrinder);
+	public static final TileEntityTypeAllocator<TileEntityPoweredGrinder> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityPoweredGrinder(), ModBlocks.PoweredGrinder);
 
 	public static final int DEFAULT_PROCESSING_TIME = 200;
 	public static final int DEFAULT_PROCESSING_COST = 5;

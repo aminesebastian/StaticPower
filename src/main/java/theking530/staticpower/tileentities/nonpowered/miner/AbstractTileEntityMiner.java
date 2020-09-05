@@ -55,7 +55,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 	private int idleFuelCost;
 	private float heatGeneration;
 
-	public AbstractTileEntityMiner(TileEntityTypeAllocator allocator) {
+	public AbstractTileEntityMiner(TileEntityTypeAllocator<? extends AbstractTileEntityMiner> allocator) {
 		super(allocator);
 		disableFaceInteraction();
 		blocks = new ArrayList<BlockPos>();

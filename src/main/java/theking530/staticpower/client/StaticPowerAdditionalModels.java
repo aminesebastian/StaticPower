@@ -111,8 +111,13 @@ public class StaticPowerAdditionalModels {
 
 	public static final ResourceLocation CABLE_DIGISTORE_TERMINAL_ATTACHMENT_ON = registerModel("block/cables/attachments/digistore_terminal_attachment_on");
 	public static final ResourceLocation CABLE_DIGISTORE_TERMINAL_ATTACHMENT = registerModel("block/cables/attachments/digistore_terminal_attachment");
+	
 	public static final ResourceLocation CABLE_DIGISTORE_CRAFTING_TERMINAL_ATTACHMENT_ON = registerModel("block/cables/attachments/digistore_crafting_terminal_attachment_on");
 	public static final ResourceLocation CABLE_DIGISTORE_CRAFTING_TERMINAL_ATTACHMENT = registerModel("block/cables/attachments/digistore_crafting_terminal_attachment");
+	
+	public static final ResourceLocation CABLE_DIGISTORE_PATTERN_ENCODER_ATTACHMENT_ON = registerModel("block/cables/attachments/digistore_pattern_encoder_attachment_on");
+	public static final ResourceLocation CABLE_DIGISTORE_PATTERN_ENCODER_ATTACHMENT = registerModel("block/cables/attachments/digistore_pattern_encoder_attachment");
+	
 	public static final ResourceLocation CABLE_DIGISTORE_EXPORTER_ATTACHMENT = registerModel("block/cables/attachments/digistore_exporter");
 	public static final ResourceLocation CABLE_DIGISTORE_IMPORTER_ATTACHMENT = registerModel("block/cables/attachments/digistore_importer");
 	public static final ResourceLocation CABLE_DIGISTORE_IO_BUS_ATTACHMENT = registerModel("block/cables/attachments/digistore_io_bus");

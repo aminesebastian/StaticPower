@@ -31,7 +31,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityLumberMill extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator TYPE = new TileEntityTypeAllocator((type) -> new TileEntityLumberMill(), ModBlocks.LumberMill);
+	public static final TileEntityTypeAllocator<TileEntityLumberMill> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityLumberMill(), ModBlocks.LumberMill);
 
 	public static final int DEFAULT_PROCESSING_TIME = 150;
 	public static final int DEFAULT_PROCESSING_COST = 5;

@@ -7,13 +7,17 @@ import theking530.staticpower.tileentities.TileEntityBase;
 public abstract class BaseDigistoreTileEntity extends TileEntityBase {
 	public final DigistoreCableProviderComponent digistoreCableProvider;
 
-	public BaseDigistoreTileEntity(TileEntityTypeAllocator allocator) {
+	public BaseDigistoreTileEntity(TileEntityTypeAllocator<? extends BaseDigistoreTileEntity> allocator) {
+		this(allocator, 0);
+
+	}
+
+	public BaseDigistoreTileEntity(TileEntityTypeAllocator<? extends BaseDigistoreTileEntity> allocator, int powerUsage) {
 		super(allocator);
-		registerComponent(digistoreCableProvider = new DigistoreCableProviderComponent("DigistoreCableProviderComponent").setShouldControlOnState());
+		registerComponent(digistoreCableProvider = new DigistoreCableProviderComponent("DigistoreCableProviderComponent", powerUsage).setShouldControlOnState());
 	}
 
 	public boolean isManagerPresent() {
 		return digistoreCableProvider.isManagerPresent();
 	}
-
 }

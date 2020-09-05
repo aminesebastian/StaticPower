@@ -8,6 +8,7 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 import theking530.api.digistore.DigistoreInventory;
 import theking530.api.digistore.IDigistoreInventory;
+import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot.DigistoreItemCraftableState;
 import theking530.staticpower.tileentities.digistorenetwork.digistore.DigistoreStack;
 import theking530.staticpower.utilities.ItemUtilities;
 
@@ -51,8 +52,14 @@ public class DigistoreNetworkTransactionManager {
 	}
 
 	public ItemStack insertItem(ItemStack stack, boolean simulate) {
+		// Skip empty items.
+		if (stack.isEmpty()) {
+			return stack;
+		}
+
 		// Create a copy for the output stack.
-		ItemStack stackToUse = stack.copy();
+		ItemStack strippedStack = stack.copy();
+		DigistoreInventorySnapshot.stripCraftableTag(strippedStack);
 
 		// Allocate a list of all potential digistores to insert into.
 		List<IDigistoreInventory> potentials = new ArrayList<IDigistoreInventory>();
@@ -61,9 +68,9 @@ public class DigistoreNetworkTransactionManager {
 		// accept the item. Only discard full digistores that do NOT have a void
 		// upgrade.
 		for (IDigistoreInventory digistore : digistores) {
-			ItemStack insertSimulation = digistore.insertItem(stackToUse, true);
+			ItemStack insertSimulation = digistore.insertItem(strippedStack, true);
 			boolean isFull = digistore.getTotalContainedCount() >= digistore.getItemCapacity();
-			if (insertSimulation.getCount() != stackToUse.getCount() && (!isFull || (isFull && digistore.shouldVoidExcess()))) {
+			if (insertSimulation.getCount() != strippedStack.getCount() && (!isFull || (isFull && digistore.shouldVoidExcess()))) {
 				potentials.add(digistore);
 			}
 		}
@@ -100,14 +107,14 @@ public class DigistoreNetworkTransactionManager {
 			}
 
 			// Update the remaining stack.
-			stackToUse = digistore.insertItem(stack, simulate);
-			if (stackToUse.isEmpty()) {
+			strippedStack = digistore.insertItem(strippedStack, simulate);
+			if (strippedStack.isEmpty()) {
 				break;
 			}
 		}
 
 		// Start filling non-empty non-mono digistores, break if we finish the fill.
-		if (!stackToUse.isEmpty()) {
+		if (!strippedStack.isEmpty()) {
 			for (IDigistoreInventory digistore : potentials) {
 				// Skip empty digistores first time around.
 				if (digistore.getTotalContainedCount() == 0) {
@@ -120,14 +127,14 @@ public class DigistoreNetworkTransactionManager {
 				}
 
 				// Update the remaining stack.
-				stackToUse = digistore.insertItem(stack, simulate);
-				if (stackToUse.isEmpty()) {
+				strippedStack = digistore.insertItem(strippedStack, simulate);
+				if (strippedStack.isEmpty()) {
 					break;
 				}
 			}
 		}
 		// Start filling empty digistores, break if we finish the fill.
-		if (!stackToUse.isEmpty()) {
+		if (!strippedStack.isEmpty()) {
 			for (IDigistoreInventory digistore : potentials) {
 				// Skip single slot digistores this time.
 				if (digistore.getUniqueItemCapacity() == 1) {
@@ -135,15 +142,15 @@ public class DigistoreNetworkTransactionManager {
 				}
 
 				// Update the remaining stack.
-				stackToUse = digistore.insertItem(stack, simulate);
-				if (stackToUse.isEmpty()) {
+				strippedStack = digistore.insertItem(strippedStack, simulate);
+				if (strippedStack.isEmpty()) {
 					break;
 				}
 			}
 		}
 
 		// The rest get free reign.
-		if (!stackToUse.isEmpty()) {
+		if (!strippedStack.isEmpty()) {
 			// Start filling, this time with empty digistores allowed. Break if we finish
 			// the fill.
 			for (IDigistoreInventory digistore : potentials) {
@@ -152,18 +159,26 @@ public class DigistoreNetworkTransactionManager {
 					continue;
 				}
 
-				stackToUse = digistore.insertItem(stack, simulate);
-				if (stackToUse.isEmpty()) {
+				strippedStack = digistore.insertItem(strippedStack, simulate);
+				if (strippedStack.isEmpty()) {
 					break;
 				}
 			}
 		}
 
 		// Return what remains.
-		return stackToUse;
+		return strippedStack;
 	}
 
 	public ItemStack extractItem(ItemStack stack, int count, boolean simulate) {
+		// Strip the craftable tag from the item to extract if needed.
+		if (DigistoreInventorySnapshot.getCraftableStateOfItem(stack) == DigistoreItemCraftableState.ONLY_CRAFTABLE) {
+			return ItemStack.EMPTY;
+		}
+
+		ItemStack extractItem = stack.copy();
+		DigistoreInventorySnapshot.stripCraftableTag(extractItem);
+
 		// Allocate a list of all potential digistores to insert into.
 		List<IDigistoreInventory> potentials = new ArrayList<IDigistoreInventory>();
 
@@ -171,7 +186,7 @@ public class DigistoreNetworkTransactionManager {
 		// accept the item.
 		for (IDigistoreInventory digistore : digistores) {
 			for (int i = 0; i < digistore.getUniqueItemCapacity(); i++) {
-				if (!digistore.getDigistoreStack(i).isEmpty() && ItemUtilities.areItemStacksStackable(stack, digistore.getDigistoreStack(i).getStoredItem())) {
+				if (!digistore.getDigistoreStack(i).isEmpty() && ItemUtilities.areItemStacksStackable(extractItem, digistore.getDigistoreStack(i).getStoredItem())) {
 					potentials.add(digistore);
 				}
 			}
@@ -196,7 +211,7 @@ public class DigistoreNetworkTransactionManager {
 		// Start extracting, break if we finish the extract.
 		for (IDigistoreInventory digistore : potentials) {
 			// Extract up to the amount we need.
-			ItemStack extracted = digistore.extractItem(stack, count - output.getCount(), simulate);
+			ItemStack extracted = digistore.extractItem(extractItem, count - output.getCount(), simulate);
 
 			// If this is our first iteration, set the output stack. Otherwise, just grow
 			// it.

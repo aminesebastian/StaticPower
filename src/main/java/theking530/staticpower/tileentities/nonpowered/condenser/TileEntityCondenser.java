@@ -25,7 +25,7 @@ import theking530.staticpower.tileentities.components.items.UpgradeInventoryComp
 
 public class TileEntityCondenser extends TileEntityConfigurable {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator TYPE = new TileEntityTypeAllocator((type) -> new TileEntityCondenser(), ModBlocks.Condenser);
+	public static final TileEntityTypeAllocator<TileEntityCondenser> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityCondenser(), ModBlocks.Condenser);
 
 	public static final int DEFAULT_PROCESSING_TIME = 5;
 	public static final float DEFAULT_HEAT_GENERATION = 50.0f;

@@ -26,7 +26,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityFusionFurnace extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator TYPE = new TileEntityTypeAllocator((type) -> new TileEntityFusionFurnace(), ModBlocks.FusionFurnace);
+	public static final TileEntityTypeAllocator<TileEntityFusionFurnace> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityFusionFurnace(), ModBlocks.FusionFurnace);
 
 	public static final int DEFAULT_PROCESSING_TIME = 250;
 	public static final int DEFAULT_PROCESSING_COST = 25;

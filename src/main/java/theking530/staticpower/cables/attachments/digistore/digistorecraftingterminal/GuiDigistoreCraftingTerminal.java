@@ -3,7 +3,6 @@ package theking530.staticpower.cables.attachments.digistore.digistorecraftingter
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import theking530.staticcore.gui.widgets.EntityRenderWidget;
-import theking530.staticcore.gui.widgets.GuiIslandWidget;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
@@ -30,9 +29,6 @@ public class GuiDigistoreCraftingTerminal extends AbstractGuiDigistoreTerminal<C
 		tab.setTabSide(TabSide.RIGHT);
 		getTabManager().setPosition(0, -5);
 		getTabManager().registerTab(tab);
-		
-		// Add island for the armor.
-		registerWidget(new GuiIslandWidget(-24, 104, 30, 80));
 	}
 
 	@Override
@@ -52,6 +48,7 @@ public class GuiDigistoreCraftingTerminal extends AbstractGuiDigistoreTerminal<C
 
 	@Override
 	public void updateData() {
+		super.updateData();
 		if (getCableComponent().isManagerPresent()) {
 			progressBar.setErrorState(false);
 		} else {

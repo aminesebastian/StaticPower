@@ -2,7 +2,7 @@
 	"parent": "staticpower:block/cables/cable_2_attachment_full_block",
 	"textures": {
 		"0": "staticpower:blocks/cables/attachments/cable_digistore_base_full_attachment",
-		"1": "staticpower:blocks/cables/attachments/digistore_terminal_cover_on",
+		"1": "staticpower:blocks/cables/attachments/digistore_terminal_on",
 		"particle": "staticpower:blocks/cables/attachments/cable_digistore_base_full_attachment"
 	}
 }

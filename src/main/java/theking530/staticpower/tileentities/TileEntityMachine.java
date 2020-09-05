@@ -16,11 +16,11 @@ public abstract class TileEntityMachine extends TileEntityConfigurable {
 
 	public boolean isUpdateQueued = true;
 
-	public TileEntityMachine(TileEntityTypeAllocator allocator) {
+	public TileEntityMachine(TileEntityTypeAllocator<? extends TileEntityMachine> allocator) {
 		this(allocator, StaticPowerTiers.BASIC);
 	}
 
-	public TileEntityMachine(TileEntityTypeAllocator allocator, ResourceLocation tier) {
+	public TileEntityMachine(TileEntityTypeAllocator<? extends TileEntityMachine> allocator, ResourceLocation tier) {
 		super(allocator);
 		disableFaceInteraction();
 		StaticPowerTier tierObject = StaticPowerDataRegistry.getTier(tier);

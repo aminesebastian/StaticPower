@@ -25,7 +25,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityFormer extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator TYPE = new TileEntityTypeAllocator((type) -> new TileEntityFormer(), ModBlocks.Former);
+	public static final TileEntityTypeAllocator<TileEntityFormer> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityFormer(), ModBlocks.Former);
 	
 	public static final int DEFAULT_PROCESSING_TIME = 150;
 	public static final int DEFAULT_PROCESSING_COST = 5;

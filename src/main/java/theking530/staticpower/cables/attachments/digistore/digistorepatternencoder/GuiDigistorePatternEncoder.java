@@ -3,7 +3,6 @@ package theking530.staticpower.cables.attachments.digistore.digistorepatternenco
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import theking530.staticcore.gui.widgets.GuiIslandWidget;
 import theking530.staticcore.gui.widgets.button.SpriteButton;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
@@ -37,9 +36,6 @@ public class GuiDigistorePatternEncoder extends AbstractGuiDigistoreTerminal<Con
 		tab.setTabSide(TabSide.RIGHT);
 		getTabManager().setPosition(0, -5);
 		getTabManager().registerTab(tab);
-
-		// Add island for the armor.
-		registerWidget(new GuiIslandWidget(-24, 104, 30, 80));
 		setOutputSlotSize(16);
 
 		// Add recipe type button.
@@ -52,7 +48,7 @@ public class GuiDigistorePatternEncoder extends AbstractGuiDigistoreTerminal<Con
 
 		// Add encode button.
 		registerWidget(encodeButton = new SpriteButton(152, 136, 16, 16, StaticPowerSprites.ARROW_DOWN, null, this::onEncodePressed));
-		encodeButton.setTooltip(new StringTextComponent("Clear Recipe"));
+		encodeButton.setTooltip(new StringTextComponent("Encode Recipe"));
 	}
 
 	@Override
@@ -86,6 +82,8 @@ public class GuiDigistorePatternEncoder extends AbstractGuiDigistoreTerminal<Con
 
 	protected void onClearRecipePressed(StandardButton button, MouseButton mouseButton) {
 		getContainer().clearRecipe();
+		// Send sync packet to the server.
+		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(new PacketPatternEncoderClearRecipe(getContainer().windowId));
 	}
 
 	protected void onRecipeTypeButtonPressed(StandardButton button, MouseButton mouseButton) {

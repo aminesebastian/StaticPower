@@ -33,6 +33,13 @@ public class PhantomSlot extends StaticPowerContainerSlot {
 		}
 	}
 
+	public void setLimitToSingleItem(boolean limit) {
+		limitToOnePerItem = limit;
+		if (limit) {
+			itemHandler.getStackInSlot(slotNumber).setCount(1);
+		}
+	}
+
 	public void decreasePhantomCount(int amount) {
 		itemHandler.getStackInSlot(slotNumber).shrink(amount);
 	}

@@ -13,7 +13,7 @@ public class TileEntityConfigurable extends TileEntityBase {
 	public final SideConfigurationComponent ioSideConfiguration;
 	public final RedstoneControlComponent redstoneControlComponent;
 
-	public TileEntityConfigurable(TileEntityTypeAllocator allocator) {
+	public TileEntityConfigurable(TileEntityTypeAllocator<? extends TileEntityConfigurable> allocator) {
 		super(allocator);
 		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", this::onSidesConfigUpdate, this::checkSideConfiguration));
 		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent", RedstoneMode.Ignore));

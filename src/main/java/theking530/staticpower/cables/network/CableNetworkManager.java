@@ -38,6 +38,10 @@ import theking530.staticpower.StaticPower;
 public class CableNetworkManager extends WorldSavedData {
 	private static final Logger LOGGER = LogManager.getLogger(CableNetworkManager.class);
 	private static final String PREFIX = StaticPower.MOD_ID + "_cable_network";
+
+	private long currentCraftingId = 0;
+	private long currentItemParcelId = 0;
+
 	private final World World;
 	private final HashMap<BlockPos, ServerCable> WorldCables;
 	private final HashMap<Long, CableNetwork> Networks;
@@ -309,8 +313,44 @@ public class CableNetworkManager extends WorldSavedData {
 		return Networks.values();
 	}
 
+	public long getCurrentCraftingId() {
+		return currentCraftingId;
+	}
+
+	public long getAndIncrementCurrentCraftingId() {
+		// Increment first just to be safe in case someone forgets to increment.
+		incrementCurrentCraftingId();
+		return currentCraftingId;
+	}
+
+	public void incrementCurrentCraftingId() {
+		currentCraftingId++;
+		markDirty();
+	}
+
+	public long getCurrentItemParcelId() {
+		// Increment first just to be safe in case someone forgets to increment.
+		incrementCurrentItemParcelId();
+		return currentItemParcelId;
+	}
+
+	public void incrementCurrentItemParcelId() {
+		currentItemParcelId++;
+		markDirty();
+	}
+
 	@Override
 	public void read(CompoundNBT tag) {
+		// Save the current parcel id.
+		if (tag.contains("current_parcel_id")) {
+			currentItemParcelId = tag.getLong("current_parcel_id");
+		}
+
+		// Load the current crafting id.
+		if (tag.contains("crafting_id")) {
+			currentCraftingId = tag.getLong("crafting_id");
+		}
+
 		ListNBT cables = tag.getList("cables", Constants.NBT.TAG_COMPOUND);
 		for (INBT cableTag : cables) {
 			CompoundNBT cableTagCompound = (CompoundNBT) cableTag;
@@ -335,6 +375,10 @@ public class CableNetworkManager extends WorldSavedData {
 
 	@Override
 	public CompoundNBT write(CompoundNBT tag) {
+		// Save the current crafting id.
+		tag.putLong("crafting_id", currentCraftingId);
+		tag.putLong("current_parcel_id", currentItemParcelId);
+
 		ListNBT cables = new ListNBT();
 		WorldCables.values().forEach(cable -> {
 			CompoundNBT cableTag = new CompoundNBT();

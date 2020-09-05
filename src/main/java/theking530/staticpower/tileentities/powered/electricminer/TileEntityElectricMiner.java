@@ -20,7 +20,7 @@ import theking530.staticpower.tileentities.nonpowered.miner.AbstractTileEntityMi
 
 public class TileEntityElectricMiner extends AbstractTileEntityMiner {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator TYPE = new TileEntityTypeAllocator((type) -> new TileEntityElectricMiner(), ModBlocks.ElectricMiner);
+	public static final TileEntityTypeAllocator<TileEntityElectricMiner> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityElectricMiner(), ModBlocks.ElectricMiner);
 
 	public final EnergyStorageComponent energyStorage;
 	public final UpgradeInventoryComponent upgradesInventory;

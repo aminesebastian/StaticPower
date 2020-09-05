@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.ClickType;
 import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.inventory.container.Slot;
@@ -25,12 +26,14 @@ import theking530.staticpower.cables.attachments.digistore.iobus.ContainerDigist
 import theking530.staticpower.cables.attachments.digistore.iobus.GuiDigistoreIOBus;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot;
+import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot.DigistoreItemCraftableState;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.container.slots.DigistoreSlot;
 import theking530.staticpower.container.slots.DummySlot;
+import theking530.staticpower.container.slots.PlayerArmorItemSlot;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCableAttachment> extends AbstractCableAttachmentContainer<T> {
@@ -44,7 +47,6 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 	protected int itemsPerRow;
 	protected int maxRows;
 	protected Vector2D digistoreInventoryPosition;
-	protected boolean resyncInv;
 	protected boolean managerPresentLastState;
 
 	private int scrollOffset;
@@ -52,6 +54,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 	private String filter;
 	private DigistoreInventorySortType sortType;
 	private DigistoreSimulatedItemStackHandler clientSimulatedInventory;
+	private boolean resyncInv;
 
 	public AbstractContainerDigistoreTerminal(ContainerTypeAllocator<?, ?> allocator, int windowId, PlayerInventory playerInventory, ItemStack attachment, Direction attachmentSide,
 			AbstractCableProviderComponent cableComponent) {
@@ -74,6 +77,12 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 	public void initializeContainer() {
 		managerPresentLastState = getCableComponent().isManagerPresent();
 
+		// Armor
+		addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 39, -18, 109, EquipmentSlotType.HEAD));
+		addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 38, -18, 127, EquipmentSlotType.CHEST));
+		addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 37, -18, 145, EquipmentSlotType.LEGS));
+		addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 36, -18, 163, EquipmentSlotType.FEET));
+
 		// On both the client and the server, add the player slots.
 		addPlayerHotbar(getPlayerInventory(), 8, 246);
 		addPlayerInventory(getPlayerInventory(), 8, 188);
@@ -92,7 +101,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 		// If we clicked on a digistore network slot, perform the appropriate action.
 		if (isDigistoreSlot(slotId)) {
 			// If we're picking up (or inserting).
-			if (clickTypeIn == ClickType.PICKUP) {
+			if (clickTypeIn == ClickType.PICKUP || clickTypeIn == ClickType.SWAP) {
 				// Get the contents in the slot and the stack the player is currently holding on
 				// their mouse. Check to make sure the slot is a valid one and not a dummy.
 				final ItemStack actualSlotContents = slotId < inventorySlots.size() ? inventorySlots.get(slotId).getStack() : ItemStack.EMPTY;
@@ -106,11 +115,32 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 						// left
 						// clicking, or a half stack if not.
 						if (playerMouseHeldItem.isEmpty()) {
-							int halfStackSize = actualSlotContents.getCount() >= actualSlotContents.getMaxStackSize() ? (actualSlotContents.getMaxStackSize() + 1) / 2
-									: (actualSlotContents.getCount() + 1) / 2;
-							int takeAmount = dragType == 0 ? actualSlotContents.getMaxStackSize() : halfStackSize;
-							ItemStack actuallyExtracted = digistoreModule.extractItem(actualSlotContents, takeAmount, false);
-							getPlayerInventory().setItemStack(actuallyExtracted);
+							// Get the stack in the slot.
+							ItemStack stackInSlot = inventorySlots.get(slotId).getStack();
+							// Get its craftable state.
+							DigistoreItemCraftableState itemCraftableState = DigistoreInventorySnapshot.getCraftableStateOfItem(stackInSlot);
+
+							// Check if we should craft it. This is true if the item is ONLY craftable, or
+							// if the player held the craft button.
+							boolean shouldCraft = itemCraftableState == DigistoreItemCraftableState.ONLY_CRAFTABLE;
+							shouldCraft |= itemCraftableState == DigistoreItemCraftableState.CRAFTABLE && dragType == INVENTORY_COMPONENT_LOCK_MOUSE_BUTTON;
+
+							// If we should craft it, attempt to add a request for it. IF not, just pull it
+							// out like usual.
+							if (shouldCraft) {
+								digistoreModule.addCraftingRequest(stackInSlot);
+							} else {
+								// Get the half stack size.
+								int halfStackSize = actualSlotContents.getCount() >= actualSlotContents.getMaxStackSize() ? (actualSlotContents.getMaxStackSize() + 1) / 2
+										: (actualSlotContents.getCount() + 1) / 2;
+								// Calculate the take amount based on whether the user requested left or right
+								// click.
+								int takeAmount = dragType == 0 ? actualSlotContents.getMaxStackSize() : halfStackSize;
+								// Perform the extract.
+								ItemStack actuallyExtracted = digistoreModule.extractItem(actualSlotContents, takeAmount, false);
+								// And then place it into the item stack under the mouse.
+								getPlayerInventory().setItemStack(actuallyExtracted);
+							}
 						} else {
 							// If left click, insert the whole stack, if right click, only one at a time.
 							int insertAmount = dragType == 0 ? playerMouseHeldItem.getCount() : 1;
@@ -306,6 +336,10 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 
 	protected void setMaxRows(int maxRows) {
 		this.maxRows = maxRows;
+		resyncInv = true;
+	}
+
+	protected void markForResync() {
 		resyncInv = true;
 	}
 

@@ -93,7 +93,7 @@ public class DigistorePatternCard extends StaticPowerItem implements ICustomMode
 	}
 
 	public static boolean hasPattern(ItemStack card) {
-		return card.hasTag() && card.getTag().contains(DigistorePatternCard.ENCODED_PATTERN_TAG);
+		return card.getItem() instanceof DigistorePatternCard && card.hasTag() && card.getTag().contains(DigistorePatternCard.ENCODED_PATTERN_TAG);
 	}
 
 	@Override

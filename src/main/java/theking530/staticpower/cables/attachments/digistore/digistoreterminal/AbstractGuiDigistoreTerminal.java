@@ -5,6 +5,7 @@ import com.google.common.base.Strings;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import theking530.staticcore.gui.GuiDrawUtilities;
@@ -18,6 +19,8 @@ import theking530.staticcore.utilities.Color;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.attachments.AbstractCableAttachmentGui;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
+import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot;
+import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot.DigistoreItemCraftableState;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.container.slots.DigistoreSlot;
 import theking530.staticpower.container.slots.NoCountRenderSlot;
@@ -60,6 +63,9 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		// Add search mode button.
 		registerWidget(searchModeButton = new SpriteButton(-20, 40, 16, 16, StaticPowerSprites.SEARCH_MODE_DEFAULT, null, this::onSearchModeButtonPressed));
 
+		// Add island for the armor.
+		registerWidget(new GuiIslandWidget(-24, 104, 30, 80));
+
 		// Set default settings for tooltips/sprites.
 		updateSortAndFilter();
 	}
@@ -70,11 +76,17 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 			// Draw the slot with no count visible.
 			drawSlot(new NoCountRenderSlot(slotIn));
 
-			// Pass the itemstack count through the metric converter.
-			MetricConverter count = new MetricConverter(slotIn.getStack().getCount());
+			ItemStack slotStack = slotIn.getStack();
+			if (DigistoreInventorySnapshot.getCraftableStateOfItem(slotStack) == DigistoreItemCraftableState.ONLY_CRAFTABLE) {
+				// Draw a string that says: "Craft".
+				GuiDrawUtilities.drawStringWithSize("Craft", slotIn.xPos + 16, slotIn.yPos + 15, 0.5f, Color.EIGHT_BIT_WHITE, true);
+			} else {
+				// Pass the itemstack count through the metric converter.
+				MetricConverter count = new MetricConverter(slotIn.getStack().getCount());
 
-			// Draw the item count string manually.
-			GuiDrawUtilities.drawStringWithSize(count.getValueAsString(true), slotIn.xPos + 16, slotIn.yPos + 15, 0.5f, Color.EIGHT_BIT_WHITE, true);
+				// Draw the item count string manually.
+				GuiDrawUtilities.drawStringWithSize(count.getValueAsString(true), slotIn.xPos + 16, slotIn.yPos + 15, 0.5f, Color.EIGHT_BIT_WHITE, true);
+			}
 		} else {
 			super.drawSlot(slotIn);
 		}
@@ -90,6 +102,15 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		}
 		scrollBar.setMaxScroll(getContainer().getMaxScroll());
 		getContainer().setScrollOffset(scrollBar.getScrollAmount());
+	}
+
+	@Override
+	protected void drawBehindItems(float partialTicks, int mouseX, int mouseY) {
+		super.drawBehindItems(partialTicks, mouseX, mouseY);
+		itemRenderer.drawItem(Items.IRON_HELMET, guiLeft, guiTop, -18, 109, 0.3f);
+		itemRenderer.drawItem(Items.IRON_CHESTPLATE, guiLeft, guiTop, -18, 127, 0.3f);
+		itemRenderer.drawItem(Items.IRON_LEGGINGS, guiLeft, guiTop, -18, 145, 0.3f);
+		itemRenderer.drawItem(Items.IRON_BOOTS, guiLeft, guiTop, -18, 163, 0.3f);
 	}
 
 	protected void onSearchTextChanged(TextInputWidget searchBar, String text) {

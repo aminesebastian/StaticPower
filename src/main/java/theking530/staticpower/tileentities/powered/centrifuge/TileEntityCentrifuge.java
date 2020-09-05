@@ -30,7 +30,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityCentrifuge extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator TYPE = new TileEntityTypeAllocator((type) -> new TileEntityCentrifuge(), ModBlocks.Centrifuge);
+	public static final TileEntityTypeAllocator<TileEntityCentrifuge> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityCentrifuge(), ModBlocks.Centrifuge);
 
 	public static final int DEFAULT_PROCESSING_TIME = 100;
 	public static final int DEFAULT_PROCESSING_COST = 20;

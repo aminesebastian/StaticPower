@@ -1,21 +1,35 @@
 package theking530.staticpower.cables.digistore;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 import theking530.api.digistore.IDigistoreInventory;
+import theking530.staticpower.cables.attachments.digistore.digistorepatternencoder.DigistorePatternEncoder.RecipeEncodingType;
 import theking530.staticpower.cables.attachments.digistore.digistoreterminal.DigistoreInventorySortType;
+import theking530.staticpower.items.DigistorePatternCard.EncodedDigistorePattern;
+import theking530.staticpower.tileentities.digistorenetwork.atomicconstructor.TileEntityAtomicConstructor;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class DigistoreInventorySnapshot implements IItemHandler {
+	public static final String CRAFTABLE_TAG = "digistore_craftable";
+
+	public enum DigistoreItemCraftableState {
+		NONE, CRAFTABLE, ONLY_CRAFTABLE
+	}
+
 	public static final DigistoreInventorySnapshot EMPTY = new DigistoreInventorySnapshot();
 	private final List<ItemStack> stacks;
+	private final Map<ItemStack, List<EncodedDigistorePattern>> craftableItems;
 	private final DigistoreNetworkModule module;
 	private final String filterString;
 	private final DigistoreInventorySortType sortType;
@@ -23,25 +37,24 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 	private final boolean isEmpty;
 
 	public DigistoreInventorySnapshot(DigistoreNetworkModule module, String filter, DigistoreInventorySortType sortType, boolean sortDescending) {
-		this.isEmpty = false;
 		this.module = module;
 		this.sortType = sortType;
 		this.sortDescending = sortDescending;
 		stacks = new ArrayList<ItemStack>();
 		filterString = filter.toLowerCase();
+		craftableItems = new HashMap<ItemStack, List<EncodedDigistorePattern>>();
 
 		// Perform an initial update when first created.
-		update();
+		if (module != null) {
+			update();
+			isEmpty = false;
+		} else {
+			isEmpty = true;
+		}
 	}
 
 	private DigistoreInventorySnapshot() {
-		this.isEmpty = true;
-		this.module = null;
-		this.sortType = DigistoreInventorySortType.COUNT;
-		this.sortDescending = true;
-		stacks = new ArrayList<ItemStack>();
-		filterString = "";
-
+		this(null, "", DigistoreInventorySortType.COUNT, true);
 	}
 
 	public boolean isEmpty() {
@@ -49,10 +62,10 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 	}
 
 	public void update() {
-		// Start profiling.
+		// Start profiling (this only occurs on the server).
 		Minecraft.getInstance().getProfiler().startSection("DigistoreInventoryBuilding");
 
-		// First clear the stack array.
+		// Clear the stacks list.
 		stacks.clear();
 
 		// Populate the stacks.
@@ -66,47 +79,62 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 					continue;
 				}
 
-				// Skip items that don't match the filter.
-				if (filterString.length() > 0) {
-					if (filterString.startsWith("@") && filterString.length() > 1) {
-						if (!stackInSlot.getItem().getRegistryName().getNamespace().toLowerCase().contains(filterString.substring(1))) {
-							continue;
-						}
-					} else if (filterString.startsWith("$") && filterString.length() > 1) {
-						// Set up a flag to indicate if it was found by tag.
-						boolean found = false;
+				// Cache the item in the hash set.
+				ItemStack stackToCache = stackInSlot.copy();
+				stackToCache.setCount(digistore.getDigistoreStack(i).getCount());
+				cacheOrIncreaseItemCount(stackToCache);
+			}
+		}
 
-						// Loop through the tags and indicate if we find a match.
-						for (ResourceLocation tag : stackInSlot.getItem().getTags()) {
-							if (tag.getPath().toLowerCase().contains(filterString.substring(1))) {
-								found = true;
-								break;
-							}
-						}
+		// Add the craftable items.
+		for (TileEntityAtomicConstructor constructor : module.getConstructors()) {
+			// Iterate through all the patterns.
+			for (ItemStack pattern : constructor.patternInventory) {
+				// If we're able to get the encoded pattern and it is for a crafting table.
+				EncodedDigistorePattern encodedPattern = EncodedDigistorePattern.readFromPatternCard(pattern);
+				if (encodedPattern != null && encodedPattern.recipeType == RecipeEncodingType.CRAFTING) {
+					// Get the first output (as that's the only one that matters).
+					ItemStack output = encodedPattern.outputs[0];
 
-						// If no match is found, skip this item.
-						if (!found) {
-							continue;
-						}
-					} else if (!stackInSlot.getDisplayName().getFormattedText().toLowerCase().contains(this.filterString)) {
-						continue;
-					}
-				}
-
-				// Get the index of the item if we have already stored it.
-				int indexOfItem = getItemIndex(stackInSlot);
-
-				// Increment the count if we have, otherwise create a new entry.
-				if (indexOfItem >= 0) {
-					stacks.get(indexOfItem).grow(digistore.getDigistoreStack(i).getCount());
-				} else {
-					stacks.add(ItemHandlerHelper.copyStackWithSize(stackInSlot, digistore.getDigistoreStack(i).getCount()));
+					// Cache the craftable.
+					cacheCraftable(output, encodedPattern);
 				}
 			}
 		}
 
 		// Get the sort direction modifier.
 		int sortModifier = sortDescending ? 1 : -1;
+
+		// Filter the stacks.
+		for (int i = stacks.size() - 1; i >= 0; i--) {
+			ItemStack stack = stacks.get(i);
+			// Skip items that don't match the filter.
+			if (filterString.length() > 0) {
+				if (filterString.startsWith("@") && filterString.length() > 1) {
+					if (!stack.getItem().getRegistryName().getNamespace().toLowerCase().contains(filterString.substring(1))) {
+						stacks.remove(i);
+					}
+				} else if (filterString.startsWith("$") && filterString.length() > 1) {
+					// Set up a flag to indicate if it was found by tag.
+					boolean found = false;
+
+					// Loop through the tags and indicate if we find a match.
+					for (ResourceLocation tag : stack.getItem().getTags()) {
+						if (tag.getPath().toLowerCase().contains(filterString.substring(1))) {
+							found = true;
+							break;
+						}
+					}
+
+					// If no match is found, skip this item.
+					if (!found) {
+						stacks.remove(i);
+					}
+				} else if (!stack.getDisplayName().getFormattedText().toLowerCase().contains(this.filterString)) {
+					stacks.remove(i);
+				}
+			}
+		}
 
 		// Sort by the requested sort type.
 		if (sortType == DigistoreInventorySortType.COUNT) {
@@ -162,13 +190,88 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 		return true;
 	}
 
-	protected int getItemIndex(ItemStack stack) {
-		for (int i = 0; i < stacks.size(); i++) {
-			ItemStack test = stacks.get(i);
-			if (ItemUtilities.areItemStacksStackable(test, stack)) {
-				return i;
+	public List<EncodedDigistorePattern> getAllPatternsForItem(ItemStack output) {
+		for (ItemStack key : craftableItems.keySet()) {
+			if (ItemUtilities.areItemStacksStackable(key, output)) {
+				return craftableItems.get(key);
 			}
 		}
-		return -1;
+		return Collections.emptyList();
+	}
+
+	protected void cacheCraftable(ItemStack stack, EncodedDigistorePattern pattern) {
+		// Cache the craftable. This requires an optimization pass.
+		ItemStack stackToCache = stack.copy();
+		stackToCache.setCount(1);
+
+		// If we already have cached this, just add this new pattern.
+		boolean patternCached = false;
+		for (ItemStack key : craftableItems.keySet()) {
+			if (ItemUtilities.areItemStacksStackable(key, stackToCache)) {
+				craftableItems.get(key).add(pattern);
+				patternCached = true;
+			}
+		}
+		// Otherwise, create a new entry.
+		if (!patternCached) {
+			LinkedList<EncodedDigistorePattern> patternList = new LinkedList<EncodedDigistorePattern>();
+			patternList.add(pattern);
+			craftableItems.put(stackToCache.copy(), patternList);
+		}
+
+		// Iterate through all the craftables.
+		for (ItemStack cached : stacks) {
+			ItemStack strippedCached = stripCraftableTag(cached.copy());
+			// If the item is already cached, mark it as craftable.
+			if (ItemUtilities.areItemStacksStackable(strippedCached, stackToCache)) {
+				// Mark the craftable state.
+				// state.
+				if (!cached.hasTag()) {
+					cached.setTag(new CompoundNBT());
+				}
+				cached.getTag().putInt(CRAFTABLE_TAG, DigistoreItemCraftableState.CRAFTABLE.ordinal());
+				return;
+			}
+		}
+
+		// If we made it this far, we never found the item. Add it and mark it as
+		// craftable. If it does not have a tag, add one to store the craftable state.
+		if (!stackToCache.hasTag()) {
+			stackToCache.setTag(new CompoundNBT());
+		}
+		// Mark the craftable state and add it to the list.
+		stackToCache.getTag().putInt(CRAFTABLE_TAG, DigistoreItemCraftableState.ONLY_CRAFTABLE.ordinal());
+		stacks.add(stackToCache);
+	}
+
+	protected void cacheOrIncreaseItemCount(ItemStack stack) {
+		for (ItemStack test : stacks) {
+			if (ItemUtilities.areItemStacksStackable(test, stack)) {
+				test.grow(stack.getCount());
+				return;
+			}
+		}
+
+		stacks.add(stack);
+	}
+
+	public static ItemStack stripCraftableTag(ItemStack stack) {
+		if (stack.hasTag()) {
+			stack.getTag().remove(CRAFTABLE_TAG);
+			if (stack.getTag().keySet().size() == 0) {
+				stack.setTag(null);
+			}
+		}
+		return stack;
+	}
+
+	public static DigistoreItemCraftableState getCraftableStateOfItem(ItemStack stack) {
+		if (!stack.hasTag()) {
+			return DigistoreItemCraftableState.NONE;
+		}
+		if (!stack.getTag().contains(CRAFTABLE_TAG)) {
+			return DigistoreItemCraftableState.NONE;
+		}
+		return DigistoreItemCraftableState.values()[stack.getTag().getInt(CRAFTABLE_TAG)];
 	}
 }
