@@ -27,6 +27,10 @@ public abstract class AbstractCableNetworkModule {
 		return Type;
 	}
 
+	public CableNetwork getNetwork() {
+		return Network;
+	}
+
 	public abstract void getReaderOutput(List<ITextComponent> components);
 
 	public abstract void tick(World world);

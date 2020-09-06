@@ -71,6 +71,23 @@ public class ItemUtilities {
 	}
 
 	/**
+	 * Checks to see if stack2 can be used to replace stack1 based on their tags.
+	 * Example, two different kinds of wood logs would return true here.
+	 * 
+	 * @param stack1 The master item to replace.
+	 * @param stack2 The possible replacement item.
+	 * @return True if stack2 is usable to replace stack1.
+	 */
+	public static boolean doStacksOverlapTags(ItemStack stack1, ItemStack stack2) {
+		for (ResourceLocation filterItemTags : stack1.getItem().getTags()) {
+			if (stack2.getItem().getTags().contains(filterItemTags)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Compares the provided {@link ItemStack}s and returns true if they are equal
 	 * in all things except count. NOTE: This does not actually mean that the items
 	 * can stack (ie. Passing two iron helmets in here will still return true.).

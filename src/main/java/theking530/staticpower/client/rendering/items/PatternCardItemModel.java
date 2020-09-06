@@ -14,8 +14,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.world.World;
+import theking530.staticpower.cables.digistore.crafting.EncodedDigistorePattern;
 import theking530.staticpower.items.DigistorePatternCard;
-import theking530.staticpower.items.DigistorePatternCard.EncodedDigistorePattern;
 
 @SuppressWarnings("deprecation")
 public class PatternCardItemModel implements IBakedModel {
@@ -41,9 +41,9 @@ public class PatternCardItemModel implements IBakedModel {
 					if (Screen.hasControlDown()) {
 						// Try to get the pattern and make sure it has an output.
 						EncodedDigistorePattern pattern = EncodedDigistorePattern.readFromPatternCard(stack);
-						if (pattern != null && pattern.outputs.length > 0) {
+						if (pattern != null && pattern.getOutputs().length > 0) {
 							// Get the baked model for the recipe output.
-							return Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(pattern.outputs[0], world, entity);
+							return Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(pattern.getOutputs()[0], world, entity);
 						}
 					}
 					return encodedModel;

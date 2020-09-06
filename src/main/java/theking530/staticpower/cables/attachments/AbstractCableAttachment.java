@@ -72,10 +72,12 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 
 	public void onRemovedFromCable(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
 		IItemHandler upgradeInv = getUpgradeInventory(attachment);
-		for (int i = 0; i < upgradeInv.getSlots(); i++) {
-			ItemStack upgrade = upgradeInv.getStackInSlot(i);
-			if (!upgrade.isEmpty()) {
-				WorldUtilities.dropItem(cable.getWorld(), cable.getPos(), upgrade);
+		if (upgradeInv != null) {
+			for (int i = 0; i < upgradeInv.getSlots(); i++) {
+				ItemStack upgrade = upgradeInv.getStackInSlot(i);
+				if (!upgrade.isEmpty()) {
+					WorldUtilities.dropItem(cable.getWorld(), cable.getPos(), upgrade);
+				}
 			}
 		}
 		attachment.setTag(null);

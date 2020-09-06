@@ -369,6 +369,7 @@
 	"block.staticpower.digistore_manager": "Digistore Manager",
 	"block.staticpower.digistore_server_rack": "Server Rack",
 	"block.staticpower.digistore_atomic_constructor": "Atomic Constructor",
+	"block.staticpower.digistore_pattern_storage": "Pattern Storage",
 	"block.staticpower.solar_panel_basic": "Basic Solar Panel",
 	"block.staticpower.solar_panel_advanced": "Advanced Solar Panel",
 	"block.staticpower.solar_panel_static": "Static Solar Panel",

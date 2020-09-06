@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.digistorenetwork.atomicconstructor;
+package theking530.staticpower.tileentities.digistorenetwork.patternstorage;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -12,13 +12,13 @@ import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.ItemStackHandlerFilter;
 import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreTileEntity;
 
-public class TileEntityAtomicConstructor extends BaseDigistoreTileEntity {
+public class TileEntityPatternStorage extends BaseDigistoreTileEntity {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityAtomicConstructor> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityAtomicConstructor(), ModBlocks.AtomicConstructor);
+	public static final TileEntityTypeAllocator<TileEntityPatternStorage> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityPatternStorage(), ModBlocks.PatternStorage);
 
 	public final InventoryComponent patternInventory;
 
-	public TileEntityAtomicConstructor() {
+	public TileEntityPatternStorage() {
 		super(TYPE, 10);
 
 		registerComponent(patternInventory = new InventoryComponent("PatternInventory", 18).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
@@ -31,7 +31,7 @@ public class TileEntityAtomicConstructor extends BaseDigistoreTileEntity {
 
 	@Override
 	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
-		return new ContainerAtomicConstructor(windowId, inventory, this);
+		return new ContainerPatternStorage(windowId, inventory, this);
 	}
 
 }

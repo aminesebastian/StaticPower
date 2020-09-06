@@ -8,16 +8,14 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.common.util.Constants;
 import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
-import theking530.staticpower.cables.attachments.digistore.digistorepatternencoder.DigistorePatternEncoder.RecipeEncodingType;
+import theking530.staticpower.cables.digistore.crafting.EncodedDigistorePattern;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.items.PatternCardItemModel;
 
@@ -55,7 +53,7 @@ public class DigistorePatternCard extends StaticPowerItem implements ICustomMode
 
 		// Add inputs.
 		tooltip.add(new StringTextComponent("Inputs: "));
-		for (ItemStack input : pattern.inputs) {
+		for (ItemStack input : pattern.getInputs()) {
 			if (!input.isEmpty()) {
 				tooltip.add(new StringTextComponent("  •").appendSibling(input.getDisplayName()));
 			}
@@ -63,7 +61,7 @@ public class DigistorePatternCard extends StaticPowerItem implements ICustomMode
 
 		// Add outputs.
 		tooltip.add(new StringTextComponent("Outputs: "));
-		for (ItemStack output : pattern.outputs) {
+		for (ItemStack output : pattern.getOutputs()) {
 			if (!output.isEmpty()) {
 				tooltip.add(new StringTextComponent("  •").appendSibling(output.getDisplayName()));
 			}
@@ -78,9 +76,13 @@ public class DigistorePatternCard extends StaticPowerItem implements ICustomMode
 		return output;
 	}
 
-	public ItemStack getEncodedRecipe(EncodedDigistorePattern recipe) {
+	public ItemStack getPatternForRecipe(EncodedDigistorePattern recipe) {
 		// Create the pattern stack.
 		ItemStack output = new ItemStack(this);
+
+		if (!recipe.isValid()) {
+			return output;
+		}
 
 		// Give it a tag.
 		output.setTag(new CompoundNBT());
@@ -107,81 +109,4 @@ public class DigistorePatternCard extends StaticPowerItem implements ICustomMode
 		return new PatternCardItemModel(existingModel, encodedModel);
 	}
 
-	public static class EncodedDigistorePattern {
-		public final ItemStack[] inputs;
-		public final ItemStack[] outputs;
-		public final RecipeEncodingType recipeType;
-
-		public EncodedDigistorePattern(ItemStack[] inputs, ItemStack[] outputs, RecipeEncodingType recipeType) {
-			this.inputs = inputs;
-			this.outputs = outputs;
-			this.recipeType = recipeType;
-		}
-
-		@Nullable
-		public static EncodedDigistorePattern readFromPatternCard(ItemStack patternCard) {
-			if (hasPattern(patternCard)) {
-				CompoundNBT patternTag = patternCard.getTag().getCompound(ENCODED_PATTERN_TAG);
-				if (!patternTag.contains("type") || !patternTag.contains("inputs") || !patternTag.contains("outputs")) {
-					return null;
-				}
-				return read(patternTag);
-			}
-			return null;
-		}
-
-		public static EncodedDigistorePattern read(CompoundNBT nbt) {
-			// Read the recipe type.
-			RecipeEncodingType recipeType = RecipeEncodingType.values()[nbt.getInt("type")];
-
-			// Read the inputs.
-			ItemStack[] inputStacks = new ItemStack[9];
-			ListNBT inputsNBT = nbt.getList("inputs", Constants.NBT.TAG_COMPOUND);
-			for (int i = 0; i < 9; i++) {
-				CompoundNBT inputTagNbt = (CompoundNBT) inputsNBT.get(i);
-				ItemStack stack = ItemStack.read(inputTagNbt);
-				inputStacks[i] = stack;
-			}
-
-			// Read the outputs.
-			ItemStack[] outputStacks = new ItemStack[9];
-			ListNBT outputsNBT = nbt.getList("outputs", Constants.NBT.TAG_COMPOUND);
-			for (int i = 0; i < 9; i++) {
-				CompoundNBT outputTagNbt = (CompoundNBT) outputsNBT.get(i);
-				ItemStack stack = ItemStack.read(outputTagNbt);
-				outputStacks[i] = stack;
-			}
-
-			// Create the recipe.
-			return new EncodedDigistorePattern(inputStacks, outputStacks, recipeType);
-		}
-
-		public CompoundNBT serialize() {
-			// Create the pattern tag.
-			CompoundNBT pattern = new CompoundNBT();
-
-			// Store the recipe type.
-			pattern.putInt("type", recipeType.ordinal());
-
-			// Store the inputs.
-			ListNBT inputStacks = new ListNBT();
-			for (ItemStack stack : inputs) {
-				CompoundNBT inputTag = new CompoundNBT();
-				stack.write(inputTag);
-				inputStacks.add(inputTag);
-			}
-			pattern.put("inputs", inputStacks);
-
-			// Store the outputs.
-			ListNBT outputStacks = new ListNBT();
-			for (ItemStack stack : outputs) {
-				CompoundNBT outputTag = new CompoundNBT();
-				stack.write(outputTag);
-				outputStacks.add(outputTag);
-			}
-			pattern.put("outputs", outputStacks);
-
-			return pattern;
-		}
-	}
 }

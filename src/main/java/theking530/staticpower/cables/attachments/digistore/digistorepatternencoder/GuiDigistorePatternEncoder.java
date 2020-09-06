@@ -68,6 +68,7 @@ public class GuiDigistorePatternEncoder extends AbstractGuiDigistoreTerminal<Con
 
 	@Override
 	public void updateData() {
+		super.updateData();
 		if (getCableComponent().isManagerPresent()) {
 			progressBar.setErrorState(false);
 		} else {

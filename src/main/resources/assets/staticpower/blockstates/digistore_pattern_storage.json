@@ -1,0 +1,12 @@
+{
+    "variants": {
+        "facing=north,is_on=false": { "model": "staticpower:block/machines/digistore_pattern_storage" },
+        "facing=south,is_on=false": { "model": "staticpower:block/machines/digistore_pattern_storage", "y": 180 },
+        "facing=west,is_on=false":  { "model": "staticpower:block/machines/digistore_pattern_storage", "y": 270 },
+        "facing=east,is_on=false":  { "model": "staticpower:block/machines/digistore_pattern_storage", "y": 90 },
+		"facing=north,is_on=true": { "model": "staticpower:block/machines/digistore_pattern_storage_on" },
+        "facing=south,is_on=true": { "model": "staticpower:block/machines/digistore_pattern_storage_on", "y": 180 },
+        "facing=west,is_on=true":  { "model": "staticpower:block/machines/digistore_pattern_storage_on", "y": 270 },
+        "facing=east,is_on=true":  { "model": "staticpower:block/machines/digistore_pattern_storage_on", "y": 90 }
+    }
+}

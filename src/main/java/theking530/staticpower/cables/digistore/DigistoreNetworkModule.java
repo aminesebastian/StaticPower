@@ -2,53 +2,58 @@ package theking530.staticpower.cables.digistore;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map.Entry;
-import java.util.Queue;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.common.util.Constants;
 import theking530.api.digistore.CapabilityDigistoreInventory;
 import theking530.api.digistore.IDigistoreInventory;
 import theking530.staticpower.cables.attachments.digistore.digistoreterminal.DigistoreInventorySortType;
+import theking530.staticpower.cables.digistore.crafting.DigistoreNetworkCraftingManager;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
-import theking530.staticpower.cables.network.CableNetworkManager;
+import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.NetworkMapper;
 import theking530.staticpower.cables.network.ServerCable;
-import theking530.staticpower.items.DigistorePatternCard.EncodedDigistorePattern;
-import theking530.staticpower.tileentities.digistorenetwork.atomicconstructor.TileEntityAtomicConstructor;
 import theking530.staticpower.tileentities.digistorenetwork.manager.TileEntityDigistoreManager;
+import theking530.staticpower.tileentities.digistorenetwork.patternstorage.TileEntityPatternStorage;
 import theking530.staticpower.utilities.MetricConverter;
 
 public class DigistoreNetworkModule extends AbstractCableNetworkModule {
-	private final Queue<DigistoreCraftingRequest> craftingRequests;
+	public static final int CRAFTING_TIME = 10;
+
 	private final List<IDigistoreInventory> digistores;
 	private final List<ServerCable> powerUsingDigistores;
-	private final List<TileEntityAtomicConstructor> constructors;
+	private final List<TileEntityPatternStorage> constructors;
+
 	private final DigistoreNetworkTransactionManager transactionManager;
+	private final DigistoreNetworkCraftingManager craftingManager;
 	private TileEntityDigistoreManager manager;
+	private int craftingTimer;
 
 	public DigistoreNetworkModule() {
 		super(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE);
 		digistores = new LinkedList<IDigistoreInventory>();
 		transactionManager = new DigistoreNetworkTransactionManager(this);
 		powerUsingDigistores = new LinkedList<ServerCable>();
-		constructors = new LinkedList<TileEntityAtomicConstructor>();
-		craftingRequests = new LinkedList<DigistoreCraftingRequest>();
+		constructors = new LinkedList<TileEntityPatternStorage>();
+		craftingManager = new DigistoreNetworkCraftingManager(this);
 	}
 
 	@Override
 	public void tick(World world) {
 		if (isManagerPresent()) {
 			manager.energyStorage.useBulkPower(getPowerUsage());
-			processCraftingReuqests();
+
+			craftingTimer++;
+			if (craftingTimer >= CRAFTING_TIME) {
+				craftingManager.processCrafting();
+				craftingTimer = 0;
+			}
 		}
 	}
 
@@ -74,8 +79,8 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 				});
 
 				// Capture the constructors.
-				if (te instanceof TileEntityAtomicConstructor) {
-					constructors.add((TileEntityAtomicConstructor) te);
+				if (te instanceof TileEntityPatternStorage) {
+					constructors.add((TileEntityPatternStorage) te);
 				}
 
 				// If this cable has a power usage tag, capture it as a power user.
@@ -101,74 +106,29 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 		return manager != null && manager.energyStorage.getStorage().getStoredPower() > 0;
 	}
 
-	public DigistoreInventorySnapshot getNetworkInventorySnapshot(String filter, DigistoreInventorySortType sortType, boolean sortDescending) {
+	public DigistoreInventorySnapshot getNetworkInventorySnapshotForDisplay(String filter, DigistoreInventorySortType sortType, boolean sortDescending) {
 		if (!isManagerPresent()) {
 			return DigistoreInventorySnapshot.EMPTY;
 		}
 		return new DigistoreInventorySnapshot(this, filter, sortType, sortDescending);
 	}
 
+	public DigistoreInventorySnapshot getSimulatedNetworkInventorySnapshot() {
+		if (!isManagerPresent()) {
+			return DigistoreInventorySnapshot.EMPTY;
+		}
+		return new DigistoreInventorySnapshot(this, "", null, false, true);
+	}
+
+	public DigistoreInventorySnapshot getNonSimulatedNetworkInventorySnapshot() {
+		if (!isManagerPresent()) {
+			return DigistoreInventorySnapshot.EMPTY;
+		}
+		return new DigistoreInventorySnapshot(this, "", null, false, false);
+	}
+
 	public DigistoreNetworkTransactionManager getTransactionManager() {
 		return transactionManager;
-	}
-
-	public boolean addCraftingRequest(ItemStack outputItem) {
-		ItemStack strippedItem = outputItem.copy();
-		DigistoreInventorySnapshot.stripCraftableTag(strippedItem);
-
-		DigistoreInventorySnapshot snapshot = getNetworkInventorySnapshot("", DigistoreInventorySortType.COUNT, false);
-		List<EncodedDigistorePattern> patterns = snapshot.getAllPatternsForItem(strippedItem);
-		EncodedDigistorePattern bestPattern = null;
-		for (EncodedDigistorePattern candidate : patterns) {
-			bestPattern = candidate;
-		}
-
-		if (bestPattern != null) {
-			DigistoreCraftingRequest request = new DigistoreCraftingRequest(CableNetworkManager.get(Network.getWorld()).getAndIncrementCurrentCraftingId(), bestPattern);
-			if (canCraftRequest(request)) {
-				craftingRequests.add(request);
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	protected void processCraftingReuqests() {
-		// If there are no requests, do nothing.
-		if (craftingRequests.size() == 0) {
-			return;
-		}
-
-		// Pop the top request and attempt to process it.
-		DigistoreCraftingRequest topRequest = craftingRequests.peek();
-		if (canCraftRequest(topRequest)) {
-			if (craftRequest(topRequest)) {
-				craftingRequests.poll();
-			}
-		}
-	}
-
-	protected boolean canCraftRequest(DigistoreCraftingRequest request) {
-		// Check to see if we have the items required to craft with.
-		for (Entry<ItemStack, Integer> requiredItem : request.getRequiredItems().entrySet()) {
-			ItemStack simulatedExtract = extractItem(requiredItem.getKey(), requiredItem.getValue(), true);
-			if (simulatedExtract.getCount() != requiredItem.getValue()) {
-				return false;
-			}
-		}
-
-		// Check to see if we have space to insert the crafted item.
-		ItemStack remaining = this.insertItem(request.pattern.outputs[0].copy(), true);
-		return remaining.isEmpty();
-	}
-
-	protected boolean craftRequest(DigistoreCraftingRequest request) {
-		for (Entry<ItemStack, Integer> requiredItem : request.getRequiredItems().entrySet()) {
-			extractItem(requiredItem.getKey(), requiredItem.getValue(), false);
-		}
-		insertItem(request.pattern.outputs[0], false);
-		return true;
 	}
 
 	public List<IDigistoreInventory> getAllDigistores() {
@@ -187,7 +147,7 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 		return usage;
 	}
 
-	public List<TileEntityAtomicConstructor> getConstructors() {
+	public List<TileEntityPatternStorage> getConstructors() {
 		return constructors;
 	}
 
@@ -209,6 +169,19 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 		throw new RuntimeException("Attempted to extract an item from a network with no present manager.");
 	}
 
+	public DigistoreNetworkCraftingManager getCraftingManager() {
+		return craftingManager;
+	}
+
+	@Override
+	public void onAddedToNetwork(CableNetwork other) {
+		super.onAddedToNetwork(other);
+		if (other.hasModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE)) {
+			DigistoreNetworkModule module = (DigistoreNetworkModule) other.getModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE);
+			module.craftingManager.mergeWithOtherManager(craftingManager);
+		}
+	}
+
 	@Override
 	public void getReaderOutput(List<ITextComponent> output) {
 		// Get the total amount of items.
@@ -228,24 +201,14 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 
 	@Override
 	public void readFromNbt(CompoundNBT tag) {
-		// Get the request NBT list and add the parcels.
-		ListNBT requestNBTList = tag.getList("requests", Constants.NBT.TAG_COMPOUND);
-		craftingRequests.clear();
-		requestNBTList.forEach(requestTag -> {
-			CompoundNBT requestNbtTag = (CompoundNBT) requestTag;
-			craftingRequests.add(DigistoreCraftingRequest.read(requestNbtTag));
-		});
+		craftingManager.readFromNbt(tag);
+		craftingTimer = tag.getInt("crafting_timer");
 	}
 
 	@Override
 	public CompoundNBT writeToNbt(CompoundNBT tag) {
-		// Serialize the requests to the list.
-		ListNBT requestNBTList = new ListNBT();
-		craftingRequests.forEach(request -> {
-			requestNBTList.add(request.serializeToNBT());
-		});
-		tag.put("requests", requestNBTList);
-
+		craftingManager.writeToNbt(tag);
+		tag.putInt("crafting_timer", craftingTimer);
 		return tag;
 	}
 }

@@ -23,10 +23,10 @@ import theking530.staticpower.cables.heat.BlockHeatCable;
 import theking530.staticpower.cables.item.BlockItemCable;
 import theking530.staticpower.cables.power.BlockPowerCable;
 import theking530.staticpower.data.StaticPowerTiers;
-import theking530.staticpower.tileentities.digistorenetwork.atomicconstructor.BlockAtomicConstructor;
 import theking530.staticpower.tileentities.digistorenetwork.digistore.BlockDigistore;
 import theking530.staticpower.tileentities.digistorenetwork.ioport.BlockDigistoreIOPort;
 import theking530.staticpower.tileentities.digistorenetwork.manager.BlockDigistoreManager;
+import theking530.staticpower.tileentities.digistorenetwork.patternstorage.BlockPatternStorage;
 import theking530.staticpower.tileentities.digistorenetwork.severrack.BlockDigistoreServerRack;
 import theking530.staticpower.tileentities.nonpowered.condenser.BlockCondenser;
 import theking530.staticpower.tileentities.nonpowered.evaporator.BlockEvaporator;
@@ -173,7 +173,7 @@ public class ModBlocks {
 	public static BlockDigistoreIOPort DigistoreIOPort;
 	public static BlockDigistore Digistore;
 	public static BlockDigistoreServerRack DigistoreServerRack;
-	public static BlockAtomicConstructor AtomicConstructor;
+	public static BlockPatternStorage PatternStorage;
 
 	// Cables
 	public static BlockItemCable ItemCableBasic;
@@ -350,7 +350,7 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(DigistoreIOPort = new BlockDigistoreIOPort("digistore_io_port"));
 		StaticPowerRegistry.preRegisterBlock(Digistore = new BlockDigistore("digistore"));
 		StaticPowerRegistry.preRegisterBlock(DigistoreServerRack = new BlockDigistoreServerRack("digistore_server_rack"));
-		StaticPowerRegistry.preRegisterBlock(AtomicConstructor = new BlockAtomicConstructor("digistore_atomic_constructor"));		
+		StaticPowerRegistry.preRegisterBlock(PatternStorage = new BlockPatternStorage("digistore_pattern_storage"));		
 		
 		// Cables
 		StaticPowerRegistry.preRegisterBlock(DigistoreWire = new BlockDigistoreNetworkWire("cable_digistore"));

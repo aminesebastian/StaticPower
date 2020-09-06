@@ -90,7 +90,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 		// If on the server, populate the digistore container slots.
 		if (!getCableComponent().getWorld().isRemote && getCableComponent().isManagerPresent()) {
 			getDigistoreNetwork().ifPresent(digistoreModule -> {
-				DigistoreInventorySnapshot digistoreInv = digistoreModule.getNetworkInventorySnapshot(filter, sortType, sortDescending);
+				DigistoreInventorySnapshot digistoreInv = digistoreModule.getNetworkInventorySnapshotForDisplay(filter, sortType, sortDescending);
 				addDigistoreSlots(digistoreInv, itemsPerRow, digistoreInventoryPosition.getXi(), digistoreInventoryPosition.getYi());
 			});
 		}
@@ -114,9 +114,10 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 						// is not empty, otherwise, attempt to extract. Extract up to a full stack if
 						// left
 						// clicking, or a half stack if not.
-						if (playerMouseHeldItem.isEmpty()) {
+						if (playerMouseHeldItem.isEmpty() && !inventorySlots.get(slotId).getStack().isEmpty()) {
 							// Get the stack in the slot.
 							ItemStack stackInSlot = inventorySlots.get(slotId).getStack();
+							
 							// Get its craftable state.
 							DigistoreItemCraftableState itemCraftableState = DigistoreInventorySnapshot.getCraftableStateOfItem(stackInSlot);
 
@@ -128,7 +129,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 							// If we should craft it, attempt to add a request for it. IF not, just pull it
 							// out like usual.
 							if (shouldCraft) {
-								digistoreModule.addCraftingRequest(stackInSlot);
+								digistoreModule.getCraftingManager().addCraftingRequest(stackInSlot, 1);
 							} else {
 								// Get the half stack size.
 								int halfStackSize = actualSlotContents.getCount() >= actualSlotContents.getMaxStackSize() ? (actualSlotContents.getMaxStackSize() + 1) / 2
@@ -408,7 +409,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 			}
 
 			// Get the network inventory.
-			DigistoreInventorySnapshot digistoreInv = digistoreModule.getNetworkInventorySnapshot(filter, sortType, sortDescending);
+			DigistoreInventorySnapshot digistoreInv = digistoreModule.getNetworkInventorySnapshotForDisplay(filter, sortType, sortDescending);
 			addDigistoreSlots(digistoreInv, itemsPerRow, digistoreInventoryPosition.getXi(), digistoreInventoryPosition.getYi());
 
 			if (oldInv != null && !resyncInv) {

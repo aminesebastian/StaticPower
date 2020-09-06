@@ -85,7 +85,9 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 
 	}
 
-	public void onNetworksJoined(CableNetwork other) {
+	@Override
+	public void onAddedToNetwork(CableNetwork other) {
+		super.onAddedToNetwork(other);
 		if (other.hasModule(CableNetworkModuleTypes.POWER_NETWORK_MODULE)) {
 			PowerNetworkModule module = (PowerNetworkModule) other.getModule(CableNetworkModuleTypes.POWER_NETWORK_MODULE);
 			module.EnergyStorage.addPowerIgnoreTransferRate(EnergyStorage.getStoredPower());

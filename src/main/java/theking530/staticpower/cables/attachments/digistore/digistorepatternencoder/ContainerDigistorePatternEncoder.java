@@ -21,13 +21,13 @@ import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.digistore.digistorepatternencoder.DigistorePatternEncoder.RecipeEncodingType;
 import theking530.staticpower.cables.attachments.digistore.digistoreterminal.AbstractContainerDigistoreTerminal;
+import theking530.staticpower.cables.digistore.crafting.EncodedDigistorePattern;
 import theking530.staticpower.container.FakeCraftingInventory;
 import theking530.staticpower.container.slots.OutputSlot;
 import theking530.staticpower.container.slots.PhantomSlot;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.integration.JEI.IJEIReipceTransferHandler;
-import theking530.staticpower.items.DigistorePatternCard.EncodedDigistorePattern;
 
 public class ContainerDigistorePatternEncoder extends AbstractContainerDigistoreTerminal<DigistorePatternEncoder> implements IJEIReipceTransferHandler {
 	@ContainerTypePopulator
@@ -269,14 +269,34 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 		}
 
 		// Create the encoded recipe.
-		ItemStack encodedRecipe = ModItems.PatternCard.getEncodedRecipe(new EncodedDigistorePattern(inputs, outputs, currentRecipeType));
+		ItemStack encodedRecipe = ItemStack.EMPTY;
+
+		// If we're in crafting mode, also cache the recipe Id. If not, just use the
+		// inputs and outputs.
+		if (currentRecipeType == RecipeEncodingType.CRAFTING) {
+			// Created a simulated crafting inventory.
+			FakeCraftingInventory craftingInv = new FakeCraftingInventory(3, 3);
+			for (int i = 0; i < 9; i++) {
+				craftingInv.setInventorySlotContents(i, encoderInventory.getStackInSlot(DigistorePatternEncoder.RECIPE_START_SLOT + i));
+			}
+
+			// Check for a recipe.
+			ICraftingRecipe recipe = getCableComponent().getWorld().getServer().getRecipeManager().getRecipe(IRecipeType.CRAFTING, craftingInv, getCableComponent().getWorld()).orElse(null);
+			if (recipe != null) {
+				encodedRecipe = ModItems.PatternCard.getPatternForRecipe(new EncodedDigistorePattern(inputs, recipe));
+			}
+		} else {
+			encodedRecipe = ModItems.PatternCard.getPatternForRecipe(new EncodedDigistorePattern(inputs, outputs, currentRecipeType));
+		}
 
 		// Check to make sure the output slot can stack with this encoded recipe (odd
 		// chance the user may encode the same recipe multiple times).
-		ItemStack simulatedInsert = encoderInventory.insertItem(DigistorePatternEncoder.PATTERN_OUTPUT_SLOT, encodedRecipe.copy(), true);
-		if (simulatedInsert.isEmpty()) {
-			encoderInventory.insertItem(DigistorePatternEncoder.PATTERN_OUTPUT_SLOT, encodedRecipe.copy(), false);
-			encoderInventory.extractItem(DigistorePatternEncoder.PATTERN_INPUT_SLOT, 1, false);
+		if (!encodedRecipe.isEmpty()) {
+			ItemStack simulatedInsert = encoderInventory.insertItem(DigistorePatternEncoder.PATTERN_OUTPUT_SLOT, encodedRecipe.copy(), true);
+			if (simulatedInsert.isEmpty()) {
+				encoderInventory.insertItem(DigistorePatternEncoder.PATTERN_OUTPUT_SLOT, encodedRecipe.copy(), false);
+				encoderInventory.extractItem(DigistorePatternEncoder.PATTERN_INPUT_SLOT, 1, false);
+			}
 		}
 	}
 

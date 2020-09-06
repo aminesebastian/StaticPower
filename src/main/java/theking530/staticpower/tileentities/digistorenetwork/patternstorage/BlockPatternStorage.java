@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.digistorenetwork.atomicconstructor;
+package theking530.staticpower.tileentities.digistorenetwork.patternstorage;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -10,9 +10,9 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreBlock;
 
-public class BlockAtomicConstructor extends BaseDigistoreBlock {
+public class BlockPatternStorage extends BaseDigistoreBlock {
 
-	public BlockAtomicConstructor(String name) {
+	public BlockPatternStorage(String name) {
 		super(name);
 	}
 
@@ -23,6 +23,6 @@ public class BlockAtomicConstructor extends BaseDigistoreBlock {
 
 	@Override
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
-		return TileEntityAtomicConstructor.TYPE.create();
+		return TileEntityPatternStorage.TYPE.create();
 	}
 }

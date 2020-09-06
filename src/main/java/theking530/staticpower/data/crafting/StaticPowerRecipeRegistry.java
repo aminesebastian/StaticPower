@@ -5,12 +5,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipe;
+import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.ResourceLocation;
@@ -34,6 +36,7 @@ public class StaticPowerRecipeRegistry {
 	@SuppressWarnings("rawtypes")
 	public static final HashMap<IRecipeType, LinkedList<AbstractStaticPowerRecipe>> RECIPES = new HashMap<IRecipeType, LinkedList<AbstractStaticPowerRecipe>>();
 	public static final LinkedList<FurnaceRecipe> FURNACE_RECIPES = new LinkedList<FurnaceRecipe>();
+	public static final Map<ResourceLocation, ICraftingRecipe> CRAFTING_RECIPES = new HashMap<ResourceLocation, ICraftingRecipe>();
 
 	/**
 	 * Attempts to find a recipe of the given type that matches the provided
@@ -130,6 +133,7 @@ public class StaticPowerRecipeRegistry {
 		// Clear the recipe lists.
 		RECIPES.clear();
 		FURNACE_RECIPES.clear();
+		CRAFTING_RECIPES.clear();
 
 		// Keep track of how many recipes are cached.
 		int recipeCount = 0;
@@ -143,6 +147,9 @@ public class StaticPowerRecipeRegistry {
 			} else if (recipe.getType() == IRecipeType.SMELTING) {
 				// Cache smelting recipes.
 				FURNACE_RECIPES.add((FurnaceRecipe) recipe);
+			} else if (recipe.getType() == IRecipeType.CRAFTING) {
+				// Cache crafting recipes.
+				CRAFTING_RECIPES.put(recipe.getId(), (ICraftingRecipe) recipe);
 			}
 		}
 

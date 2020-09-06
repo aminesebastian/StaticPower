@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.digistorenetwork.atomicconstructor;
+package theking530.staticpower.tileentities.digistorenetwork.patternstorage;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketBuffer;
@@ -7,16 +7,16 @@ import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 
-public class ContainerAtomicConstructor extends StaticPowerTileEntityContainer<TileEntityAtomicConstructor> {
+public class ContainerPatternStorage extends StaticPowerTileEntityContainer<TileEntityPatternStorage> {
 	@ContainerTypePopulator
-	public static final ContainerTypeAllocator<ContainerAtomicConstructor, GuiAtomicConstructor> TYPE = new ContainerTypeAllocator<>("digistore_atomic_constructor", ContainerAtomicConstructor::new,
-			GuiAtomicConstructor::new);
+	public static final ContainerTypeAllocator<ContainerPatternStorage, GuiPatternStorage> TYPE = new ContainerTypeAllocator<>("digistore_atomic_constructor", ContainerPatternStorage::new,
+			GuiPatternStorage::new);
 
-	public ContainerAtomicConstructor(int windowId, PlayerInventory inv, PacketBuffer data) {
-		this(windowId, inv, (TileEntityAtomicConstructor) resolveTileEntityFromDataPacket(inv, data));
+	public ContainerPatternStorage(int windowId, PlayerInventory inv, PacketBuffer data) {
+		this(windowId, inv, (TileEntityPatternStorage) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerAtomicConstructor(int windowId, PlayerInventory playerInventory, TileEntityAtomicConstructor owner) {
+	public ContainerPatternStorage(int windowId, PlayerInventory playerInventory, TileEntityPatternStorage owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 
