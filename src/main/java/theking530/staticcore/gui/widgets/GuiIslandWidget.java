@@ -20,8 +20,8 @@ public class GuiIslandWidget extends AbstractGuiWidget {
 	@Override
 	public void renderBackground(int mouseX, int mouseY, float partialTicks) {
 		Vector2D screenSpace = getScreenSpacePosition();
-		GuiDrawUtilities.drawGenericBackground((int) getSize().getX(), (int) getSize().getY(), (int) screenSpace.getX(), (int) screenSpace.getY(), GuiDrawUtilities.DEFAULT_BACKGROUND_COLOR, GuiDrawUtilities.DEFAULT_BACKGROUND_EDGE_TINT, leftEnabled,
-				rightEnabled, topEnabled, bottomEnabled);
+		GuiDrawUtilities.drawGenericBackground((int) getSize().getX(), (int) getSize().getY(), (int) screenSpace.getX(), (int) screenSpace.getY(), 0.0f, GuiDrawUtilities.DEFAULT_BACKGROUND_COLOR, GuiDrawUtilities.DEFAULT_BACKGROUND_EDGE_TINT,
+				leftEnabled, rightEnabled, topEnabled, bottomEnabled);
 	}
 
 	public GuiIslandWidget setTopEnabledState(boolean state) {

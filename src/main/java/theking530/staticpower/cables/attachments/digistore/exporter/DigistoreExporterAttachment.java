@@ -1,7 +1,5 @@
 package theking530.staticpower.cables.attachments.digistore.exporter;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import javax.annotation.Nullable;
 
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,11 +23,13 @@ import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.init.ModUpgrades;
 import theking530.staticpower.items.CableAttachmentInventoryCapabilityProvider;
 import theking530.staticpower.items.upgrades.AcceleratorUpgrade;
+import theking530.staticpower.items.upgrades.CraftingUpgrade;
 import theking530.staticpower.items.upgrades.StackUpgrade;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class DigistoreExporterAttachment extends AbstractCableAttachment {
-	public static final String EXPORT_TIMER_TAG = "extraction_timer";
+	public static final String CURRENT_CRAFTING_ID_TAG = "current_crafting_request";
+	public static final String EXPORT_TIMER_TAG = "export_timer";
 
 	public DigistoreExporterAttachment(String name) {
 		super(name);
@@ -48,6 +48,7 @@ public class DigistoreExporterAttachment extends AbstractCableAttachment {
 	public void onAddedToCable(ItemStack attachment, Direction side, AbstractCableProviderComponent cableComponent) {
 		super.onAddedToCable(attachment, side, cableComponent);
 		attachment.getTag().putInt(EXPORT_TIMER_TAG, 0);
+		attachment.getTag().putLong(CURRENT_CRAFTING_ID_TAG, -1);
 	}
 
 	@Override
@@ -70,14 +71,6 @@ public class DigistoreExporterAttachment extends AbstractCableAttachment {
 	}
 
 	public boolean increaseSupplierTimer(ItemStack attachment) {
-
-		if (!attachment.hasTag()) {
-			attachment.setTag(new CompoundNBT());
-		}
-		if (!attachment.getTag().contains(EXPORT_TIMER_TAG)) {
-			attachment.getTag().putInt(EXPORT_TIMER_TAG, 0);
-		}
-
 		// Get the current timer and the extraction rate.
 		int currentTimer = attachment.getTag().getInt(EXPORT_TIMER_TAG);
 
@@ -88,10 +81,8 @@ public class DigistoreExporterAttachment extends AbstractCableAttachment {
 			return true;
 		} else {
 			attachment.getTag().putInt(EXPORT_TIMER_TAG, currentTimer);
-
 			return false;
 		}
-
 	}
 
 	@Override
@@ -109,14 +100,21 @@ public class DigistoreExporterAttachment extends AbstractCableAttachment {
 		return StaticPowerAdditionalModels.CABLE_DIGISTORE_EXPORTER_ATTACHMENT;
 	}
 
-	protected boolean supplyFromNetwork(ItemStack attachment, Direction side, AbstractCableProviderComponent cable, TileEntity targetTe) {
-		AtomicBoolean output = new AtomicBoolean(false);
+	protected void supplyFromNetwork(ItemStack attachment, Direction side, AbstractCableProviderComponent cable, TileEntity targetTe) {
 		targetTe.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).ifPresent(target -> {
 			cable.<DigistoreNetworkModule>getNetworkModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE).ifPresent(module -> {
 				// Return early if there is no manager.
 				if (!module.isManagerPresent()) {
 					return;
 				}
+
+				// If we're waiting on a craft, check if the crafting is completed.
+				if (isWaitingOnCraftingRequest(attachment)) {
+					if (module.getCraftingManager().isCraftingIdStillProcessint(getCurrentCraftingId(attachment))) {
+						return;
+					}
+				}
+
 				// Get the filter inventory (if there is a null value, do not handle it, throw
 				// an exception).
 				IItemHandler filterItems = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
@@ -137,7 +135,8 @@ public class DigistoreExporterAttachment extends AbstractCableAttachment {
 						// Attempt an extract.
 						ItemStack extractedItem = module.extractItem(filterItem, countToExtract, true);
 
-						// If the extracted item not empty, continue.
+						// If the extracted item not empty, see if we can craft it. If we can, mark it
+						// for crafting. If not, continue checking.
 						if (!extractedItem.isEmpty()) {
 							// Attempt to transfer the itemstack through the cable network.
 							ItemStack remainingAmount = InventoryUtilities.insertItemIntoInventory(target, extractedItem.copy(), false);
@@ -146,8 +145,12 @@ public class DigistoreExporterAttachment extends AbstractCableAttachment {
 							if (remainingAmount.getCount() < extractedItem.getCount()) {
 								module.extractItem(extractedItem, extractedItem.getCount() - remainingAmount.getCount(), false);
 								cable.getTileEntity().markDirty();
-								output.set(true);
 								break;
+							}
+						} else if (hasUpgradeOfClass(attachment, CraftingUpgrade.class)) {
+							long craftingId = module.getCraftingManager().addCraftingRequest(filterItem, countToExtract, false).getId();
+							if (craftingId >= 0) {
+								setCurrentCraftingId(attachment, craftingId);
 							}
 						}
 					}
@@ -159,7 +162,22 @@ public class DigistoreExporterAttachment extends AbstractCableAttachment {
 				}
 			});
 		});
-		return output.get();
+	}
+
+	protected void setCurrentCraftingId(ItemStack attachment, long id) {
+		attachment.getTag().putLong(CURRENT_CRAFTING_ID_TAG, id);
+	}
+
+	protected long getCurrentCraftingId(ItemStack attachment) {
+		return attachment.getTag().getLong(CURRENT_CRAFTING_ID_TAG);
+	}
+
+	protected void markCurrentCraftingIdComplete(ItemStack attachment) {
+		attachment.getTag().putLong(CURRENT_CRAFTING_ID_TAG, -1);
+	}
+
+	protected boolean isWaitingOnCraftingRequest(ItemStack attachment) {
+		return attachment.getTag().getLong(CURRENT_CRAFTING_ID_TAG) >= 0;
 	}
 
 	@SuppressWarnings("deprecation")

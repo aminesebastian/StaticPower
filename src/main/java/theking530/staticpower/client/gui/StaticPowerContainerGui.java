@@ -75,7 +75,7 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	 */
 	public StaticPowerContainerGui(T container, final PlayerInventory playerInventory, ITextComponent title, int guiXSize, int guiYSize) {
 		super(container, playerInventory, title);
-		widgetContainer = new WidgetContainer();
+		widgetContainer = new WidgetContainer(this);
 		xSize = guiXSize;
 		ySize = guiYSize;
 		xSizeTarget = guiXSize;
@@ -426,7 +426,7 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	 *                        corner border).
 	 */
 	public void drawGenericBackground(int xPos, int yPos, int width, int height, Color backgroundColor, Color borderTint) {
-		GuiDrawUtilities.drawGenericBackground(width, height, xPos + guiLeft, yPos + guiTop, backgroundColor, borderTint, true, true, true, true);
+		GuiDrawUtilities.drawGenericBackground(width, height, xPos + guiLeft, yPos + guiTop, 0.0f, backgroundColor, borderTint, true, true, true, true);
 	}
 
 	/**
@@ -623,5 +623,10 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 
 	public GuiTabManager getTabManager() {
 		return tabManager;
+	}
+
+	@Override
+	public void removed() {
+		super.removed();
 	}
 }

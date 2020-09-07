@@ -122,6 +122,7 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation CABLE_DIGISTORE_IMPORTER_ATTACHMENT = registerModel("block/cables/attachments/digistore_importer");
 	public static final ResourceLocation CABLE_DIGISTORE_IO_BUS_ATTACHMENT = registerModel("block/cables/attachments/digistore_io_bus");
 	public static final ResourceLocation CABLE_DIGISTORE_REGULATOR_ATTACHMENT = registerModel("block/cables/attachments/digistore_regulator");
+	public static final ResourceLocation CABLE_DIGISTORE_CRAFTING_INTERFACE_ATTACHMENT = registerModel("block/cables/attachments/digistore_crafting_interface");
 
 	public static final ResourceLocation BASIC_DIGISTORE_CARD = registerModel("block/machines/digistore_card_basic");
 	public static final ResourceLocation ADVANCVED_DIGISTORE_CARD = registerModel("block/machines/digistore_card_advanced");

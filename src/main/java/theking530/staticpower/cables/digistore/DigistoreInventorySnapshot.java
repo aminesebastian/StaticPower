@@ -8,17 +8,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.IItemHandler;
 import theking530.api.digistore.IDigistoreInventory;
+import theking530.staticpower.cables.attachments.digistore.craftinginterface.DigistoreCraftingInterfaceAttachment;
 import theking530.staticpower.cables.attachments.digistore.digistorepatternencoder.DigistorePatternEncoder.RecipeEncodingType;
 import theking530.staticpower.cables.attachments.digistore.digistoreterminal.DigistoreInventorySortType;
+import theking530.staticpower.cables.digistore.crafting.CraftingInterfaceWrapper;
 import theking530.staticpower.cables.digistore.crafting.EncodedDigistorePattern;
 import theking530.staticpower.tileentities.digistorenetwork.patternstorage.TileEntityPatternStorage;
+import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class DigistoreInventorySnapshot implements IItemHandler {
@@ -34,13 +36,25 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 	private final String filterString;
 	private final DigistoreInventorySortType sortType;
 	private final boolean sortDescending;
-	private final boolean isEmpty;
 	private final boolean simulated;
+	private boolean isEmpty;
 
 	private DigistoreNetworkModule module;
 
 	public DigistoreInventorySnapshot(DigistoreNetworkModule module, String filter, DigistoreInventorySortType sortType, boolean sortDescending) {
 		this(module, filter, sortType, sortDescending, true);
+	}
+
+	public DigistoreInventorySnapshot(DigistoreInventorySnapshot otherSnapshot) {
+		this(null, "", DigistoreInventorySortType.COUNT, true);
+
+		// Copy the stacks.
+		for (ItemStack stack : otherSnapshot.stacks) {
+			stacks.add(stack.copy());
+		}
+
+		// But just add references to the recipes.
+		craftableItems.putAll(otherSnapshot.craftableItems);
 	}
 
 	public DigistoreInventorySnapshot(DigistoreNetworkModule module, String filter, DigistoreInventorySortType sortType, boolean sortDescending, boolean simulated) {
@@ -70,9 +84,6 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 	}
 
 	public void update() {
-		// Start profiling (this only occurs on the server).
-		Minecraft.getInstance().getProfiler().startSection("DigistoreInventoryBuilding");
-
 		// Clear the stacks list.
 		stacks.clear();
 
@@ -100,13 +111,25 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 			for (ItemStack pattern : constructor.patternInventory) {
 				// If we're able to get the encoded pattern and it is for a crafting table.
 				EncodedDigistorePattern encodedPattern = EncodedDigistorePattern.readFromPatternCard(pattern);
-				if (encodedPattern != null && encodedPattern.getRecipeType() == RecipeEncodingType.CRAFTING) {
+				if (encodedPattern != null && encodedPattern.getRecipeType() == RecipeEncodingType.CRAFTING_TABLE) {
 					// Get the first output (as that's the only one that matters).
-					ItemStack output = encodedPattern.getOutputs()[0];
+					ItemStack output = encodedPattern.getOutput();
 
 					// Cache the craftable.
 					cacheCraftable(output, encodedPattern);
 				}
+			}
+		}
+
+		// Add the machine craftable items.
+		for (CraftingInterfaceWrapper craftingInterface : module.getCraftingInterfaces()) {
+			List<EncodedDigistorePattern> patterns = DigistoreCraftingInterfaceAttachment.getAllPaternsInInterface(craftingInterface.getAttachment());
+			for (EncodedDigistorePattern pattern : patterns) {
+				// Get the first output (as that's the only one that matters).
+				ItemStack output = pattern.getOutput();
+
+				// Cache the craftable.
+				cacheCraftable(output, pattern);
 			}
 		}
 
@@ -171,9 +194,6 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 		if (simulated) {
 			module = null;
 		}
-
-		// End profiling.
-		Minecraft.getInstance().getProfiler().endSection();
 	}
 
 	@Override
@@ -280,6 +300,10 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 			}
 		}
 		return amount - remaining;
+	}
+
+	public ItemStack insertItemStack(ItemStack stack, boolean simulate) {
+		return InventoryUtilities.insertItemIntoInventory(this, stack, simulate);
 	}
 
 	protected void cacheCraftable(ItemStack stack, EncodedDigistorePattern pattern) {

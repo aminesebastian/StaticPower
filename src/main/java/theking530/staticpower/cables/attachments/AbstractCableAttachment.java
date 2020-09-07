@@ -44,6 +44,7 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 				CableBoundsHoverResult hoverResult = block.CableBounds.getHoveredAttachmentOrCover(pos, player);
 				if (!hoverResult.isEmpty() && hoverResult.type == CableBoundsHoverType.HELD_ATTACHMENT && cableComponent.attachAttachment(item, hoverResult.direction)) {
 					if (!world.isRemote) {
+						cableComponent.setSideDisabledState(hoverResult.direction, false);
 						item.setCount(item.getCount() - 1);
 					} else {
 						world.playSound(player, pos, SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 0.15F, (float) (0.5F + Math.random() * 2.0));

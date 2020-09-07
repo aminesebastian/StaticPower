@@ -19,16 +19,16 @@ import theking530.staticpower.items.DigistorePatternCard;
 
 public class EncodedDigistorePattern {
 	private final ItemStack[] inputs;
-	private final ItemStack[] outputs;
+	private final ItemStack output;
 	private final RecipeEncodingType recipeType;
 	private final List<EncodedIngredient> requiredItems;
 
 	private final ResourceLocation craftingRecipeId;
 	private final boolean isValid;
 
-	public EncodedDigistorePattern(ItemStack[] inputs, ItemStack[] outputs, RecipeEncodingType recipeType) {
+	public EncodedDigistorePattern(ItemStack[] inputs, ItemStack output, RecipeEncodingType recipeType) {
 		this.inputs = inputs;
-		this.outputs = outputs;
+		this.output = output;
 		this.recipeType = recipeType;
 		this.craftingRecipeId = null;
 		this.requiredItems = new LinkedList<EncodedIngredient>();
@@ -38,18 +38,18 @@ public class EncodedDigistorePattern {
 
 	public EncodedDigistorePattern(ItemStack[] inputs, ICraftingRecipe recipe) {
 		this.requiredItems = new LinkedList<EncodedIngredient>();
-		this.recipeType = RecipeEncodingType.CRAFTING;
-		this.outputs = new ItemStack[1];
+		this.recipeType = RecipeEncodingType.CRAFTING_TABLE;
 
 		if (recipe == null) {
 			isValid = false;
 			this.inputs = new ItemStack[0];
 			this.craftingRecipeId = null;
+			this.output = ItemStack.EMPTY;
 		} else {
 			isValid = true;
 			this.craftingRecipeId = recipe.getId();
 			this.inputs = inputs;
-			this.outputs[0] = recipe.getRecipeOutput();
+			this.output = recipe.getRecipeOutput();
 			cacheRequiredIngredients(recipe.getIngredients());
 		}
 	}
@@ -62,8 +62,8 @@ public class EncodedDigistorePattern {
 		return inputs;
 	}
 
-	public ItemStack[] getOutputs() {
-		return outputs;
+	public ItemStack getOutput() {
+		return output;
 	}
 
 	public RecipeEncodingType getRecipeType() {
@@ -134,7 +134,7 @@ public class EncodedDigistorePattern {
 	public static EncodedDigistorePattern readFromPatternCard(ItemStack patternCard) {
 		if (DigistorePatternCard.hasPattern(patternCard)) {
 			CompoundNBT patternTag = patternCard.getTag().getCompound(DigistorePatternCard.ENCODED_PATTERN_TAG);
-			if (!patternTag.contains("type") || !patternTag.contains("inputs") || !patternTag.contains("outputs")) {
+			if (!patternTag.contains("type") || !patternTag.contains("inputs") || !patternTag.contains("output")) {
 				return null;
 			}
 
@@ -175,25 +175,25 @@ public class EncodedDigistorePattern {
 			inputStacks[i] = stack;
 		}
 
-		// Read the outputs.
-		ItemStack[] outputStacks = new ItemStack[9];
-		ListNBT outputsNBT = nbt.getList("outputs", Constants.NBT.TAG_COMPOUND);
-		for (int i = 0; i < outputsNBT.size(); i++) {
-			CompoundNBT outputTagNbt = (CompoundNBT) outputsNBT.get(i);
-			ItemStack stack = ItemStack.read(outputTagNbt);
-			outputStacks[i] = stack;
-		}
+		// Read the output.
+		ItemStack outputStack = ItemStack.read(nbt.getCompound("output"));
 
 		// Create the recipe.
-		if (recipeType == RecipeEncodingType.CRAFTING) {
+		if (recipeType == RecipeEncodingType.CRAFTING_TABLE) {
 			if (craftingRecipeId != null && StaticPowerRecipeRegistry.CRAFTING_RECIPES.containsKey(craftingRecipeId)) {
 				return new EncodedDigistorePattern(inputStacks, StaticPowerRecipeRegistry.CRAFTING_RECIPES.get(craftingRecipeId));
 			} else {
 				return new EncodedDigistorePattern(inputStacks, null);
 			}
 		} else {
-			return new EncodedDigistorePattern(inputStacks, outputStacks, recipeType);
+			return new EncodedDigistorePattern(inputStacks, outputStack, recipeType);
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "EncodedDigistorePattern [inputs=" + Arrays.toString(inputs) + ", output=" + output + ", recipeType=" + recipeType + ", requiredItems=" + requiredItems + ", craftingRecipeId="
+				+ craftingRecipeId + ", isValid=" + isValid + "]";
 	}
 
 	public CompoundNBT serialize() {
@@ -217,21 +217,12 @@ public class EncodedDigistorePattern {
 		}
 		pattern.put("inputs", inputStacks);
 
-		// Store the outputs.
-		ListNBT outputStacks = new ListNBT();
-		for (ItemStack stack : outputs) {
-			CompoundNBT outputTag = new CompoundNBT();
-			stack.write(outputTag);
-			outputStacks.add(outputTag);
-		}
-		pattern.put("outputs", outputStacks);
+		// Store the output.
+		CompoundNBT outputTag = new CompoundNBT();
+		output.write(outputTag);
+		pattern.put("output", outputTag);
 
 		return pattern;
-	}
-
-	@Override
-	public String toString() {
-		return "EncodedDigistorePattern [requiredItems=" + requiredItems + ", outputs=" + Arrays.toString(outputs) + ", recipeType=" + recipeType + "]";
 	}
 
 	public static class EncodedIngredient {

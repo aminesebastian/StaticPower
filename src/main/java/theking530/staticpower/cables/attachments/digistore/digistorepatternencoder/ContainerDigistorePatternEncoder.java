@@ -23,6 +23,7 @@ import theking530.staticpower.cables.attachments.digistore.digistorepatternencod
 import theking530.staticpower.cables.attachments.digistore.digistoreterminal.AbstractContainerDigistoreTerminal;
 import theking530.staticpower.cables.digistore.crafting.EncodedDigistorePattern;
 import theking530.staticpower.container.FakeCraftingInventory;
+import theking530.staticpower.container.slots.EncodedPatternSlot;
 import theking530.staticpower.container.slots.OutputSlot;
 import theking530.staticpower.container.slots.PhantomSlot;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
@@ -37,8 +38,6 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 	private ItemStackHandler encoderInventory;
 	private RecipeEncodingType currentRecipeType;
 	private List<PhantomSlot> inputSlots;
-	private List<StaticPowerContainerSlot> machineOutputSlots;
-	private StaticPowerContainerSlot craftingOutputSlot;
 
 	public ContainerDigistorePatternEncoder(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, getAttachmentItemStack(inv, data), getAttachmentSide(data), getCableComponent(inv, data));
@@ -51,9 +50,8 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 	@Override
 	public void initializeContainer() {
 		// Initalize the default values.
-		currentRecipeType = RecipeEncodingType.CRAFTING;
+		currentRecipeType = RecipeEncodingType.CRAFTING_TABLE;
 		inputSlots = new ArrayList<PhantomSlot>();
-		machineOutputSlots = new ArrayList<StaticPowerContainerSlot>();
 
 		// Attempt to get the item filter inventory.
 		getAttachment().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((handler) -> {
@@ -78,30 +76,14 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 		}
 
 		// Add the pattern slots.
-		addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.PatternCard), 0.3f, encoderInventory, DigistorePatternEncoder.PATTERN_INPUT_SLOT, 152, 118) {
-			@Override
-			public boolean isItemValid(@Nonnull ItemStack stack) {
-				if (stack.isEmpty()) {
-					return false;
-				}
-				return stack.getItem() == ModItems.PatternCard;
-			}
-		});
+		addSlot(new EncodedPatternSlot(encoderInventory, new ItemStack(ModItems.PatternCard), DigistorePatternEncoder.PATTERN_INPUT_SLOT, 152, 118));
 		addSlot(new OutputSlot(encoderInventory, ModItems.PatternCard.getBlankEncodedCardForPreview(), DigistorePatternEncoder.PATTERN_OUTPUT_SLOT, 152, 154));
 
-		// Add machine output slots.
-		for (int y = 0; y < 3; y++) {
-			for (int x = 0; x < 3; x++) {
-				StaticPowerContainerSlot slot = createOutputSlot(DigistorePatternEncoder.RECIPE_OUTPUT_START_SLOT + x + (y * 3), 90 + x * 18, 118 + y * 18, true);
-				machineOutputSlots.add((StaticPowerContainerSlot) slot);
-			}
-		}
-
 		// Add crafting output slot.
-		craftingOutputSlot = createOutputSlot(DigistorePatternEncoder.RECIPE_SINGLE_SLOT, 90, 136, false);
+		createOutputSlot(DigistorePatternEncoder.RECIPE_SINGLE_SLOT, 90, 136, false);
 
 		// Start in crafting mode.
-		setCurrentRecipeType(RecipeEncodingType.CRAFTING);
+		setCurrentRecipeType(RecipeEncodingType.CRAFTING_TABLE);
 
 		// This HAS to come last.
 		super.initializeContainer();
@@ -147,7 +129,7 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 		}
 
 		// If we're not in crafting mode, do nothing.
-		if (currentRecipeType != RecipeEncodingType.CRAFTING) {
+		if (currentRecipeType != RecipeEncodingType.CRAFTING_TABLE) {
 			return;
 		}
 
@@ -175,7 +157,7 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 		StaticPowerContainerSlot slot = (StaticPowerContainerSlot) addSlot(new StaticPowerContainerSlot(encoderInventory, index, x, y) {
 			@Override
 			public boolean canTakeStack(PlayerEntity playerIn) {
-				if (enableInput) {
+				if (currentRecipeType == RecipeEncodingType.MACHINE) {
 					encoderInventory.setStackInSlot(index, ItemStack.EMPTY);
 				}
 				return false;
@@ -186,7 +168,7 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 				if (stack.isEmpty()) {
 					return false;
 				}
-				if (enableInput) {
+				if (currentRecipeType == RecipeEncodingType.MACHINE) {
 					putStack(stack.copy());
 				}
 				return false;
@@ -203,30 +185,14 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 		// Update the recipe type.
 		this.currentRecipeType = currentRecipeType;
 
-		// If this is a crafting recipe type, set the machine output slots to disabled.
-		// Then, enable the crafting output slots and limit the input slot item counts
-		// to 1. If this is a machine recipe.
-		if (currentRecipeType == RecipeEncodingType.CRAFTING) {
-			// Disable all machine output slots.
-			for (StaticPowerContainerSlot slot : machineOutputSlots) {
-				slot.setEnabledState(false);
-			}
-			// Enable the single output slot.
-			craftingOutputSlot.setEnabledState(true);
-
+		// If this is a crafting recipe type, limit the input slot item counts to 1. If
+		// this is a machine recipe, un-limit the counts.
+		if (currentRecipeType == RecipeEncodingType.CRAFTING_TABLE) {
 			// Limit the inputs to a stack size of 1.
 			for (PhantomSlot slot : inputSlots) {
 				slot.setLimitToSingleItem(true);
 			}
 		} else {
-			// Disable the single output slot.
-			craftingOutputSlot.setEnabledState(true);
-
-			// Enable all machine output slots.
-			for (StaticPowerContainerSlot slot : machineOutputSlots) {
-				slot.setEnabledState(true);
-			}
-
 			// Allow the inputs to grow past 1 stack size.
 			for (PhantomSlot slot : inputSlots) {
 				slot.setLimitToSingleItem(false);
@@ -245,9 +211,6 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 			return;
 		}
 
-		// Mark a flag to make sure an output exists.
-		boolean outputPresent = false;
-
 		// Capture the inputs.
 		ItemStack[] inputs = new ItemStack[9];
 		for (int i = 0; i < 9; i++) {
@@ -255,16 +218,10 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 		}
 
 		// Capture the outputs.
-		ItemStack[] outputs = new ItemStack[9];
-		for (int i = 0; i < 9; i++) {
-			outputs[i] = encoderInventory.getStackInSlot(i + DigistorePatternEncoder.RECIPE_OUTPUT_START_SLOT).copy();
-			if (!outputs[i].isEmpty()) {
-				outputPresent = true;
-			}
-		}
+		ItemStack output = encoderInventory.getStackInSlot(DigistorePatternEncoder.RECIPE_OUTPUT_SLOT).copy();
 
-		// If there are no outputs, do nothing.
-		if (!outputPresent) {
+		// If there are no output, do nothing.
+		if (output.isEmpty()) {
 			return;
 		}
 
@@ -273,7 +230,7 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 
 		// If we're in crafting mode, also cache the recipe Id. If not, just use the
 		// inputs and outputs.
-		if (currentRecipeType == RecipeEncodingType.CRAFTING) {
+		if (currentRecipeType == RecipeEncodingType.CRAFTING_TABLE) {
 			// Created a simulated crafting inventory.
 			FakeCraftingInventory craftingInv = new FakeCraftingInventory(3, 3);
 			for (int i = 0; i < 9; i++) {
@@ -286,7 +243,7 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 				encodedRecipe = ModItems.PatternCard.getPatternForRecipe(new EncodedDigistorePattern(inputs, recipe));
 			}
 		} else {
-			encodedRecipe = ModItems.PatternCard.getPatternForRecipe(new EncodedDigistorePattern(inputs, outputs, currentRecipeType));
+			encodedRecipe = ModItems.PatternCard.getPatternForRecipe(new EncodedDigistorePattern(inputs, output, currentRecipeType));
 		}
 
 		// Check to make sure the output slot can stack with this encoded recipe (odd

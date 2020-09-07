@@ -15,13 +15,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import theking530.staticcore.gui.ContainerOpener;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.attachments.AbstractCableAttachmentContainer;
+import theking530.staticpower.cables.attachments.digistore.digistoreterminal.autocrafting.ContainerCraftingAmount;
 import theking530.staticpower.cables.attachments.digistore.iobus.ContainerDigistoreIOBus;
 import theking530.staticpower.cables.attachments.digistore.iobus.GuiDigistoreIOBus;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
@@ -117,7 +120,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 						if (playerMouseHeldItem.isEmpty() && !inventorySlots.get(slotId).getStack().isEmpty()) {
 							// Get the stack in the slot.
 							ItemStack stackInSlot = inventorySlots.get(slotId).getStack();
-							
+
 							// Get its craftable state.
 							DigistoreItemCraftableState itemCraftableState = DigistoreInventorySnapshot.getCraftableStateOfItem(stackInSlot);
 
@@ -129,7 +132,13 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 							// If we should craft it, attempt to add a request for it. IF not, just pull it
 							// out like usual.
 							if (shouldCraft) {
-								digistoreModule.getCraftingManager().addCraftingRequest(stackInSlot, 1);
+								ContainerOpener requestUi = new ContainerOpener((id, inv, ply) -> {
+									return new ContainerCraftingAmount(id, inv, null);
+								});
+
+								NetworkHooks.openGui((ServerPlayerEntity) player, requestUi);
+								// digistoreModule.getCraftingManager().addCraftingRequest(stackInSlot, 1,
+								// false);
 							} else {
 								// Get the half stack size.
 								int halfStackSize = actualSlotContents.getCount() >= actualSlotContents.getMaxStackSize() ? (actualSlotContents.getMaxStackSize() + 1) / 2

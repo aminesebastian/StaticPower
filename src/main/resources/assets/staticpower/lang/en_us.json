@@ -243,6 +243,7 @@
 	"item.staticpower.cable_attachment_digistore_importer": "Importer",
 	"item.staticpower.cable_attachment_digistore_io_bus": "I/O Bus",
 	"item.staticpower.cable_attachment_digistore_regulator": "Regulator",
+	"item.staticpower.cable_attachment_digistore_crafting_interface": "Crafting Interface",
 	"item.staticpower.digistore_card_basic": "Basic Digistore Card",
 	"item.staticpower.digistore_card_advanced": "Advanced Digistore Card",
 	"item.staticpower.digistore_card_static": "Static Digistore Card",

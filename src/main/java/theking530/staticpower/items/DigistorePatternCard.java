@@ -60,13 +60,10 @@ public class DigistorePatternCard extends StaticPowerItem implements ICustomMode
 		}
 
 		// Add outputs.
-		tooltip.add(new StringTextComponent("Outputs: "));
-		for (ItemStack output : pattern.getOutputs()) {
-			if (!output.isEmpty()) {
-				tooltip.add(new StringTextComponent("  •").appendSibling(output.getDisplayName()));
-			}
+		tooltip.add(new StringTextComponent("Output: "));
+		if (!pattern.getOutput().isEmpty()) {
+			tooltip.add(new StringTextComponent("  •").appendSibling(pattern.getOutput().getDisplayName()));
 		}
-
 	}
 
 	public ItemStack getBlankEncodedCardForPreview() {

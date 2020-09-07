@@ -43,6 +43,8 @@ public class StaticPowerConfig {
 	public static int digistoreExporterSlots;
 	public static int digistoreExporterStackSize;
 
+	public static int digistoreCraftingInterfaceSlots;
+
 	public static float acceleratorCardMaxImprovment;
 
 	static {
@@ -87,6 +89,8 @@ public class StaticPowerConfig {
 		digistoreExporterSlots = CLIENT.digistoreExporterSlots.get();
 		digistoreExporterStackSize = CLIENT.digistoreExporterStackSize.get();
 
+		digistoreCraftingInterfaceSlots = CLIENT.digistoreCraftingInterfaceSlots.get();
+
 		acceleratorCardMaxImprovment = CLIENT.acceleratorCardImprovment.get();
 	}
 
@@ -118,6 +122,8 @@ public class StaticPowerConfig {
 		public ConfigValue<Integer> digistoreExporterRate;
 		public ConfigValue<Integer> digistoreExporterSlots;
 		public ConfigValue<Integer> digistoreExporterStackSize;
+
+		public ConfigValue<Integer> digistoreCraftingInterfaceSlots;
 
 		public ConfigValue<Float> acceleratorCardImprovment;
 
@@ -157,6 +163,11 @@ public class StaticPowerConfig {
 					.define("DigistoreExporterSlots", 8);
 			digistoreExporterStackSize = builder.comment("Controls how many items the exporter will try to export per operation.")
 					.translation(StaticPower.MOD_ID + ".config." + "digistoreExporterStackSize").define("DigistoreExporterstackSize", 8);
+			builder.pop();
+
+			builder.push("Crafting Interface");
+			digistoreCraftingInterfaceSlots = builder.comment("Controls how many slots the crafting interface attachment gets.")
+					.translation(StaticPower.MOD_ID + ".config." + "digistoreCraftingInterfaceSlots").define("DigistoreCraftingInterfaceSlots", 9);
 			builder.pop();
 			builder.pop();
 

@@ -30,10 +30,8 @@ public class GuiDrawUtilities {
 
 	private static final float BACKGROUND_PIXEL_SIZE = 1.0f / 9.0f;
 
-	public static void drawGenericBackground(int width, int height, int guiLeft, int guiTop, Color mainBackgroundColor, Color rimTint, boolean drawLeft, boolean drawRight, boolean drawTop,
-			boolean drawBottom) {
-		float zLevel = 0.0f;
-
+	public static void drawGenericBackground(int width, int height, int guiLeft, int guiTop, float zLevel, Color mainBackgroundColor, Color rimTint, boolean drawLeft, boolean drawRight,
+			boolean drawTop, boolean drawBottom) {
 		// MainBG
 		drawColoredRectangle(guiLeft + 3, guiTop + 3, width - 4, height - 4, zLevel, mainBackgroundColor);
 
@@ -60,8 +58,12 @@ public class GuiDrawUtilities {
 		}
 	}
 
+	public static void drawGenericBackground(int width, int height, int guiLeft, int guiTop, float zLevel) {
+		drawGenericBackground(width, height, guiLeft, guiTop, zLevel, DEFAULT_BACKGROUND_COLOR, DEFAULT_BACKGROUND_EDGE_TINT, true, true, true, true);
+	}
+
 	public static void drawGenericBackground(int width, int height, int guiLeft, int guiTop) {
-		drawGenericBackground(width, height, guiLeft, guiTop, DEFAULT_BACKGROUND_COLOR, DEFAULT_BACKGROUND_EDGE_TINT, true, true, true, true);
+		drawGenericBackground(width, height, guiLeft, guiTop, 0.0f, DEFAULT_BACKGROUND_COLOR, DEFAULT_BACKGROUND_EDGE_TINT, true, true, true, true);
 	}
 
 	public static void drawPlayerInventorySlots(int xPos, int yPos) {

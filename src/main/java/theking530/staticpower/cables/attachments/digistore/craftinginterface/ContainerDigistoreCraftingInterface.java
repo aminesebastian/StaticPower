@@ -1,4 +1,4 @@
-package theking530.staticpower.cables.attachments.filter;
+package theking530.staticpower.cables.attachments.digistore.craftinginterface;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -11,19 +11,20 @@ import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachmentContainer;
-import theking530.staticpower.container.slots.PhantomSlot;
+import theking530.staticpower.container.slots.EncodedPatternSlot;
 
-public class ContainerFilter extends AbstractCableAttachmentContainer<FilterAttachment> {
+public class ContainerDigistoreCraftingInterface extends AbstractCableAttachmentContainer<DigistoreCraftingInterfaceAttachment> {
 	@ContainerTypePopulator
-	public static final ContainerTypeAllocator<ContainerFilter, GuiFilter> TYPE = new ContainerTypeAllocator<>("cable_attachment_filter", ContainerFilter::new, GuiFilter::new);
+	public static final ContainerTypeAllocator<ContainerDigistoreCraftingInterface, GuiDigistoreCraftingInterface> TYPE = new ContainerTypeAllocator<>("cable_attachment_digistore_crafting_interface",
+			ContainerDigistoreCraftingInterface::new, GuiDigistoreCraftingInterface::new);
 
 	private ItemStackHandler filterInventory;
 
-	public ContainerFilter(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerDigistoreCraftingInterface(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, getAttachmentItemStack(inv, data), getAttachmentSide(data), getCableComponent(inv, data));
 	}
 
-	public ContainerFilter(int windowId, PlayerInventory playerInventory, ItemStack attachment, Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
+	public ContainerDigistoreCraftingInterface(int windowId, PlayerInventory playerInventory, ItemStack attachment, Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
 		super(TYPE, windowId, playerInventory, attachment, attachmentSide, cableComponent);
 	}
 
@@ -34,10 +35,10 @@ public class ContainerFilter extends AbstractCableAttachmentContainer<FilterAtta
 			filterInventory = (ItemStackHandler) handler;
 		});
 
-		this.addSlotsInGrid(filterInventory, 0, 88, 24, SDMath.getSmallestFactor(filterInventory.getSlots(), 6), 16,
-				(index, x, y) -> new PhantomSlot(filterInventory, index, x, y, true).renderFluidContainerAsFluid());
-		this.addPlayerInventory(getPlayerInventory(), 8, 69);
-		this.addPlayerHotbar(getPlayerInventory(), 8, 127);
+		addSlotsInGrid(filterInventory, 0, 88, 24, SDMath.getSmallestFactor(filterInventory.getSlots(), 6), 16, (index, x, y) -> new EncodedPatternSlot(filterInventory, index, x, y));
+
+		addPlayerInventory(getPlayerInventory(), 8, 69);
+		addPlayerHotbar(getPlayerInventory(), 8, 127);
 	}
 
 	public ItemStackHandler getExtractorInventory() {

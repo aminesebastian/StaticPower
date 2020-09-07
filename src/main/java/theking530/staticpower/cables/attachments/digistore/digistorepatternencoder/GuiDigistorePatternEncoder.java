@@ -88,12 +88,12 @@ public class GuiDigistorePatternEncoder extends AbstractGuiDigistoreTerminal<Con
 	}
 
 	protected void onRecipeTypeButtonPressed(StandardButton button, MouseButton mouseButton) {
-		if (getContainer().getCurrentRecipeType() == RecipeEncodingType.CRAFTING) {
+		if (getContainer().getCurrentRecipeType() == RecipeEncodingType.CRAFTING_TABLE) {
 			getContainer().setCurrentRecipeType(RecipeEncodingType.MACHINE);
 			recipeTypeButton.setRegularTexture(StaticPowerSprites.FURNACE_ICON);
 			recipeTypeButton.setTooltip(new StringTextComponent("Free-form Recipe"));
 		} else {
-			getContainer().setCurrentRecipeType(RecipeEncodingType.CRAFTING);
+			getContainer().setCurrentRecipeType(RecipeEncodingType.CRAFTING_TABLE);
 			recipeTypeButton.setRegularTexture(StaticPowerSprites.CRAFTING_TABLE_ICON);
 			recipeTypeButton.setTooltip(new StringTextComponent("Crafting Table Recipe"));
 		}

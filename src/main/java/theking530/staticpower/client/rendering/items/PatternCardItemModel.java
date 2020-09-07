@@ -41,9 +41,9 @@ public class PatternCardItemModel implements IBakedModel {
 					if (Screen.hasControlDown()) {
 						// Try to get the pattern and make sure it has an output.
 						EncodedDigistorePattern pattern = EncodedDigistorePattern.readFromPatternCard(stack);
-						if (pattern != null && pattern.getOutputs().length > 0) {
+						if (pattern != null && !pattern.getOutput().isEmpty()) {
 							// Get the baked model for the recipe output.
-							return Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(pattern.getOutputs()[0], world, entity);
+							return Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(pattern.getOutput(), world, entity);
 						}
 					}
 					return encodedModel;

@@ -16,13 +16,13 @@ import theking530.staticpower.items.CableAttachmentInventoryCapabilityProvider;
 
 public class DigistorePatternEncoder extends AbstractDigistoreTerminalAttachment {
 	public enum RecipeEncodingType {
-		CRAFTING, MACHINE
+		CRAFTING_TABLE, MACHINE
 	}
 
-	public static final int PATTERN_INPUT_SLOT = 18;
-	public static final int PATTERN_OUTPUT_SLOT = 19;
+	public static final int PATTERN_INPUT_SLOT = 10;
+	public static final int PATTERN_OUTPUT_SLOT = 11;
 	public static final int RECIPE_START_SLOT = 0;
-	public static final int RECIPE_OUTPUT_START_SLOT = 9;
+	public static final int RECIPE_OUTPUT_SLOT = 9;
 	public static final int RECIPE_SINGLE_SLOT = 9;
 
 	public DigistorePatternEncoder(String name) {
@@ -40,7 +40,7 @@ public class DigistorePatternEncoder extends AbstractDigistoreTerminalAttachment
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-		return new CableAttachmentInventoryCapabilityProvider(stack, 20, 0, nbt);
+		return new CableAttachmentInventoryCapabilityProvider(stack, 12, 0, nbt);
 	}
 
 	protected class DigistoreCraftingTerminalContainerProvider extends AbstractCableAttachmentContainerProvider {

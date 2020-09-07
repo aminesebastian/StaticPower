@@ -1,73 +1,96 @@
 package theking530.staticpower.cables.digistore.crafting;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraftforge.common.util.Constants;
+import theking530.staticpower.data.crafting.IngredientUtilities;
 
 public class AutoCraftingStep {
-	private final Ingredient requiredItem;
-	private final int ownedAmount;
-	private int amountCraftable;
-	private int amountCrafted;
-	private final int totalAmount;
+	private final Ingredient ingredientToCraft;
+	private int storedAmount;
+	private int amountRemainingToCraft;
+	private int totalRequiredAmount;
 	private boolean isAttemptingResolve;
+	private boolean machineItemsSupplied;
 	private EncodedDigistorePattern pattern;
 
-	public AutoCraftingStep(Ingredient requiredItem, int ownedAmount, int amountCraftable, int totalAmount) {
-		this.requiredItem = requiredItem;
-		this.ownedAmount = ownedAmount;
-		this.amountCraftable = amountCraftable;
-		this.amountCrafted = 0;
-		this.totalAmount = totalAmount;
+	public AutoCraftingStep(Ingredient itemToCraft, int storedAmount, int amountRemainintToCraft, int totalRequiredAmount) {
+		this.ingredientToCraft = itemToCraft;
+		this.storedAmount = storedAmount;
+		this.amountRemainingToCraft = amountRemainintToCraft;
+		this.totalRequiredAmount = totalRequiredAmount;
 		this.isAttemptingResolve = false;
 	}
 
-	public void setPattern(EncodedDigistorePattern pattern) {
+	public void setCraftingPattern(EncodedDigistorePattern pattern) {
 		this.pattern = pattern;
 	}
 
-	public EncodedDigistorePattern getPattern() {
+	public EncodedDigistorePattern getCraftingPattern() {
 		return pattern;
 	}
 
-	public Ingredient getRequiredItem() {
-		return requiredItem;
+	public Ingredient getIngredientToCraft() {
+		return ingredientToCraft;
 	}
 
 	public int getRequiredCraftingIterations() {
-		float amount = ((float) amountCraftable / (float) pattern.getOutputs()[0].getCount());
+		float amount = ((float) amountRemainingToCraft / (float) pattern.getOutput().getCount());
 		return (int) Math.ceil(amount);
 	}
 
 	public void markCraftingIterationCompleted() {
-		amountCrafted += pattern.getOutputs()[0].getCount();
-		amountCraftable -= pattern.getOutputs()[0].getCount();
+		amountRemainingToCraft -= pattern.getOutput().getCount();
+		if (amountRemainingToCraft < 0) {
+			amountRemainingToCraft = 0;
+		}
 	}
 
-	public int getAmountCrafted() {
-		return amountCrafted;
+	public int getAmountAlreadyCrafted() {
+		return totalRequiredAmount - storedAmount + amountRemainingToCraft;
+	}
+
+	public void setStoredAmount(int storedAmount) {
+		this.storedAmount = storedAmount;
+	}
+
+	public void setAmountRemainingToCraft(int amountRemainingToCraft) {
+		this.amountRemainingToCraft = amountRemainingToCraft;
+	}
+
+	public void setTotalRequiredAmount(int totalRequiredAmount) {
+		this.totalRequiredAmount = totalRequiredAmount;
+	}
+
+	public void setAttemptingResolve(boolean isAttemptingResolve) {
+		this.isAttemptingResolve = isAttemptingResolve;
+	}
+
+	public boolean areMachineCraftingItemsAlreadySupplied() {
+		return machineItemsSupplied;
+	}
+
+	public void markMachineCraftingItemsAlreadySupplied() {
+		machineItemsSupplied = true;
 	}
 
 	public boolean isCraftingCompleted() {
-		return amountCraftable == 0;
+		return amountRemainingToCraft <= 0;
 	}
 
 	public boolean isCraftingStep() {
-		return pattern != null || amountCraftable > 0;
+		return pattern != null && amountRemainingToCraft > 0;
 	}
 
-	public int getOwnedAmount() {
-		return ownedAmount;
+	public int getStoredAmount() {
+		return storedAmount;
 	}
 
-	public int getAmountCraftable() {
-		return amountCraftable;
+	public int getAmountRemainingToCraft() {
+		return amountRemainingToCraft;
 	}
 
-	public int getTotalAmount() {
-		return totalAmount;
+	public int getTotalRequiredAmount() {
+		return totalRequiredAmount;
 	}
 
 	public void setResolving() {
@@ -80,60 +103,54 @@ public class AutoCraftingStep {
 
 	@Override
 	public String toString() {
-		return "AutoCraftingStep [requiredItem=" + requiredItem + ", ownedAmount=" + ownedAmount + ", amountCraftable=" + amountCraftable + ", totalAmount=" + totalAmount + ", pattern=" + pattern
-				+ ", isAttemptingResolve=" + isAttemptingResolve + "]";
+		return "AutoCraftingStep [requiredItem=" + ingredientToCraft + ", storedAmount=" + storedAmount + ", amountRemainintToCraft=" + amountRemainingToCraft + ", amountCrafted="
+				+ getAmountAlreadyCrafted() + ", totalRequiredAmount=" + totalRequiredAmount + ", isAttemptingResolve=" + isAttemptingResolve + ", pattern=" + pattern + "]";
 	}
 
 	public CompoundNBT serialize() {
 		CompoundNBT output = new CompoundNBT();
-		output.putInt("owned_mount", ownedAmount);
-		output.putInt("amount_craftable", amountCraftable);
-		output.putInt("total_amount", totalAmount);
+		output.putInt("stored_amount", storedAmount);
+		output.putInt("amount_to_craft", amountRemainingToCraft);
+		output.putInt("total_amount", totalRequiredAmount);
 		output.putBoolean("is_attempting_resolve", isAttemptingResolve);
+		output.putBoolean("machine_items_supplied", machineItemsSupplied);
 		if (pattern != null) {
 			output.put("pattern", pattern.serialize());
 		}
 
-		// Store the ingredients.
-		ListNBT ingredientStacks = new ListNBT();
-		for (ItemStack stack : requiredItem.getMatchingStacks()) {
-			CompoundNBT outputTag = new CompoundNBT();
-			stack.write(outputTag);
-			ingredientStacks.add(outputTag);
-		}
-		output.put("ingredient_items", ingredientStacks);
+		output.put("required_item", IngredientUtilities.serializeIngredient(ingredientToCraft));
 
 		return output;
 	}
 
 	public static AutoCraftingStep read(CompoundNBT nbt) {
-		int ownedAmount = nbt.getInt("owned_mount");
-		int amountCraftable = nbt.getInt("amount_craftable");
+		int ownedAmount = nbt.getInt("stored_amount");
+		int amountCraftable = nbt.getInt("amount_to_craft");
 		int totalAmount = nbt.getInt("total_amount");
 		boolean isAttemptingResolve = nbt.getBoolean("is_attempting_resolve");
+		boolean machineItemsSupplied = nbt.getBoolean("machine_items_supplied");
+
 		EncodedDigistorePattern pattern = null;
 		if (nbt.contains("pattern")) {
 			pattern = EncodedDigistorePattern.read(nbt.getCompound("pattern"));
+			if (pattern == null) {
+				throw new RuntimeException("Unable to load encoded pattern with contents: " + nbt.getCompound("pattern")
+						+ ". If a recipe was removed, first replace it an cancel all requests regarding the item before removing it.");
+			}
 		}
 
-		// Read the ingredients.
-		ListNBT ingredientsNbt = nbt.getList("outputs", Constants.NBT.TAG_COMPOUND);
-		ItemStack[] ingredientStacks = new ItemStack[ingredientsNbt.size()];
-		for (int i = 0; i < ingredientsNbt.size(); i++) {
-			CompoundNBT outputTagNbt = (CompoundNBT) ingredientsNbt.get(i);
-			ItemStack stack = ItemStack.read(outputTagNbt);
-			ingredientStacks[i] = stack;
-		}
-		Ingredient requiredItem = Ingredient.fromStacks(ingredientStacks);
+		// Read the ingredient.
+		Ingredient requiredItem = IngredientUtilities.deserializeIngredient(nbt.getCompound("required_item"));
 
 		// Create the output.
 		AutoCraftingStep output = new AutoCraftingStep(requiredItem, ownedAmount, amountCraftable, totalAmount);
 		if (pattern != null && pattern.isValid()) {
-			output.setPattern(pattern);
+			output.setCraftingPattern(pattern);
 		}
 		if (isAttemptingResolve) {
 			output.setResolving();
 		}
+		output.machineItemsSupplied = machineItemsSupplied;
 		return output;
 	}
 

@@ -2,10 +2,13 @@ package theking530.staticcore.gui.widgets;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.util.text.ITextComponent;
 import theking530.staticcore.gui.WidgetContainer;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.Vector2D;
+import theking530.staticpower.client.gui.StaticPowerContainerGui;
 
 public abstract class AbstractGuiWidget {
 	public enum EInputResult {
@@ -44,6 +47,28 @@ public abstract class AbstractGuiWidget {
 	 */
 	public void setOwningContainer(WidgetContainer container) {
 		owningContainer = container;
+	}
+
+	/**
+	 * This method is raised when this widget is added to a container that exists on
+	 * a ContainerScreen. This will NOT be called on any other object that defines a
+	 * WidgetContainer.
+	 * 
+	 * @param gui
+	 */
+	public void addedToGui(@Nullable StaticPowerContainerGui<?> gui) {
+
+	}
+
+	/**
+	 * This method is raised when this widget is removed from a container that
+	 * exists on a ContainerScreen. This will NOT be called on any other object that
+	 * defines a WidgetContainer.
+	 * 
+	 * @param gui
+	 */
+	public void removedFromGui(@Nullable StaticPowerContainerGui<?> gui) {
+
 	}
 
 	/**

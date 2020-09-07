@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nullable;
+
 import com.google.common.collect.Lists;
 
 import net.minecraft.client.Minecraft;
@@ -12,6 +14,7 @@ import net.minecraft.util.text.ITextComponent;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget.EInputResult;
 import theking530.staticcore.utilities.Vector2D;
+import theking530.staticpower.client.gui.StaticPowerContainerGui;
 
 /**
  * Interface that enables a class to contains and render widgets.
@@ -21,9 +24,17 @@ import theking530.staticcore.utilities.Vector2D;
  */
 public class WidgetContainer {
 	protected final HashSet<AbstractGuiWidget> widgets;
+	@Nullable
+	protected final StaticPowerContainerGui<?> owner;
+
+	public WidgetContainer(StaticPowerContainerGui<?> owner) {
+		widgets = new HashSet<AbstractGuiWidget>();
+		this.owner = owner;
+	}
 
 	public WidgetContainer() {
 		widgets = new HashSet<AbstractGuiWidget>();
+		this.owner = null;
 	}
 
 	public void tick() {
@@ -75,7 +86,8 @@ public class WidgetContainer {
 		Vector2D mousePosition = new Vector2D(mouseX, mouseY);
 		List<ITextComponent> tooltips = new ArrayList<ITextComponent>();
 		for (AbstractGuiWidget widget : widgets) {
-			if (widget.isVisible() && !widget.getTooltipsDisabled() && (!widget.getShouldAutoCalculateTooltipBounds() || (widget.getShouldAutoCalculateTooltipBounds() && widget.isPointInsideBounds(mousePosition)))) {
+			if (widget.isVisible() && !widget.getTooltipsDisabled()
+					&& (!widget.getShouldAutoCalculateTooltipBounds() || (widget.getShouldAutoCalculateTooltipBounds() && widget.isPointInsideBounds(mousePosition)))) {
 				widget.getTooltips(mousePosition, tooltips, false);
 			}
 		}
@@ -158,7 +170,18 @@ public class WidgetContainer {
 
 	public WidgetContainer registerWidget(AbstractGuiWidget widget) {
 		widgets.add(widget);
+		widget.setOwningContainer(this);
+		if (owner != null) {
+			widget.addedToGui(owner);
+		}
 		return this;
+	}
+
+	public boolean removeWidget(AbstractGuiWidget widget) {
+		if (owner != null) {
+			widget.removedFromGui(owner);
+		}
+		return widgets.remove(widget);
 	}
 
 	public Set<AbstractGuiWidget> getWidgets() {

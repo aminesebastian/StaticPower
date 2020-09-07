@@ -9,7 +9,6 @@ import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticcore.utilities.SDMath;
-import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachmentContainer;
 import theking530.staticpower.container.slots.PhantomSlot;
@@ -34,12 +33,6 @@ public class ContainerExtractor extends AbstractCableAttachmentContainer<Extract
 		getAttachment().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((handler) -> {
 			filterInventory = (ItemStackHandler) handler;
 		});
-
-		// If the item filter is null, then return early and log the error.
-		if (filterInventory == null) {
-			StaticPower.LOGGER.error(String.format("Received capability for ItemFilter: %1$s that did not inherit from InventoryItemFilter.", getAttachment().getDisplayName()));
-			return;
-		}
 
 		this.addSlotsInGrid(filterInventory, 0, 88, 24, SDMath.getSmallestFactor(filterInventory.getSlots(), 6), 16,
 				(index, x, y) -> new PhantomSlot(filterInventory, index, x, y, true).renderFluidContainerAsFluid());

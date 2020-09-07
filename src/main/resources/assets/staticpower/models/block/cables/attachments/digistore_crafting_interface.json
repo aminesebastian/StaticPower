@@ -1,0 +1,6 @@
+{
+	"parent": "staticpower:block/cables/attachments/digistore_exporter",
+	"textures": {
+		"0": "staticpower:blocks/cables/attachments/cable_digistore_crafting_interface_attachment"
+	}
+}

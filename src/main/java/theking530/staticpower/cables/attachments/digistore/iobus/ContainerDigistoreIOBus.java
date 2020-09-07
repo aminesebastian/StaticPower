@@ -9,7 +9,6 @@ import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticcore.utilities.SDMath;
-import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachmentContainer;
 import theking530.staticpower.container.slots.PhantomSlot;
@@ -42,12 +41,6 @@ public class ContainerDigistoreIOBus extends AbstractCableAttachmentContainer<Di
 		getAttachment().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.DOWN).ifPresent((handler) -> {
 			upgradeInventory = (ItemStackHandler) handler;
 		});
-
-		// If the item filter is null, then return early and log the error.
-		if (filterInventory == null) {
-			StaticPower.LOGGER.error(String.format("Received capability for Importer: %1$s that did not inherit from InventoryItemFilter.", getAttachment().getDisplayName()));
-			return;
-		}
 
 		addSlotsInGrid(filterInventory, 0, filterInventory.getSlots() / 2, 98, 20, SDMath.getSmallestFactor(filterInventory.getSlots(), 6), 16,
 				(index, x, y) -> new PhantomSlot(filterInventory, index, x, y, true).renderFluidContainerAsFluid());

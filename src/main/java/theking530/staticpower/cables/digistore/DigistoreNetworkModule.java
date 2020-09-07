@@ -6,29 +6,34 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import theking530.api.digistore.CapabilityDigistoreInventory;
 import theking530.api.digistore.IDigistoreInventory;
+import theking530.staticpower.cables.attachments.digistore.craftinginterface.DigistoreCraftingInterfaceAttachment;
 import theking530.staticpower.cables.attachments.digistore.digistoreterminal.DigistoreInventorySortType;
+import theking530.staticpower.cables.digistore.crafting.CraftingInterfaceWrapper;
 import theking530.staticpower.cables.digistore.crafting.DigistoreNetworkCraftingManager;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.NetworkMapper;
 import theking530.staticpower.cables.network.ServerCable;
+import theking530.staticpower.tileentities.components.ComponentUtilities;
 import theking530.staticpower.tileentities.digistorenetwork.manager.TileEntityDigistoreManager;
 import theking530.staticpower.tileentities.digistorenetwork.patternstorage.TileEntityPatternStorage;
 import theking530.staticpower.utilities.MetricConverter;
 
 public class DigistoreNetworkModule extends AbstractCableNetworkModule {
-	public static final int CRAFTING_TIME = 10;
+	public static final int CRAFTING_TIME = 5;
 
 	private final List<IDigistoreInventory> digistores;
 	private final List<ServerCable> powerUsingDigistores;
 	private final List<TileEntityPatternStorage> constructors;
+	private final List<CraftingInterfaceWrapper> craftingInterfaces;
 
 	private final DigistoreNetworkTransactionManager transactionManager;
 	private final DigistoreNetworkCraftingManager craftingManager;
@@ -40,6 +45,7 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 		digistores = new LinkedList<IDigistoreInventory>();
 		transactionManager = new DigistoreNetworkTransactionManager(this);
 		powerUsingDigistores = new LinkedList<ServerCable>();
+		craftingInterfaces = new LinkedList<CraftingInterfaceWrapper>();
 		constructors = new LinkedList<TileEntityPatternStorage>();
 		craftingManager = new DigistoreNetworkCraftingManager(this);
 	}
@@ -65,6 +71,7 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 		digistores.clear();
 		constructors.clear();
 		powerUsingDigistores.clear();
+		craftingInterfaces.clear();
 		manager = null;
 
 		// Cache all the digistores in the network.
@@ -87,6 +94,16 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 				if (cable.containsProperty(DigistoreCableProviderComponent.POWER_USAGE_TAG)) {
 					powerUsingDigistores.add(cable);
 				}
+
+				// If this cable has a crafting interface, cache it.
+				ComponentUtilities.getComponent(DigistoreCableProviderComponent.class, te).ifPresent(comp -> {
+					for (Direction dir : Direction.values()) {
+						ItemStack attachment = comp.getAttachment(dir);
+						if (attachment.getItem() instanceof DigistoreCraftingInterfaceAttachment) {
+							craftingInterfaces.add(new CraftingInterfaceWrapper(attachment, dir, cable));
+						}
+					}
+				});
 
 				// If this is also a manager, set the manager present to true.
 				if (te instanceof TileEntityDigistoreManager) {
@@ -149,6 +166,10 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 
 	public List<TileEntityPatternStorage> getConstructors() {
 		return constructors;
+	}
+
+	public List<CraftingInterfaceWrapper> getCraftingInterfaces() {
+		return craftingInterfaces;
 	}
 
 	public boolean containsItem(ItemStack stack) {

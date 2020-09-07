@@ -1,6 +1,8 @@
 package theking530.staticpower.cables;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Nullable;
@@ -324,6 +326,37 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 */
 	public boolean hasAttachment(Direction side) {
 		return !Attachments[side.ordinal()].isEmpty();
+	}
+
+	/**
+	 * Checks to see if this component has any attachments of the provided type.
+	 * 
+	 * @param attachmentClass The attachment class to check.
+	 * @return True if the cable has at least one attachment of this type.
+	 */
+	public boolean hasAttachmentOfType(Class<? extends AbstractCableAttachment> attachmentClass) {
+		for (Direction dir : Direction.values()) {
+			if (attachmentClass.isInstance(Attachments[dir.ordinal()].getItem())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Gets a list of all attachments of the provided class.
+	 * 
+	 * @param attachmentClass The attachment class to check for.
+	 * @return
+	 */
+	public List<ItemStack> getAttachmentsOfType(Class<? extends AbstractCableAttachment> attachmentClass) {
+		List<ItemStack> outputs = new ArrayList<ItemStack>();
+		for (Direction dir : Direction.values()) {
+			if (attachmentClass.isInstance(Attachments[dir.ordinal()].getItem())) {
+				outputs.add(Attachments[dir.ordinal()]);
+			}
+		}
+		return outputs;
 	}
 
 	/**

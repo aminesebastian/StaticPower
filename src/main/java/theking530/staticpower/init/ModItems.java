@@ -2,6 +2,7 @@ package theking530.staticpower.init;
 
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.cables.attachments.cover.CableCover;
+import theking530.staticpower.cables.attachments.digistore.craftinginterface.DigistoreCraftingInterfaceAttachment;
 import theking530.staticpower.cables.attachments.digistore.digistorecraftingterminal.DigistoreCraftingTerminal;
 import theking530.staticpower.cables.attachments.digistore.digistorepatternencoder.DigistorePatternEncoder;
 import theking530.staticpower.cables.attachments.digistore.digistoreterminal.DigistoreTerminal;
@@ -277,6 +278,7 @@ public class ModItems {
 	public static DigistoreTerminal DigistoreTerminalAttachment;
 	public static DigistoreCraftingTerminal DigistoreCraftingTerminalAttachment;
 	public static DigistorePatternEncoder DigistorePatternEncoderAttachment;
+	public static DigistoreCraftingInterfaceAttachment DigistoreCraftingInterfaceAttachment;
 
 	public static DigistorePatternCard PatternCard;
 
@@ -578,6 +580,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(DigistoreTerminalAttachment = new DigistoreTerminal("cable_attachment_digistore_terminal"));
 		StaticPowerRegistry.preRegisterItem(DigistoreCraftingTerminalAttachment = new DigistoreCraftingTerminal("cable_attachment_digistore_crafting_terminal"));
 		StaticPowerRegistry.preRegisterItem(DigistorePatternEncoderAttachment = new DigistorePatternEncoder("cable_attachment_digistore_pattern_encoder"));
+		StaticPowerRegistry.preRegisterItem(DigistoreCraftingInterfaceAttachment = new DigistoreCraftingInterfaceAttachment("cable_attachment_digistore_crafting_interface"));
 
 		// Digistore Misc.
 		StaticPowerRegistry.preRegisterItem(PatternCard = new DigistorePatternCard("digistore_pattern_card"));
