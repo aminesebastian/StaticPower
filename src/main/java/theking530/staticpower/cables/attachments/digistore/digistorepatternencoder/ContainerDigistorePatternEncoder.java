@@ -20,7 +20,7 @@ import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.digistore.digistorepatternencoder.DigistorePatternEncoder.RecipeEncodingType;
-import theking530.staticpower.cables.attachments.digistore.digistoreterminal.AbstractContainerDigistoreTerminal;
+import theking530.staticpower.cables.attachments.digistore.terminal.AbstractContainerDigistoreTerminal;
 import theking530.staticpower.cables.digistore.crafting.EncodedDigistorePattern;
 import theking530.staticpower.container.FakeCraftingInventory;
 import theking530.staticpower.container.slots.EncodedPatternSlot;

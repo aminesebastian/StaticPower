@@ -8,6 +8,7 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.cables.attachments.digistore.terminal.AbstractDigistoreTerminalAttachment;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 
 public class DigistoreTerminal extends AbstractDigistoreTerminalAttachment {

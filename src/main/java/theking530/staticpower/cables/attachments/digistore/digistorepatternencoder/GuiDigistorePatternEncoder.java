@@ -11,7 +11,7 @@ import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.cables.attachments.digistore.digistorepatternencoder.DigistorePatternEncoder.RecipeEncodingType;
-import theking530.staticpower.cables.attachments.digistore.digistoreterminal.AbstractGuiDigistoreTerminal;
+import theking530.staticpower.cables.attachments.digistore.terminal.AbstractGuiDigistoreTerminal;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 

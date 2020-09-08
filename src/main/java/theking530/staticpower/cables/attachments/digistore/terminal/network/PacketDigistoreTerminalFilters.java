@@ -1,10 +1,13 @@
-package theking530.staticpower.cables.attachments.digistore.digistoreterminal;
+package theking530.staticpower.cables.attachments.digistore.terminal.network;
 
 import java.util.function.Supplier;
 
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
+import theking530.staticpower.cables.attachments.digistore.terminal.AbstractContainerDigistoreTerminal;
+import theking530.staticpower.cables.attachments.digistore.terminal.DigistoreInventorySortType;
+import theking530.staticpower.cables.attachments.digistore.terminal.DigistoreSearchMode;
 import theking530.staticpower.network.NetworkMessage;
 
 public class PacketDigistoreTerminalFilters extends NetworkMessage {

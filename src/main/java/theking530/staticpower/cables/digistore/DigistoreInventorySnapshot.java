@@ -16,7 +16,7 @@ import net.minecraftforge.items.IItemHandler;
 import theking530.api.digistore.IDigistoreInventory;
 import theking530.staticpower.cables.attachments.digistore.craftinginterface.DigistoreCraftingInterfaceAttachment;
 import theking530.staticpower.cables.attachments.digistore.digistorepatternencoder.DigistorePatternEncoder.RecipeEncodingType;
-import theking530.staticpower.cables.attachments.digistore.digistoreterminal.DigistoreInventorySortType;
+import theking530.staticpower.cables.attachments.digistore.terminal.DigistoreInventorySortType;
 import theking530.staticpower.cables.digistore.crafting.CraftingInterfaceWrapper;
 import theking530.staticpower.cables.digistore.crafting.EncodedDigistorePattern;
 import theking530.staticpower.tileentities.digistorenetwork.patternstorage.TileEntityPatternStorage;

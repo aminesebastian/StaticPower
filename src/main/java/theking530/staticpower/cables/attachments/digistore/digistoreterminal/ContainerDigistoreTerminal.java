@@ -7,6 +7,7 @@ import net.minecraft.util.Direction;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.cables.attachments.digistore.terminal.AbstractContainerDigistoreTerminal;
 
 public class ContainerDigistoreTerminal extends AbstractContainerDigistoreTerminal<DigistoreTerminal> {
 	@ContainerTypePopulator

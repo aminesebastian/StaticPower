@@ -8,13 +8,14 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 
 public class ContainerOpener implements INamedContainerProvider {
 	private final TriFunction<Integer, PlayerInventory, PlayerEntity, Container> container;
+	private final ITextComponent name;
 
-	public ContainerOpener(TriFunction<Integer, PlayerInventory, PlayerEntity, Container> container) {
+	public ContainerOpener(ITextComponent name, TriFunction<Integer, PlayerInventory, PlayerEntity, Container> container) {
 		this.container = container;
+		this.name = name;
 	}
 
 	@Override
@@ -24,7 +25,7 @@ public class ContainerOpener implements INamedContainerProvider {
 
 	@Override
 	public ITextComponent getDisplayName() {
-		return new StringTextComponent("IMPELEMT");
+		return name;
 	}
 
 	public static @FunctionalInterface interface TriFunction<A, B, C, R> {

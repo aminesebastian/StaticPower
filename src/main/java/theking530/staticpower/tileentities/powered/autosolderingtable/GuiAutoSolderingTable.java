@@ -2,13 +2,13 @@ package theking530.staticpower.tileentities.powered.autosolderingtable;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
-import theking530.staticcore.gui.widgets.GuiDrawItem;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.GuiMachinePowerInfoTab;
 import theking530.staticcore.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
+import theking530.staticcore.utilities.GuiDrawItem;
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.AbstractGuiSolderingTable;

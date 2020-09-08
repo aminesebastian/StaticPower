@@ -41,7 +41,7 @@ public class GuiVacuumChest extends StaticPowerTileEntityGui<ContainerVacuumChes
 
 		if (getTileEntity().showTank()) {
 			xSize = 200;
-			xSizeTarget = 200;
+			this.setDesieredGuiSize(200, ySize);
 		} else {
 			fluidBar.setVisible(false);
 		}

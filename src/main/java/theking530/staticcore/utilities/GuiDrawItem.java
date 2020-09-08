@@ -1,4 +1,4 @@
-package theking530.staticcore.gui.widgets;
+package theking530.staticcore.utilities;
 
 import org.lwjgl.opengl.GL11;
 
@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import theking530.staticcore.utilities.Color;
 
 public class GuiDrawItem {
 	protected Color tint;

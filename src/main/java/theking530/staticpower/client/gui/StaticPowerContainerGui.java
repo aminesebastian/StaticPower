@@ -21,10 +21,10 @@ import theking530.staticcore.gui.WidgetContainer;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget.EInputResult;
-import theking530.staticcore.gui.widgets.GuiDrawItem;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab;
 import theking530.staticcore.gui.widgets.tabs.GuiTabManager;
 import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.GuiDrawItem;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.container.StaticPowerContainer;
@@ -55,8 +55,10 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	/** The item renderer. */
 	protected final GuiDrawItem itemRenderer;
 
-	protected int xSizeTarget;
-	protected int ySizeTarget;
+	protected Vector2D sizeTarget;
+	protected Vector2D previousSizeTarget;
+	protected boolean isScreenSizeChanging;
+
 	protected int outputSlotSize;
 	protected int inputSlotSize;
 	protected boolean isInitialized;
@@ -78,11 +80,11 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 		widgetContainer = new WidgetContainer(this);
 		xSize = guiXSize;
 		ySize = guiYSize;
-		xSizeTarget = guiXSize;
-		ySizeTarget = guiYSize;
+		sizeTarget = new Vector2D(xSize, ySize);
 		outputSlotSize = 24;
 		inputSlotSize = 16;
 		itemRenderer = new GuiDrawItem();
+		isScreenSizeChanging = false;
 		partialTicks = 0.0f;
 		lockedSprite = new SpriteDrawable(StaticPowerSprites.DIGISTORE_LOCKED_INDICATOR, 8, 8);
 		lockedSprite.setTint(new Color(1.0f, 1.0f, 1.0f, 0.95f));
@@ -587,15 +589,15 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	}
 
 	public void setGuiSizeTarget(int xSizeTarget, int ySizeTarget) {
-		this.xSizeTarget = xSizeTarget;
-		this.ySizeTarget = ySizeTarget;
+		previousSizeTarget = new Vector2D(xSize, ySize);
+		sizeTarget = new Vector2D(xSizeTarget, ySizeTarget);
 	}
 
 	public void setDesieredGuiSize(int xSize, int ySize) {
 		this.xSize = xSize;
 		this.ySize = ySize;
-		this.xSizeTarget = xSize;
-		this.ySizeTarget = ySize;
+		previousSizeTarget = new Vector2D(xSize, ySize);
+		sizeTarget = previousSizeTarget;
 	}
 
 	public void registerWidget(AbstractGuiWidget widget) {
@@ -603,22 +605,61 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 	}
 
 	private void animateScreenSize() {
-		if (Math.abs(xSize - xSizeTarget) > 0) {
-			int minimumAnimationVal = xSizeTarget - xSize > 0 ? 1 : -1;
+		// Check if any change occured.
+		boolean changeOccured = false;
+
+		// Process the xSize.
+		if (Math.abs(xSize - sizeTarget.getXi()) > 0) {
+			int minimumAnimationVal = sizeTarget.getXi() - xSize > 0 ? 1 : -1;
 			if (minimumAnimationVal == 1) {
-				xSize = xSize + Math.max(minimumAnimationVal, (xSizeTarget - xSize) / 20);
+				xSize = xSize + Math.max(minimumAnimationVal, (sizeTarget.getXi() - xSize) / 15);
 			} else {
-				xSize = xSize + Math.min(minimumAnimationVal, (xSizeTarget - xSize) / 20);
+				xSize = xSize + Math.min(minimumAnimationVal, (sizeTarget.getXi() - xSize) / 15);
 			}
+			isScreenSizeChanging = true;
+			changeOccured = true;
 		}
-		if (Math.abs(ySize - ySizeTarget) > 0) {
-			int minimumAnimationVal = ySizeTarget - ySize > 0 ? 1 : -1;
+
+		// Process the ySize.
+		if (Math.abs(ySize - sizeTarget.getYi()) > 0) {
+			int minimumAnimationVal = sizeTarget.getYi() - ySize > 0 ? 1 : -1;
 			if (minimumAnimationVal == 1) {
-				ySize = ySize + Math.max(minimumAnimationVal, (ySizeTarget - ySize) / 20);
+				ySize = ySize + Math.max(minimumAnimationVal, (sizeTarget.getYi() - ySize) / 15);
 			} else {
-				ySize = ySize + Math.min(minimumAnimationVal, (ySizeTarget - ySize) / 20);
+				ySize = ySize + Math.min(minimumAnimationVal, (sizeTarget.getYi() - ySize) / 15);
 			}
+			isScreenSizeChanging = true;
+			changeOccured = true;
 		}
+
+		// If a change occured, raise the changed method. If not, and we were previously
+		// changing, raise the change completed method and mark changing as false. THIS
+		// CAN BE DONE WAY BETTER - TO DO.
+		if (changeOccured) {
+			Vector2D expectedDifference = previousSizeTarget.clone().subtract(sizeTarget);
+			Vector2D currentDifference = new Vector2D(xSize - sizeTarget.getXi(), ySize - sizeTarget.getYi());
+			Vector2D alpha = currentDifference.clone().divide(expectedDifference);
+			alpha = new Vector2D(1.0f, 1.0f).subtract(alpha);
+			if (Float.isNaN(alpha.getX())) {
+				alpha.setX(0.0f);
+			}
+			if (Float.isNaN(alpha.getY())) {
+				alpha.setY(0.0f);
+			}
+
+			onScreenSizeChanged(alpha);
+		} else if (isScreenSizeChanging) {
+			onScreenSizeChangeCompleted();
+			isScreenSizeChanging = false;
+		}
+	}
+
+	protected void onScreenSizeChanged(Vector2D alpha) {
+
+	}
+
+	protected void onScreenSizeChangeCompleted() {
+
 	}
 
 	public GuiTabManager getTabManager() {

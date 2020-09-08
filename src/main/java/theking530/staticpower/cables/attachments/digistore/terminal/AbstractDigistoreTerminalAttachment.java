@@ -1,4 +1,4 @@
-package theking530.staticpower.cables.attachments.digistore.digistoreterminal;
+package theking530.staticpower.cables.attachments.digistore.terminal;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;

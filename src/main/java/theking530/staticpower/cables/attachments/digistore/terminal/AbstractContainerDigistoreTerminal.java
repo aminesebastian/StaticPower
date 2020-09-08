@@ -1,4 +1,4 @@
-package theking530.staticpower.cables.attachments.digistore.digistoreterminal;
+package theking530.staticpower.cables.attachments.digistore.terminal;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +13,7 @@ import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -24,13 +25,16 @@ import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.attachments.AbstractCableAttachmentContainer;
-import theking530.staticpower.cables.attachments.digistore.digistoreterminal.autocrafting.ContainerCraftingAmount;
+import theking530.staticpower.cables.attachments.digistore.digistoreterminal.DigistoreTerminal;
 import theking530.staticpower.cables.attachments.digistore.iobus.ContainerDigistoreIOBus;
 import theking530.staticpower.cables.attachments.digistore.iobus.GuiDigistoreIOBus;
+import theking530.staticpower.cables.attachments.digistore.terminal.autocrafting.ContainerCraftingAmount;
+import theking530.staticpower.cables.attachments.digistore.terminal.network.PacketDigistoreTerminalFilters;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot.DigistoreItemCraftableState;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
+import theking530.staticpower.cables.digistore.crafting.CraftingRequestResponse;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
@@ -132,13 +136,22 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 							// If we should craft it, attempt to add a request for it. IF not, just pull it
 							// out like usual.
 							if (shouldCraft) {
-								ContainerOpener requestUi = new ContainerOpener((id, inv, ply) -> {
-									return new ContainerCraftingAmount(id, inv, null);
-								});
+								// Calculate the max craftable.
+								CraftingRequestResponse craftingResponse = digistoreModule.getCraftingManager().addCraftingRequest(stackInSlot, Integer.MAX_VALUE, true);
 
-								NetworkHooks.openGui((ServerPlayerEntity) player, requestUi);
-								// digistoreModule.getCraftingManager().addCraftingRequest(stackInSlot, 1,
-								// false);
+								// Open prompt for crafting if we can actually craft some.
+								if (craftingResponse.getCraftableAmount() > 0) {
+									// Create the container opener.
+									ContainerOpener requestUi = new ContainerOpener(new StringTextComponent("Crafting Request"), (id, inv, ply) -> {
+										return new ContainerCraftingAmount(id, inv, craftingResponse, digistoreModule.getNetwork().getId());
+									});
+
+									// Open the UI.
+									NetworkHooks.openGui((ServerPlayerEntity) player, requestUi, buff -> {
+										buff.writeCompoundTag(craftingResponse.serialze());
+										buff.writeLong(digistoreModule.getNetwork().getId());
+									});
+								}
 							} else {
 								// Get the half stack size.
 								int halfStackSize = actualSlotContents.getCount() >= actualSlotContents.getMaxStackSize() ? (actualSlotContents.getMaxStackSize() + 1) / 2
@@ -285,7 +298,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 		DigistoreTerminal.setSortDescending(getAttachment(), sortDescending);
 		resyncInv = true;
 		if (getCableComponent().getWorld().isRemote) {
-			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(new PacketDigistoreTerminalFilters(windowId, filter, mode, sortType, sortDescending));
+			StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketDigistoreTerminalFilters(windowId, filter, mode, sortType, sortDescending));
 		}
 	}
 

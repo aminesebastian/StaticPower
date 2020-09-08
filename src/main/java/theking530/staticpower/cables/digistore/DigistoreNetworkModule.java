@@ -14,7 +14,7 @@ import net.minecraft.world.chunk.Chunk;
 import theking530.api.digistore.CapabilityDigistoreInventory;
 import theking530.api.digistore.IDigistoreInventory;
 import theking530.staticpower.cables.attachments.digistore.craftinginterface.DigistoreCraftingInterfaceAttachment;
-import theking530.staticpower.cables.attachments.digistore.digistoreterminal.DigistoreInventorySortType;
+import theking530.staticpower.cables.attachments.digistore.terminal.DigistoreInventorySortType;
 import theking530.staticpower.cables.digistore.crafting.CraftingInterfaceWrapper;
 import theking530.staticpower.cables.digistore.crafting.DigistoreNetworkCraftingManager;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;

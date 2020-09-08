@@ -2,8 +2,8 @@ package theking530.staticpower.container.slots;
 
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.gui.widgets.GuiDrawItem;
 import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.GuiDrawItem;
 
 public class DigistoreSlot extends StaticPowerContainerSlot {
 	private boolean managerPresent;

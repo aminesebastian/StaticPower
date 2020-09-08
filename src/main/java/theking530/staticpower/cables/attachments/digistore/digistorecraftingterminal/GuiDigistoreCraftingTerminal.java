@@ -7,7 +7,7 @@ import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticcore.utilities.Vector2D;
-import theking530.staticpower.cables.attachments.digistore.digistoreterminal.AbstractGuiDigistoreTerminal;
+import theking530.staticpower.cables.attachments.digistore.terminal.AbstractGuiDigistoreTerminal;
 
 public class GuiDigistoreCraftingTerminal extends AbstractGuiDigistoreTerminal<ContainerDigistoreCraftingTerminal, DigistoreCraftingTerminal> {
 	private ArrowProgressBar progressBar;

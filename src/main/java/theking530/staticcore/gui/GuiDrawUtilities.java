@@ -1,7 +1,5 @@
 package theking530.staticcore.gui;
 
-import org.lwjgl.opengl.GL11;
-
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 
@@ -107,7 +105,6 @@ public class GuiDrawUtilities {
 	}
 
 	public static void drawTexturedGenericRect(float xCoord, float yCoord, float width, float height, float zLevel, float minU, float minV, float maxU, float maxV) {
-		;
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
 		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
@@ -201,47 +198,25 @@ public class GuiDrawUtilities {
 		float uPixel = 1.0f / 200.0f;
 		float vPixel = 1.0f / 20.0f;
 
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder tes = tessellator.getBuffer();
-		BufferBuilder vertexbuffer = tessellator.getBuffer();
-		tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-
 		if (hovered) {
 			Minecraft.getInstance().getTextureManager().bindTexture(GuiTextures.BUTTON_HOVER);
 		} else {
 			Minecraft.getInstance().getTextureManager().bindTexture(GuiTextures.BUTTON);
 		}
 
-		// Top
-		vertexbuffer.pos(x + width, y + 2, 0).tex(0, vPixel * 2).endVertex();
-		vertexbuffer.pos(x + width, y, 0).tex(0, 0).endVertex();
-		vertexbuffer.pos(x, y, 0).tex(1, 0).endVertex();
-		vertexbuffer.pos(x, y + 2, 0).tex(1, vPixel * 2).endVertex();
-
-		// Bottom
-		vertexbuffer.pos(x + width, y + (height), 0).tex(0, vPixel * 20).endVertex();
-		vertexbuffer.pos(x + width, y + (height - 3), 0).tex(0, vPixel * 17).endVertex();
-		vertexbuffer.pos(x, y + (height - 3), 0).tex(1, vPixel * 17).endVertex();
-		vertexbuffer.pos(x, y + (height), 0).tex(1, vPixel * 20).endVertex();
-
-		// Right
-		vertexbuffer.pos(x + width, y + (height), 0).tex(0, vPixel * 20).endVertex();
-		vertexbuffer.pos(x + width, y, 0).tex(0, 0).endVertex();
-		vertexbuffer.pos(x - 2 + width, y, 0).tex(uPixel * 2, 0).endVertex();
-		vertexbuffer.pos(x - 2 + width, y + (height), 0).tex(uPixel * 2, vPixel * 20).endVertex();
-
-		// Left
-		vertexbuffer.pos(x + 2, y + (height), 0).tex(uPixel * 198, 1).endVertex();
-		vertexbuffer.pos(x + 2, y, 0).tex(uPixel * 198, 0).endVertex();
-		vertexbuffer.pos(x, y, 0).tex(1, 0).endVertex();
-		vertexbuffer.pos(x, y + (height), 0).tex(1, 1).endVertex();
-
 		// Body
-		vertexbuffer.pos(x + width - 2, y - 3 + (height), 0).tex(uPixel * 2, vPixel * 17).endVertex();
-		vertexbuffer.pos(x + width - 2, y + 2, 0).tex(uPixel * 2, vPixel * 2).endVertex();
-		vertexbuffer.pos(x + 2, y + 2, 0).tex(uPixel * 198, vPixel * 2).endVertex();
-		vertexbuffer.pos(x + 2, y - 3 + (height), 0).tex(uPixel * 198, vPixel * 17).endVertex();
+		drawTexturedGenericRect(x + 2, y + 2, width - 4, height - 5, zLevel, uPixel * 2, vPixel * 2, uPixel * 198, vPixel * 17);
 
-		tessellator.draw();
+		// Corners
+		drawTexturedGenericRect(x, y, 2, 2, zLevel, 0.0f, 0.0f, 2 * uPixel, 2 * vPixel);
+		drawTexturedGenericRect(x + width - 2, y, 2, 2, zLevel, 198 * uPixel, 0, 1, 2 * vPixel);
+		drawTexturedGenericRect(x, y + height - 3, 2, 3, zLevel, 0.0f, 17 * vPixel, 2 * uPixel, 20 * vPixel);
+		drawTexturedGenericRect(x + width - 2, y + height - 3, 2, 3, zLevel, 198 * uPixel, 17 * vPixel, 1, 20 * vPixel);
+
+		// Sides
+		drawTexturedGenericRect(x + 2, y, width - 4, 2, zLevel, 2 * uPixel, 0, 198 * uPixel, 2 * vPixel);
+		drawTexturedGenericRect(x, y + 2, 2, height - 5, zLevel, 0.0f, 2 * vPixel, 2 * uPixel, 17 * vPixel);
+		drawTexturedGenericRect(x + width - 2, y + 2, 2, height - 5, zLevel, 198 * uPixel, 2 * vPixel, 1, 17 * vPixel);
+		drawTexturedGenericRect(x + 2, y + height - 3, width - 4, 3, zLevel, 2 * uPixel, 17 * vPixel, 198 * uPixel, 20 * vPixel);
 	}
 }

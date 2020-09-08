@@ -3,6 +3,7 @@ package theking530.staticpower.network;
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.Supplier;
 
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -31,6 +32,14 @@ public class StaticPowerMessageHandler {
 
 	public static void sendToAllPlayersInDimension(SimpleChannel channel, World world, NetworkMessage message) {
 		channel.send(PacketDistributor.DIMENSION.with(() -> world.getDimension().getType()), message);
+	}
+
+	public static void sendMessageToPlayer(SimpleChannel channel, ServerPlayerEntity player, NetworkMessage message) {
+		channel.send(PacketDistributor.PLAYER.with(() -> player), message);
+	}
+
+	public static void sendToServer(SimpleChannel channel, NetworkMessage message) {
+		channel.sendToServer(message);
 	}
 
 	/**

@@ -45,9 +45,23 @@ public abstract class AbstractVector implements Cloneable {
 		return (T) this;
 	}
 
+	public <T extends AbstractVector> T divide(AbstractVector other) {
+		for (int i = 0; i < Math.min(other.getDimensions(), getDimensions()); i++) {
+			values.set(i, values.get(i) / other.values.get(i));
+		}
+		return (T) this;
+	}
+
 	public <T extends AbstractVector> T add(AbstractVector other) {
 		for (int i = 0; i < Math.min(other.getDimensions(), getDimensions()); i++) {
-			values.set(i, other.getScalar(i) + values.get(i));
+			values.set(i, values.get(i) + other.values.get(i));
+		}
+		return (T) this;
+	}
+
+	public <T extends AbstractVector> T subtract(AbstractVector other) {
+		for (int i = 0; i < Math.min(other.getDimensions(), getDimensions()); i++) {
+			values.set(i, values.get(i) - other.values.get(i));
 		}
 		return (T) this;
 	}

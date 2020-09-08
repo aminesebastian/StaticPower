@@ -1,4 +1,4 @@
-package theking530.staticpower.cables.attachments.digistore.digistoreterminal;
+package theking530.staticpower.cables.attachments.digistore.terminal;
 
 import java.util.ArrayList;
 import java.util.List;

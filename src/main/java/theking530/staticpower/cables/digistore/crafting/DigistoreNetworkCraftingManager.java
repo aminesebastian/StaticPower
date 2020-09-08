@@ -93,7 +93,7 @@ public class DigistoreNetworkCraftingManager {
 			// If we're simulating, simply return the craftable amount in the wrapper.
 			// Otherwise, add the crafting reuquest.
 			if (simulate) {
-				return new CraftingRequestResponse(-1, craftableAmount);
+				return new CraftingRequestResponse(-1, craftableAmount, requestedItem, steps);
 			} else {
 				// Add the steps in reverse to the list. Skip the steps that don't have a
 				// pattern.
@@ -101,10 +101,10 @@ public class DigistoreNetworkCraftingManager {
 				long id = CableNetworkManager.get(module.getNetwork().getWorld()).getAndIncrementCurrentCraftingId();
 				DigistoreCraftingRequest request = new DigistoreCraftingRequest(id, steps);
 				craftingRequests.add(request);
-				return new CraftingRequestResponse(id, craftableAmount);
+				return new CraftingRequestResponse(id, craftableAmount, requestedItem, steps);
 			}
 		}
-		return new CraftingRequestResponse(-1, 0);
+		return new CraftingRequestResponse(-1, 0, ItemStack.EMPTY, Collections.emptyList());
 	}
 
 	protected int getPatternTreeForItem(EncodedIngredient ing, int amount, DigistoreInventorySnapshot snapshot, List<AutoCraftingStep> outSteps) {
@@ -181,17 +181,26 @@ public class DigistoreNetworkCraftingManager {
 						if (craftableAmount >= missingAmount) {
 							patternSteps.addAll(steps);
 						} else {
-							maxOutput = Math.min(maxOutput, (craftableAmount + extracted) / requiredItem.getCount());
-							currentStep.setAmountRemainingToCraft(craftableAmount);
-							currentStep.setTotalRequiredAmount(craftableAmount + extracted);
-							failed = true;
-							break;
+							// Update the new max output.
+							maxOutput = Math.min(maxOutput, (craftableAmount + extracted) / requiredItem.getCount()) * pattern.getOutput().getCount();
+
+							// If the new max output is less than or equal to zero, stop checking this
+							// pattern. IF we can craft at least one, update the step.
+							if (maxOutput <= 0) {
+								failed = true;
+								break;
+							} else {
+								currentStep.setAmountRemainingToCraft(craftableAmount);
+								currentStep.setTotalRequiredAmount(craftableAmount + extracted);
+								patternSteps.addAll(steps);
+							}
 						}
 					} else {
 						if (extracted > requiredItem.getCount()) {
-							maxOutput = Math.min(maxOutput, extracted / requiredItem.getCount());
+							maxOutput = Math.min(maxOutput, extracted / requiredItem.getCount()) * pattern.getOutput().getCount();
 							currentStep.setAmountRemainingToCraft(0);
 							currentStep.setTotalRequiredAmount(extracted);
+							patternSteps.addAll(steps);
 						} else {
 							failed = true;
 							break;
@@ -373,7 +382,6 @@ public class DigistoreNetworkCraftingManager {
 	public void readFromNbt(CompoundNBT tag) {
 		// Get the request NBT list and add the parcels.
 		ListNBT requestNBTList = tag.getList("requests", Constants.NBT.TAG_COMPOUND);
-		craftingRequests.clear();
 		requestNBTList.forEach(requestTag -> {
 			CompoundNBT requestNbtTag = (CompoundNBT) requestTag;
 			craftingRequests.add(DigistoreCraftingRequest.read(requestNbtTag));

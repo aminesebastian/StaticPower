@@ -339,6 +339,13 @@ public class CableNetworkManager extends WorldSavedData {
 		markDirty();
 	}
 
+	public CableNetwork getNetworkById(long id) {
+		if (Networks.containsKey(id)) {
+			return Networks.get(id);
+		}
+		return null;
+	}
+
 	@Override
 	public void read(CompoundNBT tag) {
 		// Save the current parcel id.

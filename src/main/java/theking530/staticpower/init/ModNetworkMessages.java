@@ -7,13 +7,17 @@ import theking530.staticcore.gui.widgets.tabs.redstonecontrol.PacketRedstoneComp
 import theking530.staticpower.cables.attachments.digistore.digistorepatternencoder.PacketPatternEncoderClearRecipe;
 import theking530.staticpower.cables.attachments.digistore.digistorepatternencoder.PacketPatternEncoderEncode;
 import theking530.staticpower.cables.attachments.digistore.digistorepatternencoder.PacketPatternEncoderRecipeTypeChange;
-import theking530.staticpower.cables.attachments.digistore.digistoreterminal.PacketDigistoreTerminalFilters;
+import theking530.staticpower.cables.attachments.digistore.terminal.network.PacketDigistoreTerminalFilters;
+import theking530.staticpower.cables.digistore.crafting.network.PacketMakeDigistoreCraftingRequest;
+import theking530.staticpower.cables.digistore.crafting.network.PacketRequestDigistoreCraftRecalculation;
+import theking530.staticpower.cables.digistore.crafting.network.PacketSimulateDigistoreCraftingRequestResponse;
 import theking530.staticpower.cables.fluid.FluidCableUpdatePacket;
 import theking530.staticpower.cables.heat.HeatCableUpdatePacket;
 import theking530.staticpower.cables.item.ItemCableAddedPacket;
 import theking530.staticpower.cables.item.ItemCableRemovedPacket;
 import theking530.staticpower.integration.JEI.JEIRecipeTransferPacket;
 import theking530.staticpower.items.itemfilter.PacketItemFilter;
+import theking530.staticpower.network.PacketCloseCurrentContainer;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.network.TileEntityBasicSyncPacket;
 import theking530.staticpower.tileentities.components.fluids.PacketFluidContainerComponent;
@@ -52,5 +56,9 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(PacketPatternEncoderRecipeTypeChange.class);	
 		StaticPowerMessageHandler.registerMessage(PacketPatternEncoderEncode.class);	
 		StaticPowerMessageHandler.registerMessage(PacketPatternEncoderClearRecipe.class);	
+		StaticPowerMessageHandler.registerMessage(PacketRequestDigistoreCraftRecalculation.class);	
+		StaticPowerMessageHandler.registerMessage(PacketSimulateDigistoreCraftingRequestResponse.class);
+		StaticPowerMessageHandler.registerMessage(PacketMakeDigistoreCraftingRequest.class);	
+		StaticPowerMessageHandler.registerMessage(PacketCloseCurrentContainer.class);		
 	}
 }

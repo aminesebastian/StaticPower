@@ -258,5 +258,11 @@ public class EncodedDigistorePattern {
 		public boolean equalsIgnoringCount(EncodedIngredient other) {
 			return other.ingredient == ingredient;
 		}
+
+		@Override
+		public String toString() {
+			return "EncodedIngredient [stacks=" + Arrays.toString(ingredient.getMatchingStacks()) + "]";
+		}
+
 	}
 }

@@ -1,4 +1,4 @@
-package theking530.staticpower.cables.attachments.digistore.digistoreterminal;
+package theking530.staticpower.cables.attachments.digistore.terminal;
 
 import com.google.common.base.Strings;
 
@@ -18,6 +18,7 @@ import theking530.staticcore.gui.widgets.textinput.TextInputWidget;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.attachments.AbstractCableAttachmentGui;
+import theking530.staticpower.cables.attachments.digistore.digistoreterminal.DigistoreTerminal;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot.DigistoreItemCraftableState;
