@@ -71,7 +71,7 @@ public class StandardButton extends AbstractGuiWidget {
 
 	@Override
 	public EInputResult mouseClick(int mouseX, int mouseY, int button) {
-		if (!isVisible()) {
+		if (!isVisible() || !isEnabled()) {
 			return EInputResult.UNHANDLED;
 		}
 		if (this.isPointInsideBounds(new Vector2D(mouseX, mouseY))) {
@@ -99,7 +99,7 @@ public class StandardButton extends AbstractGuiWidget {
 		// Always just update the clicked state to NONE here.
 		currentlyPressedMouseButton = MouseButton.NONE;
 
-		if (!isVisible()) {
+		if (!isVisible() || !isEnabled()) {
 			return;
 		}
 
@@ -117,6 +117,15 @@ public class StandardButton extends AbstractGuiWidget {
 	}
 
 	protected void drawButtonOverlay(int buttonLeft, int buttonTop) {
+	}
+
+	@Override
+	public StandardButton setEnabled(boolean isEnabled) {
+		super.setEnabled(isEnabled);
+		if (!isEnabled) {
+			this.hovered = false;
+		}
+		return this;
 	}
 
 	protected void playSound(MouseButton state) {

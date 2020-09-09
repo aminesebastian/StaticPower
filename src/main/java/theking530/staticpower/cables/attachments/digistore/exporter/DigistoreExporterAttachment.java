@@ -18,6 +18,7 @@ import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
+import theking530.staticpower.cables.digistore.crafting.DigistoreNetworkCraftingManager.CraftingRequestType;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.init.ModUpgrades;
@@ -148,7 +149,7 @@ public class DigistoreExporterAttachment extends AbstractCableAttachment {
 								break;
 							}
 						} else if (hasUpgradeOfClass(attachment, CraftingUpgrade.class)) {
-							long craftingId = module.getCraftingManager().addCraftingRequest(filterItem, countToExtract, false).getId();
+							long craftingId = module.getCraftingManager().addCraftingRequest(filterItem, countToExtract, CraftingRequestType.EXECUTE).getId();
 							if (craftingId >= 0) {
 								setCurrentCraftingId(attachment, craftingId);
 							}

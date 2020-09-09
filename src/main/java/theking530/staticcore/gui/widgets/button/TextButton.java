@@ -4,6 +4,7 @@ import java.util.function.BiConsumer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Color;
 
 public class TextButton extends StandardButton {
@@ -19,7 +20,14 @@ public class TextButton extends StandardButton {
 
 	@Override
 	protected void drawButtonOverlay(int buttonLeft, int buttonTop) {
-		fontRenderer.drawStringWithShadow(text, buttonLeft + getSize().getX() / 2 - fontRenderer.getStringWidth(text) / 2, buttonTop - fontRenderer.FONT_HEIGHT / 2 + getSize().getY() / 2, new Color(255, 255, 255).encodeInInteger());
+		int width = fontRenderer.getStringWidth(text);
+
+		GuiDrawUtilities.drawStringWithSize(text, buttonLeft + 1 + getSize().getX() / 2 + width / 2, buttonTop - 1 + fontRenderer.FONT_HEIGHT / 2 + getSize().getY() / 2, 1.0f,
+				isEnabled() ? Color.EIGHT_BIT_WHITE : Color.EIGHT_BIT_WHITE, true);
+
+		if (!isEnabled()) {
+			GuiDrawUtilities.drawColoredRectangle(buttonLeft, buttonTop, getSize().getX(), getSize().getY(), 1.0f, new Color(128.0f, 128.0f, 128.0f, 75.0f));
+		}
 	}
 
 	public TextButton setText(String text) {

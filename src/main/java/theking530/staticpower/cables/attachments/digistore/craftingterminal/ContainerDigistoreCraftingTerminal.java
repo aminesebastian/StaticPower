@@ -1,4 +1,4 @@
-package theking530.staticpower.cables.attachments.digistore.digistorecraftingterminal;
+package theking530.staticpower.cables.attachments.digistore.craftingterminal;
 
 import java.util.Optional;
 
@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
-import theking530.staticpower.cables.attachments.digistore.terminal.AbstractContainerDigistoreTerminal;
+import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractContainerDigistoreTerminal;
 import theking530.staticpower.container.slots.CraftingRecipeInputSlot;
 import theking530.staticpower.container.slots.DigistoreCraftingOutputSlot;
 import theking530.staticpower.integration.JEI.IJEIReipceTransferHandler;

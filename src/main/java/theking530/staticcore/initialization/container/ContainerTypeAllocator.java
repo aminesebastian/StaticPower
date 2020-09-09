@@ -42,6 +42,10 @@ public class ContainerTypeAllocator<T extends Container, K extends ContainerScre
 		}
 	}
 
+	public IContainerFactory<T> getContainerFactory() {
+		return containerFactory;
+	}
+
 	public void registerScreen() {
 		if (screenRegistered) {
 			throw new RuntimeException("Attempted to register an already registered TileEntityTypeAllocator!");

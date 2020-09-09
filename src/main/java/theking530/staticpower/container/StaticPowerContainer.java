@@ -1,20 +1,29 @@
 package theking530.staticpower.container;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.ClickType;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.items.IItemHandler;
+import theking530.staticcore.gui.ContainerOpener;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
+import theking530.staticcore.network.NetworkGUI;
 import theking530.staticcore.utilities.TriFunction;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.container.slots.DummySlot;
@@ -26,16 +35,21 @@ import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.powered.autocrafter.PacketLockInventorySlot;
 
 public abstract class StaticPowerContainer extends Container {
+	public static final Logger LOGGER = LogManager.getLogger(StaticPowerContainer.class);
 	public static final int INVENTORY_COMPONENT_LOCK_MOUSE_BUTTON = 69;
+	public final ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator;
 	protected int playerInventoryStart;
 	protected int playerHotbarStart;
 	protected int playerInventoryEnd;
 	protected int playerHotbarEnd;
 	private final PlayerInventory playerInventory;
 	private final Field listenersField;
+	private ContainerOpener<?> opener;
+	private ITextComponent name;
 
-	protected StaticPowerContainer(ContainerTypeAllocator<?, ?> allocator, int id, PlayerInventory inv) {
+	protected StaticPowerContainer(ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator, int id, PlayerInventory inv) {
 		super(allocator.getType(), id);
+		this.allocator = allocator;
 		playerInventory = inv;
 		listenersField = getListnersField();
 		preInitializeContainer();
@@ -53,6 +67,54 @@ public abstract class StaticPowerContainer extends Container {
 	@SuppressWarnings("unchecked")
 	public <T extends Slot> T addSlotGeneric(T slotIn) {
 		return (T) super.addSlot(slotIn);
+	}
+
+	public PacketBuffer getRevertDataPacket() {
+		return null;
+	}
+
+	public StaticPowerContainer duplicateForRevert(int windowId, PlayerInventory inv, PacketBuffer data) {
+		try {
+			Constructor<? extends StaticPowerContainer> constructor = getClass().getConstructor(new Class[] { int.class, PlayerInventory.class, PacketBuffer.class });
+			return constructor.newInstance(windowId, inv, data);
+		} catch (Exception e) {
+			LOGGER.error(
+					"An error occured when attempting to duplicate the current container for reverting. You may either need to implement getRevertDataPacket() or may need to provide a custom implementation for duplicateForRevert().",
+					e);
+		}
+		return null;
+	}
+
+	public StaticPowerContainer setOpener(ContainerOpener<?> opener) {
+		this.opener = opener;
+		return this;
+	}
+
+	public boolean canRevert() {
+		return opener != null;
+	}
+
+	public void revertToParent() {
+		// Open prompt for crafting if we can actually craft some.
+		// Create the container opener.
+		ContainerOpener<?> requestUi = new ContainerOpener<>(opener.getParent().getName(), (x, y, z) -> opener.getParent().duplicateForRevert(x, y, opener.getParent().getRevertDataPacket()));
+
+		// Open the UI.
+		NetworkGUI.openGui((ServerPlayerEntity) getPlayerInventory().player, requestUi, buff -> {
+			PacketBuffer parent = opener.getParent().getRevertDataPacket();
+			if (parent != null) {
+				parent.resetReaderIndex();
+				buff.writeBytes(parent);
+			}
+		});
+	}
+
+	public void setName(ITextComponent name) {
+		this.name = name;
+	}
+
+	public ITextComponent getName() {
+		return this.name;
 	}
 
 	protected void addPlayerInventory(PlayerInventory invPlayer, int xPosition, int yPosition) {

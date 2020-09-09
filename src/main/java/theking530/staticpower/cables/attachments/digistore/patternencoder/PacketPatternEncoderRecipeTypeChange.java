@@ -1,22 +1,22 @@
-package theking530.staticpower.cables.attachments.digistore.digistorepatternencoder;
+package theking530.staticpower.cables.attachments.digistore.patternencoder;
 
 import java.util.function.Supplier;
 
 import net.minecraft.inventory.container.Container;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
-import theking530.staticpower.cables.attachments.digistore.digistorepatternencoder.DigistorePatternEncoder.RecipeEncodingType;
+import theking530.staticpower.cables.attachments.digistore.patternencoder.DigistorePatternEncoder.RecipeEncodingType;
 import theking530.staticpower.network.NetworkMessage;
 
-public class PacketPatternEncoderEncode extends NetworkMessage {
+public class PacketPatternEncoderRecipeTypeChange extends NetworkMessage {
 	protected RecipeEncodingType recipeType;
 	protected int windowId;
 
-	public PacketPatternEncoderEncode() {
+	public PacketPatternEncoderRecipeTypeChange() {
 
 	}
 
-	public PacketPatternEncoderEncode(int windowId, RecipeEncodingType recipeType) {
+	public PacketPatternEncoderRecipeTypeChange(int windowId, RecipeEncodingType recipeType) {
 		this.recipeType = recipeType;
 		this.windowId = windowId;
 	}
@@ -39,7 +39,7 @@ public class PacketPatternEncoderEncode extends NetworkMessage {
 			Container openContainer = ctx.get().getSender().openContainer;
 			if (openContainer != null && openContainer instanceof ContainerDigistorePatternEncoder && openContainer.windowId == windowId) {
 				ContainerDigistorePatternEncoder encoderContainer = (ContainerDigistorePatternEncoder) openContainer;
-				encoderContainer.attemptEncode();
+				encoderContainer.setCurrentRecipeType(recipeType);
 			}
 		});
 	}

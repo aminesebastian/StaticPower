@@ -7,7 +7,7 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
-import theking530.staticpower.cables.attachments.digistore.terminal.autocrafting.ContainerCraftingAmount;
+import theking530.staticpower.cables.attachments.digistore.terminalbase.autocrafting.ContainerCraftingAmount;
 import theking530.staticpower.network.NetworkMessage;
 
 public class PacketRequestDigistoreCraftRecalculation extends NetworkMessage {

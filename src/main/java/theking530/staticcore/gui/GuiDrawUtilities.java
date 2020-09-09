@@ -139,7 +139,7 @@ public class GuiDrawUtilities {
 	 * @param color
 	 * @param withShadow
 	 */
-	public static void drawStringWithSize(String text, int xPos, int yPos, float scale, Color color, boolean withShadow) {
+	public static void drawStringWithSize(String text, float xPos, float yPos, float scale, Color color, boolean withShadow) {
 		final float scaleFactor = scale;
 		final float inverseScaleFactor = 1.0f / scaleFactor;
 		final int offset = 0;

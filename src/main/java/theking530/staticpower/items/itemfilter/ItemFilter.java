@@ -21,10 +21,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import theking530.staticcore.network.NetworkGUI;
 import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.items.ItemStackInventoryCapabilityProvider;
 import theking530.staticpower.items.StaticPowerItem;
@@ -77,7 +77,7 @@ public class ItemFilter extends StaticPowerItem {
 	@Override
 	protected ActionResult<ItemStack> onStaticPowerItemRightClicked(World world, PlayerEntity player, Hand hand, ItemStack item) {
 		if (!world.isRemote && !player.isSneaking()) {
-			NetworkHooks.openGui((ServerPlayerEntity) player, new ItemFilterContainerProvider(item), buff -> {
+			NetworkGUI.openGui((ServerPlayerEntity) player, new ItemFilterContainerProvider(item), buff -> {
 				buff.writeInt(player.inventory.getSlotFor(item));
 			});
 			return ActionResult.resultSuccess(item);

@@ -1,4 +1,4 @@
-package theking530.staticpower.cables.attachments.digistore.terminal;
+package theking530.staticpower.cables.attachments.digistore.terminalbase;
 
 public enum DigistoreSearchMode {
 	DEFAULT, ONE_WAY, TWO_WAY;

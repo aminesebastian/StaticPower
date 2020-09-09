@@ -25,6 +25,7 @@ public abstract class AbstractGuiWidget {
 	private Vector2D ownerPosition;
 	private Vector2D ownerSize;
 	private boolean isVisible;
+	private boolean isEnabled;
 	private boolean tooltipsDisabled;
 	private boolean autoHandleTooltipBounds;
 	private RectangleBounds cachedBounds;
@@ -36,6 +37,7 @@ public abstract class AbstractGuiWidget {
 		ownerPosition = new Vector2D(0.0f, 0.0f);
 		ownerSize = new Vector2D(0.0f, 0.0f);
 		isVisible = true;
+		isEnabled = true;
 		autoHandleTooltipBounds = true;
 	}
 
@@ -81,6 +83,15 @@ public abstract class AbstractGuiWidget {
 	}
 
 	/**
+	 * Check if the widget is enabled.
+	 * 
+	 * @return
+	 */
+	public boolean isEnabled() {
+		return isEnabled;
+	}
+
+	/**
 	 * Sets the visibility of the widget.
 	 * 
 	 * @param isVisible
@@ -88,6 +99,17 @@ public abstract class AbstractGuiWidget {
 	 */
 	public AbstractGuiWidget setVisible(boolean isVisible) {
 		this.isVisible = isVisible;
+		return this;
+	}
+
+	/**
+	 * Sets the enabled state of this widget.
+	 * 
+	 * @param isEnabled
+	 * @return
+	 */
+	public AbstractGuiWidget setEnabled(boolean isEnabled) {
+		this.isEnabled = isEnabled;
 		return this;
 	}
 

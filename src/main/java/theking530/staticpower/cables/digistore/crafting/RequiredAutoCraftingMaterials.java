@@ -11,6 +11,7 @@ import net.minecraft.item.crafting.Ingredient;
 public class RequiredAutoCraftingMaterials {
 	private final List<AutoCraftingStep> steps;
 	private final List<RequiredAutoCraftingMaterial> materials;
+	private boolean isMissingMaterials;
 
 	public RequiredAutoCraftingMaterials(List<AutoCraftingStep> steps) {
 		this.steps = steps;
@@ -27,28 +28,40 @@ public class RequiredAutoCraftingMaterials {
 			return;
 		}
 
-		for (int i = 0; i < steps.size(); i++) {
+		for (int i = 1; i < steps.size(); i++) {
 			AutoCraftingStep step = steps.get(i);
+			RequiredAutoCraftingMaterial material = null;
 			if (step.getCraftingPattern() != null) {
-				RequiredAutoCraftingMaterial material = this.getMaterialForItem(step.getCraftingPattern().getOutput());
+				material = this.getMaterialForItem(step.getCraftingPattern().getOutput());
 				if (material == null) {
-					material = new RequiredAutoCraftingMaterial(step.getCraftingPattern().getOutput(), step.getTotalRequiredAmount(), step.getAmountRemainingToCraft());
+					material = new RequiredAutoCraftingMaterial(step.getCraftingPattern().getOutput(), step.getTotalRequiredAmount(), step.getAmountRemainingToCraft(), step.getStoredAmount());
 					materials.add(material);
 				} else {
 					material.addAmountToCraft(step.getAmountRemainingToCraft());
 					material.addRequiredAmount(step.getTotalRequiredAmount());
+					material.addStoredAmount(step.getStoredAmount());
 				}
 			} else {
-				RequiredAutoCraftingMaterial material = getMaterialForItem(step.getIngredientToCraft());
+				material = getMaterialForItem(step.getIngredientToCraft());
 				if (material == null) {
-					material = new RequiredAutoCraftingMaterial(step.getIngredientToCraft(), step.getTotalRequiredAmount(), step.getAmountRemainingToCraft());
+					material = new RequiredAutoCraftingMaterial(step.getIngredientToCraft(), step.getTotalRequiredAmount(), step.getAmountRemainingToCraft(), step.getStoredAmount());
 					materials.add(material);
 				} else {
 					material.addAmountToCraft(step.getAmountRemainingToCraft());
 					material.addRequiredAmount(step.getTotalRequiredAmount());
+					material.addStoredAmount(step.getStoredAmount());
 				}
 			}
+
+			// Check if we're missing materials.
+			if (material.getMissingAmount() > 0) {
+				isMissingMaterials = true;
+			}
 		}
+	}
+
+	public boolean isMissingMaterials() {
+		return isMissingMaterials;
 	}
 
 	@Nullable
@@ -75,17 +88,20 @@ public class RequiredAutoCraftingMaterials {
 		private final Ingredient item;
 		private int amountRequired;
 		private int amountToCraft;
+		private int amountStored;
 
-		public RequiredAutoCraftingMaterial(ItemStack item, int amountRequired, int amountToCraft) {
+		public RequiredAutoCraftingMaterial(ItemStack item, int amountRequired, int amountToCraft, int amountStored) {
 			this.item = Ingredient.fromStacks(item);
 			this.amountRequired = amountRequired;
 			this.amountToCraft = amountToCraft;
+			this.amountStored = amountStored;
 		}
 
-		public RequiredAutoCraftingMaterial(Ingredient item, int amountRequired, int amountToCraft) {
+		public RequiredAutoCraftingMaterial(Ingredient item, int amountRequired, int amountToCraft, int amountStored) {
 			this.item = item;
 			this.amountRequired = amountRequired;
 			this.amountToCraft = amountToCraft;
+			this.amountStored = amountStored;
 		}
 
 		public void addRequiredAmount(int amount) {
@@ -96,8 +112,16 @@ public class RequiredAutoCraftingMaterials {
 			amountToCraft += amount;
 		}
 
+		public void addStoredAmount(int amount) {
+			amountStored += amount;
+		}
+
 		public Ingredient getItem() {
 			return item;
+		}
+
+		public int getAmountStored() {
+			return amountStored;
 		}
 
 		public int getAmountRequired() {
@@ -106,6 +130,10 @@ public class RequiredAutoCraftingMaterials {
 
 		public int getAmountToCraft() {
 			return amountToCraft;
+		}
+
+		public int getMissingAmount() {
+			return Math.max(0, amountRequired - amountStored - amountToCraft);
 		}
 	}
 }

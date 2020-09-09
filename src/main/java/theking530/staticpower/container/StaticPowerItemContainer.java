@@ -9,7 +9,7 @@ import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 public abstract class StaticPowerItemContainer<T extends Item> extends StaticPowerContainer {
 	private final ItemStack itemstack;
 
-	protected StaticPowerItemContainer(ContainerTypeAllocator<?, ?> allocator, int id, PlayerInventory inv, ItemStack itemStack) {
+	protected StaticPowerItemContainer(ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator, int id, PlayerInventory inv, ItemStack itemStack) {
 		super(allocator, id, inv);
 		itemstack = itemStack;
 		initializeContainer(); // This has to be called here and not in the super.

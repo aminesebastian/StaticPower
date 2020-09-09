@@ -12,7 +12,6 @@ import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.Rectangle2d;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.ClickType;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.items.SlotItemHandler;
@@ -44,7 +43,7 @@ import theking530.staticpower.tileentities.components.items.InventoryComponent;
  *
  * @param <T> The container type.
  */
-public abstract class StaticPowerContainerGui<T extends Container> extends ContainerScreen<T> {
+public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> extends ContainerScreen<T> {
 	/** The default location to render the inventory label. */
 	public static final Vector2D DEFAULT_INVENTORY_LABEL_LOCATION = new Vector2D(8, 97);
 
@@ -89,6 +88,7 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 		lockedSprite = new SpriteDrawable(StaticPowerSprites.DIGISTORE_LOCKED_INDICATOR, 8, 8);
 		lockedSprite.setTint(new Color(1.0f, 1.0f, 1.0f, 0.95f));
 		registerWidget(tabManager = new GuiTabManager(this));
+		container.setName(title);
 	}
 
 	@Override()
@@ -612,9 +612,9 @@ public abstract class StaticPowerContainerGui<T extends Container> extends Conta
 		if (Math.abs(xSize - sizeTarget.getXi()) > 0) {
 			int minimumAnimationVal = sizeTarget.getXi() - xSize > 0 ? 1 : -1;
 			if (minimumAnimationVal == 1) {
-				xSize = xSize + Math.max(minimumAnimationVal, (sizeTarget.getXi() - xSize) / 15);
+				xSize = xSize + Math.max(minimumAnimationVal, (sizeTarget.getXi() - xSize) / 10);
 			} else {
-				xSize = xSize + Math.min(minimumAnimationVal, (sizeTarget.getXi() - xSize) / 15);
+				xSize = xSize + Math.min(minimumAnimationVal, (sizeTarget.getXi() - xSize) / 10);
 			}
 			isScreenSizeChanging = true;
 			changeOccured = true;

@@ -1,4 +1,4 @@
-package theking530.staticpower.cables.attachments.digistore.digistorepatternencoder;
+package theking530.staticpower.cables.attachments.digistore.patternencoder;
 
 import javax.annotation.Nullable;
 
@@ -10,7 +10,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
-import theking530.staticpower.cables.attachments.digistore.terminal.AbstractDigistoreTerminalAttachment;
+import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractDigistoreTerminalAttachment;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.items.CableAttachmentInventoryCapabilityProvider;
 

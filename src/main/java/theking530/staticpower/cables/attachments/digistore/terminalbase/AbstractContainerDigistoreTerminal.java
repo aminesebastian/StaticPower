@@ -1,4 +1,4 @@
-package theking530.staticpower.cables.attachments.digistore.terminal;
+package theking530.staticpower.cables.attachments.digistore.terminalbase;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +16,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import theking530.staticcore.gui.ContainerOpener;
@@ -25,28 +24,25 @@ import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.attachments.AbstractCableAttachmentContainer;
-import theking530.staticpower.cables.attachments.digistore.digistoreterminal.DigistoreTerminal;
-import theking530.staticpower.cables.attachments.digistore.iobus.ContainerDigistoreIOBus;
-import theking530.staticpower.cables.attachments.digistore.iobus.GuiDigistoreIOBus;
-import theking530.staticpower.cables.attachments.digistore.terminal.autocrafting.ContainerCraftingAmount;
-import theking530.staticpower.cables.attachments.digistore.terminal.network.PacketDigistoreTerminalFilters;
+import theking530.staticpower.cables.attachments.digistore.terminal.DigistoreTerminal;
+import theking530.staticpower.cables.attachments.digistore.terminalbase.autocrafting.ContainerCraftingAmount;
+import theking530.staticpower.cables.attachments.digistore.terminalbase.network.PacketDigistoreTerminalFilters;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot.DigistoreItemCraftableState;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.digistore.crafting.CraftingRequestResponse;
+import theking530.staticpower.cables.digistore.crafting.DigistoreNetworkCraftingManager.CraftingRequestType;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
+import theking530.staticpower.container.StaticPowerContainer;
 import theking530.staticpower.container.slots.DigistoreSlot;
 import theking530.staticpower.container.slots.DummySlot;
 import theking530.staticpower.container.slots.PlayerArmorItemSlot;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCableAttachment> extends AbstractCableAttachmentContainer<T> {
-	public static final ContainerTypeAllocator<ContainerDigistoreIOBus, GuiDigistoreIOBus> TYPE = new ContainerTypeAllocator<>("cable_attachment_digistore_io_bus", ContainerDigistoreIOBus::new,
-			GuiDigistoreIOBus::new);
-
 	public static final int DEFAULT_ITEMS_PER_ROW = 9;
 	public static final int DEFAULT_MAX_ROWS_ON_SCREEN = 8;
 	public static final Vector2D DEFAULT_INVENTORY_START = new Vector2D(8, 22);
@@ -63,8 +59,8 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 	private DigistoreSimulatedItemStackHandler clientSimulatedInventory;
 	private boolean resyncInv;
 
-	public AbstractContainerDigistoreTerminal(ContainerTypeAllocator<?, ?> allocator, int windowId, PlayerInventory playerInventory, ItemStack attachment, Direction attachmentSide,
-			AbstractCableProviderComponent cableComponent) {
+	public AbstractContainerDigistoreTerminal(ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator, int windowId, PlayerInventory playerInventory, ItemStack attachment,
+			Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
 		super(allocator, windowId, playerInventory, attachment, attachmentSide, cableComponent);
 	}
 
@@ -137,21 +133,19 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 							// out like usual.
 							if (shouldCraft) {
 								// Calculate the max craftable.
-								CraftingRequestResponse craftingResponse = digistoreModule.getCraftingManager().addCraftingRequest(stackInSlot, Integer.MAX_VALUE, true);
+								CraftingRequestResponse craftingResponse = digistoreModule.getCraftingManager().addCraftingRequest(stackInSlot, 1, CraftingRequestType.SIMULATE_NO_LIMITS);
 
 								// Open prompt for crafting if we can actually craft some.
-								if (craftingResponse.getCraftableAmount() > 0) {
-									// Create the container opener.
-									ContainerOpener requestUi = new ContainerOpener(new StringTextComponent("Crafting Request"), (id, inv, ply) -> {
-										return new ContainerCraftingAmount(id, inv, craftingResponse, digistoreModule.getNetwork().getId());
-									});
+								// Create the container opener.
+								ContainerOpener<?> requestUi = new ContainerOpener<>(new StringTextComponent("Crafting Request"), (id, inv, data) -> {
+									return new ContainerCraftingAmount(id, inv, craftingResponse, digistoreModule.getNetwork().getId());
+								}).fromParent(this);
 
-									// Open the UI.
-									NetworkHooks.openGui((ServerPlayerEntity) player, requestUi, buff -> {
-										buff.writeCompoundTag(craftingResponse.serialze());
-										buff.writeLong(digistoreModule.getNetwork().getId());
-									});
-								}
+								// Open the UI.
+								requestUi.open((ServerPlayerEntity) player, buff -> {
+									buff.writeCompoundTag(craftingResponse.serialze());
+									buff.writeLong(digistoreModule.getNetwork().getId());
+								});
 							} else {
 								// Get the half stack size.
 								int halfStackSize = actualSlotContents.getCount() >= actualSlotContents.getMaxStackSize() ? (actualSlotContents.getMaxStackSize() + 1) / 2

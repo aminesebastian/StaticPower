@@ -1,4 +1,4 @@
-package theking530.staticpower.cables.attachments.digistore.digistorepatternencoder;
+package theking530.staticpower.cables.attachments.digistore.patternencoder;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
@@ -10,8 +10,8 @@ import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticcore.utilities.Vector2D;
-import theking530.staticpower.cables.attachments.digistore.digistorepatternencoder.DigistorePatternEncoder.RecipeEncodingType;
-import theking530.staticpower.cables.attachments.digistore.terminal.AbstractGuiDigistoreTerminal;
+import theking530.staticpower.cables.attachments.digistore.patternencoder.DigistorePatternEncoder.RecipeEncodingType;
+import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractGuiDigistoreTerminal;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 

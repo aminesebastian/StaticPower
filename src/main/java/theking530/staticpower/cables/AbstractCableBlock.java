@@ -21,9 +21,9 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkHooks;
 import theking530.api.wrench.RegularWrenchMode;
 import theking530.api.wrench.SneakWrenchMode;
+import theking530.staticcore.network.NetworkGUI;
 import theking530.staticpower.blocks.StaticPowerBlock;
 import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
 import theking530.staticpower.cables.CableBoundsHoverResult.CableBoundsHoverType;
@@ -86,7 +86,7 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 				// If the item requests a GUI, open it.
 				if (attachmentItem.hasGui(attachment)) {
 					if (!world.isRemote) {
-						NetworkHooks.openGui((ServerPlayerEntity) player, attachmentItem.getContainerProvider(attachment, component, hoveredDirection), buff -> {
+						NetworkGUI.openGui((ServerPlayerEntity) player, attachmentItem.getContainerProvider(attachment, component, hoveredDirection), buff -> {
 							buff.writeInt(hoveredDirection.ordinal());
 							buff.writeBlockPos(pos);
 						});

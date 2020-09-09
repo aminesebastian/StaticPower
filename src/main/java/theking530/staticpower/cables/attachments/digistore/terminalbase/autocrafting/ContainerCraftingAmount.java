@@ -1,4 +1,4 @@
-package theking530.staticpower.cables.attachments.digistore.terminal.autocrafting;
+package theking530.staticpower.cables.attachments.digistore.terminalbase.autocrafting;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -8,13 +8,14 @@ import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.digistore.crafting.CraftingRequestResponse;
+import theking530.staticpower.cables.digistore.crafting.DigistoreNetworkCraftingManager.CraftingRequestType;
 import theking530.staticpower.cables.digistore.crafting.network.PacketRequestDigistoreCraftRecalculation;
 import theking530.staticpower.cables.digistore.crafting.network.PacketSimulateDigistoreCraftingRequestResponse;
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
+import theking530.staticpower.container.PacketCloseCurrentContainer;
 import theking530.staticpower.container.StaticPowerContainer;
-import theking530.staticpower.network.PacketCloseCurrentContainer;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class ContainerCraftingAmount extends StaticPowerContainer {
@@ -22,7 +23,6 @@ public class ContainerCraftingAmount extends StaticPowerContainer {
 	public static final ContainerTypeAllocator<ContainerCraftingAmount, GuiCraftingAmount> TYPE = new ContainerTypeAllocator<>("crafting_request", ContainerCraftingAmount::new,
 			GuiCraftingAmount::new);
 
-	private final int maximumToCraft;
 	private CraftingRequestResponse craftingResponse;
 	private long networkId;
 
@@ -33,16 +33,11 @@ public class ContainerCraftingAmount extends StaticPowerContainer {
 	public ContainerCraftingAmount(int windowId, PlayerInventory playerInventory, CraftingRequestResponse craftingResponse, long networkId) {
 		super(TYPE, windowId, playerInventory);
 		this.craftingResponse = craftingResponse;
-		this.maximumToCraft = craftingResponse.getCraftableAmount();
 		this.networkId = networkId;
 	}
 
 	public CraftingRequestResponse getCraftingResponse() {
 		return craftingResponse;
-	}
-
-	public int getMaxCraftableAmount() {
-		return maximumToCraft;
 	}
 
 	public void updateCraftingResponse(ItemStack target, int amount) {
@@ -52,7 +47,7 @@ public class ContainerCraftingAmount extends StaticPowerContainer {
 			CableNetwork network = CableNetworkManager.get(getPlayerInventory().player.world).getNetworkById(networkId);
 			DigistoreNetworkModule digistoreModule = network.getModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE);
 			if (digistoreModule != null && digistoreModule.isManagerPresent()) {
-				CraftingRequestResponse newResponse = digistoreModule.getCraftingManager().addCraftingRequest(target, amount, true);
+				CraftingRequestResponse newResponse = digistoreModule.getCraftingManager().addCraftingRequest(target, amount, CraftingRequestType.SIMULATE_NO_LIMITS);
 				PacketSimulateDigistoreCraftingRequestResponse newCraftingRequest = new PacketSimulateDigistoreCraftingRequestResponse(windowId, newResponse);
 				StaticPowerMessageHandler.sendMessageToPlayer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, (ServerPlayerEntity) getPlayerInventory().player, newCraftingRequest);
 			}
@@ -72,7 +67,7 @@ public class ContainerCraftingAmount extends StaticPowerContainer {
 			// If the module is valid and we still have the manager present, add the
 			// request.
 			if (digistoreModule != null && digistoreModule.isManagerPresent()) {
-				digistoreModule.getCraftingManager().addCraftingRequest(target, amount, false);
+				digistoreModule.getCraftingManager().addCraftingRequest(target, amount, CraftingRequestType.EXECUTE);
 				StaticPowerMessageHandler.sendMessageToPlayer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, (ServerPlayerEntity) getPlayerInventory().player,
 						new PacketCloseCurrentContainer(windowId));
 			}

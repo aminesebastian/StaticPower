@@ -1,5 +1,6 @@
 package theking530.staticpower.cables.attachments;
 
+import io.netty.buffer.Unpooled;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
@@ -17,7 +18,7 @@ public class AbstractCableAttachmentContainer<T extends AbstractCableAttachment>
 	private final AbstractCableProviderComponent cableComponent;
 	private final ItemStack attachment;
 
-	protected AbstractCableAttachmentContainer(ContainerTypeAllocator<?, ?> allocator, int id, PlayerInventory inv, ItemStack attachment, Direction attachmentSide,
+	protected AbstractCableAttachmentContainer(ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator, int id, PlayerInventory inv, ItemStack attachment, Direction attachmentSide,
 			AbstractCableProviderComponent cableComponent) {
 		super(allocator, id, inv);
 		this.attachment = attachment;
@@ -59,6 +60,15 @@ public class AbstractCableAttachmentContainer<T extends AbstractCableAttachment>
 	@Override
 	public boolean canInteractWith(PlayerEntity player) {
 		return true;
+	}
+
+	@Override
+	public PacketBuffer getRevertDataPacket() {
+		PacketBuffer extraData = new PacketBuffer(Unpooled.buffer());
+		extraData.writeInt(attachmentSide.ordinal());
+		extraData.writeBlockPos(cableComponent.getPos());
+		extraData.readerIndex(0);
+		return extraData;
 	}
 
 	/**

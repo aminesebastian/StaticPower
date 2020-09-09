@@ -26,7 +26,7 @@ public abstract class StaticPowerTileEntityContainer<T extends TileEntityBase> e
 	private int syncTime;
 	private int syncTimer;
 
-	public StaticPowerTileEntityContainer(ContainerTypeAllocator<?, ?> allocator, int windowId, PlayerInventory inv, T owner) {
+	public StaticPowerTileEntityContainer(ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator, int windowId, PlayerInventory inv, T owner) {
 		super(allocator, windowId, inv);
 		owningTileEntity = owner;
 		// This has to be called here and not in the super as the super initializes

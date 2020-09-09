@@ -12,6 +12,7 @@ import net.minecraftforge.common.util.Constants;
 public class CraftingRequestResponse {
 	private final long id;
 	private final int craftableAmount;
+	private int currentCraftingStep;
 	private final ItemStack craftingTarget;
 	private final List<AutoCraftingStep> steps;
 	private final RequiredAutoCraftingMaterials billOfMaterials;
@@ -21,6 +22,7 @@ public class CraftingRequestResponse {
 		this.craftableAmount = craftableAmount;
 		this.craftingTarget = craftingTarget;
 		this.steps = steps;
+		this.currentCraftingStep = 0;
 		this.billOfMaterials = new RequiredAutoCraftingMaterials(steps);
 	}
 
@@ -40,6 +42,18 @@ public class CraftingRequestResponse {
 		return craftableAmount;
 	}
 
+	public AutoCraftingStep peekTopStep() {
+		return steps.get(currentCraftingStep);
+	}
+
+	public void completeCurrentStep() {
+		currentCraftingStep++;
+	}
+
+	public boolean isDone() {
+		return currentCraftingStep >= steps.size();
+	}
+
 	public RequiredAutoCraftingMaterials getBillOfMaterials() {
 		return billOfMaterials;
 	}
@@ -53,6 +67,9 @@ public class CraftingRequestResponse {
 
 		// Store the amount.
 		output.putInt("amount", craftableAmount);
+
+		// Store the current step.
+		output.putInt("current_step", currentCraftingStep);
 
 		// Store the crafting target.
 		CompoundNBT craftingTargetNbt = new CompoundNBT();
@@ -76,6 +93,9 @@ public class CraftingRequestResponse {
 		// Read the amount.
 		int amount = nbt.getInt("amount");
 
+		// Read the current step.
+		int currentCraftingStep = nbt.getInt("current_step");
+
 		// Read the crafting target.
 		ItemStack target = ItemStack.read(nbt.getCompound("target"));
 
@@ -87,6 +107,8 @@ public class CraftingRequestResponse {
 			steps.add(AutoCraftingStep.read(stepTag));
 		}
 
-		return new CraftingRequestResponse(id, amount, target, steps);
+		CraftingRequestResponse output = new CraftingRequestResponse(id, amount, target, steps);
+		output.currentCraftingStep = currentCraftingStep;
+		return output;
 	}
 }

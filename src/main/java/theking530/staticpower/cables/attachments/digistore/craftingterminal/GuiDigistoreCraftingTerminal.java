@@ -1,4 +1,4 @@
-package theking530.staticpower.cables.attachments.digistore.digistorecraftingterminal;
+package theking530.staticpower.cables.attachments.digistore.craftingterminal;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
@@ -7,7 +7,7 @@ import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticcore.utilities.Vector2D;
-import theking530.staticpower.cables.attachments.digistore.terminal.AbstractGuiDigistoreTerminal;
+import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractGuiDigistoreTerminal;
 
 public class GuiDigistoreCraftingTerminal extends AbstractGuiDigistoreTerminal<ContainerDigistoreCraftingTerminal, DigistoreCraftingTerminal> {
 	private ArrowProgressBar progressBar;

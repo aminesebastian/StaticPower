@@ -7,6 +7,7 @@ package theking530.staticcore.utilities;
  *
  */
 public class Color extends Vector4D {
+	public static final Color EIGHT_BIT_RED = new Color(255.0f, 0.0f, 0.0f, 255.0f);
 	public static final Color EIGHT_BIT_WHITE = new Color(255.0f, 255.0f, 255.0f, 255.0f);
 	public static final Color EIGHT_BIT_GREY = new Color(128.0f, 128.0f, 128.0f, 255.0f);
 	public static final Color EIGHT_BIT_DARK_GREY = new Color(63.0f, 63.0f, 63.0f, 255.0f);

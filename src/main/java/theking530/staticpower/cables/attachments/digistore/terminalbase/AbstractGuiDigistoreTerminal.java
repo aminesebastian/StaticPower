@@ -1,4 +1,4 @@
-package theking530.staticpower.cables.attachments.digistore.terminal;
+package theking530.staticpower.cables.attachments.digistore.terminalbase;
 
 import com.google.common.base.Strings;
 
@@ -18,7 +18,7 @@ import theking530.staticcore.gui.widgets.textinput.TextInputWidget;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.attachments.AbstractCableAttachmentGui;
-import theking530.staticpower.cables.attachments.digistore.digistoreterminal.DigistoreTerminal;
+import theking530.staticpower.cables.attachments.digistore.terminal.DigistoreTerminal;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot.DigistoreItemCraftableState;
@@ -29,11 +29,16 @@ import theking530.staticpower.integration.JEI.PluginJEI;
 import theking530.staticpower.utilities.MetricConverter;
 
 public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDigistoreTerminal<K>, K extends AbstractCableAttachment> extends AbstractCableAttachmentGui<T, K> {
+	public enum TerminalViewType {
+		ITEMS, CRAFTING;
+	}
+
+	public TerminalViewType viewType;
 	public TextInputWidget searchBar;
 	public ScrollBarWidget scrollBar;
 	public SpriteButton sortButton;
 	public SpriteButton searchModeButton;
-
+	
 	public AbstractGuiDigistoreTerminal(T container, PlayerInventory invPlayer, ITextComponent name, int width, int height) {
 		super(container, invPlayer, name, width, height);
 
@@ -66,6 +71,18 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 
 		// Add island for the armor.
 		registerWidget(new GuiIslandWidget(-24, 104, 30, 80));
+
+		// Add island for the regular tab.
+		registerWidget(new GuiIslandWidget(this.xSize - 4, 143, 25, 24));
+		registerWidget(new SpriteButton(this.xSize - 1, 145, 20, 20, StaticPowerSprites.FURNACE_ICON, null, (a, b) -> {
+			viewType = TerminalViewType.ITEMS;
+		}).setShouldDrawButtonBackground(false));
+
+		// Add island for the crafting tab.
+		registerWidget(new GuiIslandWidget(this.xSize - 4, 168, 25, 24));
+		registerWidget(new SpriteButton(this.xSize - 1, 170, 20, 20, StaticPowerSprites.CRAFTING_TABLE_ICON, null, (a, b) -> {
+			viewType = TerminalViewType.CRAFTING;
+		}).setShouldDrawButtonBackground(false));
 
 		// Set default settings for tooltips/sprites.
 		updateSortAndFilter();
