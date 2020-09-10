@@ -222,13 +222,16 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		// If we clicked on an input container slot and we held control, don't raise the
 		// regular clicked chain. Use the SWAP just as a placeholder.
 		if (Screen.hasControlDown()) {
-			handleMouseClick(hoveredSlot, hoveredSlot.slotNumber, StaticPowerContainer.INVENTORY_COMPONENT_LOCK_MOUSE_BUTTON, ClickType.SWAP);
-			return true;
-		} else {
-			boolean superCallResult = super.mouseClicked(mouseX, mouseY, button);
-			widgetContainer.handleMouseClick(mouseX, mouseY, button);
-			return superCallResult;
+			if (hoveredSlot != null) {
+				handleMouseClick(hoveredSlot, hoveredSlot.slotNumber, StaticPowerContainer.INVENTORY_COMPONENT_LOCK_MOUSE_BUTTON, ClickType.SWAP);
+				return true;
+			}
+			return false;
 		}
+
+		boolean superCallResult = super.mouseClicked(mouseX, mouseY, button);
+		widgetContainer.handleMouseClick(mouseX, mouseY, button);
+		return superCallResult;
 	}
 
 	@Override

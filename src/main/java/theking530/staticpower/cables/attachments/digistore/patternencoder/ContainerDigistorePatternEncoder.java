@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
@@ -21,12 +19,12 @@ import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.DigistorePatternEncoder.RecipeEncodingType;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractContainerDigistoreTerminal;
+import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractGuiDigistoreTerminal.TerminalViewType;
 import theking530.staticpower.cables.digistore.crafting.EncodedDigistorePattern;
 import theking530.staticpower.container.FakeCraftingInventory;
 import theking530.staticpower.container.slots.EncodedPatternSlot;
 import theking530.staticpower.container.slots.OutputSlot;
 import theking530.staticpower.container.slots.PhantomSlot;
-import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.integration.JEI.IJEIReipceTransferHandler;
 
@@ -38,6 +36,7 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 	private ItemStackHandler encoderInventory;
 	private RecipeEncodingType currentRecipeType;
 	private List<PhantomSlot> inputSlots;
+	private PhantomSlot outputSlot;
 
 	public ContainerDigistorePatternEncoder(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, getAttachmentItemStack(inv, data), getAttachmentSide(data), getCableComponent(inv, data));
@@ -70,17 +69,32 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 						super.onSlotChanged();
 						updateOutputSlot();
 					}
+
+					@Override
+					public boolean isEnabled() {
+						return getViewType() == TerminalViewType.ITEMS;
+					}
 				});
 				inputSlots.add((PhantomSlot) slot);
 			}
 		}
 
 		// Add the pattern slots.
-		addSlot(new EncodedPatternSlot(encoderInventory, new ItemStack(ModItems.PatternCard), DigistorePatternEncoder.PATTERN_INPUT_SLOT, 152, 118));
-		addSlot(new OutputSlot(encoderInventory, ModItems.PatternCard.getBlankEncodedCardForPreview(), DigistorePatternEncoder.PATTERN_OUTPUT_SLOT, 152, 154));
+		addSlot(new EncodedPatternSlot(encoderInventory, new ItemStack(ModItems.PatternCard), DigistorePatternEncoder.PATTERN_INPUT_SLOT, 152, 118) {
+			@Override
+			public boolean isEnabled() {
+				return getViewType() == TerminalViewType.ITEMS;
+			}
+		});
+		addSlot(new OutputSlot(encoderInventory, ModItems.PatternCard.getBlankEncodedCardForPreview(), DigistorePatternEncoder.PATTERN_OUTPUT_SLOT, 152, 154) {
+			@Override
+			public boolean isEnabled() {
+				return getViewType() == TerminalViewType.ITEMS;
+			}
+		});
 
 		// Add crafting output slot.
-		createOutputSlot(DigistorePatternEncoder.RECIPE_SINGLE_SLOT, 90, 136, false);
+		outputSlot = createOutputSlot(DigistorePatternEncoder.RECIPE_SINGLE_SLOT, 90, 136, false);
 
 		// Start in crafting mode.
 		setCurrentRecipeType(RecipeEncodingType.CRAFTING_TABLE);
@@ -153,25 +167,32 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 		markForResync();
 	}
 
-	protected StaticPowerContainerSlot createOutputSlot(int index, int x, int y, boolean enableInput) {
-		StaticPowerContainerSlot slot = (StaticPowerContainerSlot) addSlot(new StaticPowerContainerSlot(encoderInventory, index, x, y) {
+	protected PhantomSlot createOutputSlot(int index, int x, int y, boolean enableInput) {
+		PhantomSlot slot = (PhantomSlot) addSlot(new PhantomSlot(encoderInventory, index, x, y, true) {
 			@Override
-			public boolean canTakeStack(PlayerEntity playerIn) {
+			public void insertPhantomItem(ItemStack stack, int amount) {
 				if (currentRecipeType == RecipeEncodingType.MACHINE) {
-					encoderInventory.setStackInSlot(index, ItemStack.EMPTY);
+					super.insertPhantomItem(stack, amount);
 				}
-				return false;
 			}
 
 			@Override
-			public boolean isItemValid(@Nonnull ItemStack stack) {
-				if (stack.isEmpty()) {
-					return false;
-				}
+			public void decreasePhantomCount(int amount) {
 				if (currentRecipeType == RecipeEncodingType.MACHINE) {
-					putStack(stack.copy());
+					super.decreasePhantomCount(amount);
 				}
-				return false;
+			}
+
+			@Override
+			public void clearPhantom() {
+				if (currentRecipeType == RecipeEncodingType.MACHINE) {
+					super.clearPhantom();
+				}
+			}
+
+			@Override
+			public boolean isEnabled() {
+				return getViewType() == TerminalViewType.ITEMS;
 			}
 		});
 		return slot;
@@ -192,11 +213,13 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 			for (PhantomSlot slot : inputSlots) {
 				slot.setLimitToSingleItem(true);
 			}
+			outputSlot.setLimitToSingleItem(true);
 		} else {
 			// Allow the inputs to grow past 1 stack size.
 			for (PhantomSlot slot : inputSlots) {
 				slot.setLimitToSingleItem(false);
 			}
+			outputSlot.setLimitToSingleItem(false);
 		}
 	}
 

@@ -246,8 +246,10 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 
 	public List<EncodedDigistorePattern> getAllPatternsForIngredient(Ingredient ingredient) {
 		List<EncodedDigistorePattern> output = new ArrayList<EncodedDigistorePattern>();
-		for (ItemStack stack : ingredient.getMatchingStacks()) {
-			output.addAll(getAllPatternsForItem(stack));
+		for (ItemStack key : craftableItems.keySet()) {
+			if (ingredient.test(key)) {
+				output.addAll(craftableItems.get(key));
+			}
 		}
 		return output;
 	}

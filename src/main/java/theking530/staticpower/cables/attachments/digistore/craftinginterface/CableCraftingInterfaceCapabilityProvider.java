@@ -16,7 +16,12 @@ public class CableCraftingInterfaceCapabilityProvider extends ItemStackInventory
 
 	public CableCraftingInterfaceCapabilityProvider(ItemStack owner, int size, @Nullable CompoundNBT nbt) {
 		super(owner, size, nbt);
-		upgradeInventory = new ItemInventoryHandler("processing_items", owner, 9);
+		upgradeInventory = new ItemInventoryHandler("processing_items", owner, 9) {
+			@Override
+			public int getSlotLimit(int slot) {
+				return Integer.MAX_VALUE;
+			}
+		};
 	}
 
 	@Override

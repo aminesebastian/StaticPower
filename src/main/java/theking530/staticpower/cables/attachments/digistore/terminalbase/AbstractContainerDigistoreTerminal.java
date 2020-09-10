@@ -1,5 +1,6 @@
 package theking530.staticpower.cables.attachments.digistore.terminalbase;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
@@ -25,8 +26,10 @@ import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.attachments.AbstractCableAttachmentContainer;
 import theking530.staticpower.cables.attachments.digistore.terminal.DigistoreTerminal;
+import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractGuiDigistoreTerminal.TerminalViewType;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.autocrafting.ContainerCraftingAmount;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.network.PacketDigistoreTerminalFilters;
+import theking530.staticpower.cables.attachments.digistore.terminalbase.network.PacketGetCurrentCraftingQueue;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot.DigistoreItemCraftableState;
@@ -47,16 +50,20 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 	public static final int DEFAULT_MAX_ROWS_ON_SCREEN = 8;
 	public static final Vector2D DEFAULT_INVENTORY_START = new Vector2D(8, 22);
 
+	private List<CraftingRequestResponse> craftingRequests;
+
 	protected int itemsPerRow;
 	protected int maxRows;
 	protected Vector2D digistoreInventoryPosition;
 	protected boolean managerPresentLastState;
+	protected boolean hideDigistoreItems;
 
 	private int scrollOffset;
 	private boolean sortDescending;
 	private String filter;
 	private DigistoreInventorySortType sortType;
 	private DigistoreSimulatedItemStackHandler clientSimulatedInventory;
+	private TerminalViewType viewType;
 	private boolean resyncInv;
 
 	public AbstractContainerDigistoreTerminal(ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator, int windowId, PlayerInventory playerInventory, ItemStack attachment,
@@ -71,13 +78,16 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 		digistoreInventoryPosition = DEFAULT_INVENTORY_START;
 		scrollOffset = 0;
 		sortDescending = true;
+		hideDigistoreItems = false;
 		filter = "";
 		resyncInv = false;
 		sortType = DigistoreInventorySortType.COUNT;
+		this.craftingRequests = new LinkedList<CraftingRequestResponse>();
 	}
 
 	@Override
 	public void initializeContainer() {
+		viewType = TerminalViewType.ITEMS;
 		managerPresentLastState = getCableComponent().isManagerPresent();
 
 		// Armor
@@ -333,6 +343,46 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 		return maxRows;
 	}
 
+	public void setViewType(TerminalViewType type) {
+		this.viewType = type;
+	}
+
+	public TerminalViewType getViewType() {
+		return this.viewType;
+	}
+
+	public void setHideDigistoreInventory(boolean hideItems) {
+		this.hideDigistoreItems = hideItems;
+		if (hideItems) {
+			// Remove all the digistore slots.
+			for (int i = inventorySlots.size() - 1; i >= getFirstDigistoreSlotIndex(); i--) {
+				if (inventorySlots.get(i) instanceof DigistoreSlot) {
+					DigistoreSlot digiSlot = (DigistoreSlot) inventorySlots.get(i);
+					digiSlot.setEnabledState(false);
+				}
+			}
+		} else {
+			addDigistoreSlots(clientSimulatedInventory, itemsPerRow, digistoreInventoryPosition.getXi(), digistoreInventoryPosition.getYi());
+		}
+	}
+
+	public boolean isHidingDigistoreInventory() {
+		return this.hideDigistoreItems;
+	}
+
+	public List<CraftingRequestResponse> getCurrentCraftingQueue() {
+		return craftingRequests;
+	}
+
+	public void updateCraftingQueue(List<CraftingRequestResponse> queue) {
+		craftingRequests = queue;
+	}
+
+	public void refreshCraftingQueue() {
+		PacketGetCurrentCraftingQueue newCraftingRequest = new PacketGetCurrentCraftingQueue(windowId);
+		StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, newCraftingRequest);
+	}
+
 	/**
 	 * Returns how many digistore slots are on screen.
 	 * 
@@ -479,7 +529,16 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 			// Create the slot at the proper x and y positions in the grid (accounting for
 			// the scroll offset).
 			DigistoreSlot output = new DigistoreSlot(digistoreInv, i, xPos + ((i % rowSize) * adjustedSlotSize), yPos + ((row - scrollOffset) * adjustedSlotSize),
-					getCableComponent().isManagerPresent());
+					getCableComponent().isManagerPresent()) {
+				@Override
+				public boolean isEnabled() {
+					if (hideDigistoreItems) {
+						return false;
+					} else {
+						return super.isEnabled();
+					}
+				}
+			};
 
 			// We then update the enabled state if this slot should be enabled. A slot is
 			// enabled IF it's row is beyond the row that the scroll bar is set to AND it is
@@ -503,7 +562,12 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 		// but we can render up to 50, we must render 30 blank slots).
 		int missingSlots = (itemsPerRow * maxRows) - enabledSlots;
 
-		// Add a dummy slot for each of the missing slots.
+		// If we're hiding the items, no missing slots.
+		if (hideDigistoreItems) {
+			missingSlots = 0;
+		}
+
+		// Add a dummy slot for each of the missing slots if we're not hiding the items.
 		for (int i = 0; i < missingSlots; i++) {
 			int index = enabledSlots + i;
 			int row = index / rowSize;

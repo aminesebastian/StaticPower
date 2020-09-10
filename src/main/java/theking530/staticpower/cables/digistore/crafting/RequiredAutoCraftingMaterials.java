@@ -8,6 +8,16 @@ import javax.annotation.Nullable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 
+/**
+ * Manifest class that contains an aggregation of all the material required for
+ * the list of steps provided. Provides an easy way to check for missing
+ * materials as well (not live missing materials, this class does not check
+ * against a real digistore network instead, only takes the values for missing
+ * provided in the steps).
+ * 
+ * @author amine
+ *
+ */
 public class RequiredAutoCraftingMaterials {
 	private final List<AutoCraftingStep> steps;
 	private final List<RequiredAutoCraftingMaterial> materials;
@@ -19,18 +29,26 @@ public class RequiredAutoCraftingMaterials {
 		update();
 	}
 
+	/**
+	 * Gets an aggregate list of all required ingredients.
+	 * 
+	 * @return
+	 */
 	public List<RequiredAutoCraftingMaterial> getMaterials() {
 		return materials;
 	}
 
+	/**
+	 * Updates the material list and aggregates requirements per material.
+	 */
 	protected void update() {
-		if (steps.size() == 1) {
-			return;
-		}
-
-		for (int i = 1; i < steps.size(); i++) {
-			AutoCraftingStep step = steps.get(i);
+		// Check all the steps.
+		for (AutoCraftingStep step : steps) {
+			// Allocate the material.
 			RequiredAutoCraftingMaterial material = null;
+
+			// If this is a crafting pattern step, add the output of the crafting pattern to
+			// the material list. Otherwise just add the ingredient.
 			if (step.getCraftingPattern() != null) {
 				material = this.getMaterialForItem(step.getCraftingPattern().getOutput());
 				if (material == null) {
@@ -53,13 +71,19 @@ public class RequiredAutoCraftingMaterials {
 				}
 			}
 
-			// Check if we're missing materials.
+			// Check if we're missing materials. If so, mark this materials list as missing
+			// materials.
 			if (material.getMissingAmount() > 0) {
 				isMissingMaterials = true;
 			}
 		}
 	}
 
+	/**
+	 * If this material list is missing materials, this method will return true.
+	 * 
+	 * @return
+	 */
 	public boolean isMissingMaterials() {
 		return isMissingMaterials;
 	}

@@ -11,7 +11,8 @@ import theking530.staticpower.cables.attachments.digistore.terminalbase.Abstract
 
 public class GuiDigistoreCraftingTerminal extends AbstractGuiDigistoreTerminal<ContainerDigistoreCraftingTerminal, DigistoreCraftingTerminal> {
 	private ArrowProgressBar progressBar;
-	
+	private EntityRenderWidget entityRenderer;
+
 	public GuiDigistoreCraftingTerminal(ContainerDigistoreCraftingTerminal container, PlayerInventory invPlayer, ITextComponent name) {
 		super(container, invPlayer, name, 176, 270);
 
@@ -21,7 +22,7 @@ public class GuiDigistoreCraftingTerminal extends AbstractGuiDigistoreTerminal<C
 	public void initializeGui() {
 		super.initializeGui();
 		registerWidget(progressBar = (ArrowProgressBar) new ArrowProgressBar(118, 138).disableProgressTooltip());
-		registerWidget(new EntityRenderWidget(10, 115, 42, 58, this.minecraft.player));
+		registerWidget(entityRenderer = new EntityRenderWidget(10, 115, 42, 58, this.minecraft.player));
 		searchBar.setSize(70, 12);
 		searchBar.setPosition(98, 6);
 
@@ -47,6 +48,24 @@ public class GuiDigistoreCraftingTerminal extends AbstractGuiDigistoreTerminal<C
 	}
 
 	@Override
+	protected boolean switchToCraftingStatusView() {
+		if (super.switchToCraftingStatusView()) {
+			this.entityRenderer.setVisible(false);
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	protected boolean switchToDefaultView() {
+		if (super.switchToDefaultView()) {
+			this.entityRenderer.setVisible(true);
+			return true;
+		}
+		return false;
+	}
+
+	@Override
 	public void updateData() {
 		super.updateData();
 		if (getCableComponent().isManagerPresent()) {
@@ -59,7 +78,6 @@ public class GuiDigistoreCraftingTerminal extends AbstractGuiDigistoreTerminal<C
 	@Override
 	protected void drawBackgroundExtras(float partialTicks, int mouseX, int mouseY) {
 		super.drawBackgroundExtras(partialTicks, mouseX, mouseY);
-
 
 	}
 }

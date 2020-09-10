@@ -20,7 +20,9 @@ public class CraftingRequestResponse {
 	public CraftingRequestResponse(long id, int craftableAmount, ItemStack craftingTarget, List<AutoCraftingStep> steps) {
 		this.id = id;
 		this.craftableAmount = craftableAmount;
-		this.craftingTarget = craftingTarget;
+		ItemStack itemToSerialize = craftingTarget.copy();
+		itemToSerialize.setCount(1);
+		this.craftingTarget = itemToSerialize;
 		this.steps = steps;
 		this.currentCraftingStep = 0;
 		this.billOfMaterials = new RequiredAutoCraftingMaterials(steps);

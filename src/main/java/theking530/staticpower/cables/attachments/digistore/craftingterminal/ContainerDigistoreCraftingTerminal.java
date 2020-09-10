@@ -19,6 +19,7 @@ import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractContainerDigistoreTerminal;
+import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractGuiDigistoreTerminal.TerminalViewType;
 import theking530.staticpower.container.slots.CraftingRecipeInputSlot;
 import theking530.staticpower.container.slots.DigistoreCraftingOutputSlot;
 import theking530.staticpower.integration.JEI.IJEIReipceTransferHandler;
@@ -49,10 +50,21 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 		setMaxRows(5);
 
 		// Add the crafting input slot.
-		addSlotsInGrid(craftMatrix, 0, 89, 120, 3, (index, xPos, yPos) -> new CraftingRecipeInputSlot(craftMatrix, index, xPos, yPos));
+		addSlotsInGrid(craftMatrix, 0, 89, 120, 3, (index, xPos, yPos) -> new CraftingRecipeInputSlot(craftMatrix, index, xPos, yPos) {
+			@Override
+			public boolean isEnabled() {
+				return getViewType() == TerminalViewType.ITEMS;
+			}
+
+		});
 
 		// Add crafting output slot.
-		addSlot(new DigistoreCraftingOutputSlot(this, getPlayerInventory().player, craftMatrix, craftResult, 0, 148, 138));
+		addSlot(new DigistoreCraftingOutputSlot(this, getPlayerInventory().player, craftMatrix, craftResult, 0, 148, 138) {
+			@Override
+			public boolean isEnabled() {
+				return getViewType() == TerminalViewType.ITEMS;
+			}
+		});
 
 		super.initializeContainer();
 	}

@@ -368,7 +368,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 			sendRemoveTransferingPacketToCable(packet.getCurrentEntry().getPosition(), packet.getId());
 			packet.incrementCurrentPathIndex();
 
-			// Get the current and next max move times (how many ticks it takes to travelt
+			// Get the current and next max move times (how many ticks it takes to travele
 			// through a single pipe).
 			int currentMoveTime = packet.getCurrentMoveTime();
 			int nextPipeMinMoveTime = CableNetworkManager.get(Network.getWorld()).getCable(packet.getCurrentEntry().getPosition()).getIntProperty(ItemCableComponent.ITEM_CABLE_MINIMUM_MOVE_TIME);

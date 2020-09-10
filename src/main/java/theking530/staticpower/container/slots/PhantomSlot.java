@@ -15,7 +15,7 @@ public class PhantomSlot extends StaticPowerContainerSlot {
 	}
 
 	public void insertPhantomItem(ItemStack stack, int amount) {
-		if (itemHandler.getStackInSlot(slotNumber).isEmpty()) {
+		if (itemHandler.getStackInSlot(getSlotIndex()).isEmpty()) {
 			ItemStack copy = stack.copy();
 			if (limitToOnePerItem) {
 				copy.setCount(1);
@@ -23,10 +23,10 @@ public class PhantomSlot extends StaticPowerContainerSlot {
 				copy.setCount(amount);
 			}
 
-			itemHandler.setStackInSlot(slotNumber, copy);
-		} else if (ItemUtilities.areItemStacksStackable(stack, itemHandler.getStackInSlot(slotNumber))) {
+			itemHandler.setStackInSlot(getSlotIndex(), copy);
+		} else if (ItemUtilities.areItemStacksStackable(stack, itemHandler.getStackInSlot(getSlotIndex()))) {
 			if (!limitToOnePerItem) {
-				itemHandler.getStackInSlot(slotNumber).grow(amount);
+				itemHandler.getStackInSlot(getSlotIndex()).grow(amount);
 			}
 		} else {
 			clearPhantom();
@@ -36,16 +36,16 @@ public class PhantomSlot extends StaticPowerContainerSlot {
 	public void setLimitToSingleItem(boolean limit) {
 		limitToOnePerItem = limit;
 		if (limit) {
-			itemHandler.getStackInSlot(slotNumber).setCount(1);
+			itemHandler.getStackInSlot(getSlotIndex()).setCount(1);
 		}
 	}
 
 	public void decreasePhantomCount(int amount) {
-		itemHandler.getStackInSlot(slotNumber).shrink(amount);
+		itemHandler.getStackInSlot(getSlotIndex()).shrink(amount);
 	}
 
 	public void clearPhantom() {
-		itemHandler.setStackInSlot(slotNumber, ItemStack.EMPTY);
+		itemHandler.setStackInSlot(getSlotIndex(), ItemStack.EMPTY);
 	}
 
 	@Override

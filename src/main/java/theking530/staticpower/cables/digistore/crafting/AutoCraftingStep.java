@@ -40,6 +40,7 @@ public class AutoCraftingStep {
 
 	public void markCraftingIterationCompleted() {
 		amountRemainingToCraft -= pattern.getOutput().getCount();
+		storedAmount += pattern.getOutput().getCount();
 		if (amountRemainingToCraft < 0) {
 			amountRemainingToCraft = 0;
 		}
@@ -51,14 +52,23 @@ public class AutoCraftingStep {
 
 	public void setStoredAmount(int storedAmount) {
 		this.storedAmount = storedAmount;
+		if (amountRemainingToCraft < 0) {
+			amountRemainingToCraft = 0;
+		}
 	}
 
 	public void setAmountRemainingToCraft(int amountRemainingToCraft) {
 		this.amountRemainingToCraft = amountRemainingToCraft;
+		if (amountRemainingToCraft < 0) {
+			amountRemainingToCraft = 0;
+		}
 	}
 
 	public void setTotalRequiredAmount(int totalRequiredAmount) {
 		this.totalRequiredAmount = totalRequiredAmount;
+		if (amountRemainingToCraft < 0) {
+			amountRemainingToCraft = 0;
+		}
 	}
 
 	public void setAttemptingResolve(boolean isAttemptingResolve) {

@@ -8,6 +8,8 @@ import theking530.staticpower.cables.attachments.digistore.patternencoder.Packet
 import theking530.staticpower.cables.attachments.digistore.patternencoder.PacketPatternEncoderEncode;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.PacketPatternEncoderRecipeTypeChange;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.network.PacketDigistoreTerminalFilters;
+import theking530.staticpower.cables.attachments.digistore.terminalbase.network.PacketGetCurrentCraftingQueue;
+import theking530.staticpower.cables.attachments.digistore.terminalbase.network.PacketReturnCurrentCraftingQueue;
 import theking530.staticpower.cables.digistore.crafting.network.PacketMakeDigistoreCraftingRequest;
 import theking530.staticpower.cables.digistore.crafting.network.PacketRequestDigistoreCraftRecalculation;
 import theking530.staticpower.cables.digistore.crafting.network.PacketSimulateDigistoreCraftingRequestResponse;
@@ -62,5 +64,7 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(PacketMakeDigistoreCraftingRequest.class);	
 		StaticPowerMessageHandler.registerMessage(PacketCloseCurrentContainer.class);			
 		StaticPowerMessageHandler.registerMessage(PacketRevertToParentContainer.class);		
+		StaticPowerMessageHandler.registerMessage(PacketGetCurrentCraftingQueue.class);			
+		StaticPowerMessageHandler.registerMessage(PacketReturnCurrentCraftingQueue.class);		
 	}
 }

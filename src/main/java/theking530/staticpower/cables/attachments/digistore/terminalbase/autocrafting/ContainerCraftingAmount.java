@@ -14,7 +14,6 @@ import theking530.staticpower.cables.digistore.crafting.network.PacketSimulateDi
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
-import theking530.staticpower.container.PacketCloseCurrentContainer;
 import theking530.staticpower.container.StaticPowerContainer;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
@@ -68,8 +67,7 @@ public class ContainerCraftingAmount extends StaticPowerContainer {
 			// request.
 			if (digistoreModule != null && digistoreModule.isManagerPresent()) {
 				digistoreModule.getCraftingManager().addCraftingRequest(target, amount, CraftingRequestType.EXECUTE);
-				StaticPowerMessageHandler.sendMessageToPlayer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, (ServerPlayerEntity) getPlayerInventory().player,
-						new PacketCloseCurrentContainer(windowId));
+				revertToParent();
 			}
 		} else {
 			throw new RuntimeException("This should only be called on the server!");

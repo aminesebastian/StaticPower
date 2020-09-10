@@ -173,7 +173,7 @@ public class WorldUtilities {
 
 		// Execute the fill. Remove the fluid from the world.
 		handler.fill(fillableStack, FluidAction.EXECUTE);
-		worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
+		worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 1 | 2);
 
 		// If the player is not null, play the pickup sound.
 		if (playerIn != null) {

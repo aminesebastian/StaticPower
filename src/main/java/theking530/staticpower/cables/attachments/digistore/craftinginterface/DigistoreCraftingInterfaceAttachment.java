@@ -203,19 +203,17 @@ public class DigistoreCraftingInterfaceAttachment extends AbstractCableAttachmen
 			return false;
 		}
 
-		// Get the inventory.
+		// Get the inventory. If it is null, return false.
 		IItemHandler processingItemInventory = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.DOWN).orElse(null);
-
-		// If it exists, insert all the items and return true. Otherwise, return false.
-		if (processingItemInventory != null) {
-			for (int i = 0; i < items.size(); i++) {
-				processingItemInventory.insertItem(i, items.get(i), false);
-			}
-			return true;
+		if (processingItemInventory == null) {
+			return false;
 		}
 
-		// If we arrived here, return false.
-		return false;
+		// If it exists, insert all the items and return true.
+		for (int i = 0; i < items.size(); i++) {
+			InventoryUtilities.insertItemIntoInventory(processingItemInventory, items.get(i), false);
+		}
+		return true;
 	}
 
 	protected class CraftingInterfaceContainerProvider extends AbstractCableAttachmentContainerProvider {

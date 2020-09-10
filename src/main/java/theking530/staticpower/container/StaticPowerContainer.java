@@ -2,6 +2,7 @@ package theking530.staticpower.container;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -169,38 +170,43 @@ public abstract class StaticPowerContainer extends Container {
 		return false;
 	}
 
-	protected void addSlotsInGrid(IInventory inventory, int startingIndex, int xPos, int yPos, int maxPerRow, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
-		addSlotsInGrid(inventory, startingIndex, xPos, yPos, maxPerRow, 16, slotFactory);
+	protected List<Slot> addSlotsInGrid(IInventory inventory, int startingIndex, int xPos, int yPos, int maxPerRow, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
+		return addSlotsInGrid(inventory, startingIndex, xPos, yPos, maxPerRow, 16, slotFactory);
 	}
 
-	protected void addSlotsInGrid(IItemHandler inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
-		addSlotsInGrid(inventory, startingIndex, inventory.getSlots(), xPos, yPos, maxPerRow, slotSize, slotFactory);
+	protected List<Slot> addSlotsInGrid(IItemHandler inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
+		return addSlotsInGrid(inventory, startingIndex, inventory.getSlots(), xPos, yPos, maxPerRow, slotSize, slotFactory);
 	}
 
-	protected void addSlotsInGrid(IItemHandler inventory, int startingIndex, int xPos, int yPos, int maxPerRow, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
-		addSlotsInGrid(inventory, startingIndex, inventory.getSlots(), xPos, yPos, maxPerRow, 16, slotFactory);
+	protected List<Slot> addSlotsInGrid(IItemHandler inventory, int startingIndex, int xPos, int yPos, int maxPerRow, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
+		return addSlotsInGrid(inventory, startingIndex, inventory.getSlots(), xPos, yPos, maxPerRow, 16, slotFactory);
 	}
 
-	protected void addSlotsInGrid(IItemHandler inventory, int startingIndex, int slotCount, int xPos, int yPos, int maxPerRow, int slotSize, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
+	protected List<Slot> addSlotsInGrid(IItemHandler inventory, int startingIndex, int slotCount, int xPos, int yPos, int maxPerRow, int slotSize,
+			TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
+		List<Slot> outputs = new ArrayList<Slot>();
 		maxPerRow = Math.min(inventory.getSlots(), maxPerRow);
 		int adjustedSlotSize = slotSize + 2;
 		int offset = (maxPerRow * adjustedSlotSize) / 2;
 		for (int i = 0; i < slotCount; i++) {
 			int row = i / maxPerRow;
 			Slot output = slotFactory.apply(startingIndex + i, xPos + ((i % maxPerRow) * adjustedSlotSize) - offset, yPos + (row * adjustedSlotSize));
-			addSlot(output);
+			outputs.add(addSlot(output));
 		}
+		return outputs;
 	}
 
-	protected void addSlotsInGrid(IInventory inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
+	protected List<Slot> addSlotsInGrid(IInventory inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
+		List<Slot> outputs = new ArrayList<Slot>();
 		maxPerRow = Math.min(inventory.getSizeInventory(), maxPerRow);
 		int adjustedSlotSize = slotSize + 2;
 		int offset = (maxPerRow * adjustedSlotSize) / 2;
 		for (int i = 0; i < inventory.getSizeInventory(); i++) {
 			int row = i / maxPerRow;
 			Slot output = slotFactory.apply(startingIndex + i, xPos + ((i % maxPerRow) * adjustedSlotSize) - offset, yPos + (row * adjustedSlotSize));
-			addSlot(output);
+			outputs.add(addSlot(output));
 		}
+		return outputs;
 	}
 
 	protected void addSlotsInPerfectSquare(IItemHandler inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {

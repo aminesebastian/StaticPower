@@ -28,7 +28,7 @@ import theking530.staticpower.tileentities.digistorenetwork.patternstorage.TileE
 import theking530.staticpower.utilities.MetricConverter;
 
 public class DigistoreNetworkModule extends AbstractCableNetworkModule {
-	public static final int CRAFTING_TIME = 5;
+	public static final int CRAFTING_TIME = 10;
 
 	private final List<IDigistoreInventory> digistores;
 	private final List<ServerCable> powerUsingDigistores;

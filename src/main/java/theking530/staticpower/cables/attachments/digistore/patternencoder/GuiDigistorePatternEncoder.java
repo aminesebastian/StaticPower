@@ -52,6 +52,30 @@ public class GuiDigistorePatternEncoder extends AbstractGuiDigistoreTerminal<Con
 	}
 
 	@Override
+	protected boolean switchToCraftingStatusView() {
+		if (super.switchToCraftingStatusView()) {
+			this.recipeTypeButton.setVisible(false);
+			this.clearRecipeButton.setVisible(false);
+			this.encodeButton.setVisible(false);
+			this.progressBar.setVisible(false);
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	protected boolean switchToDefaultView() {
+		if (super.switchToDefaultView()) {
+			this.recipeTypeButton.setVisible(true);
+			this.clearRecipeButton.setVisible(true);
+			this.encodeButton.setVisible(true);
+			this.progressBar.setVisible(true);
+			return true;
+		}
+		return false;
+	}
+
+	@Override
 	protected Vector2D getContainerLabelDrawLocation() {
 		return new Vector2D(8, 8);
 	}

@@ -13,15 +13,19 @@ import theking530.staticcore.gui.widgets.GuiIslandWidget;
 import theking530.staticcore.gui.widgets.button.SpriteButton;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
+import theking530.staticcore.gui.widgets.button.TextButton;
 import theking530.staticcore.gui.widgets.scrollbar.ScrollBarWidget;
 import theking530.staticcore.gui.widgets.textinput.TextInputWidget;
 import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.attachments.AbstractCableAttachmentGui;
 import theking530.staticpower.cables.attachments.digistore.terminal.DigistoreTerminal;
+import theking530.staticpower.cables.attachments.digistore.terminalbase.autocrafting.AutoCraftingStepsWidget;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot.DigistoreItemCraftableState;
+import theking530.staticpower.cables.digistore.crafting.CraftingRequestResponse;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.container.slots.DigistoreSlot;
 import theking530.staticpower.container.slots.NoCountRenderSlot;
@@ -33,20 +37,36 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		ITEMS, CRAFTING;
 	}
 
+	public static final int MAX_CRAFTING_STEP_COLUMNS = 2;
+	public static final int MAX_CRAFTING_STEPS_ROWS = 5;
+	public static final int CRAFTING_LIST_UPDATE_RATE = 20;
+
 	public TerminalViewType viewType;
 	public TextInputWidget searchBar;
 	public ScrollBarWidget scrollBar;
 	public SpriteButton sortButton;
 	public SpriteButton searchModeButton;
-	
+	public SpriteButton craftingViewButton;
+	public SpriteButton itemViewButton;
+	public AutoCraftingStepsWidget craftingStepsWidget;
+
+	public TextButton activeCraftingLeft;
+	public TextButton activeCraftingRight;
+
+	private int craftingRequestUpdateTimer;
+	private int currentCraftingRequestIndex;
+
 	public AbstractGuiDigistoreTerminal(T container, PlayerInventory invPlayer, ITextComponent name, int width, int height) {
 		super(container, invPlayer, name, width, height);
-
+		craftingRequestUpdateTimer = 0;
 	}
 
 	@Override
 	public void initializeGui() {
 		super.initializeGui();
+		// Set the default view type.
+		viewType = TerminalViewType.ITEMS;
+
 		// Add search bar and sync it with JEI if requested.
 		String initialSerachString = "";
 		if (DigistoreTerminal.getSearchMode(getContainer().getAttachment()) == DigistoreSearchMode.TWO_WAY) {
@@ -74,15 +94,23 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 
 		// Add island for the regular tab.
 		registerWidget(new GuiIslandWidget(this.xSize - 4, 143, 25, 24));
-		registerWidget(new SpriteButton(this.xSize - 1, 145, 20, 20, StaticPowerSprites.FURNACE_ICON, null, (a, b) -> {
-			viewType = TerminalViewType.ITEMS;
-		}).setShouldDrawButtonBackground(false));
-
+		registerWidget(itemViewButton = (SpriteButton) new SpriteButton(this.xSize - 1, 145, 20, 20, StaticPowerSprites.FURNACE_ICON, null, (a, b) -> switchToDefaultView())
+				.setShouldDrawButtonBackground(false));
+		
 		// Add island for the crafting tab.
 		registerWidget(new GuiIslandWidget(this.xSize - 4, 168, 25, 24));
-		registerWidget(new SpriteButton(this.xSize - 1, 170, 20, 20, StaticPowerSprites.CRAFTING_TABLE_ICON, null, (a, b) -> {
-			viewType = TerminalViewType.CRAFTING;
-		}).setShouldDrawButtonBackground(false));
+		registerWidget(craftingViewButton = (SpriteButton) new SpriteButton(this.xSize - 1, 170, 20, 20, StaticPowerSprites.CRAFTING_TABLE_ICON, null, (a, b) -> switchToCraftingStatusView())
+				.setShouldDrawButtonBackground(false));
+
+		// Add the crafting steps renderer.
+		registerWidget(craftingStepsWidget = new AutoCraftingStepsWidget(8, 40, 160, 133, MAX_CRAFTING_STEPS_ROWS, MAX_CRAFTING_STEP_COLUMNS));
+		craftingStepsWidget.setVisible(false);
+
+		// Add the crafting rotation buttons and default them to invisible.
+		registerWidget(activeCraftingLeft = new TextButton(7, 20, 14, 14, "<", (a, b) -> rotateCurrentlyViewedRecipeStatus(-1)));
+		registerWidget(activeCraftingRight = new TextButton(this.xSize - 23, 20, 14, 14, ">", (a, b) -> rotateCurrentlyViewedRecipeStatus(-1)));
+		activeCraftingLeft.setVisible(false);
+		activeCraftingRight.setVisible(false);
 
 		// Set default settings for tooltips/sprites.
 		updateSortAndFilter();
@@ -118,8 +146,25 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 			String jeiSearchString = Strings.nullToEmpty(PluginJEI.RUNTIME.getIngredientFilter().getFilterText());
 			searchBar.setText(jeiSearchString);
 		}
+
+		// Update the scroll bar.
 		scrollBar.setMaxScroll(getContainer().getMaxScroll());
 		getContainer().setScrollOffset(scrollBar.getScrollAmount());
+
+		// Update the crafting queue regardless of if we are in that view or not.
+		craftingRequestUpdateTimer++;
+		if (craftingRequestUpdateTimer >= CRAFTING_LIST_UPDATE_RATE) {
+			getContainer().refreshCraftingQueue();
+			craftingRequestUpdateTimer = 0;
+		}
+		if (getContainer().getCurrentCraftingQueue().size() > 0) {
+			CraftingRequestResponse currentRequest = getContainer().getCurrentCraftingQueue().get(currentCraftingRequestIndex);
+			craftingStepsWidget.setRequest(currentRequest);
+			craftingViewButton.setTooltip(new StringTextComponent(String.format("%1$d jobs currently queued.", getContainer().getCurrentCraftingQueue().size())));
+		} else {
+			craftingStepsWidget.setRequest(null);
+			craftingViewButton.setTooltip(new StringTextComponent("No crafting jobs currently queued."));
+		}
 	}
 
 	@Override
@@ -129,6 +174,52 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		itemRenderer.drawItem(Items.IRON_CHESTPLATE, guiLeft, guiTop, -18, 127, 0.3f);
 		itemRenderer.drawItem(Items.IRON_LEGGINGS, guiLeft, guiTop, -18, 145, 0.3f);
 		itemRenderer.drawItem(Items.IRON_BOOTS, guiLeft, guiTop, -18, 163, 0.3f);
+
+		if (viewType == TerminalViewType.CRAFTING) {
+			if (getContainer().getCurrentCraftingQueue().size() > 0) {
+				if (currentCraftingRequestIndex >= getContainer().getCurrentCraftingQueue().size()) {
+					currentCraftingRequestIndex = getContainer().getCurrentCraftingQueue().size() - 1;
+				}
+				CraftingRequestResponse currentRequest = getContainer().getCurrentCraftingQueue().get(currentCraftingRequestIndex);
+				this.itemRenderer.drawItem(currentRequest.getCraftingItem(), guiLeft, guiTop, (xSize / 2) - 8, 20, 1.0f);
+			}
+		}
+	}
+
+	protected void rotateCurrentlyViewedRecipeStatus(int direction) {
+		if (getContainer().getCurrentCraftingQueue().size() == 0) {
+			return;
+		}
+
+		currentCraftingRequestIndex = Math.floorMod(currentCraftingRequestIndex + direction, getContainer().getCurrentCraftingQueue().size());
+		currentCraftingRequestIndex = SDMath.clamp(currentCraftingRequestIndex, 0, getContainer().getCurrentCraftingQueue().size() - 1);
+	}
+
+	protected boolean switchToCraftingStatusView() {
+		if (viewType != TerminalViewType.CRAFTING && getContainer().getCurrentCraftingQueue().size() > 0) {
+			getContainer().refreshCraftingQueue();
+			viewType = TerminalViewType.CRAFTING;
+			getContainer().setHideDigistoreInventory(true);
+			searchBar.setVisible(false);
+			craftingStepsWidget.setVisible(true);
+			activeCraftingLeft.setVisible(true);
+			activeCraftingRight.setVisible(true);
+			return true;
+		}
+		return false;
+	}
+
+	protected boolean switchToDefaultView() {
+		if (viewType != TerminalViewType.ITEMS) {
+			viewType = TerminalViewType.ITEMS;
+			getContainer().setHideDigistoreInventory(false);
+			searchBar.setVisible(true);
+			craftingStepsWidget.setVisible(false);
+			activeCraftingLeft.setVisible(false);
+			activeCraftingRight.setVisible(false);
+			return true;
+		}
+		return false;
 	}
 
 	protected void onSearchTextChanged(TextInputWidget searchBar, String text) {
