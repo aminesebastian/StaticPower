@@ -211,6 +211,7 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 		if (!simulated) {
 			return module.insertItem(stack, simulate);
 		} else {
+			cacheOrIncreaseItemCount(stack);
 			return ItemStack.EMPTY;
 		}
 	}

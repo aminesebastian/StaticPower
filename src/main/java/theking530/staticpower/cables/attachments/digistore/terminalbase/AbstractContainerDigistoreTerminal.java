@@ -36,6 +36,7 @@ import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot.Digist
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.digistore.crafting.CraftingRequestResponse;
 import theking530.staticpower.cables.digistore.crafting.DigistoreNetworkCraftingManager.CraftingRequestType;
+import theking530.staticpower.cables.digistore.crafting.network.PacketCancelDigistoreCraftingRequest;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
@@ -381,6 +382,12 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 	public void refreshCraftingQueue() {
 		PacketGetCurrentCraftingQueue newCraftingRequest = new PacketGetCurrentCraftingQueue(windowId);
 		StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, newCraftingRequest);
+	}
+
+	public void cancelCraftingRequest(long id) {
+		PacketCancelDigistoreCraftingRequest cancelRequest = new PacketCancelDigistoreCraftingRequest(windowId, id);
+		StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, cancelRequest);
+		refreshCraftingQueue();
 	}
 
 	/**

@@ -14,6 +14,7 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.Constants;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.DigistorePatternEncoder.RecipeEncodingType;
+import theking530.staticpower.data.crafting.IngredientUtilities;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.items.DigistorePatternCard;
 
@@ -252,7 +253,7 @@ public class EncodedDigistorePattern {
 		}
 
 		public boolean representsIngrdient(Ingredient other) {
-			return ingredient == other;
+			return IngredientUtilities.areIngredientsEqual(ingredient, other);
 		}
 
 		public boolean equalsIgnoringCount(EncodedIngredient other) {

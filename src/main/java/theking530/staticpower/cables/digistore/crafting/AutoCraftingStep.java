@@ -47,7 +47,7 @@ public class AutoCraftingStep {
 	}
 
 	public int getAmountAlreadyCrafted() {
-		return totalRequiredAmount - storedAmount + amountRemainingToCraft;
+		return totalRequiredAmount - (storedAmount + amountRemainingToCraft);
 	}
 
 	public void setStoredAmount(int storedAmount) {
@@ -113,7 +113,7 @@ public class AutoCraftingStep {
 
 	@Override
 	public String toString() {
-		return "AutoCraftingStep [requiredItem=" + ingredientToCraft + ", storedAmount=" + storedAmount + ", amountRemainintToCraft=" + amountRemainingToCraft + ", amountCrafted="
+		return "AutoCraftingStep [requiredItem=" + (ingredientToCraft.hasNoMatchingItems() ? ingredientToCraft : ingredientToCraft.getMatchingStacks()[0]) + ", storedAmount=" + storedAmount + ", amountRemainintToCraft=" + amountRemainingToCraft + ", amountCrafted="
 				+ getAmountAlreadyCrafted() + ", totalRequiredAmount=" + totalRequiredAmount + ", isAttemptingResolve=" + isAttemptingResolve + ", pattern=" + pattern + "]";
 	}
 

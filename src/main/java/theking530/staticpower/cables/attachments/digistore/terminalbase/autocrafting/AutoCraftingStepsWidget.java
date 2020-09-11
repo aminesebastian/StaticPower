@@ -62,6 +62,7 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 		for (int i = end - 1; i >= start; i--) {
 			int zeroIndex = i - start;
 			stepRenderers.get(zeroIndex).setMaterial(materials.getMaterials().get(i));
+			stepRenderers.get(zeroIndex).updateData();
 		}
 	}
 
@@ -132,7 +133,7 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 			return 0;
 		}
 
-		int materialRows = (int) Math.ceil((double) request.getBillOfMaterials().getMaterials().size() / rows);
+		int materialRows = (int) Math.ceil((double) request.getBillOfMaterials().getMaterials().size() / columns);
 		return Math.max(0, materialRows - rows);
 	}
 

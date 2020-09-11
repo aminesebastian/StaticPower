@@ -24,7 +24,7 @@ public class AutoCraftingStepWidget extends AbstractGuiWidget {
 	private int ingredientRenderIndex;
 
 	static {
-		MISSING_INGREDIENT_RENDERABLE = new SpriteDrawable(StaticPowerSprites.ERROR, 8, 8);
+		MISSING_INGREDIENT_RENDERABLE = new SpriteDrawable(StaticPowerSprites.ERROR, 16, 16);
 		ITEM_RENDERER = new GuiDrawItem();
 	}
 

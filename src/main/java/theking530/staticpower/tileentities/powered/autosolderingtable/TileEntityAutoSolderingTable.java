@@ -15,6 +15,7 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
+import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
@@ -33,7 +34,7 @@ public class TileEntityAutoSolderingTable extends AbstractSolderingTable {
 	public final MachineProcessingComponent moveComponent;
 	public final MachineProcessingComponent processingComponent;
 	public final InventoryComponent internalInventory;
-	public final InventoryComponent batteryInventory;
+	public final BatteryInventoryComponent batteryInventory;
 	public final InventoryComponent outputInventory;
 
 	public TileEntityAutoSolderingTable() {
@@ -48,7 +49,7 @@ public class TileEntityAutoSolderingTable extends AbstractSolderingTable {
 
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 9, MachineSideMode.Never));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
-		registerComponent(batteryInventory = new InventoryComponent("BatteryInventory", 1, MachineSideMode.Never));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 
 		registerComponent(
 				moveComponent = new MachineProcessingComponent("MoveComponent", DEFAULT_MOVING_TIME, this::canMoveFromInputToProcessing, () -> ProcessingCheckState.ok(), this::movingCompleted, true)

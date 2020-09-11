@@ -5,6 +5,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraftforge.common.util.Constants;
+import theking530.staticpower.utilities.ItemUtilities;
 
 public class IngredientUtilities {
 	public static CompoundNBT serializeIngredient(Ingredient ingredient) {
@@ -29,5 +30,20 @@ public class IngredientUtilities {
 			ingredientStacks[i] = stack;
 		}
 		return Ingredient.fromStacks(ingredientStacks);
+	}
+
+	public static boolean areIngredientsEqual(Ingredient first, Ingredient second) {
+		if (first.hasNoMatchingItems() || second.hasNoMatchingItems()) {
+			return false;
+		}
+		if (first.getMatchingStacks().length != second.getMatchingStacks().length) {
+			return false;
+		}
+		for (int i = 0; i < first.getMatchingStacks().length; i++) {
+			if (!ItemUtilities.areItemStacksStackable(first.getMatchingStacks()[i], second.getMatchingStacks()[i])) {
+				return false;
+			}
+		}
+		return true;
 	}
 }

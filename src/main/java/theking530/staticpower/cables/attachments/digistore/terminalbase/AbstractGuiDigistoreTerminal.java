@@ -39,7 +39,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 
 	public static final int MAX_CRAFTING_STEP_COLUMNS = 2;
 	public static final int MAX_CRAFTING_STEPS_ROWS = 5;
-	public static final int CRAFTING_LIST_UPDATE_RATE = 20;
+	public static final int CRAFTING_LIST_UPDATE_RATE = 10;
 
 	public TerminalViewType viewType;
 	public TextInputWidget searchBar;
@@ -52,6 +52,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 
 	public TextButton activeCraftingLeft;
 	public TextButton activeCraftingRight;
+	public SpriteButton craftingRequestCancelButton;
 
 	private int craftingRequestUpdateTimer;
 	private int currentCraftingRequestIndex;
@@ -96,7 +97,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		registerWidget(new GuiIslandWidget(this.xSize - 4, 143, 25, 24));
 		registerWidget(itemViewButton = (SpriteButton) new SpriteButton(this.xSize - 1, 145, 20, 20, StaticPowerSprites.FURNACE_ICON, null, (a, b) -> switchToDefaultView())
 				.setShouldDrawButtonBackground(false));
-		
+
 		// Add island for the crafting tab.
 		registerWidget(new GuiIslandWidget(this.xSize - 4, 168, 25, 24));
 		registerWidget(craftingViewButton = (SpriteButton) new SpriteButton(this.xSize - 1, 170, 20, 20, StaticPowerSprites.CRAFTING_TABLE_ICON, null, (a, b) -> switchToCraftingStatusView())
@@ -112,8 +113,17 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		activeCraftingLeft.setVisible(false);
 		activeCraftingRight.setVisible(false);
 
+		// Cancel crafting request button.
+		registerWidget(craftingRequestCancelButton = (SpriteButton) new SpriteButton(98, 24, 8, 8, StaticPowerSprites.ERROR, null, (a, b) -> cancelCurrentCraftingRequest())
+				.setShouldDrawButtonBackground(false));
+		craftingRequestCancelButton.setTooltip(new StringTextComponent("Cancel"));
+		craftingRequestCancelButton.setVisible(false);
+
 		// Set default settings for tooltips/sprites.
 		updateSortAndFilter();
+
+		// Refresh the crafting queue.
+		getContainer().refreshCraftingQueue();
 	}
 
 	@Override
@@ -147,16 +157,18 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 			searchBar.setText(jeiSearchString);
 		}
 
-		// Update the scroll bar.
-		scrollBar.setMaxScroll(getContainer().getMaxScroll());
-		getContainer().setScrollOffset(scrollBar.getScrollAmount());
-
 		// Update the crafting queue regardless of if we are in that view or not.
 		craftingRequestUpdateTimer++;
 		if (craftingRequestUpdateTimer >= CRAFTING_LIST_UPDATE_RATE) {
 			getContainer().refreshCraftingQueue();
 			craftingRequestUpdateTimer = 0;
 		}
+
+		// Update the enabled states for the left and right buttons.
+		activeCraftingLeft.setEnabled(getContainer().getCurrentCraftingQueue().size() > 1);
+		activeCraftingRight.setEnabled(getContainer().getCurrentCraftingQueue().size() > 1);
+
+		// Update the crafting widget and the tool tips.
 		if (getContainer().getCurrentCraftingQueue().size() > 0) {
 			CraftingRequestResponse currentRequest = getContainer().getCurrentCraftingQueue().get(currentCraftingRequestIndex);
 			craftingStepsWidget.setRequest(currentRequest);
@@ -164,6 +176,19 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		} else {
 			craftingStepsWidget.setRequest(null);
 			craftingViewButton.setTooltip(new StringTextComponent("No crafting jobs currently queued."));
+		}
+
+		// IF we are in the crafting view and have crafting requests, show the cancel
+		// button.
+		if (viewType == TerminalViewType.CRAFTING) {
+			// Update the scroll offset.
+			scrollBar.setMaxScroll(craftingStepsWidget.getMaxScrollPosition());
+			craftingRequestCancelButton.setVisible(getContainer().getCurrentCraftingQueue().size() > 0);
+			craftingStepsWidget.setScrollPosition(scrollBar.getScrollAmount());
+		} else {
+			// Update the scroll bar.
+			scrollBar.setMaxScroll(getContainer().getMaxScroll());
+			getContainer().setScrollOffset(scrollBar.getScrollAmount());
 		}
 	}
 
@@ -195,6 +220,11 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		currentCraftingRequestIndex = SDMath.clamp(currentCraftingRequestIndex, 0, getContainer().getCurrentCraftingQueue().size() - 1);
 	}
 
+	protected void cancelCurrentCraftingRequest() {
+		CraftingRequestResponse currentRequest = getContainer().getCurrentCraftingQueue().get(currentCraftingRequestIndex);
+		getContainer().cancelCraftingRequest(currentRequest.getId());
+	}
+
 	protected boolean switchToCraftingStatusView() {
 		if (viewType != TerminalViewType.CRAFTING && getContainer().getCurrentCraftingQueue().size() > 0) {
 			getContainer().refreshCraftingQueue();
@@ -204,6 +234,8 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 			craftingStepsWidget.setVisible(true);
 			activeCraftingLeft.setVisible(true);
 			activeCraftingRight.setVisible(true);
+			craftingRequestCancelButton.setVisible(true);
+			scrollBar.setMaxScroll(0);
 			return true;
 		}
 		return false;
@@ -217,6 +249,8 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 			craftingStepsWidget.setVisible(false);
 			activeCraftingLeft.setVisible(false);
 			activeCraftingRight.setVisible(false);
+			craftingRequestCancelButton.setVisible(false);
+			scrollBar.setMaxScroll(0);
 			return true;
 		}
 		return false;

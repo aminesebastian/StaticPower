@@ -59,7 +59,7 @@ public class GuiCraftingAmount extends StaticPowerContainerGui<ContainerCrafting
 		registerWidget(plusOne = new TextButton(112, 152, 20, 16, "+1", (b, n) -> modifyCraftingAmmount(1)));
 		registerWidget(plusTen = new TextButton(134, 152, 25, 16, "+10", (b, n) -> modifyCraftingAmmount(10)));
 		registerWidget(confirm = new TextButton(61, 152, 45, 16, "Confirm", (b, n) -> confirmCraft()));
-		registerWidget(scrollBar = new ScrollBarWidget(146, 53, 96));
+		registerWidget(scrollBar = new ScrollBarWidget(146, 53, 95));
 		registerWidget(stepsWidget = new AutoCraftingStepsWidget(8, 53, 136, 95, MAX_ROWS, COLUMNS));
 
 		// Set the initial request amount to 1. Don't allow any non-numerics and do not

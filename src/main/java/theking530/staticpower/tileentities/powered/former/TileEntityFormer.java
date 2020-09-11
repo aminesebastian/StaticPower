@@ -89,12 +89,12 @@ public class TileEntityFormer extends TileEntityMachine {
 	protected ProcessingCheckState moveInputs(FormerRecipe recipe) {
 		// If the items can be insert into the output, transfer the items and return
 		// true.
-		if (InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRecipeOutput())) {
+		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRecipeOutput())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 
 		transferItemInternally(recipe.getInputIngredient().getCount(), inputInventory, 0, internalInventory, 0);
-		transferItemInternally(inputInventory, 1, internalInventory, 1);
+		internalInventory.setStackInSlot(1, inputInventory.getStackInSlot(1).copy());
 		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}

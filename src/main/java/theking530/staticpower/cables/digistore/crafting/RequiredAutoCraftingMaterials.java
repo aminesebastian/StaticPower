@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import theking530.staticpower.data.crafting.IngredientUtilities;
 
 /**
  * Manifest class that contains an aggregation of all the material required for
@@ -101,7 +102,7 @@ public class RequiredAutoCraftingMaterials {
 	@Nullable
 	protected RequiredAutoCraftingMaterial getMaterialForItem(Ingredient ing) {
 		for (RequiredAutoCraftingMaterial material : materials) {
-			if (material.getItem() == ing) {
+			if (IngredientUtilities.areIngredientsEqual(material.getItem(), ing)) {
 				return material;
 			}
 		}
@@ -158,6 +159,12 @@ public class RequiredAutoCraftingMaterials {
 
 		public int getMissingAmount() {
 			return Math.max(0, amountRequired - amountStored - amountToCraft);
+		}
+
+		@Override
+		public String toString() {
+			return "RequiredAutoCraftingMaterial [item=" + (item.hasNoMatchingItems() ? item : item.getMatchingStacks()[0]) + ", amountRequired=" + amountRequired + ", amountToCraft=" + amountToCraft
+					+ ", amountStored=" + amountStored + "]";
 		}
 	}
 }
