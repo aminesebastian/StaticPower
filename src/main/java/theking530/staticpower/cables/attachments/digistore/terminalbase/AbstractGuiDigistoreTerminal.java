@@ -230,6 +230,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 			getContainer().refreshCraftingQueue();
 			viewType = TerminalViewType.CRAFTING;
 			getContainer().setHideDigistoreInventory(true);
+			getContainer().setViewType(TerminalViewType.CRAFTING);
 			searchBar.setVisible(false);
 			craftingStepsWidget.setVisible(true);
 			activeCraftingLeft.setVisible(true);
@@ -245,6 +246,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		if (viewType != TerminalViewType.ITEMS) {
 			viewType = TerminalViewType.ITEMS;
 			getContainer().setHideDigistoreInventory(false);
+			getContainer().setViewType(TerminalViewType.ITEMS);
 			searchBar.setVisible(true);
 			craftingStepsWidget.setVisible(false);
 			activeCraftingLeft.setVisible(false);

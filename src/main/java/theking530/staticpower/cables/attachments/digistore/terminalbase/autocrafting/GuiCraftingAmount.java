@@ -21,7 +21,7 @@ import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class GuiCraftingAmount extends StaticPowerContainerGui<ContainerCraftingAmount> {
 	public static final int COLUMNS = 2;
-	public static final int MAX_ROWS = 4;
+	public static final int MAX_ROWS = 5;
 
 	public TextInputWidget searchBar;
 	public ItemDrawable craftingStack;
@@ -39,7 +39,7 @@ public class GuiCraftingAmount extends StaticPowerContainerGui<ContainerCrafting
 	public AutoCraftingStepsWidget stepsWidget;
 
 	public GuiCraftingAmount(ContainerCraftingAmount container, PlayerInventory invPlayer, ITextComponent name) {
-		super(container, invPlayer, name, 165, 174);
+		super(container, invPlayer, name, 165, 198);
 	}
 
 	@Override
@@ -54,12 +54,12 @@ public class GuiCraftingAmount extends StaticPowerContainerGui<ContainerCrafting
 		craftingStackDrawableWidget.setTooltip(getContainer().getCraftingResponse().getCraftingItem().getDisplayName());
 
 		registerWidget(close = new SpriteButton(152, 4, 8, 8, StaticPowerSprites.CLOSE, null, (b, n) -> goBack()));
-		registerWidget(minusTen = new TextButton(28, 152, 25, 16, "-10", (b, n) -> modifyCraftingAmmount(-10)));
-		registerWidget(minusOne = new TextButton(6, 152, 20, 16, "-1", (b, n) -> modifyCraftingAmmount(-1)));
-		registerWidget(plusOne = new TextButton(112, 152, 20, 16, "+1", (b, n) -> modifyCraftingAmmount(1)));
-		registerWidget(plusTen = new TextButton(134, 152, 25, 16, "+10", (b, n) -> modifyCraftingAmmount(10)));
-		registerWidget(confirm = new TextButton(61, 152, 45, 16, "Confirm", (b, n) -> confirmCraft()));
-		registerWidget(scrollBar = new ScrollBarWidget(146, 53, 95));
+		registerWidget(minusTen = new TextButton(28, 176, 25, 16, "-10", (b, n) -> modifyCraftingAmmount(-10)));
+		registerWidget(minusOne = new TextButton(6, 176, 20, 16, "-1", (b, n) -> modifyCraftingAmmount(-1)));
+		registerWidget(plusOne = new TextButton(112, 176, 20, 16, "+1", (b, n) -> modifyCraftingAmmount(1)));
+		registerWidget(plusTen = new TextButton(134, 176, 25, 16, "+10", (b, n) -> modifyCraftingAmmount(10)));
+		registerWidget(confirm = new TextButton(61, 176, 45, 16, "Confirm", (b, n) -> confirmCraft()));
+		registerWidget(scrollBar = new ScrollBarWidget(146, 53, 119));
 		registerWidget(stepsWidget = new AutoCraftingStepsWidget(8, 53, 136, 95, MAX_ROWS, COLUMNS));
 
 		// Set the initial request amount to 1. Don't allow any non-numerics and do not

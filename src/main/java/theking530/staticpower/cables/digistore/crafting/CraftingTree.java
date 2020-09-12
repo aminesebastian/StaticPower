@@ -14,6 +14,7 @@ import net.minecraft.item.crafting.Ingredient;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot;
 import theking530.staticpower.cables.digistore.crafting.EncodedDigistorePattern.EncodedIngredient;
 
+@Deprecated
 public class CraftingTree {
 	public static final int MAX_CRAFT_QUERY_DEPTH = 128;
 	public static final Logger LOGGER = LogManager.getLogger(CraftingTree.class);
@@ -124,10 +125,12 @@ public class CraftingTree {
 		return node;
 	}
 
+	@Deprecated
 	public enum CraftingTreeNodeType {
 		TARGET, CRAFT, TERMINAL
 	}
 
+	@Deprecated
 	public class CraftingTreeNode {
 		public final CraftingTreeNodeType type;
 		public final Ingredient targetIngredient;

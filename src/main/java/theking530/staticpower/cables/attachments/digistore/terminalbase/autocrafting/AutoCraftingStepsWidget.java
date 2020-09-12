@@ -86,7 +86,7 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 		Vector2D screenSpacePos = getScreenSpacePosition();
 
 		// Draw the background.
-		GuiDrawUtilities.drawSlot(screenSpacePos.getX(), screenSpacePos.getY(), getSize().getX(), getSize().getY());
+		GuiDrawUtilities.drawSlot(screenSpacePos.getX(), screenSpacePos.getY(), getSize().getX(), (rows * 24) - 1);
 
 		// If there is no request, do nothing else.
 		if (request == null) {
@@ -102,7 +102,7 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 		// Render the vertical dividers.
 		int divisionDistance = this.getSize().getXi() / columns;
 		for (int i = 1; i < columns; i++) {
-			GuiDrawUtilities.drawColoredRectangle(screenSpacePos.getX() + (divisionDistance * i) - 1, screenSpacePos.getY(), 1.0f, getSize().getY(), 1.0f, Color.GREY);
+			GuiDrawUtilities.drawColoredRectangle(screenSpacePos.getX() + (divisionDistance * i) - 1, screenSpacePos.getY(), 1.0f, (rows * 24) - 1, 1.0f, Color.GREY);
 		}
 	}
 
