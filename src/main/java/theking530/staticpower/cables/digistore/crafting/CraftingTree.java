@@ -2,6 +2,7 @@ package theking530.staticpower.cables.digistore.crafting;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 
@@ -13,13 +14,81 @@ import net.minecraft.item.crafting.Ingredient;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot;
 import theking530.staticpower.cables.digistore.crafting.EncodedDigistorePattern.EncodedIngredient;
 
-public class CraftingTreeGenerator {
+public class CraftingTree {
 	public static final int MAX_CRAFT_QUERY_DEPTH = 128;
-	public static final Logger LOGGER = LogManager.getLogger(CraftingTreeGenerator.class);
+	public static final Logger LOGGER = LogManager.getLogger(CraftingTree.class);
+	protected CraftingTreeNode root;
 
-	public CraftingTreeNode generateTreeForItem(ItemStack targetItem, DigistoreInventorySnapshot snapshot) {
-		CraftingTreeNode root = getPatternTreeForItem(Ingredient.fromStacks(targetItem), 1, snapshot, 0);
+	public CraftingTree generate(ItemStack targetItem, int amount, DigistoreInventorySnapshot snapshot) {
+		root = getPatternTreeForItem(Ingredient.fromStacks(targetItem), amount, snapshot, 0);
+		return this;
+	}
+
+	public CraftingTreeNode getRoot() {
 		return root;
+	}
+
+	public void traverseCraftingOrder(Predicate<CraftingTreeNode> callback) {
+		for (int i = 1; i <= getHeight(); i++) {
+			traverseCraftingOrder(callback, root, i);
+		}
+	}
+
+	public void traverseCraftingOrder(Predicate<CraftingTreeNode> callback, CraftingTreeNode node, int level) {
+		if (node == null) {
+			return;
+		}
+		if (level == 1) {
+			callback.test(node);
+		} else if (level > 1) {
+			for (CraftingTreeNode child : node.children) {
+				traverseCraftingOrder(callback, child, level - 1);
+			}
+		}
+	}
+
+	public void printForDebug() {
+		System.out.println("----------------------------------");
+		System.out.println();
+
+		// Traverse reverse inorder.
+		traverseCraftingOrder((node) -> {
+			node.printDebug();
+			System.out.println();
+			return true;
+		});
+		System.out.println();
+		System.out.println("----------------------------------");
+	}
+
+	public int getHeight() {
+		return getHeight(root);
+	}
+
+	private int getHeight(CraftingTreeNode node) {
+		// Base Case
+		if (node == null) {
+			return 0;
+		} else {
+			// Allocate an array for all the heights.
+			int[] heights = new int[node.children.size()];
+
+			// Get all the heights for all the sub trees.
+			for (int i = 0; i < node.children.size(); i++) {
+				heights[i] = getHeight(node.children.get(i));
+			}
+
+			// Get the maximum height.
+			int maxHeight = 0;
+			for (int height : heights) {
+				if (height > maxHeight) {
+					maxHeight = height;
+				}
+			}
+
+			// Return the max height plus 1.
+			return maxHeight + 1;
+		}
 	}
 
 	@Nullable
@@ -42,7 +111,7 @@ public class CraftingTreeGenerator {
 		EncodedDigistorePattern pattern = patterns.get(0);
 
 		// Create a node for this step and add it.
-		CraftingTreeNode node = new CraftingTreeNode(CraftingTreeNodeType.TERMINAL, ingredient, amountRequired, pattern);
+		CraftingTreeNode node = new CraftingTreeNode(CraftingTreeNodeType.CRAFT, ingredient, amountRequired, pattern);
 
 		// Add all the items required to craft with.
 		for (EncodedIngredient requiredItem : pattern.getRequiredItems()) {
@@ -79,7 +148,7 @@ public class CraftingTreeGenerator {
 			this.children.add(node);
 		}
 
-		public String getDebugTreeOutput() {
+		public String printDebug() {
 			String item = targetIngredient.hasNoMatchingItems() ? targetIngredient.toString() : targetIngredient.getMatchingStacks()[0].getDisplayName().getFormattedText();
 			String required = (" \tRequired: " + amountRequired);
 			if (craftingPattern != null) {
@@ -91,23 +160,6 @@ public class CraftingTreeGenerator {
 			}
 
 			return "";
-		}
-
-		public void printForDebug() {
-			System.out.println("----------------------------------");
-			System.out.println();
-			printForDebug(0);
-			System.out.println();
-			System.out.println("----------------------------------");
-		}
-
-		private void printForDebug(int level) {
-			getDebugTreeOutput();
-			System.out.println();
-
-			for (CraftingTreeNode child : children) {
-				child.printForDebug(level + 1);
-			}
 		}
 
 		@Override

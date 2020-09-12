@@ -45,7 +45,7 @@ public class GuiCraftingAmount extends StaticPowerContainerGui<ContainerCrafting
 	@Override
 	public void initializeGui() {
 		super.initializeGui();
-		guiTop -= 40;
+		guiTop -= 30;
 
 		missingIngredientDrawable = new SpriteDrawable(StaticPowerSprites.ERROR, 16, 16);
 

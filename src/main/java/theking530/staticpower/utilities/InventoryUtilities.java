@@ -7,6 +7,7 @@ import java.util.List;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
@@ -250,6 +251,32 @@ public class InventoryUtilities {
 			}
 		}
 		return output;
+	}
+
+	public static int extractWithIngredient(Ingredient ingredient, int amount, IItemHandler inv) {
+		return extractWithIngredient(ingredient, amount, inv, null);
+	}
+
+	public static int extractWithIngredient(Ingredient ingredient, int amount, IItemHandler inv, List<ItemStack> items) {
+		if (amount == 0) {
+			return 0;
+		}
+
+		int remaining = amount;
+		for (int i = 0; i < inv.getSlots(); i++) {
+			if (ingredient.test(inv.getStackInSlot(i))) {
+				ItemStack extracted = inv.extractItem(i, remaining, false);
+				remaining -= extracted.getCount();
+				if (items != null && !extracted.isEmpty()) {
+					items.add(extracted);
+				}
+
+				if (remaining == 0) {
+					break;
+				}
+			}
+		}
+		return amount - remaining;
 	}
 
 	public static void clearInventory(IItemHandler inv) {
