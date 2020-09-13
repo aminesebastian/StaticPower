@@ -98,7 +98,7 @@ public class DigistoreNetworkCraftingManager {
 		int craftableAmount = generatePatternSteps(new EncodedIngredient(strippedItem, 1), amount, snapshot, steps, null, 0, requestType);
 
 		// Post process the steps to reduce redundant crafting.
-		// postProcessPatternSteps(steps);
+		postProcessPatternSteps(steps);
 
 		// Update the craftable amount.
 		intialStep.setAmountRemainingToCraft(craftableAmount);

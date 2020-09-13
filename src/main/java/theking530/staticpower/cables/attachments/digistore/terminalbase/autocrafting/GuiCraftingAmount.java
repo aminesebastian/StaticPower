@@ -109,6 +109,8 @@ public class GuiCraftingAmount extends StaticPowerContainerGui<ContainerCrafting
 			int currentAmount = Integer.parseInt(searchBar.getText());
 			currentAmount = SDMath.clamp(currentAmount + delta, 0, Integer.MAX_VALUE);
 			searchBar.setText(String.valueOf(currentAmount));
+			minusTen.setEnabled(currentAmount > 10);
+			minusOne.setEnabled(currentAmount > 1);
 		}
 	}
 

@@ -1,7 +1,14 @@
 package theking530.staticpower.cables.digistore.crafting;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Queue;
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
@@ -14,35 +21,53 @@ import net.minecraft.item.crafting.Ingredient;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot;
 import theking530.staticpower.cables.digistore.crafting.EncodedDigistorePattern.EncodedIngredient;
 
-@Deprecated
 public class CraftingTree {
 	public static final int MAX_CRAFT_QUERY_DEPTH = 128;
 	public static final Logger LOGGER = LogManager.getLogger(CraftingTree.class);
-	protected CraftingTreeNode root;
+	protected CraftingNode root;
 
 	public CraftingTree generate(ItemStack targetItem, int amount, DigistoreInventorySnapshot snapshot) {
-		root = getPatternTreeForItem(Ingredient.fromStacks(targetItem), amount, snapshot, 0);
+		List<RawCraftingNode> rawTrees = cachePatternTreeForItem(Ingredient.fromStacks(targetItem), amount, snapshot, 0);
+		List<CraftingNode> trees = flattenTrees(rawTrees);
+
+		System.out.println("------------------New Set----------------");
+		for (int j = 0; j < trees.size(); j++) {
+			CraftingNode node = trees.get(j);
+			System.out.println(j);
+			for (int i = 1; i <= getHeight(node); i++) {
+				System.out.print("Level " + i + ":  ");
+				traverseCraftingOrder(treeNode -> {
+					treeNode.printDebug();
+					System.out.println();
+					return true;
+				}, node, i);
+			}
+			System.out.println();
+			System.out.println("----------------------------------");
+		}
+		System.out.println("------------------End Set----------------");
+		root = trees.get(0);
 		return this;
 	}
 
-	public CraftingTreeNode getRoot() {
+	public CraftingNode getRoot() {
 		return root;
 	}
 
-	public void traverseCraftingOrder(Predicate<CraftingTreeNode> callback) {
+	public void traverseCraftingOrder(Predicate<CraftingNode> callback) {
 		for (int i = 1; i <= getHeight(); i++) {
 			traverseCraftingOrder(callback, root, i);
 		}
 	}
 
-	public void traverseCraftingOrder(Predicate<CraftingTreeNode> callback, CraftingTreeNode node, int level) {
+	public static void traverseCraftingOrder(Predicate<CraftingNode> callback, CraftingNode node, int level) {
 		if (node == null) {
 			return;
 		}
 		if (level == 1) {
 			callback.test(node);
 		} else if (level > 1) {
-			for (CraftingTreeNode child : node.children) {
+			for (CraftingNode child : node.children) {
 				traverseCraftingOrder(callback, child, level - 1);
 			}
 		}
@@ -66,7 +91,7 @@ public class CraftingTree {
 		return getHeight(root);
 	}
 
-	private int getHeight(CraftingTreeNode node) {
+	private static int getHeight(CraftingNode node) {
 		// Base Case
 		if (node == null) {
 			return 0;
@@ -93,11 +118,11 @@ public class CraftingTree {
 	}
 
 	@Nullable
-	protected CraftingTreeNode getPatternTreeForItem(Ingredient ingredient, int amountRequired, DigistoreInventorySnapshot snapshot, int depth) {
+	protected List<RawCraftingNode> cachePatternTreeForItem(Ingredient ingredient, int amountRequired, DigistoreInventorySnapshot snapshot, int depth) {
 		// If we surpassed the max search depth, return false.
 		if (depth > MAX_CRAFT_QUERY_DEPTH) {
 			LOGGER.warn(String.format("Reached the maximum crafitng query depth of: $1%d when attempting to craft required ingredient: %2$s.", MAX_CRAFT_QUERY_DEPTH, ingredient.toString()));
-			return null;
+			return Collections.emptyList();
 		}
 
 		// Get all the patterns for this item.
@@ -105,58 +130,102 @@ public class CraftingTree {
 
 		// If we have no patterns for this item, this is a terminal node.
 		if (patterns.size() == 0) {
-			return new CraftingTreeNode(CraftingTreeNodeType.TERMINAL, ingredient, amountRequired, null);
+			return Arrays.asList(new RawCraftingNode(CraftingTreeNodeType.TERMINAL, ingredient, amountRequired));
 		}
 
-		// For the first pattern, recurse.
-		EncodedDigistorePattern pattern = patterns.get(0);
+		// Allocate the output.
+		List<RawCraftingNode> output = new ArrayList<RawCraftingNode>();
 
-		// Create a node for this step and add it.
-		CraftingTreeNode node = new CraftingTreeNode(CraftingTreeNodeType.CRAFT, ingredient, amountRequired, pattern);
+		// Iterate through all the patterns.
+		for (EncodedDigistorePattern pattern : patterns) {
+			// Create a node for this.
+			RawCraftingNode node = new RawCraftingNode(CraftingTreeNodeType.CRAFT, ingredient, amountRequired);
+			output.add(node);
 
-		// Add all the items required to craft with.
-		for (EncodedIngredient requiredItem : pattern.getRequiredItems()) {
-			double ingredientRequired = requiredItem.getCount() * amountRequired;
-			ingredientRequired = Math.ceil(ingredientRequired / pattern.getOutput().getCount());
-			CraftingTreeNode childTree = getPatternTreeForItem(requiredItem.getIngredient(), (int) ingredientRequired, snapshot, depth + 1);
-			node.addChildNode(childTree);
+			// Add all the items required to craft with.
+			for (EncodedIngredient requiredItem : pattern.getRequiredItems()) {
+				double ingredientRequired = requiredItem.getCount() * amountRequired;
+				ingredientRequired = Math.ceil(ingredientRequired / pattern.getOutput().getCount());
+				List<RawCraftingNode> nodes = cachePatternTreeForItem(requiredItem.getIngredient(), (int) ingredientRequired, snapshot, depth + 1);
+				node.addChildren(pattern, nodes);
+			}
 		}
 
-		return node;
+		// Return all the outputs.
+		return output;
 	}
 
-	@Deprecated
+	protected List<CraftingNode> flattenTrees(List<RawCraftingNode> rawTrees) {
+		int variations = 1;
+		for (RawCraftingNode root : rawTrees) {
+			Queue<RawCraftingNode> toVisit = new LinkedList<RawCraftingNode>();
+			toVisit.add(root);
+
+			while (!toVisit.isEmpty()) {
+				RawCraftingNode target = toVisit.poll();
+				variations *= target.children.size() > 0 ? target.children.size() : 1;
+				for (Entry<EncodedDigistorePattern, List<RawCraftingNode>> entry : target.children.entrySet()) {
+					for (RawCraftingNode child : entry.getValue()) {
+						toVisit.add(child);
+					}
+				}
+			}
+		}
+
+		List<CraftingNode> output = new ArrayList<CraftingNode>();
+		for (int i = 1; i < variations + 1; i++) {
+			RawCraftingNode root = rawTrees.get(rawTrees.size() % i);
+			EncodedDigistorePattern pattern = (EncodedDigistorePattern) root.children.keySet().toArray()[root.children.keySet().size() % i];
+			CraftingNode newRoot = new CraftingNode(root.type, root.targetIngredient, root.amountRequired, pattern);
+			output.add(newRoot);
+			convertRawToRegular(newRoot, root, i);
+		}
+		return output;
+	}
+
+	private void convertRawToRegular(CraftingNode newNode, RawCraftingNode oldNode, int variation) {
+		if (oldNode.children.size() > 0) {
+			EncodedDigistorePattern pattern = (EncodedDigistorePattern) oldNode.children.keySet().toArray()[oldNode.children.keySet().size() % variation];
+			for (RawCraftingNode child : oldNode.children.get(pattern)) {
+				CraftingNode newTarget = new CraftingNode(child.type, child.targetIngredient, child.amountRequired, pattern);
+				newNode.addChild(newTarget);
+				convertRawToRegular(newTarget, child, variation);
+			}
+		} else {
+			CraftingNode newTarget = new CraftingNode(oldNode.type, oldNode.targetIngredient, oldNode.amountRequired, null);
+			newNode.addChild(newTarget);
+		}
+	}
+
 	public enum CraftingTreeNodeType {
 		TARGET, CRAFT, TERMINAL
 	}
 
-	@Deprecated
-	public class CraftingTreeNode {
+	public class CraftingNode {
 		public final CraftingTreeNodeType type;
 		public final Ingredient targetIngredient;
 		public final int amountRequired;
-		public final EncodedDigistorePattern craftingPattern;
-		public final List<CraftingTreeNode> children;
+		public final EncodedDigistorePattern pattern;
+		public final List<CraftingNode> children;
 
-		public CraftingTreeNode(CraftingTreeNodeType type, Ingredient targetIngredient, int amountRequired, EncodedDigistorePattern craftingPattern) {
-			super();
+		public CraftingNode(CraftingTreeNodeType type, Ingredient targetIngredient, int amountRequired, EncodedDigistorePattern pattern) {
 			this.type = type;
 			this.targetIngredient = targetIngredient;
-			this.craftingPattern = craftingPattern;
-			this.children = new ArrayList<CraftingTreeNode>();
 			this.amountRequired = amountRequired;
+			this.children = new ArrayList<CraftingNode>();
+			this.pattern = pattern;
 		}
 
-		public void addChildNode(CraftingTreeNode node) {
-			this.children.add(node);
+		public void addChild(CraftingNode child) {
+			this.children.add(child);
 		}
 
 		public String printDebug() {
 			String item = targetIngredient.hasNoMatchingItems() ? targetIngredient.toString() : targetIngredient.getMatchingStacks()[0].getDisplayName().getFormattedText();
 			String required = (" \tRequired: " + amountRequired);
-			if (craftingPattern != null) {
-				String output = " \tCrafting Output: " + craftingPattern.getOutput().getCount();
-				String iterations = " \tMaximum Crafting Iterations: " + (int) Math.ceil((double) amountRequired / craftingPattern.getOutput().getCount());
+			if (pattern != null) {
+				String output = " \tCrafting Output: " + pattern.getOutput().getCount();
+				String iterations = " \tMaximum Crafting Iterations: " + (int) Math.ceil((double) amountRequired / pattern.getOutput().getCount());
 				System.out.format("%s%30s%10s%10s", item, required, output, iterations);
 			} else {
 				System.out.format("%s%30s", item, required);
@@ -167,7 +236,35 @@ public class CraftingTree {
 
 		@Override
 		public String toString() {
-			return "CraftingTreeNode [type=" + type + ", targetIngredient=" + targetIngredient + ", craftingPattern=" + craftingPattern + ", children=" + children + "]";
+			return "CraftingNode [type=" + type + ", targetIngredient=" + targetIngredient + ", amountRequired=" + amountRequired + ", children=" + children + "]";
+		}
+
+	}
+
+	public class RawCraftingNode {
+		public final CraftingTreeNodeType type;
+		public final Ingredient targetIngredient;
+		public final int amountRequired;
+		public final Map<EncodedDigistorePattern, List<RawCraftingNode>> children;
+
+		public RawCraftingNode(CraftingTreeNodeType type, Ingredient targetIngredient, int amountRequired) {
+			this.type = type;
+			this.targetIngredient = targetIngredient;
+			this.children = new HashMap<EncodedDigistorePattern, List<RawCraftingNode>>();
+			this.amountRequired = amountRequired;
+		}
+
+		public void addChildren(EncodedDigistorePattern pattern, List<RawCraftingNode> node) {
+			children.put(pattern, node);
+		}
+
+		public String printDebug() {
+			return "";
+		}
+
+		@Override
+		public String toString() {
+			return "CraftingTreeNode [type=" + type + ", targetIngredient=" + targetIngredient + ", amountRequired=" + amountRequired + ", children=" + children + "]";
 		}
 	}
 }

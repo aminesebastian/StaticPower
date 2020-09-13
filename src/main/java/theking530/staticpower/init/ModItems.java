@@ -166,6 +166,12 @@ public class ModItems {
 	public static StaticPowerItem CrystalLumum;
 	public static StaticPowerItem DustWood;
 
+	public static StaticPowerItem BasicCard;
+	public static StaticPowerItem AdvancedCard;
+	public static StaticPowerItem StaticCard;
+	public static StaticPowerItem EnergizedCard;
+	public static StaticPowerItem LumumCard;
+	
 	public static StaticPowerItem BasicProcessor;
 	public static StaticPowerItem AdvancedProcessor;
 	public static StaticPowerItem StaticProcessor;
@@ -335,12 +341,19 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(LumumCrop = new StaticPlantCrop("crop_lumum", ModFoods.LUMUM_CROP));
 		StaticPowerRegistry.preRegisterItem(DepletedCrop = new DepletedCrop("crop_depleted"));
 
-		// Processors
+		// Cards
 		StaticPowerRegistry.preRegisterItem(BasicProcessor = new StaticPowerItem("processor_basic"));
 		StaticPowerRegistry.preRegisterItem(AdvancedProcessor = new StaticPowerItem("processor_advanced"));
 		StaticPowerRegistry.preRegisterItem(StaticProcessor = new StaticPowerItem("processor_static"));
 		StaticPowerRegistry.preRegisterItem(EnergizedProcessor = new StaticPowerItem("processor_energized"));
 		StaticPowerRegistry.preRegisterItem(LumumProcessor = new StaticPowerItem("processor_lumum"));
+		
+		// Processors
+		StaticPowerRegistry.preRegisterItem(BasicCard = new StaticPowerItem("card_basic"));
+		StaticPowerRegistry.preRegisterItem(AdvancedCard = new StaticPowerItem("card_advanced"));
+		StaticPowerRegistry.preRegisterItem(StaticCard = new StaticPowerItem("card_static"));
+		StaticPowerRegistry.preRegisterItem(EnergizedCard = new StaticPowerItem("card_energized"));
+		StaticPowerRegistry.preRegisterItem(LumumCard = new StaticPowerItem("card_lumum"));
 
 		// Batteries
 		StaticPowerRegistry.preRegisterItem(BasicPortableBattery = new PortableBattery("portable_battery_basic", StaticPowerTiers.BASIC));
