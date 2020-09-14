@@ -210,6 +210,7 @@ public class ModItems {
 	public static StaticPowerItem InternalClock;
 	public static StaticPowerItem Motor;
 	public static StaticPowerItem Plug;
+	public static StaticPowerItem DigistoreCore;
 
 	public static FluidCapsule IronCapsule;
 	public static FluidCapsule BasicCapsule;
@@ -396,7 +397,8 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(IOPort = new StaticPowerItem("io_port"));
 		StaticPowerRegistry.preRegisterItem(Motor = new StaticPowerItem("motor"));
 		StaticPowerRegistry.preRegisterItem(Plug = new StaticPowerItem("plug"));
-
+		StaticPowerRegistry.preRegisterItem(DigistoreCore = new StaticPowerItem("digistore_core"));
+		
 		StaticPowerRegistry.preRegisterItem(IronCapsule = new FluidCapsule("capsule_iron", StaticPowerTiers.IRON));
 		StaticPowerRegistry.preRegisterItem(BasicCapsule = new FluidCapsule("capsule_basic", StaticPowerTiers.BASIC));
 		StaticPowerRegistry.preRegisterItem(AdvancedCapsule = new FluidCapsule("capsule_advanced", StaticPowerTiers.ADVANCED));

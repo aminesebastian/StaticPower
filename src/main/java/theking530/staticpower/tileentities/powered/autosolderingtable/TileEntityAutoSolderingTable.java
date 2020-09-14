@@ -19,6 +19,7 @@ import theking530.staticpower.tileentities.components.items.BatteryInventoryComp
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
+import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.AbstractSolderingTable;
 import theking530.staticpower.utilities.InventoryUtilities;
 
@@ -35,6 +36,7 @@ public class TileEntityAutoSolderingTable extends AbstractSolderingTable {
 	public final MachineProcessingComponent processingComponent;
 	public final InventoryComponent internalInventory;
 	public final BatteryInventoryComponent batteryInventory;
+	public final UpgradeInventoryComponent upgradesInventory;
 	public final InventoryComponent outputInventory;
 
 	public TileEntityAutoSolderingTable() {
@@ -50,13 +52,22 @@ public class TileEntityAutoSolderingTable extends AbstractSolderingTable {
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 9, MachineSideMode.Never));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
+		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		registerComponent(
 				moveComponent = new MachineProcessingComponent("MoveComponent", DEFAULT_MOVING_TIME, this::canMoveFromInputToProcessing, () -> ProcessingCheckState.ok(), this::movingCompleted, true)
 						.setRedstoneControlComponent(redstoneControlComponent));
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true)
-				.setShouldControlBlockState(true).setRedstoneControlComponent(redstoneControlComponent).setEnergyComponent(energyStorage).setProcessingPowerUsage(DEFAULT_PROCESSING_COST));
+				.setShouldControlBlockState(true));
 
+		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
+		processingComponent.setUpgradeInventory(upgradesInventory);
+		processingComponent.setEnergyComponent(energyStorage);
+		processingComponent.setProcessingPowerUsage(DEFAULT_PROCESSING_COST);
+
+		// Set the energy storage upgrade inventory.
+		energyStorage.setUpgradeInventory(upgradesInventory);
+		
 		registerComponent(new OutputServoComponent("OutputServo", 2, outputInventory));
 		registerComponent(new InputServoComponent("InputServo", 2, inventory));
 	}

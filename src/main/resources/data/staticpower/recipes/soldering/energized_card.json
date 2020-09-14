@@ -1,0 +1,28 @@
+{
+	"type": "staticpower:soldering_recipe",
+	"pattern": [
+		"lwl",
+		"gpg",
+		"iii"
+	],
+	"key": {
+		"l": {
+			"item": "staticpower:plate_energized"
+		},
+		"p": {
+			"item": "staticpower:processor_energized"
+		},
+		"w": {
+			"tag": "forge:ingots/gold"
+		},
+		"i": {
+			"tag": "forge:ingots/iron"
+		},
+		"g": {
+			"item": "staticpower:crystal_energized"
+		}
+	},
+	"result": {
+		"item": "staticpower:card_energized"
+	}
+}

@@ -1,0 +1,25 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ggg",
+		"drd",
+		"gpg"
+	],
+	"key": {
+		"g": {
+			"tag": "forge:glass"
+		},
+		"r": {
+			"tag": "forge:storage_blocks/quartz"
+		},
+		"d": {
+			"tag": "forge:gems/emerald"
+		},
+		"p": {
+			"item": "staticpower:upgrade_plate_basic"
+		}
+	},
+	"result": {
+		"item": "staticpower:upgrade_stack"
+	}
+}

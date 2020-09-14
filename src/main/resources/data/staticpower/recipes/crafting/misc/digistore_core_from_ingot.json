@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"   ",
+		"rzg",
+		"   "
+	],
+	"key": {
+		"r": {
+			"tag": "forge:dusts/redstone"
+		},
+		"g": {
+			"tag": "forge:dusts/glowstone"
+		},
+		"z": {
+			"tag": "forge:ingots/zinc"
+		}
+	},
+	"result": {
+		"item": "staticpower:digistore_core",
+		"count": 2
+	}
+}

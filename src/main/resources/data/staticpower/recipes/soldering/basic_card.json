@@ -1,0 +1,28 @@
+{
+	"type": "staticpower:soldering_recipe",
+	"pattern": [
+		"lwl",
+		"gpg",
+		"iii"
+	],
+	"key": {
+		"l": {
+			"tag": "forge:plates/tin"
+		},
+		"p": {
+			"item": "staticpower:processor_basic"
+		},
+		"w": {
+			"tag": "forge:ingots/copper"
+		},
+		"i": {
+			"tag": "forge:ingots/iron"
+		},
+		"g": {
+			"tag": "forge:dusts/redstone"
+		}
+	},
+	"result": {
+		"item": "staticpower:card_basic"
+	}
+}

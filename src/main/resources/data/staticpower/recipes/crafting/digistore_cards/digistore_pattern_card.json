@@ -1,0 +1,26 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"lll",
+		"rcr",
+		"ppp"
+	],
+	"key": {
+		"r": {
+			"tag": "forge:dusts/redstone"
+		},
+		"c": {
+			"item": "staticpower:digistore_core"
+		},
+		"l": {
+			"tag": "forge:glass"
+		},
+		"p": {
+			"tag": "forge:plates/magnesium"
+		}
+	},
+	"result": {
+		"item": "staticpower:digistore_pattern_card",
+		"count": 2
+	}
+}

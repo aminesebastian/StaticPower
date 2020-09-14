@@ -38,10 +38,12 @@ public class TileEntityRenderTank extends StaticPowerTileEntitySpecialRenderer<T
 
 		// Draw the glass. We have to do it like this because of how mineraft orders
 		// transparency.
-		@SuppressWarnings("deprecation")
-		AtlasTexture blocksTexture = ModelLoader.instance().getSpriteMap().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-		TextureAtlasSprite sprite = blocksTexture.getSprite(StaticPowerSprites.BLANK_TEXTURE);
-		CUBE_MODEL.drawPreviewCube(new Vector3f(1.95f * TEXEL, 2f * TEXEL, 1.95f * TEXEL), new Vector3f(12.1f * TEXEL, 12.1f * TEXEL, 12.1f * TEXEL), new Color(0.4f, 0.45f, 0.55f, 0.35f), matrixStack,
-				sprite);
+		if (ModelLoader.instance() != null && ModelLoader.instance().getSpriteMap() != null) {
+			@SuppressWarnings("deprecation")
+			AtlasTexture blocksTexture = ModelLoader.instance().getSpriteMap().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+			TextureAtlasSprite sprite = blocksTexture.getSprite(StaticPowerSprites.BLANK_TEXTURE);
+			CUBE_MODEL.drawPreviewCube(new Vector3f(1.95f * TEXEL, 2f * TEXEL, 1.95f * TEXEL), new Vector3f(12.1f * TEXEL, 12.1f * TEXEL, 12.1f * TEXEL), new Color(0.4f, 0.45f, 0.55f, 0.35f),
+					matrixStack, sprite);
+		}
 	}
 }

@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		" g ",
+		" r ",
+		" p "
+	],
+	"key": {
+		"g": {
+			"tag": "forge:ingots/copper"
+		},
+		"r": {
+			"item": "minecraft:bucket"
+		},
+		"p": {
+			"item": "staticpower:upgrade_plate_energized"
+		}
+	},
+	"result": {
+		"item": "staticpower:upgrade_tank_energized"
+	}
+}

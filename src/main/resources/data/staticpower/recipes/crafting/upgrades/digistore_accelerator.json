@@ -1,0 +1,25 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ggg",
+		"drd",
+		"gpg"
+	],
+	"key": {
+		"g": {
+			"tag": "forge:glass"
+		},
+		"r": {
+			"item": "minecraft:glowstone"
+		},
+		"d": {
+			"tag": "forge:dusts/redstone"
+		},
+		"p": {
+			"item": "staticpower:upgrade_plate_basic"
+		}
+	},
+	"result": {
+		"item": "staticpower:upgrade_accelerator"
+	}
+}

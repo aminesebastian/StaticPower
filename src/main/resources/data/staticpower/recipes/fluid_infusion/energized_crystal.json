@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:fluid_infusion_recipe",
 	"input": {
-		"item": "staticpower:crystal_static"
+		"tag": "forge:gems/diamond"
 	},
 	"fluid": {
 		"fluid": "staticpower:fluid_energized",

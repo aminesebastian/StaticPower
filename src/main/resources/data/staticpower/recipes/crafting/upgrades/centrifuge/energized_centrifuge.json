@@ -1,0 +1,25 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		" g ",
+		"ere",
+		" p "
+	],
+	"key": {
+		"g": {
+			"tag": "forge:ingots/tin"
+		},
+		"e": {
+			"item": "staticpower:gear_energized"
+		},
+		"r": {
+			"item": "staticpower:motor"
+		},
+		"p": {
+			"item": "staticpower:upgrade_plate_energized"
+		}
+	},
+	"result": {
+		"item": "staticpower:upgrade_centrifuge_energized"
+	}
+}

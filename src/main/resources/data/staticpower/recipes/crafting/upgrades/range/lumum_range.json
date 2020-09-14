@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ggg",
+		"grg",
+		"gpg"
+	],
+	"key": {
+		"g": {
+			"tag": "forge:ingots/tungsten"
+		},
+		"r": {
+			"tag": "forge:gems/emerald"
+		},
+		"p": {
+			"item": "staticpower:upgrade_plate_lumum"
+		}
+	},
+	"result": {
+		"item": "staticpower:upgrade_range_lumum"
+	}
+}
