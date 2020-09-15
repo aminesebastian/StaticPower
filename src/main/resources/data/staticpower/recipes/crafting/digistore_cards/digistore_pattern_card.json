@@ -16,11 +16,11 @@
 			"tag": "forge:glass"
 		},
 		"p": {
-			"tag": "forge:plates/magnesium"
+			"tag": "forge:ingots/magnesium"
 		}
 	},
 	"result": {
 		"item": "staticpower:digistore_pattern_card",
-		"count": 2
+		"count": 3
 	}
 }

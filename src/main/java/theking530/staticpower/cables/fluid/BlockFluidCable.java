@@ -1,18 +1,24 @@
 package theking530.staticpower.cables.fluid;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
+import theking530.api.power.StaticVoltTooltipUtilities;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
@@ -27,11 +33,18 @@ public class BlockFluidCable extends AbstractCableBlock {
 		super(name, new CableBoundsCache(2.0D, new Vector3D(3.0f, 3.0f, 3.0f)));
 	}
 
+	@OnlyIn(Dist.CLIENT)
+	@Override
+	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+		super.getBasicTooltip(stack, worldIn, tooltip);
+		tooltip.add(StaticVoltTooltipUtilities.getPowerPerTickTooltip(100));
+	}
+
 	@Override
 	public IBakedModel getModelOverride(BlockState state, @Nullable IBakedModel existingModel, ModelBakeEvent event) {
 		IBakedModel extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_EXTENSION);
 		IBakedModel attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_ATTACHMENT);
-		
+
 		// Don't use the straight model (it just looks better without it! :D ).
 		return new CableBakedModel(existingModel, extensionModel, null, attachmentModel);
 	}

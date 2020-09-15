@@ -1,13 +1,18 @@
 package theking530.staticpower.cables.item;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -16,6 +21,7 @@ import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.CableBoundsCache;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
+import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockItemCable extends AbstractCableBlock {
@@ -24,6 +30,15 @@ public class BlockItemCable extends AbstractCableBlock {
 	public BlockItemCable(String name, ResourceLocation tier) {
 		super(name, new CableBoundsCache(2.0D, new Vector3D(3.0f, 3.0f, 3.0f)));
 		this.tier = tier;
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	@Override
+	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+		super.getBasicTooltip(stack, worldIn, tooltip);
+		tooltip.add(ItemCableTooltipUtilities.getMaxSpeedTooltip(StaticPowerDataRegistry.getTier(tier).getItemCableMaxSpeed()));
+		tooltip.add(ItemCableTooltipUtilities.getAccelerationTooltip(StaticPowerDataRegistry.getTier(tier).getItemCableAcceleration()));
+		tooltip.add(ItemCableTooltipUtilities.getFrictionTooltip(StaticPowerDataRegistry.getTier(tier).getItemCableFriction()));
 	}
 
 	@Override
