@@ -12,6 +12,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -42,6 +44,7 @@ public class BlockIndustrialFluidCable extends AbstractCableBlock {
 	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
 		super.getBasicTooltip(stack, worldIn, tooltip);
 		tooltip.add(FluidCableTooltipUtilities.getFluidTrasnferRate(StaticPowerDataRegistry.getTier(tier).getCableIndustrialFluidCapacity()));
+		tooltip.add(new StringTextComponent(TextFormatting.RED.toString()).appendText("Cannot connect directly to blocks!"));
 	}
 
 	@Override
