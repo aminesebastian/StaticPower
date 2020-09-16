@@ -4,31 +4,36 @@ import java.text.DecimalFormat;
 
 public class MetricConverter {
 	private static final DecimalFormat FORMATTER = new DecimalFormat("#.##");
-	private static final String[] SUFFIXES = { "", "k", "M", "G", "T", "P", "E", "Z", "Y" };
+	private static final String[] SUFFIXES = { "y", "z", "a", "f", "p", "n", "µ", "m", "", "k", "M", "G", "T", "P", "E", "Z", "Y" };
 	private float Value;
 	private String Suffix;
 
-	public MetricConverter(float value) {
+	public MetricConverter(float value, int initialOffset) {
 		// Keep dividing the Value by 1000 until we hit a current value of < 1000.
 		// For each iteration of the loop, increment the suffix index.
-		int suffixIndex = 0;
+		int suffixIndex = 8 + initialOffset;
 		this.Value = Math.abs(value);
+
 		while (Value / 1000 >= 1) {
 			Value /= 1000;
 			suffixIndex++;
 		}
 
 		// Correct for negatives.
-		if(value < 0) {
+		if (value < 0) {
 			Value *= -1;
 		}
-		
+
 		// Cache the suffix.
 		if (suffixIndex < SUFFIXES.length - 1) {
 			Suffix = SUFFIXES[suffixIndex];
 		} else {
-			Suffix = "TOO_BIG_C'MON";
+			Suffix = "OUT_OF_RANGE_C'MON";
 		}
+	}
+
+	public MetricConverter(float value) {
+		this(value, 0);
 	}
 
 	public float getValue() {

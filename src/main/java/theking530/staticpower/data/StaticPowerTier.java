@@ -50,6 +50,12 @@ public class StaticPowerTier {
 	private float itemCableFriction;
 	private int itemCableMaxSpeed;
 
+	/***************************
+	 * Fluid Cable Configuration
+	 ***************************/
+	private int cableFluidCapacity;
+	private int cableIndustrialFluidCapacity;
+
 	/********************
 	 * Heat Configuration
 	 ********************/
@@ -116,6 +122,14 @@ public class StaticPowerTier {
 	private int itemFilterSlots;
 
 	private int upgradeOrdinal;
+
+	public int getCableFluidCapacity() {
+		return cableFluidCapacity;
+	}
+
+	public int getCableIndustrialFluidCapacity() {
+		return cableIndustrialFluidCapacity;
+	}
 
 	public int getDefaultTankCapacity() {
 		return defaultTankCapacity;

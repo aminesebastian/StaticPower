@@ -190,8 +190,19 @@ public class ModBlocks {
 	public static BlockPowerCable PowerCableLumum;
 	public static BlockPowerCable PowerCableCreative;
 
-	public static BlockFluidCable FluidCable;
-	public static BlockIndustrialFluidCable IndustrialFluidCable;
+	public static BlockFluidCable FluidCableBasic;
+	public static BlockFluidCable FluidCableAdvanced;
+	public static BlockFluidCable FluidCableStatic;
+	public static BlockFluidCable FluidCableEnergized;
+	public static BlockFluidCable FluidCableLumum;
+	public static BlockFluidCable FluidCableCreative;
+
+	public static BlockIndustrialFluidCable IndustrialFluidCableBasic;
+	public static BlockIndustrialFluidCable IndustrialFluidCableAdvanced;
+	public static BlockIndustrialFluidCable IndustrialFluidCableStatic;
+	public static BlockIndustrialFluidCable IndustrialFluidCableEnergized;
+	public static BlockIndustrialFluidCable IndustrialFluidCableLumum;
+	public static BlockIndustrialFluidCable IndustrialFluidCableCreative;
 
 	public static BlockHeatCable CopperHeatCable;
 	public static BlockHeatCable TinHeatCable;
@@ -350,8 +361,8 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(DigistoreIOPort = new BlockDigistoreIOPort("digistore_io_port"));
 		StaticPowerRegistry.preRegisterBlock(Digistore = new BlockDigistore("digistore"));
 		StaticPowerRegistry.preRegisterBlock(DigistoreServerRack = new BlockDigistoreServerRack("digistore_server_rack"));
-		StaticPowerRegistry.preRegisterBlock(PatternStorage = new BlockPatternStorage("digistore_pattern_storage"));		
-		
+		StaticPowerRegistry.preRegisterBlock(PatternStorage = new BlockPatternStorage("digistore_pattern_storage"));
+
 		// Cables
 		StaticPowerRegistry.preRegisterBlock(DigistoreWire = new BlockDigistoreNetworkWire("cable_digistore"));
 		StaticPowerRegistry.preRegisterBlock(PowerCableBasic = new BlockPowerCable("cable_power_basic", StaticPowerTiers.BASIC));
@@ -368,8 +379,19 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(ItemCableLumum = new BlockItemCable("cable_item_lumum", StaticPowerTiers.LUMUM));
 		StaticPowerRegistry.preRegisterBlock(ItemCableCreative = new BlockItemCable("cable_item_creative", StaticPowerTiers.CREATIVE));
 
-		StaticPowerRegistry.preRegisterBlock(FluidCable = new BlockFluidCable("cable_fluid"));
-		StaticPowerRegistry.preRegisterBlock(IndustrialFluidCable = new BlockIndustrialFluidCable("cable_industrial_fluid"));
+		StaticPowerRegistry.preRegisterBlock(FluidCableBasic = new BlockFluidCable("cable_fluid_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterBlock(FluidCableAdvanced = new BlockFluidCable("cable_fluid_advanced", StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterBlock(FluidCableStatic = new BlockFluidCable("cable_fluid_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterBlock(FluidCableEnergized = new BlockFluidCable("cable_fluid_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterBlock(FluidCableLumum = new BlockFluidCable("cable_fluid_lumum", StaticPowerTiers.LUMUM));
+		StaticPowerRegistry.preRegisterBlock(FluidCableCreative = new BlockFluidCable("cable_fluid_creative", StaticPowerTiers.CREATIVE));
+
+		StaticPowerRegistry.preRegisterBlock(IndustrialFluidCableBasic = new BlockIndustrialFluidCable("cable_industrial_fluid_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterBlock(IndustrialFluidCableAdvanced = new BlockIndustrialFluidCable("cable_industrial_fluid_advanced", StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterBlock(IndustrialFluidCableStatic = new BlockIndustrialFluidCable("cable_industrial_fluid_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterBlock(IndustrialFluidCableEnergized = new BlockIndustrialFluidCable("cable_industrial_fluid_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterBlock(IndustrialFluidCableLumum = new BlockIndustrialFluidCable("cable_industrial_fluid_lumum", StaticPowerTiers.LUMUM));
+		StaticPowerRegistry.preRegisterBlock(IndustrialFluidCableCreative = new BlockIndustrialFluidCable("cable_industrial_fluid_creative", StaticPowerTiers.CREATIVE));
 
 		StaticPowerRegistry.preRegisterBlock(CopperHeatCable = new BlockHeatCable("cable_heat_copper", StaticPowerTiers.COPPER));
 		StaticPowerRegistry.preRegisterBlock(TinHeatCable = new BlockHeatCable("cable_heat_tin", StaticPowerTiers.TIN));

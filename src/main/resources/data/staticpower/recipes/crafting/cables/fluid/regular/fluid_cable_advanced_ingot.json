@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ppp",
+		"rir",
+		"ppp"
+	],
+	"key": {
+		"i": {
+			"tag": "forge:glass"
+		},
+		"r": {
+			"tag": "forge:rubber"
+		},
+		"p": {
+			"tag": "forge:ingots/brass"
+		}
+	},
+	"result": {
+		"item": "staticpower:cable_fluid_advanced",
+		"count": 4
+	}
+}

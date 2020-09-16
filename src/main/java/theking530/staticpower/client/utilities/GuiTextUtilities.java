@@ -142,7 +142,7 @@ public class GuiTextUtilities {
 	}
 
 	public static ITextComponent formatFluidToString(float fluid, boolean includeUnits, boolean includeMetricUnit) {
-		MetricConverter metricEnergy = new MetricConverter(fluid);
+		MetricConverter metricEnergy = new MetricConverter(fluid, -1);
 		ITextComponent output = new StringTextComponent(NUMBER_FORMATTER.format(metricEnergy.getValue()));
 
 		if (includeMetricUnit) {
@@ -156,7 +156,7 @@ public class GuiTextUtilities {
 	}
 
 	public static ITextComponent formatFluidRateToString(float fluidRate) {
-		MetricConverter metricRate = new MetricConverter(fluidRate);
+		MetricConverter metricRate = new MetricConverter(fluidRate, -1);
 		return new StringTextComponent(NUMBER_FORMATTER.format(metricRate.getValue())).appendText(" ").appendText(metricRate.getSuffix()).appendSibling(FLUID_RATE_TRANSLATION);
 	}
 

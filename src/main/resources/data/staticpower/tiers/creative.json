@@ -19,5 +19,7 @@
 	"defaultMachinePowerCapacity": 2147483647,
 	"defaultMachinePowerInput": 2147483647,
 	"defaultMachinePowerOutput": 2147483647,
-	"capsuleCapacity": 2147483647
+	"capsuleCapacity": 2147483647,
+	"cableFluidCapacity": 2147483647,
+	"cableIndustrialFluidCapacity": 2147483647
 }

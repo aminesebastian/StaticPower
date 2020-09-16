@@ -39,5 +39,7 @@
 	"defaultMachinePowerInput": 10,
 	"defaultMachinePowerOutput": 10,
 	"defaultTankCapacity": 5000,
-	"capsuleCapacity": 4000
+	"capsuleCapacity": 4000,
+	"cableFluidCapacity": 100,
+	"cableIndustrialFluidCapacity": 1000
 }

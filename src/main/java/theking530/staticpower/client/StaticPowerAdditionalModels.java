@@ -59,13 +59,57 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation CABLE_DIGISTORE_EXTENSION = registerModel("block/cables/digistore/extension");
 	public static final ResourceLocation CABLE_DIGISTORE_ATTACHMENT = registerModel("block/cables/digistore/attachment");
 
-	public static final ResourceLocation CABLE_FLUID_STRAIGHT = registerModel("block/cables/fluid/straight");
-	public static final ResourceLocation CABLE_FLUID_EXTENSION = registerModel("block/cables/fluid/extension");
-	public static final ResourceLocation CABLE_FLUID_ATTACHMENT = registerModel("block/cables/fluid/attachment");
+	public static final ResourceLocation CABLE_FLUID_BASIC_STRAIGHT = registerModel("block/cables/fluid/basic/straight");
+	public static final ResourceLocation CABLE_FLUID_BASIC_EXTENSION = registerModel("block/cables/fluid/basic/extension");
+	public static final ResourceLocation CABLE_FLUID_BASIC_ATTACHMENT = registerModel("block/cables/fluid/basic/attachment");
 
-	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_STRAIGHT = registerModel("block/cables/industrial_fluid/straight");
-	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_EXTENSION = registerModel("block/cables/industrial_fluid/extension");
-	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_ATTACHMENT = registerModel("block/cables/industrial_fluid/attachment");
+	public static final ResourceLocation CABLE_FLUID_ADVANCED_STRAIGHT = registerModel("block/cables/fluid/advanced/straight");
+	public static final ResourceLocation CABLE_FLUID_ADVANCED_EXTENSION = registerModel("block/cables/fluid/advanced/extension");
+	public static final ResourceLocation CABLE_FLUID_ADVANCED_ATTACHMENT = registerModel("block/cables/fluid/advanced/attachment");
+
+	public static final ResourceLocation CABLE_FLUID_STATIC_STRAIGHT = registerModel("block/cables/fluid/static/straight");
+	public static final ResourceLocation CABLE_FLUID_STATIC_EXTENSION = registerModel("block/cables/fluid/static/extension");
+	public static final ResourceLocation CABLE_FLUID_STATIC_ATTACHMENT = registerModel("block/cables/fluid/static/attachment");
+
+	public static final ResourceLocation CABLE_FLUID_ENERGIZED_STRAIGHT = registerModel("block/cables/fluid/energized/straight");
+	public static final ResourceLocation CABLE_FLUID_ENERGIZED_EXTENSION = registerModel("block/cables/fluid/energized/extension");
+	public static final ResourceLocation CABLE_FLUID_ENERGIZED_ATTACHMENT = registerModel("block/cables/fluid/energized/attachment");
+
+	public static final ResourceLocation CABLE_FLUID_LUMUM_STRAIGHT = registerModel("block/cables/fluid/lumum/straight");
+	public static final ResourceLocation CABLE_FLUID_LUMUM_EXTENSION = registerModel("block/cables/fluid/lumum/extension");
+	public static final ResourceLocation CABLE_FLUID_LUMUM_ATTACHMENT = registerModel("block/cables/fluid/lumum/attachment");
+
+	public static final ResourceLocation CABLE_FLUID_CREATIVE_STRAIGHT = registerModel("block/cables/fluid/creative/straight");
+	public static final ResourceLocation CABLE_FLUID_CREATIVE_EXTENSION = registerModel("block/cables/fluid/creative/extension");
+	public static final ResourceLocation CABLE_FLUID_CREATIVE_ATTACHMENT = registerModel("block/cables/fluid/creative/attachment");
+
+	public static final ResourceLocation CABLE_FLUID_DEFAULT_ATTACHMENT = registerModel("block/cables/fluid/attachment");
+
+	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_BASIC_STRAIGHT = registerModel("block/cables/industrial_fluid/basic/straight");
+	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_BASIC_EXTENSION = registerModel("block/cables/industrial_fluid/basic/extension");
+	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_BASIC_ATTACHMENT = registerModel("block/cables/industrial_fluid/basic/attachment");
+
+	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_ADVANCED_STRAIGHT = registerModel("block/cables/industrial_fluid/advanced/straight");
+	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_ADVANCED_EXTENSION = registerModel("block/cables/industrial_fluid/advanced/extension");
+	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_ADVANCED_ATTACHMENT = registerModel("block/cables/industrial_fluid/advanced/attachment");
+
+	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_STATIC_STRAIGHT = registerModel("block/cables/industrial_fluid/static/straight");
+	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_STATIC_EXTENSION = registerModel("block/cables/industrial_fluid/static/extension");
+	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_STATIC_ATTACHMENT = registerModel("block/cables/industrial_fluid/static/attachment");
+
+	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_ENERGIZED_STRAIGHT = registerModel("block/cables/industrial_fluid/energized/straight");
+	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_ENERGIZED_EXTENSION = registerModel("block/cables/industrial_fluid/energized/extension");
+	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_ENERGIZED_ATTACHMENT = registerModel("block/cables/industrial_fluid/energized/attachment");
+
+	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_LUMUM_STRAIGHT = registerModel("block/cables/industrial_fluid/lumum/straight");
+	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_LUMUM_EXTENSION = registerModel("block/cables/industrial_fluid/lumum/extension");
+	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_LUMUM_ATTACHMENT = registerModel("block/cables/industrial_fluid/lumum/attachment");
+
+	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_CREATIVE_STRAIGHT = registerModel("block/cables/industrial_fluid/creative/straight");
+	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_CREATIVE_EXTENSION = registerModel("block/cables/industrial_fluid/creative/extension");
+	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_CREATIVE_ATTACHMENT = registerModel("block/cables/industrial_fluid/creative/attachment");
+
+	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_DEFAULT_ATTACHMENT = registerModel("block/cables/industrial_fluid/attachment");
 
 	public static final ResourceLocation CABLE_HEAT_COPPER_STRAIGHT = registerModel("block/cables/heat/copper/straight");
 	public static final ResourceLocation CABLE_HEAT_COPPER_EXTENSION = registerModel("block/cables/heat/copper/extension");
@@ -111,13 +155,13 @@ public class StaticPowerAdditionalModels {
 
 	public static final ResourceLocation CABLE_DIGISTORE_TERMINAL_ATTACHMENT_ON = registerModel("block/cables/attachments/digistore_terminal_attachment_on");
 	public static final ResourceLocation CABLE_DIGISTORE_TERMINAL_ATTACHMENT = registerModel("block/cables/attachments/digistore_terminal_attachment");
-	
+
 	public static final ResourceLocation CABLE_DIGISTORE_CRAFTING_TERMINAL_ATTACHMENT_ON = registerModel("block/cables/attachments/digistore_crafting_terminal_attachment_on");
 	public static final ResourceLocation CABLE_DIGISTORE_CRAFTING_TERMINAL_ATTACHMENT = registerModel("block/cables/attachments/digistore_crafting_terminal_attachment");
-	
+
 	public static final ResourceLocation CABLE_DIGISTORE_PATTERN_ENCODER_ATTACHMENT_ON = registerModel("block/cables/attachments/digistore_pattern_encoder_attachment_on");
 	public static final ResourceLocation CABLE_DIGISTORE_PATTERN_ENCODER_ATTACHMENT = registerModel("block/cables/attachments/digistore_pattern_encoder_attachment");
-	
+
 	public static final ResourceLocation CABLE_DIGISTORE_EXPORTER_ATTACHMENT = registerModel("block/cables/attachments/digistore_exporter");
 	public static final ResourceLocation CABLE_DIGISTORE_IMPORTER_ATTACHMENT = registerModel("block/cables/attachments/digistore_importer");
 	public static final ResourceLocation CABLE_DIGISTORE_IO_BUS_ATTACHMENT = registerModel("block/cables/attachments/digistore_io_bus");
@@ -139,7 +183,6 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation CREATIVE_DIGISTORE_SINGULAR_CARD = registerModel("block/machines/digistore_card_singular_creative");
 	public static final ResourceLocation DIGISTORE_SINGULAR_CARD_BAR = registerModel("block/machines/digistore_singular_card_bar");
 	public static final ResourceLocation DIGISTORE_SINGULAR_CARD_BAR_FULL = registerModel("block/machines/digistore_singular_card_bar_full");
-	
 
 	public static final ResourceLocation DIGISTORE_PATTERN_CARD_ENCODED = registerModel("item/digistore_pattern_card_encoded");
 
