@@ -1,8 +1,10 @@
 package theking530.staticpower.init;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialColor;
 import net.minecraftforge.common.ToolType;
 import theking530.staticcore.utilities.HarvestLevel;
 import theking530.staticpower.StaticPowerRegistry;
@@ -16,6 +18,9 @@ import theking530.staticpower.blocks.StaticPowerRotatePillarBlock;
 import theking530.staticpower.blocks.crops.BaseSimplePlant;
 import theking530.staticpower.blocks.decorative.Lamp;
 import theking530.staticpower.blocks.decorative.StaticPowerGlassBlock;
+import theking530.staticpower.blocks.tree.StaticPowerSapling;
+import theking530.staticpower.blocks.tree.StaticPowerTreeLeaves;
+import theking530.staticpower.blocks.tree.StaticPowerTreeLog;
 import theking530.staticpower.cables.digistore.BlockDigistoreNetworkWire;
 import theking530.staticpower.cables.fluid.BlockFluidCable;
 import theking530.staticpower.cables.fluid.BlockIndustrialFluidCable;
@@ -57,6 +62,7 @@ import theking530.staticpower.tileentities.powered.solarpanels.BlockSolarPanel;
 import theking530.staticpower.tileentities.powered.solidgenerator.BlockSolidGenerator;
 import theking530.staticpower.tileentities.powered.squeezer.BlockSqueezer;
 import theking530.staticpower.tileentities.powered.treefarmer.BlockTreeFarmer;
+import theking530.staticpower.trees.rubbertree.RubberTree;
 
 public class ModBlocks {
 	// Decorative
@@ -217,6 +223,15 @@ public class ModBlocks {
 	public static BlockBattery BatteryEnergized;
 	public static BlockBattery BatteryLumum;
 	public static BlockBattery BatteryCreative;
+
+	// Rubber Tree
+	public static StaticPowerTreeLog RubberTreeWood;
+	public static StaticPowerTreeLog RubberTreeLog;
+	public static StaticPowerTreeLog RubberTreeStrippedLog;
+	public static StaticPowerTreeLog RubberTreeStrippedWood;
+	public static StaticPowerBlock RubberTreePlanks;
+	public static StaticPowerTreeLeaves RubberTreeLeaves;
+	public static StaticPowerSapling RubberTreeSapling;
 
 	public static void init() {
 		// Decorative
@@ -405,5 +420,13 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(BatteryEnergized = new BlockBattery("battery_block_energized", StaticPowerTiers.ENERGIZED));
 		StaticPowerRegistry.preRegisterBlock(BatteryLumum = new BlockBattery("battery_block_lumum", StaticPowerTiers.LUMUM));
 		StaticPowerRegistry.preRegisterBlock(BatteryCreative = new BlockBattery("battery_block_creative", StaticPowerTiers.CREATIVE));
+
+		StaticPowerRegistry.preRegisterBlock(RubberTreeStrippedWood = new StaticPowerTreeLog("rubber_tree_stripped_wood", MaterialColor.WOOD, Block.Properties.from(Blocks.STRIPPED_OAK_WOOD)));
+		StaticPowerRegistry.preRegisterBlock(RubberTreeStrippedLog = new StaticPowerTreeLog("rubber_tree_stripped_log", MaterialColor.WOOD, Block.Properties.from(Blocks.STRIPPED_OAK_LOG)));
+		StaticPowerRegistry.preRegisterBlock(RubberTreeWood = new StaticPowerTreeLog("rubber_tree_wood", MaterialColor.WOOD, RubberTreeStrippedWood, Block.Properties.from(Blocks.OAK_LOG)));
+		StaticPowerRegistry.preRegisterBlock(RubberTreeLog = new StaticPowerTreeLog("rubber_tree_log", MaterialColor.WOOD, RubberTreeStrippedLog, Block.Properties.from(Blocks.OAK_LOG)));
+		StaticPowerRegistry.preRegisterBlock(RubberTreePlanks = new StaticPowerBlock("rubber_tree_planks", Block.Properties.from(Blocks.OAK_PLANKS)));
+		StaticPowerRegistry.preRegisterBlock(RubberTreeLeaves = new StaticPowerTreeLeaves("rubber_tree_leaves", Block.Properties.from(Blocks.OAK_LEAVES)));
+		StaticPowerRegistry.preRegisterBlock(RubberTreeSapling = new StaticPowerSapling("rubber_tree_sapling", () -> new RubberTree(), Block.Properties.from(Blocks.OAK_SAPLING)));
 	}
 }

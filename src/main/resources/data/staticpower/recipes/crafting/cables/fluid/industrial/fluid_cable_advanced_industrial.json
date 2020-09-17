@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"prp",
+		"rir",
+		"prp"
+	],
+	"key": {
+		"i": {
+			"tag": "forge:glass"
+		},
+		"r": {
+			"tag": "forge:rubber"
+		},
+		"p": {
+			"item": "staticpower:cable_fluid_advanced"
+		}
+	},
+	"result": {
+		"item": "staticpower:cable_industrial_fluid_advanced",
+		"count": 4
+	}
+}

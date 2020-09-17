@@ -178,7 +178,8 @@ public class ModItems {
 	public static StaticPowerItem EnergizedProcessor;
 	public static StaticPowerItem LumumProcessor;
 
-	public static StaticPowerItem Rubber;
+	public static StaticPowerItem RubberBar;
+	public static StaticPowerItem RubberSheet;
 	public static StaticPowerItem IOPort;
 	public static StaticPowerItem WireCopper;
 	public static StaticPowerItem WireTin;
@@ -419,7 +420,8 @@ public class ModItems {
 		// Materials
 		StaticPowerRegistry.preRegisterItem(GemRuby = new StaticPowerItem("gem_ruby"));
 		StaticPowerRegistry.preRegisterItem(GemSapphire = new StaticPowerItem("gem_sapphire"));
-		StaticPowerRegistry.preRegisterItem(Rubber = new StaticPowerItem("rubber"));
+		StaticPowerRegistry.preRegisterItem(RubberBar = new StaticPowerItem("rubber_bar"));
+		StaticPowerRegistry.preRegisterItem(RubberSheet = new StaticPowerItem("rubber_sheet"));
 		StaticPowerRegistry.preRegisterItem(RawSilicon = new StaticPowerItem("raw_silicon"));
 		StaticPowerRegistry.preRegisterItem(Silicon = new StaticPowerItem("silicon"));
 		StaticPowerRegistry.preRegisterItem(StaticDopedSilicon = new StaticPowerItem("silicon_doped_static"));

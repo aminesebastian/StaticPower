@@ -1,0 +1,6 @@
+{
+    "parent": "block/leaves",
+    "textures": {
+        "all": "staticpower:blocks/trees/rubber_tree_leaves"
+    }
+}

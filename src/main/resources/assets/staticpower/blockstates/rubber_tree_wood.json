@@ -1,0 +1,7 @@
+{
+    "variants": {
+        "axis=y":  { "model": "staticpower:block/trees/rubber_tree_wood" },
+        "axis=z":   { "model": "staticpower:block/trees/rubber_tree_wood", "x": 90 },
+        "axis=x":   { "model": "staticpower:block/trees/rubber_tree_wood", "x": 90, "y": 90 }
+    }
+}

@@ -1,9 +1,11 @@
 package theking530.staticpower.events;
 
+import net.minecraft.block.ComposterBlock;
 import net.minecraft.item.BucketItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
+import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import theking530.api.digistore.CapabilityDigistoreInventory;
@@ -17,9 +19,11 @@ import theking530.staticpower.cables.item.ItemNetworkModuleFactory;
 import theking530.staticpower.cables.network.CableNetworkModuleRegistry;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.power.PowerNetworkModuleFactory;
+import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.integration.TOP.PluginTOP;
 
+@SuppressWarnings("deprecation")
 public class StaticPowerCommonEventHandler {
 
 	/**
@@ -39,6 +43,11 @@ public class StaticPowerCommonEventHandler {
 		CapabilityDigistoreInventory.register();
 		CapabilityStaticVolt.register();
 		CapabilityHeatable.register();
+
+		// Register composter recipes.
+		DeferredWorkQueue.runLater(() -> {
+			ComposterBlock.CHANCES.put(ModBlocks.RubberTreeLeaves.asItem(), 0.6f);
+		});
 
 		StaticPower.LOGGER.info("Static Power Common Setup Completed!");
 	}

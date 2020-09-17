@@ -16,6 +16,7 @@ import theking530.staticpower.init.ModLootTableAdditions;
 import theking530.staticpower.init.ModNetworkMessages;
 import theking530.staticpower.init.ModOres;
 import theking530.staticpower.init.ModRecipeSerializers;
+import theking530.staticpower.init.ModTrees;
 import theking530.staticpower.init.ModUpgrades;
 
 @Mod(StaticPower.MOD_ID)
@@ -34,6 +35,7 @@ public class StaticPower {
 		ModFluids.init();
 		ModNetworkMessages.init();
 		ModOres.init();
+		ModTrees.init();
 		ModLootTableAdditions.init();
 		StaticCoreRegistry.initialize();
 	}
