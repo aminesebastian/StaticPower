@@ -31,6 +31,7 @@ public class ModFluids {
 	public static StaticPowerFluidBundle Fertilizer;
 	public static StaticPowerFluidBundle Honey;
 	public static StaticPowerFluidBundle Concrete;
+	public static StaticPowerFluidBundle Latex;
 
 	public static void init() {
 		registerFluidBundle(StaticFluid = new StaticPowerFluidBuilder("fluid_static").addAutoBucket().addAttributes(builder -> {
@@ -69,8 +70,13 @@ public class ModFluids {
 		registerFluidBundle(Honey = new StaticPowerFluidBuilder("honey").addAutoBucket().addAttributes(builder -> {
 			builder.viscosity(128).density(64).sound(SoundEvents.BLOCK_HONEY_BLOCK_STEP);
 		}).build());
+
 		registerFluidBundle(Concrete = new StaticPowerFluidBuilder("concrete").addAutoBucket().addAttributes(builder -> {
 			builder.viscosity(128).density(64).sound(SoundEvents.BLOCK_HONEY_BLOCK_STEP);
+		}).build());
+
+		registerFluidBundle(Latex = new StaticPowerFluidBuilder("liquid_latex").addAutoBucket().addAttributes(builder -> {
+			builder.viscosity(80).density(32).sound(SoundEvents.BLOCK_HONEY_BLOCK_STEP);
 		}).build());
 	}
 

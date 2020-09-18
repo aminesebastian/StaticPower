@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"lll",
+		"lcl",
+		"lll"
+	],
+	"key": {
+		"l": {
+			"item": "staticpower:latex_chunk"
+		},
+		"c": {
+			"tag": "forge:dusts/coal"
+		}
+	},
+	"result": {
+		"item": "staticpower:rubber_bar"
+	}
+}

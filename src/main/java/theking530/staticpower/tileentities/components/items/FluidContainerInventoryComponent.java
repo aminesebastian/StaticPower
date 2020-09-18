@@ -109,11 +109,14 @@ public class FluidContainerInventoryComponent extends InventoryComponent {
 			int filledAmount = containerHandler.fill(simulatedDrain, FluidAction.EXECUTE);
 			if (filledAmount > 0) {
 				fluidHandler.drain(filledAmount, FluidAction.EXECUTE);
-				float minSound = Math.max(1.0f - (float) fluidHandler.getFluidInTank(0).getAmount() / fluidHandler.getTankCapacity(0), 0.55f) * 1.1f;
-				float maxSound = minSound + 0.1f;
-				// Play the sound.
-				getWorld().playSound(null, getPos(), simulatedDrain.getFluid() == Fluids.LAVA ? SoundEvents.ITEM_BUCKET_FILL_LAVA : SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 0.35f,
-						SDMath.clamp(getWorld().getRandom().nextFloat(), minSound, maxSound));
+
+				if (filledAmount >= 1000) {
+					float minSound = Math.max(1.0f - (float) fluidHandler.getFluidInTank(0).getAmount() / fluidHandler.getTankCapacity(0), 0.55f) * 1.1f;
+					float maxSound = minSound + 0.1f;
+					// Play the sound.
+					getWorld().playSound(null, getPos(), simulatedDrain.getFluid() == Fluids.LAVA ? SoundEvents.ITEM_BUCKET_FILL_LAVA : SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 0.35f,
+							SDMath.clamp(getWorld().getRandom().nextFloat(), minSound, maxSound));
+				}
 
 				// If the container is empty, transfer it to the empty container slot.
 				if (containerHandler.getFluidInTank(0).getAmount() == containerHandler.getTankCapacity(0)) {
@@ -145,11 +148,14 @@ public class FluidContainerInventoryComponent extends InventoryComponent {
 
 			if (filledAmount > 0) {
 				containerHandler.drain(filledAmount, FluidAction.EXECUTE);
-				float minSound = Math.max(1.0f - (float) fluidHandler.getFluidInTank(0).getAmount() / fluidHandler.getTankCapacity(0), 0.55f) * 1.1f;
-				float maxSound = minSound + 0.1f;
-				// Play the sound.
-				getWorld().playSound(null, getPos(), simulatedDrain.getFluid() == Fluids.LAVA ? SoundEvents.ITEM_BUCKET_EMPTY_LAVA : SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 0.35f,
-						SDMath.clamp(getWorld().getRandom().nextFloat(), minSound, maxSound));
+
+				if (filledAmount >= 1000) {
+					float minSound = Math.max(1.0f - (float) fluidHandler.getFluidInTank(0).getAmount() / fluidHandler.getTankCapacity(0), 0.55f) * 1.1f;
+					float maxSound = minSound + 0.1f;
+					// Play the sound.
+					getWorld().playSound(null, getPos(), simulatedDrain.getFluid() == Fluids.LAVA ? SoundEvents.ITEM_BUCKET_EMPTY_LAVA : SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 0.35f,
+							SDMath.clamp(getWorld().getRandom().nextFloat(), minSound, maxSound));
+				}
 
 				// If the container is empty, transfer it to the empty container slot.
 				if (containerHandler.getFluidInTank(0).getAmount() == 0) {

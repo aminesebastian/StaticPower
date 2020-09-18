@@ -8,6 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.BushBlock;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.trees.Tree;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer.Builder;
@@ -18,11 +19,14 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.ForgeEventFactory;
 import theking530.staticpower.blocks.StaticPowerItemBlock;
+import theking530.staticpower.blocks.interfaces.IBlockRenderLayerProvider;
 import theking530.staticpower.blocks.interfaces.IItemBlockProvider;
 
-public class StaticPowerSapling extends BushBlock implements IGrowable, IItemBlockProvider {
+public class StaticPowerSapling extends BushBlock implements IGrowable, IItemBlockProvider, IBlockRenderLayerProvider {
 	public static final IntegerProperty STAGE = BlockStateProperties.STAGE_0_1;
 	protected static final VoxelShape SHAPE = Block.makeCuboidShape(2.0D, 0.0D, 2.0D, 14.0D, 12.0D, 14.0D);
 	private final Supplier<Tree> tree;
@@ -83,5 +87,11 @@ public class StaticPowerSapling extends BushBlock implements IGrowable, IItemBlo
 	@Override
 	public BlockItem getItemBlock() {
 		return new StaticPowerItemBlock(this);
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public RenderType getRenderType() {
+		return RenderType.getCutout();
 	}
 }

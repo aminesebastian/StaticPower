@@ -30,7 +30,6 @@ public class GuiUpgradeTab extends BaseGuiTab {
 	@Override
 	protected void initialized(int tabXPosition, int tabYPosition) {
 		// Add the slots.
-		System.out.println(this.guiXOffset);
 		container.addSlotGeneric(new UpgradeItemSlot(upgradesInventory, 0, 4 + guiXOffset, 24 + guiYOffset));
 		slotIndecies.add(container.inventorySlots.size() - 1);
 

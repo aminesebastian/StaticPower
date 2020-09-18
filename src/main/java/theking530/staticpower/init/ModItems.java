@@ -165,6 +165,7 @@ public class ModItems {
 	public static StaticPowerItem CrystalEnergized;
 	public static StaticPowerItem CrystalLumum;
 	public static StaticPowerItem DustWood;
+	public static StaticPowerItem LatexChunk;
 
 	public static StaticPowerItem BasicCard;
 	public static StaticPowerItem AdvancedCard;
@@ -430,7 +431,8 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(CrystalStatic = new StaticPowerItem("crystal_static"));
 		StaticPowerRegistry.preRegisterItem(CrystalEnergized = new StaticPowerItem("crystal_energized"));
 		StaticPowerRegistry.preRegisterItem(CrystalLumum = new StaticPowerItem("crystal_lumum"));
-
+		StaticPowerRegistry.preRegisterItem(LatexChunk = new StaticPowerItem("latex_chunk"));
+		
 		// Plates
 		StaticPowerRegistry.preRegisterItem(PlateIron = new StaticPowerItem("plate_iron"));
 		StaticPowerRegistry.preRegisterItem(PlateGold = new StaticPowerItem("plate_gold"));

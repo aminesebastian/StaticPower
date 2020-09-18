@@ -277,26 +277,24 @@ public abstract class StaticPowerContainer extends Container {
 	public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, PlayerEntity player) {
 		// If the mouse button was INVENTORY_COMPONENT_FILTER_MOUSE_BUTTON, then this is
 		// an attempt to lock a slot.
-		if (dragType == INVENTORY_COMPONENT_LOCK_MOUSE_BUTTON) {
+		if (dragType == INVENTORY_COMPONENT_LOCK_MOUSE_BUTTON && slotId >= 0) {
 			Slot slot = inventorySlots.get(slotId);
 			if (slot instanceof StaticPowerContainerSlot && ((StaticPowerContainerSlot) slot).getItemHandler() instanceof InventoryComponent) {
 				if (player.getEntityWorld().isRemote) {
 					// Get the inventory component.
 					InventoryComponent invComponent = ((InventoryComponent) ((StaticPowerContainerSlot) slot).getItemHandler());
 
-					// Get the relative slot index for the input inventory.
-					int inputInventorySlot = slotId - 9;
 					// If they held control, toggle the locked state of the slot.
 					if (Screen.hasControlDown()) {
-						if (invComponent.isSlotLocked(inputInventorySlot)) {
-							invComponent.unlockSlot(inputInventorySlot);
+						if (invComponent.isSlotLocked(slot.getSlotIndex())) {
+							invComponent.unlockSlot(slot.getSlotIndex());
 						} else {
-							invComponent.lockSlot(inputInventorySlot, invComponent.getStackInSlot(inputInventorySlot));
+							invComponent.lockSlot(slot.getSlotIndex(), invComponent.getStackInSlot(slot.getSlotIndex()));
 						}
 
 						// Send a packet to the server with the updated values.
-						NetworkMessage msg = new PacketLockInventorySlot(invComponent, inputInventorySlot, invComponent.isSlotLocked(inputInventorySlot),
-								invComponent.getStackInSlot(inputInventorySlot));
+						NetworkMessage msg = new PacketLockInventorySlot(invComponent, slot.getSlotIndex(), invComponent.isSlotLocked(slot.getSlotIndex()),
+								invComponent.getStackInSlot(slot.getSlotIndex()));
 						StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
 
 					}

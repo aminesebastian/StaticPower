@@ -1,0 +1,20 @@
+{
+	"type": "staticpower:lumber_mill_recipe",
+	"input": {
+		"item": "staticpower:log_static"
+	},
+	"outputs": {
+		"primary": {
+			"item": "staticpower:planks_static",
+			"count": 6
+		},
+		"secondary": {
+			"item": "staticpower:dust_wood",
+			"count": 4
+		},
+		"fluid": {
+			"fluid": "staticpower:tree_sap",
+			"volume": 0
+		}
+	}
+}

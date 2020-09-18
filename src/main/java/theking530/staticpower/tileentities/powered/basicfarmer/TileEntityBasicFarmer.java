@@ -99,7 +99,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 					return ModTags.FARMING_AXE.contains(stack.getItem());
 				}
 			}
-		}));
+		}).setSlotsLockable(true));
 
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 9, MachineSideMode.Output));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 128));

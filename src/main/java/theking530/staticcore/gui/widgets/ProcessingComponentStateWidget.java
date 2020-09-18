@@ -12,15 +12,19 @@ import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 
 public class ProcessingComponentStateWidget extends AbstractGuiWidget {
-	private final SpriteDrawable validDrawable;;
+	private final SpriteDrawable validDrawable;
 	private final SpriteDrawable errorDrawable;
 	private final MachineProcessingComponent machineProcessingComponent;
 
-	public ProcessingComponentStateWidget(MachineProcessingComponent machineProcessingComponent, float xPosition, float yPosition) {
-		super(xPosition, yPosition, 16, 16);
-		errorDrawable = new SpriteDrawable(StaticPowerSprites.ERROR, 16, 16);
-		validDrawable = new SpriteDrawable(StaticPowerSprites.GREEN_CHECK, 16, 16);
+	public ProcessingComponentStateWidget(MachineProcessingComponent machineProcessingComponent, float xPosition, float yPosition, int width, int height) {
+		super(xPosition, yPosition, width, height);
+		errorDrawable = new SpriteDrawable(StaticPowerSprites.ERROR, width, height);
+		validDrawable = new SpriteDrawable(StaticPowerSprites.GREEN_CHECK, width, height);
 		this.machineProcessingComponent = machineProcessingComponent;
+	}
+
+	public ProcessingComponentStateWidget(MachineProcessingComponent machineProcessingComponent, float xPosition, float yPosition) {
+		this(machineProcessingComponent, xPosition, yPosition, 16, 16);
 	}
 
 	@Override

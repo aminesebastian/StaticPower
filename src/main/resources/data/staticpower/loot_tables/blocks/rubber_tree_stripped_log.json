@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "staticpower:cable_fluid"
+          "name": "staticpower:rubber_tree_stripped_log"
         }
       ],
       "conditions": [

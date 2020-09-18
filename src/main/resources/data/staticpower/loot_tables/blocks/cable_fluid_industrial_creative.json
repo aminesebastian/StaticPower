@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "staticpower:cable_industrial_fluid"
+          "name": "staticpower:cable_fluid_industrial_creative"
         }
       ],
       "conditions": [

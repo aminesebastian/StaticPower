@@ -19,6 +19,7 @@ import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
@@ -37,6 +38,7 @@ import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderTreeFarmer;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.farmer.FarmingFertalizerRecipe;
@@ -68,8 +70,8 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 			ModBlocks.TreeFarmer);
 
 	public static final int DEFAULT_WATER_USAGE = 1;
-	public static final int DEFAULT_IDLE_ENERGY_USAGE = 15;
-	public static final int DEFAULT_HARVEST_ENERGY_COST = 100;
+	public static final int DEFAULT_IDLE_ENERGY_USAGE = 10;
+	public static final int DEFAULT_HARVEST_ENERGY_COST = 1000;
 	public static final int MAX_WOOD_RECURSIVE_DEPTH = 100;
 	public static final int DEFAULT_RANGE = 2;
 	public static final int DEFAULT_SAPLING_SPACING = 2;
@@ -97,7 +99,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 	private Ingredient saplingIngredient;
 
 	public TileEntityTreeFarm() {
-		super(TYPE);
+		super(TYPE, StaticPowerTiers.STATIC);
 
 		woodIngredient = Ingredient.fromTag(ModTags.LOG);
 		leafIngredient = Ingredient.fromTag(ModTags.LEAVES);
@@ -107,7 +109,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 			public boolean canInsertItem(int slot, ItemStack stack) {
 				return slot == 0 ? ModTags.FARMING_AXE.contains(stack.getItem()) : saplingIngredient.test(stack);
 			}
-		}));
+		}).setSlotsLockable(true));
 
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 9, MachineSideMode.Output));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
@@ -118,7 +120,6 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 		processingComponent.setEnergyComponent(energyStorage);
-		processingComponent.setCompletedPowerUsage(DEFAULT_HARVEST_ENERGY_COST);
 		processingComponent.setProcessingPowerUsage(DEFAULT_IDLE_ENERGY_USAGE);
 
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluid) -> {
@@ -139,15 +140,9 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 	}
 
 	@Override
-	public void validate() {
-		super.validate();
-	}
-
-	@Override
 	public void process() {
 		if (processingComponent.isPerformingWork()) {
 			if (!getWorld().isRemote) {
-				energyStorage.useBulkPower(DEFAULT_IDLE_ENERGY_USAGE);
 				fluidTankComponent.drain(DEFAULT_WATER_USAGE, FluidAction.EXECUTE);
 			}
 		}
@@ -202,6 +197,10 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 	}
 
 	private void refreshBlocksInRange(int range) {
+		if (this.isRemoved()) {
+			return;
+		}
+
 		// Get the forward and right directions.
 		Direction forwardDirection = getFacingDirection();
 		Direction rightDirection = SideConfigurationUtilities.getDirectionFromSide(BlockSide.RIGHT, forwardDirection);
@@ -349,11 +348,15 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 					// itsself.
 					FakePlayer player = FakePlayerFactory.getMinecraft((ServerWorld) getWorld());
 					player.setHeldItem(Hand.MAIN_HAND, sapling.copy());
-					sapling.onItemUse(new ItemUseContext(player, Hand.MAIN_HAND, new BlockRayTraceResult(new Vec3d(0.0f, 1.0f, 0.0f), Direction.UP, pos, false)));
+					ActionResultType placementResult = sapling.onItemUse(new ItemUseContext(player, Hand.MAIN_HAND, new BlockRayTraceResult(new Vec3d(0.0f, 1.0f, 0.0f), Direction.UP, pos, false)));
 
-					// Once planted, extract the sapling from the slot.
-					inputInventory.extractItem(saplingSlot, 1, false);
-					return true;
+					if (placementResult.isSuccess()) {
+						// Once planted, extract the sapling from the slot.
+						inputInventory.extractItem(saplingSlot, 1, false);
+						return true;
+					} else {
+						return false;
+					}
 				}
 			}
 		}

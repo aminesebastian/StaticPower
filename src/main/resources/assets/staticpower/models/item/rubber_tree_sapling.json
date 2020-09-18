@@ -1,3 +1,6 @@
 {
-	"parent": "staticpower:block/trees/rubber_tree_sapling"
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "staticpower:blocks/trees/rubber_tree_sapling"
+	}
 }
