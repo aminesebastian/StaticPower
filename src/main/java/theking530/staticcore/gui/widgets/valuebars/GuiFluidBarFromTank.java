@@ -29,6 +29,8 @@ public class GuiFluidBarFromTank extends AbstractGuiWidget {
 
 	@Override
 	public void renderBehindItems(int mouseX, int mouseY, float partialTicks) {
+		tank.updateBeforeRendering(partialTicks);
+
 		Vector2D ownerRelativePosition = getScreenSpacePosition();
 		if (owningTileEntity != null) {
 			if (!owningTileEntity.hasComponentOfType(SideConfigurationComponent.class)) {

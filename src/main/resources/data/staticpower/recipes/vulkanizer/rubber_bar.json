@@ -1,0 +1,10 @@
+{
+	"type": "staticpower:vulcanizer_recipe",
+	"input": {
+		"fluid": "staticpower:liquid_latex",
+		"volume": 25
+	},
+	"output": {
+		"item": "staticpower:rubber_bar"
+	}
+}

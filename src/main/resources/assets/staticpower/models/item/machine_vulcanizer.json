@@ -1,0 +1,6 @@
+{
+    "parent": "staticpower:block/machines/machine_vulcanizer",
+	"textures": {
+		"io_frame": "staticpower:blocks/empty_texture"
+	}
+}

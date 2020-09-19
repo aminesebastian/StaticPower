@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.fluids.FluidStack;
 
 /**
  * Utility class to help serialize objects to and from NBT using the annotations
@@ -105,6 +106,11 @@ public class SerializationUtilities {
 				} else if (t == BlockPos.class) {
 					BlockPos pos = (BlockPos) field.get(object);
 					nbt.putLong(field.getName(), pos.toLong());
+				} else if (t == FluidStack.class) {
+					FluidStack fluid = (FluidStack) field.get(object);
+					CompoundNBT tag = new CompoundNBT();
+					fluid.writeToNBT(tag);
+					nbt.put(field.getName(), tag);
 				} else if (INBTSerializable.class.isAssignableFrom(t)) {
 					@SuppressWarnings("unchecked")
 					INBTSerializable<CompoundNBT> serializeable = (INBTSerializable<CompoundNBT>) field.get(object);
@@ -174,6 +180,9 @@ public class SerializationUtilities {
 					@SuppressWarnings("unchecked")
 					INBTSerializable<CompoundNBT> serializeable = (INBTSerializable<CompoundNBT>) field.get(object);
 					serializeable.deserializeNBT(nbt.getCompound(field.getName()));
+				} else if (t == FluidStack.class) {
+					FluidStack stack = FluidStack.loadFluidStackFromNBT(nbt.getCompound(field.getName()));
+					field.set(object, stack);
 				} else {
 					LOGGER.warn(String.format("Encountered deserializeable field %1$s with unsupported type: %2$s.", field.getName(), t));
 				}

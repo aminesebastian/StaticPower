@@ -39,7 +39,8 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 	private float upgradeMultiplier;
 	@UpdateSerialize
 	private int defaultCapacity;
-	
+	private float lastUpdatePartialTick;
+
 	protected final HashSet<MachineSideMode> capabilityExposeModes;
 	private final FluidComponentCapabilityInterface capabilityInterface;
 	private FluidStack lastSyncFluidStack;
@@ -66,6 +67,7 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 				capabilityExposeModes.add(mode);
 			}
 		}
+		lastUpdatePartialTick = 0.0f;
 	}
 
 	@Override
@@ -101,10 +103,10 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 
 	@Override
 	public void updateBeforeRendering(float partialTicks) {
-		if (visualFillLevel != getFluidAmount()) {
+		if (visualFillLevel != getFluidAmount() && lastUpdatePartialTick != partialTicks) {
 			float difference = visualFillLevel - getFluidAmount();
-			visualFillLevel -= difference * (partialTicks / 20.0f);
-
+			visualFillLevel -= difference * (partialTicks / 10.0f);
+			lastUpdatePartialTick = partialTicks;
 		}
 	}
 

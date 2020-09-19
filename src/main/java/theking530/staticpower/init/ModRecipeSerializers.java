@@ -17,6 +17,7 @@ import theking530.staticpower.data.crafting.wrappers.lumbermill.LumberMillRecipe
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.squeezer.SqueezerRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.thermalconductivity.ThermalConductivityRecipeSerializer;
+import theking530.staticpower.data.crafting.wrappers.vulcanizer.VulcanizerRecipeSerializer;
 
 public class ModRecipeSerializers {
 
@@ -37,5 +38,6 @@ public class ModRecipeSerializers {
 		StaticPowerRegistry.preRegisterRecipeSerializer(ThermalConductivityRecipeSerializer.INSTANCE);
 		StaticPowerRegistry.preRegisterRecipeSerializer(EvaporatorRecipeSerializer.INSTANCE);
 		StaticPowerRegistry.preRegisterRecipeSerializer(CondensationRecipeSerializer.INSTANCE);		
+		StaticPowerRegistry.preRegisterRecipeSerializer(VulcanizerRecipeSerializer.INSTANCE);		
 	}
 }

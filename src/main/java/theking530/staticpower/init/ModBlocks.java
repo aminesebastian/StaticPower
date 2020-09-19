@@ -15,6 +15,7 @@ import theking530.staticpower.blocks.StaticPowerCutoutBlock;
 import theking530.staticpower.blocks.StaticPowerFarmland;
 import theking530.staticpower.blocks.StaticPowerOre;
 import theking530.staticpower.blocks.StaticPowerRotatePillarBlock;
+import theking530.staticpower.blocks.StaticPowerSlimeBlock;
 import theking530.staticpower.blocks.crops.BaseSimplePlant;
 import theking530.staticpower.blocks.decorative.Lamp;
 import theking530.staticpower.blocks.decorative.StaticPowerGlassBlock;
@@ -62,6 +63,7 @@ import theking530.staticpower.tileentities.powered.solarpanels.BlockSolarPanel;
 import theking530.staticpower.tileentities.powered.solidgenerator.BlockSolidGenerator;
 import theking530.staticpower.tileentities.powered.squeezer.BlockSqueezer;
 import theking530.staticpower.tileentities.powered.treefarmer.BlockTreeFarmer;
+import theking530.staticpower.tileentities.powered.vulcanizer.BlockVulcanizer;
 import theking530.staticpower.trees.rubbertree.RubberTree;
 
 public class ModBlocks {
@@ -106,7 +108,7 @@ public class ModBlocks {
 	public static StaticPowerOre OreRuby;
 	public static StaticPowerOre OreSapphire;
 
-	// Metal Blocks
+	// Storage Blocks
 	public static StaticPowerBlock BlockCopper;
 	public static StaticPowerBlock BlockTin;
 	public static StaticPowerBlock BlockZinc;
@@ -125,6 +127,8 @@ public class ModBlocks {
 	public static StaticPowerBlock BlockStaticMetal;
 	public static StaticPowerBlock BlockEnergizedMetal;
 	public static StaticPowerBlock BlockLumumMetal;
+	public static StaticPowerSlimeBlock BlockLatex;
+	public static StaticPowerSlimeBlock BlockRubber;
 
 	// Machines
 	public static StaticPowerCutoutBlock MachineBlockIron;
@@ -160,6 +164,7 @@ public class ModBlocks {
 	public static BlockElectricMiner ElectricMiner;
 	public static BlockEvaporator Evaporator;
 	public static BlockCondenser Condenser;
+	public static BlockVulcanizer Vulcanizer;
 
 	public static BlockHeatSink AluminiumHeatSink;
 	public static BlockHeatSink CopperHeatSink;
@@ -303,6 +308,8 @@ public class ModBlocks {
 				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.STONE_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(1.7f)));
 		StaticPowerRegistry.preRegisterBlock(BlockBronze = new StaticPowerBlock("block_bronze",
 				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.STONE_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(1.7f)));
+		StaticPowerRegistry.preRegisterBlock(BlockLatex = new StaticPowerSlimeBlock("block_latex", Block.Properties.from(Blocks.SLIME_BLOCK)));
+		StaticPowerRegistry.preRegisterBlock(BlockRubber = new StaticPowerSlimeBlock("block_rubber", Block.Properties.from(Blocks.SLIME_BLOCK)));
 
 		StaticPowerRegistry.preRegisterBlock(BlockRedstoneAlloy = new StaticPowerBlock("block_redstone_alloy",
 				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.STONE_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(1.7f)));
@@ -362,6 +369,7 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(ElectricMiner = new BlockElectricMiner("machine_electric_miner"));
 		StaticPowerRegistry.preRegisterBlock(Evaporator = new BlockEvaporator("machine_evaporator"));
 		StaticPowerRegistry.preRegisterBlock(Condenser = new BlockCondenser("machine_condenser"));
+		StaticPowerRegistry.preRegisterBlock(Vulcanizer = new BlockVulcanizer("machine_vulcanizer"));
 
 		StaticPowerRegistry.preRegisterBlock(AluminiumHeatSink = new BlockHeatSink("heat_sink_aluminium", StaticPowerTiers.ALUMINIUM));
 		StaticPowerRegistry.preRegisterBlock(CopperHeatSink = new BlockHeatSink("heat_sink_copper", StaticPowerTiers.COPPER));

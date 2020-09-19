@@ -1,0 +1,13 @@
+{
+  "forge_marker": 1,
+    "variants": {
+		"facing=north,is_on=false": { "model": "staticpower:block/machines/machine_vulcanizer" },
+        "facing=south,is_on=false": { "model": "staticpower:block/machines/machine_vulcanizer", "y": 180 },
+        "facing=west,is_on=false":  { "model": "staticpower:block/machines/machine_vulcanizer", "y": 270 },
+        "facing=east,is_on=false":  { "model": "staticpower:block/machines/machine_vulcanizer", "y": 90 },
+		"facing=north,is_on=true": { "model": "staticpower:block/machines/machine_vulcanizer_on" },
+        "facing=south,is_on=true": { "model": "staticpower:block/machines/machine_vulcanizer_on", "y": 180 },
+        "facing=west,is_on=true":  { "model": "staticpower:block/machines/machine_vulcanizer_on", "y": 270 },
+        "facing=east,is_on=true":  { "model": "staticpower:block/machines/machine_vulcanizer_on", "y": 90 }
+    }
+}
