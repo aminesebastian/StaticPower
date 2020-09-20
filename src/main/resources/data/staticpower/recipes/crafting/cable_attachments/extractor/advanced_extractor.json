@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"prp",
+		"pap",
+		" p "
+	],
+	"key": {
+		"p": {
+			"tag": "forge:ingots/brass"
+		},
+		"a": {
+			"item": "staticpower:servo"
+		},
+		"r": {
+			"tag": "forge:dusts/redstone"
+		}
+	},
+	"result": {
+		"item": "staticpower:cable_attachment_advanced_extractor"
+	}
+}

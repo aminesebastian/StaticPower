@@ -1,13 +1,13 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
-		"grg",
-		"rpr",
-		"grg"
+		"rgr",
+		"gpg",
+		"rgr"
 	],
 	"key": {
 		"g": {
-			"tag": "forge:ingots/tungsten"
+			"item": "minecraft:piston"
 		},
 		"r": {
 			"tag": "forge:gems/emerald"

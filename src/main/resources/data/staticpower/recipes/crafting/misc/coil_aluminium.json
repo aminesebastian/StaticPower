@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"www",
+		"wsw",
+		"www"
+	],
+	"key": {
+		"w": {
+			"tag": "forge:wires/aluminium"
+		},
+		"s": {
+			"tag": "forge:rods/wooden"
+		}
+	},
+	"result": {
+		"item": "staticpower:coil_aluminium"
+	}
+}

@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:former_recipe",
+	"input": {
+		"item": "staticpower:rubber_bar"
+	},
+	"mold": {
+		"item": "staticpower:mold_plate"
+	},
+	"output": {
+		"item": "staticpower:rubber_sheet"
+	}
+}

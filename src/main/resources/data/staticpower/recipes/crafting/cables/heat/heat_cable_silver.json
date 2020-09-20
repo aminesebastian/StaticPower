@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		" i ",
+		" i ",
+		" i "
+	],
+	"key": {
+		"i": {
+			"tag": "forge:ingots/silver"
+		}
+	},
+	"result": {
+		"item": "staticpower:cable_heat_silver",
+		"count": 3
+	}
+}

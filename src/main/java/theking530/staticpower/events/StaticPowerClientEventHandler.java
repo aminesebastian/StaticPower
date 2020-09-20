@@ -118,13 +118,13 @@ public class StaticPowerClientEventHandler {
 	}
 
 	public static void onItemColorBakeEvent(ColorHandlerEvent.Item event) {
-		event.getItemColors().register(new CapsuleColorProvider(), ModItems.IronCapsule);
-		event.getItemColors().register(new CapsuleColorProvider(), ModItems.BasicCapsule);
-		event.getItemColors().register(new CapsuleColorProvider(), ModItems.AdvancedCapsule);
-		event.getItemColors().register(new CapsuleColorProvider(), ModItems.StaticCapsule);
-		event.getItemColors().register(new CapsuleColorProvider(), ModItems.EnergizedCapsule);
-		event.getItemColors().register(new CapsuleColorProvider(), ModItems.LumumCapsule);
-		event.getItemColors().register(new CapsuleColorProvider(), ModItems.CreativeCapsule);
+		event.getItemColors().register(new CapsuleColorProvider(), ModItems.IronFluidCapsule);
+		event.getItemColors().register(new CapsuleColorProvider(), ModItems.BasicFluidCapsule);
+		event.getItemColors().register(new CapsuleColorProvider(), ModItems.AdvancedFluidCapsule);
+		event.getItemColors().register(new CapsuleColorProvider(), ModItems.StaticFluidCapsule);
+		event.getItemColors().register(new CapsuleColorProvider(), ModItems.EnergizedFluidCapsule);
+		event.getItemColors().register(new CapsuleColorProvider(), ModItems.LumumFluidCapsule);
+		event.getItemColors().register(new CapsuleColorProvider(), ModItems.CreativeFluidCapsule);
 	}
 
 	public static void onTextureStitchEvent(TextureStitchEvent.Pre event) {

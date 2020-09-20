@@ -172,7 +172,7 @@ public class ModItems {
 	public static StaticPowerItem StaticCard;
 	public static StaticPowerItem EnergizedCard;
 	public static StaticPowerItem LumumCard;
-	
+
 	public static StaticPowerItem BasicProcessor;
 	public static StaticPowerItem AdvancedProcessor;
 	public static StaticPowerItem StaticProcessor;
@@ -187,9 +187,13 @@ public class ModItems {
 	public static StaticPowerItem WireSilver;
 	public static StaticPowerItem WireGold;
 	public static StaticPowerItem WirePlatinum;
+	public static StaticPowerItem WireAluminium;
 	public static StaticPowerItem CoilCopper;
 	public static StaticPowerItem CoilSilver;
 	public static StaticPowerItem CoilGold;
+	public static StaticPowerItem CoilPlatinum;
+	public static StaticPowerItem CoilAluminium;
+	public static StaticPowerItem CoilTin;
 
 	public static DrillBit IronDrillBit;
 	public static DrillBit BronzeDrillBit;
@@ -214,13 +218,13 @@ public class ModItems {
 	public static StaticPowerItem Plug;
 	public static StaticPowerItem DigistoreCore;
 
-	public static FluidCapsule IronCapsule;
-	public static FluidCapsule BasicCapsule;
-	public static FluidCapsule AdvancedCapsule;
-	public static FluidCapsule StaticCapsule;
-	public static FluidCapsule EnergizedCapsule;
-	public static FluidCapsule LumumCapsule;
-	public static FluidCapsule CreativeCapsule;
+	public static FluidCapsule IronFluidCapsule;
+	public static FluidCapsule BasicFluidCapsule;
+	public static FluidCapsule AdvancedFluidCapsule;
+	public static FluidCapsule StaticFluidCapsule;
+	public static FluidCapsule EnergizedFluidCapsule;
+	public static FluidCapsule LumumFluidCapsule;
+	public static FluidCapsule CreativeFluidCapsule;
 
 	public static StaticPowerItem BasicUpgradePlate;
 	public static StaticPowerItem AdvancedUpgradePlate;
@@ -350,7 +354,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(StaticProcessor = new StaticPowerItem("processor_static"));
 		StaticPowerRegistry.preRegisterItem(EnergizedProcessor = new StaticPowerItem("processor_energized"));
 		StaticPowerRegistry.preRegisterItem(LumumProcessor = new StaticPowerItem("processor_lumum"));
-		
+
 		// Processors
 		StaticPowerRegistry.preRegisterItem(BasicCard = new StaticPowerItem("card_basic"));
 		StaticPowerRegistry.preRegisterItem(AdvancedCard = new StaticPowerItem("card_advanced"));
@@ -400,23 +404,27 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(Motor = new StaticPowerItem("motor"));
 		StaticPowerRegistry.preRegisterItem(Plug = new StaticPowerItem("plug"));
 		StaticPowerRegistry.preRegisterItem(DigistoreCore = new StaticPowerItem("digistore_core"));
-		
-		StaticPowerRegistry.preRegisterItem(IronCapsule = new FluidCapsule("capsule_iron", StaticPowerTiers.IRON));
-		StaticPowerRegistry.preRegisterItem(BasicCapsule = new FluidCapsule("capsule_basic", StaticPowerTiers.BASIC));
-		StaticPowerRegistry.preRegisterItem(AdvancedCapsule = new FluidCapsule("capsule_advanced", StaticPowerTiers.ADVANCED));
-		StaticPowerRegistry.preRegisterItem(StaticCapsule = new FluidCapsule("capsule_static", StaticPowerTiers.STATIC));
-		StaticPowerRegistry.preRegisterItem(EnergizedCapsule = new FluidCapsule("capsule_energized", StaticPowerTiers.ENERGIZED));
-		StaticPowerRegistry.preRegisterItem(LumumCapsule = new FluidCapsule("capsule_lumum", StaticPowerTiers.LUMUM));
-		StaticPowerRegistry.preRegisterItem(CreativeCapsule = new FluidCapsule("capsule_creative", StaticPowerTiers.CREATIVE));
+
+		StaticPowerRegistry.preRegisterItem(IronFluidCapsule = new FluidCapsule("fluid_capsule_iron", StaticPowerTiers.IRON));
+		StaticPowerRegistry.preRegisterItem(BasicFluidCapsule = new FluidCapsule("fluid_capsule_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterItem(AdvancedFluidCapsule = new FluidCapsule("fluid_capsule_advanced", StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterItem(StaticFluidCapsule = new FluidCapsule("fluid_capsule_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterItem(EnergizedFluidCapsule = new FluidCapsule("fluid_capsule_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterItem(LumumFluidCapsule = new FluidCapsule("fluid_capsule_lumum", StaticPowerTiers.LUMUM));
+		StaticPowerRegistry.preRegisterItem(CreativeFluidCapsule = new FluidCapsule("fluid_capsule_creative", StaticPowerTiers.CREATIVE));
 
 		StaticPowerRegistry.preRegisterItem(WireCopper = new StaticPowerItem("wire_copper"));
 		StaticPowerRegistry.preRegisterItem(WireTin = new StaticPowerItem("wire_tin"));
 		StaticPowerRegistry.preRegisterItem(WireSilver = new StaticPowerItem("wire_silver"));
 		StaticPowerRegistry.preRegisterItem(WireGold = new StaticPowerItem("wire_gold"));
 		StaticPowerRegistry.preRegisterItem(WirePlatinum = new StaticPowerItem("wire_platinum"));
+		StaticPowerRegistry.preRegisterItem(WireAluminium = new StaticPowerItem("wire_aluminium"));
 		StaticPowerRegistry.preRegisterItem(CoilCopper = new StaticPowerItem("coil_copper"));
 		StaticPowerRegistry.preRegisterItem(CoilSilver = new StaticPowerItem("coil_silver"));
 		StaticPowerRegistry.preRegisterItem(CoilGold = new StaticPowerItem("coil_gold"));
+		StaticPowerRegistry.preRegisterItem(CoilPlatinum = new StaticPowerItem("coil_platinum"));
+		StaticPowerRegistry.preRegisterItem(CoilAluminium = new StaticPowerItem("coil_aluminium"));
+		StaticPowerRegistry.preRegisterItem(CoilTin = new StaticPowerItem("coil_tin"));
 
 		// Materials
 		StaticPowerRegistry.preRegisterItem(GemRuby = new StaticPowerItem("gem_ruby"));
@@ -432,7 +440,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(CrystalEnergized = new StaticPowerItem("crystal_energized"));
 		StaticPowerRegistry.preRegisterItem(CrystalLumum = new StaticPowerItem("crystal_lumum"));
 		StaticPowerRegistry.preRegisterItem(LatexChunk = new StaticPowerItem("latex_chunk"));
-		
+
 		// Plates
 		StaticPowerRegistry.preRegisterItem(PlateIron = new StaticPowerItem("plate_iron"));
 		StaticPowerRegistry.preRegisterItem(PlateGold = new StaticPowerItem("plate_gold"));

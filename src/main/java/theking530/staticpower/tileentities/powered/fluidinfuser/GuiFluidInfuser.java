@@ -10,6 +10,7 @@ import theking530.staticcore.gui.widgets.tabs.GuiMachineFluidTab;
 import theking530.staticcore.gui.widgets.tabs.GuiMachinePowerInfoTab;
 import theking530.staticcore.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
+import theking530.staticcore.gui.widgets.tabs.slottabs.GuiFluidContainerTab;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
@@ -34,6 +35,7 @@ public class GuiFluidInfuser extends StaticPowerTileEntityGui<ContainerFluidInfu
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage, getTileEntity().processingComponent).setTabSide(TabSide.LEFT), true);
 		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiFluidContainerTab(this.container, getTileEntity().fluidContainerComponent).setTabSide(TabSide.LEFT));
 
 		setOutputSlotSize(20);
 	}

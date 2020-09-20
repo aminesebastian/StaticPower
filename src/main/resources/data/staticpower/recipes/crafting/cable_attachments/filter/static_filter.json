@@ -1,0 +1,25 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"prp",
+		"pbp",
+		" a "
+	],
+	"key": {
+		"p": {
+			"item": "staticpower:ingot_static"
+		},
+		"a": {
+			"item": "minecraft:paper"
+		},
+		"b": {
+			"item": "minecraft:iron_bars"
+		},
+		"r": {
+			"tag": "forge:dusts/redstone"
+		}
+	},
+	"result": {
+		"item": "staticpower:cable_attachment_static_filter"
+	}
+}

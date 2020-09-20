@@ -36,6 +36,7 @@ import theking530.staticpower.data.crafting.wrappers.lumbermill.LumberMillRecipe
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
 import theking530.staticpower.data.crafting.wrappers.solidfuel.SolidFuelRecipe;
 import theking530.staticpower.data.crafting.wrappers.squeezer.SqueezerRecipe;
+import theking530.staticpower.data.crafting.wrappers.vulcanizer.VulcanizerRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.integration.JEI.bottler.BottleRecipeCategory;
@@ -54,6 +55,7 @@ import theking530.staticpower.integration.JEI.poweredgrinder.PoweredGrinderRecip
 import theking530.staticpower.integration.JEI.solderingtable.SolderingTableRecipeCategory;
 import theking530.staticpower.integration.JEI.solidgenerator.SolidGeneratorRecipeCategory;
 import theking530.staticpower.integration.JEI.squeezer.SqueezerRecipeCategory;
+import theking530.staticpower.integration.JEI.vulcanizer.VulcanizerRecipeCategory;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
 import theking530.staticpower.items.fluidcapsule.FluidCapsule;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.ContainerSolderingTable;
@@ -93,6 +95,8 @@ public class PluginJEI implements IModPlugin {
 	private CondenserRecipeCategory condensationCategory;
 	@Nullable
 	private FluidGeneratorRecipeCateogry fuidGeneratorRecipeCateogry;
+	@Nullable
+	private VulcanizerRecipeCategory vulcanizerRecipeCategory;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
@@ -164,6 +168,10 @@ public class PluginJEI implements IModPlugin {
 		// Fluid Generator
 		fuidGeneratorRecipeCateogry = new FluidGeneratorRecipeCateogry(guiHelper);
 		registration.addRecipeCategories(fuidGeneratorRecipeCateogry);
+
+		// Vulcanizer
+		vulcanizerRecipeCategory = new VulcanizerRecipeCategory(guiHelper);
+		registration.addRecipeCategories(vulcanizerRecipeCategory);
 	}
 
 	@Override
@@ -182,13 +190,13 @@ public class PluginJEI implements IModPlugin {
 		subtypeRegistry.registerSubtypeInterpreter(ModItems.CreativePortableBattery, new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
 		subtypeRegistry.registerSubtypeInterpreter(ModItems.ElectringSolderingIron, new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
 
-		subtypeRegistry.registerSubtypeInterpreter(ModItems.IronCapsule, new FluidCapsule.FluidCapsuleItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(ModItems.BasicCapsule, new FluidCapsule.FluidCapsuleItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(ModItems.AdvancedCapsule, new FluidCapsule.FluidCapsuleItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(ModItems.StaticCapsule, new FluidCapsule.FluidCapsuleItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(ModItems.EnergizedCapsule, new FluidCapsule.FluidCapsuleItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(ModItems.LumumCapsule, new FluidCapsule.FluidCapsuleItemJEIInterpreter());
-		subtypeRegistry.registerSubtypeInterpreter(ModItems.CreativeCapsule, new FluidCapsule.FluidCapsuleItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.IronFluidCapsule, new FluidCapsule.FluidCapsuleItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.BasicFluidCapsule, new FluidCapsule.FluidCapsuleItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.AdvancedFluidCapsule, new FluidCapsule.FluidCapsuleItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.StaticFluidCapsule, new FluidCapsule.FluidCapsuleItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.EnergizedFluidCapsule, new FluidCapsule.FluidCapsuleItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.LumumFluidCapsule, new FluidCapsule.FluidCapsuleItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.CreativeFluidCapsule, new FluidCapsule.FluidCapsuleItemJEIInterpreter());
 	}
 
 	@Override
@@ -208,6 +216,7 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(EvaporatorRecipe.RECIPE_TYPE), EvaporatorRecipeCategory.EVAPORATOR_UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FluidGeneratorRecipe.RECIPE_TYPE), FluidGeneratorRecipeCateogry.FLUID_GENERATOR_UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(CondensationRecipe.RECIPE_TYPE), CondenserRecipeCategory.CONDENSER_UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(VulcanizerRecipe.RECIPE_TYPE), VulcanizerRecipeCategory.VULCANIZER_UID);
 	}
 
 	@Override
@@ -229,6 +238,7 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Evaporator), EvaporatorRecipeCategory.EVAPORATOR_UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.FluidGenerator), FluidGeneratorRecipeCateogry.FLUID_GENERATOR_UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Condenser), CondenserRecipeCategory.CONDENSER_UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Vulcanizer), VulcanizerRecipeCategory.VULCANIZER_UID);
 	}
 
 	@Override

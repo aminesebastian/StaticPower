@@ -76,13 +76,13 @@ public class StaticPowerItemGroup extends ItemGroup {
 
 		// Add all the capsules for all fluids.
 		for (Fluid fluid : GameRegistry.findRegistry(Fluid.class)) {
-			subTypes.add(ModItems.IronCapsule.getFilledVariant(fluid));
-			subTypes.add(ModItems.BasicCapsule.getFilledVariant(fluid));
-			subTypes.add(ModItems.AdvancedCapsule.getFilledVariant(fluid));
-			subTypes.add(ModItems.StaticCapsule.getFilledVariant(fluid));
-			subTypes.add(ModItems.EnergizedCapsule.getFilledVariant(fluid));
-			subTypes.add(ModItems.LumumCapsule.getFilledVariant(fluid));
-			subTypes.add(ModItems.CreativeCapsule.getFilledVariant(fluid));
+			subTypes.add(ModItems.IronFluidCapsule.getFilledVariant(fluid));
+			subTypes.add(ModItems.BasicFluidCapsule.getFilledVariant(fluid));
+			subTypes.add(ModItems.AdvancedFluidCapsule.getFilledVariant(fluid));
+			subTypes.add(ModItems.StaticFluidCapsule.getFilledVariant(fluid));
+			subTypes.add(ModItems.EnergizedFluidCapsule.getFilledVariant(fluid));
+			subTypes.add(ModItems.LumumFluidCapsule.getFilledVariant(fluid));
+			subTypes.add(ModItems.CreativeFluidCapsule.getFilledVariant(fluid));
 		}
 	}
 }

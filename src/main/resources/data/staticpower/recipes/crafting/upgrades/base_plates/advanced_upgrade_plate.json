@@ -13,7 +13,7 @@
 			"item": "staticpower:processor_advanced"
 		},
 		"p": {
-			"item": "staticpower:plate_advanced"
+			"tag": "forge:plates/gold"
 		}
 	},
 	"result": {

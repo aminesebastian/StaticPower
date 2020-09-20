@@ -1,0 +1,15 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{
+			"tag": "forge:plates/aluminium"
+		},
+		{
+			"item": "staticpower:wire_cutters"
+		}
+	],
+	"result": {
+		"item": "staticpower:wire_aluminium",
+		"count": 4
+	}
+}

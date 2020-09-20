@@ -20,9 +20,11 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 import theking530.staticpower.tileentities.components.fluids.FluidInputServoComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
+import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
+import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.utilities.InventoryUtilities;
 
@@ -38,6 +40,7 @@ public class TileEntityVulcanizer extends TileEntityMachine {
 	public final InventoryComponent outputInventory;
 	public final InventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
+	public final FluidContainerInventoryComponent fluidContainerComponent;
 	public final RecipeProcessingComponent<VulcanizerRecipe> processingComponent;
 	public final FluidTankComponent fluidTankComponent;
 
@@ -68,9 +71,18 @@ public class TileEntityVulcanizer extends TileEntityMachine {
 		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory, 0));
 
 		// Setup the fluid tanks and servo.
-		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE, (fluidStack) -> {
+			return processingComponent.getRecipe(new RecipeMatchParameters(fluidStack)).isPresent();
+		}));
+
+		fluidTankComponent.setCapabilityExposedModes(MachineSideMode.Input);
+		fluidTankComponent.setUpgradeInventory(upgradesInventory);
 		fluidTankComponent.setCanDrain(false);
+		
 		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, fluidTankComponent, MachineSideMode.Input));
+
+		// Create the fluid container component.
+		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent).setMode(FluidContainerInteractionMode.DRAIN));
 
 		// Set the energy storage upgrade inventory.
 		energyStorage.setUpgradeInventory(upgradesInventory);

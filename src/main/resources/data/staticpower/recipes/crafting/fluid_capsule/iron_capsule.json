@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ppp",
+		"bgb",
+		"ppp"
+	],
+	"key": {
+		"g": {
+			"tag": "forge:glass"
+		},
+		"p": {
+			"tag": "forge:plates/iron"
+		},
+		"b": {
+			"item": "minecraft:bucket"
+		}
+	},
+	"result": {
+		"item": "staticpower:fluid_capsule_iron"
+	}
+}

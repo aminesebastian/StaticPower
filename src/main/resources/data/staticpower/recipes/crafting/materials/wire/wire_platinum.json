@@ -2,7 +2,7 @@
 	"type": "minecraft:crafting_shapeless",
 	"ingredients": [
 		{
-			"tag": "forge:ingots/platinum"
+			"tag": "forge:plates/platinum"
 		},
 		{
 			"item": "staticpower:wire_cutters"

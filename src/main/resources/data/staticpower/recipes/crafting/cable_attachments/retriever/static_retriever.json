@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"prp",
+		"pap",
+		" p "
+	],
+	"key": {
+		"p": {
+			"item": "staticpower:ingot_static"
+		},
+		"a": {
+			"item": "staticpower:processor_static"
+		},
+		"r": {
+			"tag": "forge:dusts/redstone"
+		}
+	},
+	"result": {
+		"item": "staticpower:cable_attachment_static_retriever"
+	}
+}
