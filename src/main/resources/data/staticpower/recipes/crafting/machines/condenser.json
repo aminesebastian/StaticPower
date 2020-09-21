@@ -1,0 +1,25 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"cgc",
+		"ubu",
+		"cgc"
+	],
+	"key": {
+		"u": {
+			"item": "minecraft:bucket"
+		},
+		"b": {
+			"item": "staticpower:machine_block_energized"
+		},
+		"g": {
+			"tag": "forge:glass"
+		},
+		"c": {
+			"tag": "forge:plates/copper"
+		}
+	},
+	"result": {
+		"item": "staticpower:machine_condenser"
+	}
+}

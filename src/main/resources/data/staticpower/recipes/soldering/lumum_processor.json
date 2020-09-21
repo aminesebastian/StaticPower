@@ -7,7 +7,7 @@
 	],
 	"key": {
 		"r": {
-			"tag": "forge:silicon"
+			"item": "staticpower:silicon_doped_lumum"
 		},
 		"p": {
 			"tag": "staticpower:plates/lumum"

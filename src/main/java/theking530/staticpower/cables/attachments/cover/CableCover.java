@@ -17,6 +17,8 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.EmptyBlockReader;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
 import theking530.staticpower.cables.AbstractCableBlock;
@@ -94,6 +96,7 @@ public class CableCover extends Item implements ICustomModelSupplier {
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)	
 	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
 		return new CoverItemModelProvider(existingModel, new CoverBuilder());
 	}

@@ -11,6 +11,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.client.rendering.blocks.BatteryBlockedBakedModel;
@@ -72,6 +74,7 @@ public class BlockBattery extends StaticPowerMachineBlock {
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)	
 	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
 		return new BatteryBlockedBakedModel(existingModel);
 	}

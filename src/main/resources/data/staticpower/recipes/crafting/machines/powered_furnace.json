@@ -1,0 +1,28 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		" b ",
+		"umu",
+		"gpg"
+	],
+	"key": {
+		"m": {
+			"item": "staticpower:machine_block_basic"
+		},
+		"u": {
+			"item": "staticpower:coil_copper"
+		},
+		"g": {
+			"tag": "forge:storage_blocks/copper"
+		},
+		"p": {
+			"item": "staticpower:plug"
+		},
+		"b": {
+			"item": "minecraft:bucket"
+		}
+	},
+	"result": {
+		"item": "staticpower:machine_powered_furnace"
+	}
+}

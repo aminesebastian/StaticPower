@@ -22,6 +22,7 @@ public class BlockDigistoreNetworkWire extends AbstractCableBlock {
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)	
 	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
 		IBakedModel extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_DIGISTORE_EXTENSION);
 		IBakedModel straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_DIGISTORE_STRAIGHT);

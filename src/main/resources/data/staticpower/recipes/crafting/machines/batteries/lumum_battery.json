@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"bpb",
+		"bmb",
+		"bpb"
+	],
+	"key": {
+		"p": {
+			"item": "staticpower:plate_lumum"
+		},
+		"m": {
+			"item": "staticpower:machine_block_lumum"
+		},
+		"b": {
+			"item": "staticpower:portable_battery_lumum"
+		}
+	},
+	"result": {
+		"item": "staticpower:battery_block_lumum"
+	}
+}

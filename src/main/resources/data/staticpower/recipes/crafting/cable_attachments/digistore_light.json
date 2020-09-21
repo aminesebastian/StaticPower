@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ggt",
+		"gst",
+		"ggt"
+	],
+	"key": {
+		"g": {
+			"tag": "forge:glass"
+		},
+		"s": {
+			"tag": "forge:dusts/glowstone"
+		},
+		"t": {
+			"tag": "forge:ingots/zinc"
+		}
+	},
+	"result": {
+		"item": "staticpower:cable_attachment_digistore_light"
+	}
+}

@@ -1,0 +1,28 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		" s ",
+		"ibi",
+		"gpg"
+	],
+	"key": {
+		"g": {
+			"tag": "forge:gears/tin"
+		},
+		"s": {
+			"item": "staticpower:soldering_table"
+		},
+		"b": {
+			"item": "staticpower:machine_block_basic"
+		},
+		"p": {
+			"item": "staticpower:plug"
+		},
+		"i": {
+			"item": "staticpower:soldering_iron"
+		}
+	},
+	"result": {
+		"item": "staticpower:machine_industrial_soldering_table"
+	}
+}

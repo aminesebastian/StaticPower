@@ -1,0 +1,25 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"zdz",
+		"zpz",
+		" c "
+	],
+	"key": {
+		"z": {
+			"tag": "forge:ingots/magnesium"
+		},
+		"d": {
+			"tag": "forge:chests/wooden"
+		},
+		"p": {
+			"item": "staticpower:processor_lumum"
+		},
+		"c": {
+			"item": "staticpower:digistore_core"
+		}
+	},
+	"result": {
+		"item": "staticpower:cable_attachment_digistore_crafting_interface"
+	}
+}

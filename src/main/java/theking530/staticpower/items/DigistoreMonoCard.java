@@ -8,6 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import theking530.api.digistore.DigistoreInventoryCapabilityProvider;
@@ -59,6 +61,7 @@ public class DigistoreMonoCard extends DigistoreCard implements ICustomModelSupp
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)	
 	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
 		return new DigistoreMonoCardItemModel(existingModel);
 	}

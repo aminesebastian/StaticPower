@@ -7,7 +7,7 @@
 	],
 	"key": {
 		"r": {
-			"tag": "forge:silicon"
+			"item": "staticpower:silicon_doped_energized"
 		},
 		"p": {
 			"tag": "staticpower:plates/energized"

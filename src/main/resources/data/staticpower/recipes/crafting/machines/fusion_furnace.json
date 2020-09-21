@@ -1,0 +1,31 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"bcb",
+		"gmg",
+		"rpr"
+	],
+	"key": {
+		"m": {
+			"item": "staticpower:machine_block_energized"
+		},
+		"g": {
+			"tag": "forge:slimeballs"
+		},
+		"p": {
+			"item": "staticpower:plug"
+		},
+		"b": {
+			"item": "minecraft:bucket"
+		},
+		"r": {
+			"item": "minecraft:bricks"
+		},
+		"c": {
+			"item": "staticpower:coil_gold"
+		}
+	},
+	"result": {
+		"item": "staticpower:machine_fusion_furnace"
+	}
+}

@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"sss",
+		"scs",
+		"s s"
+	],
+	"key": {
+		"s": {
+			"tag": "forge:stone"
+		},
+		"c": {
+			"item": "minecraft:crafting_table"
+		}
+	},
+	"result": {
+		"item": "staticpower:soldering_table"
+	}
+}

@@ -1,0 +1,28 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"bob",
+		"gmg",
+		"bpb"
+	],
+	"key": {
+		"m": {
+			"item": "staticpower:machine_block_energized"
+		},
+		"g": {
+			"item": "staticpower:gear_energized"
+		},
+		"p": {
+			"item": "staticpower:plug"
+		},
+		"o": {
+			"item": "staticpower:motor"
+		},
+		"b": {
+			"item": "minecraft:bucket"
+		}
+	},
+	"result": {
+		"item": "staticpower:machine_electric_miner"
+	}
+}

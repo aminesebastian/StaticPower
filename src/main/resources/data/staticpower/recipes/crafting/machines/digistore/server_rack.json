@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"tct",
+		"oco",
+		"tct"
+	],
+	"key": {
+		"t": {
+			"tag": "forge:ingots/tin"
+		},
+		"c": {
+			"tag": "forge:chests/wooden"
+		},
+		"o": {
+			"item": "staticpower:digistore_core"
+		}
+	},
+	"result": {
+		"item": "staticpower:digistore_server_rack"
+	}
+}

@@ -5,6 +5,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
 import theking530.staticpower.client.rendering.blocks.DefaultMachineBakedModel;
@@ -33,6 +35,7 @@ public abstract class StaticPowerMachineBlock extends StaticPowerTileEntityBlock
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)	
 	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
 		return new DefaultMachineBakedModel(existingModel);
 	}

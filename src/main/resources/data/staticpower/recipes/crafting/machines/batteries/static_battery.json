@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"bpb",
+		"bmb",
+		"bpb"
+	],
+	"key": {
+		"p": {
+			"item": "staticpower:plate_static"
+		},
+		"m": {
+			"item": "staticpower:machine_block_static"
+		},
+		"b": {
+			"item": "staticpower:portable_battery_static"
+		}
+	},
+	"result": {
+		"item": "staticpower:battery_block_static"
+	}
+}

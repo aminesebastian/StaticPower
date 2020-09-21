@@ -51,6 +51,7 @@ public class BlockTank extends StaticPowerTileEntityBlock implements ICustomMode
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)	
 	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
 		return new TankMachineBakedModel(existingModel);
 	}

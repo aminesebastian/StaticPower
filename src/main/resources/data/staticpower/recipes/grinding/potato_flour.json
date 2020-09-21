@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:grinder_recipe",
+	"input": {
+		"tag": "forge:crops/potato"
+	},
+	"output": [
+		{
+			"item": "staticpower:flour_potato",
+			"count": 2
+		}
+	]
+}

@@ -111,6 +111,7 @@ public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplie
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)	
 	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
 		return new FluidCapsuleItemModel(existingModel);
 	}

@@ -1,0 +1,31 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"uau",
+		"gbg",
+		"plp"
+	],
+	"key": {
+		"b": {
+			"item": "staticpower:machine_block_basic"
+		},
+		"a": {
+			"tag": "forge:glass"
+		},
+		"u": {
+			"item": "minecraft:bucket"
+		},
+		"g": {
+			"tag": "forge:gears/iron"
+		},
+		"l": {
+			"item": "staticpower:plug"
+		},
+		"p": {
+			"item": "minecraft:piston"
+		}
+	},
+	"result": {
+		"item": "staticpower:machine_squeezer"
+	}
+}

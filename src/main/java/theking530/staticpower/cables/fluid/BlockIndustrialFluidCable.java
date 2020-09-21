@@ -48,6 +48,7 @@ public class BlockIndustrialFluidCable extends AbstractCableBlock {
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)	
 	public IBakedModel getModelOverride(BlockState state, @Nullable IBakedModel existingModel, ModelBakeEvent event) {
 		IBakedModel extensionModel = null;
 		IBakedModel straightModel = null;

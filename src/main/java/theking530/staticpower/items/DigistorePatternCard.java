@@ -105,6 +105,7 @@ public class DigistorePatternCard extends StaticPowerItem implements ICustomMode
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)	
 	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
 		IBakedModel encodedModel = event.getModelRegistry().get(StaticPowerAdditionalModels.DIGISTORE_PATTERN_CARD_ENCODED);
 		return new PatternCardItemModel(existingModel, encodedModel);

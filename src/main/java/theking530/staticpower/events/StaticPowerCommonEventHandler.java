@@ -6,6 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.fml.DeferredWorkQueue;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import theking530.api.digistore.CapabilityDigistoreInventory;
@@ -25,6 +26,7 @@ import theking530.staticpower.integration.TOP.PluginTOP;
 
 @SuppressWarnings("deprecation")
 public class StaticPowerCommonEventHandler {
+	public static final String TOP_MODID = "theoneprobe";
 
 	/**
 	 * This event is raised by the common setup event.
@@ -53,7 +55,11 @@ public class StaticPowerCommonEventHandler {
 	}
 
 	public static void enqueueIMC(InterModEnqueueEvent event) {
-		PluginTOP.register();
+		// Only register if the one probe is loaded.
+		ModList modList = ModList.get();
+		if (modList.isLoaded(TOP_MODID)) {
+			PluginTOP.sendIMC();
+		}
 	}
 
 	public static void onMilkBucketUsed(RightClickBlock event) {

@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{
+			"item": "staticpower:cable_attachment_digistore_screen"
+		},
+		{
+			"item": "staticpower:digistore_core"
+		},
+		{
+			"tag": "forge:chests/wooden"
+		}
+	],
+	"result": {
+		"item": "staticpower:cable_attachment_digistore_terminal"
+	}
+}

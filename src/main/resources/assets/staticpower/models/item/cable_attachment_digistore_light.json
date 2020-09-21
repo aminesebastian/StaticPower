@@ -1,0 +1,4 @@
+{
+	"parent": "staticpower:block/cables/attachments/digistore_light_on",
+	"gui_light": "front"
+}

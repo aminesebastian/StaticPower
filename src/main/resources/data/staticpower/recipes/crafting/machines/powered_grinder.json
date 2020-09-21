@@ -1,0 +1,28 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ueu",
+		"eme",
+		"gpg"
+	],
+	"key": {
+		"m": {
+			"item": "staticpower:machine_block_basic"
+		},
+		"u": {
+			"item": "minecraft:flint"
+		},
+		"g": {
+			"tag": "forge:storage_blocks/iron"
+		},
+		"e": {
+			"tag": "forge:gears/iron"
+		},
+		"p": {
+			"item": "staticpower:plug"
+		}
+	},
+	"result": {
+		"item": "staticpower:machine_powered_grinder"
+	}
+}

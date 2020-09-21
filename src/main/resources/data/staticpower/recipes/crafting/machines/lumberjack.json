@@ -1,0 +1,28 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"g g",
+		"aba",
+		"ulu"
+	],
+	"key": {
+		"b": {
+			"item": "staticpower:machine_block_static"
+		},
+		"a": {
+			"item": "minecraft:iron_axe"
+		},
+		"u": {
+			"item": "minecraft:bucket"
+		},
+		"g": {
+			"tag": "forge:gears/iron"
+		},
+		"l": {
+			"item": "staticpower:plug"
+		}
+	},
+	"result": {
+		"item": "staticpower:machine_tree_farmer"
+	}
+}

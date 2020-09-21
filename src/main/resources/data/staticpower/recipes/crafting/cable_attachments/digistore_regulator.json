@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"zcz",
+		"zpz",
+		"zcz"
+	],
+	"key": {
+		"z": {
+			"tag": "forge:ingots/magnesium"
+		},
+		"p": {
+			"item": "staticpower:processor_advanced"
+		},
+		"c": {
+			"item": "staticpower:digistore_core"
+		}
+	},
+	"result": {
+		"item": "staticpower:cable_attachment_digistore_regulator"
+	}
+}

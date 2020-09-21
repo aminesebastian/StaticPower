@@ -9,6 +9,8 @@ import net.minecraft.util.math.BlockPos;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
+import theking530.staticpower.cables.attachments.digistore.DigistoreLight;
+import theking530.staticpower.cables.attachments.digistore.DigistoreScreen;
 import theking530.staticpower.cables.attachments.digistore.craftinginterface.DigistoreCraftingInterfaceAttachment;
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.DigistoreCraftingTerminal;
 import theking530.staticpower.cables.attachments.digistore.exporter.DigistoreExporterAttachment;
@@ -46,6 +48,8 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 		addValidAttachmentClass(DigistoreRegulatorAttachment.class);
 		addValidAttachmentClass(DigistorePatternEncoder.class);
 		addValidAttachmentClass(DigistoreCraftingInterfaceAttachment.class);
+		addValidAttachmentClass(DigistoreLight.class);
+		addValidAttachmentClass(DigistoreScreen.class);
 	}
 
 	public void preProcessUpdate() {

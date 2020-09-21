@@ -1,7 +1,6 @@
 package theking530.staticpower.events;
 
 import net.minecraft.item.Items;
-import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
@@ -12,7 +11,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 
@@ -33,11 +31,6 @@ public class StaticPowerForgeEventRegistry {
 	@SubscribeEvent
 	public static void onLootLoad(LootTableLoadEvent event) {
 		StaticPowerDataRegistry.onLootTableLoaded(event);
-	}
-
-	@SubscribeEvent
-	public static void registerItemColors(ColorHandlerEvent.Item event) {
-		StaticPowerRegistry.onRegisterItemColors(event);
 	}
 
 	@SubscribeEvent

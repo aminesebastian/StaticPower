@@ -15,6 +15,8 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -45,7 +47,7 @@ public class StaticCoreRegistry {
 		processContainerTypeAllocators((containerAllocator) -> {
 			CONTAINER_ALLOCATORS.add(containerAllocator);
 		});
-
+		
 		LOGGER.info(String.format("Initialized: %1$d Tile Entity Allocators and %2$d Container Type Allocators.", TILE_ENTITY_ALLOCATORS.size(), CONTAINER_ALLOCATORS.size()));
 	}
 
@@ -55,6 +57,7 @@ public class StaticCoreRegistry {
 		}
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	public static void registerTileEntitySpecialRenderers() {
 		StaticCoreRegistry.processTileEntityTypeAllocators((allocator) -> {
 			if (allocator.requiresTileEntitySpecialRenderer()) {

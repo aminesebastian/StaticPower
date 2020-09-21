@@ -1,0 +1,28 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"g g",
+		"cbc",
+		"ala"
+	],
+	"key": {
+		"b": {
+			"item": "staticpower:machine_block_basic"
+		},
+		"a": {
+			"item": "staticpower:portable_battery_basic"
+		},
+		"c": {
+			"item": "staticpower:coil_gold"
+		},
+		"g": {
+			"tag": "forge:dusts/redstone"
+		},
+		"l": {
+			"item": "staticpower:plug"
+		}
+	},
+	"result": {
+		"item": "staticpower:machine_generator_fluid"
+	}
+}

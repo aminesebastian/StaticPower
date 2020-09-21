@@ -1,0 +1,28 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		" s ",
+		"gbg",
+		"cpc"
+	],
+	"key": {
+		"g": {
+			"tag": "forge:gears/tin"
+		},
+		"s": {
+			"item": "minecraft:crafting_table"
+		},
+		"b": {
+			"item": "staticpower:machine_block_basic"
+		},
+		"p": {
+			"item": "staticpower:plug"
+		},
+		"c": {
+			"tag": "forge:chests/wooden"
+		}
+	},
+	"result": {
+		"item": "staticpower:machine_industrial_crafting_table"
+	}
+}

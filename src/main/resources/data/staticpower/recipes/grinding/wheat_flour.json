@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:grinder_recipe",
+	"input": {
+		"tag": "forge:crops/wheat"
+	},
+	"output": [
+		{
+			"item": "staticpower:flour_wheat",
+			"count": 2
+		}
+	]
+}

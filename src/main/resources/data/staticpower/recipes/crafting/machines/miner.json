@@ -1,0 +1,28 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"bob",
+		"gmg",
+		"bpb"
+	],
+	"key": {
+		"m": {
+			"item": "staticpower:machine_block_iron"
+		},
+		"g": {
+			"tag": "forge:gears/tin"
+		},
+		"p": {
+			"item": "staticpower:heat_sink_copper"
+		},
+		"o": {
+			"item": "staticpower:motor"
+		},
+		"b": {
+			"item": "minecraft:bucket"
+		}
+	},
+	"result": {
+		"item": "staticpower:machine_miner"
+	}
+}

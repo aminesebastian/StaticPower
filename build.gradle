@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
+
 buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
@@ -6,12 +8,16 @@ buildscript {
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+		classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.0'
     }
 }
+
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'java'
 
 version = "${mc_version}-${staticpower_version}"
 group = "com.theking530.staticpower" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -106,6 +112,23 @@ dependencies {
     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}")
 	
 	compile group: 'org.reflections', name: 'reflections', version: '0.9.10'
+}
+
+shadowJar {
+    // Only shadow reflections
+    dependencies {
+        include(dependency('org.reflections:.*'))
+		include(dependency('org.javassist:.*'))
+    }
+
+    // Relocate reflections to prevent conflicts with other mods that include it
+    relocate 'org.reflections.Reflections', 'theking530.reflections.Reflections'
+
+    classifier '' // Replace the default JAR
+}
+
+reobf {
+    shadowJar {} // Reobfuscate the shadowed JAR
 }
 
 repositories {
@@ -205,4 +228,5 @@ buildApiJar.dependsOn sourcesJar
 
 artifacts {
 	archives sourcesJar
+	archives shadowJar
 }

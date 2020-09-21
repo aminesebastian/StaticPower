@@ -1,0 +1,14 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{
+			"item": "staticpower:cable_attachment_digistore_terminal"
+		},
+		{
+			"item": "minecraft:crafting_table"
+		}
+	],
+	"result": {
+		"item": "staticpower:cable_attachment_digistore_crafting_terminal"
+	}
+}

@@ -3,6 +3,8 @@ package theking530.staticpower.client;
 import java.util.HashSet;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelLoader;
 import theking530.staticpower.StaticPower;
 
@@ -162,6 +164,12 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation CABLE_DIGISTORE_PATTERN_ENCODER_ATTACHMENT_ON = registerModel("block/cables/attachments/digistore_pattern_encoder_attachment_on");
 	public static final ResourceLocation CABLE_DIGISTORE_PATTERN_ENCODER_ATTACHMENT = registerModel("block/cables/attachments/digistore_pattern_encoder_attachment");
 
+	public static final ResourceLocation CABLE_DIGISTORE_SCREEN_ATTACHMENT_ON = registerModel("block/cables/attachments/digistore_screen_on");
+	public static final ResourceLocation CABLE_DIGISTORE_SCREEN_ATTACHMENT = registerModel("block/cables/attachments/digistore_screen_off");
+
+	public static final ResourceLocation CABLE_DIGISTORE_LIGHT_ATTACHMENT_ON = registerModel("block/cables/attachments/digistore_light_on");
+	public static final ResourceLocation CABLE_DIGISTORE_LIGHT_ATTACHMENT = registerModel("block/cables/attachments/digistore_light_off");
+
 	public static final ResourceLocation CABLE_DIGISTORE_EXPORTER_ATTACHMENT = registerModel("block/cables/attachments/digistore_exporter");
 	public static final ResourceLocation CABLE_DIGISTORE_IMPORTER_ATTACHMENT = registerModel("block/cables/attachments/digistore_importer");
 	public static final ResourceLocation CABLE_DIGISTORE_IO_BUS_ATTACHMENT = registerModel("block/cables/attachments/digistore_io_bus");
@@ -186,6 +194,7 @@ public class StaticPowerAdditionalModels {
 
 	public static final ResourceLocation DIGISTORE_PATTERN_CARD_ENCODED = registerModel("item/digistore_pattern_card_encoded");
 
+	@OnlyIn(Dist.CLIENT)
 	public static void regsiterModels() {
 		for (ResourceLocation model : MODELS) {
 			ModelLoader.addSpecialModel(model);

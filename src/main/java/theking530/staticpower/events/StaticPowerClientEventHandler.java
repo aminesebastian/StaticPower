@@ -37,6 +37,7 @@ import theking530.staticpower.data.crafting.wrappers.thermalconductivity.Thermal
 import theking530.staticpower.init.ModItems;
 
 @SuppressWarnings("deprecation")
+@OnlyIn(Dist.CLIENT)
 public class StaticPowerClientEventHandler {
 	private static final CustomRenderer CUSTOM_RENDERER = new CustomRenderer();
 
@@ -147,7 +148,6 @@ public class StaticPowerClientEventHandler {
 	}
 
 	@SubscribeEvent
-	@OnlyIn(Dist.CLIENT)
 	public static void onAddItemTooltip(ItemTooltipEvent event) {
 		if (Screen.hasShiftDown()) {
 			RecipeMatchParameters matchParameters = new RecipeMatchParameters(event.getItemStack());
@@ -162,7 +162,6 @@ public class StaticPowerClientEventHandler {
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	private static void initializeGui() {
 		StaticCoreRegistry.registerScreenFactories();
 	}

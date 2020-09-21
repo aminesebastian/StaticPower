@@ -9,6 +9,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import theking530.staticpower.client.rendering.blocks.DigistoreModel;
 import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreBlock;
@@ -34,6 +36,7 @@ public class BlockDigistore extends BaseDigistoreBlock {
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)	
 	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
 		return new DigistoreModel(existingModel);
 	}

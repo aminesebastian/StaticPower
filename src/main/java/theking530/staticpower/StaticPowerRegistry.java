@@ -3,7 +3,6 @@ package theking530.staticpower;
 import java.util.HashSet;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.fluid.FlowingFluid;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.ContainerType;
@@ -11,7 +10,6 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.event.RegistryEvent;
 import theking530.staticcore.initialization.StaticCoreRegistry;
 import theking530.staticpower.blocks.interfaces.IItemBlockProvider;
@@ -76,14 +74,6 @@ public class StaticPowerRegistry {
 	public static void onRegisterItems(RegistryEvent.Register<Item> event) {
 		for (Item item : ITEMS) {
 			event.getRegistry().register(item);
-		}
-	}
-
-	public static void onRegisterItemColors(ColorHandlerEvent.Item event) {
-		for (Item item : ITEMS) {
-			if (item instanceof IItemColor) {
-				event.getItemColors().register((IItemColor) item, item);
-			}
 		}
 	}
 

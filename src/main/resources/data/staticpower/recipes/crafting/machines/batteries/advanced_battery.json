@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"bpb",
+		"bmb",
+		"bpb"
+	],
+	"key": {
+		"p": {
+			"tag": "forge:plates/gold"
+		},
+		"m": {
+			"item": "staticpower:machine_block_advanced"
+		},
+		"b": {
+			"item": "staticpower:portable_battery_advanced"
+		}
+	},
+	"result": {
+		"item": "staticpower:battery_block_advanced"
+	}
+}
