@@ -3,6 +3,9 @@ package theking530.staticpower.network;
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.Supplier;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
@@ -22,6 +25,7 @@ import theking530.staticpower.StaticPower;
  */
 public class StaticPowerMessageHandler {
 	private static final String PROTOCOL_VERSION = "1";
+	public static final Logger LOGGER = LogManager.getLogger(StaticPowerMessageHandler.class);
 	public static final SimpleChannel MAIN_PACKET_CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(StaticPower.MOD_ID, "main"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals,
 			PROTOCOL_VERSION::equals);
 	private static int currentMessageId = 0;
@@ -72,7 +76,7 @@ public class StaticPowerMessageHandler {
 		try {
 			pack = type.getConstructor().newInstance();
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-			StaticPower.LOGGER.error(String.format("An error occured when attempting to decode packet of type: %1$s.", type.toString()), e);
+			LOGGER.error(String.format("An error occured when attempting to decode packet of type: %1$s.", type.toString()), e);
 		}
 		return pack;
 	}

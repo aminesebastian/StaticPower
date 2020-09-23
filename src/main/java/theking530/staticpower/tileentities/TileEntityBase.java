@@ -45,7 +45,6 @@ import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
-import theking530.staticpower.StaticPower;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
@@ -249,7 +248,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	public Direction getFacingDirection() {
 		// If the world is null, return UP and log the error.
 		if (getWorld() == null) {
-			StaticPower.LOGGER.error("There was an attempt to get the facing direction before the block has been fully placed in the world! TileEntity: %1$s at position: %2$s.",
+			LOGGER.error("There was an attempt to get the facing direction before the block has been fully placed in the world! TileEntity: %1$s at position: %2$s.",
 					getDisplayName().getFormattedText(), pos);
 			return Direction.UP;
 		}

@@ -1,8 +1,5 @@
 package theking530.staticpower;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.item.ItemGroup;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -23,7 +20,6 @@ import theking530.staticpower.init.ModUpgrades;
 @Mod.EventBusSubscriber(modid = StaticPower.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class StaticPower {
 	public static final String MOD_ID = "staticpower";
-	public static final Logger LOGGER = LogManager.getLogger(StaticPower.MOD_ID);
 	public static final ItemGroup CREATIVE_TAB = new StaticPowerItemGroup();
 
 	public StaticPower() {

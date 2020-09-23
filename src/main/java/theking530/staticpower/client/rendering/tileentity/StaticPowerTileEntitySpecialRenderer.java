@@ -2,6 +2,9 @@ package theking530.staticpower.client.rendering.tileentity;
 
 import javax.annotation.Nonnull;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
@@ -27,19 +30,22 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticcore.utilities.Vector4D;
-import theking530.staticpower.StaticPower;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.digistorenetwork.digistore.TileEntityDigistore;
 
 @SuppressWarnings("deprecation")
+@OnlyIn(Dist.CLIENT)
 public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityBase> extends TileEntityRenderer<T> {
+	public static final Logger LOGGER = LogManager.getLogger(StaticPowerTileEntitySpecialRenderer.class);
 	protected static final float TEXEL = (1.0f / 16.0f);
 	protected ItemRenderer ItemRenderer;
 
@@ -72,7 +78,7 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 			// Render the tile entity.
 			renderTileEntityBase(tileEntity, tileEntityPos, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 		} catch (Exception e) {
-			StaticPower.LOGGER.error(String.format("An error occured when attempting to draw tile entity base: %1$s.", tileEntity), e);
+			LOGGER.error(String.format("An error occured when attempting to draw tile entity base: %1$s.", tileEntity), e);
 		}
 
 		matrixStack.pop();

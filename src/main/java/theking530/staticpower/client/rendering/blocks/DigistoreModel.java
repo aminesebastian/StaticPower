@@ -18,6 +18,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ILightReader;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import theking530.staticcore.utilities.SDMath;
@@ -25,6 +27,7 @@ import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
 import theking530.staticpower.items.DigistoreCard;
 import theking530.staticpower.tileentities.digistorenetwork.digistore.TileEntityDigistore;
 
+@OnlyIn(Dist.CLIENT)
 public class DigistoreModel extends AbstractBakedModel {
 	public DigistoreModel(IBakedModel baseModel) {
 		super(baseModel);

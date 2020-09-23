@@ -30,13 +30,13 @@ import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
 import net.minecraftforge.client.model.pipeline.TRSRTransformer;
 import net.minecraftforge.common.model.TransformationHelper;
-import theking530.staticpower.StaticPower;
 
 public abstract class AbstractBakedModel implements IBakedModel {
 	protected static final float UNIT = 1.0f / 16.0f;
 	protected static final Logger LOGGER = LogManager.getLogger(AbstractBakedModel.class);
 	protected static final Map<Direction, Quaternion> FACING_ROTATIONS = new EnumMap<Direction, Quaternion>(Direction.class);
 	protected static final Map<Direction, TransformationMatrix> SIDE_TRANSFORMS = new EnumMap<>(Direction.class);
+
 	protected final HashSet<String> LoggedErrors = new HashSet<String>();
 	protected final FaceBakery FaceBaker = new FaceBakery();
 	protected final IBakedModel BaseModel;
@@ -165,7 +165,7 @@ public abstract class AbstractBakedModel implements IBakedModel {
 	protected void conditionallyLogError(String log) {
 		if (!LoggedErrors.contains(log)) {
 			LoggedErrors.add(log);
-			StaticPower.LOGGER.error(log);
+			LOGGER.error(log);
 		}
 	}
 }

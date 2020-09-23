@@ -1,14 +1,14 @@
 package theking530.staticcore.initialization;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.reflections.Reflections;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.inventory.container.Container;
@@ -20,13 +20,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.loading.FMLLoader;
+import net.minecraftforge.fml.loading.moddiscovery.ModFileInfo;
+import net.minecraftforge.forgespi.language.ModFileScanData.AnnotationData;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
-import theking530.staticpower.StaticPower;
-import theking530.staticpower.container.StaticPowerContainer;
-import theking530.staticpower.tileentities.TileEntityBase;
 
 @SuppressWarnings("deprecation")
 public class StaticCoreRegistry {
@@ -47,7 +47,7 @@ public class StaticCoreRegistry {
 		processContainerTypeAllocators((containerAllocator) -> {
 			CONTAINER_ALLOCATORS.add(containerAllocator);
 		});
-		
+
 		LOGGER.info(String.format("Initialized: %1$d Tile Entity Allocators and %2$d Container Type Allocators.", TILE_ENTITY_ALLOCATORS.size(), CONTAINER_ALLOCATORS.size()));
 	}
 
@@ -77,50 +77,59 @@ public class StaticCoreRegistry {
 			for (ContainerTypeAllocator<? extends Container, ? extends Screen> container : CONTAINER_ALLOCATORS) {
 				container.registerScreen();
 			}
-			StaticPower.LOGGER.info("Registered all Static Power container types.");
+			LOGGER.info("Registered all Static Power container types.");
 		});
 	}
 
 	@SuppressWarnings("unchecked")
 	public static void processTileEntityTypeAllocators(Consumer<TileEntityTypeAllocator<TileEntity>> allocatorConsumer) {
 		// Process the allocators.
-		Set<Class<? extends TileEntityBase>> classes = getAllModTileEntityClasses();
-		for (Class<? extends TileEntityBase> baseClass : classes) {
-			for (Field field : baseClass.getDeclaredFields()) {
-				if (field.isAnnotationPresent(TileEntityTypePopulator.class)) {
-					try {
-						allocatorConsumer.accept((TileEntityTypeAllocator<TileEntity>) field.get(null));
-					} catch (Exception e) {
-						LOGGER.error(String.format("An error occured when attempting to process tile entity allocator: %1$s.", field.getName()));
-					}
-				}
+		for (AnnotationData annotation : getAnnotationsOfType(TileEntityTypePopulator.class)) {
+			try {
+				Class<?> act = Class.forName(annotation.getClassType().getClassName());
+				Field field = act.getField(annotation.getMemberName());
+				allocatorConsumer.accept((TileEntityTypeAllocator<TileEntity>) field.get(null));
+			} catch (Exception e) {
+				LOGGER.error(String.format("An error occured when attempting to process tile entity allocator: %1$s.", annotation.getMemberName()));
 			}
 		}
 	}
 
 	public static void processContainerTypeAllocators(Consumer<ContainerTypeAllocator<?, ?>> allocatorConsumer) {
 		// Process the allocators.
-		Set<Class<? extends StaticPowerContainer>> classes = getAllModContainerClasses();
-		for (Class<? extends StaticPowerContainer> baseClass : classes) {
-			for (Field field : baseClass.getDeclaredFields()) {
-				if (field.isAnnotationPresent(ContainerTypePopulator.class)) {
-					try {
-						allocatorConsumer.accept((ContainerTypeAllocator<?, ?>) field.get(null));
-					} catch (Exception e) {
-						LOGGER.error(String.format("An error occured when attempting to process container allocator: %1$s.", field.getName()));
-					}
-				}
+		for (AnnotationData annotation : getAnnotationsOfType(ContainerTypePopulator.class)) {
+			try {
+				Class<?> act = Class.forName(annotation.getClassType().getClassName());
+				Field field = act.getField(annotation.getMemberName());
+				allocatorConsumer.accept((ContainerTypeAllocator<?, ?>) field.get(null));
+			} catch (Exception e) {
+				LOGGER.error(String.format("An error occured when attempting to process container allocator: %1$s.", annotation.getMemberName()));
 			}
 		}
 	}
 
-	public static Set<Class<? extends StaticPowerContainer>> getAllModContainerClasses() {
-		Reflections reflections = new Reflections("");
-		return reflections.getSubTypesOf(StaticPowerContainer.class);
-	}
+	public static ArrayList<AnnotationData> getAnnotationsOfType(Class<? extends Annotation> annotationType) {
+		// Allocate the output.
+		ArrayList<AnnotationData> output = new ArrayList<AnnotationData>();
 
-	public static Set<Class<? extends TileEntityBase>> getAllModTileEntityClasses() {
-		Reflections reflections = new Reflections("");
-		return reflections.getSubTypesOf(TileEntityBase.class);
+		// Iterate through all the file infos.
+		for (ModFileInfo mod : FMLLoader.getLoadingModList().getModFiles()) {
+			// Iterate through all the annotations.
+			for (AnnotationData anno : mod.getFile().getScanResult().getAnnotations()) {
+				// Check to see if the annotation is of the requested type.
+				try {
+					Class<?> act = Class.forName(anno.getAnnotationType().getClassName());
+					System.out.println(act);
+					if (annotationType == act) {
+						output.add(anno);
+					}
+				} catch (ClassNotFoundException e) {
+					LOGGER.error(String.format("An error occured when attempting to process annotation: %1$s.", anno.getAnnotationType().getClassName()), e);
+				}
+			}
+		}
+
+		// Return the output.
+		return output;
 	}
 }

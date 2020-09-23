@@ -11,10 +11,13 @@ import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.tileentities.powered.autosolderingtable.TileEntityAutoSolderingTable;
 
 @SuppressWarnings("deprecation")
+@OnlyIn(Dist.CLIENT)
 public class TileEntityRenderAutoSolderingTable extends StaticPowerTileEntitySpecialRenderer<TileEntityAutoSolderingTable> {
 
 	public TileEntityRenderAutoSolderingTable(TileEntityRendererDispatcher rendererDispatcherIn) {

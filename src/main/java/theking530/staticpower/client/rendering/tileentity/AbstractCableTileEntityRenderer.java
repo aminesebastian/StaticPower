@@ -11,6 +11,8 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Color;
@@ -22,6 +24,7 @@ import theking530.staticpower.client.rendering.BlockModel;
 import theking530.staticpower.tileentities.TileEntityBase;
 
 @SuppressWarnings("deprecation")
+@OnlyIn(Dist.CLIENT)
 public abstract class AbstractCableTileEntityRenderer<T extends TileEntityBase> extends StaticPowerTileEntitySpecialRenderer<T> {
 	protected static final BlockModel CUBE_MODEL = new BlockModel();
 	protected static final Vector3D BLOCK_RENDER_SCALE = new Vector3D(0.3f, 0.3f, 0.3f);

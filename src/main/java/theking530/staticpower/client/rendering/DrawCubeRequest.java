@@ -2,8 +2,11 @@ package theking530.staticpower.client.rendering;
 
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.utilities.Color;
 
+@OnlyIn(Dist.CLIENT)
 public class DrawCubeRequest {
 	public Vector3f Position;
 	public Vector3f Scale;

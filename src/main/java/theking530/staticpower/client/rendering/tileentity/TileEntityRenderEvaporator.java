@@ -6,10 +6,13 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticcore.utilities.Vector4D;
 import theking530.staticpower.tileentities.nonpowered.evaporator.TileEntityEvaporator;
 
+@OnlyIn(Dist.CLIENT)
 public class TileEntityRenderEvaporator extends StaticPowerTileEntitySpecialRenderer<TileEntityEvaporator> {
 
 	public TileEntityRenderEvaporator(TileEntityRendererDispatcher rendererDispatcherIn) {

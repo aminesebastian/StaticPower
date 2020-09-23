@@ -11,10 +11,13 @@ import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Direction;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.StaticPowerSprites;
 
+@OnlyIn(Dist.CLIENT)
 public class BlockModel {
 	@SuppressWarnings("unused")
 	private static final Color DEFAULT_COLOR = new Color(1.0f, 1.0f, 1.0f);

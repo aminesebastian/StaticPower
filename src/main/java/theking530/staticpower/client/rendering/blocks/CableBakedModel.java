@@ -18,6 +18,8 @@ import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ILightReader;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.data.IModelData;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
@@ -26,6 +28,7 @@ import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.client.rendering.CoverBuilder;
 
+@OnlyIn(Dist.CLIENT)
 public class CableBakedModel extends AbstractBakedModel {
 	public static final Logger LOGGER = LogManager.getLogger(AbstractBakedModel.class);
 	private final IBakedModel Extension;

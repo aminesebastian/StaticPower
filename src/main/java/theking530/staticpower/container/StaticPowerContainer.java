@@ -26,7 +26,6 @@ import theking530.staticcore.gui.ContainerOpener;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.network.NetworkGUI;
 import theking530.staticcore.utilities.TriFunction;
-import theking530.staticpower.StaticPower;
 import theking530.staticpower.container.slots.DummySlot;
 import theking530.staticpower.container.slots.PhantomSlot;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
@@ -38,7 +37,9 @@ import theking530.staticpower.tileentities.powered.autocrafter.PacketLockInvento
 public abstract class StaticPowerContainer extends Container {
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerContainer.class);
 	public static final int INVENTORY_COMPONENT_LOCK_MOUSE_BUTTON = 69;
+	
 	public final ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator;
+	
 	protected int playerInventoryStart;
 	protected int playerHotbarStart;
 	protected int playerInventoryEnd;
@@ -347,7 +348,7 @@ public abstract class StaticPowerContainer extends Container {
 		try {
 			return (List<IContainerListener>) listenersField.get(this);
 		} catch (Exception e) {
-			StaticPower.LOGGER.error(String.format("An error occured when attempting to access (through reflection) the listeners to this container: %1$s.", this.toString()), e);
+			LOGGER.error(String.format("An error occured when attempting to access (through reflection) the listeners to this container: %1$s.", this.toString()), e);
 		}
 		return null;
 	}

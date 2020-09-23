@@ -28,6 +28,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.SimpleModelTransform;
 import net.minecraftforge.client.model.data.EmptyModelData;
@@ -43,6 +45,7 @@ import theking530.staticpower.items.PortableBattery;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 @SuppressWarnings("deprecation")
+@OnlyIn(Dist.CLIENT)
 public class PortableBatteryItemModel implements IBakedModel {
 	private final Int2ObjectMap<PortableBatteryModel> cache = new Int2ObjectArrayMap<>();
 	private final IBakedModel baseModel;

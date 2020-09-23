@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -26,12 +29,13 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
 import theking530.staticpower.data.crafting.wrappers.former.FormerRecipe;
 import theking530.staticpower.data.crafting.wrappers.solidfuel.SolidFuelRecipe;
+import theking530.staticpower.events.StaticPowerClientEventHandler;
 
 public class StaticPowerRecipeRegistry {
+	public static final Logger LOGGER = LogManager.getLogger(StaticPowerClientEventHandler.class);
 
 	@SuppressWarnings("rawtypes")
 	public static final HashMap<IRecipeType, LinkedList<AbstractStaticPowerRecipe>> RECIPES = new HashMap<IRecipeType, LinkedList<AbstractStaticPowerRecipe>>();
@@ -128,7 +132,7 @@ public class StaticPowerRecipeRegistry {
 		boolean firstTime = RECIPES.size() == 0;
 
 		// Log that caching has started.
-		StaticPower.LOGGER.info(String.format("%1$s Static Power recipes.", (firstTime ? "caching" : "re-caching")));
+		LOGGER.info(String.format("%1$s Static Power recipes.", (firstTime ? "caching" : "re-caching")));
 
 		// Clear the recipe lists.
 		RECIPES.clear();
@@ -196,13 +200,13 @@ public class StaticPowerRecipeRegistry {
 					recipeCount++;
 					addRecipe(bucketRecipe);
 				} else {
-					StaticPower.LOGGER.info(String.format("Attempted to register a dynamic bottler recipe for item: %1$s. The .json definition may not be required unless it is an override.",
+					LOGGER.info(String.format("Attempted to register a dynamic bottler recipe for item: %1$s. The .json definition may not be required unless it is an override.",
 							emptyContainer.getDisplayName().getFormattedText()));
 				}
 			}
 		}
 
 		// Log the completion.
-		StaticPower.LOGGER.info(String.format("Succesfully %1$s %2$d Static Power recipes.", (firstTime ? "cached" : "re-cached"), recipeCount));
+		LOGGER.info(String.format("Succesfully %1$s %2$d Static Power recipes.", (firstTime ? "cached" : "re-cached"), recipeCount));
 	}
 }

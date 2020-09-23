@@ -16,13 +16,17 @@ import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import theking530.staticcore.utilities.Color;
 
+@OnlyIn(Dist.CLIENT)
 public class CustomRenderer {
 	private BlockModel model = new BlockModel();
 	private static HashMap<TileEntity, HashMap<String, DrawCubeRequest>> CubeRenderRequests = new HashMap<TileEntity, HashMap<String, DrawCubeRequest>>();
 
+	@SuppressWarnings("resource")
 	public void render(RenderWorldLastEvent event) {
 		// Get the current matrix stack.
 		MatrixStack matrixStack = event.getMatrixStack();

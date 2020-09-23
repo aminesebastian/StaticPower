@@ -16,9 +16,12 @@ import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 
+@OnlyIn(Dist.CLIENT)
 public class BatteryBlockedBakedModel extends DefaultMachineBakedModel {
 	private static final Map<MachineSideMode, BlockFaceUV> SIDE_MODE_UV_LAYOUTS = new HashMap<MachineSideMode, BlockFaceUV>();
 	private static final Map<MachineSideMode, BlockFaceUV> TOP_MODE_UV_LAYOUTS = new HashMap<MachineSideMode, BlockFaceUV>();

@@ -3,7 +3,9 @@ package theking530.staticpower.tileentities.components.serialization;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,6 +24,7 @@ import net.minecraftforge.fluids.FluidStack;
  */
 public class SerializationUtilities {
 	public static final Logger LOGGER = LogManager.getLogger(SerializationUtilities.class);
+	public static final Map<Class<?>, List<Field>> FIELD_MAP = new HashMap<Class<?>, List<Field>>();
 
 	/**
 	 * Gets all the {@link UpdateSerialize} fields on the provided object.
@@ -29,20 +32,24 @@ public class SerializationUtilities {
 	 * @return The list of update serializeable fields.
 	 */
 	public static List<Field> getUpdateSerializeableFields(Object obj) {
-		// Allocate output list.
-		List<Field> updateFields = new ArrayList<Field>();
+		if (!FIELD_MAP.containsKey(obj.getClass())) {
+			// Allocate output list.
+			List<Field> updateFields = new ArrayList<Field>();
 
-		// Iterate through all the fields.
-		for (Class<?> c = obj.getClass(); c != null; c = c.getSuperclass()) {
-			for (Field field : c.getDeclaredFields()) {
-				if (field.isAnnotationPresent(UpdateSerialize.class)) {
-					updateFields.add(field);
+			// Iterate through all the fields.
+			for (Class<?> c = obj.getClass(); c != null; c = c.getSuperclass()) {
+				for (Field field : c.getDeclaredFields()) {
+					if (field.isAnnotationPresent(UpdateSerialize.class)) {
+						updateFields.add(field);
+					}
 				}
 			}
-		}
 
-		// Return the save serializeable fields.
-		return updateFields;
+			FIELD_MAP.put(obj.getClass(), updateFields);
+			return updateFields;
+		} else {
+			return FIELD_MAP.get(obj);
+		}
 	}
 
 	/**

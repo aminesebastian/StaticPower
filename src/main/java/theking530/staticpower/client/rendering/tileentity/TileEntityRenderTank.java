@@ -8,6 +8,8 @@ import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelLoader;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Color;
@@ -16,6 +18,7 @@ import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.BlockModel;
 import theking530.staticpower.tileentities.nonpowered.tank.TileEntityTank;
 
+@OnlyIn(Dist.CLIENT)
 public class TileEntityRenderTank extends StaticPowerTileEntitySpecialRenderer<TileEntityTank> {
 	protected static final BlockModel CUBE_MODEL = new BlockModel();
 

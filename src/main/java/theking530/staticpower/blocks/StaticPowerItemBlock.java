@@ -5,6 +5,9 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.BlockItem;
@@ -19,6 +22,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticpower.StaticPower;
 
 public class StaticPowerItemBlock extends BlockItem {
+	public static final Logger LOGGER = LogManager.getLogger(StaticPowerItemBlock.class);
+	
 	protected final Block OWNING_BLOCK;
 
 	/**
@@ -41,7 +46,7 @@ public class StaticPowerItemBlock extends BlockItem {
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
 		// Return early if an invalid owner is encountered.
 		if (OWNING_BLOCK == null) {
-			StaticPower.LOGGER.info("Invalid owning block encountered when attempting to generate tooltips for StaticPowerItemBlock.");
+			LOGGER.info("Invalid owning block encountered when attempting to generate tooltips for StaticPowerItemBlock.");
 			return;
 		}
 

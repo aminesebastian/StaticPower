@@ -4,14 +4,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootPool;
 import net.minecraft.world.storage.loot.TableLootEntry;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.LootTableLoadEvent;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.utilities.CustomJsonLoader;
 import theking530.staticpower.StaticPower;
 
 public class StaticPowerDataRegistry {
+	public static final Logger LOGGER = LogManager.getLogger(StaticPowerDataRegistry.class);
 	private static final Map<ResourceLocation, ResourceLocation> LOOT_TABLE_ADDITIONS = new HashMap<ResourceLocation, ResourceLocation>();
 
 	/**
@@ -48,15 +54,18 @@ public class StaticPowerDataRegistry {
 		int customDataCount = 0;
 
 		// Log that caching has started.
-		StaticPower.LOGGER.info(String.format("%1$s Static Power data.", (firstTime ? "Caching" : "Re-caching")));
+		LOGGER.info(String.format("%1$s Static Power data.", (firstTime ? "Caching" : "Re-caching")));
 
 		// Load all tiers.
-		List<StaticPowerTier> tiers = CustomJsonLoader.loadAllInPath(StaticPower.class, "/data/staticpower/tiers", StaticPowerTier.class);
+		List<StaticPowerTier> tiers = CustomJsonLoader.loadAllInPath(StaticPower.class, FMLEnvironment.dist == Dist.CLIENT ? "/data/staticpower/tiers" : "/tiers", StaticPowerTier.class);
 		customDataCount += tiers.size();
-		tiers.forEach(tier -> TIERS.put(tier.getTierId(), tier));
+		tiers.forEach(tier -> {
+			TIERS.put(tier.getTierId(), tier);
+			LOGGER.info(String.format("Loaded Tier: %1$s.", tier.getTierId()));
+		});
 
 		// Log the completion.
-		StaticPower.LOGGER.info(String.format("Succesfully %1$s %2$d Static Power data.", (firstTime ? "cached" : "re-cached"), customDataCount));
+		LOGGER.info(String.format("Succesfully %1$s %2$d Static Power data.", (firstTime ? "cached" : "re-cached"), customDataCount));
 	}
 
 	public static void onLootTableLoaded(LootTableLoadEvent event) {

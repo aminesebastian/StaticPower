@@ -1,5 +1,8 @@
 package theking530.staticpower.items.itemfilter;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -10,13 +13,14 @@ import theking530.staticcore.gui.widgets.button.SpriteButton;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
-import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.gui.StaticPowerItemStackGui;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class GuiItemFilter extends StaticPowerItemStackGui<ContainerItemFilter, ItemFilter> {
+	public static final Logger LOGGER = LogManager.getLogger(GuiItemFilter.class);
+
 	public GuiInfoTab infoTab;
 	private ItemStackHandler filterInventory;
 
@@ -38,7 +42,7 @@ public class GuiItemFilter extends StaticPowerItemStackGui<ContainerItemFilter, 
 
 		// If the item filter is null, then return early and log the error.
 		if (filterInventory == null) {
-			StaticPower.LOGGER.error(String.format("Received capability for ItemFilter: %1$s that did not inherit from InventoryItemFilter.", getItemStack().getDisplayName()));
+			LOGGER.error(String.format("Received capability for ItemFilter: %1$s that did not inherit from InventoryItemFilter.", getItemStack().getDisplayName()));
 			return;
 		}
 

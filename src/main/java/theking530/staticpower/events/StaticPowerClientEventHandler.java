@@ -1,8 +1,10 @@
 package theking530.staticpower.events;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
@@ -17,13 +19,8 @@ import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import theking530.api.heat.HeatTooltipUtilities;
 import theking530.staticcore.initialization.StaticCoreRegistry;
-import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.blocks.interfaces.IBlockRenderLayerProvider;
 import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
@@ -31,14 +28,12 @@ import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.client.rendering.items.FluidCapsuleItemModel.CapsuleColorProvider;
-import theking530.staticpower.data.crafting.RecipeMatchParameters;
-import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
-import theking530.staticpower.data.crafting.wrappers.thermalconductivity.ThermalConductivityRecipe;
 import theking530.staticpower.init.ModItems;
 
 @SuppressWarnings("deprecation")
 @OnlyIn(Dist.CLIENT)
 public class StaticPowerClientEventHandler {
+	public static final Logger LOGGER = LogManager.getLogger(StaticPowerClientEventHandler.class);
 	private static final CustomRenderer CUSTOM_RENDERER = new CustomRenderer();
 
 	/**
@@ -70,7 +65,7 @@ public class StaticPowerClientEventHandler {
 		StaticCoreRegistry.registerTileEntitySpecialRenderers();
 
 		// Log the completion.
-		StaticPower.LOGGER.info("Static Power Client Setup Completed!");
+		LOGGER.info("Static Power Client Setup Completed!");
 	}
 
 	public static void onModelBakeEvent(ModelBakeEvent event) {
@@ -92,7 +87,7 @@ public class StaticPowerClientEventHandler {
 						if (override != null) {
 							event.getModelRegistry().put(variantMRL, override);
 						} else {
-							StaticPower.LOGGER.error(String.format("Encountered null model override for block: %1$s.", block.getNameTextComponent().getFormattedText()));
+							LOGGER.error(String.format("Encountered null model override for block: %1$s.", block.getNameTextComponent().getFormattedText()));
 						}
 					}
 				}
@@ -136,30 +131,15 @@ public class StaticPowerClientEventHandler {
 					event.addSprite(sprite);
 					spriteCount++;
 				} catch (Exception e) {
-					StaticPower.LOGGER.error(String.format("Failed to register texture: %1$s to the texture atlas.", sprite));
+					LOGGER.error(String.format("Failed to register texture: %1$s to the texture atlas.", sprite));
 				}
 			}
-			StaticPower.LOGGER.info(String.format("Registered %1$s Static Power sprites.", spriteCount));
+			LOGGER.info(String.format("Registered %1$s Static Power sprites.", spriteCount));
 		}
 	}
 
 	public static void render(RenderWorldLastEvent event) {
 		CUSTOM_RENDERER.render(event);
-	}
-
-	@SubscribeEvent
-	public static void onAddItemTooltip(ItemTooltipEvent event) {
-		if (Screen.hasShiftDown()) {
-			RecipeMatchParameters matchParameters = new RecipeMatchParameters(event.getItemStack());
-
-			FluidUtil.getFluidContained(event.getItemStack()).ifPresent(fluid -> {
-				matchParameters.setFluids(fluid.copy());
-			});
-
-			StaticPowerRecipeRegistry.getRecipe(ThermalConductivityRecipe.RECIPE_TYPE, matchParameters).ifPresent(recipe -> {
-				event.getToolTip().add(HeatTooltipUtilities.getHeatRateTooltip(recipe.getThermalConductivity()));
-			});
-		}
 	}
 
 	private static void initializeGui() {

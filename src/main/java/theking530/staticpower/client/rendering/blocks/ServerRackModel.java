@@ -22,6 +22,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.ILightReader;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
@@ -38,6 +40,7 @@ import theking530.thirdparty.codechicken.lib.model.pipeline.BakedPipeline;
 import theking530.thirdparty.codechicken.lib.model.pipeline.transformers.QuadClamper;
 import theking530.thirdparty.codechicken.lib.model.pipeline.transformers.QuadReInterpolator;
 
+@OnlyIn(Dist.CLIENT)
 public class ServerRackModel extends AbstractBakedModel {
 	private static final CachedFormat BAR_FORMAT = CachedFormat.lookup(DefaultVertexFormats.BLOCK);
 	private final ThreadLocal<BakedPipeline> pipelines = ThreadLocal.withInitial(() -> BakedPipeline.builder()

@@ -2,6 +2,9 @@ package theking530.staticpower.blocks.crops;
 
 import java.util.Random;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropsBlock;
@@ -27,7 +30,6 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.IPlantable;
-import theking530.staticpower.StaticPower;
 import theking530.staticpower.blocks.interfaces.IBlockRenderLayerProvider;
 
 /**
@@ -37,6 +39,8 @@ import theking530.staticpower.blocks.interfaces.IBlockRenderLayerProvider;
  *
  */
 public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable, IBlockRenderLayerProvider {
+	public static final Logger LOGGER = LogManager.getLogger(BaseSimplePlant.class);
+	
 	/**
 	 * The different bounding boxes for the crop at different ages.
 	 */
@@ -81,7 +85,7 @@ public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		if (state.get(getAgeProperty()) > getMaxAge()) {
-			StaticPower.LOGGER.error(String.format("Plant at position: %1$s was found with an invalid value for Age.", pos.toString()));
+			LOGGER.error(String.format("Plant at position: %1$s was found with an invalid value for Age.", pos.toString()));
 			return SHAPES[getMaxAge()];
 		}
 		return SHAPES[state.get(getAgeProperty())];

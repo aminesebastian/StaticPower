@@ -2,7 +2,6 @@ package theking530.staticpower.items.itemfilter;
 
 import java.util.function.Supplier;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Hand;
@@ -46,7 +45,7 @@ public class PacketItemFilter extends NetworkMessage {
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
-			ItemStack heldItem = Minecraft.getInstance().player.getHeldItem(Hand.MAIN_HAND);
+			ItemStack heldItem = context.get().getSender().getHeldItem(Hand.MAIN_HAND);
 			if (!heldItem.isEmpty() && heldItem.getItem() instanceof ItemFilter) {
 				heldItem.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((IItemHandler handler) -> {
 					ItemFilter filter = (ItemFilter) heldItem.getItem();

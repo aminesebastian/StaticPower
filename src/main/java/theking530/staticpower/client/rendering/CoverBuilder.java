@@ -18,6 +18,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
@@ -39,6 +41,7 @@ import theking530.thirdparty.codechicken.lib.model.pipeline.transformers.QuadTin
  *
  * @author covers1624
  */
+@OnlyIn(Dist.CLIENT)
 public class CoverBuilder {
 
 	public static final double THICK_THICKNESS = 2D / 16D;

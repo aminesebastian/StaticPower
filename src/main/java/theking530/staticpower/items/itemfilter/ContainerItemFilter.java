@@ -1,5 +1,8 @@
 package theking530.staticpower.items.itemfilter;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.ClickType;
@@ -11,14 +14,14 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
-import theking530.staticpower.StaticPower;
 import theking530.staticpower.container.StaticPowerItemContainer;
 import theking530.staticpower.container.slots.PhantomSlot;
 
 public class ContainerItemFilter extends StaticPowerItemContainer<ItemFilter> {
+	public static final Logger LOGGER = LogManager.getLogger(ContainerItemFilter.class);
+
 	@ContainerTypePopulator
-	public static final ContainerTypeAllocator<ContainerItemFilter, GuiItemFilter> TYPE = new ContainerTypeAllocator<>("filter_item", ContainerItemFilter::new,
-			GuiItemFilter::new);
+	public static final ContainerTypeAllocator<ContainerItemFilter, GuiItemFilter> TYPE = new ContainerTypeAllocator<>("filter_item", ContainerItemFilter::new, GuiItemFilter::new);
 
 	private ItemStackHandler filterInventory;
 
@@ -39,7 +42,7 @@ public class ContainerItemFilter extends StaticPowerItemContainer<ItemFilter> {
 
 		// If the item filter is null, then return early and log the error.
 		if (filterInventory == null) {
-			StaticPower.LOGGER.error(String.format("Received capability for ItemFilter: %1$s that did not inherit from InventoryItemFilter.", getItemStack().getDisplayName()));
+			LOGGER.error(String.format("Received capability for ItemFilter: %1$s that did not inherit from InventoryItemFilter.", getItemStack().getDisplayName()));
 			return;
 		}
 

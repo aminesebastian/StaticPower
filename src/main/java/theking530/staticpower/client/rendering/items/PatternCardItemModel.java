@@ -14,10 +14,13 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticpower.cables.digistore.crafting.EncodedDigistorePattern;
 import theking530.staticpower.items.DigistorePatternCard;
 
 @SuppressWarnings("deprecation")
+@OnlyIn(Dist.CLIENT)
 public class PatternCardItemModel implements IBakedModel {
 	private final IBakedModel blankModel;
 	private final IBakedModel encodedModel;

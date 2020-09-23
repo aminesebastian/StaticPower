@@ -2,6 +2,9 @@ package theking530.staticpower.container;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -12,7 +15,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.network.PacketDistributor;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
-import theking530.staticpower.StaticPower;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.network.TileEntityBasicSyncPacket;
@@ -21,7 +23,9 @@ import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public abstract class StaticPowerTileEntityContainer<T extends TileEntityBase> extends StaticPowerContainer {
+	public static final Logger LOGGER = LogManager.getLogger(StaticPowerTileEntityContainer.class);
 	public static final int DEFAULT_SYNC_TIME = 2;
+	
 	private final T owningTileEntity;
 	private int syncTime;
 	private int syncTimer;
@@ -106,7 +110,7 @@ public abstract class StaticPowerTileEntityContainer<T extends TileEntityBase> e
 		if (tileAtPos instanceof TileEntityBase) {
 			return (TileEntityBase) tileAtPos;
 		} else {
-			StaticPower.LOGGER.error(String.format("Encountered invalid tile entity: %1$s at position: %2$s.", tileAtPos, data.readBlockPos()));
+			LOGGER.error(String.format("Encountered invalid tile entity: %1$s at position: %2$s.", tileAtPos, data.readBlockPos()));
 			return null;
 		}
 	}

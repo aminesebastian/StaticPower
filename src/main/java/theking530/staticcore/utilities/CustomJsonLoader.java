@@ -29,35 +29,40 @@ public class CustomJsonLoader {
 		FileSystem filesystem = null;
 		URL url = mainModClass.getResource(relativePath);
 
+		Stream<Path> paths = null;
 		try {
-			if (url != null) {
-				URI uri = url.toURI();
-				Path path = null;
+			URI uri = url.toURI();
+			Path path = null;
 
-				if ("file".equals(uri.getScheme())) {
-					path = Paths.get(mainModClass.getResource(relativePath).toURI());
-				} else {
-					filesystem = FileSystems.newFileSystem(uri, Collections.emptyMap());
-					path = filesystem.getPath(relativePath);
-				}
-				Gson gson = new Gson();
-				Stream<Path> paths = Files.walk(path);
-
-				paths.filter(Files::isRegularFile).forEach((filePath) -> {
-					try {
-						File fileToParse = filePath.toFile();
-						FileReader reader = new FileReader(fileToParse);
-						BufferedReader bufferedReader = new BufferedReader(reader);
-						output.add(gson.fromJson(bufferedReader, outputType));
-					} catch (FileNotFoundException e) {
-						LOGGER.error(String.format("An error occured when attempting to parse file: %1$s as class: %2$s.", filePath, outputType), e);
-					}
-				});
-
+			if ("file".equals(uri.getScheme())) {
+				path = Paths.get(mainModClass.getResource(relativePath).toURI());
+			} else {
+				filesystem = FileSystems.newFileSystem(uri, Collections.emptyMap());
+				path = filesystem.getPath(relativePath);
 			}
+			Gson gson = new Gson();
+			paths = Files.walk(path);
+
+			LOGGER.info(path);
+
+			paths.filter(Files::isRegularFile).forEach((filePath) -> {
+				try {
+					File fileToParse = filePath.toFile();
+					FileReader reader = new FileReader(fileToParse);
+					BufferedReader bufferedReader = new BufferedReader(reader);
+					output.add(gson.fromJson(bufferedReader, outputType));
+				} catch (FileNotFoundException e) {
+					LOGGER.error(String.format("An error occured when attempting to parse file: %1$s as class: %2$s.", filePath, outputType), e);
+				}
+			});
+
 			return output;
 		} catch (Exception e) {
 			throw new RuntimeException(String.format("An error occured when attempting to load files for ModClass: %1$s from relative path: %2$s.", mainModClass, relativePath), e);
+		} finally {
+			if (paths != null) {
+				paths.close();
+			}
 		}
 	}
 }
