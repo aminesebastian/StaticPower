@@ -12,8 +12,11 @@ import net.minecraftforge.fml.config.ModConfig;
 @EventBusSubscriber(modid = StaticPower.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class StaticPowerConfig {
 
-	public static final StaticPowerClientConfig CLIENT;
-	public static final ForgeConfigSpec CLIENT_SPEC;
+	public static final StaticPowerClientConfig SERVER;
+	public static final ForgeConfigSpec SERVER_SPEC;
+
+	public static int minRubberWoodBarkPerStrip;
+	public static int maxRubberWoodBarkPerStrip;
 
 	public static boolean generateCopperOre;
 	public static boolean generateTinOre;
@@ -45,56 +48,62 @@ public class StaticPowerConfig {
 
 	public static int digistoreCraftingInterfaceSlots;
 
-	public static float acceleratorCardMaxImprovment;
+	public static double acceleratorCardMaxImprovment;
 
 	static {
 		final Pair<StaticPowerClientConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(StaticPowerClientConfig::new);
-		CLIENT_SPEC = specPair.getRight();
-		CLIENT = specPair.getLeft();
+		SERVER_SPEC = specPair.getRight();
+		SERVER = specPair.getLeft();
 	}
 
 	@SubscribeEvent
 	public static void onModConfigEvent(final ModConfig.ModConfigEvent configEvent) {
-		if (configEvent.getConfig().getSpec() == StaticPowerConfig.CLIENT_SPEC) {
+		if (configEvent.getConfig().getSpec() == StaticPowerConfig.SERVER_SPEC) {
 			bakeConfig();
 		}
 	}
 
 	public static void bakeConfig() {
-		generateCopperOre = CLIENT.generateCopperOre.get();
-		generateTinOre = CLIENT.generateTinOre.get();
-		generateLeadOre = CLIENT.generateLeadOre.get();
-		generateSilverOre = CLIENT.generateSilverOre.get();
-		generatePlatinumOre = CLIENT.generatePlatinumOre.get();
-		generateTungstenOre = CLIENT.generateTungstenOre.get();
-		generateZincOre = CLIENT.generateZincOre.get();
-		generateMagnesiumOre = CLIENT.generateMagnesiumOre.get();
-		generateAluminiumOre = CLIENT.generateAluminiumOre.get();
-		generateSapphireOre = CLIENT.generateSapphireOre.get();
-		generateRubyOre = CLIENT.generateRubyOre.get();
+		minRubberWoodBarkPerStrip = SERVER.minRubberWoodBarkPerStrip.get();
+		maxRubberWoodBarkPerStrip = SERVER.maxRubberWoodBarkPerStrip.get();
 
-		digistoreRegulatorRate = CLIENT.digistoreRegulatorRate.get();
-		digistoreRegulatorStackSize = CLIENT.digistoreRegulatorStackSize.get();
-		digistoreRegulatorSlots = CLIENT.digistoreRegulatorSlots.get();
+		generateCopperOre = SERVER.generateCopperOre.get();
+		generateTinOre = SERVER.generateTinOre.get();
+		generateLeadOre = SERVER.generateLeadOre.get();
+		generateSilverOre = SERVER.generateSilverOre.get();
+		generatePlatinumOre = SERVER.generatePlatinumOre.get();
+		generateTungstenOre = SERVER.generateTungstenOre.get();
+		generateZincOre = SERVER.generateZincOre.get();
+		generateMagnesiumOre = SERVER.generateMagnesiumOre.get();
+		generateAluminiumOre = SERVER.generateAluminiumOre.get();
+		generateSapphireOre = SERVER.generateSapphireOre.get();
+		generateRubyOre = SERVER.generateRubyOre.get();
 
-		digistoreIOBusRate = CLIENT.digistoreIOBusRate.get();
-		digistoreIOBusSlots = CLIENT.digistoreIOBusSlots.get();
-		digistoreIOBusStackSize = CLIENT.digistoreIOBusStackSize.get();
+		digistoreRegulatorRate = SERVER.digistoreRegulatorRate.get();
+		digistoreRegulatorStackSize = SERVER.digistoreRegulatorStackSize.get();
+		digistoreRegulatorSlots = SERVER.digistoreRegulatorSlots.get();
 
-		digistoreImporterRate = CLIENT.digistoreImporterRate.get();
-		digistoreImporterSlots = CLIENT.digistoreImporterSlots.get();
-		digistoreImporterStackSize = CLIENT.digistoreImporterStackSize.get();
+		digistoreIOBusRate = SERVER.digistoreIOBusRate.get();
+		digistoreIOBusSlots = SERVER.digistoreIOBusSlots.get();
+		digistoreIOBusStackSize = SERVER.digistoreIOBusStackSize.get();
 
-		digistoreExporterRate = CLIENT.digistoreExporterRate.get();
-		digistoreExporterSlots = CLIENT.digistoreExporterSlots.get();
-		digistoreExporterStackSize = CLIENT.digistoreExporterStackSize.get();
+		digistoreImporterRate = SERVER.digistoreImporterRate.get();
+		digistoreImporterSlots = SERVER.digistoreImporterSlots.get();
+		digistoreImporterStackSize = SERVER.digistoreImporterStackSize.get();
 
-		digistoreCraftingInterfaceSlots = CLIENT.digistoreCraftingInterfaceSlots.get();
+		digistoreExporterRate = SERVER.digistoreExporterRate.get();
+		digistoreExporterSlots = SERVER.digistoreExporterSlots.get();
+		digistoreExporterStackSize = SERVER.digistoreExporterStackSize.get();
 
-		acceleratorCardMaxImprovment = CLIENT.acceleratorCardImprovment.get();
+		digistoreCraftingInterfaceSlots = SERVER.digistoreCraftingInterfaceSlots.get();
+
+		acceleratorCardMaxImprovment = SERVER.acceleratorCardImprovment.get();
 	}
 
 	public static class StaticPowerClientConfig {
+		public ConfigValue<Integer> minRubberWoodBarkPerStrip;
+		public ConfigValue<Integer> maxRubberWoodBarkPerStrip;
+
 		public BooleanValue generateCopperOre;
 		public BooleanValue generateTinOre;
 		public BooleanValue generateLeadOre;
@@ -125,9 +134,18 @@ public class StaticPowerConfig {
 
 		public ConfigValue<Integer> digistoreCraftingInterfaceSlots;
 
-		public ConfigValue<Float> acceleratorCardImprovment;
+		public ConfigValue<Double> acceleratorCardImprovment;
 
 		public StaticPowerClientConfig(ForgeConfigSpec.Builder builder) {
+			builder.push("Tools");
+			builder.push("Axe");
+			minRubberWoodBarkPerStrip = builder.comment("Controls the minimum number of strips of bark are removed from a rubber wood log when stripped with an axe.")
+					.translation(StaticPower.MOD_ID + ".config." + "minRubberWoodBarkPerStrip").define("MinRubberWoodBarkPerStrip", 1);
+			maxRubberWoodBarkPerStrip = builder.comment("Controls the maximum number of strips of bark are removed from a rubber wood log when stripped with an axe.")
+					.translation(StaticPower.MOD_ID + ".config." + "maxRubberWoodBarkPerStrip").define("MaxRubberWoodBarkPerStrip", 4);
+			builder.pop();
+			builder.pop();
+
 			builder.push("Digistore");
 			builder.push("Regulator");
 			digistoreRegulatorRate = builder.comment("Controls how many ticks between each digistore regulator operation. The higher, the faster the operations, but the stronger hit to performance.")
@@ -173,7 +191,7 @@ public class StaticPowerConfig {
 
 			builder.push("Upgrades");
 			acceleratorCardImprovment = builder.comment("Defines the effect a max sized stack of accelerator upgrades will have.")
-					.translation(StaticPower.MOD_ID + ".config." + "acceleratorCardImprovment").define("AcceleratorCardImprovment", 4.0f);
+					.translation(StaticPower.MOD_ID + ".config." + "acceleratorCardImprovment").define("AcceleratorCardImprovment", 4.0);
 			builder.pop();
 
 			builder.push("Ore_Generation");

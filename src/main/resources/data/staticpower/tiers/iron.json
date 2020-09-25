@@ -3,5 +3,6 @@
 		"namespace": "staticpower",
 		"path": "tier_iron"
 	},
+	"unlocalizedTierName": "tier.staticpower.iron",
 	"capsuleCapacity": 2000
 }

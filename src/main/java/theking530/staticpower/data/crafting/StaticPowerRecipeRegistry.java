@@ -18,8 +18,8 @@ import net.minecraft.item.crafting.FurnaceRecipe;
 import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidAttributes;
@@ -32,10 +32,9 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
 import theking530.staticpower.data.crafting.wrappers.former.FormerRecipe;
 import theking530.staticpower.data.crafting.wrappers.solidfuel.SolidFuelRecipe;
-import theking530.staticpower.events.StaticPowerClientEventHandler;
 
 public class StaticPowerRecipeRegistry {
-	public static final Logger LOGGER = LogManager.getLogger(StaticPowerClientEventHandler.class);
+	public static final Logger LOGGER = LogManager.getLogger(StaticPowerRecipeRegistry.class);
 
 	@SuppressWarnings("rawtypes")
 	public static final HashMap<IRecipeType, LinkedList<AbstractStaticPowerRecipe>> RECIPES = new HashMap<IRecipeType, LinkedList<AbstractStaticPowerRecipe>>();
@@ -127,12 +126,12 @@ public class StaticPowerRecipeRegistry {
 	/**
 	 * This event is raised when the resources are loaded/reloaded.
 	 */
-	public static void onResourcesReloaded(RecipesUpdatedEvent event) {
+	public static void onResourcesReloaded(RecipeManager manager) {
 		// Capture if this is the first time we are caching.
 		boolean firstTime = RECIPES.size() == 0;
 
 		// Log that caching has started.
-		LOGGER.info(String.format("%1$s Static Power recipes.", (firstTime ? "caching" : "re-caching")));
+		LOGGER.info(String.format("%1$s Static Power recipes.", (firstTime ? "Caching" : "Re-caching")));
 
 		// Clear the recipe lists.
 		RECIPES.clear();
@@ -143,7 +142,7 @@ public class StaticPowerRecipeRegistry {
 		int recipeCount = 0;
 
 		// Iterate through all the recipes and cache the Static Power ones.
-		Collection<IRecipe<?>> recipes = event.getRecipeManager().getRecipes();
+		Collection<IRecipe<?>> recipes = manager.getRecipes();
 		for (IRecipe<?> recipe : recipes) {
 			if (recipe instanceof AbstractStaticPowerRecipe) {
 				addRecipe((AbstractStaticPowerRecipe) recipe);

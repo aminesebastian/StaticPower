@@ -8,6 +8,8 @@ import net.minecraft.item.HoeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
@@ -16,8 +18,13 @@ import theking530.staticpower.container.slots.OutputSlot;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 
 public class ContainerBasicFarmer extends StaticPowerTileEntityContainer<TileEntityBasicFarmer> {
-@ContainerTypePopulator
-	public static final ContainerTypeAllocator<ContainerBasicFarmer, GuiBasicFarmer> TYPE = new ContainerTypeAllocator<>("machine_basic_farmer", ContainerBasicFarmer::new, GuiBasicFarmer::new);
+	@ContainerTypePopulator
+	public static final ContainerTypeAllocator<ContainerBasicFarmer, GuiBasicFarmer> TYPE = new ContainerTypeAllocator<>("machine_basic_farmer", ContainerBasicFarmer::new);
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE.setScreenFactory(GuiBasicFarmer::new);
+		}
+	}
 
 	public ContainerBasicFarmer(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, (TileEntityBasicFarmer) resolveTileEntityFromDataPacket(inv, data));

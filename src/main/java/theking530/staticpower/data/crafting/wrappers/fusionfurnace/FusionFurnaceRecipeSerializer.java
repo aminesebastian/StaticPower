@@ -56,13 +56,31 @@ public class FusionFurnaceRecipeSerializer extends ForgeRegistryEntry<IRecipeSer
 
 	@Override
 	public FusionFurnaceRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-		// TODO Auto-generated method stub
-		return null;
+		int power = buffer.readInt();
+		int time = buffer.readInt();
+
+		int inputCount = buffer.readByte();
+		List<StaticPowerIngredient> inputs = new ArrayList<StaticPowerIngredient>();
+		for (int i = 0; i < inputCount; i++) {
+			inputs.add(StaticPowerIngredient.read(buffer));
+		}
+
+		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.readFromBuffer(buffer);
+
+		// Craete the recipe.
+		return new FusionFurnaceRecipe(recipeId, time, power, inputs, output);
 	}
 
 	@Override
 	public void write(PacketBuffer buffer, FusionFurnaceRecipe recipe) {
-		// TODO Auto-generated method stub
+		buffer.writeInt(recipe.getPowerCost());
+		buffer.writeInt(recipe.getProcessingTime());
+		buffer.writeByte(recipe.getInputs().size());
 
+		for (StaticPowerIngredient ing : recipe.getInputs()) {
+			ing.write(buffer);
+		}
+
+		recipe.getOutput().writeToBuffer(buffer);
 	}
 }

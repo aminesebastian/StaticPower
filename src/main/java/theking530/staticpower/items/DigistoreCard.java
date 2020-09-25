@@ -18,7 +18,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import theking530.api.digistore.CapabilityDigistoreInventory;
 import theking530.api.digistore.DigistoreInventoryCapabilityProvider;
 import theking530.api.digistore.IDigistoreInventory;
-import theking530.staticpower.data.StaticPowerDataRegistry;
+import theking530.staticpower.data.TierReloadListener;
 import theking530.staticpower.utilities.MetricConverter;
 
 public class DigistoreCard extends StaticPowerItem {
@@ -44,7 +44,7 @@ public class DigistoreCard extends StaticPowerItem {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-		return new DigistoreInventoryCapabilityProvider(stack, MAX_UNIQUE_ITEM_TYPES_PER_CARD, StaticPowerDataRegistry.getTier(tierType).getDigistoreCapacity(), nbt);
+		return new DigistoreInventoryCapabilityProvider(stack, MAX_UNIQUE_ITEM_TYPES_PER_CARD, TierReloadListener.getTier(tierType).getDigistoreCapacity(), nbt);
 	}
 
 	public static IDigistoreInventory getInventory(ItemStack stack) {

@@ -30,14 +30,14 @@ public class PacketEnergyStorageComponent extends NetworkMessage {
 	public void decode(PacketBuffer buf) {
 		energyComponentNBT = buf.readCompoundTag();
 		position = buf.readBlockPos();
-		componentName = buf.readString();
+		componentName = readStringOnServer(buf);
 	}
 
 	@Override
 	public void encode(PacketBuffer buf) {
 		buf.writeCompoundTag(energyComponentNBT);
 		buf.writeBlockPos(position);
-		buf.writeString(componentName);
+		writeStringOnServer(componentName, buf);
 	}
 
 	@Override

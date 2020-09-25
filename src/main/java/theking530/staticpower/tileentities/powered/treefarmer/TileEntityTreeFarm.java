@@ -29,9 +29,11 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.Color;
@@ -66,8 +68,13 @@ import theking530.staticpower.utilities.WorldUtilities;
 
 public class TileEntityTreeFarm extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityTreeFarm> TYPE = new TileEntityTypeAllocator<TileEntityTreeFarm>((type) -> new TileEntityTreeFarm(), TileEntityRenderTreeFarmer::new,
-			ModBlocks.TreeFarmer);
+	public static final TileEntityTypeAllocator<TileEntityTreeFarm> TYPE = new TileEntityTypeAllocator<TileEntityTreeFarm>((type) -> new TileEntityTreeFarm(), ModBlocks.TreeFarmer);
+
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE.setTileEntitySpecialRenderer(TileEntityRenderTreeFarmer::new);
+		}
+	}
 
 	public static final int DEFAULT_WATER_USAGE = 1;
 	public static final int DEFAULT_IDLE_ENERGY_USAGE = 10;

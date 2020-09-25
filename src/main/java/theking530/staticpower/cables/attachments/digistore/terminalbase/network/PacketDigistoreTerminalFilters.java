@@ -32,7 +32,7 @@ public class PacketDigistoreTerminalFilters extends NetworkMessage {
 	@Override
 	public void encode(PacketBuffer buffer) {
 		buffer.writeInt(windowId);
-		buffer.writeString(searchString);
+		writeStringOnServer(searchString, buffer);
 		buffer.writeInt(searchMode.ordinal());
 		buffer.writeInt(sortType.ordinal());
 		buffer.writeBoolean(sortDescending);
@@ -41,7 +41,7 @@ public class PacketDigistoreTerminalFilters extends NetworkMessage {
 	@Override
 	public void decode(PacketBuffer buffer) {
 		windowId = buffer.readInt();
-		searchString = buffer.readString();
+		searchString = readStringOnServer(buffer);
 		searchMode = DigistoreSearchMode.values()[buffer.readInt()];
 		sortType = DigistoreInventorySortType.values()[buffer.readInt()];
 		sortDescending = buffer.readBoolean();

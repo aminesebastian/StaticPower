@@ -28,8 +28,8 @@ import theking530.staticpower.cables.CableBoundsCache;
 import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
-import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.data.TierReloadListener;
 
 public class BlockIndustrialFluidCable extends AbstractCableBlock {
 	private ResourceLocation tier;
@@ -43,7 +43,7 @@ public class BlockIndustrialFluidCable extends AbstractCableBlock {
 	@Override
 	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
 		super.getBasicTooltip(stack, worldIn, tooltip);
-		tooltip.add(FluidCableTooltipUtilities.getFluidTrasnferRate(StaticPowerDataRegistry.getTier(tier).getCableIndustrialFluidCapacity()));
+		tooltip.add(FluidCableTooltipUtilities.getFluidTrasnferRate(TierReloadListener.getTier(tier).getCableIndustrialFluidCapacity()));
 		tooltip.add(new StringTextComponent(TextFormatting.RED.toString()).appendText("Cannot connect directly to blocks!"));
 	}
 

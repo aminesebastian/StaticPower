@@ -4,6 +4,8 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
@@ -19,8 +21,12 @@ import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class ContainerCraftingAmount extends StaticPowerContainer {
 	@ContainerTypePopulator
-	public static final ContainerTypeAllocator<ContainerCraftingAmount, GuiCraftingAmount> TYPE = new ContainerTypeAllocator<>("crafting_request", ContainerCraftingAmount::new,
-			GuiCraftingAmount::new);
+	public static final ContainerTypeAllocator<ContainerCraftingAmount, GuiCraftingAmount> TYPE = new ContainerTypeAllocator<>("crafting_request", ContainerCraftingAmount::new);
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE.setScreenFactory(GuiCraftingAmount::new);
+		}
+	}
 
 	private CraftingRequestResponse craftingResponse;
 	private long networkId;

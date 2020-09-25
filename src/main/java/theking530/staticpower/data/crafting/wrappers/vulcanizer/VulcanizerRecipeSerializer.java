@@ -32,7 +32,7 @@ public class VulcanizerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 			powerCost = processingElement.get("power").getAsInt();
 			processingTime = processingElement.get("time").getAsInt();
 		}
-		
+
 		// Get the input fluid.
 		JsonObject inputElement = JSONUtils.getJsonObject(json, "input");
 		FluidStack input = StaticPowerJsonParsingUtilities.parseFluidStack(inputElement);
@@ -46,13 +46,19 @@ public class VulcanizerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 
 	@Override
 	public VulcanizerRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-		// TODO Auto-generated method stub
-		return null;
+		// Start with the default processing values.
+		int powerCost = buffer.readInt();
+		int processingTime = buffer.readInt();
+		FluidStack input = buffer.readFluidStack();
+		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.readFromBuffer(buffer);
+		return new VulcanizerRecipe(recipeId, processingTime, powerCost, input, output);
 	}
 
 	@Override
 	public void write(PacketBuffer buffer, VulcanizerRecipe recipe) {
-		// TODO Auto-generated method stub
-
+		buffer.writeInt(recipe.getPowerCost());
+		buffer.writeInt(recipe.getProcessingTime());
+		buffer.writeFluidStack(recipe.getInputFluid());
+		recipe.getOutputItem().writeToBuffer(buffer);
 	}
 }

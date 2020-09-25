@@ -8,7 +8,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
 import theking530.staticpower.client.rendering.items.PortableBatteryItemModel;
-import theking530.staticpower.data.StaticPowerDataRegistry;
+import theking530.staticpower.data.TierReloadListener;
 
 public class PortableBattery extends StaticPowerEnergyStoringItem implements ICustomModelSupplier {
 	public final ResourceLocation tier;
@@ -31,6 +31,6 @@ public class PortableBattery extends StaticPowerEnergyStoringItem implements ICu
 
 	@Override
 	public int getCapacity() {
-		return StaticPowerDataRegistry.getTier(tier).getPortableBatteryCapacity();
+		return TierReloadListener.getTier(tier).getPortableBatteryCapacity();
 	}
 }

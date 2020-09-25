@@ -2,6 +2,8 @@ package theking530.staticpower.tileentities.powered.treefarmer;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
@@ -10,8 +12,13 @@ import theking530.staticpower.container.slots.OutputSlot;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 
 public class ContainerTreeFarmer extends StaticPowerTileEntityContainer<TileEntityTreeFarm> {
-@ContainerTypePopulator
-	public static final ContainerTypeAllocator<ContainerTreeFarmer, GuiTreeFarmer> TYPE = new ContainerTypeAllocator<>("machine_tree_farmer", ContainerTreeFarmer::new, GuiTreeFarmer::new);
+	@ContainerTypePopulator
+	public static final ContainerTypeAllocator<ContainerTreeFarmer, GuiTreeFarmer> TYPE = new ContainerTypeAllocator<>("machine_tree_farmer", ContainerTreeFarmer::new);
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE.setScreenFactory(GuiTreeFarmer::new);
+		}
+	}
 
 	public ContainerTreeFarmer(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, (TileEntityTreeFarm) resolveTileEntityFromDataPacket(inv, data));

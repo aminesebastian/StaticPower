@@ -81,13 +81,21 @@ public class SqueezerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
 
 	@Override
 	public SqueezerRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-		// TODO Auto-generated method stub
-		return null;
+		int power = buffer.readInt();
+		int time = buffer.readInt();
+		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
+		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.readFromBuffer(buffer);
+		FluidStack fluid = buffer.readFluidStack();
+
+		return new SqueezerRecipe(recipeId, input, output, fluid, time, power);
 	}
 
 	@Override
 	public void write(PacketBuffer buffer, SqueezerRecipe recipe) {
-		// TODO Auto-generated method stub
-
+		buffer.writeInt(recipe.getPowerCost());
+		buffer.writeInt(recipe.getProcessingTime());
+		recipe.getInput().write(buffer);
+		recipe.getOutput().writeToBuffer(buffer);
+		buffer.writeFluidStack(recipe.getOutputFluid());
 	}
 }

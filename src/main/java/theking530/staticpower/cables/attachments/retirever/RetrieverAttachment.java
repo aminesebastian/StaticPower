@@ -17,7 +17,7 @@ import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.item.ItemNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
-import theking530.staticpower.data.StaticPowerDataRegistry;
+import theking530.staticpower.data.TierReloadListener;
 import theking530.staticpower.items.ItemStackInventoryCapabilityProvider;
 import theking530.staticpower.utilities.InventoryUtilities;
 
@@ -38,7 +38,7 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-		return new ItemStackInventoryCapabilityProvider(stack, StaticPowerDataRegistry.getTier(tierType).getCableRetrievalFilterSlots(), nbt);
+		return new ItemStackInventoryCapabilityProvider(stack, TierReloadListener.getTier(tierType).getCableRetrievalFilterSlots(), nbt);
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 				}
 
 				// If we're able to retrieve an item, break.
-				if (network.retrieveItemStack(filterItem, StaticPowerDataRegistry.getTier(tierType).getCableRetrievalStackSize(), cable.getPos().offset(side))) {
+				if (network.retrieveItemStack(filterItem, TierReloadListener.getTier(tierType).getCableRetrievalStackSize(), cable.getPos().offset(side))) {
 					break;
 				}
 			}
@@ -96,7 +96,7 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 
 		// Increment the current timer.
 		currentTimer += 1;
-		if (currentTimer >= StaticPowerDataRegistry.getTier(tierType).getCableRetrievalRate()) {
+		if (currentTimer >= TierReloadListener.getTier(tierType).getCableRetrievalRate()) {
 			attachment.getTag().putInt(RETRIEVEAL_TIMER_TAG, 0);
 			return true;
 		} else {

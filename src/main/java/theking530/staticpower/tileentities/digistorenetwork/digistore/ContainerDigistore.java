@@ -5,6 +5,8 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
@@ -13,7 +15,12 @@ import theking530.staticpower.init.ModItems;
 
 public class ContainerDigistore extends StaticPowerTileEntityContainer<TileEntityDigistore> {
 	@ContainerTypePopulator
-	public static final ContainerTypeAllocator<ContainerDigistore, GuiDigistore> TYPE = new ContainerTypeAllocator<>("digistore", ContainerDigistore::new, GuiDigistore::new);
+	public static final ContainerTypeAllocator<ContainerDigistore, GuiDigistore> TYPE = new ContainerTypeAllocator<>("digistore", ContainerDigistore::new);
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE.setScreenFactory(GuiDigistore::new);
+		}
+	}
 
 	public ContainerDigistore(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, (TileEntityDigistore) resolveTileEntityFromDataPacket(inv, data));

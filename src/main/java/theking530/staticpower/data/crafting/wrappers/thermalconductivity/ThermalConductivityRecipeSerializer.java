@@ -43,10 +43,16 @@ public class ThermalConductivityRecipeSerializer extends ForgeRegistryEntry<IRec
 
 	@Override
 	public ThermalConductivityRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-		return null;
+		Ingredient blocks = Ingredient.read(buffer);
+		FluidStack fluid = buffer.readFluidStack();
+		float cond = buffer.readFloat();
+		return new ThermalConductivityRecipe(recipeId, blocks, fluid, cond);
 	}
 
 	@Override
 	public void write(PacketBuffer buffer, ThermalConductivityRecipe recipe) {
+		recipe.getBlocks().write(buffer);
+		buffer.writeFluidStack(recipe.getFluid());
+		buffer.writeFloat(recipe.getThermalConductivity());
 	}
 }

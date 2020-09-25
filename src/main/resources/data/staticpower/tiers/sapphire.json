@@ -3,5 +3,6 @@
 		"namespace": "staticpower",
 		"path": "tier_sapphire"
 	},
+	"unlocalizedTierName": "tier.staticpower.sapphire",
 	"drillBitUses": 12000
 }

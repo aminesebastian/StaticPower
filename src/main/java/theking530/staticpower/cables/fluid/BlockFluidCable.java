@@ -26,8 +26,8 @@ import theking530.staticpower.cables.CableBoundsCache;
 import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
-import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.data.TierReloadListener;
 
 public class BlockFluidCable extends AbstractCableBlock {
 	private ResourceLocation tier;
@@ -41,7 +41,7 @@ public class BlockFluidCable extends AbstractCableBlock {
 	@Override
 	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
 		super.getBasicTooltip(stack, worldIn, tooltip);
-		tooltip.add(FluidCableTooltipUtilities.getFluidTrasnferRate(StaticPowerDataRegistry.getTier(tier).getCableFluidCapacity()));
+		tooltip.add(FluidCableTooltipUtilities.getFluidTrasnferRate(TierReloadListener.getTier(tier).getCableFluidCapacity()));
 	}
 
 	@Override

@@ -1,16 +1,15 @@
 package theking530.staticpower.tileentities.components.loopingsound;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.ISound;
-import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 
 public class LoopingSoundComponent extends AbstractTileEntityComponent {
-	private SimpleSound currentlyPlayingSound;
+	private final ISoundComponentProxy proxy;
 	private int soundReactionTime;
 
 	private int soundStopCooldown;
@@ -32,6 +31,11 @@ public class LoopingSoundComponent extends AbstractTileEntityComponent {
 	public LoopingSoundComponent(String name, int reactionTime) {
 		super(name);
 		soundReactionTime = reactionTime;
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			proxy = new ClientSoundComponentProxy();
+		} else {
+			proxy = new ServerSoundComponentProxy();
+		}
 	}
 
 	@Override
@@ -57,10 +61,7 @@ public class LoopingSoundComponent extends AbstractTileEntityComponent {
 
 	public void startPlayingSound(ResourceLocation soundIdIn, SoundCategory categoryIn, float volumeIn, float pitchIn, BlockPos pos, int blockRadius) {
 		if (getWorld().isRemote) {
-			if (currentlyPlayingSound == null || !Minecraft.getInstance().getSoundHandler().isPlaying(currentlyPlayingSound)) {
-				currentlyPlayingSound = new SimpleSound(soundIdIn, SoundCategory.BLOCKS, volumeIn, pitchIn, true, 0, ISound.AttenuationType.LINEAR, pos.getX(), pos.getY(), pos.getZ(), false);
-				Minecraft.getInstance().getSoundHandler().play(currentlyPlayingSound);
-			}
+			proxy.startPlayingSound(getWorld(), soundIdIn, categoryIn, volumeIn, pitchIn, pos, blockRadius);
 		} else {
 			if (soundStartCooldown == 0) {
 				LoopingSoundPacketStart syncPacket = new LoopingSoundPacketStart(this, soundIdIn, categoryIn, volumeIn, pitchIn, pos);
@@ -73,10 +74,7 @@ public class LoopingSoundComponent extends AbstractTileEntityComponent {
 
 	public void stopPlayingSound() {
 		if (getWorld().isRemote) {
-			if (currentlyPlayingSound != null && Minecraft.getInstance().getSoundHandler().isPlaying(currentlyPlayingSound)) {
-				Minecraft.getInstance().getSoundHandler().stop(currentlyPlayingSound);
-			}
-			currentlyPlayingSound = null;
+			proxy.stopPlayingSound(getWorld());
 		} else {
 			if (!shouldBeStopping) {
 				shouldBeStopping = true;

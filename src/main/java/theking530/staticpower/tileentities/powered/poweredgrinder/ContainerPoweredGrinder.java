@@ -2,6 +2,8 @@ package theking530.staticpower.tileentities.powered.poweredgrinder;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
@@ -12,8 +14,12 @@ import theking530.staticpower.container.slots.UpgradeItemSlot;
 
 public class ContainerPoweredGrinder extends StaticPowerTileEntityContainer<TileEntityPoweredGrinder> {
 	@ContainerTypePopulator
-	public static final ContainerTypeAllocator<ContainerPoweredGrinder, GuiPoweredGrinder> TYPE = new ContainerTypeAllocator<>("machine_powered_grinder", ContainerPoweredGrinder::new,
-			GuiPoweredGrinder::new);
+	public static final ContainerTypeAllocator<ContainerPoweredGrinder, GuiPoweredGrinder> TYPE = new ContainerTypeAllocator<>("machine_powered_grinder", ContainerPoweredGrinder::new);
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE.setScreenFactory(GuiPoweredGrinder::new);
+		}
+	}
 
 	public ContainerPoweredGrinder(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, (TileEntityPoweredGrinder) resolveTileEntityFromDataPacket(inv, data));

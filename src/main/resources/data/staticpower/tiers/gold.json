@@ -3,6 +3,7 @@
 		"namespace": "staticpower",
 		"path": "tier_gold"
 	},
+	"unlocalizedTierName": "tier.staticpower.gold",
 	"heatCableCapacity": 100,
 	"heatCableConductivity": 40.0,
 	"heatSinkCapacity": 10000,

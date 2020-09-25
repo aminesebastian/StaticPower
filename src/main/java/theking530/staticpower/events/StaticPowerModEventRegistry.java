@@ -36,20 +36,16 @@ import theking530.staticpower.cables.item.ItemNetworkModuleFactory;
 import theking530.staticpower.cables.network.CableNetworkModuleRegistry;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.power.PowerNetworkModuleFactory;
-import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.TOP.PluginTOP;
 
 @SuppressWarnings("deprecation")
 @Mod.EventBusSubscriber(modid = StaticPower.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class StaticPowerModEventRegistry {
-	public static final String TOP_MODID = "theoneprobe";	
+	public static final String TOP_MODID = "theoneprobe";
+	public static final String JEI_MODID = "jei";
+	
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerModEventRegistry.class);
-
-	@SubscribeEvent
-	public static void registriesCreated(RegistryEvent.NewRegistry event) {
-		StaticPowerDataRegistry.onResourcesReloaded();
-	}
 
 	@SubscribeEvent
 	public static void commonSetupEvent(FMLCommonSetupEvent event) {

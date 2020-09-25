@@ -4,6 +4,8 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Direction;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
@@ -11,8 +13,12 @@ import theking530.staticpower.cables.attachments.digistore.terminalbase.Abstract
 
 public class ContainerDigistoreTerminal extends AbstractContainerDigistoreTerminal<DigistoreTerminal> {
 	@ContainerTypePopulator
-	public static final ContainerTypeAllocator<ContainerDigistoreTerminal, GuiDigistoreTerminal> TYPE = new ContainerTypeAllocator<>("digistore_terminal", ContainerDigistoreTerminal::new,
-			GuiDigistoreTerminal::new);
+	public static final ContainerTypeAllocator<ContainerDigistoreTerminal, GuiDigistoreTerminal> TYPE = new ContainerTypeAllocator<>("digistore_terminal", ContainerDigistoreTerminal::new);
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE.setScreenFactory(GuiDigistoreTerminal::new);
+		}
+	}
 
 	public ContainerDigistoreTerminal(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, getAttachmentItemStack(inv, data), getAttachmentSide(data), getCableComponent(inv, data));

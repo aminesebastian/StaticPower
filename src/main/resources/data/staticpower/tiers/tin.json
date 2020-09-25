@@ -3,6 +3,7 @@
 		"namespace": "staticpower",
 		"path": "tier_tin"
 	},
+	"unlocalizedTierName": "tier.staticpower.tin",
 	"heatCableCapacity": 35,
 	"heatCableConductivity": 30.0,
 	"heatSinkCapacity": 5000,

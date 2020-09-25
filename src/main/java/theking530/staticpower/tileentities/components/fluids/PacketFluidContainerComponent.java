@@ -32,7 +32,7 @@ public class PacketFluidContainerComponent extends NetworkMessage {
 	public void decode(PacketBuffer buf) {
 		fluidComponentNBT = buf.readCompoundTag();
 		position = buf.readBlockPos();
-		componentName = buf.readString();
+		componentName = readStringOnServer(buf);
 		modeOrdinal = buf.readInt();
 	}
 
@@ -40,7 +40,7 @@ public class PacketFluidContainerComponent extends NetworkMessage {
 	public void encode(PacketBuffer buf) {
 		buf.writeCompoundTag(fluidComponentNBT);
 		buf.writeBlockPos(position);
-		buf.writeString(componentName);
+		writeStringOnServer(componentName, buf);
 		buf.writeInt(modeOrdinal);
 	}
 

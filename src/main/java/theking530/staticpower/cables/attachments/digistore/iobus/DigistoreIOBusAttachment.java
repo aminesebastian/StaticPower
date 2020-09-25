@@ -246,7 +246,7 @@ public class DigistoreIOBusAttachment extends AbstractCableAttachment {
 	protected int getIOBusRate(ItemStack attachment) {
 		float acceleratorCardCount = getUpgradeCount(attachment, AcceleratorUpgrade.class);
 		if (acceleratorCardCount > 0) {
-			float accelerationAmount = StaticPowerConfig.acceleratorCardMaxImprovment * (acceleratorCardCount / ModUpgrades.AcceleratorUpgrade.getMaxStackSize());
+			double accelerationAmount = StaticPowerConfig.acceleratorCardMaxImprovment * (acceleratorCardCount / ModUpgrades.AcceleratorUpgrade.getMaxStackSize());
 			return (int) (StaticPowerConfig.digistoreIOBusRate / accelerationAmount);
 		} else {
 			return StaticPowerConfig.digistoreIOBusRate;

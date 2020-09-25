@@ -28,7 +28,7 @@ import theking530.staticpower.cables.fluid.FluidCableComponent;
 import theking530.staticpower.cables.fluid.FluidNetworkModule;
 import theking530.staticpower.cables.item.ItemNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
-import theking530.staticpower.data.StaticPowerDataRegistry;
+import theking530.staticpower.data.TierReloadListener;
 import theking530.staticpower.items.ItemStackInventoryCapabilityProvider;
 import theking530.staticpower.tileentities.digistorenetwork.ioport.TileEntityDigistoreIOPort;
 import theking530.staticpower.utilities.ItemUtilities;
@@ -50,7 +50,7 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-		return new ItemStackInventoryCapabilityProvider(stack, StaticPowerDataRegistry.getTier(tierType).getCableExtractionFilterSlots(), nbt);
+		return new ItemStackInventoryCapabilityProvider(stack, TierReloadListener.getTier(tierType).getCableExtractionFilterSlots(), nbt);
 	}
 
 	@Override
@@ -122,7 +122,7 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 
 		// Increment the current timer.
 		currentTimer += 1;
-		if (currentTimer >= StaticPowerDataRegistry.getTier(tierType).getCableExtractorRate()) {
+		if (currentTimer >= TierReloadListener.getTier(tierType).getCableExtractorRate()) {
 			attachment.getTag().putInt(EXTRACTION_TIMER_TAG, 0);
 			return true;
 		} else {
@@ -171,7 +171,7 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 					for (int i = 0; i < filterItems.getSlots(); i++) {
 						if (!filterItems.getStackInSlot(currentSlot).isEmpty()) {
 							// Simulate an extract.
-							ItemStack extractedItem = module.extractItem(filterItems.getStackInSlot(currentSlot), StaticPowerDataRegistry.getTier(tierType).getCableExtractionStackSize(), true);
+							ItemStack extractedItem = module.extractItem(filterItems.getStackInSlot(currentSlot), TierReloadListener.getTier(tierType).getCableExtractionStackSize(), true);
 
 							// Increment the current slot and make sure we wrap around.
 							currentSlot++;
@@ -207,7 +207,7 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 			targetTe.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).ifPresent(inv -> {
 				for (int i = 0; i < inv.getSlots(); i++) {
 					// Simulate an extract.
-					ItemStack extractedItem = inv.extractItem(i, StaticPowerDataRegistry.getTier(tierType).getCableExtractionStackSize(), true);
+					ItemStack extractedItem = inv.extractItem(i, TierReloadListener.getTier(tierType).getCableExtractionStackSize(), true);
 
 					// If the extracted item is empty, continue.
 					if (extractedItem.isEmpty()) {
@@ -240,7 +240,7 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 					return;
 				}
 				if (fluidCable.isFluidValid(0, tank.getFluidInTank(0))) {
-					FluidStack drained = tank.drain(StaticPowerDataRegistry.getTier(tierType).getCableExtractionFluidRate(), FluidAction.SIMULATE);
+					FluidStack drained = tank.drain(TierReloadListener.getTier(tierType).getCableExtractionFluidRate(), FluidAction.SIMULATE);
 					int filled = fluidCable.fill(drained, FluidAction.EXECUTE);
 					tank.drain(filled, FluidAction.EXECUTE);
 				}

@@ -21,8 +21,8 @@ import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.CableBoundsCache;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
-import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.data.TierReloadListener;
 
 public class BlockItemCable extends AbstractCableBlock {
 	public final ResourceLocation tier;
@@ -36,9 +36,9 @@ public class BlockItemCable extends AbstractCableBlock {
 	@Override
 	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
 		super.getBasicTooltip(stack, worldIn, tooltip);
-		tooltip.add(ItemCableTooltipUtilities.getMaxSpeedTooltip(StaticPowerDataRegistry.getTier(tier).getItemCableMaxSpeed()));
-		tooltip.add(ItemCableTooltipUtilities.getAccelerationTooltip(StaticPowerDataRegistry.getTier(tier).getItemCableAcceleration()));
-		tooltip.add(ItemCableTooltipUtilities.getFrictionTooltip(StaticPowerDataRegistry.getTier(tier).getItemCableFriction()));
+		tooltip.add(ItemCableTooltipUtilities.getMaxSpeedTooltip(TierReloadListener.getTier(tier).getItemCableMaxSpeed()));
+		tooltip.add(ItemCableTooltipUtilities.getAccelerationTooltip(TierReloadListener.getTier(tier).getItemCableAcceleration()));
+		tooltip.add(ItemCableTooltipUtilities.getFrictionTooltip(TierReloadListener.getTier(tier).getItemCableFriction()));
 	}
 
 	@Override

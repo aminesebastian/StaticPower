@@ -4,7 +4,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
@@ -21,17 +23,22 @@ import theking530.staticpower.tileentities.components.fluids.FluidInputServoComp
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent;
+import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
-import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityFluidInfuser extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityFluidInfuser> TYPE = new TileEntityTypeAllocator<TileEntityFluidInfuser>((type) -> new TileEntityFluidInfuser(),
-			TileEntityRenderFluidInfuser::new, ModBlocks.FluidInfuser);
+	public static final TileEntityTypeAllocator<TileEntityFluidInfuser> TYPE = new TileEntityTypeAllocator<TileEntityFluidInfuser>((type) -> new TileEntityFluidInfuser(), ModBlocks.FluidInfuser);
+
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE.setTileEntitySpecialRenderer(TileEntityRenderFluidInfuser::new);
+		}
+	}
 
 	public static final int DEFAULT_PROCESSING_TIME = 200;
 	public static final int DEFAULT_PROCESSING_COST = 5;

@@ -7,8 +7,10 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderFluidGenerator;
@@ -32,7 +34,13 @@ import theking530.staticpower.tileentities.components.power.PowerDistributionCom
 public class TileEntityFluidGenerator extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityFluidGenerator> TYPE = new TileEntityTypeAllocator<TileEntityFluidGenerator>((type) -> new TileEntityFluidGenerator(),
-			TileEntityRenderFluidGenerator::new, ModBlocks.FluidGenerator);
+			ModBlocks.FluidGenerator);
+
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE.setTileEntitySpecialRenderer(TileEntityRenderFluidGenerator::new);
+		}
+	}
 
 	public final InventoryComponent upgradesInventory;
 	public final MachineProcessingComponent processingComponent;

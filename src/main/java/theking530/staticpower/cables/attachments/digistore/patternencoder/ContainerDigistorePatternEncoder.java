@@ -12,6 +12,8 @@ import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Direction;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -31,7 +33,12 @@ import theking530.staticpower.integration.JEI.IJEIReipceTransferHandler;
 public class ContainerDigistorePatternEncoder extends AbstractContainerDigistoreTerminal<DigistorePatternEncoder> implements IJEIReipceTransferHandler {
 	@ContainerTypePopulator
 	public static final ContainerTypeAllocator<ContainerDigistorePatternEncoder, GuiDigistorePatternEncoder> TYPE = new ContainerTypeAllocator<>("digistore_pattern_terminal",
-			ContainerDigistorePatternEncoder::new, GuiDigistorePatternEncoder::new);
+			ContainerDigistorePatternEncoder::new);
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE.setScreenFactory(GuiDigistorePatternEncoder::new);
+		}
+	}
 
 	private ItemStackHandler encoderInventory;
 	private RecipeEncodingType currentRecipeType;

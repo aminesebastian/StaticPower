@@ -11,6 +11,8 @@ import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
@@ -31,8 +33,13 @@ import theking530.staticpower.utilities.InventoryUtilities;
 public class TileEntityAutoCraftingTable extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityAutoCraftingTable> TYPE = new TileEntityTypeAllocator<TileEntityAutoCraftingTable>((type) -> new TileEntityAutoCraftingTable(),
-			TileEntityRenderAutoCraftingTable::new, ModBlocks.AutoCraftingTable);
+			ModBlocks.AutoCraftingTable);
 
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE.setTileEntitySpecialRenderer(TileEntityRenderAutoCraftingTable::new);
+		}
+	}
 	public static final int DEFAULT_PROCESSING_TIME = 100;
 	public static final int DEFAULT_PROCESSING_COST = 5;
 	public static final int DEFAULT_MOVING_TIME = 4;
@@ -57,13 +64,13 @@ public class TileEntityAutoCraftingTable extends TileEntityMachine {
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryInventory", energyStorage.getStorage()));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
-		
+
 		registerComponent(
 				moveComponent = new MachineProcessingComponent("MoveComponent", DEFAULT_MOVING_TIME, this::canMoveFromInputToProcessing, () -> ProcessingCheckState.ok(), this::movingCompleted, true)
 						.setRedstoneControlComponent(redstoneControlComponent));
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true)
 				.setShouldControlBlockState(true));
-		
+
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setEnergyComponent(energyStorage);
@@ -74,7 +81,7 @@ public class TileEntityAutoCraftingTable extends TileEntityMachine {
 
 		// Set the energy storage upgrade inventory.
 		energyStorage.setUpgradeInventory(upgradesInventory);
-		
+
 		patternInventory.setShouldDropContentsOnBreak(false);
 		filterInventory = new ItemStack[9];
 	}

@@ -35,10 +35,16 @@ public class FermenterRecipeSerializer extends ForgeRegistryEntry<IRecipeSeriali
 
 	@Override
 	public FermenterRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-		return null;
+		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
+		FluidStack output = buffer.readFluidStack();
+
+		// Create the recipe.
+		return new FermenterRecipe(recipeId, input, output);
 	}
 
 	@Override
 	public void write(PacketBuffer buffer, FermenterRecipe recipe) {
+		recipe.getInputIngredient().write(buffer);
+		buffer.writeFluidStack(recipe.getOutputFluidStack());
 	}
 }

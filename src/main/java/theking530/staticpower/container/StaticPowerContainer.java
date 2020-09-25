@@ -37,9 +37,9 @@ import theking530.staticpower.tileentities.powered.autocrafter.PacketLockInvento
 public abstract class StaticPowerContainer extends Container {
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerContainer.class);
 	public static final int INVENTORY_COMPONENT_LOCK_MOUSE_BUTTON = 69;
-	
+
 	public final ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator;
-	
+
 	protected int playerInventoryStart;
 	protected int playerHotbarStart;
 	protected int playerInventoryEnd;
@@ -359,6 +359,6 @@ public abstract class StaticPowerContainer extends Container {
 	 * @return
 	 */
 	private Field getListnersField() {
-		return ObfuscationReflectionHelper.findField(Container.class, "field_177758_a");
+		return ObfuscationReflectionHelper.findField(Container.class, "field_75149_d");
 	}
 }

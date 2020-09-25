@@ -6,6 +6,8 @@ import java.util.List;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
@@ -18,7 +20,13 @@ import theking530.staticpower.integration.JEI.IJEIReipceTransferHandler;
 public class ContainerAutoCraftingTable extends StaticPowerTileEntityContainer<TileEntityAutoCraftingTable> implements IJEIReipceTransferHandler {
 	@ContainerTypePopulator
 	public static final ContainerTypeAllocator<ContainerAutoCraftingTable, GuiAutoCraftingTable> TYPE = new ContainerTypeAllocator<>("machine_industrial_crafting_table",
-			ContainerAutoCraftingTable::new, GuiAutoCraftingTable::new);
+			ContainerAutoCraftingTable::new);
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE.setScreenFactory(GuiAutoCraftingTable::new);
+		}
+	}
+
 	private List<ItemStack> lastCraftingPattern;
 
 	public ContainerAutoCraftingTable(int windowId, PlayerInventory inv, PacketBuffer data) {

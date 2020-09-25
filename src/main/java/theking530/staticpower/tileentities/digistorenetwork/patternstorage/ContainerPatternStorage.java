@@ -2,6 +2,8 @@ package theking530.staticpower.tileentities.digistorenetwork.patternstorage;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
@@ -9,8 +11,12 @@ import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 
 public class ContainerPatternStorage extends StaticPowerTileEntityContainer<TileEntityPatternStorage> {
 	@ContainerTypePopulator
-	public static final ContainerTypeAllocator<ContainerPatternStorage, GuiPatternStorage> TYPE = new ContainerTypeAllocator<>("digistore_atomic_constructor", ContainerPatternStorage::new,
-			GuiPatternStorage::new);
+	public static final ContainerTypeAllocator<ContainerPatternStorage, GuiPatternStorage> TYPE = new ContainerTypeAllocator<>("digistore_atomic_constructor", ContainerPatternStorage::new);
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE.setScreenFactory(GuiPatternStorage::new);
+		}
+	}
 
 	public ContainerPatternStorage(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, (TileEntityPatternStorage) resolveTileEntityFromDataPacket(inv, data));

@@ -37,8 +37,8 @@ public class LoopingSoundPacketStart extends NetworkMessage {
 
 	@Override
 	public void decode(PacketBuffer buf) {
-		componentName = buf.readString();
-		soundIdIn = new ResourceLocation(buf.readString());
+		componentName = readStringOnServer(buf);
+		soundIdIn = new ResourceLocation(readStringOnServer(buf));
 		categoryIn = SoundCategory.values()[buf.readInt()];
 		volumeIn = buf.readFloat();
 		pitchIn = buf.readFloat();
@@ -48,8 +48,8 @@ public class LoopingSoundPacketStart extends NetworkMessage {
 
 	@Override
 	public void encode(PacketBuffer buf) {
-		buf.writeString(componentName);
-		buf.writeString(soundIdIn.toString());
+		writeStringOnServer(componentName, buf);
+		writeStringOnServer(soundIdIn.toString(), buf);
 		buf.writeInt(categoryIn.ordinal());
 		buf.writeFloat(volumeIn);
 		buf.writeFloat(pitchIn);

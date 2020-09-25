@@ -57,13 +57,25 @@ public class GrinderRecipeSerializer extends ForgeRegistryEntry<IRecipeSerialize
 
 	@Override
 	public GrinderRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-		// TODO Auto-generated method stub
-		return null;
+		int power = buffer.readInt();
+		int time = buffer.readInt();
+		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
+		int outputCount = buffer.readByte();
+		ProbabilityItemStackOutput[] outputs = new ProbabilityItemStackOutput[outputCount];
+		for (int i = 0; i < outputCount; i++) {
+			outputs[i] = ProbabilityItemStackOutput.readFromBuffer(buffer);
+		}
+		return new GrinderRecipe(recipeId, time, power, input, outputs);
 	}
 
 	@Override
 	public void write(PacketBuffer buffer, GrinderRecipe recipe) {
-		// TODO Auto-generated method stub
-
+		buffer.writeInt(recipe.getPowerCost());
+		buffer.writeInt(recipe.getProcessingTime());
+		recipe.getInputIngredient().write(buffer);
+		buffer.writeByte(recipe.getOutputItems().length);
+		for (int i = 0; i < recipe.getOutputItems().length; i++) {
+			recipe.getOutputItems()[i].writeToBuffer(buffer);
+		}
 	}
 }

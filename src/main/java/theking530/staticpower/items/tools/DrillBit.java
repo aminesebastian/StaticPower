@@ -12,8 +12,8 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.data.TierReloadListener;
 import theking530.staticpower.items.StaticPowerItem;
 
 public class DrillBit extends StaticPowerItem {
@@ -32,7 +32,7 @@ public class DrillBit extends StaticPowerItem {
 	@Override
 	public int getMaxDamage(ItemStack stack) {
 		// Extra step here to ensure the correct tier is used.
-		return StaticPowerDataRegistry.getTier(((DrillBit) stack.getItem()).tier).getDrillBitUses();
+		return TierReloadListener.getTier(((DrillBit) stack.getItem()).tier).getDrillBitUses();
 	}
 
 	@Override

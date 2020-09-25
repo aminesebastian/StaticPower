@@ -1,6 +1,10 @@
 package theking530.staticpower.data;
 
+import java.util.Arrays;
+
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
+import theking530.staticpower.tileentities.components.serialization.SerializationUtilities;
 
 public class StaticPowerTier {
 	private ResourceLocation tierId;
@@ -122,6 +126,10 @@ public class StaticPowerTier {
 	private int itemFilterSlots;
 
 	private int upgradeOrdinal;
+
+	public void setId(ResourceLocation id) {
+		this.tierId = id;
+	}
 
 	public int getCableFluidCapacity() {
 		return cableFluidCapacity;
@@ -307,4 +315,15 @@ public class StaticPowerTier {
 		return cableRetrievalFilterSlots;
 	}
 
+	public CompoundNBT writeToNbt() {
+		CompoundNBT output = new CompoundNBT();
+		SerializationUtilities.serializeFieldsToNbt(output, Arrays.asList(getClass().getDeclaredFields()), this);
+		return output;
+	}
+
+	public static StaticPowerTier readFromNbt(CompoundNBT nbt) {
+		StaticPowerTier output = new StaticPowerTier();
+		SerializationUtilities.deserializeFieldsToNbt(nbt, Arrays.asList(output.getClass().getDeclaredFields()), output);
+		return output;
+	}
 }

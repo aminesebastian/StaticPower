@@ -56,7 +56,7 @@ public class PacketGuiTabAddSlots extends NetworkMessage {
 		locations = buf.readVarIntArray();
 
 		// Split out the inventory names.
-		String inventories = buf.readString();
+		String inventories = readStringOnServer(buf);
 		inventoryComponentNames = inventories.split("\\$");
 	}
 
@@ -72,7 +72,7 @@ public class PacketGuiTabAddSlots extends NetworkMessage {
 		buf.writeVarIntArray(locations);
 
 		String inventories = inventoryComponentList.stream().collect(Collectors.joining("$"));
-		buf.writeString(inventories);
+		writeStringOnServer(inventories, buf);
 	}
 
 	@Override

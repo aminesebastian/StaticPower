@@ -15,6 +15,8 @@ import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Direction;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
@@ -28,7 +30,12 @@ import theking530.staticpower.utilities.WorldUtilities;
 public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigistoreTerminal<DigistoreCraftingTerminal> implements IJEIReipceTransferHandler {
 	@ContainerTypePopulator
 	public static final ContainerTypeAllocator<ContainerDigistoreCraftingTerminal, GuiDigistoreCraftingTerminal> TYPE = new ContainerTypeAllocator<>("digistore_crafting_terminal",
-			ContainerDigistoreCraftingTerminal::new, GuiDigistoreCraftingTerminal::new);
+			ContainerDigistoreCraftingTerminal::new);
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE.setScreenFactory(GuiDigistoreCraftingTerminal::new);
+		}
+	}
 
 	private CraftingInventory craftMatrix;
 	private CraftResultInventory craftResult;

@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.objectweb.asm.Type;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.inventory.container.Container;
@@ -72,6 +73,7 @@ public class StaticCoreRegistry {
 		}
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	public static void registerScreenFactories() {
 		DeferredWorkQueue.runLater(() -> {
 			for (ContainerTypeAllocator<? extends Container, ? extends Screen> container : CONTAINER_ALLOCATORS) {
@@ -90,7 +92,7 @@ public class StaticCoreRegistry {
 				Field field = act.getField(annotation.getMemberName());
 				allocatorConsumer.accept((TileEntityTypeAllocator<TileEntity>) field.get(null));
 			} catch (Exception e) {
-				LOGGER.error(String.format("An error occured when attempting to process tile entity allocator: %1$s.", annotation.getMemberName()));
+				LOGGER.error(String.format("An error occured when attempting to process tile entity allocator: %1$s.", annotation.getMemberName()), e);
 			}
 		}
 	}
@@ -103,7 +105,7 @@ public class StaticCoreRegistry {
 				Field field = act.getField(annotation.getMemberName());
 				allocatorConsumer.accept((ContainerTypeAllocator<?, ?>) field.get(null));
 			} catch (Exception e) {
-				LOGGER.error(String.format("An error occured when attempting to process container allocator: %1$s.", annotation.getMemberName()));
+				LOGGER.error(String.format("An error occured when attempting to process container allocator: %1$s.", annotation.getMemberName()), e);
 			}
 		}
 	}
@@ -118,12 +120,10 @@ public class StaticCoreRegistry {
 			for (AnnotationData anno : mod.getFile().getScanResult().getAnnotations()) {
 				// Check to see if the annotation is of the requested type.
 				try {
-					Class<?> act = Class.forName(anno.getAnnotationType().getClassName());
-					System.out.println(act);
-					if (annotationType == act) {
+					if (anno.getAnnotationType().equals(Type.getType(annotationType))) {
 						output.add(anno);
 					}
-				} catch (ClassNotFoundException e) {
+				} catch (Exception e) {
 					LOGGER.error(String.format("An error occured when attempting to process annotation: %1$s.", anno.getAnnotationType().getClassName()), e);
 				}
 			}

@@ -7,6 +7,8 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderAutoSolderingTable;
@@ -26,7 +28,13 @@ import theking530.staticpower.utilities.InventoryUtilities;
 public class TileEntityAutoSolderingTable extends AbstractSolderingTable {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityAutoSolderingTable> TYPE = new TileEntityTypeAllocator<TileEntityAutoSolderingTable>((type) -> new TileEntityAutoSolderingTable(),
-			TileEntityRenderAutoSolderingTable::new, ModBlocks.AutoSolderingTable);
+			ModBlocks.AutoSolderingTable);
+
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE.setTileEntitySpecialRenderer(TileEntityRenderAutoSolderingTable::new);
+		}
+	}
 
 	public static final int DEFAULT_PROCESSING_TIME = 100;
 	public static final int DEFAULT_PROCESSING_COST = 5;
@@ -67,7 +75,7 @@ public class TileEntityAutoSolderingTable extends AbstractSolderingTable {
 
 		// Set the energy storage upgrade inventory.
 		energyStorage.setUpgradeInventory(upgradesInventory);
-		
+
 		registerComponent(new OutputServoComponent("OutputServo", 2, outputInventory));
 		registerComponent(new InputServoComponent("InputServo", 2, inventory));
 	}

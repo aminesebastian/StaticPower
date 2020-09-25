@@ -4,6 +4,8 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Direction;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -15,7 +17,12 @@ import theking530.staticpower.container.slots.PhantomSlot;
 
 public class ContainerRetriever extends AbstractCableAttachmentContainer<RetrieverAttachment> {
 	@ContainerTypePopulator
-	public static final ContainerTypeAllocator<ContainerRetriever, GuiRetriever> TYPE = new ContainerTypeAllocator<>("cable_attachment_retriever", ContainerRetriever::new, GuiRetriever::new);
+	public static final ContainerTypeAllocator<ContainerRetriever, GuiRetriever> TYPE = new ContainerTypeAllocator<>("cable_attachment_retriever", ContainerRetriever::new);
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE.setScreenFactory(GuiRetriever::new);
+		}
+	}
 
 	private ItemStackHandler filterInventory;
 

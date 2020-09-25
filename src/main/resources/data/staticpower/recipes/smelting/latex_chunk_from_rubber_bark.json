@@ -1,7 +1,7 @@
 {
 	"type": "minecraft:smelting",
 	"ingredient": {
-		"item": "staticpower:rubber_tree_wood"
+		"item": "staticpower:rubber_wood_bark"
 	},
 	"result": "staticpower:latex_chunk",
 	"experience": 0.5,

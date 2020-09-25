@@ -2,6 +2,7 @@ package theking530.staticpower.network;
 
 import java.util.function.Supplier;
 
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
@@ -35,6 +36,16 @@ public abstract class NetworkMessage {
 	 * @param ctx The context of the message.
 	 */
 	public abstract void handle(Supplier<Context> ctx);
+
+	protected void writeStringOnServer(String componentName, PacketBuffer buf) {
+		CompoundNBT tag = new CompoundNBT();
+		tag.putString("te_component_name", componentName);
+		buf.writeCompoundTag(tag);
+	}
+
+	protected String readStringOnServer(PacketBuffer buf) {
+		return buf.readCompoundTag().getString("te_component_name");
+	}
 
 	/**
 	 * This method is raised by the packet handler and should not normally be

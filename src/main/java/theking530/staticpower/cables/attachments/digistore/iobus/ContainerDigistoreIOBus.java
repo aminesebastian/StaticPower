@@ -4,6 +4,8 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Direction;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -16,8 +18,12 @@ import theking530.staticpower.container.slots.UpgradeItemSlot;
 
 public class ContainerDigistoreIOBus extends AbstractCableAttachmentContainer<DigistoreIOBusAttachment> {
 	@ContainerTypePopulator
-	public static final ContainerTypeAllocator<ContainerDigistoreIOBus, GuiDigistoreIOBus> TYPE = new ContainerTypeAllocator<>("cable_attachment_digistore_io_bus", ContainerDigistoreIOBus::new,
-			GuiDigistoreIOBus::new);
+	public static final ContainerTypeAllocator<ContainerDigistoreIOBus, GuiDigistoreIOBus> TYPE = new ContainerTypeAllocator<>("cable_attachment_digistore_io_bus", ContainerDigistoreIOBus::new);
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE.setScreenFactory(GuiDigistoreIOBus::new);
+		}
+	}
 
 	private ItemStackHandler filterInventory;
 	private ItemStackHandler upgradeInventory;

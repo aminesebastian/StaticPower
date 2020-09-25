@@ -64,13 +64,27 @@ public class CentrifugeRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 
 	@Override
 	public CentrifugeRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-		// TODO Auto-generated method stub
-		return null;
+		int power = buffer.readInt();
+		int time = buffer.readInt();
+		int speed = buffer.readInt();
+		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
+		ProbabilityItemStackOutput output1 = ProbabilityItemStackOutput.readFromBuffer(buffer);
+		ProbabilityItemStackOutput output2 = ProbabilityItemStackOutput.readFromBuffer(buffer);
+		ProbabilityItemStackOutput output3 = ProbabilityItemStackOutput.readFromBuffer(buffer);
+
+		// Create the recipe.
+		return new CentrifugeRecipe(recipeId, time, power, input, output1, output2, output3, speed);
 	}
 
 	@Override
 	public void write(PacketBuffer buffer, CentrifugeRecipe recipe) {
-		// TODO Auto-generated method stub
+		buffer.writeInt(recipe.getPowerCost());
+		buffer.writeInt(recipe.getProcessingTime());
+		buffer.writeInt(recipe.getMinimumSpeed());
+		recipe.getInput().write(buffer);
+		recipe.getOutput1().writeToBuffer(buffer);
+		recipe.getOutput2().writeToBuffer(buffer);
+		recipe.getOutput3().writeToBuffer(buffer);
 
 	}
 }

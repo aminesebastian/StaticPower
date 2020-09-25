@@ -2,6 +2,8 @@ package theking530.staticpower.tileentities.powered.squeezer;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
@@ -11,8 +13,13 @@ import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.container.slots.UpgradeItemSlot;
 
 public class ContainerSqueezer extends StaticPowerTileEntityContainer<TileEntitySqueezer> {
-		@ContainerTypePopulator
-	public static final ContainerTypeAllocator<ContainerSqueezer, GuiSqueezer> TYPE = new ContainerTypeAllocator<>("machine_squeezer", ContainerSqueezer::new, GuiSqueezer::new);
+	@ContainerTypePopulator
+	public static final ContainerTypeAllocator<ContainerSqueezer, GuiSqueezer> TYPE = new ContainerTypeAllocator<>("machine_squeezer", ContainerSqueezer::new);
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE.setScreenFactory(GuiSqueezer::new);
+		}
+	}
 
 	public ContainerSqueezer(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, (TileEntitySqueezer) resolveTileEntityFromDataPacket(inv, data));

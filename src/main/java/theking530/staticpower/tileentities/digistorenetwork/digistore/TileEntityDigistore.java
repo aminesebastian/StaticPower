@@ -14,11 +14,13 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.api.digistore.CapabilityDigistoreInventory;
@@ -36,8 +38,13 @@ import theking530.staticpower.utilities.WorldUtilities;
 
 public class TileEntityDigistore extends BaseDigistoreTileEntity implements IItemHandler {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityDigistore> TYPE = new TileEntityTypeAllocator<TileEntityDigistore>((type) -> new TileEntityDigistore(), TileEntityRenderDigistore::new,
-			ModBlocks.Digistore);
+	public static final TileEntityTypeAllocator<TileEntityDigistore> TYPE = new TileEntityTypeAllocator<TileEntityDigistore>((type) -> new TileEntityDigistore(), ModBlocks.Digistore);
+
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE.setTileEntitySpecialRenderer(TileEntityRenderDigistore::new);
+		}
+	}
 
 	public final DigistoreInventoryComponent inventory;
 	/** KEEP IN MIND: This is purely cosmetic and on the client side. */

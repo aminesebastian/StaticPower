@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.FluidStack;
@@ -24,7 +25,8 @@ import net.minecraftforge.fluids.FluidStack;
  */
 public class SerializationUtilities {
 	public static final Logger LOGGER = LogManager.getLogger(SerializationUtilities.class);
-	public static final Map<Class<?>, List<Field>> FIELD_MAP = new HashMap<Class<?>, List<Field>>();
+	public static final Map<Class<?>, List<Field>> UPDATE_FIELDS_MAP = new HashMap<Class<?>, List<Field>>();
+	public static final Map<Class<?>, List<Field>> SAVE_FIELDS_MAP = new HashMap<Class<?>, List<Field>>();
 
 	/**
 	 * Gets all the {@link UpdateSerialize} fields on the provided object.
@@ -32,7 +34,8 @@ public class SerializationUtilities {
 	 * @return The list of update serializeable fields.
 	 */
 	public static List<Field> getUpdateSerializeableFields(Object obj) {
-		if (!FIELD_MAP.containsKey(obj.getClass())) {
+		// Check if we already cached this object.
+		if (!UPDATE_FIELDS_MAP.containsKey(obj.getClass())) {
 			// Allocate output list.
 			List<Field> updateFields = new ArrayList<Field>();
 
@@ -45,10 +48,12 @@ public class SerializationUtilities {
 				}
 			}
 
-			FIELD_MAP.put(obj.getClass(), updateFields);
+			// Cache the fields.
+			UPDATE_FIELDS_MAP.put(obj.getClass(), updateFields);
 			return updateFields;
 		} else {
-			return FIELD_MAP.get(obj);
+			// Return the cached fields.
+			return UPDATE_FIELDS_MAP.get(obj.getClass());
 		}
 	}
 
@@ -58,20 +63,27 @@ public class SerializationUtilities {
 	 * @return The list of save serializeable fields.
 	 */
 	public static List<Field> getSaveSerializeableFields(Object obj) {
-		// Allocate output list.
-		List<Field> saveFields = new ArrayList<Field>();
+		// Check if we already cached this object.
+		if (!SAVE_FIELDS_MAP.containsKey(obj.getClass())) {
+			// Allocate output list.
+			List<Field> updateFields = new ArrayList<Field>();
 
-		// Iterate through all the fields.
-		for (Class<?> c = obj.getClass(); c != null; c = c.getSuperclass()) {
-			for (Field field : obj.getClass().getDeclaredFields()) {
-				if (field.isAnnotationPresent(SaveSerialize.class) || field.isAnnotationPresent(UpdateSerialize.class)) {
-					saveFields.add(field);
+			// Iterate through all the fields.
+			for (Class<?> c = obj.getClass(); c != null; c = c.getSuperclass()) {
+				for (Field field : c.getDeclaredFields()) {
+					if (field.isAnnotationPresent(SaveSerialize.class) || field.isAnnotationPresent(UpdateSerialize.class)) {
+						updateFields.add(field);
+					}
 				}
 			}
-		}
 
-		// Return the save serializeable fields.
-		return saveFields;
+			// Cache the fields.
+			SAVE_FIELDS_MAP.put(obj.getClass(), updateFields);
+			return updateFields;
+		} else {
+			// Return the cached fields.
+			return SAVE_FIELDS_MAP.get(obj.getClass());
+		}
 	}
 
 	/**
@@ -113,6 +125,9 @@ public class SerializationUtilities {
 				} else if (t == BlockPos.class) {
 					BlockPos pos = (BlockPos) field.get(object);
 					nbt.putLong(field.getName(), pos.toLong());
+				} else if (t == ResourceLocation.class) {
+					ResourceLocation loc = (ResourceLocation) field.get(object);
+					nbt.putString(field.getName(), loc.toString());
 				} else if (t == FluidStack.class) {
 					FluidStack fluid = (FluidStack) field.get(object);
 					CompoundNBT tag = new CompoundNBT();
@@ -183,13 +198,16 @@ public class SerializationUtilities {
 				} else if (t == BlockPos.class) {
 					BlockPos pos = BlockPos.fromLong(nbt.getLong(field.getName()));
 					field.set(object, pos);
+				} else if (t == ResourceLocation.class) {
+					ResourceLocation loc = new ResourceLocation(nbt.getString(field.getName()));
+					field.set(object, loc);
+				} else if (t == FluidStack.class) {
+					FluidStack stack = FluidStack.loadFluidStackFromNBT(nbt.getCompound(field.getName()));
+					field.set(object, stack);
 				} else if (INBTSerializable.class.isAssignableFrom(t)) {
 					@SuppressWarnings("unchecked")
 					INBTSerializable<CompoundNBT> serializeable = (INBTSerializable<CompoundNBT>) field.get(object);
 					serializeable.deserializeNBT(nbt.getCompound(field.getName()));
-				} else if (t == FluidStack.class) {
-					FluidStack stack = FluidStack.loadFluidStackFromNBT(nbt.getCompound(field.getName()));
-					field.set(object, stack);
 				} else {
 					LOGGER.warn(String.format("Encountered deserializeable field %1$s with unsupported type: %2$s.", field.getName(), t));
 				}

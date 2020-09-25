@@ -65,13 +65,22 @@ public class FluidInfusionRecipeSerializer extends ForgeRegistryEntry<IRecipeSer
 
 	@Override
 	public FluidInfusionRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-		// TODO Auto-generated method stub
-		return null;
+		int power = buffer.readInt();
+		int time = buffer.readInt();
+		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
+		FluidStack fluidInput = buffer.readFluidStack();
+		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.readFromBuffer(buffer);
+
+		// Create the recipe.
+		return new FluidInfusionRecipe(recipeId, input, output, fluidInput, time, power);
 	}
 
 	@Override
 	public void write(PacketBuffer buffer, FluidInfusionRecipe recipe) {
-		// TODO Auto-generated method stub
-
+		buffer.writeInt(recipe.getPowerCost());
+		buffer.writeInt(recipe.getProcessingTime());
+		recipe.getInput().write(buffer);
+		buffer.writeFluidStack(recipe.getRequiredFluid());
+		recipe.getOutput().writeToBuffer(buffer);
 	}
 }

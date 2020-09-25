@@ -172,7 +172,7 @@ public class DigistoreRegulatorAttachment extends AbstractCableAttachment {
 	protected int getRegulationRate(ItemStack attachment) {
 		float acceleratorCardCount = getUpgradeCount(attachment, AcceleratorUpgrade.class);
 		if (acceleratorCardCount > 0) {
-			float accelerationAmount = StaticPowerConfig.acceleratorCardMaxImprovment * (acceleratorCardCount / ModUpgrades.AcceleratorUpgrade.getMaxStackSize());
+			double accelerationAmount = StaticPowerConfig.acceleratorCardMaxImprovment * (acceleratorCardCount / ModUpgrades.AcceleratorUpgrade.getMaxStackSize());
 			return (int) (StaticPowerConfig.digistoreRegulatorRate / accelerationAmount);
 		} else {
 			return StaticPowerConfig.digistoreRegulatorRate;

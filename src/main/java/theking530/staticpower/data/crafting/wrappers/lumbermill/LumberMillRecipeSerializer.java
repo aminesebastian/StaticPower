@@ -60,13 +60,23 @@ public class LumberMillRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 
 	@Override
 	public LumberMillRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-		// TODO Auto-generated method stub
-		return null;
+		int power = buffer.readInt();
+		int time = buffer.readInt();
+		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
+		ProbabilityItemStackOutput primary = ProbabilityItemStackOutput.readFromBuffer(buffer);
+		ProbabilityItemStackOutput secondary = ProbabilityItemStackOutput.readFromBuffer(buffer);
+		FluidStack outFluid = buffer.readFluidStack();
+
+		return new LumberMillRecipe(recipeId, input, primary, secondary, outFluid, time, power);
 	}
 
 	@Override
 	public void write(PacketBuffer buffer, LumberMillRecipe recipe) {
-		// TODO Auto-generated method stub
-
+		buffer.writeInt(recipe.getPowerCost());
+		buffer.writeInt(recipe.getProcessingTime());
+		recipe.getInput().write(buffer);
+		recipe.getPrimaryOutput().writeToBuffer(buffer);
+		recipe.getSecondaryOutput().writeToBuffer(buffer);
+		buffer.writeFluidStack(recipe.getOutputFluid());
 	}
 }

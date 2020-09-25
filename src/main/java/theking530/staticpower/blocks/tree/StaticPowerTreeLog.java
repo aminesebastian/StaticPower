@@ -1,11 +1,15 @@
 package theking530.staticpower.blocks.tree;
 
+import java.util.function.Supplier;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LogBlock;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
@@ -14,20 +18,32 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
+import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.blocks.StaticPowerItemBlock;
 import theking530.staticpower.blocks.interfaces.IItemBlockProvider;
+import theking530.staticpower.utilities.WorldUtilities;
 
 public class StaticPowerTreeLog extends LogBlock implements IItemBlockProvider {
 	private final Block strippedVariant;
+	private final Supplier<Integer> minBark;
+	private final Supplier<Integer> maxBark;
+	private final Supplier<Item> barkItemSupplier;
 
-	public StaticPowerTreeLog(String name, MaterialColor verticalColorIn, Block strippedVariant, Properties properties) {
+	public StaticPowerTreeLog(String name, MaterialColor verticalColorIn, Block strippedVariant, Properties properties, Supplier<Integer> minBark, Supplier<Integer> maxBark, Supplier<Item> barkItem) {
 		super(verticalColorIn, properties);
 		this.setRegistryName(name);
 		this.strippedVariant = strippedVariant;
+		this.minBark = minBark;
+		this.maxBark = maxBark;
+		this.barkItemSupplier = barkItem;
+	}
+
+	public StaticPowerTreeLog(String name, MaterialColor verticalColorIn, Block strippedVariant, Properties properties) {
+		this(name, verticalColorIn, strippedVariant, properties, () -> 0, () -> 0, () -> null);
 	}
 
 	public StaticPowerTreeLog(String name, MaterialColor verticalColorIn, Properties properties) {
-		this(name, verticalColorIn, null, properties);
+		this(name, verticalColorIn, null, properties, () -> 0, () -> 0, () -> null);
 	}
 
 	@Deprecated
@@ -46,6 +62,17 @@ public class StaticPowerTreeLog extends LogBlock implements IItemBlockProvider {
 				player.getHeldItem(handIn).damageItem(1, player, (p_220040_1_) -> {
 					p_220040_1_.sendBreakAnimation(handIn);
 				});
+
+				// Spawn the bark if needed.
+				Item barkItem = barkItemSupplier.get();
+				if (barkItem != null && !worldIn.isRemote) {
+					// Get the amount to spawn.
+					int barkAmount = SDMath.getRandomIntInRange(minBark.get(), maxBark.get());
+					if (barkAmount > 0) {
+						ItemStack barkStack = new ItemStack(barkItem, barkAmount);
+						WorldUtilities.dropItem(worldIn, pos.offset(hit.getFace()), barkStack);
+					}
+				}
 
 				// Return a success.
 				return ActionResultType.SUCCESS;

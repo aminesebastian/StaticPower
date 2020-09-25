@@ -25,20 +25,22 @@ public class FluidGeneratorRecipeSerializer extends ForgeRegistryEntry<IRecipeSe
 
 		// Capture the generated power.
 		int powerAmount = json.get("power").getAsInt();
-		
+
 		// Create the recipe.
 		return new FluidGeneratorRecipe(recipeId, containedFluid, powerAmount);
 	}
 
 	@Override
 	public FluidGeneratorRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-		// TODO Auto-generated method stub
-		return null;
+		int power = buffer.readInt();
+		FluidStack fluid = buffer.readFluidStack();
+		// Create the recipe.
+		return new FluidGeneratorRecipe(recipeId, fluid, power);
 	}
 
 	@Override
 	public void write(PacketBuffer buffer, FluidGeneratorRecipe recipe) {
-		// TODO Auto-generated method stub
-
+		buffer.writeInt(recipe.getPowerGeneration());
+		buffer.writeFluidStack(recipe.getFluid());
 	}
 }

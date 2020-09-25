@@ -21,8 +21,8 @@ import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.CableBoundsCache;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
-import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.data.TierReloadListener;
 
 public class BlockHeatCable extends AbstractCableBlock {
 	public final ResourceLocation tier;
@@ -36,8 +36,8 @@ public class BlockHeatCable extends AbstractCableBlock {
 	@Override
 	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
 		super.getBasicTooltip(stack, worldIn, tooltip);
-		tooltip.add(HeatTooltipUtilities.getHeatRateTooltip(StaticPowerDataRegistry.getTier(tier).getHeatCableConductivity()));
-		tooltip.add(HeatTooltipUtilities.getHeatCapacityTooltip(StaticPowerDataRegistry.getTier(tier).getHeatCableCapacity()));
+		tooltip.add(HeatTooltipUtilities.getHeatRateTooltip(TierReloadListener.getTier(tier).getHeatCableConductivity()));
+		tooltip.add(HeatTooltipUtilities.getHeatCapacityTooltip(TierReloadListener.getTier(tier).getHeatCableCapacity()));
 	}
 
 	@Override

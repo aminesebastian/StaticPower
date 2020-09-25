@@ -5,11 +5,13 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderBatteryBlock;
-import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.data.TierReloadListener;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
@@ -20,27 +22,38 @@ import theking530.staticpower.tileentities.components.power.PowerDistributionCom
 public class TileEntityBattery extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityBattery> TYPE_BASIC = new TileEntityTypeAllocator<TileEntityBattery>((allocator) -> new TileEntityBattery(allocator, StaticPowerTiers.BASIC),
-			TileEntityRenderBatteryBlock::new, ModBlocks.BatteryBasic);
+			ModBlocks.BatteryBasic);
 
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityBattery> TYPE_ADVANCED = new TileEntityTypeAllocator<TileEntityBattery>(
-			(allocator) -> new TileEntityBattery(allocator, StaticPowerTiers.ADVANCED), TileEntityRenderBatteryBlock::new, ModBlocks.BatteryAdvanced);
+			(allocator) -> new TileEntityBattery(allocator, StaticPowerTiers.ADVANCED), ModBlocks.BatteryAdvanced);
 
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityBattery> TYPE_STATIC = new TileEntityTypeAllocator<TileEntityBattery>(
-			(allocator) -> new TileEntityBattery(allocator, StaticPowerTiers.STATIC), TileEntityRenderBatteryBlock::new, ModBlocks.BatteryStatic);
+			(allocator) -> new TileEntityBattery(allocator, StaticPowerTiers.STATIC), ModBlocks.BatteryStatic);
 
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityBattery> TYPE_ENERGIZED = new TileEntityTypeAllocator<TileEntityBattery>(
-			(allocator) -> new TileEntityBattery(allocator, StaticPowerTiers.ENERGIZED), TileEntityRenderBatteryBlock::new, ModBlocks.BatteryEnergized);
+			(allocator) -> new TileEntityBattery(allocator, StaticPowerTiers.ENERGIZED), ModBlocks.BatteryEnergized);
 
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityBattery> TYPE_LUMUM = new TileEntityTypeAllocator<TileEntityBattery>((allocator) -> new TileEntityBattery(allocator, StaticPowerTiers.LUMUM),
-			TileEntityRenderBatteryBlock::new, ModBlocks.BatteryLumum);
+			ModBlocks.BatteryLumum);
 
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityBattery> TYPE_CREATIVE = new TileEntityTypeAllocator<TileEntityBattery>(
-			(allocator) -> new TileEntityBattery(allocator, StaticPowerTiers.CREATIVE), TileEntityRenderBatteryBlock::new, ModBlocks.BatteryCreative);
+			(allocator) -> new TileEntityBattery(allocator, StaticPowerTiers.CREATIVE), ModBlocks.BatteryCreative);
+
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE_BASIC.setTileEntitySpecialRenderer(TileEntityRenderBatteryBlock::new);
+			TYPE_ADVANCED.setTileEntitySpecialRenderer(TileEntityRenderBatteryBlock::new);
+			TYPE_STATIC.setTileEntitySpecialRenderer(TileEntityRenderBatteryBlock::new);
+			TYPE_ENERGIZED.setTileEntitySpecialRenderer(TileEntityRenderBatteryBlock::new);
+			TYPE_LUMUM.setTileEntitySpecialRenderer(TileEntityRenderBatteryBlock::new);
+			TYPE_CREATIVE.setTileEntitySpecialRenderer(TileEntityRenderBatteryBlock::new);
+		}
+	}
 
 	private int minPowerThreshold;
 	private int maxPowerThreshold;
@@ -73,9 +86,9 @@ public class TileEntityBattery extends TileEntityMachine {
 			return true;
 		});
 
-		energyStorage.getStorage().setCapacity(StaticPowerDataRegistry.getTier(tier).getBatteryCapacity());
-		inputRFTick = StaticPowerDataRegistry.getTier(tier).getDefaultMachinePowerOutput() * 2;
-		outputRFTick = StaticPowerDataRegistry.getTier(tier).getDefaultMachinePowerOutput() * 2;
+		energyStorage.getStorage().setCapacity(TierReloadListener.getTier(tier).getBatteryCapacity());
+		inputRFTick = TierReloadListener.getTier(tier).getDefaultMachinePowerOutput() * 2;
+		outputRFTick = TierReloadListener.getTier(tier).getDefaultMachinePowerOutput() * 2;
 		maxPowerIO = inputRFTick * 2;
 
 		energyStorage.getStorage().setMaxReceive(inputRFTick);

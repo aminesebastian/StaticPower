@@ -22,10 +22,12 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderPump;
@@ -44,7 +46,13 @@ import theking530.staticpower.tileentities.components.items.FluidContainerInvent
 
 public class TileEntityPump extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityPump> TYPE = new TileEntityTypeAllocator<TileEntityPump>((type) -> new TileEntityPump(), TileEntityRenderPump::new, ModBlocks.Pump);
+	public static final TileEntityTypeAllocator<TileEntityPump> TYPE = new TileEntityTypeAllocator<TileEntityPump>((type) -> new TileEntityPump(), ModBlocks.Pump);
+
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE.setTileEntitySpecialRenderer(TileEntityRenderPump::new);
+		}
+	}
 
 	public static final Logger LOGGER = LogManager.getLogger(TileEntityPump.class);
 	public static final int PUMP_POWER_COST = 120;

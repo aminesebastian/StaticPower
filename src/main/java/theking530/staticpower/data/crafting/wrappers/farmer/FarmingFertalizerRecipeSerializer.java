@@ -41,13 +41,15 @@ public class FarmingFertalizerRecipeSerializer extends ForgeRegistryEntry<IRecip
 
 	@Override
 	public FarmingFertalizerRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-		// TODO Auto-generated method stub
-		return null;
+		FluidStack fluid = buffer.readFluidStack();
+		float fertilizer = buffer.readFloat();
+		// Create the recipe.
+		return new FarmingFertalizerRecipe(recipeId, fluid, fertilizer);
 	}
 
 	@Override
 	public void write(PacketBuffer buffer, FarmingFertalizerRecipe recipe) {
-		// TODO Auto-generated method stub
-
+		buffer.writeFluidStack(recipe.getRequiredFluid());
+		buffer.writeFloat(recipe.getFertalizationAmount());
 	}
 }

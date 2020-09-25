@@ -17,9 +17,9 @@ import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.cables.heat.HeatCableComponent;
-import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.data.TierReloadListener;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
 
@@ -45,7 +45,7 @@ public class TileEntityHeatSink extends TileEntityMachine implements INamedConta
 
 	public TileEntityHeatSink(TileEntityTypeAllocator<TileEntityHeatSink> allocator, ResourceLocation tierName) {
 		super(allocator);
-		StaticPowerTier tier = StaticPowerDataRegistry.getTier(tierName);
+		StaticPowerTier tier = TierReloadListener.getTier(tierName);
 		registerComponent(cableComponent = new HeatCableComponent("HeatCableComponent", tier.getHeatSinkCapacity(), tier.getHeatSinkConductivity(), tier.getHeatSinkElectricHeatGeneration(),
 				tier.getHeatSinkElectricHeatPowerUsage()).setEnergyStorageComponent(energyStorage));
 		energyStorage.setMaxInput(tier.getHeatSinkElectricHeatPowerUsage() * 2);

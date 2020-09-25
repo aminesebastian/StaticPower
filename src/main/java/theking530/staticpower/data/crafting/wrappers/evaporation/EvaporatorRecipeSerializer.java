@@ -43,20 +43,26 @@ public class EvaporatorRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 		if (JSONUtils.hasField(json, "heat")) {
 			heatCost = json.get("heat").getAsFloat();
 		}
-		
+
 		// Create the recipe.
 		return new EvaporatorRecipe(recipeId, inputFluid, outputFluid, heatCost, processingTime);
 	}
 
 	@Override
 	public EvaporatorRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-		// TODO Auto-generated method stub
-		return null;
+		int time = buffer.readInt();
+		float heat = buffer.readFloat();
+		FluidStack input = buffer.readFluidStack();
+		FluidStack output = buffer.readFluidStack();
+		// Create the recipe.
+		return new EvaporatorRecipe(recipeId, input, output, heat, time);
 	}
 
 	@Override
 	public void write(PacketBuffer buffer, EvaporatorRecipe recipe) {
-		// TODO Auto-generated method stub
-
+		buffer.writeInt(recipe.getProcessingTime());
+		buffer.writeFloat(recipe.getRequiredHeat());
+		buffer.writeFluidStack(recipe.getInputFluid());
+		buffer.writeFluidStack(recipe.getOutputFluid());
 	}
 }

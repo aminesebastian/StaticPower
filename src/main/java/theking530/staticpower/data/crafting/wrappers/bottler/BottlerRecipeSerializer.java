@@ -39,13 +39,17 @@ public class BottlerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerialize
 
 	@Override
 	public BottleRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-		// TODO Auto-generated method stub
-		return null;
+		ItemStack empty = buffer.readItemStack();
+		ItemStack filled = buffer.readItemStack();
+		FluidStack fluid = buffer.readFluidStack();
+		// Create the recipe.
+		return new BottleRecipe(recipeId, filled, empty, fluid);
 	}
 
 	@Override
 	public void write(PacketBuffer buffer, BottleRecipe recipe) {
-		// TODO Auto-generated method stub
-
+		buffer.writeItemStack(recipe.getEmptyBottle());
+		buffer.writeItemStack(recipe.getFilledBottle());
+		buffer.writeFluidStack(recipe.getFluid());
 	}
 }

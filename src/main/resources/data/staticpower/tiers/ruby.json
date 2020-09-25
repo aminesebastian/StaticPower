@@ -3,5 +3,6 @@
 		"namespace": "staticpower",
 		"path": "tier_ruby"
 	},
+	"unlocalizedTierName": "tier.staticpower.ruby",
 	"drillBitUses": 12000
 }

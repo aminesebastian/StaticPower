@@ -16,17 +16,25 @@ public abstract class BaseJEIRecipeCategory<T extends IRecipe<IInventory>> imple
 	public int getFluidTankDisplaySize(FluidStack stack) {
 		if (stack.getAmount() <= 5) {
 			return 5;
-		} else if (stack.getAmount() <= 10) {
+		} else if (stack.getAmount() < 10) {
 			return 10;
-		} else if (stack.getAmount() <= 100) {
+		} else if (stack.getAmount() < 25) {
+			return 25;
+		} else if (stack.getAmount() < 50) {
+			return 50;
+		} else if (stack.getAmount() < 100) {
 			return 100;
-		} else if (stack.getAmount() <= 1000) {
+		} else if (stack.getAmount() < 250) {
+			return 250;
+		} else if (stack.getAmount() < 500) {
+			return 500;
+		} else if (stack.getAmount() < 1000) {
 			return 1000;
-		} else if (stack.getAmount() <= 10000) {
+		} else if (stack.getAmount() < 10000) {
 			return 10000;
-		} else if (stack.getAmount() <= 100000) {
+		} else if (stack.getAmount() < 100000) {
 			return 100000;
-		} else if (stack.getAmount() <= 1000000) {
+		} else if (stack.getAmount() < 1000000) {
 			return 1000000;
 		}
 		return 0;

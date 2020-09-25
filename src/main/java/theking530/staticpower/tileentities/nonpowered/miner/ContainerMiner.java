@@ -4,6 +4,8 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
@@ -13,7 +15,12 @@ import theking530.staticpower.init.ModItems;
 
 public class ContainerMiner extends StaticPowerTileEntityContainer<TileEntityMiner> {
 	@ContainerTypePopulator
-	public static final ContainerTypeAllocator<ContainerMiner, GuiMiner> TYPE = new ContainerTypeAllocator<>("machine_miner", ContainerMiner::new, GuiMiner::new);
+	public static final ContainerTypeAllocator<ContainerMiner, GuiMiner> TYPE = new ContainerTypeAllocator<>("machine_miner", ContainerMiner::new);
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE.setScreenFactory(GuiMiner::new);
+		}
+	}
 
 	public ContainerMiner(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, (TileEntityMiner) resolveTileEntityFromDataPacket(inv, data));

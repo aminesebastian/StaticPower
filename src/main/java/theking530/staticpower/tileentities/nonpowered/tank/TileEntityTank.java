@@ -3,6 +3,8 @@ package theking530.staticpower.tileentities.nonpowered.tank;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderTank;
@@ -16,9 +18,15 @@ import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent;
 import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 
-public class TileEntityTank extends TileEntityBase  {
+public class TileEntityTank extends TileEntityBase {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityTank> TYPE = new TileEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(), TileEntityRenderTank::new, ModBlocks.BasicTank);
+	public static final TileEntityTypeAllocator<TileEntityTank> TYPE = new TileEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(), ModBlocks.BasicTank);
+
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE.setTileEntitySpecialRenderer(TileEntityRenderTank::new);
+		}
+	}
 
 	public final FluidContainerInventoryComponent inputFluidContainerComponent;
 	public final FluidContainerInventoryComponent outputFluidContainerComponent;

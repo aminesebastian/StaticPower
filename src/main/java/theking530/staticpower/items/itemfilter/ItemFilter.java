@@ -25,7 +25,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticcore.network.NetworkGUI;
-import theking530.staticpower.data.StaticPowerDataRegistry;
+import theking530.staticpower.data.TierReloadListener;
 import theking530.staticpower.items.ItemStackInventoryCapabilityProvider;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.utilities.ItemUtilities;
@@ -68,7 +68,7 @@ public class ItemFilter extends StaticPowerItem {
 		stack.getTag().putBoolean(MATCH_MOD_KEY, false);
 
 		// Add the inventory.
-		return new ItemStackInventoryCapabilityProvider(stack, StaticPowerDataRegistry.getTier(filterTier).getItemFilterSlots(), nbt);
+		return new ItemStackInventoryCapabilityProvider(stack, TierReloadListener.getTier(filterTier).getItemFilterSlots(), nbt);
 	}
 
 	/**

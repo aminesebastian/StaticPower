@@ -3,6 +3,8 @@ package theking530.staticpower.tileentities.powered.former;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
@@ -13,8 +15,13 @@ import theking530.staticpower.container.slots.UpgradeItemSlot;
 import theking530.staticpower.init.ModItems;
 
 public class ContainerFormer extends StaticPowerTileEntityContainer<TileEntityFormer> {
-		@ContainerTypePopulator
-	public static final ContainerTypeAllocator<ContainerFormer, GuiFormer> TYPE = new ContainerTypeAllocator<>("machine_former", ContainerFormer::new, GuiFormer::new);
+	@ContainerTypePopulator
+	public static final ContainerTypeAllocator<ContainerFormer, GuiFormer> TYPE = new ContainerTypeAllocator<>("machine_former", ContainerFormer::new);
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE.setScreenFactory(GuiFormer::new);
+		}
+	}
 
 	public ContainerFormer(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, (TileEntityFormer) resolveTileEntityFromDataPacket(inv, data));

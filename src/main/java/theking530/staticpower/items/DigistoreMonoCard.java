@@ -16,7 +16,7 @@ import theking530.api.digistore.DigistoreInventoryCapabilityProvider;
 import theking530.api.digistore.IDigistoreInventory;
 import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
 import theking530.staticpower.client.rendering.items.DigistoreMonoCardItemModel;
-import theking530.staticpower.data.StaticPowerDataRegistry;
+import theking530.staticpower.data.TierReloadListener;
 
 public class DigistoreMonoCard extends DigistoreCard implements ICustomModelSupplier {
 
@@ -49,7 +49,7 @@ public class DigistoreMonoCard extends DigistoreCard implements ICustomModelSupp
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-		int capacity = StaticPowerDataRegistry.getTier(tierType).getDigistoreCapacity() * (MAX_UNIQUE_ITEM_TYPES_PER_CARD / 8);
+		int capacity = TierReloadListener.getTier(tierType).getDigistoreCapacity() * (MAX_UNIQUE_ITEM_TYPES_PER_CARD / 8);
 
 		// Cover in case of integer overflow, we max at int.max.
 		return new DigistoreInventoryCapabilityProvider(stack, 1, capacity < 0 ? Integer.MAX_VALUE : capacity, nbt);

@@ -10,6 +10,8 @@ import net.minecraft.inventory.container.ClickType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SSetSlotPacket;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.slots.SolderingTableOutputSlot;
@@ -19,7 +21,12 @@ import theking530.staticpower.utilities.ItemUtilities;
 
 public class ContainerSolderingTable extends AbstractContainerSolderingTable<TileEntitySolderingTable> {
 	@ContainerTypePopulator
-	public static final ContainerTypeAllocator<ContainerSolderingTable, GuiSolderingTable> TYPE = new ContainerTypeAllocator<>("soldering_table", ContainerSolderingTable::new, GuiSolderingTable::new);
+	public static final ContainerTypeAllocator<ContainerSolderingTable, GuiSolderingTable> TYPE = new ContainerTypeAllocator<>("soldering_table", ContainerSolderingTable::new);
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE.setScreenFactory(GuiSolderingTable::new);
+		}
+	}
 
 	private @Nullable SolderingTableOutputSlot outputSlot;
 	private CraftResultInventory craftResult;

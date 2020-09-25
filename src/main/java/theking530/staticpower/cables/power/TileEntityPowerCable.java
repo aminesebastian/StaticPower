@@ -3,8 +3,8 @@ package theking530.staticpower.cables.power;
 import net.minecraft.util.ResourceLocation;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
-import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.data.TierReloadListener;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityBase;
 
@@ -30,7 +30,7 @@ public class TileEntityPowerCable extends TileEntityBase {
 
 	public TileEntityPowerCable(TileEntityTypeAllocator<TileEntityPowerCable> allocator, ResourceLocation tier) {
 		super(allocator);
-		registerComponent(new PowerCableComponent("PowerCableComponent", StaticPowerDataRegistry.getTier(tier).getCablePowerCapacity(), StaticPowerDataRegistry.getTier(tier).getCablePowerDelivery()));
+		registerComponent(new PowerCableComponent("PowerCableComponent", TierReloadListener.getTier(tier).getCablePowerCapacity(), TierReloadListener.getTier(tier).getCablePowerDelivery()));
 	}
 
 	@Override

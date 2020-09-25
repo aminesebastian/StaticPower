@@ -122,7 +122,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 				ItemStack playerMouseHeldItem = getPlayerInventory().getItemStack();
 
 				// Only perform on the server.
-				if (!getCableComponent().getWorld().isRemote && getCableComponent().isManagerPresent()) {
+				if (!player.getEntityWorld().isRemote && getCableComponent().isManagerPresent()) {
 					getDigistoreNetwork().ifPresent(digistoreModule -> {
 						// If on the server, attempt to either insert into the network if the held stack
 						// is not empty, otherwise, attempt to extract. Extract up to a full stack if
@@ -554,12 +554,14 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 			// minor performance.
 			output.setEnabledState(row >= this.scrollOffset);
 
-			if (output.isEnabled()) {
-				output.setEnabledState((i - (scrollOffset * rowSize)) < itemsPerRow * maxRows);
-			}
+			if (getCableComponent().getWorld().isRemote) {
+				if (output.isEnabled()) {
+					output.setEnabledState((i - (scrollOffset * rowSize)) < itemsPerRow * maxRows);
+				}
 
-			// If the slot is enabled, increment the enabled slots count.
-			enabledSlots += output.isEnabled() ? 1 : 0;
+				// If the slot is enabled, increment the enabled slots count.
+				enabledSlots += output.isEnabled() ? 1 : 0;
+			}
 
 			// Add the slot.
 			addSlot(output);

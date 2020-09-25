@@ -185,7 +185,7 @@ public class DigistoreExporterAttachment extends AbstractCableAttachment {
 	protected int getExportRate(ItemStack attachment) {
 		float acceleratorCardCount = getUpgradeCount(attachment, AcceleratorUpgrade.class);
 		if (acceleratorCardCount > 0) {
-			float accelerationAmount = StaticPowerConfig.acceleratorCardMaxImprovment * (acceleratorCardCount / ModUpgrades.AcceleratorUpgrade.getMaxStackSize());
+			double accelerationAmount = StaticPowerConfig.acceleratorCardMaxImprovment * (acceleratorCardCount / ModUpgrades.AcceleratorUpgrade.getMaxStackSize());
 			return (int) (StaticPowerConfig.digistoreExporterRate / accelerationAmount);
 		} else {
 			return StaticPowerConfig.digistoreExporterRate;

@@ -33,9 +33,9 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
 import theking530.staticpower.client.rendering.items.FluidCapsuleItemModel;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
-import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.data.TierReloadListener;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.utilities.WorldUtilities;
 
@@ -72,7 +72,7 @@ public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplie
 
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable net.minecraft.nbt.CompoundNBT nbt) {
-		StaticPowerTier tierObject = StaticPowerDataRegistry.getTier(tier);
+		StaticPowerTier tierObject = TierReloadListener.getTier(tier);
 		return new FluidCapsuleCapability(stack, tierObject.getCapsuleCapacity(), tier == StaticPowerTiers.CREATIVE);
 	}
 

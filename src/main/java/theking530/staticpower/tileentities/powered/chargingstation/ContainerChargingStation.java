@@ -4,6 +4,8 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
@@ -15,8 +17,12 @@ import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 public class ContainerChargingStation extends StaticPowerTileEntityContainer<TileEntityChargingStation> {
 	@ContainerTypePopulator
-	public static final ContainerTypeAllocator<ContainerChargingStation, GuiChargingStation> TYPE = new ContainerTypeAllocator<>("machine_charging_station",
-			ContainerChargingStation::new, GuiChargingStation::new);
+	public static final ContainerTypeAllocator<ContainerChargingStation, GuiChargingStation> TYPE = new ContainerTypeAllocator<>("machine_charging_station", ContainerChargingStation::new);
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE.setScreenFactory(GuiChargingStation::new);
+		}
+	}
 
 	public ContainerChargingStation(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, (TileEntityChargingStation) resolveTileEntityFromDataPacket(inv, data));

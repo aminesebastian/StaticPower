@@ -15,8 +15,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.api.IUpgradeItem;
-import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.StaticPowerTier;
+import theking530.staticpower.data.TierReloadListener;
 import theking530.staticpower.items.StaticPowerItem;
 
 public class BaseUpgrade extends StaticPowerItem implements IUpgradeItem {
@@ -51,7 +51,7 @@ public class BaseUpgrade extends StaticPowerItem implements IUpgradeItem {
 	@Override
 	public StaticPowerTier getTier() {
 		if (isTiered()) {
-			return StaticPowerDataRegistry.getTier(tier);
+			return TierReloadListener.getTier(tier);
 		} else {
 			throw new RuntimeException("Attempted to get the tier of a non-tiered ugprade!");
 		}

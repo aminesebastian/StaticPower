@@ -117,7 +117,7 @@ public class FormerRecipeCategory extends BaseJEIRecipeCategory<FormerRecipe> {
 		ingredients.setInputIngredients(input);
 
 		List<ItemStack> outputs = new ArrayList<ItemStack>();
-		outputs.add(recipe.getRecipeOutput());
+		outputs.add(recipe.getRawRecipeOutput());
 
 		ingredients.setOutputs(VanillaTypes.ITEM, outputs);
 

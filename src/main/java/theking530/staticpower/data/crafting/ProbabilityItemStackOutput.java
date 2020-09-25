@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ShapedRecipe;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 
 public class ProbabilityItemStackOutput {
@@ -64,5 +65,16 @@ public class ProbabilityItemStackOutput {
 		} else {
 			return new ProbabilityItemStackOutput(output);
 		}
+	}
+
+	public static ProbabilityItemStackOutput readFromBuffer(PacketBuffer buffer) {
+		ItemStack localItem = buffer.readItemStack();
+		float localPercent = buffer.readFloat();
+		return new ProbabilityItemStackOutput(localItem, localPercent);
+	}
+
+	public void writeToBuffer(PacketBuffer buffer) {
+		buffer.writeItemStack(item);
+		buffer.writeFloat(percentChance);
 	}
 }

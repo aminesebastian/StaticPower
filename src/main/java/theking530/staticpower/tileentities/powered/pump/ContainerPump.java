@@ -3,6 +3,8 @@ package theking530.staticpower.tileentities.powered.pump;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Items;
 import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
@@ -11,7 +13,12 @@ import theking530.staticpower.container.slots.FluidContainerSlot;
 
 public class ContainerPump extends StaticPowerTileEntityContainer<TileEntityPump> {
 	@ContainerTypePopulator
-	public static final ContainerTypeAllocator<ContainerPump, GuiPump> TYPE = new ContainerTypeAllocator<>("pump", ContainerPump::new, GuiPump::new);
+	public static final ContainerTypeAllocator<ContainerPump, GuiPump> TYPE = new ContainerTypeAllocator<>("pump", ContainerPump::new);
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE.setScreenFactory(GuiPump::new);
+		}
+	}
 
 	public ContainerPump(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, (TileEntityPump) resolveTileEntityFromDataPacket(inv, data));

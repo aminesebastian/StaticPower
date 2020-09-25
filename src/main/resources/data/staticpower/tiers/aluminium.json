@@ -3,6 +3,7 @@
 		"namespace": "staticpower",
 		"path": "tier_aluminium"
 	},
+	"unlocalizedTierName": "tier.staticpower.aluminium",
 	"heatCableCapacity": 10,
 	"heatCableConductivity": 20.0,
 	"heatSinkCapacity": 300.0,

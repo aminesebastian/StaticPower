@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.network.PacketBuffer;
 
 public class StaticPowerIngredient {
 	private final Ingredient ingredient;
@@ -54,5 +55,16 @@ public class StaticPowerIngredient {
 
 		// Create the ingredient wrapper..
 		return new StaticPowerIngredient(input, inputCount);
+	}
+
+	public void write(PacketBuffer buffer) {
+		ingredient.write(buffer);
+		buffer.writeInt(count);
+	}
+
+	public static StaticPowerIngredient read(PacketBuffer buffer) {
+		Ingredient ingredient = Ingredient.read(buffer);
+		int count = buffer.readInt();
+		return new StaticPowerIngredient(ingredient, count);
 	}
 }

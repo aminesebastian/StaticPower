@@ -50,13 +50,20 @@ public class CondensationRecipeSerializer extends ForgeRegistryEntry<IRecipeSeri
 
 	@Override
 	public CondensationRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-		// TODO Auto-generated method stub
-		return null;
+		int time = buffer.readInt();
+		float heat = buffer.readFloat();
+		FluidStack input = buffer.readFluidStack();
+		FluidStack output = buffer.readFluidStack();
+
+		// Create the recipe.
+		return new CondensationRecipe(recipeId, input, output, time, heat);
 	}
 
 	@Override
 	public void write(PacketBuffer buffer, CondensationRecipe recipe) {
-		// TODO Auto-generated method stub
-
+		buffer.writeInt(recipe.getProcessingTime());
+		buffer.writeFloat(recipe.getHeatGeneration());
+		buffer.writeFluidStack(recipe.getInputFluid());
+		buffer.writeFluidStack(recipe.getOutputFluid());
 	}
 }

@@ -12,9 +12,9 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
-import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.data.TierReloadListener;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
@@ -50,7 +50,7 @@ public class TileEntitySolarPanel extends TileEntityBase implements ITickableTil
 	public TileEntitySolarPanel(TileEntityTypeAllocator<TileEntitySolarPanel> allocator, ResourceLocation tierType) {
 		super(allocator);
 		// Set the values based on the tier.
-		StaticPowerTier tier = StaticPowerDataRegistry.getTier(tierType);
+		StaticPowerTier tier = TierReloadListener.getTier(tierType);
 		registerComponent(energyStorage = new EnergyStorageComponent("PowerBuffer", tier.getSolarPanelPowerStorage(), tier.getSolarPanelPowerGeneration(), tier.getSolarPanelPowerGeneration()));
 		energyStorage.getStorage().setCanRecieve(false);
 

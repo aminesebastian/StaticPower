@@ -4,7 +4,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
@@ -31,8 +33,13 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntitySqueezer extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntitySqueezer> TYPE = new TileEntityTypeAllocator<TileEntitySqueezer>((type) -> new TileEntitySqueezer(), TileEntityRenderSqueezer::new,
-			ModBlocks.Squeezer);
+	public static final TileEntityTypeAllocator<TileEntitySqueezer> TYPE = new TileEntityTypeAllocator<TileEntitySqueezer>((type) -> new TileEntitySqueezer(), ModBlocks.Squeezer);
+
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE.setTileEntitySpecialRenderer(TileEntityRenderSqueezer::new);
+		}
+	}
 
 	public static final int DEFAULT_PROCESSING_TIME = 100;
 	public static final int DEFAULT_PROCESSING_COST = 5;

@@ -35,7 +35,7 @@ public class PacketLockInventorySlot extends NetworkMessage {
 		slot = buf.readInt();
 		locked = buf.readBoolean();
 		filteredIem = buf.readItemStack();
-		componentName = buf.readString();
+		componentName = readStringOnServer(buf);
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class PacketLockInventorySlot extends NetworkMessage {
 		buf.writeInt(slot);
 		buf.writeBoolean(locked);
 		buf.writeItemStack(filteredIem);
-		buf.writeString(componentName);
+		writeStringOnServer(componentName, buf);
 	}
 
 	@Override

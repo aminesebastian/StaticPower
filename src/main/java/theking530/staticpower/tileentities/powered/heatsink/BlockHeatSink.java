@@ -26,8 +26,8 @@ import theking530.api.heat.HeatTooltipUtilities;
 import theking530.staticcore.utilities.HarvestLevel;
 import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
-import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.data.TierReloadListener;
 
 public class BlockHeatSink extends StaticPowerTileEntityBlock {
 	public final ResourceLocation tier;
@@ -41,12 +41,12 @@ public class BlockHeatSink extends StaticPowerTileEntityBlock {
 	@Override
 	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
 		super.getBasicTooltip(stack, worldIn, tooltip);
-		tooltip.add(HeatTooltipUtilities.getHeatRateTooltip(StaticPowerDataRegistry.getTier(tier).getHeatSinkConductivity()));
-		tooltip.add(HeatTooltipUtilities.getHeatCapacityTooltip(StaticPowerDataRegistry.getTier(tier).getHeatSinkCapacity()));
-		tooltip.add(HeatTooltipUtilities.getHeatGenerationTooltip(StaticPowerDataRegistry.getTier(tier).getHeatSinkElectricHeatGeneration()));
+		tooltip.add(HeatTooltipUtilities.getHeatRateTooltip(TierReloadListener.getTier(tier).getHeatSinkConductivity()));
+		tooltip.add(HeatTooltipUtilities.getHeatCapacityTooltip(TierReloadListener.getTier(tier).getHeatSinkCapacity()));
+		tooltip.add(HeatTooltipUtilities.getHeatGenerationTooltip(TierReloadListener.getTier(tier).getHeatSinkElectricHeatGeneration()));
 		tooltip.add(new StringTextComponent(TextFormatting.GRAY.toString()).appendSibling(new StringTextComponent("Generation Usage: "))
 				.appendSibling(new StringTextComponent(TextFormatting.RED.toString()))
-				.appendSibling(GuiTextUtilities.formatEnergyRateToString(StaticPowerDataRegistry.getTier(tier).getHeatSinkElectricHeatPowerUsage())));
+				.appendSibling(GuiTextUtilities.formatEnergyRateToString(TierReloadListener.getTier(tier).getHeatSinkElectricHeatPowerUsage())));
 	}
 
 	@Override

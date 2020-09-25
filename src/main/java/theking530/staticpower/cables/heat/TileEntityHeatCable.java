@@ -8,8 +8,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
-import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.data.TierReloadListener;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityBase;
 
@@ -34,8 +34,8 @@ public class TileEntityHeatCable extends TileEntityBase {
 
 	public TileEntityHeatCable(TileEntityTypeAllocator<TileEntityHeatCable> allocator, ResourceLocation tier) {
 		super(allocator);
-		registerComponent(cableComponent = new HeatCableComponent("HeatCableComponent", StaticPowerDataRegistry.getTier(tier).getHeatCableCapacity(),
-				StaticPowerDataRegistry.getTier(tier).getHeatCableConductivity()));
+		registerComponent(cableComponent = new HeatCableComponent("HeatCableComponent", TierReloadListener.getTier(tier).getHeatCableCapacity(),
+				TierReloadListener.getTier(tier).getHeatCableConductivity()));
 	}
 
 	@Override

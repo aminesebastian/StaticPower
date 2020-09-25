@@ -7,6 +7,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraftforge.common.ToolType;
 import theking530.staticcore.utilities.HarvestLevel;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.blocks.EnergizedGrass;
 import theking530.staticpower.blocks.StaticGrass;
@@ -431,8 +432,10 @@ public class ModBlocks {
 
 		StaticPowerRegistry.preRegisterBlock(RubberTreeStrippedWood = new StaticPowerTreeLog("rubber_tree_stripped_wood", MaterialColor.WOOD, Block.Properties.from(Blocks.STRIPPED_OAK_WOOD)));
 		StaticPowerRegistry.preRegisterBlock(RubberTreeStrippedLog = new StaticPowerTreeLog("rubber_tree_stripped_log", MaterialColor.WOOD, Block.Properties.from(Blocks.STRIPPED_OAK_LOG)));
-		StaticPowerRegistry.preRegisterBlock(RubberTreeWood = new StaticPowerTreeLog("rubber_tree_wood", MaterialColor.WOOD, RubberTreeStrippedWood, Block.Properties.from(Blocks.OAK_LOG)));
-		StaticPowerRegistry.preRegisterBlock(RubberTreeLog = new StaticPowerTreeLog("rubber_tree_log", MaterialColor.WOOD, RubberTreeStrippedLog, Block.Properties.from(Blocks.OAK_LOG)));
+		StaticPowerRegistry.preRegisterBlock(RubberTreeWood = new StaticPowerTreeLog("rubber_tree_wood", MaterialColor.WOOD, RubberTreeStrippedWood, Block.Properties.from(Blocks.OAK_LOG),
+				() -> StaticPowerConfig.minRubberWoodBarkPerStrip, () -> StaticPowerConfig.maxRubberWoodBarkPerStrip, () -> ModItems.RubberWoodBark));
+		StaticPowerRegistry.preRegisterBlock(RubberTreeLog = new StaticPowerTreeLog("rubber_tree_log", MaterialColor.WOOD, RubberTreeStrippedLog, Block.Properties.from(Blocks.OAK_LOG),
+				() -> StaticPowerConfig.minRubberWoodBarkPerStrip, () -> StaticPowerConfig.maxRubberWoodBarkPerStrip, () -> ModItems.RubberWoodBark));
 		StaticPowerRegistry.preRegisterBlock(RubberTreePlanks = new StaticPowerBlock("rubber_tree_planks", Block.Properties.from(Blocks.OAK_PLANKS)));
 		StaticPowerRegistry.preRegisterBlock(RubberTreeLeaves = new StaticPowerTreeLeaves("rubber_tree_leaves", Block.Properties.from(Blocks.OAK_LEAVES)));
 		StaticPowerRegistry.preRegisterBlock(RubberTreeSapling = new StaticPowerSapling("rubber_tree_sapling", () -> new RubberTree(), Block.Properties.from(Blocks.OAK_SAPLING)));

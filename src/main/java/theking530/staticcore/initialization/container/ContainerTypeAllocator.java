@@ -5,6 +5,8 @@ import net.minecraft.client.gui.ScreenManager.IScreenFactory;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.network.IContainerFactory;
@@ -17,16 +19,14 @@ import net.minecraftforge.fml.network.IContainerFactory;
 public class ContainerTypeAllocator<T extends Container, K extends ContainerScreen<T>> {
 	protected final String name;
 	protected final IContainerFactory<T> containerFactory;
-	protected final IScreenFactory<T, K> screenFactory;
+	protected IScreenFactory<T, K> screenFactory;
 	protected ContainerType<T> type;
 	private boolean containerRegistered;
 	private boolean screenRegistered;
 
-	public ContainerTypeAllocator(String name, IContainerFactory<T> factory, IScreenFactory<T, K> screen) {
-		super();
+	public ContainerTypeAllocator(String name, IContainerFactory<T> factory) {
 		this.name = name;
 		this.containerFactory = factory;
-		this.screenFactory = screen;
 		this.containerRegistered = false;
 		this.screenRegistered = false;
 	}
@@ -46,6 +46,12 @@ public class ContainerTypeAllocator<T extends Container, K extends ContainerScre
 		return containerFactory;
 	}
 
+	@OnlyIn(Dist.CLIENT)
+	public void setScreenFactory(IScreenFactory<T, K> screenFactory) {
+		this.screenFactory = screenFactory;
+	}
+
+	@OnlyIn(Dist.CLIENT)
 	public void registerScreen() {
 		if (screenRegistered) {
 			throw new RuntimeException("Attempted to register an already registered TileEntityTypeAllocator!");

@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.fml.ModList;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.GuiIslandWidget;
 import theking530.staticcore.gui.widgets.button.SpriteButton;
@@ -29,6 +30,7 @@ import theking530.staticpower.cables.digistore.crafting.CraftingRequestResponse;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.container.slots.DigistoreSlot;
 import theking530.staticpower.container.slots.NoCountRenderSlot;
+import theking530.staticpower.events.StaticPowerModEventRegistry;
 import theking530.staticpower.integration.JEI.PluginJEI;
 import theking530.staticpower.utilities.MetricConverter;
 
@@ -88,7 +90,9 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		registerWidget(sortButton = new SpriteButton(-20, 20, 16, 16, StaticPowerSprites.SORT_NUMERICAL_DESC, null, this::onSortButtonPressed));
 
 		// Add search mode button.
-		registerWidget(searchModeButton = new SpriteButton(-20, 40, 16, 16, StaticPowerSprites.SEARCH_MODE_DEFAULT, null, this::onSearchModeButtonPressed));
+		if (ModList.get().isLoaded(StaticPowerModEventRegistry.JEI_MODID)) {
+			registerWidget(searchModeButton = new SpriteButton(-20, 40, 16, 16, StaticPowerSprites.SEARCH_MODE_DEFAULT, null, this::onSearchModeButtonPressed));
+		}
 
 		// Add island for the armor.
 		registerWidget(new GuiIslandWidget(-24, 104, 30, 80));
@@ -150,11 +154,14 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 
 	@Override
 	public void updateData() {
-		// If we have two way syncing enabled, changes to the JEI search bar will also
+		// If we have JEI installed two way syncing enabled, changes to the JEI search
+		// bar will also
 		// affect the digistore search bar.
-		if (DigistoreTerminal.getSearchMode(getContainer().getAttachment()) == DigistoreSearchMode.TWO_WAY) {
-			String jeiSearchString = Strings.nullToEmpty(PluginJEI.RUNTIME.getIngredientFilter().getFilterText());
-			searchBar.setText(jeiSearchString);
+		if (ModList.get().isLoaded(StaticPowerModEventRegistry.JEI_MODID)) {
+			if (DigistoreTerminal.getSearchMode(getContainer().getAttachment()) == DigistoreSearchMode.TWO_WAY) {
+				String jeiSearchString = Strings.nullToEmpty(PluginJEI.RUNTIME.getIngredientFilter().getFilterText());
+				searchBar.setText(jeiSearchString);
+			}
 		}
 
 		// Update the crafting queue regardless of if we are in that view or not.
@@ -315,19 +322,21 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		boolean descending = DigistoreTerminal.getSortDescending(attachment);
 
 		// Update tooltips and sprites.
-		switch (searchMode) {
-		case DEFAULT:
-			searchModeButton.setTooltip(new StringTextComponent("Default Search Mode"));
-			searchModeButton.setRegularTexture(StaticPowerSprites.SEARCH_MODE_DEFAULT);
-			break;
-		case ONE_WAY:
-			searchModeButton.setTooltip(new StringTextComponent("One-Way JEI Search Mode"));
-			searchModeButton.setRegularTexture(StaticPowerSprites.SEARCH_MODE_ONE_WAY);
-			break;
-		case TWO_WAY:
-			searchModeButton.setTooltip(new StringTextComponent("Two-Way JEI Search Mode"));
-			searchModeButton.setRegularTexture(StaticPowerSprites.SEARCH_MODE_TWO_WAY);
-			break;
+		if (ModList.get().isLoaded(StaticPowerModEventRegistry.JEI_MODID)) {
+			switch (searchMode) {
+			case DEFAULT:
+				searchModeButton.setTooltip(new StringTextComponent("Default Search Mode"));
+				searchModeButton.setRegularTexture(StaticPowerSprites.SEARCH_MODE_DEFAULT);
+				break;
+			case ONE_WAY:
+				searchModeButton.setTooltip(new StringTextComponent("One-Way JEI Search Mode"));
+				searchModeButton.setRegularTexture(StaticPowerSprites.SEARCH_MODE_ONE_WAY);
+				break;
+			case TWO_WAY:
+				searchModeButton.setTooltip(new StringTextComponent("Two-Way JEI Search Mode"));
+				searchModeButton.setRegularTexture(StaticPowerSprites.SEARCH_MODE_TWO_WAY);
+				break;
+			}
 		}
 
 		switch (sortType) {

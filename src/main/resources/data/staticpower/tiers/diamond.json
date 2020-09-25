@@ -3,5 +3,6 @@
 		"namespace": "staticpower",
 		"path": "tier_diamond"
 	},
+	"unlocalizedTierName": "tier.staticpower.diamond",
 	"drillBitUses": 48000
 }

@@ -2,6 +2,8 @@ package theking530.staticpower.tileentities.powered.fermenter;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
@@ -11,7 +13,12 @@ import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 
 public class ContainerFermenter extends StaticPowerTileEntityContainer<TileEntityFermenter> {
 	@ContainerTypePopulator
-	public static final ContainerTypeAllocator<ContainerFermenter, GuiFermenter> TYPE = new ContainerTypeAllocator<>("machine_fermenter", ContainerFermenter::new, GuiFermenter::new);
+	public static final ContainerTypeAllocator<ContainerFermenter, GuiFermenter> TYPE = new ContainerTypeAllocator<>("machine_fermenter", ContainerFermenter::new);
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE.setScreenFactory(GuiFermenter::new);
+		}
+	}
 
 	public ContainerFermenter(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, (TileEntityFermenter) resolveTileEntityFromDataPacket(inv, data));

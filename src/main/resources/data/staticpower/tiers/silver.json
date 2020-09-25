@@ -3,6 +3,7 @@
 		"namespace": "staticpower",
 		"path": "tier_silver"
 	},
+	"unlocalizedTierName": "tier.staticpower.silver",
 	"heatCableCapacity": 25,
 	"heatCableConductivity": 60.0,
 	"heatSinkCapacity": 3000,

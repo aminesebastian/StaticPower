@@ -2,6 +2,8 @@ package theking530.staticpower.tileentities.powered.vulcanizer;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
@@ -11,7 +13,12 @@ import theking530.staticpower.container.slots.UpgradeItemSlot;
 
 public class ContainerVulcanizer extends StaticPowerTileEntityContainer<TileEntityVulcanizer> {
 	@ContainerTypePopulator
-	public static final ContainerTypeAllocator<ContainerVulcanizer, GuiVulcanizer> TYPE = new ContainerTypeAllocator<>("machine_vulcanizer", ContainerVulcanizer::new, GuiVulcanizer::new);
+	public static final ContainerTypeAllocator<ContainerVulcanizer, GuiVulcanizer> TYPE = new ContainerTypeAllocator<>("machine_vulcanizer", ContainerVulcanizer::new);
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE.setScreenFactory(GuiVulcanizer::new);
+		}
+	}
 
 	public ContainerVulcanizer(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, (TileEntityVulcanizer) resolveTileEntityFromDataPacket(inv, data));

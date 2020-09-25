@@ -25,7 +25,7 @@ public class AcceleratorUpgrade extends BaseUpgrade {
 		tooltip.add(new StringTextComponent(TextFormatting.GREEN + "Increases the frequency at which"));
 		tooltip.add(new StringTextComponent(TextFormatting.GREEN + "certain digistore attachments will operate."));
 
-		float percentIncrease = StaticPowerConfig.acceleratorCardMaxImprovment;
+		double percentIncrease = StaticPowerConfig.acceleratorCardMaxImprovment;
 		percentIncrease *= (float) stack.getCount() / stack.getMaxStackSize();
 		tooltip.add(new StringTextComponent(TextFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(percentIncrease * 100) + "%" + TextFormatting.GREEN + " Transfer Speed"));
 	}

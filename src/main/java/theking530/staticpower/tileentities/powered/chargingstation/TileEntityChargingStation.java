@@ -6,6 +6,8 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderChargingStation;
@@ -25,7 +27,13 @@ import theking530.staticpower.utilities.InventoryUtilities;
 public class TileEntityChargingStation extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityChargingStation> TYPE = new TileEntityTypeAllocator<TileEntityChargingStation>((type) -> new TileEntityChargingStation(),
-			TileEntityRenderChargingStation::new, ModBlocks.ChargingStation);
+			 ModBlocks.ChargingStation);
+	
+	static {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE.setTileEntitySpecialRenderer(TileEntityRenderChargingStation::new);
+		}
+	}
 
 	public final InventoryComponent unchargedInventory;
 	public final InventoryComponent chargedInventory;
