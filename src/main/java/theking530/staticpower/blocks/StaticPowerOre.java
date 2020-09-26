@@ -46,7 +46,17 @@ public class StaticPowerOre extends StaticPowerBlock {
 	 * @param maximumXP    The maximum amount of XP to spawn when this ore is mined.
 	 */
 	public StaticPowerOre(String name, ToolType tool, HarvestLevel harvestLevel, float hardness, int minimumXP, int maximumXP) {
-		super(name, Block.Properties.create(Material.ROCK).harvestTool(tool).harvestLevel(harvestLevel.ordinal()).hardnessAndResistance(hardness).sound(SoundType.STONE));
+		this(name, Block.Properties.create(Material.ROCK).harvestTool(tool).harvestLevel(harvestLevel.ordinal()).hardnessAndResistance(hardness).sound(SoundType.STONE), 0, 0);
+
+	}
+
+	public StaticPowerOre(String name, Block.Properties properties) {
+		this(name, properties, 0, 0);
+
+	}
+
+	public StaticPowerOre(String name, Block.Properties properties, int minimumXP, int maximumXP) {
+		super(name, properties);
 		this.minimumXP = minimumXP;
 		this.maximumXP = maximumXP;
 	}

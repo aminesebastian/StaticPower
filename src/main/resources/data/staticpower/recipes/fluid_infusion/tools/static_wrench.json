@@ -1,0 +1,13 @@
+{
+	"type": "staticpower:fluid_infusion_recipe",
+	"input": {
+		"item": "staticpower:wrench"
+	},
+	"fluid": {
+		"fluid": "staticpower:fluid_static",
+		"volume": 1000
+	},
+	"result": {
+		"item": "staticpower:wrench_static"
+	}
+}

@@ -255,7 +255,12 @@ public class ModItems {
 	public static WireCutters WireCutters;
 	public static SolderingIron SolderingIron;
 	public static ElectricSolderingIron ElectringSolderingIron;
+
+	public static StaticWrench Wrench;
 	public static StaticWrench StaticWrench;
+	public static StaticWrench EnergizedWrench;
+	public static StaticWrench LumumWrench;
+
 	public static CableNetworkAnalyzer CableNetworkAnalyzer;
 	public static CoverSaw IronCoverSaw;
 	public static CoverSaw TungstenCoverSaw;
@@ -380,7 +385,11 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(WireCutters = new WireCutters("wire_cutters", 100));
 		StaticPowerRegistry.preRegisterItem(SolderingIron = new SolderingIron("soldering_iron", 100));
 		StaticPowerRegistry.preRegisterItem(ElectringSolderingIron = new ElectricSolderingIron("soldering_iron_electric", 1000));
-		StaticPowerRegistry.preRegisterItem(StaticWrench = new StaticWrench("static_wrench"));
+
+		StaticPowerRegistry.preRegisterItem(Wrench = new StaticWrench("wrench"));
+		StaticPowerRegistry.preRegisterItem(StaticWrench = new StaticWrench("wrench_static"));
+		StaticPowerRegistry.preRegisterItem(EnergizedWrench = new StaticWrench("wrench_energized"));
+		StaticPowerRegistry.preRegisterItem(LumumWrench = new StaticWrench("wrench_lumum"));
 
 		StaticPowerRegistry.preRegisterItem(IronCoverSaw = new CoverSaw("saw_iron", 100));
 		StaticPowerRegistry.preRegisterItem(TungstenCoverSaw = new CoverSaw("saw_tungsten", 2500));

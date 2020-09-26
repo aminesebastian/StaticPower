@@ -2,21 +2,18 @@
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
 		" i ",
-		" ci",
-		"t  "
+		" gi",
+		"i  "
 	],
 	"key": {
 		"i": {
 			"tag": "forge:ingots/iron"
 		},
-		"t": {
-			"tag": "forge:ingots/tin"
-		},
-		"c": {
-			"item": "staticpower:crop_static"
+		"g": {
+			"tag": "forge:gears/tin"
 		}
 	},
 	"result": {
-		"item": "staticpower:static_wrench"
+		"item": "staticpower:wrench"
 	}
 }

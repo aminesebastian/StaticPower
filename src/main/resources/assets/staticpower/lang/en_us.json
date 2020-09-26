@@ -1,6 +1,9 @@
 {
 	"itemGroup.StaticPower": "Static Power",
-	"item.staticpower.static_wrench": "Static Wrench",
+	"item.staticpower.wrench": "Wrench",
+	"item.staticpower.wrench_static": "Static Wrench",
+	"item.staticpower.wrench_energized": "Energized Wrench",
+	"item.staticpower.wrench_lumum": "Lumum Wrench",
 	"item.staticpower.tutorial_boock": "Static Text Book",
 	"item.staticpower.wire_cutters": "Wire Cutters",
 	"item.staticpower.metal_hammer": "Forge Hammer",
