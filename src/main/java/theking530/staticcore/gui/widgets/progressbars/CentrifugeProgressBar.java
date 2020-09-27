@@ -4,10 +4,13 @@ import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.gui.GuiTextures;
 
+@OnlyIn(Dist.CLIENT)
 public class CentrifugeProgressBar extends AbstractProgressBar {
 	public CentrifugeProgressBar(int xPosition, int yPosition) {
 		super(xPosition, yPosition, 16, 16);

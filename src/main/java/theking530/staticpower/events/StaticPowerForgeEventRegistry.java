@@ -21,6 +21,7 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.network.PacketDistributor;
 import theking530.api.heat.HeatTooltipUtilities;
 import theking530.staticpower.StaticPower;
@@ -52,21 +53,18 @@ public class StaticPowerForgeEventRegistry {
 	public static void onPlayerJoinedGame(PlayerEvent.PlayerLoggedInEvent playerLoggedIn) {
 		if (!playerLoggedIn.getPlayer().getEntityWorld().isRemote) {
 			NetworkMessage msg = new PacketSyncTiers(TierReloadListener.TIERS.values());
-			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL
-					.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) playerLoggedIn.getPlayer()), msg);
-			StaticPower.LOGGER.info(String.format("Synced tier configuration to player: %1$s!",
-					playerLoggedIn.getPlayer().getDisplayName().getString()));
+			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) playerLoggedIn.getPlayer()), msg);
+			StaticPower.LOGGER.info(String.format("Synced tier configuration to player: %1$s!", playerLoggedIn.getPlayer().getDisplayName().getString()));
 		}
 	}
 
 	@SubscribeEvent
 	public static void onServerAboutToStart(FMLServerAboutToStartEvent serverStarted) {
-		IReloadableResourceManager resourceManager = (IReloadableResourceManager) serverStarted.getServer()
-				.getDataPackRegistries().getResourceManager();
+		IReloadableResourceManager resourceManager = (IReloadableResourceManager) serverStarted.getServer().getDataPackRegistries().getResourceManager();
 		resourceManager.addReloadListener(new TierReloadListener());
 		resourceManager.addReloadListener(new RecipeReloadListener(serverStarted.getServer().getRecipeManager()));
 		StaticPower.LOGGER.info("Server resource reload listener created!");
-		
+
 		TierReloadListener.updateOnServer(resourceManager);
 
 		ModOres.init();
@@ -88,18 +86,18 @@ public class StaticPowerForgeEventRegistry {
 	@OnlyIn(Dist.CLIENT)
 	public static void onAddItemTooltip(ItemTooltipEvent event) {
 		// Add thermal rate tooltips.
-		if (Screen.hasShiftDown()) {
-			RecipeMatchParameters matchParameters = new RecipeMatchParameters(event.getItemStack());
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			if (Screen.hasShiftDown()) {
+				RecipeMatchParameters matchParameters = new RecipeMatchParameters(event.getItemStack());
 
-			FluidUtil.getFluidContained(event.getItemStack()).ifPresent(fluid -> {
-				matchParameters.setFluids(fluid.copy());
-			});
+				FluidUtil.getFluidContained(event.getItemStack()).ifPresent(fluid -> {
+					matchParameters.setFluids(fluid.copy());
+				});
 
-			StaticPowerRecipeRegistry.getRecipe(ThermalConductivityRecipe.RECIPE_TYPE, matchParameters)
-					.ifPresent(recipe -> {
-						event.getToolTip()
-								.add(HeatTooltipUtilities.getHeatRateTooltip(recipe.getThermalConductivity()));
-					});
+				StaticPowerRecipeRegistry.getRecipe(ThermalConductivityRecipe.RECIPE_TYPE, matchParameters).ifPresent(recipe -> {
+					event.getToolTip().add(HeatTooltipUtilities.getHeatRateTooltip(recipe.getThermalConductivity()));
+				});
+			}
 		}
 	}
 

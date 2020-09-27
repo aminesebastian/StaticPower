@@ -12,12 +12,15 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Items;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.widgets.button.ItemButton;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab;
 import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
 
+@OnlyIn(Dist.CLIENT)
 public abstract class AbstractGuiRedstoneTab extends BaseGuiTab {
 
 	public ItemButton ignoreRedstoneButton;

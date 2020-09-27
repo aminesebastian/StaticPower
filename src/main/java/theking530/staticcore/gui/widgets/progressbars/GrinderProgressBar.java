@@ -2,10 +2,13 @@ package theking530.staticcore.gui.widgets.progressbars;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.gui.GuiTextures;
 
+@OnlyIn(Dist.CLIENT)
 public class GrinderProgressBar extends AbstractProgressBar {
 
 	public GrinderProgressBar(int xPosition, int yPosition) {

@@ -5,10 +5,13 @@ import java.util.List;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.api.heat.IHeatStorage;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.Vector2D;
 
+@OnlyIn(Dist.CLIENT)
 public class GuiHeatBarFromHeatStorage extends AbstractGuiWidget {
 
 	private IHeatStorage heatStorage;

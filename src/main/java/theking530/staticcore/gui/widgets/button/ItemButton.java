@@ -8,8 +8,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.utilities.Vector2D;
 
+@OnlyIn(Dist.CLIENT)
 public class ItemButton extends StandardButton {
 
 	protected final ItemStack itemIcon;

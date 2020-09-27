@@ -19,7 +19,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import theking530.staticcore.gui.ContainerOpener;
+import theking530.staticcore.container.ContainerOpener;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.cables.AbstractCableProviderComponent;

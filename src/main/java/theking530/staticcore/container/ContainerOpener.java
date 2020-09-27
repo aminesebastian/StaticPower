@@ -1,4 +1,4 @@
-package theking530.staticcore.gui;
+package theking530.staticcore.container;
 
 import java.util.Objects;
 import java.util.function.Consumer;

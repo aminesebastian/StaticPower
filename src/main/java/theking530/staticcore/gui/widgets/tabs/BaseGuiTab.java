@@ -16,6 +16,8 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.WidgetContainer;
 import theking530.staticcore.gui.drawables.IDrawable;
 import theking530.staticcore.gui.drawables.ItemDrawable;
@@ -33,6 +35,7 @@ import theking530.staticpower.client.gui.GuiTextures;
  * @author Amine Sebastian
  *
  */
+@OnlyIn(Dist.CLIENT)
 public abstract class BaseGuiTab {
 	/**
 	 * Data type for the animation state of the tab.

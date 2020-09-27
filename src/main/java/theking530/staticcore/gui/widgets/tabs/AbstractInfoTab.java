@@ -19,10 +19,13 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.drawables.IDrawable;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.client.gui.GuiTextures;
 
+@OnlyIn(Dist.CLIENT)
 public abstract class AbstractInfoTab extends BaseGuiTab {
 	public static final float LINE_HEIGHT = 10.5f;
 	public static final float LINE_BREAK_HEIGHT = 8.0f;

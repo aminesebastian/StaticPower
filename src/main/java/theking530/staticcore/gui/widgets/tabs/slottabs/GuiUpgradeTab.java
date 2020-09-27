@@ -3,6 +3,8 @@ package theking530.staticcore.gui.widgets.tabs.slottabs;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab;
 import theking530.staticcore.gui.widgets.tabs.PacketGuiTabAddSlots;
 import theking530.staticpower.client.gui.GuiTextures;
@@ -14,6 +16,7 @@ import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.utilities.InventoryUtilities;
 
+@OnlyIn(Dist.CLIENT)
 public class GuiUpgradeTab extends BaseGuiTab {
 	private final InventoryComponent upgradesInventory;
 	private final List<Integer> slotIndecies;

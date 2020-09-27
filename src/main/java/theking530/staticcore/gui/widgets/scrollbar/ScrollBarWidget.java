@@ -2,6 +2,8 @@ package theking530.staticcore.gui.widgets.scrollbar;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
@@ -9,6 +11,7 @@ import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.StaticPowerSprites;
 
+@OnlyIn(Dist.CLIENT)
 public class ScrollBarWidget extends AbstractGuiWidget {
 	private int scrollAmount;
 	private int maxScroll;

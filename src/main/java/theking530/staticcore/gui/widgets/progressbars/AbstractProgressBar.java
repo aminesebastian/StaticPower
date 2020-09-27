@@ -10,6 +10,8 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.drawables.IDrawable;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
@@ -25,6 +27,7 @@ import theking530.staticpower.tileentities.components.control.MachineProcessingC
  * @author TheKing530
  *
  */
+@OnlyIn(Dist.CLIENT)
 public abstract class AbstractProgressBar extends AbstractGuiWidget {
 	/**
 	 * The machine processing component this progress bar is bound to (if one

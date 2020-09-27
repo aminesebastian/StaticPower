@@ -7,12 +7,16 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabState;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.gui.StaticPowerContainerGui;
 
+
+@OnlyIn(Dist.CLIENT)
 public class GuiTabManager extends AbstractGuiWidget {
 
 	private List<BaseGuiTab> registeredTabs;
@@ -105,8 +109,7 @@ public class GuiTabManager extends AbstractGuiWidget {
 				}
 			}
 			int adjustedOffset = Math.min(tabPositionY + (i * 25) + offset, maxOffset);
-			rightTabs.get(i).updateTabPosition(tabPositionX, adjustedOffset, partialTicks, mouseX, mouseY,
-					Math.max(0, rightTabs.size() - i - 1));
+			rightTabs.get(i).updateTabPosition(tabPositionX, adjustedOffset, partialTicks, mouseX, mouseY, Math.max(0, rightTabs.size() - i - 1));
 			rightTabs.get(i).drawTabPanel(matrix, partialTicks);
 			if (rightTabs.get(i).isOpen()) {
 				rightTabs.get(i).renderBackground(matrix, mouseX, mouseY, partialTicks);
@@ -121,8 +124,8 @@ public class GuiTabManager extends AbstractGuiWidget {
 				}
 			}
 			int adjustedOffset = Math.min(tabPositionY + (i * 25) + offset, maxOffset);
-			leftTabs.get(i).updateTabPosition((int) (tabPositionX - getOwnerSize().getX() - 21), adjustedOffset,
-					partialTicks, mouseX, mouseY, Math.max(0, leftTabs.size() - i - 1));
+			leftTabs.get(i).updateTabPosition((int) (tabPositionX - getOwnerSize().getX() - 21), adjustedOffset, partialTicks, mouseX, mouseY,
+					Math.max(0, leftTabs.size() - i - 1));
 			leftTabs.get(i).drawTabPanel(matrix, partialTicks);
 			if (leftTabs.get(i).isOpen()) {
 				leftTabs.get(i).renderBackground(matrix, mouseX, mouseY, partialTicks);

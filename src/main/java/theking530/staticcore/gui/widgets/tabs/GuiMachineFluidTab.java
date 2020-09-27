@@ -3,12 +3,15 @@ package theking530.staticcore.gui.widgets.tabs;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.drawables.ItemDrawable;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 
+@OnlyIn(Dist.CLIENT)
 public class GuiMachineFluidTab extends AbstractInfoTab {
 	protected FluidTankComponent fluidTank;
 

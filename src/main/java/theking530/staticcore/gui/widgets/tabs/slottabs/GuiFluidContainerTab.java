@@ -7,6 +7,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.widgets.button.SpriteButton;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
@@ -23,6 +25,7 @@ import theking530.staticpower.tileentities.components.items.FluidContainerInvent
 import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 
+@OnlyIn(Dist.CLIENT)
 public class GuiFluidContainerTab extends BaseGuiTab {
 	private final FluidContainerInventoryComponent fluidContainerComponent;
 	private final List<Integer> fluidConatinerInventoryIndecies;

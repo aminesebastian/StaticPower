@@ -22,7 +22,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.items.IItemHandler;
-import theking530.staticcore.gui.ContainerOpener;
+import theking530.staticcore.container.ContainerOpener;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.network.NetworkGUI;
 import theking530.staticcore.utilities.TriFunction;

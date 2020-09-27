@@ -16,8 +16,11 @@ import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.utilities.Color;
 
+@OnlyIn(Dist.CLIENT)
 public class SpriteButton extends StandardButton {
 	private ResourceLocation regularTexture;
 	private ResourceLocation hoveredTexture;

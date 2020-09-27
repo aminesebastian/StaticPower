@@ -11,6 +11,8 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget.EInputResult;
 import theking530.staticcore.utilities.Vector2D;
@@ -22,6 +24,7 @@ import theking530.staticpower.client.gui.StaticPowerContainerGui;
  * @author Amine Sebastian
  *
  */
+@OnlyIn(Dist.CLIENT)
 public class WidgetContainer {
 	protected final HashSet<AbstractGuiWidget> widgets;
 	@Nullable

@@ -11,9 +11,13 @@ import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
 
+
+@OnlyIn(Dist.CLIENT)
 public class SpriteDrawable implements IDrawable {
 	private ResourceLocation sprite;
 	private Vector2D size;
@@ -67,32 +71,21 @@ public class SpriteDrawable implements IDrawable {
 				// Bind the texture atlas.
 				Minecraft.getInstance().getTextureManager().bindTexture(sprite);
 				// Draw the sprite.
-				vertexbuffer.pos(x, y + size.getY(), z)
-						.color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(0.0f, 1.0f)
-						.endVertex();
-				vertexbuffer.pos(x, y, z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha())
-						.tex(0.0f, 0.0f).endVertex();
-				vertexbuffer.pos(x + size.getX(), y, z)
-						.color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(1.0f, 0.0f)
-						.endVertex();
-				vertexbuffer.pos(x + size.getX(), y + size.getY(), z)
-						.color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(1.0f, 1.0f)
-						.endVertex();
+				vertexbuffer.pos(x, y + size.getY(), z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(0.0f, 1.0f).endVertex();
+				vertexbuffer.pos(x, y, z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(0.0f, 0.0f).endVertex();
+				vertexbuffer.pos(x + size.getX(), y, z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(1.0f, 0.0f).endVertex();
+				vertexbuffer.pos(x + size.getX(), y + size.getY(), z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(1.0f, 1.0f).endVertex();
 				tessellator.draw();
 
 			} else {
 				Minecraft.getInstance().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 				// Draw the sprite.
-				vertexbuffer.pos(x, y + size.getY(), z)
-						.color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha())
-						.tex(spriteTexture.getMinU(), spriteTexture.getMaxV()).endVertex();
-				vertexbuffer.pos(x, y, z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha())
-						.tex(spriteTexture.getMinU(), spriteTexture.getMinV()).endVertex();
-				vertexbuffer.pos(x + size.getX(), y, z)
-						.color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha())
-						.tex(spriteTexture.getMaxU(), spriteTexture.getMinV()).endVertex();
-				vertexbuffer.pos(x + size.getX(), y + size.getY(), z)
-						.color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha())
+				vertexbuffer.pos(x, y + size.getY(), z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(spriteTexture.getMinU(), spriteTexture.getMaxV())
+						.endVertex();
+				vertexbuffer.pos(x, y, z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(spriteTexture.getMinU(), spriteTexture.getMinV()).endVertex();
+				vertexbuffer.pos(x + size.getX(), y, z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(spriteTexture.getMaxU(), spriteTexture.getMinV())
+						.endVertex();
+				vertexbuffer.pos(x + size.getX(), y + size.getY(), z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha())
 						.tex(spriteTexture.getMaxU(), spriteTexture.getMaxV()).endVertex();
 				tessellator.draw();
 			}
