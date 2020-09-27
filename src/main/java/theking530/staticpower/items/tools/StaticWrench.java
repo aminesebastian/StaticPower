@@ -35,10 +35,12 @@ public class StaticWrench extends StaticPowerItem implements IWrenchTool {
 			if (!playerIn.isSneaking()) {
 				if (getWrenchMode(itemStack).ordinal() + 1 <= RegularWrenchMode.values().length - 1) {
 					setWrenchMode(itemStack, RegularWrenchMode.values()[getWrenchMode(itemStack).ordinal() + 1]);
-					playerIn.sendMessage(new StringTextComponent("Wrench Mode: " + getWrenchMode(itemStack).toString()));
+					playerIn.sendMessage(new StringTextComponent("Wrench Mode: " + getWrenchMode(itemStack).toString()),
+							playerIn.getUniqueID());
 				} else {
 					setWrenchMode(itemStack, RegularWrenchMode.values()[0]);
-					playerIn.sendMessage(new StringTextComponent("Wrench Mode: " + getWrenchMode(itemStack).toString()));
+					playerIn.sendMessage(new StringTextComponent("Wrench Mode: " + getWrenchMode(itemStack).toString()),
+							playerIn.getUniqueID());
 				}
 			}
 		}
@@ -46,27 +48,31 @@ public class StaticWrench extends StaticPowerItem implements IWrenchTool {
 	}
 
 	@Override
-	protected ActionResultType onStaticPowerItemUsedOnBlock(ItemUseContext context, World world, BlockPos pos, Direction face, PlayerEntity player, ItemStack item) {
+	protected ActionResultType onStaticPowerItemUsedOnBlock(ItemUseContext context, World world, BlockPos pos,
+			Direction face, PlayerEntity player, ItemStack item) {
 		if (item != null) {
 			if (world.getBlockState(pos).getBlock() instanceof IWrenchable) {
 				IWrenchable block = (IWrenchable) world.getBlockState(pos).getBlock();
 				player.swingArm(Hand.MAIN_HAND);
 				if (!player.isSneaking()) {
-					ActionResultType result = block.wrenchBlock(player, getWrenchMode(item), item, world, pos, face, true);
+					ActionResultType result = block.wrenchBlock(player, getWrenchMode(item), item, world, pos, face,
+							true);
 					if (result == ActionResultType.SUCCESS) {
 						playWrenchSound(world, pos);
 						return result;
 					}
 				} else {
 					if (world.getBlockState(pos).getBlock() instanceof IWrenchable) {
-						ActionResultType result = block.sneakWrenchBlock(player, getSneakWrenchMode(item), item, world, pos, face, true);
+						ActionResultType result = block.sneakWrenchBlock(player, getSneakWrenchMode(item), item, world,
+								pos, face, true);
 						if (result == ActionResultType.SUCCESS) {
 							playWrenchSound(world, pos);
 							return result;
 						}
 					}
 				}
-			} else if (world.getBlockState(pos).getProperties().contains(BlockStateProperties.AXIS) && getWrenchMode(item) == RegularWrenchMode.ROTATE) {
+			} else if (world.getBlockState(pos).getProperties().contains(BlockStateProperties.AXIS)
+					&& getWrenchMode(item) == RegularWrenchMode.ROTATE) {
 				// If on the server, rotate the block to face the axis that was rightclicked by
 				// the wrench.
 				BlockState rotatedState = world.getBlockState(pos);
@@ -76,7 +82,8 @@ public class StaticWrench extends StaticPowerItem implements IWrenchTool {
 						world.setBlockState(pos, rotatedState, 1 | 2);
 					}
 				}
-				world.playSound(null, pos, SoundEvents.ITEM_BOOK_PUT, SoundCategory.BLOCKS, 0.5F, (float) (1.0F + Math.random() * 0.5));
+				world.playSound(null, pos, SoundEvents.ITEM_BOOK_PUT, SoundCategory.BLOCKS, 0.5F,
+						(float) (1.0F + Math.random() * 0.5));
 				return ActionResultType.SUCCESS;
 			}
 		}
@@ -84,7 +91,8 @@ public class StaticWrench extends StaticPowerItem implements IWrenchTool {
 	}
 
 	public void playWrenchSound(World world, BlockPos pos) {
-		world.playSound(null, pos, SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 0.15F, (float) (0.5F + Math.random() * 2.0));
+		world.playSound(null, pos, SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 0.15F,
+				(float) (0.5F + Math.random() * 2.0));
 	}
 
 	@Override

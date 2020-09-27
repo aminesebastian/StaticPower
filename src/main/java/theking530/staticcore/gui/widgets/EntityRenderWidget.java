@@ -1,5 +1,7 @@
 package theking530.staticcore.gui.widgets;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.entity.LivingEntity;
 import theking530.staticcore.gui.GuiDrawUtilities;
@@ -15,7 +17,7 @@ public class EntityRenderWidget extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderBehindItems(int mouseX, int mouseY, float partialTicks) {
+	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 		// Calculate the scale.
 		int scale = (int) (getSize().getX() + getSize().getY()) / 4;
 

@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -31,12 +32,13 @@ public class DigistoreMonoCard extends DigistoreCard implements ICustomModelSupp
 	@Override
 	public ITextComponent getDisplayName(ItemStack stack) {
 		// Get the item name.
-		ITextComponent cardName = super.getDisplayName(stack);
+		IFormattableTextComponent cardName = (IFormattableTextComponent) super.getDisplayName(stack);
 
 		// If this card contains an item, append it's display name.
 		IDigistoreInventory inventory = DigistoreCard.getInventory(stack);
 		if (!inventory.getDigistoreStack(0).getStoredItem().isEmpty()) {
-			cardName.appendText(" (").appendSibling(inventory.getDigistoreStack(0).getStoredItem().getDisplayName()).appendText(")");
+			cardName.appendString(" (").append(inventory.getDigistoreStack(0).getStoredItem().getDisplayName())
+					.appendString(")");
 		}
 
 		// Return the final name.
@@ -49,7 +51,8 @@ public class DigistoreMonoCard extends DigistoreCard implements ICustomModelSupp
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-		int capacity = TierReloadListener.getTier(tierType).getDigistoreCapacity() * (MAX_UNIQUE_ITEM_TYPES_PER_CARD / 8);
+		int capacity = TierReloadListener.getTier(tierType).getDigistoreCapacity()
+				* (MAX_UNIQUE_ITEM_TYPES_PER_CARD / 8);
 
 		// Cover in case of integer overflow, we max at int.max.
 		return new DigistoreInventoryCapabilityProvider(stack, 1, capacity < 0 ? Integer.MAX_VALUE : capacity, nbt);
@@ -61,7 +64,7 @@ public class DigistoreMonoCard extends DigistoreCard implements ICustomModelSupp
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)	
+	@OnlyIn(Dist.CLIENT)
 	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
 		return new DigistoreMonoCardItemModel(existingModel);
 	}

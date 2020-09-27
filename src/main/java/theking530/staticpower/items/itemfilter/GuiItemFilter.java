@@ -3,6 +3,8 @@ package theking530.staticpower.items.itemfilter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -64,6 +66,15 @@ public class GuiItemFilter extends StaticPowerItemStackGui<ContainerItemFilter, 
 		nbtButton.setToggleable(true).setToggled(getItemFilter().filterForNBT(getItemStack())).setTooltip(new TranslationTextComponent("Enable NBT Match"));
 		tagButton.setToggleable(true).setToggled(getItemFilter().filterForTag(getItemStack())).setTooltip(new TranslationTextComponent("Enable Ore Dictionary Match"));
 		modButton.setToggleable(true).setToggled(getItemFilter().filterForMod(getItemStack())).setTooltip(new TranslationTextComponent("Enable Mod Match"));
+
+		if (this.getContainer().filterInventory.getSlots() > 9) {
+			int additionalHeight = 16;
+			this.setDesieredGuiSize(xSize, ySize + additionalHeight - 4);
+			whitelistButton.setPosition(whitelistButton.getPosition().getX(), whitelistButton.getPosition().getY() + additionalHeight);
+			nbtButton.setPosition(nbtButton.getPosition().getX(), nbtButton.getPosition().getY() + additionalHeight);
+			tagButton.setPosition(tagButton.getPosition().getX(), tagButton.getPosition().getY() + additionalHeight);
+			modButton.setPosition(modButton.getPosition().getX(), modButton.getPosition().getY() + additionalHeight);
+		}
 	}
 
 	public void buttonPressed(StandardButton button, MouseButton mouseButton) {
@@ -83,13 +94,13 @@ public class GuiItemFilter extends StaticPowerItemStackGui<ContainerItemFilter, 
 		}
 
 		// Send a packet to the server with the updated values.
-		NetworkMessage msg = new PacketItemFilter(getItemFilter().isWhiteListMode(getItemStack()), getItemFilter().filterForNBT(getItemStack()), getItemFilter().filterForTag(getItemStack()),
-				getItemFilter().filterForMod(getItemStack()));
+		NetworkMessage msg = new PacketItemFilter(getItemFilter().isWhiteListMode(getItemStack()), getItemFilter().filterForNBT(getItemStack()),
+				getItemFilter().filterForTag(getItemStack()), getItemFilter().filterForMod(getItemStack()));
 		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
 	}
 
 	@Override
-	protected void drawBackgroundExtras(float f, int i, int j) {
+	protected void drawBackgroundExtras(MatrixStack stack, float f, int i, int j) {
 		drawGenericBackground();
 		drawContainerSlots(container.inventorySlots);
 	}

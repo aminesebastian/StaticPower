@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ITickTimer;
@@ -16,6 +18,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
@@ -31,7 +34,8 @@ import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 
 public class FluidGeneratorRecipeCateogry extends BaseJEIRecipeCategory<FluidGeneratorRecipe> {
-	public static final ResourceLocation FLUID_GENERATOR_UID = new ResourceLocation(StaticPower.MOD_ID, "fluid_generator");
+	public static final ResourceLocation FLUID_GENERATOR_UID = new ResourceLocation(StaticPower.MOD_ID,
+			"fluid_generator");
 
 	private final TranslationTextComponent locTitle;
 	private final IDrawable background;
@@ -59,7 +63,7 @@ public class FluidGeneratorRecipeCateogry extends BaseJEIRecipeCategory<FluidGen
 	@Override
 	@Nonnull
 	public String getTitle() {
-		return locTitle.getFormattedText();
+		return locTitle.getString();
 	}
 
 	@Override
@@ -79,31 +83,34 @@ public class FluidGeneratorRecipeCateogry extends BaseJEIRecipeCategory<FluidGen
 	}
 
 	@Override
-	public void draw(FluidGeneratorRecipe recipe, double mouseX, double mouseY) {
+	public void draw(FluidGeneratorRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
 		// This doesn't actually draw the fluid, just the bars.
 		GuiFluidBarUtilities.drawFluidBar(recipe.getFluid(), 0, 0, 77, 54, 1.0f, 16, 48, MachineSideMode.Never, true);
-		GuiPowerBarUtilities.drawPowerBar(8, 54, 16, 48, 1.0f, recipe.getPowerGeneration(), recipe.getPowerGeneration());
+		GuiPowerBarUtilities.drawPowerBar(8, 54, 16, 48, 1.0f, recipe.getPowerGeneration(),
+				recipe.getPowerGeneration());
 
 		// Draw the progress bars.
 		pBar.setCurrentProgress(processingTimer.getValue());
 		pBar.setMaxProgress(processingTimer.getMaxValue());
-		pBar.renderBehindItems((int) mouseX, (int) mouseY, 0.0f);
+		pBar.renderBehindItems(null, (int) mouseX, (int) mouseY, 0.0f);
 
 		flameBar.setCurrentProgress(processingTimer.getValue());
 		flameBar.setMaxProgress(processingTimer.getMaxValue());
-		flameBar.renderBehindItems((int) mouseX, (int) mouseY, 0.0f);
+		flameBar.renderBehindItems(null, (int) mouseX, (int) mouseY, 0.0f);
 
 		FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;
-		String powerGeneration = GuiTextUtilities.formatEnergyRateToString(recipe.getPowerGeneration()).getFormattedText();
-		fontRenderer.drawString(powerGeneration, 51 - (fontRenderer.getStringWidth(powerGeneration) / 2), 5, Color.EIGHT_BIT_DARK_GREY.encodeInInteger());
-	
+		String powerGeneration = GuiTextUtilities.formatEnergyRateToString(recipe.getPowerGeneration()).getString();
+		fontRenderer.drawString(matrixStack, powerGeneration, 51 - (fontRenderer.getStringWidth(powerGeneration) / 2),
+				5, Color.EIGHT_BIT_DARK_GREY.encodeInInteger());
+
 	}
 
 	@Override
-	public List<String> getTooltipStrings(FluidGeneratorRecipe recipe, double mouseX, double mouseY) {
-		List<String> output = new ArrayList<String>();
+	public List<ITextComponent> getTooltipStrings(FluidGeneratorRecipe recipe, double mouseX, double mouseY) {
+		List<ITextComponent> output = new ArrayList<ITextComponent>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new StringTextComponent("Generates: ").appendSibling(GuiTextUtilities.formatEnergyRateToString(recipe.getPowerGeneration())).getFormattedText());
+			output.add(new StringTextComponent("Generates: ")
+					.append(GuiTextUtilities.formatEnergyRateToString(recipe.getPowerGeneration())));
 		}
 
 		return output;

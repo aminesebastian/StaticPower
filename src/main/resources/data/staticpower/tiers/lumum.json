@@ -21,7 +21,7 @@
 	"digistoreCapacity": 262144,
 	"batteryCapacity": 100000,
 	"itemCableMaxSpeed": 5,
-	"itemFilterSlots": 12,
+	"itemFilterSlots": 18,
 	"itemCableAcceleration": 2.0,
 	"itemCableFriction": 1.5,
 	"drillBitUses": 16000,

@@ -2,6 +2,8 @@ package theking530.staticcore.gui.widgets.tabs.redstonecontrol;
 
 import org.lwjgl.opengl.GL11;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -25,22 +27,27 @@ public abstract class AbstractGuiRedstoneTab extends BaseGuiTab {
 	public AbstractGuiRedstoneTab(RedstoneMode currentMode) {
 		super("Redstone Control", 100, 85, GuiTextures.RED_TAB, Items.REDSTONE);
 
-		widgetContainer.registerWidget(ignoreRedstoneButton = new ItemButton(Items.GUNPOWDER, 23, 30, 20, 20, (button, mouseButton) -> {
-			synchronizeRedstoneMode(RedstoneMode.Ignore);
-			updateToggledButton(ignoreRedstoneButton);
-		}));
-		widgetContainer.registerWidget(lowRedstoneButton = new ItemButton(Items.REDSTONE, 53, 30, 20, 20, (button, mouseButton) -> {
-			synchronizeRedstoneMode(RedstoneMode.Low);
-			updateToggledButton(lowRedstoneButton);
-		}));
-		widgetContainer.registerWidget(highRedstoneButton = new ItemButton(Blocks.REDSTONE_TORCH.asItem(), 83, 30, 20, 20, (button, mouseButton) -> {
-			synchronizeRedstoneMode(RedstoneMode.High);
-			updateToggledButton(highRedstoneButton);
-		}));
+		widgetContainer.registerWidget(
+				ignoreRedstoneButton = new ItemButton(Items.GUNPOWDER, 23, 30, 20, 20, (button, mouseButton) -> {
+					synchronizeRedstoneMode(RedstoneMode.Ignore);
+					updateToggledButton(ignoreRedstoneButton);
+				}));
+		widgetContainer.registerWidget(
+				lowRedstoneButton = new ItemButton(Items.REDSTONE, 53, 30, 20, 20, (button, mouseButton) -> {
+					synchronizeRedstoneMode(RedstoneMode.Low);
+					updateToggledButton(lowRedstoneButton);
+				}));
+		widgetContainer.registerWidget(highRedstoneButton = new ItemButton(Blocks.REDSTONE_TORCH.asItem(), 83, 30, 20,
+				20, (button, mouseButton) -> {
+					synchronizeRedstoneMode(RedstoneMode.High);
+					updateToggledButton(highRedstoneButton);
+				}));
 
 		highRedstoneButton.setTooltip(new TranslationTextComponent("gui.staticpower.redstone_mode.high"));
-		ignoreRedstoneButton.setClickSoundPitch(0.7f).setTooltip(new TranslationTextComponent("gui.staticpower.redstone_mode.ignore"));
-		lowRedstoneButton.setClickSoundPitch(0.85f).setTooltip(new TranslationTextComponent("gui.staticpower.redstone_mode.low"));
+		ignoreRedstoneButton.setClickSoundPitch(0.7f)
+				.setTooltip(new TranslationTextComponent("gui.staticpower.redstone_mode.ignore"));
+		lowRedstoneButton.setClickSoundPitch(0.85f)
+				.setTooltip(new TranslationTextComponent("gui.staticpower.redstone_mode.low"));
 
 		// Initialize the correct button.
 		if (currentMode == RedstoneMode.Ignore) {
@@ -53,37 +60,39 @@ public abstract class AbstractGuiRedstoneTab extends BaseGuiTab {
 	}
 
 	@Override
-	public void renderBackground(int mouseX, int mouseY, float partialTicks) {
+	public void renderBackground(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 		drawButtonBG(xPosition - 3, yPosition - 32);
-		super.renderBackground(mouseX, mouseY, partialTicks);
-		drawText(xPosition + 5, yPosition - 35);
+		super.renderBackground(matrix, mouseX, mouseY, partialTicks);
+		drawText(matrix, xPosition + 5, yPosition - 35);
 	}
 
-	protected void drawText(int xPos, int yPos) {
+	protected void drawText(MatrixStack stack, int xPos, int yPos) {
 		String tabName = TextFormatting.YELLOW + "Redstone Config";
 		String redstoneMode = "Mode: ";
 
-		modeText(xPos, yPos);
-		fontRenderer.drawStringWithShadow(redstoneMode, xPos - this.fontRenderer.getStringWidth(redstoneMode) / 2 + 24, yPos + 95, 16777215);
-		fontRenderer.drawStringWithShadow(tabName, xPos - this.fontRenderer.getStringWidth(tabName) / 2 + 58, yPos + 43, 16777215);
+		modeText(stack, xPos, yPos);
+		fontRenderer.drawStringWithShadow(stack, redstoneMode,
+				xPos - this.fontRenderer.getStringWidth(redstoneMode) / 2 + 24, yPos + 95, 16777215);
+		fontRenderer.drawStringWithShadow(stack, tabName, xPos - this.fontRenderer.getStringWidth(tabName) / 2 + 58,
+				yPos + 43, 16777215);
 	}
 
-	protected void modeText(int tabLeft, int tabTop) {
+	protected void modeText(MatrixStack stack, int tabLeft, int tabTop) {
 		if (getCurrentMode() == RedstoneMode.Low) {
-			fontRenderer.drawStringWithShadow("Low", tabLeft + 37, tabTop + 95, 16777215);
-			fontRenderer.drawStringWithShadow("This machine will", tabLeft + 8, tabTop + 110, 16777215);
-			fontRenderer.drawStringWithShadow("only operate with no", tabLeft + 8, tabTop + 118, 16777215);
-			fontRenderer.drawStringWithShadow("signal.", tabLeft + 8, tabTop + 127, 16777215);
+			fontRenderer.drawStringWithShadow(stack, "Low", tabLeft + 37, tabTop + 95, 16777215);
+			fontRenderer.drawStringWithShadow(stack, "This machine will", tabLeft + 8, tabTop + 110, 16777215);
+			fontRenderer.drawStringWithShadow(stack, "only operate with no", tabLeft + 8, tabTop + 118, 16777215);
+			fontRenderer.drawStringWithShadow(stack, "signal.", tabLeft + 8, tabTop + 127, 16777215);
 		} else if (getCurrentMode() == RedstoneMode.High) {
-			fontRenderer.drawStringWithShadow("High", tabLeft + 37, tabTop + 95, 16777215);
-			fontRenderer.drawStringWithShadow("This machine will", tabLeft + 8, tabTop + 110, 16777215);
-			fontRenderer.drawStringWithShadow("only operate with a", tabLeft + 8, tabTop + 118, 16777215);
-			fontRenderer.drawStringWithShadow("redstone signal.", tabLeft + 8, tabTop + 127, 16777215);
+			fontRenderer.drawStringWithShadow(stack, "High", tabLeft + 37, tabTop + 95, 16777215);
+			fontRenderer.drawStringWithShadow(stack, "This machine will", tabLeft + 8, tabTop + 110, 16777215);
+			fontRenderer.drawStringWithShadow(stack, "only operate with a", tabLeft + 8, tabTop + 118, 16777215);
+			fontRenderer.drawStringWithShadow(stack, "redstone signal.", tabLeft + 8, tabTop + 127, 16777215);
 		} else if (getCurrentMode() == RedstoneMode.Ignore) {
-			fontRenderer.drawStringWithShadow("Ignore", tabLeft + 37, tabTop + 95, 16777215);
-			fontRenderer.drawStringWithShadow("This machine will", tabLeft + 8, tabTop + 110, 16777215);
-			fontRenderer.drawStringWithShadow("ignore any redstone", tabLeft + 8, tabTop + 118, 16777215);
-			fontRenderer.drawStringWithShadow("signal.", tabLeft + 8, tabTop + 127, 16777215);
+			fontRenderer.drawStringWithShadow(stack, "Ignore", tabLeft + 37, tabTop + 95, 16777215);
+			fontRenderer.drawStringWithShadow(stack, "This machine will", tabLeft + 8, tabTop + 110, 16777215);
+			fontRenderer.drawStringWithShadow(stack, "ignore any redstone", tabLeft + 8, tabTop + 118, 16777215);
+			fontRenderer.drawStringWithShadow(stack, "signal.", tabLeft + 8, tabTop + 127, 16777215);
 		}
 	}
 

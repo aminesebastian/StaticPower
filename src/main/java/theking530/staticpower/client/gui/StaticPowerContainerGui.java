@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.gui.screen.Screen;
@@ -74,7 +75,8 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * @param guiXSize        The gui's xSize.
 	 * @param guiYSize        The gui's ySize;
 	 */
-	public StaticPowerContainerGui(T container, final PlayerInventory playerInventory, ITextComponent title, int guiXSize, int guiYSize) {
+	public StaticPowerContainerGui(T container, final PlayerInventory playerInventory, ITextComponent title,
+			int guiXSize, int guiYSize) {
 		super(container, playerInventory, title);
 		widgetContainer = new WidgetContainer(this);
 		xSize = guiXSize;
@@ -130,11 +132,9 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * draw the title at a custom location.
 	 */
 	@Override
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-
+	protected void drawGuiContainerForegroundLayer(MatrixStack stack, int mouseX, int mouseY) {
 		// Draw the title.
-		drawContainerTitle(mouseX, mouseY);
+		drawContainerTitle(stack, mouseX, mouseY);
 
 		// Draw the locks for lock slots. We do this in a single pass to avoid having
 		// the flip the GL states a lot.
@@ -158,32 +158,34 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * the widget backgrounds, the tabs, and buttons.
 	 */
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+	protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
 		// Renders the dark background.
-		renderBackground();
+		renderBackground(stack);
 
 		// Update the widgets and then draw the background.
-		widgetContainer.update(new Vector2D(getGuiLeft(), getGuiTop()), new Vector2D(getXSize(), getYSize()), partialTicks, mouseX, mouseY);
-		widgetContainer.renderBackground(mouseX, mouseY, partialTicks);
+		widgetContainer.update(new Vector2D(getGuiLeft(), getGuiTop()), new Vector2D(getXSize(), getYSize()),
+				partialTicks, mouseX, mouseY);
+		widgetContainer.renderBackground(stack, mouseX, mouseY, partialTicks);
 
 		// Draw the container background.
 		drawGenericBackground();
 
 		// Draw any extras.
-		drawBackgroundExtras(partialTicks, mouseX, mouseY);
+		drawBackgroundExtras(stack, partialTicks, mouseX, mouseY);
 
 		// Draw the slots.
 		if (container instanceof StaticPowerTileEntityContainer) {
-			drawContainerSlots(container.inventorySlots, ((StaticPowerTileEntityContainer<?>) container).getTileEntity().getComponent(SideConfigurationComponent.class));
+			drawContainerSlots(container.inventorySlots, ((StaticPowerTileEntityContainer<?>) container).getTileEntity()
+					.getComponent(SideConfigurationComponent.class));
 		} else {
 			drawContainerSlots(container.inventorySlots);
 		}
 
 		// Draw any widgets that need to appear above slots/items.
-		widgetContainer.renderBehindItems(mouseX, mouseY, partialTicks);
+		widgetContainer.renderBehindItems(stack, mouseX, mouseY, partialTicks);
 
 		// Draw anything infront of the background but behind the items.
-		drawBehindItems(partialTicks, mouseX, mouseY);
+		drawBehindItems(stack, partialTicks, mouseX, mouseY);
 
 		// Animations the screensize if the target sizes have changed.
 		animateScreenSize();
@@ -193,8 +195,8 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * Renders the UI.
 	 */
 	@Override
-	public void render(int mouseX, int mouseY, float partialTicks) {
-		super.render(mouseX, mouseY, partialTicks);
+	public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+		super.render(stack, mouseX, mouseY, partialTicks);
 
 		// Cache the partial ticks.
 		this.partialTicks = partialTicks;
@@ -203,18 +205,18 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		widgetContainer.handleMouseMove(mouseX, mouseY);
 
 		// Render the foreground of all the widgets.
-		widgetContainer.renderForegound(mouseX, mouseY, partialTicks);
+		widgetContainer.renderForegound(stack, mouseX, mouseY, partialTicks);
 
 		drawSlotOverlays(container.inventorySlots);
 
 		// Draw any additional foreground elements.
-		drawForegroundExtras(partialTicks, mouseX, mouseY);
+		drawForegroundExtras(stack, partialTicks, mouseX, mouseY);
 
 		// Renders any hovered tooltips.
-		renderHoveredToolTip(mouseX, mouseY);
+		renderHoveredTooltip(stack, mouseX, mouseY);
 
 		// Render the widget tooltips as needed.
-		widgetContainer.renderTooltips(mouseX, mouseY);
+		widgetContainer.renderTooltips(stack, mouseX, mouseY);
 	}
 
 	@Override
@@ -223,7 +225,8 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		// regular clicked chain. Use the SWAP just as a placeholder.
 		if (Screen.hasControlDown()) {
 			if (hoveredSlot != null) {
-				handleMouseClick(hoveredSlot, hoveredSlot.slotNumber, StaticPowerContainer.INVENTORY_COMPONENT_LOCK_MOUSE_BUTTON, ClickType.SWAP);
+				handleMouseClick(hoveredSlot, hoveredSlot.slotNumber,
+						StaticPowerContainer.INVENTORY_COMPONENT_LOCK_MOUSE_BUTTON, ClickType.SWAP);
 				return true;
 			}
 			return false;
@@ -290,19 +293,21 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * @param mouseX The mouse's x position.
 	 * @param mouseY The mouse's y position.
 	 */
-	protected void drawContainerTitle(int mouseX, int mouseY) {
+	protected void drawContainerTitle(MatrixStack stack, int mouseX, int mouseY) {
 		// Draw the container title if requested at the designated location.
 		if (shouldDrawContainerLabel()) {
 			Vector2D containerLabelLocation = getContainerLabelDrawLocation();
 			ITextComponent containerName = getTitle();
 			String containerString = containerName.getString();
-			font.drawString(containerString, containerLabelLocation.getX(), containerLabelLocation.getY(), 4210752);
+			font.drawString(stack, containerString, containerLabelLocation.getX(), containerLabelLocation.getY(),
+					4210752);
 		}
 
 		// Draw the inventory label if requested at the designated location.
 		if (shouldDrawInventoryLabel()) {
 			Vector2D inventoryLabelLocation = getInventoryLabelDrawLocation();
-			font.drawString(playerInventory.getDisplayName().getFormattedText(), inventoryLabelLocation.getX(), inventoryLabelLocation.getY(), 4210752);
+			font.drawString(stack, playerInventory.getDisplayName().getString(), inventoryLabelLocation.getX(),
+					inventoryLabelLocation.getY(), 4210752);
 		}
 	}
 
@@ -354,11 +359,12 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * Override this method to draw any additional background features (features
 	 * that should appear behind items).
 	 * 
+	 * @param stack        TODO
 	 * @param partialTicks The delta time.
 	 * @param mouseX       The mouse's x position.
 	 * @param mouseY       The mouse's y position.
 	 */
-	protected void drawBackgroundExtras(float partialTicks, int mouseX, int mouseY) {
+	protected void drawBackgroundExtras(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
 
 	}
 
@@ -366,11 +372,12 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * Override this method to draw any additional background features (features
 	 * that should appear infront of the background, but behind items.).
 	 * 
+	 * @param stack        TODO
 	 * @param partialTicks The delta time.
 	 * @param mouseX       The mouse's x position.
 	 * @param mouseY       The mouse's y position.
 	 */
-	protected void drawBehindItems(float partialTicks, int mouseX, int mouseY) {
+	protected void drawBehindItems(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
 
 	}
 
@@ -378,11 +385,12 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * Override this method to draw any additional foreground features (features
 	 * that should appear in front of items).
 	 * 
+	 * @param stack        TODO
 	 * @param partialTicks The delta time.
 	 * @param mouseX       The mouse's x position.
 	 * @param mouseY       The mouse's y position.
 	 */
-	protected void drawForegroundExtras(float partialTicks, int mouseX, int mouseY) {
+	protected void drawForegroundExtras(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
 	}
 
 	/**
@@ -430,8 +438,10 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * @param borderTint      The tint to apply to the border (the two pixel rounded
 	 *                        corner border).
 	 */
-	public void drawGenericBackground(int xPos, int yPos, int width, int height, Color backgroundColor, Color borderTint) {
-		GuiDrawUtilities.drawGenericBackground(width, height, xPos + guiLeft, yPos + guiTop, 0.0f, backgroundColor, borderTint, true, true, true, true);
+	public void drawGenericBackground(int xPos, int yPos, int width, int height, Color backgroundColor,
+			Color borderTint) {
+		GuiDrawUtilities.drawGenericBackground(width, height, xPos + guiLeft, yPos + guiTop, 0.0f, backgroundColor,
+				borderTint, true, true, true, true);
 	}
 
 	/**
@@ -452,8 +462,8 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	}
 
 	@Override
-	public void drawSlot(Slot slotIn) {
-		super.drawSlot(slotIn);
+	public void moveItems(MatrixStack stack, Slot slotIn) {
+		super.moveItems(stack, slotIn);
 	}
 
 	/**
@@ -496,7 +506,8 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		for (Slot slot : slots) {
 			if (slot instanceof StaticPowerContainerSlot) {
 				StaticPowerContainerSlot handlerSlot = (StaticPowerContainerSlot) slot;
-				int slotSize = handlerSlot.getMode().isOutputMode() ? outputSlotSize : handlerSlot.getMode().isInputMode() ? inputSlotSize : 16;
+				int slotSize = handlerSlot.getMode().isOutputMode() ? outputSlotSize
+						: handlerSlot.getMode().isInputMode() ? inputSlotSize : 16;
 				int sizePosOffset = (slotSize - 16) / 2;
 				handlerSlot.drawSlotOverlay(itemRenderer, guiLeft, guiTop, slotSize, sizePosOffset);
 			}
@@ -532,31 +543,39 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 				MachineSideMode intendedMode = handlerSlot.getMode();
 
 				// If the slot is an output slot, increase the size of the slot.
-				int slotSize = intendedMode.isOutputMode() || slot instanceof OutputSlot ? outputSlotSize : handlerSlot.getMode().isInputMode() ? inputSlotSize : 16;
+				int slotSize = intendedMode.isOutputMode() || slot instanceof OutputSlot ? outputSlotSize
+						: handlerSlot.getMode().isInputMode() ? inputSlotSize : 16;
 				int sizePosOffset = (slotSize - 16) / 2;
 
 				// If side configuration is present, draw the slow with a border.
 				if (sideConfiguration != null) {
 					if (intendedMode != MachineSideMode.Regular && intendedMode != MachineSideMode.Never) {
 						// Get the side mode to draw with.
-						MachineSideMode drawnSideMode = sideConfiguration.getCountOfSidesWithMode(intendedMode) > 0 ? intendedMode : MachineSideMode.Regular;
+						MachineSideMode drawnSideMode = sideConfiguration.getCountOfSidesWithMode(intendedMode) > 0
+								? intendedMode
+								: MachineSideMode.Regular;
 
 						// If the drawn side is regular, check to see if we can render one of the two
 						// general output or input modes.
 						if (drawnSideMode == MachineSideMode.Regular) {
-							if (intendedMode.isOutputMode() && sideConfiguration.getCountOfSidesWithMode(MachineSideMode.Output) > 0) {
+							if (intendedMode.isOutputMode()
+									&& sideConfiguration.getCountOfSidesWithMode(MachineSideMode.Output) > 0) {
 								drawnSideMode = MachineSideMode.Output;
-							} else if (intendedMode.isInputMode() && sideConfiguration.getCountOfSidesWithMode(MachineSideMode.Input) > 0) {
+							} else if (intendedMode.isInputMode()
+									&& sideConfiguration.getCountOfSidesWithMode(MachineSideMode.Input) > 0) {
 								drawnSideMode = MachineSideMode.Input;
 							}
 						}
 
-						drawEmptySlot(slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset, slotSize, slotSize, drawnSideMode);
+						drawEmptySlot(slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset, slotSize,
+								slotSize, drawnSideMode);
 					} else {
-						drawEmptySlot(slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset, slotSize, slotSize);
+						drawEmptySlot(slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset, slotSize,
+								slotSize);
 					}
 				} else {
-					drawEmptySlot(slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset, slotSize, slotSize);
+					drawEmptySlot(slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset, slotSize,
+							slotSize);
 				}
 
 				// Check if this slot's inventory is an InventoryComponent
@@ -566,10 +585,13 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 					if (component.areSlotsLockable()) {
 						// If the slot is locked, render the phantom item & the lock indicator.
 						if (component.isSlotLocked(slot.getSlotIndex())) {
-							itemRenderer.drawItem(component.getLockedSlotFilter(slot.getSlotIndex()), guiLeft, guiTop, slot.xPos, slot.yPos, 0.5f);
+							itemRenderer.drawItem(component.getLockedSlotFilter(slot.getSlotIndex()), guiLeft, guiTop,
+									slot.xPos, slot.yPos, 0.5f);
 						}
 						// Draw the yellow line lockable indicator.
-						GuiDrawUtilities.drawColoredRectangle(slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset + slotSize, slotSize, 1.0f, 1.0f, new Color(0.9f, 0.8f, 0));
+						GuiDrawUtilities.drawColoredRectangle(slot.xPos + guiLeft - sizePosOffset,
+								slot.yPos + guiTop - sizePosOffset + slotSize, slotSize, 1.0f, 1.0f,
+								new Color(0.9f, 0.8f, 0));
 					}
 				}
 
@@ -670,7 +692,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	}
 
 	@Override
-	public void removed() {
-		super.removed();
+	public void closeScreen() {
+		super.closeScreen();
 	}
 }

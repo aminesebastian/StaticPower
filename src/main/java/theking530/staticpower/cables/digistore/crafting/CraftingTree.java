@@ -221,7 +221,7 @@ public class CraftingTree {
 		}
 
 		public String printDebug() {
-			String item = targetIngredient.hasNoMatchingItems() ? targetIngredient.toString() : targetIngredient.getMatchingStacks()[0].getDisplayName().getFormattedText();
+			String item = targetIngredient.hasNoMatchingItems() ? targetIngredient.toString() : targetIngredient.getMatchingStacks()[0].getDisplayName().getString();
 			String required = (" \tRequired: " + amountRequired);
 			if (pattern != null) {
 				String output = " \tCrafting Output: " + pattern.getOutput().getCount();

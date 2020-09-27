@@ -105,7 +105,7 @@ public class CableNetwork {
 		// Allocate the output list.
 		List<ITextComponent> output = new LinkedList<ITextComponent>();
 		output.add(new StringTextComponent(""));
-		output.add(new StringTextComponent("NetworkID: ").appendText(String.format("%1$s%2$d with %3$d cables", TextFormatting.GRAY.toString(), NetworkId, Graph.getCables().size())));
+		output.add(new StringTextComponent("NetworkID: ").appendString(String.format("%1$s%2$d with %3$d cables", TextFormatting.GRAY.toString(), NetworkId, Graph.getCables().size())));
 
 		// Capture the output contents of the modules.
 		for (AbstractCableNetworkModule module : Modules.values()) {

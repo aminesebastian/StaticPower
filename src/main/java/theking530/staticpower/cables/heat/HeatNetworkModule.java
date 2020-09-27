@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -61,11 +61,11 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 		ITextComponent averageConductivity = GuiTextUtilities.formatHeatRateToString(averageThermalConductivity);
 
 		components.add(
-				new StringTextComponent(TextFormatting.WHITE.toString()).appendSibling(new StringTextComponent("Contains: ")).appendText(TextFormatting.GRAY.toString()).appendSibling(currentHeat));
-		components.add(new StringTextComponent(TextFormatting.RED.toString()).appendSibling(new StringTextComponent("Heating: ")).appendText(TextFormatting.GRAY.toString()).appendSibling(heating));
-		components.add(new StringTextComponent(TextFormatting.BLUE.toString()).appendSibling(new StringTextComponent("Cooling: ")).appendText(TextFormatting.GRAY.toString()).appendSibling(cooling));
-		components.add(new StringTextComponent(TextFormatting.AQUA.toString()).appendSibling(new StringTextComponent("Average Conductivity: ")).appendText(TextFormatting.GRAY.toString())
-				.appendSibling(averageConductivity));
+				new StringTextComponent(TextFormatting.WHITE.toString()).append(new StringTextComponent("Contains: ")).appendString(TextFormatting.GRAY.toString()).append(currentHeat));
+		components.add(new StringTextComponent(TextFormatting.RED.toString()).append(new StringTextComponent("Heating: ")).appendString(TextFormatting.GRAY.toString()).append(heating));
+		components.add(new StringTextComponent(TextFormatting.BLUE.toString()).append(new StringTextComponent("Cooling: ")).appendString(TextFormatting.GRAY.toString()).append(cooling));
+		components.add(new StringTextComponent(TextFormatting.AQUA.toString()).append(new StringTextComponent("Average Conductivity: ")).appendString(TextFormatting.GRAY.toString())
+				.append(averageConductivity));
 	}
 
 	@Override
@@ -79,7 +79,7 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 		for (ServerCable cable : Network.getGraph().getCables().values()) {
 			// Execute any passive heating/cooling.
 			for (Direction dir : Direction.values()) {
-				IFluidState fluidState = Network.getWorld().getFluidState(cable.getPos().offset(dir));
+				FluidState fluidState = Network.getWorld().getFluidState(cable.getPos().offset(dir));
 				BlockState blockstate = Network.getWorld().getBlockState(cable.getPos().offset(dir));
 				StaticPowerRecipeRegistry
 						.getRecipe(ThermalConductivityRecipe.RECIPE_TYPE, new RecipeMatchParameters(new ItemStack(blockstate.getBlock())).setFluids(new FluidStack(fluidState.getFluid(), 1)))

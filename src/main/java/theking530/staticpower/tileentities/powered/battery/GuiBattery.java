@@ -3,7 +3,8 @@ package theking530.staticpower.tileentities.powered.battery;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
@@ -40,7 +41,8 @@ public class GuiBattery extends StaticPowerTileEntityGui<ContainerBattery, TileE
 		getTabManager().registerTab(infoTab = new GuiInfoTab("Battery", 120));
 		infoTab.addLine(new StringTextComponent("A Battery stores power for later usage."));
 		infoTab.addLineBreak();
-		infoTab.addLine(new StringTextComponent("Holding control and shift while left/right clicking on the buttons will change the rates the limits are altered."));
+		infoTab.addLine(new StringTextComponent(
+				"Holding control and shift while left/right clicking on the buttons will change the rates the limits are altered."));
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
 		getTabManager().registerTab(new GuiSideConfigTab(true, getTileEntity()));
@@ -54,34 +56,39 @@ public class GuiBattery extends StaticPowerTileEntityGui<ContainerBattery, TileE
 	}
 
 	@Override
-	protected void drawForegroundExtras(float partialTicks, int mouseX, int mouseY) {
-		super.drawForegroundExtras(partialTicks, mouseX, mouseY);
+	protected void drawForegroundExtras(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+		super.drawForegroundExtras(stack, partialTicks, mouseX, mouseY);
 
 		// Render the input rate string.
-		font.drawString("Input", this.guiLeft + 15, this.guiTop + 32, 4210752);
-		String inputRateString = GuiTextUtilities.formatEnergyRateToString(getTileEntity().getInputLimit()).getFormattedText();
-		font.drawString(inputRateString, guiLeft + 28 - (font.getStringWidth(inputRateString) / 2), guiTop + 42, 4210752);
+		font.drawString(stack, "Input", this.guiLeft + 15, this.guiTop + 32, 4210752);
+		String inputRateString = GuiTextUtilities.formatEnergyRateToString(getTileEntity().getInputLimit()).getString();
+		font.drawString(stack, inputRateString, guiLeft + 28 - (font.getStringWidth(inputRateString) / 2), guiTop + 42,
+				4210752);
 
 		// Render the output rate string.
-		font.drawString("Output", this.guiLeft + 132, this.guiTop + 32, 4210752);
-		String outputRateString = GuiTextUtilities.formatEnergyRateToString(getTileEntity().getOutputLimit()).getFormattedText();
-		font.drawString(outputRateString, guiLeft + 149 - (font.getStringWidth(outputRateString) / 2), guiTop + 42, 4210752);
+		font.drawString(stack, "Output", this.guiLeft + 132, this.guiTop + 32, 4210752);
+		String outputRateString = GuiTextUtilities.formatEnergyRateToString(getTileEntity().getOutputLimit())
+				.getString();
+		font.drawString(stack, outputRateString, guiLeft + 149 - (font.getStringWidth(outputRateString) / 2),
+				guiTop + 42, 4210752);
 
 		// Add tooltip for the actual value of the input.
-		List<String> tooltips = new ArrayList<String>();
-		if (mouseX > guiLeft + 28 - (font.getStringWidth(inputRateString) / 2) && mouseX < guiLeft + 28 + (font.getStringWidth(inputRateString) / 2) && mouseY > this.guiTop + 41
+		List<ITextComponent> tooltips = new ArrayList<ITextComponent>();
+		if (mouseX > guiLeft + 28 - (font.getStringWidth(inputRateString) / 2)
+				&& mouseX < guiLeft + 28 + (font.getStringWidth(inputRateString) / 2) && mouseY > this.guiTop + 41
 				&& mouseY < this.guiTop + 50) {
-			tooltips.add(inputRateString);
+			tooltips.add(new StringTextComponent(inputRateString));
 		}
 
 		// Add tooltip for the actual value of the output.
-		if (mouseX > guiLeft + 149 - (font.getStringWidth(inputRateString) / 2) && mouseX < guiLeft + 149 + (font.getStringWidth(inputRateString) / 2) && mouseY > this.guiTop + 41
+		if (mouseX > guiLeft + 149 - (font.getStringWidth(inputRateString) / 2)
+				&& mouseX < guiLeft + 149 + (font.getStringWidth(inputRateString) / 2) && mouseY > this.guiTop + 41
 				&& mouseY < this.guiTop + 50) {
-			tooltips.add(outputRateString);
+			tooltips.add(new StringTextComponent(outputRateString));
 		}
 
 		// Render the tooltips.
-		Minecraft.getInstance().currentScreen.renderTooltip(tooltips, mouseX, mouseY, Minecraft.getInstance().fontRenderer);
+		this.func_243308_b(stack, tooltips, mouseX, mouseY);
 	}
 
 	@Override
@@ -114,13 +121,16 @@ public class GuiBattery extends StaticPowerTileEntityGui<ContainerBattery, TileE
 		}
 
 		if (input) {
-			getTileEntity().setInputLimit(Math.max(0, Math.min(getTileEntity().getInputLimit() + deltaValue, getTileEntity().getMaximumPowerIO())));
+			getTileEntity().setInputLimit(Math.max(0,
+					Math.min(getTileEntity().getInputLimit() + deltaValue, getTileEntity().getMaximumPowerIO())));
 		} else {
-			getTileEntity().setOutputLimit(Math.max(0, Math.min(getTileEntity().getOutputLimit() + deltaValue, getTileEntity().getMaximumPowerIO())));
+			getTileEntity().setOutputLimit(Math.max(0,
+					Math.min(getTileEntity().getOutputLimit() + deltaValue, getTileEntity().getMaximumPowerIO())));
 		}
 
 		// Create the packet.
-		NetworkMessage msg = new BatteryControlSyncPacket(getTileEntity().getInputLimit(), getTileEntity().getOutputLimit(), getTileEntity().getPos());
+		NetworkMessage msg = new BatteryControlSyncPacket(getTileEntity().getInputLimit(),
+				getTileEntity().getOutputLimit(), getTileEntity().getPos());
 		// Send a packet to the server with the updated values.
 		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
 	}

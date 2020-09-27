@@ -13,7 +13,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
@@ -28,7 +28,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.FluidActionResult;
@@ -151,7 +151,7 @@ public class WorldUtilities {
 		}
 
 		// Get the fluid state. If it is not a source or is empty, return a failure.
-		IFluidState state = worldIn.getFluidState(pos);
+		FluidState state = worldIn.getFluidState(pos);
 		if (state.isEmpty() || !state.isSource()) {
 			return FluidActionResult.FAILURE;
 		}
@@ -219,7 +219,7 @@ public class WorldUtilities {
 			return false;
 		}
 
-		BlockItemUseContext context = new BlockItemUseContext(new ItemUseContext(player, hand, new BlockRayTraceResult(Vec3d.ZERO, Direction.UP, pos, false))); // TODO: This neds proper context...
+		BlockItemUseContext context = new BlockItemUseContext(new ItemUseContext(player, hand, new BlockRayTraceResult(Vector3d.ZERO, Direction.UP, pos, false))); // TODO: This neds proper context...
 
 		// check that we can place the fluid at the destination
 		BlockState destBlockState = world.getBlockState(pos);
@@ -230,7 +230,7 @@ public class WorldUtilities {
 			return false; // Non-air, solid, unreplacable block. We can't put fluid here.
 		}
 
-		if (world.dimension.doesWaterVaporize() && fluid.getAttributes().doesVaporize(world, pos, resource)) {
+		if (world.getDimensionType().isUltrawarm() && fluid.getAttributes().doesVaporize(world, pos, resource)) {
 			FluidStack result = fluidSource.drain(resource, IFluidHandler.FluidAction.EXECUTE);
 			if (!result.isEmpty()) {
 				result.getFluid().getAttributes().vaporize(player, world, pos, result);

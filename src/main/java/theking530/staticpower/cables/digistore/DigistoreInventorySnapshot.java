@@ -163,7 +163,7 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 						if (!found) {
 							stacks.remove(i);
 						}
-					} else if (!stack.getDisplayName().getFormattedText().toLowerCase().contains(this.filterString)) {
+					} else if (!stack.getDisplayName().getString().toLowerCase().contains(this.filterString)) {
 						stacks.remove(i);
 					}
 				}
@@ -183,7 +183,7 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 				stacks.sort(new Comparator<ItemStack>() {
 					@Override
 					public int compare(ItemStack o1, ItemStack o2) {
-						return (o1.getDisplayName().getFormattedText().compareToIgnoreCase(o2.getDisplayName().getFormattedText())) * sortModifier;
+						return (o1.getDisplayName().getString().compareToIgnoreCase(o2.getDisplayName().getString())) * sortModifier;
 					}
 				});
 			}

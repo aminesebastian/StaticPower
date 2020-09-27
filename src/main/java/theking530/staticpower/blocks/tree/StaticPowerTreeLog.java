@@ -4,7 +4,6 @@ import java.util.function.Supplier;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.LogBlock;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -20,34 +19,36 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.blocks.StaticPowerItemBlock;
-import theking530.staticpower.blocks.interfaces.IItemBlockProvider;
+import theking530.staticpower.blocks.StaticPowerRotatePillarBlock;
 import theking530.staticpower.utilities.WorldUtilities;
 
-public class StaticPowerTreeLog extends LogBlock implements IItemBlockProvider {
+public class StaticPowerTreeLog extends StaticPowerRotatePillarBlock {
 	private final Block strippedVariant;
 	private final Supplier<Integer> minBark;
 	private final Supplier<Integer> maxBark;
 	private final Supplier<Item> barkItemSupplier;
 
-	public StaticPowerTreeLog(String name, MaterialColor verticalColorIn, Block strippedVariant, Properties properties, Supplier<Integer> minBark, Supplier<Integer> maxBark, Supplier<Item> barkItem) {
-		super(verticalColorIn, properties);
-		this.setRegistryName(name);
+	public StaticPowerTreeLog(String name, Block strippedVariant, Properties properties, Supplier<Integer> minBark,
+			Supplier<Integer> maxBark, Supplier<Item> barkItem) {
+		super(name, properties);
 		this.strippedVariant = strippedVariant;
 		this.minBark = minBark;
 		this.maxBark = maxBark;
 		this.barkItemSupplier = barkItem;
 	}
 
-	public StaticPowerTreeLog(String name, MaterialColor verticalColorIn, Block strippedVariant, Properties properties) {
-		this(name, verticalColorIn, strippedVariant, properties, () -> 0, () -> 0, () -> null);
+	public StaticPowerTreeLog(String name, MaterialColor verticalColorIn, Block strippedVariant,
+			Properties properties) {
+		this(name, strippedVariant, properties, () -> 0, () -> 0, () -> null);
 	}
 
 	public StaticPowerTreeLog(String name, MaterialColor verticalColorIn, Properties properties) {
-		this(name, verticalColorIn, null, properties, () -> 0, () -> 0, () -> null);
+		this(name, null, properties, () -> 0, () -> 0, () -> null);
 	}
 
 	@Deprecated
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player,
+			Hand handIn, BlockRayTraceResult hit) {
 		// If there is a striped variant defined.
 		if (strippedVariant != null) {
 			// If the player is holding an axe.

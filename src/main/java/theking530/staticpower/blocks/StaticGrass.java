@@ -23,7 +23,8 @@ import net.minecraftforge.common.ToolType;
 public class StaticGrass extends StaticPowerBlock {
 
 	public StaticGrass(String name) {
-		super(name, Block.Properties.create(Material.EARTH).harvestTool(ToolType.SHOVEL).harvestLevel(0).hardnessAndResistance(0.6f).sound(SoundType.GROUND).lightValue(8).tickRandomly());
+		super(name, Block.Properties.create(Material.EARTH).harvestTool(ToolType.SHOVEL).harvestLevel(0)
+				.hardnessAndResistance(0.6f).sound(SoundType.GROUND).setLightLevel((state) -> 8).tickRandomly());
 	}
 
 	@Override

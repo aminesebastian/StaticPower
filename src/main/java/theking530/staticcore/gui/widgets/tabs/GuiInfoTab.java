@@ -8,7 +8,7 @@ import theking530.staticpower.client.gui.GuiTextures;
 
 public class GuiInfoTab extends AbstractInfoTab {
 	public GuiInfoTab(ITextComponent title, int width) {
-		this(title.getFormattedText(), width);
+		this(title.getString(), width);
 	}
 
 	public GuiInfoTab(int width) {

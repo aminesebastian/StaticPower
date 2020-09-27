@@ -6,6 +6,8 @@ import java.util.stream.Stream;
 
 import javax.annotation.Nonnull;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -15,8 +17,8 @@ import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import theking530.staticcore.gui.GuiDrawUtilities;
@@ -26,7 +28,8 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 
 public class SolderingTableRecipeCategory extends BaseJEIRecipeCategory<SolderingRecipe> {
-	public static final ResourceLocation SOLDERING_TABLE_UID = new ResourceLocation(StaticPower.MOD_ID, "soldering_table");
+	public static final ResourceLocation SOLDERING_TABLE_UID = new ResourceLocation(StaticPower.MOD_ID,
+			"soldering_table");
 	private static final int OUTPUT_SLOT = 10;
 	private static final int SOLDERING_IRON_SLOT = 11;
 
@@ -50,7 +53,7 @@ public class SolderingTableRecipeCategory extends BaseJEIRecipeCategory<Solderin
 	@Override
 	@Nonnull
 	public String getTitle() {
-		return locTitle.getFormattedText();
+		return locTitle.getString();
 	}
 
 	@Override
@@ -70,7 +73,7 @@ public class SolderingTableRecipeCategory extends BaseJEIRecipeCategory<Solderin
 	}
 
 	@Override
-	public void draw(SolderingRecipe recipe, double mouseX, double mouseY) {
+	public void draw(SolderingRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
 		GuiDrawUtilities.drawSlot(110, 21, 20, 20);
 		GuiDrawUtilities.drawSlot(8, 5, 16, 16);
 
@@ -89,7 +92,7 @@ public class SolderingTableRecipeCategory extends BaseJEIRecipeCategory<Solderin
 		input.addAll(recipe.getIngredients());
 
 		// Add the soldering iron input.
-		Tag<Item> tag = ItemTags.getCollection().get(new ResourceLocation("staticpower:soldering_iron"));
+		ITag<Item> tag = ItemTags.getCollection().get(new ResourceLocation("staticpower:soldering_iron"));
 		Ingredient solderingIron = Ingredient.fromItemListStream(Stream.of(new Ingredient.TagList(tag)));
 		input.add(solderingIron);
 

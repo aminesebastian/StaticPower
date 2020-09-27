@@ -12,7 +12,6 @@ import com.google.common.collect.ImmutableList;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -20,8 +19,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.ILightReader;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.world.IBlockDisplayReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.EmptyModelData;
@@ -57,12 +57,14 @@ public class ServerRackModel extends AbstractBakedModel {
 
 	@Override
 	@Nonnull
-	public IModelData getModelData(@Nonnull ILightReader world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull IModelData tileData) {
+	public IModelData getModelData(@Nonnull IBlockDisplayReader world, @Nonnull BlockPos pos, @Nonnull BlockState state,
+			@Nonnull IModelData tileData) {
 		return tileData;
 	}
 
 	@Override
-	protected List<BakedQuad> getBakedQuadsFromIModelData(@Nullable BlockState state, Direction side, @Nonnull Random rand, @Nonnull IModelData data) {
+	protected List<BakedQuad> getBakedQuadsFromIModelData(@Nullable BlockState state, Direction side,
+			@Nonnull Random rand, @Nonnull IModelData data) {
 		// If the property is not there, return early.
 		if (!data.hasProperty(TileEntityDigistoreServerRack.CARD_RENDERING_STATE)) {
 			return Collections.emptyList();
@@ -85,7 +87,8 @@ public class ServerRackModel extends AbstractBakedModel {
 			}
 
 			// Get the model of the card.
-			IBakedModel model = Minecraft.getInstance().getModelManager().getModel(((DigistoreCard) cards[i].getItem()).model);
+			IBakedModel model = Minecraft.getInstance().getModelManager()
+					.getModel(((DigistoreCard) cards[i].getItem()).model);
 
 			// Calculate the offset for the current card's model.
 			float xOffset = ((i / 4) * UNIT * 6.5f) - (UNIT * 3.25f);
@@ -97,7 +100,8 @@ public class ServerRackModel extends AbstractBakedModel {
 			Vector3f offset = SDMath.transformVectorByDirection(facing, new Vector3f(xOffset, yOffset, zOffset));
 
 			// Transform the card's quads.
-			List<BakedQuad> bakedCardQuads = transformQuads(model, offset, new Vector3f(1.0f, 1.0f, 1.0f), FACING_ROTATIONS.get(facing), side, state, rand);
+			List<BakedQuad> bakedCardQuads = transformQuads(model, offset, new Vector3f(1.0f, 1.0f, 1.0f),
+					FACING_ROTATIONS.get(facing), side, state, rand);
 			newQuads.addAll(bakedCardQuads);
 
 			// If we are rendering a mono card, render the filled bar.
@@ -111,11 +115,13 @@ public class ServerRackModel extends AbstractBakedModel {
 				// Get the model of the card bar.
 				IBakedModel barModel;
 				if (filledPercentage < 1.0f) {
-					barModel = Minecraft.getInstance().getModelManager().getModel(StaticPowerAdditionalModels.DIGISTORE_SINGULAR_CARD_BAR);
+					barModel = Minecraft.getInstance().getModelManager()
+							.getModel(StaticPowerAdditionalModels.DIGISTORE_SINGULAR_CARD_BAR);
 				} else {
-					barModel = Minecraft.getInstance().getModelManager().getModel(StaticPowerAdditionalModels.DIGISTORE_SINGULAR_CARD_BAR_FULL);
+					barModel = Minecraft.getInstance().getModelManager()
+							.getModel(StaticPowerAdditionalModels.DIGISTORE_SINGULAR_CARD_BAR_FULL);
 				}
-				
+
 				// Adjust the filled percentage to work with the fill bar.
 				filledPercentage *= (4.75f / 16.0f);
 
@@ -132,7 +138,9 @@ public class ServerRackModel extends AbstractBakedModel {
 					Quad collectorQuad = this.collectors.get();
 
 					QuadClamper clamper = pipeline.getElement("clamper", QuadClamper.class);
-					AxisAlignedBB barBounds = new AxisAlignedBB(new Vec3d((10.25f / 16.0f) - filledPercentage, 0.0f, 0.0f), new Vec3d((10.25f / 16.0f), 1.0f, 1.0f));
+					AxisAlignedBB barBounds = new AxisAlignedBB(
+							new Vector3d((10.25f / 16.0f) - filledPercentage, 0.0f, 0.0f),
+							new Vector3d((10.25f / 16.0f), 1.0f, 1.0f));
 					clamper.setClampBounds(barBounds);
 
 					// Reset the pipeline, clears all enabled/disabled states.
@@ -153,7 +161,8 @@ public class ServerRackModel extends AbstractBakedModel {
 
 					// Add all the bar's quads transformed with the same offset and rotation as the
 					// card.
-					newQuads.addAll(transformQuads(barQuadList, offset, new Vector3f(1.0f, 1.0f, 1.0f), FACING_ROTATIONS.get(facing)));
+					newQuads.addAll(transformQuads(barQuadList, offset, new Vector3f(1.0f, 1.0f, 1.0f),
+							FACING_ROTATIONS.get(facing)));
 				}
 			}
 		}
@@ -165,5 +174,10 @@ public class ServerRackModel extends AbstractBakedModel {
 		ModelDataMap.Builder builder = new ModelDataMap.Builder();
 		ModelDataMap modelDataMap = builder.build();
 		return modelDataMap;
+	}
+
+	@Override
+	public boolean isSideLit() {
+		return BaseModel.isSideLit();
 	}
 }

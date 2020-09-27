@@ -18,7 +18,7 @@ public class GuiPatternStorage extends StaticPowerTileEntityGui<ContainerPattern
 
 	@Override
 	public void initializeGui() {
-		getTabManager().registerTab(infoTab = new GuiInfoTab(getTileEntity().getDisplayName().getFormattedText(), 100));
+		getTabManager().registerTab(infoTab = new GuiInfoTab(getTileEntity().getDisplayName().getString(), 100));
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class GuiPatternStorage extends StaticPowerTileEntityGui<ContainerPattern
 
 		// Pass the itemstack count through the metric converter.
 		MetricConverter count = new MetricConverter(getTileEntity().patternInventory.getSlots());
-		infoTab.addKeyValueLine(new StringTextComponent("Max Patterns"), new StringTextComponent(TextFormatting.WHITE.toString()).appendSibling(new StringTextComponent(count.getValueAsString(true))),
+		infoTab.addKeyValueLine(new StringTextComponent("Max Patterns"), new StringTextComponent(TextFormatting.WHITE.toString()).append(new StringTextComponent(count.getValueAsString(true))),
 				TextFormatting.RED);
 	}
 }

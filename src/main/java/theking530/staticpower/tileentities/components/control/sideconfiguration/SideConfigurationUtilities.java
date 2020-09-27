@@ -244,7 +244,7 @@ public class SideConfigurationUtilities {
 	}
 
 	public static Direction getBlockHorizontal(BlockState block) {
-		if (block.has(BlockStateProperties.FACING)) {
+		if (block.hasProperty(BlockStateProperties.FACING)) {
 			return block.get(BlockStateProperties.FACING);
 		}
 		return null;

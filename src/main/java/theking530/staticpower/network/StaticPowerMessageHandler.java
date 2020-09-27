@@ -26,16 +26,19 @@ import theking530.staticpower.StaticPower;
 public class StaticPowerMessageHandler {
 	private static final String PROTOCOL_VERSION = "1";
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerMessageHandler.class);
-	public static final SimpleChannel MAIN_PACKET_CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(StaticPower.MOD_ID, "main"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals,
+	public static final SimpleChannel MAIN_PACKET_CHANNEL = NetworkRegistry.newSimpleChannel(
+			new ResourceLocation(StaticPower.MOD_ID, "main"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals,
 			PROTOCOL_VERSION::equals);
 	private static int currentMessageId = 0;
 
-	public static void sendMessageToPlayerInArea(SimpleChannel channel, World world, BlockPos position, int radius, NetworkMessage message) {
-		channel.send(PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(position.getX(), position.getY(), position.getZ(), radius, world.getDimension().getType())), message);
+	public static void sendMessageToPlayerInArea(SimpleChannel channel, World world, BlockPos position, int radius,
+			NetworkMessage message) {
+		channel.send(PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(position.getX(),
+				position.getY(), position.getZ(), radius, world.getDimensionKey())), message);
 	}
 
 	public static void sendToAllPlayersInDimension(SimpleChannel channel, World world, NetworkMessage message) {
-		channel.send(PacketDistributor.DIMENSION.with(() -> world.getDimension().getType()), message);
+		channel.send(PacketDistributor.DIMENSION.with(() -> world.getDimensionKey()), message);
 	}
 
 	public static void sendMessageToPlayer(SimpleChannel channel, ServerPlayerEntity player, NetworkMessage message) {
@@ -75,8 +78,11 @@ public class StaticPowerMessageHandler {
 		MSG pack = null;
 		try {
 			pack = type.getConstructor().newInstance();
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-			LOGGER.error(String.format("An error occured when attempting to decode packet of type: %1$s.", type.toString()), e);
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException e) {
+			LOGGER.error(
+					String.format("An error occured when attempting to decode packet of type: %1$s.", type.toString()),
+					e);
 		}
 		return pack;
 	}

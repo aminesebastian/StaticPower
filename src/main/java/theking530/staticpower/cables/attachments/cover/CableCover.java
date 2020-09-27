@@ -61,7 +61,7 @@ public class CableCover extends Item implements ICustomModelSupplier {
 		output.setTag(new CompoundNBT());
 		CompoundNBT blockStateTag = NBTUtil.writeBlockState(blockState);
 		output.getTag().put(COVER_BLOCK_STATE_TAG, blockStateTag);
-		output.setDisplayName(blockState.getBlock().getNameTextComponent().deepCopy().appendText(" ").appendSibling(COVER_TRANSLATION_COMPONENT));
+		output.setDisplayName(blockState.getBlock().getTranslatedName().deepCopy().appendString(" ").append(COVER_TRANSLATION_COMPONENT));
 		return output;
 	}
 

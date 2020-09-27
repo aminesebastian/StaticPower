@@ -1,5 +1,7 @@
 package theking530.staticcore.gui.widgets.progressbars;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.gui.GuiTextures;
@@ -10,8 +12,8 @@ public class FireProgressBar extends AbstractProgressBar {
 	}
 
 	@Override
-	public void renderBehindItems(int mouseX, int mouseY, float partialTicks) {
-		super.renderBehindItems(mouseX, mouseY, partialTicks);
+	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+		super.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
 
 		Vector2D screenSpacePosition = this.getScreenSpacePosition();
 		float adjustedProgress = visualCurrentProgress / maxProgress;

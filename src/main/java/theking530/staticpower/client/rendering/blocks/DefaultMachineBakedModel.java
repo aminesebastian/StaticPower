@@ -16,7 +16,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.BlockFaceUV;
 import net.minecraft.client.renderer.model.BlockPartFace;
@@ -27,7 +26,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ILightReader;
+import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.world.IBlockDisplayReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelLoader;
@@ -43,7 +43,8 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 @OnlyIn(Dist.CLIENT)
 public class DefaultMachineBakedModel extends AbstractBakedModel {
 	@SuppressWarnings("deprecation")
-	protected static final AtlasTexture BLOCKS_TEXTURE = ModelLoader.instance().getSpriteMap().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+	protected static final AtlasTexture BLOCKS_TEXTURE = ModelLoader.instance().getSpriteMap()
+			.getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 	private static final Logger LOGGER = LogManager.getLogger(DefaultMachineBakedModel.class);
 	private static final ModelProperty<Optional<MachineSideMode[]>> SIDE_CONFIG = new ModelProperty<>();
 
@@ -53,7 +54,8 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 
 	@Override
 	@Nonnull
-	public IModelData getModelData(@Nonnull ILightReader world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull IModelData tileData) {
+	public IModelData getModelData(@Nonnull IBlockDisplayReader world, @Nonnull BlockPos pos, @Nonnull BlockState state,
+			@Nonnull IModelData tileData) {
 		Optional<MachineSideMode[]> configurations = getSideConfigurations(world, pos);
 		ModelDataMap modelDataMap = getEmptyIModelData();
 		modelDataMap.setData(SIDE_CONFIG, configurations);
@@ -62,11 +64,13 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	protected List<BakedQuad> getBakedQuadsFromIModelData(@Nullable BlockState state, Direction side, @Nonnull Random rand, @Nonnull IModelData data) {
+	protected List<BakedQuad> getBakedQuadsFromIModelData(@Nullable BlockState state, Direction side,
+			@Nonnull Random rand, @Nonnull IModelData data) {
 		// Check if the data has the SIDE_CONFIG property. If not, something has gone
 		// wrong.
 		if (!data.hasProperty(SIDE_CONFIG)) {
-			conditionallyLogError("Encountered invalid side configuration data when attempting to bake quads for machine.");
+			conditionallyLogError(
+					"Encountered invalid side configuration data when attempting to bake quads for machine.");
 			return BaseModel.getQuads(state, side, rand);
 		}
 		// Attempt to get the side configuration.
@@ -90,7 +94,8 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 
 			MachineSideMode sideMode = sideConfigurations.get()[renderingSide.ordinal()];
 			try {
-				AtlasTexture blocksTexture = ModelLoader.instance().getSpriteMap().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+				AtlasTexture blocksTexture = ModelLoader.instance().getSpriteMap()
+						.getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 
 				// Get the texture sprite for the side.
 				TextureAtlasSprite sideSprite = getSpriteForMachineSide(sideMode, blocksTexture, renderingSide);
@@ -105,7 +110,8 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 		return newQuads.build();
 	}
 
-	protected void renderQuadsForSide(Builder<BakedQuad> newQuads, Direction side, TextureAtlasSprite sideSprite, BakedQuad originalQuad, MachineSideMode sideConfiguration) {
+	protected void renderQuadsForSide(Builder<BakedQuad> newQuads, Direction side, TextureAtlasSprite sideSprite,
+			BakedQuad originalQuad, MachineSideMode sideConfiguration) {
 		newQuads.add(originalQuad);
 		if (sideConfiguration != MachineSideMode.Never) {
 			// Vectors for quads are relative to the face direction, so we need to only work
@@ -125,12 +131,14 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 			posOffset.add(16.0f, 16.0f, 16.0f);
 			Vector3f negOffset = SDMath.transformVectorByDirection(offsetSide, new Vector3f(0.0f, 0.0f, -0.005f));
 
-			BakedQuad newQuad = FaceBaker.bakeQuad(negOffset, posOffset, blockPartFace, sideSprite, side, IDENTITY, null, true, new ResourceLocation("dummy_name"));
+			BakedQuad newQuad = FaceBaker.bakeQuad(negOffset, posOffset, blockPartFace, sideSprite, side, IDENTITY,
+					null, true, new ResourceLocation("dummy_name"));
 			newQuads.add(newQuad);
 		}
 	}
 
-	protected TextureAtlasSprite getSpriteForMachineSide(MachineSideMode mode, AtlasTexture blocksStitchedTextures, Direction side) {
+	protected TextureAtlasSprite getSpriteForMachineSide(MachineSideMode mode, AtlasTexture blocksStitchedTextures,
+			Direction side) {
 		switch (mode) {
 		case Input:
 			return blocksStitchedTextures.getSprite(StaticPowerSprites.MACHINE_SIDE_INPUT);
@@ -156,7 +164,8 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 		return modelDataMap;
 	}
 
-	protected Optional<MachineSideMode[]> getSideConfigurations(@Nonnull ILightReader world, @Nonnull BlockPos blockPos) {
+	protected Optional<MachineSideMode[]> getSideConfigurations(@Nonnull IBlockDisplayReader world,
+			@Nonnull BlockPos blockPos) {
 		if (!world.getBlockState(blockPos).hasTileEntity()) {
 			return Optional.empty();
 		}
@@ -166,9 +175,15 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 		if (rawTileEntity != null && rawTileEntity instanceof TileEntityBase) {
 			TileEntityBase configurable = (TileEntityBase) rawTileEntity;
 			if (configurable.hasComponentOfType(SideConfigurationComponent.class)) {
-				return Optional.of(configurable.getComponent(SideConfigurationComponent.class).getWorldSpaceConfiguration());
+				return Optional
+						.of(configurable.getComponent(SideConfigurationComponent.class).getWorldSpaceConfiguration());
 			}
 		}
 		return Optional.empty();
+	}
+
+	@Override
+	public boolean isSideLit() {
+		return BaseModel.isSideLit();
 	}
 }

@@ -16,6 +16,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
+import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.container.StaticPowerItemContainer;
 import theking530.staticpower.container.slots.PhantomSlot;
 
@@ -30,7 +31,7 @@ public class ContainerItemFilter extends StaticPowerItemContainer<ItemFilter> {
 		}
 	}
 
-	private ItemStackHandler filterInventory;
+	public ItemStackHandler filterInventory;
 
 	public ContainerItemFilter(int windowId, PlayerInventory inv, PacketBuffer data) {
 		this(windowId, inv, getHeldItemstack(inv, data));
@@ -53,13 +54,11 @@ public class ContainerItemFilter extends StaticPowerItemContainer<ItemFilter> {
 			return;
 		}
 
-		int slotOffset = 0;
-		for (int i = 0; i < filterInventory.getSlots(); i++) {
-			this.addSlot(new PhantomSlot(filterInventory, i, 8 + (i + slotOffset) * 18, 19, true).renderFluidContainerAsFluid());
-		}
+		addSlotsInGrid(filterInventory, 0, 89, 19, SDMath.getSmallestFactor(filterInventory.getSlots(), 9), 16,
+				(index, x, y) -> new PhantomSlot(filterInventory, index, x, y, true).renderFluidContainerAsFluid());
 
-		this.addPlayerInventory(getPlayerInventory(), 8, 69);
-		this.addPlayerHotbar(getPlayerInventory(), 8, 127);
+		addPlayerInventory(getPlayerInventory(), 8, 69 + (filterInventory.getSlots() > 9 ? 12 : 0));
+		addPlayerHotbar(getPlayerInventory(), 8, 127 + (filterInventory.getSlots() > 9 ? 12 : 0));
 	}
 
 	@Override

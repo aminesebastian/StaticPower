@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.util.text.ITextComponent;
 import theking530.staticcore.gui.WidgetContainer;
 import theking530.staticcore.utilities.RectangleBounds;
@@ -237,28 +239,28 @@ public abstract class AbstractGuiWidget {
 	/**
 	 * This method should be overriden to draw anything that should appear behind
 	 * slots/items/anything else.
-	 * 
+	 * @param matrix TODO
 	 * @param mouseX
 	 * @param mouseY
 	 * @param partialTicks
 	 */
-	public void renderBackground(int mouseX, int mouseY, float partialTicks) {
+	public void renderBackground(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 
 	}
 
 	/**
 	 * This method should be overriden to render anything that should appear above
 	 * the background but behind any slots/items.
-	 * 
+	 * @param matrix TODO
 	 * @param mouseX
 	 * @param mouseY
 	 * @param partialTicks
 	 */
-	public void renderBehindItems(int mouseX, int mouseY, float partialTicks) {
+	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 
 	}
 
-	public void renderForeground(int mouseX, int mouseY, float partialTicks) {
+	public void renderForeground(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 
 	}
 

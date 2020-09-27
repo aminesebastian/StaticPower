@@ -2,7 +2,7 @@ package theking530.staticpower.client.utilities;
 
 import java.text.NumberFormat;
 
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import theking530.staticpower.utilities.MetricConverter;
@@ -51,25 +51,25 @@ public class GuiTextUtilities {
 	 * @param energy The amount of energy to format.
 	 * @return The formatted string.
 	 */
-	public static ITextComponent formatEnergyToString(int energy, boolean includeUnits, boolean includeMetricUnit) {
+	public static IFormattableTextComponent formatEnergyToString(int energy, boolean includeUnits, boolean includeMetricUnit) {
 		MetricConverter metricEnergy = new MetricConverter(energy);
-		ITextComponent output = new StringTextComponent(NUMBER_FORMATTER.format(metricEnergy.getValue()));
+		IFormattableTextComponent output = new StringTextComponent(NUMBER_FORMATTER.format(metricEnergy.getValue()));
 
 		if (includeMetricUnit) {
-			output.appendText(metricEnergy.getSuffix());
+			output.appendString(metricEnergy.getSuffix());
 		}
 
 		if (includeUnits) {
-			output.appendSibling(ENERGY_UNIT_TRANSLATION);
+			output.append(ENERGY_UNIT_TRANSLATION);
 		}
 		return output;
 	}
 
-	public static ITextComponent formatEnergyToString(int energy, boolean includeUnits) {
+	public static IFormattableTextComponent formatEnergyToString(int energy, boolean includeUnits) {
 		return formatEnergyToString(energy, includeUnits, true);
 	}
 
-	public static ITextComponent formatEnergyToString(int energy) {
+	public static IFormattableTextComponent formatEnergyToString(int energy) {
 		return formatEnergyToString(energy, true, true);
 	}
 
@@ -82,8 +82,8 @@ public class GuiTextUtilities {
 	 * @param capacity The maximum amount of energy to use as the denominator.
 	 * @return The formatted string.
 	 */
-	public static ITextComponent formatEnergyToString(int energy, int capacity) {
-		return formatEnergyToString(energy, false, true).appendText("/").appendSibling(formatEnergyToString(capacity));
+	public static IFormattableTextComponent formatEnergyToString(int energy, int capacity) {
+		return formatEnergyToString(energy, false, true).appendString("/").append(formatEnergyToString(capacity));
 
 	}
 
@@ -94,77 +94,77 @@ public class GuiTextUtilities {
 	 * @param energyRate The energy rate to format.
 	 * @return The formatted string.
 	 */
-	public static ITextComponent formatEnergyRateToString(float energyRate) {
+	public static IFormattableTextComponent formatEnergyRateToString(float energyRate) {
 		MetricConverter metricRate = new MetricConverter(energyRate);
-		return new StringTextComponent(NUMBER_FORMATTER.format(metricRate.getValue())).appendText(metricRate.getSuffix()).appendSibling(ENERGY_RATE_TRANSLATION);
+		return new StringTextComponent(NUMBER_FORMATTER.format(metricRate.getValue())).appendString(metricRate.getSuffix()).append(ENERGY_RATE_TRANSLATION);
 	}
 
-	public static ITextComponent formatHeatToString(float currentHeat, float capacity) {
-		return formatHeatToString(currentHeat, false, true).appendText("/").appendSibling(formatHeatToString(capacity));
+	public static IFormattableTextComponent formatHeatToString(float currentHeat, float capacity) {
+		return formatHeatToString(currentHeat, false, true).appendString("/").append(formatHeatToString(capacity));
 
 	}
 
-	public static ITextComponent formatHeatToString(float heat) {
+	public static IFormattableTextComponent formatHeatToString(float heat) {
 		return formatHeatToString(heat, true, true);
 	}
 
-	public static ITextComponent formatHeatToString(float heat, boolean includeUnits, boolean includeMetricUnit) {
+	public static IFormattableTextComponent formatHeatToString(float heat, boolean includeUnits, boolean includeMetricUnit) {
 		MetricConverter metricEnergy = new MetricConverter(heat);
-		ITextComponent output = new StringTextComponent(NUMBER_FORMATTER.format(metricEnergy.getValue()));
+		IFormattableTextComponent output = new StringTextComponent(NUMBER_FORMATTER.format(metricEnergy.getValue()));
 
 		if (includeMetricUnit) {
-			output.appendText(metricEnergy.getSuffix());
+			output.appendString(metricEnergy.getSuffix());
 		}
 
 		if (includeUnits) {
-			output.appendText(" ").appendSibling(HEAT_UNIT_TRANSLATION);
+			output.appendString(" ").append(HEAT_UNIT_TRANSLATION);
 		}
 		return output;
 	}
 
-	public static ITextComponent formatHeatRateToString(float heatTransferRate) {
+	public static IFormattableTextComponent formatHeatRateToString(float heatTransferRate) {
 		MetricConverter metricRate = new MetricConverter(heatTransferRate);
-		return new StringTextComponent(NUMBER_FORMATTER.format(metricRate.getValue())).appendText(" ").appendText(metricRate.getSuffix()).appendSibling(HEAT_RATE_TRANSLATION);
+		return new StringTextComponent(NUMBER_FORMATTER.format(metricRate.getValue())).appendString(" ").appendString(metricRate.getSuffix()).append(HEAT_RATE_TRANSLATION);
 	}
 
-	public static ITextComponent formatConductivityToString(float conductivity) {
+	public static IFormattableTextComponent formatConductivityToString(float conductivity) {
 		MetricConverter metricRate = new MetricConverter(conductivity);
-		return new StringTextComponent(NUMBER_FORMATTER.format(metricRate.getValue())).appendText(metricRate.getSuffix()).appendSibling(HEAT_CONDUCTIVITY_TRANSLATION);
+		return new StringTextComponent(NUMBER_FORMATTER.format(metricRate.getValue())).appendString(metricRate.getSuffix()).append(HEAT_CONDUCTIVITY_TRANSLATION);
 	}
 
-	public static ITextComponent formatFluidToString(float currentFluid, float capacity) {
-		return formatFluidToString(currentFluid, false, true).appendText("/").appendSibling(formatFluidToString(capacity));
+	public static IFormattableTextComponent formatFluidToString(float currentFluid, float capacity) {
+		return formatFluidToString(currentFluid, false, true).appendString("/").append(formatFluidToString(capacity));
 
 	}
 
-	public static ITextComponent formatFluidToString(float fluidAmount) {
+	public static IFormattableTextComponent formatFluidToString(float fluidAmount) {
 		return formatFluidToString(fluidAmount, true, true);
 	}
 
-	public static ITextComponent formatFluidToString(float fluid, boolean includeUnits, boolean includeMetricUnit) {
+	public static IFormattableTextComponent formatFluidToString(float fluid, boolean includeUnits, boolean includeMetricUnit) {
 		MetricConverter metricEnergy = new MetricConverter(fluid, -1);
-		ITextComponent output = new StringTextComponent(NUMBER_FORMATTER.format(metricEnergy.getValue()));
+		IFormattableTextComponent output = new StringTextComponent(NUMBER_FORMATTER.format(metricEnergy.getValue()));
 
 		if (includeMetricUnit) {
-			output.appendText(metricEnergy.getSuffix());
+			output.appendString(metricEnergy.getSuffix());
 		}
 
 		if (includeUnits) {
-			output.appendText(" ").appendSibling(FLUID_UNIT_TRANSLATION);
+			output.appendString(" ").append(FLUID_UNIT_TRANSLATION);
 		}
 		return output;
 	}
 
-	public static ITextComponent formatFluidRateToString(float fluidRate) {
+	public static IFormattableTextComponent formatFluidRateToString(float fluidRate) {
 		MetricConverter metricRate = new MetricConverter(fluidRate, -1);
-		return new StringTextComponent(NUMBER_FORMATTER.format(metricRate.getValue())).appendText(" ").appendText(metricRate.getSuffix()).appendSibling(FLUID_RATE_TRANSLATION);
+		return new StringTextComponent(NUMBER_FORMATTER.format(metricRate.getValue())).appendString(" ").appendString(metricRate.getSuffix()).append(FLUID_RATE_TRANSLATION);
 	}
 
-	public static ITextComponent formatNumberAsString(float number) {
+	public static IFormattableTextComponent formatNumberAsString(float number) {
 		return new StringTextComponent(NUMBER_FORMATTER.format(number));
 	}
 
-	public static ITextComponent formatNumberAsString(int number) {
+	public static IFormattableTextComponent formatNumberAsString(int number) {
 		return new StringTextComponent(NUMBER_FORMATTER.format(number));
 	}
 }

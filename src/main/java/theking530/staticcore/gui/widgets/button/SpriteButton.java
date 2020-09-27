@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import org.lwjgl.opengl.GL11;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.Minecraft;
@@ -21,7 +22,8 @@ public class SpriteButton extends StandardButton {
 	private ResourceLocation regularTexture;
 	private ResourceLocation hoveredTexture;
 
-	public SpriteButton(int xPos, int yPos, int width, int height, ResourceLocation sprite, @Nullable ResourceLocation hoveredSprite, BiConsumer<StandardButton, MouseButton> onClicked) {
+	public SpriteButton(int xPos, int yPos, int width, int height, ResourceLocation sprite,
+			@Nullable ResourceLocation hoveredSprite, BiConsumer<StandardButton, MouseButton> onClicked) {
 		super(xPos, yPos, width, height, onClicked);
 		this.regularTexture = sprite;
 		this.hoveredTexture = hoveredSprite;
@@ -47,25 +49,37 @@ public class SpriteButton extends StandardButton {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	protected void drawButtonOverlay(int buttonLeft, int buttonTop) {
+	protected void drawButtonOverlay(MatrixStack stack, int buttonLeft, int buttonTop) {
 		GlStateManager.enableBlend();
+		GL11.glDisable(GL11.GL_CULL_FACE);
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder tes = tessellator.getBuffer();
 		BufferBuilder vertexbuffer = tessellator.getBuffer();
 		tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
 
-		TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(getRegularTexture());
+		TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE)
+				.apply(getRegularTexture());
 		if (getHoveredTexture() != null && (isClicked() || isHovered() || isToggled())) {
-			sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(getHoveredTexture());
+			sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE)
+					.apply(getHoveredTexture());
 		}
 
 		Minecraft.getInstance().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 		Color tint = Color.WHITE;
-		vertexbuffer.pos(buttonLeft, buttonTop + getSize().getY(), 0.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), sprite.getMaxV()).endVertex();
-		vertexbuffer.pos(buttonLeft, buttonTop, 0.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), sprite.getMinV()).endVertex();
-		vertexbuffer.pos(buttonLeft + getSize().getX(), buttonTop, 0.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMaxU(), sprite.getMinV()).endVertex();
-		vertexbuffer.pos(buttonLeft + getSize().getX(), buttonTop + getSize().getY(), 0.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMaxU(), sprite.getMaxV()).endVertex();
+		vertexbuffer.pos(buttonLeft, buttonTop + getSize().getY(), 0.0f)
+				.color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha())
+				.tex(sprite.getMinU(), sprite.getMaxV()).endVertex();
+		vertexbuffer.pos(buttonLeft, buttonTop, 0.0f)
+				.color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha())
+				.tex(sprite.getMinU(), sprite.getMinV()).endVertex();
+		vertexbuffer.pos(buttonLeft + getSize().getX(), buttonTop, 0.0f)
+				.color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha())
+				.tex(sprite.getMaxU(), sprite.getMinV()).endVertex();
+		vertexbuffer.pos(buttonLeft + getSize().getX(), buttonTop + getSize().getY(), 0.0f)
+				.color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha())
+				.tex(sprite.getMaxU(), sprite.getMaxV()).endVertex();
 
 		tessellator.draw();
+		GL11.glEnable(GL11.GL_CULL_FACE);
 	}
 }

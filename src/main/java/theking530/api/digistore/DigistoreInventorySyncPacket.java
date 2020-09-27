@@ -37,9 +37,10 @@ public class DigistoreInventorySyncPacket extends NetworkMessage {
 			if (Minecraft.getInstance().player.world.isAreaLoaded(capabilityPosition, 1)) {
 				TileEntity rawTileEntity = Minecraft.getInstance().player.world.getTileEntity(capabilityPosition);
 				if (rawTileEntity != null) {
-					rawTileEntity.getCapability(CapabilityDigistoreInventory.DIGISTORE_INVENTORY_CAPABILITY).ifPresent(inv -> {
-						inv.deserializeNBT(inventoryUpdateTag);
-					});
+					rawTileEntity.getCapability(CapabilityDigistoreInventory.DIGISTORE_INVENTORY_CAPABILITY)
+							.ifPresent(inv -> {
+								inv.deserializeNBT(inventoryUpdateTag);
+							});
 				}
 			}
 		});

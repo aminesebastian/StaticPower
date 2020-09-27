@@ -18,10 +18,10 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.cables.CableBoundsHoverResult.CableBoundsHoverType;
@@ -101,7 +101,7 @@ public class CableBoundsCache {
 	 */
 	public @Nullable CableBoundsHoverResult getHoveredAttachmentOrCover(BlockPos pos, PlayerEntity entity) {
 		// Get the start and end vectors for the raytracing.
-		Pair<Vec3d, Vec3d> vec = RaytracingUtilities.getVectors(entity);
+		Pair<Vector3d, Vector3d> vec = RaytracingUtilities.getVectors(entity);
 
 		// Get the cable attachment.
 		AbstractCableProviderComponent cable = CableUtilities.getCableWrapperComponent(entity.getEntityWorld(), pos);
@@ -125,7 +125,7 @@ public class CableBoundsCache {
 		// Setup the order by which we process the hovered directions to prioratize the
 		// off angles first.
 		Direction[] directionOrder = XAxisDirectionPriority;
-		Vec3d lookAtVector = entity.getLookVec();
+		Vector3d lookAtVector = entity.getLookVec();
 		Direction lookAtDirection = Direction.getFacingFromVector(lookAtVector.getX(), lookAtVector.getY(), lookAtVector.getZ());
 
 		if (lookAtDirection.getAxis() == Axis.Z) {

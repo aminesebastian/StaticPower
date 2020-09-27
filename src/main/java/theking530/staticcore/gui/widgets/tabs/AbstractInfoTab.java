@@ -3,14 +3,20 @@ package theking530.staticcore.gui.widgets.tabs;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import org.lwjgl.opengl.GL11;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import theking530.staticcore.gui.drawables.IDrawable;
@@ -37,7 +43,7 @@ public abstract class AbstractInfoTab extends BaseGuiTab {
 	}
 
 	public int addLine(TextFormatting color, ITextComponent value) {
-		info.add(new StringTextComponent(color.toString()).appendSibling(value));
+		info.add(new StringTextComponent(color.toString()).append(value));
 		return info.size() - 1;
 	}
 
@@ -46,13 +52,13 @@ public abstract class AbstractInfoTab extends BaseGuiTab {
 	}
 
 	public int addKeyValueLine(ITextComponent key, ITextComponent value, TextFormatting keyColor) {
-		info.add(new StringTextComponent(keyColor.toString()).appendSibling(key).appendText(": ").appendSibling(value));
+		info.add(new StringTextComponent(keyColor.toString()).append(key).appendString(": ").append(value));
 		return info.size() - 1;
 	}
 
 	public int addKeyValueTwoLiner(ITextComponent key, ITextComponent value, TextFormatting keyColor) {
-		info.add(new StringTextComponent(keyColor.toString()).appendSibling(key).appendText(": "));
-		info.add(new StringTextComponent(" ").appendSibling(value));
+		info.add(new StringTextComponent(keyColor.toString()).append(key).appendString(": "));
+		info.add(new StringTextComponent(" ").append(value));
 		return info.size() - 1;
 	}
 
@@ -65,27 +71,28 @@ public abstract class AbstractInfoTab extends BaseGuiTab {
 	}
 
 	@Override
-	public void renderBackground(int mouseX, int mouseY, float partialTicks) {
+	public void renderBackground(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 		if (isOpen()) {
 			if (info != null) {
-				drawTextBG();
-				drawTitle();
-				drawInfo(false);
+				drawTextBG(matrix);
+				drawTitle(matrix);
+				drawInfo(matrix, false);
 			}
 		}
 	}
 
 	@Override
 	public void updateData() {
-		this.tabHeight = (int) (drawInfo(false) + HEIGHT_PADDING);
+		this.tabHeight = (int) (drawInfo(null, true) + HEIGHT_PADDING);
 	}
 
-	protected void drawTitle() {
+	protected void drawTitle(MatrixStack stack) {
 		// Draw title.
-		fontRenderer.drawStringWithShadow(getTitle(), xPosition + (getTabSide() == TabSide.LEFT ? 11 : 24), yPosition + 8, titleColor);
+		fontRenderer.drawStringWithShadow(stack, getTitle(), xPosition + (getTabSide() == TabSide.LEFT ? 11 : 24),
+				yPosition + 8, titleColor);
 	}
 
-	protected float drawInfo(boolean simulate) {
+	protected float drawInfo(@Nullable MatrixStack stack, boolean simulate) {
 		// Scale offsets.
 		float lineHeight = 0.0f;
 		float height = 0;
@@ -93,7 +100,7 @@ public abstract class AbstractInfoTab extends BaseGuiTab {
 		// Iterate through all the info lines.
 		for (int i = 0; i < info.size(); i++) {
 			// Format the text.
-			String formattedText = info.get(i).getFormattedText();
+			ITextProperties formattedText = info.get(i);
 
 			if (formattedText.equals("\n")) {
 				lineHeight += LINE_BREAK_HEIGHT;
@@ -102,11 +109,11 @@ public abstract class AbstractInfoTab extends BaseGuiTab {
 			}
 
 			// Get the word wrapped result.
-			List<String> wordWrappedText = fontRenderer.listFormattedStringToWidth(formattedText, this.tabWidth);
+			List<IReorderingProcessor> wordWrappedText = fontRenderer.trimStringToWidth(formattedText, this.tabWidth);
 			// Render the info text.
-			for (String text : wordWrappedText) {
+			for (IReorderingProcessor text : wordWrappedText) {
 				if (!simulate) {
-					fontRenderer.drawStringWithShadow(text, xPosition + 14, (yPosition + 25) + lineHeight, 16777215);
+					fontRenderer.func_238422_b_(stack, text, xPosition + 14, (yPosition + 25) + lineHeight, 16777215);
 				}
 				lineHeight += LINE_HEIGHT;
 				height += LINE_HEIGHT;
@@ -116,7 +123,7 @@ public abstract class AbstractInfoTab extends BaseGuiTab {
 		return height;
 	}
 
-	protected void drawTextBG() {
+	protected void drawTextBG(MatrixStack stack) {
 		GL11.glEnable(GL11.GL_BLEND);
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder vertexbuffer = tessellator.getBuffer();

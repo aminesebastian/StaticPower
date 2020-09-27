@@ -17,7 +17,7 @@ import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ILightReader;
+import net.minecraft.world.IBlockDisplayReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -36,7 +36,8 @@ public class CableBakedModel extends AbstractBakedModel {
 	private final IBakedModel Attachment;
 	private final CoverBuilder coverBuilder;
 
-	public CableBakedModel(IBakedModel coreModel, IBakedModel extensionModel, IBakedModel straightModel, IBakedModel attachmentModel) {
+	public CableBakedModel(IBakedModel coreModel, IBakedModel extensionModel, IBakedModel straightModel,
+			IBakedModel attachmentModel) {
 		super(coreModel);
 		Extension = extensionModel;
 		Straight = straightModel;
@@ -46,12 +47,14 @@ public class CableBakedModel extends AbstractBakedModel {
 
 	@Override
 	@Nonnull
-	public IModelData getModelData(@Nonnull ILightReader world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull IModelData tileData) {
+	public IModelData getModelData(@Nonnull IBlockDisplayReader world, @Nonnull BlockPos pos, @Nonnull BlockState state,
+			@Nonnull IModelData tileData) {
 		return tileData;
 	}
 
 	@Override
-	protected List<BakedQuad> getBakedQuadsFromIModelData(@Nullable BlockState state, Direction side, @Nonnull Random rand, @Nonnull IModelData data) {
+	protected List<BakedQuad> getBakedQuadsFromIModelData(@Nullable BlockState state, Direction side,
+			@Nonnull Random rand, @Nonnull IModelData data) {
 		// If we're missing a property, just return the default core model.
 		if (!data.hasProperty(AbstractCableProviderComponent.CABLE_RENDERING_STATE)) {
 			LOGGER.error("Cable is missing one of the required model data properties.");
@@ -63,7 +66,7 @@ public class CableBakedModel extends AbstractBakedModel {
 
 		// Get the model properties.
 		CableRenderingState renderingState = data.getData(AbstractCableProviderComponent.CABLE_RENDERING_STATE);
-		
+
 		// Render the cover.
 		RenderType layer = MinecraftForgeClient.getRenderLayer();
 		if (side != null && renderingState.covers[side.ordinal()] != null) {
@@ -73,10 +76,12 @@ public class CableBakedModel extends AbstractBakedModel {
 		// If we have a simple straight connection, just add that mode. Otherwise, add
 		// the core and then apply any additional models.
 		if (Straight != null && CableUtilities.isCableStraightConnection(renderingState.connectionStates)) {
-			newQuads.addAll(rotateQuadsToFaceDirection(Straight, CableUtilities.getStraightConnectionSide(renderingState.connectionStates), side, state, rand));
+			newQuads.addAll(rotateQuadsToFaceDirection(Straight,
+					CableUtilities.getStraightConnectionSide(renderingState.connectionStates), side, state, rand));
 			for (Direction dir : Direction.values()) {
 				if (renderingState.attachments[dir.ordinal()] != null) {
-					IBakedModel model = Minecraft.getInstance().getModelManager().getModel(renderingState.attachments[dir.ordinal()]);
+					IBakedModel model = Minecraft.getInstance().getModelManager()
+							.getModel(renderingState.attachments[dir.ordinal()]);
 					newQuads.addAll(rotateQuadsToFaceDirection(model, dir, side, state, rand));
 					newQuads.addAll(rotateQuadsToFaceDirection(Extension, dir, side, state, rand));
 				}
@@ -96,10 +101,12 @@ public class CableBakedModel extends AbstractBakedModel {
 				// Decide what to render based on the connection state.
 				if (connectionState == CableConnectionState.CABLE) {
 					newQuads.addAll(rotateQuadsToFaceDirection(Extension, dir, side, state, rand));
-				} else if (connectionState == CableConnectionState.TILE_ENTITY || renderingState.attachments[dir.ordinal()] != null) {
+				} else if (connectionState == CableConnectionState.TILE_ENTITY
+						|| renderingState.attachments[dir.ordinal()] != null) {
 					newQuads.addAll(rotateQuadsToFaceDirection(Extension, dir, side, state, rand));
 					if (renderingState.attachments[dir.ordinal()] != null) {
-						IBakedModel model = Minecraft.getInstance().getModelManager().getModel(renderingState.attachments[dir.ordinal()]);
+						IBakedModel model = Minecraft.getInstance().getModelManager()
+								.getModel(renderingState.attachments[dir.ordinal()]);
 						newQuads.addAll(rotateQuadsToFaceDirection(model, dir, side, state, rand));
 					} else {
 						newQuads.addAll(rotateQuadsToFaceDirection(Attachment, dir, side, state, rand));
@@ -109,5 +116,10 @@ public class CableBakedModel extends AbstractBakedModel {
 		}
 
 		return newQuads;
+	}
+
+	@Override
+	public boolean isSideLit() {
+		return this.BaseModel.isSideLit();
 	}
 }

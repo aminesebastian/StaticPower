@@ -2,6 +2,8 @@ package theking530.staticcore.gui.widgets.tabs;
 
 import org.lwjgl.opengl.GL11;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -46,28 +48,35 @@ public class GuiSideConfigTab extends BaseGuiTab {
 
 		int xOffset = 3;
 		int yOffset = 8;
-		widgetContainer.registerWidget(topButton = new TextButton(xOffset + tabWidth / 2, yOffset + 15, 20, 20, "T", this::buttonPressed));
-		widgetContainer.registerWidget(bottomButton = new TextButton(xOffset + tabWidth / 2, yOffset + tabHeight - 15, 20, 20, "B", this::buttonPressed));
-		widgetContainer.registerWidget(rightButton = new TextButton(xOffset + tabWidth - 15, yOffset + tabHeight / 2, 20, 20, "L", this::buttonPressed));
-		widgetContainer.registerWidget(leftButton = new TextButton(xOffset + 15, yOffset + tabHeight / 2, 20, 20, "R", this::buttonPressed));
-		widgetContainer.registerWidget(backButton = new TextButton(xOffset + tabWidth / 2, yOffset + tabHeight / 2, 20, 20, "B", this::buttonPressed));
-		widgetContainer.registerWidget(frontButton = new TextButton(xOffset + 15, yOffset + 15, 20, 20, "F", this::buttonPressed));
+		widgetContainer.registerWidget(
+				topButton = new TextButton(xOffset + tabWidth / 2, yOffset + 15, 20, 20, "T", this::buttonPressed));
+		widgetContainer.registerWidget(bottomButton = new TextButton(xOffset + tabWidth / 2, yOffset + tabHeight - 15,
+				20, 20, "B", this::buttonPressed));
+		widgetContainer.registerWidget(rightButton = new TextButton(xOffset + tabWidth - 15, yOffset + tabHeight / 2,
+				20, 20, "L", this::buttonPressed));
+		widgetContainer.registerWidget(
+				leftButton = new TextButton(xOffset + 15, yOffset + tabHeight / 2, 20, 20, "R", this::buttonPressed));
+		widgetContainer.registerWidget(backButton = new TextButton(xOffset + tabWidth / 2, yOffset + tabHeight / 2, 20,
+				20, "B", this::buttonPressed));
+		widgetContainer.registerWidget(
+				frontButton = new TextButton(xOffset + 15, yOffset + 15, 20, 20, "F", this::buttonPressed));
 		frontButton.setVisible(allowFaceInteraction);
 
 		updateTooltips();
 	}
 
 	@Override
-	public void renderBackground(int mouseX, int mouseY, float partialTicks) {
-		drawText(xPosition + 10, yPosition + 8);
+	public void renderBackground(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+		drawText(matrix, xPosition + 10, yPosition + 8);
 		drawButtonBG(xPosition, yPosition);
-		super.renderBackground(mouseX, mouseY, partialTicks);
+		super.renderBackground(matrix, mouseX, mouseY, partialTicks);
 	}
 
-	public void drawText(int xPos, int yPos) {
+	public void drawText(MatrixStack stack, int xPos, int yPos) {
 		String tabName = "Side Config";
 		modeText(xPos, yPos);
-		fontRenderer.drawStringWithShadow(tabName, xPos - this.fontRenderer.getStringWidth(tabName) / 2 + 45, yPos, 16777215);
+		fontRenderer.drawStringWithShadow(stack, tabName, xPos - this.fontRenderer.getStringWidth(tabName) / 2 + 45,
+				yPos, 16777215);
 	}
 
 	public void modeText(int tabLeft, int tabTop) {
@@ -94,19 +103,32 @@ public class GuiSideConfigTab extends BaseGuiTab {
 		}
 		SideConfigurationComponent sideComp = tileEntity.getComponent(SideConfigurationComponent.class);
 
-		SideIncrementDirection direction = button.getClickedState() == MouseButton.LEFT ? SideIncrementDirection.FORWARD : SideIncrementDirection.BACKWARDS;
+		SideIncrementDirection direction = button.getClickedState() == MouseButton.LEFT ? SideIncrementDirection.FORWARD
+				: SideIncrementDirection.BACKWARDS;
 		if (button == topButton) {
-			sideComp.modulateWorldSpaceSideMode(SideConfigurationUtilities.getDirectionFromSide(BlockSide.TOP, tileEntity.getFacingDirection()), direction);
+			sideComp.modulateWorldSpaceSideMode(
+					SideConfigurationUtilities.getDirectionFromSide(BlockSide.TOP, tileEntity.getFacingDirection()),
+					direction);
 		} else if (button == bottomButton) {
-			sideComp.modulateWorldSpaceSideMode(SideConfigurationUtilities.getDirectionFromSide(BlockSide.BOTTOM, tileEntity.getFacingDirection()), direction);
+			sideComp.modulateWorldSpaceSideMode(
+					SideConfigurationUtilities.getDirectionFromSide(BlockSide.BOTTOM, tileEntity.getFacingDirection()),
+					direction);
 		} else if (button == leftButton) {
-			sideComp.modulateWorldSpaceSideMode(SideConfigurationUtilities.getDirectionFromSide(BlockSide.LEFT, tileEntity.getFacingDirection()), direction);
+			sideComp.modulateWorldSpaceSideMode(
+					SideConfigurationUtilities.getDirectionFromSide(BlockSide.LEFT, tileEntity.getFacingDirection()),
+					direction);
 		} else if (button == rightButton) {
-			sideComp.modulateWorldSpaceSideMode(SideConfigurationUtilities.getDirectionFromSide(BlockSide.RIGHT, tileEntity.getFacingDirection()), direction);
+			sideComp.modulateWorldSpaceSideMode(
+					SideConfigurationUtilities.getDirectionFromSide(BlockSide.RIGHT, tileEntity.getFacingDirection()),
+					direction);
 		} else if (button == frontButton && allowFaceInteraction) {
-			sideComp.modulateWorldSpaceSideMode(SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, tileEntity.getFacingDirection()), direction);
+			sideComp.modulateWorldSpaceSideMode(
+					SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, tileEntity.getFacingDirection()),
+					direction);
 		} else if (button == backButton) {
-			sideComp.modulateWorldSpaceSideMode(SideConfigurationUtilities.getDirectionFromSide(BlockSide.BACK, tileEntity.getFacingDirection()), direction);
+			sideComp.modulateWorldSpaceSideMode(
+					SideConfigurationUtilities.getDirectionFromSide(BlockSide.BACK, tileEntity.getFacingDirection()),
+					direction);
 		}
 		updateTooltips();
 
@@ -148,24 +170,26 @@ public class GuiSideConfigTab extends BaseGuiTab {
 			}
 
 			// Get the world space direction and current side mode.
-			Direction worldSpaceSide = SideConfigurationUtilities.getDirectionFromSide(side, tileEntity.getFacingDirection());
+			Direction worldSpaceSide = SideConfigurationUtilities.getDirectionFromSide(side,
+					tileEntity.getFacingDirection());
 			MachineSideMode currentMode = sideComp.getWorldSpaceDirectionConfiguration(worldSpaceSide);
 
 			// Get the translation components.
 			TranslationTextComponent translatedSideName = side.getName();
 			ITextComponent translatedModeName = currentMode.getName();
 
-			button.setText(currentMode.getFontColor() + translatedSideName.getFormattedText().substring(0, 1));
-			button.setTooltip(
-					translatedSideName.appendText(" (").appendSibling(new TranslationTextComponent("gui.staticpower.direction." + worldSpaceSide.toString())).appendText(TextFormatting.WHITE + ")"),
-					translatedModeName);
+			button.setText(currentMode.getFontColor() + translatedSideName.getString().substring(0, 1));
+			button.setTooltip(translatedSideName.appendString(" (")
+					.append(new TranslationTextComponent("gui.staticpower.direction." + worldSpaceSide.toString()))
+					.appendString(TextFormatting.WHITE + ")"), translatedModeName);
 		}
 	}
 
 	public TranslationTextComponent conditionallyGetCardinal(BlockSide side) {
 		if (tileEntity instanceof TileEntityBase) {
 			TileEntityBase te = (TileEntityBase) tileEntity;
-			return new TranslationTextComponent("gui." + SideConfigurationUtilities.getDirectionFromSide(side, te.getFacingDirection()).toString().toLowerCase());
+			return new TranslationTextComponent("gui." + SideConfigurationUtilities
+					.getDirectionFromSide(side, te.getFacingDirection()).toString().toLowerCase());
 		}
 		return new TranslationTextComponent("ERROR");
 	}

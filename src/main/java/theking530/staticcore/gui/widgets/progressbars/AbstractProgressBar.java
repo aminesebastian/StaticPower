@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -79,7 +81,7 @@ public abstract class AbstractProgressBar extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderBehindItems(int mouseX, int mouseY, float partialTicks) {
+	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 		// Capture the max progress.
 		if (machineProcessingComponent != null) {
 			maxProgress = machineProcessingComponent.getMaxProcessingTime();
@@ -108,11 +110,11 @@ public abstract class AbstractProgressBar extends AbstractGuiWidget {
 		} else if (enableProgressTooltip) {
 			if (currentProgress > 0) {
 				String remainingTime = decimalFormat.format((maxProgress - currentProgress) / (tickDownRate * 20.0f));
-				tooltips.add(new TranslationTextComponent("gui.staticpower.remaining").appendText(": ").appendText(remainingTime)
-						.appendSibling(new TranslationTextComponent("gui.staticpower.seconds.short")));
+				tooltips.add(new TranslationTextComponent("gui.staticpower.remaining").appendString(": ").appendString(remainingTime)
+						.append(new TranslationTextComponent("gui.staticpower.seconds.short")));
 			} else {
 				String maxTime = decimalFormat.format(maxProgress / (tickDownRate * 20.0f));
-				tooltips.add(new TranslationTextComponent("gui.staticpower.max").appendText(": ").appendText(maxTime).appendSibling(new TranslationTextComponent("gui.staticpower.seconds.short")));
+				tooltips.add(new TranslationTextComponent("gui.staticpower.max").appendString(": ").appendString(maxTime).append(new TranslationTextComponent("gui.staticpower.seconds.short")));
 			}
 		}
 	}

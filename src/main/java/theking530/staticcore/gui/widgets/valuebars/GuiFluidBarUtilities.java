@@ -95,11 +95,11 @@ public class GuiFluidBarUtilities {
 			ITextComponent name = fluid.getDisplayName();
 			tooltip.add(name);
 			tooltip.add(new StringTextComponent(NumberFormat.getNumberInstance(Locale.US).format(fluidAmount) + "/" + NumberFormat.getNumberInstance(Locale.US).format(maxCapacity))
-					.appendSibling(new TranslationTextComponent("gui.staticpower.millbuckets")));
+					.append(new TranslationTextComponent("gui.staticpower.millbuckets")));
 			return tooltip;
 		} else {
 			tooltip.add(new TranslationTextComponent("gui.staticpower.empty"));
-			tooltip.add(new StringTextComponent("0/" + NumberFormat.getNumberInstance(Locale.US).format(maxCapacity)).appendSibling(new TranslationTextComponent("gui.staticpower.millbuckets")));
+			tooltip.add(new StringTextComponent("0/" + NumberFormat.getNumberInstance(Locale.US).format(maxCapacity)).append(new TranslationTextComponent("gui.staticpower.millbuckets")));
 			return tooltip;
 		}
 	}

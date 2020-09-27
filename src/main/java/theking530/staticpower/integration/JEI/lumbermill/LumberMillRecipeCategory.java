@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ITickTimer;
@@ -17,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
@@ -61,7 +64,7 @@ public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRe
 	@Override
 	@Nonnull
 	public String getTitle() {
-		return locTitle.getFormattedText();
+		return locTitle.getString();
 	}
 
 	@Override
@@ -81,26 +84,27 @@ public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRe
 	}
 
 	@Override
-	public void draw(LumberMillRecipe recipe, double mouseX, double mouseY) {
+	public void draw(LumberMillRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
 		GuiDrawUtilities.drawSlot(41, 19, 16, 16);
 		GuiDrawUtilities.drawSlot(89, 17, 20, 20);
 		GuiDrawUtilities.drawSlot(119, 17, 20, 20);
 
 		// This doesn't actually draw the fluid, just the bars.
-		GuiFluidBarUtilities.drawFluidBar(recipe.getOutputFluid(), 0, 0, 153, 54, 1.0f, 16, 48, MachineSideMode.Never, true);
+		GuiFluidBarUtilities.drawFluidBar(recipe.getOutputFluid(), 0, 0, 153, 54, 1.0f, 16, 48, MachineSideMode.Never,
+				true);
 		GuiPowerBarUtilities.drawPowerBar(8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		pBar.setCurrentProgress(processingTimer.getValue());
 		pBar.setMaxProgress(processingTimer.getMaxValue());
-		pBar.renderBehindItems((int) mouseX, (int) mouseY, 0.0f);
+		pBar.renderBehindItems(null, (int) mouseX, (int) mouseY, 0.0f);
 	}
 
 	@Override
-	public List<String> getTooltipStrings(LumberMillRecipe recipe, double mouseX, double mouseY) {
-		List<String> output = new ArrayList<String>();
+	public List<ITextComponent> getTooltipStrings(LumberMillRecipe recipe, double mouseX, double mouseY) {
+		List<ITextComponent> output = new ArrayList<ITextComponent>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			String powerCost = GuiTextUtilities.formatEnergyToString(recipe.getProcessingTime() * recipe.getPowerCost()).getFormattedText();
-			output.add("Usage: " + powerCost);
+			output.add(new StringTextComponent("Usage: ")
+					.append(GuiTextUtilities.formatEnergyToString(recipe.getPowerCost() * recipe.getProcessingTime())));
 		}
 
 		// Render the progress bar tooltip.
@@ -109,7 +113,7 @@ public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRe
 			List<ITextComponent> tooltips = new ArrayList<ITextComponent>();
 			pBar.getTooltips(mouse, tooltips, false);
 			for (ITextComponent tooltip : tooltips) {
-				output.add(tooltip.getFormattedText());
+				output.add(tooltip);
 			}
 		}
 
@@ -144,7 +148,7 @@ public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRe
 		guiItemStacks.init(PRIMARY_OUTPUT_SLOT, false, 90, 18);
 		guiItemStacks.init(SECONDARY_OUTPUT_SLOT, false, 120, 18);
 		guiItemStacks.set(ingredients);
-		
+
 		// Add the fluid.
 		if (recipe.hasOutputFluid()) {
 			IGuiFluidStackGroup fluids = recipeLayout.getFluidStacks();
@@ -152,7 +156,8 @@ public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRe
 			fluids.set(ingredients);
 		}
 
-		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime() * recipe.getPowerCost(), true);
+		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(),
+				recipe.getProcessingTime() * recipe.getPowerCost(), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);
 	}
 }

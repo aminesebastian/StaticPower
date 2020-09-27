@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ITickTimer;
@@ -14,6 +16,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidStack;
@@ -54,7 +57,7 @@ public class CondenserRecipeCategory extends BaseJEIRecipeCategory<CondensationR
 	@Override
 	@Nonnull
 	public String getTitle() {
-		return locTitle.getFormattedText();
+		return locTitle.getString();
 	}
 
 	@Override
@@ -74,10 +77,12 @@ public class CondenserRecipeCategory extends BaseJEIRecipeCategory<CondensationR
 	}
 
 	@Override
-	public void draw(CondensationRecipe recipe, double mouseX, double mouseY) {
+	public void draw(CondensationRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
 		// This doesn't actually draw the fluid, just the bars.
-		GuiFluidBarUtilities.drawFluidBar(recipe.getInputFluid(), 0, 0, 50, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
-		GuiFluidBarUtilities.drawFluidBar(recipe.getOutputFluid(), 0, 0, 104, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
+		GuiFluidBarUtilities.drawFluidBar(recipe.getInputFluid(), 0, 0, 50, 56, 1.0f, 16, 52, MachineSideMode.Never,
+				true);
+		GuiFluidBarUtilities.drawFluidBar(recipe.getOutputFluid(), 0, 0, 104, 56, 1.0f, 16, 52, MachineSideMode.Never,
+				true);
 
 		GuiHeatBarUtilities.drawHeatBar(8, 56, 16, 52, 1.0f, recipe.getHeatGeneration(), recipe.getHeatGeneration());
 
@@ -89,17 +94,18 @@ public class CondenserRecipeCategory extends BaseJEIRecipeCategory<CondensationR
 	}
 
 	@Override
-	public List<String> getTooltipStrings(CondensationRecipe recipe, double mouseX, double mouseY) {
-		List<String> output = new ArrayList<String>();
+	public List<ITextComponent> getTooltipStrings(CondensationRecipe recipe, double mouseX, double mouseY) {
+		List<ITextComponent> output = new ArrayList<ITextComponent>();
 
 		// Render the heat bar tooltip.
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new StringTextComponent("Generates: ").appendSibling(GuiTextUtilities.formatHeatToString(recipe.getHeatGeneration())).getFormattedText());
+			output.add(new StringTextComponent("Generates: ")
+					.append(GuiTextUtilities.formatHeatToString(recipe.getHeatGeneration())));
 		}
 
 		// Render the progress bar tooltip.
 		if (mouseX > 69 && mouseX < 99 && mouseY > 21 && mouseY < 29) {
-			output.add("Required Time: " + recipe.getProcessingTime() / 20.0f + "s");
+			output.add(new StringTextComponent("Required Time: " + recipe.getProcessingTime() / 20.0f + "s"));
 		}
 
 		return output;

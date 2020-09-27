@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ILightReader;
+import net.minecraft.world.IBlockDisplayReader;
 import theking530.staticpower.cables.attachments.cover.CableCover;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 
@@ -22,9 +22,11 @@ public class CableRenderingState {
 	public final BlockState[] covers;
 	public final boolean[] disabledSides;
 	public final BlockPos pos;
-	public final ILightReader world;
+	public final IBlockDisplayReader world;
 
-	public CableRenderingState(CableConnectionState[] connectionStates, ResourceLocation[] attachments, ItemStack[] attachmentItems, ItemStack[] covers, boolean[] disabledSides, BlockPos pos, ILightReader world) {
+	public CableRenderingState(CableConnectionState[] connectionStates, ResourceLocation[] attachments,
+			ItemStack[] attachmentItems, ItemStack[] covers, boolean[] disabledSides, BlockPos pos,
+			IBlockDisplayReader world) {
 		super();
 		this.connectionStates = connectionStates;
 		this.attachments = attachments;

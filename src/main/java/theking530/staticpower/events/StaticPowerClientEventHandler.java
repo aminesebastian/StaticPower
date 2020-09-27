@@ -87,7 +87,7 @@ public class StaticPowerClientEventHandler {
 						if (override != null) {
 							event.getModelRegistry().put(variantMRL, override);
 						} else {
-							LOGGER.error(String.format("Encountered null model override for block: %1$s.", block.getNameTextComponent().getFormattedText()));
+							LOGGER.error(String.format("Encountered null model override for block: %1$s.", block.getTranslatedName().getString()));
 						}
 					}
 				}

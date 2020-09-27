@@ -34,30 +34,40 @@ public class ModFluids {
 	public static StaticPowerFluidBundle Latex;
 
 	public static void init() {
-		registerFluidBundle(StaticFluid = new StaticPowerFluidBuilder("fluid_static").addAutoBucket().addAttributes(builder -> {
-			builder.luminosity(15);
-		}).build());
-		registerFluidBundle(EnergizedFluid = new StaticPowerFluidBuilder("fluid_energized").addAutoBucket().addAttributes(builder -> {
-			builder.luminosity(15);
-		}).build());
-		registerFluidBundle(LumumFluid = new StaticPowerFluidBuilder("fluid_lumum").addAutoBucket().addAttributes(builder -> {
-			builder.luminosity(15);
-		}).build());
+		registerFluidBundle(
+				StaticFluid = new StaticPowerFluidBuilder("fluid_static").addAutoBucket().addAttributes(builder -> {
+					builder.luminosity(15);
+				}).build());
+		registerFluidBundle(EnergizedFluid = new StaticPowerFluidBuilder("fluid_energized").addAutoBucket()
+				.addAttributes(builder -> {
+					builder.luminosity(15);
+				}).build());
+		registerFluidBundle(
+				LumumFluid = new StaticPowerFluidBuilder("fluid_lumum").addAutoBucket().addAttributes(builder -> {
+					builder.luminosity(15);
+				}).build());
 
 		registerFluidBundle(Ethanol = new StaticPowerFluidBuilder("ethanol").addAutoBucket().build());
+
 		registerFluidBundle(Mash = new StaticPowerFluidBuilder("mash").addAutoBucket().build());
-		registerFluidBundle(EvaporatedMash = new StaticPowerFluidBuilder("evaporated_mash").addAutoBucket().addAttributes(builder -> {
-			builder.gaseous().density(-100);
-		}).build());
-		registerFluidBundle(LiquidExperience = new StaticPowerFluidBuilder("liquid_experience").addAutoBucket().build());
+
+		registerFluidBundle(EvaporatedMash = new StaticPowerFluidBuilder("evaporated_mash").addAutoBucket()
+				.addAttributes(builder -> {
+					builder.gaseous().density(-100);
+				}).build());
+
+		registerFluidBundle(LiquidExperience = new StaticPowerFluidBuilder("experience").addAutoBucket().build());
+
 		registerFluidBundle(Steam = new StaticPowerFluidBuilder("steam").addAutoBucket().addAttributes(builder -> {
 			builder.gaseous().density(-100);
 		}).build());
-		registerFluidBundle(SeedOil = new StaticPowerFluidBuilder("seed_oil").addAutoBucket().build());
-		registerFluidBundle(TreeOil = new StaticPowerFluidBuilder("tree_oil").addAutoBucket().build());
+
+		registerFluidBundle(SeedOil = new StaticPowerFluidBuilder("oil_seed").addAutoBucket().build());
+		registerFluidBundle(TreeOil = new StaticPowerFluidBuilder("oil_tree").addAutoBucket().build());
 		registerFluidBundle(TreeSap = new StaticPowerFluidBuilder("tree_sap").addAutoBucket().build());
 
-		registerFluidBundle(Milk = new StaticPowerFluidBuilder("milk").addBucketSupplier(() -> Items.MILK_BUCKET).setShouldRegisterBucket(false).build());
+		registerFluidBundle(Milk = new StaticPowerFluidBuilder("milk").addBucketSupplier(() -> Items.MILK_BUCKET)
+				.setShouldRegisterBucket(false).build());
 
 		registerFluidBundle(AppleJuice = new StaticPowerFluidBuilder("juice_apple").addAutoBucket().build());
 		registerFluidBundle(BerryJuice = new StaticPowerFluidBuilder("juice_berry").addAutoBucket().build());
@@ -65,17 +75,18 @@ public class ModFluids {
 		registerFluidBundle(CarrotJuice = new StaticPowerFluidBuilder("juice_carrot").addAutoBucket().build());
 		registerFluidBundle(WatermelonJuice = new StaticPowerFluidBuilder("juice_melon").addAutoBucket().build());
 		registerFluidBundle(BeetJuice = new StaticPowerFluidBuilder("juice_beetroot").addAutoBucket().build());
-		registerFluidBundle(Fertilizer = new StaticPowerFluidBuilder("liquid_fertilizer").addAutoBucket().build());
+		registerFluidBundle(Fertilizer = new StaticPowerFluidBuilder("fertilizer").addAutoBucket().build());
 
 		registerFluidBundle(Honey = new StaticPowerFluidBuilder("honey").addAutoBucket().addAttributes(builder -> {
 			builder.viscosity(128).density(64).sound(SoundEvents.BLOCK_HONEY_BLOCK_STEP);
 		}).build());
 
-		registerFluidBundle(Concrete = new StaticPowerFluidBuilder("concrete").addAutoBucket().addAttributes(builder -> {
-			builder.viscosity(128).density(64).sound(SoundEvents.BLOCK_HONEY_BLOCK_STEP);
-		}).build());
+		registerFluidBundle(
+				Concrete = new StaticPowerFluidBuilder("concrete").addAutoBucket().addAttributes(builder -> {
+					builder.viscosity(128).density(64).sound(SoundEvents.BLOCK_HONEY_BLOCK_STEP);
+				}).build());
 
-		registerFluidBundle(Latex = new StaticPowerFluidBuilder("liquid_latex").addAutoBucket().addAttributes(builder -> {
+		registerFluidBundle(Latex = new StaticPowerFluidBuilder("latex").addAutoBucket().addAttributes(builder -> {
 			builder.viscosity(80).density(32).sound(SoundEvents.BLOCK_HONEY_BLOCK_STEP);
 		}).build());
 	}

@@ -1,5 +1,7 @@
 package theking530.staticpower.tileentities.powered.chargingstation;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Items;
 import net.minecraft.util.text.ITextComponent;
@@ -32,8 +34,8 @@ public class GuiChargingStation extends StaticPowerTileEntityGui<ContainerChargi
 	}
 
 	@Override
-	protected void drawBehindItems(float partialTicks, int mouseX, int mouseY) {
-		super.drawBehindItems(partialTicks, mouseX, mouseY);
+	protected void drawBehindItems(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+		super.drawBehindItems(stack, partialTicks, mouseX, mouseY);
 		this.itemRenderer.drawItem(Items.IRON_HELMET, guiLeft, guiTop, 152, 8, 0.3f);
 		this.itemRenderer.drawItem(Items.IRON_CHESTPLATE, guiLeft, guiTop, 152, 26, 0.3f);
 		this.itemRenderer.drawItem(Items.IRON_LEGGINGS, guiLeft, guiTop, 152, 44, 0.3f);

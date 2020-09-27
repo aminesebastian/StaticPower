@@ -13,7 +13,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.BlockFaceUV;
@@ -23,11 +22,12 @@ import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelLoader;
@@ -58,7 +58,8 @@ public class PortableBatteryItemModel implements IBakedModel {
 	public ItemOverrideList getOverrides() {
 		return new ItemOverrideList() {
 			@Override
-			public IBakedModel getModelWithOverrides(IBakedModel originalModel, ItemStack stack, World world, LivingEntity entity) {
+			public IBakedModel getOverrideModel(IBakedModel originalModel, ItemStack stack, @Nullable ClientWorld world,
+					@Nullable LivingEntity livingEntity) {
 				// Make sure we have a valid portable battery.
 				if (!(stack.getItem() instanceof PortableBattery)) {
 					return originalModel;
@@ -104,10 +105,9 @@ public class PortableBatteryItemModel implements IBakedModel {
 	}
 
 	@Override
-	public boolean func_230044_c_() {
-		return baseModel.func_230044_c_();
+	public boolean isSideLit() {
+		return baseModel.isSideLit();
 	}
-
 	@Override
 	public boolean isBuiltInRenderer() {
 		return baseModel.isBuiltInRenderer();
@@ -172,8 +172,8 @@ public class PortableBatteryItemModel implements IBakedModel {
 		}
 
 		@Override
-		public boolean func_230044_c_() {
-			return false;
+		public boolean isSideLit() {
+			return baseModel.isSideLit();
 		}
 
 		@Override

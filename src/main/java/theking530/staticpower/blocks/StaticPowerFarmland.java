@@ -60,7 +60,7 @@ public class StaticPowerFarmland extends StaticPowerBlock {
 			return true;
 		}
 
-		return type == PlantType.Desert || type == PlantType.Nether || type == PlantType.Crop || type == PlantType.Cave;
+		return type == PlantType.DESERT || type == PlantType.NETHER || type == PlantType.CROP || type == PlantType.CAVE;
 	}
 
 	public boolean hasCrops(IBlockReader worldIn, BlockPos pos) {

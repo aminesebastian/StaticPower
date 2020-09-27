@@ -3,6 +3,8 @@ package theking530.staticcore.gui.widgets;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -28,7 +30,7 @@ public class ProcessingComponentStateWidget extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderBehindItems(int mouseX, int mouseY, float partialTicks) {
+	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 		Vector2D screenSpacePosition = this.getScreenSpacePosition();
 		if (machineProcessingComponent.isProcessingStoppedDueToError()) {
 			errorDrawable.draw(screenSpacePosition.getX(), screenSpacePosition.getY());
@@ -50,10 +52,10 @@ public class ProcessingComponentStateWidget extends AbstractGuiWidget {
 			String remainingTime = decimalFormat
 					.format((machineProcessingComponent.getMaxProcessingTime() - machineProcessingComponent.getCurrentProcessingTime()) / (machineProcessingComponent.getTimeUnitsPerTick() * 20.0f));
 			tooltips.add(
-					new TranslationTextComponent("gui.staticpower.remaining").appendText(": ").appendText(remainingTime).appendSibling(new TranslationTextComponent("gui.staticpower.seconds.short")));
+					new TranslationTextComponent("gui.staticpower.remaining").appendString(": ").appendString(remainingTime).append(new TranslationTextComponent("gui.staticpower.seconds.short")));
 		} else {
 			String maxTime = decimalFormat.format(machineProcessingComponent.getMaxProcessingTime() / (machineProcessingComponent.getTimeUnitsPerTick() * 20.0f));
-			tooltips.add(new TranslationTextComponent("gui.staticpower.max").appendText(": ").appendText(maxTime).appendSibling(new TranslationTextComponent("gui.staticpower.seconds.short")));
+			tooltips.add(new TranslationTextComponent("gui.staticpower.max").appendString(": ").appendString(maxTime).append(new TranslationTextComponent("gui.staticpower.seconds.short")));
 		}
 	}
 }

@@ -77,12 +77,14 @@ public class StaticPowerItem extends Item {
 	@Override
 	public ActionResultType onItemUse(ItemUseContext context) {
 		super.onItemUse(context);
-		return onStaticPowerItemUsedOnBlock(context, context.getWorld(), context.getPos(), context.getFace(), context.getPlayer(), context.getItem());
+		return onStaticPowerItemUsedOnBlock(context, context.getWorld(), context.getPos(), context.getFace(),
+				context.getPlayer(), context.getItem());
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip,
+			ITooltipFlag flagIn) {
 		// Get the basic tooltips.
 		List<ITextComponent> basicTooltips = new ArrayList<ITextComponent>();
 		getBasicTooltip(stack, worldIn, basicTooltips);
@@ -103,7 +105,7 @@ public class StaticPowerItem extends Item {
 			if (Screen.hasShiftDown()) {
 				tooltip.addAll(advancedToolTips);
 			} else {
-				tooltip.add(new StringTextComponent("Hold Shift").applyTextStyle(TextFormatting.ITALIC));
+				tooltip.add(new StringTextComponent("Hold Shift").mergeStyle(TextFormatting.ITALIC));
 			}
 		}
 	}
@@ -117,7 +119,8 @@ public class StaticPowerItem extends Item {
 	 * @param item   The {@link ItemStack}.
 	 * @return The result of the action.
 	 */
-	protected ActionResult<ItemStack> onStaticPowerItemRightClicked(World world, PlayerEntity player, Hand hand, ItemStack item) {
+	protected ActionResult<ItemStack> onStaticPowerItemRightClicked(World world, PlayerEntity player, Hand hand,
+			ItemStack item) {
 		return ActionResult.resultPass(item);
 	}
 
@@ -132,7 +135,8 @@ public class StaticPowerItem extends Item {
 	 * @param item    The item stack that was used.
 	 * @return The result of the action (SUCCESS, PASS, FAIL, CONSUME).
 	 */
-	protected ActionResultType onStaticPowerItemUsedOnBlock(ItemUseContext context, World world, BlockPos pos, Direction face, PlayerEntity player, ItemStack item) {
+	protected ActionResultType onStaticPowerItemUsedOnBlock(ItemUseContext context, World world, BlockPos pos,
+			Direction face, PlayerEntity player, ItemStack item) {
 		return ActionResultType.PASS;
 	}
 

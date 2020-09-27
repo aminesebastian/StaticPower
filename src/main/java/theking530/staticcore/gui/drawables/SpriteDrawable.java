@@ -61,27 +61,42 @@ public class SpriteDrawable implements IDrawable {
 
 			// Turn on the blending just in case its not on.
 			GlStateManager.enableBlend();
+			GL11.glDisable(GL11.GL_CULL_FACE);
 
 			if (spriteTexture.getName().toString().equals("minecraft:missingno")) {
 				// Bind the texture atlas.
 				Minecraft.getInstance().getTextureManager().bindTexture(sprite);
 				// Draw the sprite.
-				vertexbuffer.pos(x, y + size.getY(), z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(0.0f, 1.0f).endVertex();
-				vertexbuffer.pos(x, y, z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(0.0f, 0.0f).endVertex();
-				vertexbuffer.pos(x + size.getX(), y, z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(1.0f, 0.0f).endVertex();
-				vertexbuffer.pos(x + size.getX(), y + size.getY(), z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(1.0f, 1.0f).endVertex();
+				vertexbuffer.pos(x, y + size.getY(), z)
+						.color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(0.0f, 1.0f)
+						.endVertex();
+				vertexbuffer.pos(x, y, z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha())
+						.tex(0.0f, 0.0f).endVertex();
+				vertexbuffer.pos(x + size.getX(), y, z)
+						.color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(1.0f, 0.0f)
+						.endVertex();
+				vertexbuffer.pos(x + size.getX(), y + size.getY(), z)
+						.color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(1.0f, 1.0f)
+						.endVertex();
 				tessellator.draw();
 
 			} else {
 				Minecraft.getInstance().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 				// Draw the sprite.
-				vertexbuffer.pos(x, y + size.getY(), z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(spriteTexture.getMinU(), spriteTexture.getMaxV()).endVertex();
-				vertexbuffer.pos(x, y, z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(spriteTexture.getMinU(), spriteTexture.getMinV()).endVertex();
-				vertexbuffer.pos(x + size.getX(), y, z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(spriteTexture.getMaxU(), spriteTexture.getMinV()).endVertex();
-				vertexbuffer.pos(x + size.getX(), y + size.getY(), z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(spriteTexture.getMaxU(), spriteTexture.getMaxV())
-						.endVertex();
+				vertexbuffer.pos(x, y + size.getY(), z)
+						.color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha())
+						.tex(spriteTexture.getMinU(), spriteTexture.getMaxV()).endVertex();
+				vertexbuffer.pos(x, y, z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha())
+						.tex(spriteTexture.getMinU(), spriteTexture.getMinV()).endVertex();
+				vertexbuffer.pos(x + size.getX(), y, z)
+						.color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha())
+						.tex(spriteTexture.getMaxU(), spriteTexture.getMinV()).endVertex();
+				vertexbuffer.pos(x + size.getX(), y + size.getY(), z)
+						.color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha())
+						.tex(spriteTexture.getMaxU(), spriteTexture.getMaxV()).endVertex();
 				tessellator.draw();
 			}
+			GL11.glEnable(GL11.GL_CULL_FACE);
 		}
 	}
 }

@@ -2,6 +2,8 @@ package theking530.staticcore.gui.widgets.valuebars;
 
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.util.text.ITextComponent;
 import theking530.api.power.StaticVoltHandler;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
@@ -17,7 +19,7 @@ public class GuiPowerBarFromEnergyStorage extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderBehindItems(int mouseX, int mouseY, float partialTicks) {
+	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 		Vector2D ownerRelativePosition = getScreenSpacePosition();
 		GuiPowerBarUtilities.drawPowerBar(ownerRelativePosition.getX(), ownerRelativePosition.getY() + getSize().getY(), getSize().getX(), getSize().getY(), 0.0f, energyStorage.getStoredPower(),
 				energyStorage.getCapacity());

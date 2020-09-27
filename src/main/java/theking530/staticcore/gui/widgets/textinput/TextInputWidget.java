@@ -3,9 +3,13 @@ package theking530.staticcore.gui.widgets.textinput;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.Vector2D;
@@ -24,7 +28,8 @@ public class TextInputWidget extends AbstractGuiWidget {
 	public TextInputWidget(String initialString, float xPosition, float yPosition, float width, float height) {
 		super(xPosition, yPosition, width, height);
 		fontRenderer = Minecraft.getInstance().fontRenderer;
-		textField = new StaticPowerTextFieldWidget(fontRenderer, (int) xPosition, (int) yPosition, (int) width, (int) height, "");
+		textField = new StaticPowerTextFieldWidget(fontRenderer, (int) xPosition, (int) yPosition, (int) width,
+				(int) height, new StringTextComponent(""));
 		textField.setText(initialString);
 		alignment = TextAlignment.LEFT;
 	}
@@ -75,7 +80,7 @@ public class TextInputWidget extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderBehindItems(int mouseX, int mouseY, float partialTicks) {
+	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 		Vector2D position = this.getScreenSpacePosition();
 		GuiDrawUtilities.drawSlot(position.getX(), position.getY(), getSize().getX(), getSize().getY());
 
@@ -89,7 +94,7 @@ public class TextInputWidget extends AbstractGuiWidget {
 
 		textField.setWidth((int) getSize().getX());
 		textField.setHeight((int) getSize().getY());
-		textField.render(mouseX, mouseY, partialTicks);
+		textField.render(matrix, mouseX, mouseX, partialTicks);
 	}
 
 	@Override
@@ -146,13 +151,15 @@ public class TextInputWidget extends AbstractGuiWidget {
 
 	private class StaticPowerTextFieldWidget extends TextFieldWidget {
 
-		public StaticPowerTextFieldWidget(FontRenderer fontIn, int xIn, int yIn, int widthIn, int heightIn, String msg) {
+		public StaticPowerTextFieldWidget(FontRenderer fontIn, int xIn, int yIn, int widthIn, int heightIn,
+				ITextComponent msg) {
 			super(fontIn, xIn, yIn, widthIn, heightIn, msg);
 			setEnableBackgroundDrawing(false);
 		}
 
-		public void renderButton(int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_) {
-			super.renderButton(p_renderButton_1_, p_renderButton_2_, p_renderButton_3_);
+		public void renderButton(MatrixStack stack, int p_renderButton_1_, int p_renderButton_2_,
+				float p_renderButton_3_) {
+			super.renderButton(stack, p_renderButton_1_, p_renderButton_2_, p_renderButton_3_);
 		}
 	}
 }

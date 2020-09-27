@@ -52,17 +52,22 @@ public class StaticPowerForgeEventRegistry {
 	public static void onPlayerJoinedGame(PlayerEvent.PlayerLoggedInEvent playerLoggedIn) {
 		if (!playerLoggedIn.getPlayer().getEntityWorld().isRemote) {
 			NetworkMessage msg = new PacketSyncTiers(TierReloadListener.TIERS.values());
-			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) playerLoggedIn.getPlayer()), msg);
-			StaticPower.LOGGER.info(String.format("Synced tier configuration to player: %1$s!", playerLoggedIn.getPlayer().getDisplayName().getFormattedText()));
+			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL
+					.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) playerLoggedIn.getPlayer()), msg);
+			StaticPower.LOGGER.info(String.format("Synced tier configuration to player: %1$s!",
+					playerLoggedIn.getPlayer().getDisplayName().getString()));
 		}
 	}
 
 	@SubscribeEvent
 	public static void onServerAboutToStart(FMLServerAboutToStartEvent serverStarted) {
-		IReloadableResourceManager resourceManager = serverStarted.getServer().getResourceManager();
+		IReloadableResourceManager resourceManager = (IReloadableResourceManager) serverStarted.getServer()
+				.getDataPackRegistries().getResourceManager();
 		resourceManager.addReloadListener(new TierReloadListener());
 		resourceManager.addReloadListener(new RecipeReloadListener(serverStarted.getServer().getRecipeManager()));
 		StaticPower.LOGGER.info("Server resource reload listener created!");
+		
+		TierReloadListener.updateOnServer(resourceManager);
 
 		ModOres.init();
 		StaticPower.LOGGER.info("Ore generators registered!");
@@ -90,9 +95,11 @@ public class StaticPowerForgeEventRegistry {
 				matchParameters.setFluids(fluid.copy());
 			});
 
-			StaticPowerRecipeRegistry.getRecipe(ThermalConductivityRecipe.RECIPE_TYPE, matchParameters).ifPresent(recipe -> {
-				event.getToolTip().add(HeatTooltipUtilities.getHeatRateTooltip(recipe.getThermalConductivity()));
-			});
+			StaticPowerRecipeRegistry.getRecipe(ThermalConductivityRecipe.RECIPE_TYPE, matchParameters)
+					.ifPresent(recipe -> {
+						event.getToolTip()
+								.add(HeatTooltipUtilities.getHeatRateTooltip(recipe.getThermalConductivity()));
+					});
 		}
 	}
 

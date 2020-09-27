@@ -2,6 +2,8 @@ package theking530.staticcore.gui.widgets.valuebars;
 
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.util.text.ITextComponent;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.Vector2D;
@@ -28,7 +30,7 @@ public class GuiFluidBarFromTank extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderBehindItems(int mouseX, int mouseY, float partialTicks) {
+	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 		tank.updateBeforeRendering(partialTicks);
 
 		Vector2D ownerRelativePosition = getScreenSpacePosition();

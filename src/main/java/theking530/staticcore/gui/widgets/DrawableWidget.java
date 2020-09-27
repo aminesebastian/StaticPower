@@ -2,6 +2,8 @@ package theking530.staticcore.gui.widgets;
 
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.util.text.ITextComponent;
 import theking530.staticcore.gui.drawables.IDrawable;
 import theking530.staticcore.utilities.Vector2D;
@@ -26,7 +28,7 @@ public class DrawableWidget extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderBehindItems(int mouseX, int mouseY, float partialTicks) {
+	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 		// Get the screen space position and offset it by the scale to center the
 		// entity.
 		Vector2D screenSpacePosition = getScreenSpacePosition();

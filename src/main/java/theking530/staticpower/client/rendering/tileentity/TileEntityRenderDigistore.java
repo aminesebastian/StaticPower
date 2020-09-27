@@ -30,7 +30,7 @@ public class TileEntityRenderDigistore extends StaticPowerTileEntitySpecialRende
 					15728880, combinedOverlay);
 			drawFillBar(tileEntity, pos, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 			MetricConverter metric = new MetricConverter(tileEntity.inventory.getTotalContainedCount());
-			drawTextInWorld(metric.getValueAsString(true), tileEntity, new Color(255.0f, 255.0f, 255.0f, 255.0f), new Vector3D(0.5f, 0.323f, 1.0f), 0.007f, partialTicks, matrixStack, buffer,
+			drawTextInWorld(metric.getValueAsString(true), tileEntity, new Color(255.0f, 255.0f, 255.0f, 255.0f), new Vector3D(0.5f, 0.323f, 1.0001f), 0.007f, partialTicks, matrixStack, buffer,
 					combinedLight, combinedOverlay);
 		}
 		drawIndicators(tileEntity, pos, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);

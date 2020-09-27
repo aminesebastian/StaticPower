@@ -40,7 +40,7 @@ import theking530.staticpower.blocks.interfaces.IBlockRenderLayerProvider;
  */
 public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable, IBlockRenderLayerProvider {
 	public static final Logger LOGGER = LogManager.getLogger(BaseSimplePlant.class);
-	
+
 	/**
 	 * The different bounding boxes for the crop at different ages.
 	 */
@@ -52,7 +52,8 @@ public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable
 	 * @param name The registry name for this block sans namespace.
 	 */
 	public BaseSimplePlant(String name) {
-		super(Block.Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().hardnessAndResistance(0.0f).sound(SoundType.CROP));
+		super(Block.Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().hardnessAndResistance(0.0f)
+				.sound(SoundType.CROP));
 		setRegistryName(name);
 		SHAPES = getShapesByAge();
 	}
@@ -60,6 +61,7 @@ public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable
 	/**
 	 * On random block tick, attempt to grow the plant.
 	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
 		super.tick(state, worldIn, pos, rand);
@@ -70,7 +72,8 @@ public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable
 			int i = this.getAge(state);
 			if (i < this.getMaxAge()) {
 				float f = getGrowthChance(this, worldIn, pos);
-				if (net.minecraftforge.common.ForgeHooks.onCropsGrowPre(worldIn, pos, state, rand.nextInt((int) (25.0F / f) + 1) == 0)) {
+				if (net.minecraftforge.common.ForgeHooks.onCropsGrowPre(worldIn, pos, state,
+						rand.nextInt((int) (25.0F / f) + 1) == 0)) {
 					worldIn.setBlockState(pos, this.withAge(i + 1), 2);
 					net.minecraftforge.common.ForgeHooks.onCropsGrowPost(worldIn, pos, state);
 				}
@@ -85,7 +88,8 @@ public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		if (state.get(getAgeProperty()) > getMaxAge()) {
-			LOGGER.error(String.format("Plant at position: %1$s was found with an invalid value for Age.", pos.toString()));
+			LOGGER.error(
+					String.format("Plant at position: %1$s was found with an invalid value for Age.", pos.toString()));
 			return SHAPES[getMaxAge()];
 		}
 		return SHAPES[state.get(getAgeProperty())];
@@ -97,7 +101,8 @@ public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable
 	 * harvested.
 	 */
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player,
+			Hand handIn, BlockRayTraceResult hit) {
 		if (isMaxAge(state)) {
 			Block.spawnDrops(state, worldIn, pos);
 			worldIn.setBlockState(pos, withAge(0), 2);
@@ -217,7 +222,8 @@ public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable
 			for (int j = -1; j <= 1; ++j) {
 				float f1 = 0.0F;
 				BlockState blockstate = worldIn.getBlockState(blockpos.add(i, 0, j));
-				if (blockstate.canSustainPlant(worldIn, blockpos.add(i, 0, j), net.minecraft.util.Direction.UP, (IPlantable) blockIn)) {
+				if (blockstate.canSustainPlant(worldIn, blockpos.add(i, 0, j), net.minecraft.util.Direction.UP,
+						(IPlantable) blockIn)) {
 					f1 = 1.0F;
 					if (blockstate.isFertile(worldIn, blockpos.add(i, 0, j))) {
 						f1 = 3.0F;
@@ -236,12 +242,16 @@ public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable
 		BlockPos blockpos2 = pos.south();
 		BlockPos blockpos3 = pos.west();
 		BlockPos blockpos4 = pos.east();
-		boolean flag = blockIn == worldIn.getBlockState(blockpos3).getBlock() || blockIn == worldIn.getBlockState(blockpos4).getBlock();
-		boolean flag1 = blockIn == worldIn.getBlockState(blockpos1).getBlock() || blockIn == worldIn.getBlockState(blockpos2).getBlock();
+		boolean flag = blockIn == worldIn.getBlockState(blockpos3).getBlock()
+				|| blockIn == worldIn.getBlockState(blockpos4).getBlock();
+		boolean flag1 = blockIn == worldIn.getBlockState(blockpos1).getBlock()
+				|| blockIn == worldIn.getBlockState(blockpos2).getBlock();
 		if (flag && flag1) {
 			f /= 2.0F;
 		} else {
-			boolean flag2 = blockIn == worldIn.getBlockState(blockpos3.north()).getBlock() || blockIn == worldIn.getBlockState(blockpos4.north()).getBlock() || blockIn == worldIn.getBlockState(blockpos4.south()).getBlock()
+			boolean flag2 = blockIn == worldIn.getBlockState(blockpos3.north()).getBlock()
+					|| blockIn == worldIn.getBlockState(blockpos4.north()).getBlock()
+					|| blockIn == worldIn.getBlockState(blockpos4.south()).getBlock()
 					|| blockIn == worldIn.getBlockState(blockpos3.south()).getBlock();
 			if (flag2) {
 				f /= 2.0F;
@@ -264,7 +274,8 @@ public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable
 	 */
 	@Override
 	public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-		if (entityIn instanceof RavagerEntity && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(worldIn, entityIn)) {
+		if (entityIn instanceof RavagerEntity
+				&& net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(worldIn, entityIn)) {
 			worldIn.destroyBlock(pos, true, entityIn);
 		}
 
@@ -308,9 +319,14 @@ public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable
 	 *         of the plant.
 	 */
 	public VoxelShape[] getShapesByAge() {
-		return new VoxelShape[] { Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D), Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D), Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D),
-				Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D), Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D), Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 10.0D, 16.0D),
-				Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 10.0D, 16.0D), Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D) };
+		return new VoxelShape[] { Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D),
+				Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D),
+				Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D),
+				Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D),
+				Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D),
+				Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 10.0D, 16.0D),
+				Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 10.0D, 16.0D),
+				Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D) };
 	}
 
 	@Override

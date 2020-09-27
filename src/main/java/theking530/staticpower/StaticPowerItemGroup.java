@@ -37,10 +37,11 @@ public class StaticPowerItemGroup extends ItemGroup {
 	}
 
 	private void calculateSubTypes() {
-		// If we have calculated the subtypes, do nothing.
-		if (this.subTypes != null) {
-			return;
-		}
+		// Remove this caching for now until we gather a better system for gathering subtypes AFTER tiers have been synced.
+//		// If we have calculated the subtypes, do nothing.
+//		if (this.subTypes != null) {
+//			return;
+//		}
 
 		// Preallocate a large array.
 		this.subTypes = new ArrayList<>(1000);

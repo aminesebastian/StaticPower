@@ -20,7 +20,8 @@ public class CableNetworkAnalyzer extends StaticPowerItem {
 	}
 
 	@Override
-	protected ActionResultType onStaticPowerItemUsedOnBlock(ItemUseContext context, World world, BlockPos pos, Direction face, PlayerEntity player, ItemStack item) {
+	protected ActionResultType onStaticPowerItemUsedOnBlock(ItemUseContext context, World world, BlockPos pos,
+			Direction face, PlayerEntity player, ItemStack item) {
 		// If on the server.
 		if (!world.isRemote) {
 			// If we right clicked on a cable.
@@ -29,7 +30,7 @@ public class CableNetworkAnalyzer extends StaticPowerItem {
 				ServerCable cable = CableNetworkManager.get(world).getCable(pos);
 				// Get all the messages that should be written to the output and write them.
 				for (ITextComponent text : cable.getNetwork().getReaderOutput()) {
-					player.sendMessage(text);
+					player.sendMessage(text, player.getUniqueID());
 				}
 				return ActionResultType.SUCCESS;
 			}

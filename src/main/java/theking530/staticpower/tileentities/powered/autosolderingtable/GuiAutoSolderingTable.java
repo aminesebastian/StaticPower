@@ -1,5 +1,7 @@
 package theking530.staticpower.tileentities.powered.autosolderingtable;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
@@ -14,10 +16,12 @@ import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.AbstractGuiSolderingTable;
 
-public class GuiAutoSolderingTable extends AbstractGuiSolderingTable<TileEntityAutoSolderingTable, ContainerAutoSolderingTable> {
+public class GuiAutoSolderingTable
+		extends AbstractGuiSolderingTable<TileEntityAutoSolderingTable, ContainerAutoSolderingTable> {
 	private final GuiDrawItem itemRenderer;
 
-	public GuiAutoSolderingTable(ContainerAutoSolderingTable container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiAutoSolderingTable(ContainerAutoSolderingTable container, PlayerInventory invPlayer,
+			ITextComponent name) {
 		super(container, invPlayer, name, 176, 185);
 		itemRenderer = new GuiDrawItem();
 	}
@@ -26,21 +30,26 @@ public class GuiAutoSolderingTable extends AbstractGuiSolderingTable<TileEntityA
 	public void initializeGui() {
 		super.initializeGui();
 		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 45));
-		registerWidget(new ArrowProgressBar(99, 38).bindToMachineProcessingComponent(getTileEntity().processingComponent));
+		registerWidget(
+				new ArrowProgressBar(99, 38).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
-		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
+		getTabManager().registerTab(
+				new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
-		
-		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage, getTileEntity().processingComponent).setTabSide(TabSide.LEFT), true);
-		getTabManager().registerTab(new GuiUpgradeTab(this.container, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
-		
+
+		getTabManager().registerTab(
+				new GuiMachinePowerInfoTab(getTileEntity().energyStorage, getTileEntity().processingComponent)
+						.setTabSide(TabSide.LEFT),
+				true);
+		getTabManager().registerTab(
+				new GuiUpgradeTab(this.container, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
+
 		setOutputSlotSize(20);
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-
+	protected void drawBehindItems(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+		super.drawBehindItems(stack, partialTicks, mouseX, mouseY);
 		// Check if we have a recipe currently processing.
 		SolderingRecipe recipe = getTileEntity().getCurrentProcessingRecipe().orElse(null);
 

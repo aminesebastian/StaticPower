@@ -3,8 +3,8 @@ package theking530.staticcore.utilities;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.vector.Vector3f;
 
 public class SDMath {
 	private static final Random RANDOM = new Random();

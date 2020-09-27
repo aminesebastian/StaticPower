@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.util.SoundCategory;
@@ -31,7 +33,8 @@ public class StandardButton extends AbstractGuiWidget {
 	private float clickSoundPitch;
 	private List<ITextComponent> tooltip;
 
-	public StandardButton(int xPos, int yPos, int width, int height, BiConsumer<StandardButton, MouseButton> onClickedEvent) {
+	public StandardButton(int xPos, int yPos, int width, int height,
+			BiConsumer<StandardButton, MouseButton> onClickedEvent) {
 		super(xPos, yPos, width, height);
 		clickSoundPitch = 1.0f;
 		onClicked = onClickedEvent;
@@ -52,7 +55,7 @@ public class StandardButton extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderBehindItems(int mouseX, int mouseY, float partialTicks) {
+	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 		if (!isVisible()) {
 			return;
 		}
@@ -64,9 +67,9 @@ public class StandardButton extends AbstractGuiWidget {
 
 		// Draw the button and then the overlay.
 		if (shouldDrawButtonBackground()) {
-			drawButton(buttonLeft, buttonTop);
+			drawButton(matrix, buttonLeft, buttonTop);
 		}
-		drawButtonOverlay(buttonLeft, buttonTop);
+		drawButtonOverlay(matrix, buttonLeft, buttonTop);
 	}
 
 	@Override
@@ -112,11 +115,12 @@ public class StandardButton extends AbstractGuiWidget {
 		hovered = false;
 	}
 
-	protected void drawButton(int buttonLeft, int buttonTop) {
-		GuiDrawUtilities.drawDefaultButton(isClicked() || isHovered() || isToggled(), buttonLeft, buttonTop, getSize().getX(), getSize().getY(), 0.0f);
+	protected void drawButton(MatrixStack stack, int buttonLeft, int buttonTop) {
+		GuiDrawUtilities.drawDefaultButton(isClicked() || isHovered() || isToggled(), buttonLeft, buttonTop,
+				getSize().getX(), getSize().getY(), 0.0f);
 	}
 
-	protected void drawButtonOverlay(int buttonLeft, int buttonTop) {
+	protected void drawButtonOverlay(MatrixStack stack, int buttonLeft, int buttonTop) {
 	}
 
 	@Override
@@ -131,7 +135,8 @@ public class StandardButton extends AbstractGuiWidget {
 	protected void playSound(MouseButton state) {
 		float pitch = state == MouseButton.LEFT ? clickSoundPitch : clickSoundPitch * 1.1f;
 		ClientPlayerEntity player = Minecraft.getInstance().player;
-		player.world.playSound(player, player.getPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.MASTER, 1.0f, pitch);
+		player.world.playSound(player, player.getPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.MASTER, 1.0f,
+				pitch);
 	}
 
 	public StandardButton setToggleable(boolean toggleable) {

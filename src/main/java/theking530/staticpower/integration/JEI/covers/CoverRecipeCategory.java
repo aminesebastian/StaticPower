@@ -16,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapelessRecipe;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import theking530.staticpower.StaticPower;
@@ -86,7 +87,7 @@ public class CoverRecipeCategory implements IRecipeManagerPlugin {
 			if (ModTags.COVER_SAW.contains(coverSourceItem)) {
 				List<T> recipes = new ArrayList<T>();
 				// Get all the registered blocks.
-				for (Entry<ResourceLocation, Block> block : GameRegistry.findRegistry(Block.class).getEntries()) {
+				for (Entry<RegistryKey<Block>, Block> block : GameRegistry.findRegistry(Block.class).getEntries()) {
 					// If this is a valid cover block, create the recipe.
 					if (CableCover.isValidForCover(block.getValue())) {
 						ItemStack output = cableCover.makeCoverForBlock(block.getValue().getDefaultState());
@@ -104,7 +105,8 @@ public class CoverRecipeCategory implements IRecipeManagerPlugin {
 				// If we can make a cover for this block, return that cover. Otherwise, return
 				// an empty itemstack.
 				if (CableCover.isValidForCover(((BlockItem) coverSourceItem).getBlock())) {
-					ItemStack output = cableCover.makeCoverForBlock(((BlockItem) coverSourceItem).getBlock().getDefaultState());
+					ItemStack output = cableCover
+							.makeCoverForBlock(((BlockItem) coverSourceItem).getBlock().getDefaultState());
 					output.setCount(8);
 					return Collections.singletonList((T) make(coverSourceItemStack, output));
 				} else {
@@ -118,7 +120,8 @@ public class CoverRecipeCategory implements IRecipeManagerPlugin {
 
 	private ShapelessRecipe make(ItemStack coverBlockItem, ItemStack result) {
 		// This id should only be used within JEI and not really matter
-		ResourceLocation id = new ResourceLocation(StaticPower.MOD_ID, "cover/" + coverBlockItem.getItem().getRegistryName().toString().replace(':', '/'));
+		ResourceLocation id = new ResourceLocation(StaticPower.MOD_ID,
+				"cover/" + coverBlockItem.getItem().getRegistryName().toString().replace(':', '/'));
 
 		// Popualte the ingredients.
 		NonNullList<Ingredient> ingredients = NonNullList.withSize(2, Ingredient.EMPTY);

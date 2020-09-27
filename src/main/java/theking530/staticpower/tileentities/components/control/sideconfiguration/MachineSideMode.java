@@ -30,7 +30,7 @@ public enum MachineSideMode {
 	}
 
 	public ITextComponent getName() {
-		return new StringTextComponent(fontColor.toString()).appendSibling(new TranslationTextComponent(name));
+		return new StringTextComponent(fontColor.toString()).append(new TranslationTextComponent(name));
 	}
 
 	public Color getColor() {

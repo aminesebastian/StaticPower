@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ITickTimer;
@@ -17,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.progressbars.GrinderProgressBar;
@@ -61,7 +64,7 @@ public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderR
 	@Override
 	@Nonnull
 	public String getTitle() {
-		return locTitle.getFormattedText();
+		return locTitle.getString();
 	}
 
 	@Override
@@ -81,7 +84,7 @@ public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderR
 	}
 
 	@Override
-	public void draw(GrinderRecipe recipe, double mouseX, double mouseY) {
+	public void draw(GrinderRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
 		GuiDrawUtilities.drawSlot(80, 6, 16, 16);
 
 		GuiDrawUtilities.drawSlot(78, 46, 20, 20);
@@ -92,15 +95,15 @@ public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderR
 
 		pBar.setCurrentProgress(processingTimer.getValue());
 		pBar.setMaxProgress(processingTimer.getMaxValue());
-		pBar.renderBehindItems((int) mouseX, (int) mouseY, 0.0f);
+		pBar.renderBehindItems(null, (int) mouseX, (int) mouseY, 0.0f);
 	}
 
 	@Override
-	public List<String> getTooltipStrings(GrinderRecipe recipe, double mouseX, double mouseY) {
-		List<String> output = new ArrayList<String>();
+	public List<ITextComponent> getTooltipStrings(GrinderRecipe recipe, double mouseX, double mouseY) {
+		List<ITextComponent> output = new ArrayList<ITextComponent>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			String powerCost = GuiTextUtilities.formatEnergyToString(recipe.getProcessingTime() * recipe.getPowerCost()).getFormattedText();
-			output.add("Usage: " + powerCost);
+			output.add(new StringTextComponent("Usage: ")
+					.append(GuiTextUtilities.formatEnergyToString(recipe.getPowerCost() * recipe.getProcessingTime())));
 		}
 
 		// Render the progress bar tooltip.
@@ -109,7 +112,7 @@ public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderR
 			List<ITextComponent> tooltips = new ArrayList<ITextComponent>();
 			pBar.getTooltips(mouse, tooltips, false);
 			for (ITextComponent tooltip : tooltips) {
-				output.add(tooltip.getFormattedText());
+				output.add(tooltip);
 			}
 		}
 
@@ -135,7 +138,7 @@ public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderR
 	public void setRecipe(IRecipeLayout recipeLayout, GrinderRecipe recipe, IIngredients ingredients) {
 		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
 		guiItemStacks.init(INTPUT_SLOT, true, 79, 5);
-		
+
 		guiItemStacks.init(PRIMARY_OUTPUT_SLOT, false, 79, 47);
 		guiItemStacks.init(SECONDARY_OUTPUT_SLOT, false, 53, 33);
 		guiItemStacks.init(TERTIARY_OUTPUT_SLOT, false, 105, 33);
@@ -145,21 +148,25 @@ public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderR
 		// Add the outptu percentage to the tooltip for the ingredient.
 		guiItemStacks.addTooltipCallback(new ITooltipCallback<ItemStack>() {
 			@Override
-			public void onTooltip(int slotIndex, boolean input, ItemStack ingredient, List<String> tooltip) {
+			public void onTooltip(int slotIndex, boolean input, ItemStack ingredient, List<ITextComponent> tooltip) {
 				// Only perform for inputs.
 				if (!input) {
 					// Trasnfrom into the output index space.
 					int outputIndex = slotIndex - 1;
 
 					// Formulate the output percentage tooltip and then add it.
-					String outputPercentage = new TranslationTextComponent("gui.staticpower.output_chance").appendText(": ").appendText(String.valueOf((int) (recipe.getOutputItems()[outputIndex].getOutputChance() * 100)) + "%").getFormattedText();
+					ITextComponent outputPercentage = new TranslationTextComponent("gui.staticpower.output_chance")
+							.appendString(": ").appendString(
+									String.valueOf((int) (recipe.getOutputItems()[outputIndex].getOutputChance() * 100))
+											+ "%");
 					tooltip.add(outputPercentage);
 				}
 			}
 		});
 
 		// Add the fluid.
-		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime() * recipe.getPowerCost(), true);
+		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(),
+				recipe.getProcessingTime() * recipe.getPowerCost(), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);
 	}
 }

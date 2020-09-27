@@ -23,6 +23,7 @@ public class NoCountRenderSlot extends Slot {
 		// Otherwise, return a copy with a stack size of one.
 		parent = parent.copy();
 		parent.setCount(1);
+
 		return parent;
 	}
 }

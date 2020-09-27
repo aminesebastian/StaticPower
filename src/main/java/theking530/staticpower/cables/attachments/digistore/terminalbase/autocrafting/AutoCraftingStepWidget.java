@@ -2,6 +2,8 @@ package theking530.staticpower.cables.attachments.digistore.terminalbase.autocra
 
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -61,7 +63,9 @@ public class AutoCraftingStepWidget extends AbstractGuiWidget {
 			Vector2D screenSpacePosition = getScreenSpacePosition();
 
 			// Get all the tooltips and add them to the tooltips list.
-			if (mousePosition.getX() >= screenSpacePosition.getXi() && mousePosition.getX() <= screenSpacePosition.getXi() + 16 && mousePosition.getY() >= screenSpacePosition.getYi()
+			if (mousePosition.getX() >= screenSpacePosition.getXi()
+					&& mousePosition.getX() <= screenSpacePosition.getXi() + 16
+					&& mousePosition.getY() >= screenSpacePosition.getYi()
 					&& mousePosition.getY() <= screenSpacePosition.getYi() + 16) {
 				tooltips.addAll(getCurrentIndexItemStack().getTooltip(null, TooltipFlags.NORMAL));
 			}
@@ -69,7 +73,7 @@ public class AutoCraftingStepWidget extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderForeground(int mouseX, int mouseY, float partialTicks) {
+	public void renderForeground(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 		if (material == null) {
 			return;
 		}
@@ -83,7 +87,8 @@ public class AutoCraftingStepWidget extends AbstractGuiWidget {
 		// If it has items, draw the item (rotate through all the itemstacks in the
 		// ingredient).
 		if (!ing.hasNoMatchingItems()) {
-			ITEM_RENDERER.drawItem(getCurrentIndexItemStack(), 0, 0, screenSpacePosition.getXi() + 2, screenSpacePosition.getYi() + 3, 1.0f);
+			ITEM_RENDERER.drawItem(getCurrentIndexItemStack(), 0, 0, screenSpacePosition.getXi() + 2,
+					screenSpacePosition.getYi() + 3, 1.0f);
 		}
 
 		// If we're missing any items, render the missing scenario. If we have to craft,
@@ -91,25 +96,42 @@ public class AutoCraftingStepWidget extends AbstractGuiWidget {
 		// all
 		// the items scenario.
 		if (material.getMissingAmount() > 0) {
-			GuiDrawUtilities.drawStringWithSize("Required: " + material.getAmountRequired(), screenSpacePosition.getXi() + 53, screenSpacePosition.getYi() + 7, 0.5f, Color.EIGHT_BIT_WHITE, true);
-			GuiDrawUtilities.drawStringWithSize("Stored: " + material.getAmountStored(), screenSpacePosition.getXi() + 53, screenSpacePosition.getYi() + 12, 0.5f, Color.EIGHT_BIT_WHITE, true);
-			GuiDrawUtilities.drawColoredRectangle(screenSpacePosition.getXi() + 21, screenSpacePosition.getYi() + 14, 35.0f, 0.5f, 1.0f, Color.GREY);
-			GuiDrawUtilities.drawStringWithSize("Missing: " + material.getMissingAmount(), screenSpacePosition.getXi() + 53.5f, screenSpacePosition.getYi() + 19.5f, 0.5f,
+			GuiDrawUtilities.drawStringWithSize(matrix, "Required: " + material.getAmountRequired(),
+					screenSpacePosition.getXi() + 53, screenSpacePosition.getYi() + 7, 0.5f, Color.EIGHT_BIT_WHITE,
+					true);
+			GuiDrawUtilities.drawStringWithSize(matrix, "Stored: " + material.getAmountStored(),
+					screenSpacePosition.getXi() + 53, screenSpacePosition.getYi() + 12, 0.5f, Color.EIGHT_BIT_WHITE,
+					true);
+			GuiDrawUtilities.drawColoredRectangle(screenSpacePosition.getXi() + 21, screenSpacePosition.getYi() + 14,
+					35.0f, 0.5f, 1.0f, Color.GREY);
+			GuiDrawUtilities.drawStringWithSize(matrix, "Missing: " + material.getMissingAmount(),
+					screenSpacePosition.getXi() + 53.5f, screenSpacePosition.getYi() + 19.5f, 0.5f,
 					new Color(75.0f, 25.0f, 0.0f, 255.0f), false);
-			GuiDrawUtilities.drawStringWithSize("Missing: " + material.getMissingAmount(), screenSpacePosition.getXi() + 53, screenSpacePosition.getYi() + 19, 0.5f,
+			GuiDrawUtilities.drawStringWithSize(matrix, "Missing: " + material.getMissingAmount(),
+					screenSpacePosition.getXi() + 53, screenSpacePosition.getYi() + 19, 0.5f,
 					new Color(255.0f, 150.0f, 50.0f, 255.0f), false);
 			MISSING_INGREDIENT_RENDERABLE.draw(screenSpacePosition.getXi() + 2, screenSpacePosition.getYi() + 3);
 		} else if (material.getAmountToCraft() > 0) {
-			GuiDrawUtilities.drawStringWithSize("Required: " + material.getAmountRequired(), screenSpacePosition.getXi() + 53, screenSpacePosition.getYi() + 7, 0.5f, Color.EIGHT_BIT_WHITE, true);
-			GuiDrawUtilities.drawStringWithSize("Stored: " + material.getAmountStored(), screenSpacePosition.getXi() + 53, screenSpacePosition.getYi() + 12, 0.5f, Color.EIGHT_BIT_WHITE, true);
-			GuiDrawUtilities.drawColoredRectangle(screenSpacePosition.getXi() + 21, screenSpacePosition.getYi() + 14, 35.0f, 0.5f, 1.0f, Color.GREY);
-			GuiDrawUtilities.drawStringWithSize("To Craft: " + material.getAmountToCraft(), screenSpacePosition.getXi() + 53, screenSpacePosition.getYi() + 19, 0.5f, Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawStringWithSize(matrix, "Required: " + material.getAmountRequired(),
+					screenSpacePosition.getXi() + 53, screenSpacePosition.getYi() + 7, 0.5f, Color.EIGHT_BIT_WHITE,
+					true);
+			GuiDrawUtilities.drawStringWithSize(matrix, "Stored: " + material.getAmountStored(),
+					screenSpacePosition.getXi() + 53, screenSpacePosition.getYi() + 12, 0.5f, Color.EIGHT_BIT_WHITE,
+					true);
+			GuiDrawUtilities.drawColoredRectangle(screenSpacePosition.getXi() + 21, screenSpacePosition.getYi() + 14,
+					35.0f, 0.5f, 1.0f, Color.GREY);
+			GuiDrawUtilities.drawStringWithSize(matrix, "To Craft: " + material.getAmountToCraft(),
+					screenSpacePosition.getXi() + 53, screenSpacePosition.getYi() + 19, 0.5f, Color.EIGHT_BIT_WHITE,
+					true);
 		} else {
-			GuiDrawUtilities.drawStringWithSize("Stored: " + material.getAmountRequired(), screenSpacePosition.getXi() + 53, screenSpacePosition.getYi() + 11, 0.5f, Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawStringWithSize(matrix, "Stored: " + material.getAmountRequired(),
+					screenSpacePosition.getXi() + 53, screenSpacePosition.getYi() + 11, 0.5f, Color.EIGHT_BIT_WHITE,
+					true);
 		}
 
 		// Draw the bottom divider.
-		GuiDrawUtilities.drawColoredRectangle(screenSpacePosition.getXi(), screenSpacePosition.getYi() + getSize().getY(), getSize().getX(), 0.75f, 1.0f, Color.GREY);
+		GuiDrawUtilities.drawColoredRectangle(screenSpacePosition.getXi(),
+				screenSpacePosition.getYi() + getSize().getY(), getSize().getX(), 0.75f, 1.0f, Color.GREY);
 	}
 
 	protected ItemStack getCurrentIndexItemStack() {

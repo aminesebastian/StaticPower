@@ -3,6 +3,8 @@ package theking530.staticpower.client.rendering.items;
 import java.util.List;
 import java.util.Random;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
@@ -10,10 +12,10 @@ import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
-import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticpower.cables.digistore.crafting.EncodedDigistorePattern;
@@ -34,7 +36,8 @@ public class PatternCardItemModel implements IBakedModel {
 	public ItemOverrideList getOverrides() {
 		return new ItemOverrideList() {
 			@Override
-			public IBakedModel getModelWithOverrides(IBakedModel originalModel, ItemStack stack, World world, LivingEntity entity) {
+			public IBakedModel getOverrideModel(IBakedModel originalModel, ItemStack stack, @Nullable ClientWorld world,
+					@Nullable LivingEntity livingEntity) {
 				// Make sure we have a valid portable battery.
 				if (!(stack.getItem() instanceof DigistorePatternCard)) {
 					return originalModel;
@@ -46,7 +49,7 @@ public class PatternCardItemModel implements IBakedModel {
 						EncodedDigistorePattern pattern = EncodedDigistorePattern.readFromPatternCard(stack);
 						if (pattern != null && !pattern.getOutput().isEmpty()) {
 							// Get the baked model for the recipe output.
-							return Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(pattern.getOutput(), world, entity);
+							return Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(pattern.getOutput(), world, livingEntity);
 						}
 					}
 					return encodedModel;
@@ -72,8 +75,8 @@ public class PatternCardItemModel implements IBakedModel {
 	}
 
 	@Override
-	public boolean func_230044_c_() {
-		return blankModel.func_230044_c_();
+	public boolean isSideLit() {
+		return blankModel.isSideLit();
 	}
 
 	@Override

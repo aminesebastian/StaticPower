@@ -9,17 +9,15 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.item.BucketItem;
 import net.minecraft.item.Item;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.tags.Tag;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.tags.ITag.INamedTag;
 import net.minecraftforge.fluids.FluidAttributes;
-import theking530.staticpower.StaticPower;
 import theking530.staticpower.fluid.AbstractStaticPowerFluid.Flowing;
 import theking530.staticpower.fluid.AbstractStaticPowerFluid.Source;
 import theking530.staticpower.items.StaticPowerFluidBucket;
 
 public class StaticPowerFluidBundle {
 	public final String name;
-	public final Tag<Fluid> Tag;
+	public final INamedTag<Fluid> Tag;
 	public final StaticPowerFluidBlock FluidBlock;
 	public final AbstractStaticPowerFluid.Source Fluid;
 	public final AbstractStaticPowerFluid.Flowing FlowingFluid;
@@ -27,7 +25,8 @@ public class StaticPowerFluidBundle {
 	private final StaticPowerFluidBuilder builder;
 	private Item cachedBucketItem;
 
-	public StaticPowerFluidBundle(String name, Tag<Fluid> tag, StaticPowerFluidBlock fluidBlock, Source fluid, Flowing flowingFluid, Supplier<Item> bucketSupplier, StaticPowerFluidBuilder builder) {
+	public StaticPowerFluidBundle(String name, INamedTag<Fluid> tag, StaticPowerFluidBlock fluidBlock, Source fluid,
+			Flowing flowingFluid, Supplier<Item> bucketSupplier, StaticPowerFluidBuilder builder) {
 		this.name = name;
 		Tag = tag;
 		FluidBlock = fluidBlock;
@@ -92,10 +91,12 @@ public class StaticPowerFluidBundle {
 		public StaticPowerFluidBundle build() {
 			String stillTexture = "blocks/fluids/" + name + "_still";
 			String flowingTexture = "blocks/fluids/" + name + "_flowing";
-			Tag<Fluid> tag = new FluidTags.Wrapper(new ResourceLocation(StaticPower.MOD_ID, name));
+			INamedTag<Fluid> tag = FluidTags.makeWrapperTag(name);
 			fluidBlock = new StaticPowerFluidBlock(name, () -> fluid, Block.Properties.create(Material.WATER));
-			fluid = new AbstractStaticPowerFluid.Source(name, bucketSupplier, () -> fluidBlock, () -> fluid, () -> flowingFluid, stillTexture, flowingTexture, tag, attributes);
-			flowingFluid = new AbstractStaticPowerFluid.Flowing(name, bucketSupplier, () -> fluidBlock, () -> fluid, () -> flowingFluid, stillTexture, flowingTexture, tag, attributes);
+			fluid = new AbstractStaticPowerFluid.Source(name, bucketSupplier, () -> fluidBlock, () -> fluid,
+					() -> flowingFluid, stillTexture, flowingTexture, tag, attributes);
+			flowingFluid = new AbstractStaticPowerFluid.Flowing(name, bucketSupplier, () -> fluidBlock, () -> fluid,
+					() -> flowingFluid, stillTexture, flowingTexture, tag, attributes);
 
 			return new StaticPowerFluidBundle(name, tag, fluidBlock, fluid, flowingFluid, bucketSupplier, this);
 

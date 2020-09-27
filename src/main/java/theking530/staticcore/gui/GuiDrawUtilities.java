@@ -1,5 +1,6 @@
 package theking530.staticcore.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 
@@ -7,8 +8,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.TransformationMatrix;
-import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.fluid.Fluid;
@@ -28,40 +27,51 @@ public class GuiDrawUtilities {
 
 	private static final float BACKGROUND_PIXEL_SIZE = 1.0f / 9.0f;
 
-	public static void drawGenericBackground(int width, int height, int guiLeft, int guiTop, float zLevel, Color mainBackgroundColor, Color rimTint, boolean drawLeft, boolean drawRight,
-			boolean drawTop, boolean drawBottom) {
+	public static void drawGenericBackground(int width, int height, int guiLeft, int guiTop, float zLevel,
+			Color mainBackgroundColor, Color rimTint, boolean drawLeft, boolean drawRight, boolean drawTop,
+			boolean drawBottom) {
 		// MainBG
 		drawColoredRectangle(guiLeft + 3, guiTop + 3, width - 4, height - 4, zLevel, mainBackgroundColor);
 
 		Minecraft.getInstance().getTextureManager().bindTexture(GuiTextures.GENERIC_GUI);
 
 		// Corners
-		drawTexturedGenericRect(guiLeft, guiTop, 4, 4, 0.0f, 0.0f, zLevel, 4 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
-		drawTexturedGenericRect(guiLeft + width - 5, guiTop, 5, 4, zLevel, 4 * BACKGROUND_PIXEL_SIZE, 0.0f, 9 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
-		drawTexturedGenericRect(guiLeft, guiTop + height - 5, 4, 5, 0.0f, zLevel, 4 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE);
-		drawTexturedGenericRect(guiLeft + width - 4, guiTop + height - 4, 4, 4, zLevel, 5 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE);
+		drawTexturedGenericRect(guiLeft, guiTop, 4, 4, 0.0f, 0.0f, zLevel, 4 * BACKGROUND_PIXEL_SIZE,
+				4 * BACKGROUND_PIXEL_SIZE);
+		drawTexturedGenericRect(guiLeft + width - 5, guiTop, 5, 4, zLevel, 4 * BACKGROUND_PIXEL_SIZE, 0.0f,
+				9 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
+		drawTexturedGenericRect(guiLeft, guiTop + height - 5, 4, 5, 0.0f, zLevel, 4 * BACKGROUND_PIXEL_SIZE,
+				4 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE);
+		drawTexturedGenericRect(guiLeft + width - 4, guiTop + height - 4, 4, 4, zLevel, 5 * BACKGROUND_PIXEL_SIZE,
+				5 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE);
 
 		// Sides
 		if (drawTop) {
-			drawTexturedGenericRect(guiLeft + 4, guiTop, width - 7, 3, zLevel, 3 * BACKGROUND_PIXEL_SIZE, 0.0f, 4 * BACKGROUND_PIXEL_SIZE, 3 * BACKGROUND_PIXEL_SIZE);
+			drawTexturedGenericRect(guiLeft + 4, guiTop, width - 7, 3, zLevel, 3 * BACKGROUND_PIXEL_SIZE, 0.0f,
+					4 * BACKGROUND_PIXEL_SIZE, 3 * BACKGROUND_PIXEL_SIZE);
 		}
 		if (drawLeft) {
-			drawTexturedGenericRect(guiLeft, guiTop + 4, 3, height - 8, 0.0f, zLevel, 3 * BACKGROUND_PIXEL_SIZE, 3 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
+			drawTexturedGenericRect(guiLeft, guiTop + 4, 3, height - 8, 0.0f, zLevel, 3 * BACKGROUND_PIXEL_SIZE,
+					3 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
 		}
 		if (drawRight) {
-			drawTexturedGenericRect(guiLeft + width - 3, guiTop + 4, 3, height - 8, zLevel, 6 * BACKGROUND_PIXEL_SIZE, 3 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
+			drawTexturedGenericRect(guiLeft + width - 3, guiTop + 4, 3, height - 8, zLevel, 6 * BACKGROUND_PIXEL_SIZE,
+					3 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
 		}
 		if (drawBottom) {
-			drawTexturedGenericRect(guiLeft + 4, guiTop + height - 3, width - 8, 3, zLevel, 4 * BACKGROUND_PIXEL_SIZE, 6 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE);
+			drawTexturedGenericRect(guiLeft + 4, guiTop + height - 3, width - 8, 3, zLevel, 4 * BACKGROUND_PIXEL_SIZE,
+					6 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE);
 		}
 	}
 
 	public static void drawGenericBackground(int width, int height, int guiLeft, int guiTop, float zLevel) {
-		drawGenericBackground(width, height, guiLeft, guiTop, zLevel, DEFAULT_BACKGROUND_COLOR, DEFAULT_BACKGROUND_EDGE_TINT, true, true, true, true);
+		drawGenericBackground(width, height, guiLeft, guiTop, zLevel, DEFAULT_BACKGROUND_COLOR,
+				DEFAULT_BACKGROUND_EDGE_TINT, true, true, true, true);
 	}
 
 	public static void drawGenericBackground(int width, int height, int guiLeft, int guiTop) {
-		drawGenericBackground(width, height, guiLeft, guiTop, 0.0f, DEFAULT_BACKGROUND_COLOR, DEFAULT_BACKGROUND_EDGE_TINT, true, true, true, true);
+		drawGenericBackground(width, height, guiLeft, guiTop, 0.0f, DEFAULT_BACKGROUND_COLOR,
+				DEFAULT_BACKGROUND_EDGE_TINT, true, true, true, true);
 	}
 
 	public static void drawPlayerInventorySlots(int xPos, int yPos) {
@@ -104,7 +114,8 @@ public class GuiDrawUtilities {
 
 	}
 
-	public static void drawTexturedGenericRect(float xCoord, float yCoord, float width, float height, float zLevel, float minU, float minV, float maxU, float maxV) {
+	public static void drawTexturedGenericRect(float xCoord, float yCoord, float width, float height, float zLevel,
+			float minU, float minV, float maxU, float maxV) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
 		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
@@ -115,16 +126,21 @@ public class GuiDrawUtilities {
 		tessellator.draw();
 	}
 
-	public static void drawColoredRectangle(float xCoord, float yCoord, float width, float height, float zLevel, Color color) {
+	public static void drawColoredRectangle(float xCoord, float yCoord, float width, float height, float zLevel,
+			Color color) {
 		GlStateManager.disableTexture();
 		GlStateManager.enableBlend();
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
 		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_COLOR);
-		bufferbuilder.pos(xCoord, yCoord + height, zLevel).color(color.getX(), color.getY(), color.getZ(), color.getW()).endVertex();
-		bufferbuilder.pos(xCoord + width, yCoord + height, zLevel).color(color.getX(), color.getY(), color.getZ(), color.getW()).endVertex();
-		bufferbuilder.pos(xCoord + width, yCoord, zLevel).color(color.getX(), color.getY(), color.getZ(), color.getW()).endVertex();
-		bufferbuilder.pos(xCoord, yCoord, zLevel).color(color.getX(), color.getY(), color.getZ(), color.getW()).endVertex();
+		bufferbuilder.pos(xCoord, yCoord + height, zLevel).color(color.getX(), color.getY(), color.getZ(), color.getW())
+				.endVertex();
+		bufferbuilder.pos(xCoord + width, yCoord + height, zLevel)
+				.color(color.getX(), color.getY(), color.getZ(), color.getW()).endVertex();
+		bufferbuilder.pos(xCoord + width, yCoord, zLevel).color(color.getX(), color.getY(), color.getZ(), color.getW())
+				.endVertex();
+		bufferbuilder.pos(xCoord, yCoord, zLevel).color(color.getX(), color.getY(), color.getZ(), color.getW())
+				.endVertex();
 		tessellator.draw();
 		GlStateManager.enableTexture();
 	}
@@ -139,23 +155,29 @@ public class GuiDrawUtilities {
 	 * @param color
 	 * @param withShadow
 	 */
-	public static void drawStringWithSize(String text, float xPos, float yPos, float scale, Color color, boolean withShadow) {
+	public static void drawStringWithSize(MatrixStack matrixStack, String text, float xPos, float yPos, float scale,
+			Color color, boolean withShadow) {
 		final float scaleFactor = scale;
 		final float inverseScaleFactor = 1.0f / scaleFactor;
 		final int offset = 0;
 
-		TransformationMatrix tm = new TransformationMatrix(new Vector3f(0, 0, 300), null, new Vector3f(scaleFactor, scaleFactor, scaleFactor), null);
+		matrixStack.push();
+		matrixStack.scale(scaleFactor, scaleFactor, 1.0f);
 
 		RenderSystem.disableBlend();
-		final int X = (int) ((xPos + offset - Minecraft.getInstance().fontRenderer.getStringWidth(text) * scaleFactor) * inverseScaleFactor);
+		final int X = (int) ((xPos + offset - Minecraft.getInstance().fontRenderer.getStringWidth(text) * scaleFactor)
+				* inverseScaleFactor);
 		final int Y = (int) ((yPos + offset - 7.0f * scaleFactor) * inverseScaleFactor);
 		IRenderTypeBuffer.Impl buffer = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
-		Minecraft.getInstance().fontRenderer.renderString(text, X, Y, color.encodeInInteger(), withShadow, tm.getMatrix(), buffer, true, 0, 15728880);
+		Minecraft.getInstance().fontRenderer.renderString(text, X, Y, color.encodeInInteger(), withShadow,
+				matrixStack.getLast().getMatrix(), buffer, true, 0, 15728880);
 		buffer.finish();
 		RenderSystem.enableBlend();
+		matrixStack.pop();
 	}
 
-	public static void drawTexturedModalRect(ResourceLocation texture, float x, float y, float width, float height, float minU, float minV, float maxU, float maxV) {
+	public static void drawTexturedModalRect(ResourceLocation texture, float x, float y, float width, float height,
+			float minU, float minV, float maxU, float maxV) {
 		Minecraft.getInstance().getTextureManager().bindTexture(texture);
 		GlStateManager.enableBlend();
 		Tessellator tessellator = Tessellator.getInstance();
@@ -168,16 +190,21 @@ public class GuiDrawUtilities {
 		tessellator.draw();
 	}
 
-	public static void drawTexturedModalRect(ResourceLocation texture, float x, float y, float width, float height, float minU, float minV, float maxU, float maxV, Color color) {
+	public static void drawTexturedModalRect(ResourceLocation texture, float x, float y, float width, float height,
+			float minU, float minV, float maxU, float maxV, Color color) {
 		Minecraft.getInstance().getTextureManager().bindTexture(texture);
 		GlStateManager.enableBlend();
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
 		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_COLOR_TEX);
-		bufferbuilder.pos((double) (x + 0), (double) (y + height), 0.0).color(color.getX(), color.getY(), color.getZ(), color.getW()).tex(minU, maxV).endVertex();
-		bufferbuilder.pos((double) (x + width), (double) (y + height), 0.0).color(color.getX(), color.getY(), color.getZ(), color.getW()).tex(maxU, maxV).endVertex();
-		bufferbuilder.pos((double) (x + width), (double) (y + 0), 0.0).color(color.getX(), color.getY(), color.getZ(), color.getW()).tex(maxU, minV).endVertex();
-		bufferbuilder.pos((double) (x + 0), (double) (y + 0), 0.0).color(color.getX(), color.getY(), color.getZ(), color.getW()).tex(minU, minV).endVertex();
+		bufferbuilder.pos((double) (x + 0), (double) (y + height), 0.0)
+				.color(color.getX(), color.getY(), color.getZ(), color.getW()).tex(minU, maxV).endVertex();
+		bufferbuilder.pos((double) (x + width), (double) (y + height), 0.0)
+				.color(color.getX(), color.getY(), color.getZ(), color.getW()).tex(maxU, maxV).endVertex();
+		bufferbuilder.pos((double) (x + width), (double) (y + 0), 0.0)
+				.color(color.getX(), color.getY(), color.getZ(), color.getW()).tex(maxU, minV).endVertex();
+		bufferbuilder.pos((double) (x + 0), (double) (y + 0), 0.0)
+				.color(color.getX(), color.getY(), color.getZ(), color.getW()).tex(minU, minV).endVertex();
 		tessellator.draw();
 	}
 
@@ -205,7 +232,8 @@ public class GuiDrawUtilities {
 		}
 
 		// Body
-		drawTexturedGenericRect(x + 2, y + 2, width - 4, height - 5, zLevel, uPixel * 2, vPixel * 2, uPixel * 198, vPixel * 17);
+		drawTexturedGenericRect(x + 2, y + 2, width - 4, height - 5, zLevel, uPixel * 2, vPixel * 2, uPixel * 198,
+				vPixel * 17);
 
 		// Corners
 		drawTexturedGenericRect(x, y, 2, 2, zLevel, 0.0f, 0.0f, 2 * uPixel, 2 * vPixel);
@@ -217,6 +245,7 @@ public class GuiDrawUtilities {
 		drawTexturedGenericRect(x + 2, y, width - 4, 2, zLevel, 2 * uPixel, 0, 198 * uPixel, 2 * vPixel);
 		drawTexturedGenericRect(x, y + 2, 2, height - 5, zLevel, 0.0f, 2 * vPixel, 2 * uPixel, 17 * vPixel);
 		drawTexturedGenericRect(x + width - 2, y + 2, 2, height - 5, zLevel, 198 * uPixel, 2 * vPixel, 1, 17 * vPixel);
-		drawTexturedGenericRect(x + 2, y + height - 3, width - 4, 3, zLevel, 2 * uPixel, 17 * vPixel, 198 * uPixel, 20 * vPixel);
+		drawTexturedGenericRect(x + 2, y + height - 3, width - 4, 3, zLevel, 2 * uPixel, 17 * vPixel, 198 * uPixel,
+				20 * vPixel);
 	}
 }

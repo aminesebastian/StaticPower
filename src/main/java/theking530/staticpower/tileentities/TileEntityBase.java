@@ -53,10 +53,9 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.serialization.SerializationUtilities;
-import theking530.staticpower.tileentities.interfaces.IBreakSerializeable;
 import theking530.staticpower.utilities.WorldUtilities;
 
-public abstract class TileEntityBase extends TileEntity implements ITickableTileEntity, IBreakSerializeable, INamedContainerProvider {
+public abstract class TileEntityBase extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
 	public static final Logger LOGGER = LogManager.getLogger(TileEntityBase.class);
 	protected final static Random RANDOM = new Random();
 	private boolean isValid;
@@ -99,7 +98,8 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 
 		// If an update is queued, perform the update.
 		if (updateQueued) {
-			world.markAndNotifyBlock(pos, world.getChunkAt(pos), world.getBlockState(pos), world.getBlockState(pos), 1 | 2);
+			world.markAndNotifyBlock(pos, world.getChunkAt(pos), world.getBlockState(pos), world.getBlockState(pos),
+					1 | 2, 512);
 			if (world.isRemote) {
 				ModelDataManager.requestModelDataRefresh(this);
 			}
@@ -152,13 +152,15 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	public void onPlaced(BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
 		if (hasComponentOfType(SideConfigurationComponent.class)) {
 			if (DisableFaceInteraction) {
-				getComponent(SideConfigurationComponent.class).setWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, getFacingDirection()),
+				getComponent(SideConfigurationComponent.class).setWorldSpaceDirectionConfiguration(
+						SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, getFacingDirection()),
 						MachineSideMode.Never);
 			}
 		}
 	}
 
-	public ActionResultType onBlockActivated(BlockState currentState, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+	public ActionResultType onBlockActivated(BlockState currentState, PlayerEntity player, Hand hand,
+			BlockRayTraceResult hit) {
 		return ActionResultType.PASS;
 	}
 
@@ -174,7 +176,9 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 
 		// Add all the items that are currently in an inventory.
 		if (pos != null) {
-			TileEntityBase baseTe = world.getTileEntity(pos) instanceof TileEntityBase ? (TileEntityBase) world.getTileEntity(pos) : null;
+			TileEntityBase baseTe = world.getTileEntity(pos) instanceof TileEntityBase
+					? (TileEntityBase) world.getTileEntity(pos)
+					: null;
 			if (baseTe != null) {
 				for (InventoryComponent comp : baseTe.getComponents(InventoryComponent.class)) {
 					// Skip components that should not drop their contents.
@@ -241,20 +245,22 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		transferItemInternally(1, fromInv, fromSlot, toInv, toSlot);
 	}
 
-	public void transferItemInternally(int count, InventoryComponent fromInv, int fromSlot, InventoryComponent toInv, int toSlot) {
+	public void transferItemInternally(int count, InventoryComponent fromInv, int fromSlot, InventoryComponent toInv,
+			int toSlot) {
 		toInv.insertItem(toSlot, fromInv.extractItem(fromSlot, count, false), false);
 	}
 
 	public Direction getFacingDirection() {
 		// If the world is null, return UP and log the error.
 		if (getWorld() == null) {
-			LOGGER.error("There was an attempt to get the facing direction before the block has been fully placed in the world! TileEntity: %1$s at position: %2$s.",
-					getDisplayName().getFormattedText(), pos);
+			LOGGER.error(
+					"There was an attempt to get the facing direction before the block has been fully placed in the world! TileEntity: %1$s at position: %2$s.",
+					getDisplayName().getString(), pos);
 			return Direction.UP;
 		}
 
 		// Attempt to get the block state for horizontal facing.
-		if (getWorld().getBlockState(pos).has(HorizontalBlock.HORIZONTAL_FACING)) {
+		if (getWorld().getBlockState(pos).hasProperty(HorizontalBlock.HORIZONTAL_FACING)) {
 			return getWorld().getBlockState(getPos()).get(HorizontalBlock.HORIZONTAL_FACING);
 		} else {
 			return Direction.UP;
@@ -404,31 +410,12 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		}
 
 		// Sort the inventories.
-		Comparator<InventoryComponent> inventoryComparator = Comparator.comparingInt(InventoryComponent::getShiftClickPriority).reversed();
+		Comparator<InventoryComponent> inventoryComparator = Comparator
+				.comparingInt(InventoryComponent::getShiftClickPriority).reversed();
 		inventories.sort(inventoryComparator);
 
 		// Return the sorted list.
 		return inventories;
-	}
-
-	/* Serializeable */
-	public CompoundNBT serializeOnBroken(CompoundNBT nbt) {
-		write(nbt);
-		return nbt;
-	}
-
-	public void deserializeOnPlaced(CompoundNBT nbt, World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-		read(nbt);
-	}
-
-	@Override
-	public boolean shouldSerializeWhenBroken() {
-		return true;
-	}
-
-	@Override
-	public boolean shouldDeserializeWhenPlaced(CompoundNBT nbt, World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-		return true;
 	}
 
 	@Override
@@ -457,7 +444,9 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		// tag. Catch errors on a per component basis to prevent one component from
 		// breaking all the rest.
 		for (AbstractTileEntityComponent component : Components.values()) {
-			CompoundNBT componentTag = nbt.contains(component.getComponentName()) ? nbt.getCompound(component.getComponentName()) : new CompoundNBT();
+			CompoundNBT componentTag = nbt.contains(component.getComponentName())
+					? nbt.getCompound(component.getComponentName())
+					: new CompoundNBT();
 			component.serializeUpdateNbt(componentTag, fromUpdate);
 			nbt.put(component.getComponentName(), componentTag);
 		}
@@ -501,7 +490,9 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		// tag. Catch errors on a per component basis to prevent one component from
 		// breaking all the rest.
 		for (AbstractTileEntityComponent component : Components.values()) {
-			CompoundNBT componentTag = nbt.contains(component.getComponentName()) ? nbt.getCompound(component.getComponentName()) : new CompoundNBT();
+			CompoundNBT componentTag = nbt.contains(component.getComponentName())
+					? nbt.getCompound(component.getComponentName())
+					: new CompoundNBT();
 			component.serializeSaveNbt(componentTag);
 			nbt.put(component.getComponentName(), componentTag);
 		}
@@ -571,9 +562,9 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 * {@link #read(CompoundNBT)}.
 	 */
 	@Override
-	public void handleUpdateTag(CompoundNBT tag) {
-		super.handleUpdateTag(tag);
-		read(tag);
+	public void handleUpdateTag(BlockState state, CompoundNBT tag) {
+		super.handleUpdateTag(state, tag);
+		read(state, tag);
 	}
 
 	/**
@@ -590,8 +581,8 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 * Deserializes this {@link TileEntity} from the provided tag.
 	 */
 	@Override
-	public void read(CompoundNBT parentNBTTagCompound) {
-		super.read(parentNBTTagCompound);
+	public void read(BlockState state, CompoundNBT parentNBTTagCompound) {
+		super.read(state, parentNBTTagCompound);
 		deserializeUpdateNbt(parentNBTTagCompound, false);
 		deserializeSaveNbt(parentNBTTagCompound);
 	}
@@ -611,7 +602,9 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 */
 	@Override
 	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
-		LOGGER.error(String.format("TileEntity: %1$s did not override the method #createMenu. The container for this TE is broken.", getDisplayName().getFormattedText()));
+		LOGGER.error(String.format(
+				"TileEntity: %1$s did not override the method #createMenu. The container for this TE is broken.",
+				getDisplayName().getString()));
 		return null;
 	}
 

@@ -1,5 +1,7 @@
 package theking530.staticpower.tileentities.powered.crucible;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import theking530.staticcore.gui.widgets.tabs.GuiSideConfigTab;
@@ -24,7 +26,7 @@ public class GuiCrucible extends StaticPowerTileEntityGui<ContainerCrucible, Til
 	}
 
 	@Override
-	protected void drawBackgroundExtras(float partialTicks, int mouseX, int mouseY) {
+	protected void drawBackgroundExtras(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
 		drawGenericBackground();
 		drawPlayerInventorySlots();
 		drawContainerSlots(container.inventorySlots, getTileEntity().ioSideConfiguration);

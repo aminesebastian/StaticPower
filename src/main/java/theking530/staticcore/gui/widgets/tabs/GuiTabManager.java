@@ -3,6 +3,8 @@ package theking530.staticcore.gui.widgets.tabs;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
@@ -77,7 +79,7 @@ public class GuiTabManager extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderBackground(int mouseX, int mouseY, float partialTicks) {
+	public void renderBackground(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 		Vector2D positionOffset = this.getPosition();
 		int tabPositionX = (int) (getOwnerPosition().getX() + getOwnerSize().getX() - 1 + positionOffset.getX());
 		int tabPositionY = (int) (getOwnerPosition().getY() + 10 + positionOffset.getY());
@@ -103,10 +105,11 @@ public class GuiTabManager extends AbstractGuiWidget {
 				}
 			}
 			int adjustedOffset = Math.min(tabPositionY + (i * 25) + offset, maxOffset);
-			rightTabs.get(i).updateTabPosition(tabPositionX, adjustedOffset, partialTicks, mouseX, mouseY, Math.max(0, rightTabs.size() - i - 1));
-			rightTabs.get(i).drawTabPanel(partialTicks);
+			rightTabs.get(i).updateTabPosition(tabPositionX, adjustedOffset, partialTicks, mouseX, mouseY,
+					Math.max(0, rightTabs.size() - i - 1));
+			rightTabs.get(i).drawTabPanel(matrix, partialTicks);
 			if (rightTabs.get(i).isOpen()) {
-				rightTabs.get(i).renderBackground(mouseX, mouseY, partialTicks);
+				rightTabs.get(i).renderBackground(matrix, mouseX, mouseY, partialTicks);
 			}
 		}
 
@@ -118,27 +121,28 @@ public class GuiTabManager extends AbstractGuiWidget {
 				}
 			}
 			int adjustedOffset = Math.min(tabPositionY + (i * 25) + offset, maxOffset);
-			leftTabs.get(i).updateTabPosition((int) (tabPositionX - getOwnerSize().getX() - 21), adjustedOffset, partialTicks, mouseX, mouseY, Math.max(0, leftTabs.size() - i - 1));
-			leftTabs.get(i).drawTabPanel(partialTicks);
+			leftTabs.get(i).updateTabPosition((int) (tabPositionX - getOwnerSize().getX() - 21), adjustedOffset,
+					partialTicks, mouseX, mouseY, Math.max(0, leftTabs.size() - i - 1));
+			leftTabs.get(i).drawTabPanel(matrix, partialTicks);
 			if (leftTabs.get(i).isOpen()) {
-				leftTabs.get(i).renderBackground(mouseX, mouseY, partialTicks);
+				leftTabs.get(i).renderBackground(matrix, mouseX, mouseY, partialTicks);
 			}
 		}
 	}
 
 	@Override
-	public void renderBehindItems(int mouseX, int mouseY, float partialTicks) {
+	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 		for (BaseGuiTab tab : registeredTabs) {
 			if (tab.isOpen()) {
-				tab.renderBehindItems(mouseX, mouseY, partialTicks);
+				tab.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
 			}
 		}
 	}
 
 	@Override
-	public void renderForeground(int mouseX, int mouseY, float partialTicks) {
+	public void renderForeground(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 		for (BaseGuiTab tab : registeredTabs) {
-			tab.renderForeground(mouseX, mouseY, partialTicks);
+			tab.renderForeground(matrix, mouseX, mouseY, partialTicks);
 		}
 	}
 

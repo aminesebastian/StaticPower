@@ -3,6 +3,8 @@ package theking530.staticpower.tileentities.powered.electricminer;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -37,10 +39,12 @@ public class GuiElectricMiner extends StaticPowerTileEntityGui<ContainerElectric
 	public void initializeGui() {
 		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 52));
 		registerWidget(new GuiHeatBarFromHeatStorage(getTileEntity().heatStorage.getStorage(), 26, 8, 2, 52));
-		registerWidget(new SquareProgressBar(78, 55, 20, 2).bindToMachineProcessingComponent(getTileEntity().processingComponent));
+		registerWidget(new SquareProgressBar(78, 55, 20, 2)
+				.bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
 		// Add a button we can use to toggle the in world radius preview.
-		registerWidget(drawPreviewButton = new SpriteButton(156, 61, 12, 12, StaticPowerSprites.RANGE_ICON, null, this::buttonPressed));
+		registerWidget(drawPreviewButton = new SpriteButton(156, 61, 12, 12, StaticPowerSprites.RANGE_ICON, null,
+				this::buttonPressed));
 		drawPreviewButton.setTooltip(new StringTextComponent("Preview Range"));
 		drawPreviewButton.setToggleable(true);
 		drawPreviewButton.setToggled(getTileEntity().getShouldDrawRadiusPreview());
@@ -49,9 +53,13 @@ public class GuiElectricMiner extends StaticPowerTileEntityGui<ContainerElectric
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
 
-		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage, getTileEntity().processingComponent).setTabSide(TabSide.LEFT), true);
+		getTabManager().registerTab(
+				new GuiMachinePowerInfoTab(getTileEntity().energyStorage, getTileEntity().processingComponent)
+						.setTabSide(TabSide.LEFT),
+				true);
 		getTabManager().registerTab(new GuiMachineHeatTab(getTileEntity().heatStorage).setTabSide(TabSide.LEFT));
-		getTabManager().registerTab(new GuiUpgradeTab(container, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
+		getTabManager()
+				.registerTab(new GuiUpgradeTab(container, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
 
 		setOutputSlotSize(20);
 	}
@@ -63,29 +71,31 @@ public class GuiElectricMiner extends StaticPowerTileEntityGui<ContainerElectric
 	}
 
 	@Override
-	protected void renderHoveredToolTip(int mouseX, int mouseY) {
-		super.renderHoveredToolTip(mouseX, mouseY);
+	protected void renderHoveredTooltip(MatrixStack stack, int mouseX, int mouseY) {
+		super.renderHoveredTooltip(stack, mouseX, mouseY);
 
 		// Make sure that we are not done mining. If we are done, getting the currently
 		// targeted block will throw an exception (since there is none). This is better
 		// than having it return some arbitrary value.
 		if (!getTileEntity().isDoneMining()) {
 			if (mouseX > guiLeft + 72 && mouseX < guiLeft + 102 && mouseY > guiTop + 62 && mouseY < guiTop + 72) {
-				List<String> tooltip = new ArrayList<String>();
+				List<ITextComponent> tooltip = new ArrayList<ITextComponent>();
 				BlockPos currentPos = getTileEntity().getCurrentlyTargetedBlockPos();
-				tooltip.add(String.format("X=%1$s Z=%2$d", currentPos.getX(), currentPos.getZ()));
-				this.renderTooltip(tooltip, mouseX, mouseY, font);
-			} else if (mouseX > guiLeft + 66 && mouseX < guiLeft + 110 && mouseY > guiTop + 16 && mouseY < guiTop + 26) {
-				List<String> tooltip = new ArrayList<String>();
-				tooltip.add("Time remaining until this miner has reached bedrock.");
-				this.renderTooltip(tooltip, mouseX, mouseY, font);
+				tooltip.add(
+						new StringTextComponent(String.format("X=%1$s Z=%2$d", currentPos.getX(), currentPos.getZ())));
+				this.func_243308_b(stack, tooltip, mouseX, mouseY);
+			} else if (mouseX > guiLeft + 66 && mouseX < guiLeft + 110 && mouseY > guiTop + 16
+					&& mouseY < guiTop + 26) {
+				List<ITextComponent> tooltip = new ArrayList<ITextComponent>();
+				tooltip.add(new StringTextComponent("Time remaining until this miner has reached bedrock."));
+				this.func_243308_b(stack, tooltip, mouseX, mouseY);
 			}
 		}
 	}
 
 	@Override
-	protected void drawBehindItems(float partialTicks, int mouseX, int mouseY) {
-		super.drawBehindItems(partialTicks, mouseX, mouseY);
+	protected void drawBehindItems(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+		super.drawBehindItems(stack, partialTicks, mouseX, mouseY);
 
 		// Draw the vertical dividers.
 		GuiDrawUtilities.drawColoredRectangle(guiLeft + 50, guiTop + 20, 1.0f, 55, 0.0f, Color.GREY);
@@ -94,15 +104,17 @@ public class GuiElectricMiner extends StaticPowerTileEntityGui<ContainerElectric
 		// If we are done mining, simply render "Done!". Otherwise, render the Y
 		// coordinate of the block we are mining & the remaining time.
 		if (getTileEntity().isDoneMining()) {
-			font.drawString("Done!", guiLeft + 75, guiTop + 64, 4210752);
+			font.drawString(stack, "Done!", guiLeft + 75, guiTop + 64, 4210752);
 		} else {
 			// Draw the current Y Level.
 			String currentYLevel = "Y=" + getTileEntity().getCurrentlyTargetedBlockPos().getY();
-			font.drawString(currentYLevel, guiLeft + 89 - (font.getStringWidth(currentYLevel) / 2), guiTop + 64, 4210752);
+			font.drawString(stack, currentYLevel, guiLeft + 89 - (font.getStringWidth(currentYLevel) / 2), guiTop + 64,
+					4210752);
 
 			// Draw the time remaining.
 			String timeRemaining = SDTime.ticksToTimeString(getTileEntity().getTicksRemainingUntilCompletion());
-			font.drawString(timeRemaining, guiLeft + 89 - (font.getStringWidth(timeRemaining) / 2), guiTop + 18, 4210752);
+			font.drawString(stack, timeRemaining, guiLeft + 89 - (font.getStringWidth(timeRemaining) / 2), guiTop + 18,
+					4210752);
 		}
 	}
 }

@@ -9,7 +9,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.ActionResultType;
@@ -33,9 +33,7 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
 import theking530.staticpower.client.rendering.items.FluidCapsuleItemModel;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
-import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
-import theking530.staticpower.data.TierReloadListener;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.utilities.WorldUtilities;
 
@@ -51,8 +49,8 @@ public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplie
 	@OnlyIn(Dist.CLIENT)
 	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
 		FluidUtil.getFluidHandler(stack).ifPresent(fluidHandler -> {
-			tooltip.add(new StringTextComponent(TextFormatting.WHITE.toString())
-					.appendSibling(GuiTextUtilities.formatFluidToString(fluidHandler.getFluidInTank(0).getAmount(), fluidHandler.getTankCapacity(0))));
+			tooltip.add(new StringTextComponent(TextFormatting.WHITE.toString()).append(GuiTextUtilities
+					.formatFluidToString(fluidHandler.getFluidInTank(0).getAmount(), fluidHandler.getTankCapacity(0))));
 		});
 	}
 
@@ -72,8 +70,7 @@ public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplie
 
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable net.minecraft.nbt.CompoundNBT nbt) {
-		StaticPowerTier tierObject = TierReloadListener.getTier(tier);
-		return new FluidCapsuleCapability(stack, tierObject.getCapsuleCapacity(), tier == StaticPowerTiers.CREATIVE);
+		return new FluidCapsuleCapability(stack, tier, tier == StaticPowerTiers.CREATIVE);
 	}
 
 	@Override
@@ -87,7 +84,8 @@ public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplie
 		if (containerHandler == null || containerHandler.getFluidInTank(0).isEmpty()) {
 			return new TranslationTextComponent(this.getTranslationKey(stack));
 		}
-		return new TranslationTextComponent(this.getTranslationKey(stack)).appendText(" (").appendSibling(containerHandler.getFluidInTank(0).getDisplayName()).appendText(")");
+		return new TranslationTextComponent(this.getTranslationKey(stack)).appendString(" (")
+				.append(containerHandler.getFluidInTank(0).getDisplayName()).appendString(")");
 	}
 
 	@Override
@@ -96,13 +94,15 @@ public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplie
 	}
 
 	@Override
-	protected ActionResultType onStaticPowerItemUsedOnBlock(ItemUseContext context, World world, BlockPos pos, Direction face, PlayerEntity player, ItemStack item) {
+	protected ActionResultType onStaticPowerItemUsedOnBlock(ItemUseContext context, World world, BlockPos pos,
+			Direction face, PlayerEntity player, ItemStack item) {
 		IFluidHandler fluidHandler = FluidUtil.getFluidHandler(item).orElse(null);
 		if (fluidHandler != null) {
 			BlockPos fluidTargetPos = pos.offset(face);
-			IFluidState usedFluidState = world.getFluidState(fluidTargetPos);
+			FluidState usedFluidState = world.getFluidState(fluidTargetPos);
 			if (usedFluidState.isEmpty()) {
-				WorldUtilities.tryPlaceFluid(player, world, context.getHand(), fluidTargetPos, fluidHandler, fluidHandler.getFluidInTank(0));
+				WorldUtilities.tryPlaceFluid(player, world, context.getHand(), fluidTargetPos, fluidHandler,
+						fluidHandler.getFluidInTank(0));
 			} else {
 				WorldUtilities.tryPickUpFluid(item, player, world, fluidTargetPos, face);
 			}
@@ -111,7 +111,7 @@ public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplie
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)	
+	@OnlyIn(Dist.CLIENT)
 	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
 		return new FluidCapsuleItemModel(existingModel);
 	}
@@ -133,8 +133,10 @@ public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplie
 			if (containerHandler == null || containerHandler.getFluidInTank(0).isEmpty()) {
 				return (tier.toString());
 			}
-			return tier.toString() + itemStack.getItem().getRegistryName().toString() + containerHandler.getFluidInTank(0).getFluid().getRegistryName().toString()
-					+ containerHandler.getFluidInTank(0).getFluid().getRegistryName() + containerHandler.getFluidInTank(0).getAmount();
+			return tier.toString() + itemStack.getItem().getRegistryName().toString()
+					+ containerHandler.getFluidInTank(0).getFluid().getRegistryName().toString()
+					+ containerHandler.getFluidInTank(0).getFluid().getRegistryName()
+					+ containerHandler.getFluidInTank(0).getAmount();
 		}
 	}
 }

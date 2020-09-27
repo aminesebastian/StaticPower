@@ -200,7 +200,7 @@ public class StaticPowerRecipeRegistry {
 					addRecipe(bucketRecipe);
 				} else {
 					LOGGER.info(String.format("Attempted to register a dynamic bottler recipe for item: %1$s. The .json definition may not be required unless it is an override.",
-							emptyContainer.getDisplayName().getFormattedText()));
+							emptyContainer.getDisplayName().getString()));
 				}
 			}
 		}

@@ -3,7 +3,7 @@ package theking530.staticpower.data.crafting;
 import java.util.Map;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.google.gson.JsonElement;
 
 import net.minecraft.client.resources.JsonReloadListener;
 import net.minecraft.item.crafting.RecipeManager;
@@ -21,8 +21,7 @@ public class RecipeReloadListener extends JsonReloadListener {
 	}
 
 	@Override
-	protected void apply(Map<ResourceLocation, JsonObject> objectMap, IResourceManager manager, IProfiler profiler) {
+	protected void apply(Map<ResourceLocation, JsonElement> objectMap, IResourceManager manager, IProfiler profiler) {
 		StaticPowerRecipeRegistry.onResourcesReloaded(this.manager);
 	}
-
 }

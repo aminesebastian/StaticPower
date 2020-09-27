@@ -45,6 +45,6 @@ public class ElectricSolderingIron extends StaticPowerEnergyStoringItem implemen
 	protected void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
 		int energyStored = EnergyHandlerItemStackUtilities.getEnergyStored(stack);
 		int capacity = EnergyHandlerItemStackUtilities.getEnergyStorageCapacity(stack);
-		tooltip.add(new StringTextComponent("Power Stored: ").appendSibling(GuiTextUtilities.formatEnergyToString(energyStored, capacity)));
+		tooltip.add(new StringTextComponent("Power Stored: ").append(GuiTextUtilities.formatEnergyToString(energyStored, capacity)));
 	}
 }

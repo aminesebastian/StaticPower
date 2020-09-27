@@ -23,7 +23,7 @@ import theking530.staticpower.StaticPower;
 
 public class StaticPowerItemBlock extends BlockItem {
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerItemBlock.class);
-	
+
 	protected final Block OWNING_BLOCK;
 
 	/**
@@ -43,10 +43,12 @@ public class StaticPowerItemBlock extends BlockItem {
 	 */
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip,
+			ITooltipFlag flagIn) {
 		// Return early if an invalid owner is encountered.
 		if (OWNING_BLOCK == null) {
-			LOGGER.info("Invalid owning block encountered when attempting to generate tooltips for StaticPowerItemBlock.");
+			LOGGER.info(
+					"Invalid owning block encountered when attempting to generate tooltips for StaticPowerItemBlock.");
 			return;
 		}
 
@@ -78,7 +80,7 @@ public class StaticPowerItemBlock extends BlockItem {
 			if (flagIn.isAdvanced()) {
 				tooltip.addAll(advancedToolTips);
 			} else {
-				tooltip.add(new StringTextComponent("Hold Shift").applyTextStyle(TextFormatting.ITALIC));
+				tooltip.add(new StringTextComponent("Hold Shift").mergeStyle(TextFormatting.ITALIC));
 			}
 		}
 	}

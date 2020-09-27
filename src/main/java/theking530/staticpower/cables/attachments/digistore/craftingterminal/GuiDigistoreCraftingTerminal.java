@@ -1,5 +1,7 @@
 package theking530.staticpower.cables.attachments.digistore.craftingterminal;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import theking530.staticcore.gui.widgets.EntityRenderWidget;
@@ -76,8 +78,8 @@ public class GuiDigistoreCraftingTerminal extends AbstractGuiDigistoreTerminal<C
 	}
 
 	@Override
-	protected void drawBackgroundExtras(float partialTicks, int mouseX, int mouseY) {
-		super.drawBackgroundExtras(partialTicks, mouseX, mouseY);
+	protected void drawBackgroundExtras(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+		super.drawBackgroundExtras(stack, partialTicks, mouseX, mouseY);
 
 	}
 }

@@ -139,7 +139,7 @@ public class FluidNetworkModule extends AbstractCableNetworkModule {
 	public void getReaderOutput(List<ITextComponent> output) {
 		String storedFluid = new MetricConverter(FluidTank.getFluidAmount()).getValueAsString(true);
 		String maximumFluid = new MetricConverter(FluidTank.getCapacity()).getValueAsString(true);
-		output.add(new StringTextComponent(String.format("Contains: %1$smB of %2$s out of a maximum of %3$smB.", storedFluid, FluidTank.getFluid().getDisplayName().getFormattedText(), maximumFluid)));
+		output.add(new StringTextComponent(String.format("Contains: %1$smB of %2$s out of a maximum of %3$smB.", storedFluid, FluidTank.getFluid().getDisplayName().getString(), maximumFluid)));
 	}
 
 	@Override

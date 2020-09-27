@@ -2,10 +2,9 @@ package theking530.staticpower.blocks.decorative;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.entity.EntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraftforge.api.distmarker.Dist;
@@ -21,7 +20,8 @@ public class StaticPowerGlassBlock extends StaticPowerBlock {
 	 * @param name The registry name of the block sans namespace.
 	 */
 	public StaticPowerGlassBlock(String name) {
-		super(name, Block.Properties.create(Material.GLASS).harvestTool(ToolType.PICKAXE).hardnessAndResistance(4.0F).sound(SoundType.GLASS).notSolid());
+		super(name, Block.Properties.from(Blocks.GLASS).harvestTool(ToolType.PICKAXE).hardnessAndResistance(4.0F)
+				.sound(SoundType.GLASS).notSolid());
 	}
 
 	@Override
@@ -38,20 +38,5 @@ public class StaticPowerGlassBlock extends StaticPowerBlock {
 	@Override
 	public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
 		return true;
-	}
-
-	@Override
-	public boolean causesSuffocation(BlockState state, IBlockReader worldIn, BlockPos pos) {
-		return false;
-	}
-
-	@Override
-	public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
-		return false;
-	}
-
-	@Override
-	public boolean canEntitySpawn(BlockState state, IBlockReader worldIn, BlockPos pos, EntityType<?> type) {
-		return false;
 	}
 }

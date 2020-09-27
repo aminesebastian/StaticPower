@@ -18,10 +18,10 @@ import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
-import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.EmptyModelData;
@@ -46,7 +46,8 @@ public class CoverItemModelProvider implements IBakedModel {
 	public ItemOverrideList getOverrides() {
 		return new ItemOverrideList() {
 			@Override
-			public IBakedModel getModelWithOverrides(IBakedModel originalModel, ItemStack stack, World world, LivingEntity entity) {
+			public IBakedModel getOverrideModel(IBakedModel originalModel, ItemStack stack, @Nullable ClientWorld world,
+					@Nullable LivingEntity livingEntity) {
 				// If this is not a CableCover item or it has no tag, return the original
 				// moodel.
 				if (!(stack.getItem() instanceof CableCover) || !stack.hasTag()) {
@@ -59,7 +60,8 @@ public class CoverItemModelProvider implements IBakedModel {
 				int hash = Objects.hash(coverItemStack.getItem().getRegistryName(), coverItemStack.getTag());
 				CoverItemModel model = CoverItemModelProvider.this.cache.get(hash);
 				if (model == null) {
-					model = new CoverItemModel(CoverItemModelProvider.this.baseModel, coverItemStack, CoverItemModelProvider.this.coverBuilder);
+					model = new CoverItemModel(CoverItemModelProvider.this.baseModel, coverItemStack,
+							CoverItemModelProvider.this.coverBuilder);
 					CoverItemModelProvider.this.cache.put(hash, model);
 				}
 
@@ -84,8 +86,8 @@ public class CoverItemModelProvider implements IBakedModel {
 	}
 
 	@Override
-	public boolean func_230044_c_() {
-		return baseModel.func_230044_c_();
+	public boolean isSideLit() {
+		return baseModel.isSideLit();
 	}
 
 	@Override
@@ -115,7 +117,8 @@ public class CoverItemModelProvider implements IBakedModel {
 		}
 
 		@Override
-		protected List<BakedQuad> getBakedQuadsFromIModelData(BlockState state, Direction side, Random rand, IModelData data) {
+		protected List<BakedQuad> getBakedQuadsFromIModelData(BlockState state, Direction side, Random rand,
+				IModelData data) {
 			if (side != null) {
 				return Collections.emptyList();
 			}
@@ -139,8 +142,8 @@ public class CoverItemModelProvider implements IBakedModel {
 		}
 
 		@Override
-		public boolean func_230044_c_() {
-			return false;
+		public boolean isSideLit() {
+			return BaseModel.isSideLit();
 		}
 
 		@Override

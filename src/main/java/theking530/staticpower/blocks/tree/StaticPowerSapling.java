@@ -56,11 +56,12 @@ public class StaticPowerSapling extends BushBlock implements IGrowable, IItemBlo
 
 	public void grow(ServerWorld serverWorld, BlockPos pos, BlockState state, Random rand) {
 		if (state.get(STAGE) == 0) {
-			serverWorld.setBlockState(pos, state.cycle(STAGE), 4);
+			serverWorld.setBlockState(pos, state.func_235896_a_(STAGE), 4);
 		} else {
 			if (!ForgeEventFactory.saplingGrowTree(serverWorld, rand, pos))
 				return;
-			this.tree.get().place(serverWorld, serverWorld.getChunkProvider().getChunkGenerator(), pos, state, rand);
+			this.tree.get().attemptGrowTree(serverWorld, serverWorld.getChunkProvider().getChunkGenerator(), pos, state,
+					rand);
 		}
 	}
 

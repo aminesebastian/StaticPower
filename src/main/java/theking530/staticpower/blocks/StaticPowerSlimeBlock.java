@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -43,10 +43,10 @@ public class StaticPowerSlimeBlock extends StaticPowerBlock {
 	}
 
 	private void func_226946_a_(Entity p_226946_1_) {
-		Vec3d vec3d = p_226946_1_.getMotion();
-		if (vec3d.y < 0.0D) {
+		Vector3d Vector3d = p_226946_1_.getMotion();
+		if (Vector3d.y < 0.0D) {
 			double d0 = p_226946_1_ instanceof LivingEntity ? 1.0D : 0.8D;
-			p_226946_1_.setMotion(vec3d.x, -vec3d.y * d0, vec3d.z);
+			p_226946_1_.setMotion(Vector3d.x, -Vector3d.y * d0, Vector3d.z);
 		}
 
 	}

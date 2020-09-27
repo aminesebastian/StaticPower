@@ -464,8 +464,10 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 			processingSpeedUpgradeMultiplier = 1.0f;
 			powerUsageIncreaseMultiplier = 1.0f;
 		} else {
-			processingSpeedUpgradeMultiplier = (1.0f + speedUpgrade.getTier().getProcessingSpeedUpgrade()) * speedUpgrade.getUpgradeWeight();
-			powerUsageIncreaseMultiplier = (1.0f + speedUpgrade.getTier().getProcessingSpeedPowerCost()) * speedUpgrade.getUpgradeWeight();
+			processingSpeedUpgradeMultiplier = (1.0f + speedUpgrade.getTier().getProcessingSpeedUpgrade())
+					* speedUpgrade.getUpgradeWeight();
+			powerUsageIncreaseMultiplier = (1.0f + speedUpgrade.getTier().getProcessingSpeedPowerCost())
+					* speedUpgrade.getUpgradeWeight();
 		}
 
 		// Set the processing time.
@@ -517,17 +519,18 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 	protected ProcessingCheckState checkPowerRequirements() {
 		// Check the processing power cost.
 		if (hasProcessingPowerCost && !powerComponent.hasEnoughPower(getPowerUsage())) {
-			return ProcessingCheckState.error(new StringTextComponent("Not Enough Power!").getFormattedText());
+			return ProcessingCheckState.error(new StringTextComponent("Not Enough Power!").getString());
 		}
 		// Check the processing power rate.
 		if (hasProcessingPowerCost && powerComponent.getStorage().getMaxDrain() < getPowerUsage()) {
-			return ProcessingCheckState.error(new StringTextComponent("Recipe's power per tick requirement (").appendSibling(GuiTextUtilities.formatEnergyRateToString(getPowerUsage()))
-					.appendText(") is larger than the max for this machine!").getFormattedText());
+			return ProcessingCheckState.error(new StringTextComponent("Recipe's power per tick requirement (")
+					.append(GuiTextUtilities.formatEnergyRateToString(getPowerUsage()))
+					.appendString(") is larger than the max for this machine!").getString());
 		}
 
 		// Check the completion power cost.
 		if (hasCompletedPowerCost && !powerComponent.hasEnoughPower(getCompletedPowerUsage())) {
-			return ProcessingCheckState.error(new StringTextComponent("Not Enough Power!").getFormattedText());
+			return ProcessingCheckState.error(new StringTextComponent("Not Enough Power!").getString());
 		}
 
 		// If we made it this far, return true.
@@ -537,7 +540,8 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 	protected ProcessingCheckState checkRedstoneState() {
 		// Check the redstone control component.
 		if (redstoneControlComponent != null && !redstoneControlComponent.passesRedstoneCheck()) {
-			return ProcessingCheckState.error(new StringTextComponent("Redstone Control Mode Not Satisfied.").getFormattedText());
+			return ProcessingCheckState
+					.error(new StringTextComponent("Redstone Control Mode Not Satisfied.").getString());
 		}
 
 		return ProcessingCheckState.ok();
@@ -546,7 +550,7 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 	protected void setIsOnBlockState(boolean on) {
 		if (!getWorld().isRemote && shouldControlOnBlockState) {
 			BlockState currentState = getWorld().getBlockState(getPos());
-			if (currentState.has(StaticPowerMachineBlock.IS_ON)) {
+			if (currentState.hasProperty(StaticPowerMachineBlock.IS_ON)) {
 				if (currentState.get(StaticPowerMachineBlock.IS_ON) != on) {
 					getWorld().setBlockState(getPos(), currentState.with(StaticPowerMachineBlock.IS_ON, on), 2);
 				}
@@ -559,7 +563,7 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 			return false;
 		}
 		BlockState currentState = getWorld().getBlockState(getPos());
-		if (currentState.has(StaticPowerMachineBlock.IS_ON)) {
+		if (currentState.hasProperty(StaticPowerMachineBlock.IS_ON)) {
 			return currentState.get(StaticPowerMachineBlock.IS_ON);
 		}
 		return false;
@@ -635,7 +639,8 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 		}
 
 		public static ProcessingCheckState outputTankCannotTakeFluid() {
-			return new ProcessingCheckState(ProcessingState.ERROR, "Tank does not have enough space for recipe output.");
+			return new ProcessingCheckState(ProcessingState.ERROR,
+					"Tank does not have enough space for recipe output.");
 		}
 
 		public static ProcessingCheckState outputFluidDoesNotMatch() {

@@ -1,5 +1,7 @@
 package theking530.staticcore.gui.widgets.scrollbar;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
@@ -84,7 +86,7 @@ public class ScrollBarWidget extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderBehindItems(int mouseX, int mouseY, float partialTicks) {
+	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 		Vector2D position = this.getScreenSpacePosition();
 		GuiDrawUtilities.drawSlot(position.getX(), position.getY(), getSize().getX(), getSize().getY());
 

@@ -1,5 +1,7 @@
 package theking530.staticpower.tileentities.powered.autocrafter;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.util.text.ITextComponent;
@@ -17,7 +19,8 @@ import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
 
-public class GuiAutoCraftingTable extends StaticPowerTileEntityGui<ContainerAutoCraftingTable, TileEntityAutoCraftingTable> {
+public class GuiAutoCraftingTable
+		extends StaticPowerTileEntityGui<ContainerAutoCraftingTable, TileEntityAutoCraftingTable> {
 	private final GuiDrawItem itemRenderer;
 	private final SpriteDrawable lockedSprite;
 
@@ -33,20 +36,26 @@ public class GuiAutoCraftingTable extends StaticPowerTileEntityGui<ContainerAuto
 	public void initializeGui() {
 		super.initializeGui();
 		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 45));
-		registerWidget(new ArrowProgressBar(99, 38).bindToMachineProcessingComponent(getTileEntity().processingComponent));
+		registerWidget(
+				new ArrowProgressBar(99, 38).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
-		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
+		getTabManager().registerTab(
+				new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
-		
-		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage, getTileEntity().processingComponent).setTabSide(TabSide.LEFT), true);
-		getTabManager().registerTab(new GuiUpgradeTab(this.container, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
-		
+
+		getTabManager().registerTab(
+				new GuiMachinePowerInfoTab(getTileEntity().energyStorage, getTileEntity().processingComponent)
+						.setTabSide(TabSide.LEFT),
+				true);
+		getTabManager().registerTab(
+				new GuiUpgradeTab(this.container, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
+
 		setOutputSlotSize(20);
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+	protected void drawBehindItems(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+		super.drawBehindItems(stack, partialTicks, mouseX, mouseY);
 		// Check if we have a recipe currently processing.
 		ICraftingRecipe recipe = getTileEntity().getCurrentProcessingRecipe().orElse(null);
 
@@ -59,10 +68,5 @@ public class GuiAutoCraftingTable extends StaticPowerTileEntityGui<ContainerAuto
 		if (recipe != null) {
 			itemRenderer.drawItem(recipe.getRecipeOutput(), guiLeft, guiTop, 129, 38, 0.3f);
 		}
-	}
-
-	@Override
-	public void updateData() {
-
 	}
 }

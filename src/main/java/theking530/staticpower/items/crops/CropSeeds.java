@@ -59,7 +59,7 @@ public class CropSeeds extends StaticPowerItem implements IPlantable {
 	 */
 	@Override
 	public PlantType getPlantType(IBlockReader world, BlockPos pos) {
-		return PlantType.Crop;
+		return PlantType.CROP;
 	}
 
 	/**

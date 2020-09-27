@@ -56,21 +56,22 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 		super.preProcessUpdate();
 		// Check to see if the manager is present. If not, update the tile entity.
 		if (!getWorld().isRemote) {
-			this.<DigistoreNetworkModule>getNetworkModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE).ifPresent(network -> {
-				if (managerPresent != network.isManagerPresent()) {
-					managerPresent = network.isManagerPresent();
-					this.getTileEntity().markTileEntityForSynchronization();
-				}
+			this.<DigistoreNetworkModule>getNetworkModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE)
+					.ifPresent(network -> {
+						if (managerPresent != network.isManagerPresent()) {
+							managerPresent = network.isManagerPresent();
+							this.getTileEntity().markTileEntityForSynchronization();
+						}
 
-				// Update the on/off state of the block.
-				if (shouldControlOnBlockState) {
-					if (managerPresent && !getIsOnBlockState()) {
-						setIsOnBlockState(true);
-					} else if (!managerPresent && getIsOnBlockState()) {
-						setIsOnBlockState(false);
-					}
-				}
-			});
+						// Update the on/off state of the block.
+						if (shouldControlOnBlockState) {
+							if (managerPresent && !getIsOnBlockState()) {
+								setIsOnBlockState(true);
+							} else if (!managerPresent && getIsOnBlockState()) {
+								setIsOnBlockState(false);
+							}
+						}
+					});
 		}
 	}
 
@@ -93,10 +94,13 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	}
 
 	@Override
-	protected CableConnectionState cacheConnectionState(Direction side, @Nullable TileEntity te, BlockPos blockPosition) {
-		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(), blockPosition);
+	protected CableConnectionState cacheConnectionState(Direction side, @Nullable TileEntity te,
+			BlockPos blockPosition) {
+		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(),
+				blockPosition);
 
-		if (te instanceof TileEntityDigistoreWire && otherProvider != null && otherProvider.areCableCompatible(this, side)) {
+		if (te instanceof TileEntityDigistoreWire && otherProvider != null
+				&& otherProvider.areCableCompatible(this, side)) {
 			if (!otherProvider.isSideDisabled(side.getOpposite())) {
 				return CableConnectionState.CABLE;
 			}
@@ -112,7 +116,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	protected void setIsOnBlockState(boolean on) {
 		if (!getWorld().isRemote && shouldControlOnBlockState) {
 			BlockState currentState = getWorld().getBlockState(getPos());
-			if (currentState.has(StaticPowerMachineBlock.IS_ON)) {
+			if (currentState.hasProperty(StaticPowerMachineBlock.IS_ON)) {
 				if (currentState.get(StaticPowerMachineBlock.IS_ON) != on) {
 					getWorld().setBlockState(getPos(), currentState.with(StaticPowerMachineBlock.IS_ON, on), 2);
 				}
@@ -125,7 +129,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 			return false;
 		}
 		BlockState currentState = getWorld().getBlockState(getPos());
-		if (currentState.has(StaticPowerMachineBlock.IS_ON)) {
+		if (currentState.hasProperty(StaticPowerMachineBlock.IS_ON)) {
 			return currentState.get(StaticPowerMachineBlock.IS_ON);
 		}
 		return false;

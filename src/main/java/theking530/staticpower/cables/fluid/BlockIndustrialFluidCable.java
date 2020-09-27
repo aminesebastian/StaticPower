@@ -44,7 +44,7 @@ public class BlockIndustrialFluidCable extends AbstractCableBlock {
 	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
 		super.getBasicTooltip(stack, worldIn, tooltip);
 		tooltip.add(FluidCableTooltipUtilities.getFluidTrasnferRate(TierReloadListener.getTier(tier).getCableIndustrialFluidCapacity()));
-		tooltip.add(new StringTextComponent(TextFormatting.RED.toString()).appendText("Cannot connect directly to blocks!"));
+		tooltip.add(new StringTextComponent(TextFormatting.RED.toString()).appendString("Cannot connect directly to blocks!"));
 	}
 
 	@Override

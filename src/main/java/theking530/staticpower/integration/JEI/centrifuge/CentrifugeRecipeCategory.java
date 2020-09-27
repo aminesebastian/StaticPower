@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ITickTimer;
@@ -18,6 +20,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.progressbars.CentrifugeProgressBar;
@@ -63,7 +66,7 @@ public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRe
 	@Override
 	@Nonnull
 	public String getTitle() {
-		return locTitle.getFormattedText();
+		return locTitle.getString();
 	}
 
 	@Override
@@ -83,7 +86,7 @@ public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRe
 	}
 
 	@Override
-	public void draw(CentrifugeRecipe recipe, double mouseX, double mouseY) {
+	public void draw(CentrifugeRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
 		GuiDrawUtilities.drawSlot(80, 6, 16, 16);
 
 		GuiDrawUtilities.drawSlot(78, 46, 20, 20);
@@ -93,20 +96,22 @@ public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRe
 		GuiPowerBarUtilities.drawPowerBar(8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		String rpmText = String.valueOf(recipe.getMinimumSpeed()) + " RPM";
-		GuiDrawUtilities.drawColoredRectangle(103, 12, Minecraft.getInstance().fontRenderer.getStringWidth(rpmText) + 4, 11, 0.0f, Color.GREY);
-		Minecraft.getInstance().fontRenderer.drawStringWithShadow(rpmText, 105, 14, Color.EIGHT_BIT_WHITE.encodeInInteger());
+		GuiDrawUtilities.drawColoredRectangle(103, 12, Minecraft.getInstance().fontRenderer.getStringWidth(rpmText) + 4,
+				11, 0.0f, Color.GREY);
+		Minecraft.getInstance().fontRenderer.drawStringWithShadow(matrixStack, rpmText, 105, 14,
+				Color.EIGHT_BIT_WHITE.encodeInInteger());
 
 		pBar.setCurrentProgress(processingTimer.getValue());
 		pBar.setMaxProgress(processingTimer.getMaxValue());
-		pBar.renderBehindItems((int) mouseX, (int) mouseY, 0.0f);
+		pBar.renderBehindItems(null, (int) mouseX, (int) mouseY, 0.0f);
 	}
 
 	@Override
-	public List<String> getTooltipStrings(CentrifugeRecipe recipe, double mouseX, double mouseY) {
-		List<String> output = new ArrayList<String>();
+	public List<ITextComponent> getTooltipStrings(CentrifugeRecipe recipe, double mouseX, double mouseY) {
+		List<ITextComponent> output = new ArrayList<ITextComponent>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			String powerCost = GuiTextUtilities.formatEnergyToString(recipe.getPowerCost() * recipe.getProcessingTime()).getFormattedText();
-			output.add("Usage: " + powerCost);
+			output.add(new StringTextComponent("Usage: ")
+					.append(GuiTextUtilities.formatEnergyToString(recipe.getPowerCost() * recipe.getProcessingTime())));
 		}
 
 		// Render the progress bar tooltip.
@@ -115,9 +120,9 @@ public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRe
 			List<ITextComponent> tooltips = new ArrayList<ITextComponent>();
 			pBar.getTooltips(mouse, tooltips, false);
 			for (ITextComponent tooltip : tooltips) {
-				output.add(tooltip.getFormattedText());
+				output.add(tooltip);
 			}
-			output.add("Required RPM: " + recipe.getMinimumSpeed());
+			output.add(new StringTextComponent("Required RPM: " + recipe.getMinimumSpeed()));
 		}
 
 		return output;
@@ -151,22 +156,25 @@ public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRe
 		// Add the output percentage to the tooltip for the ingredient.
 		guiItemStacks.addTooltipCallback(new ITooltipCallback<ItemStack>() {
 			@Override
-			public void onTooltip(int slotIndex, boolean input, ItemStack ingredient, List<String> tooltip) {
+			public void onTooltip(int slotIndex, boolean input, ItemStack ingredient, List<ITextComponent> tooltip) {
 				// Only perform for inputs.
 				if (!input) {
 					// Transform into the output index space.
 					int outputIndex = slotIndex - 1;
 
 					// Formulate the output percentage tooltip and then add it.
-					String outputPercentage = new TranslationTextComponent("gui.staticpower.output_chance").appendText(": ")
-							.appendText(String.valueOf((int) (recipe.getOutputs().get(outputIndex).getOutputChance() * 100)) + "%").getFormattedText();
+					ITextComponent outputPercentage = new TranslationTextComponent("gui.staticpower.output_chance")
+							.appendString(": ").appendString(
+									String.valueOf((int) (recipe.getOutputs().get(outputIndex).getOutputChance() * 100))
+											+ "%");
 					tooltip.add(outputPercentage);
 				}
 			}
 		});
 
 		// Add the fluid.
-		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime() * recipe.getPowerCost(), true);
+		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(),
+				recipe.getProcessingTime() * recipe.getPowerCost(), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);
 	}
 }

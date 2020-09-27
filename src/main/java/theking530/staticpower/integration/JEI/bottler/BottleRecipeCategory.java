@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ITickTimer;
@@ -15,6 +17,8 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
@@ -56,7 +60,7 @@ public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 	@Override
 	@Nonnull
 	public String getTitle() {
-		return locTitle.getFormattedText();
+		return locTitle.getString();
 	}
 
 	@Override
@@ -76,7 +80,7 @@ public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 	}
 
 	@Override
-	public void draw(BottleRecipe recipe, double mouseX, double mouseY) {
+	public void draw(BottleRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
 		GuiDrawUtilities.drawSlot(109, 12, 16, 16);
 		GuiDrawUtilities.drawSlot(107, 36, 20, 20);
 
@@ -92,11 +96,11 @@ public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 	}
 
 	@Override
-	public List<String> getTooltipStrings(BottleRecipe recipe, double mouseX, double mouseY) {
-		List<String> output = new ArrayList<String>();
+	public List<ITextComponent> getTooltipStrings(BottleRecipe recipe, double mouseX, double mouseY) {
+		List<ITextComponent> output = new ArrayList<ITextComponent>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			String powerCost = GuiTextUtilities.formatEnergyToString(TileEntityBottler.DEFAULT_PROCESSING_COST * TileEntityBottler.DEFAULT_PROCESSING_TIME).getFormattedText();
-			output.add("Usage: " + powerCost);
+			output.add(new StringTextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(
+					TileEntityBottler.DEFAULT_PROCESSING_COST * TileEntityBottler.DEFAULT_PROCESSING_TIME)));
 		}
 
 		return output;
@@ -129,7 +133,9 @@ public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 		fluids.init(3, true, 50, 4, 16, 52, getFluidTankDisplaySize(recipe.getFluid()), false, null);
 		fluids.set(ingredients);
 
-		powerTimer = guiHelper.createTickTimer(TileEntityBottler.DEFAULT_PROCESSING_COST, TileEntityBottler.DEFAULT_PROCESSING_COST * TileEntityBottler.DEFAULT_PROCESSING_TIME, true);
-		processingTimer = guiHelper.createTickTimer(TileEntityBottler.DEFAULT_PROCESSING_COST, TileEntityBottler.DEFAULT_PROCESSING_COST, false);
+		powerTimer = guiHelper.createTickTimer(TileEntityBottler.DEFAULT_PROCESSING_COST,
+				TileEntityBottler.DEFAULT_PROCESSING_COST * TileEntityBottler.DEFAULT_PROCESSING_TIME, true);
+		processingTimer = guiHelper.createTickTimer(TileEntityBottler.DEFAULT_PROCESSING_COST,
+				TileEntityBottler.DEFAULT_PROCESSING_COST, false);
 	}
 }

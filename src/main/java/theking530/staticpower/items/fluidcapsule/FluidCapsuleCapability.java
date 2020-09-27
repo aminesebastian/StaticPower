@@ -6,12 +6,14 @@ import javax.annotation.Nullable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import theking530.staticpower.data.TierReloadListener;
 
 public class FluidCapsuleCapability implements IFluidHandlerItem, ICapabilityProvider {
 
@@ -19,8 +21,8 @@ public class FluidCapsuleCapability implements IFluidHandlerItem, ICapabilityPro
 	public static final String FLUID_STORAGE_NBT_KEY = "StaticPowerFluid";
 	/** The fluid stack currently stored in the item. */
 	public static final String STORED_FLUID_NBT_KEY = "StoredFluid";
-	/** Tag for the maximum amount of fluid that can be stored in the item. */
-	public static final String CAPACITY_NBT_KEY = "Capacity";
+	/** Tag for the tier of the capsule. */
+	public static final String TIER_NBT_KEY = "Tier";
 	/** Tag to indicate if this is a creative capability. */
 	public static final String CREATIVE_NBT_KEY = "Creative";
 
@@ -29,7 +31,7 @@ public class FluidCapsuleCapability implements IFluidHandlerItem, ICapabilityPro
 	protected ItemStack container;
 	protected boolean isCreative;
 
-	public FluidCapsuleCapability(@Nonnull ItemStack container, int capacity, boolean isCreative) {
+	public FluidCapsuleCapability(@Nonnull ItemStack container, ResourceLocation tier, boolean isCreative) {
 		this.container = container;
 		this.isCreative = isCreative;
 
@@ -40,7 +42,7 @@ public class FluidCapsuleCapability implements IFluidHandlerItem, ICapabilityPro
 			CompoundNBT fluidTag = new CompoundNBT();
 			FluidStack.EMPTY.writeToNBT(fluidTag);
 			fluidContainerNBT.put(STORED_FLUID_NBT_KEY, fluidTag);
-			fluidContainerNBT.putInt(CAPACITY_NBT_KEY, capacity);
+			fluidContainerNBT.putString(TIER_NBT_KEY, tier.toString());
 			fluidContainerNBT.putBoolean(CREATIVE_NBT_KEY, isCreative);
 			container.getTag().put(FLUID_STORAGE_NBT_KEY, fluidContainerNBT);
 		}
@@ -58,7 +60,8 @@ public class FluidCapsuleCapability implements IFluidHandlerItem, ICapabilityPro
 
 	@Nonnull
 	public FluidStack getFluid() {
-		FluidStack output = FluidStack.loadFluidStackFromNBT(container.getTag().getCompound(FLUID_STORAGE_NBT_KEY).getCompound(STORED_FLUID_NBT_KEY));
+		FluidStack output = FluidStack.loadFluidStackFromNBT(
+				container.getTag().getCompound(FLUID_STORAGE_NBT_KEY).getCompound(STORED_FLUID_NBT_KEY));
 		if (isCreative) {
 			if (!output.isEmpty()) {
 				output.setAmount(Integer.MAX_VALUE);
@@ -80,7 +83,9 @@ public class FluidCapsuleCapability implements IFluidHandlerItem, ICapabilityPro
 
 	@Override
 	public int getTankCapacity(int tank) {
-		return container.getTag().getCompound(FLUID_STORAGE_NBT_KEY).getInt(CAPACITY_NBT_KEY);
+		ResourceLocation tier = new ResourceLocation(
+				container.getTag().getCompound(FLUID_STORAGE_NBT_KEY).getString(TIER_NBT_KEY));
+		return TierReloadListener.getTier(tier).getCapsuleCapacity();
 	}
 
 	@Override
@@ -92,7 +97,8 @@ public class FluidCapsuleCapability implements IFluidHandlerItem, ICapabilityPro
 	public int fill(FluidStack resource, FluidAction action) {
 		FluidStack containedFluid = getFluid();
 
-		if (resource == null || resource.isEmpty() || !containedFluid.isEmpty() && !resource.isFluidEqual(containedFluid)) {
+		if (resource == null || resource.isEmpty()
+				|| !containedFluid.isEmpty() && !resource.isFluidEqual(containedFluid)) {
 			return 0;
 		}
 

@@ -13,6 +13,7 @@ import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import theking530.api.power.CapabilityStaticVolt;
 import theking530.staticpower.StaticPower;
@@ -32,7 +33,8 @@ public class StaticPowerTOPHandler implements IProbeInfoProvider {
 	 * adding elements to that will cause them to be grouped vertically.
 	 */
 	@Override
-	public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, PlayerEntity player, World world, BlockState blockState, IProbeHitData data) {
+	public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, PlayerEntity player, World world,
+			BlockState blockState, IProbeHitData data) {
 		// The TE we are looking at if it exists.
 		TileEntity te = world.getTileEntity(data.getPos());
 		if (te == null) {
@@ -40,10 +42,13 @@ public class StaticPowerTOPHandler implements IProbeInfoProvider {
 		}
 
 		// Handle any static volts.
-		world.getTileEntity(data.getPos()).getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).ifPresent(handler -> {
-			probeInfo.progress(handler.getStoredPower(), handler.getCapacity(),
-					probeInfo.defaultProgressStyle().suffix("V").filledColor(0xff0099cc).alternateFilledColor(0xff0075ff).borderColor(0xff999999).numberFormat(NumberFormat.COMPACT));
-		});
+		world.getTileEntity(data.getPos()).getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY)
+				.ifPresent(handler -> {
+					probeInfo.progress(handler.getStoredPower(), handler.getCapacity(),
+							probeInfo.defaultProgressStyle().suffix("V").filledColor(0xff0099cc)
+									.alternateFilledColor(0xff0075ff).borderColor(0xff999999)
+									.numberFormat(NumberFormat.COMPACT));
+				});
 
 		// Get the base tile entity.
 		if (!(te instanceof TileEntityBase)) {
@@ -55,19 +60,26 @@ public class StaticPowerTOPHandler implements IProbeInfoProvider {
 		if (teBase.hasComponentOfType(AbstractProcesingComponent.class)) {
 			AbstractProcesingComponent processingComponent = teBase.getComponent(AbstractProcesingComponent.class);
 			if (processingComponent.isProcessing()) {
-				probeInfo.progress(processingComponent.getMaxProcessingTime() - processingComponent.getCurrentProcessingTime(), processingComponent.getMaxProcessingTime(),
-						probeInfo.defaultProgressStyle().suffix("Ticks Remaining").filledColor(0xffaaaaaa).alternateFilledColor(0xffaaaaaa).borderColor(0xff999999).numberFormat(NumberFormat.COMPACT));
+				probeInfo.progress(
+						processingComponent.getMaxProcessingTime() - processingComponent.getCurrentProcessingTime(),
+						processingComponent.getMaxProcessingTime(),
+						probeInfo.defaultProgressStyle().suffix("Ticks Remaining").filledColor(0xffaaaaaa)
+								.alternateFilledColor(0xffaaaaaa).borderColor(0xff999999)
+								.numberFormat(NumberFormat.COMPACT));
 			} else {
 				probeInfo.progress(0, 0,
-						probeInfo.defaultProgressStyle().suffix("Ticks Remaining").filledColor(0xffaaaaaa).alternateFilledColor(0xffaaaaaa).borderColor(0xff999999).numberFormat(NumberFormat.COMPACT));
+						probeInfo.defaultProgressStyle().suffix("Ticks Remaining").filledColor(0xffaaaaaa)
+								.alternateFilledColor(0xffaaaaaa).borderColor(0xff999999)
+								.numberFormat(NumberFormat.COMPACT));
 			}
 
 		}
 		// Add the digistore component info.
 		if (teBase.hasComponentOfType(DigistoreCableProviderComponent.class)) {
-			DigistoreCableProviderComponent digistoreComponent = teBase.getComponent(DigistoreCableProviderComponent.class);
+			DigistoreCableProviderComponent digistoreComponent = teBase
+					.getComponent(DigistoreCableProviderComponent.class);
 			if (!digistoreComponent.isManagerPresent()) {
-				probeInfo.text("Manager Not Present!");
+				probeInfo.text(new StringTextComponent("Manager Not Present!"));
 			}
 		}
 	}
@@ -89,7 +101,8 @@ public class StaticPowerTOPHandler implements IProbeInfoProvider {
 				}
 
 				@Override
-				public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, PlayerEntity player, World world, BlockState blockState, IProbeHitData data) {
+				public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, PlayerEntity player, World world,
+						BlockState blockState, IProbeHitData data) {
 					Handler.addProbeInfo(mode, probeInfo, player, world, blockState, data);
 				}
 			});

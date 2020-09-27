@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ITickTimer;
@@ -16,6 +18,8 @@ import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
@@ -58,7 +62,7 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 	@Override
 	@Nonnull
 	public String getTitle() {
-		return locTitle.getFormattedText();
+		return locTitle.getString();
 	}
 
 	@Override
@@ -78,7 +82,7 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 	}
 
 	@Override
-	public void draw(FermenterRecipe recipe, double mouseX, double mouseY) {
+	public void draw(FermenterRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
 		// Draw the slots.
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 3; ++j) {
@@ -92,7 +96,8 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 		GuiPowerBarUtilities.drawPowerBar(8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		// This doesn't actually draw the fluid, just the bars.
-		GuiFluidBarUtilities.drawFluidBar(recipe.getOutputFluidStack(), 0, 0, 153, 54, 1.0f, 16, 48, MachineSideMode.Never, true);
+		GuiFluidBarUtilities.drawFluidBar(recipe.getOutputFluidStack(), 0, 0, 153, 54, 1.0f, 16, 48,
+				MachineSideMode.Never, true);
 
 		// Draw the progress bar as a fluid.
 		GuiDrawUtilities.drawSlot(97, 24, 48, 5);
@@ -102,13 +107,14 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 	}
 
 	@Override
-	public List<String> getTooltipStrings(FermenterRecipe recipe, double mouseX, double mouseY) {
-		List<String> output = new ArrayList<String>();
+	public List<ITextComponent> getTooltipStrings(FermenterRecipe recipe, double mouseX, double mouseY) {
+		List<ITextComponent> output = new ArrayList<ITextComponent>();
 
 		// Add a tooltip for the energy bar.
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			String powerCost = GuiTextUtilities.formatEnergyToString(TileEntityFermenter.DEFAULT_PROCESSING_COST * TileEntityFermenter.DEFAULT_PROCESSING_TIME).getFormattedText();
-			output.add("Usage: " + powerCost);
+			output.add(new StringTextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(
+					TileEntityFermenter.DEFAULT_PROCESSING_COST * TileEntityFermenter.DEFAULT_PROCESSING_TIME)));
+
 		}
 
 		return output;
@@ -140,7 +146,9 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 		fluids.init(3, false, 153, 6, 16, 48, getFluidTankDisplaySize(recipe.getOutputFluidStack()), false, null);
 		fluids.set(ingredients);
 
-		powerTimer = guiHelper.createTickTimer(TileEntityFermenter.DEFAULT_PROCESSING_TIME, TileEntityFermenter.DEFAULT_PROCESSING_COST * TileEntityFermenter.DEFAULT_PROCESSING_TIME, true);
-		processingTimer = guiHelper.createTickTimer(TileEntityFermenter.DEFAULT_PROCESSING_TIME, TileEntityFermenter.DEFAULT_PROCESSING_COST, false);
+		powerTimer = guiHelper.createTickTimer(TileEntityFermenter.DEFAULT_PROCESSING_TIME,
+				TileEntityFermenter.DEFAULT_PROCESSING_COST * TileEntityFermenter.DEFAULT_PROCESSING_TIME, true);
+		processingTimer = guiHelper.createTickTimer(TileEntityFermenter.DEFAULT_PROCESSING_TIME,
+				TileEntityFermenter.DEFAULT_PROCESSING_COST, false);
 	}
 }

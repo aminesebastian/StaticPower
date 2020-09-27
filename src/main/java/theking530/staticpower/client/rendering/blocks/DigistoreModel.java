@@ -11,13 +11,13 @@ import com.google.common.collect.ImmutableList;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ILightReader;
+import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.world.IBlockDisplayReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.IModelData;
@@ -35,12 +35,14 @@ public class DigistoreModel extends AbstractBakedModel {
 
 	@Override
 	@Nonnull
-	public IModelData getModelData(@Nonnull ILightReader world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull IModelData tileData) {
+	public IModelData getModelData(@Nonnull IBlockDisplayReader world, @Nonnull BlockPos pos, @Nonnull BlockState state,
+			@Nonnull IModelData tileData) {
 		return tileData;
 	}
 
 	@Override
-	protected List<BakedQuad> getBakedQuadsFromIModelData(@Nullable BlockState state, Direction side, @Nonnull Random rand, @Nonnull IModelData data) {
+	protected List<BakedQuad> getBakedQuadsFromIModelData(@Nullable BlockState state, Direction side,
+			@Nonnull Random rand, @Nonnull IModelData data) {
 		// If the property is not there, return early.
 		if (!data.hasProperty(TileEntityDigistore.RENDERING_STATE)) {
 			return Collections.emptyList();
@@ -60,7 +62,8 @@ public class DigistoreModel extends AbstractBakedModel {
 		// Render the card.
 		if (!card.isEmpty()) {
 			// Get the model of the card.
-			IBakedModel model = Minecraft.getInstance().getModelManager().getModel(((DigistoreCard) card.getItem()).model);
+			IBakedModel model = Minecraft.getInstance().getModelManager()
+					.getModel(((DigistoreCard) card.getItem()).model);
 
 			// Calculate the offset for the current card's model.
 			float xOffset = 0.0f;
@@ -71,7 +74,8 @@ public class DigistoreModel extends AbstractBakedModel {
 			Vector3f offset = SDMath.transformVectorByDirection(facing, new Vector3f(xOffset, yOffset, zOffset));
 
 			// Transform the card's quads.
-			List<BakedQuad> bakedCardQuads = transformQuads(model, offset, new Vector3f(1.46f, .6f, 1.0f), FACING_ROTATIONS.get(facing), side, state, rand);
+			List<BakedQuad> bakedCardQuads = transformQuads(model, offset, new Vector3f(1.46f, .6f, 1.0f),
+					FACING_ROTATIONS.get(facing), side, state, rand);
 			newQuads.addAll(bakedCardQuads);
 
 		}
@@ -83,5 +87,10 @@ public class DigistoreModel extends AbstractBakedModel {
 		ModelDataMap.Builder builder = new ModelDataMap.Builder();
 		ModelDataMap modelDataMap = builder.build();
 		return modelDataMap;
+	}
+
+	@Override
+	public boolean isSideLit() {
+		return BaseModel.isSideLit();
 	}
 }

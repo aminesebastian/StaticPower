@@ -3,6 +3,8 @@ package theking530.staticpower.cables.attachments.digistore.terminalbase.autocra
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.util.text.ITextComponent;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
@@ -81,7 +83,7 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderForeground(int mouseX, int mouseY, float partialTicks) {
+	public void renderForeground(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 		// Get the screen space position.
 		Vector2D screenSpacePos = getScreenSpacePosition();
 
@@ -96,7 +98,7 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 		// Render the widgets.
 		for (AutoCraftingStepWidget widget : stepRenderers) {
 			widget.updateBeforeRender(screenSpacePos, getSize(), partialTicks, mouseX, mouseY);
-			widget.renderForeground(mouseX, mouseY, partialTicks);
+			widget.renderForeground(null, mouseX, mouseY, partialTicks);
 		}
 
 		// Render the vertical dividers.

@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ITickTimer;
@@ -16,6 +18,7 @@ import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.ForgeHooks;
 import theking530.staticcore.gui.GuiDrawUtilities;
@@ -30,7 +33,8 @@ import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.tileentities.powered.solidgenerator.TileEntitySolidGenerator;
 
 public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFuelRecipe> {
-	public static final ResourceLocation SOLID_GENERATOR_UID = new ResourceLocation(StaticPower.MOD_ID, "solid_generator");
+	public static final ResourceLocation SOLID_GENERATOR_UID = new ResourceLocation(StaticPower.MOD_ID,
+			"solid_generator");
 	private static final int INTPUT_SLOT = 0;
 
 	private final TranslationTextComponent locTitle;
@@ -48,8 +52,12 @@ public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFue
 		locTitle = new TranslationTextComponent(ModBlocks.SolidGenerator.getTranslationKey());
 		background = guiHelper.createBlankDrawable(90, 60);
 		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.SolidGenerator));
-		flamesBg = guiHelper.drawableBuilder(new ResourceLocation(StaticPower.MOD_ID, "textures/gui/flames.png"), 0, 14, 14, 14).setTextureSize(32, 32).build();
-		flames = guiHelper.drawableBuilder(new ResourceLocation(StaticPower.MOD_ID, "textures/gui/flames.png"), 0, 0, 14, 14).setTextureSize(32, 32).build();
+		flamesBg = guiHelper
+				.drawableBuilder(new ResourceLocation(StaticPower.MOD_ID, "textures/gui/flames.png"), 0, 14, 14, 14)
+				.setTextureSize(32, 32).build();
+		flames = guiHelper
+				.drawableBuilder(new ResourceLocation(StaticPower.MOD_ID, "textures/gui/flames.png"), 0, 0, 14, 14)
+				.setTextureSize(32, 32).build();
 		pBar = new ArrowProgressBar(55, 19).setFlipped(true);
 	}
 
@@ -62,7 +70,7 @@ public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFue
 	@Override
 	@Nonnull
 	public String getTitle() {
-		return locTitle.getFormattedText();
+		return locTitle.getString();
 	}
 
 	@Override
@@ -82,26 +90,27 @@ public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFue
 	}
 
 	@Override
-	public void draw(SolidFuelRecipe recipe, double mouseX, double mouseY) {
+	public void draw(SolidFuelRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
 		GuiDrawUtilities.drawSlot(66, 19, 16, 16);
 
 		GuiPowerBarUtilities.drawPowerBar(8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
 
-		flamesBg.draw(67, 40);
-		flames.draw(67, 40, (int) (((float) processingTimer.getValue() / processingTimer.getMaxValue()) * 14.0f), 0, 0, 0);
+		flamesBg.draw(matrixStack, 67, 40);
+		flames.draw(matrixStack, 67, 40,
+				(int) (((float) processingTimer.getValue() / processingTimer.getMaxValue()) * 14.0f), 0, 0, 0);
 
 		pBar.setCurrentProgress(processingTimer.getValue());
 		pBar.setMaxProgress(processingTimer.getMaxValue());
-		pBar.renderBehindItems((int) mouseX, (int) mouseY, 0.0f);
+		pBar.renderBehindItems(null, (int) mouseX, (int) mouseY, 0.0f);
 	}
 
 	@Override
-	public List<String> getTooltipStrings(SolidFuelRecipe recipe, double mouseX, double mouseY) {
-		List<String> output = new ArrayList<String>();
+	public List<ITextComponent> getTooltipStrings(SolidFuelRecipe recipe, double mouseX, double mouseY) {
+		List<ITextComponent> output = new ArrayList<ITextComponent>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
 			int burnTime = ForgeHooks.getBurnTime(recipe.getFuel());
-			String powerCost = GuiTextUtilities.formatEnergyToString(TileEntitySolidGenerator.DEFAULT_POWER_GENERATION * burnTime).getFormattedText();
-			output.add("Generates: " + powerCost);
+			output.add(new StringTextComponent("Generates: ").append(GuiTextUtilities
+					.formatEnergyToString(TileEntitySolidGenerator.DEFAULT_POWER_GENERATION * burnTime)));
 		}
 
 		// Render the progress bar tooltip.
@@ -110,7 +119,7 @@ public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFue
 			List<ITextComponent> tooltips = new ArrayList<ITextComponent>();
 			pBar.getTooltips(mouse, tooltips, false);
 			for (ITextComponent tooltip : tooltips) {
-				output.add(tooltip.getFormattedText());
+				output.add(tooltip);
 			}
 		}
 
@@ -129,7 +138,8 @@ public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFue
 		guiItemStacks.set(ingredients);
 
 		int burnTime = recipe.getFuelAmount();
-		powerTimer = guiHelper.createTickTimer(Math.max(1, burnTime / 10), TileEntitySolidGenerator.DEFAULT_POWER_GENERATION * burnTime, false);
+		powerTimer = guiHelper.createTickTimer(Math.max(1, burnTime / 10),
+				TileEntitySolidGenerator.DEFAULT_POWER_GENERATION * burnTime, false);
 		processingTimer = guiHelper.createTickTimer(burnTime, burnTime, false);
 	}
 }
