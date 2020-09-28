@@ -65,7 +65,7 @@ import theking530.staticpower.tileentities.powered.solidgenerator.BlockSolidGene
 import theking530.staticpower.tileentities.powered.squeezer.BlockSqueezer;
 import theking530.staticpower.tileentities.powered.treefarmer.BlockTreeFarmer;
 import theking530.staticpower.tileentities.powered.vulcanizer.BlockVulcanizer;
-import theking530.staticpower.trees.rubbertree.RubberTree;
+import theking530.staticpower.world.trees.RubberTree;
 
 public class ModBlocks {
 	// Decorative

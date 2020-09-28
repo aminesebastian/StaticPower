@@ -1,4 +1,4 @@
-package theking530.staticpower.trees;
+package theking530.staticpower.world.trees;
 
 import java.util.Random;
 

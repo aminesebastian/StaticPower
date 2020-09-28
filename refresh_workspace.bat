@@ -1,3 +1,3 @@
-call gradlew eclipse  --no-daemonC
+call gradlew eclipse  --no-daemon
 call gradlew genEclipseRuns 
 pause

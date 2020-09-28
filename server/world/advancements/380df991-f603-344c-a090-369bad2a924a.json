@@ -1,0 +1,9 @@
+{
+  "minecraft:recipes/decorations/chest": {
+    "criteria": {
+      "has_the_recipe": "2020-09-27 22:33:51 -0400"
+    },
+    "done": true
+  },
+  "DataVersion": 2580
+}

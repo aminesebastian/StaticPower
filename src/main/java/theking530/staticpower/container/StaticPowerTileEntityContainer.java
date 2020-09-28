@@ -25,7 +25,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 public abstract class StaticPowerTileEntityContainer<T extends TileEntityBase> extends StaticPowerContainer {
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerTileEntityContainer.class);
 	public static final int DEFAULT_SYNC_TIME = 2;
-	
+
 	private final T owningTileEntity;
 	private int syncTime;
 	private int syncTimer;
@@ -66,11 +66,8 @@ public abstract class StaticPowerTileEntityContainer<T extends TileEntityBase> e
 		if (syncTimer >= syncTime) {
 			syncTimer = 0;
 
-			// Get all listening players.
-			List<IContainerListener> listeners = getListeners();
-
 			// Send a packet to all listening players.
-			for (IContainerListener listener : listeners) {
+			for (IContainerListener listener : this.listeners) {
 				if (listener instanceof ServerPlayerEntity) {
 					NetworkMessage msg = new TileEntityBasicSyncPacket(getTileEntity());
 					StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) listener), msg);

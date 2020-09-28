@@ -15,6 +15,7 @@ public class StaticPowerConfig {
 	public static final StaticPowerClientConfig SERVER;
 	public static final ForgeConfigSpec SERVER_SPEC;
 
+	public static int rubberWoodSpawnChance;
 	public static int minRubberWoodBarkPerStrip;
 	public static int maxRubberWoodBarkPerStrip;
 
@@ -64,6 +65,7 @@ public class StaticPowerConfig {
 	}
 
 	public static void bakeConfig() {
+		rubberWoodSpawnChance = SERVER.rubberWoodSpawnChance.get();
 		minRubberWoodBarkPerStrip = SERVER.minRubberWoodBarkPerStrip.get();
 		maxRubberWoodBarkPerStrip = SERVER.maxRubberWoodBarkPerStrip.get();
 
@@ -101,6 +103,7 @@ public class StaticPowerConfig {
 	}
 
 	public static class StaticPowerClientConfig {
+		public ConfigValue<Integer> rubberWoodSpawnChance;
 		public ConfigValue<Integer> minRubberWoodBarkPerStrip;
 		public ConfigValue<Integer> maxRubberWoodBarkPerStrip;
 
@@ -150,17 +153,16 @@ public class StaticPowerConfig {
 			builder.push("Regulator");
 			digistoreRegulatorRate = builder.comment("Controls how many ticks between each digistore regulator operation. The higher, the faster the operations, but the stronger hit to performance.")
 					.translation(StaticPower.MOD_ID + ".config." + "digistoreRegulatorRate").define("DigistoreRegulatorRate", 50);
-			digistoreRegulatorSlots = builder.comment("Controls how many slots the regulator has.").translation(StaticPower.MOD_ID + ".config." + "digistoreRegulatorSlots")
-					.define("DigistoreRegulatorSlots", 8);
-			digistoreRegulatorStackSize = builder.comment("Controls how many items can be transfered for each item type during a regulation.")
-					.translation(StaticPower.MOD_ID + ".config." + "digistoreRegulatorStackSize").define("DigistoreRegulatorStackSize", 8);
+			digistoreRegulatorSlots = builder.comment("Controls how many slots the regulator has.").translation(StaticPower.MOD_ID + ".config." + "digistoreRegulatorSlots").define("DigistoreRegulatorSlots", 8);
+			digistoreRegulatorStackSize = builder.comment("Controls how many items can be transfered for each item type during a regulation.").translation(StaticPower.MOD_ID + ".config." + "digistoreRegulatorStackSize")
+					.define("DigistoreRegulatorStackSize", 8);
 			builder.pop();
 
 			builder.push("I/O Bus");
 			digistoreIOBusRate = builder.comment("Controls how many ticks between each digistore I/O bus operation. The higher, the faster the operations, but the stronger hit to performance.")
 					.translation(StaticPower.MOD_ID + ".config." + "digistoreIOBusRate").define("DigistoreIOBusRate", 40);
-			digistoreIOBusSlots = builder.comment("Controls how many slots each the import and output rows of the digistore I/O bus have.")
-					.translation(StaticPower.MOD_ID + ".config." + "digistoreIOBusSlots").define("DigistoreIOBusSlots", 8);
+			digistoreIOBusSlots = builder.comment("Controls how many slots each the import and output rows of the digistore I/O bus have.").translation(StaticPower.MOD_ID + ".config." + "digistoreIOBusSlots")
+					.define("DigistoreIOBusSlots", 8);
 			digistoreIOBusStackSize = builder.comment("Controls how many items the digistore I/O will try to import per operation. This count is separate for the import and the export.")
 					.translation(StaticPower.MOD_ID + ".config." + "digistoreIOBusStackSize").define("DigistoreIOBusStackSize", 8);
 			builder.pop();
@@ -168,33 +170,32 @@ public class StaticPowerConfig {
 			builder.push("Importer");
 			digistoreImporterRate = builder.comment("Controls how many ticks between each digistore importer operation. The higher, the faster the operations, but the stronger hit to performance.")
 					.translation(StaticPower.MOD_ID + ".config." + "digistoreImporterRate").define("DigistoreImporterRate", 40);
-			digistoreImporterSlots = builder.comment("Controls how many slots the digistore importer has.").translation(StaticPower.MOD_ID + ".config." + "digistoreImporterSlots")
-					.define("DigistoreImporterSlots", 8);
-			digistoreImporterStackSize = builder.comment("Controls how many items the importer will try to import per operation.")
-					.translation(StaticPower.MOD_ID + ".config." + "digistoreImporterStackSize").define("DigistoreImporterStackSize", 8);
+			digistoreImporterSlots = builder.comment("Controls how many slots the digistore importer has.").translation(StaticPower.MOD_ID + ".config." + "digistoreImporterSlots").define("DigistoreImporterSlots", 8);
+			digistoreImporterStackSize = builder.comment("Controls how many items the importer will try to import per operation.").translation(StaticPower.MOD_ID + ".config." + "digistoreImporterStackSize")
+					.define("DigistoreImporterStackSize", 8);
 			builder.pop();
 
 			builder.push("Exporter");
 			digistoreExporterRate = builder.comment("Controls how many ticks between each digistore exporter operation. The higher, the faster the operations, but the stronger hit to performance.")
 					.translation(StaticPower.MOD_ID + ".config." + "digistoreExporterRate").define("DigistoreExporterRate", 40);
-			digistoreExporterSlots = builder.comment("Controls how many slots the digistore exporter has.").translation(StaticPower.MOD_ID + ".config." + "digistoreExporterSlots")
-					.define("DigistoreExporterSlots", 8);
-			digistoreExporterStackSize = builder.comment("Controls how many items the exporter will try to export per operation.")
-					.translation(StaticPower.MOD_ID + ".config." + "digistoreExporterStackSize").define("DigistoreExporterstackSize", 8);
+			digistoreExporterSlots = builder.comment("Controls how many slots the digistore exporter has.").translation(StaticPower.MOD_ID + ".config." + "digistoreExporterSlots").define("DigistoreExporterSlots", 8);
+			digistoreExporterStackSize = builder.comment("Controls how many items the exporter will try to export per operation.").translation(StaticPower.MOD_ID + ".config." + "digistoreExporterStackSize")
+					.define("DigistoreExporterstackSize", 8);
 			builder.pop();
 
 			builder.push("Crafting Interface");
-			digistoreCraftingInterfaceSlots = builder.comment("Controls how many slots the crafting interface attachment gets.")
-					.translation(StaticPower.MOD_ID + ".config." + "digistoreCraftingInterfaceSlots").define("DigistoreCraftingInterfaceSlots", 9);
+			digistoreCraftingInterfaceSlots = builder.comment("Controls how many slots the crafting interface attachment gets.").translation(StaticPower.MOD_ID + ".config." + "digistoreCraftingInterfaceSlots")
+					.define("DigistoreCraftingInterfaceSlots", 9);
 			builder.pop();
 			builder.pop();
 
 			builder.push("Upgrades");
-			acceleratorCardImprovment = builder.comment("Defines the effect a max sized stack of accelerator upgrades will have.")
-					.translation(StaticPower.MOD_ID + ".config." + "acceleratorCardImprovment").define("AcceleratorCardImprovment", 4.0);
+			acceleratorCardImprovment = builder.comment("Defines the effect a max sized stack of accelerator upgrades will have.").translation(StaticPower.MOD_ID + ".config." + "acceleratorCardImprovment")
+					.define("AcceleratorCardImprovment", 4.0);
 			builder.pop();
 
-			builder.push("Ore_Generation");
+			builder.push("Generation");
+			builder.push("Ore Generation");
 			generateZincOre = builder.comment("Disable or Enable Zinc Ore Generation").translation(StaticPower.MOD_ID + ".config." + "zincore").define("GenerateZincOre", true);
 			generateMagnesiumOre = builder.comment("Disable or Enable Magnesium Ore Generation").translation(StaticPower.MOD_ID + ".config." + "magnesiumore").define("GenerateMagnesiumOre", true);
 			generateAluminiumOre = builder.comment("Disable or Enable Aluminium Ore Generation").translation(StaticPower.MOD_ID + ".config." + "aluminiumore").define("GenerateAluminiumOre", true);
@@ -206,6 +207,10 @@ public class StaticPowerConfig {
 			generateTungstenOre = builder.comment("Disable or Enable Tunsgten Ore Generation").translation(StaticPower.MOD_ID + ".config." + "tungstenore").define("GenerateTungstenOre", true);
 			generateSapphireOre = builder.comment("Disable or Enable Sapphire Ore Generation").translation(StaticPower.MOD_ID + ".config." + "sapphireore").define("GenerateSapphireOre", true);
 			generateRubyOre = builder.comment("Disable or Enable Ruby Ore Generation").translation(StaticPower.MOD_ID + ".config." + "rubyore").define("GenerateRubyOre", true);
+			builder.pop();
+			builder.push("Tree Generation");
+			rubberWoodSpawnChance = builder.comment("Controls the chance of a rubber tree spawning.").translation(StaticPower.MOD_ID + ".config." + "rubberWoodSpawnChance").define("RubberWoodSpawnChance", 70);
+			builder.pop();
 			builder.pop();
 		}
 	}

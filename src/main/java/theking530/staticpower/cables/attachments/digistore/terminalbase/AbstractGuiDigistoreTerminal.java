@@ -148,7 +148,6 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 			// Draw the slot with no count visible.
 			moveItems(matrixStack, new NoCountRenderSlot(slotIn));
 
-			System.out.println(slotIn.getStack());
 			ItemStack slotStack = slotIn.getStack();
 			matrixStack.push();
 			matrixStack.translate(0.0, 0.0, 260.0);

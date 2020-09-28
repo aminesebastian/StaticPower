@@ -16,6 +16,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
+import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.common.Mod;
@@ -34,9 +35,10 @@ import theking530.staticpower.data.crafting.RecipeReloadListener;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.thermalconductivity.ThermalConductivityRecipe;
 import theking530.staticpower.init.ModFluids;
-import theking530.staticpower.init.ModOres;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
+import theking530.staticpower.world.ore.ModOres;
+import theking530.staticpower.world.trees.ModTrees;
 
 @Mod.EventBusSubscriber(modid = StaticPower.MOD_ID, bus = EventBusSubscriber.Bus.FORGE)
 public class StaticPowerForgeEventRegistry {
@@ -66,8 +68,6 @@ public class StaticPowerForgeEventRegistry {
 		StaticPower.LOGGER.info("Server resource reload listener created!");
 
 		TierReloadListener.updateOnServer(resourceManager);
-
-		ModOres.init();
 		StaticPower.LOGGER.info("Ore generators registered!");
 	}
 
@@ -80,6 +80,12 @@ public class StaticPowerForgeEventRegistry {
 	@SubscribeEvent
 	public static void onLootLoad(LootTableLoadEvent event) {
 		StaticPowerDataRegistry.onLootTableLoaded(event);
+	}
+
+	@SubscribeEvent
+	public static void onBiomeLoading(BiomeLoadingEvent event) {
+		ModOres.addOreGenFeatures(event);
+		ModTrees.addTreeFeatures(event);
 	}
 
 	@SubscribeEvent

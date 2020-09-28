@@ -2,20 +2,12 @@
 [Tools]
 
 	[Tools.Axe]
-		#Controls the minimum number of strips of bark are removed from a rubber wood log when stripped with an axe.
-		MinRubberWoodBarkPerStrip = 1
 		#Controls the maximum number of strips of bark are removed from a rubber wood log when stripped with an axe.
 		MaxRubberWoodBarkPerStrip = 4
+		#Controls the minimum number of strips of bark are removed from a rubber wood log when stripped with an axe.
+		MinRubberWoodBarkPerStrip = 1
 
 [Digistore]
-
-	[Digistore.Regulator]
-		#Controls how many ticks between each digistore regulator operation. The higher, the faster the operations, but the stronger hit to performance.
-		DigistoreRegulatorRate = 50
-		#Controls how many slots the regulator has.
-		DigistoreRegulatorSlots = 8
-		#Controls how many items can be transfered for each item type during a regulation.
-		DigistoreRegulatorStackSize = 8
 
 	[Digistore."I/O Bus"]
 		#Controls how many ticks between each digistore I/O bus operation. The higher, the faster the operations, but the stronger hit to performance.
@@ -25,51 +17,59 @@
 		#Controls how many items the digistore I/O will try to import per operation. This count is separate for the import and the export.
 		DigistoreIOBusStackSize = 8
 
-	[Digistore.Importer]
-		#Controls how many ticks between each digistore importer operation. The higher, the faster the operations, but the stronger hit to performance.
-		DigistoreImporterRate = 40
-		#Controls how many slots the digistore importer has.
-		DigistoreImporterSlots = 8
-		#Controls how many items the importer will try to import per operation.
-		DigistoreImporterStackSize = 8
-
-	[Digistore.Exporter]
-		#Controls how many ticks between each digistore exporter operation. The higher, the faster the operations, but the stronger hit to performance.
-		DigistoreExporterRate = 40
-		#Controls how many slots the digistore exporter has.
-		DigistoreExporterSlots = 8
-		#Controls how many items the exporter will try to export per operation.
-		DigistoreExporterstackSize = 8
+	[Digistore.Regulator]
+		#Controls how many ticks between each digistore regulator operation. The higher, the faster the operations, but the stronger hit to performance.
+		DigistoreRegulatorRate = 50
+		#Controls how many items can be transfered for each item type during a regulation.
+		DigistoreRegulatorStackSize = 8
+		#Controls how many slots the regulator has.
+		DigistoreRegulatorSlots = 8
 
 	[Digistore."Crafting Interface"]
 		#Controls how many slots the crafting interface attachment gets.
 		DigistoreCraftingInterfaceSlots = 9
+
+	[Digistore.Exporter]
+		#Controls how many slots the digistore exporter has.
+		DigistoreExporterSlots = 8
+		#Controls how many ticks between each digistore exporter operation. The higher, the faster the operations, but the stronger hit to performance.
+		DigistoreExporterRate = 40
+		#Controls how many items the exporter will try to export per operation.
+		DigistoreExporterstackSize = 8
+
+	[Digistore.Importer]
+		#Controls how many items the importer will try to import per operation.
+		DigistoreImporterStackSize = 8
+		#Controls how many ticks between each digistore importer operation. The higher, the faster the operations, but the stronger hit to performance.
+		DigistoreImporterRate = 40
+		#Controls how many slots the digistore importer has.
+		DigistoreImporterSlots = 8
 
 [Upgrades]
 	#Defines the effect a max sized stack of accelerator upgrades will have.
 	AcceleratorCardImprovment = 4.0
 
 [Ore_Generation]
-	#Disable or Enable Zinc Ore Generation
-	GenerateZincOre = true
-	#Disable or Enable Magnesium Ore Generation
-	GenerateMagnesiumOre = true
-	#Disable or Enable Aluminium Ore Generation
-	GenerateAluminiumOre = true
-	#Disable or Enable Copper Ore Generation
-	GenerateCopperOre = true
-	#Disable or Enable Tin Ore Generation
-	GenerateTinOre = true
-	#Disable or Enable Lead Ore Generation
-	GenerateLeadOre = true
 	#Disable or Enable Silver Ore Generation
 	GenerateSilverOre = true
-	#Disable or Enable Platinum Ore Generation
-	GeneratePlatinumOre = true
 	#Disable or Enable Tunsgten Ore Generation
 	GenerateTungstenOre = true
-	#Disable or Enable Sapphire Ore Generation
-	GenerateSapphireOre = true
+	#Disable or Enable Zinc Ore Generation
+	GenerateZincOre = true
+	#Disable or Enable Aluminium Ore Generation
+	GenerateAluminiumOre = true
 	#Disable or Enable Ruby Ore Generation
 	GenerateRubyOre = true
+	#Disable or Enable Tin Ore Generation
+	GenerateTinOre = true
+	#Disable or Enable Magnesium Ore Generation
+	GenerateMagnesiumOre = true
+	#Disable or Enable Copper Ore Generation
+	GenerateCopperOre = true
+	#Disable or Enable Lead Ore Generation
+	GenerateLeadOre = true
+	#Disable or Enable Sapphire Ore Generation
+	GenerateSapphireOre = true
+	#Disable or Enable Platinum Ore Generation
+	GeneratePlatinumOre = true
 

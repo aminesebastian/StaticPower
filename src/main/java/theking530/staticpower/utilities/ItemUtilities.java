@@ -3,7 +3,10 @@ package theking530.staticpower.utilities;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.IItemHandler;
 
@@ -112,5 +115,49 @@ public class ItemUtilities {
 			return false;
 
 		return (!item1.hasTag() || item1.getTag().equals(item2.getTag())) && item1.areCapsCompatible(item2);
+	}
+
+	public static CompoundNBT writeLargeStackItemToNBT(ItemStack stack) {
+		CompoundNBT itemNbt = new CompoundNBT();
+		stack.write(itemNbt);
+		itemNbt.putInt("large_size", stack.getCount());
+		return itemNbt;
+	}
+
+	public static ItemStack readLargeStackItemFromNBT(CompoundNBT itemNbt) {
+		ItemStack output = ItemStack.read(itemNbt);
+		output.setCount(itemNbt.getInt("large_size"));
+		return output;
+	}
+
+	public static PacketBuffer writeLargeStackItemToBuffer(ItemStack stack, boolean limitedTag, PacketBuffer buffer) {
+		if (stack.isEmpty()) {
+			buffer.writeBoolean(false);
+		} else {
+			buffer.writeBoolean(true);
+			Item item = stack.getItem();
+			buffer.writeVarInt(Item.getIdFromItem(item));
+			buffer.writeInt(stack.getCount());
+			CompoundNBT compoundnbt = null;
+			if (item.isDamageable(stack) || item.shouldSyncTag()) {
+				compoundnbt = limitedTag ? stack.getShareTag() : stack.getTag();
+			}
+
+			buffer.writeCompoundTag(compoundnbt);
+		}
+
+		return buffer;
+	}
+
+	public static ItemStack readLargeStackItemFromBuffer(PacketBuffer buffer) {
+		if (!buffer.readBoolean()) {
+			return ItemStack.EMPTY;
+		} else {
+			int i = buffer.readVarInt();
+			int j = buffer.readInt();
+			ItemStack itemstack = new ItemStack(Item.getItemById(i), j);
+			itemstack.readShareTag(buffer.readCompoundTag());
+			return itemstack;
+		}
 	}
 }

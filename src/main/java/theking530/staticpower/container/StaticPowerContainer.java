@@ -1,13 +1,13 @@
 package theking530.staticpower.container;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -15,12 +15,13 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.ClickType;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.IContainerListener;
+import net.minecraft.inventory.container.CraftingResultSlot;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.play.server.SSetSlotPacket;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticcore.container.ContainerOpener;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -30,6 +31,8 @@ import theking530.staticpower.container.slots.DummySlot;
 import theking530.staticpower.container.slots.PhantomSlot;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.network.NetworkMessage;
+import theking530.staticpower.network.SSetSlotLargeItemStackPacket;
+import theking530.staticpower.network.SWindowLargeItemsPacket;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.powered.autocrafter.PacketLockInventorySlot;
@@ -45,7 +48,6 @@ public abstract class StaticPowerContainer extends Container {
 	protected int playerInventoryEnd;
 	protected int playerHotbarEnd;
 	private final PlayerInventory playerInventory;
-	private final Field listenersField;
 	private ContainerOpener<?> opener;
 	private ITextComponent name;
 
@@ -53,7 +55,6 @@ public abstract class StaticPowerContainer extends Container {
 		super(allocator.getType(), id);
 		this.allocator = allocator;
 		playerInventory = inv;
-		listenersField = getListnersField();
 		preInitializeContainer();
 	}
 
@@ -99,7 +100,8 @@ public abstract class StaticPowerContainer extends Container {
 	public void revertToParent() {
 		// Open prompt for crafting if we can actually craft some.
 		// Create the container opener.
-		ContainerOpener<?> requestUi = new ContainerOpener<>(opener.getParent().getName(), (x, y, z) -> opener.getParent().duplicateForRevert(x, y, opener.getParent().getRevertDataPacket()));
+		ContainerOpener<?> requestUi = new ContainerOpener<>(opener.getParent().getName(),
+				(x, y, z) -> opener.getParent().duplicateForRevert(x, y, opener.getParent().getRevertDataPacket()));
 
 		// Open the UI.
 		NetworkGUI.openGui((ServerPlayerEntity) getPlayerInventory().player, requestUi, buff -> {
@@ -175,7 +177,8 @@ public abstract class StaticPowerContainer extends Container {
 		return addSlotsInGrid(inventory, startingIndex, xPos, yPos, maxPerRow, 16, slotFactory);
 	}
 
-	protected List<Slot> addSlotsInGrid(IItemHandler inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
+	protected List<Slot> addSlotsInGrid(IItemHandler inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize,
+			TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
 		return addSlotsInGrid(inventory, startingIndex, inventory.getSlots(), xPos, yPos, maxPerRow, slotSize, slotFactory);
 	}
 
@@ -197,7 +200,8 @@ public abstract class StaticPowerContainer extends Container {
 		return outputs;
 	}
 
-	protected List<Slot> addSlotsInGrid(IInventory inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
+	protected List<Slot> addSlotsInGrid(IInventory inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize,
+			TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
 		List<Slot> outputs = new ArrayList<Slot>();
 		maxPerRow = Math.min(inventory.getSizeInventory(), maxPerRow);
 		int adjustedSlotSize = slotSize + 2;
@@ -210,7 +214,8 @@ public abstract class StaticPowerContainer extends Container {
 		return outputs;
 	}
 
-	protected void addSlotsInPerfectSquare(IItemHandler inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
+	protected void addSlotsInPerfectSquare(IItemHandler inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize,
+			TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
 		addSlotsInGrid(inventory, startingIndex, xPos, yPos, maxPerRow, slotSize, slotFactory);
 		maxPerRow = Math.min(inventory.getSlots(), maxPerRow);
 		int adjustedSlotSize = slotSize + 2;
@@ -332,33 +337,25 @@ public abstract class StaticPowerContainer extends Container {
 		}
 	}
 
+	public void sendLargeItemSlotContents(ServerPlayerEntity player, Container containerToSend, int slotInd, ItemStack stack) {
+		if (!(containerToSend.getSlot(slotInd) instanceof CraftingResultSlot)) {
+			if (containerToSend == player.container) {
+				CriteriaTriggers.INVENTORY_CHANGED.test(player, player.inventory, stack);
+			}
+
+			StaticPowerMessageHandler.sendMessageToPlayer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, player,
+					new SSetSlotLargeItemStackPacket(containerToSend.windowId, slotInd, stack));
+
+		}
+	}
+
+	public void sendAllLargeItemContents(ServerPlayerEntity player, Container containerToSend, NonNullList<ItemStack> itemsList) {
+		StaticPowerMessageHandler.sendMessageToPlayer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, player, new SWindowLargeItemsPacket(containerToSend.windowId, itemsList));
+		player.connection.sendPacket(new SSetSlotPacket(-1, -1, player.inventory.getItemStack()));
+	}
+
 	@Override
 	public boolean canInteractWith(PlayerEntity playerIn) {
 		return true;
-	}
-
-	/**
-	 * Gets the list of all listeners to this container. Access the private
-	 * "listeners" field through cached reflection.
-	 * 
-	 * @return The list of all listeners to this container.
-	 */
-	@SuppressWarnings("unchecked")
-	public List<IContainerListener> getListeners() {
-		try {
-			return (List<IContainerListener>) listenersField.get(this);
-		} catch (Exception e) {
-			LOGGER.error(String.format("An error occured when attempting to access (through reflection) the listeners to this container: %1$s.", this.toString()), e);
-		}
-		return null;
-	}
-
-	/**
-	 * Gets the private listeners field.
-	 * 
-	 * @return
-	 */
-	private Field getListnersField() {
-		return ObfuscationReflectionHelper.findField(Container.class, "field_75149_d");
 	}
 }

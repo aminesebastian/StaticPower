@@ -23,6 +23,8 @@ import theking530.staticpower.container.PacketRevertToParentContainer;
 import theking530.staticpower.data.PacketSyncTiers;
 import theking530.staticpower.integration.JEI.JEIRecipeTransferPacket;
 import theking530.staticpower.items.itemfilter.PacketItemFilter;
+import theking530.staticpower.network.SSetSlotLargeItemStackPacket;
+import theking530.staticpower.network.SWindowLargeItemsPacket;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.network.TileEntityBasicSyncPacket;
 import theking530.staticpower.tileentities.components.fluids.PacketFluidContainerComponent;
@@ -70,5 +72,8 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(PacketReturnCurrentCraftingQueue.class);
 		StaticPowerMessageHandler.registerMessage(PacketCancelDigistoreCraftingRequest.class);
 		StaticPowerMessageHandler.registerMessage(PacketSyncTiers.class);
+
+		StaticPowerMessageHandler.registerVanillaStyleMessage(SWindowLargeItemsPacket.class);
+		StaticPowerMessageHandler.registerVanillaStyleMessage(SSetSlotLargeItemStackPacket.class);
 	}
 }

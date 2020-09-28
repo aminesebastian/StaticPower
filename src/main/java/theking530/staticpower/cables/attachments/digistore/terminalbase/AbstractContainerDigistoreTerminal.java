@@ -67,8 +67,8 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 	private TerminalViewType viewType;
 	private boolean resyncInv;
 
-	public AbstractContainerDigistoreTerminal(ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator, int windowId, PlayerInventory playerInventory, ItemStack attachment,
-			Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
+	public AbstractContainerDigistoreTerminal(ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator, int windowId, PlayerInventory playerInventory,
+			ItemStack attachment, Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
 		super(allocator, windowId, playerInventory, attachment, attachmentSide, cableComponent);
 	}
 
@@ -144,7 +144,8 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 							// out like usual.
 							if (shouldCraft) {
 								// Calculate the max craftable.
-								CraftingRequestResponse craftingResponse = digistoreModule.getCraftingManager().addCraftingRequest(stackInSlot, 1, CraftingRequestType.SIMULATE_NO_LIMITS);
+								CraftingRequestResponse craftingResponse = digistoreModule.getCraftingManager().addCraftingRequest(stackInSlot, 1,
+										CraftingRequestType.SIMULATE_NO_LIMITS);
 
 								// Open prompt for crafting if we can actually craft some.
 								// Create the container opener.
@@ -199,13 +200,13 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 	 */
 	@Override
 	public void detectAndSendChanges() {
-		super.detectAndSendChanges();
+		// super.detectAndSendChanges();
 		if (managerPresentLastState != getCableComponent().isManagerPresent()) {
 			managerPresentLastState = getCableComponent().isManagerPresent();
 			onManagerStateChanged(managerPresentLastState);
 		}
 
-		for (IContainerListener listener : getListeners()) {
+		for (IContainerListener listener : this.listeners) {
 			if (listener instanceof ServerPlayerEntity) {
 				syncContainerSlots((ServerPlayerEntity) listener);
 			}
@@ -303,7 +304,8 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 		DigistoreTerminal.setSortDescending(getAttachment(), sortDescending);
 		resyncInv = true;
 		if (getCableComponent().getWorld().isRemote) {
-			StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketDigistoreTerminalFilters(windowId, filter, mode, sortType, sortDescending));
+			StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL,
+					new PacketDigistoreTerminalFilters(windowId, filter, mode, sortType, sortDescending));
 		}
 	}
 
@@ -490,18 +492,16 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 					for (int i = 0; i < oldInv.getSlots(); i++) {
 						ItemStack oldStack = oldInv.getStackInSlot(i);
 						if (!ItemStack.areItemStacksEqual(oldStack, digistoreInv.getStackInSlot(i))) {
-							// System.out.println("Syncing Slot: " + i + " Item:" + oldStack);
-							((ServerPlayerEntity) player).sendSlotContents(this, getFirstDigistoreSlotIndex() + i, digistoreInv.getStackInSlot(i));
+							sendLargeItemSlotContents((ServerPlayerEntity) player, this, getFirstDigistoreSlotIndex() + i, digistoreInv.getStackInSlot(i));
 						}
 					}
 				} else {
 					// Sync the whole thing.
-					((ServerPlayerEntity) player).sendAllContents(this, this.getInventory());
+					sendAllLargeItemContents((ServerPlayerEntity) player, this, this.getInventory());
 				}
 			} else {
 				// Sync the whole thing.
-				((ServerPlayerEntity) player).sendAllContents(this, this.getInventory());
-				// System.out.println("WHOLE INV SYNC");
+				sendAllLargeItemContents((ServerPlayerEntity) player, this, this.getInventory());
 				resyncInv = false;
 			}
 		});
