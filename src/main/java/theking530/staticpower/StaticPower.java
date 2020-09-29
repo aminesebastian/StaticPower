@@ -26,6 +26,7 @@ public class StaticPower {
 
 	public StaticPower() {
 		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, StaticPowerConfig.SERVER_SPEC);
+		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, StaticPowerConfig.COMMON_SPEC);
 		ModRecipeSerializers.init();
 		ModBlocks.init();
 		ModItems.init();

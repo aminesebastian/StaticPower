@@ -18,15 +18,14 @@ public class FusionProgressBar extends AbstractProgressBar {
 	@Override
 	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 		super.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
-		Vector2D screenSpacePosition = this.getScreenSpacePosition();
+		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
 		float adjustedProgress = visualCurrentProgress / maxProgress;
 
-		GuiDrawUtilities.drawTexturedModalRect(GuiTextures.FUSION_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY() + 0.5f, getSize().getX(), getSize().getY(), 0.25f, 0.0f, 0.75f,
-				0.5f);
+		GuiDrawUtilities.drawTexturedModalRect(GuiTextures.FUSION_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY() + 0.5f, getSize().getX(), getSize().getY(), 0.25f, 0.0f, 0.75f, 0.5f);
 
 		if (visualCurrentProgress > 0) {
-			GuiDrawUtilities.drawTexturedModalRect(GuiTextures.FUSION_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY() + 0.5f, getSize().getX(),
-					getSize().getY() * (adjustedProgress), 0.25f, 0.5f, 0.75f, 0.5f + (0.5f * adjustedProgress));
+			GuiDrawUtilities.drawTexturedModalRect(GuiTextures.FUSION_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY() + 0.5f, getSize().getX(), getSize().getY() * (adjustedProgress), 0.25f, 0.5f,
+					0.75f, 0.5f + (0.5f * adjustedProgress));
 		}
 
 		if (isProcessingErrored) {

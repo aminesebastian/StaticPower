@@ -30,10 +30,10 @@ public class FluidProgressBar extends AbstractProgressBar {
 		super.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
 
 		// Get the screen space position.
-		Vector2D screenSpacePosition = this.getScreenSpacePosition();
+		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
 
 		// Draw the background.
-		GuiDrawUtilities.drawSlot(screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY());
+		GuiDrawUtilities.drawSlot(null, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY());
 
 		// Draw the fluid.
 		if (!displayFluidStack.isEmpty()) {
@@ -52,8 +52,8 @@ public class FluidProgressBar extends AbstractProgressBar {
 				float uvDiff = icon.getMaxU() - icon.getMinU();
 
 				Minecraft.getInstance().getTextureManager().bindTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE);
-				GuiDrawUtilities.drawTexturedModalRect(PlayerContainer.LOCATION_BLOCKS_TEXTURE, screenSpacePosition.getX(), screenSpacePosition.getY(), adjustedProgress * getSize().getX(),
-						getSize().getY(), icon.getMinU(), icon.getMinV(), icon.getMinU() + (uvDiff * adjustedProgress), icon.getMaxV(), fluidColor);
+				GuiDrawUtilities.drawTexturedModalRect(PlayerContainer.LOCATION_BLOCKS_TEXTURE, screenSpacePosition.getX(), screenSpacePosition.getY(), adjustedProgress * getSize().getX(), getSize().getY(),
+						icon.getMinU(), icon.getMinV(), icon.getMinU() + (uvDiff * adjustedProgress), icon.getMaxV(), fluidColor);
 			}
 
 			// Draw the leading white line.

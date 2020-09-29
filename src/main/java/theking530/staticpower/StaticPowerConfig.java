@@ -12,7 +12,10 @@ import net.minecraftforge.fml.config.ModConfig;
 @EventBusSubscriber(modid = StaticPower.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class StaticPowerConfig {
 
-	public static final StaticPowerClientConfig SERVER;
+	public static final StaticPowerCommonConfig COMMON;
+	public static final ForgeConfigSpec COMMON_SPEC;
+
+	public static final StaticPowerServerConfig SERVER;
 	public static final ForgeConfigSpec SERVER_SPEC;
 
 	public static int rubberWoodSpawnChance;
@@ -52,34 +55,43 @@ public class StaticPowerConfig {
 	public static double acceleratorCardMaxImprovment;
 
 	static {
-		final Pair<StaticPowerClientConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(StaticPowerClientConfig::new);
-		SERVER_SPEC = specPair.getRight();
-		SERVER = specPair.getLeft();
+		final Pair<StaticPowerServerConfig, ForgeConfigSpec> serverPair = new ForgeConfigSpec.Builder().configure(StaticPowerServerConfig::new);
+		SERVER_SPEC = serverPair.getRight();
+		SERVER = serverPair.getLeft();
+
+		final Pair<StaticPowerCommonConfig, ForgeConfigSpec> commonPair = new ForgeConfigSpec.Builder().configure(StaticPowerCommonConfig::new);
+		COMMON_SPEC = commonPair.getRight();
+		COMMON = commonPair.getLeft();
 	}
 
 	@SubscribeEvent
 	public static void onModConfigEvent(final ModConfig.ModConfigEvent configEvent) {
-		if (configEvent.getConfig().getSpec() == StaticPowerConfig.SERVER_SPEC) {
-			bakeConfig();
+		if (configEvent.getConfig().getSpec() == StaticPowerConfig.COMMON_SPEC) {
+			bakeCommonConfig();
+		} else if (configEvent.getConfig().getSpec() == StaticPowerConfig.SERVER_SPEC) {
+			bakeServerConfig();
 		}
 	}
 
-	public static void bakeConfig() {
-		rubberWoodSpawnChance = SERVER.rubberWoodSpawnChance.get();
+	private static void bakeCommonConfig() {
+		rubberWoodSpawnChance = COMMON.rubberWoodSpawnChance.get();
+		generatePlatinumOre = COMMON.generatePlatinumOre.get();
+		generateTungstenOre = COMMON.generateTungstenOre.get();
+		generateZincOre = COMMON.generateZincOre.get();
+		generateMagnesiumOre = COMMON.generateMagnesiumOre.get();
+		generateAluminiumOre = COMMON.generateAluminiumOre.get();
+		generateSapphireOre = COMMON.generateSapphireOre.get();
+		generateRubyOre = COMMON.generateRubyOre.get();
+	}
+
+	private static void bakeServerConfig() {
 		minRubberWoodBarkPerStrip = SERVER.minRubberWoodBarkPerStrip.get();
 		maxRubberWoodBarkPerStrip = SERVER.maxRubberWoodBarkPerStrip.get();
 
-		generateCopperOre = SERVER.generateCopperOre.get();
-		generateTinOre = SERVER.generateTinOre.get();
-		generateLeadOre = SERVER.generateLeadOre.get();
-		generateSilverOre = SERVER.generateSilverOre.get();
-		generatePlatinumOre = SERVER.generatePlatinumOre.get();
-		generateTungstenOre = SERVER.generateTungstenOre.get();
-		generateZincOre = SERVER.generateZincOre.get();
-		generateMagnesiumOre = SERVER.generateMagnesiumOre.get();
-		generateAluminiumOre = SERVER.generateAluminiumOre.get();
-		generateSapphireOre = SERVER.generateSapphireOre.get();
-		generateRubyOre = SERVER.generateRubyOre.get();
+		generateCopperOre = COMMON.generateCopperOre.get();
+		generateTinOre = COMMON.generateTinOre.get();
+		generateLeadOre = COMMON.generateLeadOre.get();
+		generateSilverOre = COMMON.generateSilverOre.get();
 
 		digistoreRegulatorRate = SERVER.digistoreRegulatorRate.get();
 		digistoreRegulatorStackSize = SERVER.digistoreRegulatorStackSize.get();
@@ -102,10 +114,15 @@ public class StaticPowerConfig {
 		acceleratorCardMaxImprovment = SERVER.acceleratorCardImprovment.get();
 	}
 
-	public static class StaticPowerClientConfig {
+	/**
+	 * This config contains data that needs to be loaded before the world is
+	 * created. This data is NOT synced to the client.
+	 * 
+	 * @author amine
+	 *
+	 */
+	public static class StaticPowerCommonConfig {
 		public ConfigValue<Integer> rubberWoodSpawnChance;
-		public ConfigValue<Integer> minRubberWoodBarkPerStrip;
-		public ConfigValue<Integer> maxRubberWoodBarkPerStrip;
 
 		public BooleanValue generateCopperOre;
 		public BooleanValue generateTinOre;
@@ -118,6 +135,39 @@ public class StaticPowerConfig {
 		public BooleanValue generateAluminiumOre;
 		public BooleanValue generateSapphireOre;
 		public BooleanValue generateRubyOre;
+
+		public StaticPowerCommonConfig(ForgeConfigSpec.Builder builder) {
+			builder.push("Generation");
+			builder.push("Ore Generation");
+			generateZincOre = builder.comment("Disable or Enable Zinc Ore Generation").translation(StaticPower.MOD_ID + ".config." + "zincore").define("GenerateZincOre", true);
+			generateMagnesiumOre = builder.comment("Disable or Enable Magnesium Ore Generation").translation(StaticPower.MOD_ID + ".config." + "magnesiumore").define("GenerateMagnesiumOre", true);
+			generateAluminiumOre = builder.comment("Disable or Enable Aluminium Ore Generation").translation(StaticPower.MOD_ID + ".config." + "aluminiumore").define("GenerateAluminiumOre", true);
+			generateCopperOre = builder.comment("Disable or Enable Copper Ore Generation").translation(StaticPower.MOD_ID + ".config." + "copperore").define("GenerateCopperOre", true);
+			generateTinOre = builder.comment("Disable or Enable Tin Ore Generation").translation(StaticPower.MOD_ID + ".config." + "tinore").define("GenerateTinOre", true);
+			generateLeadOre = builder.comment("Disable or Enable Lead Ore Generation").translation(StaticPower.MOD_ID + ".config." + "leadore").define("GenerateLeadOre", true);
+			generateSilverOre = builder.comment("Disable or Enable Silver Ore Generation").translation(StaticPower.MOD_ID + ".config." + "silverore").define("GenerateSilverOre", true);
+			generatePlatinumOre = builder.comment("Disable or Enable Platinum Ore Generation").translation(StaticPower.MOD_ID + ".config." + "platinumore").define("GeneratePlatinumOre", true);
+			generateTungstenOre = builder.comment("Disable or Enable Tunsgten Ore Generation").translation(StaticPower.MOD_ID + ".config." + "tungstenore").define("GenerateTungstenOre", true);
+			generateSapphireOre = builder.comment("Disable or Enable Sapphire Ore Generation").translation(StaticPower.MOD_ID + ".config." + "sapphireore").define("GenerateSapphireOre", true);
+			generateRubyOre = builder.comment("Disable or Enable Ruby Ore Generation").translation(StaticPower.MOD_ID + ".config." + "rubyore").define("GenerateRubyOre", true);
+			builder.pop();
+			builder.push("Tree Generation");
+			rubberWoodSpawnChance = builder.comment("Controls the chance of a rubber tree spawning.").translation(StaticPower.MOD_ID + ".config." + "rubberWoodSpawnChance").define("RubberWoodSpawnChance", 70);
+			builder.pop();
+			builder.pop();
+		}
+	}
+
+	/**
+	 * This config contains data that is loaded once the world is created and it is
+	 * synced to the client.
+	 * 
+	 * @author amine
+	 *
+	 */
+	public static class StaticPowerServerConfig {
+		public ConfigValue<Integer> minRubberWoodBarkPerStrip;
+		public ConfigValue<Integer> maxRubberWoodBarkPerStrip;
 
 		public ConfigValue<Integer> digistoreRegulatorRate;
 		public ConfigValue<Integer> digistoreRegulatorStackSize;
@@ -139,7 +189,7 @@ public class StaticPowerConfig {
 
 		public ConfigValue<Double> acceleratorCardImprovment;
 
-		public StaticPowerClientConfig(ForgeConfigSpec.Builder builder) {
+		public StaticPowerServerConfig(ForgeConfigSpec.Builder builder) {
 			builder.push("Tools");
 			builder.push("Axe");
 			minRubberWoodBarkPerStrip = builder.comment("Controls the minimum number of strips of bark are removed from a rubber wood log when stripped with an axe.")
@@ -192,25 +242,6 @@ public class StaticPowerConfig {
 			builder.push("Upgrades");
 			acceleratorCardImprovment = builder.comment("Defines the effect a max sized stack of accelerator upgrades will have.").translation(StaticPower.MOD_ID + ".config." + "acceleratorCardImprovment")
 					.define("AcceleratorCardImprovment", 4.0);
-			builder.pop();
-
-			builder.push("Generation");
-			builder.push("Ore Generation");
-			generateZincOre = builder.comment("Disable or Enable Zinc Ore Generation").translation(StaticPower.MOD_ID + ".config." + "zincore").define("GenerateZincOre", true);
-			generateMagnesiumOre = builder.comment("Disable or Enable Magnesium Ore Generation").translation(StaticPower.MOD_ID + ".config." + "magnesiumore").define("GenerateMagnesiumOre", true);
-			generateAluminiumOre = builder.comment("Disable or Enable Aluminium Ore Generation").translation(StaticPower.MOD_ID + ".config." + "aluminiumore").define("GenerateAluminiumOre", true);
-			generateCopperOre = builder.comment("Disable or Enable Copper Ore Generation").translation(StaticPower.MOD_ID + ".config." + "copperore").define("GenerateCopperOre", true);
-			generateTinOre = builder.comment("Disable or Enable Tin Ore Generation").translation(StaticPower.MOD_ID + ".config." + "tinore").define("GenerateTinOre", true);
-			generateLeadOre = builder.comment("Disable or Enable Lead Ore Generation").translation(StaticPower.MOD_ID + ".config." + "leadore").define("GenerateLeadOre", true);
-			generateSilverOre = builder.comment("Disable or Enable Silver Ore Generation").translation(StaticPower.MOD_ID + ".config." + "silverore").define("GenerateSilverOre", true);
-			generatePlatinumOre = builder.comment("Disable or Enable Platinum Ore Generation").translation(StaticPower.MOD_ID + ".config." + "platinumore").define("GeneratePlatinumOre", true);
-			generateTungstenOre = builder.comment("Disable or Enable Tunsgten Ore Generation").translation(StaticPower.MOD_ID + ".config." + "tungstenore").define("GenerateTungstenOre", true);
-			generateSapphireOre = builder.comment("Disable or Enable Sapphire Ore Generation").translation(StaticPower.MOD_ID + ".config." + "sapphireore").define("GenerateSapphireOre", true);
-			generateRubyOre = builder.comment("Disable or Enable Ruby Ore Generation").translation(StaticPower.MOD_ID + ".config." + "rubyore").define("GenerateRubyOre", true);
-			builder.pop();
-			builder.push("Tree Generation");
-			rubberWoodSpawnChance = builder.comment("Controls the chance of a rubber tree spawning.").translation(StaticPower.MOD_ID + ".config." + "rubberWoodSpawnChance").define("RubberWoodSpawnChance", 70);
-			builder.pop();
 			builder.pop();
 		}
 	}

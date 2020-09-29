@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.util.text.ITextComponent;
+import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.WidgetContainer;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.Vector2D;
@@ -24,19 +25,18 @@ public abstract class AbstractGuiWidget {
 
 	private Vector2D position;
 	private Vector2D size;
-	private Vector2D ownerPosition;
 	private Vector2D ownerSize;
 	private boolean isVisible;
 	private boolean isEnabled;
 	private boolean tooltipsDisabled;
 	private boolean autoHandleTooltipBounds;
 	private RectangleBounds cachedBounds;
+	private MatrixStack lastMatrixStack;
 
 	public AbstractGuiWidget(float xPosition, float yPosition, float width, float height) {
 		cachedBounds = new RectangleBounds(0.0f, 0.0f, 0.0f, 0.0f); // Must be initially set to 0.
 		position = new Vector2D(xPosition, yPosition);
 		size = new Vector2D(width, height);
-		ownerPosition = new Vector2D(0.0f, 0.0f);
 		ownerSize = new Vector2D(0.0f, 0.0f);
 		isVisible = true;
 		isEnabled = true;
@@ -144,9 +144,9 @@ public abstract class AbstractGuiWidget {
 	 * 
 	 * @return
 	 */
-	public Vector2D getScreenSpacePosition() {
-		return new Vector2D(position.getX() + getOwnerPosition().getX(), position.getY() + getOwnerPosition().getY());
-	}
+//	public Vector2D getScreenSpacePosition() {
+//		return new Vector2D(position.getX() + getOwnerPosition().getX(), position.getY() + getOwnerPosition().getY());
+//	}
 
 	/**
 	 * Gets the overall bounds of this widget. X and Y are the minimum X and Y
@@ -182,14 +182,14 @@ public abstract class AbstractGuiWidget {
 	}
 
 	/**
-	 * Gets the position of the owner of this widget.
+	 * Gets the last matrix that was used to render this widget. of the owner of
+	 * this widget.
 	 * 
 	 * @return
 	 */
-	public Vector2D getOwnerPosition() {
-		return ownerPosition;
+	public MatrixStack getLastRenderMatrix() {
+		return lastMatrixStack;
 	}
-
 	/**
 	 * Gets the size of the owner of this widget.
 	 * 
@@ -228,18 +228,18 @@ public abstract class AbstractGuiWidget {
 	 * @param mouseX        TODO
 	 * @param mouseY        TODO
 	 */
-	public void updateBeforeRender(Vector2D ownerPosition, Vector2D ownerSize, float partialTicks, int mouseX, int mouseY) {
-		this.ownerPosition = ownerPosition;
+	public void updateBeforeRender(MatrixStack matrixStack, Vector2D ownerSize, float partialTicks, int mouseX, int mouseY) {
 		this.ownerSize = ownerSize;
-
-		Vector2D screenSpacePosition = getScreenSpacePosition();
+		this.lastMatrixStack = matrixStack;
+		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrixStack, getPosition());
 		cachedBounds.update(screenSpacePosition.getX(), screenSpacePosition.getY(), this.size.getX(), this.size.getY());
 	}
 
 	/**
 	 * This method should be overriden to draw anything that should appear behind
 	 * slots/items/anything else.
-	 * @param matrix TODO
+	 * 
+	 * @param matrix       TODO
 	 * @param mouseX
 	 * @param mouseY
 	 * @param partialTicks
@@ -251,7 +251,8 @@ public abstract class AbstractGuiWidget {
 	/**
 	 * This method should be overriden to render anything that should appear above
 	 * the background but behind any slots/items.
-	 * @param matrix TODO
+	 * 
+	 * @param matrix       TODO
 	 * @param mouseX
 	 * @param mouseY
 	 * @param partialTicks

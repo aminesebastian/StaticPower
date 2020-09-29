@@ -79,26 +79,24 @@ public class VulcanizerRecipeCategory extends BaseJEIRecipeCategory<VulcanizerRe
 
 	@Override
 	public void draw(VulcanizerRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(112, 15, 20, 20);
+		GuiDrawUtilities.drawSlot(matrixStack, 112, 15, 20, 20);
 
 		// This doesn't actually draw the fluid, just the bars.
-		GuiFluidBarUtilities.drawFluidBar(recipe.getInputFluid(), 0, 0, 40, 56, 1.0f, 16, 52, MachineSideMode.Never,
-				true);
-		GuiPowerBarUtilities.drawPowerBar(8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
+		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getInputFluid(), 0, 0, 40, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
+		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		// Draw the progress bar as a fluid.
-		GuiDrawUtilities.drawSlot(62, 23, 43, 5);
+		GuiDrawUtilities.drawSlot(matrixStack, 62, 23, 43, 5);
 		float progress = ((float) processingTimer.getValue() / processingTimer.getMaxValue()) * 43;
 		FluidStack fluid = recipe.getInputFluid();
-		GuiFluidBarUtilities.drawFluidBar(fluid, 1000, 1000, 62, 28, 1, progress, 5, false);
+		GuiFluidBarUtilities.drawFluidBar(matrixStack, fluid, 1000, 1000, 62, 28, 1, progress, 5, false);
 	}
 
 	@Override
 	public List<ITextComponent> getTooltipStrings(VulcanizerRecipe recipe, double mouseX, double mouseY) {
 		List<ITextComponent> output = new ArrayList<ITextComponent>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new StringTextComponent("Usage: ")
-					.append(GuiTextUtilities.formatEnergyToString(recipe.getPowerCost() * recipe.getProcessingTime())));
+			output.add(new StringTextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(recipe.getPowerCost() * recipe.getProcessingTime())));
 		}
 		return output;
 	}
@@ -126,8 +124,7 @@ public class VulcanizerRecipeCategory extends BaseJEIRecipeCategory<VulcanizerRe
 		fluids.init(3, true, 40, 4, 16, 52, getFluidTankDisplaySize(recipe.getInputFluid()), false, null);
 		fluids.set(ingredients);
 
-		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(),
-				recipe.getProcessingTime() * recipe.getPowerCost(), true);
+		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime() * recipe.getPowerCost(), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);
 	}
 }

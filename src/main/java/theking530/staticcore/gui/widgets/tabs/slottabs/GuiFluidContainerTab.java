@@ -3,6 +3,8 @@ package theking530.staticcore.gui.widgets.tabs.slottabs;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -52,12 +54,12 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 
 		// Initialize the button.
 		if (fluidContainerComponent.getFluidInteractionMode() == FluidContainerInteractionMode.DRAIN) {
-			this.widgetContainer.registerWidget(fillDirectionButton = new SpriteButton(3, 40, 20, 20, StaticPowerSprites.EMPTY_BUCKET, StaticPowerSprites.EMPTY_BUCKET_HOVERED, this::buttonPressed));
+			this.widgetContainer.registerWidget(fillDirectionButton = new SpriteButton(2, 40, 20, 20, StaticPowerSprites.EMPTY_BUCKET, StaticPowerSprites.EMPTY_BUCKET_HOVERED, this::buttonPressed));
 			this.topSlotPreview = filledBucketPreview;
 			this.bottomSlotPreview = emptyBucketPreview;
 			fillDirectionButton.setTooltip(new StringTextComponent("Fill Machine with Container Contents"));
 		} else {
-			this.widgetContainer.registerWidget(fillDirectionButton = new SpriteButton(3, 40, 20, 20, StaticPowerSprites.FILL_BUCKET, StaticPowerSprites.FILL_BUCKET_HOVERED, this::buttonPressed));
+			this.widgetContainer.registerWidget(fillDirectionButton = new SpriteButton(2, 40, 20, 20, StaticPowerSprites.FILL_BUCKET, StaticPowerSprites.FILL_BUCKET_HOVERED, this::buttonPressed));
 			this.topSlotPreview = emptyBucketPreview;
 			this.bottomSlotPreview = filledBucketPreview;
 			fillDirectionButton.setTooltip(new StringTextComponent("Fill Container with Machine Contents"));
@@ -70,21 +72,28 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 	@Override
 	protected void initialized(int tabXPosition, int tabYPosition) {
 		// Add the slots.
-		topSlot = container.addSlotGeneric(new FluidContainerSlot(fluidContainerComponent, topSlotPreview, 0, 4 + guiXOffset, 23 + guiYOffset));
+		topSlot = container.addSlotGeneric(new FluidContainerSlot(fluidContainerComponent, topSlotPreview, 0, 4 + xPosition, 0));
 		fluidConatinerInventoryIndecies.add(container.inventorySlots.size() - 1);
 
-		bottomSlot = container.addSlotGeneric(new FluidContainerSlot(fluidContainerComponent, bottomSlotPreview, 1, 4 + guiXOffset, 60 + guiYOffset));
+		bottomSlot = container.addSlotGeneric(new FluidContainerSlot(fluidContainerComponent, bottomSlotPreview, 1, 4 + xPosition, 0));
 		fluidConatinerInventoryIndecies.add(container.inventorySlots.size() - 1);
 
 		PacketGuiTabAddSlots msg = new PacketGuiTabAddSlots(container.windowId);
-		msg.addSlot((InventoryComponent) fluidContainerComponent, 0, 4 + guiXOffset, 23);
-		msg.addSlot((InventoryComponent) fluidContainerComponent, 1, 4 + guiXOffset, 45);
+		msg.addSlot((InventoryComponent) fluidContainerComponent, 0, 0, 0);
+		msg.addSlot((InventoryComponent) fluidContainerComponent, 1, 0, 0);
 
 		// Send a packet to the server with the updated values.
 		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
 
 		// Initialize as closed.
 		onTabClosing();
+	}
+
+	@Override
+	protected void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+		super.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
+		topSlot.yPos = this.yPosition + 24;
+		bottomSlot.yPos = this.yPosition + 60;
 	}
 
 	@Override

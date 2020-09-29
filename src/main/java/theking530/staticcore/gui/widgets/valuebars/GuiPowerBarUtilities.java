@@ -3,6 +3,10 @@ package theking530.staticcore.gui.widgets.valuebars;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -10,6 +14,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import theking530.staticcore.gui.GuiDrawUtilities;
+import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 
@@ -26,29 +31,32 @@ public class GuiPowerBarUtilities {
 		return tooltip;
 	}
 
-	public static void drawPowerBar(float xpos, float ypos, float width, float height, float zLevel, int currentEnergy, int maxEnergy) {
+	public static void drawPowerBar(@Nullable MatrixStack matrixStack, float xpos, float ypos, float width, float height, float zLevel, int currentEnergy, int maxEnergy) {
 		float u1 = (float) currentEnergy / (float) maxEnergy;
 		float k1 = u1 * height;
 
-		GuiDrawUtilities.drawSlot(xpos, ypos - height, width, height);
+		GuiDrawUtilities.drawSlot(matrixStack, xpos, ypos - height, width, height);
+
+		// Get the origin.
+		Vector2D origin = GuiDrawUtilities.translatePositionByMatrix(matrixStack, xpos, ypos);
 
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder vertexbuffer = tessellator.getBuffer();
 		Minecraft.getInstance().getTextureManager().bindTexture(GuiTextures.POWER_BAR_BG);
 		vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-		vertexbuffer.pos(xpos + width, ypos, zLevel).tex(1, 0).endVertex();
-		vertexbuffer.pos(xpos + width, ypos - height, zLevel).tex(1.0f, 1.0f).endVertex();
-		vertexbuffer.pos(xpos, ypos - height, zLevel).tex(0.0f, 1.0f).endVertex();
-		vertexbuffer.pos(xpos, ypos, zLevel).tex(0, 0).endVertex();
+		vertexbuffer.pos(origin.getX() + width, origin.getY(), zLevel).tex(1, 0).endVertex();
+		vertexbuffer.pos(origin.getX() + width, origin.getY() - height, zLevel).tex(1.0f, 1.0f).endVertex();
+		vertexbuffer.pos(origin.getX(), origin.getY() - height, zLevel).tex(0.0f, 1.0f).endVertex();
+		vertexbuffer.pos(origin.getX(), origin.getY(), zLevel).tex(0, 0).endVertex();
 		tessellator.draw();
 
 		float glowState = getPowerBarGlow();
 		Minecraft.getInstance().getTextureManager().bindTexture(GuiTextures.POWER_BAR_FG);
 		vertexbuffer.begin(7, DefaultVertexFormats.POSITION_COLOR_TEX);
-		vertexbuffer.pos(xpos + width, ypos, zLevel).color(glowState, glowState, glowState, 1.0f).tex(1, 0).endVertex();
-		vertexbuffer.pos(xpos + width, ypos - k1, zLevel).color(glowState, glowState, glowState, 1.0f).tex(1, u1).endVertex();
-		vertexbuffer.pos(xpos, ypos - k1, zLevel).color(glowState, glowState, glowState, 1.0f).tex(0, u1).endVertex();
-		vertexbuffer.pos(xpos, ypos, zLevel).color(glowState, glowState, glowState, 1.0f).tex(0, 0).endVertex();
+		vertexbuffer.pos(origin.getX() + width, origin.getY(), zLevel).color(glowState, glowState, glowState, 1.0f).tex(1, 0).endVertex();
+		vertexbuffer.pos(origin.getX() + width, origin.getY() - k1, zLevel).color(glowState, glowState, glowState, 1.0f).tex(1, u1).endVertex();
+		vertexbuffer.pos(origin.getX(), origin.getY() - k1, zLevel).color(glowState, glowState, glowState, 1.0f).tex(0, u1).endVertex();
+		vertexbuffer.pos(origin.getX(), origin.getY(), zLevel).color(glowState, glowState, glowState, 1.0f).tex(0, 0).endVertex();
 		tessellator.draw();
 	}
 

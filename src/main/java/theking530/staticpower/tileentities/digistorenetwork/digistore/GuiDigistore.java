@@ -63,10 +63,7 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 
 		// Pass the itemstack count through the metric converter.
 		MetricConverter count = new MetricConverter(inventory.getItemCapacity());
-		infoTab.addKeyValueLine(new StringTextComponent("Max Items"),
-				new StringTextComponent(TextFormatting.WHITE.toString())
-						.append(new StringTextComponent(count.getValueAsString(true))),
-				TextFormatting.RED);
+		infoTab.addKeyValueLine(new StringTextComponent("Max Items"), new StringTextComponent(TextFormatting.WHITE.toString()).append(new StringTextComponent(count.getValueAsString(true))), TextFormatting.RED);
 	}
 
 	@Override
@@ -74,8 +71,7 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 		super.drawForegroundExtras(stack, partialTicks, mouseX, mouseY);
 		if (inventory.getItemCapacity() > 0) {
 			if (mouseX >= guiLeft + 76 && mouseX <= guiLeft + 100 && mouseY >= guiTop + 21 && mouseY <= guiTop + 45) {
-				GuiDrawUtilities.drawColoredRectangle(guiLeft + 79, guiTop + 19, 18, 18, 1.0f,
-						new Color(200, 200, 200, 200).fromEightBitToFloat());
+				GuiDrawUtilities.drawColoredRectangle(guiLeft + 79, guiTop + 19, 18, 18, 1.0f, new Color(200, 200, 200, 200).fromEightBitToFloat());
 				renderTooltip(stack, inventory.getDigistoreStack(0).getStoredItem(), mouseX, mouseY);
 			}
 		}
@@ -86,7 +82,7 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 		super.drawBackgroundExtras(stack, partialTicks, mouseX, mouseY);
 
 		// Draw the massive digistore slot.
-		drawEmptySlot(guiLeft + 78, guiTop + 18, 20, 20);
+		drawEmptySlot(stack, guiLeft + 78, guiTop + 18, 20, 20);
 
 		// Draw the item.
 		if (inventory.getCurrentUniqueItemTypeCount() > 0) {
@@ -98,8 +94,7 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 			MetricConverter count = new MetricConverter(inventory.getTotalContainedCount());
 
 			// Draw the item count string.
-			GuiDrawUtilities.drawStringWithSize(stack, count.getValueAsString(true), guiLeft + 98, guiTop + 37, 0.5f,
-					Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawStringWithSize(stack, count.getValueAsString(true), guiLeft + 98, guiTop + 37, 0.5f, Color.EIGHT_BIT_WHITE, true);
 		}
 	}
 }

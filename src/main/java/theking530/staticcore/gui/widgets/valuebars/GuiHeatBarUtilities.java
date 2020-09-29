@@ -26,7 +26,7 @@ public class GuiHeatBarUtilities {
 		float u1 = currentHeat / maxHeat;
 		float k1 = u1 * height;
 
-		GuiDrawUtilities.drawSlot(xpos, ypos - height, width, height);
+		GuiDrawUtilities.drawSlot(null, xpos, ypos - height, width, height);
 
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder vertexbuffer = tessellator.getBuffer();

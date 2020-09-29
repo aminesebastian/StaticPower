@@ -87,13 +87,13 @@ public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRe
 
 	@Override
 	public void draw(CentrifugeRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(80, 6, 16, 16);
+		GuiDrawUtilities.drawSlot(matrixStack, 80, 6, 16, 16);
 
-		GuiDrawUtilities.drawSlot(78, 46, 20, 20);
-		GuiDrawUtilities.drawSlot(104, 32, 20, 20);
-		GuiDrawUtilities.drawSlot(52, 32, 20, 20);
+		GuiDrawUtilities.drawSlot(matrixStack, 78, 46, 20, 20);
+		GuiDrawUtilities.drawSlot(matrixStack, 104, 32, 20, 20);
+		GuiDrawUtilities.drawSlot(matrixStack, 52, 32, 20, 20);
 
-		GuiPowerBarUtilities.drawPowerBar(8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
+		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		String rpmText = String.valueOf(recipe.getMinimumSpeed()) + " RPM";
 		GuiDrawUtilities.drawColoredRectangle(103, 12, Minecraft.getInstance().fontRenderer.getStringWidth(rpmText) + 4,
@@ -103,7 +103,7 @@ public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRe
 
 		pBar.setCurrentProgress(processingTimer.getValue());
 		pBar.setMaxProgress(processingTimer.getMaxValue());
-		pBar.renderBehindItems(null, (int) mouseX, (int) mouseY, 0.0f);
+		pBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);
 	}
 
 	@Override

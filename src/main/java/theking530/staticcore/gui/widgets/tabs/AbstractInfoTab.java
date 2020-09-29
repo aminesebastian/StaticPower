@@ -5,25 +5,19 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import org.lwjgl.opengl.GL11;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.drawables.IDrawable;
 import theking530.staticcore.utilities.Color;
-import theking530.staticpower.client.gui.GuiTextures;
 
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractInfoTab extends BaseGuiTab {
@@ -61,7 +55,7 @@ public abstract class AbstractInfoTab extends BaseGuiTab {
 
 	public int addKeyValueTwoLiner(ITextComponent key, ITextComponent value, TextFormatting keyColor) {
 		info.add(new StringTextComponent(keyColor.toString()).append(key).appendString(": "));
-		info.add(new StringTextComponent(" ").append(value));
+		info.add(new StringTextComponent(" ").append(value).setStyle(Style.EMPTY.setFormatting(keyColor)));
 		return info.size() - 1;
 	}
 
@@ -77,6 +71,7 @@ public abstract class AbstractInfoTab extends BaseGuiTab {
 	public void renderBackground(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 		if (isOpen()) {
 			if (info != null) {
+				drawDarkBackground(matrix, 10, 22, tabWidth + 5, tabHeight - 7);
 				drawTextBG(matrix);
 				drawTitle(matrix);
 				drawInfo(matrix, false);
@@ -91,8 +86,7 @@ public abstract class AbstractInfoTab extends BaseGuiTab {
 
 	protected void drawTitle(MatrixStack stack) {
 		// Draw title.
-		fontRenderer.drawStringWithShadow(stack, getTitle(), xPosition + (getTabSide() == TabSide.LEFT ? 11 : 24),
-				yPosition + 8, titleColor);
+		fontRenderer.drawStringWithShadow(stack, getTitle(), (getTabSide() == TabSide.LEFT ? 11 : 24), 8, titleColor);
 	}
 
 	protected float drawInfo(@Nullable MatrixStack stack, boolean simulate) {
@@ -116,7 +110,7 @@ public abstract class AbstractInfoTab extends BaseGuiTab {
 			// Render the info text.
 			for (IReorderingProcessor text : wordWrappedText) {
 				if (!simulate) {
-					fontRenderer.func_238422_b_(stack, text, xPosition + 14, (yPosition + 25) + lineHeight, 16777215);
+					fontRenderer.func_238407_a_(stack, text, 14, 25 + lineHeight, 16777215);
 				}
 				lineHeight += LINE_HEIGHT;
 				height += LINE_HEIGHT;
@@ -127,17 +121,6 @@ public abstract class AbstractInfoTab extends BaseGuiTab {
 	}
 
 	protected void drawTextBG(MatrixStack stack) {
-		GL11.glEnable(GL11.GL_BLEND);
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder vertexbuffer = tessellator.getBuffer();
-		Minecraft.getInstance().getTextureManager().bindTexture(GuiTextures.BUTTON_BG);
-		GL11.glColor3f(1.0f, 1.0f, 1.0f);
-		vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-		vertexbuffer.pos(xPosition + tabWidth + 15, yPosition + tabHeight + 17, 0).tex(0, 1).endVertex();
-		vertexbuffer.pos(xPosition + tabWidth + 15, yPosition + 22, 0).tex(0, 0).endVertex();
-		vertexbuffer.pos(xPosition + 10, yPosition + 22, 0).tex(1, 0).endVertex();
-		vertexbuffer.pos(xPosition + 10, yPosition + tabHeight + 17, 0).tex(1, 1).endVertex();
-		tessellator.draw();
-		GL11.glDisable(GL11.GL_BLEND);
+
 	}
 }

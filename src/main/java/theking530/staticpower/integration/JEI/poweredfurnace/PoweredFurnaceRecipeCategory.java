@@ -83,15 +83,15 @@ public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<FurnaceR
 
 	@Override
 	public void draw(FurnaceRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(41, 19, 16, 16);
-		GuiDrawUtilities.drawSlot(89, 17, 20, 20);
+		GuiDrawUtilities.drawSlot(matrixStack, 41, 19, 16, 16);
+		GuiDrawUtilities.drawSlot(matrixStack, 89, 17, 20, 20);
 
 		// This doesn't actually draw the fluid, just the bars.
-		GuiPowerBarUtilities.drawPowerBar(8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
+		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		pBar.setCurrentProgress(processingTimer.getValue());
 		pBar.setMaxProgress(processingTimer.getMaxValue());
-		pBar.renderBehindItems(null, (int) mouseX, (int) mouseY, 0.0f);
+		pBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);
 	}
 
 	@Override

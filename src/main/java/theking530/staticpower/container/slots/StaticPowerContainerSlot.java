@@ -3,6 +3,7 @@ package theking530.staticpower.container.slots;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.item.ItemStack;
@@ -92,7 +93,7 @@ public class StaticPowerContainerSlot extends SlotItemHandler {
 		return isEnabled;
 	}
 
-	public void drawBeforeItem(GuiDrawItem itemRenderer, int guiLeft, int guiTop, int slotSize, int slotPosOffset) {
+	public void drawBeforeItem(MatrixStack matrixStack, GuiDrawItem itemRenderer, int guiLeft, int guiTop, int slotSize, int slotPosOffset) {
 		if (!getPreviewItem().isEmpty()) {
 			itemRenderer.drawItem(getPreviewItem(), guiLeft, guiTop, xPos, yPos, getPreviewAlpha());
 		}
@@ -102,7 +103,7 @@ public class StaticPowerContainerSlot extends SlotItemHandler {
 				if (fluidItem.getTanks() > 0) {
 					RenderSystem.enableDepthTest();
 					FluidStack fluid = fluidItem.getFluidInTank(0);
-					GuiFluidBarUtilities.drawFluidBar(fluid, 1, 1, guiLeft + xPos, guiTop + yPos + 16.0f, 500.0f, 16.0f, 16.0f, false);
+					GuiFluidBarUtilities.drawFluidBar(matrixStack, fluid, 1, 1, guiLeft + xPos, guiTop + yPos + 16.0f, 500.0f, 16.0f, 16.0f, false);
 					RenderSystem.disableDepthTest();
 				}
 			}

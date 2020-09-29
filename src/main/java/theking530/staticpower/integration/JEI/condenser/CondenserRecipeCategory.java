@@ -79,18 +79,16 @@ public class CondenserRecipeCategory extends BaseJEIRecipeCategory<CondensationR
 	@Override
 	public void draw(CondensationRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
 		// This doesn't actually draw the fluid, just the bars.
-		GuiFluidBarUtilities.drawFluidBar(recipe.getInputFluid(), 0, 0, 50, 56, 1.0f, 16, 52, MachineSideMode.Never,
-				true);
-		GuiFluidBarUtilities.drawFluidBar(recipe.getOutputFluid(), 0, 0, 104, 56, 1.0f, 16, 52, MachineSideMode.Never,
-				true);
+		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getInputFluid(), 0, 0, 50, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
+		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getOutputFluid(), 0, 0, 104, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
 
 		GuiHeatBarUtilities.drawHeatBar(8, 56, 16, 52, 1.0f, recipe.getHeatGeneration(), recipe.getHeatGeneration());
 
 		// Draw the progress bar as a fluid.
-		GuiDrawUtilities.drawSlot(70, 23, 28, 5);
+		GuiDrawUtilities.drawSlot(matrixStack, 70, 23, 28, 5);
 		float progress = ((float) processingTimer.getValue() / processingTimer.getMaxValue()) * 28;
 		FluidStack fluid = recipe.getInputFluid();
-		GuiFluidBarUtilities.drawFluidBar(fluid, 1000, 1000, 70, 28, 1, progress, 5, false);
+		GuiFluidBarUtilities.drawFluidBar(matrixStack, fluid, 1000, 1000, 70, 28, 1, progress, 5, false);
 	}
 
 	@Override
@@ -99,8 +97,7 @@ public class CondenserRecipeCategory extends BaseJEIRecipeCategory<CondensationR
 
 		// Render the heat bar tooltip.
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new StringTextComponent("Generates: ")
-					.append(GuiTextUtilities.formatHeatToString(recipe.getHeatGeneration())));
+			output.add(new StringTextComponent("Generates: ").append(GuiTextUtilities.formatHeatToString(recipe.getHeatGeneration())));
 		}
 
 		// Render the progress bar tooltip.

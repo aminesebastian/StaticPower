@@ -27,8 +27,7 @@ public class ItemButton extends StandardButton {
 	 * @param xPos   The xPosition of the button.
 	 * @param yPos   The yPosition of the button.
 	 */
-	public ItemButton(ItemStack icon, int xPos, int yPos, int width, int height,
-			BiConsumer<StandardButton, MouseButton> onClicked) {
+	public ItemButton(ItemStack icon, int xPos, int yPos, int width, int height, BiConsumer<StandardButton, MouseButton> onClicked) {
 		super(xPos, yPos, width, height, onClicked);
 
 		itemIcon = icon;
@@ -44,8 +43,7 @@ public class ItemButton extends StandardButton {
 	 * @param xPos   The xPosition of the button.
 	 * @param yPos   The yPosition of the button.
 	 */
-	public ItemButton(Item icon, int xPos, int yPos, int width, int height,
-			BiConsumer<StandardButton, MouseButton> onClicked) {
+	public ItemButton(Item icon, int xPos, int yPos, int width, int height, BiConsumer<StandardButton, MouseButton> onClicked) {
 		this(new ItemStack(icon), xPos, yPos, width, height, onClicked);
 	}
 
@@ -58,8 +56,7 @@ public class ItemButton extends StandardButton {
 			Vector2D size = this.getSize();
 			int halfSizeX = size.getXi() / 2;
 			int halfSizeY = size.getYi() / 2;
-			customRenderer.renderItemIntoGUI(itemIcon, (int) buttonLeft + (halfSizeX - 8),
-					(int) buttonTop + (halfSizeY - 8));
+			customRenderer.renderItemIntoGUI(itemIcon, (int) buttonLeft + (halfSizeX - 8), (int) buttonTop + (halfSizeY - 8));
 		}
 	}
 }

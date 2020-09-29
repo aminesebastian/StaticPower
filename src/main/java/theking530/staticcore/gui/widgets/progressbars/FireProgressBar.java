@@ -18,16 +18,15 @@ public class FireProgressBar extends AbstractProgressBar {
 	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 		super.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
 
-		Vector2D screenSpacePosition = this.getScreenSpacePosition();
+		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
 		float adjustedProgress = visualCurrentProgress / maxProgress;
 
-		GuiDrawUtilities.drawTexturedModalRect(GuiTextures.FIRE_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY(), 0.0f, 0.46875f, 0.4375f,
-				0.875f);
+		GuiDrawUtilities.drawTexturedModalRect(GuiTextures.FIRE_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY(), 0.0f, 0.46875f, 0.4375f, 0.875f);
 		float topOffset = getSize().getY() * (adjustedProgress);
 
 		if (visualCurrentProgress > 0) {
-			GuiDrawUtilities.drawTexturedModalRect(GuiTextures.FIRE_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY() + topOffset, getSize().getX(),
-					getSize().getY() * (1.0f - adjustedProgress), 0.0f, 0.40625f * adjustedProgress, 0.4375f, 0.40625f);
+			GuiDrawUtilities.drawTexturedModalRect(GuiTextures.FIRE_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY() + topOffset, getSize().getX(), getSize().getY() * (1.0f - adjustedProgress), 0.0f,
+					0.40625f * adjustedProgress, 0.4375f, 0.40625f);
 		}
 
 		if (isProcessingErrored) {

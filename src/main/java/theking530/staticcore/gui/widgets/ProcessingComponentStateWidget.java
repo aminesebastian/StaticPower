@@ -8,6 +8,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.StaticPowerSprites;
@@ -31,7 +32,7 @@ public class ProcessingComponentStateWidget extends AbstractGuiWidget {
 
 	@Override
 	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
-		Vector2D screenSpacePosition = this.getScreenSpacePosition();
+		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
 		if (machineProcessingComponent.isProcessingStoppedDueToError()) {
 			errorDrawable.draw(screenSpacePosition.getX(), screenSpacePosition.getY());
 		} else {

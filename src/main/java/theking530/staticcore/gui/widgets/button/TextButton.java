@@ -17,8 +17,7 @@ public class TextButton extends StandardButton {
 	private String text;
 	private FontRenderer fontRenderer;
 
-	public TextButton(int xPos, int yPos, int width, int height, String text,
-			BiConsumer<StandardButton, MouseButton> onClicked) {
+	public TextButton(int xPos, int yPos, int width, int height, String text, BiConsumer<StandardButton, MouseButton> onClicked) {
 		super(xPos, yPos, width, height, onClicked);
 		this.text = text;
 		fontRenderer = Minecraft.getInstance().fontRenderer;
@@ -28,13 +27,11 @@ public class TextButton extends StandardButton {
 	protected void drawButtonOverlay(MatrixStack stack, int buttonLeft, int buttonTop) {
 		int width = fontRenderer.getStringWidth(text);
 
-		GuiDrawUtilities.drawStringWithSize(stack, text, buttonLeft + 1 + getSize().getX() / 2 + width / 2,
-				buttonTop - 1 + fontRenderer.FONT_HEIGHT / 2 + getSize().getY() / 2, 1.0f,
+		GuiDrawUtilities.drawStringWithSize(stack, text, getPosition().getXi() + getSize().getX() / 2 + width / 2, getPosition().getYi() - 1 + fontRenderer.FONT_HEIGHT / 2 + getSize().getY() / 2, 1.0f,
 				isEnabled() ? Color.EIGHT_BIT_WHITE : Color.EIGHT_BIT_WHITE, true);
 
 		if (!isEnabled()) {
-			GuiDrawUtilities.drawColoredRectangle(buttonLeft, buttonTop, getSize().getX(), getSize().getY(), 1.0f,
-					new Color(128.0f, 128.0f, 128.0f, 75.0f));
+			GuiDrawUtilities.drawColoredRectangle(buttonLeft, buttonTop, getSize().getX(), getSize().getY(), 1.0f, new Color(128.0f, 128.0f, 128.0f, 75.0f));
 		}
 	}
 

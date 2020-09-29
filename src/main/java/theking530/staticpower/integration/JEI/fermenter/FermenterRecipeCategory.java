@@ -86,24 +86,23 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 		// Draw the slots.
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 3; ++j) {
-				GuiDrawUtilities.drawSlot(40 + j * 18, 4 + i * 18, 16, 16);
+				GuiDrawUtilities.drawSlot(matrixStack, 40 + j * 18, 4 + i * 18, 16, 16);
 			}
 		}
 
-		GuiDrawUtilities.drawSlot(112, 34, 20, 20);
+		GuiDrawUtilities.drawSlot(matrixStack, 112, 34, 20, 20);
 
 		// Draw the power bar.
-		GuiPowerBarUtilities.drawPowerBar(8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
+		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		// This doesn't actually draw the fluid, just the bars.
-		GuiFluidBarUtilities.drawFluidBar(recipe.getOutputFluidStack(), 0, 0, 153, 54, 1.0f, 16, 48,
-				MachineSideMode.Never, true);
+		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getOutputFluidStack(), 0, 0, 153, 54, 1.0f, 16, 48, MachineSideMode.Never, true);
 
 		// Draw the progress bar as a fluid.
-		GuiDrawUtilities.drawSlot(97, 24, 48, 5);
+		GuiDrawUtilities.drawSlot(matrixStack, 97, 24, 48, 5);
 		float progress = ((float) processingTimer.getValue() / processingTimer.getMaxValue()) * 45;
 		FluidStack fluid = recipe.getOutputFluidStack();
-		GuiFluidBarUtilities.drawFluidBar(fluid, 1000, 1000, 97, 29, 1, progress, 5, false);
+		GuiFluidBarUtilities.drawFluidBar(matrixStack, fluid, 1000, 1000, 97, 29, 1, progress, 5, false);
 	}
 
 	@Override
@@ -112,8 +111,7 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 
 		// Add a tooltip for the energy bar.
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new StringTextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(
-					TileEntityFermenter.DEFAULT_PROCESSING_COST * TileEntityFermenter.DEFAULT_PROCESSING_TIME)));
+			output.add(new StringTextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(TileEntityFermenter.DEFAULT_PROCESSING_COST * TileEntityFermenter.DEFAULT_PROCESSING_TIME)));
 
 		}
 
@@ -146,9 +144,7 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 		fluids.init(3, false, 153, 6, 16, 48, getFluidTankDisplaySize(recipe.getOutputFluidStack()), false, null);
 		fluids.set(ingredients);
 
-		powerTimer = guiHelper.createTickTimer(TileEntityFermenter.DEFAULT_PROCESSING_TIME,
-				TileEntityFermenter.DEFAULT_PROCESSING_COST * TileEntityFermenter.DEFAULT_PROCESSING_TIME, true);
-		processingTimer = guiHelper.createTickTimer(TileEntityFermenter.DEFAULT_PROCESSING_TIME,
-				TileEntityFermenter.DEFAULT_PROCESSING_COST, false);
+		powerTimer = guiHelper.createTickTimer(TileEntityFermenter.DEFAULT_PROCESSING_TIME, TileEntityFermenter.DEFAULT_PROCESSING_COST * TileEntityFermenter.DEFAULT_PROCESSING_TIME, true);
+		processingTimer = guiHelper.createTickTimer(TileEntityFermenter.DEFAULT_PROCESSING_TIME, TileEntityFermenter.DEFAULT_PROCESSING_COST, false);
 	}
 }

@@ -3,6 +3,8 @@ package theking530.staticcore.gui.widgets.tabs.slottabs;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab;
@@ -19,40 +21,35 @@ import theking530.staticpower.utilities.InventoryUtilities;
 @OnlyIn(Dist.CLIENT)
 public class GuiUpgradeTab extends BaseGuiTab {
 	private final InventoryComponent upgradesInventory;
-	private final List<Integer> slotIndecies;
+	private final List<StaticPowerContainerSlot> slots;
 	private final StaticPowerContainer container;
 
 	public GuiUpgradeTab(StaticPowerContainer container, InventoryComponent upgradesInventory) {
 		super("Upgrades", 0, 57, GuiTextures.YELLOW_TAB, ModUpgrades.BasicSpeedUpgrade);
 		this.container = container;
-		this.slotIndecies = new ArrayList<Integer>();
+		this.slots = new ArrayList<StaticPowerContainerSlot>();
 		this.upgradesInventory = upgradesInventory;
 		showNotificationBadge = !InventoryUtilities.isInventoryEmpty(upgradesInventory);
 	}
 
 	@Override
 	protected void initialized(int tabXPosition, int tabYPosition) {
-		// Add the slots.
-		container.addSlotGeneric(new UpgradeItemSlot(upgradesInventory, 0, 4 + guiXOffset, 24 + guiYOffset));
-		slotIndecies.add(container.inventorySlots.size() - 1);
-
-		container.addSlotGeneric(new UpgradeItemSlot(upgradesInventory, 1, 4 + guiXOffset, 42 + guiYOffset));
-		slotIndecies.add(container.inventorySlots.size() - 1);
-
-		container.addSlotGeneric(new UpgradeItemSlot(upgradesInventory, 2, 4 + guiXOffset, 60 + guiYOffset));
-		slotIndecies.add(container.inventorySlots.size() - 1);
-
+		// Allocate the packet.
 		PacketGuiTabAddSlots msg = new PacketGuiTabAddSlots(container.windowId);
-		msg.addSlot(upgradesInventory, 0, 4 + guiXOffset, 24);
-		msg.addSlot(upgradesInventory, 1, 4 + guiXOffset, 45);
-		msg.addSlot(upgradesInventory, 2, 4 + guiXOffset, 60);
+
+		// Add the slots.
+		for (int i = 0; i < 3; i++) {
+			StaticPowerContainerSlot slot;
+			container.addSlotGeneric(slot = new UpgradeItemSlot(upgradesInventory, i, this.xPosition + 4, 0));
+			slots.add(slot);
+			msg.addSlot(upgradesInventory, i, 0, 0);
+		}
 
 		// Send a packet to the server with the updated values.
 		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
 
 		// Set the is initial state.
-		for (int index : slotIndecies) {
-			StaticPowerContainerSlot slot = (StaticPowerContainerSlot) container.inventorySlots.get(index);
+		for (StaticPowerContainerSlot slot : slots) {
 			slot.setEnabledState(false);
 		}
 
@@ -61,9 +58,16 @@ public class GuiUpgradeTab extends BaseGuiTab {
 	}
 
 	@Override
+	protected void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+		super.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
+		for (int i = 0; i < slots.size(); i++) {
+			slots.get(i).yPos = this.yPosition + 24 + (i * 18);
+		}
+	}
+
+	@Override
 	protected void onTabOpened() {
-		for (int index : slotIndecies) {
-			StaticPowerContainerSlot slot = (StaticPowerContainerSlot) container.inventorySlots.get(index);
+		for (StaticPowerContainerSlot slot : slots) {
 			slot.setEnabledState(true);
 		}
 		showNotificationBadge = !InventoryUtilities.isInventoryEmpty(upgradesInventory);
@@ -71,8 +75,7 @@ public class GuiUpgradeTab extends BaseGuiTab {
 
 	@Override
 	protected void onTabClosing() {
-		for (int index : slotIndecies) {
-			StaticPowerContainerSlot slot = (StaticPowerContainerSlot) container.inventorySlots.get(index);
+		for (StaticPowerContainerSlot slot : slots) {
 			slot.setEnabledState(false);
 		}
 		showNotificationBadge = !InventoryUtilities.isInventoryEmpty(upgradesInventory);

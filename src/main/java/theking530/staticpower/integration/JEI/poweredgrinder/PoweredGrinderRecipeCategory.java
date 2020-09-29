@@ -85,17 +85,17 @@ public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderR
 
 	@Override
 	public void draw(GrinderRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(80, 6, 16, 16);
+		GuiDrawUtilities.drawSlot(matrixStack, 80, 6, 16, 16);
 
-		GuiDrawUtilities.drawSlot(78, 46, 20, 20);
-		GuiDrawUtilities.drawSlot(104, 32, 20, 20);
-		GuiDrawUtilities.drawSlot(52, 32, 20, 20);
+		GuiDrawUtilities.drawSlot(matrixStack, 78, 46, 20, 20);
+		GuiDrawUtilities.drawSlot(matrixStack, 104, 32, 20, 20);
+		GuiDrawUtilities.drawSlot(matrixStack, 52, 32, 20, 20);
 
-		GuiPowerBarUtilities.drawPowerBar(8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
+		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		pBar.setCurrentProgress(processingTimer.getValue());
 		pBar.setMaxProgress(processingTimer.getMaxValue());
-		pBar.renderBehindItems(null, (int) mouseX, (int) mouseY, 0.0f);
+		pBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);
 	}
 
 	@Override

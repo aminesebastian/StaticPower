@@ -15,7 +15,6 @@ import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabState;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.gui.StaticPowerContainerGui;
 
-
 @OnlyIn(Dist.CLIENT)
 public class GuiTabManager extends AbstractGuiWidget {
 
@@ -83,14 +82,16 @@ public class GuiTabManager extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderBackground(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
-		Vector2D positionOffset = this.getPosition();
-		int tabPositionX = (int) (getOwnerPosition().getX() + getOwnerSize().getX() - 1 + positionOffset.getX());
-		int tabPositionY = (int) (getOwnerPosition().getY() + 10 + positionOffset.getY());
+	public void updateBeforeRender(MatrixStack matrixStack, Vector2D ownerSize, float partialTicks, int mouseX, int mouseY) {
+		super.updateBeforeRender(matrixStack, ownerSize, partialTicks, mouseX, mouseY);
+		int tabPositionX = (int) (getPosition().getX() + getOwnerSize().getX() - 1 + getPosition().getX());
+		int tabPositionY = (int) (getPosition().getY() + 10 + getPosition().getY());
 
+		// Allocate lists for the left and right tabs.
 		List<BaseGuiTab> leftTabs = new ArrayList<BaseGuiTab>();
 		List<BaseGuiTab> rightTabs = new ArrayList<BaseGuiTab>();
 
+		// Populuate those lists.
 		for (BaseGuiTab tab : registeredTabs) {
 			if (tab.getTabSide() == TabSide.RIGHT) {
 				rightTabs.add(tab);
@@ -99,37 +100,77 @@ public class GuiTabManager extends AbstractGuiWidget {
 			}
 		}
 
-		int maxOffset = (int) (getOwnerPosition().getY() + getOwnerSize().getY() - 25);
+		// Calculate the maximum amount we can push a tab down.
+		int maxOffset = (int) (getPosition().getY() + getOwnerSize().getY() - 25);
 
+		// Iterate through the right tabs.
 		for (int i = rightTabs.size() - 1; i >= 0; i--) {
+			// Allocate the offset.
 			int offset = 0;
+
+			// Set the offset.
 			if (i > 0) {
 				for (int j = i - 1; j >= 0; j--) {
 					offset += (int) rightTabs.get(j).getBounds().getHeight() - 24;
 				}
 			}
+
+			// Calculate the final offset and clamp it to the max.
 			int adjustedOffset = Math.min(tabPositionY + (i * 25) + offset, maxOffset);
-			rightTabs.get(i).updateTabPosition(tabPositionX, adjustedOffset, partialTicks, mouseX, mouseY, Math.max(0, rightTabs.size() - i - 1));
-			rightTabs.get(i).drawTabPanel(matrix, partialTicks);
-			if (rightTabs.get(i).isOpen()) {
-				rightTabs.get(i).renderBackground(matrix, mouseX, mouseY, partialTicks);
-			}
+
+			// Push a matrix for this tab's position.
+			matrixStack.push();
+			matrixStack.translate(tabPositionX, adjustedOffset, 0);
+
+			// Update the position.
+			rightTabs.get(i).updateTabPosition(matrixStack, tabPositionX, adjustedOffset, partialTicks, mouseX, mouseY, Math.max(0, rightTabs.size() - i - 1));
+
+			// Pop the matrix.
+			matrixStack.pop();
 		}
 
+		// Iterate through the left tabs.
 		for (int i = leftTabs.size() - 1; i >= 0; i--) {
+			// Allocate the offset.
 			int offset = 0;
+
+			// Set the offset.
 			if (i > 0) {
 				for (int j = i - 1; j >= 0; j--) {
 					offset += (int) leftTabs.get(j).getBounds().getHeight() - 24;
 				}
 			}
+
+			// Calculate the final offset and clamp it to the max.
 			int adjustedOffset = Math.min(tabPositionY + (i * 25) + offset, maxOffset);
-			leftTabs.get(i).updateTabPosition((int) (tabPositionX - getOwnerSize().getX() - 21), adjustedOffset, partialTicks, mouseX, mouseY,
+
+			// Push a matrix for this tab's position.
+			matrixStack.push();
+			matrixStack.translate((int) (tabPositionX - getOwnerSize().getX() - leftTabs.get(i).tabWidth - 21), adjustedOffset, 0);
+
+			// Update the position.
+			leftTabs.get(i).updateTabPosition(matrixStack, (int) (tabPositionX - getOwnerSize().getX() - leftTabs.get(i).tabWidth - 21), adjustedOffset, partialTicks, mouseX, mouseY,
 					Math.max(0, leftTabs.size() - i - 1));
-			leftTabs.get(i).drawTabPanel(matrix, partialTicks);
-			if (leftTabs.get(i).isOpen()) {
-				leftTabs.get(i).renderBackground(matrix, mouseX, mouseY, partialTicks);
+
+			// Pop the matrix.
+			matrixStack.pop();
+		}
+	}
+
+	@Override
+	public void renderBackground(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+		// Render the tab backgrounds.
+		for (BaseGuiTab tab : registeredTabs) {
+			matrix.push();
+			matrix.translate(tab.xPosition, tab.yPosition, 0);
+			// Draw the tab panel.
+			tab.drawTabPanel(matrix, partialTicks);
+
+			// If open, draw the tab background.
+			if (tab.isOpen()) {
+				tab.renderBackground(matrix, mouseX, mouseY, partialTicks);
 			}
+			matrix.pop();
 		}
 	}
 
@@ -137,7 +178,10 @@ public class GuiTabManager extends AbstractGuiWidget {
 	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 		for (BaseGuiTab tab : registeredTabs) {
 			if (tab.isOpen()) {
+				matrix.push();
+				matrix.translate(tab.xPosition, tab.yPosition, 0);
 				tab.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
+				matrix.pop();
 			}
 		}
 	}
@@ -145,7 +189,10 @@ public class GuiTabManager extends AbstractGuiWidget {
 	@Override
 	public void renderForeground(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 		for (BaseGuiTab tab : registeredTabs) {
+			matrix.push();
+			matrix.translate(tab.xPosition, tab.yPosition, 0);
 			tab.renderForeground(matrix, mouseX, mouseY, partialTicks);
+			matrix.pop();
 		}
 	}
 
@@ -159,7 +206,7 @@ public class GuiTabManager extends AbstractGuiWidget {
 	@Override
 	public EInputResult mouseClick(int mouseX, int mouseY, int button) {
 		for (BaseGuiTab tab : registeredTabs) {
-			EInputResult inputUsed = tab.mouseClick(mouseX, mouseY, button);
+			EInputResult inputUsed = tab.mouseClick(getLastRenderMatrix(), mouseX, mouseY, button);
 			if (inputUsed == EInputResult.HANDLED) {
 				return EInputResult.HANDLED;
 			}

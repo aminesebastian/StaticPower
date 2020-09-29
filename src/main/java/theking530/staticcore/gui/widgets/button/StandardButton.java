@@ -36,8 +36,7 @@ public class StandardButton extends AbstractGuiWidget {
 	private float clickSoundPitch;
 	private List<ITextComponent> tooltip;
 
-	public StandardButton(int xPos, int yPos, int width, int height,
-			BiConsumer<StandardButton, MouseButton> onClickedEvent) {
+	public StandardButton(int xPos, int yPos, int width, int height, BiConsumer<StandardButton, MouseButton> onClickedEvent) {
 		super(xPos, yPos, width, height);
 		clickSoundPitch = 1.0f;
 		onClicked = onClickedEvent;
@@ -64,7 +63,7 @@ public class StandardButton extends AbstractGuiWidget {
 		}
 
 		// Calculate the button's left and top.
-		Vector2D position = getScreenSpacePosition();
+		Vector2D position = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
 		int buttonLeft = (int) position.getX();
 		int buttonTop = (int) position.getY();
 
@@ -119,8 +118,7 @@ public class StandardButton extends AbstractGuiWidget {
 	}
 
 	protected void drawButton(MatrixStack stack, int buttonLeft, int buttonTop) {
-		GuiDrawUtilities.drawDefaultButton(isClicked() || isHovered() || isToggled(), buttonLeft, buttonTop,
-				getSize().getX(), getSize().getY(), 0.0f);
+		GuiDrawUtilities.drawDefaultButton(isClicked() || isHovered() || isToggled(), buttonLeft, buttonTop, getSize().getX(), getSize().getY(), 0.0f);
 	}
 
 	protected void drawButtonOverlay(MatrixStack stack, int buttonLeft, int buttonTop) {
@@ -138,8 +136,7 @@ public class StandardButton extends AbstractGuiWidget {
 	protected void playSound(MouseButton state) {
 		float pitch = state == MouseButton.LEFT ? clickSoundPitch : clickSoundPitch * 1.1f;
 		ClientPlayerEntity player = Minecraft.getInstance().player;
-		player.world.playSound(player, player.getPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.MASTER, 1.0f,
-				pitch);
+		player.world.playSound(player, player.getPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.MASTER, 1.0f, pitch);
 	}
 
 	public StandardButton setToggleable(boolean toggleable) {

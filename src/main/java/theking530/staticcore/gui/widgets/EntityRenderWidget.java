@@ -23,11 +23,11 @@ public class EntityRenderWidget extends AbstractGuiWidget {
 
 		// Get the screen space position and offset it by the scale to center the
 		// entity.
-		Vector2D screenSpacePosition = getScreenSpacePosition();
+		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
 		Vector2D offset = new Vector2D(screenSpacePosition.getX() + (getSize().getX() / 2.0f), screenSpacePosition.getY() + (getSize().getY() / 2.0f) + scale);
 
 		// Draw the slot border.
-		GuiDrawUtilities.drawSlot(screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY());
+		GuiDrawUtilities.drawSlot(null, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY());
 
 		// Then the background.
 		GuiDrawUtilities.drawColoredRectangle(screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY(), 1.0f, Color.BLACK);

@@ -34,8 +34,7 @@ import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 
 public class FluidGeneratorRecipeCateogry extends BaseJEIRecipeCategory<FluidGeneratorRecipe> {
-	public static final ResourceLocation FLUID_GENERATOR_UID = new ResourceLocation(StaticPower.MOD_ID,
-			"fluid_generator");
+	public static final ResourceLocation FLUID_GENERATOR_UID = new ResourceLocation(StaticPower.MOD_ID, "fluid_generator");
 
 	private final TranslationTextComponent locTitle;
 	private final IDrawable background;
@@ -85,23 +84,21 @@ public class FluidGeneratorRecipeCateogry extends BaseJEIRecipeCategory<FluidGen
 	@Override
 	public void draw(FluidGeneratorRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
 		// This doesn't actually draw the fluid, just the bars.
-		GuiFluidBarUtilities.drawFluidBar(recipe.getFluid(), 0, 0, 77, 54, 1.0f, 16, 48, MachineSideMode.Never, true);
-		GuiPowerBarUtilities.drawPowerBar(8, 54, 16, 48, 1.0f, recipe.getPowerGeneration(),
-				recipe.getPowerGeneration());
+		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getFluid(), 0, 0, 77, 54, 1.0f, 16, 48, MachineSideMode.Never, true);
+		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, recipe.getPowerGeneration(), recipe.getPowerGeneration());
 
 		// Draw the progress bars.
 		pBar.setCurrentProgress(processingTimer.getValue());
 		pBar.setMaxProgress(processingTimer.getMaxValue());
-		pBar.renderBehindItems(null, (int) mouseX, (int) mouseY, 0.0f);
+		pBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);
 
 		flameBar.setCurrentProgress(processingTimer.getValue());
 		flameBar.setMaxProgress(processingTimer.getMaxValue());
-		flameBar.renderBehindItems(null, (int) mouseX, (int) mouseY, 0.0f);
+		flameBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);
 
 		FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;
 		String powerGeneration = GuiTextUtilities.formatEnergyRateToString(recipe.getPowerGeneration()).getString();
-		fontRenderer.drawString(matrixStack, powerGeneration, 51 - (fontRenderer.getStringWidth(powerGeneration) / 2),
-				5, Color.EIGHT_BIT_DARK_GREY.encodeInInteger());
+		fontRenderer.drawString(matrixStack, powerGeneration, 51 - (fontRenderer.getStringWidth(powerGeneration) / 2), 5, Color.EIGHT_BIT_DARK_GREY.encodeInInteger());
 
 	}
 
@@ -109,8 +106,7 @@ public class FluidGeneratorRecipeCateogry extends BaseJEIRecipeCategory<FluidGen
 	public List<ITextComponent> getTooltipStrings(FluidGeneratorRecipe recipe, double mouseX, double mouseY) {
 		List<ITextComponent> output = new ArrayList<ITextComponent>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new StringTextComponent("Generates: ")
-					.append(GuiTextUtilities.formatEnergyRateToString(recipe.getPowerGeneration())));
+			output.add(new StringTextComponent("Generates: ").append(GuiTextUtilities.formatEnergyRateToString(recipe.getPowerGeneration())));
 		}
 
 		return output;

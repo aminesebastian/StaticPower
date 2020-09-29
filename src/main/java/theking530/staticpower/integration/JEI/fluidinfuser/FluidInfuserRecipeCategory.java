@@ -85,32 +85,30 @@ public class FluidInfuserRecipeCategory extends BaseJEIRecipeCategory<FluidInfus
 
 	@Override
 	public void draw(FluidInfusionRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(31, 17, 16, 16);
-		GuiDrawUtilities.drawSlot(122, 15, 20, 20);
+		GuiDrawUtilities.drawSlot(matrixStack, 31, 17, 16, 16);
+		GuiDrawUtilities.drawSlot(matrixStack, 122, 15, 20, 20);
 
 		// This doesn't actually draw the fluid, just the bars.
-		GuiFluidBarUtilities.drawFluidBar(recipe.getRequiredFluid(), 0, 0, 77, 56, 1.0f, 16, 52, MachineSideMode.Never,
-				true);
-		GuiPowerBarUtilities.drawPowerBar(8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
+		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getRequiredFluid(), 0, 0, 77, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
+		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		// Draw the progress bar as a fluid.
-		GuiDrawUtilities.drawSlot(99, 23, 17, 5);
+		GuiDrawUtilities.drawSlot(matrixStack, 99, 23, 17, 5);
 		float progress = ((float) processingTimer.getValue() / processingTimer.getMaxValue()) * 17;
 		FluidStack fluid = recipe.getRequiredFluid();
-		GuiFluidBarUtilities.drawFluidBar(fluid, 1000, 1000, 99, 28, 1, progress, 5, false);
+		GuiFluidBarUtilities.drawFluidBar(matrixStack, fluid, 1000, 1000, 99, 28, 1, progress, 5, false);
 
 		// Draw the arrow progress bar.
 		pBar.setCurrentProgress(processingTimer.getValue());
 		pBar.setMaxProgress(processingTimer.getMaxValue());
-		pBar.renderBehindItems(null, (int) mouseX, (int) mouseY, 0.0f);
+		pBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);
 	}
 
 	@Override
 	public List<ITextComponent> getTooltipStrings(FluidInfusionRecipe recipe, double mouseX, double mouseY) {
 		List<ITextComponent> output = new ArrayList<ITextComponent>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new StringTextComponent("Usage: ")
-					.append(GuiTextUtilities.formatEnergyToString(recipe.getPowerCost() * recipe.getProcessingTime())));
+			output.add(new StringTextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(recipe.getPowerCost() * recipe.getProcessingTime())));
 		}
 
 		// Render the progress bar tooltip.
@@ -155,8 +153,7 @@ public class FluidInfuserRecipeCategory extends BaseJEIRecipeCategory<FluidInfus
 		fluids.init(3, true, 77, 4, 16, 52, getFluidTankDisplaySize(recipe.getRequiredFluid()), false, null);
 		fluids.set(ingredients);
 
-		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(),
-				recipe.getProcessingTime() * recipe.getPowerCost(), true);
+		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime() * recipe.getPowerCost(), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);
 	}
 }

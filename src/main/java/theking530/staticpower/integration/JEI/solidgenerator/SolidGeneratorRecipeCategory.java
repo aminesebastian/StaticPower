@@ -91,9 +91,9 @@ public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFue
 
 	@Override
 	public void draw(SolidFuelRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(66, 19, 16, 16);
+		GuiDrawUtilities.drawSlot(matrixStack, 66, 19, 16, 16);
 
-		GuiPowerBarUtilities.drawPowerBar(8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
+		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		flamesBg.draw(matrixStack, 67, 40);
 		flames.draw(matrixStack, 67, 40,
@@ -101,7 +101,7 @@ public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFue
 
 		pBar.setCurrentProgress(processingTimer.getValue());
 		pBar.setMaxProgress(processingTimer.getMaxValue());
-		pBar.renderBehindItems(null, (int) mouseX, (int) mouseY, 0.0f);
+		pBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);
 	}
 
 	@Override

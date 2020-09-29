@@ -82,14 +82,14 @@ public class FormerRecipeCategory extends BaseJEIRecipeCategory<FormerRecipe> {
 
 	@Override
 	public void draw(FormerRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(40, 19, 16, 16);
-		GuiDrawUtilities.drawSlot(63, 19, 16, 16);
-		GuiDrawUtilities.drawSlot(110, 17, 20, 20);
-		GuiPowerBarUtilities.drawPowerBar(8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
+		GuiDrawUtilities.drawSlot(matrixStack, 40, 19, 16, 16);
+		GuiDrawUtilities.drawSlot(matrixStack, 63, 19, 16, 16);
+		GuiDrawUtilities.drawSlot(matrixStack, 110, 17, 20, 20);
+		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		pBar.setCurrentProgress(processingTimer.getValue());
 		pBar.setMaxProgress(processingTimer.getMaxValue());
-		pBar.renderBehindItems(null, (int) mouseX, (int) mouseY, 0.0f);
+		pBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);
 	}
 
 	@Override

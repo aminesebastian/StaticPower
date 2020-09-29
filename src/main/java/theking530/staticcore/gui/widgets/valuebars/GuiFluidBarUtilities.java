@@ -5,7 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.annotation.Nullable;
+
 import org.lwjgl.opengl.GL11;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -19,21 +23,25 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 
 public class GuiFluidBarUtilities {
 
-	public static void drawFluidBar(FluidStack fluid, int capacity, int amount, float x, float y, float zLevel, float width, float height, boolean drawOverlay) {
-		drawFluidBar(fluid, capacity, amount, x, y, zLevel, width, height, null, drawOverlay);
+	public static void drawFluidBar(@Nullable MatrixStack stack, FluidStack fluid, int capacity, int amount, float x, float y, float zLevel, float width, float height, boolean drawOverlay) {
+		drawFluidBar(stack, fluid, capacity, amount, x, y, zLevel, width, height, null, drawOverlay);
 	}
 
 	@SuppressWarnings("deprecation")
-	public static void drawFluidBar(FluidStack fluid, int capacity, int amount, float x, float y, float zLevel, float width, float height, MachineSideMode mode, boolean drawOverlay) {
+	public static void drawFluidBar(@Nullable MatrixStack matrixStack, FluidStack fluid, int capacity, int amount, float x, float y, float zLevel, float width, float height, MachineSideMode mode, boolean drawOverlay) {
 		if (mode != null && mode != MachineSideMode.Regular && mode != MachineSideMode.Never) {
-			GuiDrawUtilities.drawSlot((int) x, (int) (y - height), (int) width, (int) height, mode.getColor());
+			GuiDrawUtilities.drawSlot(matrixStack, (int) x, (int) (y - height), (int) width, (int) height, mode.getColor());
 		} else {
-			GuiDrawUtilities.drawSlot((int) x, (int) (y - height), (int) width, (int) height);
+			GuiDrawUtilities.drawSlot(matrixStack, (int) x, (int) (y - height), (int) width, (int) height);
 		}
+
+		// Calculate the origin.
+		Vector2D origin = GuiDrawUtilities.translatePositionByMatrix(matrixStack, x, y);
 
 		if (fluid != null && fluid.getFluid() != null) {
 			Color fluidColor = GuiDrawUtilities.getFluidColor(fluid);
@@ -65,12 +73,13 @@ public class GuiFluidBarUtilities {
 					Tessellator tessellator = Tessellator.getInstance();
 					BufferBuilder tes = tessellator.getBuffer();
 					tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
-					tes.pos(x + width, y - yMin, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha()).tex(icon.getMaxU(), icon.getMinV()).endVertex();
-					tes.pos(x + width, y - yMax, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha())
+					tes.pos(origin.getX() + width, origin.getY() - yMin, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha()).tex(icon.getMaxU(), icon.getMinV())
+							.endVertex();
+					tes.pos(origin.getX() + width, origin.getY() - yMax, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha())
 							.tex(icon.getMaxU(), icon.getMinV() + (fillRatio * diffV)).endVertex();
-					tes.pos(x, y - yMax, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha())
+					tes.pos(origin.getX(), origin.getY() - yMax, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha())
 							.tex(icon.getMinU(), icon.getMinV() + (fillRatio * diffV)).endVertex();
-					tes.pos(x, y - yMin, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha()).tex(icon.getMinU(), icon.getMinV()).endVertex();
+					tes.pos(origin.getX(), origin.getY() - yMin, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha()).tex(icon.getMinU(), icon.getMinV()).endVertex();
 					tessellator.draw();
 				}
 			}
@@ -79,10 +88,10 @@ public class GuiFluidBarUtilities {
 			Color linesColor = new Color(0.2f, 0.2f, 0.2f, 0.5f);
 			for (int i = 0; i < height / 10; i++) {
 				if (y - height + 2 + (i * 10) < y) {
-					GuiDrawUtilities.drawColoredRectangle(x, y - height + 2 + (i * 10), width - 3, 0.5f, zLevel, linesColor);
+					GuiDrawUtilities.drawColoredRectangle(origin.getX(), origin.getY() - height + 2 + (i * 10), width - 3, 0.5f, zLevel, linesColor);
 				}
 				if (y - height + 7 + (i * 10) < y) {
-					GuiDrawUtilities.drawColoredRectangle(x, y - height + 7 + (i * 10), width - 7, 0.5f, zLevel, linesColor);
+					GuiDrawUtilities.drawColoredRectangle(origin.getX(), origin.getY() - height + 7 + (i * 10), width - 7, 0.5f, zLevel, linesColor);
 				}
 			}
 		}

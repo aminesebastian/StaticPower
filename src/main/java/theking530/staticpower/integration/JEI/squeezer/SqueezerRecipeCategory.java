@@ -83,18 +83,18 @@ public class SqueezerRecipeCategory extends BaseJEIRecipeCategory<SqueezerRecipe
 	@Override
 	public void draw(SqueezerRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
 		Vector2D origin = getGuiOrigin(matrixStack);
-		GuiDrawUtilities.drawSlot(origin.getX() + 50, origin.getY() + 13, 16, 16);
-		GuiDrawUtilities.drawSlot(origin.getX() + 75, origin.getY() + 32, 20, 20);
+		GuiDrawUtilities.drawSlot(matrixStack, 50, 12, 16, 16);
+		GuiDrawUtilities.drawSlot(matrixStack, 75, 32, 20, 20);
 
 		// This doesn't actually draw the fluid, just the bars.
-		GuiFluidBarUtilities.drawFluidBar(recipe.getOutputFluid(), 0, 0, origin.getX() + 106, origin.getY() + 56, 1.0f, 16, 52, MachineSideMode.Never, true);
-		GuiPowerBarUtilities.drawPowerBar(origin.getX() + 8, origin.getY() + 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
+		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getOutputFluid(), 0, 0, origin.getX() + 106, origin.getY() + 56, 1.0f, 16, 52, MachineSideMode.Never, true);
+		GuiPowerBarUtilities.drawPowerBar(matrixStack, origin.getX() + 8, origin.getY() + 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		// Draw the progress bar as a fluid.
-		GuiDrawUtilities.drawSlot(origin.getX() + 72, origin.getY() + 18, 28, 5);
+		GuiDrawUtilities.drawSlot(matrixStack, origin.getX() + 72, origin.getY() + 18, 28, 5);
 		float progress = ((float) processingTimer.getValue() / processingTimer.getMaxValue()) * 28;
 		FluidStack fluid = recipe.getOutputFluid();
-		GuiFluidBarUtilities.drawFluidBar(fluid, 1000, 1000, origin.getX() + 72, origin.getY() + 23, 1, progress, 5, false);
+		GuiFluidBarUtilities.drawFluidBar(matrixStack, fluid, 1000, 1000, origin.getX() + 72, origin.getY() + 23, 1, progress, 5, false);
 	}
 
 	@Override

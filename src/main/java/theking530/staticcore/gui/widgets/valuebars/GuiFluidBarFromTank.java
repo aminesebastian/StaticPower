@@ -36,7 +36,6 @@ public class GuiFluidBarFromTank extends AbstractGuiWidget {
 	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 		tank.updateBeforeRendering(partialTicks);
 
-		Vector2D ownerRelativePosition = getScreenSpacePosition();
 		if (owningTileEntity != null) {
 			if (!owningTileEntity.hasComponentOfType(SideConfigurationComponent.class)) {
 				return;
@@ -45,16 +44,16 @@ public class GuiFluidBarFromTank extends AbstractGuiWidget {
 
 			if (sideComp != null && mode != null) {
 				if (sideComp.getCountOfSidesWithMode(mode) > 0) {
-					GuiFluidBarUtilities.drawFluidBar(tank.getFluid(), tank.getCapacity(), (int) (tank.getVisualFillLevel() * tank.getCapacity()), ownerRelativePosition.getX(),
-							ownerRelativePosition.getY() + getSize().getY(), 0.0f, getSize().getX(), getSize().getY(), mode, true);
+					GuiFluidBarUtilities.drawFluidBar(matrix, tank.getFluid(), tank.getCapacity(), (int) (tank.getVisualFillLevel() * tank.getCapacity()), getPosition().getX(), getPosition().getY() + getSize().getY(),
+							0.0f, getSize().getX(), getSize().getY(), mode, true);
 				} else {
-					GuiFluidBarUtilities.drawFluidBar(tank.getFluid(), tank.getCapacity(), (int) (tank.getVisualFillLevel() * tank.getCapacity()), ownerRelativePosition.getX(),
-							ownerRelativePosition.getY() + getSize().getY(), 0.0f, getSize().getX(), getSize().getY(), true);
+					GuiFluidBarUtilities.drawFluidBar(matrix, tank.getFluid(), tank.getCapacity(), (int) (tank.getVisualFillLevel() * tank.getCapacity()), getPosition().getX(), getPosition().getY() + getSize().getY(),
+							0.0f, getSize().getX(), getSize().getY(), true);
 				}
 			}
 		} else {
-			GuiFluidBarUtilities.drawFluidBar(tank.getFluid(), tank.getCapacity(), (int) (tank.getVisualFillLevel() * tank.getCapacity()), ownerRelativePosition.getX(),
-					ownerRelativePosition.getY() + getSize().getY(), 0.0f, getSize().getX(), getSize().getY(), true);
+			GuiFluidBarUtilities.drawFluidBar(matrix, tank.getFluid(), tank.getCapacity(), (int) (tank.getVisualFillLevel() * tank.getCapacity()), getPosition().getX(), getPosition().getY() + getSize().getY(), 0.0f,
+					getSize().getX(), getSize().getY(), true);
 		}
 	}
 

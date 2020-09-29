@@ -31,8 +31,7 @@ public class TextInputWidget extends AbstractGuiWidget {
 	public TextInputWidget(String initialString, float xPosition, float yPosition, float width, float height) {
 		super(xPosition, yPosition, width, height);
 		fontRenderer = Minecraft.getInstance().fontRenderer;
-		textField = new StaticPowerTextFieldWidget(fontRenderer, (int) xPosition, (int) yPosition, (int) width,
-				(int) height, new StringTextComponent(""));
+		textField = new StaticPowerTextFieldWidget(fontRenderer, (int) xPosition, (int) yPosition, (int) width, (int) height, new StringTextComponent(""));
 		textField.setText(initialString);
 		alignment = TextAlignment.LEFT;
 	}
@@ -84,8 +83,8 @@ public class TextInputWidget extends AbstractGuiWidget {
 
 	@Override
 	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
-		Vector2D position = this.getScreenSpacePosition();
-		GuiDrawUtilities.drawSlot(position.getX(), position.getY(), getSize().getX(), getSize().getY());
+		Vector2D position = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
+		GuiDrawUtilities.drawSlot(null, position.getX(), position.getY(), getSize().getX(), getSize().getY());
 
 		textField.x = (int) (position.getX() + 2);
 		textField.y = (int) (position.getY() + 2);
@@ -154,14 +153,12 @@ public class TextInputWidget extends AbstractGuiWidget {
 
 	private class StaticPowerTextFieldWidget extends TextFieldWidget {
 
-		public StaticPowerTextFieldWidget(FontRenderer fontIn, int xIn, int yIn, int widthIn, int heightIn,
-				ITextComponent msg) {
+		public StaticPowerTextFieldWidget(FontRenderer fontIn, int xIn, int yIn, int widthIn, int heightIn, ITextComponent msg) {
 			super(fontIn, xIn, yIn, widthIn, heightIn, msg);
 			setEnableBackgroundDrawing(false);
 		}
 
-		public void renderButton(MatrixStack stack, int p_renderButton_1_, int p_renderButton_2_,
-				float p_renderButton_3_) {
+		public void renderButton(MatrixStack stack, int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_) {
 			super.renderButton(stack, p_renderButton_1_, p_renderButton_2_, p_renderButton_3_);
 		}
 	}

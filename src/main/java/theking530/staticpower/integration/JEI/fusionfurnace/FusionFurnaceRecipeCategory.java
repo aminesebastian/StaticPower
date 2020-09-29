@@ -87,15 +87,15 @@ public class FusionFurnaceRecipeCategory extends BaseJEIRecipeCategory<FusionFur
 
 	@Override
 	public void draw(FusionFurnaceRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(36, 25, 16, 16);
-		GuiDrawUtilities.drawSlot(58, 13, 16, 16);
-		GuiDrawUtilities.drawSlot(80, 2, 16, 16);
-		GuiDrawUtilities.drawSlot(102, 13, 16, 16);
-		GuiDrawUtilities.drawSlot(124, 25, 16, 16);
-		GuiDrawUtilities.drawSlot(78, 38, 20, 20);
+		GuiDrawUtilities.drawSlot(matrixStack, 36, 25, 16, 16);
+		GuiDrawUtilities.drawSlot(matrixStack, 58, 13, 16, 16);
+		GuiDrawUtilities.drawSlot(matrixStack, 80, 2, 16, 16);
+		GuiDrawUtilities.drawSlot(matrixStack, 102, 13, 16, 16);
+		GuiDrawUtilities.drawSlot(matrixStack, 124, 25, 16, 16);
+		GuiDrawUtilities.drawSlot(matrixStack, 78, 38, 20, 20);
 
 		// This doesn't actually draw the fluid, just the bars.
-		GuiPowerBarUtilities.drawPowerBar(8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
+		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		pBar.setCurrentProgress(processingTimer.getValue());
 		pBar.setMaxProgress(processingTimer.getMaxValue());

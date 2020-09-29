@@ -94,15 +94,15 @@ public class GuiItemFilter extends StaticPowerItemStackGui<ContainerItemFilter, 
 		}
 
 		// Send a packet to the server with the updated values.
-		NetworkMessage msg = new PacketItemFilter(getItemFilter().isWhiteListMode(getItemStack()), getItemFilter().filterForNBT(getItemStack()),
-				getItemFilter().filterForTag(getItemStack()), getItemFilter().filterForMod(getItemStack()));
+		NetworkMessage msg = new PacketItemFilter(getItemFilter().isWhiteListMode(getItemStack()), getItemFilter().filterForNBT(getItemStack()), getItemFilter().filterForTag(getItemStack()),
+				getItemFilter().filterForMod(getItemStack()));
 		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
 	}
 
 	@Override
 	protected void drawBackgroundExtras(MatrixStack stack, float f, int i, int j) {
 		drawGenericBackground();
-		drawContainerSlots(container.inventorySlots);
+		drawContainerSlots(stack, container.inventorySlots);
 	}
 
 	protected ItemFilter getItemFilter() {

@@ -29,6 +29,7 @@ public class WidgetContainer {
 	protected final HashSet<AbstractGuiWidget> widgets;
 	@Nullable
 	protected final StaticPowerContainerGui<?> owner;
+	protected Vector2D ownerPosition;
 
 	public WidgetContainer(StaticPowerContainerGui<?> owner) {
 		widgets = new HashSet<AbstractGuiWidget>();
@@ -47,55 +48,90 @@ public class WidgetContainer {
 		}
 	}
 
-	public void update(Vector2D ownerPosition, Vector2D ownerSize, float partialTicks, int mouseX,
-			int mouseY) {
+	public void update(MatrixStack matrixStack, Vector2D ownerPosition, Vector2D ownerSize, float partialTicks, int mouseX, int mouseY) {
+		// Update the owner position.
+		this.ownerPosition = ownerPosition;
+
+		// Translate so we draw relative to the owner now.
+		matrixStack.push();
+		matrixStack.translate(ownerPosition.getX(), ownerPosition.getY(), 0);
+
 		// Render the foreground of all the widgets.
 		for (AbstractGuiWidget widget : widgets) {
 			if (widget.isVisible()) {
-				widget.updateBeforeRender(ownerPosition, ownerSize, partialTicks, mouseX, mouseY);
+				widget.updateBeforeRender(matrixStack, ownerSize, partialTicks, mouseX, mouseY);
 			}
 		}
+
+		// Pop the matrix when we're done.
+		matrixStack.pop();
 	}
 
 	public void renderBackground(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+		// Translate so we draw relative to the owner now.
+		matrixStack.push();
+		matrixStack.translate(ownerPosition.getX(), ownerPosition.getY(), 0);
+
 		// Render the foreground of all the widgets.
 		for (AbstractGuiWidget widget : widgets) {
 			if (widget.isVisible()) {
 				widget.renderBackground(matrixStack, mouseX, mouseY, partialTicks);
 			}
 		}
+
+		// Pop the matrix when we're done.
+		matrixStack.pop();
 	}
 
 	public void renderBehindItems(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+		// Translate so we draw relative to the owner now.
+		matrixStack.push();
+		matrixStack.translate(ownerPosition.getX(), ownerPosition.getY(), 0);
+
 		// Render the foreground of all the widgets.
 		for (AbstractGuiWidget widget : widgets) {
 			if (widget.isVisible()) {
 				widget.renderBehindItems(matrixStack, mouseX, mouseY, partialTicks);
 			}
 		}
+
+		// Pop the matrix when we're done.
+		matrixStack.pop();
 	}
 
 	public void renderForegound(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+		// Translate so we draw relative to the owner now.
+		matrixStack.push();
+		matrixStack.translate(ownerPosition.getX(), ownerPosition.getY(), 0);
+
 		// Render the foreground of all the widgets.
 		for (AbstractGuiWidget widget : widgets) {
 			if (widget.isVisible()) {
 				widget.renderForeground(matrixStack, mouseX, mouseY, partialTicks);
 			}
 		}
+
+		// Pop the matrix when we're done.
+		matrixStack.pop();
 	}
 
 	public void renderTooltips(MatrixStack matrixStack, int mouseX, int mouseY) {
+		// Translate so we draw relative to the owner now.
+		matrixStack.push();
+		matrixStack.translate(ownerPosition.getX(), ownerPosition.getY(), 0);
+
 		// Capture all the tooltips for all the widgets. Skip any invisible widgets or
 		// widgets that are not hovered.
 		Vector2D mousePosition = new Vector2D(mouseX, mouseY);
 		List<ITextComponent> tooltips = new ArrayList<ITextComponent>();
 		for (AbstractGuiWidget widget : widgets) {
-			if (widget.isVisible() && !widget.getTooltipsDisabled() && (!widget.getShouldAutoCalculateTooltipBounds()
-					|| (widget.getShouldAutoCalculateTooltipBounds() && widget.isPointInsideBounds(mousePosition)))) {
+			if (widget.isVisible() && !widget.getTooltipsDisabled() && (!widget.getShouldAutoCalculateTooltipBounds() || (widget.getShouldAutoCalculateTooltipBounds() && widget.isPointInsideBounds(mousePosition)))) {
 				widget.getTooltips(mousePosition, tooltips, false);
 			}
 		}
-
+		// Pop the matrix when we're done.
+		matrixStack.pop();
+		
 		// If there are any tooltips to render, render them.
 		if (tooltips.size() > 0) {
 			// Format them and then draw them.
