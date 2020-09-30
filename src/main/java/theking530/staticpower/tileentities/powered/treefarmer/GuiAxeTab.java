@@ -5,6 +5,7 @@ import net.minecraft.item.Items;
 import theking530.staticcore.gui.drawables.ItemDrawable;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab;
 import theking530.staticcore.gui.widgets.tabs.PacketGuiTabAddSlots;
+import theking530.staticcore.utilities.Color;
 import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.container.StaticPowerContainer;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
@@ -16,9 +17,10 @@ public class GuiAxeTab extends BaseGuiTab {
 	private int slotIndex;
 
 	public GuiAxeTab(StaticPowerContainer container, TileEntityTreeFarm treeFarmer) {
-		super("Lumber Axe", 0, 0, GuiTextures.ORANGE_TAB, Items.IRON_AXE);
+		super("Lumber Axe", Color.EIGHT_BIT_WHITE, 0, 0, GuiTextures.ORANGE_TAB, Items.IRON_AXE);
 		this.container = container;
 		this.treeFarmer = treeFarmer;
+		this.drawTitle = false;
 	}
 
 	@Override

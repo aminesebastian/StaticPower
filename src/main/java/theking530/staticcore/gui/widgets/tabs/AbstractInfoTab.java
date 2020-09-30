@@ -10,7 +10,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
@@ -26,12 +25,10 @@ public abstract class AbstractInfoTab extends BaseGuiTab {
 	public static final float HEIGHT_PADDING = 9.0f;
 
 	private List<ITextComponent> info;
-	private int titleColor;
 
-	public AbstractInfoTab(String title, int width, ResourceLocation tabBackground, IDrawable icon, Color titleColor) {
-		super(title, width, 0, tabBackground, icon);
+	public AbstractInfoTab(String title, Color titleColor, int width, ResourceLocation tabBackground, IDrawable icon) {
+		super(title, titleColor, width, 0, tabBackground, icon);
 		info = new ArrayList<ITextComponent>();
-		this.titleColor = titleColor.encodeInInteger();
 	}
 
 	public int addLine(ITextComponent value) {
@@ -69,11 +66,11 @@ public abstract class AbstractInfoTab extends BaseGuiTab {
 
 	@Override
 	public void renderBackground(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+		super.renderBackground(matrix, mouseX, mouseY, partialTicks);
 		if (isOpen()) {
 			if (info != null) {
 				drawDarkBackground(matrix, 10, 22, tabWidth + 5, tabHeight - 7);
 				drawTextBG(matrix);
-				drawTitle(matrix);
 				drawInfo(matrix, false);
 			}
 		}
@@ -84,11 +81,6 @@ public abstract class AbstractInfoTab extends BaseGuiTab {
 		this.tabHeight = (int) (drawInfo(null, true) + HEIGHT_PADDING);
 	}
 
-	protected void drawTitle(MatrixStack stack) {
-		// Draw title.
-		fontRenderer.drawStringWithShadow(stack, getTitle(), (getTabSide() == TabSide.LEFT ? 11 : 24), 8, titleColor);
-	}
-
 	protected float drawInfo(@Nullable MatrixStack stack, boolean simulate) {
 		// Scale offsets.
 		float lineHeight = 0.0f;
@@ -97,9 +89,9 @@ public abstract class AbstractInfoTab extends BaseGuiTab {
 		// Iterate through all the info lines.
 		for (int i = 0; i < info.size(); i++) {
 			// Format the text.
-			ITextProperties formattedText = info.get(i);
+			ITextComponent formattedText = info.get(i);
 
-			if (formattedText.equals("\n")) {
+			if (formattedText.getString().equals("\n")) {
 				lineHeight += LINE_BREAK_HEIGHT;
 				height += LINE_BREAK_HEIGHT;
 				continue;

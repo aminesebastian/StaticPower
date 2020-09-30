@@ -9,6 +9,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab;
 import theking530.staticcore.gui.widgets.tabs.PacketGuiTabAddSlots;
+import theking530.staticcore.utilities.Color;
 import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.container.StaticPowerContainer;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
@@ -25,11 +26,12 @@ public class GuiUpgradeTab extends BaseGuiTab {
 	private final StaticPowerContainer container;
 
 	public GuiUpgradeTab(StaticPowerContainer container, InventoryComponent upgradesInventory) {
-		super("Upgrades", 0, 57, GuiTextures.YELLOW_TAB, ModUpgrades.BasicSpeedUpgrade);
+		super("Upgrades", Color.EIGHT_BIT_WHITE, 0, 57, GuiTextures.YELLOW_TAB, ModUpgrades.BasicSpeedUpgrade);
 		this.container = container;
 		this.slots = new ArrayList<StaticPowerContainerSlot>();
 		this.upgradesInventory = upgradesInventory;
-		showNotificationBadge = !InventoryUtilities.isInventoryEmpty(upgradesInventory);
+		this.showNotificationBadge = !InventoryUtilities.isInventoryEmpty(upgradesInventory);
+		this.drawTitle = false;
 	}
 
 	@Override
@@ -67,8 +69,9 @@ public class GuiUpgradeTab extends BaseGuiTab {
 
 	@Override
 	protected void onTabOpened() {
-		for (StaticPowerContainerSlot slot : slots) {
-			slot.setEnabledState(true);
+		for (int i = 0; i < slots.size(); i++) {
+			slots.get(i).yPos = this.yPosition + 24 + (i * 18);
+			slots.get(i).setEnabledState(true);
 		}
 		showNotificationBadge = !InventoryUtilities.isInventoryEmpty(upgradesInventory);
 	}

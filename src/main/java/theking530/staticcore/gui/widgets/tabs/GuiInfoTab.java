@@ -19,6 +19,6 @@ public class GuiInfoTab extends AbstractInfoTab {
 	}
 
 	public GuiInfoTab(String title, int width) {
-		super(title, width, GuiTextures.GREEN_TAB, new ItemDrawable(Items.PAPER), new Color(0, 242, 255));
+		super(title, new Color(0, 242, 255), width, GuiTextures.GREEN_TAB, new ItemDrawable(Items.PAPER));
 	}
 }

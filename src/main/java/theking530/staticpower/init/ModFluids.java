@@ -18,6 +18,7 @@ public class ModFluids {
 	public static StaticPowerFluidBundle Steam;
 	public static StaticPowerFluidBundle TreeOil;
 	public static StaticPowerFluidBundle TreeSap;
+	public static StaticPowerFluidBundle InfernalTreeSap;
 	public static StaticPowerFluidBundle SeedOil;
 
 	public static StaticPowerFluidBundle Milk;
@@ -65,6 +66,7 @@ public class ModFluids {
 		registerFluidBundle(SeedOil = new StaticPowerFluidBuilder("oil_seed").addAutoBucket().build());
 		registerFluidBundle(TreeOil = new StaticPowerFluidBuilder("oil_tree").addAutoBucket().build());
 		registerFluidBundle(TreeSap = new StaticPowerFluidBuilder("tree_sap").addAutoBucket().build());
+		registerFluidBundle(InfernalTreeSap = new StaticPowerFluidBuilder("infernal_tree_sap").addAutoBucket().build());
 
 		registerFluidBundle(Milk = new StaticPowerFluidBuilder("milk").addBucketSupplier(() -> Items.MILK_BUCKET)
 				.setShouldRegisterBucket(false).build());

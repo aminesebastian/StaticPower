@@ -16,6 +16,7 @@ import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab;
 import theking530.staticcore.gui.widgets.tabs.PacketGuiTabAddSlots;
+import theking530.staticcore.utilities.Color;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.container.StaticPowerContainer;
@@ -45,12 +46,13 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 	}
 
 	public GuiFluidContainerTab(StaticPowerContainer container, FluidContainerInventoryComponent fluidContainerComponent, Item emptyBucketPreview, Item filledBucketPreview) {
-		super("Fluid Containers", 0, 57, GuiTextures.MAGENTA_TAB, Items.BUCKET);
+		super("Fluid Containers", Color.EIGHT_BIT_WHITE, 0, 57, GuiTextures.MAGENTA_TAB, Items.BUCKET);
 		this.container = container;
 		this.fluidConatinerInventoryIndecies = new ArrayList<Integer>();
 		this.fluidContainerComponent = fluidContainerComponent;
 		this.emptyBucketPreview = emptyBucketPreview;
 		this.filledBucketPreview = filledBucketPreview;
+		this.drawTitle = false;
 
 		// Initialize the button.
 		if (fluidContainerComponent.getFluidInteractionMode() == FluidContainerInteractionMode.DRAIN) {
@@ -100,6 +102,8 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 	protected void onTabOpened() {
 		for (int index : fluidConatinerInventoryIndecies) {
 			StaticPowerContainerSlot slot = (StaticPowerContainerSlot) container.inventorySlots.get(index);
+			topSlot.yPos = this.yPosition + 24;
+			bottomSlot.yPos = this.yPosition + 60;
 			slot.setEnabledState(true);
 		}
 	}

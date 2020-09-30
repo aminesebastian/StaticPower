@@ -16,7 +16,7 @@ public class GuiMachineHeatTab extends AbstractInfoTab {
 	protected HeatStorageComponent heatStorage;
 
 	public GuiMachineHeatTab(HeatStorageComponent storage) {
-		super("Heat I/O", 75, GuiTextures.ORANGE_TAB, new ItemDrawable(Items.CAMPFIRE), new Color(100, 255, 255));
+		super("Heat I/O", new Color(100, 255, 255), 75, GuiTextures.ORANGE_TAB, new ItemDrawable(Items.CAMPFIRE));
 		heatStorage = storage;
 	}
 

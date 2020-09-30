@@ -24,6 +24,7 @@ import theking530.staticcore.gui.drawables.IDrawable;
 import theking530.staticcore.gui.drawables.ItemDrawable;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget.EInputResult;
+import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.StaticVertexBuffer;
 import theking530.staticcore.utilities.Vector2D;
@@ -79,6 +80,7 @@ public abstract class BaseGuiTab {
 	protected int yPosition;
 	protected int guiXOffset;
 	protected int guiYOffset;
+	protected int titleColor;
 	protected RectangleBounds cachedIconBounds;
 	protected RectangleBounds cachedTabBounds;
 	protected final WidgetContainer widgetContainer;
@@ -96,6 +98,7 @@ public abstract class BaseGuiTab {
 	private TabSide tabSide;
 	private boolean initialPositionSet;
 	protected boolean showNotificationBadge;
+	protected boolean drawTitle;
 	protected SpriteDrawable notifictionBadge;
 	protected GuiTabManager owningManager;
 
@@ -107,11 +110,12 @@ public abstract class BaseGuiTab {
 	 * @param texture   The background texture of the tab.
 	 * @param item      The item that should render as the icon for the tab.
 	 */
-	public BaseGuiTab(String title, int tabWidth, int tabHeight, ResourceLocation texture, IDrawable icon) {
+	public BaseGuiTab(String title, Color titleColor, int tabWidth, int tabHeight, ResourceLocation texture, IDrawable icon) {
 		this.tabWidth = tabWidth;
 		this.tabHeight = tabHeight;
 		this.icon = icon;
 		this.title = title;
+		this.titleColor = titleColor.encodeInInteger();
 		cachedIconBounds = new RectangleBounds(0.0f, 0.0f, 0.0f, 0.0f); // Must be initially set to 0.
 		cachedTabBounds = new RectangleBounds(0.0f, 0.0f, 0.0f, 0.0f); // Must be initially set to 0.
 		tabTexture = texture;
@@ -122,6 +126,7 @@ public abstract class BaseGuiTab {
 		initialPositionSet = false;
 		notifictionBadge = new SpriteDrawable(StaticPowerSprites.NOTIFICATION, 9, 9);
 		showNotificationBadge = false;
+		drawTitle = true;
 	}
 
 	/**
@@ -132,8 +137,8 @@ public abstract class BaseGuiTab {
 	 * @param texture   The background texture of the tab.
 	 * @param item      The item that should render as the icon for the tab.
 	 */
-	public BaseGuiTab(String title, int tabWidth, int tabHeight, ResourceLocation texture, Item item) {
-		this(title, tabWidth, tabHeight, texture, new ItemDrawable(item));
+	public BaseGuiTab(String title, Color titleColor, int tabWidth, int tabHeight, ResourceLocation texture, Item item) {
+		this(title, titleColor, tabWidth, tabHeight, texture, new ItemDrawable(item));
 	}
 
 	/**
@@ -144,8 +149,8 @@ public abstract class BaseGuiTab {
 	 * @param texture   The background texture of the tab.
 	 * @param block     The block that should render as the icon for the tab.
 	 */
-	public BaseGuiTab(String title, int tabWidth, int tabHeight, ResourceLocation texture, Block block) {
-		this(title, tabWidth, tabHeight, texture, new ItemDrawable(block));
+	public BaseGuiTab(String title, Color titleColor, int tabWidth, int tabHeight, ResourceLocation texture, Block block) {
+		this(title, titleColor, tabWidth, tabHeight, texture, new ItemDrawable(block));
 	}
 
 	/**
@@ -315,6 +320,7 @@ public abstract class BaseGuiTab {
 	 * @param showAdvanced
 	 */
 	public void getTooltips(Vector2D mousePosition, List<ITextComponent> tooltips, boolean showAdvanced) {
+		widgetContainer.getTooltips(mousePosition, tooltips, showAdvanced);
 	}
 
 	/**
@@ -375,6 +381,11 @@ public abstract class BaseGuiTab {
 	 */
 	protected void renderBackground(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 		widgetContainer.renderBackground(matrix, mouseX, mouseY, partialTicks);
+		if (isOpen()) {
+			if (drawTitle) {
+				drawTitle(matrix);
+			}
+		}
 	}
 
 	protected void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
@@ -391,9 +402,7 @@ public abstract class BaseGuiTab {
 	 * @param yPos         The y position of the mouse.
 	 */
 	protected void renderForeground(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
-		if (isOpen()) {
-			widgetContainer.renderTooltips(matrix, mouseX, mouseY);
-		}
+
 	}
 
 	/**
@@ -461,6 +470,16 @@ public abstract class BaseGuiTab {
 				notifictionBadge.draw(getTabSide() == TabSide.RIGHT ? position.getX() + 17 : position.getX() + tabWidth - 4.0f, position.getY() - 2.0f, tabIndex);
 			}
 		}
+	}
+
+	/**
+	 * Draws the title of the tab.
+	 * 
+	 * @param stack
+	 */
+	protected void drawTitle(MatrixStack stack) {
+		// Draw title.
+		fontRenderer.drawStringWithShadow(stack, getTitle(), (getTabSide() == TabSide.LEFT ? 11 : 24), 8, titleColor);
 	}
 
 	/**

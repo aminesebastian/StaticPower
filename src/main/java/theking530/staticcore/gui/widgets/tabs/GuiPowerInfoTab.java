@@ -15,7 +15,7 @@ public class GuiPowerInfoTab extends AbstractInfoTab {
 	private EnergyStorageComponent energyStorage;
 
 	public GuiPowerInfoTab(EnergyStorageComponent storage) {
-		super("Power I/O", 83, GuiTextures.PURPLE_TAB, new SpriteDrawable(GuiTextures.POWER_TAB_ICON, 16, 16), new Color(242, 0, 255));
+		super("Power I/O", new Color(242, 0, 255), 83, GuiTextures.PURPLE_TAB, new SpriteDrawable(GuiTextures.POWER_TAB_ICON, 16, 16));
 		this.energyStorage = storage;
 	}
 

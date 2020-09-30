@@ -5,7 +5,6 @@ import org.lwjgl.opengl.GL11;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -19,6 +18,7 @@ import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.gui.widgets.button.TextButton;
+import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.network.NetworkMessage;
@@ -34,7 +34,6 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 public class GuiSideConfigTab extends BaseGuiTab {
 
 	public TileEntityBase tileEntity;
-	private FontRenderer fontRenderer;
 
 	private TextButton topButton;
 	private TextButton bottomButton;
@@ -46,9 +45,8 @@ public class GuiSideConfigTab extends BaseGuiTab {
 	private boolean allowFaceInteraction;
 
 	public GuiSideConfigTab(boolean faceInteraction, TileEntityBase te) {
-		super("Side Configuration", 80, 80, GuiTextures.BLUE_TAB, te.getBlockState().getBlock());
+		super("Side Config", Color.EIGHT_BIT_WHITE, 80, 80, GuiTextures.BLUE_TAB, te.getBlockState().getBlock());
 		tileEntity = te;
-		fontRenderer = Minecraft.getInstance().fontRenderer;
 		allowFaceInteraction = faceInteraction;
 
 		int xOffset = 3;
@@ -66,19 +64,8 @@ public class GuiSideConfigTab extends BaseGuiTab {
 
 	@Override
 	public void renderBackground(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
-		drawText(matrix, 10, 8);
 		drawButtonBG(matrix, 0, 0);
 		super.renderBackground(matrix, mouseX, mouseY, partialTicks);
-	}
-
-	public void drawText(MatrixStack stack, int xPos, int yPos) {
-		String tabName = "Side Config";
-		modeText(xPos, yPos);
-		fontRenderer.drawStringWithShadow(stack, tabName, xPos - this.fontRenderer.getStringWidth(tabName) / 2 + 45, yPos, 16777215);
-	}
-
-	public void modeText(int tabLeft, int tabTop) {
-
 	}
 
 	public void drawButtonBG(MatrixStack matrix, int xPos, int yPos) {

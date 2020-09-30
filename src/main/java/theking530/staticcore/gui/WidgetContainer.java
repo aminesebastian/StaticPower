@@ -10,6 +10,7 @@ import javax.annotation.Nullable;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -124,18 +125,23 @@ public class WidgetContainer {
 		// widgets that are not hovered.
 		Vector2D mousePosition = new Vector2D(mouseX, mouseY);
 		List<ITextComponent> tooltips = new ArrayList<ITextComponent>();
-		for (AbstractGuiWidget widget : widgets) {
-			if (widget.isVisible() && !widget.getTooltipsDisabled() && (!widget.getShouldAutoCalculateTooltipBounds() || (widget.getShouldAutoCalculateTooltipBounds() && widget.isPointInsideBounds(mousePosition)))) {
-				widget.getTooltips(mousePosition, tooltips, false);
-			}
-		}
+		getTooltips(mousePosition, tooltips, Screen.hasShiftDown());
+		
 		// Pop the matrix when we're done.
 		matrixStack.pop();
-		
+
 		// If there are any tooltips to render, render them.
 		if (tooltips.size() > 0) {
 			// Format them and then draw them.
 			Minecraft.getInstance().currentScreen.func_243308_b(matrixStack, tooltips, mouseX, mouseY);
+		}
+	}
+
+	public void getTooltips(Vector2D mousePosition, List<ITextComponent> tooltips, boolean showAdvanced) {
+		for (AbstractGuiWidget widget : widgets) {
+			if (widget.isVisible() && !widget.getTooltipsDisabled() && (!widget.getShouldAutoCalculateTooltipBounds() || (widget.getShouldAutoCalculateTooltipBounds() && widget.isPointInsideBounds(mousePosition)))) {
+				widget.getTooltips(mousePosition, tooltips, false);
+			}
 		}
 	}
 

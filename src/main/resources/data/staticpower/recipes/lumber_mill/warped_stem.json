@@ -1,0 +1,20 @@
+{
+	"type": "staticpower:lumber_mill_recipe",
+	"input": {
+		"item": "minecraft:warped_stem"
+	},
+	"outputs": {
+		"primary": {
+			"item": "minecraft:warped_planks",
+			"count": 6
+		},
+		"secondary": {
+			"item": "staticpower:dust_wood",
+			"count": 4
+		},
+		"fluid": {
+			"fluid": "staticpower:infernal_tree_sap",
+			"volume": 10
+		}
+	}
+}
