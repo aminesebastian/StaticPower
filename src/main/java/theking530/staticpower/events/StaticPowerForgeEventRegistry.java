@@ -9,13 +9,13 @@ import net.minecraft.item.Items;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.DrawHighlightEvent;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -36,7 +36,6 @@ import theking530.staticpower.data.crafting.RecipeReloadListener;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.thermalconductivity.ThermalConductivityRecipe;
 import theking530.staticpower.init.ModFluids;
-import theking530.staticpower.items.tools.MiningDrill;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.world.ore.ModOres;
@@ -76,9 +75,12 @@ public class StaticPowerForgeEventRegistry {
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void render(RenderWorldLastEvent event) {
-		StaticPowerClientEventHandler.render(event);
+		StaticPowerClientEventHandler.onWorldRender(event);
 	}
-
+	@SubscribeEvent
+	static void renderBlockHighlights(DrawHighlightEvent.HighlightBlock event) {
+		StaticPowerClientEventHandler.renderBlockHighlights(event);
+	}
 	@SubscribeEvent
 	public static void onLootLoad(LootTableLoadEvent event) {
 		StaticPowerDataRegistry.onLootTableLoaded(event);
@@ -115,19 +117,6 @@ public class StaticPowerForgeEventRegistry {
 	@SubscribeEvent
 	public static void resourcesReloadedEvent(RecipesUpdatedEvent event) {
 		StaticPowerRecipeRegistry.onResourcesReloaded(event.getRecipeManager());
-	}
-
-	@SubscribeEvent
-	public static void onBlockMining(LeftClickBlock event) {
-		ItemStack stack = event.getPlayer().getHeldItemMainhand();
-		if (!stack.isEmpty() && stack.getItem() instanceof MiningDrill) {
-			MiningDrill drill = (MiningDrill) stack.getItem();
-			drill.handleMiningProgress(event.getPlayer(), event.getPlayer().getHeldItemMainhand(), event.getWorld(), event.getWorld().getBlockState(event.getPos()), event.getPos(), event.getFace());
-		}
-	}
-	@SubscribeEvent
-	public static void onBlockMined(LeftClickBlock event) {
-		
 	}
 
 	@SubscribeEvent
