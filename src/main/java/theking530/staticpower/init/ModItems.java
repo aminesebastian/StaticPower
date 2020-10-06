@@ -31,13 +31,13 @@ import theking530.staticpower.items.fluidcapsule.FluidCapsule;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.items.tools.CableNetworkAnalyzer;
 import theking530.staticpower.items.tools.CoverSaw;
-import theking530.staticpower.items.tools.DrillBit;
 import theking530.staticpower.items.tools.ElectricSolderingIron;
 import theking530.staticpower.items.tools.MetalHammer;
-import theking530.staticpower.items.tools.MiningDrill;
 import theking530.staticpower.items.tools.SolderingIron;
 import theking530.staticpower.items.tools.StaticWrench;
 import theking530.staticpower.items.tools.WireCutters;
+import theking530.staticpower.items.tools.miningdrill.DrillBit;
+import theking530.staticpower.items.tools.miningdrill.MiningDrill;
 
 public class ModItems {
 	public static StaticPowerItem DistilleryGrain;
@@ -255,7 +255,11 @@ public class ModItems {
 	public static MetalHammer MetalHammer;
 	public static WireCutters WireCutters;
 	public static SolderingIron SolderingIron;
-	public static MiningDrill MiningDrill;
+	public static MiningDrill BasicMiningDrill;
+	public static MiningDrill AdvancedMiningDrill;
+	public static MiningDrill StaticMiningDrill;
+	public static MiningDrill EnergizedMiningDrill;
+	public static MiningDrill LumumMiningDrill;
 	public static ElectricSolderingIron ElectringSolderingIron;
 
 	public static StaticWrench Wrench;
@@ -385,8 +389,12 @@ public class ModItems {
 		// Tools
 		StaticPowerRegistry.preRegisterItem(MetalHammer = new MetalHammer("metal_hammer", 100));
 		StaticPowerRegistry.preRegisterItem(WireCutters = new WireCutters("wire_cutters", 100));
-		StaticPowerRegistry.preRegisterItem(MiningDrill = new MiningDrill("mining_drill", 10.0f, 10.0f));
-
+		StaticPowerRegistry.preRegisterItem(BasicMiningDrill = new MiningDrill("mining_drill_basic", 10.0f, 10.0f));
+		StaticPowerRegistry.preRegisterItem(AdvancedMiningDrill = new MiningDrill("mining_drill_advanced", 10.0f, 10.0f));
+		StaticPowerRegistry.preRegisterItem(StaticMiningDrill = new MiningDrill("mining_drill_static", 10.0f, 10.0f));
+		StaticPowerRegistry.preRegisterItem(EnergizedMiningDrill = new MiningDrill("mining_drill_energized", 10.0f, 10.0f));
+		StaticPowerRegistry.preRegisterItem(LumumMiningDrill = new MiningDrill("mining_drill_lumum", 10.0f, 10.0f));
+		
 		StaticPowerRegistry.preRegisterItem(SolderingIron = new SolderingIron("soldering_iron", 100));
 		StaticPowerRegistry.preRegisterItem(ElectringSolderingIron = new ElectricSolderingIron("soldering_iron_electric", 1000));
 

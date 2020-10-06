@@ -44,7 +44,7 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 	protected final Multimap<Attribute, AttributeModifier> toolAttributes;
 
 	public AbstractMultiHarvestTool(String name, float attackDamageIn, float attackSpeedIn) {
-		super(name, new Item.Properties().addToolType(ToolType.PICKAXE, ItemTier.DIAMOND.getHarvestLevel()).addToolType(ToolType.SHOVEL, ItemTier.DIAMOND.getHarvestLevel()));
+		super(name, new Item.Properties().defaultMaxDamage(1000).addToolType(ToolType.PICKAXE, ItemTier.DIAMOND.getHarvestLevel()).addToolType(ToolType.SHOVEL, ItemTier.DIAMOND.getHarvestLevel()));
 		this.effectiveOn = getEffectiveBlocks();
 		this.efficiency = 5.0f;
 		this.attackDamage = attackDamageIn + 2.0f;

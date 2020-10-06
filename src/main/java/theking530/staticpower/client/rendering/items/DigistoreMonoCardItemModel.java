@@ -53,8 +53,7 @@ public class DigistoreMonoCardItemModel implements IBakedModel {
 	public ItemOverrideList getOverrides() {
 		return new ItemOverrideList() {
 			@Override
-			public IBakedModel getOverrideModel(IBakedModel originalModel, ItemStack stack, @Nullable ClientWorld world,
-					@Nullable LivingEntity livingEntity) {
+			public IBakedModel getOverrideModel(IBakedModel originalModel, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity livingEntity) {
 				if (!(stack.getItem() instanceof DigistoreMonoCard)) {
 					return originalModel;
 				}
@@ -107,13 +106,11 @@ public class DigistoreMonoCardItemModel implements IBakedModel {
 
 	private class DigistoreMonoCardModel extends AbstractBakedModel {
 		private final float filledRatio;
-		private final IBakedModel baseModel;
 		private List<BakedQuad> quads = null;
 
 		protected DigistoreMonoCardModel(IBakedModel baseModel, float filledRatio) {
 			super(baseModel);
 			this.filledRatio = filledRatio;
-			this.baseModel = baseModel;
 		}
 
 		@Override
@@ -122,18 +119,16 @@ public class DigistoreMonoCardItemModel implements IBakedModel {
 		}
 
 		@Override
-		protected List<BakedQuad> getBakedQuadsFromIModelData(BlockState state, Direction side, Random rand,
-				IModelData data) {
+		protected List<BakedQuad> getBakedQuadsFromIModelData(BlockState state, Direction side, Random rand, IModelData data) {
 			if (side != null) {
 				return Collections.emptyList();
 			}
 
 			if (quads == null) {
 				quads = new ArrayList<BakedQuad>();
-				quads.addAll(baseModel.getQuads(state, side, rand, data));
+				quads.addAll(BaseModel.getQuads(state, side, rand, data));
 
-				AtlasTexture blocksTexture = ModelLoader.instance().getSpriteMap()
-						.getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+				AtlasTexture blocksTexture = ModelLoader.instance().getSpriteMap().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 				TextureAtlasSprite sideSprite;
 
 				if (filledRatio < 1.0f) {
@@ -145,10 +140,8 @@ public class DigistoreMonoCardItemModel implements IBakedModel {
 				BlockFaceUV blockFaceUV = new BlockFaceUV(new float[] { 0.0f, 0.0f, 16.0f, 16.0f }, 0);
 				BlockPartFace blockPartFace = new BlockPartFace(null, -1, sideSprite.getName().toString(), blockFaceUV);
 
-				BakedQuad newQuad = FaceBaker.bakeQuad(new Vector3f(3.5f, 4.0f, 0.0f),
-						new Vector3f(3.5f + (filledRatio * 9.0f), 5.4f, 16.0f), blockPartFace, sideSprite,
-						Direction.SOUTH, SimpleModelTransform.IDENTITY, null, false,
-						new ResourceLocation("dummy_name"));
+				BakedQuad newQuad = FaceBaker.bakeQuad(new Vector3f(3.5f, 4.0f, 0.0f), new Vector3f(3.5f + (filledRatio * 9.0f), 5.4f, 16.0f), blockPartFace, sideSprite, Direction.SOUTH, SimpleModelTransform.IDENTITY,
+						null, false, new ResourceLocation("dummy_name"));
 				quads.add(newQuad);
 			}
 			return quads;
@@ -167,7 +160,7 @@ public class DigistoreMonoCardItemModel implements IBakedModel {
 
 		@Override
 		public boolean isSideLit() {
-			return baseModel.isSideLit();
+			return BaseModel.isSideLit();
 		}
 
 		@Override

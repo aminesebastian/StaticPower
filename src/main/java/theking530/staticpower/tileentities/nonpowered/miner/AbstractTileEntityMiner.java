@@ -16,7 +16,7 @@ import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.init.ModTags;
-import theking530.staticpower.items.tools.DrillBit;
+import theking530.staticpower.items.tools.miningdrill.DrillBit;
 import theking530.staticpower.tileentities.TileEntityConfigurable;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;

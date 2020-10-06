@@ -1,13 +1,37 @@
-package theking530.staticpower.items.tools;
+package theking530.staticpower.items.tools.miningdrill;
 
 import java.util.Set;
+
+import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableSet;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import theking530.staticcore.network.NetworkGUI;
+import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
+import theking530.staticpower.client.rendering.items.MiningDrillItemModel;
+import theking530.staticpower.items.ItemStackInventoryCapabilityProvider;
+import theking530.staticpower.items.tools.AbstractMultiHarvestTool;
 
-public class MiningDrill extends AbstractMultiHarvestTool {
+public class MiningDrill extends AbstractMultiHarvestTool implements ICustomModelSupplier {
 	private static final Set<Block> EFFECTIVE_ON = ImmutableSet.of(Blocks.ACTIVATOR_RAIL, Blocks.COAL_ORE, Blocks.COBBLESTONE, Blocks.DETECTOR_RAIL, Blocks.DIAMOND_BLOCK, Blocks.DIAMOND_ORE, Blocks.POWERED_RAIL,
 			Blocks.GOLD_BLOCK, Blocks.GOLD_ORE, Blocks.NETHER_GOLD_ORE, Blocks.ICE, Blocks.IRON_BLOCK, Blocks.IRON_ORE, Blocks.LAPIS_BLOCK, Blocks.LAPIS_ORE, Blocks.MOSSY_COBBLESTONE, Blocks.NETHERRACK,
 			Blocks.PACKED_ICE, Blocks.BLUE_ICE, Blocks.RAIL, Blocks.REDSTONE_ORE, Blocks.SANDSTONE, Blocks.CHISELED_SANDSTONE, Blocks.CUT_SANDSTONE, Blocks.CHISELED_RED_SANDSTONE, Blocks.CUT_RED_SANDSTONE,
@@ -28,6 +52,30 @@ public class MiningDrill extends AbstractMultiHarvestTool {
 		super(name, attackDamageIn, attackSpeedIn);
 	}
 
+	/**
+	 * When right clicked, open the drill UI.
+	 */
+	@Override
+	protected ActionResult<ItemStack> onStaticPowerItemRightClicked(World world, PlayerEntity player, Hand hand, ItemStack item) {
+		if (!world.isRemote && player.isSneaking()) {
+			NetworkGUI.openGui((ServerPlayerEntity) player, new MiningDrillContainerProvider(item), buff -> {
+				buff.writeInt(player.inventory.getSlotFor(item));
+			});
+			return ActionResult.resultSuccess(item);
+		}
+		return ActionResult.resultPass(item);
+	}
+
+	/**
+	 * Add the inventory capability.
+	 */
+	@Nullable
+	@Override
+	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
+		// Add the inventory.
+		return new ItemStackInventoryCapabilityProvider(stack, 4, nbt);
+	}
+
 	@Override
 	public Set<Block> getEffectiveBlocks() {
 		return EFFECTIVE_ON;
@@ -41,5 +89,34 @@ public class MiningDrill extends AbstractMultiHarvestTool {
 	@Override
 	public int getHeight() {
 		return 1;
+	}
+
+	@Override
+	public boolean hasModelOverride(BlockState state) {
+		return true;
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
+		return new MiningDrillItemModel(existingModel);
+	}
+
+	public class MiningDrillContainerProvider implements INamedContainerProvider {
+		public ItemStack targetItemStack;
+
+		public MiningDrillContainerProvider(ItemStack stack) {
+			targetItemStack = stack;
+		}
+
+		@Override
+		public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+			return new ContainerMiningDrill(windowId, inventory, targetItemStack);
+		}
+
+		@Override
+		public ITextComponent getDisplayName() {
+			return targetItemStack.getDisplayName();
+		}
 	}
 }

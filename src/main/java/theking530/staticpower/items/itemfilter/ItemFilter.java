@@ -50,9 +50,6 @@ public class ItemFilter extends StaticPowerItem {
 	/**
 	 * Add the inventory capability.
 	 */
-	/**
-	 * Add the inventory capability.
-	 */
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
