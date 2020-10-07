@@ -2,6 +2,7 @@ package theking530.staticpower.items.tools.miningdrill;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.ClickType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
@@ -44,15 +45,29 @@ public class ContainerMiningDrill extends StaticPowerItemContainer<MiningDrill> 
 		});
 
 		// Drill Bit
-		this.addSlot(new StaticPowerContainerSlot(inventory, 0, 80, 18));
+		this.addSlot(new StaticPowerContainerSlot(inventory, 0, 80, 18) {
+			@Override
+			public void onSlotChanged() {
+				super.onSlotChanged();
+
+				// Update the drill.
+				int drillSlot = getPlayerInventory().player.inventory.getSlotFor(getItemStack());
+				if (drillSlot >= 0) {
+					if (!getPlayerInventory().player.world.isRemote) {
+						ServerPlayerEntity serverPlayer = (ServerPlayerEntity) getPlayerInventory().player;
+						serverPlayer.sendSlotContents(ContainerMiningDrill.this, playerHotbarStart + drillSlot, getItemStack());
+					}
+				}
+			}
+		});
 
 		// Upgrades
 		this.addSlot(new UpgradeItemSlot(inventory, 1, 152, 12));
 		this.addSlot(new UpgradeItemSlot(inventory, 2, 152, 32));
 		this.addSlot(new UpgradeItemSlot(inventory, 3, 152, 52));
 
-		addPlayerInventory(getPlayerInventory(), 8, 69 + (inventory.getSlots() > 9 ? 12 : 0));
 		addPlayerHotbar(getPlayerInventory(), 8, 127 + (inventory.getSlots() > 9 ? 12 : 0));
+		addPlayerInventory(getPlayerInventory(), 8, 69 + (inventory.getSlots() > 9 ? 12 : 0));
 	}
 
 	@Override

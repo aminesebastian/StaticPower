@@ -19,6 +19,7 @@ public class DigistoreInventoryCapabilityProvider implements ICapabilityProvider
 		owningItemStack = owner;
 		initialNbt = nbt;
 		inventory = new DigistoreInventory(uniqueItemTypes, maxStoredItems);
+		
 		if (nbt != null) {
 			inventory.deserializeNBT(nbt);
 		}

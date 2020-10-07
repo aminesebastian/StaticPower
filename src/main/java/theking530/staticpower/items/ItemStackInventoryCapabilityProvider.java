@@ -7,11 +7,12 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import theking530.staticpower.items.utilities.ItemInventoryHandler;
 
-public class ItemStackInventoryCapabilityProvider implements ICapabilityProvider {
+public class ItemStackInventoryCapabilityProvider implements ICapabilityProvider, ICapabilitySerializable<CompoundNBT> {
 	protected final ItemStack owningItemStack;
 	protected final int inventorySize;
 	protected final CompoundNBT initialNbt;
@@ -22,7 +23,8 @@ public class ItemStackInventoryCapabilityProvider implements ICapabilityProvider
 		owningItemStack = owner;
 		initialNbt = nbt;
 		inventory = new ItemInventoryHandler("default", owner, inventorySize);
-		if (nbt != null && !nbt.isEmpty()) {
+
+		if (nbt != null) {
 			inventory.deserializeNBT(nbt);
 		}
 	}
@@ -33,5 +35,15 @@ public class ItemStackInventoryCapabilityProvider implements ICapabilityProvider
 			return net.minecraftforge.common.util.LazyOptional.of(() -> inventory).cast();
 		}
 		return LazyOptional.empty();
+	}
+
+	@Override
+	public CompoundNBT serializeNBT() {
+		return inventory.serializeNBT();
+	}
+
+	@Override
+	public void deserializeNBT(CompoundNBT nbt) {
+		inventory.deserializeNBT(nbt);
 	}
 }

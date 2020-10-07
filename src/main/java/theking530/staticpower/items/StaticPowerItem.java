@@ -16,6 +16,7 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -23,6 +24,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 /**
  * Base class for most static power items.
@@ -77,14 +79,17 @@ public class StaticPowerItem extends Item {
 	@Override
 	public ActionResultType onItemUse(ItemUseContext context) {
 		super.onItemUse(context);
-		return onStaticPowerItemUsedOnBlock(context, context.getWorld(), context.getPos(), context.getFace(),
-				context.getPlayer(), context.getItem());
+		return onStaticPowerItemUsedOnBlock(context, context.getWorld(), context.getPos(), context.getFace(), context.getPlayer(), context.getItem());
+	}
+
+	@Override
+	public int getRGBDurabilityForDisplay(ItemStack stack) {
+		return EnergyHandlerItemStackUtilities.getRGBDurabilityForDisplay(stack);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip,
-			ITooltipFlag flagIn) {
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
 		// Get the basic tooltips.
 		List<ITextComponent> basicTooltips = new ArrayList<ITextComponent>();
 		getBasicTooltip(stack, worldIn, basicTooltips);
@@ -119,8 +124,7 @@ public class StaticPowerItem extends Item {
 	 * @param item   The {@link ItemStack}.
 	 * @return The result of the action.
 	 */
-	protected ActionResult<ItemStack> onStaticPowerItemRightClicked(World world, PlayerEntity player, Hand hand,
-			ItemStack item) {
+	protected ActionResult<ItemStack> onStaticPowerItemRightClicked(World world, PlayerEntity player, Hand hand, ItemStack item) {
 		return ActionResult.resultPass(item);
 	}
 
@@ -135,8 +139,7 @@ public class StaticPowerItem extends Item {
 	 * @param item    The item stack that was used.
 	 * @return The result of the action (SUCCESS, PASS, FAIL, CONSUME).
 	 */
-	protected ActionResultType onStaticPowerItemUsedOnBlock(ItemUseContext context, World world, BlockPos pos,
-			Direction face, PlayerEntity player, ItemStack item) {
+	protected ActionResultType onStaticPowerItemUsedOnBlock(ItemUseContext context, World world, BlockPos pos, Direction face, PlayerEntity player, ItemStack item) {
 		return ActionResultType.PASS;
 	}
 

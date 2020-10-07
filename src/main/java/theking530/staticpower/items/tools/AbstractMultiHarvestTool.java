@@ -23,7 +23,6 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemTier;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -32,9 +31,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.ToolType;
 import theking530.staticpower.items.StaticPowerItem;
 
 public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
@@ -43,8 +40,8 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 	protected final float attackDamage;
 	protected final Multimap<Attribute, AttributeModifier> toolAttributes;
 
-	public AbstractMultiHarvestTool(String name, float attackDamageIn, float attackSpeedIn) {
-		super(name, new Item.Properties().defaultMaxDamage(1000).addToolType(ToolType.PICKAXE, ItemTier.DIAMOND.getHarvestLevel()).addToolType(ToolType.SHOVEL, ItemTier.DIAMOND.getHarvestLevel()));
+	public AbstractMultiHarvestTool(Item.Properties properties, String name, float attackDamageIn, float attackSpeedIn) {
+		super(name, properties.maxStackSize(1));
 		this.effectiveOn = getEffectiveBlocks();
 		this.efficiency = 5.0f;
 		this.attackDamage = attackDamageIn + 2.0f;
@@ -57,9 +54,17 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 
 	public abstract Set<Block> getEffectiveBlocks();
 
-	public abstract int getWidth();
+	public abstract int getWidth(ItemStack stack);
 
-	public abstract int getHeight();
+	public abstract int getHeight(ItemStack stack);
+
+	public boolean canMine(ItemStack stack) {
+		return true;
+	}
+
+	protected void onBlocksMined(ItemStack stack, List<BlockPos> blocksMined, PlayerEntity player) {
+
+	}
 
 	public boolean isEffectiveOnBlock(ItemStack stack, BlockState state) {
 		if (getToolTypes(stack).stream().anyMatch(e -> state.isToolEffective(e))) {
@@ -79,8 +84,8 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 
 		// Capture the list of all the blocks to mind.
 		List<BlockPos> minableBlocks = new ArrayList<BlockPos>();
-		for (int x = -getWidth(); x <= getWidth(); x++) {
-			for (int y = -getHeight(); y <= getHeight(); y++) {
+		for (int x = -getWidth(itemstack); x <= getWidth(itemstack); x++) {
+			for (int y = -getHeight(itemstack); y <= getHeight(itemstack); y++) {
 				// Offset in both directions.
 				BlockPos offsetPos = pos.offset(harvestDirections.getHeightDirection(), y);
 				offsetPos = offsetPos.offset(harvestDirections.getWidthDirection(), x);
@@ -97,10 +102,15 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 	}
 
 	public MultiBlockHarvestDirections getHarvestDirections(ItemStack itemstack, BlockPos pos, PlayerEntity player) {
-		return new MultiBlockHarvestDirections(getWidth(), getHeight(), itemstack, pos, player);
+		return new MultiBlockHarvestDirections(getWidth(itemstack), getHeight(itemstack), itemstack, pos, player);
 	}
 
 	protected boolean breakAllMultiHarvestBlocks(ItemStack itemstack, BlockPos pos, PlayerEntity player) {
+		// If we can't mine, do nothing.
+		if (!canMine(itemstack)) {
+			return false;
+		}
+
 		// Quick check to see if we're on the client. If we are, then just perform the
 		// default behaviour.
 		if (!(player instanceof ServerPlayerEntity)) {
@@ -116,6 +126,8 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 				harvestExtraBlock(extraPos, (ServerPlayerEntity) player);
 			}
 
+			// Raise on the harvested method.
+			onBlocksMined(itemstack, minableBlocks, player);
 			return true;
 		} else {
 			return false;
@@ -190,21 +202,6 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 	@Override
 	public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, PlayerEntity player) {
 		return breakAllMultiHarvestBlocks(itemstack, pos, player);
-	}
-
-	/**
-	 * Called when a Block is destroyed using this Item. Return true to trigger the
-	 * "Use Item" statistic.
-	 */
-	@Override
-	public boolean onBlockDestroyed(ItemStack stack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {
-		if (!worldIn.isRemote && state.getBlockHardness(worldIn, pos) != 0.0F) {
-			stack.damageItem(1, entityLiving, (entity) -> {
-				entity.sendBreakAnimation(EquipmentSlotType.MAINHAND);
-			});
-		}
-
-		return true;
 	}
 
 	/**

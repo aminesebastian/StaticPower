@@ -13,17 +13,19 @@ public class ItemInventoryHandler extends ItemStackHandler {
 		super(size);
 		this.container = container;
 		this.name = name;
+
 		if (container.hasTag() && container.getTag().contains(getTag())) {
 			deserializeNBT(container.getTag().getCompound(getTag()));
 		}
 	}
 
-	@Override
-	protected void onContentsChanged(int slot) {
-		if (!container.hasTag()) {
-			container.setTag(new CompoundNBT());
-		}
-		container.getTag().put(getTag(), serializeNBT());
+	public void updateToTag(CompoundNBT nbt) {
+		nbt.put(getTag(), serializeNBT());
+	}
+
+	public void updateFromTag(CompoundNBT nbt) {
+		deserializeNBT(nbt.getCompound(getTag()));
+		System.out.println(nbt);
 	}
 
 	protected String getTag() {

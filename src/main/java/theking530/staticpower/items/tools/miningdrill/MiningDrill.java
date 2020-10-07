@@ -1,5 +1,6 @@
 package theking530.staticpower.items.tools.miningdrill;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Nullable;
@@ -13,23 +14,37 @@ import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTier;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.common.ToolType;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import theking530.staticcore.network.NetworkGUI;
 import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
 import theking530.staticpower.client.rendering.items.MiningDrillItemModel;
-import theking530.staticpower.items.ItemStackInventoryCapabilityProvider;
+import theking530.staticpower.items.EnergyHandlerItemStack;
 import theking530.staticpower.items.tools.AbstractMultiHarvestTool;
+import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
+import theking530.staticpower.items.utilities.ItemInventoryHandler;
 
 public class MiningDrill extends AbstractMultiHarvestTool implements ICustomModelSupplier {
 	private static final Set<Block> EFFECTIVE_ON = ImmutableSet.of(Blocks.ACTIVATOR_RAIL, Blocks.COAL_ORE, Blocks.COBBLESTONE, Blocks.DETECTOR_RAIL, Blocks.DIAMOND_BLOCK, Blocks.DIAMOND_ORE, Blocks.POWERED_RAIL,
@@ -49,7 +64,12 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 			Blocks.SOUL_SOIL);
 
 	public MiningDrill(String name, float attackDamageIn, float attackSpeedIn) {
-		super(name, attackDamageIn, attackSpeedIn);
+		super(new Item.Properties().setNoRepair().addToolType(ToolType.PICKAXE, ItemTier.DIAMOND.getHarvestLevel()).addToolType(ToolType.SHOVEL, ItemTier.DIAMOND.getHarvestLevel()), name, attackDamageIn, attackSpeedIn);
+	}
+
+	@Override
+	public boolean canMine(ItemStack itemstack) {
+		return hasDrillBit(itemstack);
 	}
 
 	/**
@@ -66,6 +86,15 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		return ActionResult.resultPass(item);
 	}
 
+	@Override
+	protected void onBlocksMined(ItemStack stack, List<BlockPos> blocksMined, PlayerEntity player) {
+		if (!player.getEntityWorld().isRemote) {
+			stack.damageItem(1, player, (entity) -> {
+				entity.sendBreakAnimation(EquipmentSlotType.MAINHAND);
+			});
+		}
+	}
+
 	/**
 	 * Add the inventory capability.
 	 */
@@ -73,7 +102,25 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
 		// Add the inventory.
-		return new ItemStackInventoryCapabilityProvider(stack, 4, nbt);
+		return new MiningDrillCapability(stack, 4, nbt);
+	}
+
+	@Override
+	public int getRGBDurabilityForDisplay(ItemStack stack) {
+		return EnergyHandlerItemStackUtilities.getRGBDurabilityForDisplay(stack);
+	}
+
+	public boolean hasDrillBit(ItemStack stack) {
+		// Get the inventory.
+		IItemHandler inventory = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+
+		// If null, return false.
+		if (inventory == null) {
+			return false;
+		}
+
+		// Check to make sure we have a drill bit, and its not broken.
+		return !inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(0).getDamage() < inventory.getStackInSlot(0).getMaxDamage();
 	}
 
 	@Override
@@ -82,12 +129,12 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	}
 
 	@Override
-	public int getWidth() {
+	public int getWidth(ItemStack itemstack) {
 		return 1;
 	}
 
 	@Override
-	public int getHeight() {
+	public int getHeight(ItemStack itemstack) {
 		return 1;
 	}
 
@@ -119,4 +166,44 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 			return targetItemStack.getDisplayName();
 		}
 	}
+
+	public class MiningDrillCapability implements ICapabilityProvider, ICapabilitySerializable<CompoundNBT> {
+		protected final ItemStack owningItemStack;
+		protected final int inventorySize;
+		protected final CompoundNBT initialNbt;
+		protected final ItemInventoryHandler inventory;
+
+		public MiningDrillCapability(ItemStack owner, int size, @Nullable CompoundNBT nbt) {
+			inventorySize = size;
+			owningItemStack = owner;
+			initialNbt = nbt;
+			inventory = new ItemInventoryHandler("default", owner, inventorySize);
+
+			if (nbt != null) {
+				inventory.deserializeNBT(nbt);
+			}
+		}
+
+		@Override
+		public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+			if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+				return net.minecraftforge.common.util.LazyOptional.of(() -> inventory).cast();
+			} else if (cap == CapabilityEnergy.ENERGY) {
+				// This SHOULD BE CACHED.
+				return LazyOptional.of(() -> new EnergyHandlerItemStack(owningItemStack, 1000, 1000, 1000)).cast();
+			}
+			return LazyOptional.empty();
+		}
+
+		@Override
+		public CompoundNBT serializeNBT() {
+			return inventory.serializeNBT();
+		}
+
+		@Override
+		public void deserializeNBT(CompoundNBT nbt) {
+			inventory.deserializeNBT(nbt);
+		}
+	}
+
 }

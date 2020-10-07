@@ -51,10 +51,12 @@ public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
 		return new ICapabilityProvider() {
+
 			@Nonnull
 			@Override
 			public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
 				if (cap == CapabilityEnergy.ENERGY) {
+					// This SHOULD BE CACHED.
 					return LazyOptional.of(() -> new EnergyHandlerItemStack(stack, getCapacity(), getCapacity(), getCapacity())).cast();
 				}
 				return LazyOptional.empty();
@@ -100,8 +102,7 @@ public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	public static class EnergyItemJEIInterpreter implements ISubtypeInterpreter {
 		@Override
 		public String apply(ItemStack itemStack) {
-			return itemStack.getItem().getRegistryName().toString() + EnergyHandlerItemStackUtilities.getEnergyStorageCapacity(itemStack) + " "
-					+ EnergyHandlerItemStackUtilities.getEnergyStored(itemStack);
+			return itemStack.getItem().getRegistryName().toString() + EnergyHandlerItemStackUtilities.getEnergyStorageCapacity(itemStack) + " " + EnergyHandlerItemStackUtilities.getEnergyStored(itemStack);
 		}
 	}
 

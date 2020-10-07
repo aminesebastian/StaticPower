@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -27,6 +28,11 @@ public class EnergyHandlerItemStackUtilities {
 	public static final String MAX_RECEIVE_ENERGY_NBT_KEY = "MaxReceieveEnery";
 	/** Tag for the maximum amount of energy that can be drained per tick. */
 	public static final String MAX_DRAIN_ENERGY_NBT_KEY = "MaxDrainEnergy";
+
+	public static int getRGBDurabilityForDisplay(ItemStack stack) {
+		double hue = (170.0f / 360.0f) + (stack.getItem().getDurabilityForDisplay(stack)) * (40.0f / 360.0f);
+		return MathHelper.hsvToRGB((float) hue, 1.0F, 1.0F);
+	}
 
 	/**
 	 * Gets the energy storage nbt tag.
