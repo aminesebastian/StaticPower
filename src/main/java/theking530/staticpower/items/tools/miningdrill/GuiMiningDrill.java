@@ -15,10 +15,11 @@ public class GuiMiningDrill extends StaticPowerItemStackGui<ContainerMiningDrill
 	public static final Logger LOGGER = LogManager.getLogger(GuiMiningDrill.class);
 
 	public GuiInfoTab infoTab;
+	@SuppressWarnings("unused")
 	private ItemStackHandler inventory;
 
 	public GuiMiningDrill(ContainerMiningDrill container, PlayerInventory invPlayer, ITextComponent name) {
-		super(container, invPlayer, name, 176, 151);
+		super(container, invPlayer, name, 176, 142);
 	}
 
 	@Override

@@ -16,7 +16,6 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -80,11 +79,6 @@ public class StaticPowerItem extends Item {
 	public ActionResultType onItemUse(ItemUseContext context) {
 		super.onItemUse(context);
 		return onStaticPowerItemUsedOnBlock(context, context.getWorld(), context.getPos(), context.getFace(), context.getPlayer(), context.getItem());
-	}
-
-	@Override
-	public int getRGBDurabilityForDisplay(ItemStack stack) {
-		return EnergyHandlerItemStackUtilities.getRGBDurabilityForDisplay(stack);
 	}
 
 	@Override

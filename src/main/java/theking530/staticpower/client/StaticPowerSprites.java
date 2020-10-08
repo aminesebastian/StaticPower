@@ -9,6 +9,7 @@ public class StaticPowerSprites {
 	public static final HashSet<ResourceLocation> SPRITES = new HashSet<ResourceLocation>();
 
 	public static final ResourceLocation BLANK_TEXTURE = registerSprite("blank_texture");
+	public static final ResourceLocation BLACK_TEXTURE = registerSprite("black_texture");
 
 	public static final ResourceLocation DIGISTORE_VOID_INDICATOR = registerSprite("blocks/digistore/void_indicator");
 	public static final ResourceLocation DIGISTORE_LOCKED_INDICATOR = registerSprite("blocks/digistore/locked_indicator");
@@ -81,6 +82,9 @@ public class StaticPowerSprites {
 	public static final ResourceLocation FURNACE_ICON = registerSprite("gui/furnace_icon");
 	public static final ResourceLocation CLOSE = registerSprite("gui/close");
 	public static final ResourceLocation ARROW_DOWN = registerSprite("gui/arrow_down");
+
+	public static final ResourceLocation DURABILITY_BAR = registerSprite("items/tools/durability_bar");
+	public static final ResourceLocation TOOL_POWER_BAR = registerSprite("items/tools/tool_power_bar");
 
 	private static ResourceLocation registerSprite(String path) {
 		ResourceLocation sprite = new ResourceLocation(StaticPower.MOD_ID, path);

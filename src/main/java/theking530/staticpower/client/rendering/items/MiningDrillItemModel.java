@@ -12,22 +12,32 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.BakedQuad;
+import net.minecraft.client.renderer.model.BlockFaceUV;
+import net.minecraft.client.renderer.model.BlockPartFace;
+import net.minecraft.client.renderer.model.BlockPartRotation;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ItemOverrideList;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.SimpleModelTransform;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.blocks.AbstractBakedModel;
+import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 @OnlyIn(Dist.CLIENT)
 @SuppressWarnings("deprecation")
@@ -96,6 +106,7 @@ public class MiningDrillItemModel implements IBakedModel {
 			if (side != null) {
 				return Collections.emptyList();
 			}
+
 			List<BakedQuad> output = new ArrayList<BakedQuad>();
 			output.addAll(BaseModel.getQuads(state, side, rand, data));
 
@@ -107,6 +118,34 @@ public class MiningDrillItemModel implements IBakedModel {
 					output.addAll(transformQuads(drillBitQuads, new Vector3f(0.3f, 0.3f, -0.001f), new Vector3f(0.55f, 0.55f, 1.1f), new Quaternion(0, 0, 135, true)));
 				}
 			});
+
+			// Draw the power bar.
+			try {
+				// Get the atlas texture.
+				AtlasTexture blocksTexture = ModelLoader.instance().getSpriteMap().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+
+				// Draw the durability background.
+				TextureAtlasSprite blackSprite = blocksTexture.getSprite(StaticPowerSprites.BLACK_TEXTURE);
+				BlockFaceUV durabilityBgUv = new BlockFaceUV(new float[] { 0.0f, 0.0f, 16.0f, 16.0f }, 0);
+				BlockPartFace durabilityPartFace = new BlockPartFace(null, -1, blackSprite.getName().toString(), durabilityBgUv);
+				BlockPartRotation rotation = new BlockPartRotation(new Vector3f(0.0f, 0.0f, 0.0f), Direction.Axis.Z, 135, false);
+				BakedQuad durabilityBackground = FaceBaker.bakeQuad(new Vector3f(-3.0f, -12.0f, 8.5f), new Vector3f(2.0f, -11.35f, 8.51f), durabilityPartFace, blackSprite, Direction.SOUTH, SimpleModelTransform.IDENTITY,
+						rotation, false, new ResourceLocation("dummy_name"));
+				output.add(durabilityBackground);
+
+				// Draw the durability bar.
+				float bitDurability = (float) EnergyHandlerItemStackUtilities.getEnergyStored(stack) / EnergyHandlerItemStackUtilities.getEnergyStorageCapacity(stack);
+				float xUVCoord = bitDurability * 15.999f;
+				TextureAtlasSprite durabilityTexture = blocksTexture.getSprite(StaticPowerSprites.TOOL_POWER_BAR);
+				BlockFaceUV blockFaceUV = new BlockFaceUV(new float[] { xUVCoord, 0.0f, xUVCoord, 16.0f }, 0);
+				BlockPartFace durabilityBarFace = new BlockPartFace(null, -1, durabilityTexture.getName().toString(), blockFaceUV);
+
+				BakedQuad durabilityBar = FaceBaker.bakeQuad(new Vector3f(-3.0f, -12.0f, 8.5f), new Vector3f(-3.0f + (bitDurability * 5.0f), -11.35f, 8.511f), durabilityBarFace, durabilityTexture, Direction.SOUTH,
+						SimpleModelTransform.IDENTITY, rotation, false, new ResourceLocation("dummy_name"));
+				output.add(durabilityBar);
+			} catch (Exception e) {
+				// No nothing -- this is just for those edge cases where resources are reloaded.
+			}
 
 			return output;
 		}
@@ -144,7 +183,14 @@ public class MiningDrillItemModel implements IBakedModel {
 
 		@Override
 		public TextureAtlasSprite getParticleTexture() {
-			return null;
+			// If we have a drill bit, return the particle texture for the drill bit.
+			// Otherwise, return the particle texture for the base model.
+			IItemHandler inv = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+			if (inv != null && !inv.getStackInSlot(0).isEmpty()) {
+				IBakedModel itemModel = Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(inv.getStackInSlot(0), Minecraft.getInstance().world, null);
+				return itemModel.getParticleTexture();
+			}
+			return BaseModel.getParticleTexture();
 		}
 	}
 }

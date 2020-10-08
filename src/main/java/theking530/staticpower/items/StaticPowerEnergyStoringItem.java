@@ -80,6 +80,11 @@ public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	}
 
 	@Override
+	public int getRGBDurabilityForDisplay(ItemStack stack) {
+		return EnergyHandlerItemStackUtilities.getRGBDurabilityForDisplay(stack);
+	}
+
+	@Override
 	public double getDurabilityForDisplay(ItemStack stack) {
 		// Get the energy handler.
 		IEnergyStorage handler = EnergyHandlerItemStackUtilities.getEnergyContainer(stack).orElse(null);

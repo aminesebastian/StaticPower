@@ -67,6 +67,9 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 	}
 
 	public boolean isEffectiveOnBlock(ItemStack stack, BlockState state) {
+		if (!canMine(stack)) {
+			return false;
+		}
 		if (getToolTypes(stack).stream().anyMatch(e -> state.isToolEffective(e))) {
 			return true;
 		}
@@ -78,7 +81,7 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 		MultiBlockHarvestDirections harvestDirections = getHarvestDirections(itemstack, pos, player);
 
 		// If the harvest directions are not valid, do nothing.
-		if (!harvestDirections.isValid()) {
+		if (!harvestDirections.isValid() || !canMine(itemstack)) {
 			return Collections.emptyList();
 		}
 
@@ -184,7 +187,7 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 
 	@Override
 	public float getDestroySpeed(ItemStack stack, BlockState state) {
-		return isEffectiveOnBlock(stack, state) ? this.efficiency : 1.0F;
+		return isEffectiveOnBlock(stack, state) ? this.efficiency : canMine(stack) ? 1.0f : 0.0f;
 	}
 
 	/**

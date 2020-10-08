@@ -41,6 +41,7 @@ import net.minecraftforge.items.IItemHandler;
 import theking530.staticcore.network.NetworkGUI;
 import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
 import theking530.staticpower.client.rendering.items.MiningDrillItemModel;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.items.EnergyHandlerItemStack;
 import theking530.staticpower.items.tools.AbstractMultiHarvestTool;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
@@ -69,7 +70,7 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 
 	@Override
 	public boolean canMine(ItemStack itemstack) {
-		return hasDrillBit(itemstack);
+		return hasDrillBit(itemstack) && EnergyHandlerItemStackUtilities.getEnergyStored(itemstack) > 0;
 	}
 
 	/**
@@ -88,11 +89,43 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 
 	@Override
 	protected void onBlocksMined(ItemStack stack, List<BlockPos> blocksMined, PlayerEntity player) {
+		// Apply damage to the drill bit.
 		if (!player.getEntityWorld().isRemote) {
-			stack.damageItem(1, player, (entity) -> {
-				entity.sendBreakAnimation(EquipmentSlotType.MAINHAND);
+			stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
+				handler.getStackInSlot(0).damageItem(blocksMined.size(), player, (entity) -> {
+					entity.sendBreakAnimation(EquipmentSlotType.MAINHAND);
+					handler.getStackInSlot(0).shrink(1);
+				});
 			});
+
+			// Use Power.
+			EnergyHandlerItemStackUtilities.useEnergyFromItemstack(stack, 1, false);
 		}
+	}
+
+	@Override
+	public boolean showDurabilityBar(ItemStack stack) {
+		return hasDrillBit(stack);
+	}
+
+	@Override
+	public double getDurabilityForDisplay(ItemStack stack) {
+		// Get the inventory.
+		IItemHandler inventory = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+		if (inventory == null) {
+			return 0.0f;
+		}
+
+		// Get the power ratio.
+		return inventory.getStackInSlot(0).getItem().getDurabilityForDisplay(inventory.getStackInSlot(0));
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+		int remainingCharge = EnergyHandlerItemStackUtilities.getEnergyStored(stack);
+		int capacity = EnergyHandlerItemStackUtilities.getEnergyStorageCapacity(stack);
+		tooltip.add(GuiTextUtilities.formatEnergyToString(remainingCharge, capacity));
 	}
 
 	/**
@@ -107,7 +140,7 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 
 	@Override
 	public int getRGBDurabilityForDisplay(ItemStack stack) {
-		return EnergyHandlerItemStackUtilities.getRGBDurabilityForDisplay(stack);
+		return super.getRGBDurabilityForDisplay(stack);// EnergyHandlerItemStackUtilities.getRGBDurabilityForDisplay(stack);
 	}
 
 	public boolean hasDrillBit(ItemStack stack) {
@@ -186,6 +219,10 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 
 		@Override
 		public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+			if (cap == null) {
+				return LazyOptional.empty();
+			}
+
 			if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
 				return net.minecraftforge.common.util.LazyOptional.of(() -> inventory).cast();
 			} else if (cap == CapabilityEnergy.ENERGY) {

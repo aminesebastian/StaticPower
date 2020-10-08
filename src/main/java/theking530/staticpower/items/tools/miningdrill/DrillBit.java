@@ -36,6 +36,11 @@ public class DrillBit extends StaticPowerItem {
 	}
 
 	@Override
+	public boolean showDurabilityBar(ItemStack stack) {
+		return true;
+	}
+
+	@Override
 	@OnlyIn(Dist.CLIENT)
 	protected void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
 		tooltip.add(new StringTextComponent("Max Blocks Drilled: " + getMaxDamage(stack)));
