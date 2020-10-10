@@ -2,23 +2,20 @@ package theking530.staticpower.items;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.IEnergyStorage;
+import theking530.api.power.IStaticVoltHandler;
+import theking530.api.power.ItemStackStaticVoltCapability;
+import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
@@ -50,18 +47,7 @@ public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-		return new ICapabilityProvider() {
-
-			@Nonnull
-			@Override
-			public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-				if (cap == CapabilityEnergy.ENERGY) {
-					// This SHOULD BE CACHED.
-					return LazyOptional.of(() -> new EnergyHandlerItemStack(stack, getCapacity(), getCapacity(), getCapacity())).cast();
-				}
-				return LazyOptional.empty();
-			}
-		};
+		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackStaticVoltCapability("default", stack, getCapacity(), getCapacity(), getCapacity()));
 	}
 
 	public ItemStack getFilledVariant() {
@@ -87,27 +73,27 @@ public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	@Override
 	public double getDurabilityForDisplay(ItemStack stack) {
 		// Get the energy handler.
-		IEnergyStorage handler = EnergyHandlerItemStackUtilities.getEnergyContainer(stack).orElse(null);
+		IStaticVoltHandler handler = EnergyHandlerItemStackUtilities.getEnergyContainer(stack).orElse(null);
 		if (handler == null) {
 			return 0.0f;
 		}
 
 		// Get the power ratio.
-		return 1.0 - (double) handler.getEnergyStored() / (double) handler.getMaxEnergyStored();
+		return 1.0 - (float) handler.getStoredPower() / (float) handler.getCapacity();
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
-		int remainingCharge = EnergyHandlerItemStackUtilities.getEnergyStored(stack);
-		int capacity = EnergyHandlerItemStackUtilities.getEnergyStorageCapacity(stack);
+		int remainingCharge = EnergyHandlerItemStackUtilities.getStoredPower(stack);
+		int capacity = EnergyHandlerItemStackUtilities.getCapacity(stack);
 		tooltip.add(GuiTextUtilities.formatEnergyToString(remainingCharge, capacity));
 	}
 
 	public static class EnergyItemJEIInterpreter implements ISubtypeInterpreter {
 		@Override
 		public String apply(ItemStack itemStack) {
-			return itemStack.getItem().getRegistryName().toString() + EnergyHandlerItemStackUtilities.getEnergyStorageCapacity(itemStack) + " " + EnergyHandlerItemStackUtilities.getEnergyStored(itemStack);
+			return itemStack.getItem().getRegistryName().toString() + EnergyHandlerItemStackUtilities.getCapacity(itemStack) + " " + EnergyHandlerItemStackUtilities.getStoredPower(itemStack);
 		}
 	}
 

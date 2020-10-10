@@ -34,10 +34,10 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.SimpleModelTransform;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import theking530.api.power.IStaticVoltHandler;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.blocks.AbstractBakedModel;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -58,21 +58,20 @@ public class PortableBatteryItemModel implements IBakedModel {
 	public ItemOverrideList getOverrides() {
 		return new ItemOverrideList() {
 			@Override
-			public IBakedModel getOverrideModel(IBakedModel originalModel, ItemStack stack, @Nullable ClientWorld world,
-					@Nullable LivingEntity livingEntity) {
+			public IBakedModel getOverrideModel(IBakedModel originalModel, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity livingEntity) {
 				// Make sure we have a valid portable battery.
 				if (!(stack.getItem() instanceof PortableBattery)) {
 					return originalModel;
 				}
 
 				// Get the energy handler.
-				IEnergyStorage handler = EnergyHandlerItemStackUtilities.getEnergyContainer(stack).orElse(null);
+				IStaticVoltHandler handler = EnergyHandlerItemStackUtilities.getEnergyContainer(stack).orElse(null);
 				if (handler == null) {
 					return originalModel;
 				}
 
 				// Get the power ratio.
-				float ratio = (float) handler.getEnergyStored() / (float) handler.getMaxEnergyStored();
+				float ratio = (float) handler.getStoredPower() / (float) handler.getCapacity();
 				int intRatio = (int) (ratio * 50);
 
 				// Hash the unique info about this model.
@@ -108,6 +107,7 @@ public class PortableBatteryItemModel implements IBakedModel {
 	public boolean isSideLit() {
 		return baseModel.isSideLit();
 	}
+
 	@Override
 	public boolean isBuiltInRenderer() {
 		return baseModel.isBuiltInRenderer();
@@ -152,8 +152,8 @@ public class PortableBatteryItemModel implements IBakedModel {
 				BlockFaceUV blockFaceUV = new BlockFaceUV(new float[] { 0.0f, 0.0f, 16.0f, 16.0f }, 0);
 				BlockPartFace blockPartFace = new BlockPartFace(null, 1, sideSprite.getName().toString(), blockFaceUV);
 
-				BakedQuad newQuad = FaceBaker.bakeQuad(new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(16.0f, filledRatio * 16.0f, 8.51f), blockPartFace, sideSprite, Direction.SOUTH,
-						SimpleModelTransform.IDENTITY, null, false, new ResourceLocation("dummy_name"));
+				BakedQuad newQuad = FaceBaker.bakeQuad(new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(16.0f, filledRatio * 16.0f, 8.51f), blockPartFace, sideSprite, Direction.SOUTH, SimpleModelTransform.IDENTITY, null,
+						false, new ResourceLocation("dummy_name"));
 
 				quads.add(newQuad);
 			}

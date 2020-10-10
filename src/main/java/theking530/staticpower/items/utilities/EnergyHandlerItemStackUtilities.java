@@ -1,63 +1,25 @@
 package theking530.staticpower.items.utilities;
 
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.IEnergyStorage;
+import theking530.api.power.CapabilityStaticVolt;
+import theking530.api.power.IStaticVoltHandler;
 
 /**
- * Library class containing useful functions to interact with an energy storing
- * {@link ItemStack} from StaticPower.
+ * Library class containing useful functions to interact with an static volt
+ * storing {@link ItemStack} from StaticPower.
  * 
  * @author Amine Sebastian
  *
  */
 public class EnergyHandlerItemStackUtilities {
-	/** Top level tag name for energy capability serialization. */
-	public static final String ENERGY_STORAGE_NBT_KEY = "StaticPowerEnergy";
-	/** Tag for the amount of energy stored in the item. */
-	public static final String CURRENT_ENERGY_NBT_KEY = "StoredEnergy";
-	/** Tag for the maximum amount of energy that can be stored in the item. */
-	public static final String MAX_ENERGY_NBT_KEY = "MaxEnergy";
-	/** Tag for the maximum amount of energy that can be received per tick. */
-	public static final String MAX_RECEIVE_ENERGY_NBT_KEY = "MaxReceieveEnery";
-	/** Tag for the maximum amount of energy that can be drained per tick. */
-	public static final String MAX_DRAIN_ENERGY_NBT_KEY = "MaxDrainEnergy";
 
 	public static int getRGBDurabilityForDisplay(ItemStack stack) {
 		double hue = (170.0f / 360.0f) + (stack.getItem().getDurabilityForDisplay(stack)) * (40.0f / 360.0f);
 		return MathHelper.hsvToRGB((float) hue, 1.0F, 1.0F);
-	}
-
-	/**
-	 * Gets the energy storage nbt tag.
-	 * 
-	 * @return The energy NBT tag.
-	 */
-	public static CompoundNBT getEnergyStorageNBTTag(ItemStack itemstack) {
-		if (itemstack.hasTag()) {
-			if (itemstack.getTag().contains(ENERGY_STORAGE_NBT_KEY)) {
-				return itemstack.getTag().getCompound(ENERGY_STORAGE_NBT_KEY);
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Checks to see if the provided {@link ItemStack} is a valid energy container.
-	 * 
-	 * @param container The itemstack to check.
-	 * @return True if the itemstack is a valid energy containing itemstack, false
-	 *         otherwise.
-	 */
-	public static boolean isValidStaticPowerEnergyContainingItemstack(ItemStack container) {
-		return container.hasTag() && container.getTag().contains(MAX_DRAIN_ENERGY_NBT_KEY) && container.getTag().contains(MAX_RECEIVE_ENERGY_NBT_KEY) && container.getTag().contains(MAX_ENERGY_NBT_KEY)
-				&& container.getTag().contains(CURRENT_ENERGY_NBT_KEY);
 	}
 
 	/**
@@ -69,21 +31,17 @@ public class EnergyHandlerItemStackUtilities {
 	 *         otherwise.
 	 */
 	public static boolean isEnergyContainer(ItemStack container) {
-		AtomicBoolean exists = new AtomicBoolean(false);
-		container.getCapability(CapabilityEnergy.ENERGY).ifPresent((IEnergyStorage instance) -> {
-			exists.set(true);
-		});
-		return exists.get();
+		return container.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).isPresent();
 	}
 
 	/**
-	 * Gets the IEnergyStorage associated with the provided container.
+	 * Gets the IStaticVoltHandler associated with the provided container.
 	 * 
 	 * @param container The itemstack to check.
-	 * @return The IEnergyStorage associated with the provided container.
+	 * @return The IStaticVoltHandler associated with the provided container.
 	 */
-	public static LazyOptional<IEnergyStorage> getEnergyContainer(ItemStack container) {
-		return container.getCapability(CapabilityEnergy.ENERGY);
+	public static LazyOptional<IStaticVoltHandler> getEnergyContainer(ItemStack container) {
+		return container.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY);
 	}
 
 	/**
@@ -95,8 +53,8 @@ public class EnergyHandlerItemStackUtilities {
 	 *                  to.
 	 */
 	public static void setEnergy(ItemStack container, int energy) {
-		container.getCapability(CapabilityEnergy.ENERGY).ifPresent((IEnergyStorage instance) -> {
-			instance.receiveEnergy(instance.getMaxEnergyStored(), false);
+		container.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).ifPresent((IStaticVoltHandler instance) -> {
+			instance.receivePower(energy, false);
 		});
 	}
 
@@ -105,10 +63,10 @@ public class EnergyHandlerItemStackUtilities {
 	 * 
 	 * @param container The itemstack to check.
 	 */
-	public static int getEnergyStored(ItemStack container) {
+	public static int getStoredPower(ItemStack container) {
 		AtomicInteger energy = new AtomicInteger(0);
-		container.getCapability(CapabilityEnergy.ENERGY).ifPresent((IEnergyStorage instance) -> {
-			energy.set(instance.getEnergyStored());
+		container.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).ifPresent((IStaticVoltHandler instance) -> {
+			energy.set(instance.getStoredPower());
 		});
 		return energy.get();
 	}
@@ -119,10 +77,10 @@ public class EnergyHandlerItemStackUtilities {
 	 * 
 	 * @param container The itemstack to check.
 	 */
-	public static int getEnergyStorageCapacity(ItemStack container) {
+	public static int getCapacity(ItemStack container) {
 		AtomicInteger energy = new AtomicInteger(0);
-		container.getCapability(CapabilityEnergy.ENERGY).ifPresent((IEnergyStorage instance) -> {
-			energy.set(instance.getMaxEnergyStored());
+		container.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).ifPresent((IStaticVoltHandler instance) -> {
+			energy.set(instance.getCapacity());
 		});
 		return energy.get();
 	}
@@ -135,10 +93,10 @@ public class EnergyHandlerItemStackUtilities {
 	 * @param simulate   If true, the process will only be simulated.
 	 * @return The actual amount of energy added.
 	 */
-	public static int addEnergyToItemstack(ItemStack container, int maxReceive, boolean simulate) {
+	public static int receivePower(ItemStack container, int maxReceive, boolean simulate) {
 		AtomicInteger received = new AtomicInteger(0);
-		container.getCapability(CapabilityEnergy.ENERGY).ifPresent((IEnergyStorage instance) -> {
-			received.set(instance.receiveEnergy(maxReceive, simulate));
+		container.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).ifPresent((IStaticVoltHandler instance) -> {
+			received.set(instance.receivePower(maxReceive, simulate));
 		});
 		return received.get();
 	}
@@ -151,10 +109,11 @@ public class EnergyHandlerItemStackUtilities {
 	 * @param simulate   If true, the process will only be simulated.
 	 * @return The actual amount of energy drained.
 	 */
-	public static int useEnergyFromItemstack(ItemStack container, int maxExtract, boolean simulate) {
+	public static int drainPower(ItemStack container, int maxExtract, boolean simulate) {
 		AtomicInteger extracted = new AtomicInteger(0);
-		container.getCapability(CapabilityEnergy.ENERGY).ifPresent((IEnergyStorage instance) -> {
-			extracted.set(instance.extractEnergy(maxExtract, simulate));
+		container.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).ifPresent((IStaticVoltHandler instance) -> {
+			System.out.println(maxExtract);
+			extracted.set(instance.drainPower(maxExtract, simulate));
 		});
 		return extracted.get();
 	}

@@ -23,7 +23,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 /**
  * Base class for most static power items.

@@ -85,8 +85,8 @@ public class TileEntityChargingStation extends TileEntityMachine {
 					ItemStack stack = unchargedInventory.getStackInSlot(i);
 					// If it's not empty and is an energy storing item.
 					if (stack != ItemStack.EMPTY && EnergyHandlerItemStackUtilities.isEnergyContainer(stack)) {
-						if (EnergyHandlerItemStackUtilities.getEnergyStored(stack) < EnergyHandlerItemStackUtilities.getEnergyStorageCapacity(stack)) {
-							int charged = EnergyHandlerItemStackUtilities.addEnergyToItemstack(stack, maxOutput, false);
+						if (EnergyHandlerItemStackUtilities.getStoredPower(stack) < EnergyHandlerItemStackUtilities.getCapacity(stack)) {
+							int charged = EnergyHandlerItemStackUtilities.receivePower(stack, maxOutput, false);
 							energyStorage.useBulkPower(charged);
 						} else {
 							moveChargedItemToOutputs(i);
@@ -123,7 +123,7 @@ public class TileEntityChargingStation extends TileEntityMachine {
 		for (int i = 0; i < unchargedInventory.getSlots(); i++) {
 			ItemStack stack = unchargedInventory.getStackInSlot(i);
 			if (stack != ItemStack.EMPTY && EnergyHandlerItemStackUtilities.isEnergyContainer(stack)) {
-				if (EnergyHandlerItemStackUtilities.getEnergyStored(stack) < EnergyHandlerItemStackUtilities.getEnergyStorageCapacity(stack)) {
+				if (EnergyHandlerItemStackUtilities.getStoredPower(stack) < EnergyHandlerItemStackUtilities.getCapacity(stack)) {
 					count++;
 				}
 			}

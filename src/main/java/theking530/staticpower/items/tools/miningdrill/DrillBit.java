@@ -43,7 +43,7 @@ public class DrillBit extends StaticPowerItem {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	protected void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
-		tooltip.add(new StringTextComponent("Max Blocks Drilled: " + getMaxDamage(stack)));
 		tooltip.add(new StringTextComponent("Blocks Remaining: " + (getMaxDamage(stack) - getDamage(stack))));
+		tooltip.add(new StringTextComponent("Max Blocks Drilled: " + getMaxDamage(stack)));
 	}
 }

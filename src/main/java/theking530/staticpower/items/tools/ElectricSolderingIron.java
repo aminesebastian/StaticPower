@@ -23,15 +23,15 @@ public class ElectricSolderingIron extends StaticPowerEnergyStoringItem implemen
 
 	@Override
 	public boolean useSolderingItem(ItemStack itemstack) {
-		if (EnergyHandlerItemStackUtilities.getEnergyStored(itemstack) >= 10) {
-			EnergyHandlerItemStackUtilities.useEnergyFromItemstack(itemstack, 10, false);
+		if (EnergyHandlerItemStackUtilities.getStoredPower(itemstack) >= 10) {
+			EnergyHandlerItemStackUtilities.drainPower(itemstack, 10, false);
 		}
 		return false;
 	}
 
 	@Override
 	public boolean canSolder(ItemStack itemstack) {
-		return EnergyHandlerItemStackUtilities.getEnergyStored(itemstack) >= 10;
+		return EnergyHandlerItemStackUtilities.getStoredPower(itemstack) >= 10;
 	}
 
 	@Override
@@ -43,8 +43,8 @@ public class ElectricSolderingIron extends StaticPowerEnergyStoringItem implemen
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	protected void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
-		int energyStored = EnergyHandlerItemStackUtilities.getEnergyStored(stack);
-		int capacity = EnergyHandlerItemStackUtilities.getEnergyStorageCapacity(stack);
+		int energyStored = EnergyHandlerItemStackUtilities.getStoredPower(stack);
+		int capacity = EnergyHandlerItemStackUtilities.getCapacity(stack);
 		tooltip.add(new StringTextComponent("Power Stored: ").append(GuiTextUtilities.formatEnergyToString(energyStored, capacity)));
 	}
 }

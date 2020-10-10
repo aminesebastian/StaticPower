@@ -37,7 +37,8 @@ public class StaticPowerItemGroup extends ItemGroup {
 	}
 
 	private void calculateSubTypes() {
-		// Remove this caching for now until we gather a better system for gathering subtypes AFTER tiers have been synced.
+		// Remove this caching for now until we gather a better system for gathering
+		// subtypes AFTER tiers have been synced.
 //		// If we have calculated the subtypes, do nothing.
 //		if (this.subTypes != null) {
 //			return;
@@ -74,6 +75,13 @@ public class StaticPowerItemGroup extends ItemGroup {
 		subTypes.add(ModItems.LumumPortableBattery.getFilledVariant());
 		subTypes.add(ModItems.CreativePortableBattery.getFilledVariant());
 		subTypes.add(ModItems.ElectringSolderingIron.getFilledVariant());
+
+		// Add the drills.
+		subTypes.add(ModItems.BasicMiningDrill.getFilledVariant());
+		subTypes.add(ModItems.AdvancedMiningDrill.getFilledVariant());
+		subTypes.add(ModItems.StaticMiningDrill.getFilledVariant());
+		subTypes.add(ModItems.EnergizedMiningDrill.getFilledVariant());
+		subTypes.add(ModItems.LumumMiningDrill.getFilledVariant());
 
 		// Add all the capsules for all fluids.
 		for (Fluid fluid : GameRegistry.findRegistry(Fluid.class)) {

@@ -11,6 +11,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -22,7 +23,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTier;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -31,21 +31,19 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.common.ToolType;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import theking530.api.power.CapabilityStaticVolt;
+import theking530.api.power.ItemStackStaticVoltCapability;
+import theking530.staticcore.item.ItemStackCapabilityInventory;
+import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticcore.network.NetworkGUI;
 import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
 import theking530.staticpower.client.rendering.items.MiningDrillItemModel;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
-import theking530.staticpower.items.EnergyHandlerItemStack;
 import theking530.staticpower.items.tools.AbstractMultiHarvestTool;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
-import theking530.staticpower.items.utilities.ItemInventoryHandler;
 
 public class MiningDrill extends AbstractMultiHarvestTool implements ICustomModelSupplier {
 	private static final Set<Block> EFFECTIVE_ON = ImmutableSet.of(Blocks.ACTIVATOR_RAIL, Blocks.COAL_ORE, Blocks.COBBLESTONE, Blocks.DETECTOR_RAIL, Blocks.DIAMOND_BLOCK, Blocks.DIAMOND_ORE, Blocks.POWERED_RAIL,
@@ -70,7 +68,7 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 
 	@Override
 	public boolean canMine(ItemStack itemstack) {
-		return hasDrillBit(itemstack) && EnergyHandlerItemStackUtilities.getEnergyStored(itemstack) > 0;
+		return hasDrillBit(itemstack) && EnergyHandlerItemStackUtilities.getStoredPower(itemstack) > 0;
 	}
 
 	/**
@@ -87,19 +85,22 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		return ActionResult.resultPass(item);
 	}
 
+	/**
+	 * This method is only raised on the server.
+	 */
 	@Override
 	protected void onBlocksMined(ItemStack stack, List<BlockPos> blocksMined, PlayerEntity player) {
 		// Apply damage to the drill bit.
-		if (!player.getEntityWorld().isRemote) {
-			stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
-				handler.getStackInSlot(0).damageItem(blocksMined.size(), player, (entity) -> {
-					entity.sendBreakAnimation(EquipmentSlotType.MAINHAND);
-					handler.getStackInSlot(0).shrink(1);
-				});
+		stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
+			handler.getStackInSlot(0).damageItem(blocksMined.size(), player, (entity) -> {
+				entity.sendBreakAnimation(EquipmentSlotType.MAINHAND);
+				handler.getStackInSlot(0).shrink(1);
 			});
+		});
 
-			// Use Power.
-			EnergyHandlerItemStackUtilities.useEnergyFromItemstack(stack, 1, false);
+		// Update the energy usage on client and server.
+		if (!player.isCreative()) {
+			EnergyHandlerItemStackUtilities.drainPower(stack, 1, false);
 		}
 	}
 
@@ -123,9 +124,15 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
-		int remainingCharge = EnergyHandlerItemStackUtilities.getEnergyStored(stack);
-		int capacity = EnergyHandlerItemStackUtilities.getEnergyStorageCapacity(stack);
+		int remainingCharge = EnergyHandlerItemStackUtilities.getStoredPower(stack);
+		int capacity = EnergyHandlerItemStackUtilities.getCapacity(stack);
 		tooltip.add(GuiTextUtilities.formatEnergyToString(remainingCharge, capacity));
+
+		// Get the inventory.
+		IItemHandler inventory = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+		if (inventory != null) {
+			inventory.getStackInSlot(0).getItem().addInformation(inventory.getStackInSlot(0), worldIn, tooltip, TooltipFlags.ADVANCED);
+		}
 	}
 
 	/**
@@ -134,13 +141,18 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-		// Add the inventory.
-		return new MiningDrillCapability(stack, 4, nbt);
+		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, 5)).addCapability(new ItemStackStaticVoltCapability("default", stack, 100, 100, 100));
 	}
 
 	@Override
 	public int getRGBDurabilityForDisplay(ItemStack stack) {
 		return super.getRGBDurabilityForDisplay(stack);// EnergyHandlerItemStackUtilities.getRGBDurabilityForDisplay(stack);
+	}
+
+	public ItemStack getFilledVariant() {
+		ItemStack output = new ItemStack(this, 1);
+		EnergyHandlerItemStackUtilities.setEnergy(output, Integer.MAX_VALUE);
+		return output;
 	}
 
 	public boolean hasDrillBit(ItemStack stack) {
@@ -197,49 +209,6 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		@Override
 		public ITextComponent getDisplayName() {
 			return targetItemStack.getDisplayName();
-		}
-	}
-
-	public class MiningDrillCapability implements ICapabilityProvider, ICapabilitySerializable<CompoundNBT> {
-		protected final ItemStack owningItemStack;
-		protected final int inventorySize;
-		protected final CompoundNBT initialNbt;
-		protected final ItemInventoryHandler inventory;
-
-		public MiningDrillCapability(ItemStack owner, int size, @Nullable CompoundNBT nbt) {
-			inventorySize = size;
-			owningItemStack = owner;
-			initialNbt = nbt;
-			inventory = new ItemInventoryHandler("default", owner, inventorySize);
-
-			if (nbt != null) {
-				inventory.deserializeNBT(nbt);
-			}
-		}
-
-		@Override
-		public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-			if (cap == null) {
-				return LazyOptional.empty();
-			}
-
-			if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-				return net.minecraftforge.common.util.LazyOptional.of(() -> inventory).cast();
-			} else if (cap == CapabilityEnergy.ENERGY) {
-				// This SHOULD BE CACHED.
-				return LazyOptional.of(() -> new EnergyHandlerItemStack(owningItemStack, 1000, 1000, 1000)).cast();
-			}
-			return LazyOptional.empty();
-		}
-
-		@Override
-		public CompoundNBT serializeNBT() {
-			return inventory.serializeNBT();
-		}
-
-		@Override
-		public void deserializeNBT(CompoundNBT nbt) {
-			inventory.deserializeNBT(nbt);
 		}
 	}
 

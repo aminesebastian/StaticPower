@@ -17,6 +17,8 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import theking530.staticcore.item.ItemStackCapabilityInventory;
+import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
@@ -41,7 +43,8 @@ public class DigistoreCraftingInterfaceAttachment extends AbstractCableAttachmen
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-		return new CableCraftingInterfaceCapabilityProvider(stack, StaticPowerConfig.digistoreCraftingInterfaceSlots, nbt);
+		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, StaticPowerConfig.digistoreCraftingInterfaceSlots), (Direction) null)
+				.addCapability(new ItemStackCapabilityInventory("upgrades", stack, 9));
 	}
 
 	@Override

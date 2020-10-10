@@ -9,10 +9,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import theking530.staticcore.item.ItemStackCapabilityInventory;
+import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractDigistoreTerminalAttachment;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
-import theking530.staticpower.items.CableAttachmentInventoryCapabilityProvider;
 
 public class DigistorePatternEncoder extends AbstractDigistoreTerminalAttachment {
 	public enum RecipeEncodingType {
@@ -40,7 +41,7 @@ public class DigistorePatternEncoder extends AbstractDigistoreTerminalAttachment
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-		return new CableAttachmentInventoryCapabilityProvider(stack, 12, 0, nbt);
+		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, 12));
 	}
 
 	protected class DigistoreCraftingTerminalContainerProvider extends AbstractCableAttachmentContainerProvider {

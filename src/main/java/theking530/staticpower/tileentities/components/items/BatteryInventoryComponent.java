@@ -34,7 +34,7 @@ public class BatteryInventoryComponent extends InventoryComponent {
 				if (candidate != null) {
 					if (EnergyHandlerItemStackUtilities.isEnergyContainer(candidate)) {
 						int maxInput = EnergyStorage.getCurrentMaximumPowerInput();
-						int recieved = EnergyHandlerItemStackUtilities.useEnergyFromItemstack(candidate, maxInput, false);
+						int recieved = EnergyHandlerItemStackUtilities.drainPower(candidate, maxInput, false);
 						EnergyStorage.receivePower(recieved, false);
 					}
 				}

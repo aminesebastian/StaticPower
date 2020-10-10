@@ -13,6 +13,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import theking530.staticcore.item.ItemStackCapabilityInventory;
+import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
@@ -22,7 +24,6 @@ import theking530.staticpower.cables.digistore.crafting.DigistoreNetworkCrafting
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.init.ModUpgrades;
-import theking530.staticpower.items.CableAttachmentInventoryCapabilityProvider;
 import theking530.staticpower.items.upgrades.AcceleratorUpgrade;
 import theking530.staticpower.items.upgrades.CraftingUpgrade;
 import theking530.staticpower.items.upgrades.StackUpgrade;
@@ -42,7 +43,8 @@ public class DigistoreExporterAttachment extends AbstractCableAttachment {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-		return new CableAttachmentInventoryCapabilityProvider(stack, StaticPowerConfig.digistoreExporterSlots, 3, nbt);
+		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, StaticPowerConfig.digistoreExporterSlots), (Direction) null)
+				.addCapability(new ItemStackCapabilityInventory("upgrades", stack, 3));
 	}
 
 	@Override
