@@ -9,6 +9,7 @@ public class ItemStackCapabilityInventory extends ItemStackHandler implements II
 	protected static final String ITEM_INVENTORY_TAG = "static_power_inventory";
 	protected final ItemStack container;
 	protected final String name;
+	protected ItemStackMultiCapabilityProvider owningProvider;
 
 	public ItemStackCapabilityInventory(String name, ItemStack container, int size) {
 		super(size);
@@ -28,5 +29,15 @@ public class ItemStackCapabilityInventory extends ItemStackHandler implements II
 	@Override
 	public Capability<?>[] getCapabilityTypes() {
 		return new Capability<?>[] { CapabilityItemHandler.ITEM_HANDLER_CAPABILITY };
+	}
+
+	@Override
+	public ItemStackMultiCapabilityProvider getOwningProvider() {
+		return owningProvider;
+	}
+
+	@Override
+	public void setOwningProvider(ItemStackMultiCapabilityProvider owningProvider) {
+		this.owningProvider = owningProvider;
 	}
 }

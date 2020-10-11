@@ -5,12 +5,14 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
@@ -22,6 +24,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.ToolType;
 import theking530.staticpower.StaticPower;
 
 /**
@@ -57,6 +60,23 @@ public class StaticPowerItem extends Item {
 		super(properties.group(StaticPower.CREATIVE_TAB));
 		NAME = name;
 		setRegistryName(name);
+	}
+
+	@Override
+	@Nullable
+	public CompoundNBT getShareTag(ItemStack stack) {
+		CompoundNBT output = stack.serializeNBT();
+		return output;
+	}
+
+	@Override
+	public void readShareTag(ItemStack stack, @Nullable CompoundNBT nbt) {
+		stack.deserializeNBT(nbt);
+	}
+
+	@Override
+	public int getHarvestLevel(ItemStack stack, ToolType tool, @Nullable PlayerEntity player, @Nullable BlockState blockState) {
+		return super.getHarvestLevel(stack, tool, player, blockState);
 	}
 
 	/**

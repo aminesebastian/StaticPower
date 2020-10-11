@@ -196,6 +196,12 @@ public class PluginJEI implements IModPlugin {
 		subtypeRegistry.registerSubtypeInterpreter(ModItems.EnergizedMiningDrill, new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
 		subtypeRegistry.registerSubtypeInterpreter(ModItems.LumumMiningDrill, new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
 
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.BasicMagnet, new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.AdvancedMagnet, new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.StaticMagnet, new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.EnergizedMagnet, new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.LumumMagnet, new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		
 		subtypeRegistry.registerSubtypeInterpreter(ModItems.IronFluidCapsule, new FluidCapsule.FluidCapsuleItemJEIInterpreter());
 		subtypeRegistry.registerSubtypeInterpreter(ModItems.BasicFluidCapsule, new FluidCapsule.FluidCapsuleItemJEIInterpreter());
 		subtypeRegistry.registerSubtypeInterpreter(ModItems.AdvancedFluidCapsule, new FluidCapsule.FluidCapsuleItemJEIInterpreter());

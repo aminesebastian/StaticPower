@@ -83,6 +83,13 @@ public class StaticPowerItemGroup extends ItemGroup {
 		subTypes.add(ModItems.EnergizedMiningDrill.getFilledVariant());
 		subTypes.add(ModItems.LumumMiningDrill.getFilledVariant());
 
+		// Add the magnets.
+		subTypes.add(ModItems.BasicMagnet.getFilledVariant());
+		subTypes.add(ModItems.AdvancedMagnet.getFilledVariant());
+		subTypes.add(ModItems.StaticMagnet.getFilledVariant());
+		subTypes.add(ModItems.EnergizedMagnet.getFilledVariant());
+		subTypes.add(ModItems.LumumMagnet.getFilledVariant());
+		
 		// Add all the capsules for all fluids.
 		for (Fluid fluid : GameRegistry.findRegistry(Fluid.class)) {
 			subTypes.add(ModItems.IronFluidCapsule.getFilledVariant(fluid));

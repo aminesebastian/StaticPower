@@ -107,14 +107,12 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements INa
 			if (InventoryUtilities.canFullyInsertItemIntoInventory(inventory, stack) && doesItemPassFilter(stack)) {
 				double distance = Math.sqrt(x * x + y * y + z * z);
 				if (distance < 1.1 || (shouldTeleport && distance < getRadius() - 0.1f)) {
-					if (InventoryUtilities.canFullyInsertItemIntoInventory(inventory, stack)) {
-						if (!getWorld().isRemote) {
-							InventoryUtilities.insertItemIntoInventory(inventory, stack, false);
-						}
-						entity.remove();
-						getWorld().addParticle(ParticleTypes.PORTAL, (double) pos.getX() + 0.5, (double) pos.getY() + 1.0, (double) pos.getZ() + 0.5, 0.0D, 0.0D, 0.0D);
-						getWorld().playSound((double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 0.5F, 1.0F, false);
+					if (!getWorld().isRemote) {
+						InventoryUtilities.insertItemIntoInventory(inventory, stack, false);
 					}
+					entity.remove();
+					getWorld().addParticle(ParticleTypes.PORTAL, (double) pos.getX() + 0.5, (double) pos.getY() + 1.0, (double) pos.getZ() + 0.5, 0.0D, 0.0D, 0.0D);
+					getWorld().playSound((double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 0.5F, 1.0F, false);
 				} else {
 					double var11 = 1.0 - distance / 15.0;
 					if (var11 > 0.0D) {
@@ -142,8 +140,7 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements INa
 					fluidTankComponent.fill(new FluidStack(ModFluids.LiquidExperience.Fluid, orb.xpValue), FluidAction.EXECUTE);
 					markTileEntityForSynchronization();
 					orb.remove();
-					getWorld().playSound((double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.BLOCKS, 0.5F,
-							(RANDOM.nextFloat() + 1) / 2, false);
+					getWorld().playSound((double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.BLOCKS, 0.5F, (RANDOM.nextFloat() + 1) / 2, false);
 				}
 			} else {
 				double var11 = 1.0 - distance / 15.0;

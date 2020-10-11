@@ -1,5 +1,6 @@
 package theking530.staticpower.init;
 
+import net.minecraft.item.ItemTier;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.cables.attachments.cover.CableCover;
 import theking530.staticpower.cables.attachments.digistore.DigistoreLight;
@@ -32,6 +33,7 @@ import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.items.tools.CableNetworkAnalyzer;
 import theking530.staticpower.items.tools.CoverSaw;
 import theking530.staticpower.items.tools.ElectricSolderingIron;
+import theking530.staticpower.items.tools.Magnet;
 import theking530.staticpower.items.tools.MetalHammer;
 import theking530.staticpower.items.tools.SolderingIron;
 import theking530.staticpower.items.tools.StaticWrench;
@@ -267,6 +269,12 @@ public class ModItems {
 	public static StaticWrench EnergizedWrench;
 	public static StaticWrench LumumWrench;
 
+	public static Magnet BasicMagnet;
+	public static Magnet AdvancedMagnet;
+	public static Magnet StaticMagnet;
+	public static Magnet EnergizedMagnet;
+	public static Magnet LumumMagnet;
+
 	public static CableNetworkAnalyzer CableNetworkAnalyzer;
 	public static CoverSaw IronCoverSaw;
 	public static CoverSaw TungstenCoverSaw;
@@ -389,12 +397,12 @@ public class ModItems {
 		// Tools
 		StaticPowerRegistry.preRegisterItem(MetalHammer = new MetalHammer("metal_hammer", 100));
 		StaticPowerRegistry.preRegisterItem(WireCutters = new WireCutters("wire_cutters", 100));
-		StaticPowerRegistry.preRegisterItem(BasicMiningDrill = new MiningDrill("mining_drill_basic", 10.0f, 10.0f));
-		StaticPowerRegistry.preRegisterItem(AdvancedMiningDrill = new MiningDrill("mining_drill_advanced", 10.0f, 10.0f));
-		StaticPowerRegistry.preRegisterItem(StaticMiningDrill = new MiningDrill("mining_drill_static", 10.0f, 10.0f));
-		StaticPowerRegistry.preRegisterItem(EnergizedMiningDrill = new MiningDrill("mining_drill_energized", 10.0f, 10.0f));
-		StaticPowerRegistry.preRegisterItem(LumumMiningDrill = new MiningDrill("mining_drill_lumum", 10.0f, 10.0f));
-		
+		StaticPowerRegistry.preRegisterItem(BasicMiningDrill = new MiningDrill("mining_drill_basic", 5.0f, 5.0f, StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterItem(AdvancedMiningDrill = new MiningDrill("mining_drill_advanced", 5.0f, 5.0f, StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterItem(StaticMiningDrill = new MiningDrill("mining_drill_static", 5.0f, 5.0f, StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterItem(EnergizedMiningDrill = new MiningDrill("mining_drill_energized", 5.0f, 5.0f, StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterItem(LumumMiningDrill = new MiningDrill("mining_drill_lumum", 5.0f, 5.0f, StaticPowerTiers.LUMUM));
+
 		StaticPowerRegistry.preRegisterItem(SolderingIron = new SolderingIron("soldering_iron", 100));
 		StaticPowerRegistry.preRegisterItem(ElectringSolderingIron = new ElectricSolderingIron("soldering_iron_electric", 1000));
 
@@ -402,6 +410,12 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(StaticWrench = new StaticWrench("wrench_static"));
 		StaticPowerRegistry.preRegisterItem(EnergizedWrench = new StaticWrench("wrench_energized"));
 		StaticPowerRegistry.preRegisterItem(LumumWrench = new StaticWrench("wrench_lumum"));
+
+		StaticPowerRegistry.preRegisterItem(BasicMagnet = new Magnet("magnet_basic", 1000, 2));
+		StaticPowerRegistry.preRegisterItem(AdvancedMagnet = new Magnet("magnet_advanced", 2000, 3));
+		StaticPowerRegistry.preRegisterItem(StaticMagnet = new Magnet("magnet_static", 5000, 4));
+		StaticPowerRegistry.preRegisterItem(EnergizedMagnet = new Magnet("magnet_energized", 10000, 6));
+		StaticPowerRegistry.preRegisterItem(LumumMagnet = new Magnet("magnet_lumum", 20000, 8));
 
 		StaticPowerRegistry.preRegisterItem(IronCoverSaw = new CoverSaw("saw_iron", 100));
 		StaticPowerRegistry.preRegisterItem(TungstenCoverSaw = new CoverSaw("saw_tungsten", 2500));
@@ -546,17 +560,17 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(LumumUpgradePlate = new StaticPowerItem("upgrade_plate_lumum"));
 
 		// Dril Bits
-		StaticPowerRegistry.preRegisterItem(IronDrillBit = new DrillBit("drill_bit_iron", StaticPowerTiers.BASIC));
-		StaticPowerRegistry.preRegisterItem(BronzeDrillBit = new DrillBit("drill_bit_bronze", StaticPowerTiers.BRONZE));
-		StaticPowerRegistry.preRegisterItem(AdvancedDrillBit = new DrillBit("drill_bit_advanced", StaticPowerTiers.ADVANCED));
-		StaticPowerRegistry.preRegisterItem(TungstenDrillBit = new DrillBit("drill_bit_tungsten", StaticPowerTiers.TUNGSTEN));
-		StaticPowerRegistry.preRegisterItem(DiamondDrillBit = new DrillBit("drill_bit_diamond", StaticPowerTiers.DIAMOND));
-		StaticPowerRegistry.preRegisterItem(RubyDrillBit = new DrillBit("drill_bit_ruby", StaticPowerTiers.RUBY));
-		StaticPowerRegistry.preRegisterItem(SapphireDrillBit = new DrillBit("drill_bit_sapphire", StaticPowerTiers.SAPPHIRE));
-		StaticPowerRegistry.preRegisterItem(StaticDrillBit = new DrillBit("drill_bit_static", StaticPowerTiers.STATIC));
-		StaticPowerRegistry.preRegisterItem(EnergizedDrillBit = new DrillBit("drill_bit_energized", StaticPowerTiers.ENERGIZED));
-		StaticPowerRegistry.preRegisterItem(LumumDrillBit = new DrillBit("drill_bit_lumum", StaticPowerTiers.LUMUM));
-		StaticPowerRegistry.preRegisterItem(CreativeDrillBit = new DrillBit("drill_bit_creative", StaticPowerTiers.CREATIVE));
+		StaticPowerRegistry.preRegisterItem(IronDrillBit = new DrillBit("drill_bit_iron", ItemTier.IRON, StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterItem(BronzeDrillBit = new DrillBit("drill_bit_bronze", ItemTier.IRON, StaticPowerTiers.BRONZE));
+		StaticPowerRegistry.preRegisterItem(AdvancedDrillBit = new DrillBit("drill_bit_advanced", ItemTier.IRON, StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterItem(TungstenDrillBit = new DrillBit("drill_bit_tungsten", ItemTier.NETHERITE, StaticPowerTiers.TUNGSTEN));
+		StaticPowerRegistry.preRegisterItem(DiamondDrillBit = new DrillBit("drill_bit_diamond", ItemTier.DIAMOND, StaticPowerTiers.DIAMOND));
+		StaticPowerRegistry.preRegisterItem(RubyDrillBit = new DrillBit("drill_bit_ruby", ItemTier.DIAMOND, StaticPowerTiers.RUBY));
+		StaticPowerRegistry.preRegisterItem(SapphireDrillBit = new DrillBit("drill_bit_sapphire", ItemTier.DIAMOND, StaticPowerTiers.SAPPHIRE));
+		StaticPowerRegistry.preRegisterItem(StaticDrillBit = new DrillBit("drill_bit_static", ItemTier.DIAMOND, StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterItem(EnergizedDrillBit = new DrillBit("drill_bit_energized", ItemTier.DIAMOND, StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterItem(LumumDrillBit = new DrillBit("drill_bit_lumum", ItemTier.NETHERITE, StaticPowerTiers.LUMUM));
+		StaticPowerRegistry.preRegisterItem(CreativeDrillBit = new DrillBit("drill_bit_creative", ItemTier.NETHERITE, StaticPowerTiers.CREATIVE));
 
 		// Ingots
 		StaticPowerRegistry.preRegisterItem(IngotCopper = new StaticPowerItem("ingot_copper"));

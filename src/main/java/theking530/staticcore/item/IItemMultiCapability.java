@@ -7,5 +7,9 @@ import net.minecraftforge.common.util.INBTSerializable;
 public interface IItemMultiCapability extends INBTSerializable<CompoundNBT> {
 	public String getName();
 
+	public ItemStackMultiCapabilityProvider getOwningProvider();
+
+	public void setOwningProvider(ItemStackMultiCapabilityProvider owningProvider);
+
 	public Capability<?>[] getCapabilityTypes();
 }

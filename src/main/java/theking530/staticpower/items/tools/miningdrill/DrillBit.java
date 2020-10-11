@@ -6,22 +6,31 @@ import javax.annotation.Nullable;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTier;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticcore.utilities.ItemTierUtilities;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.TierReloadListener;
 import theking530.staticpower.items.StaticPowerItem;
+import theking530.staticpower.utilities.MetricConverter;
 
 public class DrillBit extends StaticPowerItem {
 	public final ResourceLocation tier;
+	public final ItemTier miningTier;
 
-	public DrillBit(String name, ResourceLocation tier) {
+	public DrillBit(String name, ItemTier miningTier, ResourceLocation tier) {
 		super(name, new Item.Properties().maxStackSize(1).maxDamage(1));
+		this.miningTier = miningTier;
 		this.tier = tier;
+	}
+
+	public ItemTier getMiningTier() {
+		return miningTier;
 	}
 
 	@Override
@@ -42,8 +51,12 @@ public class DrillBit extends StaticPowerItem {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
-		tooltip.add(new StringTextComponent("Blocks Remaining: " + (getMaxDamage(stack) - getDamage(stack))));
-		tooltip.add(new StringTextComponent("Max Blocks Drilled: " + getMaxDamage(stack)));
+	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+		tooltip.add(new TranslationTextComponent("gui.staticpower.mining_tier").appendString(": ").append(ItemTierUtilities.getNameForItemTier(miningTier)));
+		int remaining = getMaxDamage(stack) - getDamage(stack);
+		int max = getMaxDamage(stack);
+		
+		tooltip.add(new TranslationTextComponent("gui.staticpower.block_remaining").appendString(": ").appendString(new MetricConverter(remaining).getValueAsString(true)));
+		tooltip.add(new TranslationTextComponent("gui.staticpower.max_drillable_blocks").appendString(": ").appendString(new MetricConverter(max).getValueAsString(true)));
 	}
 }

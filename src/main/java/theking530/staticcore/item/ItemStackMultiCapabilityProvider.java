@@ -51,6 +51,9 @@ public class ItemStackMultiCapabilityProvider implements ICapabilityProvider, IC
 			return this;
 		}
 
+		// Set the owning provider.
+		instance.setOwningProvider(this);
+
 		// Register this instance for all the capabilities it exposes.
 		for (Capability<?> capability : instance.getCapabilityTypes()) {
 			if (!capabilityMap.containsKey(capability)) {

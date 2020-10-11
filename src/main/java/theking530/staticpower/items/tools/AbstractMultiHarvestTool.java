@@ -3,7 +3,6 @@ package theking530.staticpower.items.tools;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
@@ -35,15 +34,11 @@ import net.minecraft.world.server.ServerWorld;
 import theking530.staticpower.items.StaticPowerItem;
 
 public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
-	protected final Set<Block> effectiveOn;
-	protected final float efficiency;
-	protected final float attackDamage;
-	protected final Multimap<Attribute, AttributeModifier> toolAttributes;
+	protected float attackDamage;
+	protected Multimap<Attribute, AttributeModifier> toolAttributes;
 
 	public AbstractMultiHarvestTool(Item.Properties properties, String name, float attackDamageIn, float attackSpeedIn) {
 		super(name, properties.maxStackSize(1));
-		this.effectiveOn = getEffectiveBlocks();
-		this.efficiency = 5.0f;
 		this.attackDamage = attackDamageIn + 2.0f;
 		Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Tool modifier", (double) this.attackDamage, AttributeModifier.Operation.ADDITION));
@@ -52,28 +47,29 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 
 	}
 
-	public abstract Set<Block> getEffectiveBlocks();
+	public abstract boolean canHarvestAtFullSpeed(ItemStack stack, BlockState state);
+
+	public abstract boolean canHarvestBlock(ItemStack stack, BlockState state);
 
 	public abstract int getWidth(ItemStack stack);
 
 	public abstract int getHeight(ItemStack stack);
 
+	protected abstract float getEfficiency(ItemStack itemstack);
+
 	public boolean canMine(ItemStack stack) {
 		return true;
 	}
 
-	protected void onBlocksMined(ItemStack stack, List<BlockPos> blocksMined, PlayerEntity player) {
-
-	}
-
-	public boolean isEffectiveOnBlock(ItemStack stack, BlockState state) {
+	protected boolean canHarvestBlockInternal(ItemStack stack, BlockState state) {
 		if (!canMine(stack)) {
 			return false;
 		}
-		if (getToolTypes(stack).stream().anyMatch(e -> state.isToolEffective(e))) {
-			return true;
-		}
-		return effectiveOn.contains(state.getBlock()) ? true : false;
+		return canHarvestBlock(stack, state);
+	}
+
+	protected void onBlocksMined(ItemStack stack, List<BlockPos> blocksMined, PlayerEntity player) {
+
 	}
 
 	public List<BlockPos> getMineableExtraBlocks(ItemStack itemstack, BlockPos pos, PlayerEntity player) {
@@ -87,15 +83,22 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 
 		// Capture the list of all the blocks to mind.
 		List<BlockPos> minableBlocks = new ArrayList<BlockPos>();
-		for (int x = -getWidth(itemstack); x <= getWidth(itemstack); x++) {
-			for (int y = -getHeight(itemstack); y <= getHeight(itemstack); y++) {
-				// Offset in both directions.
-				BlockPos offsetPos = pos.offset(harvestDirections.getHeightDirection(), y);
-				offsetPos = offsetPos.offset(harvestDirections.getWidthDirection(), x);
 
-				// Check if we can harvest this block.
-				if (isEffectiveOnBlock(itemstack, player.getEntityWorld().getBlockState(offsetPos))) {
-					minableBlocks.add(offsetPos);
+		// If sneaking, only mine the targeted block. Otherwise get all the blocks in
+		// the width and height.
+		if (player.isSneaking()) {
+			minableBlocks.add(pos);
+		} else {
+			for (int x = -getWidth(itemstack); x <= getWidth(itemstack); x++) {
+				for (int y = -getHeight(itemstack); y <= getHeight(itemstack); y++) {
+					// Offset in both directions.
+					BlockPos offsetPos = pos.offset(harvestDirections.getHeightDirection(), y);
+					offsetPos = offsetPos.offset(harvestDirections.getWidthDirection(), x);
+
+					// Check if we can harvest this block.
+					if (canHarvestBlockInternal(itemstack, player.getEntityWorld().getBlockState(offsetPos))) {
+						minableBlocks.add(offsetPos);
+					}
 				}
 			}
 		}
@@ -187,7 +190,8 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 
 	@Override
 	public float getDestroySpeed(ItemStack stack, BlockState state) {
-		return isEffectiveOnBlock(stack, state) ? this.efficiency : canMine(stack) ? 1.0f : 0.0f;
+		System.out.println(getEfficiency(stack));
+		return canHarvestAtFullSpeed(stack, state) ? this.getEfficiency(stack) : canMine(stack) ? 1.0f : 0.0f;
 	}
 
 	/**

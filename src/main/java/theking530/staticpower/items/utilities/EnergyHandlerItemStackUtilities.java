@@ -112,7 +112,6 @@ public class EnergyHandlerItemStackUtilities {
 	public static int drainPower(ItemStack container, int maxExtract, boolean simulate) {
 		AtomicInteger extracted = new AtomicInteger(0);
 		container.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).ifPresent((IStaticVoltHandler instance) -> {
-			System.out.println(maxExtract);
 			extracted.set(instance.drainPower(maxExtract, simulate));
 		});
 		return extracted.get();

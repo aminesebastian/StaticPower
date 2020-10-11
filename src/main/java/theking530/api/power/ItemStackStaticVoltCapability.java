@@ -5,6 +5,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import theking530.staticcore.item.IItemMultiCapability;
+import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 
 public class ItemStackStaticVoltCapability extends StaticVoltHandler implements IItemMultiCapability, IEnergyStorage {
 	protected static final String ITEM_ENERGY_TAG = "static_power_energy";
@@ -12,6 +13,7 @@ public class ItemStackStaticVoltCapability extends StaticVoltHandler implements 
 	protected final ItemStack container;
 	protected final StaticVoltHandler handler;
 	protected final PowerEnergyInterface energyInterface;
+	protected ItemStackMultiCapabilityProvider owningProvider;
 
 	public ItemStackStaticVoltCapability(String name, ItemStack container, int capacity, int maxInput, int maxOutput) {
 		super(capacity, maxInput, maxOutput);
@@ -63,5 +65,15 @@ public class ItemStackStaticVoltCapability extends StaticVoltHandler implements 
 	@Override
 	public boolean canReceive() {
 		return energyInterface.canReceive();
+	}
+
+	@Override
+	public ItemStackMultiCapabilityProvider getOwningProvider() {
+		return owningProvider;
+	}
+
+	@Override
+	public void setOwningProvider(ItemStackMultiCapabilityProvider owningProvider) {
+		this.owningProvider = owningProvider;
 	}
 }
