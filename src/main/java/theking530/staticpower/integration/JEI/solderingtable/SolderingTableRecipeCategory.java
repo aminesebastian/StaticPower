@@ -74,12 +74,12 @@ public class SolderingTableRecipeCategory extends BaseJEIRecipeCategory<Solderin
 
 	@Override
 	public void draw(SolderingRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(null, 110, 21, 20, 20);
-		GuiDrawUtilities.drawSlot(null, 8, 5, 16, 16);
+		GuiDrawUtilities.drawSlot(matrixStack, 110, 21, 20, 20);
+		GuiDrawUtilities.drawSlot(matrixStack, 8, 5, 16, 16);
 
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 3; x++) {
-				GuiDrawUtilities.drawSlot(null, 44 + x * 18, 5 + y * 18, 16, 16);
+				GuiDrawUtilities.drawSlot(matrixStack, 44 + x * 18, 5 + y * 18, 16, 16);
 			}
 		}
 

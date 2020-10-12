@@ -1,5 +1,9 @@
 package theking530.api.power;
 
+import javax.annotation.Nullable;
+
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public class PowerEnergyInterface implements IEnergyStorage, IStaticVoltHandler {
@@ -139,4 +143,25 @@ public class PowerEnergyInterface implements IEnergyStorage, IStaticVoltHandler 
 		return canRecievePower();
 	}
 
+	public static @Nullable PowerEnergyInterface getFromItemStack(ItemStack stack) {
+		// Skip empty stacks.
+		if (stack.isEmpty()) {
+			return null;
+		}
+
+		// Check for SV.
+		IStaticVoltHandler svHandler = stack.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).orElse(null);
+		if (svHandler != null) {
+			return new PowerEnergyInterface(svHandler);
+		}
+
+		// Check for FE.
+		IEnergyStorage energyStorage = stack.getCapability(CapabilityEnergy.ENERGY).orElse(null);
+		if (energyStorage != null) {
+			return new PowerEnergyInterface(energyStorage);
+		}
+
+		// If we make it this far, return null.
+		return null;
+	}
 }

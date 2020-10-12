@@ -8,6 +8,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
 
 public class StaticPowerIngredient {
+	public static final StaticPowerIngredient EMPTY = new StaticPowerIngredient(Ingredient.EMPTY, 0);
 	private final Ingredient ingredient;
 	private final int count;
 
@@ -34,6 +35,14 @@ public class StaticPowerIngredient {
 
 	public boolean test(ItemStack stackToTest) {
 		return ingredient.test(stackToTest);
+	}
+
+	public boolean test(ItemStack stackToTest, boolean verifyCounts) {
+		if (verifyCounts) {
+			return testWithCount(stackToTest);
+		} else {
+			return test(stackToTest);
+		}
 	}
 
 	public boolean testWithCount(ItemStack stackToTest) {

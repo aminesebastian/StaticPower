@@ -1,0 +1,26 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"wpw",
+		"bbb",
+		"wlw"
+	],
+	"key": {
+		"w": {
+			"tag": "forge:wires/platinum"
+		},
+		"b": {
+			"item": "staticpower:portable_battery_lumum"
+		},
+		"p": {
+			"item": "staticpower:processor_lumum"
+		},
+		"l": {
+			"item": "staticpower:plug"
+		}
+	},
+	"result": {
+		"item": "staticpower:battery_pack_lumum",
+		"count": 1
+	}
+}

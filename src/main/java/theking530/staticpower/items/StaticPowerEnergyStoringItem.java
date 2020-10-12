@@ -62,7 +62,7 @@ public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 
 	@Override
 	public boolean showDurabilityBar(ItemStack stack) {
-		return getDurabilityForDisplay(stack) > 0.0f && getDurabilityForDisplay(stack) < 1.0f;
+		return getDurabilityForDisplay(stack) < 1.0f;
 	}
 
 	@Override

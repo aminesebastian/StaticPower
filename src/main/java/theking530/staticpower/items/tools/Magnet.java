@@ -110,6 +110,7 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+		tooltip.add(new TranslationTextComponent(isActivated(stack) ? "gui.staticpower.active" : "gui.staticpower.inactive"));
 		tooltip.add(new TranslationTextComponent("gui.staticpower.radius").appendString(": ").appendString(String.valueOf(radius)));
 		super.getBasicTooltip(stack, worldIn, tooltip);
 	}

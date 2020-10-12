@@ -68,14 +68,25 @@ public class StaticPowerItemGroup extends ItemGroup {
 		}
 
 		// Add the electric items.
+		subTypes.add(ModItems.ElectringSolderingIron.getFilledVariant());
+		
+		// Add the batteries.
 		subTypes.add(ModItems.BasicPortableBattery.getFilledVariant());
 		subTypes.add(ModItems.AdvancedPortableBattery.getFilledVariant());
 		subTypes.add(ModItems.StaticPortableBattery.getFilledVariant());
 		subTypes.add(ModItems.EnergizedPortableBattery.getFilledVariant());
 		subTypes.add(ModItems.LumumPortableBattery.getFilledVariant());
 		subTypes.add(ModItems.CreativePortableBattery.getFilledVariant());
-		subTypes.add(ModItems.ElectringSolderingIron.getFilledVariant());
 
+		// Add the battery packs.
+		subTypes.add(ModItems.BasicBatteryPack.getFilledVariant());
+		subTypes.add(ModItems.AdvancedBatteryPack.getFilledVariant());
+		subTypes.add(ModItems.StaticBatteryPack.getFilledVariant());
+		subTypes.add(ModItems.EnergizedBatteryPack.getFilledVariant());
+		subTypes.add(ModItems.LumumBatteryPack.getFilledVariant());
+		subTypes.add(ModItems.CreativeBatteryPack.getFilledVariant());
+		subTypes.add(ModItems.ElectringSolderingIron.getFilledVariant());
+		
 		// Add the drills.
 		subTypes.add(ModItems.BasicMiningDrill.getFilledVariant());
 		subTypes.add(ModItems.AdvancedMiningDrill.getFilledVariant());

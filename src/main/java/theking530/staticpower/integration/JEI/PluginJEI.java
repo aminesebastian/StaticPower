@@ -188,6 +188,14 @@ public class PluginJEI implements IModPlugin {
 		subtypeRegistry.registerSubtypeInterpreter(ModItems.EnergizedPortableBattery, new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
 		subtypeRegistry.registerSubtypeInterpreter(ModItems.LumumPortableBattery, new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
 		subtypeRegistry.registerSubtypeInterpreter(ModItems.CreativePortableBattery, new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.BasicBatteryPack, new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.AdvancedBatteryPack, new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.StaticBatteryPack, new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.EnergizedBatteryPack, new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.LumumBatteryPack, new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.CreativeBatteryPack, new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
+		
 		subtypeRegistry.registerSubtypeInterpreter(ModItems.ElectringSolderingIron, new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());
 
 		subtypeRegistry.registerSubtypeInterpreter(ModItems.BasicMiningDrill, new StaticPowerEnergyStoringItem.EnergyItemJEIInterpreter());

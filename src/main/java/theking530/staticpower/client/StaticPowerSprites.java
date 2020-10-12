@@ -67,6 +67,9 @@ public class StaticPowerSprites {
 	public static final ResourceLocation PORTABLE_BATTERY_FILL_BAR = registerSprite("items/batteries/portable_battery_filled_bar");
 	public static final ResourceLocation PORTABLE_CREATIVE_BATTERY_FILL_BAR = registerSprite("items/batteries/portable_battery_creative_filled_bar");
 	
+	public static final ResourceLocation PORTABLE_BATTERY_PACK_FILL_BAR = registerSprite("items/batteries/battery_pack_filled_bar");
+	public static final ResourceLocation PORTABLE_CREATIVE_BATTERY_PACK_FILL_BAR = registerSprite("items/batteries/battery_pack_creative_filled_bar");
+	
 	public static final ResourceLocation CANCEL = registerSprite("gui/cancel");
 	public static final ResourceLocation GREEN_CHECK = registerSprite("gui/check");
 	public static final ResourceLocation DISABLED = registerSprite("gui/disabled");

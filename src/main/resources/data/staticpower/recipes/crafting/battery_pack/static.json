@@ -1,0 +1,26 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"wpw",
+		"bbb",
+		"wlw"
+	],
+	"key": {
+		"w": {
+			"tag": "forge:wires/gold"
+		},
+		"b": {
+			"item": "staticpower:portable_battery_static"
+		},
+		"p": {
+			"item": "staticpower:processor_static"
+		},
+		"l": {
+			"item": "staticpower:plug"
+		}
+	},
+	"result": {
+		"item": "staticpower:battery_pack_static",
+		"count": 1
+	}
+}

@@ -42,6 +42,7 @@ import theking530.staticpower.tileentities.nonpowered.solderingtable.BlockSolder
 import theking530.staticpower.tileentities.nonpowered.tank.BlockTank;
 import theking530.staticpower.tileentities.nonpowered.vacuumchest.BlockVacuumChest;
 import theking530.staticpower.tileentities.powered.autocrafter.BlockAutoCraftingTable;
+import theking530.staticpower.tileentities.powered.autosmith.BlockAutoSmith;
 import theking530.staticpower.tileentities.powered.autosolderingtable.BlockAutoSolderingTable;
 import theking530.staticpower.tileentities.powered.basicfarmer.BlockBasicFarmer;
 import theking530.staticpower.tileentities.powered.battery.BlockBattery;
@@ -166,6 +167,7 @@ public class ModBlocks {
 	public static BlockEvaporator Evaporator;
 	public static BlockCondenser Condenser;
 	public static BlockVulcanizer Vulcanizer;
+	public static BlockAutoSmith AutoSmith;
 
 	public static BlockHeatSink AluminiumHeatSink;
 	public static BlockHeatSink CopperHeatSink;
@@ -371,6 +373,7 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(Evaporator = new BlockEvaporator("machine_evaporator"));
 		StaticPowerRegistry.preRegisterBlock(Condenser = new BlockCondenser("machine_condenser"));
 		StaticPowerRegistry.preRegisterBlock(Vulcanizer = new BlockVulcanizer("machine_vulcanizer"));
+		StaticPowerRegistry.preRegisterBlock(AutoSmith = new BlockAutoSmith("machine_auto_smith"));
 
 		StaticPowerRegistry.preRegisterBlock(AluminiumHeatSink = new BlockHeatSink("heat_sink_aluminium", StaticPowerTiers.ALUMINIUM));
 		StaticPowerRegistry.preRegisterBlock(CopperHeatSink = new BlockHeatSink("heat_sink_copper", StaticPowerTiers.COPPER));

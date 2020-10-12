@@ -41,16 +41,16 @@ import theking530.api.power.IStaticVoltHandler;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.blocks.AbstractBakedModel;
 import theking530.staticpower.data.StaticPowerTiers;
-import theking530.staticpower.items.PortableBattery;
+import theking530.staticpower.items.BatteryPack;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 @SuppressWarnings("deprecation")
 @OnlyIn(Dist.CLIENT)
-public class PortableBatteryItemModel implements IBakedModel {
+public class BatteryPackItemModel implements IBakedModel {
 	private final Int2ObjectMap<PortableBatteryModel> cache = new Int2ObjectArrayMap<>();
 	private final IBakedModel baseModel;
 
-	public PortableBatteryItemModel(IBakedModel baseModel) {
+	public BatteryPackItemModel(IBakedModel baseModel) {
 		this.baseModel = baseModel;
 	}
 
@@ -60,7 +60,7 @@ public class PortableBatteryItemModel implements IBakedModel {
 			@Override
 			public IBakedModel getOverrideModel(IBakedModel originalModel, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity livingEntity) {
 				// Make sure we have a valid portable battery.
-				if (!(stack.getItem() instanceof PortableBattery)) {
+				if (!(stack.getItem() instanceof BatteryPack)) {
 					return originalModel;
 				}
 
@@ -75,13 +75,13 @@ public class PortableBatteryItemModel implements IBakedModel {
 				int intRatio = (int) (ratio * 50);
 
 				// Hash the unique info about this model.
-				int hash = Objects.hash(stack.getItem().getRegistryName() + ((PortableBattery) stack.getItem()).tier.toString() + intRatio);
+				int hash = Objects.hash(stack.getItem().getRegistryName() + ((BatteryPack) stack.getItem()).tier.toString() + intRatio);
 
 				// Check to see if we need to cache this model, if we do, do it.
-				PortableBatteryModel model = PortableBatteryItemModel.this.cache.get(hash);
+				PortableBatteryModel model = BatteryPackItemModel.this.cache.get(hash);
 				if (model == null) {
-					model = new PortableBatteryModel(baseModel, ratio, ((PortableBattery) stack.getItem()).tier == StaticPowerTiers.CREATIVE);
-					PortableBatteryItemModel.this.cache.put(hash, model);
+					model = new PortableBatteryModel(baseModel, ratio, ((BatteryPack) stack.getItem()).tier == StaticPowerTiers.CREATIVE);
+					BatteryPackItemModel.this.cache.put(hash, model);
 				}
 				return model;
 			}
@@ -147,15 +147,14 @@ public class PortableBatteryItemModel implements IBakedModel {
 				quads.addAll(baseModel.getQuads(state, side, rand, data));
 
 				AtlasTexture blocksTexture = ModelLoader.instance().getSpriteMap().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-				TextureAtlasSprite sideSprite = blocksTexture.getSprite(creative ? StaticPowerSprites.PORTABLE_CREATIVE_BATTERY_FILL_BAR : StaticPowerSprites.PORTABLE_BATTERY_FILL_BAR);
+				TextureAtlasSprite sideSprite = blocksTexture.getSprite(creative ? StaticPowerSprites.PORTABLE_CREATIVE_BATTERY_PACK_FILL_BAR : StaticPowerSprites.PORTABLE_BATTERY_PACK_FILL_BAR);
 
-				BlockFaceUV blockFaceUV = new BlockFaceUV(new float[] { 0.0f, 0.0f, 16.0f, 16.0f }, 0);
+				BlockFaceUV blockFaceUV = new BlockFaceUV(new float[] { 0.0f, 4.95f, 16.0f, 5.0f + filledRatio * 5.0f }, 0);
 				BlockPartFace blockPartFace = new BlockPartFace(null, 1, sideSprite.getName().toString(), blockFaceUV);
 
-				quads.add(FaceBaker.bakeQuad(new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(16.0f, filledRatio * 16.0f, 8.51f), blockPartFace, sideSprite, Direction.SOUTH, SimpleModelTransform.IDENTITY, null, false,
+				quads.add(FaceBaker.bakeQuad(new Vector3f(0.0f, 4.95f, 0.0f), new Vector3f(16.0f, 11.5f, 8.501f), blockPartFace, sideSprite, Direction.SOUTH, SimpleModelTransform.IDENTITY, null, false,
 						new ResourceLocation("dummy_name")));
-
-				quads.add(FaceBaker.bakeQuad(new Vector3f(0.0f, 0.0f, 7.499f), new Vector3f(16.0f, filledRatio * 16.0f, 16.0f), blockPartFace, sideSprite, Direction.NORTH, SimpleModelTransform.IDENTITY, null, false,
+				quads.add(FaceBaker.bakeQuad(new Vector3f(0.0f, 4.95f, 7.499f), new Vector3f(16.0f, 11.5f, 16.0f), blockPartFace, sideSprite, Direction.NORTH, SimpleModelTransform.IDENTITY, null, false,
 						new ResourceLocation("dummy_name")));
 			}
 			return quads;

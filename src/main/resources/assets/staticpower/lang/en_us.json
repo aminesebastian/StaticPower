@@ -87,6 +87,7 @@
 	"item.staticpower.crop_energized": "Energized Crop",
 	"item.staticpower.crop_lumum": "Lumum Crop",
 	"item.staticpower.seed_static": "Static Seed",
+	"item.staticpower.seed_energized": "Energized Seed",
 	"item.staticpower.seed_lumum": "Lumum Seed",
 	"item.staticpower.crop_depleted": "Depleted Crop",
 	"item.staticpower.crystal_static": "Static Crystal",
@@ -208,6 +209,12 @@
 	"item.staticpower.portable_battery_energized": "Energized Portable Battery",
 	"item.staticpower.portable_battery_lumum": "Lumum Portable Battery",
 	"item.staticpower.portable_battery_creative": "Creative Portable Battery",
+	"item.staticpower.battery_pack_basic": "Basic Battery Pack",
+	"item.staticpower.battery_pack_advanced": "Advanced Battery Pack",
+	"item.staticpower.battery_pack_static": "Static Battery Pack",
+	"item.staticpower.battery_pack_energized": "Energized Battery Pack",
+	"item.staticpower.battery_pack_lumum": "Lumum Battery Pack",
+	"item.staticpower.battery_pack_creative": "Creative Battery Pack",
 	"item.staticpower.fluid_capsule_iron": "Iron Capsule",
 	"item.staticpower.fluid_capsule_basic": "Basic Capsule",
 	"item.staticpower.fluid_capsule_advanced": "Advanced Capsule",
@@ -490,7 +497,7 @@
 	"fluid.staticpower.juice_carrot": "Carrot Juice",
 	"fluid.staticpower.juice_berry": "Berry Juice",
 	"fluid.staticpower.juice_melon": "Melon Juice",
-	"fluid.staticpower.liquid_fertilizer": "Fertilizer",
+	"fluid.staticpower.fertilizer": "Fertilizer",
 	"fluid.staticpower.oil_seed": "Seed Oil",
 	"fluid.staticpower.honey": "Honey",
 	"fluid.staticpower.concrete": "Concrete",
@@ -549,5 +556,7 @@
 	"gui.staticpower.block_remaining": "Blocks Remaining",
 	"gui.staticpower.max_drillable_blocks": "Max Blocks Drilled",
 	"gui.staticpower.efficiency": "Efficiency",
-	"gui.staticpower.mining_speed": "Mining Speed"
+	"gui.staticpower.mining_speed": "Mining Speed",
+	"gui.staticpower.active": "Active",
+	"gui.staticpower.inactive": "Inactive"
 }

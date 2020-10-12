@@ -18,6 +18,7 @@ import theking530.staticpower.cables.attachments.filter.FilterAttachment;
 import theking530.staticpower.cables.attachments.retirever.RetrieverAttachment;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.items.BatteryPack;
 import theking530.staticpower.items.DigistoreCard;
 import theking530.staticpower.items.DigistoreMonoCard;
 import theking530.staticpower.items.DigistorePatternCard;
@@ -245,6 +246,13 @@ public class ModItems {
 	public static PortableBattery LumumPortableBattery;
 	public static PortableBattery CreativePortableBattery;
 
+	public static BatteryPack BasicBatteryPack;
+	public static BatteryPack AdvancedBatteryPack;
+	public static BatteryPack StaticBatteryPack;
+	public static BatteryPack EnergizedBatteryPack;
+	public static BatteryPack LumumBatteryPack;
+	public static BatteryPack CreativeBatteryPack;
+
 	public static StaticPlantSeeds StaticSeeds;
 	public static StaticPlantSeeds EnergizedSeeds;
 	public static StaticPlantSeeds LumumSeeds;
@@ -393,6 +401,14 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(EnergizedPortableBattery = new PortableBattery("portable_battery_energized", StaticPowerTiers.ENERGIZED));
 		StaticPowerRegistry.preRegisterItem(LumumPortableBattery = new PortableBattery("portable_battery_lumum", StaticPowerTiers.LUMUM));
 		StaticPowerRegistry.preRegisterItem(CreativePortableBattery = new PortableBattery("portable_battery_creative", StaticPowerTiers.CREATIVE));
+
+		// Battery packs.
+		StaticPowerRegistry.preRegisterItem(BasicBatteryPack = new BatteryPack("battery_pack_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterItem(AdvancedBatteryPack = new BatteryPack("battery_pack_advanced", StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterItem(StaticBatteryPack = new BatteryPack("battery_pack_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterItem(EnergizedBatteryPack = new BatteryPack("battery_pack_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterItem(LumumBatteryPack = new BatteryPack("battery_pack_lumum", StaticPowerTiers.LUMUM));
+		StaticPowerRegistry.preRegisterItem(CreativeBatteryPack = new BatteryPack("battery_pack_creative", StaticPowerTiers.CREATIVE));
 
 		// Tools
 		StaticPowerRegistry.preRegisterItem(MetalHammer = new MetalHammer("metal_hammer", 100));

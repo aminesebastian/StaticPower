@@ -20,6 +20,9 @@ import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.utilities.MetricConverter;
 
 public class DrillBit extends StaticPowerItem {
+	private static final String FORTUNE_TAG = "fortune";
+	private static final String MINING_SPEED_TAG = "speed";
+	
 	public final ResourceLocation tier;
 	public final ItemTier miningTier;
 

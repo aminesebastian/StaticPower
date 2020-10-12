@@ -27,6 +27,8 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import theking530.api.digistore.CapabilityDigistoreInventory;
 import theking530.api.heat.CapabilityHeatable;
 import theking530.api.power.CapabilityStaticVolt;
+import theking530.api.smithingattributes.AttributeModifierRegistry;
+import theking530.api.smithingattributes.FloatAttributeModifier;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModuleFactory;
@@ -44,7 +46,7 @@ import theking530.staticpower.integration.TOP.PluginTOP;
 public class StaticPowerModEventRegistry {
 	public static final String TOP_MODID = "theoneprobe";
 	public static final String JEI_MODID = "jei";
-	
+
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerModEventRegistry.class);
 
 	@SubscribeEvent
@@ -61,6 +63,12 @@ public class StaticPowerModEventRegistry {
 		CapabilityStaticVolt.register();
 		CapabilityHeatable.register();
 
+		// Register smithing attributes.
+		AttributeModifierRegistry.registerAttributeType("float", (name, type) -> new FloatAttributeModifier(name, type));
+
+		// Register smithing attribute modifiers.
+		AttributeModifierRegistry.registerAttributeType("float", (name, type) -> new FloatAttributeModifier(name, type));
+		
 		// Register composter recipes.
 		DeferredWorkQueue.runLater(() -> {
 			ComposterBlock.CHANCES.put(ModBlocks.RubberTreeLeaves.asItem(), 0.6f);

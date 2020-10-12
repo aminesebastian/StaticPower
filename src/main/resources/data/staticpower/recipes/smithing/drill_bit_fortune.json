@@ -1,0 +1,18 @@
+{
+	"type": "staticpower:auto_smith_recipe",
+	"smith_target": {
+		"item": "staticpower:drill_bit_iron"
+	},
+	"modifier_item": {
+		"tag": "forge:gems/lapis",
+		"count": 2
+	},
+	"attributes": [
+		{
+			"name": "fortune",
+			"type": "float",
+			"amount": 1.0,
+			"isAdditive": true
+		}
+	]
+}
