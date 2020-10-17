@@ -1,16 +1,34 @@
-package theking530.api.smithingattributes;
+package theking530.api.smithingattributes.attributes.modifiers;
 
 import com.google.gson.JsonObject;
 
 import net.minecraft.nbt.CompoundNBT;
 
-public abstract class AbstractAttributeModifier {
-	public String name;
-	public String type;
+public abstract class AbstractAttributeModifier<T> {
+	protected String name;
+	protected String type;
+	protected T value;
 
 	public AbstractAttributeModifier(String name, String type) {
 		this.name = name;
 		this.type = type;
+		this.value = null;
+	}
+
+	public T getValue() {
+		return value;
+	}
+
+	public void setValue(T value) {
+		this.value = value;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getType() {
+		return type;
 	}
 
 	public void deserialize(JsonObject json) {
@@ -25,7 +43,7 @@ public abstract class AbstractAttributeModifier {
 		read(nbt);
 	}
 
-	public CompoundNBT write() {
+	public CompoundNBT serialize() {
 		CompoundNBT output = new CompoundNBT();
 		output.putString("name", name);
 		output.putString("type", type);

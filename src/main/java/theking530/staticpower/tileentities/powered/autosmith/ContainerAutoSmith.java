@@ -42,11 +42,6 @@ public class ContainerAutoSmith extends StaticPowerTileEntityContainer<TileEntit
 		// Output
 		addSlot(new OutputSlot(getTileEntity().outputInventory, 0, 127, 30));
 
-		// Upgrades
-		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 0, 152, 12));
-		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 1, 152, 32));
-		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 2, 152, 52));
-
 		// Battery
 		addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 64));
 

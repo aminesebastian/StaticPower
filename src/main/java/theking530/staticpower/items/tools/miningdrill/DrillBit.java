@@ -7,12 +7,18 @@ import javax.annotation.Nullable;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTier;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import theking530.api.smithingattributes.attributes.AttributeRegistry;
+import theking530.api.smithingattributes.attributes.FortuneAttributeDefenition;
+import theking530.api.smithingattributes.capability.SmithableHandler;
+import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticcore.utilities.ItemTierUtilities;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.TierReloadListener;
@@ -20,9 +26,6 @@ import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.utilities.MetricConverter;
 
 public class DrillBit extends StaticPowerItem {
-	private static final String FORTUNE_TAG = "fortune";
-	private static final String MINING_SPEED_TAG = "speed";
-	
 	public final ResourceLocation tier;
 	public final ItemTier miningTier;
 
@@ -30,6 +33,17 @@ public class DrillBit extends StaticPowerItem {
 		super(name, new Item.Properties().maxStackSize(1).maxDamage(1));
 		this.miningTier = miningTier;
 		this.tier = tier;
+	}
+
+	@Nullable
+	@Override
+	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {		
+		FortuneAttributeDefenition fortuneAttribute = (FortuneAttributeDefenition) AttributeRegistry.createInstance(new ResourceLocation("staticpower", "fortune"));
+		fortuneAttribute.setBaseValue(0);
+		
+		SmithableHandler handler = new SmithableHandler("attributes");
+		handler.addAttribute(fortuneAttribute);
+		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(handler);
 	}
 
 	public ItemTier getMiningTier() {
@@ -58,7 +72,7 @@ public class DrillBit extends StaticPowerItem {
 		tooltip.add(new TranslationTextComponent("gui.staticpower.mining_tier").appendString(": ").append(ItemTierUtilities.getNameForItemTier(miningTier)));
 		int remaining = getMaxDamage(stack) - getDamage(stack);
 		int max = getMaxDamage(stack);
-		
+
 		tooltip.add(new TranslationTextComponent("gui.staticpower.block_remaining").appendString(": ").appendString(new MetricConverter(remaining).getValueAsString(true)));
 		tooltip.add(new TranslationTextComponent("gui.staticpower.max_drillable_blocks").appendString(": ").appendString(new MetricConverter(max).getValueAsString(true)));
 	}

@@ -9,8 +9,8 @@ import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
-import theking530.api.smithingattributes.AbstractAttributeModifier;
-import theking530.api.smithingattributes.AttributeModifierRegistry;
+import theking530.api.smithingattributes.attributes.AttributeModifierRegistry;
+import theking530.api.smithingattributes.attributes.modifiers.AbstractAttributeModifier;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
@@ -105,7 +105,7 @@ public class AutoSmithRecipeSerializer extends ForgeRegistryEntry<IRecipeSeriali
 
 		// Write the modifiers.
 		for (AbstractAttributeModifier modifier : recipe.getModifiers()) {
-			buffer.writeCompoundTag(modifier.write());
+			buffer.writeCompoundTag(modifier.serialize());
 		}
 	}
 }

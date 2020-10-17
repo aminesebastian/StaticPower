@@ -10,6 +10,7 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
@@ -27,8 +28,11 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import theking530.api.digistore.CapabilityDigistoreInventory;
 import theking530.api.heat.CapabilityHeatable;
 import theking530.api.power.CapabilityStaticVolt;
-import theking530.api.smithingattributes.AttributeModifierRegistry;
-import theking530.api.smithingattributes.FloatAttributeModifier;
+import theking530.api.smithingattributes.attributes.AttributeModifierRegistry;
+import theking530.api.smithingattributes.attributes.AttributeRegistry;
+import theking530.api.smithingattributes.attributes.FortuneAttributeDefenition;
+import theking530.api.smithingattributes.attributes.modifiers.FloatAttributeModifier;
+import theking530.api.smithingattributes.capability.CapabilitySmithable;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModuleFactory;
@@ -62,10 +66,11 @@ public class StaticPowerModEventRegistry {
 		CapabilityDigistoreInventory.register();
 		CapabilityStaticVolt.register();
 		CapabilityHeatable.register();
+		CapabilitySmithable.register();
 
 		// Register smithing attributes.
-		AttributeModifierRegistry.registerAttributeType("float", (name, type) -> new FloatAttributeModifier(name, type));
-
+		AttributeRegistry.registerAttributeType(new ResourceLocation("staticpower", "fortune"), (id) -> new FortuneAttributeDefenition(id));
+		
 		// Register smithing attribute modifiers.
 		AttributeModifierRegistry.registerAttributeType("float", (name, type) -> new FloatAttributeModifier(name, type));
 		
