@@ -7,6 +7,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.resources.IReloadableResourceManager;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.DrawHighlightEvent;
@@ -26,6 +27,7 @@ import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.network.PacketDistributor;
 import theking530.api.heat.HeatTooltipUtilities;
+import theking530.api.itemattributes.AttributeUtilities;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.data.PacketSyncTiers;
@@ -77,10 +79,12 @@ public class StaticPowerForgeEventRegistry {
 	public static void render(RenderWorldLastEvent event) {
 		StaticPowerClientEventHandler.onWorldRender(event);
 	}
+
 	@SubscribeEvent
 	static void renderBlockHighlights(DrawHighlightEvent.HighlightBlock event) {
 		StaticPowerClientEventHandler.renderBlockHighlights(event);
 	}
+
 	@SubscribeEvent
 	public static void onLootLoad(LootTableLoadEvent event) {
 		StaticPowerDataRegistry.onLootTableLoaded(event);
@@ -95,8 +99,11 @@ public class StaticPowerForgeEventRegistry {
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void onAddItemTooltip(ItemTooltipEvent event) {
-		// Add thermal rate tooltips.
+		if (event.getToolTip().size() > 1) {
+			event.getToolTip().add(new StringTextComponent(""));
+		}
 		if (FMLEnvironment.dist == Dist.CLIENT) {
+			// Add thermal rate tooltips.
 			if (Screen.hasShiftDown()) {
 				RecipeMatchParameters matchParameters = new RecipeMatchParameters(event.getItemStack());
 
@@ -108,6 +115,9 @@ public class StaticPowerForgeEventRegistry {
 					event.getToolTip().add(HeatTooltipUtilities.getHeatRateTooltip(recipe.getThermalConductivity()));
 				});
 			}
+
+			// Add attributable tooltips.
+			AttributeUtilities.addTooltipsForAttribute(event.getItemStack(), event.getToolTip(), Screen.hasShiftDown());
 		}
 	}
 

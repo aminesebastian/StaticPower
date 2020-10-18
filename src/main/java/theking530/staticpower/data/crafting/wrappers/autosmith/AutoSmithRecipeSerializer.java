@@ -9,11 +9,10 @@ import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
-import theking530.api.smithingattributes.attributes.AttributeModifierRegistry;
-import theking530.api.smithingattributes.attributes.modifiers.AbstractAttributeModifier;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
+import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe.RecipeModifierWrapper;
 import theking530.staticpower.tileentities.powered.autosmith.TileEntityAutoSmith;
 
 public class AutoSmithRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<AutoSmithRecipe> {
@@ -26,8 +25,11 @@ public class AutoSmithRecipeSerializer extends ForgeRegistryEntry<IRecipeSeriali
 	@Override
 	public AutoSmithRecipe read(ResourceLocation recipeId, JsonObject json) {
 		// Capture the smith target.
-		JsonObject smithingTargetObject = JSONUtils.getJsonObject(json, "smith_target");
-		StaticPowerIngredient smithingTarget = StaticPowerIngredient.deserialize(smithingTargetObject);
+		StaticPowerIngredient smithingTarget = StaticPowerIngredient.EMPTY;
+		if (JSONUtils.hasField(json, "smith_target")) {
+			JsonObject smithingTargetObject = JSONUtils.getJsonObject(json, "smith_target");
+			smithingTarget = StaticPowerIngredient.deserialize(smithingTargetObject);
+		}
 
 		// Capture the optional material.
 		StaticPowerIngredient modifierMaterial = StaticPowerIngredient.EMPTY;
@@ -45,9 +47,9 @@ public class AutoSmithRecipeSerializer extends ForgeRegistryEntry<IRecipeSeriali
 
 		// Get the modifiers.
 		JsonArray attributeModifiers = JSONUtils.getJsonArray(json, "attributes");
-		AbstractAttributeModifier[] modifiers = new AbstractAttributeModifier[attributeModifiers.size()];
+		RecipeModifierWrapper[] modifiers = new RecipeModifierWrapper[attributeModifiers.size()];
 		for (int i = 0; i < attributeModifiers.size(); i++) {
-			modifiers[i] = AttributeModifierRegistry.createInstance(attributeModifiers.get(i).getAsJsonObject());
+			modifiers[i] = new RecipeModifierWrapper(attributeModifiers.get(i).getAsJsonObject());
 		}
 
 		// Start with the default values.
@@ -80,9 +82,9 @@ public class AutoSmithRecipeSerializer extends ForgeRegistryEntry<IRecipeSeriali
 		int modifierCount = buffer.readInt();
 
 		// Read the modifiers.
-		AbstractAttributeModifier[] modifiers = new AbstractAttributeModifier[modifierCount];
+		RecipeModifierWrapper[] modifiers = new RecipeModifierWrapper[modifierCount];
 		for (int i = 0; i < modifierCount; i++) {
-			modifiers[i] = AttributeModifierRegistry.createInstance(buffer.readCompoundTag());
+			modifiers[i] = new RecipeModifierWrapper(buffer);
 		}
 
 		// Create the recipe.
@@ -104,7 +106,7 @@ public class AutoSmithRecipeSerializer extends ForgeRegistryEntry<IRecipeSeriali
 		buffer.writeInt(recipe.getModifiers().length);
 
 		// Write the modifiers.
-		for (AbstractAttributeModifier modifier : recipe.getModifiers()) {
+		for (RecipeModifierWrapper modifier : recipe.getModifiers()) {
 			buffer.writeCompoundTag(modifier.serialize());
 		}
 	}

@@ -4,12 +4,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import theking530.api.itemattributes.capability.CapabilityAttributable;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe;
+import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe.RecipeModifierWrapper;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
@@ -122,11 +123,17 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 		// Modify the input that we put in the buffer, and then put it into the output.
 		ItemStack output = internalInventory.getStackInSlot(0);
 
-		// Set the tag on the stack if it doesn't exist.
-		if (!output.hasTag()) {
-			output.setTag(new CompoundNBT());
-		}
+		// Add the modifiers.
+		output.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).ifPresent(attributes -> {
+			// For all of the modifiers, if the item has the attribute, add the modifier.
+			for (RecipeModifierWrapper modifier : recipe.getModifiers()) {
+				if (attributes.hasAttribute(modifier.getAttributeId())) {
+					attributes.getAttribute(modifier.getAttributeId()).addModifier(modifier.getModifier(), false);
+				}
+			}
+		});
 
+		// Put the item into the output slot.
 		outputInventory.insertItem(0, output, false);
 
 		// Drain the fluid.

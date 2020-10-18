@@ -1,4 +1,4 @@
-package theking530.api.smithingattributes.capability;
+package theking530.api.itemattributes.capability;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -7,18 +7,18 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
-import theking530.api.smithingattributes.attributes.AbstractAttributeDefenition;
-import theking530.api.smithingattributes.attributes.AttributeRegistry;
-import theking530.api.smithingattributes.attributes.modifiers.AbstractAttributeModifier;
+import theking530.api.itemattributes.attributes.AbstractAttributeDefenition;
+import theking530.api.itemattributes.attributes.AttributeRegistry;
+import theking530.api.itemattributes.attributes.modifiers.AbstractAttributeModifier;
 import theking530.staticcore.item.IItemMultiCapability;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 
-public class SmithableHandler implements ISmithable, INBTSerializable<CompoundNBT>, IItemMultiCapability {
+public class AttributeableHandler implements IAttributable, INBTSerializable<CompoundNBT>, IItemMultiCapability {
 	private final HashMap<ResourceLocation, AbstractAttributeDefenition<?, ?>> attributes;
 	private String name;
 	private ItemStackMultiCapabilityProvider parent;
 
-	public SmithableHandler(String name) {
+	public AttributeableHandler(String name) {
 		this.name = name;
 		attributes = new HashMap<ResourceLocation, AbstractAttributeDefenition<?, ?>>();
 	}
@@ -34,7 +34,7 @@ public class SmithableHandler implements ISmithable, INBTSerializable<CompoundNB
 	}
 
 	@Override
-	public <T, K extends AbstractAttributeModifier<T>> boolean addAttribute(AbstractAttributeDefenition<T, K> attribute) {
+	public <T, K extends AbstractAttributeModifier<?>> boolean addAttribute(AbstractAttributeDefenition<T, K> attribute) {
 		if (hasAttribute(attribute.getId())) {
 			return false;
 		}
@@ -44,7 +44,7 @@ public class SmithableHandler implements ISmithable, INBTSerializable<CompoundNB
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T, K extends AbstractAttributeModifier<T>> AbstractAttributeDefenition<T, K> getAttribute(ResourceLocation attributeId) {
+	public <T, K extends AbstractAttributeModifier<?>> AbstractAttributeDefenition<T, K> getAttribute(ResourceLocation attributeId) {
 		return (AbstractAttributeDefenition<T, K>) attributes.get(attributeId);
 	}
 
@@ -57,7 +57,7 @@ public class SmithableHandler implements ISmithable, INBTSerializable<CompoundNB
 			attributeList.put(id.toString(), serializedAttribute);
 		}
 		output.put("attributes", attributeList);
-		return null;
+		return output;
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class SmithableHandler implements ISmithable, INBTSerializable<CompoundNB
 
 	@Override
 	public Capability<?>[] getCapabilityTypes() {
-		return new Capability[] { CapabilitySmithable.SMITHABLE_CAPABILITY };
+		return new Capability[] { CapabilityAttributable.ATTRIBUTABLE_CAPABILITY };
 	}
 
 }

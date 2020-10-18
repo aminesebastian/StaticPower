@@ -1,4 +1,4 @@
-package theking530.api.smithingattributes.attributes.modifiers;
+package theking530.api.itemattributes.attributes.modifiers;
 
 import com.google.gson.JsonObject;
 
@@ -7,8 +7,13 @@ import net.minecraft.nbt.CompoundNBT;
 public class FloatAttributeModifier extends AbstractAttributeModifier<Float> {
 	public boolean isAdditive;
 
-	public FloatAttributeModifier(String name, String type) {
-		super(name, type);
+	public FloatAttributeModifier() {
+
+	}
+
+	public FloatAttributeModifier(float value, boolean isAdditive) {
+		super(value);
+		this.isAdditive = isAdditive;
 	}
 
 	@Override
@@ -27,5 +32,10 @@ public class FloatAttributeModifier extends AbstractAttributeModifier<Float> {
 	protected void write(CompoundNBT nbt) {
 		nbt.putFloat("amount", value);
 		nbt.putBoolean("isAdditive", isAdditive);
+	}
+
+	@Override
+	public String getType() {
+		return "float";
 	}
 }

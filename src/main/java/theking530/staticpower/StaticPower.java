@@ -8,6 +8,10 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.config.ModConfig;
+import theking530.api.itemattributes.attributes.AttributeModifierRegistry;
+import theking530.api.itemattributes.attributes.AttributeRegistry;
+import theking530.api.itemattributes.attributes.FortuneAttributeDefenition;
+import theking530.api.itemattributes.attributes.modifiers.FloatAttributeModifier;
 import theking530.staticcore.initialization.StaticCoreRegistry;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModFluids;
@@ -25,6 +29,12 @@ public class StaticPower {
 	public static final ItemGroup CREATIVE_TAB = new StaticPowerItemGroup();
 
 	public StaticPower() {
+		// Register smithing attributes.
+		AttributeRegistry.registerAttribute(FortuneAttributeDefenition.ID, (id) -> new FortuneAttributeDefenition(id));
+
+		// Register smithing attribute modifiers.
+		AttributeModifierRegistry.registerAttributeType("float", () -> new FloatAttributeModifier());
+
 		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, StaticPowerConfig.SERVER_SPEC);
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, StaticPowerConfig.COMMON_SPEC);
 		ModRecipeSerializers.init();

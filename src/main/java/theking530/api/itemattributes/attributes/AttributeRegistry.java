@@ -1,4 +1,4 @@
-package theking530.api.smithingattributes.attributes;
+package theking530.api.itemattributes.attributes;
 
 import java.util.HashMap;
 import java.util.function.Function;
@@ -8,7 +8,7 @@ import net.minecraft.util.ResourceLocation;
 public class AttributeRegistry {
 	private static final HashMap<ResourceLocation, Function<ResourceLocation, AbstractAttributeDefenition<?, ?>>> ATTRIBUTE_MAP = new HashMap<>();
 
-	public static void registerAttributeType(ResourceLocation id, Function<ResourceLocation, AbstractAttributeDefenition<?, ?>> factory) {
+	public static void registerAttribute(ResourceLocation id, Function<ResourceLocation, AbstractAttributeDefenition<?, ?>> factory) {
 		ATTRIBUTE_MAP.put(id, factory);
 	}
 
