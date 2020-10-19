@@ -15,16 +15,22 @@ import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import theking530.api.itemattributes.attributes.AbstractAttributeDefenition;
+import theking530.api.itemattributes.capability.CapabilityAttributable;
+import theking530.api.itemattributes.capability.IAttributable;
 import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
+import theking530.staticcore.gui.widgets.progressbars.AutoSmithProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
+import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
@@ -46,14 +52,14 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<AutoSmithRecip
 
 	private ITickTimer powerTimer;
 	private ITickTimer processingTimer;
-	private final ArrowProgressBar pBar;
+	private final AutoSmithProgressBar pBar;
 
 	public SmithingRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
 		locTitle = new TranslationTextComponent(ModBlocks.AutoSmith.getTranslationKey());
-		background = guiHelper.createBlankDrawable(146, 60);
+		background = guiHelper.createBlankDrawable(170, 60);
 		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.AutoSmith));
-		pBar = new ArrowProgressBar(51, 17);
+		pBar = new AutoSmithProgressBar(49, 19);
 	}
 
 	@Override
@@ -86,9 +92,12 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<AutoSmithRecip
 
 	@Override
 	public void draw(AutoSmithRecipeJEIWrapper recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(matrixStack, 31, 17, 16, 16);
-		GuiDrawUtilities.drawSlot(matrixStack, 122, 15, 20, 20);
-		GuiDrawUtilities.drawSlot(matrixStack, 132, 15, 20, 20);
+		GuiDrawUtilities.drawSlot(matrixStack, 50, 0, 16, 16);
+		GuiDrawUtilities.drawSlot(matrixStack, 80, 20, 16, 16);
+		GuiDrawUtilities.drawSlot(matrixStack, 48, 40, 20, 20);
+
+		GuiDrawUtilities.drawSlot(matrixStack, 102, 0, 68, 60);
+		GuiDrawUtilities.drawColoredRectangle(matrixStack, 102, 0, 68, 60, 0.0f, Color.DARK_GREY);
 
 		// This doesn't actually draw the fluid, just the bars.
 		if (!recipe.getRecipe().getModifierFluid().isEmpty()) {
@@ -102,6 +111,36 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<AutoSmithRecip
 		pBar.setCurrentProgress(processingTimer.getValue());
 		pBar.setMaxProgress(processingTimer.getMaxValue());
 		pBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);
+
+		// Draw the attribute title.
+		Minecraft.getInstance().fontRenderer.drawStringWithShadow(matrixStack, new TranslationTextComponent("gui.staticpower.attributes").appendString(": ").getString(), 104.5f, 2,
+				Color.EIGHT_BIT_WHITE.encodeInInteger());
+
+		// Create a copy of the input.
+		ItemStack copy = recipe.getInputItem().copy();
+
+		// Get the attributable of the copy and apply the recipe. Then, list the new
+		// values.
+		IAttributable originalAttributable = recipe.getInputItem().getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);
+		IAttributable copyAttributable = copy.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);
+		if (originalAttributable != null && copyAttributable != null) {
+			recipe.getRecipe().applyToItemStack(copy);
+			float yOffset = 13;
+
+			matrixStack.push();
+			matrixStack.scale(0.9f, 0.9f, 0.9f);
+			for (ResourceLocation attribId : copyAttributable.getAllAttributes()) {
+				AbstractAttributeDefenition<?, ?> originalAttribute = originalAttributable.getAttribute(attribId);
+				AbstractAttributeDefenition<?, ?> copyAttribute = copyAttributable.getAttribute(attribId);
+				IFormattableTextComponent differenceLabel = copyAttribute.getDifferenceLabel(originalAttribute);
+
+				if (differenceLabel != null) {
+					Minecraft.getInstance().fontRenderer.drawStringWithShadow(matrixStack, differenceLabel.getString(), 116, yOffset, originalAttribute.getColor().getColor());
+					yOffset += 9.5f;
+				}
+			}
+			matrixStack.pop();
+		}
 	}
 
 	@Override
@@ -143,9 +182,9 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<AutoSmithRecip
 	public void setRecipe(IRecipeLayout recipeLayout, AutoSmithRecipeJEIWrapper recipe, IIngredients ingredients) {
 		// Add the input and output slots.
 		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
-		guiItemStacks.init(INTPUT_SLOT, true, 30, 16);
-		guiItemStacks.init(MODIFIER_SLOT, true, 50, 16);
-		guiItemStacks.init(OUTPUT_SLOT, false, 123, 16);
+		guiItemStacks.init(INTPUT_SLOT, true, 49, -1);
+		guiItemStacks.init(MODIFIER_SLOT, true, 79, 19);
+		guiItemStacks.init(OUTPUT_SLOT, false, 49, 41);
 
 		// Set the items.
 		guiItemStacks.set(ingredients);

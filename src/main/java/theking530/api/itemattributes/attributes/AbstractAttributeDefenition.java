@@ -3,6 +3,8 @@ package theking530.api.itemattributes.attributes;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
@@ -43,6 +45,8 @@ public abstract class AbstractAttributeDefenition<T, K extends AbstractAttribute
 
 	public abstract boolean canAcceptModifier(K modifier);
 
+	public abstract @Nullable IFormattableTextComponent getDifferenceLabel(AbstractAttributeDefenition<?, ?> other);
+
 	protected abstract void serializeBaseValue(CompoundNBT nbt);
 
 	protected abstract void deserializeBaseValue(CompoundNBT nbt);
@@ -57,6 +61,12 @@ public abstract class AbstractAttributeDefenition<T, K extends AbstractAttribute
 
 	public Class<K> getModifierType() {
 		return this.modifierType;
+	}
+
+	@SuppressWarnings("unchecked")
+	public T addModifierUnchecked(AbstractAttributeModifier<?> modifier, boolean simulate) {
+		return addModifier((K) modifier, simulate);
+
 	}
 
 	public T addModifier(K modifier, boolean simulate) {

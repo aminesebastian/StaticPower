@@ -45,7 +45,7 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 			}
 
 			// Check the smithing target if this recipes is restricted to specific items.
-			if (isWildcardRecipe() && !smithTarget.test(matchParams.getItems()[0], matchParams.shouldVerifyItemCounts())) {
+			if (!isWildcardRecipe() && !smithTarget.test(matchParams.getItems()[0], matchParams.shouldVerifyItemCounts())) {
 				return false;
 			}
 

@@ -2,7 +2,7 @@ package theking530.staticpower.tileentities.powered.autosmith;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
-import theking530.staticcore.gui.widgets.ProcessingComponentStateWidget;
+import theking530.staticcore.gui.widgets.progressbars.AutoSmithProgressBar;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticcore.gui.widgets.tabs.GuiMachineFluidTab;
@@ -19,6 +19,7 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 
 public class GuiAutoSmith extends StaticPowerTileEntityGui<ContainerAutoSmith, TileEntityAutoSmith> {
 
+	@SuppressWarnings("unused")
 	private GuiInfoTab infoTab;
 
 	public GuiAutoSmith(ContainerAutoSmith container, PlayerInventory invPlayer, ITextComponent name) {
@@ -29,8 +30,8 @@ public class GuiAutoSmith extends StaticPowerTileEntityGui<ContainerAutoSmith, T
 	public void initializeGui() {
 		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 48));
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 150, 8, 16, 60, MachineSideMode.Input, getTileEntity()));
-		registerWidget(new ProcessingComponentStateWidget(getTileEntity().processingComponent, 48, 38));
-
+		registerWidget(new AutoSmithProgressBar(79, 37).bindToMachineProcessingComponent(getTileEntity().processingComponent));
+		
 		getTabManager().registerTab(infoTab = new GuiInfoTab(getTitle(), 120));
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
@@ -40,12 +41,11 @@ public class GuiAutoSmith extends StaticPowerTileEntityGui<ContainerAutoSmith, T
 		getTabManager().registerTab(new GuiFluidContainerTab(this.container, getTileEntity().fluidContainerComponent).setTabSide(TabSide.LEFT));
 		getTabManager().registerTab(new GuiUpgradeTab(this.container, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
 
-		setOutputSlotSize(16);
+		setOutputSlotSize(20);
 	}
 
 	@Override
 	public void updateData() {
 		super.updateData();
-
 	}
 }

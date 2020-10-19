@@ -11,6 +11,7 @@ import net.minecraftforge.fml.config.ModConfig;
 import theking530.api.itemattributes.attributes.AttributeModifierRegistry;
 import theking530.api.itemattributes.attributes.AttributeRegistry;
 import theking530.api.itemattributes.attributes.FortuneAttributeDefenition;
+import theking530.api.itemattributes.attributes.HasteAtributeDefenition;
 import theking530.api.itemattributes.attributes.modifiers.FloatAttributeModifier;
 import theking530.staticcore.initialization.StaticCoreRegistry;
 import theking530.staticpower.init.ModBlocks;
@@ -31,7 +32,8 @@ public class StaticPower {
 	public StaticPower() {
 		// Register smithing attributes.
 		AttributeRegistry.registerAttribute(FortuneAttributeDefenition.ID, (id) -> new FortuneAttributeDefenition(id));
-
+		AttributeRegistry.registerAttribute(HasteAtributeDefenition.ID, (id) -> new HasteAtributeDefenition(id));
+		
 		// Register smithing attribute modifiers.
 		AttributeModifierRegistry.registerAttributeType("float", () -> new FloatAttributeModifier());
 

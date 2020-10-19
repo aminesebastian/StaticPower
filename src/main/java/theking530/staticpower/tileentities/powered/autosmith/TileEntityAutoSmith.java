@@ -1,16 +1,20 @@
 package theking530.staticpower.tileentities.powered.autosmith;
 
+import java.util.List;
+
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.api.itemattributes.capability.CapabilityAttributable;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe;
-import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe.RecipeModifierWrapper;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
@@ -24,6 +28,7 @@ import theking530.staticpower.tileentities.components.items.FluidContainerInvent
 import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
+import theking530.staticpower.tileentities.components.items.ItemStackHandlerFilter;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.utilities.InventoryUtilities;
@@ -50,7 +55,15 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 		super(TYPE);
 
 		// Setup the inventories.
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 2, MachineSideMode.Input).setShiftClickEnabled(true));
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 2, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
+			@Override
+			public boolean canInsertItem(int slot, ItemStack stack) {
+				if (slot == 0) {
+					return isValidInput(stack, false);
+				}
+				return isValidInput(stack, true);
+			}
+		}));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 2));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output) {
 			@Override
@@ -62,8 +75,8 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<AutoSmithRecipe>("ProcessingComponent", AutoSmithRecipe.RECIPE_TYPE, 1, this::getMatchParameters, this::moveInputs, this::canProcessRecipe,
-				this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<AutoSmithRecipe>("ProcessingComponent", AutoSmithRecipe.RECIPE_TYPE, 1, this::getMatchParameters,
+				this::moveInputs, this::canProcessRecipe, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -78,7 +91,8 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory, 0));
 
 		// Setup the fluid tanks and servo.
-		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
+		registerComponent(
+				fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
 		fluidTankComponent.setCanDrain(false);
 		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, fluidTankComponent, MachineSideMode.Input));
 
@@ -105,7 +119,8 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 		}
 
 		// Transfer the inputs to internal buffers.
-		transferItemInternally(recipe.getSmithTarget().getCount(), inputInventory, 0, internalInventory, 0);
+		int transferCount = recipe.isWildcardRecipe() ? 1 : recipe.getSmithTarget().getCount();
+		transferItemInternally(transferCount, inputInventory, 0, internalInventory, 0);
 		transferItemInternally(recipe.getModifierMaterial().getCount(), inputInventory, 1, internalInventory, 1);
 
 		markTileEntityForSynchronization();
@@ -123,15 +138,8 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 		// Modify the input that we put in the buffer, and then put it into the output.
 		ItemStack output = internalInventory.getStackInSlot(0);
 
-		// Add the modifiers.
-		output.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).ifPresent(attributes -> {
-			// For all of the modifiers, if the item has the attribute, add the modifier.
-			for (RecipeModifierWrapper modifier : recipe.getModifiers()) {
-				if (attributes.hasAttribute(modifier.getAttributeId())) {
-					attributes.getAttribute(modifier.getAttributeId()).addModifier(modifier.getModifier(), false);
-				}
-			}
-		});
+		// Apply the recipe.
+		recipe.applyToItemStack(output);
 
 		// Put the item into the output slot.
 		outputInventory.insertItem(0, output, false);
@@ -139,11 +147,30 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 		// Drain the fluid.
 		fluidTankComponent.drain(recipe.getModifierFluid().getAmount(), FluidAction.EXECUTE);
 
+		// Play the crafting sound.
+		getWorld().playSound(null, getPos().getX(), getPos().getY() + 0.5, getPos().getZ(), SoundEvents.BLOCK_ANVIL_PLACE, SoundCategory.BLOCKS, 0.1F,
+				((getWorld().getRandom().nextFloat() * .75f) + 1.25f));
+
 		// Clear the internal inventory.
 		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
 		internalInventory.setStackInSlot(1, ItemStack.EMPTY);
 		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
+	}
+
+	public boolean isValidInput(ItemStack stack, boolean modifier) {
+		if (!modifier) {
+			return stack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).isPresent();
+		} else {
+			// Test for modifier materials.
+			List<AutoSmithRecipe> recipes = StaticPowerRecipeRegistry.getRecipesOfType(AutoSmithRecipe.RECIPE_TYPE);
+			for (AutoSmithRecipe recipe : recipes) {
+				if (recipe.getModifierMaterial().test(stack)) {
+					return true;
+				}
+			}
+			return false;
+		}
 	}
 
 	@Override

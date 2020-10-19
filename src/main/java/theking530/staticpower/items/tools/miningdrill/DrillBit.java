@@ -17,6 +17,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import theking530.api.itemattributes.attributes.AttributeRegistry;
 import theking530.api.itemattributes.attributes.FortuneAttributeDefenition;
+import theking530.api.itemattributes.attributes.HasteAtributeDefenition;
 import theking530.api.itemattributes.capability.AttributeableHandler;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticcore.utilities.ItemTierUtilities;
@@ -39,10 +40,12 @@ public class DrillBit extends StaticPowerItem {
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
 		FortuneAttributeDefenition fortuneAttribute = (FortuneAttributeDefenition) AttributeRegistry.createInstance(FortuneAttributeDefenition.ID);
-		fortuneAttribute.setBaseValue(0);
+		HasteAtributeDefenition hasteAttribute = (HasteAtributeDefenition) AttributeRegistry.createInstance(HasteAtributeDefenition.ID);
+
 
 		AttributeableHandler handler = new AttributeableHandler("attributes");
 		handler.addAttribute(fortuneAttribute);
+		handler.addAttribute(hasteAttribute);
 		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(handler);
 	}
 

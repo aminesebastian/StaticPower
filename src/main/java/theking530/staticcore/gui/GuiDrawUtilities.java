@@ -34,8 +34,8 @@ public class GuiDrawUtilities {
 
 	private static final float BACKGROUND_PIXEL_SIZE = 1.0f / 9.0f;
 
-	public static void drawGenericBackground(int width, int height, int guiLeft, int guiTop, float zLevel, Color mainBackgroundColor, Color rimTint, boolean drawLeft, boolean drawRight, boolean drawTop,
-			boolean drawBottom) {
+	public static void drawGenericBackground(int width, int height, int guiLeft, int guiTop, float zLevel, Color mainBackgroundColor, Color rimTint, boolean drawLeft, boolean drawRight,
+			boolean drawTop, boolean drawBottom) {
 		// MainBG
 		drawColoredRectangle(guiLeft + 3, guiTop + 3, width - 4, height - 4, zLevel, mainBackgroundColor);
 
@@ -45,7 +45,8 @@ public class GuiDrawUtilities {
 		drawTexturedGenericRect(guiLeft, guiTop, 4, 4, 0.0f, 0.0f, zLevel, 4 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
 		drawTexturedGenericRect(guiLeft + width - 5, guiTop, 5, 4, zLevel, 4 * BACKGROUND_PIXEL_SIZE, 0.0f, 9 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
 		drawTexturedGenericRect(guiLeft, guiTop + height - 5, 4, 5, 0.0f, zLevel, 4 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE);
-		drawTexturedGenericRect(guiLeft + width - 4, guiTop + height - 4, 4, 4, zLevel, 5 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE);
+		drawTexturedGenericRect(guiLeft + width - 4, guiTop + height - 4, 4, 4, zLevel, 5 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE,
+				9 * BACKGROUND_PIXEL_SIZE);
 
 		// Sides
 		if (drawTop) {
@@ -55,10 +56,12 @@ public class GuiDrawUtilities {
 			drawTexturedGenericRect(guiLeft, guiTop + 4, 3, height - 8, 0.0f, zLevel, 3 * BACKGROUND_PIXEL_SIZE, 3 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
 		}
 		if (drawRight) {
-			drawTexturedGenericRect(guiLeft + width - 3, guiTop + 4, 3, height - 8, zLevel, 6 * BACKGROUND_PIXEL_SIZE, 3 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE, 4 * BACKGROUND_PIXEL_SIZE);
+			drawTexturedGenericRect(guiLeft + width - 3, guiTop + 4, 3, height - 8, zLevel, 6 * BACKGROUND_PIXEL_SIZE, 3 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE,
+					4 * BACKGROUND_PIXEL_SIZE);
 		}
 		if (drawBottom) {
-			drawTexturedGenericRect(guiLeft + 4, guiTop + height - 3, width - 8, 3, zLevel, 4 * BACKGROUND_PIXEL_SIZE, 6 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE, 9 * BACKGROUND_PIXEL_SIZE);
+			drawTexturedGenericRect(guiLeft + 4, guiTop + height - 3, width - 8, 3, zLevel, 4 * BACKGROUND_PIXEL_SIZE, 6 * BACKGROUND_PIXEL_SIZE, 5 * BACKGROUND_PIXEL_SIZE,
+					9 * BACKGROUND_PIXEL_SIZE);
 		}
 	}
 
@@ -108,7 +111,6 @@ public class GuiDrawUtilities {
 		int filledHeight = (int) (fillAmount * height);
 		float zLevel = 0.0f;
 		drawColoredRectangle(xPos, yPos + (height - filledHeight), xPos + width, yPos + height, zLevel, color);
-
 	}
 
 	public static void drawTexturedGenericRect(float xCoord, float yCoord, float width, float height, float zLevel, float minU, float minV, float maxU, float maxV) {
@@ -120,6 +122,12 @@ public class GuiDrawUtilities {
 		bufferbuilder.pos(xCoord + width, yCoord, zLevel).tex(maxU, minV).endVertex();
 		bufferbuilder.pos(xCoord, yCoord, zLevel).tex(minU, minV).endVertex();
 		tessellator.draw();
+	}
+
+	public static void drawColoredRectangle(@Nullable MatrixStack matrixStack, float xCoord, float yCoord, float width, float height, float zLevel, Color color) {
+		Vector2D origin = translatePositionByMatrix(matrixStack, xCoord, yCoord);
+		drawColoredRectangle(origin.getX(), origin.getY(), width, height, zLevel, color);
+
 	}
 
 	public static void drawColoredRectangle(float xCoord, float yCoord, float width, float height, float zLevel, Color color) {

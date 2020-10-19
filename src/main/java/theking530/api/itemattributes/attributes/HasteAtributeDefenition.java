@@ -7,21 +7,22 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import theking530.api.itemattributes.attributes.modifiers.FloatAttributeModifier;
 
-public class FortuneAttributeDefenition extends AbstractAttributeDefenition<Integer, FloatAttributeModifier> {
+public class HasteAtributeDefenition extends AbstractAttributeDefenition<Integer, FloatAttributeModifier> {
 	public static final int MAX_VALUE = 300;
-	public static final ResourceLocation ID = new ResourceLocation("staticpower", "fortune");
+	public static final ResourceLocation ID = new ResourceLocation("staticpower", "haste");
 
-	public FortuneAttributeDefenition(ResourceLocation id) {
-		super(ID, "gui.staticpower.fortune", TextFormatting.BLUE, FloatAttributeModifier.class);
+	public HasteAtributeDefenition(ResourceLocation id) {
+		super(ID, "gui.staticpower.haste", TextFormatting.GOLD, FloatAttributeModifier.class);
 		baseValue = 0;
 	}
 
-	public int getFortuneLevel() {
-		if (getValue() < 100) {
+	public int getHasteLevel() {
+		int value = getValue();
+		if (value < 100) {
 			return 1;
-		} else if (getValue() < 200) {
+		} else if (value > 200 && value < 300) {
 			return 2;
-		} else if (getValue() >= 300) {
+		} else if (value >= 300) {
 			return 3;
 		} else {
 			return 0;
@@ -32,21 +33,21 @@ public class FortuneAttributeDefenition extends AbstractAttributeDefenition<Inte
 	public IFormattableTextComponent getAttributeTitle(boolean showAdvanced) {
 		IFormattableTextComponent baseTitle = super.getAttributeTitle(showAdvanced);
 
-		int fortuneLevel = getFortuneLevel();
-		String fortuneTier = "";
+		int hasteLevel = getHasteLevel();
+		String hasteTier = "";
 
-		if (fortuneLevel == 1) {
-			fortuneTier = "I";
-		} else if (fortuneLevel == 2) {
-			fortuneTier = "II";
-		} else if (fortuneLevel == 3) {
-			fortuneTier = "III";
+		if (hasteLevel == 1) {
+			hasteTier = "I";
+		} else if (hasteLevel == 2) {
+			hasteTier = "II";
+		} else if (hasteLevel == 3) {
+			hasteTier = "III";
 		}
 
 		if (showAdvanced) {
-			return baseTitle.appendString(" " + fortuneTier).appendString((TextFormatting.GRAY.toString() + " (" + getValue() + "/" + MAX_VALUE + ")"));
+			return baseTitle.appendString(" " + hasteTier).appendString((TextFormatting.GRAY.toString() + " (" + getValue() + "/" + MAX_VALUE + ")"));
 		} else {
-			return baseTitle.appendString(" " + fortuneTier);
+			return baseTitle.appendString(" " + hasteTier);
 		}
 	}
 
@@ -94,11 +95,11 @@ public class FortuneAttributeDefenition extends AbstractAttributeDefenition<Inte
 
 	@Override
 	public IFormattableTextComponent getDifferenceLabel(AbstractAttributeDefenition<?, ?> other) {
-		if (!(other instanceof FortuneAttributeDefenition)) {
+		if (!(other instanceof HasteAtributeDefenition)) {
 			return null;
 		}
 
-		FortuneAttributeDefenition otherFortune = (FortuneAttributeDefenition) other;
+		HasteAtributeDefenition otherFortune = (HasteAtributeDefenition) other;
 		int difference = this.getValue() - otherFortune.getValue();
 		if (difference == 0) {
 			return null;

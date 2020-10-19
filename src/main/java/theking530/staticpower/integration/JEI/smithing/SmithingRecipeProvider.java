@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 
-import mezz.jei.api.constants.VanillaRecipeCategoryUid;
 import mezz.jei.api.recipe.IFocus;
 import mezz.jei.api.recipe.advanced.IRecipeManagerPlugin;
 import mezz.jei.api.recipe.category.IRecipeCategory;
@@ -72,8 +71,7 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T, V> List<T> getRecipes(IRecipeCategory<T> recipeCategory, IFocus<V> focus) {
-		System.out.println(recipeCategory.getUid());
-		if (!VanillaRecipeCategoryUid.CRAFTING.equals(recipeCategory.getUid())) {
+		if (!SmithingRecipeCategory.AUTO_SMITHING_UID.equals(recipeCategory.getUid())) {
 			return Collections.emptyList();
 		}
 
@@ -175,6 +173,10 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 		@Override
 		public ItemStack getRecipeOutput() {
 			return output;
+		}
+
+		public ItemStack getInputItem() {
+			return input;
 		}
 
 		public Ingredient getInput() {

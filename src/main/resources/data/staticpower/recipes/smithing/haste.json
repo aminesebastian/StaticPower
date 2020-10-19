@@ -1,14 +1,13 @@
 {
 	"type": "staticpower:auto_smith_recipe",
 	"modifier_item": {
-		"tag": "forge:gems/lapis",
+		"tag": "forge:dusts/glowstone",
 		"count": 2
 	},
 	"attributes": [
 		{
-			"id": "staticpower:fortune",
+			"id": "staticpower:haste",
 			"modifier": {
-				"name": "fortune",
 				"type": "float",
 				"amount": 25.0,
 				"isAdditive": true

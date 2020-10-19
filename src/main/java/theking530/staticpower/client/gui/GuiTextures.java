@@ -36,4 +36,5 @@ public class GuiTextures {
 	public static final ResourceLocation GRINDER_PROGRESS_BAR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/grinder_progress_bar.png");
 	public static final ResourceLocation FUSION_PROGRESS_BAR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/fusion_progress_bar.png");
 	public static final ResourceLocation CENTRIFUGE_PROGRESS_BAR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/centrifuge_progress_bar.png");
+	public static final ResourceLocation AUTO_SMITH_PROGRESS_BAR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/auto_smith_progress_bar.png");
 }
