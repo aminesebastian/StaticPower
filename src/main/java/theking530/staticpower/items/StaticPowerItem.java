@@ -8,16 +8,19 @@ import javax.annotation.Nullable;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -177,5 +180,24 @@ public class StaticPowerItem extends Item {
 	 */
 	@OnlyIn(Dist.CLIENT)
 	protected void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+	}
+
+	@SuppressWarnings("deprecation")
+	public boolean removeEnchantment(ItemStack stack, Enchantment enchantment) {
+		stack.getOrCreateTag();
+		if (!stack.getTag().contains("Enchantments", 9)) {
+			stack.getTag().put("Enchantments", new ListNBT());
+		}
+
+		ListNBT listnbt = stack.getTag().getList("Enchantments", 10);
+		boolean removedFlag = false;
+		for (int i = listnbt.size() - 1; i >= 0; i--) {
+			CompoundNBT enchantmentNbt = (CompoundNBT) listnbt.get(i);
+			if (enchantmentNbt.getString("id").equals(Registry.ENCHANTMENT.getKey(enchantment).toString())) {
+				listnbt.remove(i);
+				removedFlag = true;
+			}
+		}
+		return removedFlag;
 	}
 }

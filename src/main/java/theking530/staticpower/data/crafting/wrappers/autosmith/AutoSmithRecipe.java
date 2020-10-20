@@ -11,6 +11,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
+import theking530.api.itemattributes.attributes.AbstractAttributeDefenition;
 import theking530.api.itemattributes.attributes.AttributeModifierRegistry;
 import theking530.api.itemattributes.attributes.modifiers.AbstractAttributeModifier;
 import theking530.api.itemattributes.capability.CapabilityAttributable;
@@ -37,6 +38,7 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 		this.modifiers = modifiers;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public boolean isValid(RecipeMatchParameters matchParams) {
 		if (matchParams.shouldVerifyItems()) {
 			// Check if items are supplied.
@@ -66,7 +68,8 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 			boolean wasApplied = false;
 			for (RecipeModifierWrapper wrapper : modifiers) {
 				if (attributable.hasAttribute(wrapper.getAttributeId())) {
-					if (attributable.getAttribute(wrapper.getAttributeId()).canAcceptModifier(wrapper.getModifier())) {
+					AbstractAttributeDefenition attribute = attributable.getAttribute(wrapper.getAttributeId());
+					if (attribute.canAcceptModifier(wrapper.getModifier())) {
 						wasApplied = true;
 						break;
 					}
@@ -126,6 +129,7 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 		return RECIPE_TYPE;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public boolean applyToItemStack(ItemStack stack) {
 		IAttributable attributable = stack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);
 		if (attributable == null) {
@@ -138,8 +142,9 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 		// Apply the modifiers and indicate that one was applied.
 		for (RecipeModifierWrapper modifier : getModifiers()) {
 			if (attributable.hasAttribute(modifier.getAttributeId())) {
-				if (attributable.getAttribute(modifier.getAttributeId()).canAcceptModifier(modifier.getModifier())) {
-					attributable.getAttribute(modifier.getAttributeId()).addModifier(modifier.getModifier(), false);
+				AbstractAttributeDefenition attribute = attributable.getAttribute(modifier.getAttributeId());
+				if (attribute.canAcceptModifier(modifier.getModifier())) {
+					attribute.addModifier(modifier.getModifier(), false);
 					applied = true;
 				}
 			}
@@ -148,10 +153,12 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 		return applied;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public boolean canApplyToAttributable(IAttributable attributable) {
 		for (RecipeModifierWrapper modifier : getModifiers()) {
 			if (attributable.hasAttribute(modifier.getAttributeId())) {
-				if (attributable.getAttribute(modifier.getAttributeId()).canAcceptModifier(modifier.getModifier())) {
+				AbstractAttributeDefenition attribute = attributable.getAttribute(modifier.getAttributeId());
+				if (attribute.canAcceptModifier(modifier.getModifier())) {
 					return true;
 				}
 			}

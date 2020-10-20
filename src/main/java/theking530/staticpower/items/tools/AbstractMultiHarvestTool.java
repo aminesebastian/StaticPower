@@ -68,7 +68,17 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 		return canHarvestBlock(stack, state);
 	}
 
-	protected void onBlocksMined(ItemStack stack, List<BlockPos> blocksMined, PlayerEntity player) {
+	/**
+	 * This method is only raised on the server.
+	 */
+	protected void onStartingBlockMining(ItemStack stack, List<BlockPos> blocksMined, PlayerEntity player) {
+
+	}
+
+	/**
+	 * This method is only raised on the server.
+	 */
+	protected void onAllBlocksMined(ItemStack stack, List<BlockPos> blocksMined, PlayerEntity player) {
 
 	}
 
@@ -128,12 +138,14 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 
 		// Harvest all the additional blocks if any were captured.
 		if (minableBlocks.size() > 0) {
+			onStartingBlockMining(itemstack, minableBlocks, player);
+
 			for (BlockPos extraPos : minableBlocks) {
 				harvestExtraBlock(extraPos, (ServerPlayerEntity) player);
 			}
 
 			// Raise on the harvested method.
-			onBlocksMined(itemstack, minableBlocks, player);
+			onAllBlocksMined(itemstack, minableBlocks, player);
 			return true;
 		} else {
 			return false;
@@ -153,44 +165,42 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 				return false;
 			} else if (player.blockActionRestricted(player.getEntityWorld(), pos, player.interactionManager.getGameType())) {
 				return false;
+			} else if (player.isCreative()) {
+				removeExtraBlock(pos, false, player);
+				return true;
 			} else {
-				if (player.isCreative()) {
-					removeExtraBlock(pos, false, player);
-					return true;
-				} else {
-					ItemStack itemstack = player.getHeldItemMainhand();
-					ItemStack itemstack1 = itemstack.copy();
-					boolean flag1 = blockstate.canHarvestBlock(player.getEntityWorld(), pos, player); // previously player.func_234569_d_(blockstate)
-					itemstack.onBlockDestroyed(player.getEntityWorld(), blockstate, pos, player);
-					if (itemstack.isEmpty() && !itemstack1.isEmpty())
-						net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(player, itemstack1, Hand.MAIN_HAND);
-					boolean flag = removeExtraBlock(pos, flag1, player);
-
-					if (flag && flag1) {
-						block.harvestBlock(player.getEntityWorld(), player, pos, blockstate, tileentity, itemstack1);
-					}
-
-					if (flag && exp > 0)
-						blockstate.getBlock().dropXpOnBlockBreak((ServerWorld) player.getEntityWorld(), pos, exp);
-
-					return true;
+				ItemStack heldItem = player.getHeldItemMainhand();
+				ItemStack heldItemCopy = heldItem.copy();
+				boolean canHarvest = blockstate.canHarvestBlock(player.getEntityWorld(), pos, player);
+				heldItem.onBlockDestroyed(player.getEntityWorld(), blockstate, pos, player);
+				if (heldItem.isEmpty() && !heldItemCopy.isEmpty()) {
+					net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(player, heldItemCopy, Hand.MAIN_HAND);
 				}
+				boolean flag = removeExtraBlock(pos, canHarvest, player);
+
+				if (flag && canHarvest) {
+					block.harvestBlock(player.getEntityWorld(), player, pos, blockstate, tileentity, heldItemCopy);
+					if (exp > 0) {
+						blockstate.getBlock().dropXpOnBlockBreak((ServerWorld) player.getEntityWorld(), pos, exp);
+					}
+				}
+
+				return true;
 			}
 		}
 	}
 
-	protected boolean removeExtraBlock(BlockPos p_180235_1_, boolean canHarvest, ServerPlayerEntity player) {
-		BlockState state = player.getEntityWorld().getBlockState(p_180235_1_);
-		boolean removed = state.removedByPlayer(player.getEntityWorld(), p_180235_1_, player, canHarvest, player.getEntityWorld().getFluidState(p_180235_1_));
+	protected boolean removeExtraBlock(BlockPos pos, boolean canHarvest, ServerPlayerEntity player) {
+		BlockState state = player.getEntityWorld().getBlockState(pos);
+		boolean removed = state.removedByPlayer(player.getEntityWorld(), pos, player, canHarvest, player.getEntityWorld().getFluidState(pos));
 		if (removed) {
-			state.getBlock().onPlayerDestroy(player.getEntityWorld(), p_180235_1_, state);
+			state.getBlock().onPlayerDestroy(player.getEntityWorld(), pos, state);
 		}
 		return removed;
 	}
 
 	@Override
 	public float getDestroySpeed(ItemStack stack, BlockState state) {
-		System.out.println(getEfficiency(stack));
 		return canHarvestAtFullSpeed(stack, state) ? this.getEfficiency(stack) : canMine(stack) ? 1.0f : 0.0f;
 	}
 
@@ -200,9 +210,6 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 	 */
 	@Override
 	public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-		stack.damageItem(2, attacker, (entity) -> {
-			entity.sendBreakAnimation(EquipmentSlotType.MAINHAND);
-		});
 		return true;
 	}
 
