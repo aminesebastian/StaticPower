@@ -7,11 +7,11 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import theking530.api.itemattributes.attributes.modifiers.FloatAttributeModifier;
 
-public class HasteAtributeDefenition extends AbstractAttributeDefenition<Integer, FloatAttributeModifier> {
+public class HasteAttributeDefenition extends AbstractAttributeDefenition<Integer, FloatAttributeModifier> {
 	public static final int MAX_VALUE = 300;
 	public static final ResourceLocation ID = new ResourceLocation("staticpower", "haste");
 
-	public HasteAtributeDefenition(ResourceLocation id) {
+	public HasteAttributeDefenition(ResourceLocation id) {
 		super(ID, "gui.staticpower.haste", TextFormatting.GOLD, FloatAttributeModifier.class);
 		baseValue = 0;
 	}
@@ -95,11 +95,11 @@ public class HasteAtributeDefenition extends AbstractAttributeDefenition<Integer
 
 	@Override
 	public IFormattableTextComponent getDifferenceLabel(AbstractAttributeDefenition<?, ?> other) {
-		if (!(other instanceof HasteAtributeDefenition)) {
+		if (!(other instanceof HasteAttributeDefenition)) {
 			return null;
 		}
 
-		HasteAtributeDefenition otherFortune = (HasteAtributeDefenition) other;
+		HasteAttributeDefenition otherFortune = (HasteAttributeDefenition) other;
 		int difference = this.getValue() - otherFortune.getValue();
 		if (difference == 0) {
 			return null;

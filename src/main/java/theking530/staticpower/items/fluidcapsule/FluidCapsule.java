@@ -47,7 +47,7 @@ public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplie
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+	protected void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
 		FluidUtil.getFluidHandler(stack).ifPresent(fluidHandler -> {
 			tooltip.add(new StringTextComponent(TextFormatting.WHITE.toString()).append(GuiTextUtilities
 					.formatFluidToString(fluidHandler.getFluidInTank(0).getAmount(), fluidHandler.getTankCapacity(0))));

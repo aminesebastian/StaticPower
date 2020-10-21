@@ -42,8 +42,10 @@ public class SolderingIron extends StaticPowerItem implements ISolderingIron {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
-		tooltip.add(new StringTextComponent("Max Uses: " + getMaxDamage(stack)));
-		tooltip.add(new StringTextComponent("Uses Remaining: " + (getMaxDamage(stack) - getDamage(stack))));
+	protected void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
+		if (showAdvanced) {
+			tooltip.add(new StringTextComponent("Max Uses: " + getMaxDamage(stack)));
+			tooltip.add(new StringTextComponent("Uses Remaining: " + (getMaxDamage(stack) - getDamage(stack))));
+		}
 	}
 }

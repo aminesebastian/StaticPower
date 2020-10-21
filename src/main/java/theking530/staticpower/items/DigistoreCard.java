@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -48,7 +47,8 @@ public class DigistoreCard extends StaticPowerItem {
 	}
 
 	public static IDigistoreInventory getInventory(ItemStack stack) {
-		return stack.getCapability(CapabilityDigistoreInventory.DIGISTORE_INVENTORY_CAPABILITY).orElseThrow(() -> new RuntimeException("Encounetered a digistore card without an attached digistore inventory."));
+		return stack.getCapability(CapabilityDigistoreInventory.DIGISTORE_INVENTORY_CAPABILITY)
+				.orElseThrow(() -> new RuntimeException("Encounetered a digistore card without an attached digistore inventory."));
 	}
 
 	@Nullable
@@ -74,21 +74,18 @@ public class DigistoreCard extends StaticPowerItem {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
-		if (!Screen.hasShiftDown()) {
-			tooltip.add(new StringTextComponent("Stores: ").appendString(String.valueOf(getInventory(stack).getItemCapacity() / 64)).appendString(" Stacks"));
-			tooltip.add(new StringTextComponent("Max Types: ").appendString(String.valueOf(getInventory(stack).getUniqueItemCapacity())));
-		}
-	}
+	protected void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
+		tooltip.add(new StringTextComponent("Stores: ").appendString(String.valueOf(getInventory(stack).getItemCapacity() / 64)).appendString(" Stacks"));
+		tooltip.add(new StringTextComponent("Max Types: ").appendString(String.valueOf(getInventory(stack).getUniqueItemCapacity())));
 
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	protected void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
-		int storedAmount = getInventory(stack).getTotalContainedCount();
-		float filledPercentage = (float) storedAmount / getInventory(stack).getItemCapacity();
-		MetricConverter converter = new MetricConverter(storedAmount);
-		tooltip.add(new StringTextComponent("Stored: ").appendString(converter.getValueAsString(true)).appendString(" Items (").appendString(String.valueOf((int) (100 * filledPercentage))).appendString("%)"));
-		tooltip.add(new StringTextComponent("Types: ").appendString(String.valueOf(getInventory(stack).getCurrentUniqueItemTypeCount())));
+		if (showAdvanced) {
+			int storedAmount = getInventory(stack).getTotalContainedCount();
+			float filledPercentage = (float) storedAmount / getInventory(stack).getItemCapacity();
+			MetricConverter converter = new MetricConverter(storedAmount);
+			tooltip.add(new StringTextComponent("Stored: ").appendString(converter.getValueAsString(true)).appendString(" Items (")
+					.appendString(String.valueOf((int) (100 * filledPercentage))).appendString("%)"));
+			tooltip.add(new StringTextComponent("Types: ").appendString(String.valueOf(getInventory(stack).getCurrentUniqueItemTypeCount())));
+		}
 	}
 
 	@Override

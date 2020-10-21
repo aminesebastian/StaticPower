@@ -133,9 +133,9 @@ public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustom
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+	protected void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
 		tooltip.add(new TranslationTextComponent(isActivated(stack) ? "gui.staticpower.active" : "gui.staticpower.inactive"));
-		super.getBasicTooltip(stack, worldIn, tooltip);
+		super.getTooltip(stack, worldIn, tooltip, showAdvanced);
 	}
 
 	@Override

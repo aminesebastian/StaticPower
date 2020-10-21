@@ -81,7 +81,7 @@ public class StaticPowerForgeEventRegistry {
 	}
 
 	@SubscribeEvent
-	static void renderBlockHighlights(DrawHighlightEvent.HighlightBlock event) {
+	public static void renderBlockHighlights(DrawHighlightEvent.HighlightBlock event) {
 		StaticPowerClientEventHandler.renderBlockHighlights(event);
 	}
 

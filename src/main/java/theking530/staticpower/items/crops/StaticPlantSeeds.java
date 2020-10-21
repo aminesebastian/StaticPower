@@ -19,7 +19,7 @@ public class StaticPlantSeeds extends CropSeeds {
     }
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+	protected void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
 		tooltip.add(new StringTextComponent("These Seeds Radiate with"));
 		tooltip.add(new StringTextComponent("a Strange Energy..."));
 	}

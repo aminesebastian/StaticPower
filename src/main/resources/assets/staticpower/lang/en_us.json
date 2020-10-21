@@ -562,5 +562,7 @@
 	"gui.staticpower.inactive": "Inactive",
 	"gui.staticpower.fortune": "Fortune",
 	"gui.staticpower.haste": "Haste",
-	"gui.staticpower.attributes": "Attributes"
+	"gui.staticpower.attributes": "Attributes",
+	"gui.staticpower.hold_shift": "Hold Shift",
+	"gui.staticpower.hold_control": "Hold Control"
 }

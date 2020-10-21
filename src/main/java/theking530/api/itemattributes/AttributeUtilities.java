@@ -6,8 +6,6 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import theking530.api.itemattributes.attributes.AbstractAttributeDefenition;
 import theking530.api.itemattributes.capability.CapabilityAttributable;
 
@@ -30,9 +28,7 @@ public class AttributeUtilities {
 
 			// Add the header and footer.
 			if (attributeTooltips.size() > 0) {
-				tooltip.add(new TranslationTextComponent("gui.staticpower.attributes"));
 				tooltip.addAll(attributeTooltips);
-				tooltip.add(new StringTextComponent(""));
 			}
 
 		});

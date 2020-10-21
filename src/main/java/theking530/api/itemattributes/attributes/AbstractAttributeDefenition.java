@@ -38,7 +38,7 @@ public abstract class AbstractAttributeDefenition<T, K extends AbstractAttribute
 		this.modifiers = new ArrayList<K>();
 		this.modifierType = modifierType;
 	}
-
+	
 	public abstract T getValue();
 
 	public abstract boolean shouldDisplayOnTooltip();

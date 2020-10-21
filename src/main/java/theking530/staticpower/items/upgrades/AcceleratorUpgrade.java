@@ -21,7 +21,7 @@ public class AcceleratorUpgrade extends BaseUpgrade {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+	protected void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
 		tooltip.add(new StringTextComponent(TextFormatting.GREEN + "Increases the frequency at which"));
 		tooltip.add(new StringTextComponent(TextFormatting.GREEN + "certain digistore attachments will operate."));
 

@@ -21,7 +21,7 @@ public class BaseOutputMultiplierUpgrade extends BaseUpgrade {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+	protected void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
 		tooltip.add(new StringTextComponent(
 				TextFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(getTier().getOutputMultiplierUpgrade() * 100) + "%" + TextFormatting.GREEN + " Output Chance"));
 		tooltip.add(new StringTextComponent(

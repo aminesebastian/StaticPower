@@ -20,7 +20,7 @@ public class CraftingUpgrade extends BaseUpgrade {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+	protected void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
 		tooltip.add(new StringTextComponent(TextFormatting.GREEN + "Allows digistore attachments"));
 		tooltip.add(new StringTextComponent(TextFormatting.GREEN + "to craft items if needed."));
 	}

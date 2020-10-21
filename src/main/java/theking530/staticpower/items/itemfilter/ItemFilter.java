@@ -66,7 +66,8 @@ public class ItemFilter extends StaticPowerItem {
 		stack.getTag().putBoolean(MATCH_MOD_KEY, false);
 
 		// Add the inventory.
-		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, TierReloadListener.getTier(filterTier).getItemFilterSlots()));
+		return new ItemStackMultiCapabilityProvider(stack, nbt)
+				.addCapability(new ItemStackCapabilityInventory("default", stack, TierReloadListener.getTier(filterTier).getItemFilterSlots()));
 	}
 
 	/**
@@ -153,21 +154,23 @@ public class ItemFilter extends StaticPowerItem {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
-		boolean empty = true;
-		if (stack.hasTag() && stack.getTag().contains("Items")) {
-			ItemStackHandler tempHandler = new ItemStackHandler();
-			tempHandler.deserializeNBT(stack.getTag());
+	protected void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
+		if (showAdvanced) {
+			boolean empty = true;
+			if (stack.hasTag() && stack.getTag().contains("Items")) {
+				ItemStackHandler tempHandler = new ItemStackHandler();
+				tempHandler.deserializeNBT(stack.getTag());
 
-			for (int i = 0; i < tempHandler.getSlots(); i++) {
-				if (!tempHandler.getStackInSlot(i).isEmpty()) {
-					tooltip.add(new StringTextComponent("Slot " + (i + 1) + ": ").append(tempHandler.getStackInSlot(i).getDisplayName()));
-					empty = false;
+				for (int i = 0; i < tempHandler.getSlots(); i++) {
+					if (!tempHandler.getStackInSlot(i).isEmpty()) {
+						tooltip.add(new StringTextComponent("Slot " + (i + 1) + ": ").append(tempHandler.getStackInSlot(i).getDisplayName()));
+						empty = false;
+					}
 				}
 			}
-		}
-		if (empty) {
-			tooltip.add(new StringTextComponent(TextFormatting.ITALIC + "Empty"));
+			if (empty) {
+				tooltip.add(new StringTextComponent(TextFormatting.ITALIC + "Empty"));
+			}
 		}
 	}
 

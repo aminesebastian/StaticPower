@@ -21,7 +21,7 @@ public class BaseRangeUpgrade extends BaseUpgrade {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+	protected void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
 		float upgradeAmount = getTier().getRangeUpgrade();
 
 		if (upgradeAmount < 0) {

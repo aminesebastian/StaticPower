@@ -2,6 +2,7 @@ package theking530.staticpower.items.tools.miningdrill;
 
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.annotation.Nullable;
 
@@ -12,7 +13,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -30,7 +30,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -40,7 +39,9 @@ import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import theking530.api.itemattributes.AttributeUtilities;
 import theking530.api.itemattributes.attributes.FortuneAttributeDefenition;
+import theking530.api.itemattributes.attributes.HasteAttributeDefenition;
 import theking530.api.itemattributes.capability.CapabilityAttributable;
 import theking530.api.power.ItemStackStaticVoltCapability;
 import theking530.staticcore.item.ItemStackCapabilityInventory;
@@ -121,12 +122,20 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 
 	@Override
 	protected float getEfficiency(ItemStack itemstack) {
+		AtomicReference<Float> efficiency = new AtomicReference<Float>(1.0f);
+
 		if (hasDrillBit(itemstack)) {
 			ItemStack drillBitStack = getDrillBit(itemstack);
 			DrillBit drillBit = (DrillBit) drillBitStack.getItem();
-			return drillBit.getMiningTier().getEfficiency();
+			efficiency.set(drillBit.getMiningTier().getEfficiency());
+			drillBitStack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).ifPresent(attributable -> {
+				if (attributable.hasAttribute(HasteAttributeDefenition.ID)) {
+					HasteAttributeDefenition hasteDefenition = (HasteAttributeDefenition) attributable.getAttribute(HasteAttributeDefenition.ID);
+					efficiency.set(efficiency.get() * ((hasteDefenition.getValue() / 300.0f) + 1.0f));
+				}
+			});
 		}
-		return 1.0f;
+		return efficiency.get();
 	}
 
 	@Override
@@ -155,13 +164,15 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 
 	@Override
 	protected void onStartingBlockMining(ItemStack stack, List<BlockPos> blocksMined, PlayerEntity player) {
-		stack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).ifPresent(attributable -> {
-			if (attributable.hasAttribute(FortuneAttributeDefenition.ID)) {
-				FortuneAttributeDefenition fortune = (FortuneAttributeDefenition) attributable.getAttribute(FortuneAttributeDefenition.ID);
-				stack.addEnchantment(Enchantments.FORTUNE, fortune.getFortuneLevel());
-			}
-		});
-
+		if (hasDrillBit(stack)) {
+			ItemStack bit = getDrillBit(stack);
+			bit.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).ifPresent(attributable -> {
+				if (attributable.hasAttribute(FortuneAttributeDefenition.ID)) {
+					FortuneAttributeDefenition fortune = (FortuneAttributeDefenition) attributable.getAttribute(FortuneAttributeDefenition.ID);
+					stack.addEnchantment(Enchantments.FORTUNE, fortune.getFortuneLevel());
+				}
+			});
+		}
 	}
 
 	/**
@@ -205,24 +216,28 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+	protected void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
 		int remainingCharge = EnergyHandlerItemStackUtilities.getStoredPower(stack);
 		int capacity = EnergyHandlerItemStackUtilities.getCapacity(stack);
 		tooltip.add(GuiTextUtilities.formatEnergyToString(remainingCharge, capacity));
 
+		if (hasDrillBit(stack)) {
+			ItemStack drillBit = this.getDrillBit(stack);
+			DrillBit drillBitItem = (DrillBit) drillBit.getItem();
+			drillBitItem.getTooltip(drillBit, worldIn, tooltip, isShowingAdvanced);
+			if (isShowingAdvanced) {
+				drillBitItem.getAdvancedTooltip(drillBit, worldIn, tooltip);
+			}
+			tooltip.add(new StringTextComponent(""));
+			AttributeUtilities.addTooltipsForAttribute(drillBit, tooltip, isShowingAdvanced);
+		}
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	protected void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
-		// Get the inventory.
-		IItemHandler inventory = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
-		if (inventory != null) {
-			tooltip.add(new StringTextComponent("——————————————").mergeStyle(TextFormatting.DARK_GRAY));
-			inventory.getStackInSlot(0).getItem().addInformation(inventory.getStackInSlot(0), worldIn, tooltip, TooltipFlags.ADVANCED);
-			tooltip.add(new StringTextComponent("——————————————").mergeStyle(TextFormatting.DARK_GRAY));
-			tooltip.add(new TranslationTextComponent("gui.staticpower.mining_speed").appendString(": ").appendString(String.valueOf(this.getEfficiency(stack))));
-		}
+		tooltip.add(new StringTextComponent(""));
+		tooltip.add(new TranslationTextComponent("gui.staticpower.mining_speed").appendString(" ").appendString(String.valueOf(this.getEfficiency(stack))));
 	}
 
 	/**

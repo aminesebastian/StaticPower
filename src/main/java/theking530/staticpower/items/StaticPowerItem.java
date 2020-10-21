@@ -22,8 +22,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -106,27 +106,31 @@ public class StaticPowerItem extends Item {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-		// Get the basic tooltips.
+		// Allocate the basic tooltips.
 		List<ITextComponent> basicTooltips = new ArrayList<ITextComponent>();
-		getBasicTooltip(stack, worldIn, basicTooltips);
-
-		// Add the tooltips if any were requested.
-		if (basicTooltips.size() > 0) {
-			tooltip.addAll(basicTooltips);
-		}
 
 		// Get the advanced tooltips.
 		List<ITextComponent> advancedToolTips = new ArrayList<ITextComponent>();
 		getAdvancedTooltip(stack, worldIn, advancedToolTips);
 
-		// Add the advanced tooltips if any were requested.
-		if (advancedToolTips.size() > 0) {
-			// If sneak is not held, indicate that the user should hold sneak, otherwise add
-			// the advanced tooltips.
-			if (Screen.hasShiftDown()) {
+		// If we are holding shift, show the advanced tooltips.
+		if (Screen.hasControlDown()) {
+			// Add the basics that are in advanced mode.
+			getTooltip(stack, worldIn, basicTooltips, true);
+			tooltip.addAll(basicTooltips);
+
+			// Add the advanced.
+			if (advancedToolTips.size() > 0) {
 				tooltip.addAll(advancedToolTips);
-			} else {
-				tooltip.add(new StringTextComponent("Hold Shift").mergeStyle(TextFormatting.ITALIC));
+			}
+		} else {
+			// If there are basic tooltips, add them.
+			getTooltip(stack, worldIn, basicTooltips, false);
+			tooltip.addAll(basicTooltips);
+
+			// If there are advanced tooltips, indicate to hold control.
+			if (advancedToolTips.size() > 0) {
+				tooltip.add(new TranslationTextComponent("gui.staticpower.hold_control").mergeStyle(TextFormatting.ITALIC).mergeStyle(TextFormatting.GRAY));
 			}
 		}
 	}
@@ -160,24 +164,18 @@ public class StaticPowerItem extends Item {
 	}
 
 	/**
-	 * Gets the basic tooltip that is displayed when hovered by the user.
+	 * Gets the tooltip that is displayed when hovered by the user.
 	 * 
-	 * @param stack   The item stack hovered by the user.
-	 * @param worldIn The world the player was in when hovering the item.
-	 * @param tooltip The list of {@link ITextComponent} to add to the tooltip.
+	 * @param stack             The item stack hovered by the user.
+	 * @param worldIn           The world the player was in when hovering the item.
+	 * @param tooltip           The list of {@link ITextComponent} to add to the
+	 *                          tooltip.
+	 * @param isShowingAdvanced True if advanced tooltips are requested.
 	 */
 	@OnlyIn(Dist.CLIENT)
-	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+	protected void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
 	}
 
-	/**
-	 * Gets the advanced tooltip that is displayed when hovered by the user and they
-	 * are holding shift.
-	 * 
-	 * @param stack   The item stack hovered by the user.
-	 * @param worldIn The world the player was in when hovering the item.
-	 * @param tooltip The list of {@link ITextComponent} to add to the tooltip.
-	 */
 	@OnlyIn(Dist.CLIENT)
 	protected void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
 	}

@@ -21,7 +21,7 @@ public class BaseCentrifugeUpgrade extends BaseUpgrade {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+	protected void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
 		int speedUpgrade = getTier().getMaxCentrifugeSpeedUpgrade();
 		float powerUsageUpgrade = getTier().getCentrifugeUpgradedPowerIncrease();
 

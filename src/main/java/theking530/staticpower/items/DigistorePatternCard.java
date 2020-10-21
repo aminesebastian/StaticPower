@@ -43,32 +43,33 @@ public class DigistorePatternCard extends StaticPowerItem implements ICustomMode
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
-		// Try to get the pattern.
-		EncodedDigistorePattern pattern = EncodedDigistorePattern.readFromPatternCard(stack);
+	protected void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
+		if (showAdvanced) {
+			// Try to get the pattern.
+			EncodedDigistorePattern pattern = EncodedDigistorePattern.readFromPatternCard(stack);
 
-		// If there is no pattern, do nothing.
-		if (pattern == null) {
-			return;
-		}
-
-		// Add inputs.
-		tooltip.add(new StringTextComponent("Inputs: "));
-		for (ItemStack input : pattern.getInputs()) {
-			if (!input.isEmpty()) {
-				tooltip.add(new StringTextComponent("  •").append(input.getDisplayName()));
+			// If there is no pattern, do nothing.
+			if (pattern == null) {
+				return;
 			}
-		}
 
-		// Add outputs.
-		tooltip.add(new StringTextComponent("Output: "));
-		if (!pattern.getOutput().isEmpty()) {
-			IFormattableTextComponent outputTooltip = new StringTextComponent("  •")
-					.append(pattern.getOutput().getDisplayName());
-			if (pattern.getOutput().getCount() > 1) {
-				outputTooltip.append(new StringTextComponent(" x" + pattern.getOutput().getCount()));
+			// Add inputs.
+			tooltip.add(new StringTextComponent("Inputs: "));
+			for (ItemStack input : pattern.getInputs()) {
+				if (!input.isEmpty()) {
+					tooltip.add(new StringTextComponent("  •").append(input.getDisplayName()));
+				}
 			}
-			tooltip.add(outputTooltip);
+
+			// Add outputs.
+			tooltip.add(new StringTextComponent("Output: "));
+			if (!pattern.getOutput().isEmpty()) {
+				IFormattableTextComponent outputTooltip = new StringTextComponent("  •").append(pattern.getOutput().getDisplayName());
+				if (pattern.getOutput().getCount() > 1) {
+					outputTooltip.append(new StringTextComponent(" x" + pattern.getOutput().getCount()));
+				}
+				tooltip.add(outputTooltip);
+			}
 		}
 	}
 
@@ -98,8 +99,7 @@ public class DigistorePatternCard extends StaticPowerItem implements ICustomMode
 	}
 
 	public static boolean hasPattern(ItemStack card) {
-		return card.getItem() instanceof DigistorePatternCard && card.hasTag()
-				&& card.getTag().contains(DigistorePatternCard.ENCODED_PATTERN_TAG);
+		return card.getItem() instanceof DigistorePatternCard && card.hasTag() && card.getTag().contains(DigistorePatternCard.ENCODED_PATTERN_TAG);
 	}
 
 	@Override
@@ -110,8 +110,7 @@ public class DigistorePatternCard extends StaticPowerItem implements ICustomMode
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
-		IBakedModel encodedModel = event.getModelRegistry()
-				.get(StaticPowerAdditionalModels.DIGISTORE_PATTERN_CARD_ENCODED);
+		IBakedModel encodedModel = event.getModelRegistry().get(StaticPowerAdditionalModels.DIGISTORE_PATTERN_CARD_ENCODED);
 		return new PatternCardItemModel(existingModel, encodedModel);
 	}
 

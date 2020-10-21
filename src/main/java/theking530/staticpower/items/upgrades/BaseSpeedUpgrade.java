@@ -21,7 +21,7 @@ public class BaseSpeedUpgrade extends BaseUpgrade {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+	protected void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
 		float speedUpgrade = getTier().getProcessingSpeedUpgrade();
 		speedUpgrade *= (float) stack.getCount() / stack.getMaxStackSize();
 
