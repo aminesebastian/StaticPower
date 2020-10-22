@@ -1,13 +1,10 @@
 package theking530.staticpower.items;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -22,8 +19,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -103,38 +98,6 @@ public class StaticPowerItem extends Item {
 		return onStaticPowerItemUsedOnBlock(context, context.getWorld(), context.getPos(), context.getFace(), context.getPlayer(), context.getItem());
 	}
 
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-		// Allocate the basic tooltips.
-		List<ITextComponent> basicTooltips = new ArrayList<ITextComponent>();
-
-		// Get the advanced tooltips.
-		List<ITextComponent> advancedToolTips = new ArrayList<ITextComponent>();
-		getAdvancedTooltip(stack, worldIn, advancedToolTips);
-
-		// If we are holding shift, show the advanced tooltips.
-		if (Screen.hasControlDown()) {
-			// Add the basics that are in advanced mode.
-			getTooltip(stack, worldIn, basicTooltips, true);
-			tooltip.addAll(basicTooltips);
-
-			// Add the advanced.
-			if (advancedToolTips.size() > 0) {
-				tooltip.addAll(advancedToolTips);
-			}
-		} else {
-			// If there are basic tooltips, add them.
-			getTooltip(stack, worldIn, basicTooltips, false);
-			tooltip.addAll(basicTooltips);
-
-			// If there are advanced tooltips, indicate to hold control.
-			if (advancedToolTips.size() > 0) {
-				tooltip.add(new TranslationTextComponent("gui.staticpower.hold_control").mergeStyle(TextFormatting.ITALIC).mergeStyle(TextFormatting.GRAY));
-			}
-		}
-	}
-
 	/**
 	 * Expanded version of onItemRightClick.
 	 * 
@@ -173,11 +136,11 @@ public class StaticPowerItem extends Item {
 	 * @param isShowingAdvanced True if advanced tooltips are requested.
 	 */
 	@OnlyIn(Dist.CLIENT)
-	protected void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	protected void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+	public void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
 	}
 
 	@SuppressWarnings("deprecation")

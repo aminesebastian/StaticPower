@@ -154,7 +154,7 @@ public class ItemFilter extends StaticPowerItem {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
 		if (showAdvanced) {
 			boolean empty = true;
 			if (stack.hasTag() && stack.getTag().contains("Items")) {

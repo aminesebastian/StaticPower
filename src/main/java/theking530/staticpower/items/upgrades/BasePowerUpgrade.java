@@ -21,7 +21,7 @@ public class BasePowerUpgrade extends BaseUpgrade {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
 		float powerUpgrade = getTier().getPowerUpgrade();
 		powerUpgrade *= (float) stack.getCount() / stack.getMaxStackSize();
 

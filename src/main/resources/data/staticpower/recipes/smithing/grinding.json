@@ -1,0 +1,15 @@
+{
+	"type": "staticpower:auto_smith_recipe",
+	"modifier_item": {
+		"item": "staticpower:grinder_component"
+	},
+	"attributes": [
+		{
+			"id": "staticpower:grinding",
+			"modifier": {
+				"type": "boolean",
+				"value": true 
+			}
+		}
+	]
+}

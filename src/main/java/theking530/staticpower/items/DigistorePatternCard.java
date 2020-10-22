@@ -43,7 +43,7 @@ public class DigistorePatternCard extends StaticPowerItem implements ICustomMode
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
 		if (showAdvanced) {
 			// Try to get the pattern.
 			EncodedDigistorePattern pattern = EncodedDigistorePattern.readFromPatternCard(stack);

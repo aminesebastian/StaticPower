@@ -74,7 +74,7 @@ public class DigistoreCard extends StaticPowerItem {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
 		tooltip.add(new StringTextComponent("Stores: ").appendString(String.valueOf(getInventory(stack).getItemCapacity() / 64)).appendString(" Stacks"));
 		tooltip.add(new StringTextComponent("Max Types: ").appendString(String.valueOf(getInventory(stack).getUniqueItemCapacity())));
 

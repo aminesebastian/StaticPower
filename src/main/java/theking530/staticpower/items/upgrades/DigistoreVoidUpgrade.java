@@ -20,7 +20,7 @@ public class DigistoreVoidUpgrade extends BaseUpgrade {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
 		tooltip.add(new StringTextComponent(TextFormatting.WHITE + "Voids all excess items"));
 		tooltip.add(new StringTextComponent(TextFormatting.WHITE + "entering a Digistore."));
 	}

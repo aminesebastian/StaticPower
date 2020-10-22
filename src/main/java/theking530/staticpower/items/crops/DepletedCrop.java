@@ -28,7 +28,7 @@ public class DepletedCrop extends StaticPowerItem {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
 		tooltip.add(new StringTextComponent("Strangly Fertilizing..."));
 	}
 

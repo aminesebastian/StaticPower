@@ -29,7 +29,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -216,7 +215,7 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
 		int remainingCharge = EnergyHandlerItemStackUtilities.getStoredPower(stack);
 		int capacity = EnergyHandlerItemStackUtilities.getCapacity(stack);
 		tooltip.add(GuiTextUtilities.formatEnergyToString(remainingCharge, capacity));
@@ -228,15 +227,13 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 			if (isShowingAdvanced) {
 				drillBitItem.getAdvancedTooltip(drillBit, worldIn, tooltip);
 			}
-			tooltip.add(new StringTextComponent(""));
 			AttributeUtilities.addTooltipsForAttribute(drillBit, tooltip, isShowingAdvanced);
 		}
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
-		tooltip.add(new StringTextComponent(""));
+	public void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
 		tooltip.add(new TranslationTextComponent("gui.staticpower.mining_speed").appendString(" ").appendString(String.valueOf(this.getEfficiency(stack))));
 	}
 
@@ -256,15 +253,15 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	}
 
 	@Override
-	public boolean canHarvestBlock(ItemStack stack, BlockState state) {
-		// First check if we can even mine.
-		if (!canMine(stack)) {
-			return false;
-		}
-
+	public boolean canMineBlock(ItemStack stack, BlockState state, BlockPos pos, PlayerEntity player) {
 		// Check the tool.
 		if (getToolTypes(stack).stream().anyMatch(e -> state.isToolEffective(e))) {
 			return true;
+		}
+
+		// Check the hardness.
+		if (state.getPlayerRelativeBlockHardness(player, player.getEntityWorld(), pos) < 1.0f) {
+			return false;
 		}
 
 		// If we are able to harvest the block full speed, do so.

@@ -21,7 +21,7 @@ public class ExperienceVacuumUpgrade extends BaseUpgrade implements IUpgradeItem
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
 		if(showAdvanced) {
 			tooltip.add(new StringTextComponent(TextFormatting.GREEN + "Allows objects with"));
 			tooltip.add(new StringTextComponent(TextFormatting.GREEN + "vacuum effects to"));

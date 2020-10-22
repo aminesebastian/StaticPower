@@ -49,7 +49,7 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 
 	public abstract boolean canHarvestAtFullSpeed(ItemStack stack, BlockState state);
 
-	public abstract boolean canHarvestBlock(ItemStack stack, BlockState state);
+	public abstract boolean canMineBlock(ItemStack stack, BlockState state, BlockPos pos, PlayerEntity player);
 
 	public abstract int getWidth(ItemStack stack);
 
@@ -61,11 +61,11 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 		return true;
 	}
 
-	protected boolean canHarvestBlockInternal(ItemStack stack, BlockState state) {
+	protected boolean canHarvestBlockInternal(ItemStack stack, BlockState state, BlockPos pos, PlayerEntity player) {
 		if (!canMine(stack)) {
 			return false;
 		}
-		return canHarvestBlock(stack, state);
+		return canMineBlock(stack, state, pos, player);
 	}
 
 	/**
@@ -106,7 +106,7 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 					offsetPos = offsetPos.offset(harvestDirections.getWidthDirection(), x);
 
 					// Check if we can harvest this block.
-					if (canHarvestBlockInternal(itemstack, player.getEntityWorld().getBlockState(offsetPos))) {
+					if (canHarvestBlockInternal(itemstack, player.getEntityWorld().getBlockState(offsetPos), offsetPos, player)) {
 						minableBlocks.add(offsetPos);
 					}
 				}

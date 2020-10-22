@@ -36,7 +36,7 @@ public class ElectricSolderingIron extends StaticPowerEnergyStoringItem implemen
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
 		tooltip.add(new StringTextComponent("Power per Operation: 100V"));
 		if (showAdvanced) {
 			int energyStored = EnergyHandlerItemStackUtilities.getStoredPower(stack);

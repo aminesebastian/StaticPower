@@ -21,7 +21,7 @@ public class StaticPlantCrop extends StaticPowerItem {
 	}		
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
 		tooltip.add(new StringTextComponent("These Seem to Radiate"));
 		tooltip.add(new StringTextComponent("Energy...Yummy"));
 	}

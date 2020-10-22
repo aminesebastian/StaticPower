@@ -1,5 +1,8 @@
 package theking530.staticpower.events;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.BucketItem;
@@ -7,7 +10,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.resources.IReloadableResourceManager;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.DrawHighlightEvent;
@@ -38,6 +44,7 @@ import theking530.staticpower.data.crafting.RecipeReloadListener;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.thermalconductivity.ThermalConductivityRecipe;
 import theking530.staticpower.init.ModFluids;
+import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.world.ore.ModOres;
@@ -99,25 +106,74 @@ public class StaticPowerForgeEventRegistry {
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void onAddItemTooltip(ItemTooltipEvent event) {
-		if (event.getToolTip().size() > 1) {
-			event.getToolTip().add(new StringTextComponent(""));
-		}
 		if (FMLEnvironment.dist == Dist.CLIENT) {
+			// Capture the original tooltips.
+			List<ITextComponent> original = new ArrayList<ITextComponent>();
+			original.addAll(event.getToolTip());
+			event.getToolTip().clear();
+			event.getToolTip().add(original.get(0));
+			original.remove(0);
+
+			// Allocate the basic tooltips.
+			List<ITextComponent> basicTooltips = new ArrayList<ITextComponent>();
+
+			// Get the advanced tooltips.
+			List<ITextComponent> advancedToolTips = new ArrayList<ITextComponent>();
+
+			// If the item is a staticpower item, capture the tooltips.
+			if (event.getItemStack().getItem() instanceof StaticPowerItem) {
+				StaticPowerItem spItem = (StaticPowerItem) event.getItemStack().getItem();
+				if (spItem != null && event.getPlayer() != null && event.getPlayer().getEntityWorld() != null) {
+					spItem.getTooltip(event.getItemStack(), event.getPlayer().getEntityWorld(), basicTooltips, Screen.hasControlDown());
+					spItem.getAdvancedTooltip(event.getItemStack(), event.getPlayer().world, advancedToolTips);
+				}
+			}
+
 			// Add thermal rate tooltips.
-			if (Screen.hasShiftDown()) {
+			if (Screen.hasControlDown()) {
+				// Add the basic tooltips if any are presented.
+				if (basicTooltips.size() > 0) {
+					event.getToolTip().addAll(basicTooltips);
+				}
+
+				// Add the advanced.
+				if (advancedToolTips.size() > 0) {
+					event.getToolTip().addAll(advancedToolTips);
+				}
+
+				// Create recipe match parameters for checking for heat tooltip values.
 				RecipeMatchParameters matchParameters = new RecipeMatchParameters(event.getItemStack());
 
+				// Populate the fluid in the item if one exists.
 				FluidUtil.getFluidContained(event.getItemStack()).ifPresent(fluid -> {
 					matchParameters.setFluids(fluid.copy());
 				});
 
+				// Add the tooltip if the control key is down.
 				StaticPowerRecipeRegistry.getRecipe(ThermalConductivityRecipe.RECIPE_TYPE, matchParameters).ifPresent(recipe -> {
 					event.getToolTip().add(HeatTooltipUtilities.getHeatRateTooltip(recipe.getThermalConductivity()));
 				});
+
+				// Add attributable tooltips.
+				AttributeUtilities.addTooltipsForAttribute(event.getItemStack(), event.getToolTip(), Screen.hasControlDown());
+			} else {
+				// Add the basic tooltips if any are presented.
+				if (basicTooltips.size() > 0) {
+					event.getToolTip().addAll(basicTooltips);
+				}
+
+				// Add attributable tooltips.
+				AttributeUtilities.addTooltipsForAttribute(event.getItemStack(), event.getToolTip(), Screen.hasControlDown());
+
+				// Add the "Hold Control" indentifier.
+				if (advancedToolTips.size() > 0) {
+					event.getToolTip().add(new StringTextComponent(""));
+					event.getToolTip().add(new TranslationTextComponent("gui.staticpower.hold_control").mergeStyle(TextFormatting.ITALIC).mergeStyle(TextFormatting.GRAY));
+				}
 			}
 
-			// Add attributable tooltips.
-			AttributeUtilities.addTooltipsForAttribute(event.getItemStack(), event.getToolTip(), Screen.hasShiftDown());
+			// Add back the original tooltips.
+			event.getToolTip().addAll(original);
 		}
 	}
 

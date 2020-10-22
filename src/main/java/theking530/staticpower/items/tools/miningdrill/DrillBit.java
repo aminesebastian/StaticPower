@@ -17,6 +17,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import theking530.api.itemattributes.attributes.AttributeRegistry;
 import theking530.api.itemattributes.attributes.FortuneAttributeDefenition;
+import theking530.api.itemattributes.attributes.GrindingAttributeDefenition;
 import theking530.api.itemattributes.attributes.HasteAttributeDefenition;
 import theking530.api.itemattributes.capability.AttributeableHandler;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
@@ -41,10 +42,12 @@ public class DrillBit extends StaticPowerItem {
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
 		FortuneAttributeDefenition fortuneAttribute = (FortuneAttributeDefenition) AttributeRegistry.createInstance(FortuneAttributeDefenition.ID);
 		HasteAttributeDefenition hasteAttribute = (HasteAttributeDefenition) AttributeRegistry.createInstance(HasteAttributeDefenition.ID);
+		GrindingAttributeDefenition grindingAttribute = (GrindingAttributeDefenition) AttributeRegistry.createInstance(GrindingAttributeDefenition.ID);
 
 		AttributeableHandler handler = new AttributeableHandler("attributes");
 		handler.addAttribute(fortuneAttribute);
 		handler.addAttribute(hasteAttribute);
+		handler.addAttribute(grindingAttribute);
 		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(handler);
 	}
 
@@ -70,13 +73,13 @@ public class DrillBit extends StaticPowerItem {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
 		tooltip.add(new TranslationTextComponent("gui.staticpower.mining_tier").appendString(": ").append(ItemTierUtilities.getNameForItemTier(miningTier)));
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+	public void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
 		int remaining = getMaxDamage(stack) - getDamage(stack);
 		int max = getMaxDamage(stack);
 		String remainingString = "(" + new MetricConverter(remaining).getValueAsString(true) + "/" + new MetricConverter(max).getValueAsString(true) + ")";

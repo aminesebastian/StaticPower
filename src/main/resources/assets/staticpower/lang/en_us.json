@@ -339,6 +339,7 @@
 	"item.staticpower.upgrade_quarrying_static": "Static Quarry Upgrade",
 	"item.staticpower.upgrade_quarrying_energized": "Energized Quarry Upgrade",
 	"item.staticpower.upgrade_quarrying_lumum": "Lumum Quarry Upgrade",
+	"item.staticpower.grinder_component": "Grinder Component",
 	"block.staticpower.grass_static": "Static Grass",
 	"block.staticpower.grass_energized": "Energized Grass",
 	"block.staticpower.grass_lumum": "Lumum Static",
@@ -562,6 +563,7 @@
 	"gui.staticpower.inactive": "Inactive",
 	"gui.staticpower.fortune": "Fortune",
 	"gui.staticpower.haste": "Haste",
+	"gui.staticpower.grinding": "Grinding",
 	"gui.staticpower.attributes": "Attributes",
 	"gui.staticpower.hold_shift": "Hold Shift",
 	"gui.staticpower.hold_control": "Hold Control"
