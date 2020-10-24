@@ -1,6 +1,7 @@
 package theking530.staticpower.items.tools.miningdrill;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -24,6 +25,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTier;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
@@ -40,18 +42,26 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.api.itemattributes.AttributeUtilities;
 import theking530.api.itemattributes.attributes.FortuneAttributeDefenition;
+import theking530.api.itemattributes.attributes.GrindingAttributeDefenition;
 import theking530.api.itemattributes.attributes.HasteAttributeDefenition;
 import theking530.api.itemattributes.capability.CapabilityAttributable;
+import theking530.api.itemattributes.capability.IAttributable;
 import theking530.api.power.ItemStackStaticVoltCapability;
 import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticcore.network.NetworkGUI;
+import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
 import theking530.staticpower.client.rendering.items.MiningDrillItemModel;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.TierReloadListener;
+import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
+import theking530.staticpower.data.crafting.wrappers.grinder.GrinderRecipe;
 import theking530.staticpower.items.tools.AbstractMultiHarvestTool;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
+import theking530.staticpower.utilities.WorldUtilities;
 
 public class MiningDrill extends AbstractMultiHarvestTool implements ICustomModelSupplier {
 	private static final Set<Block> FULL_SPEED_BLOCKS = ImmutableSet.of(Blocks.ACTIVATOR_RAIL, Blocks.COAL_ORE, Blocks.COBBLESTONE, Blocks.DETECTOR_RAIL, Blocks.DIAMOND_BLOCK,
@@ -161,6 +171,40 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		return ActionResult.resultPass(item);
 	}
 
+	protected void harvestBlockDrops(BlockState state, Block block, BlockPos pos, ServerPlayerEntity player, TileEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
+		// Get the drill bit attributes.
+		IAttributable drillBitAttributes = getDrillBit(heldItem).getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);
+
+		// Allocate a flag to see if the grinder was used.
+		boolean wasGround = false;
+
+		// If we have attributes.
+		if (drillBitAttributes != null) {
+			// Check for the grinder attriubte.
+			if (drillBitAttributes.hasAttribute(GrindingAttributeDefenition.ID)) {
+				// Get the grinding attribute and check if its enabled.
+				GrindingAttributeDefenition grindingAttribute = (GrindingAttributeDefenition) drillBitAttributes.getAttribute(GrindingAttributeDefenition.ID);
+				if (grindingAttribute.getValue()) {
+					RecipeMatchParameters matchParameters = new RecipeMatchParameters(new ItemStack(block.asItem()));
+					Optional<GrinderRecipe> recipe = StaticPowerRecipeRegistry.getRecipe(GrinderRecipe.RECIPE_TYPE, matchParameters);
+					if (recipe.isPresent()) {
+						wasGround = true;
+						for (ProbabilityItemStackOutput output : recipe.get().getOutputItems()) {
+							if (SDMath.diceRoll(output.getOutputChance())) {
+								WorldUtilities.dropItem(player.getEntityWorld(), pos, output.getItem());
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// If the grinder was not used, perform a regular harvest.
+		if (!wasGround) {
+			super.harvestBlockDrops(state, block, pos, player, tileEntity, heldItem, experience, isCreative);
+		}
+	}
+
 	@Override
 	protected void onStartingBlockMining(ItemStack stack, List<BlockPos> blocksMined, PlayerEntity player) {
 		if (hasDrillBit(stack)) {
@@ -260,7 +304,7 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		}
 
 		// Check the hardness.
-		if (state.getPlayerRelativeBlockHardness(player, player.getEntityWorld(), pos) < 1.0f) {
+		if (state.getPlayerRelativeBlockHardness(player, player.getEntityWorld(), pos) <= 0.0f) {
 			return false;
 		}
 

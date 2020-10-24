@@ -16,7 +16,6 @@ import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerItemContainer;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
-import theking530.staticpower.container.slots.UpgradeItemSlot;
 import theking530.staticpower.init.ModItems;
 
 public class ContainerMiningDrill extends StaticPowerItemContainer<MiningDrill> {
@@ -46,7 +45,7 @@ public class ContainerMiningDrill extends StaticPowerItemContainer<MiningDrill> 
 		});
 
 		// Drill Bit
-		this.addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.IronDrillBit), 0.3f, inventory, 0, 80, 17) {
+		this.addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.IronDrillBit), 0.3f, inventory, 0, 80, 24) {
 			@Override
 			public void onSlotChanged() {
 				super.onSlotChanged();
@@ -68,9 +67,9 @@ public class ContainerMiningDrill extends StaticPowerItemContainer<MiningDrill> 
 		});
 
 		// Upgrades
-		this.addSlot(new UpgradeItemSlot(inventory, 1, 61, 38));
-		this.addSlot(new UpgradeItemSlot(inventory, 2, 79, 38));
-		this.addSlot(new UpgradeItemSlot(inventory, 3, 97, 38));
+//		this.addSlot(new UpgradeItemSlot(inventory, 1, 61, 38));
+//		this.addSlot(new UpgradeItemSlot(inventory, 2, 79, 38));
+//		this.addSlot(new UpgradeItemSlot(inventory, 3, 97, 38));
 
 		addPlayerHotbar(getPlayerInventory(), 8, 118 + (inventory.getSlots() > 9 ? 12 : 0));
 		addPlayerInventory(getPlayerInventory(), 8, 60 + (inventory.getSlots() > 9 ? 12 : 0));

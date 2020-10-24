@@ -141,7 +141,7 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 			onStartingBlockMining(itemstack, minableBlocks, player);
 
 			for (BlockPos extraPos : minableBlocks) {
-				harvestExtraBlock(extraPos, (ServerPlayerEntity) player);
+				breakAndHarvestBlock(extraPos, (ServerPlayerEntity) player);
 			}
 
 			// Raise on the harvested method.
@@ -152,7 +152,7 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 		}
 	}
 
-	protected boolean harvestExtraBlock(BlockPos pos, ServerPlayerEntity player) {
+	protected boolean breakAndHarvestBlock(BlockPos pos, ServerPlayerEntity player) {
 		BlockState blockstate = player.getEntityWorld().getBlockState(pos);
 		int exp = net.minecraftforge.common.ForgeHooks.onBlockBreakEvent(player.getEntityWorld(), player.interactionManager.getGameType(), player, pos);
 		if (exp == -1) {
@@ -166,37 +166,54 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 			} else if (player.blockActionRestricted(player.getEntityWorld(), pos, player.interactionManager.getGameType())) {
 				return false;
 			} else if (player.isCreative()) {
-				removeExtraBlock(pos, false, player);
+				if (breakBlock(blockstate, block, pos, player, tileentity, player.getHeldItemMainhand(), exp, true)) {
+					harvestBlockDrops(blockstate, block, pos, player, tileentity, player.getHeldItemMainhand(), exp, true);
+				}
 				return true;
 			} else {
-				ItemStack heldItem = player.getHeldItemMainhand();
-				ItemStack heldItemCopy = heldItem.copy();
-				boolean canHarvest = blockstate.canHarvestBlock(player.getEntityWorld(), pos, player);
-				heldItem.onBlockDestroyed(player.getEntityWorld(), blockstate, pos, player);
-				if (heldItem.isEmpty() && !heldItemCopy.isEmpty()) {
-					net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(player, heldItemCopy, Hand.MAIN_HAND);
+				if (breakBlock(blockstate, block, pos, player, tileentity, player.getHeldItemMainhand(), exp, false)) {
+					harvestBlockDrops(blockstate, block, pos, player, tileentity, player.getHeldItemMainhand(), exp, false);
 				}
-				boolean flag = removeExtraBlock(pos, canHarvest, player);
-
-				if (flag && canHarvest) {
-					block.harvestBlock(player.getEntityWorld(), player, pos, blockstate, tileentity, heldItemCopy);
-					if (exp > 0) {
-						blockstate.getBlock().dropXpOnBlockBreak((ServerWorld) player.getEntityWorld(), pos, exp);
-					}
-				}
-
 				return true;
 			}
 		}
 	}
 
-	protected boolean removeExtraBlock(BlockPos pos, boolean canHarvest, ServerPlayerEntity player) {
-		BlockState state = player.getEntityWorld().getBlockState(pos);
-		boolean removed = state.removedByPlayer(player.getEntityWorld(), pos, player, canHarvest, player.getEntityWorld().getFluidState(pos));
+	protected boolean breakBlock(BlockState state, Block block, BlockPos pos, ServerPlayerEntity player, TileEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
+		// Indicate to the held item that a block was destroyed using it.
+		heldItem.onBlockDestroyed(player.getEntityWorld(), state, pos, player);
+
+		// If we are in survival mode, lets see if the item mining was destroyed.
+		if (!isCreative) {
+			// Get a copy of the held item to see if the real heldItem broke.
+			ItemStack heldItemCopy = heldItem.copy();
+
+			// If the held item is now empty but the copy is not, that means the held item
+			// was made empty and has therefore broken.
+			if (heldItem.isEmpty() && !heldItemCopy.isEmpty()) {
+				net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(player, heldItemCopy, Hand.MAIN_HAND);
+			}
+		}
+
+		// Check if we can harvest.
+		boolean canHarvestWithDrops = state.canHarvestBlock(player.getEntityWorld(), pos, player);
+
+		// Remove the block.
+		boolean removed = state.removedByPlayer(player.getEntityWorld(), pos, player, canHarvestWithDrops, player.getEntityWorld().getFluidState(pos));
 		if (removed) {
+			// Indicate that the player is destroying the block.
 			state.getBlock().onPlayerDestroy(player.getEntityWorld(), pos, state);
 		}
-		return removed;
+
+		// Return if we broke the block and should drop the contents.
+		return removed && canHarvestWithDrops;
+	}
+
+	protected void harvestBlockDrops(BlockState state, Block block, BlockPos pos, ServerPlayerEntity player, TileEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
+		block.harvestBlock(player.getEntityWorld(), player, pos, state, tileEntity, heldItem);
+		if (experience > 0) {
+			state.getBlock().dropXpOnBlockBreak((ServerWorld) player.getEntityWorld(), pos, experience);
+		}
 	}
 
 	@Override

@@ -37,7 +37,7 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityAutoSmith> TYPE = new TileEntityTypeAllocator<TileEntityAutoSmith>((allocator) -> new TileEntityAutoSmith(), ModBlocks.AutoSmith);
 
-	public static final int DEFAULT_PROCESSING_TIME = 200;
+	public static final int DEFAULT_PROCESSING_TIME = 75;
 	public static final int DEFAULT_PROCESSING_COST = 5;
 	public static final int DEFAULT_MOVING_TIME = 4;
 	public static final int DEFAULT_TANK_SIZE = 5000;
