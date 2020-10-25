@@ -14,6 +14,8 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -23,6 +25,7 @@ import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
+import theking530.staticpower.cables.attachments.AttachmentTooltipUtilities;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
@@ -253,6 +256,12 @@ public class DigistoreIOBusAttachment extends AbstractCableAttachment {
 		} else {
 			return StaticPowerConfig.digistoreIOBusRate;
 		}
+	}
+
+	@Override	
+	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
+		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.import_slots", StaticPowerConfig.digistoreIOBusSlots, tooltip);
+		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.export_slots", StaticPowerConfig.digistoreIOBusSlots, tooltip);
 	}
 
 	protected class RegulatorContainerProvider extends AbstractCableAttachmentContainerProvider {

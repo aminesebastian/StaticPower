@@ -48,7 +48,7 @@ public class TileEntityItemCable extends TileEntityBase {
 	public TileEntityItemCable(TileEntityTypeAllocator<TileEntityItemCable> allocator, ResourceLocation tier) {
 		super(allocator);
 		StaticPowerTier tierObject = TierReloadListener.getTier(tier);
-		registerComponent(cableComponent = new ItemCableComponent("ItemCableComponent", tierObject.getItemCableMaxSpeed(), tierObject.getItemCableFriction(),
+		registerComponent(cableComponent = new ItemCableComponent("ItemCableComponent", tier, tierObject.getItemCableMaxSpeed(), tierObject.getItemCableFriction(),
 				1.0f / Math.max(tierObject.getItemCableAcceleration(), 0.00000001f)));
 	}
 }

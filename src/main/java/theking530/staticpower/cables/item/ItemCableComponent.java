@@ -11,6 +11,7 @@ import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
@@ -28,27 +29,34 @@ import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
+import theking530.staticpower.data.TierReloadListener;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class ItemCableComponent extends AbstractCableProviderComponent implements IItemHandler {
-	public static final int BASE_MOVE_TIME = 60;
-	public static final String ITEM_CABLE_MINIMUM_MOVE_TIME = "min_transfer_time";
-	public static final String ITEM_CABLE_FRICTION_FACTOR = "friction_factor";
-	public static final String ITEM_CABLE_ACCELERATION_FACTOR = "acceleration_factor";
+	/**
+	 * This is the slowest an item may travel.
+	 */
+	public static final int MAXIMUM_MOVE_TIME = 1000;
+	public static final String ITEM_CABLE_MINIMUM_MOVE_TIME_TAG = "min_transfer_time";
+	public static final String ITEM_CABLE_FRICTION_FACTOR_TAG = "friction_factor";
+	public static final String ITEM_CABLE_ACCELERATION_FACTOR_TAG = "acceleration_factor";
 
-	private int maxTrasnferSpeed;
-	private float frictionFactor;
-	private float accelerationFactor;
-	private HashMap<Long, ItemRoutingParcelClient> containedPackets;
+	private final int maxTrasnferSpeed;
+	private final float frictionFactor;
+	private final float accelerationFactor;
+	private final HashMap<Long, ItemRoutingParcelClient> containedPackets;
+	private final ResourceLocation tier;
+	
 	private Direction lastCapabilityRequestedDirection;
 
-	public ItemCableComponent(String name, int maxTransferSpeed, float frictionFactor, float accelerationFactor) {
+	public ItemCableComponent(String name, ResourceLocation tier, int maxTransferSpeed, float frictionFactor, float accelerationFactor) {
 		super(name, CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
 		containedPackets = new HashMap<Long, ItemRoutingParcelClient>();
 		lastCapabilityRequestedDirection = Direction.UP;
 		this.maxTrasnferSpeed = maxTransferSpeed;
 		this.frictionFactor = frictionFactor;
 		this.accelerationFactor = accelerationFactor;
+		this.tier = tier;
 		addValidAttachmentClass(ExtractorAttachment.class);
 		addValidAttachmentClass(FilterAttachment.class);
 		addValidAttachmentClass(RetrieverAttachment.class);
@@ -129,9 +137,9 @@ public class ItemCableComponent extends AbstractCableProviderComponent implement
 	@Override
 	protected ServerCable createCable() {
 		return new ServerCable(getWorld(), getPos(), getSupportedNetworkModuleTypes(), (cable) -> {
-			cable.setProperty(ITEM_CABLE_MINIMUM_MOVE_TIME, maxTrasnferSpeed);
-			cable.setProperty(ITEM_CABLE_FRICTION_FACTOR, frictionFactor);
-			cable.setProperty(ITEM_CABLE_ACCELERATION_FACTOR, accelerationFactor);
+			cable.setProperty(ITEM_CABLE_MINIMUM_MOVE_TIME_TAG, maxTrasnferSpeed);
+			cable.setProperty(ITEM_CABLE_FRICTION_FACTOR_TAG, frictionFactor);
+			cable.setProperty(ITEM_CABLE_ACCELERATION_FACTOR_TAG, accelerationFactor);
 		});
 	}
 
@@ -234,8 +242,10 @@ public class ItemCableComponent extends AbstractCableProviderComponent implement
 			insertStack.setCount(Math.min(stack.getCount(), getSlotLimit(slot)));
 
 			this.<ItemNetworkModule>getNetworkModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE).ifPresent(network -> {
-				// Attempt to insert the stack into the cable.
-				ItemStack remainingAmount = network.transferItemStack(insertStack, getPos(), lastCapabilityRequestedDirection, false);
+				// Attempt to insert the stack into the cable. We will use the default
+				// extraction speed.
+				ItemStack remainingAmount = network.transferItemStack(insertStack, getPos(), lastCapabilityRequestedDirection, false,
+						TierReloadListener.getTier(tier).getExtractedItemInitialSpeed());
 				if (remainingAmount.getCount() < insertStack.getCount()) {
 					getTileEntity().markDirty();
 					stack.setCount(stack.getCount() - insertStack.getCount() + remainingAmount.getCount());

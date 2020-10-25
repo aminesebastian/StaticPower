@@ -9,16 +9,21 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Rarity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
+import theking530.staticcore.utilities.StaticPowerRarities;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
+import theking530.staticpower.cables.attachments.AttachmentTooltipUtilities;
 import theking530.staticpower.data.TierReloadListener;
 import theking530.staticpower.utilities.ItemUtilities;
 
@@ -44,7 +49,8 @@ public class FilterAttachment extends AbstractCableAttachment {
 	public boolean doesItemPassFilter(ItemStack attachment, ItemStack itemToTest, AbstractCableProviderComponent cableComponent) {
 		// Get the filter inventory (if there is a null value, do not handle it, throw
 		// an exception).
-		IItemHandler filterItems = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(() -> new RuntimeException("Encounetered an filter attachment without a valid filter inventory."));
+		IItemHandler filterItems = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+				.orElseThrow(() -> new RuntimeException("Encounetered an filter attachment without a valid filter inventory."));
 
 		// Get the list of filter items.
 		List<ItemStack> filterItemList = new LinkedList<ItemStack>();
@@ -77,6 +83,16 @@ public class FilterAttachment extends AbstractCableAttachment {
 	@Override
 	public ResourceLocation getModel(ItemStack attachment, AbstractCableProviderComponent cableComponent) {
 		return model;
+	}
+
+	@Override
+	public Rarity getRarity(ItemStack stack) {
+		return StaticPowerRarities.getRarityForTier(this.tierType);
+	}
+
+	@Override
+	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
+		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.slots", TierReloadListener.getTier(tierType).getCableFilterSlots(), tooltip);
 	}
 
 	protected class FilterContainerProvider extends AbstractCableAttachmentContainerProvider {

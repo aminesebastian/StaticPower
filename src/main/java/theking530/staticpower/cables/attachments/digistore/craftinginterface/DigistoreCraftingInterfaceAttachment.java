@@ -13,6 +13,8 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -22,6 +24,7 @@ import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
+import theking530.staticpower.cables.attachments.AttachmentTooltipUtilities;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.digistore.crafting.EncodedDigistorePattern;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
@@ -43,7 +46,8 @@ public class DigistoreCraftingInterfaceAttachment extends AbstractCableAttachmen
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, StaticPowerConfig.digistoreCraftingInterfaceSlots), (Direction) null)
+		return new ItemStackMultiCapabilityProvider(stack, nbt)
+				.addCapability(new ItemStackCapabilityInventory("default", stack, StaticPowerConfig.digistoreCraftingInterfaceSlots), (Direction) null)
 				.addCapability(new ItemStackCapabilityInventory("upgrades", stack, 9));
 	}
 
@@ -217,6 +221,11 @@ public class DigistoreCraftingInterfaceAttachment extends AbstractCableAttachmen
 			InventoryUtilities.insertItemIntoInventory(processingItemInventory, items.get(i), false);
 		}
 		return true;
+	}
+
+	@Override	
+	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
+		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.slots", StaticPowerConfig.digistoreCraftingInterfaceSlots, tooltip);
 	}
 
 	protected class CraftingInterfaceContainerProvider extends AbstractCableAttachmentContainerProvider {

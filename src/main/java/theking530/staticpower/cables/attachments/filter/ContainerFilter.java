@@ -41,10 +41,10 @@ public class ContainerFilter extends AbstractCableAttachmentContainer<FilterAtta
 			filterInventory = (ItemStackHandler) handler;
 		});
 
-		this.addSlotsInGrid(filterInventory, 0, 88, 24, SDMath.getSmallestFactor(filterInventory.getSlots(), 6), 16,
+		addSlotsInGrid(filterInventory, 0, 88, 24, SDMath.getSmallestFactor(filterInventory.getSlots(), 6), 16,
 				(index, x, y) -> new PhantomSlot(filterInventory, index, x, y, true).renderFluidContainerAsFluid());
-		this.addPlayerInventory(getPlayerInventory(), 8, 69);
-		this.addPlayerHotbar(getPlayerInventory(), 8, 127);
+		addPlayerInventory(getPlayerInventory(), 8, 69);
+		addPlayerHotbar(getPlayerInventory(), 8, 127);
 	}
 
 	public ItemStackHandler getExtractorInventory() {

@@ -10,10 +10,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Rarity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -23,8 +26,10 @@ import net.minecraftforge.items.IItemHandler;
 import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticcore.utilities.SDMath;
+import theking530.staticcore.utilities.StaticPowerRarities;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
+import theking530.staticpower.cables.attachments.AttachmentTooltipUtilities;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.fluid.FluidCableComponent;
 import theking530.staticpower.cables.fluid.FluidNetworkModule;
@@ -51,7 +56,8 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, TierReloadListener.getTier(tierType).getCableExtractionFilterSlots()));
+		return new ItemStackMultiCapabilityProvider(stack, nbt)
+				.addCapability(new ItemStackCapabilityInventory("default", stack, TierReloadListener.getTier(tierType).getCableExtractionFilterSlots()));
 	}
 
 	@Override
@@ -149,6 +155,11 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 		return model;
 	}
 
+	@Override
+	public Rarity getRarity(ItemStack stack) {
+		return StaticPowerRarities.getRarityForTier(this.tierType);
+	}
+
 	protected boolean performDigistoreExtract(ItemStack attachment, Direction side, AbstractCableProviderComponent cable, TileEntity targetTe) {
 		if (targetTe instanceof TileEntityDigistoreIOPort) {
 			AtomicBoolean output = new AtomicBoolean(false);
@@ -186,7 +197,8 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 							}
 
 							// Attempt to transfer the itemstack through the cable network.
-							ItemStack remainingAmount = network.transferItemStack(extractedItem, cable.getPos(), side, false);
+							ItemStack remainingAmount = network.transferItemStack(extractedItem, cable.getPos(), side, false,
+									TierReloadListener.getTier(tierType).getExtractedItemInitialSpeed());
 							if (remainingAmount.getCount() < extractedItem.getCount()) {
 								module.extractItem(extractedItem, extractedItem.getCount() - remainingAmount.getCount(), false);
 								cable.getTileEntity().markDirty();
@@ -221,7 +233,7 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 					}
 
 					// Attempt to transfer the itemstack through the cable network.
-					ItemStack remainingAmount = network.transferItemStack(extractedItem, cable.getPos(), side, false);
+					ItemStack remainingAmount = network.transferItemStack(extractedItem, cable.getPos(), side, false, TierReloadListener.getTier(tierType).getExtractedItemInitialSpeed());
 					if (remainingAmount.getCount() < extractedItem.getCount()) {
 						inv.extractItem(i, extractedItem.getCount() - remainingAmount.getCount(), false);
 						cable.getTileEntity().markDirty();
@@ -247,6 +259,11 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 				}
 			});
 		});
+	}
+
+	@Override
+	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
+		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.slots", TierReloadListener.getTier(tierType).getCableExtractionFilterSlots(), tooltip);
 	}
 
 	protected class ExtractorContainerProvider extends AbstractCableAttachmentContainerProvider {

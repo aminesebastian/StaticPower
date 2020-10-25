@@ -28,6 +28,7 @@ public class StaticPowerTier {
 	private int cableExtractionStackSize;
 	private int cableExtractionFluidRate;
 	private int cableExtractionFilterSlots;
+	private int cableExtractedItemInitialSpeed;
 
 	/*************************
 	 * Retrieval Configuration
@@ -35,6 +36,7 @@ public class StaticPowerTier {
 	private int cableRetrievalRate;
 	private int cableRetrievalStackSize;
 	private int cableRetrievalFilterSlots;
+	private int cableRetrievedItemInitialSpeed;
 
 	/**********************
 	 * Filter Configuration
@@ -303,6 +305,10 @@ public class StaticPowerTier {
 		return cableExtractionFilterSlots;
 	}
 
+	public int getExtractedItemInitialSpeed() {
+		return cableExtractedItemInitialSpeed;
+	}
+
 	public int getCableRetrievalRate() {
 		return cableRetrievalRate;
 	}
@@ -313,6 +319,10 @@ public class StaticPowerTier {
 
 	public int getCableRetrievalFilterSlots() {
 		return cableRetrievalFilterSlots;
+	}
+
+	public int getRetrievedItemInitialSpeed() {
+		return cableRetrievedItemInitialSpeed;
 	}
 
 	public CompoundNBT writeToNbt() {

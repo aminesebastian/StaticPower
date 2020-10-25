@@ -73,7 +73,7 @@ public class TileEntityFluidCable extends TileEntityBase {
 
 	public TileEntityFluidCable(TileEntityTypeAllocator<TileEntityFluidCable> allocator, float radius, boolean isIndustrial, ResourceLocation tier) {
 		super(allocator);
-		registerComponent(fluidCableComponent = new FluidCableComponent("FluidCableComponent",
+		registerComponent(fluidCableComponent = new FluidCableComponent("FluidCableComponent", isIndustrial,
 				isIndustrial ? TierReloadListener.getTier(tier).getCableIndustrialFluidCapacity() : TierReloadListener.getTier(tier).getCableFluidCapacity()));
 		fluidRenderRadius = radius;
 	}

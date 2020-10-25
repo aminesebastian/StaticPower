@@ -1,22 +1,29 @@
 package theking530.staticpower.cables.attachments.retirever;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Rarity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
+import theking530.staticcore.utilities.StaticPowerRarities;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
+import theking530.staticpower.cables.attachments.AttachmentTooltipUtilities;
 import theking530.staticpower.cables.item.ItemNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.data.TierReloadListener;
@@ -39,7 +46,8 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, TierReloadListener.getTier(tierType).getCableRetrievalFilterSlots()));
+		return new ItemStackMultiCapabilityProvider(stack, nbt)
+				.addCapability(new ItemStackCapabilityInventory("default", stack, TierReloadListener.getTier(tierType).getCableRetrievalFilterSlots()));
 	}
 
 	@Override
@@ -77,7 +85,8 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 				}
 
 				// If we're able to retrieve an item, break.
-				if (network.retrieveItemStack(filterItem, TierReloadListener.getTier(tierType).getCableRetrievalStackSize(), cable.getPos().offset(side))) {
+				if (network.retrieveItemStack(filterItem, TierReloadListener.getTier(tierType).getCableRetrievalStackSize(), cable.getPos().offset(side),
+						TierReloadListener.getTier(tierType).getRetrievedItemInitialSpeed())) {
 					break;
 				}
 			}
@@ -120,6 +129,16 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 	@Override
 	public ResourceLocation getModel(ItemStack attachment, AbstractCableProviderComponent cableComponent) {
 		return model;
+	}
+
+	@Override
+	public Rarity getRarity(ItemStack stack) {
+		return StaticPowerRarities.getRarityForTier(this.tierType);
+	}
+
+	@Override
+	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
+		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.slots", TierReloadListener.getTier(tierType).getCableRetrievalFilterSlots(), tooltip);
 	}
 
 	protected class FilterContainerProvider extends AbstractCableAttachmentContainerProvider {

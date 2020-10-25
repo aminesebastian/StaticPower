@@ -33,13 +33,17 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	private float lastUpdateFilledPercentage;
 	private float visualFilledPercentage;
 
-	public FluidCableComponent(String name, int capacity) {
+	public FluidCableComponent(String name, boolean isIndustrial, int capacity) {
 		super(name, CableNetworkModuleTypes.FLUID_NETWORK_MODULE);
 		this.capacity = capacity;
 		lastUpdateFluidStack = FluidStack.EMPTY;
 		lastUpdateFilledPercentage = 0.0f;
 		visualFilledPercentage = 0.0f;
-		addValidAttachmentClass(ExtractorAttachment.class);
+		
+		// Only non-industrial pipes can have attachments.
+		if(!isIndustrial) {
+			addValidAttachmentClass(ExtractorAttachment.class);
+		}
 	}
 
 	@Override
