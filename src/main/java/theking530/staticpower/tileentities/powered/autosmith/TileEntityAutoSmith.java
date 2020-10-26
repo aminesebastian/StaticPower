@@ -1,6 +1,7 @@
 package theking530.staticpower.tileentities.powered.autosmith;
 
 import java.util.List;
+import java.util.Optional;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -9,7 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import theking530.api.itemattributes.capability.CapabilityAttributable;
+import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
@@ -21,6 +22,7 @@ import theking530.staticpower.tileentities.components.control.AbstractProcesingC
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.components.fluids.FluidInputServoComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
@@ -45,6 +47,7 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent internalInventory;
 	public final InventoryComponent outputInventory;
+	public final InventoryComponent completedOutputInventory;
 	public final InventoryComponent batteryInventory;
 	public final FluidContainerInventoryComponent fluidContainerComponent;
 	public final UpgradeInventoryComponent upgradesInventory;
@@ -64,13 +67,23 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 				return isValidInput(stack, true);
 			}
 		}));
+
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 2));
-		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output) {
+
+		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output2) {
 			@Override
 			public int getSlotLimit(int slot) {
 				return 1;
 			}
 		});
+
+		registerComponent(completedOutputInventory = new InventoryComponent("CompletedOutputInventory", 1, MachineSideMode.Output3) {
+			@Override
+			public int getSlotLimit(int slot) {
+				return 1;
+			}
+		});
+
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
@@ -87,8 +100,9 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 		processingComponent.setProcessingPowerUsage(DEFAULT_PROCESSING_COST);
 
 		// Setup the I/O servos.
-		registerComponent(new InputServoComponent("InputServo", 4, inputInventory, 0));
-		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory, 0));
+		registerComponent(new InputServoComponent("InputServo", inputInventory, 0));
+		registerComponent(new OutputServoComponent("OutputServo", outputInventory));
+		registerComponent(new OutputServoComponent("CompletedOutputServo", completedOutputInventory));
 
 		// Setup the fluid tanks and servo.
 		registerComponent(
@@ -141,8 +155,21 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 		// Apply the recipe.
 		recipe.applyToItemStack(output);
 
-		// Put the item into the output slot.
-		outputInventory.insertItem(0, output, false);
+		// Make a hybrid of recipe parameters with the output as the smithing target,
+		// but the inputs as the rest.
+		RecipeMatchParameters nextRecipeParameters = new RecipeMatchParameters(output, inputInventory.getStackInSlot(1)).setFluids(fluidTankComponent.getFluid());
+
+		// Check to get the recipe that will be processed next based on the modifier.
+		Optional<AutoSmithRecipe> nextRecipe = processingComponent.getRecipe(nextRecipeParameters);
+
+		// Put the item into the appropriate output slot.
+		if (nextRecipe.isPresent() && nextRecipe.get().canApplyToItemStack(output)) {
+			outputInventory.insertItem(0, output, false);
+		} else if (inputInventory.getStackInSlot(1).isEmpty()) {
+			completedOutputInventory.insertItem(0, output, false);
+		} else {
+			completedOutputInventory.insertItem(0, output, false);
+		}
 
 		// Drain the fluid.
 		fluidTankComponent.drain(recipe.getModifierFluid().getAmount(), FluidAction.EXECUTE);
@@ -171,6 +198,12 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 			}
 			return false;
 		}
+	}
+
+	@Override
+	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
+		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Regular || mode == MachineSideMode.Output || mode == MachineSideMode.Input || mode == MachineSideMode.Output2
+				|| mode == MachineSideMode.Output3;
 	}
 
 	@Override

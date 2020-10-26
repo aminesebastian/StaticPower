@@ -1,4 +1,4 @@
-package theking530.api.itemattributes.attributes;
+package theking530.api.attributes.defenitions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,8 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
-import theking530.api.itemattributes.attributes.modifiers.AbstractAttributeModifier;
+import theking530.api.attributes.modifiers.AbstractAttributeModifier;
+import theking530.api.attributes.registration.AttributeModifierRegistry;
 
 public abstract class AbstractAttributeDefenition<T, K extends AbstractAttributeModifier<?>> implements INBTSerializable<CompoundNBT> {
 	protected final ResourceLocation id;

@@ -1,15 +1,18 @@
-package theking530.api.itemattributes.attributes;
+package theking530.api.attributes.defenitions;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
-import theking530.api.itemattributes.attributes.modifiers.FloatAttributeModifier;
+import theking530.api.attributes.modifiers.FloatAttributeModifier;
+import theking530.api.attributes.registration.AttributeRegistration;
+import theking530.staticcore.utilities.SDMath;
 
+@AttributeRegistration("staticpower:fortune")
 public class FortuneAttributeDefenition extends AbstractAttributeDefenition<Integer, FloatAttributeModifier> {
-	public static final int MAX_VALUE = 300;
 	public static final ResourceLocation ID = new ResourceLocation("staticpower", "fortune");
+	public static final int MAX_VALUE = 300;
 
 	public FortuneAttributeDefenition(ResourceLocation id) {
 		super(ID, "gui.staticpower.fortune", TextFormatting.BLUE, FloatAttributeModifier.class);
@@ -26,6 +29,12 @@ public class FortuneAttributeDefenition extends AbstractAttributeDefenition<Inte
 		} else {
 			return 0;
 		}
+	}
+
+	public int getFortuneLevelWithChance() {
+		int minLevel = getValue() / MAX_VALUE;
+		int potentialRandomValue = (int) Math.ceil(getValue() / MAX_VALUE);
+		return SDMath.getRandomIntInRange(minLevel, potentialRandomValue);
 	}
 
 	@Override

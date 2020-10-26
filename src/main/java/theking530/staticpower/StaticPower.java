@@ -8,14 +8,6 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.config.ModConfig;
-import theking530.api.itemattributes.attributes.AttributeModifierRegistry;
-import theking530.api.itemattributes.attributes.AttributeRegistry;
-import theking530.api.itemattributes.attributes.FortuneAttributeDefenition;
-import theking530.api.itemattributes.attributes.GrindingAttributeDefenition;
-import theking530.api.itemattributes.attributes.HasteAttributeDefenition;
-import theking530.api.itemattributes.attributes.modifiers.BooleanAttributeModifier;
-import theking530.api.itemattributes.attributes.modifiers.FloatAttributeModifier;
-import theking530.api.itemattributes.attributes.modifiers.IntegerAttributeModifier;
 import theking530.staticcore.initialization.StaticCoreRegistry;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModFluids;
@@ -33,16 +25,7 @@ public class StaticPower {
 	public static final ItemGroup CREATIVE_TAB = new StaticPowerItemGroup();
 
 	public StaticPower() {
-		// Register smithing attributes.
-		AttributeRegistry.registerAttribute(FortuneAttributeDefenition.ID, (id) -> new FortuneAttributeDefenition(id));
-		AttributeRegistry.registerAttribute(HasteAttributeDefenition.ID, (id) -> new HasteAttributeDefenition(id));
-		AttributeRegistry.registerAttribute(GrindingAttributeDefenition.ID, (id) -> new GrindingAttributeDefenition(id));
-		
-		// Register smithing attribute modifiers.
-		AttributeModifierRegistry.registerAttributeType("float", () -> new FloatAttributeModifier());
-		AttributeModifierRegistry.registerAttributeType("integer", () -> new IntegerAttributeModifier());
-		AttributeModifierRegistry.registerAttributeType("boolean", () -> new BooleanAttributeModifier());
-
+		StaticCoreRegistry.preInitialize();
 		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, StaticPowerConfig.SERVER_SPEC);
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, StaticPowerConfig.COMMON_SPEC);
 		ModRecipeSerializers.init();
@@ -52,6 +35,6 @@ public class StaticPower {
 		ModFluids.init();
 		ModNetworkMessages.init();
 		ModLootTableAdditions.init();
-		StaticCoreRegistry.initialize();
+		StaticCoreRegistry.postInitialize();
 	}
 }

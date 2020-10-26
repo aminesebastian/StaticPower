@@ -1,5 +1,7 @@
 package theking530.staticpower.tileentities.powered.treefarmer;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import theking530.staticcore.gui.drawables.ItemDrawable;
@@ -14,7 +16,7 @@ import theking530.staticpower.network.StaticPowerMessageHandler;
 public class GuiAxeTab extends BaseGuiTab {
 	private final TileEntityTreeFarm treeFarmer;
 	private final StaticPowerContainer container;
-	private int slotIndex;
+	private StaticPowerContainerSlot slot;
 
 	public GuiAxeTab(StaticPowerContainer container, TileEntityTreeFarm treeFarmer) {
 		super("Lumber Axe", Color.EIGHT_BIT_WHITE, 0, 0, GuiTextures.ORANGE_TAB, Items.IRON_AXE);
@@ -26,17 +28,16 @@ public class GuiAxeTab extends BaseGuiTab {
 	@Override
 	protected void initialized(int tabXPosition, int tabYPosition) {
 		// Add the slots.
-		container.addSlotGeneric(new StaticPowerContainerSlot(new ItemStack(Items.IRON_AXE), 0.3f, treeFarmer.inputInventory, 0, -18, 4 + guiYOffset));
-		slotIndex = container.inventorySlots.size() - 1;
+		slot = new StaticPowerContainerSlot(new ItemStack(Items.IRON_AXE), 0.3f, treeFarmer.inputInventory, 0, this.xPosition + 4, 0);
+		container.addSlotGeneric(slot);
 
 		PacketGuiTabAddSlots msg = new PacketGuiTabAddSlots(container.windowId);
-		msg.addSlot(treeFarmer.inputInventory, 0, -17, 59);
+		msg.addSlot(treeFarmer.inputInventory, 0, 0, 0);
 
 		// Send a packet to the server with the updated values.
 		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
 
 		// Set the is initial state.
-		StaticPowerContainerSlot slot = (StaticPowerContainerSlot) container.inventorySlots.get(slotIndex);
 		slot.setEnabledState(false);
 
 		// Update the icon if it should be updated.
@@ -46,14 +47,19 @@ public class GuiAxeTab extends BaseGuiTab {
 	}
 
 	@Override
+	protected void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+		super.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
+		slot.yPos = this.yPosition + 4;
+	}
+
+	@Override
 	protected void onTabOpened() {
-		StaticPowerContainerSlot slot = (StaticPowerContainerSlot) container.inventorySlots.get(slotIndex);
 		slot.setEnabledState(true);
+		slot.yPos = this.yPosition + 4;
 	}
 
 	@Override
 	protected void onTabClosing() {
-		StaticPowerContainerSlot slot = (StaticPowerContainerSlot) container.inventorySlots.get(slotIndex);
 		slot.setEnabledState(false);
 
 		// Update the icon to either the default if the slot is empty, or the slot's

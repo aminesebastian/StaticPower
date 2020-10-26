@@ -1,0 +1,52 @@
+package theking530.api.attributes.defenitions;
+
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.TextFormatting;
+import theking530.api.attributes.modifiers.BooleanAttributeModifier;
+import theking530.api.attributes.registration.AttributeRegistration;
+
+@AttributeRegistration("staticpower:smelting")
+public class SmeltingAttributeDefenition extends AbstractAttributeDefenition<Boolean, BooleanAttributeModifier> {
+	public static final ResourceLocation ID = new ResourceLocation("staticpower", "smelting");
+
+	public SmeltingAttributeDefenition(ResourceLocation id) {
+		super(ID, "gui.staticpower.smelting", TextFormatting.GOLD, BooleanAttributeModifier.class);
+		baseValue = false;
+	}
+
+	@Override
+	public Boolean getValue() {
+		return modifiers.size() > 0;
+	}
+
+	@Override
+	protected void serializeBaseValue(CompoundNBT nbt) {
+		nbt.putBoolean("base_value", baseValue);
+	}
+
+	@Override
+	protected void deserializeBaseValue(CompoundNBT nbt) {
+		baseValue = nbt.getBoolean("base_value");
+	}
+
+	@Override
+	public boolean canAcceptModifier(BooleanAttributeModifier modifier) {
+		// If we already have the grinding modifier, dont do anything.
+		return !getValue();
+	}
+
+	@Override
+	public boolean shouldDisplayOnTooltip() {
+		return getValue();
+	}
+
+	@Override
+	public IFormattableTextComponent getDifferenceLabel(AbstractAttributeDefenition<?, ?> other) {
+		if (other.getValue() == this.getValue()) {
+			return null;
+		}
+		return super.getAttributeTitle(false);
+	}
+}

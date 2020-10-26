@@ -1,15 +1,14 @@
 {
 	"type": "staticpower:auto_smith_recipe",
 	"modifier_item": {
-		"tag": "forge:dusts/glowstone",
-		"count": 2
+		"tag": "forge:dusts/glowstone"
 	},
 	"attributes": [
 		{
 			"id": "staticpower:haste",
 			"modifier": {
 				"type": "float",
-				"amount": 25.0,
+				"amount": 1.0,
 				"isAdditive": true
 			}
 		}

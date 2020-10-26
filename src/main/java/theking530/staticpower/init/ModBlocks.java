@@ -29,6 +29,7 @@ import theking530.staticpower.cables.fluid.BlockIndustrialFluidCable;
 import theking530.staticpower.cables.heat.BlockHeatCable;
 import theking530.staticpower.cables.item.BlockItemCable;
 import theking530.staticpower.cables.power.BlockPowerCable;
+import theking530.staticpower.cables.scaffold.BlockScaffoldCable;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.tileentities.digistorenetwork.digistore.BlockDigistore;
 import theking530.staticpower.tileentities.digistorenetwork.ioport.BlockDigistoreIOPort;
@@ -224,6 +225,8 @@ public class ModBlocks {
 	public static BlockHeatCable GoldHeatCable;
 	public static BlockHeatCable AluminiumHeatCable;
 
+	public static BlockScaffoldCable ScaffoldCable;
+
 	// Batteries
 	public static BlockBattery BatteryBasic;
 	public static BlockBattery BatteryAdvanced;
@@ -261,13 +264,17 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(LumumPlant = new BaseSimplePlant("plant_lumum"));
 
 		// Wood
-		StaticPowerRegistry.preRegisterBlock(StaticLog = new StaticPowerRotatePillarBlock("log_static", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
-		StaticPowerRegistry.preRegisterBlock(EnergizedLog = new StaticPowerRotatePillarBlock("log_energized", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
-		StaticPowerRegistry.preRegisterBlock(LumumLog = new StaticPowerRotatePillarBlock("log_lumum", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
+		StaticPowerRegistry
+				.preRegisterBlock(StaticLog = new StaticPowerRotatePillarBlock("log_static", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
+		StaticPowerRegistry
+				.preRegisterBlock(EnergizedLog = new StaticPowerRotatePillarBlock("log_energized", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
+		StaticPowerRegistry
+				.preRegisterBlock(LumumLog = new StaticPowerRotatePillarBlock("log_lumum", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
 
 		// Planks
 		StaticPowerRegistry.preRegisterBlock(StaticPlanks = new StaticPowerBlock("planks_static", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
-		StaticPowerRegistry.preRegisterBlock(EnergizedPlanks = new StaticPowerBlock("planks_energized", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
+		StaticPowerRegistry
+				.preRegisterBlock(EnergizedPlanks = new StaticPowerBlock("planks_energized", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
 		StaticPowerRegistry.preRegisterBlock(LumumPlanks = new StaticPowerBlock("planks_lumum", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
 
 		// Ore
@@ -327,18 +334,18 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(BlockRubber = new StaticPowerSlimeBlock("block_rubber", Block.Properties.from(Blocks.SLIME_BLOCK)));
 
 		// Machine Blocks
-		StaticPowerRegistry
-				.preRegisterBlock(MachineBlockIron = new StaticPowerCutoutBlock("machine_block_iron", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
-		StaticPowerRegistry
-				.preRegisterBlock(MachineBlockBasic = new StaticPowerCutoutBlock("machine_block_basic", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
+		StaticPowerRegistry.preRegisterBlock(
+				MachineBlockIron = new StaticPowerCutoutBlock("machine_block_iron", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
+		StaticPowerRegistry.preRegisterBlock(
+				MachineBlockBasic = new StaticPowerCutoutBlock("machine_block_basic", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
 		StaticPowerRegistry.preRegisterBlock(
 				MachineBlockAdvanced = new StaticPowerCutoutBlock("machine_block_advanced", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
-		StaticPowerRegistry
-				.preRegisterBlock(MachineBlockStatic = new StaticPowerCutoutBlock("machine_block_static", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
+		StaticPowerRegistry.preRegisterBlock(
+				MachineBlockStatic = new StaticPowerCutoutBlock("machine_block_static", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
 		StaticPowerRegistry.preRegisterBlock(
 				MachineBlockEnergized = new StaticPowerCutoutBlock("machine_block_energized", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
-		StaticPowerRegistry
-				.preRegisterBlock(MachineBlockLumum = new StaticPowerCutoutBlock("machine_block_lumum", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
+		StaticPowerRegistry.preRegisterBlock(
+				MachineBlockLumum = new StaticPowerCutoutBlock("machine_block_lumum", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
 
 		// Machines
 		StaticPowerRegistry.preRegisterBlock(VacuumChest = new BlockVacuumChest("chest_vacuum"));
@@ -426,6 +433,8 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(GoldHeatCable = new BlockHeatCable("cable_heat_gold", StaticPowerTiers.GOLD));
 		StaticPowerRegistry.preRegisterBlock(AluminiumHeatCable = new BlockHeatCable("cable_heat_aluminium", StaticPowerTiers.ALUMINIUM));
 
+		StaticPowerRegistry.preRegisterBlock(ScaffoldCable = new BlockScaffoldCable("cable_scaffold"));
+
 		StaticPowerRegistry.preRegisterBlock(BatteryBasic = new BlockBattery("battery_block_basic", StaticPowerTiers.BASIC));
 		StaticPowerRegistry.preRegisterBlock(BatteryAdvanced = new BlockBattery("battery_block_advanced", StaticPowerTiers.ADVANCED));
 		StaticPowerRegistry.preRegisterBlock(BatteryStatic = new BlockBattery("battery_block_static", StaticPowerTiers.STATIC));
@@ -433,12 +442,13 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(BatteryLumum = new BlockBattery("battery_block_lumum", StaticPowerTiers.LUMUM));
 		StaticPowerRegistry.preRegisterBlock(BatteryCreative = new BlockBattery("battery_block_creative", StaticPowerTiers.CREATIVE));
 
-		StaticPowerRegistry.preRegisterBlock(RubberTreeStrippedWood = new StaticPowerTreeLog("rubber_tree_stripped_wood", MaterialColor.WOOD, Block.Properties.from(Blocks.STRIPPED_OAK_WOOD)));
+		StaticPowerRegistry
+				.preRegisterBlock(RubberTreeStrippedWood = new StaticPowerTreeLog("rubber_tree_stripped_wood", MaterialColor.WOOD, Block.Properties.from(Blocks.STRIPPED_OAK_WOOD)));
 		StaticPowerRegistry.preRegisterBlock(RubberTreeStrippedLog = new StaticPowerTreeLog("rubber_tree_stripped_log", MaterialColor.WOOD, Block.Properties.from(Blocks.STRIPPED_OAK_LOG)));
-		StaticPowerRegistry.preRegisterBlock(RubberTreeWood = new StaticPowerTreeLog("rubber_tree_wood", RubberTreeStrippedWood, Block.Properties.from(Blocks.OAK_LOG), () -> StaticPowerConfig.minRubberWoodBarkPerStrip,
-				() -> StaticPowerConfig.maxRubberWoodBarkPerStrip, () -> ModItems.RubberWoodBark));
-		StaticPowerRegistry.preRegisterBlock(RubberTreeLog = new StaticPowerTreeLog("rubber_tree_log", RubberTreeStrippedLog, Block.Properties.from(Blocks.OAK_LOG), () -> StaticPowerConfig.minRubberWoodBarkPerStrip,
-				() -> StaticPowerConfig.maxRubberWoodBarkPerStrip, () -> ModItems.RubberWoodBark));
+		StaticPowerRegistry.preRegisterBlock(RubberTreeWood = new StaticPowerTreeLog("rubber_tree_wood", RubberTreeStrippedWood, Block.Properties.from(Blocks.OAK_LOG),
+				() -> StaticPowerConfig.minRubberWoodBarkPerStrip, () -> StaticPowerConfig.maxRubberWoodBarkPerStrip, () -> ModItems.RubberWoodBark));
+		StaticPowerRegistry.preRegisterBlock(RubberTreeLog = new StaticPowerTreeLog("rubber_tree_log", RubberTreeStrippedLog, Block.Properties.from(Blocks.OAK_LOG),
+				() -> StaticPowerConfig.minRubberWoodBarkPerStrip, () -> StaticPowerConfig.maxRubberWoodBarkPerStrip, () -> ModItems.RubberWoodBark));
 		StaticPowerRegistry.preRegisterBlock(RubberTreePlanks = new StaticPowerBlock("rubber_tree_planks", Block.Properties.from(Blocks.OAK_PLANKS)));
 		StaticPowerRegistry.preRegisterBlock(RubberTreeLeaves = new StaticPowerTreeLeaves("rubber_tree_leaves", Block.Properties.from(Blocks.OAK_LEAVES)));
 		StaticPowerRegistry.preRegisterBlock(RubberTreeSapling = new StaticPowerSapling("rubber_tree_sapling", () -> new RubberTree(), Block.Properties.from(Blocks.OAK_SAPLING)));

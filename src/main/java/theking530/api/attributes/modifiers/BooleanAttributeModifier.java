@@ -1,9 +1,11 @@
-package theking530.api.itemattributes.attributes.modifiers;
+package theking530.api.attributes.modifiers;
 
 import com.google.gson.JsonObject;
 
 import net.minecraft.nbt.CompoundNBT;
+import theking530.api.attributes.registration.AttributeModifierRegistration;
 
+@AttributeModifierRegistration("boolean")
 public class BooleanAttributeModifier extends AbstractAttributeModifier<Boolean> {
 	public BooleanAttributeModifier() {
 

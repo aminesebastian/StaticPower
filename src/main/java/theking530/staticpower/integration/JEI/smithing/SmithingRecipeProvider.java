@@ -19,8 +19,8 @@ import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import theking530.api.itemattributes.capability.CapabilityAttributable;
-import theking530.api.itemattributes.capability.IAttributable;
+import theking530.api.attributes.capability.CapabilityAttributable;
+import theking530.api.attributes.capability.IAttributable;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe;
 

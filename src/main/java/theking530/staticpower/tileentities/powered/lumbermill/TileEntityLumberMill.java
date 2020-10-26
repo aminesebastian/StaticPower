@@ -51,7 +51,6 @@ public class TileEntityLumberMill extends TileEntityMachine {
 
 	public TileEntityLumberMill() {
 		super(TYPE);
-		this.disableFaceInteraction();
 
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
@@ -80,9 +79,9 @@ public class TileEntityLumberMill extends TileEntityMachine {
 		processingComponent.setProcessingPowerUsage(DEFAULT_PROCESSING_COST);
 
 		// Setup the I/O servos.
-		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));
-		registerComponent(new OutputServoComponent("OutputServo", 1, mainOutputInventory));
-		registerComponent(new OutputServoComponent("SecondaryOutputServo", 1, secondaryOutputInventory));
+		registerComponent(new InputServoComponent("InputServo", inputInventory));
+		registerComponent(new OutputServoComponent("OutputServo",  mainOutputInventory));
+		registerComponent(new OutputServoComponent("SecondaryOutputServo", secondaryOutputInventory));
 
 		// Setup the fluid tank and fluid servo.
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Output).setUpgradeInventory(upgradesInventory));

@@ -15,11 +15,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import theking530.api.itemattributes.attributes.AttributeRegistry;
-import theking530.api.itemattributes.attributes.FortuneAttributeDefenition;
-import theking530.api.itemattributes.attributes.GrindingAttributeDefenition;
-import theking530.api.itemattributes.attributes.HasteAttributeDefenition;
-import theking530.api.itemattributes.capability.AttributeableHandler;
+import theking530.api.attributes.capability.AttributeableHandler;
+import theking530.api.attributes.defenitions.FortuneAttributeDefenition;
+import theking530.api.attributes.defenitions.GrindingAttributeDefenition;
+import theking530.api.attributes.defenitions.HasteAttributeDefenition;
+import theking530.api.attributes.defenitions.SilkTouchAttributeDefenition;
+import theking530.api.attributes.defenitions.SmeltingAttributeDefenition;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticcore.utilities.ItemTierUtilities;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -40,14 +41,12 @@ public class DrillBit extends StaticPowerItem {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-		FortuneAttributeDefenition fortuneAttribute = (FortuneAttributeDefenition) AttributeRegistry.createInstance(FortuneAttributeDefenition.ID);
-		HasteAttributeDefenition hasteAttribute = (HasteAttributeDefenition) AttributeRegistry.createInstance(HasteAttributeDefenition.ID);
-		GrindingAttributeDefenition grindingAttribute = (GrindingAttributeDefenition) AttributeRegistry.createInstance(GrindingAttributeDefenition.ID);
-
 		AttributeableHandler handler = new AttributeableHandler("attributes");
-		handler.addAttribute(fortuneAttribute);
-		handler.addAttribute(hasteAttribute);
-		handler.addAttribute(grindingAttribute);
+		handler.addAttribute(FortuneAttributeDefenition.ID);
+		handler.addAttribute(HasteAttributeDefenition.ID);
+		handler.addAttribute(GrindingAttributeDefenition.ID);
+		handler.addAttribute(SmeltingAttributeDefenition.ID);
+		handler.addAttribute(SilkTouchAttributeDefenition.ID);
 		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(handler);
 	}
 

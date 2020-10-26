@@ -1,18 +1,20 @@
-package theking530.api.itemattributes.attributes;
+package theking530.api.attributes.defenitions;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
-import theking530.api.itemattributes.attributes.modifiers.FloatAttributeModifier;
+import theking530.api.attributes.modifiers.FloatAttributeModifier;
+import theking530.api.attributes.registration.AttributeRegistration;
 
+@AttributeRegistration("staticpower:haste")
 public class HasteAttributeDefenition extends AbstractAttributeDefenition<Integer, FloatAttributeModifier> {
-	public static final int MAX_VALUE = 300;
 	public static final ResourceLocation ID = new ResourceLocation("staticpower", "haste");
+	public static final int MAX_VALUE = 300;
 
 	public HasteAttributeDefenition(ResourceLocation id) {
-		super(ID, "gui.staticpower.haste", TextFormatting.GOLD, FloatAttributeModifier.class);
+		super(ID, "gui.staticpower.haste", TextFormatting.YELLOW, FloatAttributeModifier.class);
 		baseValue = 0;
 	}
 

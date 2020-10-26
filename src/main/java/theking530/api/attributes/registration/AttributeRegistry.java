@@ -1,9 +1,10 @@
-package theking530.api.itemattributes.attributes;
+package theking530.api.attributes.registration;
 
 import java.util.HashMap;
 import java.util.function.Function;
 
 import net.minecraft.util.ResourceLocation;
+import theking530.api.attributes.defenitions.AbstractAttributeDefenition;
 
 public class AttributeRegistry {
 	private static final HashMap<ResourceLocation, Function<ResourceLocation, AbstractAttributeDefenition<?, ?>>> ATTRIBUTE_MAP = new HashMap<>();
@@ -14,5 +15,9 @@ public class AttributeRegistry {
 
 	public static AbstractAttributeDefenition<?, ?> createInstance(ResourceLocation id) {
 		return ATTRIBUTE_MAP.get(id).apply(id);
+	}
+
+	public static int getRegisteredAttributeCount() {
+		return ATTRIBUTE_MAP.size();
 	}
 }

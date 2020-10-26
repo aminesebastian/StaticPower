@@ -1,4 +1,4 @@
-package theking530.api.itemattributes.capability;
+package theking530.api.attributes.capability;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -7,8 +7,8 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
-import theking530.api.itemattributes.attributes.AbstractAttributeDefenition;
-import theking530.api.itemattributes.attributes.AttributeRegistry;
+import theking530.api.attributes.defenitions.AbstractAttributeDefenition;
+import theking530.api.attributes.registration.AttributeRegistry;
 import theking530.staticcore.item.IItemMultiCapability;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 
@@ -30,6 +30,11 @@ public class AttributeableHandler implements IAttributable, INBTSerializable<Com
 	@Override
 	public boolean hasAttribute(ResourceLocation id) {
 		return attributes.containsKey(id);
+	}
+
+	@Override
+	public boolean addAttribute(ResourceLocation attributeId) {
+		return addAttribute(AttributeRegistry.createInstance(attributeId));
 	}
 
 	@Override

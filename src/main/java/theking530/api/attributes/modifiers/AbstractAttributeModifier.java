@@ -1,4 +1,4 @@
-package theking530.api.itemattributes.attributes.modifiers;
+package theking530.api.attributes.modifiers;
 
 import com.google.gson.JsonObject;
 

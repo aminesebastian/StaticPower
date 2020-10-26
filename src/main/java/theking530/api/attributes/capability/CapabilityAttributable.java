@@ -1,4 +1,4 @@
-package theking530.api.itemattributes.capability;
+package theking530.api.attributes.capability;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;

@@ -1,41 +1,43 @@
-package theking530.api.itemattributes.attributes.modifiers;
+package theking530.api.attributes.modifiers;
 
 import com.google.gson.JsonObject;
 
 import net.minecraft.nbt.CompoundNBT;
+import theking530.api.attributes.registration.AttributeModifierRegistration;
 
-public class IntegerAttributeModifier extends AbstractAttributeModifier<Integer> {
+@AttributeModifierRegistration("float")
+public class FloatAttributeModifier extends AbstractAttributeModifier<Float> {
 	public boolean isAdditive;
 
-	public IntegerAttributeModifier() {
+	public FloatAttributeModifier() {
 
 	}
 
-	public IntegerAttributeModifier(int value, boolean isAdditive) {
+	public FloatAttributeModifier(float value, boolean isAdditive) {
 		super(value);
 		this.isAdditive = isAdditive;
 	}
 
 	@Override
 	protected void read(JsonObject json) {
-		value = json.get("amount").getAsInt();
+		value = json.get("amount").getAsFloat();
 		isAdditive = json.get("isAdditive").getAsBoolean();
 	}
 
 	@Override
 	protected void read(CompoundNBT nbt) {
-		value = nbt.getInt("amount");
+		value = nbt.getFloat("amount");
 		isAdditive = nbt.getBoolean("isAdditive");
 	}
 
 	@Override
 	protected void write(CompoundNBT nbt) {
-		nbt.putInt("amount", value);
+		nbt.putFloat("amount", value);
 		nbt.putBoolean("isAdditive", isAdditive);
 	}
 
 	@Override
 	public String getType() {
-		return "integer";
+		return "float";
 	}
 }

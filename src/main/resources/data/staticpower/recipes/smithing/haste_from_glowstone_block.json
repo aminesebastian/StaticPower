@@ -1,0 +1,16 @@
+{
+	"type": "staticpower:auto_smith_recipe",
+	"modifier_item": {
+		"item": "minecraft:glowstone"
+	},
+	"attributes": [
+		{
+			"id": "staticpower:haste",
+			"modifier": {
+				"type": "float",
+				"amount": 4.0,
+				"isAdditive": true
+			}
+		}
+	]
+}

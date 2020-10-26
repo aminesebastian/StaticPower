@@ -1,11 +1,13 @@
-package theking530.api.itemattributes.attributes;
+package theking530.api.attributes.defenitions;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.TextFormatting;
-import theking530.api.itemattributes.attributes.modifiers.BooleanAttributeModifier;
+import theking530.api.attributes.modifiers.BooleanAttributeModifier;
+import theking530.api.attributes.registration.AttributeRegistration;
 
+@AttributeRegistration("staticpower:grinding")
 public class GrindingAttributeDefenition extends AbstractAttributeDefenition<Boolean, BooleanAttributeModifier> {
 	public static final ResourceLocation ID = new ResourceLocation("staticpower", "grinding");
 
@@ -42,6 +44,9 @@ public class GrindingAttributeDefenition extends AbstractAttributeDefenition<Boo
 
 	@Override
 	public IFormattableTextComponent getDifferenceLabel(AbstractAttributeDefenition<?, ?> other) {
+		if (other.getValue() == this.getValue()) {
+			return null;
+		}
 		return super.getAttributeTitle(false);
 	}
 }

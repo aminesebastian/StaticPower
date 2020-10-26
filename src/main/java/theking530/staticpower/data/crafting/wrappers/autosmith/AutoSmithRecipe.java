@@ -11,11 +11,11 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.api.itemattributes.attributes.AbstractAttributeDefenition;
-import theking530.api.itemattributes.attributes.AttributeModifierRegistry;
-import theking530.api.itemattributes.attributes.modifiers.AbstractAttributeModifier;
-import theking530.api.itemattributes.capability.CapabilityAttributable;
-import theking530.api.itemattributes.capability.IAttributable;
+import theking530.api.attributes.capability.CapabilityAttributable;
+import theking530.api.attributes.capability.IAttributable;
+import theking530.api.attributes.defenitions.AbstractAttributeDefenition;
+import theking530.api.attributes.modifiers.AbstractAttributeModifier;
+import theking530.api.attributes.registration.AttributeModifierRegistry;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
@@ -127,6 +127,14 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 	@Override
 	public IRecipeType<?> getType() {
 		return RECIPE_TYPE;
+	}
+
+	public boolean canApplyToItemStack(ItemStack stack) {
+		IAttributable attributable = stack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);
+		if (attributable == null) {
+			return false;
+		}
+		return canApplyToAttributable(attributable);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

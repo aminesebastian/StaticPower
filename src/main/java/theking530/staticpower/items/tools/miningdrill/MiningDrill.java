@@ -19,11 +19,14 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTier;
+import net.minecraft.item.crafting.FurnaceRecipe;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
@@ -33,6 +36,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -40,12 +44,14 @@ import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import theking530.api.itemattributes.AttributeUtilities;
-import theking530.api.itemattributes.attributes.FortuneAttributeDefenition;
-import theking530.api.itemattributes.attributes.GrindingAttributeDefenition;
-import theking530.api.itemattributes.attributes.HasteAttributeDefenition;
-import theking530.api.itemattributes.capability.CapabilityAttributable;
-import theking530.api.itemattributes.capability.IAttributable;
+import theking530.api.attributes.AttributeUtilities;
+import theking530.api.attributes.capability.CapabilityAttributable;
+import theking530.api.attributes.capability.IAttributable;
+import theking530.api.attributes.defenitions.FortuneAttributeDefenition;
+import theking530.api.attributes.defenitions.GrindingAttributeDefenition;
+import theking530.api.attributes.defenitions.HasteAttributeDefenition;
+import theking530.api.attributes.defenitions.SilkTouchAttributeDefenition;
+import theking530.api.attributes.defenitions.SmeltingAttributeDefenition;
 import theking530.api.power.ItemStackStaticVoltCapability;
 import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
@@ -175,34 +181,96 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		// Get the drill bit attributes.
 		IAttributable drillBitAttributes = getDrillBit(heldItem).getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);
 
-		// Allocate a flag to see if the grinder was used.
-		boolean wasGround = false;
+		// Allocate a list of the items that would be dropped.
+		List<ItemStack> droppableItems = Block.getDrops(state, player.getServerWorld(), pos, tileEntity, player, heldItem);
 
 		// If we have attributes.
 		if (drillBitAttributes != null) {
-			// Check for the grinder attriubte.
+			// Check for the grinder attribute. If we do, we add the grindable items to the
+			// list if grindable.
 			if (drillBitAttributes.hasAttribute(GrindingAttributeDefenition.ID)) {
 				// Get the grinding attribute and check if its enabled.
 				GrindingAttributeDefenition grindingAttribute = (GrindingAttributeDefenition) drillBitAttributes.getAttribute(GrindingAttributeDefenition.ID);
-				if (grindingAttribute.getValue()) {
-					RecipeMatchParameters matchParameters = new RecipeMatchParameters(new ItemStack(block.asItem()));
-					Optional<GrinderRecipe> recipe = StaticPowerRecipeRegistry.getRecipe(GrinderRecipe.RECIPE_TYPE, matchParameters);
-					if (recipe.isPresent()) {
-						wasGround = true;
-						for (ProbabilityItemStackOutput output : recipe.get().getOutputItems()) {
-							if (SDMath.diceRoll(output.getOutputChance())) {
-								WorldUtilities.dropItem(player.getEntityWorld(), pos, output.getItem());
-							}
+				handleGrindingAttribute(grindingAttribute, droppableItems, state, block, pos, player, tileEntity, heldItem, experience, isCreative);
+			}
+
+			// Check for the smelting attribute. If we do, handle it.
+			if (drillBitAttributes.hasAttribute(SmeltingAttributeDefenition.ID)) {
+				// Get the smelting attribute.
+				SmeltingAttributeDefenition smeltingAttribute = (SmeltingAttributeDefenition) drillBitAttributes.getAttribute(SmeltingAttributeDefenition.ID);
+				handleSmeltingAttribute(smeltingAttribute, droppableItems, state, block, pos, player, tileEntity, heldItem, experience, isCreative);
+			}
+		}
+
+		// Drop all the droppable stacks.
+		for (ItemStack stack : droppableItems) {
+			WorldUtilities.dropItem(player.getServerWorld(), pos, stack);
+		}
+
+		// Drop the XP.
+		if (experience > 0) {
+			state.getBlock().dropXpOnBlockBreak((ServerWorld) player.getEntityWorld(), pos, experience);
+		}
+
+		// Spawn any additional drops.
+		state.spawnAdditionalDrops((ServerWorld) player.getEntityWorld(), pos, heldItem);
+	}
+
+	protected boolean handleGrindingAttribute(GrindingAttributeDefenition grindingAttribute, List<ItemStack> droppableItems, BlockState state, Block block, BlockPos pos,
+			ServerPlayerEntity player, TileEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
+
+		// Allocate a flag to check if anything was ground.
+		boolean wasAnythingGround = false;
+
+		// Get the grinding attribute and check if its enabled.
+		if (grindingAttribute.getValue()) {
+			// Iterate through all the items that were going to be dropped.
+			for (int i = droppableItems.size() - 1; i >= 0; i--) {
+				// Get the droppable stack and get the grinding recipe for it if it exists.
+				ItemStack droppableStack = droppableItems.get(i);
+				RecipeMatchParameters matchParameters = new RecipeMatchParameters(droppableStack);
+				Optional<GrinderRecipe> recipe = StaticPowerRecipeRegistry.getRecipe(GrinderRecipe.RECIPE_TYPE, matchParameters);
+
+				// If the recipe is present, create the ground droppables.
+				if (recipe.isPresent()) {
+					for (ProbabilityItemStackOutput output : recipe.get().getOutputItems()) {
+						if (SDMath.diceRoll(output.getOutputChance())) {
+							droppableItems.add(output.getItem());
 						}
 					}
+					wasAnythingGround = true;
+				}
+			}
+		}
+		return wasAnythingGround;
+	}
+
+	protected boolean handleSmeltingAttribute(SmeltingAttributeDefenition smeltingAttribute, List<ItemStack> droppableItems, BlockState state, Block block, BlockPos pos,
+			ServerPlayerEntity player, TileEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
+
+		// Allocate a flag to check if anything was smelted.
+		boolean wasAnythingSmelted = false;
+
+		// If the smelting attribute is enabled.
+		if (smeltingAttribute.getValue()) {
+			// Iterate through all the items that were going to be dropped.
+			for (int i = droppableItems.size() - 1; i >= 0; i--) {
+				// Get the droppable stack and get the furnace recipe for it if it exists.
+				ItemStack droppableStack = droppableItems.get(i);
+				RecipeMatchParameters matchParameters = new RecipeMatchParameters(droppableStack);
+				Optional<FurnaceRecipe> recipe = player.getServerWorld().getRecipeManager().getRecipe(IRecipeType.SMELTING, new Inventory(matchParameters.getItems()[0]),
+						player.getServerWorld());
+
+				// Replace the spot the droppable list with the smelting output if it exists.
+				if (recipe.isPresent()) {
+					droppableItems.set(i, recipe.get().getRecipeOutput());
+					wasAnythingSmelted = true;
 				}
 			}
 		}
 
-		// If the grinder was not used, perform a regular harvest.
-		if (!wasGround) {
-			super.harvestBlockDrops(state, block, pos, player, tileEntity, heldItem, experience, isCreative);
-		}
+		// Return the flag.
+		return wasAnythingSmelted;
 	}
 
 	@Override
@@ -212,7 +280,12 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 			bit.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).ifPresent(attributable -> {
 				if (attributable.hasAttribute(FortuneAttributeDefenition.ID)) {
 					FortuneAttributeDefenition fortune = (FortuneAttributeDefenition) attributable.getAttribute(FortuneAttributeDefenition.ID);
-					stack.addEnchantment(Enchantments.FORTUNE, fortune.getFortuneLevel());
+					int fLevel = fortune.getFortuneLevelWithChance();
+					System.out.println(fLevel);
+					stack.addEnchantment(Enchantments.FORTUNE, fLevel);
+				}
+				if (attributable.hasAttribute(SilkTouchAttributeDefenition.ID)) {
+					stack.addEnchantment(Enchantments.SILK_TOUCH, 1);
 				}
 			});
 		}
@@ -238,6 +311,7 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 
 		// Remove the enchantments.
 		removeEnchantment(stack, Enchantments.FORTUNE);
+		removeEnchantment(stack, Enchantments.SILK_TOUCH);
 	}
 
 	@Override
@@ -289,11 +363,6 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
 		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, 5))
 				.addCapability(new ItemStackStaticVoltCapability("default", stack, getCapacity(), getCapacity(), getCapacity()));
-	}
-
-	@Override
-	public int getRGBDurabilityForDisplay(ItemStack stack) {
-		return super.getRGBDurabilityForDisplay(stack);// EnergyHandlerItemStackUtilities.getRGBDurabilityForDisplay(stack);
 	}
 
 	@Override

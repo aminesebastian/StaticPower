@@ -1,0 +1,15 @@
+{
+	"type": "staticpower:auto_smith_recipe",
+	"modifier_item": {
+		"item": "minecraft:honey_bottle"
+	},
+	"attributes": [
+		{
+			"id": "staticpower:silk_touch",
+			"modifier": {
+				"type": "boolean",
+				"value": true
+			}
+		}
+	]
+}

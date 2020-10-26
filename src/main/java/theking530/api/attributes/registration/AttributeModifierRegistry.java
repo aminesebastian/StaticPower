@@ -1,4 +1,4 @@
-package theking530.api.itemattributes.attributes;
+package theking530.api.attributes.registration;
 
 import java.util.HashMap;
 import java.util.function.Supplier;
@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 import com.google.gson.JsonObject;
 
 import net.minecraft.nbt.CompoundNBT;
-import theking530.api.itemattributes.attributes.modifiers.AbstractAttributeModifier;
+import theking530.api.attributes.modifiers.AbstractAttributeModifier;
 
 public class AttributeModifierRegistry {
 	private static final HashMap<String, Supplier<AbstractAttributeModifier<?>>> MODIFIER_MAP = new HashMap<>();
@@ -32,5 +32,9 @@ public class AttributeModifierRegistry {
 		AbstractAttributeModifier<T> output = (AbstractAttributeModifier<T>) MODIFIER_MAP.get(nbt.getString("type")).get();
 		output.deserialize(nbt);
 		return output;
+	}
+
+	public static int getRegisteredAttributeModifierCount() {
+		return MODIFIER_MAP.size();
 	}
 }

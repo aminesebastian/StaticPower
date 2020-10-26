@@ -1,0 +1,7 @@
+{
+  "parent": "staticpower:block/cables/cable_extension",
+  "textures": {
+    "cable_texture": "staticpower:blocks/cables/cable_scaffold",
+    "particle": "staticpower:blocks/cables/cable_scaffold"
+  }
+}

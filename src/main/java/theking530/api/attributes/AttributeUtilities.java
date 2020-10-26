@@ -1,4 +1,4 @@
-package theking530.api.itemattributes;
+package theking530.api.attributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,8 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import theking530.api.itemattributes.attributes.AbstractAttributeDefenition;
-import theking530.api.itemattributes.capability.CapabilityAttributable;
+import theking530.api.attributes.capability.CapabilityAttributable;
+import theking530.api.attributes.defenitions.AbstractAttributeDefenition;
 
 public class AttributeUtilities {
 	public static void addTooltipsForAttribute(ItemStack stack, List<ITextComponent> tooltip, boolean showAdvanced) {

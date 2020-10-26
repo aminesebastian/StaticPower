@@ -24,9 +24,9 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
+import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.digistore.CapabilityDigistoreInventory;
 import theking530.api.heat.CapabilityHeatable;
-import theking530.api.itemattributes.capability.CapabilityAttributable;
 import theking530.api.power.CapabilityStaticVolt;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerRegistry;
@@ -37,6 +37,7 @@ import theking530.staticpower.cables.item.ItemNetworkModuleFactory;
 import theking530.staticpower.cables.network.CableNetworkModuleRegistry;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.power.PowerNetworkModuleFactory;
+import theking530.staticpower.cables.scaffold.ScaffoldNetworkModuleFactory;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.TOP.PluginTOP;
 
@@ -56,6 +57,7 @@ public class StaticPowerModEventRegistry {
 		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.FLUID_NETWORK_MODULE, new FluidNetworkModuleFactory());
 		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE, new DigistoreNetworkModuleFactory());
 		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.HEAT_NETWORK_MODULE, new HeatNetworkModuleFactory());
+		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.SCAFFOLD_NETWORK_MODULE, new ScaffoldNetworkModuleFactory());
 
 		// Register capabilities.
 		CapabilityDigistoreInventory.register();

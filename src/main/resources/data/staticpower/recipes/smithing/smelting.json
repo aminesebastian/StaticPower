@@ -1,0 +1,16 @@
+{
+	"type": "staticpower:auto_smith_recipe",
+	"modifier_item": {
+		"item": "staticpower:heat_sink_gold",
+		"count": 9
+	},
+	"attributes": [
+		{
+			"id": "staticpower:smelting",
+			"modifier": {
+				"type": "boolean",
+				"value": true
+			}
+		}
+	]
+}
