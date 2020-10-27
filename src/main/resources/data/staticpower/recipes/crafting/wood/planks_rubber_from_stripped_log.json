@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{
+			"item": "staticpower:rubber_tree_striped_log"
+		}
+	],
+	"result": {
+		"item": "staticpower:rubber_tree_planks",
+		"count": 4
+	}
+}

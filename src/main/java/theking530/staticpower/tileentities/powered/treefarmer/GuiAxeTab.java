@@ -56,11 +56,13 @@ public class GuiAxeTab extends BaseGuiTab {
 	protected void onTabOpened() {
 		slot.setEnabledState(true);
 		slot.yPos = this.yPosition + 4;
+		this.title = "";
 	}
 
 	@Override
 	protected void onTabClosing() {
 		slot.setEnabledState(false);
+		this.title = "Lumber Axe";
 
 		// Update the icon to either the default if the slot is empty, or the slot's
 		// containted item.
