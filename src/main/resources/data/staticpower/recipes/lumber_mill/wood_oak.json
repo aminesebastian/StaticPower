@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:lumber_mill_recipe",
 	"input": {
-		"item": "minecraft:oak_log"
+		"tag": "minecraft:oak_logs"
 	},
 	"outputs": {
 		"primary": {

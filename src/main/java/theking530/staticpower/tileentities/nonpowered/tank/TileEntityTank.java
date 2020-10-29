@@ -3,11 +3,15 @@ package theking530.staticpower.tileentities.nonpowered.tank;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderTank;
+import theking530.staticpower.data.StaticPowerTier;
+import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.data.TierReloadListener;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
@@ -20,11 +24,27 @@ import theking530.staticpower.tileentities.components.items.FluidContainerInvent
 
 public class TileEntityTank extends TileEntityBase {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityTank> TYPE = new TileEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(), ModBlocks.BasicTank);
+	public static final TileEntityTypeAllocator<TileEntityTank> TYPE_BASIC = new TileEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(type, StaticPowerTiers.BASIC),
+			ModBlocks.BasicTank);
+	public static final TileEntityTypeAllocator<TileEntityTank> TYPE_ADVANCED = new TileEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(type, StaticPowerTiers.ADVANCED),
+			ModBlocks.AdvancedTank);
+	public static final TileEntityTypeAllocator<TileEntityTank> TYPE_STATIC = new TileEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(type, StaticPowerTiers.STATIC),
+			ModBlocks.StaticTank);
+	public static final TileEntityTypeAllocator<TileEntityTank> TYPE_ENERGIZED = new TileEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(type, StaticPowerTiers.ENERGIZED),
+			ModBlocks.EnergizedTank);
+	public static final TileEntityTypeAllocator<TileEntityTank> TYPE_LUMUM = new TileEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(type, StaticPowerTiers.LUMUM),
+			ModBlocks.LumumTank);
+	public static final TileEntityTypeAllocator<TileEntityTank> TYPE_CREATIVE = new TileEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(type, StaticPowerTiers.CREATIVE),
+			ModBlocks.CreativeTank);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
-			TYPE.setTileEntitySpecialRenderer(TileEntityRenderTank::new);
+			TYPE_BASIC.setTileEntitySpecialRenderer(TileEntityRenderTank::new);
+			TYPE_ADVANCED.setTileEntitySpecialRenderer(TileEntityRenderTank::new);
+			TYPE_STATIC.setTileEntitySpecialRenderer(TileEntityRenderTank::new);
+			TYPE_ENERGIZED.setTileEntitySpecialRenderer(TileEntityRenderTank::new);
+			TYPE_LUMUM.setTileEntitySpecialRenderer(TileEntityRenderTank::new);
+			TYPE_CREATIVE.setTileEntitySpecialRenderer(TileEntityRenderTank::new);
 		}
 	}
 
@@ -33,12 +53,19 @@ public class TileEntityTank extends TileEntityBase {
 	public final FluidTankComponent fluidTankComponent;
 	public final SideConfigurationComponent ioSideConfiguration;
 
-	public TileEntityTank() {
-		super(TYPE);
+	public TileEntityTank(TileEntityTypeAllocator<TileEntityTank> allocator, ResourceLocation tier) {
+		super(allocator);
+
+		// Get the tier.
+		StaticPowerTier tierObject = TierReloadListener.getTier(tier);
+
 		// Add the tank component.
-		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 16000).setCapabilityExposedModes(MachineSideMode.Regular, MachineSideMode.Input, MachineSideMode.Output));
+		int capacity = tier == StaticPowerTiers.CREATIVE ? Integer.MAX_VALUE : tierObject.getDefaultTankCapacity() * 4;
+		registerComponent(
+				fluidTankComponent = new FluidTankComponent("FluidTank", capacity).setCapabilityExposedModes(MachineSideMode.Regular, MachineSideMode.Input, MachineSideMode.Output));
 		fluidTankComponent.setCanFill(true);
 		DisableFaceInteraction = false;
+
 		// Add the side configuration component.
 		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", (side, mode) -> {
 		}, (side, mode) -> {
@@ -50,8 +77,8 @@ public class TileEntityTank extends TileEntityBase {
 		registerComponent(outputFluidContainerComponent = new FluidContainerInventoryComponent("FluidDrainContainerServo", fluidTankComponent).setMode(FluidContainerInteractionMode.FILL));
 
 		// Add the two components to auto input and output fluids.
-		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, fluidTankComponent, MachineSideMode.Input));
-		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
+		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", fluidTankComponent.getCapacity() / 100, fluidTankComponent, MachineSideMode.Input));
+		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", fluidTankComponent.getCapacity() / 100, fluidTankComponent, MachineSideMode.Output));
 	}
 
 	@Override

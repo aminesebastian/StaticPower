@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
@@ -22,11 +23,14 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
 import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
 import theking530.staticpower.client.rendering.blocks.TankMachineBakedModel;
+import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockTank extends StaticPowerTileEntityBlock implements ICustomModelSupplier {
+	private ResourceLocation tier;
 
-	public BlockTank(String name) {
+	public BlockTank(String name, ResourceLocation tier) {
 		super(name, Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).hardnessAndResistance(3.5f, 5.0f).sound(SoundType.METAL).notSolid());
+		this.tier = tier;
 	}
 
 	@Override
@@ -51,7 +55,7 @@ public class BlockTank extends StaticPowerTileEntityBlock implements ICustomMode
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)	
+	@OnlyIn(Dist.CLIENT)
 	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
 		return new TankMachineBakedModel(existingModel);
 	}
@@ -64,6 +68,19 @@ public class BlockTank extends StaticPowerTileEntityBlock implements ICustomMode
 
 	@Override
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
-		return TileEntityTank.TYPE.create();
+		if (tier == StaticPowerTiers.BASIC) {
+			return TileEntityTank.TYPE_BASIC.create();
+		} else if (tier == StaticPowerTiers.ADVANCED) {
+			return TileEntityTank.TYPE_ADVANCED.create();
+		} else if (tier == StaticPowerTiers.STATIC) {
+			return TileEntityTank.TYPE_STATIC.create();
+		} else if (tier == StaticPowerTiers.ENERGIZED) {
+			return TileEntityTank.TYPE_ENERGIZED.create();
+		} else if (tier == StaticPowerTiers.LUMUM) {
+			return TileEntityTank.TYPE_LUMUM.create();
+		} else if (tier == StaticPowerTiers.CREATIVE) {
+			return TileEntityTank.TYPE_CREATIVE.create();
+		}
+		return null;
 	}
 }

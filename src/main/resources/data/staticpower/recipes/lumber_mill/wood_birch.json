@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:lumber_mill_recipe",
 	"input": {
-		"item": "minecraft:birch_log"
+		"tag": "minecraft:birch_logs"
 	},
 	"outputs": {
 		"primary": {

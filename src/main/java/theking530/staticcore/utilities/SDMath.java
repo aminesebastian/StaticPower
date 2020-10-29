@@ -64,6 +64,10 @@ public class SDMath {
 		return Math.max(Math.min(value, max), min);
 	}
 
+	public static long clamp(long value, long min, long max) {
+		return Math.max(Math.min(value, max), min);
+	}
+
 	public static float clamp(float value, float min, float max) {
 		return Math.max(Math.min(value, max), min);
 	}

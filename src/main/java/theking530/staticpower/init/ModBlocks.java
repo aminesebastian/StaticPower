@@ -147,7 +147,14 @@ public class ModBlocks {
 	public static BlockPoweredGrinder PoweredGrinder;
 	public static BlockLumberMill LumberMill;
 	public static BlockBasicFarmer BasicFarmer;
+
 	public static BlockTank BasicTank;
+	public static BlockTank AdvancedTank;
+	public static BlockTank StaticTank;
+	public static BlockTank EnergizedTank;
+	public static BlockTank LumumTank;
+	public static BlockTank CreativeTank;
+
 	public static BlockPump Pump;
 	public static BlockTreeFarmer TreeFarmer;
 	public static BlockFermenter Fermenter;
@@ -388,7 +395,13 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(SilverHeatSink = new BlockHeatSink("heat_sink_silver", StaticPowerTiers.SILVER));
 		StaticPowerRegistry.preRegisterBlock(GoldHeatSink = new BlockHeatSink("heat_sink_gold", StaticPowerTiers.GOLD));
 
-		StaticPowerRegistry.preRegisterBlock(BasicTank = new BlockTank("tank_basic"));
+		StaticPowerRegistry.preRegisterBlock(BasicTank = new BlockTank("tank_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterBlock(AdvancedTank = new BlockTank("tank_advanced", StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterBlock(StaticTank = new BlockTank("tank_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterBlock(EnergizedTank = new BlockTank("tank_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterBlock(LumumTank = new BlockTank("tank_lumum", StaticPowerTiers.LUMUM));
+		StaticPowerRegistry.preRegisterBlock(CreativeTank = new BlockTank("tank_creative", StaticPowerTiers.CREATIVE));
+
 		StaticPowerRegistry.preRegisterBlock(Pump = new BlockPump("pump"));
 
 		StaticPowerRegistry.preRegisterBlock(DigistoreManager = new BlockDigistoreManager("digistore_manager"));

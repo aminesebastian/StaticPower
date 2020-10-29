@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:lumber_mill_recipe",
 	"input": {
-		"item": "staticpower:rubber_tree_log"
+		"tag": "forge:rubber_wood_logs"
 	},
 	"outputs": {
 		"primary": {

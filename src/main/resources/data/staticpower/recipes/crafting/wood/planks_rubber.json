@@ -2,7 +2,7 @@
 	"type": "minecraft:crafting_shapeless",
 	"ingredients": [
 		{
-			"item": "staticpower:rubber_tree_log"
+			"item": "staticpower:rubber_tree_stripped_wood"
 		}
 	],
 	"result": {

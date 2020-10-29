@@ -107,7 +107,7 @@ public class SerializationUtilities {
 				// Get the type of the field and then serialize it if possible.
 				Class<?> t = field.getType();
 				if (t.isEnum()) {
-					Method m = t.getMethod("ordinal");
+					Method m = t.getMethod("ordinal");	
 					int value = (int) m.invoke(field.get(object));
 					nbt.putByte(field.getName(), (byte) value);
 				} else if (t == boolean.class) {
