@@ -5,6 +5,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -35,8 +37,18 @@ public abstract class StaticPowerMachineBlock extends StaticPowerTileEntityBlock
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)	
+	@OnlyIn(Dist.CLIENT)
 	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
 		return new DefaultMachineBakedModel(existingModel);
 	}
+
+	@Override
+	public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
+		// Check to see if we have the IS_ON property and it is true. If so, light up.
+		if (state.hasProperty(IS_ON) && state.get(IS_ON)) {
+			return 15;
+		}
+		return state.getLightValue();
+	}
+
 }

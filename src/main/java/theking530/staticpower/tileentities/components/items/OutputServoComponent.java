@@ -122,7 +122,8 @@ public class OutputServoComponent extends AbstractTileEntityComponent {
 				// Try to insert an item into it.
 				for (int i = 0; i < inventory.getSlots(); i++) {
 					// Get the candidate to transfer.
-					ItemStack candidate = inventory.getStackInSlot(i);
+					ItemStack candidate = inventory.extractItem(i, validSide.getSlotLimit(i), true);
+					
 					// Attempt the insert using a copy and capture the remaining.
 					ItemStack remaining = InventoryUtilities.insertItemIntoInventory(validSide, candidate.copy(), false);
 

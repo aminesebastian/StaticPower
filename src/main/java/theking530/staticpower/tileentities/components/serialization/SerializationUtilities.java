@@ -98,12 +98,11 @@ public class SerializationUtilities {
 		// Iterate through all the fields.
 		for (Field field : fields) {
 			// Check if the field is accessible.
-			boolean isPrivate = !field.isAccessible();
+			boolean isAccessible = !field.isAccessible();
 			try {
 				// Mark it accessible if not.
-				if (isPrivate) {
-					field.setAccessible(true);
-				}
+				field.setAccessible(true);
+				
 				// Get the type of the field and then serialize it if possible.
 				Class<?> t = field.getType();
 				if (t.isEnum()) {
@@ -145,7 +144,7 @@ public class SerializationUtilities {
 				LOGGER.error(String.format("An error occured when attempting to serialize field: %1$s from object: %2$s to NBT.", field.getName(), object), e);
 			} finally {
 				// Reset the private state if needed.
-				if (isPrivate) {
+				if (isAccessible) {
 					field.setAccessible(false);
 				}
 			}

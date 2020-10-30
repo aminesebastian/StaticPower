@@ -22,6 +22,7 @@ import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
 import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
+import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.blocks.TankMachineBakedModel;
 import theking530.staticpower.data.StaticPowerTiers;
 
@@ -57,7 +58,20 @@ public class BlockTank extends StaticPowerTileEntityBlock implements ICustomMode
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
-		return new TankMachineBakedModel(existingModel);
+		if (tier == StaticPowerTiers.BASIC) {
+			return new TankMachineBakedModel(existingModel, StaticPowerSprites.BASIC_TANK);
+		} else if (tier == StaticPowerTiers.ADVANCED) {
+			return new TankMachineBakedModel(existingModel, StaticPowerSprites.ADVANCED_TANK);
+		} else if (tier == StaticPowerTiers.STATIC) {
+			return new TankMachineBakedModel(existingModel, StaticPowerSprites.STATIC_TANK);
+		} else if (tier == StaticPowerTiers.ENERGIZED) {
+			return new TankMachineBakedModel(existingModel, StaticPowerSprites.ENERGIZED_TANK);
+		} else if (tier == StaticPowerTiers.LUMUM) {
+			return new TankMachineBakedModel(existingModel, StaticPowerSprites.LUMUM_TANK);
+		} else if (tier == StaticPowerTiers.CREATIVE) {
+			return new TankMachineBakedModel(existingModel, StaticPowerSprites.CREATIVE_TANK);
+		}
+		return null;
 	}
 
 	@Override

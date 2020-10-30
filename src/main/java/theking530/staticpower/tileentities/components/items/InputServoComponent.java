@@ -125,7 +125,7 @@ public class InputServoComponent extends AbstractTileEntityComponent {
 				// Try to insert an item into it.
 				for (int i = 0; i < validSide.getSlots(); i++) {
 					// Get the candidate to input.
-					ItemStack candidate = validSide.getStackInSlot(i);
+					ItemStack candidate = validSide.extractItem(i, inventory.getSlotLimit(i), true);
 
 					// Check the filter if it exists, and skip if it fails.
 					if (filter != null && !filter.test(candidate)) {

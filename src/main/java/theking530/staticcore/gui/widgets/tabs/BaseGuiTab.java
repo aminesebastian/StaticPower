@@ -464,12 +464,14 @@ public abstract class BaseGuiTab {
 	 */
 	protected void drawButtonIcon(MatrixStack stack, float partialTicks) {
 		Vector2D position = GuiDrawUtilities.translatePositionByMatrix(stack, 0, 0);
+		GlStateManager.disableDepthTest();
 		if (icon != null) {
 			icon.draw(getTabSide() == TabSide.RIGHT ? position.getX() + 3 : position.getX() + tabWidth + 4.0f, position.getY() + 4, tabIndex);
 			if (showNotificationBadge && tabState == TabState.CLOSED) {
 				notifictionBadge.draw(getTabSide() == TabSide.RIGHT ? position.getX() + 17 : position.getX() + tabWidth - 4.0f, position.getY() - 2.0f, tabIndex);
 			}
 		}
+		GlStateManager.enableDepthTest();
 	}
 
 	/**
@@ -528,17 +530,20 @@ public abstract class BaseGuiTab {
 		// Bottom
 		StaticVertexBuffer.pos(tabLeft + 1, tabTop + 24 + (tabHeight * animationTimer / animationTime), zLevel, 0.0f, 1.0f);
 		StaticVertexBuffer.pos(tabLeft + 21 + (tabWidth * animationTimer / animationTime), tabTop + 24 + (tabHeight * animationTimer / animationTime), zLevel, 1.0f - xPixel * 3.0f, 1.0f);
-		StaticVertexBuffer.pos(tabLeft + 21 + (tabWidth * animationTimer / animationTime), tabTop + 21 + (tabHeight * animationTimer / animationTime), zLevel, 1.0f - xPixel * 3.0f, 1.0f - yPixel * 4.0f);
+		StaticVertexBuffer.pos(tabLeft + 21 + (tabWidth * animationTimer / animationTime), tabTop + 21 + (tabHeight * animationTimer / animationTime), zLevel, 1.0f - xPixel * 3.0f,
+				1.0f - yPixel * 4.0f);
 		StaticVertexBuffer.pos(tabLeft + 1, tabTop + 21 + (tabHeight * animationTimer / animationTime), zLevel, 0.0f, 1.0f - yPixel * 4.0f);
 
 		// Right Side
 		StaticVertexBuffer.pos(tabLeft + 23.5 + (tabWidth * animationTimer / animationTime), tabTop + 21.4 + (tabHeight * animationTimer / animationTime), zLevel, 1.0f, yPixel * 4.0f);
 		StaticVertexBuffer.pos(tabLeft + 23.5 + (tabWidth * animationTimer / animationTime), tabTop + 4, zLevel, 1.0f, 1.0f - yPixel * 4.0f);
 		StaticVertexBuffer.pos(tabLeft + 21 + (tabWidth * animationTimer / animationTime), tabTop + 4, zLevel, 1.0f - xPixel * 3.0f, 1.0f - yPixel * 4.0f);
-		StaticVertexBuffer.pos(tabLeft + 21 + (tabWidth * animationTimer / animationTime), tabTop + 21.4 + (tabHeight * animationTimer / animationTime), zLevel, 1.0f - xPixel * 3.0f, yPixel * 4.0f);
+		StaticVertexBuffer.pos(tabLeft + 21 + (tabWidth * animationTimer / animationTime), tabTop + 21.4 + (tabHeight * animationTimer / animationTime), zLevel, 1.0f - xPixel * 3.0f,
+				yPixel * 4.0f);
 
 		// Body
-		StaticVertexBuffer.pos(tabLeft + 21 + (tabWidth * animationTimer / animationTime), tabTop + 21 + (tabHeight * animationTimer / animationTime), zLevel, 1.0f - xPixel * 4.0f, yPixel * 4.0f);
+		StaticVertexBuffer.pos(tabLeft + 21 + (tabWidth * animationTimer / animationTime), tabTop + 21 + (tabHeight * animationTimer / animationTime), zLevel, 1.0f - xPixel * 4.0f,
+				yPixel * 4.0f);
 		StaticVertexBuffer.pos(tabLeft + 21 + (tabWidth * animationTimer / animationTime), tabTop + 3, zLevel, 1.0f - xPixel * 4.0f, 1.0f - yPixel * 4.0f);
 		StaticVertexBuffer.pos(tabLeft + 1, tabTop + 3, zLevel, 0, 1.0f - yPixel * 4.0f);
 		StaticVertexBuffer.pos(tabLeft + 1, tabTop + 21 + (tabHeight * animationTimer / animationTime), zLevel, 0, yPixel * 4.0f);
@@ -546,7 +551,8 @@ public abstract class BaseGuiTab {
 		// Bottom Corner
 		StaticVertexBuffer.pos(tabLeft + 23.5 + (tabWidth * animationTimer / animationTime), tabTop + 24 + (tabHeight * animationTimer / animationTime), zLevel, 1, 1);
 		StaticVertexBuffer.pos(tabLeft + 23.5 + (tabWidth * animationTimer / animationTime), tabTop + 20 + (tabHeight * animationTimer / animationTime), zLevel, 1, 1.0f - yPixel * 5.0f);
-		StaticVertexBuffer.pos(tabLeft + 20 + (tabWidth * animationTimer / animationTime), tabTop + 20 + (tabHeight * animationTimer / animationTime), zLevel, 1.0f - xPixel * 4.0f, 1.0f - yPixel * 5.0f);
+		StaticVertexBuffer.pos(tabLeft + 20 + (tabWidth * animationTimer / animationTime), tabTop + 20 + (tabHeight * animationTimer / animationTime), zLevel, 1.0f - xPixel * 4.0f,
+				1.0f - yPixel * 5.0f);
 		StaticVertexBuffer.pos(tabLeft + 20 + (tabWidth * animationTimer / animationTime), tabTop + 24 + (tabHeight * animationTimer / animationTime), zLevel, 1.0f - xPixel * 4.0f, 1);
 
 		// Top Corner

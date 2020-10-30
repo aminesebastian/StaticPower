@@ -34,8 +34,13 @@ public class StaticPowerSprites {
 	public static final ResourceLocation BASIC_BATTERY_TOP = registerSprite("blocks/machines/batteries/battery_basic_top");
 	public static final ResourceLocation BASIC_BATTERY_SIDE = registerSprite("blocks/machines/batteries/battery_basic_side");
 
-	public static final ResourceLocation TANK_SIDE = registerSprite("blocks/machines/tank_basic");
-
+	public static final ResourceLocation BASIC_TANK = registerSprite("blocks/machines/tank_basic");
+	public static final ResourceLocation ADVANCED_TANK = registerSprite("blocks/machines/tank_advanced");
+	public static final ResourceLocation STATIC_TANK = registerSprite("blocks/machines/tank_static");
+	public static final ResourceLocation ENERGIZED_TANK = registerSprite("blocks/machines/tank_energized");
+	public static final ResourceLocation LUMUM_TANK = registerSprite("blocks/machines/tank_lumum");
+	public static final ResourceLocation CREATIVE_TANK = registerSprite("blocks/machines/tank_creative");
+	
 	public static final ResourceLocation BATTERY_BLOCK_BASIC = registerSprite("blocks/machines/batteries/battery_block_basic");
 	public static final ResourceLocation BATTERY_BLOCK_BAR = registerSprite("blocks/machines/batteries/battery_block_side_filled");
 

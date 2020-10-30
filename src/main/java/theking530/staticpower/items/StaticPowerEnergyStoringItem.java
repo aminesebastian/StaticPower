@@ -47,7 +47,8 @@ public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackStaticVoltCapability("default", stack, getCapacity(), getCapacity(), getCapacity()));
+		int capacity = getCapacity();
+		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackStaticVoltCapability("default", stack, capacity, capacity, capacity));
 	}
 
 	public ItemStack getFilledVariant() {
@@ -93,7 +94,8 @@ public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	public static class EnergyItemJEIInterpreter implements ISubtypeInterpreter {
 		@Override
 		public String apply(ItemStack itemStack) {
-			return itemStack.getItem().getRegistryName().toString() + EnergyHandlerItemStackUtilities.getCapacity(itemStack) + " " + EnergyHandlerItemStackUtilities.getStoredPower(itemStack);
+			return itemStack.getItem().getRegistryName().toString() + EnergyHandlerItemStackUtilities.getCapacity(itemStack) + " "
+					+ EnergyHandlerItemStackUtilities.getStoredPower(itemStack);
 		}
 	}
 

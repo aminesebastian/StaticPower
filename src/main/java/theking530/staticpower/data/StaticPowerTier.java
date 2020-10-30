@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.ForgeConfigSpec;
 import theking530.staticpower.tileentities.components.serialization.SerializationUtilities;
 
 public class StaticPowerTier {
@@ -128,6 +129,14 @@ public class StaticPowerTier {
 	private int itemFilterSlots;
 
 	private int upgradeOrdinal;
+
+	public StaticPowerTier(ForgeConfigSpec.Builder builder) {
+
+	}
+
+	public StaticPowerTier() {
+
+	}
 
 	public void setId(ResourceLocation id) {
 		this.tierId = id;

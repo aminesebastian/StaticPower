@@ -51,12 +51,12 @@ public class GuiSideConfigTab extends BaseGuiTab {
 
 		int xOffset = 3;
 		int yOffset = 8;
-		widgetContainer.registerWidget(topButton = new TextButton(xOffset + tabWidth / 2, yOffset + 15, 20, 20, "T", this::buttonPressed));
-		widgetContainer.registerWidget(bottomButton = new TextButton(xOffset + tabWidth / 2, yOffset + tabHeight - 15, 20, 20, "B", this::buttonPressed));
-		widgetContainer.registerWidget(rightButton = new TextButton(xOffset + tabWidth - 15, yOffset + tabHeight / 2, 20, 20, "L", this::buttonPressed));
-		widgetContainer.registerWidget(leftButton = new TextButton(xOffset + 15, yOffset + tabHeight / 2, 20, 20, "R", this::buttonPressed));
-		widgetContainer.registerWidget(backButton = new TextButton(xOffset + tabWidth / 2, yOffset + tabHeight / 2, 20, 20, "B", this::buttonPressed));
-		widgetContainer.registerWidget(frontButton = new TextButton(xOffset + 15, yOffset + 15, 20, 20, "F", this::buttonPressed));
+		widgetContainer.registerWidget(topButton = new TextButton(xOffset + tabWidth / 2, yOffset + 17, 20, 20, "T", this::buttonPressed));
+		widgetContainer.registerWidget(bottomButton = new TextButton(xOffset + tabWidth / 2, yOffset + tabHeight - 13, 20, 20, "B", this::buttonPressed));
+		widgetContainer.registerWidget(rightButton = new TextButton(xOffset + tabWidth - 15, yOffset + 2 + tabHeight / 2, 20, 20, "L", this::buttonPressed));
+		widgetContainer.registerWidget(leftButton = new TextButton(xOffset + 15, yOffset + 2 + tabHeight / 2, 20, 20, "R", this::buttonPressed));
+		widgetContainer.registerWidget(backButton = new TextButton(xOffset + tabWidth / 2, yOffset + 2 + tabHeight / 2, 20, 20, "B", this::buttonPressed));
+		widgetContainer.registerWidget(frontButton = new TextButton(xOffset + 15, yOffset + 17, 20, 20, "F", this::buttonPressed));
 		frontButton.setVisible(allowFaceInteraction);
 
 		updateTooltips();
@@ -76,10 +76,10 @@ public class GuiSideConfigTab extends BaseGuiTab {
 		BufferBuilder vertexbuffer = tessellator.getBuffer();
 		Minecraft.getInstance().getTextureManager().bindTexture(GuiTextures.BUTTON_BG);
 		vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-		vertexbuffer.pos(position.getX() + 95, position.getY() + 95, 0).tex(0, 1).endVertex();
-		vertexbuffer.pos(position.getX() + 95, position.getY() + 20, 0).tex(0, 0).endVertex();
-		vertexbuffer.pos(position.getX() + 10, position.getY() + 20, 0).tex(1, 0).endVertex();
-		vertexbuffer.pos(position.getX() + 10, position.getY() + 95, 0).tex(1, 1).endVertex();
+		vertexbuffer.pos(position.getX() + 95, position.getY() + 97, 0).tex(0, 1).endVertex();
+		vertexbuffer.pos(position.getX() + 95, position.getY() + 22, 0).tex(0, 0).endVertex();
+		vertexbuffer.pos(position.getX() + 10, position.getY() + 22, 0).tex(1, 0).endVertex();
+		vertexbuffer.pos(position.getX() + 10, position.getY() + 97, 0).tex(1, 1).endVertex();
 		tessellator.draw();
 		GL11.glDisable(GL11.GL_BLEND);
 	}
@@ -152,8 +152,8 @@ public class GuiSideConfigTab extends BaseGuiTab {
 			ITextComponent translatedModeName = currentMode.getName();
 
 			button.setText(currentMode.getFontColor() + translatedSideName.getString().substring(0, 1));
-			button.setTooltip(translatedSideName.appendString(" (").append(new TranslationTextComponent("gui.staticpower.direction." + worldSpaceSide.toString())).appendString(TextFormatting.WHITE + ")"),
-					translatedModeName);
+			button.setTooltip(translatedSideName.appendString(" (").append(new TranslationTextComponent("gui.staticpower.direction." + worldSpaceSide.toString()))
+					.appendString(TextFormatting.WHITE + ")"), translatedModeName);
 		}
 	}
 

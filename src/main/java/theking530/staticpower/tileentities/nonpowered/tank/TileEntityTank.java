@@ -26,14 +26,19 @@ public class TileEntityTank extends TileEntityBase {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityTank> TYPE_BASIC = new TileEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(type, StaticPowerTiers.BASIC),
 			ModBlocks.BasicTank);
+	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityTank> TYPE_ADVANCED = new TileEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(type, StaticPowerTiers.ADVANCED),
 			ModBlocks.AdvancedTank);
+	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityTank> TYPE_STATIC = new TileEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(type, StaticPowerTiers.STATIC),
 			ModBlocks.StaticTank);
+	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityTank> TYPE_ENERGIZED = new TileEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(type, StaticPowerTiers.ENERGIZED),
 			ModBlocks.EnergizedTank);
+	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityTank> TYPE_LUMUM = new TileEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(type, StaticPowerTiers.LUMUM),
 			ModBlocks.LumumTank);
+	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityTank> TYPE_CREATIVE = new TileEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(type, StaticPowerTiers.CREATIVE),
 			ModBlocks.CreativeTank);
 
