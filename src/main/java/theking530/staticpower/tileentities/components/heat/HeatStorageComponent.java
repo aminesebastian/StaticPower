@@ -25,15 +25,15 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 	@UpdateSerialize
 	protected final HeatStorage heatStorage;
 	protected final HeatDissipationTiming dissipationTiming;
-	protected TriFunction<Float, Direction, HeatManipulationAction, Boolean> filter;
-	private float lastSyncHeat;
+	protected TriFunction<Double, Direction, HeatManipulationAction, Boolean> filter;
+	private double lastSyncHeat;
 	private HeatComponentCapabilityAccess capabilityAccessor;
 
-	public HeatStorageComponent(String name, float maxHeat, float maxTransferRate) {
+	public HeatStorageComponent(String name, double maxHeat, double maxTransferRate) {
 		this(name, maxHeat, maxTransferRate, HeatDissipationTiming.POST_PROCESS);
 	}
 
-	public HeatStorageComponent(String name, float maxHeat, float maxTransferRate, HeatDissipationTiming timing) {
+	public HeatStorageComponent(String name, double maxHeat, double maxTransferRate, HeatDissipationTiming timing) {
 		super(name);
 		heatStorage = new HeatStorage(maxHeat, maxTransferRate);
 		capabilityAccessor = new HeatComponentCapabilityAccess();
@@ -54,7 +54,7 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 		if (!getWorld().isRemote) {
 			// Get the current delta between the amount of power we have and the power we
 			// had last tick.
-			float delta = Math.abs(heatStorage.getCurrentHeat() - lastSyncHeat);
+			double delta = Math.abs(heatStorage.getCurrentHeat() - lastSyncHeat);
 
 			// Determine if we should sync.
 			boolean shouldSync = delta > ENERGY_SYNC_MAX_DELTA;
@@ -106,7 +106,7 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 	 * @param filter
 	 * @return
 	 */
-	public HeatStorageComponent setCapabiltiyFilter(TriFunction<Float, Direction, HeatManipulationAction, Boolean> filter) {
+	public HeatStorageComponent setCapabiltiyFilter(TriFunction<Double, Direction, HeatManipulationAction, Boolean> filter) {
 		this.filter = filter;
 		return this;
 	}
@@ -127,7 +127,7 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 		protected Direction currentSide;
 
 		@Override
-		public float heat(float amountToHeat, boolean simulate) {
+		public double heat(double amountToHeat, boolean simulate) {
 			if (HeatStorageComponent.this.filter != null && !HeatStorageComponent.this.filter.apply(amountToHeat, currentSide, HeatManipulationAction.HEAT)) {
 				return 0.0f;
 			}
@@ -135,7 +135,7 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 		}
 
 		@Override
-		public float cool(float amountToCool, boolean simulate) {
+		public double cool(double amountToCool, boolean simulate) {
 			if (HeatStorageComponent.this.filter != null && !HeatStorageComponent.this.filter.apply(amountToCool, currentSide, HeatManipulationAction.COOL)) {
 				return 0.0f;
 			}
@@ -143,17 +143,17 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 		}
 
 		@Override
-		public float getCurrentHeat() {
+		public double getCurrentHeat() {
 			return HeatStorageComponent.this.getStorage().getCurrentHeat();
 		}
 
 		@Override
-		public float getMaximumHeat() {
+		public double getMaximumHeat() {
 			return HeatStorageComponent.this.getStorage().getMaximumHeat();
 		}
 
 		@Override
-		public float getConductivity() {
+		public double getConductivity() {
 			return HeatStorageComponent.this.getStorage().getConductivity();
 		}
 	}

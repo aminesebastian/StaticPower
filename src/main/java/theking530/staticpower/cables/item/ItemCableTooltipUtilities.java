@@ -6,17 +6,17 @@ import net.minecraft.util.text.TextFormatting;
 
 public class ItemCableTooltipUtilities {
 
-	public static ITextComponent getMaxSpeedTooltip(float maxSpeed) {
+	public static ITextComponent getMaxSpeedTooltip(double maxSpeed) {
 		return new StringTextComponent(TextFormatting.GRAY.toString()).append(new StringTextComponent("Max Speed: ")).appendString(TextFormatting.BLUE.toString())
 				.append(new StringTextComponent(String.valueOf(maxSpeed)));
 	}
 
-	public static ITextComponent getAccelerationTooltip(float acceleration) {
+	public static ITextComponent getAccelerationTooltip(double acceleration) {
 		return new StringTextComponent(TextFormatting.GRAY.toString()).append(new StringTextComponent("Acceleration: ")).appendString(TextFormatting.GREEN.toString())
 				.append(new StringTextComponent(String.valueOf(acceleration)));
 	}
 
-	public static ITextComponent getFrictionTooltip(float friction) {
+	public static ITextComponent getFrictionTooltip(double friction) {
 		return new StringTextComponent(TextFormatting.GRAY.toString()).append(new StringTextComponent("Friction: ")).appendString(TextFormatting.RED.toString())
 				.append(new StringTextComponent(String.valueOf(friction)));
 	}

@@ -34,7 +34,7 @@ public class StaticPowerFarmland extends StaticPowerBlock {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
 		tooltip.add(new StringTextComponent("This isn't just regular dirt."));
 		tooltip.add(new StringTextComponent("This is " + TextFormatting.ITALIC + "Advanced " + TextFormatting.RESET + TextFormatting.GRAY + "dirt."));
 	}
@@ -65,7 +65,8 @@ public class StaticPowerFarmland extends StaticPowerBlock {
 
 	public boolean hasCrops(IBlockReader worldIn, BlockPos pos) {
 		BlockState state = worldIn.getBlockState(pos.up());
-		return state.getBlock() instanceof net.minecraftforge.common.IPlantable && canSustainPlant(state, worldIn, pos, Direction.UP, (net.minecraftforge.common.IPlantable) state.getBlock());
+		return state.getBlock() instanceof net.minecraftforge.common.IPlantable
+				&& canSustainPlant(state, worldIn, pos, Direction.UP, (net.minecraftforge.common.IPlantable) state.getBlock());
 	}
 
 	@Override

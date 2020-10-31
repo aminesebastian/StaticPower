@@ -22,6 +22,7 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.utilities.Vector3D;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableBoundsCache;
@@ -29,7 +30,6 @@ import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
 import theking530.staticpower.data.StaticPowerTiers;
-import theking530.staticpower.data.TierReloadListener;
 
 public class BlockIndustrialFluidCable extends AbstractCableBlock {
 	private ResourceLocation tier;
@@ -41,14 +41,13 @@ public class BlockIndustrialFluidCable extends AbstractCableBlock {
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
-		super.getBasicTooltip(stack, worldIn, tooltip);
-		tooltip.add(FluidCableTooltipUtilities.getFluidTrasnferRate(TierReloadListener.getTier(tier).getCableIndustrialFluidCapacity()));
+	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
+		tooltip.add(FluidCableTooltipUtilities.getFluidTrasnferRate(StaticPowerConfig.getTier(tier).cableIndustrialFluidCapacity.get()));
 		tooltip.add(new StringTextComponent(TextFormatting.RED.toString()).appendString("Cannot connect directly to blocks!"));
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)	
+	@OnlyIn(Dist.CLIENT)
 	public IBakedModel getModelOverride(BlockState state, @Nullable IBakedModel existingModel, ModelBakeEvent event) {
 		IBakedModel extensionModel = null;
 		IBakedModel straightModel = null;

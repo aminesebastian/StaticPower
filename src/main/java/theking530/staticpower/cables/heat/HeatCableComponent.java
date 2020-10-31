@@ -30,23 +30,23 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	public static final String HEAT_RATE_DATA_TAG_KEY = "heat_transfer_rate";
 	public static final String HEAT_GENERATION_RATE = "heat_generation";
 	public static final String HEAT_GENERATION_POWER_USAGE = "heat_generation_power_cost";
-	private final float capacity;
-	private final float transferRate;
+	private final double capacity;
+	private final double transferRate;
 	@UpdateSerialize
-	private float clientSideHeat;
+	private double clientSideHeat;
 	@UpdateSerialize
-	private float clientSideHeatCapacity;
+	private double clientSideHeatCapacity;
 	@UpdateSerialize
-	private float heatGeneration;
+	private double heatGeneration;
 	@UpdateSerialize
 	private int heatGenerationPowerUsage;
 	private EnergyStorageComponent energyStorageComponent;
 
-	public HeatCableComponent(String name, float capacity, float transferRate) {
+	public HeatCableComponent(String name, double capacity, double transferRate) {
 		this(name, capacity, transferRate, 0.0f, 0);
 	}
 
-	public HeatCableComponent(String name, float capacity, float transferRate, float heatGeneration, int heatGenerationPowerUsage) {
+	public HeatCableComponent(String name, double capacity, double transferRate, double heatGeneration, int heatGenerationPowerUsage) {
 		super(name, CableNetworkModuleTypes.HEAT_NETWORK_MODULE);
 		this.capacity = capacity;
 		this.transferRate = transferRate;
@@ -92,7 +92,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	public void generateHeat(HeatNetworkModule networkModule) {
 		if (!getWorld().isRemote) {
 			if (energyStorageComponent != null && heatGeneration != 0.0f) {
-				float transferableHeat = networkModule.getHeatStorage().getMaximumHeat() - networkModule.getHeatStorage().getCurrentHeat();
+				double transferableHeat = networkModule.getHeatStorage().getMaximumHeat() - networkModule.getHeatStorage().getCurrentHeat();
 				transferableHeat = Math.min(transferableHeat, heatGeneration);
 
 				int maxPowerUsage = Math.min(heatGenerationPowerUsage, energyStorageComponent.getStorage().getStoredPower());
@@ -111,38 +111,38 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	}
 
 	@Override
-	public float getCurrentHeat() {
+	public double getCurrentHeat() {
 		if (!getTileEntity().getWorld().isRemote) {
 			AtomicDouble recieve = new AtomicDouble(0);
 			getHeatNetworkModule().ifPresent(module -> {
 				recieve.set(module.getHeatStorage().getCurrentHeat());
 			});
-			return (float) recieve.get();
+			return recieve.get();
 		} else {
 			return clientSideHeat;
 		}
 	}
 
 	@Override
-	public float getMaximumHeat() {
+	public double getMaximumHeat() {
 		if (!getTileEntity().getWorld().isRemote) {
 			AtomicDouble recieve = new AtomicDouble(0);
 			getHeatNetworkModule().ifPresent(module -> {
 				recieve.set(module.getHeatStorage().getMaximumHeat());
 			});
-			return (float) recieve.get();
+			return recieve.get();
 		} else {
 			return clientSideHeatCapacity;
 		}
 	}
 
 	@Override
-	public float getConductivity() {
+	public double getConductivity() {
 		return transferRate;
 	}
 
 	@Override
-	public float heat(float amountToHeat, boolean simulate) {
+	public double heat(double amountToHeat, boolean simulate) {
 		if (!getTileEntity().getWorld().isRemote) {
 			AtomicDouble recieve = new AtomicDouble(0);
 			getHeatNetworkModule().ifPresent(module -> {
@@ -155,7 +155,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	}
 
 	@Override
-	public float cool(float amountToCool, boolean simulate) {
+	public double cool(double amountToCool, boolean simulate) {
 		if (!getTileEntity().getWorld().isRemote) {
 			AtomicDouble recieve = new AtomicDouble(0);
 			getHeatNetworkModule().ifPresent(module -> {
@@ -167,7 +167,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 		}
 	}
 
-	public void updateFromNetworkUpdatePacket(float clientHeat, float clientCapacity) {
+	public void updateFromNetworkUpdatePacket(double clientHeat, double clientCapacity) {
 		this.clientSideHeat = clientHeat;
 		this.clientSideHeatCapacity = clientCapacity;
 	}

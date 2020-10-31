@@ -576,6 +576,16 @@
 	"gui.staticpower.hold_shift": "Hold Shift",
 	"gui.staticpower.hold_control": "Hold Control",
 	"gui.staticpower.slots": "Slots",
+	"gui.staticpower.blocks": "Blocks",
 	"gui.staticpower.import_slots": "Import Slots",
-	"gui.staticpower.export_slots": "Export Slots"
+	"gui.staticpower.export_slots": "Export Slots",
+	"gui.staticpower.extractor_rate_format": "Extracts every %1$d ticks",
+	"gui.staticpower.extractor_fluid_rate": "%1$s per Extraction",
+	"gui.staticpower.extractor_stack_size": "%1$d items per Extraction",
+	"gui.staticpower.retriever_rate_format": "Extracts every %1$d ticks",
+	"gui.staticpower.retriever_stack_size": "%1$d items per Extraction",
+	"gui.staticpower.cable_transfer_rate": "%1$d %2$s/s",
+	"gui.staticpower.max_transfer_rate": "Maximum Transfer Rate",
+	"gui.staticpower.item_cable_acceleration": "Acceleration: %1$d%%",
+	"gui.staticpower.item_cable_friction": "Friction: -%1$d%%"
 }

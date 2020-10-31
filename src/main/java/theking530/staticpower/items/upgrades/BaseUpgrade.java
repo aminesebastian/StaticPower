@@ -15,8 +15,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.api.IUpgradeItem;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTier;
-import theking530.staticpower.data.TierReloadListener;
 import theking530.staticpower.items.StaticPowerItem;
 
 public class BaseUpgrade extends StaticPowerItem implements IUpgradeItem {
@@ -51,7 +51,7 @@ public class BaseUpgrade extends StaticPowerItem implements IUpgradeItem {
 	@Override
 	public StaticPowerTier getTier() {
 		if (isTiered()) {
-			return TierReloadListener.getTier(tier);
+			return StaticPowerConfig.getTier(tier);
 		} else {
 			throw new RuntimeException("Attempted to get the tier of a non-tiered ugprade!");
 		}
@@ -65,8 +65,8 @@ public class BaseUpgrade extends StaticPowerItem implements IUpgradeItem {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
-		if(showAdvanced) {
-			tooltip.add(new StringTextComponent(TextFormatting.WHITE + "Stacks Up To: " + stack.getMaxStackSize()));	
+		if (showAdvanced) {
+			tooltip.add(new StringTextComponent(TextFormatting.WHITE + "Stacks Up To: " + stack.getMaxStackSize()));
 		}
 	}
 

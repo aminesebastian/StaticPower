@@ -128,7 +128,7 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 		if (upgrade.isEmpty()) {
 			upgradeMultiplier = 1.0f;
 		} else {
-			upgradeMultiplier = 1.0f + (upgrade.getTier().getTankCapacityUpgrade() * upgrade.getUpgradeWeight());
+			upgradeMultiplier = (float) (1.0f + (upgrade.getTier().tankCapacityUpgrade.get() * upgrade.getUpgradeWeight()));
 		}
 
 		// Set the capacity.

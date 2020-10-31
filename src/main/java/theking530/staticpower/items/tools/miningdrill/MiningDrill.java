@@ -57,10 +57,10 @@ import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticcore.network.NetworkGUI;
 import theking530.staticcore.utilities.SDMath;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
 import theking530.staticpower.client.rendering.items.MiningDrillItemModel;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
-import theking530.staticpower.data.TierReloadListener;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
@@ -96,7 +96,7 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	}
 
 	public int getCapacity() {
-		return TierReloadListener.getTier(tier).getPortableBatteryCapacity() * 2;
+		return StaticPowerConfig.getTier(tier).portableBatteryCapacity.get() * 2;
 	}
 
 	public ItemStack getFilledVariant() {

@@ -7,15 +7,15 @@ import theking530.staticpower.client.utilities.GuiTextUtilities;
 
 public class HeatTooltipUtilities {
 
-	public static ITextComponent getHeatRateTooltip(float heatDissipation) {
+	public static ITextComponent getHeatRateTooltip(double heatDissipation) {
 		return new StringTextComponent(TextFormatting.GRAY + "Heat Dissipation: ").append(GuiTextUtilities.formatHeatRateToString(heatDissipation)).mergeStyle(TextFormatting.BLUE);
 	}
 
-	public static ITextComponent getHeatGenerationTooltip(float heatGeneration) {
+	public static ITextComponent getHeatGenerationTooltip(double heatGeneration) {
 		return new StringTextComponent(TextFormatting.GRAY + "Heat Generation: ").append(GuiTextUtilities.formatHeatRateToString(heatGeneration)).mergeStyle(TextFormatting.GOLD);
 	}
 
-	public static ITextComponent getHeatCapacityTooltip(float capacity) {
+	public static ITextComponent getHeatCapacityTooltip(double capacity) {
 		return new StringTextComponent(TextFormatting.GRAY + "Heat Capacity: ").append(GuiTextUtilities.formatHeatToString(capacity)).mergeStyle(TextFormatting.GREEN);
 	}
 }

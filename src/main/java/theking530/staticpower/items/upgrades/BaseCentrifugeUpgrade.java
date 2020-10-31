@@ -22,8 +22,8 @@ public class BaseCentrifugeUpgrade extends BaseUpgrade {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
-		int speedUpgrade = getTier().getMaxCentrifugeSpeedUpgrade();
-		float powerUsageUpgrade = getTier().getCentrifugeUpgradedPowerIncrease();
+		int speedUpgrade = getTier().maxCentrifugeSpeedUpgrade.get();
+		double powerUsageUpgrade = getTier().centrifugeUpgradedPowerIncrease.get();
 
 		tooltip.add(new StringTextComponent(TextFormatting.WHITE + new java.text.DecimalFormat("#").format(speedUpgrade) + TextFormatting.GREEN + " RPM Max Speed"));
 		tooltip.add(new StringTextComponent(TextFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(powerUsageUpgrade * 100) + "%" + TextFormatting.RED + " RF Per Tick"));

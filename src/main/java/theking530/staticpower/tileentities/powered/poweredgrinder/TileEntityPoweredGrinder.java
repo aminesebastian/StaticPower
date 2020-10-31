@@ -137,7 +137,7 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 		// new processing speeds.
 		float upgradeAmount = DEFAULT_OUTPUT_BONUS_CHANCE;
 		if (!upgradeWrapper.isEmpty()) {
-			upgradeAmount = 1.0f + (upgradeWrapper.getTier().getTankCapacityUpgrade() * upgradeWrapper.getUpgradeWeight());
+			upgradeAmount = (float) (1.0f + (upgradeWrapper.getTier().outputMultiplierUpgrade.get() * upgradeWrapper.getUpgradeWeight()));
 		}
 
 		// Set the bonus output amount.

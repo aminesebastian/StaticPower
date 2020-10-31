@@ -23,9 +23,9 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import theking530.api.power.CapabilityStaticVolt;
 import theking530.api.power.PowerEnergyInterface;
 import theking530.staticcore.utilities.SDMath;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
 import theking530.staticpower.client.rendering.items.BatteryPackItemModel;
-import theking530.staticpower.data.TierReloadListener;
 
 public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustomModelSupplier {
 	private static final String ACTIVATED_TAG = "activated";
@@ -151,6 +151,6 @@ public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustom
 
 	@Override
 	public int getCapacity() {
-		return TierReloadListener.getTier(tier).getPortableBatteryCapacity() * 3;
+		return StaticPowerConfig.getTier(tier).portableBatteryCapacity.get() * 3;
 	}
 }

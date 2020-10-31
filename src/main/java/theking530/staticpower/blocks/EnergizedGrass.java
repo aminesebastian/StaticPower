@@ -23,13 +23,13 @@ import net.minecraftforge.common.ToolType;
 public class EnergizedGrass extends StaticPowerBlock {
 
 	public EnergizedGrass(String name) {
-		super(name, Block.Properties.create(Material.EARTH).harvestTool(ToolType.SHOVEL).harvestLevel(0)
-				.hardnessAndResistance(0.6f).sound(SoundType.GROUND).setLightLevel((state) -> 8).tickRandomly());
+		super(name, Block.Properties.create(Material.EARTH).harvestTool(ToolType.SHOVEL).harvestLevel(0).hardnessAndResistance(0.6f).sound(SoundType.GROUND).setLightLevel((state) -> 8)
+				.tickRandomly());
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
 		tooltip.add(new StringTextComponent("Walk On Top."));
 		tooltip.add(new StringTextComponent("I Dare You."));
 	}

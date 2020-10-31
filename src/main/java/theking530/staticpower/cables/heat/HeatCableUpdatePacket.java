@@ -15,10 +15,10 @@ public class HeatCableUpdatePacket extends NetworkMessage {
 	private float currentHeat;
 	private float capacity;
 
-	public HeatCableUpdatePacket(BlockPos position, float currentHeat, float capacity) {
+	public HeatCableUpdatePacket(BlockPos position, double currentHeat, double capacity) {
 		this.position = position;
-		this.currentHeat = currentHeat;
-		this.capacity = capacity;
+		this.currentHeat = (float) currentHeat;
+		this.capacity = (float) capacity;
 	}
 
 	public HeatCableUpdatePacket() {

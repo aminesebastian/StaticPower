@@ -22,10 +22,10 @@ public class BasePowerUpgrade extends BaseUpgrade {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
-		float powerUpgrade = getTier().getPowerUpgrade();
+		double powerUpgrade = getTier().powerUpgrade.get();
 		powerUpgrade *= (float) stack.getCount() / stack.getMaxStackSize();
 
-		float powerRateUpgrade = getTier().getPowerIoUpgrade();
+		double powerRateUpgrade = getTier().powerIOUpgrade.get();
 		powerRateUpgrade *= (float) stack.getCount() / stack.getMaxStackSize();
 
 		tooltip.add(new StringTextComponent(TextFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(powerUpgrade * 100) + "%" + TextFormatting.GREEN + " RF Capacity"));

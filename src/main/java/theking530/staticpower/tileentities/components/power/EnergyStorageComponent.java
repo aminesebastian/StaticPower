@@ -155,8 +155,8 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 			powerCapacityUpgradeMultiplier = 1.0f;
 			powerIOUpgradeMultiplier = 1.0f;
 		} else {
-			powerCapacityUpgradeMultiplier = 1.0f + (upgrade.getTier().getPowerUpgrade() * upgrade.getUpgradeWeight());
-			powerIOUpgradeMultiplier = 1.0f + (upgrade.getTier().getPowerIoUpgrade() * upgrade.getUpgradeWeight());
+			powerCapacityUpgradeMultiplier = (float) (1.0f + (upgrade.getTier().powerUpgrade.get() * upgrade.getUpgradeWeight()));
+			powerIOUpgradeMultiplier = (float) (1.0f + (upgrade.getTier().powerIOUpgrade.get() * upgrade.getUpgradeWeight()));
 		}
 
 		// Set the new values.

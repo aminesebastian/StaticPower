@@ -68,7 +68,8 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements INa
 		registerComponent(filterSlotInventory = new InventoryComponent("FilterSlot", 1).setShiftClickEnabled(true).setShiftClickPriority(100));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
-		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Output).setUpgradeInventory(upgradesInventory));
+		registerComponent(
+				fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Output).setUpgradeInventory(upgradesInventory));
 		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent).setMode(FluidContainerInteractionMode.FILL));
 		registerComponent(fluidOutputServo = new FluidOutputServoComponent("FluidInputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
 
@@ -140,7 +141,8 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements INa
 					fluidTankComponent.fill(new FluidStack(ModFluids.LiquidExperience.Fluid, orb.xpValue), FluidAction.EXECUTE);
 					markTileEntityForSynchronization();
 					orb.remove();
-					getWorld().playSound((double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.BLOCKS, 0.5F, (RANDOM.nextFloat() + 1) / 2, false);
+					getWorld().playSound((double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.BLOCKS, 0.5F,
+							(RANDOM.nextFloat() + 1) / 2, false);
 				}
 			} else {
 				double var11 = 1.0 - distance / 15.0;
@@ -194,7 +196,7 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements INa
 		// Get the range upgrade.
 		UpgradeItemWrapper rangeUpgrade = upgradesInventory.getMaxTierItemForUpgradeType(UpgradeType.RANGE);
 		if (!rangeUpgrade.isEmpty()) {
-			vacuumDiamater = DEFAULT_RANGE * rangeUpgrade.getTier().getRangeUpgrade();
+			vacuumDiamater = (float) (DEFAULT_RANGE * rangeUpgrade.getTier().rangeUpgrade.get());
 		} else {
 			vacuumDiamater = DEFAULT_RANGE;
 		}

@@ -5,10 +5,10 @@ import java.text.DecimalFormat;
 public class MetricConverter {
 	private static final DecimalFormat FORMATTER = new DecimalFormat("#.##");
 	private static final String[] SUFFIXES = { "y", "z", "a", "f", "p", "n", "µ", "m", "", "k", "M", "G", "T", "P", "E", "Z", "Y" };
-	private float Value;
+	private double Value;
 	private String Suffix;
 
-	public MetricConverter(float value, int initialOffset) {
+	public MetricConverter(double value, int initialOffset) {
 		// Keep dividing the Value by 1000 until we hit a current value of < 1000.
 		// For each iteration of the loop, increment the suffix index.
 		int suffixIndex = 8 + initialOffset;
@@ -32,11 +32,11 @@ public class MetricConverter {
 		}
 	}
 
-	public MetricConverter(float value) {
+	public MetricConverter(double value) {
 		this(value, 0);
 	}
 
-	public float getValue() {
+	public double getValue() {
 		return Value;
 	}
 

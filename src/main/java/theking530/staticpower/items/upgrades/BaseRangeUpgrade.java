@@ -22,7 +22,7 @@ public class BaseRangeUpgrade extends BaseUpgrade {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
-		float upgradeAmount = getTier().getRangeUpgrade();
+		double upgradeAmount = getTier().rangeUpgrade.get();
 
 		if (upgradeAmount < 0) {
 			tooltip.add(new StringTextComponent(TextFormatting.RED + "-" + new java.text.DecimalFormat("#").format(upgradeAmount * 100) + "% " + TextFormatting.WHITE + "Range"));

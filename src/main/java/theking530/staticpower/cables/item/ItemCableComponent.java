@@ -19,6 +19,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.attachments.extractor.ExtractorAttachment;
@@ -29,7 +30,6 @@ import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
-import theking530.staticpower.data.TierReloadListener;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class ItemCableComponent extends AbstractCableProviderComponent implements IItemHandler {
@@ -37,23 +37,23 @@ public class ItemCableComponent extends AbstractCableProviderComponent implement
 	 * This is the slowest an item may travel.
 	 */
 	public static final int MAXIMUM_MOVE_TIME = 1000;
-	public static final String ITEM_CABLE_MINIMUM_MOVE_TIME_TAG = "min_transfer_time";
+	public static final String ITEM_CABLE_MAX_BLOCKS_PER_TICK = "min_transfer_time";
 	public static final String ITEM_CABLE_FRICTION_FACTOR_TAG = "friction_factor";
 	public static final String ITEM_CABLE_ACCELERATION_FACTOR_TAG = "acceleration_factor";
 
-	private final int maxTrasnferSpeed;
-	private final float frictionFactor;
-	private final float accelerationFactor;
+	private final double maxTransferSpeed;
+	private final double frictionFactor;
+	private final double accelerationFactor;
 	private final HashMap<Long, ItemRoutingParcelClient> containedPackets;
 	private final ResourceLocation tier;
-	
+
 	private Direction lastCapabilityRequestedDirection;
 
-	public ItemCableComponent(String name, ResourceLocation tier, int maxTransferSpeed, float frictionFactor, float accelerationFactor) {
+	public ItemCableComponent(String name, ResourceLocation tier, double maxTransferSpeed, double frictionFactor, double accelerationFactor) {
 		super(name, CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
 		containedPackets = new HashMap<Long, ItemRoutingParcelClient>();
 		lastCapabilityRequestedDirection = Direction.UP;
-		this.maxTrasnferSpeed = maxTransferSpeed;
+		this.maxTransferSpeed = maxTransferSpeed;
 		this.frictionFactor = frictionFactor;
 		this.accelerationFactor = accelerationFactor;
 		this.tier = tier;
@@ -94,8 +94,8 @@ public class ItemCableComponent extends AbstractCableProviderComponent implement
 		super.onOwningTileEntityRemoved();
 	}
 
-	public int getMaxTransferSpeed() {
-		return maxTrasnferSpeed;
+	public double getMaxTransferSpeed() {
+		return maxTransferSpeed;
 	}
 
 	public void addTransferingItem(ItemRoutingParcelClient routingPacket) {
@@ -137,7 +137,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent implement
 	@Override
 	protected ServerCable createCable() {
 		return new ServerCable(getWorld(), getPos(), getSupportedNetworkModuleTypes(), (cable) -> {
-			cable.setProperty(ITEM_CABLE_MINIMUM_MOVE_TIME_TAG, maxTrasnferSpeed);
+			cable.setProperty(ITEM_CABLE_MAX_BLOCKS_PER_TICK, maxTransferSpeed);
 			cable.setProperty(ITEM_CABLE_FRICTION_FACTOR_TAG, frictionFactor);
 			cable.setProperty(ITEM_CABLE_ACCELERATION_FACTOR_TAG, accelerationFactor);
 		});
@@ -245,7 +245,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent implement
 				// Attempt to insert the stack into the cable. We will use the default
 				// extraction speed.
 				ItemStack remainingAmount = network.transferItemStack(insertStack, getPos(), lastCapabilityRequestedDirection, false,
-						TierReloadListener.getTier(tier).getExtractedItemInitialSpeed());
+						StaticPowerConfig.getTier(tier).cableExtractedItemInitialSpeed.get());
 				if (remainingAmount.getCount() < insertStack.getCount()) {
 					getTileEntity().markDirty();
 					stack.setCount(stack.getCount() - insertStack.getCount() + remainingAmount.getCount());

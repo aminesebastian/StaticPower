@@ -78,8 +78,8 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 		upgradesInventory.setModifiedCallback(this::onUpgradesInventoryModifiedCallback);
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<CentrifugeRecipe>("ProcessingComponent", CentrifugeRecipe.RECIPE_TYPE, DEFAULT_PROCESSING_TIME, this::getMatchParameters,
-				this::moveInputs, this::canProcessRecipe, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<CentrifugeRecipe>("ProcessingComponent", CentrifugeRecipe.RECIPE_TYPE, DEFAULT_PROCESSING_TIME,
+				this::getMatchParameters, this::moveInputs, this::canProcessRecipe, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -201,8 +201,8 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 		// If it is not valid, set the values back to the defaults. Otherwise, set the
 		// new max speed.
 		if (!upgradeWrapper.isEmpty()) {
-			maxSpeed = upgradeWrapper.getTier().getMaxCentrifugeSpeedUpgrade();
-			centrifugeMotorPowerCost = (int) (DEFAULT_CENTRIFUGE_MOTOR_COST * (1.0f + upgradeWrapper.getTier().getCentrifugeUpgradedPowerIncrease()));
+			maxSpeed = upgradeWrapper.getTier().maxCentrifugeSpeedUpgrade.get();
+			centrifugeMotorPowerCost = (int) (DEFAULT_CENTRIFUGE_MOTOR_COST * (1.0f + upgradeWrapper.getTier().centrifugeUpgradedPowerIncrease.get()));
 		} else {
 			maxSpeed = DEFAULT_MAX_SPEED;
 			centrifugeMotorPowerCost = DEFAULT_CENTRIFUGE_MOTOR_COST;

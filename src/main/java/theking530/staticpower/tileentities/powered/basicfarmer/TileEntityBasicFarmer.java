@@ -62,7 +62,8 @@ import theking530.staticpower.utilities.WorldUtilities;
 
 public class TileEntityBasicFarmer extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityBasicFarmer> TYPE = new TileEntityTypeAllocator<TileEntityBasicFarmer>((allocator) -> new TileEntityBasicFarmer(), ModBlocks.BasicFarmer);
+	public static final TileEntityTypeAllocator<TileEntityBasicFarmer> TYPE = new TileEntityTypeAllocator<TileEntityBasicFarmer>((allocator) -> new TileEntityBasicFarmer(),
+			ModBlocks.BasicFarmer);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -111,11 +112,12 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 9, MachineSideMode.Output));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 128));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
-		registerComponent(upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3).setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
+		registerComponent(
+				upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3).setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
 
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_TIME_PER_BLOCK, this::canFarm, this::canFarm, this::processingCompleted, true)
-				.setUpgradeInventory(upgradesInventory).setRedstoneControlComponent(redstoneControlComponent).setEnergyComponent(energyStorage).setProcessingPowerUsage(DEFAULT_IDLE_ENERGY_USAGE)
-				.setCompletedPowerUsage(DEFAULT_HARVEST_ENERGY_COST));
+				.setUpgradeInventory(upgradesInventory).setRedstoneControlComponent(redstoneControlComponent).setEnergyComponent(energyStorage)
+				.setProcessingPowerUsage(DEFAULT_IDLE_ENERGY_USAGE).setCompletedPowerUsage(DEFAULT_HARVEST_ENERGY_COST));
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluid) -> {
 			return StaticPowerRecipeRegistry.getRecipe(FarmingFertalizerRecipe.RECIPE_TYPE, new RecipeMatchParameters(fluid)).isPresent();
 		}).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
@@ -363,7 +365,8 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		for (ItemStack drop : WorldUtilities.getBlockDrops(getWorld(), pos)) {
 			InventoryUtilities.insertItemIntoInventory(internalInventory, drop, false);
 		}
-		getWorld().playSound(null, pos, getWorld().getBlockState(pos).getBlock().getSoundType(getWorld().getBlockState(pos), world, pos, null).getBreakSound(), SoundCategory.BLOCKS, 1.0F, 1.0F);
+		getWorld().playSound(null, pos, getWorld().getBlockState(pos).getBlock().getSoundType(getWorld().getBlockState(pos), world, pos, null).getBreakSound(), SoundCategory.BLOCKS, 1.0F,
+				1.0F);
 		((ServerWorld) getWorld()).spawnParticle(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 1, 0.0D, 0.0D, 0.0D, 0.0D);
 	}
 
@@ -478,7 +481,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		range = DEFAULT_RANGE;
 		for (ItemStack stack : upgradesInventory) {
 			if (stack.getItem() instanceof BaseRangeUpgrade) {
-				range = (int) Math.max(range, DEFAULT_RANGE * (((BaseRangeUpgrade) stack.getItem()).getTier().getRangeUpgrade()));
+				range = (int) Math.max(range, DEFAULT_RANGE * (((BaseRangeUpgrade) stack.getItem()).getTier().rangeUpgrade.get()));
 			}
 		}
 		refreshBlocksInRange(range);

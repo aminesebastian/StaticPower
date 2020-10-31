@@ -1,5 +1,6 @@
 package theking530.api.heat;
 
+import net.minecraft.nbt.DoubleNBT;
 import net.minecraft.nbt.FloatNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
@@ -15,7 +16,7 @@ public class CapabilityHeatable {
 		CapabilityManager.INSTANCE.register(IHeatStorage.class, new Capability.IStorage<IHeatStorage>() {
 			@Override
 			public INBT writeNBT(Capability<IHeatStorage> capability, IHeatStorage instance, Direction side) {
-				return FloatNBT.valueOf(instance.getCurrentHeat());
+				return DoubleNBT.valueOf(instance.getCurrentHeat());
 			}
 
 			@Override

@@ -13,7 +13,7 @@ import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 
 public class GuiHeatBarUtilities {
-	public static List<ITextComponent> getTooltip(float currentHeat, float maxHeat, float energyTransferPerTick) {
+	public static List<ITextComponent> getTooltip(double currentHeat, double maxHeat, double heatPerTick) {
 		List<ITextComponent> tooltip = new ArrayList<ITextComponent>();
 
 		// Show the total amount of energy remaining / total energy capacity.
@@ -22,9 +22,9 @@ public class GuiHeatBarUtilities {
 		return tooltip;
 	}
 
-	public static void drawHeatBar(float xpos, float ypos, float width, float height, float zLevel, float currentHeat, float maxHeat) {
-		float u1 = currentHeat / maxHeat;
-		float k1 = u1 * height;
+	public static void drawHeatBar(float xpos, float ypos, float width, float height, float zLevel, double currentHeat, double maxHeat) {
+		double u1 = currentHeat / maxHeat;
+		double k1 = u1 * height;
 
 		GuiDrawUtilities.drawSlot(null, xpos, ypos - height, width, height);
 
@@ -40,10 +40,10 @@ public class GuiHeatBarUtilities {
 
 		Minecraft.getInstance().getTextureManager().bindTexture(GuiTextures.HEAT_BAR_FG);
 		vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-		vertexbuffer.pos(xpos + width, ypos, zLevel).tex(1, u1).endVertex();
+		vertexbuffer.pos(xpos + width, ypos, zLevel).tex(1, (float) u1).endVertex();
 		vertexbuffer.pos(xpos + width, ypos - k1, zLevel).tex(1, 0).endVertex();
 		vertexbuffer.pos(xpos, ypos - k1, zLevel).tex(0, 0).endVertex();
-		vertexbuffer.pos(xpos, ypos, zLevel).tex(0, u1).endVertex();
+		vertexbuffer.pos(xpos, ypos, zLevel).tex(0, (float) u1).endVertex();
 		tessellator.draw();
 	}
 }

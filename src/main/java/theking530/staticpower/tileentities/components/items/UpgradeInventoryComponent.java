@@ -38,7 +38,7 @@ public class UpgradeInventoryComponent extends InventoryComponent {
 			// If it is a valid upgrade item, and it is of the requested type, check to see
 			// if the tier is higher than the current tier.
 			if (upgradeItem != null && upgradeItem.isOfType(type)) {
-				if (maxTier == null || upgradeItem.getTier().getUpgradeOrdinal() > maxTier.getUpgradeOrdinal()) {
+				if (maxTier == null || upgradeItem.getTier().upgradeOrdinal.get() > maxTier.upgradeOrdinal.get()) {
 					maxTier = upgradeItem.getTier();
 					maxTierUpgradeStack = upgradeStack;
 					count += upgradeStack.getCount();

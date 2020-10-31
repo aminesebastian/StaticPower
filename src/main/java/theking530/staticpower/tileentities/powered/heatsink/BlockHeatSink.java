@@ -24,10 +24,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
 import theking530.api.heat.HeatTooltipUtilities;
 import theking530.staticcore.utilities.HarvestLevel;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
+import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
-import theking530.staticpower.data.TierReloadListener;
 
 public class BlockHeatSink extends StaticPowerTileEntityBlock {
 	public final ResourceLocation tier;
@@ -39,13 +40,14 @@ public class BlockHeatSink extends StaticPowerTileEntityBlock {
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	protected void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
-		super.getBasicTooltip(stack, worldIn, tooltip);
-		tooltip.add(HeatTooltipUtilities.getHeatRateTooltip(TierReloadListener.getTier(tier).getHeatSinkConductivity()));
-		tooltip.add(HeatTooltipUtilities.getHeatCapacityTooltip(TierReloadListener.getTier(tier).getHeatSinkCapacity()));
-		tooltip.add(HeatTooltipUtilities.getHeatGenerationTooltip(TierReloadListener.getTier(tier).getHeatSinkElectricHeatGeneration()));
-		tooltip.add(new StringTextComponent(TextFormatting.GRAY + "Generation Usage: ")
-				.append(GuiTextUtilities.formatEnergyRateToString(TierReloadListener.getTier(tier).getHeatSinkElectricHeatPowerUsage())).mergeStyle(TextFormatting.RED));
+	public void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+		super.getAdvancedTooltip(stack, worldIn, tooltip);
+		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
+		tooltip.add(HeatTooltipUtilities.getHeatRateTooltip(tierObject.heatSinkConductivity.get()));
+		tooltip.add(HeatTooltipUtilities.getHeatCapacityTooltip(tierObject.heatSinkCapacity.get()));
+		tooltip.add(HeatTooltipUtilities.getHeatGenerationTooltip(tierObject.heatSinkElectricHeatGeneration.get()));
+		tooltip.add(new StringTextComponent(TextFormatting.GRAY + "Generation Usage: ").append(GuiTextUtilities.formatEnergyRateToString(tierObject.heatSinkElectricHeatPowerUsage.get()))
+				.mergeStyle(TextFormatting.RED));
 	}
 
 	@Override

@@ -21,10 +21,10 @@ import net.minecraftforge.items.IItemHandler;
 import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticcore.utilities.StaticPowerRarities;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.attachments.AttachmentTooltipUtilities;
-import theking530.staticpower.data.TierReloadListener;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class FilterAttachment extends AbstractCableAttachment {
@@ -43,7 +43,7 @@ public class FilterAttachment extends AbstractCableAttachment {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, TierReloadListener.getTier(tierType).getCableFilterSlots()));
+		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, StaticPowerConfig.getTier(tierType).cableFilterSlots.get()));
 	}
 
 	public boolean doesItemPassFilter(ItemStack attachment, ItemStack itemToTest, AbstractCableProviderComponent cableComponent) {
@@ -92,7 +92,7 @@ public class FilterAttachment extends AbstractCableAttachment {
 
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
-		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.slots", TierReloadListener.getTier(tierType).getCableFilterSlots(), tooltip);
+		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.slots", StaticPowerConfig.getTier(tierType).cableFilterSlots.get(), tooltip);
 	}
 
 	protected class FilterContainerProvider extends AbstractCableAttachmentContainerProvider {

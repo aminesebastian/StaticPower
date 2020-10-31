@@ -23,6 +23,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
+import theking530.staticcore.utilities.ITooltipProvider;
 import theking530.staticpower.StaticPower;
 
 /**
@@ -31,7 +32,7 @@ import theking530.staticpower.StaticPower;
  * @author Amine Sebastian
  *
  */
-public class StaticPowerItem extends Item {
+public class StaticPowerItem extends Item implements ITooltipProvider {
 	/**
 	 * The name of this item.
 	 */

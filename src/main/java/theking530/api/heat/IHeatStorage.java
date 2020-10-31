@@ -18,7 +18,7 @@ public interface IHeatStorage {
 	 * 
 	 * @return
 	 */
-	public float getCurrentHeat();
+	public double getCurrentHeat();
 
 	/**
 	 * Returns the maximum amount of heat that can be stored in this heatable
@@ -26,14 +26,14 @@ public interface IHeatStorage {
 	 * 
 	 * @return
 	 */
-	public float getMaximumHeat();
+	public double getMaximumHeat();
 
 	/**
 	 * Gets the maximum rate that this heatable entity can transfer thermal energy.
 	 * 
 	 * @return
 	 */
-	public float getConductivity();
+	public double getConductivity();
 
 	/**
 	 * Adds heat to this heatable entity.
@@ -42,7 +42,7 @@ public interface IHeatStorage {
 	 * @param simulate
 	 * @return
 	 */
-	public float heat(float amountToHeat, boolean simulate);
+	public double heat(double amountToHeat, boolean simulate);
 
 	/**
 	 * Cools down this heatable entity.
@@ -51,7 +51,7 @@ public interface IHeatStorage {
 	 * @param simulate
 	 * @return
 	 */
-	public float cool(float amountToCool, boolean simulate);
+	public double cool(double amountToCool, boolean simulate);
 
 	/**
 	 * Transfers the heat stored in this storage to adjacent blocks. The transfered
@@ -69,7 +69,7 @@ public interface IHeatStorage {
 			TileEntity te = reader.getTileEntity(currentPos.offset(dir));
 			if (te != null && te.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, dir.getOpposite()).isPresent()) {
 				te.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, dir.getOpposite()).ifPresent(capability -> {
-					float cooled = capability.heat(getCurrentHeat() * getConductivity(), false);
+					double cooled = capability.heat(getCurrentHeat() * getConductivity(), false);
 					cool(cooled, false);
 				});
 			} else {

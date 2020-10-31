@@ -1,348 +1,554 @@
 package theking530.staticpower.data;
 
-import java.util.Arrays;
-
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
-import theking530.staticpower.tileentities.components.serialization.SerializationUtilities;
+import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
+import theking530.staticpower.StaticPower;
 
-public class StaticPowerTier {
-	private ResourceLocation tierId;
-	private String unlocalizedTierName;
+public abstract class StaticPowerTier {
+	/****************
+	 * Tier Settings
+	 ****************/
+	public ConfigValue<String> tierId;
+	public ConfigValue<String> unlocalizedTierName;
 
 	/***********
 	 * Digistore
 	 ***********/
-	private int digistoreCapacity;
+	public ConfigValue<Integer> digistoreCardCapacity;
 
 	/*************
 	 * Solar Panel
 	 *************/
-	private int solarPanelPowerGeneration;
-	private int solarPanelPowerStorage;
+	public ConfigValue<Integer> solarPanelPowerGeneration;
+	public ConfigValue<Integer> solarPanelPowerStorage;
 
 	/***************************
 	 * Extraction Configuration
 	 ***************************/
-	private int cableExtractorRate;
-	private int cableExtractionStackSize;
-	private int cableExtractionFluidRate;
-	private int cableExtractionFilterSlots;
-	private int cableExtractedItemInitialSpeed;
+	public ConfigValue<Integer> cableExtractorRate;
+	public ConfigValue<Integer> cableExtractionStackSize;
+	public ConfigValue<Integer> cableExtractionFluidRate;
+	public ConfigValue<Integer> cableExtractionFilterSlots;
+	public ConfigValue<Double> cableExtractedItemInitialSpeed;
 
 	/*************************
 	 * Retrieval Configuration
 	 *************************/
-	private int cableRetrievalRate;
-	private int cableRetrievalStackSize;
-	private int cableRetrievalFilterSlots;
-	private int cableRetrievedItemInitialSpeed;
+	public ConfigValue<Integer> cableRetrievalRate;
+	public ConfigValue<Integer> cableRetrievalStackSize;
+	public ConfigValue<Integer> cableRetrievalFilterSlots;
+	public ConfigValue<Double> cableRetrievedItemInitialSpeed;
 
 	/**********************
 	 * Filter Configuration
 	 **********************/
-	private int cableFilterSlots;
+	public ConfigValue<Integer> cableFilterSlots;
 
 	/***************************
 	 * Power Cable Configuration
 	 ***************************/
-	private int cablePowerCapacity;
-	private int cablePowerDelivery;
+	public ConfigValue<Integer> cablePowerCapacity;
+	public ConfigValue<Integer> cablePowerDelivery;
 
 	/**************************
 	 * Item Cable Configuration
 	 **************************/
-	private float itemCableAcceleration;
-	private float itemCableFriction;
-	private int itemCableMaxSpeed;
+	public ConfigValue<Double> itemCableAcceleration;
+	public ConfigValue<Double> itemCableFriction;
+	public ConfigValue<Double> itemCableMaxSpeed;
 
 	/***************************
 	 * Fluid Cable Configuration
 	 ***************************/
-	private int cableFluidCapacity;
-	private int cableIndustrialFluidCapacity;
+	public ConfigValue<Integer> cableFluidCapacity;
+	public ConfigValue<Integer> cableIndustrialFluidCapacity;
 
 	/********************
 	 * Heat Configuration
 	 ********************/
-	private float heatCableCapacity;
-	private float heatCableConductivity;
-	private float heatSinkCapacity;
-	private float heatSinkConductivity;
-	private float heatSinkElectricHeatGeneration;
-	private int heatSinkElectricHeatPowerUsage;
+	public ConfigValue<Double> heatCableCapacity;
+	public ConfigValue<Double> heatCableConductivity;
+	public ConfigValue<Double> heatSinkCapacity;
+	public ConfigValue<Double> heatSinkConductivity;
+	public ConfigValue<Double> heatSinkElectricHeatGeneration;
+	public ConfigValue<Integer> heatSinkElectricHeatPowerUsage;
 
 	/*********************
 	 * Power Configuration
 	 *********************/
-	private int batteryCapacity;
-	private int portableBatteryCapacity;
+	public ConfigValue<Integer> batteryCapacity;
+	public ConfigValue<Integer> portableBatteryCapacity;
 
 	/***********************
 	 * Machine Configuration
 	 ***********************/
-	private int defaultMachinePowerCapacity;
-	private int defaultMachinePowerInput;
-	private int defaultMachinePowerOutput;
+	public ConfigValue<Integer> defaultMachinePowerCapacity;
+	public ConfigValue<Integer> defaultMachinePowerInput;
+	public ConfigValue<Integer> defaultMachinePowerOutput;
 
 	/********************
 	 * Processing Upgrade
 	 ********************/
-	private float processingSpeedUpgrade;
-	private float processingSpeedPowerCost;
+	public ConfigValue<Double> processingSpeedUpgrade;
+	public ConfigValue<Double> processingSpeedPowerCost;
 
 	/**************
 	 * Tank Upgrade
 	 **************/
-	private float tankCapacityUpgrade;
+	public ConfigValue<Double> tankCapacityUpgrade;
 
 	/***************
 	 * Range Upgrade
 	 ***************/
-	private float rangeUpgrade;
+	public ConfigValue<Double> rangeUpgrade;
 
 	/***************
 	 * Power Upgrade
 	 ***************/
-	private float powerUpgrade;
-	private float powerIoUpgrade;
+	public ConfigValue<Double> powerUpgrade;
+	public ConfigValue<Double> powerIOUpgrade;
 
 	/***************************
 	 * Output Multiplier Upgrade
 	 ***************************/
-	private float outputMultiplierUpgrade;
-	private float outputMultiplierPowerCostUpgrade;
+	public ConfigValue<Double> outputMultiplierUpgrade;
+	public ConfigValue<Double> outputMultiplierPowerCostUpgrade;
 
 	/********************
 	 * Centrifuge Upgrade
 	 ********************/
-	private int maxCentrifugeSpeedUpgrade;
-	private float centrifugeUpgradedPowerIncrease;
+	public ConfigValue<Integer> maxCentrifugeSpeedUpgrade;
+	public ConfigValue<Double> centrifugeUpgradedPowerIncrease;
 
 	/*******
 	 * Misc
 	 *******/
-	private int defaultTankCapacity;
-	private int capsuleCapacity;
-	private int drillBitUses;
-	private int itemFilterSlots;
+	public ConfigValue<Integer> defaultTankCapacity;
+	public ConfigValue<Integer> capsuleCapacity;
+	public ConfigValue<Integer> drillBitUses;
+	public ConfigValue<Integer> itemFilterSlots;
 
-	private int upgradeOrdinal;
+	public ConfigValue<Integer> upgradeOrdinal;
 
 	public StaticPowerTier(ForgeConfigSpec.Builder builder) {
+		// Establish field for the tier Id.
+		tierId = builder.comment("The unique id of the tier in the format of 'MOD_ID:TIER_NAME'.").translation(StaticPower.MOD_ID + ".config." + "tierId").define("TierId",
+				getTierId().toString());
 
+		// Establish a field for the unlocalized name.
+		unlocalizedTierName = builder.comment("The unlocalized name of the tier.").translation(StaticPower.MOD_ID + ".config." + "unlocalizedTierName").define("UnlocalizedTierName",
+				getUnlocalizedName());
+
+		builder.push("Digistore");
+		digistoreCardCapacity = builder.comment("The number of items that can be contained in a regular digistore card of this tier.")
+				.translation(StaticPower.MOD_ID + ".config." + "digistoreCardCapacity").define("DigistoreCardCapacity", getDigistoreCapacity());
+		builder.pop();
+
+		builder.push("Machines");
+		defaultMachinePowerCapacity = builder.comment("The base amount of power a machine of this tier can store.")
+				.translation(StaticPower.MOD_ID + ".config." + "defaultMachinePowerCapacity").define("DefaultMachinePowerCapacity", this.getDefaultMachinePowerCapacity());
+
+		defaultMachinePowerInput = builder.comment("The base amount of power a machine of this tier can consume from a power providing source (a cable or battery).")
+				.translation(StaticPower.MOD_ID + ".config." + "defaultMachinePowerInput").define("DefaultMachinePowerInput", this.getDefaultMachinePowerInput());
+
+		defaultMachinePowerOutput = builder.comment("The base amount of power that can be extracted or provided by a machine of this tier.")
+				.translation(StaticPower.MOD_ID + ".config." + "defaultMachinePowerOutput").define("DefaultMachinePowerOutput", this.getDefaultMachinePowerOutput());
+
+		defaultTankCapacity = builder.comment("The base amount of fluid a machine of this tier can store..").translation(StaticPower.MOD_ID + ".config." + "defaultTankCapacity")
+				.define("DefaultTankCapacity", this.getDefaultTankCapacity());
+
+		builder.push("Battery");
+		batteryCapacity = builder.comment("The amount of power that a non-portable battery of this tier can store..").translation(StaticPower.MOD_ID + ".config." + "batteryCapacity")
+				.define("BatteryCapacity", this.getBatteryCapacity());
+		builder.pop();
+
+		builder.push("Solar_Panel");
+		solarPanelPowerGeneration = builder.comment("The amount of power generated by a solar panel of this tier per tick.")
+				.translation(StaticPower.MOD_ID + ".config." + "solarPanelPowerGeneration").define("SolarPanelPowerGeneration", this.getSolarPanelPowerGeneration());
+
+		solarPanelPowerStorage = builder.comment("The amount of power a solar panel of this tier can store.").translation(StaticPower.MOD_ID + ".config." + "solarPanelPowerStorage")
+				.define("SolarPanelPowerStorage", this.getSolarPanelPowerGeneration());
+		builder.pop();
+
+		builder.push("Heatsink");
+		heatSinkCapacity = builder.comment("The amount of heat a heatsink of this tier can store.").translation(StaticPower.MOD_ID + ".config." + "heatSinkCapacity")
+				.define("HeatSinkCapacity", this.getHeatSinkCapacity());
+
+		heatSinkConductivity = builder.comment("The conductivity multiplier for a heatsink of this tier. The higher it is, the faster it is able to dissipate heat.")
+				.translation(StaticPower.MOD_ID + ".config." + "heatSinkConductivity").define("HeatSinkConductivity", this.getHeatSinkConductivity());
+
+		heatSinkElectricHeatGeneration = builder.comment("The amount of heat generated per tick by a heatsink of this tier when supplied with power.")
+				.translation(StaticPower.MOD_ID + ".config." + "heatSinkElectricHeatGeneration").define("HeatSinkElectricHeatGeneration", this.getHeatSinkElectricHeatGeneration());
+
+		heatSinkElectricHeatPowerUsage = builder.comment("The amount of power used per tick to generate heat in a heatsink of this tier.")
+				.translation(StaticPower.MOD_ID + ".config." + "heatSinkElectricHeatPowerUsage").define("HeatSinkElectricHeatPowerUsage", this.getHeatSinkElectricHeatPowerUsage());
+		builder.pop();
+		builder.pop();
+
+		builder.push("Cables_Attachments");
+		builder.push("Extractor");
+		cableExtractorRate = builder.comment("How many ticks inbetween each extraction. The lower, the more frequently it extracts. Lower values impact performance.")
+				.translation(StaticPower.MOD_ID + ".config." + "cableExtractorRate").define("CableExtractorRate", this.getCableExtractorRate());
+
+		cableExtractionStackSize = builder.comment("The number of items that are extracted per extraction.").translation(StaticPower.MOD_ID + ".config." + "cableExtractionStackSize")
+				.define("CableExtractionStackSize", this.getCableExtractionStackSize());
+
+		cableExtractionFluidRate = builder.comment("The amount of fluid extracted per extraction").translation(StaticPower.MOD_ID + ".config." + "cableExtractionFluidRate")
+				.define("CableExtractionFluidRate", this.getCableExtractionFluidRate());
+
+		cableExtractionFilterSlots = builder.comment("The number of filter slots available on an extractor of this tier.")
+				.translation(StaticPower.MOD_ID + ".config." + "cableExtractionFilterSlots").define("CableExtractionFilterSlots", this.getCableExtractionFilterSlots());
+
+		cableExtractedItemInitialSpeed = builder.comment("The initial speed of the item that is input into the tube when an extractor of this tier extracts an item.")
+				.translation(StaticPower.MOD_ID + ".config." + "cableExtractedItemInitialSpeed").define("CableExtractedItemInitialSpeed", this.getExtractedItemInitialSpeed());
+		builder.pop();
+
+		builder.push("Retriever");
+		cableRetrievalRate = builder.comment("How many ticks inbetween each extraction. The lower, the more frequently it extracts. Lower values impact performance.")
+				.translation(StaticPower.MOD_ID + ".config." + "cableRetrievalRate").define("CableRetrievalRate", this.getCableRetrievalRate());
+
+		cableRetrievalStackSize = builder.comment("The number of items that are retrieved per operation.").translation(StaticPower.MOD_ID + ".config." + "cableRetrievalStackSize")
+				.define("CableRetrievalStackSize", this.getCableRetrievalStackSize());
+
+		cableRetrievalFilterSlots = builder.comment("The number of filter slots available on a retriever of this tier. Higher numbers will impact performance.")
+				.translation(StaticPower.MOD_ID + ".config." + "cableRetrievalFilterSlots").define("CableRetrievalFilterSlots", this.getCableRetrievalFilterSlots());
+
+		cableRetrievedItemInitialSpeed = builder.comment("The initial speed of the item that is input into the tube when an retriever of this tier retrieves an item.")
+				.translation(StaticPower.MOD_ID + ".config." + "cableRetrievedItemInitialSpeed").define("CableRetrievedItemInitialSpeed", this.getRetrievedItemInitialSpeed());
+		builder.pop();
+
+		builder.push("Filter");
+		cableFilterSlots = builder.comment("The number slots in a filter of this tier.").translation(StaticPower.MOD_ID + ".config." + "cableFilterSlots").define("CableFilterSlots",
+				this.getCableFilterSlots());
+		builder.pop();
+		builder.pop();
+
+		/********
+		 * Cables
+		 ********/
+		builder.push("Cables");
+
+		/********
+		 * Power
+		 ********/
+		builder.push("Power");
+		cablePowerCapacity = builder.comment("The amount of power that a power cable of this tier can store.").translation(StaticPower.MOD_ID + ".config." + "cablePowerCapacity")
+				.define("CablePowerCapacity", this.getCablePowerCapacity());
+
+		cablePowerDelivery = builder.comment("The amount of power that a power cable of this tier can supply to a single destination.")
+				.translation(StaticPower.MOD_ID + ".config." + "cablePowerDelivery").define("CablePowerDelivery", this.getCablePowerDelivery());
+		builder.pop();
+
+		/********
+		 * Item
+		 ********/
+		builder.push("Item");
+		itemCableAcceleration = builder.comment("The rate (as a percentage 1.0+) at which items in this tube will accelerate up to the max speed.")
+				.translation(StaticPower.MOD_ID + ".config." + "itemCableAcceleration").define("ItemCableAcceleration", this.getItemCableAcceleration());
+
+		itemCableFriction = builder.comment("The rate (as a percentage 1.0+) at which items in this tube will decelerate down to the max speed.")
+				.translation(StaticPower.MOD_ID + ".config." + "itemCableFriction").define("ItemCableFriction", this.getItemCableFriction());
+
+		itemCableMaxSpeed = builder.comment(
+				"The max speed (in blocks traveled per second) of an item tube of this tier. Faster items will slow down to match this rate, and slower items will speed up to match this rate. This value cannot be higher than 19, otherwise items will cease to transfer.")
+				.translation(StaticPower.MOD_ID + ".config." + "itemCableMaxSpeed").define("ItemCableMaxSpeed", this.getItemCableMaxSpeed());
+		builder.pop();
+
+		/********
+		 * Fluid
+		 ********/
+		builder.push("Fluid");
+		cableFluidCapacity = builder.comment("The amount of fluid that can be stored in a regular fluid pipe of this tier.")
+				.translation(StaticPower.MOD_ID + ".config." + "cableFluidCapacity").define("CableFluidCapacity", this.getCableFluidCapacity());
+
+		cableIndustrialFluidCapacity = builder.comment("The amount of fluid that can be stored in an industrial fluid pipe of this tier.")
+				.translation(StaticPower.MOD_ID + ".config." + "cableIndustrialFluidCapacity").define("CableIndustrialFluidCapacity", this.getCableIndustrialFluidCapacity());
+		builder.pop();
+
+		/********
+		 * Heat
+		 ********/
+		builder.push("Heat");
+		heatCableCapacity = builder.comment("The amount of heat that a heat pipe of this tier can store.").translation(StaticPower.MOD_ID + ".config." + "heatCableCapacity")
+				.define("HeatCableCapacity", this.getHeatCableCapacity());
+
+		heatCableConductivity = builder.comment("The conductivity multiplier for a heat pipe of this tier. The higher it is, the faster it is able to dissipate heat.")
+				.translation(StaticPower.MOD_ID + ".config." + "heatCableConductivity").define("HeatCableConductivity", this.getHeatCableConductivity());
+		builder.pop();
+		builder.pop();
+
+		/********
+		 * Items
+		 ********/
+		builder.push("Items");
+		capsuleCapacity = builder.comment("The amount of fluid that can be stored in a fluid capsule of this tier.").translation(StaticPower.MOD_ID + ".config." + "capsuleCapacity")
+				.define("CapsuleCapacity", this.getCapsuleCapacity());
+
+		portableBatteryCapacity = builder.comment("The amount of power that can be stored in a portable battery of this tier.")
+				.translation(StaticPower.MOD_ID + ".config." + "portableBatteryCapacity").define("PortableBatteryCapacity", this.getPortableBatteryCapacity());
+
+		drillBitUses = builder.comment("The number of blocks that can be mined by a drill bit of this tier.").translation(StaticPower.MOD_ID + ".config." + "drillBitUses")
+				.define("DrillBitUses", this.getDrillBitUses());
+
+		itemFilterSlots = builder.comment("The number of slots that exist on an item filter of this tier (not the filter attachment, the actual item).")
+				.translation(StaticPower.MOD_ID + ".config." + "itemFilterSlots").define("ItemFilterSlots", this.getItemFilterSlots());
+
+		builder.push("Upgrade");
+		upgradeOrdinal = builder.comment(
+				"The upgrade ordinal of this tier. Higher value will take precedence. For example, if a machine has both Basic and Energized power upgrades installed, the Energized upgrades will be used when calculating power values because it has the higher upgrade ordinal. In the case of a tie, it comes down to which one appears in later in the upgrade slots.")
+				.translation(StaticPower.MOD_ID + ".config." + "upgradeOrdinal").define("UpgradeOrdinal", this.getUpgradeOrdinal());
+
+		/********************
+		 * Processing Upgrade
+		 ********************/
+		builder.push("Processing");
+		processingSpeedUpgrade = builder.comment("The processing speed upgrade for a full upgrade stack of this tier (as a percentage 1.0+).")
+				.translation(StaticPower.MOD_ID + ".config." + "processingSpeedUpgrade").define("ProcessingSpeedUpgrade", this.getProcessingSpeedUpgrade());
+
+		processingSpeedPowerCost = builder.comment("The processing speed power cost penality for a full upgrade stack of this tier (as a percentage 1.0+).")
+				.translation(StaticPower.MOD_ID + ".config." + "processingSpeedPowerCost").define("ProcessingSpeedPowerCost", this.getProcessingSpeedPowerCost());
+		builder.pop();
+
+		/********************
+		 * Power Upgrade
+		 ********************/
+		builder.push("Power");
+		powerUpgrade = builder.comment("The power upgrade multiplier of a power upgrade for a full stack of this tier.").translation(StaticPower.MOD_ID + ".config." + "powerUpgrade")
+				.define("PowerUpgrade", this.getPowerUpgrade());
+
+		powerIOUpgrade = builder.comment("The power I/O (input/output) upgrade multiplier for a full stack of a power upgrade of this tier.")
+				.translation(StaticPower.MOD_ID + ".config." + "powerIOUpgrade").define("PowerIOUpgrade", this.getPowerIoUpgrade());
+		builder.pop();
+
+		/********************
+		 * Tank Upgrade
+		 ********************/
+		builder.push("Tank");
+		tankCapacityUpgrade = builder.comment("The tank capacity multiplier for a full stack of a tank upgrade of this tier (as a percentage 1.0+).")
+				.translation(StaticPower.MOD_ID + ".config." + "tankCapacityUpgrade").define("TankCapacityUpgrade", this.getTankCapacityUpgrade());
+		builder.pop();
+
+		/********************
+		 * Range Upgrade
+		 ********************/
+		builder.push("Range");
+		rangeUpgrade = builder.comment("The increase in radius in percent for a single range upgrade of this tier.").translation(StaticPower.MOD_ID + ".config." + "rangeUpgrade")
+				.define("RangeUpgrade", this.getRangeUpgrade());
+		builder.pop();
+
+		/********************
+		 * Centrifuge Upgrade
+		 ********************/
+		builder.push("Centrifuge");
+		maxCentrifugeSpeedUpgrade = builder.comment("The new maximum speed set by a centrifuge upgrade of this tier.")
+				.translation(StaticPower.MOD_ID + ".config." + "maxCentrifugeSpeedUpgrade").define("MaxCentrifugeSpeedUpgrade", this.getMaxCentrifugeSpeedUpgrade());
+
+		centrifugeUpgradedPowerIncrease = builder.comment("The amount of increased power cost due to a centrifuge upgrade of this tier.")
+				.translation(StaticPower.MOD_ID + ".config." + "centrifugeUpgradedPowerIncrease").define("CentrifugeUpgradedPowerIncrease", this.getCentrifugeUpgradedPowerIncrease());
+		builder.pop();
+
+		/********************
+		 * Output Upgrade
+		 ********************/
+		builder.push("Output_Multiplier");
+		outputMultiplierUpgrade = builder
+				.comment("The multiplier applied to the output change of any probability outputs for a full stack of an output multiplier upgrade (as a percentage 1.0+).")
+				.translation(StaticPower.MOD_ID + ".config." + "outputMultiplierUpgrade").define("OutputMultiplierUpgrade", this.getOutputMultiplierUpgrade());
+
+		outputMultiplierPowerCostUpgrade = builder.comment("The power usage increase for a full stack of an output multiplier upgrade (as a percentage 1.0+).")
+				.translation(StaticPower.MOD_ID + ".config." + "outputMultiplierPowerCostUpgrade").define("OutputMultiplierPowerCostUpgrade", this.getOutputMultiplierPowerCostUpgrade());
+		builder.pop();
+
+		builder.pop();
+		builder.pop();
 	}
 
-	public StaticPowerTier() {
+	protected abstract ResourceLocation getTierId();
 
+	protected abstract String getUnlocalizedName();
+
+	protected int getCableFluidCapacity() {
+		return 0;
 	}
 
-	public void setId(ResourceLocation id) {
-		this.tierId = id;
+	protected int getCableIndustrialFluidCapacity() {
+		return 0;
 	}
 
-	public int getCableFluidCapacity() {
-		return cableFluidCapacity;
+	protected int getDefaultTankCapacity() {
+		return 0;
 	}
 
-	public int getCableIndustrialFluidCapacity() {
-		return cableIndustrialFluidCapacity;
+	protected int getCapsuleCapacity() {
+		return 0;
 	}
 
-	public int getDefaultTankCapacity() {
-		return defaultTankCapacity;
+	protected int getDefaultMachinePowerCapacity() {
+		return 0;
 	}
 
-	public int getCapsuleCapacity() {
-		return capsuleCapacity;
+	protected int getDefaultMachinePowerInput() {
+		return 0;
 	}
 
-	public int getDefaultMachinePowerCapacity() {
-		return defaultMachinePowerCapacity;
+	protected int getDefaultMachinePowerOutput() {
+		return 0;
 	}
 
-	public int getDefaultMachinePowerInput() {
-		return defaultMachinePowerInput;
+	protected double getHeatSinkElectricHeatGeneration() {
+		return 0;
 	}
 
-	public int getDefaultMachinePowerOutput() {
-		return defaultMachinePowerOutput;
+	protected int getHeatSinkElectricHeatPowerUsage() {
+		return 0;
 	}
 
-	public float getHeatSinkElectricHeatGeneration() {
-		return heatSinkElectricHeatGeneration;
+	protected int getMaxCentrifugeSpeedUpgrade() {
+		return 0;
 	}
 
-	public int getHeatSinkElectricHeatPowerUsage() {
-		return heatSinkElectricHeatPowerUsage;
+	protected double getCentrifugeUpgradedPowerIncrease() {
+		return 0;
 	}
 
-	public int getMaxCentrifugeSpeedUpgrade() {
-		return maxCentrifugeSpeedUpgrade;
+	protected double getOutputMultiplierPowerCostUpgrade() {
+		return 0;
 	}
 
-	public float getCentrifugeUpgradedPowerIncrease() {
-		return centrifugeUpgradedPowerIncrease;
+	protected double getOutputMultiplierUpgrade() {
+		return 0;
 	}
 
-	public float getOutputMultiplierPowerCostUpgrade() {
-		return outputMultiplierPowerCostUpgrade;
+	protected double getPowerUpgrade() {
+		return 0;
 	}
 
-	public float getOutputMultiplierUpgrade() {
-		return outputMultiplierUpgrade;
+	protected double getPowerIoUpgrade() {
+		return 0;
 	}
 
-	public float getPowerUpgrade() {
-		return powerUpgrade;
+	protected double getRangeUpgrade() {
+		return 0;
 	}
 
-	public float getPowerIoUpgrade() {
-		return powerIoUpgrade;
+	protected double getTankCapacityUpgrade() {
+		return 0;
 	}
 
-	public float getRangeUpgrade() {
-		return rangeUpgrade;
+	protected double getProcessingSpeedUpgrade() {
+		return 0;
 	}
 
-	public float getTankCapacityUpgrade() {
-		return tankCapacityUpgrade;
+	protected double getProcessingSpeedPowerCost() {
+		return 0;
 	}
 
-	public float getProcessingSpeedUpgrade() {
-		return processingSpeedUpgrade;
+	protected int getUpgradeOrdinal() {
+		return 0;
 	}
 
-	public float getProcessingSpeedPowerCost() {
-		return processingSpeedPowerCost;
+	protected double getHeatSinkCapacity() {
+		return 0;
 	}
 
-	public int getUpgradeOrdinal() {
-		return upgradeOrdinal;
+	protected double getHeatSinkConductivity() {
+		return 0;
 	}
 
-	public float getHeatSinkCapacity() {
-		return heatSinkCapacity;
+	protected double getHeatCableCapacity() {
+		return 0;
 	}
 
-	public float getHeatSinkConductivity() {
-		return heatSinkConductivity;
+	protected double getHeatCableConductivity() {
+		return 0;
 	}
 
-	public float getHeatCableCapacity() {
-		return heatCableCapacity;
+	protected int getDrillBitUses() {
+		return 0;
 	}
 
-	public float getHeatCableConductivity() {
-		return heatCableConductivity;
+	protected int getItemFilterSlots() {
+		return 0;
 	}
 
-	public int getDrillBitUses() {
-		return drillBitUses;
+	protected double getItemCableMaxSpeed() {
+		return 0;
 	}
 
-	public int getItemFilterSlots() {
-		return itemFilterSlots;
+	protected double getItemCableAcceleration() {
+		return 0;
 	}
 
-	public int getItemCableMaxSpeed() {
-		return itemCableMaxSpeed;
+	protected double getItemCableFriction() {
+		return 0;
 	}
 
-	public float getItemCableAcceleration() {
-		return itemCableAcceleration;
+	protected int getBatteryCapacity() {
+		return 0;
 	}
 
-	public float getItemCableFriction() {
-		return itemCableFriction;
+	protected int getCablePowerCapacity() {
+		return 0;
 	}
 
-	public int getBatteryCapacity() {
-		return batteryCapacity;
+	protected int getCablePowerDelivery() {
+		return 0;
 	}
 
-	public int getCablePowerCapacity() {
-		return cablePowerCapacity;
+	protected int getCableFilterSlots() {
+		return 0;
 	}
 
-	public int getCablePowerDelivery() {
-		return cablePowerDelivery;
+	protected int getPortableBatteryCapacity() {
+		return 0;
 	}
 
-	public int getCableFilterSlots() {
-		return cableFilterSlots;
+	protected int getDigistoreCapacity() {
+		return 0;
 	}
 
-	public ResourceLocation getTierId() {
-		return tierId;
+	protected int getSolarPanelPowerGeneration() {
+		return 0;
 	}
 
-	public String getUnlocalizedTierName() {
-		return unlocalizedTierName;
+	protected int getSolarPanelPowerStorage() {
+		return 0;
 	}
 
-	public int getPortableBatteryCapacity() {
-		return portableBatteryCapacity;
+	protected int getCableExtractorRate() {
+		return 0;
 	}
 
-	public int getDigistoreCapacity() {
-		return digistoreCapacity;
+	protected int getCableExtractionStackSize() {
+		return 0;
 	}
 
-	public int getSolarPanelPowerGeneration() {
-		return solarPanelPowerGeneration;
+	protected int getCableExtractionFluidRate() {
+		return 0;
 	}
 
-	public int getSolarPanelPowerStorage() {
-		return solarPanelPowerStorage;
+	protected int getCableExtractionFilterSlots() {
+		return 0;
 	}
 
-	public int getCableExtractorRate() {
-		return cableExtractorRate;
+	protected double getExtractedItemInitialSpeed() {
+		return 0;
 	}
 
-	public int getCableExtractionStackSize() {
-		return cableExtractionStackSize;
+	protected int getCableRetrievalRate() {
+		return 0;
 	}
 
-	public int getCableExtractionFluidRate() {
-		return cableExtractionFluidRate;
+	protected int getCableRetrievalStackSize() {
+		return 0;
 	}
 
-	public int getCableExtractionFilterSlots() {
-		return cableExtractionFilterSlots;
+	protected int getCableRetrievalFilterSlots() {
+		return 0;
 	}
 
-	public int getExtractedItemInitialSpeed() {
-		return cableExtractedItemInitialSpeed;
-	}
-
-	public int getCableRetrievalRate() {
-		return cableRetrievalRate;
-	}
-
-	public int getCableRetrievalStackSize() {
-		return cableRetrievalStackSize;
-	}
-
-	public int getCableRetrievalFilterSlots() {
-		return cableRetrievalFilterSlots;
-	}
-
-	public int getRetrievedItemInitialSpeed() {
-		return cableRetrievedItemInitialSpeed;
-	}
-
-	public CompoundNBT writeToNbt() {
-		CompoundNBT output = new CompoundNBT();
-		SerializationUtilities.serializeFieldsToNbt(output, Arrays.asList(getClass().getDeclaredFields()), this);
-		return output;
-	}
-
-	public static StaticPowerTier readFromNbt(CompoundNBT nbt) {
-		StaticPowerTier output = new StaticPowerTier();
-		SerializationUtilities.deserializeFieldsToNbt(nbt, Arrays.asList(output.getClass().getDeclaredFields()), output);
-		return output;
+	protected double getRetrievedItemInitialSpeed() {
+		return 0;
 	}
 }

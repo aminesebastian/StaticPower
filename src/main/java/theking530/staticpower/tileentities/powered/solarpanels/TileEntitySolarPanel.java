@@ -12,9 +12,9 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
-import theking530.staticpower.data.TierReloadListener;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
@@ -50,15 +50,16 @@ public class TileEntitySolarPanel extends TileEntityBase implements ITickableTil
 	public TileEntitySolarPanel(TileEntityTypeAllocator<TileEntitySolarPanel> allocator, ResourceLocation tierType) {
 		super(allocator);
 		// Set the values based on the tier.
-		StaticPowerTier tier = TierReloadListener.getTier(tierType);
-		registerComponent(energyStorage = new EnergyStorageComponent("PowerBuffer", tier.getSolarPanelPowerStorage(), tier.getSolarPanelPowerGeneration(), tier.getSolarPanelPowerGeneration()));
+		StaticPowerTier tier = StaticPowerConfig.getTier(tierType);
+		registerComponent(
+				energyStorage = new EnergyStorageComponent("PowerBuffer", tier.solarPanelPowerStorage.get(), tier.solarPanelPowerGeneration.get(), tier.solarPanelPowerGeneration.get()));
 		energyStorage.getStorage().setCanRecieve(false);
 
 		registerComponent(new PowerDistributionComponent("PowerDistribution", energyStorage.getStorage()));
 
-		energyStorage.getStorage().setCapacity(tier.getSolarPanelPowerStorage());
-		energyStorage.getStorage().setMaxExtract(tier.getSolarPanelPowerGeneration());
-		energyStorage.getStorage().setMaxReceive(tier.getSolarPanelPowerGeneration());
+		energyStorage.getStorage().setCapacity(tier.solarPanelPowerStorage.get());
+		energyStorage.getStorage().setMaxExtract(tier.solarPanelPowerGeneration.get());
+		energyStorage.getStorage().setMaxReceive(tier.solarPanelPowerGeneration.get());
 	}
 
 	@Override

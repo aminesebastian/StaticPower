@@ -464,10 +464,8 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 			processingSpeedUpgradeMultiplier = 1.0f;
 			powerUsageIncreaseMultiplier = 1.0f;
 		} else {
-			processingSpeedUpgradeMultiplier = (1.0f + speedUpgrade.getTier().getProcessingSpeedUpgrade())
-					* speedUpgrade.getUpgradeWeight();
-			powerUsageIncreaseMultiplier = (1.0f + speedUpgrade.getTier().getProcessingSpeedPowerCost())
-					* speedUpgrade.getUpgradeWeight();
+			processingSpeedUpgradeMultiplier = (float) ((1.0f + speedUpgrade.getTier().processingSpeedUpgrade.get()) * speedUpgrade.getUpgradeWeight());
+			powerUsageIncreaseMultiplier = (float) ((1.0f + speedUpgrade.getTier().processingSpeedPowerCost.get()) * speedUpgrade.getUpgradeWeight());
 		}
 
 		// Set the processing time.
@@ -523,8 +521,7 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 		}
 		// Check the processing power rate.
 		if (hasProcessingPowerCost && powerComponent.getStorage().getMaxDrain() < getPowerUsage()) {
-			return ProcessingCheckState.error(new StringTextComponent("Recipe's power per tick requirement (")
-					.append(GuiTextUtilities.formatEnergyRateToString(getPowerUsage()))
+			return ProcessingCheckState.error(new StringTextComponent("Recipe's power per tick requirement (").append(GuiTextUtilities.formatEnergyRateToString(getPowerUsage()))
 					.appendString(") is larger than the max for this machine!").getString());
 		}
 
@@ -540,8 +537,7 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 	protected ProcessingCheckState checkRedstoneState() {
 		// Check the redstone control component.
 		if (redstoneControlComponent != null && !redstoneControlComponent.passesRedstoneCheck()) {
-			return ProcessingCheckState
-					.error(new StringTextComponent("Redstone Control Mode Not Satisfied.").getString());
+			return ProcessingCheckState.error(new StringTextComponent("Redstone Control Mode Not Satisfied.").getString());
 		}
 
 		return ProcessingCheckState.ok();
@@ -639,8 +635,7 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 		}
 
 		public static ProcessingCheckState outputTankCannotTakeFluid() {
-			return new ProcessingCheckState(ProcessingState.ERROR,
-					"Tank does not have enough space for recipe output.");
+			return new ProcessingCheckState(ProcessingState.ERROR, "Tank does not have enough space for recipe output.");
 		}
 
 		public static ProcessingCheckState outputFluidDoesNotMatch() {

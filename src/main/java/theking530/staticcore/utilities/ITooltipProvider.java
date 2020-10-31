@@ -1,0 +1,28 @@
+package theking530.staticcore.utilities;
+
+import java.util.List;
+
+import javax.annotation.Nullable;
+
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+public interface ITooltipProvider {
+	/**
+	 * Gets the tooltip that is displayed when hovered by the user.
+	 * 
+	 * @param stack             The item stack hovered by the user.
+	 * @param worldIn           The world the player was in when hovering the item.
+	 * @param tooltip           The list of {@link ITextComponent} to add to the
+	 *                          tooltip.
+	 * @param isShowingAdvanced True if advanced tooltips are requested.
+	 */
+	@OnlyIn(Dist.CLIENT)
+	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced);
+
+	@OnlyIn(Dist.CLIENT)
+	public void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip);
+}

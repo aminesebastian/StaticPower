@@ -11,18 +11,22 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import theking530.staticcore.utilities.Vector3D;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.CableBoundsCache;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerTiers;
-import theking530.staticpower.data.TierReloadListener;
 
 public class BlockItemCable extends AbstractCableBlock {
 	public final ResourceLocation tier;
@@ -30,15 +34,6 @@ public class BlockItemCable extends AbstractCableBlock {
 	public BlockItemCable(String name, ResourceLocation tier) {
 		super(name, new CableBoundsCache(2.0D, new Vector3D(3.0f, 3.0f, 3.0f)));
 		this.tier = tier;
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	@Override
-	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
-		super.getBasicTooltip(stack, worldIn, tooltip);
-		tooltip.add(ItemCableTooltipUtilities.getMaxSpeedTooltip(TierReloadListener.getTier(tier).getItemCableMaxSpeed()));
-		tooltip.add(ItemCableTooltipUtilities.getAccelerationTooltip(TierReloadListener.getTier(tier).getItemCableAcceleration()));
-		tooltip.add(ItemCableTooltipUtilities.getFrictionTooltip(TierReloadListener.getTier(tier).getItemCableFriction()));
 	}
 
 	@Override
@@ -60,7 +55,7 @@ public class BlockItemCable extends AbstractCableBlock {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)	
+	@OnlyIn(Dist.CLIENT)
 	public IBakedModel getModelOverride(BlockState state, @Nullable IBakedModel existingModel, ModelBakeEvent event) {
 		IBakedModel extensionModel = null;
 		IBakedModel straightModel = null;
@@ -87,6 +82,24 @@ public class BlockItemCable extends AbstractCableBlock {
 		}
 
 		return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	@Override
+	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
+		double blocksPerTick = StaticPowerConfig.getTier(tier).itemCableMaxSpeed.get();
+		tooltip.add(new TranslationTextComponent("gui.staticpower.max_transfer_rate"));
+		tooltip.add(new StringTextComponent("- ").append(new TranslationTextComponent("gui.staticpower.cable_transfer_rate",
+				TextFormatting.GREEN + GuiTextUtilities.formatUnitRateToString(blocksPerTick).getString(), new TranslationTextComponent("gui.staticpower.blocks").getString())));
+	}
+
+	@Override
+	public void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+		tooltip.add(new StringTextComponent(""));
+		tooltip.add(new TranslationTextComponent("gui.staticpower.item_cable_acceleration",
+				TextFormatting.BLUE + GuiTextUtilities.formatUnitRateToString(StaticPowerConfig.getTier(tier).itemCableAcceleration.get() * 100).getString()));
+		tooltip.add(new TranslationTextComponent("gui.staticpower.item_cable_friction",
+				TextFormatting.RED + GuiTextUtilities.formatUnitRateToString(StaticPowerConfig.getTier(tier).itemCableFriction.get() * 100).getString()));
 	}
 
 	@Override

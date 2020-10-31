@@ -5,10 +5,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderItemCable;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
-import theking530.staticpower.data.TierReloadListener;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityBase;
 
@@ -47,8 +47,8 @@ public class TileEntityItemCable extends TileEntityBase {
 
 	public TileEntityItemCable(TileEntityTypeAllocator<TileEntityItemCable> allocator, ResourceLocation tier) {
 		super(allocator);
-		StaticPowerTier tierObject = TierReloadListener.getTier(tier);
-		registerComponent(cableComponent = new ItemCableComponent("ItemCableComponent", tier, tierObject.getItemCableMaxSpeed(), tierObject.getItemCableFriction(),
-				1.0f / Math.max(tierObject.getItemCableAcceleration(), 0.00000001f)));
+		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
+		registerComponent(cableComponent = new ItemCableComponent("ItemCableComponent", tier, tierObject.itemCableMaxSpeed.get(), tierObject.itemCableFriction.get(),
+				1.0f / Math.max(tierObject.itemCableAcceleration.get(), 0.00000001f)));
 	}
 }

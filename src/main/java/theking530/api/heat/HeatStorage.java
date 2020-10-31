@@ -8,9 +8,9 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundNBT>, Cloneable {
 	public static final int MAXIMUM_IO_CAPTURE_FRAMES = 20;
-	protected float currentHeat;
-	protected float maximumHeat;
-	protected float conductivity;
+	protected double currentHeat;
+	protected double maximumHeat;
+	protected double conductivity;
 
 	protected boolean canHeat;
 	protected boolean canCool;
@@ -23,7 +23,7 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundNBT>,
 	protected float averageRecieved;
 	protected float averageExtracted;
 
-	public HeatStorage(float maximumHeat, float conductivity) {
+	public HeatStorage(double maximumHeat, double conductivity) {
 		this.maximumHeat = maximumHeat;
 		this.conductivity = conductivity;
 		canHeat = true;
@@ -34,12 +34,12 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundNBT>,
 	}
 
 	@Override
-	public float getCurrentHeat() {
+	public double getCurrentHeat() {
 		return currentHeat;
 	}
 
 	@Override
-	public float getMaximumHeat() {
+	public double getMaximumHeat() {
 		return maximumHeat;
 	}
 
@@ -49,7 +49,7 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundNBT>,
 	}
 
 	@Override
-	public float getConductivity() {
+	public double getConductivity() {
 		return conductivity;
 	}
 
@@ -58,12 +58,12 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundNBT>,
 	}
 
 	@Override
-	public float heat(float amountToHeat, boolean simulate) {
+	public double heat(double amountToHeat, boolean simulate) {
 		if (!canHeat) {
 			return 0.0f;
 		}
-		float remainingHeatCapacity = maximumHeat - currentHeat;
-		float actualHeatAmount = Math.min(remainingHeatCapacity, amountToHeat);
+		double remainingHeatCapacity = maximumHeat - currentHeat;
+		double actualHeatAmount = Math.min(remainingHeatCapacity, amountToHeat);
 		if (!simulate) {
 			currentHeat += actualHeatAmount;
 			currentFrameEnergyReceived += actualHeatAmount;
@@ -73,11 +73,11 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundNBT>,
 	}
 
 	@Override
-	public float cool(float amountToCool, boolean simulate) {
+	public double cool(double amountToCool, boolean simulate) {
 		if (!canCool) {
 			return 0.0f;
 		}
-		float actualCoolAmount = Math.min(currentHeat, amountToCool);
+		double actualCoolAmount = Math.min(currentHeat, amountToCool);
 		if (!simulate) {
 			currentHeat -= actualCoolAmount;
 			currentFrameEnergyExtracted -= actualCoolAmount;
@@ -210,9 +210,9 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundNBT>,
 			currentHeat = 0;
 		}
 
-		output.putFloat("current_heat", currentHeat);
-		output.putFloat("maximum_heat", maximumHeat);
-		output.putFloat("maximum_transfer_rate", conductivity);
+		output.putDouble("current_heat", currentHeat);
+		output.putDouble("maximum_heat", maximumHeat);
+		output.putDouble("maximum_transfer_rate", conductivity);
 		output.putFloat("recieved", averageRecieved);
 		output.putFloat("extracted", averageExtracted);
 		return output;

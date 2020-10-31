@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.BucketItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -22,7 +21,6 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -31,22 +29,17 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.fml.network.PacketDistributor;
 import theking530.api.attributes.AttributeUtilities;
 import theking530.api.heat.HeatTooltipUtilities;
+import theking530.staticcore.utilities.ITooltipProvider;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.network.CableNetworkManager;
-import theking530.staticpower.data.PacketSyncTiers;
 import theking530.staticpower.data.StaticPowerDataRegistry;
-import theking530.staticpower.data.TierReloadListener;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.RecipeReloadListener;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.thermalconductivity.ThermalConductivityRecipe;
 import theking530.staticpower.init.ModFluids;
-import theking530.staticpower.items.StaticPowerItem;
-import theking530.staticpower.network.NetworkMessage;
-import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.world.ore.ModOres;
 import theking530.staticpower.world.trees.ModTrees;
 
@@ -62,23 +55,10 @@ public class StaticPowerForgeEventRegistry {
 	}
 
 	@SubscribeEvent
-	public static void onPlayerJoinedGame(PlayerEvent.PlayerLoggedInEvent playerLoggedIn) {
-		if (!playerLoggedIn.getPlayer().getEntityWorld().isRemote) {
-			NetworkMessage msg = new PacketSyncTiers(TierReloadListener.TIERS.values());
-			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) playerLoggedIn.getPlayer()), msg);
-			StaticPower.LOGGER.info(String.format("Synced tier configuration to player: %1$s!", playerLoggedIn.getPlayer().getDisplayName().getString()));
-		}
-	}
-
-	@SubscribeEvent
 	public static void onServerAboutToStart(FMLServerAboutToStartEvent serverStarted) {
 		IReloadableResourceManager resourceManager = (IReloadableResourceManager) serverStarted.getServer().getDataPackRegistries().getResourceManager();
-		resourceManager.addReloadListener(new TierReloadListener());
 		resourceManager.addReloadListener(new RecipeReloadListener(serverStarted.getServer().getRecipeManager()));
 		StaticPower.LOGGER.info("Server resource reload listener created!");
-
-		TierReloadListener.updateOnServer(resourceManager);
-		StaticPower.LOGGER.info("Ore generators registered!");
 	}
 
 	@SubscribeEvent
@@ -120,9 +100,9 @@ public class StaticPowerForgeEventRegistry {
 			// Get the advanced tooltips.
 			List<ITextComponent> advancedToolTips = new ArrayList<ITextComponent>();
 
-			// If the item is a staticpower item, capture the tooltips.
-			if (event.getItemStack().getItem() instanceof StaticPowerItem) {
-				StaticPowerItem spItem = (StaticPowerItem) event.getItemStack().getItem();
+			// If the item is an ITooltipProvider, capture the tooltips.
+			if (event.getItemStack().getItem() instanceof ITooltipProvider) {
+				ITooltipProvider spItem = (ITooltipProvider) event.getItemStack().getItem();
 				if (spItem != null && event.getPlayer() != null && event.getPlayer().getEntityWorld() != null) {
 					spItem.getTooltip(event.getItemStack(), event.getPlayer().getEntityWorld(), basicTooltips, Screen.hasControlDown());
 					spItem.getAdvancedTooltip(event.getItemStack(), event.getPlayer().world, advancedToolTips);

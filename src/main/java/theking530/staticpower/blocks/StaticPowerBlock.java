@@ -32,6 +32,7 @@ import net.minecraftforge.common.ToolType;
 import theking530.api.wrench.IWrenchable;
 import theking530.api.wrench.RegularWrenchMode;
 import theking530.api.wrench.SneakWrenchMode;
+import theking530.staticcore.utilities.ITooltipProvider;
 import theking530.staticpower.blocks.interfaces.IBlockRenderLayerProvider;
 import theking530.staticpower.blocks.interfaces.IItemBlockProvider;
 import theking530.staticpower.items.tools.StaticWrench;
@@ -43,7 +44,7 @@ import theking530.staticpower.tileentities.TileEntityBase;
  * @author Amine Sebastian
  *
  */
-public class StaticPowerBlock extends Block implements IItemBlockProvider, IBlockRenderLayerProvider, IWrenchable {
+public class StaticPowerBlock extends Block implements IItemBlockProvider, IBlockRenderLayerProvider, IWrenchable, ITooltipProvider {
 	/**
 	 * Facing property used by blocks that require keeping track of the direction
 	 * they face (does not have to be used).
@@ -199,27 +200,12 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IBloc
 		return RenderType.getSolid();
 	}
 
-	/**
-	 * Gets the basic tooltip that is displayed when hovered by the user.
-	 * 
-	 * @param stack   The item stack hovered by the user.
-	 * @param worldIn The world the player was in when hovering the item.
-	 * @param tooltip The list of {@link ITextComponent} to add to the tooltip.
-	 */
 	@OnlyIn(Dist.CLIENT)
-	protected void getBasicTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
 	}
 
-	/**
-	 * Gets the advanced tooltip that is displayed when hovered by the user and they
-	 * are holding shift.
-	 * 
-	 * @param stack   The item stack hovered by the user.
-	 * @param worldIn The world the player was in when hovering the item.
-	 * @param tooltip The list of {@link ITextComponent} to add to the tooltip.
-	 */
 	@OnlyIn(Dist.CLIENT)
-	protected void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+	public void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
 	}
 
 	/**

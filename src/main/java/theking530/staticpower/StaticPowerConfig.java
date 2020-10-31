@@ -1,19 +1,23 @@
 package theking530.staticpower;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
+import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.loading.FMLPaths;
 import theking530.staticpower.data.StaticPowerTier;
-import theking530.staticpower.data.StaticPowerTiers;
 
 @EventBusSubscriber(modid = StaticPower.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class StaticPowerConfig {
@@ -24,7 +28,7 @@ public class StaticPowerConfig {
 	public static final StaticPowerServerConfig SERVER;
 	public static final ForgeConfigSpec SERVER_SPEC;
 
-	public static final Map<ResourceLocation, ConfigPair> TIERS;
+	public static final Map<String, ConfigPair> TIERS;
 
 	public static int rubberWoodSpawnChance;
 	public static int minRubberWoodBarkPerStrip;
@@ -72,8 +76,7 @@ public class StaticPowerConfig {
 		COMMON = commonPair.getLeft();
 
 		TIERS = new HashMap<>();
-		final Pair<StaticPowerTier, ForgeConfigSpec> basicPair = new ForgeConfigSpec.Builder().configure(StaticPowerTier::new);
-		TIERS.put(StaticPowerTiers.BASIC, new ConfigPair(basicPair.getRight(), basicPair.getLeft()));
+
 	}
 
 	@SubscribeEvent
@@ -268,6 +271,42 @@ public class StaticPowerConfig {
 			acceleratorCardImprovment = builder.comment("Defines the effect a max sized stack of accelerator upgrades will have.")
 					.translation(StaticPower.MOD_ID + ".config." + "acceleratorCardImprovment").define("AcceleratorCardImprovment", 4.0);
 			builder.pop();
+		}
+	}
+
+	public static void registerTier(ResourceLocation tierId, Function<Builder, StaticPowerTier> tierConstructor) {
+		Pair<StaticPowerTier, ForgeConfigSpec> basicPair = new ForgeConfigSpec.Builder().configure(tierConstructor);
+		TIERS.put(tierId.toString(), new ConfigPair(basicPair.getRight(), basicPair.getLeft()));
+		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, StaticPowerConfig.TIERS.get(tierId.toString()).spec, StaticPower.MOD_ID + "\\tiers\\" + tierId.getPath() + ".toml");
+	}
+
+	public static StaticPowerTier getTier(ResourceLocation tierId) {
+		return TIERS.get(tierId.toString()).tier;
+	}
+
+	public static void preInitialize() {
+		// Verify the config sub-folder exists.
+		checkOrCreateFolder(StaticPower.MOD_ID);
+
+		// Verify the tiers folder exists.
+		checkOrCreateFolder(StaticPower.MOD_ID + "\\tiers");
+
+		// Add the server and common configs.
+		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, StaticPowerConfig.SERVER_SPEC);
+		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, StaticPowerConfig.COMMON_SPEC, StaticPower.MOD_ID + "\\" + StaticPower.MOD_ID + "-common.toml");
+	}
+
+	private static void checkOrCreateFolder(String path) {
+		// Verify or create the folder.
+		File subFolder = new File(FMLPaths.CONFIGDIR.get().toFile(), path);
+		if (!subFolder.exists()) {
+			try {
+				if (!subFolder.mkdir()) {
+					throw new RuntimeException("Could not create config directory " + subFolder);
+				}
+			} catch (SecurityException e) {
+				throw new RuntimeException("Could not create config directory " + subFolder, e);
+			}
 		}
 	}
 

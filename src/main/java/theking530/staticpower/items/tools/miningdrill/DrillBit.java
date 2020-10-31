@@ -23,8 +23,8 @@ import theking530.api.attributes.defenitions.SilkTouchAttributeDefenition;
 import theking530.api.attributes.defenitions.SmeltingAttributeDefenition;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticcore.utilities.ItemTierUtilities;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTiers;
-import theking530.staticpower.data.TierReloadListener;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.utilities.MetricConverter;
 
@@ -62,7 +62,7 @@ public class DrillBit extends StaticPowerItem {
 	@Override
 	public int getMaxDamage(ItemStack stack) {
 		// Extra step here to ensure the correct tier is used.
-		return TierReloadListener.getTier(((DrillBit) stack.getItem()).tier).getDrillBitUses();
+		return StaticPowerConfig.getTier(((DrillBit) stack.getItem()).tier).drillBitUses.get();
 	}
 
 	@Override

@@ -13,7 +13,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import theking530.staticpower.data.TierReloadListener;
+import theking530.staticpower.StaticPowerConfig;
 
 public class FluidCapsuleCapability implements IFluidHandlerItem, ICapabilityProvider {
 
@@ -60,8 +60,7 @@ public class FluidCapsuleCapability implements IFluidHandlerItem, ICapabilityPro
 
 	@Nonnull
 	public FluidStack getFluid() {
-		FluidStack output = FluidStack.loadFluidStackFromNBT(
-				container.getTag().getCompound(FLUID_STORAGE_NBT_KEY).getCompound(STORED_FLUID_NBT_KEY));
+		FluidStack output = FluidStack.loadFluidStackFromNBT(container.getTag().getCompound(FLUID_STORAGE_NBT_KEY).getCompound(STORED_FLUID_NBT_KEY));
 		if (isCreative) {
 			if (!output.isEmpty()) {
 				output.setAmount(Integer.MAX_VALUE);
@@ -83,9 +82,8 @@ public class FluidCapsuleCapability implements IFluidHandlerItem, ICapabilityPro
 
 	@Override
 	public int getTankCapacity(int tank) {
-		ResourceLocation tier = new ResourceLocation(
-				container.getTag().getCompound(FLUID_STORAGE_NBT_KEY).getString(TIER_NBT_KEY));
-		return TierReloadListener.getTier(tier).getCapsuleCapacity();
+		ResourceLocation tier = new ResourceLocation(container.getTag().getCompound(FLUID_STORAGE_NBT_KEY).getString(TIER_NBT_KEY));
+		return StaticPowerConfig.getTier(tier).capsuleCapacity.get();
 	}
 
 	@Override
@@ -97,8 +95,7 @@ public class FluidCapsuleCapability implements IFluidHandlerItem, ICapabilityPro
 	public int fill(FluidStack resource, FluidAction action) {
 		FluidStack containedFluid = getFluid();
 
-		if (resource == null || resource.isEmpty()
-				|| !containedFluid.isEmpty() && !resource.isFluidEqual(containedFluid)) {
+		if (resource == null || resource.isEmpty() || !containedFluid.isEmpty() && !resource.isFluidEqual(containedFluid)) {
 			return 0;
 		}
 

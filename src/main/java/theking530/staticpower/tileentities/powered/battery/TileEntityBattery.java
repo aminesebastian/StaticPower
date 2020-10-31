@@ -9,9 +9,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderBatteryBlock;
+import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
-import theking530.staticpower.data.TierReloadListener;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
@@ -21,8 +22,8 @@ import theking530.staticpower.tileentities.components.power.PowerDistributionCom
 
 public class TileEntityBattery extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityBattery> TYPE_BASIC = new TileEntityTypeAllocator<TileEntityBattery>((allocator) -> new TileEntityBattery(allocator, StaticPowerTiers.BASIC),
-			ModBlocks.BatteryBasic);
+	public static final TileEntityTypeAllocator<TileEntityBattery> TYPE_BASIC = new TileEntityTypeAllocator<TileEntityBattery>(
+			(allocator) -> new TileEntityBattery(allocator, StaticPowerTiers.BASIC), ModBlocks.BatteryBasic);
 
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityBattery> TYPE_ADVANCED = new TileEntityTypeAllocator<TileEntityBattery>(
@@ -37,8 +38,8 @@ public class TileEntityBattery extends TileEntityMachine {
 			(allocator) -> new TileEntityBattery(allocator, StaticPowerTiers.ENERGIZED), ModBlocks.BatteryEnergized);
 
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityBattery> TYPE_LUMUM = new TileEntityTypeAllocator<TileEntityBattery>((allocator) -> new TileEntityBattery(allocator, StaticPowerTiers.LUMUM),
-			ModBlocks.BatteryLumum);
+	public static final TileEntityTypeAllocator<TileEntityBattery> TYPE_LUMUM = new TileEntityTypeAllocator<TileEntityBattery>(
+			(allocator) -> new TileEntityBattery(allocator, StaticPowerTiers.LUMUM), ModBlocks.BatteryLumum);
 
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityBattery> TYPE_CREATIVE = new TileEntityTypeAllocator<TileEntityBattery>(
@@ -86,9 +87,10 @@ public class TileEntityBattery extends TileEntityMachine {
 			return true;
 		});
 
-		energyStorage.getStorage().setCapacity(TierReloadListener.getTier(tier).getBatteryCapacity());
-		inputRFTick = TierReloadListener.getTier(tier).getDefaultMachinePowerOutput() * 2;
-		outputRFTick = TierReloadListener.getTier(tier).getDefaultMachinePowerOutput() * 2;
+		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
+		energyStorage.getStorage().setCapacity(tierObject.batteryCapacity.get());
+		inputRFTick = tierObject.defaultMachinePowerInput.get() * 2;
+		outputRFTick = tierObject.defaultMachinePowerOutput.get() * 2;
 		maxPowerIO = inputRFTick * 2;
 
 		energyStorage.getStorage().setMaxReceive(inputRFTick);

@@ -16,10 +16,10 @@ import net.minecraft.util.math.AxisAlignedBB;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.heat.HeatCableComponent;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
-import theking530.staticpower.data.TierReloadListener;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
 
@@ -31,24 +31,24 @@ public class TileEntityHeatSink extends TileEntityMachine implements INamedConta
 	public static final TileEntityTypeAllocator<TileEntityHeatSink> TYPE_COPPER = new TileEntityTypeAllocator<TileEntityHeatSink>(
 			(allocator) -> new TileEntityHeatSink(allocator, StaticPowerTiers.COPPER), ModBlocks.CopperHeatSink);
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityHeatSink> TYPE_TIN = new TileEntityTypeAllocator<TileEntityHeatSink>((allocator) -> new TileEntityHeatSink(allocator, StaticPowerTiers.TIN),
-			ModBlocks.TinHeatSink);
+	public static final TileEntityTypeAllocator<TileEntityHeatSink> TYPE_TIN = new TileEntityTypeAllocator<TileEntityHeatSink>(
+			(allocator) -> new TileEntityHeatSink(allocator, StaticPowerTiers.TIN), ModBlocks.TinHeatSink);
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityHeatSink> TYPE_SILVER = new TileEntityTypeAllocator<TileEntityHeatSink>(
 			(allocator) -> new TileEntityHeatSink(allocator, StaticPowerTiers.SILVER), ModBlocks.SilverHeatSink);
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityHeatSink> TYPE_GOLD = new TileEntityTypeAllocator<TileEntityHeatSink>((allocator) -> new TileEntityHeatSink(allocator, StaticPowerTiers.GOLD),
-			ModBlocks.GoldHeatSink);
+	public static final TileEntityTypeAllocator<TileEntityHeatSink> TYPE_GOLD = new TileEntityTypeAllocator<TileEntityHeatSink>(
+			(allocator) -> new TileEntityHeatSink(allocator, StaticPowerTiers.GOLD), ModBlocks.GoldHeatSink);
 
 	public static final float HEAT_DAMAGE_THRESHOLD = 100.0f;
 	public final HeatCableComponent cableComponent;
 
 	public TileEntityHeatSink(TileEntityTypeAllocator<TileEntityHeatSink> allocator, ResourceLocation tierName) {
 		super(allocator);
-		StaticPowerTier tier = TierReloadListener.getTier(tierName);
-		registerComponent(cableComponent = new HeatCableComponent("HeatCableComponent", tier.getHeatSinkCapacity(), tier.getHeatSinkConductivity(), tier.getHeatSinkElectricHeatGeneration(),
-				tier.getHeatSinkElectricHeatPowerUsage()).setEnergyStorageComponent(energyStorage));
-		energyStorage.setMaxInput(tier.getHeatSinkElectricHeatPowerUsage() * 2);
+		StaticPowerTier tier = StaticPowerConfig.getTier(tierName);
+		registerComponent(cableComponent = new HeatCableComponent("HeatCableComponent", tier.heatSinkCapacity.get(), tier.heatSinkConductivity.get(),
+				tier.heatSinkElectricHeatGeneration.get(), tier.heatSinkElectricHeatPowerUsage.get()).setEnergyStorageComponent(energyStorage));
+		energyStorage.setMaxInput(tier.heatSinkElectricHeatPowerUsage.get() * 2);
 	}
 
 	@Override

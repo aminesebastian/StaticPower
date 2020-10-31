@@ -50,7 +50,7 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 	public void getReaderOutput(List<ITextComponent> components) {
 		float averageThermalConductivity = 0.0f;
 		for (ServerCable cable : Network.getGraph().getCables().values()) {
-			averageThermalConductivity += cable.getFloatProperty(HeatCableComponent.HEAT_RATE_DATA_TAG_KEY);
+			averageThermalConductivity += cable.getDoubleProperty(HeatCableComponent.HEAT_RATE_DATA_TAG_KEY);
 		}
 		;
 		averageThermalConductivity /= Network.getGraph().getCables().size();
@@ -85,9 +85,9 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 						.getRecipe(ThermalConductivityRecipe.RECIPE_TYPE, new RecipeMatchParameters(new ItemStack(blockstate.getBlock())).setFluids(new FluidStack(fluidState.getFluid(), 1)))
 						.ifPresent((recipe) -> {
 							if (recipe.getThermalConductivity() < 0) {
-								heatStorage.heat(recipe.getThermalConductivity() * cable.getFloatProperty(HeatCableComponent.HEAT_RATE_DATA_TAG_KEY), false);
+								heatStorage.heat(recipe.getThermalConductivity() * cable.getDoubleProperty(HeatCableComponent.HEAT_RATE_DATA_TAG_KEY), false);
 							} else {
-								heatStorage.cool(recipe.getThermalConductivity() * cable.getFloatProperty(HeatCableComponent.HEAT_RATE_DATA_TAG_KEY), false);
+								heatStorage.cool(recipe.getThermalConductivity() * cable.getDoubleProperty(HeatCableComponent.HEAT_RATE_DATA_TAG_KEY), false);
 							}
 						});
 			}
@@ -103,15 +103,15 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 				// Continue if we found some valid destinations.
 				if (destinations.size() > 0) {
 					// Calculate how we should split the output amount.
-					float outputPerDestination = Math.max(1, heatStorage.getCurrentHeat() / destinations.size());
+					double outputPerDestination = Math.max(1, heatStorage.getCurrentHeat() / destinations.size());
 
 					// Distribute the heat to the destinations.
 					for (IHeatStorage wrapper : destinations.keySet()) {
 						// Get the thermal conductivity of the attached cable.
-						float toSupply = Math.min(CableNetworkManager.get(world).getCable(destinations.get(wrapper).getConnectedCable()).getFloatProperty(HeatCableComponent.HEAT_RATE_DATA_TAG_KEY),
+						double toSupply = Math.min(CableNetworkManager.get(world).getCable(destinations.get(wrapper).getConnectedCable()).getDoubleProperty(HeatCableComponent.HEAT_RATE_DATA_TAG_KEY),
 								outputPerDestination);
 						// Limit that to the max amount we currently have.
-						float supplied = wrapper.heat(Math.min(toSupply, heatStorage.getCurrentHeat()), false);
+						double supplied = wrapper.heat(Math.min(toSupply, heatStorage.getCurrentHeat()), false);
 
 						// If the supplied amount is > 0, supply it.
 						if (supplied > 0) {
@@ -141,7 +141,7 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 		for (ServerCable cable : mapper.getDiscoveredCables()) {
 			// If they have a heat cable component, get the capacity.
 			if (cable.containsProperty(HeatCableComponent.HEAT_CAPACITY_DATA_TAG_KEY)) {
-				total += cable.getFloatProperty(HeatCableComponent.HEAT_CAPACITY_DATA_TAG_KEY);
+				total += cable.getDoubleProperty(HeatCableComponent.HEAT_CAPACITY_DATA_TAG_KEY);
 			}
 		}
 
@@ -158,7 +158,7 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 		}
 	}
 
-	public float getHeatPerCable() {
+	public double getHeatPerCable() {
 		return heatStorage.getCurrentHeat() / Network.getGraph().getCables().size();
 	}
 

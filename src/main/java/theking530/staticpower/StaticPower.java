@@ -1,18 +1,30 @@
 package theking530.staticpower;
 
-import java.io.File;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.item.ItemGroup;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.loading.FMLPaths;
 import theking530.staticcore.initialization.StaticCoreRegistry;
+import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.data.tiers.StaticPowerTierAdvanced;
+import theking530.staticpower.data.tiers.StaticPowerTierAluminium;
+import theking530.staticpower.data.tiers.StaticPowerTierBasic;
+import theking530.staticpower.data.tiers.StaticPowerTierBronze;
+import theking530.staticpower.data.tiers.StaticPowerTierCopper;
+import theking530.staticpower.data.tiers.StaticPowerTierCreative;
+import theking530.staticpower.data.tiers.StaticPowerTierDiamond;
+import theking530.staticpower.data.tiers.StaticPowerTierEnergized;
+import theking530.staticpower.data.tiers.StaticPowerTierGold;
+import theking530.staticpower.data.tiers.StaticPowerTierIron;
+import theking530.staticpower.data.tiers.StaticPowerTierLumum;
+import theking530.staticpower.data.tiers.StaticPowerTierRuby;
+import theking530.staticpower.data.tiers.StaticPowerTierSapphire;
+import theking530.staticpower.data.tiers.StaticPowerTierSilver;
+import theking530.staticpower.data.tiers.StaticPowerTierStatic;
+import theking530.staticpower.data.tiers.StaticPowerTierTin;
+import theking530.staticpower.data.tiers.StaticPowerTierTungsten;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.init.ModItems;
@@ -29,25 +41,28 @@ public class StaticPower {
 	public static final ItemGroup CREATIVE_TAB = new StaticPowerItemGroup();
 
 	public StaticPower() {
-		File configSubFolder = new File(FMLPaths.CONFIGDIR.get().toFile(), StaticPower.MOD_ID);
-		if (!configSubFolder.exists()) {
-			try {
-				if (!configSubFolder.mkdir()) {
-					throw new RuntimeException("Could not create config directory " + configSubFolder);
-				}
-			} catch (SecurityException e) {
-				throw new RuntimeException("Could not create config directory " + configSubFolder, e);
-			}
-		}
+		StaticPowerConfig.preInitialize();
+
+		StaticPowerConfig.registerTier(StaticPowerTiers.BASIC, StaticPowerTierBasic::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.ADVANCED, StaticPowerTierAdvanced::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.STATIC, StaticPowerTierStatic::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.ENERGIZED, StaticPowerTierEnergized::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.LUMUM, StaticPowerTierLumum::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.CREATIVE, StaticPowerTierCreative::new);
+
+		StaticPowerConfig.registerTier(StaticPowerTiers.ALUMINIUM, StaticPowerTierAluminium::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.BRONZE, StaticPowerTierBronze::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.COPPER, StaticPowerTierCopper::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.DIAMOND, StaticPowerTierDiamond::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.GOLD, StaticPowerTierGold::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.IRON, StaticPowerTierIron::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.RUBY, StaticPowerTierRuby::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.SAPPHIRE, StaticPowerTierSapphire::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.SILVER, StaticPowerTierSilver::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.TIN, StaticPowerTierTin::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.TUNGSTEN, StaticPowerTierTungsten::new);
 
 		StaticCoreRegistry.preInitialize();
-		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, StaticPowerConfig.SERVER_SPEC);
-		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, StaticPowerConfig.COMMON_SPEC, StaticPower.MOD_ID + "\\" + StaticPower.MOD_ID + "-common.toml");
-
-		for (ResourceLocation tier : StaticPowerConfig.TIERS.keySet()) {
-			ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, StaticPowerConfig.TIERS.get(tier).spec, StaticPower.MOD_ID + "\\" + tier.getPath() + ".toml");
-		}
-
 		ModRecipeSerializers.init();
 		ModBlocks.init();
 		ModItems.init();

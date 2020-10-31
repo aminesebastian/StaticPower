@@ -27,7 +27,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticcore.network.NetworkGUI;
-import theking530.staticpower.data.TierReloadListener;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.utilities.ItemUtilities;
 
@@ -67,7 +67,7 @@ public class ItemFilter extends StaticPowerItem {
 
 		// Add the inventory.
 		return new ItemStackMultiCapabilityProvider(stack, nbt)
-				.addCapability(new ItemStackCapabilityInventory("default", stack, TierReloadListener.getTier(filterTier).getItemFilterSlots()));
+				.addCapability(new ItemStackCapabilityInventory("default", stack, StaticPowerConfig.getTier(filterTier).itemFilterSlots.get()));
 	}
 
 	/**

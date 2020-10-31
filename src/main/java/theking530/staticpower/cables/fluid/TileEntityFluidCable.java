@@ -5,9 +5,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderFluidCable;
 import theking530.staticpower.data.StaticPowerTiers;
-import theking530.staticpower.data.TierReloadListener;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityBase;
 
@@ -74,7 +74,7 @@ public class TileEntityFluidCable extends TileEntityBase {
 	public TileEntityFluidCable(TileEntityTypeAllocator<TileEntityFluidCable> allocator, float radius, boolean isIndustrial, ResourceLocation tier) {
 		super(allocator);
 		registerComponent(fluidCableComponent = new FluidCableComponent("FluidCableComponent", isIndustrial,
-				isIndustrial ? TierReloadListener.getTier(tier).getCableIndustrialFluidCapacity() : TierReloadListener.getTier(tier).getCableFluidCapacity()));
+				isIndustrial ? StaticPowerConfig.getTier(tier).cableIndustrialFluidCapacity.get() : StaticPowerConfig.getTier(tier).cableFluidCapacity.get()));
 		fluidRenderRadius = radius;
 	}
 }

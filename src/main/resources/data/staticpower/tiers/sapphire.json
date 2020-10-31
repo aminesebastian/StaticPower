@@ -1,8 +1,0 @@
-{
-	"tierId": {
-		"namespace": "staticpower",
-		"path": "tier_sapphire"
-	},
-	"unlocalizedTierName": "tier.staticpower.sapphire",
-	"drillBitUses": 4000
-}
