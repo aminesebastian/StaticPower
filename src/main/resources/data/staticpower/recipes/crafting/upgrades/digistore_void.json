@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ggg",
+		"ggg",
+		"gpg"
+	],
+	"key": {
+		"g": {
+			"tag": "forge:obsidian"
+		},
+		"p": {
+			"item": "staticpower:upgrade_plate_basic"
+		}
+	},
+	"result": {
+		"item": "staticpower:upgrade_digistore_void"
+	}
+}

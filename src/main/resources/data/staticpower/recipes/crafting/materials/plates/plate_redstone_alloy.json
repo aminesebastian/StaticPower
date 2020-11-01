@@ -5,7 +5,7 @@
 			"item": "staticpower:ingot_redstone_alloy"
 		},
 		{
-			"item": "staticpower:metal_hammer"
+			"tag": "staticpower:metal_hammer"
 		}
 	],
 	"result": {

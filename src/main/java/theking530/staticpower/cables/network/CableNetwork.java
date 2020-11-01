@@ -51,13 +51,25 @@ public class CableNetwork {
 			updateGraph(World, Origin);
 		}
 
-		// Tick all the attachments.
+		// Tick all the modules.
+
 		for (AbstractCableNetworkModule module : Modules.values()) {
-			module.tick(World);
+			try {
+				module.tick(World);
+			} catch (Exception e) {
+				throw new RuntimeException(String.format("An error occured when attempting to tick a graph module of type: %1$s.", module.getType().toString()), e);
+			}
 		}
 
+		// Tick all the cables.
 		if (Graph.getCables().size() > 0) {
-			Graph.getCables().values().forEach(cable -> cable.tick());
+			for (ServerCable cable : Graph.getCables().values()) {
+				try {
+					cable.tick();
+				} catch (Exception e) {
+					throw new RuntimeException(String.format("An error occured when attempting to tick a cable with data tag: %1$s.", cable.getCompleteDataTag().toString()), e);
+				}
+			}
 		}
 	}
 
@@ -94,7 +106,11 @@ public class CableNetwork {
 
 		// Let all the modules know the graph was updated.
 		for (AbstractCableNetworkModule module : Modules.values()) {
-			module.onNetworkGraphUpdated(output);
+			try {
+				module.onNetworkGraphUpdated(output);
+			} catch (Exception e) {
+				throw new RuntimeException(String.format("An error occured when attempting to update a network module of type: %1$s with a new graph.", module.getType().toString()), e);
+			}
 		}
 
 		// Return the mapping result.

@@ -89,7 +89,7 @@ public class BlockItemCable extends AbstractCableBlock {
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
 		double blocksPerTick = StaticPowerConfig.getTier(tier).itemCableMaxSpeed.get();
 		tooltip.add(new TranslationTextComponent("gui.staticpower.max_transfer_rate"));
-		tooltip.add(new StringTextComponent("- ").append(new TranslationTextComponent("gui.staticpower.cable_transfer_rate",
+		tooltip.add(new StringTextComponent("• ").append(new TranslationTextComponent("gui.staticpower.cable_transfer_rate",
 				TextFormatting.GREEN + GuiTextUtilities.formatUnitRateToString(blocksPerTick).getString(), new TranslationTextComponent("gui.staticpower.blocks").getString())));
 	}
 

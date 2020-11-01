@@ -5,7 +5,7 @@
 			"tag": "forge:plates/silver"
 		},
 		{
-			"item": "staticpower:wire_cutters"
+			"tag": "staticpower:wire_cutters"
 		}
 	],
 	"result": {

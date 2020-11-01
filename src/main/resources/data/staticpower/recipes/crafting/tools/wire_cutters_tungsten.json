@@ -7,13 +7,13 @@
 	],
 	"key": {
 		"i": {
-			"tag": "forge:ingots/iron"
+			"tag": "forge:ingots/tungsten"
 		},
 		"l": {
 			"tag": "forge:gems/lapis"
 		}
 	},
 	"result": {
-		"item": "staticpower:wire_cutters"
+		"item": "staticpower:wire_cutters_tungsten"
 	}
 }

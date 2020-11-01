@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		" i ",
+		"iri",
+		"ddd"
+	],
+	"key": {
+		"i": {
+			"tag": "forge:ingots/tin"
+		},
+		"d": {
+			"item": "staticpower:drill_bit_iron"
+		},
+		"r": {
+			"tag": "forge:dusts/redstone"
+		}
+	},
+	"result": {
+		"item": "staticpower:grinder_component"
+	}
+}

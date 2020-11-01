@@ -5,7 +5,7 @@
 			"tag": "forge:ingots/aluminium"
 		},
 		{
-			"item": "staticpower:metal_hammer"
+			"tag": "staticpower:metal_hammer"
 		}
 	],
 	"result": {

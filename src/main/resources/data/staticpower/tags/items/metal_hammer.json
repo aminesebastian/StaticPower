@@ -1,0 +1,10 @@
+{
+	"replace": false,
+	"values": [
+		"staticpower:metal_hammer_iron",
+		"staticpower:metal_hammer_zinc",
+		"staticpower:metal_hammer_bronze",
+		"staticpower:metal_hammer_tungsten",
+		"staticpower:metal_hammer_creative"
+	]
+}

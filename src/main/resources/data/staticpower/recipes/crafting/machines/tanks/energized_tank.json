@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"pgp",
+		"gug",
+		"pgp"
+	],
+	"key": {
+		"g": {
+			"tag": "forge:glass"
+		},
+		"p": {
+			"item": "staticpower:plate_energized"
+		},
+		"u": {
+			"item": "staticpower:fluid_capsule_energized"
+		}
+	},
+	"result": {
+		"item": "staticpower:tank_energized"
+	}
+}

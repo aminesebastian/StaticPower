@@ -105,6 +105,10 @@ public class ServerCable {
 		dataTag.putDouble(key, value);
 	}
 
+	public CompoundNBT getCompleteDataTag() {
+		return dataTag;
+	}
+
 	public BlockPos getPos() {
 		return Position;
 	}

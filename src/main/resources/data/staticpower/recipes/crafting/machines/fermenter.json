@@ -16,13 +16,13 @@
 			"item": "minecraft:bucket"
 		},
 		"g": {
-			"tag": "forge:gears/brass"
+			"tag": "forge:gears/bronze"
 		},
 		"l": {
 			"item": "staticpower:plug"
 		},
 		"r": {
-			"tag": "forge:storage_blocks/brass"
+			"tag": "forge:storage_blocks/bronze"
 		}
 	},
 	"result": {

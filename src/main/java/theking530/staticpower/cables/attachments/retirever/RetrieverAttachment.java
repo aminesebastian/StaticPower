@@ -72,13 +72,16 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 		}
 
 		// Get the tile entity on the inserting side, return if it is null.
-		TileEntity targetInventory = cable.getWorld().getTileEntity(cable.getPos().offset(side));
-		if (targetInventory == null || targetInventory.isRemoved()) {
+		TileEntity adjacentEntity = cable.getWorld().getTileEntity(cable.getPos().offset(side));
+		if (adjacentEntity == null || adjacentEntity.isRemoved()) {
 			return;
 		}
 
-		// If the filter inventory is false, do nothing.
+		// Get the filter inventory.
 		IItemHandler filterInventory = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+
+		// Get the filter inventory.
+		IItemHandler targetInventory = adjacentEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).orElse(null);
 
 		// Attempt to retrieve the item.
 		cable.<ItemNetworkModule>getNetworkModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE).ifPresent(network -> {
@@ -88,8 +91,13 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 					continue;
 				}
 
+				// Check to make sure the destination can accept the item.
+				if (!InventoryUtilities.canPartiallyInsertItemIntoInventory(targetInventory, filterItem)) {
+					continue;
+				}
+
 				// If we're able to retrieve an item, break.
-				if (network.retrieveItemStack(filterItem, StaticPowerConfig.getTier(tierType).cableRetrievalStackSize.get(), cable.getPos().offset(side),
+				if (network.retrieveItemStack(filterItem, StaticPowerConfig.getTier(tierType).cableRetrievalStackSize.get(), cable.getPos().offset(side), side,
 						StaticPowerConfig.getTier(tierType).cableRetrievedItemInitialSpeed.get())) {
 					break;
 				}
@@ -149,11 +157,11 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 	public void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
 		tooltip.add(new StringTextComponent(""));
 		tooltip.add(new TranslationTextComponent("gui.staticpower.retriever_rate_format", TextFormatting.AQUA.toString() + StaticPowerConfig.getTier(tierType).cableRetrievalRate.get()));
-		tooltip.add(new StringTextComponent("- ").append(
+		tooltip.add(new StringTextComponent("• ").append(
 				new TranslationTextComponent("gui.staticpower.retriever_stack_size", TextFormatting.GOLD.toString() + StaticPowerConfig.getTier(tierType).cableRetrievalStackSize.get())));
 
 		double blocksPerTick = StaticPowerConfig.getTier(tierType).cableRetrievedItemInitialSpeed.get();
-		tooltip.add(new StringTextComponent("- ").append(new TranslationTextComponent("gui.staticpower.cable_transfer_rate",
+		tooltip.add(new StringTextComponent("• ").append(new TranslationTextComponent("gui.staticpower.cable_transfer_rate",
 				TextFormatting.GREEN + GuiTextUtilities.formatUnitRateToString(blocksPerTick).getString(), new TranslationTextComponent("gui.staticpower.blocks").getString())));
 	}
 

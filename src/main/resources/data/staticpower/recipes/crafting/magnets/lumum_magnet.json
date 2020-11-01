@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"mmm",
+		"m m",
+		"b b"
+	],
+	"key": {
+		"m": {
+			"item": "staticpower:ingot_lumum"
+		},
+		"b": {
+			"item": "staticpower:portable_battery_lumum"
+		}
+	},
+	"result": {
+		"item": "staticpower:magnet_lumum"
+	}
+}

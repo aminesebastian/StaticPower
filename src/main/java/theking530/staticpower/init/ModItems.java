@@ -263,8 +263,18 @@ public class ModItems {
 	public static StaticPlantCrop LumumCrop;
 	public static DepletedCrop DepletedCrop;
 
-	public static MetalHammer MetalHammer;
-	public static WireCutters WireCutters;
+	public static MetalHammer IronMetalHammer;
+	public static MetalHammer ZincMetalHammer;
+	public static MetalHammer BronzeMetalHammer;
+	public static MetalHammer TungstenMetalHammer;
+	public static MetalHammer CreativeMetalHammer;
+
+	public static WireCutters IronWireCutters;
+	public static WireCutters ZincWireCutters;
+	public static WireCutters BronzeWireCutters;
+	public static WireCutters TungstenWireCutters;
+	public static WireCutters CreativeWireCutters;
+
 	public static SolderingIron SolderingIron;
 	public static MiningDrill BasicMiningDrill;
 	public static MiningDrill AdvancedMiningDrill;
@@ -412,8 +422,18 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(CreativeBatteryPack = new BatteryPack("battery_pack_creative", StaticPowerTiers.CREATIVE));
 
 		// Tools
-		StaticPowerRegistry.preRegisterItem(MetalHammer = new MetalHammer("metal_hammer", 100));
-		StaticPowerRegistry.preRegisterItem(WireCutters = new WireCutters("wire_cutters", 100));
+		StaticPowerRegistry.preRegisterItem(IronMetalHammer = new MetalHammer("metal_hammer_iron", 100));
+		StaticPowerRegistry.preRegisterItem(ZincMetalHammer = new MetalHammer("metal_hammer_zinc", 500));
+		StaticPowerRegistry.preRegisterItem(BronzeMetalHammer = new MetalHammer("metal_hammer_bronze", 1000));
+		StaticPowerRegistry.preRegisterItem(TungstenMetalHammer = new MetalHammer("metal_hammer_tungsten", 5000));
+		StaticPowerRegistry.preRegisterItem(CreativeMetalHammer = new MetalHammer("metal_hammer_creative", Integer.MAX_VALUE));
+
+		StaticPowerRegistry.preRegisterItem(IronWireCutters = new WireCutters("wire_cutters_iron", 100));
+		StaticPowerRegistry.preRegisterItem(ZincWireCutters = new WireCutters("wire_cutters_zinc", 500));
+		StaticPowerRegistry.preRegisterItem(BronzeWireCutters = new WireCutters("wire_cutters_bronze", 1000));
+		StaticPowerRegistry.preRegisterItem(TungstenWireCutters = new WireCutters("wire_cutters_tungsten", 5000));
+		StaticPowerRegistry.preRegisterItem(CreativeWireCutters = new WireCutters("wire_cutters_creative", Integer.MAX_VALUE));
+
 		StaticPowerRegistry.preRegisterItem(BasicMiningDrill = new MiningDrill("mining_drill_basic", 5.0f, 5.0f, StaticPowerTiers.BASIC));
 		StaticPowerRegistry.preRegisterItem(AdvancedMiningDrill = new MiningDrill("mining_drill_advanced", 5.0f, 5.0f, StaticPowerTiers.ADVANCED));
 		StaticPowerRegistry.preRegisterItem(StaticMiningDrill = new MiningDrill("mining_drill_static", 5.0f, 5.0f, StaticPowerTiers.STATIC));

@@ -5,7 +5,7 @@
 			"tag": "forge:plates/tin"
 		},
 		{
-			"item": "staticpower:wire_cutters"
+			"tag": "staticpower:wire_cutters"
 		}
 	],
 	"result": {

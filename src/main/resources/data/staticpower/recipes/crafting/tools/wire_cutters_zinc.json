@@ -1,19 +1,19 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
-		"iii",
-		"isi",
-		" s "
+		"i i",
+		" l ",
+		"l l"
 	],
 	"key": {
 		"i": {
 			"tag": "forge:ingots/zinc"
 		},
-		"s": {
-			"tag": "forge:rods/wooden"
+		"l": {
+			"tag": "forge:gems/lapis"
 		}
 	},
 	"result": {
-		"item": "staticpower:metal_hammer"
+		"item": "staticpower:wire_cutters_zinc"
 	}
 }

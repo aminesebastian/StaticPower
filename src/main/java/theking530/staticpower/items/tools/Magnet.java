@@ -17,6 +17,8 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -65,7 +67,8 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 		}
 
 		// Create the AABB to search within.
-		AxisAlignedBB aabb = new AxisAlignedBB(player.getPosX() - radius, player.getPosY() - radius, player.getPosZ() - radius, player.getPosX() + radius, player.getPosY() + radius, player.getPosZ() + radius);
+		AxisAlignedBB aabb = new AxisAlignedBB(player.getPosX() - radius, player.getPosY() - radius, player.getPosZ() - radius, player.getPosX() + radius, player.getPosY() + radius,
+				player.getPosZ() + radius);
 
 		// Search for all the item entities.
 		List<ItemEntity> droppedItems = world.getEntitiesWithinAABB(ItemEntity.class, aabb, (ItemEntity item) -> true);
@@ -110,8 +113,13 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
-		tooltip.add(new TranslationTextComponent(isActivated(stack) ? "gui.staticpower.active" : "gui.staticpower.inactive"));
-		tooltip.add(new TranslationTextComponent("gui.staticpower.radius").appendString(": ").appendString(String.valueOf(radius)));
+		tooltip.add(new TranslationTextComponent(isActivated(stack) ? "gui.staticpower.active" : "gui.staticpower.inactive")
+				.mergeStyle(isActivated(stack) ? TextFormatting.GREEN : TextFormatting.RED));
+		tooltip.add(
+				new StringTextComponent("• ").append(new TranslationTextComponent("gui.staticpower.radius")).appendString(" " + TextFormatting.GREEN.toString() + String.valueOf(radius)));
+
+		tooltip.add(new StringTextComponent(""));
+
 		super.getTooltip(stack, worldIn, tooltip, showAdvanced);
 	}
 

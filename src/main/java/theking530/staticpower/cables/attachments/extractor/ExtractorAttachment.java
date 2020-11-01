@@ -275,13 +275,13 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 	public void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
 		tooltip.add(new StringTextComponent(""));
 		tooltip.add(new TranslationTextComponent("gui.staticpower.extractor_rate_format", TextFormatting.AQUA.toString() + StaticPowerConfig.getTier(tierType).cableExtractorRate.get()));
-		tooltip.add(new StringTextComponent("- ").append(
+		tooltip.add(new StringTextComponent("• ").append(
 				new TranslationTextComponent("gui.staticpower.extractor_stack_size", TextFormatting.GOLD.toString() + StaticPowerConfig.getTier(tierType).cableExtractionStackSize.get())));
-		tooltip.add(new StringTextComponent("- ").append(new TranslationTextComponent("gui.staticpower.extractor_fluid_rate",
+		tooltip.add(new StringTextComponent("• ").append(new TranslationTextComponent("gui.staticpower.extractor_fluid_rate",
 				TextFormatting.BLUE + GuiTextUtilities.formatFluidToString(StaticPowerConfig.getTier(tierType).cableExtractionFluidRate.get()).getString())));
 
 		double blocksPerTick = StaticPowerConfig.getTier(tierType).cableExtractedItemInitialSpeed.get();
-		tooltip.add(new StringTextComponent("- ").append(new TranslationTextComponent("gui.staticpower.cable_transfer_rate",
+		tooltip.add(new StringTextComponent("• ").append(new TranslationTextComponent("gui.staticpower.cable_transfer_rate",
 				TextFormatting.GREEN + GuiTextUtilities.formatUnitRateToString(blocksPerTick).getString(), new TranslationTextComponent("gui.staticpower.blocks").getString())));
 	}
 

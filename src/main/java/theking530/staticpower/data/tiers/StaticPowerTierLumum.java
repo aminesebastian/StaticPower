@@ -88,7 +88,7 @@ public class StaticPowerTierLumum extends StaticPowerTier {
 
 	@Override
 	protected double getRetrievedItemInitialSpeed() {
-		return 4;
+		return 2;
 	}
 
 	@Override

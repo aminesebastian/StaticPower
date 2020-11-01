@@ -1,0 +1,28 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"h h",
+		"aba",
+		"ili"
+	],
+	"key": {
+		"b": {
+			"item": "staticpower:machine_block_basic"
+		},
+		"a": {
+			"item": "minecraft:anvil"
+		},
+		"i": {
+			"item": "minecraft:iron_block"
+		},
+		"h": {
+			"tag": "staticpower:metal_hammer"
+		},
+		"l": {
+			"item": "staticpower:plug"
+		}
+	},
+	"result": {
+		"item": "staticpower:machine_auto_smith"
+	}
+}

@@ -68,7 +68,7 @@ public class StaticPowerTierStatic extends StaticPowerTier {
 
 	@Override
 	protected double getExtractedItemInitialSpeed() {
-		return 0.5;
+		return 1.0;
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class StaticPowerTierStatic extends StaticPowerTier {
 
 	@Override
 	protected double getRetrievedItemInitialSpeed() {
-		return 0.5;
+		return 1.0;
 	}
 
 	@Override

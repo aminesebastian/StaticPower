@@ -88,7 +88,7 @@ public class StaticPowerTierAdvanced extends StaticPowerTier {
 
 	@Override
 	protected double getRetrievedItemInitialSpeed() {
-		return .5;
+		return 0.5;
 	}
 
 	@Override

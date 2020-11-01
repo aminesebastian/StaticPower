@@ -7,13 +7,13 @@
 	],
 	"key": {
 		"i": {
-			"tag": "forge:ingots/bronze"
+			"tag": "forge:ingots/tungsten"
 		},
 		"s": {
 			"tag": "forge:rods/wooden"
 		}
 	},
 	"result": {
-		"item": "staticpower:metal_hammer"
+		"item": "staticpower:metal_hammer_tungsten"
 	}
 }

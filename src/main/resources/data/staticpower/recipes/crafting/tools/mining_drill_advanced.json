@@ -1,0 +1,31 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"tlt",
+		"bmg",
+		"trt"
+	],
+	"key": {
+		"t": {
+			"tag": "forge:ingots/brass"
+		},
+		"b": {
+			"item": "staticpower:portable_battery_advanced"
+		},
+		"g": {
+			"tag": "forge:gears/brass"
+		},
+		"m": {
+			"item": "staticpower:motor"
+		},
+		"r": {
+			"tag": "forge:dusts/redstone"
+		},
+		"l": {
+			"item": "minecraft:lever"
+		}
+	},
+	"result": {
+		"item": "staticpower:mining_drill_advanced"
+	}
+}

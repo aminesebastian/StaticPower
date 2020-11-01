@@ -195,17 +195,18 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 	 * @param destinationPosition The destination to insert into.
 	 * @return True if we were able to retrieve, false otherwise.
 	 */
-	public boolean retrieveItemStack(ItemStack stack, int maxExtract, BlockPos destinationPosition, double blocksPerSecond) {
+	public boolean retrieveItemStack(ItemStack stack, int maxExtract, BlockPos destinationPosition, Direction requestingSide, double blocksPerSecond) {
 		// Get all the destination wrappers that contain this item.
 		List<RetrivalSourceWrapper> sources = getSourcesForItemRetrieval(stack, destinationPosition);
 		if (sources.size() == 0) {
 			return false;
 		}
 
-		// Preallocate the shortest values.
+		// Preallocate the shortest values trackers.
 		Path shortestPath = null;
 		int shortestPathLength = Integer.MAX_VALUE;
 		RetrivalSourceWrapper targetSource = null;
+
 		// Calculate the shortest path.
 		for (RetrivalSourceWrapper source : sources) {
 			// Get all the potential paths.
@@ -213,6 +214,12 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 
 			// Iterate through all the paths to the proposed tile entity.
 			for (Path path : paths) {
+				// Make sure the path goes to the same side.
+				if (path.getDestinationDirection() != requestingSide) {
+					continue;
+				}
+
+				// Check for the shortest path.
 				if (path.getLength() < shortestPathLength) {
 					shortestPath = path;
 					shortestPathLength = path.getLength();
