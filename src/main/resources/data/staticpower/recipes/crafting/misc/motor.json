@@ -1,9 +1,9 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
-		" ii",
-		"icr",
-		" ii"
+		"tt ",
+		"mci",
+		"ii "
 	],
 	"key": {
 		"c": {
@@ -12,8 +12,11 @@
 		"i": {
 			"tag": "forge:ingots/iron"
 		},
-		"r": {
-			"tag": "forge:dusts/redstone"
+		"t": {
+			"tag": "forge:ingots/tin"
+		},
+		"m": {
+			"item": "staticpower:magnet_basic"
 		}
 	},
 	"result": {

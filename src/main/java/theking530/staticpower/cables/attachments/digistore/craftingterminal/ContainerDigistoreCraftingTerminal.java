@@ -25,6 +25,7 @@ import theking530.staticpower.cables.attachments.digistore.terminalbase.Abstract
 import theking530.staticpower.container.slots.CraftingRecipeInputSlot;
 import theking530.staticpower.container.slots.DigistoreCraftingOutputSlot;
 import theking530.staticpower.integration.JEI.IJEIReipceTransferHandler;
+import theking530.staticpower.utilities.PlayerUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigistoreTerminal<DigistoreCraftingTerminal> implements IJEIReipceTransferHandler {
@@ -147,7 +148,7 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 					for (ItemStack item : options) {
 
 						// First see if the item exists in the player's inventory. If it does, use that.
-						int playerItemSlot = getPlayerInventory().getSlotFor(item);
+						int playerItemSlot = PlayerUtilities.getSlotForStackInPlayerInventory(getPlayerInventory().player, item);
 						if (playerItemSlot != -1) {
 							ItemStack playerExtracted = getPlayerInventory().decrStackSize(playerItemSlot, 1);
 							craftMatrix.setInventorySlotContents(i, playerExtracted);

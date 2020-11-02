@@ -3,7 +3,7 @@
 	"pattern": [
 		"tlt",
 		"bmg",
-		"trt"
+		"brt"
 	],
 	"key": {
 		"t": {
@@ -19,7 +19,7 @@
 			"item": "staticpower:motor"
 		},
 		"r": {
-			"tag": "forge:dusts/redstone"
+			"item": "staticpower:processor_energized"
 		},
 		"l": {
 			"item": "minecraft:lever"

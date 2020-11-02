@@ -189,8 +189,9 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 		}
 
 		public RecipeModifierWrapper(PacketBuffer buffer) {
-			this.attributeId = new ResourceLocation(buffer.readString());
-			this.modifier = AttributeModifierRegistry.createInstance(buffer.readCompoundTag());
+			CompoundNBT data = buffer.readCompoundTag();
+			this.attributeId = new ResourceLocation(data.getString("attribute_id"));
+			this.modifier = AttributeModifierRegistry.createInstance(data.getCompound("modifier"));
 		}
 
 		public CompoundNBT serialize() {

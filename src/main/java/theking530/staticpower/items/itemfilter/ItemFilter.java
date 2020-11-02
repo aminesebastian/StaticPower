@@ -77,7 +77,7 @@ public class ItemFilter extends StaticPowerItem {
 	protected ActionResult<ItemStack> onStaticPowerItemRightClicked(World world, PlayerEntity player, Hand hand, ItemStack item) {
 		if (!world.isRemote && !player.isSneaking()) {
 			NetworkGUI.openGui((ServerPlayerEntity) player, new ItemFilterContainerProvider(item), buff -> {
-				buff.writeInt(player.inventory.getSlotFor(item));
+				buff.writeInt(player.inventory.currentItem);
 			});
 			return ActionResult.resultSuccess(item);
 		}

@@ -58,6 +58,7 @@ public class StaticPowerForgeEventRegistry {
 	public static void onServerAboutToStart(FMLServerAboutToStartEvent serverStarted) {
 		IReloadableResourceManager resourceManager = (IReloadableResourceManager) serverStarted.getServer().getDataPackRegistries().getResourceManager();
 		resourceManager.addReloadListener(new RecipeReloadListener(serverStarted.getServer().getRecipeManager()));
+		StaticPowerRecipeRegistry.onResourcesReloaded(serverStarted.getServer().getRecipeManager());
 		StaticPower.LOGGER.info("Server resource reload listener created!");
 	}
 
@@ -68,6 +69,7 @@ public class StaticPowerForgeEventRegistry {
 	}
 
 	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
 	public static void renderBlockHighlights(DrawHighlightEvent.HighlightBlock event) {
 		StaticPowerClientEventHandler.renderBlockHighlights(event);
 	}

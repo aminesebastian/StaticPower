@@ -1,0 +1,4 @@
+[02Nov2020 01:31:10.341] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--gameDir, ., --launchTarget, fmluserdevserver, --fml.mcpVersion, 20200911.084530, --fml.mcVersion, 1.16.3, --fml.forgeGroup, net.minecraftforge, --fml.forgeVersion, 34.1.0]
+[02Nov2020 01:31:10.344] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 7.0.1+78+master.e9771d8 starting: java version 1.8.0_222 by AdoptOpenJDK
+[02Nov2020 01:31:10.691] [main/INFO] [net.minecraftforge.fml.loading.FixSSL/CORE]: Added Lets Encrypt root certificates as additional trust
+[02Nov2020 01:31:10.733] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.1 Source=file:/C:/Users/amine/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.1/3099ac85bce29d37a22d3561073d01eb99b0cf4b/mixin-0.8.1.jar Service=ModLauncher Env=SERVER

@@ -176,6 +176,7 @@ public class StaticPowerClientEventHandler {
 	 *
 	 * @param event the highlight event
 	 */
+	@OnlyIn(Dist.CLIENT)
 	public static void renderBlockHighlights(DrawHighlightEvent.HighlightBlock event) {
 		PlayerEntity player = Minecraft.getInstance().player;
 
@@ -260,6 +261,7 @@ public class StaticPowerClientEventHandler {
 	 * @param world         the active world
 	 * @param extraBlocks   the list of blocks
 	 */
+	@OnlyIn(Dist.CLIENT)
 	private static void drawBlockDamageTexture(WorldRenderer worldRender, MatrixStack matrixStackIn, ActiveRenderInfo renderInfo, World world, Iterable<BlockPos> extraBlocks) {
 		double d0 = renderInfo.getProjectedView().x;
 		double d1 = renderInfo.getProjectedView().y;

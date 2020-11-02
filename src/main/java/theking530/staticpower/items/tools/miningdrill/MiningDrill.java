@@ -170,7 +170,7 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	protected ActionResult<ItemStack> onStaticPowerItemRightClicked(World world, PlayerEntity player, Hand hand, ItemStack item) {
 		if (!world.isRemote && player.isSneaking()) {
 			NetworkGUI.openGui((ServerPlayerEntity) player, new MiningDrillContainerProvider(item), buff -> {
-				buff.writeInt(player.inventory.getSlotFor(item));
+				buff.writeInt(player.inventory.currentItem);
 			});
 			return ActionResult.resultSuccess(item);
 		}
@@ -281,11 +281,13 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 				if (attributable.hasAttribute(FortuneAttributeDefenition.ID)) {
 					FortuneAttributeDefenition fortune = (FortuneAttributeDefenition) attributable.getAttribute(FortuneAttributeDefenition.ID);
 					int fLevel = fortune.getFortuneLevelWithChance();
-					System.out.println(fLevel);
 					stack.addEnchantment(Enchantments.FORTUNE, fLevel);
 				}
 				if (attributable.hasAttribute(SilkTouchAttributeDefenition.ID)) {
-					stack.addEnchantment(Enchantments.SILK_TOUCH, 1);
+					SilkTouchAttributeDefenition silkTouch = (SilkTouchAttributeDefenition) attributable.getAttribute(SilkTouchAttributeDefenition.ID);
+					if(silkTouch.getValue()) {
+						stack.addEnchantment(Enchantments.SILK_TOUCH, 1);				
+					}
 				}
 			});
 		}

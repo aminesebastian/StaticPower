@@ -51,7 +51,7 @@ public class ContainerMiningDrill extends StaticPowerItemContainer<MiningDrill> 
 				super.onSlotChanged();
 
 				// Update the drill.
-				int drillSlot = getPlayerInventory().player.inventory.getSlotFor(getItemStack());
+				int drillSlot = getPlayerInventory().player.inventory.currentItem;
 				if (drillSlot >= 0) {
 					if (!getPlayerInventory().player.world.isRemote) {
 						ServerPlayerEntity serverPlayer = (ServerPlayerEntity) getPlayerInventory().player;

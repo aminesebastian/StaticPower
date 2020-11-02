@@ -117,6 +117,10 @@ public class ItemUtilities {
 		return (!item1.hasTag() || item1.getTag().equals(item2.getTag())) && item1.areCapsCompatible(item2);
 	}
 
+	public static boolean areItemStacksExactlyEqual(ItemStack stack1, ItemStack stack2) {
+		return stack1.getItem() == stack2.getItem() && ItemStack.areItemStackTagsEqual(stack1, stack2);
+	}
+
 	public static CompoundNBT writeLargeStackItemToNBT(ItemStack stack) {
 		CompoundNBT itemNbt = new CompoundNBT();
 		stack.write(itemNbt);

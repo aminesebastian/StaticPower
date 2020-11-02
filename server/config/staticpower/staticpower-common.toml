@@ -1,0 +1,31 @@
+
+[Generation]
+
+	[Generation."Tree Generation"]
+		#Controls the chance of a rubber tree spawning.
+		RubberWoodSpawnChance = 70
+
+	[Generation."Ore Generation"]
+		#Disable or Enable Silver Ore Generation
+		GenerateSilverOre = true
+		#Disable or Enable Tunsgten Ore Generation
+		GenerateTungstenOre = true
+		#Disable or Enable Zinc Ore Generation
+		GenerateZincOre = true
+		#Disable or Enable Aluminium Ore Generation
+		GenerateAluminiumOre = true
+		#Disable or Enable Ruby Ore Generation
+		GenerateRubyOre = true
+		#Disable or Enable Tin Ore Generation
+		GenerateTinOre = true
+		#Disable or Enable Magnesium Ore Generation
+		GenerateMagnesiumOre = true
+		#Disable or Enable Copper Ore Generation
+		GenerateCopperOre = true
+		#Disable or Enable Lead Ore Generation
+		GenerateLeadOre = true
+		#Disable or Enable Sapphire Ore Generation
+		GenerateSapphireOre = true
+		#Disable or Enable Platinum Ore Generation
+		GeneratePlatinumOre = true
+
