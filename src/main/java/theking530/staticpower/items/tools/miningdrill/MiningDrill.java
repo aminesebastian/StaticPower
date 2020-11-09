@@ -1,5 +1,6 @@
 package theking530.staticpower.items.tools.miningdrill;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -24,7 +25,6 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemTier;
 import net.minecraft.item.crafting.FurnaceRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
@@ -87,12 +87,15 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 			Blocks.MAGENTA_CONCRETE_POWDER, Blocks.LIGHT_BLUE_CONCRETE_POWDER, Blocks.YELLOW_CONCRETE_POWDER, Blocks.LIME_CONCRETE_POWDER, Blocks.PINK_CONCRETE_POWDER,
 			Blocks.GRAY_CONCRETE_POWDER, Blocks.LIGHT_GRAY_CONCRETE_POWDER, Blocks.CYAN_CONCRETE_POWDER, Blocks.PURPLE_CONCRETE_POWDER, Blocks.BLUE_CONCRETE_POWDER,
 			Blocks.BROWN_CONCRETE_POWDER, Blocks.GREEN_CONCRETE_POWDER, Blocks.RED_CONCRETE_POWDER, Blocks.BLACK_CONCRETE_POWDER, Blocks.SOUL_SOIL);
+
+	private static final Set<ToolType> TOOL_TYPES = new HashSet<ToolType>();
 	public final ResourceLocation tier;
 
 	public MiningDrill(String name, float attackDamageIn, float attackSpeedIn, ResourceLocation tier) {
-		super(new Item.Properties().setNoRepair().addToolType(ToolType.PICKAXE, ItemTier.NETHERITE.getHarvestLevel()).addToolType(ToolType.SHOVEL, ItemTier.NETHERITE.getHarvestLevel()),
-				name, attackDamageIn, attackSpeedIn);
+		super(new Item.Properties().setNoRepair(), name, attackDamageIn, attackSpeedIn);
 		this.tier = tier;
+		TOOL_TYPES.add(ToolType.PICKAXE);
+		TOOL_TYPES.add(ToolType.SHOVEL);
 	}
 
 	public int getCapacity() {
@@ -131,7 +134,7 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	}
 
 	@Override
-	public boolean canMine(ItemStack itemstack) {
+	public boolean isReadyToMine(ItemStack itemstack) {
 		return hasDrillBit(itemstack) && EnergyHandlerItemStackUtilities.getStoredPower(itemstack) > 0;
 	}
 
@@ -285,8 +288,8 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 				}
 				if (attributable.hasAttribute(SilkTouchAttributeDefenition.ID)) {
 					SilkTouchAttributeDefenition silkTouch = (SilkTouchAttributeDefenition) attributable.getAttribute(SilkTouchAttributeDefenition.ID);
-					if(silkTouch.getValue()) {
-						stack.addEnchantment(Enchantments.SILK_TOUCH, 1);				
+					if (silkTouch.getValue()) {
+						stack.addEnchantment(Enchantments.SILK_TOUCH, 1);
 					}
 				}
 			});
@@ -368,27 +371,28 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	}
 
 	@Override
-	public boolean canMineBlock(ItemStack stack, BlockState state, BlockPos pos, PlayerEntity player) {
+	protected boolean canHarvestBlockInternal(ItemStack stack, BlockState state) {
 		// Check the tool.
 		if (getToolTypes(stack).stream().anyMatch(e -> state.isToolEffective(e))) {
 			return true;
 		}
 
-		// Check the hardness.
-		if (state.getPlayerRelativeBlockHardness(player, player.getEntityWorld(), pos) <= 0.0f) {
-			return false;
-		}
+//		// Check the hardness.
+//		if (state.getPlayerRelativeBlockHardness(player, player.getEntityWorld(), pos) <= 0.0f) {
+//			return false;
+//		}
 
-		// If we are able to harvest the block full speed, do so.
+		// If we are able to harvest the block full speed, no need to further check.
 		if (FULL_SPEED_BLOCKS.contains(state.getBlock())) {
 			return true;
 		}
 
 		// Then check by harvest level
-		int i = this.getHarvestLevel(stack, ToolType.PICKAXE, null, state);
-		if (state.getHarvestTool() == net.minecraftforge.common.ToolType.PICKAXE) {
+		if (state.getHarvestTool() != null) {
+			int i = this.getHarvestLevel(stack, state.getHarvestTool(), null, state);
 			return i >= state.getHarvestLevel();
 		}
+
 		Material material = state.getMaterial();
 		return material == Material.ROCK || material == Material.IRON || material == Material.ANVIL || material == Material.CLAY || material == Material.SAND || material == Material.EARTH;
 	}
@@ -408,6 +412,11 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		// Finally, check the materials.
 		Material material = state.getMaterial();
 		return material == Material.ROCK || material == Material.IRON || material == Material.ANVIL || material == Material.CLAY || material == Material.SAND || material == Material.EARTH;
+	}
+
+	@Override
+	public Set<ToolType> getToolTypes(ItemStack stack) {
+		return TOOL_TYPES;
 	}
 
 	@Override

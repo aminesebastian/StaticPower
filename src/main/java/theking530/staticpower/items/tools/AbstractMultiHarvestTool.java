@@ -49,7 +49,7 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 
 	public abstract boolean canHarvestAtFullSpeed(ItemStack stack, BlockState state);
 
-	public abstract boolean canMineBlock(ItemStack stack, BlockState state, BlockPos pos, PlayerEntity player);
+	protected abstract boolean canHarvestBlockInternal(ItemStack stack, BlockState state);
 
 	public abstract int getWidth(ItemStack stack);
 
@@ -57,15 +57,16 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 
 	protected abstract float getEfficiency(ItemStack itemstack);
 
-	public boolean canMine(ItemStack stack) {
+	public boolean isReadyToMine(ItemStack stack) {
 		return true;
 	}
 
-	protected boolean canHarvestBlockInternal(ItemStack stack, BlockState state, BlockPos pos, PlayerEntity player) {
-		if (!canMine(stack)) {
+	@Override
+	public boolean canHarvestBlock(ItemStack stack, BlockState state) {
+		if (!isReadyToMine(stack)) {
 			return false;
 		}
-		return canMineBlock(stack, state, pos, player);
+		return canHarvestBlockInternal(stack, state);
 	}
 
 	/**
@@ -87,7 +88,7 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 		MultiBlockHarvestDirections harvestDirections = getHarvestDirections(itemstack, pos, player);
 
 		// If the harvest directions are not valid, do nothing.
-		if (!harvestDirections.isValid() || !canMine(itemstack)) {
+		if (!harvestDirections.isValid() || !isReadyToMine(itemstack)) {
 			return Collections.emptyList();
 		}
 
@@ -106,7 +107,7 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 					offsetPos = offsetPos.offset(harvestDirections.getWidthDirection(), x);
 
 					// Check if we can harvest this block.
-					if (canHarvestBlockInternal(itemstack, player.getEntityWorld().getBlockState(offsetPos), offsetPos, player)) {
+					if (canHarvestBlock(itemstack, player.getEntityWorld().getBlockState(offsetPos))) {
 						minableBlocks.add(offsetPos);
 					}
 				}
@@ -123,7 +124,7 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 
 	protected boolean breakAllMultiHarvestBlocks(ItemStack itemstack, BlockPos pos, PlayerEntity player) {
 		// If we can't mine, do nothing.
-		if (!canMine(itemstack)) {
+		if (!isReadyToMine(itemstack)) {
 			return false;
 		}
 
@@ -218,7 +219,7 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 
 	@Override
 	public float getDestroySpeed(ItemStack stack, BlockState state) {
-		return canHarvestAtFullSpeed(stack, state) ? this.getEfficiency(stack) : canMine(stack) ? 1.0f : 0.0f;
+		return canHarvestAtFullSpeed(stack, state) ? this.getEfficiency(stack) : isReadyToMine(stack) ? 1.0f : 0.0f;
 	}
 
 	/**
