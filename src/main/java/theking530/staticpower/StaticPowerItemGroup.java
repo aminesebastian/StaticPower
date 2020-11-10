@@ -94,6 +94,13 @@ public class StaticPowerItemGroup extends ItemGroup {
 		subTypes.add(ModItems.EnergizedMiningDrill.getFilledVariant());
 		subTypes.add(ModItems.LumumMiningDrill.getFilledVariant());
 
+		// Add the chainsaws.
+		subTypes.add(ModItems.BasicChainsaw.getFilledVariant());
+		subTypes.add(ModItems.AdvancedChainsaw.getFilledVariant());
+		subTypes.add(ModItems.StaticChainsaw.getFilledVariant());
+		subTypes.add(ModItems.EnergizedChainsaw.getFilledVariant());
+		subTypes.add(ModItems.LumumChainsaw.getFilledVariant());		
+		
 		// Add the magnets.
 		subTypes.add(ModItems.BasicMagnet.getFilledVariant());
 		subTypes.add(ModItems.AdvancedMagnet.getFilledVariant());

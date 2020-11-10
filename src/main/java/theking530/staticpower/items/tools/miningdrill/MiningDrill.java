@@ -305,7 +305,6 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
 			handler.getStackInSlot(0).damageItem(blocksMined.size(), player, (entity) -> {
 				entity.sendBreakAnimation(EquipmentSlotType.MAINHAND);
-				handler.getStackInSlot(0).shrink(1);
 			});
 		});
 
@@ -376,11 +375,6 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		if (getToolTypes(stack).stream().anyMatch(e -> state.isToolEffective(e))) {
 			return true;
 		}
-
-//		// Check the hardness.
-//		if (state.getPlayerRelativeBlockHardness(player, player.getEntityWorld(), pos) <= 0.0f) {
-//			return false;
-//		}
 
 		// If we are able to harvest the block full speed, no need to further check.
 		if (FULL_SPEED_BLOCKS.contains(state.getBlock())) {

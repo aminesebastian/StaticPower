@@ -106,6 +106,14 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 					BlockPos offsetPos = pos.offset(harvestDirections.getHeightDirection(), y);
 					offsetPos = offsetPos.offset(harvestDirections.getWidthDirection(), x);
 
+					// Get the state.
+					BlockState state = player.getEntityWorld().getBlockState(offsetPos);
+
+					// Check the hardness.
+					if (state.getPlayerRelativeBlockHardness(player, player.getEntityWorld(), pos) <= 0.0f) {
+						continue;
+					}
+
 					// Check if we can harvest this block.
 					if (canHarvestBlock(itemstack, player.getEntityWorld().getBlockState(offsetPos))) {
 						minableBlocks.add(offsetPos);

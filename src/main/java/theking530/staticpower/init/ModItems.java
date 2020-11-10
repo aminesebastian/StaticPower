@@ -39,6 +39,8 @@ import theking530.staticpower.items.tools.MetalHammer;
 import theking530.staticpower.items.tools.SolderingIron;
 import theking530.staticpower.items.tools.StaticWrench;
 import theking530.staticpower.items.tools.WireCutters;
+import theking530.staticpower.items.tools.chainsaw.Chainsaw;
+import theking530.staticpower.items.tools.chainsaw.ChainsawBlade;
 import theking530.staticpower.items.tools.miningdrill.DrillBit;
 import theking530.staticpower.items.tools.miningdrill.MiningDrill;
 
@@ -214,6 +216,15 @@ public class ModItems {
 	public static DrillBit LumumDrillBit;
 	public static DrillBit CreativeDrillBit;
 
+	public static ChainsawBlade IronChainsawBlade;
+	public static ChainsawBlade BronzeChainsawBlade;
+	public static ChainsawBlade AdvancedChainsawBlade;
+	public static ChainsawBlade TungstenChainsawBlade;
+	public static ChainsawBlade StaticChainsawBlade;
+	public static ChainsawBlade EnergizedChainsawBlade;
+	public static ChainsawBlade LumumChainsawBlade;
+	public static ChainsawBlade CreativeChainsawBlade;
+	
 	public static StaticPowerItem MemoryChip;
 	public static StaticPowerItem LogicGatePowerSync;
 	public static StaticPowerItem InvertedLogicGatePowerSync;
@@ -276,13 +287,20 @@ public class ModItems {
 	public static WireCutters CreativeWireCutters;
 
 	public static SolderingIron SolderingIron;
+	public static ElectricSolderingIron ElectringSolderingIron;
+
 	public static MiningDrill BasicMiningDrill;
 	public static MiningDrill AdvancedMiningDrill;
 	public static MiningDrill StaticMiningDrill;
 	public static MiningDrill EnergizedMiningDrill;
 	public static MiningDrill LumumMiningDrill;
-	public static ElectricSolderingIron ElectringSolderingIron;
-
+	
+	public static Chainsaw BasicChainsaw;
+	public static Chainsaw AdvancedChainsaw;
+	public static Chainsaw StaticChainsaw;
+	public static Chainsaw EnergizedChainsaw;
+	public static Chainsaw LumumChainsaw;
+	
 	public static StaticWrench Wrench;
 	public static StaticWrench StaticWrench;
 	public static StaticWrench EnergizedWrench;
@@ -440,6 +458,12 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(EnergizedMiningDrill = new MiningDrill("mining_drill_energized", 5.0f, 5.0f, StaticPowerTiers.ENERGIZED));
 		StaticPowerRegistry.preRegisterItem(LumumMiningDrill = new MiningDrill("mining_drill_lumum", 5.0f, 5.0f, StaticPowerTiers.LUMUM));
 
+		StaticPowerRegistry.preRegisterItem(BasicChainsaw = new Chainsaw("chainsaw_basic", 5.0f, 5.0f, StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterItem(AdvancedChainsaw = new Chainsaw("chainsaw_advanced", 5.0f, 5.0f, StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterItem(StaticChainsaw = new Chainsaw("chainsaw_static", 5.0f, 5.0f, StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterItem(EnergizedChainsaw = new Chainsaw("chainsaw_energized", 5.0f, 5.0f, StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterItem(LumumChainsaw = new Chainsaw("chainsaw_lumum", 5.0f, 5.0f, StaticPowerTiers.LUMUM));
+		
 		StaticPowerRegistry.preRegisterItem(SolderingIron = new SolderingIron("soldering_iron", 100));
 		StaticPowerRegistry.preRegisterItem(ElectringSolderingIron = new ElectricSolderingIron("soldering_iron_electric", 1000));
 
@@ -597,7 +621,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(EnergizedUpgradePlate = new StaticPowerItem("upgrade_plate_energized"));
 		StaticPowerRegistry.preRegisterItem(LumumUpgradePlate = new StaticPowerItem("upgrade_plate_lumum"));
 
-		// Dril Bits
+		// Drill Bits
 		StaticPowerRegistry.preRegisterItem(IronDrillBit = new DrillBit("drill_bit_iron", ItemTier.IRON, StaticPowerTiers.BASIC));
 		StaticPowerRegistry.preRegisterItem(BronzeDrillBit = new DrillBit("drill_bit_bronze", ItemTier.IRON, StaticPowerTiers.BRONZE));
 		StaticPowerRegistry.preRegisterItem(AdvancedDrillBit = new DrillBit("drill_bit_advanced", ItemTier.IRON, StaticPowerTiers.ADVANCED));
@@ -610,6 +634,16 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(LumumDrillBit = new DrillBit("drill_bit_lumum", ItemTier.NETHERITE, StaticPowerTiers.LUMUM));
 		StaticPowerRegistry.preRegisterItem(CreativeDrillBit = new DrillBit("drill_bit_creative", ItemTier.NETHERITE, StaticPowerTiers.CREATIVE));
 
+		// Chainsaw Blades
+		StaticPowerRegistry.preRegisterItem(IronChainsawBlade = new ChainsawBlade("chainsaw_blade_iron", ItemTier.IRON, StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterItem(BronzeChainsawBlade = new ChainsawBlade("chainsaw_blade_bronze", ItemTier.IRON, StaticPowerTiers.BRONZE));
+		StaticPowerRegistry.preRegisterItem(AdvancedChainsawBlade = new ChainsawBlade("chainsaw_blade_advanced", ItemTier.IRON, StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterItem(TungstenChainsawBlade = new ChainsawBlade("chainsaw_blade_tungsten", ItemTier.NETHERITE, StaticPowerTiers.TUNGSTEN));
+		StaticPowerRegistry.preRegisterItem(StaticChainsawBlade = new ChainsawBlade("chainsaw_blade_static", ItemTier.DIAMOND, StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterItem(EnergizedChainsawBlade = new ChainsawBlade("chainsaw_blade_energized", ItemTier.DIAMOND, StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterItem(LumumChainsawBlade = new ChainsawBlade("chainsaw_blade_lumum", ItemTier.NETHERITE, StaticPowerTiers.LUMUM));
+		StaticPowerRegistry.preRegisterItem(CreativeChainsawBlade = new ChainsawBlade("chainsaw_blade_creative", ItemTier.NETHERITE, StaticPowerTiers.CREATIVE));
+		
 		// Ingots
 		StaticPowerRegistry.preRegisterItem(IngotCopper = new StaticPowerItem("ingot_copper"));
 		StaticPowerRegistry.preRegisterItem(IngotTin = new StaticPowerItem("ingot_tin"));
