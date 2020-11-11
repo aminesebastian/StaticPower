@@ -101,9 +101,9 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 	private int currentBlockIndex;
 	private int range;
 
-	private Ingredient woodIngredient;
-	private Ingredient leafIngredient;
-	private Ingredient saplingIngredient;
+	private final Ingredient woodIngredient;
+	private final Ingredient leafIngredient;
+	private final Ingredient saplingIngredient;
 
 	public TileEntityTreeFarm() {
 		super(TYPE, StaticPowerTiers.STATIC);

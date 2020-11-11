@@ -25,12 +25,9 @@ public class ModTags {
 	public static final INamedTag<Item> LEAVES = createItemWrapper(new ResourceLocation("minecraft", "leaves"));
 	public static final INamedTag<Item> SAPLING = createItemWrapper(new ResourceLocation("minecraft", "saplings"));
 	public static final INamedTag<Item> COVER_SAW = createItemWrapper(new ResourceLocation(StaticPower.MOD_ID, "saw"));
-	public static final INamedTag<Item> FARMING_AXE = createItemWrapper(
-			new ResourceLocation(StaticPower.MOD_ID, "farming_axe"));
-	public static final INamedTag<Item> FARMING_HOE = createItemWrapper(
-			new ResourceLocation(StaticPower.MOD_ID, "farming_hoe"));
-	public static final INamedTag<Item> MINER_ORE = createItemWrapper(
-			new ResourceLocation(StaticPower.MOD_ID, "miner_ores"));
+	public static final INamedTag<Item> FARMING_AXE = createItemWrapper(new ResourceLocation(StaticPower.MOD_ID, "farming_axe"));
+	public static final INamedTag<Item> FARMING_HOE = createItemWrapper(new ResourceLocation(StaticPower.MOD_ID, "farming_hoe"));
+	public static final INamedTag<Item> MINER_ORE = createItemWrapper(new ResourceLocation(StaticPower.MOD_ID, "miner_ores"));
 
 	public static INamedTag<Item> createItemWrapper(ResourceLocation name) {
 		return createWrapperTag(ItemTags.getAllTags(), name, ItemTags::makeWrapperTag);
@@ -40,13 +37,12 @@ public class ModTags {
 		return createWrapperTag(BlockTags.getAllTags(), name, BlockTags::makeWrapperTag);
 	}
 
-	private static <T> INamedTag<T> createWrapperTag(List<? extends INamedTag<T>> allExisting, ResourceLocation name,
-			Function<String, INamedTag<T>> createNew) {
-		Optional<? extends INamedTag<T>> existing = allExisting.stream().filter(tag -> tag.getName().equals(name))
-				.findAny();
-		if (existing.isPresent())
+	private static <T> INamedTag<T> createWrapperTag(List<? extends INamedTag<T>> allExisting, ResourceLocation name, Function<String, INamedTag<T>> createNew) {
+		Optional<? extends INamedTag<T>> existing = allExisting.stream().filter(tag -> tag.getName().equals(name)).findAny();
+		if (existing.isPresent()) {
 			return existing.get();
-		else
+		} else {
 			return createNew.apply(name.toString());
+		}
 	}
 }

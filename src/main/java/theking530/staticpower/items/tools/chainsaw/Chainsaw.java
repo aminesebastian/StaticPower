@@ -1,5 +1,6 @@
 package theking530.staticpower.items.tools.chainsaw;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,9 +23,11 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -50,6 +53,7 @@ import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
 import theking530.staticpower.client.rendering.items.ChainsawItemModel;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
+import theking530.staticpower.init.ModTags;
 import theking530.staticpower.items.tools.AbstractMultiHarvestTool;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
@@ -59,6 +63,8 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 			Blocks.DARK_OAK_BUTTON, Blocks.ACACIA_BUTTON, Blocks.CRIMSON_BUTTON, Blocks.WARPED_BUTTON);
 
 	private static final Set<ToolType> TOOL_TYPES = new HashSet<ToolType>();
+	private static final int MAX_RECURSION = 100;
+	private Ingredient woodIngredient;
 	public final ResourceLocation tier;
 
 	public Chainsaw(String name, float attackDamageIn, float attackSpeedIn, ResourceLocation tier) {
@@ -288,6 +294,68 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 	@Override
 	public boolean hasModelOverride(BlockState state) {
 		return true;
+	}
+
+	@Override
+	public List<BlockPos> getMineableExtraBlocks(ItemStack itemstack, BlockPos pos, PlayerEntity player) {
+		// Capture the list of all the blocks to mine.
+		List<BlockPos> minableBlocks = new ArrayList<BlockPos>();
+
+		// If we can't mine, just return the single block.
+		if (!isReadyToMine(itemstack)) {
+			minableBlocks.add(pos);
+			return minableBlocks;
+		}
+		
+		// Perform the recursive analysis.
+		recursiveTreeAnalyzer(itemstack, pos, player, minableBlocks, new HashSet<BlockPos>(), 0);
+
+		// Return the list of mineable blocks.
+		return minableBlocks;
+	}
+
+	@SuppressWarnings("deprecation")
+	private void recursiveTreeAnalyzer(ItemStack itemstack, BlockPos pos, PlayerEntity player, List<BlockPos> positions, Set<BlockPos> visited, int currentDepth) {
+		// If we maxed out on depth, stop.
+		if (currentDepth > MAX_RECURSION) {
+			return;
+		}
+
+		// If we have already visited this spot, stop.
+		if (visited.contains(pos)) {
+			return;
+		}
+
+		// Mark this spot as visited.
+		visited.add(pos);
+
+		// Get the state and block here, and check if they are air.
+		BlockState state = player.getEntityWorld().getBlockState(pos);
+		Block block = state.getBlock();
+		if (!block.isAir(state, player.getEntityWorld(), pos)) {
+			// Make an itemstack for the block.
+			ItemStack blockStack = new ItemStack(Item.getItemFromBlock(block));
+
+			// If not air, check to see if it is wood. If it is, and its harvestable,
+			// harvest it.
+			if (getLogTag().test(blockStack)) {
+				if (this.canHarvestBlockInternal(itemstack, state)) {
+					positions.add(pos);
+					
+					// Recurse.
+					for (Direction dir : Direction.values()) {
+						recursiveTreeAnalyzer(itemstack, pos.offset(dir), player, positions, visited, currentDepth + 1);
+					}
+				}
+			}
+		}
+	}
+
+	private Ingredient getLogTag() {
+		if (woodIngredient == null) {
+			woodIngredient = Ingredient.fromTag(ModTags.LOG);
+		}
+		return woodIngredient;
 	}
 
 	@Override

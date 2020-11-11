@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.Nullable;
 
@@ -108,27 +109,34 @@ public class ChainsawItemModel implements IBakedModel {
 			}
 
 			List<BakedQuad> output = new ArrayList<BakedQuad>();
+			AtomicBoolean drillBitEquipped = new AtomicBoolean(false);
 
 			// Attempt to get the chainsaw inventory.
 			stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((handler) -> {
 				if (!handler.getStackInSlot(0).isEmpty()) {
+					drillBitEquipped.set(true);
 					IBakedModel itemModel = Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(handler.getStackInSlot(0), Minecraft.getInstance().world, null);
 					List<BakedQuad> chainsawBladeQuads = itemModel.getQuads(state, side, rand, data);
 					output.addAll(transformQuads(chainsawBladeQuads, new Vector3f(0.25f, 0.28f, 0f), new Vector3f(0.5f, 0.5f, 0.5f), new Quaternion(0, 0, 0, true)));
-					
-					// Add a mini drill.
-					List<BakedQuad> baseQuads = BaseModel.getQuads(state, side, rand, data);
-					output.addAll(transformQuads(baseQuads, new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(1.0f, 1.0f, 1.0f), new Quaternion(0, 0, 0, true)));
-				}else {
-					// Add the full drill.
-					List<BakedQuad> baseQuads = BaseModel.getQuads(state, side, rand, data);
-					output.addAll(transformQuads(baseQuads, new Vector3f(0.15f, 0.15f, 0.0f), new Vector3f(1.3f, 1.3f, 1.0f), new Quaternion(0, 0, 0, true)));
 				}
 			});
-			
+
+			if (drillBitEquipped.get()) {
+				// Add a mini drill.
+				List<BakedQuad> baseQuads = BaseModel.getQuads(state, side, rand, data);
+				output.addAll(transformQuads(baseQuads, new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(1.0f, 1.0f, 1.0f), new Quaternion(0, 0, 0, true)));
+			} else {
+				// Add the full drill.
+				List<BakedQuad> baseQuads = BaseModel.getQuads(state, side, rand, data);
+				output.addAll(transformQuads(baseQuads, new Vector3f(0.15f, 0.15f, 0.0f), new Vector3f(1.3f, 1.3f, 1.0f), new Quaternion(0, 0, 0, true)));
+			}
 
 			// Draw the power bar.
 			try {
+				// Top Offset
+				float topOffset = drillBitEquipped.get() ? 3.5f : 0.0f;
+				float sideOffset = drillBitEquipped.get() ? 0.5f : 0.0f;
+
 				// Get the atlas texture.
 				AtlasTexture blocksTexture = ModelLoader.instance().getSpriteMap().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 
@@ -137,8 +145,8 @@ public class ChainsawItemModel implements IBakedModel {
 				BlockFaceUV durabilityBgUv = new BlockFaceUV(new float[] { 0.0f, 0.0f, 16.0f, 16.0f }, 0);
 				BlockPartFace durabilityPartFace = new BlockPartFace(null, -1, blackSprite.getName().toString(), durabilityBgUv);
 				BlockPartRotation rotation = new BlockPartRotation(new Vector3f(0.0f, 0.0f, 0.0f), Direction.Axis.Z, 135, false);
-				BakedQuad durabilityBackground = FaceBaker.bakeQuad(new Vector3f(-3.0f, -12.0f, 8.5f), new Vector3f(2.0f, -11.35f, 8.51f), durabilityPartFace, blackSprite, Direction.SOUTH,
-						SimpleModelTransform.IDENTITY, rotation, false, new ResourceLocation("dummy_name"));
+				BakedQuad durabilityBackground = FaceBaker.bakeQuad(new Vector3f(-3.0f + sideOffset, -15.15f + topOffset, 8.5f), new Vector3f(2.5f - sideOffset, -14.7f + topOffset, 8.51f), durabilityPartFace,
+						blackSprite, Direction.SOUTH, SimpleModelTransform.IDENTITY, rotation, false, new ResourceLocation("dummy_name"));
 				output.add(durabilityBackground);
 
 				// Draw the durability bar.
@@ -148,8 +156,9 @@ public class ChainsawItemModel implements IBakedModel {
 				BlockFaceUV blockFaceUV = new BlockFaceUV(new float[] { xUVCoord, 0.0f, xUVCoord, 16.0f }, 0);
 				BlockPartFace durabilityBarFace = new BlockPartFace(null, -1, durabilityTexture.getName().toString(), blockFaceUV);
 
-				BakedQuad durabilityBar = FaceBaker.bakeQuad(new Vector3f(-3.0f, -12.0f, 8.5f), new Vector3f(-3.0f + (bitDurability * 5.0f), -11.35f, 8.511f), durabilityBarFace,
-						durabilityTexture, Direction.SOUTH, SimpleModelTransform.IDENTITY, rotation, false, new ResourceLocation("dummy_name"));
+				BakedQuad durabilityBar = FaceBaker.bakeQuad(new Vector3f(-3.0f + sideOffset, -15.15f + topOffset, 8.5f),
+						new Vector3f(-3.0f + (bitDurability * 5.5f) - sideOffset, -14.7f + topOffset, 8.511f), durabilityBarFace, durabilityTexture, Direction.SOUTH, SimpleModelTransform.IDENTITY,
+						rotation, false, new ResourceLocation("dummy_name"));
 				output.add(durabilityBar);
 			} catch (Exception e) {
 				// No nothing -- this is just for those edge cases where resources are reloaded.

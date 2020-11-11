@@ -84,6 +84,15 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 	}
 
 	public List<BlockPos> getMineableExtraBlocks(ItemStack itemstack, BlockPos pos, PlayerEntity player) {
+		// Capture the list of all the blocks to mine.
+		List<BlockPos> minableBlocks = new ArrayList<BlockPos>();
+
+		// If we can't mine, just return the single block.
+		if (!isReadyToMine(itemstack)) {
+			minableBlocks.add(pos);
+			return minableBlocks;
+		}
+
 		// Capture the harvest directions.
 		MultiBlockHarvestDirections harvestDirections = getHarvestDirections(itemstack, pos, player);
 
@@ -91,9 +100,6 @@ public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
 		if (!harvestDirections.isValid() || !isReadyToMine(itemstack)) {
 			return Collections.emptyList();
 		}
-
-		// Capture the list of all the blocks to mind.
-		List<BlockPos> minableBlocks = new ArrayList<BlockPos>();
 
 		// If sneaking, only mine the targeted block. Otherwise get all the blocks in
 		// the width and height.

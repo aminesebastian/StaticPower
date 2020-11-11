@@ -192,7 +192,8 @@ public class StaticPowerClientEventHandler {
 		if (!tool.isEmpty()) {
 			if (tool.getItem() instanceof AbstractMultiHarvestTool) {
 				ActiveRenderInfo renderInfo = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();
-				List<BlockPos> extraBlocks = ((AbstractMultiHarvestTool) tool.getItem()).getMineableExtraBlocks(tool, event.getTarget().getPos(), player);
+				AbstractMultiHarvestTool toolItem = (AbstractMultiHarvestTool) tool.getItem();
+				List<BlockPos> extraBlocks = toolItem.getMineableExtraBlocks(tool, event.getTarget().getPos(), player);
 
 				WorldRenderer worldRender = event.getContext();
 				MatrixStack matrix = event.getMatrix();
