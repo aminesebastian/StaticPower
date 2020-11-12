@@ -13,6 +13,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe;
@@ -40,7 +41,7 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 	public static final TileEntityTypeAllocator<TileEntityAutoSmith> TYPE = new TileEntityTypeAllocator<TileEntityAutoSmith>((allocator) -> new TileEntityAutoSmith(), ModBlocks.AutoSmith);
 
 	public static final int DEFAULT_PROCESSING_TIME = 75;
-	public static final int DEFAULT_PROCESSING_COST = 5;
+	public static final int DEFAULT_PROCESSING_COST = 40;
 	public static final int DEFAULT_MOVING_TIME = 4;
 	public static final int DEFAULT_TANK_SIZE = 5000;
 
@@ -55,7 +56,7 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 	public final FluidTankComponent fluidTankComponent;
 
 	public TileEntityAutoSmith() {
-		super(TYPE);
+		super(TYPE, StaticPowerTiers.ENERGIZED);
 
 		// Setup the inventories.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 2, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {

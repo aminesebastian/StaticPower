@@ -115,12 +115,12 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 
 	@Override
 	protected float getEfficiency(ItemStack itemstack) {
-		AtomicReference<Float> efficiency = new AtomicReference<Float>(1.0f);
+		AtomicReference<Float> efficiency = new AtomicReference<Float>(5.0f);
 
 		if (hasChainsawBlade(itemstack)) {
 			ItemStack blade = getChainsawBlade(itemstack);
 			ChainsawBlade bladeItem = (ChainsawBlade) blade.getItem();
-			efficiency.set(bladeItem.getMiningTier().getEfficiency());
+			efficiency.set(bladeItem.getMiningTier().getEfficiency() * 0.5f);
 			blade.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).ifPresent(attributable -> {
 				if (attributable.hasAttribute(HasteAttributeDefenition.ID)) {
 					HasteAttributeDefenition hasteDefenition = (HasteAttributeDefenition) attributable.getAttribute(HasteAttributeDefenition.ID);
@@ -224,7 +224,7 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
-		tooltip.add(new TranslationTextComponent("gui.staticpower.mining_speed").appendString(" ").appendString(String.valueOf(this.getEfficiency(stack))));
+		tooltip.add(new TranslationTextComponent("gui.staticpower.mining_speed").appendString(" ").appendString(String.valueOf(getEfficiency(stack))));
 	}
 
 	/**

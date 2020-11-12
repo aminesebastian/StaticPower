@@ -8,9 +8,10 @@ import theking530.staticcore.utilities.Color;
 
 public enum MachineSideMode {
 	Regular("regular", TextFormatting.WHITE, new Color(139, 139, 139, 255).fromEightBitToFloat()), Input("input", TextFormatting.BLUE, new Color(80, 130, 179, 255).fromEightBitToFloat()),
-	Input2("input2", TextFormatting.DARK_PURPLE, new Color(100, 0, 200, 255).fromEightBitToFloat()), Output("output", TextFormatting.GOLD, new Color(237, 160, 45, 255).fromEightBitToFloat()),
-	Output2("output2", TextFormatting.GREEN, new Color(0, 200, 50, 255).fromEightBitToFloat()), Output3("output3", TextFormatting.YELLOW, new Color(220, 220, 0, 255).fromEightBitToFloat()),
-	Disabled("disabled", TextFormatting.RED, new Color(200, 20, 20, 255).fromEightBitToFloat()), Never("never", TextFormatting.WHITE, new Color(0, 0, 0, 0).fromEightBitToFloat());
+	Input2("input2", TextFormatting.DARK_PURPLE, new Color(100, 0, 200, 255).fromEightBitToFloat()),
+	Output("output", TextFormatting.GOLD, new Color(237, 160, 45, 255).fromEightBitToFloat()), Output2("output2", TextFormatting.GREEN, new Color(0, 200, 50, 255).fromEightBitToFloat()),
+	Output3("output3", TextFormatting.YELLOW, new Color(220, 220, 0, 255).fromEightBitToFloat()), Disabled("disabled", TextFormatting.RED, new Color(200, 20, 20, 255).fromEightBitToFloat()),
+	Never("never", TextFormatting.WHITE, new Color(0, 0, 0, 0).fromEightBitToFloat());
 
 	/** The unlocalized name of the mode. */
 	private String name;
@@ -47,5 +48,18 @@ public enum MachineSideMode {
 
 	public boolean isDisabledMode() {
 		return this == Disabled;
+	}
+
+	public boolean areOfSameType(MachineSideMode other) {
+		if (other.isOutputMode() && this.isOutputMode()) {
+			return true;
+		}
+		if (other.isInputMode() && this.isInputMode()) {
+			return true;
+		}
+		if (other.isDisabledMode() && this.isDisabledMode()) {
+			return true;
+		}
+		return false;
 	}
 }
