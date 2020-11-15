@@ -34,6 +34,7 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 	}
 
 	protected NonNullList<ItemStack> stacks;
+	protected NonNullList<ItemStack> lastStacks;
 	protected List<ItemStack> lockedSlots;
 	private ItemStackHandlerFilter filter;
 	private MachineSideMode inventoryMode;
@@ -60,6 +61,7 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 		this.capabilityExtractEnabled = true;
 		this.shouldDropContentsOnBreak = true;
 		this.stacks = NonNullList.withSize(size, ItemStack.EMPTY);
+		this.lastStacks = NonNullList.withSize(size, ItemStack.EMPTY);
 		this.areSlotsLockable = false;
 		this.shiftClickPriority = 0;
 		this.lockedSlots = new ArrayList<ItemStack>();
@@ -72,6 +74,33 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 			setCapabilityInsertEnabled(false);
 		} else if (mode.isInputMode()) {
 			setCapabilityExtractEnabled(false);
+		}
+	}
+
+	/**
+	 * Checks for inventory modification.
+	 */
+	public void preProcessUpdate() {
+		for (int i = 0; i < Math.min(stacks.size(), lastStacks.size()); i++) {
+			ItemStack currentStack = stacks.get(i);
+			ItemStack lastStack = lastStacks.get(i);
+
+			// If both are empty, skip/
+			if (currentStack.isEmpty() && lastStack.isEmpty()) {
+				continue;
+			}
+
+			// If the items are not equal, then something has changed.
+			if (!lastStack.equals(currentStack, false)) {
+				if (lastStack.isEmpty()) {
+					onItemStackAdded(currentStack, i);
+				} else if (currentStack.isEmpty()) {
+					onItemStackRemoved(lastStack, i);
+				} else {
+					onItemStackModified(currentStack, i);
+				}
+				lastStacks.set(i, currentStack.copy());
+			}
 		}
 	}
 
@@ -267,18 +296,22 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 	}
 
 	public void setSize(int size) {
+		// Set the last stacks to the new size.
+		lastStacks = NonNullList.withSize(size, ItemStack.EMPTY);
+
+		// Then update the items.
+		for (int i = 0; i < Math.min(stacks.size(), size); i++) {
+			lastStacks.set(i, stacks.get(i));
+		}
+
+		// Finally, set the actual stacks array to the new list.
 		stacks = NonNullList.withSize(size, ItemStack.EMPTY);
 	}
 
 	@Override
 	public void setStackInSlot(int slot, @Nonnull ItemStack stack) {
 		validateSlotIndex(slot);
-		ItemStack oldStack = getStackInSlot(slot);
 		this.stacks.set(slot, stack);
-
-		if (!oldStack.equals(stack, false)) {
-			onItemStackAdded(stack, slot);
-		}
 	}
 
 	@Override
@@ -356,10 +389,8 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 		if (!simulate) {
 			if (existing.isEmpty()) {
 				this.stacks.set(slot, reachedLimit ? ItemHandlerHelper.copyStackWithSize(stack, limit) : stack);
-				onItemStackAdded(getStackInSlot(slot), slot);
 			} else {
 				existing.grow(reachedLimit ? limit : stack.getCount());
-				onItemStackModified(getStackInSlot(slot), slot);
 			}
 		}
 
@@ -391,9 +422,7 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 
 		if (existing.getCount() <= toExtract) {
 			if (!simulate) {
-				ItemStack removedItem = getStackInSlot(slot);
 				this.stacks.set(slot, ItemStack.EMPTY);
-				onItemStackRemoved(removedItem, slot);
 				return existing;
 			} else {
 				return existing.copy();
@@ -401,7 +430,6 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 		} else {
 			if (!simulate) {
 				this.stacks.set(slot, ItemHandlerHelper.copyStackWithSize(existing, existing.getCount() - toExtract));
-				onItemStackModified(getStackInSlot(slot), slot);
 			}
 
 			return ItemHandlerHelper.copyStackWithSize(existing, toExtract);

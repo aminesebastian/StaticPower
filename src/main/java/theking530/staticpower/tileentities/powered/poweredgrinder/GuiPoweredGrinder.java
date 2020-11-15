@@ -30,7 +30,7 @@ public class GuiPoweredGrinder extends StaticPowerTileEntityGui<ContainerPowered
 		getTabManager().registerTab(infoTab = new GuiInfoTab(getTitle(), 100));
 		infoTab.addLine(new StringTextComponent("Grinds items into their base components."));
 		infoTab.addLineBreak();
-		infoTab.addKeyValueTwoLiner(new StringTextComponent("Bonus Chance"), GuiTextUtilities.formatNumberAsString(getTileEntity().getBonusChance() - 1.0f).appendString("%"), TextFormatting.GREEN);
+		infoTab.addKeyValueTwoLiner(new StringTextComponent("Add. Bonus Chance"), GuiTextUtilities.formatNumberAsString(getTileEntity().getBonusChance() - 1.0f).appendString("%"), TextFormatting.GREEN);
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
@@ -40,6 +40,6 @@ public class GuiPoweredGrinder extends StaticPowerTileEntityGui<ContainerPowered
 
 	@Override
 	public void updateData() {
-		infoTab.updateLineByIndex(3, GuiTextUtilities.formatNumberAsString(getTileEntity().getBonusChance() - 1.0f).appendString("%"));
+		infoTab.updateLineByIndex(3, GuiTextUtilities.formatNumberAsString(100 * (getTileEntity().getBonusChance() - 1.0f)).appendString("%"));
 	}
 }

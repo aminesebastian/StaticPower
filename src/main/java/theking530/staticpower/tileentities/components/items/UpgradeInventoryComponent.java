@@ -94,7 +94,7 @@ public class UpgradeInventoryComponent extends InventoryComponent {
 		}
 
 		public float getUpgradeWeight() {
-			return (float) stack.getCount() / stack.getMaxStackSize();
+			return (float) stack.getCount() / (float) stack.getMaxStackSize();
 		}
 
 	}
