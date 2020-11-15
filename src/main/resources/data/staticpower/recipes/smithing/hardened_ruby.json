@@ -1,0 +1,15 @@
+{
+	"type": "staticpower:auto_smith_recipe",
+	"modifier_item": {
+		"tag": "forge:dusts/ruby"
+	},
+	"attributes": [
+		{
+			"id": "staticpower:hardened_ruby",
+			"modifier": {
+				"type": "boolean",
+				"value": true
+			}
+		}
+	]
+}

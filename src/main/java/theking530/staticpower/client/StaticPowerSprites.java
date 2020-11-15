@@ -94,6 +94,16 @@ public class StaticPowerSprites {
 	public static final ResourceLocation DURABILITY_BAR = registerSprite("items/tools/durability_bar");
 	public static final ResourceLocation TOOL_POWER_BAR = registerSprite("items/tools/tool_power_bar");
 
+	public static final ResourceLocation DRILL_BIT_FORTUNE = registerSprite("items/components/drill_bits/drill_bit_layer_fortune");
+	public static final ResourceLocation DRILL_BIT_HASTE = registerSprite("items/components/drill_bits/drill_bit_layer_haste");
+	public static final ResourceLocation DRILL_BIT_HARDENED_DIAMOND = registerSprite("items/components/drill_bits/drill_bit_layer_hardened_diamond");
+	public static final ResourceLocation DRILL_BIT_HARDENED_EMERALD = registerSprite("items/components/drill_bits/drill_bit_layer_hardened_emerald");
+	public static final ResourceLocation DRILL_BIT_HARDENED_RUBY = registerSprite("items/components/drill_bits/drill_bit_layer_hardened_ruby");
+	public static final ResourceLocation DRILL_BIT_HARDENED_SAPPHIRE = registerSprite("items/components/drill_bits/drill_bit_layer_hardened_sapphire");
+	public static final ResourceLocation DRILL_BIT_GRINDING = registerSprite("items/components/drill_bits/drill_bit_layer_grinding");
+	public static final ResourceLocation DRILL_BIT_SILK_TOUCH = registerSprite("items/components/drill_bits/drill_bit_layer_silk_touch");
+	public static final ResourceLocation DRILL_BIT_SMELTING = registerSprite("items/components/drill_bits/drill_bit_layer_smelting");
+
 	private static ResourceLocation registerSprite(String path) {
 		ResourceLocation sprite = new ResourceLocation(StaticPower.MOD_ID, path);
 		SPRITES.add(sprite);

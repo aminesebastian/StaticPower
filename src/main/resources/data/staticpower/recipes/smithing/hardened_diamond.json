@@ -1,0 +1,15 @@
+{
+	"type": "staticpower:auto_smith_recipe",
+	"modifier_item": {
+		"tag": "forge:dusts/diamond"
+	},
+	"attributes": [
+		{
+			"id": "staticpower:hardened_diamond",
+			"modifier": {
+				"type": "boolean",
+				"value": true
+			}
+		}
+	]
+}

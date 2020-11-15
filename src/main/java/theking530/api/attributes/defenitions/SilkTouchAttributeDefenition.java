@@ -4,6 +4,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.modifiers.BooleanAttributeModifier;
 import theking530.api.attributes.registration.AttributeRegistration;
 
@@ -12,7 +13,7 @@ public class SilkTouchAttributeDefenition extends AbstractAttributeDefenition<Bo
 	public static final ResourceLocation ID = new ResourceLocation("staticpower", "silk_touch");
 
 	public SilkTouchAttributeDefenition(ResourceLocation id) {
-		super(ID, "gui.staticpower.silk_touch", TextFormatting.AQUA, BooleanAttributeModifier.class);
+		super(ID, "attribute.staticpower.silk_touch", TextFormatting.WHITE, BooleanAttributeModifier.class);
 		baseValue = false;
 	}
 
@@ -32,13 +33,13 @@ public class SilkTouchAttributeDefenition extends AbstractAttributeDefenition<Bo
 	}
 
 	@Override
-	public boolean canAcceptModifier(BooleanAttributeModifier modifier) {
+	public boolean canAcceptModifier(IAttributable attributable, BooleanAttributeModifier modifier) {
 		// If we already have the grinding modifier, dont do anything.
 		return !getValue();
 	}
 
 	@Override
-	public boolean shouldDisplayOnTooltip() {
+	public boolean isActive() {
 		return getValue();
 	}
 

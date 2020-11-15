@@ -1,0 +1,15 @@
+{
+	"type": "staticpower:auto_smith_recipe",
+	"modifier_item": {
+		"tag": "forge:dusts/emerald"
+	},
+	"attributes": [
+		{
+			"id": "staticpower:hardened_emerald",
+			"modifier": {
+				"type": "boolean",
+				"value": true
+			}
+		}
+	]
+}

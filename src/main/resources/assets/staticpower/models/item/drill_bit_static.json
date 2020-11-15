@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "staticpower:items/components/drill_bit_static"
+		"layer0": "staticpower:items/components/drill_bits/drill_bit_static"
 	}
 }

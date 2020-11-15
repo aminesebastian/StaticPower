@@ -5,6 +5,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.modifiers.FloatAttributeModifier;
 import theking530.api.attributes.registration.AttributeRegistration;
 
@@ -14,7 +15,7 @@ public class HasteAttributeDefenition extends AbstractAttributeDefenition<Intege
 	public static final int MAX_VALUE = 300;
 
 	public HasteAttributeDefenition(ResourceLocation id) {
-		super(ID, "gui.staticpower.haste", TextFormatting.YELLOW, FloatAttributeModifier.class);
+		super(ID, "attribute.staticpower.haste", TextFormatting.YELLOW, FloatAttributeModifier.class);
 		baseValue = 0;
 	}
 
@@ -82,7 +83,7 @@ public class HasteAttributeDefenition extends AbstractAttributeDefenition<Intege
 	}
 
 	@Override
-	public boolean canAcceptModifier(FloatAttributeModifier modifier) {
+	public boolean canAcceptModifier(IAttributable attributable, FloatAttributeModifier modifier) {
 		// If we're already at the max, we can't take another modifier.
 		if (getValue() >= MAX_VALUE) {
 			return false;
@@ -91,7 +92,7 @@ public class HasteAttributeDefenition extends AbstractAttributeDefenition<Intege
 	}
 
 	@Override
-	public boolean shouldDisplayOnTooltip() {
+	public boolean isActive() {
 		return getValue() > 0;
 	}
 

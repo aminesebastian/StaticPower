@@ -15,6 +15,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
+import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.modifiers.AbstractAttributeModifier;
 import theking530.api.attributes.registration.AttributeModifierRegistry;
 
@@ -39,12 +40,19 @@ public abstract class AbstractAttributeDefenition<T, K extends AbstractAttribute
 		this.modifiers = new ArrayList<K>();
 		this.modifierType = modifierType;
 	}
-	
+
 	public abstract T getValue();
 
-	public abstract boolean shouldDisplayOnTooltip();
+	/**
+	 * This method should return true when this attribute is active. When this
+	 * returns false, the attribute will not appear on a tooltip, or rendered on an
+	 * item, etc.
+	 * 
+	 * @return
+	 */
+	public abstract boolean isActive();
 
-	public abstract boolean canAcceptModifier(K modifier);
+	public abstract boolean canAcceptModifier(IAttributable attributable, K modifier);
 
 	public abstract @Nullable IFormattableTextComponent getDifferenceLabel(AbstractAttributeDefenition<?, ?> other);
 

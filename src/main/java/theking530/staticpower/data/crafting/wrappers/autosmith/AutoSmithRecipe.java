@@ -69,7 +69,7 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 			for (RecipeModifierWrapper wrapper : modifiers) {
 				if (attributable.hasAttribute(wrapper.getAttributeId())) {
 					AbstractAttributeDefenition attribute = attributable.getAttribute(wrapper.getAttributeId());
-					if (attribute.canAcceptModifier(wrapper.getModifier())) {
+					if (attribute.canAcceptModifier(attributable, wrapper.getModifier())) {
 						wasApplied = true;
 						break;
 					}
@@ -151,7 +151,7 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 		for (RecipeModifierWrapper modifier : getModifiers()) {
 			if (attributable.hasAttribute(modifier.getAttributeId())) {
 				AbstractAttributeDefenition attribute = attributable.getAttribute(modifier.getAttributeId());
-				if (attribute.canAcceptModifier(modifier.getModifier())) {
+				if (attribute.canAcceptModifier(attributable, modifier.getModifier())) {
 					attribute.addModifier(modifier.getModifier(), false);
 					applied = true;
 				}
@@ -166,7 +166,7 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 		for (RecipeModifierWrapper modifier : getModifiers()) {
 			if (attributable.hasAttribute(modifier.getAttributeId())) {
 				AbstractAttributeDefenition attribute = attributable.getAttribute(modifier.getAttributeId());
-				if (attribute.canAcceptModifier(modifier.getModifier())) {
+				if (attribute.canAcceptModifier(attributable, modifier.getModifier())) {
 					return true;
 				}
 			}

@@ -208,9 +208,6 @@ public class ModItems {
 	public static DrillBit BronzeDrillBit;
 	public static DrillBit AdvancedDrillBit;
 	public static DrillBit TungstenDrillBit;
-	public static DrillBit DiamondDrillBit;
-	public static DrillBit RubyDrillBit;
-	public static DrillBit SapphireDrillBit;
 	public static DrillBit StaticDrillBit;
 	public static DrillBit EnergizedDrillBit;
 	public static DrillBit LumumDrillBit;
@@ -626,9 +623,6 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(BronzeDrillBit = new DrillBit("drill_bit_bronze", ItemTier.IRON, StaticPowerTiers.BRONZE));
 		StaticPowerRegistry.preRegisterItem(AdvancedDrillBit = new DrillBit("drill_bit_advanced", ItemTier.IRON, StaticPowerTiers.ADVANCED));
 		StaticPowerRegistry.preRegisterItem(TungstenDrillBit = new DrillBit("drill_bit_tungsten", ItemTier.NETHERITE, StaticPowerTiers.TUNGSTEN));
-		StaticPowerRegistry.preRegisterItem(DiamondDrillBit = new DrillBit("drill_bit_diamond", ItemTier.DIAMOND, StaticPowerTiers.DIAMOND));
-		StaticPowerRegistry.preRegisterItem(RubyDrillBit = new DrillBit("drill_bit_ruby", ItemTier.DIAMOND, StaticPowerTiers.RUBY));
-		StaticPowerRegistry.preRegisterItem(SapphireDrillBit = new DrillBit("drill_bit_sapphire", ItemTier.DIAMOND, StaticPowerTiers.SAPPHIRE));
 		StaticPowerRegistry.preRegisterItem(StaticDrillBit = new DrillBit("drill_bit_static", ItemTier.DIAMOND, StaticPowerTiers.STATIC));
 		StaticPowerRegistry.preRegisterItem(EnergizedDrillBit = new DrillBit("drill_bit_energized", ItemTier.DIAMOND, StaticPowerTiers.ENERGIZED));
 		StaticPowerRegistry.preRegisterItem(LumumDrillBit = new DrillBit("drill_bit_lumum", ItemTier.NETHERITE, StaticPowerTiers.LUMUM));

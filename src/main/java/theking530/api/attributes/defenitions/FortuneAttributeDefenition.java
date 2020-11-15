@@ -5,6 +5,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.modifiers.FloatAttributeModifier;
 import theking530.api.attributes.registration.AttributeRegistration;
 import theking530.staticcore.utilities.SDMath;
@@ -15,7 +16,7 @@ public class FortuneAttributeDefenition extends AbstractAttributeDefenition<Inte
 	public static final int MAX_VALUE = 300;
 
 	public FortuneAttributeDefenition(ResourceLocation id) {
-		super(ID, "gui.staticpower.fortune", TextFormatting.BLUE, FloatAttributeModifier.class);
+		super(ID, "attribute.staticpower.fortune", TextFormatting.BLUE, FloatAttributeModifier.class);
 		baseValue = 0;
 	}
 
@@ -88,7 +89,7 @@ public class FortuneAttributeDefenition extends AbstractAttributeDefenition<Inte
 	}
 
 	@Override
-	public boolean canAcceptModifier(FloatAttributeModifier modifier) {
+	public boolean canAcceptModifier(IAttributable attributable, FloatAttributeModifier modifier) {
 		// If we're already at the max, we can't take another modifier.
 		if (getValue() >= MAX_VALUE) {
 			return false;
@@ -97,7 +98,7 @@ public class FortuneAttributeDefenition extends AbstractAttributeDefenition<Inte
 	}
 
 	@Override
-	public boolean shouldDisplayOnTooltip() {
+	public boolean isActive() {
 		return getValue() > 0;
 	}
 

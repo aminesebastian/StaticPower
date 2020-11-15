@@ -1,0 +1,15 @@
+{
+	"type": "staticpower:auto_smith_recipe",
+	"modifier_item": {
+		"tag": "forge:dusts/sapphire"
+	},
+	"attributes": [
+		{
+			"id": "staticpower:hardened_sapphire",
+			"modifier": {
+				"type": "boolean",
+				"value": true
+			}
+		}
+	]
+}

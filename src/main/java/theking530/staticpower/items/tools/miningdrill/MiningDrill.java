@@ -1,5 +1,6 @@
 package theking530.staticpower.items.tools.miningdrill;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -225,6 +226,9 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		// Allocate a flag to check if anything was ground.
 		boolean wasAnythingGround = false;
 
+		// Capture the ground items.
+		List<ItemStack> groundItems = new ArrayList<ItemStack>();
+
 		// Get the grinding attribute and check if its enabled.
 		if (grindingAttribute.getValue()) {
 			// Iterate through all the items that were going to be dropped.
@@ -236,15 +240,27 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 
 				// If the recipe is present, create the ground droppables.
 				if (recipe.isPresent()) {
+					boolean didGrindingSucceed = false;
 					for (ProbabilityItemStackOutput output : recipe.get().getOutputItems()) {
 						if (SDMath.diceRoll(output.getOutputChance())) {
-							droppableItems.add(output.getItem());
+							groundItems.add(output.getItem());
+							didGrindingSucceed = true;
 						}
+					}
+
+					// If the grinding of this particular item succeeded, remove it from the
+					// droppable list.
+					if (didGrindingSucceed) {
+						droppableItems.remove(i);
 					}
 					wasAnythingGround = true;
 				}
 			}
 		}
+
+		// Add the ground items to the output.
+		droppableItems.addAll(groundItems);
+
 		return wasAnythingGround;
 	}
 
