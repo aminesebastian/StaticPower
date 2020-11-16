@@ -25,4 +25,10 @@ public class StaticPowerTierTungsten extends StaticPowerTier {
 	protected int getDrillBitUses() {
 		return 48000;
 	}
+
+	@Override
+	protected int getChainsawBladeUses() {
+		return 96000;
+	}
+
 }

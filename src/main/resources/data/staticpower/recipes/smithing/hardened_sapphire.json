@@ -1,7 +1,8 @@
 {
 	"type": "staticpower:auto_smith_recipe",
 	"modifier_item": {
-		"tag": "forge:dusts/sapphire"
+		"tag": "forge:dusts/sapphire",
+		"count": 3
 	},
 	"attributes": [
 		{

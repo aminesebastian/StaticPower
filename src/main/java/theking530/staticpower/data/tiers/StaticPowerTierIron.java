@@ -25,4 +25,9 @@ public class StaticPowerTierIron extends StaticPowerTier {
 	protected int getDrillBitUses() {
 		return 2000;
 	}
+
+	@Override
+	protected int getChainsawBladeUses() {
+		return 4000;
+	}
 }

@@ -137,6 +137,11 @@ public class StaticPowerTierAdvanced extends StaticPowerTier {
 	}
 
 	@Override
+	protected int getChainsawBladeUses() {
+		return 13000;
+	}
+
+	@Override
 	protected double getProcessingSpeedUpgrade() {
 		return 3.0f;
 	}

@@ -20,9 +20,11 @@ public class StaticPowerTierDiamond extends StaticPowerTier {
 	protected String getUnlocalizedName() {
 		return "tier.staticpower.diamond";
 	}
-
-	@Override
-	protected int getDrillBitUses() {
-		return 8000;
+	protected Double getHardenedDurabilityBoost() {
+		return 2.0;
+	}
+	
+	protected Boolean isHardenedDurabilityBoostAdditive() {
+			return false;
 	}
 }

@@ -362,9 +362,7 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 			ItemStack drillBit = this.getDrillBit(stack);
 			DrillBit drillBitItem = (DrillBit) drillBit.getItem();
 			drillBitItem.getTooltip(drillBit, worldIn, tooltip, isShowingAdvanced);
-			if (isShowingAdvanced) {
-				drillBitItem.getAdvancedTooltip(drillBit, worldIn, tooltip);
-			}
+			tooltip.add(new TranslationTextComponent("gui.staticpower.mining_speed").appendString(" ").append(GuiTextUtilities.formatUnitRateToString(this.getEfficiency(stack))));
 			AttributeUtilities.addTooltipsForAttribute(drillBit, tooltip, isShowingAdvanced);
 		}
 	}
@@ -372,7 +370,11 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
-		tooltip.add(new TranslationTextComponent("gui.staticpower.mining_speed").appendString(" ").appendString(String.valueOf(this.getEfficiency(stack))));
+		if (hasDrillBit(stack)) {
+			ItemStack drillBit = this.getDrillBit(stack);
+			DrillBit drillBitItem = (DrillBit) drillBit.getItem();
+			drillBitItem.getAdvancedTooltip(drillBit, worldIn, tooltip);
+		}
 	}
 
 	/**

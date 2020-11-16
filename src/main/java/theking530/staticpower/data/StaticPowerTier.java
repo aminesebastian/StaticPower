@@ -121,12 +121,19 @@ public abstract class StaticPowerTier {
 	public ConfigValue<Integer> maxCentrifugeSpeedUpgrade;
 	public ConfigValue<Double> centrifugeUpgradedPowerIncrease;
 
+	/********
+	 * Tools
+	 ********/
+	public ConfigValue<Integer> drillBitUses;
+	public ConfigValue<Integer> chainsawBladeUses;
+	public ConfigValue<Double> hardenedDurabilityBoost;
+	public ConfigValue<Boolean> hardenedDurabilityBoostAdditive;
+
 	/*******
 	 * Misc
 	 *******/
 	public ConfigValue<Integer> defaultTankCapacity;
 	public ConfigValue<Integer> capsuleCapacity;
-	public ConfigValue<Integer> drillBitUses;
 	public ConfigValue<Integer> itemFilterSlots;
 
 	public ConfigValue<Integer> upgradeOrdinal;
@@ -288,9 +295,6 @@ public abstract class StaticPowerTier {
 		portableBatteryCapacity = builder.comment("The amount of power that can be stored in a portable battery of this tier.")
 				.translation(StaticPower.MOD_ID + ".config." + "portableBatteryCapacity").define("PortableBatteryCapacity", this.getPortableBatteryCapacity());
 
-		drillBitUses = builder.comment("The number of blocks that can be mined by a drill bit of this tier.").translation(StaticPower.MOD_ID + ".config." + "drillBitUses")
-				.define("DrillBitUses", this.getDrillBitUses());
-
 		itemFilterSlots = builder.comment("The number of slots that exist on an item filter of this tier (not the filter attachment, the actual item).")
 				.translation(StaticPower.MOD_ID + ".config." + "itemFilterSlots").define("ItemFilterSlots", this.getItemFilterSlots());
 
@@ -298,6 +302,22 @@ public abstract class StaticPowerTier {
 		upgradeOrdinal = builder.comment(
 				"The upgrade ordinal of this tier. Higher value will take precedence. For example, if a machine has both Basic and Energized power upgrades installed, the Energized upgrades will be used when calculating power values because it has the higher upgrade ordinal. In the case of a tie, it comes down to which one appears in later in the upgrade slots.")
 				.translation(StaticPower.MOD_ID + ".config." + "upgradeOrdinal").define("UpgradeOrdinal", this.getUpgradeOrdinal());
+
+		/********
+		 * Tools
+		 ********/
+		builder.push("Tools");
+		drillBitUses = builder.comment("The number of blocks that can be mined by a drill bit of this tier.").translation(StaticPower.MOD_ID + ".config." + "drillBitUses")
+				.define("DrillBitUses", this.getDrillBitUses());
+		chainsawBladeUses = builder.comment("The number of blocks that can be mined by a chainsaw blade of this tier.").translation(StaticPower.MOD_ID + ".config." + "chainsawBladeUses")
+				.define("ChainsawBladeUses", this.getChainsawBladeUses());
+
+		hardenedDurabilityBoost = builder.comment("The amount of durability gained when the diamond hardened modifier is added.")
+				.translation(StaticPower.MOD_ID + ".config." + "diamondHardenedDurabilityBoost").define("DiamondHardenedDurabilityBoost", this.getHardenedDurabilityBoost());
+		hardenedDurabilityBoostAdditive = builder.comment("Defines whether the hardened durability boost is additive or multaplicative.")
+				.translation(StaticPower.MOD_ID + ".config." + "hardenedDurabilityBoostAdditive").define("HardenedDurabilityBoostAdditive", this.isHardenedDurabilityBoostAdditive());
+
+		builder.pop();
 
 		/********************
 		 * Processing Upgrade
@@ -466,6 +486,18 @@ public abstract class StaticPowerTier {
 
 	protected int getDrillBitUses() {
 		return 0;
+	}
+
+	protected int getChainsawBladeUses() {
+		return 0;
+	}
+
+	protected Double getHardenedDurabilityBoost() {
+		return 0.0;
+	}
+
+	protected Boolean isHardenedDurabilityBoostAdditive() {
+		return false;
 	}
 
 	protected int getItemFilterSlots() {

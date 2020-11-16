@@ -15,6 +15,7 @@ import theking530.staticpower.data.tiers.StaticPowerTierBronze;
 import theking530.staticpower.data.tiers.StaticPowerTierCopper;
 import theking530.staticpower.data.tiers.StaticPowerTierCreative;
 import theking530.staticpower.data.tiers.StaticPowerTierDiamond;
+import theking530.staticpower.data.tiers.StaticPowerTierEmerald;
 import theking530.staticpower.data.tiers.StaticPowerTierEnergized;
 import theking530.staticpower.data.tiers.StaticPowerTierGold;
 import theking530.staticpower.data.tiers.StaticPowerTierIron;
@@ -53,14 +54,16 @@ public class StaticPower {
 		StaticPowerConfig.registerTier(StaticPowerTiers.ALUMINIUM, StaticPowerTierAluminium::new);
 		StaticPowerConfig.registerTier(StaticPowerTiers.BRONZE, StaticPowerTierBronze::new);
 		StaticPowerConfig.registerTier(StaticPowerTiers.COPPER, StaticPowerTierCopper::new);
-		StaticPowerConfig.registerTier(StaticPowerTiers.DIAMOND, StaticPowerTierDiamond::new);
 		StaticPowerConfig.registerTier(StaticPowerTiers.GOLD, StaticPowerTierGold::new);
 		StaticPowerConfig.registerTier(StaticPowerTiers.IRON, StaticPowerTierIron::new);
-		StaticPowerConfig.registerTier(StaticPowerTiers.RUBY, StaticPowerTierRuby::new);
-		StaticPowerConfig.registerTier(StaticPowerTiers.SAPPHIRE, StaticPowerTierSapphire::new);
 		StaticPowerConfig.registerTier(StaticPowerTiers.SILVER, StaticPowerTierSilver::new);
 		StaticPowerConfig.registerTier(StaticPowerTiers.TIN, StaticPowerTierTin::new);
 		StaticPowerConfig.registerTier(StaticPowerTiers.TUNGSTEN, StaticPowerTierTungsten::new);
+
+		StaticPowerConfig.registerTier(StaticPowerTiers.DIAMOND, StaticPowerTierDiamond::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.RUBY, StaticPowerTierRuby::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.SAPPHIRE, StaticPowerTierSapphire::new);
+		StaticPowerConfig.registerTier(StaticPowerTiers.EMERALD, StaticPowerTierEmerald::new);
 
 		StaticCoreRegistry.preInitialize();
 		ModRecipeSerializers.init();

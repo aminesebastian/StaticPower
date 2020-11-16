@@ -36,15 +36,15 @@ import net.minecraftforge.items.IItemHandler;
 import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.attributes.capability.IAttributable;
 import theking530.staticpower.client.rendering.blocks.AbstractBakedModel;
-import theking530.staticpower.items.tools.miningdrill.DrillBit;
+import theking530.staticpower.items.tools.chainsaw.ChainsawBlade;
 
 @OnlyIn(Dist.CLIENT)
 @SuppressWarnings("deprecation")
-public class DrillBitItemModel implements IBakedModel {
-	private final IBakedModel baseDrillBitModel;
+public class ChainsawBladeItemModel implements IBakedModel {
+	private final IBakedModel baseChainsawBlade;
 
-	public DrillBitItemModel(IBakedModel emptyDrillModel) {
-		this.baseDrillBitModel = emptyDrillModel;
+	public ChainsawBladeItemModel(IBakedModel emptyDrillModel) {
+		this.baseChainsawBlade = emptyDrillModel;
 	}
 
 	@Override
@@ -52,46 +52,46 @@ public class DrillBitItemModel implements IBakedModel {
 		return new ItemOverrideList() {
 			@Override
 			public IBakedModel getOverrideModel(IBakedModel originalModel, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity livingEntity) {
-				return new DrillBitWithLayers(stack, baseDrillBitModel);
+				return new ChainsawBladeWithLayers(stack, baseChainsawBlade);
 			}
 		};
 	}
 
 	@Override
 	public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand) {
-		return baseDrillBitModel.getQuads(state, side, rand);
+		return baseChainsawBlade.getQuads(state, side, rand);
 	}
 
 	@Override
 	public boolean isAmbientOcclusion() {
-		return baseDrillBitModel.isAmbientOcclusion();
+		return baseChainsawBlade.isAmbientOcclusion();
 	}
 
 	@Override
 	public boolean isGui3d() {
-		return baseDrillBitModel.isGui3d();
+		return baseChainsawBlade.isGui3d();
 	}
 
 	@Override
 	public boolean isSideLit() {
-		return baseDrillBitModel.isSideLit();
+		return baseChainsawBlade.isSideLit();
 	}
 
 	@Override
 	public boolean isBuiltInRenderer() {
-		return baseDrillBitModel.isBuiltInRenderer();
+		return baseChainsawBlade.isBuiltInRenderer();
 	}
 
 	@Override
 	public TextureAtlasSprite getParticleTexture() {
-		return baseDrillBitModel.getParticleTexture();
+		return baseChainsawBlade.getParticleTexture();
 	}
 
-	protected class DrillBitWithLayers extends AbstractBakedModel {
+	protected class ChainsawBladeWithLayers extends AbstractBakedModel {
 		private final ItemStack stack;
 
-		public DrillBitWithLayers(ItemStack stack, IBakedModel baseDrillBitModel) {
-			super(baseDrillBitModel);
+		public ChainsawBladeWithLayers(ItemStack stack, IBakedModel baseChainsawBladeModel) {
+			super(baseChainsawBladeModel);
 			this.stack = stack;
 		}
 
@@ -122,23 +122,23 @@ public class DrillBitItemModel implements IBakedModel {
 				AtlasTexture spriteSheet = ModelLoader.instance().getSpriteMap().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 
 				// Get the drill bit item.
-				DrillBit bit = (DrillBit) stack.getItem();
+				ChainsawBlade bit = (ChainsawBlade) stack.getItem();
 
 				// Generate sprites list.
 				List<ResourceLocation> layers = bit.getRenderLayers().getOrderedRenderSprites(attributable);
-				
+
 				// Render the sprites.
 				for (ResourceLocation spriteLocation : layers) {
 					// Get the sprite.
 					TextureAtlasSprite sprite = spriteSheet.getSprite(spriteLocation);
 					BlockFaceUV spriteUv = new BlockFaceUV(new float[] { 0.0f, 0.0f, 16.0f, 16.0f }, 0);
 					BlockPartFace spriteFace = new BlockPartFace(null, -1, sprite.getName().toString(), spriteUv);
-					
+
 					// Create both sides.
 					BakedQuad frontSide = FaceBaker.bakeQuad(new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(16.0f, 16.0f, 8.5f), spriteFace, sprite, Direction.SOUTH,
 							SimpleModelTransform.IDENTITY, null, false, new ResourceLocation("dummy_name"));
 					output.add(frontSide);
-					
+
 					BakedQuad backSide = FaceBaker.bakeQuad(new Vector3f(0.0f, 0.0f, 7.5f), new Vector3f(16.0f, 16.0f, 16.0f), spriteFace, sprite, Direction.NORTH,
 							SimpleModelTransform.IDENTITY, null, false, new ResourceLocation("dummy_name"));
 					output.add(backSide);

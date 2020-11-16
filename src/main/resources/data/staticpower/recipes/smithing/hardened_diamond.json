@@ -1,7 +1,8 @@
 {
 	"type": "staticpower:auto_smith_recipe",
 	"modifier_item": {
-		"tag": "forge:dusts/diamond"
+		"tag": "forge:dusts/diamond",
+		"count": 3
 	},
 	"attributes": [
 		{

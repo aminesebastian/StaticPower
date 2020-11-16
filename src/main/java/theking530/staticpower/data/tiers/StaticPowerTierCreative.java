@@ -82,6 +82,11 @@ public class StaticPowerTierCreative extends StaticPowerTier {
 	}
 
 	@Override
+	protected int getChainsawBladeUses() {
+		return 2147483647;
+	}
+
+	@Override
 	protected int getDefaultMachinePowerCapacity() {
 		return 2147483647;
 	}

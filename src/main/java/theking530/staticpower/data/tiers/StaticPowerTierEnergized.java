@@ -137,6 +137,11 @@ public class StaticPowerTierEnergized extends StaticPowerTier {
 	}
 
 	@Override
+	protected int getChainsawBladeUses() {
+		return 24000;
+	}
+
+	@Override
 	protected double getProcessingSpeedUpgrade() {
 		return 7.0f;
 	}

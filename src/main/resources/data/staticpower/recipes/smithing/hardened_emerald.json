@@ -1,7 +1,8 @@
 {
 	"type": "staticpower:auto_smith_recipe",
 	"modifier_item": {
-		"tag": "forge:dusts/emerald"
+		"tag": "forge:dusts/emerald",
+		"count": 3
 	},
 	"attributes": [
 		{

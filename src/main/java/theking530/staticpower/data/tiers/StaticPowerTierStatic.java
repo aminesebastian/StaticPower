@@ -135,7 +135,10 @@ public class StaticPowerTierStatic extends StaticPowerTier {
 	protected int getDrillBitUses() {
 		return 8000;
 	}
-
+	@Override
+	protected int getChainsawBladeUses() {
+		return 16000;
+	}
 	@Override
 	protected double getProcessingSpeedUpgrade() {
 		return 5.0f;

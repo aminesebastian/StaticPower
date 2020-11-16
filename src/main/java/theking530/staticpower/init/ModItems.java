@@ -175,7 +175,8 @@ public class ModItems {
 	public static StaticPowerItem DustWood;
 	public static StaticPowerItem LatexChunk;
 	public static StaticPowerItem RubberWoodBark;
-
+	public static StaticPowerItem PortableSmeltingCore;
+	
 	public static StaticPowerItem BasicCard;
 	public static StaticPowerItem AdvancedCard;
 	public static StaticPowerItem StaticCard;
@@ -503,7 +504,8 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(Plug = new StaticPowerItem("plug"));
 		StaticPowerRegistry.preRegisterItem(DigistoreCore = new StaticPowerItem("digistore_core"));
 		StaticPowerRegistry.preRegisterItem(GrinderComponent = new StaticPowerItem("grinder_component"));
-
+		StaticPowerRegistry.preRegisterItem(PortableSmeltingCore = new StaticPowerItem("portable_smelting_core"));		
+	
 		StaticPowerRegistry.preRegisterItem(IronFluidCapsule = new FluidCapsule("fluid_capsule_iron", StaticPowerTiers.IRON));
 		StaticPowerRegistry.preRegisterItem(BasicFluidCapsule = new FluidCapsule("fluid_capsule_basic", StaticPowerTiers.BASIC));
 		StaticPowerRegistry.preRegisterItem(AdvancedFluidCapsule = new FluidCapsule("fluid_capsule_advanced", StaticPowerTiers.ADVANCED));

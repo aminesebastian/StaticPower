@@ -137,6 +137,11 @@ public class StaticPowerTierLumum extends StaticPowerTier {
 	}
 
 	@Override
+	protected int getChainsawBladeUses() {
+		return 32000;
+	}
+
+	@Override
 	protected double getProcessingSpeedUpgrade() {
 		return 10.0f;
 	}

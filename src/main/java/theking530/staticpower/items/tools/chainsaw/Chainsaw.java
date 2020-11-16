@@ -214,9 +214,7 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 			ItemStack blade = this.getChainsawBlade(stack);
 			ChainsawBlade bladeItem = (ChainsawBlade) blade.getItem();
 			bladeItem.getTooltip(blade, worldIn, tooltip, isShowingAdvanced);
-			if (isShowingAdvanced) {
-				bladeItem.getAdvancedTooltip(blade, worldIn, tooltip);
-			}
+			tooltip.add(new TranslationTextComponent("gui.staticpower.mining_speed").appendString(" ").appendString(String.valueOf(getEfficiency(stack))));
 			AttributeUtilities.addTooltipsForAttribute(blade, tooltip, isShowingAdvanced);
 		}
 	}
@@ -224,7 +222,11 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
-		tooltip.add(new TranslationTextComponent("gui.staticpower.mining_speed").appendString(" ").appendString(String.valueOf(getEfficiency(stack))));
+		if (hasChainsawBlade(stack)) {
+			ItemStack blade = this.getChainsawBlade(stack);
+			ChainsawBlade bladeItem = (ChainsawBlade) blade.getItem();
+			bladeItem.getAdvancedTooltip(blade, worldIn, tooltip);
+		}
 	}
 
 	/**
@@ -306,7 +308,7 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 			minableBlocks.add(pos);
 			return minableBlocks;
 		}
-		
+
 		// Perform the recursive analysis.
 		recursiveTreeAnalyzer(itemstack, pos, player, minableBlocks, new HashSet<BlockPos>(), 0);
 
@@ -341,7 +343,7 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 			if (getLogTag().test(blockStack)) {
 				if (this.canHarvestBlockInternal(itemstack, state)) {
 					positions.add(pos);
-					
+
 					// Recurse.
 					for (Direction dir : Direction.values()) {
 						recursiveTreeAnalyzer(itemstack, pos.offset(dir), player, positions, visited, currentDepth + 1);

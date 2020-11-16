@@ -5,24 +5,24 @@ import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.StaticPowerTier;
 
-public class StaticPowerTierRuby extends StaticPowerTier {
+public class StaticPowerTierEmerald extends StaticPowerTier {
 
-	public StaticPowerTierRuby(Builder builder) {
+	public StaticPowerTierEmerald(Builder builder) {
 		super(builder);
 	}
 
 	@Override
 	protected ResourceLocation getTierId() {
-		return new ResourceLocation(StaticPower.MOD_ID, "ruby");
+		return new ResourceLocation(StaticPower.MOD_ID, "diamond");
 	}
 
 	@Override
 	protected String getUnlocalizedName() {
-		return "tier.staticpower.ruby";
+		return "tier.staticpower.emerald";
 	}
 
 	protected Double getHardenedDurabilityBoost() {
-		return 5000.0;
+		return 10000.0;
 	}
 
 	protected Boolean isHardenedDurabilityBoostAdditive() {

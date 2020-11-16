@@ -20,9 +20,11 @@ public class StaticPowerTierSapphire extends StaticPowerTier {
 	protected String getUnlocalizedName() {
 		return "tier.staticpower.sapphire";
 	}
+	protected Double getHardenedDurabilityBoost() {
+		return 1.5;
+	}
 
-	@Override
-	protected int getDrillBitUses() {
-		return 4000;
+	protected Boolean isHardenedDurabilityBoostAdditive() {
+		return false;
 	}
 }

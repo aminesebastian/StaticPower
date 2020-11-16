@@ -1,8 +1,8 @@
 {
 	"type": "staticpower:auto_smith_recipe",
 	"modifier_item": {
-		"item": "staticpower:heat_sink_gold",
-		"count": 9
+		"item": "staticpower:portable_smelting_core",
+		"count": 3
 	},
 	"attributes": [
 		{

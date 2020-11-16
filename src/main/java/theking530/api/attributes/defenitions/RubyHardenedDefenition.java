@@ -1,68 +1,37 @@
 package theking530.api.attributes.defenitions;
 
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.TextFormatting;
-import theking530.api.attributes.AttributeUtilities;
-import theking530.api.attributes.capability.IAttributable;
-import theking530.api.attributes.modifiers.BooleanAttributeModifier;
 import theking530.api.attributes.registration.AttributeRegistration;
+import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.data.StaticPowerTiers;
 
 @AttributeRegistration("staticpower:hardened_ruby")
-public class RubyHardenedDefenition extends AbstractAttributeDefenition<Boolean, BooleanAttributeModifier> {
+public class RubyHardenedDefenition extends AbstractHardenedDefenition {
 	public static final ResourceLocation ID = new ResourceLocation("staticpower", "hardened_ruby");
 
 	public RubyHardenedDefenition(ResourceLocation id) {
-		super(ID, "attribute.staticpower.hardened_ruby", TextFormatting.RED, BooleanAttributeModifier.class);
-		baseValue = false;
+		super(ID, "attribute.staticpower.hardened_ruby", TextFormatting.RED);
 	}
 
 	@Override
-	public Boolean getValue() {
-		return modifiers.size() > 0;
-	}
-
-	@Override
-	protected void serializeBaseValue(CompoundNBT nbt) {
-		nbt.putBoolean("base_value", baseValue);
-	}
-
-	@Override
-	protected void deserializeBaseValue(CompoundNBT nbt) {
-		baseValue = nbt.getBoolean("base_value");
-	}
-
-	@Override
-	public boolean canAcceptModifier(IAttributable attributable, BooleanAttributeModifier modifier) {
-		// If we're already enabled, do nothing.
-		if (getValue() == true) {
-			return false;
+	public int applyHardening(int value) {
+		if (!getValue()) {
+			return value;
 		}
 
-		// Check to make sure we don't have any of the other hardening types.
-		if (AttributeUtilities.safeCheckAttributeValue(attributable, SapphireHardenedDefenition.ID, true)) {
-			return false;
-		} else if (AttributeUtilities.safeCheckAttributeValue(attributable, EmeraldHardenedDefenition.ID, true)) {
-			return false;
-		} else if (AttributeUtilities.safeCheckAttributeValue(attributable, DiamondHardenedDefenition.ID, true)) {
-			return false;
+		// Get the modifier amount.
+		double modifier = StaticPowerConfig.getTier(StaticPowerTiers.RUBY).hardenedDurabilityBoost.get();
+
+		// Apply the modification depending on whether or not this is an additive
+		// durability boost.
+		if (StaticPowerConfig.getTier(StaticPowerTiers.RUBY).hardenedDurabilityBoostAdditive.get()) {
+			value += modifier;
+		} else {
+			value *= modifier;
 		}
 
-		// If the above checks passed, return true.
-		return true;
-	}
-
-	@Override
-	public boolean isActive() {
-		return getValue();
-	}
-
-	@Override
-	public IFormattableTextComponent getDifferenceLabel(AbstractAttributeDefenition<?, ?> other) {
-		if (other.getValue() == this.getValue()) {
-			return null;
-		}
-		return super.getAttributeTitle(false);
+		// Return the modified value.
+		return value;
 	}
 }

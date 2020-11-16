@@ -13,6 +13,7 @@ public class StaticPowerTiers {
 	public static final ResourceLocation CREATIVE = new ResourceLocation(StaticPower.MOD_ID, "tier_creative");
 
 	public static final ResourceLocation DIAMOND = new ResourceLocation(StaticPower.MOD_ID, "tier_diamond");
+	public static final ResourceLocation EMERALD = new ResourceLocation(StaticPower.MOD_ID, "tier_emerald");
 	public static final ResourceLocation RUBY = new ResourceLocation(StaticPower.MOD_ID, "tier_ruby");
 	public static final ResourceLocation SAPPHIRE = new ResourceLocation(StaticPower.MOD_ID, "tier_sapphire");
 	public static final ResourceLocation TUNGSTEN = new ResourceLocation(StaticPower.MOD_ID, "tier_tungsten");

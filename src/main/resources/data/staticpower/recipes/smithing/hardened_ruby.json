@@ -1,7 +1,8 @@
 {
 	"type": "staticpower:auto_smith_recipe",
 	"modifier_item": {
-		"tag": "forge:dusts/ruby"
+		"tag": "forge:dusts/ruby",
+		"count": 3
 	},
 	"attributes": [
 		{
