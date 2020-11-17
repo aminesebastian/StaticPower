@@ -22,11 +22,12 @@ import theking530.api.attributes.defenitions.EmeraldHardenedDefenition;
 import theking530.api.attributes.defenitions.HasteAttributeDefenition;
 import theking530.api.attributes.defenitions.RubyHardenedDefenition;
 import theking530.api.attributes.defenitions.SapphireHardenedDefenition;
+import theking530.api.attributes.defenitions.SmeltingAttributeDefenition;
 import theking530.api.attributes.rendering.AttributableItemRenderLayers;
 import theking530.api.attributes.rendering.BasicAttributeRenderLayer;
 import theking530.staticcore.utilities.ItemTierUtilities;
 import theking530.staticpower.StaticPowerConfig;
-import theking530.staticpower.client.StaticPowerSprites;
+import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.items.ChainsawBladeItemModel;
 import theking530.staticpower.items.tools.AbstractToolPart;
 import theking530.staticpower.utilities.MetricConverter;
@@ -46,15 +47,18 @@ public class ChainsawBlade extends AbstractToolPart {
 		handler.addAttribute(RubyHardenedDefenition.ID);
 		handler.addAttribute(SapphireHardenedDefenition.ID);
 		handler.addAttribute(EmeraldHardenedDefenition.ID);
+		handler.addAttribute(SmeltingAttributeDefenition.ID);
 	}
 
 	@Override
 	protected void initializeRenderLayers(AttributableItemRenderLayers renderLayers) {
-		renderLayers.addLayer(DiamondHardenedDefenition.ID, new BasicAttributeRenderLayer(StaticPowerSprites.CHAINSAW_BLADE_HARDENED_DIAMOND, 2));
-		renderLayers.addLayer(RubyHardenedDefenition.ID, new BasicAttributeRenderLayer(StaticPowerSprites.CHAINSAW_BLADE_HARDENED_RUBY, 2));
-		renderLayers.addLayer(SapphireHardenedDefenition.ID, new BasicAttributeRenderLayer(StaticPowerSprites.CHAINSAW_BLADE_HARDENED_SAPPHIRE, 2));
-		renderLayers.addLayer(EmeraldHardenedDefenition.ID, new BasicAttributeRenderLayer(StaticPowerSprites.CHAINSAW_BLADE_HARDENED_EMERALD, 2));
-		renderLayers.addLayer(HasteAttributeDefenition.ID, new BasicAttributeRenderLayer(StaticPowerSprites.CHAINSAW_BLADE_HASTE, 3));
+		renderLayers.addLayer(DiamondHardenedDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.CHAINSAW_BLADE_HARDENED_DIAMOND, 2));
+		renderLayers.addLayer(RubyHardenedDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.CHAINSAW_BLADE_HARDENED_RUBY, 2));
+		renderLayers.addLayer(SapphireHardenedDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.CHAINSAW_BLADE_HARDENED_SAPPHIRE, 2));
+		renderLayers.addLayer(EmeraldHardenedDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.CHAINSAW_BLADE_HARDENED_EMERALD, 2));
+		renderLayers.addLayer(SmeltingAttributeDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.CHAINSAW_BLADE_SMELTING, 2));
+
+		renderLayers.addLayer(HasteAttributeDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.CHAINSAW_BLADE_HASTE, 3));
 	}
 
 	@Override
@@ -74,8 +78,7 @@ public class ChainsawBlade extends AbstractToolPart {
 
 		// Add the durability.
 		int remaining = getMaxDamage(stack) - getDamage(stack);
-		int max = getMaxDamage(stack);
-		String remainingString = "(" + new MetricConverter(remaining).getValueAsString(true) + "/" + new MetricConverter(max).getValueAsString(true) + ")";
+		String remainingString = new MetricConverter(remaining).getValueAsString(true);
 		tooltip.add(new TranslationTextComponent("gui.staticpower.durability").appendString(" ").appendString(remainingString));
 	}
 

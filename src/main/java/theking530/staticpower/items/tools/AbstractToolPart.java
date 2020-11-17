@@ -27,6 +27,7 @@ public abstract class AbstractToolPart extends StaticPowerItem implements ICusto
 		super(name, properties);
 		this.tier = tier;
 		this.renderLayers = new AttributableItemRenderLayers();
+		initializeRenderLayers(renderLayers); // Do this in the constructor as we only want this one ONCE.
 	}
 
 	public ResourceLocation getTier() {

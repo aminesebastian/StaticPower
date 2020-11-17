@@ -40,7 +40,7 @@ public class StaticPowerSprites {
 	public static final ResourceLocation ENERGIZED_TANK = registerSprite("blocks/machines/tank_energized");
 	public static final ResourceLocation LUMUM_TANK = registerSprite("blocks/machines/tank_lumum");
 	public static final ResourceLocation CREATIVE_TANK = registerSprite("blocks/machines/tank_creative");
-	
+
 	public static final ResourceLocation BATTERY_BLOCK_BASIC = registerSprite("blocks/machines/batteries/battery_block_basic");
 	public static final ResourceLocation BATTERY_BLOCK_BAR = registerSprite("blocks/machines/batteries/battery_block_side_filled");
 
@@ -71,10 +71,10 @@ public class StaticPowerSprites {
 
 	public static final ResourceLocation PORTABLE_BATTERY_FILL_BAR = registerSprite("items/batteries/portable_battery_filled_bar");
 	public static final ResourceLocation PORTABLE_CREATIVE_BATTERY_FILL_BAR = registerSprite("items/batteries/portable_battery_creative_filled_bar");
-	
+
 	public static final ResourceLocation PORTABLE_BATTERY_PACK_FILL_BAR = registerSprite("items/batteries/battery_pack_filled_bar");
 	public static final ResourceLocation PORTABLE_CREATIVE_BATTERY_PACK_FILL_BAR = registerSprite("items/batteries/battery_pack_creative_filled_bar");
-	
+
 	public static final ResourceLocation CANCEL = registerSprite("gui/cancel");
 	public static final ResourceLocation GREEN_CHECK = registerSprite("gui/check");
 	public static final ResourceLocation DISABLED = registerSprite("gui/disabled");
@@ -83,7 +83,7 @@ public class StaticPowerSprites {
 	public static final ResourceLocation NOTIFICATION = registerSprite("gui/notification");
 	public static final ResourceLocation IMPORT = registerSprite("gui/import_icon");
 	public static final ResourceLocation EXPORT = registerSprite("gui/export_icon");
-	
+
 	public static final ResourceLocation FLAMES = registerSprite("gui/flames");
 
 	public static final ResourceLocation CRAFTING_TABLE_ICON = registerSprite("gui/crafting_table_icon");
@@ -94,21 +94,6 @@ public class StaticPowerSprites {
 	public static final ResourceLocation DURABILITY_BAR = registerSprite("items/tools/durability_bar");
 	public static final ResourceLocation TOOL_POWER_BAR = registerSprite("items/tools/tool_power_bar");
 
-	public static final ResourceLocation DRILL_BIT_FORTUNE = registerSprite("items/components/drill_bits/drill_bit_layer_fortune");
-	public static final ResourceLocation DRILL_BIT_HASTE = registerSprite("items/components/drill_bits/drill_bit_layer_haste");
-	public static final ResourceLocation DRILL_BIT_HARDENED_DIAMOND = registerSprite("items/components/drill_bits/drill_bit_layer_hardened_diamond");
-	public static final ResourceLocation DRILL_BIT_HARDENED_EMERALD = registerSprite("items/components/drill_bits/drill_bit_layer_hardened_emerald");
-	public static final ResourceLocation DRILL_BIT_HARDENED_RUBY = registerSprite("items/components/drill_bits/drill_bit_layer_hardened_ruby");
-	public static final ResourceLocation DRILL_BIT_HARDENED_SAPPHIRE = registerSprite("items/components/drill_bits/drill_bit_layer_hardened_sapphire");
-	public static final ResourceLocation DRILL_BIT_GRINDING = registerSprite("items/components/drill_bits/drill_bit_layer_grinding");
-	public static final ResourceLocation DRILL_BIT_SILK_TOUCH = registerSprite("items/components/drill_bits/drill_bit_layer_silk_touch");
-	public static final ResourceLocation DRILL_BIT_SMELTING = registerSprite("items/components/drill_bits/drill_bit_layer_smelting");
-	
-	public static final ResourceLocation CHAINSAW_BLADE_HASTE = registerSprite("items/components/chainsaw_blades/chainsaw_blade_layer_haste");
-	public static final ResourceLocation CHAINSAW_BLADE_HARDENED_DIAMOND = registerSprite("items/components/chainsaw_blades/chainsaw_blade_layer_hardened_diamond");
-	public static final ResourceLocation CHAINSAW_BLADE_HARDENED_EMERALD = registerSprite("items/components/chainsaw_blades/chainsaw_blade_layer_hardened_emerald");
-	public static final ResourceLocation CHAINSAW_BLADE_HARDENED_RUBY = registerSprite("items/components/chainsaw_blades/chainsaw_blade_layer_hardened_ruby");
-	public static final ResourceLocation CHAINSAW_BLADE_HARDENED_SAPPHIRE = registerSprite("items/components/chainsaw_blades/chainsaw_blade_layer_hardened_sapphire");
 
 	private static ResourceLocation registerSprite(String path) {
 		ResourceLocation sprite = new ResourceLocation(StaticPower.MOD_ID, path);

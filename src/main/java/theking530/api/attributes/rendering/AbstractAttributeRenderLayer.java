@@ -1,6 +1,13 @@
 package theking530.api.attributes.rendering;
 
-import net.minecraft.util.ResourceLocation;
+import java.util.List;
+import java.util.Random;
+
+import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.model.BakedQuad;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.Direction;
+import net.minecraftforge.client.model.data.IModelData;
 import theking530.api.attributes.capability.IAttributable;
 
 public abstract class AbstractAttributeRenderLayer {
@@ -28,12 +35,12 @@ public abstract class AbstractAttributeRenderLayer {
 	}
 
 	/**
-	 * This method should return the resource location to use when rendering this
-	 * attrribute for the provided attributable.
-	 * 
+	 * This method should return the quads to render on top of the item.
+	 * @param stack TODO
 	 * @param attributable
+	 * 
 	 * @return
 	 */
-	public abstract ResourceLocation getSprite(IAttributable attributable);
+	public abstract List<BakedQuad> getQuads(ItemStack stack, IAttributable attributable, BlockState state, Direction side, Random rand, IModelData data);
 
 }

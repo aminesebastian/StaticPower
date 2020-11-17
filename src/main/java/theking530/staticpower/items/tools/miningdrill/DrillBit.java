@@ -30,7 +30,7 @@ import theking530.api.attributes.rendering.AttributableItemRenderLayers;
 import theking530.api.attributes.rendering.BasicAttributeRenderLayer;
 import theking530.staticcore.utilities.ItemTierUtilities;
 import theking530.staticpower.StaticPowerConfig;
-import theking530.staticpower.client.StaticPowerSprites;
+import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.items.DrillBitItemModel;
 import theking530.staticpower.items.tools.AbstractToolPart;
 import theking530.staticpower.utilities.MetricConverter;
@@ -60,19 +60,19 @@ public class DrillBit extends AbstractToolPart {
 
 	@Override
 	protected void initializeRenderLayers(AttributableItemRenderLayers renderLayers) {
-		renderLayers.addLayer(GrindingAttributeDefenition.ID, new BasicAttributeRenderLayer(StaticPowerSprites.DRILL_BIT_GRINDING, -1));
+		renderLayers.addLayer(GrindingAttributeDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.DRILL_BIT_GRINDING, -1));
 
-		renderLayers.addLayer(SmeltingAttributeDefenition.ID, new BasicAttributeRenderLayer(StaticPowerSprites.DRILL_BIT_SMELTING, 1));
+		renderLayers.addLayer(SmeltingAttributeDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.DRILL_BIT_SMELTING, 1));
 
-		renderLayers.addLayer(DiamondHardenedDefenition.ID, new BasicAttributeRenderLayer(StaticPowerSprites.DRILL_BIT_HARDENED_DIAMOND, 2));
-		renderLayers.addLayer(RubyHardenedDefenition.ID, new BasicAttributeRenderLayer(StaticPowerSprites.DRILL_BIT_HARDENED_RUBY, 2));
-		renderLayers.addLayer(SapphireHardenedDefenition.ID, new BasicAttributeRenderLayer(StaticPowerSprites.DRILL_BIT_HARDENED_SAPPHIRE, 2));
-		renderLayers.addLayer(EmeraldHardenedDefenition.ID, new BasicAttributeRenderLayer(StaticPowerSprites.DRILL_BIT_HARDENED_EMERALD, 2));
+		renderLayers.addLayer(DiamondHardenedDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.DRILL_BIT_HARDENED_DIAMOND, 2));
+		renderLayers.addLayer(RubyHardenedDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.DRILL_BIT_HARDENED_RUBY, 2));
+		renderLayers.addLayer(SapphireHardenedDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.DRILL_BIT_HARDENED_SAPPHIRE, 2));
+		renderLayers.addLayer(EmeraldHardenedDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.DRILL_BIT_HARDENED_EMERALD, 2));
 
-		renderLayers.addLayer(HasteAttributeDefenition.ID, new BasicAttributeRenderLayer(StaticPowerSprites.DRILL_BIT_HASTE, 3));
-		renderLayers.addLayer(SilkTouchAttributeDefenition.ID, new BasicAttributeRenderLayer(StaticPowerSprites.DRILL_BIT_SILK_TOUCH, 3));
+		renderLayers.addLayer(HasteAttributeDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.DRILL_BIT_HASTE, 3));
+		renderLayers.addLayer(SilkTouchAttributeDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.DRILL_BIT_SILK_TOUCH, 3));
 
-		renderLayers.addLayer(FortuneAttributeDefenition.ID, new BasicAttributeRenderLayer(StaticPowerSprites.DRILL_BIT_FORTUNE, 10));
+		renderLayers.addLayer(FortuneAttributeDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.DRILL_BIT_FORTUNE, 10));
 	}
 
 	public ItemTier getMiningTier() {
@@ -92,8 +92,7 @@ public class DrillBit extends AbstractToolPart {
 
 		// Add the durability.
 		int remaining = getMaxDamage(stack) - getDamage(stack);
-		int max = getMaxDamage(stack);
-		String remainingString = "(" + new MetricConverter(remaining).getValueAsString(true) + "/" + new MetricConverter(max).getValueAsString(true) + ")";
+		String remainingString = new MetricConverter(remaining).getValueAsString(true);
 		tooltip.add(new TranslationTextComponent("gui.staticpower.durability").appendString(" ").appendString(remainingString));
 	}
 

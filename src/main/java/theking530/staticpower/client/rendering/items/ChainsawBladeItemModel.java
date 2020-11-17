@@ -12,23 +12,16 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.BlockFaceUV;
-import net.minecraft.client.renderer.model.BlockPartFace;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ItemOverrideList;
-import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.client.model.SimpleModelTransform;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -117,36 +110,13 @@ public class ChainsawBladeItemModel implements IBakedModel {
 				return output;
 			}
 
-			try {
-				// Get the texture.
-				AtlasTexture spriteSheet = ModelLoader.instance().getSpriteMap().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+			// Get the drill bit item.
+			ChainsawBlade bit = (ChainsawBlade) stack.getItem();
 
-				// Get the drill bit item.
-				ChainsawBlade bit = (ChainsawBlade) stack.getItem();
-
-				// Generate sprites list.
-				List<ResourceLocation> layers = bit.getRenderLayers().getOrderedRenderSprites(attributable);
-
-				// Render the sprites.
-				for (ResourceLocation spriteLocation : layers) {
-					// Get the sprite.
-					TextureAtlasSprite sprite = spriteSheet.getSprite(spriteLocation);
-					BlockFaceUV spriteUv = new BlockFaceUV(new float[] { 0.0f, 0.0f, 16.0f, 16.0f }, 0);
-					BlockPartFace spriteFace = new BlockPartFace(null, -1, sprite.getName().toString(), spriteUv);
-
-					// Create both sides.
-					BakedQuad frontSide = FaceBaker.bakeQuad(new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(16.0f, 16.0f, 8.5f), spriteFace, sprite, Direction.SOUTH,
-							SimpleModelTransform.IDENTITY, null, false, new ResourceLocation("dummy_name"));
-					output.add(frontSide);
-
-					BakedQuad backSide = FaceBaker.bakeQuad(new Vector3f(0.0f, 0.0f, 7.5f), new Vector3f(16.0f, 16.0f, 16.0f), spriteFace, sprite, Direction.NORTH,
-							SimpleModelTransform.IDENTITY, null, false, new ResourceLocation("dummy_name"));
-					output.add(backSide);
-				}
-			} catch (Exception e) {
-				// No nothing -- this is just for those edge cases where resources are reloaded.
-			}
-
+			// Add all the quads.
+			List<BakedQuad> layers = bit.getRenderLayers().getOrderedRenderQuads(stack, attributable, state, side, rand, data);
+			output.addAll(layers);
+			
 			return output;
 		}
 

@@ -5,8 +5,14 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.model.BakedQuad;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.data.IModelData;
 import theking530.api.attributes.capability.IAttributable;
 
 public class AttributableItemRenderLayers {
@@ -36,7 +42,7 @@ public class AttributableItemRenderLayers {
 	 * @param attributable
 	 * @return
 	 */
-	public List<ResourceLocation> getOrderedRenderSprites(IAttributable attributable) {
+	public List<BakedQuad> getOrderedRenderQuads(ItemStack stack, IAttributable attributable, BlockState state, Direction side, Random rand, IModelData data) {
 		// Allocate a list for the appropriate layers.
 		ArrayList<AbstractAttributeRenderLayer> applicableLayers = new ArrayList<>();
 
@@ -56,11 +62,11 @@ public class AttributableItemRenderLayers {
 		});
 
 		// Allocate the output.
-		ArrayList<ResourceLocation> output = new ArrayList<>();
+		ArrayList<BakedQuad> output = new ArrayList<>();
 
-		// Then, populate the sprites.
+		// Then, populate the quads.
 		for (AbstractAttributeRenderLayer orderedLayer : applicableLayers) {
-			output.add(orderedLayer.getSprite(attributable));
+			output.addAll(orderedLayer.getQuads(stack, attributable, state, side, rand, data));
 		}
 
 		// Finally, return the ordered list of sprites.

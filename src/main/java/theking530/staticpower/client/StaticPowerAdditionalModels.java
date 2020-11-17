@@ -198,6 +198,23 @@ public class StaticPowerAdditionalModels {
 
 	public static final ResourceLocation DIGISTORE_PATTERN_CARD_ENCODED = registerModel("item/digistore_pattern_card_encoded");
 
+	public static final ResourceLocation DRILL_BIT_FORTUNE = registerModel("item/attribute_layers/drill_bits/drill_bit_layer_fortune");
+	public static final ResourceLocation DRILL_BIT_HASTE = registerModel("item/attribute_layers/drill_bits/drill_bit_layer_haste");
+	public static final ResourceLocation DRILL_BIT_HARDENED_DIAMOND = registerModel("item/attribute_layers/drill_bits/drill_bit_layer_hardened_diamond");
+	public static final ResourceLocation DRILL_BIT_HARDENED_EMERALD = registerModel("item/attribute_layers/drill_bits/drill_bit_layer_hardened_emerald");
+	public static final ResourceLocation DRILL_BIT_HARDENED_RUBY = registerModel("item/attribute_layers/drill_bits/drill_bit_layer_hardened_ruby");
+	public static final ResourceLocation DRILL_BIT_HARDENED_SAPPHIRE = registerModel("item/attribute_layers/drill_bits/drill_bit_layer_hardened_sapphire");
+	public static final ResourceLocation DRILL_BIT_GRINDING = registerModel("item/attribute_layers/drill_bits/drill_bit_layer_grinding");
+	public static final ResourceLocation DRILL_BIT_SILK_TOUCH = registerModel("item/attribute_layers/drill_bits/drill_bit_layer_silk_touch");
+	public static final ResourceLocation DRILL_BIT_SMELTING = registerModel("item/attribute_layers/drill_bits/drill_bit_layer_smelting");
+
+	public static final ResourceLocation CHAINSAW_BLADE_HASTE = registerModel("item/attribute_layers/chainsaw_blades/chainsaw_blade_layer_haste");
+	public static final ResourceLocation CHAINSAW_BLADE_HARDENED_DIAMOND = registerModel("item/attribute_layers/chainsaw_blades/chainsaw_blade_layer_hardened_diamond");
+	public static final ResourceLocation CHAINSAW_BLADE_HARDENED_EMERALD = registerModel("item/attribute_layers/chainsaw_blades/chainsaw_blade_layer_hardened_emerald");
+	public static final ResourceLocation CHAINSAW_BLADE_HARDENED_RUBY = registerModel("item/attribute_layers/chainsaw_blades/chainsaw_blade_layer_hardened_ruby");
+	public static final ResourceLocation CHAINSAW_BLADE_HARDENED_SAPPHIRE = registerModel("item/attribute_layers/chainsaw_blades/chainsaw_blade_layer_hardened_sapphire");
+	public static final ResourceLocation CHAINSAW_BLADE_SMELTING = registerModel("item/attribute_layers/chainsaw_blades/chainsaw_blade_layer_smelting");
+
 	@OnlyIn(Dist.CLIENT)
 	public static void regsiterModels() {
 		for (ResourceLocation model : MODELS) {
