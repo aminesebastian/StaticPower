@@ -181,6 +181,7 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		return ActionResult.resultPass(item);
 	}
 
+	@Override
 	protected void harvestBlockDrops(BlockState state, Block block, BlockPos pos, ServerPlayerEntity player, TileEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
 		// Get the drill bit attributes.
 		IAttributable drillBitAttributes = getDrillBit(heldItem).getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);

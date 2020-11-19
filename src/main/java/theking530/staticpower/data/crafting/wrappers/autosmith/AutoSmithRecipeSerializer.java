@@ -46,15 +46,21 @@ public class AutoSmithRecipeSerializer extends ForgeRegistryEntry<IRecipeSeriali
 		}
 
 		// Get the modifiers.
-		JsonArray attributeModifiers = JSONUtils.getJsonArray(json, "attributes");
-		RecipeModifierWrapper[] modifiers = new RecipeModifierWrapper[attributeModifiers.size()];
-		for (int i = 0; i < attributeModifiers.size(); i++) {
-			modifiers[i] = new RecipeModifierWrapper(attributeModifiers.get(i).getAsJsonObject());
+		RecipeModifierWrapper[] modifiers;
+		if (JSONUtils.hasField(json, "attributes")) {
+			JsonArray attributeModifiers = JSONUtils.getJsonArray(json, "attributes");
+			modifiers = new RecipeModifierWrapper[attributeModifiers.size()];
+			for (int i = 0; i < attributeModifiers.size(); i++) {
+				modifiers[i] = new RecipeModifierWrapper(attributeModifiers.get(i).getAsJsonObject());
+			}
+		}else {
+			modifiers = new RecipeModifierWrapper[0];
 		}
 
 		// Start with the default values.
 		int powerCost = TileEntityAutoSmith.DEFAULT_PROCESSING_COST;
 		int processingTime = TileEntityAutoSmith.DEFAULT_PROCESSING_TIME;
+		int repairAmount = 0;
 
 		// Capture the processing and power costs.
 		if (JSONUtils.hasField(json, "processing")) {
@@ -63,8 +69,13 @@ public class AutoSmithRecipeSerializer extends ForgeRegistryEntry<IRecipeSeriali
 			processingTime = processingElement.get("time").getAsInt();
 		}
 
+		// Capture the repair amount if provided.
+		if (JSONUtils.hasField(json, "repair_amount")) {
+			repairAmount = JSONUtils.getInt(json, "repair_amount");
+		}
+
 		// Create the recipe.
-		return new AutoSmithRecipe(recipeId, smithingTarget, modifierMaterial, modifiedFlid, modifiers, powerCost, processingTime);
+		return new AutoSmithRecipe(recipeId, smithingTarget, modifierMaterial, modifiedFlid, modifiers, repairAmount, powerCost, processingTime);
 	}
 
 	@Override
@@ -72,6 +83,7 @@ public class AutoSmithRecipeSerializer extends ForgeRegistryEntry<IRecipeSeriali
 		// Read the processing times.
 		int power = buffer.readInt();
 		int time = buffer.readInt();
+		int repairAmount = buffer.readInt();
 
 		// Read the input item, modifier, and fluid.
 		StaticPowerIngredient smithingTarget = StaticPowerIngredient.read(buffer);
@@ -88,7 +100,7 @@ public class AutoSmithRecipeSerializer extends ForgeRegistryEntry<IRecipeSeriali
 		}
 
 		// Create the recipe.
-		return new AutoSmithRecipe(recipeId, smithingTarget, modifierMaterial, fluidInput, modifiers, power, time);
+		return new AutoSmithRecipe(recipeId, smithingTarget, modifierMaterial, fluidInput, modifiers, repairAmount, power, time);
 	}
 
 	@Override
@@ -96,6 +108,7 @@ public class AutoSmithRecipeSerializer extends ForgeRegistryEntry<IRecipeSeriali
 		// Write the processing costs.
 		buffer.writeInt(recipe.getPowerCost());
 		buffer.writeInt(recipe.getProcessingTime());
+		buffer.writeInt(recipe.getRepairAmount());
 
 		// Write the input item, modifier, and fluid.
 		recipe.getSmithTarget().write(buffer);

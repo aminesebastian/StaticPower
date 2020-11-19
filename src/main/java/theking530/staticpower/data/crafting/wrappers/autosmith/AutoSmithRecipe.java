@@ -28,14 +28,16 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 	private final StaticPowerIngredient modifierMaterial;
 	private final FluidStack modifierFluid;
 	private final RecipeModifierWrapper[] modifiers;
+	private final int repairAmount;
 
 	public AutoSmithRecipe(ResourceLocation name, @Nullable StaticPowerIngredient smithTarget, StaticPowerIngredient modifierMaterial, FluidStack modifierFluid,
-			RecipeModifierWrapper[] modifiers, int powerCost, int processingTime) {
+			RecipeModifierWrapper[] modifiers, int repairAmount, int powerCost, int processingTime) {
 		super(name, processingTime, powerCost);
 		this.modifierMaterial = modifierMaterial;
 		this.smithTarget = smithTarget;
 		this.modifierFluid = modifierFluid;
 		this.modifiers = modifiers;
+		this.repairAmount = repairAmount;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -46,6 +48,14 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 				return false;
 			}
 
+			if (matchParams.getItems().length != 2) {
+				return false;
+			}
+
+			if (matchParams.getItems()[0].isEmpty() || matchParams.getItems()[1].isEmpty()) {
+				return false;
+			}
+
 			// Check the smithing target if this recipes is restricted to specific items.
 			if (!isWildcardRecipe() && !smithTarget.test(matchParams.getItems()[0], matchParams.shouldVerifyItemCounts())) {
 				return false;
@@ -53,32 +63,47 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 
 			// Check the smithing material.
 			if (!modifierMaterial.isEmpty()) {
-				if (matchParams.getItems().length < 2 || !modifierMaterial.test(matchParams.getItems()[1], matchParams.shouldVerifyItemCounts())) {
+				if (!modifierMaterial.test(matchParams.getItems()[1], matchParams.shouldVerifyItemCounts())) {
 					return false;
 				}
 			}
 
-			// Check if the input is attributable.
-			IAttributable attributable = matchParams.getItems()[0].getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);
-			if (attributable == null) {
-				return false;
-			}
+			// Check if the input is attributable and if any of the modifiers can be
+			// applied.
+			boolean appliedModifierIfRequested = false;
+			if (hasModifiers()) {
+				IAttributable attributable = matchParams.getItems()[0].getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);
+				if (attributable == null) {
+					return false;
+				}
 
-			// Check if the item has any of the attributes.
-			boolean wasApplied = false;
-			for (RecipeModifierWrapper wrapper : modifiers) {
-				if (attributable.hasAttribute(wrapper.getAttributeId())) {
-					AbstractAttributeDefenition attribute = attributable.getAttribute(wrapper.getAttributeId());
-					if (attribute.canAcceptModifier(attributable, wrapper.getModifier())) {
-						wasApplied = true;
-						break;
+				// Check if the item has any of the attributes.
+				for (RecipeModifierWrapper wrapper : modifiers) {
+					if (attributable.hasAttribute(wrapper.getAttributeId())) {
+						AbstractAttributeDefenition attribute = attributable.getAttribute(wrapper.getAttributeId());
+						if (attribute.canAcceptModifier(attributable, wrapper.getModifier())) {
+							appliedModifierIfRequested = true;
+							break;
+						}
 					}
+				}
+
+				// Check if an attribute modifier was acceptable.
+				if (!appliedModifierIfRequested) {
+					return false;
 				}
 			}
 
-			// Check if an attribute modifier was acceptable.
-			if (!wasApplied) {
-				return false;
+			// Check if this recipe performs a repair.
+			if (performsRepair()) {
+				// See if the item input is repairable and if it has any damage.
+				boolean canRepair = matchParams.getItems()[0].getDamage() < matchParams.getItems()[0].getMaxDamage();
+
+				// If it is not repairable AND no modifiers can be applied, then this recipe can
+				// do nothing. Return false.
+				if (!canRepair && !appliedModifierIfRequested) {
+					return false;
+				}
 			}
 		}
 
@@ -101,6 +126,18 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 
 	public RecipeModifierWrapper[] getModifiers() {
 		return modifiers;
+	}
+
+	public boolean hasModifiers() {
+		return modifiers.length > 0;
+	}
+
+	public boolean performsRepair() {
+		return repairAmount > 0;
+	}
+
+	public int getRepairAmount() {
+		return repairAmount;
 	}
 
 	public boolean isWildcardRecipe() {
@@ -139,22 +176,36 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public boolean applyToItemStack(ItemStack stack) {
+		// Try to get the attributable. If the input has no attributable AND it does not
+		// perform a repair, return false.
 		IAttributable attributable = stack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);
-		if (attributable == null) {
+		if (attributable == null && !performsRepair()) {
 			return false;
 		}
 
-		// Flag to see if anything was modified.
+		// Flag to see if anything was modified or repaired.
 		boolean applied = false;
 
-		// Apply the modifiers and indicate that one was applied.
-		for (RecipeModifierWrapper modifier : getModifiers()) {
-			if (attributable.hasAttribute(modifier.getAttributeId())) {
-				AbstractAttributeDefenition attribute = attributable.getAttribute(modifier.getAttributeId());
-				if (attribute.canAcceptModifier(attributable, modifier.getModifier())) {
-					attribute.addModifier(modifier.getModifier(), false);
-					applied = true;
+		// Perform the attributable modification if applicable.
+		if (attributable != null) {
+			// Apply the modifiers and indicate that one was applied.
+			for (RecipeModifierWrapper modifier : getModifiers()) {
+				if (attributable.hasAttribute(modifier.getAttributeId())) {
+					AbstractAttributeDefenition attribute = attributable.getAttribute(modifier.getAttributeId());
+					if (attribute.canAcceptModifier(attributable, modifier.getModifier())) {
+						attribute.addModifier(modifier.getModifier(), false);
+						applied = true;
+					}
 				}
+			}
+		}
+
+		// Attempt a repair if this recipe can perform one.
+		if (performsRepair()) {
+			if (stack.isRepairable() && stack.getDamage() > 0) {
+				// NO need to zero check here, the #setDamage method already does so.
+				stack.setDamage(stack.getDamage() - this.getRepairAmount());
+				applied = true;
 			}
 		}
 

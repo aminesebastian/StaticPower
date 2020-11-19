@@ -3,6 +3,7 @@ package theking530.staticpower.items.tools.chainsaw;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -19,10 +20,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipe;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -44,7 +48,9 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.api.attributes.AttributeUtilities;
 import theking530.api.attributes.capability.CapabilityAttributable;
+import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.defenitions.HasteAttributeDefenition;
+import theking530.api.attributes.defenitions.SmeltingAttributeDefenition;
 import theking530.api.power.ItemStackStaticVoltCapability;
 import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
@@ -53,6 +59,7 @@ import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
 import theking530.staticpower.client.rendering.items.ChainsawItemModel;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
+import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.init.ModTags;
 import theking530.staticpower.items.tools.AbstractMultiHarvestTool;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
@@ -159,6 +166,19 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 		// Allocate a list of the items that would be dropped.
 		List<ItemStack> droppableItems = Block.getDrops(state, player.getServerWorld(), pos, tileEntity, player, heldItem);
 
+		// Get the drill bit attributes.
+		IAttributable drillBitAttributes = getChainsawBlade(heldItem).getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);
+
+		// If we have attributes.
+		if (drillBitAttributes != null) {
+			// Check for the smelting attribute. If we do, handle it.
+			if (drillBitAttributes.hasAttribute(SmeltingAttributeDefenition.ID)) {
+				// Get the smelting attribute.
+				SmeltingAttributeDefenition smeltingAttribute = (SmeltingAttributeDefenition) drillBitAttributes.getAttribute(SmeltingAttributeDefenition.ID);
+				handleSmeltingAttribute(smeltingAttribute, droppableItems, state, block, pos, player, tileEntity, heldItem, experience, isCreative);
+			}
+		}
+
 		// Drop all the droppable stacks.
 		for (ItemStack stack : droppableItems) {
 			WorldUtilities.dropItem(player.getServerWorld(), pos, stack);
@@ -171,6 +191,34 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 
 		// Spawn any additional drops.
 		state.spawnAdditionalDrops((ServerWorld) player.getEntityWorld(), pos, heldItem);
+	}
+
+	protected boolean handleSmeltingAttribute(SmeltingAttributeDefenition smeltingAttribute, List<ItemStack> droppableItems, BlockState state, Block block, BlockPos pos,
+			ServerPlayerEntity player, TileEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
+
+		// Allocate a flag to check if anything was smelted.
+		boolean wasAnythingSmelted = false;
+
+		// If the smelting attribute is enabled.
+		if (smeltingAttribute.getValue()) {
+			// Iterate through all the items that were going to be dropped.
+			for (int i = droppableItems.size() - 1; i >= 0; i--) {
+				// Get the droppable stack and get the furnace recipe for it if it exists.
+				ItemStack droppableStack = droppableItems.get(i);
+				RecipeMatchParameters matchParameters = new RecipeMatchParameters(droppableStack);
+				Optional<FurnaceRecipe> recipe = player.getServerWorld().getRecipeManager().getRecipe(IRecipeType.SMELTING, new Inventory(matchParameters.getItems()[0]),
+						player.getServerWorld());
+
+				// Replace the spot the droppable list with the smelting output if it exists.
+				if (recipe.isPresent()) {
+					droppableItems.set(i, recipe.get().getRecipeOutput());
+					wasAnythingSmelted = true;
+				}
+			}
+		}
+
+		// Return the flag.
+		return wasAnythingSmelted;
 	}
 
 	/**

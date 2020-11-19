@@ -22,6 +22,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.attributes.capability.IAttributable;
@@ -38,6 +39,7 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.integration.JEI.smithing.SmithingRecipeProvider.AutoSmithRecipeJEIWrapper;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
+import theking530.staticpower.utilities.MetricConverter;
 
 public class SmithingRecipeCategory extends BaseJEIRecipeCategory<AutoSmithRecipeJEIWrapper> {
 	public static final ResourceLocation AUTO_SMITHING_UID = new ResourceLocation(StaticPower.MOD_ID, "auto_smith");
@@ -124,11 +126,26 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<AutoSmithRecip
 		IAttributable originalAttributable = recipe.getInputItem().getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);
 		IAttributable copyAttributable = copy.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);
 		if (originalAttributable != null && copyAttributable != null) {
+			// Apply the recipe to the copy.
 			recipe.getRecipe().applyToItemStack(copy);
+
+			// Set the initial offset.
 			float yOffset = 13;
 
+			// Shrink the font.
 			matrixStack.push();
 			matrixStack.scale(0.9f, 0.9f, 0.9f);
+
+			// If this recipe repairs, list the repair amount as well.
+			if (recipe.getRecipe().performsRepair()) {
+				MetricConverter repairMetric = new MetricConverter(recipe.getRecipe().getRepairAmount());
+				String repairString = "+" + repairMetric.getValueAsString(true);
+				Minecraft.getInstance().fontRenderer.drawStringWithShadow(matrixStack, "Repair", 116, yOffset, TextFormatting.WHITE.getColor());
+				Minecraft.getInstance().fontRenderer.drawStringWithShadow(matrixStack, repairString, 151, yOffset, TextFormatting.GREEN.getColor());
+				yOffset += 9.5f;
+			}
+
+			// List the attribute changes.
 			for (ResourceLocation attribId : copyAttributable.getAllAttributes()) {
 				AbstractAttributeDefenition<?, ?> originalAttribute = originalAttributable.getAttribute(attribId);
 				AbstractAttributeDefenition<?, ?> copyAttribute = copyAttributable.getAttribute(attribId);

@@ -1,0 +1,10 @@
+{
+	"type": "staticpower:auto_smith_recipe",
+	"smith_target": {
+			"tag": "staticpower:repairable/tungsten_repairable"
+	},
+	"modifier_item": {
+		"tag": "forge:ingots/tungsten"
+	},
+	"repair_amount": 1000
+}

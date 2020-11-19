@@ -64,13 +64,12 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	@Override
 	@Nullable
 	public CompoundNBT getShareTag(ItemStack stack) {
-		CompoundNBT output = stack.serializeNBT();
-		return output;
+		return stack.getTag();
 	}
 
 	@Override
 	public void readShareTag(ItemStack stack, @Nullable CompoundNBT nbt) {
-		stack.deserializeNBT(nbt);
+        stack.setTag(nbt);
 	}
 
 	@Override

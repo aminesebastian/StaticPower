@@ -20,7 +20,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import theking530.api.attributes.capability.CapabilityAttributable;
-import theking530.api.attributes.capability.IAttributable;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe;
 
@@ -87,12 +86,6 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 	}
 
 	private List<AutoSmithRecipeJEIWrapper> makeFromSmithingInput(ItemStack input) {
-		// Check to make sure the input has the attributable capability.
-		IAttributable attributable = input.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);
-		if (attributable == null) {
-			return Collections.emptyList();
-		}
-
 		// Allocate the output.
 		List<AutoSmithRecipeJEIWrapper> output = new ArrayList<AutoSmithRecipeJEIWrapper>();
 
@@ -104,7 +97,7 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 			// If the recipe is not item requested OR if the recipe accepts the input.
 			if (recipe.isWildcardRecipe() || recipe.getSmithTarget().test(input)) {
 				ItemStack outputItem = input.copy();
-				if (recipe.applyToItemStack(outputItem)) {
+				if (recipe.applyToItemStack(outputItem) || recipe.performsRepair()) {
 					output.add(new AutoSmithRecipeJEIWrapper(recipe, input, outputItem));
 				}
 			}
@@ -115,7 +108,19 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 	}
 
 	public boolean isValidSmithingOutput(ItemStack stack) {
-		return stack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).isPresent();
+		if (stack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).isPresent()) {
+			return true;
+		}
+
+		// Test for smith targets that dont have attributable marks.
+		List<AutoSmithRecipe> recipes = StaticPowerRecipeRegistry.getRecipesOfType(AutoSmithRecipe.RECIPE_TYPE);
+		for (AutoSmithRecipe recipe : recipes) {
+			if (!recipe.isWildcardRecipe() && recipe.getSmithTarget().test(stack)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	public boolean isValidSmithingInput(ItemStack stack) {
@@ -124,10 +129,13 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 			return true;
 		}
 
-		// Test for modifier materials.
+		// Test for modifier materials or input materials.
 		List<AutoSmithRecipe> recipes = StaticPowerRecipeRegistry.getRecipesOfType(AutoSmithRecipe.RECIPE_TYPE);
 		for (AutoSmithRecipe recipe : recipes) {
 			if (recipe.getModifierMaterial().test(stack)) {
+				return true;
+			}
+			if (!recipe.isWildcardRecipe() && recipe.getSmithTarget().test(stack)) {
 				return true;
 			}
 		}

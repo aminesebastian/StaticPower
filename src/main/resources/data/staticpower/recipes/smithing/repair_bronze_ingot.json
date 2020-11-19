@@ -1,0 +1,10 @@
+{
+	"type": "staticpower:auto_smith_recipe",
+	"smith_target": {
+			"tag": "staticpower:repairable/bronze_repairable"
+	},
+	"modifier_item": {
+		"tag": "forge:ingots/bronze"
+	},
+	"repair_amount": 500
+}

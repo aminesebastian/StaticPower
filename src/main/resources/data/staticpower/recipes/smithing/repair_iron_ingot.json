@@ -1,0 +1,10 @@
+{
+	"type": "staticpower:auto_smith_recipe",
+	"smith_target": {
+			"tag": "staticpower:repairable/iron_repairable"
+	},
+	"modifier_item": {
+		"tag": "forge:ingots/iron"
+	},
+	"repair_amount": 1000
+}

@@ -1,0 +1,10 @@
+{
+	"type": "staticpower:auto_smith_recipe",
+	"smith_target": {
+			"tag": "staticpower:repairable/static_repairable"
+	},
+	"modifier_item": {
+		"item": "staticpower:ingot_static"
+	},
+	"repair_amount": 1000
+}

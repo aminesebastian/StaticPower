@@ -1,0 +1,10 @@
+{
+	"type": "staticpower:auto_smith_recipe",
+	"smith_target": {
+			"tag": "staticpower:repairable/brass_repairable"
+	},
+	"modifier_item": {
+		"tag": "forge:ingots/brass"
+	},
+	"repair_amount": 500
+}
