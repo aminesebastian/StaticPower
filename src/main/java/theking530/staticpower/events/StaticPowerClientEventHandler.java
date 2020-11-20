@@ -168,7 +168,7 @@ public class StaticPowerClientEventHandler {
 
 	public static void onWorldRender(RenderWorldLastEvent event) {
 		CUSTOM_RENDERER.render(event);
-		handleMultiToolBlockDamageRender(event);
+		renderMultiHarvesteBlockBreakEffect(event);
 	}
 
 	/**
@@ -177,48 +177,52 @@ public class StaticPowerClientEventHandler {
 	 * @param event the highlight event
 	 */
 	@OnlyIn(Dist.CLIENT)
-	public static void renderBlockHighlights(DrawHighlightEvent.HighlightBlock event) {
-		PlayerEntity player = Minecraft.getInstance().player;
-
-		if (player == null) {
+	public static void renderMultiHarvestBoundingBoxes(DrawHighlightEvent.HighlightBlock event) {
+		// If the player is null, do nothing.
+		if (Minecraft.getInstance().player == null) {
 			return;
 		}
 
-		World world = player.world;
+		// Get the held item.
+		ItemStack tool = Minecraft.getInstance().player.getHeldItemMainhand();
 
-		ItemStack tool = player.getHeldItemMainhand();
+		// Check to see if the tool is not empty and is an instance of the multi harvest
+		// tool.
+		if (!tool.isEmpty() && tool.getItem() instanceof AbstractMultiHarvestTool) {
+			// If so, get the current rendering info.
+			ActiveRenderInfo renderInfo = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();
 
-		// AOE preview
-		if (!tool.isEmpty()) {
-			if (tool.getItem() instanceof AbstractMultiHarvestTool) {
-				ActiveRenderInfo renderInfo = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();
-				AbstractMultiHarvestTool toolItem = (AbstractMultiHarvestTool) tool.getItem();
-				List<BlockPos> extraBlocks = toolItem.getMineableExtraBlocks(tool, event.getTarget().getPos(), player);
+			// Get the tool's item and get the blocks that are currently being targeted for
+			// harvesting.
+			AbstractMultiHarvestTool toolItem = (AbstractMultiHarvestTool) tool.getItem();
+			List<BlockPos> extraBlocks = toolItem.getMineableExtraBlocks(tool, event.getTarget().getPos(), Minecraft.getInstance().player);
 
-				WorldRenderer worldRender = event.getContext();
-				MatrixStack matrix = event.getMatrix();
-				IVertexBuilder vertexBuilder = worldRender.renderTypeTextures.getBufferSource().getBuffer(RenderType.getLines());
-				Entity viewEntity = renderInfo.getRenderViewEntity();
+			// Get the world renderer state.
+			WorldRenderer worldRender = event.getContext();
+			MatrixStack matrix = event.getMatrix();
+			IVertexBuilder vertexBuilder = worldRender.renderTypeTextures.getBufferSource().getBuffer(RenderType.getLines());
+			Entity viewEntity = renderInfo.getRenderViewEntity();
 
-				Vector3d vector3d = renderInfo.getProjectedView();
-				double d0 = vector3d.getX();
-				double d1 = vector3d.getY();
-				double d2 = vector3d.getZ();
+			// Get the current projected view.
+			Vector3d vector3d = renderInfo.getProjectedView();
 
-				matrix.push();
+			// Push a new transform matrix.
+			matrix.push();
 
-				for (BlockPos pos : extraBlocks) {
-					if (world.getWorldBorder().contains(pos)) {
-						worldRender.drawSelectionBox(matrix, vertexBuilder, viewEntity, d0, d1, d2, pos, world.getBlockState(pos));
-					}
+			// For all of the harvestable blocks, render the bounding box.
+			for (BlockPos pos : extraBlocks) {
+				if (Minecraft.getInstance().player.getEntityWorld().getWorldBorder().contains(pos)) {
+					worldRender.drawSelectionBox(matrix, vertexBuilder, viewEntity, vector3d.getX(), vector3d.getY(), vector3d.getZ(), pos,
+							Minecraft.getInstance().player.getEntityWorld().getBlockState(pos));
 				}
-
-				matrix.pop();
 			}
+
+			// Pop the added transform matrix.
+			matrix.pop();
 		}
 	}
 
-	private static void handleMultiToolBlockDamageRender(RenderWorldLastEvent event) {
+	private static void renderMultiHarvesteBlockBreakEffect(RenderWorldLastEvent event) {
 		// Get the controller. If it is null, return early.
 		PlayerController controller = Minecraft.getInstance().playerController;
 		if (controller == null) {
@@ -264,39 +268,47 @@ public class StaticPowerClientEventHandler {
 	 */
 	@OnlyIn(Dist.CLIENT)
 	private static void drawBlockDamageTexture(WorldRenderer worldRender, MatrixStack matrixStackIn, ActiveRenderInfo renderInfo, World world, Iterable<BlockPos> extraBlocks) {
-		double d0 = renderInfo.getProjectedView().x;
-		double d1 = renderInfo.getProjectedView().y;
-		double d2 = renderInfo.getProjectedView().z;
-
-		assert Minecraft.getInstance().playerController != null;
+		// Get the current break progress.
 		int progress = (int) (getCurrentFocusedBlockDamage() * 10.0F) - 1;
 
+		// If it's less than 0, do nothing.
 		if (progress < 0) {
 			return;
 		}
 
-		progress = Math.min(progress, 10); // Ensure that for whatever reason the progress level doesn't go OOB.
+		// Clamp the progress to a min of 10 (Thank you @Tinkers' Construct)!
+		progress = Math.min(progress, 10);
 
+		// Get the block render dispatcher and use it to render the damage effect.
 		BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
 		IVertexBuilder vertexBuilder = worldRender.renderTypeTextures.getCrumblingBufferSource().getBuffer(ModelBakery.DESTROY_RENDER_TYPES.get(progress));
 
+		// Render the effect for each of the blocks.
 		for (BlockPos pos : extraBlocks) {
 			matrixStackIn.push();
-			matrixStackIn.translate((double) pos.getX() - d0, (double) pos.getY() - d1, (double) pos.getZ() - d2);
+			// Make sure we transform into projection space.
+			matrixStackIn.translate((double) pos.getX() - renderInfo.getProjectedView().x, (double) pos.getY() - renderInfo.getProjectedView().y,
+					(double) pos.getZ() - renderInfo.getProjectedView().z);
 			IVertexBuilder matrixBuilder = new MatrixApplyingVertexBuilder(vertexBuilder, matrixStackIn.getLast().getMatrix(), matrixStackIn.getLast().getNormal());
+
+			// Render the damage.
 			dispatcher.renderBlockDamage(world.getBlockState(pos), pos, world, matrixStackIn, matrixBuilder);
 			matrixStackIn.pop();
 		}
 	}
 
+	// Gets the damage of the current block being targeted by the player.
 	protected static float getCurrentFocusedBlockDamage() {
 		try {
+			// Cache the reflection handle to the private field (considered going ASM
+			// here...but this is client side only so, would rather lose a few frames vs
+			// introducing incomparability).
 			if (currentBlockDamageMP == null) {
 				currentBlockDamageMP = ObfuscationReflectionHelper.findField(PlayerController.class, "field_78770_f");
 			}
 			return currentBlockDamageMP.getFloat(Minecraft.getInstance().playerController);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("An error occured when attempting to the break progress for the targeted block!", e);
 		}
 		return 0.0f;
 	}

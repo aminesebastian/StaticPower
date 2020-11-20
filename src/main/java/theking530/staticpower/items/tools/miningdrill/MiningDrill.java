@@ -146,11 +146,11 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		if (hasDrillBit(itemstack)) {
 			ItemStack drillBitStack = getDrillBit(itemstack);
 			DrillBit drillBit = (DrillBit) drillBitStack.getItem();
-			efficiency.set(drillBit.getMiningTier().getEfficiency());
+			efficiency.set(drillBit.getMiningTier().getEfficiency() * 0.1f);
 			drillBitStack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).ifPresent(attributable -> {
 				if (attributable.hasAttribute(HasteAttributeDefenition.ID)) {
 					HasteAttributeDefenition hasteDefenition = (HasteAttributeDefenition) attributable.getAttribute(HasteAttributeDefenition.ID);
-					efficiency.set(efficiency.get() * ((hasteDefenition.getValue() / 300.0f) + 1.0f));
+					efficiency.set(efficiency.get() * (((hasteDefenition.getValue() * 10.0f) / 300.0f) + 1.0f));
 				}
 			});
 		}

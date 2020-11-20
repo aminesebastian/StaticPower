@@ -71,7 +71,7 @@ public class StaticPowerForgeEventRegistry {
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void renderBlockHighlights(DrawHighlightEvent.HighlightBlock event) {
-		StaticPowerClientEventHandler.renderBlockHighlights(event);
+		StaticPowerClientEventHandler.renderMultiHarvestBoundingBoxes(event);
 	}
 
 	@SubscribeEvent

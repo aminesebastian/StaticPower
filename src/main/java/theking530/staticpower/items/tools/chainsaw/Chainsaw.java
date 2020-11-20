@@ -127,11 +127,11 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 		if (hasChainsawBlade(itemstack)) {
 			ItemStack blade = getChainsawBlade(itemstack);
 			ChainsawBlade bladeItem = (ChainsawBlade) blade.getItem();
-			efficiency.set(bladeItem.getMiningTier().getEfficiency() * 0.5f);
+			efficiency.set(bladeItem.getMiningTier().getEfficiency() * 0.25f);
 			blade.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).ifPresent(attributable -> {
 				if (attributable.hasAttribute(HasteAttributeDefenition.ID)) {
 					HasteAttributeDefenition hasteDefenition = (HasteAttributeDefenition) attributable.getAttribute(HasteAttributeDefenition.ID);
-					efficiency.set(efficiency.get() * ((hasteDefenition.getValue() / 300.0f) + 1.0f));
+					efficiency.set(efficiency.get() * (((hasteDefenition.getValue() * 10.0f) / 300.0f) + 1.0f));
 				}
 			});
 		}

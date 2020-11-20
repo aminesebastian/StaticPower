@@ -23,10 +23,12 @@ public class HasteAttributeDefenition extends AbstractAttributeDefenition<Intege
 		int value = getValue();
 		if (value < 100) {
 			return 1;
-		} else if (value > 200 && value < 300) {
+		} else if (value > 100 && value < 200) {
 			return 2;
-		} else if (value >= 300) {
+		} else if (value >= 200) {
 			return 3;
+		} else if (value >= 300) {
+			return 4;
 		} else {
 			return 0;
 		}
@@ -45,6 +47,8 @@ public class HasteAttributeDefenition extends AbstractAttributeDefenition<Intege
 			hasteTier = "II";
 		} else if (hasteLevel == 3) {
 			hasteTier = "III";
+		} else if (hasteLevel == 4) {
+			hasteTier = "IV";
 		}
 
 		if (showAdvanced) {

@@ -21,12 +21,15 @@ public class FortuneAttributeDefenition extends AbstractAttributeDefenition<Inte
 	}
 
 	public int getFortuneLevel() {
-		if (getValue() < 100) {
+		int value = getValue();
+		if (value < 100) {
 			return 1;
-		} else if (getValue() < 200) {
+		} else if (value > 100 && value < 200) {
 			return 2;
-		} else if (getValue() >= 300) {
+		} else if (value >= 200) {
 			return 3;
+		} else if (value >= 300) {
+			return 4;
 		} else {
 			return 0;
 		}
@@ -51,6 +54,8 @@ public class FortuneAttributeDefenition extends AbstractAttributeDefenition<Inte
 			fortuneTier = "II";
 		} else if (fortuneLevel == 3) {
 			fortuneTier = "III";
+		} else if (fortuneLevel == 4) {
+			fortuneTier = "IV";
 		}
 
 		if (showAdvanced) {

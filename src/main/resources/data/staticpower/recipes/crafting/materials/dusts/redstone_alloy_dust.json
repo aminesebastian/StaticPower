@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{
+			"tag": "forge:dusts/redstone"
+		},
+		{
+			"tag": "forge:dusts/redstone"
+		},
+		{
+			"tag": "forge:dusts/gold"
+		},
+		{
+			"tag": "forge:dusts/silver"
+		}
+	],
+	"result": {
+		"item": "staticpower:dust_redstone_alloy",
+		"count": 2
+	}
+}
