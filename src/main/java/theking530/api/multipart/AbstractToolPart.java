@@ -1,4 +1,4 @@
-package theking530.staticpower.items.tools;
+package theking530.api.multipart;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

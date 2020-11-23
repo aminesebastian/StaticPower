@@ -1,0 +1,13 @@
+{
+	"type": "staticpower:former_recipe",
+	"input": {
+		"tag": "forge:ingots/bronze",
+		"count": 5
+	},
+	"mold": {
+		"item": "staticpower:mold_blade"
+	},
+	"output": {
+		"item": "staticpower:blade_bronze"
+	}
+}

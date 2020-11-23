@@ -1,31 +1,31 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
-		"tlt",
+		"tbt",
 		"bmg",
-		"brt"
+		"lrt"
 	],
 	"key": {
 		"t": {
-			"tag": "forge:ingots/gold"
+			"item": "staticpower:ingot_energized"
 		},
 		"b": {
-			"item": "staticpower:portable_battery_advanced"
+			"item": "staticpower:portable_battery_energized"
 		},
 		"g": {
-			"tag": "forge:gears/brass"
+			"item": "staticpower:gear_energized"
 		},
 		"m": {
 			"item": "staticpower:motor"
 		},
 		"r": {
-			"item": "staticpower:processor_advanced"
+			"item": "staticpower:processor_energized"
 		},
 		"l": {
 			"item": "minecraft:lever"
 		}
 	},
 	"result": {
-		"item": "staticpower:mining_drill_advanced"
+		"item": "staticpower:chainsaw_energized"
 	}
 }

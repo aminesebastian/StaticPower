@@ -1,9 +1,9 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
-		"tlt",
+		"tbt",
 		"bmg",
-		"brt"
+		"lrt"
 	],
 	"key": {
 		"t": {
@@ -26,6 +26,6 @@
 		}
 	},
 	"result": {
-		"item": "staticpower:mining_drill_advanced"
+		"item": "staticpower:chainsaw_advanced"
 	}
 }

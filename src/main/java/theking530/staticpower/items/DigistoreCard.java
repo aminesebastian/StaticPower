@@ -51,27 +51,6 @@ public class DigistoreCard extends StaticPowerItem {
 				.orElseThrow(() -> new RuntimeException("Encounetered a digistore card without an attached digistore inventory."));
 	}
 
-	@Nullable
-	@Override
-	public CompoundNBT getShareTag(ItemStack stack) {
-		CompoundNBT nbt = stack.getOrCreateTag();
-		stack.getCapability(CapabilityDigistoreInventory.DIGISTORE_INVENTORY_CAPABILITY).ifPresent(inventory -> {
-			nbt.put("digistore_inventory", inventory.serializeNBT());
-		});
-		return nbt;
-	}
-
-	@Override
-	public void readShareTag(ItemStack stack, @Nullable CompoundNBT nbt) {
-		super.readShareTag(stack, nbt);
-
-		if (nbt != null && nbt.contains("digistore_inventory")) {
-			stack.getCapability(CapabilityDigistoreInventory.DIGISTORE_INVENTORY_CAPABILITY).ifPresent(inventory -> {
-				inventory.deserializeNBT((CompoundNBT) nbt.get("digistore_inventory"));
-			});
-		}
-	}
-
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {

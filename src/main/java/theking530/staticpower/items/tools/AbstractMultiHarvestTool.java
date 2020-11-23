@@ -31,9 +31,9 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.server.ServerWorld;
-import theking530.staticpower.items.StaticPowerItem;
+import theking530.api.multipart.AbstractMultiPartItem;
 
-public abstract class AbstractMultiHarvestTool extends StaticPowerItem {
+public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 	protected float attackDamage;
 	protected Multimap<Attribute, AttributeModifier> toolAttributes;
 

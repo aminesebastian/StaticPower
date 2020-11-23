@@ -1,4 +1,4 @@
-package theking530.staticpower.items.tools.chainsaw;
+package theking530.staticpower.items.tools.sword;
 
 import java.util.List;
 
@@ -17,11 +17,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import theking530.api.attributes.capability.AttributeableHandler;
-import theking530.api.attributes.defenitions.DiamondHardenedDefenition;
-import theking530.api.attributes.defenitions.EmeraldHardenedDefenition;
 import theking530.api.attributes.defenitions.HasteAttributeDefenition;
-import theking530.api.attributes.defenitions.RubyHardenedDefenition;
-import theking530.api.attributes.defenitions.SapphireHardenedDefenition;
 import theking530.api.attributes.defenitions.SmeltingAttributeDefenition;
 import theking530.api.attributes.rendering.AttributableItemRenderLayers;
 import theking530.api.attributes.rendering.BasicAttributeRenderLayer;
@@ -29,13 +25,13 @@ import theking530.api.multipart.AbstractToolPart;
 import theking530.staticcore.utilities.ItemTierUtilities;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
-import theking530.staticpower.client.rendering.items.ChainsawBladeItemModel;
+import theking530.staticpower.client.rendering.items.BladeItemModel;
 import theking530.staticpower.utilities.MetricConverter;
 
-public class ChainsawBlade extends AbstractToolPart {
+public class Blade extends AbstractToolPart {
 	public final ItemTier miningTier;
 
-	public ChainsawBlade(String name, ItemTier miningTier, ResourceLocation tier) {
+	public Blade(String name, ItemTier miningTier, ResourceLocation tier) {
 		super(name, tier, new Item.Properties().maxStackSize(1).maxDamage(1));
 		this.miningTier = miningTier;
 	}
@@ -43,22 +39,13 @@ public class ChainsawBlade extends AbstractToolPart {
 	@Override
 	protected void initializeAttributes(AttributeableHandler handler) {
 		handler.addAttribute(HasteAttributeDefenition.ID);
-		handler.addAttribute(DiamondHardenedDefenition.ID);
-		handler.addAttribute(RubyHardenedDefenition.ID);
-		handler.addAttribute(SapphireHardenedDefenition.ID);
-		handler.addAttribute(EmeraldHardenedDefenition.ID);
 		handler.addAttribute(SmeltingAttributeDefenition.ID);
 	}
 
 	@Override
 	protected void initializeRenderLayers(AttributableItemRenderLayers renderLayers) {
 		renderLayers.addLayer(SmeltingAttributeDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.BLADE_SMELTING, 2));
-		renderLayers.addLayer(HasteAttributeDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.BLADE_HASTE, 2));
-		
-		renderLayers.addLayer(DiamondHardenedDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.CHAINSAW_BLADE_HARDENED_DIAMOND, 3));
-		renderLayers.addLayer(RubyHardenedDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.CHAINSAW_BLADE_HARDENED_RUBY, 3));
-		renderLayers.addLayer(SapphireHardenedDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.CHAINSAW_BLADE_HARDENED_SAPPHIRE, 3));
-		renderLayers.addLayer(EmeraldHardenedDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.CHAINSAW_BLADE_HARDENED_EMERALD, 3));
+		renderLayers.addLayer(HasteAttributeDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.BLADE_HASTE, 3));
 	}
 
 	@Override
@@ -85,7 +72,7 @@ public class ChainsawBlade extends AbstractToolPart {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
-		return new ChainsawBladeItemModel(existingModel);
+		return new BladeItemModel(existingModel);
 	}
 
 }

@@ -1,0 +1,13 @@
+{
+	"type": "staticpower:former_recipe",
+	"input": {
+		"item": "staticpower:ingot_energized",
+		"count": 5
+	},
+	"mold": {
+		"item": "staticpower:mold_blade"
+	},
+	"output": {
+		"item": "staticpower:blade_energized"
+	}
+}

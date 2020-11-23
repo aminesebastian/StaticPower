@@ -28,11 +28,11 @@ import theking530.api.attributes.defenitions.SilkTouchAttributeDefenition;
 import theking530.api.attributes.defenitions.SmeltingAttributeDefenition;
 import theking530.api.attributes.rendering.AttributableItemRenderLayers;
 import theking530.api.attributes.rendering.BasicAttributeRenderLayer;
+import theking530.api.multipart.AbstractToolPart;
 import theking530.staticcore.utilities.ItemTierUtilities;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.items.DrillBitItemModel;
-import theking530.staticpower.items.tools.AbstractToolPart;
 import theking530.staticpower.utilities.MetricConverter;
 
 public class DrillBit extends AbstractToolPart {

@@ -208,12 +208,13 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation DRILL_BIT_SILK_TOUCH = registerModel("item/attribute_layers/drill_bits/drill_bit_layer_silk_touch");
 	public static final ResourceLocation DRILL_BIT_SMELTING = registerModel("item/attribute_layers/drill_bits/drill_bit_layer_smelting");
 
-	public static final ResourceLocation CHAINSAW_BLADE_HASTE = registerModel("item/attribute_layers/chainsaw_blades/chainsaw_blade_layer_haste");
+	public static final ResourceLocation BLADE_HASTE = registerModel("item/attribute_layers/blades/blade_layer_haste");
+	public static final ResourceLocation BLADE_SMELTING = registerModel("item/attribute_layers/blades/blade_layer_smelting");
+	
 	public static final ResourceLocation CHAINSAW_BLADE_HARDENED_DIAMOND = registerModel("item/attribute_layers/chainsaw_blades/chainsaw_blade_layer_hardened_diamond");
 	public static final ResourceLocation CHAINSAW_BLADE_HARDENED_EMERALD = registerModel("item/attribute_layers/chainsaw_blades/chainsaw_blade_layer_hardened_emerald");
 	public static final ResourceLocation CHAINSAW_BLADE_HARDENED_RUBY = registerModel("item/attribute_layers/chainsaw_blades/chainsaw_blade_layer_hardened_ruby");
 	public static final ResourceLocation CHAINSAW_BLADE_HARDENED_SAPPHIRE = registerModel("item/attribute_layers/chainsaw_blades/chainsaw_blade_layer_hardened_sapphire");
-	public static final ResourceLocation CHAINSAW_BLADE_SMELTING = registerModel("item/attribute_layers/chainsaw_blades/chainsaw_blade_layer_smelting");
 
 	@OnlyIn(Dist.CLIENT)
 	public static void regsiterModels() {

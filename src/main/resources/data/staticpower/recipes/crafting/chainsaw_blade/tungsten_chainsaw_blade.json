@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ccc",
+		"cbc",
+		"ccc"
+	],
+	"key": {
+		"b": {
+			"item": "staticpower:blade_tungsten"
+		},
+		"c": {
+			"item": "minecraft:chain"
+		}
+	},
+	"result": {
+		"item": "staticpower:chainsaw_blade_tungsten"
+	}
+}
