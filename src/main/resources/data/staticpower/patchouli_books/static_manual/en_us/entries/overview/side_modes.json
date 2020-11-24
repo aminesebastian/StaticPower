@@ -28,17 +28,17 @@
 		{
 			"type": "text",
 			"title": "Power",
-			"text": "The side configurations for power are incredibly straight forward. There are only three options: $(9)$(bold)input, $(6)$(bold)output, $(reset)and $(4)$(bold)disabled. $(reset)Only batteries and other power generating machines can have their sides configured for power. All other machines accept power on all sides and do not offer the opportunty to provide power."
+			"text": "The side configurations for power are elementary! There are only three options: $(9)$(bold)input, $(6)$(bold)output, $(reset)and $(4)$(bold)disabled. $(reset)Only batteries and other power generating machines can have their sides configured for power. All other machines accept power on all sides and do not offer the opportunty to provide power."
 		},
 		{
 			"type": "text",
 			"title": "Items",
-			"text": "The side configurations for items are a little more complex. A machine can have up to 7 options: $(9)$(bold)input, $(5)$(bold)secondary input, $(6)$(bold)output, $(2)$(bold)primary output, $(#c4be00)$(bold)secondary output, $(reset)and $(4)$(bold)disabled. $(reset)The role these configurions play can differ among from machine to machine, although the majority only offer the primary 3 $(bold)$(9)op$(6)ti$(4)ons."
+			"text": "The side configurations for items are more complex but also, more powerful! A machine can have up to 6 options: $(9)$(bold)input, $(5)$(bold)secondary input, $(6)$(bold)output, $(2)$(bold)primary output, $(#c4be00)$(bold)secondary output, $(reset)and $(4)$(bold)disabled. $(reset)The role these configurions play can differ from machine to machine, although the majority only offer the primary 3 $(bold)$(9)op$(6)ti$(4)ons."
 		},
 		{
 			"type": "text",
 			"title": "Fluids",
-			"text": "The side configurations for fluids are the same as the options for items, except that they...pump fluids instead of items."
+			"text": "The side configurations for fluids provide the same options as the configurations for items, except they interact with fluids."
 		}
 	]
 }

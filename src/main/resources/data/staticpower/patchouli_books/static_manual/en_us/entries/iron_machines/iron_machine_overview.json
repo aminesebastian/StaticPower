@@ -5,7 +5,7 @@
 	"pages": [
 		{
 			"type": "text",
-			"text": "The Iron Machine Block; the innovation that started it all. A construct of a bygone era - before the great collapse - when the machine lords were still a backwater minority faction, slaves to the industrialists and political elite"
+			"text": "The $(8)$(bold)Iron Machine Block. $(reset)The innovation that started it all. A construct of a bygone era - before the great collapse - when the machine lords were still a backwater minority faction, slaves to the industrialists and political elite"
 		}
 	]
 }
