@@ -1,0 +1,36 @@
+{
+	"name": "Power",
+	"icon": "staticpower:cable_power_energized",
+	"category": "staticpower:transport",
+	"pages": [
+		{
+			"type": "text",
+			"text": "This is a test entry, but it should show up!"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/cables/power/power_cable_basic_ingot",
+			"recipe2": "staticpower:crafting/cables/power/power_cable_basic_plate"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/cables/power/power_cable_advanced_ingot",
+			"recipe2": "staticpower:crafting/cables/power/power_cable_advanced_plate"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/cables/power/power_cable_static_ingot",
+			"recipe2": "staticpower:crafting/cables/power/power_cable_static_plate"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/cables/power/power_cable_energized_ingot",
+			"recipe2": "staticpower:crafting/cables/power/power_cable_energized_plate"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/cables/power/power_cable_lumum_ingot",
+			"recipe2": "staticpower:crafting/cables/power/power_cable_lumum_plate"
+		}
+	]
+}

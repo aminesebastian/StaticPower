@@ -1,7 +1,7 @@
 {
 	"name": "Introduction",
-	"icon": "staticpower:crop_static",
-	"category": "staticpower:overview",
+	"icon": "minecraft:paper",
+	"category": "staticpower:transport",
 	"pages": [
 		{
 			"type": "text",
