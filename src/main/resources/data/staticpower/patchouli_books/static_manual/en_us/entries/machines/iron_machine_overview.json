@@ -1,7 +1,7 @@
 {
 	"name": "Introduction",
 	"icon": "staticpower:machine_block_iron",
-	"category": "staticpower:iron_machines",
+	"category": "staticpower:machines",
 	"pages": [
 		{
 			"type": "text",

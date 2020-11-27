@@ -1,6 +1,6 @@
 {
 	"name": "Power",
-	"icon": "staticpower:cable_power_energized",
+	"icon": "staticpower:cable_power_basic",
 	"category": "staticpower:transport",
 	"pages": [
 		{

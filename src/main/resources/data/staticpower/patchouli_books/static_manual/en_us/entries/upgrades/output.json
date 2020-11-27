@@ -1,0 +1,11 @@
+{
+	"name": "Output Multiplier",
+	"icon": "staticpower:upgrade_output_multiplier_basic",
+	"category": "staticpower:upgrades",
+	"pages": [
+		{
+			"type": "text",
+			"text": "This is a test entry, but it should show up!"
+		}
+	]
+}
