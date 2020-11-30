@@ -50,6 +50,14 @@ public class StaticPowerIngredient {
 	}
 
 	public static StaticPowerIngredient deserialize(JsonElement json) {
+		// Handle empty ingredients.
+		if (json.isJsonObject()) {
+			JsonObject object = json.getAsJsonObject();
+			if (object.size() == 0) {
+				return StaticPowerIngredient.EMPTY;
+			}
+		}
+
 		// Get the input ingredient.
 		Ingredient input = Ingredient.deserialize(json);
 

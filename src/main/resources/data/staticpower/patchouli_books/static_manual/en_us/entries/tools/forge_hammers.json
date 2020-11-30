@@ -1,0 +1,21 @@
+{
+	"name": "Forge Hammers",
+	"icon": "staticpower:metal_hammer_iron",
+	"category": "staticpower:tools",
+	"pages": [
+		{
+			"type": "text",
+			"text": "This is a test entry, but it should show up!"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/tools/forge_hammer_iron",
+			"recipe2": "staticpower:crafting/tools/forge_hammer_zinc"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/tools/forge_hammer_bronze",
+			"recipe2": "staticpower:crafting/tools/forge_hammer_tungsten"
+		}
+	]
+}

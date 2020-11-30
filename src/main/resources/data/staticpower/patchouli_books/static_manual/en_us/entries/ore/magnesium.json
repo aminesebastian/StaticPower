@@ -1,0 +1,17 @@
+{
+	"name": "Magnesium",
+	"icon": "staticpower:ore_magnesium",
+	"category": "staticpower:world",
+	"pages": [
+		{
+			"type": "spotlight",
+			"item": "staticpower:ore_magnesium",
+			"text": "This is a test entry, but it should show up!"
+		},
+		{
+			"type": "spotlight",
+			"item": "staticpower:ingot_magnesium",
+			"text": "This is a test entry, but it should show up!"
+		}
+	]
+}

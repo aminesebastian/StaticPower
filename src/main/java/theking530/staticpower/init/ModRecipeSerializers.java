@@ -14,6 +14,7 @@ import theking530.staticpower.data.crafting.wrappers.fluidinfusion.FluidInfusion
 import theking530.staticpower.data.crafting.wrappers.former.FormerRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.fusionfurnace.FusionFurnaceRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.grinder.GrinderRecipeSerializer;
+import theking530.staticpower.data.crafting.wrappers.lathe.LatheRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.lumbermill.LumberMillRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.squeezer.SqueezerRecipeSerializer;
@@ -40,6 +41,7 @@ public class ModRecipeSerializers {
 		StaticPowerRegistry.preRegisterRecipeSerializer(EvaporatorRecipeSerializer.INSTANCE);
 		StaticPowerRegistry.preRegisterRecipeSerializer(CondensationRecipeSerializer.INSTANCE);		
 		StaticPowerRegistry.preRegisterRecipeSerializer(VulcanizerRecipeSerializer.INSTANCE);	
-		StaticPowerRegistry.preRegisterRecipeSerializer(AutoSmithRecipeSerializer.INSTANCE);			
+		StaticPowerRegistry.preRegisterRecipeSerializer(AutoSmithRecipeSerializer.INSTANCE);	
+		StaticPowerRegistry.preRegisterRecipeSerializer(LatheRecipeSerializer.INSTANCE);			
 	}
 }

@@ -1,0 +1,21 @@
+{
+	"name": "Wire Cutter",
+	"icon": "staticpower:wire_cutters_iron",
+	"category": "staticpower:tools",
+	"pages": [
+		{
+			"type": "text",
+			"text": "This is a test entry, but it should show up!"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/tools/wire_cutters_iron",
+			"recipe2": "staticpower:crafting/tools/wire_cutters_zinc"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/tools/wire_cutters_bronze",
+			"recipe2": "staticpower:crafting/tools/wire_cutters_tungsten"
+		}
+	]
+}

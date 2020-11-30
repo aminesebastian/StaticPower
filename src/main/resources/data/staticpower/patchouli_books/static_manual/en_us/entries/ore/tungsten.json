@@ -1,0 +1,17 @@
+{
+	"name": "Tungsten",
+	"icon": "staticpower:ore_tungsten",
+	"category": "staticpower:world",
+	"pages": [
+		{
+			"type": "spotlight",
+			"item": "staticpower:ore_tungsten",
+			"text": "This is a test entry, but it should show up!"
+		},
+		{
+			"type": "spotlight",
+			"item": "staticpower:ingot_tungsten",
+			"text": "This is a test entry, but it should show up!"
+		}
+	]
+}

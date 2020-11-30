@@ -1,0 +1,15 @@
+{
+	"name": "Screen",
+	"icon": "staticpower:cable_attachment_digistore_screen",
+	"category": "staticpower:attachments",
+	"pages": [
+		{
+			"type": "text",
+			"text": "This is a test entry, but it should show up!"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/cable_attachments/digistore_screen"
+		}
+	]
+}

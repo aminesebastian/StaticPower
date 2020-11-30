@@ -1,0 +1,25 @@
+{
+	"name": "Battery",
+	"icon": "staticpower:battery_block_basic",
+	"category": "staticpower:machines",
+	"pages": [
+		{
+			"type": "text",
+			"text": "This is a test entry, but it should show up!"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/machines/batteries/basic_battery",
+			"recipe2": "staticpower:crafting/machines/batteries/advanced_battery"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/machines/batteries/static_battery",
+			"recipe2": "staticpower:crafting/machines/batteries/energized_battery"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/machines/batteries/lumum_battery"
+		}
+	]
+}

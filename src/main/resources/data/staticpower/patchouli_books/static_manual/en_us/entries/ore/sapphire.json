@@ -1,0 +1,17 @@
+{
+	"name": "Sapphire",
+	"icon": "staticpower:ore_sapphire",
+	"category": "staticpower:world",
+	"pages": [
+		{
+			"type": "spotlight",
+			"item": "staticpower:ore_sapphire",
+			"text": "This is a test entry, but it should show up!"
+		},
+		{
+			"type": "spotlight",
+			"item": "staticpower:gem_sapphire",
+			"text": "This is a test entry, but it should show up!"
+		}
+	]
+}

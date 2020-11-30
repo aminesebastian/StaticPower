@@ -1,6 +1,6 @@
 {
 	"name": "Machines",
 	"description": "Sometimes all a revolution needs is a block...",
-	"icon": "staticpower:machine_generator_solid",
+	"icon": "staticpower:machine_block_basic",
 	"sortnum": 0
 }

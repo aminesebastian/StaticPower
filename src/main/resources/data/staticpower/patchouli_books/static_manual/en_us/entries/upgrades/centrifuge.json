@@ -6,6 +6,18 @@
 		{
 			"type": "text",
 			"text": "This is a test entry, but it should show up!"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/upgrades/centrifuge/basic_centrifuge",
+			"recipe2": "staticpower:crafting/upgrades/centrifuge/static_centrifuge",
+			"title": "Basic & Static"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/upgrades/centrifuge/energized_centrifuge",
+			"recipe2": "staticpower:crafting/upgrades/centrifuge/lumum_centrifuge",
+			"title": "Energized & Lumum"
 		}
 	]
 }

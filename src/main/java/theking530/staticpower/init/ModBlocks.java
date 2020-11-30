@@ -58,6 +58,7 @@ import theking530.staticpower.tileentities.powered.fluidinfuser.BlockFluidInfuse
 import theking530.staticpower.tileentities.powered.former.BlockFormer;
 import theking530.staticpower.tileentities.powered.fusionfurnace.BlockFusionFurnace;
 import theking530.staticpower.tileentities.powered.heatsink.BlockHeatSink;
+import theking530.staticpower.tileentities.powered.lathe.BlockLathe;
 import theking530.staticpower.tileentities.powered.lumbermill.BlockLumberMill;
 import theking530.staticpower.tileentities.powered.poweredfurnace.BlockPoweredFurnace;
 import theking530.staticpower.tileentities.powered.poweredgrinder.BlockPoweredGrinder;
@@ -133,7 +134,7 @@ public class ModBlocks {
 	public static StaticPowerSlimeBlock BlockLatex;
 	public static StaticPowerSlimeBlock BlockRubber;
 
-	// Machines
+	// Machine blocks.
 	public static StaticPowerCutoutBlock MachineBlockIron;
 	public static StaticPowerCutoutBlock MachineBlockBasic;
 	public static StaticPowerCutoutBlock MachineBlockAdvanced;
@@ -176,6 +177,7 @@ public class ModBlocks {
 	public static BlockCondenser Condenser;
 	public static BlockVulcanizer Vulcanizer;
 	public static BlockAutoSmith AutoSmith;
+	public static BlockLathe Lathe;
 
 	public static BlockHeatSink AluminiumHeatSink;
 	public static BlockHeatSink CopperHeatSink;
@@ -388,6 +390,7 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(Condenser = new BlockCondenser("machine_condenser"));
 		StaticPowerRegistry.preRegisterBlock(Vulcanizer = new BlockVulcanizer("machine_vulcanizer"));
 		StaticPowerRegistry.preRegisterBlock(AutoSmith = new BlockAutoSmith("machine_auto_smith"));
+		StaticPowerRegistry.preRegisterBlock(Lathe = new BlockLathe("machine_lathe"));
 
 		StaticPowerRegistry.preRegisterBlock(AluminiumHeatSink = new BlockHeatSink("heat_sink_aluminium", StaticPowerTiers.ALUMINIUM));
 		StaticPowerRegistry.preRegisterBlock(CopperHeatSink = new BlockHeatSink("heat_sink_copper", StaticPowerTiers.COPPER));

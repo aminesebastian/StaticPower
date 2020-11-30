@@ -5,7 +5,11 @@
 	"pages": [
 		{
 			"type": "text",
-			"text": "This is a test entry, but it should show up!"
+			"text": "An accelerator card can be used in a digistore $(l:exporter)$(bold)Exporter$(/l), $(l:exporter)$(bold)Importer$(/l), $(l:exporter)$(bold)I/O Bus$(/l), or $(l:exporter)$(bold)Regulator$(/l) to increase the speed at which items are transfered."
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/upgrades/digistore_accelerator"
 		}
 	]
 }

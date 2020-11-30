@@ -1,0 +1,26 @@
+{
+	"type": "staticpower:lathe_recipe",
+	"inputs": [
+		{
+			"tag": "minecraft:planks"
+		},
+		{},
+		{
+			"tag": "minecraft:planks"
+		}
+	],
+	"outputs": {
+		"primary": {
+			"item": "minecraft:stick",
+			"count": 8
+		},
+		"secondary": {
+			"item": "staticpower:dust_wood",
+			"count": 2
+		},
+		"fluid": {
+			"fluid": "staticpower:tree_sap",
+			"volume": 10
+		}
+	}
+}

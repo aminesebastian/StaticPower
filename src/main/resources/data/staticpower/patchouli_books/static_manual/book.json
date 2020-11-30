@@ -3,5 +3,13 @@
 	"landing_text": "Welcome to the world of Static Power! Machines, infrastrcture, power generation, decorations, new mechanics, and new ways to produce & store items!",
 	"version": 1,
 	"book_texture": "patchouli:textures/gui/book_cyan.png",
-	"model": "staticpower:static_manual"
+	"model": "staticpower:static_manual",
+	"macros": {
+		"$(input)": "$(9)$(bold)",
+		"$(input2)": "$(5)$(bold)",
+		"$(output)": "$(6)$(bold)",
+		"$(output2)": "$(2)$(bold)",
+		"$(output3)": "$(#c4be00)$(bold)",
+		"$(disabled)": "$(4)$(bold)"
+	}
 }

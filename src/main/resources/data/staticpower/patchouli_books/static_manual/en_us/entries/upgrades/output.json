@@ -6,6 +6,18 @@
 		{
 			"type": "text",
 			"text": "This is a test entry, but it should show up!"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/upgrades/output/basic_output",
+			"recipe2": "staticpower:crafting/upgrades/output/static_output",
+			"title": "Basic & Static"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/upgrades/output/energized_output",
+			"recipe2": "staticpower:crafting/upgrades/output/lumum_output",
+			"title": "Energized & Lumum"
 		}
 	]
 }
