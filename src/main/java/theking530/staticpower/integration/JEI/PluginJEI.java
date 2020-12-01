@@ -32,6 +32,7 @@ import theking530.staticpower.data.crafting.wrappers.fluidinfusion.FluidInfusion
 import theking530.staticpower.data.crafting.wrappers.former.FormerRecipe;
 import theking530.staticpower.data.crafting.wrappers.fusionfurnace.FusionFurnaceRecipe;
 import theking530.staticpower.data.crafting.wrappers.grinder.GrinderRecipe;
+import theking530.staticpower.data.crafting.wrappers.lathe.LatheRecipe;
 import theking530.staticpower.data.crafting.wrappers.lumbermill.LumberMillRecipe;
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
 import theking530.staticpower.data.crafting.wrappers.solidfuel.SolidFuelRecipe;
@@ -49,6 +50,7 @@ import theking530.staticpower.integration.JEI.fluidgenerator.FluidGeneratorRecip
 import theking530.staticpower.integration.JEI.fluidinfuser.FluidInfuserRecipeCategory;
 import theking530.staticpower.integration.JEI.former.FormerRecipeCategory;
 import theking530.staticpower.integration.JEI.fusionfurnace.FusionFurnaceRecipeCategory;
+import theking530.staticpower.integration.JEI.lathe.LatheRecipeCategory;
 import theking530.staticpower.integration.JEI.lumbermill.LumberMillRecipeCategory;
 import theking530.staticpower.integration.JEI.poweredfurnace.PoweredFurnaceRecipeCategory;
 import theking530.staticpower.integration.JEI.poweredgrinder.PoweredGrinderRecipeCategory;
@@ -101,6 +103,8 @@ public class PluginJEI implements IModPlugin {
 	private VulcanizerRecipeCategory vulcanizerRecipeCategory;
 	@Nullable
 	private SmithingRecipeCategory smithingRecipeCategory;
+	@Nullable
+	private LatheRecipeCategory latheRecipeCategory;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
@@ -180,6 +184,10 @@ public class PluginJEI implements IModPlugin {
 		// Smithing
 		smithingRecipeCategory = new SmithingRecipeCategory(guiHelper);
 		registration.addRecipeCategories(smithingRecipeCategory);
+
+		// Lathe
+		latheRecipeCategory = new LatheRecipeCategory(guiHelper);
+		registration.addRecipeCategories(latheRecipeCategory);
 	}
 
 	@Override
@@ -251,6 +259,7 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FluidGeneratorRecipe.RECIPE_TYPE), FluidGeneratorRecipeCateogry.FLUID_GENERATOR_UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(CondensationRecipe.RECIPE_TYPE), CondenserRecipeCategory.CONDENSER_UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(VulcanizerRecipe.RECIPE_TYPE), VulcanizerRecipeCategory.VULCANIZER_UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(LatheRecipe.RECIPE_TYPE), LatheRecipeCategory.LATHE_UID);
 		registration.addRecipes(new SmithingRecipeProvider().getRecipes(null), SmithingRecipeCategory.AUTO_SMITHING_UID);
 	}
 
@@ -275,6 +284,7 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Condenser), CondenserRecipeCategory.CONDENSER_UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Vulcanizer), VulcanizerRecipeCategory.VULCANIZER_UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AutoSmith), SmithingRecipeCategory.AUTO_SMITHING_UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Lathe), LatheRecipeCategory.LATHE_UID);
 	}
 
 	@Override

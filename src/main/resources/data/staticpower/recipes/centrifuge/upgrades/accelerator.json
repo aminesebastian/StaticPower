@@ -1,0 +1,19 @@
+{
+	"type": "staticpower:centrifuge_recipe",
+	"input": {
+		"item": "staticpower:upgrade_accelerator"
+	},
+	"minimum_speed": 500,
+	"outputs": [
+		{
+			"item": "minecraft:redstone",
+			"count": 2
+		},
+		{
+			"item": "minecraft:glowstone"
+		},
+		{
+			"item": "staticpower:upgrade_plate_basic"
+		}
+	]
+}

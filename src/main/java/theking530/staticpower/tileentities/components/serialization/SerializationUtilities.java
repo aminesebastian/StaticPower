@@ -171,9 +171,7 @@ public class SerializationUtilities {
 			boolean isPrivate = !field.isAccessible();
 			try {
 				// Mark it accessible if not.
-				if (isPrivate) {
-					field.setAccessible(true);
-				}
+				field.setAccessible(true);
 
 				// Get the type of the field and then serialize it if possible.
 				Class<?> t = field.getType();

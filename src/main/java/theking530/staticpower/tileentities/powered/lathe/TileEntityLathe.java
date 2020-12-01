@@ -73,7 +73,7 @@ public class TileEntityLathe extends TileEntityMachine {
 		processingComponent.setProcessingPowerUsage(DEFAULT_PROCESSING_COST);
 
 		// Setup the I/O servos.
-		registerComponent(new InputServoComponent("InputServo", inputInventory));
+		registerComponent(new InputServoComponent("InputServo", inputInventory).setRoundRobin(true));
 		registerComponent(new OutputServoComponent("OutputServo", mainOutputInventory));
 		registerComponent(new OutputServoComponent("SecondaryOutputServo", secondaryOutputInventory));
 

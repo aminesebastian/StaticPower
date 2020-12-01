@@ -1,0 +1,20 @@
+{
+	"type": "staticpower:centrifuge_recipe",
+	"input": {
+		"item": "staticpower:upgrade_experience_vacuum"
+	},
+	"minimum_speed": 500,
+	"outputs": [
+		{
+			"item": "minecraft:emerald",
+			"count": 2
+		},
+		{
+			"item": "minecraft:obsidian",
+			"count": 6
+		},
+		{
+			"item": "staticpower:upgrade_plate_basic"
+		}
+	]
+}

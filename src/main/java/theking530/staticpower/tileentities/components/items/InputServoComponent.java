@@ -18,6 +18,7 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
+import theking530.staticpower.tileentities.components.serialization.SaveSerialize;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class InputServoComponent extends AbstractTileEntityComponent {
@@ -29,10 +30,13 @@ public class InputServoComponent extends AbstractTileEntityComponent {
 	private int[] slots;
 	private MachineSideMode inputMode;
 	private Predicate<ItemStack> filter;
+	@SaveSerialize
+	private boolean roundRobin;
+	@SaveSerialize
+	private int lastRoundRobinSlotIndex;
 
 	public InputServoComponent(String name, InventoryComponent inventory, MachineSideMode mode, Predicate<ItemStack> filter, int... slots) {
 		super(name);
-		this.inputTime = DEFAULT_INPUT_TIME;
 		this.inventory = inventory;
 		if (slots.length == 0) {
 			this.slots = new int[inventory.getSlots()];
@@ -44,6 +48,9 @@ public class InputServoComponent extends AbstractTileEntityComponent {
 		}
 
 		this.inputMode = mode;
+		this.roundRobin = false;
+		this.inputTime = DEFAULT_INPUT_TIME;
+		this.lastRoundRobinSlotIndex = 0;
 	}
 
 	public InputServoComponent(String name, int inputTime, InventoryComponent inventory, MachineSideMode mode, int... slots) {
@@ -66,6 +73,11 @@ public class InputServoComponent extends AbstractTileEntityComponent {
 		return inputMode;
 	}
 
+	public InputServoComponent setRoundRobin(boolean roundRobin) {
+		this.roundRobin = roundRobin;
+		return this;
+	}
+
 	@Override
 	public void preProcessUpdate() {
 		// Do nothing if this component is not enabled.
@@ -84,7 +96,9 @@ public class InputServoComponent extends AbstractTileEntityComponent {
 			inputTimer++;
 
 			// If the timer has not elapsed, return early.
-			if (inputTimer < inputTime) {
+			if (inputTimer < inputTime && !roundRobin) {
+				return;
+			} else if (inputTimer == 0) {
 				return;
 			}
 			inputTimer = 0;
@@ -127,13 +141,39 @@ public class InputServoComponent extends AbstractTileEntityComponent {
 					// Get the candidate to input.
 					ItemStack candidate = validSide.extractItem(i, inventory.getSlotLimit(i), true);
 
+					// Skip empty candidates.
+					if (candidate.isEmpty()) {
+						continue;
+					}
+
 					// Check the filter if it exists, and skip if it fails.
 					if (filter != null && !filter.test(candidate)) {
 						continue;
 					}
 
-					// Attempt the insert using a copy and capture the remaining.
-					ItemStack remaining = InventoryUtilities.insertItemIntoInventory(inventory, candidate.copy(), false);
+					// Allocate the remaining.
+					ItemStack remaining = ItemStack.EMPTY;
+
+					// Attempt the insert using a copy and capture the remaining. If using round
+					// robin, perform a round robin input.
+					if (this.roundRobin) {
+						// Get the round robbin slot to use.
+						int slotToUse = slots[lastRoundRobinSlotIndex];
+
+						// Change the size.
+						candidate.setCount(1);
+
+						// Capture the remaining.
+						remaining = InventoryUtilities.insertItemIntoInventory(inventory, candidate.copy(), slotToUse, slotToUse, false);
+
+						// Increment and wrap around.
+						lastRoundRobinSlotIndex++;
+						if (lastRoundRobinSlotIndex >= slots.length) {
+							lastRoundRobinSlotIndex = 0;
+						}
+					} else {
+						remaining = InventoryUtilities.insertItemIntoInventory(inventory, candidate.copy(), false);
+					}
 
 					// If any items were transfered, extract the transfered amount from our
 					// inventory and then stop.

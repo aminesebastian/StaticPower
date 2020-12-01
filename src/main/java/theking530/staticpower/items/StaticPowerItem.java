@@ -64,24 +64,45 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	@Override
 	@Nullable
 	public CompoundNBT getShareTag(ItemStack stack) {
-		CompoundNBT output = stack.getOrCreateTag();
-		output.put("sync_tag", getStaticPowerSyncTag(stack));
-		return stack.getTag();
+		// Make the super call.
+		CompoundNBT output = super.getShareTag(stack);
+
+		// See if we have anything to sync.
+		CompoundNBT syncTag = getStaticPowerSyncTag(stack);
+
+		// If we do, add it.
+		if (syncTag != null) {
+			// If the tag is null, create one.
+			if (output == null) {
+				output = stack.getOrCreateTag();
+			}
+			output.put("sync_tag", syncTag);
+		}
+
+		// Return the combined NBT.
+		return output;
 	}
 
 	@Override
 	public void readShareTag(ItemStack stack, @Nullable CompoundNBT nbt) {
-		stack.setTag(nbt);
-		CompoundNBT syncTag = nbt.getCompound("sync_tag");
-		processStaticPowerSyncTag(stack, syncTag);
+		// Read the input nbt.
+		super.readShareTag(stack, nbt);
+
+		// If there was an input and it contains a sync tag, use it then remove it.
+		if (nbt != null && nbt.contains("sync_tag")) {
+			CompoundNBT syncTag = nbt.getCompound("sync_tag");
+			processStaticPowerSyncTag(stack, syncTag);
+		}
 	}
 
 	protected CompoundNBT getStaticPowerSyncTag(ItemStack stack) {
-		return stack.serializeNBT();
+		return (CompoundNBT) stack.serializeNBT().get("ForgeCaps");
 	}
 
 	protected void processStaticPowerSyncTag(ItemStack stack, @Nullable CompoundNBT nbt) {
-		stack.deserializeNBT(nbt);
+		CompoundNBT tag = stack.getTag();
+		tag.put("ForgeCaps", nbt);
+		stack.deserializeNBT(tag);
 	}
 
 	@Override

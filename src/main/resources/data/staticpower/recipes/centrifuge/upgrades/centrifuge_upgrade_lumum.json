@@ -1,0 +1,19 @@
+{
+	"type": "staticpower:centrifuge_recipe",
+	"input": {
+		"item": "staticpower:upgrade_centrifuge_lumum"
+	},
+	"minimum_speed": 500,
+	"outputs": [
+		{
+			"item": "staticpower:gear_lumum",
+			"count": 2
+		},
+		{
+			"item": "staticpower:motor"
+		},
+		{
+			"item": "staticpower:upgrade_plate_lumum"
+		}
+	]
+}

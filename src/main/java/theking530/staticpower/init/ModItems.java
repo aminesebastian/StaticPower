@@ -25,6 +25,7 @@ import theking530.staticpower.items.DigistorePatternCard;
 import theking530.staticpower.items.JuiceBottleItem;
 import theking530.staticpower.items.MilkBottleItem;
 import theking530.staticpower.items.PortableBattery;
+import theking530.staticpower.items.StaticPowerBurnableItem;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.items.crops.DepletedCrop;
 import theking530.staticpower.items.crops.StaticPlantCrop;
@@ -178,7 +179,7 @@ public class ModItems {
 	public static StaticPowerItem LatexChunk;
 	public static StaticPowerItem RubberWoodBark;
 	public static StaticPowerItem PortableSmeltingCore;
-	
+
 	public static StaticPowerItem BasicCard;
 	public static StaticPowerItem AdvancedCard;
 	public static StaticPowerItem StaticCard;
@@ -224,7 +225,7 @@ public class ModItems {
 	public static Blade EnergizedBlade;
 	public static Blade LumumBlade;
 	public static Blade CreativeBlade;
-	
+
 	public static ChainsawBlade IronChainsawBlade;
 	public static ChainsawBlade BronzeChainsawBlade;
 	public static ChainsawBlade AdvancedChainsawBlade;
@@ -233,7 +234,7 @@ public class ModItems {
 	public static ChainsawBlade EnergizedChainsawBlade;
 	public static ChainsawBlade LumumChainsawBlade;
 	public static ChainsawBlade CreativeChainsawBlade;
-	
+
 	public static StaticPowerItem MemoryChip;
 	public static StaticPowerItem LogicGatePowerSync;
 	public static StaticPowerItem InvertedLogicGatePowerSync;
@@ -303,13 +304,13 @@ public class ModItems {
 	public static MiningDrill StaticMiningDrill;
 	public static MiningDrill EnergizedMiningDrill;
 	public static MiningDrill LumumMiningDrill;
-	
+
 	public static Chainsaw BasicChainsaw;
 	public static Chainsaw AdvancedChainsaw;
 	public static Chainsaw StaticChainsaw;
 	public static Chainsaw EnergizedChainsaw;
 	public static Chainsaw LumumChainsaw;
-	
+
 	public static StaticWrench Wrench;
 	public static StaticWrench StaticWrench;
 	public static StaticWrench EnergizedWrench;
@@ -408,7 +409,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(MoldWire = new StaticPowerItem("mold_wire"));
 		StaticPowerRegistry.preRegisterItem(MoldGear = new StaticPowerItem("mold_gear"));
 		StaticPowerRegistry.preRegisterItem(MoldBlade = new StaticPowerItem("mold_blade"));
-		
+
 		// Plants
 		StaticPowerRegistry.preRegisterItem(StaticSeeds = new StaticPlantSeeds("seed_static", ModBlocks.StaticPlant));
 		StaticPowerRegistry.preRegisterItem(EnergizedSeeds = new StaticPlantSeeds("seed_energized", ModBlocks.EnergizedPlant));
@@ -473,7 +474,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(StaticChainsaw = new Chainsaw("chainsaw_static", 5.0f, 5.0f, StaticPowerTiers.STATIC));
 		StaticPowerRegistry.preRegisterItem(EnergizedChainsaw = new Chainsaw("chainsaw_energized", 5.0f, 5.0f, StaticPowerTiers.ENERGIZED));
 		StaticPowerRegistry.preRegisterItem(LumumChainsaw = new Chainsaw("chainsaw_lumum", 5.0f, 5.0f, StaticPowerTiers.LUMUM));
-		
+
 		StaticPowerRegistry.preRegisterItem(SolderingIron = new SolderingIron("soldering_iron", 100));
 		StaticPowerRegistry.preRegisterItem(ElectringSolderingIron = new ElectricSolderingIron("soldering_iron_electric", 1000));
 
@@ -516,8 +517,8 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(Plug = new StaticPowerItem("plug"));
 		StaticPowerRegistry.preRegisterItem(DigistoreCore = new StaticPowerItem("digistore_core"));
 		StaticPowerRegistry.preRegisterItem(GrinderComponent = new StaticPowerItem("grinder_component"));
-		StaticPowerRegistry.preRegisterItem(PortableSmeltingCore = new StaticPowerItem("portable_smelting_core"));		
-	
+		StaticPowerRegistry.preRegisterItem(PortableSmeltingCore = new StaticPowerItem("portable_smelting_core"));
+
 		StaticPowerRegistry.preRegisterItem(IronFluidCapsule = new FluidCapsule("fluid_capsule_iron", StaticPowerTiers.IRON));
 		StaticPowerRegistry.preRegisterItem(BasicFluidCapsule = new FluidCapsule("fluid_capsule_basic", StaticPowerTiers.BASIC));
 		StaticPowerRegistry.preRegisterItem(AdvancedFluidCapsule = new FluidCapsule("fluid_capsule_advanced", StaticPowerTiers.ADVANCED));
@@ -596,7 +597,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(GearBronze = new StaticPowerItem("gear_bronze"));
 
 		// Dusts
-		StaticPowerRegistry.preRegisterItem(DustWood = new StaticPowerItem("dust_wood"));
+		StaticPowerRegistry.preRegisterItem(DustWood = new StaticPowerBurnableItem("dust_wood", 250));
 		StaticPowerRegistry.preRegisterItem(DustCopper = new StaticPowerItem("dust_copper"));
 		StaticPowerRegistry.preRegisterItem(DustTin = new StaticPowerItem("dust_tin"));
 		StaticPowerRegistry.preRegisterItem(DustZinc = new StaticPowerItem("dust_zinc"));
@@ -642,7 +643,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(LumumDrillBit = new DrillBit("drill_bit_lumum", ItemTier.NETHERITE, StaticPowerTiers.LUMUM));
 		StaticPowerRegistry.preRegisterItem(CreativeDrillBit = new DrillBit("drill_bit_creative", ItemTier.NETHERITE, StaticPowerTiers.CREATIVE));
 
-		//Blades
+		// Blades
 		StaticPowerRegistry.preRegisterItem(IronBlade = new Blade("blade_iron", ItemTier.IRON, StaticPowerTiers.BASIC));
 		StaticPowerRegistry.preRegisterItem(BronzeBlade = new Blade("blade_bronze", ItemTier.IRON, StaticPowerTiers.BRONZE));
 		StaticPowerRegistry.preRegisterItem(AdvancedBlade = new Blade("blade_advanced", ItemTier.IRON, StaticPowerTiers.ADVANCED));
@@ -651,7 +652,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(EnergizedBlade = new Blade("blade_energized", ItemTier.DIAMOND, StaticPowerTiers.ENERGIZED));
 		StaticPowerRegistry.preRegisterItem(LumumBlade = new Blade("blade_lumum", ItemTier.NETHERITE, StaticPowerTiers.LUMUM));
 		StaticPowerRegistry.preRegisterItem(CreativeBlade = new Blade("blade_creative", ItemTier.NETHERITE, StaticPowerTiers.CREATIVE));
-		
+
 		// Chainsaw Blades
 		StaticPowerRegistry.preRegisterItem(IronChainsawBlade = new ChainsawBlade("chainsaw_blade_iron", ItemTier.IRON, StaticPowerTiers.BASIC));
 		StaticPowerRegistry.preRegisterItem(BronzeChainsawBlade = new ChainsawBlade("chainsaw_blade_bronze", ItemTier.IRON, StaticPowerTiers.BRONZE));
@@ -661,7 +662,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(EnergizedChainsawBlade = new ChainsawBlade("chainsaw_blade_energized", ItemTier.DIAMOND, StaticPowerTiers.ENERGIZED));
 		StaticPowerRegistry.preRegisterItem(LumumChainsawBlade = new ChainsawBlade("chainsaw_blade_lumum", ItemTier.NETHERITE, StaticPowerTiers.LUMUM));
 		StaticPowerRegistry.preRegisterItem(CreativeChainsawBlade = new ChainsawBlade("chainsaw_blade_creative", ItemTier.NETHERITE, StaticPowerTiers.CREATIVE));
-		
+
 		// Ingots
 		StaticPowerRegistry.preRegisterItem(IngotCopper = new StaticPowerItem("ingot_copper"));
 		StaticPowerRegistry.preRegisterItem(IngotTin = new StaticPowerItem("ingot_tin"));

@@ -1,0 +1,18 @@
+{
+	"type": "staticpower:centrifuge_recipe",
+	"input": {
+		"item": "staticpower:upgrade_tank_static"
+	},
+	"minimum_speed": 500,
+	"outputs": [
+		{
+			"item": "staticpower:ingot_copper"
+		},
+		{
+			"item": "minecraft:bucket"
+		},
+		{
+			"item": "staticpower:upgrade_plate_static"
+		}
+	]
+}

@@ -38,7 +38,7 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 	 * Indicates how many times faster this block will perform compared to the
 	 * vanila furnace.
 	 */
-	public static final float DEFAULT_PROCESSING_TIME_MULT = 2.0f;
+	public static final float DEFAULT_PROCESSING_TIME_MULT = 1.3f;
 	public static final int DEFAULT_PROCESSING_COST = 5;
 	public static final int DEFAULT_MOVING_TIME = 4;
 

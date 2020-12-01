@@ -1,0 +1,18 @@
+{
+	"type": "staticpower:centrifuge_recipe",
+	"input": {
+		"item": "staticpower:upgrade_speed_static"
+	},
+	"minimum_speed": 500,
+	"outputs": [
+		{
+			"item": "staticpower:ingot_silver"
+		},
+		{
+			"item": "minecraft:glowstone"
+		},
+		{
+			"item": "staticpower:upgrade_plate_static"
+		}
+	]
+}

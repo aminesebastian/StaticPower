@@ -1,0 +1,20 @@
+{
+	"type": "staticpower:centrifuge_recipe",
+	"input": {
+		"item": "staticpower:upgrade_range_basic"
+	},
+	"minimum_speed": 500,
+	"outputs": [
+		{
+			"item": "minecraft:redstone",
+			"count": 3
+		},
+		{
+			"item": "minecraft:piston",
+			"count": 3
+		},
+		{
+			"item": "staticpower:upgrade_plate_basic"
+		}
+	]
+}
