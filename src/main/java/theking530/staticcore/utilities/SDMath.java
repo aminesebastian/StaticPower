@@ -76,6 +76,15 @@ public class SDMath {
 		return Math.max(Math.min(value, max), min);
 	}
 
+	public static int multiplyRespectingOverflow(int base, int multiplier) {
+		try {
+			int output = Math.multiplyExact(base, multiplier);
+			return output;
+		} catch (Exception e) {
+			return Integer.MAX_VALUE;
+		}
+	}
+
 	/**
 	 * Transforms the provided vector to point in the direction of the provided
 	 * vector.

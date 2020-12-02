@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:lumber_mill_recipe",
 	"input": {
-		"item": "minecraft:jungle_planks"
+		"item": "staticpower:rubber_tree_planks"
 	},
 	"outputs": {
 		"primary": {

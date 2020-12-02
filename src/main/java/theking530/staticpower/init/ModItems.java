@@ -634,7 +634,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(LumumUpgradePlate = new StaticPowerItem("upgrade_plate_lumum"));
 
 		// Drill Bits
-		StaticPowerRegistry.preRegisterItem(IronDrillBit = new DrillBit("drill_bit_iron", ItemTier.IRON, StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterItem(IronDrillBit = new DrillBit("drill_bit_iron", ItemTier.IRON, StaticPowerTiers.IRON));
 		StaticPowerRegistry.preRegisterItem(BronzeDrillBit = new DrillBit("drill_bit_bronze", ItemTier.IRON, StaticPowerTiers.BRONZE));
 		StaticPowerRegistry.preRegisterItem(AdvancedDrillBit = new DrillBit("drill_bit_advanced", ItemTier.IRON, StaticPowerTiers.ADVANCED));
 		StaticPowerRegistry.preRegisterItem(TungstenDrillBit = new DrillBit("drill_bit_tungsten", ItemTier.NETHERITE, StaticPowerTiers.TUNGSTEN));
@@ -644,7 +644,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(CreativeDrillBit = new DrillBit("drill_bit_creative", ItemTier.NETHERITE, StaticPowerTiers.CREATIVE));
 
 		// Blades
-		StaticPowerRegistry.preRegisterItem(IronBlade = new Blade("blade_iron", ItemTier.IRON, StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterItem(IronBlade = new Blade("blade_iron", ItemTier.IRON, StaticPowerTiers.IRON));
 		StaticPowerRegistry.preRegisterItem(BronzeBlade = new Blade("blade_bronze", ItemTier.IRON, StaticPowerTiers.BRONZE));
 		StaticPowerRegistry.preRegisterItem(AdvancedBlade = new Blade("blade_advanced", ItemTier.IRON, StaticPowerTiers.ADVANCED));
 		StaticPowerRegistry.preRegisterItem(TungstenBlade = new Blade("blade_tungsten", ItemTier.NETHERITE, StaticPowerTiers.TUNGSTEN));

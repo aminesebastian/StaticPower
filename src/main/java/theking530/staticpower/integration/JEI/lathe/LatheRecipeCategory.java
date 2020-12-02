@@ -36,13 +36,9 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 
 public class LatheRecipeCategory extends BaseJEIRecipeCategory<LatheRecipe> {
 	public static final ResourceLocation LATHE_UID = new ResourceLocation(StaticPower.MOD_ID, "lathe");
-	private static final int INTPUT_SLOT_1 = 0;
-	private static final int INTPUT_SLOT_2 = 1;
-	private static final int INTPUT_SLOT_3 = 2;
-	private static final int INTPUT_SLOT_4 = 3;
-	private static final int PRIMARY_OUTPUT_SLOT = 4;
-	private static final int SECONDARY_OUTPUT_SLOT = 5;
-	private static final int FLUID_OUTPUT_SLOT = 6;
+	private static final int PRIMARY_OUTPUT_SLOT = 9;
+	private static final int SECONDARY_OUTPUT_SLOT = 10;
+	private static final int FLUID_OUTPUT_SLOT = 11;
 
 	private final TranslationTextComponent locTitle;
 	private final IDrawable background;
@@ -57,7 +53,7 @@ public class LatheRecipeCategory extends BaseJEIRecipeCategory<LatheRecipe> {
 		locTitle = new TranslationTextComponent(ModBlocks.Lathe.getTranslationKey());
 		background = guiHelper.createBlankDrawable(176, 60);
 		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.Lathe));
-		pBar = new ArrowProgressBar(73, 21);
+		pBar = new ArrowProgressBar(91, 6);
 	}
 
 	@Override
@@ -90,14 +86,14 @@ public class LatheRecipeCategory extends BaseJEIRecipeCategory<LatheRecipe> {
 
 	@Override
 	public void draw(LatheRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(matrixStack, 34, 12, 16, 16);
-		GuiDrawUtilities.drawSlot(matrixStack, 52, 12, 16, 16);
-		GuiDrawUtilities.drawSlot(matrixStack, 34, 30, 16, 16);
-		GuiDrawUtilities.drawSlot(matrixStack, 52, 30, 16, 16);
-		
-		
-		GuiDrawUtilities.drawSlot(matrixStack, 100, 19, 20, 20);
-		GuiDrawUtilities.drawSlot(matrixStack, 126, 19, 20, 20);
+		for (int y = 0; y < 3; y++) {
+			for (int x = 0; x < 3; x++) {
+				GuiDrawUtilities.drawSlot(matrixStack, 32 + x * 18, 5 + y * 18, 16, 16);
+			}
+		}
+
+		GuiDrawUtilities.drawSlot(matrixStack, 120, 5, 20, 20);
+		GuiDrawUtilities.drawSlot(matrixStack, 120, 39, 20, 20);
 
 		// This doesn't actually draw the fluid, just the bars.
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getOutputFluid(), 0, 0, 153, 54, 1.0f, 16, 48, MachineSideMode.Never, true);
@@ -154,13 +150,19 @@ public class LatheRecipeCategory extends BaseJEIRecipeCategory<LatheRecipe> {
 	@Override
 	public void setRecipe(IRecipeLayout recipeLayout, LatheRecipe recipe, IIngredients ingredients) {
 		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
-		guiItemStacks.init(INTPUT_SLOT_1, true, 33, 11);
-		guiItemStacks.init(INTPUT_SLOT_2, true, 51, 11);
-		guiItemStacks.init(INTPUT_SLOT_3, true, 33, 29);
-		guiItemStacks.init(INTPUT_SLOT_4, true, 51, 29);
 
-		guiItemStacks.init(PRIMARY_OUTPUT_SLOT, false, 101, 20);
-		guiItemStacks.init(SECONDARY_OUTPUT_SLOT, false, 127, 20);
+		// Add the inputs.
+		for (int y = 0; y < 3; y++) {
+			for (int x = 0; x < 3; x++) {
+				guiItemStacks.init(x + (y * 3), true, 31 + x * 18, 4 + y * 18);
+			}
+		}
+
+		// Add the outputs.
+		guiItemStacks.init(PRIMARY_OUTPUT_SLOT, false, 121, 6);
+		guiItemStacks.init(SECONDARY_OUTPUT_SLOT, false, 121, 40);
+
+		// Set the ingredients.
 		guiItemStacks.set(ingredients);
 
 		// Add the fluid.

@@ -190,18 +190,16 @@ public class StaticPowerRecipeRegistry {
 				}
 
 				// Create the recipe.
+				FluidStack fluidStack = new FluidStack(fluid, FluidAttributes.BUCKET_VOLUME);
 				ItemStack emptyContainer = container.copy();
 				ResourceLocation recipe = new ResourceLocation(fluid.getRegistryName().getNamespace(), fluid.getRegistryName().getPath() + "_bottler_dynamic");
-				BottleRecipe bucketRecipe = new BottleRecipe(recipe, result.getResult(), emptyContainer, new FluidStack(fluid, FluidAttributes.BUCKET_VOLUME));
+				BottleRecipe bucketRecipe = new BottleRecipe(recipe, result.getResult(), emptyContainer, fluidStack);
 
 				// Add the recipe if is not a duplicate, otherwise, skip it.
-				if (!StaticPowerRecipeRegistry.getRecipesOfType(BottleRecipe.RECIPE_TYPE).contains(bucketRecipe)) {
-					recipeCount++;
-					addRecipe(bucketRecipe);
-				} else {
-					LOGGER.info(String.format("Attempted to register a dynamic bottler recipe for item: %1$s. The .json definition may not be required unless it is an override.",
-							emptyContainer.getDisplayName().getString()));
-				}
+				recipeCount++;
+				addRecipe(bucketRecipe);
+				LOGGER.info(String.format("Registering a dynamic bottler recipe for item: %1$s and fluid: %2$s.", emptyContainer.getDisplayName().getString(),
+						fluid.getAttributes().getDisplayName(fluidStack).getString()));
 			}
 		}
 

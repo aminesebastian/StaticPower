@@ -31,7 +31,7 @@ public class ContainerLathe extends StaticPowerTileEntityContainer<TileEntityLat
 	@Override
 	public void initializeContainer() {
 		// Input
-		this.addSlotsInGrid(getTileEntity().inputInventory, 0, 50, 24, 2, (index, x, y) -> {
+		this.addSlotsInGrid(getTileEntity().inputInventory, 0, 60, 18, 3, (index, x, y) -> {
 			return new StaticPowerContainerSlot(getTileEntity().inputInventory, index, x, y);
 		});
 
@@ -39,8 +39,8 @@ public class ContainerLathe extends StaticPowerTileEntityContainer<TileEntityLat
 		this.addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 60));
 
 		// Output
-		this.addSlot(new OutputSlot(getTileEntity().mainOutputInventory, 0, 99, 32));
-		this.addSlot(new OutputSlot(getTileEntity().secondaryOutputInventory, 0, 125, 32));
+		this.addSlot(new OutputSlot(getTileEntity().mainOutputInventory, 0, 120, 20));
+		this.addSlot(new OutputSlot(getTileEntity().secondaryOutputInventory, 0, 120, 52));
 
 		this.addPlayerInventory(getPlayerInventory(), 8, 84);
 		this.addPlayerHotbar(getPlayerInventory(), 8, 142);

@@ -8,6 +8,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderTank;
 import theking530.staticpower.data.StaticPowerTier;
@@ -42,6 +43,8 @@ public class TileEntityTank extends TileEntityBase {
 	public static final TileEntityTypeAllocator<TileEntityTank> TYPE_CREATIVE = new TileEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(type, StaticPowerTiers.CREATIVE),
 			ModBlocks.CreativeTank);
 
+	public static final int MACHINE_TANK_CAPACITY_MULTIPLIER = 4;
+
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
 			TYPE_BASIC.setTileEntitySpecialRenderer(TileEntityRenderTank::new);
@@ -65,7 +68,7 @@ public class TileEntityTank extends TileEntityBase {
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
 
 		// Add the tank component.
-		int capacity = tier == StaticPowerTiers.CREATIVE ? Integer.MAX_VALUE : tierObject.defaultTankCapacity.get() * 4;
+		int capacity = SDMath.multiplyRespectingOverflow(tierObject.defaultTankCapacity.get(), MACHINE_TANK_CAPACITY_MULTIPLIER);
 		registerComponent(
 				fluidTankComponent = new FluidTankComponent("FluidTank", capacity).setCapabilityExposedModes(MachineSideMode.Regular, MachineSideMode.Input, MachineSideMode.Output));
 		fluidTankComponent.setCanFill(true);

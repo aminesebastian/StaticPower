@@ -9,7 +9,7 @@
 			"count": 10
 		},
 		"fluid": {
-			"fluid": "staticpower:tree_sap",
+			"fluid": "staticpower:oil_tree",
 			"volume": 2
 		}
 	}

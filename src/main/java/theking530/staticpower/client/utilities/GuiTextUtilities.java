@@ -29,7 +29,7 @@ public class GuiTextUtilities {
 	public static final TranslationTextComponent HEAT_UNIT_TRANSLATION = new TranslationTextComponent("gui.staticpower.heat_unit");
 	/** Translation text component for Heat Per Tick (H/t). */
 	public static final TranslationTextComponent HEAT_RATE_TRANSLATION = new TranslationTextComponent("gui.staticpower.heat_unit_per_tick");
-	/** Translation text component for Conductivity (σ). */
+	/** Translation text component for Conductivity (Ïƒ). */
 	public static final TranslationTextComponent HEAT_CONDUCTIVITY_TRANSLATION = new TranslationTextComponent("gui.staticpower.heat_conductivity");
 
 	/** Single instance of number formatter with two decimal places.. */
@@ -38,6 +38,7 @@ public class GuiTextUtilities {
 	private static final NumberFormat NUMBER_FORMATTER_ONE_DECIMAL;
 	/** Single instance of number formatter with no decimal place. */
 	private static final NumberFormat NUMBER_FORMATTER_NO_DECIMAL;
+	
 	/**
 	 * Static initializer for number formatter.
 	 */
@@ -63,11 +64,21 @@ public class GuiTextUtilities {
 	 * @return The formatted string.
 	 */
 	public static IFormattableTextComponent formatEnergyToString(int energy, boolean includeUnits, boolean includeMetricUnit) {
-		MetricConverter metricEnergy = new MetricConverter(energy);
-		IFormattableTextComponent output = new StringTextComponent(NUMBER_FORMATTER_TWO_DECIMAL.format(metricEnergy.getValue()));
+		// Allocate the text component.
+		IFormattableTextComponent output;
 
-		if (includeMetricUnit) {
-			output.appendString(metricEnergy.getSuffix());
+		// If the value is equal to the integer max, make it infinite.
+		if (energy == Integer.MAX_VALUE) {
+			output = new StringTextComponent("∞");
+		} else {
+			// Perform the metric conversion.
+			MetricConverter metricEnergy = new MetricConverter(energy);
+			output = new StringTextComponent(NUMBER_FORMATTER_TWO_DECIMAL.format(metricEnergy.getValue()));
+
+			// Include the metric unit if requested.
+			if (includeMetricUnit) {
+				output.appendString(metricEnergy.getSuffix());
+			}
 		}
 
 		if (includeUnits) {
@@ -106,8 +117,17 @@ public class GuiTextUtilities {
 	 * @return The formatted string.
 	 */
 	public static IFormattableTextComponent formatEnergyRateToString(double energyRate) {
-		MetricConverter metricRate = new MetricConverter(energyRate);
-		return new StringTextComponent(NUMBER_FORMATTER_TWO_DECIMAL.format(metricRate.getValue())).appendString(metricRate.getSuffix()).append(ENERGY_RATE_TRANSLATION);
+		// Allocate the text component.
+		IFormattableTextComponent output;
+		
+		// If the value is equal to the integer max, make it infinite.
+		if ((int)energyRate == Integer.MAX_VALUE) {
+			output = new StringTextComponent("∞");
+		} else {
+			MetricConverter metricRate = new MetricConverter(energyRate);
+			output = new StringTextComponent(NUMBER_FORMATTER_TWO_DECIMAL.format(metricRate.getValue())).appendString(metricRate.getSuffix());
+		}
+		return output.append(ENERGY_RATE_TRANSLATION);
 	}
 
 	public static IFormattableTextComponent formatHeatToString(double currentHeat, double capacity) {
@@ -120,11 +140,19 @@ public class GuiTextUtilities {
 	}
 
 	public static IFormattableTextComponent formatHeatToString(double heat, boolean includeUnits, boolean includeMetricUnit) {
-		MetricConverter metricEnergy = new MetricConverter(heat);
-		IFormattableTextComponent output = new StringTextComponent(NUMBER_FORMATTER_TWO_DECIMAL.format(metricEnergy.getValue()));
+		// Allocate the text component.
+		IFormattableTextComponent output;
 
-		if (includeMetricUnit) {
-			output.appendString(metricEnergy.getSuffix());
+		// If the value is equal to the integer max, make it infinite.
+		if ((int)heat == Integer.MAX_VALUE) {
+			output = new StringTextComponent("∞");
+		} else {
+			MetricConverter metricEnergy = new MetricConverter(heat);
+			output = new StringTextComponent(NUMBER_FORMATTER_TWO_DECIMAL.format(metricEnergy.getValue()));
+
+			if (includeMetricUnit) {
+				output.appendString(metricEnergy.getSuffix());
+			}
 		}
 
 		if (includeUnits) {
@@ -134,13 +162,33 @@ public class GuiTextUtilities {
 	}
 
 	public static IFormattableTextComponent formatHeatRateToString(double heatTransferRate) {
-		MetricConverter metricRate = new MetricConverter(heatTransferRate);
-		return new StringTextComponent(NUMBER_FORMATTER_TWO_DECIMAL.format(metricRate.getValue())).appendString(" ").appendString(metricRate.getSuffix()).append(HEAT_RATE_TRANSLATION);
+		// Allocate the text component.
+		IFormattableTextComponent output;
+
+		// If the value is equal to the integer max, make it infinite.
+		if ((int)heatTransferRate == Integer.MAX_VALUE) {
+			output = new StringTextComponent("∞");
+		} else {
+			MetricConverter metricRate = new MetricConverter(heatTransferRate);
+			output = new StringTextComponent(NUMBER_FORMATTER_TWO_DECIMAL.format(metricRate.getValue())).appendString(" ").appendString(metricRate.getSuffix());
+		}
+
+		return output.append(HEAT_RATE_TRANSLATION);
 	}
 
 	public static IFormattableTextComponent formatConductivityToString(double conductivity) {
-		MetricConverter metricRate = new MetricConverter(conductivity);
-		return new StringTextComponent(NUMBER_FORMATTER_TWO_DECIMAL.format(metricRate.getValue())).appendString(metricRate.getSuffix()).append(HEAT_CONDUCTIVITY_TRANSLATION);
+		// Allocate the text component.
+		IFormattableTextComponent output;
+
+		// If the value is equal to the integer max, make it infinite.
+		if ((int)conductivity == Integer.MAX_VALUE) {
+			output = new StringTextComponent("∞");
+		} else {
+			MetricConverter metricRate = new MetricConverter(conductivity);
+			output = new StringTextComponent(NUMBER_FORMATTER_TWO_DECIMAL.format(metricRate.getValue())).appendString(metricRate.getSuffix());
+		}
+
+		return output.append(HEAT_CONDUCTIVITY_TRANSLATION);
 	}
 
 	public static IFormattableTextComponent formatFluidToString(double currentFluid, double capacity) {
@@ -153,16 +201,26 @@ public class GuiTextUtilities {
 	}
 
 	public static IFormattableTextComponent formatFluidToString(double fluid, boolean includeUnits, boolean includeMetricUnit) {
-		MetricConverter metricFluid = new MetricConverter(fluid, -1);
-		IFormattableTextComponent output = new StringTextComponent(NUMBER_FORMATTER_ONE_DECIMAL.format(metricFluid.getValue()));
+		// Allocate the text component.
+		IFormattableTextComponent output;
 
-		if (includeMetricUnit) {
-			output.appendString(metricFluid.getSuffix());
+		// If the value is equal to the integer max, make it infinite.
+		if ((int)fluid == Integer.MAX_VALUE) {
+			output = new StringTextComponent("∞");
+		} else {
+			MetricConverter metricFluid = new MetricConverter(fluid, -1);
+			output = new StringTextComponent(NUMBER_FORMATTER_ONE_DECIMAL.format(metricFluid.getValue()));
+
+			if (includeMetricUnit) {
+				output.appendString(metricFluid.getSuffix());
+			}
 		}
 
+		// Append the units if requested.
 		if (includeUnits) {
 			output.append(FLUID_UNIT_TRANSLATION);
 		}
+
 		return output;
 	}
 
@@ -184,9 +242,19 @@ public class GuiTextUtilities {
 	}
 
 	public static IFormattableTextComponent formatFluidRateToString(double fluidRate, boolean includeSpace) {
-		MetricConverter metricRate = new MetricConverter(fluidRate, -1);
-		return new StringTextComponent(NUMBER_FORMATTER_ONE_DECIMAL.format(metricRate.getValue())).appendString(includeSpace ? " " : "").appendString(metricRate.getSuffix())
-				.append(FLUID_RATE_TRANSLATION);
+		// Allocate the text component.
+		IFormattableTextComponent output;
+
+		// If the value is equal to the integer max, make it infinite.
+		if ((int)fluidRate == Integer.MAX_VALUE) {
+			output = new StringTextComponent("∞");
+		} else {
+			MetricConverter metricRate = new MetricConverter(fluidRate, -1);
+			output = new StringTextComponent(NUMBER_FORMATTER_ONE_DECIMAL.format(metricRate.getValue())).appendString(includeSpace ? " " : "").appendString(metricRate.getSuffix())
+					.append(FLUID_RATE_TRANSLATION);
+		}
+
+		return output.append(FLUID_RATE_TRANSLATION);
 	}
 
 	public static IFormattableTextComponent formatNumberAsString(double number) {

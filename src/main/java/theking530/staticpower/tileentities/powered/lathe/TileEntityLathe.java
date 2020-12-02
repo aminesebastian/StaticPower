@@ -32,7 +32,7 @@ public class TileEntityLathe extends TileEntityMachine {
 	public static final TileEntityTypeAllocator<TileEntityLathe> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityLathe(), ModBlocks.Lathe);
 
 	public static final int DEFAULT_PROCESSING_TIME = 150;
-	public static final int DEFAULT_PROCESSING_COST = 5;
+	public static final int DEFAULT_PROCESSING_COST = 3;
 	public static final int DEFAULT_MOVING_TIME = 4;
 	public static final int DEFAULT_TANK_SIZE = 5000;
 
@@ -50,10 +50,10 @@ public class TileEntityLathe extends TileEntityMachine {
 	public TileEntityLathe() {
 		super(TYPE);
 
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 4, MachineSideMode.Input).setShiftClickEnabled(true).setSlotsLockable(true));
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 9, MachineSideMode.Input).setShiftClickEnabled(true).setSlotsLockable(true));
 
 		// Setup all the other inventories.
-		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 4));
+		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 9));
 		registerComponent(mainOutputInventory = new InventoryComponent("MainOutputInventory", 1, MachineSideMode.Output2));
 		registerComponent(secondaryOutputInventory = new InventoryComponent("SecondaryOutputInventory", 1, MachineSideMode.Output3));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
@@ -93,9 +93,11 @@ public class TileEntityLathe extends TileEntityMachine {
 	protected RecipeMatchParameters getMatchParameters(RecipeProcessingLocation location) {
 		if (location == RecipeProcessingLocation.INTERNAL) {
 			return new RecipeMatchParameters(internalInventory.getStackInSlot(0), internalInventory.getStackInSlot(1), internalInventory.getStackInSlot(2),
-					internalInventory.getStackInSlot(3));
+					internalInventory.getStackInSlot(3), internalInventory.getStackInSlot(4), internalInventory.getStackInSlot(5), internalInventory.getStackInSlot(6),
+					internalInventory.getStackInSlot(7), internalInventory.getStackInSlot(8));
 		} else {
-			return new RecipeMatchParameters(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1), inputInventory.getStackInSlot(2), inputInventory.getStackInSlot(3));
+			return new RecipeMatchParameters(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1), inputInventory.getStackInSlot(2), inputInventory.getStackInSlot(3),
+					inputInventory.getStackInSlot(4), inputInventory.getStackInSlot(5), inputInventory.getStackInSlot(6), inputInventory.getStackInSlot(7), inputInventory.getStackInSlot(8));
 		}
 	}
 
@@ -105,11 +107,11 @@ public class TileEntityLathe extends TileEntityMachine {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 
-		// Move the item.
-		transferItemInternally(inputInventory, 0, internalInventory, 0);
-		transferItemInternally(inputInventory, 1, internalInventory, 1);
-		transferItemInternally(inputInventory, 2, internalInventory, 2);
-		transferItemInternally(inputInventory, 3, internalInventory, 3);
+		// Move the items.
+		for (int i = 0; i < 9; i++) {
+			transferItemInternally(recipe.getInputs().get(i).getCount(), inputInventory, i, internalInventory, i);
+		}
+		
 		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}

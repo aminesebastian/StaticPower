@@ -1,11 +1,13 @@
 package theking530.staticpower.data.crafting.wrappers.lathe;
 
-import com.google.gson.JsonArray;
+import java.util.Map;
+
 import com.google.gson.JsonObject;
 
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
@@ -24,12 +26,12 @@ public class LatheRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<
 
 	@Override
 	public LatheRecipe read(ResourceLocation recipeId, JsonObject json) {
-		// Capture the input ingredient.
-		JsonArray inputsArray = JSONUtils.getJsonArray(json, "inputs");
-		StaticPowerIngredient[] inputs = new StaticPowerIngredient[inputsArray.size()];
-		for (int i = 0; i < inputsArray.size(); i++) {
-			inputs[i] = StaticPowerIngredient.deserialize(inputsArray.get(i));
-		}
+		// Capture the input ingredients.
+		Map<String, StaticPowerIngredient> map = LatheRecipe.deserializeKey(JSONUtils.getJsonObject(json, "key"));
+		String[] astring = LatheRecipe.patternFromJson(JSONUtils.getJsonArray(json, "pattern"));
+		int width = astring[0].length();
+		int height = astring.length;
+		NonNullList<StaticPowerIngredient> inputs = LatheRecipe.deserializeIngredients(astring, map, width, height);
 
 		// Start with the default values.
 		int powerCost = TileEntityLumberMill.DEFAULT_PROCESSING_COST;
@@ -53,37 +55,41 @@ public class LatheRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<
 			secondaryOutput = ProbabilityItemStackOutput.parseFromJSON(outputs.getAsJsonObject("secondary"));
 		}
 
-		// Deserialize the fluid output if it exsists.
+		// Deserialize the fluid output if it exists.
 		if (outputs.has("fluid")) {
 			fluidOutput = StaticPowerJsonParsingUtilities.parseFluidStack(outputs.getAsJsonObject("fluid"));
 		}
 
 		// Craete the recipe.
-		return new LatheRecipe(recipeId, inputs, primaryOutput, secondaryOutput, fluidOutput, processingTime, powerCost);
+		return new LatheRecipe(recipeId, width, height, inputs, primaryOutput, secondaryOutput, fluidOutput, processingTime, powerCost);
 	}
 
 	@Override
 	public LatheRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
 		int power = buffer.readInt();
 		int time = buffer.readInt();
-		int inputCount = buffer.readInt();
-		StaticPowerIngredient[] inputs = new StaticPowerIngredient[inputCount];
-		for (int i = 0; i < inputCount; i++) {
-			inputs[i] = StaticPowerIngredient.read(buffer);
+		int width = buffer.readVarInt();
+		int height = buffer.readVarInt();
+
+		NonNullList<StaticPowerIngredient> nonnulllist = NonNullList.withSize(width * height, StaticPowerIngredient.EMPTY);
+		for (int k = 0; k < nonnulllist.size(); ++k) {
+			nonnulllist.set(k, StaticPowerIngredient.read(buffer));
 		}
 
 		ProbabilityItemStackOutput primary = ProbabilityItemStackOutput.readFromBuffer(buffer);
 		ProbabilityItemStackOutput secondary = ProbabilityItemStackOutput.readFromBuffer(buffer);
 		FluidStack outFluid = buffer.readFluidStack();
 
-		return new LatheRecipe(recipeId, inputs, primary, secondary, outFluid, time, power);
+		return new LatheRecipe(recipeId, width, height, nonnulllist, primary, secondary, outFluid, time, power);
 	}
 
 	@Override
 	public void write(PacketBuffer buffer, LatheRecipe recipe) {
 		buffer.writeInt(recipe.getPowerCost());
 		buffer.writeInt(recipe.getProcessingTime());
-		buffer.writeInt(recipe.getInputs().length);
+		buffer.writeVarInt(recipe.recipeWidth);
+		buffer.writeVarInt(recipe.recipeHeight);
+
 		for (StaticPowerIngredient ing : recipe.getInputs()) {
 			ing.write(buffer);
 		}

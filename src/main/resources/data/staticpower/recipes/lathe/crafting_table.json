@@ -1,9 +1,9 @@
 {
 	"type": "staticpower:lathe_recipe",
 	"pattern": [
-		" w ",
-		" w ",
-		"   "
+		"   ",
+		"ww ",
+		"ww "
 	],
 	"key": {
 		"w": {
@@ -12,16 +12,16 @@
 	},
 	"outputs": {
 		"primary": {
-			"item": "minecraft:stick",
-			"count": 8
+			"item": "minecraft:crafting_table",
+			"count": 2
 		},
 		"secondary": {
 			"item": "staticpower:dust_wood",
-			"count": 2
+			"count": 4
 		},
 		"fluid": {
 			"fluid": "staticpower:oil_tree",
-			"volume": 10
+			"volume": 20
 		}
 	}
 }

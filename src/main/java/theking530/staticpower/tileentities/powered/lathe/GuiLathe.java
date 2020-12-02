@@ -25,7 +25,7 @@ public class GuiLathe extends StaticPowerTileEntityGui<ContainerLathe, TileEntit
 	public void initializeGui() {
 		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 48));
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 150, 8, 16, 60, MachineSideMode.Output, getTileEntity()));
-		registerWidget(new ArrowProgressBar(71, 32).bindToMachineProcessingComponent(getTileEntity().processingComponent));
+		registerWidget(new ArrowProgressBar(90, 20).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));

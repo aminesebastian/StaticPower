@@ -647,7 +647,7 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 		}
 
 		public static ProcessingCheckState outputsCannotTakeRecipe() {
-			return new ProcessingCheckState(ProcessingState.ERROR, "Recipe output cannot be placed in output slot(s).");
+			return new ProcessingCheckState(ProcessingState.ERROR, "Recipe output cannot be placed in machine output.");
 		}
 	}
 }

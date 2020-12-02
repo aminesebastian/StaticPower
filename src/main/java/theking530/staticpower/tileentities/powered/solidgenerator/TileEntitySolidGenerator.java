@@ -33,7 +33,7 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntitySolidGenerator> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntitySolidGenerator(), ModBlocks.SolidGenerator);
 
-	public static final int DEFAULT_POWER_GENERATION = 15;
+	public static final int DEFAULT_POWER_GENERATION = 5;
 	public static final int DEFAULT_MOVING_TIME = 4;
 
 	public final InventoryComponent inputInventory;

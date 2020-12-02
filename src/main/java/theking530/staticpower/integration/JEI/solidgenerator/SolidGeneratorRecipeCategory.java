@@ -14,6 +14,8 @@ import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -24,6 +26,7 @@ import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.progressbars.FireProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
+import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
@@ -95,6 +98,11 @@ public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFue
 		pBar.setCurrentProgress(processingTimer.getValue());
 		pBar.setMaxProgress(processingTimer.getMaxValue());
 		pBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);
+
+		FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;
+		String powerGeneration = GuiTextUtilities.formatEnergyRateToString(TileEntitySolidGenerator.DEFAULT_POWER_GENERATION).getString();
+		fontRenderer.drawString(matrixStack, powerGeneration, 51 - (fontRenderer.getStringWidth(powerGeneration) / 2), 5, Color.EIGHT_BIT_DARK_GREY.encodeInInteger());
+
 	}
 
 	@Override

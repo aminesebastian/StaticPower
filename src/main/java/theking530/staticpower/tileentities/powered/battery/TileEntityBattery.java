@@ -9,6 +9,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderBatteryBlock;
 import theking530.staticpower.data.StaticPowerTier;
@@ -44,6 +45,8 @@ public class TileEntityBattery extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityBattery> TYPE_CREATIVE = new TileEntityTypeAllocator<TileEntityBattery>(
 			(allocator) -> new TileEntityBattery(allocator, StaticPowerTiers.CREATIVE), ModBlocks.BatteryCreative);
+
+	public static final int MACHINE_POWER_IO_MULTIPLIER = 4;
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -89,9 +92,10 @@ public class TileEntityBattery extends TileEntityMachine {
 
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
 		energyStorage.getStorage().setCapacity(tierObject.batteryCapacity.get());
-		inputRFTick = tierObject.defaultMachinePowerInput.get() * 2;
-		outputRFTick = tierObject.defaultMachinePowerOutput.get() * 2;
-		maxPowerIO = inputRFTick * 2;
+
+		inputRFTick = SDMath.multiplyRespectingOverflow(tierObject.defaultMachinePowerInput.get(), MACHINE_POWER_IO_MULTIPLIER / 2);
+		outputRFTick = SDMath.multiplyRespectingOverflow(tierObject.defaultMachinePowerOutput.get(), MACHINE_POWER_IO_MULTIPLIER / 2);
+		maxPowerIO = SDMath.multiplyRespectingOverflow(inputRFTick, MACHINE_POWER_IO_MULTIPLIER);
 
 		energyStorage.getStorage().setMaxReceive(inputRFTick);
 		energyStorage.getStorage().setMaxExtract(outputRFTick);

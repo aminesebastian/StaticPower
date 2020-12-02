@@ -1,19 +1,22 @@
 {
 	"type": "staticpower:lathe_recipe",
 	"pattern": [
-		" w ",
-		" w ",
-		"   "
+		"www",
+		"wrw",
+		"www"
 	],
 	"key": {
 		"w": {
 			"tag": "minecraft:planks"
+		},
+		"r": {
+			"tag": "forge:dusts/redstone"
 		}
 	},
 	"outputs": {
 		"primary": {
-			"item": "minecraft:stick",
-			"count": 8
+			"item": "minecraft:note_block",
+			"count": 3
 		},
 		"secondary": {
 			"item": "staticpower:dust_wood",

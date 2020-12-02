@@ -1,21 +1,32 @@
 package theking530.staticpower.tileentities.powered.battery;
 
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import theking530.staticcore.utilities.SDMath;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.client.rendering.blocks.BatteryBlockedBakedModel;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockBattery extends StaticPowerMachineBlock {
@@ -30,6 +41,17 @@ public class BlockBattery extends StaticPowerMachineBlock {
 	@Override
 	public HasGuiType hasGuiScreen(TileEntity tileEntity, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
 		return HasGuiType.ALWAYS;
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	@Override
+	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
+		tooltip.add(
+				new StringTextComponent(TextFormatting.GREEN.toString() + "Capacity: ").append(GuiTextUtilities.formatEnergyToString(StaticPowerConfig.getTier(tier).batteryCapacity.get())));
+		tooltip.add(new StringTextComponent(TextFormatting.BLUE.toString() + "Max Input: ").append(GuiTextUtilities
+				.formatEnergyRateToString(SDMath.multiplyRespectingOverflow(StaticPowerConfig.getTier(tier).defaultMachinePowerInput.get(), TileEntityBattery.MACHINE_POWER_IO_MULTIPLIER))));
+		tooltip.add(new StringTextComponent(TextFormatting.GOLD.toString() + "Max Output: ").append(GuiTextUtilities.formatEnergyRateToString(
+				SDMath.multiplyRespectingOverflow(StaticPowerConfig.getTier(tier).defaultMachinePowerOutput.get(), TileEntityBattery.MACHINE_POWER_IO_MULTIPLIER))));
 	}
 
 	@Override
@@ -74,7 +96,7 @@ public class BlockBattery extends StaticPowerMachineBlock {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)	
+	@OnlyIn(Dist.CLIENT)
 	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
 		return new BatteryBlockedBakedModel(existingModel);
 	}

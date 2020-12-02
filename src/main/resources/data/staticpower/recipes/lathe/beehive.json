@@ -1,27 +1,30 @@
 {
 	"type": "staticpower:lathe_recipe",
 	"pattern": [
-		" w ",
-		" w ",
-		"   "
+		"www",
+		"hhh",
+		"www"
 	],
 	"key": {
 		"w": {
 			"tag": "minecraft:planks"
+		},
+		"h": {
+			"item": "minecraft:honeycomb"
 		}
 	},
 	"outputs": {
 		"primary": {
-			"item": "minecraft:stick",
-			"count": 8
+			"item": "minecraft:beehive",
+			"count": 2
 		},
 		"secondary": {
 			"item": "staticpower:dust_wood",
-			"count": 2
+			"count": 6
 		},
 		"fluid": {
 			"fluid": "staticpower:oil_tree",
-			"volume": 10
+			"volume": 30
 		}
 	}
 }

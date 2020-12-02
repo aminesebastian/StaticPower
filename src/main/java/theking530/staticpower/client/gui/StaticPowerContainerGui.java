@@ -569,7 +569,9 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 						// If the slot is locked, render the phantom item & the lock indicator.
 						if (component.isSlotLocked(slot.getSlotIndex())) {
 							itemRenderer.drawItem(component.getLockedSlotFilter(slot.getSlotIndex()), guiLeft, guiTop, slot.xPos, slot.yPos, 0.5f);
+							GlStateManager.enableDepthTest();
 						}
+						
 						// Draw the yellow line lockable indicator.
 						GuiDrawUtilities.drawColoredRectangle(slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset + slotSize, slotSize, 1.0f, 1.0f, new Color(0.9f, 0.8f, 0));
 					}

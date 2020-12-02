@@ -1,27 +1,30 @@
 {
 	"type": "staticpower:lathe_recipe",
 	"pattern": [
-		" w ",
-		" w ",
-		"   "
+		"wsw",
+		"w w",
+		"wsw"
 	],
 	"key": {
 		"w": {
 			"tag": "minecraft:planks"
+		},
+		"s": {
+			"tag": "minecraft:wooden_slabs"
 		}
 	},
 	"outputs": {
 		"primary": {
-			"item": "minecraft:stick",
-			"count": 8
+			"item": "minecraft:barrel",
+			"count": 2
 		},
 		"secondary": {
 			"item": "staticpower:dust_wood",
-			"count": 2
+			"count": 7
 		},
 		"fluid": {
 			"fluid": "staticpower:oil_tree",
-			"volume": 10
+			"volume": 35
 		}
 	}
 }
