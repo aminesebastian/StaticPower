@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:squeezer_recipe",
+	"input": {
+		"item": "staticpower:dust_wood"
+	},
+	"outputs": {
+		"fluid": {
+			"fluid": "staticpower:oil_tree",
+			"volume": 1
+		}
+	}
+}

@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"   ",
+		" p ",
+		"wfw"
+	],
+	"key": {
+		"w": {
+			"item": "minecraft:purple_wool"
+		},
+		"f": {
+			"item": "staticpower:bed_frame"
+		},
+		"p": {
+			"item": "minecraft:white_wool"
+		}
+	},
+	"result": {
+		"item": "minecraft:purple_bed",
+		"count": 1
+	}
+}

@@ -48,7 +48,8 @@ import theking530.staticpower.items.tools.sword.Blade;
 
 public class ModItems {
 	public static StaticPowerItem DistilleryGrain;
-
+	public static StaticPowerItem BedFrame;
+	
 	public static StaticPowerItem WheatFlour;
 	public static StaticPowerItem PotatoFlour;
 	public static StaticPowerItem PotatoBread;
@@ -393,7 +394,8 @@ public class ModItems {
 	public static void init() {
 		// Misc.
 		StaticPowerRegistry.preRegisterItem(DistilleryGrain = new StaticPowerItem("distillery_grain"));
-
+		StaticPowerRegistry.preRegisterItem(BedFrame = new StaticPowerItem("bed_frame"));
+		
 		// Food
 		StaticPowerRegistry.preRegisterItem(WheatFlour = new StaticPowerItem("flour_wheat"));
 		StaticPowerRegistry.preRegisterItem(PotatoFlour = new StaticPowerItem("flour_potato"));

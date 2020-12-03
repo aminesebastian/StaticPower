@@ -1,9 +1,9 @@
 {
 	"type": "staticpower:lathe_recipe",
 	"pattern": [
-		"wsw",
-		"w w",
-		"wsw"
+		"   ",
+		"sss",
+		"w w"
 	],
 	"key": {
 		"w": {
@@ -15,16 +15,16 @@
 	},
 	"outputs": {
 		"primary": {
-			"item": "minecraft:barrel",
+			"item": "staticpower:bed_frame",
 			"count": 2
 		},
 		"secondary": {
 			"item": "staticpower:dust_wood",
-			"count": 7
+			"count": 3
 		},
 		"fluid": {
 			"fluid": "staticpower:oil_tree",
-			"volume": 35
+			"volume": 15
 		}
 	}
 }
