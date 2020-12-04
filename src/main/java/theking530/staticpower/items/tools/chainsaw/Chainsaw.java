@@ -103,10 +103,11 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 	public ItemStack getPartInSlot(ItemStack stack, AbstractMultiPartSlot slot) {
 		if (slot == MultiPartSlots.CHAINSAW_BLADE) {
 			IItemHandler inventory = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
-			return inventory.getStackInSlot(0);
-		} else {
-			return ItemStack.EMPTY;
+			if (inventory != null) {
+				return inventory.getStackInSlot(0);
+			}
 		}
+		return ItemStack.EMPTY;
 	}
 
 	@Override
@@ -157,6 +158,11 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 	}
 
 	protected void harvestBlockDrops(BlockState state, Block block, BlockPos pos, ServerPlayerEntity player, TileEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
+		// If the player is in creative, do nothing.
+		if (isCreative) {
+			return;
+		}
+		
 		// Allocate a list of the items that would be dropped.
 		List<ItemStack> droppableItems = Block.getDrops(state, player.getServerWorld(), pos, tileEntity, player, heldItem);
 

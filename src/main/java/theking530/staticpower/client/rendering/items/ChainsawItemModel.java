@@ -109,20 +109,20 @@ public class ChainsawItemModel implements IBakedModel {
 			}
 
 			List<BakedQuad> output = new ArrayList<BakedQuad>();
-			AtomicBoolean drillBitEquipped = new AtomicBoolean(false);
+			AtomicBoolean chainsawEquipped = new AtomicBoolean(false);
 
 			// Attempt to get the chainsaw inventory.
 			stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((handler) -> {
 				if (!handler.getStackInSlot(0).isEmpty()) {
-					drillBitEquipped.set(true);
+					chainsawEquipped.set(true);
 					IBakedModel itemModel = Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(handler.getStackInSlot(0), Minecraft.getInstance().world, null);
 					List<BakedQuad> chainsawBladeQuads = itemModel.getQuads(state, side, rand, data);
 					output.addAll(transformQuads(chainsawBladeQuads, new Vector3f(0.25f, 0.28f, 0f), new Vector3f(0.5f, 0.5f, 0.5f), new Quaternion(0, 0, 0, true)));
 				}
 			});
 
-			if (drillBitEquipped.get()) {
-				// Add a mini drill.
+			if (chainsawEquipped.get()) {
+				// Add a mini chainsaw.
 				List<BakedQuad> baseQuads = BaseModel.getQuads(state, side, rand, data);
 				output.addAll(transformQuads(baseQuads, new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(1.0f, 1.0f, 1.0f), new Quaternion(0, 0, 0, true)));
 			} else {
@@ -134,8 +134,8 @@ public class ChainsawItemModel implements IBakedModel {
 			// Draw the power bar.
 			try {
 				// Top Offset
-				float topOffset = drillBitEquipped.get() ? 3.5f : 0.0f;
-				float sideOffset = drillBitEquipped.get() ? 0.5f : 0.0f;
+				float topOffset = chainsawEquipped.get() ? 3.5f : 0.0f;
+				float sideOffset = chainsawEquipped.get() ? 0.5f : 0.0f;
 
 				// Get the atlas texture.
 				AtlasTexture blocksTexture = ModelLoader.instance().getSpriteMap().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);

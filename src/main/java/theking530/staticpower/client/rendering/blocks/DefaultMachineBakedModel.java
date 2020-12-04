@@ -125,8 +125,8 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 				offsetSide = Direction.UP;
 			}
 
-			BlockFaceUV blockFaceUV = new BlockFaceUV(new float[] { 0.0f, 0.0f, 16.0f, 16.0f }, 0);
-			BlockPartFace blockPartFace = new BlockPartFace(null, -1, sideSprite.getName().toString(), blockFaceUV);
+			BlockFaceUV blockFaceUV = new BlockFaceUV(new float[] { 0.005f, 0.005f, 15.995f, 15.995f }, 0);
+			BlockPartFace blockPartFace = new BlockPartFace(side, -1, sideSprite.getName().toString(), blockFaceUV);
 			Vector3f posOffset = SDMath.transformVectorByDirection(offsetSide, new Vector3f(0.0f, 0.0f, 0.005f));
 			posOffset.add(16.0f, 16.0f, 16.0f);
 			Vector3f negOffset = SDMath.transformVectorByDirection(offsetSide, new Vector3f(0.0f, 0.0f, -0.005f));

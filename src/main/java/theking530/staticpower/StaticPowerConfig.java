@@ -133,8 +133,6 @@ public class StaticPowerConfig {
 	 * This config contains data that needs to be loaded before the world is
 	 * created. This data is NOT synced to the client.
 	 * 
-	 * @author amine
-	 *
 	 */
 	public static class StaticPowerCommonConfig {
 		public ConfigValue<Integer> rubberWoodSpawnChance;
@@ -173,7 +171,7 @@ public class StaticPowerConfig {
 			builder.pop();
 			builder.push("Tree Generation");
 			rubberWoodSpawnChance = builder.comment("Controls the chance of a rubber tree spawning.").translation(StaticPower.MOD_ID + ".config." + "rubberWoodSpawnChance")
-					.define("RubberWoodSpawnChance", 70);
+					.define("RubberWoodSpawnChance", 30);
 			builder.pop();
 			builder.pop();
 		}

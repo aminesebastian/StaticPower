@@ -117,10 +117,11 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	public ItemStack getPartInSlot(ItemStack stack, AbstractMultiPartSlot slot) {
 		if (slot == MultiPartSlots.DRILL_BIT) {
 			IItemHandler inventory = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
-			return inventory.getStackInSlot(0);
-		} else {
-			return ItemStack.EMPTY;
+			if (inventory != null) {
+				return inventory.getStackInSlot(0);
+			}
 		}
+		return ItemStack.EMPTY;
 	}
 
 	@Override
@@ -177,6 +178,11 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 
 	@Override
 	protected void harvestBlockDrops(BlockState state, Block block, BlockPos pos, ServerPlayerEntity player, TileEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
+		// If the player is in creative, do nothing.
+		if (isCreative) {
+			return;
+		}
+
 		// Get the drill bit attributes.
 		IAttributable drillBitAttributes = getPartInSlot(heldItem, MultiPartSlots.DRILL_BIT).getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);
 

@@ -33,6 +33,11 @@ public class StaticPowerItemGroup extends ItemGroup {
 	@Override
 	public void fill(NonNullList<ItemStack> items) {
 		this.calculateSubTypes();
+		for (final Item item : ForgeRegistries.ITEMS) {
+			if (item.getGroup() == this) {
+				items.add(new ItemStack(item));
+			}
+		}
 		items.addAll(subTypes);
 	}
 
@@ -69,7 +74,7 @@ public class StaticPowerItemGroup extends ItemGroup {
 
 		// Add the electric items.
 		subTypes.add(ModItems.ElectringSolderingIron.getFilledVariant());
-		
+
 		// Add the batteries.
 		subTypes.add(ModItems.BasicPortableBattery.getFilledVariant());
 		subTypes.add(ModItems.AdvancedPortableBattery.getFilledVariant());
@@ -86,7 +91,7 @@ public class StaticPowerItemGroup extends ItemGroup {
 		subTypes.add(ModItems.LumumBatteryPack.getFilledVariant());
 		subTypes.add(ModItems.CreativeBatteryPack.getFilledVariant());
 		subTypes.add(ModItems.ElectringSolderingIron.getFilledVariant());
-		
+
 		// Add the drills.
 		subTypes.add(ModItems.BasicMiningDrill.getFilledVariant());
 		subTypes.add(ModItems.AdvancedMiningDrill.getFilledVariant());
@@ -99,15 +104,15 @@ public class StaticPowerItemGroup extends ItemGroup {
 		subTypes.add(ModItems.AdvancedChainsaw.getFilledVariant());
 		subTypes.add(ModItems.StaticChainsaw.getFilledVariant());
 		subTypes.add(ModItems.EnergizedChainsaw.getFilledVariant());
-		subTypes.add(ModItems.LumumChainsaw.getFilledVariant());		
-		
+		subTypes.add(ModItems.LumumChainsaw.getFilledVariant());
+
 		// Add the magnets.
 		subTypes.add(ModItems.BasicMagnet.getFilledVariant());
 		subTypes.add(ModItems.AdvancedMagnet.getFilledVariant());
 		subTypes.add(ModItems.StaticMagnet.getFilledVariant());
 		subTypes.add(ModItems.EnergizedMagnet.getFilledVariant());
 		subTypes.add(ModItems.LumumMagnet.getFilledVariant());
-		
+
 		// Add all the capsules for all fluids.
 		for (Fluid fluid : GameRegistry.findRegistry(Fluid.class)) {
 			subTypes.add(ModItems.IronFluidCapsule.getFilledVariant(fluid));

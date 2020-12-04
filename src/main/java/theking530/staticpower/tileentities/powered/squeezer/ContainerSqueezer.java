@@ -38,9 +38,9 @@ public class ContainerSqueezer extends StaticPowerTileEntityContainer<TileEntity
 		addSlot(new OutputSlot(getTileEntity().outputInventory, 0, 80, 52));
 
 		// Upgrades
-		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 0, 152, 12));
-		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 1, 152, 32));
-		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 2, 152, 52));
+		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 0, 152, 17));
+		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 1, 152, 35));
+		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 2, 152, 53));
 
 		// Battery
 		addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 64));
