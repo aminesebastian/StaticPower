@@ -42,6 +42,11 @@ public class StaticPowerTierAdvanced extends StaticPowerTier {
 	}
 
 	@Override
+	protected int getPumpRate() {
+		return 80;
+	}
+
+	@Override
 	protected int getCableFilterSlots() {
 		return 5;
 	}

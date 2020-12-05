@@ -156,7 +156,14 @@ public class ModBlocks {
 	public static BlockTank LumumTank;
 	public static BlockTank CreativeTank;
 
-	public static BlockPump Pump;
+	public static BlockPump IronPump;
+	public static BlockPump BasicPump;
+	public static BlockPump AdvancedPump;
+	public static BlockPump StaticPump;
+	public static BlockPump EnergizedPump;
+	public static BlockPump LumumPump;
+	public static BlockPump CreativePump;
+	
 	public static BlockTreeFarmer TreeFarmer;
 	public static BlockFermenter Fermenter;
 	public static BlockFormer Former;
@@ -273,18 +280,14 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(LumumPlant = new BaseSimplePlant("plant_lumum"));
 
 		// Wood
-		StaticPowerRegistry
-				.preRegisterBlock(StaticLog = new StaticPowerRotatePillarBlock("log_static", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
-		StaticPowerRegistry
-				.preRegisterBlock(EnergizedLog = new StaticPowerRotatePillarBlock("log_energized", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
-		StaticPowerRegistry
-				.preRegisterBlock(LumumLog = new StaticPowerRotatePillarBlock("log_lumum", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
+		StaticPowerRegistry.preRegisterBlock(StaticLog = new StaticPowerRotatePillarBlock("log_static", Block.Properties.from(Blocks.OAK_LOG)));
+		StaticPowerRegistry.preRegisterBlock(EnergizedLog = new StaticPowerRotatePillarBlock("log_energized", Block.Properties.from(Blocks.OAK_LOG)));
+		StaticPowerRegistry.preRegisterBlock(LumumLog = new StaticPowerRotatePillarBlock("log_lumum", Block.Properties.from(Blocks.OAK_LOG)));
 
 		// Planks
-		StaticPowerRegistry.preRegisterBlock(StaticPlanks = new StaticPowerBlock("planks_static", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
-		StaticPowerRegistry
-				.preRegisterBlock(EnergizedPlanks = new StaticPowerBlock("planks_energized", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
-		StaticPowerRegistry.preRegisterBlock(LumumPlanks = new StaticPowerBlock("planks_lumum", Block.Properties.create(Material.WOOD).harvestTool(ToolType.AXE).sound(SoundType.WOOD)));
+		StaticPowerRegistry.preRegisterBlock(StaticPlanks = new StaticPowerBlock("planks_static", Block.Properties.from(Blocks.OAK_PLANKS)));
+		StaticPowerRegistry.preRegisterBlock(EnergizedPlanks = new StaticPowerBlock("planks_energized", Block.Properties.from(Blocks.OAK_PLANKS)));
+		StaticPowerRegistry.preRegisterBlock(LumumPlanks = new StaticPowerBlock("planks_lumum", Block.Properties.from(Blocks.OAK_PLANKS)));
 
 		// Ore
 		StaticPowerRegistry.preRegisterBlock(OreCopper = new StaticPowerOre("ore_copper", Block.Properties.from(Blocks.IRON_ORE).setRequiresTool()));
@@ -405,7 +408,14 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(LumumTank = new BlockTank("tank_lumum", StaticPowerTiers.LUMUM));
 		StaticPowerRegistry.preRegisterBlock(CreativeTank = new BlockTank("tank_creative", StaticPowerTiers.CREATIVE));
 
-		StaticPowerRegistry.preRegisterBlock(Pump = new BlockPump("pump"));
+		// Pumps
+		StaticPowerRegistry.preRegisterBlock(IronPump = new BlockPump("pump_iron", StaticPowerTiers.IRON));
+		StaticPowerRegistry.preRegisterBlock(BasicPump = new BlockPump("pump_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterBlock(AdvancedPump = new BlockPump("pump_advanced", StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterBlock(StaticPump = new BlockPump("pump_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterBlock(EnergizedPump = new BlockPump("pump_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterBlock(LumumPump = new BlockPump("pump_lumum", StaticPowerTiers.LUMUM));
+		StaticPowerRegistry.preRegisterBlock(CreativePump = new BlockPump("pump_creative", StaticPowerTiers.CREATIVE));
 
 		StaticPowerRegistry.preRegisterBlock(DigistoreManager = new BlockDigistoreManager("digistore_manager"));
 		StaticPowerRegistry.preRegisterBlock(DigistoreIOPort = new BlockDigistoreIOPort("digistore_io_port"));

@@ -5,9 +5,6 @@ import java.util.Queue;
 
 import javax.annotation.Nullable;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,6 +16,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -30,7 +28,9 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderPump;
+import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
@@ -43,21 +43,44 @@ import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent;
 import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
+import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 
 public class TileEntityPump extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityPump> TYPE = new TileEntityTypeAllocator<TileEntityPump>(
-			(type) -> new TileEntityPump(), ModBlocks.Pump);
+	public static final TileEntityTypeAllocator<TileEntityPump> TYPE_IRON = new TileEntityTypeAllocator<TileEntityPump>((type) -> new TileEntityPump(type, StaticPowerTiers.IRON),
+			ModBlocks.IronPump);
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityPump> TYPE_BASIC = new TileEntityTypeAllocator<TileEntityPump>((type) -> new TileEntityPump(type, StaticPowerTiers.BASIC),
+			ModBlocks.BasicPump);
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityPump> TYPE_ADVANCED = new TileEntityTypeAllocator<TileEntityPump>((type) -> new TileEntityPump(type, StaticPowerTiers.ADVANCED),
+			ModBlocks.AdvancedPump);
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityPump> TYPE_STATIC = new TileEntityTypeAllocator<TileEntityPump>((type) -> new TileEntityPump(type, StaticPowerTiers.STATIC),
+			ModBlocks.StaticPump);
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityPump> TYPE_ENERGIZED = new TileEntityTypeAllocator<TileEntityPump>((type) -> new TileEntityPump(type, StaticPowerTiers.ENERGIZED),
+			ModBlocks.EnergizedPump);
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityPump> TYPE_LUMUM = new TileEntityTypeAllocator<TileEntityPump>((type) -> new TileEntityPump(type, StaticPowerTiers.LUMUM),
+			ModBlocks.LumumPump);
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityPump> TYPE_CREATIVE = new TileEntityTypeAllocator<TileEntityPump>((type) -> new TileEntityPump(type, StaticPowerTiers.CREATIVE),
+			ModBlocks.CreativePump);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
-			TYPE.setTileEntitySpecialRenderer(TileEntityRenderPump::new);
+			TYPE_IRON.setTileEntitySpecialRenderer(TileEntityRenderPump::new);
+			TYPE_BASIC.setTileEntitySpecialRenderer(TileEntityRenderPump::new);
+			TYPE_ADVANCED.setTileEntitySpecialRenderer(TileEntityRenderPump::new);
+			TYPE_STATIC.setTileEntitySpecialRenderer(TileEntityRenderPump::new);
+			TYPE_ENERGIZED.setTileEntitySpecialRenderer(TileEntityRenderPump::new);
+			TYPE_LUMUM.setTileEntitySpecialRenderer(TileEntityRenderPump::new);
+			TYPE_CREATIVE.setTileEntitySpecialRenderer(TileEntityRenderPump::new);
 		}
 	}
 
-	public static final Logger LOGGER = LogManager.getLogger(TileEntityPump.class);
-	public static final int PUMP_POWER_COST = 120;
-	public static final int DEFAULT_PUMP_RATE = 40;
+	public static final int PUMP_POWER_COST = 100;
 
 	public final FluidContainerInventoryComponent fluidContainerInventory;
 	public final FluidTankComponent fluidTankComponent;
@@ -65,39 +88,40 @@ public class TileEntityPump extends TileEntityMachine {
 	public final BatteryInventoryComponent batteryInventory;
 	private final Queue<BlockPos> positionsToPump;
 
-	public TileEntityPump() {
-		super(TYPE, StaticPowerTiers.ADVANCED);
+	@UpdateSerialize
+	public int pumpRate;
+
+	public TileEntityPump(TileEntityTypeAllocator<TileEntityPump> allocator, ResourceLocation tier) {
+		super(allocator, tier);
+
+		// Get the tier.
+		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
+		pumpRate = tierObject.pumpRate.get();
 
 		// Add the tank component.
-		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 8000)
-				.setCapabilityExposedModes(MachineSideMode.Output).setCanFill(false));
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tierObject.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Output).setCanFill(false));
 
 		// Add the fluid output servo to deliver fluid to adjacent blocks.
-		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent,
-				MachineSideMode.Output));
+		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
 
 		// Register components to allow the pump to fill buckets in the GUI.
-		registerComponent(fluidContainerInventory = new FluidContainerInventoryComponent("FluidFillContainerServo",
-				fluidTankComponent).setMode(FluidContainerInteractionMode.FILL));
+		registerComponent(fluidContainerInventory = new FluidContainerInventoryComponent("FluidFillContainerServo", fluidTankComponent).setMode(FluidContainerInteractionMode.FILL));
 
-		// Regsiter the processing component to handle the pumping.
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PUMP_RATE,
-				this::canProcess, this::canProcess, this::pump, true)
-						.setRedstoneControlComponent(redstoneControlComponent));
-		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent,
-				MachineSideMode.Output));
+		// Register the processing component to handle the pumping.
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", pumpRate, this::canProcess, this::canProcess, this::pump, true)
+				.setRedstoneControlComponent(redstoneControlComponent).setEnergyComponent(energyStorage).setCompletedPowerUsage(PUMP_POWER_COST));
+
+		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
 
 		// Battery
-		registerComponent(
-				batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 
 		// Set the default side configuration.
-		ioSideConfiguration.setDefaultConfiguration(MachineSideMode.Disabled, MachineSideMode.Output,
-				MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output);
+		ioSideConfiguration.setDefaultConfiguration(MachineSideMode.Disabled, MachineSideMode.Output, MachineSideMode.Disabled, MachineSideMode.Disabled, MachineSideMode.Disabled,
+				MachineSideMode.Disabled);
 
 		// Disable face interaction.
 		DisableFaceInteraction = false;
-		this.energyStorage.getStorage().setMaxExtract(PUMP_POWER_COST);
 		// Initialize the positions to pump container.
 		positionsToPump = new LinkedList<BlockPos>();
 	}
@@ -130,60 +154,67 @@ public class TileEntityPump extends TileEntityMachine {
 	 * @return
 	 */
 	public ProcessingCheckState pump() {
-		// If we have capacity to pump.
-		if ((fluidTankComponent.getFluidAmount() + FluidAttributes.BUCKET_VOLUME) <= fluidTankComponent.getCapacity()
-				&& energyStorage.hasEnoughPower(1000)) {
-			// If the positions to pump is empty, try to start again.
-			if (positionsToPump.size() == 0) {
-				BlockPos newPos = getInitialPumpBlock();
-				if (newPos != null) {
-					positionsToPump.add(newPos);
-				}
+		// Do nothing if the tank is near full.
+		if ((fluidTankComponent.getFluidAmount() + FluidAttributes.BUCKET_VOLUME) > fluidTankComponent.getCapacity()) {
+			return ProcessingCheckState.outputTankCannotTakeFluid();
+		}
+
+		// If the positions to pump is empty, try to start again.
+		if (positionsToPump.size() == 0) {
+			BlockPos newPos = getInitialPumpBlock();
+			if (newPos != null) {
+				positionsToPump.add(newPos);
+			}
+		}
+
+		// If we have a position to pump, attempt to pump it.
+		if (positionsToPump.size() > 0) {
+			// Get the fluid state at the position to pump.
+			BlockPos position = positionsToPump.poll();
+			FluidState fluidState = getWorld().getFluidState(position);
+
+			while (!fluidState.isSource() && !positionsToPump.isEmpty()) {
+				position = positionsToPump.poll();
+				fluidState = getWorld().getFluidState(position);
 			}
 
-			// If we have a position to pump, attempt to pump it.
-			if (positionsToPump.size() > 0) {
-				// Get the fluid state at the position to pump.
-				BlockPos position = positionsToPump.poll();
-				FluidState fluidState = getWorld().getFluidState(position);
-
-				while (!fluidState.isSource() && !positionsToPump.isEmpty()) {
-					position = positionsToPump.poll();
-					fluidState = getWorld().getFluidState(position);
-				}
-
-				if (position != null) {
-					// If the fluid is pumpable, pump it. If not, something has changed drastically,
-					// rebuild the queue.
-					if (fluidState.getFluid().isSource(fluidState)) {
-						// Play the sound.
-						getWorld().playSound(null, getPos(),
-								fluidState.getFluid() == Fluids.LAVA ? SoundEvents.ITEM_BUCKET_FILL_LAVA
-										: SoundEvents.ITEM_BUCKET_FILL,
-								SoundCategory.BLOCKS, 1.0f, 1.0f);
-
-						// Use the power.
-						energyStorage.useBulkPower(PUMP_POWER_COST);
-
-						// Pump the fluid.
-						FluidStack pumpedStack = new FluidStack(fluidState.getFluid(), FluidAttributes.BUCKET_VOLUME);
-						fluidTankComponent.fill(pumpedStack, FluidAction.EXECUTE);
-						getWorld().setBlockState(position, Blocks.AIR.getDefaultState());
-
-						// If this is water, we just stop. No recursion as water is infinite anyway.
-						if (pumpedStack.getFluid() == Fluids.WATER) {
-							positionsToPump.clear();
-							return ProcessingCheckState.ok();
-						}
+			if (position != null) {
+				// If the fluid is pumpable, pump it. If not, something has changed drastically,
+				// rebuild the queue.
+				if (fluidState.getFluid().isSource(fluidState)) {
+					// Check to make sure the fluid can go into the tank if we already have a fluid.
+					if (!fluidTankComponent.isEmpty() && !fluidState.getFluid().equals(fluidTankComponent.getFluid().getFluid())) {
+						return ProcessingCheckState.error("Encountered fluid that cannot be placed into the output tank!");
 					}
 
-					// No matter what, search around the pumped block.
-					searchAroundPumpedBlock(position);
-					// Log the pump queue creation.
-					LOGGER.info(String.format(
-							"Rebuilt Pump Queue to size: %1$d for Pump at position: %2$s in Dimension: %3$s.",
-							positionsToPump.size(), getPos(), getWorld().getDimensionType()));
+					// Play the sound.
+					getWorld().playSound(null, getPos(), fluidState.getFluid() == Fluids.LAVA ? SoundEvents.ITEM_BUCKET_FILL_LAVA : SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1.0f,
+							1.0f);
+
+					// Use the power.
+					energyStorage.useBulkPower(PUMP_POWER_COST);
+
+					// Pump the fluid.
+					FluidStack pumpedStack = new FluidStack(fluidState.getFluid(), FluidAttributes.BUCKET_VOLUME);
+					fluidTankComponent.fill(pumpedStack, FluidAction.EXECUTE);
+
+					// Do not suck away the source block if this is a creative pump.
+					if (this.tier != StaticPowerTiers.CREATIVE) {
+						getWorld().setBlockState(position, Blocks.AIR.getDefaultState());
+					}
+
+					// If this is water, we just stop. No recursion as water is infinite anyway.
+					if (pumpedStack.getFluid() == Fluids.WATER) {
+						positionsToPump.clear();
+						return ProcessingCheckState.ok();
+					}
 				}
+
+				// No matter what, search around the pumped block.
+				searchAroundPumpedBlock(position);
+				// Log the pump queue creation.
+				LOGGER.info(
+						String.format("Rebuilt Pump Queue to size: %1$d for Pump at position: %2$s in Dimension: %3$s.", positionsToPump.size(), getPos(), getWorld().getDimensionType()));
 			}
 		}
 
@@ -212,8 +243,7 @@ public class TileEntityPump extends TileEntityMachine {
 			BlockPos samplePos = new BlockPos(getPos().getX(), i, getPos().getZ());
 
 			// If we hit a non fluid block that is not just AIR, stop.
-			if (!(getWorld().getBlockState(samplePos).getBlock() instanceof FlowingFluidBlock)
-					&& getWorld().getBlockState(samplePos).getBlock() != Blocks.AIR) {
+			if (!(getWorld().getBlockState(samplePos).getBlock() instanceof FlowingFluidBlock) && getWorld().getBlockState(samplePos).getBlock() != Blocks.AIR) {
 				return null;
 			}
 
@@ -254,8 +284,7 @@ public class TileEntityPump extends TileEntityMachine {
 			positionsToPump.add(BlockPos.fromLong(posTagCompound.getLong("pos")));
 		}
 
-		LOGGER.info(String.format("Deserialized Pump at position: %1$s with: %2$d queued positions.", getPos(),
-				positionsToPump.size()));
+		LOGGER.info(String.format("Deserialized Pump at position: %1$s with: %2$d queued positions.", getPos(), positionsToPump.size()));
 	}
 
 	@Override

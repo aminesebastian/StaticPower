@@ -235,6 +235,7 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IBloc
 	}
 
 	@Deprecated
+	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 		// Raise the inheritor's method.
 		onStaticPowerBlockReplaced(state, world, pos, newState, isMoving, state.getBlock() != newState.getBlock());

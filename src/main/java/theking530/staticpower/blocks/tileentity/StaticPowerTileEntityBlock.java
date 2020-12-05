@@ -7,11 +7,9 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -32,8 +30,9 @@ import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent.SideIncrementDirection;
 import theking530.staticpower.tileentities.interfaces.IBreakSerializeable;
+import theking530.staticpower.utilities.WorldUtilities;
 
-public abstract class StaticPowerTileEntityBlock extends StaticPowerBlock  {
+public abstract class StaticPowerTileEntityBlock extends StaticPowerBlock {
 	protected enum HasGuiType {
 		NEVER, ALWAYS, SNEAKING_ONLY;
 	}
@@ -58,6 +57,13 @@ public abstract class StaticPowerTileEntityBlock extends StaticPowerBlock  {
 	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 		world.setBlockState(pos, state.with(FACING, placer.getHorizontalFacing().getOpposite()), 2);
 		super.onBlockPlacedBy(world, pos, state, placer, stack);
+
+		if (world.getTileEntity(pos) != null) {
+			TileEntity te = world.getTileEntity(pos);
+			if (te instanceof IBreakSerializeable) {
+				IBreakSerializeable.deserializeToTileEntity(world, pos, state, placer, stack);
+			}
+		}
 	}
 
 	@Override
@@ -166,32 +172,17 @@ public abstract class StaticPowerTileEntityBlock extends StaticPowerBlock  {
 
 	@Override
 	public ActionResultType sneakWrenchBlock(PlayerEntity player, SneakWrenchMode mode, ItemStack wrench, World world, BlockPos pos, Direction facing, boolean returnDrops) {
-		// If we're on the server.
+		// If we're on the server and this machine has a tile entity of type
+		// IBreakSerializeable.
 		if (!world.isRemote && world.getTileEntity(pos) instanceof IBreakSerializeable) {
-			// Get a handle to the serializeable tile entity.
-			IBreakSerializeable tempMachine = (IBreakSerializeable) world.getTileEntity(pos);
+			ItemStack machineStack = IBreakSerializeable.createItemDrop(this, player, world, pos, facing);
+			// Drop the item.
+			WorldUtilities.dropItem(world, pos, machineStack);
 
-			if (tempMachine.shouldSerializeWhenBroken()) {
-				// Create a new itemstack to represent this block.
-				ItemStack machineStack = new ItemStack(asItem());
-
-				// Create some new nbt to add to this stack. Then, create another new nbt to
-				// hold our serializeable data.
-				CompoundNBT topLevelNbt = new CompoundNBT();
-				CompoundNBT serializeabltNbt = new CompoundNBT();
-
-				// Serialize the tile entity and then store it on the serializeabltNbt. Then,
-				// add the serializeabltNbt to the itemstack.
-				tempMachine.serializeOnBroken(serializeabltNbt);
-				topLevelNbt.put(IBreakSerializeable.SERIALIZEABLE_NBT, serializeabltNbt);
-
-				// Drop the itemstack and swap this block to air (break it).
-				ItemEntity droppedItem = new ItemEntity(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, machineStack);
-				world.addEntity(droppedItem);
-				world.setBlockState(pos, Blocks.AIR.getDefaultState());
-
-				return ActionResultType.SUCCESS;
-			}
+			// Swap this block to air (break it).
+			world.removeTileEntity(pos);
+			world.setBlockState(pos, Blocks.AIR.getDefaultState());
+			return ActionResultType.SUCCESS;
 		}
 		return super.sneakWrenchBlock(player, mode, wrench, world, pos, facing, returnDrops);
 	}

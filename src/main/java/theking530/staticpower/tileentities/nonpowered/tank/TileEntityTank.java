@@ -1,9 +1,15 @@
 package theking530.staticpower.tileentities.nonpowered.tank;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
@@ -97,5 +103,15 @@ public class TileEntityTank extends TileEntityBase {
 	@Override
 	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
 		return new ContainerTank(windowId, inventory, this);
+	}
+
+	@Override
+	public boolean shouldSerializeWhenBroken() {
+		return true;
+	}
+
+	@Override
+	public boolean shouldDeserializeWhenPlaced(CompoundNBT nbt, World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+		return true;
 	}
 }

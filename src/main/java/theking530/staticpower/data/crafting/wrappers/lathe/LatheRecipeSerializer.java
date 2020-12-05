@@ -60,7 +60,7 @@ public class LatheRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<
 			fluidOutput = StaticPowerJsonParsingUtilities.parseFluidStack(outputs.getAsJsonObject("fluid"));
 		}
 
-		// Craete the recipe.
+		// Create the recipe.
 		return new LatheRecipe(recipeId, width, height, inputs, primaryOutput, secondaryOutput, fluidOutput, processingTime, powerCost);
 	}
 

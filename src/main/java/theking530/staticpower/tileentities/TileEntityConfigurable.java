@@ -1,6 +1,12 @@
 package theking530.staticpower.tileentities;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
@@ -33,5 +39,15 @@ public class TileEntityConfigurable extends TileEntityBase {
 
 	private boolean checkSideConfiguration(Direction direction, MachineSideMode mode) {
 		return isValidSideConfiguration(SideConfigurationUtilities.getBlockSide(direction, getFacingDirection()), mode);
+	}
+
+	@Override
+	public boolean shouldSerializeWhenBroken() {
+		return true;
+	}
+
+	@Override
+	public boolean shouldDeserializeWhenPlaced(CompoundNBT nbt, World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+		return true;
 	}
 }

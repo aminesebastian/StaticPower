@@ -8,6 +8,7 @@ import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticcore.gui.widgets.tabs.GuiMachineFluidTab;
 import theking530.staticcore.gui.widgets.tabs.GuiMachinePowerInfoTab;
 import theking530.staticcore.gui.widgets.tabs.GuiSideConfigTab;
+import theking530.staticcore.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
@@ -24,10 +25,12 @@ public class GuiPump extends StaticPowerTileEntityGui<ContainerPump, TileEntityP
 	public void initializeGui() {
 		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 10, 16, 44));
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 71, 20, 32, 52));
-		registerWidget(new ArrowProgressBar(106, 20));
-		tabManager.registerTab(infoTab = new GuiInfoTab(100));
+		registerWidget(new ArrowProgressBar(106, 20).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
+		getTabManager().registerTab(infoTab = new GuiInfoTab(100));
+		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
 		getTabManager().registerTab(new GuiSideConfigTab(true, getTileEntity()));
+
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage, getTileEntity().processingComponent).setTabSide(TabSide.LEFT), true);
 		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT));
 	}

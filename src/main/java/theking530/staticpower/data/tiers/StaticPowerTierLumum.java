@@ -42,6 +42,11 @@ public class StaticPowerTierLumum extends StaticPowerTier {
 	}
 
 	@Override
+	protected int getPumpRate() {
+		return 20;
+	}
+
+	@Override
 	protected int getCableFilterSlots() {
 		return 12;
 	}

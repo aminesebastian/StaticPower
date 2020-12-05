@@ -1,0 +1,5 @@
+{
+    "variants": {
+        "": { "model": "staticpower:block/machines/pump_static" }
+    }
+}

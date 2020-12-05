@@ -21,6 +21,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ToolType;
 import theking530.api.wrench.RegularWrenchMode;
 import theking530.api.wrench.SneakWrenchMode;
 import theking530.staticcore.network.NetworkGUI;
@@ -36,7 +37,7 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 	public final CableBoundsCache CableBounds;
 
 	public AbstractCableBlock(String name, CableBoundsCache cableBoundsGenerator) {
-		super(name, Block.Properties.create(Material.IRON).hardnessAndResistance(1.5f).notSolid());
+		super(name, Block.Properties.create(Material.IRON).hardnessAndResistance(1.5f).notSolid().harvestTool(ToolType.PICKAXE).setRequiresTool());
 		CableBounds = cableBoundsGenerator;
 	}
 

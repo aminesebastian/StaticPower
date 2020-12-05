@@ -13,7 +13,6 @@ import theking530.staticcore.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedst
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
-import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
 
 public class GuiPoweredGrinder extends StaticPowerTileEntityGui<ContainerPoweredGrinder, TileEntityPoweredGrinder> {
 	private GuiInfoTab infoTab;
@@ -30,9 +29,10 @@ public class GuiPoweredGrinder extends StaticPowerTileEntityGui<ContainerPowered
 		getTabManager().registerTab(infoTab = new GuiInfoTab(getTitle(), 100));
 		infoTab.addLine(new StringTextComponent("Grinds items into their base components."));
 		infoTab.addLineBreak();
-		infoTab.addKeyValueTwoLiner(new StringTextComponent("Add. Bonus Chance"), GuiTextUtilities.formatNumberAsString(getTileEntity().getBonusChance() - 1.0f).appendString("%"), TextFormatting.GREEN);
+		infoTab.addKeyValueTwoLiner(new StringTextComponent("Add. Bonus Chance"), GuiTextUtilities.formatNumberAsString(getTileEntity().getBonusChance() - 1.0f).appendString("%"),
+				TextFormatting.GREEN);
 
-		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
+		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage, getTileEntity().processingComponent).setTabSide(TabSide.LEFT), true);
 		setOutputSlotSize(20);

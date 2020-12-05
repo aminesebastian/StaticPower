@@ -42,6 +42,11 @@ public class StaticPowerTierCreative extends StaticPowerTier {
 	}
 
 	@Override
+	protected int getPumpRate() {
+		return 10;
+	}
+
+	@Override
 	protected int getCablePowerCapacity() {
 		return 2147483647;
 	}

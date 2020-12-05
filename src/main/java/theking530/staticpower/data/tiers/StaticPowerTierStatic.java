@@ -42,6 +42,11 @@ public class StaticPowerTierStatic extends StaticPowerTier {
 	}
 
 	@Override
+	protected int getPumpRate() {
+		return 60;
+	}
+
+	@Override
 	protected int getCableFilterSlots() {
 		return 7;
 	}
@@ -135,10 +140,12 @@ public class StaticPowerTierStatic extends StaticPowerTier {
 	protected int getDrillBitUses() {
 		return 8000;
 	}
+
 	@Override
 	protected int getChainsawBladeUses() {
 		return 16000;
 	}
+
 	@Override
 	protected double getProcessingSpeedUpgrade() {
 		return 5.0f;

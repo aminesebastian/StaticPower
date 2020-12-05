@@ -219,7 +219,8 @@ public class WorldUtilities {
 			return false;
 		}
 
-		BlockItemUseContext context = new BlockItemUseContext(new ItemUseContext(player, hand, new BlockRayTraceResult(Vector3d.ZERO, Direction.UP, pos, false))); // TODO: This neds proper context...
+		BlockItemUseContext context = new BlockItemUseContext(new ItemUseContext(player, hand, new BlockRayTraceResult(Vector3d.ZERO, Direction.UP, pos, false))); // TODO: This neds proper
+																																									// context...
 
 		// check that we can place the fluid at the destination
 		BlockState destBlockState = world.getBlockState(pos);
@@ -258,7 +259,7 @@ public class WorldUtilities {
 	public static ItemEntity dropItem(World worldIn, double x, double y, double z, ItemStack stack, int count) {
 		ItemStack droppedStack = stack.copy();
 		droppedStack.setCount(count);
-		ItemEntity itemEntity = new ItemEntity(worldIn, x, y, z, droppedStack);
+		ItemEntity itemEntity = new ItemEntity(worldIn, x + 0.5, y + 0.5, z + 0.5, droppedStack);
 		worldIn.addEntity(itemEntity);
 		return itemEntity;
 	}
@@ -266,17 +267,17 @@ public class WorldUtilities {
 	public static ItemEntity dropItem(World worldIn, Direction direction, double x, double y, double z, ItemStack stack, int count) {
 		ItemEntity item = null;
 		if (direction == Direction.EAST) {
-			item = dropItem(worldIn, x + 0.5f, y + 0.5f, z + 0.5f, stack, count);
+			item = dropItem(worldIn, x, y, z, stack, count);
 		} else if (direction == Direction.NORTH) {
-			item = dropItem(worldIn, x + 0.5f, y + 0.5f, z - 0.5f, stack, count);
+			item = dropItem(worldIn, x, y, z, stack, count);
 		} else if (direction == Direction.SOUTH) {
-			item = dropItem(worldIn, x + 0.5f, y + 0.5f, z + 0.5f, stack, count);
+			item = dropItem(worldIn, x, y, z, stack, count);
 		} else if (direction == Direction.UP) {
-			item = dropItem(worldIn, x + 0.5f, y + 0.5f, z + 0.5f, stack, count);
+			item = dropItem(worldIn, x, y, z, stack, count);
 		} else if (direction == Direction.DOWN) {
-			item = dropItem(worldIn, x + 0.5f, y - 0.5f, z + 0.5f, stack, count);
+			item = dropItem(worldIn, x, y, z, stack, count);
 		} else if (direction == Direction.WEST) {
-			item = dropItem(worldIn, x - 0.5f, y + 0.5f, z + 0.5f, stack, count);
+			item = dropItem(worldIn, x, y, z, stack, count);
 		}
 
 		// Don't tell me why, but this helps make it NOT launch...go figure.

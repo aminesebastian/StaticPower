@@ -38,7 +38,7 @@ import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockTank extends StaticPowerTileEntityBlock implements ICustomModelSupplier {
-	private ResourceLocation tier;
+	private final ResourceLocation tier;
 
 	public BlockTank(String name, ResourceLocation tier) {
 		super(name, Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).hardnessAndResistance(3.5f, 5.0f).sound(SoundType.METAL).notSolid());

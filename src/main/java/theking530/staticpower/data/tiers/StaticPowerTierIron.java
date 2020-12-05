@@ -30,4 +30,28 @@ public class StaticPowerTierIron extends StaticPowerTier {
 	protected int getChainsawBladeUses() {
 		return 4000;
 	}
+
+	@Override
+	protected int getPumpRate() {
+		return 120;
+	}
+
+	@Override
+	protected int getDefaultTankCapacity() {
+		return 2500;
+	}
+
+	@Override
+	protected int getDefaultMachinePowerCapacity() {
+		return 200;
+	}
+	@Override
+	protected int getDefaultMachinePowerInput() {
+		return 5;
+	}
+
+	@Override
+	protected int getDefaultMachinePowerOutput() {
+		return 5;
+	}
 }

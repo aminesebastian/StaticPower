@@ -42,6 +42,11 @@ public class StaticPowerTierEnergized extends StaticPowerTier {
 	}
 
 	@Override
+	protected int getPumpRate() {
+		return 40;
+	}
+
+	@Override
 	protected int getCableFilterSlots() {
 		return 9;
 	}

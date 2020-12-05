@@ -23,6 +23,11 @@ public abstract class StaticPowerTier {
 	public ConfigValue<Integer> solarPanelPowerGeneration;
 	public ConfigValue<Integer> solarPanelPowerStorage;
 
+	/*******
+	 * Pump
+	 *******/
+	public ConfigValue<Integer> pumpRate;
+
 	/***************************
 	 * Extraction Configuration
 	 ***************************/
@@ -176,6 +181,11 @@ public abstract class StaticPowerTier {
 
 		solarPanelPowerStorage = builder.comment("The amount of power a solar panel of this tier can store.").translation(StaticPower.MOD_ID + ".config." + "solarPanelPowerStorage")
 				.define("SolarPanelPowerStorage", this.getSolarPanelPowerGeneration());
+		builder.pop();
+
+		builder.push("Pump");
+		pumpRate = builder.comment("The amount of ticks that will elapse between each pump operation. The higher this number, the slower the pump will operate (20 ticks == 1 second).")
+				.translation(StaticPower.MOD_ID + ".config." + "pumpRate").define("PumpRate", this.getPumpRate());
 		builder.pop();
 
 		builder.push("Heatsink");
@@ -545,6 +555,10 @@ public abstract class StaticPowerTier {
 	}
 
 	protected int getSolarPanelPowerStorage() {
+		return 0;
+	}
+
+	protected int getPumpRate() {
 		return 0;
 	}
 
