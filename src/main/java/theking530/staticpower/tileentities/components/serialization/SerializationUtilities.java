@@ -98,7 +98,7 @@ public class SerializationUtilities {
 		// Iterate through all the fields.
 		for (Field field : fields) {
 			// Check if the field is accessible.
-			boolean isAccessible = !field.isAccessible();
+			boolean isAccessible = field.isAccessible();
 			try {
 				// Mark it accessible if not.
 				field.setAccessible(true);
@@ -144,7 +144,7 @@ public class SerializationUtilities {
 				LOGGER.error(String.format("An error occured when attempting to serialize field: %1$s from object: %2$s to NBT.", field.getName(), object), e);
 			} finally {
 				// Reset the private state if needed.
-				if (isAccessible) {
+				if (!isAccessible) {
 					field.setAccessible(false);
 				}
 			}

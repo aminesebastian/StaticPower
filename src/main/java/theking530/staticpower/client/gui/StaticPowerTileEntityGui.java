@@ -18,6 +18,7 @@ public abstract class StaticPowerTileEntityGui<T extends StaticPowerTileEntityCo
 	public StaticPowerTileEntityGui(T container, final PlayerInventory playerInventory, ITextComponent title, int guiXSize, int guiYSize) {
 		super(container, playerInventory, title, guiXSize, guiYSize);
 		owningTileEntity = container.getTileEntity();
+		setOutputSlotSize(20);
 	}
 
 	/**

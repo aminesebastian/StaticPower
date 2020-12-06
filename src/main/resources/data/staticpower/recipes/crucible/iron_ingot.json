@@ -1,0 +1,16 @@
+{
+	"type": "staticpower:crucible_recipe",
+	"input": {
+		"tag": "forge:ingots/iron"
+	},
+	"outputs": {
+		"fluid": {
+			"fluid": "staticpower:molten_iron",
+			"volume": 144
+		},
+		"item": {
+			"item": "staticpower:slag",
+			"count": 2
+		}
+	}
+}

@@ -18,6 +18,7 @@ import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderAutoCraftingTable;
 import theking530.staticpower.container.FakeCraftingInventory;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
@@ -56,7 +57,7 @@ public class TileEntityAutoCraftingTable extends TileEntityMachine {
 	protected final ItemStack[] filterInventory;
 
 	public TileEntityAutoCraftingTable() {
-		super(TYPE);
+		super(TYPE, StaticPowerTiers.BASIC);
 		registerComponent(patternInventory = new InventoryComponent("PatternInventory", 9, MachineSideMode.Never));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 9, MachineSideMode.Never));
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 9, MachineSideMode.Input).setSlotsLockable(true).setShiftClickEnabled(true));

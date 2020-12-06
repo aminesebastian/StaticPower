@@ -216,6 +216,8 @@ public class TileEntityPump extends TileEntityMachine {
 				LOGGER.info(
 						String.format("Rebuilt Pump Queue to size: %1$d for Pump at position: %2$s in Dimension: %3$s.", positionsToPump.size(), getPos(), getWorld().getDimensionType()));
 			}
+		}else {
+			return ProcessingCheckState.error("No sources found to pump!");
 		}
 
 		// Always return true so the machine processing component always proceeds.

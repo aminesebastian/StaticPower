@@ -6,6 +6,7 @@ import theking530.staticpower.data.crafting.wrappers.bottler.BottlerRecipeSerial
 import theking530.staticpower.data.crafting.wrappers.centrifuge.CentrifugeRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.condensation.CondensationRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.covers.CoverRecipe;
+import theking530.staticpower.data.crafting.wrappers.crucible.CrucibleRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.evaporation.EvaporatorRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.farmer.FarmingFertalizerRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.fermenter.FermenterRecipeSerializer;
@@ -16,6 +17,7 @@ import theking530.staticpower.data.crafting.wrappers.fusionfurnace.FusionFurnace
 import theking530.staticpower.data.crafting.wrappers.grinder.GrinderRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.lathe.LatheRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.lumbermill.LumberMillRecipeSerializer;
+import theking530.staticpower.data.crafting.wrappers.mixer.MixerRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.squeezer.SqueezerRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.thermalconductivity.ThermalConductivityRecipeSerializer;
@@ -42,6 +44,8 @@ public class ModRecipeSerializers {
 		StaticPowerRegistry.preRegisterRecipeSerializer(CondensationRecipeSerializer.INSTANCE);		
 		StaticPowerRegistry.preRegisterRecipeSerializer(VulcanizerRecipeSerializer.INSTANCE);	
 		StaticPowerRegistry.preRegisterRecipeSerializer(AutoSmithRecipeSerializer.INSTANCE);	
-		StaticPowerRegistry.preRegisterRecipeSerializer(LatheRecipeSerializer.INSTANCE);			
+		StaticPowerRegistry.preRegisterRecipeSerializer(LatheRecipeSerializer.INSTANCE);	
+		StaticPowerRegistry.preRegisterRecipeSerializer(MixerRecipeSerializer.INSTANCE);	
+		StaticPowerRegistry.preRegisterRecipeSerializer(CrucibleRecipeSerializer.INSTANCE);					
 	}
 }

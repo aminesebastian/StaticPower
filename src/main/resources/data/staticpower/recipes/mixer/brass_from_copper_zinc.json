@@ -1,0 +1,15 @@
+{
+	"type": "staticpower:mixer_recipe",
+	"fluid_input_1": {
+		"fluid": "staticpower:molten_copper",
+		"volume": 10
+	},
+	"fluid_input_2": {
+		"fluid": "staticpower:molten_zinc",
+		"volume": 10
+	},
+	"result": {
+		"fluid": "staticpower:molten_brass",
+		"volume": 20
+	}
+}

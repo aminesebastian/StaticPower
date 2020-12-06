@@ -8,6 +8,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.lumbermill.LumberMillRecipe;
 import theking530.staticpower.init.ModBlocks;
@@ -50,7 +51,7 @@ public class TileEntityLumberMill extends TileEntityMachine {
 	public final FluidTankComponent fluidTankComponent;
 
 	public TileEntityLumberMill() {
-		super(TYPE);
+		super(TYPE, StaticPowerTiers.BASIC);
 
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
@@ -67,8 +68,8 @@ public class TileEntityLumberMill extends TileEntityMachine {
 
 		// Setup the processing component to work with the redstone control component,
 		// upgrade component and energy component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<LumberMillRecipe>("ProcessingComponent", LumberMillRecipe.RECIPE_TYPE, 1, this::getMatchParameters, this::moveInputs,
-				this::canProcessRecipe, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<LumberMillRecipe>("ProcessingComponent", LumberMillRecipe.RECIPE_TYPE, 1, this::getMatchParameters,
+				this::moveInputs, this::canProcessRecipe, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -80,11 +81,12 @@ public class TileEntityLumberMill extends TileEntityMachine {
 
 		// Setup the I/O servos.
 		registerComponent(new InputServoComponent("InputServo", inputInventory));
-		registerComponent(new OutputServoComponent("OutputServo",  mainOutputInventory));
+		registerComponent(new OutputServoComponent("OutputServo", mainOutputInventory));
 		registerComponent(new OutputServoComponent("SecondaryOutputServo", secondaryOutputInventory));
 
 		// Setup the fluid tank and fluid servo.
-		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Output).setUpgradeInventory(upgradesInventory));
+		registerComponent(
+				fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Output).setUpgradeInventory(upgradesInventory));
 		fluidTankComponent.setCanFill(false);
 		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
 
@@ -167,5 +169,10 @@ public class TileEntityLumberMill extends TileEntityMachine {
 	@Override
 	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
 		return new ContainerLumberMill(windowId, inventory, this);
+	}
+
+	@Override
+	protected MachineSideMode[] getDefaultSideConfiguration() {
+		return new MachineSideMode[] { MachineSideMode.Input, MachineSideMode.Input, MachineSideMode.Output2, MachineSideMode.Output2, MachineSideMode.Output3, MachineSideMode.Output3 };
 	}
 }

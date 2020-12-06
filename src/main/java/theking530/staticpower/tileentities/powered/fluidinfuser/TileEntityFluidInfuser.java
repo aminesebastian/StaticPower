@@ -10,7 +10,10 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderFluidInfuser;
+import theking530.staticpower.data.StaticPowerTier;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.fluidinfusion.FluidInfusionRecipe;
 import theking530.staticpower.init.ModBlocks;
@@ -32,7 +35,8 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityFluidInfuser extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityFluidInfuser> TYPE = new TileEntityTypeAllocator<TileEntityFluidInfuser>((type) -> new TileEntityFluidInfuser(), ModBlocks.FluidInfuser);
+	public static final TileEntityTypeAllocator<TileEntityFluidInfuser> TYPE = new TileEntityTypeAllocator<TileEntityFluidInfuser>((type) -> new TileEntityFluidInfuser(),
+			ModBlocks.FluidInfuser);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -43,7 +47,6 @@ public class TileEntityFluidInfuser extends TileEntityMachine {
 	public static final int DEFAULT_PROCESSING_TIME = 200;
 	public static final int DEFAULT_PROCESSING_COST = 5;
 	public static final int DEFAULT_MOVING_TIME = 4;
-	public static final int DEFAULT_TANK_SIZE = 5000;
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent internalInventory;
@@ -55,7 +58,10 @@ public class TileEntityFluidInfuser extends TileEntityMachine {
 	public final FluidTankComponent fluidTankComponent;
 
 	public TileEntityFluidInfuser() {
-		super(TYPE);
+		super(TYPE, StaticPowerTiers.BASIC);
+
+		// Get the tier object.
+		StaticPowerTier tier = StaticPowerConfig.getTier(StaticPowerTiers.BASIC);
 
 		// Setup the inventories.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true));
@@ -81,7 +87,8 @@ public class TileEntityFluidInfuser extends TileEntityMachine {
 		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory, 0));
 
 		// Setup the fluid tanks and servo.
-		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tier.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Input)
+				.setUpgradeInventory(upgradesInventory));
 		fluidTankComponent.setCanDrain(false);
 		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, fluidTankComponent, MachineSideMode.Input));
 

@@ -33,17 +33,23 @@ public class GuiFluidBarUtilities {
 	}
 
 	@SuppressWarnings("deprecation")
-	public static void drawFluidBar(@Nullable MatrixStack matrixStack, FluidStack fluid, int capacity, int amount, float x, float y, float zLevel, float width, float height, MachineSideMode mode, boolean drawOverlay) {
+	public static void drawFluidBar(@Nullable MatrixStack matrixStack, FluidStack fluid, int capacity, int amount, float x, float y, float zLevel, float width, float height,
+			MachineSideMode mode, boolean drawOverlay) {
 		if (mode != null && mode != MachineSideMode.Regular && mode != MachineSideMode.Never) {
 			GuiDrawUtilities.drawSlot(matrixStack, (int) x, (int) (y - height), (int) width, (int) height, mode.getColor());
 		} else {
 			GuiDrawUtilities.drawSlot(matrixStack, (int) x, (int) (y - height), (int) width, (int) height);
 		}
 
+		// 3D effect controls.
+		float depthEffectSides = 1.5f;
+		float depthDistance = 5.0f;
+
 		// Calculate the origin.
 		Vector2D origin = GuiDrawUtilities.translatePositionByMatrix(matrixStack, x, y);
 
 		if (fluid != null && fluid.getFluid() != null) {
+			float topColorTint = 0.5f;
 			Color fluidColor = GuiDrawUtilities.getFluidColor(fluid);
 			boolean isGas = fluid.getFluid().getAttributes().isGaseous();
 
@@ -73,17 +79,44 @@ public class GuiFluidBarUtilities {
 					Tessellator tessellator = Tessellator.getInstance();
 					BufferBuilder tes = tessellator.getBuffer();
 					tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
-					tes.pos(origin.getX() + width, origin.getY() - yMin, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha()).tex(icon.getMaxU(), icon.getMinV())
-							.endVertex();
+					tes.pos(origin.getX() + width, origin.getY() - yMin, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha())
+							.tex(icon.getMaxU(), icon.getMinV()).endVertex();
 					tes.pos(origin.getX() + width, origin.getY() - yMax, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha())
 							.tex(icon.getMaxU(), icon.getMinV() + (fillRatio * diffV)).endVertex();
 					tes.pos(origin.getX(), origin.getY() - yMax, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha())
 							.tex(icon.getMinU(), icon.getMinV() + (fillRatio * diffV)).endVertex();
-					tes.pos(origin.getX(), origin.getY() - yMin, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha()).tex(icon.getMinU(), icon.getMinV()).endVertex();
+					tes.pos(origin.getX(), origin.getY() - yMin, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha())
+							.tex(icon.getMinU(), icon.getMinV()).endVertex();
 					tessellator.draw();
 				}
+
+				float filledRatio = ((float) amount / capacity);
+				float depthEffect = (1.0f * filledRatio) + (depthDistance * (1.0f - filledRatio));
+				float depthHeightStart = (filledRatio * height);
+				depthEffect = Math.min(height - depthHeightStart, depthEffect);
+
+				Tessellator tessellator = Tessellator.getInstance();
+				BufferBuilder tes = tessellator.getBuffer();
+				tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
+				tes.pos(origin.getX() + width + 0.1f, origin.getY() - depthHeightStart, zLevel)
+						.color(fluidColor.getRed() * topColorTint, fluidColor.getGreen() * topColorTint, fluidColor.getBlue() * topColorTint, fluidColor.getAlpha())
+						.tex(icon.getMaxU(), icon.getMinV()).endVertex();
+
+				tes.pos(origin.getX() + width - depthEffectSides, origin.getY() - depthHeightStart - depthEffect, zLevel)
+						.color(fluidColor.getRed() * topColorTint, fluidColor.getGreen() * topColorTint, fluidColor.getBlue() * topColorTint, fluidColor.getAlpha())
+						.tex(icon.getMaxU(), icon.getMinV() + (filledRatio * diffV)).endVertex();
+
+				tes.pos(origin.getX() + depthEffectSides, origin.getY() - depthHeightStart - depthEffect, zLevel)
+						.color(fluidColor.getRed() * topColorTint, fluidColor.getGreen() * topColorTint, fluidColor.getBlue() * topColorTint, fluidColor.getAlpha())
+						.tex(icon.getMinU(), icon.getMinV() + (filledRatio * diffV)).endVertex();
+
+				tes.pos(origin.getX() - 0.1f, origin.getY() - depthHeightStart, zLevel)
+						.color(fluidColor.getRed() * topColorTint, fluidColor.getGreen() * topColorTint, fluidColor.getBlue() * topColorTint, fluidColor.getAlpha())
+						.tex(icon.getMinU(), icon.getMinV()).endVertex();
+				tessellator.draw();
 			}
 		}
+
 		if (drawOverlay) {
 			Color linesColor = new Color(0.2f, 0.2f, 0.2f, 0.5f);
 			for (int i = 0; i < height / 10; i++) {

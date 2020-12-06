@@ -8,6 +8,7 @@ import net.minecraft.item.crafting.FurnaceRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
@@ -50,7 +51,7 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 	public final RecipeProcessingComponent<FurnaceRecipe> processingComponent;
 
 	public TileEntityPoweredFurnace() {
-		super(TYPE);
+		super(TYPE, StaticPowerTiers.BASIC);
 
 		// Setup the input inventory to only accept items that have a valid recipe.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {

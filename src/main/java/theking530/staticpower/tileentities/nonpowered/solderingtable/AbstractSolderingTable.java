@@ -8,6 +8,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.api.ISolderingIron;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
@@ -22,7 +23,7 @@ public abstract class AbstractSolderingTable extends TileEntityMachine implement
 	public final InventoryComponent inventory;
 
 	public AbstractSolderingTable(TileEntityTypeAllocator<? extends AbstractSolderingTable> allocator) {
-		super(allocator);
+		super(allocator, StaticPowerTiers.BASIC);
 		registerComponent(patternInventory = new InventoryComponent("PatternInventory", 9, MachineSideMode.Never));
 		registerComponent(inventory = new InventoryComponent("Inventory", 9, MachineSideMode.Never).setShiftClickEnabled(true));
 		registerComponent(solderingIronInventory = new InventoryComponent("SolderingIronInventory", 1, MachineSideMode.Never).setShiftClickEnabled(true).setShiftClickPriority(100)

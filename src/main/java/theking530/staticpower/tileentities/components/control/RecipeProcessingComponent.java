@@ -244,6 +244,10 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 		return Optional.empty();
 	}
 
+	public Optional<T> getCurrentProcessingRecipe() {
+		return getRecipe(RecipeProcessingLocation.INTERNAL);
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public RecipeProcessingComponent<T> setUpgradeInventory(UpgradeInventoryComponent inventory) {

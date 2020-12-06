@@ -2,7 +2,6 @@ package theking530.staticpower.tileentities.powered.crucible;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
@@ -13,7 +12,7 @@ import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.container.slots.BatteryItemSlot;
 import theking530.staticpower.container.slots.OutputSlot;
-import theking530.staticpower.container.slots.PlayerArmorItemSlot;
+import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.container.slots.UpgradeItemSlot;
 import theking530.staticpower.items.upgrades.BaseUpgrade;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
@@ -38,27 +37,21 @@ public class ContainerCrucible extends StaticPowerTileEntityContainer<TileEntity
 	@Override
 	public void initializeContainer() {
 		// Input
-		this.addSlot(new OutputSlot(getTileEntity().inputInventory, 0, 46, 52));
+		addSlot(new StaticPowerContainerSlot(getTileEntity().inputInventory, 0, 52, 42));
 
 		// Output
-		this.addSlot(new OutputSlot(getTileEntity().outputInventory, 0, 69, 52));
+		addSlot(new OutputSlot(getTileEntity().outputInventory, 0, 79, 24));
 
 		// Upgrades
-		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 0, 152, 8));
-		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 1, 152, 30));
-		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 2, 152, 52));
+		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 0, 152, 17));
+		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 1, 152, 35));
+		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 2, 152, 53));
 
 		// Battery
-		this.addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 54));
+		addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 64));
 
-		// Armor
-		this.addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 39, -24, 14, EquipmentSlotType.HEAD));
-		this.addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 38, -24, 33, EquipmentSlotType.CHEST));
-		this.addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 37, -24, 52, EquipmentSlotType.LEGS));
-		this.addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 36, -24, 71, EquipmentSlotType.FEET));
-
-		this.addPlayerInventory(getPlayerInventory(), 8, 84);
-		this.addPlayerHotbar(getPlayerInventory(), 8, 142);
+		addPlayerInventory(getPlayerInventory(), 8, 84);
+		addPlayerHotbar(getPlayerInventory(), 8, 142);
 	}
 
 	@Override

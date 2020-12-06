@@ -250,8 +250,7 @@ public class GuiTextUtilities {
 			output = new StringTextComponent("∞");
 		} else {
 			MetricConverter metricRate = new MetricConverter(fluidRate, -1);
-			output = new StringTextComponent(NUMBER_FORMATTER_ONE_DECIMAL.format(metricRate.getValue())).appendString(includeSpace ? " " : "").appendString(metricRate.getSuffix())
-					.append(FLUID_RATE_TRANSLATION);
+			output = new StringTextComponent(NUMBER_FORMATTER_ONE_DECIMAL.format(metricRate.getValue())).appendString(includeSpace ? " " : "").appendString(metricRate.getSuffix());
 		}
 
 		return output.append(FLUID_RATE_TRANSLATION);

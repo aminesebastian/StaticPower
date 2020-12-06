@@ -1,0 +1,16 @@
+{
+	"type": "staticpower:crucible_recipe",
+	"input": {
+		"tag": "forge:ingots/platinum"
+	},
+	"outputs": {
+		"fluid": {
+			"fluid": "staticpower:molten_platinum",
+			"volume": 144
+		},
+		"item": {
+			"item": "staticpower:slag",
+			"count": 2
+		}
+	}
+}

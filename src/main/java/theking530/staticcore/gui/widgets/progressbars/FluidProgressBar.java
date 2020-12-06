@@ -59,10 +59,10 @@ public class FluidProgressBar extends AbstractProgressBar {
 			// Draw the leading white line.
 			GuiDrawUtilities.drawColoredRectangle(screenSpacePosition.getX() + (adjustedProgress * getSize().getX()), screenSpacePosition.getY(), 0.75f, getSize().getY(), 1.0f, Color.WHITE);
 		}
-
+		
 		// Draw the error indicator if needed.
 		if (isProcessingErrored) {
-			getErrorDrawable().draw(screenSpacePosition.getX() + (getSize().getX() / 2.0f) - 8.0f, screenSpacePosition.getY() - (getSize().getY() / 2.0f) - 3.25f);
+			getErrorDrawable().draw(screenSpacePosition.getX() + (getSize().getX() / 2.0f) - 8.0f, screenSpacePosition.getY() - (16 - getSize().getY()) / 2);
 		}
 	}
 }

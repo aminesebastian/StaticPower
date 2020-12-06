@@ -1,0 +1,16 @@
+{
+	"type": "staticpower:crucible_recipe",
+	"input": {
+		"tag": "forge:ingots/zinc"
+	},
+	"outputs": {
+		"fluid": {
+			"fluid": "staticpower:molten_zinc",
+			"volume": 144
+		},
+		"item": {
+			"item": "staticpower:slag",
+			"count": 2
+		}
+	}
+}

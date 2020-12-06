@@ -7,6 +7,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.lathe.LatheRecipe;
 import theking530.staticpower.init.ModBlocks;
@@ -48,7 +49,7 @@ public class TileEntityLathe extends TileEntityMachine {
 	public final FluidTankComponent fluidTankComponent;
 
 	public TileEntityLathe() {
-		super(TYPE);
+		super(TYPE, StaticPowerTiers.STATIC);
 
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 9, MachineSideMode.Input).setShiftClickEnabled(true).setSlotsLockable(true));
 

@@ -8,6 +8,7 @@ import theking530.api.IUpgradeItem.UpgradeType;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.grinder.GrinderRecipe;
@@ -48,7 +49,7 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 	private float bonusOutputChance;
 
 	public TileEntityPoweredGrinder() {
-		super(TYPE);
+		super(TYPE, StaticPowerTiers.BASIC);
 
 		// Setup the input inventory to only accept items that have a valid recipe.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {

@@ -30,6 +30,7 @@ public class StaticPowerSprites {
 	public static final ResourceLocation MACHINE_SIDE_GREEN = registerSprite("blocks/machines/sides_modes/machine_side_green");
 	public static final ResourceLocation MACHINE_SIDE_YELLOW = registerSprite("blocks/machines/sides_modes/machine_side_yellow");
 	public static final ResourceLocation MACHINE_SIDE_PURPLE = registerSprite("blocks/machines/sides_modes/machine_side_purple");
+	public static final ResourceLocation MACHINE_SIDE_MAGENTA = registerSprite("blocks/machines/sides_modes/machine_side_magenta");
 
 	public static final ResourceLocation BASIC_BATTERY_TOP = registerSprite("blocks/machines/batteries/battery_basic_top");
 	public static final ResourceLocation BASIC_BATTERY_SIDE = registerSprite("blocks/machines/batteries/battery_basic_side");
@@ -83,7 +84,6 @@ public class StaticPowerSprites {
 	public static final ResourceLocation NOTIFICATION = registerSprite("gui/notification");
 	public static final ResourceLocation IMPORT = registerSprite("gui/import_icon");
 	public static final ResourceLocation EXPORT = registerSprite("gui/export_icon");
-
 	public static final ResourceLocation FLAMES = registerSprite("gui/flames");
 
 	public static final ResourceLocation CRAFTING_TABLE_ICON = registerSprite("gui/crafting_table_icon");

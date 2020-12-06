@@ -14,6 +14,7 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderFluidGenerator;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.fluidgenerator.FluidGeneratorRecipe;
@@ -49,7 +50,7 @@ public class TileEntityFluidGenerator extends TileEntityMachine {
 	public final LoopingSoundComponent generatingSoundComponent;
 
 	public TileEntityFluidGenerator() {
-		super(TYPE);
+		super(TYPE, StaticPowerTiers.BASIC);
 		disableFaceInteraction();
 
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));

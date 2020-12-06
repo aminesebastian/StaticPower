@@ -45,7 +45,7 @@ public class MachineProcessingComponent extends AbstractProcesingComponent {
 
 	protected ProcessingCheckState canContinueProcessing() {
 		// Check the parent state.
-		ProcessingCheckState superCall = super.canCompleteProcessing();
+		ProcessingCheckState superCall = super.canContinueProcessing();
 		if (!superCall.isOk()) {
 			return superCall;
 		}

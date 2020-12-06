@@ -13,6 +13,7 @@ import net.minecraftforge.common.ForgeHooks;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.solidfuel.SolidFuelRecipe;
 import theking530.staticpower.init.ModBlocks;
@@ -46,7 +47,7 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 	public int powerGenerationPerTick;
 
 	public TileEntitySolidGenerator() {
-		super(TYPE);
+		super(TYPE, StaticPowerTiers.IRON);
 		disableFaceInteraction();
 
 		// Register the input inventory and only let it receive items if they are

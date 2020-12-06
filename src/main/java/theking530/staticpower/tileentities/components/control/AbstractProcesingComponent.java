@@ -301,7 +301,7 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 
 		// Check the power state.
 		ProcessingCheckState powerState;
-		if (!(powerState = checkPowerRequirements()).isOk()) {
+		if (this.currentProcessingTime != this.processingTime && !(powerState = checkPowerRequirements()).isOk()) {
 			return powerState;
 		}
 
@@ -314,12 +314,6 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 		ProcessingCheckState redstoneState;
 		if (!(redstoneState = checkRedstoneState()).isOk()) {
 			return redstoneState;
-		}
-
-		// Check the power state.
-		ProcessingCheckState powerState;
-		if (!(powerState = checkPowerRequirements()).isOk()) {
-			return powerState;
 		}
 
 		// If the above are met, return ok.
