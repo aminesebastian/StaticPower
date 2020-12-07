@@ -6,12 +6,11 @@
 	"output": [
 		{
 			"item": "minecraft:coal",
-			"count": 2
-		},
-		{
-			"item": "minecraft:coal",
-			"count": 1,
-			"chance": 0.25
+			"count": 2,
+			"bonus": {
+				"count": 1,
+				"chance": 0.25
+			}
 		}
 	]
 }

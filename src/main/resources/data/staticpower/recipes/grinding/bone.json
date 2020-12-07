@@ -1,0 +1,16 @@
+{
+	"type": "staticpower:grinder_recipe",
+	"input": {
+		"item": "minecraft:bone"
+	},
+	"output": [
+		{
+			"item": "minecraft:bone_meal",
+			"count": 5,
+			"bonus": {
+				"count": 1,
+				"chance": 0.25
+			}
+		}
+	]
+}

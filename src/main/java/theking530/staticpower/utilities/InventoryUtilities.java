@@ -227,6 +227,11 @@ public class InventoryUtilities {
 	}
 
 	public static ItemStack insertItemIntoInventory(IItemHandler inv, ItemStack stack, int start, int stop, boolean simulate) {
+		// Do nothing if the input is empty.
+		if (stack.isEmpty()) {
+			return ItemStack.EMPTY;
+		}
+
 		// Allocate a copy of the provided stack.
 		ItemStack output = stack.copy();
 

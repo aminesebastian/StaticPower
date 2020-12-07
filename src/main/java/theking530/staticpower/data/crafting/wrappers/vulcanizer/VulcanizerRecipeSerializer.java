@@ -11,7 +11,7 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
-import theking530.staticpower.tileentities.powered.poweredgrinder.TileEntityPoweredGrinder;
+import theking530.staticpower.tileentities.powered.vulcanizer.TileEntityVulcanizer;
 
 public class VulcanizerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<VulcanizerRecipe> {
 	public static final VulcanizerRecipeSerializer INSTANCE = new VulcanizerRecipeSerializer();
@@ -23,8 +23,8 @@ public class VulcanizerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 	@Override
 	public VulcanizerRecipe read(ResourceLocation recipeId, JsonObject json) {
 		// Start with the default processing values.
-		int powerCost = TileEntityPoweredGrinder.DEFAULT_PROCESSING_COST;
-		int processingTime = TileEntityPoweredGrinder.DEFAULT_PROCESSING_TIME;
+		int powerCost = TileEntityVulcanizer.DEFAULT_PROCESSING_COST;
+		int processingTime = TileEntityVulcanizer.DEFAULT_PROCESSING_TIME;
 
 		// Capture the processing and power costs.
 		if (JSONUtils.hasField(json, "processing")) {
@@ -59,6 +59,6 @@ public class VulcanizerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 		buffer.writeInt(recipe.getPowerCost());
 		buffer.writeInt(recipe.getProcessingTime());
 		buffer.writeFluidStack(recipe.getInputFluid());
-		recipe.getOutputItem().writeToBuffer(buffer);
+		recipe.getOutput().writeToBuffer(buffer);
 	}
 }

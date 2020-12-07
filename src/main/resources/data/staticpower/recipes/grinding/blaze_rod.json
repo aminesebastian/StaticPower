@@ -6,12 +6,11 @@
 	"output": [
 		{
 			"item": "minecraft:blaze_powder",
-			"count": 4
-		},
-		{
-			"item": "minecraft:blaze_powder",
-			"count": 1,
-			"chance": 0.5
+			"count": 4,
+			"bonus": {
+				"count": 1,
+				"chance": 0.5
+			}
 		}
 	]
 }

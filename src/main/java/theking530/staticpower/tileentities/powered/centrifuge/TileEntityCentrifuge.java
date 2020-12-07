@@ -150,17 +150,16 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 			// For each output, insert the contents into the output based on the percentage
 			// chance. The clear the internal inventory, mark for synchronization, and
 			// return true.
-			if (SDMath.diceRoll(recipe.getOutput1().getOutputChance())) {
-				InventoryUtilities.insertItemIntoInventory(firstOutputInventory, recipe.getOutput1().getItem().copy(), false);
-			}
-			if (!recipe.getOutput2().isEmpty() && SDMath.diceRoll(recipe.getOutput2().getOutputChance())) {
-				InventoryUtilities.insertItemIntoInventory(secondOutputInventory, recipe.getOutput2().getItem().copy(), false);
-			}
-			if (!recipe.getOutput3().isEmpty() && SDMath.diceRoll(recipe.getOutput3().getOutputChance())) {
-				InventoryUtilities.insertItemIntoInventory(thirdOutputInventory, recipe.getOutput3().getItem().copy(), false);
-			}
+			// Insert the output.
+			ItemStack output1 = recipe.getOutput1().calculateOutput();
+			ItemStack output2 = recipe.getOutput2().calculateOutput();
+			ItemStack output3 = recipe.getOutput3().calculateOutput();
 
-			internalInventory.setStackInSlot(0, ItemStack.EMPTY);
+			InventoryUtilities.insertItemIntoInventory(firstOutputInventory, output1, false);
+			InventoryUtilities.insertItemIntoInventory(secondOutputInventory, output2, false);
+			InventoryUtilities.insertItemIntoInventory(thirdOutputInventory, output3, false);
+
+			InventoryUtilities.clearInventory(internalInventory);
 			markTileEntityForSynchronization();
 			return ProcessingCheckState.ok();
 		}
@@ -170,7 +169,7 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 	@Override
 	public void process() {
 		// Maintain the spin.
-		if (!getWorld().isRemote) {
+		if (!getWorld().isRemote && redstoneControlComponent.passesRedstoneCheck()) {
 			// If we're spinning faster than the current max, start slowing down. Otherwise,
 			// either spin up or maintain speed.
 			if (currentSpeed > maxSpeed) {

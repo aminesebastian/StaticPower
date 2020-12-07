@@ -1,0 +1,28 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"cuc",
+		"umu",
+		"epe"
+	],
+	"key": {
+		"m": {
+			"item": "staticpower:machine_block_energized"
+		},
+		"u": {
+			"item": "minecraft:flint"
+		},
+		"e": {
+			"item": "staticpower:gear_energized"
+		},
+		"p": {
+			"item": "staticpower:plug"
+		},
+		"c": {
+			"item": "staticpower:grinder_component"
+		}
+	},
+	"result": {
+		"item": "staticpower:machine_tumbler"
+	}
+}

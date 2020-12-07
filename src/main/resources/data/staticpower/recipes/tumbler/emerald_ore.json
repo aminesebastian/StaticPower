@@ -1,0 +1,10 @@
+{
+	"type": "staticpower:tumbler_recipe",
+	"input": {
+		"tag": "forge:ores/emerald"
+	},
+	"output": {
+		"item": "staticpower:chunks_emerald",
+		"count": 5
+	}
+}

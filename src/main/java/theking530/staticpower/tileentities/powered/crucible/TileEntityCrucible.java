@@ -7,7 +7,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
-import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerTier;
@@ -38,9 +37,9 @@ public class TileEntityCrucible extends TileEntityMachine {
 	public static final TileEntityTypeAllocator<TileEntityCrucible> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityCrucible(), ModBlocks.Crucible);
 
 	public static final int DEFAULT_PROCESSING_TIME = 100;
-	public static final int DEFAULT_PROCESSING_COST = 5;
+	public static final int DEFAULT_PROCESSING_COST = 20;
 	public static final int HEAT_GENERATION = 5;
-	public static final int HEAT_POWER_COST = 5;
+	public static final int HEAT_POWER_COST = 10;
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent internalInventory;
@@ -74,7 +73,7 @@ public class TileEntityCrucible extends TileEntityMachine {
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Register the heate component.
-		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 3000.0f, 10.0f));
+		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 5000.0f, 10.0f));
 		heatStorage.getStorage().setConductivity(10);
 
 		// Setup the processing component.
@@ -107,9 +106,11 @@ public class TileEntityCrucible extends TileEntityMachine {
 	@Override
 	public void process() {
 		super.process();
-		if (energyStorage.hasEnoughPower(HEAT_POWER_COST) && heatStorage.getStorage().canFullyAbsorbHeat(HEAT_GENERATION)) {
-			heatStorage.getStorage().heat(HEAT_GENERATION, false);
-			energyStorage.useBulkPower(HEAT_POWER_COST);
+		if (!world.isRemote && redstoneControlComponent.passesRedstoneCheck()) {
+			if (energyStorage.hasEnoughPower(HEAT_POWER_COST) && heatStorage.getStorage().canFullyAbsorbHeat(HEAT_GENERATION)) {
+				heatStorage.getStorage().heat(HEAT_GENERATION, false);
+				energyStorage.useBulkPower(HEAT_POWER_COST);
+			}
 		}
 	}
 
@@ -172,8 +173,9 @@ public class TileEntityCrucible extends TileEntityMachine {
 	protected ProcessingCheckState processingCompleted(CrucibleRecipe recipe) {
 		// Insert the outputs
 		// Check the dice roll for the output.
-		if (recipe.hasItemOutput() && SDMath.diceRoll(recipe.getOutput().getOutputChance())) {
-			outputInventory.insertItem(0, recipe.getOutput().getItem().copy(), false);
+		if (recipe.hasItemOutput()) {
+			ItemStack output = recipe.getOutput().calculateOutput();
+			outputInventory.insertItem(0, output, false);
 		}
 
 		// Fill the output tank.

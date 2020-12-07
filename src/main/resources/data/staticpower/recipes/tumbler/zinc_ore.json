@@ -1,0 +1,14 @@
+{
+	"type": "staticpower:tumbler_recipe",
+	"input": {
+		"tag": "forge:ores/zinc"
+	},
+	"output": {
+		"item": "staticpower:chunks_zinc",
+		"count": 6,
+		"bonus": {
+			"count": 2,
+			"chance": 0.26
+		}
+	}
+}

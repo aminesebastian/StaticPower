@@ -30,6 +30,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
+import theking530.staticpower.data.crafting.wrappers.castingbasin.CastingRecipe;
 import theking530.staticpower.data.crafting.wrappers.former.FormerRecipe;
 import theking530.staticpower.data.crafting.wrappers.solidfuel.SolidFuelRecipe;
 
@@ -105,6 +106,23 @@ public class StaticPowerRecipeRegistry {
 		for (AbstractStaticPowerRecipe recipe : RECIPES.get(FormerRecipe.RECIPE_TYPE)) {
 			FormerRecipe formerRecipe = (FormerRecipe) recipe;
 			if (formerRecipe.getRequiredMold().test(stack)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Checks to see if the provided itemstack is a valid casting mold used in any
+	 * recipe.
+	 * 
+	 * @param stack
+	 * @return
+	 */
+	public static boolean isValidCastingMold(ItemStack stack) {
+		for (AbstractStaticPowerRecipe recipe : RECIPES.get(CastingRecipe.RECIPE_TYPE)) {
+			CastingRecipe castingRecipe = (CastingRecipe) recipe;
+			if (castingRecipe.getRequiredMold().test(stack)) {
 				return true;
 			}
 		}

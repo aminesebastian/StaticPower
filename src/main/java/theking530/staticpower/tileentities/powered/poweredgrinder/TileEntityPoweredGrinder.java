@@ -7,7 +7,6 @@ import net.minecraft.item.ItemStack;
 import theking530.api.IUpgradeItem.UpgradeType;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
-import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
@@ -121,10 +120,10 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 		// chance. The clear the internal inventory, mark for synchronization, and
 		// return true.
 		for (ProbabilityItemStackOutput output : recipe.getOutputItems()) {
-			if (SDMath.diceRoll(output.getOutputChance() * bonusOutputChance)) {
-				InventoryUtilities.insertItemIntoInventory(outputInventory, output.getItem().copy(), false);
-			}
+			ItemStack outputItem = output.calculateOutput(bonusOutputChance - 1.0f);
+			InventoryUtilities.insertItemIntoInventory(outputInventory, outputItem, false);
 		}
+
 		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
 		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();

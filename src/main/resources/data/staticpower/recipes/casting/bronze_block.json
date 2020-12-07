@@ -1,0 +1,13 @@
+{
+	"type": "staticpower:casting_recipe",
+	"input": {
+		"fluid": "staticpower:molten_bronze",
+		"volume": 1296
+	},
+	"mold": {
+		"item": "staticpower:mold_block"
+	},
+	"output": {
+		"item": "staticpower:block_bronze"
+	}
+}

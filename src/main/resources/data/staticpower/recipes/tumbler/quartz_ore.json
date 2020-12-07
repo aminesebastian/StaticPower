@@ -1,0 +1,10 @@
+{
+	"type": "staticpower:tumbler_recipe",
+	"input": {
+		"tag": "forge:ores/quartz"
+	},
+	"output": {
+		"item": "staticpower:chunks_quartz",
+		"count": 4
+	}
+}

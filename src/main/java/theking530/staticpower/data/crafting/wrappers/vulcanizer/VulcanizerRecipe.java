@@ -21,7 +21,7 @@ public class VulcanizerRecipe extends AbstractMachineRecipe {
 		this.inputFluid = inputFluid;
 	}
 
-	public ProbabilityItemStackOutput getOutputItem() {
+	public ProbabilityItemStackOutput getOutput() {
 		return output;
 	}
 

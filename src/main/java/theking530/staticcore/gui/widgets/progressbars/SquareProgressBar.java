@@ -26,7 +26,6 @@ public class SquareProgressBar extends AbstractProgressBar {
 	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 		super.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
 		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
-		float adjustedProgress = visualCurrentProgress / maxProgress;
 
 		// Draw a red border if erorred and too small. If large enough, draw the red X.
 		if (isProcessingErrored) {
@@ -39,7 +38,7 @@ public class SquareProgressBar extends AbstractProgressBar {
 			GuiDrawUtilities.drawSlot(null, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY());
 		}
 
-		drawRect(screenSpacePosition.getX(), screenSpacePosition.getY(), (screenSpacePosition.getX() + (getSize().getX() * adjustedProgress)), screenSpacePosition.getY() + getSize().getY(),
+		drawRect(screenSpacePosition.getX(), screenSpacePosition.getY(), (screenSpacePosition.getX() + (getSize().getX() * visualCurrentProgresPercentage)), screenSpacePosition.getY() + getSize().getY(),
 				new Color(1.0f, 1.0f, 1.0f).encodeInInteger());
 	}
 

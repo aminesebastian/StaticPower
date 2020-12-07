@@ -6,12 +6,11 @@
 	"output": [
 		{
 			"item": "staticpower:gem_ruby",
-			"count": 3
-		},
-		{
-			"item": "staticpower:gem_ruby",
-			"count": 1,
-			"chance": 0.25
+			"count": 3,
+			"bonus": {
+				"count": 1,
+				"chance": 0.25
+			}
 		},
 		{
 			"item": "staticpower:dust_ruby",

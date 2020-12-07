@@ -21,8 +21,7 @@ public class MixerProgressBar extends AbstractProgressBar {
 		super.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
 
 		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
-		float adjustedProgress = visualCurrentProgress / maxProgress;
-		float smoothedProgress = adjustedProgress * adjustedProgress;
+		float smoothedProgress = visualCurrentProgresPercentage * visualCurrentProgresPercentage;
 
 		GL11.glPushMatrix();
 		GL11.glTranslatef(screenSpacePosition.getX() + 1.5f + getSize().getX() / 2, screenSpacePosition.getY() + getSize().getY() / 2, screenSpacePosition.getY() + getSize().getY() / 2);
@@ -31,8 +30,8 @@ public class MixerProgressBar extends AbstractProgressBar {
 				-(screenSpacePosition.getY() + getSize().getY() / 2) + 0.5f);
 		GuiDrawUtilities.drawTexturedModalRect(GuiTextures.MIXER_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY(), 0.0f, 0.5f, 1.0f,
 				1.0f);
-		GuiDrawUtilities.drawTexturedModalRect(GuiTextures.MIXER_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY() * adjustedProgress,
-				0.0f, 0.0f, 1.0f, (0.5f * adjustedProgress));
+		GuiDrawUtilities.drawTexturedModalRect(GuiTextures.MIXER_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY() * visualCurrentProgresPercentage,
+				0.0f, 0.0f, 1.0f, (0.5f * visualCurrentProgresPercentage));
 		GL11.glPopMatrix();
 
 		if (isProcessingErrored) {

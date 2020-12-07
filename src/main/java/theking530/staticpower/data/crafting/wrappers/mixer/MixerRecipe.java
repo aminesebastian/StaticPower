@@ -86,21 +86,21 @@ public class MixerRecipe extends AbstractMachineRecipe {
 
 			// Check fluids either way.
 			boolean straightMatch = true;
-			straightMatch &= matchParams.hasFluids() && matchParams.getFluids()[0].equals(inputFluid1);
-			straightMatch &= matchParams.hasFluids() && matchParams.getFluids()[1].equals(inputFluid2);
+			straightMatch &= matchParams.getFluids()[0].equals(inputFluid1);
+			straightMatch &= matchParams.getFluids()[1].equals(inputFluid2);
 			if (!straightMatch) {
-				matched &= matchParams.hasFluids() && matchParams.getFluids()[1].equals(inputFluid1);
-				matched &= matchParams.hasFluids() && matchParams.getFluids()[0].equals(inputFluid2);
+				matched &= matchParams.getFluids()[1].equals(inputFluid1);
+				matched &= matchParams.getFluids()[0].equals(inputFluid2);
 			}
 
 			// Verify the amounts.
 			if (matched && matchParams.shouldVerifyFluidAmounts()) {
 				if (straightMatch) {
-					matched &= matchParams.hasFluids() && matchParams.getFluids()[0].getAmount() >= inputFluid1.getAmount();
-					matched &= matchParams.hasFluids() && matchParams.getFluids()[1].getAmount() >= inputFluid2.getAmount();
+					matched &= matchParams.getFluids()[0].getAmount() >= inputFluid1.getAmount();
+					matched &= matchParams.getFluids()[1].getAmount() >= inputFluid2.getAmount();
 				} else {
-					matched &= matchParams.hasFluids() && matchParams.getFluids()[1].getAmount() >= inputFluid1.getAmount();
-					matched &= matchParams.hasFluids() && matchParams.getFluids()[0].getAmount() >= inputFluid2.getAmount();
+					matched &= matchParams.getFluids()[1].getAmount() >= inputFluid1.getAmount();
+					matched &= matchParams.getFluids()[0].getAmount() >= inputFluid2.getAmount();
 				}
 			}
 		}

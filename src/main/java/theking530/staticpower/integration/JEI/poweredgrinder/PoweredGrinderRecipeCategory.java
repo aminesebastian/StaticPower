@@ -12,7 +12,6 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
-import mezz.jei.api.gui.ingredient.ITooltipCallback;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.item.ItemStack;
@@ -145,24 +144,7 @@ public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderR
 
 		guiItemStacks.set(ingredients);
 
-		// Add the outptu percentage to the tooltip for the ingredient.
-		guiItemStacks.addTooltipCallback(new ITooltipCallback<ItemStack>() {
-			@Override
-			public void onTooltip(int slotIndex, boolean input, ItemStack ingredient, List<ITextComponent> tooltip) {
-				// Only perform for inputs.
-				if (!input) {
-					// Trasnfrom into the output index space.
-					int outputIndex = slotIndex - 1;
-
-					// Formulate the output percentage tooltip and then add it.
-					ITextComponent outputPercentage = new TranslationTextComponent("gui.staticpower.output_chance")
-							.appendString(": ").appendString(
-									String.valueOf((int) (recipe.getOutputItems()[outputIndex].getOutputChance() * 100))
-											+ "%");
-					tooltip.add(outputPercentage);
-				}
-			}
-		});
+		addProbabilityTooltips(recipeLayout, PRIMARY_OUTPUT_SLOT, recipe.getOutputItems());
 
 		// Add the fluid.
 		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(),

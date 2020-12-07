@@ -49,7 +49,7 @@ import theking530.staticpower.items.tools.sword.Blade;
 public class ModItems {
 	public static StaticPowerItem DistilleryGrain;
 	public static StaticPowerItem BedFrame;
-	
+
 	public static StaticPowerItem WheatFlour;
 	public static StaticPowerItem PotatoFlour;
 	public static StaticPowerItem PotatoBread;
@@ -63,6 +63,9 @@ public class ModItems {
 	public static StaticPowerItem MoldWire;
 	public static StaticPowerItem MoldGear;
 	public static StaticPowerItem MoldBlade;
+	public static StaticPowerItem MoldIngot;
+	public static StaticPowerItem MoldNugget;
+	public static StaticPowerItem MoldBlock;
 
 	public static StaticPowerItem IngotCopper;
 	public static StaticPowerItem IngotTin;
@@ -164,6 +167,26 @@ public class ModItems {
 	public static StaticPowerItem DustSulfur;
 	public static StaticPowerItem DustSaltpeter;
 	public static StaticPowerItem DustCharcoal;
+
+	public static StaticPowerItem ChunksCopper;
+	public static StaticPowerItem ChunksTin;
+	public static StaticPowerItem ChunksZinc;
+	public static StaticPowerItem ChunksSilver;
+	public static StaticPowerItem ChunksLead;
+	public static StaticPowerItem ChunksTungsten;
+	public static StaticPowerItem ChunksMagnesium;
+	public static StaticPowerItem ChunksPlatinum;
+	public static StaticPowerItem ChunksAluminium;
+	public static StaticPowerItem ChunksCoal;
+	public static StaticPowerItem ChunksGold;
+	public static StaticPowerItem ChunksIron;
+	public static StaticPowerItem ChunksRuby;
+	public static StaticPowerItem ChunksSapphire;
+	public static StaticPowerItem ChunksEmerald;
+	public static StaticPowerItem ChunksDiamond;
+	public static StaticPowerItem ChunksLapis;
+	public static StaticPowerItem ChunksRedstone;
+	public static StaticPowerItem ChunksQuartz;
 
 	public static StaticPowerItem GemRuby;
 	public static StaticPowerItem GemSapphire;
@@ -396,7 +419,7 @@ public class ModItems {
 		// Misc.
 		StaticPowerRegistry.preRegisterItem(DistilleryGrain = new StaticPowerItem("distillery_grain"));
 		StaticPowerRegistry.preRegisterItem(BedFrame = new StaticPowerItem("bed_frame"));
-		
+
 		// Food
 		StaticPowerRegistry.preRegisterItem(WheatFlour = new StaticPowerItem("flour_wheat"));
 		StaticPowerRegistry.preRegisterItem(PotatoFlour = new StaticPowerItem("flour_potato"));
@@ -412,6 +435,9 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(MoldWire = new StaticPowerItem("mold_wire"));
 		StaticPowerRegistry.preRegisterItem(MoldGear = new StaticPowerItem("mold_gear"));
 		StaticPowerRegistry.preRegisterItem(MoldBlade = new StaticPowerItem("mold_blade"));
+		StaticPowerRegistry.preRegisterItem(MoldIngot = new StaticPowerItem("mold_ingot"));
+		StaticPowerRegistry.preRegisterItem(MoldNugget = new StaticPowerItem("mold_nugget"));
+		StaticPowerRegistry.preRegisterItem(MoldBlock = new StaticPowerItem("mold_block"));
 
 		// Plants
 		StaticPowerRegistry.preRegisterItem(StaticSeeds = new StaticPlantSeeds("seed_static", ModBlocks.StaticPlant));
@@ -522,7 +548,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(GrinderComponent = new StaticPowerItem("grinder_component"));
 		StaticPowerRegistry.preRegisterItem(PortableSmeltingCore = new StaticPowerItem("portable_smelting_core"));
 		StaticPowerRegistry.preRegisterItem(Slag = new StaticPowerItem("slag"));
-		
+
 		StaticPowerRegistry.preRegisterItem(IronFluidCapsule = new FluidCapsule("fluid_capsule_iron", StaticPowerTiers.IRON));
 		StaticPowerRegistry.preRegisterItem(BasicFluidCapsule = new FluidCapsule("fluid_capsule_basic", StaticPowerTiers.BASIC));
 		StaticPowerRegistry.preRegisterItem(AdvancedFluidCapsule = new FluidCapsule("fluid_capsule_advanced", StaticPowerTiers.ADVANCED));
@@ -629,6 +655,27 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(DustCharcoal = new StaticPowerItem("dust_charcoal"));
 		StaticPowerRegistry.preRegisterItem(DustBrass = new StaticPowerItem("dust_brass"));
 		StaticPowerRegistry.preRegisterItem(DustBronze = new StaticPowerItem("dust_bronze"));
+
+		// Chunks
+		StaticPowerRegistry.preRegisterItem(ChunksCopper = new StaticPowerItem("chunks_copper"));
+		StaticPowerRegistry.preRegisterItem(ChunksTin = new StaticPowerItem("chunks_tin"));
+		StaticPowerRegistry.preRegisterItem(ChunksZinc = new StaticPowerItem("chunks_zinc"));
+		StaticPowerRegistry.preRegisterItem(ChunksSilver = new StaticPowerItem("chunks_silver"));
+		StaticPowerRegistry.preRegisterItem(ChunksLead = new StaticPowerItem("chunks_lead"));
+		StaticPowerRegistry.preRegisterItem(ChunksTungsten = new StaticPowerItem("chunks_tungsten"));
+		StaticPowerRegistry.preRegisterItem(ChunksMagnesium = new StaticPowerItem("chunks_magnesium"));
+		StaticPowerRegistry.preRegisterItem(ChunksPlatinum = new StaticPowerItem("chunks_platinum"));
+		StaticPowerRegistry.preRegisterItem(ChunksAluminium = new StaticPowerItem("chunks_aluminium"));
+		StaticPowerRegistry.preRegisterItem(ChunksCoal = new StaticPowerItem("chunks_coal"));
+		StaticPowerRegistry.preRegisterItem(ChunksGold = new StaticPowerItem("chunks_gold"));
+		StaticPowerRegistry.preRegisterItem(ChunksIron = new StaticPowerItem("chunks_iron"));
+		StaticPowerRegistry.preRegisterItem(ChunksRuby = new StaticPowerItem("chunks_ruby"));
+		StaticPowerRegistry.preRegisterItem(ChunksSapphire = new StaticPowerItem("chunks_sapphire"));
+		StaticPowerRegistry.preRegisterItem(ChunksEmerald = new StaticPowerItem("chunks_emerald"));
+		StaticPowerRegistry.preRegisterItem(ChunksDiamond = new StaticPowerItem("chunks_diamond"));
+		StaticPowerRegistry.preRegisterItem(ChunksLapis = new StaticPowerItem("chunks_lapis"));
+		StaticPowerRegistry.preRegisterItem(ChunksRedstone = new StaticPowerItem("chunks_redstone"));
+		StaticPowerRegistry.preRegisterItem(ChunksQuartz = new StaticPowerItem("chunks_quartz"));
 
 		// Upgrade Plates
 		StaticPowerRegistry.preRegisterItem(BasicUpgradePlate = new StaticPowerItem("upgrade_plate_basic"));

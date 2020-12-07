@@ -48,6 +48,7 @@ import theking530.staticpower.tileentities.powered.autosolderingtable.BlockAutoS
 import theking530.staticpower.tileentities.powered.basicfarmer.BlockBasicFarmer;
 import theking530.staticpower.tileentities.powered.battery.BlockBattery;
 import theking530.staticpower.tileentities.powered.bottler.BlockBottler;
+import theking530.staticpower.tileentities.powered.caster.BlockCaster;
 import theking530.staticpower.tileentities.powered.centrifuge.BlockCentrifuge;
 import theking530.staticpower.tileentities.powered.chargingstation.BlockChargingStation;
 import theking530.staticpower.tileentities.powered.crucible.BlockCrucible;
@@ -68,6 +69,7 @@ import theking530.staticpower.tileentities.powered.solarpanels.BlockSolarPanel;
 import theking530.staticpower.tileentities.powered.solidgenerator.BlockSolidGenerator;
 import theking530.staticpower.tileentities.powered.squeezer.BlockSqueezer;
 import theking530.staticpower.tileentities.powered.treefarmer.BlockTreeFarmer;
+import theking530.staticpower.tileentities.powered.tumbler.BlockTumbler;
 import theking530.staticpower.tileentities.powered.vulcanizer.BlockVulcanizer;
 import theking530.staticpower.world.trees.RubberTree;
 
@@ -164,7 +166,7 @@ public class ModBlocks {
 	public static BlockPump EnergizedPump;
 	public static BlockPump LumumPump;
 	public static BlockPump CreativePump;
-	
+
 	public static BlockTreeFarmer TreeFarmer;
 	public static BlockFermenter Fermenter;
 	public static BlockFormer Former;
@@ -187,6 +189,8 @@ public class ModBlocks {
 	public static BlockAutoSmith AutoSmith;
 	public static BlockLathe Lathe;
 	public static BlockMixer Mixer;
+	public static BlockCaster Caster;
+	public static BlockTumbler Tumbler;
 
 	public static BlockHeatSink AluminiumHeatSink;
 	public static BlockHeatSink CopperHeatSink;
@@ -397,7 +401,9 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(AutoSmith = new BlockAutoSmith("machine_auto_smith"));
 		StaticPowerRegistry.preRegisterBlock(Lathe = new BlockLathe("machine_lathe"));
 		StaticPowerRegistry.preRegisterBlock(Mixer = new BlockMixer("machine_mixer"));
-		
+		StaticPowerRegistry.preRegisterBlock(Caster = new BlockCaster("machine_caster"));
+		StaticPowerRegistry.preRegisterBlock(Tumbler = new BlockTumbler("machine_tumbler"));
+
 		StaticPowerRegistry.preRegisterBlock(AluminiumHeatSink = new BlockHeatSink("heat_sink_aluminium", StaticPowerTiers.ALUMINIUM));
 		StaticPowerRegistry.preRegisterBlock(CopperHeatSink = new BlockHeatSink("heat_sink_copper", StaticPowerTiers.COPPER));
 		StaticPowerRegistry.preRegisterBlock(TinHeatSink = new BlockHeatSink("heat_sink_tin", StaticPowerTiers.TIN));

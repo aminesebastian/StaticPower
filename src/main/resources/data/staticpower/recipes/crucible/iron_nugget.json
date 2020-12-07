@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:crucible_recipe",
+	"input": {
+		"tag": "forge:nuggets/iron"
+	},
+	"outputs": {
+		"fluid": {
+			"fluid": "staticpower:molten_iron",
+			"volume": 16
+		}
+	}
+}

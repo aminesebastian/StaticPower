@@ -1,0 +1,10 @@
+{
+	"type": "staticpower:tumbler_recipe",
+	"input": {
+		"tag": "forge:ores/sapphire"
+	},
+	"output": {
+		"item": "staticpower:chunks_sapphire",
+		"count": 3
+	}
+}

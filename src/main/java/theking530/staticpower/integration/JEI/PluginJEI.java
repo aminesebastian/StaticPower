@@ -23,6 +23,7 @@ import theking530.staticpower.cables.attachments.digistore.patternencoder.Contai
 import theking530.staticpower.client.gui.StaticPowerContainerGui;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
+import theking530.staticpower.data.crafting.wrappers.castingbasin.CastingRecipe;
 import theking530.staticpower.data.crafting.wrappers.centrifuge.CentrifugeRecipe;
 import theking530.staticpower.data.crafting.wrappers.condensation.CondensationRecipe;
 import theking530.staticpower.data.crafting.wrappers.crucible.CrucibleRecipe;
@@ -39,10 +40,12 @@ import theking530.staticpower.data.crafting.wrappers.mixer.MixerRecipe;
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
 import theking530.staticpower.data.crafting.wrappers.solidfuel.SolidFuelRecipe;
 import theking530.staticpower.data.crafting.wrappers.squeezer.SqueezerRecipe;
+import theking530.staticpower.data.crafting.wrappers.tumbler.TumblerRecipe;
 import theking530.staticpower.data.crafting.wrappers.vulcanizer.VulcanizerRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.integration.JEI.bottler.BottleRecipeCategory;
+import theking530.staticpower.integration.JEI.caster.CasterRecipeCategory;
 import theking530.staticpower.integration.JEI.centrifuge.CentrifugeRecipeCategory;
 import theking530.staticpower.integration.JEI.condenser.CondenserRecipeCategory;
 import theking530.staticpower.integration.JEI.covers.CoverRecipeCategory;
@@ -63,6 +66,7 @@ import theking530.staticpower.integration.JEI.smithing.SmithingRecipeProvider;
 import theking530.staticpower.integration.JEI.solderingtable.SolderingTableRecipeCategory;
 import theking530.staticpower.integration.JEI.solidgenerator.SolidGeneratorRecipeCategory;
 import theking530.staticpower.integration.JEI.squeezer.SqueezerRecipeCategory;
+import theking530.staticpower.integration.JEI.tumbler.TumblerRecipeCategory;
 import theking530.staticpower.integration.JEI.vulcanizer.VulcanizerRecipeCategory;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
 import theking530.staticpower.items.fluidcapsule.FluidCapsule;
@@ -113,6 +117,10 @@ public class PluginJEI implements IModPlugin {
 	private MixerRecipeCategory mixerRecipeCategory;
 	@Nullable
 	private CrucibleRecipeCategory crucibleRecipeCategory;
+	@Nullable
+	private CasterRecipeCategory casterRecipeCategory;
+	@Nullable
+	private TumblerRecipeCategory tumblerRecipeCategory;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
@@ -204,6 +212,14 @@ public class PluginJEI implements IModPlugin {
 		// Crucible
 		crucibleRecipeCategory = new CrucibleRecipeCategory(guiHelper);
 		registration.addRecipeCategories(crucibleRecipeCategory);
+
+		// Caster
+		casterRecipeCategory = new CasterRecipeCategory(guiHelper);
+		registration.addRecipeCategories(casterRecipeCategory);
+
+		// Tumbler
+		tumblerRecipeCategory = new TumblerRecipeCategory(guiHelper);
+		registration.addRecipeCategories(tumblerRecipeCategory);
 	}
 
 	@Override
@@ -279,6 +295,8 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipes(new SmithingRecipeProvider().getRecipes(null), SmithingRecipeCategory.AUTO_SMITHING_UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(MixerRecipe.RECIPE_TYPE), MixerRecipeCategory.MIXER_UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(CrucibleRecipe.RECIPE_TYPE), CrucibleRecipeCategory.CRUCIBLE_UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(CastingRecipe.RECIPE_TYPE), CasterRecipeCategory.CASTER_UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(TumblerRecipe.RECIPE_TYPE), TumblerRecipeCategory.TUMBLER_UID);
 	}
 
 	@Override
@@ -305,6 +323,8 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Lathe), LatheRecipeCategory.LATHE_UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Mixer), MixerRecipeCategory.MIXER_UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Crucible), CrucibleRecipeCategory.CRUCIBLE_UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Caster), CasterRecipeCategory.CASTER_UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Tumbler), TumblerRecipeCategory.TUMBLER_UID);
 	}
 
 	@Override

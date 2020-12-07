@@ -15,7 +15,7 @@ import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
-import theking530.staticpower.tileentities.powered.squeezer.TileEntitySqueezer;
+import theking530.staticpower.tileentities.powered.crucible.TileEntityCrucible;
 
 public class CrucibleRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CrucibleRecipe> {
 	public static final CrucibleRecipeSerializer INSTANCE = new CrucibleRecipeSerializer();
@@ -38,8 +38,8 @@ public class CrucibleRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
 		}
 
 		// Start with the default values.
-		int powerCost = TileEntitySqueezer.DEFAULT_PROCESSING_COST;
-		int processingTime = TileEntitySqueezer.DEFAULT_PROCESSING_TIME;
+		int powerCost = TileEntityCrucible.DEFAULT_PROCESSING_COST;
+		int processingTime = TileEntityCrucible.DEFAULT_PROCESSING_TIME;
 
 		// Capture the processing and power costs.
 		if (JSONUtils.hasField(json, "processing")) {

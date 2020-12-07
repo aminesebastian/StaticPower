@@ -3,10 +3,10 @@ package theking530.staticpower.tileentities.powered.lathe;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
-import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.lathe.LatheRecipe;
@@ -130,12 +130,12 @@ public class TileEntityLathe extends TileEntityMachine {
 	}
 
 	protected ProcessingCheckState processingCompleted(LatheRecipe recipe) {
-		if (SDMath.diceRoll(recipe.getPrimaryOutput().getOutputChance())) {
-			mainOutputInventory.insertItem(0, recipe.getPrimaryOutput().getItem().copy(), false);
-		}
-		if (SDMath.diceRoll(recipe.getSecondaryOutput().getOutputChance())) {
-			secondaryOutputInventory.insertItem(0, recipe.getSecondaryOutput().getItem().copy(), false);
-		}
+		ItemStack primaryOutput = recipe.getPrimaryOutput().calculateOutput();
+		ItemStack secondaryOutput = recipe.getSecondaryOutput().calculateOutput();
+
+		mainOutputInventory.insertItem(0, primaryOutput, false);
+		secondaryOutputInventory.insertItem(0, secondaryOutput, false);
+
 		fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.EXECUTE);
 
 		InventoryUtilities.clearInventory(internalInventory);

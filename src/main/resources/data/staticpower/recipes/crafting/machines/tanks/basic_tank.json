@@ -1,13 +1,13 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
-		"pgp",
-		"gug",
-		"pgp"
+		"pup",
+		"uiu",
+		"pup"
 	],
 	"key": {
-		"g": {
-			"tag": "forge:glass"
+		"i": {
+			"item": "staticpower:io_port"
 		},
 		"p": {
 			"tag": "forge:plates/tin"

@@ -51,7 +51,7 @@ public class FluidOutputServoComponent extends AbstractTileEntityComponent {
 		}
 
 		// Attempt to get the fluid handler for that tile entity.
-		te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side).ifPresent(tank -> {
+		te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite()).ifPresent(tank -> {
 			// Transfer the fluid.
 			FluidUtil.tryFluidTransfer(tank, owningTank, inputRate, true);
 		});

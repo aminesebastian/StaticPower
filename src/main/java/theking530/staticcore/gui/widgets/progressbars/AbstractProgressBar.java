@@ -2,6 +2,7 @@ package theking530.staticcore.gui.widgets.progressbars;
 
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Nullable;
 
@@ -42,6 +43,11 @@ public abstract class AbstractProgressBar extends AbstractGuiWidget {
 	 */
 	protected float visualCurrentProgress;
 	/**
+	 * The visual current progress percentage. This should be the only value used
+	 * when rendering!
+	 */
+	protected float visualCurrentProgresPercentage;
+	/**
 	 * The actual current progress as defined by the processing component or set
 	 * manually.
 	 */
@@ -73,6 +79,19 @@ public abstract class AbstractProgressBar extends AbstractGuiWidget {
 	 * progress bar is not errored and is hovered.
 	 */
 	protected boolean enableProgressTooltip;
+	/**
+	 * Indicates when to offset the animation percentage. For example, if this value
+	 * is set to 0.5, and {@link #percentageDelayBefore} is true, then this bar will
+	 * only animate from progress percent 0.0 to 0.5. If
+	 * {@link #percentageDelayBefore} is false, then this bar will animate 0.5 to
+	 * 1.0.
+	 */
+	protected Optional<Float> percentageDelay;
+	/**
+	 * Indicates on which side of the {@link #percentageDelay} that the bar will
+	 * populate.
+	 */
+	protected boolean percentageDelayBefore;
 
 	public AbstractProgressBar(float xPosition, float yPosition, float width, float height) {
 		super(xPosition, yPosition, width, height);
@@ -80,6 +99,8 @@ public abstract class AbstractProgressBar extends AbstractGuiWidget {
 		tickDownRate = 1;
 		visualCurrentProgress = 0.0f;
 		enableProgressTooltip = true;
+		percentageDelay = Optional.empty();
+		percentageDelayBefore = false;
 		errorDrawable = new SpriteDrawable(StaticPowerSprites.ERROR, 16, 16);
 	}
 
@@ -96,9 +117,37 @@ public abstract class AbstractProgressBar extends AbstractGuiWidget {
 
 		// Calculate the visual current progress.
 		visualCurrentProgress = SDMath.clamp(visualCurrentProgress + partialTicks, currentProgress - 1, currentProgress);
+
 		if (visualCurrentProgress > maxProgress) {
 			visualCurrentProgress = maxProgress;
 		}
+
+		// Calculate the percentage.
+		visualCurrentProgresPercentage = visualCurrentProgress / maxProgress;
+
+		// Perform the animation offset.
+		if (percentageDelay.isPresent()) {
+			// Get the range of percentage covered by this progress bar and the starting
+			// percentage.
+			float totalPercentCovered;
+			float startPercentage;
+			if (percentageDelayBefore) {
+				totalPercentCovered = percentageDelay.get();
+				startPercentage = 0.0f;
+			} else {
+				totalPercentCovered = 1.0f - percentageDelay.get();
+				startPercentage = percentageDelay.get();
+			}
+
+			// If we are below the starting percentage, do nothing. Otherwise, remap the
+			// values into the range for this bar.
+			if (visualCurrentProgresPercentage < startPercentage) {
+				visualCurrentProgresPercentage = 0.0f;
+			} else {
+				visualCurrentProgresPercentage = (visualCurrentProgresPercentage - startPercentage) / totalPercentCovered;
+			}
+		}
+
 	}
 
 	@Override
@@ -117,7 +166,8 @@ public abstract class AbstractProgressBar extends AbstractGuiWidget {
 						.append(new TranslationTextComponent("gui.staticpower.seconds.short")));
 			} else {
 				String maxTime = decimalFormat.format(maxProgress / (tickDownRate * 20.0f));
-				tooltips.add(new TranslationTextComponent("gui.staticpower.max").appendString(": ").appendString(maxTime).append(new TranslationTextComponent("gui.staticpower.seconds.short")));
+				tooltips.add(
+						new TranslationTextComponent("gui.staticpower.max").appendString(": ").appendString(maxTime).append(new TranslationTextComponent("gui.staticpower.seconds.short")));
 			}
 		}
 	}
@@ -139,6 +189,18 @@ public abstract class AbstractProgressBar extends AbstractGuiWidget {
 
 	public AbstractProgressBar setErrorMessage(String message) {
 		processingErrorMessage = message;
+		return this;
+	}
+
+	public AbstractProgressBar setAnimationStartAfter(float percentage) {
+		this.percentageDelay = Optional.of(percentage);
+		this.percentageDelayBefore = false;
+		return this;
+	}
+
+	public AbstractProgressBar setAnimationLastUntil(float percentage) {
+		this.percentageDelay = Optional.of(percentage);
+		this.percentageDelayBefore = true;
 		return this;
 	}
 

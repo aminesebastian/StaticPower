@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:former_recipe",
+	"input": {
+		"item": "staticpower:mold_blank"
+	},
+	"mold": {
+		"tag": "forge:ingot"
+	},
+	"output": {
+		"item": "staticpower:mold_ingot"
+	}
+}

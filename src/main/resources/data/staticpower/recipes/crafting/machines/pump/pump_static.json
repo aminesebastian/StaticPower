@@ -1,0 +1,25 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		" g ",
+		"pbp",
+		"ptp"
+	],
+	"key": {
+		"b": {
+			"item": "staticpower:machine_block_static"
+		},
+		"p": {
+			"item": "minecraft:piston"
+		},
+		"t": {
+			"item": "staticpower:cable_industrial_fluid_static"
+		},
+		"g": {
+			"tag": "forge:glass"
+		}
+	},
+	"result": {
+		"item": "staticpower:pump_static"
+	}
+}

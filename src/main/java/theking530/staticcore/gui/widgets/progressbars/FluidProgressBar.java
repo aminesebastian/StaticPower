@@ -37,9 +37,6 @@ public class FluidProgressBar extends AbstractProgressBar {
 
 		// Draw the fluid.
 		if (!displayFluidStack.isEmpty()) {
-			// Get the adjusted progress.
-			float adjustedProgress = visualCurrentProgress / maxProgress;
-
 			// Get the fluid icon.
 			TextureAtlasSprite icon = GuiDrawUtilities.getStillFluidSprite(displayFluidStack);
 
@@ -52,12 +49,12 @@ public class FluidProgressBar extends AbstractProgressBar {
 				float uvDiff = icon.getMaxU() - icon.getMinU();
 
 				Minecraft.getInstance().getTextureManager().bindTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE);
-				GuiDrawUtilities.drawTexturedModalRect(PlayerContainer.LOCATION_BLOCKS_TEXTURE, screenSpacePosition.getX(), screenSpacePosition.getY(), adjustedProgress * getSize().getX(), getSize().getY(),
-						icon.getMinU(), icon.getMinV(), icon.getMinU() + (uvDiff * adjustedProgress), icon.getMaxV(), fluidColor);
+				GuiDrawUtilities.drawTexturedModalRect(PlayerContainer.LOCATION_BLOCKS_TEXTURE, screenSpacePosition.getX(), screenSpacePosition.getY(), visualCurrentProgresPercentage * getSize().getX(), getSize().getY(),
+						icon.getMinU(), icon.getMinV(), icon.getMinU() + (uvDiff * visualCurrentProgresPercentage), icon.getMaxV(), fluidColor);
 			}
 
 			// Draw the leading white line.
-			GuiDrawUtilities.drawColoredRectangle(screenSpacePosition.getX() + (adjustedProgress * getSize().getX()), screenSpacePosition.getY(), 0.75f, getSize().getY(), 1.0f, Color.WHITE);
+			GuiDrawUtilities.drawColoredRectangle(screenSpacePosition.getX() + (visualCurrentProgresPercentage * getSize().getX()), screenSpacePosition.getY(), 0.75f, getSize().getY(), 1.0f, Color.WHITE);
 		}
 		
 		// Draw the error indicator if needed.

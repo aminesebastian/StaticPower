@@ -1,0 +1,10 @@
+{
+	"type": "staticpower:tumbler_recipe",
+	"input": {
+		"tag": "forge:ores/redstone"
+	},
+	"output": {
+		"item": "staticpower:chunks_redstone",
+		"count": 5
+	}
+}

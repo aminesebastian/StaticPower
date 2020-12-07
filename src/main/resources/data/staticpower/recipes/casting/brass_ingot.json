@@ -1,0 +1,13 @@
+{
+	"type": "staticpower:casting_recipe",
+	"input": {
+		"fluid": "staticpower:molten_brass",
+		"volume": 144
+	},
+	"mold": {
+		"item": "staticpower:mold_ingot"
+	},
+	"output": {
+		"item": "staticpower:ingot_brass"
+	}
+}

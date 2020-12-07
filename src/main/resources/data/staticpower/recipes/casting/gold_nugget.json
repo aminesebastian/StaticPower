@@ -1,0 +1,13 @@
+{
+	"type": "staticpower:casting_recipe",
+	"input": {
+		"fluid": "staticpower:molten_gold",
+		"volume": 16
+	},
+	"mold": {
+		"item": "staticpower:mold_nugget"
+	},
+	"output": {
+		"item": "minecraft:gold_nugget"
+	}
+}

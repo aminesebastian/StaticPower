@@ -6,12 +6,11 @@
 	"output": [
 		{
 			"item": "minecraft:glowstone_dust",
-			"count": 3
-		},
-		{
-			"item": "minecraft:glowstone_dust",
-			"count": 1,
-			"chance": 0.5
+			"count": 3,
+			"bonus": {
+				"count": 1,
+				"chance": 0.5
+			}
 		}
 	]
 }

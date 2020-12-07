@@ -3,11 +3,11 @@ package theking530.staticpower.tileentities.powered.vulcanizer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
-import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.vulcanizer.VulcanizerRecipe;
@@ -56,8 +56,8 @@ public class TileEntityVulcanizer extends TileEntityMachine {
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<VulcanizerRecipe>("ProcessingComponent", VulcanizerRecipe.RECIPE_TYPE, 1, this::getMatchParameters, this::moveInputs,
-				this::canProcessRecipe, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<VulcanizerRecipe>("ProcessingComponent", VulcanizerRecipe.RECIPE_TYPE, 1, this::getMatchParameters,
+				this::moveInputs, this::canProcessRecipe, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -78,7 +78,7 @@ public class TileEntityVulcanizer extends TileEntityMachine {
 		fluidTankComponent.setCapabilityExposedModes(MachineSideMode.Input);
 		fluidTankComponent.setUpgradeInventory(upgradesInventory);
 		fluidTankComponent.setCanDrain(false);
-		
+
 		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, fluidTankComponent, MachineSideMode.Input));
 
 		// Create the fluid container component.
@@ -122,9 +122,8 @@ public class TileEntityVulcanizer extends TileEntityMachine {
 
 	protected ProcessingCheckState processingCompleted(VulcanizerRecipe recipe) {
 		// Output the item if the dice roll passes.
-		if (SDMath.diceRoll(recipe.getOutputItem().getOutputChance())) {
-			outputInventory.insertItem(0, recipe.getOutputItem().getItem().copy(), false);
-		}
+		ItemStack outputItem = recipe.getOutput().calculateOutput();
+		outputInventory.insertItem(0, outputItem, false);
 
 		// Clear the processing stack.
 		currentProcessingFluidStack = FluidStack.EMPTY;

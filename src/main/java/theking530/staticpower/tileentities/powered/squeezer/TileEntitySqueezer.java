@@ -9,7 +9,6 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
-import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderSqueezer;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.squeezer.SqueezerRecipe;
@@ -74,8 +73,8 @@ public class TileEntitySqueezer extends TileEntityMachine {
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<SqueezerRecipe>("ProcessingComponent", SqueezerRecipe.RECIPE_TYPE, 1, this::getMatchParameters, this::moveInputs,
-				this::canProcessRecipe, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<SqueezerRecipe>("ProcessingComponent", SqueezerRecipe.RECIPE_TYPE, 1, this::getMatchParameters,
+				this::moveInputs, this::canProcessRecipe, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -90,7 +89,8 @@ public class TileEntitySqueezer extends TileEntityMachine {
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));
 
 		// Setup the fluid tank and fluid output servo.
-		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Output).setUpgradeInventory(upgradesInventory));
+		registerComponent(
+				fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Output).setUpgradeInventory(upgradesInventory));
 		fluidTankComponent.setCanFill(false);
 		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
 		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent).setMode(FluidContainerInteractionMode.FILL));
@@ -149,8 +149,9 @@ public class TileEntitySqueezer extends TileEntityMachine {
 
 		// Insert the outputs
 		// Check the dice roll for the output.
-		if (recipe.hasItemOutput() && SDMath.diceRoll(recipe.getOutput().getOutputChance())) {
-			outputInventory.insertItem(0, recipe.getOutput().getItem().copy(), false);
+		if (recipe.hasItemOutput()) {
+			ItemStack outputItem = recipe.getOutput().calculateOutput();
+			outputInventory.insertItem(0, outputItem, false);
 		}
 
 		// Fill the output tank.

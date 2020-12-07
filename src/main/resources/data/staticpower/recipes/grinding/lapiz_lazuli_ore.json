@@ -6,12 +6,11 @@
 	"output": [
 		{
 			"item": "minecraft:lapis_lazuli",
-			"count": 5
-		},
-		{
-			"item": "minecraft:lapis_lazuli",
-			"count": 1,
-			"chance": 0.4
+			"count": 5,
+			"bonus": {
+				"count": 1,
+				"chance": 0.4
+			}
 		}
 	]
 }

@@ -1,0 +1,10 @@
+{
+	"type": "staticpower:tumbler_recipe",
+	"input": {
+		"tag": "forge:ores/diamond"
+	},
+	"output": {
+		"item": "staticpower:chunks_diamond",
+		"count": 5
+	}
+}

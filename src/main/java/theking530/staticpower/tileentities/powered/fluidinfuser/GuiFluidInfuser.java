@@ -1,5 +1,7 @@
 package theking530.staticpower.tileentities.powered.fluidinfuser;
 
+import java.util.Optional;
+
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fluids.FluidStack;
@@ -14,6 +16,7 @@ import theking530.staticcore.gui.widgets.tabs.slottabs.GuiFluidContainerTab;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
+import theking530.staticpower.data.crafting.wrappers.fluidinfusion.FluidInfusionRecipe;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 
@@ -42,10 +45,12 @@ public class GuiFluidInfuser extends StaticPowerTileEntityGui<ContainerFluidInfu
 
 	@Override
 	public void updateData() {
-		// If the recipe is non-null, render the fluid progress bar.
-		if (getTileEntity().processingComponent.isProcessing()) {
-			FluidStack fluid = getTileEntity().fluidTankComponent.getFluid();
-			progressBar.setFluidStack(fluid);
+		// Get the recipe.
+		Optional<FluidInfusionRecipe> currentRecipe = getTileEntity().processingComponent.getCurrentProcessingRecipe();
+
+		// Update the progress bar.
+		if (currentRecipe.isPresent()) {
+			progressBar.setFluidStack(currentRecipe.get().getRequiredFluid());
 		} else {
 			progressBar.setFluidStack(FluidStack.EMPTY);
 		}

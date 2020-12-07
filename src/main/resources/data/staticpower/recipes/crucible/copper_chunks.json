@@ -1,0 +1,16 @@
+{
+	"type": "staticpower:crucible_recipe",
+	"input": {
+		"tag": "forge:chunks/copper"
+	},
+	"outputs": {
+		"fluid": {
+			"fluid": "staticpower:molten_copper",
+			"volume": 72
+		},
+		"item": {
+			"item": "staticpower:slag",
+			"count": 1
+		}
+	}
+}

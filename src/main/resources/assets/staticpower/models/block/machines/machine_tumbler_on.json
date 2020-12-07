@@ -1,0 +1,6 @@
+{
+    "parent": "staticpower:block/machines/machine_tumbler",
+	"textures": {
+		"front_overlay": "staticpower:blocks/machines/tumbler_face_on"
+    }
+}

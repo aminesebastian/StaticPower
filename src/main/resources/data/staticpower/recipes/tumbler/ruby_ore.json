@@ -1,0 +1,10 @@
+{
+	"type": "staticpower:tumbler_recipe",
+	"input": {
+		"tag": "forge:ores/ruby"
+	},
+	"output": {
+		"item": "staticpower:chunks_ruby",
+		"count": 3
+	}
+}

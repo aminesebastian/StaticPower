@@ -1,0 +1,28 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"huh",
+		"bmb",
+		"bpb"
+	],
+	"key": {
+		"h": {
+			"item": "staticpower:heat_sink_gold"
+		},
+		"b": {
+			"item": "minecraft:bricks"
+		},
+		"m": {
+			"item": "staticpower:machine_block_energized"
+		},
+		"u": {
+			"item": "minecraft:bucket"
+		},
+		"p": {
+			"item": "staticpower:plug"
+		}
+	},
+	"result": {
+		"item": "staticpower:machine_crucible"
+	}
+}

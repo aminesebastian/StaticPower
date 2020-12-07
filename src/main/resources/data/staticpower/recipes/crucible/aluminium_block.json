@@ -1,0 +1,15 @@
+{
+	"type": "staticpower:crucible_recipe",
+	"input": {
+		"tag": "forge:storage_blocks/aluminium"
+	},
+	"outputs": {
+		"fluid": {
+			"fluid": "staticpower:molten_aluminium",
+			"volume": 1296
+		},
+		"item": {
+			"item": "staticpower:slag",
+			"count": 9
+		}	}
+}

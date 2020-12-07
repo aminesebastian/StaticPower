@@ -104,7 +104,7 @@ public class VulcanizerRecipeCategory extends BaseJEIRecipeCategory<VulcanizerRe
 	@Override
 	public void setIngredients(VulcanizerRecipe recipe, IIngredients ingredients) {
 		// Set the filled bottle output itemstack.
-		ingredients.setOutput(VanillaTypes.ITEM, recipe.getOutputItem().getItem());
+		ingredients.setOutput(VanillaTypes.ITEM, recipe.getOutput().getItem());
 
 		// Set the input fluid.
 		ingredients.setInput(VanillaTypes.FLUID, recipe.getInputFluid());

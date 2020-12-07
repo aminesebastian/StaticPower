@@ -6,7 +6,6 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
-import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.fusionfurnace.FusionFurnaceRecipe;
@@ -110,9 +109,8 @@ public class TileEntityFusionFurnace extends TileEntityMachine {
 
 	protected ProcessingCheckState processingCompleted(FusionFurnaceRecipe recipe) {
 		// Insert the output into the output inventory.
-		if (SDMath.diceRoll(recipe.getOutput().getOutputChance())) {
-			InventoryUtilities.insertItemIntoInventory(outputInventory, recipe.getOutput().getItem().copy(), false);
-		}
+		ItemStack output = recipe.getOutput().calculateOutput();
+		InventoryUtilities.insertItemIntoInventory(outputInventory, output, false);
 
 		// Clear the internal inventory.
 		internalInventory.setStackInSlot(0, ItemStack.EMPTY);

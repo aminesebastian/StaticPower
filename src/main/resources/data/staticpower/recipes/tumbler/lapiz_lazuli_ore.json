@@ -1,0 +1,10 @@
+{
+	"type": "staticpower:tumbler_recipe",
+	"input": {
+		"tag": "forge:ores/lapis"
+	},
+	"output": {
+		"item": "staticpower:chunks_lapis",
+		"count": 5
+	}
+}

@@ -7,19 +7,19 @@
 	],
 	"key": {
 		"b": {
-			"item": "staticpower:machine_block_iron"
+			"item": "staticpower:machine_block_lumum"
 		},
 		"p": {
 			"item": "minecraft:piston"
 		},
 		"t": {
-			"item": "staticpower:cable_industrial_fluid_basic"
+			"item": "staticpower:cable_industrial_fluid_lumum"
 		},
 		"g": {
 			"tag": "forge:glass"
 		}
 	},
 	"result": {
-		"item": "staticpower:pump"
+		"item": "staticpower:pump_lumum"
 	}
 }

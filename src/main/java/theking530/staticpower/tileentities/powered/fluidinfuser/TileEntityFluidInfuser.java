@@ -9,7 +9,6 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
-import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderFluidInfuser;
 import theking530.staticpower.data.StaticPowerTier;
@@ -128,15 +127,14 @@ public class TileEntityFluidInfuser extends TileEntityMachine {
 
 	protected ProcessingCheckState processingCompleted(FluidInfusionRecipe recipe) {
 		// Output the item if the dice roll passes.
-		if (SDMath.diceRoll(recipe.getOutput().getOutputChance())) {
-			outputInventory.insertItem(0, recipe.getOutput().getItem().copy(), false);
-		}
+		ItemStack output = recipe.getOutput().calculateOutput();
+		outputInventory.insertItem(0, output, false);
 
 		// Drain the fluid.
 		fluidTankComponent.drain(recipe.getRequiredFluid().getAmount(), FluidAction.EXECUTE);
 
 		// Clear the internal inventory.
-		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
+		InventoryUtilities.clearInventory(internalInventory);
 		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}

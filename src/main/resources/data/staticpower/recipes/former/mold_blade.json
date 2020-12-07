@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:former_recipe",
+	"input": {
+		"item": "staticpower:mold_blank"
+	},
+	"mold": {
+		"item": "minecraft:wooden_sword"
+	},
+	"output": {
+		"item": "staticpower:mold_blade"
+	}
+}

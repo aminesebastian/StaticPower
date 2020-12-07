@@ -1,0 +1,28 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"u u",
+		"gbg",
+		"mpm"
+	],
+	"key": {
+		"g": {
+			"tag": "forge:gears/gold"
+		},
+		"m": {
+			"item": "staticpower:motor"
+		},
+		"b": {
+			"item": "staticpower:machine_block_advanced"
+		},
+		"u": {
+			"item": "minecraft:bucket"
+		},
+		"p": {
+			"item": "staticpower:plug"
+		}
+	},
+	"result": {
+		"item": "staticpower:machine_mixer"
+	}
+}

@@ -6,12 +6,11 @@
 	"output": [
 		{
 			"item": "minecraft:diamond",
-			"count": 2
-		},
-		{
-			"item": "minecraft:diamond",
-			"count": 1,
-			"chance": 0.1
+			"count": 2,
+			"bonus": {
+				"count": 1,
+				"chance": 0.1
+			}
 		},
 		{
 			"item": "staticpower:dust_diamond",
