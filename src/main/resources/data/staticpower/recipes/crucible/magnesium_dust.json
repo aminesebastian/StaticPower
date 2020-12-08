@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:crucible_recipe",
+	"input": {
+		"tag": "forge:dusts/magnesium"
+	},
+	"outputs": {
+		"fluid": {
+			"fluid": "staticpower:molten_magnesium",
+			"volume": 144
+		}
+	}
+}

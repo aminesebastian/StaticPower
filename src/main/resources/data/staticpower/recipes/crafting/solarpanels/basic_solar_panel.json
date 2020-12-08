@@ -2,7 +2,7 @@
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
 		"ggg",
-		"iii",
+		"sis",
 		"ppp"
 	],
 	"key": {
@@ -14,6 +14,9 @@
 		},
 		"g": {
 			"tag": "forge:glass/blue"
+		},
+		"s": {
+			"tag": "forge:silicon"
 		}
 	},
 	"result": {

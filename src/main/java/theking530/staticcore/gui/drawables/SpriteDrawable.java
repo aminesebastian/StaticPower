@@ -16,14 +16,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
 
-
 @OnlyIn(Dist.CLIENT)
 public class SpriteDrawable implements IDrawable {
 	private ResourceLocation sprite;
 	private Vector2D size;
 	private Color tint;
 
-	public SpriteDrawable(ResourceLocation sprite, int width, int height) {
+	public SpriteDrawable(ResourceLocation sprite, float width, float height) {
 		this.sprite = sprite;
 		this.size = new Vector2D(width, height);
 		this.tint = Color.WHITE;

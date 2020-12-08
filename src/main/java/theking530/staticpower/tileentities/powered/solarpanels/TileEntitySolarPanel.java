@@ -3,13 +3,7 @@ package theking530.staticpower.tileentities.powered.solarpanels;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
@@ -17,10 +11,12 @@ import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityBase;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
 import theking530.staticpower.tileentities.components.power.PowerDistributionComponent;
 
-public class TileEntitySolarPanel extends TileEntityBase implements ITickableTileEntity {
+public class TileEntitySolarPanel extends TileEntityBase {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntitySolarPanel> TYPE_BASIC = new TileEntityTypeAllocator<TileEntitySolarPanel>(
 			(allocator) -> new TileEntitySolarPanel(allocator, StaticPowerTiers.BASIC), ModBlocks.SolarPanelBasic);
@@ -46,32 +42,43 @@ public class TileEntitySolarPanel extends TileEntityBase implements ITickableTil
 			(allocator) -> new TileEntitySolarPanel(allocator, StaticPowerTiers.CREATIVE), ModBlocks.SolarPanelCreative);
 
 	public EnergyStorageComponent energyStorage;
+	public SideConfigurationComponent sideConfiguration;
+	private final boolean isCreative;
 
 	public TileEntitySolarPanel(TileEntityTypeAllocator<TileEntitySolarPanel> allocator, ResourceLocation tierType) {
 		super(allocator);
 		// Set the values based on the tier.
 		StaticPowerTier tier = StaticPowerConfig.getTier(tierType);
+		isCreative = tierType == StaticPowerTiers.CREATIVE;
+
+		// Set the energy storage.
 		registerComponent(
 				energyStorage = new EnergyStorageComponent("PowerBuffer", tier.solarPanelPowerStorage.get(), tier.solarPanelPowerGeneration.get(), tier.solarPanelPowerGeneration.get()));
+
+		// Don't let the storage recieve from outside sources.
 		energyStorage.getStorage().setCanRecieve(false);
-
-		registerComponent(new PowerDistributionComponent("PowerDistribution", energyStorage.getStorage()));
-
 		energyStorage.getStorage().setCapacity(tier.solarPanelPowerStorage.get());
 		energyStorage.getStorage().setMaxExtract(tier.solarPanelPowerGeneration.get());
 		energyStorage.getStorage().setMaxReceive(tier.solarPanelPowerGeneration.get());
+
+		// Set the side config to only output on the bottom and disable on the rest.
+		registerComponent(sideConfiguration = new SideConfigurationComponent("SideConfig", new MachineSideMode[] { MachineSideMode.Output, MachineSideMode.Disabled, MachineSideMode.Disabled,
+				MachineSideMode.Disabled, MachineSideMode.Disabled, MachineSideMode.Disabled }));
+
+		// Set the distribution component.
+		registerComponent(new PowerDistributionComponent("PowerDistribution", energyStorage.getStorage()));
 	}
 
 	@Override
 	public void process() {
-		// Perform the generation on both the client and the server. The client
-		// generation is only for immediate visual response.
-		generateRF();
+		if (!world.isRemote) {
+			generateRF();
+		}
 	}
 
 	// Functionality
 	public void generateRF() {
-		if (getWorld().canBlockSeeSky(pos)) {
+		if (isGenerating() && energyStorage.canAcceptPower(1)) {
 			if (energyStorage.getStorage().getStoredPower() < energyStorage.getStorage().getCapacity()) {
 				energyStorage.getStorage().setCanRecieve(true);
 				energyStorage.getStorage().receivePower(energyStorage.getStorage().getMaxReceive(), false);
@@ -81,41 +88,23 @@ public class TileEntitySolarPanel extends TileEntityBase implements ITickableTil
 	}
 
 	public boolean isGenerating() {
-		if (!getWorld().canBlockSeeSky(pos)) {
-			return false;
-		} else if (energyStorage.getStorage().getStoredPower() < energyStorage.getStorage().getCapacity()) {
+		// Always returns true if in creative.
+		if (isCreative) {
 			return true;
 		}
-		return false;
-	}
 
-	// Light
-	public float lightRatio() {
-		return calculateLightRatio(getWorld(), pos);
-	}
-
-	public float calculateLightRatio(World world, BlockPos pos) {
-		int lightValue = 128;
-		float sunAngle = world.getCelestialAngleRadians(1.0F);
-		if (sunAngle < (float) Math.PI) {
-			sunAngle += (0.0F - sunAngle) * 0.2F;
-		} else {
-			sunAngle += (((float) Math.PI * 2F) - sunAngle) * 0.2F;
+		// If we can't see the sky, isnt day time, or is raining, or can't store the
+		// power, return false.
+		if (!getWorld().canBlockSeeSky(pos) || !getWorld().isDaytime() || getWorld().isRaining()) {
+			return false;
 		}
 
-		lightValue = Math.round(lightValue * MathHelper.cos(sunAngle));
-
-		lightValue = MathHelper.clamp(lightValue, 0, 15);
-		return lightValue / 15f;
+		// If all of the above passed, return true.
+		return true;
 	}
 
 	@Override
 	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
-		return null;
-	}
-
-	@Override
-	public ITextComponent getDisplayName() {
-		return new TranslationTextComponent(ModBlocks.SolarPanelBasic.getTranslationKey());
+		return new ContainerSolarPanel(windowId, inventory, this);
 	}
 }

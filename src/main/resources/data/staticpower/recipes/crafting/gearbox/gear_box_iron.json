@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"gii",
+		"iig",
+		"gii"
+	],
+	"key": {
+		"i": {
+			"tag": "forge:ingots/iron"
+		},
+		"g": {
+			"tag": "forge:gears/iron"
+		}
+	},
+	"result": {
+		"item": "staticpower:gear_box_iron"
+	}
+}

@@ -1,5 +1,8 @@
 package theking530.staticpower.integration.JEI;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 import mezz.jei.api.IModPlugin;
@@ -7,20 +10,25 @@ import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaRecipeCategoryUid;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.helpers.IJeiHelpers;
+import mezz.jei.api.ingredients.IIngredientType;
+import mezz.jei.api.ingredients.subtypes.ISubtypeManager;
 import mezz.jei.api.registration.IAdvancedRegistration;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
+import mezz.jei.api.registration.IModIngredientRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
+import mezz.jei.util.StackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.ContainerDigistoreCraftingTerminal;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.ContainerDigistorePatternEncoder;
 import theking530.staticpower.client.gui.StaticPowerContainerGui;
+import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
 import theking530.staticpower.data.crafting.wrappers.castingbasin.CastingRecipe;
@@ -44,30 +52,32 @@ import theking530.staticpower.data.crafting.wrappers.tumbler.TumblerRecipe;
 import theking530.staticpower.data.crafting.wrappers.vulcanizer.VulcanizerRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModItems;
-import theking530.staticpower.integration.JEI.bottler.BottleRecipeCategory;
-import theking530.staticpower.integration.JEI.caster.CasterRecipeCategory;
-import theking530.staticpower.integration.JEI.centrifuge.CentrifugeRecipeCategory;
-import theking530.staticpower.integration.JEI.condenser.CondenserRecipeCategory;
-import theking530.staticpower.integration.JEI.covers.CoverRecipeCategory;
-import theking530.staticpower.integration.JEI.crucible.CrucibleRecipeCategory;
-import theking530.staticpower.integration.JEI.evaporator.EvaporatorRecipeCategory;
-import theking530.staticpower.integration.JEI.fermenter.FermenterRecipeCategory;
-import theking530.staticpower.integration.JEI.fluidgenerator.FluidGeneratorRecipeCateogry;
-import theking530.staticpower.integration.JEI.fluidinfuser.FluidInfuserRecipeCategory;
-import theking530.staticpower.integration.JEI.former.FormerRecipeCategory;
-import theking530.staticpower.integration.JEI.fusionfurnace.FusionFurnaceRecipeCategory;
-import theking530.staticpower.integration.JEI.lathe.LatheRecipeCategory;
-import theking530.staticpower.integration.JEI.lumbermill.LumberMillRecipeCategory;
-import theking530.staticpower.integration.JEI.mixer.MixerRecipeCategory;
-import theking530.staticpower.integration.JEI.poweredfurnace.PoweredFurnaceRecipeCategory;
-import theking530.staticpower.integration.JEI.poweredgrinder.PoweredGrinderRecipeCategory;
-import theking530.staticpower.integration.JEI.smithing.SmithingRecipeCategory;
-import theking530.staticpower.integration.JEI.smithing.SmithingRecipeProvider;
-import theking530.staticpower.integration.JEI.solderingtable.SolderingTableRecipeCategory;
-import theking530.staticpower.integration.JEI.solidgenerator.SolidGeneratorRecipeCategory;
-import theking530.staticpower.integration.JEI.squeezer.SqueezerRecipeCategory;
-import theking530.staticpower.integration.JEI.tumbler.TumblerRecipeCategory;
-import theking530.staticpower.integration.JEI.vulcanizer.VulcanizerRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.bottler.BottleRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.caster.CasterRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.centrifuge.CentrifugeRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.condenser.CondenserRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.covers.CoverRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.crucible.CrucibleRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.evaporator.EvaporatorRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.fermenter.FermenterRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.fluidgenerator.FluidGeneratorRecipeCateogry;
+import theking530.staticpower.integration.JEI.categories.fluidinfuser.FluidInfuserRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.former.FormerRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.fusionfurnace.FusionFurnaceRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.lathe.LatheRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.lumbermill.LumberMillRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.mixer.MixerRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.poweredfurnace.PoweredFurnaceRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.poweredgrinder.PoweredGrinderRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.smithing.SmithingRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.smithing.SmithingRecipeProvider;
+import theking530.staticpower.integration.JEI.categories.solderingtable.SolderingTableRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.solidgenerator.SolidGeneratorRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.squeezer.SqueezerRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.tumbler.TumblerRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.vulcanizer.VulcanizerRecipeCategory;
+import theking530.staticpower.integration.JEI.ingredients.ProbabilityItemStackHelper;
+import theking530.staticpower.integration.JEI.ingredients.ProbabilityItemStackRenderer;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
 import theking530.staticpower.items.fluidcapsule.FluidCapsule;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.ContainerSolderingTable;
@@ -76,6 +86,7 @@ import theking530.staticpower.tileentities.powered.autosolderingtable.ContainerA
 
 @JeiPlugin
 public class PluginJEI implements IModPlugin {
+	public static final IIngredientType<ProbabilityItemStackOutput> PROBABILITY_ITEM_STACK = () -> ProbabilityItemStackOutput.class;
 	public static IJeiRuntime RUNTIME;
 	@Nullable
 	private LumberMillRecipeCategory lumberMillCategory;
@@ -126,6 +137,18 @@ public class PluginJEI implements IModPlugin {
 	@Override
 	public void registerGuiHandlers(IGuiHandlerRegistration registration) {
 		registration.addGuiContainerHandler(StaticPowerContainerGui.class, new JEIContainerHandler());
+	}
+
+	@Override
+	public void registerIngredients(IModIngredientRegistration registration) {
+		ISubtypeManager subtypeManager = registration.getSubtypeManager();
+		StackHelper stackHelper = new StackHelper(subtypeManager);
+
+		List<ProbabilityItemStackOutput> probabilityStacks = new ArrayList<ProbabilityItemStackOutput>();
+
+		ProbabilityItemStackHelper itemStackHelper = new ProbabilityItemStackHelper(stackHelper);
+		ProbabilityItemStackRenderer itemStackRenderer = new ProbabilityItemStackRenderer();
+		registration.register(PROBABILITY_ITEM_STACK, probabilityStacks, itemStackHelper, itemStackRenderer);
 	}
 
 	@Override

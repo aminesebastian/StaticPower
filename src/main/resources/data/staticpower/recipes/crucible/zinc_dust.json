@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:crucible_recipe",
+	"input": {
+		"tag": "forge:dusts/zinc"
+	},
+	"outputs": {
+		"fluid": {
+			"fluid": "staticpower:molten_zinc",
+			"volume": 144
+		}
+	}
+}

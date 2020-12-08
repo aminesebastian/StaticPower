@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:former_recipe",
+	"input": {
+		"item": "staticpower:mold_blank"
+	},
+	"mold": {
+		"tag": "staticpower:drill_bits"
+	},
+	"output": {
+		"item": "staticpower:mold_drill_bit"
+	}
+}

@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:crucible_recipe",
+	"input": {
+		"tag": "forge:dusts/bronze"
+	},
+	"outputs": {
+		"fluid": {
+			"fluid": "staticpower:molten_bronze",
+			"volume": 144
+		}
+	}
+}

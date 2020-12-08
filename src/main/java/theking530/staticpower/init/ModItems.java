@@ -22,6 +22,7 @@ import theking530.staticpower.items.BatteryPack;
 import theking530.staticpower.items.DigistoreCard;
 import theking530.staticpower.items.DigistoreMonoCard;
 import theking530.staticpower.items.DigistorePatternCard;
+import theking530.staticpower.items.GearBox;
 import theking530.staticpower.items.JuiceBottleItem;
 import theking530.staticpower.items.MilkBottleItem;
 import theking530.staticpower.items.PortableBattery;
@@ -66,6 +67,7 @@ public class ModItems {
 	public static StaticPowerItem MoldIngot;
 	public static StaticPowerItem MoldNugget;
 	public static StaticPowerItem MoldBlock;
+	public static StaticPowerItem MoldDrillBit;
 
 	public static StaticPowerItem IngotCopper;
 	public static StaticPowerItem IngotTin;
@@ -138,6 +140,25 @@ public class ModItems {
 	public static StaticPowerItem GearGold;
 	public static StaticPowerItem GearBrass;
 	public static StaticPowerItem GearBronze;
+
+	public static StaticPowerItem GearBoxCopper;
+	public static StaticPowerItem GearBoxTin;
+	public static StaticPowerItem GearBoxZinc;
+	public static StaticPowerItem GearBoxSilver;
+	public static StaticPowerItem GearBoxLead;
+	public static StaticPowerItem GearBoxTungsten;
+	public static StaticPowerItem GearBoxMagnesium;
+	public static StaticPowerItem GearBoxPlatinum;
+	public static StaticPowerItem GearBoxAluminium;
+	public static StaticPowerItem GearBoxStatic;
+	public static StaticPowerItem GearBoxEnergized;
+	public static StaticPowerItem GearBoxLumum;
+	public static StaticPowerItem GearBoxInertInfusion;
+	public static StaticPowerItem GearBoxRedstoneAlloy;
+	public static StaticPowerItem GearBoxIron;
+	public static StaticPowerItem GearBoxGold;
+	public static StaticPowerItem GearBoxBrass;
+	public static StaticPowerItem GearBoxBronze;
 
 	public static StaticPowerItem DustCopper;
 	public static StaticPowerItem DustTin;
@@ -438,6 +459,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(MoldIngot = new StaticPowerItem("mold_ingot"));
 		StaticPowerRegistry.preRegisterItem(MoldNugget = new StaticPowerItem("mold_nugget"));
 		StaticPowerRegistry.preRegisterItem(MoldBlock = new StaticPowerItem("mold_block"));
+		StaticPowerRegistry.preRegisterItem(MoldDrillBit = new StaticPowerItem("mold_drill_bit"));
 
 		// Plants
 		StaticPowerRegistry.preRegisterItem(StaticSeeds = new StaticPlantSeeds("seed_static", ModBlocks.StaticPlant));
@@ -545,7 +567,6 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(Motor = new StaticPowerItem("motor"));
 		StaticPowerRegistry.preRegisterItem(Plug = new StaticPowerItem("plug"));
 		StaticPowerRegistry.preRegisterItem(DigistoreCore = new StaticPowerItem("digistore_core"));
-		StaticPowerRegistry.preRegisterItem(GrinderComponent = new StaticPowerItem("grinder_component"));
 		StaticPowerRegistry.preRegisterItem(PortableSmeltingCore = new StaticPowerItem("portable_smelting_core"));
 		StaticPowerRegistry.preRegisterItem(Slag = new StaticPowerItem("slag"));
 
@@ -625,6 +646,26 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(GearGold = new StaticPowerItem("gear_gold"));
 		StaticPowerRegistry.preRegisterItem(GearBrass = new StaticPowerItem("gear_brass"));
 		StaticPowerRegistry.preRegisterItem(GearBronze = new StaticPowerItem("gear_bronze"));
+
+		// Gear Boxes
+		StaticPowerRegistry.preRegisterItem(GearBoxCopper = new GearBox("gear_box_copper", GearCopper));
+		StaticPowerRegistry.preRegisterItem(GearBoxTin = new GearBox("gear_box_tin", GearTin));
+		StaticPowerRegistry.preRegisterItem(GearBoxZinc = new GearBox("gear_box_zinc", GearZinc));
+		StaticPowerRegistry.preRegisterItem(GearBoxSilver = new GearBox("gear_box_silver", GearSilver));
+		StaticPowerRegistry.preRegisterItem(GearBoxLead = new GearBox("gear_box_lead", GearLead));
+		StaticPowerRegistry.preRegisterItem(GearBoxTungsten = new GearBox("gear_box_tungsten", GearTungsten));
+		StaticPowerRegistry.preRegisterItem(GearBoxMagnesium = new GearBox("gear_box_magnesium", GearMagnesium));
+		StaticPowerRegistry.preRegisterItem(GearBoxPlatinum = new GearBox("gear_box_platinum", GearPlatinum));
+		StaticPowerRegistry.preRegisterItem(GearBoxAluminium = new GearBox("gear_box_aluminium", GearAluminium));
+		StaticPowerRegistry.preRegisterItem(GearBoxStatic = new GearBox("gear_box_static", GearStatic));
+		StaticPowerRegistry.preRegisterItem(GearBoxEnergized = new GearBox("gear_box_energized", GearEnergized));
+		StaticPowerRegistry.preRegisterItem(GearBoxLumum = new GearBox("gear_box_lumum", GearLumum));
+		StaticPowerRegistry.preRegisterItem(GearBoxInertInfusion = new GearBox("gear_box_inert_infusion", GearInertInfusion));
+		StaticPowerRegistry.preRegisterItem(GearBoxRedstoneAlloy = new GearBox("gear_box_redstone_alloy", GearRedstoneAlloy));
+		StaticPowerRegistry.preRegisterItem(GearBoxIron = new GearBox("gear_box_iron", GearIron));
+		StaticPowerRegistry.preRegisterItem(GearBoxGold = new GearBox("gear_box_gold", GearGold));
+		StaticPowerRegistry.preRegisterItem(GearBoxBrass = new GearBox("gear_box_brass", GearBrass));
+		StaticPowerRegistry.preRegisterItem(GearBoxBronze = new GearBox("gear_box_bronze", GearBronze));
 
 		// Dusts
 		StaticPowerRegistry.preRegisterItem(DustWood = new StaticPowerBurnableItem("dust_wood", 250));

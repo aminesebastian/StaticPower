@@ -19,7 +19,7 @@
 			"item": "staticpower:plug"
 		},
 		"c": {
-			"item": "staticpower:grinder_component"
+			"item": "staticpower:gear_box_energized"
 		}
 	},
 	"result": {

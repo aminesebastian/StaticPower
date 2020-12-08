@@ -2,12 +2,16 @@ package theking530.staticpower.tileentities.powered.solarpanels;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
 import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
 import theking530.staticpower.data.StaticPowerTiers;
 
@@ -21,6 +25,11 @@ public class BlockSolarPanel extends StaticPowerTileEntityBlock {
 	}
 
 	@Override
+	public HasGuiType hasGuiScreen(TileEntity tileEntity, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+		return HasGuiType.ALWAYS;
+	}
+
+	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return SHAPE;
 	}
@@ -29,6 +38,8 @@ public class BlockSolarPanel extends StaticPowerTileEntityBlock {
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
 		if (tierType == StaticPowerTiers.BASIC) {
 			return TileEntitySolarPanel.TYPE_BASIC.create();
+		} else if (tierType == StaticPowerTiers.ADVANCED) {
+			return TileEntitySolarPanel.TYPE_ADVANCED.create();
 		} else if (tierType == StaticPowerTiers.STATIC) {
 			return TileEntitySolarPanel.TYPE_STATIC.create();
 		} else if (tierType == StaticPowerTiers.ENERGIZED) {

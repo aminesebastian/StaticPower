@@ -26,11 +26,18 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	private final BiConsumer<Direction, MachineSideMode> callback;
 	private final BiPredicate<Direction, MachineSideMode> sideModeFilter;
 
-	public SideConfigurationComponent(String name, BiConsumer<Direction, MachineSideMode> onConfigurationChangedCallback, BiPredicate<Direction, MachineSideMode> sideModeFilter) {
-		this(name, onConfigurationChangedCallback, sideModeFilter, new MachineSideMode[] { MachineSideMode.Input, MachineSideMode.Input, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output });
+	public SideConfigurationComponent(String name, MachineSideMode[] defaultConfiguration) {
+		this(name, (dir, side) -> {
+		}, (dir, side) -> true, defaultConfiguration);
 	}
 
-	public SideConfigurationComponent(String name, BiConsumer<Direction, MachineSideMode> onConfigurationChangedCallback, BiPredicate<Direction, MachineSideMode> sideModeFilter, MachineSideMode[] defaultConfiguration) {
+	public SideConfigurationComponent(String name, BiConsumer<Direction, MachineSideMode> onConfigurationChangedCallback, BiPredicate<Direction, MachineSideMode> sideModeFilter) {
+		this(name, onConfigurationChangedCallback, sideModeFilter,
+				new MachineSideMode[] { MachineSideMode.Input, MachineSideMode.Input, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output });
+	}
+
+	public SideConfigurationComponent(String name, BiConsumer<Direction, MachineSideMode> onConfigurationChangedCallback, BiPredicate<Direction, MachineSideMode> sideModeFilter,
+			MachineSideMode[] defaultConfiguration) {
 		super(name);
 		this.callback = onConfigurationChangedCallback;
 		this.sideModeFilter = sideModeFilter;

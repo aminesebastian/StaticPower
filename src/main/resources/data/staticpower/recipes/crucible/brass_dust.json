@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:crucible_recipe",
+	"input": {
+		"tag": "forge:dusts/brass"
+	},
+	"outputs": {
+		"fluid": {
+			"fluid": "staticpower:molten_brass",
+			"volume": 144
+		}
+	}
+}
