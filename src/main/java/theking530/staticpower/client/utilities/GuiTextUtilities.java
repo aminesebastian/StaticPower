@@ -29,7 +29,7 @@ public class GuiTextUtilities {
 	public static final TranslationTextComponent HEAT_UNIT_TRANSLATION = new TranslationTextComponent("gui.staticpower.heat_unit");
 	/** Translation text component for Heat Per Tick (H/t). */
 	public static final TranslationTextComponent HEAT_RATE_TRANSLATION = new TranslationTextComponent("gui.staticpower.heat_unit_per_tick");
-	/** Translation text component for Conductivity (Ïƒ). */
+	/** Translation text component for Conductivity. */
 	public static final TranslationTextComponent HEAT_CONDUCTIVITY_TRANSLATION = new TranslationTextComponent("gui.staticpower.heat_conductivity");
 
 	/** Single instance of number formatter with two decimal places.. */

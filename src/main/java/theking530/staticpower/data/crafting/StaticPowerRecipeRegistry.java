@@ -179,6 +179,11 @@ public class StaticPowerRecipeRegistry {
 			// Create an instance to use.
 			ItemStack instance = new ItemStack(item);
 
+			// Skip empty instances.
+			if (instance.isEmpty()) {
+				continue;
+			}
+
 			// If this is a burnable, cache it.
 			if (ForgeHooks.getBurnTime(instance) > 0) {
 				ResourceLocation recipe = new ResourceLocation(item.getRegistryName().getNamespace(), item.getRegistryName().getPath() + "_solid_fuel_dynamic");
@@ -188,6 +193,11 @@ public class StaticPowerRecipeRegistry {
 
 			// Capture bottler recipes.
 			for (Fluid fluid : GameRegistry.findRegistry(Fluid.class)) {
+				// If it has no bucket, skip it.
+				if (fluid.getFilledBucket() == null) {
+					continue;
+				}
+
 				// Get the fluid container handler. If this itemstack doesn't have a fluid
 				// container, skip it.
 				IFluidHandler containerHandler = FluidUtil.getFluidHandler(instance).orElse(null);
@@ -202,14 +212,14 @@ public class StaticPowerRecipeRegistry {
 				FluidTank simulatedTank = new FluidTank(FluidAttributes.BUCKET_VOLUME);
 				simulatedTank.fill(new FluidStack(fluid, FluidAttributes.BUCKET_VOLUME), FluidAction.EXECUTE);
 				FluidActionResult result = FluidUtil.tryFillContainer(container, simulatedTank, FluidAttributes.BUCKET_VOLUME, null, true);
+				ItemStack emptyContainer = container.copy();
 
-				if (!result.isSuccess()) {
+				if (!result.isSuccess() || result.getResult().isEmpty() || emptyContainer.isEmpty()) {
 					continue;
 				}
 
 				// Create the recipe.
 				FluidStack fluidStack = new FluidStack(fluid, FluidAttributes.BUCKET_VOLUME);
-				ItemStack emptyContainer = container.copy();
 				ResourceLocation recipe = new ResourceLocation(fluid.getRegistryName().getNamespace(), fluid.getRegistryName().getPath() + "_bottler_dynamic");
 				BottleRecipe bucketRecipe = new BottleRecipe(recipe, result.getResult(), emptyContainer, fluidStack);
 

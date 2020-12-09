@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"g  ",
+		" ig",
+		"g  "
+	],
+	"key": {
+		"i": {
+			"item": "staticpower:rod_redstone_alloy"
+		},
+		"g": {
+			"item": "staticpower:gear_redstone_alloy"
+		}
+	},
+	"result": {
+		"item": "staticpower:gear_box_redstone_alloy"
+	}
+}

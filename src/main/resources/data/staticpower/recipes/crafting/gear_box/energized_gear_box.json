@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"g  ",
+		" ig",
+		"g  "
+	],
+	"key": {
+		"i": {
+			"item": "staticpower:rod_energized"
+		},
+		"g": {
+			"item": "staticpower:gear_energized"
+		}
+	},
+	"result": {
+		"item": "staticpower:gear_box_energized"
+	}
+}

@@ -1,0 +1,13 @@
+{
+	"type": "staticpower:former_recipe",
+	"input": {
+		"tag": "forge:ingots/tin"
+	},
+	"mold": {
+		"item": "staticpower:mold_rod"
+	},
+	"output": {
+		"item": "staticpower:rod_tin",
+		"count": 2
+	}
+}

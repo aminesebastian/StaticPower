@@ -130,7 +130,10 @@ public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRe
 		// Set the output items.
 		List<ProbabilityItemStackOutput> outputs = new ArrayList<ProbabilityItemStackOutput>();
 		outputs.add(recipe.getPrimaryOutput());
-		outputs.add(recipe.getSecondaryOutput());
+		if (!recipe.getSecondaryOutput().isEmpty()) {
+			outputs.add(recipe.getSecondaryOutput());
+		}
+
 		ingredients.setOutputs(PluginJEI.PROBABILITY_ITEM_STACK, outputs);
 
 		// Set the output fluids.
@@ -148,7 +151,9 @@ public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRe
 		// Set the outputs.
 		IGuiIngredientGroup<ProbabilityItemStackOutput> probabilityStacks = recipeLayout.getIngredientsGroup(PluginJEI.PROBABILITY_ITEM_STACK);
 		probabilityStacks.init(PRIMARY_OUTPUT_SLOT, false, 91, 19);
-		probabilityStacks.init(SECONDARY_OUTPUT_SLOT, false, 121, 19);
+		if (!recipe.getSecondaryOutput().isEmpty()) {
+			probabilityStacks.init(SECONDARY_OUTPUT_SLOT, false, 121, 19);
+		}
 		probabilityStacks.set(ingredients);
 
 		// Add the fluid.

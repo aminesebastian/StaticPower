@@ -133,7 +133,7 @@ public class FormerRecipeCategory extends BaseJEIRecipeCategory<FormerRecipe> {
 
 		// Set the outputs.
 		IGuiIngredientGroup<ProbabilityItemStackOutput> probabilityStacks = recipeLayout.getIngredientsGroup(PluginJEI.PROBABILITY_ITEM_STACK);
-		probabilityStacks.init(OUTPUT_SLOT, false, 111, 18);
+		probabilityStacks.init(OUTPUT_SLOT, false, 112, 19);
 		probabilityStacks.set(ingredients);
 
 		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime() * recipe.getPowerCost(), true);

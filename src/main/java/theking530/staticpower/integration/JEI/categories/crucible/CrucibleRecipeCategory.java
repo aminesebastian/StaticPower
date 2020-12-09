@@ -12,6 +12,7 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
+import mezz.jei.api.gui.ingredient.IGuiIngredientGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
@@ -28,9 +29,11 @@ import theking530.staticcore.gui.widgets.valuebars.GuiHeatBarUtilities;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
+import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.wrappers.crucible.CrucibleRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
+import theking530.staticpower.integration.JEI.PluginJEI;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 
 public class CrucibleRecipeCategory extends BaseJEIRecipeCategory<CrucibleRecipe> {
@@ -120,17 +123,13 @@ public class CrucibleRecipeCategory extends BaseJEIRecipeCategory<CrucibleRecipe
 		input.add(recipe.getInput().getIngredient());
 		ingredients.setInputIngredients(input);
 
-		List<ItemStack> outputs = new ArrayList<ItemStack>();
-		// Add the output item if one exists.
-		if (recipe.hasItemOutput()) {
-			outputs.add(recipe.getOutput().getItem());
-		}
-
 		// Add the output fluid if one exists.
 		ingredients.setOutput(VanillaTypes.FLUID, recipe.getOutputFluid());
 
 		// Set the output item stacks.
-		ingredients.setOutputs(VanillaTypes.ITEM, outputs);
+		if(!recipe.getOutput().isEmpty()) {
+			ingredients.setOutput(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getOutput());
+		}
 	}
 
 	@Override
@@ -138,14 +137,15 @@ public class CrucibleRecipeCategory extends BaseJEIRecipeCategory<CrucibleRecipe
 		// Add the input.
 		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
 		guiItemStacks.init(INTPUT_SLOT, true, 49, 11);
-
+		guiItemStacks.set(ingredients);
+		
 		// Add the output item if it exists.
 		if (recipe.hasItemOutput()) {
-			guiItemStacks.init(OUTPUT_SLOT, false, 76, 33);
+			// Set the outputs.
+			IGuiIngredientGroup<ProbabilityItemStackOutput> probabilityStacks = recipeLayout.getIngredientsGroup(PluginJEI.PROBABILITY_ITEM_STACK);
+			probabilityStacks.init(OUTPUT_SLOT, false, 76, 33);
+			probabilityStacks.set(ingredients);
 		}
-
-		// Set the items.
-		guiItemStacks.set(ingredients);
 
 		// Add the fluid.
 		IGuiFluidStackGroup fluids = recipeLayout.getFluidStacks();

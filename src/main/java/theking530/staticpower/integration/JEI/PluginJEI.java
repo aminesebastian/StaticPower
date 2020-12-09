@@ -11,7 +11,6 @@ import mezz.jei.api.constants.VanillaRecipeCategoryUid;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.helpers.IJeiHelpers;
 import mezz.jei.api.ingredients.IIngredientType;
-import mezz.jei.api.ingredients.subtypes.ISubtypeManager;
 import mezz.jei.api.registration.IAdvancedRegistration;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IModIngredientRegistration;
@@ -21,7 +20,6 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
-import mezz.jei.util.StackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import theking530.staticpower.StaticPower;
@@ -141,12 +139,9 @@ public class PluginJEI implements IModPlugin {
 
 	@Override
 	public void registerIngredients(IModIngredientRegistration registration) {
-		ISubtypeManager subtypeManager = registration.getSubtypeManager();
-		StackHelper stackHelper = new StackHelper(subtypeManager);
-
 		List<ProbabilityItemStackOutput> probabilityStacks = new ArrayList<ProbabilityItemStackOutput>();
 
-		ProbabilityItemStackHelper itemStackHelper = new ProbabilityItemStackHelper(stackHelper);
+		ProbabilityItemStackHelper itemStackHelper = new ProbabilityItemStackHelper(registration);
 		ProbabilityItemStackRenderer itemStackRenderer = new ProbabilityItemStackRenderer();
 		registration.register(PROBABILITY_ITEM_STACK, probabilityStacks, itemStackHelper, itemStackRenderer);
 	}

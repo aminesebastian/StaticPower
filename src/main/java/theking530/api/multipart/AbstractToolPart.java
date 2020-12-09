@@ -14,8 +14,8 @@ import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.attributes.defenitions.AbstractAttributeDefenition;
 import theking530.api.attributes.defenitions.AbstractHardenedDefenition;
 import theking530.api.attributes.rendering.AttributableItemRenderLayers;
+import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
-import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.items.StaticPowerItem;
 

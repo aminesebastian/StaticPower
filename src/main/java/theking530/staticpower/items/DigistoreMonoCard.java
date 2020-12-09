@@ -15,8 +15,8 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import theking530.api.digistore.DigistoreInventoryCapabilityProvider;
 import theking530.api.digistore.IDigistoreInventory;
+import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticpower.StaticPowerConfig;
-import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
 import theking530.staticpower.client.rendering.items.DigistoreMonoCardItemModel;
 
 public class DigistoreMonoCard extends DigistoreCard implements ICustomModelSupplier {

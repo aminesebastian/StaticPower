@@ -34,8 +34,7 @@ import net.minecraftforge.common.model.TransformationHelper;
 public abstract class AbstractBakedModel implements IBakedModel {
 	protected static final float UNIT = 1.0f / 16.0f;
 	protected static final Logger LOGGER = LogManager.getLogger(AbstractBakedModel.class);
-	protected static final Map<Direction, Quaternion> FACING_ROTATIONS = new EnumMap<Direction, Quaternion>(
-			Direction.class);
+	protected static final Map<Direction, Quaternion> FACING_ROTATIONS = new EnumMap<Direction, Quaternion>(Direction.class);
 	protected static final Map<Direction, TransformationMatrix> SIDE_TRANSFORMS = new EnumMap<>(Direction.class);
 
 	protected final HashSet<String> LoggedErrors = new HashSet<String>();
@@ -64,21 +63,18 @@ public abstract class AbstractBakedModel implements IBakedModel {
 
 	@Override
 	@Nonnull
-	public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand,
-			@Nonnull IModelData extraData) {
+	public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
 		return getBakedQuadsFromIModelData(state, side, rand, extraData);
 	}
 
-	protected abstract List<BakedQuad> getBakedQuadsFromIModelData(@Nullable BlockState state, Direction side,
-			@Nonnull Random rand, @Nonnull IModelData data);
+	protected abstract List<BakedQuad> getBakedQuadsFromIModelData(@Nullable BlockState state, Direction side, @Nonnull Random rand, @Nonnull IModelData data);
 
 	@Override
 	public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand) {
-		throw new AssertionError("IBakedModel::getQuads should never be called, only IForgeBakedModel::getQuads");
+		return Collections.emptyList();
 	}
 
-	protected List<BakedQuad> rotateQuadsToFaceDirection(IBakedModel model, Direction desiredRotation,
-			Direction drawingSide, BlockState state, Random rand) {
+	protected List<BakedQuad> rotateQuadsToFaceDirection(IBakedModel model, Direction desiredRotation, Direction drawingSide, BlockState state, Random rand) {
 		TransformationMatrix transformation = SIDE_TRANSFORMS.get(desiredRotation);
 		ImmutableList.Builder<BakedQuad> quads = ImmutableList.builder();
 
@@ -97,32 +93,26 @@ public abstract class AbstractBakedModel implements IBakedModel {
 					quads.add(builder.build());
 				}
 			} catch (Exception e) {
-				LOGGER.error(String.format(
-						"An error occured when attempting to rotate a model to face the desired rotation. Model: %1$s.",
-						model), e);
+				LOGGER.error(String.format("An error occured when attempting to rotate a model to face the desired rotation. Model: %1$s.", model), e);
 			}
 		}
 
 		return quads.build();
 	}
 
-	protected List<BakedQuad> transformQuads(IBakedModel model, Vector3f translation, Vector3f scale,
-			Quaternion rotation, Direction drawingSide, BlockState state, Random rand) {
+	protected List<BakedQuad> transformQuads(IBakedModel model, Vector3f translation, Vector3f scale, Quaternion rotation, Direction drawingSide, BlockState state, Random rand) {
 		// Build the output.
 		if (model != null) {
-			return transformQuads(model.getQuads(state, drawingSide, rand, EmptyModelData.INSTANCE), translation, scale,
-					rotation);
+			return transformQuads(model.getQuads(state, drawingSide, rand, EmptyModelData.INSTANCE), translation, scale, rotation);
 		}
 
 		return Collections.emptyList();
 	}
 
-	protected List<BakedQuad> transformQuads(List<BakedQuad> inQuads, Vector3f translation, Vector3f scale,
-			Quaternion rotation) {
+	protected List<BakedQuad> transformQuads(List<BakedQuad> inQuads, Vector3f translation, Vector3f scale, Quaternion rotation) {
 		ImmutableList.Builder<BakedQuad> quads = ImmutableList.builder();
 
-		TransformationMatrix transformation = new TransformationMatrix(translation, rotation, scale, null)
-				.blockCenterToCorner();
+		TransformationMatrix transformation = new TransformationMatrix(translation, rotation, scale, null).blockCenterToCorner();
 
 		// Build the output.
 		if (inQuads != null && inQuads.size() > 0) {

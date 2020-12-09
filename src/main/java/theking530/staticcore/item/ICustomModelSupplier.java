@@ -1,4 +1,4 @@
-package theking530.staticpower.blocks.interfaces;
+package theking530.staticcore.item;
 
 import javax.annotation.Nullable;
 

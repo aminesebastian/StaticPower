@@ -68,6 +68,7 @@ public class ModItems {
 	public static StaticPowerItem MoldNugget;
 	public static StaticPowerItem MoldBlock;
 	public static StaticPowerItem MoldDrillBit;
+	public static StaticPowerItem MoldRod;
 
 	public static StaticPowerItem IngotCopper;
 	public static StaticPowerItem IngotTin;
@@ -208,6 +209,32 @@ public class ModItems {
 	public static StaticPowerItem ChunksLapis;
 	public static StaticPowerItem ChunksRedstone;
 	public static StaticPowerItem ChunksQuartz;
+
+	public static StaticPowerItem RodCopper;
+	public static StaticPowerItem RodTin;
+	public static StaticPowerItem RodZinc;
+	public static StaticPowerItem RodSilver;
+	public static StaticPowerItem RodLead;
+	public static StaticPowerItem RodTungsten;
+	public static StaticPowerItem RodMagnesium;
+	public static StaticPowerItem RodPlatinum;
+	public static StaticPowerItem RodAluminium;
+	public static StaticPowerItem RodStatic;
+	public static StaticPowerItem RodEnergized;
+	public static StaticPowerItem RodLumum;
+	public static StaticPowerItem RodInertInfusion;
+	public static StaticPowerItem RodRedstoneAlloy;
+	public static StaticPowerItem RodBrass;
+	public static StaticPowerItem RodBronze;
+	public static StaticPowerItem RodCoal;
+	public static StaticPowerItem RodGold;
+	public static StaticPowerItem RodIron;
+	public static StaticPowerItem RodRuby;
+	public static StaticPowerItem RodSapphire;
+	public static StaticPowerItem RodEmerald;
+	public static StaticPowerItem RodDiamond;
+	public static StaticPowerItem RodQuartz;
+	public static StaticPowerItem RodLapis;
 
 	public static StaticPowerItem GemRuby;
 	public static StaticPowerItem GemSapphire;
@@ -460,6 +487,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(MoldNugget = new StaticPowerItem("mold_nugget"));
 		StaticPowerRegistry.preRegisterItem(MoldBlock = new StaticPowerItem("mold_block"));
 		StaticPowerRegistry.preRegisterItem(MoldDrillBit = new StaticPowerItem("mold_drill_bit"));
+		StaticPowerRegistry.preRegisterItem(MoldRod = new StaticPowerItem("mold_rod"));
 
 		// Plants
 		StaticPowerRegistry.preRegisterItem(StaticSeeds = new StaticPlantSeeds("seed_static", ModBlocks.StaticPlant));
@@ -696,6 +724,33 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(DustCharcoal = new StaticPowerItem("dust_charcoal"));
 		StaticPowerRegistry.preRegisterItem(DustBrass = new StaticPowerItem("dust_brass"));
 		StaticPowerRegistry.preRegisterItem(DustBronze = new StaticPowerItem("dust_bronze"));
+
+		// Rods
+		StaticPowerRegistry.preRegisterItem(RodCopper = new StaticPowerItem("rod_copper"));
+		StaticPowerRegistry.preRegisterItem(RodTin = new StaticPowerItem("rod_tin"));
+		StaticPowerRegistry.preRegisterItem(RodZinc = new StaticPowerItem("rod_zinc"));
+		StaticPowerRegistry.preRegisterItem(RodSilver = new StaticPowerItem("rod_silver"));
+		StaticPowerRegistry.preRegisterItem(RodLead = new StaticPowerItem("rod_lead"));
+		StaticPowerRegistry.preRegisterItem(RodTungsten = new StaticPowerItem("rod_tungsten"));
+		StaticPowerRegistry.preRegisterItem(RodMagnesium = new StaticPowerItem("rod_magnesium"));
+		StaticPowerRegistry.preRegisterItem(RodPlatinum = new StaticPowerItem("rod_platinum"));
+		StaticPowerRegistry.preRegisterItem(RodAluminium = new StaticPowerItem("rod_aluminium"));
+		StaticPowerRegistry.preRegisterItem(RodStatic = new StaticPowerItem("rod_static"));
+		StaticPowerRegistry.preRegisterItem(RodEnergized = new StaticPowerItem("rod_energized"));
+		StaticPowerRegistry.preRegisterItem(RodLumum = new StaticPowerItem("rod_lumum"));
+		StaticPowerRegistry.preRegisterItem(RodInertInfusion = new StaticPowerItem("rod_inert_infusion"));
+		StaticPowerRegistry.preRegisterItem(RodRedstoneAlloy = new StaticPowerItem("rod_redstone_alloy"));
+		StaticPowerRegistry.preRegisterItem(RodCoal = new StaticPowerItem("rod_coal"));
+		StaticPowerRegistry.preRegisterItem(RodGold = new StaticPowerItem("rod_gold"));
+		StaticPowerRegistry.preRegisterItem(RodIron = new StaticPowerItem("rod_iron"));
+		StaticPowerRegistry.preRegisterItem(RodRuby = new StaticPowerItem("rod_ruby"));
+		StaticPowerRegistry.preRegisterItem(RodSapphire = new StaticPowerItem("rod_sapphire"));
+		StaticPowerRegistry.preRegisterItem(RodEmerald = new StaticPowerItem("rod_emerald"));
+		StaticPowerRegistry.preRegisterItem(RodDiamond = new StaticPowerItem("rod_diamond"));
+		StaticPowerRegistry.preRegisterItem(RodQuartz = new StaticPowerItem("rod_quartz"));
+		StaticPowerRegistry.preRegisterItem(RodBrass = new StaticPowerItem("rod_brass"));
+		StaticPowerRegistry.preRegisterItem(RodBronze = new StaticPowerItem("rod_bronze"));
+		StaticPowerRegistry.preRegisterItem(RodLapis = new StaticPowerItem("rod_lapis"));
 
 		// Chunks
 		StaticPowerRegistry.preRegisterItem(ChunksCopper = new StaticPowerItem("chunks_copper"));

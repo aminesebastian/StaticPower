@@ -2,16 +2,16 @@ package theking530.staticpower.integration.JEI.ingredients;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 import javax.annotation.Nullable;
 
 import mezz.jei.api.ingredients.IIngredientHelper;
+import mezz.jei.api.ingredients.subtypes.ISubtypeManager;
 import mezz.jei.api.ingredients.subtypes.UidContext;
 import mezz.jei.api.recipe.IFocus;
 import mezz.jei.api.recipe.IFocusFactory;
-import mezz.jei.color.ColorGetter;
-import mezz.jei.util.ErrorUtil;
-import mezz.jei.util.StackHelper;
+import mezz.jei.api.registration.IModIngredientRegistration;
 import net.minecraft.block.Block;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.BlockItem;
@@ -25,12 +25,13 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.integration.JEI.JEIErrorUtilSnippet;
 
 public class ProbabilityItemStackHelper implements IIngredientHelper<ProbabilityItemStackOutput> {
-	private final StackHelper stackHelper;
+	private final ISubtypeManager subtypeManager;
 
-	public ProbabilityItemStackHelper(StackHelper stackHelper) {
-		this.stackHelper = stackHelper;
+	public ProbabilityItemStackHelper(IModIngredientRegistration registration) {
+		subtypeManager = registration.getSubtypeManager();
 	}
 
 	@Override
@@ -63,7 +64,7 @@ public class ProbabilityItemStackHelper implements IIngredientHelper<Probability
 	@Override
 	public ProbabilityItemStackOutput getMatch(Iterable<ProbabilityItemStackOutput> ingredients, ProbabilityItemStackOutput toMatch, UidContext context) {
 		for (ProbabilityItemStackOutput stack : ingredients) {
-			if (stackHelper.isEquivalent(toMatch.getItem(), stack.getItem(), context)) {
+			if (isEquivalent(toMatch.getItem(), stack.getItem(), context)) {
 				return stack;
 			}
 		}
@@ -74,7 +75,7 @@ public class ProbabilityItemStackHelper implements IIngredientHelper<Probability
 	public String getDisplayName(ProbabilityItemStackOutput ingredient) {
 		ITextComponent displayNameTextComponent = ingredient.getItem().getDisplayName();
 		String displayName = displayNameTextComponent.getString();
-		ErrorUtil.checkNotNull(displayName, "itemStack.getDisplayName()");
+		JEIErrorUtilSnippet.checkNotNull(displayName, "itemStack.getDisplayName()");
 		return displayName;
 	}
 
@@ -85,19 +86,19 @@ public class ProbabilityItemStackHelper implements IIngredientHelper<Probability
 
 	@Override
 	public String getUniqueId(ProbabilityItemStackOutput ingredient, UidContext context) {
-		ErrorUtil.checkNotEmpty(ingredient.getItem());
-		return stackHelper.getUniqueIdentifierForStack(ingredient.getItem(), context);
+		JEIErrorUtilSnippet.checkNotEmpty(ingredient.getItem());
+		return getUniqueIdentifierForStack(ingredient.getItem(), context);
 	}
 
 	@Override
 	public String getWildcardId(ProbabilityItemStackOutput ingredient) {
-		ErrorUtil.checkNotEmpty(ingredient.getItem());
-		return stackHelper.getRegistryNameForStack(ingredient.getItem());
+		JEIErrorUtilSnippet.checkNotEmpty(ingredient.getItem());
+		return getRegistryNameForStack(ingredient.getItem());
 	}
 
 	@Override
 	public String getModId(ProbabilityItemStackOutput ingredient) {
-		ErrorUtil.checkNotEmpty(ingredient.getItem());
+		JEIErrorUtilSnippet.checkNotEmpty(ingredient.getItem());
 
 		Item item = ingredient.getItem().getItem();
 		ResourceLocation itemName = item.getRegistryName();
@@ -111,7 +112,7 @@ public class ProbabilityItemStackHelper implements IIngredientHelper<Probability
 
 	@Override
 	public String getDisplayModId(ProbabilityItemStackOutput ingredient) {
-		ErrorUtil.checkNotEmpty(ingredient.getItem());
+		JEIErrorUtilSnippet.checkNotEmpty(ingredient.getItem());
 
 		Item item = ingredient.getItem().getItem();
 		String modId = item.getCreatorModId(ingredient.getItem());
@@ -124,12 +125,12 @@ public class ProbabilityItemStackHelper implements IIngredientHelper<Probability
 
 	@Override
 	public Iterable<Integer> getColors(ProbabilityItemStackOutput ingredient) {
-		return ColorGetter.getColors(ingredient.getItem(), 2);
+		return Collections.emptyList();
 	}
 
 	@Override
 	public String getResourceId(ProbabilityItemStackOutput ingredient) {
-		ErrorUtil.checkNotEmpty(ingredient.getItem());
+		JEIErrorUtilSnippet.checkNotEmpty(ingredient.getItem());
 
 		Item item = ingredient.getItem().getItem();
 		ResourceLocation itemName = item.getRegistryName();
@@ -189,6 +190,51 @@ public class ProbabilityItemStackHelper implements IIngredientHelper<Probability
 
 	@Override
 	public String getErrorInfo(@Nullable ProbabilityItemStackOutput ingredient) {
-		return ErrorUtil.getItemStackInfo(ingredient.getItem());
+		return JEIErrorUtilSnippet.getItemStackInfo(ingredient.getItem());
+	}
+
+	public boolean isEquivalent(@Nullable ItemStack lhs, @Nullable ItemStack rhs, UidContext context) {
+		JEIErrorUtilSnippet.checkNotNull(context, "context");
+		if (lhs == rhs) {
+			return true;
+		}
+
+		if (lhs == null || rhs == null) {
+			return false;
+		}
+
+		if (lhs.getItem() != rhs.getItem()) {
+			return false;
+		}
+
+		String keyLhs = getUniqueIdentifierForStack(lhs, context);
+		String keyRhs = getUniqueIdentifierForStack(rhs, context);
+		return keyLhs.equals(keyRhs);
+	}
+
+	public String getUniqueIdentifierForStack(ItemStack stack, UidContext context) {
+		String result = getRegistryNameForStack(stack);
+		String subtypeInfo = subtypeManager.getSubtypeInfo(stack, context);
+		if (subtypeInfo != null && !subtypeInfo.isEmpty()) {
+			result = result + ':' + subtypeInfo;
+		}
+		return result;
+	}
+
+	public String getRegistryNameForStack(ItemStack stack) {
+		JEIErrorUtilSnippet.checkNotEmpty(stack, "stack");
+
+		Item item = stack.getItem();
+		ResourceLocation registryName = item.getRegistryName();
+		if (registryName == null) {
+			String stackInfo = JEIErrorUtilSnippet.getItemStackInfo(stack);
+			throw new IllegalStateException("Item has no registry name: " + stackInfo);
+		}
+
+		return registryName.toString();
+	}
+
+	public enum UidMode {
+		NORMAL, WILDCARD
 	}
 }

@@ -1,0 +1,13 @@
+{
+	"type": "staticpower:former_recipe",
+	"input": {
+		"item": "staticpower:ingot_redstone_alloy"
+	},
+	"mold": {
+		"item": "staticpower:mold_rod"
+	},
+	"output": {
+		"item": "staticpower:rod_redstone_alloy",
+		"count": 2
+	}
+}

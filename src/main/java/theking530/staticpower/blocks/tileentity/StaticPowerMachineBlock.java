@@ -10,7 +10,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
+import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticpower.client.rendering.blocks.DefaultMachineBakedModel;
 
 public abstract class StaticPowerMachineBlock extends StaticPowerTileEntityBlock implements ICustomModelSupplier {

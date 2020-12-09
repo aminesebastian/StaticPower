@@ -121,7 +121,9 @@ public class SqueezerRecipeCategory extends BaseJEIRecipeCategory<SqueezerRecipe
 		}
 
 		// Set the output.
-		ingredients.setOutput(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getOutput());
+		if (!recipe.getOutput().isEmpty()) {
+			ingredients.setOutput(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getOutput());
+		}
 	}
 
 	@Override
@@ -133,8 +135,10 @@ public class SqueezerRecipeCategory extends BaseJEIRecipeCategory<SqueezerRecipe
 		// Add the output item if it exists.
 		if (recipe.hasItemOutput()) {
 			IGuiIngredientGroup<ProbabilityItemStackOutput> probabilityStacks = recipeLayout.getIngredientsGroup(PluginJEI.PROBABILITY_ITEM_STACK);
-			probabilityStacks.init(OUTPUT_SLOT, false, 77, 34);
-			probabilityStacks.set(ingredients);
+			if (!recipe.getOutput().isEmpty()) {
+				probabilityStacks.init(OUTPUT_SLOT, false, 77, 34);
+				probabilityStacks.set(ingredients);
+			}
 		}
 
 		// Set the items.

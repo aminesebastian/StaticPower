@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"g  ",
+		" ig",
+		"g  "
+	],
+	"key": {
+		"i": {
+			"tag": "forge:rods/zinc"
+		},
+		"g": {
+			"tag": "forge:gears/zinc"
+		}
+	},
+	"result": {
+		"item": "staticpower:gear_box_zinc"
+	}
+}

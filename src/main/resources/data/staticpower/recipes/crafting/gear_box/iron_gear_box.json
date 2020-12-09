@@ -1,13 +1,13 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
-		"gii",
-		"iig",
-		"gii"
+		"g  ",
+		" ig",
+		"g  "
 	],
 	"key": {
 		"i": {
-			"tag": "forge:ingots/iron"
+			"tag": "forge:rods/iron"
 		},
 		"g": {
 			"tag": "forge:gears/iron"

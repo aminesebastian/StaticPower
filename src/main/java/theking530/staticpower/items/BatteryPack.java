@@ -22,9 +22,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import theking530.api.power.CapabilityStaticVolt;
 import theking530.api.power.PowerEnergyInterface;
+import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
-import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
 import theking530.staticpower.client.rendering.items.BatteryPackItemModel;
 
 public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustomModelSupplier {

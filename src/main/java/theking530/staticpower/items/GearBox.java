@@ -4,7 +4,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
+import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticpower.client.rendering.items.GearBoxModel;
 
 /**

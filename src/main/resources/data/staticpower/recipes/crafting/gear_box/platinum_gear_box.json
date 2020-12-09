@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"g  ",
+		" ig",
+		"g  "
+	],
+	"key": {
+		"i": {
+			"tag": "forge:rods/platinum"
+		},
+		"g": {
+			"tag": "forge:gears/platinum"
+		}
+	},
+	"result": {
+		"item": "staticpower:gear_box_platinum"
+	}
+}

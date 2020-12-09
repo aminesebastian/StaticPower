@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"g  ",
+		" ig",
+		"g  "
+	],
+	"key": {
+		"i": {
+			"tag": "forge:rods/gold"
+		},
+		"g": {
+			"tag": "forge:gears/gold"
+		}
+	},
+	"result": {
+		"item": "staticpower:gear_box_gold"
+	}
+}

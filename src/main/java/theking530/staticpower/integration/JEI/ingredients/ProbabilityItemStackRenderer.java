@@ -9,7 +9,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import mezz.jei.api.ingredients.IIngredientRenderer;
-import mezz.jei.util.ErrorUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -23,6 +22,7 @@ import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.integration.JEI.JEIErrorUtilSnippet;
 
 public class ProbabilityItemStackRenderer implements IIngredientRenderer<ProbabilityItemStackOutput> {
 
@@ -79,7 +79,7 @@ public class ProbabilityItemStackRenderer implements IIngredientRenderer<Probabi
 
 			return tooltip;
 		} catch (RuntimeException | LinkageError e) {
-			String itemStackInfo = ErrorUtil.getItemStackInfo(ingredient.getItem());
+			String itemStackInfo = JEIErrorUtilSnippet.getItemStackInfo(ingredient.getItem());
 			StaticPower.LOGGER.error("Failed to get tooltip: {}", itemStackInfo, e);
 			List<ITextComponent> list = new ArrayList<>();
 			TranslationTextComponent crash = new TranslationTextComponent("jei.tooltip.error.crash");

@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"g  ",
+		" ig",
+		"g  "
+	],
+	"key": {
+		"i": {
+			"item": "staticpower:rod_inert_infusion"
+		},
+		"g": {
+			"item": "staticpower:gear_inert_infusion"
+		}
+	},
+	"result": {
+		"item": "staticpower:gear_box_inert_infusion"
+	}
+}

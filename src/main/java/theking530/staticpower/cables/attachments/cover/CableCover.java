@@ -20,7 +20,7 @@ import net.minecraft.world.EmptyBlockReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import theking530.staticpower.blocks.interfaces.ICustomModelSupplier;
+import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;

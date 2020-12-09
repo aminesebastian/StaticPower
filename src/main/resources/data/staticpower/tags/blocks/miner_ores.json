@@ -1,6 +1,16 @@
 {
 	"replace": false,
 	"values": [
-		"#forge:ores"
+		"#forge:ores",
+		"#forge:sand",
+		"#forge:sandstone",
+		"#forge:gravel",
+		"#forge:stone",
+		"#forge:netherrack",
+		"minecraft:grass_block",
+		"minecraft:dirt",
+		"minecraft:coarse_dirt",
+		"minecraft:basalt",
+		"minecraft:blackstone"
 	]
 }

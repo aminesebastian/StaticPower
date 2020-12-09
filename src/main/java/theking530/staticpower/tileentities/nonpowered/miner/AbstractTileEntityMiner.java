@@ -78,7 +78,8 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 
 		registerComponent(miningSoundComponent = new LoopingSoundComponent("MiningSoundComponent", 20));
 
-		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 10000.0f, 1.0f).setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.COOL));
+		registerComponent(
+				heatStorage = new HeatStorageComponent("HeatStorageComponent", 10000.0f, 1.0f).setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.COOL));
 		registerComponent(new OutputServoComponent("OutputServo", 20, outputInventory));
 	}
 
@@ -186,18 +187,11 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 			}
 
 			// Play the sound.
-			world.playSound(null, getPos(), minedBlockState.getSoundType().getBreakSound(), SoundCategory.BLOCKS, 0.2f, 0.25f);
+			world.playSound(null, getPos(), minedBlockState.getSoundType().getBreakSound(), SoundCategory.BLOCKS, 0.2f, 0.75f);
 
 			// Damage the drill bit.
 			if (getDrillBit().attemptDamageItem(1, world.rand, null)) {
-				drillBitInventory.getStackInSlot(0).shrink(1);
 				world.playSound(null, getPos(), SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0f, 1.0f);
-			}
-
-			// If we hit dirt, make it coarse dirt.
-			if (minedBlockState.getBlock() == Blocks.DIRT || minedBlockState.getBlock() == Blocks.GRASS_BLOCK) {
-				world.setBlockState(minedPos, Blocks.COARSE_DIRT.getDefaultState(), 1 | 2);
-				return ProcessingCheckState.ok();
 			}
 
 			// Check if this is a mineable block. If not, just return true.
@@ -212,7 +206,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 			}
 
 			// Set the mined block to cobblestone.
-			world.setBlockState(minedPos, Blocks.COBBLESTONE.getDefaultState(), 1 | 2);
+			world.setBlockState(minedPos, Blocks.AIR.getDefaultState(), 1 | 2);
 
 			// Raise the on mined event.
 			onBlockMined(minedPos, minedBlockState);
