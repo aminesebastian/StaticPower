@@ -3,6 +3,8 @@ package theking530.staticpower;
 import java.util.HashSet;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.fluid.FlowingFluid;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.ContainerType;
@@ -13,6 +15,8 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.event.RegistryEvent;
 import theking530.staticcore.initialization.StaticCoreRegistry;
 import theking530.staticpower.blocks.interfaces.IItemBlockProvider;
+import theking530.staticpower.entities.EntitySmeep;
+import theking530.staticpower.init.ModEntities;
 
 /**
  * Main registry class responsible for preparing entities for registration and
@@ -27,6 +31,7 @@ public class StaticPowerRegistry {
 	public static final HashSet<Block> BLOCKS = new HashSet<>();
 	public static final HashSet<FlowingFluid> FLUIDS = new HashSet<FlowingFluid>();
 	public static final HashSet<IRecipeSerializer> RECIPE_SERIALIZERS = new HashSet<IRecipeSerializer>();
+	public static final HashSet<EntityType> ENTITES = new HashSet<EntityType>();
 
 	/**
 	 * Pre-registers an item for registration through the registry event.
@@ -37,6 +42,17 @@ public class StaticPowerRegistry {
 	public static Item preRegisterItem(Item item) {
 		ITEMS.add(item);
 		return item;
+	}
+
+	/**
+	 * Pre-registers an entity for registration through the registry event.
+	 * 
+	 * @param entity The entity to pre-register.
+	 * @return The entity that was passed.
+	 */
+	public static EntityType preRegisterEntity(EntityType entity) {
+		ENTITES.add(entity);
+		return entity;
 	}
 
 	/**
@@ -95,6 +111,14 @@ public class StaticPowerRegistry {
 
 	public static void onRegisterContainerTypes(RegistryEvent.Register<ContainerType<?>> event) {
 		StaticCoreRegistry.registerContainerTypes(event);
+	}
+
+	public static void onRegisterEntities(final RegistryEvent.Register<EntityType<?>> event) {
+		for (EntityType type : ENTITES) {
+			event.getRegistry().register(type);
+		}
+
+		GlobalEntityTypeAttributes.put(ModEntities.SMEEP, EntitySmeep.getAttributes().create());
 	}
 
 	public static void onRegisterRecipeSerializers(RegistryEvent.Register<IRecipeSerializer<?>> event) {

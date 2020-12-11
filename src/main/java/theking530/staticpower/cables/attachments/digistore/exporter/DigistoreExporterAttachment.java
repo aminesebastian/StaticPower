@@ -48,7 +48,8 @@ public class DigistoreExporterAttachment extends AbstractCableAttachment {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, StaticPowerConfig.digistoreExporterSlots), (Direction) null)
+		return new ItemStackMultiCapabilityProvider(stack, nbt)
+				.addCapability(new ItemStackCapabilityInventory("default", stack, StaticPowerConfig.SERVER.digistoreExporterSlots.get()), (Direction) null)
 				.addCapability(new ItemStackCapabilityInventory("upgrades", stack, 3));
 	}
 
@@ -137,7 +138,7 @@ public class DigistoreExporterAttachment extends AbstractCableAttachment {
 					if (!filterItems.getStackInSlot(currentSlot).isEmpty()) {
 						// Get the amount to extract.
 						ItemStack filterItem = filterItems.getStackInSlot(currentSlot);
-						int countToExtract = Math.min(StaticPowerConfig.digistoreExporterStackSize, filterItem.getMaxStackSize());
+						int countToExtract = Math.min(StaticPowerConfig.SERVER.digistoreExporterStackSize.get(), filterItem.getMaxStackSize());
 						countToExtract = hasUpgradeOfClass(attachment, StackUpgrade.class) ? filterItem.getMaxStackSize() : countToExtract;
 
 						// Attempt an extract.
@@ -192,16 +193,16 @@ public class DigistoreExporterAttachment extends AbstractCableAttachment {
 	protected int getExportRate(ItemStack attachment) {
 		float acceleratorCardCount = getUpgradeCount(attachment, AcceleratorUpgrade.class);
 		if (acceleratorCardCount > 0) {
-			double accelerationAmount = StaticPowerConfig.acceleratorCardMaxImprovment * (acceleratorCardCount / ModUpgrades.AcceleratorUpgrade.getMaxStackSize());
-			return (int) (StaticPowerConfig.digistoreExporterRate / accelerationAmount);
+			double accelerationAmount = StaticPowerConfig.SERVER.acceleratorCardImprovment.get() * (acceleratorCardCount / ModUpgrades.AcceleratorUpgrade.getMaxStackSize());
+			return (int) (StaticPowerConfig.SERVER.digistoreExporterRate.get() / accelerationAmount);
 		} else {
-			return StaticPowerConfig.digistoreExporterRate;
+			return StaticPowerConfig.SERVER.digistoreExporterRate.get();
 		}
 	}
 
-	@Override	
+	@Override
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
-		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.slots", StaticPowerConfig.digistoreExporterSlots, tooltip);
+		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.slots", StaticPowerConfig.SERVER.digistoreExporterSlots.get(), tooltip);
 	}
 
 	protected class ExporterContainerProvider extends AbstractCableAttachmentContainerProvider {

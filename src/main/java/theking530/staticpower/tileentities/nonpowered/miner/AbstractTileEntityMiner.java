@@ -8,13 +8,15 @@ import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraftforge.common.util.Constants;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.utilities.Color;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.init.ModTags;
 import theking530.staticpower.items.tools.miningdrill.DrillBit;
@@ -43,21 +45,15 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 	private boolean shouldDrawRadiusPreview;
 	private final List<BlockPos> blocks;
 	private int currentBlockIndex;
-	private int ticksPerOperation;
 	private int miningRadius;
-	private int blockMiningFuelCost;
-	private int idleFuelCost;
 	private float heatGeneration;
 
 	public AbstractTileEntityMiner(TileEntityTypeAllocator<? extends AbstractTileEntityMiner> allocator) {
 		super(allocator);
 		disableFaceInteraction();
 		blocks = new ArrayList<BlockPos>();
-		ticksPerOperation = getProcessingTime();
-		miningRadius = StaticPowerConfig.electricMinerRadius;
-		blockMiningFuelCost = DEFAULT_MINING_COST;
-		idleFuelCost = DEFAULT_IDLE_COST;
-		heatGeneration = DEFAULT_HEAT_GENERATION;
+		miningRadius = getBaseRadius();
+		heatGeneration = getHeatGeneration();
 
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
 		registerComponent(drillBitInventory = new InventoryComponent("DrillBitInventory", 1, MachineSideMode.Never).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
@@ -67,14 +63,18 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 		}));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 64, MachineSideMode.Never));
 
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", ticksPerOperation, this::canProcess, this::canProcess, this::processingCompleted, true)
-				.setShouldControlBlockState(true).setRedstoneControlComponent(redstoneControlComponent));
+		registerComponent(
+				processingComponent = new MachineProcessingComponent("ProcessingComponent", getProcessingTime(), this::canProcess, this::canProcess, this::processingCompleted, true));
+		processingComponent.setShouldControlBlockState(true);
+		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
+		processingComponent.setProcessingPowerUsage(getPowerUsage());
 
 		registerComponent(miningSoundComponent = new LoopingSoundComponent("MiningSoundComponent", 20));
 
 		registerComponent(
 				heatStorage = new HeatStorageComponent("HeatStorageComponent", 10000.0f, 1.0f).setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.COOL));
 		registerComponent(new OutputServoComponent("OutputServo", 20, outputInventory));
+		heatStorage.getStorage().setCanHeat(false);
 	}
 
 	@Override
@@ -98,7 +98,9 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 			}
 
 			if (processingComponent.isPerformingWork()) {
+				heatStorage.getStorage().setCanHeat(true);
 				heatStorage.getStorage().heat(heatGeneration, false);
+				heatStorage.getStorage().setCanHeat(false);
 			}
 
 			if (processingComponent.getIsOnBlockState()) {
@@ -110,6 +112,12 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 	}
 
 	protected abstract int getProcessingTime();
+
+	protected abstract int getHeatGeneration();
+
+	protected abstract int getBaseRadius();
+
+	protected abstract int getPowerUsage();
 
 	public boolean isDoneMining() {
 		return currentBlockIndex == -1;
@@ -222,36 +230,12 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 		return shouldDrawRadiusPreview;
 	}
 
-	public int getTicksPerOperation() {
-		return ticksPerOperation;
-	}
-
-	public void setTicksPerOperation(int ticksPerOperation) {
-		this.ticksPerOperation = ticksPerOperation;
-	}
-
 	public int getMiningRadius() {
 		return miningRadius;
 	}
 
 	public void setMiningRadius(int miningRadius) {
 		this.miningRadius = miningRadius;
-	}
-
-	public int getBlockMiningFuelCost() {
-		return blockMiningFuelCost;
-	}
-
-	public void setBlockMiningFuelCost(int blockMiningFuelCost) {
-		this.blockMiningFuelCost = blockMiningFuelCost;
-	}
-
-	public int getIdleFuelCost() {
-		return idleFuelCost;
-	}
-
-	public void setIdleFuelCost(int idleFuelCost) {
-		this.idleFuelCost = idleFuelCost;
 	}
 
 	public void setShouldDrawRadiusPreview(boolean shouldDraw) {
@@ -319,20 +303,43 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 		currentBlockIndex = nbt.getInt("current_index");
-		ticksPerOperation = nbt.getInt("ticks_per_operation");
 		miningRadius = nbt.getInt("radius");
-		blockMiningFuelCost = nbt.getInt("mining_cost");
-		idleFuelCost = nbt.getInt("idle_cost");
 	}
 
 	@Override
 	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
 		nbt.putInt("current_index", currentBlockIndex);
-		nbt.putInt("ticks_per_operation", ticksPerOperation);
 		nbt.putInt("radius", miningRadius);
-		nbt.putInt("mining_cost", blockMiningFuelCost);
-		nbt.putInt("idle_cost", idleFuelCost);
+
+		return nbt;
+	}
+
+	@Override
+	public void deserializeSaveNbt(CompoundNBT nbt) {
+		super.deserializeSaveNbt(nbt);
+
+		// Load the blocks for mining.
+		blocks.clear();
+		ListNBT savedBlocks = nbt.getList("blocks", Constants.NBT.TAG_COMPOUND);
+		for (INBT blockTag : savedBlocks) {
+			CompoundNBT blockTagCompound = (CompoundNBT) blockTag;
+			blocks.add(BlockPos.fromLong(blockTagCompound.getLong("pos")));
+		}
+	}
+
+	@Override
+	public CompoundNBT serializeSaveNbt(CompoundNBT nbt) {
+		super.serializeSaveNbt(nbt);
+
+		// Save the blocks marked for mining.
+		ListNBT savedBlocks = new ListNBT();
+		blocks.forEach(block -> {
+			CompoundNBT blockTag = new CompoundNBT();
+			blockTag.putLong("pos", block.toLong());
+			savedBlocks.add(blockTag);
+		});
+		nbt.put("blocks", savedBlocks);
 
 		return nbt;
 	}

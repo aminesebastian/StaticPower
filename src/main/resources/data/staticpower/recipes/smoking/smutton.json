@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smoking",
+  "ingredient": {
+    "item": "staticpower:smutton_raw"
+  },
+  "result": "staticpower:smutton_cooked",
+  "experience": 0.5,
+  "cookingtime": 100
+}

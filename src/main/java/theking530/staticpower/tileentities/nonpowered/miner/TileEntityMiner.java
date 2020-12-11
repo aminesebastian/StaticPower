@@ -13,6 +13,7 @@ import net.minecraftforge.common.ForgeHooks;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
@@ -24,6 +25,7 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityMiner> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityMiner(), ModBlocks.Miner);
 
+	private static final int DEFAULT_FUEL_MOVE_TIME = 4;
 	public final InventoryComponent fuelInventory;
 	public final InventoryComponent fuelBurningInventory;
 	public final MachineProcessingComponent fuelComponent;
@@ -71,6 +73,7 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 	public ProcessingCheckState moveFuel() {
 		int burnTime = getFuelBurnTime(fuelInventory.getStackInSlot(0));
 		fuelComponent.setMaxProcessingTime(burnTime);
+		fuelComponent.setTimeUnitsPerTick(getPowerUsage());
 		transferItemInternally(fuelInventory, 0, fuelBurningInventory, 0);
 		return ProcessingCheckState.ok();
 	}
@@ -112,7 +115,7 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 
 	@Override
 	public void onBlockMined(BlockPos pos, BlockState minedBlock) {
-		fuelComponent.setMaxProcessingTime(Math.min(fuelComponent.getCurrentProcessingTime() + getBlockMiningFuelCost(), fuelComponent.getMaxProcessingTime()));
+		fuelComponent.setMaxProcessingTime(Math.min(fuelComponent.getCurrentProcessingTime(), fuelComponent.getMaxProcessingTime()));
 		// IF we have reached the final block, set the current block index to -1.
 		if (isDoneMining()) {
 			fuelComponent.cancelProcessing();
@@ -121,7 +124,22 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 
 	@Override
 	protected int getProcessingTime() {
-		return DEFAULT_MINING_TIME / 2;
+		return StaticPowerConfig.SERVER.minerProcessingTime.get();
+	}
+
+	@Override
+	protected int getHeatGeneration() {
+		return StaticPowerConfig.SERVER.minerHeatGeneration.get();
+	}
+
+	@Override
+	protected int getBaseRadius() {
+		return StaticPowerConfig.SERVER.minerRadius.get();
+	}
+
+	@Override
+	protected int getPowerUsage() {
+		return StaticPowerConfig.SERVER.minerFuelUsage.get();
 	}
 
 	public int getFuelBurnTime(ItemStack input) {

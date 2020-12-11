@@ -109,6 +109,8 @@
 	"item.staticpower.pie_static": "Static Pie",
 	"item.staticpower.pie_energized": "Energized Pie",
 	"item.staticpower.pie_lumum": "Lumum Pie",
+	"item.staticpower.smutton_raw": "Raw S'Mutton",
+	"item.staticpower.smutton_cooked": "Cooked S'Mutton",
 	"item.staticpower.crop_static": "Static Crop",
 	"item.staticpower.crop_energized": "Energized Crop",
 	"item.staticpower.crop_lumum": "Lumum Crop",
@@ -444,6 +446,7 @@
 	"item.staticpower.upgrade_quarrying_lumum": "Lumum Quarry Upgrade",
 	"item.staticpower.portable_smelting_core": "Portable Smelting Core",
 	"item.staticpower.bed_frame": "Bed Frame",
+	"item.staticpower.egg_smeep": "Smeep Spawn Egg",
 	"block.staticpower.grass_static": "Static Grass",
 	"block.staticpower.grass_energized": "Energized Grass",
 	"block.staticpower.grass_lumum": "Lumum Static",
@@ -601,6 +604,7 @@
 	"block.staticpower.heat_sink_tin": "Tin Heat Sink",
 	"block.staticpower.heat_sink_silver": "Silver Heat Sink",
 	"block.staticpower.heat_sink_gold": "Gold Heat Sink",
+	"block.staticpower.smeep_wool": "Smeep Wool",
 	"fluid.staticpower.tree_sap": "Tree Sap",
 	"fluid.staticpower.infernal_tree_sap": "Infernal Tree Sap",
 	"fluid.staticpower.ethanol": "Ethanol",
@@ -729,5 +733,6 @@
 	"gui.staticpower.sunrise": "Sunrise",
 	"gui.staticpower.rainy": "Rainy",
 	"gui.staticpower.snowy": "Snowy",
-	"gui.staticpower.clear": "Clear"
+	"gui.staticpower.clear": "Clear",
+	"entity.staticpower.smeep": "S'Meep"
 }

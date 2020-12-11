@@ -48,7 +48,8 @@ public class DigistoreIOBusAttachment extends AbstractCableAttachment {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, StaticPowerConfig.digistoreIOBusSlots * 2), (Direction) null)
+		return new ItemStackMultiCapabilityProvider(stack, nbt)
+				.addCapability(new ItemStackCapabilityInventory("default", stack, StaticPowerConfig.SERVER.digistoreIOBusSlots.get() * 2), (Direction) null)
 				.addCapability(new ItemStackCapabilityInventory("upgrades", stack, 3));
 	}
 
@@ -151,7 +152,7 @@ public class DigistoreIOBusAttachment extends AbstractCableAttachment {
 
 				for (int i = 0; i < target.getSlots(); i++) {
 					// Simulate an extract.
-					int countToExtract = StaticPowerConfig.digistoreIOBusStackSize;
+					int countToExtract = StaticPowerConfig.SERVER.digistoreIOBusStackSize.get();
 					countToExtract = hasUpgradeOfClass(attachment, StackUpgrade.class) ? 64 : countToExtract;
 					ItemStack extractedItem = target.extractItem(i, countToExtract, true);
 
@@ -200,7 +201,7 @@ public class DigistoreIOBusAttachment extends AbstractCableAttachment {
 					if (!filterItems.getStackInSlot(currentSlot).isEmpty()) {
 						// Get the amount to extract.
 						ItemStack filterItem = filterItems.getStackInSlot(currentSlot);
-						int countToExtract = Math.min(StaticPowerConfig.digistoreIOBusStackSize, filterItem.getMaxStackSize());
+						int countToExtract = Math.min(StaticPowerConfig.SERVER.digistoreIOBusStackSize.get(), filterItem.getMaxStackSize());
 						countToExtract = hasUpgradeOfClass(attachment, StackUpgrade.class) ? filterItem.getMaxStackSize() : countToExtract;
 
 						// Simulate an extract.
@@ -236,32 +237,32 @@ public class DigistoreIOBusAttachment extends AbstractCableAttachment {
 	}
 
 	protected int filterSlotsLastIndex() {
-		return StaticPowerConfig.digistoreIOBusSlots - 1;
+		return StaticPowerConfig.SERVER.digistoreIOBusSlots.get() - 1;
 	}
 
 	protected int exportSlotsStart() {
-		return StaticPowerConfig.digistoreIOBusSlots;
+		return StaticPowerConfig.SERVER.digistoreIOBusSlots.get();
 	}
 
 	protected int exportSlotsLastIndex() {
-		return (StaticPowerConfig.digistoreIOBusSlots * 2) - 1;
+		return (StaticPowerConfig.SERVER.digistoreIOBusSlots.get() * 2) - 1;
 	}
 
 	@SuppressWarnings("deprecation")
 	protected int getIOBusRate(ItemStack attachment) {
 		float acceleratorCardCount = getUpgradeCount(attachment, AcceleratorUpgrade.class);
 		if (acceleratorCardCount > 0) {
-			double accelerationAmount = StaticPowerConfig.acceleratorCardMaxImprovment * (acceleratorCardCount / ModUpgrades.AcceleratorUpgrade.getMaxStackSize());
-			return (int) (StaticPowerConfig.digistoreIOBusRate / accelerationAmount);
+			double accelerationAmount = StaticPowerConfig.SERVER.acceleratorCardImprovment.get() * (acceleratorCardCount / ModUpgrades.AcceleratorUpgrade.getMaxStackSize());
+			return (int) (StaticPowerConfig.SERVER.digistoreIOBusRate.get() / accelerationAmount);
 		} else {
-			return StaticPowerConfig.digistoreIOBusRate;
+			return StaticPowerConfig.SERVER.digistoreIOBusRate.get();
 		}
 	}
 
-	@Override	
+	@Override
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
-		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.import_slots", StaticPowerConfig.digistoreIOBusSlots, tooltip);
-		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.export_slots", StaticPowerConfig.digistoreIOBusSlots, tooltip);
+		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.import_slots", StaticPowerConfig.SERVER.digistoreIOBusSlots.get(), tooltip);
+		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.export_slots", StaticPowerConfig.SERVER.digistoreIOBusSlots.get(), tooltip);
 	}
 
 	protected class RegulatorContainerProvider extends AbstractCableAttachmentContainerProvider {

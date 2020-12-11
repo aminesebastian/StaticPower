@@ -1,5 +1,6 @@
 package theking530.staticpower.init;
 
+import net.minecraft.item.Foods;
 import net.minecraft.item.ItemTier;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.cables.attachments.cover.CableCover;
@@ -27,6 +28,7 @@ import theking530.staticpower.items.JuiceBottleItem;
 import theking530.staticpower.items.MilkBottleItem;
 import theking530.staticpower.items.PortableBattery;
 import theking530.staticpower.items.StaticPowerBurnableItem;
+import theking530.staticpower.items.StaticPowerFood;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.items.crops.DepletedCrop;
 import theking530.staticpower.items.crops.StaticPlantCrop;
@@ -58,6 +60,8 @@ public class ModItems {
 	public static StaticPowerItem StaticPie;
 	public static StaticPowerItem EnergizedPie;
 	public static StaticPowerItem LumumPie;
+	public static StaticPowerFood RawSmutton;
+	public static StaticPowerFood CookedSmutton;
 
 	public static StaticPowerItem MoldBlank;
 	public static StaticPowerItem MoldPlate;
@@ -471,11 +475,13 @@ public class ModItems {
 		// Food
 		StaticPowerRegistry.preRegisterItem(WheatFlour = new StaticPowerItem("flour_wheat"));
 		StaticPowerRegistry.preRegisterItem(PotatoFlour = new StaticPowerItem("flour_potato"));
-		StaticPowerRegistry.preRegisterItem(PotatoBread = new StaticPowerItem("bread_potato"));
-		StaticPowerRegistry.preRegisterItem(ApplePie = new StaticPowerItem("pie_apple"));
-		StaticPowerRegistry.preRegisterItem(StaticPie = new StaticPowerItem("pie_static"));
-		StaticPowerRegistry.preRegisterItem(EnergizedPie = new StaticPowerItem("pie_energized"));
-		StaticPowerRegistry.preRegisterItem(LumumPie = new StaticPowerItem("pie_lumum"));
+		StaticPowerRegistry.preRegisterItem(PotatoBread = new StaticPowerFood("bread_potato", Foods.BREAD));
+		StaticPowerRegistry.preRegisterItem(ApplePie = new StaticPowerFood("pie_apple", Foods.PUMPKIN_PIE));
+		StaticPowerRegistry.preRegisterItem(StaticPie = new StaticPowerFood("pie_static", ModFoods.STATIC_PIE));
+		StaticPowerRegistry.preRegisterItem(EnergizedPie = new StaticPowerFood("pie_energized", ModFoods.ENERGIZED_PIE));
+		StaticPowerRegistry.preRegisterItem(LumumPie = new StaticPowerFood("pie_lumum", ModFoods.LUMUM_PIE));
+		StaticPowerRegistry.preRegisterItem(RawSmutton = new StaticPowerFood("smutton_raw", ModFoods.SMUTTON));
+		StaticPowerRegistry.preRegisterItem(CookedSmutton = new StaticPowerFood("smutton_cooked", ModFoods.COOKED_SMUTTON));
 
 		// Molds
 		StaticPowerRegistry.preRegisterItem(MoldBlank = new StaticPowerItem("mold_blank"));

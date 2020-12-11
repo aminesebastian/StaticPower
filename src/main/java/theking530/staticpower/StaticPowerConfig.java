@@ -30,50 +30,6 @@ public class StaticPowerConfig {
 
 	public static final Map<String, ConfigPair> TIERS;
 
-	public static int rubberWoodSpawnChance;
-	public static int minRubberWoodBarkPerStrip;
-	public static int maxRubberWoodBarkPerStrip;
-
-	public static boolean generateCopperOre;
-	public static boolean generateTinOre;
-	public static boolean generateLeadOre;
-	public static boolean generateSilverOre;
-	public static boolean generatePlatinumOre;
-	public static boolean generateTungstenOre;
-	public static boolean generateZincOre;
-	public static boolean generateMagnesiumOre;
-	public static boolean generateAluminiumOre;
-	public static boolean generateSapphireOre;
-	public static boolean generateRubyOre;
-
-	public static int digistoreRegulatorRate;
-	public static int digistoreRegulatorSlots;
-	public static int digistoreRegulatorStackSize;
-
-	public static int digistoreIOBusRate;
-	public static int digistoreIOBusSlots;
-	public static int digistoreIOBusStackSize;
-
-	public static int digistoreImporterRate;
-	public static int digistoreImporterSlots;
-	public static int digistoreImporterStackSize;
-
-	public static int digistoreExporterRate;
-	public static int digistoreExporterSlots;
-	public static int digistoreExporterStackSize;
-
-	public static int digistoreCraftingInterfaceSlots;
-	public static double acceleratorCardMaxImprovment;
-
-	public static int minerHeatGeneration;
-	public static int minerFuelUsage;
-	public static int minerRadius;
-	public static int minerProcessingTime;
-	public static int electricMinerHeatGeneration;
-	public static int electricMinerPowerUsage;
-	public static int electricMinerRadius;
-	public static int electricMinerProcessingTime;
-
 	static {
 		final Pair<StaticPowerServerConfig, ForgeConfigSpec> serverPair = new ForgeConfigSpec.Builder().configure(StaticPowerServerConfig::new);
 		SERVER_SPEC = serverPair.getRight();
@@ -84,65 +40,11 @@ public class StaticPowerConfig {
 		COMMON = commonPair.getLeft();
 
 		TIERS = new HashMap<>();
-
 	}
 
 	@SubscribeEvent
 	public static void onModConfigEvent(final ModConfig.ModConfigEvent configEvent) {
-		if (configEvent.getConfig().getSpec() == StaticPowerConfig.COMMON_SPEC) {
-			bakeCommonConfig();
-		} else if (configEvent.getConfig().getSpec() == StaticPowerConfig.SERVER_SPEC) {
-			bakeServerConfig();
-		}
-	}
 
-	private static void bakeCommonConfig() {
-		rubberWoodSpawnChance = COMMON.rubberWoodSpawnChance.get();
-		generatePlatinumOre = COMMON.generatePlatinumOre.get();
-		generateTungstenOre = COMMON.generateTungstenOre.get();
-		generateZincOre = COMMON.generateZincOre.get();
-		generateMagnesiumOre = COMMON.generateMagnesiumOre.get();
-		generateAluminiumOre = COMMON.generateAluminiumOre.get();
-		generateSapphireOre = COMMON.generateSapphireOre.get();
-		generateRubyOre = COMMON.generateRubyOre.get();
-		generateCopperOre = COMMON.generateCopperOre.get();
-		generateTinOre = COMMON.generateTinOre.get();
-		generateLeadOre = COMMON.generateLeadOre.get();
-		generateSilverOre = COMMON.generateSilverOre.get();
-	}
-
-	private static void bakeServerConfig() {
-		minRubberWoodBarkPerStrip = SERVER.minRubberWoodBarkPerStrip.get();
-		maxRubberWoodBarkPerStrip = SERVER.maxRubberWoodBarkPerStrip.get();
-
-		digistoreRegulatorRate = SERVER.digistoreRegulatorRate.get();
-		digistoreRegulatorStackSize = SERVER.digistoreRegulatorStackSize.get();
-		digistoreRegulatorSlots = SERVER.digistoreRegulatorSlots.get();
-
-		digistoreIOBusRate = SERVER.digistoreIOBusRate.get();
-		digistoreIOBusSlots = SERVER.digistoreIOBusSlots.get();
-		digistoreIOBusStackSize = SERVER.digistoreIOBusStackSize.get();
-
-		digistoreImporterRate = SERVER.digistoreImporterRate.get();
-		digistoreImporterSlots = SERVER.digistoreImporterSlots.get();
-		digistoreImporterStackSize = SERVER.digistoreImporterStackSize.get();
-
-		digistoreExporterRate = SERVER.digistoreExporterRate.get();
-		digistoreExporterSlots = SERVER.digistoreExporterSlots.get();
-		digistoreExporterStackSize = SERVER.digistoreExporterStackSize.get();
-
-		digistoreCraftingInterfaceSlots = SERVER.digistoreCraftingInterfaceSlots.get();
-
-		acceleratorCardMaxImprovment = SERVER.acceleratorCardImprovment.get();
-
-		minerHeatGeneration = SERVER.minerHeatGeneration.get();
-		minerFuelUsage = SERVER.minerFuelUsage.get();
-		minerRadius = SERVER.minerRadius.get();
-		minerProcessingTime = SERVER.minerProcessingTime.get();
-		electricMinerHeatGeneration = SERVER.electricMinerHeatGeneration.get();
-		electricMinerPowerUsage = SERVER.electricMinerPowerUsage.get();
-		electricMinerRadius = SERVER.electricMinerRadius.get();
-		electricMinerProcessingTime = SERVER.electricMinerProcessingTime.get();
 	}
 
 	/**
@@ -187,7 +89,7 @@ public class StaticPowerConfig {
 			builder.pop();
 			builder.push("Tree Generation");
 			rubberWoodSpawnChance = builder.comment("Controls the chance of a rubber tree spawning.").translation(StaticPower.MOD_ID + ".config." + "rubberWoodSpawnChance")
-					.define("RubberWoodSpawnChance", 30);
+					.define("RubberWoodSpawnChance", 1);
 			builder.pop();
 			builder.pop();
 		}

@@ -1,0 +1,22 @@
+{
+	"display": {
+		"icon": {
+			"item": "staticpower:crop_static"
+		},
+		"title": "Static Power!",
+		"description": "",
+		"background": "staticpower:textures/blocks/decorative/planks_static.png"
+	},
+	"criteria": {
+		"seeds_in_inventory": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "staticpower:seed_static"
+					}
+				]
+			}
+		}
+	}
+}

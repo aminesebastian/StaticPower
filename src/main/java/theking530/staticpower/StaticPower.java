@@ -27,9 +27,9 @@ import theking530.staticpower.data.tiers.StaticPowerTierStatic;
 import theking530.staticpower.data.tiers.StaticPowerTierTin;
 import theking530.staticpower.data.tiers.StaticPowerTierTungsten;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModEntities;
 import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.init.ModItems;
-import theking530.staticpower.init.ModLootTableAdditions;
 import theking530.staticpower.init.ModNetworkMessages;
 import theking530.staticpower.init.ModRecipeSerializers;
 import theking530.staticpower.init.ModUpgrades;
@@ -72,7 +72,7 @@ public class StaticPower {
 		ModUpgrades.init();
 		ModFluids.init();
 		ModNetworkMessages.init();
-		ModLootTableAdditions.init();
+		ModEntities.init();
 		StaticCoreRegistry.postInitialize();
 	}
 }

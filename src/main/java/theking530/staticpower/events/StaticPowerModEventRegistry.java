@@ -1,20 +1,25 @@
 package theking530.staticpower.events;
 
+import javax.annotation.Nonnull;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.ComposterBlock;
+import net.minecraft.entity.EntityType;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
@@ -38,6 +43,7 @@ import theking530.staticpower.cables.network.CableNetworkModuleRegistry;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.power.PowerNetworkModuleFactory;
 import theking530.staticpower.cables.scaffold.ScaffoldNetworkModuleFactory;
+import theking530.staticpower.data.loot.GrassLootModifier;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.TOP.PluginTOP;
 
@@ -137,8 +143,18 @@ public class StaticPowerModEventRegistry {
 	}
 
 	@SubscribeEvent
+	public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
+		StaticPowerRegistry.onRegisterEntities(event);
+	}
+
+	@SubscribeEvent
 	public static void registerRecipeSerializers(RegistryEvent.Register<IRecipeSerializer<?>> event) {
 		StaticPowerRegistry.onRegisterRecipeSerializers(event);
 		LOGGER.info("Static Power Reipce Serializers registered!");
+	}
+
+	@SubscribeEvent
+	public static void registerModifierSerializers(@Nonnull final RegistryEvent.Register<GlobalLootModifierSerializer<?>> event) {
+		event.getRegistry().register(new GrassLootModifier.Serializer().setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "grass_static_seeds")));
 	}
 }

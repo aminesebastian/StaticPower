@@ -45,7 +45,8 @@ public class DigistoreRegulatorAttachment extends AbstractCableAttachment {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, StaticPowerConfig.digistoreRegulatorSlots), (Direction) null)
+		return new ItemStackMultiCapabilityProvider(stack, nbt)
+				.addCapability(new ItemStackCapabilityInventory("default", stack, StaticPowerConfig.SERVER.digistoreRegulatorSlots.get()), (Direction) null)
 				.addCapability(new ItemStackCapabilityInventory("upgrades", stack, 3));
 	}
 
@@ -138,7 +139,7 @@ public class DigistoreRegulatorAttachment extends AbstractCableAttachment {
 
 					// Get current count of the item.
 					int targetItemCount = InventoryUtilities.getCountOfItem(filterItem, target);
-					int countToTransfer = Math.min(StaticPowerConfig.digistoreRegulatorStackSize, Math.abs(targetItemCount - filterItem.getCount()));
+					int countToTransfer = Math.min(StaticPowerConfig.SERVER.digistoreRegulatorStackSize.get(), Math.abs(targetItemCount - filterItem.getCount()));
 					countToTransfer = hasUpgradeOfClass(attachment, StackUpgrade.class) ? filterItem.getMaxStackSize() : countToTransfer;
 
 					// If we are at the correct count, skip it.
@@ -178,16 +179,16 @@ public class DigistoreRegulatorAttachment extends AbstractCableAttachment {
 	protected int getRegulationRate(ItemStack attachment) {
 		float acceleratorCardCount = getUpgradeCount(attachment, AcceleratorUpgrade.class);
 		if (acceleratorCardCount > 0) {
-			double accelerationAmount = StaticPowerConfig.acceleratorCardMaxImprovment * (acceleratorCardCount / ModUpgrades.AcceleratorUpgrade.getMaxStackSize());
-			return (int) (StaticPowerConfig.digistoreRegulatorRate / accelerationAmount);
+			double accelerationAmount = StaticPowerConfig.SERVER.acceleratorCardImprovment.get() * (acceleratorCardCount / ModUpgrades.AcceleratorUpgrade.getMaxStackSize());
+			return (int) (StaticPowerConfig.SERVER.digistoreRegulatorRate.get() / accelerationAmount);
 		} else {
-			return StaticPowerConfig.digistoreRegulatorRate;
+			return StaticPowerConfig.SERVER.digistoreRegulatorRate.get();
 		}
 	}
 
-	@Override	
+	@Override
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
-		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.slots", StaticPowerConfig.digistoreRegulatorSlots, tooltip);
+		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.slots", StaticPowerConfig.SERVER.digistoreRegulatorSlots.get(), tooltip);
 	}
 
 	protected class ImporterContainerProvider extends AbstractCableAttachmentContainerProvider {

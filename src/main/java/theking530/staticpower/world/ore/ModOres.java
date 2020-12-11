@@ -14,50 +14,61 @@ import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.init.ModBlocks;
 
 public class ModOres {
-	public static final ConfiguredFeature<OreFeatureConfig, ?> ZINC = register("ore_zinc", new OreConfigBuilder(ModBlocks.OreZinc).setMaxLevel(70).setMinLevel(30).setMaxVeinSize(4).setRarity(8));
-	public static final ConfiguredFeature<OreFeatureConfig, ?> MAGENSIUM = register("ore_magnesium", new OreConfigBuilder(ModBlocks.OreMagnesium).setMaxLevel(70).setMinLevel(30).setMaxVeinSize(4).setRarity(8));
-	public static final ConfiguredFeature<OreFeatureConfig, ?> COPPER = register("ore_copper", new OreConfigBuilder(ModBlocks.OreCopper).setMaxLevel(100).setMinLevel(40).setMaxVeinSize(10).setRarity(18));
-	public static final ConfiguredFeature<OreFeatureConfig, ?> TIN = register("ore_tin", new OreConfigBuilder(ModBlocks.OreTin).setMaxLevel(100).setMinLevel(40).setMaxVeinSize(7).setRarity(16));
-	public static final ConfiguredFeature<OreFeatureConfig, ?> LEAD = register("ore_lead", new OreConfigBuilder(ModBlocks.OreLead).setMaxLevel(35).setMinLevel(0).setMaxVeinSize(3).setRarity(10));
-	public static final ConfiguredFeature<OreFeatureConfig, ?> SILVER = register("ore_silver", new OreConfigBuilder(ModBlocks.OreSilver).setMaxLevel(40).setMinLevel(0).setMaxVeinSize(5).setRarity(8));
-	public static final ConfiguredFeature<OreFeatureConfig, ?> TUNGSTEN = register("ore_tungsten", new OreConfigBuilder(ModBlocks.OreTungsten).setMaxLevel(30).setMinLevel(0).setMaxVeinSize(2).setRarity(4));
-	public static final ConfiguredFeature<OreFeatureConfig, ?> PLATINUM = register("ore_platinum", new OreConfigBuilder(ModBlocks.OrePlatinum).setMaxLevel(30).setMinLevel(0).setMaxVeinSize(4).setRarity(10));
-	public static final ConfiguredFeature<OreFeatureConfig, ?> ALUMINIUM = register("ore_aluminium", new OreConfigBuilder(ModBlocks.OreAluminium).setMaxLevel(80).setMinLevel(40).setMaxVeinSize(10).setRarity(15));
-	public static final ConfiguredFeature<OreFeatureConfig, ?> SAPPHIRE = register("ore_sapphire", new OreConfigBuilder(ModBlocks.OreSapphire).setMaxLevel(20).setMinLevel(0).setMaxVeinSize(4).setRarity(3));
-	public static final ConfiguredFeature<OreFeatureConfig, ?> RUBY = register("ore_ruby", new OreConfigBuilder(ModBlocks.OreRuby).setMaxLevel(25).setMinLevel(0).setMaxVeinSize(4).setRarity(3));
+	public static final ConfiguredFeature<OreFeatureConfig, ?> ZINC = register("ore_zinc",
+			new OreConfigBuilder(ModBlocks.OreZinc).setMaxLevel(70).setMinLevel(30).setMaxVeinSize(4).setRarity(8));
+	public static final ConfiguredFeature<OreFeatureConfig, ?> MAGENSIUM = register("ore_magnesium",
+			new OreConfigBuilder(ModBlocks.OreMagnesium).setMaxLevel(70).setMinLevel(30).setMaxVeinSize(4).setRarity(8));
+	public static final ConfiguredFeature<OreFeatureConfig, ?> COPPER = register("ore_copper",
+			new OreConfigBuilder(ModBlocks.OreCopper).setMaxLevel(100).setMinLevel(40).setMaxVeinSize(10).setRarity(18));
+	public static final ConfiguredFeature<OreFeatureConfig, ?> TIN = register("ore_tin",
+			new OreConfigBuilder(ModBlocks.OreTin).setMaxLevel(100).setMinLevel(40).setMaxVeinSize(7).setRarity(16));
+	public static final ConfiguredFeature<OreFeatureConfig, ?> LEAD = register("ore_lead",
+			new OreConfigBuilder(ModBlocks.OreLead).setMaxLevel(35).setMinLevel(0).setMaxVeinSize(3).setRarity(10));
+	public static final ConfiguredFeature<OreFeatureConfig, ?> SILVER = register("ore_silver",
+			new OreConfigBuilder(ModBlocks.OreSilver).setMaxLevel(40).setMinLevel(0).setMaxVeinSize(5).setRarity(8));
+	public static final ConfiguredFeature<OreFeatureConfig, ?> TUNGSTEN = register("ore_tungsten",
+			new OreConfigBuilder(ModBlocks.OreTungsten).setMaxLevel(30).setMinLevel(0).setMaxVeinSize(2).setRarity(4));
+	public static final ConfiguredFeature<OreFeatureConfig, ?> PLATINUM = register("ore_platinum",
+			new OreConfigBuilder(ModBlocks.OrePlatinum).setMaxLevel(30).setMinLevel(0).setMaxVeinSize(4).setRarity(10));
+	public static final ConfiguredFeature<OreFeatureConfig, ?> ALUMINIUM = register("ore_aluminium",
+			new OreConfigBuilder(ModBlocks.OreAluminium).setMaxLevel(80).setMinLevel(40).setMaxVeinSize(10).setRarity(15));
+	public static final ConfiguredFeature<OreFeatureConfig, ?> SAPPHIRE = register("ore_sapphire",
+			new OreConfigBuilder(ModBlocks.OreSapphire).setMaxLevel(20).setMinLevel(0).setMaxVeinSize(4).setRarity(3));
+	public static final ConfiguredFeature<OreFeatureConfig, ?> RUBY = register("ore_ruby",
+			new OreConfigBuilder(ModBlocks.OreRuby).setMaxLevel(25).setMinLevel(0).setMaxVeinSize(4).setRarity(3));
 
 	public static void addOreGenFeatures(BiomeLoadingEvent event) {
-		if (StaticPowerConfig.generateZincOre) {
+		if (StaticPowerConfig.COMMON.generateZincOre.get()) {
 			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, ZINC);
 		}
-		if (StaticPowerConfig.generateMagnesiumOre) {
+		if (StaticPowerConfig.COMMON.generateMagnesiumOre.get()) {
 			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, MAGENSIUM);
 		}
-		if (StaticPowerConfig.generateCopperOre) {
+		if (StaticPowerConfig.COMMON.generateCopperOre.get()) {
 			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, COPPER);
 		}
-		if (StaticPowerConfig.generateTinOre) {
+		if (StaticPowerConfig.COMMON.generateTinOre.get()) {
 			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, TIN);
 		}
-		if (StaticPowerConfig.generateLeadOre) {
+		if (StaticPowerConfig.COMMON.generateLeadOre.get()) {
 			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, LEAD);
 		}
-		if (StaticPowerConfig.generateSilverOre) {
+		if (StaticPowerConfig.COMMON.generateSilverOre.get()) {
 			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, SILVER);
 		}
-		if (StaticPowerConfig.generateTungstenOre) {
+		if (StaticPowerConfig.COMMON.generateTungstenOre.get()) {
 			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, TUNGSTEN);
 		}
-		if (StaticPowerConfig.generatePlatinumOre) {
+		if (StaticPowerConfig.COMMON.generatePlatinumOre.get()) {
 			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, PLATINUM);
 		}
-		if (StaticPowerConfig.generateAluminiumOre) {
+		if (StaticPowerConfig.COMMON.generateAluminiumOre.get()) {
 			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, ALUMINIUM);
 		}
-		if (StaticPowerConfig.generateSapphireOre) {
+		if (StaticPowerConfig.COMMON.generateSapphireOre.get()) {
 			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, SAPPHIRE);
 		}
-		if (StaticPowerConfig.generateRubyOre) {
+		if (StaticPowerConfig.COMMON.generateRubyOre.get()) {
 			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, RUBY);
 		}
 	}
@@ -99,8 +110,8 @@ public class ModOres {
 		}
 
 		public ConfiguredFeature<?, ?> build() {
-			return Feature.ORE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.field_241882_a, blockSupplier.getDefaultState(), maxVeinSize))
-					.withPlacement(Placement.field_242907_l.configure(new TopSolidRangeConfig(minLevel, 0, maxLevel))).func_242728_a().func_242731_b(rarity);
+			return Feature.ORE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD, blockSupplier.getDefaultState(), maxVeinSize))
+					.withPlacement(Placement.RANGE.configure(new TopSolidRangeConfig(minLevel, 0, maxLevel))).square().func_242731_b(rarity);
 		}
 	}
 }

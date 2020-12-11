@@ -1,0 +1,22 @@
+{
+	"display": {
+		"icon": {
+			"item": "staticpower:ingot_tin"
+		},
+		"title": "Static Power!",
+		"description": "",
+		"background": "staticpower:textures/blocks/ore/ore_tin.png"
+	},
+	"criteria": {
+		"seeds_in_inventory": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "staticpower:seed_static"
+					}
+				]
+			}
+		}
+	}
+}

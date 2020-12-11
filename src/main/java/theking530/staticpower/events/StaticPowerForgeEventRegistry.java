@@ -39,6 +39,7 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.RecipeReloadListener;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.thermalconductivity.ThermalConductivityRecipe;
+import theking530.staticpower.init.ModEntities;
 import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.world.ore.ModOres;
 import theking530.staticpower.world.trees.ModTrees;
@@ -83,6 +84,7 @@ public class StaticPowerForgeEventRegistry {
 	public static void onBiomeLoading(BiomeLoadingEvent event) {
 		ModOres.addOreGenFeatures(event);
 		ModTrees.addTreeFeatures(event);
+		ModEntities.addSpawns(event);
 	}
 
 	@SubscribeEvent

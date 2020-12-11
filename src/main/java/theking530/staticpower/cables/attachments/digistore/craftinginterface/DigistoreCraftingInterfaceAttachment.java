@@ -47,7 +47,7 @@ public class DigistoreCraftingInterfaceAttachment extends AbstractCableAttachmen
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
 		return new ItemStackMultiCapabilityProvider(stack, nbt)
-				.addCapability(new ItemStackCapabilityInventory("default", stack, StaticPowerConfig.digistoreCraftingInterfaceSlots), (Direction) null)
+				.addCapability(new ItemStackCapabilityInventory("default", stack, StaticPowerConfig.SERVER.digistoreCraftingInterfaceSlots.get()), (Direction) null)
 				.addCapability(new ItemStackCapabilityInventory("upgrades", stack, 9));
 	}
 
@@ -113,7 +113,7 @@ public class DigistoreCraftingInterfaceAttachment extends AbstractCableAttachmen
 
 		// Increment the current timer.
 		currentTimer += 1;
-		if (currentTimer >= StaticPowerConfig.digistoreExporterRate) {
+		if (currentTimer >= StaticPowerConfig.SERVER.digistoreExporterRate.get()) {
 			attachment.getTag().putInt(CRAFTING_INTERFACE_TIMER_TAG, 0);
 			return true;
 		} else {
@@ -223,9 +223,9 @@ public class DigistoreCraftingInterfaceAttachment extends AbstractCableAttachmen
 		return true;
 	}
 
-	@Override	
+	@Override
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
-		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.slots", StaticPowerConfig.digistoreCraftingInterfaceSlots, tooltip);
+		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.slots", StaticPowerConfig.SERVER.digistoreCraftingInterfaceSlots.get(), tooltip);
 	}
 
 	protected class CraftingInterfaceContainerProvider extends AbstractCableAttachmentContainerProvider {

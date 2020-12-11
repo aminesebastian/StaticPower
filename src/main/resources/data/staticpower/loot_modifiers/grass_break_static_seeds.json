@@ -1,0 +1,12 @@
+{
+	"conditions": [
+		{
+			"condition": "block_state_property",
+			"block": "minecraft:grass"
+		}
+	],
+	"type": "staticpower:grass_static_seeds",
+	"minSeeds": 1,
+	"maxSeeds": 3,
+	"chance": 0.05
+}

@@ -35,15 +35,9 @@ public class TileEntityElectricMiner extends AbstractTileEntityMiner {
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 
-		// Set the fuel usages higher as they now correlate to power usage.
-		setBlockMiningFuelCost(getBlockMiningFuelCost());
-		setIdleFuelCost(getIdleFuelCost());
-
 		// Set the processing parameters.
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setEnergyComponent(energyStorage);
-		processingComponent.setProcessingPowerUsage(getIdleFuelCost() * 5);
-		processingComponent.setCompletedPowerUsage(getBlockMiningFuelCost());
 
 		// Set the energy storage upgrade inventory.
 		energyStorage.setUpgradeInventory(upgradesInventory);
@@ -74,6 +68,21 @@ public class TileEntityElectricMiner extends AbstractTileEntityMiner {
 
 	@Override
 	protected int getProcessingTime() {
-		return DEFAULT_MINING_TIME / 2;
+		return StaticPowerConfig.SERVER.electricMinerProcessingTime.get();
+	}
+
+	@Override
+	protected int getHeatGeneration() {
+		return StaticPowerConfig.SERVER.electricMinerHeatGeneration.get();
+	}
+
+	@Override
+	protected int getBaseRadius() {
+		return StaticPowerConfig.SERVER.electricMinerRadius.get();
+	}
+
+	@Override
+	protected int getPowerUsage() {
+		return StaticPowerConfig.SERVER.electricMinerPowerUsage.get();
 	}
 }
