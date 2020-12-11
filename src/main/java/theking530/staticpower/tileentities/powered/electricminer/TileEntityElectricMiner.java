@@ -42,7 +42,7 @@ public class TileEntityElectricMiner extends AbstractTileEntityMiner {
 		// Set the processing parameters.
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setEnergyComponent(energyStorage);
-		processingComponent.setProcessingPowerUsage(getIdleFuelCost());
+		processingComponent.setProcessingPowerUsage(getIdleFuelCost() * 5);
 		processingComponent.setCompletedPowerUsage(getBlockMiningFuelCost());
 
 		// Set the energy storage upgrade inventory.
@@ -70,5 +70,10 @@ public class TileEntityElectricMiner extends AbstractTileEntityMiner {
 	@Override
 	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
 		return new ContainerElectricMiner(windowId, inventory, this);
+	}
+
+	@Override
+	protected int getProcessingTime() {
+		return DEFAULT_MINING_TIME / 2;
 	}
 }

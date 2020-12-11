@@ -14,6 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3f;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.utilities.Color;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.init.ModTags;
 import theking530.staticpower.items.tools.miningdrill.DrillBit;
@@ -31,13 +32,6 @@ import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
-	public static final int DEFAULT_MINING_TIME = 60;
-	public static final int DEFAULT_MINING_COST = 10;
-	public static final int DEFAULT_IDLE_COST = 1;
-	public static final int DEFAULT_FUEL_MOVE_TIME = 4;
-	public static final float DEFAULT_HEAT_GENERATION = 500.0f;
-	public static final int MINING_RADIUS = 5;
-
 	public final InventoryComponent drillBitInventory;
 	public final InventoryComponent outputInventory;
 	public final InventoryComponent internalInventory;
@@ -59,8 +53,8 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 		super(allocator);
 		disableFaceInteraction();
 		blocks = new ArrayList<BlockPos>();
-		ticksPerOperation = DEFAULT_MINING_TIME;
-		miningRadius = MINING_RADIUS;
+		ticksPerOperation = getProcessingTime();
+		miningRadius = StaticPowerConfig.electricMinerRadius;
 		blockMiningFuelCost = DEFAULT_MINING_COST;
 		idleFuelCost = DEFAULT_IDLE_COST;
 		heatGeneration = DEFAULT_HEAT_GENERATION;
@@ -114,6 +108,8 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 			}
 		}
 	}
+
+	protected abstract int getProcessingTime();
 
 	public boolean isDoneMining() {
 		return currentBlockIndex == -1;

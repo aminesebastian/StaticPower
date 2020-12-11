@@ -63,8 +63,16 @@ public class StaticPowerConfig {
 	public static int digistoreExporterStackSize;
 
 	public static int digistoreCraftingInterfaceSlots;
-
 	public static double acceleratorCardMaxImprovment;
+
+	public static int minerHeatGeneration;
+	public static int minerFuelUsage;
+	public static int minerRadius;
+	public static int minerProcessingTime;
+	public static int electricMinerHeatGeneration;
+	public static int electricMinerPowerUsage;
+	public static int electricMinerRadius;
+	public static int electricMinerProcessingTime;
 
 	static {
 		final Pair<StaticPowerServerConfig, ForgeConfigSpec> serverPair = new ForgeConfigSpec.Builder().configure(StaticPowerServerConfig::new);
@@ -97,16 +105,15 @@ public class StaticPowerConfig {
 		generateAluminiumOre = COMMON.generateAluminiumOre.get();
 		generateSapphireOre = COMMON.generateSapphireOre.get();
 		generateRubyOre = COMMON.generateRubyOre.get();
+		generateCopperOre = COMMON.generateCopperOre.get();
+		generateTinOre = COMMON.generateTinOre.get();
+		generateLeadOre = COMMON.generateLeadOre.get();
+		generateSilverOre = COMMON.generateSilverOre.get();
 	}
 
 	private static void bakeServerConfig() {
 		minRubberWoodBarkPerStrip = SERVER.minRubberWoodBarkPerStrip.get();
 		maxRubberWoodBarkPerStrip = SERVER.maxRubberWoodBarkPerStrip.get();
-
-		generateCopperOre = COMMON.generateCopperOre.get();
-		generateTinOre = COMMON.generateTinOre.get();
-		generateLeadOre = COMMON.generateLeadOre.get();
-		generateSilverOre = COMMON.generateSilverOre.get();
 
 		digistoreRegulatorRate = SERVER.digistoreRegulatorRate.get();
 		digistoreRegulatorStackSize = SERVER.digistoreRegulatorStackSize.get();
@@ -127,6 +134,15 @@ public class StaticPowerConfig {
 		digistoreCraftingInterfaceSlots = SERVER.digistoreCraftingInterfaceSlots.get();
 
 		acceleratorCardMaxImprovment = SERVER.acceleratorCardImprovment.get();
+
+		minerHeatGeneration = SERVER.minerHeatGeneration.get();
+		minerFuelUsage = SERVER.minerFuelUsage.get();
+		minerRadius = SERVER.minerRadius.get();
+		minerProcessingTime = SERVER.minerProcessingTime.get();
+		electricMinerHeatGeneration = SERVER.electricMinerHeatGeneration.get();
+		electricMinerPowerUsage = SERVER.electricMinerPowerUsage.get();
+		electricMinerRadius = SERVER.electricMinerRadius.get();
+		electricMinerProcessingTime = SERVER.electricMinerProcessingTime.get();
 	}
 
 	/**
@@ -208,6 +224,16 @@ public class StaticPowerConfig {
 
 		public ConfigValue<Double> acceleratorCardImprovment;
 
+		public ConfigValue<Integer> minerHeatGeneration;
+		public ConfigValue<Integer> minerFuelUsage;
+		public ConfigValue<Integer> minerRadius;
+		public ConfigValue<Integer> minerProcessingTime;
+
+		public ConfigValue<Integer> electricMinerHeatGeneration;
+		public ConfigValue<Integer> electricMinerPowerUsage;
+		public ConfigValue<Integer> electricMinerRadius;
+		public ConfigValue<Integer> electricMinerProcessingTime;
+
 		public StaticPowerServerConfig(ForgeConfigSpec.Builder builder) {
 			builder.push("Tools");
 			builder.push("Axe");
@@ -268,6 +294,25 @@ public class StaticPowerConfig {
 			builder.push("Upgrades");
 			acceleratorCardImprovment = builder.comment("Defines the effect a max sized stack of accelerator upgrades will have.")
 					.translation(StaticPower.MOD_ID + ".config." + "acceleratorCardImprovment").define("AcceleratorCardImprovment", 4.0);
+			builder.pop();
+
+			builder.push("Machines");
+			minerHeatGeneration = builder.comment("Defines how much heat is produced when a block is broken by a regular miner.")
+					.translation(StaticPower.MOD_ID + ".config." + "minerHeatGeneration").define("MinerHeatGeneration", 250);
+			minerFuelUsage = builder.comment("Defines how much fuel value is used per tick by a regular miner.").translation(StaticPower.MOD_ID + ".config." + "minerFuelUsage")
+					.define("MinerFuelUsage", 1);
+			minerRadius = builder.comment("Defines the base radius of the regular miner.").translation(StaticPower.MOD_ID + ".config." + "minerRadius").define("MinerRadius", 5);
+			minerProcessingTime = builder.comment("Defines the amount of ticks a regular miner takes to break a block.").translation(StaticPower.MOD_ID + ".config." + "minerProcessingTime")
+					.define("MinerProcessingTime", 70);
+
+			electricMinerHeatGeneration = builder.comment("Defines how much heat is produced when a block is broken by an electric miner.")
+					.translation(StaticPower.MOD_ID + ".config." + "electricMinerHeatGeneration").define("ElectricMinerHeatGeneration", 200);
+			electricMinerPowerUsage = builder.comment("Defines how much power is used per tick by an electric miner.")
+					.translation(StaticPower.MOD_ID + ".config." + "electricMinerPowerUsage").define("ElectricMinerPowerUsage", 10);
+			electricMinerRadius = builder.comment("Defines the base radius of the electric miner.").translation(StaticPower.MOD_ID + ".config." + "electricMinerRadius")
+					.define("ElectricMinerRadius", 5);
+			electricMinerProcessingTime = builder.comment("Defines the amount of ticks an electric miner takes to break a block.")
+					.translation(StaticPower.MOD_ID + ".config." + "electricMinerProcessingTime").define("ElectricMinerProcessingTime", 40);
 			builder.pop();
 		}
 	}
